@@ -2,108 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49591449D63
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 21:59:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38CDC449D7B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 22:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238293AbhKHVCR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Nov 2021 16:02:17 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:36885 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S238089AbhKHVCM (ORCPT
+        id S238437AbhKHVEq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Nov 2021 16:04:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230126AbhKHVEq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Nov 2021 16:02:12 -0500
-Received: (qmail 1679175 invoked by uid 1000); 8 Nov 2021 15:59:26 -0500
-Date:   Mon, 8 Nov 2021 15:59:26 -0500
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ayush Sawal <ayush.sawal@chelsio.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rohit Maheshwari <rohitm@chelsio.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        intel-gvt-dev@lists.freedesktop.org,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-leds <linux-leds@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "open list:REMOTE PROCESSOR \(REMOTEPROC\) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-staging@lists.linux.dev,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:TENSILICA XTENSA PORT \(xtensa\)" 
-        <linux-xtensa@linux-xtensa.org>, netdev <netdev@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
-        sparclinux <sparclinux@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v0 42/42] notifier: Return an error when callback is
- already registered
-Message-ID: <20211108205926.GA1678880@rowland.harvard.edu>
-References: <20211108101157.15189-1-bp@alien8.de>
- <20211108101157.15189-43-bp@alien8.de>
- <CAMuHMdWH+txiSP_d7Jc4f_bU8Lf9iWpT4E3o5o7BJr-YdA6-VA@mail.gmail.com>
- <YYkyUEqcsOwQMb1S@zn.tnic>
- <CAMuHMdXiBEQyEXJagSfpH44hxVA2t0sDH7B7YubLGHrb2MJLLA@mail.gmail.com>
- <YYlJQYLiIrhjwOmT@zn.tnic>
- <CAMuHMdXHikGrmUzuq0WG5JRHUUE=5zsaVCTF+e4TiHpM5tc5kA@mail.gmail.com>
- <YYlOmd0AeA8DSluD@zn.tnic>
+        Mon, 8 Nov 2021 16:04:46 -0500
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92377C061570
+        for <linux-hyperv@vger.kernel.org>; Mon,  8 Nov 2021 13:02:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds202012; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OKeFXAV+WjakbyqOjhDvQAu/6xFF+rgo1c/NR+k78Gg=; b=NzEzShv6UZFAhtlssu6JOCX/Gz
+        qjYHpRQhawCDC2N1+AnyOcTbK15uBJl1Uiqh5qN+fxcsRaoLmO2q7gbeyj+VHiZIA9kAH5c+su/S2
+        MmrExq3NRtRJ0faBBvD1XIp7gL736+Q8MCt5PcuG+89aU8C3H2fDxaW0F55nuIouz90DBgSEIVg9/
+        FGqs3TY9RcLLAFKPb2yE+YxKPWbt+xFVB4k7228jnz/0rj82Qb6oqhMgsFIl1w5Bdw7Ht55DisrNQ
+        gi3G1Gw5CwCX9p63JYzfTgZKgz4vptVnFsrqftDeVRbKbxrzP7htzM4lWzJcmJs33nehFiW+XdYHh
+        KW/V+cVQ==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:55154 helo=[192.168.10.61])
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1mkBmB-0002wM-HN; Mon, 08 Nov 2021 22:01:59 +0100
+Subject: Re: [PATCH v2 8/9] drm/simpledrm: Support virtual screen sizes
+To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
+        airlied@linux.ie, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
+        airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
+        sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
+        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
+        joshua@stroblindustries.com, arnd@arndb.de
+Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <20211101141532.26655-1-tzimmermann@suse.de>
+ <20211101141532.26655-9-tzimmermann@suse.de>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <597cc1b8-30c1-bdf0-68ad-3ad0fd53fb5f@tronnes.org>
+Date:   Mon, 8 Nov 2021 22:01:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YYlOmd0AeA8DSluD@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20211101141532.26655-9-tzimmermann@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Nov 08, 2021 at 05:21:45PM +0100, Borislav Petkov wrote:
-> On Mon, Nov 08, 2021 at 05:12:16PM +0100, Geert Uytterhoeven wrote:
-> > Returning void is the other extreme ;-)
-> > 
-> > There are 3 levels (ignoring BUG_ON()/panic () inside the callee):
-> >   1. Return void: no one can check success or failure,
-> >   2. Return an error code: up to the caller to decide,
-> >   3. Return a __must_check error code: every caller must check.
-> > 
-> > I'm in favor of 2, as there are several places where it cannot fail.
+
+
+Den 01.11.2021 15.15, skrev Thomas Zimmermann:
+> Add constants for the maximum size of the shadow-plane surface
+> size. Useful for shadow planes with virtual screen sizes. The
+> current sizes are 4096 scanlines with 4096 pixels each. This
+> seems reasonable for current hardware, but can be increased as
+> necessary.
 > 
-> Makes sense to me. I'll do that in the next iteration.
+> In simpledrm, set the maximum framebuffer size from the constants
+> for shadow planes. Implements support for virtual screen sizes and
+> page flipping on the fbdev console.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+>  drivers/gpu/drm/tiny/simpledrm.c    |  9 +++++++--
+>  include/drm/drm_gem_atomic_helper.h | 18 ++++++++++++++++++
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tiny/simpledrm.c b/drivers/gpu/drm/tiny/simpledrm.c
+> index e872121e9fb0..e42ae1c6ebcd 100644
+> --- a/drivers/gpu/drm/tiny/simpledrm.c
+> +++ b/drivers/gpu/drm/tiny/simpledrm.c
+> @@ -2,6 +2,7 @@
+>  
+>  #include <linux/clk.h>
+>  #include <linux/of_clk.h>
+> +#include <linux/minmax.h>
+>  #include <linux/platform_data/simplefb.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -776,6 +777,7 @@ static int simpledrm_device_init_modeset(struct simpledrm_device *sdev)
+>  	struct drm_display_mode *mode = &sdev->mode;
+>  	struct drm_connector *connector = &sdev->connector;
+>  	struct drm_simple_display_pipe *pipe = &sdev->pipe;
+> +	unsigned long max_width, max_height;
+>  	const uint32_t *formats;
+>  	size_t nformats;
+>  	int ret;
+> @@ -784,10 +786,13 @@ static int simpledrm_device_init_modeset(struct simpledrm_device *sdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	max_width = max_t(unsigned long, mode->hdisplay, DRM_SHADOW_PLANE_MAX_WIDTH);
+> +	max_height = max_t(unsigned long, mode->vdisplay, DRM_SHADOW_PLANE_MAX_HEIGHT);
+> +
+>  	dev->mode_config.min_width = mode->hdisplay;
+> -	dev->mode_config.max_width = mode->hdisplay;
+> +	dev->mode_config.max_width = max_width;
+>  	dev->mode_config.min_height = mode->vdisplay;
+> -	dev->mode_config.max_height = mode->vdisplay;
+> +	dev->mode_config.max_height = max_height;
+>  	dev->mode_config.prefer_shadow_fbdev = true;
+>  	dev->mode_config.preferred_depth = sdev->format->cpp[0] * 8;
+>  	dev->mode_config.funcs = &simpledrm_mode_config_funcs;
+> diff --git a/include/drm/drm_gem_atomic_helper.h b/include/drm/drm_gem_atomic_helper.h
+> index 48222a107873..54983ecf641a 100644
+> --- a/include/drm/drm_gem_atomic_helper.h
+> +++ b/include/drm/drm_gem_atomic_helper.h
+> @@ -22,6 +22,24 @@ int drm_gem_simple_display_pipe_prepare_fb(struct drm_simple_display_pipe *pipe,
+>   * Helpers for planes with shadow buffers
+>   */
+>  
+> +/**
+> + * DRM_SHADOW_PLANE_MAX_WIDTH - Maximum width of a plane's shadow buffer in pixels
+> + *
+> + * For drivers with shadow planes, the maximum width of the framebuffer is
+> + * usually independent from hardware limitations. Drivers can initialize struct
+> + * drm_mode_config.max_width from DRM_SHADOW_PLANE_MAX_WIDTH.
 
-Is there really any reason for returning an error code?  For example, is 
-it anticipated that at some point in the future these registration calls 
-might fail?
+Why would a driver do that instead of using a value of its own? Is it
+some kind of standardization?
 
-Currently, the only reason for failing to register a notifier callback 
-is because the callback is already registered.  In a sense this isn't 
-even an actual failure -- after the registration returns the callback 
-_will_ still be registered.
+> + */
+> +#define DRM_SHADOW_PLANE_MAX_WIDTH	(1ul << 12)
 
-So if the call can never really fail, why bother with a return code?  
-Especially since the caller can't do anything with such a code value.
+Please use a decimal number, I'm so slow at doing this in my head that I
+use bash to calculate it for me, which really slows down parsing the code.
 
-Given the current state of affairs, I vote in favor of 1 (plus a WARN or 
-something similar to generate a stack dump in the callee, since double 
-registration really is a bug).
+Noralf.
 
-Alan Stern
+> +
+> +/**
+> + * DRM_SHADOW_PLANE_MAX_HEIGHT - Maximum height of a plane's shadow buffer in scanlines
+> + *
+> + * For drivers with shadow planes, the maximum height of the framebuffer is
+> + * usually independent from hardware limitations. Drivers can initialize struct
+> + * drm_mode_config.max_height from DRM_SHADOW_PLANE_MAX_HEIGHT.
+> + */
+> +#define DRM_SHADOW_PLANE_MAX_HEIGHT	(1ul << 12)
+> +
+>  /**
+>   * struct drm_shadow_plane_state - plane state for planes with shadow buffers
+>   *
+> 
