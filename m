@@ -2,231 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26890449C12
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 19:58:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A24FD449D00
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 21:18:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236392AbhKHTA5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Nov 2021 14:00:57 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:33813 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231641AbhKHTA5 (ORCPT
+        id S238385AbhKHUVG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Nov 2021 15:21:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238662AbhKHUVF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Nov 2021 14:00:57 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id EF97C580896;
-        Mon,  8 Nov 2021 13:58:11 -0500 (EST)
-Received: from imap45 ([10.202.2.95])
-  by compute3.internal (MEProxy); Mon, 08 Nov 2021 13:58:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        amanoeldawod.com; h=mime-version:message-id:in-reply-to
-        :references:date:from:to:cc:subject:content-type
-        :content-transfer-encoding; s=fm3; bh=dt/S3nH6/2Gr1X8YGWm3DV3sRU
-        zueTM4oni+e1bTbiw=; b=Rs+sisQoRrIyUwE9hUky1dkgj0sHEhbgWyI3xZug3a
-        Sbi0f1+dgsMLSUezPy8+E12tG2FG/PAnR6HxY0TKn1o0XvoUD2BrXXL8NwZ/rm5n
-        6yPoV41nA+b2w3IqlwUFACwZlruGoPcuTuh9akyPH+gLA71k7fsKpQTvTrvfOS1/
-        MJLw7z1vVxjgEHG7XUyv9vVkatX0TYczwB/kxIlCqyc015omx+sAskQb/S0nP7HZ
-        4xJ9goKkHHZ9H9YypWlG1w3/Y7UNdTO6v4VWScM7BU1UD73ULtmww7+x8Rsvz7X9
-        NpLDKCk+O6S9FtOiO1DFdLKW0EsKGssgpg93ATXdACFg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=dt/S3nH6/2Gr1X8YGWm3DV3sRUzueTM4oni+e1bTb
-        iw=; b=YReC95rjCjY2Q1RPx6GtY/CUIdG+oacm4CVjSMLT9i+PcE0kfl3akdAe5
-        ExoiYnNDAh2/Q/Ks/unjwhRYU/6dQiR+YPibJ23DF8JRhjISJrjLqzV4TL3tdzW3
-        A1X4mz+ftbP9thrxVlyJ7XPS51xMyO25TIx/bYkDa+VmZO3YifI9pmEcu/8awE6Y
-        BtDUsAvb45uGzzgfrDTolpw3DX/baibWDRab/kAjXKdoVohO31ko7wuMoRtlHVto
-        IL5ohXFcArKXlTpiUNcV+tX/tJcXFV67OxoKDdYyegzUDdCxqPpw3r5UKe8/Q6re
-        tc5fspkK/NtehEZojqL6myZKg8J1Q==
-X-ME-Sender: <xms:Q3OJYYXl23mMOIq3A4Y_2Q-XRBsmW3nE87puCQqMwb7lFhGIAYwZ-w>
-    <xme:Q3OJYclTaKf9Ic2iuFNRqyvgyptsYjNWRSS3KDtmtOiS6Lx-Q75UOO9A1ml6wffbq
-    qEtSMy1OS9fagXWphI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddruddvgdduudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgfgsehtqhertderreejnecuhfhrohhmpedftehm
-    rghnohgvlhcuffgrfihougdfuceokhgvrhhnvghlsegrmhgrnhhovghluggrfihougdrtg
-    homheqnecuggftrfgrthhtvghrnhepvdeuffeiffejjefftdeijeeifeeiuefgteekkedu
-    ffekieefgfdtgfeikeehhfehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepkhgvrhhnvghlsegrmhgrnhhovghluggrfihougdrtghomh
-X-ME-Proxy: <xmx:Q3OJYcaaXoVY9gESxUiwc90Oo13FWi-X1lINE12mWqlXmYtJwStjxQ>
-    <xmx:Q3OJYXU2wW9o2fvVOy0dfNPbYY5ZBEMJjabiFiUrHJzECa65jkWMOA>
-    <xmx:Q3OJYSkSURLyNyDnXV21JCicjU0JhBKEGj2VGjgVtqsiVr0fejm5FQ>
-    <xmx:Q3OJYRqRx2BP_FVmYsc8NLaghsaCysB7i47l6m6UQl1p4M4RurRnPQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 6775524A0074; Mon,  8 Nov 2021 13:58:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-1369-gd055fb5e7c-fm-20211018.002-gd055fb5e
-Mime-Version: 1.0
-Message-Id: <944752ef-ad6a-4e42-8754-54a58c7f50ef@www.fastmail.com>
-In-Reply-To: <20211101141532.26655-4-tzimmermann@suse.de>
-References: <20211101141532.26655-1-tzimmermann@suse.de>
- <20211101141532.26655-4-tzimmermann@suse.de>
-Date:   Mon, 08 Nov 2021 13:57:42 -0500
-From:   "Amanoel Dawod" <kernel@amanoeldawod.com>
-To:     "Thomas Zimmermann" <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@linux.ie, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, noralf@tronnes.org,
-        drawat.floss@gmail.com, airlied@redhat.com, kraxel@redhat.com,
-        david@lechnology.com, sam@ravnborg.org, javierm@redhat.com,
-        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
-        joshua@stroblindustries.com, arnd@arndb.de
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 3/9] drm/format-helper: Add destination-buffer pitch to
- drm_fb_swab()
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Nov 2021 15:21:05 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786A7C061570;
+        Mon,  8 Nov 2021 12:18:20 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id w29so17453459wra.12;
+        Mon, 08 Nov 2021 12:18:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j0tzCILtYLjnkVMw5fV9YV7kZoveDNXNdYAPtQjDjAQ=;
+        b=K+HM8JZN9aItz4KVC/AvPZGGZ0Diii0j3X7ZYP+c5n1YFhusHiijkCF9jYJCc2sviB
+         OzQebppaGlOLbg4TnRF3lxekMTZ5MnZgB9Eq5VDQPnDYEH6RkopaphLkWz1tUgupdnct
+         uCI+twI+d1gRdqkQiG0movCBd32XnG4hIz1zVNKdaDxuAIG4SBRHwsBJtK/0j3DijQc+
+         Yf6SHEQklwIup5h4Phxg3XHmJQBnk56Ox1VSPSLjym1mLGRLg1b5tSdO9vL5Dc6q1AmY
+         ER4D18GIh+ThoUKCaZmf6NHUqMmpMZ5pJJN0fcdYqKX5bJZIEAJyiSEWGTQNu5qiBBrv
+         Xw8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=j0tzCILtYLjnkVMw5fV9YV7kZoveDNXNdYAPtQjDjAQ=;
+        b=LGDkfD29Vg5QwGf/zt6c+0kNIExQ2fo5oVcEKFvYutueFd1v9iytI0y93HTyKYnP6s
+         oJdDDLzsWpfRzdC0IP3wtazRAHMYcp1wWTSbUFno7Yd4lSP9ZJ+AD7vNHrnx2qcENwVk
+         TXDz2G+byFqnpEa/lBxYEwXGx/xWMBF3sMC86PgHokeFDXTk2oMKT0XmywTEiqOqmYwd
+         YcyNGMSjuNfAjqn7Ww3RF1IJBYcZ6qYKx053vqrg+yzZ2tGISJlWXL44Lu/OyWloyhuA
+         JEpH8tSE4IrJRMWUSQEKwz6cORdRK3iSjRGfkTCdVaP561iGlxBnB3zG5w1KFK2caJU4
+         7NrA==
+X-Gm-Message-State: AOAM532846ALRXJprnBKWhYWtdhzKwx658uPIWwz7eCfmRj5NftPrOe/
+        njRNDOqe/2eLng==
+X-Google-Smtp-Source: ABdhPJzcTnCe0YEDx8RwNlWOrSJDmOYk/x4KD1BDzyGoVvop6ej0ZZTM+odIqcfL3wSOnq6RfnaXFw==
+X-Received: by 2002:adf:e991:: with SMTP id h17mr2262962wrm.40.1636402699089;
+        Mon, 08 Nov 2021 12:18:19 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id c15sm17359871wrs.19.2021.11.08.12.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Nov 2021 12:18:18 -0800 (PST)
+From:   Colin Ian King <colin.i.king@googlemail.com>
+X-Google-Original-From: Colin Ian King <colin.i.king@gmail.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: mana: Fix spelling mistake "calledd" -> "called"
+Date:   Mon,  8 Nov 2021 20:18:17 +0000
+Message-Id: <20211108201817.43121-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
+There is a spelling mistake in a dev_info message. Fix it.
 
-On Mon, Nov 1, 2021, at 10:15 AM, Thomas Zimmermann wrote:
-> Add destination-buffer pitch as argument to drm_fb_swab(). Done for
-> consistency with the rest of the interface.
->
-> v2:
-> 	* update documentation (Noralf)
->
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Tested-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
-> Reviewed-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
-> ---
->  drivers/gpu/drm/drm_format_helper.c | 21 ++++++++++++++++-----
->  drivers/gpu/drm/drm_mipi_dbi.c      |  2 +-
->  drivers/gpu/drm/gud/gud_pipe.c      |  2 +-
->  include/drm/drm_format_helper.h     |  5 +++--
->  4 files changed, 21 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_format_helper.c=20
-> b/drivers/gpu/drm/drm_format_helper.c
-> index fac37c697d8b..dac355320287 100644
-> --- a/drivers/gpu/drm/drm_format_helper.c
-> +++ b/drivers/gpu/drm/drm_format_helper.c
-> @@ -101,6 +101,7 @@ EXPORT_SYMBOL(drm_fb_memcpy_toio);
->  /**
->   * drm_fb_swab - Swap bytes into clip buffer
->   * @dst: Destination buffer
-> + * @dst_pitch: Number of bytes between two consecutive scanlines=20
-> within dst
->   * @src: Source buffer
->   * @fb: DRM framebuffer
->   * @clip: Clip rectangle area to copy
-> @@ -110,21 +111,27 @@ EXPORT_SYMBOL(drm_fb_memcpy_toio);
->   * time to speed up slow uncached reads.
->   *
->   * This function does not apply clipping on dst, i.e. the destination
-> - * is a small buffer containing the clip rect only.
-> + * is at the top-left corner.
->   */
-> -void drm_fb_swab(void *dst, void *src, struct drm_framebuffer *fb,
-> -		 struct drm_rect *clip, bool cached)
-> +void drm_fb_swab(void *dst, unsigned int dst_pitch, const void *src,
-> +		 const struct drm_framebuffer *fb, const struct drm_rect *clip,
-> +		 bool cached)
->  {
->  	u8 cpp =3D fb->format->cpp[0];
->  	size_t len =3D drm_rect_width(clip) * cpp;
-> -	u16 *src16, *dst16 =3D dst;
-> -	u32 *src32, *dst32 =3D dst;
-> +	const u16 *src16;
-> +	const u32 *src32;
-> +	u16 *dst16;
-> +	u32 *dst32;
->  	unsigned int x, y;
->  	void *buf =3D NULL;
->=20
->  	if (WARN_ON_ONCE(cpp !=3D 2 && cpp !=3D 4))
->  		return;
->=20
-> +	if (!dst_pitch)
-> +		dst_pitch =3D len;
-> +
->  	if (!cached)
->  		buf =3D kmalloc(len, GFP_KERNEL);
->=20
-> @@ -140,6 +147,9 @@ void drm_fb_swab(void *dst, void *src, struct=20
-> drm_framebuffer *fb,
->  			src32 =3D src;
->  		}
->=20
-> +		dst16 =3D dst;
-> +		dst32 =3D dst;
-> +
->  		for (x =3D clip->x1; x < clip->x2; x++) {
->  			if (cpp =3D=3D 4)
->  				*dst32++ =3D swab32(*src32++);
-> @@ -148,6 +158,7 @@ void drm_fb_swab(void *dst, void *src, struct=20
-> drm_framebuffer *fb,
->  		}
->=20
->  		src +=3D fb->pitches[0];
-> +		dst +=3D dst_pitch;
->  	}
->=20
->  	kfree(buf);
-> diff --git a/drivers/gpu/drm/drm_mipi_dbi.c=20
-> b/drivers/gpu/drm/drm_mipi_dbi.c
-> index c09df8b06c7a..7ce89917d761 100644
-> --- a/drivers/gpu/drm/drm_mipi_dbi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dbi.c
-> @@ -211,7 +211,7 @@ int mipi_dbi_buf_copy(void *dst, struct=20
-> drm_framebuffer *fb,
->  	switch (fb->format->format) {
->  	case DRM_FORMAT_RGB565:
->  		if (swap)
-> -			drm_fb_swab(dst, src, fb, clip, !gem->import_attach);
-> +			drm_fb_swab(dst, 0, src, fb, clip, !gem->import_attach);
->  		else
->  			drm_fb_memcpy(dst, 0, src, fb, clip);
->  		break;
-> diff --git a/drivers/gpu/drm/gud/gud_pipe.c=20
-> b/drivers/gpu/drm/gud/gud_pipe.c
-> index a92112ffd37a..e0b117b2559f 100644
-> --- a/drivers/gpu/drm/gud/gud_pipe.c
-> +++ b/drivers/gpu/drm/gud/gud_pipe.c
-> @@ -201,7 +201,7 @@ static int gud_prep_flush(struct gud_device *gdrm,=20
-> struct drm_framebuffer *fb,
->  			len =3D gud_xrgb8888_to_color(buf, format, vaddr, fb, rect);
->  		}
->  	} else if (gud_is_big_endian() && format->cpp[0] > 1) {
-> -		drm_fb_swab(buf, vaddr, fb, rect, !import_attach);
-> +		drm_fb_swab(buf, 0, vaddr, fb, rect, !import_attach);
->  	} else if (compression && !import_attach && pitch =3D=3D fb->pitches=
-[0]) {
->  		/* can compress directly from the framebuffer */
->  		buf =3D vaddr + rect->y1 * pitch;
-> diff --git a/include/drm/drm_format_helper.h=20
-> b/include/drm/drm_format_helper.h
-> index 1fc3ba7b6060..ddcba5abe306 100644
-> --- a/include/drm/drm_format_helper.h
-> +++ b/include/drm/drm_format_helper.h
-> @@ -17,8 +17,9 @@ void drm_fb_memcpy(void *dst, unsigned int dst_pitch=
-,=20
-> const void *vaddr,
->  		   const struct drm_framebuffer *fb, const struct drm_rect *clip);
->  void drm_fb_memcpy_toio(void __iomem *dst, unsigned int dst_pitch,=20
-> const void *vaddr,
->  			const struct drm_framebuffer *fb, const struct drm_rect *clip);
-> -void drm_fb_swab(void *dst, void *src, struct drm_framebuffer *fb,
-> -		 struct drm_rect *clip, bool cached);
-> +void drm_fb_swab(void *dst, unsigned int dst_pitch, const void *src,
-> +		 const struct drm_framebuffer *fb, const struct drm_rect *clip,
-> +		 bool cached);
->  void drm_fb_xrgb8888_to_rgb332(void *dst, void *vaddr, struct=20
-> drm_framebuffer *fb,
->  			       struct drm_rect *clip);
->  void drm_fb_xrgb8888_to_rgb565(void *dst, void *vaddr,
-> --=20
-> 2.33.1
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applying this fails for me (tested against 5.14 and 5.15 trees).
-Example:
-patching file include/drm/drm_format_helper.h
-Hunk #1 FAILED at 17.
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index c96ac81212f7..636dfef24a6c 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1424,7 +1424,7 @@ static void mana_gd_shutdown(struct pci_dev *pdev)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 
+-	dev_info(&pdev->dev, "Shutdown was calledd\n");
++	dev_info(&pdev->dev, "Shutdown was called\n");
+ 
+ 	mana_remove(&gc->mana, true);
+ 
+-- 
+2.32.0
 
---=20
-thanks,
-Amanoel
