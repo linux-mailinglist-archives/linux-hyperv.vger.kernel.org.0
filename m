@@ -2,137 +2,72 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22D5A447C3F
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 09:50:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 955E2447D58
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 11:12:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238172AbhKHIxV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Nov 2021 03:53:21 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:55224 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238169AbhKHIxU (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Nov 2021 03:53:20 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        id S237807AbhKHKPC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Nov 2021 05:15:02 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:38254 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237746AbhKHKO7 (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 8 Nov 2021 05:14:59 -0500
+Received: from zn.tnic (p200300ec2f33110088892b77bd117736.dip0.t-ipconnect.de [IPv6:2003:ec:2f33:1100:8889:2b77:bd11:7736])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6C64C2190B;
-        Mon,  8 Nov 2021 08:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1636361435; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8DF0C1EC04DF;
+        Mon,  8 Nov 2021 11:12:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1636366334;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=W4jPKsYsST6dQr9FRHWQB8IhrRDqgJUuPMCwmMcL1OY=;
-        b=BmQTdXukc2jnriCWni+h9SnBGCG/MSJwC2eKwHdoo6tX8GqZpxxVtzcwJAmIvskgHaOFSR
-        N7WNn/yHy3W8fhN52ITT+QqfLTw90ko/X8lUmLzfVLbtB9rngD9kheoGVAobPqHxY5P+PC
-        Ax11rEb/x2bxBfM1/ARz8aoDNzmHnOQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1636361435;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=W4jPKsYsST6dQr9FRHWQB8IhrRDqgJUuPMCwmMcL1OY=;
-        b=VZRN1w65luOREgI/fW4AsRxHjcldMmvFAZVmW/QFOlinfGWcCGGts5mWHrKLh3HDUE1qED
-        3jxPkaFrVE5Rt4BQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0B317139CF;
-        Mon,  8 Nov 2021 08:50:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id nzyxAdvkiGHbZAAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Mon, 08 Nov 2021 08:50:35 +0000
-Message-ID: <20ba6cd3-74bd-a212-f483-e0b73a95dbc1@suse.de>
-Date:   Mon, 8 Nov 2021 09:50:33 +0100
+        bh=1iair6BWPYTb3fn2g/N3YxlgrdOuwpEEIcBJ21kHgLU=;
+        b=YmYK5pWTuxMInILmWGuCaPPl5eN7NW8dSeDuDBpplcWi/gm6eS8Yba7OjFJkqwQSkGh3pr
+        uzMQSNbwlKauDhee2yXt551kKgZq6L1lcrWQVUPNShKdhMusvu2up8w4nCrfMk9rFZ03Vk
+        a/H86JSpIpv6ji/a8yN4Qve69hx4AiM=
+From:   Borislav Petkov <bp@alien8.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     linux-hyperv@vger.kernel.org
+Subject: [PATCH v0 08/42] Drivers: hv: vmbus: Check notifier registration return value
+Date:   Mon,  8 Nov 2021 11:11:23 +0100
+Message-Id: <20211108101157.15189-9-bp@alien8.de>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20211108101157.15189-1-bp@alien8.de>
+References: <20211108101157.15189-1-bp@alien8.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH v2 1/9] drm/format-helper: Export drm_fb_clip_offset()
-Content-Language: en-US
-To:     =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        daniel@ffwll.ch, airlied@linux.ie, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
-        airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
-        sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
-        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
-        joshua@stroblindustries.com, arnd@arndb.de
-Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-References: <20211101141532.26655-1-tzimmermann@suse.de>
- <20211101141532.26655-2-tzimmermann@suse.de>
- <31701408-4e54-58a4-93c9-c946ef2488af@tronnes.org>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <31701408-4e54-58a4-93c9-c946ef2488af@tronnes.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------lD2yecSCRPS0fHZxMRlz2kT3"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------lD2yecSCRPS0fHZxMRlz2kT3
-Content-Type: multipart/mixed; boundary="------------ILABsSxHpNUGpDZlZ0x220hF";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, daniel@ffwll.ch,
- airlied@linux.ie, mripard@kernel.org, maarten.lankhorst@linux.intel.com,
- drawat.floss@gmail.com, airlied@redhat.com, kraxel@redhat.com,
- david@lechnology.com, sam@ravnborg.org, javierm@redhat.com,
- kernel@amanoeldawod.com, dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch,
- aros@gmx.com, joshua@stroblindustries.com, arnd@arndb.de
-Cc: linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
- virtualization@lists.linux-foundation.org
-Message-ID: <20ba6cd3-74bd-a212-f483-e0b73a95dbc1@suse.de>
-Subject: Re: [PATCH v2 1/9] drm/format-helper: Export drm_fb_clip_offset()
-References: <20211101141532.26655-1-tzimmermann@suse.de>
- <20211101141532.26655-2-tzimmermann@suse.de>
- <31701408-4e54-58a4-93c9-c946ef2488af@tronnes.org>
-In-Reply-To: <31701408-4e54-58a4-93c9-c946ef2488af@tronnes.org>
+From: Borislav Petkov <bp@suse.de>
 
---------------ILABsSxHpNUGpDZlZ0x220hF
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Avoid homegrown notifier registration checks.
 
-SGkNCg0KQW0gMDUuMTEuMjEgdW0gMjE6NDggc2NocmllYiBOb3JhbGYgVHLDuG5uZXM6DQo+
-IA0KPiANCj4gRGVuIDAxLjExLjIwMjEgMTUuMTUsIHNrcmV2IFRob21hcyBaaW1tZXJtYW5u
-Og0KPj4gUHJvdmlkZSBhIGZ1bmN0aW9uIHRoYXQgY29tcHV0ZXMgdGhlIG9mZnNldCBpbnRv
-IGEgYmxpdCBkZXN0aW5hdGlvbg0KPj4gYnVmZmVyLiBUaGlzIHdpbGwgYWxsb3cgdG8gbW92
-ZSBkZXN0aW5hdGlvbi1idWZmZXIgY2xpcHBpbmcgaW50byB0aGUNCj4+IGZvcm1hdC1oZWxw
-ZXIgY2FsbGVycy4NCj4+DQo+PiB2MjoNCj4+IAkqIHByb3ZpZGUgZG9jdW1lbnRhdGlvbiAo
-U2FtKQ0KPj4gCSogcmV0dXJuICd1bnNpZ25lZCBpbnQnIChTYW0sIE5vcmFsZikNCj4+DQo+
-PiBTaWduZWQtb2ZmLWJ5OiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5Ac3VzZS5k
-ZT4NCj4+IC0tLQ0KPiANCj4gUmV2aWV3ZWQtYnk6IE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxm
-QHRyb25uZXMub3JnPg0KDQpUaGFua3MgYSBsb3QuIE1heSBJIGFzayB5b3UgdG8gYWxzbyBy
-ZXZpZXcgcGF0Y2hlcyA3IHRvIDk/DQoNCkJlc3QgcmVnYXJkcw0KVGhvbWFzDQoNCj4gDQoN
-Ci0tIA0KVGhvbWFzIFppbW1lcm1hbm4NCkdyYXBoaWNzIERyaXZlciBEZXZlbG9wZXINClNV
-U0UgU29mdHdhcmUgU29sdXRpb25zIEdlcm1hbnkgR21iSA0KTWF4ZmVsZHN0ci4gNSwgOTA0
-MDkgTsO8cm5iZXJnLCBHZXJtYW55DQooSFJCIDM2ODA5LCBBRyBOw7xybmJlcmcpDQpHZXNj
-aMOkZnRzZsO8aHJlcjogSXZvIFRvdGV2DQo=
+No functional changes.
 
---------------ILABsSxHpNUGpDZlZ0x220hF--
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: linux-hyperv@vger.kernel.org
+---
+ drivers/hv/vmbus_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---------------lD2yecSCRPS0fHZxMRlz2kT3
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 392c1ac4f819..370afd108d2d 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1574,8 +1574,8 @@ static int vmbus_bus_init(void)
+ 	 * the VMbus channel connection to prevent any VMbus
+ 	 * activity after the VM panics.
+ 	 */
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-			       &hyperv_panic_block);
++	if (atomic_notifier_chain_register(&panic_notifier_list, &hyperv_panic_block))
++		pr_warn("VMBus panic notifier already registered\n");
+ 
+ 	vmbus_request_offers();
+ 
+-- 
+2.29.2
 
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmGI5NkFAwAAAAAACgkQlh/E3EQov+Be
-qA//XwewE2/PKfqRQ5WOmehdS85n0nBqN87KWV5UT+SMeMSRl6sofDg04IRmD7gVlUMXGz/L4gIt
-9sgF246+onbk11K7TFBD1jK05pruCd/0E7UCNek6Fv7z+kPs0e/LmjowwMZfWllWKD5MLJBvEEaU
-UeDBpu0HSuemjcZIWapkl8m3KmtDWCsUWmifzb3I5OFBo2k3eF1DIrEBh2wbZ0+tTToG4tDGYS5s
-uwhgt/DvjH9gRLVPly2Vtzpw1XOSpRF6Q86xuUu6IIe+zQtWhnSFUnKCu0ol2m1D71szr9G9UsGA
-tLQzLZBeiLdK4Cq805BczBtgo6B/ylDB49in7k/znSymrtfbeVMkhGxUMEbcEwG77nkBwwccY24h
-tRau5jTRbqPqpcgruK4J0tuoSV+ext56jAf1jmcEPGmpHbcPg4ONbY8oA3R5Pt00oTvN8l6YxUYe
-PsQ77aueV2xG8hDP0sWj75HuHhwztO5nIru8T1kwIBOpGyWhs7qjDsDhO9i+joDDRvAd0qaUprSs
-uTT6e7+COX2rRv63LPHTOgKM+YIT8xIrNj9uAwDVszyf0LgackGR6F3Cr9RKozQDywJ61lKW95Fw
-Wt62Scq6VhFajUwZjRf+CnGzm2S3zRVR3r0OGZ2o1yCfZfrv0GRrOWfnkz9E+dfP85SSFfkFzuaP
-R6A=
-=iTI9
------END PGP SIGNATURE-----
-
---------------lD2yecSCRPS0fHZxMRlz2kT3--
