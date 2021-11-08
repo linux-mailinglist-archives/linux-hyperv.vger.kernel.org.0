@@ -2,156 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DB8A449D4B
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 21:55:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49591449D63
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Nov 2021 21:59:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236164AbhKHU6m (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Nov 2021 15:58:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232955AbhKHU6j (ORCPT
+        id S238293AbhKHVCR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Nov 2021 16:02:17 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:36885 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S238089AbhKHVCM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Nov 2021 15:58:39 -0500
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C4CC061570
-        for <linux-hyperv@vger.kernel.org>; Mon,  8 Nov 2021 12:55:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds202012; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Y8rIO5kDLiYYNdoUIRDD+j4k4YWMUxX5tNev7MxjleU=; b=M2m9a6idT9lFytz/OtUyN7hIR9
-        eDR9I31bIP0xo3DWKBKsnb6ruY7QFjLF4GTmbtDY5NXOESXAFkzM6bNKrYHZ4TVeQUAGFHP2C5kTW
-        MJopUwxQ9Nc7tkahv3gmBjPdPTPoVZbUuP87fIHX8kemrSCA7KlYSYHabsRFmzzm7YQ/0fILVEvRF
-        kUroV1JSeK+G0uOrlTGgSU3ixcRi2k85mzIFQhqZufr+PLw46x3WYNZOJRKRrZ7B1E7Tjuk5AC5pD
-        Ub733xEn5/juaebnLnS5DSzdRKQFhgi6NgeZRCWMCHgjz2z4F5X+004ATYySpFOrKczmu16cox9yN
-        kBmkJeRg==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:54997 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1mkBgF-0000Kl-B8; Mon, 08 Nov 2021 21:55:51 +0100
-Subject: Re: [PATCH v2 7/9] drm/simpledrm: Enable FB_DAMAGE_CLIPS property
-To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@linux.ie, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
-        airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
-        sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
-        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
-        joshua@stroblindustries.com, arnd@arndb.de
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20211101141532.26655-1-tzimmermann@suse.de>
- <20211101141532.26655-8-tzimmermann@suse.de>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <974e10bb-ae58-d1c1-a89e-881b39da4930@tronnes.org>
-Date:   Mon, 8 Nov 2021 21:55:46 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Mon, 8 Nov 2021 16:02:12 -0500
+Received: (qmail 1679175 invoked by uid 1000); 8 Nov 2021 15:59:26 -0500
+Date:   Mon, 8 Nov 2021 15:59:26 -0500
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rohit Maheshwari <rohitm@chelsio.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        intel-gvt-dev@lists.freedesktop.org,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-leds <linux-leds@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "open list:REMOTE PROCESSOR \(REMOTEPROC\) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        scsi <linux-scsi@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-staging@lists.linux.dev,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT \(xtensa\)" 
+        <linux-xtensa@linux-xtensa.org>, netdev <netdev@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
+        sparclinux <sparclinux@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v0 42/42] notifier: Return an error when callback is
+ already registered
+Message-ID: <20211108205926.GA1678880@rowland.harvard.edu>
+References: <20211108101157.15189-1-bp@alien8.de>
+ <20211108101157.15189-43-bp@alien8.de>
+ <CAMuHMdWH+txiSP_d7Jc4f_bU8Lf9iWpT4E3o5o7BJr-YdA6-VA@mail.gmail.com>
+ <YYkyUEqcsOwQMb1S@zn.tnic>
+ <CAMuHMdXiBEQyEXJagSfpH44hxVA2t0sDH7B7YubLGHrb2MJLLA@mail.gmail.com>
+ <YYlJQYLiIrhjwOmT@zn.tnic>
+ <CAMuHMdXHikGrmUzuq0WG5JRHUUE=5zsaVCTF+e4TiHpM5tc5kA@mail.gmail.com>
+ <YYlOmd0AeA8DSluD@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20211101141532.26655-8-tzimmermann@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YYlOmd0AeA8DSluD@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-Den 01.11.2021 15.15, skrev Thomas Zimmermann:
-> Enable the FB_DAMAGE_CLIPS property to reduce display-update
-> overhead. Also fixes a warning in the kernel log.
+On Mon, Nov 08, 2021 at 05:21:45PM +0100, Borislav Petkov wrote:
+> On Mon, Nov 08, 2021 at 05:12:16PM +0100, Geert Uytterhoeven wrote:
+> > Returning void is the other extreme ;-)
+> > 
+> > There are 3 levels (ignoring BUG_ON()/panic () inside the callee):
+> >   1. Return void: no one can check success or failure,
+> >   2. Return an error code: up to the caller to decide,
+> >   3. Return a __must_check error code: every caller must check.
+> > 
+> > I'm in favor of 2, as there are several places where it cannot fail.
 > 
->   simple-framebuffer simple-framebuffer.0: [drm] drm_plane_enable_fb_damage_clips() not called
-> 
-> Fix the computation of the blit rectangle. This wasn't an issue so
-> far, as simpledrm always blitted the full framebuffer. The code now
-> supports damage clipping and virtual screen sizes.
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
->  drivers/gpu/drm/tiny/simpledrm.c | 30 ++++++++++++++++++++++--------
->  1 file changed, 22 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tiny/simpledrm.c b/drivers/gpu/drm/tiny/simpledrm.c
-> index 571f716ff427..e872121e9fb0 100644
-> --- a/drivers/gpu/drm/tiny/simpledrm.c
-> +++ b/drivers/gpu/drm/tiny/simpledrm.c
-> @@ -642,7 +642,7 @@ simpledrm_simple_display_pipe_enable(struct drm_simple_display_pipe *pipe,
->  	void *vmap = shadow_plane_state->data[0].vaddr; /* TODO: Use mapping abstraction */
->  	struct drm_device *dev = &sdev->dev;
->  	void __iomem *dst = sdev->screen_base;
-> -	struct drm_rect clip;
-> +	struct drm_rect src_clip, dst_clip;
->  	int idx;
->  
->  	if (!fb)
-> @@ -651,10 +651,14 @@ simpledrm_simple_display_pipe_enable(struct drm_simple_display_pipe *pipe,
->  	if (!drm_dev_enter(dev, &idx))
->  		return;
->  
-> -	drm_rect_init(&clip, 0, 0, fb->width, fb->height);
-> +	drm_rect_fp_to_int(&src_clip, &plane_state->src);
->  
-> -	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &clip);
-> -	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &clip);
-> +	dst_clip = plane_state->dst;
+> Makes sense to me. I'll do that in the next iteration.
 
-I assume that src_clip and dst_clip are of the same size, since scaling
-is not supported. What prevents dst_clip from being bigger than the
-buffer that's being blitted into? Where is that bounds checking done?
+Is there really any reason for returning an error code?  For example, is 
+it anticipated that at some point in the future these registration calls 
+might fail?
 
-Noralf.
+Currently, the only reason for failing to register a notifier callback 
+is because the callback is already registered.  In a sense this isn't 
+even an actual failure -- after the registration returns the callback 
+_will_ still be registered.
 
-> +	if (!drm_rect_intersect(&dst_clip, &src_clip))
-> +		return;
-> +
-> +	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &dst_clip);
-> +	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &src_clip);
->  
->  	drm_dev_exit(idx);
->  }
-> @@ -686,20 +690,28 @@ simpledrm_simple_display_pipe_update(struct drm_simple_display_pipe *pipe,
->  	struct drm_framebuffer *fb = plane_state->fb;
->  	struct drm_device *dev = &sdev->dev;
->  	void __iomem *dst = sdev->screen_base;
-> -	struct drm_rect clip;
-> +	struct drm_rect damage_clip, src_clip, dst_clip;
->  	int idx;
->  
->  	if (!fb)
->  		return;
->  
-> -	if (!drm_atomic_helper_damage_merged(old_plane_state, plane_state, &clip))
-> +	if (!drm_atomic_helper_damage_merged(old_plane_state, plane_state, &damage_clip))
-> +		return;
-> +
-> +	drm_rect_fp_to_int(&src_clip, &plane_state->src);
-> +	if (!drm_rect_intersect(&src_clip, &damage_clip))
-> +		return;
-> +
-> +	dst_clip = plane_state->dst;
-> +	if (!drm_rect_intersect(&dst_clip, &src_clip))
->  		return;
->  
->  	if (!drm_dev_enter(dev, &idx))
->  		return;
->  
-> -	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &clip);
-> -	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &clip);
-> +	dst += drm_fb_clip_offset(sdev->pitch, sdev->format, &dst_clip);
-> +	drm_fb_blit_toio(dst, sdev->pitch, sdev->format->format, vmap, fb, &src_clip);
->  
->  	drm_dev_exit(idx);
->  }
-> @@ -794,6 +806,8 @@ static int simpledrm_device_init_modeset(struct simpledrm_device *sdev)
->  	if (ret)
->  		return ret;
->  
-> +	drm_plane_enable_fb_damage_clips(&pipe->plane);
-> +
->  	drm_mode_config_reset(dev);
->  
->  	return 0;
-> 
+So if the call can never really fail, why bother with a return code?  
+Especially since the caller can't do anything with such a code value.
+
+Given the current state of affairs, I vote in favor of 1 (plus a WARN or 
+something similar to generate a stack dump in the callee, since double 
+registration really is a bug).
+
+Alan Stern
