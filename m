@@ -2,114 +2,211 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8930344A37B
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Nov 2021 02:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEC8F44AA16
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Nov 2021 10:06:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242115AbhKIB1W (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Nov 2021 20:27:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241716AbhKIBPe (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Nov 2021 20:15:34 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 955B961AE2;
-        Tue,  9 Nov 2021 01:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636419998;
-        bh=VQ/XpjLMN06VarBHID7J8EAudkaPGA6lrPwedjZHmg8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7vvjnpSka2CG3pg5rpTWL7kGRlmYbPEgM4TTo4avc4k4rFkccl90rI6juiMbQ2TB
-         oXy/m45brsCeR/fV8KRbq34kVoU8ktm5d6BLtfnQUWFnjJpYOaTMNHC5NgIQZZm7Fs
-         eA0w+P0qb0Bts+8SVXlbreK0KlUsDLCYzvJhzFOs/DhcU3MEuKQY3GGiLEFvO4xmGV
-         SlbXUHe1d6V1Og2dJVTBckTrsapHvC3e2BQymOp8QQVFL1SkBVFnnmpTgqkV8Clv6K
-         t1t6pzhhSyCgoSHuKT+WgjQgwppTBkgKqGIHcKfV1RWKxJ6LeVAVGB08huwX3rrKTo
-         6SAZ+PzSlzGzQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 43/47] x86/hyperv: Protect set_hv_tscchange_cb() against getting preempted
-Date:   Mon,  8 Nov 2021 12:50:27 -0500
-Message-Id: <20211108175031.1190422-43-sashal@kernel.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211108175031.1190422-1-sashal@kernel.org>
-References: <20211108175031.1190422-1-sashal@kernel.org>
+        id S238308AbhKIJJP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 Nov 2021 04:09:15 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:41420 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230489AbhKIJJO (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 9 Nov 2021 04:09:14 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 4B8CB1FDB9;
+        Tue,  9 Nov 2021 09:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1636448788; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3MRFGWlUNvnfI7JR1017qsC5IEmSZ3drs8ufv6ocL2M=;
+        b=V+C9Yvrz6EfGkGvbEI3KJcAvNZUxrLJRdUOB3vSYLACh1VnMgp0eAljZ49oHcIyU1FHtn6
+        kjwP96vlGmzQ4dWsOW7xj+Xcv2VAB4gKdorbIjf148RDiOSuiNjhDZ2DhBTQ4qV7GfA2/R
+        WaWPZCjN3MJMv+q0T4k0PiayuzsugFU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1636448788;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3MRFGWlUNvnfI7JR1017qsC5IEmSZ3drs8ufv6ocL2M=;
+        b=9vS2+p7dKUCkoGRtb3R8jWD273BntINIMeTziIRm83jUIIzOoWvJgjo+O8O9rQtPoz4ddk
+        /vbFCQ9sJJE8CHBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D720F13ADA;
+        Tue,  9 Nov 2021 09:06:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id emcmMxM6imGlSQAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Tue, 09 Nov 2021 09:06:27 +0000
+Message-ID: <e3acf05c-3215-dd40-a677-76e6df597151@suse.de>
+Date:   Tue, 9 Nov 2021 10:06:27 +0100
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH v2 8/9] drm/simpledrm: Support virtual screen sizes
+Content-Language: en-US
+To:     =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        daniel@ffwll.ch, airlied@linux.ie, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
+        airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
+        sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
+        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
+        joshua@stroblindustries.com, arnd@arndb.de
+Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+References: <20211101141532.26655-1-tzimmermann@suse.de>
+ <20211101141532.26655-9-tzimmermann@suse.de>
+ <597cc1b8-30c1-bdf0-68ad-3ad0fd53fb5f@tronnes.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <597cc1b8-30c1-bdf0-68ad-3ad0fd53fb5f@tronnes.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------N5BSEpWwPsVWVnf9L5B2cDKG"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------N5BSEpWwPsVWVnf9L5B2cDKG
+Content-Type: multipart/mixed; boundary="------------E2BL7AAL30DVsV0kEYWQcr0S";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, daniel@ffwll.ch,
+ airlied@linux.ie, mripard@kernel.org, maarten.lankhorst@linux.intel.com,
+ drawat.floss@gmail.com, airlied@redhat.com, kraxel@redhat.com,
+ david@lechnology.com, sam@ravnborg.org, javierm@redhat.com,
+ kernel@amanoeldawod.com, dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch,
+ aros@gmx.com, joshua@stroblindustries.com, arnd@arndb.de
+Cc: linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ virtualization@lists.linux-foundation.org
+Message-ID: <e3acf05c-3215-dd40-a677-76e6df597151@suse.de>
+Subject: Re: [PATCH v2 8/9] drm/simpledrm: Support virtual screen sizes
+References: <20211101141532.26655-1-tzimmermann@suse.de>
+ <20211101141532.26655-9-tzimmermann@suse.de>
+ <597cc1b8-30c1-bdf0-68ad-3ad0fd53fb5f@tronnes.org>
+In-Reply-To: <597cc1b8-30c1-bdf0-68ad-3ad0fd53fb5f@tronnes.org>
 
-[ Upstream commit 285f68afa8b20f752b0b7194d54980b5e0e27b75 ]
+--------------E2BL7AAL30DVsV0kEYWQcr0S
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-The following issue is observed with CONFIG_DEBUG_PREEMPT when KVM loads:
+SGkNCg0KQW0gMDguMTEuMjEgdW0gMjI6MDEgc2NocmllYiBOb3JhbGYgVHLDuG5uZXM6DQo+
+IA0KPiANCj4gRGVuIDAxLjExLjIwMjEgMTUuMTUsIHNrcmV2IFRob21hcyBaaW1tZXJtYW5u
+Og0KPj4gQWRkIGNvbnN0YW50cyBmb3IgdGhlIG1heGltdW0gc2l6ZSBvZiB0aGUgc2hhZG93
+LXBsYW5lIHN1cmZhY2UNCj4+IHNpemUuIFVzZWZ1bCBmb3Igc2hhZG93IHBsYW5lcyB3aXRo
+IHZpcnR1YWwgc2NyZWVuIHNpemVzLiBUaGUNCj4+IGN1cnJlbnQgc2l6ZXMgYXJlIDQwOTYg
+c2NhbmxpbmVzIHdpdGggNDA5NiBwaXhlbHMgZWFjaC4gVGhpcw0KPj4gc2VlbXMgcmVhc29u
+YWJsZSBmb3IgY3VycmVudCBoYXJkd2FyZSwgYnV0IGNhbiBiZSBpbmNyZWFzZWQgYXMNCj4+
+IG5lY2Vzc2FyeS4NCj4+DQo+PiBJbiBzaW1wbGVkcm0sIHNldCB0aGUgbWF4aW11bSBmcmFt
+ZWJ1ZmZlciBzaXplIGZyb20gdGhlIGNvbnN0YW50cw0KPj4gZm9yIHNoYWRvdyBwbGFuZXMu
+IEltcGxlbWVudHMgc3VwcG9ydCBmb3IgdmlydHVhbCBzY3JlZW4gc2l6ZXMgYW5kDQo+PiBw
+YWdlIGZsaXBwaW5nIG9uIHRoZSBmYmRldiBjb25zb2xlLg0KPj4NCj4+IFNpZ25lZC1vZmYt
+Ynk6IFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPg0KPj4gLS0tDQo+
+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55L3NpbXBsZWRybS5jICAgIHwgIDkgKysrKysrKy0t
+DQo+PiAgIGluY2x1ZGUvZHJtL2RybV9nZW1fYXRvbWljX2hlbHBlci5oIHwgMTggKysrKysr
+KysrKysrKysrKysrDQo+PiAgIDIgZmlsZXMgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwg
+MiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Rp
+bnkvc2ltcGxlZHJtLmMgYi9kcml2ZXJzL2dwdS9kcm0vdGlueS9zaW1wbGVkcm0uYw0KPj4g
+aW5kZXggZTg3MjEyMWU5ZmIwLi5lNDJhZTFjNmViY2QgMTAwNjQ0DQo+PiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vdGlueS9zaW1wbGVkcm0uYw0KPj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L3Rpbnkvc2ltcGxlZHJtLmMNCj4+IEBAIC0yLDYgKzIsNyBAQA0KPj4gICANCj4+ICAgI2lu
+Y2x1ZGUgPGxpbnV4L2Nsay5oPg0KPj4gICAjaW5jbHVkZSA8bGludXgvb2ZfY2xrLmg+DQo+
+PiArI2luY2x1ZGUgPGxpbnV4L21pbm1heC5oPg0KPj4gICAjaW5jbHVkZSA8bGludXgvcGxh
+dGZvcm1fZGF0YS9zaW1wbGVmYi5oPg0KPj4gICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1f
+ZGV2aWNlLmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4N
+Cj4+IEBAIC03NzYsNiArNzc3LDcgQEAgc3RhdGljIGludCBzaW1wbGVkcm1fZGV2aWNlX2lu
+aXRfbW9kZXNldChzdHJ1Y3Qgc2ltcGxlZHJtX2RldmljZSAqc2RldikNCj4+ICAgCXN0cnVj
+dCBkcm1fZGlzcGxheV9tb2RlICptb2RlID0gJnNkZXYtPm1vZGU7DQo+PiAgIAlzdHJ1Y3Qg
+ZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yID0gJnNkZXYtPmNvbm5lY3RvcjsNCj4+ICAgCXN0
+cnVjdCBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSAqcGlwZSA9ICZzZGV2LT5waXBlOw0KPj4g
+Kwl1bnNpZ25lZCBsb25nIG1heF93aWR0aCwgbWF4X2hlaWdodDsNCj4+ICAgCWNvbnN0IHVp
+bnQzMl90ICpmb3JtYXRzOw0KPj4gICAJc2l6ZV90IG5mb3JtYXRzOw0KPj4gICAJaW50IHJl
+dDsNCj4+IEBAIC03ODQsMTAgKzc4NiwxMyBAQCBzdGF0aWMgaW50IHNpbXBsZWRybV9kZXZp
+Y2VfaW5pdF9tb2Rlc2V0KHN0cnVjdCBzaW1wbGVkcm1fZGV2aWNlICpzZGV2KQ0KPj4gICAJ
+aWYgKHJldCkNCj4+ICAgCQlyZXR1cm4gcmV0Ow0KPj4gICANCj4+ICsJbWF4X3dpZHRoID0g
+bWF4X3QodW5zaWduZWQgbG9uZywgbW9kZS0+aGRpc3BsYXksIERSTV9TSEFET1dfUExBTkVf
+TUFYX1dJRFRIKTsNCj4+ICsJbWF4X2hlaWdodCA9IG1heF90KHVuc2lnbmVkIGxvbmcsIG1v
+ZGUtPnZkaXNwbGF5LCBEUk1fU0hBRE9XX1BMQU5FX01BWF9IRUlHSFQpOw0KPj4gKw0KPj4g
+ICAJZGV2LT5tb2RlX2NvbmZpZy5taW5fd2lkdGggPSBtb2RlLT5oZGlzcGxheTsNCj4+IC0J
+ZGV2LT5tb2RlX2NvbmZpZy5tYXhfd2lkdGggPSBtb2RlLT5oZGlzcGxheTsNCj4+ICsJZGV2
+LT5tb2RlX2NvbmZpZy5tYXhfd2lkdGggPSBtYXhfd2lkdGg7DQo+PiAgIAlkZXYtPm1vZGVf
+Y29uZmlnLm1pbl9oZWlnaHQgPSBtb2RlLT52ZGlzcGxheTsNCj4+IC0JZGV2LT5tb2RlX2Nv
+bmZpZy5tYXhfaGVpZ2h0ID0gbW9kZS0+dmRpc3BsYXk7DQo+PiArCWRldi0+bW9kZV9jb25m
+aWcubWF4X2hlaWdodCA9IG1heF9oZWlnaHQ7DQo+PiAgIAlkZXYtPm1vZGVfY29uZmlnLnBy
+ZWZlcl9zaGFkb3dfZmJkZXYgPSB0cnVlOw0KPj4gICAJZGV2LT5tb2RlX2NvbmZpZy5wcmVm
+ZXJyZWRfZGVwdGggPSBzZGV2LT5mb3JtYXQtPmNwcFswXSAqIDg7DQo+PiAgIAlkZXYtPm1v
+ZGVfY29uZmlnLmZ1bmNzID0gJnNpbXBsZWRybV9tb2RlX2NvbmZpZ19mdW5jczsNCj4+IGRp
+ZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1fZ2VtX2F0b21pY19oZWxwZXIuaCBiL2luY2x1
+ZGUvZHJtL2RybV9nZW1fYXRvbWljX2hlbHBlci5oDQo+PiBpbmRleCA0ODIyMmExMDc4NzMu
+LjU0OTgzZWNmNjQxYSAxMDA2NDQNCj4+IC0tLSBhL2luY2x1ZGUvZHJtL2RybV9nZW1fYXRv
+bWljX2hlbHBlci5oDQo+PiArKysgYi9pbmNsdWRlL2RybS9kcm1fZ2VtX2F0b21pY19oZWxw
+ZXIuaA0KPj4gQEAgLTIyLDYgKzIyLDI0IEBAIGludCBkcm1fZ2VtX3NpbXBsZV9kaXNwbGF5
+X3BpcGVfcHJlcGFyZV9mYihzdHJ1Y3QgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGUgKnBpcGUs
+DQo+PiAgICAqIEhlbHBlcnMgZm9yIHBsYW5lcyB3aXRoIHNoYWRvdyBidWZmZXJzDQo+PiAg
+ICAqLw0KPj4gICANCj4+ICsvKioNCj4+ICsgKiBEUk1fU0hBRE9XX1BMQU5FX01BWF9XSURU
+SCAtIE1heGltdW0gd2lkdGggb2YgYSBwbGFuZSdzIHNoYWRvdyBidWZmZXIgaW4gcGl4ZWxz
+DQo+PiArICoNCj4+ICsgKiBGb3IgZHJpdmVycyB3aXRoIHNoYWRvdyBwbGFuZXMsIHRoZSBt
+YXhpbXVtIHdpZHRoIG9mIHRoZSBmcmFtZWJ1ZmZlciBpcw0KPj4gKyAqIHVzdWFsbHkgaW5k
+ZXBlbmRlbnQgZnJvbSBoYXJkd2FyZSBsaW1pdGF0aW9ucy4gRHJpdmVycyBjYW4gaW5pdGlh
+bGl6ZSBzdHJ1Y3QNCj4+ICsgKiBkcm1fbW9kZV9jb25maWcubWF4X3dpZHRoIGZyb20gRFJN
+X1NIQURPV19QTEFORV9NQVhfV0lEVEguDQo+IA0KPiBXaHkgd291bGQgYSBkcml2ZXIgZG8g
+dGhhdCBpbnN0ZWFkIG9mIHVzaW5nIGEgdmFsdWUgb2YgaXRzIG93bj8gSXMgaXQNCj4gc29t
+ZSBraW5kIG9mIHN0YW5kYXJkaXphdGlvbj8NCg0KRXhhY3RseS4gVGhlIHNoYWRvdyBmcmFt
+ZWJ1ZmZlciBpcyBpbiBzeXN0ZW0gbWVtb3J5LCBzbyBpdHMgc2l6ZSBpcyANCmFyYml0cmFy
+aWx5IGxhcmdlLiBJZiBlYWNoIGRyaXZlciBzZXRzIGl0cyBvd24gbGltaXQsIGl0IGp1c3Qg
+ZnJhZ21lbnRzIA0KdGhlIERSTSBmZWF0dXJlIHNldC4gVGhlcmUncyB1c3VhbGx5IG5vIHJl
+YXNvbiB3aHkgb25lIGRyaXZlciBjYW4gaGF2ZSANCjQwOTYgcGl4ZWxzIGFuZCBhbm90aGVy
+IG9uZSBqdXN0IDIwNDggb3IgZXZlbiA4MTkyLiBTZXR0aW5nIGEgY29uc3RhbnQgDQpoYXJt
+b25pemVzIHRoaXMgYW1vbmcgZHJpdmVycy4NCg0KUGxlYXNlIG5vdGUgdGhhdCBub3RoaW5n
+IHJlYWxseSBkZXBlbmRzIG9uIHRoaXMgdmFsdWUuIERyaXZlcnMgY2FuIHN0aWxsIA0KdXNl
+IGEgZGlmZmVyZW50IGxpbWl0IGlmIHRoZXkgaGF2ZSB0by4NCg0KPiANCj4+ICsgKi8NCj4+
+ICsjZGVmaW5lIERSTV9TSEFET1dfUExBTkVfTUFYX1dJRFRICSgxdWwgPDwgMTIpDQo+IA0K
+PiBQbGVhc2UgdXNlIGEgZGVjaW1hbCBudW1iZXIsIEknbSBzbyBzbG93IGF0IGRvaW5nIHRo
+aXMgaW4gbXkgaGVhZCB0aGF0IEkNCj4gdXNlIGJhc2ggdG8gY2FsY3VsYXRlIGl0IGZvciBt
+ZSwgd2hpY2ggcmVhbGx5IHNsb3dzIGRvd24gcGFyc2luZyB0aGUgY29kZS4NCg0KT2suIDpE
+DQoNCkJlc3QgcmVnYXJkDQpUaG9tYXMNCg0KPiANCj4gTm9yYWxmLg0KPiANCj4+ICsNCj4+
+ICsvKioNCj4+ICsgKiBEUk1fU0hBRE9XX1BMQU5FX01BWF9IRUlHSFQgLSBNYXhpbXVtIGhl
+aWdodCBvZiBhIHBsYW5lJ3Mgc2hhZG93IGJ1ZmZlciBpbiBzY2FubGluZXMNCj4+ICsgKg0K
+Pj4gKyAqIEZvciBkcml2ZXJzIHdpdGggc2hhZG93IHBsYW5lcywgdGhlIG1heGltdW0gaGVp
+Z2h0IG9mIHRoZSBmcmFtZWJ1ZmZlciBpcw0KPj4gKyAqIHVzdWFsbHkgaW5kZXBlbmRlbnQg
+ZnJvbSBoYXJkd2FyZSBsaW1pdGF0aW9ucy4gRHJpdmVycyBjYW4gaW5pdGlhbGl6ZSBzdHJ1
+Y3QNCj4+ICsgKiBkcm1fbW9kZV9jb25maWcubWF4X2hlaWdodCBmcm9tIERSTV9TSEFET1df
+UExBTkVfTUFYX0hFSUdIVC4NCj4+ICsgKi8NCj4+ICsjZGVmaW5lIERSTV9TSEFET1dfUExB
+TkVfTUFYX0hFSUdIVAkoMXVsIDw8IDEyKQ0KPj4gKw0KPj4gICAvKioNCj4+ICAgICogc3Ry
+dWN0IGRybV9zaGFkb3dfcGxhbmVfc3RhdGUgLSBwbGFuZSBzdGF0ZSBmb3IgcGxhbmVzIHdp
+dGggc2hhZG93IGJ1ZmZlcnMNCj4+ICAgICoNCj4+DQoNCi0tIA0KVGhvbWFzIFppbW1lcm1h
+bm4NCkdyYXBoaWNzIERyaXZlciBEZXZlbG9wZXINClNVU0UgU29mdHdhcmUgU29sdXRpb25z
+IEdlcm1hbnkgR21iSA0KTWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55
+DQooSFJCIDM2ODA5LCBBRyBOw7xybmJlcmcpDQpHZXNjaMOkZnRzZsO8aHJlcjogSXZvIFRv
+dGV2DQo=
 
- KVM: vmx: using Hyper-V Enlightened VMCS
- BUG: using smp_processor_id() in preemptible [00000000] code: systemd-udevd/488
- caller is set_hv_tscchange_cb+0x16/0x80
- CPU: 1 PID: 488 Comm: systemd-udevd Not tainted 5.15.0-rc5+ #396
- Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.0 12/17/2019
- Call Trace:
-  dump_stack_lvl+0x6a/0x9a
-  check_preemption_disabled+0xde/0xe0
-  ? kvm_gen_update_masterclock+0xd0/0xd0 [kvm]
-  set_hv_tscchange_cb+0x16/0x80
-  kvm_arch_init+0x23f/0x290 [kvm]
-  kvm_init+0x30/0x310 [kvm]
-  vmx_init+0xaf/0x134 [kvm_intel]
-  ...
+--------------E2BL7AAL30DVsV0kEYWQcr0S--
 
-set_hv_tscchange_cb() can get preempted in between acquiring
-smp_processor_id() and writing to HV_X64_MSR_REENLIGHTENMENT_CONTROL. This
-is not an issue by itself: HV_X64_MSR_REENLIGHTENMENT_CONTROL is a
-partition-wide MSR and it doesn't matter which particular CPU will be
-used to receive reenlightenment notifications. The only real problem can
-(in theory) be observed if the CPU whose id was acquired with
-smp_processor_id() goes offline before we manage to write to the MSR,
-the logic in hv_cpu_die() won't be able to reassign it correctly.
+--------------N5BSEpWwPsVWVnf9L5B2cDKG
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-Reported-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Link: https://lore.kernel.org/r/20211012155005.1613352-1-vkuznets@redhat.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/hyperv/hv_init.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 1663ad84778ba..bd4b6951b1483 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -192,7 +192,6 @@ void set_hv_tscchange_cb(void (*cb)(void))
- 	struct hv_reenlightenment_control re_ctrl = {
- 		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
- 		.enabled = 1,
--		.target_vp = hv_vp_index[smp_processor_id()]
- 	};
- 	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
- 
-@@ -206,8 +205,12 @@ void set_hv_tscchange_cb(void (*cb)(void))
- 	/* Make sure callback is registered before we write to MSRs */
- 	wmb();
- 
-+	re_ctrl.target_vp = hv_vp_index[get_cpu()];
-+
- 	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
- 	wrmsrl(HV_X64_MSR_TSC_EMULATION_CONTROL, *((u64 *)&emu_ctrl));
-+
-+	put_cpu();
- }
- EXPORT_SYMBOL_GPL(set_hv_tscchange_cb);
- 
--- 
-2.33.0
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmGKOhMFAwAAAAAACgkQlh/E3EQov+AO
+nQ/+Jtwuw6Zjadu+qsI+zyhoNIFfdUKylkCk5dbomkYNPNR5VXpFXf/fCaFHGkx9sHIPJcTV/uri
+ulIWyB+CADBoArIWK3WAQ/6d+61IFeb8M0Gzbun4FKOaIoMgGsTusCQo/PrlxOCijTbDgNliCPlN
+NDK+0vn7kohuNS9wtyP4XF0yR7IJS8/2DKqrmcOPoWZw1B4eLWnU68oLPHbm+RFm7Bhi3Y7rxgAu
+jKLMvLGRe/7fKNeaVMSc7Ziox8J4o++Kn/KtA+L+4EsJI4OMLVzVbcMED21bxeQ04XIwd3eRVPdJ
+WKVNJBH5fr7HNqJz7mLxiQu6eTjFvCYZ+eeOHWVy43GeeIUtiZhMQL3aWBpMW5ntsrYErqt2BUfy
+no0LVJuqXSrVqa9U8y4z2V+K2ey3A6HeNWudCAQwl1hAs9YMlU/VmjW/NEZOuhmEm42pz+JLsSdQ
+XG0zWKtm1O42o1WtFhQrdVzCRi0KmXs3zkv8POA1BlEU+uoa+dv7IB0j5EcxXgpieIBe8t25/HCS
++BJtrB+jH9MOV98gS8U+kkVrTPbVvi8sWq2B00bVV2Y/BYM1k0xhqC0n8lNrP85ILC85LsMjqa+L
+9xBTx45Bk3h9aCErubVXyfsY50TS+eOVNnCoUAwdgBAlB5gC/hlPHXPQz+s/LNWWyv/SW3DIQbV/
+fS4=
+=g/B5
+-----END PGP SIGNATURE-----
 
+--------------N5BSEpWwPsVWVnf9L5B2cDKG--
