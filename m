@@ -2,78 +2,142 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E70744C15E
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Nov 2021 13:34:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C60E44C187
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Nov 2021 13:48:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231232AbhKJMhB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 10 Nov 2021 07:37:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231210AbhKJMhA (ORCPT
+        id S231613AbhKJMuu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 10 Nov 2021 07:50:50 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:46358 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231210AbhKJMuu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 10 Nov 2021 07:37:00 -0500
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742F8C061764
-        for <linux-hyperv@vger.kernel.org>; Wed, 10 Nov 2021 04:34:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds202012; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xun289VLWWZ82saKfNnf5+f3tJJ0jkNDF5lxfzbWlmM=; b=QFuXmqRSBOQITyzJYF6V1YmiS0
-        h2SeY3zlP8LbZEBribxQij+PUF98b77082ErPi+XFtV9WTx8Lm2caNKvwYBlmMrEGX1Do3ySBaQJK
-        78Ae91Xix1ZRqgoxdADS7DupOSZCrsdJfztx6U5sBqa5ub5sGLciU8kdCxIETfHBvpAarGnXSoCzh
-        1NKMZD8Uo75gKvsoBj7jhkAThGCO7SD24bkCC7ojIdSKEIcBKeHDdb6BYWsGm8O40Gx5k7Z3CMADk
-        MpPiel7BDPK3RsZqvq1UN9WlgNgGcVJpp6L/3iUgN0BySvFRynZNTfngQOUe61KMN5PgoS6HwF5BC
-        87oT5RGg==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:52473 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1mkmnq-0005OW-GL; Wed, 10 Nov 2021 13:34:10 +0100
+        Wed, 10 Nov 2021 07:50:50 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 75AE81FD6F;
+        Wed, 10 Nov 2021 12:48:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1636548481; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2WufwUXuacQxACp4CzCzI/JF4gBFBKhG2MtaMFrxrqc=;
+        b=Wpvs3Q/faap2TFU60d4JGwunm4RbJmhZxwW7BrGmHxCTliCC8W3K4sfUYSFcXp7MAf3kDC
+        w2y9eXrig7ckruMCbQe2sTlfUMVmMSb5XdpcJ3a0IusDlXRsg0ry1qJ7cK8Ebg6PY1uPUJ
+        pTjMuF4q9a5UY6mAqafV64TxMeU0H+8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1636548481;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2WufwUXuacQxACp4CzCzI/JF4gBFBKhG2MtaMFrxrqc=;
+        b=F/YEYbGhJyKv9S6W8fsVnPFCia/YkbHO01hLtXjkN5Qejo0KHOrE5R905xQdvZlPUwv0QJ
+        c5wyWfvXsRu6M6Dw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1393413C13;
+        Wed, 10 Nov 2021 12:48:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 4QzJA4G/i2G+BwAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Wed, 10 Nov 2021 12:48:01 +0000
+Message-ID: <19ba897d-9007-a103-581e-060c5ce1c9ed@suse.de>
+Date:   Wed, 10 Nov 2021 13:48:00 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
 Subject: Re: [PATCH v3 7/9] drm/simpledrm: Enable FB_DAMAGE_CLIPS property
-To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@linux.ie, mripard@kernel.org,
+Content-Language: en-US
+To:     =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        daniel@ffwll.ch, airlied@linux.ie, mripard@kernel.org,
         maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
         airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
         sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
         dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
         joshua@stroblindustries.com, arnd@arndb.de
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
         virtualization@lists.linux-foundation.org
 References: <20211110103702.374-1-tzimmermann@suse.de>
  <20211110103702.374-8-tzimmermann@suse.de>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Message-ID: <0e762e67-b18f-3cbd-b401-d6766a7168a3@tronnes.org>
-Date:   Wed, 10 Nov 2021 13:34:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <20211110103702.374-8-tzimmermann@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+ <0e762e67-b18f-3cbd-b401-d6766a7168a3@tronnes.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <0e762e67-b18f-3cbd-b401-d6766a7168a3@tronnes.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------0cX1qCaT9R59oyZmyRmlISAI"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------0cX1qCaT9R59oyZmyRmlISAI
+Content-Type: multipart/mixed; boundary="------------KIACkatNRafAgCIAHPTqpNXC";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, daniel@ffwll.ch,
+ airlied@linux.ie, mripard@kernel.org, maarten.lankhorst@linux.intel.com,
+ drawat.floss@gmail.com, airlied@redhat.com, kraxel@redhat.com,
+ david@lechnology.com, sam@ravnborg.org, javierm@redhat.com,
+ kernel@amanoeldawod.com, dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch,
+ aros@gmx.com, joshua@stroblindustries.com, arnd@arndb.de
+Cc: linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ virtualization@lists.linux-foundation.org
+Message-ID: <19ba897d-9007-a103-581e-060c5ce1c9ed@suse.de>
+Subject: Re: [PATCH v3 7/9] drm/simpledrm: Enable FB_DAMAGE_CLIPS property
+References: <20211110103702.374-1-tzimmermann@suse.de>
+ <20211110103702.374-8-tzimmermann@suse.de>
+ <0e762e67-b18f-3cbd-b401-d6766a7168a3@tronnes.org>
+In-Reply-To: <0e762e67-b18f-3cbd-b401-d6766a7168a3@tronnes.org>
 
+--------------KIACkatNRafAgCIAHPTqpNXC
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Den 10.11.2021 11.37, skrev Thomas Zimmermann:
-> Enable the FB_DAMAGE_CLIPS property to reduce display-update
-> overhead. Also fixes a warning in the kernel log.
-> 
->   simple-framebuffer simple-framebuffer.0: [drm] drm_plane_enable_fb_damage_clips() not called
-> 
-> Fix the computation of the blit rectangle. This wasn't an issue so
-> far, as simpledrm always blitted the full framebuffer. The code now
-> supports damage clipping and virtual screen sizes.
-> 
-> v3:
-> 	* fix drm_dev_enter() error path (Noralf)
-> 	* remove unnecessary clipping from update function (Noralf)
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
+SGkNCg0KQW0gMTAuMTEuMjEgdW0gMTM6MzQgc2NocmllYiBOb3JhbGYgVHLDuG5uZXM6DQo+
+IA0KPiANCj4gRGVuIDEwLjExLjIwMjEgMTEuMzcsIHNrcmV2IFRob21hcyBaaW1tZXJtYW5u
+Og0KPj4gRW5hYmxlIHRoZSBGQl9EQU1BR0VfQ0xJUFMgcHJvcGVydHkgdG8gcmVkdWNlIGRp
+c3BsYXktdXBkYXRlDQo+PiBvdmVyaGVhZC4gQWxzbyBmaXhlcyBhIHdhcm5pbmcgaW4gdGhl
+IGtlcm5lbCBsb2cuDQo+Pg0KPj4gICAgc2ltcGxlLWZyYW1lYnVmZmVyIHNpbXBsZS1mcmFt
+ZWJ1ZmZlci4wOiBbZHJtXSBkcm1fcGxhbmVfZW5hYmxlX2ZiX2RhbWFnZV9jbGlwcygpIG5v
+dCBjYWxsZWQNCj4+DQo+PiBGaXggdGhlIGNvbXB1dGF0aW9uIG9mIHRoZSBibGl0IHJlY3Rh
+bmdsZS4gVGhpcyB3YXNuJ3QgYW4gaXNzdWUgc28NCj4+IGZhciwgYXMgc2ltcGxlZHJtIGFs
+d2F5cyBibGl0dGVkIHRoZSBmdWxsIGZyYW1lYnVmZmVyLiBUaGUgY29kZSBub3cNCj4+IHN1
+cHBvcnRzIGRhbWFnZSBjbGlwcGluZyBhbmQgdmlydHVhbCBzY3JlZW4gc2l6ZXMuDQo+Pg0K
+Pj4gdjM6DQo+PiAJKiBmaXggZHJtX2Rldl9lbnRlcigpIGVycm9yIHBhdGggKE5vcmFsZikN
+Cj4+IAkqIHJlbW92ZSB1bm5lY2Vzc2FyeSBjbGlwcGluZyBmcm9tIHVwZGF0ZSBmdW5jdGlv
+biAoTm9yYWxmKQ0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFRob21hcyBaaW1tZXJtYW5uIDx0
+emltbWVybWFubkBzdXNlLmRlPg0KPj4gLS0tDQo+IA0KPiBSZXZpZXdlZC1ieTogTm9yYWxm
+IFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+DQo+IA0KDQpUaGFuayB5b3Ugc28gbXVj
+aCBmb3IgcmV2aWV3aW5nLg0KDQpCZXN0IHJlZ2FyZHMNClRob21hcw0KDQotLSANClRob21h
+cyBaaW1tZXJtYW5uDQpHcmFwaGljcyBEcml2ZXIgRGV2ZWxvcGVyDQpTVVNFIFNvZnR3YXJl
+IFNvbHV0aW9ucyBHZXJtYW55IEdtYkgNCk1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVy
+ZywgR2VybWFueQ0KKEhSQiAzNjgwOSwgQUcgTsO8cm5iZXJnKQ0KR2VzY2jDpGZ0c2bDvGhy
+ZXI6IEl2byBUb3Rldg0K
 
-Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
+--------------KIACkatNRafAgCIAHPTqpNXC--
+
+--------------0cX1qCaT9R59oyZmyRmlISAI
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmGLv4AFAwAAAAAACgkQlh/E3EQov+B9
+Mw/+NWgWEaue6XDuMNmcZfWO78HWOL7wEbr4gmBorYMXdBBwSo1NM9xr3lPs2+HHUVfeg2p6MG40
+G/q760Z700QqAAsptSspUs+8dCQkz7dp+Mi6qBDIXgXFWCdz3K/pXrsqdTu1X1j7rbbzhFlC2eDY
+pIuusZn9WMppPOGUpWrh1oLeCP/z3aq6gefhIauMpJkZjm1LXHr2wmtczdt8xEN0TO7HiXzb0R0S
+9ZbjBPJ6CxLESd74BIxBx1KSeCV7kOYZGznA+EtI0hzH7FkLUNxfOp3vt/mUJTfVwr7jVwbubYsF
+7vpKselbtekKzE8ERE2KVYQTVrTcFoAioxIvdoeox3FWJ0g7fe/3//I3aNf0RGrEASKlhNacKvT4
++4aF04FBJ2e7wb87Bb2KklcDN5btNzo0Lo+d8CZ2PabtjSlb1w2w7M+/+0IBBZsQZbV5IV8Bz5Ib
+Gjh3UzpkjG1AGfJ69++Q8ARVX6rNi02g5MmJobiGtJS2gGsy3k1Vj8gI83qbgiZX1GaJLHqt/6Fj
+OVRGN6xUk2LE2KKKkErAdLB+Aq022MWUbiFaNNiJB7MJv1dmT1PrYG5XuBn+sJaQ26TFte9RPGN0
+CBL9fzKF6el+G3Th+6vhlr0F2L2GAW6yxK2SBLi4663QkY0Yh+53ro2yJz/b4iiDLOxHil24B+Jd
+lhU=
+=/pjM
+-----END PGP SIGNATURE-----
+
+--------------0cX1qCaT9R59oyZmyRmlISAI--
