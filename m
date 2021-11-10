@@ -2,135 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FD9444BED2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Nov 2021 11:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E70744C15E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Nov 2021 13:34:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbhKJKj5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 10 Nov 2021 05:39:57 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:34492 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231174AbhKJKjz (ORCPT
+        id S231232AbhKJMhB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 10 Nov 2021 07:37:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231210AbhKJMhA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 10 Nov 2021 05:39:55 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id C3EA921B17;
-        Wed, 10 Nov 2021 10:37:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1636540627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NkYQaVKrGH7uTRvl4bz/W0pMqdYAOLpVdgrspXEDLgo=;
-        b=2M9ONZooniFT/gdbmz4EnYCN9aduttAFKOcyz7YBU5DtAbngHzLivS2GqYOOHBdzpULvUu
-        TV5Ec5iEkdzTxWV1j1Kaz2METEDRQ6yiBAQS1oB3libXS42/f/Z/MrD9EjDwd2rgGxkq6Q
-        0BWoKqu+IdNaEvcrqQq4OJ95gJznuAg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1636540627;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NkYQaVKrGH7uTRvl4bz/W0pMqdYAOLpVdgrspXEDLgo=;
-        b=sDvOM+0Bkc9eircYBoGci9kxTd/17dgSCU80trUeFT+esBAMiBZzAsxtIcosdJO1CMkxYv
-        MYSWfTEoDqkDUYCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4999313E72;
-        Wed, 10 Nov 2021 10:37:07 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id KPvzENOgi2EnPAAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Wed, 10 Nov 2021 10:37:07 +0000
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     daniel@ffwll.ch, airlied@linux.ie, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com, noralf@tronnes.org,
-        drawat.floss@gmail.com, airlied@redhat.com, kraxel@redhat.com,
-        david@lechnology.com, sam@ravnborg.org, javierm@redhat.com,
-        kernel@amanoeldawod.com, dirty.ice.hu@gmail.com,
-        michael+lkml@stapelberg.ch, aros@gmx.com,
+        Wed, 10 Nov 2021 07:37:00 -0500
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742F8C061764
+        for <linux-hyperv@vger.kernel.org>; Wed, 10 Nov 2021 04:34:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
+        ; s=ds202012; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xun289VLWWZ82saKfNnf5+f3tJJ0jkNDF5lxfzbWlmM=; b=QFuXmqRSBOQITyzJYF6V1YmiS0
+        h2SeY3zlP8LbZEBribxQij+PUF98b77082ErPi+XFtV9WTx8Lm2caNKvwYBlmMrEGX1Do3ySBaQJK
+        78Ae91Xix1ZRqgoxdADS7DupOSZCrsdJfztx6U5sBqa5ub5sGLciU8kdCxIETfHBvpAarGnXSoCzh
+        1NKMZD8Uo75gKvsoBj7jhkAThGCO7SD24bkCC7ojIdSKEIcBKeHDdb6BYWsGm8O40Gx5k7Z3CMADk
+        MpPiel7BDPK3RsZqvq1UN9WlgNgGcVJpp6L/3iUgN0BySvFRynZNTfngQOUe61KMN5PgoS6HwF5BC
+        87oT5RGg==;
+Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:52473 helo=[192.168.10.61])
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <noralf@tronnes.org>)
+        id 1mkmnq-0005OW-GL; Wed, 10 Nov 2021 13:34:10 +0100
+Subject: Re: [PATCH v3 7/9] drm/simpledrm: Enable FB_DAMAGE_CLIPS property
+To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
+        airlied@linux.ie, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, drawat.floss@gmail.com,
+        airlied@redhat.com, kraxel@redhat.com, david@lechnology.com,
+        sam@ravnborg.org, javierm@redhat.com, kernel@amanoeldawod.com,
+        dirty.ice.hu@gmail.com, michael+lkml@stapelberg.ch, aros@gmx.com,
         joshua@stroblindustries.com, arnd@arndb.de
 Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v3 9/9] drm: Clarify semantics of struct drm_mode_config.{min,max}_{width,height}
-Date:   Wed, 10 Nov 2021 11:37:02 +0100
-Message-Id: <20211110103702.374-10-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211110103702.374-1-tzimmermann@suse.de>
+        virtualization@lists.linux-foundation.org
 References: <20211110103702.374-1-tzimmermann@suse.de>
+ <20211110103702.374-8-tzimmermann@suse.de>
+From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Message-ID: <0e762e67-b18f-3cbd-b401-d6766a7168a3@tronnes.org>
+Date:   Wed, 10 Nov 2021 13:34:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20211110103702.374-8-tzimmermann@suse.de>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add additional information on the semantics of the size fields in
-struct drm_mode_config. Also add a TODO to review all driver for
-correct usage of these fields.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Acked-by: Noralf Trønnes <noralf@tronnes.org>
----
- Documentation/gpu/todo.rst    | 15 +++++++++++++++
- include/drm/drm_mode_config.h | 13 +++++++++++++
- 2 files changed, 28 insertions(+)
 
-diff --git a/Documentation/gpu/todo.rst b/Documentation/gpu/todo.rst
-index 60d1d7ee0719..f4e1d72149f7 100644
---- a/Documentation/gpu/todo.rst
-+++ b/Documentation/gpu/todo.rst
-@@ -463,6 +463,21 @@ Contact: Thomas Zimmermann <tzimmermann@suse.de>, Christian König, Daniel Vette
- 
- Level: Intermediate
- 
-+Review all drivers for setting struct drm_mode_config.{max_width,max_height} correctly
-+--------------------------------------------------------------------------------------
-+
-+The values in struct drm_mode_config.{max_width,max_height} describe the
-+maximum supported framebuffer size. It's the virtual screen size, but many
-+drivers treat it like limitations of the physical resolution.
-+
-+The maximum width depends on the hardware's maximum scanline pitch. The
-+maximum height depends on the amount of addressable video memory. Review all
-+drivers to initialize the fields to the correct values.
-+
-+Contact: Thomas Zimmermann <tzimmermann@suse.de>
-+
-+Level: Intermediate
-+
- 
- Core refactorings
- =================
-diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
-index 48b7de80daf5..91ca575a78de 100644
---- a/include/drm/drm_mode_config.h
-+++ b/include/drm/drm_mode_config.h
-@@ -359,6 +359,19 @@ struct drm_mode_config_funcs {
-  * Core mode resource tracking structure.  All CRTC, encoders, and connectors
-  * enumerated by the driver are added here, as are global properties.  Some
-  * global restrictions are also here, e.g. dimension restrictions.
-+ *
-+ * Framebuffer sizes refer to the virtual screen that can be displayed by
-+ * the CRTC. This can be different from the physical resolution programmed.
-+ * The minimum width and height, stored in @min_width and @min_height,
-+ * describe the smallest size of the framebuffer. It correlates to the
-+ * minimum programmable resolution.
-+ * The maximum width, stored in @max_width, is typically limited by the
-+ * maximum pitch between two adjacent scanlines. The maximum height, stored
-+ * in @max_height, is usually only limited by the amount of addressable video
-+ * memory. For hardware that has no real maximum, drivers should pick a
-+ * reasonable default.
-+ *
-+ * See also @DRM_SHADOW_PLANE_MAX_WIDTH and @DRM_SHADOW_PLANE_MAX_HEIGHT.
-  */
- struct drm_mode_config {
- 	/**
--- 
-2.33.1
+Den 10.11.2021 11.37, skrev Thomas Zimmermann:
+> Enable the FB_DAMAGE_CLIPS property to reduce display-update
+> overhead. Also fixes a warning in the kernel log.
+> 
+>   simple-framebuffer simple-framebuffer.0: [drm] drm_plane_enable_fb_damage_clips() not called
+> 
+> Fix the computation of the blit rectangle. This wasn't an issue so
+> far, as simpledrm always blitted the full framebuffer. The code now
+> supports damage clipping and virtual screen sizes.
+> 
+> v3:
+> 	* fix drm_dev_enter() error path (Noralf)
+> 	* remove unnecessary clipping from update function (Noralf)
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
 
+Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
