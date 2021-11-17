@@ -2,70 +2,70 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8DF0454719
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Nov 2021 14:23:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2890845474C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Nov 2021 14:32:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237501AbhKQNZj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Nov 2021 08:25:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41154 "EHLO
+        id S237640AbhKQNf3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Nov 2021 08:35:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232163AbhKQNZj (ORCPT
+        with ESMTP id S232814AbhKQNfZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Nov 2021 08:25:39 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4810C061570;
-        Wed, 17 Nov 2021 05:22:40 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id 28so2232919pgq.8;
-        Wed, 17 Nov 2021 05:22:40 -0800 (PST)
+        Wed, 17 Nov 2021 08:35:25 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE3CC061570;
+        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id gf14-20020a17090ac7ce00b001a7a2a0b5c3so5241989pjb.5;
+        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=n7Jf+5/Jh7KOEFSs12H1gnleHX5Ul1EJihf5cWALbbw=;
-        b=NMtrHwlhumZZGG7ACQ5UZwJN7rtTqhVOALh7ylXTR9G6Y8zmsKtbGjwSxvzwVD314V
-         mFlCILMpoJPcOxUNV38QoEdCs8zz43HlJK1GNiNc4P2QVifmYL23tPn/GqSDrxCGPg16
-         bvAIjKJA0lzwI5sAj/KKF7Bc8fhHe/9Wx28bmwIGJrkCjDmdcCDuD5dw7cCpuvtFoqub
-         iSkzJKRMidoqCXXQSY0sUPKp3Cs63451CNuN8JlBUt7M7BBJqI/PFOoctzgC3YAkmPjZ
-         yOWSQXVn3LZwrWkLZBlx3QxZWWBmdX22onr58Glga9JdD2AAQeBuO5o77eDt6FelUOw8
-         iVxA==
+        bh=zR3oNRYhTYJUZxaoak8qMlUuBunZjm5m9hqskt3h3S4=;
+        b=ggvPHm4xgldOYNuvLAK0wCZC8fi4QdT92wt9aO0Z1D+A8KeOi+P1P1JWtXkWduE+Ch
+         r6ou4FvXsNhepLE8E70VqGkz+/lDwWv7enCCiPmHwIBtd8kf2It6TjK/tqJvLKuShbGK
+         0bql4MAv8/pbMx8YyG0cDh/0zTFZMrBCBap5FVuQdaMLz170KD8tA2xrwcyOnV2CGSaU
+         XC9McvnV4rtzWcYyCt8336Tl0rj1KT9TWDrtW7oGGCWhI41aW30RYAShzVcOFPieXpQ2
+         2szScJ98dW1z6BZ6y4Px5EjFn8WqTBG7cb5V8p7izkymWXTEpGK00GSfEtG9CuZzRkDF
+         KZTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=n7Jf+5/Jh7KOEFSs12H1gnleHX5Ul1EJihf5cWALbbw=;
-        b=b9UyN0TiiyTrrUM5mEVW0SLXg+DC3fOTfUw4UTOuK/YxkehoAr9f6NSymOWOyBqOCw
-         ZP/wzZEt0UizfGSypZaR5lD2XT/ZI19sJx/zX0Pda6CY93KZL5jSyTngq6TDoDmcN0o6
-         Gw8qnnpoZl7W8FvZ3XCnIV31/N5IrQE0M0sA4N5VomOGcZTXqA9xoXB4UQBUGcns37h9
-         vM1R+zFAj3tR1DSoo821Zfw1D/HCw/3y4+fscstgFsiT1pC1M0UcwdOFhrdjVqk/MbZS
-         8OG8xhSOFBDVTaeMzO/7Fr6GBa8W8b5DpsyjzOl5UrjyXCQ9J6XDWaqGDQNYOWqpM+XC
-         Lv/g==
-X-Gm-Message-State: AOAM532Kmw5b5iLYFPgryVggLtRMLp0ZCft1Kg2ILRAx9cHtwmA4swM8
-        Hlj8fOcvkwa1WS7nEfL5Vy0=
-X-Google-Smtp-Source: ABdhPJwYIet5fq/8KowjGXs7GPhnQ/zbG+7NtQHLznln3NXsAVsDB6ZMleQEQVqBwkPH6jdcXK5meg==
-X-Received: by 2002:a05:6a00:2146:b0:44c:2922:8abf with SMTP id o6-20020a056a00214600b0044c29228abfmr48946221pfk.27.1637155360284;
-        Wed, 17 Nov 2021 05:22:40 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
-        by smtp.gmail.com with ESMTPSA id t40sm23310231pfg.107.2021.11.17.05.22.28
+        bh=zR3oNRYhTYJUZxaoak8qMlUuBunZjm5m9hqskt3h3S4=;
+        b=Bo70UPaDpuKqXPdkCLD4hIxGsoZ9ov6Skbxan7ghjroDGPwLtV4RdV40T0ybBfHSSi
+         11pTZCDHFNqfghkJ+CNvWZyl55kC2E+cKGGYouVJK0c7/ivT0bd9lHJvQ7huE6dQLuE1
+         0hFAJhcQXGAW8jz1/aflFPBnr52pYtFC6Lc3L8uWgpw9S0VySh61qsKBOSWIEmQyUsGU
+         zBh0tYvF5zk4tscJHwMiegrx8Xa5VuPzLqNBn3BDbcYFcW711cO1oFshV6cTvI0Tnn/m
+         45rE1mw0QwrnQP6oDER8ZI1aURvNdtfOQ7982rJpZFjenzVvHBfs8aykD96xlEEyVBt+
+         msOw==
+X-Gm-Message-State: AOAM5324Mn9w+WcXllL4TU8hHswJ/3uJ4k7uk3wRiM3lZHA8su92G4Zl
+        7pQeJcFnkBbbiOfSZ8yRrmE=
+X-Google-Smtp-Source: ABdhPJzUpe9LLZVlH0z5E35okJoiJmMYQnfNMpmq8a9kmB7F5FUzY6wGExQKYAIJCpzqgtl9+SISaw==
+X-Received: by 2002:a17:90a:ab17:: with SMTP id m23mr9499872pjq.194.1637155946398;
+        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
+        by smtp.gmail.com with ESMTPSA id y28sm23237747pfa.208.2021.11.17.05.32.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Nov 2021 05:22:39 -0800 (PST)
-Message-ID: <fb9809f5-a830-733e-745b-aa1b1d2671f5@gmail.com>
-Date:   Wed, 17 Nov 2021 21:22:27 +0800
+        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
+Message-ID: <0ab42ae0-9323-9297-c2c8-1cfc1ebada08@gmail.com>
+Date:   Wed, 17 Nov 2021 21:32:13 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.1
-Subject: Re: [PATCH 3/5] hyperv/IOMMU: Enable swiotlb bounce buffer for
- Isolation VM
+Subject: Re: [PATCH 1/5] x86/Swiotlb: Add Swiotlb bounce buffer remap function
+ for HV IVM
 Content-Language: en-US
-To:     Borislav Petkov <bp@alien8.de>
+To:     Christoph Hellwig <hch@lst.de>
 Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, x86@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         hpa@zytor.com, jgross@suse.com, sstabellini@kernel.org,
         boris.ostrovsky@oracle.com, kys@microsoft.com,
         haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
         decui@microsoft.com, joro@8bytes.org, will@kernel.org,
         davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, hch@lst.de, m.szyprowski@samsung.com,
+        martin.petersen@oracle.com, m.szyprowski@samsung.com,
         robin.murphy@arm.com, xen-devel@lists.xenproject.org,
         michael.h.kelley@microsoft.com,
         Tianyu Lan <Tianyu.Lan@microsoft.com>,
@@ -75,27 +75,53 @@ Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
         konrad.wilk@oracle.com, parri.andrea@gmail.com,
         thomas.lendacky@amd.com, dave.hansen@intel.com
 References: <20211116153923.196763-1-ltykernel@gmail.com>
- <20211116153923.196763-4-ltykernel@gmail.com> <YZQCp6WWKAdOCbh8@zn.tnic>
+ <20211116153923.196763-2-ltykernel@gmail.com> <20211117095953.GA10330@lst.de>
 From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <YZQCp6WWKAdOCbh8@zn.tnic>
+In-Reply-To: <20211117095953.GA10330@lst.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Hi Christoph:
+       Thanks for your review.
 
+On 11/17/2021 5:59 PM, Christoph Hellwig wrote:
+> The subject is wrong, nothing x86-specific here.  Please use
+> "swiotlb: " as the prefix
 
-On 11/17/2021 3:12 AM, Borislav Petkov wrote:
-> What you should do, instead, is add an isol. VM specific
-> hv_cc_platform_has() just like amd_cc_platform_has() and handle
-> the cc_attrs there for your platform, like return false for
-> CC_ATTR_GUEST_MEM_ENCRYPT and then you won't need to add that hv_* thing
-> everywhere.
+OK. Will update. Thanks.
+
 > 
-> And then fix it up in __set_memory_enc_dec() too.
->
+>> + * @vaddr:	The vaddr of the swiotlb memory pool. The swiotlb
+>> + *		memory pool may be remapped in the memory encrypted case and store
+> 
+> Please avoid the overly long line. >
+>> +	/*
+>> +	 * With swiotlb_unencrypted_base setting, swiotlb bounce buffer will
+>> +	 * be remapped in the swiotlb_update_mem_attributes() and return here
+>> +	 * directly.
+>> +	 */
+> 
+> I'd word this as:
+> 
+> 	/*
+> 	 * If swiotlb_unencrypted_base is set, the bounce buffer memory will
+> 	 * be remapped and cleared in swiotlb_update_mem_attributes.
+> 	 */
 
-Yes, agree. Will add hv cc_attrs and check via cc_platform_has().
+Thanks for suggestion. Will update. Thanks.
 
 
+>> +	ret = swiotlb_init_io_tlb_mem(mem, __pa(tlb), nslabs, false);
+>> +	if (ret) {
+>> +		memblock_free(mem->slots, alloc_size);
+>> +		return ret;
+>> +	}
+> 
+> With the latest update swiotlb_init_io_tlb_mem will always return 0,
+> so no need for the return value change or error handling here.
+> 
+
+OK. Will revert the change.
