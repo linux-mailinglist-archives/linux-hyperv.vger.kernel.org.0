@@ -2,60 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2890845474C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Nov 2021 14:32:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D034547FB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Nov 2021 15:02:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237640AbhKQNf3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Nov 2021 08:35:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43422 "EHLO
+        id S238061AbhKQODp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Nov 2021 09:03:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232814AbhKQNfZ (ORCPT
+        with ESMTP id S238064AbhKQODS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Nov 2021 08:35:25 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE3CC061570;
-        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id gf14-20020a17090ac7ce00b001a7a2a0b5c3so5241989pjb.5;
-        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
+        Wed, 17 Nov 2021 09:03:18 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA79C061200;
+        Wed, 17 Nov 2021 06:00:20 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id z6so1054833plk.6;
+        Wed, 17 Nov 2021 06:00:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=zR3oNRYhTYJUZxaoak8qMlUuBunZjm5m9hqskt3h3S4=;
-        b=ggvPHm4xgldOYNuvLAK0wCZC8fi4QdT92wt9aO0Z1D+A8KeOi+P1P1JWtXkWduE+Ch
-         r6ou4FvXsNhepLE8E70VqGkz+/lDwWv7enCCiPmHwIBtd8kf2It6TjK/tqJvLKuShbGK
-         0bql4MAv8/pbMx8YyG0cDh/0zTFZMrBCBap5FVuQdaMLz170KD8tA2xrwcyOnV2CGSaU
-         XC9McvnV4rtzWcYyCt8336Tl0rj1KT9TWDrtW7oGGCWhI41aW30RYAShzVcOFPieXpQ2
-         2szScJ98dW1z6BZ6y4Px5EjFn8WqTBG7cb5V8p7izkymWXTEpGK00GSfEtG9CuZzRkDF
-         KZTw==
+        bh=pfKT7vWJtxV2smk9CnW5qMlXjmk0IHKeJrqLf4YFRis=;
+        b=Rjj9c6AtN53lwjrZL6EQMTK4S9B6EyjLDiTKAEZtG92IG/z5eW4MmmZjuNMEaPPtjf
+         LSOJT/vIwEcxXU1K7Ca+hnK+LznG3PkqsB9P36idDXcWR6yBZ0TKu/gYYNIynsfa6uwl
+         wwXh4cR3P9Fphh3Ru4IOABiaCcVVd3dR/Z+YDRN5tiFV3q6iF+hOXqmMcg2FfSxJRFzw
+         2zMMFPxbuq+GlPyeaD3MgQIipxxSO7TRApycEHsiuMj7dn5MGNWFoo8smcQRSoTJRhJs
+         ZsXAJgdRa8E0sMFr5/frJselNGMJAjuNu9fCWyvPs//KwOW3T6zPAQdpgf+k/6JRtRmA
+         Pl4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=zR3oNRYhTYJUZxaoak8qMlUuBunZjm5m9hqskt3h3S4=;
-        b=Bo70UPaDpuKqXPdkCLD4hIxGsoZ9ov6Skbxan7ghjroDGPwLtV4RdV40T0ybBfHSSi
-         11pTZCDHFNqfghkJ+CNvWZyl55kC2E+cKGGYouVJK0c7/ivT0bd9lHJvQ7huE6dQLuE1
-         0hFAJhcQXGAW8jz1/aflFPBnr52pYtFC6Lc3L8uWgpw9S0VySh61qsKBOSWIEmQyUsGU
-         zBh0tYvF5zk4tscJHwMiegrx8Xa5VuPzLqNBn3BDbcYFcW711cO1oFshV6cTvI0Tnn/m
-         45rE1mw0QwrnQP6oDER8ZI1aURvNdtfOQ7982rJpZFjenzVvHBfs8aykD96xlEEyVBt+
-         msOw==
-X-Gm-Message-State: AOAM5324Mn9w+WcXllL4TU8hHswJ/3uJ4k7uk3wRiM3lZHA8su92G4Zl
-        7pQeJcFnkBbbiOfSZ8yRrmE=
-X-Google-Smtp-Source: ABdhPJzUpe9LLZVlH0z5E35okJoiJmMYQnfNMpmq8a9kmB7F5FUzY6wGExQKYAIJCpzqgtl9+SISaw==
-X-Received: by 2002:a17:90a:ab17:: with SMTP id m23mr9499872pjq.194.1637155946398;
-        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
-        by smtp.gmail.com with ESMTPSA id y28sm23237747pfa.208.2021.11.17.05.32.15
+        bh=pfKT7vWJtxV2smk9CnW5qMlXjmk0IHKeJrqLf4YFRis=;
+        b=mS0jdIgZd7Q97Xdsz6TQfVm3/aXPIGbDgzFcled1XA+BjO6qacWEoy41rewMbLMR8l
+         mjurSH+8T5Zhrpi1VtaUBD9xy2KKPcxi6KEMbZ/7WkKzpv0plVXgDyitV6RZDZEfBi/A
+         UnLhj8PoqzXqDBtz/4NHnwKFqqDt9KsUNI98ekZ4Xt3RtZ6ld45scBFniinAiyG4x1wc
+         TsrkJF2xrJ0P3GTzpoA1SkFO3gqjtYJwFI64c7aIwcmi2KQFDbg1mxkX1NCK1vmyfhCo
+         c/3PUC+FQ99g0PglttpNKYw2EC98d68BBwn0RJfvQSFM/3hzBS1kwbM/mLi6jaNHxOXj
+         JEAg==
+X-Gm-Message-State: AOAM533eB/7pHX0GKB/sBPfJEbSwBgCBsndz9UUmRcRp5wbfyDqz7R5z
+        4ZIBrOhbgCyCiLVLNswmUoc=
+X-Google-Smtp-Source: ABdhPJz045G1qOXv6u71zRNaxnc6W77FjMF/vz0ksg1+BccDMfhcBoN3nBp5JPhXQCiAcID15bfAZg==
+X-Received: by 2002:a17:903:32c2:b0:141:eed4:ec1c with SMTP id i2-20020a17090332c200b00141eed4ec1cmr56123455plr.33.1637157619685;
+        Wed, 17 Nov 2021 06:00:19 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
+        by smtp.gmail.com with ESMTPSA id 95sm5490056pjo.2.2021.11.17.06.00.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Nov 2021 05:32:26 -0800 (PST)
-Message-ID: <0ab42ae0-9323-9297-c2c8-1cfc1ebada08@gmail.com>
-Date:   Wed, 17 Nov 2021 21:32:13 +0800
+        Wed, 17 Nov 2021 06:00:19 -0800 (PST)
+Message-ID: <c93bf3d4-75c1-bc3d-2789-1d65e7c19158@gmail.com>
+Date:   Wed, 17 Nov 2021 22:00:08 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.1
-Subject: Re: [PATCH 1/5] x86/Swiotlb: Add Swiotlb bounce buffer remap function
- for HV IVM
+Subject: Re: [PATCH 3/5] hyperv/IOMMU: Enable swiotlb bounce buffer for
+ Isolation VM
 Content-Language: en-US
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
@@ -75,53 +75,28 @@ Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
         konrad.wilk@oracle.com, parri.andrea@gmail.com,
         thomas.lendacky@amd.com, dave.hansen@intel.com
 References: <20211116153923.196763-1-ltykernel@gmail.com>
- <20211116153923.196763-2-ltykernel@gmail.com> <20211117095953.GA10330@lst.de>
+ <20211116153923.196763-4-ltykernel@gmail.com> <20211117100142.GB10330@lst.de>
 From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <20211117095953.GA10330@lst.de>
+In-Reply-To: <20211117100142.GB10330@lst.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Christoph:
-       Thanks for your review.
-
-On 11/17/2021 5:59 PM, Christoph Hellwig wrote:
-> The subject is wrong, nothing x86-specific here.  Please use
-> "swiotlb: " as the prefix
-
-OK. Will update. Thanks.
-
-> 
->> + * @vaddr:	The vaddr of the swiotlb memory pool. The swiotlb
->> + *		memory pool may be remapped in the memory encrypted case and store
-> 
-> Please avoid the overly long line. >
->> +	/*
->> +	 * With swiotlb_unencrypted_base setting, swiotlb bounce buffer will
->> +	 * be remapped in the swiotlb_update_mem_attributes() and return here
->> +	 * directly.
->> +	 */
-> 
-> I'd word this as:
-> 
-> 	/*
-> 	 * If swiotlb_unencrypted_base is set, the bounce buffer memory will
-> 	 * be remapped and cleared in swiotlb_update_mem_attributes.
-> 	 */
-
-Thanks for suggestion. Will update. Thanks.
-
-
->> +	ret = swiotlb_init_io_tlb_mem(mem, __pa(tlb), nslabs, false);
->> +	if (ret) {
->> +		memblock_free(mem->slots, alloc_size);
->> +		return ret;
->> +	}
-> 
-> With the latest update swiotlb_init_io_tlb_mem will always return 0,
-> so no need for the return value change or error handling here.
+On 11/17/2021 6:01 PM, Christoph Hellwig wrote:
+> This doesn't really have much to do with normal DMA mapping,
+> so why does this direct through the dma ops?
 > 
 
-OK. Will revert the change.
+According to the previous discussion, dma_alloc_noncontigous()
+and dma_vmap_noncontiguous() may be used to handle the noncontigous
+memory alloc/map in the netvsc driver. So add alloc/free and vmap/vunmap
+callbacks here to handle the case. The previous patch v4 & v5 handles
+the allocation and map in the netvsc driver. If this should not go 
+though dma ops, We also may make it as vmbus specific function and keep
+the function in the vmbus driver.
+
+https://lkml.org/lkml/2021/9/28/51
+
+
