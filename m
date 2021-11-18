@@ -2,156 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AC0345515A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Nov 2021 00:58:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19EEE455751
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Nov 2021 09:51:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241749AbhKRABW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Nov 2021 19:01:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241730AbhKRABN (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Nov 2021 19:01:13 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C8D5A61AD2;
-        Wed, 17 Nov 2021 23:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637193494;
-        bh=jt1bptChpIJAfJm7hhcvnL0z6T39eDJjHsyLzG8zD1Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=lyKjNjZh0qOCqIMVIpeRoNDwhdUJ/tL20BWpiwNwGttOe0RfGC7KJ4PhUovOify8k
-         CPIwK9uSUQMg7VMxx+ystTmi5eBYFIkTtVD4sE8ulLOvbgkfTXGOpyI5/5ntrQgvl0
-         CfZ1WfNlECodqxIGcyQGBzURqYPwL89BjB4irtfrZDGz99G0bGiOvyoqAHp04d3fBv
-         aBxC568xp2R7kzM9biPqbt5SZcYkGOgkMTsagR6oWZfjlJq8OfZ4tIYBwT1Dm+Bjb+
-         xfWKIqeKqVbpwaZ3tBQdETriNpArC0Ads/tlo1ukjZbgXjypi2+h68mtdIpt5Dhoxd
-         4UKc+KstDfPQQ==
-Date:   Wed, 17 Nov 2021 17:58:12 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Naveen Naidu <naveennaidu479@gmail.com>
-Cc:     bhelgaas@google.com,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-hyperv@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh@kernel.org>, Wei Liu <wei.liu@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        linux-rockchip@lists.infradead.org,
-        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Robert Richter <rric@kernel.org>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH v3 01/25] PCI: Add PCI_ERROR_RESPONSE and it's related
- definitions
-Message-ID: <20211117235812.GA1786428@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7960a4dee0e417eedd7d2e031d04ac9016c6686.1634825082.git.naveennaidu479@gmail.com>
+        id S244773AbhKRIys (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Nov 2021 03:54:48 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:59820 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243365AbhKRIyq (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 18 Nov 2021 03:54:46 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1109)
+        id 9B13C20C63DD; Thu, 18 Nov 2021 00:51:46 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B13C20C63DD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1637225506;
+        bh=J9rOJ6jfJ1HltNYB2odhwK1CJrGxLwIZp7w3haTv62Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ad8O9sGRH3y0zJH5so0jJH1CP3UjGR68+cYMifTEHV5tPN5vfBnbZb95P0xdWkseS
+         4R8v5P32lFz1+7+xvzy8km65zFGQTzzHxPt06LAVjzgjyxUV7MNNSAsgg9P3lZmaRO
+         Tnyr5hTPFZPH3EkThdBQQxkMaGED/TJ9hF4sVImw=
+From:   Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, maz@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: [PATCH v6 0/2] PCI: hv: Hyper-V vPCI for arm64
+Date:   Thu, 18 Nov 2021 00:51:28 -0800
+Message-Id: <1637225490-2213-1-git-send-email-sunilmut@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 08:37:26PM +0530, Naveen Naidu wrote:
-> An MMIO read from a PCI device that doesn't exist or doesn't respond
-> causes a PCI error.  There's no real data to return to satisfy the
-> CPU read, so most hardware fabricates ~0 data.
-> 
-> Add a PCI_ERROR_RESPONSE definition for that and use it where
-> appropriate to make these checks consistent and easier to find.
-> 
-> Also add helper definitions SET_PCI_ERROR_RESPONSE and
-> RESPONSE_IS_PCI_ERROR to make the code more readable.
-> 
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
-> ---
->  include/linux/pci.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index cd8aa6fce204..689c8277c584 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -154,6 +154,15 @@ enum pci_interrupt_pin {
->  /* The number of legacy PCI INTx interrupts */
->  #define PCI_NUM_INTX	4
->  
-> +/*
-> + * Reading from a device that doesn't respond typically returns ~0.  A
-> + * successful read from a device may also return ~0, so you need additional
-> + * information to reliably identify errors.
-> + */
-> +#define PCI_ERROR_RESPONSE     (~0ULL)
-> +#define SET_PCI_ERROR_RESPONSE(val)    (*(val) = ((typeof(*(val))) PCI_ERROR_RESPONSE))
-> +#define RESPONSE_IS_PCI_ERROR(val) ((val) == ((typeof(val)) PCI_ERROR_RESPONSE))
+From: Sunil Muthuswamy <sunilmut@microsoft.com>
 
-Beautiful!  I really like this.
+Current Hyper-V vPCI code only compiles and works for x86. There are some
+hardcoded assumptions about the architectural IRQ chip and other arch
+defines.
 
-I would prefer the macros to start with "PCI_", e.g.,
-PCI_SET_ERROR_RESPONSE().
+Add support for Hyper-V vPCI for arm64 by first breaking the current hard
+coded dependency using a set of new interfaces and implementing those for
+x86 first. That is in the first patch. The second patch adds support for
+Hyper-V vPCI for arm64 by implementing the above mentioned interfaces. That
+is done by introducing a Hyper-V vPCI specific MSI IRQ domain & chip for
+allocating SPI vectors.
 
-I think "RESPONSE_IS_PCI_ERROR()" is too strong because (as the
-comment says), ~0 *may* indicate an error.  Or it may be a successful
-read of a register that happens to contain ~0.
+changes in v1 -> v2:
+ - Moved the irqchip implementation to drivers/pci as suggested
+   by Marc Zyngier
+ - Addressed Multi-MSI handling issues identified by Marc Zyngier
+ - Addressed lock/synchronization primitive as suggested by Marc
+   Zyngier
+ - Addressed other code feedback from Marc Zyngier
 
-Possibilities to convey the idea that this isn't definitive:
+changes in v2 -> v3:
+ - Addressed comments from Bjorn Helgaas about patch formatting and
+   verbiage
+ - Using 'git send-email' to ensure that the patch series is correctly
+   threaded. Feedback by Bjorn Helgaas
+ - Fixed Hyper-V vPCI build break for module build, reported by Boqun Feng
 
-  PCI_POSSIBLE_ERROR_RESPONSE(val)  # a little long
-  PCI_LIKELY_ERROR(val)             # we really have no idea whether
-  PCI_PROBABLE_ERROR(val)           #   likely or probable
-  PCI_POSSIBLE_ERROR(val)           # promising?
+changes in v3 -> v4:
+ - Removed the separate file for IRQ chip that was there in previous
+   iterations and moved the IRQ chip implementation to pci-hyperv.c.
+   Feedback by Michael Kelley and Marc Zyngier.
+ - Addressed various comments from Marc Zyngier about structuring and
+   layout.
+ - Addressed comment from Marc Zyngier about IRQ affinity and other
+   miscellaneous comments.
 
-Can you rebase to my "main" branch (v5.16-rc1), tweak the above, and
-collect up the acks/reviews?
+changes in v4 -> v5:
+ - Fixed an issue with picking the right cpu for irq affinity, identified
+   by Marc Zyngier.
 
-We should also browse drivers outside drivers/pci for places we could
-use these.  Not necessarily as part of this series, although if
-authors there object, it would be good to learn that earlier than
-later.
+changes in v5 -> v6:
+ - Minor comment updates suggested by Michael Kelley.
 
-Drivers that implement pci_error_handlers might be a fruitful place to
-start.  But you've done a great job finding users of ~0 and 0xffff...
-in drivers/pci/, too.
+Sunil Muthuswamy (2):
+  PCI: hv: Make the code arch neutral by adding arch specific interfaces
+  arm64: PCI: hv: Add support for Hyper-V vPCI
 
-> +
->  /*
->   * pci_power_t values must match the bits in the Capabilities PME_Support
->   * and Control/Status PowerState fields in the Power Management capability.
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+ arch/arm64/include/asm/hyperv-tlfs.h |   9 +
+ arch/x86/include/asm/hyperv-tlfs.h   |  33 ++++
+ arch/x86/include/asm/mshyperv.h      |   7 -
+ drivers/pci/Kconfig                  |   2 +-
+ drivers/pci/controller/Kconfig       |   2 +-
+ drivers/pci/controller/pci-hyperv.c  | 281 ++++++++++++++++++++++++---
+ include/asm-generic/hyperv-tlfs.h    |  33 ----
+ 7 files changed, 300 insertions(+), 67 deletions(-)
+
+
+base-commit: fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
+-- 
+2.25.1
+
+
