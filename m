@@ -2,98 +2,113 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB0AA455D9A
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Nov 2021 15:11:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A352456468
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Nov 2021 21:44:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232750AbhKROMs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Nov 2021 09:12:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232744AbhKROMr (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Nov 2021 09:12:47 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1711C061570;
-        Thu, 18 Nov 2021 06:09:47 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id fv9-20020a17090b0e8900b001a6a5ab1392so5828730pjb.1;
-        Thu, 18 Nov 2021 06:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=otIBlbR4NTHUrEp/WYu2Y03OTgd+6umgzibtCvzje0s=;
-        b=gVoIOcI852I7EU2zy3TSd3RJe/detUUq1Ve0b3AIMbrSUDE/Vy/VCFqYM7pe6sx8Cc
-         gux7B4/DgiCaPuKEKCRsNwXS3JqSk7yWtMgvSSDQNuLhRhinw2yjJQ8qvYnBRmQVs7hP
-         DryNQCHnbGa+5OjqEqJEYooh8gr/jtHaOiJn/fyQcg5IKPy5uACoLLey4/+t6tFGKzMD
-         1iYCeMTAxrjLbn6W5Y9jOt0vLOzQoK3qvpRDHqUPhd2HgPd4azd0UhfMVxtaD3R2tLJY
-         X3NUgIFIZhBqq9W+UX92825pbxcVAf+dFZPcsAZ+3ZabFsJUl/XE7AXu5cukLw8htrMN
-         1JNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=otIBlbR4NTHUrEp/WYu2Y03OTgd+6umgzibtCvzje0s=;
-        b=4YsSu1O1rp7loKIFO5w9XqH0u8GHcErjcFtT5f+Zrl/6lgquwWcbBnzIAMJw+dMHPZ
-         YAIk8BP48mGQcL0wiS+HPqoYIHcN9tUYWQvNmsWqmEBnqKQXWqrWkUMf7XrbroEHBI9t
-         kCYsIjQT5xsGUQRQZgd3EuT5M2uXVJVdwMa7U3dBDQCoiQLYtBSvZFKArD/8lIoxJcEJ
-         P6aN/+p3n/Asw07Xg9ia9lrBQkQtSUwqyNxQyowFr33XLvRpyOcFG/sTrOPWA5Zc32Yf
-         E1Y4h8wQBRivlnEx0bMqxHg3IYuMioS1S7hapcG29YOVlqqfE0jhEC1/XN8LOwCgbiqC
-         OjDA==
-X-Gm-Message-State: AOAM533KLyCG7hDeL9tEYvfQGTcRI6EesJhHrB2ce6njiEcz4yq6J9nM
-        cGoV8SijwoN3QRQlV5ActCY=
-X-Google-Smtp-Source: ABdhPJx1zPuGcWopRuFR6Vd9E6bpdnVaEtb9yWanVmd73lNDx+Q1NhxffyXrU/L5bDlA9BloyDAtFg==
-X-Received: by 2002:a17:90b:128d:: with SMTP id fw13mr10927636pjb.50.1637244587334;
-        Thu, 18 Nov 2021 06:09:47 -0800 (PST)
-Received: from localhost.localdomain ([2406:7400:63:2c47:5ffe:fc34:61f0:f1ea])
-        by smtp.gmail.com with ESMTPSA id x14sm2822878pjl.27.2021.11.18.06.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 06:09:47 -0800 (PST)
-From:   Naveen Naidu <naveennaidu479@gmail.com>
-To:     bhelgaas@google.com
-Cc:     Naveen Naidu <naveennaidu479@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        id S233188AbhKRUrX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Nov 2021 15:47:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232565AbhKRUrX (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 18 Nov 2021 15:47:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 475F96128C;
+        Thu, 18 Nov 2021 20:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637268262;
+        bh=sVeugOXOThpr87Zi3LpkKeS4dLNuxTnnYlOPOREQuJ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Jb8casGJHw1GPw52ROWvElXI1Y3Ol4NorSB8tY4VFUWAsxhMhJw1eGg8yeeDOl3HL
+         1gEwn+J/Nwj3oOgX2oyUA2qOkyE/QgPMADTRcCzD9yMiYgcjYUYDgq+dL2TdYrZkrO
+         DdUxiQel6roOXC65gdhkzxUJk9jgL+XYK9S7+j+2lkQ1K/Kzq9TxQ0cGLh3BqCmPU8
+         SJQVIITH1U7ML7B0BhEONKb9SbGnIRmDeuojCtWd98bXE7wmEYbfbkzXsfTzGIULyP
+         C+fXuO7dL5eKt7rtZyOn/GSS+MoJ67VMC4nYz5UwIajXf0XXzbE3KqP5TeTFwOTboQ
+         1i0TF1Z0kO7nA==
+Date:   Thu, 18 Nov 2021 14:44:21 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Naveen Naidu <naveennaidu479@gmail.com>
+Cc:     bhelgaas@google.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-hyperv@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Russell Currey <ruscur@russell.cc>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-hyperv@vger.kernel.org (open list:Hyper-V/Azure CORE AND DRIVERS)
-Subject: [PATCH v4 24/25] PCI: hv: Use PCI_ERROR_RESPONSE to specify hardware read error
-Date:   Thu, 18 Nov 2021 19:33:34 +0530
-Message-Id: <12124f41cab7d8aa944de05f85d9567bfe157704.1637243717.git.naveennaidu479@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1637243717.git.naveennaidu479@gmail.com>
-References: <cover.1637243717.git.naveennaidu479@gmail.com>
+        Toan Le <toan@os.amperecomputing.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh@kernel.org>, Wei Liu <wei.liu@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        linux-rockchip@lists.infradead.org,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Robert Richter <rric@kernel.org>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lukas Wunner <lukas@wunner.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH v4 00/25] Unify PCI error response checking
+Message-ID: <20211118204421.GA1881943@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1637243717.git.naveennaidu479@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Include PCI_ERROR_RESPONSE along with 0xFFFFFFFF in the comment to
-specify a hardware error. This makes MMIO read errors easier to find.
+On Thu, Nov 18, 2021 at 07:33:10PM +0530, Naveen Naidu wrote:
+> An MMIO read from a PCI device that doesn't exist or doesn't respond
+> causes a PCI error.  There's no real data to return to satisfy the 
+> CPU read, so most hardware fabricates ~0 data.
+> 
+> This patch series adds PCI_ERROR_RESPONSE definition and other helper
+> definition PCI_SET_ERROR_RESPONSE and PCI_POSSIBLE_ERROR and uses it
+> where appropriate to make these checks consistent and easier to find.
+> 
+> This helps unify PCI error response checking and make error check
+> consistent and easier to find.
+> 
+> This series also ensures that the error response fabrication now happens
+> in the PCI_OP_READ and PCI_USER_READ_CONFIG. This removes the
+> responsibility from controller drivers to do the error response setting. 
 
-Signed-off-by: Naveen Naidu <naveennaidu479@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied to pci/error for v5.17.  Thanks, this is really nice work.
+Somehow small changes like these add up to something much greater than
+one would expect.
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 6733cb14e775..1f961d0b5d6b 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1774,7 +1774,7 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
- 	 * If the memory enable bit is already set, Hyper-V silently ignores
- 	 * the below BAR updates, and the related PCI device driver can not
- 	 * work, because reading from the device register(s) always returns
--	 * 0xFFFFFFFF.
-+	 * 0xFFFFFFFF (PCI_ERROR_RESPONSE).
- 	 */
- 	list_for_each_entry(hpdev, &hbus->children, list_entry) {
- 		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
--- 
-2.25.1
+This touches many native controller drivers but in trivial ways, so I
+plan to merge this branch after the usual native controller stuff from
+Lorenzo.
 
+I tweaked the commit logs to clarify that this series is all about
+*config* reads, not MMIO reads.  MMIO reads have similar issues, and
+we can use PCI_ERROR_RESPONSE, etc., there, too, but that's not what
+this series does.
+
+Bjorn
