@@ -2,79 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F21EA4568B1
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Nov 2021 04:37:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9128456E32
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Nov 2021 12:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233712AbhKSDkC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Nov 2021 22:40:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233693AbhKSDkB (ORCPT
+        id S235046AbhKSLc1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Nov 2021 06:32:27 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22312 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230101AbhKSLc0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Nov 2021 22:40:01 -0500
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15DA4C061748
-        for <linux-hyperv@vger.kernel.org>; Thu, 18 Nov 2021 19:37:00 -0800 (PST)
-Received: by mail-ot1-x342.google.com with SMTP id h12-20020a056830034c00b0055c8458126fso14808635ote.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 18 Nov 2021 19:37:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=nP7GfvIrZmi0WL2XKuJvvnkwZeUNxsIC8PTcNU6NDlPQJ607ucK0Qy62B5HTKohddu
-         xENqULG4PSkx21qnylM3z4mz8hQzWnZWIs9JULXMUYt4xflnBRDRkCKR1PZe46j4QJmc
-         s1yccVoao/pTW+f94U2IdQso/4T9OlOUPpqYuQHmaEK2sQjqLPwal17EyKdi5qG7pEhq
-         MHEtHDfCzNhzr2s0GjM/NwUYR++3fW0DFJ0eUD/6Ky/abnT2SogPDUpaFQkkM9f/wIjp
-         eegIKTmA5hS6OoRRnPNaBaFb0zM1fBJkeJ30NRXWOLfBdtRhtFeNVdwaHTbVJHlt4JaU
-         dWwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=It04TZLGN5s661krQfq5QReHeSCxOYk+MaEPRWNZk7ecdOm+2QJC25WbRQCL2oNx3M
-         WfLPXv4mZagWTXjws/HjyboaMqu41L+E0DefRgZ8DTqIs0FTLzNeDyz+jnvQWm9OYrYm
-         yT1LdoPaGL37xry+8oihVHhRayvOJteiIOI7DNB5Mg98kfmEFVrc3UyJ06+3tnkOvhX0
-         sc4rw+01TMBGvg6JRctvihPkGhYk7w+Tntht5ffIihFo1BWCvcWPoNoQC6z5KMnh7GcT
-         RttpnuQgHjgO+P06kkj1dMiNm20lARVewISCfD4TH43HFedvAs1LFH5HrusBYAAjHjcL
-         wpFw==
-X-Gm-Message-State: AOAM531NhLmO07K7GVq95uvqbWsK6LeurE7IvFEaPe+3pDmixylLQX0U
-        8Ethfc+da/GAlfEDkUIjMyn8jlRPWnn/WND2awk=
-X-Google-Smtp-Source: ABdhPJw7gEWB3RSWC/fBdK7hTbQkrFGZtcBcz12LQ3LOEEA/MiJ7wnHE8V6yxOm4VvjdgOV8J7XHOI5ZWtHCUtj/pY4=
-X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr1904375otp.373.1637293019413;
- Thu, 18 Nov 2021 19:36:59 -0800 (PST)
+        Fri, 19 Nov 2021 06:32:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637321364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=YNsvprf1D4tM6+4YGzakWjPMIUQacpxPSiAIWlnUZcE=;
+        b=cYtWPS9wMiYohwJXMYtGVqMAV/YBj/hhHCEHzXMfVfHjyycnY0LSM5wDx0eBEsxdKMpRgg
+        lz2Rpd/rN3jfvT6LGLuSidPDX7PkPEE4xHDcNIMIjKb6QvDg01thw1U+J2jG8DrL96chdi
+        /a35V/31NPcOkLLM8N3qXJajWgfRvbU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-461-Ne7WM6Y4NKGckXIv6l9jIQ-1; Fri, 19 Nov 2021 06:29:21 -0500
+X-MC-Unique: Ne7WM6Y4NKGckXIv6l9jIQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64C5C8799E0;
+        Fri, 19 Nov 2021 11:29:20 +0000 (UTC)
+Received: from localhost.localdomain.com (unknown [10.39.192.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDB15100EB3D;
+        Fri, 19 Nov 2021 11:29:10 +0000 (UTC)
+From:   Mohammed Gamal <mgamal@redhat.com>
+To:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        decui@microsoft.com, drawat.floss@gmail.com
+Cc:     linux-kernel@vger.kernel.org, daniel@ffwll.ch, airlied@linux.ie,
+        Mohammed Gamal <mgamal@redhat.com>
+Subject: [PATCH] drm/hyperv: Fix device removal on Gen1 VMs
+Date:   Fri, 19 Nov 2021 12:29:00 +0100
+Message-Id: <20211119112900.300537-1-mgamal@redhat.com>
 MIME-Version: 1.0
-Sender: dd16978@gmail.com
-Received: by 2002:a4a:d557:0:0:0:0:0 with HTTP; Thu, 18 Nov 2021 19:36:58
- -0800 (PST)
-From:   "Mr. Mustafa Ali." <muafalia@gmail.com>
-Date:   Fri, 19 Nov 2021 04:36:58 +0100
-X-Google-Sender-Auth: qyDyMCA6e8_FWGJgKYBlcGTnPXs
-Message-ID: <CA+qKLfdiT=Q+0ZmuB7+Fb972bRum3t-MVT2Uef8NQpO8QPh5Tw@mail.gmail.com>
-Subject: Greetings Dear Friend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Friend,
+The Hyper-V DRM driver tries to free MMIO region on removing
+the device regardless of VM type, while Gen1 VMs don't use MMIO
+and hence causing the kernel to crash on a NULL pointer dereference.
 
-This message might meet you in utmost surprise. However, It's just my
-urgent need for a foreign partner that made me contact you for this
-transaction. I assured you of honesty and reliability to champion this
-business opportunity. I am a banker by profession in Turkey, and
-currently holding the post of Auditor in Standard Chartered Bank.
+Fix this by making deallocating MMIO only on Gen2 machines and implement
+removal for Gen1
 
-I have the opportunity of transferring the leftover funds ($15 Million
-Dollars) of one of my clients who died along with his entire family in
-a crisis in Myanmar Asia. I am inviting you for a business deal where
-this money can be shared between us if you agree to my business
-proposal.
+Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
 
-Further details of the transfer will be forwarded to you immediately
-after I receive your return letter.
+Signed-off-by: Mohammed Gamal <mgamal@redhat.com>
+---
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-Best Regards,
-Mr. Mustafa Ali.
-mustafa.ali@rahroco.com
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+index cd818a629183..9f923beb7d8d 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+@@ -225,12 +225,29 @@ static int hyperv_vmbus_remove(struct hv_device *hdev)
+ {
+ 	struct drm_device *dev = hv_get_drvdata(hdev);
+ 	struct hyperv_drm_device *hv = to_hv(dev);
++	struct pci_dev *pdev;
+ 
+ 	drm_dev_unplug(dev);
+ 	drm_atomic_helper_shutdown(dev);
+ 	vmbus_close(hdev->channel);
+ 	hv_set_drvdata(hdev, NULL);
+-	vmbus_free_mmio(hv->mem->start, hv->fb_size);
++
++	/*
++	 * Free allocated MMIO memory only on Gen2 VMs.
++	 * On Gen1 VMs, release the PCI device
++	 */
++	if (efi_enabled(EFI_BOOT)) {
++		vmbus_free_mmio(hv->mem->start, hv->fb_size);
++	} else {
++		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
++				PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
++		if (!pdev) {
++			drm_err(dev, "Unable to find PCI Hyper-V video\n");
++			return -ENODEV;
++		}
++		pci_release_region(pdev, 0);
++		pci_dev_put(pdev);
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.33.1
+
