@@ -2,114 +2,381 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E5345708D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Nov 2021 15:23:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74FB2457202
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Nov 2021 16:47:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235842AbhKSO06 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Nov 2021 09:26:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232080AbhKSO06 (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Nov 2021 09:26:58 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9396C061574;
-        Fri, 19 Nov 2021 06:23:56 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id 200so8796593pga.1;
-        Fri, 19 Nov 2021 06:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=dvjMlZBI3ldb1jXqYwhDV7AWs1lj5LCSS81ZY56RgHg=;
-        b=lD29CjzOk03sgDLP+GNvSpxJtgVkW5rJkK+91U6AQudAzMZxrwkaky9OEq6jf27Gw7
-         +El3go4e6gBFGCWthIzBWcaH6MtynoVd2Asx0s8lF4AHh9KTCrYFWAivyI8ee0X1Vv36
-         V2FQuAVabQQBAbOL0fIquaORLXE6V2pQuWoxP4p8Bdmk66ffMTRypmvZJws3ZQPoiG7R
-         xBnlvWtgNAT1CZU5CVKw8D3+cafHZ/lwicgnA/RP75ZpQaa+0T4cnXOpdWgAZYBmS+Ds
-         D+JWFTqNXrZl80kk+n0WgCyZhptSAvKOJXiZ1wT44+Ikfkw7mB3QMLEop9ypqPjQJy3c
-         M8pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=dvjMlZBI3ldb1jXqYwhDV7AWs1lj5LCSS81ZY56RgHg=;
-        b=ymOoSNPXb9r3m4Ip0eXlmv0Q4P1UZsmxUwGL5lKG/9B7dE2h+J3/mZSlEGyKl66/v1
-         0GwcmDvEOK1uQdQxDkgT6oCc7DuGNytaHFfzTNJALqupO2HMuNf/RK5bnZM6PDLLwq7f
-         kK6EGX1448Q21QUEGs5Vfz41APQwtGtzHbKJwzpriOPEAWjQRfFRzDYcKyphbCKaMuvX
-         RymMoxcyEXGdlUWR8iuZYzqd3l8X8ap8TosIWVJBK0sK1N9gyVjqVTEb3uLrI3kJ+9aG
-         iHytVLT8pWOJbrFv80RMGta6mzqTWS4j9ZNkV3DU3LjimptmgCDs90a9+iNzZzzmQIUC
-         cFUA==
-X-Gm-Message-State: AOAM533D70nN4qd2+pQf94pHCLx7NMxOCx+wlfL/XlIBDxI4keQOYY/X
-        y5ekXgyMeYgJxNEInVywDT7KYgjaLReP6g==
-X-Google-Smtp-Source: ABdhPJzKRBXlcGt3waRWzaH9R47/6SD0/IgoWcAgajHv/fxOJufbEPJI6hNEQ9SuwB+/pum/5oX3UA==
-X-Received: by 2002:a63:b54a:: with SMTP id u10mr17506905pgo.69.1637331836308;
-        Fri, 19 Nov 2021 06:23:56 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
-        by smtp.gmail.com with ESMTPSA id l12sm3181520pfu.100.2021.11.19.06.23.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Nov 2021 06:23:55 -0800 (PST)
-Message-ID: <f7fcb4d5-fcdd-0d24-60ed-62c27ed8e2d9@gmail.com>
-Date:   Fri, 19 Nov 2021 22:23:45 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH 3/5] hyperv/IOMMU: Enable swiotlb bounce buffer for
- Isolation VM
-Content-Language: en-US
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, jgross@suse.com, sstabellini@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, joro@8bytes.org, will@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, xen-devel@lists.xenproject.org,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, vkuznets@redhat.com, brijesh.singh@amd.com,
-        konrad.wilk@oracle.com, parri.andrea@gmail.com,
-        thomas.lendacky@amd.com, dave.hansen@intel.com
-References: <20211116153923.196763-1-ltykernel@gmail.com>
- <20211116153923.196763-4-ltykernel@gmail.com> <20211117100142.GB10330@lst.de>
- <c93bf3d4-75c1-bc3d-2789-1d65e7c19158@gmail.com>
-In-Reply-To: <c93bf3d4-75c1-bc3d-2789-1d65e7c19158@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        id S233036AbhKSPue (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Nov 2021 10:50:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233725AbhKSPue (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 19 Nov 2021 10:50:34 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C57C61246;
+        Fri, 19 Nov 2021 15:47:32 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mo66s-006Zt2-0k; Fri, 19 Nov 2021 15:47:30 +0000
+Date:   Fri, 19 Nov 2021 15:47:29 +0000
+Message-ID: <875yso6tbi.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [PATCH v6 2/2] arm64: PCI: hv: Add support for Hyper-V vPCI
+In-Reply-To: <1637225490-2213-3-git-send-email-sunilmut@linux.microsoft.com>
+References: <1637225490-2213-1-git-send-email-sunilmut@linux.microsoft.com>
+        <1637225490-2213-3-git-send-email-sunilmut@linux.microsoft.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sunilmut@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 11/17/2021 10:00 PM, Tianyu Lan wrote:
-> On 11/17/2021 6:01 PM, Christoph Hellwig wrote:
->> This doesn't really have much to do with normal DMA mapping,
->> so why does this direct through the dma ops?
->>
+On Thu, 18 Nov 2021 08:51:30 +0000,
+Sunil Muthuswamy <sunilmut@linux.microsoft.com> wrote:
 > 
-> According to the previous discussion, dma_alloc_noncontigous()
-> and dma_vmap_noncontiguous() may be used to handle the noncontigous
-> memory alloc/map in the netvsc driver. So add alloc/free and vmap/vunmap
-> callbacks here to handle the case. The previous patch v4 & v5 handles
-> the allocation and map in the netvsc driver. If this should not go 
-> though dma ops, We also may make it as vmbus specific function and keep
-> the function in the vmbus driver.
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
 > 
-> https://lkml.org/lkml/2021/9/28/51
+> Add support for Hyper-V vPCI for arm64 by implementing the arch specific
+> interfaces. Introduce an IRQ domain and chip specific to Hyper-v vPCI that
+> is based on SPIs. The IRQ domain parents itself to the arch GIC IRQ domain
+> for basic vector management.
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> ---
+> In v2, v3, v4, v5 & v6:
+>  Changes are described in the cover letter.
+> 
+>  arch/arm64/include/asm/hyperv-tlfs.h |   9 ++
+>  drivers/pci/Kconfig                  |   2 +-
+>  drivers/pci/controller/Kconfig       |   2 +-
+>  drivers/pci/controller/pci-hyperv.c  | 204 ++++++++++++++++++++++++++-
+>  4 files changed, 214 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
+> index 4d964a7f02ee..bc6c7ac934a1 100644
+> --- a/arch/arm64/include/asm/hyperv-tlfs.h
+> +++ b/arch/arm64/include/asm/hyperv-tlfs.h
+> @@ -64,6 +64,15 @@
+>  #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
+>  #define HV_REGISTER_STIMER0_COUNT	0x000B0001
+>  
+> +union hv_msi_entry {
+> +	u64 as_uint64[2];
+> +	struct {
+> +		u64 address;
+> +		u32 data;
+> +		u32 reserved;
+> +	} __packed;
+> +};
+> +
+>  #include <asm-generic/hyperv-tlfs.h>
+>  
+>  #endif
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index 43e615aa12ff..d98fafdd0f99 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -184,7 +184,7 @@ config PCI_LABEL
+>  
+>  config PCI_HYPERV
+>  	tristate "Hyper-V PCI Frontend"
+> -	depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+> +	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+>  	select PCI_HYPERV_INTERFACE
+>  	help
+>  	  The PCI device frontend driver allows the kernel to import arbitrary
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 93b141110537..2536abcc045a 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -281,7 +281,7 @@ config PCIE_BRCMSTB
+>  
+>  config PCI_HYPERV_INTERFACE
+>  	tristate "Hyper-V PCI Interface"
+> -	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> +	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
+>  	help
+>  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+>  	  have a common interface with the Hyper-V PCI frontend driver.
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index ead7d6cb6bf1..d52e23b1d14b 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -47,6 +47,8 @@
+>  #include <linux/msi.h>
+>  #include <linux/hyperv.h>
+>  #include <linux/refcount.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/acpi.h>
+>  #include <asm/mshyperv.h>
+>  
+>  /*
+> @@ -614,7 +616,202 @@ static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+>  {
+>  	return pci_msi_prepare(domain, dev, nvec, info);
+>  }
+> -#endif /* CONFIG_X86 */
+> +#elif defined(CONFIG_ARM64)
+> +/*
+> + * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
+> + * of room at the start to allow for SPIs to be specified through ACPI and
+> + * starting with a power of two to satisfy power of 2 multi-MSI requirement.
+> + */
+> +#define HV_PCI_MSI_SPI_START	64
+> +#define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
+> +#define DELIVERY_MODE		0
+> +#define FLOW_HANDLER		NULL
+> +#define FLOW_NAME		NULL
+> +#define hv_msi_prepare		NULL
+> +
+> +struct hv_pci_chip_data {
+> +	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
+> +	struct mutex	map_lock;
+> +};
+> +
+> +/* Hyper-V vPCI MSI GIC IRQ domain */
+> +static struct irq_domain *hv_msi_gic_irq_domain;
+> +
+> +/* Hyper-V PCI MSI IRQ chip */
+> +static struct irq_chip hv_arm64_msi_irq_chip = {
+> +	.name = "MSI",
+> +	.irq_set_affinity = irq_chip_set_affinity_parent,
+> +	.irq_eoi = irq_chip_eoi_parent,
+> +	.irq_mask = irq_chip_mask_parent,
+> +	.irq_unmask = irq_chip_unmask_parent
+> +};
+> +
+> +static unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
+> +{
+> +	return irqd->parent_data->hwirq;
+> +}
+> +
+> +static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> +				       struct msi_desc *msi_desc)
+> +{
+> +	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
+> +			      msi_desc->msg.address_lo;
+> +	msi_entry->data = msi_desc->msg.data;
+> +}
+> +
+> +static void hv_pci_vec_irq_domain_free(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs)
+> +{
+> +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> +	struct irq_data *irqd = irq_domain_get_irq_data(domain, virq);
+> +	int first = irqd->hwirq - HV_PCI_MSI_SPI_START;
+> +
+> +	mutex_lock(&chip_data->map_lock);
+> +	bitmap_release_region(chip_data->spi_map,
+> +			      first,
+> +			      get_count_order(nr_irqs));
+> +	mutex_unlock(&chip_data->map_lock);
+> +	irq_domain_reset_irq_data(irqd);
+> +	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
+> +}
+> +
+> +static int hv_pci_vec_alloc_device_irq(struct irq_domain *domain,
+> +				       unsigned int nr_irqs,
+> +				       irq_hw_number_t *hwirq)
+> +{
+> +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> +	unsigned int index;
+> +
+> +	/* Find and allocate region from the SPI bitmap */
+> +	mutex_lock(&chip_data->map_lock);
+> +	index = bitmap_find_free_region(chip_data->spi_map,
+> +					HV_PCI_MSI_SPI_NR,
+> +					get_count_order(nr_irqs));
+> +	mutex_unlock(&chip_data->map_lock);
+> +	if (index < 0)
+> +		return -ENOSPC;
+> +
+> +	*hwirq = index + HV_PCI_MSI_SPI_START;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
+> +					   unsigned int virq,
+> +					   irq_hw_number_t hwirq)
+> +{
+> +	struct irq_fwspec fwspec;
+> +
+> +	fwspec.fwnode = domain->parent->fwnode;
+> +	fwspec.param_count = 2;
+> +	fwspec.param[0] = hwirq;
+> +	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+> +
+> +	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
 
+I think you are missing the actual edge configuration here. Since the
+interrupt specifier doesn't come from either DT or ACPI, nobody will
+set the trigger type, and you have to do it yourself here. At the
+moment, you will get whatever is in the GIC configuration.
 
-Hi Christoph:
-       Sorry to bother you. Could you have a look? Which solution do you
-prefer? If we need to call dma_alloc/map_noncontigous() function in the
-netvsc driver what patch 4 does. The Hyper-V specific implementation
-needs to be hided in some callbacks and call these callback in the
-dma_alloc/map_noncontigous(). I used dma ops here. If the allocation and
-map operation should be Hyper-V specific function, we may put these
-functions in the vmbus driver and other vmbus device drivers also may
-reuse these functions if necessary.
+> +}
+> +
+> +static int hv_pci_vec_irq_domain_alloc(struct irq_domain *domain,
+> +				       unsigned int virq, unsigned int nr_irqs,
+> +				       void *args)
+> +{
+> +	irq_hw_number_t hwirq;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = hv_pci_vec_alloc_device_irq(domain, nr_irqs, &hwirq);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		ret = hv_pci_vec_irq_gic_domain_alloc(domain, virq + i,
+> +						      hwirq + i);
+> +		if (ret)
+> +			goto free_irq;
+> +
+> +		ret = irq_domain_set_hwirq_and_chip(domain, virq + i,
+> +						    hwirq + i,
+> +						    &hv_arm64_msi_irq_chip,
+> +						    domain->host_data);
+> +		if (ret)
+> +			goto free_irq;
+> +
+> +		pr_debug("pID:%d vID:%u\n", (int)(hwirq + i), virq + i);
+> +	}
+> +
+> +	return 0;
+> +
+> +free_irq:
+> +	hv_pci_vec_irq_domain_free(domain, virq, nr_irqs);
+> +
+> +	return ret;
 
-Thanks.
+How about the interrupts that have already been allocated?
+
+> +}
+> +
+> +/*
+> + * Pick the first online cpu as the irq affinity that can be temporarily used
+> + * for composing MSI from the hypervisor. GIC will eventually set the right
+> + * affinity for the irq and the 'unmask' will retarget the interrupt to that
+> + * cpu.
+> + */
+> +static int hv_pci_vec_irq_domain_activate(struct irq_domain *domain,
+> +					  struct irq_data *irqd, bool reserve)
+> +{
+> +	int cpu = cpumask_first(cpu_online_mask);
+> +
+> +	irq_data_update_effective_affinity(irqd, cpumask_of(cpu));
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops hv_pci_domain_ops = {
+> +	.alloc	= hv_pci_vec_irq_domain_alloc,
+> +	.free	= hv_pci_vec_irq_domain_free,
+> +	.activate = hv_pci_vec_irq_domain_activate,
+> +};
+> +
+> +static int hv_pci_irqchip_init(void)
+> +{
+> +	static struct hv_pci_chip_data *chip_data;
+> +	struct fwnode_handle *fn = NULL;
+> +	int ret = -ENOMEM;
+> +
+> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> +	if (!chip_data)
+> +		return ret;
+> +
+> +	mutex_init(&chip_data->map_lock);
+> +	fn = irq_domain_alloc_named_fwnode("Hyper-V ARM64 vPCI");
+
+This will appear in debugfs. I'd rather you keep it short, sweet and
+without spaces. "hv_vpci_arm64" seems better to me.
+
+> +	if (!fn)
+> +		goto free_chip;
+> +
+> +	/*
+> +	 * IRQ domain once enabled, should not be removed since there is no
+> +	 * way to ensure that all the corresponding devices are also gone and
+> +	 * no interrupts will be generated.
+> +	 */
+> +	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+> +							  fn, &hv_pci_domain_ops,
+> +							  chip_data);
+> +
+> +	if (!hv_msi_gic_irq_domain) {
+> +		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+> +		goto free_chip;
+> +	}
+> +
+> +	return 0;
+> +
+> +free_chip:
+> +	kfree(chip_data);
+> +	if (fn)
+> +		irq_domain_free_fwnode(fn);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct irq_domain *hv_pci_get_root_domain(void)
+> +{
+> +	return hv_msi_gic_irq_domain;
+> +}
+> +#endif /* CONFIG_ARM64 */
+>  
+>  /**
+>   * hv_pci_generic_compl() - Invoked for a completion packet
+> @@ -1227,6 +1424,8 @@ static void hv_msi_free(struct irq_domain *domain, struct msi_domain_info *info,
+>  static void hv_irq_mask(struct irq_data *data)
+>  {
+>  	pci_msi_mask_irq(data);
+> +	if (data->parent_data->chip->irq_mask)
+> +		irq_chip_mask_parent(data);
+>  }
+>  
+>  /**
+> @@ -1343,6 +1542,8 @@ static void hv_irq_unmask(struct irq_data *data)
+>  		dev_err(&hbus->hdev->device,
+>  			"%s() failed: %#llx", __func__, res);
+>  
+> +	if (data->parent_data->chip->irq_unmask)
+> +		irq_chip_unmask_parent(data);
+>  	pci_msi_unmask_irq(data);
+>  }
+>  
+> @@ -1619,6 +1820,7 @@ static struct irq_chip hv_msi_irq_chip = {
+>  	.irq_compose_msi_msg	= hv_compose_msi_msg,
+>  	.irq_set_affinity	= irq_chip_set_affinity_parent,
+>  	.irq_ack		= irq_chip_ack_parent,
+> +	.irq_eoi		= irq_chip_eoi_parent,
+>  	.irq_mask		= hv_irq_mask,
+>  	.irq_unmask		= hv_irq_unmask,
+
+You probably want to avoid unconditionally setting callbacks that may
+have side effects on another architecture (ack on arm64, eoi on x86).
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
