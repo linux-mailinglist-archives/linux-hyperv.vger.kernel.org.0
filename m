@@ -2,80 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C62845802D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Nov 2021 20:48:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49E484586A5
+	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Nov 2021 22:56:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231617AbhKTTvM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 20 Nov 2021 14:51:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231184AbhKTTvJ (ORCPT
+        id S231284AbhKUV7u (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 21 Nov 2021 16:59:50 -0500
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:56086 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230418AbhKUV7t (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 20 Nov 2021 14:51:09 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573EAC061574
-        for <linux-hyperv@vger.kernel.org>; Sat, 20 Nov 2021 11:48:05 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id h63so11526191pgc.12
-        for <linux-hyperv@vger.kernel.org>; Sat, 20 Nov 2021 11:48:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=Zf3qHTIuX08W3MEypEDsxAbttqkjekaco/oM0WCXsjZ4tz+elH7yFmpk6kbdO/9OmR
-         yD8p//UHZQSFgLOwFaxG/zd66e8dRcC3CrbEA1YYRXuHHyxZMi+V2odBSedJy551F3SA
-         MWkX4TlxPHLlSx2bu4ppu2oSJ5u94erHZKg4+oO0915XwCDiDMlFLM8/1HormW6/dYQy
-         zhGB+9Ylog9YWrszvyjG6yVL1jDgSrhHlSXtvfahpGjAfMY3NSvgarkiW3GyN3kvjpyN
-         VLFu8WUpsEnRCu/GOYwwkiTENFPT7Ww0fNNmgVjuOKJpBSTHT/ZIk98aCoQOYStNtTtA
-         q2jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=C5q4jClKNDnhlv6X1qmQdEs8KM6qfoPRLAXhnxfJm6qUNrSB9s6bVXN6IDcWx+Omvv
-         R1FNC8py2qfZfj/o/6lH263Cb5aP7HnyijaDckdhkSoM1iW+F/4qASV71fHio83fJoHj
-         Am2Mv2CXFoC9GqLMcXYR7zWrh9HHP19cOY1DNB9iOzmGYuPi8vuSoSx8Qwgwxni2uNoE
-         f31H7uN3oLs0maeg61FsB1tdgZxW+TsZbR16YdIkk6ZaZJ/xsW8gs11cDYk3A5aZYqyl
-         9v9CW596fxTPqNQTtBvo3yWl2hRyMFHbRM4RikBgc5WU/TQpMz7xdMSs7SELUly4rkY/
-         Tz1A==
-X-Gm-Message-State: AOAM531EdBrhIv4C8gpLj/pppSfZK1UkOinif1z33TA3smI8pkrvqtna
-        TbhJNg8Zrjf4cNZZlyI1ulvO697g1Wp+QYL1RAo=
-X-Google-Smtp-Source: ABdhPJyqM8o2L8sFcd8BiwQ6wVhUc8mYgssCxq+w7+G5ccobrfaKsFrhcnwBeqYkllfZS36Vq6bbaNDjdLZ1lWsBiVA=
-X-Received: by 2002:a05:6a00:2290:b0:49f:c63a:2a5f with SMTP id
- f16-20020a056a00229000b0049fc63a2a5fmr73410025pfe.69.1637437684841; Sat, 20
- Nov 2021 11:48:04 -0800 (PST)
+        Sun, 21 Nov 2021 16:59:49 -0500
+Received: from pop-os.home ([86.243.171.122])
+        by smtp.orange.fr with ESMTPA
+        id oupFmUkCKE8xToupFmqrnz; Sun, 21 Nov 2021 22:56:42 +0100
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sun, 21 Nov 2021 22:56:42 +0100
+X-ME-IP: 86.243.171.122
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] hv_netvsc: Use bitmap_zalloc() when applicable
+Date:   Sun, 21 Nov 2021 22:56:39 +0100
+Message-Id: <534578d2296a1f4bd86c9bd4676e9d6b92eceb59.1637531723.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Sender: ds7410159@gmail.com
-Received: by 2002:a05:7300:4153:b0:42:142f:a6c9 with HTTP; Sat, 20 Nov 2021
- 11:48:04 -0800 (PST)
-From:   "Mr. Mustafa Ali." <mustafaliali85@gmail.com>
-Date:   Sat, 20 Nov 2021 20:48:04 +0100
-X-Google-Sender-Auth: T88QPMd1TEO5kcWIe7-kMh920Bw
-Message-ID: <CABb8Riw9GTQTB+-9ZxgG+Las_g6CxMZYe0V7-jtoKOKvwOGRBA@mail.gmail.com>
-Subject: Greetings Dear Friend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Friend,
+'send_section_map' is a bitmap. So use 'bitmap_zalloc()' to simplify code,
+improve the semantic and avoid some open-coded arithmetic in allocator
+arguments.
 
-This message might meet you in utmost surprise. However, It's just my
-urgent need for a foreign partner that made me contact you for this
-transaction. I assured you of honesty and reliability to champion this
-business opportunity. I am a banker by profession in Turkey, and
-currently holding the post of Auditor in Standard Chartered Bank.
+Also change the corresponding 'kfree()' into 'bitmap_free()' to keep
+consistency.
 
-I have the opportunity of transferring the leftover funds ($15 Million
-Dollars) of one of my clients who died along with his entire family in
-a crisis in Myanmar Asia. I am inviting you for a business deal where
-this money can be shared between us if you agree to my business
-proposal.
+While at it, change an '== NULL' test into a '!'.
 
-Further details of the transfer will be forwarded to you immediately
-after I receive your return letter.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/hyperv/netvsc.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Best Regards,
-Mr. Mustafa Ali.
-mustafa.ali@rahroco.com
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 396bc1c204e6..5086cd07d1ed 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -155,7 +155,7 @@ static void free_netvsc_device(struct rcu_head *head)
+ 	kfree(nvdev->extension);
+ 	vfree(nvdev->recv_buf);
+ 	vfree(nvdev->send_buf);
+-	kfree(nvdev->send_section_map);
++	bitmap_free(nvdev->send_section_map);
+ 
+ 	for (i = 0; i < VRSS_CHANNEL_MAX; i++) {
+ 		xdp_rxq_info_unreg(&nvdev->chan_table[i].xdp_rxq);
+@@ -336,7 +336,6 @@ static int netvsc_init_buf(struct hv_device *device,
+ 	struct net_device *ndev = hv_get_drvdata(device);
+ 	struct nvsp_message *init_packet;
+ 	unsigned int buf_size;
+-	size_t map_words;
+ 	int i, ret = 0;
+ 
+ 	/* Get receive buffer area. */
+@@ -528,10 +527,9 @@ static int netvsc_init_buf(struct hv_device *device,
+ 		   net_device->send_section_size, net_device->send_section_cnt);
+ 
+ 	/* Setup state for managing the send buffer. */
+-	map_words = DIV_ROUND_UP(net_device->send_section_cnt, BITS_PER_LONG);
+-
+-	net_device->send_section_map = kcalloc(map_words, sizeof(ulong), GFP_KERNEL);
+-	if (net_device->send_section_map == NULL) {
++	net_device->send_section_map = bitmap_zalloc(net_device->send_section_cnt,
++						     GFP_KERNEL);
++	if (!net_device->send_section_map) {
+ 		ret = -ENOMEM;
+ 		goto cleanup;
+ 	}
+-- 
+2.30.2
+
