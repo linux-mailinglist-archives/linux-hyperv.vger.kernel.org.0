@@ -2,89 +2,71 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49E484586A5
-	for <lists+linux-hyperv@lfdr.de>; Sun, 21 Nov 2021 22:56:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7FD44590B4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Nov 2021 16:00:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231284AbhKUV7u (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 21 Nov 2021 16:59:50 -0500
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:56086 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230418AbhKUV7t (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 21 Nov 2021 16:59:49 -0500
-Received: from pop-os.home ([86.243.171.122])
-        by smtp.orange.fr with ESMTPA
-        id oupFmUkCKE8xToupFmqrnz; Sun, 21 Nov 2021 22:56:42 +0100
-X-ME-Helo: pop-os.home
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Sun, 21 Nov 2021 22:56:42 +0100
-X-ME-IP: 86.243.171.122
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] hv_netvsc: Use bitmap_zalloc() when applicable
-Date:   Sun, 21 Nov 2021 22:56:39 +0100
-Message-Id: <534578d2296a1f4bd86c9bd4676e9d6b92eceb59.1637531723.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.30.2
+        id S239834AbhKVPDR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Nov 2021 10:03:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239820AbhKVPDQ (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 22 Nov 2021 10:03:16 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id B2DF060F50;
+        Mon, 22 Nov 2021 15:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637593209;
+        bh=Za0ZJl9E5yiRT7Qi7U6BPc3LGzUIO+C7PD1xLd3btsw=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=OBhyqt5MHkl1hvBYQPcM45/pFd9QYbUTS3TRH6Y/2uM46EqZnFEMMkLpenr8labuM
+         VddvADu1B3dmf8hw8JJAkuB3WSjICO3t3umNey6Upc0r40ucPGBNeTiBu0fbmUREzb
+         i+7Poy7ZqbuY5ImqxWqTUXLD7qeAAO2O4IbtXCbfjtxhLibDIh+LA5bhbQWg97SdQh
+         13rDzdjFS8GdxWSUzbz/l0QGS2y4XKiu2xVsuDPAcdjM/W9Zyjd+zkcSRdJmyZazFS
+         xGkZEQvjLW93frnWBWiVRl0CPhnFjJt8u9UqWIjy8lhAXOkPfwxSrtK9FBFsilRTt1
+         EkIIOIfaIONqw==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id ACA4060A94;
+        Mon, 22 Nov 2021 15:00:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] hv_netvsc: Use bitmap_zalloc() when applicable
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <163759320970.11926.3557850890600741677.git-patchwork-notify@kernel.org>
+Date:   Mon, 22 Nov 2021 15:00:09 +0000
+References: <534578d2296a1f4bd86c9bd4676e9d6b92eceb59.1637531723.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <534578d2296a1f4bd86c9bd4676e9d6b92eceb59.1637531723.git.christophe.jaillet@wanadoo.fr>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
+        kuba@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-'send_section_map' is a bitmap. So use 'bitmap_zalloc()' to simplify code,
-improve the semantic and avoid some open-coded arithmetic in allocator
-arguments.
+Hello:
 
-Also change the corresponding 'kfree()' into 'bitmap_free()' to keep
-consistency.
+This patch was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-While at it, change an '== NULL' test into a '!'.
+On Sun, 21 Nov 2021 22:56:39 +0100 you wrote:
+> 'send_section_map' is a bitmap. So use 'bitmap_zalloc()' to simplify code,
+> improve the semantic and avoid some open-coded arithmetic in allocator
+> arguments.
+> 
+> Also change the corresponding 'kfree()' into 'bitmap_free()' to keep
+> consistency.
+> 
+> [...]
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/net/hyperv/netvsc.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Here is the summary with links:
+  - hv_netvsc: Use bitmap_zalloc() when applicable
+    https://git.kernel.org/netdev/net-next/c/e9268a943998
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 396bc1c204e6..5086cd07d1ed 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -155,7 +155,7 @@ static void free_netvsc_device(struct rcu_head *head)
- 	kfree(nvdev->extension);
- 	vfree(nvdev->recv_buf);
- 	vfree(nvdev->send_buf);
--	kfree(nvdev->send_section_map);
-+	bitmap_free(nvdev->send_section_map);
- 
- 	for (i = 0; i < VRSS_CHANNEL_MAX; i++) {
- 		xdp_rxq_info_unreg(&nvdev->chan_table[i].xdp_rxq);
-@@ -336,7 +336,6 @@ static int netvsc_init_buf(struct hv_device *device,
- 	struct net_device *ndev = hv_get_drvdata(device);
- 	struct nvsp_message *init_packet;
- 	unsigned int buf_size;
--	size_t map_words;
- 	int i, ret = 0;
- 
- 	/* Get receive buffer area. */
-@@ -528,10 +527,9 @@ static int netvsc_init_buf(struct hv_device *device,
- 		   net_device->send_section_size, net_device->send_section_cnt);
- 
- 	/* Setup state for managing the send buffer. */
--	map_words = DIV_ROUND_UP(net_device->send_section_cnt, BITS_PER_LONG);
--
--	net_device->send_section_map = kcalloc(map_words, sizeof(ulong), GFP_KERNEL);
--	if (net_device->send_section_map == NULL) {
-+	net_device->send_section_map = bitmap_zalloc(net_device->send_section_cnt,
-+						     GFP_KERNEL);
-+	if (!net_device->send_section_map) {
- 		ret = -ENOMEM;
- 		goto cleanup;
- 	}
+You are awesome, thank you!
 -- 
-2.30.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
