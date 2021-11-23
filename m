@@ -2,40 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5043C45A9C9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Nov 2021 18:15:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3FE545AA4F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Nov 2021 18:45:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238738AbhKWRSX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 Nov 2021 12:18:23 -0500
-Received: from mail-cusazon11021017.outbound.protection.outlook.com ([52.101.62.17]:9165
+        id S233738AbhKWRsW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Nov 2021 12:48:22 -0500
+Received: from mail-oln040093013011.outbound.protection.outlook.com ([40.93.13.11]:12422
         "EHLO na01-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230176AbhKWRSW (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 Nov 2021 12:18:22 -0500
+        id S231621AbhKWRsV (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 23 Nov 2021 12:48:21 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ofeO3IbaEIXYKeT1TsuF9vyBcAiDKIr63Pl2J/XmdOCi1FIpB/mi2WUn0I50trgVBsDltAsalGa8wL3WcpDTqdbVwHO5yQ2egWCpC8h2vQSmQSVaf65CpBAEiR0ZRvBhnheWyxBvFROViLj01G7vRBBsWlW1zdypPDmZYcE7VxbedfICMhAit54G5jNJIgngIGYtDeP6btB2Cl4qbP21aDbpfqe1NPDo5cQaDzzx33Qch2L1SDiO9DExoUVFnyNkBiRVnzeTkKyiGWq7so9piqGLjrfJTOUABVYEDyCPsvJGjkBtsNXfka4+MR16M0lhTdaDRwHuJJQFahuh33jWNQ==
+ b=PwGWpAsN4JPTDyabFy5CC/qEaL/7R8XiI3wfS0zU6v+txO+ZpKtf9i83JsXwVs6hb48dk1wEi2lukMOyLOn3Ozl0/Hlxb/++tuI0Xjy7s595RFZmmGw+ug7BIhntNBxmp6YlunRPY0C3LslcvUBh1wWyQ7d+efuO2rBnMWGbDRhHEcvICMcRYuxYJWyegfnMrGTjJuLH9SUn4Y85BDKAeaDhVU7kr26Byz4t9mfiMBU2zoNQ3UC/pjTURAukFo24HVM+gxKadT7YXOIJCCEW8+wfOq85XACrsqh0ieBEI63QuL6ec0hWFQFFEVpTfkmflu/jK+XokQIb9qsaRqOa6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P/AgrRAsE3e8DwVFyZb8mhen++/8s7P4Fv34JlkvGGY=;
- b=VzXLSexfFuAhvdqPvnPnrCNAa5dbJi3hJbMyMb5OG/NvlTeOKpW37ZnTJ21aFz4dCHjQLgYf0CVaAR+OUXl7cbYeaGHRItM8Yjz4JysfCh1UZy1lQcwdntQmRHhpl59ROVlA2AFPM7t7UG6mdONlh/Lhxyqqfcqr8C7WZO8hKRyiGHoz8V1zU66Jewo0nHle/DhZQNw9Sg30cqKebxYCMBaHXyv9UVJi+U9JFcnFMZpDJO5pgWdk66Au1en/gqXbvrky8iLIHpC2XurwygspZEd9twJhDZorX+nnSXL0xiJeG0iHwJZhi/mdX1bFyNyl+L619KaqhlIFViQIYMPtDw==
+ bh=IoeEDz8RJcg9PZleLooYwnpY2A5G19CQR2Rx90ECbAY=;
+ b=kNAVUkNm0AtUfwCCTkpYyE1HMAbAIUs1sZhQZbR67VN+jc1J8zDxoGiNA/FYPQ8cz+JCaHS+x6KfTZBzMWLujnQSDIcABmWOfrLNLJjjEpQu8xMNOkM+cavkRiomyQlUmJnHoCIxLfCRq7F6ZszH/247uKo7EOlexYRTMI7M3xxz3TwxBAdS81wpFEbj9n/VVJ46i4H4YL8vXwl+8MKL3wftC93qeTLSWbfa4GIeGuEgdhJjPGK/h7OFLKXO469MDImlusV6AkJxF1uwWCqgZfHmXl6C7f86TrTAz/XV/9/lb2hr4/4IBaYO2b5pH+OBKEz0J+1BvvOZvuQfCSeQDQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/AgrRAsE3e8DwVFyZb8mhen++/8s7P4Fv34JlkvGGY=;
- b=LRbON/l4Wn4pQbkGozGRsjGU4x/WFNw2ml93FZI5b39xp+wBEipFK6g5tZ91ZMrIIy3Udqq+AdtEdOzOvVoPflvUvq7/8PsIp9ZYnKa+P3n7ABQ54NVu9A7RIh4Q+a9eSRAJan6wEVG4SIW+3Y5rP4OSurHxJwx9RQZ+y1dJIBU=
+ bh=IoeEDz8RJcg9PZleLooYwnpY2A5G19CQR2Rx90ECbAY=;
+ b=ax1SdL7QWQEs3Mm4figypoTN+iYMls4K6NtKCmy2s2Sa0pEqF1AHgtYDGuGQE+hKYmzZAIurTaDUbMVwTZ/+8S46c6pVHTbi1xuPiCWbK60EYZ5wwr/XX6Mj4xtrJExEVzsHG8lpgNoVwrzrgLmFPEyWnCS5IAyhEaE23mzzeYg=
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW4PR21MB1971.namprd21.prod.outlook.com (2603:10b6:303:7d::23) with
+ by MWHPR21MB0766.namprd21.prod.outlook.com (2603:10b6:300:76::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.2; Tue, 23 Nov
- 2021 17:15:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.5; Tue, 23 Nov
+ 2021 17:44:56 +0000
 Received: from MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::9401:9c8b:c334:4336]) by MWHPR21MB1593.namprd21.prod.outlook.com
  ([fe80::9401:9c8b:c334:4336%2]) with mapi id 15.20.4755.001; Tue, 23 Nov 2021
- 17:15:05 +0000
+ 17:44:56 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 To:     Tianyu Lan <ltykernel@gmail.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
@@ -75,78 +75,78 @@ CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
         "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
         "dave.hansen@intel.com" <dave.hansen@intel.com>
-Subject: RE: [PATCH V2 1/6] Swiotlb: Add Swiotlb bounce buffer remap function
- for HV IVM
-Thread-Topic: [PATCH V2 1/6] Swiotlb: Add Swiotlb bounce buffer remap function
- for HV IVM
-Thread-Index: AQHX4HeSpdu4+UVN+0mZE44Ng5xByawRUlog
-Date:   Tue, 23 Nov 2021 17:15:05 +0000
-Message-ID: <MWHPR21MB1593169593AD833A91DF553FD7609@MWHPR21MB1593.namprd21.prod.outlook.com>
+Subject: RE: [PATCH V2 4/6] hyperv/IOMMU: Enable swiotlb bounce buffer for
+ Isolation VM
+Thread-Topic: [PATCH V2 4/6] hyperv/IOMMU: Enable swiotlb bounce buffer for
+ Isolation VM
+Thread-Index: AQHX4HeZTePwP1ztSUyjgsbuNOQDvKwRXCXw
+Date:   Tue, 23 Nov 2021 17:44:56 +0000
+Message-ID: <MWHPR21MB15939F017D1D6B8F62B90A8DD7609@MWHPR21MB1593.namprd21.prod.outlook.com>
 References: <20211123143039.331929-1-ltykernel@gmail.com>
- <20211123143039.331929-2-ltykernel@gmail.com>
-In-Reply-To: <20211123143039.331929-2-ltykernel@gmail.com>
+ <20211123143039.331929-5-ltykernel@gmail.com>
+In-Reply-To: <20211123143039.331929-5-ltykernel@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=20ac84dd-6068-4158-8f23-31c48ca2fb69;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-11-23T16:46:20Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=01595679-7835-4908-9946-56a7173067a5;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-11-23T17:21:24Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 53492aa7-ed12-4d2a-c4a9-08d9aea4cb26
-x-ms-traffictypediagnostic: MW4PR21MB1971:
+x-ms-office365-filtering-correlation-id: ad468222-e641-4222-cfca-08d9aea8f6d0
+x-ms-traffictypediagnostic: MWHPR21MB0766:
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW4PR21MB1971D59BCDA7CB082BD583D7D7609@MW4PR21MB1971.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:33;
+x-microsoft-antispam-prvs: <MWHPR21MB0766610FE18BE30DC3AFF026D7609@MWHPR21MB0766.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:107;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BXFhhPGWjUIhW86hag+IGKX2AN6z4EyarBn7Qc4McNDeHg6TSwJhkEjOVl8neYr5gw9gmvUkK1he8hJEL3RWGJsKBFuqMf3HkP7+mTGE9QuDCeYxkhVU4QbTsfmsmlN7I1of0apRzOR1MU6r5/BETidQkc9iakKkJOGZ5kOZrjKvUX3TXesk3f73eY+jMw4/A0cKuiHdFWFeLZSkinZFfAIOzrN1xYY4uEHVnsSqNMHSAGoEYhN9B2J2oCLrZYm+Fgi/Y7s3ZQtCiMPpV1ogEsvAo7fUOQD43miXe4pebQDEMcs66JTHcmrhH0PsWQNVtIpLWefxaLx8YzV7EFWX40GVIe5pu5LGpgkYcWLU5BDZkYfYQjKGJ/kBfxgKuQGtobD2h372cW4tciiAQV/zy9xkl1tlCM6fs+CGcp5E/LOtiq8gRbjL7PF04j/AWMT+ej4t8H2O2yikWNwCLVqVuQIs3PQwOhL/jHKj22tOxni5Tw8FuxPHsRdgieyc9GuhzWRgvDS+1nejLoQhVh1RrbKjX+/vq0PCWfWi1hESEYNDj/Fzjqe/BfJKlqEHEx+B8/tnjZ0uJxT6ZB7D7waL8jOpXr/jPuaLzP4WE8+9rHPNnm9Rgsh/3qM4zRwUwIOLkim3ZXr35Bt12VhdJmmF9JCgx7faa57NTRxZhNAK4r1jVafXdzO4vKiNS+CJ+/Ahfs2XYQoShEK2Tg8X3+LKL9dc5nJe6Kck1npvgPoBsuemdGLEIGRjR5Junx2rxLFo10+zmiXhtlCN8Kbeoa4d6Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(10290500003)(8676002)(52536014)(122000001)(86362001)(66446008)(38100700002)(4326008)(55016003)(316002)(64756008)(2906002)(83380400001)(66946007)(33656002)(66556008)(9686003)(76116006)(8936002)(110136005)(921005)(66476007)(38070700005)(54906003)(82960400001)(508600001)(8990500004)(7406005)(7416002)(5660300002)(7696005)(71200400001)(6506007)(26005)(186003)(82950400001)(20210929001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: PQHX+WfrutwZHoDw2EkkZhgKmBDUKUwwh01GlsdycqRch95JfJRX8eCkvSFLdsij5F9tLZm44zX6wJIXlqx13PrE9Ufjev6une7Q72Qdqx75zkoeLmLctuQHR3hI+sjlsLElf1e3th/pEPm6IqntCRbXvY9+/SOU794BhVBlUQkpxsPHhQF+ddmlYt19Zxr77BbzIQa6PLokR9enhRrFublaYYhWvTuumUDK5hoZP/kY7jBVKYTHoO4DcNh0v6nqNSs98UpdPaU0pKQ61vWrte9PiCh3q21YhIcJ/oqBo+rs0z3e71QulSNwG9vfKWAjvPPC99a3hxxc7/eMij4rLb6OLfXsY5Ra09NUlweOlPIjBiBDTPktUyo+CuDDVS1r0mfnjMtsMKM0Eu/0TtpbFawuKMFc03WemUm8kW/3UcjDwQVw6ApDuzIWbIe9fTD7rAcYK3mz8VtrpdfmvB2Hch2oZm78s6em6gtpBOR1kbuPIe2dGHC2B6gss36SZ0NyTQJsG18qTrJfOYR70KcMSKbrOjZSVxt+z45N9yNC9ATN1t5rv52K0qV5PtXTDGbNutHncSBF2uP0gw08j9C8ZGpkJ8VlTStTZYrlddeamxD4K7Vl02hrVeOVv3LiQhlrWDpLWWLkrfqsjRufETy0vgx64b9NZcbdWGa+lIHqzd2xJ2u4GdEquM+973P78lXiTva4DZ5Uo+ACScYqKaV2KxtG/Zq4uNCyU7ju8f7vgcFxRbaTsikBJ9izamquQhpPmSdMvJ7rbitWq3PGkpkfCA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(316002)(10290500003)(86362001)(508600001)(8676002)(110136005)(7416002)(76116006)(33656002)(5660300002)(8936002)(82950400001)(55016003)(82960400001)(38100700002)(4326008)(64756008)(66556008)(66476007)(66446008)(71200400001)(9686003)(7406005)(122000001)(54906003)(52536014)(6506007)(8990500004)(186003)(26005)(66946007)(38070700005)(921005)(30864003)(83380400001)(7696005)(20210929001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?qISMY46OkQlgn6H3Q+Fooujnc0qtjjsuFvjmlGqNjADwI/t3dApfBKnJQqAi?=
- =?us-ascii?Q?LhSqbZ4AxJDpwRrzc7u1RpQ+vm19FSk54j0IGjA8EZf8YBnEsZSd2lkcZsCu?=
- =?us-ascii?Q?dUigtnQaRzHbRlHnnmL2EiIcpunEfZORCYU54REGEKHCxXkqgUwBpD2Kg/8T?=
- =?us-ascii?Q?4Uc6D6hKnsxUKvmul/pGVPO4nOwPWI8QHnq7DiBTEspZ7W63uncbzodNk/+H?=
- =?us-ascii?Q?E+D1J1aoZbS76vHWva0rutqG5Aj1fH71UabpZuNyVafpvdZwlDkOT5kMAL3M?=
- =?us-ascii?Q?KZuQS/IJvggbG69rmEjXMWg0QllMCme3BuGdlo6TSGNeBfBjHFeDAdGEmSMl?=
- =?us-ascii?Q?+Ge9bM5HUeB/GW6BUpQ5tMN1nmAIMBIZY81yYLq+79Ve+T98OnkevqKHZVKw?=
- =?us-ascii?Q?c3+igq9hp1gJnF6JRWIX8iXQA5TgmA4ebDCQ8i4bP6LKlOUTj8CgaVXMsC+j?=
- =?us-ascii?Q?T99OJbyIB8tnxcfSDJlFGs0V67X5E5tvT7Ee+F4uGkUDUrOhsCeZSflUgKTZ?=
- =?us-ascii?Q?XbVxwt9u62qbLoS8za9VMuXovi96lh9D71Fz4gEd8P0+o/r2OrtUq3LMF9aa?=
- =?us-ascii?Q?W8yXsrbbwrm5l7ji8eiEby+c5cinyfcLDIuBN/ir6xnpdUmzk3a+f9Ell675?=
- =?us-ascii?Q?Ae+rZDIVmaabImPhIDmR6iXXBVt9SB05GwplFjiKhd3iQbTKd/DrZQQ3pVHf?=
- =?us-ascii?Q?+8oFJtp3TqPekFbovgX251rIwdV/p9/I352mSFPyL0pAQw1ifSgqRhYtSMPa?=
- =?us-ascii?Q?A2vrcrwD72Wk0ibEmkHXfxe6Wr8ynV7TqUIqwnfBizNH639fD0R6b/488Dab?=
- =?us-ascii?Q?b1VWosuelySMOZ5zuNTEl2Ea9p2V1VHUYQrrhS6AzP0YNnh26TRhuPKGJJzz?=
- =?us-ascii?Q?chOkU2DW9ZEHoTrO+D/JLqb6YwXee0/Q6IOkIqyjo5deCmHB2iVbCKZlLL6/?=
- =?us-ascii?Q?QueJUgp2TMBWdT8KkG4eNBIXiuk3UzHadn3fJ6JChhgpwRRI+kLVG8vn8IO/?=
- =?us-ascii?Q?hG0Zw5+QM48RQfjF0p0KH461iCBThm5eFtz1DDPPcmNQZV1xY9NGll81QafF?=
- =?us-ascii?Q?bmVYddjSjStF2l27QNQKz6i9oowIcmmIFpMuToGaHbFw+D9375NzjntEYuk4?=
- =?us-ascii?Q?XBpD/oArQTrL2dQFXirXMkkolf8YgunNxPSGM7vzVNf5opxyOb77/XCpsQ6w?=
- =?us-ascii?Q?qQjXjav1pCVM4H2KedC3HZUFnhElwJRaUWuTU0yGtUZwk6055N28FKWHs+mG?=
- =?us-ascii?Q?gwmrF0h7fL+0hpQwqsz+HNAf3Xb7NWgm0fvUk7868SZ+kGfvVd2zM8F7/rJ3?=
- =?us-ascii?Q?dp/I0NkxJjnp77x11byGMidgQMmO3bDc2bvSZ39R2q7fKDYvwx79zMz/btYV?=
- =?us-ascii?Q?rzomLqrftvhqjFRRqnjI92Nq3FiWvQd9hKaYVLbuhG0sah3NjLL1c1JtUT7t?=
- =?us-ascii?Q?yEoPliQvo13G9VVGtpHkoFcImQGKS5j5MzGGQ3Cw6s9gc0Xl5H6+aZQq0+EX?=
- =?us-ascii?Q?+CGBAaxcQq5P0MNzzJKQb95OhpNbia3wRecfEWqRarcgzZWZKAAn7T4kfwOK?=
- =?us-ascii?Q?pqedMNb2NTnq/RJlpwcJnIRsZv3vCGVip+jzRUNco/pGQDBteTSfEmoTLqG4?=
- =?us-ascii?Q?nR4tYLXJh6KcBCwvTUjlBDjJGXLrVctJqC6VX7bGJ2FfXRBidEDIPihqIswO?=
- =?us-ascii?Q?u6uoCQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?oIiCGN/JDykGgKkdoKHpmIRN6x2zdYFhZJMciGoQK7qYSAPf5VAbJ9QfLd41?=
+ =?us-ascii?Q?5tQfMI5c73cZl/bolu159YkWLHYN0w1JjXXrWaHbeuaxBZoaKWTZmS7pLJqi?=
+ =?us-ascii?Q?m0VEqrLg0C4KAZVuORIFGHBZWfvJ18dIAt/SHbXPDgk92j7a3njSUnhJJ8fB?=
+ =?us-ascii?Q?P0ZSfGEUKbcQkybBiw4fgTq16rEQVil3QShxjcaPevuOLBOIefFKUDbrADNP?=
+ =?us-ascii?Q?4E5s6ZNyLwI7m7Ue8ogTsUfCMdazI9KdMEePA2KvEXlDuIG0NoaA86zXC5Wm?=
+ =?us-ascii?Q?bkirtbt0rrzStyjvsssrXXh88ncLahYuU6nr02c81ydnn0m7NIaJRXVaG4Gd?=
+ =?us-ascii?Q?vVIQBbaOThPglQ6xpKPadlMOoQSq+Ifu4NY+yHRrwRdORmH/ZJA9VxG5Kh6b?=
+ =?us-ascii?Q?z9RiDJj8wNN/lwVwF9x8njslgH3drJ4hqJ+jR9WYRLH/Z3VErRPuHx1tpjP8?=
+ =?us-ascii?Q?vmGLKk+00KRN8pjGtaiMd9xbvzx5LFZqjY+g1liwz2seucjVWEgjk499TE4G?=
+ =?us-ascii?Q?YcDnLH/ofvTtWxePn3C2qyULcT0C8J1nXegBzellqJZRMQtFxnNJCXB/upSV?=
+ =?us-ascii?Q?iUwxgOtSc32/GTK11G69JVTGJB0gX9zodUm9Fop8l8Ylb7dfssMPpAo9vNI3?=
+ =?us-ascii?Q?JQtyvrLI/Gwd/uSsGtoXa8hyrpuE18FAWxYBcCdfclNq8sSOApQ9E2ySGPtt?=
+ =?us-ascii?Q?PIdhqP9gC0sDzJyVokdKp3NiHL2yedqoFq/Zm8r+kPbpsiCr6FQnGxKOipke?=
+ =?us-ascii?Q?ABbT+/h+vl+6cPlEYkrWi8W9ZY2yJ9rhAYbre76Q4ceRByPnWpqYL0t08Mfa?=
+ =?us-ascii?Q?24x36G4YXZB0UAuy5EeBoFN6ScbD+ETwURdOARma+5d+mN7y/fuzdtZYzAey?=
+ =?us-ascii?Q?iFd82Fj6SFNznrKbaL6LSqywxtI8CUwFoQeGDuRwa4cYUB1uFj45r40c1F4+?=
+ =?us-ascii?Q?vQ0TJceAko2E4bADiT5AQBJVnDtvZ6VAf34iuivgnRGSqn2hVi+cV8qHd+G9?=
+ =?us-ascii?Q?ZumGAlyHYUU7T0mxe/fUH2Fzfh3cgkACRr4IAT9OghB10mGVHKtScu1Hwq27?=
+ =?us-ascii?Q?PDafH2A4OMS8rs4Bcj4UGNsN5I6DPEBUAroRjHMNiVoEPLkXrakF3wXGNvxi?=
+ =?us-ascii?Q?B6U1fW+TGINwBFpkMhzkY8Twz3V3f3ZlWhQt+sDx1sHr3qYagVHWWNlHPI2g?=
+ =?us-ascii?Q?8C3e87ZMT4HC0F4ULjTcbkRy7SrdUvGiU/yWOK7PyDsPEbBWpraWPEr+W+Ux?=
+ =?us-ascii?Q?fNP9O3dVbrTsR/UH6ddGRrKzaAwgleAQzairEH02q7g/LjymghxNgjmXptoj?=
+ =?us-ascii?Q?ph+lmB6cBlXDQJy3T35hycTp+ByrOHuLPnmO265NqGRDJJjBzlr/oVihQllM?=
+ =?us-ascii?Q?k3RVEw8A+yFCqunPC8dnUeFKQ71S2ML15jpGCMAJDyWfjI1Q8lnTIVOCSqE7?=
+ =?us-ascii?Q?kJj1X8qiZnUghjaAlN5SPmCH+D2a01Vm8Wg+agdHeCpvPUmndfBfECBJHOr3?=
+ =?us-ascii?Q?HoQWDqIBwSYV5BlnwR0a8ummJNEHVdeosYQVoNqumDL3GeWG5jlj8S2SFfwy?=
+ =?us-ascii?Q?qwiptrGVmFGJyJQKxzc5RoKJW7T0wMSpR6HqGdsPchnVKMiIAqVHXYcEpyNG?=
+ =?us-ascii?Q?RfFrG3X2hroXxZDSeJWoTDJwGKPakLbHBtVR1yN0B3OlQaNXiOZWs3lacXic?=
+ =?us-ascii?Q?w1kILA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53492aa7-ed12-4d2a-c4a9-08d9aea4cb26
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Nov 2021 17:15:05.4451
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad468222-e641-4222-cfca-08d9aea8f6d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Nov 2021 17:44:56.7534
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qOra8OzZ1qzl4uDv+Uqevz5sK8v2xfxSnG8vFqHfIOM0Oy922aI0mTzsdUUVDZVH/Wnt8KuFdM80KvCyac4asMKfi1SHXugr+JXT1telu3Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1971
+X-MS-Exchange-CrossTenant-userprincipalname: HirjXOPg7516nskoSMI97AYHuXPmpOv+pekjcHQb3yVj0UpmdpoXFSIXzfn1ke2EQgmVMviyGziOTTZbgPMktc/jVGi9keZlONzsu1GkfDM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0766
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -154,223 +154,369 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 From: Tianyu Lan <ltykernel@gmail.com> Sent: Tuesday, November 23, 2021 6:3=
 1 AM
 >=20
-> In Isolation VM with AMD SEV, bounce buffer needs to be accessed via
-> extra address space which is above shared_gpa_boundary (E.G 39 bit
-> address line) reported by Hyper-V CPUID ISOLATION_CONFIG. The access
-> physical address will be original physical address + shared_gpa_boundary.
-> The shared_gpa_boundary in the AMD SEV SNP spec is called virtual top of
-> memory(vTOM). Memory addresses below vTOM are automatically treated as
-> private while memory above vTOM is treated as shared.
+> hyperv Isolation VM requires bounce buffer support to copy
+> data from/to encrypted memory and so enable swiotlb force
+> mode to use swiotlb bounce buffer for DMA transaction.
 >=20
-> Expose swiotlb_unencrypted_base for platforms to set unencrypted
-> memory base offset and platform calls swiotlb_update_mem_attributes()
-> to remap swiotlb mem to unencrypted address space. memremap() can
-> not be called in the early stage and so put remapping code into
-> swiotlb_update_mem_attributes(). Store remap address and use it to copy
-> data from/to swiotlb bounce buffer.
+> In Isolation VM with AMD SEV, the bounce buffer needs to be
+> accessed via extra address space which is above shared_gpa_boundary
+> (E.G 39 bit address line) reported by Hyper-V CPUID ISOLATION_CONFIG.
+> The access physical address will be original physical address +
+> shared_gpa_boundary. The shared_gpa_boundary in the AMD SEV SNP
+> spec is called virtual top of memory(vTOM). Memory addresses below
+> vTOM are automatically treated as private while memory above
+> vTOM is treated as shared.
+>=20
+> Hyper-V initalizes swiotlb bounce buffer and default swiotlb
+> needs to be disabled. pci_swiotlb_detect_override() and
+> pci_swiotlb_detect_4gb() enable the default one. To override
+> the setting, hyperv_swiotlb_detect() needs to run before
+> these detect functions which depends on the pci_xen_swiotlb_
+> init(). Make pci_xen_swiotlb_init() depends on the hyperv_swiotlb
+> _detect() to keep the order.
+>=20
+> Swiotlb bounce buffer code calls set_memory_decrypted()
+> to mark bounce buffer visible to host and map it in extra
+> address space via memremap. Populate the shared_gpa_boundary
+> (vTOM) via swiotlb_unencrypted_base variable.
+>=20
+> The map function memremap() can't work in the early place
+> hyperv_iommu_swiotlb_init() and so call swiotlb_update_mem_attributes()
+> in the hyperv_iommu_swiotlb_later_init().
+>=20
+> Add Hyper-V dma ops and provide alloc/free and vmap/vunmap noncontiguous
+> callback to handle request of  allocating and mapping noncontiguous dma
+> memory in vmbus device driver. Netvsc driver will use this. Set dma_ops_
+> bypass flag for hv device to use dma direct functions during mapping/unma=
+pping
+> dma page.
 >=20
 > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > ---
 > Change since v1:
-> 	* Rework comment in the swiotlb_init_io_tlb_mem()
-> 	* Make swiotlb_init_io_tlb_mem() back to return void.
-> ---
->  include/linux/swiotlb.h |  6 +++++
->  kernel/dma/swiotlb.c    | 53 +++++++++++++++++++++++++++++++++++++----
->  2 files changed, 54 insertions(+), 5 deletions(-)
+> 	* Remove hv isolation check in the sev_setup_arch()
 >=20
-> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-> index 569272871375..f6c3638255d5 100644
-> --- a/include/linux/swiotlb.h
-> +++ b/include/linux/swiotlb.h
-> @@ -73,6 +73,9 @@ extern enum swiotlb_force swiotlb_force;
->   * @end:	The end address of the swiotlb memory pool. Used to do a quick
->   *		range check to see if the memory was in fact allocated by this
->   *		API.
-> + * @vaddr:	The vaddr of the swiotlb memory pool. The swiotlb memory pool
-> + *		may be remapped in the memory encrypted case and store virtual
-> + *		address for bounce buffer operation.
->   * @nslabs:	The number of IO TLB blocks (in groups of 64) between @start=
- and
->   *		@end. For default swiotlb, this is command line adjustable via
->   *		setup_io_tlb_npages.
-> @@ -92,6 +95,7 @@ extern enum swiotlb_force swiotlb_force;
->  struct io_tlb_mem {
->  	phys_addr_t start;
->  	phys_addr_t end;
-> +	void *vaddr;
->  	unsigned long nslabs;
->  	unsigned long used;
->  	unsigned int index;
-> @@ -186,4 +190,6 @@ static inline bool is_swiotlb_for_alloc(struct device=
- *dev)
+>  arch/x86/mm/mem_encrypt.c      |   1 +
+>  arch/x86/xen/pci-swiotlb-xen.c |   3 +-
+>  drivers/hv/Kconfig             |   1 +
+>  drivers/hv/vmbus_drv.c         |   6 ++
+>  drivers/iommu/hyperv-iommu.c   | 164 +++++++++++++++++++++++++++++++++
+>  include/linux/hyperv.h         |  10 ++
+>  6 files changed, 184 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+> index 35487305d8af..e48c73b3dd41 100644
+> --- a/arch/x86/mm/mem_encrypt.c
+> +++ b/arch/x86/mm/mem_encrypt.c
+> @@ -31,6 +31,7 @@
+>  #include <asm/processor-flags.h>
+>  #include <asm/msr.h>
+>  #include <asm/cmdline.h>
+> +#include <asm/mshyperv.h>
+
+There is no longer any need to add this #include since code changes to this
+file in a previous version of the patch are now gone.
+
+>=20
+>  #include "mm_internal.h"
+>=20
+> diff --git a/arch/x86/xen/pci-swiotlb-xen.c b/arch/x86/xen/pci-swiotlb-xe=
+n.c
+> index 46df59aeaa06..30fd0600b008 100644
+> --- a/arch/x86/xen/pci-swiotlb-xen.c
+> +++ b/arch/x86/xen/pci-swiotlb-xen.c
+> @@ -4,6 +4,7 @@
+>=20
+>  #include <linux/dma-map-ops.h>
+>  #include <linux/pci.h>
+> +#include <linux/hyperv.h>
+>  #include <xen/swiotlb-xen.h>
+>=20
+>  #include <asm/xen/hypervisor.h>
+> @@ -91,6 +92,6 @@ int pci_xen_swiotlb_init_late(void)
+>  EXPORT_SYMBOL_GPL(pci_xen_swiotlb_init_late);
+>=20
+>  IOMMU_INIT_FINISH(pci_xen_swiotlb_detect,
+> -		  NULL,
+> +		  hyperv_swiotlb_detect,
+>  		  pci_xen_swiotlb_init,
+>  		  NULL);
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index dd12af20e467..d43b4cd88f57 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -9,6 +9,7 @@ config HYPERV
+>  	select PARAVIRT
+>  	select X86_HV_CALLBACK_VECTOR if X86
+>  	select VMAP_PFN
+> +	select DMA_OPS_BYPASS
+>  	help
+>  	  Select this option to run Linux as a Hyper-V client operating
+>  	  system.
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 392c1ac4f819..32dc193e31cd 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/random.h>
+>  #include <linux/kernel.h>
+>  #include <linux/syscore_ops.h>
+> +#include <linux/dma-map-ops.h>
+>  #include <clocksource/hyperv_timer.h>
+>  #include "hyperv_vmbus.h"
+>=20
+> @@ -2078,6 +2079,7 @@ struct hv_device *vmbus_device_create(const guid_t =
+*type,
+>  	return child_device_obj;
 >  }
->  #endif /* CONFIG_DMA_RESTRICTED_POOL */
 >=20
-> +extern phys_addr_t swiotlb_unencrypted_base;
-> +
->  #endif /* __LINUX_SWIOTLB_H */
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index 8e840fbbed7c..c303fdeba82f 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -50,6 +50,7 @@
->  #include <asm/io.h>
->  #include <asm/dma.h>
->=20
-> +#include <linux/io.h>
->  #include <linux/init.h>
->  #include <linux/memblock.h>
->  #include <linux/iommu-helper.h>
-> @@ -72,6 +73,8 @@ enum swiotlb_force swiotlb_force;
->=20
->  struct io_tlb_mem io_tlb_default_mem;
->=20
-> +phys_addr_t swiotlb_unencrypted_base;
-> +
+> +static u64 vmbus_dma_mask =3D DMA_BIT_MASK(64);
 >  /*
->   * Max segment that we can provide which (if pages are contingous) will
->   * not be bounced (unless SWIOTLB_FORCE is set).
-> @@ -155,6 +158,31 @@ static inline unsigned long nr_slots(u64 val)
->  	return DIV_ROUND_UP(val, IO_TLB_SIZE);
->  }
->=20
-> +/*
-> + * Remap swioltb memory in the unencrypted physical address space
-> + * when swiotlb_unencrypted_base is set. (e.g. for Hyper-V AMD SEV-SNP
-> + * Isolation VMs).
-> + */
-> +void *swiotlb_mem_remap(struct io_tlb_mem *mem, unsigned long bytes)
-> +{
-> +	void *vaddr;
-> +
-> +	if (swiotlb_unencrypted_base) {
-> +		phys_addr_t paddr =3D mem->start + swiotlb_unencrypted_base;
-> +
-> +		vaddr =3D memremap(paddr, bytes, MEMREMAP_WB);
-> +		if (!vaddr) {
-> +			pr_err("Failed to map the unencrypted memory %llx size %lx.\n",
-> +			       paddr, bytes);
-> +			return NULL;
-> +		}
-> +
-> +		return vaddr;
-> +	}
-> +
-> +	return phys_to_virt(mem->start);
-> +}
-> +
->  /*
->   * Early SWIOTLB allocation may be too early to allow an architecture to
->   * perform the desired operations.  This function allows the architectur=
-e to
-> @@ -172,7 +200,14 @@ void __init swiotlb_update_mem_attributes(void)
->  	vaddr =3D phys_to_virt(mem->start);
->  	bytes =3D PAGE_ALIGN(mem->nslabs << IO_TLB_SHIFT);
->  	set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
-> -	memset(vaddr, 0, bytes);
-> +
-> +	mem->vaddr =3D swiotlb_mem_remap(mem, bytes);
-> +	if (!mem->vaddr) {
-> +		pr_err("Fail to remap swiotlb mem.\n");
-> +		return;
-> +	}
-> +
-> +	memset(mem->vaddr, 0, bytes);
->  }
-
-In the error case, do you want to leave mem->vaddr as NULL?  Or is it
-better to leave it as the virtual address of mem-start?  Your code leaves i=
-t
-as NULL.
-
-The interaction between swiotlb_update_mem_attributes() and the helper
-function swiotlb_memo_remap() seems kind of clunky.  phys_to_virt() gets ca=
-lled
-twice, for example, and two error messages are printed.  The code would be
-more straightforward by just putting the helper function inline:
-
-mem->vaddr =3D phys_to_virt(mem->start);
-bytes =3D PAGE_ALIGN(mem->nslabs << IO_TLB_SHIFT);
-set_memory_decrypted((unsigned long)(mem->vaddr), bytes >> PAGE_SHIFT);
-
-if (swiotlb_unencrypted_base) {
-	phys_addr_t paddr =3D mem->start + swiotlb_unencrypted_base;
-
-	mem->vaddr =3D memremap(paddr, bytes, MEMREMAP_WB);
-	if (!mem->vaddr) {
-		pr_err("Failed to map the unencrypted memory %llx size %lx.\n",
-			       paddr, bytes);
-		return;
-	}
-}
-
-memset(mem->vaddr, 0, bytes);
-
-(This version also leaves mem->vaddr as NULL in the error case.)
-
->=20
->  static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t =
-start,
-> @@ -196,7 +231,18 @@ static void swiotlb_init_io_tlb_mem(struct io_tlb_me=
-m *mem, phys_addr_t start,
->  		mem->slots[i].orig_addr =3D INVALID_PHYS_ADDR;
->  		mem->slots[i].alloc_size =3D 0;
+>   * vmbus_device_register - Register the child device
+>   */
+> @@ -2118,6 +2120,10 @@ int vmbus_device_register(struct hv_device *child_=
+device_obj)
 >  	}
+>  	hv_debug_add_dev_dir(child_device_obj);
+>=20
+> +	child_device_obj->device.dma_ops_bypass =3D true;
+> +	child_device_obj->device.dma_ops =3D &hyperv_iommu_dma_ops;
+> +	child_device_obj->device.dma_mask =3D &vmbus_dma_mask;
+> +	child_device_obj->device.dma_parms =3D &child_device_obj->dma_parms;
+>  	return 0;
+>=20
+>  err_kset_unregister:
+> diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+> index e285a220c913..ebcb628e7e8f 100644
+> --- a/drivers/iommu/hyperv-iommu.c
+> +++ b/drivers/iommu/hyperv-iommu.c
+> @@ -13,14 +13,21 @@
+>  #include <linux/irq.h>
+>  #include <linux/iommu.h>
+>  #include <linux/module.h>
+> +#include <linux/hyperv.h>
+> +#include <linux/io.h>
+>=20
+>  #include <asm/apic.h>
+>  #include <asm/cpu.h>
+>  #include <asm/hw_irq.h>
+>  #include <asm/io_apic.h>
+> +#include <asm/iommu.h>
+> +#include <asm/iommu_table.h>
+>  #include <asm/irq_remapping.h>
+>  #include <asm/hypervisor.h>
+>  #include <asm/mshyperv.h>
+> +#include <asm/swiotlb.h>
+> +#include <linux/dma-map-ops.h>
+> +#include <linux/dma-direct.h>
+>=20
+>  #include "irq_remapping.h"
+>=20
+> @@ -337,4 +344,161 @@ static const struct irq_domain_ops hyperv_root_ir_d=
+omain_ops =3D {
+>  	.free =3D hyperv_root_irq_remapping_free,
+>  };
+>=20
+> +static void __init hyperv_iommu_swiotlb_init(void)
+> +{
+> +	unsigned long hyperv_io_tlb_size;
+> +	void *hyperv_io_tlb_start;
 > +
 > +	/*
-> +	 * If swiotlb_unencrypted_base is set, the bounce buffer memory will
-> +	 * be remapped and cleared in swiotlb_update_mem_attributes.
+> +	 * Allocate Hyper-V swiotlb bounce buffer at early place
+> +	 * to reserve large contiguous memory.
 > +	 */
-> +	if (swiotlb_unencrypted_base)
+> +	hyperv_io_tlb_size =3D swiotlb_size_or_default();
+> +	hyperv_io_tlb_start =3D memblock_alloc(hyperv_io_tlb_size, PAGE_SIZE);
+> +
+> +	if (!hyperv_io_tlb_start)
+> +		pr_warn("Fail to allocate Hyper-V swiotlb buffer.\n");
+> +
+> +	swiotlb_init_with_tbl(hyperv_io_tlb_start,
+> +			      hyperv_io_tlb_size >> IO_TLB_SHIFT, true);
+> +}
+> +
+> +int __init hyperv_swiotlb_detect(void)
+> +{
+> +	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV))
+> +		return 0;
+> +
+> +	if (!hv_is_isolation_supported())
+> +		return 0;
+> +
+> +	/*
+> +	 * Enable swiotlb force mode in Isolation VM to
+> +	 * use swiotlb bounce buffer for dma transaction.
+> +	 */
+> +	if (hv_isolation_type_snp())
+> +		swiotlb_unencrypted_base =3D ms_hyperv.shared_gpa_boundary;
+> +	swiotlb_force =3D SWIOTLB_FORCE;
+> +	return 1;
+> +}
+> +
+> +static void __init hyperv_iommu_swiotlb_later_init(void)
+> +{
+> +	/*
+> +	 * Swiotlb bounce buffer needs to be mapped in extra address
+> +	 * space. Map function doesn't work in the early place and so
+> +	 * call swiotlb_update_mem_attributes() here.
+> +	 */
+> +	swiotlb_update_mem_attributes();
+> +}
+> +
+> +IOMMU_INIT_FINISH(hyperv_swiotlb_detect,
+> +		  NULL, hyperv_iommu_swiotlb_init,
+> +		  hyperv_iommu_swiotlb_later_init);
+> +
+> +static struct sg_table *hyperv_dma_alloc_noncontiguous(struct device *de=
+v,
+> +		size_t size, enum dma_data_direction dir, gfp_t gfp,
+> +		unsigned long attrs)
+> +{
+> +	struct dma_sgt_handle *sh;
+> +	struct page **pages;
+> +	int num_pages =3D size >> PAGE_SHIFT;
+
+This assumes "size" is a multiple of PAGE_SIZE.  Probably should round
+up for safety.
+
+> +	void *vaddr, *ptr;
+> +	int rc, i;
+> +
+> +	if (!hv_isolation_type_snp())
+> +		return NULL;
+> +
+> +	sh =3D kmalloc(sizeof(*sh), gfp);
+> +	if (!sh)
+> +		return NULL;
+> +
+> +	vaddr =3D vmalloc(size);
+> +	if (!vaddr)
+> +		goto free_sgt;
+> +
+> +	pages =3D kvmalloc_array(num_pages, sizeof(struct page *),
+> +				    GFP_KERNEL | __GFP_ZERO);
+> +	if (!pages)
+> +		goto free_mem;
+> +
+> +	for (i =3D 0, ptr =3D vaddr; i < num_pages; ++i, ptr +=3D PAGE_SIZE)
+> +		pages[i] =3D vmalloc_to_page(ptr);
+> +
+> +	rc =3D sg_alloc_table_from_pages(&sh->sgt, pages, num_pages, 0, size, G=
+FP_KERNEL);
+> +	if (rc)
+> +		goto free_pages;
+> +
+> +	sh->sgt.sgl->dma_address =3D (dma_addr_t)vaddr;
+> +	sh->sgt.sgl->dma_length =3D size;
+
+include/linux/scatterlist.h defines macros sg_dma_address() and
+sg_dma_len() for accessing these two fields.   It's probably best to use th=
+em.
+
+> +	sh->pages =3D pages;
+> +
+> +	return &sh->sgt;
+> +
+> +free_pages:
+> +	kvfree(pages);
+> +free_mem:
+> +	vfree(vaddr);
+> +free_sgt:
+> +	kfree(sh);
+> +	return NULL;
+> +}
+> +
+> +static void hyperv_dma_free_noncontiguous(struct device *dev, size_t siz=
+e,
+> +		struct sg_table *sgt, enum dma_data_direction dir)
+> +{
+> +	struct dma_sgt_handle *sh =3D sgt_handle(sgt);
+> +
+> +	if (!hv_isolation_type_snp())
 > +		return;
 > +
-> +	set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
+> +	vfree((void *)sh->sgt.sgl->dma_address);
 
-Prior to this patch, and here in the new version as well, the return value =
-from
-set_memory_decrypted() is ignored in several places in this file.  As previ=
-ously
-discussed, swiotlb_init_io_tlb_mem() is a void function, so there's no plac=
-e to
-return an error. Is that OK?
+Use sg_dma_address()
 
->  	memset(vaddr, 0, bytes);
-> +	mem->vaddr =3D vaddr;
-> +	return;
->  }
+> +	sg_free_table(&sh->sgt);
+> +	kvfree(sh->pages);
+> +	kfree(sh);
+> +}
+> +
+> +static void *hyperv_dma_vmap_noncontiguous(struct device *dev, size_t si=
+ze,
+> +			struct sg_table *sgt)
+> +{
+> +	int pg_count =3D size >> PAGE_SHIFT;
+
+Round up so don't assume size is a multiple of PAGE_SIZE?
+
+> +	unsigned long *pfns;
+> +	struct page **pages =3D sgt_handle(sgt)->pages;
+> +	void *vaddr =3D NULL;
+> +	int i;
+> +
+> +	if (!hv_isolation_type_snp())
+> +		return NULL;
+> +
+> +	if (!pages)
+> +		return NULL;
+> +
+> +	pfns =3D kcalloc(pg_count, sizeof(*pfns), GFP_KERNEL);
+> +	if (!pfns)
+> +		return NULL;
+> +
+> +	for (i =3D 0; i < pg_count; i++)
+> +		pfns[i] =3D page_to_pfn(pages[i]) +
+> +			(ms_hyperv.shared_gpa_boundary >> PAGE_SHIFT);
+> +
+> +	vaddr =3D vmap_pfn(pfns, pg_count, PAGE_KERNEL);
+> +	kfree(pfns);
+> +	return vaddr;
+> +
+> +}
+> +
+> +static void hyperv_dma_vunmap_noncontiguous(struct device *dev, void *ad=
+dr)
+> +{
+> +	if (!hv_isolation_type_snp())
+> +		return;
+> +	vunmap(addr);
+> +}
+> +
+> +const struct dma_map_ops hyperv_iommu_dma_ops =3D {
+> +		.alloc_noncontiguous =3D hyperv_dma_alloc_noncontiguous,
+> +		.free_noncontiguous =3D hyperv_dma_free_noncontiguous,
+> +		.vmap_noncontiguous =3D hyperv_dma_vmap_noncontiguous,
+> +		.vunmap_noncontiguous =3D hyperv_dma_vunmap_noncontiguous,
+> +};
+> +EXPORT_SYMBOL_GPL(hyperv_iommu_dma_ops);
+> +
+>  #endif
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index b823311eac79..4d44fb3b3f1c 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -1726,6 +1726,16 @@ int hyperv_write_cfg_blk(struct pci_dev *dev, void=
+ *buf, unsigned int len,
+>  int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
+>  				void (*block_invalidate)(void *context,
+>  							 u64 block_mask));
+> +#ifdef CONFIG_HYPERV
+> +int __init hyperv_swiotlb_detect(void);
+> +#else
+> +static inline int __init hyperv_swiotlb_detect(void)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+> +extern const struct dma_map_ops hyperv_iommu_dma_ops;
 >=20
->  int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int ve=
-rbose)
-> @@ -318,7 +364,6 @@ swiotlb_late_init_with_tbl(char *tlb, unsigned long n=
-slabs)
->  	if (!mem->slots)
->  		return -ENOMEM;
->=20
-> -	set_memory_decrypted((unsigned long)tlb, bytes >> PAGE_SHIFT);
->  	swiotlb_init_io_tlb_mem(mem, virt_to_phys(tlb), nslabs, true);
->=20
->  	swiotlb_print_info();
-> @@ -371,7 +416,7 @@ static void swiotlb_bounce(struct device *dev, phys_a=
-ddr_t tlb_addr, size_t size
->  	phys_addr_t orig_addr =3D mem->slots[index].orig_addr;
->  	size_t alloc_size =3D mem->slots[index].alloc_size;
->  	unsigned long pfn =3D PFN_DOWN(orig_addr);
-> -	unsigned char *vaddr =3D phys_to_virt(tlb_addr);
-> +	unsigned char *vaddr =3D mem->vaddr + tlb_addr - mem->start;
->  	unsigned int tlb_offset, orig_addr_offset;
->=20
->  	if (orig_addr =3D=3D INVALID_PHYS_ADDR)
-> @@ -806,8 +851,6 @@ static int rmem_swiotlb_device_init(struct reserved_m=
-em *rmem,
->  			return -ENOMEM;
->  		}
->=20
-> -		set_memory_decrypted((unsigned long)phys_to_virt(rmem->base),
-> -				     rmem->size >> PAGE_SHIFT);
->  		swiotlb_init_io_tlb_mem(mem, rmem->base, nslabs, false);
->  		mem->force_bounce =3D true;
->  		mem->for_alloc =3D true;
+>  struct hyperv_pci_block_ops {
+>  	int (*read_block)(struct pci_dev *dev, void *buf, unsigned int buf_len,
 > --
 > 2.25.1
 
