@@ -2,125 +2,131 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 294E845EDA8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 Nov 2021 13:12:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8C6345F805
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Nov 2021 02:20:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352819AbhKZMP3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 26 Nov 2021 07:15:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
+        id S1344844AbhK0BXv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 26 Nov 2021 20:23:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377339AbhKZMN3 (ORCPT
+        with ESMTP id S243404AbhK0BVu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 26 Nov 2021 07:13:29 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F84C0619E0;
-        Fri, 26 Nov 2021 03:39:17 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id p13so1024842pfw.2;
-        Fri, 26 Nov 2021 03:39:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=ambWW/4YEyu662pYE46PBmuDJfo9av+csYLqJQyv9eI=;
-        b=be/+Ee7qIA99Wogw9aDbu8FGuY+NkyZyPMuDQQQMyfJu74GW/p4hwR7Uk3SV8SOWot
-         OTvvRslVrIRWr+jhwF4djz3GnmhzFxoTjzdSB66EYMTFp4ObhQoXBUaxMmS0E8ljOC5C
-         BvMJB5gq9CLv6RX+bLXdcwcuXLE+FMY5lUFCbxIImkmK67mwpllFQSs45yZerfLFiBCR
-         DbhWdfqUQ3x6YsTjsY/25enAc6WD87puZv3GLXecg2pr4iVTltkGoYwbxLChdmS97p73
-         BAHuN7hbOH9DJ41QGZsyZO96dnKzD8IZFOupSItaLv9c137ht8NLB+g2Qd6+KKgLGpSA
-         nk6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ambWW/4YEyu662pYE46PBmuDJfo9av+csYLqJQyv9eI=;
-        b=S5+c/cfo7ZU8D+LjNbTGkk3UFkdKKUpmHnQsN2v0WOjqoif9Q+ccKd+9ifcNuejygq
-         gkfwSCsEzd1UAO2lRx30M2+78NJqp/MtkoXSsFGEg9SilZ66gr79kFi3CbiGiEJ5IKyh
-         SPTW0mb4rzsBU1uTfq0tN8FFbWf8In9BmbsrOqCr3NUjMWMSJA9Buoc1VgHnUb9jYGqH
-         8e+ekpCf0z3kMNJ/bl8riwtUIyZEM3NOFKR1d6Ii9Y9WOblduyEU22ATNi7jx1+OW1j4
-         6wCeEY+2CXo2vG1vChVGqBPIZVyeC77ek51HTomluaPZOJRDEMTNFlEPBw9NxfdvKcP6
-         Udcg==
-X-Gm-Message-State: AOAM533UW3JqewjFv/52R8TPlYFwwrLlE0H8H6XB9OMlqI7cp5lGoUkh
-        Tg1NAZ53TR6hFwFWogPz5ug=
-X-Google-Smtp-Source: ABdhPJyqblxnRgV5wg5BPP9Vi1R0NhHs6AkjTX8lIUxkdCJzlfse/09nmYdMwJ3MumBswrLh4eDT7g==
-X-Received: by 2002:a65:5a8e:: with SMTP id c14mr20429967pgt.241.1637926756738;
-        Fri, 26 Nov 2021 03:39:16 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
-        by smtp.gmail.com with ESMTPSA id f21sm7243932pfe.69.2021.11.26.03.39.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Nov 2021 03:39:16 -0800 (PST)
-Message-ID: <e874b4c3-1d09-8d2a-bd59-80bae7e554d6@gmail.com>
-Date:   Fri, 26 Nov 2021 19:39:03 +0800
+        Fri, 26 Nov 2021 20:21:50 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA48C061574;
+        Fri, 26 Nov 2021 17:18:36 -0800 (PST)
+Message-ID: <20211126222700.862407977@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1637975915;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yycwdrBPyffnUpJMIEsWOSM4kLQ6cxBvXzwUm35xG8E=;
+        b=DCccYnZ0yiKVC0u4+n9H7FGmyRWRAGxhw5lrXeLif2IGAZr2rY9i+43Gc7Jsnud/oidZaZ
+        LrE05UjXTCVSyDbmgOY0HxqDRbgAp4/y2qAPiBbi9Kif3xh1IRuv+y3cBqvYsowoPm/WUk
+        on0YrcUZq1Cix85vFTL/gxX7VMgOIB65lC5o4RFDq43U76Ck4A4DQQ8l0aK00NPb8MNzf1
+        +R+QnmSKpPY5SIbzSJT2d2nsAUVEpzoB+W6mglKPZfD5NcRonwy3W9aAXRIOuuFkxKApoo
+        q69j8LzAaUKTG+q9KEnL6HEfmmniRk/WIf4JJGwI6N1sJcqzmoeXfX/O3IGlFA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1637975915;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=yycwdrBPyffnUpJMIEsWOSM4kLQ6cxBvXzwUm35xG8E=;
+        b=l69jhsGH0nQzlU5HDD675NHbpXuRhbgyrkanFSndKRF1Uq0JyAqp7+zU1xeEBSXpgtUx6d
+        EqGASFw1EGmh4PDQ==
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [patch 00/22] genirq/msi, PCI/MSI: Spring cleaning - Part 1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH 3/5] hyperv/IOMMU: Enable swiotlb bounce buffer for
- Isolation VM
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, jgross@suse.com, sstabellini@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, joro@8bytes.org, will@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, xen-devel@lists.xenproject.org,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, vkuznets@redhat.com, brijesh.singh@amd.com,
-        konrad.wilk@oracle.com, parri.andrea@gmail.com,
-        thomas.lendacky@amd.com, dave.hansen@intel.com
-References: <20211116153923.196763-1-ltykernel@gmail.com>
- <20211116153923.196763-4-ltykernel@gmail.com> <20211117100142.GB10330@lst.de>
- <c93bf3d4-75c1-bc3d-2789-1d65e7c19158@gmail.com>
- <20211126074022.GA23659@lst.de>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <20211126074022.GA23659@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Date:   Sat, 27 Nov 2021 02:18:34 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 11/26/2021 3:40 PM, Christoph Hellwig wrote:
-> On Wed, Nov 17, 2021 at 10:00:08PM +0800, Tianyu Lan wrote:
->> On 11/17/2021 6:01 PM, Christoph Hellwig wrote:
->>> This doesn't really have much to do with normal DMA mapping,
->>> so why does this direct through the dma ops?
->>>
->>
->> According to the previous discussion, dma_alloc_noncontigous()
->> and dma_vmap_noncontiguous() may be used to handle the noncontigous
->> memory alloc/map in the netvsc driver. So add alloc/free and vmap/vunmap
->> callbacks here to handle the case. The previous patch v4 & v5 handles
->> the allocation and map in the netvsc driver. If this should not go though
->> dma ops, We also may make it as vmbus specific function and keep
->> the function in the vmbus driver.
-> 
-> But that only makes sense if they can actually use the normal DMA ops.
-> If you implement your own incomplete ops and require to use them you
-> do nothing but adding indirect calls to your fast path and making the
-> code convoluted.
-> 
-
-Because the generic part implementation can't meet the netvsc driver
-requests that allocate 16M memory and map pages via vmap_pfn(). So add 
-Hyperv alloc_noncontiguous and vmap_noncontiguous callbacks. If this is
-not a right way. we should call these hyper-V functions in the netvsc
-driver directly, right?
-
-Could you have a look at Michael summary about this series we made and
-give some guides?
-
-https://www.mail-archive.com/xen-devel@lists.xenproject.org/msg109284.html
-
-Thanks.
-
-
-
-
-
+VGhlIFtQQ0ldIE1TSSBjb2RlIGhhcyBnYWluZWQgcXVpdGUgc29tZSB3YXJ0cyBvdmVyIHRpbWUu
+IEEgcmVjZW50CmRpc2N1c3Npb24gdW5lYXJ0aGVkIGEgc2hvcnRjb21pbmc6IHRoZSBsYWNrIG9m
+IHN1cHBvcnQgZm9yIGV4cGFuZGluZwpQQ0kvTVNJLVggdmVjdG9ycyBhZnRlciBpbml0aWFsaXph
+dGlvbiBvZiBNU0ktWC4KClBDSS9NU0ktWCBoYXMgbm8gcmVxdWlyZW1lbnQgdG8gc2V0dXAgYWxs
+IHZlY3RvcnMgd2hlbiBNU0ktWCBpcyBlbmFibGVkIGluCnRoZSBkZXZpY2UuIFRoZSBub24tdXNl
+ZCB2ZWN0b3JzIGhhdmUganVzdCB0byBiZSBtYXNrZWQgaW4gdGhlIHZlY3Rvcgp0YWJsZS4gRm9y
+IFBDSS9NU0kgdGhpcyBpcyBub3QgcG9zc2libGUgYmVjYXVzZSB0aGUgbnVtYmVyIG9mIHZlY3Rv
+cnMKY2Fubm90IGJlIGNoYW5nZWQgYWZ0ZXIgaW5pdGlhbGl6YXRpb24uCgpUaGUgUENJL01TSSBj
+b2RlLCBidXQgYWxzbyB0aGUgY29yZSBNU0kgaXJxIGRvbWFpbiBjb2RlIGFyZSBidWlsdCBhcm91
+bmQKdGhlIGFzc3VtcHRpb24gdGhhdCBhbGwgcmVxdWlyZWQgdmVjdG9ycyBhcmUgaW5zdGFsbGVk
+IGF0IGluaXRpYWxpemF0aW9uCnRpbWUgYW5kIGZyZWVkIHdoZW4gdGhlIGRldmljZSBpcyBzaHV0
+IGRvd24gYnkgdGhlIGRyaXZlci4KClN1cHBvcnRpbmcgZHluYW1pYyBleHBhbnNpb24gYXQgbGVh
+c3QgZm9yIE1TSS1YIGlzIGltcG9ydGFudCBmb3IgVkZJTyBzbwp0aGF0IHRoZSBob3N0IHNpZGUg
+aW50ZXJydXB0cyBmb3IgcGFzc3Rocm91Z2ggZGV2aWNlcyBjYW4gYmUgaW5zdGFsbGVkIG9uCmRl
+bWFuZC4KClRoaXMgaXMgdGhlIGZpcnN0IHBhcnQgb2YgYSBsYXJnZSAodG90YWwgMTAxIHBhdGNo
+ZXMpIHNlcmllcyB3aGljaApyZWZhY3RvcnMgdGhlIFtQQ0ldTVNJIGluZnJhc3RydWN0dXJlIHRv
+IG1ha2UgcnVudGltZSBleHBhbnNpb24gb2YgTVNJLVgKdmVjdG9ycyBwb3NzaWJsZS4gVGhlIGxh
+c3QgcGFydCAoMTAgcGF0Y2hlcykgcHJvdmlkZSB0aGlzIGZ1bmN0aW9uYWxpdHkuCgpUaGUgZmly
+c3QgcGFydCBpcyBtb3N0bHkgYSBjbGVhbnVwIHdoaWNoIGNvbnNvbGlkYXRlcyBjb2RlLCBtb3Zl
+cyB0aGUgUENJCk1TSSBjb2RlIGludG8gYSBzZXBhcmF0ZSBkaXJlY3RvcnkgYW5kIHNwbGl0cyBp
+dCB1cCBpbnRvIHNldmVyYWwgcGFydHMuCgpObyBmdW5jdGlvbmFsIGNoYW5nZSBpbnRlbmRlZCBl
+eGNlcHQgZm9yIHBhdGNoIDIvTiB3aGljaCBjaGFuZ2VzIHRoZQpiZWhhdmlvdXIgb2YgcGNpX2dl
+dF92ZWN0b3IoKS9hZmZpbml0eSgpIHRvIGdldCByaWQgb2YgdGhlIGFzc3VtcHRpb24gdGhhdAp0
+aGUgcHJvdmlkZWQgaW5kZXggaXMgdGhlICJpbmRleCIgaW50byB0aGUgZGVzY3JpcHRvciBsaXN0
+IGluc3RlYWQgb2YgdXNpbmcKaXQgYXMgdGhlIGFjdHVhbCBNU0lbWF0gaW5kZXggYXMgc2VlbiBi
+eSB0aGUgaGFyZHdhcmUuIFRoaXMgd291bGQgYnJlYWsKdXNlcnMgb2Ygc3BhcnNlIGFsbG9jYXRl
+ZCBNU0ktWCBlbnRyaWVzLCBidXQgbm9uIG9mIHRoZW0gdXNlIHRoZXNlCmZ1bmN0aW9ucy4KClRo
+aXMgc2VyaWVzIGlzIGJhc2VkIG9uIDUuMTYtcmMyIGFuZCBhbHNvIGF2YWlsYWJsZSB2aWEgZ2l0
+OgoKICAgICBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdGds
+eC9kZXZlbC5naXQgbXNpLXYxLXBhcnQtMQoKRm9yIHRoZSBjdXJpb3VzIHdobyBjYW4ndCB3YWl0
+IGZvciB0aGUgbmV4dCBwYXJ0IHRvIGFycml2ZSB0aGUgZnVsbCBzZXJpZXMKaXMgYXZhaWxhYmxl
+IHZpYToKCiAgICAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
+L3RnbHgvZGV2ZWwuZ2l0IG1zaS12MS1wYXJ0LTQKClRoYW5rcywKCgl0Z2x4Ci0tLQogYXJjaC9w
+b3dlcnBjL3BsYXRmb3Jtcy80eHgvbXNpLmMgICAgICAgICAgICB8ICAyODEgLS0tLS0tLS0tLS0t
+CiBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9wY2kvcGNpLnJzdCAgICAgIHwgICAgMiAKIGIv
+YXJjaC9taXBzL3BjaS9tc2ktb2N0ZW9uLmMgICAgICAgICAgICAgICAgfCAgIDMyIC0KIGIvYXJj
+aC9wb3dlcnBjL3BsYXRmb3Jtcy80eHgvTWFrZWZpbGUgICAgICAgfCAgICAxIAogYi9hcmNoL3Bv
+d2VycGMvcGxhdGZvcm1zL2NlbGwvYXhvbl9tc2kuYyAgICB8ICAgIDIgCiBiL2FyY2gvcG93ZXJw
+Yy9wbGF0Zm9ybXMvcG93ZXJudi9wY2ktaW9kYS5jIHwgICAgNCAKIGIvYXJjaC9wb3dlcnBjL3Bs
+YXRmb3Jtcy9wc2VyaWVzL21zaS5jICAgICAgfCAgICA2IAogYi9hcmNoL3Bvd2VycGMvc3lzZGV2
+L0tjb25maWcgICAgICAgICAgICAgICB8ICAgIDYgCiBiL2FyY2gvczM5MC9wY2kvcGNpX2lycS5j
+ICAgICAgICAgICAgICAgICAgIHwgICAgNCAKIGIvYXJjaC9zcGFyYy9rZXJuZWwvcGNpX21zaS5j
+ICAgICAgICAgICAgICAgfCAgICA0IAogYi9hcmNoL3g4Ni9oeXBlcnYvaXJxZG9tYWluLmMgICAg
+ICAgICAgICAgICB8ICAgNTUgLS0KIGIvYXJjaC94ODYvaW5jbHVkZS9hc20veDg2X2luaXQuaCAg
+ICAgICAgICAgfCAgICA2IAogYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS94ZW4vaHlwZXJ2aXNvci5o
+ICAgICB8ICAgIDggCiBiL2FyY2gveDg2L2tlcm5lbC9hcGljL21zaS5jICAgICAgICAgICAgICAg
+IHwgICAgOCAKIGIvYXJjaC94ODYva2VybmVsL3g4Nl9pbml0LmMgICAgICAgICAgICAgICAgfCAg
+IDEyIAogYi9hcmNoL3g4Ni9wY2kveGVuLmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTkg
+CiBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtZ2ljLXYybS5jICAgICAgICAgICAgIHwgICAgMSAKIGIv
+ZHJpdmVycy9pcnFjaGlwL2lycS1naWMtdjMtaXRzLXBjaS1tc2kuYyAgfCAgICAxIAogYi9kcml2
+ZXJzL2lycWNoaXAvaXJxLWdpYy12My1tYmkuYyAgICAgICAgICB8ICAgIDEgCiBiL2RyaXZlcnMv
+bmV0L3dpcmVsZXNzL2F0aC9hdGgxMWsvcGNpLmMgICAgIHwgICAgMiAKIGIvZHJpdmVycy9wY2kv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgICAzIAogYi9kcml2ZXJzL3BjaS9tc2kv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgIDcgCiBiL2RyaXZlcnMvcGNpL21zaS9pcnFk
+b21haW4uYyAgICAgICAgICAgICAgIHwgIDI2NyArKysrKysrKysrKwogYi9kcml2ZXJzL3BjaS9t
+c2kvbGVnYWN5LmMgICAgICAgICAgICAgICAgICB8ICAgNzkgKysrCiBiL2RyaXZlcnMvcGNpL21z
+aS9tc2kuYyAgICAgICAgICAgICAgICAgICAgIHwgIDY0NSArKysrLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCiBiL2RyaXZlcnMvcGNpL21zaS9tc2kuaCAgICAgICAgICAgICAgICAgICAgIHwgICAz
+OSArCiBiL2RyaXZlcnMvcGNpL21zaS9wY2lkZXZfbXNpLmMgICAgICAgICAgICAgIHwgICA0MyAr
+CiBiL2RyaXZlcnMvcGNpL3BjaS1zeXNmcy5jICAgICAgICAgICAgICAgICAgIHwgICAgNyAKIGIv
+ZHJpdmVycy9wY2kveGVuLXBjaWZyb250LmMgICAgICAgICAgICAgICAgfCAgICAyIAogYi9pbmNs
+dWRlL2xpbnV4L21zaS5oICAgICAgICAgICAgICAgICAgICAgICB8ICAxMzUgKystLS0KIGIvaW5j
+bHVkZS9saW51eC9wY2kuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxIAogYi9rZXJuZWwv
+aXJxL21zaS5jICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNDEgKwogMzIgZmlsZXMgY2hh
+bmdlZCwgNjk2IGluc2VydGlvbnMoKyksIDEwMjggZGVsZXRpb25zKC0pCg==
