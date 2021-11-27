@@ -2,37 +2,34 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31FEE45F837
-	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Nov 2021 02:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97BD045F842
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Nov 2021 02:21:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344705AbhK0BYH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 26 Nov 2021 20:24:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344700AbhK0BWE (ORCPT
+        id S1345456AbhK0BYI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 26 Nov 2021 20:24:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:34974 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344485AbhK0BWF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 26 Nov 2021 20:22:04 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7751C061757;
-        Fri, 26 Nov 2021 17:18:50 -0800 (PST)
-Message-ID: <20211126223824.558746009@linutronix.de>
+        Fri, 26 Nov 2021 20:22:05 -0500
+Message-ID: <20211126223824.618089023@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637975927;
+        s=2020; t=1637975929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=t8fdQf5v0Re3s6aU2w+RDhHEUcAYg2OEvsShj+q+pN4=;
-        b=cmxuu0+S0CsZgYZ32HYbpri2Sd336Qg0Z/c81KGZv/d8VT2cx3pO+wemLvUEb8/rZzqWVq
-        0Aee2el4uFtUTEwM4NevFSfRRWXl8VsohVUQkWOKC+PX0UQyocXwd13XzgnMnq75EbEPpc
-        0XDH6VZ4F6aY7FGjwQjBxCJ7S/gKrxXo/ft3a22JYLKHH+h+Axgwy8gMgGdardXG7mD8wm
-        3V4bu8HbHxltFdFVIZbZpYe1L772kd6xKP36Y2xY0IxJPYxSmaQFkKvdAoQKrvZZSPMg4i
-        ILG/RGrZ7qSuIfwivCkd64S54zttW12a2Bqgv90Is3DfVoXms2CX5Xi+tguk7Q==
+         references:references; bh=AC2FZ3NgPgtEmYfcPESal194oN272JgZRDrbkWg3jyI=;
+        b=fY2o7bDZAUVc/zoI1x+1iRosxr2o2nOfaSNbzN7bFTNRKIq0WzWEHfq/yLnAGd6hff0U9n
+        oSfclkWuqUl8kL0RsAjXx/6ZF/8AgYMW392ffBX68wjqMTfc9LsyqwphWk32oKADWGFmZg
+        LMS75NESl6jj6lfsrSs7STcgr/rqRpvCNcjveF5FEEZ4BXGz1QOfOXz8p2PLkQcGAi8DL8
+        13N+zlDE0Y8kK2uM6gcnpAN4PSK+XxyxqfhISdV6PVrTMh8xtSBavQThj6ET55FLZP/Xtv
+        T9/pwLYQjtVROBa4RukaM2jD0Mspyu8Aj1dW+31SqK2OwIpA+qBnfuXpm68ZZQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637975927;
+        s=2020e; t=1637975929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=t8fdQf5v0Re3s6aU2w+RDhHEUcAYg2OEvsShj+q+pN4=;
-        b=cZ5icEO1gkVwPGoTe3vcr7yZhvwpxdLRW5DA8ZhfyEhQ1AqnzzWnOcXhvMTVspkGXfUHDc
-        LU+g5W5AGkvQPBCg==
+         references:references; bh=AC2FZ3NgPgtEmYfcPESal194oN272JgZRDrbkWg3jyI=;
+        b=IYYLi9B8sK3zKuIQC8Azf7fN1Zp2VtQ/UXo2UA05k/m9XK5bwyWcY9FFuGj7In2IEZpvp6
+        C+cyGGYnlNvmfcCQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -41,12 +38,11 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
         Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Paul Mackerras <paulus@samba.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         linuxppc-dev@lists.ozlabs.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         sparclinux@vger.kernel.org, x86@kernel.org,
         xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
@@ -54,36 +50,73 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Juergen Gross <jgross@suse.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>
-Subject: [patch 08/22] PCI/sysfs: Use pci_irq_vector()
+Subject: [patch 09/22] MIPS: Octeon: Use arch_setup_msi_irq()
 References: <20211126222700.862407977@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:18:47 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:18:48 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-instead of fiddling with msi descriptors.
+The core code provides the same loop code except for the MSI-X reject. Move
+that to arch_setup_msi_irq() and remove the duplicated code.
+
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org
 ---
- drivers/pci/pci-sysfs.c |    7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/mips/pci/msi-octeon.c |   32 +++-----------------------------
+ 1 file changed, 3 insertions(+), 29 deletions(-)
 
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -62,11 +62,8 @@ static ssize_t irq_show(struct device *d
- 	 * For MSI, show the first MSI IRQ; for all other cases including
- 	 * MSI-X, show the legacy INTx IRQ.
- 	 */
--	if (pdev->msi_enabled) {
--		struct msi_desc *desc = first_pci_msi_entry(pdev);
--
--		return sysfs_emit(buf, "%u\n", desc->irq);
--	}
-+	if (pdev->msi_enabled)
-+		return sysfs_emit(buf, "%u\n", pci_irq_vector(pdev, 0));
- #endif
+--- a/arch/mips/pci/msi-octeon.c
++++ b/arch/mips/pci/msi-octeon.c
+@@ -68,6 +68,9 @@ int arch_setup_msi_irq(struct pci_dev *d
+ 	u64 search_mask;
+ 	int index;
  
- 	return sysfs_emit(buf, "%u\n", pdev->irq);
++	if (desc->pci.msi_attrib.is_msix)
++		return -EINVAL;
++
+ 	/*
+ 	 * Read the MSI config to figure out how many IRQs this device
+ 	 * wants.  Most devices only want 1, which will give
+@@ -182,35 +185,6 @@ int arch_setup_msi_irq(struct pci_dev *d
+ 	return 0;
+ }
+ 
+-int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+-{
+-	struct msi_desc *entry;
+-	int ret;
+-
+-	/*
+-	 * MSI-X is not supported.
+-	 */
+-	if (type == PCI_CAP_ID_MSIX)
+-		return -EINVAL;
+-
+-	/*
+-	 * If an architecture wants to support multiple MSI, it needs to
+-	 * override arch_setup_msi_irqs()
+-	 */
+-	if (type == PCI_CAP_ID_MSI && nvec > 1)
+-		return 1;
+-
+-	for_each_pci_msi_entry(entry, dev) {
+-		ret = arch_setup_msi_irq(dev, entry);
+-		if (ret < 0)
+-			return ret;
+-		if (ret > 0)
+-			return -ENOSPC;
+-	}
+-
+-	return 0;
+-}
+-
+ /**
+  * Called when a device no longer needs its MSI interrupts. All
+  * MSI interrupts for the device are freed.
 
