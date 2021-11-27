@@ -2,34 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F90D45F8BF
-	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Nov 2021 02:22:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B04845F9C6
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Nov 2021 02:25:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347365AbhK0BZK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 26 Nov 2021 20:25:10 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36594 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344835AbhK0BXJ (ORCPT
+        id S1346129AbhK0B2S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 26 Nov 2021 20:28:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345369AbhK0B0J (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 26 Nov 2021 20:23:09 -0500
-Message-ID: <20211126223825.320724006@linutronix.de>
+        Fri, 26 Nov 2021 20:26:09 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54848C06179F;
+        Fri, 26 Nov 2021 17:20:49 -0800 (PST)
+Message-ID: <20211126223825.375987680@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637975994;
+        s=2020; t=1637975995;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=kh2ZB8gumt7yFa2wjaDhpeN9tXzUfJvLkALkOS94EFA=;
-        b=D9US/8tVMwlRfaqgiDmj8ly+USrLZ+QbU+koi5BF+9g0Iguix1/4W7JOvM77Fxvfxk0Pk4
-        i3Alyb5QMZHm2M3doE0zc03SvL1G/N+bW29B5GT+JiK+vvoAlbXFGOqr1+ineD8/JbZxLU
-        VefISwNxY93Qm1ylUIwl0+ZfwQytaWS63YV3kQ7UyjTBMGq2GViLeHOw0UV4yJZV5wEQAD
-        BOCN8t3XNrraZIreQz7DQgTEE6WK/0Rw8FSfygM1uVbA31f7wm0TvILCaHzAcara9sqOXE
-        zsr873tLkNtGYtX/TI5l1mJFeYDe+L1wjO8kk9uwsSbh+uyxfw/ICDIhVgWFVw==
+         references:references; bh=b2AUMZ8n+35cpll0aGngdLAswuTgfFiNP2Zkn1C/x7I=;
+        b=ey9VYVwJMRVwcfksR95/YBZo1QlvbZYZfkgR7eb1Bag9qzNXJVS4jhzTRW9yLHvexEKDVG
+        NdZfvT2UsBn5RL0J1M+rpZkuXtbS5nqVETijSbR74gN4IMGuh2X3TA+zCERUnJLGu6r7QS
+        xejJUwLGFdc68/9VQGrA+Irdjq4KBqDAprh9jYxhOBi5rbMrlRWDhET/p4bI3lf3w6YD4h
+        E9/b6kmGP1Gy0ecl+kxuinGZvO3BSkQDIvqLkXs3Q4djlmfg3lY4IS8xh0nFZuCKSVYsOi
+        TM8bL2+caOtSm9X4D68tGdAABZpJEayGt8Qun72Z1DAX05A5ADO4k3hxbtYqrQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637975994;
+        s=2020e; t=1637975995;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=kh2ZB8gumt7yFa2wjaDhpeN9tXzUfJvLkALkOS94EFA=;
-        b=8Uh+QoxZaq46tV5s75Y6r3qCvSsAdyGP5v255GrAqW6V5bDTByErDycUXzyT6e32TmhIUx
-        k69MGZ3JHevpO4BQ==
+         references:references; bh=b2AUMZ8n+35cpll0aGngdLAswuTgfFiNP2Zkn1C/x7I=;
+        b=esFpcWNsvZJ3Th+y6sturNxS1eWHYEkG46onG7uJo3BAZF4nhSHejJp0haubUPknhdF5iT
+        ic49rCWGRUTIKJBw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -51,145 +54,89 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Juergen Gross <jgross@suse.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>
-Subject: [patch 21/22] genirq/msi: Handle PCI/MSI allocation fail in core code
+Subject: [patch 22/22] PCI/MSI: Move descriptor counting on allocation fail to
+ the legacy code
 References: <20211126222700.862407977@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:19:53 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:19:55 +0100 (CET)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Get rid of yet another irqdomain callback and let the core code return the
-already available information of how many descriptors could be allocated.
+The irqdomain code already returns the information. Move the loop to the
+legacy code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/pci/msi/irqdomain.c |   13 -------------
- include/linux/msi.h         |    5 +----
- kernel/irq/msi.c            |   29 +++++++++++++++++++++++++----
- 3 files changed, 26 insertions(+), 21 deletions(-)
+ drivers/pci/msi/legacy.c |   20 +++++++++++++++++++-
+ drivers/pci/msi/msi.c    |   19 +------------------
+ 2 files changed, 20 insertions(+), 19 deletions(-)
 
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -95,16 +95,6 @@ static int pci_msi_domain_check_cap(stru
- 	return 0;
- }
- 
--static int pci_msi_domain_handle_error(struct irq_domain *domain,
--				       struct msi_desc *desc, int error)
--{
--	/* Special handling to support __pci_enable_msi_range() */
--	if (pci_msi_desc_is_multi_msi(desc) && error == -ENOSPC)
--		return 1;
--
--	return error;
--}
--
- static void pci_msi_domain_set_desc(msi_alloc_info_t *arg,
- 				    struct msi_desc *desc)
- {
-@@ -115,7 +105,6 @@ static void pci_msi_domain_set_desc(msi_
- static struct msi_domain_ops pci_msi_domain_ops_default = {
- 	.set_desc	= pci_msi_domain_set_desc,
- 	.msi_check	= pci_msi_domain_check_cap,
--	.handle_error	= pci_msi_domain_handle_error,
- };
- 
- static void pci_msi_domain_update_dom_ops(struct msi_domain_info *info)
-@@ -129,8 +118,6 @@ static void pci_msi_domain_update_dom_op
- 			ops->set_desc = pci_msi_domain_set_desc;
- 		if (ops->msi_check == NULL)
- 			ops->msi_check = pci_msi_domain_check_cap;
--		if (ops->handle_error == NULL)
--			ops->handle_error = pci_msi_domain_handle_error;
+--- a/drivers/pci/msi/legacy.c
++++ b/drivers/pci/msi/legacy.c
+@@ -50,9 +50,27 @@ void __weak arch_teardown_msi_irqs(struc
  	}
  }
  
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -285,7 +285,6 @@ struct msi_domain_info;
-  * @msi_check:		Callback for verification of the domain/info/dev data
-  * @msi_prepare:	Prepare the allocation of the interrupts in the domain
-  * @set_desc:		Set the msi descriptor for an interrupt
-- * @handle_error:	Optional error handler if the allocation fails
-  * @domain_alloc_irqs:	Optional function to override the default allocation
-  *			function.
-  * @domain_free_irqs:	Optional function to override the default free
-@@ -294,7 +293,7 @@ struct msi_domain_info;
-  * @get_hwirq, @msi_init and @msi_free are callbacks used by the underlying
-  * irqdomain.
-  *
-- * @msi_check, @msi_prepare, @handle_error and @set_desc are callbacks used by
-+ * @msi_check, @msi_prepare and @set_desc are callbacks used by
-  * msi_domain_alloc/free_irqs().
-  *
-  * @domain_alloc_irqs, @domain_free_irqs can be used to override the
-@@ -331,8 +330,6 @@ struct msi_domain_ops {
- 				       msi_alloc_info_t *arg);
- 	void		(*set_desc)(msi_alloc_info_t *arg,
- 				    struct msi_desc *desc);
--	int		(*handle_error)(struct irq_domain *domain,
--					struct msi_desc *desc, int error);
- 	int		(*domain_alloc_irqs)(struct irq_domain *domain,
- 					     struct device *dev, int nvec);
- 	void		(*domain_free_irqs)(struct irq_domain *domain,
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -538,6 +538,27 @@ static bool msi_check_reservation_mode(s
- 	return desc->pci.msi_attrib.is_msix || desc->pci.msi_attrib.can_mask;
- }
- 
-+static int msi_handle_pci_fail(struct irq_domain *domain, struct msi_desc *desc,
-+			       int allocated)
++static int pci_msi_setup_check_result(struct pci_dev *dev, int type, int ret)
 +{
-+	switch(domain->bus_token) {
-+	case DOMAIN_BUS_PCI_MSI:
-+	case DOMAIN_BUS_VMD_MSI:
-+		if (IS_ENABLED(CONFIG_PCI_MSI))
-+			break;
-+		fallthrough;
-+	default:
-+		return -ENOSPC;
++	struct msi_desc *entry;
++	int avail = 0;
++
++	if (type != PCI_CAP_ID_MSIX || ret >= 0)
++		return ret;
++
++	/* Scan the MSI descriptors for successfully allocated ones. */
++	for_each_pci_msi_entry(entry, dev) {
++		if (entry->irq != 0)
++			avail++;
 +	}
-+
-+	/* Let a failed PCI multi MSI allocation retry */
-+	if (desc->nvec_used > 1)
-+		return 1;
-+
-+	/* If there was a successful allocation let the caller know */
-+	return allocated ? allocated : -ENOSPC;
++	return avail ? avail : ret;
 +}
 +
- int __msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
- 			    int nvec)
+ int pci_msi_legacy_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
  {
-@@ -546,6 +567,7 @@ int __msi_domain_alloc_irqs(struct irq_d
- 	struct irq_data *irq_data;
- 	struct msi_desc *desc;
- 	msi_alloc_info_t arg = { };
-+	int allocated = 0;
- 	int i, ret, virq;
- 	bool can_reserve;
+-	return arch_setup_msi_irqs(dev, nvec, type);
++	int ret = arch_setup_msi_irqs(dev, nvec, type);
++
++	return pci_msi_setup_check_result(dev, type, ret);
+ }
  
-@@ -560,16 +582,15 @@ int __msi_domain_alloc_irqs(struct irq_d
- 					       dev_to_node(dev), &arg, false,
- 					       desc->affinity);
- 		if (virq < 0) {
--			ret = -ENOSPC;
--			if (ops->handle_error)
--				ret = ops->handle_error(domain, desc, ret);
--			return ret;
-+			ret = msi_handle_pci_fail(domain, desc, allocated);
-+			goto cleanup;
- 		}
+ void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev)
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -609,7 +609,7 @@ static int msix_capability_init(struct p
  
- 		for (i = 0; i < desc->nvec_used; i++) {
- 			irq_set_msi_desc_off(virq, i, desc);
- 			irq_debugfs_copy_devname(virq + i, dev);
- 		}
-+		allocated++;
- 	}
+ 	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
+ 	if (ret)
+-		goto out_avail;
++		goto out_free;
  
- 	can_reserve = msi_check_reservation_mode(domain, info, dev);
+ 	/* Check if all MSI entries honor device restrictions */
+ 	ret = msi_verify_entries(dev);
+@@ -634,23 +634,6 @@ static int msix_capability_init(struct p
+ 	pcibios_free_irq(dev);
+ 	return 0;
+ 
+-out_avail:
+-	if (ret < 0) {
+-		/*
+-		 * If we had some success, report the number of IRQs
+-		 * we succeeded in setting up.
+-		 */
+-		struct msi_desc *entry;
+-		int avail = 0;
+-
+-		for_each_pci_msi_entry(entry, dev) {
+-			if (entry->irq != 0)
+-				avail++;
+-		}
+-		if (avail != 0)
+-			ret = avail;
+-	}
+-
+ out_free:
+ 	free_msi_irqs(dev);
+ 
 
