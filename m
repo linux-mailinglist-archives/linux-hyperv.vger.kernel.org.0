@@ -2,279 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 713D94605DC
-	for <lists+linux-hyperv@lfdr.de>; Sun, 28 Nov 2021 12:17:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C935460A55
+	for <lists+linux-hyperv@lfdr.de>; Sun, 28 Nov 2021 22:28:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233784AbhK1LUX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 28 Nov 2021 06:20:23 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:52140 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352445AbhK1LSW (ORCPT
+        id S232065AbhK1Vb0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 28 Nov 2021 16:31:26 -0500
+Received: from mail-wm1-f47.google.com ([209.85.128.47]:37836 "EHLO
+        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233831AbhK1V30 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 28 Nov 2021 06:18:22 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 90C781FCA1;
-        Sun, 28 Nov 2021 11:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1638098105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Anljq+Wlt67ghjUgtowz33uZJuiJE7LcFFdumpYBPbQ=;
-        b=cORDoLhhTv6Pvy/wEYOeaj0+noo8dvDMluC1ZpBarB3cAbHI40UN/1iHjN3bWBhVP0aizH
-        /NMFWg6oCo5x8lgfMjsJuECexWXZtoh9byc1oggFWKSu02kWt9gazsZhgX4El5PzIxK+as
-        2rxhxJh+CmJik0qb7yx5+btjpldJ70o=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id ADEFE133D1;
-        Sun, 28 Nov 2021 11:15:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id KhNhKLhko2FZUgAAMHmgww
-        (envelope-from <jgross@suse.com>); Sun, 28 Nov 2021 11:15:04 +0000
-Subject: Re: [patch 00/22] genirq/msi, PCI/MSI: Spring cleaning - Part 1
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20211126222700.862407977@linutronix.de>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <2b96282e-aa7e-f864-a4fe-a1211605b0d3@suse.com>
-Date:   Sun, 28 Nov 2021 12:15:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Sun, 28 Nov 2021 16:29:26 -0500
+Received: by mail-wm1-f47.google.com with SMTP id k37-20020a05600c1ca500b00330cb84834fso15251435wms.2;
+        Sun, 28 Nov 2021 13:26:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o+wK4OmDifQrSqKUMTc1/sdSUNGixNnHa1F6AolO5c4=;
+        b=BSbVjKe/7dkt5ZS5Lt7Y8Rw8mifgzybyTRrMEkPibzDYDxbWJtK6BT4dPY7pVg/YUP
+         9ifigZjnyouo684gv4Fo3IqqZJWA0klp5Ut0mAciBSWeHVmzNN/h9dnanVSTA3mQlm2s
+         PSVdDRnasS2s0tB1L/tUWarcehuHce0cDtTvHji5l3cW3lFeWfUgdXPgZHlgCbF3aipT
+         zpitVHxoYKkqLqgkaXDJdtAATPOTT25QLKWBEpM+ShoOuiOP0C321+3hNwwGSUwUe17f
+         2tlOvMUWVs6QWSkn1xtB7va/H6qTuEB2sbF5u3JJwkL5Tmc/6zfRmAkAw7nMMoZAX36N
+         wESQ==
+X-Gm-Message-State: AOAM531ltSFJ1plWtyp3z+mNfoFgRp2OveXgo/8t5kc0oN/BYZSmUUR7
+        tmMJWtGnGUTwBI1XkR8fCAo=
+X-Google-Smtp-Source: ABdhPJwxm8SsISwobAty1d50Tfyr4XXxZPxgb0IV0ZY6pw9vKcFbEUiWNHstSLfth3I25dyrvZU75Q==
+X-Received: by 2002:a1c:f005:: with SMTP id a5mr33115229wmb.19.1638134768892;
+        Sun, 28 Nov 2021 13:26:08 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b10sm11969801wrt.36.2021.11.28.13.26.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Nov 2021 13:26:08 -0800 (PST)
+Date:   Sun, 28 Nov 2021 21:26:06 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] hv: utils: add PTP_1588_CLOCK to Kconfig to fix build
+Message-ID: <20211128212606.ft3qzwcsy3divl7z@liuwe-devbox-debian-v2>
+References: <20211126023316.25184-1-rdunlap@infradead.org>
+ <MWHPR21MB159387A26F1FF1A77CEB4255D7649@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20211126222700.862407977@linutronix.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="Scpk3SAl3oj2hcLchcXspItyFiWaZIboV"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR21MB159387A26F1FF1A77CEB4255D7649@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Scpk3SAl3oj2hcLchcXspItyFiWaZIboV
-Content-Type: multipart/mixed; boundary="XcilTgwO7ykUk5wJYdiDkIub8q5tPTxBW";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- Kevin Tian <kevin.tian@intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Megha Dey <megha.dey@intel.com>, Ashok Raj <ashok.raj@intel.com>,
- linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
- Paul Mackerras <paulus@samba.org>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- linuxppc-dev@lists.ozlabs.org,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, sparclinux@vger.kernel.org,
- x86@kernel.org, xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
- Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
- Christian Borntraeger <borntraeger@de.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>
-Message-ID: <2b96282e-aa7e-f864-a4fe-a1211605b0d3@suse.com>
-Subject: Re: [patch 00/22] genirq/msi, PCI/MSI: Spring cleaning - Part 1
-References: <20211126222700.862407977@linutronix.de>
-In-Reply-To: <20211126222700.862407977@linutronix.de>
+On Sat, Nov 27, 2021 at 07:12:11PM +0000, Michael Kelley (LINUX) wrote:
+> From: Randy Dunlap <rdunlap@infradead.org> Sent: Thursday, November 25, 2021 6:33 PM
+> > 
+> > The hyperv utilities use PTP clock interfaces and should depend a
+> > a kconfig symbol such that they will be built as a loadable module or
+> > builtin so that linker errors do not happen.
+> > 
+> > Prevents these build errors:
+> > 
+> > ld: drivers/hv/hv_util.o: in function `hv_timesync_deinit':
+> > hv_util.c:(.text+0x37d): undefined reference to `ptp_clock_unregister'
+> > ld: drivers/hv/hv_util.o: in function `hv_timesync_init':
+> > hv_util.c:(.text+0x738): undefined reference to `ptp_clock_register'
+> > 
+> > Fixes: 46a971913611a ("Staging: hv: move hyperv code out of staging directory")
+> 
+> Seems like the "Fixes" tag should reference something a little newer than
+> when the Hyper-V code was first added.  Either commit 3716a49a81ba
+> ("hv_utils: implement Hyper-V PTP source") or commit e5f31552674e 
+> ("ethernet: fix PTP_1588_CLOCK dependencies") when
+> PTP_1588_CLOCK_OPTIONAL was added.
+[...]
+> 
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
---XcilTgwO7ykUk5wJYdiDkIub8q5tPTxBW
-Content-Type: multipart/mixed;
- boundary="------------6139348637D6BA4177E1F3E2"
-Content-Language: en-US
+I used 3716a49a81ba in the Fixes tag and pushed it to hyperv-fixes.
 
-This is a multi-part message in MIME format.
---------------6139348637D6BA4177E1F3E2
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-
-On 27.11.21 02:18, Thomas Gleixner wrote:
-> The [PCI] MSI code has gained quite some warts over time. A recent
-> discussion unearthed a shortcoming: the lack of support for expanding
-> PCI/MSI-X vectors after initialization of MSI-X.
->=20
-> PCI/MSI-X has no requirement to setup all vectors when MSI-X is enabled=
- in
-> the device. The non-used vectors have just to be masked in the vector
-> table. For PCI/MSI this is not possible because the number of vectors
-> cannot be changed after initialization.
->=20
-> The PCI/MSI code, but also the core MSI irq domain code are built aroun=
-d
-> the assumption that all required vectors are installed at initializatio=
-n
-> time and freed when the device is shut down by the driver.
->=20
-> Supporting dynamic expansion at least for MSI-X is important for VFIO s=
-o
-> that the host side interrupts for passthrough devices can be installed =
-on
-> demand.
->=20
-> This is the first part of a large (total 101 patches) series which
-> refactors the [PCI]MSI infrastructure to make runtime expansion of MSI-=
-X
-> vectors possible. The last part (10 patches) provide this functionality=
-=2E
->=20
-> The first part is mostly a cleanup which consolidates code, moves the P=
-CI
-> MSI code into a separate directory and splits it up into several parts.=
-
->=20
-> No functional change intended except for patch 2/N which changes the
-> behaviour of pci_get_vector()/affinity() to get rid of the assumption t=
-hat
-> the provided index is the "index" into the descriptor list instead of u=
-sing
-> it as the actual MSI[X] index as seen by the hardware. This would break=
-
-> users of sparse allocated MSI-X entries, but non of them use these
-> functions.
->=20
-> This series is based on 5.16-rc2 and also available via git:
->=20
->       git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-=
-v1-part-1
-
-Tested with Xen (PV dom0, PV guest, PVH guest, HVM guest).
-
-You can add my:
-
-Tested-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
-
---------------6139348637D6BA4177E1F3E2
-Content-Type: application/pgp-keys;
- name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Description: OpenPGP public key
-Content-Disposition: attachment;
- filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOBy=
-cWx
-w3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJvedYm8O=
-f8Z
-d621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y=
-9bf
-IhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xq=
-G7/
-377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR=
-3Jv
-c3MgPGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsEFgIDA=
-QIe
-AQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4FUGNQH2lvWAUy+dnyT=
-hpw
-dtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3TyevpB0CA3dbBQp0OW0fgCetToGIQrg0=
-MbD
-1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbv=
-oPH
-Z8SlM4KWm8rG+lIkGurqqu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v=
-5QL
-+qHI3EIPtyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVyZ=
-2Vu
-IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJCAcDAgEGFQgCC=
-QoL
-BBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4RF7HoZhPVPogNVbC4YA6lW7Dr=
-Wf0
-teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz78X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC=
-/nu
-AFVGy+67q2DH8As3KPu0344TBDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0Lh=
-ITT
-d9jLzdDad1pQSToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLm=
-XBK
-7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkMnQfvUewRz=
-80h
-SnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMBAgAjBQJTjHDXAhsDBwsJC=
-AcD
-AgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJn=
-FOX
-gMLdBQgBlVPO3/D9R8LtF9DBAFPNhlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1=
-jnD
-kfJZr6jrbjgyoZHiw/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0=
-N51
-N5JfVRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwPOoE+l=
-otu
-fe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK/1xMI3/+8jbO0tsn1=
-tqS
-EUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuZGU+wsB5BBMBAgAjBQJTjHDrA=
-hsD
-BwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3=
-g3O
-ZUEBmDHVVbqMtzwlmNC4k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5=
-dM7
-wRqzgJpJwK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu5=
-D+j
-LRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzBTNh30FVKK1Evm=
-V2x
-AKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37IoN1EblHI//x/e2AaIHpzK5h88N=
-Eaw
-QsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpW=
-nHI
-s98ndPUDpnoxWQugJ6MpMncr0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZR=
-wgn
-BC5mVM6JjQ5xDk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNV=
-bVF
-LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mmwe0icXKLk=
-pEd
-IXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0Iv3OOImwTEe4co3c1mwARA=
-QAB
-wsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMvQ/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEw=
-Tbe
-8YFsw2V/Buv6Z4Mysln3nQK5ZadD534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1=
-vJz
-Q1fOU8lYFpZXTXIHb+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8=
-VGi
-wXvTyJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqcsuylW=
-svi
-uGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5BjR/i1DG86lem3iBDX=
-zXs
-ZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------6139348637D6BA4177E1F3E2--
-
---XcilTgwO7ykUk5wJYdiDkIub8q5tPTxBW--
-
---Scpk3SAl3oj2hcLchcXspItyFiWaZIboV
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmGjZLgFAwAAAAAACgkQsN6d1ii/Ey99
-Ygf/TuyiJBY2+ZjWsQqU5ZSGT6YuYXhwPE+B8wmVLs7GMwz8vn9KaHJK68c79Ma6+or1pJ8bVeV1
-/9/UXhj0i0p0EDWRpXfe20DMCw5VKZCXioTzX7sOsjqjNtkWbhml32Gvaa7P9vqUd+FGPfbQ9l/r
-ndcLPROZz4/7Hp3R8++nRJRU65ZU8gxeNrkjOS8NeYVs2Def36ry9X/HLky5ka/bBgEmWLH7JwlS
-d9q6tmhtlbUeUbXIMLhayLFAV4ZJ6jgCCgEWa1Bvu4eh3B9OUNr4pmbuglY6gQL/nk02uR3VtyZ1
-5Pyefgqkl9M3bzJPAvspvOGs0qAxZC0k1GntQmQkBg==
-=mphy
------END PGP SIGNATURE-----
-
---Scpk3SAl3oj2hcLchcXspItyFiWaZIboV--
+Wei.
