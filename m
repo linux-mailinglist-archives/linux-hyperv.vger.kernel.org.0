@@ -2,41 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 058AB46411E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Nov 2021 23:13:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A3C4641A9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Nov 2021 23:42:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234629AbhK3WOr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Nov 2021 17:14:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344731AbhK3WOJ (ORCPT
+        id S1344845AbhK3WpQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 Nov 2021 17:45:16 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36276 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345079AbhK3Wov (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Nov 2021 17:14:09 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E07C06174A;
-        Tue, 30 Nov 2021 14:10:47 -0800 (PST)
+        Tue, 30 Nov 2021 17:44:51 -0500
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638310245;
+        s=2020; t=1638312089;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iQwNm3evMDmCqqNj6SOBSL2raZeNEDMRyVYLWo7plsQ=;
-        b=cfCUOIaPomiZCO9d79k8QaTA54iAEZbQY4lmYzVXbCZ99fBBPE+xqpOo1m4nSfa3KPq6+6
-        pI8jqClQqAQ6e9xEzGMdMDMlM7PO3wO+IzFhUB7wl4w2H81v2euyyU8OpSzUxgKY+0HqOn
-        tbRxYHYo0OtQnM7fMd/Q2RflLcOK0WEbJRcLaARC9aG5kGkie13cZuSuCFIva1m+TA616i
-        dV35DJLlXGyNBE5vTnPj0hgLjo4pBUrYZ1WEUXNY8Y4DNEBT5I7kTI7Vt9Tc5Lg2J+Di+B
-        X84UlqMbc2Q4lC6o9mfXgbNv2vVK1HCIjDj9nJ/ptp3y+rYMnW5ZpEnm9xcPOg==
+        bh=1bOw8HEe7jHxyt1BTzbWx6wvk9iJpbF5Gn0Kg7y1Blo=;
+        b=2IrmNv3Iea3b/0P87xEGqZAZmwL1onSUMGqd0zxtDIRJLTynmNSC7uxIH8L/l5dtLj/5OD
+        JagFWx3aJMiS1LFIeYftEfo0Ur2kNjTtrOTkBnBmsBzvAxM9ucbFfqPVN5bViblbdfTyHh
+        DmsunGG30VGceQJj3KLRF3KIyBTUwjdi6+cIFEZFOGwVLxR6/Qv+GDEs3kZsbO3Sb5vEY4
+        CGDmi02z+2/4fP0CRSLAGmUXhnn/6DLG04oqIJtIelaVlS8RIp1r9e2Sxk09e7hCcOFzEs
+        b9sVLSs/CWxPIfpw834x9ILDVWh3TWdsOj5JuMEeZ6q+sN/NVCvFkfOxPIzp8w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638310245;
+        s=2020e; t=1638312089;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iQwNm3evMDmCqqNj6SOBSL2raZeNEDMRyVYLWo7plsQ=;
-        b=OS4mhIe7yFZLurVEyelXc9LbdOQ2hxFAIJTEo5kZyIy2QO7wrWZZMF3x6KmDym+n1S953w
-        D2cPy3zCOhdCl9Bg==
+        bh=1bOw8HEe7jHxyt1BTzbWx6wvk9iJpbF5Gn0Kg7y1Blo=;
+        b=wP+0RlPVEZMaKpggmpseYFDjn/awmzpDeY9BMit0WIgaUAvSVTefpWgNK6fro3P2SJv3Ar
+        0+sa+FEk57SExTAA==
 To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     linux-hyperv@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
@@ -55,13 +52,13 @@ Cc:     linux-hyperv@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Subject: Re: [patch 05/22] genirq/msi: Fixup includes
-In-Reply-To: <524d9b84-caa8-dd6f-bb5e-9fc906d279c0@kaod.org>
+In-Reply-To: <87czmhb8gq.ffs@tglx>
 References: <20211126222700.862407977@linutronix.de>
  <20211126223824.382273262@linutronix.de>
  <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org> <87tufud4m3.ffs@tglx>
- <524d9b84-caa8-dd6f-bb5e-9fc906d279c0@kaod.org>
-Date:   Tue, 30 Nov 2021 23:10:45 +0100
-Message-ID: <87czmhb8gq.ffs@tglx>
+ <524d9b84-caa8-dd6f-bb5e-9fc906d279c0@kaod.org> <87czmhb8gq.ffs@tglx>
+Date:   Tue, 30 Nov 2021 23:41:28 +0100
+Message-ID: <875ys9b71j.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -69,20 +66,37 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Nov 30 2021 at 22:48, C=C3=A9dric Le Goater wrote:
-> On 11/29/21 22:38, Thomas Gleixner wrote:
->> On Mon, Nov 29 2021 at 08:33, C=C3=A9dric Le Goater wrote:
->> thanks for having a look. I fixed up this and other fallout and pushed o=
-ut an
->> updated series (all 4 parts) to:
->>=20
->>          git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
->
-> pSeries fails to allocate MSIs starting with this patch :
->
->   [PATCH 049/101] powerpc/pseries/msi: Let core code check for contiguous=
- ...
->
-> I will dig in later on.
+On Tue, Nov 30 2021 at 23:10, Thomas Gleixner wrote:
 
-Let me stare at the core function..
+> On Tue, Nov 30 2021 at 22:48, C=C3=A9dric Le Goater wrote:
+>> On 11/29/21 22:38, Thomas Gleixner wrote:
+>>> On Mon, Nov 29 2021 at 08:33, C=C3=A9dric Le Goater wrote:
+>>> thanks for having a look. I fixed up this and other fallout and pushed =
+out an
+>>> updated series (all 4 parts) to:
+>>>=20
+>>>          git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
+>>
+>> pSeries fails to allocate MSIs starting with this patch :
+>>
+>>   [PATCH 049/101] powerpc/pseries/msi: Let core code check for contiguou=
+s ...
+>>
+>> I will dig in later on.
+>
+> Let me stare at the core function..
+
+It's not the core function. It's the patch above and I'm a moron.
+
+--- a/arch/powerpc/platforms/pseries/msi.c
++++ b/arch/powerpc/platforms/pseries/msi.c
+@@ -359,9 +359,6 @@ static int rtas_prepare_msi_irqs(struct
+ 	if (quota && quota < nvec)
+ 		return quota;
+=20
+-	if (type =3D=3D PCI_CAP_ID_MSIX)
+-		return -EINVAL;
+-
+ 	/*
+ 	 * Firmware currently refuse any non power of two allocation
+ 	 * so we round up if the quota will allow it.
