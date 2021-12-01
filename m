@@ -2,47 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80A3C4641A9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Nov 2021 23:42:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F3DC4647DB
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Dec 2021 08:22:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344845AbhK3WpQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Nov 2021 17:45:16 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36276 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345079AbhK3Wov (ORCPT
+        id S239614AbhLAHZ1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 1 Dec 2021 02:25:27 -0500
+Received: from 3.mo552.mail-out.ovh.net ([178.33.254.192]:40793 "EHLO
+        3.mo552.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230360AbhLAHZ1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Nov 2021 17:44:51 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638312089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1bOw8HEe7jHxyt1BTzbWx6wvk9iJpbF5Gn0Kg7y1Blo=;
-        b=2IrmNv3Iea3b/0P87xEGqZAZmwL1onSUMGqd0zxtDIRJLTynmNSC7uxIH8L/l5dtLj/5OD
-        JagFWx3aJMiS1LFIeYftEfo0Ur2kNjTtrOTkBnBmsBzvAxM9ucbFfqPVN5bViblbdfTyHh
-        DmsunGG30VGceQJj3KLRF3KIyBTUwjdi6+cIFEZFOGwVLxR6/Qv+GDEs3kZsbO3Sb5vEY4
-        CGDmi02z+2/4fP0CRSLAGmUXhnn/6DLG04oqIJtIelaVlS8RIp1r9e2Sxk09e7hCcOFzEs
-        b9sVLSs/CWxPIfpw834x9ILDVWh3TWdsOj5JuMEeZ6q+sN/NVCvFkfOxPIzp8w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638312089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1bOw8HEe7jHxyt1BTzbWx6wvk9iJpbF5Gn0Kg7y1Blo=;
-        b=wP+0RlPVEZMaKpggmpseYFDjn/awmzpDeY9BMit0WIgaUAvSVTefpWgNK6fro3P2SJv3Ar
-        0+sa+FEk57SExTAA==
-To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        Wed, 1 Dec 2021 02:25:27 -0500
+X-Greylist: delayed 465 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Dec 2021 02:25:26 EST
+Received: from mxplan5.mail.ovh.net (unknown [10.108.1.125])
+        by mo552.mail-out.ovh.net (Postfix) with ESMTPS id B6B2D217F7;
+        Wed,  1 Dec 2021 07:14:07 +0000 (UTC)
+Received: from kaod.org (37.59.142.105) by DAG4EX1.mxp5.local (172.16.2.31)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 1 Dec
+ 2021 08:14:05 +0100
+Authentication-Results: garm.ovh; auth=pass (GARM-105G00686e3cafe-0521-4f42-aedc-fcaeb2775d24,
+                    A214034E9EDAB49BEA2160BF49F8C38F118F2259) smtp.auth=clg@kaod.org
+X-OVh-ClientIp: 90.11.56.15
+Message-ID: <39556bdc-f48c-68b2-6bec-5975b92e02e2@kaod.org>
+Date:   Wed, 1 Dec 2021 08:14:05 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [patch 05/22] genirq/msi: Fixup includes
+Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-hyperv@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        sparclinux@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+CC:     <linux-hyperv@vger.kernel.org>, Paul Mackerras <paulus@samba.org>,
+        <sparclinux@vger.kernel.org>, Wei Liu <wei.liu@kernel.org>,
         Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
-        x86@kernel.org, Christian Borntraeger <borntraeger@de.ibm.com>,
+        <x86@kernel.org>, Christian Borntraeger <borntraeger@de.ibm.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
+        Jason Gunthorpe <jgg@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
         Kevin Tian <kevin.tian@intel.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Alex Williamson <alex.williamson@redhat.com>,
@@ -50,53 +46,55 @@ Cc:     linux-hyperv@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
         Juergen Gross <jgross@suse.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch 05/22] genirq/msi: Fixup includes
-In-Reply-To: <87czmhb8gq.ffs@tglx>
+        <linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
 References: <20211126222700.862407977@linutronix.de>
  <20211126223824.382273262@linutronix.de>
  <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org> <87tufud4m3.ffs@tglx>
  <524d9b84-caa8-dd6f-bb5e-9fc906d279c0@kaod.org> <87czmhb8gq.ffs@tglx>
-Date:   Tue, 30 Nov 2021 23:41:28 +0100
-Message-ID: <875ys9b71j.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+ <875ys9b71j.ffs@tglx>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+In-Reply-To: <875ys9b71j.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [37.59.142.105]
+X-ClientProxiedBy: DAG1EX2.mxp5.local (172.16.2.2) To DAG4EX1.mxp5.local
+ (172.16.2.31)
+X-Ovh-Tracer-GUID: e52f034b-6a74-4e80-b1cd-9a54c9a992a9
+X-Ovh-Tracer-Id: 2359604732828158876
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddriedvgddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvfhfhjggtgfhisehtkeertddtfeejnecuhfhrohhmpeevrogurhhitggpnfgvpgfiohgrthgvrhcuoegtlhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepjeekvdfgudevkeefkeeltdejteekvdegffegudetgeettdffjeefheekfeelffdtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddruddtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhg
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Nov 30 2021 at 23:10, Thomas Gleixner wrote:
-
-> On Tue, Nov 30 2021 at 22:48, C=C3=A9dric Le Goater wrote:
->> On 11/29/21 22:38, Thomas Gleixner wrote:
->>> On Mon, Nov 29 2021 at 08:33, C=C3=A9dric Le Goater wrote:
->>> thanks for having a look. I fixed up this and other fallout and pushed =
-out an
->>> updated series (all 4 parts) to:
->>>=20
->>>          git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
+On 11/30/21 23:41, Thomas Gleixner wrote:
+> On Tue, Nov 30 2021 at 23:10, Thomas Gleixner wrote:
+> 
+>> On Tue, Nov 30 2021 at 22:48, Cédric Le Goater wrote:
+>>> On 11/29/21 22:38, Thomas Gleixner wrote:
+>>>> On Mon, Nov 29 2021 at 08:33, Cédric Le Goater wrote:
+>>>> thanks for having a look. I fixed up this and other fallout and pushed out an
+>>>> updated series (all 4 parts) to:
+>>>>
+>>>>           git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
+>>>
+>>> pSeries fails to allocate MSIs starting with this patch :
+>>>
+>>>    [PATCH 049/101] powerpc/pseries/msi: Let core code check for contiguous ...
+>>>
+>>> I will dig in later on.
 >>
->> pSeries fails to allocate MSIs starting with this patch :
->>
->>   [PATCH 049/101] powerpc/pseries/msi: Let core code check for contiguou=
-s ...
->>
->> I will dig in later on.
->
-> Let me stare at the core function..
+>> Let me stare at the core function..
+> 
+> It's not the core function. It's the patch above and I'm a moron.
 
-It's not the core function. It's the patch above and I'm a moron.
+All good now. Ship it !
 
---- a/arch/powerpc/platforms/pseries/msi.c
-+++ b/arch/powerpc/platforms/pseries/msi.c
-@@ -359,9 +359,6 @@ static int rtas_prepare_msi_irqs(struct
- 	if (quota && quota < nvec)
- 		return quota;
-=20
--	if (type =3D=3D PCI_CAP_ID_MSIX)
--		return -EINVAL;
--
- 	/*
- 	 * Firmware currently refuse any non power of two allocation
- 	 * so we round up if the quota will allow it.
+Thanks,
+
+C.
+
+
+
+
