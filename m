@@ -2,43 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F3DC4647DB
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Dec 2021 08:22:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3A2464BF3
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Dec 2021 11:48:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239614AbhLAHZ1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 1 Dec 2021 02:25:27 -0500
-Received: from 3.mo552.mail-out.ovh.net ([178.33.254.192]:40793 "EHLO
-        3.mo552.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230360AbhLAHZ1 (ORCPT
+        id S243164AbhLAKvk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 1 Dec 2021 05:51:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237724AbhLAKvk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 1 Dec 2021 02:25:27 -0500
-X-Greylist: delayed 465 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Dec 2021 02:25:26 EST
-Received: from mxplan5.mail.ovh.net (unknown [10.108.1.125])
-        by mo552.mail-out.ovh.net (Postfix) with ESMTPS id B6B2D217F7;
-        Wed,  1 Dec 2021 07:14:07 +0000 (UTC)
-Received: from kaod.org (37.59.142.105) by DAG4EX1.mxp5.local (172.16.2.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Wed, 1 Dec
- 2021 08:14:05 +0100
-Authentication-Results: garm.ovh; auth=pass (GARM-105G00686e3cafe-0521-4f42-aedc-fcaeb2775d24,
-                    A214034E9EDAB49BEA2160BF49F8C38F118F2259) smtp.auth=clg@kaod.org
-X-OVh-ClientIp: 90.11.56.15
-Message-ID: <39556bdc-f48c-68b2-6bec-5975b92e02e2@kaod.org>
-Date:   Wed, 1 Dec 2021 08:14:05 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [patch 05/22] genirq/msi: Fixup includes
-Content-Language: en-US
-To:     Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 1 Dec 2021 05:51:40 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C29C061574;
+        Wed,  1 Dec 2021 02:48:19 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638355698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fKVDaayb9Z/Ddig0Fl/GaJFR9P6OWvMrHeuR0/MtGo0=;
+        b=2ZakPGx22bgcebPzdNcjjRS3Y+6bDCb8UqLyR772WTqZ3Dp4UaYXmOk/PEQcTyOQ7C281b
+        bPOyziVy1+KZVMw3CGvc+ExOnUo3TGdnz0i00ne5c5xhE9SdM/59qPZ0xTYuY8kFfCRJHa
+        wcobwbC4oDqjpMDdFFfLEhfZrKdXImuDjnGTDbe68FOs6Usz9scL95/c6U40dk3gLSwp4H
+        hFcMKRQNY/TUSQIPtN1M6bsI7K7UFwZ9DBl1XIRPJr+91AHdW2Vxfy1MGQffna5JvbHjBr
+        uAxbtarLA9tARJPPzvIH6mf2U5yQzqI1DPvadU9/jGsPDm2ZYxczJgvoUPA9sw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638355698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fKVDaayb9Z/Ddig0Fl/GaJFR9P6OWvMrHeuR0/MtGo0=;
+        b=qy6yHYx5gu2MckULeM58AC46b3/lxjDG+QCdq/u8tP1cQaKsq7O2NcCTYCu267QpY8omHJ
+        23N9eC+QYS1K/KDg==
+To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
         LKML <linux-kernel@vger.kernel.org>
-CC:     <linux-hyperv@vger.kernel.org>, Paul Mackerras <paulus@samba.org>,
-        <sparclinux@vger.kernel.org>, Wei Liu <wei.liu@kernel.org>,
+Cc:     linux-hyperv@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        sparclinux@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
         Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
-        <x86@kernel.org>, Christian Borntraeger <borntraeger@de.ibm.com>,
+        x86@kernel.org, Christian Borntraeger <borntraeger@de.ibm.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
+        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
         Kevin Tian <kevin.tian@intel.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Alex Williamson <alex.williamson@redhat.com>,
@@ -46,55 +53,32 @@ CC:     <linux-hyperv@vger.kernel.org>, Paul Mackerras <paulus@samba.org>,
         Juergen Gross <jgross@suse.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-mips@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch 05/22] genirq/msi: Fixup includes
+In-Reply-To: <39556bdc-f48c-68b2-6bec-5975b92e02e2@kaod.org>
 References: <20211126222700.862407977@linutronix.de>
  <20211126223824.382273262@linutronix.de>
  <b1a6d267-c7b4-c4b9-ab0e-f5cc32bfe9bf@kaod.org> <87tufud4m3.ffs@tglx>
  <524d9b84-caa8-dd6f-bb5e-9fc906d279c0@kaod.org> <87czmhb8gq.ffs@tglx>
- <875ys9b71j.ffs@tglx>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-In-Reply-To: <875ys9b71j.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.105]
-X-ClientProxiedBy: DAG1EX2.mxp5.local (172.16.2.2) To DAG4EX1.mxp5.local
- (172.16.2.31)
-X-Ovh-Tracer-GUID: e52f034b-6a74-4e80-b1cd-9a54c9a992a9
-X-Ovh-Tracer-Id: 2359604732828158876
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddriedvgddutdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvfhfhjggtgfhisehtkeertddtfeejnecuhfhrohhmpeevrogurhhitggpnfgvpgfiohgrthgvrhcuoegtlhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepjeekvdfgudevkeefkeeltdejteekvdegffegudetgeettdffjeefheekfeelffdtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddruddtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegtlhhgsehkrghougdrohhrghdprhgtphhtthhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhg
+ <875ys9b71j.ffs@tglx> <39556bdc-f48c-68b2-6bec-5975b92e02e2@kaod.org>
+Date:   Wed, 01 Dec 2021 11:48:17 +0100
+Message-ID: <875ys8a9e6.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 11/30/21 23:41, Thomas Gleixner wrote:
-> On Tue, Nov 30 2021 at 23:10, Thomas Gleixner wrote:
-> 
->> On Tue, Nov 30 2021 at 22:48, Cédric Le Goater wrote:
->>> On 11/29/21 22:38, Thomas Gleixner wrote:
->>>> On Mon, Nov 29 2021 at 08:33, Cédric Le Goater wrote:
->>>> thanks for having a look. I fixed up this and other fallout and pushed out an
->>>> updated series (all 4 parts) to:
->>>>
->>>>           git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel msi
->>>
->>> pSeries fails to allocate MSIs starting with this patch :
->>>
->>>    [PATCH 049/101] powerpc/pseries/msi: Let core code check for contiguous ...
->>>
->>> I will dig in later on.
->>
->> Let me stare at the core function..
-> 
-> It's not the core function. It's the patch above and I'm a moron.
+Cedric,
 
-All good now. Ship it !
+On Wed, Dec 01 2021 at 08:14, C=C3=A9dric Le Goater wrote:
+> On 11/30/21 23:41, Thomas Gleixner wrote:
+>> It's not the core function. It's the patch above and I'm a moron.
+>
+> All good now. Ship it !
 
-Thanks,
+thanks a lot for testing this and dealing with the fallout. Much
+appreciated!
 
-C.
-
-
-
-
+        tglx
