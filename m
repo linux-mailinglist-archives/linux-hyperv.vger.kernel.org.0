@@ -2,162 +2,281 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3197466646
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Dec 2021 16:16:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5525C467619
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Dec 2021 12:20:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358910AbhLBPUJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 2 Dec 2021 10:20:09 -0500
-Received: from mail-cusazlp17010001.outbound.protection.outlook.com ([40.93.13.1]:10995
-        "EHLO na01-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S236157AbhLBPUC (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 2 Dec 2021 10:20:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G/U6g3c60MSqZkToKv/3tv9cDehF1NhqFG7wWvSdhGO23mdX8oqSJF0farvfcaN4VbeP3ZQ1ElyCrOAHRJN/n74YgSESI/PvqXQqDdj3pBVQl++I6TKDcOSv8fZo8rbr4l/48Bf+G1+w4BC3Ex3poh+yJ4dkFkL7ZmAUhOpSYS12fCqAUys/udYMiavEgly3hoMTBiGFVD8rivCEHwHC37n7X2gDCk2eMCaBK3pMmQm0r7NNSndhpDwE6gJ9b/CVtoDtjZ6b1kDThHe2/ImvxzsmoJHSSqbjQ33m92kJQKw5zr8DTYmkRdsmKHeunKsM5nYdm6zh2hHwp4PszQn3BQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IXuPOeJAPbtwczpiM1Kfwe/KvtCvjVzt9ieOZUplcxw=;
- b=Ko94BSdY/0jxvfi5kJpHTmGDQ5m20/PF9QzWn/qclwnFUDpRAu198yZl6yTnJ3xGvc9+seSUbsHyVh1y57QjgAaaVEhcvpsuVI09rL6OBSINi7nJyGViLoAib0VPkv1burXC5CIU+NcrwQXqJ3o9UvewBQY1keY0jPT5BVUUWatTlJGe9k5yfegKTPQVjS9pz1NW5vr4E20AgIrv9/Hs17s/oiKa74Hb5muePpiCtwDLKLqQo9evnl8YUrZZqFxoiRFMOwV2mkc5kEgmT1OCWxV6k4gDZFOasqf4LE7UN420eGIIhrV39kNcQa79nk4cmp7C3cnOZAB2NF3WE7dqSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IXuPOeJAPbtwczpiM1Kfwe/KvtCvjVzt9ieOZUplcxw=;
- b=Drd8fYJFj5bnFG8hIIFuExVVWWdph7dvsNrCfx8Nqfs0em+nFhtpz2VWjTz86l3uIrWVRHzpIg/ev4+DMNm/OcZ8efJSM4gL9EK9xXLDwJDqVM1NfH+miXKCSkQADqS+RB194gy33FoGTwAcvKPN9ARUYhniDoIrJDuEpfDFtlk=
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
- by MW4PR21MB3030.namprd21.prod.outlook.com (2603:10b6:303:133::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.5; Thu, 2 Dec
- 2021 15:16:35 +0000
-Received: from MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9401:9c8b:c334:4336]) by MWHPR21MB1593.namprd21.prod.outlook.com
- ([fe80::9401:9c8b:c334:4336%2]) with mapi id 15.20.4755.001; Thu, 2 Dec 2021
- 15:16:35 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        vkuznets <vkuznets@redhat.com>
-CC:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ajay Garg <ajaygargnsit@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: RE: [PATCH v2 8/8] KVM: x86: Add checks for reserved-to-zero Hyper-V
- hypercall fields
-Thread-Topic: [PATCH v2 8/8] KVM: x86: Add checks for reserved-to-zero Hyper-V
- hypercall fields
-Thread-Index: AQHXzSJh65/VHj4xikGNZ9FzYT3jdKvufX8AgDAsmgCAANqFoA==
-Date:   Thu, 2 Dec 2021 15:16:35 +0000
-Message-ID: <MWHPR21MB1593E284E412873C64B54A32D7699@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <20211030000800.3065132-1-seanjc@google.com>
- <20211030000800.3065132-9-seanjc@google.com>
- <87v91cjhch.fsf@vitty.brq.redhat.com> <YagrxIknF9DX8l8L@google.com>
-In-Reply-To: <YagrxIknF9DX8l8L@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a26e8b93-53af-4503-a5ab-6b6c42f9dce0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-12-02T15:15:30Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 40e5ac26-24f8-474a-c9bb-08d9b5a6bb2f
-x-ms-traffictypediagnostic: MW4PR21MB3030:EE_
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW4PR21MB303039CACDDA6EAD5D5FFFEAD7699@MW4PR21MB3030.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /q3OxKW94+Kj9Ewz3gSDbhgbORJaMa/zfm7CCOMhATcGJJ73lELOqpKERMqCuMNGZQMPlPgYLe2H0j3gVHKGULPIVyVLEXOHbzaAxIKaJDGzHlcdwPCsSIDNN11NU/6y3Yvl2ljwKpg6RQuqj1fClFHBNaFtxcDQ12Q/mw6KuEs9+9RMK06HKhZlo73N2/6wI4aVa1qkfVtuAnMjBIFa0P1IGJXfRfOBDS1SiQuzZyw9GcKYhBFi6lQBoKeSErgan1P1Co3t2IdaeNj1vycRA17P6h9NauocjAODSjm7aWk8jEV54cKeEgXJugm5fEzG23A0yGJmtZpSa40z+2Uxt/oWbiBst6XsnLIyz4BjZYxMQkIIGRfMvMqHT1BQB+dXpDvKtCisyAvA+rAZ2DxYXqy0q7sby63L4BonzPEfzKMSMeBKfQeR4j3iW1BSANgD1oUT3JgOMu1XUfXgd5G76lUhUFLgAAssa/4NEy6Y+tJxH763YkIWdmLzV5ExV/uReoJN+/djgqm/5d4hHJAHAjvBxJzFAUsOEyAEM0VZGeBcB2AT2MyacuBixCnDAzPb5reEM8yIiGyUVzLBS2g34BIxvamI0cLH/9depGA0f5BLRvUPBubbESo+7DiPf36/z/jv9YygPXZDdq3N/AnVzhXd1vHHT5QsQq0k84GcIL/XAigtwMSp2FEMPKSszXaPCF7uizzazio2b8bkXiMAVfR5qKHj3FMaEVNQbJNdp+yuw1hFkM/chKNF4NG4bX0q0ndwGxjGdCdbKRy7EbLpF91CY/3YeKRO9VbGKxClTnzXgAVBw3rDY9S22iYSsgysGxiOBD0XOHNpyy6/Fsnc7A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(9686003)(33656002)(38070700005)(38100700002)(6506007)(7416002)(8990500004)(66556008)(186003)(55016003)(2906002)(26005)(122000001)(4326008)(8936002)(54906003)(7696005)(66476007)(316002)(64756008)(52536014)(66446008)(82960400001)(76116006)(8676002)(966005)(66946007)(4744005)(5660300002)(82950400001)(71200400001)(110136005)(508600001)(86362001)(10290500003)(20210929001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?8pzP9tZ3jqGvhuppaNuVc2TIHkk9ifk+XKfPJLa9xBv5Mglz9xAAYaiAa2ER?=
- =?us-ascii?Q?3qYW+wMguO9l5u51TGTlfxSC6JsnkZuSZmxfbgb3UTsN+J9N7q3jj5FhAIJP?=
- =?us-ascii?Q?9XUtJ1ejJc52YlKFD5nNHxwwdVCUeaDFyY6dzDVoyyPYqgHwiuBySck7oyQk?=
- =?us-ascii?Q?NgbOzePAwXtFj1bSit5zOA26cOb2gtApZ91+Mk6RSSu1WDqNvKM3IVhgKoVd?=
- =?us-ascii?Q?LAYGbC0jO+rvWuaIGw/f1AWleZiP55Xa+3ndn59sWCj+nBHmUlU48vCKAvdR?=
- =?us-ascii?Q?lf9kqfi++VMHXeF+iK+7O1D5YQK5kQNRaI5ieTpY2V0G3QhdxDmPsmO2abaa?=
- =?us-ascii?Q?nJeeeqhQFG+lqwoVBaVACRIyEVdH2Rb6OzAxHqfnEAGX3O92R3KmYneue2ks?=
- =?us-ascii?Q?xTd5KIPG76y0p4ttz0F0qsqQVjqudx3+caDhiTced/g0B5Gd3EI/MQ0qV865?=
- =?us-ascii?Q?XLDun+sMW5/cxXssfuGGNIy+b3a0BncwLmhWUmePbNW0Pa7qo/27wAkPDgJ0?=
- =?us-ascii?Q?9vt/JSfaMEl4BlBjQ9jUeKR2KlHOxPiTPyMJ2LvsCvIdrFNon6BrJP29qioc?=
- =?us-ascii?Q?KWfJV64FQ0IrWsv4Eavdr2nLJ/08kBKxKRuLqNbnwbkb/UZuCsbd/rzXG0ej?=
- =?us-ascii?Q?xjdJn+nSm6OvnnH+Gf1CpTl96/3+4tzhOwAoCStZeHLPySS9HqPLK+e/5DqT?=
- =?us-ascii?Q?yDo624K7Rqvty6n42N69QKMLQs6bZry70dOsP351GRFmnYwOJTeESi9sft0G?=
- =?us-ascii?Q?ET8VHllG8fiRdbFev55sKA+8mAs0oFxsUZ5YJIpwJS/e0y9VGn3fJBfW2mQS?=
- =?us-ascii?Q?DV51I3cQ8WvAB2bXSPxdMpAGP1kzV9n6lf8dtCs2vI3sRPYaUX+AogMNigv9?=
- =?us-ascii?Q?JrwQYhi4NjWgqfHMGtlKZuEqM4iZdN6BDfQ+5nS0NNiHeQbHdKlMPTszmtGj?=
- =?us-ascii?Q?iQsSrSklzLDxS8AGraV59EF2LRNoPfgU3DZJLZgNJ6v5qLiCbk5yL1QxAvdt?=
- =?us-ascii?Q?+k425IZdrYP8hFlDzs3wCPAv9RGpuo0qUX/uLo1nezJNmxK5uem4MZ3aXAJz?=
- =?us-ascii?Q?KpYwoRTplz8Hkc7Ibg4CrUEkaCq2QNPJPedS9LyQsMZZC5lM5VyzGigj2vYS?=
- =?us-ascii?Q?OwEvoDn1pF2vuPBGBqOXjlcoUwZiDUVl9SOTQdYtwb+5dipWOclMYOKm0jQa?=
- =?us-ascii?Q?V9iYkqZk9CNykAtHKbOB+KbIG9rTvydrjRmolMfGOlMWsC0xHKdsb86QDYjs?=
- =?us-ascii?Q?hDN0V1qIn6H8DI8+RWS4ve8rnTsIvbK12j2wTCQaQfohQ2AJ4CypKFbJ0hm/?=
- =?us-ascii?Q?RnLZNVCyRZZwtL0eh/YsFs2r3H83nicb8lsQYkmiARuiILkNn3pQ+YwrJWqq?=
- =?us-ascii?Q?UWQkBG1IRN8vRTWUtQGE6+ghJFGMj+tewUXJyYI4Jf2SUQDDlXm1k4IHue1F?=
- =?us-ascii?Q?R1MJabw6pQiGhsUjk6lj4pgABLxgCyI9/1Ey2Mo/Ow/wcP48dUo9jLf3UL3D?=
- =?us-ascii?Q?aLSGEznaYrEsSS3uDcDGik3g3jAhsykbzxwrP2OgokbkwvuYUOcNqADk1JAY?=
- =?us-ascii?Q?/XJgm9BaXjlF5cbp3ifWT5UsC80J3Sob56VqmUpe7OGjz2KqYcyy2g35eV0K?=
- =?us-ascii?Q?7yDv3HOIrEdDA6vzF7mVwkSrOFhcKyzNrF7YJ6Ut9kpU6uPTMqM4uq1NlmcD?=
- =?us-ascii?Q?lohwaQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S243475AbhLCLXn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 3 Dec 2021 06:23:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1380358AbhLCLXm (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 3 Dec 2021 06:23:42 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DEEAC06173E;
+        Fri,  3 Dec 2021 03:20:18 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id k4so1866770plx.8;
+        Fri, 03 Dec 2021 03:20:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=7XsAJ2cZU1lppUyPBmVsEbXy/GKDAj/Ht+i8uHD7lok=;
+        b=fQI0WyY3dvLwdv22bT+tWb115e4Q95jD6vrbYcmPVcwOyogr9umcIO0a/KZzkZF0rU
+         qjv+YjbgPRKUi57eJSOspJ/nc9Xx0y6B+ShA6u79dQDpjAliXRhyzyFFhlcxT7Mkch1K
+         q1Htr6xBNQmACCzFHpqEJQ4IFR5KLc5Up09f0yDbrMAL2dGNIoDCk2kVY9vf7H/OqfTF
+         vj7WVjaYIRG9InmQYKKZoLEcnyr9fnCfLZMJ00mCUyXKJGM6wmAKtV6BkqeDbPJtqzHZ
+         wVggDDSxJtPp+HclUV3H9xLVWitco7xUeWkf/kzzWR666KG5ZxHBXQifzIXarMd5G5hy
+         YahQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=7XsAJ2cZU1lppUyPBmVsEbXy/GKDAj/Ht+i8uHD7lok=;
+        b=MoY2sjpAMgyYkYKSyl3yTrmDha4s9ftXhU1G3vwTsPLx5CqephRZGkTxOeBcMa00Hw
+         x/7TjGxpLH/vsUpAClAgDG0VbYb1ToTO+7yQ1+/0ykGNSOxPaEJXywKMnNZ9gkHWgNGB
+         2c769oup5WeP09lET6ayHH6o6pPJvzN6S4qyGv8/wRy2v0B0PPk9s2MKXUTC8WFbBZzQ
+         YHwGCeT+gmmIJZLI4AuuOpY8bdCmQX1j6LZYgBPdaCWC864oAQlc+bok2q8wofXduq3+
+         +OJ7CLGfdD6kN9anQqdSzLPDfOp9rJyeo0XLpJnXYXcfaO8SR2br2fRuoGeqoHw6to7N
+         oyVQ==
+X-Gm-Message-State: AOAM53378jPICPHynxcaCHHo5EK8+5kH1DdhVZwJ9daWFoAXaTzAf4AR
+        VFbSbOrUAin+FhaeabDvAq8Erol6TmpDvw==
+X-Google-Smtp-Source: ABdhPJwyiDbpHGaLzHTehq+eMK96rnMASx0J/gnS2CYK1pGpGeM2FntwySwLQ6ehw5HLLx+8am9Xvw==
+X-Received: by 2002:a17:90b:3447:: with SMTP id lj7mr13390043pjb.112.1638530418013;
+        Fri, 03 Dec 2021 03:20:18 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
+        by smtp.gmail.com with ESMTPSA id q32sm2126609pja.4.2021.12.03.03.20.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Dec 2021 03:20:17 -0800 (PST)
+Message-ID: <e78ba239-2dad-d48f-671e-f76a943052f1@gmail.com>
+Date:   Fri, 3 Dec 2021 19:20:04 +0800
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40e5ac26-24f8-474a-c9bb-08d9b5a6bb2f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2021 15:16:35.7406
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Li/Qvu9m74m4LFq2rZP0ubOD25fzzqVVMmiwsZyzq3SRrhNg8MtVVu3p6jekMl8DvKfGDgDIMBQ4uXXF0YWxXGHwacCp7P9TlP2fEkuqKXA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB3030
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH V3 1/5] Swiotlb: Add Swiotlb bounce buffer remap function
+ for HV IVM
+Content-Language: en-US
+To:     Tom Lendacky <thomas.lendacky@amd.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, jgross@suse.com, sstabellini@kernel.org,
+        boris.ostrovsky@oracle.com, joro@8bytes.org, will@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, arnd@arndb.de, hch@infradead.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        Tianyu.Lan@microsoft.com, xen-devel@lists.xenproject.org,
+        michael.h.kelley@microsoft.com
+Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
+        hch@lst.de, parri.andrea@gmail.com, dave.hansen@intel.com
+References: <20211201160257.1003912-1-ltykernel@gmail.com>
+ <20211201160257.1003912-2-ltykernel@gmail.com>
+ <41bb0a87-9fdb-4c67-a903-9e87d092993a@amd.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <41bb0a87-9fdb-4c67-a903-9e87d092993a@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Sean Christopherson <seanjc@google.com> Sent: Wednesday, December 1, =
-2021 6:13 PM
->=20
-> On Mon, Nov 01, 2021, Vitaly Kuznetsov wrote:
-> > Sean Christopherson <seanjc@google.com> writes:
-> >
-> > > Add checks for the three fields in Hyper-V's hypercall params that mu=
-st
-> > > be zero.  Per the TLFS, HV_STATUS_INVALID_HYPERCALL_INPUT is returned=
- if
-> > > "A reserved bit in the specified hypercall input value is non-zero."
-> > >
-> > > Note, the TLFS has an off-by-one bug for the last reserved field, whi=
-ch
-> > > it defines as being bits 64:60.  The same section states "The input f=
-ield
-> > > 64-bit value called a hypercall input value.", i.e. bit 64 doesn't
-> > > exist.
-> >
-> > This version are you looking at? I can't see this issue in 6.0b
->=20
-> It's the web-based documentation, the 6.0b PDF indeed does not have the s=
-ame bug.
->=20
-> https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/h=
-ypercall-interface#hypercall-inputs
 
-Did you (or Vitaly) file a bug report on this doc issue?  If not, I can do =
-so.
 
-Michael
+On 12/2/2021 10:42 PM, Tom Lendacky wrote:
+> On 12/1/21 10:02 AM, Tianyu Lan wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> In Isolation VM with AMD SEV, bounce buffer needs to be accessed via
+>> extra address space which is above shared_gpa_boundary (E.G 39 bit
+>> address line) reported by Hyper-V CPUID ISOLATION_CONFIG. The access
+>> physical address will be original physical address + shared_gpa_boundary.
+>> The shared_gpa_boundary in the AMD SEV SNP spec is called virtual top of
+>> memory(vTOM). Memory addresses below vTOM are automatically treated as
+>> private while memory above vTOM is treated as shared.
+>>
+>> Expose swiotlb_unencrypted_base for platforms to set unencrypted
+>> memory base offset and platform calls swiotlb_update_mem_attributes()
+>> to remap swiotlb mem to unencrypted address space. memremap() can
+>> not be called in the early stage and so put remapping code into
+>> swiotlb_update_mem_attributes(). Store remap address and use it to copy
+>> data from/to swiotlb bounce buffer.
+>>
+>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> This patch results in the following stack trace during a bare-metal boot
+> on my EPYC system with SME active (e.g. mem_encrypt=on):
+> 
+> [    0.123932] BUG: Bad page state in process swapper  pfn:108001
+> [    0.123942] page:(____ptrval____) refcount:0 mapcount:-128 
+> mapping:0000000000000000 index:0x0 pfn:0x108001
+> [    0.123946] flags: 0x17ffffc0000000(node=0|zone=2|lastcpupid=0x1fffff)
+> [    0.123952] raw: 0017ffffc0000000 ffff88904f2d5e80 ffff88904f2d5e80 
+> 0000000000000000
+> [    0.123954] raw: 0000000000000000 0000000000000000 00000000ffffff7f 
+> 0000000000000000
+> [    0.123955] page dumped because: nonzero mapcount
+> [    0.123957] Modules linked in:
+> [    0.123961] CPU: 0 PID: 0 Comm: swapper Not tainted 
+> 5.16.0-rc3-sos-custom #2
+> [    0.123964] Hardware name: AMD Corporation
+> [    0.123967] Call Trace:
+> [    0.123971]  <TASK>
+> [    0.123975]  dump_stack_lvl+0x48/0x5e
+> [    0.123985]  bad_page.cold+0x65/0x96
+> [    0.123990]  __free_pages_ok+0x3a8/0x410
+> [    0.123996]  memblock_free_all+0x171/0x1dc
+> [    0.124005]  mem_init+0x1f/0x14b
+> [    0.124011]  start_kernel+0x3b5/0x6a1
+> [    0.124016]  secondary_startup_64_no_verify+0xb0/0xbb
+> [    0.124022]  </TASK>
+> 
+> I see ~40 of these traces, each for different pfns.
+> 
+> Thanks,
+> Tom
+
+Hi Tom:
+       Thanks for your test. Could you help to test the following patch 
+and check whether it can fix the issue.
+
+
+diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+index 569272871375..f6c3638255d5 100644
+--- a/include/linux/swiotlb.h
++++ b/include/linux/swiotlb.h
+@@ -73,6 +73,9 @@ extern enum swiotlb_force swiotlb_force;
+   * @end:       The end address of the swiotlb memory pool. Used to do 
+a quick
+   *             range check to see if the memory was in fact allocated 
+by this
+   *             API.
++ * @vaddr:     The vaddr of the swiotlb memory pool. The swiotlb memory 
+pool
++ *             may be remapped in the memory encrypted case and store 
+virtual
++ *             address for bounce buffer operation.
+   * @nslabs:    The number of IO TLB blocks (in groups of 64) between 
+@start and
+   *             @end. For default swiotlb, this is command line 
+adjustable via
+   *             setup_io_tlb_npages.
+@@ -92,6 +95,7 @@ extern enum swiotlb_force swiotlb_force;
+  struct io_tlb_mem {
+         phys_addr_t start;
+         phys_addr_t end;
++       void *vaddr;
+         unsigned long nslabs;
+         unsigned long used;
+         unsigned int index;
+@@ -186,4 +190,6 @@ static inline bool is_swiotlb_for_alloc(struct 
+device *dev)
+  }
+  #endif /* CONFIG_DMA_RESTRICTED_POOL */
+
++extern phys_addr_t swiotlb_unencrypted_base;
++
+  #endif /* __LINUX_SWIOTLB_H */
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 8e840fbbed7c..34e6ade4f73c 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -50,6 +50,7 @@
+  #include <asm/io.h>
+  #include <asm/dma.h>
+
++#include <linux/io.h>
+  #include <linux/init.h>
+  #include <linux/memblock.h>
+  #include <linux/iommu-helper.h>
+@@ -72,6 +73,8 @@ enum swiotlb_force swiotlb_force;
+
+  struct io_tlb_mem io_tlb_default_mem;
+
++phys_addr_t swiotlb_unencrypted_base;
++
+  /*
+   * Max segment that we can provide which (if pages are contingous) will
+   * not be bounced (unless SWIOTLB_FORCE is set).
+@@ -155,6 +158,27 @@ static inline unsigned long nr_slots(u64 val)
+         return DIV_ROUND_UP(val, IO_TLB_SIZE);
+  }
+
++/*
++ * Remap swioltb memory in the unencrypted physical address space
++ * when swiotlb_unencrypted_base is set. (e.g. for Hyper-V AMD SEV-SNP
++ * Isolation VMs).
++ */
++void *swiotlb_mem_remap(struct io_tlb_mem *mem, unsigned long bytes)
++{
++       void *vaddr = NULL;
++
++       if (swiotlb_unencrypted_base) {
++               phys_addr_t paddr = mem->start + swiotlb_unencrypted_base;
++
++               vaddr = memremap(paddr, bytes, MEMREMAP_WB);
++               if (!vaddr)
++                       pr_err("Failed to map the unencrypted memory 
+%llx size %lx.\n",
++                              paddr, bytes);
++       }
++
++       return vaddr;
++}
++
+  /*
+   * Early SWIOTLB allocation may be too early to allow an architecture to
+   * perform the desired operations.  This function allows the 
+architecture to
+@@ -172,7 +196,12 @@ void __init swiotlb_update_mem_attributes(void)
+         vaddr = phys_to_virt(mem->start);
+         bytes = PAGE_ALIGN(mem->nslabs << IO_TLB_SHIFT);
+         set_memory_decrypted((unsigned long)vaddr, bytes >> PAGE_SHIFT);
+-       memset(vaddr, 0, bytes);
++
++       mem->vaddr = swiotlb_mem_remap(mem, bytes);
++       if (!mem->vaddr)
++               mem->vaddr = vaddr;
++
++       memset(mem->vaddr, 0, bytes);
+  }
+
+  static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, 
+phys_addr_t start,
+@@ -196,7 +225,17 @@ static void swiotlb_init_io_tlb_mem(struct 
+io_tlb_mem *mem, phys_addr_t start,
+                 mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
+                 mem->slots[i].alloc_size = 0;
+         }
++
++       /*
++        * If swiotlb_unencrypted_base is set, the bounce buffer memory will
++        * be remapped and cleared in swiotlb_update_mem_attributes.
++        */
++       if (swiotlb_unencrypted_base)
++               return;
++
+         memset(vaddr, 0, bytes);
++       mem->vaddr = vaddr;
++       return;
+  }
+
+  int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, int 
+verbose)
+@@ -371,7 +410,7 @@ static void swiotlb_bounce(struct device *dev, 
+phys_addr_t tlb_addr, size_t size
+         phys_addr_t orig_addr = mem->slots[index].orig_addr;
+         size_t alloc_size = mem->slots[index].alloc_size;
+         unsigned long pfn = PFN_DOWN(orig_addr);
+-       unsigned char *vaddr = phys_to_virt(tlb_addr);
++       unsigned char *vaddr = mem->vaddr + tlb_addr - mem->start;
+         unsigned int tlb_offset, orig_addr_offset;
+
+         if (orig_addr == INVALID_PHYS_ADDR)
+
+
+Thanks.
+
