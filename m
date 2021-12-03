@@ -2,113 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F6FF467648
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Dec 2021 12:26:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90D6946791F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Dec 2021 15:09:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242826AbhLCL33 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 3 Dec 2021 06:29:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242314AbhLCL32 (ORCPT
+        id S230250AbhLCOM6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 3 Dec 2021 09:12:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22622 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1352549AbhLCOM5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 3 Dec 2021 06:29:28 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA824C06173E;
-        Fri,  3 Dec 2021 03:26:04 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id n15-20020a17090a160f00b001a75089daa3so4920700pja.1;
-        Fri, 03 Dec 2021 03:26:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Df2I2A2zVcIhvBHXD5z9iabD7nB5LthE/+eMaX0CJns=;
-        b=LrhVabQro3+RJTAF2UUwo++Q3tHVPc9KkdjTXgZj5009TrrrQoEZbScehBEamrCUSN
-         uAuPgOUZCbn39oord0X3XW7U/XIJ2WzNu0xdbBsMDjNH8DRAcaKxm/RnUdXTK7TPH9GB
-         /3QVEkipv/oDwHi2iskl2LfbgoDlNjPpNEnAH9c0t4ds6OIO4vgwzDl9tD4vqPr3Jj1i
-         soeN//lG51eXYc9/8Noh0CxgiHul5HzjoLY8pcB7lUlMXYr1yF0iF5iR8ZnAimEr0fEF
-         u9pUnIeyp3+uCAIcJI0WC45iQsDzZ7vfXZh4Mm9tVdhmXvGp7nCrb22wqTAz0TVn9HBO
-         JiOg==
+        Fri, 3 Dec 2021 09:12:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638540572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Th3/AwwdNWFRMVyXQbUB5Zn699vPcry9PjQt24tDZNs=;
+        b=BnvbZmSxAKuvvWFBMi779uHrkQGll0hXImSlHmkSWpO7ywlwSlsIBz6Kj5TGGYEcqZt+Ws
+        1EKfjkacukyWiUhKPTrWxTecZc1X4Dgjgm5kwpcHdAXK9vAbKkpY+WyWSaAvdKDHI3nlDq
+        ESj7hRUa5t32cu+XiS1ieiPE9Q5u/nA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-102-ips9VtC-NRm1VmuM0Xs6_Q-1; Fri, 03 Dec 2021 09:09:31 -0500
+X-MC-Unique: ips9VtC-NRm1VmuM0Xs6_Q-1
+Received: by mail-wm1-f72.google.com with SMTP id l4-20020a05600c1d0400b00332f47a0fa3so1414570wms.8
+        for <linux-hyperv@vger.kernel.org>; Fri, 03 Dec 2021 06:09:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Df2I2A2zVcIhvBHXD5z9iabD7nB5LthE/+eMaX0CJns=;
-        b=E8sotDUvNz5HdcrH5IfA/iK7LvYJgg4RelVWrRLHVizWFSn6hFgkgEsenDUzTKeLrA
-         Q+h+N1mYrB4xEWlmyrB0uaJzqjnis9D8EP9nBoLskUzEheAPiqgbPITWDF7x2vJdhcDf
-         NOo5uVxEB8EFXXg39S9SI1ncNlWE3jXW7nWxdUBApY93HkAH+pW+/208VhKRDBm6O6bt
-         g3x2wKYiOCWwog+1Vxa6Jndci62ccXZpdX+QRu9netfxemp4Y0bJI1IJ8Xv40BeafVnL
-         qg9q0pBH8BiLz+X6qKpNoc1NuQ31iZO8FW0piEUxmXpmOGJ/OO31krkMCF2YeZRXJLO1
-         5qFg==
-X-Gm-Message-State: AOAM530kmE34KKke+ux6Vu+DB64YRdpMEiEZfMFXjH+7nD2Th4oF16aC
-        8Bkj52vCbo0njkL9R0TL8XY=
-X-Google-Smtp-Source: ABdhPJzPvoKIz31xLOmSdpnjjIrMa2J9GjBdJxPwkC+KmRLj7Ds+PG6GrIFi6sWFBo0epAEx6rdfGQ==
-X-Received: by 2002:a17:90b:190f:: with SMTP id mp15mr13348018pjb.210.1638530764387;
-        Fri, 03 Dec 2021 03:26:04 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
-        by smtp.gmail.com with ESMTPSA id mp12sm5062949pjb.39.2021.12.03.03.25.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Dec 2021 03:26:04 -0800 (PST)
-Message-ID: <4006e942-b6bf-ac21-c56b-4719e514dbd2@gmail.com>
-Date:   Fri, 3 Dec 2021 19:25:52 +0800
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Th3/AwwdNWFRMVyXQbUB5Zn699vPcry9PjQt24tDZNs=;
+        b=RMTrPbSHZfEGYcdTgRTejbXVpMURWbDSF9dy8PizGSqlUcziN9pF8C4uXJfHG+aaz1
+         qXkOtWTUwVcjnegNZYOmo9UnH/vNxLrDYQnAlMG0BJjWHtwUuBvlbrByQZAXx9FwjdC7
+         DeC93eTWXKQCo5+OTrGnbVfyuaA5uHfr1oNuc6qpI6BuifH316/SzBks3K7WGK6z2Ung
+         /4V5WeWvOoVbrmKsrT+8lRYSNe21dQMjVhAphKiW20NqNY9Z6AKu3xQL5r1carnSR0is
+         kBXIuVdOUlV83MFuOZEgwq6m9lyzOYCN7w+LyHngLurEJRvKktUcozJXhDyd/g/culqR
+         L5gw==
+X-Gm-Message-State: AOAM530Zy0cOcRVZtv5ezQZXmTfBZrIbbxNPYO3Zu2yjzbIrMl7mZ7j4
+        VVyz2LXxrOeP2Scw7s6h7yoX3BD4N50O9TuMdRyDZXAnJH3kIXqbOKsijSMUt7dMOAFIzqvwmDj
+        1TeNdorACpAcI3IMqE2pNeAj1
+X-Received: by 2002:adf:e2c5:: with SMTP id d5mr21726922wrj.338.1638540569912;
+        Fri, 03 Dec 2021 06:09:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwn8SCemCKl3G0iSjXXF2Z8BcbWnjoIe4SW0+H1SuKLyllcsxQUH/Bt1H7vpADvQabw8WfPDw==
+X-Received: by 2002:adf:e2c5:: with SMTP id d5mr21726875wrj.338.1638540569626;
+        Fri, 03 Dec 2021 06:09:29 -0800 (PST)
+Received: from fedora (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id f15sm3497480wmg.30.2021.12.03.06.09.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Dec 2021 06:09:29 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ajay Garg <ajaygargnsit@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: ** POTENTIAL FRAUD ALERT - RED HAT ** RE: [PATCH v2 8/8] KVM:
+ x86: Add checks for reserved-to-zero Hyper-V hypercall fields
+In-Reply-To: <MWHPR21MB1593E284E412873C64B54A32D7699@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20211030000800.3065132-1-seanjc@google.com>
+ <20211030000800.3065132-9-seanjc@google.com>
+ <87v91cjhch.fsf@vitty.brq.redhat.com> <YagrxIknF9DX8l8L@google.com>
+ <MWHPR21MB1593E284E412873C64B54A32D7699@MWHPR21MB1593.namprd21.prod.outlook.com>
+Date:   Fri, 03 Dec 2021 15:09:27 +0100
+Message-ID: <87o85x7pbc.fsf@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH V3 3/5] hyperv/IOMMU: Enable swiotlb bounce buffer for
- Isolation VM
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, jgross@suse.com, sstabellini@kernel.org,
-        boris.ostrovsky@oracle.com, joro@8bytes.org, will@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, arnd@arndb.de, hch@infradead.org,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
-        Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com,
-        xen-devel@lists.xenproject.org, michael.h.kelley@microsoft.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
-        hch@lst.de, parri.andrea@gmail.com, dave.hansen@intel.com
-References: <20211201160257.1003912-1-ltykernel@gmail.com>
- <20211201160257.1003912-4-ltykernel@gmail.com>
- <20211202144336.z2sfs6kw5kdsfqgv@liuwe-devbox-debian-v2>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <20211202144336.z2sfs6kw5kdsfqgv@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/2/2021 10:43 PM, Wei Liu wrote:
-> On Wed, Dec 01, 2021 at 11:02:54AM -0500, Tianyu Lan wrote:
-> [...]
->> diff --git a/arch/x86/xen/pci-swiotlb-xen.c b/arch/x86/xen/pci-swiotlb-xen.c
->> index 46df59aeaa06..30fd0600b008 100644
->> --- a/arch/x86/xen/pci-swiotlb-xen.c
->> +++ b/arch/x86/xen/pci-swiotlb-xen.c
->> @@ -4,6 +4,7 @@
->>   
->>   #include <linux/dma-map-ops.h>
->>   #include <linux/pci.h>
->> +#include <linux/hyperv.h>
->>   #include <xen/swiotlb-xen.h>
->>   
->>   #include <asm/xen/hypervisor.h>
->> @@ -91,6 +92,6 @@ int pci_xen_swiotlb_init_late(void)
->>   EXPORT_SYMBOL_GPL(pci_xen_swiotlb_init_late);
->>   
->>   IOMMU_INIT_FINISH(pci_xen_swiotlb_detect,
->> -		  NULL,
->> +		  hyperv_swiotlb_detect,
-> 
-> It is not immediately obvious why this is needed just by reading the
-> code. Please consider copying some of the text in the commit message to
-> a comment here.
-> 
+"Michael Kelley (LINUX)" <mikelley@microsoft.com> writes:
 
-Thanks for suggestion. Will update.
+> From: Sean Christopherson <seanjc@google.com> Sent: Wednesday, December 1, 2021 6:13 PM
+>> 
+>> On Mon, Nov 01, 2021, Vitaly Kuznetsov wrote:
+>> > Sean Christopherson <seanjc@google.com> writes:
+>> >
+>> > > Add checks for the three fields in Hyper-V's hypercall params that must
+>> > > be zero.  Per the TLFS, HV_STATUS_INVALID_HYPERCALL_INPUT is returned if
+>> > > "A reserved bit in the specified hypercall input value is non-zero."
+>> > >
+>> > > Note, the TLFS has an off-by-one bug for the last reserved field, which
+>> > > it defines as being bits 64:60.  The same section states "The input field
+>> > > 64-bit value called a hypercall input value.", i.e. bit 64 doesn't
+>> > > exist.
+>> >
+>> > This version are you looking at? I can't see this issue in 6.0b
+>> 
+>> It's the web-based documentation, the 6.0b PDF indeed does not have the same bug.
+>> 
+>> https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface#hypercall-inputs
+>
+> Did you (or Vitaly) file a bug report on this doc issue?  If not, I can do so.
+>
+
+Done, https://github.com/MicrosoftDocs/Virtualization-Documentation/pull/1682
+
+-- 
+Vitaly
+
