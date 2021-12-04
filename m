@@ -2,96 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3002D4680E5
-	for <lists+linux-hyperv@lfdr.de>; Sat,  4 Dec 2021 00:48:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 113CF46831A
+	for <lists+linux-hyperv@lfdr.de>; Sat,  4 Dec 2021 08:22:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354491AbhLCXwL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 3 Dec 2021 18:52:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39464 "EHLO
+        id S1344352AbhLDHZa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 4 Dec 2021 02:25:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354388AbhLCXwL (ORCPT
+        with ESMTP id S232185AbhLDHZ3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 3 Dec 2021 18:52:11 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A81C061354
-        for <linux-hyperv@vger.kernel.org>; Fri,  3 Dec 2021 15:48:46 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id s137so4577785pgs.5
-        for <linux-hyperv@vger.kernel.org>; Fri, 03 Dec 2021 15:48:46 -0800 (PST)
+        Sat, 4 Dec 2021 02:25:29 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87C1C061751;
+        Fri,  3 Dec 2021 23:22:04 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso6951352pji.0;
+        Fri, 03 Dec 2021 23:22:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jZAmDHsC6a6B1+lUDqpdszqQCD3+V34qAynkOGNqzOs=;
-        b=ZROJNDJMOq5eIJoHp0p2tGr6bzowIDKO97CIqwhIh2xybI8owSYD51r3cZQjUy7SMs
-         /P40psd2IV5qDAXCOCYwHiSHhml5L0HIMnhaLZObQG+0Hv1TAktoB1btbfH4raGuMAMe
-         ell0IVFfKq86nUJQpY0EZXb2dY9wbbgAGzMXedTAW+uehWC6uWCvbOHeg2kpnbzPykUN
-         lX9e0y4K1FLLZBvfJWvyw8HhVNgXjG49W4LKgWJQwTZg4t1woSQEZRu5HpUtfTQJq5h8
-         rwdbRyd+awbHRbi9DEg9SXwvQGC6Ubgqnzoyn+LSR2ttCXmaRK2RKHh6RimVCyhhdZs8
-         i/Cw==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=ZkQEYozmB0wgYJcxDO/m983AAdy8n14FhucCaGoUzA4=;
+        b=blREAYP23qBjIahcqczEuNSUq6MRbQ5UXgW1oG4ZGSSpOed90dbanN+LHvJF7N6ME0
+         Y9LKoSwodHr9BOd//+DW6OvBPSh6Rf4BdMb2EzDvtQ+sVoes1f6+7VWyUKFWqiaSHHqU
+         Am+FtOCVPnOAgj6oTP0k0IWgh4dooTt7QX7KQKbCT+o69WR7nP4hJQspPwFm25qXtPCW
+         kBdkmADgMPc7HTKvYOavrblwjUfXQ3wlSxkW6E/shgs8QAhLWvPBZ3tVRmEVD7CWY44S
+         t8LTdIFpatSjby01xMjLjf42MSd1m5DtLtC+1uS3bLpAx3vREm/i+1aUCO81LPZgXzuP
+         nkWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jZAmDHsC6a6B1+lUDqpdszqQCD3+V34qAynkOGNqzOs=;
-        b=N/LFrZ+IxQ1U2Rxze/AoPONnGV2mA0qjkh3Xh86uQ0/3p86Apftf8FIAczSzQJ6F5/
-         yfwcpAcJXmBLLvGDEvfylnUwJleYgKwSY7ee4pIpVIqRh++Qe2ew8+Zgg6hsNQEoH21V
-         r1/th1tvUuJgnXZyhrpdkdDsQ29xNmYZT/M5U07kDS7+GZ4QR18bApgUMjprGuCRGPwG
-         LBAkXWJWYRRPXXnJkTKIYbxJ3M0uH1a2Nxqdjnxc/yTr9OBierbbIpJVlo5v9yyP/zwR
-         hLHxmte28Dua0xfPvIZ1h7099QP7FdkJe3zkLwo0VMFHaXM41DMfyI/wW1AlK5Nk918M
-         jHfQ==
-X-Gm-Message-State: AOAM5312dqOuswvFv1j94U1RecZY5zM7tliWlP+/7hQRrpj4Aq7wuFZq
-        fdBPt3CKjlf1LeLW8h8A8OtaOA==
-X-Google-Smtp-Source: ABdhPJxiSrEcmRBZRtgKjhJMnu5tJLdEcIhiCx8GQtfxumShdLMvRSAXNQRAKE0vEMsLMNwHj3EJRQ==
-X-Received: by 2002:a05:6a00:2353:b0:4ab:1694:6f50 with SMTP id j19-20020a056a00235300b004ab16946f50mr6815870pfj.7.1638575326038;
-        Fri, 03 Dec 2021 15:48:46 -0800 (PST)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id j6sm4164413pfu.205.2021.12.03.15.48.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 15:48:45 -0800 (PST)
-Date:   Fri, 3 Dec 2021 23:48:42 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ajay Garg <ajaygargnsit@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 7/8] KVM: x86: Reject fixeds-size Hyper-V hypercalls
- with non-zero "var_cnt"
-Message-ID: <Yaqs2uIiAoyfbdbX@google.com>
-References: <20211030000800.3065132-1-seanjc@google.com>
- <20211030000800.3065132-8-seanjc@google.com>
- <87y268jhm1.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ZkQEYozmB0wgYJcxDO/m983AAdy8n14FhucCaGoUzA4=;
+        b=y2p/lvt374wlKRsJOW+X3FJTKJeg5JQ5PGHiHtuMWq8vjHK8kNwOx2cXg7kFIDt6GZ
+         GWpTXROfQaQGc4Sqcwf7un19o6tzvq8gTC40TkOzJgdJvrOQATV78k9J6sK0ymLtzmC6
+         iyLfZDt1xtt4pCF+o3xM/8r80ZD7DFlRAKkX19MUxh2ZPm6hSzVm09ns226Fs86OwwxI
+         s1csl3Ix8jApBmjaCkVXFEbLW9ASwBbPlFRWE3V8pRWaWhW8iLr6+cubVa/1Ylo+zNuG
+         PTjCL7swYrzNvCV7WEWCAit5nq5UxEvKDbxc0SaemDhJMIYNAgUu3Y6qBdg/XyUfHR5O
+         20LQ==
+X-Gm-Message-State: AOAM533wEHgVJox09V37PvdH3GuZhMAvzI4CXCG4Eumk/NbEYzH5NMz4
+        MZ/jzbFv3zbXgsgVPu/5e2k=
+X-Google-Smtp-Source: ABdhPJzcZuwuxSGpXoC+LpAfScg+HY+PAZl5x85Fy3cmkRF8TnHHjxYQIiUVC9++sZKTL0nxBihlXA==
+X-Received: by 2002:a17:903:1105:b0:143:a593:dc6e with SMTP id n5-20020a170903110500b00143a593dc6emr28523850plh.6.1638602524291;
+        Fri, 03 Dec 2021 23:22:04 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
+        by smtp.gmail.com with ESMTPSA id t10sm4331860pga.6.2021.12.03.23.21.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Dec 2021 23:22:03 -0800 (PST)
+Message-ID: <59e41c28-260f-876d-c7cf-a13669ad8984@gmail.com>
+Date:   Sat, 4 Dec 2021 15:21:50 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y268jhm1.fsf@vitty.brq.redhat.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH V3 1/5] Swiotlb: Add Swiotlb bounce buffer remap function
+ for HV IVM
+Content-Language: en-US
+To:     Tom Lendacky <thomas.lendacky@amd.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, jgross@suse.com, sstabellini@kernel.org,
+        boris.ostrovsky@oracle.com, joro@8bytes.org, will@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, arnd@arndb.de, hch@infradead.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        Tianyu.Lan@microsoft.com, xen-devel@lists.xenproject.org,
+        michael.h.kelley@microsoft.com
+Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
+        hch@lst.de, parri.andrea@gmail.com, dave.hansen@intel.com
+References: <20211201160257.1003912-1-ltykernel@gmail.com>
+ <20211201160257.1003912-2-ltykernel@gmail.com>
+ <41bb0a87-9fdb-4c67-a903-9e87d092993a@amd.com>
+ <e78ba239-2dad-d48f-671e-f76a943052f1@gmail.com>
+ <06faf04c-dc4a-69fd-0be9-04f57f779ffe@amd.com>
+ <1b7b8e20-a861-ab26-26a1-dad1eb80a461@amd.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <1b7b8e20-a861-ab26-26a1-dad1eb80a461@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Nov 01, 2021, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> > @@ -2331,6 +2331,11 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
-> >  			ret = HV_STATUS_OPERATION_DENIED;
-> >  			break;
-> >  		}
-> > +		if (unlikely(hc.var_cnt)) {
-> > +			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
-> > +			break;
-> > +		}
-> > +
+On 12/4/2021 4:06 AM, Tom Lendacky wrote:
+>>> Hi Tom:
+>>>        Thanks for your test. Could you help to test the following 
+>>> patch and check whether it can fix the issue.
+>>
+>> The patch is mangled. Is the only difference where 
+>> set_memory_decrypted() is called?
 > 
-> Probably true for HVCALL_RESET_DEBUG_SESSION but I'm not sure about
-> HVCALL_POST_DEBUG_DATA/HVCALL_RETRIEVE_DEBUG_DATA (note 'fallthrough'
-> above) -- these are not described well in TLFS.
+> I de-mangled the patch. No more stack traces with SME active.
+> 
+> Thanks,
+> Tom
 
-I'll drop the check for all the DEBUG hypercalls and add a note in the changelog
-to call out that they're probably not supposed to use var_cnt, but that the TLFS
-documentation isn't clear one way or the other.
+Hi Tom:
+	Thanks a lot for your rework and test. I will update in the next version.
+
+Thanks.
