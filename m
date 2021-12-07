@@ -2,146 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A655D46C5E7
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 22:02:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E80EB46C71C
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 23:09:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232805AbhLGVGT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Dec 2021 16:06:19 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:53224 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232369AbhLGVGN (ORCPT
+        id S233088AbhLGWNI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Dec 2021 17:13:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234616AbhLGWNI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Dec 2021 16:06:13 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EEC16B81E7D;
-        Tue,  7 Dec 2021 21:02:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF0FC341C1;
-        Tue,  7 Dec 2021 21:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638910959;
-        bh=xQoYzuJZBtazlb9l9/rEZFpq4l8ZITO51ml+vNgPc6M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=e153nty81BUAPS50lzOeG3i/XMpm26Pk8TGxhpDoheH+aGOAhJjiCObFncc/cOH46
-         OXARkgcqJJlGa0F/Bsl/N/Hr8iyx5YBElDJEc4KBNNajc4emj6cdjk7cQoxzm32rM6
-         wS8QDvcYSbelmRSilLFSFpzwM4nEMGo1OciLG1fy1ib0RAXNhpEhAgwC7XOVLwtEMg
-         hUh+UVjgpZDPJcdCSkYndl3E5r7GBkkzKgk8s3NaLe/CmCRfbyieQFOca/oFRIERXj
-         HKyqHP6oyciLgO6YSOX23lsQkoLBX7Z1J+QJANGpc3FC3xvrJLcihkCi836KsOw4gQ
-         4SgZq/E6VBAOQ==
-Date:   Tue, 7 Dec 2021 15:02:38 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [patch V2 23/23] PCI/MSI: Move descriptor counting on allocation
- fail to the legacy code
-Message-ID: <20211207210238.GA77554@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211206210225.101336873@linutronix.de>
+        Tue, 7 Dec 2021 17:13:08 -0500
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75735C061748
+        for <linux-hyperv@vger.kernel.org>; Tue,  7 Dec 2021 14:09:37 -0800 (PST)
+Received: by mail-pl1-x649.google.com with SMTP id n13-20020a170902d2cd00b0014228ffc40dso105166plc.4
+        for <linux-hyperv@vger.kernel.org>; Tue, 07 Dec 2021 14:09:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=reply-to:date:message-id:mime-version:subject:from:to:cc;
+        bh=H9d3b7ySfPUUkyj8WwGO7YINvSuZ61NMD+2fSI/NRIQ=;
+        b=kavNo4w//awmdXO5HpD/p+k8j6D9sG5ed5rnhy6iRwkpibbidw6pxcuAlSF08ANNHS
+         AuzRlasPHS5c+2qkBbl5iC6XWKTL0VtiGFM5Y9jNipsSu8Mt+rVitZBMQ/C3fdD0W9no
+         Gd7C9tHsD6AdQ40xfJlyUtRCxUb240E1fWiSd3/AFwMrxRZf1GTcv21jiPBDjdKx8EGV
+         KcwMnMhh205HO6lvj5rdnxQA/wEvoQYWKnoJjlQ3J8fRr9WYhaGxfBBulxET05qUcXTi
+         KL+VA8Iu0l+JerJE1K4vUqVNe66UTgxBGsyfCm0HJDihzF2XKvzmMO3k3OgspObBZ+VL
+         p8+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:reply-to:date:message-id:mime-version:subject
+         :from:to:cc;
+        bh=H9d3b7ySfPUUkyj8WwGO7YINvSuZ61NMD+2fSI/NRIQ=;
+        b=AjvTcWxHHkOsvmaeDZr71jlb4KMXPdHof5nHRFDeEYucNKND6aGJksFHOvqXjVK0Ys
+         8+CSUvXLsaTZybYKLKdWARrnLqf3iD5XWGoY+ag35KMcoAxzXOHXu9dQXzxJKufKxdpB
+         JNRqtPjTzpZuH43gzPTYnIkRGSjnD3WsjvstE+q8nhI44c02ycCW9XP8LPDvhohj9Gph
+         bdiGv5p0+xZ5U8R9iRNHSlbelZP9JaTMgDThEjd+4ngZMIwfrYg4irykOteBiNRF+GbL
+         tMUUxJWiHN/tG7myWw7lYbhhQLp1lfx4BtX5v/y2gk4XYO66tfxqiixzvnb8H8z0IV41
+         PS+A==
+X-Gm-Message-State: AOAM5317+Akij8hmA+GmZeWUG9vtYj14y3aK7X1VomYJJF1yebZ6xE0B
+        pahLOz9zMtIRS+hjK0hC3VdDt2NqhgU=
+X-Google-Smtp-Source: ABdhPJzYigwKgXuf4QjKrxXjkaHgzzD+/k5Wx9tZeXK3ngvuCH9gJt9PRu0YFmMirUBJBLh3UP201FwOiaY=
+X-Received: from seanjc.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:3e5])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:4a0e:: with SMTP id
+ kk14mr2401871pjb.42.1638914976806; Tue, 07 Dec 2021 14:09:36 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date:   Tue,  7 Dec 2021 22:09:18 +0000
+Message-Id: <20211207220926.718794-1-seanjc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.34.1.400.ga245620fadb-goog
+Subject: [PATCH v3 0/8] KVM: x86: Hyper-V hypercall fix and cleanups
+From:   Sean Christopherson <seanjc@google.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ajay Garg <ajaygargnsit@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Dec 06, 2021 at 11:28:00PM +0100, Thomas Gleixner wrote:
-> The irqdomain code already returns the information. Move the loop to the
-> legacy code.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Tested-by: Juergen Gross <jgross@suse.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Fix a bug where KVM incorrectly skips an "all_cpus" IPI request, and misc
+cleanups and enhancements for KVM handling of Hyper-V hypercalls.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Based on kvm/queue, commit 1cf84614b04a ("KVM: x86: Exit to ...").
 
-> ---
->  drivers/pci/msi/legacy.c |   20 +++++++++++++++++++-
->  drivers/pci/msi/msi.c    |   19 +------------------
->  2 files changed, 20 insertions(+), 19 deletions(-)
-> 
-> --- a/drivers/pci/msi/legacy.c
-> +++ b/drivers/pci/msi/legacy.c
-> @@ -50,9 +50,27 @@ void __weak arch_teardown_msi_irqs(struc
->  	}
->  }
->  
-> +static int pci_msi_setup_check_result(struct pci_dev *dev, int type, int ret)
-> +{
-> +	struct msi_desc *entry;
-> +	int avail = 0;
-> +
-> +	if (type != PCI_CAP_ID_MSIX || ret >= 0)
-> +		return ret;
-> +
-> +	/* Scan the MSI descriptors for successfully allocated ones. */
-> +	for_each_pci_msi_entry(entry, dev) {
-> +		if (entry->irq != 0)
-> +			avail++;
-> +	}
-> +	return avail ? avail : ret;
-> +}
-> +
->  int pci_msi_legacy_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
->  {
-> -	return arch_setup_msi_irqs(dev, nvec, type);
-> +	int ret = arch_setup_msi_irqs(dev, nvec, type);
-> +
-> +	return pci_msi_setup_check_result(dev, type, ret);
->  }
->  
->  void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev)
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -609,7 +609,7 @@ static int msix_capability_init(struct p
->  
->  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
->  	if (ret)
-> -		goto out_avail;
-> +		goto out_free;
->  
->  	/* Check if all MSI entries honor device restrictions */
->  	ret = msi_verify_entries(dev);
-> @@ -634,23 +634,6 @@ static int msix_capability_init(struct p
->  	pcibios_free_irq(dev);
->  	return 0;
->  
-> -out_avail:
-> -	if (ret < 0) {
-> -		/*
-> -		 * If we had some success, report the number of IRQs
-> -		 * we succeeded in setting up.
-> -		 */
-> -		struct msi_desc *entry;
-> -		int avail = 0;
-> -
-> -		for_each_pci_msi_entry(entry, dev) {
-> -			if (entry->irq != 0)
-> -				avail++;
-> -		}
-> -		if (avail != 0)
-> -			ret = avail;
-> -	}
-> -
->  out_free:
->  	free_msi_irqs(dev);
->  
-> 
+v3:
+  - Collect reviews. [Vitaly]
+  - Add BUILD_BUG_ON() to protect KVM_HV_MAX_SPARSE_VCPU_SET_BITS. [Vitaly]
+  - Fix misc typos. [Vitaly]
+  - Opportunistically rename "cnt" to "rep_cnt" in tracepoint. [Vitaly]
+  - Drop var_cnt checks for debug hypercalls due to lack of documentation
+    as to their expected behavior. [Vitaly]
+  - Tweak the changelog regarding the TLFS spec issue to reference the
+    bug filed by Vitaly.
+
+v2: https://lore.kernel.org/all/20211030000800.3065132-1-seanjc@google.com/
+
+Sean Christopherson (8):
+  KVM: x86: Ignore sparse banks size for an "all CPUs", non-sparse IPI
+    req
+  KVM: x86: Get the number of Hyper-V sparse banks from the VARHEAD
+    field
+  KVM: x86: Refactor kvm_hv_flush_tlb() to reduce indentation
+  KVM: x86: Add a helper to get the sparse VP_SET for IPIs and TLB
+    flushes
+  KVM: x86: Don't bother reading sparse banks that end up being ignored
+  KVM: x86: Shove vp_bitmap handling down into sparse_set_to_vcpu_mask()
+  KVM: x86: Reject fixeds-size Hyper-V hypercalls with non-zero
+    "var_cnt"
+  KVM: x86: Add checks for reserved-to-zero Hyper-V hypercall fields
+
+ arch/x86/kvm/hyperv.c             | 175 ++++++++++++++++++------------
+ arch/x86/kvm/trace.h              |  14 ++-
+ include/asm-generic/hyperv-tlfs.h |   7 ++
+ 3 files changed, 123 insertions(+), 73 deletions(-)
+
+-- 
+2.34.1.400.ga245620fadb-goog
+
