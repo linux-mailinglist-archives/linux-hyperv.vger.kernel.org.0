@@ -2,468 +2,438 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C22546B4DE
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 08:56:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40B8846B7E6
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 10:47:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231878AbhLGH7v (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Dec 2021 02:59:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231784AbhLGH7k (ORCPT
+        id S230116AbhLGJuw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Dec 2021 04:50:52 -0500
+Received: from 2.mo548.mail-out.ovh.net ([178.33.255.19]:34267 "EHLO
+        2.mo548.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229978AbhLGJuv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Dec 2021 02:59:40 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 970D7C061746;
-        Mon,  6 Dec 2021 23:56:10 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id m24so1455290pgn.7;
-        Mon, 06 Dec 2021 23:56:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1g0RnzssZkBnBKymEz0YZXD32oRDdHA8PZSX43vBfcQ=;
-        b=DPJLG9TDnNhVXnQW2YEfBH+M833gPdW0lAnxhjhZDf2c20b1lJpQHjFnJccLn5Au7g
-         2nleyqrrQPqJ+uAG5/3ZpDEwq0dd/uz+iG0WJ+MucdNDr46VJjNnM5494GhB5Mez41j1
-         BDzXvYqXreumBsVCvrbGYDdD1Ykw2/rxNsQLVq9p2gorhcrlGjtGo62k8ZqEUXS2UAGd
-         nmY6QkFTE1/WoOYouh6ZHru4Awvw3N8dl+GDh19AvIDDg6e/GrYe4RYLHCEeb1P9El5J
-         UAZgK227ANaEbExbhFv/JC8rZSVqqYP8NTENhTSun3NJU5sqfZvd1F1L0M/vUL9/ue2L
-         bRiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1g0RnzssZkBnBKymEz0YZXD32oRDdHA8PZSX43vBfcQ=;
-        b=KOtX11qj53FX4ViUzsLzU/ljs+Os60td/B6bJVW4kl2DnXsdgScRhjsb7iL1T9epCn
-         ptM9yLg+9cDfnmDe4LcQZX/9Z9ZkjyWeon5iIPHYNhdW27VJHa9PdVxQh9YK4RsxcN8C
-         7C3PO1+dSmvN7UT/sv5sJScTv5kA6THUW5jEQtGqOWLluidKAQ5TZYeox3sl1s/a70Aq
-         OzmNARCWR7ha1aJTwTgOaDPOoavrrctt4HtFoGLhTzBVszr/Uq6ddGMDWhs4S1O/VEyU
-         A4oeK9RtkNKN0+f+9+YQitelRPDJsJdED34IOxvtsA0jhJPQHlzvYbFTAmV1fqAGpfrT
-         rkRw==
-X-Gm-Message-State: AOAM532NA5sx+OGh6oDGp+Wa/UsCSyoo9rFwFmwh5GiZiG5hFohC+zFu
-        gu9/g7FgwtfeZDReIf1hkg4=
-X-Google-Smtp-Source: ABdhPJw8k7BqB6+OihkYKSaN/gsptWyei6U6Z4ryEUxDaUb6UfetfyJm6E35GbOLPhQyAShrkKrryA==
-X-Received: by 2002:a63:1016:: with SMTP id f22mr22496170pgl.566.1638863770042;
-        Mon, 06 Dec 2021 23:56:10 -0800 (PST)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:0:a463:d753:723:c3a9])
-        by smtp.gmail.com with ESMTPSA id n15sm1794353pgs.59.2021.12.06.23.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 23:56:09 -0800 (PST)
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, davem@davemloft.net,
-        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        arnd@arndb.de, hch@infradead.org, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, Tianyu.Lan@microsoft.com,
-        thomas.lendacky@amd.com, michael.h.kelley@microsoft.com
-Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
-        hch@lst.de, joro@8bytes.org, parri.andrea@gmail.com,
-        dave.hansen@intel.com
-Subject: [PATCH V6 5/5] net: netvsc: Add Isolation VM support for netvsc driver
-Date:   Tue,  7 Dec 2021 02:56:01 -0500
-Message-Id: <20211207075602.2452-6-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211207075602.2452-1-ltykernel@gmail.com>
-References: <20211207075602.2452-1-ltykernel@gmail.com>
+        Tue, 7 Dec 2021 04:50:51 -0500
+X-Greylist: delayed 6600 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Dec 2021 04:50:51 EST
+Received: from mxplan5.mail.ovh.net (unknown [10.108.4.240])
+        by mo548.mail-out.ovh.net (Postfix) with ESMTPS id C4A4B209B3;
+        Tue,  7 Dec 2021 07:21:35 +0000 (UTC)
+Received: from kaod.org (37.59.142.102) by DAG4EX1.mxp5.local (172.16.2.31)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 7 Dec
+ 2021 08:21:34 +0100
+Authentication-Results: garm.ovh; auth=pass (GARM-102R004880801b5-1b74-45de-8484-6c3316d6c777,
+                    EDCC1E77E28A65BD51DFCD2B92BF934EEA10E5FB) smtp.auth=clg@kaod.org
+X-OVh-ClientIp: 82.64.250.170
+Message-ID: <8d1e9d2b-fbe9-2e15-6df6-03028902791a@kaod.org>
+Date:   Tue, 7 Dec 2021 08:21:33 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [patch V2 01/23] powerpc/4xx: Remove MSI support which never
+ worked
+Content-Language: en-US
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <linuxppc-dev@lists.ozlabs.org>, Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        <linux-mips@vger.kernel.org>, Kalle Valo <kvalo@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <sparclinux@vger.kernel.org>, <x86@kernel.org>,
+        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
+        Wei Liu <wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+References: <20211206210147.872865823@linutronix.de>
+ <20211206210223.872249537@linutronix.de>
+From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+In-Reply-To: <20211206210223.872249537@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [37.59.142.102]
+X-ClientProxiedBy: DAG6EX1.mxp5.local (172.16.2.51) To DAG4EX1.mxp5.local
+ (172.16.2.31)
+X-Ovh-Tracer-GUID: b516111a-777e-4242-b371-8efd2fe3d9aa
+X-Ovh-Tracer-Id: 828380858499042085
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddrjeeggddutdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvfhfhjggtgfhisehtjeertddtfeejnecuhfhrohhmpeevrogurhhitggpnfgvpgfiohgrthgvrhcuoegtlhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhephffhleegueektdetffdvffeuieeugfekkeelheelteeftdfgtefffeehueegleehnecukfhppedtrddtrddtrddtpdefjedrheelrddugedvrddutddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehmgihplhgrnhehrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheptghlgheskhgrohgurdhorhhgpdhrtghpthhtohephhgtrgeslhhinhhugidrihgsmhdrtghomh
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Hello Thomas,
 
-In Isolation VM, all shared memory with host needs to mark visible
-to host via hvcall. vmbus_establish_gpadl() has already done it for
-netvsc rx/tx ring buffer. The page buffer used by vmbus_sendpacket_
-pagebuffer() stills need to be handled. Use DMA API to map/umap
-these memory during sending/receiving packet and Hyper-V swiotlb
-bounce buffer dma address will be returned. The swiotlb bounce buffer
-has been masked to be visible to host during boot up.
+On 12/6/21 23:27, Thomas Gleixner wrote:
+> This code is broken since day one. ppc4xx_setup_msi_irqs() has the
+> following gems:
+> 
+>   1) The handling of the result of msi_bitmap_alloc_hwirqs() is completely
+>      broken:
+>      
+>      When the result is greater than or equal 0 (bitmap allocation
+>      successful) then the loop terminates and the function returns 0
+>      (success) despite not having installed an interrupt.
+> 
+>      When the result is less than 0 (bitmap allocation fails), it prints an
+>      error message and continues to "work" with that error code which would
+>      eventually end up in the MSI message data.
+> 
+>   2) On every invocation the file global pp4xx_msi::msi_virqs bitmap is
+>      allocated thereby leaking the previous one.
+> 
+> IOW, this has never worked and for more than 10 years nobody cared. Remove
+> the gunk.
+> 
+> Fixes: 3fb7933850fa ("powerpc/4xx: Adding PCIe MSI support")
 
-rx/tx ring buffer is allocated via vzalloc() and they need to be
-mapped into unencrypted address space(above vTOM) before sharing
-with host and accessing. Add hv_map/unmap_memory() to map/umap rx
-/tx ring buffer.
+Shouldn't we remove all of it ? including the updates in the device trees
+and the Kconfig changes under :
 
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
-Change since v3:
-       * Replace HV_HYP_PAGE_SIZE with PAGE_SIZE and virt_to_hvpfn()
-         with vmalloc_to_pfn() in the hv_map_memory()
+arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
+arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
+arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
+arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
+arch/powerpc/platforms/40x/Kconfig:	select PPC4xx_MSI
 
-Change since v2:
-       * Add hv_map/unmap_memory() to map/umap rx/tx ring buffer.
----
- arch/x86/hyperv/ivm.c             |  28 ++++++
- drivers/hv/hv_common.c            |  11 +++
- drivers/net/hyperv/hyperv_net.h   |   5 ++
- drivers/net/hyperv/netvsc.c       | 136 +++++++++++++++++++++++++++++-
- drivers/net/hyperv/netvsc_drv.c   |   1 +
- drivers/net/hyperv/rndis_filter.c |   2 +
- include/asm-generic/mshyperv.h    |   2 +
- include/linux/hyperv.h            |   5 ++
- 8 files changed, 187 insertions(+), 3 deletions(-)
+Thanks,
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 69c7a57f3307..2b994117581e 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -287,3 +287,31 @@ int hv_set_mem_host_visibility(unsigned long kbuffer, int pagecount, bool visibl
- 	kfree(pfn_array);
- 	return ret;
- }
-+
-+/*
-+ * hv_map_memory - map memory to extra space in the AMD SEV-SNP Isolation VM.
-+ */
-+void *hv_map_memory(void *addr, unsigned long size)
-+{
-+	unsigned long *pfns = kcalloc(size / PAGE_SIZE,
-+				      sizeof(unsigned long), GFP_KERNEL);
-+	void *vaddr;
-+	int i;
-+
-+	if (!pfns)
-+		return NULL;
-+
-+	for (i = 0; i < size / PAGE_SIZE; i++)
-+		pfns[i] = vmalloc_to_pfn(addr + i * PAGE_SIZE) +
-+			(ms_hyperv.shared_gpa_boundary >> PAGE_SHIFT);
-+
-+	vaddr = vmap_pfn(pfns, size / PAGE_SIZE, PAGE_KERNEL_IO);
-+	kfree(pfns);
-+
-+	return vaddr;
-+}
-+
-+void hv_unmap_memory(void *addr)
-+{
-+	vunmap(addr);
-+}
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 7be173a99f27..3c5cb1f70319 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -295,3 +295,14 @@ u64 __weak hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_s
- 	return HV_STATUS_INVALID_PARAMETER;
- }
- EXPORT_SYMBOL_GPL(hv_ghcb_hypercall);
-+
-+void __weak *hv_map_memory(void *addr, unsigned long size)
-+{
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(hv_map_memory);
-+
-+void __weak hv_unmap_memory(void *addr)
-+{
-+}
-+EXPORT_SYMBOL_GPL(hv_unmap_memory);
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index 315278a7cf88..cf69da0e296c 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -164,6 +164,7 @@ struct hv_netvsc_packet {
- 	u32 total_bytes;
- 	u32 send_buf_index;
- 	u32 total_data_buflen;
-+	struct hv_dma_range *dma_range;
- };
- 
- #define NETVSC_HASH_KEYLEN 40
-@@ -1074,6 +1075,7 @@ struct netvsc_device {
- 
- 	/* Receive buffer allocated by us but manages by NetVSP */
- 	void *recv_buf;
-+	void *recv_original_buf;
- 	u32 recv_buf_size; /* allocated bytes */
- 	struct vmbus_gpadl recv_buf_gpadl_handle;
- 	u32 recv_section_cnt;
-@@ -1082,6 +1084,7 @@ struct netvsc_device {
- 
- 	/* Send buffer allocated by us */
- 	void *send_buf;
-+	void *send_original_buf;
- 	u32 send_buf_size;
- 	struct vmbus_gpadl send_buf_gpadl_handle;
- 	u32 send_section_cnt;
-@@ -1731,4 +1734,6 @@ struct rndis_message {
- #define RETRY_US_HI	10000
- #define RETRY_MAX	2000	/* >10 sec */
- 
-+void netvsc_dma_unmap(struct hv_device *hv_dev,
-+		      struct hv_netvsc_packet *packet);
- #endif /* _HYPERV_NET_H */
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 396bc1c204e6..b7ade735a806 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -153,8 +153,21 @@ static void free_netvsc_device(struct rcu_head *head)
- 	int i;
- 
- 	kfree(nvdev->extension);
--	vfree(nvdev->recv_buf);
--	vfree(nvdev->send_buf);
-+
-+	if (nvdev->recv_original_buf) {
-+		hv_unmap_memory(nvdev->recv_buf);
-+		vfree(nvdev->recv_original_buf);
-+	} else {
-+		vfree(nvdev->recv_buf);
-+	}
-+
-+	if (nvdev->send_original_buf) {
-+		hv_unmap_memory(nvdev->send_buf);
-+		vfree(nvdev->send_original_buf);
-+	} else {
-+		vfree(nvdev->send_buf);
-+	}
-+
- 	kfree(nvdev->send_section_map);
- 
- 	for (i = 0; i < VRSS_CHANNEL_MAX; i++) {
-@@ -338,6 +351,7 @@ static int netvsc_init_buf(struct hv_device *device,
- 	unsigned int buf_size;
- 	size_t map_words;
- 	int i, ret = 0;
-+	void *vaddr;
- 
- 	/* Get receive buffer area. */
- 	buf_size = device_info->recv_sections * device_info->recv_section_size;
-@@ -373,6 +387,17 @@ static int netvsc_init_buf(struct hv_device *device,
- 		goto cleanup;
- 	}
- 
-+	if (hv_isolation_type_snp()) {
-+		vaddr = hv_map_memory(net_device->recv_buf, buf_size);
-+		if (!vaddr) {
-+			ret = -ENOMEM;
-+			goto cleanup;
-+		}
-+
-+		net_device->recv_original_buf = net_device->recv_buf;
-+		net_device->recv_buf = vaddr;
-+	}
-+
- 	/* Notify the NetVsp of the gpadl handle */
- 	init_packet = &net_device->channel_init_pkt;
- 	memset(init_packet, 0, sizeof(struct nvsp_message));
-@@ -476,6 +501,17 @@ static int netvsc_init_buf(struct hv_device *device,
- 		goto cleanup;
- 	}
- 
-+	if (hv_isolation_type_snp()) {
-+		vaddr = hv_map_memory(net_device->send_buf, buf_size);
-+		if (!vaddr) {
-+			ret = -ENOMEM;
-+			goto cleanup;
-+		}
-+
-+		net_device->send_original_buf = net_device->send_buf;
-+		net_device->send_buf = vaddr;
-+	}
-+
- 	/* Notify the NetVsp of the gpadl handle */
- 	init_packet = &net_device->channel_init_pkt;
- 	memset(init_packet, 0, sizeof(struct nvsp_message));
-@@ -766,7 +802,7 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
- 
- 	/* Notify the layer above us */
- 	if (likely(skb)) {
--		const struct hv_netvsc_packet *packet
-+		struct hv_netvsc_packet *packet
- 			= (struct hv_netvsc_packet *)skb->cb;
- 		u32 send_index = packet->send_buf_index;
- 		struct netvsc_stats *tx_stats;
-@@ -782,6 +818,7 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
- 		tx_stats->bytes += packet->total_bytes;
- 		u64_stats_update_end(&tx_stats->syncp);
- 
-+		netvsc_dma_unmap(ndev_ctx->device_ctx, packet);
- 		napi_consume_skb(skb, budget);
- 	}
- 
-@@ -946,6 +983,88 @@ static void netvsc_copy_to_send_buf(struct netvsc_device *net_device,
- 		memset(dest, 0, padding);
- }
- 
-+void netvsc_dma_unmap(struct hv_device *hv_dev,
-+		      struct hv_netvsc_packet *packet)
-+{
-+	u32 page_count = packet->cp_partial ?
-+		packet->page_buf_cnt - packet->rmsg_pgcnt :
-+		packet->page_buf_cnt;
-+	int i;
-+
-+	if (!hv_is_isolation_supported())
-+		return;
-+
-+	if (!packet->dma_range)
-+		return;
-+
-+	for (i = 0; i < page_count; i++)
-+		dma_unmap_single(&hv_dev->device, packet->dma_range[i].dma,
-+				 packet->dma_range[i].mapping_size,
-+				 DMA_TO_DEVICE);
-+
-+	kfree(packet->dma_range);
-+}
-+
-+/* netvsc_dma_map - Map swiotlb bounce buffer with data page of
-+ * packet sent by vmbus_sendpacket_pagebuffer() in the Isolation
-+ * VM.
-+ *
-+ * In isolation VM, netvsc send buffer has been marked visible to
-+ * host and so the data copied to send buffer doesn't need to use
-+ * bounce buffer. The data pages handled by vmbus_sendpacket_pagebuffer()
-+ * may not be copied to send buffer and so these pages need to be
-+ * mapped with swiotlb bounce buffer. netvsc_dma_map() is to do
-+ * that. The pfns in the struct hv_page_buffer need to be converted
-+ * to bounce buffer's pfn. The loop here is necessary because the
-+ * entries in the page buffer array are not necessarily full
-+ * pages of data.  Each entry in the array has a separate offset and
-+ * len that may be non-zero, even for entries in the middle of the
-+ * array.  And the entries are not physically contiguous.  So each
-+ * entry must be individually mapped rather than as a contiguous unit.
-+ * So not use dma_map_sg() here.
-+ */
-+int netvsc_dma_map(struct hv_device *hv_dev,
-+		   struct hv_netvsc_packet *packet,
-+		   struct hv_page_buffer *pb)
-+{
-+	u32 page_count =  packet->cp_partial ?
-+		packet->page_buf_cnt - packet->rmsg_pgcnt :
-+		packet->page_buf_cnt;
-+	dma_addr_t dma;
-+	int i;
-+
-+	if (!hv_is_isolation_supported())
-+		return 0;
-+
-+	packet->dma_range = kcalloc(page_count,
-+				    sizeof(*packet->dma_range),
-+				    GFP_KERNEL);
-+	if (!packet->dma_range)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < page_count; i++) {
-+		char *src = phys_to_virt((pb[i].pfn << HV_HYP_PAGE_SHIFT)
-+					 + pb[i].offset);
-+		u32 len = pb[i].len;
-+
-+		dma = dma_map_single(&hv_dev->device, src, len,
-+				     DMA_TO_DEVICE);
-+		if (dma_mapping_error(&hv_dev->device, dma)) {
-+			kfree(packet->dma_range);
-+			return -ENOMEM;
-+		}
-+
-+		/* pb[].offset and pb[].len are not changed during dma mapping
-+		 * and so not reassign.
-+		 */
-+		packet->dma_range[i].dma = dma;
-+		packet->dma_range[i].mapping_size = len;
-+		pb[i].pfn = dma >> HV_HYP_PAGE_SHIFT;
-+	}
-+
-+	return 0;
-+}
-+
- static inline int netvsc_send_pkt(
- 	struct hv_device *device,
- 	struct hv_netvsc_packet *packet,
-@@ -986,14 +1105,24 @@ static inline int netvsc_send_pkt(
- 
- 	trace_nvsp_send_pkt(ndev, out_channel, rpkt);
- 
-+	packet->dma_range = NULL;
- 	if (packet->page_buf_cnt) {
- 		if (packet->cp_partial)
- 			pb += packet->rmsg_pgcnt;
- 
-+		ret = netvsc_dma_map(ndev_ctx->device_ctx, packet, pb);
-+		if (ret) {
-+			ret = -EAGAIN;
-+			goto exit;
-+		}
-+
- 		ret = vmbus_sendpacket_pagebuffer(out_channel,
- 						  pb, packet->page_buf_cnt,
- 						  &nvmsg, sizeof(nvmsg),
- 						  req_id);
-+
-+		if (ret)
-+			netvsc_dma_unmap(ndev_ctx->device_ctx, packet);
- 	} else {
- 		ret = vmbus_sendpacket(out_channel,
- 				       &nvmsg, sizeof(nvmsg),
-@@ -1001,6 +1130,7 @@ static inline int netvsc_send_pkt(
- 				       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	}
- 
-+exit:
- 	if (ret == 0) {
- 		atomic_inc_return(&nvchan->queue_sends);
- 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 7e66ae1d2a59..17958533bf30 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2512,6 +2512,7 @@ static int netvsc_probe(struct hv_device *dev,
- 	net->netdev_ops = &device_ops;
- 	net->ethtool_ops = &ethtool_ops;
- 	SET_NETDEV_DEV(net, &dev->device);
-+	dma_set_min_align_mask(&dev->device, HV_HYP_PAGE_SIZE - 1);
- 
- 	/* We always need headroom for rndis header */
- 	net->needed_headroom = RNDIS_AND_PPI_SIZE;
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index f6c9c2a670f9..448fcc325ed7 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -361,6 +361,8 @@ static void rndis_filter_receive_response(struct net_device *ndev,
- 			}
- 		}
- 
-+		netvsc_dma_unmap(((struct net_device_context *)
-+			netdev_priv(ndev))->device_ctx, &request->pkt);
- 		complete(&request->wait_event);
- 	} else {
- 		netdev_err(ndev,
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index 3e2248ac328e..94e73ba129c5 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -269,6 +269,8 @@ bool hv_isolation_type_snp(void);
- u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
- void hyperv_cleanup(void);
- bool hv_query_ext_cap(u64 cap_query);
-+void *hv_map_memory(void *addr, unsigned long size);
-+void hv_unmap_memory(void *addr);
- #else /* CONFIG_HYPERV */
- static inline bool hv_is_hyperv_initialized(void) { return false; }
- static inline bool hv_is_hibernation_supported(void) { return false; }
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 74f5e92f91a0..b53cfc4163af 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1584,6 +1584,11 @@ struct hyperv_service_callback {
- 	void (*callback)(void *context);
- };
- 
-+struct hv_dma_range {
-+	dma_addr_t dma;
-+	u32 mapping_size;
-+};
-+
- #define MAX_SRV_VER	0x7ffffff
- extern bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, u8 *buf, u32 buflen,
- 				const int *fw_version, int fw_vercnt,
--- 
-2.25.1
+C.
+
+
+
+> Fixes: 247540b03bfc ("powerpc/44x: Fix PCI MSI support for Maui APM821xx SoC and Bluestone board")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
+>   arch/powerpc/platforms/4xx/Makefile |    1
+>   arch/powerpc/platforms/4xx/msi.c    |  281 ------------------------------------
+>   arch/powerpc/sysdev/Kconfig         |    6
+>   3 files changed, 288 deletions(-)
+> 
+> --- a/arch/powerpc/platforms/4xx/Makefile
+> +++ b/arch/powerpc/platforms/4xx/Makefile
+> @@ -3,6 +3,5 @@ obj-y				+= uic.o machine_check.o
+>   obj-$(CONFIG_4xx_SOC)		+= soc.o
+>   obj-$(CONFIG_PCI)		+= pci.o
+>   obj-$(CONFIG_PPC4xx_HSTA_MSI)	+= hsta_msi.o
+> -obj-$(CONFIG_PPC4xx_MSI)	+= msi.o
+>   obj-$(CONFIG_PPC4xx_CPM)	+= cpm.o
+>   obj-$(CONFIG_PPC4xx_GPIO)	+= gpio.o
+> --- a/arch/powerpc/platforms/4xx/msi.c
+> +++ /dev/null
+> @@ -1,281 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-or-later
+> -/*
+> - * Adding PCI-E MSI support for PPC4XX SoCs.
+> - *
+> - * Copyright (c) 2010, Applied Micro Circuits Corporation
+> - * Authors:	Tirumala R Marri <tmarri@apm.com>
+> - *		Feng Kan <fkan@apm.com>
+> - */
+> -
+> -#include <linux/irq.h>
+> -#include <linux/pci.h>
+> -#include <linux/msi.h>
+> -#include <linux/of_platform.h>
+> -#include <linux/interrupt.h>
+> -#include <linux/export.h>
+> -#include <linux/kernel.h>
+> -#include <asm/prom.h>
+> -#include <asm/hw_irq.h>
+> -#include <asm/ppc-pci.h>
+> -#include <asm/dcr.h>
+> -#include <asm/dcr-regs.h>
+> -#include <asm/msi_bitmap.h>
+> -
+> -#define PEIH_TERMADH	0x00
+> -#define PEIH_TERMADL	0x08
+> -#define PEIH_MSIED	0x10
+> -#define PEIH_MSIMK	0x18
+> -#define PEIH_MSIASS	0x20
+> -#define PEIH_FLUSH0	0x30
+> -#define PEIH_FLUSH1	0x38
+> -#define PEIH_CNTRST	0x48
+> -
+> -static int msi_irqs;
+> -
+> -struct ppc4xx_msi {
+> -	u32 msi_addr_lo;
+> -	u32 msi_addr_hi;
+> -	void __iomem *msi_regs;
+> -	int *msi_virqs;
+> -	struct msi_bitmap bitmap;
+> -	struct device_node *msi_dev;
+> -};
+> -
+> -static struct ppc4xx_msi ppc4xx_msi;
+> -
+> -static int ppc4xx_msi_init_allocator(struct platform_device *dev,
+> -		struct ppc4xx_msi *msi_data)
+> -{
+> -	int err;
+> -
+> -	err = msi_bitmap_alloc(&msi_data->bitmap, msi_irqs,
+> -			      dev->dev.of_node);
+> -	if (err)
+> -		return err;
+> -
+> -	err = msi_bitmap_reserve_dt_hwirqs(&msi_data->bitmap);
+> -	if (err < 0) {
+> -		msi_bitmap_free(&msi_data->bitmap);
+> -		return err;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static int ppc4xx_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+> -{
+> -	int int_no = -ENOMEM;
+> -	unsigned int virq;
+> -	struct msi_msg msg;
+> -	struct msi_desc *entry;
+> -	struct ppc4xx_msi *msi_data = &ppc4xx_msi;
+> -
+> -	dev_dbg(&dev->dev, "PCIE-MSI:%s called. vec %x type %d\n",
+> -		__func__, nvec, type);
+> -	if (type == PCI_CAP_ID_MSIX)
+> -		pr_debug("ppc4xx msi: MSI-X untested, trying anyway.\n");
+> -
+> -	msi_data->msi_virqs = kmalloc_array(msi_irqs, sizeof(int), GFP_KERNEL);
+> -	if (!msi_data->msi_virqs)
+> -		return -ENOMEM;
+> -
+> -	for_each_pci_msi_entry(entry, dev) {
+> -		int_no = msi_bitmap_alloc_hwirqs(&msi_data->bitmap, 1);
+> -		if (int_no >= 0)
+> -			break;
+> -		if (int_no < 0) {
+> -			pr_debug("%s: fail allocating msi interrupt\n",
+> -					__func__);
+> -		}
+> -		virq = irq_of_parse_and_map(msi_data->msi_dev, int_no);
+> -		if (!virq) {
+> -			dev_err(&dev->dev, "%s: fail mapping irq\n", __func__);
+> -			msi_bitmap_free_hwirqs(&msi_data->bitmap, int_no, 1);
+> -			return -ENOSPC;
+> -		}
+> -		dev_dbg(&dev->dev, "%s: virq = %d\n", __func__, virq);
+> -
+> -		/* Setup msi address space */
+> -		msg.address_hi = msi_data->msi_addr_hi;
+> -		msg.address_lo = msi_data->msi_addr_lo;
+> -
+> -		irq_set_msi_desc(virq, entry);
+> -		msg.data = int_no;
+> -		pci_write_msi_msg(virq, &msg);
+> -	}
+> -	return 0;
+> -}
+> -
+> -void ppc4xx_teardown_msi_irqs(struct pci_dev *dev)
+> -{
+> -	struct msi_desc *entry;
+> -	struct ppc4xx_msi *msi_data = &ppc4xx_msi;
+> -	irq_hw_number_t hwirq;
+> -
+> -	dev_dbg(&dev->dev, "PCIE-MSI: tearing down msi irqs\n");
+> -
+> -	for_each_pci_msi_entry(entry, dev) {
+> -		if (!entry->irq)
+> -			continue;
+> -		hwirq = virq_to_hw(entry->irq);
+> -		irq_set_msi_desc(entry->irq, NULL);
+> -		irq_dispose_mapping(entry->irq);
+> -		msi_bitmap_free_hwirqs(&msi_data->bitmap, hwirq, 1);
+> -	}
+> -}
+> -
+> -static int ppc4xx_setup_pcieh_hw(struct platform_device *dev,
+> -				 struct resource res, struct ppc4xx_msi *msi)
+> -{
+> -	const u32 *msi_data;
+> -	const u32 *msi_mask;
+> -	const u32 *sdr_addr;
+> -	dma_addr_t msi_phys;
+> -	void *msi_virt;
+> -	int err;
+> -
+> -	sdr_addr = of_get_property(dev->dev.of_node, "sdr-base", NULL);
+> -	if (!sdr_addr)
+> -		return -EINVAL;
+> -
+> -	msi_data = of_get_property(dev->dev.of_node, "msi-data", NULL);
+> -	if (!msi_data)
+> -		return -EINVAL;
+> -
+> -	msi_mask = of_get_property(dev->dev.of_node, "msi-mask", NULL);
+> -	if (!msi_mask)
+> -		return -EINVAL;
+> -
+> -	msi->msi_dev = of_find_node_by_name(NULL, "ppc4xx-msi");
+> -	if (!msi->msi_dev)
+> -		return -ENODEV;
+> -
+> -	msi->msi_regs = of_iomap(msi->msi_dev, 0);
+> -	if (!msi->msi_regs) {
+> -		dev_err(&dev->dev, "of_iomap failed\n");
+> -		err = -ENOMEM;
+> -		goto node_put;
+> -	}
+> -	dev_dbg(&dev->dev, "PCIE-MSI: msi register mapped 0x%x 0x%x\n",
+> -		(u32) (msi->msi_regs + PEIH_TERMADH), (u32) (msi->msi_regs));
+> -
+> -	msi_virt = dma_alloc_coherent(&dev->dev, 64, &msi_phys, GFP_KERNEL);
+> -	if (!msi_virt) {
+> -		err = -ENOMEM;
+> -		goto iounmap;
+> -	}
+> -	msi->msi_addr_hi = upper_32_bits(msi_phys);
+> -	msi->msi_addr_lo = lower_32_bits(msi_phys & 0xffffffff);
+> -	dev_dbg(&dev->dev, "PCIE-MSI: msi address high 0x%x, low 0x%x\n",
+> -		msi->msi_addr_hi, msi->msi_addr_lo);
+> -
+> -	mtdcri(SDR0, *sdr_addr, upper_32_bits(res.start));	/*HIGH addr */
+> -	mtdcri(SDR0, *sdr_addr + 1, lower_32_bits(res.start));	/* Low addr */
+> -
+> -	/* Progam the Interrupt handler Termination addr registers */
+> -	out_be32(msi->msi_regs + PEIH_TERMADH, msi->msi_addr_hi);
+> -	out_be32(msi->msi_regs + PEIH_TERMADL, msi->msi_addr_lo);
+> -
+> -	/* Program MSI Expected data and Mask bits */
+> -	out_be32(msi->msi_regs + PEIH_MSIED, *msi_data);
+> -	out_be32(msi->msi_regs + PEIH_MSIMK, *msi_mask);
+> -
+> -	dma_free_coherent(&dev->dev, 64, msi_virt, msi_phys);
+> -
+> -	return 0;
+> -
+> -iounmap:
+> -	iounmap(msi->msi_regs);
+> -node_put:
+> -	of_node_put(msi->msi_dev);
+> -	return err;
+> -}
+> -
+> -static int ppc4xx_of_msi_remove(struct platform_device *dev)
+> -{
+> -	struct ppc4xx_msi *msi = dev->dev.platform_data;
+> -	int i;
+> -	int virq;
+> -
+> -	for (i = 0; i < msi_irqs; i++) {
+> -		virq = msi->msi_virqs[i];
+> -		if (virq)
+> -			irq_dispose_mapping(virq);
+> -	}
+> -
+> -	if (msi->bitmap.bitmap)
+> -		msi_bitmap_free(&msi->bitmap);
+> -	iounmap(msi->msi_regs);
+> -	of_node_put(msi->msi_dev);
+> -
+> -	return 0;
+> -}
+> -
+> -static int ppc4xx_msi_probe(struct platform_device *dev)
+> -{
+> -	struct ppc4xx_msi *msi;
+> -	struct resource res;
+> -	int err = 0;
+> -	struct pci_controller *phb;
+> -
+> -	dev_dbg(&dev->dev, "PCIE-MSI: Setting up MSI support...\n");
+> -
+> -	msi = devm_kzalloc(&dev->dev, sizeof(*msi), GFP_KERNEL);
+> -	if (!msi)
+> -		return -ENOMEM;
+> -	dev->dev.platform_data = msi;
+> -
+> -	/* Get MSI ranges */
+> -	err = of_address_to_resource(dev->dev.of_node, 0, &res);
+> -	if (err) {
+> -		dev_err(&dev->dev, "%pOF resource error!\n", dev->dev.of_node);
+> -		return err;
+> -	}
+> -
+> -	msi_irqs = of_irq_count(dev->dev.of_node);
+> -	if (!msi_irqs)
+> -		return -ENODEV;
+> -
+> -	err = ppc4xx_setup_pcieh_hw(dev, res, msi);
+> -	if (err)
+> -		return err;
+> -
+> -	err = ppc4xx_msi_init_allocator(dev, msi);
+> -	if (err) {
+> -		dev_err(&dev->dev, "Error allocating MSI bitmap\n");
+> -		goto error_out;
+> -	}
+> -	ppc4xx_msi = *msi;
+> -
+> -	list_for_each_entry(phb, &hose_list, list_node) {
+> -		phb->controller_ops.setup_msi_irqs = ppc4xx_setup_msi_irqs;
+> -		phb->controller_ops.teardown_msi_irqs = ppc4xx_teardown_msi_irqs;
+> -	}
+> -	return 0;
+> -
+> -error_out:
+> -	ppc4xx_of_msi_remove(dev);
+> -	return err;
+> -}
+> -static const struct of_device_id ppc4xx_msi_ids[] = {
+> -	{
+> -		.compatible = "amcc,ppc4xx-msi",
+> -	},
+> -	{}
+> -};
+> -static struct platform_driver ppc4xx_msi_driver = {
+> -	.probe = ppc4xx_msi_probe,
+> -	.remove = ppc4xx_of_msi_remove,
+> -	.driver = {
+> -		   .name = "ppc4xx-msi",
+> -		   .of_match_table = ppc4xx_msi_ids,
+> -		   },
+> -
+> -};
+> -
+> -static __init int ppc4xx_msi_init(void)
+> -{
+> -	return platform_driver_register(&ppc4xx_msi_driver);
+> -}
+> -
+> -subsys_initcall(ppc4xx_msi_init);
+> --- a/arch/powerpc/sysdev/Kconfig
+> +++ b/arch/powerpc/sysdev/Kconfig
+> @@ -12,17 +12,11 @@ config PPC4xx_HSTA_MSI
+>   	depends on PCI_MSI
+>   	depends on PCI && 4xx
+>   
+> -config PPC4xx_MSI
+> -	bool
+> -	depends on PCI_MSI
+> -	depends on PCI && 4xx
+> -
+>   config PPC_MSI_BITMAP
+>   	bool
+>   	depends on PCI_MSI
+>   	default y if MPIC
+>   	default y if FSL_PCI
+> -	default y if PPC4xx_MSI
+>   	default y if PPC_POWERNV
+>   
+>   source "arch/powerpc/sysdev/xics/Kconfig"
+> 
 
