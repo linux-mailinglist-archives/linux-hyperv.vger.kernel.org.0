@@ -2,144 +2,135 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8F3F46ABF9
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Dec 2021 23:29:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A979346B2EF
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 07:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357871AbhLFWdG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Dec 2021 17:33:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
+        id S236411AbhLGGft (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Dec 2021 01:35:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358032AbhLFWcA (ORCPT
+        with ESMTP id S235855AbhLGGfs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Dec 2021 17:32:00 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A50C0698C2;
-        Mon,  6 Dec 2021 14:28:02 -0800 (PST)
-Message-ID: <20211206210225.101336873@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638829681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=DA21nVmLDiBI7abTCMjgj20KY6xV+oZ7nL3Tb95GpzU=;
-        b=tUgqDZDZ/EiCdKplAETvDx9zP2J7lXVbAOyLOoBuYDH6TGhvuPG60E8xxxj2easlDQNPkn
-        zTUdmJbnIRjdW2jZn22BV2YC4f0v6JUg4B85PNY0gmnqpQ/sN1zmKIaFOZKwqGTNC8Cwta
-        Zuzg0fNd26HEMDHArMjtG0lzJFq888jFDvle1JTBYdcc+inM3sPjBJytAfcyCtrn23O2UA
-        KEo+a2AtJrT7M4ZyZw3GWFzmCrk8w7SJ8if/eriSWmpCeXjmWpgB3652GOnCNeZesHt7bK
-        srYzZDxpjI6VQFY1vaT/mjtrbyNnxnAjKtFj8+UQL1Hs+wIUbfpLlFZD9d5QMQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638829681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=DA21nVmLDiBI7abTCMjgj20KY6xV+oZ7nL3Tb95GpzU=;
-        b=MCrfZbg73639x4t4CYmepEMeEst8qlRnGzxNB/5IvDcEPSsvluAaurSvCLQW1KB8HRZ02F
-        1dXwMChHv9TjP5Cw==
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: [patch V2 23/23] PCI/MSI: Move descriptor counting on allocation fail
- to the legacy code
-References: <20211206210147.872865823@linutronix.de>
+        Tue, 7 Dec 2021 01:35:48 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6A4C061359
+        for <linux-hyperv@vger.kernel.org>; Mon,  6 Dec 2021 22:32:19 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso1193204pji.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 06 Dec 2021 22:32:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cods9WyaktA6BF6JbbixG/DZf7V5gCMolIBwnRIBsoA=;
+        b=MMD41CtxbBzB9YAAnCbHieIqVxNNB7RXyBlaQGRrHSeyJzYxkZgp4SmWmDhqYNerxg
+         MprUuKqQAdg87VjPx7xnn5SuRVIZ4iMi7flp+RPD7CksU6Va8ZAaqdNdm1cV5SSwSrLo
+         tc/PwmOJa5JD+CExp35BTRQAXpR6U5Ek4JuVc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cods9WyaktA6BF6JbbixG/DZf7V5gCMolIBwnRIBsoA=;
+        b=GSgcbOmQtoG1d98ssFUuFUQKHjaxd8SeZKJr1vXJu9dTBE8St5amazSOOfg7k5KL5X
+         8hfg2h95ixQUzzoGqf3GDZjmyiFG1wTCOJYyb542fu+uR+90ghv5cfSifbpA+YTs2/7u
+         hjleJFG3CNQrjIl+ZGjJzpG8cfzv75So56gEMZaEovyH3b7IkX7JVKGoIqWioSS5Ix3O
+         iNPdhQY57+HfqAv22C6mgwXkD2o/l5RevhBHyEepEgnzS0cn3Wuou2O1YdDGBKVEK5x0
+         5Q7ZuwxD+VVL41bqjJhNgANzLzeskL7k+vLATiwzwYXQkC3zD5bgairtAG3nfSbZlmfU
+         uDhg==
+X-Gm-Message-State: AOAM533lyU0tHqhY1eUYhX/xOUme0Sn55XraUwfSIuLGqpbbN/PdE8CA
+        8lhH4Om/4RcmJPlsyo4iEFo5wQ==
+X-Google-Smtp-Source: ABdhPJyp1UxglPEqmBhAA0mHlqJZn71XaypcbZcnECd4iiPFthtfrShdVlCTDQxxiafiXeZrE7GRMg==
+X-Received: by 2002:a17:90b:17cc:: with SMTP id me12mr4322891pjb.179.1638858738693;
+        Mon, 06 Dec 2021 22:32:18 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y6sm15487110pfi.154.2021.12.06.22.32.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Dec 2021 22:32:18 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] hv_sock: Extract hvs_send_data() helper that takes only header
+Date:   Mon,  6 Dec 2021 22:32:17 -0800
+Message-Id: <20211207063217.2591451-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon,  6 Dec 2021 23:28:00 +0100 (CET)
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2572; h=from:subject; bh=48lY+W7yxU1t+Az6SdjP5/a959EClqgZo8+U7ONH7iw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBhrv/woEdF1Rs69O+MuGiyQRAPdwunWIkJe1PXhimt WEGXogyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYa7/8AAKCRCJcvTf3G3AJoBLD/ 0ULE05fML+vI6+/LCIG9Ks4prnpoPtcUsW4eIvsa59c015zp36rvqreqIxD63DBa64rs8r4MgskEc9 WFVuih/7jWmW9P0kl6Wpb1qpRJxTTg85WPn53QptwU4zIbYVjo8u3om7OU8/ZSzD0oCDo7QRQDR8sq vu1hEZ6KZRPmdx0RguKp1+TgiUdYRDRRVcSAB977TwcutxZ3U1JNZy53y+ze3DanRCy5HW+qNFly9D ZyYFmUZxGcMNc+4v5B36dIKkRmJrHLZK5xrbUnrpxpCC/iXfR2DsJeHQVFrc7ejRYe0qjtSb2TWZlf 2Hondoefq+t1yBc0iL1SZBn8y/V9E6Qy0cWhF8zO89pX96X+hAZzEJKceL1hD/r1nNbfwlJl4I9t4F Cwu1o1EQSktmt/Cs2kUNx9HsTUiGBY3IaQ2EwDDiLHSJZRFCty/eOH7zKT1BDwNmIdUH0wytq+dma+ 1w+fUpV+dA3wpd+XqK/IgwIY5xKby/V+mUZVhz4GT+WQaRib/yeVFrVRdy3iue/rpBnsqq31xiXOdi WN3gjAK/DLqn0KCr9zObiXuiRdVbWoIVXXFsrbEOmiMZM+mC9VfVRNAIjxRfPhWoYSaEhsxfNjQViZ fPHEZ/ZDNNJ9EGqpcRzaJIuGKy++T3K+6nLXpcl7XsjqOZ7XQCiuvWaa0Wsw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The irqdomain code already returns the information. Move the loop to the
-legacy code.
+When building under -Warray-bounds, the compiler is especially
+conservative when faced with casts from a smaller object to a larger
+object. While this has found many real bugs, there are some cases that
+are currently false positives (like here). With this as one of the last
+few instances of the warning in the kernel before -Warray-bounds can be
+enabled globally, rearrange the functions so that there is a header-only
+version of hvs_send_data(). Silences this warning:
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+net/vmw_vsock/hyperv_transport.c: In function 'hvs_shutdown_lock_held.constprop':
+net/vmw_vsock/hyperv_transport.c:231:32: warning: array subscript 'struct hvs_send_buf[0]' is partly outside array bounds of 'struct vmpipe_proto_header[1]' [-Warray-bounds]
+  231 |         send_buf->hdr.pkt_type = 1;
+      |         ~~~~~~~~~~~~~~~~~~~~~~~^~~
+net/vmw_vsock/hyperv_transport.c:465:36: note: while referencing 'hdr'
+  465 |         struct vmpipe_proto_header hdr;
+      |                                    ^~~
+
+This change results in no executable instruction differences.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/pci/msi/legacy.c |   20 +++++++++++++++++++-
- drivers/pci/msi/msi.c    |   19 +------------------
- 2 files changed, 20 insertions(+), 19 deletions(-)
+ net/vmw_vsock/hyperv_transport.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/drivers/pci/msi/legacy.c
-+++ b/drivers/pci/msi/legacy.c
-@@ -50,9 +50,27 @@ void __weak arch_teardown_msi_irqs(struc
- 	}
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+index 19189cf30a72..e111e13b6660 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -225,14 +225,20 @@ static size_t hvs_channel_writable_bytes(struct vmbus_channel *chan)
+ 	return round_down(ret, 8);
  }
  
-+static int pci_msi_setup_check_result(struct pci_dev *dev, int type, int ret)
++static int __hvs_send_data(struct vmbus_channel *chan,
++			   struct vmpipe_proto_header *hdr,
++			   size_t to_write)
 +{
-+	struct msi_desc *entry;
-+	int avail = 0;
-+
-+	if (type != PCI_CAP_ID_MSIX || ret >= 0)
-+		return ret;
-+
-+	/* Scan the MSI descriptors for successfully allocated ones. */
-+	for_each_pci_msi_entry(entry, dev) {
-+		if (entry->irq != 0)
-+			avail++;
-+	}
-+	return avail ? avail : ret;
++	hdr->pkt_type = 1;
++	hdr->data_size = to_write;
++	return vmbus_sendpacket(chan, hdr, sizeof(*hdr) + to_write,
++				0, VM_PKT_DATA_INBAND, 0);
 +}
 +
- int pci_msi_legacy_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+ static int hvs_send_data(struct vmbus_channel *chan,
+ 			 struct hvs_send_buf *send_buf, size_t to_write)
  {
--	return arch_setup_msi_irqs(dev, nvec, type);
-+	int ret = arch_setup_msi_irqs(dev, nvec, type);
-+
-+	return pci_msi_setup_check_result(dev, type, ret);
+-	send_buf->hdr.pkt_type = 1;
+-	send_buf->hdr.data_size = to_write;
+-	return vmbus_sendpacket(chan, &send_buf->hdr,
+-				sizeof(send_buf->hdr) + to_write,
+-				0, VM_PKT_DATA_INBAND, 0);
++	return __hvs_send_data(chan, &send_buf->hdr, to_write);
  }
  
- void pci_msi_legacy_teardown_msi_irqs(struct pci_dev *dev)
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -609,7 +609,7 @@ static int msix_capability_init(struct p
+ static void hvs_channel_cb(void *ctx)
+@@ -468,7 +474,7 @@ static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
+ 		return;
  
- 	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
- 	if (ret)
--		goto out_avail;
-+		goto out_free;
+ 	/* It can't fail: see hvs_channel_writable_bytes(). */
+-	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
++	(void)__hvs_send_data(hvs->chan, &hdr, 0);
+ 	hvs->fin_sent = true;
+ }
  
- 	/* Check if all MSI entries honor device restrictions */
- 	ret = msi_verify_entries(dev);
-@@ -634,23 +634,6 @@ static int msix_capability_init(struct p
- 	pcibios_free_irq(dev);
- 	return 0;
- 
--out_avail:
--	if (ret < 0) {
--		/*
--		 * If we had some success, report the number of IRQs
--		 * we succeeded in setting up.
--		 */
--		struct msi_desc *entry;
--		int avail = 0;
--
--		for_each_pci_msi_entry(entry, dev) {
--			if (entry->irq != 0)
--				avail++;
--		}
--		if (avail != 0)
--			ret = avail;
--	}
--
- out_free:
- 	free_msi_irqs(dev);
- 
+-- 
+2.30.2
 
