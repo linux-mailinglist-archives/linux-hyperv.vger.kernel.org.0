@@ -2,116 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBBF446BA24
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 12:36:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7726646BA9E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 13:03:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235730AbhLGLjh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Dec 2021 06:39:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbhLGLjg (ORCPT
+        id S236073AbhLGMHI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Dec 2021 07:07:08 -0500
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:33599 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236069AbhLGMHH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Dec 2021 06:39:36 -0500
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee2:21ea])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C4EC061574;
-        Tue,  7 Dec 2021 03:36:06 -0800 (PST)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4J7dXf3dSsz4xYy;
-        Tue,  7 Dec 2021 22:36:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1638876964;
-        bh=lTsXMkBa68SdK2mCmwfpSshAWpT0dRMMMq4RDsTmMUc=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=BMwzDWkPEIYhXynBVAirAw4gLvuuvW+w979j7Yqtpl/UPXPORphUfbt+jK+l0pabP
-         GTehyWDzuL/CjvtZ3vJKYoj5rsJPb1bnDWny7P2YlVPjCcML69cHmHBNG0AIDWe7Gz
-         7IRiJMIJ4Kb9b5hGDoNDnHaxCTClNUWIJdKvD1WISOHxae57UeEHW0ELnQ3BY1ByPF
-         1oPzO4gyeKDsiFe+zukx8HTbH7jtndcbjgt+u2Img9ev7FSfwZJM9PLRYWX7kshjFe
-         JBwE+rXxecauzokxEZQ57uU9ynC6VsB3Nd14q1sEiH2ivRH0Hx8EhFL3DwxqA8pymw
-         p3ZiZsIoOoIIQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [patch V2 01/23] powerpc/4xx: Remove MSI support which never
- worked
-In-Reply-To: <8d1e9d2b-fbe9-2e15-6df6-03028902791a@kaod.org>
-References: <20211206210147.872865823@linutronix.de>
- <20211206210223.872249537@linutronix.de>
- <8d1e9d2b-fbe9-2e15-6df6-03028902791a@kaod.org>
-Date:   Tue, 07 Dec 2021 22:36:02 +1100
-Message-ID: <87ilw0odel.fsf@mpe.ellerman.id.au>
+        Tue, 7 Dec 2021 07:07:07 -0500
+Received: by mail-wr1-f52.google.com with SMTP id d24so29148554wra.0;
+        Tue, 07 Dec 2021 04:03:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WOUkRvk8md0qXXeJWUBaI3pWBezAEcrjYlSaZ1Cva6A=;
+        b=IJ9JvEIdZjVPaXmiQuBDDuypRCU4M2pzREewawCznlMR3VhnKVBatXB+JIpXdWhLut
+         bb/HyAWzYmyqMu2f2KHjcQ6XjsUJS2i8nHQtj6ANFnM9n4Y3WREEUPAyUbxkIW6mVxbc
+         c/gceWEczq2UAWCVKnLuUT5cC12BZ6Qfk7AobzIFfWQ4FRJvZrb5eADBskSsMnj6Qkbc
+         PkEDgiLYEHG1atWkVjU21I8mQ3D7sUgzKpyAxfQ7CpEoU+04rDgRCzXn0QhR4A4u7bnd
+         o39UjtaQ9yNbX9w0RfRUGmIl094cdnMpRf+TJMUXPPoDBVEtMOjk+1pmmhPRbRNKcBsn
+         OruA==
+X-Gm-Message-State: AOAM532BY5WO1fwZxye7Ju0Dn8FYaqz4GwgCQHmC71IZVDiCzeAPCp4O
+        Xj+DVfjYVxeWGxwLTMYzhts=
+X-Google-Smtp-Source: ABdhPJzMzHrPwjx1q6wcjSgllaGFav30b9QtgoVVc3D8PMFLIs2P8l6Us9wMV4IxRbCko1NRKBiujw==
+X-Received: by 2002:adf:f947:: with SMTP id q7mr50874696wrr.260.1638878616067;
+        Tue, 07 Dec 2021 04:03:36 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id g18sm3074323wmq.4.2021.12.07.04.03.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 04:03:34 -0800 (PST)
+Date:   Tue, 7 Dec 2021 12:03:33 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] hv_sock: Extract hvs_send_data() helper that takes only
+ header
+Message-ID: <20211207120333.rmq3mmla5js7kpuj@liuwe-devbox-debian-v2>
+References: <20211207063217.2591451-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211207063217.2591451-1-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-C=C3=A9dric Le Goater <clg@kaod.org> writes:
-> Hello Thomas,
->
-> On 12/6/21 23:27, Thomas Gleixner wrote:
->> This code is broken since day one. ppc4xx_setup_msi_irqs() has the
->> following gems:
->>=20
->>   1) The handling of the result of msi_bitmap_alloc_hwirqs() is complete=
-ly
->>      broken:
->>=20=20=20=20=20=20
->>      When the result is greater than or equal 0 (bitmap allocation
->>      successful) then the loop terminates and the function returns 0
->>      (success) despite not having installed an interrupt.
->>=20
->>      When the result is less than 0 (bitmap allocation fails), it prints=
- an
->>      error message and continues to "work" with that error code which wo=
-uld
->>      eventually end up in the MSI message data.
->>=20
->>   2) On every invocation the file global pp4xx_msi::msi_virqs bitmap is
->>      allocated thereby leaking the previous one.
->>=20
->> IOW, this has never worked and for more than 10 years nobody cared. Remo=
-ve
->> the gunk.
->>=20
->> Fixes: 3fb7933850fa ("powerpc/4xx: Adding PCIe MSI support")
->
-> Shouldn't we remove all of it ? including the updates in the device trees
-> and the Kconfig changes under :
->
-> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
-> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
-> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
-> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
-> arch/powerpc/platforms/40x/Kconfig:	select PPC4xx_MSI
+On Mon, Dec 06, 2021 at 10:32:17PM -0800, Kees Cook wrote:
+> When building under -Warray-bounds, the compiler is especially
+> conservative when faced with casts from a smaller object to a larger
+> object. While this has found many real bugs, there are some cases that
+> are currently false positives (like here). With this as one of the last
+> few instances of the warning in the kernel before -Warray-bounds can be
+> enabled globally, rearrange the functions so that there is a header-only
+> version of hvs_send_data(). Silences this warning:
+> 
+> net/vmw_vsock/hyperv_transport.c: In function 'hvs_shutdown_lock_held.constprop':
+> net/vmw_vsock/hyperv_transport.c:231:32: warning: array subscript 'struct hvs_send_buf[0]' is partly outside array bounds of 'struct vmpipe_proto_header[1]' [-Warray-bounds]
+>   231 |         send_buf->hdr.pkt_type = 1;
+>       |         ~~~~~~~~~~~~~~~~~~~~~~~^~~
+> net/vmw_vsock/hyperv_transport.c:465:36: note: while referencing 'hdr'
+>   465 |         struct vmpipe_proto_header hdr;
+>       |                                    ^~~
+> 
+> This change results in no executable instruction differences.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This patch should drop those selects I guess. Can you send an
-incremental diff for Thomas to squash in?
-
-Removing all the tendrils in various device tree files will probably
-require some archaeology, and it should be perfectly safe to leave those
-in the tree with the driver gone. So I think we can do that as a
-subsequent patch, rather than in this series.
-
-cheers
+Acked-by: Wei Liu <wei.liu@kernel.org>
