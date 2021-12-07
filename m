@@ -2,336 +2,188 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4847B46C01A
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 16:58:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E48846C1E7
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Dec 2021 18:36:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239311AbhLGQBH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Dec 2021 11:01:07 -0500
-Received: from smtpout1.mo529.mail-out.ovh.net ([178.32.125.2]:44025 "EHLO
-        smtpout1.mo529.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239304AbhLGQBH (ORCPT
+        id S239735AbhLGRjk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Dec 2021 12:39:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235271AbhLGRjj (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Dec 2021 11:01:07 -0500
-X-Greylist: delayed 445 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Dec 2021 11:01:07 EST
-Received: from mxplan5.mail.ovh.net (unknown [10.108.4.36])
-        by mo529.mail-out.ovh.net (Postfix) with ESMTPS id 876D2D06810E;
-        Tue,  7 Dec 2021 16:50:06 +0100 (CET)
-Received: from kaod.org (37.59.142.96) by DAG4EX1.mxp5.local (172.16.2.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 7 Dec
- 2021 16:50:04 +0100
-Authentication-Results: garm.ovh; auth=pass (GARM-96R0016d463d06-8f28-4116-8296-36026f977615,
-                    D5B34436B48CBBE29FDE786D5871FA4E32D79878) smtp.auth=clg@kaod.org
-X-OVh-ClientIp: 86.201.172.254
-Message-ID: <27f22e0e-8f84-a6d7-704b-d9eddc642d74@kaod.org>
-Date:   Tue, 7 Dec 2021 16:50:01 +0100
+        Tue, 7 Dec 2021 12:39:39 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F366DC061574;
+        Tue,  7 Dec 2021 09:36:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4BBF0CE1C69;
+        Tue,  7 Dec 2021 17:36:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30882C341C7;
+        Tue,  7 Dec 2021 17:36:05 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="da3Ng9ts"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1638898561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JEncML74KciRPTHUJgcoLxaU8ezhg4AbnyMOEsP2sas=;
+        b=da3Ng9tsRKzsp8tl85MW2VQvCdklOGVMgGS8WnJdm3AWElMx7KiuvNJsgt3ls6lewKwYnQ
+        waM/y9TxWAgRX0oxqHPNfIYs/Az0gXZI291ylH5KfSVlNo/9B3+n4glTigph/ky7AjvHRC
+        vgQ+G0o7na07oRlHS9qVxBD3T49ZP7M=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 1a0e2178 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
+        Tue, 7 Dec 2021 17:36:01 +0000 (UTC)
+Received: by mail-yb1-f178.google.com with SMTP id v64so42908102ybi.5;
+        Tue, 07 Dec 2021 09:36:01 -0800 (PST)
+X-Gm-Message-State: AOAM5339kCqsoRe2v5qHpuL8dSUmje5xE4veAQ8TJFCTelTeRospmtNo
+        2JNBoMRDlUTFrx+lxjQZKJgMFxu0RSdwfFuqBFY=
+X-Google-Smtp-Source: ABdhPJxRJE8S3O5YmMCANueUK4lz2zAh9leN0CI2YWuhcKT6tZY7G2N6BNxEXlbxocENbttygA4qsIaHDoPu+GtuChM=
+X-Received: by 2002:a25:1e83:: with SMTP id e125mr49691951ybe.32.1638898558882;
+ Tue, 07 Dec 2021 09:35:58 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [patch V2 01/23] powerpc/4xx: Remove MSI support which never
- worked
-Content-Language: en-US
-To:     Michael Ellerman <mpe@ellerman.id.au>,
+References: <20211207121737.2347312-1-bigeasy@linutronix.de> <20211207121737.2347312-2-bigeasy@linutronix.de>
+In-Reply-To: <20211207121737.2347312-2-bigeasy@linutronix.de>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 7 Dec 2021 18:35:47 +0100
+X-Gmail-Original-Message-ID: <CAHmME9oSD-XkYaozFAiDnr1n4qBjTb8febw5mt6LS_DfzLUo7A@mail.gmail.com>
+Message-ID: <CAHmME9oSD-XkYaozFAiDnr1n4qBjTb8febw5mt6LS_DfzLUo7A@mail.gmail.com>
+Subject: Re: [PATCH 1/5] random: Remove unused irq_flags argument from add_interrupt_randomness().
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
         Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <linuxppc-dev@lists.ozlabs.org>, Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-mips@vger.kernel.org>, Kalle Valo <kvalo@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <sparclinux@vger.kernel.org>, <x86@kernel.org>,
-        <xen-devel@lists.xenproject.org>, <ath11k@lists.infradead.org>,
-        Wei Liu <wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20211206210147.872865823@linutronix.de>
- <20211206210223.872249537@linutronix.de>
- <8d1e9d2b-fbe9-2e15-6df6-03028902791a@kaod.org>
- <87ilw0odel.fsf@mpe.ellerman.id.au>
-From:   =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-In-Reply-To: <87ilw0odel.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.96]
-X-ClientProxiedBy: DAG9EX1.mxp5.local (172.16.2.81) To DAG4EX1.mxp5.local
- (172.16.2.31)
-X-Ovh-Tracer-GUID: 3ba07c30-c0fb-4b34-adb9-c7c234a94237
-X-Ovh-Tracer-Id: 9416182396562148133
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvuddrjeehgdekfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfhfhfgjtgfgihesthekredttdefjeenucfhrhhomhepveorughrihgtpgfnvggpifhorghtvghruceotghlgheskhgrohgurdhorhhgqeenucggtffrrghtthgvrhhnpeeigedvffekgeeftedutddttdevudeihfegudffkeeitdekkeetkefhffelveelleenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddrleeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdphhgvlhhopehmgihplhgrnhehrdhmrghilhdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheptghlgheskhgrohgurdhorhhgpdhrtghpthhtohephhgtrgeslhhinhhugidrihgsmhdrtghomh
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        X86 ML <x86@kernel.org>,
+        Sultan Alsawaf <sultan@kerneltoast.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/7/21 12:36, Michael Ellerman wrote:
-> Cédric Le Goater <clg@kaod.org> writes:
->> Hello Thomas,
->>
->> On 12/6/21 23:27, Thomas Gleixner wrote:
->>> This code is broken since day one. ppc4xx_setup_msi_irqs() has the
->>> following gems:
->>>
->>>    1) The handling of the result of msi_bitmap_alloc_hwirqs() is completely
->>>       broken:
->>>       
->>>       When the result is greater than or equal 0 (bitmap allocation
->>>       successful) then the loop terminates and the function returns 0
->>>       (success) despite not having installed an interrupt.
->>>
->>>       When the result is less than 0 (bitmap allocation fails), it prints an
->>>       error message and continues to "work" with that error code which would
->>>       eventually end up in the MSI message data.
->>>
->>>    2) On every invocation the file global pp4xx_msi::msi_virqs bitmap is
->>>       allocated thereby leaking the previous one.
->>>
->>> IOW, this has never worked and for more than 10 years nobody cared. Remove
->>> the gunk.
->>>
->>> Fixes: 3fb7933850fa ("powerpc/4xx: Adding PCIe MSI support")
->>
->> Shouldn't we remove all of it ? including the updates in the device trees
->> and the Kconfig changes under :
->>
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/44x/Kconfig:	select PPC4xx_MSI
->> arch/powerpc/platforms/40x/Kconfig:	select PPC4xx_MSI
-> 
-> This patch should drop those selects I guess. Can you send an
-> incremental diff for Thomas to squash in?
+On Tue, Dec 7, 2021 at 1:17 PM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> Since commit
+>    ee3e00e9e7101 ("random: use registers from interrupted code for CPU's w/o a cycle counter")
+>
+> the irq_flags argument is no longer used.
+>
+> Remove unused irq_flags irq_flags.
+>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: K. Y. Srinivasan <kys@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: x86@kernel.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 2 +-
+>  drivers/char/random.c          | 4 ++--
+>  drivers/hv/vmbus_drv.c         | 2 +-
+>  include/linux/random.h         | 2 +-
+>  kernel/irq/handle.c            | 2 +-
+>  5 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index ff55df60228f7..2a0f836789118 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -79,7 +79,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_stimer0)
+>         inc_irq_stat(hyperv_stimer0_count);
+>         if (hv_stimer0_handler)
+>                 hv_stimer0_handler();
+> -       add_interrupt_randomness(HYPERV_STIMER0_VECTOR, 0);
+> +       add_interrupt_randomness(HYPERV_STIMER0_VECTOR);
+>         ack_APIC_irq();
+>
+>         set_irq_regs(old_regs);
+> diff --git a/drivers/char/random.c b/drivers/char/random.c
+> index 605969ed0f965..c8067c264a880 100644
+> --- a/drivers/char/random.c
+> +++ b/drivers/char/random.c
+> @@ -200,7 +200,7 @@
+>   *     void add_device_randomness(const void *buf, unsigned int size);
+>   *     void add_input_randomness(unsigned int type, unsigned int code,
+>   *                                unsigned int value);
+> - *     void add_interrupt_randomness(int irq, int irq_flags);
+> + *     void add_interrupt_randomness(int irq);
+>   *     void add_disk_randomness(struct gendisk *disk);
+>   *
+>   * add_device_randomness() is for adding data to the random pool that
+> @@ -1242,7 +1242,7 @@ static __u32 get_reg(struct fast_pool *f, struct pt_regs *regs)
+>         return *ptr;
+>  }
+>
+> -void add_interrupt_randomness(int irq, int irq_flags)
+> +void add_interrupt_randomness(int irq)
+>  {
+>         struct entropy_store    *r;
+>         struct fast_pool        *fast_pool = this_cpu_ptr(&irq_randomness);
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 392c1ac4f8193..7ae04ccb10438 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1381,7 +1381,7 @@ static void vmbus_isr(void)
+>                         tasklet_schedule(&hv_cpu->msg_dpc);
+>         }
+>
+> -       add_interrupt_randomness(vmbus_interrupt, 0);
+> +       add_interrupt_randomness(vmbus_interrupt);
+>  }
+>
+>  static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
+> diff --git a/include/linux/random.h b/include/linux/random.h
+> index f45b8be3e3c4e..c45b2693e51fb 100644
+> --- a/include/linux/random.h
+> +++ b/include/linux/random.h
+> @@ -35,7 +35,7 @@ static inline void add_latent_entropy(void) {}
+>
+>  extern void add_input_randomness(unsigned int type, unsigned int code,
+>                                  unsigned int value) __latent_entropy;
+> -extern void add_interrupt_randomness(int irq, int irq_flags) __latent_entropy;
+> +extern void add_interrupt_randomness(int irq) __latent_entropy;
+>
+>  extern void get_random_bytes(void *buf, int nbytes);
+>  extern int wait_for_random_bytes(void);
+> diff --git a/kernel/irq/handle.c b/kernel/irq/handle.c
+> index 27182003b879c..68c76c3caaf55 100644
+> --- a/kernel/irq/handle.c
+> +++ b/kernel/irq/handle.c
+> @@ -197,7 +197,7 @@ irqreturn_t handle_irq_event_percpu(struct irq_desc *desc)
+>
+>         retval = __handle_irq_event_percpu(desc, &flags);
+>
+> -       add_interrupt_randomness(desc->irq_data.irq, flags);
+> +       add_interrupt_randomness(desc->irq_data.irq);
+>
+>         if (!irq_settings_no_debug(desc))
+>                 note_interrupt(desc, retval);
+> --
+> 2.34.1
+>
 
-Sure.
+Thanks for this. Sultan noticed the same thing a while back:
+https://lore.kernel.org/lkml/20180430031222.mapajgwprkkr6p36@sultan-box/
 
-> Removing all the tendrils in various device tree files will probably
-> require some archaeology, and it should be perfectly safe to leave those
-> in the tree with the driver gone. So I think we can do that as a
-> subsequent patch, rather than in this series.
+I'll apply this and the subsequent one.
 
-Here are the changes. Compiled tested with ppc40x and ppc44x defconfigs.
-
-Thanks,
-
-C.
-
-diff --git a/arch/powerpc/boot/dts/bluestone.dts b/arch/powerpc/boot/dts/bluestone.dts
-index aa1ae94cd776..6971595319c1 100644
---- a/arch/powerpc/boot/dts/bluestone.dts
-+++ b/arch/powerpc/boot/dts/bluestone.dts
-@@ -366,30 +366,5 @@ PCIE0: pcie@d00000000 {
-  				0x0 0x0 0x0 0x3 &UIC3 0xe 0x4 /* swizzled int C */
-  				0x0 0x0 0x0 0x4 &UIC3 0xf 0x4 /* swizzled int D */>;
-  		};
--
--		MSI: ppc4xx-msi@C10000000 {
--			compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--			reg = < 0xC 0x10000000 0x100
--				0xC 0x10000000 0x100>;
--			sdr-base = <0x36C>;
--			msi-data = <0x00004440>;
--			msi-mask = <0x0000ffe0>;
--			interrupts =<0 1 2 3 4 5 6 7>;
--			interrupt-parent = <&MSI>;
--			#interrupt-cells = <1>;
--			#address-cells = <0>;
--			#size-cells = <0>;
--			msi-available-ranges = <0x0 0x100>;
--			interrupt-map = <
--				0 &UIC3 0x18 1
--				1 &UIC3 0x19 1
--				2 &UIC3 0x1A 1
--				3 &UIC3 0x1B 1
--				4 &UIC3 0x1C 1
--				5 &UIC3 0x1D 1
--				6 &UIC3 0x1E 1
--				7 &UIC3 0x1F 1
--			>;
--		};
-  	};
-  };
-diff --git a/arch/powerpc/boot/dts/canyonlands.dts b/arch/powerpc/boot/dts/canyonlands.dts
-index c5fbb08e0a6e..5db1bff6b23d 100644
---- a/arch/powerpc/boot/dts/canyonlands.dts
-+++ b/arch/powerpc/boot/dts/canyonlands.dts
-@@ -544,23 +544,5 @@ PCIE1: pcie@d20000000 {
-  				0x0 0x0 0x0 0x3 &UIC3 0x12 0x4 /* swizzled int C */
-  				0x0 0x0 0x0 0x4 &UIC3 0x13 0x4 /* swizzled int D */>;
-  		};
--
--		MSI: ppc4xx-msi@C10000000 {
--			compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--			reg = < 0xC 0x10000000 0x100>;
--			sdr-base = <0x36C>;
--			msi-data = <0x00000000>;
--			msi-mask = <0x44440000>;
--			interrupt-count = <3>;
--			interrupts = <0 1 2 3>;
--			interrupt-parent = <&UIC3>;
--			#interrupt-cells = <1>;
--			#address-cells = <0>;
--			#size-cells = <0>;
--			interrupt-map = <0 &UIC3 0x18 1
--					1 &UIC3 0x19 1
--					2 &UIC3 0x1A 1
--					3 &UIC3 0x1B 1>;
--		};
-  	};
-  };
-diff --git a/arch/powerpc/boot/dts/katmai.dts b/arch/powerpc/boot/dts/katmai.dts
-index a8f353229fb7..4262b2bbd6de 100644
---- a/arch/powerpc/boot/dts/katmai.dts
-+++ b/arch/powerpc/boot/dts/katmai.dts
-@@ -442,24 +442,6 @@ PCIE2: pcie@d40000000 {
-  				0x0 0x0 0x0 0x4 &UIC3 0xb 0x4 /* swizzled int D */>;
-  		};
-  
--		MSI: ppc4xx-msi@400300000 {
--				compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--				reg = < 0x4 0x00300000 0x100>;
--				sdr-base = <0x3B0>;
--				msi-data = <0x00000000>;
--				msi-mask = <0x44440000>;
--				interrupt-count = <3>;
--				interrupts =<0 1 2 3>;
--				interrupt-parent = <&UIC0>;
--				#interrupt-cells = <1>;
--				#address-cells = <0>;
--				#size-cells = <0>;
--				interrupt-map = <0 &UIC0 0xC 1
--					1 &UIC0 0x0D 1
--					2 &UIC0 0x0E 1
--					3 &UIC0 0x0F 1>;
--		};
--
-  		I2O: i2o@400100000 {
-  			compatible = "ibm,i2o-440spe";
-  			reg = <0x00000004 0x00100000 0x100>;
-diff --git a/arch/powerpc/boot/dts/kilauea.dts b/arch/powerpc/boot/dts/kilauea.dts
-index a709fb47a180..c07a7525a72c 100644
---- a/arch/powerpc/boot/dts/kilauea.dts
-+++ b/arch/powerpc/boot/dts/kilauea.dts
-@@ -403,33 +403,5 @@ PCIE1: pcie@c0000000 {
-  				0x0 0x0 0x0 0x3 &UIC2 0xd 0x4 /* swizzled int C */
-  				0x0 0x0 0x0 0x4 &UIC2 0xe 0x4 /* swizzled int D */>;
-  		};
--
--		MSI: ppc4xx-msi@C10000000 {
--			compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--			reg = <0xEF620000 0x100>;
--			sdr-base = <0x4B0>;
--			msi-data = <0x00000000>;
--			msi-mask = <0x44440000>;
--			interrupt-count = <12>;
--			interrupts = <0 1 2 3 4 5 6 7 8 9 0xA 0xB 0xC 0xD>;
--			interrupt-parent = <&UIC2>;
--			#interrupt-cells = <1>;
--			#address-cells = <0>;
--			#size-cells = <0>;
--			interrupt-map = <0 &UIC2 0x10 1
--					1 &UIC2 0x11 1
--					2 &UIC2 0x12 1
--					2 &UIC2 0x13 1
--					2 &UIC2 0x14 1
--					2 &UIC2 0x15 1
--					2 &UIC2 0x16 1
--					2 &UIC2 0x17 1
--					2 &UIC2 0x18 1
--					2 &UIC2 0x19 1
--					2 &UIC2 0x1A 1
--					2 &UIC2 0x1B 1
--					2 &UIC2 0x1C 1
--					3 &UIC2 0x1D 1>;
--		};
-  	};
-  };
-diff --git a/arch/powerpc/boot/dts/redwood.dts b/arch/powerpc/boot/dts/redwood.dts
-index f38035a1f4a1..3c849e23e5f3 100644
---- a/arch/powerpc/boot/dts/redwood.dts
-+++ b/arch/powerpc/boot/dts/redwood.dts
-@@ -358,25 +358,6 @@ PCIE2: pcie@d40000000 {
-  				0x0 0x0 0x0 0x4 &UIC3 0xb 0x4 /* swizzled int D */>;
-  		};
-  
--		MSI: ppc4xx-msi@400300000 {
--				compatible = "amcc,ppc4xx-msi", "ppc4xx-msi";
--				reg = < 0x4 0x00300000 0x100
--					0x4 0x00300000 0x100>;
--				sdr-base = <0x3B0>;
--				msi-data = <0x00000000>;
--				msi-mask = <0x44440000>;
--				interrupt-count = <3>;
--				interrupts =<0 1 2 3>;
--				interrupt-parent = <&UIC0>;
--				#interrupt-cells = <1>;
--				#address-cells = <0>;
--				#size-cells = <0>;
--				interrupt-map = <0 &UIC0 0xC 1
--					1 &UIC0 0x0D 1
--					2 &UIC0 0x0E 1
--					3 &UIC0 0x0F 1>;
--		};
--
-  	};
-  
-  
-diff --git a/arch/powerpc/platforms/40x/Kconfig b/arch/powerpc/platforms/40x/Kconfig
-index e3e5217c9822..614ea6dc994c 100644
---- a/arch/powerpc/platforms/40x/Kconfig
-+++ b/arch/powerpc/platforms/40x/Kconfig
-@@ -23,7 +23,6 @@ config KILAUEA
-  	select PPC4xx_PCI_EXPRESS
-  	select FORCE_PCI
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	help
-  	  This option enables support for the AMCC PPC405EX evaluation board.
-  
-diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
-index 83975ef50975..25b80cd558f8 100644
---- a/arch/powerpc/platforms/44x/Kconfig
-+++ b/arch/powerpc/platforms/44x/Kconfig
-@@ -23,7 +23,6 @@ config BLUESTONE
-  	select APM821xx
-  	select FORCE_PCI
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	select PPC4xx_PCI_EXPRESS
-  	select IBM_EMAC_RGMII if IBM_EMAC
-  	help
-@@ -73,7 +72,6 @@ config KATMAI
-  	select FORCE_PCI
-  	select PPC4xx_PCI_EXPRESS
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	help
-  	  This option enables support for the AMCC PPC440SPe evaluation board.
-  
-@@ -115,7 +113,6 @@ config CANYONLANDS
-  	select FORCE_PCI
-  	select PPC4xx_PCI_EXPRESS
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	select IBM_EMAC_RGMII if IBM_EMAC
-  	select IBM_EMAC_ZMII if IBM_EMAC
-  	help
-@@ -141,7 +138,6 @@ config REDWOOD
-  	select FORCE_PCI
-  	select PPC4xx_PCI_EXPRESS
-  	select PCI_MSI
--	select PPC4xx_MSI
-  	help
-  	  This option enables support for the AMCC PPC460SX Redwood board.
-  
--- 
-2.31.1
-
-
+Regards,
+Jason
