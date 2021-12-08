@@ -2,82 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDD1346DD55
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Dec 2021 21:56:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD14D46DE75
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Dec 2021 23:37:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236121AbhLHVA1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Dec 2021 16:00:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
+        id S237362AbhLHWlS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 Dec 2021 17:41:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235864AbhLHVA1 (ORCPT
+        with ESMTP id S236539AbhLHWlS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Dec 2021 16:00:27 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6293C0617A1;
-        Wed,  8 Dec 2021 12:56:54 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638997011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RI9goYiyaxxlyowVIy50GRXpRhCNUYZrM4r3seD1bKI=;
-        b=NIPhL0sgn8M0aJUIi890pmZGlk891yoUSSDMnC4hnbyawxG2Kyh7G1sHH/xsmtSWUM8FfZ
-        FyiBCPJVbWpXpFfMUl77mb1l8QqDIF5HigALgdn/RYqTMPCpOHMr0KIFCokDN7aLnrEdks
-        8rrnfZKCxcaetGnTQyHUg4mAfEc2N1sxXiIWn5IbWqnhikYmOYt6fknKqXzV7CdqL4P4H4
-        8ZS0DFKNdnSGea2HezKm7Hkc6llGKcBl9S+VI9FjnibvCSYHAcSlNTnETtfGbCxdf3f6N4
-        HjxoAKj0UnKj8JjZlpBFr0/NMCZQnVLvInv7aT9TCLkwNt6S0nNqOl/aBjfedw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638997011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RI9goYiyaxxlyowVIy50GRXpRhCNUYZrM4r3seD1bKI=;
-        b=KF19qqsUtSG+rWG9NpEYyzGIEvbq/ti9eoiMayWfd1iK3FYz9roP5HeWY227THj1hSYyZu
-        bO4E+0TC1Z5Br/AA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, ath11k@lists.infradead.org,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [patch V2 20/23] PCI/MSI: Move msi_lock to struct pci_dev
-In-Reply-To: <20211208152925.GU6385@nvidia.com>
-References: <20211206210147.872865823@linutronix.de>
- <20211206210224.925241961@linutronix.de>
- <20211208152925.GU6385@nvidia.com>
-Date:   Wed, 08 Dec 2021 21:56:50 +0100
-Message-ID: <871r2m24tp.ffs@tglx>
+        Wed, 8 Dec 2021 17:41:18 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8F7C061746;
+        Wed,  8 Dec 2021 14:37:45 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id t9so6632128wrx.7;
+        Wed, 08 Dec 2021 14:37:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ltEh61NUR5opsmEls4nl8qwF170eYcG3QnbnvsYmLkc=;
+        b=Vv1SnbI3Hnmh/yVAYnhqqnaCYZW/MWbUHZQ574aDiL95EWaS9us80hpNVP57iFaGSm
+         331JvFk7M8N0PL1+E3v1P0NRDUsDEWGWqoUttdDvUJtD9zVPm0D6J9juH6yLmNYDVpr2
+         Uos/3n84IFMmegHCsQQx3NzhrLTTnhLKoWRGa8IZsGZlA16khSgixXfW5qALU7s0QFjw
+         1AIGn69RFK+U1rVSib/xnGAaF7wYj1kj2lwZrUgVwuFnDcWtZF6ulKibSybipdjo8e+w
+         qXHC7sYYsd5kV+kFkU9xOrVvLMVRIcBLmGVQCKl4v3vrkIfUxhrJs5iVQB8riA5ejioJ
+         QKlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ltEh61NUR5opsmEls4nl8qwF170eYcG3QnbnvsYmLkc=;
+        b=u40gJFakYa9mJeM0S0jMhqBHp2ZPryxNZWJWJKA5JIaJAINqhN+aV8PeV7qX03cGbX
+         hQiDlX5C3A7dZryscv6/YAmbyvgqA8Mszvt//rudfgShVLtrv0jMwdrKZmjRfQ3ft/Qj
+         GzYikPqh6dyWW+hOVVAbg+ylsbWdtinADOtmoULdeH2EUHFfsRCIDYO1ovl9rLOTR8uv
+         qOLFm9ytvfubqX0+aevYwCipTfXl8dZDZ85m0fgISBg6oqiZAOdEGEFJo6B+eLWuH5hK
+         LSLYbF/fKSn0posNmgE9fO/gJAFZ4EW1XyHaz2Xbljbf5Mmp30dY8qmMdCFPMNVaz9fQ
+         1GUw==
+X-Gm-Message-State: AOAM530OHhQp6mBnRomNRc9ZpRnd6KXC3Yhb205gFSNnY/KsqHMb6W/R
+        guAlA1DcmRH7AicpSSALgio=
+X-Google-Smtp-Source: ABdhPJw14QKUmBDLUvt7AbHOxb6KmnlLuia4Ejrt7gieEu7zj7nD8l/9Pf/+40qNSkKWuBwex673fg==
+X-Received: by 2002:adf:dc12:: with SMTP id t18mr1808383wri.566.1639003064320;
+        Wed, 08 Dec 2021 14:37:44 -0800 (PST)
+Received: from localhost.localdomain ([217.113.240.86])
+        by smtp.gmail.com with ESMTPSA id n184sm6957308wme.2.2021.12.08.14.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 14:37:43 -0800 (PST)
+From:   =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+To:     kys@microsoft.com
+Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, davem@davemloft.net, sumit.semwal@linaro.org,
+        christian.koenig@amd.com, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org,
+        =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Subject: [PATCH] net: mana: Fix memory leak in mana_hwc_create_wq
+Date:   Wed,  8 Dec 2021 23:37:23 +0100
+Message-Id: <20211208223723.18520-1-jose.exposito89@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Dec 08 2021 at 11:29, Jason Gunthorpe wrote:
-> On Mon, Dec 06, 2021 at 11:27:56PM +0100, Thomas Gleixner wrote:
->>  	if (!desc->pci.msi_attrib.can_mask)
->
-> It looks like most of the time this is called by an irq_chip, except
-> for a few special cases list pci_msi_shutdown()
->
-> Is this something that should ideally go away someday and use some
-> lock in the irq_chip - not unlike what we've thought is needed for
-> IMS?
+If allocating the DMA buffer fails, mana_hwc_destroy_wq was called
+without previously storing the pointer to the queue.
 
-Some day we'll have that yes.
+In order to avoid leaking the pointer to the queue, store it as soon as
+it is allocated.
+
+Addresses-Coverity-ID: 1484720 ("Resource leak")
+Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+---
+ drivers/net/ethernet/microsoft/mana/hw_channel.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 34b971ff8ef8..078d6a5a0768 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -480,16 +480,16 @@ static int mana_hwc_create_wq(struct hw_channel_context *hwc,
+ 	if (err)
+ 		goto out;
+ 
+-	err = mana_hwc_alloc_dma_buf(hwc, q_depth, max_msg_size,
+-				     &hwc_wq->msg_buf);
+-	if (err)
+-		goto out;
+-
+ 	hwc_wq->hwc = hwc;
+ 	hwc_wq->gdma_wq = queue;
+ 	hwc_wq->queue_depth = q_depth;
+ 	hwc_wq->hwc_cq = hwc_cq;
+ 
++	err = mana_hwc_alloc_dma_buf(hwc, q_depth, max_msg_size,
++				     &hwc_wq->msg_buf);
++	if (err)
++		goto out;
++
+ 	*hwc_wq_ptr = hwc_wq;
+ 	return 0;
+ out:
+-- 
+2.25.1
+
