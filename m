@@ -2,161 +2,128 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5D7B46E602
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Dec 2021 10:55:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5367746E769
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Dec 2021 12:17:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230434AbhLIJ73 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 9 Dec 2021 04:59:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:36420 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229952AbhLIJ72 (ORCPT
+        id S236534AbhLILUv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Dec 2021 06:20:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235365AbhLILUu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 9 Dec 2021 04:59:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639043755;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tifu8jPxoXiPodobNqLDC7Ur+Twa+ScoTD0T3Hcu8HE=;
-        b=HwGgK2AGdxofrS3IYWN+nY6hMzY77JyTmx4IM2ClxfMtVdFc1+Wj5FW+DU2x8k9msNf17g
-        D9ytMxtjl+Lj6LFvLpBK+khbMdrkpAjMEDkvfWzbFroXcdnavi84zpnN3a8K1G5DnnU3hn
-        FN2IwqQfootuNF6xm9Ooay6I7sp+6Dg=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-331-sZtEFSB0PeeEpmLzPJ2Sgw-1; Thu, 09 Dec 2021 04:55:54 -0500
-X-MC-Unique: sZtEFSB0PeeEpmLzPJ2Sgw-1
-Received: by mail-ed1-f69.google.com with SMTP id w18-20020a056402071200b003e61cbafdb4so4793981edx.4
-        for <linux-hyperv@vger.kernel.org>; Thu, 09 Dec 2021 01:55:54 -0800 (PST)
+        Thu, 9 Dec 2021 06:20:50 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C13C061746;
+        Thu,  9 Dec 2021 03:17:17 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id j5-20020a17090a318500b001a6c749e697so5918397pjb.1;
+        Thu, 09 Dec 2021 03:17:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=7++LgR6CHSvNByLY82LW9yKqPrn0areIcNLzqPnbuDs=;
+        b=devInOcspgU9jMzUkwQ4cW9HzrPs8Huk68CilnEkO0UWTbHyLicW6H5aVikM64Gmnx
+         WFs4Sp2hpBcuLpVmLGIsvEPCFunl7OLPuW8wpVIoJMvHPR4Y45nM/4sWIbLncBsa3Tps
+         UCW7DSv0OKimSsiFG+nqvvCNykGnbOPOTWRktixpuBhEC7IcYt5V7AbFgEQKYZS5V8Nk
+         pmC3XjlowIpRQL3uAPUUJXhKBDet1SCbmvvKnsJTSDwAU9fnFWxmbNzL8p1bq1OEnEl8
+         /bcYeIiCEkI8oSLGwK1p0KxtDFemGjK9t+BFw0jb/uD2AVAmRJLTnu/+fy92lNKJGZJF
+         R1Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Tifu8jPxoXiPodobNqLDC7Ur+Twa+ScoTD0T3Hcu8HE=;
-        b=3aC32wqw37s8QBXy4D4XJ7b8Hno5rXkJ/dlVHrvgW/FIZdMneDa0tEEgcAk5nWr8C5
-         E+jLZ+c9j0w42uOZ7dccekDTJKWSmSXzgdEgGtcT0YzH1yAVIRH1HATq4lctQT7vGVZd
-         RqFcuFtLlmeWTZtomqTe7HH1LuTZu/53pwXcEfXep4G6V56rUeb6B+f0MTmmKNon/9w6
-         aNd4ucLF6pWPQCxqUE3ha6YXLZsoRnrh2bPtNvMOKgFLzAIFqd30Nm/UyiS7rMFdCCnR
-         XLP2JBgCOi9xQi/3MHl3wu5Dmz1dT1d5wLeuuC64N0GWaWHyPrUOC319m1CVXjT8jzl8
-         gsGw==
-X-Gm-Message-State: AOAM533X7GYJd/yOSsNM4cWzBwfHRF0EGvJ+vWvmKKV0fIsT8kjb/EsC
-        X4RYWo5twf0N/Jw9ACFrRPZZ2wAES/Vn28xqcV9hcozxcDgBYuVnUpzTZRCQlkXcgFZSGRJwOdq
-        vDSWV7UMQwSxRQHOPDfZXRsKq
-X-Received: by 2002:a50:d710:: with SMTP id t16mr27488347edi.50.1639043752305;
-        Thu, 09 Dec 2021 01:55:52 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw6QqCxdit+LRk7iJREbeQBji1uNqG143rwxeUhxS89nG10fe15dcnhEv1m6U1xRuvyXnf4ng==
-X-Received: by 2002:a50:d710:: with SMTP id t16mr27488319edi.50.1639043752085;
-        Thu, 09 Dec 2021 01:55:52 -0800 (PST)
-Received: from fedora (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id f7sm3251022edw.44.2021.12.09.01.55.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 01:55:51 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ajay Garg <ajaygargnsit@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=7++LgR6CHSvNByLY82LW9yKqPrn0areIcNLzqPnbuDs=;
+        b=AEQSXzBXIEA6z5+mfgjnvnZyawK+2i5lQNFX97/1GjIpD127rOTLAZ8Z7BHEnE/LQh
+         1OgSvmur5qtaGk7x7wNi+JT1W4vFmZfnlq/BU1A+L/BTeu9OT0I4RwAR0yHR2lM9HglY
+         N6nmVNnyyLhMw5n5EGoN4Ww+LFSQeIjGgfiCgj/zgxGAk3yW6ASdgMPBEXKe59iZSKKi
+         74QYIVpmI3aPv0+HyvyrCBx3QR81vh1O5De859Pd43EK1YPHnphY4t3vPFBqiP8YqpTY
+         KsHLE2+Fbcgoni/qpKJznb6+bh5dkVRDs1d3GoSqsUScF+j4WEgsWWKiW6xPx9MGbj2M
+         vIHA==
+X-Gm-Message-State: AOAM5330A67IZdTlmpG1UUe05BEiS/3rPUAAe/7+DrMUITkXF+DX71o7
+        PlIyA1lEhEPDcGKpIkvmVRY=
+X-Google-Smtp-Source: ABdhPJw6mFG+w4KDhuIF/LkOsGARjWx+5UEh9URRd9WM7jkBUtu2M0tOhMtumtGVnqqsw5jUCAd09g==
+X-Received: by 2002:a17:90b:3850:: with SMTP id nl16mr14999898pjb.10.1639048637182;
+        Thu, 09 Dec 2021 03:17:17 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:18:efec::50b])
+        by smtp.gmail.com with ESMTPSA id d10sm6777113pfl.139.2021.12.09.03.17.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Dec 2021 03:17:16 -0800 (PST)
+Message-ID: <ff4497cc-741a-113c-c6eb-dd5966716863@gmail.com>
+Date:   Thu, 9 Dec 2021 19:17:08 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH V6 4/5] scsi: storvsc: Add Isolation VM support for
+ storvsc driver
+Content-Language: en-US
+To:     Long Li <longli@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 7/8] KVM: x86: Reject fixeds-size Hyper-V hypercalls
- with non-zero "var_cnt"
-In-Reply-To: <20211207220926.718794-8-seanjc@google.com>
-References: <20211207220926.718794-1-seanjc@google.com>
- <20211207220926.718794-8-seanjc@google.com>
-Date:   Thu, 09 Dec 2021 10:55:50 +0100
-Message-ID: <87lf0u3xw9.fsf@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "hch@lst.de" <hch@lst.de>, "joro@8bytes.org" <joro@8bytes.org>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+References: <20211207075602.2452-1-ltykernel@gmail.com>
+ <20211207075602.2452-5-ltykernel@gmail.com>
+ <BY5PR21MB1506535EF9222ED4300C38BBCE709@BY5PR21MB1506.namprd21.prod.outlook.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <BY5PR21MB1506535EF9222ED4300C38BBCE709@BY5PR21MB1506.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
 
-> Reject Hyper-V hypercalls if the guest specifies a non-zero variable size
-> header (var_cnt in KVM) for a hypercall that has a fixed header size.
-> Per the TLFS:
->
->   It is illegal to specify a non-zero variable header size for a
->   hypercall that is not explicitly documented as accepting variable sized
->   input headers. In such a case the hypercall will result in a return
->   code of HV_STATUS_INVALID_HYPERCALL_INPUT.
->
-> Note, at least some of the various DEBUG commands likely aren't allowed
-> to use variable size headers, but the TLFS documentation doesn't clearly
-> state what is/isn't allowed.  Omit them for now to avoid unnecessary
-> breakage.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/hyperv.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index f33a5e890048..522ccd2f0db4 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -2250,14 +2250,14 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->  
->  	switch (hc.code) {
->  	case HVCALL_NOTIFY_LONG_SPIN_WAIT:
-> -		if (unlikely(hc.rep)) {
-> +		if (unlikely(hc.rep || hc.var_cnt)) {
->  			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->  			break;
->  		}
->  		kvm_vcpu_on_spin(vcpu, true);
->  		break;
->  	case HVCALL_SIGNAL_EVENT:
-> -		if (unlikely(hc.rep)) {
-> +		if (unlikely(hc.rep || hc.var_cnt)) {
->  			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->  			break;
->  		}
-> @@ -2267,7 +2267,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->  		fallthrough;	/* maybe userspace knows this conn_id */
->  	case HVCALL_POST_MESSAGE:
->  		/* don't bother userspace if it has no way to handle it */
-> -		if (unlikely(hc.rep || !to_hv_synic(vcpu)->active)) {
-> +		if (unlikely(hc.rep || hc.var_cnt || !to_hv_synic(vcpu)->active)) {
->  			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->  			break;
->  		}
-> @@ -2280,14 +2280,14 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->  				kvm_hv_hypercall_complete_userspace;
->  		return 0;
->  	case HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST:
-> -		if (unlikely(!hc.rep_cnt || hc.rep_idx)) {
-> +		if (unlikely(!hc.rep_cnt || hc.rep_idx || hc.var_cnt)) {
->  			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->  			break;
->  		}
->  		ret = kvm_hv_flush_tlb(vcpu, &hc, false);
->  		break;
->  	case HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE:
-> -		if (unlikely(hc.rep)) {
-> +		if (unlikely(hc.rep || hc.var_cnt)) {
->  			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->  			break;
->  		}
-> @@ -2308,7 +2308,7 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
->  		ret = kvm_hv_flush_tlb(vcpu, &hc, true);
->  		break;
->  	case HVCALL_SEND_IPI:
-> -		if (unlikely(hc.rep)) {
-> +		if (unlikely(hc.rep || hc.var_cnt)) {
->  			ret = HV_STATUS_INVALID_HYPERCALL_INPUT;
->  			break;
->  		}
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+On 12/9/2021 4:00 PM, Long Li wrote:
+>> @@ -1848,21 +1851,22 @@ static int storvsc_queuecommand(struct Scsi_Host
+>> *host, struct scsi_cmnd *scmnd)
+>>   		payload->range.len = length;
+>>   		payload->range.offset = offset_in_hvpg;
+>>
+>> +		sg_count = scsi_dma_map(scmnd);
+>> +		if (sg_count < 0)
+>> +			return SCSI_MLQUEUE_DEVICE_BUSY;
+> Hi Tianyu,
+> 
+> This patch (and this patch series) unconditionally adds code for dealing with DMA addresses for all VMs, including non-isolation VMs.
+> 
+> Does this add performance penalty for VMs that don't require isolation?
+> 
 
--- 
-Vitaly
+Hi Long:
+	scsi_dma_map() in the traditional VM just save sg->offset to
+sg->dma_address and no data copy because swiotlb bounce buffer code
+doesn't work. The data copy only takes place in the Isolation VM and
+swiotlb_force is set. So there is no additional overhead in the 
+traditional VM.
 
+Thanks.
