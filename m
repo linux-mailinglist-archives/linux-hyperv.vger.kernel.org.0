@@ -2,138 +2,309 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E23B46DF7E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Dec 2021 01:32:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB0CD46E3A1
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Dec 2021 09:00:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbhLIAgT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Dec 2021 19:36:19 -0500
-Received: from mail-cusazlp17010007.outbound.protection.outlook.com ([40.93.13.7]:10587
+        id S234190AbhLIIEI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Dec 2021 03:04:08 -0500
+Received: from mail-eus2azlp17010006.outbound.protection.outlook.com ([40.93.12.6]:41189
         "EHLO na01-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229478AbhLIAgT (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Dec 2021 19:36:19 -0500
+        id S229590AbhLIIEG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 9 Dec 2021 03:04:06 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=foNtpmwMlhVzYuAfmK8/HNErvZdUYk3NClT29q4U/lrJbkJkU0CCbkny6AxP087THD2QfyswPdABEfySczDzYCBI2O1duqoFEylxq/gVRm/wuNO4B39neG+gGCiWGcXOg/hcZFGZtC0faZnohJ6roc+uxy02fo7BNiTL1eXndPXlyK8b+k1YYT+p4L5jEDqBDrsNHrZHek6AG/n8gEIBYqVjHflQMbvzFym4hh6JxhnCxKddoxhguKfawPHHBa/O+VkTAV/cCFoI2JeomhVrHdl2O0UtcPTmUU4fO8I/TC0/hpspTmXhSyrKpDZAWuuUlRy3SsAfW5BoOZBW/oiXDw==
+ b=Xbr6dabkWIx7fIib3/lnsHxtolFrVqZ/hrAvhQG1cEN6txZGm8eY9PDRO/Ib8YalDmaUXHX7ZOx1Mem4trr9forMu0R+vAKLDoWD2csh7u61YfISy+Dv/Vossg+guriMq/gThJvwWfP99tPU9Qj236HXlBr64ZwpXGjWApRJP6KTDsE7e6d4jji6TuHJrbWGrhTFYsMqazJ6ofjiPqytL2Sw68/6FZ8exfwZNjQDB74QjBgDlkIoqORw0fUS9jnEdJ5dLmXwAvBGl7VtEzJTJcnAh8eTzhPmFmTjVh7gGkah+lNwCjKKkV9JSmkTnE+breXP2GokIlBjMqpdsvGmdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=otZCjO/nidx0f7EYgzqfUCuW6sv/kHQHi098v9gL1n0=;
- b=IgeAzCbcP78a3N5yI2SgMho7jyf9grWklm0Tlg/g5h0MpFV5w/DuIaEcYy5c7n5EnLYpT1utTGCBgdkinANSQ++bSLG7timmnyeULUtUDiPgBl3KfC7JWWUvOxXbl+hZBZdaDb63p7+oh7KBTznd1kymWruxlgqWk+vmNW17INpv54IVlx0gQ3MI9AMeLiGqOSBbL04PX/OZw1n0cwfWECOdagx/vyWmdR2fB6sqIVMNJKPdATVa1dC52qRRnOGwEWF7y/oPmEBZtfVQGSHEqs9kqadBZ3h1Pa9Rd4L6lPGDZojKFAXW6iBPvzFhcN45RMr7xMX6vQW34slTeiqBOg==
+ bh=8pYfuxx9XaLF/ir07erjUL+58rdUqyRH1Ku1mItBe+Y=;
+ b=TeUELVMizASxh8SSC3W989pEzc7TKnglRnUGDa4H1RXjWZvvVQw1xUlzPQDSwj94QHr0hQjLLMEXTXK5zu381+re2RJ/Zn9WspIw35PgzwWDEMRhGd9HYDh5SdQLWw5bKyYZ1HtqtU26VDD7zF8HekHPe3JIrVaJQRp4C5JWrdcQTWHHNsiRbr3tWTiE027Dw/TCiPaQg+nw9+vJmw+bzQlFfrcbLJMAyH6otMeWXcQS8YT/rKWKbkiltwEZ4oVn49dhaB/FV849GGV1mB3Vggy+PxfYJL9HScRaV9Vg/Che9uMSOFAb4/I9BMoj+WajbCZ9WfPfmKidWpZsGkF/kw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=otZCjO/nidx0f7EYgzqfUCuW6sv/kHQHi098v9gL1n0=;
- b=iBPOEL+0l9YW8eO9Y/FpB1x/a8uKdfjf9hCwNJxtS7LQOMNoRtNrKzZvhyRccFAphhsCs0jwZQzD36EHvFKEx3SEtWEc64Kdvmx3y1vewBb9CsN0Z+P3mqT/y2YTjMcLJrp6Twx0BRBUlx8JB32JRdRvA7Vlr4JJHiiQ12DWVVs=
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
- by SJ0PR21MB1885.namprd21.prod.outlook.com (2603:10b6:a03:291::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4801.7; Thu, 9 Dec
- 2021 00:32:43 +0000
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::9904:180b:e610:fd83]) by BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::9904:180b:e610:fd83%4]) with mapi id 15.20.4755.004; Thu, 9 Dec 2021
- 00:32:43 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+ bh=8pYfuxx9XaLF/ir07erjUL+58rdUqyRH1Ku1mItBe+Y=;
+ b=amvOnwCjDM57AhzF6k2EYrw0qa5H9gHP34EacgGCKZUY+Q4mxwOJEHfpOdrUCIHZjRIOp/Vj+GSgIbidtl/V8PasY8K/bd4mdoKwm8qGY7WUxCvBxeyAOKzcNnrBM/oDZWtHLs1LXpev3dfHEWfrXX6rm5Lo9rLsOeLYilpGsKw=
+Received: from BY5PR21MB1506.namprd21.prod.outlook.com (20.180.35.76) by
+ BYAPR21MB1686.namprd21.prod.outlook.com (52.135.222.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4801.7; Thu, 9 Dec 2021 08:00:26 +0000
+Received: from BY5PR21MB1506.namprd21.prod.outlook.com
+ ([fe80::1db2:a482:d774:93ea]) by BY5PR21MB1506.namprd21.prod.outlook.com
+ ([fe80::1db2:a482:d774:93ea%3]) with mapi id 15.20.4713.004; Thu, 9 Dec 2021
+ 08:00:26 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Tianyu Lan <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
         "davem@davemloft.net" <davem@davemloft.net>,
-        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>
-Subject: RE: [PATCH] net: mana: Fix memory leak in mana_hwc_create_wq
-Thread-Topic: [PATCH] net: mana: Fix memory leak in mana_hwc_create_wq
-Thread-Index: AQHX7IQ6hDfqEUINL02UEFLUNC++MqwpTypw
-Date:   Thu, 9 Dec 2021 00:32:43 +0000
-Message-ID: <BYAPR21MB127035BB4732C65B02EB793EBF709@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <20211208223723.18520-1-jose.exposito89@gmail.com>
-In-Reply-To: <20211208223723.18520-1-jose.exposito89@gmail.com>
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "hch@lst.de" <hch@lst.de>, "joro@8bytes.org" <joro@8bytes.org>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+Subject: RE: [PATCH V6 4/5] scsi: storvsc: Add Isolation VM support for
+ storvsc driver
+Thread-Topic: [PATCH V6 4/5] scsi: storvsc: Add Isolation VM support for
+ storvsc driver
+Thread-Index: AQHX6z/0MdbPZMb29kOxpYi7UQICZqwpzfxg
+Date:   Thu, 9 Dec 2021 08:00:25 +0000
+Message-ID: <BY5PR21MB1506535EF9222ED4300C38BBCE709@BY5PR21MB1506.namprd21.prod.outlook.com>
+References: <20211207075602.2452-1-ltykernel@gmail.com>
+ <20211207075602.2452-5-ltykernel@gmail.com>
+In-Reply-To: <20211207075602.2452-5-ltykernel@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c00fd344-3c21-4465-b076-ac8feef6df8c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-12-09T00:31:25Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=425896c8-41fc-478c-aa48-5910dd9b0060;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2021-12-09T07:56:16Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0f57a678-2e36-4737-6896-08d9baab6a54
-x-ms-traffictypediagnostic: SJ0PR21MB1885:EE_
-x-microsoft-antispam-prvs: <SJ0PR21MB18858141C085BE9006B08338BF709@SJ0PR21MB1885.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:608;
+x-ms-office365-filtering-correlation-id: d6bc52d8-8958-43d0-2845-08d9bae9f59d
+x-ms-traffictypediagnostic: BYAPR21MB1686:EE_
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR21MB168676257E98D71DCAFF639DCE709@BYAPR21MB1686.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NdgueZSFzfLnD/Q7z0J113kkl2PrjYngOJkI8HaTUaeXYAZKGTpIwuMzKQ3ozvqEdsVvxqCdIDH0aC6hhcVstvXqSfTw0D8jqr2jSQRLH/CcjvNk284YKlpIJYh0vdTIpTv/w4lL5q0NmvcX7N8A+ZLuu7mNL9uUMpZK8cnKV7pU3iZ37Be36kZv+NPt1ymbmFpSYhG3NXq++cabUQiE/8XfZNZhFR3IE1g0l/4hTOmRCakEr4aP0P6C1UDrIVi2v/TJEFhjoUlEWGDSZE1IjKEsnr3eK2kLv8TTjATpsY0MlR0yundmKisU6K53k5qY+B+4vOfUt76MC9l9yvQqLT+bdW4Ms+gQKbjtoJcvgSi6ypglBRRgi7rwaBg/VdIPxBPw8KI7gEizV1wdNspf1xKwZ26Dpe/So8szl6FBcXhPA0ozwPIhBWTis4nRePNcBcYKgQgQXT7m/M1rcSKA2P+lHmVvj8XXs0Dul9QM5vdRKGCN7hbakP0ibpuY92qqHLgtE59/Wrz3p7hf32A9YonMUXtxEsE2BKAex1EA9ROSfIEqhaDbZ0z9jwePPzccNkvIjTYbn5mAlNL/7txL4jC8RrARsk3Wq56nARNAG+wFkE1I4U9/NFWYt3HZTQcSCnAdgk1nocGcK/ce4ACOzgx6w7morGLsdkTFMSvZn0iM52HkQscqS0yPXNZvmv0R7ZZmVj2wydGvMnTXk3Hbeg0Cz2QGO0TH8R4eqEfylYml4XhZQM13jp1Qt98njsON
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(82950400001)(4326008)(86362001)(38100700002)(5660300002)(66476007)(64756008)(55016003)(66446008)(52536014)(2906002)(66574015)(71200400001)(7416002)(7696005)(66556008)(38070700005)(122000001)(8936002)(10290500003)(82960400001)(33656002)(9686003)(316002)(508600001)(110136005)(26005)(54906003)(8676002)(4744005)(66946007)(76116006)(6506007)(186003)(6636002)(8990500004)(83380400001)(20210929001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: VqkO6j6Nlp7CadSqBY/stSqWbBjicTpnSfelqHt+KXA+RgeBiD2dTfUNCQHHXAjMQ55jMUqBu7xuDjS76OLm38gCaU18T9tJXBGV/DFXwSZqIncEtOTHQ58DdzZRWwRxZACqMSIXf3FKBpVQ7ARa6eLdY7dg1d4OONYNIRfIqU4//TdRvbixyIU2E0wlKL8Jvc5YrJOS3fqal3NtiVEDoEuVdXrYGuhcd6xxmjFUO2B77zt4+DgjWq69Tg+2S/SkzE4kkJqbbFK+Ky9GP0pRNv3P5ozHXOWEIfQI7Xsgc9tRJfnUnsXY1RK19NnY9kNp7Z2aL79YqJUcuxMK2yCDhBpZRGO5yx27RhxthPVU80oZb6eDhWu37cF2CJAN6JgTiCyt4nHtFunpdxgbezP4U+PO9PLJwwKHbyBT4k//M5O4aZuBQXAECzZriDYjMsbAfDLloJSv12g99VXadrxwPwnsJQS/fKvzpbZQfwMrr2uXWyk0+PLXQ+jBKs6BPDYTjeL2sHf0PkVwBp4LRBKB0P0Cyr7eRtXX0KPNHquyLZKV3YEgVAK5HmHzsj0HMIZAMX55KmudZSA+SK2wcOkmoCWloEW7bqq2Zi15oKVgHg4XEag5YYGsi72IbCihKV3jjA8eD/4rZ0BjOumuiWtQQacNEVywx3yCy5YqwnA08/NP2s90zyzC2qms+Qj9waAz
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1506.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(86362001)(64756008)(122000001)(66476007)(9686003)(4326008)(52536014)(38070700005)(82960400001)(2906002)(82950400001)(921005)(66446008)(8676002)(7696005)(66556008)(10290500003)(38100700002)(186003)(8936002)(5660300002)(26005)(83380400001)(76116006)(66946007)(71200400001)(508600001)(33656002)(8990500004)(6636002)(54906003)(316002)(110136005)(55016003)(6506007)(7406005)(7416002)(20210929001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?ISlBzg8ZqloJQiFOhVTNsPbZIHvbwZrf0L1DPPq2Odc8UMDNFN8jontaLW?=
- =?iso-8859-1?Q?6ydIQ9k138gLKWBcshypJXqqn7hmh6xuYUMndj7GmBAmSE+0PnC8EpvTCF?=
- =?iso-8859-1?Q?OVu90X6OMw/20sV5WZhrKxky7Tup7jHmGVAhDq5CI52LTU6FbGu0G/kriA?=
- =?iso-8859-1?Q?vf/s4AmwRQSYo/cbrFxFMHnfMbiyw2ewXBKtCM4/HeIHMeg1V4Vx6fDE6E?=
- =?iso-8859-1?Q?Cf8jxOVy/uwxUFSyVDlFdCf07FUVdepcaSloq5w5ElRdmNJledLCLb+qM9?=
- =?iso-8859-1?Q?DOSpzvffTjBsszzGsMq7sbazs2Js48s0igTg1xtU3LEesxqXOYqRIFd1Az?=
- =?iso-8859-1?Q?MS30QEPd127wlnDI+B12BWfY9WDhSp8VYbkdPC4N13mp23AO3NiKW3HdPx?=
- =?iso-8859-1?Q?HPZRlR9w7pwUW+Jp94emtTxJNcosKy4k0LpTWakQh2DPnsNArpmScygM5R?=
- =?iso-8859-1?Q?t+iJD+oB4k8GPlaDCMh1soohJrY6oxiWQb6QO9EHtO5ht0HnbR1oY+NHW/?=
- =?iso-8859-1?Q?YbzAZRsCc58BcXw3qdk4Vgg9QcqR1EVzJwqil0fJnofNf3I2yaDg/DxIqt?=
- =?iso-8859-1?Q?OEz7S8ktJ+U8Zzj0pKqEeIK7Kn1hQJjV2exNfN9dwLQJWGva//4kWt6q9i?=
- =?iso-8859-1?Q?whjrM4kpNbyIaXqVI9ACHUGzU5Ma4R5UccvCRY3d9q0huKg57JxXFEKZLY?=
- =?iso-8859-1?Q?vnT/TU16f4rGLLEGD1pxgdmNfHvm4efsOywMGgjf9da1w/BSp/kQu1nBRq?=
- =?iso-8859-1?Q?T985rQPKBAT7KoKCmyDnTy+gLXbWPPNHPir+AJNDMgNDZqh67pmHPbi3vq?=
- =?iso-8859-1?Q?iWxkLZlO+eqISUPWj4w+ST9vEP6aihdqTbOue7Z0pQsOrjKoWxadK0Kd9y?=
- =?iso-8859-1?Q?gBScGsN8Zx5MBeMes9Fto2RePQjYcHNgJWnq4uyzQ/BV0EOsLCof06Atmu?=
- =?iso-8859-1?Q?sciIbEpmU3HNiD3S6i84xlNCSuf46kCANac3dm0urAJjUwZq69YbvXsumM?=
- =?iso-8859-1?Q?ONekOgeULV4w8W52iJUnKa6L7fkEQ0HH1WXvoymgQf2eonk/zE6iXXPg6T?=
- =?iso-8859-1?Q?fuClAWb7cQNSmXNZeGR4GTVyn8KeX3d8RtglCioWM9Kqxfpv4kZZd4PYFp?=
- =?iso-8859-1?Q?6VxrHRXCKhjmSkaM4mLL5PSupami3jH8loClnp3SmbN7svOK2gvBhIMlOi?=
- =?iso-8859-1?Q?eM9ZU+TJyf/RXsBJ3mjLd6OlVkjfdqwcVdyonkhNDFXl8QIFoF79F0DTeW?=
- =?iso-8859-1?Q?kLlWgQiDIFqf4hRh/FqfOG99YRtoHsAN5HVFp6uRIWtJg6k/mUJ7ycC4wf?=
- =?iso-8859-1?Q?8Zsq7qEOgr5IlA++4ftAjlU3kD8gdDxu3Ctrf8efMPRlb8DSF1q8NuUB7z?=
- =?iso-8859-1?Q?S29fp8hfGn8bd/6AbRS5FsWqVYcVQa+3So8cWDr30D6kjSWpr29RBONo/s?=
- =?iso-8859-1?Q?7vMa7DZvBmXbk/rmOYqEbjhpdLmsrbo9UIX/BIe1kMG8QtKaej44jOABim?=
- =?iso-8859-1?Q?8fmMCLsblZQpuO6Qx9elQ2Asr6IejA8FKiNwK54ML6yIC/lENJDX9R7N16?=
- =?iso-8859-1?Q?va8iRZUUbJt53boQmuSQ5o3W1T5vlFxLpUDSvEhHrXPef3wshXIEFXBWfd?=
- =?iso-8859-1?Q?q59zC/73ztTSFtb4iz8guSGo7YS3KtlxC7BBjUFbXzoheJJlftCbo7QmqZ?=
- =?iso-8859-1?Q?Hh5FLb7eUATzcOccP7g=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
+x-ms-exchange-antispam-messagedata-0: Lhjr5R2D8mbk2c2OmkkjVCMlNl+utiNl9e+rNDwguL21XzFeqFbGBcjZxc6O15bcvQB4T2UDeY/M6AsnqvqMSKLYAp4E8WjW3Xu0h8Oy3jFCu30pKHvimghhR5w9Ra3Jbr++RTo+/v9taNdBD2n/eg4eOtu3qOTgX3WWlUP9r0BW0nT+7/BTKCKVRaimiZS4FETigK+Dx9Dn5xCIcgVG/hZtfwsGYHxbnNszS+AXTyZFyRDvfTDoMh5o1miL7s/UqetvtfWvDakud06nl7qtjzwyRWWkMzIXCQkk4WsM/lfPIaF93MJEGUj/+YWh90gOFTcgkOhl6jZQ696lgBpUSQVUqZ2WRj8l05Cf+589tzgpZFmemJ9zFOVvFk+GJVhifapSHx9owmVNE0wpyWvMATyDKjASfF4y/PdCsK3SUmHriSOYRtstE0D/nn35ePzC
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f57a678-2e36-4737-6896-08d9baab6a54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2021 00:32:43.4376
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1506.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6bc52d8-8958-43d0-2845-08d9bae9f59d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2021 08:00:25.9444
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r5NBUXYqGvcUXdhER/hrtskbgLjVdXosFXRQ8Tc71hIANdsx3izlLZ0xI1uvVtLAZFrHKRAZP4RccoSUSR7SeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1885
+X-MS-Exchange-CrossTenant-userprincipalname: t7aAFTXlz0zNjvj2qVhv59UfE/+fVp4swHV262b9vwMpDk+cXWj4wmrqMaqei5iXqw7vJmQqVH1vb9giytQQwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1686
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Jos=E9 Exp=F3sito <jose.exposito89@gmail.com>
-> Sent: Wednesday, December 8, 2021 2:37 PM
+> Subject: [PATCH V6 4/5] scsi: storvsc: Add Isolation VM support for storv=
+sc driver
 >=20
-> If allocating the DMA buffer fails, mana_hwc_destroy_wq was called
-> without previously storing the pointer to the queue.
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 >=20
-> In order to avoid leaking the pointer to the queue, store it as soon as
-> it is allocated.
+> In Isolation VM, all shared memory with host needs to mark visible to hos=
+t via
+> hvcall. vmbus_establish_gpadl() has already done it for storvsc rx/tx rin=
+g buffer.
+> The page buffer used by vmbus_sendpacket_
+> mpb_desc() still needs to be handled. Use DMA API(scsi_dma_map/unmap) to
+> map these memory during sending/receiving packet and return swiotlb bounc=
+e
+> buffer dma address. In Isolation VM, swiotlb  bounce buffer is marked to =
+be
+> visible to host and the swiotlb force mode is enabled.
 >=20
-> Addresses-Coverity-ID: 1484720 ("Resource leak")
-> Signed-off-by: Jos=E9 Exp=F3sito <jose.exposito89@gmail.com>
+> Set device's dma min align mask to HV_HYP_PAGE_SIZE - 1 in order to keep =
+the
+> original data offset in the bounce buffer.
+>=20
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  drivers/hv/vmbus_drv.c     |  4 ++++
+>  drivers/scsi/storvsc_drv.c | 37 +++++++++++++++++++++----------------
+>  include/linux/hyperv.h     |  1 +
+>  3 files changed, 26 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c index
+> 392c1ac4f819..ae6ec503399a 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/random.h>
+>  #include <linux/kernel.h>
+>  #include <linux/syscore_ops.h>
+> +#include <linux/dma-map-ops.h>
+>  #include <clocksource/hyperv_timer.h>
+>  #include "hyperv_vmbus.h"
+>=20
+> @@ -2078,6 +2079,7 @@ struct hv_device *vmbus_device_create(const guid_t
+> *type,
+>  	return child_device_obj;
+>  }
+>=20
+> +static u64 vmbus_dma_mask =3D DMA_BIT_MASK(64);
+>  /*
+>   * vmbus_device_register - Register the child device
+>   */
+> @@ -2118,6 +2120,8 @@ int vmbus_device_register(struct hv_device
+> *child_device_obj)
+>  	}
+>  	hv_debug_add_dev_dir(child_device_obj);
+>=20
+> +	child_device_obj->device.dma_mask =3D &vmbus_dma_mask;
+> +	child_device_obj->device.dma_parms =3D &child_device_obj->dma_parms;
+>  	return 0;
+>=20
+>  err_kset_unregister:
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c inde=
+x
+> 20595c0ba0ae..ae293600d799 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/device.h>
+>  #include <linux/hyperv.h>
+>  #include <linux/blkdev.h>
+> +#include <linux/dma-mapping.h>
+> +
+>  #include <scsi/scsi.h>
+>  #include <scsi/scsi_cmnd.h>
+>  #include <scsi/scsi_host.h>
+> @@ -1336,6 +1338,7 @@ static void storvsc_on_channel_callback(void
+> *context)
+>  					continue;
+>  				}
+>  				request =3D (struct storvsc_cmd_request
+> *)scsi_cmd_priv(scmnd);
+> +				scsi_dma_unmap(scmnd);
+>  			}
+>=20
+>  			storvsc_on_receive(stor_device, packet, request); @@
+> -1749,7 +1752,6 @@ static int storvsc_queuecommand(struct Scsi_Host *host=
+,
+> struct scsi_cmnd *scmnd)
+>  	struct hv_host_device *host_dev =3D shost_priv(host);
+>  	struct hv_device *dev =3D host_dev->dev;
+>  	struct storvsc_cmd_request *cmd_request =3D scsi_cmd_priv(scmnd);
+> -	int i;
+>  	struct scatterlist *sgl;
+>  	unsigned int sg_count;
+>  	struct vmscsi_request *vm_srb;
+> @@ -1831,10 +1833,11 @@ static int storvsc_queuecommand(struct Scsi_Host
+> *host, struct scsi_cmnd *scmnd)
+>  	payload_sz =3D sizeof(cmd_request->mpb);
+>=20
+>  	if (sg_count) {
+> -		unsigned int hvpgoff, hvpfns_to_add;
+>  		unsigned long offset_in_hvpg =3D offset_in_hvpage(sgl->offset);
+>  		unsigned int hvpg_count =3D HVPFN_UP(offset_in_hvpg + length);
+> -		u64 hvpfn;
+> +		struct scatterlist *sg;
+> +		unsigned long hvpfn, hvpfns_to_add;
+> +		int j, i =3D 0;
+>=20
+>  		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
+>=20
+> @@ -1848,21 +1851,22 @@ static int storvsc_queuecommand(struct Scsi_Host
+> *host, struct scsi_cmnd *scmnd)
+>  		payload->range.len =3D length;
+>  		payload->range.offset =3D offset_in_hvpg;
+>=20
+> +		sg_count =3D scsi_dma_map(scmnd);
+> +		if (sg_count < 0)
+> +			return SCSI_MLQUEUE_DEVICE_BUSY;
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Hi Tianyu,
+
+This patch (and this patch series) unconditionally adds code for dealing wi=
+th DMA addresses for all VMs, including non-isolation VMs.
+
+Does this add performance penalty for VMs that don't require isolation?
+
+Long
+
+>=20
+> -		for (i =3D 0; sgl !=3D NULL; sgl =3D sg_next(sgl)) {
+> +		for_each_sg(sgl, sg, sg_count, j) {
+>  			/*
+> -			 * Init values for the current sgl entry. hvpgoff
+> -			 * and hvpfns_to_add are in units of Hyper-V size
+> -			 * pages. Handling the PAGE_SIZE !=3D
+> HV_HYP_PAGE_SIZE
+> -			 * case also handles values of sgl->offset that are
+> -			 * larger than PAGE_SIZE. Such offsets are handled
+> -			 * even on other than the first sgl entry, provided
+> -			 * they are a multiple of PAGE_SIZE.
+> +			 * Init values for the current sgl entry. hvpfns_to_add
+> +			 * is in units of Hyper-V size pages. Handling the
+> +			 * PAGE_SIZE !=3D HV_HYP_PAGE_SIZE case also handles
+> +			 * values of sgl->offset that are larger than PAGE_SIZE.
+> +			 * Such offsets are handled even on other than the first
+> +			 * sgl entry, provided they are a multiple of PAGE_SIZE.
+>  			 */
+> -			hvpgoff =3D HVPFN_DOWN(sgl->offset);
+> -			hvpfn =3D page_to_hvpfn(sg_page(sgl)) + hvpgoff;
+> -			hvpfns_to_add =3D	HVPFN_UP(sgl->offset + sgl-
+> >length) -
+> -						hvpgoff;
+> +			hvpfn =3D HVPFN_DOWN(sg_dma_address(sg));
+> +			hvpfns_to_add =3D HVPFN_UP(sg_dma_address(sg) +
+> +						 sg_dma_len(sg)) - hvpfn;
+>=20
+>  			/*
+>  			 * Fill the next portion of the PFN array with @@ -
+> 1872,7 +1876,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host,
+> struct scsi_cmnd *scmnd)
+>  			 * the PFN array is filled.
+>  			 */
+>  			while (hvpfns_to_add--)
+> -				payload->range.pfn_array[i++] =3D	hvpfn++;
+> +				payload->range.pfn_array[i++] =3D hvpfn++;
+>  		}
+>  	}
+>=20
+> @@ -2016,6 +2020,7 @@ static int storvsc_probe(struct hv_device *device,
+>  	stor_device->vmscsi_size_delta =3D sizeof(struct vmscsi_win8_extension)=
+;
+>  	spin_lock_init(&stor_device->lock);
+>  	hv_set_drvdata(device, stor_device);
+> +	dma_set_min_align_mask(&device->device, HV_HYP_PAGE_SIZE - 1);
+>=20
+>  	stor_device->port_number =3D host->host_no;
+>  	ret =3D storvsc_connect_to_vsp(device, storvsc_ringbuffer_size, is_fc);
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h index
+> 1f037e114dc8..74f5e92f91a0 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -1261,6 +1261,7 @@ struct hv_device {
+>=20
+>  	struct vmbus_channel *channel;
+>  	struct kset	     *channels_kset;
+> +	struct device_dma_parameters dma_parms;
+>=20
+>  	/* place holder to keep track of the dir for hv device in debugfs */
+>  	struct dentry *debug_dir;
+> --
+> 2.25.1
 
