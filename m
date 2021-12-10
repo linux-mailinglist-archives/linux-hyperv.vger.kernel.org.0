@@ -2,60 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8D1E46FFC0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Dec 2021 12:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E156947018B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Dec 2021 14:25:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238113AbhLJLa2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 10 Dec 2021 06:30:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41902 "EHLO
+        id S238319AbhLJN32 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 10 Dec 2021 08:29:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234694AbhLJLa1 (ORCPT
+        with ESMTP id S230479AbhLJN31 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 10 Dec 2021 06:30:27 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04985C061746;
-        Fri, 10 Dec 2021 03:26:53 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id r5so7806846pgi.6;
-        Fri, 10 Dec 2021 03:26:52 -0800 (PST)
+        Fri, 10 Dec 2021 08:29:27 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEDAC061746;
+        Fri, 10 Dec 2021 05:25:52 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id 8so8489707pfo.4;
+        Fri, 10 Dec 2021 05:25:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=oNMML2GUfpRe4KuxNkgjDIBCEtPq+5IBWg/SvCiB1ac=;
-        b=R6WJg/vOJke+Pss70tPbsPfFF/c3xP//0lNWb4hUhYl4MWKxQP2AhRoJk4Y5bJnZp1
-         KlS/DCpvqpFeiAygTjN3XgOkI4wsSUC3pOrCoqxfXll66oNqjjEsxdBGCU8QLOGpiVFR
-         LWobxq8LFE1rEMc9YMoXunbOVZdz+3AjoVc8Kg1y1K0br5h1EYdR+RZpCv+3N4AQ+bZY
-         pcM/MyWJuqJ15I3uei6a2bY9gaYAbKfpGIxypgOKVezQsvr67voKcAS9cTyw+4bd89zI
-         U6kMYbLLJuqyUsx1sojCQ4Giu6rXvLiH2AL0GvH1cco0m27EzFRtcTcBh4LPEZ09Zf0b
-         hZFA==
+        bh=uqbMD53C4ItO9uYDsVUp6EzSCFXpBRENU7IWZcPSA4M=;
+        b=DYNhmkDVXoEZft9BS7jFUM1vYYZ9YvKi4muEhJQLHJqiGbbJk0Iumlz2I6fT8+haze
+         +MHAL/pcdD4GLXyqCU4Eprb2eJjd2mf5vjZ8DzEVupN2/zan52H0xynI+4aaWNtuVWQR
+         u3FFiz7DqcRVKU3YNjfbYFUBd9ISYneZ0CFIwjjQz4wdmgu3nHHTvURDoHnr8+4N58O0
+         +eACuj6LixZk6F8b3vkNTwo6yKMoV83F9BRq8aU/+w55tia+vJpE3bD21MEPY3j+2BaE
+         9dLxiZxTDsTYe+1zqNUFCvJlKUuDFeGgSZNtGgd0+OHn+cZQKKeYxLE0Si0RPs0NHEOx
+         16Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=oNMML2GUfpRe4KuxNkgjDIBCEtPq+5IBWg/SvCiB1ac=;
-        b=oe7DT9hup1Ybt4K9Aw9x06z2lhJGiSASd1LxlOnE2k9YU4hB0jN/LiknrD8f2M/6AK
-         7iS8Sm46A5/1wVwUtFD6107X5ucOVPCXTy/FiU6uaVQdd4zXZ9UTVUI7WV8uNCPIzGzp
-         mrpLvHAkEs+yS09Y91czkXNubyyZ1f/tuFAfhmCLS984zYwU4EGkkLHjvK/BVgDmnZVm
-         6wtpJz4QBmrvtiTOGQDfgoAzkX+0o1lnP23vXGKmY6qYuhvKVH2xm9JIuvwXWrkouDT6
-         1ZwrP+NQoCCdy9KqByzC3tyZDdv6e8Jo+Up+/HJFFk80TZC3gyxADcKlaKkPBjDZzJuG
-         ngXw==
-X-Gm-Message-State: AOAM530xXfVP52+SZ3J9blf3A0aqSjz4GJiqQOovt0Bzr+SVXxnEvPW6
-        9sTbn5ljHkE46HgFsdLAIOw=
-X-Google-Smtp-Source: ABdhPJwHRIt+DqTuxKr3Ov92YpyxCIqQ63650YjNIjSjqT5l4iFIeahNGLj6YxvmmYkMJGFzIrL5ng==
-X-Received: by 2002:a63:d753:: with SMTP id w19mr5091188pgi.174.1639135612496;
-        Fri, 10 Dec 2021 03:26:52 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
-        by smtp.gmail.com with ESMTPSA id on6sm16041313pjb.47.2021.12.10.03.26.42
+        bh=uqbMD53C4ItO9uYDsVUp6EzSCFXpBRENU7IWZcPSA4M=;
+        b=dmc4mvED9DO2IiGQtPKxe9QzVvaXQIfLeMof9VkeuGyVFRFdjppS/s1aIt8mpkbPr8
+         NKo67xR/iq9uLuIzmBhjw+e0rOVpstWsEot8jz7IFdz+++0phNgXtylpbxk/04wKWXnJ
+         UKYnR5QbR9WC2JxMhsOk96nMj+VzafpIZWYYRebPNAvoZTCjPu9BgUNdFe+8F6kaEIuH
+         8D+NkRqh7Ie5EQiAgRijSg4qpWAZioOKoeiYRatkFLxhrT4GXk14EVd+hsFZXW5cXsxD
+         q86ktT2AICAQH8jeIAQdt4fv053tSo92nhVRSf2ljLB/BJrhGSHpq2DmwROTPQ+xHzpo
+         nPZA==
+X-Gm-Message-State: AOAM530IxhxH/i6HBlmdp4AR/pXelH+kAlVmt1QkYvSRdeRyKxC38SA/
+        cn0p0UkBgogF4Ex3yVSersY=
+X-Google-Smtp-Source: ABdhPJw/w6j8JzL1Fx/z+ArF/5BNciB/RRrnV3JnjQfO14coUZUSUS2ONAfIBFDYLQpvqjdNq3HtQA==
+X-Received: by 2002:a62:1708:0:b0:4a7:e068:b121 with SMTP id 8-20020a621708000000b004a7e068b121mr17936120pfx.61.1639142752136;
+        Fri, 10 Dec 2021 05:25:52 -0800 (PST)
+Received: from [10.10.156.113] ([167.220.232.113])
+        by smtp.gmail.com with ESMTPSA id c17sm1481858pfc.163.2021.12.10.05.25.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Dec 2021 03:26:52 -0800 (PST)
-Message-ID: <e4125f7b-fdd9-dc0d-63d0-93d841dbb3c3@gmail.com>
-Date:   Fri, 10 Dec 2021 19:26:40 +0800
+        Fri, 10 Dec 2021 05:25:51 -0800 (PST)
+Message-ID: <4d60fcd1-97df-f4a1-1b79-643e65f66b3e@gmail.com>
+Date:   Fri, 10 Dec 2021 21:25:40 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH V6 2/5] x86/hyper-v: Add hyperv Isolation VM check in the
- cc_platform_has()
+Subject: Re: [PATCH V6 3/5] hyper-v: Enable swiotlb bounce buffer for
+ Isolation VM
 Content-Language: en-US
 To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
@@ -91,77 +91,68 @@ Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
         "dave.hansen@intel.com" <dave.hansen@intel.com>
 References: <20211207075602.2452-1-ltykernel@gmail.com>
- <20211207075602.2452-3-ltykernel@gmail.com>
- <MWHPR21MB1593F014EC440F5DEDCFDDFFD7709@MWHPR21MB1593.namprd21.prod.outlook.com>
+ <20211207075602.2452-4-ltykernel@gmail.com>
+ <MWHPR21MB159359667085776793988EACD7709@MWHPR21MB1593.namprd21.prod.outlook.com>
 From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <MWHPR21MB1593F014EC440F5DEDCFDDFFD7709@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB159359667085776793988EACD7709@MWHPR21MB1593.namprd21.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/10/2021 4:38 AM, Michael Kelley (LINUX) wrote:
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Monday, December 6, 2021 11:56 PM
+On 12/10/2021 4:09 AM, Michael Kelley (LINUX) wrote:
+>> @@ -319,8 +320,16 @@ static void __init ms_hyperv_init_platform(void)
+>>   		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
+>>   			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
 >>
->> Hyper-V provides Isolation VM which has memory encrypt support. Add
->> hyperv_cc_platform_has() and return true for check of GUEST_MEM_ENCRYPT
->> attribute.
->>
->> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
->> ---
->> Change since v3:
->> 	* Change code style of checking GUEST_MEM attribute in the
->> 	  hyperv_cc_platform_has().
->> ---
->>   arch/x86/kernel/cc_platform.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
->> index 03bb2f343ddb..47db88c275d5 100644
->> --- a/arch/x86/kernel/cc_platform.c
->> +++ b/arch/x86/kernel/cc_platform.c
->> @@ -11,6 +11,7 @@
->>   #include <linux/cc_platform.h>
->>   #include <linux/mem_encrypt.h>
->>
->> +#include <asm/mshyperv.h>
->>   #include <asm/processor.h>
->>
->>   static bool __maybe_unused intel_cc_platform_has(enum cc_attr attr)
->> @@ -58,9 +59,16 @@ static bool amd_cc_platform_has(enum cc_attr attr)
->>   #endif
->>   }
->>
->> +static bool hyperv_cc_platform_has(enum cc_attr attr)
->> +{
->> +	return attr == CC_ATTR_GUEST_MEM_ENCRYPT;
->> +}
->>
->>   bool cc_platform_has(enum cc_attr attr)
->>   {
->> +	if (hv_is_isolation_supported())
->> +		return hyperv_cc_platform_has(attr);
+>> -		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP)
+>> +		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
+>>   			static_branch_enable(&isolation_type_snp);
+>> +			swiotlb_unencrypted_base = ms_hyperv.shared_gpa_boundary;
+>> +		}
 >> +
->>   	if (sme_me_mask)
->>   		return amd_cc_platform_has(attr);
+>> +		/*
+>> +		 * Enable swiotlb force mode in Isolation VM to
+>> +		 * use swiotlb bounce buffer for dma transaction.
+>> +		 */
+>> +		swiotlb_force = SWIOTLB_FORCE;
+> I'm good with this approach that directly updates the swiotlb settings here
+> 
+> rather than in IOMMU initialization code.  It's a lot more straightforward.
+> 
+> However, there's an issue if building for X86_32 without PAE, in that the
+> swiotlb module may not be built, resulting in compile and link errors.  The
+> swiotlb.h file needs to be updated to provide a stub function for
+> swiotlb_update_mem_attributes().   swiotlb_unencrypted_base probably
+> needs wrapper functions to get/set it, which can be stubs when
+> CONFIG_SWIOTLB is not set.  swiotlb_force is a bit of a mess in that it already
+> has a stub definition that assumes it will only be read, and not set.  A bit of
+> thinking will be needed to sort that out.
+
+It's ok to fix the issue via selecting swiotlb when CONFIG_HYPERV is
+set?
+
+> 
+>>   	}
 >>
-> 
-> Throughout Linux kernel code, there are about 20 calls to cc_platform_has()
-> with CC_ATTR_GUEST_MEM_ENCRYPT as the argument.  The original code
-> (from v1 of this patch set) only dealt with the call in sev_setup_arch().   But
-> with this patch, all the other calls that previously returned "false" will now
-> return "true" in a Hyper-V Isolated VM.  I didn't try to analyze all these other
-> calls, so I think there's an open question about whether this is the behavior
-> we want.
-> 
-
-CC_ATTR_GUEST_MEM_ENCRYPT is for SEV support so far. Hyper-V Isolation
-VM is based on SEV or software memory encrypt. Most checks can be 
-reused. The difference is that SEV code use encrypt bit in the page
-table to encrypt and decrypt memory while Hyper-V uses vTOM. But the sev
-memory encrypt mask "sme_me_mask" is unset in the Hyper-V Isolation VM
-where claims sev and sme are unsupported. The rest of checks for mem enc
-bit are still safe. So reuse CC_ATTR_GUEST_MEM_ENCRYPT for Hyper-V.
-
-
+>>   	if (hv_max_functions_eax >= HYPERV_CPUID_NESTED_FEATURES) {
+>> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+>> index b823311eac79..1f037e114dc8 100644
+>> --- a/include/linux/hyperv.h
+>> +++ b/include/linux/hyperv.h
+>> @@ -1726,6 +1726,14 @@ int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
+>>   int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
+>>   				void (*block_invalidate)(void *context,
+>>   							 u64 block_mask));
+>> +#if IS_ENABLED(CONFIG_HYPERV)
+>> +int __init hyperv_swiotlb_detect(void);
+>> +#else
+>> +static inline int __init hyperv_swiotlb_detect(void)
+>> +{
+>> +	return 0;
+>> +}
+>> +#endif
+> I don't think hyperv_swiotlb_detect() is used any longer, so this change
+> should be dropped.
+Yes, will update.
