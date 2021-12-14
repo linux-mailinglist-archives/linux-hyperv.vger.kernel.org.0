@@ -2,107 +2,258 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05C48473C08
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Dec 2021 05:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E44E947419D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Dec 2021 12:41:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232282AbhLNEhI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Dec 2021 23:37:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231237AbhLNEhI (ORCPT
+        id S229619AbhLNLlD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Dec 2021 06:41:03 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:58130 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229554AbhLNLlC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Dec 2021 23:37:08 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9985BC061574;
-        Mon, 13 Dec 2021 20:37:07 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id u17so12696612plg.9;
-        Mon, 13 Dec 2021 20:37:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:from:subject:to:cc
-         :references:content-language:in-reply-to:content-transfer-encoding;
-        bh=w4jF6pVlAr6sHba/AXtkTZyGmAkMDj6qQwAZlJ+UdLM=;
-        b=OO8cW6CQyLhwtJRdZo64ynH6YeKqGhXzDwlR96DxhxE8Bz5kntawlo3U2eaGVD6CHI
-         QwlLfqlppyoVymnRsSdhwAbcwoI1D7iwAn/eC7pS7Pj0K1VfQQPlhUUd5xy+WbCBAYDe
-         CQOlcjQSfsQlxLiRuxOWyrkrVDXvfEueSrvOQHwoCOK3vTOpot3KDNKHU3PW7aUlZOQX
-         MN7v7ONz+WWwWOXpsViMSrzGNo6sSDbOMGzJD6Qa0xvRGJgAgkSVClBY32rRHfyCo6A3
-         FQ9HQBcHZRpZZlCrmfLicfdlKItAAolAJVEfIXHGJEJMbZjO/ZWcO9H4hEoGAYqHbkbf
-         SDXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:from
-         :subject:to:cc:references:content-language:in-reply-to
-         :content-transfer-encoding;
-        bh=w4jF6pVlAr6sHba/AXtkTZyGmAkMDj6qQwAZlJ+UdLM=;
-        b=pbj4RHfLXR3vaJ3f+39BXabS7GGoegOvJW1Ap5kq13Pk6w6DnFiMxUpPDIRwrvsRsY
-         5s+2RAukrCs8yQQWCUQZGp88R9cLYVsgS23iw1ZGIfIZdFDCU846ucL9wrZTHaeM9nQl
-         0kboFqFGPME3m43Sfmv+plrPE/6ZITyuHk7jDf7YQZH13oJdkljxGQ5HGD0zvPnVWdUc
-         DLvlsRR8xaFYxFtE5d7I5yg4Ltdx7vAB+fcVYRNGxVdAQafigf7CSRpoPnppNRkZnxe4
-         Ddd1foBipd2FNWYB6sXlNxeGpFR/jA7xIrTq4SsLbpXhCMQ0w7WdAqYH5IBC2Rz+2lmD
-         cLIw==
-X-Gm-Message-State: AOAM532KccntHo/TuVgNVxULWDszCHcxYHIjZNVbhiTFg8EzeG9f6w9I
-        b5vLw2rclTqpF2o0LeAcwMw=
-X-Google-Smtp-Source: ABdhPJw8uDA1QXzEpygmuAAZVoXz6dprKQR+3bFuLs1n/mm4f5XuNE+IqFlivIE3110OJ/+FyvUzTA==
-X-Received: by 2002:a17:90b:4b86:: with SMTP id lr6mr2944595pjb.98.1639456626921;
-        Mon, 13 Dec 2021 20:37:06 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::50b? ([2404:f801:9000:1a:efea::50b])
-        by smtp.gmail.com with ESMTPSA id rm10sm812022pjb.29.2021.12.13.20.36.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Dec 2021 20:37:06 -0800 (PST)
-Message-ID: <3243ff22-f6c8-b7cd-26b7-6e917e274a7c@gmail.com>
-Date:   Tue, 14 Dec 2021 12:36:56 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-From:   Tianyu Lan <ltykernel@gmail.com>
-Subject: Re: [PATCH V7 1/5] swiotlb: Add swiotlb bounce buffer remap function
- for HV IVM
-To:     Dave Hansen <dave.hansen@intel.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, davem@davemloft.net, kuba@kernel.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
-        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        thomas.lendacky@amd.com, Tianyu.Lan@microsoft.com,
-        michael.h.kelley@microsoft.com
-Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
-        hch@lst.de, joro@8bytes.org, parri.andrea@gmail.com
-References: <20211213071407.314309-1-ltykernel@gmail.com>
- <20211213071407.314309-2-ltykernel@gmail.com>
- <198e9243-abca-b23e-0e8e-8581a7329ede@intel.com>
-Content-Language: en-US
-In-Reply-To: <198e9243-abca-b23e-0e8e-8581a7329ede@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 14 Dec 2021 06:41:02 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C472EB818A0;
+        Tue, 14 Dec 2021 11:41:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 607E7C34605;
+        Tue, 14 Dec 2021 11:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639482059;
+        bh=Y9cU4Rjmw8f1R7hT/PwYwvdBTVfEZRq/z2i+vhoiIkU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lvmwOe/fvHGCs0jnEH6qfpLn+9h0LVYxfzDbIsNaHPQoR8FMrseXXi4g3ARhxOKOS
+         uNQbXqM5OG5iMsJKrqa9iSPzK1Idi7P59bGaEchraKfIZNiBwn5nuUyx/BoEDOw/Lb
+         n71GDBVD9vO2F82tGIHqeEgAayDxylDjr1A9ip+YNc7qCreW2+zvx6UnBpAtrFE8Yv
+         Zflp3EATMqJ6Z1TYbegado4fwsWzZ06ni8dcCoMZO1tw4q5z8g2YJ6ZmzAP9fTDwxD
+         WTEr13dVTgr9xtyZtyX2C7X66J95VaJ3fwYqqYRpHWMBFCnqKOtvPJzrlKOGsph2wu
+         oi+XFENesCw3Q==
+Received: from cfbb000407.r.cam.camfibre.uk ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mx6Az-00C21t-HU; Tue, 14 Dec 2021 11:40:57 +0000
+Date:   Tue, 14 Dec 2021 11:40:57 +0000
+Message-ID: <875yrrjtx2.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v6 2/2] arm64: PCI: hv: Add support for Hyper-V vPCI
+In-Reply-To: <BN8PR21MB114040F48FB7F3988BA95032C0759@BN8PR21MB1140.namprd21.prod.outlook.com>
+References: <1637225490-2213-1-git-send-email-sunilmut@linux.microsoft.com>
+        <1637225490-2213-3-git-send-email-sunilmut@linux.microsoft.com>
+        <875yso6tbi.wl-maz@kernel.org>
+        <BN8PR21MB114040F48FB7F3988BA95032C0759@BN8PR21MB1140.namprd21.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: sunilmut@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/14/2021 12:45 AM, Dave Hansen wrote:
-> On 12/12/21 11:14 PM, Tianyu Lan wrote:
->> In Isolation VM with AMD SEV, bounce buffer needs to be accessed via
->> extra address space which is above shared_gpa_boundary (E.G 39 bit
->> address line) reported by Hyper-V CPUID ISOLATION_CONFIG. The access
->> physical address will be original physical address + shared_gpa_boundary.
->> The shared_gpa_boundary in the AMD SEV SNP spec is called virtual top of
->> memory(vTOM). Memory addresses below vTOM are automatically treated as
->> private while memory above vTOM is treated as shared.
+On Tue, 14 Dec 2021 00:46:59 +0000,
+Sunil Muthuswamy <sunilmut@microsoft.com> wrote:
 > 
-> This seems to be independently reintroducing some of the SEV
-> infrastructure.  Is it really OK that this doesn't interact at all with
-> any existing SEV code?
+> On Friday, November 19, 2021 7:47 AM,
+> Marc Zyngier <maz@kernel.org> wrote:
 > 
-> For instance, do we need a new 'swiotlb_unencrypted_base', or should
-> this just be using sme_me_mask somehow?
+> [nip..]
+> 
+> > > +static int hv_pci_vec_alloc_device_irq(struct irq_domain *domain,
+> > > +				       unsigned int nr_irqs,
+> > > +				       irq_hw_number_t *hwirq)
+> > > +{
+> > > +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> > > +	unsigned int index;
+> > > +
+> > > +	/* Find and allocate region from the SPI bitmap */
+> > > +	mutex_lock(&chip_data->map_lock);
+> > > +	index = bitmap_find_free_region(chip_data->spi_map,
+> > > +					HV_PCI_MSI_SPI_NR,
+> > > +					get_count_order(nr_irqs));
+> > > +	mutex_unlock(&chip_data->map_lock);
+> > > +	if (index < 0)
+> > > +		return -ENOSPC;
+> > > +
+> > > +	*hwirq = index + HV_PCI_MSI_SPI_START;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
+> > > +					   unsigned int virq,
+> > > +					   irq_hw_number_t hwirq)
+> > > +{
+> > > +	struct irq_fwspec fwspec;
+> > > +
+> > > +	fwspec.fwnode = domain->parent->fwnode;
+> > > +	fwspec.param_count = 2;
+> > > +	fwspec.param[0] = hwirq;
+> > > +	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+> > > +
+> > > +	return irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
+> > 
+> > I think you are missing the actual edge configuration here. Since the
+> > interrupt specifier doesn't come from either DT or ACPI, nobody will
+> > set the trigger type, and you have to do it yourself here. At the
+> > moment, you will get whatever is in the GIC configuration.
+> > 
+> 
+> I see, thanks. So, just a call of irq_set_irq_type(IRQ_TYPE_EDGE_RISING)?
 
-Hi Dave:
-        Thanks for your review. Hyper-V provides a para-virtualized
-confidential computing solution based on the AMD SEV function and not
-expose sev&sme capabilities to guest. So sme_me_mask is unset in the
-Hyper-V Isolation VM. swiotlb_unencrypted_base is more general solution
-to handle such case of different address space for encrypted and
-decrypted memory and other platform also may reuse it.
+You are already deep in the irq stack, and calling a high level
+function here is a pretty bad idea. You'll need something like:
+
+	struct irq_data *d;
+	d = irq_domain_get_irq_data(domain->parent, virq);
+	d->chip->irq_set_type(d, IRQ_TYPE_EDGE_RISING);
+
+on the return from the parent allocation.
+
+> > > +}
+> > > +
+> > > +static int hv_pci_vec_irq_domain_alloc(struct irq_domain *domain,
+> > > +				       unsigned int virq, unsigned int nr_irqs,
+> > > +				       void *args)
+> > > +{
+> > > +	irq_hw_number_t hwirq;
+> > > +	unsigned int i;
+> > > +	int ret;
+> > > +
+> > > +	ret = hv_pci_vec_alloc_device_irq(domain, nr_irqs, &hwirq);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	for (i = 0; i < nr_irqs; i++) {
+> > > +		ret = hv_pci_vec_irq_gic_domain_alloc(domain, virq + i,
+> > > +						      hwirq + i);
+> > > +		if (ret)
+> > > +			goto free_irq;
+> > > +
+> > > +		ret = irq_domain_set_hwirq_and_chip(domain, virq + i,
+> > > +						    hwirq + i,
+> > > +						    &hv_arm64_msi_irq_chip,
+> > > +						    domain->host_data);
+> > > +		if (ret)
+> > > +			goto free_irq;
+> > > +
+> > > +		pr_debug("pID:%d vID:%u\n", (int)(hwirq + i), virq + i);
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +
+> > > +free_irq:
+> > > +	hv_pci_vec_irq_domain_free(domain, virq, nr_irqs);
+> > > +
+> > > +	return ret;
+> > 
+> > How about the interrupts that have already been allocated?
+> 
+> Not sure I am fully following. If you are referring to the failure
+> path and the interrupts that were allocated, then I am calling '
+> hv_pci_vec_irq_domain_free' which should free the interrupts from
+> the bitmap and the parent irq domain.  Can you please clarify?
+
+I see several problems on the failure path:
+
+- You are freeing more than you actually configured. Not necessary a
+  big deal, but still (it is a common issue, and the core deals with
+  it)
+
+- hv_pci_vec_irq_domain_free() calls irq_domain_reset_irq_data() on a
+  single pointer. Why? Either you wipe them all, or you don't.
+
+>  
+> > 
+> > > +}
+> > > +
+> > > +/*
+> > > + * Pick the first online cpu as the irq affinity that can be temporarily used
+> > > + * for composing MSI from the hypervisor. GIC will eventually set the right
+> > > + * affinity for the irq and the 'unmask' will retarget the interrupt to that
+> > > + * cpu.
+> > > + */
+> > > +static int hv_pci_vec_irq_domain_activate(struct irq_domain *domain,
+> > > +					  struct irq_data *irqd, bool reserve)
+> > > +{
+> > > +	int cpu = cpumask_first(cpu_online_mask);
+> > > +
+> > > +	irq_data_update_effective_affinity(irqd, cpumask_of(cpu));
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct irq_domain_ops hv_pci_domain_ops = {
+> > > +	.alloc	= hv_pci_vec_irq_domain_alloc,
+> > > +	.free	= hv_pci_vec_irq_domain_free,
+> > > +	.activate = hv_pci_vec_irq_domain_activate,
+> > > +};
+> > > +
+> > > +static int hv_pci_irqchip_init(void)
+> > > +{
+> > > +	static struct hv_pci_chip_data *chip_data;
+> > > +	struct fwnode_handle *fn = NULL;
+> > > +	int ret = -ENOMEM;
+> > > +
+> > > +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> > > +	if (!chip_data)
+> > > +		return ret;
+> > > +
+> > > +	mutex_init(&chip_data->map_lock);
+> > > +	fn = irq_domain_alloc_named_fwnode("Hyper-V ARM64 vPCI");
+> > 
+> > This will appear in debugfs. I'd rather you keep it short, sweet and
+> > without spaces. "hv_vpci_arm64" seems better to me.
+> 
+> Sure, will fix in next version.
+> 
+> > >
+> > > @@ -1619,6 +1820,7 @@ static struct irq_chip hv_msi_irq_chip = {
+> > >  	.irq_compose_msi_msg	= hv_compose_msi_msg,
+> > >  	.irq_set_affinity	= irq_chip_set_affinity_parent,
+> > >  	.irq_ack		= irq_chip_ack_parent,
+> > > +	.irq_eoi		= irq_chip_eoi_parent,
+> > >  	.irq_mask		= hv_irq_mask,
+> > >  	.irq_unmask		= hv_irq_unmask,
+> > 
+> > You probably want to avoid unconditionally setting callbacks that may
+> > have side effects on another architecture (ack on arm64, eoi on x86).
+> 
+> Thanks. Will fix in next version.
+> 
+> Is there some other feedback that would like to see get addressed in the
+> current patch? Trying to close down on all remaining feedback items here.
+
+Not at the moment, as I have paged this out a long time ago.
+Addressing feedback more often than once a month would definitely
+help. I usually complain about patches being sent too often, but
+you're squarely in the opposite camp.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
