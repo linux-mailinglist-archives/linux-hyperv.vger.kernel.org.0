@@ -2,111 +2,189 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59999474D43
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Dec 2021 22:37:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D53D474DDE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Dec 2021 23:23:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232792AbhLNVhM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 14 Dec 2021 16:37:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231331AbhLNVhM (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 14 Dec 2021 16:37:12 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B724AC061574
-        for <linux-hyperv@vger.kernel.org>; Tue, 14 Dec 2021 13:37:11 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id g14so66861773edb.8
-        for <linux-hyperv@vger.kernel.org>; Tue, 14 Dec 2021 13:37:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9UTAK0b5L3KaubCL/oV4wrRC8fixbiMSCS/6uVmjtHo=;
-        b=PhrXjkuoAM3dy70a2g+o9KOpM5toJ5WKKg332iwP4AVhrSsPo/oX4aH9XBRXCWVzGP
-         /1Hw8PU+Dz67St7OzLpx6GAHC7Q5C0ke/yK4udPtTsPntsmHc1xMWhSq1LafRdEcBb7M
-         s+kda2QWwAWBVtJcXytzdW+z+XAA9vAaq9cHRPH8XQyCGXsuoH2rCTjLBkhytEQihPnd
-         bsQ8aFRielBwdEzJVklbOfscj5tsI1cxf2T/01BDHg77iv25jDKJ+T0KxiB4bJo/UzDL
-         Don5PUNwgSNUyWoh6XJRG9cMF8geAtnMa6ZHUUhQd5kCgVES96SxduTn3iHL1fQmWrdB
-         J1hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9UTAK0b5L3KaubCL/oV4wrRC8fixbiMSCS/6uVmjtHo=;
-        b=YCBp2HfRGt4evYOI2waRC3+tKo74tRcoMdYD8RVJnKA0KGWbg14H0BHeeLvx0oPui6
-         NHuDgWuT6nS8HU0/yi+aUuWLf4xj38HRi74B2PcujkxdvpKWaVdxg8gm6VBCCufV2/Ff
-         n7Uj67tIGjpWoOSOe2g5ePKp13vJKpf8RpmnVuufPorqRe+RFmHh3056eTVgNQzdPh3s
-         jjvB4kgYBeuE+LAxpPAPLiNl/b1UMD28ssvlPi3DMNl6bpc8n98uaX74O5Ha+e1W7iq9
-         IMVpZn6UIv7E832ANwWuJG5fZESUWq4kD1uxoC//Uu75dQspsyyWm9mDkAqziOA784S4
-         ukoQ==
-X-Gm-Message-State: AOAM532MfsMGiTuY66LXfi6rNV3+dTnqsdBkF32tEExbOhA3gsJh32Vk
-        EszdD4W+ehPx32cuMbV3oqcu25bQKQw=
-X-Google-Smtp-Source: ABdhPJxxCjQsv+yKbqJCBJgSzRrk1RYPayFa8mZSDOG3wz5f/uBRUdsOTGEoEhjUmEiOv7scAuVqtg==
-X-Received: by 2002:a17:906:4fc8:: with SMTP id i8mr8642058ejw.427.1639517830211;
-        Tue, 14 Dec 2021 13:37:10 -0800 (PST)
-Received: from anparri (host-79-23-180-143.retail.telecomitalia.it. [79.23.180.143])
-        by smtp.gmail.com with ESMTPSA id cy26sm17703edb.7.2021.12.14.13.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 13:37:09 -0800 (PST)
-Date:   Tue, 14 Dec 2021 22:36:59 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Yanming Liu <yanminglr@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, Andres Beltran <lkmlabelt@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] hv: account for packet descriptor in maximum packet size
-Message-ID: <20211214213659.GA2550@anparri>
-References: <20211212121326.215377-1-yanminglr@gmail.com>
- <20211213014709.GA2316@anparri>
- <CAH+BkoF-Y55MCSoFes3QYJqXEEH3ZsjHMjmtrKmN3UHv9S_0iw@mail.gmail.com>
- <20211214020658.GA439610@anparri>
- <20211214042804.GA1934@anparri>
- <CAH+BkoE51_zAtgOo5ZGJk+32cycQ+OetL_U8hyO8oNMJaymAGg@mail.gmail.com>
+        id S233778AbhLNWXs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Dec 2021 17:23:48 -0500
+Received: from mail-bn7nam10on2075.outbound.protection.outlook.com ([40.107.92.75]:58625
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231132AbhLNWXr (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 14 Dec 2021 17:23:47 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W7ltI0b0JoVcZQlPxBpV/6VRd7/jkpvA8FH3gp/kiYj/+lAvDIhxul2RnpBCqmnhqs8FIaAl1lfx/3mSpHirINpI5qV8VWBg1qOLs0ySbKQIeRsU/QlDzdOOpKGk8mGTZu+5AugkC5AGkW4g4majVbX95YRP01BSPUiRPjQmyOURA8IUA49yylh2QPAbOYZ6ifl5lPb3/lV0NbllycZF8PC12hD8zIDeczBJ49mvh4ejEM8PmtRnSShGyS6f7gF9DlafKFwNNFtI7BgHSS+XZtG+bXJPWNZ/css7iEW5xv3r1q+MquoEdl9yoOCdRx/ngQmTSvMSoyoQ5mtSYQ3OLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aN/ypNYWg4nvC5d/FKiTZuoHDirbOC6eHg1wc8QPtmE=;
+ b=TUJDk+1LusvXcLwf9GU1WdpaJLyAViEQhYf0UA+rjjMbMTSJsDB/Umgp1bXdVXxAFK5GVU15nVW/eqB7HJat6Nr9uta7x0lpNS0Yrlgt6QhQv8EhxUQI0n3HuYq9A0CdpTDgEdWb+XswgTYYfqoYyR0jl5Ano2NhWSsKUwZnfwZUnJDjToTEbqLvhEuf/VpdmK0moGWVRwRWyPVx245FS3taBEX2V8f+HIRi9nColagMR61OntxsNpfbURrjLyjPlG5mkjoVt30meKMxlcKkgNtQCA8FoaLBUZ8r6TeYTuxt4Rh/qbhXtws65KBOILJl3DVWMqGHkeu2Bl7EO97/ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aN/ypNYWg4nvC5d/FKiTZuoHDirbOC6eHg1wc8QPtmE=;
+ b=qOGY+Vo5e9Wym6op1aS6gF3Sc6YY1lKOsqCgxTtIZvs/bvqGydlSkgI9mM4+KEf8CKWXAk6vryiOKnh3cVV7z4oJL2ZTnwBNHWzDgHoPEJVNvWdSdpm0zvhkZKAogvVcjOnwqTqOgdMsYXhEz5rl/krnT5qo5r8BviXLJ8ATXko=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
+ by DM4PR12MB5072.namprd12.prod.outlook.com (2603:10b6:5:38b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.21; Tue, 14 Dec
+ 2021 22:23:38 +0000
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::1ddd:71e4:5803:e44a]) by DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::1ddd:71e4:5803:e44a%3]) with mapi id 15.20.4734.028; Tue, 14 Dec 2021
+ 22:23:38 +0000
+Subject: Re: [PATCH V7 1/5] swiotlb: Add swiotlb bounce buffer remap function
+ for HV IVM
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, davem@davemloft.net, kuba@kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        Tianyu.Lan@microsoft.com, michael.h.kelley@microsoft.com
+Cc:     iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
+        hch@lst.de, joro@8bytes.org, parri.andrea@gmail.com
+References: <20211213071407.314309-1-ltykernel@gmail.com>
+ <20211213071407.314309-2-ltykernel@gmail.com>
+ <198e9243-abca-b23e-0e8e-8581a7329ede@intel.com>
+ <3243ff22-f6c8-b7cd-26b7-6e917e274a7c@gmail.com>
+ <c25ff1e8-4d1e-cf1c-a9f6-c189307f92fd@intel.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <a1c8f26f-fbf2-29b6-e734-e6d6151c39f8@amd.com>
+Date:   Tue, 14 Dec 2021 16:23:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+In-Reply-To: <c25ff1e8-4d1e-cf1c-a9f6-c189307f92fd@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR15CA0049.namprd15.prod.outlook.com
+ (2603:10b6:208:237::18) To DM4PR12MB5229.namprd12.prod.outlook.com
+ (2603:10b6:5:398::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH+BkoE51_zAtgOo5ZGJk+32cycQ+OetL_U8hyO8oNMJaymAGg@mail.gmail.com>
+Received: from [10.236.30.241] (165.204.77.1) by MN2PR15CA0049.namprd15.prod.outlook.com (2603:10b6:208:237::18) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Tue, 14 Dec 2021 22:23:34 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 11af7221-fda9-4a28-deb5-08d9bf505fcb
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5072:EE_
+X-Microsoft-Antispam-PRVS: <DM4PR12MB5072C7592FF644D706972458EC759@DM4PR12MB5072.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r/mV53upqhm/I6Fy6wp82xN4BYDZ6QpFL/sxwj0CxD3MNDEH5AhMN63AQT8ixwXoJ0Kp8K9HK3zFEX0sx6F8IkcGfIhCkLz1J8j6fFCW78DXrCR1h7Vub9qxI2/6buaY2QdbTitZ2N5DsAfLPSKnpzJ3jwD04Rjlzf43I//soLNA7fert146FiYxF6WEoQiQNvQ5Hy/ZoIeUwbYlaE3Ycfc9wxub/0rDBkIpLhJHgYbQzCq8yYtoIUJyqo30TmRwzSNSioYLfPycHrJeSfWUjl5xVKyASFMML+YQ1s34AlFIupUvhDqgO+C4RMOVMB+EybPcuHe7RNrinEQB9ih+TFpCCDrigkuLaShiYq6tCgGFfdaybr8clwhedSAghC4nY08GRRDnwxS4oEPQce4bJwtIpicALtMti5wTmmFCv8wcC+FMWbUZTyw1GzAmatyj0S33x4PNiKhwLnHNPZpsOO9nzEGDN84Z3YU6Q06MARMaWN0xe50oQTCgg6SNw2fnUd3xiEeO53MsnqpKue1FMGIFSrSUr6aFni4bWJj21rtsbDgZIHINQOhsnUPqjfdNYRACt/JnDojqLY9fZPMSDXXE0xc7zRsPYiRobUM3nCyoCBtWR9wnlHnVo+D9AXwyLrmdXLao6F00ivLsvvN2wksB/ml/lSrAr+O/LZw/PpfydLlYOt92w20poMos4TqFllRExCkSpOZyTJV5XJKSN0BOtyPBolViNLvg/Ph81q3bh9zfPNG7wvEkD3CHHUsrhC524QvycKHWHRLHeNpfruriuod2v61/lVT6waVFJnpbG1EQoi2PRtL9VaE4pfY5+Jr6L6f9+4cfDjczIIxPFQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(53546011)(31686004)(6486002)(31696002)(921005)(16576012)(508600001)(26005)(36756003)(38100700002)(316002)(66556008)(2616005)(4326008)(2906002)(8936002)(5660300002)(8676002)(7416002)(7406005)(83380400001)(66946007)(86362001)(66476007)(956004)(186003)(966005)(110136005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z3JIV1EvTFkrL2w1Y2c1LzROVVJYWnMvQnRObXk3VUo2bkpTa0xldk43RVcz?=
+ =?utf-8?B?TnJSalBZQTFkWmJrazVuSGUrUmljOVdMdDJyZE56RENNV1NSb3lRYkNWNE9S?=
+ =?utf-8?B?bnl2cWNYZGZMTVlrZFgweVEwZzYyNkpvcVYrR0EyOXhXdFdEQytUbTVhZ0lG?=
+ =?utf-8?B?eW9KVlVQdW5aUFNyMEw1NWZvVS80dGNRZHNwNGhOWEYzOTVUdmJleFVsTGNm?=
+ =?utf-8?B?c3piNDRtL3J5WnFQY1ZBV1BubkNHTUl0SVhIMjExdlNSUXFKdWdTRytNM1dC?=
+ =?utf-8?B?WG04bSsvZWRJaUZxa2s3NE5kc0RVcERYdXlXcEFVeEZJQzM1SW5ia25nelRC?=
+ =?utf-8?B?TmpVdEV2Wm9tM0ZqM3owV3pIalZTM2htbjV2aWV3VmVLRDJLYy9TMGpzZGs2?=
+ =?utf-8?B?QUpKaVV0S0p6NlZVdUJMSTdncXMxeDJUbDhoNFhEM2ZDSEhuNFdCd3FSa3pp?=
+ =?utf-8?B?SDdLTGoxOWo5VGRRZllXcmpYeTJHZ2RrSFVDSVZIeWh3cGhoczB1NEpOK3kx?=
+ =?utf-8?B?UVFZR3NydGlsVlB5ZklEZTBNcFBNSGIrWk5GanBPOVZLemlMM0cybEdFeE92?=
+ =?utf-8?B?eHkrRkFMakxDQ2QzeThmS2FZcVR1OUY3dUlGNkxsekZVcTMrdVlwZE56NXhl?=
+ =?utf-8?B?RXhSNzR2MEZqM00vU2RmT3k5d25PbDUrc3Z5alJFVFNFL0drbitURzRoa0ZF?=
+ =?utf-8?B?ZVcwSkVyVXo4RG9LSE9QTmo4Qm5aTWRQdlkxczJFZjhrSHRYK3pRNGduQUdk?=
+ =?utf-8?B?TEUrdGFTV2JjajhhVGhHZVN5RUg1NHNtblp4Nm5rN0t3NkhrdkhTbDByWGlv?=
+ =?utf-8?B?TGZ6U2QrV2g3U3JSWTRXeEw4WnVZOTRwUzhlRTA5cmRKaHh2RXEybzlza2t3?=
+ =?utf-8?B?THRoMHBRcGFRbDQ1cnhEc0JLSWs2dzVsbjJTUytxcEE4TUsyRm5ROWYzTjg1?=
+ =?utf-8?B?Ni9SWVlsd2RzN2NFNktzbUt1ZnpwRGhTMVVmQWF6bVVkbVIvZ0hLeit4QVNE?=
+ =?utf-8?B?djY3M3N0bnZUYjhmaEtZOE5Bc0hPYlJuRjh5V3JjRkZ4OFNSK3FRUFZIM3Q1?=
+ =?utf-8?B?WVl6SEVBRTZVeURvMktaUFk1YzFiWlZwT1NlWUxiYTg5YTRwMWErM2NhTlhP?=
+ =?utf-8?B?K1FRQlR4bEw3ZUhSYmVjVmpadlVaSitaY21oQy9TTFk1T3FURDVhbzYyRWF0?=
+ =?utf-8?B?ZlI3MmRvdWRpUnJwNUs5cGZUSW1Idkc5TENKZkU0clVzNzl0U1g3cjRvUnZD?=
+ =?utf-8?B?ZnhEdWF4dnJkWTVOZVdTY2FBaHdWN1hGcWhRM0k4eVhxNGpaWmlvZ0xaQThw?=
+ =?utf-8?B?S3dPNFNVaFMwcWczUyswWVBRZjl0YURzaC9lTUJDT2JYNXNFNENkK1lCcS81?=
+ =?utf-8?B?S3A3eFhlM1g1TjhqRzB3Z3Zpb2daM1JSR3FyNm55ZHdwVmw1MmFVSHB6dTZk?=
+ =?utf-8?B?ZDJncFNmaWhYSWxUNkIwd1UxalUyNWovZnE5ZE93OUtLQ29RMnpUZUxEZW1M?=
+ =?utf-8?B?eFYySExzWnhsTm10TWwvcmgzdWFVcXBLSW1OaWVDbmd3a1ZQRUloNHMrcFhP?=
+ =?utf-8?B?eDQ1amlTbEZOSDN4bTJVdGl5RVZhRzZ4TTRpQzlYZGFzZHViTHAvUy9Odnhm?=
+ =?utf-8?B?RVErdFVXaDMrb0IxdlVlb3orQ1JrNjREY3U4ZENKdWx3eUt4aGc0d0hsOWZy?=
+ =?utf-8?B?N2VTMWx3eHV4RTNrMVlOaGpBSHlEc2pKdGRwNTRjZGtsWWd3YlVnZmM5MWxB?=
+ =?utf-8?B?MWMzdmt6dkFkQjQrcVZJZ0dxSXJLNjAzL292b1RJYWwvOEN3OXFuVHpyRnRo?=
+ =?utf-8?B?blJ6b0E2a1NTSnBTZCs5QjZwRlo4WWJnbCszUmI4eVUvL2hNeHRIaGJ6YS8r?=
+ =?utf-8?B?OEdkSVkzT2VkeURncVJHMHE5MmhKZWdMVjNXOWo1emZOcXpzeG4wSDBBWG1m?=
+ =?utf-8?B?SG8wZjJGV0tPN1ZJQXUxOXRBUWtoamVUaFZNUTQrREJKTXB3cmhXYVpmZThK?=
+ =?utf-8?B?ZlRXNC84TlZhd3RodjBwSUMwUkE4OEFKeG9SaVBYVkdOa0NpNjFyWVVwaHdR?=
+ =?utf-8?B?K01tczgvdFJlOElOa1Z4YTFpTWFyeTJrdlc3STlCd1BaSVdIaXU1bGFJditi?=
+ =?utf-8?B?UVBMUGpXS3JIelZBaUk5NkNqVGVtWHZkVnJPbloySFovSyt0dG5mc05zK1N0?=
+ =?utf-8?Q?j+vegUo3YzjtqluI8BKssHg=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11af7221-fda9-4a28-deb5-08d9bf505fcb
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2021 22:23:37.9402
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: trOwXHynVzJyIwVe5uejfFp/vUHp26bayatLp18EF4QxWNEGbel+3XJXuR+KNBwDrgUHz/siKO2IsBMNNs9n3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5072
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> Thank you for your very detailed reply! I'm going to send a V2 which
-> should address all your comments.
-
-Appreciated.  (Well, it might be worth to give other people/reviewers
-some more time to process v1 and this discussion...  ;) )
-
-
-> Provided that there are indeed drivers (hv_storvsc and hv_netvsc)
-> which explicitly account for vmpacket_descriptor header, changing
-> max_pkt_size for individual drivers makes more sense.
-> However in this case I'm not sure about our reasoning of 'pkt_offset'
-> above. In drivers/scsi/storvsc_drv.c:
+On 12/14/21 12:40 PM, Dave Hansen wrote:
+> On 12/13/21 8:36 PM, Tianyu Lan wrote:
+>> On 12/14/2021 12:45 AM, Dave Hansen wrote:
+>>> On 12/12/21 11:14 PM, Tianyu Lan wrote:
+>>>> In Isolation VM with AMD SEV, bounce buffer needs to be accessed via
+>>>> extra address space which is above shared_gpa_boundary (E.G 39 bit
+>>>> address line) reported by Hyper-V CPUID ISOLATION_CONFIG. The access
+>>>> physical address will be original physical address +
+>>>> shared_gpa_boundary.
+>>>> The shared_gpa_boundary in the AMD SEV SNP spec is called virtual top of
+>>>> memory(vTOM). Memory addresses below vTOM are automatically treated as
+>>>> private while memory above vTOM is treated as shared.
+>>>
+>>> This seems to be independently reintroducing some of the SEV
+>>> infrastructure.  Is it really OK that this doesn't interact at all with
+>>> any existing SEV code?
+>>>
+>>> For instance, do we need a new 'swiotlb_unencrypted_base', or should
+>>> this just be using sme_me_mask somehow?
+>>
+>>         Thanks for your review. Hyper-V provides a para-virtualized
+>> confidential computing solution based on the AMD SEV function and not
+>> expose sev&sme capabilities to guest. So sme_me_mask is unset in the
+>> Hyper-V Isolation VM. swiotlb_unencrypted_base is more general solution
+>> to handle such case of different address space for encrypted and
+>> decrypted memory and other platform also may reuse it.
 > 
-> #define STORVSC_MAX_PKT_SIZE (sizeof(struct vmpacket_descriptor) +\
->                               sizeof(struct vstor_packet))
+> I don't really understand how this can be more general any *not* get
+> utilized by the existing SEV support.
+
+The Virtual Top-of-Memory (VTOM) support is an SEV-SNP feature that is 
+meant to be used with a (relatively) un-enlightened guest. The idea is 
+that the C-bit in the guest page tables must be 0 for all accesses. It is 
+only the physical address relative to VTOM that determines if the access 
+is encrypted or not. So setting sme_me_mask will actually cause issues 
+when running with this feature. Since all DMA for an SEV-SNP guest must 
+still be to shared (unencrypted) memory, some enlightenment is needed. In 
+this case, memory mapped above VTOM will provide that via the SWIOTLB 
+update. For SEV-SNP guests running with VTOM, they are likely to also be 
+running with the Reflect #VC feature, allowing a "paravisor" to handle any 
+#VCs generated by the guest.
+
+See sections 15.36.8 "Virtual Top-of-Memory" and 15.36.9 "Reflect #VC" in 
+volume 2 of the AMD APM [1].
+
+I'm not sure if that will answer your question or generate more :)
+
+Thanks,
+Tom
+
+[1] https://www.amd.com/system/files/TechDocs/24593.pdf
+
 > 
-> Should I also change this 'sizeof(struct vmpacket_descriptor)' to
-> VMBUS_MAX_PKT_DESCR_SIZE? Otherwise this would not match the check in
-> hv_pkt_iter_first.
-
-AFAICT, the above #define is fine, i.e., it represents an upper bound
-on pkt_len as used in hv_pkt_iter_first() (this is all is required on
-max_pkt_size, cf. the memcpy() in hv_pkt_iter_first()).
-
-The same consideration, AFAICT, holds for NETVSC_MAX_PKT_SIZE.
-
-The remarks about pkt_offset targetted the cases, such as hv_balloon,
-where we can somehow upper bound
-
-	(pkt_len - pkt_offset)
-
-(the "packet payload"), since then an upper bound on pkt_offset would
-give us an upper bound on pkt_len "for free" (associativity):
-
-	ptk_len = (pkt_len - pkt_offset) + pkt_offset
-
-  Andrea
