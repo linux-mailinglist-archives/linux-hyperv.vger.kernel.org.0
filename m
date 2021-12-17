@@ -2,82 +2,79 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E3AB47842E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Dec 2021 05:40:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7276479372
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Dec 2021 19:02:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbhLQEkO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Dec 2021 23:40:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232492AbhLQEkN (ORCPT
+        id S236246AbhLQSCH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Dec 2021 13:02:07 -0500
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:37873 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235822AbhLQSCH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Dec 2021 23:40:13 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C478C061574;
-        Thu, 16 Dec 2021 20:40:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EF131B826F4;
-        Fri, 17 Dec 2021 04:40:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BA9FDC36AE8;
-        Fri, 17 Dec 2021 04:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639716010;
-        bh=rwv6cNRQrcnb/nNVrWctl59B67f5Gjg6W8600vB6jnk=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=pNZ1F+qYKnPwkfAFTkQfkhZoBTcLARIzAd+e3bjFL0IIBM7z9F3YChEJeFLFxTEhK
-         MDz8A2iBxqGssBOTqv241JmBSkvHLgpnBG5JaMDAvMG6A7I3+3Cbft0I8e5beG7Z/A
-         w4vG13IQqpkMd2rcS4/2sYC9kspNxbLk9v0Uc9d3MiIP/IBVzcyhVfv0FheQ4teYgx
-         eMHbfAkStDV5+eFer/wghVIwcEMLNx920p6MQeZebc+p0fNxSJ/u5sNe3mZ5/Ox9FI
-         UE8Qi6MbPn8v5AXLw1mDpkS4EFPF2hoym2+IcGAZxV/rME741FIKX+dLLzecl8MhHZ
-         iH71IYHEeg7cA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id A3D0D60BD0;
-        Fri, 17 Dec 2021 04:40:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 17 Dec 2021 13:02:07 -0500
+Received: by mail-wr1-f44.google.com with SMTP id t26so5589424wrb.4;
+        Fri, 17 Dec 2021 10:02:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oMu9apPBaIi5tnaaEn/7B+TGrd8QQOY69E+E1XVDBJI=;
+        b=rQiiVzDgUTRI5Aw4FhDYAb1jNDiVSrnyY735WPIpQ2mHwSdIBpd61t4lV18ihtqCBX
+         g9Qp7v51MbxDsvkU1GA+VRskJPURthVlBDgaY2QeB5EkrKJxlRAyrWV8d+GwaY7dQ8DN
+         Pjzq3e6X8UFatGKwaCWmKM5CcCUreAJjHSP/kcm6cJiMdQFxjsMYQ9z/ZQLtb6TBYAcZ
+         OWbBNR/Eg2dur7qP9TfmcXZOI5SPC2B7HVT7Y49LTvXOpA82vDv8yXOsMA9mnxDqbN1l
+         M6awgz6LRSxEBMCsyVYgkArezUopkBDeTmAq74gH8IEH6ISd6hpLsITLAEpuSTqsuIig
+         nIzg==
+X-Gm-Message-State: AOAM5303ZUM9l8KtGH77J5dONtbP0JmE18td727pFB/XOgwugalr59Ea
+        ujbaw5AiV2ZPZQwFG0UTi3g=
+X-Google-Smtp-Source: ABdhPJxZW9VkgRs6Fqo+bYWZVKfD8ydQU1cDhNtoIVkXQmcCzITHgxDeT8/9Q5qOUz6j3QSv/dbrVg==
+X-Received: by 2002:a5d:58f2:: with SMTP id f18mr3409586wrd.98.1639764125887;
+        Fri, 17 Dec 2021 10:02:05 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id d2sm7663606wmb.31.2021.12.17.10.02.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Dec 2021 10:02:05 -0800 (PST)
+Date:   Fri, 17 Dec 2021 18:02:03 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, davem@davemloft.net,
+        kuba@kernel.org, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        arnd@arndb.de, hch@infradead.org, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, thomas.lendacky@amd.com,
+        Tianyu.Lan@microsoft.com, michael.h.kelley@microsoft.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
+        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
+        hch@lst.de, joro@8bytes.org, parri.andrea@gmail.com,
+        dave.hansen@intel.com
+Subject: Re: [PATCH V7 0/5] x86/Hyper-V: Add Hyper-V Isolation VM
+ support(Second part)
+Message-ID: <20211217180203.sb4av3a7ezqmtvu6@liuwe-devbox-debian-v2>
+References: <20211213071407.314309-1-ltykernel@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: mana: Add RX fencing
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <163971601066.6242.10593525667079499767.git-patchwork-notify@kernel.org>
-Date:   Fri, 17 Dec 2021 04:40:10 +0000
-References: <20211216001748.8751-1-decui@microsoft.com>
-In-Reply-To: <20211216001748.8751-1-decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, gustavoars@kernel.org,
-        haiyangz@microsoft.com, netdev@vger.kernel.org, kys@microsoft.com,
-        stephen@networkplumber.org, wei.liu@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        shacharr@microsoft.com, paulros@microsoft.com, olaf@aepfle.de,
-        vkuznets@redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211213071407.314309-1-ltykernel@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 15 Dec 2021 16:17:48 -0800 you wrote:
-> RX fencing allows the driver to know that any prior change to the RQs has
-> finished, e.g. when the RQs are disabled/enabled or the hashkey/indirection
-> table are changed, RX fencing is required.
+On Mon, Dec 13, 2021 at 02:14:01AM -0500, Tianyu Lan wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+[...]
 > 
-> Remove the previous workaround "ssleep(1)" and add the real support for
-> RX fencing as the PF driver supports the MANA_FENCE_RQ request now (any
-> old PF driver not supporting the request won't be used in production).
+> Tianyu Lan (5):
+>   swiotlb: Add swiotlb bounce buffer remap function for HV IVM
+>   x86/hyper-v: Add hyperv Isolation VM check in the cc_platform_has()
+>   hyper-v: Enable swiotlb bounce buffer for Isolation VM
+>   scsi: storvsc: Add Isolation VM support for storvsc driver
+>   net: netvsc: Add Isolation VM support for netvsc driver
 > 
-> [...]
 
-Here is the summary with links:
-  - [net-next] net: mana: Add RX fencing
-    https://git.kernel.org/netdev/net-next/c/6cc74443a773
+Applied to hyperv-next. Thanks.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Wei.
