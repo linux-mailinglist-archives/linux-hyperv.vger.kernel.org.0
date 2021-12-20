@@ -2,33 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BF1547ABDF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Dec 2021 15:39:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6580B47AF0C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Dec 2021 16:08:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233971AbhLTOjq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Dec 2021 09:39:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59734 "EHLO
+        id S237874AbhLTPIM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Dec 2021 10:08:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234639AbhLTOi7 (ORCPT
+        with ESMTP id S239936AbhLTPGU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Dec 2021 09:38:59 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE8CC0613B5;
-        Mon, 20 Dec 2021 06:38:59 -0800 (PST)
+        Mon, 20 Dec 2021 10:06:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9FAC08EAF4;
+        Mon, 20 Dec 2021 06:53:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7A386B80EDA;
-        Mon, 20 Dec 2021 14:38:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BBEC36AF9;
-        Mon, 20 Dec 2021 14:38:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E22161185;
+        Mon, 20 Dec 2021 14:53:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5470CC36AE8;
+        Mon, 20 Dec 2021 14:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640011137;
-        bh=ZYs4DYBHpDxqVveMW9XDZ0Z6LTi3Pb8MbmSNyBW6oPA=;
+        s=korg; t=1640012002;
+        bh=zOh8JSzoPA2ejPGnZMR1+MAVDJFx3VR3ZbF4DA2bW9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aDhFyjNO1tsCnYN6sqMTx16MzDXG/tKAIYjmsGH11vSHuyGSn2JoskbwWjstc8DXc
-         GniynLIahFja1QtR3NXjm1rUi+tBT6E3eHuGCs3EjJGMaOZ+IqKR2MRH4botb4PQSf
-         lg9nmHpyz8Ed15DYY0wAGez/wg/c881ZbcN4zwoY=
+        b=hbO72iunwIkdxrRTNJTfJF1a+faDd3s+khzCaJG99+c2vYSApHQ7hAqs8+gRhXzkq
+         SZK/Fe1SRnntjTXe/Ca4XgvzVzX8sDZ/kIxVNpR1ttIAE9dWxAl9LpNESAsFlB8XGL
+         mw5u0bNgBL6zOW05+1RnLT9Y6Qi4scp+0DFjK9Js=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -42,12 +42,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-hyperv@vger.kernel.org,
         Michael Kelley <mikelley@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 17/45] hv: utils: add PTP_1588_CLOCK to Kconfig to fix build
-Date:   Mon, 20 Dec 2021 15:34:12 +0100
-Message-Id: <20211220143022.850174832@linuxfoundation.org>
+Subject: [PATCH 5.15 046/177] hv: utils: add PTP_1588_CLOCK to Kconfig to fix build
+Date:   Mon, 20 Dec 2021 15:33:16 +0100
+Message-Id: <20211220143041.647792342@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211220143022.266532675@linuxfoundation.org>
-References: <20211220143022.266532675@linuxfoundation.org>
+In-Reply-To: <20211220143040.058287525@linuxfoundation.org>
+References: <20211220143040.058287525@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -91,10 +91,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 247a62604d1f6..23ad80dbe7af0 100644
+index d1123ceb38f3f..9a074cbdef78c 100644
 --- a/drivers/hv/Kconfig
 +++ b/drivers/hv/Kconfig
-@@ -14,6 +14,7 @@ config HYPERV_TSCPAGE
+@@ -18,6 +18,7 @@ config HYPERV_TIMER
  config HYPERV_UTILS
  	tristate "Microsoft Hyper-V Utilities driver"
  	depends on HYPERV && CONNECTOR && NLS
