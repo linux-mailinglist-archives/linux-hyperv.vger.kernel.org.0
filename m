@@ -2,30 +2,30 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7762747ACC4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Dec 2021 15:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE30047AC40
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Dec 2021 15:43:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236368AbhLTOqm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Dec 2021 09:46:42 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:37098 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235430AbhLTOnl (ORCPT
+        id S235590AbhLTOmh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Dec 2021 09:42:37 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:49752 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234916AbhLTOlL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Dec 2021 09:43:41 -0500
+        Mon, 20 Dec 2021 09:41:11 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 477D7611BC;
-        Mon, 20 Dec 2021 14:43:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CAE0C36AE8;
-        Mon, 20 Dec 2021 14:43:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B8209B80EEB;
+        Mon, 20 Dec 2021 14:41:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB584C36AE7;
+        Mon, 20 Dec 2021 14:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640011420;
-        bh=nCcllGnloMbPxDxi9tnGf1r+X75h46np8ZxojuJNSlg=;
+        s=korg; t=1640011268;
+        bh=kG5sUjlVAIYU2TEAVKXxTJOfbZ9adhIXSrQqpqsDxqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGR9zfhzrBr3Hfw5ypfcdfDGLuIcCvcCCZ29ez0uqTiytQ9pWXJ5u5ZAcVbPvW5vu
-         df7VR67sA09fj7HC20144pcttPiGVa39jpuSuSf39VK0cRqDN5IoEjTGwQ17r3LkXx
-         tFPmFle5+N4UfWp0ke4tR51RsL56BdeY2okH1YHQ=
+        b=CsWXmdLow+xZOn0MSaoPMC7Y51jjQ75DAPLyX4L29szole1WbnkPuQ0hf1UPDDd4b
+         Cf7Da2IeSRX/jks6f+J9kDysWpRYDgiM+dXqu4NIFBSktJmPiKK9djSAKQk0TPzjeq
+         u6+48kad9ZzVMNh26aHV0JFQxoQ5t8HCuZ9odAps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,12 +39,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-hyperv@vger.kernel.org,
         Michael Kelley <mikelley@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 15/71] hv: utils: add PTP_1588_CLOCK to Kconfig to fix build
-Date:   Mon, 20 Dec 2021 15:34:04 +0100
-Message-Id: <20211220143026.201418732@linuxfoundation.org>
+Subject: [PATCH 4.19 18/56] hv: utils: add PTP_1588_CLOCK to Kconfig to fix build
+Date:   Mon, 20 Dec 2021 15:34:11 +0100
+Message-Id: <20211220143024.049888083@linuxfoundation.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211220143025.683747691@linuxfoundation.org>
-References: <20211220143025.683747691@linuxfoundation.org>
+In-Reply-To: <20211220143023.451982183@linuxfoundation.org>
+References: <20211220143023.451982183@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -88,10 +88,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 79e5356a737a2..210e532ac277f 100644
+index 1c1a2514d6f31..b1c93441900ad 100644
 --- a/drivers/hv/Kconfig
 +++ b/drivers/hv/Kconfig
-@@ -17,6 +17,7 @@ config HYPERV_TIMER
+@@ -16,6 +16,7 @@ config HYPERV_TSCPAGE
  config HYPERV_UTILS
  	tristate "Microsoft Hyper-V Utilities driver"
  	depends on HYPERV && CONNECTOR && NLS
