@@ -2,92 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A51B247CDB2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Dec 2021 08:54:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D18347EEAF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Dec 2021 13:02:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243090AbhLVHym (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Dec 2021 02:54:42 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:38386 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243081AbhLVHyl (ORCPT
+        id S1352624AbhLXMC1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 24 Dec 2021 07:02:27 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:15972 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232442AbhLXMC1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Dec 2021 02:54:41 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0369E618D6;
-        Wed, 22 Dec 2021 07:54:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF50C36AE5;
-        Wed, 22 Dec 2021 07:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1640159680;
-        bh=YjXqL4Z0rW6HSakPTtDSodXM3P36BkzOc2Oo3D5+UGk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qQeh5J/+jP4kK7r4iUVD7DRT0WToGrb4umMhhW0yAcnRAr9sG7/1AORO5bsC3rVin
-         /rdrTxTKqe0UaCK2bfmTeyGtK6nV9IcFgOVpm5uDHQWI3yOUC844g/gl3Yt+nJgGqA
-         ZhWgHXO6/BKk6t9u/yWmOJMRCYen3K9zpf0nuAs4=
-Date:   Wed, 22 Dec 2021 08:54:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        kernel test robot <lkp@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 18/56] hv: utils: add PTP_1588_CLOCK to Kconfig to
- fix build
-Message-ID: <YcLZvcoiPVVmWhu4@kroah.com>
-References: <20211220143023.451982183@linuxfoundation.org>
- <20211220143024.049888083@linuxfoundation.org>
- <20211220203136.GA4116@duo.ucw.cz>
+        Fri, 24 Dec 2021 07:02:27 -0500
+Received: from canpemm500007.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JL5FX5y1mzVflm;
+        Fri, 24 Dec 2021 19:59:12 +0800 (CST)
+Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
+ (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Fri, 24 Dec
+ 2021 20:02:24 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
+        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
+        <decui@microsoft.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <mikelley@microsoft.com>,
+        <Tianyu.Lan@microsoft.com>, <longli@microsoft.com>
+CC:     <linux-hyperv@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: storvsc: Fix unsigned comparison to zero
+Date:   Fri, 24 Dec 2021 20:02:16 +0800
+Message-ID: <20211224120216.35896-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211220203136.GA4116@duo.ucw.cz>
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.215]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500007.china.huawei.com (7.192.104.62)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 09:31:36PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > [ Upstream commit 1dc2f2b81a6a9895da59f3915760f6c0c3074492 ]
-> > 
-> > The hyperv utilities use PTP clock interfaces and should depend a
-> > a kconfig symbol such that they will be built as a loadable module or
-> > builtin so that linker errors do not happen.
-> > 
-> > Prevents these build errors:
-> > 
-> > ld: drivers/hv/hv_util.o: in function `hv_timesync_deinit':
-> > hv_util.c:(.text+0x37d): undefined reference to `ptp_clock_unregister'
-> > ld: drivers/hv/hv_util.o: in function `hv_timesync_init':
-> > hv_util.c:(.text+0x738): undefined reference to `ptp_clock_register'
-> 
-> This is bad idea for 4.19:
-> 
-> > +++ b/drivers/hv/Kconfig
-> > @@ -16,6 +16,7 @@ config HYPERV_TSCPAGE
-> >  config HYPERV_UTILS
-> >  	tristate "Microsoft Hyper-V Utilities driver"
-> >  	depends on HYPERV && CONNECTOR && NLS
-> > +	depends on PTP_1588_CLOCK_OPTIONAL
-> >  	help
-> >  	  Select this option to enable the Hyper-V Utilities.
-> 
-> grep -ri PTP_1588_CLOCK_OPTIONAL .
-> 
-> Results in no result in 4.19. So this will break hyperv. No results in
-> 5.10, either, so it is bad idea there, too.
+The unsigned variable sg_count is being assigned a return value
+from the call to scsi_dma_map() that can return -ENOMEM.
 
-Thanks, I will go delete it from all queues.
+Fixes: 743b237c3a7b ("scsi: storvsc: Add Isolation VM support for storvsc driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/scsi/storvsc_drv.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-greg k-h
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index ae293600d799..072c752a8c36 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1837,7 +1837,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 		unsigned int hvpg_count = HVPFN_UP(offset_in_hvpg + length);
+ 		struct scatterlist *sg;
+ 		unsigned long hvpfn, hvpfns_to_add;
+-		int j, i = 0;
++		int sg_cnt, j, i = 0;
+ 
+ 		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
+ 
+@@ -1851,11 +1851,11 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
+ 		payload->range.len = length;
+ 		payload->range.offset = offset_in_hvpg;
+ 
+-		sg_count = scsi_dma_map(scmnd);
+-		if (sg_count < 0)
++		sg_cnt = scsi_dma_map(scmnd);
++		if (sg_cnt < 0)
+ 			return SCSI_MLQUEUE_DEVICE_BUSY;
+ 
+-		for_each_sg(sgl, sg, sg_count, j) {
++		for_each_sg(sgl, sg, sg_cnt, j) {
+ 			/*
+ 			 * Init values for the current sgl entry. hvpfns_to_add
+ 			 * is in units of Hyper-V size pages. Handling the
+-- 
+2.17.1
+
