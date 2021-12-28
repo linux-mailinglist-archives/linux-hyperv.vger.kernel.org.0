@@ -2,159 +2,230 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6868A4805E3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Dec 2021 04:33:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72D16480915
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Dec 2021 13:23:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234726AbhL1DdH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 27 Dec 2021 22:33:07 -0500
-Received: from mail-centralusazon11021015.outbound.protection.outlook.com ([52.101.62.15]:54485
-        "EHLO na01-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234716AbhL1DdG (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 27 Dec 2021 22:33:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=euSUZsdD8Aba+pTgEX7+WqW1po7Aw9SUUfeSvGd11u+02DEp0djb5tMADzORwFAKKpKwiZJcxGpYbdADFvVLzBHav9J/mQeib8BSqa1AsYGHN0cT+vFDnr8hfGfKArazgacixxCxuj3x7rWKTmf4b1OQ2uH7O0f343buB5Hx3JC76TVcwH/cr7SjUFh8A5ELGfUcx23nxJlmSJF+HrQqrIixmPhdGnrkCNeiFp3c1f2E6U70WUA206jQwSZrNBLgbgid6jbJpEUmE4lcASpaeTbQuxHwoQAOLNKUOwaudE3qGhlfmVrnnB4Coo5qEGErl/ryf//czBUaQfwoZUWluw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DZm2e7r2jSKfToR3pCci7F5GeR8cAIItQwTUOunAJxo=;
- b=R6wpd+DYniJzgyNgKMywHw8FXEWnPYW3PATKjRUcYWPDvTqtgLNl/MTrGkCKjO8QIbVm5OKzGJABlEf4X+g9Z3LIqcyBziVfsmriB015yBbzUVN2nqUSmtgRQrQggm6NWI2njioLrdmb0laUNrhe+1aDthO8JY7M1hQBJ3oy554DtvZxx2dCJ2RGs2Y+RxjGfChdNL+cSRrNBQ+1FaPC9+pDCHGfxNqwlUB8hg9mLMmCNgXygmwAAaO3x27zhQjrKnHrNr3gaY9yBC/ROgwDOciHI6wF7ZZ5flmBNrQdLVm5gL8RDcEEO/vxkvqm4lOyR9D7RCmd+Puxh/4KuFgt6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DZm2e7r2jSKfToR3pCci7F5GeR8cAIItQwTUOunAJxo=;
- b=iWKX+Qo86/ANBM61iEUsT+bChTElWzDEJEH0HtAW+oy5A5vAyl2TObTgxp//dORBaLjMvf1s6sW++dnRVxRS+d5Qga8H9XFPaQS16C+3tFf1IJRq8V48XLI5+7DSomorxek7HJL/LyIz628mzAoXlOGfdTeK5lhQenG340IJTSg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
- by MWHPR21MB0477.namprd21.prod.outlook.com (2603:10b6:300:ec::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.3; Tue, 28 Dec
- 2021 03:32:56 +0000
-Received: from DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::4c2:54c4:85bc:dd62]) by DM6PR21MB1514.namprd21.prod.outlook.com
- ([fe80::4c2:54c4:85bc:dd62%6]) with mapi id 15.20.4867.003; Tue, 28 Dec 2021
- 03:32:56 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     sthemmin@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, arnd@arndb.de, tianyu.lan@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com, linux-arch@vger.kernel.org
-Subject: [PATCH 2/2] x86/hyperv: Fix definition of hv_ghcb_pg variable
-Date:   Mon, 27 Dec 2021 19:31:55 -0800
-Message-Id: <1640662315-22260-2-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1640662315-22260-1-git-send-email-mikelley@microsoft.com>
-References: <1640662315-22260-1-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0266.namprd03.prod.outlook.com
- (2603:10b6:303:b4::31) To DM6PR21MB1514.namprd21.prod.outlook.com
- (2603:10b6:5:22d::11)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4e06747f-8842-40f0-1bc4-08d9c9b2bd36
-X-MS-TrafficTypeDiagnostic: MWHPR21MB0477:EE_
-X-MS-Exchange-AtpMessageProperties: SA|SL
-X-Microsoft-Antispam-PRVS: <MWHPR21MB047735CC1FAF94ED7B729FE4D7439@MWHPR21MB0477.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gmw60Yz1Buhe+yrLtqD/jytrjS3h6ltp2ZL6N4GNo89RxQRq4E3mlL6Lq+btU4po3AKIxiWi8killOgBedG5oo29BSScnzPHMaKlf6efLQ6va0Rqc1CD7MDLI1iaeWzLzu6Do6tYw8xQJmbLcPYozGwDI1uGmV7ogUnXH4lu7wPAuDzWUb0WaFoxHhqbGV4Saup/A06c4kW/3WtIabstbeI6TCYO3NUVF0qMJAyAbRhQjgjOYjOzuGbsxW36Y3h0iuOqoRfwxX/Y6jlF842ezcuUuuXiUIbQZLnTRxBmfFNuhFwBWFDRDWjzmq+SEEigz3hvs6Cl5x1ZiZNmj5fM5MpwamHkeq5CMjpw+5ohHFyXtmvK7S+ci76/P5ulmVdftfLUEaJlRc1BceIpEPVKYSbqvzxArGNZ9vXL8ZVUKWK60hKm3RcRafJrfay+USVNq0ykKK2vmqmiHvTwnMJRreWhaE5Q7HH0h8+57VNfup6ZxUEmuWwkpQvMt1AWlSGmYD8ieTwF2oXAEkQT9mGHVTYsxOTa6DLbFcowk37Gx0KZOzNgcyWlGMgjGcFi6RiKfIrxMvxBwdo5X4U8eLM3f3qm3kPaPCkNXGknLfL3WlFNA5CUZzuovH4RMHkQHCR03WDTvZ0h0kW648oyHa7IimWkjEHwzFHBQKUu+hiSNz4buUGVZcajp0VYj049qHQ2koTgsXic7hnhQObzCKw43AxbbvJnglxBOVgW8j7QumrYgLBd/gxib/WiWEEVEPP79ldEDCc3UqJg2GcN/774Tw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6512007)(66946007)(921005)(52116002)(6486002)(82950400001)(82960400001)(86362001)(316002)(36756003)(2906002)(38100700002)(6506007)(38350700002)(66476007)(66556008)(5660300002)(2616005)(4326008)(7416002)(508600001)(8936002)(10290500003)(83380400001)(8676002)(26005)(186003)(20210929001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?v0hP93clAjtdTpyeT2ZHjYPHpS4x9QYDABLSrernMpu9p1C3amw+X0g3raEn?=
- =?us-ascii?Q?s5V5t1syoSFg03FlpDOwsO5jevtKWDVXWViJKFmnTU9foZeyFFz/cmcLCH1t?=
- =?us-ascii?Q?iLWxjwJWOM4gWfCw47spqAsMrD20WyCKOCy3ofxBYNHd5vi0Dv0vBIbKX30d?=
- =?us-ascii?Q?gnPFBJiSfzW+0J4XGPvXAn2U+x6ILvlfMVmHIcffGe5g6/oOPzWggTk3OsQ7?=
- =?us-ascii?Q?g3qU/SVUzkJf3BrFedNpBSJzdbcNaLIrweMoEI0KCji6k6xkVq87OFfzMx0X?=
- =?us-ascii?Q?T7nxfpAgS5bI76gcsaQylAjR5goirnW0DPW8ssqcrP7Il6Dmt3nAKRbvgQWC?=
- =?us-ascii?Q?24Yy+UpaIoqiluSkHpBhd7C4p/Yqmy0UE4NNLBj22RIDh2DarRzjoYj9lgbg?=
- =?us-ascii?Q?EN6ztKO8gKq+xS0is9QtEhLrjhRmReq7sXXtDLo23qO2VaMYqMOSeTxvEbcC?=
- =?us-ascii?Q?mUMmQNzwIklPjs66enZxBt6PxIp/hceqT6Cockjsu10DrDh1jkAFl7rg0woN?=
- =?us-ascii?Q?KmMaX5bxplKTzKJqGhbnKBbfUAqF96Bkyqh9CYvGq/dNeCyUCFCrO5ostSMX?=
- =?us-ascii?Q?WW4Vs+yL9KoGQLGw9q4YEPOmzREPuK/Gslwb9Oy3+dmqWjGYbwUN1tt+xeMV?=
- =?us-ascii?Q?1ckDI5jLMJWBSxTyAlB0tos2FLOGlB7Kbju95EZeX0eU2BCVNr37bY1S2Ni5?=
- =?us-ascii?Q?nVg7WQQbweuTGWjqOnVr5GTonbfhlX+NW61SxMRnuuQYeqWTJ4fm/QReO96I?=
- =?us-ascii?Q?63AESB+3hU/AlTLwUEe0ArvOZHZZ7r7AjfQF6ezwDf/DtWEbIAtSTbMF8IAp?=
- =?us-ascii?Q?VICjbLbPSRzqPMgWDKoyrVft/Yq9PbKT7W6fKa0KvsL8/TuLKDuOwB9Ux0Be?=
- =?us-ascii?Q?OhwDOLbi97KF2A0IHGasyHRsae/j1kXJQkkZX3ruZfxVQLCdMufiyUznUVY4?=
- =?us-ascii?Q?Miky30KmgDNCFcWEBSeD+RaCkkVuN7ZzzftbDZ5L+/V4G71wRbagby7Jz3PJ?=
- =?us-ascii?Q?dQoB6BJ4GwoOXvqW3VRatyfBnmIO1WTzFEXxYZjQSm8FSOespn+zxdTmj7mp?=
- =?us-ascii?Q?Kx8hrPXOKOWTqRTN94hwdzGjDTCZoWvMxsRlNGoASkDzfFtiQ0IP/Z2WlRTA?=
- =?us-ascii?Q?dugHo7UWRtV2jOiiRNATvV9vZCFCoM5oFR+Q8rtuejJUqcgEQzcyY+49sEdz?=
- =?us-ascii?Q?9Dc5FMzUNb/MNNM4c7Wlj+Dmvmmsl/Xj3Qu4RcRtwVhumP4zg9SFKvhTSMZR?=
- =?us-ascii?Q?09JHd8USYRxkG7PVDlxeUlmnK9xlqtu0TGSjw6RLE7B4CUDq51RGAElPHVgO?=
- =?us-ascii?Q?4F0COf4PEpXWxu0oj/nkkqUVRryG2bPoROTRZGc2VsxM/bUVkxq/0BY/qdGW?=
- =?us-ascii?Q?H9gyoGWsyf6R7CTuZRTEH4wI70MiG9y5mzvU3NciQKbmhG0oh3T9Mt8oHI9t?=
- =?us-ascii?Q?dNIveDzMp/dvlEwYoRDQrSv1bPTiqLUUY1kL5/rIUdPFA20jtOYrXAIIeEos?=
- =?us-ascii?Q?6Sx1U0/9Ihh1kD/YP1GCrmLAies0+W+j+cA1hiJUQTCz/A5xdm15fxOvrgXS?=
- =?us-ascii?Q?NHOhDSwjjQ5CVrAp/YjaRbjQ7XGuqo0cSe36UY7w2lv6ESPTwK5RFj0qRgQc?=
- =?us-ascii?Q?CGx11PFq/SfK+sEu9le/PN8=3D?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e06747f-8842-40f0-1bc4-08d9c9b2bd36
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Dec 2021 03:32:56.6687
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oyOHddo70wRiBPSbzFDLjP0nOlnaz+kP+ayb8eVbWBsC/8hX//35YMgHxEUexxIoaJdxPrryAf1q8Ios69jJ5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0477
+        id S231167AbhL1MXS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 28 Dec 2021 07:23:18 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:33498 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230290AbhL1MXS (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 28 Dec 2021 07:23:18 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ADFBFB811BD;
+        Tue, 28 Dec 2021 12:23:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA1EC36AE8;
+        Tue, 28 Dec 2021 12:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640694195;
+        bh=ctzCAJML9qMvzhn8zf3X+uHDG/LU7mhRfvDCv/DU5+c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Hsfy1FCV6/kLsTWdRLKKONenuyoAGROPdbP4BiXY3md0f0fAHSml4MZyk5eeTiZAH
+         WtM62Xt0aIc5SnGUDyv62QwtCMFhCfuWKfqLHvudKSV4SvnuVx9gAMXPew7+UQxoVX
+         E+6Uh/qqqgW+1OgG8lfrfv2VvTOc/dhSOSjmTP5L9OuJLS4TnlKuWmZi+lOGny4QGf
+         97iyywzeeW9wr1YxBLaOHMd1djkQOSE43hWX9kEsXt7QFt4qN7iyyfBB2j5+GEDIZL
+         6ct1aQ0h5FMRqsCC8OC0w3PNlgWmc6oZ7gKO2c7PttC6f7QByamDpT5LGxHMfK6Gl1
+         JuvHHWcyM/BbQ==
+Received: from cfbb000407.r.cam.camfibre.uk ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1n2BVZ-00EiPi-8y; Tue, 28 Dec 2021 12:23:13 +0000
+Date:   Tue, 28 Dec 2021 12:23:12 +0000
+Message-ID: <87ilv8zznz.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [PATCH v7 2/2] PCI: hv: Add arm64 Hyper-V vPCI support
+In-Reply-To: <MWHPR21MB1593272A454D568311C3B254D7429@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <1639767121-22007-1-git-send-email-sunilmut@linux.microsoft.com>
+        <1639767121-22007-3-git-send-email-sunilmut@linux.microsoft.com>
+        <MWHPR21MB1593272A454D568311C3B254D7429@MWHPR21MB1593.namprd21.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: mikelley@microsoft.com, sunilmut@linux.microsoft.com, kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, x86@kernel.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, linux-arch@vger.kernel.org, sunilmut@microsoft.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The percpu variable hv_ghcb_pg is incorrectly defined.  The __percpu
-qualifier should be associated with the union hv_ghcb * (i.e.,
-a pointer), not with the target of the pointer. This distinction
-makes no difference to gcc and the generated code, but sparse
-correctly complains.  Fix the definition in the interest of
-general correctness in addition to making sparse happy.
+On Mon, 27 Dec 2021 17:38:07 +0000,
+"Michael Kelley (LINUX)" <mikelley@microsoft.com> wrote:
+> 
+> From: Sunil Muthuswamy <sunilmut@linux.microsoft.com> Sent: Friday, December 17, 2021 10:52 AM
+> > 
+> > Add arm64 Hyper-V vPCI support by implementing the arch specific
+> > interfaces. Introduce an IRQ domain and chip specific to Hyper-v vPCI that
+> > is based on SPIs. The IRQ domain parents itself to the arch GIC IRQ domain
+> > for basic vector management.
+> > 
+> > Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> > ---
+> > In v2, v3, v4, v5, v6 & v7:
+> >  Changes are described in the cover letter.
+> > 
+> >  arch/arm64/include/asm/hyperv-tlfs.h |   9 +
+> >  drivers/pci/Kconfig                  |   2 +-
+> >  drivers/pci/controller/Kconfig       |   2 +-
+> >  drivers/pci/controller/pci-hyperv.c  | 241 ++++++++++++++++++++++++++-
+> >  4 files changed, 251 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
+> > index 4d964a7f02ee..bc6c7ac934a1 100644
+> > --- a/arch/arm64/include/asm/hyperv-tlfs.h
+> > +++ b/arch/arm64/include/asm/hyperv-tlfs.h
+> > @@ -64,6 +64,15 @@
+> >  #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
+> >  #define HV_REGISTER_STIMER0_COUNT	0x000B0001
+> > 
+> > +union hv_msi_entry {
+> > +	u64 as_uint64[2];
+> > +	struct {
+> > +		u64 address;
+> > +		u32 data;
+> > +		u32 reserved;
+> > +	} __packed;
+> > +};
+> > +
+> >  #include <asm-generic/hyperv-tlfs.h>
+> > 
+> >  #endif
+> > diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> > index 43e615aa12ff..d98fafdd0f99 100644
+> > --- a/drivers/pci/Kconfig
+> > +++ b/drivers/pci/Kconfig
+> > @@ -184,7 +184,7 @@ config PCI_LABEL
+> > 
+> >  config PCI_HYPERV
+> >  	tristate "Hyper-V PCI Frontend"
+> > -	depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+> > +	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+> >  	select PCI_HYPERV_INTERFACE
+> >  	help
+> >  	  The PCI device frontend driver allows the kernel to import arbitrary
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index 93b141110537..2536abcc045a 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -281,7 +281,7 @@ config PCIE_BRCMSTB
+> > 
+> >  config PCI_HYPERV_INTERFACE
+> >  	tristate "Hyper-V PCI Interface"
+> > -	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
+> > +	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN
+> >  	help
+> >  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+> >  	  have a common interface with the Hyper-V PCI frontend driver.
+> > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> > index ead7d6cb6bf1..02ba2e7e2618 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -47,6 +47,8 @@
+> >  #include <linux/msi.h>
+> >  #include <linux/hyperv.h>
+> >  #include <linux/refcount.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/acpi.h>
+> >  #include <asm/mshyperv.h>
+> > 
+> >  /*
+> > @@ -614,7 +616,236 @@ static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
+> >  {
+> >  	return pci_msi_prepare(domain, dev, nvec, info);
+> >  }
+> > -#endif /* CONFIG_X86 */
+> > +#elif defined(CONFIG_ARM64)
+> > +/*
+> > + * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
+> > + * of room at the start to allow for SPIs to be specified through ACPI and
+> > + * starting with a power of two to satisfy power of 2 multi-MSI requirement.
+> > + */
+> > +#define HV_PCI_MSI_SPI_START	64
+> > +#define HV_PCI_MSI_SPI_NR	(1020 - HV_PCI_MSI_SPI_START)
+> > +#define DELIVERY_MODE		0
+> > +#define FLOW_HANDLER		NULL
+> > +#define FLOW_NAME		NULL
+> > +#define hv_msi_prepare		NULL
+> > +
+> > +struct hv_pci_chip_data {
+> > +	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
+> > +	struct mutex	map_lock;
+> > +};
+> > +
+> > +/* Hyper-V vPCI MSI GIC IRQ domain */
+> > +static struct irq_domain *hv_msi_gic_irq_domain;
+> > +
+> > +/* Hyper-V PCI MSI IRQ chip */
+> > +static struct irq_chip hv_arm64_msi_irq_chip = {
+> > +	.name = "MSI",
+> > +	.irq_set_affinity = irq_chip_set_affinity_parent,
+> > +	.irq_eoi = irq_chip_eoi_parent,
+> > +	.irq_mask = irq_chip_mask_parent,
+> > +	.irq_unmask = irq_chip_unmask_parent
+> > +};
+> > +
+> > +static unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
+> > +{
+> > +	return irqd->parent_data->hwirq;
+> > +}
+> > +
+> > +static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> > +				       struct msi_desc *msi_desc)
+> > +{
+> > +	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
+> > +			      msi_desc->msg.address_lo;
+> > +	msi_entry->data = msi_desc->msg.data;
+> > +}
+> > +
+> > +/*
+> > + * @nr_bm_irqs:		Indicates the number of IRQs that were allocated from
+> > + *			the bitmap.
+> > + * @nr_dom_irqs:	Indicates the number of IRQs that were allocated from
+> > + *			the parent domain.
+> > + */
+> > +static void hv_pci_vec_irq_free(struct irq_domain *domain,
+> > +				unsigned int virq,
+> > +				unsigned int nr_bm_irqs,
+> > +				unsigned int nr_dom_irqs)
+> > +{
+> > +	struct hv_pci_chip_data *chip_data = domain->host_data;
+> > +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+> 
+> FWIW, irq_domain_get_irq_data() can return NULL.   Maybe that's an
+> error in the "should never happen" category.   Throughout kernel code,
+> some callers check for a NULL result, but a lot do not.
 
-No functional change.
+irq_domain_get_irq_data() returns NULL when there is no mapping. If
+this happens here, then the allocation tracking has gone horribly
+wrong, and I certainly want to see the resulting Oops rather than
+papering over it.
 
-Fixes: 0cc4f6d9f0b9 ("x86/hyperv: Initialize GHCB page in Isolation VM")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- arch/x86/hyperv/hv_init.c       | 2 +-
- arch/x86/include/asm/mshyperv.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+	M.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 96eb7db..99afe77 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -36,7 +36,7 @@
- void *hv_hypercall_pg;
- EXPORT_SYMBOL_GPL(hv_hypercall_pg);
- 
--union hv_ghcb __percpu **hv_ghcb_pg;
-+union hv_ghcb * __percpu *hv_ghcb_pg;
- 
- /* Storage to save the hypercall page temporarily for hibernation */
- static void *hv_hypercall_pg_saved;
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index da3972f..498317d 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -30,7 +30,7 @@ typedef int (*hyperv_fill_flush_list_func)(
- 
- extern u64 hv_current_partition_id;
- 
--extern union hv_ghcb  __percpu **hv_ghcb_pg;
-+extern union hv_ghcb * __percpu *hv_ghcb_pg;
- 
- int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
- int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
 -- 
-1.8.3.1
-
+Without deviation from the norm, progress is not possible.
