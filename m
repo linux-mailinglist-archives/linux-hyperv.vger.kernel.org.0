@@ -2,33 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FD42481748
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Dec 2021 23:31:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6075448180B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 30 Dec 2021 02:27:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230511AbhL2Wbv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Dec 2021 17:31:51 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:57642 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230448AbhL2Wbu (ORCPT
+        id S233922AbhL3B1t (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Dec 2021 20:27:49 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:50656 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232261AbhL3B1s (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Dec 2021 17:31:50 -0500
+        Wed, 29 Dec 2021 20:27:48 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6180CB819C4;
-        Wed, 29 Dec 2021 22:31:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 086E3C36AEC;
-        Wed, 29 Dec 2021 22:31:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5DE17615BB;
+        Thu, 30 Dec 2021 01:27:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA02C36AEE;
+        Thu, 30 Dec 2021 01:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640817108;
-        bh=B4HVt5LABOlLWHuHdH8fZyS2jYElsURWkNBEs1eJcD4=;
+        s=k20201202; t=1640827667;
+        bh=VyHQY8J49gY+iAihRqxjOKsUj4wupvO0oUTJjIn1KrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frU5+fxE/J6Uql1O2WBDMETbgRbTR4pLU9XU7UX0asg9wlJZJLGZWbwANOMSQzO5A
-         lR4u9baiD4O7s6ENK3x4IZTQB6tUEmUn+N2LdX54kvjjRzW1cnMhQp6O9tBqH+uBng
-         4MzzeMcchs5qjCBqOQQYl31OQOtM5mK1DR17Vp38Y6cNyjDQOMh0S/RnVETIAq0TEW
-         635PsES1z6RT4dyrOSC+7jzPWzAVmCb6aAMDjlMom1kPyzTWSf6u5QL62yW5hIxuU6
-         smi1JiutLmqQRZCwBuuoJxCWBIm6lSiFX7/WIB4RbS+FooYV45VhqXJQcpA11NTBSj
-         NvTSNIY8rEE0A==
+        b=PCRujHrlvJ++eMV+8eOATEJODo3khk0hQq/qcOGZJbOYVzdGaJEIdQpe3ygUNnexv
+         h2B2UhmvvwrWYfXay/0DFsT+93ABO9urf7cswier/8esz/sWGUfqzUcXlAOR+gKynv
+         1a/grh6c0mmNY7d0MGHXlo8O9AskGejfATQlOS0UmQGGRK7+ZmQGx+2pLxQMtoRjKi
+         CwuAD0fmyCWoX1DMFsFLfNE8h0v8OIFLrH113Ncsdk2CgRt3oUx/bi75brGOEczrS5
+         TMAuPXSAUe1oT7//Rt10B20IOyCqz8tUfPiccgTDL8cTvGrxN3k3fiMz1b5EvnF7c3
+         RQR99+BMsZxQg==
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     ast@kernel.org, daniel@iogearbox.net
 Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
@@ -43,12 +43,12 @@ Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-omap@vger.kernel.org
-Subject: [PATCH bpf-next 1/2] net: add includes masked by netdevice.h including uapi/bpf.h
-Date:   Wed, 29 Dec 2021 14:31:38 -0800
-Message-Id: <20211229223139.708975-2-kuba@kernel.org>
+Subject: [PATCH bpf-next v2 1/2] net: add includes masked by netdevice.h including uapi/bpf.h
+Date:   Wed, 29 Dec 2021 17:27:41 -0800
+Message-Id: <20211230012742.770642-2-kuba@kernel.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211229223139.708975-1-kuba@kernel.org>
-References: <20211229223139.708975-1-kuba@kernel.org>
+In-Reply-To: <20211230012742.770642-1-kuba@kernel.org>
+References: <20211230012742.770642-1-kuba@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -61,6 +61,9 @@ Mostly network drivers missing an include for XDP_PACKET_HEADROOM.
 
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
+v2:
+ - fix buildbot's randconfig failure in ipv6
+
 CC: shayagr@amazon.com
 CC: akiyano@amazon.com
 CC: darinzon@amazon.com
@@ -90,8 +93,9 @@ CC: linux-omap@vger.kernel.org
  drivers/net/ethernet/microsoft/mana/mana_en.c      | 2 ++
  drivers/net/ethernet/stmicro/stmmac/stmmac.h       | 1 +
  drivers/net/ethernet/ti/cpsw_priv.h                | 2 ++
+ include/net/ip6_fib.h                              | 1 +
  kernel/bpf/net_namespace.c                         | 1 +
- 6 files changed, 8 insertions(+)
+ 7 files changed, 9 insertions(+)
 
 diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
 index 0c39fc2fa345..9391c7101fba 100644
@@ -155,6 +159,18 @@ index f33c882eb70e..74555970730c 100644
  #include "davinci_cpdma.h"
  
  #define CPSW_DEBUG	(NETIF_MSG_HW		| NETIF_MSG_WOL		| \
+diff --git a/include/net/ip6_fib.h b/include/net/ip6_fib.h
+index 83b8070d1cc9..a9a4ccc0cdb5 100644
+--- a/include/net/ip6_fib.h
++++ b/include/net/ip6_fib.h
+@@ -20,6 +20,7 @@
+ #include <net/inetpeer.h>
+ #include <net/fib_notifier.h>
+ #include <linux/indirect_call_wrapper.h>
++#include <uapi/linux/bpf.h>
+ 
+ #ifdef CONFIG_IPV6_MULTIPLE_TABLES
+ #define FIB6_TABLE_HASHSZ 256
 diff --git a/kernel/bpf/net_namespace.c b/kernel/bpf/net_namespace.c
 index 542f275bf252..868cc2c43899 100644
 --- a/kernel/bpf/net_namespace.c
