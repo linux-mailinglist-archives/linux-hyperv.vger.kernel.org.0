@@ -2,81 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8DA148525E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jan 2022 13:23:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D97AF4856DB
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jan 2022 17:50:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239984AbiAEMXt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jan 2022 07:23:49 -0500
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:43744 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbiAEMXs (ORCPT
+        id S242018AbiAEQuj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jan 2022 11:50:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43847 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S242014AbiAEQuh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jan 2022 07:23:48 -0500
-Received: by mail-wr1-f54.google.com with SMTP id o3so24436981wrh.10;
-        Wed, 05 Jan 2022 04:23:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3vGTuWVHs0jAZJPZmVYXJHdNt84L1PDEmSZR/VjnEFM=;
-        b=kLJZFrw/CkL13K1UhXaXfjPYBUz8yi5UCt9bxk5MghqFMhJci9HPWEHy8HPiual5XZ
-         nPi1tAHciUAi0Z/+8q/lC14q54uTONBUSnqTPiWe8Hw7/zlCkKZRY1WVAd8BrkPcjB/w
-         mpDzEtoHPjERAFcis7ndhd7lcqG366Uw7Lpj7r8YWWHzLBLgrYnZt2H1Ize3qv0UkdfK
-         dSbReiGxY0sjrDYMGTVMo8s3rog8o73dST3MsrcGQFyotaS4Yv6FcD9SEJfQhyKf55z1
-         lFcR8Bd5M93bztavw/SoAFyCeU/WXgIE2sGodk9rV0A3Q9d9kCP//sF26/Voj2A0DqGg
-         wgIQ==
-X-Gm-Message-State: AOAM530qOskZlq9P43XhqO6f9lSgoThN/fEkEh7n/iW1PTvN7I6zaApI
-        2WJAGu9MDuLKmjeXczIa5tM=
-X-Google-Smtp-Source: ABdhPJytrxWG4YRfNcP5E3R86MxwQk61VG41q2ECBIwykw2jHAbzUhtzIKzidXOJ6z7sJGugTa1KFw==
-X-Received: by 2002:adf:fbcf:: with SMTP id d15mr34871393wrs.132.1641385427221;
-        Wed, 05 Jan 2022 04:23:47 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id l14sm36041756wrr.53.2022.01.05.04.23.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jan 2022 04:23:46 -0800 (PST)
-Date:   Wed, 5 Jan 2022 12:23:45 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, jejb@linux.ibm.com, mikelley@microsoft.com,
-        Tianyu.Lan@microsoft.com, longli@microsoft.com,
-        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 -next] scsi: storvsc: Fix unsigned comparison to zero
-Message-ID: <20220105122345.f5qlp5ftirglk7og@liuwe-devbox-debian-v2>
-References: <20211227040311.54584-1-yuehaibing@huawei.com>
- <yq135m2zqw1.fsf@ca-mkp.ca.oracle.com>
+        Wed, 5 Jan 2022 11:50:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641401436;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZeXQGQsnd6fmuh87PORrGNZfi1tukb7V3nJM/haD+x8=;
+        b=gDCff1EcDOqeenb4lCoz2kJxC7/9BYH0Z43AJkWMI3S4aKAkfcQG1aFJq25fj/sQO4gyAE
+        cZrBgvBo96zTpo8icv30pUDXfVWI9tk6lbXMgIO1243fNQT/ke6bO+GRgHlSXZwVeH1xfm
+        pXEf5AYBAKGRQRN1cnvHBviLSeAs3AA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-34-EkNYejUIPD6bZUUhGOn8bw-1; Wed, 05 Jan 2022 11:50:33 -0500
+X-MC-Unique: EkNYejUIPD6bZUUhGOn8bw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FEAE81CCB5;
+        Wed,  5 Jan 2022 16:50:31 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.40.194.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B5387E8F4;
+        Wed,  5 Jan 2022 16:50:28 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC] Drivers: hv: balloon: Temporary disable the driver on ARM64 when PAGE_SIZE != 4k
+Date:   Wed,  5 Jan 2022 17:50:28 +0100
+Message-Id: <20220105165028.1343706-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq135m2zqw1.fsf@ca-mkp.ca.oracle.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jan 05, 2022 at 12:41:31AM -0500, Martin K. Petersen wrote:
-> 
-> YueHaibing,
-> 
-> > The unsigned variable sg_count is being assigned a return value
-> > from the call to scsi_dma_map() that can return -ENOMEM.
-> >
-> > Fixes: 743b237c3a7b ("scsi: storvsc: Add Isolation VM support for
-> > storvsc driver")
-> 
-> This should probably go through the Hyper-V tree - I presume that's
-> where the offending commit is sitting?
+Hyper-V ballooning and memory hotplug protocol always seems to assume
+4k page size so all PFNs in the structures used for communication are
+4k PFNs. In case a different page size is in use on the guest (e.g.
+64k), things go terribly wrong all over:
+- When reporting statistics, post_status() reports them in guest pages
+and hypervisor sees very low memory usage.
+- When ballooning, guest reports back PFNs of the allocated pages but
+the hypervisor treats them as 4k PFNs.
+- When unballooning or memory hotplugging, PFNs coming from the host
+are 4k PFNs and they may not even be 64k aligned making it difficult
+to handle.
 
-Hi Martin
+While statistics and ballooning requests would be relatively easy to
+handle by converting between guest and hypervisor page sizes in the
+communication structures, handling unballooning and memory hotplug
+requests seem to be harder. In particular, when ballooning up
+alloc_balloon_pages() shatters huge pages so unballooning request can
+be handled for any part of it. It is not possible to shatter a 64k
+page into 4k pages so it's unclear how to handle unballooning for a
+sub-range if such request ever comes so we can't just report a 64k
+page as 16 separate 4k pages.
 
-I will pick this up.
+Ideally, the protocol between the guest and the host should be changed
+to allow for different guest page sizes.
 
-Thanks,
-Wei.
+While there's no solution for the above mentioned problems, it seems
+we're better off without the driver in problematic cases.
 
-> 
-> Otherwise I can take this after -rc1 is out.
-> 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ drivers/hv/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 0747a8f1fcee..fb353a13e5c4 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -25,7 +25,7 @@ config HYPERV_UTILS
+ 
+ config HYPERV_BALLOON
+ 	tristate "Microsoft Hyper-V Balloon driver"
+-	depends on HYPERV
++	depends on HYPERV && (X86 || (ARM64 && ARM64_4K_PAGES))
+ 	select PAGE_REPORTING
+ 	help
+ 	  Select this option to enable Hyper-V Balloon driver.
+-- 
+2.33.1
+
