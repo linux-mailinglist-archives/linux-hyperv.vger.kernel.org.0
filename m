@@ -2,180 +2,209 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 421CB48624E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jan 2022 10:46:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA1534862AB
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jan 2022 11:05:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237534AbiAFJqX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 Jan 2022 04:46:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49595 "EHLO
+        id S237777AbiAFKFh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 6 Jan 2022 05:05:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40609 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237427AbiAFJqU (ORCPT
+        by vger.kernel.org with ESMTP id S237769AbiAFKFh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 Jan 2022 04:46:20 -0500
+        Thu, 6 Jan 2022 05:05:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641462380;
+        s=mimecast20190719; t=1641463536;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=UOql9r6TG+gVAuhd4vUHWF9s3KT2BSsvXaBsFleNoFI=;
-        b=frQvTH4vG5cCXn90qjd6Qau8r/6SBVCw9PUqH+HuhXuvaFHbDnon7l9x/EKGd0Y5KbljHr
-        eVPnpVjAkpEkMvTGllgWtuEkjnFzCxIzRPlV+FR7WIX3fr1jSt3FX/FPaxcfy/vxcwhw6d
-        zsE3r4kL2NwsYpXM/mntYCe5Agz2nXA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZquyDjMWtH6Elw5UE/jt48UgaPm40THs0oEdj0Vwssc=;
+        b=D2hmH6247aGoVlnUTiTiXvAOrC67xDw06pUog1LezTe8AG0vhowp1NAYrrQeMGPBOVEW2p
+        AspFZLzA4T1v0kVirNnxv+St/eYTipHLkCmmiVixqCQsy3SXGC2p2JKBrhsOL3jSga/Cgg
+        Bv/s59nobf4zAEFnW5nTdZxkMkGRnoY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-544-WhVcCo76N52plnlYAnjunw-1; Thu, 06 Jan 2022 04:46:16 -0500
-X-MC-Unique: WhVcCo76N52plnlYAnjunw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1373EA0BDE;
-        Thu,  6 Jan 2022 09:46:15 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.40.194.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 919521079741;
-        Thu,  6 Jan 2022 09:46:12 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+ us-mta-586-Tz1eLbFpMjOvDARjjSJsFQ-1; Thu, 06 Jan 2022 05:05:29 -0500
+X-MC-Unique: Tz1eLbFpMjOvDARjjSJsFQ-1
+Received: by mail-wr1-f70.google.com with SMTP id m18-20020adfa3d2000000b001a56f76b2deso48361wrb.7
+        for <linux-hyperv@vger.kernel.org>; Thu, 06 Jan 2022 02:05:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:organization:subject
+         :in-reply-to:content-transfer-encoding;
+        bh=ZquyDjMWtH6Elw5UE/jt48UgaPm40THs0oEdj0Vwssc=;
+        b=OTlhRMKos1uDwfhAYjrHF/5QUwu5i822jTck289pjpa0Tu1OTUcnQoq6vWJOuj1Mgx
+         Eyf3beaAX83l7XQ65iQoCHoQnClSxOtBXL8HJnNqR23hoevkqKsH6tLeEnjDUys0wrZR
+         cmYsRGANyZEaEjGuuee2wioWR+MPzGtzEJdcaDR6IJUh3kwd30B0sZcTC5PSP2zw7iS0
+         KWQsKrVMSQ5pl2aDbFYKSv5n6DDowSvb2MoSIY6uQ0+V6FvSRcPSCqiCuOs0LYDfixdh
+         44zoR9UBgvc5fXqqgo+HV0xZBT+lzoH2tDrvdmTVHeusrcH7xtO5JKVFwKJBZtU7HZqh
+         nirg==
+X-Gm-Message-State: AOAM530j7Z77i/xh6hy3mkDzQROKJqQYu4aWyo771NqngYCAR/A2/4Nn
+        /vwL4wNHZNOHyTRvNFu25H5TwBjUkwVFfbCKDn9mhVl3stT9F6kJyouZEfNLUKQpqrWgNFciHyp
+        AwUrAIYQM2/g/9yyu9cf38zVl
+X-Received: by 2002:a05:6000:1807:: with SMTP id m7mr49931388wrh.191.1641463527945;
+        Thu, 06 Jan 2022 02:05:27 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzv6lEQSqv1I2s2ToQnZUt16x8ql29+wEorqhqfkyZm/saq6lidksuzyFufB1UL+A+Fcqbwuw==
+X-Received: by 2002:a05:6000:1807:: with SMTP id m7mr49931355wrh.191.1641463527588;
+        Thu, 06 Jan 2022 02:05:27 -0800 (PST)
+Received: from [192.168.3.132] (p5b0c699a.dip0.t-ipconnect.de. [91.12.105.154])
+        by smtp.gmail.com with ESMTPSA id j3sm1619719wrt.14.2022.01.06.02.05.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jan 2022 02:05:27 -0800 (PST)
+Message-ID: <277b1085-d9a7-78d5-4997-3c0595f54460@redhat.com>
+Date:   Thu, 6 Jan 2022 11:05:26 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Content-Language: en-US
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/hyperv: Properly deal with empty cpumasks in hyperv_flush_tlb_multi()
-Date:   Thu,  6 Jan 2022 10:46:11 +0100
-Message-Id: <20220106094611.1404218-1-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
+References: <20220105165028.1343706-1-vkuznets@redhat.com>
+ <20220105202203.evk7uckmephnu3ev@liuwe-devbox-debian-v2>
+ <87leztp7zk.fsf@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH RFC] Drivers: hv: balloon: Temporary disable the driver on
+ ARM64 when PAGE_SIZE != 4k
+In-Reply-To: <87leztp7zk.fsf@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-KASAN detected the following issue:
+On 06.01.22 09:46, Vitaly Kuznetsov wrote:
+> Wei Liu <wei.liu@kernel.org> writes:
+> 
+>> On Wed, Jan 05, 2022 at 05:50:28PM +0100, Vitaly Kuznetsov wrote:
+>>> Hyper-V ballooning and memory hotplug protocol always seems to assume
+>>> 4k page size so all PFNs in the structures used for communication are
+>>> 4k PFNs. In case a different page size is in use on the guest (e.g.
+>>> 64k), things go terribly wrong all over:
+>>> - When reporting statistics, post_status() reports them in guest pages
+>>> and hypervisor sees very low memory usage.
+>>> - When ballooning, guest reports back PFNs of the allocated pages but
+>>> the hypervisor treats them as 4k PFNs.
+>>> - When unballooning or memory hotplugging, PFNs coming from the host
+>>> are 4k PFNs and they may not even be 64k aligned making it difficult
+>>> to handle.
+>>>
+>>> While statistics and ballooning requests would be relatively easy to
+>>> handle by converting between guest and hypervisor page sizes in the
+>>> communication structures, handling unballooning and memory hotplug
+>>> requests seem to be harder. In particular, when ballooning up
+>>> alloc_balloon_pages() shatters huge pages so unballooning request can
+>>> be handled for any part of it. It is not possible to shatter a 64k
+>>> page into 4k pages so it's unclear how to handle unballooning for a
+>>> sub-range if such request ever comes so we can't just report a 64k
+>>> page as 16 separate 4k pages.
+>>>
+>>
+>> How does virtio-balloon handle it? Does its protocol handle different
+>> page sizes?
+>>
+> 
+> Let's ask the expert)
+> 
+> David,
+> 
+> how does virtio-balloon (and virtio-mem) deal with different page sizes
+> between guest and host?
 
- BUG: KASAN: slab-out-of-bounds in hyperv_flush_tlb_multi+0xf88/0x1060
- Read of size 4 at addr ffff8880011ccbc0 by task kcompactd0/33
+virtio-mem is easy, virtio-balloon is more involved. virtio-balloon has
+similarly a 4k granularity as part of the protocol.
 
- CPU: 1 PID: 33 Comm: kcompactd0 Not tainted 5.14.0-39.el9.x86_64+debug #1
- Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine,
-     BIOS Hyper-V UEFI Release v4.0 12/17/2019
- Call Trace:
-  dump_stack_lvl+0x57/0x7d
-  print_address_description.constprop.0+0x1f/0x140
-  ? hyperv_flush_tlb_multi+0xf88/0x1060
-  __kasan_report.cold+0x7f/0x11e
-  ? hyperv_flush_tlb_multi+0xf88/0x1060
-  kasan_report+0x38/0x50
-  hyperv_flush_tlb_multi+0xf88/0x1060
-  flush_tlb_mm_range+0x1b1/0x200
-  ptep_clear_flush+0x10e/0x150
-...
- Allocated by task 0:
-  kasan_save_stack+0x1b/0x40
-  __kasan_kmalloc+0x7c/0x90
-  hv_common_init+0xae/0x115
-  hyperv_init+0x97/0x501
-  apic_intr_mode_init+0xb3/0x1e0
-  x86_late_time_init+0x92/0xa2
-  start_kernel+0x338/0x3eb
-  secondary_startup_64_no_verify+0xc2/0xcb
 
- The buggy address belongs to the object at ffff8880011cc800
-  which belongs to the cache kmalloc-1k of size 1024
- The buggy address is located 960 bytes inside of
-  1024-byte region [ffff8880011cc800, ffff8880011ccc00)
+1. virtio-mem:
 
-'hyperv_flush_tlb_multi+0xf88/0x1060' points to
-hv_cpu_number_to_vp_number() and '960 bytes' means we're trying to get
-VP_INDEX for CPU#240. 'nr_cpus' here is exactly 240 so we're trying to
-access past hv_vp_index's last element. This can (and will) happen
-when 'cpus' mask is empty and cpumask_last() will return '>=nr_cpus'.
+It has a per-device block size determined by the device, usually around
+1 MiB or bigger. virtio-mem usually uses the THP size (e.g., 2 MiB on
+x86_64) unless larger huge pages are used for backing device memory in
+the hypervisor. So the actual base page size doesn't play any role.
 
-Commit ad0a6bad4475 ("x86/hyperv: check cpu mask after interrupt has
-been disabled") tried to deal with empty cpumask situation but
-apparently didn't fully fix the issue.
+Resizing is triggered by a resize request towards the guest, and it's
+always up to the guest to select device blocks to (un)plug.
 
-'cpus' cpumask which is passed to hyperv_flush_tlb_multi() is
-'mm_cpumask(mm)' (which is '&mm->cpu_bitmap'). This mask changes every
-time the particular mm is scheduled/unscheduled on some CPU (see
-switch_mm_irqs_off()), disabling IRQs on the CPU which is performing remote
-TLB flush has zero influence on whether the particular process can get
-scheduled/unscheduled on _other_ CPUs so e.g. in the case where the mm was
-scheduled on one other CPU and got unscheduled during
-hyperv_flush_tlb_multi()'s execution will lead to cpumask becoming empty.
+E.g., plugged_size: 200 MiB, requested_size: 300 MiB -> guest is
+requested to plug 100 MiB (select unplugged device blocks and request to
+plug them)
 
-It doesn't seem that there's a good way to protect 'mm_cpumask(mm)'
-from changing during hyperv_flush_tlb_multi()'s execution. It would be
-possible to copy it in the very beginning of the function but this is a
-waste. It seems we can deal with changing cpumask just fine.
+E.g., plugged_size: 300 MiB, requested_size: 200 MiB -> guest is
+requested to unplug 100 MiB (select plugged device blocks and request to
+unplug them)
 
-When 'cpus' cpumask changes during hyperv_flush_tlb_multi()'s
-execution, there are two possible issues:
-- 'Under-flushing': we will not flush TLB on a CPU which got added to
-the mask while hyperv_flush_tlb_multi() was already running. This is
-not a problem as this is equal to mm getting scheduled on that CPU
-right after TLB flush.
-- 'Over-flushing': we may flush TLB on a CPU which is already cleared
-from the mask. First, extra TLB flush preserves correctness. Second,
-Hyper-V's TLB flush hypercall takes 'mm->pgd' argument so Hyper-V may
-avoid the flush if CR3 doesn't match.
 
-Fix the immediate issue with cpumask_last()/hv_cpu_number_to_vp_number()
-and remove the pointless cpumask_empty() check from the beginning of the
-function as it really doesn't protect anything. Also, avoid the hypercall
-altogether when 'flush->processor_mask' ends up being empty.
+1.1 host granularity < guest granularity
 
-Fixes: ad0a6bad4475 ("x86/hyperv: check cpu mask after interrupt has been disabled")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/hyperv/mmu.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+Assume the device supports 2MiB and the guest 4 MiB, which is the case
+on current x86_64, The guest will simply (un)plug in 4 MiB granularity,
+logically mapping to two 2MiB device blocks. Requests not aligned to
+4MiB cannot be fully processed.
 
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index bd13736d0c05..0ad2378fe6ad 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -68,15 +68,6 @@ static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
- 
- 	local_irq_save(flags);
- 
--	/*
--	 * Only check the mask _after_ interrupt has been disabled to avoid the
--	 * mask changing under our feet.
--	 */
--	if (cpumask_empty(cpus)) {
--		local_irq_restore(flags);
--		return;
--	}
--
- 	flush_pcpu = (struct hv_tlb_flush **)
- 		     this_cpu_ptr(hyperv_pcpu_input_arg);
- 
-@@ -115,7 +106,9 @@ static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
- 		 * must. We will also check all VP numbers when walking the
- 		 * supplied CPU set to remain correct in all cases.
- 		 */
--		if (hv_cpu_number_to_vp_number(cpumask_last(cpus)) >= 64)
-+		cpu = cpumask_last(cpus);
-+
-+		if (cpu < nr_cpumask_bits && hv_cpu_number_to_vp_number(cpu) >= 64)
- 			goto do_ex_hypercall;
- 
- 		for_each_cpu(cpu, cpus) {
-@@ -131,6 +124,12 @@ static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
- 			__set_bit(vcpu, (unsigned long *)
- 				  &flush->processor_mask);
- 		}
-+
-+		/* nothing to flush if 'processor_mask' ends up being empty */
-+		if (!flush->processor_mask) {
-+			local_irq_restore(flags);
-+			return;
-+		}
- 	}
- 
- 	/*
+
+1.2 guest granularity < host granularity
+
+Assume the device supports 2 MiB and the guest 1 MiB. The guest will
+simply (un)plug in 2 MiB granularity.
+
+
+
+2. virtio-balloon
+
+It's based on 4k pages.
+
+Inflation/deflation is triggered by a balloon size change request. It's
+always up to the guest to select pages to inflate/deflate
+
+E.g., current_size: 200 MiB, target_size: 300 MiB -> guest is requested
+to inflate the balloon by 100 MiB (select deflated pages and request to
+inflate them)
+
+E.g., current_size: 300 MiB, target_size: 200 MiB -> guest is requested
+to deflate 100 MiB (select inflated pages and request to deflate them)
+
+2.1 guest granularity > 4k:
+
+Assume the guest has a page size of 16K. Inflation/deflation requests
+not aligned to 16K cannot be fully processed. Otherwise, the guest
+simply inflates/defaltes 16k pages by logically inflating/deflating 4
+consecutive 4k pages. It's worth noting that inflation/deflation
+requests of 4k pages cannot be rejected by the host.
+
+VIRTIO_BALLOON_PAGES_PER_PAGE expresses exactly that. set_page_pfns()
+simply iterates over VIRTIO_BALLOON_PAGES_PER_PAGE "4k sub-pages"
+
+2.2 host granularity > 4k:
+
+Assume the host has a page size of 16K. From a guest POV we don't care
+and we don't know and will just operate on 4k pages. In the hypervisor
+it's problematic, though: if the guest inflated a 4k page, we cannot
+easily free up a 16k page. We'd have to track the state of each and
+every individual page, which is undesirable: once the complete 16k page
+would be inflated, we could free it. QEMU only tracks this for
+consecutive inflation requests, which sometimes works.
+
+
+
+Long story short, IIRC all the details about the HV balloon, the real
+issue is that while the guest is in charge of selecting pages to
+inflate, it's the *hypervisor* that selects pages to deflate, which
+makes it impossible to handle 2.1 in a similar way to virtio-balloon.
+The hypervisor would have to know about the guest granularity in order
+to not request to deflate, say, 4k pages, but 16k pages. Devil might be
+in the detail.
+
 -- 
-2.33.1
+Thanks,
+
+David / dhildenb
 
