@@ -2,89 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81A874864DD
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jan 2022 14:03:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAC65486DA7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jan 2022 00:21:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238944AbiAFNDl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 Jan 2022 08:03:41 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:52775 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239006AbiAFNDl (ORCPT
+        id S245428AbiAFXVF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 6 Jan 2022 18:21:05 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:37148 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234795AbiAFXVF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 Jan 2022 08:03:41 -0500
-Received: by mail-wm1-f47.google.com with SMTP id v123so1713435wme.2;
-        Thu, 06 Jan 2022 05:03:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vcYnekM26AwY1vgrHqt3niX4oXoouwaBi8z/zP8TK7s=;
-        b=KK1AhbTgHQntIEoZKmY7mqNYMpCGMojc2X8jImMj3fsLPy0VObLXJbPoSky5LXsB55
-         pkWPrF2QpkLlj81DfXgOMtzoyEDpPDJdIFHkN5fA/Opdi3tIw/Q5vnjcL2z6W1b6KdrP
-         nMqNkVzzQ33L+9/rzOez7I2fji+61AG4J1x2IvN/pugkswXecJbkPEyRD9gcmk8cYHAe
-         f/z+UYPG0Uu/fgG0sbcEB3nqh1mlzvIdcuXQh9rAJVaKHeYqeG31cETZSctu5hZCI4p7
-         zyCORkBHBWlCDBpvq6rV+hMFKcEt7oTDU89KMSOrpkSz7pv6Qb6Wygg6DR1B+4+Z0x8j
-         jU9g==
-X-Gm-Message-State: AOAM533lyrJtN4u/Crz/ODPbUAJsH7z+yLMQR8Bcrx6H+P4/J8AqbGRR
-        Qb3AofyHcL7S0v6Ai4aVYVk=
-X-Google-Smtp-Source: ABdhPJxjG8n0y9ZGjhfUAQ/lARqGtAcsKv1amFfIs3NrZLQDMXO0cFdv3+3SKS6rfToX8YU5cknK9Q==
-X-Received: by 2002:a05:600c:acf:: with SMTP id c15mr6826950wmr.7.1641474219848;
-        Thu, 06 Jan 2022 05:03:39 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b6sm2089988wri.56.2022.01.06.05.03.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 05:03:39 -0800 (PST)
-Date:   Thu, 6 Jan 2022 13:03:37 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     ast@kernel.org, daniel@iogearbox.net, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, shayagr@amazon.com, akiyano@amazon.com,
-        darinzon@amazon.com, ndagan@amazon.com, saeedb@amazon.com,
-        sgoutham@marvell.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        peppe.cavallaro@st.com, alexandre.torgue@foss.st.com,
-        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-        grygorii.strashko@ti.com, sameehj@amazon.com,
-        chenhao288@hisilicon.com, moyufeng@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 1/2] net: add includes masked by netdevice.h
- including uapi/bpf.h
-Message-ID: <20220106130337.qtvjgffwlyzy7j2y@liuwe-devbox-debian-v2>
-References: <20211230012742.770642-1-kuba@kernel.org>
- <20211230012742.770642-2-kuba@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211230012742.770642-2-kuba@kernel.org>
+        Thu, 6 Jan 2022 18:21:05 -0500
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id DEE8A20B7179; Thu,  6 Jan 2022 15:21:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DEE8A20B7179
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1641511264;
+        bh=QLQ7OeBa1sO3epoyChchUmo5nTa02ccxvrxcJ1gXpmo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hpK8tNrBj56qotepxk+nYmrsB9u9r0S0KVSX/G+4ZWtIYGHpcIlPA4ugbpDRjWAJ/
+         XsO9Z6eZKXmX7KfLH/KiS4V2JjE0Nw2bifihsB64W5S8LS6GV1pwQw0wPKuw6yejGD
+         Av31xnXih0zODLgEEIcI8Im9+mVZIkejsSHCg+kM=
+From:   longli@linuxonhyperv.com
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, paekkaladevi@microsoft.com
+Cc:     Long Li <longli@microsoft.com>
+Subject: [PATCH] PCI: hv: Fix NUMA node assignment when kernel boots with parameters affecting NUMA topology
+Date:   Thu,  6 Jan 2022 15:20:28 -0800
+Message-Id: <1641511228-12415-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Dec 29, 2021 at 05:27:41PM -0800, Jakub Kicinski wrote:
-> Add missing includes unmasked by the subsequent change.
-> 
-> Mostly network drivers missing an include for XDP_PACKET_HEADROOM.
-> 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[...]
->  drivers/net/ethernet/microsoft/mana/mana_en.c      | 2 ++
+From: Long Li <longli@microsoft.com>
 
-This seems trivially correct, so in case an ack is needed:
+When the kernel boots with parameters restricting the number of cpus or NUMA
+nodes, e.g. maxcpus=X or numa=off, the vPCI driver should only set to the NUMA
+node to a value that is valid in the current running kernel.
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index c1d5a374b967..2ece9e90dc50 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1,6 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
->  /* Copyright (c) 2021, Microsoft Corporation. */
->  
-> +#include <uapi/linux/bpf.h>
-> +
->  #include <linux/inetdevice.h>
->  #include <linux/etherdevice.h>
->  #include <linux/ethtool.h>
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index fc1a29acadbb..8686343eff4c 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1835,8 +1835,21 @@ static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
+ 		if (!hv_dev)
+ 			continue;
+ 
+-		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+-			set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_node);
++		if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY) {
++			int cpu;
++			bool found_node = false;
++
++			for_each_possible_cpu(cpu)
++				if (cpu_to_node(cpu) ==
++				    hv_dev->desc.virtual_numa_node) {
++					found_node = true;
++					break;
++				}
++
++			if (found_node)
++				set_dev_node(&dev->dev,
++					     hv_dev->desc.virtual_numa_node);
++		}
+ 
+ 		put_pcichild(hv_dev);
+ 	}
+-- 
+2.25.1
+
