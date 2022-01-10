@@ -2,68 +2,140 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A40E44898A6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jan 2022 13:32:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA23648995A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jan 2022 14:11:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245528AbiAJMcn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 10 Jan 2022 07:32:43 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:46812 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245522AbiAJMck (ORCPT
+        id S231143AbiAJNLq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 10 Jan 2022 08:11:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230262AbiAJNLq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 10 Jan 2022 07:32:40 -0500
-Received: by mail-wm1-f47.google.com with SMTP id d187-20020a1c1dc4000000b003474b4b7ebcso6502363wmd.5;
-        Mon, 10 Jan 2022 04:32:40 -0800 (PST)
+        Mon, 10 Jan 2022 08:11:46 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D701EC06173F
+        for <linux-hyperv@vger.kernel.org>; Mon, 10 Jan 2022 05:11:45 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id t24so5550167edi.8
+        for <linux-hyperv@vger.kernel.org>; Mon, 10 Jan 2022 05:11:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=Bgie3w5lZXcUpEJsNUNnYT9D80sz6831OKMgWSWMpAMR4c04HQM1hwHkoZ1AqHgJ5M
+         pQJfhFBsNTGc+jfMsWTuSDXhNBe5XPwJ8/UQZKbYcWTDQ68Eu4MBBVsHf0V3Baa+27Pp
+         IUJW/950IUGNsTto2NnsTW49/Cy4Vf+KfgzDT0+KZ2gcb/QkEKg3LEIj8qPJpiII0Qbk
+         buE3CbPl0T8T6omQLXT3KYJBxN98pPIrfxDam1Qs0diPFN43pWVugWbd8LU8WaIGviK3
+         O/t/NLMKhR03EdE8rMi5c8T5epCw09Yzc4YmAU5QrO9ZaREbayNwAtpm1SWYSR1IiBuY
+         5w9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f3LQhWJAJKsb68e/0rFUgtYKcFHxmU2zF5dMcfIjv78=;
-        b=UmmM1+eLwWqjmo+5+Ho3+2pw/RUbUbf1P+BF7/yVzZlH2uUEVptpwvjZCFth1brN7H
-         LROz/9AZxpkNAbTDQPXdhsEE5cGyFiwR6JXU105LDDDbVopxP3TG3UT9o51hjz6DpN8u
-         MklFp1LRUYHXqi6oelj4lVAf2M2eI9AGrjZc/P5jMDShEGuu03uIneEP+yYVJnvfVfAp
-         gzmULmb5XguiEQ45Sb4pPRyJcPjtwqfX1Fa7JQ13r9h90SU2uT4hgqCLz/bMhV7UpSCi
-         LgtzDvAyyG212K5Zn/SSyRGEhAou/8ya3b/syjCqScDrgm0rhaj8TH/n6C1gYWDgqcYP
-         rI+g==
-X-Gm-Message-State: AOAM530seAGSYWte7FOA3zrJSRpFaqf2oNqLXTznBOGyxAS8v8Kh3jY2
-        Sne+UHukPhJMgnvwqkKrcfE=
-X-Google-Smtp-Source: ABdhPJyqu61Adly8ssPLGPb66LI05B4lJ1Un8xtFd/gv0BCZRYog8byk1oHZtN/QHtaT4O8onvAWrg==
-X-Received: by 2002:a05:600c:1907:: with SMTP id j7mr21950758wmq.175.1641817959405;
-        Mon, 10 Jan 2022 04:32:39 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g12sm3024240wrm.109.2022.01.10.04.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jan 2022 04:32:39 -0800 (PST)
-Date:   Mon, 10 Jan 2022 12:32:37 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     Juan Vazquez <juvazq@linux.microsoft.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, mikelley@microsoft.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-hyperv@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: storvsc: Fix storvsc_queuecommand() memory leak
-Message-ID: <20220110123237.ujsfx7anhk3eqhcf@liuwe-devbox-debian-v2>
-References: <20220109001758.6401-1-juvazq@linux.microsoft.com>
- <7354695e-a8dd-8c6c-ee7e-764280184863@gmail.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=GvBfvJ6wBfIt+M9sHLz1Y79Y45GeQcdjfLzub0MPZIo1o7K3EyuOywemUCvyjGxN1Q
+         4EgtHVswRs8DSPNbXsOmQQJ2S2ZhM7n1BZN/2tYImE/wc1IKj9raEfpfDuJkGqk3gUge
+         SjoUDvhoj5VpsXw35qUN4Lwzf7NTZhCh9n1d7i3bHRYFiM++3vsxE6ZrgMxTd8RlA/0N
+         NBaIB9dYdgMnfBWd/MKNf1LLOnCv/qgjmiIWWIPZ5+Kju1NeuYrcsunCby0T2a4SmU71
+         LIROtN6cgMeOClM8xYEqM5fWZlnfCYKLsSYdL83ToO42iFC1XJXwpHxhuWaD2ZfcDHF0
+         BoYw==
+X-Gm-Message-State: AOAM5338OFPi7tukFfs1dfITpGYI6twOOCDNWCx8RKEqYLJakw/LRZs4
+        otKClueSEP1t1M8fE58D557THfMEmsEp6nDDlN432jp7rSs=
+X-Google-Smtp-Source: ABdhPJyUuzfRq9+VAp3YIslVsNF7E8r6u+SDvjtiaFw6sfTA9uOxrmlrl9JDay/jDh10uqplhgk07a+YHTpM3Ge0znw=
+X-Received: by 2002:ac2:4c51:: with SMTP id o17mr60639917lfk.558.1641820293776;
+ Mon, 10 Jan 2022 05:11:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7354695e-a8dd-8c6c-ee7e-764280184863@gmail.com>
+Received: by 2002:a05:6504:15d1:0:0:0:0 with HTTP; Mon, 10 Jan 2022 05:11:32
+ -0800 (PST)
+Reply-To: gtbank107@yahoo.com
+From:   Barr Robert Richter <westernunion.benin982@gmail.com>
+Date:   Mon, 10 Jan 2022 14:11:32 +0100
+Message-ID: <CAP=nHBK9zHzp_=-EVswWQiLxEoc+HV4oqddgtnEqf-9qYab_4Q@mail.gmail.com>
+Subject: Contact GT Bank-Benin to receive your transfer amount of $18.5m US Dollars.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 08:13:33PM +0800, Tianyu Lan wrote:
-> On 1/9/2022 8:17 AM, Juan Vazquez wrote:
-> > Fix possible memory leak in error path of storvsc_queuecommand() when
-> > DMA mapping fails.
-> > 
-> > Fixes: 743b237c3a7b ("scsi: storvsc: Add Isolation VM support for storvsc driver")
-> > Signed-off-by: Juan Vazquez <juvazq@linux.microsoft.com>
-> 
-> Looks good. Thanks for the fix patch.
-> 
-> Reviewed-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Attn,Dear
+I need you to know that the fear of the LORD is
+the beginning of wisdom, and knowledge of the Holy One is
+understanding. As power of God Most High. And This is the confidence
+we have in approaching God, that if we ask anything according to his
+will, he hears us. I will make you know that Slow and steady wins the race.
+It is your turn to receive your overdue compensation funds total
+amount $18.5Milion  USD.
+I actualized that you will receive your transfer today without any more delay
+No More fee OK, Believe me , I am your Attorney standing here on your favor.
+I just concluded conversation with the Gt Bank Director, Mrs Mary Gate
+And She told me that your transfer is ready today
 
-Applied. Thanks.
+So the Bank Asked you to contact them immediately by re-confirming
+your Bank details asap.
+Because this is the Only thing holding this transfer
+If you did not trust me and Mrs Mary Gate,Who Else will you Trust?
+For we are the ones trying to protect your funds here
+and make sure that your funds is secure.
+So Promisingly, I am here to assure you, that Grate Miracle is coming on
+your way, and this funds total amount of $18.500,000 is your
+compensation, entitlement inheritance overdue funds on your name.
+Which you cannot let anything delay you from receiving your funds now,
+
+Finally i advised you to try your possible best and contact Gt Bank Benin
+once you get this message to receive your transfer $18.5 USD today.
+I know that a journey of thousand miles begins with a single step.
+Always put your best foot forward
+Try as hard as you can, God give you best.
+take my advice and follow the due process of your payment, the
+transfer will be released to
+you smoothly without any hitches or hindrance.
+
+Contact DR.MRS MARY GATE, Director Gt bank-Benin to receive your
+transfer amount of $18.5m US Dollars
+It was deposited and registered to your name this morning.
+Contact the Bank now to know when they will transfer to your
+country today
+
+Email id: gtbank107@yahoo.com
+Tel/mobile, +229 99069872
+Contact person, Mrs Mary Gate,Director Gt bank-Benin.
+Among the blind the one-eyed man is king
+
+As you sow, so you shall reap, i want you to receive your funds
+Best things in life are free
+Send to her your Bank Details as i listed here.
+
+Your account name-------------
+Your Bank Name----------------
+Account Number----------
+your Bank address----------
+Country-----------
+Your private phone number---------
+Routing Numbers-------------
+Swift Code-----------
+
+Note, Your funds is %100 Percent ready for
+transfer.
+Everything you do remember that Good things come to those who wait.
+I have done this work for you with my personally effort, Honesty is
+the best policy.
+now your transfer is currently deposited with paying bank this morning.
+It is by the grace of God that I received Christ, having known the truth.
+I had no choice than to do what is lawful and justice in the
+sight of God for eternal life and in the sight of man for witness of
+God & His Mercies and glory upon my life.
+
+send this needed bank details to the bank today, so that you receive
+your transfer today as
+it is available for your confirmation today.
+Please do your best as a serious person and send the fee urgent, Note
+that this transfer of $18.500.000 M USD is a Gift from God to Bless
+you.
+
+If you did not contact the bank urgent, finally the Bank will release
+your transfer of $18.500.000M USD to  Mr. David Bollen as your
+representative.
+So not allow another to claim your Money.
+Thanks For your Understanding.
+
+Barr Robert Richter, UN Attorney At Law Court-Benin
