@@ -2,270 +2,148 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85765488D84
-	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jan 2022 01:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB216489814
+	for <lists+linux-hyperv@lfdr.de>; Mon, 10 Jan 2022 12:53:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237594AbiAJAod (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 9 Jan 2022 19:44:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236630AbiAJAob (ORCPT
+        id S244989AbiAJLxT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 10 Jan 2022 06:53:19 -0500
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:40686 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S245232AbiAJLvS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 9 Jan 2022 19:44:31 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A4FC06173F;
-        Sun,  9 Jan 2022 16:44:31 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id q25so38506491edb.2;
-        Sun, 09 Jan 2022 16:44:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=d6TeLkgYS1ew8fCJmvh49i3fDk/RLdVzngu08Uax2h4=;
-        b=Nuk6V4eDecFZtqH5KuYOv3stWfzk3z30dmeeKoUhD4geZRR7ItYdfH8H3xs1/YL1sC
-         f8+KBb7PpXLRi5UWA2pKKHLrev0/LsRTVlS6iX5h4OLCC/3lJeQnoqacQW+eV+DmERru
-         HpFqP3hP43vi9J//SvRwoQfrlcNBiFwO5DopN7siK+QaQT9MS98p9GPnn8NmkS2w56Hk
-         IomDRqUPJMGIqv/V62YZI1Z4hHFIdBpHw8KyJoSJHxxxWz2pspaLVUnGZQNSo9QH7FEh
-         8C+KhgvOH2NG1UBc+KL8/Io1lirgJJ5Hk0618AYRNv8AyJy50DWmbPVaXTn551nOKVww
-         TlYw==
+        Mon, 10 Jan 2022 06:51:18 -0500
+Received: by mail-wr1-f45.google.com with SMTP id x4so1069908wru.7;
+        Mon, 10 Jan 2022 03:51:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=d6TeLkgYS1ew8fCJmvh49i3fDk/RLdVzngu08Uax2h4=;
-        b=3DTnBzcFdFhlt7gkrB7z3dablvcM8ieyBOR3SeYR9xNDTunSPk6lTKUcJr9BlRgyWe
-         EnlcOfeZo7m/cBQ5mMBuyuly9ksgsRjxY8K15eZg8MXvIbLm1XabpXhGhWiQkKWEoyjn
-         1Kn9FRJSlI7QkO9VUP3H11SJFoNgF+9sL60kL/sv1L/Y0pNj1UejxqmBL1IiR1KyS+9C
-         5tT+ipgVVAXWLIxOlAokNZPWnc6qgpZEXjYAyog3HqRwSak8QKjScMsy/N42TwJQQg7y
-         AqUMmSKpW/G7ADrmKJ+QJjKf3v+6d9G5Uf2DYUoCmMAy7q7afag4FYoNOWC4cg4E6O6I
-         Ih+A==
-X-Gm-Message-State: AOAM533as/zwlxvq3BN6LBZLUA0njUk+obr7NTOLslFkGaUz/3vWCD2e
-        Cdfafv3+8TD/ZvtOqL0HmtQ=
-X-Google-Smtp-Source: ABdhPJw9LBaKSD+9yimBA0BUEf+Z1s0gMshG0cPBnRoiNX58JwKhEm6y52sQVaIofS1PA2lIQLoD/Q==
-X-Received: by 2002:a05:6402:5216:: with SMTP id s22mr3321353edd.132.1641775469982;
-        Sun, 09 Jan 2022 16:44:29 -0800 (PST)
-Received: from anparri (host-95-250-60-3.retail.telecomitalia.it. [95.250.60.3])
-        by smtp.gmail.com with ESMTPSA id 18sm1821263ejo.8.2022.01.09.16.44.28
+        bh=fVWYnPe31TN3wo6NRP7EnmwglODEuDj2HiGbPx+TZmY=;
+        b=fnLz/TFSLrObkVRoLMLgJlUnsJhK5M0s1+GFyKsDOk1Kb0SvRr4dSOJlYz+KzS2AVG
+         tWkpF9wcQOSI3x9CnwJe4sUCMD6PKRQG4vMOTX17o9f2d+Iw8n2xe8n5be41IMt+huqo
+         tQ5mlVSnyrQnAp3dV0AQBkudWTZ6JhreKafIOYDqgCZY2knVbO7i3YE9YlEem+V49ZTz
+         Vqh+R2MGIiAPQat18U57OJMNQELmsSZ7Hne/ZOcjSLLS4Rfy9qMrmpYEoGIUgt2bVaqx
+         xudZ20lxqxlPIbtkpeZJPOi1J3uO4kdePGUnMMJp9h9t+Eu9rveDKsr4nUOy3zyHf/uh
+         r6YQ==
+X-Gm-Message-State: AOAM533u7eUHkn2l5goPZukHkKFPDVKVp4sfj/RMLN6iAf5MVj5JwqnD
+        VO4osUsg9NAzMTmgdSTL6LVdD+BnMkA=
+X-Google-Smtp-Source: ABdhPJzZNE2Dpo4pqnOKM7B/3CE83uW86vTW5ZzWGI5vRXlce3sqr5qgUYP56XzldBhPM1/GMQ+FfQ==
+X-Received: by 2002:a5d:59a7:: with SMTP id p7mr64016015wrr.258.1641815474270;
+        Mon, 10 Jan 2022 03:51:14 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id a20sm6260816wmb.27.2022.01.10.03.51.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jan 2022 16:44:29 -0800 (PST)
-Date:   Mon, 10 Jan 2022 01:44:19 +0100
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     Yanming Liu <yanminglr@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
-        daniel@ffwll.ch, mikelley@microsoft.com, lkmlabelt@gmail.com
-Subject: Re: [PATCH v2] hv: account for packet descriptor in maximum packet
- size
-Message-ID: <20220110004419.GA435914@anparri>
-References: <20220109095516.3250392-1-yanminglr@gmail.com>
+        Mon, 10 Jan 2022 03:51:13 -0800 (PST)
+Date:   Mon, 10 Jan 2022 11:51:11 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/hyperv: Properly deal with empty cpumasks in
+ hyperv_flush_tlb_multi()
+Message-ID: <20220110115111.nmtahu5afhdgmc7z@liuwe-devbox-debian-v2>
+References: <20220106094611.1404218-1-vkuznets@redhat.com>
+ <MWHPR21MB15938ED874CF437A9C540050D74D9@MWHPR21MB1593.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220109095516.3250392-1-yanminglr@gmail.com>
+In-Reply-To: <MWHPR21MB15938ED874CF437A9C540050D74D9@MWHPR21MB1593.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-(Extending Cc: list,)
-
-On Sun, Jan 09, 2022 at 05:55:16PM +0800, Yanming Liu wrote:
-> Commit adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V
-> out of the ring buffer") introduced a notion of maximum packet size in
-> vmbus channel and used that size to initialize a buffer holding all
-> incoming packet along with their vmbus packet header. Currently, some
-> vmbus drivers set max_pkt_size to the size of their receive buffer
-> passed to vmbus_recvpacket, however vmbus_open expects this size to also
-> include vmbus packet header. This leads to corruption of the ring buffer
-> state when receiving a maximum sized packet.
+On Fri, Jan 07, 2022 at 04:56:29PM +0000, Michael Kelley (LINUX) wrote:
+> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, January 6, 2022 1:46 AM
+> > 
+> > KASAN detected the following issue:
+> > 
+> >  BUG: KASAN: slab-out-of-bounds in hyperv_flush_tlb_multi+0xf88/0x1060
+> >  Read of size 4 at addr ffff8880011ccbc0 by task kcompactd0/33
+> > 
+> >  CPU: 1 PID: 33 Comm: kcompactd0 Not tainted 5.14.0-39.el9.x86_64+debug #1
+> >  Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine,
+> >      BIOS Hyper-V UEFI Release v4.0 12/17/2019
+> >  Call Trace:
+> >   dump_stack_lvl+0x57/0x7d
+> >   print_address_description.constprop.0+0x1f/0x140
+> >   ? hyperv_flush_tlb_multi+0xf88/0x1060
+> >   __kasan_report.cold+0x7f/0x11e
+> >   ? hyperv_flush_tlb_multi+0xf88/0x1060
+> >   kasan_report+0x38/0x50
+> >   hyperv_flush_tlb_multi+0xf88/0x1060
+> >   flush_tlb_mm_range+0x1b1/0x200
+> >   ptep_clear_flush+0x10e/0x150
+> > ...
+> >  Allocated by task 0:
+> >   kasan_save_stack+0x1b/0x40
+> >   __kasan_kmalloc+0x7c/0x90
+> >   hv_common_init+0xae/0x115
+> >   hyperv_init+0x97/0x501
+> >   apic_intr_mode_init+0xb3/0x1e0
+> >   x86_late_time_init+0x92/0xa2
+> >   start_kernel+0x338/0x3eb
+> >   secondary_startup_64_no_verify+0xc2/0xcb
+> > 
+> >  The buggy address belongs to the object at ffff8880011cc800
+> >   which belongs to the cache kmalloc-1k of size 1024
+> >  The buggy address is located 960 bytes inside of
+> >   1024-byte region [ffff8880011cc800, ffff8880011ccc00)
+> > 
+> > 'hyperv_flush_tlb_multi+0xf88/0x1060' points to
+> > hv_cpu_number_to_vp_number() and '960 bytes' means we're trying to get
+> > VP_INDEX for CPU#240. 'nr_cpus' here is exactly 240 so we're trying to
+> > access past hv_vp_index's last element. This can (and will) happen
+> > when 'cpus' mask is empty and cpumask_last() will return '>=nr_cpus'.
+> > 
+> > Commit ad0a6bad4475 ("x86/hyperv: check cpu mask after interrupt has
+> > been disabled") tried to deal with empty cpumask situation but
+> > apparently didn't fully fix the issue.
+> > 
+> > 'cpus' cpumask which is passed to hyperv_flush_tlb_multi() is
+> > 'mm_cpumask(mm)' (which is '&mm->cpu_bitmap'). This mask changes every
+> > time the particular mm is scheduled/unscheduled on some CPU (see
+> > switch_mm_irqs_off()), disabling IRQs on the CPU which is performing remote
+> > TLB flush has zero influence on whether the particular process can get
+> > scheduled/unscheduled on _other_ CPUs so e.g. in the case where the mm was
+> > scheduled on one other CPU and got unscheduled during
+> > hyperv_flush_tlb_multi()'s execution will lead to cpumask becoming empty.
+> > 
+> > It doesn't seem that there's a good way to protect 'mm_cpumask(mm)'
+> > from changing during hyperv_flush_tlb_multi()'s execution. It would be
+> > possible to copy it in the very beginning of the function but this is a
+> > waste. It seems we can deal with changing cpumask just fine.
+> > 
+> > When 'cpus' cpumask changes during hyperv_flush_tlb_multi()'s
+> > execution, there are two possible issues:
+> > - 'Under-flushing': we will not flush TLB on a CPU which got added to
+> > the mask while hyperv_flush_tlb_multi() was already running. This is
+> > not a problem as this is equal to mm getting scheduled on that CPU
+> > right after TLB flush.
+> > - 'Over-flushing': we may flush TLB on a CPU which is already cleared
+> > from the mask. First, extra TLB flush preserves correctness. Second,
+> > Hyper-V's TLB flush hypercall takes 'mm->pgd' argument so Hyper-V may
+> > avoid the flush if CR3 doesn't match.
+> > 
+> > Fix the immediate issue with
+> > cpumask_last()/hv_cpu_number_to_vp_number()
+> > and remove the pointless cpumask_empty() check from the beginning of the
+> > function as it really doesn't protect anything. Also, avoid the hypercall
+> > altogether when 'flush->processor_mask' ends up being empty.
+> > 
+> > Fixes: ad0a6bad4475 ("x86/hyperv: check cpu mask after interrupt has been disabled")
+> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > ---
+> >  arch/x86/hyperv/mmu.c | 19 +++++++++----------
+> >  1 file changed, 9 insertions(+), 10 deletions(-)
+> > 
+[...]
 > 
-> Specifically, in hv_balloon I have observed of a dm_unballoon_request
-> message of 4096 bytes being truncated to 4080 bytes. When the driver
-> tries to read next packet it starts from a wrong read_index, receives
-> garbage and prints a lot of "Unhandled message: type: <garbage>" in
-> dmesg.
-> 
-> The same mismatch also happens in hv_fcopy, hv_kvp, hv_snapshot,
-> hv_util, hyperv_drm and hyperv_fb, though bad cases are not observed
-> yet.
-> 
-> Allocate the buffer with HV_HYP_PAGE_SIZE more bytes to make room for
-> the descriptor, assuming the vmbus packet header will never be larger
-> than HV_HYP_PAGE_SIZE. This is essentially free compared to just adding
-> 'sizeof(struct vmpacket_descriptor)' because these buffers are all more
-> than HV_HYP_PAGE_SIZE bytes so kmalloc rounds them up anyway.
-> 
-> Fixes: adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer")
-> Suggested-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Signed-off-by: Yanming Liu <yanminglr@gmail.com>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-Thanks for sorting this out; the patch looks good to me:
-
-Reviewed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-
-In future submissions (if any), please include LKML as well as subsystem
-lists&maintainers; scripts/get_maintainer.pl can be useful to this end.
-
-  Andrea
-
-
-> ---
-> v2: Changed to modify max_pkt_size in individual drivers instead of in
-> vmbus code as suggested by Andrea Parri.
-> 
->  drivers/gpu/drm/hyperv/hyperv_drm_proto.c |  2 ++
->  drivers/hv/hv_balloon.c                   |  7 +++++++
->  drivers/hv/hv_fcopy.c                     |  2 +-
->  drivers/hv/hv_kvp.c                       |  2 +-
->  drivers/hv/hv_snapshot.c                  |  2 +-
->  drivers/hv/hv_util.c                      | 17 +++++++++++++++++
->  drivers/video/fbdev/hyperv_fb.c           |  2 ++
->  7 files changed, 31 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> index c0155c6271bf..bf1548054276 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> @@ -478,6 +478,8 @@ int hyperv_connect_vsp(struct hv_device *hdev)
->  	struct drm_device *dev = &hv->dev;
->  	int ret;
->  
-> +	hdev->channel->max_pkt_size = HV_HYP_PAGE_SIZE + VMBUS_MAX_PACKET_SIZE;
-> +
->  	ret = vmbus_open(hdev->channel, VMBUS_RING_BUFSIZE, VMBUS_RING_BUFSIZE,
->  			 NULL, 0, hyperv_receive, hdev);
->  	if (ret) {
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index ca873a3b98db..ee2527c3d3b8 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1660,6 +1660,13 @@ static int balloon_connect_vsp(struct hv_device *dev)
->  	unsigned long t;
->  	int ret;
->  
-> +	/*
-> +	 * max_pkt_size should be large enough for one vmbus packet header plus
-> +	 * our receive buffer size. We assume vmbus packet header is smaller
-> +	 * than HV_HYP_PAGE_SIZE.
-> +	 */
-> +	dev->channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
-> +
->  	ret = vmbus_open(dev->channel, dm_ring_size, dm_ring_size, NULL, 0,
->  			 balloon_onchannelcallback, dev);
->  	if (ret)
-> diff --git a/drivers/hv/hv_fcopy.c b/drivers/hv/hv_fcopy.c
-> index 660036da7449..07a508ce65db 100644
-> --- a/drivers/hv/hv_fcopy.c
-> +++ b/drivers/hv/hv_fcopy.c
-> @@ -349,7 +349,7 @@ int hv_fcopy_init(struct hv_util_service *srv)
->  {
->  	recv_buffer = srv->recv_buffer;
->  	fcopy_transaction.recv_channel = srv->channel;
-> -	fcopy_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
-> +	fcopy_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 3;
->  
->  	/*
->  	 * When this driver loads, the user level daemon that
-> diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
-> index c698592b83e4..b85d725ae5b1 100644
-> --- a/drivers/hv/hv_kvp.c
-> +++ b/drivers/hv/hv_kvp.c
-> @@ -757,7 +757,7 @@ hv_kvp_init(struct hv_util_service *srv)
->  {
->  	recv_buffer = srv->recv_buffer;
->  	kvp_transaction.recv_channel = srv->channel;
-> -	kvp_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 4;
-> +	kvp_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 5;
->  
->  	/*
->  	 * When this driver loads, the user level daemon that
-> diff --git a/drivers/hv/hv_snapshot.c b/drivers/hv/hv_snapshot.c
-> index 6018b9d1b1fb..dba6baacbf17 100644
-> --- a/drivers/hv/hv_snapshot.c
-> +++ b/drivers/hv/hv_snapshot.c
-> @@ -375,7 +375,7 @@ hv_vss_init(struct hv_util_service *srv)
->  	}
->  	recv_buffer = srv->recv_buffer;
->  	vss_transaction.recv_channel = srv->channel;
-> -	vss_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
-> +	vss_transaction.recv_channel->max_pkt_size = HV_HYP_PAGE_SIZE * 3;
->  
->  	/*
->  	 * When this driver loads, the user level daemon that
-> diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-> index 835e6039c186..a7b88c067c07 100644
-> --- a/drivers/hv/hv_util.c
-> +++ b/drivers/hv/hv_util.c
-> @@ -112,6 +112,8 @@ static int hv_shutdown_init(struct hv_util_service *srv)
->  
->  	hibernation_supported = hv_is_hibernation_supported();
->  
-> +	channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
-> +
->  	return 0;
->  }
->  
-> @@ -133,9 +135,11 @@ static struct hv_util_service util_timesynch = {
->  	.util_deinit = hv_timesync_deinit,
->  };
->  
-> +static int heartbeat_init(struct hv_util_service *src);
->  static void heartbeat_onchannelcallback(void *context);
->  static struct hv_util_service util_heartbeat = {
->  	.util_cb = heartbeat_onchannelcallback,
-> +	.util_init = heartbeat_init,
->  };
->  
->  static struct hv_util_service util_kvp = {
-> @@ -553,6 +557,15 @@ static void heartbeat_onchannelcallback(void *context)
->  	}
->  }
->  
-> +static int heartbeat_init(struct hv_util_service *srv)
-> +{
-> +	struct vmbus_channel *channel = srv->channel;
-> +
-> +	channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
-> +
-> +	return 0;
-> +}
-> +
->  #define HV_UTIL_RING_SEND_SIZE VMBUS_RING_SIZE(3 * HV_HYP_PAGE_SIZE)
->  #define HV_UTIL_RING_RECV_SIZE VMBUS_RING_SIZE(3 * HV_HYP_PAGE_SIZE)
->  
-> @@ -734,6 +747,8 @@ static struct ptp_clock *hv_ptp_clock;
->  
->  static int hv_timesync_init(struct hv_util_service *srv)
->  {
-> +	struct vmbus_channel *channel = srv->channel;
-> +
->  	spin_lock_init(&host_ts.lock);
->  
->  	INIT_WORK(&adj_time_work, hv_set_host_time);
-> @@ -750,6 +765,8 @@ static int hv_timesync_init(struct hv_util_service *srv)
->  		hv_ptp_clock = NULL;
->  	}
->  
-> +	channel->max_pkt_size = HV_HYP_PAGE_SIZE * 2;
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-> index 23999df52739..ae4240777f7d 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -636,6 +636,8 @@ static int synthvid_connect_vsp(struct hv_device *hdev)
->  	struct hvfb_par *par = info->par;
->  	int ret;
->  
-> +	hdev->channel->max_pkt_size = HV_HYP_PAGE_SIZE + MAX_VMBUS_PKT_SIZE;
-> +
->  	ret = vmbus_open(hdev->channel, RING_BUFSIZE, RING_BUFSIZE,
->  			 NULL, 0, synthvid_receive, hdev);
->  	if (ret) {
-> -- 
-> 2.34.1
-> 
+Applied to hyperv-next. Thanks.
