@@ -2,51 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EB3748D03D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jan 2022 02:49:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50EF648D264
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jan 2022 07:43:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231464AbiAMBtc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Jan 2022 20:49:32 -0500
-Received: from mga09.intel.com ([134.134.136.24]:21826 "EHLO mga09.intel.com"
+        id S230043AbiAMGnj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 13 Jan 2022 01:43:39 -0500
+Received: from mga14.intel.com ([192.55.52.115]:14235 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231445AbiAMBtb (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Jan 2022 20:49:31 -0500
+        id S230003AbiAMGnj (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 13 Jan 2022 01:43:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642038571; x=1673574571;
+  t=1642056218; x=1673592218;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=aV1IRwF7QmGNhF4kQZH+fgmZ1S/kPyy2qaTPidaBol4=;
-  b=hlqYqT2ba1yXdWU43cL8TVim5k1NO7leAHFyWLf7MP83xT3BZA+j4LBj
-   8d3B+rMeP/5/Js9hOKJCCdDZPt78g7Vk7ZOaW+SOB6b1rursI6dfQf3DX
-   sX/bJ7ZjHG6g8D+5Wt0FhQ3tztyf64G/aMSg5PztaF17Fj86FCsMCEtrm
-   0qxTyRBPxYLMdu0CrX9iI1hmmf6AVp9Jduux81X2odt3/OVLMzIAgfjzB
-   y0sX7vUGYqsPt5hThA+tBR4UZkAbgIMc7BU9AwI4vptMX8OWqSFGdotjh
-   B3mUAdA+7lgPQStVewSgch++kKXUChw+BUyWY0OMn+EME5EVw4Laun59E
+  bh=BOrkV33rjJw4g+fhq7eTTJEHnUunciYxIbP79TYzYEw=;
+  b=I68Swf6SUkWvilEnm0lrlCQZGOqsbKssiG/ZK3CROFCBKodntt0InRfV
+   F5rHLvxSSx60NWDpf5+HJPE/isBrQtYAh6OrybuHfvwyyoseVXsInrwhz
+   HdQuam/l2mpFEQ9VzAyTmIIE25nD1VN5jUsNqI4+XMeqrChBrKI4HKMKm
+   U/wf7p8mCHWl7M53Ne9UMz+6YTBcUcynmzDWGJ3SSJ0XsHjQOveknxnVA
+   FDIJDY/FPWtnJTXwD/xZoXqZBA1dtUFWgEhaAzzHN2hg+0ZZL6luzZupa
+   UbJaKYHDsHYa/JnKkoOMkUNBhA2MRPQ7NBYSs6ayIgXszMYfIht8I3Bdo
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="243700580"
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244148538"
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="243700580"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 17:49:30 -0800
+   d="scan'208";a="244148538"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 22:43:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="613791775"
+   d="scan'208";a="491030796"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Jan 2022 17:49:27 -0800
+  by orsmga002.jf.intel.com with ESMTP; 12 Jan 2022 22:43:34 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1n7pF1-0006hC-An; Thu, 13 Jan 2022 01:49:27 +0000
-Date:   Thu, 13 Jan 2022 09:49:05 +0800
+        id 1n7tpe-0006v3-4a; Thu, 13 Jan 2022 06:43:34 +0000
+Date:   Thu, 13 Jan 2022 14:42:53 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Iouri Tarassov <iourit@linux.microsoft.com>, kys@microsoft.com,
         haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
         linux-hyperv@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        spronovo@microsoft.com, gregkh@linuxfoundation.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, spronovo@microsoft.com,
+        gregkh@linuxfoundation.org
 Subject: Re: [PATCH v1 1/9] drivers: hv: dxgkrnl: Driver initialization and
  creation of dxgadapter
-Message-ID: <202201130941.ZVnyqikS-lkp@intel.com>
+Message-ID: <202201131405.tgtilUdq-lkp@intel.com>
 References: <1b26482b50832b95a9d8532c493cee6c97323b87.1641937419.git.iourit@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,51 +63,92 @@ Hi Iouri,
 I love your patch! Perhaps something to improve:
 
 [auto build test WARNING on linus/master]
-[also build test WARNING on v5.16 next-20220112]
+[also build test WARNING on v5.16 next-20220113]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/Iouri-Tarassov/drivers-hv-dxgkrnl-Driver-overview/20220113-035836
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e3084ed48fd6b661fe434da0cb36d7d6706cf27f
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20220113/202201130941.ZVnyqikS-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+config: arm64-randconfig-r032-20220113 (https://download.01.org/0day-ci/archive/20220113/202201131405.tgtilUdq-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project d1021978b8e7e35dcc30201ca1731d64b5a602a8)
 reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm64 cross compiling tool for clang build
+        # apt-get install binutils-aarch64-linux-gnu
         # https://github.com/0day-ci/linux/commit/00f97c12e2cf0ba4ba1108e2fce9a3d0e287cc8c
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review Iouri-Tarassov/drivers-hv-dxgkrnl-Driver-overview/20220113-035836
         git checkout 00f97c12e2cf0ba4ba1108e2fce9a3d0e287cc8c
         # save the config file to linux build tree
         mkdir build_dir
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/hv/dxgkrnl/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/hv/dxgkrnl/
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
 All warnings (new ones prefixed by >>):
 
->> drivers/hv/dxgkrnl/dxgmodule.c:79:20: warning: no previous prototype for 'find_pci_adapter' [-Wmissing-prototypes]
-      79 | struct dxgadapter *find_pci_adapter(struct pci_dev *dev)
-         |                    ^~~~~~~~~~~~~~~~
->> drivers/hv/dxgkrnl/dxgmodule.c:135:6: warning: no previous prototype for 'signal_host_cpu_event' [-Wmissing-prototypes]
-     135 | void signal_host_cpu_event(struct dxghostevent *eventhdr)
-         |      ^~~~~~~~~~~~~~~~~~~~~
->> drivers/hv/dxgkrnl/dxgmodule.c:219:5: warning: no previous prototype for 'dxgglobal_create_adapter' [-Wmissing-prototypes]
-     219 | int dxgglobal_create_adapter(struct pci_dev *dev, guid_t *guid,
-         |     ^~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/hv/dxgkrnl/dxgmodule.c:79:20: warning: no previous prototype for function 'find_pci_adapter' [-Wmissing-prototypes]
+   struct dxgadapter *find_pci_adapter(struct pci_dev *dev)
+                      ^
+   drivers/hv/dxgkrnl/dxgmodule.c:79:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   struct dxgadapter *find_pci_adapter(struct pci_dev *dev)
+   ^
+   static 
+>> drivers/hv/dxgkrnl/dxgmodule.c:135:6: warning: no previous prototype for function 'signal_host_cpu_event' [-Wmissing-prototypes]
+   void signal_host_cpu_event(struct dxghostevent *eventhdr)
+        ^
+   drivers/hv/dxgkrnl/dxgmodule.c:135:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void signal_host_cpu_event(struct dxghostevent *eventhdr)
+   ^
+   static 
+>> drivers/hv/dxgkrnl/dxgmodule.c:219:5: warning: no previous prototype for function 'dxgglobal_create_adapter' [-Wmissing-prototypes]
+   int dxgglobal_create_adapter(struct pci_dev *dev, guid_t *guid,
+       ^
+   drivers/hv/dxgkrnl/dxgmodule.c:219:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int dxgglobal_create_adapter(struct pci_dev *dev, guid_t *guid,
+   ^
+   static 
+   3 warnings generated.
 --
->> drivers/hv/dxgkrnl/dxgvmbus.c:116:5: warning: no previous prototype for 'ntstatus2int' [-Wmissing-prototypes]
-     116 | int ntstatus2int(struct ntstatus status)
-         |     ^~~~~~~~~~~~
->> drivers/hv/dxgkrnl/dxgvmbus.c:219:6: warning: no previous prototype for 'process_inband_packet' [-Wmissing-prototypes]
-     219 | void process_inband_packet(struct dxgvmbuschannel *channel,
-         |      ^~~~~~~~~~~~~~~~~~~~~
->> drivers/hv/dxgkrnl/dxgvmbus.c:237:6: warning: no previous prototype for 'process_completion_packet' [-Wmissing-prototypes]
-     237 | void process_completion_packet(struct dxgvmbuschannel *channel,
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/hv/dxgkrnl/dxgvmbus.c:363:5: warning: no previous prototype for 'dxgvmb_send_async_msg' [-Wmissing-prototypes]
-     363 | int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
-         |     ^~~~~~~~~~~~~~~~~~~~~
+   In file included from drivers/hv/dxgkrnl/dxgvmbus.c:22:
+   drivers/hv/dxgkrnl/dxgvmbus.h:867:26: warning: implicit conversion from enumeration type 'enum dxgkvmb_commandtype' to different enumeration type 'enum dxgkvmb_commandtype_global' [-Wenum-conversion]
+           command->command_type   = DXGK_VMBCOMMAND_INVALID;
+                                   ~ ^~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/hv/dxgkrnl/dxgvmbus.c:116:5: warning: no previous prototype for function 'ntstatus2int' [-Wmissing-prototypes]
+   int ntstatus2int(struct ntstatus status)
+       ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:116:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int ntstatus2int(struct ntstatus status)
+   ^
+   static 
+>> drivers/hv/dxgkrnl/dxgvmbus.c:219:6: warning: no previous prototype for function 'process_inband_packet' [-Wmissing-prototypes]
+   void process_inband_packet(struct dxgvmbuschannel *channel,
+        ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:219:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void process_inband_packet(struct dxgvmbuschannel *channel,
+   ^
+   static 
+>> drivers/hv/dxgkrnl/dxgvmbus.c:237:6: warning: no previous prototype for function 'process_completion_packet' [-Wmissing-prototypes]
+   void process_completion_packet(struct dxgvmbuschannel *channel,
+        ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:237:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void process_completion_packet(struct dxgvmbuschannel *channel,
+   ^
+   static 
+>> drivers/hv/dxgkrnl/dxgvmbus.c:363:5: warning: no previous prototype for function 'dxgvmb_send_async_msg' [-Wmissing-prototypes]
+   int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
+       ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:363:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
+   ^
+   static 
+   drivers/hv/dxgkrnl/dxgvmbus.c:199:20: warning: unused function 'command_vm_to_host_init0' [-Wunused-function]
+   static inline void command_vm_to_host_init0(struct dxgkvmb_command_vm_to_host
+                      ^
+   6 warnings generated.
 
 
 vim +/find_pci_adapter +79 drivers/hv/dxgkrnl/dxgmodule.c
