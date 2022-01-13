@@ -2,124 +2,197 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4781148D32D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jan 2022 08:52:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EEF448D474
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jan 2022 10:49:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232790AbiAMHrr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 13 Jan 2022 02:47:47 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56606 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232789AbiAMHrq (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 13 Jan 2022 02:47:46 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9554FB82017;
-        Thu, 13 Jan 2022 07:47:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFBA3C36AE3;
-        Thu, 13 Jan 2022 07:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1642060064;
-        bh=PNI1wR8PywomuwsCo1freT7oONikPeK6ZUeKJnQrX28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=olrL8MG7JIeoUKVM1oCgJXPiToNvnr/DnYF1YMo6AHywywcHpImfYnVZdUPX4Wv9W
-         iCvAo2ivoM6D4R1NBHf/aj/eaLrmlnzsYJRCxpYpj1T9pDrfR6DEGvVagnvHOltTqP
-         ++eAAlPZsZ8xezdFYuA5tZ0gmvZsWZ2GhkcruXC4=
-Date:   Thu, 13 Jan 2022 08:47:41 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Iouri Tarassov <iourit@linux.microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spronovo@microsoft.com
-Subject: Re: [PATCH v1 8/9] drivers: hv: dxgkrnl: Implement various WDDM
- ioctls
-Message-ID: <Yd/ZHYbIHQvHp40a@kroah.com>
-References: <cover.1641937419.git.iourit@linux.microsoft.com>
- <b3abd5afcf0f46b261064fd0aa4c33a708fbb66b.1641937420.git.iourit@linux.microsoft.com>
+        id S233403AbiAMI5Y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 13 Jan 2022 03:57:24 -0500
+Received: from mga14.intel.com ([192.55.52.115]:48317 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233249AbiAMI4l (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 13 Jan 2022 03:56:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642064201; x=1673600201;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GHLvVjlhQE5kTdaUsCi6eqXByGYxXWxfs81qy3HRFtM=;
+  b=aWS0sicWdY5gcfPTaTULS9VtbtpAumwWrJ+7sKUTqoUjZhIe/y1pV348
+   XeBIzQVGnBeVyiH1kL+e5TkhlcVIRzynwoC3SmIM+TLRojYxy4FIrN+jW
+   E+tOLETP1dnrh13rNu1ieEmSo1VoEc5QqroNdyik6A+1LaKhcnw57635t
+   bbWRC+Y2e8e+4Ez82VueDzH0JnShTWbjZF7ECcg1u7wcy4muBLPUlqzGS
+   9Ecnf/R/kin+z8UrOVR9cZwWFA+HcZobjJ+/FLvq1hNY4CllvLP+gLuXa
+   0iueHYRCYjYoUHJ376N1PDtuANudlM982AbWRK/KH8+vroajnKLddVDNX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244171443"
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="244171443"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2022 00:56:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="475238615"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 13 Jan 2022 00:56:37 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n7vuO-00071d-O1; Thu, 13 Jan 2022 08:56:36 +0000
+Date:   Thu, 13 Jan 2022 16:56:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Iouri Tarassov <iourit@linux.microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, spronovo@microsoft.com,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v1 3/9] drivers: hv: dxgkrnl: Implement
+ creation/destruction of GPU allocations/resources
+Message-ID: <202201131642.1nercfCr-lkp@intel.com>
+References: <b64ae0f1fceff68b6fb43331f14062f25f2ba07a.1641937419.git.iourit@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b3abd5afcf0f46b261064fd0aa4c33a708fbb66b.1641937420.git.iourit@linux.microsoft.com>
+In-Reply-To: <b64ae0f1fceff68b6fb43331f14062f25f2ba07a.1641937419.git.iourit@linux.microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 11:55:13AM -0800, Iouri Tarassov wrote:
-> Implement various WDDM IOCTLs.
-> 
-> - IOCTLs to handle GPU virtual addressing (VA):
->    LX_DXRESERVEGPUVIRTUALADDRESS (D3DKMTReserveGpuVertualAddress)
->    LX_DXFREEGPUVIRTUALADDRESS (D3DKMTFreeGpuVertualAddress)
->    LX_DXMAPGPUVIRTUALADDRESS (D3DKMTMapGpuVertualAddress)
->    LX_DXUPDATEGPUVIRTUALADDRESS (D3DKMTUpdateGpuVertualAddress)
-> 
->    WDDM supports a compute device to use GPU virtual addresses when
->    accessing allocation memory. A GPU VA could be reserved or mapped
->    to a GPU allocation. The video memory manager on the host updates
->    GPU page tables for the virtual addresses.
-> 
-> - IOCTLs to manage residency of GPU accessing allocations:
->    LX_DXMAKERESIDENT (D3DKMTMakeResident)
->    LX_DXEVICT (D3DKMTEvict)
-> 
->    An allocation is resident when GPU is setup to access it. The
->    current WDDM design does not support on demand GPU page faulting.
->    An allocation must be resident (be in the local device memory or
->    in non-pageable system memory) before GPU is allowed to access it.
-> 
-> - IOCTLs to offer/reclaim alloctions:
->    LX_DXOFFERALLOCATIONS {D3DKMTOfferAllocations)
->    LX_DXRECLAIMALLOCATIONS2 (D3DKMTReclaimAllocations)
-> 
->    When a user mode driver does not need an allocation, it can
->    "offer" it. This means that the allocation is not in use and it
->    local device memory could be reclaimed and given to another allocation.
->    When the allocation is again needed, the caller can "reclaim" the
->    allocations. If the allocation is still in the device local memory,
->    the reclaim operation succeeds. If not the called must restore the
->    content of the allocation before it can be used by the device.
-> 
-> - LX_DXESCAPE (D3DKMTEscape)
->   This IOCTL is used to send/receive private data between user mode
->   driver and kernel mode driver. This is an extension of the WDDM APIs.
-> 
-> - LX_DXGETDEVICESTATE (D3DKMTGetDeviceState)
->   The IOCTL is used to get the current execution state of the dxgdevice
->   object.
-> 
-> - LX_DXMARKDEVICEASERROR (D3DKMTMarkDeviceAsError)
->   The IOCTL is used to bring the dxgdevice object to the error state.
->   Subsequent calls to use the device object will fail.
-> 
-> - LX_DXQUERYSTATISTICS (D3DKMTQuerystatistics)
->   The IOCTL is used to query various statistics from the compute device
->   on the host.
-> 
-> - IOCTLs to deal with execution context priorities
->   LX_DXGETCONTEXTINPROCESSSCHEDULINGPRIORITY
->   LX_DXGETCONTEXTSCHEDULINGPRIORITY
->   LX_DXSETCONTEXTINPROCESSSCHEDULINGPRIORITY
->   LX_DXSETCONTEXTSCHEDULINGPRIORITY
-> 
-> Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
-> ---
->  drivers/hv/dxgkrnl/dxgkrnl.h  |    2 +
->  drivers/hv/dxgkrnl/dxgvmbus.c | 1466 ++++++++++++++++++++++++++++---
->  drivers/hv/dxgkrnl/dxgvmbus.h |   15 +
->  drivers/hv/dxgkrnl/ioctl.c    | 1524 ++++++++++++++++++++++++++++++++-
->  4 files changed, 2831 insertions(+), 176 deletions(-)
+Hi Iouri,
 
-Again, break this up into smaller pieces.  Would you want to review all
-of these at the same time?
+I love your patch! Perhaps something to improve:
 
-Remember, you write code for people to review and understand first, and
-the compiler second.  With large changes like this, you are making it
-difficult for people to review, which is your target audience.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.16 next-20220113]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-I'll stop here, please fix up this patch series into something that is
-reviewable.
+url:    https://github.com/0day-ci/linux/commits/Iouri-Tarassov/drivers-hv-dxgkrnl-Driver-overview/20220113-035836
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e3084ed48fd6b661fe434da0cb36d7d6706cf27f
+config: arm64-randconfig-r032-20220113 (https://download.01.org/0day-ci/archive/20220113/202201131642.1nercfCr-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project d1021978b8e7e35dcc30201ca1731d64b5a602a8)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm64 cross compiling tool for clang build
+        # apt-get install binutils-aarch64-linux-gnu
+        # https://github.com/0day-ci/linux/commit/a2aa8c606c48a4e6bf8a7a51e2e4e5738e35da32
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Iouri-Tarassov/drivers-hv-dxgkrnl-Driver-overview/20220113-035836
+        git checkout a2aa8c606c48a4e6bf8a7a51e2e4e5738e35da32
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/hv/dxgkrnl/
 
-thanks,
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-greg k-h
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/hv/dxgkrnl/ioctl.c:21:
+   drivers/hv/dxgkrnl/dxgvmbus.h:867:26: warning: implicit conversion from enumeration type 'enum dxgkvmb_commandtype' to different enumeration type 'enum dxgkvmb_commandtype_global' [-Wenum-conversion]
+           command->command_type   = DXGK_VMBCOMMAND_INVALID;
+                                   ~ ^~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/hv/dxgkrnl/ioctl.c:1245:5: warning: no previous prototype for function 'validate_alloc' [-Wmissing-prototypes]
+   int validate_alloc(struct dxgallocation *alloc0,
+       ^
+   drivers/hv/dxgkrnl/ioctl.c:1245:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int validate_alloc(struct dxgallocation *alloc0,
+   ^
+   static 
+   2 warnings generated.
+--
+   In file included from drivers/hv/dxgkrnl/dxgvmbus.c:23:
+   drivers/hv/dxgkrnl/dxgvmbus.h:867:26: warning: implicit conversion from enumeration type 'enum dxgkvmb_commandtype' to different enumeration type 'enum dxgkvmb_commandtype_global' [-Wenum-conversion]
+           command->command_type   = DXGK_VMBCOMMAND_INVALID;
+                                   ~ ^~~~~~~~~~~~~~~~~~~~~~~
+   drivers/hv/dxgkrnl/dxgvmbus.c:151:5: warning: no previous prototype for function 'ntstatus2int' [-Wmissing-prototypes]
+   int ntstatus2int(struct ntstatus status)
+       ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:151:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int ntstatus2int(struct ntstatus status)
+   ^
+   static 
+   drivers/hv/dxgkrnl/dxgvmbus.c:254:6: warning: no previous prototype for function 'process_inband_packet' [-Wmissing-prototypes]
+   void process_inband_packet(struct dxgvmbuschannel *channel,
+        ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:254:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void process_inband_packet(struct dxgvmbuschannel *channel,
+   ^
+   static 
+   drivers/hv/dxgkrnl/dxgvmbus.c:272:6: warning: no previous prototype for function 'process_completion_packet' [-Wmissing-prototypes]
+   void process_completion_packet(struct dxgvmbuschannel *channel,
+        ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:272:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   void process_completion_packet(struct dxgvmbuschannel *channel,
+   ^
+   static 
+   drivers/hv/dxgkrnl/dxgvmbus.c:398:5: warning: no previous prototype for function 'dxgvmb_send_async_msg' [-Wmissing-prototypes]
+   int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
+       ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:398:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int dxgvmb_send_async_msg(struct dxgvmbuschannel *channel,
+   ^
+   static 
+>> drivers/hv/dxgkrnl/dxgvmbus.c:909:5: warning: no previous prototype for function 'create_existing_sysmem' [-Wmissing-prototypes]
+   int create_existing_sysmem(struct dxgdevice *device,
+       ^
+   drivers/hv/dxgkrnl/dxgvmbus.c:909:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int create_existing_sysmem(struct dxgdevice *device,
+   ^
+   static 
+   drivers/hv/dxgkrnl/dxgvmbus.c:234:20: warning: unused function 'command_vm_to_host_init0' [-Wunused-function]
+   static inline void command_vm_to_host_init0(struct dxgkvmb_command_vm_to_host
+                      ^
+   7 warnings generated.
+
+
+vim +/validate_alloc +1245 drivers/hv/dxgkrnl/ioctl.c
+
+  1244	
+> 1245	int validate_alloc(struct dxgallocation *alloc0,
+  1246				       struct dxgallocation *alloc,
+  1247				       struct dxgdevice *device,
+  1248				       struct d3dkmthandle alloc_handle)
+  1249	{
+  1250		u32 fail_reason;
+  1251	
+  1252		if (alloc == NULL) {
+  1253			fail_reason = 1;
+  1254			goto cleanup;
+  1255		}
+  1256		if (alloc->resource_owner != alloc0->resource_owner) {
+  1257			fail_reason = 2;
+  1258			goto cleanup;
+  1259		}
+  1260		if (alloc->resource_owner) {
+  1261			if (alloc->owner.resource != alloc0->owner.resource) {
+  1262				fail_reason = 3;
+  1263				goto cleanup;
+  1264			}
+  1265			if (alloc->owner.resource->device != device) {
+  1266				fail_reason = 4;
+  1267				goto cleanup;
+  1268			}
+  1269			if (alloc->owner.resource->shared_owner) {
+  1270				fail_reason = 5;
+  1271				goto cleanup;
+  1272			}
+  1273		} else {
+  1274			if (alloc->owner.device != device) {
+  1275				fail_reason = 6;
+  1276				goto cleanup;
+  1277			}
+  1278		}
+  1279		return 0;
+  1280	cleanup:
+  1281		pr_err("Alloc validation failed: reason: %d %x",
+  1282			   fail_reason, alloc_handle.v);
+  1283		return -EINVAL;
+  1284	}
+  1285	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
