@@ -2,123 +2,261 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3673D493E5C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Jan 2022 17:34:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC61C493FB4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Jan 2022 19:12:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349278AbiASQei (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 19 Jan 2022 11:34:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243312AbiASQeh (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 19 Jan 2022 11:34:37 -0500
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF3BC061574
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Jan 2022 08:34:37 -0800 (PST)
-Received: by mail-yb1-xb32.google.com with SMTP id m6so9054420ybc.9
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Jan 2022 08:34:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=Rpgt1bJx8K373EVrKSGqHg1nd3sdDbwlVU3RtQXZzCo=;
-        b=lunqUgNZhtXBIydufp17uNzTIRuzpqYr0IRCzKXZP1yvoBlIjHqumlybrj7RQAOCNa
-         AJfvDGW5egsl2Vr1wrwgVEQwiS4LdUlFYcaHrrK1SZP2Jsx19gVk9AH8Xse4FYSFo7Kt
-         MV/iYKBlaUCw7Ln67WTmO4y1I3AHYN+4AS1mIGeh2M81tQZbdJjStiImnh0f8wHqiu/w
-         tSx9PKDdR45DkdSesYPPIhtxzP70d3HM472AUoiEdt7kXcpqk61dPdnc9gYHE53fnRUQ
-         Qo14848lmhu+uwmSWXr5LGAOuvI/2PzM5RNyRi9saUb1ZokPk5naO+tJ/O8+anR32C04
-         dfbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=Rpgt1bJx8K373EVrKSGqHg1nd3sdDbwlVU3RtQXZzCo=;
-        b=SRHjWFAwc4dlB1SzasrBLidEWXr8v17snJjddkR8/Qd/kddURbEuWOk2esMZQmaLui
-         iJht7BknQkX9QJW1FVelLGlMWy0YFA6CNe+EvqSTh30XQ2FC2RjlBuqs7rM3eYPvkPTc
-         flLcysefZnWD7Wek2HN38mJ5aCtjItJsQ6o81dUnYaEocrgkOAQ+3kX5xOP0PNRXxfFH
-         B3hiBMsLjJMrvfyLA540l/6f8Yi0/mQUf+Lout8KnHQR6I3BrpSCO/VGHFp9aiA02Ct+
-         K3AhCznd5YBKoHos2Qgr5BVCfeGfZONNfqq0ww8wRHSNIjZAj2PtzRDbIB33Ol4rM9UA
-         vqvQ==
-X-Gm-Message-State: AOAM530MoGC6wkGrvYmE8C5GIVQJxZUDzvypi0fxYmqF13JOWTD6PgrX
-        YLvYpsC37A2Gn3NG0ylC62oHV9xOg8rHMgWjhiU=
-X-Google-Smtp-Source: ABdhPJz5I3XL6BX9k4EGRT+qCw5oYDPU3uuyAvtVkVA/62KHxppBEzo1IxCz+xCDDNp/xup5IlbarLpQVoWCq240ti4=
-X-Received: by 2002:a25:8707:: with SMTP id a7mr33792994ybl.758.1642610076573;
- Wed, 19 Jan 2022 08:34:36 -0800 (PST)
-MIME-Version: 1.0
-Sender: donnalouise11954@gmail.com
-Received: by 2002:a05:7108:528c:0:0:0:0 with HTTP; Wed, 19 Jan 2022 08:34:36
- -0800 (PST)
-From:   "Mrs. Nadia Emaan" <mrsnadiaemaan52@gmail.com>
-Date:   Wed, 19 Jan 2022 16:34:36 +0000
-X-Google-Sender-Auth: 5vHwOpxr8we_xgdwCCSmyyeOzFw
-Message-ID: <CADncvCs6=ZRKJc_5vV6N7=p1uawMF4PY5Eyud7L5oEd8AcgJ+A@mail.gmail.com>
-Subject: HELLO:
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1356674AbiASSMq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 19 Jan 2022 13:12:46 -0500
+Received: from mail-centralusazon11021022.outbound.protection.outlook.com ([52.101.62.22]:35746
+        "EHLO na01-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1347853AbiASSMp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
+        Wed, 19 Jan 2022 13:12:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U44hIUUmMwbVMnttlzCYij6BLdbJqY5rksZnM47hC2VzwuZHBqyUI8HIBfTaPOWL+4mjK24yOCyiQa9+AeiJ/zXlALxIrwkvraK1Y4ixLVVKGfPwXo3QksvzR52BXpvOarmujKpKe0Eveb2KrAinOs7UeA5sYasj9R44sX0VeTEDVmCNDSVO/b2wXHxij6ogHIxHExzZlq/3G85moq7Mj0jVR/QBdO2i4KBg9pkgRsCYKa8MmCjUufiPI/ZA54v4Qh4wZKykd3hvenEqP4yu2jT5008lxRsf5En9icwyyttEA+edseOUWKdYMBSRev6lfXhaIp/9mhbtc3MfUtLIlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uYDIdJK+ZJvQ8JUnbWP0YDh7lNHeRQDU3Q6aCIp6hAY=;
+ b=FxuV9pqxP0e0U/k7kfTTeYhblumjmBGAiOB9s+MtD6Q0U6koUrzvSgD7yeR7V/zJjdym8baRh+XDLsBF2u8tVLT9JLYPszbFRhx7JIf5DYZoLLYNT2er6sqiyHw9MAzKwmpbC8x8Oz+QjcrxqyYgPjw71E+N627pRvMuCA2i+pOeq1EZhmEBMtEHk3c2mMHLtOT1SMJxbtoPnw/KIJz/mYIMV21vsB+PEdlnFp0+MUbpV4OEiD+uBKVqV4j5YSmLHQFMWN0FhZEflgfsGB8spHkOqEjSu39oXlMEWuL3ArtCdx1ZIoAyp0I9R3Yw7IiM7XK0bU9iEUHSWVmpwi563A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uYDIdJK+ZJvQ8JUnbWP0YDh7lNHeRQDU3Q6aCIp6hAY=;
+ b=KhWy2DcmtsrbIBUW0YzyBnuaMyM6oZ+AQ1IwNQ35y+vkfU7wX3nmvlQh5q3VrVbq+3CV5tvIpSuJkvn1stlO8N7AW9OjJ9kV5iKdR4rFvjbEoC0E/POrCnNt7RZoMnoaK57pmugH9KbD3HDpyi15KA4lQXSRtDLOsqTlgqg5MaA=
+Received: from CY4PR21MB1586.namprd21.prod.outlook.com (2603:10b6:910:90::10)
+ by CO1PR21MB1329.namprd21.prod.outlook.com (2603:10b6:303:150::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.3; Wed, 19 Jan
+ 2022 18:12:42 +0000
+Received: from CY4PR21MB1586.namprd21.prod.outlook.com
+ ([fe80::b508:1cc:47b2:db82]) by CY4PR21MB1586.namprd21.prod.outlook.com
+ ([fe80::b508:1cc:47b2:db82%2]) with mapi id 15.20.4930.004; Wed, 19 Jan 2022
+ 18:12:42 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>, Andrea Parri <parri.andrea@gmail.com>
+CC:     Yanming Liu <yanminglr@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "lkmlabelt@gmail.com" <lkmlabelt@gmail.com>
+Subject: RE: [PATCH v2] hv: account for packet descriptor in maximum packet
+ size
+Thread-Topic: [PATCH v2] hv: account for packet descriptor in maximum packet
+ size
+Thread-Index: AQHYBbs9Z9MCDPVXTEy3Gdtosh0+p6xi6g+AgAe+98A=
+Date:   Wed, 19 Jan 2022 18:12:42 +0000
+Message-ID: <CY4PR21MB1586D30C6CEC81EFC37A9848D7599@CY4PR21MB1586.namprd21.prod.outlook.com>
+References: <20220109095516.3250392-1-yanminglr@gmail.com>
+ <20220110004419.GA435914@anparri>
+ <20220114191307.uu2oel7wbxhiqe56@liuwe-devbox-debian-v2>
+In-Reply-To: <20220114191307.uu2oel7wbxhiqe56@liuwe-devbox-debian-v2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=52998894-518c-4106-a338-c17fa10f8f23;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-01-19T17:30:25Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a0367a0d-9cc9-4b0d-581d-08d9db77494d
+x-ms-traffictypediagnostic: CO1PR21MB1329:EE_
+x-ms-exchange-atpmessageproperties: SA|SL
+x-microsoft-antispam-prvs: <CO1PR21MB1329DC5976D7B7DE2E4097D4D7599@CO1PR21MB1329.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ownrK0A/dtZCX6Dk7pRkTQgjQF0GqcCz5DyoMtzLZquY20mrQonkgj7eNnCsEGUYX3KOarZ15mVQhPdVf21zyY1Jc8oX6ahZpnEkYTd+fsgohC8RF6jcJ8NAWTFhWqj920R0y0L28JajzcbJrgf42LZg9C9r4qrp4wtF1C7i0LLmgrjc+JjwcsNovIptN0G4MTmulR4JLAxSzCXqA0Gmi4nkV5+/d5+noAP2CN3WYz8hlYlXcnh1egKN5AW/h5BtC7nMceWk6/Xj76veyK1Hv6H/8sWaQrjR48Ztwj/9RTuHIM5Gd2CT50X54RcktZojEuZSyBMjfhn1xtDlheG3sELCVJfw5U3NH/JZSHjD8u+ye4vK4zow9gsjJtgjuiu92cjVDauO/OE4MxO6Yaqb5J5nMCJIgVJOm5oxpxpoXI17Iyzxez0GuKPuQJZtgqNlIksRWhb/R44ntmlrM8ttGCGRw6q+RDVfOp7N6CosUQ+/VWnciFSJIG/cjFsb37wf/Bkcdsj6Jq03aA5EoEhiOn7QQcsGL1aZKpS35IHGMm3Wlegoq7DgPUZeqKEjwwP8zt18GYwE/jvCGlqh42XWAi2Sx0zxTtbkA57NthGtWUSorZ4fvKAvvMcEkW/fyutM0vF9poKorjGz4v4VOIvSF7jJxNAuEv1/QFu4MqMjSDwlyf2Yci0qUIeBla3wWYezcRXLwGvotbd5igp/fhlhfSdOjRYQPwlaB7fAmUol4EIuxNb8hxWWnYjIdgtcy3Dx
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR21MB1586.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(10290500003)(38100700002)(86362001)(122000001)(4326008)(66556008)(64756008)(66476007)(8676002)(508600001)(66446008)(54906003)(316002)(66946007)(76116006)(38070700005)(83380400001)(110136005)(55016003)(8936002)(186003)(6506007)(5660300002)(9686003)(7696005)(52536014)(33656002)(26005)(15650500001)(8990500004)(2906002)(82950400001)(82960400001)(7416002)(71200400001)(20210929001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?YF8GBI8DTVEjU4b2fjZu9qT61MFPIXEA+8EFhNzSYTBT9f8VdyxRec0b0AqQ?=
+ =?us-ascii?Q?fa/F3EOSbWV4g9OQDIayhEiiKAixt9vf3/dZdE0r+jdDVhHWXhKqCYR2f/dn?=
+ =?us-ascii?Q?5h6yX5BMiJRWEqWWLgKTGe9zitNbbiCALMOWCVWhsKMTqi4mBiDaZbxSyD8V?=
+ =?us-ascii?Q?dJaupblgY1wamEcWclDlyvaWw029CKDWat2F8Txmz5KRnu5VhLg44rwWDTF8?=
+ =?us-ascii?Q?jo70gO4BHV8949befeE+LUm4p+x6ANNng0EilHQ0goEBpnPmEiTUnqOm6gZT?=
+ =?us-ascii?Q?4nyDaS7OoSlztPZ6OKS1h9Rf5SYCb2PxGSgCTxCfzxikf0OymUKx+Ukwerxy?=
+ =?us-ascii?Q?JYkD4bhUXzuZziJa4vEipfj5JAU4D3ZpMl6yleYm3EOsKB9NQX2ivM7/rWLj?=
+ =?us-ascii?Q?gm39VYSFVO/muBCp85Ky9yRhwuupezsj/s0NRKsO+HotNVjOYo4um6/thFmM?=
+ =?us-ascii?Q?IA2hdYhchIPGfKn0yhcURtqhBBa9Noe++amXJNew6CTlIYzXEws2sUikTUWd?=
+ =?us-ascii?Q?npeEWLOr2gHNPTc/BodNYW8mVYqZzxYLjezeU6FBb3zfrPt/7eLOjPCmUEGO?=
+ =?us-ascii?Q?xkztMFv6cseZh/2F34z9OEkMr5GouMy3VgdE9u7G5tJHkfF7iWZb97XStieX?=
+ =?us-ascii?Q?fHY48o535mRVdbE0Krs//ze2Y0yO5RVzcMC5vZ78mDiIdfbi258x68L8aaEN?=
+ =?us-ascii?Q?n8HRsmEFU6wFU22QiRzrOm5ONkrazOWcy9MoTGPKRQgi6pmlicQ7t0NcYgxr?=
+ =?us-ascii?Q?AWSoMO22cqdgr8dWenafmNtAMmfhv/zl7JVVi9o5OsGW2Mz1cnd61LvPiq/W?=
+ =?us-ascii?Q?gf4nI+OCDNNUuyQXYW/jXq+RmpxWOeGkdHrwciF0G673R1dPj/779ZUw53pu?=
+ =?us-ascii?Q?0xoK9HCTX2QD8yP5r7CtalVoBWiHzm0Baf98imX4AAxyfLPF4ciotv3ZNFKk?=
+ =?us-ascii?Q?v5XhXwHwDCwTj2J1ZOhuF/eO2KgwaDDzffp/ozJiwrkGG+7gNTjPTJB2p0gs?=
+ =?us-ascii?Q?45zlYoom4HKRMJ7yptsvjR2uoFRgahNs5w8t3IrttJonL7xxuArgKb26B39M?=
+ =?us-ascii?Q?R7g27vOaDbkGwL6H5pLX0WYwPEsHvfdD5GEeJ07nunaX+n18z1UAAX2QNS2A?=
+ =?us-ascii?Q?Ts5FOuyaEb3GP9ZJ1Lx0+vW26cTs1J64bPIMnA4pdVXFHVOVYMtxe2a6xxJg?=
+ =?us-ascii?Q?zRuL/KMDDh3E1tnU8DiWu9EMTJjgCo7xbiou0h+vjQYWpg/6MlalPQ5zGwEy?=
+ =?us-ascii?Q?GH/hjr/lDxXkgtf0u4boVjs1Aragenc6X5yieCzKAXTYYwLbsV1x8q6u3XYQ?=
+ =?us-ascii?Q?h8KaySoK6q2axulTCyY7iyzyuLq+zP9y5Ld+EUblh6pFMLBrmP8rTvtpU59c?=
+ =?us-ascii?Q?hijgNx/+pN2OkNnFwhsWbdIGB3hbrXSpyG4bVlXOa2Y3Lqi0RdfsTqnaYY5T?=
+ =?us-ascii?Q?HrDjRm7rT2sSNM5j1LldhfrYh1H+5UCbM8m5ZI7HCWqQXcp9A795WOZ40cXP?=
+ =?us-ascii?Q?yniDkgRhCJQ5iQffp4jj8bAE7Myaxrsnp3N4QvAE7U604tN40iC8albs+Yw5?=
+ =?us-ascii?Q?0qD6XZrvbw2Ankx0VwQBATEZ0Ocr/SUXpNj/DhykealQVp9LPlYoGgQxKYjs?=
+ =?us-ascii?Q?/iUH1ARbxJHlbpPC315XGs4bNdEPVZdCXVR7e8Csd9hGaFcPaviWhsiyOBm7?=
+ =?us-ascii?Q?SfRhgg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR21MB1586.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0367a0d-9cc9-4b0d-581d-08d9db77494d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2022 18:12:42.4439
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PrWNuZZCKg7/xuANkNPE2aUw4/QErpG3pJ80iIDp1dSOtngJDPvNrbtqvfyKhjW6ndHwofC10Mi+9vvlaxA3Mal4P8frHaoI90y7We5O+wE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR21MB1329
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-May God Bless you Beloved =E2=80=8BFriend,
+From: Wei Liu <wei.liu@kernel.org> Sent: Friday, January 14, 2022 11:13 AM
+>=20
+> On Mon, Jan 10, 2022 at 01:44:19AM +0100, Andrea Parri wrote:
+> > (Extending Cc: list,)
+> >
+> > On Sun, Jan 09, 2022 at 05:55:16PM +0800, Yanming Liu wrote:
+> > > Commit adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-=
+V
+> > > out of the ring buffer") introduced a notion of maximum packet size i=
+n
+> > > vmbus channel and used that size to initialize a buffer holding all
+> > > incoming packet along with their vmbus packet header. Currently, some
+> > > vmbus drivers set max_pkt_size to the size of their receive buffer
+> > > passed to vmbus_recvpacket, however vmbus_open expects this size to a=
+lso
+> > > include vmbus packet header. This leads to corruption of the ring buf=
+fer
+> > > state when receiving a maximum sized packet.
+> > >
+> > > Specifically, in hv_balloon I have observed of a dm_unballoon_request
+> > > message of 4096 bytes being truncated to 4080 bytes. When the driver
+> > > tries to read next packet it starts from a wrong read_index, receives
+> > > garbage and prints a lot of "Unhandled message: type: <garbage>" in
+> > > dmesg.
+> > >
+> > > The same mismatch also happens in hv_fcopy, hv_kvp, hv_snapshot,
+> > > hv_util, hyperv_drm and hyperv_fb, though bad cases are not observed
+> > > yet.
+> > >
+> > > Allocate the buffer with HV_HYP_PAGE_SIZE more bytes to make room for
+> > > the descriptor, assuming the vmbus packet header will never be larger
+> > > than HV_HYP_PAGE_SIZE. This is essentially free compared to just addi=
+ng
+> > > 'sizeof(struct vmpacket_descriptor)' because these buffers are all mo=
+re
+> > > than HV_HYP_PAGE_SIZE bytes so kmalloc rounds them up anyway.
+> > >
+> > > Fixes: adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-=
+V out of the ring buffer")
+> > > Suggested-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> > > Signed-off-by: Yanming Liu <yanminglr@gmail.com>
+> >
+> > Thanks for sorting this out; the patch looks good to me:
+> >
+> > Reviewed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> >
+>=20
+> Thanks. I will pick this up after 5.17-rc1 is out.
+>=20
+> Wei.
 
-I am contacting you through this means because I need your urgent
-assistance and also help me to carry a charity project in your
-country. I found your email address as a true child of God for past
-few days now that I have been praying to know if you are really the
-chosen one for this great charity project, according to God's
-direction, after all prayers I am convinced, and I have decided to
-contact you. Please, i want you use the funds for the Lord's work,
-with confidence, read and respond now.
+I'm NACK'ing this set of changes.  I've spent some further time investigati=
+ng,
+so let me explain.
 
+I'm good with the overall approach of fixing individual drivers to set the
+max_pkt_size to account for the VMbus packet header, as this is an
+important aspect that was missed in the original coding.   But interestingl=
+y,
+all but one of the miscellaneous VMbus drivers allocate significantly more
+receive buffer space than is actually needed, and the max_pkt_size matching
+that receive buffer size is already bigger than needed.  In all these
+cases, there is already plenty of space for the VMbus packet header.
 
-My name is  Ms. Nadia Emman F., a widow, but currently based in West
-Africa since my life with my late husband, who was a businessman in
-this country before dying some years ago. We were married to many
-years without a child. He died after a brief illness that lasted only
-six days and I myself have been suffering from an ovarian cancer
-disease. At this moment I am about to finish the race in this way
-because the disease has reached a very bad stage, without any family
-member and without children. I hope you do not expose or betray this
-trust and I am sure that I am about to trust you for the mutual
-benefit of orphans and the less privileged. I have some funds that I
-inherited from my late husband, the total sum of ($ 12,500,000.00)
-deposited at a bank here in Burkina Faso. After knowing my current
-state of health, I decided to trust you with this fund, believing that
-you will use it in the way I will instruct here.
+These hv-util.c drivers allocate a receive buffer 4 Kbytes in size, and all
+receive only small fixed-size packets:  heartbeat, shutdown, timesync.
+I don't think any changes are needed for these drivers because the default
+max_pkt_size value of 4 Kbytes bytes is plenty of space even when
+accounting for the VMbus packet header.
 
+The VSS driver in hv_snapshot.c allocates a receive buffer of 8 Kbytes
+and sets max_pkt_size to 8 Kbytes.  But the received messages are
+all fixed size and small.  I don't know why the driver uses an 8 Kbyte
+receive buffer instead of 4 Kbytes, but the current settings are
+more than sufficient.
 
-you will use this $12.5 Million for public benefit as follows;
+The FCOPY driver in hv_fcopy.c allocates a receive buffer of 8 Kbytes
+and sets max_pkt_size to 8 Kbytes.  The received messages have
+some header overhead plus up to 6 Kbytes of data, so the 8 Kbyte
+receive buffer is definitely needed.  And while this one is a little
+closer to filling up the available receive space than the previous
+ones, there's still plenty of room for the VMbus packet header.  I
+don't think any changes are needed.
 
-1. Establish An Orphanage Home To Help The Orphanages Children.
-2. Build A Hospital To Help The Poor.
-3. Build A Nursing Home For Elderly People Need Care & Meal.
+The KVP driver in hv_kvp.c allocates a receive buffer of 16 Kbytes
+and sets max_pkt_size to 16 Kbytes.  From what I can tell, the
+received messages max out at close to 4 Kbytes.   Key exchange
+messages have 512 bytes of key name and 2048 bytes of key
+value, plus some header overhead.   ipaddr_value messages
+are the largest, with 3 IP addresses @ 1024 bytes each, plus
+a gateway with 512 bytes, and an adapter ID with 128 bytes.
+But altogether, that is still less than 4096.  I don't know why
+the receive buffer is 16 Kbytes, but it is plenty big and no
+changes are needed.
 
-You will named them after my late husband.Therefore, I need you to
-help me and claim this money and use it for charities, for orphanages
-and provide justice and help to the poor, needy and to promote the
-words of God and the effort to maintain the house of God, according to
-the bible in the book of. Jeremiah 22: 15-16, without minding our
-different religions.
+The two frame buffer drivers also use 16 Kbyte receive buffers
+and set max_pkt_size to 16 Kbytes.  Again, this looks to be overkill
+as the messages received are mostly fixed size.  One message
+returns a variable size list of supported screen resolutions, but
+each entry in the list is only 4 bytes, and we're looking at a few
+tens of resolutions at the very most.  Again, no changes are
+needed.
 
-It will be a pleasure to compensate with 40% percent of the total
-money for your effort in handling the transaction, while 60% of the
-money will go to charity project.
+After all this analysis, the balloon driver is the only one that
+needs changing.   It uses a 4 Kbyte receive buffer, and indeed
+Hyper-V may fill that receive buffer in the case of unballoon
+messages.   And that where the original problem was observed.
 
-All I need from you is sincerity and ability to complete the task of
-God without any failure. It will be my pleasure to see that the bank
-has finally released and transferred the fund to your bank account in
-the country, even before I die here in the hospital, due to my current
-state of health, everything must be processed as soon as possible.
+Two other aspects for completeness.  First, all these drivers
+do protocol version negotiation with the Hyper-V host.  The
+negotiation includes a variable-size list of supported versions.
+Each version in the list takes 4 bytes, but there would never
+be enough different versions to come close to filling a 4 Kbyte
+buffer.  So there's no problem here.
 
-I am waiting for your immediate response, if you are only interested
-in obtaining more details about the transaction and execution of this
-humanitarian project for the glory and honor of God.
+The other lurking issue is the 'offset8' field in the VMbus
+packet header, which says where the payload starts relative
+to the VMbus packet header.  In practice, this value is always
+small, so there's no significant additional space to account
+for.  While it's theoretically possible that Hyper-V could use
+a much larger value, and cause max_pkt_size to be exceeded,
+there's no real way to fix this problem.  Adding an extra page
+to max_pkt_size, as it done in this patch, certainly provides
+some extra room, but doesn't guarantee the problem can't
+happen.  But since there's no indication Hyper-V would ever
+put a big value into offset8, I don't think we need to worry
+about the possibility.
 
-Sorry if you received this letter in your spam, is due to recent
-connection/network error here in the country.
+My bottom-line:  Let's fix the balloon driver.  But now
+that we know the other drivers are safe "as is", let's leave
+them unchanged and not waste the additional memory.
 
-Please I am waiting for your urgent reply now.
-
-May God Bless you,
-Ms. Nadia Emman F.
+Michael
