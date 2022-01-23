@@ -2,109 +2,80 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77DFF4974B1
-	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Jan 2022 19:43:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E32AA4975D1
+	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Jan 2022 22:55:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234773AbiAWSnF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 23 Jan 2022 13:43:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239935AbiAWSmD (ORCPT
+        id S240234AbiAWVzk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 23 Jan 2022 16:55:40 -0500
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:44591 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234697AbiAWVzj (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 23 Jan 2022 13:42:03 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C36C061782;
-        Sun, 23 Jan 2022 10:42:03 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id v3so7875037pgc.1;
-        Sun, 23 Jan 2022 10:42:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=I0YT/VYh6ObjnXDB7ng030sn8u8S3AAW+xjtpU6qhC0=;
-        b=kq3s29g6GZf8wi2NbTnwwMbHhy8TpKIQ4eWUy/tjlH1Vpe8OzRohSKbh0NJuBIbGKE
-         AWefAIJHW1zxeanlvYSDuErwI7AbVCYWnyZSnLyC+yOjjk1falLUifpAOyQfzPGRxlUm
-         NCgGGZw6YahfLJMTHbzfLum4x9VUdar9NvF4YR9uJAjsjgdICCc9bGMYTiw6dhVpIj2m
-         23T3yJQuFspBrGVljLlEbWLX8Hn44/lP19MFqTTsAIGZ+9GmI5K/C2rnUrTkmWn1r5Uj
-         u7qZ1u+B53jjHd5jQ0n+p5ZGLFrBDziDkFTOYlcCINLApK7NL2aC6acKb3gscVOqbn1P
-         UI2A==
+        Sun, 23 Jan 2022 16:55:39 -0500
+Received: by mail-wr1-f52.google.com with SMTP id k18so10155232wrg.11;
+        Sun, 23 Jan 2022 13:55:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=I0YT/VYh6ObjnXDB7ng030sn8u8S3AAW+xjtpU6qhC0=;
-        b=KQcivrMrVE+hnVKq6JgrLyf0R2yo2tRKtKlOv+8RnMyCwrEtbwcz5K1rANwYnPw7/m
-         2m9CA/tmWLP/G20xdQlMLCsFb6EBjFf1JkhsmLiCfZmJ8NK5vxpdn9PqusIYHQ+skeCj
-         r1NPCeNE67DVxPKCojmCjHS4okey9Ezz26YAx15Chwh4bRWV6Njz9mXXrY34QgmPtFZy
-         3F2Wg+Cm7ULySXflXNcrlcANhBdrGPxZY0qxtEqlZ2k9qPU9u55j2EiIAx4ilaMNVp5z
-         tLn0O2ZFX4gkUNyln9cEGYU+L4ARjaaGF2mR/a5EOCXqvdppfOUQJWWvPveBc/TtPwy3
-         pQPA==
-X-Gm-Message-State: AOAM5332ttlwrbU/+MhPJxix/8L9FnmMWxP0t+dgs9p3gNrT1SHAd9TZ
-        dT5vcoeiuO/Jq/IAsFieujc=
-X-Google-Smtp-Source: ABdhPJwmYpc9TEcV47PWOUUbisFcgskduL2L6nlnYlZH/hQG0qVGRL3+zTix+PrCha7mKeScBdPXNw==
-X-Received: by 2002:a05:6a00:1995:b0:4c5:eb10:c83d with SMTP id d21-20020a056a00199500b004c5eb10c83dmr11135520pfl.70.1642963323151;
-        Sun, 23 Jan 2022 10:42:03 -0800 (PST)
-Received: from localhost (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id h14sm14431432pfh.95.2022.01.23.10.42.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FtCZGMVCEzvzcuj9uIT9ybSsEia//PiD1l8+cmaI4f4=;
+        b=cEk+i0WGCyRUjUvmjZxs5orB5/WGe+Rvu8BC7M2hwO728lNOnpuCzT3O2aGotrKhVo
+         33xT/aDgBRoBp80lWfE9WmNHC0CmbRtmAGa3cS4M/x3whKj3TxjpmF3VMsMsQ9lwm1aX
+         QV3dXMt85KwnoH9s91Obr/G4OrjZsM/FXTluyhbNSyPGRzqPgBPydeIkrSewYdZ+bCuO
+         V90SI10+jsRTO8OCCq0TWC8obSytM9j0VH6fO/GedD/RA2Nb5U0HszzPkWNlh7OhgYen
+         Do4F2k/p+XSBSH/kwlj8kjp5Q0Aa8nwjoTRn61Zb95raTuKWPGwaw8K8wFmyAmXflcAH
+         SjqA==
+X-Gm-Message-State: AOAM530tFzS7iN1kFCEJtLN7PQu90i0i0FjvsazKo5I33HzCucQXK/gQ
+        mnYhf/gFHMAXig+k9mPwK8hxj34X7N0=
+X-Google-Smtp-Source: ABdhPJyxn5VXglHfrRkeM0Qt816asL38uYi6WsiHvqw5MUJumobgjb9yK1GNHIeJ6QM5lhD34k+2Fw==
+X-Received: by 2002:adf:e0c6:: with SMTP id m6mr12016980wri.525.1642974938554;
+        Sun, 23 Jan 2022 13:55:38 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id h127sm19625046wmh.27.2022.01.23.13.55.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jan 2022 10:42:02 -0800 (PST)
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Laight <David.Laight@aculab.com>,
-        Joe Perches <joe@perches.com>, Dennis Zhou <dennis@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sun, 23 Jan 2022 13:55:38 -0800 (PST)
+Date:   Sun, 23 Jan 2022 21:55:36 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Yanming Liu <yanminglr@gmail.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH 43/54] drivers/hv: replace cpumask_weight with cpumask_weight_eq
-Date:   Sun, 23 Jan 2022 10:39:14 -0800
-Message-Id: <20220123183925.1052919-44-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220123183925.1052919-1-yury.norov@gmail.com>
-References: <20220123183925.1052919-1-yury.norov@gmail.com>
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] Drivers: hv: balloon: account for vmbus packet header in
+ max_pkt_size
+Message-ID: <20220123215536.vsbv7n36govrzqbd@liuwe-devbox-debian-v2>
+References: <20220119202052.3006981-1-yanminglr@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220119202052.3006981-1-yanminglr@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-init_vp_index() calls cpumask_weight() to compare the weights of cpumasks
-We can do it more efficiently with cpumask_weight_eq because conditional
-cpumask_weight may stop traversing the cpumask earlier (at least one), as
-soon as condition is met.
+On Thu, Jan 20, 2022 at 04:20:52AM +0800, Yanming Liu wrote:
+> Commit adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V
+> out of the ring buffer") introduced a notion of maximum packet size in
+> vmbus channel and used that size to initialize a buffer holding all
+> incoming packet along with their vmbus packet header. hv_balloon uses
+> the default maximum packet size VMBUS_DEFAULT_MAX_PKT_SIZE which matches
+> its maximum message size, however vmbus_open expects this size to also
+> include vmbus packet header. This leads to 4096 bytes
+> dm_unballoon_request messages being truncated to 4080 bytes. When the
+> driver tries to read next packet it starts from a wrong read_index,
+> receives garbage and prints a lot of "Unhandled message: type:
+> <garbage>" in dmesg.
+> 
+> Allocate the buffer with HV_HYP_PAGE_SIZE more bytes to make room for
+> the header.
+> 
+> Fixes: adae1e931acd ("Drivers: hv: vmbus: Copy packets sent by Hyper-V out of the ring buffer")
+> Suggested-by: Michael Kelley (LINUX) <mikelley@microsoft.com>
+> Suggested-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> Signed-off-by: Yanming Liu <yanminglr@gmail.com>
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- drivers/hv/channel_mgmt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 60375879612f..7420a5fd47b5 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -762,8 +762,8 @@ static void init_vp_index(struct vmbus_channel *channel)
- 		}
- 		alloced_mask = &hv_context.hv_numa_map[numa_node];
- 
--		if (cpumask_weight(alloced_mask) ==
--		    cpumask_weight(cpumask_of_node(numa_node))) {
-+		if (cpumask_weight_eq(alloced_mask,
-+			    cpumask_weight(cpumask_of_node(numa_node)))) {
- 			/*
- 			 * We have cycled through all the CPUs in the node;
- 			 * reset the alloced map.
--- 
-2.30.2
-
+Applied to hyperv-fixes. Thanks.
