@@ -2,105 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 768324975D3
-	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Jan 2022 22:56:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EE6A4975DD
+	for <lists+linux-hyperv@lfdr.de>; Sun, 23 Jan 2022 23:00:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240277AbiAWV4J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 23 Jan 2022 16:56:09 -0500
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:35772 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234697AbiAWV4J (ORCPT
+        id S240230AbiAWWAH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 23 Jan 2022 17:00:07 -0500
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:46972 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234697AbiAWWAH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 23 Jan 2022 16:56:09 -0500
-Received: by mail-wr1-f52.google.com with SMTP id r14so10161166wrp.2;
-        Sun, 23 Jan 2022 13:56:08 -0800 (PST)
+        Sun, 23 Jan 2022 17:00:07 -0500
+Received: by mail-wm1-f52.google.com with SMTP id a203-20020a1c98d4000000b0034d2956eb04so73903wme.5;
+        Sun, 23 Jan 2022 14:00:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=vkJFe+YpdQY4B8W9DqTO7FJ3H0EJ0x5TwT+iBVw2iXM=;
-        b=KSeKjlhBhcm2ff2wysuzkBEqVY0FfqG8GkotEE7okGFte66MxjyOXgm/D0fvQzN4qY
-         4SozoVwcadIspEPOyjPUyhcGdHIZ0q5K7h02/SRUQE8Omj3h16N+MwwVAEPXSwpVDa3v
-         CHTmclWv0/WnpjdSayihNTU91xb/33v2Hwl8BMJqJulaKA/IfLyyXw+OuYyrqi4FSU9Z
-         oKSwln06As8xO1SwDVGxwq405yBtMaF/XSZAXLZjIfwClxSfMbkA3yeZIYNV1Rs85h16
-         uUuVF/wr8Mh6yPyv6VBhMCAjVoR9KVq9cUJOgb1Qj8akmcNilfuTN+ctWXvSHrnHbCdV
-         kG0Q==
-X-Gm-Message-State: AOAM532ESay871oXaBdJBnNjVm/rlWdl8KWw6NW6gFJNwr9QXqE64UVt
-        vCz97N3FaUixnSfdxGLuxY0=
-X-Google-Smtp-Source: ABdhPJwhnlwrjUsCsa0+KILQxWz6IQlGaxe4OdxYSDfPAdjw5uuWKbL38sD7/aPt9aqlGF50rVLWKA==
-X-Received: by 2002:a05:6000:1a8e:: with SMTP id f14mr12188363wry.518.1642974967958;
-        Sun, 23 Jan 2022 13:56:07 -0800 (PST)
+        bh=pJh9I1eoTbpKvrdJo2eHmYHAPVSdA5hOmWOCZfSky6s=;
+        b=aKkJbByhqFlDlCbXlxy3T4jgwHBdLW482Ch6JAUO0wStadqYQtHE1EOkIKZvALxcbW
+         SUxWvknSQ3mnGzG5Iv4NmESj+BVpFT5xisy18EYsgWfXr0L6GXaNewARP+r9iM2yoFNc
+         RyynaJNZ3qdpxv019H412dWA76jMH+SYX051yWBW/Ef/QbE2JW/P7zozYBH6jHeJ4dXi
+         dwZ3Z5T8cposzPlLG2yPdVthMaYsQCiE64QJFawNQVcw+wr3TLj9Ft6lZL7SAjKEsfkE
+         gNo3Vs95EYC8mzg6bXAsKLE+xp9Y2BT7qXcDs8rfw8B16cDlW0tV8oLcI6uWprrW/vgA
+         U/tQ==
+X-Gm-Message-State: AOAM531//IflXssx0RymEdR9KbKLWJ4RbmIv0h7i7ljPLhQfXl8lI5k1
+        wVKKisDpHGr1YuucSIRwIL8=
+X-Google-Smtp-Source: ABdhPJzZn47WeoeSIMPoijTnR2fL6aguIsedH9zK6nT/Am/W7pO/Xy6z8ACeayxR6q302f79ZC6Wcw==
+X-Received: by 2002:a05:600c:5127:: with SMTP id o39mr9231510wms.81.1642975206017;
+        Sun, 23 Jan 2022 14:00:06 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id i2sm2779615wmq.23.2022.01.23.13.56.07
+        by smtp.gmail.com with ESMTPSA id c14sm15908197wri.32.2022.01.23.14.00.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jan 2022 13:56:07 -0800 (PST)
-Date:   Sun, 23 Jan 2022 21:56:06 +0000
+        Sun, 23 Jan 2022 14:00:05 -0800 (PST)
+Date:   Sun, 23 Jan 2022 22:00:04 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Laight <David.Laight@aculab.com>,
+        Joe Perches <joe@perches.com>, Dennis Zhou <dennis@kernel.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Wei Hu <weh@microsoft.com>, Dexuan Cui <decui@microsoft.com>,
-        "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
-        hhei <hhei@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 1/1] video: hyperv_fb: Fix validation of screen resolution
-Message-ID: <20220123215606.fzycryooluavtar4@liuwe-devbox-debian-v2>
-References: <1642360711-2335-1-git-send-email-mikelley@microsoft.com>
- <MN2PR21MB1295CE3BD15D4EB257A158DCCA569@MN2PR21MB1295.namprd21.prod.outlook.com>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 43/54] drivers/hv: replace cpumask_weight with
+ cpumask_weight_eq
+Message-ID: <20220123220004.qtwdl5oqufiy4elj@liuwe-devbox-debian-v2>
+References: <20220123183925.1052919-1-yury.norov@gmail.com>
+ <20220123183925.1052919-44-yury.norov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MN2PR21MB1295CE3BD15D4EB257A158DCCA569@MN2PR21MB1295.namprd21.prod.outlook.com>
+In-Reply-To: <20220123183925.1052919-44-yury.norov@gmail.com>
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Jan 16, 2022 at 09:53:06PM +0000, Haiyang Zhang wrote:
+On Sun, Jan 23, 2022 at 10:39:14AM -0800, Yury Norov wrote:
+> init_vp_index() calls cpumask_weight() to compare the weights of cpumasks
+> We can do it more efficiently with cpumask_weight_eq because conditional
+> cpumask_weight may stop traversing the cpumask earlier (at least one), as
+> soon as condition is met.
 > 
-> 
-> > -----Original Message-----
-> > From: Michael Kelley (LINUX) <mikelley@microsoft.com>
-> > Sent: Sunday, January 16, 2022 2:19 PM
-> > To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
-> > Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org; Wei Hu <weh@microsoft.com>; Dexuan
-> > Cui <decui@microsoft.com>; drawat.floss@gmail.com; hhei <hhei@redhat.com>; linux-
-> > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org; linux-fbdev@vger.kernel.org; dri-
-> > devel@lists.freedesktop.org
-> > Cc: Michael Kelley (LINUX) <mikelley@microsoft.com>
-> > Subject: [PATCH 1/1] video: hyperv_fb: Fix validation of screen resolution
-> > 
-> > In the WIN10 version of the Synthetic Video protocol with Hyper-V,
-> > Hyper-V reports a list of supported resolutions as part of the protocol
-> > negotiation. The driver calculates the maximum width and height from
-> > the list of resolutions, and uses those maximums to validate any screen
-> > resolution specified in the video= option on the kernel boot line.
-> > 
-> > This method of validation is incorrect. For example, the list of
-> > supported resolutions could contain 1600x1200 and 1920x1080, both of
-> > which fit in an 8 Mbyte frame buffer.  But calculating the max width
-> > and height yields 1920 and 1200, and 1920x1200 resolution does not fit
-> > in an 8 Mbyte frame buffer.  Unfortunately, this resolution is accepted,
-> > causing a kernel fault when the driver accesses memory outside the
-> > frame buffer.
-> > 
-> > Instead, validate the specified screen resolution by calculating
-> > its size, and comparing against the frame buffer size.  Delete the
-> > code for calculating the max width and height from the list of
-> > resolutions, since these max values have no use.  Also add the
-> > frame buffer size to the info message to aid in understanding why
-> > a resolution might be rejected.
-> > 
-> > Fixes: 67e7cdb4829d ("video: hyperv: hyperv_fb: Obtain screen resolution from Hyper-V
-> > host")
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-[...]
-> 
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> 
+> Signed-off-by: Yury Norov <yury.norov@gmail.com>
 
-Applied to hyperv-fixes. Thanks.
+Acked-by: Wei Liu <wei.liu@kernel.org>
