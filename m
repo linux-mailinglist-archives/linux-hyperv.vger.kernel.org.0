@@ -2,49 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84E304A4E75
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Jan 2022 19:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD7AF4A4E9E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Jan 2022 19:40:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348360AbiAaSfr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 Jan 2022 13:35:47 -0500
-Received: from mail-bn8nam08on2051.outbound.protection.outlook.com ([40.107.100.51]:21345
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238324AbiAaSfp (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 Jan 2022 13:35:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M5OlH/XZwU8ZvAH/CgH1hond4fsS3fl41xQ0dMGxx8uqZpgBOajBOiVML4JM/789u7xV0yxod0964E1J76/pTGei+Lb8mK6LpLIYM/uwszHtwKLysHqMoglnnbcNNf825A8SDMmP7FxruZ0fzSlEIYD8zrab1dif3OFHrBovGpcijxOnEQ7q/9GLTRUPHCV8etWTGJMcP5DFg8wMkKFeOQkhPHiavORkXvgUpWINHyhUvLNsd/YBbmpsFIfWVeM2D9CREfKWkWp2H2ZjKAT9bWLsGytVHuNt4TUjcb0MF1skiiHWlQBEqxZeVlO0TJ6+UqnF2pyi6Fxdevxz/RTqDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YwuD5vIXHOWuJnJEcF0XRpYEFBaaPL6OrECkwmo/RDw=;
- b=YuOa+92UCrJ91JtbcK52Str2ujFu9/9+oEFhjBKLDKKhA0yk81WFZHucGeK0yqH9UNXk6gUbbvoz+HOZp6XJ0VNxJnUFF6UNEX8zumN1/Gww2Bd8+/4EVjlBVXIYsfgOkdDy3lFPIwj/+us38OslUiCl3F0ui0K7e/bvRrUCxF8ZMiyuN55S42RqtfJDW1n8LpShzbeoqEO+GHFjJiB81ARZ9io+R0Zll8VSBpGyKrwnOgzOUCVZKd5u8YKYDoZHsDDdSDEQZEEh4ZFMIj/7eq6x5wTMMJ4lzw/cZB5h2qNXGGiUYBmyCWk9hLzVpyCeEtt4MBszYL5to7+vzjEf6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YwuD5vIXHOWuJnJEcF0XRpYEFBaaPL6OrECkwmo/RDw=;
- b=mhfh7mAKzgEGa348G9CF5DRO3CAPXvb2u+yOFGUcBd9eu32cg2HDkjybUlSnvvEuH1T+ritaV9BK9indUIRMg6BvaGCt+Q2tgfzixO6OGfRdwnjAK7O5jCAmcWbi3iO6J2H4wUJvPDlHDVmIDJZCKpHfkOHoCVeWZA/YOhPjVq1hAkf0O34xuSYmiLYE1s5nZlOCPv1ZPl+paon96SBxwOqeafULsISAftNFmTWI1AxXtJoB5KJnXUKJJbRUoLfmsqqLMgaWUUkBAjweeMYNMVFCKpOecM9syhMqMnCqZHT9RPZMRkr0vjlVgzUCuSpiFNEitWd1b43AoqU14YjzUg==
-Received: from BN6PR12MB1284.namprd12.prod.outlook.com (2603:10b6:404:17::17)
- by DM6PR12MB2970.namprd12.prod.outlook.com (2603:10b6:5:3b::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.18; Mon, 31 Jan
- 2022 18:35:43 +0000
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4209.namprd12.prod.outlook.com (2603:10b6:a03:20d::22)
- by BN6PR12MB1284.namprd12.prod.outlook.com (2603:10b6:404:17::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.15; Mon, 31 Jan
- 2022 18:35:42 +0000
-Received: from BY5PR12MB4209.namprd12.prod.outlook.com
- ([fe80::35a1:8b68:d0f7:7496]) by BY5PR12MB4209.namprd12.prod.outlook.com
- ([fe80::35a1:8b68:d0f7:7496%4]) with mapi id 15.20.4930.022; Mon, 31 Jan 2022
- 18:35:41 +0000
-Date:   Mon, 31 Jan 2022 10:35:40 -0800
-From:   Saeed Mahameed <saeedm@nvidia.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
+        id S1343565AbiAaSks (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 31 Jan 2022 13:40:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234175AbiAaSks (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Mon, 31 Jan 2022 13:40:48 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9869C061714;
+        Mon, 31 Jan 2022 10:40:47 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id t32so13026846pgm.7;
+        Mon, 31 Jan 2022 10:40:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=vUcVq5xhDtsVnawQOYBHe0I2uMjtSwKHFuB7P9A9ZPE=;
+        b=Qks15jLuTdFfJB7Yimcf6CFubiKZSrG+lgYbEXhv5CmcREhbsO9I3sHSkFpZJtXCKr
+         92ULlrJ1jbtZTyDNycEEatYwo/lYVGPSpPf1Eb96b6UbfuVheN/P13CAiMWNG2SWTU/7
+         3kMaW8gywhhLuK1ffBR6cWAnDfHfkbkT4gdENSpeUmj5WtcK+xKXA3d7Ir+6P1b6ySez
+         5aKGnhEZanxzbauIs3sIeQq7luxkHgr8QY9yfq7EiP8YuRrN+QQlfEvf8cqeTrWlxUPM
+         eHVw4/o/IfeCDvEz6RYo2vuKGwnbY5xuw8UU3STuPVmvw/DN71+Hg6YDgx6nHJknnlYG
+         GImA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=vUcVq5xhDtsVnawQOYBHe0I2uMjtSwKHFuB7P9A9ZPE=;
+        b=ia+G/kkMpdhlz7I34OSZZZ3D+DWS+OOAC5m5QUYrVmpW6pMAfypjCxeVFCT63GL/r+
+         KmUyh0phqGNg3lLvPVKGrAOj2xGxBUACokTZYqTlfPznj56qfFPhIKB4MQ0MQ8IiZqXE
+         pcrG8N8pTD3j6ffHe6T8B4D/W9K2fvcVmBbt61ZcMIrwmQkAtOI63CBuTGSQtOGjRI6u
+         1bxbl/8aCPGOQMHkAHWu6RwB9M+m8vA89NN8TDWlnBANP1DQylh99GgP0Srr3SkuDL0G
+         fpsg4Eh0jtoAL+74Ai2CExcAiVWMVXX8F8R5AmhNnoTWotNHHfxTgytyxjvvtjEIo6Bv
+         ft3g==
+X-Gm-Message-State: AOAM532o2l7kBberK9UmucXY561EzaplpD4DvfVUEQurCi3lQ3gu4imN
+        2FjE4S3AAOhyZOZDbaeJXbk=
+X-Google-Smtp-Source: ABdhPJwFcPJi/t2hparKLY2t08LTiTgjCaME1xBLmUfnatI03eGBlVkElbTxSt6cAsqmyFb4Kfa8FA==
+X-Received: by 2002:a05:6a00:b51:: with SMTP id p17mr12524853pfo.35.1643654447151;
+        Mon, 31 Jan 2022 10:40:47 -0800 (PST)
+Received: from [192.168.1.3] (ip72-194-116-95.oc.oc.cox.net. [72.194.116.95])
+        by smtp.gmail.com with ESMTPSA id s14sm18562705pfk.65.2022.01.31.10.40.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Jan 2022 10:40:45 -0800 (PST)
+Message-ID: <30ed8220-e24d-4b40-c7a6-4b09c84f9a1f@gmail.com>
+Date:   Mon, 31 Jan 2022 10:40:38 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH net-next] net: kbuild: Don't default net vendor configs to
+ y
+Content-Language: en-US
+To:     Saeed Mahameed <saeedm@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Stephen Hemminger <stephen@networkplumber.org>,
         Saeed Mahameed <saeed@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
@@ -97,8 +111,7 @@ Cc:     Stephen Hemminger <stephen@networkplumber.org>,
         Jacob Keller <jacob.e.keller@intel.com>,
         Vegard Nossum <vegard.nossum@oracle.com>,
         Rob Herring <robh@kernel.org>, l.stelmach@samsung.com,
-        rafal@milecki.pl, Florian Fainelli <f.fainelli@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
+        rafal@milecki.pl, Edwin Peer <edwin.peer@broadcom.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Michael Chan <michael.chan@broadcom.com>,
         Richard Cochran <richardcochran@gmail.com>,
@@ -126,118 +139,68 @@ Cc:     Stephen Hemminger <stephen@networkplumber.org>,
         linux-hyperv@vger.kernel.org, oss-drivers@corigine.com,
         linux-renesas-soc@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH net-next] net: kbuild: Don't default net vendor configs
- to y
-Message-ID: <20220131183540.6ekn3z7tudy5ocdl@sx1>
 References: <20220131172450.4905-1-saeed@kernel.org>
  <20220131095905.08722670@hermes.local>
  <CAMuHMdU17cBzivFm9q-VwF9EG5MX75Qct=is=F2h+Kc+VddZ4g@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdU17cBzivFm9q-VwF9EG5MX75Qct=is=F2h+Kc+VddZ4g@mail.gmail.com>
-X-ClientProxiedBy: SJ0PR03CA0123.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::8) To BY5PR12MB4209.namprd12.prod.outlook.com
- (2603:10b6:a03:20d::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0377cf89-0b6d-444e-004f-08d9e4e87bce
-X-MS-TrafficTypeDiagnostic: BN6PR12MB1284:EE_|DM6PR12MB2970:EE_
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN6PR12MB128479F6D1F0BC3AF5CFD9BFB3259@BN6PR12MB1284.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AI0cnteOD61mDeApjAKpNlbxO26EMtiDjk9ikthpDwC4zgQOTTWJCBn/uX6ShSWM0xCXsxjC9sz+qc4W1zzdzhrWJiQoSIOfdD1zzSsW5tW7NRnYzdMkbs/px4otkVEO77GyiPmWwDiLcoDJcg0ydugB7QF0/GgMIxPKhpB5IgnDzp2O5CzeKi4HiZJIT2CbMK+AOZNgNzxx5PnTuBDafZjsJlF5uCeIgFP/+4HgQCRMStXlkTiv3Vfmg5tF5FyLINWf6m5aXbiHMEB1P3FkcqntdrTPkI9tCbROnRnCE/VaLR87VfG0TRVSzp/HDZz/P+NYbLZyHXLjCRLESi3GjmYo4punMY7n0mrZ988SZCcef3yP4k4iJXxkePtMLEvHPeVi5BFm4TlNEpzfV8mSMw9raWWzREUqsSs/eRCiCUwNOOeRYUSU59865bVB7PXcML7OKFg09BLKHAvnMSVqQBkgs5eEyhS9dxgwn/azyTLHJzB19LZ659A8y0HQ2nkukR0ShkgFy8H0wn+FacM0ADsJkR0P0PU+sjeVIZsczH9deMqGRA1x3A2Z8hRldq6y6FIS+ymhJ0VB6f9NpWcoW57Vnksk9hTU5Y/L4Jqd/8L+mlL6y+R0z4vJMUjmJxcF7z5FbEyKRTx5tBS6VSQbxQwd+X5nTUTDMQ4iJhj2JzB9q6AzAxeHu3VBoKrwHgrSy0bYn0YThyZp6y1x8+X6cbJnghUzzk4L97anaY0Rb7E=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR12MB1284.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(7916004)(366004)(66946007)(186003)(6506007)(52116002)(26005)(6486002)(316002)(1076003)(33716001)(9686003)(54906003)(66476007)(6512007)(6916009)(4326008)(508600001)(8936002)(8676002)(38100700002)(83380400001)(38350700002)(5660300002)(86362001)(66556008)(2906002)(7406005)(7416002)(7336002)(7366002)(129723003)(20210929001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ivo1wHeq5JAa6C6utzDOSxsdL66cT2qCqkvqHYZ72sLzx6cAk3VvURBLypuY?=
- =?us-ascii?Q?uqz3cBrbH8ooWa7+sDwKJWwpnWzRnaPMJpCYkz6NBqOJaFCleUdKe8Wq5IUj?=
- =?us-ascii?Q?P794xTKMdyfK3aXza0/1akucDByHX+f7ykSPpluoRvAV+okDZZnTF2WG9eqI?=
- =?us-ascii?Q?ZT0P25eNRhbIHptn8oSzrTCF2s+O8p/VKZLiaRwTd1/etjY83kPYBc9CVqAG?=
- =?us-ascii?Q?Zspp395/gZ7RxZmH8cQqyQxCllSXSY6Bpx6S+/9GRiCP2sgSoJMgpsAugjkj?=
- =?us-ascii?Q?Qh12ZyAlUAOp4z4z0g9s1XpOQmHuDlWO8KA58oycLb8f+1U+H/SZ+d4loLIt?=
- =?us-ascii?Q?KpMciz4fvhjuuG+31EnayIhuKaF5vew1umDplkHuAxbnCY6bdEcKjXYIS7/R?=
- =?us-ascii?Q?v9igS1a7Lmn8H0WDonAE5p9KKhXq7wgKqOPgoWzNpOu37oL5P0ySVwc9gohG?=
- =?us-ascii?Q?ocuhtdT237qxtg8MYgKdeSIl5CLdmCwdbw2LApTU7H/jAVc1VjThQcryvWx7?=
- =?us-ascii?Q?4l/FK9PsjKn/GE942fXiXv1Stq+6+L33sC0s596hj/R/TJKRBf+2FugW0VuQ?=
- =?us-ascii?Q?4Ayan03BYvtVj+fUpYBYxHkkbIUrFCBlYvYjKMyxy7gAKWIGN/nMAz2nr9/d?=
- =?us-ascii?Q?evOw8UHO9lFJxCSBS9XofolzJZNbCeD4FzMpekr4yCT+3fbqYL5bFUqR6JbU?=
- =?us-ascii?Q?Rfug0KxiX8GbGkJmxnhhPrLV0jcVbbhEQ8u6polnk0oFWo5FcKyf7U+6HHkV?=
- =?us-ascii?Q?Hm3A7mXfbnltvSqbLmyBC1Jy9GWwMbSIU31YumwlO5MXweRTyOC9XLKuIYF/?=
- =?us-ascii?Q?z2DWeuUXUXQGMg57uytEF/uojJe0Tl/aRTViaNiJCyizYPxBtw54ZdPyw2qn?=
- =?us-ascii?Q?+uYstvkXjB155AspUbI/ltKW5gHs8T4g8pBsCQEN//RwoT6hog/5V0ZqiQoG?=
- =?us-ascii?Q?I6VchMx4dRoD6bhmZLa0J1i3CJZHj6Fh38sSw/uqkntDhNDjCmQzvyS09yi7?=
- =?us-ascii?Q?d/4AmW+iSEtkMbqLVBSQwDQXgF3I9knxg/94R4pyze+3G3+kGv7M760hV5qu?=
- =?us-ascii?Q?6nAzpf+4qCwgeXasdsv+z6Liz/r6TnRp94eQf1beNT8XcoBKioW+MUsWRiQy?=
- =?us-ascii?Q?xU27TJfX9oaHrqrnkI6dXgeSZfkASaAxAOcd+IyHDo5l42yuMCy2pkgPV/J9?=
- =?us-ascii?Q?ZhaUvP9d48+1tLN4cjAY4/b+CFbl88od8eIqS7Byq2EX/b06tyZ1SGcYL774?=
- =?us-ascii?Q?Wuj97yb7QKj9ikgqyctF9U5VNLwSkx8JoX46Luv+yic25C3yOV9O6tpEit6c?=
- =?us-ascii?Q?CUG1fHLrUTpmkR+nx9Y0zxZaFrC74ew8Z0rW/hnXfAXBVpvu0NBgTNL8lqj5?=
- =?us-ascii?Q?pTYWi+BFcZp68uD40N7krCWlVbFbq4apbO8dg9YWOGJinIIqq1nQg5RXkAmA?=
- =?us-ascii?Q?X3/2MJOfslK/Rzz6Hkwpj2Ej4IqVc+hWGPxTia4Y7MLb7hR82OtpBBMZ0mKr?=
- =?us-ascii?Q?XTgO8igu6ARA4IKYCAfkIG08X1tCc9IJOFxKJN5wC18D7O83tzjzjmlAcBqQ?=
- =?us-ascii?Q?Tj8+Vc4lUqCY1TTpwjvK5l+fB228RKX9smIsJ1V8Fq2WNjOgtJbEOGQYPgQH?=
- =?us-ascii?Q?gO3YrXEtpQU6mw7RqKokUNg=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0377cf89-0b6d-444e-004f-08d9e4e87bce
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4209.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2022 18:35:41.5122
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HbhP/vrOeyqyR6IsOZJx2nhyCU9T75DcHbkng7KgEgvDY2P1vUry8vRkyUtnrqA9TNsGL5FkQxCHIJnJ+mmGLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2970
+ <20220131183540.6ekn3z7tudy5ocdl@sx1>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20220131183540.6ekn3z7tudy5ocdl@sx1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 31 Jan 19:30, Geert Uytterhoeven wrote:
->On Mon, Jan 31, 2022 at 6:59 PM Stephen Hemminger
-><stephen@networkplumber.org> wrote:
->> On Mon, 31 Jan 2022 09:24:50 -0800
->> Saeed Mahameed <saeed@kernel.org> wrote:
+
+
+On 1/31/2022 10:35 AM, Saeed Mahameed wrote:
+> On 31 Jan 19:30, Geert Uytterhoeven wrote:
+>> On Mon, Jan 31, 2022 at 6:59 PM Stephen Hemminger
+>> <stephen@networkplumber.org> wrote:
+>>> On Mon, 31 Jan 2022 09:24:50 -0800
+>>> Saeed Mahameed <saeed@kernel.org> wrote:
+>>>
+>>> > From: Saeed Mahameed <saeedm@nvidia.com>
+>>> >
+>>> > NET_VENDOR_XYZ were defaulted to 'y' for no technical reason.
+>>> >
+>>> > Since all drivers belonging to a vendor are supposed to default to 
+>>> 'n',
+>>> > defaulting all vendors to 'n' shouldn't be an issue, and aligns well
+>>> > with the 'no new drivers' by default mentality.
+>>> >
+>>> > Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+>>>
+>>> This was done back when vendors were introduced in the network 
+>>> drivers tree.
+>>> The default of Y allowed older configurations to just work.
 >>
->> > From: Saeed Mahameed <saeedm@nvidia.com>
->> >
->> > NET_VENDOR_XYZ were defaulted to 'y' for no technical reason.
->> >
->> > Since all drivers belonging to a vendor are supposed to default to 'n',
->> > defaulting all vendors to 'n' shouldn't be an issue, and aligns well
->> > with the 'no new drivers' by default mentality.
->> >
->> > Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+>> And changing the defaults means all defconfigs must be updated first,
+>> else the user's configs will end up without drivers needed.
 >>
->> This was done back when vendors were introduced in the network drivers tree.
->> The default of Y allowed older configurations to just work.
->
->And changing the defaults means all defconfigs must be updated first,
->else the user's configs will end up without drivers needed.
->
+> 
+> As I understand correctly, at least for most common net drivers, having 
+> NET_VENDOR_XYZ=y doesn't actually build anything, we have flags per
+> module for each vendor and those are defaulted to N.
 
-As I understand correctly, at least for most common net drivers, 
-having NET_VENDOR_XYZ=y doesn't actually build anything, we have flags per
-module for each vendor and those are defaulted to N.
+Right, but once you start hiding NET_VENDOR_DRIVER_XYZ under a 
+NET_VENDOR_XYZ Kconfig symbol dependency, if NET_VENDOR_XYZ is not set 
+to Y, then you have no way to select NET_VENDOR_DRIVER_XYZ and so your 
+old defconfig breaks.
 
->> So there was a reason, not sure if it matters anymore.
->> But it seems like useless repainting to change it now.
->
->It might make sense to tune some of the defaults (i.e. change to
->"default y if ARCH_*") for drivers with clear platform dependencies.
->
+> 
+>>> So there was a reason, not sure if it matters anymore.
+>>> But it seems like useless repainting to change it now.
+>>
+>> It might make sense to tune some of the defaults (i.e. change to
+>> "default y if ARCH_*") for drivers with clear platform dependencies.
+>>
+> 
+> either set hard default to 'n' or just keep it as is, anything else is just
+> more confusion.
 
-either set hard default to 'n' or just keep it as is, anything else is just
-more confusion.
-
->Gr{oetje,eeting}s,
->
->                        Geert
->
->--
->Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
->In personal conversations with technical people, I call myself a hacker. But
->when I'm talking to journalists I just say "programmer" or something like that.
->                                -- Linus Torvalds
+Maybe the rule should go like this: any new driver vendor defaults to n, 
+and existing ones remain set to y, until we deprecate doing that and 
+switching them all off to n by 5.18?
+-- 
+Florian
