@@ -2,58 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 408964A4F38
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Jan 2022 20:13:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C7634A4F44
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Jan 2022 20:17:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236064AbiAaTNf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 Jan 2022 14:13:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46500 "EHLO
+        id S235996AbiAaTRV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 31 Jan 2022 14:17:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230501AbiAaTNe (ORCPT
+        with ESMTP id S230501AbiAaTRT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 Jan 2022 14:13:34 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5EE1C061714;
-        Mon, 31 Jan 2022 11:13:33 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id s61-20020a17090a69c300b001b4d0427ea2so79050pjj.4;
-        Mon, 31 Jan 2022 11:13:33 -0800 (PST)
+        Mon, 31 Jan 2022 14:17:19 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72859C061714;
+        Mon, 31 Jan 2022 11:17:19 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id s16so13023945pgs.13;
+        Mon, 31 Jan 2022 11:17:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=YZVTL02trY93bXBvFab8GWC4SGTBEHx7xoM5zz31pOg=;
-        b=eI59J5vvr0A8RKxUqyE9NUAu6vFBo9JLnOmw0puMQZUEm4dF2MWwJqfR/ZL08CAxWZ
-         BnWoSz1sTio7BAV9whmwWT6xUhgWC6Lo5BK4+b2sM6VIImC2/K/OnoTgvKSA94C7mdon
-         itSGEALfsQg4ZMdAZ+hZz6HnPPJcZllFKFyICnD2+E8AyYxfPrqC9UOqTS0CeUtdusV1
-         D4fD1+rjOl4c4TOP+xFamd2c429GVwsIuvmsUAgjkAklhb5p0GonFbMhGG1gbEVHUG3W
-         T9o9E6puaKCHgmEkfQ64cDBJQP0R4HnPSY65B2EhBCUypXC4/lvWzE2EgRcc1SWQbOpz
-         19og==
+         :content-disposition:in-reply-to:user-agent;
+        bh=7wtjFpATqKxdnDVdQqBB52ek5BkdZ1ljUXCnQMzA+YE=;
+        b=X8YBNplQcnUZETMeJkil7YzspkzyBjdzevD8S5EhCJDlexq9s5syiK29gaXExTCG9x
+         cBTU4EIAqxFlGcVOy9dLDJTNSr8PAc4KzWn9FXQJCMazJQ14zhMbaFZmdKsT3ySvFcC5
+         +r3lQiYQjSJ1Bqpk0g5MKjOK+eUXoYnoOQAyFGhH3u1XL9W7Xvaold+XHeW+20yzb+l/
+         HhmEKhdp51lSJjNPWNl/R7wrixvFWjSroT2+z5gRPJ8Qp0ZGv6Dn+lVgXj1OCWm+Sm0V
+         TO33xQ1scBCqlq/eQbn3dfG86QcgRdVDfAVm0dM/1ATO/ZU/p9KluVFrM9Y+mm2Oq9/E
+         aRow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=YZVTL02trY93bXBvFab8GWC4SGTBEHx7xoM5zz31pOg=;
-        b=tMwOS60CYJSxnMF/9HU/pNASKNCaxS0wnSwG/xP3O9xaKN8uOYMFSFYjxpeCHegtBJ
-         uy4VOzgllGRHfNcvvGCoW4sQRCzoJl8Fe+/K7Sp10Cl34rcc23xIcqVtCI3DaKPNJYUG
-         IpqUi0ABLz1iNdAOkAsXtRY4YLwwaraEVz60aZEBGxotqhUiKqu6rY4zMJLiBCIz8f+O
-         pj1mQoOeHlBxZVSIIN6fqGNnpXGsG4kFRj8He5RX7nBt5hUk6jE2AGoYw/zcymjBWxlr
-         J67/tGEzGLlQ0P2t1LySEQous7A5LKCBfbn66BJ/6pfQYuEux7PgevaYLLdM8IXx4+/H
-         WwYQ==
-X-Gm-Message-State: AOAM5338CrTSd3g9i0zFsEVF+WKG3A2TWzAJIfUsDF8IDHDmfd5Sym4s
-        rUdBL8NTKbyn9LAm6SsYGwM=
-X-Google-Smtp-Source: ABdhPJxZc+Bj3ecmVnKia223vAFW8JsKNa9KxQkDpM9AJ8KxEqdBZ0FJgWcicwws5wLqU29X67c1ZA==
-X-Received: by 2002:a17:902:e885:: with SMTP id w5mr22303795plg.155.1643656413464;
-        Mon, 31 Jan 2022 11:13:33 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7wtjFpATqKxdnDVdQqBB52ek5BkdZ1ljUXCnQMzA+YE=;
+        b=fIEC1jlyvQdTabSvzlXa3c0L9Sicx1tHfdmczk71MXHZc/9Y46QuRppdADd7skzu72
+         LnJ9yemMUcOtrcJAQ2sfvTARV2nSdPqWkCdwI02kJ8sw5dQ5Bu5q9H8Xi0kQbQhE8DuP
+         Q0UgDUhn3/UZJa38fJnIEnLOZUhqhuEnU+3Uch+yLBWnnsgHCTiEt9F2MkZcmHjkWfEl
+         GvIg+ycnpetaEgg3wcOJdpDwUHF/ncMN2V2bp2CBbvSTpwuBRgFTCVgDMjSbE2qxnXDL
+         DHQKXB2QynRkqI0nprXCTbyQhbOCGjY+p3LRz3xpKwAR87n6aVQFrERVpA9Xq02AyL+2
+         gO3w==
+X-Gm-Message-State: AOAM5319m+Mc8bMSK2506V2cKPvr/PruKHh8TrnrC7ws0nqBxCKBr7O2
+        n7mMX8StPBmXgHiUQtCnrZ4=
+X-Google-Smtp-Source: ABdhPJw11SX7kE9IxFaA0cpVmnKqPcCpGWxwTpOmHd3nspKT1jSnGEI0CQL4NBBvb5g7vvfFUUbwng==
+X-Received: by 2002:a63:1d4a:: with SMTP id d10mr18068276pgm.92.1643656638979;
+        Mon, 31 Jan 2022 11:17:18 -0800 (PST)
 Received: from hoboy.vegasvil.org ([2601:640:8200:33:e2d5:5eff:fea5:802f])
-        by smtp.gmail.com with ESMTPSA id mj23sm95941pjb.54.2022.01.31.11.13.27
+        by smtp.gmail.com with ESMTPSA id j18sm19961074pfj.13.2022.01.31.11.17.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 11:13:32 -0800 (PST)
-Date:   Mon, 31 Jan 2022 11:13:20 -0800
+        Mon, 31 Jan 2022 11:17:18 -0800 (PST)
+Date:   Mon, 31 Jan 2022 11:17:06 -0800
 From:   Richard Cochran <richardcochran@gmail.com>
-To:     Shannon Nelson <snelson@pensando.io>
-Cc:     Saeed Mahameed <saeed@kernel.org>,
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Saeed Mahameed <saeedm@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Saeed Mahameed <saeed@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Mark Einon <mark.einon@gmail.com>,
@@ -85,10 +86,12 @@ Cc:     Saeed Mahameed <saeed@kernel.org>,
         Vladimir Oltean <vladimir.oltean@nxp.com>,
         Claudiu Manoil <claudiu.manoil@nxp.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        UNGLinuxDriver@microchip.com, Jon Mason <jdmason@kudzu.us>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Jon Mason <jdmason@kudzu.us>,
         Simon Horman <simon.horman@corigine.com>,
         Rain River <rain.1986.08.12@gmail.com>,
-        Zhu Yanjun <zyjzyj2000@gmail.com>, drivers@pensando.io,
+        Zhu Yanjun <zyjzyj2000@gmail.com>,
+        Shannon Nelson <snelson@pensando.io>, drivers@pensando.io,
         Sergey Shtylyov <s.shtylyov@omp.ru>,
         Jiri Pirko <jiri@resnulli.us>,
         Edward Cree <ecree.xilinx@gmail.com>,
@@ -98,13 +101,11 @@ Cc:     Saeed Mahameed <saeed@kernel.org>,
         Jose Abreu <Jose.Abreu@synopsys.com>,
         Andy Gospodarek <andy@greyhouse.net>,
         Michal Simek <michal.simek@xilinx.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Jacob Keller <jacob.e.keller@intel.com>,
         Vegard Nossum <vegard.nossum@oracle.com>,
         Rob Herring <robh@kernel.org>, l.stelmach@samsung.com,
-        rafal@milecki.pl, Florian Fainelli <f.fainelli@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
+        rafal@milecki.pl, Edwin Peer <edwin.peer@broadcom.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Michael Chan <michael.chan@broadcom.com>,
         Gerhard Engleder <gerhard@engleder-embedded.com>,
@@ -133,26 +134,34 @@ Cc:     Saeed Mahameed <saeed@kernel.org>,
         linux-stm32@st-md-mailman.stormreply.com
 Subject: Re: [PATCH net-next] net: kbuild: Don't default net vendor configs
  to y
-Message-ID: <20220131191320.GA24296@hoboy.vegasvil.org>
+Message-ID: <20220131191706.GB24296@hoboy.vegasvil.org>
 References: <20220131172450.4905-1-saeed@kernel.org>
- <e9e124b0-4ea0-e84c-cd8e-1c6ad4df9d74@pensando.io>
+ <20220131095905.08722670@hermes.local>
+ <CAMuHMdU17cBzivFm9q-VwF9EG5MX75Qct=is=F2h+Kc+VddZ4g@mail.gmail.com>
+ <20220131183540.6ekn3z7tudy5ocdl@sx1>
+ <30ed8220-e24d-4b40-c7a6-4b09c84f9a1f@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e9e124b0-4ea0-e84c-cd8e-1c6ad4df9d74@pensando.io>
+In-Reply-To: <30ed8220-e24d-4b40-c7a6-4b09c84f9a1f@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 10:04:40AM -0800, Shannon Nelson wrote:
-> Is there a particular reason to change this?
-> Broken compiles?  Bad drivers?  Over-sized output?
+On Mon, Jan 31, 2022 at 10:40:38AM -0800, Florian Fainelli wrote:
 
-Having default Y is a PITA to people working on an embedded design
-that has just one working MAC.  It means having to scroll through tons
-of empty stuff when doing `make menuconfig`
+> Maybe the rule should go like this: any new driver vendor defaults to n, and
+> existing ones remain set to y, until we deprecate doing that and switching
+> them all off to n by 5.18?
+
++1
+
+Actually, I wouldn't mind breaking old configs.  Why?  Because never
+once have MY configs ever survived a kernel upgrade.  Manual fix ups
+are always needed.
+
+Nobody cares about my configs, so why should I care about theirs?
 
 Thanks,
 Richard
