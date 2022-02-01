@@ -2,124 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDA034A5DA4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Feb 2022 14:48:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 174F04A6069
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Feb 2022 16:46:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238868AbiBANsC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Feb 2022 08:48:02 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40021 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232985AbiBANsB (ORCPT
+        id S240524AbiBAPqj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Feb 2022 10:46:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240503AbiBAPqi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Feb 2022 08:48:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643723281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jvjdmFpP+aywoc255+AEdYPS7LfT6vlQYF3LS6kxF8U=;
-        b=dxupm4QpOdmI3LgVzGjYHXOfzLkwgO7bntUsR/h+laFGj6iAx4p/M7pc1BIdV08Uechhpk
-        Rwu6lTplku3LmTP440vScbiEDc0MufDnPBcV7z0z5gR8lqTzye1PY4pVxSiTswgSWJHcl6
-        areCW9ljAoHkRuKmLIoHomAj2SU/J1U=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-264-UeqH0hYKNeSKCG66UNRfTA-1; Tue, 01 Feb 2022 08:48:00 -0500
-X-MC-Unique: UeqH0hYKNeSKCG66UNRfTA-1
-Received: by mail-ej1-f71.google.com with SMTP id h22-20020a1709060f5600b006b11a2d3dcfso6575285ejj.4
-        for <linux-hyperv@vger.kernel.org>; Tue, 01 Feb 2022 05:47:59 -0800 (PST)
+        Tue, 1 Feb 2022 10:46:38 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614A9C061714;
+        Tue,  1 Feb 2022 07:46:38 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id x11so15704204plg.6;
+        Tue, 01 Feb 2022 07:46:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1duiPJ9D66APDOG7Cvkpnw8gTrrTPpxxkkLXVcyp5tw=;
+        b=nqkFhijWUsAOnFQSY7L7+PowKwdvHdK6mYqeIIu5lFEA9EF9QMNkf7Bt/Zx/QDohq6
+         YivAU+vRTU1EuuvUH66yetuUUDOhpWh1a/uCc8loQ3/9Cvk9APRyLAXnx/l59lMt4Dcm
+         V0SmMxn9cjPWWBt/gcpFD8KO1JmU+NYm9TSGXbHj/FS9QNs1E8XtO3wlJeg5rLUG6c9O
+         GBE1BtLn45PDjPgxoVJsunD3YhQnrreRscE0qeYB5YVZoMVQIL5aQ5cxul8S+UQtdHdI
+         7jJRpxUO6bPC+A2/WHNlrA/CsCPLWOie7tOtSrT2dAXkAfpkgXwdtBsiQGOCgN3OK34s
+         gJNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=jvjdmFpP+aywoc255+AEdYPS7LfT6vlQYF3LS6kxF8U=;
-        b=SPjRdQNYD9HLqRFBiuK/ioXgThbOqMOT6Lf1wlX4T1olgn+UXYOWCYNAZhA6qfraNg
-         r7ULEEqAvKJrXOh5s+guEJhyk7UQ2Kmy+o3TFlW9WR5qKYPqJY6IrJinIo+ALSQFK9kv
-         ZPdXovZzzmpSAqVvNlScsd50ZeHot7TsMSrpKR5D1o3vpc/h/2GTP0YmQuZN3Tu/fIgv
-         yFRuci+1BnHaHSFFAIWwFMTxxVaicO4FGV4OSMwWL5iLNgVgT65cPQIiRpeSHIJAd0NC
-         8zeRe4K7TXCzaX67v2km1we30dEUTAnOX/JPKFZQoGq5uWvcIHN9+nPsfQcb59UyDpKR
-         oaIw==
-X-Gm-Message-State: AOAM532PDcMw8zOZWe6xHqHOlIwiBiBGHgbjtkaAkB9KyFO8CR/T3G7I
-        4PlIaQKf3jaw30c51hhfl/ZQgF4/maolTAdmJ0g69uu+h42ueiq4GfiaDTXr3hBhzEUE4eaqygX
-        E/M46z9lf0wCywVcHbhcSpZPl
-X-Received: by 2002:a05:6402:510b:: with SMTP id m11mr24890196edd.203.1643723278785;
-        Tue, 01 Feb 2022 05:47:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxrAn6f7jQ1xsfRbMafBTd7spTEbJU55+LKoGfzGdlknXLbTTVI9SS+8IKsUIyGryLogcl9+w==
-X-Received: by 2002:a05:6402:510b:: with SMTP id m11mr24890170edd.203.1643723278466;
-        Tue, 01 Feb 2022 05:47:58 -0800 (PST)
-Received: from ?IPV6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
-        by smtp.googlemail.com with ESMTPSA id z6sm14841091ejd.35.2022.02.01.05.47.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 05:47:57 -0800 (PST)
-Message-ID: <e509c138-941e-fa9c-d832-e447ce62a4b2@redhat.com>
-Date:   Tue, 1 Feb 2022 14:47:55 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 0/8] KVM: x86: Hyper-V hypercall fix and cleanups
-Content-Language: en-US
-To:     Sean Christopherson <seanjc@google.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1duiPJ9D66APDOG7Cvkpnw8gTrrTPpxxkkLXVcyp5tw=;
+        b=R7gfBMjlaF5BkhVtMRZGOC7QtQHr9Vu9+K1tweocQVBsGcX9Y/KvmlxnuXnqTrfyWo
+         9o7EYypqCsfNLCuMZP2xpkavDRBH8Z9EHWDKXPHknXQyl8T6STzV+fZPDSfXLu4dtCoL
+         rA8bSR+L9TzZu7AGEvvdD/fj5u+WWg4aMUebwWxMBUEgpS/zwD7mBV/n8cwSBUmr+GSK
+         No4Rn78oLLUtB0JEjjUEagREHqNHFj8i1pOK1Mi7UIQVZUWDCP95+4TBIfcOOyGE8E7f
+         qpskGXnx22WBOvUz0dlgroziaZrrByGBJseMQQTBgJWTNR5Fop7NHe2I74IljRTKO37b
+         XDFQ==
+X-Gm-Message-State: AOAM532hfQ4PhMHNFrzgD8eIsR7/IMEJfSQ+HXw+uQ5ByFjUDZE5FxoD
+        L0KnqjWrIJVqyx3ZUItEvMo=
+X-Google-Smtp-Source: ABdhPJzsNX0ywpu34jXrUJ51YqKK9UTipV04rCv1O/FWGJmbyHYcax9i3DTkKCaIHErb5dmhU7X9lA==
+X-Received: by 2002:a17:90b:4d05:: with SMTP id mw5mr3003128pjb.34.1643730397808;
+        Tue, 01 Feb 2022 07:46:37 -0800 (PST)
+Received: from hoboy.vegasvil.org ([2601:640:8200:33:e2d5:5eff:fea5:802f])
+        by smtp.gmail.com with ESMTPSA id m21sm23278793pfk.26.2022.02.01.07.46.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 07:46:37 -0800 (PST)
+Date:   Tue, 1 Feb 2022 07:46:24 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Hisashi T Fujinaka <htodd@twofifty.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Awogbemila <awogbemila@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>, rafal@milecki.pl,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-sunxi@lists.linux.dev, Jiri Pirko <jiri@resnulli.us>,
+        l.stelmach@samsung.com, Shay Agroskin <shayagr@amazon.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Shannon Nelson <snelson@pensando.io>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ajay Garg <ajaygargnsit@gmail.com>
-References: <20211207220926.718794-1-seanjc@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <20211207220926.718794-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        linux-stm32@st-md-mailman.stormreply.com,
+        Gabriel Somlo <gsomlo@gmail.com>,
+        Rain River <rain.1986.08.12@gmail.com>,
+        Martin Habets <habetsm.xilinx@gmail.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Shai Malin <smalin@marvell.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>, drivers@pensando.io,
+        Omkar Kulkarni <okulkarni@marvell.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        David Arinzon <darinzon@amazon.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Catherine Sullivan <csully@google.com>,
+        linux-hyperv@vger.kernel.org, oss-drivers@corigine.com,
+        Noam Dagan <ndagan@amazon.com>, Rob Herring <robh@kernel.org>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Joel Stanley <joel@jms.id.au>,
+        Simon Horman <simon.horman@corigine.com>,
+        Asmaa Mnebhi <asmaa@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Saeed Mahameed <saeed@kernel.org>,
+        Liming Sun <limings@nvidia.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Edward Cree <ecree.xilinx@gmail.com>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Mark Einon <mark.einon@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Slark Xiao <slark_xiao@163.com>, Gary Guo <gary@garyguo.net>,
+        Gerhard Engleder <gerhard@engleder-embedded.com>,
+        Jeroen de Borst <jeroendb@google.com>,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>,
+        Prabhakar Kushwaha <pkushwaha@marvell.com>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Marcin Wojtas <mw@semihalf.com>,
+        David Thompson <davthompson@nvidia.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        netdev@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stephen Hemminger <stephen@networkplumber.org>
+Subject: Re: [Intel-wired-lan] [PATCH net-next] net: kbuild: Don't default
+ net vendor configs to y
+Message-ID: <20220201154624.GA4432@hoboy.vegasvil.org>
+References: <20220131172450.4905-1-saeed@kernel.org>
+ <20220131095905.08722670@hermes.local>
+ <CAMuHMdU17cBzivFm9q-VwF9EG5MX75Qct=is=F2h+Kc+VddZ4g@mail.gmail.com>
+ <20220131183540.6ekn3z7tudy5ocdl@sx1>
+ <30ed8220-e24d-4b40-c7a6-4b09c84f9a1f@gmail.com>
+ <09c97169-5f9a-fc8f-dea5-5423e7bfef34@twofifty.com>
+ <Yfj2GTH3tHraprl0@unreal>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yfj2GTH3tHraprl0@unreal>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/7/21 23:09, Sean Christopherson wrote:
-> Fix a bug where KVM incorrectly skips an "all_cpus" IPI request, and misc
-> cleanups and enhancements for KVM handling of Hyper-V hypercalls.
-> 
-> Based on kvm/queue, commit 1cf84614b04a ("KVM: x86: Exit to ...").
-> 
-> v3:
->    - Collect reviews. [Vitaly]
->    - Add BUILD_BUG_ON() to protect KVM_HV_MAX_SPARSE_VCPU_SET_BITS. [Vitaly]
->    - Fix misc typos. [Vitaly]
->    - Opportunistically rename "cnt" to "rep_cnt" in tracepoint. [Vitaly]
->    - Drop var_cnt checks for debug hypercalls due to lack of documentation
->      as to their expected behavior. [Vitaly]
->    - Tweak the changelog regarding the TLFS spec issue to reference the
->      bug filed by Vitaly.
-> 
-> v2: https://lore.kernel.org/all/20211030000800.3065132-1-seanjc@google.com/
-> 
-> Sean Christopherson (8):
->    KVM: x86: Ignore sparse banks size for an "all CPUs", non-sparse IPI
->      req
->    KVM: x86: Get the number of Hyper-V sparse banks from the VARHEAD
->      field
->    KVM: x86: Refactor kvm_hv_flush_tlb() to reduce indentation
->    KVM: x86: Add a helper to get the sparse VP_SET for IPIs and TLB
->      flushes
->    KVM: x86: Don't bother reading sparse banks that end up being ignored
->    KVM: x86: Shove vp_bitmap handling down into sparse_set_to_vcpu_mask()
->    KVM: x86: Reject fixeds-size Hyper-V hypercalls with non-zero
->      "var_cnt"
->    KVM: x86: Add checks for reserved-to-zero Hyper-V hypercall fields
-> 
->   arch/x86/kvm/hyperv.c             | 175 ++++++++++++++++++------------
->   arch/x86/kvm/trace.h              |  14 ++-
->   include/asm-generic/hyperv-tlfs.h |   7 ++
->   3 files changed, 123 insertions(+), 73 deletions(-)
-> 
+On Tue, Feb 01, 2022 at 10:58:01AM +0200, Leon Romanovsky wrote:
+> No, kernel configs never were declared as ABI as "regular" users are not
+> supposed to touch it. They use something provided by the distro.
 
-Queued 2-8, thanks.
-
-Paolo
-
++1
