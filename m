@@ -2,153 +2,128 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 174F04A6069
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Feb 2022 16:46:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 608744A6167
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Feb 2022 17:32:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240524AbiBAPqj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Feb 2022 10:46:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
+        id S241103AbiBAQcP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Feb 2022 11:32:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240503AbiBAPqi (ORCPT
+        with ESMTP id S241086AbiBAQcP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Feb 2022 10:46:38 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614A9C061714;
-        Tue,  1 Feb 2022 07:46:38 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id x11so15704204plg.6;
-        Tue, 01 Feb 2022 07:46:38 -0800 (PST)
+        Tue, 1 Feb 2022 11:32:15 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8520CC061714;
+        Tue,  1 Feb 2022 08:32:14 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id j10so15795375pgc.6;
+        Tue, 01 Feb 2022 08:32:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1duiPJ9D66APDOG7Cvkpnw8gTrrTPpxxkkLXVcyp5tw=;
-        b=nqkFhijWUsAOnFQSY7L7+PowKwdvHdK6mYqeIIu5lFEA9EF9QMNkf7Bt/Zx/QDohq6
-         YivAU+vRTU1EuuvUH66yetuUUDOhpWh1a/uCc8loQ3/9Cvk9APRyLAXnx/l59lMt4Dcm
-         V0SmMxn9cjPWWBt/gcpFD8KO1JmU+NYm9TSGXbHj/FS9QNs1E8XtO3wlJeg5rLUG6c9O
-         GBE1BtLn45PDjPgxoVJsunD3YhQnrreRscE0qeYB5YVZoMVQIL5aQ5cxul8S+UQtdHdI
-         7jJRpxUO6bPC+A2/WHNlrA/CsCPLWOie7tOtSrT2dAXkAfpkgXwdtBsiQGOCgN3OK34s
-         gJNg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xhI2zbG0jNZ5yz1fLORa/ua0vNztHYbX/bz96VcvOU=;
+        b=q2ZAeuPodxwJQU2rztwogjbHdGzMD0vXKNmluHDiGxY4gtRzIlQdJAWWWWWjXUSV2s
+         sGBRGBuiR3MLuht7jztdnvcbWjncBC4pE7MSdoXTXEmhvXqE1YL03UhOlqmEicbtmEW3
+         dttGWBz6b0XBsS4vyD/PbuGMxQIlrRMNmA+6rKW0csnsIKjValSTr588y9+Y73EefhH9
+         rfLZ4sBttt02feGAlBaiVpMyZrVVUFIWbEtGK3tOgBBiHxXtZ3P7J71Tahy9yrX8xbBa
+         II0n4I93snxUBwmOMUlUNpjqrSGoLwevzi+sR1ogid7z+9OZjQAJbBAGLh/X/b8FnysZ
+         uiGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1duiPJ9D66APDOG7Cvkpnw8gTrrTPpxxkkLXVcyp5tw=;
-        b=R7gfBMjlaF5BkhVtMRZGOC7QtQHr9Vu9+K1tweocQVBsGcX9Y/KvmlxnuXnqTrfyWo
-         9o7EYypqCsfNLCuMZP2xpkavDRBH8Z9EHWDKXPHknXQyl8T6STzV+fZPDSfXLu4dtCoL
-         rA8bSR+L9TzZu7AGEvvdD/fj5u+WWg4aMUebwWxMBUEgpS/zwD7mBV/n8cwSBUmr+GSK
-         No4Rn78oLLUtB0JEjjUEagREHqNHFj8i1pOK1Mi7UIQVZUWDCP95+4TBIfcOOyGE8E7f
-         qpskGXnx22WBOvUz0dlgroziaZrrByGBJseMQQTBgJWTNR5Fop7NHe2I74IljRTKO37b
-         XDFQ==
-X-Gm-Message-State: AOAM532hfQ4PhMHNFrzgD8eIsR7/IMEJfSQ+HXw+uQ5ByFjUDZE5FxoD
-        L0KnqjWrIJVqyx3ZUItEvMo=
-X-Google-Smtp-Source: ABdhPJzsNX0ywpu34jXrUJ51YqKK9UTipV04rCv1O/FWGJmbyHYcax9i3DTkKCaIHErb5dmhU7X9lA==
-X-Received: by 2002:a17:90b:4d05:: with SMTP id mw5mr3003128pjb.34.1643730397808;
-        Tue, 01 Feb 2022 07:46:37 -0800 (PST)
-Received: from hoboy.vegasvil.org ([2601:640:8200:33:e2d5:5eff:fea5:802f])
-        by smtp.gmail.com with ESMTPSA id m21sm23278793pfk.26.2022.02.01.07.46.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xhI2zbG0jNZ5yz1fLORa/ua0vNztHYbX/bz96VcvOU=;
+        b=Dl7hVXkpvlcCimWjMUbJt7bz/y8tbugyEfj87QE+1fcmPrvhgpIGzEHLhRYrgoEbLO
+         lDZaQ4CVMbxMdOkrrHH9yTDsFniH8SrJYkvtMp5jEz8kSRuHOIeTor3agEsR7VNpx0rX
+         bSjHut3dHAXUiHFcE4yrCYrVXva1FmM1lPE/FFYuyM06GllFr+oneI46/r7U3OZlabuk
+         123SD85CsOYOPFDCi5KXlRFvxQoaIMGUae9Ze8GNhZqGoVZCHhpNEKkxQ1pJEq0uJCBK
+         UlUv5IS0NBT9FwgHSSpGe8680cKKnqdtR3X/WUj+ANoxRrWZfMbmk7wPISnmQYg35bV7
+         VAcQ==
+X-Gm-Message-State: AOAM531Xw1Dq/+KsDhTU4U/fCIwBYZVWrg50uK6BPvPtt+xTnODuJGr1
+        H05pidYnhWPi1j9jELJFbzg=
+X-Google-Smtp-Source: ABdhPJw+7LhIPln247qncqytiFgNPjhSAYA88YoV7GKl+p94CA5gb2dWEyZdTkrxr+/JsoKMGn4OLw==
+X-Received: by 2002:aa7:8c02:: with SMTP id c2mr25899849pfd.81.1643733134011;
+        Tue, 01 Feb 2022 08:32:14 -0800 (PST)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:38:1876:8c7:1622:c2a0])
+        by smtp.gmail.com with ESMTPSA id e17sm21659800pfj.168.2022.02.01.08.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Feb 2022 07:46:37 -0800 (PST)
-Date:   Tue, 1 Feb 2022 07:46:24 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Hisashi T Fujinaka <htodd@twofifty.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Awogbemila <awogbemila@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>, rafal@milecki.pl,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-sunxi@lists.linux.dev, Jiri Pirko <jiri@resnulli.us>,
-        l.stelmach@samsung.com, Shay Agroskin <shayagr@amazon.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Shannon Nelson <snelson@pensando.io>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Zhu Yanjun <zyjzyj2000@gmail.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Gabriel Somlo <gsomlo@gmail.com>,
-        Rain River <rain.1986.08.12@gmail.com>,
-        Martin Habets <habetsm.xilinx@gmail.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Shai Malin <smalin@marvell.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>, drivers@pensando.io,
-        Omkar Kulkarni <okulkarni@marvell.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        David Arinzon <darinzon@amazon.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Catherine Sullivan <csully@google.com>,
-        linux-hyperv@vger.kernel.org, oss-drivers@corigine.com,
-        Noam Dagan <ndagan@amazon.com>, Rob Herring <robh@kernel.org>,
-        Steen Hegelund <steen.hegelund@microchip.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>, Joel Stanley <joel@jms.id.au>,
-        Simon Horman <simon.horman@corigine.com>,
-        Asmaa Mnebhi <asmaa@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Saeed Mahameed <saeed@kernel.org>,
-        Liming Sun <limings@nvidia.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Edward Cree <ecree.xilinx@gmail.com>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Mark Einon <mark.einon@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Slark Xiao <slark_xiao@163.com>, Gary Guo <gary@garyguo.net>,
-        Gerhard Engleder <gerhard@engleder-embedded.com>,
-        Jeroen de Borst <jeroendb@google.com>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>,
-        Prabhakar Kushwaha <pkushwaha@marvell.com>,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        David Thompson <davthompson@nvidia.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        netdev@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [Intel-wired-lan] [PATCH net-next] net: kbuild: Don't default
- net vendor configs to y
-Message-ID: <20220201154624.GA4432@hoboy.vegasvil.org>
-References: <20220131172450.4905-1-saeed@kernel.org>
- <20220131095905.08722670@hermes.local>
- <CAMuHMdU17cBzivFm9q-VwF9EG5MX75Qct=is=F2h+Kc+VddZ4g@mail.gmail.com>
- <20220131183540.6ekn3z7tudy5ocdl@sx1>
- <30ed8220-e24d-4b40-c7a6-4b09c84f9a1f@gmail.com>
- <09c97169-5f9a-fc8f-dea5-5423e7bfef34@twofifty.com>
- <Yfj2GTH3tHraprl0@unreal>
+        Tue, 01 Feb 2022 08:32:13 -0800 (PST)
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, davem@davemloft.net,
+        kuba@kernel.org, hch@infradead.org, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH] Netvsc: Call hv_unmap_memory() in the netvsc_device_remove()
+Date:   Tue,  1 Feb 2022 11:32:11 -0500
+Message-Id: <20220201163211.467423-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yfj2GTH3tHraprl0@unreal>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 10:58:01AM +0200, Leon Romanovsky wrote:
-> No, kernel configs never were declared as ABI as "regular" users are not
-> supposed to touch it. They use something provided by the distro.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-+1
+netvsc_device_remove() calls vunmap() inside which should not be
+called in the interrupt context. Current code calls hv_unmap_memory()
+in the free_netvsc_device() which is rcu callback and maybe called
+in the interrupt context. This will trigger BUG_ON(in_interrupt())
+in the vunmap(). Fix it via moving hv_unmap_memory() to netvsc_device_
+remove().
+
+Fixes: 846da38de0e8 ("net: netvsc: Add Isolation VM support for netvsc driver")
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+ drivers/net/hyperv/netvsc.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index afa81a9480cc..f989f920d4ce 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -154,19 +154,15 @@ static void free_netvsc_device(struct rcu_head *head)
+ 
+ 	kfree(nvdev->extension);
+ 
+-	if (nvdev->recv_original_buf) {
+-		hv_unmap_memory(nvdev->recv_buf);
++	if (nvdev->recv_original_buf)
+ 		vfree(nvdev->recv_original_buf);
+-	} else {
++	else
+ 		vfree(nvdev->recv_buf);
+-	}
+ 
+-	if (nvdev->send_original_buf) {
+-		hv_unmap_memory(nvdev->send_buf);
++	if (nvdev->send_original_buf)
+ 		vfree(nvdev->send_original_buf);
+-	} else {
++	else
+ 		vfree(nvdev->send_buf);
+-	}
+ 
+ 	bitmap_free(nvdev->send_section_map);
+ 
+@@ -765,6 +761,12 @@ void netvsc_device_remove(struct hv_device *device)
+ 		netvsc_teardown_send_gpadl(device, net_device, ndev);
+ 	}
+ 
++	if (net_device->recv_original_buf)
++		hv_unmap_memory(net_device->recv_buf);
++
++	if (net_device->send_original_buf)
++		hv_unmap_memory(net_device->send_buf);
++
+ 	/* Release all resources */
+ 	free_netvsc_device_rcu(net_device);
+ }
+-- 
+2.25.1
+
