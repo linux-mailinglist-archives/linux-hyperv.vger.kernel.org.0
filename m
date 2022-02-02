@@ -2,50 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3315B4A6B06
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Feb 2022 05:48:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5735D4A6B18
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Feb 2022 05:58:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232344AbiBBEsE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Feb 2022 23:48:04 -0500
-Received: from mail-sn1anam02on2071.outbound.protection.outlook.com ([40.107.96.71]:53394
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232561AbiBBEqL (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Feb 2022 23:46:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CKJnHTJjEZb/j5Qc+nBEzbt/lRnaDGfriCSIwKBmPNA6m6k3krbSm9qx2ghKDJFKUmGBUXiQNOJpB8WDAVdxYRKpkgKGdcYF9V8cbg9gS3sdLqnUTEoBRyN5nkhmwn2NzJo+9ISw6tQzrus+ozD+HHiE4eW5aW/TSJg7nKhNPM6NnQeCOt4whGA03HNJxJnS96NHUoCITA589uoGnah2r5U1VtZYcEI0SMP9ZEam9zbIfb+yGnJO4qnVKjLIWxaSRvleMbxgPcj0rNOv4aY48oUjiZgbdWIzVClNniWthPtV8KSlN4OSdJVwyrM1iy6DOL5M1YVVwy0OA/w5mCZKkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cDo+M8duniDgzDmN33yWVCHGFx5DcZBRGZKNcnTVwUo=;
- b=iF6oQWi8QoaMpMvkB600hKLfTQB2C4v4K0WF5KAMh77jNvRaTXwT6AABSSdOtdglAreBKDdns0Fhg1pcPs7tpBzoIujQYN701obDLLcl0VsAGCdfd3Wm/zly8awg9z9k89Zsq/YMjCj2KdxFqp+Qc+uZi0WeTL+HGZW13Lrg5QaIOYVVe0teGG176fhcDWSLjzMy4ygGoxeiqJtL1z1C33U2qKeuP9MzRxRiaCaz2tyhJ/VQDA28C5T5EfFU0FFckk047qhly1RGq1fRkeHHh56PU+Bx3DjxlR8uEU+B8Mg3C8KKhW1drfF3+j+zG6HWK1TWKlaaYl+SO0D7mw04EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cDo+M8duniDgzDmN33yWVCHGFx5DcZBRGZKNcnTVwUo=;
- b=E2h2WXSC4EsgFDSrcgj3zmVIsQUbS0YCiAaK7GI5NpInKuTmkRvHMFmLKnCucHtn1zW490WohUC0a20v28pcOCWbJjNomN+WuHpvmfmEz4F1TiY8HxXjCzM+7R4/bsZ3BXcPd/jksazb4jCd6TtaenFrmD6t6xRpLH0m30d32AmKIPvFprRbkFRfY2T93yuv5eejQ0dUtCjXQITP0xNWv7dJaEpEgJBvP4qHz+YmKS1IWZqX624ijhxovxpXHYCTVLfTE+/sp1a9j4vvItPK2PhULHdiOLoD6JgvVUpu/q/YNWMYJWf0YiRWJkxAWhRWxyOY/GlGGHnzJHDdunKvsQ==
-Received: from DM5PR1201MB0234.namprd12.prod.outlook.com (2603:10b6:4:56::22)
- by CY4PR12MB1304.namprd12.prod.outlook.com (2603:10b6:903:41::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Wed, 2 Feb
- 2022 04:46:06 +0000
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4209.namprd12.prod.outlook.com (2603:10b6:a03:20d::22)
- by DM5PR1201MB0234.namprd12.prod.outlook.com (2603:10b6:4:56::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.21; Wed, 2 Feb
- 2022 04:46:04 +0000
-Received: from BY5PR12MB4209.namprd12.prod.outlook.com
- ([fe80::35a1:8b68:d0f7:7496]) by BY5PR12MB4209.namprd12.prod.outlook.com
- ([fe80::35a1:8b68:d0f7:7496%4]) with mapi id 15.20.4951.012; Wed, 2 Feb 2022
- 04:46:04 +0000
-Date:   Tue, 1 Feb 2022 20:46:03 -0800
-From:   Saeed Mahameed <saeedm@nvidia.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
+        id S243892AbiBBE60 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Feb 2022 23:58:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231474AbiBBE6Z (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 1 Feb 2022 23:58:25 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71BCCC061714;
+        Tue,  1 Feb 2022 20:58:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2B0C2B83004;
+        Wed,  2 Feb 2022 04:58:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC50C004E1;
+        Wed,  2 Feb 2022 04:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643777902;
+        bh=3R1brSBq8s2swVV3kMHwHt7HZxFvwsGSwnLUB8YoKTk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qYPsl6kmBXicSMJRej/pS/2fURkTz2mm+tAC3SA3enCS27v0Yj+scLV7zlGMfZfxD
+         QbB4FpDEvQnoWpm5JFro5DS1cE+tYzdRGCXbVNfY6h7ED8/9iZB1OsU74z9oKtMPjF
+         qoAGLExZziJMB8zSCuSp3Y60vcRh9kG1j8q75s3zeQ2BUyl/zO7dy+H4q9ffRHFKv2
+         ZCkMwxmyzQW+L3j0QG3Sh/NZe5VbqmK0spmcTiaNg0OD1RsGH68vM3Yt0K81J7IML+
+         ENvyz35TnKgkFlj2O03s12dvc2k4GdL5DU/miCODdF9IgLZhJzf7FLRJPV95s+UjMi
+         L8ydXhJozy31Q==
+Date:   Tue, 1 Feb 2022 20:58:18 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Saeed Mahameed <saeedm@nvidia.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         Stephen Hemminger <stephen@networkplumber.org>,
         Saeed Mahameed <saeed@kernel.org>,
@@ -128,112 +118,92 @@ Cc:     Jakub Kicinski <kuba@kernel.org>,
         linux-stm32@st-md-mailman.stormreply.com
 Subject: Re: [PATCH net-next] net: kbuild: Don't default net vendor configs
  to y
-Message-ID: <20220202044603.tuchbk72iujdyxi4@sx1>
+Message-ID: <20220201205818.2f28cfe5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20220202044603.tuchbk72iujdyxi4@sx1>
 References: <20220131172450.4905-1-saeed@kernel.org>
- <20220131095905.08722670@hermes.local>
- <CAMuHMdU17cBzivFm9q-VwF9EG5MX75Qct=is=F2h+Kc+VddZ4g@mail.gmail.com>
- <20220131183540.6ekn3z7tudy5ocdl@sx1>
- <30ed8220-e24d-4b40-c7a6-4b09c84f9a1f@gmail.com>
- <20220131121027.4fe3e8dc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <7dc930c6-4ffc-0dd0-8385-d7956e7d16ff@gmail.com>
- <20220131151315.4ec5f2d3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <dd1497ca-b1da-311a-e5fc-7c7265eb3ddf@gmail.com>
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <dd1497ca-b1da-311a-e5fc-7c7265eb3ddf@gmail.com>
-X-ClientProxiedBy: SJ0PR03CA0181.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::6) To BY5PR12MB4209.namprd12.prod.outlook.com
- (2603:10b6:a03:20d::22)
+        <20220131095905.08722670@hermes.local>
+        <CAMuHMdU17cBzivFm9q-VwF9EG5MX75Qct=is=F2h+Kc+VddZ4g@mail.gmail.com>
+        <20220131183540.6ekn3z7tudy5ocdl@sx1>
+        <30ed8220-e24d-4b40-c7a6-4b09c84f9a1f@gmail.com>
+        <20220131121027.4fe3e8dc@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <7dc930c6-4ffc-0dd0-8385-d7956e7d16ff@gmail.com>
+        <20220131151315.4ec5f2d3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <dd1497ca-b1da-311a-e5fc-7c7265eb3ddf@gmail.com>
+        <20220202044603.tuchbk72iujdyxi4@sx1>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0ebde5f5-cb61-4f5f-7423-08d9e606eb39
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0234:EE_|CY4PR12MB1304:EE_
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0234FE0709C571345BA7004EB3279@DM5PR1201MB0234.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9ecc360KYiYAKCsClQXujGhWwvbRxdbrQuMoR5Ncr+22gS/OMmOQw04CkYlFZKNlAAeyGaknwYSNUyb+Ixt4Hn+b6UmFcexMqvtVuqUurDMKuEb+/xC5RdKUENGJtS0xGsIp7RCrdZLhn/trZ4+uKWMMCV64LiMtIjz9WoZbNk+iUY/gFYpSGQRq4P1VlXYtnANxgTyO2uRU//I0s1RPYemNfeMjdK5+6MRsXjfgBIbXP3mlqj0RCZdadAW2p9V5cTNqI9qfI+Di6VAse++lsSllqK1ltErcnFRZhUHcgVaBFHaVxpfOGGn/8Mrn6RWub+NbqU8H1I3yGhz9AJ/phZDeh7/3JyMxXCitxUtnsmmpVQTE+8GWMYom1o7xp4rEKNPczmQ8/FeUsDc+wX1s3m45nftxoG912ZuSejEh0tMJMIzZFU2M7HVdZ4m7Mrx3+XYYCZ+0uTrs8FpBK5FvuDA4FaP9AVK/BIzVDifolgJQbVAGe8qnWphnDjfGFn3tZA8Ellv5CHWLCRRAWxppq2zj1QfE+A7xZOH+fmyzG3laJMnG5xgx08QfAm+KcQ7oXBkNUZpT989hXS+S3nZJwrvaq8ZEzjCnExN8eS+sgUwOjDKeqZm6j9nBbDhX/aKnrP+UyF9K60OXZbh1leZ5VPFFwNUHd6S/sdV3C8R5MUVJPsdLw+lWHsYO95EP7qj5hvmNRRX7yTv1xoFl/BnFnK1o6QlBBFZcwdy3smfY0EM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0234.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(7916004)(366004)(83380400001)(186003)(1076003)(26005)(7336002)(5660300002)(7416002)(2906002)(7406005)(7366002)(6486002)(38350700002)(86362001)(54906003)(8676002)(4326008)(508600001)(6916009)(66556008)(66476007)(66946007)(33716001)(316002)(52116002)(8936002)(9686003)(38100700002)(6512007)(6506007)(129723003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qPpn9NtHv4YKwq76GEJtwBWiWDIOaj8cphrVBzqHvqcM7oaRQuRD8LDAR7MI?=
- =?us-ascii?Q?I2O+w54m9NeiaFIWYobRDZSvIwEm/R90EkKt+Z4H9hlqlFZee1oKpWkBl/De?=
- =?us-ascii?Q?UzNpIysuJirstZRJeuVK3QMjSCdI0bHiQMnAgJeao9IxDA7yi34g2MyGzhAg?=
- =?us-ascii?Q?92xWRLUfb5bLXas2juI6fkoFJKjbLTX0QcGjEAqBntDb8qQN87LZDEJuCcp/?=
- =?us-ascii?Q?AD6BmUfZZt0B2c4UA8lEdCcowIYf8BNl63jvBr9dJz7iSRzIBmB3Z8PxyOYu?=
- =?us-ascii?Q?tkQg9+ApNcnqspeA0TBqHC1EpxgiswKp0ZDZKWYOImsHU1b2JE9xLCxrXFgh?=
- =?us-ascii?Q?QUqVxrGriSjMeFpZsoAqYGA/i8cZ0W5CMwbo9jtVLl/DegEOE3jvhHkPdZPF?=
- =?us-ascii?Q?QotQ5CNg6cgmWTVJo2chJwGWKJ5VUJJLvZMmJG6B3MXg2VdBOHjWxThW72gU?=
- =?us-ascii?Q?uWv/hFDWtY7QJlvUrPMOYgA+XhEOSJy9rFl5TP4HIHBoeIHmUsTY6u8+xrmt?=
- =?us-ascii?Q?lStcfD2xFR/v/1SE4nSyqVTetrgbq/OBzLLoJBFu5a75DsF+tCvXXlFbMq8Q?=
- =?us-ascii?Q?SqY0TxzVBDv/RVEPhWeS08LZGukeIYm3+y5nliKSaeLZxyPuvfFNImVQM2M7?=
- =?us-ascii?Q?h5LG9FxmqCZBM2kj0Pjzgu7NAJTa8eoA+091LXm8yONKTSxGZXN+qvw1sPIJ?=
- =?us-ascii?Q?/7qQo4vstVDMbKvCynXttj3aHvHvN/dHgRdu2OGi1jKwByNLU3dt/3oAoUk8?=
- =?us-ascii?Q?pUn9iJmBP/kEBp3RHMwuU1i7jYuukjg0NrT75zSxFVxR51dwOuMB+x0g/hNV?=
- =?us-ascii?Q?Ka6zif+EJpkW4y7LRwKNflF3QEHB360frFsAeJ5ykE1HdmyjACSJ500uUyX0?=
- =?us-ascii?Q?3zd1XHKRESXVwz7A8OE785EfD680emYqgTgkAUUTx+MxAnjE2OIwPzuvGWNo?=
- =?us-ascii?Q?e/vwyc6uXO7XIupTyIMyQn1ImfBN3gHYOGWl7P07T9pf+gTGMrhRMbmEAjP4?=
- =?us-ascii?Q?vU/6meC5o7QhbfvfvorscDfXn59kUhU+JQn86ZXksUv32fcj3QchNI0JmN20?=
- =?us-ascii?Q?U+85MDQpm6g6g6C9Gf3dYhghhrjqUeRUyBdiIlHgKoxIY3rPTH47ePJWVExA?=
- =?us-ascii?Q?+ROcI2vznVuoSc1oTt4TgtFtC0vSc0zTq1gJSCKtU16gawNgk7cYEEVPKtQG?=
- =?us-ascii?Q?TzO0oBOd6+cguZ7Nc3cmnGz+13695PcJsJMvmTosS8YU4sL2eLGso1mTXOR+?=
- =?us-ascii?Q?R7ojvovxkrHwZptIZcwIZ/EJPCcjkM00FY6V24fMuSw3iDfdmcOyT7r9jCwF?=
- =?us-ascii?Q?30L33nRLLKLY/C7fXit3veJuAYjYBeg6f9wNTVOmEUn5E5cMdr7J5Jf829Q1?=
- =?us-ascii?Q?7UGAksNImqzSDppQn9vJ9YwxNBkkFSeIMqrKC6o2M2g6JM8O9b9dDcO0maTj?=
- =?us-ascii?Q?/Bmkwb8jcC+E++0GM99S7X+ZL7BSHC0yG6ijjw8oTa1eaX8ss9SGjP3VL/44?=
- =?us-ascii?Q?NG+UZ4f59ti9HtFS9gI0G0FLcIILlDBayJExesJT8M5s70fsx/HUGj33ZrDS?=
- =?us-ascii?Q?YlDYYPruNdecHMZBE4FxemUfjljH2pyCLe/cvLpeVOxliS2cASVODUCT2VvI?=
- =?us-ascii?Q?lFvMFui7ororOA90yiR5HO0=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ebde5f5-cb61-4f5f-7423-08d9e606eb39
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4209.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2022 04:46:04.1969
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7oJSbAfxmD0OlWe3xUiryamV7TIraJVyDFfYkzXkOaUnFnloh2ZEH5AI/tlLH/m2SHeKRvg0SsB2sjkdBpvAFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1304
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 31 Jan 15:19, Florian Fainelli wrote:
->
->
->On 1/31/2022 3:13 PM, Jakub Kicinski wrote:
->>On Mon, 31 Jan 2022 15:06:01 -0800 Florian Fainelli wrote:
->>>>>Right, but once you start hiding NET_VENDOR_DRIVER_XYZ under a
->>>>>NET_VENDOR_XYZ Kconfig symbol dependency, if NET_VENDOR_XYZ is not set
->>>>>to Y, then you have no way to select NET_VENDOR_DRIVER_XYZ and so your
->>>>>old defconfig breaks.
->>>>
->>>>To be clear do we actually care about *old* configs or *def* configs?
->>>
->>>I think we care about oldconfig but maybe less so about defconfigs which
->>>are in tree and can be updated.
->>
->>The oldconfigs would have to not be updated on any intervening kernel
->>in the last 10+ years to break, right? Or is there another way that an
->>oldconfig would not have the vendor config set to y at this point?
->
->That sounds very unrealistic, so yes, I don't think at this point that 
->would happen. Even if you had your 15 year old .config file and ran 
->make oldconfig today, you would have some work to do to make sure it 
->still runs on your hardware.
+On Tue, 1 Feb 2022 20:46:03 -0800 Saeed Mahameed wrote:
+> I am getting mixed messages here, on one hand we know that this patch
+> might break some old or def configs, but on the other hand people claim
+> that they have to manually fixup their own configs every time 
+> "something in configs" changes and they are fine with that. 
+> 
+> Obviously I belong to the 2nd camp, hence this patch..
+> 
+> I can sum it up with "it's fine to controllably break *some* .configs for 
+> the greater good" .. that's my .2cent.
 
-I am getting mixed messages here, on one hand we know that this patch
-might break some old or def configs, but on the other hand people claim
-that they have to manually fixup their own configs every time 
-"something in configs" changes and they are fine with that. 
+I think we agree that we don't care about oldconfigs IOW someone's
+random config.
 
-Obviously I belong to the 2nd camp, hence this patch..
+But we do care about defconfigs in the tree, if those indeed include
+ethernet drivers which would get masked out by vendor=n - they need
+fixin':
 
-I can sum it up with "it's fine to controllably break *some* .configs for 
-the greater good" .. that's my .2cent.
+$ find arch/ | grep defconfig
+arch/x86/configs/i386_defconfig
+arch/x86/configs/x86_64_defconfig
+arch/ia64/configs/generic_defconfig
+arch/ia64/configs/gensparse_defconfig
+...
 
-Thanks,
-Saeed.
+First one from the top:
 
+$ make O=build_tmp/ i386_defconfig
+$ $EDITOR drivers/net/ethernet/intel/Kconfig
+$ git diff
+diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+index 3facb55b7161..b9fdf2a835b0 100644
+--- a/drivers/net/ethernet/intel/Kconfig
++++ b/drivers/net/ethernet/intel/Kconfig
+@@ -5,7 +5,6 @@
+ 
+ config NET_VENDOR_INTEL
+        bool "Intel devices"
+-       default y
+        help
+          If you have a network (Ethernet) card belonging to this class, say Y.
+ 
+$ make O=build_tmp/ i386_defconfig
+$ diff -urpb build_tmp/.config.old build_tmp/.config
+--- build_tmp/.config.old	2022-02-01 20:55:37.087373905 -0800
++++ build_tmp/.config	2022-02-01 20:56:32.126044628 -0800
+@@ -1784,22 +1784,7 @@ CONFIG_NET_VENDOR_GOOGLE=y
+ # CONFIG_GVE is not set
+ CONFIG_NET_VENDOR_HUAWEI=y
+ # CONFIG_HINIC is not set
+-CONFIG_NET_VENDOR_I825XX=y
+-CONFIG_NET_VENDOR_INTEL=y
+-CONFIG_E100=y
+-CONFIG_E1000=y
+-CONFIG_E1000E=y
+-CONFIG_E1000E_HWTS=y
+-# CONFIG_IGB is not set
+-# CONFIG_IGBVF is not set
+-# CONFIG_IXGB is not set
+-# CONFIG_IXGBE is not set
+-# CONFIG_IXGBEVF is not set
+-# CONFIG_I40E is not set
+-# CONFIG_I40EVF is not set
+-# CONFIG_ICE is not set
+-# CONFIG_FM10K is not set
+-# CONFIG_IGC is not set
++# CONFIG_NET_VENDOR_INTEL is not set
+ CONFIG_NET_VENDOR_MICROSOFT=y
+ # CONFIG_JME is not set
+ CONFIG_NET_VENDOR_LITEX=y
