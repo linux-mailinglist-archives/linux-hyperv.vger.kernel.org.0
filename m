@@ -2,214 +2,192 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA3114A686E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Feb 2022 00:20:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C3B44A69B8
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Feb 2022 02:56:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242797AbiBAXUQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Feb 2022 18:20:16 -0500
-Received: from mail-eus2azon11021020.outbound.protection.outlook.com ([52.101.57.20]:55319
-        "EHLO na01-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229626AbiBAXUP (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Feb 2022 18:20:15 -0500
+        id S243247AbiBBB4F (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Feb 2022 20:56:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232709AbiBBBz6 (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Tue, 1 Feb 2022 20:55:58 -0500
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on20702.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::702])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0564C061714;
+        Tue,  1 Feb 2022 17:55:57 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZgOmay9Hg462Nzs2FeVCItiiGbHCj5tULyIiPtSLeGTLdQ8YY16QoNYBZ2UJRvpsyeXir3V0Q1pCZGjv29QGZ9rAJsw6/dKabZrxSDhGvxX/m5SvH70dkpKAfhkbVAs30MeQr4oZbXu/DkpDNG6o7Y9TUs2M7l/hKrV1coWv6tU03IFmD7HStz3inu7pNSL0N4pevZdlM//LJOh+NBNutYK+OcHT815zHkpoyorJ4QtM5XCoRydQrhKrrGXL4UCJBXQ9YXEqN/5pPEK8EMkcNe+62UrP/lIPO5OmuDm+6bCkbcP8uvQOdvKp8L3lXQ+CRPS72DG6j7XZaDNtjE1jWw==
+ b=LIbnQV9aD0JamcA59H1W4o2RbTlOzSLrWmwpUOGKpfrAe7lia6OCXtq/kJqOwsaPSBULJmQk4lWGGTsaSt/H5fj1hkaQ5URkp3UDtHA4B/3FYbbNyAXwH+feWvlQQP89t0uPYs8Dv32Ycitib+aEZ58gqwX+MJGsLcXesUzZZOXNef/c+Ch0Q/fUa5gPhTC//lIrM7LeVT+K9UkeH+rSOX/eKcDfawG5zjRbpAZ4Cdbgm7s7ffplufrxVJecsLytcAsxnNDQL3djhL2gxVeVbi3ZqTLo906mqvEEHzR4rxHbK01Nizw1w8DVIQpT6H+qLbPoQAZsI0YxQF79BDklsA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=buZHvy4yZtocVYUlrc9/IDwi9GBPiCTUZpS60jumck0=;
- b=WSI8J57bfwO+4//zh1fxoR6y1FnlcoVUBD0syTW6H7kGKfydy/LTI6DuIHZvAs1KckLGN4t3y83KT0i0iUUsferPRPgrIwDByRrFCtHt4y2X7jyCQZiAtqQMV4s36AxWfIxgZLCHWSmUc3VPZt9K084mz5yB5J7/e2kZ8i+SWQafFNFqwC374sn12klyCiQppV+KzXyX7418pLJ8+2FCTi+nrZQQRm8fHAN8b538+xsQq8Ib6j5/41QkYXVz/HDNAk2iW+iRv0LMG/w+0rjZ68G15P+E15NqvON8q/QWTnsq0xv74fqOXYQuhO4cf31UFlInoRGgqdIvS0AA2MJbBA==
+ bh=pHPi+wCyc/K996h+m7xhh+lnw9GpLBf455DpfhaCeko=;
+ b=gRNSCsEhk/scSDYOPeb+qjGA/iCGo2DjkkzZZFi3HIm/jwezGYAie1IwuUMHWG6Fmze+NNrlpUoEnZzDhToWBCGD5DwM8JSNc3yiUt+Ex4U5PCI0vvhqLalaXRskb5tJtNVZ+SXfvJLg65F+58K+LmszyfO42cVjaJcEHhGa63JDQX3+RGi8IOxUP0Ugp0T9iunIKpfwsbRcAHiJFxs6Cm1AqwQq5aD4bKN6j1i4PBw+D5axW0ooql59DM6uSZe7AXY+VG9oEYeNe5nAVWKJgyeQRjYt//XIS6sw9IYj/hmVMBieSLqij38dpqHAt3+G9t1F1/GP/JwfzWJntDEtMw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=buZHvy4yZtocVYUlrc9/IDwi9GBPiCTUZpS60jumck0=;
- b=XbCoWZpOiWyk5hmH0gatbIu1rH2ZZ9U1DZwEPDXpfGWUXJl91UBoVnVGWdx/IEVQ5dmg80KwQnfPX/deOtKadJUetcgsB0ghF8a+TUxZjiV9AfFqDvnGfpNyPmvM6/28aVFf9zcdmfVcQJLLRgJ+AOtUEaK6RDYkrjcwQ/QILkk=
-Received: from MN2PR21MB1295.namprd21.prod.outlook.com (2603:10b6:208:3e::25)
- by BYAPR21MB1687.namprd21.prod.outlook.com (2603:10b6:a02:c9::23) with
+ bh=pHPi+wCyc/K996h+m7xhh+lnw9GpLBf455DpfhaCeko=;
+ b=RYOrsQgRkB2UdmYTCR4WERqbAOkqir2Q2AQTxZBq95nkLoBt0Iw5sIk8w20kLQsDRoHoku1qn/6Qpu4tAqpt8Yam2TR9ke2xJoYbHVte2ei89tIDMZRwkP4b7MFGPejZvMzu60ioAnRkhMun48o8Ul92JV0cmY91fi8ulEpT06g=
+Received: from TYZP153MB0430.APCP153.PROD.OUTLOOK.COM (2603:1096:400:2f::13)
+ by PSAP153MB0486.APCP153.PROD.OUTLOOK.COM (2603:1096:301:69::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.4; Tue, 1 Feb
- 2022 23:20:09 +0000
-Received: from MN2PR21MB1295.namprd21.prod.outlook.com
- ([fe80::e081:f6e4:67eb:4704]) by MN2PR21MB1295.namprd21.prod.outlook.com
- ([fe80::e081:f6e4:67eb:4704%5]) with mapi id 15.20.4975.004; Tue, 1 Feb 2022
- 23:20:09 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Tianyu Lan <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.1; Wed, 2 Feb
+ 2022 01:55:45 +0000
+Received: from TYZP153MB0430.APCP153.PROD.OUTLOOK.COM
+ ([fe80::5909:8f53:4686:f271]) by TYZP153MB0430.APCP153.PROD.OUTLOOK.COM
+ ([fe80::5909:8f53:4686:f271%7]) with mapi id 15.20.4975.004; Wed, 2 Feb 2022
+ 01:55:45 +0000
+From:   Purna Pavan Chandra Aekkaladevi <paekkaladevi@microsoft.com>
+To:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH] Netvsc: Call hv_unmap_memory() in the
- netvsc_device_remove()
-Thread-Topic: [PATCH] Netvsc: Call hv_unmap_memory() in the
- netvsc_device_remove()
-Thread-Index: AQHYF4lItKgPG5VAM0quxqK4NaKG06x/VWFA
-Date:   Tue, 1 Feb 2022 23:20:09 +0000
-Message-ID: <MN2PR21MB1295D29EC97A4BEB9B6FA4A3CA269@MN2PR21MB1295.namprd21.prod.outlook.com>
-References: <20220201163211.467423-1-ltykernel@gmail.com>
-In-Reply-To: <20220201163211.467423-1-ltykernel@gmail.com>
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     Long Li <longli@microsoft.com>
+Subject: RE: [EXTERNAL] [Patch v4] PCI: hv: Fix NUMA node assignment when
+ kernel boots with custom NUMA topology
+Thread-Topic: [EXTERNAL] [Patch v4] PCI: hv: Fix NUMA node assignment when
+ kernel boots with custom NUMA topology
+Thread-Index: AQHYEx9Vg3YdRJXNxEinwsXNtwwx7Kx/iUmA
+Date:   Wed, 2 Feb 2022 01:55:44 +0000
+Message-ID: <TYZP153MB0430CC8F4C0BB7E410316505C7279@TYZP153MB0430.APCP153.PROD.OUTLOOK.COM>
+References: <1643247814-15184-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1643247814-15184-1-git-send-email-longli@linuxonhyperv.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=930b1b05-0e3a-42ab-9af8-c5c554d86332;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-02-01T23:19:57Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=48d17dc3-8ebb-44a7-9cd5-52b00f53778f;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-02-02T01:54:08Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6031131c-e032-4436-003e-08d9e5d963fa
-x-ms-traffictypediagnostic: BYAPR21MB1687:EE_
+x-ms-office365-filtering-correlation-id: 86f1326f-5c23-482e-2680-08d9e5ef2049
+x-ms-traffictypediagnostic: PSAP153MB0486:EE_
 x-ms-exchange-atpmessageproperties: SA|SL
-x-microsoft-antispam-prvs: <BYAPR21MB16870953BF03207D20D57000CA269@BYAPR21MB1687.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1284;
+x-microsoft-antispam-prvs: <PSAP153MB0486C02321B6232F32112D17C7279@PSAP153MB0486.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:546;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nd/D6idaDZGx3dXYNTeiPvCerId8WWuEeQcFn/8SurAnI/PLv8hNsbhI5OpBXF8dWeuRgAWqoPT+hJ14hC4eufMv0rliZPJtnlaWg6BMGR1299ANNNZ953rDaH9/Y2u2TRFrsaGduXzGS6ahJnmJleRVMYycBNKWhm3ZWLuBwzKeyokjZ6QwreE1XQfr/C4MPB53WJQC13EuZ4DUOJ9MRbl1mByiJpB0Ab5pqprjnbpMZz3vBALhbOqVTThn3m9VN0ffUNLiGvkQ5Azt55gCInistWaAvcSU42XoBzRi77b/jOS8oum0rA11AjLPbxF0KI/OsY0gMqaN51X+OjBvNjNhAQb7L++m9c2ryvXQ3IF3LYlMJuNxeb4NJgJXtUvNAD7I+bChXJR/yPljoqdc9GUj63szen8k+uDzsLiSGoNF9sJwdE1gcmtjz6KjBHnar5SpsRpbhkae4SN8pDZ/u0y26uXn39swki+7qvXUlwGe/goMMCncDhuZi33XnSdbfgyR86bS6T3Rv+BmpL6tEFIKSXwvJm2hcPq788vwSkKZKwMMMUbdP7EaV01DLwN39buotHDPWz9HKnJtxGLWUQT5j04tOIlcHKU5kHNj8YmBs8GCULeP+rVRkf153OhtKH++ziDBhNyR/J7ItK5PQAKSkI71y+SkwpOoT8PSaZGYvE9YsJQ+s9TR+k0SGlJto+mxxbqv7YTOjGwOaTRn1LPlzicUkXp3nIUEY5geUomleQvpFDPCaMYSk7inTSe3+8RkXlPm+UxzIPsO1LZqfQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR21MB1295.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(316002)(54906003)(71200400001)(52536014)(82960400001)(7696005)(6506007)(38070700005)(53546011)(110136005)(8990500004)(6636002)(9686003)(83380400001)(86362001)(55016003)(8936002)(921005)(8676002)(66556008)(82950400001)(66446008)(66476007)(4326008)(122000001)(508600001)(66946007)(64756008)(5660300002)(76116006)(7416002)(186003)(2906002)(33656002)(38100700002)(10290500003)(26005);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: T5qYlWSHGNwTSun96eRt9Kg3DTpaep1BiY3aGTWeeC68P1zeJnkIjuKcBrq8VBCBMsZ6pENCE7eyd5bSNiz1ECqb7FEViqlwhuqCD9n6voJScZkOKPuCj4tbFqDGJl1RWAN1f6qvYsRPIgVja9/Pf+UkUr6+M4JDoknsHVavNlZR+JW1jqrKkSyfoW2KCVWWCZFldkkHz+dBJ0cFDOKe0vyf0liCXqpuhao2MpxF3nPEeAUnoLLcH/3mgNNa8uRYVZ6UYDhWsbBl+jVeLe1P+t6CNgYOQPdqlUXromaUUMpxczD6XbneR++p1reQXFl3kD4IOiuWGtOzAJGForM7XjFM7WH8rnuhZA+vz3UB/hh0B1Z4aQ/AAt46/aMtRaBzzfkB0I2Ged4O/QlV9S3zlkJj6r97PwmUEKtBPp6/fJwYA/HAlkvmx2HJ5OMT896T5rHnBEyUtp9M6GtdN4uS9hNC/hSSFu+Po1DRBkBNgfIIGEhjvJo3i4SOoIFyyip1CJktIATJEZAwGy3yVuSTzKCK3HtA+HRPfw28Rbyv/jW4FCsLdT9l5cqvUx0Tyc6qFNuTRaj4huFeiMaiYZURMmPjNbR8fha2FMwysLT0N7cWh2/8sx+KJ52Q64cOyr8WOU3rOtjh4iT5zdNLwwsWpKBYk1MGYizDCp8muLLenbiMRxNtD5TarySPsOeES6LPzN1Ey1QOMh/lQmtefYJdznQU4yePXN9pAp0hYP6dhyHWx4R4ccsl0tc2ufZ5GdtACn/r3vHQlXIa0i+Q8pUm7XTwqcsVR6etoS3nK7nK1wg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZP153MB0430.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(66556008)(66946007)(66446008)(4326008)(64756008)(83380400001)(966005)(86362001)(8936002)(66476007)(82950400001)(8990500004)(82960400001)(122000001)(76116006)(110136005)(38100700002)(8676002)(38070700005)(107886003)(10290500003)(508600001)(55236004)(316002)(55016003)(9686003)(7696005)(6506007)(71200400001)(52536014)(26005)(5660300002)(53546011)(186003)(33656002)(2906002)(10090945008);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/70tPy19bnMFWNWH2y/vwIbUc1SaCtQUErSgsF8bRu7PAt9vs+5InBqy+GaB?=
- =?us-ascii?Q?tiYEOlWLd0UYC8y63U6GsPZJZLtul53CsNhD0H1JfC8Fof9sVECOQJ2F/P/5?=
- =?us-ascii?Q?gAACYhnVqrFQZrpCd+VwmhE9ZxJkmOdqfDxp9ZesVrxsmuScxluj9G6fXGsO?=
- =?us-ascii?Q?QMxMfQ0uD7crSd8Gy597hvo380ZGEOlghu3edSLmikUMnqitNP3GwJw/mErP?=
- =?us-ascii?Q?dUxW500UYQLPuGJY1mRTMi654YAwU5KQ6AzdTwpQ8Qf/WT1UnJC7x3ekhCPq?=
- =?us-ascii?Q?cLReSACQPfZz5tQUOnkzzwqa9k+1TXYSsuuXDYfHu4rvOEshh3dF+zRwL1kb?=
- =?us-ascii?Q?DPUZhoM7aosIcW9vR6y5/3RPRCMD4kBLyc3ZNmo5uXsDaTOezflQbWrbltSY?=
- =?us-ascii?Q?OwDX0pInRCTLlBXY61DEdUb9+EwX8LhUsViIy5ba9jHjuRHZ6uyo03qr7wzR?=
- =?us-ascii?Q?F9AJ0rn7ZoB0APrmvQQbTx7C/jKAILmynhMirj4+RlYtBgADl5sbtba0YmUh?=
- =?us-ascii?Q?DjSwMoWRnjt9ObkmnJGq+uVWScNehvDeGp7aCGdAHUa0tetHYrQkFPOIAS/T?=
- =?us-ascii?Q?a9ii3er7eXjeipRCGCEbtY2EVQ26EghOSFe3Ln6zJf3KDOo1zK2pDwUzafQs?=
- =?us-ascii?Q?Uzgmle3xk7l55JijIlMDENgVVmj5IUaoUE4fjWBtP7fvjRf62S31dBABR0Jo?=
- =?us-ascii?Q?uc1MYNalZTVCTHYFCYxFBiAlU2wPOGgtuTFmaoyiuo3d1ts3KbMhUht3GSpL?=
- =?us-ascii?Q?42Stpzhau06oi+onxaDxx8XU5UqrCsyVGMWz8dElEb8ildW7K78N9I33tTvh?=
- =?us-ascii?Q?Vlfeok//LuUSpI5xDCVKoqnxWDfES3Okw9hJlL372F/8unnOrmRmBSZJz0D8?=
- =?us-ascii?Q?pKZ/OHCogU2EVp6t3sUcsiHtre/2aQzMjmpdmn5DWj6/lM6GjbX3nWnSGNhS?=
- =?us-ascii?Q?wL4rkHF7mjK59EhZE4Hh+H9TBu9R13x2TxdJZAGPPLFkiKr3S/yex0i7Mpu7?=
- =?us-ascii?Q?3cv+au+DnT7Ml3/+faLthwbr1hSgICxFsfo7UM77EPLdaF9Lv8j5wu33eQk9?=
- =?us-ascii?Q?YKXeBb0+5ss04/lD0zFRGexYgklHvaD0cr6ogNcG0poEMZtEpZfJNPdINFSy?=
- =?us-ascii?Q?8boMMaQz1CWN3S0LgCOlz27Q4iS5krcYBkUFx/PsLGYniw7n0nyUNH5DNlxJ?=
- =?us-ascii?Q?yykg1o+XRkKqNYAYhVgj3huaMz9d660dvvRhdBmYa59i91ckVFuEYx8hWFSN?=
- =?us-ascii?Q?mYKfiOzZvlWj9Gbaq4wyuAAoa86ZmkhLsS8VS7AGuUxgzWg6PQ0XfhB1T4oC?=
- =?us-ascii?Q?pPMHy1G5A3oFj+lmL+VX7MCaaq3LJHBgRC8s0ILE9SG0gtRELLjn9PnaQHMC?=
- =?us-ascii?Q?q8hjHGiBsigSoDvg4kB3HjeX4YKjPhDK5gotUmbIYPmmXWnvIE3gQCVMQEGO?=
- =?us-ascii?Q?kBS3tbATAVFHBB75rGGkODIZEWcVtSuIICk75N5qnLH/Uf/rCbaECtfHxCHu?=
- =?us-ascii?Q?t57dpGu57ea7uwl5hbZW1AP2509u2A1dr0qJBn0NXD3jF0ddxbswPAM+Rcgq?=
- =?us-ascii?Q?YYG3EtF+JkiKZmW2h0fuXLkNTwZlsOKnsNC84Hpf1hORxWCBv5DF2OLJn5SJ?=
- =?us-ascii?Q?gA=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/GqUMCk4hsZeefnCbFBuxtkOQ0UYk9QE/msyKin4Qq1W9Z2GL3XJTHc/+W9E?=
+ =?us-ascii?Q?91rxJPt7HthJcbKwmc2reUFoO1SdP5/B9mr10eF0sTyUImOBicPYTwBrVOxT?=
+ =?us-ascii?Q?nMHuJy51qLefFRiCM8faMwd4UOkO0Pg3Cp9bmVzdhsA7lM7xwtMUAbJGzs/5?=
+ =?us-ascii?Q?nf6z4v51kLKAAYL7/W9/bUhey6vhZ/i8Gu8xh+L3MIyw0ucKL4l+UmsZOSBb?=
+ =?us-ascii?Q?70r9SfOO+sanjcbGozHdl2VkDSWhibWZIo+Td5ktKTuaMp7+93WIQ7nZYT9s?=
+ =?us-ascii?Q?G9/+hj7698MA3VDFaZ7jZTXPZVkcQDMqJzeaED7g49Ndj4D3MNxs5bB809AY?=
+ =?us-ascii?Q?xqdFyXhIfOP8bU3NoMInTeMcN6dweCTY8Gxn2/rCfIVeswIt7gYtq0iPHZAp?=
+ =?us-ascii?Q?+8AHXsZZNymEVxPQgy0I1QFy7GjN8Y8RBQPZutQwFWSYzWP2aX8AoSs7w5as?=
+ =?us-ascii?Q?SDylWqvUs6fj3PpIc2do8shBYC22NgyMIFwblkn3Wc2GYH7gk1+4rqYiLgkh?=
+ =?us-ascii?Q?uePZppOSqsMyQBp+S/oKeg+khI+700Jyk5jdCOucbrw3dei9mWV7jReneq5/?=
+ =?us-ascii?Q?TOrew0kvzi1gcJ1nL8tiflD5OL+fi4lXf1oA7ax0hI+b2bRDt6PzzDvitGey?=
+ =?us-ascii?Q?yV1U3iFgKTEwnGIblkOninDMSVt0QerYUlspPxtXX/Gj6J/H4bd0NqO1Tovt?=
+ =?us-ascii?Q?LJi/mjy6iPSDYem8SsUEFWuDXCay+LRtIc6nKvdBlierCWqHmI3pPL8QSuDi?=
+ =?us-ascii?Q?0p7H245zJEcUenioER9mdNUDMTfAzqiFfDROhADjyPR0YOpwuGlPNumvwyIi?=
+ =?us-ascii?Q?1iKojE8shtsgI7sVkVdFEsRYLwLwGTFs8C4MqUVb5hfJeML9puBqAoyFNCtU?=
+ =?us-ascii?Q?Vlo6ITh6pn3qLpnB3bQzNif/PfQSq6jbfEJYdntD5h++IUc1gXg8hhfqnpaF?=
+ =?us-ascii?Q?0yQSC56Y27ASUEr2/NwQMMTkv/RilC7E5GhESuuYmt0wlDpRA5SHRI2MfDX3?=
+ =?us-ascii?Q?MU5kBuz7iNqS5As3VCsYB+CtdJfdhVFmY55xS4IFRF1Dm37WZlUVp3uMXLBr?=
+ =?us-ascii?Q?24AbvtkAjOSGGNR3ntnFsJP1d2mBPKesIsWelzycKlrJWDxGwKnXwgj6kdy+?=
+ =?us-ascii?Q?gpX1LRYXjhNzILUrLSJCY4gixj7qGwUz0k1k7uRxhChppIZBvTJC59BPVz2i?=
+ =?us-ascii?Q?yYKVGLsEV61gC+t+sYfdj4v5+FmYBnL0LLRt3zYa1g9uFLBAHV20AypGAfci?=
+ =?us-ascii?Q?2BPRDWQvJzqk5xQkvGnJ/75KCG2M9AxxSZ+ziTQ9KR99M8wVll8NsRuSttcH?=
+ =?us-ascii?Q?XgMX8BS3IvMJd6576rvXLAXfer/irJTLxFWbxYfA6JKlH+rfFKG3/uecCWkN?=
+ =?us-ascii?Q?V5wF2d4HGi+LCBGxSYCND7DO1ST5EoKo4Zk6gRAyPZcvubpugbDhyXq0dBF1?=
+ =?us-ascii?Q?Cvna2fGImaIHiFcHUwTqoVBLshKIMc4xNuaY1qbgxO5gg0FOWIoAKyQuaE74?=
+ =?us-ascii?Q?9IB5Qky9mpvRdejf8SdJ5Bo5gWR4FoJf2x4n+MQ5IJ1Sxdec8OK5MqmHtYBv?=
+ =?us-ascii?Q?sNJKjLaZYXAJigtoC551H5S0BZLoMggy7JkF2H/indgU2Eab/NxTBD8wHaE7?=
+ =?us-ascii?Q?+w=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR21MB1295.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6031131c-e032-4436-003e-08d9e5d963fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2022 23:20:09.6073
+X-MS-Exchange-CrossTenant-AuthSource: TYZP153MB0430.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86f1326f-5c23-482e-2680-08d9e5ef2049
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2022 01:55:44.8595
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ieok/W4FyOMw8e3zWdachTDzYU7vXkf/jVWwZQxB+VtOwl0Zt4fevRF+5w/WWq77XrxUicLKzNlMOxl1IK+QXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1687
+X-MS-Exchange-CrossTenant-userprincipalname: W1krYr1CtffaPaPlPThflbLYQ0t96ImuzXx8mA5nClLU3bToR3uX7njV1w1mZy+tKEUJJqXxnfuWHq3LKgInZF8lsRZyssvOT+8840VwQ/E=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAP153MB0486
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
+-----Original Message-----
+From: longli@linuxonhyperv.com <longli@linuxonhyperv.com>=20
+Sent: Thursday, January 27, 2022 7:14 AM
+To: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; linux-hyperv@v=
+ger.kernel.org; Purna Pavan Chandra Aekkaladevi <paekkaladevi@microsoft.com=
+>
+Cc: Long Li <longli@microsoft.com>
+Subject: [EXTERNAL] [Patch v4] PCI: hv: Fix NUMA node assignment when kerne=
+l boots with custom NUMA topology
 
-> -----Original Message-----
-> From: Tianyu Lan <ltykernel@gmail.com>
-> Sent: Tuesday, February 1, 2022 11:32 AM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.=
-com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; wei.liu@kernel.org; Dexuan Cui <decui=
-@microsoft.com>;
-> tglx@linutronix.de; mingo@redhat.com; bp@alien8.de; dave.hansen@linux.int=
-el.com;
-> x86@kernel.org; hpa@zytor.com; davem@davemloft.net; kuba@kernel.org; hch@=
-infradead.org;
-> m.szyprowski@samsung.com; robin.murphy@arm.com; Michael Kelley (LINUX)
-> <mikelley@microsoft.com>
-> Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>; iommu@lists.linux-foundation.o=
-rg; linux-
-> hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; netdev@vger.kernel.=
-org
-> Subject: [PATCH] Netvsc: Call hv_unmap_memory() in the netvsc_device_remo=
-ve()
->=20
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->=20
-> netvsc_device_remove() calls vunmap() inside which should not be
-> called in the interrupt context. Current code calls hv_unmap_memory()
-> in the free_netvsc_device() which is rcu callback and maybe called
-> in the interrupt context. This will trigger BUG_ON(in_interrupt())
-> in the vunmap(). Fix it via moving hv_unmap_memory() to netvsc_device_
-> remove().
->=20
-> Fixes: 846da38de0e8 ("net: netvsc: Add Isolation VM support for netvsc dr=
-iver")
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/net/hyperv/netvsc.c | 18 ++++++++++--------
->  1 file changed, 10 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index afa81a9480cc..f989f920d4ce 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -154,19 +154,15 @@ static void free_netvsc_device(struct rcu_head *hea=
-d)
->=20
->  	kfree(nvdev->extension);
->=20
-> -	if (nvdev->recv_original_buf) {
-> -		hv_unmap_memory(nvdev->recv_buf);
-> +	if (nvdev->recv_original_buf)
->  		vfree(nvdev->recv_original_buf);
-> -	} else {
-> +	else
->  		vfree(nvdev->recv_buf);
-> -	}
->=20
-> -	if (nvdev->send_original_buf) {
-> -		hv_unmap_memory(nvdev->send_buf);
-> +	if (nvdev->send_original_buf)
->  		vfree(nvdev->send_original_buf);
-> -	} else {
-> +	else
->  		vfree(nvdev->send_buf);
-> -	}
->=20
->  	bitmap_free(nvdev->send_section_map);
->=20
-> @@ -765,6 +761,12 @@ void netvsc_device_remove(struct hv_device *device)
->  		netvsc_teardown_send_gpadl(device, net_device, ndev);
->  	}
->=20
-> +	if (net_device->recv_original_buf)
-> +		hv_unmap_memory(net_device->recv_buf);
-> +
-> +	if (net_device->send_original_buf)
-> +		hv_unmap_memory(net_device->send_buf);
-> +
->  	/* Release all resources */
->  	free_netvsc_device_rcu(net_device);
->  }
+[You don't often get email from longli@linuxonhyperv.com. Learn why this is=
+ important at http://aka.ms/LearnAboutSenderIdentification.]
 
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+From: Long Li <longli@microsoft.com>
+
+When kernel boots with a NUMA topology with some NUMA nodes offline, the PC=
+I driver should only set an online NUMA node on the device. This can happen=
+ during KDUMP where some NUMA nodes are not made online by the KDUMP kernel=
+.
+
+This patch also fixes the case where kernel is booting with "numa=3Doff".
+
+Fixes: 999dd956d838 ("PCI: hv: Add support for protocol 1.3 and support PCI=
+_BUS_RELATIONS2")
+Signed-off-by: Long Li <longli@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Tested-by: Purna Pavan Chandra Aekkaladevi <paekkaladevi@microsoft.com>
+---
+Change log:
+v2: use numa_map_to_online_node() to assign a node to device (suggested by =
+Michael Kelly <mikelley@microsoft.com>)
+v3: add "Fixes" and check for num_possible_nodes()
+v4: fix commit message format
+
+ drivers/pci/controller/pci-hyperv.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 20ea2ee330b8..ae0bc2fee4ca 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2155,8 +2155,17 @@ static void hv_pci_assign_numa_node(struct hv_pcibus=
+_device *hbus)
+                if (!hv_dev)
+                        continue;
+
+-               if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY)
+-                       set_dev_node(&dev->dev, hv_dev->desc.virtual_numa_n=
+ode);
++               if (hv_dev->desc.flags & HV_PCI_DEVICE_FLAG_NUMA_AFFINITY &=
+&
++                   hv_dev->desc.virtual_numa_node < num_possible_nodes())
++                       /*
++                        * The kernel may boot with some NUMA nodes offline
++                        * (e.g. in a KDUMP kernel) or with NUMA disabled v=
+ia
++                        * "numa=3Doff". In those cases, adjust the host pr=
+ovided
++                        * NUMA node to a valid NUMA node used by the kerne=
+l.
++                        */
++                       set_dev_node(&dev->dev,
++                                    numa_map_to_online_node(
++                                           =20
++ hv_dev->desc.virtual_numa_node));
+
+                put_pcichild(hv_dev);
+        }
+--
+2.25.1
+
