@@ -2,79 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 123504A914E
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Feb 2022 00:54:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8193D4A9156
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Feb 2022 00:58:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356072AbiBCXxz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Feb 2022 18:53:55 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:58824 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229807AbiBCXxz (ORCPT
+        id S229807AbiBCX6a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Feb 2022 18:58:30 -0500
+Received: from vmicros1.altlinux.org ([194.107.17.57]:49248 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356086AbiBCX63 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Feb 2022 18:53:55 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BA3CC618E8;
-        Thu,  3 Feb 2022 23:53:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC84EC340E8;
-        Thu,  3 Feb 2022 23:53:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643932434;
-        bh=tIBMDUl1KSV62Vg/VFyfqCLarqutkx/5NsVZllWQuIU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IIrLpytIhS33bMp6wD+kg5PysYuMemf04OOa2Lj1gpIMvmPHN1gxyLy1K7HLqJclZ
-         c7l3vnEM9Jvc548pHw4nJ3lEO09bchMEB/ZLKPWnTCXwzz0iYkvXvgzDwBB9jqgS/f
-         4WG+uTqDKvHAAi8AMh65/hh8PLifsBBX5Sg0WlFQdM6Oqlp9vA60RtDWgWzjQrTPiW
-         OXz6dMSeWYbhgRqKfFdPC5GmQonZHLnPVry4ki9FY2iDTTK/DdtbCyWEPE/Nqa7csX
-         CFI/COWjUi8SSQ0MM7Xeo4mcBueW81k4CinnEituMznCNOifCfE3L2MJEtJ68kkNGr
-         FbovxEEWAEGuw==
-Date:   Thu, 3 Feb 2022 15:53:51 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, davem@davemloft.net,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
-        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        thomas.lendacky@amd.com, Tianyu.Lan@microsoft.com,
-        michael.h.kelley@microsoft.com, iommu@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, vkuznets@redhat.com, brijesh.singh@amd.com,
-        konrad.wilk@oracle.com, hch@lst.de, joro@8bytes.org,
-        parri.andrea@gmail.com, dave.hansen@intel.com
-Subject: Re: [PATCH V7 4/5] scsi: storvsc: Add Isolation VM support for
- storvsc driver
-Message-ID: <20220203155351.2ca86ab3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20211213071407.314309-5-ltykernel@gmail.com>
-References: <20211213071407.314309-1-ltykernel@gmail.com>
-        <20211213071407.314309-5-ltykernel@gmail.com>
+        Thu, 3 Feb 2022 18:58:29 -0500
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 52F4372C905;
+        Fri,  4 Feb 2022 02:58:28 +0300 (MSK)
+Received: from altlinux.org (sole.flsd.net [185.75.180.6])
+        by imap.altlinux.org (Postfix) with ESMTPSA id 222C04A46F0;
+        Fri,  4 Feb 2022 02:58:28 +0300 (MSK)
+Date:   Fri, 4 Feb 2022 02:58:28 +0300
+From:   Vitaly Chikunov <vt@altlinux.org>
+To:     linux-hyperv@vger.kernel.org,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Subject: hv: drivers/hv/vmbus_drv.c:2082:29: error: shift count >= width of
+ type
+Message-ID: <20220203235828.hcsj6najsl7yxmxa@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 13 Dec 2021 02:14:05 -0500 Tianyu Lan wrote:
-> @@ -2078,6 +2079,7 @@ struct hv_device *vmbus_device_create(const guid_t *type,
->  	return child_device_obj;
->  }
->  
-> +static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
+Hi,
 
-This breaks the x86 clang allmodconfig build as I presume those
-involved know by now:
+There is new compilation error (for a second week for drm-tip[1] kernel):
 
-../drivers/hv/vmbus_drv.c:2082:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
-                            ^~~~~~~~~~~~~~~~
-../include/linux/dma-mapping.h:76:54: note: expanded from macro 'DMA_BIT_MASK'
-#define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                     ^ ~~~
-1 error generated.
+     CC [M]  drivers/hv/vmbus_drv.o
+   drivers/hv/vmbus_drv.c:2082:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+   static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
+			       ^~~~~~~~~~~~~~~~
+   ./include/linux/dma-mapping.h:76:54: note: expanded from macro 'DMA_BIT_MASK'
+   #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+							^ ~~~
+   1 error generated.
 
+I understand this looks like possible GCC (11.2.1) bug, but still it prevents
+building kernel with CONFIG_HYPERV.
 
-Is there any ETA on getting the fix into Linus's tree?
+Thanks,
+
+[1] git://anongit.freedesktop.org/drm-tip
+
