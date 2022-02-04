@@ -2,82 +2,100 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD8804A927D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Feb 2022 03:57:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 374544A96DD
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Feb 2022 10:33:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241755AbiBDCzp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Feb 2022 21:55:45 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:60200 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229967AbiBDCzp (ORCPT
+        id S238321AbiBDJdj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Feb 2022 04:33:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57447 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232946AbiBDJdi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Feb 2022 21:55:45 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 65118B83644;
-        Fri,  4 Feb 2022 02:55:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D44D7C340E8;
-        Fri,  4 Feb 2022 02:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643943342;
-        bh=iFYVFJtjKaIbefdHLdpYqegeVUxQnXuKEpN+3Ch3AIA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dr8qqzYPKFmFJByEK9kO6IpaCaW2bVgGDR5hk16oTTfhfGHTPoaUlr0Z2MKd2sbTW
-         zaBeSYK9ycn8fgB8Z8a180clQI9z3bWiKTyHJhz4+uhbMlXyYPkQ4gEZlM5x2szmk9
-         drlBO+BE2DeRlnscsGLbH1vqAVjlD+6vzU9SH+ZhT+9yMwvcf2RZMhgUp8rROy9esK
-         fJ6SOOMLfaSTdMLABEptYk/mhdKEpf2zEhxhW9QheMEtRF05JB35AR4DPFkp+3Vhjs
-         oKHraGBRsNPAWo3JoZptsYDhK+33ru8rNbOXGNRVZ7eKuQ8HsBo0gz5X+iM6m0+PUX
-         Vn9EA39y6g5cg==
-Date:   Thu, 3 Feb 2022 18:55:39 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, davem@davemloft.net,
-        jejb@linux.ibm.com, martin.petersen@oracle.com, arnd@arndb.de,
-        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        thomas.lendacky@amd.com, Tianyu.Lan@microsoft.com,
-        michael.h.kelley@microsoft.com, iommu@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, vkuznets@redhat.com, brijesh.singh@amd.com,
-        konrad.wilk@oracle.com, hch@lst.de, joro@8bytes.org,
-        parri.andrea@gmail.com, dave.hansen@intel.com
-Subject: Re: [PATCH V7 4/5] scsi: storvsc: Add Isolation VM support for
- storvsc driver
-Message-ID: <20220203185539.3b70a6b9@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20220203155351.2ca86ab3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-References: <20211213071407.314309-1-ltykernel@gmail.com>
-        <20211213071407.314309-5-ltykernel@gmail.com>
-        <20220203155351.2ca86ab3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Fri, 4 Feb 2022 04:33:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643967217;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=psHFPoCRmxPpHk1RPd76nF9dwzX3QFCwIVC0ZYt+sM4=;
+        b=NqlHvGNpMAxZqhKixIwBqy/6m2jHP3+8Ms/PI05ji6+67WpB23bNJnJv9HFIi3NkesMfG3
+        lmdTNvLGuSXi1Gfpv1nL36IimSR0blfGjnRmcBoOA4jHeuxbOVQswVLFVGs5OAyHPUvwy/
+        xy8drwnuCz/aE6LOWe3FcBHqT0lRgMk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-610-bl0LTbRlMMidvR8D-OjeUQ-1; Fri, 04 Feb 2022 04:33:36 -0500
+X-MC-Unique: bl0LTbRlMMidvR8D-OjeUQ-1
+Received: by mail-wm1-f70.google.com with SMTP id t2-20020a7bc3c2000000b003528fe59cb9so2143154wmj.5
+        for <linux-hyperv@vger.kernel.org>; Fri, 04 Feb 2022 01:33:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=psHFPoCRmxPpHk1RPd76nF9dwzX3QFCwIVC0ZYt+sM4=;
+        b=kpd7NINTu1rmZ7zIlNF0XgUkYmnI/Nq3pLFBF0dn4e5MpUtbk0HmevUo9i4mH9MQXI
+         37Bq+FaUHez/wV1+NHnXGfaLVthPmgk6Nl3LjUNMpPW1VAdj2BhzzNQ3VCkVvTdfyTS1
+         zBsxeuDEtgW7/BpZ6RUtypnnD4GgF8emRbqZr4FZspE5GTBVu8jJWjQV91Deq+e0Ja8Y
+         48uOXT+0EM9kbTaLFQ6jPaL+U3dTq2KMEiR1zEaZ3kcKgwSVyVWBDNaXZkSQcsA/LubO
+         1uJh/aJGL0ah/zyhPngbg1uqCViTHeyaSsiaxoTUz21pBypAGj91+XctxPd4oin9Flec
+         QZog==
+X-Gm-Message-State: AOAM5335W9cXWEw8ixyMw1PZ3ZGmCZpF8GCGfsQf19e8dP9LYRFpmjfn
+        mgp7Axn2rRpcYORs+vaxJ0tc+8HGCwfqQgxPoJWjHPxzq49PP0V6LCvY8M8PNhV59iDXLCmbCYr
+        Q7JO9dWu8Ub/4dtIps6ULdhAD
+X-Received: by 2002:a5d:438a:: with SMTP id i10mr1657366wrq.295.1643967215429;
+        Fri, 04 Feb 2022 01:33:35 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyVtO488vewvsDODPN7TJXImSFQxST2bZkSAO/pC+Af0K50QlfGrFTjbRDEJWGrfanM0xA3Bg==
+X-Received: by 2002:a5d:438a:: with SMTP id i10mr1657352wrq.295.1643967215242;
+        Fri, 04 Feb 2022 01:33:35 -0800 (PST)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id r8sm1366700wrx.2.2022.02.04.01.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Feb 2022 01:33:34 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vitaly Chikunov <vt@altlinux.org>
+Cc:     linux-hyperv@vger.kernel.org,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Subject: Re: hv: drivers/hv/vmbus_drv.c:2082:29: error: shift count >= width
+ of type
+In-Reply-To: <20220203235828.hcsj6najsl7yxmxa@altlinux.org>
+References: <20220203235828.hcsj6najsl7yxmxa@altlinux.org>
+Date:   Fri, 04 Feb 2022 10:33:33 +0100
+Message-ID: <874k5fascy.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 3 Feb 2022 15:53:51 -0800 Jakub Kicinski wrote:
-> On Mon, 13 Dec 2021 02:14:05 -0500 Tianyu Lan wrote:
-> > @@ -2078,6 +2079,7 @@ struct hv_device *vmbus_device_create(const guid_t *type,
-> >  	return child_device_obj;
-> >  }
-> >  
-> > +static u64 vmbus_dma_mask = DMA_BIT_MASK(64);  
-> 
-> This breaks the x86 clang allmodconfig build as I presume those
-> involved know by now:
-> 
-> ../drivers/hv/vmbus_drv.c:2082:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-> static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
->                             ^~~~~~~~~~~~~~~~
-> ../include/linux/dma-mapping.h:76:54: note: expanded from macro 'DMA_BIT_MASK'
-> #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
->                                                      ^ ~~~
-> 1 error generated.
+Vitaly Chikunov <vt@altlinux.org> writes:
 
-Looks like a compiler issue actually, found the discussion now:
+> Hi,
+>
+> There is new compilation error (for a second week for drm-tip[1] kernel):
+>
+>      CC [M]  drivers/hv/vmbus_drv.o
+>    drivers/hv/vmbus_drv.c:2082:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+>    static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
+> 			       ^~~~~~~~~~~~~~~~
+>    ./include/linux/dma-mapping.h:76:54: note: expanded from macro 'DMA_BIT_MASK'
+>    #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+> 							^ ~~~
+>    1 error generated.
+>
+> I understand this looks like possible GCC (11.2.1) bug, but still it prevents
+> building kernel with CONFIG_HYPERV.
 
-https://lore.kernel.org/llvm/202112181827.o3X7GmHz-lkp@intel.com/
+It seems DMA_BIT_MASK(64) is very common:
+
+$ git grep DMA_BIT_MASK\(64\) | wc -l
+230
+
+Is Hyper-V vmbus_drv the only victim? What happens if you replace
+'DMA_BIT_MASK(64)' with '~0ULL', does the rest of the drivers compile
+normally?
+
+-- 
+Vitaly
+
