@@ -2,155 +2,65 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC9AD4AA787
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Feb 2022 09:06:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 925E64AA7A4
+	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Feb 2022 09:24:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240302AbiBEIGQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 5 Feb 2022 03:06:16 -0500
-Received: from vmicros1.altlinux.org ([194.107.17.57]:52766 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239233AbiBEIGQ (ORCPT
+        id S235206AbiBEIYV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 5 Feb 2022 03:24:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242364AbiBEIYS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 5 Feb 2022 03:06:16 -0500
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id F258672C905;
-        Sat,  5 Feb 2022 11:06:14 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-        by imap.altlinux.org (Postfix) with ESMTPSA id D779B4A46F0;
-        Sat,  5 Feb 2022 11:06:14 +0300 (MSK)
-Date:   Sat, 5 Feb 2022 11:06:14 +0300
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Long Li <longli@microsoft.com>
-Subject: Re: [PATCH v3] drivers: hv: vmbus: Fix build on Clang 12 failed by
- DMA_BIT_MASK(64) expansion
-Message-ID: <20220205080614.52gu4mtjli4h2m3c@altlinux.org>
-References: <20220204130503.76738-1-vt@altlinux.org>
- <MWHPR21MB15939EB2A75C96B2287B38DFD7299@MWHPR21MB1593.namprd21.prod.outlook.com>
- <20220205040552.fnshfhin3fij67t6@altlinux.org>
+        Sat, 5 Feb 2022 03:24:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FEBC061346;
+        Sat,  5 Feb 2022 00:24:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0F71CB83971;
+        Sat,  5 Feb 2022 08:24:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32475C340E8;
+        Sat,  5 Feb 2022 08:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1644049451;
+        bh=D2eOrJGsH5tAWuKjVJk1cyr3QE9TV+RAkP+9Ap0LVWo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DCvsEC4mEpUxmiAqiDUpU1QaJCEG/A8u9fWMf76Biww8Hv9N2kIQQEz/NhfnHrdgW
+         Fa9piGyqUYSLbJ77/MdwHToC0mO3Seh6+dHk7kX6kSgqQ3kAsLOG7/UUMexejb83Pn
+         xVdTHnh6wxK4Iig6LDtKiD+QTOAnAaQ3nLdJ3Tlw=
+Date:   Sat, 5 Feb 2022 09:24:01 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Iouri Tarassov <iourit@linux.microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spronovo@microsoft.com
+Subject: Re: [PATCH v2 01/24] drivers: hv: dxgkrnl: Driver initialization and
+ creation of dxgadapter
+Message-ID: <Yf40IQrZR1m5mGVl@kroah.com>
+References: <cover.1644025661.git.iourit@linux.microsoft.com>
+ <98fe53740526526c4df85a3a3d2e13e88c95f229.1644025661.git.iourit@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220205040552.fnshfhin3fij67t6@altlinux.org>
+In-Reply-To: <98fe53740526526c4df85a3a3d2e13e88c95f229.1644025661.git.iourit@linux.microsoft.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Feb 05, 2022 at 07:05:53AM +0300, Vitaly Chikunov wrote:
-> On Fri, Feb 04, 2022 at 04:10:49PM +0000, Michael Kelley (LINUX) wrote:
-> > From: Vitaly Chikunov <vt@altlinux.org> Sent: Friday, February 4, 2022 5:05 AM
-> > > 
-> > > Clang 12.0.1 cannot understand that value 64 is excluded from the shift
-> > > at compile time (for use in global context) resulting in build error:
-> > > 
-> > >   drivers/hv/vmbus_drv.c:2082:29: error: shift count >= width of type [-Werror,-
-> > > Wshift-count-overflow]
-> > >   static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
-> > > 			      ^~~~~~~~~~~~~~~~
-> > >   ./include/linux/dma-mapping.h:76:54: note: expanded from macro 'DMA_BIT_MASK'
-> > >   #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-> > > 						       ^ ~~~
-> > > 
-> > > Avoid using DMA_BIT_MASK macro for that corner case.
-> > > 
-> > > Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > > Cc: Michael Kelley <mikelley@microsoft.com>
-> > > Cc: Long Li <longli@microsoft.com>
-> > > Cc: Wei Liu <wei.liu@kernel.org>
-> > > Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-> > > ---
-> > >  drivers/hv/vmbus_drv.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > > index 17bf55fe3169..a1306ca15d3f 100644
-> > > --- a/drivers/hv/vmbus_drv.c
-> > > +++ b/drivers/hv/vmbus_drv.c
-> > > @@ -2079,7 +2079,8 @@ struct hv_device *vmbus_device_create(const guid_t *type,
-> > >  	return child_device_obj;
-> > >  }
-> > > 
-> > > -static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
-> > > +/* Use ~0ULL instead of DMA_BIT_MASK(64) to work around a bug in Clang. */
-> > > +static u64 vmbus_dma_mask = ~0ULL;
-> > >  /*
-> > >   * vmbus_device_register - Register the child device
-> > >   */
-> > > --
-> > > 2.33.0
-> > 
-> > Instead of the hack approach, does the following code rearrangement solve
-> > the problem by eliminating the use of DMA_BIT_MASK(64) in a static initializer?
-> > I don't have Clang handy to try it.
-> 
-> Yes this compiles well on Clang.
+On Fri, Feb 04, 2022 at 06:33:59PM -0800, Iouri Tarassov wrote:
+> This is the first commit for adding support for a Hyper-V based
+> vGPU implementation that exposes the DirectX API to Linux userspace.
 
-How to reproduce in Docker (as in 'totally non-secure'):
+"This is the first commit" doesn't need to be in the changelog, right?
+Please read the documentation for how to write a changelog text, and
+look at all of the thousands of examples on the mailing list of others.
 
-  kernel-src$ make mrproper
-  kernel-src$ docker run --rm -it -v $PWD:/src -w /src kernelci/clang-12
-  in-docker# make CC=clang LLVM=1 O=/tmp/k allyesconfig drivers/hv/
+Also, it would help if this patch would build :(
 
-`make mrproper` is required for `O=`, where `O=` is to not pollute
-kernel tree (which will be rw bind mounted into /src) with root owned
-files (since Docker runs under real root by default), `allyesconfig` is
-to enable `HYPERV=y` the easy way. There are also other clang versions up
-to clang-14 (they all fail with that global DMA_BIT_MASK(64) error).
-
-Instead of `-v $PWD:/src -w /src` options to docker you can do git clone
-inside, this is perhaps will be slightly more secure, and you don't need
-to mrproper your tree (which will destroy .config).
-
-Vitaly,
-
-> 
-> Vitaly,
-> 
-> > 
-> > This approach also more closely follows the pattern used in other device types.
-> > 
-> > Michael
-> > 
-> > 
-> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > index 17bf55f..0d96634 100644
-> > --- a/drivers/hv/vmbus_drv.c
-> > +++ b/drivers/hv/vmbus_drv.c
-> > @@ -2079,7 +2079,6 @@ struct hv_device *vmbus_device_create(const guid_t *type,
-> >  	return child_device_obj;
-> >  }
-> >  
-> > -static u64 vmbus_dma_mask = DMA_BIT_MASK(64);
-> >  /*
-> >   * vmbus_device_register - Register the child device
-> >   */
-> > @@ -2120,8 +2119,9 @@ int vmbus_device_register(struct hv_device *child_device_obj)
-> >  	}
-> >  	hv_debug_add_dev_dir(child_device_obj);
-> >  
-> > -	child_device_obj->device.dma_mask = &vmbus_dma_mask;
-> >  	child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
-> > +	child_device_obj->device.dma_mask = &child_device_obj->dma_mask;
-> > +	dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
-> >  	return 0;
-> >  
-> >  err_kset_unregister:
-> > diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> > index f565a89..fe2e017 100644
-> > --- a/include/linux/hyperv.h
-> > +++ b/include/linux/hyperv.h
-> > @@ -1262,6 +1262,7 @@ struct hv_device {
-> >  	struct vmbus_channel *channel;
-> >  	struct kset	     *channels_kset;
-> >  	struct device_dma_parameters dma_parms;
-> > +	u64 dma_mask;
-> >  
-> >  	/* place holder to keep track of the dir for hv device in debugfs */
-> >  	struct dentry *debug_dir;
