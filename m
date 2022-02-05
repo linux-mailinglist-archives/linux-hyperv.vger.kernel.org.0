@@ -2,35 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 801674AA5CB
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Feb 2022 03:34:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C81A4AA5CE
+	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Feb 2022 03:34:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378981AbiBECeZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Feb 2022 21:34:25 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:45108 "EHLO
+        id S1379028AbiBECe1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Feb 2022 21:34:27 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:45114 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378997AbiBECeY (ORCPT
+        with ESMTP id S1378998AbiBECeY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Fri, 4 Feb 2022 21:34:24 -0500
 Received: from IOURIT-Z4.ntdev.corp.microsoft.com (unknown [192.182.151.181])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0122A20B8013;
-        Fri,  4 Feb 2022 18:34:23 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0122A20B8013
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2949720B8016;
+        Fri,  4 Feb 2022 18:34:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2949720B8016
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1644028464;
-        bh=CMdGZRlhMdcOXOPZIsWCIf52c+KFQSKTAraiwATUkKg=;
+        bh=CahL0oKsEAEfsNodpmdi8i8lS2lqexuEIoauSrJUCRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGpaGCGayIqJ7ASKvX5EUinTct7+MBtR1jfVeGTHWvtjbvPWO3xfNFTiKDuuF7gIf
-         2gPQNZK6OwX1kkCOtWEsFjfRNoL6yICVQQppf61od/tIeyQKXcyBh1IbTKeNJ7Lzuj
-         CTFwFbUoHphZaehqgKaeyXHul3FTR3s5/irOK6fQ=
+        b=rXHXK7QNQVOEau7K4M2vPL79gcYUtKk/Go/8XZBCTl6L+HCYf/4PWCTe4/7+GSWQd
+         ecwEI/vfWijhyC9BCXtCG+BUPWiwWFJw1V3e2drjcPdeAl9koMVmglmR7M9E+yxSC3
+         UewKOX90E6AzqAG+ZFdixmyYlT/SRdtR4PXrUJIM=
 From:   Iouri Tarassov <iourit@linux.microsoft.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, linux-hyperv@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, spronovo@microsoft.com,
         gregkh@linuxfoundation.org
-Subject: [PATCH v2 04/24] drivers: hv: dxgkrnl: Creation of dxgdevice
-Date:   Fri,  4 Feb 2022 18:34:02 -0800
-Message-Id: <3cd773385baf50fba168d3c293363cd4584ad77c.1644025661.git.iourit@linux.microsoft.com>
+Subject: [PATCH v2 05/24] drivers: hv: dxgkrnl: Creation of dxgcontext objects
+Date:   Fri,  4 Feb 2022 18:34:03 -0800
+Message-Id: <577c5c430924be2b64b0032d51cacd01268cbb93.1644025661.git.iourit@linux.microsoft.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <cover.1644025661.git.iourit@linux.microsoft.com>
 References: <cover.1644025661.git.iourit@linux.microsoft.com>
@@ -40,438 +40,339 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-A dxgdevice object represents a container of GPU allocations,
-GPU sync objects, GPU contexts, etc. It belongs to a dxgadapter
-object.
+Implement ioctls for dxgcontext creation/destruction:
+   LX_DXCREATECONTEXTVIRTUAL(D3DKMTCreateContextVirtual),
+   LX_DXDESTROYCONTEXT(D3DKMTDestroyContext)
+
+A dxgcontext object represents a GPU execution thread. GPU DMA
+buffers and synchronization operations are submitted for execution
+to a GPU context. GPU contexts belong to a dxgdevice object.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgadapter.c | 183 ++++++++++++++++++++++++++++++++
- drivers/hv/dxgkrnl/dxgkrnl.h    |  52 +++++++++
- drivers/hv/dxgkrnl/dxgprocess.c |  43 ++++++++
- drivers/hv/dxgkrnl/dxgvmbus.c   |  54 ++++++++++
- drivers/hv/dxgkrnl/ioctl.c      | 134 +++++++++++++++++++++++
+ drivers/hv/dxgkrnl/dxgadapter.c | 102 +++++++++++++++++++
+ drivers/hv/dxgkrnl/dxgkrnl.h    |  38 +++++++
+ drivers/hv/dxgkrnl/dxgprocess.c |   4 +
+ drivers/hv/dxgkrnl/dxgvmbus.c   |  99 ++++++++++++++++++
+ drivers/hv/dxgkrnl/ioctl.c      | 172 ++++++++++++++++++++++++++++++++
  drivers/hv/dxgkrnl/misc.h       |   1 +
- 6 files changed, 467 insertions(+)
+ 6 files changed, 416 insertions(+)
 
 diff --git a/drivers/hv/dxgkrnl/dxgadapter.c b/drivers/hv/dxgkrnl/dxgadapter.c
-index 2c7823713547..c7e1dc55de49 100644
+index c7e1dc55de49..9cdc81d4db4a 100644
 --- a/drivers/hv/dxgkrnl/dxgadapter.c
 +++ b/drivers/hv/dxgkrnl/dxgadapter.c
-@@ -199,6 +199,120 @@ void dxgadapter_release_lock_shared(struct dxgadapter *adapter)
- 	up_read(&adapter->core_lock);
+@@ -210,7 +210,9 @@ struct dxgdevice *dxgdevice_create(struct dxgadapter *adapter,
+ 		device->adapter = adapter;
+ 		device->process = process;
+ 		kref_get(&adapter->adapter_kref);
++		INIT_LIST_HEAD(&device->context_list_head);
+ 		init_rwsem(&device->device_lock);
++		init_rwsem(&device->context_list_lock);
+ 		INIT_LIST_HEAD(&device->pqueue_list_head);
+ 		device->object_state = DXGOBJECTSTATE_CREATED;
+ 		device->execution_state = _D3DKMT_DEVICEEXECUTION_ACTIVE;
+@@ -252,6 +254,20 @@ void dxgdevice_destroy(struct dxgdevice *device)
+ 
+ 	dxgdevice_stop(device);
+ 
++	{
++		struct dxgcontext *context;
++		struct dxgcontext *tmp;
++
++		pr_debug("destroying contexts\n");
++		dxgdevice_acquire_context_list_lock(device);
++		list_for_each_entry_safe(context, tmp,
++					 &device->context_list_head,
++					 context_list_entry) {
++			dxgcontext_destroy(process, context);
++		}
++		dxgdevice_release_context_list_lock(device);
++	}
++
+ 	/* Guest handles need to be released before the host handles */
+ 	hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
+ 	if (device->handle_valid) {
+@@ -305,6 +321,32 @@ bool dxgdevice_is_active(struct dxgdevice *device)
+ 	return device->object_state == DXGOBJECTSTATE_ACTIVE;
  }
  
-+struct dxgdevice *dxgdevice_create(struct dxgadapter *adapter,
-+				   struct dxgprocess *process)
++void dxgdevice_acquire_context_list_lock(struct dxgdevice *device)
 +{
-+	struct dxgdevice *device = vzalloc(sizeof(struct dxgdevice));
-+	int ret;
++	down_write(&device->context_list_lock);
++}
 +
-+	if (device) {
-+		kref_init(&device->device_kref);
-+		device->adapter = adapter;
-+		device->process = process;
-+		kref_get(&adapter->adapter_kref);
-+		init_rwsem(&device->device_lock);
-+		INIT_LIST_HEAD(&device->pqueue_list_head);
-+		device->object_state = DXGOBJECTSTATE_CREATED;
-+		device->execution_state = _D3DKMT_DEVICEEXECUTION_ACTIVE;
++void dxgdevice_release_context_list_lock(struct dxgdevice *device)
++{
++	up_write(&device->context_list_lock);
++}
 +
-+		ret = dxgprocess_adapter_add_device(process, adapter, device);
-+		if (ret < 0) {
-+			kref_put(&device->device_kref, dxgdevice_release);
-+			device = NULL;
++void dxgdevice_add_context(struct dxgdevice *device, struct dxgcontext *context)
++{
++	down_write(&device->context_list_lock);
++	list_add_tail(&context->context_list_entry, &device->context_list_head);
++	up_write(&device->context_list_lock);
++}
++
++void dxgdevice_remove_context(struct dxgdevice *device,
++			      struct dxgcontext *context)
++{
++	if (context->context_list_entry.next) {
++		list_del(&context->context_list_entry);
++		context->context_list_entry.next = NULL;
++	}
++}
++
+ void dxgdevice_release(struct kref *refcount)
+ {
+ 	struct dxgdevice *device;
+@@ -313,6 +355,66 @@ void dxgdevice_release(struct kref *refcount)
+ 	vfree(device);
+ }
+ 
++struct dxgcontext *dxgcontext_create(struct dxgdevice *device)
++{
++	struct dxgcontext *context = vzalloc(sizeof(struct dxgcontext));
++
++	if (context) {
++		kref_init(&context->context_kref);
++		context->device = device;
++		context->process = device->process;
++		context->device_handle = device->handle;
++		kref_get(&device->device_kref);
++		INIT_LIST_HEAD(&context->hwqueue_list_head);
++		init_rwsem(&context->hwqueue_list_lock);
++		dxgdevice_add_context(device, context);
++		context->object_state = DXGOBJECTSTATE_ACTIVE;
++	}
++	return context;
++}
++
++/*
++ * Called when the device context list lock is held
++ */
++void dxgcontext_destroy(struct dxgprocess *process, struct dxgcontext *context)
++{
++	pr_debug("%s %p\n", __func__, context);
++	context->object_state = DXGOBJECTSTATE_DESTROYED;
++	if (context->device) {
++		if (context->handle.v) {
++			hmgrtable_free_handle_safe(&process->handle_table,
++						   HMGRENTRY_TYPE_DXGCONTEXT,
++						   context->handle);
 +		}
++		dxgdevice_remove_context(context->device, context);
++		kref_put(&context->device->device_kref, dxgdevice_release);
 +	}
-+	return device;
++	kref_put(&context->context_kref, dxgcontext_release);
 +}
 +
-+void dxgdevice_stop(struct dxgdevice *device)
++void dxgcontext_destroy_safe(struct dxgprocess *process,
++			     struct dxgcontext *context)
 +{
++	struct dxgdevice *device = context->device;
++
++	dxgdevice_acquire_context_list_lock(device);
++	dxgcontext_destroy(process, context);
++	dxgdevice_release_context_list_lock(device);
 +}
 +
-+void dxgdevice_mark_destroyed(struct dxgdevice *device)
++bool dxgcontext_is_active(struct dxgcontext *context)
 +{
-+	down_write(&device->device_lock);
-+	device->object_state = DXGOBJECTSTATE_DESTROYED;
-+	up_write(&device->device_lock);
++	return context->object_state == DXGOBJECTSTATE_ACTIVE;
 +}
 +
-+void dxgdevice_destroy(struct dxgdevice *device)
++void dxgcontext_release(struct kref *refcount)
 +{
-+	struct dxgprocess *process = device->process;
-+	struct dxgadapter *adapter = device->adapter;
-+	struct d3dkmthandle device_handle = {};
++	struct dxgcontext *context;
 +
-+	pr_debug("%s: %p\n", __func__, device);
-+
-+	down_write(&device->device_lock);
-+
-+	if (device->object_state != DXGOBJECTSTATE_ACTIVE)
-+		goto cleanup;
-+
-+	device->object_state = DXGOBJECTSTATE_DESTROYED;
-+
-+	dxgdevice_stop(device);
-+
-+	/* Guest handles need to be released before the host handles */
-+	hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
-+	if (device->handle_valid) {
-+		hmgrtable_free_handle(&process->handle_table,
-+				      HMGRENTRY_TYPE_DXGDEVICE, device->handle);
-+		device_handle = device->handle;
-+		device->handle_valid = 0;
-+	}
-+	hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
-+
-+	if (device_handle.v) {
-+		up_write(&device->device_lock);
-+		if (dxgadapter_acquire_lock_shared(adapter) == 0) {
-+			dxgvmb_send_destroy_device(adapter, process,
-+						   device_handle);
-+			dxgadapter_release_lock_shared(adapter);
-+		}
-+		down_write(&device->device_lock);
-+	}
-+
-+cleanup:
-+
-+	if (device->adapter) {
-+		dxgprocess_adapter_remove_device(device);
-+		kref_put(&device->adapter->adapter_kref, dxgadapter_release);
-+	}
-+
-+	up_write(&device->device_lock);
-+
-+	kref_put(&device->device_kref, dxgdevice_release);
-+	pr_debug("dxgdevice_destroy_end\n");
-+}
-+
-+int dxgdevice_acquire_lock_shared(struct dxgdevice *device)
-+{
-+	down_read(&device->device_lock);
-+	if (!dxgdevice_is_active(device)) {
-+		up_read(&device->device_lock);
-+		return -ENODEV;
-+	}
-+	return 0;
-+}
-+
-+void dxgdevice_release_lock_shared(struct dxgdevice *device)
-+{
-+	up_read(&device->device_lock);
-+}
-+
-+bool dxgdevice_is_active(struct dxgdevice *device)
-+{
-+	return device->object_state == DXGOBJECTSTATE_ACTIVE;
-+}
-+
-+void dxgdevice_release(struct kref *refcount)
-+{
-+	struct dxgdevice *device;
-+
-+	device = container_of(refcount, struct dxgdevice, device_kref);
-+	vfree(device);
++	context = container_of(refcount, struct dxgcontext, context_kref);
++	vfree(context);
 +}
 +
  struct dxgprocess_adapter *dxgprocess_adapter_create(struct dxgprocess *process,
  						     struct dxgadapter *adapter)
  {
-@@ -213,6 +327,8 @@ struct dxgprocess_adapter *dxgprocess_adapter_create(struct dxgprocess *process,
- 		adapter_info->adapter = adapter;
- 		adapter_info->process = process;
- 		adapter_info->refcount = 1;
-+		mutex_init(&adapter_info->device_list_mutex);
-+		INIT_LIST_HEAD(&adapter_info->device_list_head);
- 		list_add_tail(&adapter_info->process_adapter_list_entry,
- 			      &process->process_adapter_list_head);
- 		dxgadapter_add_process(adapter, adapter_info);
-@@ -226,10 +342,32 @@ struct dxgprocess_adapter *dxgprocess_adapter_create(struct dxgprocess *process,
- 
- void dxgprocess_adapter_stop(struct dxgprocess_adapter *adapter_info)
- {
-+	struct dxgdevice *device;
-+
-+	mutex_lock(&adapter_info->device_list_mutex);
-+	list_for_each_entry(device, &adapter_info->device_list_head,
-+			    device_list_entry) {
-+		dxgdevice_stop(device);
-+	}
-+	mutex_unlock(&adapter_info->device_list_mutex);
- }
- 
- void dxgprocess_adapter_destroy(struct dxgprocess_adapter *adapter_info)
- {
-+	struct dxgdevice *device;
-+
-+	mutex_lock(&adapter_info->device_list_mutex);
-+	while (!list_empty(&adapter_info->device_list_head)) {
-+		device = list_first_entry(&adapter_info->device_list_head,
-+					  struct dxgdevice, device_list_entry);
-+		list_del(&device->device_list_entry);
-+		device->device_list_entry.next = NULL;
-+		mutex_unlock(&adapter_info->device_list_mutex);
-+		dxgdevice_destroy(device);
-+		mutex_lock(&adapter_info->device_list_mutex);
-+	}
-+	mutex_unlock(&adapter_info->device_list_mutex);
-+
- 	dxgadapter_remove_process(adapter_info);
- 	kref_put(&adapter_info->adapter->adapter_kref, dxgadapter_release);
- 	list_del(&adapter_info->process_adapter_list_entry);
-@@ -247,3 +385,48 @@ void dxgprocess_adapter_release(struct dxgprocess_adapter *adapter_info)
- 	if (adapter_info->refcount == 0)
- 		dxgprocess_adapter_destroy(adapter_info);
- }
-+
-+int dxgprocess_adapter_add_device(struct dxgprocess *process,
-+				  struct dxgadapter *adapter,
-+				  struct dxgdevice *device)
-+{
-+	struct dxgprocess_adapter *entry;
-+	struct dxgprocess_adapter *adapter_info = NULL;
-+	int ret = 0;
-+
-+	dxgglobal_acquire_process_adapter_lock();
-+
-+	list_for_each_entry(entry, &process->process_adapter_list_head,
-+			    process_adapter_list_entry) {
-+		if (entry->adapter == adapter) {
-+			adapter_info = entry;
-+			break;
-+		}
-+	}
-+	if (adapter_info == NULL) {
-+		pr_err("failed to find process adapter info\n");
-+		ret = -EINVAL;
-+		goto cleanup;
-+	}
-+	mutex_lock(&adapter_info->device_list_mutex);
-+	list_add_tail(&device->device_list_entry,
-+		      &adapter_info->device_list_head);
-+	device->adapter_info = adapter_info;
-+	mutex_unlock(&adapter_info->device_list_mutex);
-+
-+cleanup:
-+
-+	dxgglobal_release_process_adapter_lock();
-+	return ret;
-+}
-+
-+void dxgprocess_adapter_remove_device(struct dxgdevice *device)
-+{
-+	pr_debug("%s %p\n", __func__, device);
-+	mutex_lock(&device->adapter_info->device_list_mutex);
-+	if (device->device_list_entry.next) {
-+		list_del(&device->device_list_entry);
-+		device->device_list_entry.next = NULL;
-+	}
-+	mutex_unlock(&device->adapter_info->device_list_mutex);
-+}
 diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
-index fbc15731cbd5..e0a433c36a06 100644
+index e0a433c36a06..b4ca479cdd1a 100644
 --- a/drivers/hv/dxgkrnl/dxgkrnl.h
 +++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-@@ -29,6 +29,7 @@
- 
+@@ -30,6 +30,7 @@
  struct dxgprocess;
  struct dxgadapter;
-+struct dxgdevice;
+ struct dxgdevice;
++struct dxgcontext;
  
  #include "misc.h"
  #include "hmgr.h"
-@@ -152,6 +153,9 @@ struct dxgprocess_adapter {
- 	struct list_head	adapter_process_list_entry;
- 	/* Entry in dxgprocess::process_adapter_list_head */
- 	struct list_head	process_adapter_list_entry;
-+	/* List of all dxgdevice objects created for the process on adapter */
-+	struct list_head	device_list_head;
-+	struct mutex		device_list_mutex;
- 	struct dxgadapter	*adapter;
- 	struct dxgprocess	*process;
- 	int			refcount;
-@@ -161,6 +165,10 @@ struct dxgprocess_adapter *dxgprocess_adapter_create(struct dxgprocess *process,
- 						     struct dxgadapter
- 						     *adapter);
- void dxgprocess_adapter_release(struct dxgprocess_adapter *adapter);
-+int dxgprocess_adapter_add_device(struct dxgprocess *process,
-+					      struct dxgadapter *adapter,
-+					      struct dxgdevice *device);
-+void dxgprocess_adapter_remove_device(struct dxgdevice *device);
- void dxgprocess_adapter_stop(struct dxgprocess_adapter *adapter_info);
- void dxgprocess_adapter_destroy(struct dxgprocess_adapter *adapter_info);
- 
-@@ -209,6 +217,11 @@ struct dxgadapter *dxgprocess_get_adapter(struct dxgprocess *process,
- 					  struct d3dkmthandle handle);
- struct dxgadapter *dxgprocess_adapter_by_handle(struct dxgprocess *process,
- 						struct d3dkmthandle handle);
-+struct dxgdevice *dxgprocess_device_by_handle(struct dxgprocess *process,
-+					      struct d3dkmthandle handle);
-+struct dxgdevice *dxgprocess_device_by_object_handle(struct dxgprocess *process,
-+						     enum hmgrentry_type t,
-+						     struct d3dkmthandle h);
- void dxgprocess_ht_lock_shared_down(struct dxgprocess *process);
- void dxgprocess_ht_lock_shared_up(struct dxgprocess *process);
- void dxgprocess_ht_lock_exclusive_down(struct dxgprocess *process);
-@@ -228,6 +241,7 @@ enum dxgadapter_state {
-  * This object represents the grapchis adapter.
-  * Objects, which take reference on the adapter:
-  * - dxgglobal
-+ * - dxgdevice
-  * - adapter handle (struct d3dkmthandle)
+@@ -281,6 +282,7 @@ void dxgadapter_remove_process(struct dxgprocess_adapter *process_info);
+ /*
+  * The object represent the device object.
+  * The following objects take reference on the device
++ * - dxgcontext
+  * - device handle (struct d3dkmthandle)
   */
- struct dxgadapter {
-@@ -264,6 +278,38 @@ void dxgadapter_add_process(struct dxgadapter *adapter,
- 			    struct dxgprocess_adapter *process_info);
- void dxgadapter_remove_process(struct dxgprocess_adapter *process_info);
- 
+ struct dxgdevice {
+@@ -294,6 +296,8 @@ struct dxgdevice {
+ 	struct kref		device_kref;
+ 	/* Protects destcruction of the device object */
+ 	struct rw_semaphore	device_lock;
++	struct rw_semaphore	context_list_lock;
++	struct list_head	context_list_head;
+ 	/* List of paging queues. Protected by process handle table lock. */
+ 	struct list_head	pqueue_list_head;
+ 	struct d3dkmthandle	handle;
+@@ -308,7 +312,33 @@ void dxgdevice_mark_destroyed(struct dxgdevice *device);
+ int dxgdevice_acquire_lock_shared(struct dxgdevice *dev);
+ void dxgdevice_release_lock_shared(struct dxgdevice *dev);
+ void dxgdevice_release(struct kref *refcount);
++void dxgdevice_add_context(struct dxgdevice *dev, struct dxgcontext *ctx);
++void dxgdevice_remove_context(struct dxgdevice *dev, struct dxgcontext *ctx);
+ bool dxgdevice_is_active(struct dxgdevice *dev);
++void dxgdevice_acquire_context_list_lock(struct dxgdevice *dev);
++void dxgdevice_release_context_list_lock(struct dxgdevice *dev);
++
 +/*
-+ * The object represent the device object.
-+ * The following objects take reference on the device
-+ * - device handle (struct d3dkmthandle)
++ * The object represent the execution context of a device.
 + */
-+struct dxgdevice {
++struct dxgcontext {
 +	enum dxgobjectstate	object_state;
-+	/* Device takes reference on the adapter */
-+	struct dxgadapter	*adapter;
-+	struct dxgprocess_adapter *adapter_info;
++	struct dxgdevice	*device;
 +	struct dxgprocess	*process;
-+	/* Entry in the DGXPROCESS_ADAPTER device list */
-+	struct list_head	device_list_entry;
-+	struct kref		device_kref;
-+	/* Protects destcruction of the device object */
-+	struct rw_semaphore	device_lock;
-+	/* List of paging queues. Protected by process handle table lock. */
-+	struct list_head	pqueue_list_head;
++	/* entry in the device context list */
++	struct list_head	context_list_entry;
++	struct list_head	hwqueue_list_head;
++	struct rw_semaphore	hwqueue_list_lock;
++	struct kref		context_kref;
 +	struct d3dkmthandle	handle;
-+	enum d3dkmt_deviceexecution_state execution_state;
-+	u32			handle_valid;
++	struct d3dkmthandle	device_handle;
 +};
 +
-+struct dxgdevice *dxgdevice_create(struct dxgadapter *a, struct dxgprocess *p);
-+void dxgdevice_destroy(struct dxgdevice *device);
-+void dxgdevice_stop(struct dxgdevice *device);
-+void dxgdevice_mark_destroyed(struct dxgdevice *device);
-+int dxgdevice_acquire_lock_shared(struct dxgdevice *dev);
-+void dxgdevice_release_lock_shared(struct dxgdevice *dev);
-+void dxgdevice_release(struct kref *refcount);
-+bool dxgdevice_is_active(struct dxgdevice *dev);
-+
++struct dxgcontext *dxgcontext_create(struct dxgdevice *dev);
++void dxgcontext_destroy(struct dxgprocess *pr, struct dxgcontext *ctx);
++void dxgcontext_destroy_safe(struct dxgprocess *pr, struct dxgcontext *ctx);
++void dxgcontext_release(struct kref *refcount);
++bool dxgcontext_is_active(struct dxgcontext *ctx);
+ 
  void init_ioctls(void);
  long dxgk_compat_ioctl(struct file *f, unsigned int p1, unsigned long p2);
- long dxgk_unlocked_ioctl(struct file *f, unsigned int p1, unsigned long p2);
-@@ -297,6 +343,12 @@ int dxgvmb_send_destroy_process(struct d3dkmthandle process);
- int dxgvmb_send_open_adapter(struct dxgadapter *adapter);
- int dxgvmb_send_close_adapter(struct dxgadapter *adapter);
- int dxgvmb_send_get_internal_adapter_info(struct dxgadapter *adapter);
-+struct d3dkmthandle dxgvmb_send_create_device(struct dxgadapter *adapter,
-+					      struct dxgprocess *process,
-+					      struct d3dkmt_createdevice *args);
-+int dxgvmb_send_destroy_device(struct dxgadapter *adapter,
-+			       struct dxgprocess *process,
-+			       struct d3dkmthandle h);
+@@ -349,6 +379,14 @@ struct d3dkmthandle dxgvmb_send_create_device(struct dxgadapter *adapter,
+ int dxgvmb_send_destroy_device(struct dxgadapter *adapter,
+ 			       struct dxgprocess *process,
+ 			       struct d3dkmthandle h);
++struct d3dkmthandle
++dxgvmb_send_create_context(struct dxgadapter *adapter,
++			   struct dxgprocess *process,
++			   struct d3dkmt_createcontextvirtual
++			   *args);
++int dxgvmb_send_destroy_context(struct dxgadapter *adapter,
++				struct dxgprocess *process,
++				struct d3dkmthandle h);
  int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
  				   struct dxgadapter *adapter,
  				   struct d3dkmt_queryadapterinfo *args);
 diff --git a/drivers/hv/dxgkrnl/dxgprocess.c b/drivers/hv/dxgkrnl/dxgprocess.c
-index 1fd7b7659792..734585689213 100644
+index 734585689213..1e6500e12a22 100644
 --- a/drivers/hv/dxgkrnl/dxgprocess.c
 +++ b/drivers/hv/dxgkrnl/dxgprocess.c
-@@ -242,6 +242,49 @@ struct dxgadapter *dxgprocess_adapter_by_handle(struct dxgprocess *process,
- 	return adapter;
- }
- 
-+struct dxgdevice *dxgprocess_device_by_object_handle(struct dxgprocess *process,
-+						     enum hmgrentry_type t,
-+						     struct d3dkmthandle handle)
-+{
-+	struct dxgdevice *device = NULL;
-+	void *obj;
-+
-+	hmgrtable_lock(&process->handle_table, DXGLOCK_SHARED);
-+	obj = hmgrtable_get_object_by_type(&process->handle_table, t, handle);
-+	if (obj) {
-+		struct d3dkmthandle device_handle = {};
-+
-+		switch (t) {
-+		case HMGRENTRY_TYPE_DXGDEVICE:
-+			device = obj;
+@@ -258,6 +258,10 @@ struct dxgdevice *dxgprocess_device_by_object_handle(struct dxgprocess *process,
+ 		case HMGRENTRY_TYPE_DXGDEVICE:
+ 			device = obj;
+ 			break;
++		case HMGRENTRY_TYPE_DXGCONTEXT:
++			device_handle =
++			    ((struct dxgcontext *)obj)->device_handle;
 +			break;
-+		default:
-+			pr_err("invalid handle type: %d\n", t);
-+			break;
-+		}
-+		if (device == NULL)
-+			device = hmgrtable_get_object_by_type(
-+					&process->handle_table,
-+					 HMGRENTRY_TYPE_DXGDEVICE,
-+					 device_handle);
-+		if (device)
-+			if (kref_get_unless_zero(&device->device_kref) == 0)
-+				device = NULL;
-+	}
-+	if (device == NULL)
-+		pr_err("device_by_handle failed: %d %x\n", t, handle.v);
-+	hmgrtable_unlock(&process->handle_table, DXGLOCK_SHARED);
-+	return device;
-+}
-+
-+struct dxgdevice *dxgprocess_device_by_handle(struct dxgprocess *process,
-+					      struct d3dkmthandle handle)
-+{
-+	return dxgprocess_device_by_object_handle(process,
-+						  HMGRENTRY_TYPE_DXGDEVICE,
-+						  handle);
-+}
-+
- void dxgprocess_ht_lock_shared_down(struct dxgprocess *process)
- {
- 	hmgrtable_lock(&process->handle_table, DXGLOCK_SHARED);
+ 		default:
+ 			pr_err("invalid handle type: %d\n", t);
+ 			break;
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
-index 8b8e0aa0fa5d..5b560754ac0d 100644
+index 5b560754ac0d..bfd09f98f82c 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.c
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.c
-@@ -656,6 +656,60 @@ int dxgvmb_send_get_internal_adapter_info(struct dxgadapter *adapter)
+@@ -710,6 +710,105 @@ int dxgvmb_send_destroy_device(struct dxgadapter *adapter,
  	return ret;
  }
  
-+struct d3dkmthandle dxgvmb_send_create_device(struct dxgadapter *adapter,
-+					struct dxgprocess *process,
-+					struct d3dkmt_createdevice *args)
++struct d3dkmthandle
++dxgvmb_send_create_context(struct dxgadapter *adapter,
++			   struct dxgprocess *process,
++			   struct d3dkmt_createcontextvirtual *args)
 +{
++	struct dxgkvmb_command_createcontextvirtual *command = NULL;
++	u32 cmd_size;
 +	int ret;
-+	struct dxgkvmb_command_createdevice *command;
-+	struct dxgkvmb_command_createdevice_return result = { };
-+	struct dxgvmbusmsg msg;
++	struct d3dkmthandle context = {};
++	struct dxgvmbusmsg msg = {.hdr = NULL};
 +
-+	ret = init_message(&msg, adapter, process, sizeof(*command));
++	if (args->priv_drv_data_size > DXG_MAX_VM_BUS_PACKET_SIZE) {
++		pr_err("PrivateDriverDataSize is invalid");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++	cmd_size = sizeof(struct dxgkvmb_command_createcontextvirtual) +
++	    args->priv_drv_data_size - 1;
++
++	ret = init_message(&msg, adapter, process, cmd_size);
 +	if (ret)
 +		goto cleanup;
 +	command = (void *)msg.msg;
 +
-+	command_vgpu_to_host_init2(&command->hdr, DXGK_VMBCOMMAND_CREATEDEVICE,
++	command_vgpu_to_host_init2(&command->hdr,
++				   DXGK_VMBCOMMAND_CREATECONTEXTVIRTUAL,
 +				   process->host_handle);
++	command->device = args->device;
++	command->node_ordinal = args->node_ordinal;
++	command->engine_affinity = args->engine_affinity;
 +	command->flags = args->flags;
-+
++	command->client_hint = args->client_hint;
++	command->priv_drv_data_size = args->priv_drv_data_size;
++	if (args->priv_drv_data_size) {
++		ret = copy_from_user(command->priv_drv_data,
++				     args->priv_drv_data,
++				     args->priv_drv_data_size);
++		if (ret) {
++			pr_err("%s Faled to copy private data",
++				__func__);
++			ret = -EINVAL;
++			goto cleanup;
++		}
++	}
++	/* Input command is returned back as output */
 +	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size,
-+				   &result, sizeof(result));
-+	if (ret < 0)
-+		result.device.v = 0;
-+	free_message(&msg, process);
++				   command, cmd_size);
++	if (ret < 0) {
++		goto cleanup;
++	} else {
++		context = command->context;
++		if (args->priv_drv_data_size) {
++			ret = copy_to_user(args->priv_drv_data,
++					   command->priv_drv_data,
++					   args->priv_drv_data_size);
++			if (ret) {
++				pr_err("%s Faled to copy private data to user",
++					__func__);
++				ret = -EINVAL;
++				dxgvmb_send_destroy_context(adapter, process,
++							    context);
++				context.v = 0;
++			}
++		}
++	}
++
 +cleanup:
++	free_message(&msg, process);
 +	if (ret)
 +		pr_debug("err: %s %d", __func__, ret);
-+	return result.device;
++	return context;
 +}
 +
-+int dxgvmb_send_destroy_device(struct dxgadapter *adapter,
-+			       struct dxgprocess *process,
-+			       struct d3dkmthandle h)
++int dxgvmb_send_destroy_context(struct dxgadapter *adapter,
++				struct dxgprocess *process,
++				struct d3dkmthandle h)
 +{
 +	int ret;
-+	struct dxgkvmb_command_destroydevice *command;
++	struct dxgkvmb_command_destroycontext *command;
 +	struct dxgvmbusmsg msg = {.hdr = NULL};
 +
 +	ret = init_message(&msg, adapter, process, sizeof(*command));
@@ -479,9 +380,10 @@ index 8b8e0aa0fa5d..5b560754ac0d 100644
 +		goto cleanup;
 +	command = (void *)msg.msg;
 +
-+	command_vgpu_to_host_init2(&command->hdr, DXGK_VMBCOMMAND_DESTROYDEVICE,
++	command_vgpu_to_host_init2(&command->hdr,
++				   DXGK_VMBCOMMAND_DESTROYCONTEXT,
 +				   process->host_handle);
-+	command->device = h;
++	command->context = h;
 +
 +	ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr, msg.size);
 +cleanup:
@@ -495,22 +397,23 @@ index 8b8e0aa0fa5d..5b560754ac0d 100644
  				   struct dxgadapter *adapter,
  				   struct d3dkmt_queryadapterinfo *args)
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index 62a958f6f146..a6be88b6c792 100644
+index a6be88b6c792..879fb3c6b7b2 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -437,6 +437,136 @@ dxgk_query_adapter_info(struct dxgprocess *process, void *__user inargs)
+@@ -567,6 +567,174 @@ dxgk_destroy_device(struct dxgprocess *process, void *__user inargs)
  	return ret;
  }
  
 +static int
-+dxgk_create_device(struct dxgprocess *process, void *__user inargs)
++dxgk_create_context_virtual(struct dxgprocess *process, void *__user inargs)
 +{
-+	struct d3dkmt_createdevice args;
++	struct d3dkmt_createcontextvirtual args;
 +	int ret;
 +	struct dxgadapter *adapter = NULL;
 +	struct dxgdevice *device = NULL;
-+	struct d3dkmthandle host_device_handle = {};
-+	bool adapter_locked = false;
++	struct dxgcontext *context = NULL;
++	struct d3dkmthandle host_context_handle = {};
++	bool device_lock_acquired = false;
 +
 +	pr_debug("ioctl: %s", __func__);
 +
@@ -521,75 +424,92 @@ index 62a958f6f146..a6be88b6c792 100644
 +		goto cleanup;
 +	}
 +
-+	/* The call acquires reference on the adapter */
-+	adapter = dxgprocess_adapter_by_handle(process, args.adapter);
-+	if (adapter == NULL) {
++	/*
++	 * The call acquires reference on the device. It is safe to access the
++	 * adapter, because the device holds reference on it.
++	 */
++	device = dxgprocess_device_by_handle(process, args.device);
++	if (device == NULL) {
 +		ret = -EINVAL;
 +		goto cleanup;
 +	}
 +
-+	device = dxgdevice_create(adapter, process);
-+	if (device == NULL) {
++	ret = dxgdevice_acquire_lock_shared(device);
++	if (ret < 0)
++		goto cleanup;
++
++	device_lock_acquired = true;
++
++	adapter = device->adapter;
++	ret = dxgadapter_acquire_lock_shared(adapter);
++	if (ret < 0) {
++		adapter = NULL;
++		goto cleanup;
++	}
++
++	context = dxgcontext_create(device);
++	if (context == NULL) {
 +		ret = -ENOMEM;
 +		goto cleanup;
 +	}
 +
-+	ret = dxgadapter_acquire_lock_shared(adapter);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	adapter_locked = true;
-+
-+	host_device_handle = dxgvmb_send_create_device(adapter, process, &args);
-+	if (host_device_handle.v) {
-+		ret = copy_to_user(&((struct d3dkmt_createdevice *)inargs)->
-+				   device, &host_device_handle,
++	host_context_handle = dxgvmb_send_create_context(adapter,
++							 process, &args);
++	if (host_context_handle.v) {
++		hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
++		ret = hmgrtable_assign_handle(&process->handle_table, context,
++					      HMGRENTRY_TYPE_DXGCONTEXT,
++					      host_context_handle);
++		if (ret >= 0)
++			context->handle = host_context_handle;
++		hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
++		if (ret < 0)
++			goto cleanup;
++		ret = copy_to_user(&((struct d3dkmt_createcontextvirtual *)
++				   inargs)->context, &host_context_handle,
 +				   sizeof(struct d3dkmthandle));
 +		if (ret) {
-+			pr_err("%s failed to copy device handle", __func__);
++			pr_err("%s failed to copy context handle", __func__);
 +			ret = -EINVAL;
-+			goto cleanup;
 +		}
-+
-+		hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
-+		ret = hmgrtable_assign_handle(&process->handle_table, device,
-+					      HMGRENTRY_TYPE_DXGDEVICE,
-+					      host_device_handle);
-+		if (ret >= 0) {
-+			device->handle = host_device_handle;
-+			device->handle_valid = 1;
-+			device->object_state = DXGOBJECTSTATE_ACTIVE;
-+		}
-+		hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
++	} else {
++		pr_err("invalid host handle");
++		ret = -EINVAL;
 +	}
 +
 +cleanup:
 +
 +	if (ret < 0) {
-+		if (host_device_handle.v)
-+			dxgvmb_send_destroy_device(adapter, process,
-+						   host_device_handle);
-+		if (device)
-+			dxgdevice_destroy(device);
++		if (host_context_handle.v) {
++			dxgvmb_send_destroy_context(adapter, process,
++						    host_context_handle);
++		}
++		if (context)
++			dxgcontext_destroy_safe(process, context);
 +	}
 +
-+	if (adapter_locked)
++	if (adapter)
 +		dxgadapter_release_lock_shared(adapter);
 +
-+	if (adapter)
-+		kref_put(&adapter->adapter_kref, dxgadapter_release);
++	if (device) {
++		if (device_lock_acquired)
++			dxgdevice_release_lock_shared(device);
++		kref_put(&device->device_kref, dxgdevice_release);
++	}
 +
 +	pr_debug("ioctl:%s %s %d", errorstr(ret), __func__, ret);
 +	return ret;
 +}
 +
 +static int
-+dxgk_destroy_device(struct dxgprocess *process, void *__user inargs)
++dxgk_destroy_context(struct dxgprocess *process, void *__user inargs)
 +{
-+	struct d3dkmt_destroydevice args;
++	struct d3dkmt_destroycontext args;
 +	int ret;
 +	struct dxgadapter *adapter = NULL;
++	struct dxgcontext *context = NULL;
 +	struct dxgdevice *device = NULL;
++	struct d3dkmthandle device_handle = {};
 +
 +	pr_debug("ioctl: %s", __func__);
 +
@@ -601,32 +521,52 @@ index 62a958f6f146..a6be88b6c792 100644
 +	}
 +
 +	hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
-+	device = hmgrtable_get_object_by_type(&process->handle_table,
-+					      HMGRENTRY_TYPE_DXGDEVICE,
-+					      args.device);
-+	if (device) {
++	context = hmgrtable_get_object_by_type(&process->handle_table,
++					       HMGRENTRY_TYPE_DXGCONTEXT,
++					       args.context);
++	if (context) {
 +		hmgrtable_free_handle(&process->handle_table,
-+				      HMGRENTRY_TYPE_DXGDEVICE, args.device);
-+		device->handle_valid = 0;
++				      HMGRENTRY_TYPE_DXGCONTEXT, args.context);
++		context->handle.v = 0;
++		device_handle = context->device_handle;
++		context->object_state = DXGOBJECTSTATE_DESTROYED;
 +	}
 +	hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
 +
++	if (context == NULL) {
++		pr_err("invalid context handle: %x", args.context.v);
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	/*
++	 * The call acquires reference on the device. It is safe to access the
++	 * adapter, because the device holds reference on it.
++	 */
++	device = dxgprocess_device_by_handle(process, device_handle);
 +	if (device == NULL) {
-+		pr_err("invalid device handle: %x", args.device.v);
 +		ret = -EINVAL;
 +		goto cleanup;
 +	}
 +
 +	adapter = device->adapter;
-+
-+	dxgdevice_destroy(device);
-+
-+	if (dxgadapter_acquire_lock_shared(adapter) == 0) {
-+		dxgvmb_send_destroy_device(adapter, process, args.device);
-+		dxgadapter_release_lock_shared(adapter);
++	ret = dxgadapter_acquire_lock_shared(adapter);
++	if (ret < 0) {
++		adapter = NULL;
++		goto cleanup;
 +	}
 +
++	ret = dxgvmb_send_destroy_context(adapter, process, args.context);
++
++	dxgcontext_destroy_safe(process, context);
++
 +cleanup:
++
++	if (adapter)
++		dxgadapter_release_lock_shared(adapter);
++
++	if (device)
++		kref_put(&device->device_kref, dxgdevice_release);
 +
 +	pr_debug("ioctl:%s %s %d", errorstr(ret), __func__, ret);
 +	return ret;
@@ -635,35 +575,29 @@ index 62a958f6f146..a6be88b6c792 100644
  /*
   * IOCTL processing
   * The driver IOCTLs return
-@@ -495,12 +625,16 @@ void init_ioctls(void)
- {
- 	SET_IOCTL(/*0x1 */ dxgk_open_adapter_from_luid,
+@@ -627,6 +795,10 @@ void init_ioctls(void)
  		  LX_DXOPENADAPTERFROMLUID);
-+	SET_IOCTL(/*0x2 */ dxgk_create_device,
-+		  LX_DXCREATEDEVICE);
+ 	SET_IOCTL(/*0x2 */ dxgk_create_device,
+ 		  LX_DXCREATEDEVICE);
++	SET_IOCTL(/*0x4 */ dxgk_create_context_virtual,
++		  LX_DXCREATECONTEXTVIRTUAL);
++	SET_IOCTL(/*0x5 */ dxgk_destroy_context,
++		  LX_DXDESTROYCONTEXT);
  	SET_IOCTL(/*0x9 */ dxgk_query_adapter_info,
  		  LX_DXQUERYADAPTERINFO);
  	SET_IOCTL(/*0x14 */ dxgk_enum_adapters,
- 		  LX_DXENUMADAPTERS2);
- 	SET_IOCTL(/*0x15 */ dxgk_close_adapter,
- 		  LX_DXCLOSEADAPTER);
-+	SET_IOCTL(/*0x19 */ dxgk_destroy_device,
-+		  LX_DXDESTROYDEVICE);
- 	SET_IOCTL(/*0x3e */ dxgk_enum_adapters3,
- 		  LX_DXENUMADAPTERS3);
- }
 diff --git a/drivers/hv/dxgkrnl/misc.h b/drivers/hv/dxgkrnl/misc.h
-index d00e7cc00470..8948f48ec9dc 100644
+index 8948f48ec9dc..8f7b37049308 100644
 --- a/drivers/hv/dxgkrnl/misc.h
 +++ b/drivers/hv/dxgkrnl/misc.h
-@@ -25,6 +25,7 @@ extern const struct d3dkmthandle zerohandle;
-  * The higher enum value, the higher is the lock order.
-  * When a lower lock ois held, the higher lock should not be acquired.
-  *
-+ * device_list_mutex
-  * channel_lock
+@@ -30,6 +30,7 @@ extern const struct d3dkmthandle zerohandle;
   * fd_mutex
   * plistmutex
+  * table_lock
++ * context_list_lock
+  * core_lock
+  * device_lock
+  * process_adapter_mutex
 -- 
 2.35.1
 
