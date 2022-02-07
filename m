@@ -2,163 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7BE14AC57A
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Feb 2022 17:27:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 492FA4AC732
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Feb 2022 18:24:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238251AbiBGQV3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Feb 2022 11:21:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50180 "EHLO
+        id S230090AbiBGRXM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Feb 2022 12:23:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343750AbiBGQJy (ORCPT
+        with ESMTP id S1392223AbiBGRMe (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Feb 2022 11:09:54 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E24C0401DF;
-        Mon,  7 Feb 2022 08:09:44 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id v15-20020a17090a4ecf00b001b82db48754so14044290pjl.2;
-        Mon, 07 Feb 2022 08:09:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bc9AHRZR1pshNQdSUMPi4giKprTpkGNBEnF9JWPwt2E=;
-        b=JAfoiZ9t8GzKsMy000nAJS6NlGY4h0Fahz0vPp4DgANVACMUHAediTakMcUf2VUbQn
-         L4U46ZbxdSfCdqgTca9qs8DK/e59ANl6k6XGndSJTQGZkQfGzKYFxaH0Aa+NKx8y9kDc
-         ROnb3EJqAhPYk8fTVtkSq4fMazHidRwyIWpzzxmKpXQBeOt+8F6Njax/Ef7P/xBIhMX6
-         UM3+Xe+w5ebHtNlZmh7kDlteUh0+9x/xEAY1QSa0Flgr5eWMFx0X0qilvVSPHp6+G9LK
-         lfr4bUoVst/4kF43XMtL0sWdJo6uU/snm/oCBT4NNwwb4SaPO5bR4n3dVy4a2NBkB56x
-         0tNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Bc9AHRZR1pshNQdSUMPi4giKprTpkGNBEnF9JWPwt2E=;
-        b=H5FQYXf6TfE5Wxhpo/QOgBbqPos4zU1aNrf6dff/4ZTTNo2qgS75gHEFlZA+uxRKO8
-         me2wg249LYVmMrQearoKgUp0DX4TLG1wC2sPzj11WjnMhhZm26ewH/bCngfSDMhdnAcI
-         OedrdPlD/Mk9CqL91ci9XUAt5Rcbv8dtr7xfA/aK9nL4o9EpGb6qoHGJeDKk8vdxrUUe
-         ntlgJEz0q/NY5VFV2A2AlrOJMdTA8Naz0mLg4LAj1zpDu6QA4EGU2PnwsrBqt45qa8SC
-         MzjzVByx9Ad7/jG9ljKflKCsEdjARSJ8IJt/9rjlYio3yd0qEnMQ0Lg91eyjZBJHGmvu
-         E+Vg==
-X-Gm-Message-State: AOAM530Ptb5r7F13yiC4Bkunh/r1w7KwwBFJTMzODD59m/w9qVUQ0Y5G
-        7DcHIuhLMxDWfSiXlUDi5tg=
-X-Google-Smtp-Source: ABdhPJxvraa0Ez4eY9PIHd2rqE7xpEpvngaRaU3dzq0slx+I8MQ6gqMKshVGQWXwXnCvEpiNZqZuDw==
-X-Received: by 2002:a17:902:a413:: with SMTP id p19mr305861plq.35.1644250184070;
-        Mon, 07 Feb 2022 08:09:44 -0800 (PST)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:7:49ed:b358:ae30:a484])
-        by smtp.gmail.com with ESMTPSA id z14sm5958859pfh.173.2022.02.07.08.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Feb 2022 08:09:43 -0800 (PST)
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, jroedel@suse.de, Tianyu.Lan@microsoft.com,
-        thomas.lendacky@amd.com, michael.h.kelley@microsoft.com
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC FATCH] x86/Hyper-V: Add SEV negotiate protocol support in Isolation VM.
-Date:   Mon,  7 Feb 2022 11:09:28 -0500
-Message-Id: <20220207160928.111718-1-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 7 Feb 2022 12:12:34 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CB4C03FED7;
+        Mon,  7 Feb 2022 09:12:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F84B611B3;
+        Mon,  7 Feb 2022 17:12:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73DFDC004E1;
+        Mon,  7 Feb 2022 17:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644253933;
+        bh=Mfq+NKDvKmIavHgmM98+eLkiR+ISFyLuc7r9Q1vKuM8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hh/hPvuisS1Sn080BXZGrUqoKNi5YT5Ww9OqzwH0wDrXfgMLK9NudTSx3CaKMYact
+         Q3MLchoQvj9uSkV9Ilgwy0idOYucdBoIrABk4YMy30GSAgYzhLgb4ovMC8HCYKt4kp
+         wnfzkCMSwJ6i0lLVuMJRyGaW1PNumyalZmrubDwb0mZq2bIHUVM6CGvSCjFmDdoRNq
+         BntMU++8IPKV71XW/82E2rqS/BIfyNWF91SqLx+hICwUUM1PGXI9tVtX1MJQTr9Zlk
+         iFTZRY2Jc61gi/OdeFRI3Z3YuQwHT7rA30HZqRDzcjCgx4jqcDA4LEABo5eF+S5WBz
+         Ne/+pHW3gaXhw==
+Date:   Mon, 7 Feb 2022 09:12:12 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Paul Rosswurm <paulros@microsoft.com>,
+        Shachar Raindel <shacharr@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next, 1/2] net: mana: Add handling of
+ CQE_RX_TRUNCATED
+Message-ID: <20220207091212.0ccccde7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <MN2PR21MB12957F8F10E4B152E26421BBCA2A9@MN2PR21MB1295.namprd21.prod.outlook.com>
+References: <1644014745-22261-1-git-send-email-haiyangz@microsoft.com>
+        <1644014745-22261-2-git-send-email-haiyangz@microsoft.com>
+        <MN2PR21MB12957F8F10E4B152E26421BBCA2A9@MN2PR21MB1295.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Sat, 5 Feb 2022 22:32:41 +0000 Haiyang Zhang wrote:
+> Since the proper handling of CQE_RX_TRUNCATED type is important, could any
+> of you backport this patch to the stable branches: 5.16 & 5.15?
 
-Hyper-V Isolation VM code uses sev_es_ghcb_hv_call() to read/write MSR
-via ghcb page. The SEV-ES guest should call the sev_es_negotiate_protocol()
-to negotiate the GHCB protocol version before establishing the GHCB. Call
-sev_es_negotiate_protocol() in the hyperv_init_ghcb().
-
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
-This patch based on the "Add AMD Secure Nested Paging (SEV-SNP) Guest Support"
-patchset. https://lore.kernel.org/lkml/20220128171804.569796-1-brijesh.singh@amd.com/
-
- arch/x86/hyperv/hv_init.c    | 6 ++++++
- arch/x86/include/asm/sev.h   | 2 ++
- arch/x86/kernel/sev-shared.c | 2 +-
- arch/x86/kernel/sev.c        | 4 ++--
- 4 files changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 24f4a06ac46a..a22303fccf02 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -28,6 +28,7 @@
- #include <linux/syscore_ops.h>
- #include <clocksource/hyperv_timer.h>
- #include <linux/highmem.h>
-+#include <asm/sev.h>
- 
- int hyperv_init_cpuhp;
- u64 hv_current_partition_id = ~0ull;
-@@ -69,6 +70,11 @@ static int hyperv_init_ghcb(void)
- 	ghcb_base = (void **)this_cpu_ptr(hv_ghcb_pg);
- 	*ghcb_base = ghcb_va;
- 
-+	sev_es_negotiate_protocol();
-+
-+	/* Write ghcb page back after negotiating protocol. */
-+	wrmsrl(MSR_AMD64_SEV_ES_GHCB, ghcb_gpa);
-+	VMGEXIT();
- 	return 0;
- }
- 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 7a5934af9d47..fc6b0c526492 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -120,6 +120,8 @@ extern enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
- 					  struct es_em_ctxt *ctxt,
- 					  u64 exit_code, u64 exit_info_1,
- 					  u64 exit_info_2);
-+extern bool sev_es_negotiate_protocol(void);
-+
- static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs)
- {
- 	int rc;
-diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-index ce06cb7c8ed0..8b8af5a8d402 100644
---- a/arch/x86/kernel/sev-shared.c
-+++ b/arch/x86/kernel/sev-shared.c
-@@ -145,7 +145,7 @@ static void snp_register_ghcb_early(unsigned long paddr)
- 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_REGISTER);
- }
- 
--static bool sev_es_negotiate_protocol(void)
-+bool sev_es_negotiate_protocol(void)
- {
- 	u64 val;
- 
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index 3568b3303314..46c53c4885ee 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -167,12 +167,12 @@ void noinstr __sev_es_ist_exit(void)
- 	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], *(unsigned long *)ist);
- }
- 
--static inline u64 sev_es_rd_ghcb_msr(void)
-+inline u64 sev_es_rd_ghcb_msr(void)
- {
- 	return __rdmsr(MSR_AMD64_SEV_ES_GHCB);
- }
- 
--static __always_inline void sev_es_wr_ghcb_msr(u64 val)
-+__always_inline void sev_es_wr_ghcb_msr(u64 val)
- {
- 	u32 low, high;
- 
--- 
-2.25.1
-
+Only patches which are in Linus's tree can be backported to stable.
+You sent this change for -next so no, it can't be backported now.
+You need to wait until 5.17 final is released and then ask Greg KH 
+to backport it.
