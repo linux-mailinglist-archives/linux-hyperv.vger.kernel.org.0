@@ -2,74 +2,92 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 492FA4AC732
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Feb 2022 18:24:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C4C84AC816
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Feb 2022 19:01:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbiBGRXM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Feb 2022 12:23:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
+        id S236612AbiBGSAl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Feb 2022 13:00:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1392223AbiBGRMe (ORCPT
+        with ESMTP id S1345626AbiBGRzA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Feb 2022 12:12:34 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CB4C03FED7;
-        Mon,  7 Feb 2022 09:12:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F84B611B3;
-        Mon,  7 Feb 2022 17:12:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73DFDC004E1;
-        Mon,  7 Feb 2022 17:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644253933;
-        bh=Mfq+NKDvKmIavHgmM98+eLkiR+ISFyLuc7r9Q1vKuM8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hh/hPvuisS1Sn080BXZGrUqoKNi5YT5Ww9OqzwH0wDrXfgMLK9NudTSx3CaKMYact
-         Q3MLchoQvj9uSkV9Ilgwy0idOYucdBoIrABk4YMy30GSAgYzhLgb4ovMC8HCYKt4kp
-         wnfzkCMSwJ6i0lLVuMJRyGaW1PNumyalZmrubDwb0mZq2bIHUVM6CGvSCjFmDdoRNq
-         BntMU++8IPKV71XW/82E2rqS/BIfyNWF91SqLx+hICwUUM1PGXI9tVtX1MJQTr9Zlk
-         iFTZRY2Jc61gi/OdeFRI3Z3YuQwHT7rA30HZqRDzcjCgx4jqcDA4LEABo5eF+S5WBz
-         Ne/+pHW3gaXhw==
-Date:   Mon, 7 Feb 2022 09:12:12 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next, 1/2] net: mana: Add handling of
- CQE_RX_TRUNCATED
-Message-ID: <20220207091212.0ccccde7@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <MN2PR21MB12957F8F10E4B152E26421BBCA2A9@MN2PR21MB1295.namprd21.prod.outlook.com>
-References: <1644014745-22261-1-git-send-email-haiyangz@microsoft.com>
-        <1644014745-22261-2-git-send-email-haiyangz@microsoft.com>
-        <MN2PR21MB12957F8F10E4B152E26421BBCA2A9@MN2PR21MB1295.namprd21.prod.outlook.com>
+        Mon, 7 Feb 2022 12:55:00 -0500
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E8DC0401DC;
+        Mon,  7 Feb 2022 09:54:59 -0800 (PST)
+Received: by mail-wr1-f53.google.com with SMTP id u23so2481469wru.6;
+        Mon, 07 Feb 2022 09:54:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=MgMZtoimtxO2XWZhw1+iy1PmNLRHGLJ65lgwWFNnd+Q=;
+        b=4VzzEql7S1l92TGmwkbuxjVszJXPRFD0c4UnMj+53UNOqntXrn8KmKDW9OXsuAq6vP
+         ijgEFJy0FWuNXd84GGbyZOCA8F+T7FJw+JnVs/psuW7bB4akAoed/rqNf9Qnt/MASj3+
+         TYpEWFa406O9PMhrgsglET701bqWphm3BKqIORO5u4/yHWLFCad8GwCnMToQrtR2439C
+         NHTty2mOeVEUssntGWW4v09+lDAY87IFSTlgREjkrF2L0zWrSh4ceIVQh7fAx4yjgy/W
+         mFfcqLBqTD/vp4Alq+wJ5Xdpo2XSVE2ID9rjpkxHYzS/9pTpd+CE/mQeFbuitRVbB/gW
+         Wk5w==
+X-Gm-Message-State: AOAM530OvbysyFWKRPnZT8JdxsJ8zc0MVspl7fNlsIY/4QzdETczQs07
+        dQAMoEeLvVxeDQ+pUlTC4YY=
+X-Google-Smtp-Source: ABdhPJwqsSu5ejMKrQVUvMG1YdMFq6h2SGjkMEEsKCJSpOvIu+S6aF6URXu3esyaPcELlXwxm4lZxg==
+X-Received: by 2002:adf:8010:: with SMTP id 16mr450436wrk.708.1644256497887;
+        Mon, 07 Feb 2022 09:54:57 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id f13sm13358wmq.29.2022.02.07.09.54.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Feb 2022 09:54:57 -0800 (PST)
+Date:   Mon, 7 Feb 2022 17:54:55 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Juan Vazquez <juvazq@linux.microsoft.com>
+Cc:     Miaoqian Lin <linmq006@gmail.com>, decui@microsoft.com,
+        gregkh@linuxfoundation.org, haiyangz@microsoft.com,
+        kys@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sthemmin@microsoft.com,
+        wei.liu@kernel.org
+Subject: Re: [PATCH v2] Drivers: hv: vmbus: Fix memory leak in
+ vmbus_add_channel_kobj
+Message-ID: <20220207175455.ftlpbzzuq5wqducc@liuwe-devbox-debian-v2>
+References: <20220128215604.xuqdpnnn4yjqfaoy@surface>
+ <20220203173008.43480-1-linmq006@gmail.com>
+ <20220206145556.72obb2qxbsktw3sc@surface>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220206145556.72obb2qxbsktw3sc@surface>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, 5 Feb 2022 22:32:41 +0000 Haiyang Zhang wrote:
-> Since the proper handling of CQE_RX_TRUNCATED type is important, could any
-> of you backport this patch to the stable branches: 5.16 & 5.15?
+On Sun, Feb 06, 2022 at 06:55:56AM -0800, Juan Vazquez wrote:
+> On Fri, Feb 04, 2022 at 01:30:08AM +0800, Miaoqian Lin wrote:
+> > kobject_init_and_add() takes reference even when it fails.
+> > According to the doc of kobject_init_and_add()：
+> > 
+> >    If this function returns an error, kobject_put() must be called to
+> >    properly clean up the memory associated with the object.
+> > 
+> > Fix memory leak by calling kobject_put().
+> > 
+> > Fixes: c2e5df616e1a ("vmbus: add per-channel sysfs info")
+> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> > ---
+> > Changes in v2:
+> > - Add cleanup when sysfs_create_group() fails
+> > 
+> > kobject_uevent() is used for notifying userspace by sending an uevent,
+> > I don't think we need to do error handling for it.
+> 
+> Thanks for the patch. It looks good to me.
+> 
+> Reviewed-by: Juan Vazquez <juvazq@linux.microsoft.com>
 
-Only patches which are in Linus's tree can be backported to stable.
-You sent this change for -next so no, it can't be backported now.
-You need to wait until 5.17 final is released and then ask Greg KH 
-to backport it.
+Applied to hyperv-fixes. Thanks.
