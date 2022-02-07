@@ -2,108 +2,121 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BE9D4AC818
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Feb 2022 19:01:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE2374AC913
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Feb 2022 20:03:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237983AbiBGSB1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Feb 2022 13:01:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37162 "EHLO
+        id S231253AbiBGTCm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Feb 2022 14:02:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345044AbiBGR4O (ORCPT
+        with ESMTP id S235087AbiBGS71 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Feb 2022 12:56:14 -0500
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB511C0401DA;
-        Mon,  7 Feb 2022 09:56:13 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id m14so26209141wrg.12;
-        Mon, 07 Feb 2022 09:56:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VANB5eLHbFe+mcOUZTXCO8085NJWiAnZpaxFhcfyGQg=;
-        b=iZSIQqsGC/FlZTPHRADkgy0FyTzuCdgIIcdg1/Xp0ZDItHxrhsSgi6/6e1jt2rYNPm
-         j99sgXP2hNlUMVKlfQ8Dqs63YUWAqnYU1O7voAw/rrTp91XHZzMxqB4wRPU8zXAZOVkT
-         PP390YgWJPn4X+sWKCmz5N113JJo1SmdnhwHuutEZlR9ZTBTLd03HiqMnsA7RLKzQMqi
-         3neypZUFhrkki4el/M55RstfVkvegPZotuRYIcEq6cBVdmMHIuAxXLw7AR2x2KGjJbh/
-         lXM4C+s40FGRHjyKrqS+i573sS+krU98lbJUsKTdKKKxRBEDiULu3lrhsmWy1FwWNU7/
-         OALg==
-X-Gm-Message-State: AOAM533M1fC3TlMT/0njfsbil4fH0yohdMsI2QOWBWWaHLtyx4GsKf25
-        4GhmWPTmZGhmXK36RGWNhW4=
-X-Google-Smtp-Source: ABdhPJy+UZLmhDTpX5ObL76eagCOxR1zQgFmHIPctpKJTg9fy1tIFL5aCPMqR4ApMo/VcnIk+x/C1Q==
-X-Received: by 2002:a5d:4b11:: with SMTP id v17mr452829wrq.461.1644256572330;
-        Mon, 07 Feb 2022 09:56:12 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id t17sm10633453wrs.10.2022.02.07.09.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Feb 2022 09:56:12 -0800 (PST)
-Date:   Mon, 7 Feb 2022 17:56:10 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>,
-        "vt@altlinux.org" <vt@altlinux.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [PATCH 1/1] Drivers: hv: vmbus: Rework use of DMA_BIT_MASK(64)
-Message-ID: <20220207175610.rrhgfuyvsfp7evcp@liuwe-devbox-debian-v2>
-References: <1644176216-12531-1-git-send-email-mikelley@microsoft.com>
- <YgB36FwuRaF85WQq@dev-arch.archlinux-ax161>
- <MWHPR21MB1593B68BFCFC1AF8F39345ECD72C9@MWHPR21MB1593.namprd21.prod.outlook.com>
+        Mon, 7 Feb 2022 13:59:27 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DBF72C0401E0;
+        Mon,  7 Feb 2022 10:59:26 -0800 (PST)
+Received: from [192.168.1.17] (unknown [192.182.151.181])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 6081420B87DC;
+        Mon,  7 Feb 2022 10:59:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6081420B87DC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1644260366;
+        bh=qnPRMfr3c5IgREOlj6BVGD2d9Eo+Ll7t5iBZeIolVII=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=H9jrmewIVXQceTZmVhtfMmDt/HEPmjHbNqhVBCHmn1RFlQSclLlxOVNYcpqJ6C4gs
+         naUgCvS2ZPTgbW/iSs6a8R4O9993OxXAJmMhMwfjSoefnf6Sz/SDcJNb1oBGdYuqK0
+         L0uNVMzVer432HvZeELG+z+3W6OuQc9XLeOCEVSo=
+Message-ID: <a10cc7b6-98bc-e123-edfa-2cd4eba6c5c3@linux.microsoft.com>
+Date:   Mon, 7 Feb 2022 10:59:25 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR21MB1593B68BFCFC1AF8F39345ECD72C9@MWHPR21MB1593.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v2 01/24] drivers: hv: dxgkrnl: Driver initialization and
+ creation of dxgadapter
+Content-Language: en-US
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spronovo@microsoft.com
+References: <cover.1644025661.git.iourit@linux.microsoft.com>
+ <98fe53740526526c4df85a3a3d2e13e88c95f229.1644025661.git.iourit@linux.microsoft.com>
+ <Yf40f9MBfPPfyNuS@kroah.com>
+From:   Iouri Tarassov <iourit@linux.microsoft.com>
+In-Reply-To: <Yf40f9MBfPPfyNuS@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Feb 07, 2022 at 02:42:31AM +0000, Michael Kelley (LINUX) wrote:
-> From: Nathan Chancellor <nathan@kernel.org> Sent: Sunday, February 6, 2022 5:38 PM
-> > 
-> > Hi Michael,
-> > 
-> > On Sun, Feb 06, 2022 at 11:36:56AM -0800, Michael Kelley wrote:
-> > > Using DMA_BIT_MASK(64) as an initializer for a global variable
-> > > causes problems with Clang 12.0.1. The compiler doesn't understand
-> > > that value 64 is excluded from the shift at compile time, resulting
-> > > in a build error.
-> > >
-> > > While this is a compiler problem, avoid the issue by setting up
-> > > the dma_mask memory as part of struct hv_device, and initialize
-> > > it using dma_set_mask().
-> > >
-> > > Reported-by: Nathan Chancellor <nathan@kernel.org>
-> > > Reported-by: Vitaly Chikunov <vt@altlinux.org>
-> > > Reported-by: Jakub Kicinski <kuba@kernel.org>
-> > > Fixes: 743b237c3a7b ("scsi: storvsc: Add Isolation VM support for storvsc driver")
-> > > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > 
-> > Thanks a lot for working around this. I am hoping that this will be
-> > fixed in clang soon, as it is high priority on our list of issues to
-> > fix. Once it has been fixed, we should be able to undo this workaround
-> > in one way or another.
-> 
-> FWIW, the new code is as good a solution as the old code.  The new code
-> also follows some existing patterns, such as with struct platform_device.
-> As such, I don't think of this as a workaround that needs to be undone
-> in the future.
-> 
 
-Yes indeed.
+On 2/5/2022 12:25 AM, Greg KH wrote:
+> On Fri, Feb 04, 2022 at 06:33:59PM -0800, Iouri Tarassov wrote:
+> > This is the first commit for adding support for a Hyper-V based
+> > vGPU implementation that exposes the DirectX API to Linux userspace.
+> > 
+>
+> Only add the interfaces for the changes that you need in this commit.
+> Do not add them all and then use them later, that makes it impossible to
+> review.
+>
+> > ---
+> >  MAINTAINERS                     |    7 +
+> >  drivers/hv/Kconfig              |    2 +
+> >  drivers/hv/Makefile             |    1 +
+> >  drivers/hv/dxgkrnl/Kconfig      |   26 +
+> >  drivers/hv/dxgkrnl/Makefile     |    5 +
+> >  drivers/hv/dxgkrnl/dxgadapter.c |  172 +++
+> >  drivers/hv/dxgkrnl/dxgkrnl.h    |  223 ++++
+> >  drivers/hv/dxgkrnl/dxgmodule.c  |  736 ++++++++++++
+> >  drivers/hv/dxgkrnl/dxgprocess.c |   17 +
+> >  drivers/hv/dxgkrnl/dxgvmbus.c   |  578 +++++++++
+> >  drivers/hv/dxgkrnl/dxgvmbus.h   |  855 ++++++++++++++
+> >  drivers/hv/dxgkrnl/hmgr.c       |   23 +
+> >  drivers/hv/dxgkrnl/hmgr.h       |   75 ++
+> >  drivers/hv/dxgkrnl/ioctl.c      |   24 +
+> >  drivers/hv/dxgkrnl/misc.c       |   37 +
+> >  drivers/hv/dxgkrnl/misc.h       |   89 ++
+> >  include/linux/hyperv.h          |   16 +
+> >  include/uapi/misc/d3dkmthk.h    | 1945 +++++++++++++++++++++++++++++++
+> >  18 files changed, 4831 insertions(+)
+>
+> Would you want to review a 4800 line patch all at once?
+>
+> greg k-h
 
-Patch applied to hyperv-fixes. Thanks.
+Hi Greg,
+
+Thank you for reviewing. I appreciate your time.
+
+I am trying to find compromise between the number of patches and making
+review easy. There are about 70 IOCTLs in the driver interface, so 
+having a patch
+for every IOCTL seems excessive.
+
+I tried to add only definitions for the internal objects, which are used 
+in the patch.
+
+1. d3dkmthk.h defines the user mode interface structures. This is ported 
+from
+  the windows header at once. Is it acceptable to add it at it is?
+
+2. dxgvmbus.h defines the VM bus interface between the linux guest and 
+the host.
+It was ported from the windows version at once. Is it acceptable to add 
+it as it is?
+
+3. Is it acceptable to combine logically connected IOCTLs to a single patch?
+For example, IOCTLs for creation/destruction sync object and submission 
+of wait/signal operations.
+
+Thanks
+Iouri
+
