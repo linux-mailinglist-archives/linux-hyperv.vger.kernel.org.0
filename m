@@ -2,54 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53C0F4AD218
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Feb 2022 08:21:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 864FF4AD94D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Feb 2022 14:17:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245502AbiBHHUx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Feb 2022 02:20:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
+        id S242560AbiBHNQD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Feb 2022 08:16:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237283AbiBHHUw (ORCPT
+        with ESMTP id S1357021AbiBHM2j (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Feb 2022 02:20:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42422C0401EF;
-        Mon,  7 Feb 2022 23:20:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B426AB817D3;
-        Tue,  8 Feb 2022 07:20:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8C6EC004E1;
-        Tue,  8 Feb 2022 07:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1644304848;
-        bh=WMxbne3dqYu6oWo2knWZ3QdtB7OF/7OyKubW4l9Wi6w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vm2GB/TVOsqx2edVv1wKFOjRrOIqqT6LLOxc/SheDTOWjDKr8N5mS6bBtRzWq3iBP
-         2XFJDiBuFOL11+b+J/MmO3MYhO6CJqcEvDbHOCwIxCjUDCrP+9CjT3xf8qEJ85q1Nv
-         zG7VDSGqrR0zrGVRpuINKHPK0Y/mG3gUy86ldRvo=
-Date:   Tue, 8 Feb 2022 08:20:44 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
+        Tue, 8 Feb 2022 07:28:39 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59776C03FECA
+        for <linux-hyperv@vger.kernel.org>; Tue,  8 Feb 2022 04:28:38 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id w14so37156950edd.10
+        for <linux-hyperv@vger.kernel.org>; Tue, 08 Feb 2022 04:28:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NoHwUXlnI/2+4GtIY3B1wFAlk61LjWDTsV6HYfSmeLw=;
+        b=jStChDdMyGG/3ayUzbTzNYlnwxLMllmGeEpkJs6CGf6RRNXXrXPhGDRdHajcPbEmqE
+         H2DdMc34jqTdSGv+yO9e+d1+mcAZAwF0dv23gQg7pAlGRBFhHcNaiq4ABOqAXmmsuiqc
+         zqjXzEnlHvvLUC1fv4wlOHsvBg14LJ1hMK0Oo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=NoHwUXlnI/2+4GtIY3B1wFAlk61LjWDTsV6HYfSmeLw=;
+        b=xMv1g1Kve99cW2FxptBwLk5nGynOpm0oToOAUG+vpLwC2SI2ObIyWt0u2dCNGerEJR
+         3qX+aOLqy6+8huqt/7kVjXa822BkTox8NPztcUk+LNUSUl7LqQaZlmH5/+JstEchqs+A
+         +ZmHd3jTT8a0gN2+EiDdyfzaSn0I119YK9md9f6BVtqesOo4Hk5pRdOmL5daeS2AYa6N
+         ct43cSVNKQEoCXeAN61xsemnbAa3ZhE8PalNP6KDyD9zoYj55uzqiaifhicAm0Kpj3V6
+         ugm6A+JLEV5N+0zk269oTt32a3PGVYUG98+12oNxNzEy3Q1PtLPSKels4wF2cNxSndIy
+         cdTw==
+X-Gm-Message-State: AOAM5326uOWZs2eO7BE29Yhy+6RIollcklUuDRSLehjPYNss14XwUMob
+        wQHZe2kyxO+JHPHzCa/BGgYLzw==
+X-Google-Smtp-Source: ABdhPJz8CNq0yQJBtVXBnnXD7f1N+EwgFfAJSauIO2DyR45BhacerVDpgbvWItlXedF2YCVy901D6A==
+X-Received: by 2002:a05:6402:1601:: with SMTP id f1mr4223183edv.165.1644323316920;
+        Tue, 08 Feb 2022 04:28:36 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id ee23sm4753981edb.19.2022.02.08.04.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Feb 2022 04:28:36 -0800 (PST)
+Date:   Tue, 8 Feb 2022 13:28:34 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
 To:     Iouri Tarassov <iourit@linux.microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+Cc:     Daniel Vetter <daniel@ffwll.ch>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spronovo@microsoft.com, gregkh@linuxfoundation.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        jenatali@microsoft.com
+Subject: Re: [PATCH v1 9/9] drivers: hv: dxgkrnl: Implement DXGSYNCFILE
+Message-ID: <YgJh8kdz47wmZJxH@phenom.ffwll.local>
+Mail-Followup-To: Iouri Tarassov <iourit@linux.microsoft.com>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spronovo@microsoft.com
-Subject: Re: [PATCH v2 01/24] drivers: hv: dxgkrnl: Driver initialization and
- creation of dxgadapter
-Message-ID: <YgIZzKWCSCaEWPF7@kroah.com>
-References: <cover.1644025661.git.iourit@linux.microsoft.com>
- <98fe53740526526c4df85a3a3d2e13e88c95f229.1644025661.git.iourit@linux.microsoft.com>
- <Yf40f9MBfPPfyNuS@kroah.com>
- <a10cc7b6-98bc-e123-edfa-2cd4eba6c5c3@linux.microsoft.com>
+        linux-kernel@vger.kernel.org, spronovo@microsoft.com,
+        gregkh@linuxfoundation.org,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        jenatali@microsoft.com
+References: <cover.1641937419.git.iourit@linux.microsoft.com>
+ <e04c8e820bc166d9d4fe8e388aace731bb3255b0.1641937420.git.iourit@linux.microsoft.com>
+ <YeG6+Crv/Bg4h3u1@phenom.ffwll.local>
+ <e472cbe8-44ec-110a-1ad7-bc561cd0be88@linux.microsoft.com>
+ <CAKMK7uFkVvfXM7QsgSfP4OLk9b_cSwNsi3s3_7EFuL+Pa1s7eQ@mail.gmail.com>
+ <deb33dd6-06c8-13c1-8d37-4c4f36248d96@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a10cc7b6-98bc-e123-edfa-2cd4eba6c5c3@linux.microsoft.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <deb33dd6-06c8-13c1-8d37-4c4f36248d96@linux.microsoft.com>
+X-Operating-System: Linux phenom 5.10.0-8-amd64 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,84 +85,39 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Feb 07, 2022 at 10:59:25AM -0800, Iouri Tarassov wrote:
+On Fri, Feb 04, 2022 at 04:35:55PM -0800, Iouri Tarassov wrote:
 > 
-> On 2/5/2022 12:25 AM, Greg KH wrote:
-> > On Fri, Feb 04, 2022 at 06:33:59PM -0800, Iouri Tarassov wrote:
-> > > This is the first commit for adding support for a Hyper-V based
-> > > vGPU implementation that exposes the DirectX API to Linux userspace.
+> On 1/17/2022 1:35 AM, Daniel Vetter wrote:
+> > On Mon, Jan 17, 2022 at 9:34 AM Iouri Tarassov
+> > <iourit@linux.microsoft.com> wrote:
 > > >
+> > >
+> > btw another idea I had over the w/e: Another option might be to allow
+> > different backends for sync_file, and then making sure that you cannot
+> > ever mix dma_fence and hv_dxg_fence type sync_file up (in e.g. the
+> > merge ioctl).
 > > 
-> > Only add the interfaces for the changes that you need in this commit.
-> > Do not add them all and then use them later, that makes it impossible to
-> > review.
-> > 
-> > > ---
-> > >  MAINTAINERS                     |    7 +
-> > >  drivers/hv/Kconfig              |    2 +
-> > >  drivers/hv/Makefile             |    1 +
-> > >  drivers/hv/dxgkrnl/Kconfig      |   26 +
-> > >  drivers/hv/dxgkrnl/Makefile     |    5 +
-> > >  drivers/hv/dxgkrnl/dxgadapter.c |  172 +++
-> > >  drivers/hv/dxgkrnl/dxgkrnl.h    |  223 ++++
-> > >  drivers/hv/dxgkrnl/dxgmodule.c  |  736 ++++++++++++
-> > >  drivers/hv/dxgkrnl/dxgprocess.c |   17 +
-> > >  drivers/hv/dxgkrnl/dxgvmbus.c   |  578 +++++++++
-> > >  drivers/hv/dxgkrnl/dxgvmbus.h   |  855 ++++++++++++++
-> > >  drivers/hv/dxgkrnl/hmgr.c       |   23 +
-> > >  drivers/hv/dxgkrnl/hmgr.h       |   75 ++
-> > >  drivers/hv/dxgkrnl/ioctl.c      |   24 +
-> > >  drivers/hv/dxgkrnl/misc.c       |   37 +
-> > >  drivers/hv/dxgkrnl/misc.h       |   89 ++
-> > >  include/linux/hyperv.h          |   16 +
-> > >  include/uapi/misc/d3dkmthk.h    | 1945 +++++++++++++++++++++++++++++++
-> > >  18 files changed, 4831 insertions(+)
-> > 
-> > Would you want to review a 4800 line patch all at once?
-> > 
-> > greg k-h
+> > The issue is that fundamentally dma_fence and memory fences (or umf
+> > for userspace memory fences as we tend to call them) aren't
+> > compatible, but some of the interop plans we have is to allow stuffing
+> > either of them into fence container objects like sync_file. So going
+> > that route for wddm monitored fence support too could be a really
+> > future-proof approach, plus it'd allow you to still share the
+> > sync_file interface code. Not that it's going to be much code sharing,
+> > since all the implementation code needs to be distinct.
+> > -Daniel
 > 
-> Hi Greg,
+> Thanks Daniel!
 > 
-> Thank you for reviewing. I appreciate your time.
+> I will remove the patch for dxgsyncfile from the next set of upstream
+> patches.
 > 
-> I am trying to find compromise between the number of patches and making
-> review easy. There are about 70 IOCTLs in the driver interface, so having a
-> patch
-> for every IOCTL seems excessive.
-> 
-> I tried to add only definitions for the internal objects, which are used in
-> the patch.
-> 
-> 1. d3dkmthk.h defines the user mode interface structures. This is ported
-> from
->  the windows header at once. Is it acceptable to add it at it is?
+> It will be added later after a re-design.
 
-No, again, would you want to be presented with code that is not used at
-all?  How would you want this to look if you had to review this?
-
-> 2. dxgvmbus.h defines the VM bus interface between the linux guest and the
-> host.
-> It was ported from the windows version at once. Is it acceptable to add it
-> as it is?
-
-Again, no.
-
-> 3. Is it acceptable to combine logically connected IOCTLs to a single patch?
-> For example, IOCTLs for creation/destruction sync object and submission of
-> wait/signal operations.
-
-Yes, that makes sense.
-
-Again, what would you want here if you had to review all of this?
-
-I suggest stopping and taking some time and start reviewing code on the
-mailing lists first.  Look at how others are doing this for large new
-features, and offer up your review to those changes.  That will give you
-the experience for how to do it yourself.  To expect to do this all
-correct the first time without ever being on the other side of the
-process very difficult.
-
-thanks,
-
-greg k-h
+Yeah sounds like a good plan forward to not hold up everything else
+meanwhile.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
