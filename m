@@ -2,386 +2,160 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5872E4B96DA
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Feb 2022 04:46:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FCFF4BA5FC
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Feb 2022 17:32:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232987AbiBQDqW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 16 Feb 2022 22:46:22 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35540 "EHLO
+        id S243279AbiBQQbc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 17 Feb 2022 11:31:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232979AbiBQDqV (ORCPT
+        with ESMTP id S241988AbiBQQb0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 16 Feb 2022 22:46:21 -0500
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA19329C139;
-        Wed, 16 Feb 2022 19:46:05 -0800 (PST)
-Received: by mail-io1-xd35.google.com with SMTP id z2so2190601iow.8;
-        Wed, 16 Feb 2022 19:46:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1R18AGiSwApI4eXpLjrh2DkJUUPo0dvzIC8FGVasZV8=;
-        b=U93OEC24yCY+TYbpRhYFv3MLRWeYS/xvEGaG3K2WR/v0Ri51LipUDhJ+9GbRhmj96s
-         IMWECK+n6E8kizMKTtzjmQkfH2fGBnMOJm8QnkG84irEbetsHPr/kYcFziyuMWQI+U/h
-         7+JHCHMic4ev8BnfQ+6ijHHeaPh1ltCu95V6kavnR2JA82W9pLKds6AXx+5BiLFgfXTh
-         Fz8xInOwnJLxlJNcsR75Mi9zX+m2hEB2UoHe1JdZujaQ1FT2Z/qyH95NULY7wrdTzFb1
-         ty9nNfSVWKTjdc3FrMscCmvrR3w3XxoIDl6oq6VAyK32rtBWHNn1ino280+mzFxmeUed
-         XtCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1R18AGiSwApI4eXpLjrh2DkJUUPo0dvzIC8FGVasZV8=;
-        b=UM7nSVBZOCOem9MyKtkbBvWWaYGtLR9erKw/lw9nWu59baZRdfyNLZgV/H2i2hjUSb
-         DWtNyM6JuvGYvEfSXbeEzlpXxn1c13KKMFhoqkrcnS4Iqgip792dCDnxDYpqMWm//lND
-         Gsj7NX9Fd90ETUIU/QKPoxyC3pFLFRnSMdbU/z4tPe/2S4kmh/hGtpdiPWw/AobQBw8s
-         +TfyT/TCdzm9cgdI2DpxxmmTu/FCJAmpU6RgHXNNCn7GOHSRlw41GRw3vbXqcxKgZ0GS
-         QeL8AQiJF7jvcYDalSM977wv34qG6SP16a8+zdGoGSeCFErYsUVMh59NKx/n1u+ygApO
-         xHRw==
-X-Gm-Message-State: AOAM530KRtcFhtwE0qhR1s+WfmZfhbURZJ5rLJ/Q/cIlgvDvqkUEkpaO
-        ED+LpxPFBBUmh2WIBMGKF+Q=
-X-Google-Smtp-Source: ABdhPJxydsb8QgECa8OdKaLf9RgsF/uPX/mwnXlNZwPmZrP6DEgMUFV+HSXGKqZ33NEaYXLcxt9Puw==
-X-Received: by 2002:a05:6638:d91:b0:30e:345:a0d2 with SMTP id l17-20020a0566380d9100b0030e0345a0d2mr698768jaj.257.1645069564564;
-        Wed, 16 Feb 2022 19:46:04 -0800 (PST)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id u8sm1048601ilb.39.2022.02.16.19.46.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 19:46:03 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailauth.nyi.internal (Postfix) with ESMTP id F164427C0054;
-        Wed, 16 Feb 2022 22:46:01 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 16 Feb 2022 22:46:01 -0500
-X-ME-Sender: <xms:-cQNYmwDbjMZhTZ3BbO6vgmRjiiDxmttyR_ziHBClg3Lxu1Znb1Z4w>
-    <xme:-cQNYiSZcNT9nyj2OWYBO_CJgWnfce0Of6cgjrs8AiiMUKr9LPDVSeujs_OE-wzHw
-    WasUAhcyWkkI4byFQ>
-X-ME-Received: <xmr:-cQNYoXkF_pIy_cSFCZoEXOFrYdv2Bng3rZndwOptIiU-y6MRWZaG7zM9Aw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrjeejgdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeeijefhledvtdegudfhffeugeetveeluefgkeevhfeuudeuudfgveevhfetvdeuvden
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquh
-    hnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudej
-    jeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrd
-    hnrghmvg
-X-ME-Proxy: <xmx:-cQNYsg2-zjlemF-5_R56w1ArtLl2ds_v1Igf6ZRal6qD5c3VjskLA>
-    <xmx:-cQNYoDH0SKSzN37qAwvnR0OHUdfgU_qQtVwBT9cWmu2OFaYXyRavA>
-    <xmx:-cQNYtKNdbe-lpXSbTmnlEy0aWHvymfQr7-oOUBTkvHUPAXRbomHUg>
-    <xmx:-cQNYk58wSyNGHCQLUdr7UAFgpqXvmxpDpBRhJ8XFqiTkQ0PDKDsvRH2OaM>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Feb 2022 22:45:59 -0500 (EST)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thu, 17 Feb 2022 11:31:26 -0500
+Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020018.outbound.protection.outlook.com [52.101.61.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006101B8FC4;
+        Thu, 17 Feb 2022 08:31:10 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xp6WmgCov+awzE60vmhb2gBTC1xUOTsADq+Ah6TuowcQYVYPMKVGn33yS7cgmuuzQMU/Qqv9ztNbnCw7nqNe+zHrENU+O+B9+2ZDM85Zun83mZubcNtmLrqBO+q4QPGzj6J24MiVs0yw3VPyzgedr3LZ1mLdKXMYceQGfJuiQ2UaoaViwMlk5tsfFqB9mj4+DtyAFOAtYu4aevgXwQIVMQfjk55fPRow1WGqYAsg+On5CrU1/I1h1kgpGII2kVyCqgYNOHt7xg7ANHfZoLkEU/XG8PtJ05nZlQtPWbV1CJGNcCmeGilRIKCbP8M0lvBXIKR0uU6GYQeP7BlJKrr3/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=niHaUGbF/u2h6/sKFuKMndxkP3L0H1QlUim0D2jWTmI=;
+ b=Q2gko82YOGNPGyJbsqNY3nrpkEWPpnEliGOGJEOke11nGidHKr3b4tUdoz524vkttlaiDTG9X6aK7uVC09MmXMGFDimD3ymGgsXRJ7goU24ansGuCvOFWa5MrZOU6GxEIUgZ1yzPoXq64R8igHA/KoqwbRbmzTJgHfziHD2spHt7FP8OWN8C7Ge2j4Dv8k8Sua4ZmeDB+PnDpjpWZz3s+LDJsyamsQN1o5xl1IxC1MgF6UV6HkG5+itjGbB7om7FKQTwKoaNMGFpWdUiEDIOPlMIbI1zVPzNhQOnlSZMHW9QKxJDw0X3l6DAxfUAa/BoX+wrTAur0EtsLeA27h3SFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=niHaUGbF/u2h6/sKFuKMndxkP3L0H1QlUim0D2jWTmI=;
+ b=PYDLgd2Y+TJWz+7dGb1wE4GG4/DTz+bJSU2aoVCUpAsRPl+BCwLL36SxnX9KGA7F825U8v3sDELHW/fk0KKQErGJ/i4AoMuBEmxy9BLHaTTk+aBiJbFF24a5T0oDouxqGmMYmdRaQ3tUJqxfM8NoLUcFFsE+edumIwH7TIXQRcM=
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com (2603:10b6:301:7c::11)
+ by MW2PR2101MB1833.namprd21.prod.outlook.com (2603:10b6:302:8::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.7; Thu, 17 Feb
+ 2022 16:31:06 +0000
+Received: from MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::ad12:1420:5435:34e4]) by MWHPR21MB1593.namprd21.prod.outlook.com
+ ([fe80::ad12:1420:5435:34e4%5]) with mapi id 15.20.5017.009; Thu, 17 Feb 2022
+ 16:31:06 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Boqun Feng <boqun.feng@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Wei Liu <wei.liu@kernel.org>
-Cc:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+CC:     Sunil Muthuswamy <sunilmut@linux.microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Dexuan Cui <decui@microsoft.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2] PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64
-Date:   Thu, 17 Feb 2022 11:45:19 +0800
-Message-Id: <20220217034525.1687678-1-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.35.1
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH v2] PCI: hv: Avoid the retarget interrupt hypercall in
+ irq_unmask() on ARM64
+Thread-Topic: [RFC PATCH v2] PCI: hv: Avoid the retarget interrupt hypercall
+ in irq_unmask() on ARM64
+Thread-Index: AQHYI7D6XgWM06oOwkGkqfFHgzPdiKyX79sw
+Date:   Thu, 17 Feb 2022 16:31:06 +0000
+Message-ID: <MWHPR21MB1593A265118977A57FF3B329D7369@MWHPR21MB1593.namprd21.prod.outlook.com>
+References: <20220217034525.1687678-1-boqun.feng@gmail.com>
+In-Reply-To: <20220217034525.1687678-1-boqun.feng@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0d0f789c-7683-40ca-89ac-e1281906cbf6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-02-17T16:30:05Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e2676352-6a39-4355-2f8d-08d9f232e581
+x-ms-traffictypediagnostic: MW2PR2101MB1833:EE_
+x-ms-exchange-atpmessageproperties: SA|SL
+x-microsoft-antispam-prvs: <MW2PR2101MB1833E274AB387DF6703A7563D7369@MW2PR2101MB1833.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jYi83PT35Ho3yWFYuXz/0YZn8eqG9/bX6IMweP2RkhaTrHT3C/dsG2MJAHYuId7zWiHbkCn/HQsYoGYs6NDLxxjNeuqbh/iKUX5V7BCnEMkJ2CCC0PYL6e4zfnAXG5EEEg6mmebzGSb9KMZrtgGw2JbjUeViSbGX/C566+l42XFksFzf1vYuHCTxPLovQ0MbN0OHEu/XuaQYiN27a5EExkZssEG2a/JV3PhCwCNQig1esXhvkKKMiGxRQ40a1ypG3BBnvIv9pX5n1qNK6oCTPUHuyokrR2YB2eLYPR+CwPBX3y0BgOFoPmzi3N76g5fxz6SG2oW+S1ygYO5CM9MC2+CmErr1pYMT3C1fnRyspqxAvpIekl1K/jjo74OMDty5nvLP7JnoYBZ4oA6tFlUaJHWy6wIwKv94h5f6TA8oeUBG2G3ABCG4z5P30HSi6hym8aN1QgQyRzXAtS4EX626J57F8LU6kleKk8RfEf4oNBy+TpicZFuQmpjCj9Mkmp1nZlSxPn7ReSgN676l8Sfia2A6H38ztyY99lqFv0nxbgRPolEejdTk+YmI/HLIUs1B2DDy/9vC1BjXvOQXjyZvlI8W5mj2P3P9K+0C729j0w/l7AcY66vFvXsZnkuHDNuP/X6KMZo9DpYOkR4F9n3c5pz5XFjl8UKRkX9L4tiAPMuNruam87Oi/U+dwlD4oSrFPQAqXG5QDFw4cdZWq+9BXiqeqwbWfQurN0tRdLGSg8oEfSxpRAqgFoFxM7Ziwz3a
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR21MB1593.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(76116006)(55016003)(186003)(6506007)(9686003)(26005)(508600001)(122000001)(110136005)(2906002)(5660300002)(52536014)(82950400001)(54906003)(66946007)(71200400001)(33656002)(38100700002)(4744005)(10290500003)(66446008)(38070700005)(64756008)(83380400001)(316002)(66476007)(8936002)(4326008)(7696005)(8676002)(86362001)(8990500004)(82960400001)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?unMZg/3z1nhlkTwriMpKgQ+WFbKEqpU7Ymtdc3pxqUiBXY8XCYUNjVAX1S?=
+ =?iso-8859-2?Q?Sa83zAXEC5rCcMokkEQzFgSJEYWJ47mya/g7cV3O6SaKpM9dLM7369prNT?=
+ =?iso-8859-2?Q?IYJQFfOkQ9vUN4AT9/g1MLUFAEOpHTe6ph/NcjenzJ4GYKW/AhfYaQc+TZ?=
+ =?iso-8859-2?Q?f05ubaqENIHRt5ZE5z2+Tm+HVS0+Zma85PbF6L6Lh17V7ZA3uZDpZpMWuw?=
+ =?iso-8859-2?Q?zP7XGiAfedqJZqqZ3RT4GssloVXIlQRbLiiJ/eUvZkvjHZ1/1jQXaAxI/T?=
+ =?iso-8859-2?Q?0nKRmhvTg2IZL47/IBYj3fPNTaun80ZcGxM3ljhkPw9sNCLGogjdFFhUnM?=
+ =?iso-8859-2?Q?ayMNGnVAmtkIAZ49VUClS7e+QFBViRDqF3O5CRP/Qz3nx7KR5KVqe5ZAj4?=
+ =?iso-8859-2?Q?AHeND9yahOehLN6R1zh0uExPLPDBkRBEdzU+754bz39sYdEWx8nlKKn4UH?=
+ =?iso-8859-2?Q?FtY1cQeyNn1EyNP7RuCthc2LadsiP+rbzTSd8k1q9tQpT/CVGV2j6HNdCq?=
+ =?iso-8859-2?Q?aSRKqpHgiLVhU0YMqyMs1T1bg4JLYl7cnIpflRvDYzCzqe+q9pFHzkF/uv?=
+ =?iso-8859-2?Q?RJqFjj2R16MLe9f7uMSqSQa3+KOZ9h6TXeztkIf8GVT+LLr4qH7i9MjntS?=
+ =?iso-8859-2?Q?MfqXU5fyPYxcMs9qjmW62DsZynXOEEzbTiYlI/tHZSVfTudwoLf3mv0jqo?=
+ =?iso-8859-2?Q?ZBjwcwB1c603AHyPMIH1Clho/udgeMEdb2yu15gN/A9phyQ2hJys/aOdGZ?=
+ =?iso-8859-2?Q?6SNYdr+zShPNO8Byy4zFRFycxSt5T5PByKM1xStMR7oMI8Yyg7q211ttwr?=
+ =?iso-8859-2?Q?cy5TfKFfTYyUFhYTZR/XcW0FFfy8pB1NAqO26gAdizUdr5iAFKqzQbozWO?=
+ =?iso-8859-2?Q?IzM+kOB//HUAwUU1YwJkgYwC/PbB5Fv3rHP3u5NAlVMCq9AXD/odKF2Ifv?=
+ =?iso-8859-2?Q?lUjiJjxMYntBx6HEwKrthuUccsKQoeJiwjN1rsf7aQ6d2Ti+t7HBz586zx?=
+ =?iso-8859-2?Q?3zULgHjPpIx+LwHKUsd3UOUnVp57MmUz8LhO+lcFh/olQqieqoa4rqGi9P?=
+ =?iso-8859-2?Q?K7RubffPOLS8L+ixV7bbHvqOKHgSU1mVcBRK6XuVKpkiDxpU8mvvDw5TkA?=
+ =?iso-8859-2?Q?PTz7/tUR/v6d1EfsJep5ikF223hLJOyZSE2vbFv6DcDQYTb0Ojni2aJdjj?=
+ =?iso-8859-2?Q?GTuWdb48ZjCHEgbbKd/9WQ1Nk/iOeQjy3fSaiv97NRlgRewGIEUstTeTAw?=
+ =?iso-8859-2?Q?t7pNUjuGJ36x2FXAk5Bzs6XNLh6s11m0NoNr679y6yVgak5q97S/VuvQR9?=
+ =?iso-8859-2?Q?w8/9xtTgbaMY5cRyF/YOo59VjQ+hazrlVdz46JJmBLiIzhqRuYO6uog035?=
+ =?iso-8859-2?Q?5+8WcxY1MayhfJYYRlDTgkqbkfHvGcBPvjsu2XyfImcWDuPUJyV8M2x6UW?=
+ =?iso-8859-2?Q?KZJCDGR6Ot63/oQMjVjmVG61ZmeHFRgmrxB1xbp110FvzT/+cQa/xPFlxJ?=
+ =?iso-8859-2?Q?a7j/r7fUpzh8KIGJXW06gQ3NVDh94YFBQdRL2m/YmEuOKCr5RMU+yN6O3r?=
+ =?iso-8859-2?Q?sKLMt+Qcng7fgOGKl7kPSpkHBzYuPyzocLvCRHSBg1v57Zc7fJi9QlI/Zb?=
+ =?iso-8859-2?Q?+KV2iepUK16A96hDci1NVK2A1xrHgWLbvRmg/XQtbInFNAew0x7XdUezvS?=
+ =?iso-8859-2?Q?mNkSshtoxk1ueH7G4QI3AX+Iw9FGu6uHp+8BH1LiAjmE+89t8DlwaCmEIA?=
+ =?iso-8859-2?Q?kkNA=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR21MB1593.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2676352-6a39-4355-2f8d-08d9f232e581
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2022 16:31:06.0571
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OaUGNW6ZXyuVZFCkbOtvqAi7bm2mk+9EeG7IM6BkLV0Hij/Fb3jyXM3JZ7DIFFQj0fpySb9Zsh7P3ai0TL5dbPfCqBdmB7uBbT24gBMzowc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1833
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
-devices, and SPIs can be managed directly via GICD registers. Therefore
-the retarget interrupt hypercall is not needed on ARM64.
+From: Boqun Feng <boqun.feng@gmail.com> Sent: Wednesday, February 16, 2022 =
+7:45 PM
+>=20
+> On ARM64 Hyper-V guests, SPIs are used for the interrupts of virtual PCI
+> devices, and SPIs can be managed directly via GICD registers. Therefore
+> the retarget interrupt hypercall is not needed on ARM64.
+>=20
+> An arch-specific interface hv_arch_irq_unmask() is introduced to handle
+> the architecture level differences on this. For x86, the behavior
+> remains unchanged, while for ARM64 no hypercall is invoked when
+> unmasking an irq for virtual PCI devices.
+>=20
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+> v1 -> v2:
+>=20
+> *	Introduce arch-specific interface hv_arch_irq_unmask() as
+> 	suggested by Bjorn
+>=20
+>  drivers/pci/controller/pci-hyperv.c | 233 +++++++++++++++-------------
+>  1 file changed, 122 insertions(+), 111 deletions(-)
 
-An arch-specific interface hv_arch_irq_unmask() is introduced to handle
-the architecture level differences on this. For x86, the behavior
-remains unchanged, while for ARM64 no hypercall is invoked when
-unmasking an irq for virtual PCI devices.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
-v1 -> v2:
-
-*	Introduce arch-specific interface hv_arch_irq_unmask() as
-	suggested by Bjorn
-
- drivers/pci/controller/pci-hyperv.c | 233 +++++++++++++++-------------
- 1 file changed, 122 insertions(+), 111 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 20ea2ee330b8..2a1481a52489 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -616,6 +616,121 @@ static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
- {
- 	return pci_msi_prepare(domain, dev, nvec, info);
- }
-+
-+/**
-+ * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
-+ * affinity.
-+ * @data:	Describes the IRQ
-+ *
-+ * Build new a destination for the MSI and make a hypercall to
-+ * update the Interrupt Redirection Table. "Device Logical ID"
-+ * is built out of this PCI bus's instance GUID and the function
-+ * number of the device.
-+ */
-+static void hv_arch_irq_unmask(struct irq_data *data)
-+{
-+	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
-+	struct hv_retarget_device_interrupt *params;
-+	struct hv_pcibus_device *hbus;
-+	struct cpumask *dest;
-+	cpumask_var_t tmp;
-+	struct pci_bus *pbus;
-+	struct pci_dev *pdev;
-+	unsigned long flags;
-+	u32 var_size = 0;
-+	int cpu, nr_bank;
-+	u64 res;
-+
-+	dest = irq_data_get_effective_affinity_mask(data);
-+	pdev = msi_desc_to_pci_dev(msi_desc);
-+	pbus = pdev->bus;
-+	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
-+
-+	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
-+
-+	params = &hbus->retarget_msi_interrupt_params;
-+	memset(params, 0, sizeof(*params));
-+	params->partition_id = HV_PARTITION_ID_SELF;
-+	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
-+	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
-+	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
-+			   (hbus->hdev->dev_instance.b[4] << 16) |
-+			   (hbus->hdev->dev_instance.b[7] << 8) |
-+			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
-+			   PCI_FUNC(pdev->devfn);
-+	params->int_target.vector = hv_msi_get_int_vector(data);
-+
-+	/*
-+	 * Honoring apic->delivery_mode set to APIC_DELIVERY_MODE_FIXED by
-+	 * setting the HV_DEVICE_INTERRUPT_TARGET_MULTICAST flag results in a
-+	 * spurious interrupt storm. Not doing so does not seem to have a
-+	 * negative effect (yet?).
-+	 */
-+
-+	if (hbus->protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
-+		/*
-+		 * PCI_PROTOCOL_VERSION_1_2 supports the VP_SET version of the
-+		 * HVCALL_RETARGET_INTERRUPT hypercall, which also coincides
-+		 * with >64 VP support.
-+		 * ms_hyperv.hints & HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED
-+		 * is not sufficient for this hypercall.
-+		 */
-+		params->int_target.flags |=
-+			HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
-+
-+		if (!alloc_cpumask_var(&tmp, GFP_ATOMIC)) {
-+			res = 1;
-+			goto exit_unlock;
-+		}
-+
-+		cpumask_and(tmp, dest, cpu_online_mask);
-+		nr_bank = cpumask_to_vpset(&params->int_target.vp_set, tmp);
-+		free_cpumask_var(tmp);
-+
-+		if (nr_bank <= 0) {
-+			res = 1;
-+			goto exit_unlock;
-+		}
-+
-+		/*
-+		 * var-sized hypercall, var-size starts after vp_mask (thus
-+		 * vp_set.format does not count, but vp_set.valid_bank_mask
-+		 * does).
-+		 */
-+		var_size = 1 + nr_bank;
-+	} else {
-+		for_each_cpu_and(cpu, dest, cpu_online_mask) {
-+			params->int_target.vp_mask |=
-+				(1ULL << hv_cpu_number_to_vp_number(cpu));
-+		}
-+	}
-+
-+	res = hv_do_hypercall(HVCALL_RETARGET_INTERRUPT | (var_size << 17),
-+			      params, NULL);
-+
-+exit_unlock:
-+	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
-+
-+	/*
-+	 * During hibernation, when a CPU is offlined, the kernel tries
-+	 * to move the interrupt to the remaining CPUs that haven't
-+	 * been offlined yet. In this case, the below hv_do_hypercall()
-+	 * always fails since the vmbus channel has been closed:
-+	 * refer to cpu_disable_common() -> fixup_irqs() ->
-+	 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
-+	 *
-+	 * Suppress the error message for hibernation because the failure
-+	 * during hibernation does not matter (at this time all the devices
-+	 * have been frozen). Note: the correct affinity info is still updated
-+	 * into the irqdata data structure in migrate_one_irq() ->
-+	 * irq_do_set_affinity() -> hv_set_affinity(), so later when the VM
-+	 * resumes, hv_pci_restore_msi_state() is able to correctly restore
-+	 * the interrupt with the correct affinity.
-+	 */
-+	if (!hv_result_success(res) && hbus->state != hv_pcibus_removing)
-+		dev_err(&hbus->hdev->device,
-+			"%s() failed: %#llx", __func__, res);
-+}
- #elif defined(CONFIG_ARM64)
- /*
-  * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
-@@ -839,6 +954,12 @@ static struct irq_domain *hv_pci_get_root_domain(void)
- {
- 	return hv_msi_gic_irq_domain;
- }
-+
-+/*
-+ * SPIs are used for interrupts of PCI devices and SPIs is managed via GICD
-+ * registers which Hyper-V already supports, so no hypercall needed.
-+ */
-+static void hv_arch_irq_unmask(struct irq_data *data) { }
- #endif /* CONFIG_ARM64 */
- 
- /**
-@@ -1456,119 +1577,9 @@ static void hv_irq_mask(struct irq_data *data)
- 		irq_chip_mask_parent(data);
- }
- 
--/**
-- * hv_irq_unmask() - "Unmask" the IRQ by setting its current
-- * affinity.
-- * @data:	Describes the IRQ
-- *
-- * Build new a destination for the MSI and make a hypercall to
-- * update the Interrupt Redirection Table. "Device Logical ID"
-- * is built out of this PCI bus's instance GUID and the function
-- * number of the device.
-- */
- static void hv_irq_unmask(struct irq_data *data)
- {
--	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
--	struct hv_retarget_device_interrupt *params;
--	struct hv_pcibus_device *hbus;
--	struct cpumask *dest;
--	cpumask_var_t tmp;
--	struct pci_bus *pbus;
--	struct pci_dev *pdev;
--	unsigned long flags;
--	u32 var_size = 0;
--	int cpu, nr_bank;
--	u64 res;
--
--	dest = irq_data_get_effective_affinity_mask(data);
--	pdev = msi_desc_to_pci_dev(msi_desc);
--	pbus = pdev->bus;
--	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
--
--	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
--
--	params = &hbus->retarget_msi_interrupt_params;
--	memset(params, 0, sizeof(*params));
--	params->partition_id = HV_PARTITION_ID_SELF;
--	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
--	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
--	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
--			   (hbus->hdev->dev_instance.b[4] << 16) |
--			   (hbus->hdev->dev_instance.b[7] << 8) |
--			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
--			   PCI_FUNC(pdev->devfn);
--	params->int_target.vector = hv_msi_get_int_vector(data);
--
--	/*
--	 * Honoring apic->delivery_mode set to APIC_DELIVERY_MODE_FIXED by
--	 * setting the HV_DEVICE_INTERRUPT_TARGET_MULTICAST flag results in a
--	 * spurious interrupt storm. Not doing so does not seem to have a
--	 * negative effect (yet?).
--	 */
--
--	if (hbus->protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
--		/*
--		 * PCI_PROTOCOL_VERSION_1_2 supports the VP_SET version of the
--		 * HVCALL_RETARGET_INTERRUPT hypercall, which also coincides
--		 * with >64 VP support.
--		 * ms_hyperv.hints & HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED
--		 * is not sufficient for this hypercall.
--		 */
--		params->int_target.flags |=
--			HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
--
--		if (!alloc_cpumask_var(&tmp, GFP_ATOMIC)) {
--			res = 1;
--			goto exit_unlock;
--		}
--
--		cpumask_and(tmp, dest, cpu_online_mask);
--		nr_bank = cpumask_to_vpset(&params->int_target.vp_set, tmp);
--		free_cpumask_var(tmp);
--
--		if (nr_bank <= 0) {
--			res = 1;
--			goto exit_unlock;
--		}
--
--		/*
--		 * var-sized hypercall, var-size starts after vp_mask (thus
--		 * vp_set.format does not count, but vp_set.valid_bank_mask
--		 * does).
--		 */
--		var_size = 1 + nr_bank;
--	} else {
--		for_each_cpu_and(cpu, dest, cpu_online_mask) {
--			params->int_target.vp_mask |=
--				(1ULL << hv_cpu_number_to_vp_number(cpu));
--		}
--	}
--
--	res = hv_do_hypercall(HVCALL_RETARGET_INTERRUPT | (var_size << 17),
--			      params, NULL);
--
--exit_unlock:
--	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
--
--	/*
--	 * During hibernation, when a CPU is offlined, the kernel tries
--	 * to move the interrupt to the remaining CPUs that haven't
--	 * been offlined yet. In this case, the below hv_do_hypercall()
--	 * always fails since the vmbus channel has been closed:
--	 * refer to cpu_disable_common() -> fixup_irqs() ->
--	 * irq_migrate_all_off_this_cpu() -> migrate_one_irq().
--	 *
--	 * Suppress the error message for hibernation because the failure
--	 * during hibernation does not matter (at this time all the devices
--	 * have been frozen). Note: the correct affinity info is still updated
--	 * into the irqdata data structure in migrate_one_irq() ->
--	 * irq_do_set_affinity() -> hv_set_affinity(), so later when the VM
--	 * resumes, hv_pci_restore_msi_state() is able to correctly restore
--	 * the interrupt with the correct affinity.
--	 */
--	if (!hv_result_success(res) && hbus->state != hv_pcibus_removing)
--		dev_err(&hbus->hdev->device,
--			"%s() failed: %#llx", __func__, res);
-+	hv_arch_irq_unmask(data);
- 
- 	if (data->parent_data->chip->irq_unmask)
- 		irq_chip_unmask_parent(data);
--- 
-2.35.1
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
