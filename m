@@ -2,32 +2,32 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 264594BFCDA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Feb 2022 16:36:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCB324BFCE9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Feb 2022 16:36:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233540AbiBVPgP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 22 Feb 2022 10:36:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43976 "EHLO
+        id S233510AbiBVPgS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Feb 2022 10:36:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233535AbiBVPf7 (ORCPT
+        with ESMTP id S233573AbiBVPgI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 22 Feb 2022 10:35:59 -0500
+        Tue, 22 Feb 2022 10:36:08 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C83E163D5E;
-        Tue, 22 Feb 2022 07:35:28 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C6A164D02;
+        Tue, 22 Feb 2022 07:35:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=16nouNo24ejNp/bHBqFUpHpMmYYgIL88sf6fCnA5oxw=; b=Evl4OhdNJ9vFGI4KBDyMJ2uY4v
-        ahlgofRSzpQsvpw+qbnrer3aKbB3W7rQQSWiEtHPv1GOLM+A33NRlrQJtcbKPQZsq8ZJ0Ur1vnRRo
-        g3p2qbcU3jr70C8mOofs0g3hzUW4uVlAhWSisJaMMZC6wOX8A4tQ90Hk2vLNc+kmD6djArF9T8eoW
-        9u4suY2drGIZP4mp6SqQGG0Ti0UU5XC5RKqrHf1fSU30Q1huprZkGdvFxmCo5kR0DDj/lBC1BQkHm
-        KDzcPMMmVkYt9l5nGrPt5RR+4vvyTE3FSJuO351gMgi78pWHFgl6Edsr7ZHkmjhcz+ut06I1oIQyx
-        rYiE4tRw==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=XYJlVwldNVCJqO/+tuKojN3UlpP6EWuPoimLYHKi/jc=; b=PjYqXlXh0/xMADYjBN4lX4q5Ly
+        AuFycvSAdpIXN9YbLSHqw0K2dYILwjr7wgIeGZEPaMgVELz5o/txiNNKILc4nXrxHan9rtYYBwlmt
+        7GaftcZ0rDAFxBm9a1LqzQTCL93a6M9uf1PyDLGYGiRgPK7ZuYIRQDsrVP9eN9dOO9swFx1vDeZc+
+        yZPvyf1fh6NCG0uMF/LNlnZNoPYsVTSxgQ7mhLCFFvpZJhhnjfKuephjOMuwK1KFrmapY7foUzQ7p
+        05RnloFRKzpM7mJ1akDcM3wUeCLyhzdFOE+AL1st9GwnxOLIxR7uY8XZpOgAYp4TpNIfEYTRusOAm
+        VVgxXFDQ==;
 Received: from [2001:4bb8:198:f8fc:c22a:ebfc:be8d:63c2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nMXC9-00AGnS-1u; Tue, 22 Feb 2022 15:35:17 +0000
+        id 1nMXCB-00AGo7-Po; Tue, 22 Feb 2022 15:35:20 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     iommu@lists.linux-foundation.org
 Cc:     x86@kernel.org, Stefano Stabellini <sstabellini@kernel.org>,
@@ -43,10 +43,12 @@ Cc:     x86@kernel.org, Stefano Stabellini <sstabellini@kernel.org>,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
         linux-pci@vger.kernel.org
-Subject: cleanup swiotlb initialization
-Date:   Tue, 22 Feb 2022 16:35:03 +0100
-Message-Id: <20220222153514.593231-1-hch@lst.de>
+Subject: [PATCH 01/11] dma-direct: use is_swiotlb_active in dma_direct_map_page
+Date:   Tue, 22 Feb 2022 16:35:04 +0100
+Message-Id: <20220222153514.593231-2-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220222153514.593231-1-hch@lst.de>
+References: <20220222153514.593231-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -60,66 +62,27 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi all,
+Use the more specific is_swiotlb_active check instead of checking the
+global swiotlb_force variable.
 
-this series tries to clean up the swiotlb initialization, including
-that of swiotlb-xen.  To get there is also removes the x86 iommu table
-infrastructure that massively obsfucates the initialization path.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ kernel/dma/direct.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Git tree:
+diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
+index 4632b0f4f72eb..4dc16e08c7e1a 100644
+--- a/kernel/dma/direct.h
++++ b/kernel/dma/direct.h
+@@ -91,7 +91,7 @@ static inline dma_addr_t dma_direct_map_page(struct device *dev,
+ 		return swiotlb_map(dev, phys, size, dir, attrs);
+ 
+ 	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
+-		if (swiotlb_force != SWIOTLB_NO_FORCE)
++		if (is_swiotlb_active(dev))
+ 			return swiotlb_map(dev, phys, size, dir, attrs);
+ 
+ 		dev_WARN_ONCE(dev, 1,
+-- 
+2.30.2
 
-    git://git.infradead.org/users/hch/misc.git swiotlb-init-cleanup
-
-Gitweb:
-
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/swiotlb-init-cleanup
-
-Diffstat:
- arch/ia64/include/asm/iommu_table.h      |    7 -
- arch/x86/include/asm/iommu_table.h       |  102 -------------------
- arch/x86/include/asm/swiotlb.h           |   30 -----
- arch/x86/kernel/pci-iommu_table.c        |   77 --------------
- arch/x86/kernel/pci-swiotlb.c            |   77 --------------
- arch/x86/xen/pci-swiotlb-xen.c           |   96 ------------------
- b/arch/arm/mm/init.c                     |    6 -
- b/arch/arm/xen/mm.c                      |   23 ++--
- b/arch/arm64/mm/init.c                   |    6 -
- b/arch/ia64/mm/init.c                    |    4 
- b/arch/mips/cavium-octeon/dma-octeon.c   |   15 --
- b/arch/mips/loongson64/dma.c             |    2 
- b/arch/mips/pci/pci-octeon.c             |    2 
- b/arch/mips/sibyte/common/dma.c          |    2 
- b/arch/powerpc/include/asm/svm.h         |    4 
- b/arch/powerpc/include/asm/swiotlb.h     |    1 
- b/arch/powerpc/mm/mem.c                  |    6 -
- b/arch/powerpc/platforms/pseries/setup.c |    3 
- b/arch/powerpc/platforms/pseries/svm.c   |   26 ----
- b/arch/riscv/mm/init.c                   |    8 -
- b/arch/s390/mm/init.c                    |    3 
- b/arch/x86/include/asm/dma-mapping.h     |   12 --
- b/arch/x86/include/asm/gart.h            |    5 
- b/arch/x86/include/asm/iommu.h           |    8 +
- b/arch/x86/include/asm/xen/page.h        |    5 
- b/arch/x86/include/asm/xen/swiotlb-xen.h |    2 
- b/arch/x86/kernel/Makefile               |    2 
- b/arch/x86/kernel/amd_gart_64.c          |    5 
- b/arch/x86/kernel/aperture_64.c          |   14 --
- b/arch/x86/kernel/cpu/mshyperv.c         |    8 -
- b/arch/x86/kernel/pci-dma.c              |  114 +++++++++++++++++----
- b/arch/x86/kernel/tboot.c                |    1 
- b/arch/x86/kernel/vmlinux.lds.S          |   12 --
- b/arch/x86/mm/mem_encrypt_amd.c          |    3 
- b/arch/x86/pci/sta2x11-fixup.c           |    2 
- b/arch/x86/xen/Makefile                  |    2 
- b/drivers/iommu/amd/init.c               |    6 -
- b/drivers/iommu/amd/iommu.c              |    5 
- b/drivers/iommu/intel/dmar.c             |    6 -
- b/drivers/xen/swiotlb-xen.c              |  132 -------------------------
- b/include/linux/dmar.h                   |    6 -
- b/include/linux/swiotlb.h                |   22 ++--
- b/include/trace/events/swiotlb.h         |   29 +----
- b/include/xen/arm/page.h                 |    1 
- b/include/xen/swiotlb-xen.h              |    8 +
- b/kernel/dma/direct.h                    |    2 
- b/kernel/dma/swiotlb.c                   |  163 +++++++++++++++----------------
- 47 files changed, 258 insertions(+), 817 deletions(-)
