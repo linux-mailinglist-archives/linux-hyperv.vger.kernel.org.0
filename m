@@ -2,110 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D69F34BFD14
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Feb 2022 16:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58B9F4BFE00
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Feb 2022 17:01:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbiBVPhN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 22 Feb 2022 10:37:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
+        id S233532AbiBVQBM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Feb 2022 11:01:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233700AbiBVPgs (ORCPT
+        with ESMTP id S233878AbiBVQBJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 22 Feb 2022 10:36:48 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D92164D13;
-        Tue, 22 Feb 2022 07:36:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zCMW1Q+QCPXYuvBuEGOZUQKFwE9OwdLFtYhltvQ29K4=; b=UivVJu0xfBlRElPO98LGgBvic3
-        FgFkBA8tXOAwbzm4ASFviz4SOlLZ2Xk5ojd8aBpgvcYaCCrlUt0AmrI5QXz9BLb9cU7dErlkZgnz3
-        IzVqfHy80xQHgtYs4YtsJIktFe5xVp6loPXsAhY+LqtEtDSPdoKeEjZiqWlkk7Equu3WmJaFkQpSY
-        nCZa1Oyt2hQQICm8D2KgV+1H1RPCuXGZ7ggZgJ+BM2gIRjfpfUXSW4OsSGdg/5dox+XsD7+FHqwZ8
-        loSXrmeHFqVxP2h0pkLAiL/0DZ/bH24KlkPtKONU0U65lHnthcy9X8oVbBAOSQMLGRq8tZSF7/H/x
-        UnbZJ7Dg==;
-Received: from [2001:4bb8:198:f8fc:c22a:ebfc:be8d:63c2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nMXCe-00AH73-Qo; Tue, 22 Feb 2022 15:35:49 +0000
+        Tue, 22 Feb 2022 11:01:09 -0500
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65DE6163D7E;
+        Tue, 22 Feb 2022 08:00:43 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 97CA868AFE; Tue, 22 Feb 2022 17:00:40 +0100 (CET)
+Date:   Tue, 22 Feb 2022 17:00:39 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org
-Cc:     x86@kernel.org, Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 11/11] x86: remove cruft from <asm/dma-mapping.h>
-Date:   Tue, 22 Feb 2022 16:35:14 +0100
-Message-Id: <20220222153514.593231-12-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220222153514.593231-1-hch@lst.de>
-References: <20220222153514.593231-1-hch@lst.de>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, hch@infradead.org, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        brijesh.singh@amd.com, konrad.wilk@oracle.com,
+        parri.andrea@gmail.com, thomas.lendacky@amd.com
+Subject: Re: [PATCH V2 1/2] Swiotlb: Add swiotlb_alloc_from_low_pages switch
+Message-ID: <20220222160039.GA13380@lst.de>
+References: <20220209122302.213882-1-ltykernel@gmail.com> <20220209122302.213882-2-ltykernel@gmail.com> <20220214081919.GA18337@lst.de> <4f433f07-05be-f81f-43e8-55c3f1af23b3@gmail.com> <20220214135834.GA30150@lst.de> <8d052867-ccff-f00f-7c89-cc26a4bfa347@gmail.com> <23f4a64d-5977-1816-8faa-fe7691ace2ff@gmail.com> <20220222080543.GA5412@lst.de> <00112505-4999-ac41-877e-49c4cc45312e@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00112505-4999-ac41-877e-49c4cc45312e@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-<asm/dma-mapping.h> gets pulled in by all drivers using the DMA API.
-Remove x86 internal variables and unnecessary includes from it.
+On Tue, Feb 22, 2022 at 11:07:19PM +0800, Tianyu Lan wrote:
+> Thanks for your comment. That means we need to expose an 
+> swiotlb_device_init() interface to allocate bounce buffer and initialize
+> io tlb mem entry. DMA API Current  rmem_swiotlb_device_init() only works
+> for platform with device tree. The new API should be called in the bus
+> driver or new DMA API. Could you check whether this is a right way before 
+> we start the work.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/include/asm/dma-mapping.h | 11 -----------
- arch/x86/include/asm/iommu.h       |  2 ++
- 2 files changed, 2 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
-index 256fd8115223d..1c66708e30623 100644
---- a/arch/x86/include/asm/dma-mapping.h
-+++ b/arch/x86/include/asm/dma-mapping.h
-@@ -2,17 +2,6 @@
- #ifndef _ASM_X86_DMA_MAPPING_H
- #define _ASM_X86_DMA_MAPPING_H
- 
--/*
-- * IOMMU interface. See Documentation/core-api/dma-api-howto.rst and
-- * Documentation/core-api/dma-api.rst for documentation.
-- */
--
--#include <linux/scatterlist.h>
--#include <asm/io.h>
--
--extern int iommu_merge;
--extern int panic_on_overflow;
--
- extern const struct dma_map_ops *dma_ops;
- 
- static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
-diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-index dba89ed40d38d..0bef44d30a278 100644
---- a/arch/x86/include/asm/iommu.h
-+++ b/arch/x86/include/asm/iommu.h
-@@ -8,6 +8,8 @@
- 
- extern int force_iommu, no_iommu;
- extern int iommu_detected;
-+extern int iommu_merge;
-+extern int panic_on_overflow;
- 
- #ifdef CONFIG_SWIOTLB
- extern bool x86_swiotlb_enable;
--- 
-2.30.2
-
+Do these VMs use ACPI?  We'd probably really want some kind of higher
+level configuration and not have the drivers request it themselves.
