@@ -2,61 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EAD24C13D4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Feb 2022 14:16:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2CD4C13D7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Feb 2022 14:16:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240815AbiBWNQl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 23 Feb 2022 08:16:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38634 "EHLO
+        id S240820AbiBWNQq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Feb 2022 08:16:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239584AbiBWNQk (ORCPT
+        with ESMTP id S240823AbiBWNQp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 23 Feb 2022 08:16:40 -0500
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1DEAA011;
-        Wed, 23 Feb 2022 05:16:12 -0800 (PST)
-Received: by mail-il1-x12d.google.com with SMTP id e11so15233818ils.3;
-        Wed, 23 Feb 2022 05:16:12 -0800 (PST)
+        Wed, 23 Feb 2022 08:16:45 -0500
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0639A9E38;
+        Wed, 23 Feb 2022 05:16:17 -0800 (PST)
+Received: by mail-io1-xd35.google.com with SMTP id r7so18945825iot.3;
+        Wed, 23 Feb 2022 05:16:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1RzvBknQsRqqFRqcBakDx7UnpeR3xK8Ei9AhGVZI0ro=;
-        b=G6Bnf7AHCROwEduRmTJpAWS9Qs+PY7gpP0j4HkIDKDSSruS4Udl+Ybt1wsqgqtm6Ir
-         9jlZkaVXo4jjrHCXNRRx4gjEW8NtXCP7RFWT/wVsKMsJV4DgELU45ClHTAM8aE2t/o4v
-         YdekMvguj+IS6fvQGgay0ORbNuZ3j2ZQ0q9ewReFJ10kay2w3psbJOG1+ByUQeID+53z
-         Uz8FFsmlwzLg0kWEpMBqfidJ3c/GsOG4GE4hO4Bk2lvouUmWGGXk119XM+dRkRdVN1Cu
-         WPkqo2aBCBKc/Hto0+QcyyIJ7iGqvncCE06D4SeBuDpqKKCjhn+Ztugchc54J2jhcuR/
-         zP3A==
+        bh=u8in0yHTin9rid2JL1h9UHz/ZWLH7UBtkPLk0yjciWo=;
+        b=o0aEcJLwb5KuL077sU08l8nAD6z9CaYSS+zIHw1N1qn8BbmG9yBhjK4La7DlYUS68v
+         AV90yu4k9fqjO3SsYOEgrsqPFJ14ZbJtHV4kHExqj8wdMacxR7hSM153DOjKe1eymZ3/
+         jLUagLLLUhCJbtqmuGm8vzzq5scFkGx9D5Du9kBQnGxv0P9hk/Ai8HFez5s2ZeLRiARI
+         4lSCAxyu7DEHQ+/oUMlMei/6o1y/mR94iXPV1pIuHDy34xvfkqefyG2iAOYX98DaKpMm
+         7wV48TefocxDu1Ht/buxjNsvkheppZ36vXScCzWktgckjNrhTYoP6hvRRkWG/QW/J8s1
+         KRrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1RzvBknQsRqqFRqcBakDx7UnpeR3xK8Ei9AhGVZI0ro=;
-        b=UdB9TI4ZEnsFOt0b8JrK/mj8ae/DXDVfUythFBcEb1/hsL49aO7UlYldxq4+/U2IQx
-         O2SrkgRdtoM15rCKqTMN9WRUmdajJY2gRm3mBH7frjQGA2kvvyQ0CHc6gGuORWEJJTag
-         EyxEumPFUHtD/dXxqi9Bt32Hkz/WlwYCSdzIoFafPPYR/khG3y+3Luy2aX4zPNKmKycZ
-         cpsZ3u1PG6Ph6Uwqq1tPTOCBlNWYtiDr8YHpwKxCLfTsIH85u2vgLxp6BtzRSfKTG1mI
-         3BwNjcof/XuVF0yuxtg07dyI7c70u1sPCdz2V+ZdL/s9vJUSkalBrOMrAOAIp2jRtrbW
-         Lgvg==
-X-Gm-Message-State: AOAM532t1yj97NajmsdIkQFUg5mx0AHD6fwJZ7dKV5D+71bO/xDbJSsm
-        wzqpNDq47PbSKZGLzk2fiSY=
-X-Google-Smtp-Source: ABdhPJy2O+qKFfwngzHjfql/fo37iyjOgVhqqnh81ArwtuP/wOB/M/nPUEoWoPWoIuBmoTvQHcW2dA==
-X-Received: by 2002:a05:6e02:1708:b0:2c2:7258:3e72 with SMTP id u8-20020a056e02170800b002c272583e72mr4364160ill.267.1645622172368;
-        Wed, 23 Feb 2022 05:16:12 -0800 (PST)
+        bh=u8in0yHTin9rid2JL1h9UHz/ZWLH7UBtkPLk0yjciWo=;
+        b=TJ8pek0SyqrXsqTtnZBI7AIZGWdQG3ce/tbdSE3oWWhC6zKTwRtdt0eb6Kl2N5SIlk
+         5iewUsEYd/d64dFddF0k3pUQYMIHV2iTDK9C0/eJbTFaam/OG5xWye9gUykfqXGoqdRX
+         mPT7LztomPKPX6YBg7nHgHBcYImXA9uU2qh/sNFKkyntP3mEJvKab6PFw/ZXY7Cy+nV3
+         RMskMuCa4AQy8z7T3cDF2tlpHfzoMsP4XmLH1MkIWuXpdR5c3x38tVIYukjTrIIdyP1T
+         GLZ3y/69gf+VjoTOJLZEq7VnjsCKjbvS5MjxTALe0sIhKy0AHfdK06F19SODNT4xCYvf
+         gysg==
+X-Gm-Message-State: AOAM5325HLTuzKWQazLgEv5Zx1BTATHstWaqCo9T8OotWUjDTAuypv5s
+        gupAB75YE+yHHJKscmgdKuY=
+X-Google-Smtp-Source: ABdhPJzicFqUDPkW4Be0U6VpPioCzuvMlHyqli2pDCwuVxwUb1ugoQq8nTcJ0/GFAizHCeNXiWejig==
+X-Received: by 2002:a6b:8f83:0:b0:613:8b75:b76d with SMTP id r125-20020a6b8f83000000b006138b75b76dmr23134754iod.77.1645622177188;
+        Wed, 23 Feb 2022 05:16:17 -0800 (PST)
 Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id u15sm12712168ill.75.2022.02.23.05.16.10
+        by smtp.gmail.com with ESMTPSA id b1sm11526077ilj.76.2022.02.23.05.16.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 05:16:11 -0800 (PST)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 4999727C0054;
-        Wed, 23 Feb 2022 08:16:10 -0500 (EST)
+        Wed, 23 Feb 2022 05:16:16 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 856EF27C0054;
+        Wed, 23 Feb 2022 08:16:15 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 23 Feb 2022 08:16:10 -0500
-X-ME-Sender: <xms:mjMWYsNC9ET0-jiYMpUzrd1PZ0CTXj9oV679xr0GmCQ-_N-SOnzUlA>
-    <xme:mjMWYi-7tb1bDxP176Dx679wG9f98FCHRrPZvb7CjXVTZM5IU1FOU48RY0uv8icVA
-    OIuXfWO4WXfqAkVDA>
-X-ME-Received: <xmr:mjMWYjRFQVUKbP6NRkiEznlBZE7Kkp1MZBpFI8GGIJM7kAhjOtuQ5m2bdQ>
+  by compute3.internal (MEProxy); Wed, 23 Feb 2022 08:16:15 -0500
+X-ME-Sender: <xms:nzMWYogrPCD5YHap9MTKfka32zIMGVL6n71BfQF_qtsB0sEjcmoDfw>
+    <xme:nzMWYhDVECLRJf_zb1E79awfGNVKPC7aPFH-D1lLV7ZfR124sk27iKdoT5PezwadZ
+    LUc6c-_1TIbn3jykw>
+X-ME-Received: <xmr:nzMWYgFwt-ICKunEDGpeG8RC7mp_aS4maIHF1Dpxmop8tgr2Q6xw_NJkUQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrledtgdeglecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -67,12 +67,12 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrledtgdeglecutefuodetggdote
     hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
     udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
     gvrdhnrghmvg
-X-ME-Proxy: <xmx:mjMWYkubyhnP0Q42o-kcjY3hsg3IEI6CFbHnsTwr-9lFhNr9L1ezeg>
-    <xmx:mjMWYkdFMXKQz-exq_jsdcmsnC-b2Uy3o8-2CdefS7iUMdlxwMcphQ>
-    <xmx:mjMWYo3lktO3f7sJEwffua3lB8ILC28v_2z9IL016vzEFzqlyZ0NQA>
-    <xmx:mjMWYs4kubwvypDH2VOpmGIaC9bf8D17lTF_mBkXOutQ2OsnNp4mf9gZW0o>
+X-ME-Proxy: <xmx:nzMWYpQCi7pd01qw25cDY3lXLld2VZgq5BbkgLCgI_ImwGc66OebIg>
+    <xmx:nzMWYlzVNEbga3d7cf3s0N9-I_WmwsjPcEmpJlNjkEBo1E0mLQ6_HA>
+    <xmx:nzMWYn4c5lVbZFBwORKMY7vfEsTLtOl2bTVC49yvFix6ZPqva-KD0g>
+    <xmx:nzMWYlfwdTuSA8FIPIeiN1cJy28UvLffsrFxAcbQVtt0SA9xAj-s1_LnvVw>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Feb 2022 08:16:08 -0500 (EST)
+ 23 Feb 2022 08:16:14 -0500 (EST)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     Wei Liu <wei.liu@kernel.org>
 Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
@@ -84,9 +84,9 @@ Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         Michael Kelley <mikelley@microsoft.com>,
         David Hildenbrand <david@redhat.com>,
         linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
-Subject: [RFC 1/2] Drivers: hv: balloon: Support status report for larger page sizes
-Date:   Wed, 23 Feb 2022 21:15:47 +0800
-Message-Id: <20220223131548.2234326-2-boqun.feng@gmail.com>
+Subject: [RFC 2/2] Drivers: hv: balloon: Disable balloon and hot-add accordingly
+Date:   Wed, 23 Feb 2022 21:15:48 +0800
+Message-Id: <20220223131548.2234326-3-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220223131548.2234326-1-boqun.feng@gmail.com>
 References: <20220223131548.2234326-1-boqun.feng@gmail.com>
@@ -102,65 +102,55 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-DM_STATUS_REPORT expects the numbers of pages in the unit of 4k pages
-(HV_HYP_PAGE) instead of guest pages, so to make it work when guest page
-sizes are larger than 4k, convert the numbers of guest pages into the
-numbers of HV_HYP_PAGEs.
+Currently there are known potential issues for balloon and hot-add on
+ARM64:
 
-Note that the numbers of guest pages are still used for tracing because
-tracing is internal to the guest kernel.
+*	Unballoon requests from Hyper-V should only unballoon ranges
+	that are guest page size aligned, otherwise guests cannot handle
+	because it's impossible to partially free a page.
 
-Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+*	Memory hot-add requests from Hyper-V should provide the NUMA
+	node id of the added ranges or ARM64 should have a functional
+	memory_add_physaddr_to_nid(), otherwise the node id is missing
+	for add_memory().
+
+These issues require discussions on design and implementation. In the
+meanwhile, post_status() is working and essiential to guest monitoring.
+Therefore instead of the entire hv_balloon driver, the balloon and
+hot-add are disabled accordingly for now. Once the issues are fixed,
+they can be re-enable in these cases.
+
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- drivers/hv/hv_balloon.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/hv/hv_balloon.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index f2d05bff4245..062156b88a87 100644
+index 062156b88a87..35dcda20be85 100644
 --- a/drivers/hv/hv_balloon.c
 +++ b/drivers/hv/hv_balloon.c
-@@ -17,6 +17,7 @@
- #include <linux/slab.h>
- #include <linux/kthread.h>
- #include <linux/completion.h>
-+#include <linux/count_zeros.h>
- #include <linux/memory_hotplug.h>
- #include <linux/memory.h>
- #include <linux/notifier.h>
-@@ -1130,6 +1131,7 @@ static void post_status(struct hv_dynmem_device *dm)
- 	struct dm_status status;
- 	unsigned long now = jiffies;
- 	unsigned long last_post = last_post_time;
-+	unsigned long num_pages_avail, num_pages_committed;
- 
- 	if (pressure_report_delay > 0) {
- 		--pressure_report_delay;
-@@ -1154,16 +1156,21 @@ static void post_status(struct hv_dynmem_device *dm)
- 	 * num_pages_onlined) as committed to the host, otherwise it can try
- 	 * asking us to balloon them out.
+@@ -1730,9 +1730,19 @@ static int balloon_connect_vsp(struct hv_device *dev)
+ 	 * When hibernation (i.e. virtual ACPI S4 state) is enabled, the host
+ 	 * currently still requires the bits to be set, so we have to add code
+ 	 * to fail the host's hot-add and balloon up/down requests, if any.
++	 *
++	 * We disable balloon if the page size is larger than 4k, since
++	 * currently it's unclear to us whether an unballoon request can make
++	 * sure all page ranges are guest page size aligned.
++	 *
++	 * We also disable hot add on ARM64, because we currently rely on
++	 * memory_add_physaddr_to_nid() to get a node id of a hot add range,
++	 * however ARM64's memory_add_physaddr_to_nid() always return 0 and
++	 * DM_MEM_HOT_ADD_REQUEST doesn't have the NUMA node information for
++	 * add_memory().
  	 */
--	status.num_avail = si_mem_available();
--	status.num_committed = vm_memory_committed() +
-+	num_pages_avail = si_mem_available();
-+	num_pages_committed = vm_memory_committed() +
- 		dm->num_pages_ballooned +
- 		(dm->num_pages_added > dm->num_pages_onlined ?
- 		 dm->num_pages_added - dm->num_pages_onlined : 0) +
- 		compute_balloon_floor();
+-	cap_msg.caps.cap_bits.balloon = 1;
+-	cap_msg.caps.cap_bits.hot_add = 1;
++	cap_msg.caps.cap_bits.balloon = !(PAGE_SIZE > 4096UL);
++	cap_msg.caps.cap_bits.hot_add = !IS_ENABLED(CONFIG_ARM64);
  
--	trace_balloon_status(status.num_avail, status.num_committed,
-+	trace_balloon_status(num_pages_avail, num_pages_committed,
- 			     vm_memory_committed(), dm->num_pages_ballooned,
- 			     dm->num_pages_added, dm->num_pages_onlined);
-+
-+	/* Convert numbers of pages into numbers of HV_HYP_PAGEs. */
-+	status.num_avail = num_pages_avail * NR_HV_HYP_PAGES_IN_PAGE;
-+	status.num_committed = num_pages_committed * NR_HV_HYP_PAGES_IN_PAGE;
-+
  	/*
- 	 * If our transaction ID is no longer current, just don't
- 	 * send the status. This can happen if we were interrupted
+ 	 * Specify our alignment requirements as it relates
 -- 
 2.35.1
 
