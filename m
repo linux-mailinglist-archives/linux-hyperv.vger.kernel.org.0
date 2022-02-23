@@ -2,77 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DB764C13D5
+	by mail.lfdr.de (Postfix) with ESMTP id 1EAD24C13D4
 	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Feb 2022 14:16:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240806AbiBWNQe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 23 Feb 2022 08:16:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38550 "EHLO
+        id S240815AbiBWNQl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Feb 2022 08:16:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239584AbiBWNQe (ORCPT
+        with ESMTP id S239584AbiBWNQk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 23 Feb 2022 08:16:34 -0500
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FE1A9E38;
-        Wed, 23 Feb 2022 05:16:06 -0800 (PST)
-Received: by mail-io1-xd31.google.com with SMTP id r7so18945095iot.3;
-        Wed, 23 Feb 2022 05:16:06 -0800 (PST)
+        Wed, 23 Feb 2022 08:16:40 -0500
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE1DEAA011;
+        Wed, 23 Feb 2022 05:16:12 -0800 (PST)
+Received: by mail-il1-x12d.google.com with SMTP id e11so15233818ils.3;
+        Wed, 23 Feb 2022 05:16:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N/ZngmccxHK3xdUdzMq14bcJ4elOS/xqvsQ5qkzb4so=;
-        b=U3H73Mij6jCZ7Vg+VLx8hPjGaqz3dZIn++n5JILJULeHGYCjuLNox0L2nXxoPn968O
-         ZGTBLdQ/McZSxzbOYUDywVOpPRgEPZQSCSwXce8PCVC62iovckv9Y2chwn+/rUrMiX6J
-         t6l3+HXgWAhhaM30vqyMhnChV4quWoqOsbaq6VRM26iXZGPzUEJBrHhrNJZ+HZcZ7wwU
-         iR5J6WxSkdUIl5PI69tVZ0O1tYot7r0lifZbDCWQhFT/UgTCuy4YFAHFUj3wJCeAKckY
-         9WZ1nBl1lRk33Zs+2WPsyDFoIb2L5wxzvnnGbdvJA+Kz5jzP0d3CA9hnDy6jGJ86v5Dg
-         8XVA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1RzvBknQsRqqFRqcBakDx7UnpeR3xK8Ei9AhGVZI0ro=;
+        b=G6Bnf7AHCROwEduRmTJpAWS9Qs+PY7gpP0j4HkIDKDSSruS4Udl+Ybt1wsqgqtm6Ir
+         9jlZkaVXo4jjrHCXNRRx4gjEW8NtXCP7RFWT/wVsKMsJV4DgELU45ClHTAM8aE2t/o4v
+         YdekMvguj+IS6fvQGgay0ORbNuZ3j2ZQ0q9ewReFJ10kay2w3psbJOG1+ByUQeID+53z
+         Uz8FFsmlwzLg0kWEpMBqfidJ3c/GsOG4GE4hO4Bk2lvouUmWGGXk119XM+dRkRdVN1Cu
+         WPkqo2aBCBKc/Hto0+QcyyIJ7iGqvncCE06D4SeBuDpqKKCjhn+Ztugchc54J2jhcuR/
+         zP3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N/ZngmccxHK3xdUdzMq14bcJ4elOS/xqvsQ5qkzb4so=;
-        b=XbE5yrGiMFtfssU2YDR9GdloYmBw7t1etr3jOWIKwNrbiEvaT6qTdVpdA2dXE+5brL
-         zEI38lLPsQXjb4Z1eaRM+fHRltZneYRJeAoBW6dvU4K7Lj4KUe6QwC0dZDRIuZiDZv7l
-         0zku04wCjDwLTnt1wd17dZrO/4PflSvWRpuzU5rI9wBHQGY7v5V1rwHX+XdlxRnCZZtx
-         vajibPGGmeoVhWhnvIefYSnjnUX4J9g3oN8RS3/WADo22hweV5ymRsbf4ms5pm1Wcpvy
-         ieo5aXkJadfqfxOg+uBtjmdO6TZRfrnUYiuiSHtp1lv2/gUTWshq9Zz4BuoImVoNdwG/
-         HKvA==
-X-Gm-Message-State: AOAM5302zi+3Cis/tihVTKy7KJTx2YD4yRKSZY3LUJlCbiadcOc5eQoq
-        +Li5ouH9MR2n5xyCHFgRxnk=
-X-Google-Smtp-Source: ABdhPJyDlLYi8num6aKaORYvJbsGJ0QW0RvaOActL9DYdJiQUbpgVFQhFGv5VJ9YWS49FpFUZls3MA==
-X-Received: by 2002:a6b:640c:0:b0:641:31c0:53f9 with SMTP id t12-20020a6b640c000000b0064131c053f9mr8706519iog.192.1645622166089;
-        Wed, 23 Feb 2022 05:16:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1RzvBknQsRqqFRqcBakDx7UnpeR3xK8Ei9AhGVZI0ro=;
+        b=UdB9TI4ZEnsFOt0b8JrK/mj8ae/DXDVfUythFBcEb1/hsL49aO7UlYldxq4+/U2IQx
+         O2SrkgRdtoM15rCKqTMN9WRUmdajJY2gRm3mBH7frjQGA2kvvyQ0CHc6gGuORWEJJTag
+         EyxEumPFUHtD/dXxqi9Bt32Hkz/WlwYCSdzIoFafPPYR/khG3y+3Luy2aX4zPNKmKycZ
+         cpsZ3u1PG6Ph6Uwqq1tPTOCBlNWYtiDr8YHpwKxCLfTsIH85u2vgLxp6BtzRSfKTG1mI
+         3BwNjcof/XuVF0yuxtg07dyI7c70u1sPCdz2V+ZdL/s9vJUSkalBrOMrAOAIp2jRtrbW
+         Lgvg==
+X-Gm-Message-State: AOAM532t1yj97NajmsdIkQFUg5mx0AHD6fwJZ7dKV5D+71bO/xDbJSsm
+        wzqpNDq47PbSKZGLzk2fiSY=
+X-Google-Smtp-Source: ABdhPJy2O+qKFfwngzHjfql/fo37iyjOgVhqqnh81ArwtuP/wOB/M/nPUEoWoPWoIuBmoTvQHcW2dA==
+X-Received: by 2002:a05:6e02:1708:b0:2c2:7258:3e72 with SMTP id u8-20020a056e02170800b002c272583e72mr4364160ill.267.1645622172368;
+        Wed, 23 Feb 2022 05:16:12 -0800 (PST)
 Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id i16sm3677914ilk.14.2022.02.23.05.16.03
+        by smtp.gmail.com with ESMTPSA id u15sm12712168ill.75.2022.02.23.05.16.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 05:16:04 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 88DD127C005A;
-        Wed, 23 Feb 2022 08:16:03 -0500 (EST)
+        Wed, 23 Feb 2022 05:16:11 -0800 (PST)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 4999727C0054;
+        Wed, 23 Feb 2022 08:16:10 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 23 Feb 2022 08:16:03 -0500
-X-ME-Sender: <xms:kjMWYj-S0HEl9I0P9Sx4CrRmiRwo2n7RaYzKJF-1PVJKiRL5S2OXNQ>
-    <xme:kjMWYvv6PJVPhSq-hIZSS_aXfhK28uTyGcWO4mjczICZ1yJD33xi96rwv-aa3t2gR
-    zS7S4e0JBhe3kHWaA>
-X-ME-Received: <xmr:kjMWYhC3OFVynqeKR8EMTt6yyBLpYpcYZhcTJ_DXVgSCQUMvx5YOvsVk-Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrledtgdegkecutefuodetggdotefrodftvf
+  by compute1.internal (MEProxy); Wed, 23 Feb 2022 08:16:10 -0500
+X-ME-Sender: <xms:mjMWYsNC9ET0-jiYMpUzrd1PZ0CTXj9oV679xr0GmCQ-_N-SOnzUlA>
+    <xme:mjMWYi-7tb1bDxP176Dx679wG9f98FCHRrPZvb7CjXVTZM5IU1FOU48RY0uv8icVA
+    OIuXfWO4WXfqAkVDA>
+X-ME-Received: <xmr:mjMWYjRFQVUKbP6NRkiEznlBZE7Kkp1MZBpFI8GGIJM7kAhjOtuQ5m2bdQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrledtgdeglecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcuhfgv
-    nhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeeiueevjeelheduteefveeflefgjeetfeehvdekudekgfegudeghfduhfetveejuden
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhs
-    ohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnh
-    hgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:kjMWYve9QSVKeSWU-7_i00oQCKd_hRZEjnrDLpI43jiH4ypzuA060A>
-    <xmx:kjMWYoOQoXtTc3zyDc13OALZGFfiGeddTHV3DCfr6iXq-Mdy4shLMQ>
-    <xmx:kjMWYhnWSh_OSQY49Bq6QkdJbYS4pYNcOCMqqjaSrmqfxuyYtdlDIQ>
-    <xmx:kzMWYnpKLsopf0keQ3AwrdRoQF5I5hBr9fMb_DCxExs9d7kaWGrsa7r_WC8>
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpeehvdevteefgfeiudettdefvedvvdelkeejueffffelgeeuhffhjeetkeeiueeu
+    leenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvg
+X-ME-Proxy: <xmx:mjMWYkubyhnP0Q42o-kcjY3hsg3IEI6CFbHnsTwr-9lFhNr9L1ezeg>
+    <xmx:mjMWYkdFMXKQz-exq_jsdcmsnC-b2Uy3o8-2CdefS7iUMdlxwMcphQ>
+    <xmx:mjMWYo3lktO3f7sJEwffua3lB8ILC28v_2z9IL016vzEFzqlyZ0NQA>
+    <xmx:mjMWYs4kubwvypDH2VOpmGIaC9bf8D17lTF_mBkXOutQ2OsnNp4mf9gZW0o>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Feb 2022 08:16:01 -0500 (EST)
+ 23 Feb 2022 08:16:08 -0500 (EST)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     Wei Liu <wei.liu@kernel.org>
 Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
@@ -84,10 +84,12 @@ Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         Michael Kelley <mikelley@microsoft.com>,
         David Hildenbrand <david@redhat.com>,
         linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
-Subject: [RFC 0/2] Drivers: hv: balloon: Temporary fixes for ARM64
-Date:   Wed, 23 Feb 2022 21:15:46 +0800
-Message-Id: <20220223131548.2234326-1-boqun.feng@gmail.com>
+Subject: [RFC 1/2] Drivers: hv: balloon: Support status report for larger page sizes
+Date:   Wed, 23 Feb 2022 21:15:47 +0800
+Message-Id: <20220223131548.2234326-2-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220223131548.2234326-1-boqun.feng@gmail.com>
+References: <20220223131548.2234326-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -100,33 +102,65 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Since Hyper-V always uses 4k pages, hv_balloon has some difficulties
-working on ARM64 with larger pages[1]. Besides the memory hot add
-messages of Hyper-V doesn't have the information of NUMA node id of the
-added memory range, and ARM64 currently doesn't provide the conversion
-from a physical address to a node id, as a result the hv_balloon driver
-couldn't handle hot add properly when there are more than one NUMA node.
+DM_STATUS_REPORT expects the numbers of pages in the unit of 4k pages
+(HV_HYP_PAGE) instead of guest pages, so to make it work when guest page
+sizes are larger than 4k, convert the numbers of guest pages into the
+numbers of HV_HYP_PAGEs.
 
-Among these issues, post_status() is easy to fix, while the unballoon
-issue and the hot-add issue requires more discussion. To make the
-hv_balloon driver work at the best effort, this patchset fixes the
-post_status() and temporarily disable the balloon and hot-add
-accordingly.
+Note that the numbers of guest pages are still used for tracing because
+tracing is internal to the guest kernel.
 
-Looking forwards to comments and suggestions.
+Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ drivers/hv/hv_balloon.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-Regards,
-Boqun
-
-[1]: https://lore.kernel.org/lkml/20220105165028.1343706-1-vkuznets@redhat.com/
-
-Boqun Feng (2):
-  Drivers: hv: balloon: Support status report for larger page sizes
-  Drivers: hv: balloon: Disable balloon and hot-add accordingly
-
- drivers/hv/hv_balloon.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index f2d05bff4245..062156b88a87 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -17,6 +17,7 @@
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
+ #include <linux/completion.h>
++#include <linux/count_zeros.h>
+ #include <linux/memory_hotplug.h>
+ #include <linux/memory.h>
+ #include <linux/notifier.h>
+@@ -1130,6 +1131,7 @@ static void post_status(struct hv_dynmem_device *dm)
+ 	struct dm_status status;
+ 	unsigned long now = jiffies;
+ 	unsigned long last_post = last_post_time;
++	unsigned long num_pages_avail, num_pages_committed;
+ 
+ 	if (pressure_report_delay > 0) {
+ 		--pressure_report_delay;
+@@ -1154,16 +1156,21 @@ static void post_status(struct hv_dynmem_device *dm)
+ 	 * num_pages_onlined) as committed to the host, otherwise it can try
+ 	 * asking us to balloon them out.
+ 	 */
+-	status.num_avail = si_mem_available();
+-	status.num_committed = vm_memory_committed() +
++	num_pages_avail = si_mem_available();
++	num_pages_committed = vm_memory_committed() +
+ 		dm->num_pages_ballooned +
+ 		(dm->num_pages_added > dm->num_pages_onlined ?
+ 		 dm->num_pages_added - dm->num_pages_onlined : 0) +
+ 		compute_balloon_floor();
+ 
+-	trace_balloon_status(status.num_avail, status.num_committed,
++	trace_balloon_status(num_pages_avail, num_pages_committed,
+ 			     vm_memory_committed(), dm->num_pages_ballooned,
+ 			     dm->num_pages_added, dm->num_pages_onlined);
++
++	/* Convert numbers of pages into numbers of HV_HYP_PAGEs. */
++	status.num_avail = num_pages_avail * NR_HV_HYP_PAGES_IN_PAGE;
++	status.num_committed = num_pages_committed * NR_HV_HYP_PAGES_IN_PAGE;
++
+ 	/*
+ 	 * If our transaction ID is no longer current, just don't
+ 	 * send the status. This can happen if we were interrupted
 -- 
 2.35.1
 
