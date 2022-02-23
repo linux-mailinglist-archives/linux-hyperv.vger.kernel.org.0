@@ -2,61 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A15714C1BF4
+	by mail.lfdr.de (Postfix) with ESMTP id EE8214C1BF5
 	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Feb 2022 20:16:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235833AbiBWTQ3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S244319AbiBWTQ3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Wed, 23 Feb 2022 14:16:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244321AbiBWTQZ (ORCPT
+        with ESMTP id S244326AbiBWTQZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Wed, 23 Feb 2022 14:16:25 -0500
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7E041613
-        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 11:15:55 -0800 (PST)
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9647241FAF
+        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 11:15:56 -0800 (PST)
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 140193FCB0
-        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 19:15:48 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4389B40F5E
+        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 19:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1645643748;
-        bh=WWBR/3RyyId0ctzqGYcSjorUZAyYEVp2bjQXWveQ/28=;
+        s=20210705; t=1645643750;
+        bh=oRXS+YkCrSg6HXmKQBekF6bqmCpfytEa7gv0higjFpc=;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
          MIME-Version;
-        b=dCwvgne0EaGcdY4A9R1Qy83kKUCEcrOB/R0okvI6R7b7u22SXcxzsnRbWMzDHURxu
-         nts9S6fPV9BbX+ZPE3eE3a+vngfiJcnlDchpA+WoY34ZUI1N5P+un6cCo5QJx5UJ6y
-         qMH49r3yk8j8uTfn946WM45MoNVAv/aPHMJjrUkclHRjkVuOfoLGDWDhb8CWOcXBT5
-         1PQaqxYV180XTGMAv+XuicjiZ5jb2q3LQ8PcJaiFqYDaJWfqTxfVq3f0pBQu7O2RGK
-         mtSGpNW0j5Q/4Tz/5+Y68vwlltBbzHXP7OpCX6jZENieuvtJIsbMwiqHHYefg1j0Bt
-         KWzAQFK1bQB0Q==
-Received: by mail-wm1-f70.google.com with SMTP id r206-20020a1c44d7000000b00380e36c6d34so1539835wma.4
-        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 11:15:48 -0800 (PST)
+        b=o9qNnFxvyhGRDlh3zQVGjQZWDt1pJUaV5/o1187rG+Gn/D2lD01E6ZWEgg+bA1lxP
+         Pjq8kwqHewHatHkxbHL3tSIYG55BNnhv/tdrOmruacDM/UaYClJDVMRtVEiFrNur+R
+         9fhgKyMOOYN/8+yTAPxNPrVzlQbUqFaSuJYrkmZnzlCvPZUdo4ce5V6sQvZ2fRsOdY
+         sPgFNE8Ox9OkCtflNsxv5hSoUEr4rS+GfjXkoMJgq730iCu/2DQusQLDrlznQFSn5R
+         NO6QPX/4n0z4F1fJMd54rlKauSX3RwvRiX8+43LCmFhZsZYYKoxoSTJMEY28IbrPPY
+         h+RdX5VmCX6Gw==
+Received: by mail-ej1-f71.google.com with SMTP id o22-20020a1709061d5600b006d1aa593787so3598160ejh.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 11:15:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WWBR/3RyyId0ctzqGYcSjorUZAyYEVp2bjQXWveQ/28=;
-        b=3NqsgLj0B6WrjdA1SIm2Dn8AhIqGQG4tNcHf6H1LY9zG3sDMq153Ul7C6nWMXEf6CO
-         J0gVA/mxVHOI7r2ym9ZSSH74clA43bVB7TL+7HJqhHdymJaQPrzJd12jOkZcvdzmniHs
-         UnWrPFmRku6j1MbRgueRYjZrhpldtFfEUXNZ6e7dOi4a3HhIhhkpnsLT7RrA7OPNlJj8
-         kljZoNENmuirt4TBgecSmZ8sRm8xBjztuCmIQ/UZsDUhY1bRa2xEtK92ZfCiQWi0VpLv
-         7fH8A7X1Mo51cpKb4ewZ+/XtvI28qIDoVAi5uXmzGFsMfPxIgVnrNUns5cwlS4siIYDh
-         pvzg==
-X-Gm-Message-State: AOAM532Kp3kwbL94XJIPEiAW/yvBozYOC4fQQW+1pVgVMFDTlerETLD8
-        vdhT71FSTTCZAo9BE9Zwd69yMnjaWcNh7Hflg9LbnJRmVkrx8zGpBiN8kPXmjqNH3kcoglmZ3Md
-        C9uYUeaeEY5SowpTAZvcnzO/XBgcPdlNm1cuEYqiPiQ==
-X-Received: by 2002:a05:6402:70d:b0:410:ba4d:736f with SMTP id w13-20020a056402070d00b00410ba4d736fmr891840edx.0.1645643727231;
-        Wed, 23 Feb 2022 11:15:27 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw8vcySNYfbv43Pk2WXynTAOxXboVgUUSRQKZSxFWxW+kHULs5hedJTU2eFScz4UFZao2eyYQ==
-X-Received: by 2002:a05:6402:70d:b0:410:ba4d:736f with SMTP id w13-20020a056402070d00b00410ba4d736fmr891811edx.0.1645643727044;
-        Wed, 23 Feb 2022 11:15:27 -0800 (PST)
+        bh=oRXS+YkCrSg6HXmKQBekF6bqmCpfytEa7gv0higjFpc=;
+        b=FmoVaNIRBFs7zEQ7m9aWPQGK/EYrgjpWhC922zNmQ4iQmqMajv8PyHivkQxBrNlgsQ
+         JoRqEpguzNUAhn5d+8dvkC8zCU8P3dZ+GPRni2hN+NUsJ0p4uVpozkPDJWndkYB1Z2bB
+         aEuv27CiIj9a7Jm7pMQnwB7Q/ue9CBoMztqNXWBpeg9w97LokRlAgJKD8lZgJPbMQQiv
+         Y2edLslFkYzEuDTEKN0RYxLRgWtSfB1M2kR3A4nSxckkni/rDOW5ZDluR0bKE1frdqG1
+         Ga94ABgHVdG3xEmWAE9b+YVXS1GFHTf1PEaSDfN++AQqBfaKMTDQFWzwmRwjAwE3AEFV
+         4XJQ==
+X-Gm-Message-State: AOAM532ZQfvKv9gB3J88+2yGQeG/8rex80zar0jjSCVPaqFX1Cm7KZVm
+        ZdmCvV64S9PgjxkFjg1hy2SJwQef2IEJE9+HaFu3N4jwavZSFWoFPUCh87A6EdmaIPz4alZNyqE
+        NgB1OcMOFcec/i3pHIciji6IGQsIP23qKjxRI1mkv1Q==
+X-Received: by 2002:a05:6402:3487:b0:40f:fa53:956c with SMTP id v7-20020a056402348700b0040ffa53956cmr894446edc.22.1645643729019;
+        Wed, 23 Feb 2022 11:15:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx5CjazTLBKPiBmuMFKmO+Lmp6CQ3NgkMty7AAh8YmijE7P+oo2dQqmhFhNHN6v7AVbA25vYw==
+X-Received: by 2002:a05:6402:3487:b0:40f:fa53:956c with SMTP id v7-20020a056402348700b0040ffa53956cmr894395edc.22.1645643728802;
+        Wed, 23 Feb 2022 11:15:28 -0800 (PST)
 Received: from localhost.localdomain (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id b3sm208368ejl.67.2022.02.23.11.15.25
+        by smtp.gmail.com with ESMTPSA id b3sm208368ejl.67.2022.02.23.11.15.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 11:15:26 -0800 (PST)
+        Wed, 23 Feb 2022 11:15:28 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -94,9 +94,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         stable@vger.kernel.org
-Subject: [PATCH v2 09/11] clk: imx: scu: fix kfree() of static memory on setting driver_override
-Date:   Wed, 23 Feb 2022 20:14:39 +0100
-Message-Id: <20220223191441.348109-3-krzysztof.kozlowski@canonical.com>
+Subject: [PATCH v2 10/11] slimbus: qcom-ngd: fix kfree() of static memory on setting driver_override
+Date:   Wed, 23 Feb 2022 20:14:40 +0100
+Message-Id: <20220223191441.348109-4-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220223191310.347669-1-krzysztof.kozlowski@canonical.com>
 References: <20220223191310.347669-1-krzysztof.kozlowski@canonical.com>
@@ -118,31 +118,43 @@ for example when driver_override is set via sysfs.
 
 Use dedicated helper to set driver_override properly.
 
-Fixes: 77d8f3068c63 ("clk: imx: scu: add two cells binding support")
+Fixes: 917809e2280b ("slimbus: ngd: Add qcom SLIMBus NGD driver")
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 ---
- drivers/clk/imx/clk-scu.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/slimbus/qcom-ngd-ctrl.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-index 083da31dc3ea..15e1d670e51f 100644
---- a/drivers/clk/imx/clk-scu.c
-+++ b/drivers/clk/imx/clk-scu.c
-@@ -683,7 +683,12 @@ struct clk_hw *imx_clk_scu_alloc_dev(const char *name,
- 		return ERR_PTR(ret);
- 	}
+diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+index 7040293c2ee8..e1a8de4d41fb 100644
+--- a/drivers/slimbus/qcom-ngd-ctrl.c
++++ b/drivers/slimbus/qcom-ngd-ctrl.c
+@@ -1434,6 +1434,7 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 	const struct of_device_id *match;
+ 	struct device_node *node;
+ 	u32 id;
++	int ret;
  
--	pdev->driver_override = "imx-scu-clk";
-+	ret = driver_set_override(&pdev->dev, &pdev->driver_override,
-+				  "imx-scu-clk");
-+	if (ret) {
-+		platform_device_put(pdev);
-+		return ret;
-+	}
+ 	match = of_match_node(qcom_slim_ngd_dt_match, parent->of_node);
+ 	data = match->data;
+@@ -1455,7 +1456,16 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+ 		}
+ 		ngd->id = id;
+ 		ngd->pdev->dev.parent = parent;
+-		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
++
++		ret = driver_set_override(&ngd->pdev->dev,
++					  &ngd->pdev->driver_override,
++					  QCOM_SLIM_NGD_DRV_NAME);
++		if (ret) {
++			platform_device_put(ngd->pdev);
++			kfree(ngd);
++			of_node_put(node);
++			return ret;
++		}
+ 		ngd->pdev->dev.of_node = node;
+ 		ctrl->ngd = ngd;
  
- 	ret = imx_clk_scu_attach_pd(&pdev->dev, rsrc_id);
- 	if (ret)
 -- 
 2.32.0
 
