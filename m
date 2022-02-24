@@ -2,70 +2,71 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 790854C24A3
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Feb 2022 08:49:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF5904C267C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Feb 2022 09:44:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230415AbiBXHtt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 24 Feb 2022 02:49:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
+        id S232063AbiBXIoC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 24 Feb 2022 03:44:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230390AbiBXHts (ORCPT
+        with ESMTP id S231150AbiBXIn7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 24 Feb 2022 02:49:48 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E2917CC61
-        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 23:49:18 -0800 (PST)
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+        Thu, 24 Feb 2022 03:43:59 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC2B5749B
+        for <linux-hyperv@vger.kernel.org>; Thu, 24 Feb 2022 00:43:30 -0800 (PST)
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 720473FCA6
-        for <linux-hyperv@vger.kernel.org>; Thu, 24 Feb 2022 07:49:17 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 1435A3FC9E
+        for <linux-hyperv@vger.kernel.org>; Thu, 24 Feb 2022 08:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1645688957;
-        bh=tIIHXtnNxTvsUSqBUvFfmiqo64/DEPmMQ0dgIpM1aoU=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+        s=20210705; t=1645692209;
+        bh=Dcj0D0zPsXPEVS1eNhpQqfPztDcGavIHA1/tOM5ybJI=;
+        h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
          In-Reply-To:Content-Type;
-        b=l5Feig8W/a9EpyEsGmaBuW4/w3EmEkOSouuGl+9XeKDCXv56PZw/PP3KPcsHmesaG
-         ePQK/Ar4/6eX/APXZcD0jRJs8sCubwfH2Xp3r767F65vPMRVm2G9JG0w7vIifE1m6M
-         cVCttXU4nHFGAZQ9Dom03/Qu4QHL1oxxr+u7qxuszJY3iAvgBuByBf+TEiPBWQszKH
-         YxhSlVkHiitxSP3ozHVCfq+NKrG20Mn0PPCYUM9MbUqZSKozlYRTTS3tlUhPVhHrx2
-         CLbHv7BbIe5TRPZTFDlbVXO626e4ScceOy81feTLTNaSNEePT7yP0Qc8cGiJMV/GFr
-         oC3q4ZZ2evxhA==
-Received: by mail-ej1-f69.google.com with SMTP id h22-20020a1709060f5600b006b11a2d3dcfso824901ejj.4
-        for <linux-hyperv@vger.kernel.org>; Wed, 23 Feb 2022 23:49:17 -0800 (PST)
+        b=HFh0Y9pMIxRq5ATVBhCxUCMvCBmhEuT2J1x8IA9I1hRcjfUFLJ+cp597KAp3zOUgP
+         vRdOdBgcQGCVReH3DKjSyI1TxGo6mx2HfG8N4sC5HODgarLKzu3Wos/G3VZDtLSPeA
+         FNC5P1gUeGiNC6KLcbXbhCAij1ZHvsIY9yuDV0Ph35VJivEt5nyaSbg16QMVceq8KI
+         0rWfD9Nkq9OZQn266uM2aehGeEXjL8hV6UFTjDEBNUY3lKF3KrKUzeb2hTFUqA5OG6
+         CN3stpeR857YSdEBEByLaqX/uLvw3zx0kYBw+bc7j+24CL+n3xL/n2xmFCnkiETQ3e
+         GJZbmVLuJvbgQ==
+Received: by mail-wr1-f71.google.com with SMTP id p18-20020adfba92000000b001e8f7697cc7so418938wrg.20
+        for <linux-hyperv@vger.kernel.org>; Thu, 24 Feb 2022 00:43:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:from:to:cc:references:in-reply-to
          :content-transfer-encoding;
-        bh=tIIHXtnNxTvsUSqBUvFfmiqo64/DEPmMQ0dgIpM1aoU=;
-        b=Pwx4yHvv0umxiwnumoL5T1Pi18xB1jp+B+xENl2fqHBXJKw1M2dLYyqQdhZvllidER
-         47ebEgxS9W9sL+/kkwOwwUqfTh5U0yQjs/6hQ86WNDRaajSxcI4VK8IV5f0VikYyP7dc
-         5msAhEd5WbwN5/YT8aF1iEshUVdn8o6iw+DtrGJ1+TVH72WvH+/lnOzf2SQcXyV6ttiN
-         fGIqKzZzuhWM0nP/qGPJnrZAQiN2FreBeiLURQU4KiAr7piR+YxDZFQ/gSJCflTY6Z7B
-         XafcPdNVr4188944nL9BrpdTdNquCOz46ux+NN6UO/gZ/qES++FvcQrGeiZLYtZi3AUe
-         KnrA==
-X-Gm-Message-State: AOAM533xxXIinyWKrHwP8PszIx9deap9NkZUkeVv7PditS8xU05bdJNh
-        8ZF3PFJN42oPxhbIFJ0oAaunBzng8KNdOb2Gi+P6SV/Rr2cc8i2bCEqSCVDPgtuJ0Aeuz0BmSKa
-        DlS1gRgn0arxLmH5rq9XOgunGrR05eCLhSBu+Futx4g==
-X-Received: by 2002:a05:6402:177b:b0:413:2822:1705 with SMTP id da27-20020a056402177b00b0041328221705mr1116375edb.270.1645688957129;
-        Wed, 23 Feb 2022 23:49:17 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxZ4T6vTJDSRNBttoRjN0CBDIUiJLcd/AByD7b5Uhgs6BBbS824OeS6Yj6e4iHov1EozcksnA==
-X-Received: by 2002:a05:6402:177b:b0:413:2822:1705 with SMTP id da27-20020a056402177b00b0041328221705mr1116367edb.270.1645688956871;
-        Wed, 23 Feb 2022 23:49:16 -0800 (PST)
+        bh=Dcj0D0zPsXPEVS1eNhpQqfPztDcGavIHA1/tOM5ybJI=;
+        b=IVvXhatM/IgT/eHZJOo34iD+jUnyk9elRgdfM/2FILSc2uywcdEkAxL3D7nYgg5mFg
+         ly8FRI5UTxPXmzOg5NQPdZ3Vda0pNU8UspiK4BAUlqJyVYZJ2maVrbyRMxvWEd5PbpF9
+         CqyUPmO6+uZUwwpuiBQuC1uCJio9exkqvFEchBjbvU+NyZcM0xLfHF7g+B6cikHMLffk
+         pOll+oEv5TtamAK2lgCv4PK2pQR85BotGhW1kDF7unHMFzSrUB2P+5XwxI99zyI2BpeY
+         0g8pNirZPqKaTeHaPUjtFleGC/Gg/B+Cuvo4AuFXD9kA2x97XW8GWfngM6IX8spmtAna
+         MTRw==
+X-Gm-Message-State: AOAM533IKzOrItBFmNJo5Od+tLAvPFaFCVUrpZ9FEGodNUqvrcPTsEop
+        p221/XRJX5nNL8410/YrNB8N1d53EgX3gwVP3QySIXXHhMJfAN6ou/9223W648+deZFMkS0UeYB
+        hfylDei7jY4jBjEc3aE4Xb3u+upznJow1+vRLDmJr5g==
+X-Received: by 2002:a05:6402:2744:b0:404:ba60:fec6 with SMTP id z4-20020a056402274400b00404ba60fec6mr1261660edd.235.1645692198578;
+        Thu, 24 Feb 2022 00:43:18 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyR9ltyboSTjtHA8dcoqW8jhNMCdSS02AQooqb5CLRWmWM576orT/UQwLqy77zZSpmBsHCJBQ==
+X-Received: by 2002:a05:6402:2744:b0:404:ba60:fec6 with SMTP id z4-20020a056402274400b00404ba60fec6mr1261610edd.235.1645692198343;
+        Thu, 24 Feb 2022 00:43:18 -0800 (PST)
 Received: from [192.168.0.127] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id s15sm954628ejm.70.2022.02.23.23.49.15
+        by smtp.gmail.com with ESMTPSA id 16sm1006988eji.94.2022.02.24.00.43.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 23:49:16 -0800 (PST)
-Message-ID: <f7347531-8aa4-c011-d405-dea93e29779f@canonical.com>
-Date:   Thu, 24 Feb 2022 08:49:15 +0100
+        Thu, 24 Feb 2022 00:43:17 -0800 (PST)
+Message-ID: <cd89539b-92b8-0376-03c2-1a9268721b92@canonical.com>
+Date:   Thu, 24 Feb 2022 09:43:16 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH v2 05/11] pci: use helper for safer setting of
- driver_override
+Subject: Re: [PATCH v2 01/11] driver: platform: add and use helper for safer
+ setting of driver_override
 Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -101,9 +102,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         virtualization@lists.linux-foundation.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20220223215115.GA155125@bhelgaas>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220223215115.GA155125@bhelgaas>
+References: <20220223215342.GA155282@bhelgaas>
+ <bc4f3314-46f2-72a8-f25c-c9774d987ca1@canonical.com>
+In-Reply-To: <bc4f3314-46f2-72a8-f25c-c9774d987ca1@canonical.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -116,78 +117,21 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 23/02/2022 22:51, Bjorn Helgaas wrote:
-> In subject, to match drivers/pci/ convention, do something like:
-> 
->   PCI: Use driver_set_override() instead of open-coding
-> 
-> On Wed, Feb 23, 2022 at 08:13:04PM +0100, Krzysztof Kozlowski wrote:
->> Use a helper for seting driver_override to reduce amount of duplicated
->> code.
-> 
-> s/seting/setting/
-> 
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
->> ---
->>  drivers/pci/pci-sysfs.c | 24 ++++--------------------
->>  1 file changed, 4 insertions(+), 20 deletions(-)
+On 24/02/2022 08:47, Krzysztof Kozlowski wrote:
+> On 23/02/2022 22:53, Bjorn Helgaas wrote:
+>> On Wed, Feb 23, 2022 at 08:13:00PM +0100, Krzysztof Kozlowski wrote:
+>>> Several core drivers and buses expect that driver_override is a
+>>> dynamically allocated memory thus later they can kfree() it.
+>>> ...
 >>
->> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->> index 602f0fb0b007..16a163d4623e 100644
->> --- a/drivers/pci/pci-sysfs.c
->> +++ b/drivers/pci/pci-sysfs.c
->> @@ -567,31 +567,15 @@ static ssize_t driver_override_store(struct device *dev,
->>  				     const char *buf, size_t count)
->>  {
->>  	struct pci_dev *pdev = to_pci_dev(dev);
->> -	char *driver_override, *old, *cp;
->> +	int ret;
->>  
->>  	/* We need to keep extra room for a newline */
->>  	if (count >= (PAGE_SIZE - 1))
->>  		return -EINVAL;
+>>> + * set_driver_override() - Helper to set or clear driver override.
+>>
+>> Doesn't match actual function name.
 > 
-> This check makes no sense in the new function.  Michael alluded to
-> this as well.
+> Good point. I wonder why build W=1 did not complain... I need to check.
+> 
 
-I am not sure if I got your comment properly. You mean here:
-1. Move this check to driver_set_override()?
-2. Remove the check entirely?
-
-> 
->> -	driver_override = kstrndup(buf, count, GFP_KERNEL);
->> -	if (!driver_override)
->> -		return -ENOMEM;
->> -
->> -	cp = strchr(driver_override, '\n');
->> -	if (cp)
->> -		*cp = '\0';
->> -
->> -	device_lock(dev);
->> -	old = pdev->driver_override;
->> -	if (strlen(driver_override)) {
->> -		pdev->driver_override = driver_override;
->> -	} else {
->> -		kfree(driver_override);
->> -		pdev->driver_override = NULL;
->> -	}
->> -	device_unlock(dev);
->> -
->> -	kfree(old);
->> +	ret = driver_set_override(dev, &pdev->driver_override, buf);
->> +	if (ret)
->> +		return ret;
->>  
->>  	return count;
->>  }
->> -- 
->> 2.32.0
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+I see why - I missed kerneldoc /** opener.
 
 
 Best regards,
