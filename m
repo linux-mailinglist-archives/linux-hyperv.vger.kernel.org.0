@@ -2,137 +2,121 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CDAE4C474F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Feb 2022 15:19:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F4FF4C476F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Feb 2022 15:29:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241522AbiBYOTv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 25 Feb 2022 09:19:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
+        id S239774AbiBYO3f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 25 Feb 2022 09:29:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230039AbiBYOTu (ORCPT
+        with ESMTP id S232662AbiBYO3f (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 25 Feb 2022 09:19:50 -0500
-Received: from smtp-fw-9103.amazon.com (smtp-fw-9103.amazon.com [207.171.188.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94FBB22A243;
-        Fri, 25 Feb 2022 06:19:16 -0800 (PST)
+        Fri, 25 Feb 2022 09:29:35 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6026F1DAC7B;
+        Fri, 25 Feb 2022 06:29:03 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id v5-20020a17090ac90500b001bc40b548f9so8597428pjt.0;
+        Fri, 25 Feb 2022 06:29:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1645798756; x=1677334756;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JS5wUTydEragTkrDUV+gfvs0YlNNXnR6VSN786T+J8s=;
-  b=sg4KCzbg3GXX5A4iNFDd1rpZCfbh4fxlGj5pzP97ibP/nS51XyRpGVE4
-   M8nQn7zSg6eRzNY6rvNG3pe2+oy6ldae/r46WMtkIbCAOsXuYevvO23O/
-   qr62O+j3i5knphIhIvdwVKI6Aa/5gzPyuvcZYjZDzlzqGS2CGhVeZD9PM
-   E=;
-X-IronPort-AV: E=Sophos;i="5.90,136,1643673600"; 
-   d="scan'208";a="994982949"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-b27d4a00.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 25 Feb 2022 14:18:59 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-iad-1a-b27d4a00.us-east-1.amazon.com (Postfix) with ESMTPS id 503638152A;
-        Fri, 25 Feb 2022 14:18:53 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.28; Fri, 25 Feb 2022 14:18:51 +0000
-Received: from [0.0.0.0] (10.43.162.43) by EX13D20UWC001.ant.amazon.com
- (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1497.28; Fri, 25 Feb
- 2022 14:18:45 +0000
-Message-ID: <88ebdc32-2e94-ef28-37ed-1c927c12af43@amazon.com>
-Date:   Fri, 25 Feb 2022 15:18:43 +0100
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language
+         :from:to:cc:references:in-reply-to:content-transfer-encoding;
+        bh=t5YAbD7vQEX4bsWhAei3DxtoVuv5IKfWxA+u2Ae9wAc=;
+        b=NP47JcMNbHTMaUVy2mFxwWKAGJCIZ5XI3xAKbinOX0FQzqETFGEAcGIzKvoDi0UG6W
+         HZP3q4+jxZCHBNlcy8v9M7OHMswMZT+GtnAqmjrOVZiINQh8soFHCFPirFR90K62IElR
+         lCCB5VWl2SgVc2wDrNuGdgPEOHwDiRY7TRbt0qzE17Yx61PAVKkesmm5fxkskIFz5y6Y
+         GiUcyvTh5f5NIN0FbZpeoTM16xTsGSx+VjPRP+OLtzbz5EOuXBSXXPS8fkkixD9Ss5RO
+         IIzb1nDTqfBZ4seDQeDXZs/L9GMzxm7/II5xNHNMKAn6db2MYSsUmM6cmDI1TCpcloq2
+         NaRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=t5YAbD7vQEX4bsWhAei3DxtoVuv5IKfWxA+u2Ae9wAc=;
+        b=rHL/XFmeXNQvjgqGVJWUOSU/0XduUkdYtnFJQxrwf6flDALNbrp0GpNvVag7AKzXWO
+         +MceT6EzXQSsWz8osieIzNJNveHQNtKejWRKNrc1xH730Bn6TFmp+4zivsN+8qGByyRi
+         ndH4dcZCO/6FXBi6+B4iJHUdW87BIklj9kSfazwov+3Ul+7dIRk+Al8PWc6ZWiBwF3JY
+         9YEyJhgHh6ifqVq8SVOtnr2diXbPmwMd1Va4572sZP81CoFmYvH/BKLRFcpBGaKUPMsP
+         e8uYSHmKZSSaEceKPpn3PEqEH7Hq0jAW/rJQuoRGsMHQfHhgpgR7ahGrvmAoPOyXCJ92
+         hTuQ==
+X-Gm-Message-State: AOAM533QMeaRE+d6P/T6CR/msEj+Q4zfzU2qmqw9xaNS3eEVeZ2XuGuq
+        FSv8sO+8L4YrSPO7rMqzUVk=
+X-Google-Smtp-Source: ABdhPJy1vgdWztGWyuXhqHpDnH/bi2diPYr1uqAWpxAf+YpS6SsZOmGBIXvXpz8SCpBBcZGUV9yxRg==
+X-Received: by 2002:a17:902:db01:b0:150:274a:d314 with SMTP id m1-20020a170902db0100b00150274ad314mr3890912plx.52.1645799342814;
+        Fri, 25 Feb 2022 06:29:02 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::754? ([2404:f801:9000:18:efec::754])
+        by smtp.gmail.com with ESMTPSA id b17-20020a056a000a9100b004e1b7cdb8fdsm3751492pfl.70.2022.02.25.06.28.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Feb 2022 06:29:02 -0800 (PST)
+Message-ID: <a80a7efa-f15d-3649-f39f-c24820f9ef2b@gmail.com>
+Date:   Fri, 25 Feb 2022 22:28:54 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH v4] virt: vmgenid: introduce driver for reinitializing RNG
- on VM fork
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-CC:     <kvm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <adrian@parity.io>, <ardb@kernel.org>, <ben@skyportsystems.com>,
-        <berrange@redhat.com>, <colmmacc@amazon.com>,
-        <decui@microsoft.com>, <dwmw@amazon.co.uk>, <ebiggers@kernel.org>,
-        <ehabkost@redhat.com>, <gregkh@linuxfoundation.org>,
-        <haiyangz@microsoft.com>, <imammedo@redhat.com>,
-        <jannh@google.com>, <kys@microsoft.com>, <lersek@redhat.com>,
-        <linux@dominikbrodowski.net>, <mst@redhat.com>,
-        <qemu-devel@nongnu.org>, <raduweis@amazon.com>,
-        <sthemmin@microsoft.com>, <tytso@mit.edu>, <wei.liu@kernel.org>
-References: <CAHmME9pJ3wb=EbUErJrCRC=VYGhFZqj2ar_AkVPsUvAnqGtwwg@mail.gmail.com>
- <20220225124848.909093-1-Jason@zx2c4.com>
- <05c9f2a9-accb-e0de-aac7-b212adac7eb2@amazon.com>
- <YhjjuMOeV7+T7thS@zx2c4.com>
-From:   Alexander Graf <graf@amazon.com>
-In-Reply-To: <YhjjuMOeV7+T7thS@zx2c4.com>
-X-Originating-IP: [10.43.162.43]
-X-ClientProxiedBy: EX13d09UWA001.ant.amazon.com (10.43.160.247) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH V2 1/2] Swiotlb: Add swiotlb_alloc_from_low_pages switch
+Content-Language: en-US
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, hch@infradead.org,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        brijesh.singh@amd.com, konrad.wilk@oracle.com,
+        parri.andrea@gmail.com, thomas.lendacky@amd.com,
+        "krish.sadhukhan@oracle.com" <krish.sadhukhan@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+References: <20220209122302.213882-1-ltykernel@gmail.com>
+ <20220209122302.213882-2-ltykernel@gmail.com> <20220214081919.GA18337@lst.de>
+ <4f433f07-05be-f81f-43e8-55c3f1af23b3@gmail.com>
+ <20220214135834.GA30150@lst.de>
+ <8d052867-ccff-f00f-7c89-cc26a4bfa347@gmail.com>
+ <23f4a64d-5977-1816-8faa-fe7691ace2ff@gmail.com>
+ <20220222080543.GA5412@lst.de>
+ <00112505-4999-ac41-877e-49c4cc45312e@gmail.com>
+ <20220222160039.GA13380@lst.de>
+ <40f91949-58fa-4be2-5b01-ea34dda58670@gmail.com>
+In-Reply-To: <40f91949-58fa-4be2-5b01-ea34dda58670@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Ck9uIDI1LjAyLjIyIDE1OjEyLCBKYXNvbiBBLiBEb25lbmZlbGQgd3JvdGU6Cj4gSGkgQWxleCwK
-Pgo+IE9uIEZyaSwgRmViIDI1LCAyMDIyIGF0IDAyOjU3OjM4UE0gKzAxMDAsIEFsZXhhbmRlciBH
-cmFmIHdyb3RlOgo+Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYWNwaV9kZXZpY2VfaWQgdm1nZW5p
-ZF9pZHNbXSA9IHsKPj4+ICsgICAgICAgeyAiVk1HRU5JRCIsIDAgfSwKPj4+ICsgICAgICAgeyAi
-UUVNVVZHSUQiLCAwIH0sCj4+Cj4+IEFjY29yZGluZyB0byB0aGUgVk1HZW5JRCBzcGVjWzFdLCB5
-b3UgY2FuIG9ubHkgcmVseSBvbiBfQ0lEIGFuZCBfREROIGZvcgo+PiBtYXRjaGluZy4gVGhleSBi
-b3RoIGNvbnRhaW4gIlZNX0dlbl9Db3VudGVyIi4gVGhlIGxpc3QgYWJvdmUgY29udGFpbnMKPj4g
-X0hJRCB2YWx1ZXMgd2hpY2ggYXJlIG5vdCBhbiBvZmZpY2lhbCBpZGVudGlmaWVyIGZvciB0aGUg
-Vk1HZW5JRCBkZXZpY2UuCj4+Cj4+IElJUkMgdGhlIEFDUEkgZGV2aWNlIG1hdGNoIGxvZ2ljIGRv
-ZXMgbWF0Y2ggX0NJRCBpbiBhZGRpdGlvbiB0byBfSElELgo+PiBIb3dldmVyLCBpdCBpcyBsaW1p
-dGVkIHRvIDggY2hhcmFjdGVycy4gTGV0IG1lIHBhc3RlIGFuIGV4cGVyaW1lbnRhbAo+PiBoYWNr
-IEkgZGlkIGJhY2sgdGhlbiB0byBkbyB0aGUgX0NJRCBtYXRjaGluZyBpbnN0ZWFkLgo+Pgo+PiBb
-MV0KPj4gaHR0cHM6Ly9kb3dubG9hZC5taWNyb3NvZnQuY29tL2Rvd25sb2FkLzMvMS9DLzMxQ0ZD
-MzA3LTk4Q0EtNENBNS05MTRDLUQ5NzcyNjkxRTIxNC9WaXJ0dWFsTWFjaGluZUdlbmVyYXRpb25J
-RC5kb2N4Cj4+Cj4+Cj4+IEFsZXgKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9idXMu
-YyBiL2RyaXZlcnMvYWNwaS9idXMuYwo+PiBpbmRleCAxNjgyZjhiNDU0YTIuLjQ1MjQ0M2Q3OWQ4
-NyAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9hY3BpL2J1cy5jCj4+ICsrKyBiL2RyaXZlcnMvYWNw
-aS9idXMuYwo+PiBAQCAtNzQ4LDcgKzc0OCw3IEBAIHN0YXRpYyBib29sIF9fYWNwaV9tYXRjaF9k
-ZXZpY2Uoc3RydWN0IGFjcGlfZGV2aWNlCj4+ICpkZXZpY2UsCj4+ICAgICAgICAgICAgLyogRmly
-c3QsIGNoZWNrIHRoZSBBQ1BJL1BOUCBJRHMgcHJvdmlkZWQgYnkgdGhlIGNhbGxlci4gKi8KPj4g
-ICAgICAgICAgICBpZiAoYWNwaV9pZHMpIHsKPj4gICAgICAgICAgICAgICAgZm9yIChpZCA9IGFj
-cGlfaWRzOyBpZC0+aWRbMF0gfHwgaWQtPmNsczsgaWQrKykgewo+PiAtICAgICAgICAgICAgICAg
-IGlmIChpZC0+aWRbMF0gJiYgIXN0cmNtcCgoY2hhciAqKWlkLT5pZCwgaHdpZC0+aWQpKQo+PiAr
-ICAgICAgICAgICAgICAgIGlmIChpZC0+aWRbMF0gJiYgIXN0cm5jbXAoKGNoYXIgKilpZC0+aWQs
-IGh3aWQtPmlkLAo+PiBBQ1BJX0lEX0xFTiAtIDEpKQo+PiAgICAgICAgICAgICAgICAgICAgICAg
-IGdvdG8gb3V0X2FjcGlfbWF0Y2g7Cj4+ICAgICAgICAgICAgICAgICAgICBpZiAoaWQtPmNscyAm
-JiBfX2FjcGlfbWF0Y2hfZGV2aWNlX2NscyhpZCwgaHdpZCkpCj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgZ290byBvdXRfYWNwaV9tYXRjaDsKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlydC92
-bWdlbmlkLmMgYi9kcml2ZXJzL3ZpcnQvdm1nZW5pZC5jCj4+IGluZGV4IDc1YTc4N2RhOGFhZC4u
-MGJmYTQyMmNmMDk0IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL3ZpcnQvdm1nZW5pZC5jCj4+ICsr
-KyBiL2RyaXZlcnMvdmlydC92bWdlbmlkLmMKPj4gQEAgLTM1Niw3ICszNTYsOCBAQCBzdGF0aWMg
-dm9pZCB2bWdlbmlkX2FjcGlfbm90aWZ5KHN0cnVjdCBhY3BpX2RldmljZQo+PiAqZGV2aWNlLCB1
-MzIgZXZlbnQpCj4+ICAgIH0KPj4KPj4gICAgc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2Rldmlj
-ZV9pZCB2bWdlbmlkX2lkc1tdID0gewo+PiAtICAgIHsiUUVNVVZHSUQiLCAwfSwKPj4gKyAgICAv
-KiBUaGlzIHJlYWxseSBpcyBWTV9HZW5fQ291bnRlciwgYnV0IHdlIGNhbiBvbmx5IG1hdGNoIDgg
-Y2hhcmFjdGVycyAqLwo+PiArICAgIHsiVk1fR0VOX0MiLCAwfSwKPj4gICAgICAgIHsiIiwgMH0s
-Cj4+ICAgIH07Cj4gSSByZWNhbGwgdGhpcyBwYXJ0IG9mIHRoZSBvbGQgdGhyZWFkLiBGcm9tIHdo
-YXQgSSB1bmRlcnN0b29kLCB1c2luZwo+ICJWTUdFTklEIiArICJRRU1VVkdJRCIgd29ya2VkIC93
-ZWxsIGVub3VnaC8sIGV2ZW4gaWYgdGhhdCB3YXNuJ3QKPiB0ZWNobmljYWxseSBpbi1zcGVjLiBB
-cmQgbm90ZWQgdGhhdCByZWx5aW5nIG9uIF9DSUQgbGlrZSB0aGF0IGlzCj4gdGVjaG5pY2FsbHkg
-YW4gQUNQSSBzcGVjIG5vdGlmaWNhdGlvbi4gU28gd2UncmUgYmV0d2VlbiBvbmUgc3BlYyBhbmQK
-PiBhbm90aGVyLCBiYXNpY2FsbHksIGFuZCBkb2luZyAiVk1HRU5JRCIgKyAiUUVNVVZHSUQiIHJl
-cXVpcmVzIGZld2VyCj4gY2hhbmdlcywgYXMgbWVudGlvbmVkLCBhcHBlYXJzIHRvIHdvcmsgZmlu
-ZSBpbiBteSB0ZXN0aW5nLgo+Cj4gSG93ZXZlciwgd2l0aCB0aGF0IHNhaWQsIEkgdGhpbmsgc3Vw
-cG9ydGluZyB0aGlzIHZpYSAiVk1fR2VuX0NvdW50ZXIiCj4gd291bGQgYmUgYSBiZXR0ZXIgZXZl
-bnR1YWwgdGhpbmcgdG8gZG8sIGJ1dCB3aWxsIHJlcXVpcmUgYWNrcyBhbmQKPiBjaGFuZ2VzIGZy
-b20gdGhlIEFDUEkgbWFpbnRhaW5lcnMuIERvIHlvdSB0aGluayB5b3UgY291bGQgcHJlcGFyZSB5
-b3VyCj4gcGF0Y2ggcHJvcG9zYWwgYWJvdmUgYXMgc29tZXRoaW5nIG9uLXRvcCBvZiBteSB0cmVl
-IFsxXT8gQW5kIGlmIHlvdSBjYW4KPiBjb252aW5jZSB0aGUgQUNQSSBtYWludGFpbmVycyB0aGF0
-IHRoYXQncyBva2F5LCB0aGVuIEknbGwgaGFwcGlseSB0YWtlCj4gdGhlIHBhdGNoLgoKClN1cmUs
-IGxldCBtZSBzZW5kIHRoZSBBQ1BJIHBhdGNoIHN0YW5kIGFsb25lLiBObyBuZWVkIHRvIGluY2x1
-ZGUgdGhlIApWTUdlbklEIGNoYW5nZSBpbiB0aGVyZS4KCgpBbGV4CgoKCgoKQW1hem9uIERldmVs
-b3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3JhdXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdl
-c2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWlu
-Z2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDE0OTE3MyBC
-ClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+On 2/23/2022 5:46 PM, Tianyu Lan wrote:
+> 
+> 
+> On 2/23/2022 12:00 AM, Christoph Hellwig wrote:
+>> On Tue, Feb 22, 2022 at 11:07:19PM +0800, Tianyu Lan wrote:
+>>> Thanks for your comment. That means we need to expose an
+>>> swiotlb_device_init() interface to allocate bounce buffer and initialize
+>>> io tlb mem entry. DMA API Current  rmem_swiotlb_device_init() only works
+>>> for platform with device tree. The new API should be called in the bus
+>>> driver or new DMA API. Could you check whether this is a right way 
+>>> before
+>>> we start the work.
+>>
+>> Do these VMs use ACPI?  We'd probably really want some kind of higher
+>> level configuration and not have the drivers request it themselves.
+> 
+> Yes, Hyper-V isolation VM uses ACPI. Devices are enumerated via vmbus 
+> host and there is no child device information in ACPI table. The host 
+> driver seems to be the right place to call new API.
 
+Hi Christoph:
+      One more perspective is that one device may have multiple queues 
+and each queues should have independent swiotlb bounce buffer to avoid 
+spin lock overhead. The number of queues is only available in the device
+driver. This means new API needs to be called in the device driver 
+according to queue number.
