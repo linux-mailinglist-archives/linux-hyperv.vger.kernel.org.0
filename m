@@ -2,92 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A02884C48DB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Feb 2022 16:28:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00EE34C48F7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Feb 2022 16:31:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240592AbiBYP3N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 25 Feb 2022 10:29:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
+        id S242057AbiBYPbw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 25 Feb 2022 10:31:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231340AbiBYP3M (ORCPT
+        with ESMTP id S233758AbiBYPbw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 25 Feb 2022 10:29:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E4D51E44;
-        Fri, 25 Feb 2022 07:28:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 33D27B83250;
-        Fri, 25 Feb 2022 15:28:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77BC2C340F0;
-        Fri, 25 Feb 2022 15:28:34 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="WRm6cOGF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1645802913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AGc3HtA6A4VpWTuoF56TukEqyXDHbzPy+Zb56qBmVE4=;
-        b=WRm6cOGFOImn/aW/r2uMGAAnP99kIhA6KQkGrSddTUVxAkWVY9oezzK7F6YN6oeSPEX00v
-        XVn/gXm/ZD0Khupal1wI4/zPDplhrs4umww7//LN2a9PB1DjWjGzF4rwRukBQLnbj5EMHE
-        FRzEd8Ep4ZckCmimiThiqkYgmQENeqQ=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 8a164ef4 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
-        Fri, 25 Feb 2022 15:28:32 +0000 (UTC)
-Date:   Fri, 25 Feb 2022 16:28:29 +0100
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     Alexander Graf <graf@amazon.com>
-Cc:     kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        adrian@parity.io, ardb@kernel.org, ben@skyportsystems.com,
-        berrange@redhat.com, colmmacc@amazon.com, decui@microsoft.com,
-        dwmw@amazon.co.uk, ebiggers@kernel.org, ehabkost@redhat.com,
-        gregkh@linuxfoundation.org, haiyangz@microsoft.com,
-        imammedo@redhat.com, jannh@google.com, kys@microsoft.com,
-        lersek@redhat.com, linux@dominikbrodowski.net, mst@redhat.com,
-        qemu-devel@nongnu.org, raduweis@amazon.com, sthemmin@microsoft.com,
-        tytso@mit.edu, wei.liu@kernel.org
-Subject: Re: [PATCH v4] virt: vmgenid: introduce driver for reinitializing
- RNG on VM fork
-Message-ID: <Yhj1nYHXmimPsqFd@zx2c4.com>
+        Fri, 25 Feb 2022 10:31:52 -0500
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545A1218CD9;
+        Fri, 25 Feb 2022 07:31:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1645803080; x=1677339080;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=eN9+O0QeW+Uix9xoRJt85GwthBkk74Jy4BjJPjZhA8Y=;
+  b=YhMRBxvfJGZT7Us4IsuVS6CHmYqUnzXnc1QjozOJHEcgbUJ4p/AOCm2t
+   oBRsQy8HKOdEfaDSrXj6EwZRklpGin8UEiBdiW0PcmuoUru4Ky+/F6DDd
+   rOCIEo+XNZ5CtWLjcWvuEPMMM6mOq/eYfI18EtV6AEtJp7RyHmQrzKj5r
+   A=;
+X-IronPort-AV: E=Sophos;i="5.90,136,1643673600"; 
+   d="scan'208";a="66229061"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1box-d-74e80b3c.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP; 25 Feb 2022 15:31:18 +0000
+Received: from EX13MTAUWC002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-iad-1box-d-74e80b3c.us-east-1.amazon.com (Postfix) with ESMTPS id E9E1387A16;
+        Fri, 25 Feb 2022 15:31:11 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.28; Fri, 25 Feb 2022 15:31:10 +0000
+Received: from [0.0.0.0] (10.43.162.216) by EX13D20UWC001.ant.amazon.com
+ (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1497.28; Fri, 25 Feb
+ 2022 15:31:04 +0000
+Message-ID: <0b8a2c25-df48-143d-7fac-dc9b4ef68d3c@amazon.com>
+Date:   Fri, 25 Feb 2022 16:31:02 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [PATCH v4] virt: vmgenid: introduce driver for reinitializing RNG
+ on VM fork
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "Jason A. Donenfeld" <Jason@zx2c4.com>, <kvm@vger.kernel.org>,
+        <linux-crypto@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <adrian@parity.io>,
+        <ardb@kernel.org>, <ben@skyportsystems.com>, <berrange@redhat.com>,
+        <colmmacc@amazon.com>, <decui@microsoft.com>, <dwmw@amazon.co.uk>,
+        <ebiggers@kernel.org>, <ehabkost@redhat.com>,
+        <haiyangz@microsoft.com>, <imammedo@redhat.com>,
+        <jannh@google.com>, <kys@microsoft.com>, <lersek@redhat.com>,
+        <linux@dominikbrodowski.net>, <mst@redhat.com>,
+        <qemu-devel@nongnu.org>, <raduweis@amazon.com>,
+        <sthemmin@microsoft.com>, <tytso@mit.edu>, <wei.liu@kernel.org>
 References: <CAHmME9pJ3wb=EbUErJrCRC=VYGhFZqj2ar_AkVPsUvAnqGtwwg@mail.gmail.com>
  <20220225124848.909093-1-Jason@zx2c4.com>
  <05c9f2a9-accb-e0de-aac7-b212adac7eb2@amazon.com>
- <YhjttNadaaJzVa5X@zx2c4.com>
- <b3b9dd9b-c42c-f057-f546-3e390b50479f@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b3b9dd9b-c42c-f057-f546-3e390b50479f@amazon.com>
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+ <YhjphtYyXoYZ9lXY@kroah.com>
+From:   Alexander Graf <graf@amazon.com>
+In-Reply-To: <YhjphtYyXoYZ9lXY@kroah.com>
+X-Originating-IP: [10.43.162.216]
+X-ClientProxiedBy: EX13D41UWC004.ant.amazon.com (10.43.162.31) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Alex,
+Ck9uIDI1LjAyLjIyIDE1OjM2LCBHcmVnIEtIIHdyb3RlOgo+IE9uIEZyaSwgRmViIDI1LCAyMDIy
+IGF0IDAyOjU3OjM4UE0gKzAxMDAsIEFsZXhhbmRlciBHcmFmIHdyb3RlOgo+Pj4gKwo+Pj4gKyAg
+ICAgICBwaHlzX2FkZHIgPSAob2JqLT5wYWNrYWdlLmVsZW1lbnRzWzBdLmludGVnZXIudmFsdWUg
+PDwgMCkgfAo+Pj4gKyAgICAgICAgICAgICAgICAgICAob2JqLT5wYWNrYWdlLmVsZW1lbnRzWzFd
+LmludGVnZXIudmFsdWUgPDwgMzIpOwo+Pj4gKyAgICAgICBzdGF0ZS0+bmV4dF9pZCA9IGRldm1f
+bWVtcmVtYXAoJmRldmljZS0+ZGV2LCBwaHlzX2FkZHIsIFZNR0VOSURfU0laRSwgTUVNUkVNQVBf
+V0IpOwo+Pj4gKyAgICAgICBpZiAoIXN0YXRlLT5uZXh0X2lkKSB7Cj4+PiArICAgICAgICAgICAg
+ICAgcmV0ID0gLUVOT01FTTsKPj4+ICsgICAgICAgICAgICAgICBnb3RvIG91dDsKPj4+ICsgICAg
+ICAgfQo+Pj4gKwo+Pj4gKyAgICAgICBtZW1jcHkoc3RhdGUtPnRoaXNfaWQsIHN0YXRlLT5uZXh0
+X2lkLCBzaXplb2Yoc3RhdGUtPnRoaXNfaWQpKTsKPj4+ICsgICAgICAgYWRkX2RldmljZV9yYW5k
+b21uZXNzKHN0YXRlLT50aGlzX2lkLCBzaXplb2Yoc3RhdGUtPnRoaXNfaWQpKTsKPj4KPj4gUGxl
+YXNlIGV4cG9zZSB0aGUgdm1nZW5pZCB2aWEgL3N5c2ZzIHNvIHRoYXQgdXNlciBzcGFjZSBldmVu
+IHJlbW90ZWx5IGhhcyBhCj4+IGNoYW5jZSB0byBjaGVjayBpZiBpdCdzIGJlZW4gY2xvbmVkLgo+
+IEV4cG9ydCBpdCBob3c/ICBBbmQgd2h5LCB3aG8gd291bGQgY2FyZT8KCgpZb3UgY2FuIGp1c3Qg
+Y3JlYXRlIGEgc3lzZnMgZmlsZSB0aGF0IGNvbnRhaW5zIGl0LiBUaGUgc2FtZSB3YXkgd2UgaGF2
+ZSAKc3lzZnMgZmlsZXMgZm9yIFVFRkkgY29uZmlnIHRhYmxlcy4gT3Igc3lzZnMgZmlsZXMgZm9y
+IHRoZSBhY3BpIGRldmljZSAKbm9kZXMgdGhlbXNlbHZlcy4KCkkgcGVyc29uYWxseSBkb24ndCBj
+YXJlIGlmIHdlIHB1dCB0aGlzIGludG8gYSBnZW5lcmljIGxvY2F0aW9uIAooL3N5cy9oeXBlcnZp
+c29yIGZvciBleGFtcGxlKSBvciBpbnRvIHRoZSBleGlzdGluZyBhY3BpIGRldmljZSBub2RlIGFz
+IAphZGRpdGlvbmFsIGZpbGUgeW91IGNhbiBqdXN0IHJlYWQuCgpXaG8gd291bGQgY2FyZT8gV2Vs
+bCwgZm9yIHN0YXJ0ZXJzIEkgd291bGQgY2FyZSBmb3IgZGVidWdnaW5nIHB1cnBvc2VzIAo6KS4g
+RXh0cmFjdGluZyB0aGUgSUQgYW5kIHZhbGlkYXRpbmcgdGhhdCBpdCdzIGRpZmZlcmVudCB0aGFu
+IGJlZm9yZSBpcyAKcXVpdGUgdXNlZnVsIHdoZW4geW91IHdhbnQgdG8gY2hlY2sgaWYgdGhlIGNs
+b25lIHJuZyBhZGp1c3RtZW50IGFjdHVhbGx5IAp3b3JrZWQuCgpJIGRvbid0IGhhdmUgdmVyeSBz
+dHJvbmcgZmVlbGluZ3Mgb24gaXQgdGhvdWdoIC0gdW5saWtlIHRoZSBfQ0lEIApjb252ZXJzYXRp
+b24uCgoKQWxleAoKCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICkty
+YXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBT
+Y2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJs
+b3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkg
+MjM3IDg3OQoKCg==
 
-On Fri, Feb 25, 2022 at 04:15:59PM +0100, Alexander Graf wrote:
-> I'm not talking about a notification interface - we've gone through 
-> great length on that one in the previous submission. What I'm more 
-> interested in is *any* way for user space to read the current VM Gen ID. 
-> The same way I'm interested to see other device attributes of my system 
-> through sysfs.
-
-Again, no. Same basic objection: we can do this later and design it
-coherently with the rest. For example, maybe it's better to expose a
-generation counter rather than 16 byte blob, and expect userspace to
-call getrandom() subsequently to get something fresh. Or not! But maybe
-it should be hashed with a fixed prefix string before being exposed to
-userspace. Or not! I don't know, but that's not going to happen on this
-patchset. There is no reason at all why that needs to be done here and
-now. Trying to do too much at the same time is likely why the previous
-efforts from your team stalled out last year. Propose something later,
-in a new thread, and we can discuss then. One step at a time...
-
-Jason
