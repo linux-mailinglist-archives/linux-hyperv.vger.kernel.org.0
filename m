@@ -2,184 +2,225 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CFBF4C4E32
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Feb 2022 19:59:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B648F4C530B
+	for <lists+linux-hyperv@lfdr.de>; Sat, 26 Feb 2022 02:31:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233935AbiBYS74 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 25 Feb 2022 13:59:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34004 "EHLO
+        id S229510AbiBZBcT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 25 Feb 2022 20:32:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233868AbiBYS7y (ORCPT
+        with ESMTP id S229445AbiBZBcT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 25 Feb 2022 13:59:54 -0500
-Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11021022.outbound.protection.outlook.com [52.101.62.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01AF01FE541;
-        Fri, 25 Feb 2022 10:59:22 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KPWbtJGxu90QDcdoDeC6fb1cebxLMQitRGbYrnsKeR70mSZx2GQm2V8SNgUtrwjxd0JgQNboEa0T5uKJH5C4Pz8E+GdTjWuKQ010Oke8eOnqXsp9aw2lXYbjwNKCgCoDQfZ1AmTrHss6mhSoSflBkiAGsxVrjxYmxQ6+DSbY9IBLDEtQ3xTrNf+bzGSeXVuiiFKWczj4kXe7nIkAKsd8NtFQrIa3i85bbpj23CzjmAAAYerkwyDmuGD3pzRQ9ce5YYMENyHAz7JFY3U4qYzM8GNK1yP/RXLCdBnFZTmoun94G8/wp9GTW3CMK9lb3ETiuL0+tgGf7tS/krSWBg9kdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XEqkPz+MyThBCc/tTcAAauHSpr+BjYsMpS/m8y/IDOc=;
- b=PSg7KqEDAxfrb7UonAKgXZVMJ2qxMOJjQISJ4hcSFdTndaGaEem6RKKETWzqjzRMS/b649CmvxYY03ixHuH6npOzgAUYjAHjGkMjwOIC0zvyOEptgo+selWmS/Z7cmjITb42nUFyXLtUz7+J9WXh1fR8r5zKYx/4RoVUBw/mEOmToyYAXNWyLlp4489OomMalZku77zMeRIOkjcHYZ8HgeE7tnzynAXmhf1qVlTDyBunExgkHFKxAB7G6NkQDS/O3XLizBdRpCrE4a5ZwZvdXevzqPIq3nxucdMKrSgGyY1kpEr6hYTk21I5YbvOvPab9SGADVJ+epi4uy/utHDHhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XEqkPz+MyThBCc/tTcAAauHSpr+BjYsMpS/m8y/IDOc=;
- b=Re6DWYTgGV4Sj0v5cWCuwvyAkZ5+T9DzRSa5gCyzISMxcsjdfSxngc+lqPV/JBbv1PA4/WNcl3x5LKzZGNZxIKz/pYoEIdkZfLu6AxcJ9M4ugyoLz4F59ps0P2ii0ke+tNnc7wTbI/EYO2oKVFOPkj2PMV5zBFRabN7wRQEuHfw=
-Received: from MN0PR21MB3098.namprd21.prod.outlook.com (2603:10b6:208:376::14)
- by SJ0PR21MB2015.namprd21.prod.outlook.com (2603:10b6:a03:2aa::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.9; Fri, 25 Feb
- 2022 18:59:19 +0000
-Received: from MN0PR21MB3098.namprd21.prod.outlook.com
- ([fe80::69f8:51be:b573:e70c]) by MN0PR21MB3098.namprd21.prod.outlook.com
- ([fe80::69f8:51be:b573:e70c%5]) with mapi id 15.20.5038.006; Fri, 25 Feb 2022
- 18:59:19 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Anssi Hannula <anssi.hannula@bitwise.fi>,
+        Fri, 25 Feb 2022 20:32:19 -0500
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A8C21A991;
+        Fri, 25 Feb 2022 17:31:44 -0800 (PST)
+Received: by mail-io1-xd29.google.com with SMTP id t11so8550520ioi.7;
+        Fri, 25 Feb 2022 17:31:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/KigQdnFd5mFTT/93mRvjhtdUhjTO09/KSQEMEs3KFI=;
+        b=ePKrTyejrbbuJ4qUkTVosSdwluGgYxR2Of5TCKLu2sB9aAHTvnrXLN0+DC1+G3yKoi
+         aPffeu+ERqhWMFl+NXg4qWoDX1YrGAICWJxS4gVdNX4bqQGtAvES1k4cjdqm7cm89nK2
+         ki/GgN83Ni+kVVoU/GYAZFcsECYmfVdkeHzQMgJ5sSamg++8uWfQVQP6h5+qimeTADnd
+         lUSrdmNXN9S3k82uTfzJ+Iagp9lMlpt3Laoulu8RQoIbdMasPA6dTjZK9uYMWmUsyXfr
+         ZuVhLJpTxA6p3N+7ig/jKfV4fQD93LZV3IdQiNGumnqkVbqCwvySaE6EPamaVx9tCyEJ
+         1A+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/KigQdnFd5mFTT/93mRvjhtdUhjTO09/KSQEMEs3KFI=;
+        b=xnWH+gNYIVqaexYmDAoqC72Jqv5nECcY5B+g4tFokDFOtjaE5LG6+V0NYkoBoBXdcN
+         Ol8v7cilZDO4eJHooxF2NaL8YhIGT9eqD1rnl4BdLtGrtMU2uYxTobZ9e3um5QQJp5YX
+         VOpGS0M482YY1tEEYm/9y5CkS58IKBkoAQcyWrP8wk5V6k6xlaKhgoc8LAYEnqEnpsGQ
+         c58hzNLbR5j5KSMHtaZ5Y7cEjIUERjabWdpQJv9pumKLBD1x9IsZ0fzU10dbBGHpRFzN
+         laSSGmCgiYmRSzx3HU3dRrRq4bzdraVywTfBu2zSX1TlF29CS+HSjbRMCbPtNEWXL5RZ
+         pV/Q==
+X-Gm-Message-State: AOAM531rfboZDnfkh8dQ3VwTigDVTYhm1dPUOWa8oh2S1F9h7BXY5UA0
+        rJyul9YWrdYMKCt5DTCfv7o6Ycw9nmo=
+X-Google-Smtp-Source: ABdhPJwGUiQfHMvd3qeTcik90U4eh7FPqrYTFZMLIedkR4WVy4o0ha4wrvn7YV4TG0hR/CyWdI2ALQ==
+X-Received: by 2002:a02:ccd7:0:b0:30d:21d0:51d6 with SMTP id k23-20020a02ccd7000000b0030d21d051d6mr8057635jaq.138.1645839103954;
+        Fri, 25 Feb 2022 17:31:43 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id h9-20020a92c089000000b002b8b3ce939fsm2481444ile.9.2022.02.25.17.31.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Feb 2022 17:31:42 -0800 (PST)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 9201D27C0054;
+        Fri, 25 Feb 2022 20:31:41 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Fri, 25 Feb 2022 20:31:41 -0500
+X-ME-Sender: <xms:_IIZYmf6Gpmt9TJ0m2gN87pJlSp6v9EvBA35BLt7xNWFmBjSrhbbIQ>
+    <xme:_IIZYgNEX96pyJWpQX0Ekp1JO2qNJlBRsDszBetVMMpIt3aQYPuL6_y_7j5AjtwE5
+    y9uP0RWln8VN92mnQ>
+X-ME-Received: <xmr:_IIZYnj_zokPVA1ArHPQHy1HfQx5Dp1Aww2QBc5xz0i2O6xdn9Iy900Aa_p8QA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrleehgdeffecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpedvleeigedugfegveejhfejveeuveeiteejieekvdfgjeefudehfefhgfegvdeg
+    jeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvg
+X-ME-Proxy: <xmx:_IIZYj8CLH6If-LKX-TuCSx4k6fpWYXLqgwM2iDsPbli_jKofEcWig>
+    <xmx:_IIZYitTGTNFbEWPbnG8Bfr4OZMfTb_hdzV1RdI2HJMbrExSaFydUg>
+    <xmx:_IIZYqGnC_m6XVUbiDQZUdTu1hN0ZCeBSxi2kEmkpQgnIr8eO7M6hA>
+    <xmx:_YIZYsIw0iK8tbD71AgSwXo0v2buHVGpyggl-x0f5xCaJj0sdl8e55wgcs4>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 25 Feb 2022 20:31:40 -0500 (EST)
+Date:   Sat, 26 Feb 2022 09:30:50 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        David Hildenbrand <david@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] hv_balloon: rate-limit "Unhandled message" warning
-Thread-Topic: [PATCH] hv_balloon: rate-limit "Unhandled message" warning
-Thread-Index: AQHYJ/eP+P92t79ZhEqBs3JJG71Sz6ykoZ9Q
-Date:   Fri, 25 Feb 2022 18:59:18 +0000
-Message-ID: <MN0PR21MB3098049BCEFAAEE5C61F589AD73E9@MN0PR21MB3098.namprd21.prod.outlook.com>
-References: <20220222141400.98160-1-anssi.hannula@bitwise.fi>
-In-Reply-To: <20220222141400.98160-1-anssi.hannula@bitwise.fi>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=48ef8e2e-9ca7-46fe-afab-097db867915a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-02-25T18:52:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8ee754a1-0733-4740-1a5f-08d9f890ed5f
-x-ms-traffictypediagnostic: SJ0PR21MB2015:EE_
-x-ms-exchange-atpmessageproperties: SA|SL
-x-microsoft-antispam-prvs: <SJ0PR21MB2015633F04C108BD4CF68F60D73E9@SJ0PR21MB2015.namprd21.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SnYsWs2dp6mge9wMuIOCA7jPfjvoLDqbJSHpqW/faAc0xKxNkTtIpP0op2Gnpo7eT27PeiT9iguy7LhFqrVu7iVHtjN+q5fPMJepCuGIVsFxTbBOdi+8d8Shlz0jJ00Dign/4lzKZjLsH1oGwbAL7+F2lEz4y8rnEgknTGn40/w+bs7YP7+7vXy08tD/ew6RWAl2cf3HEZigfMAXiusuYXR/JvYnmGwmgkfvtcDVhMWPyjicgmNLE9ldWbBTSCAz9lqs94536toQ6FWhrZdG7Q6XtKAOJ48gS22AIq7Zm0DMR3scXPhbJZVBgAI5hGPJeXUR15HmWeMcWjGYznsgjyjccAN4nbemIJ0OjyYjddjTkApGuDiUpFe0VUEPy29c49POWjb2DxNip6O5xdlVSEhGmplpcdV/mBlP0aMIH4OEE1QBZdZUIFg0KgrZQDry7MoXWitho2wDIvms5M1MDOEhTEbKHHbP7boJjUysrfMTzc9dx9PDvZJQpEMJV+iYwRpgeA843yLPZyJFm+5q01gKOJYHR7ru6AWYr163tNEVppkw5m/kf1e/vyJ4ruObomU6FrOSnaMJXu8mbDaXYHT0diA1vJJD1jiCKksj+M8VmAj9fd6VQvhE07Eug3tk20SziWxnDB8QDaxw8zdHNUlR0Lwe2yrHJfBVErq1ZgRYS5ivGms88KO326ote8wbWHmfPQCmEZVNqO86lh6IDCSs9VI597u1wCC8e/s9jb1EzkMfQG4WxbT2nQ/fkzFW
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3098.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(7696005)(6506007)(38100700002)(15650500001)(82960400001)(5660300002)(122000001)(26005)(6636002)(82950400001)(110136005)(52536014)(8990500004)(8936002)(54906003)(186003)(316002)(55016003)(9686003)(38070700005)(86362001)(508600001)(71200400001)(10290500003)(66946007)(83380400001)(76116006)(66556008)(66476007)(64756008)(33656002)(4326008)(8676002)(66446008)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?I0G1uC37ftftVTHg1sTfkyy9PwFC7ZHgEVWDdSmDxpC2jqjn/LdMsCB420C+?=
- =?us-ascii?Q?K45mDqTkYaKhQHmDnwK6DlfPGToldQU8meF+8XlzFX34ICAxDwlE9nXtzrIv?=
- =?us-ascii?Q?jTdxODL0+hOw/qAOpkbXdGaeZQtFFm5KSYZCj9Dt6G7wf+vng7r2wHZ/EuWH?=
- =?us-ascii?Q?A+EwqdN0eyFvEhkRxsFvJR3TVuVkasdvarh8F01L9qWe/Qcznz0yi6FBXgfF?=
- =?us-ascii?Q?GO785HJtN5OsLu8Go6KGO3C1zAHPPUW8wNrgiTOVy/vmEK1idzKb51X8WF1T?=
- =?us-ascii?Q?OeKbopBX/wz/9D3U/nk1+KEblTmAu3SzZxAR9BooBJOv0rYwbpZ12JI1OCwS?=
- =?us-ascii?Q?LHR74zyHPqcBRMXhtwr9V9aaKGrm0CgtGAIqrg92skWz2BPQdEZpVrCNeQL8?=
- =?us-ascii?Q?Q0qw78btUjlbbe9TxT91bQH+BVvKC+Gg71gVVYv8bVkdwPOOqkI4ehV30gsZ?=
- =?us-ascii?Q?lb0eHLimzwSyQA/vSR8uI5PR70VP/rWX0Kjq7lr65PSsEyEF+CNdjd24rada?=
- =?us-ascii?Q?sFBDhlZlVNCU3mlDVEOisMFYXGJZ1NDoktn8GVISyhQvYqMAriHyeBwu7u5z?=
- =?us-ascii?Q?JFvkR0sF7edk/UULKqYrDDPYW35sUzBJ4C5QsF3LErnk1X7f3qnm01wxO3J1?=
- =?us-ascii?Q?n+sCY5Y4ajR0YvVHXBr+wk3NvOyAmJwgcqpUYLhyTZeqfM5W5mYXxmevK3FX?=
- =?us-ascii?Q?j+xkdgHNJE7z0YMpLU44pBw2SP/pJzQKQwnem0wR1i+m8PhdSy7oYv5YoKub?=
- =?us-ascii?Q?5cCsCmFg4S0HLqZr1f10jrq/t2xJtMBvMhMGZwv4ST5leC24B/7bDNNHSDHA?=
- =?us-ascii?Q?stBWDO6VURGiJM/9rKKZHK1x8cyYoTXQMmDcrHuU612bp85XTXrLntNR4dx0?=
- =?us-ascii?Q?aJwydGfAWDumE40Vowi3OgJM/GZttjSo52Q/0LqzoLkAe5+aneDtn2kXrm5d?=
- =?us-ascii?Q?QwvlcHI7MTpKi/L7ERp0DQZhPf7YKn/cSeCkqmC5Ox/ZIeEmNrK/5t/qkkuD?=
- =?us-ascii?Q?hv0znQrFw/Y4r4WsXelHi2tgPRptogjH9IxZySMGS71+1XKMire48rkhuuZs?=
- =?us-ascii?Q?AClUJddTUS+EFLbET+VjUIOvzXYL+FwPEDofUDxFnUv8QiUD/aPyvlfM1igC?=
- =?us-ascii?Q?xoyuQKsEylVHBHWmw1H3S3lXIJUEuaqyk9zM1fZhy212xbjWS/50hOmZMxl0?=
- =?us-ascii?Q?1FGXPtU7CLC5kkRsQqcXtZLOBL+nd9hXvTslGe+NW6pgAOtEIx8MDbgRsv8y?=
- =?us-ascii?Q?0ZquTDWya1Chm8VZpmXh6wTpkKFNokvrXshd+M2jInRon8/nEndi4SQP0/7V?=
- =?us-ascii?Q?+Xzrf8pcg5fW6I7hJqe4NcE3qgQJmSCrPE/3NVg3R0bOeLrEiIrJJDWiWnFm?=
- =?us-ascii?Q?e3rdOo4bgxC00lgIYKzX4k6jM5e84U18R8VDO5upGFFkM1/HHUxMytGNudQj?=
- =?us-ascii?Q?TMg1+l0m4+VLLP2jvW67WGJmRkhmmewgapXSfxrGUnqM7cjIIqwKKNI2da9C?=
- =?us-ascii?Q?3RnFbT6QFxrkJ0l6DOYrvqD8g472CK+4tXFK7aXnDmCc+6vDqY6E8M2/97SS?=
- =?us-ascii?Q?ZQ3DreaJpFeFtqoUvIvyd8KlTjQcIIwI16uYIAPD1+nF01YytkuoI51ADHl6?=
- =?us-ascii?Q?YAZlLtd+nYIDkMs1Dtba1jNIO1umBQrDaXhQn2AvetiyNZMkWGaNmwNvGMXY?=
- =?us-ascii?Q?DoYEDg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC v1.1] Drivers: hv: balloon: Disable balloon and hot-add
+ accordingly
+Message-ID: <YhmCys0dqkKCNQA0@boqun-archlinux>
+References: <20220223131548.2234326-3-boqun.feng@gmail.com>
+ <20220225021714.3815691-1-boqun.feng@gmail.com>
+ <MN0PR21MB30984A8F1F71588DE6B1F366D73E9@MN0PR21MB3098.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3098.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ee754a1-0733-4740-1a5f-08d9f890ed5f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2022 18:59:18.9298
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O755T19+IhByMFhPGV9BG8a+W0J+bnGT0PBzCDC9UvPZ39qwQYPdfvem2mK5SUFB8kf1+P2WiAs8oFg5Btg5V9jplkO7Lu5Tr9po5vd+9qw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB2015
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN0PR21MB30984A8F1F71588DE6B1F366D73E9@MN0PR21MB3098.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Anssi Hannula <anssi.hannula@bitwise.fi> Sent: Tuesday, February 22, =
-2022 6:14 AM
->=20
-> For a couple of times I have encountered a situation where
->=20
->   hv_balloon: Unhandled message: type: 12447
->=20
-> is being flooded over 1 million times per second with various values,
-> filling the log and consuming cycles, making debugging difficult.
->=20
-> Add rate limiting to the message.
->=20
-> Most other Hyper-V drivers already have similar rate limiting in their
-> message callbacks.
->=20
-> The cause of the floods in my case was probably fixed by 96d9d1fa5cd5
-> ("Drivers: hv: balloon: account for vmbus packet header in
-> max_pkt_size").
->=20
-> Fixes: 9aa8b50b2b3d ("Drivers: hv: Add Hyper-V balloon driver")
-> Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
-> ---
->  drivers/hv/hv_balloon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index f2d05bff4245..439f99b8b5de 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1563,7 +1563,7 @@ static void balloon_onchannelcallback(void *context=
-)
->                         break;
->=20
->                 default:
-> -                       pr_warn("Unhandled message: type: %d\n", dm_hdr->=
-type);
-> +                       pr_warn_ratelimited("Unhandled message: type: %d\=
-n", dm_hdr->type);
->=20
->                 }
->         }
-> --
-> 2.34.1
+On Fri, Feb 25, 2022 at 05:06:45PM +0000, Michael Kelley (LINUX) wrote:
+> From: Boqun Feng <boqun.feng@gmail.com> Sent: Thursday, February 24, 2022 6:17 PM
+> > 
+> > Currently there are known potential issues for balloon and hot-add on
+> > ARM64:
+> > 
+> > *	Unballoon requests from Hyper-V should only unballoon ranges
+> > 	that are guest page size aligned, otherwise guests cannot handle
+> > 	because it's impossible to partially free a page.
+> 
+> The above problem occurs only when the guest page size is > 4 Kbytes.
+> 
 
-Unlike some of the other VMbus drivers, this driver has not been "hardened"=
- for
-use in an environment where the guest does not trust the hypervisor, but it=
- was
-affected by changes to the underlying ring buffer handling.  The bug that c=
-aused
-the flood of errors has indeed been fixed, but I'm good with rate limiting =
-this
-warning.
+Ok, I wil call it out in next version.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > 
+> > *	Memory hot-add requests from Hyper-V should provide the NUMA
+> > 	node id of the added ranges or ARM64 should have a functional
+> > 	memory_add_physaddr_to_nid(), otherwise the node id is missing
+> > 	for add_memory().
+> > 
+> > These issues require discussions on design and implementation. In the
+> > meanwhile, post_status() is working and essiential to guest monitoring.
+> 
+> s/essiential/essential/
+> 
+> > Therefore instead of the entire hv_balloon driver, the balloon and
+> > hot-add are disabled accordingly for now. Once the issues are fixed,
+> > they can be re-enable in these cases.
+> 
+> Missing the word "disabling" in the first line?  Also the balloon
 
+The phrasing that I was trying to use here is "Instead of A, B and C are
+disabled" or "B and C are disabled instead of A". Looks like I'm
+inventing my own English? Any I will add the "disabling" in the next
+version ;-)
 
+Regards,
+Boqun
 
+> function is disabled only if the page size is > 4 Kbytes.
+> 
+> > 
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> > v1 --> v1.1:
+> > 
+> > *	Use HV_HYP_PAGE_SIZE instead of hard coding 4096 as suggested by
+> > 	Michael.
+> > 
+> > *	Explicitly print out the disable message if a function is
+> > 	disabled as suggested by Michael.
+> > 
+> >  drivers/hv/hv_balloon.c | 36 ++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 34 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> > index 062156b88a87..eee7402cfc02 100644
+> > --- a/drivers/hv/hv_balloon.c
+> > +++ b/drivers/hv/hv_balloon.c
+> > @@ -1660,6 +1660,38 @@ static void disable_page_reporting(void)
+> >  	}
+> >  }
+> > 
+> > +static int ballooning_enabled(void)
+> > +{
+> > +	/*
+> > +	 * Disable ballooning if the page size is not 4k (HV_HYP_PAGE_SIZE),
+> > +	 * since currently it's unclear to us whether an unballoon request can
+> > +	 * make sure all page ranges are guest page size aligned.
+> 
+> My interpretation of the conversations with Hyper-V is that that they clearly
+> don't guarantee page ranges are guest page aligned.
+> 
+> > +	 */
+> > +	if (PAGE_SIZE != HV_HYP_PAGE_SIZE) {
+> > +		pr_info("Ballooning disabled because page size is not 4096 bytes\n");
+> > +		return 0;
+> > +	}
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +static int hot_add_enabled(void)
+> > +{
+> > +	/*
+> > +	 * Disable hot add on ARM64, because we currently rely on
+> > +	 * memory_add_physaddr_to_nid() to get a node id of a hot add range,
+> > +	 * however ARM64's memory_add_physaddr_to_nid() always return 0 and
+> > +	 * DM_MEM_HOT_ADD_REQUEST doesn't have the NUMA node information for
+> > +	 * add_memory().
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_ARM64)) {
+> > +		pr_info("Memory hot add disabled on ARM64\n");
+> > +		return 0;
+> > +	}
+> > +
+> > +	return 1;
+> > +}
+> > +
+> >  static int balloon_connect_vsp(struct hv_device *dev)
+> >  {
+> >  	struct dm_version_request version_req;
+> > @@ -1731,8 +1763,8 @@ static int balloon_connect_vsp(struct hv_device *dev)
+> >  	 * currently still requires the bits to be set, so we have to add code
+> >  	 * to fail the host's hot-add and balloon up/down requests, if any.
+> >  	 */
+> > -	cap_msg.caps.cap_bits.balloon = 1;
+> > -	cap_msg.caps.cap_bits.hot_add = 1;
+> > +	cap_msg.caps.cap_bits.balloon = ballooning_enabled();
+> > +	cap_msg.caps.cap_bits.hot_add = hot_add_enabled();
+> > 
+> >  	/*
+> >  	 * Specify our alignment requirements as it relates
+> > --
+> > 2.33.0
+> 
+> The code looks good to me.
+> 
+> Michael
