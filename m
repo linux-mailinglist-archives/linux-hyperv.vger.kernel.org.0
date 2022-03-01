@@ -2,39 +2,71 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C43804C798F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Feb 2022 21:09:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D66214C86C5
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 09:42:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbiB1UGu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 28 Feb 2022 15:06:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
+        id S230384AbiCAImn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Mar 2022 03:42:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbiB1UGt (ORCPT
+        with ESMTP id S233469AbiCAImn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 28 Feb 2022 15:06:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D33DEDE;
-        Mon, 28 Feb 2022 12:06:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 1 Mar 2022 03:42:43 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266F288B0D
+        for <linux-hyperv@vger.kernel.org>; Tue,  1 Mar 2022 00:42:01 -0800 (PST)
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 27383B81642;
-        Mon, 28 Feb 2022 20:06:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E29C340F1;
-        Mon, 28 Feb 2022 20:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646078767;
-        bh=uSavGpk0ExFlsWEKDVZVzJWcPdfAeGmRGCCGsNDGZJI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Qb3B2kQ3+f9XzXe4nmDRsU8fezmZ+/v8PAEwfxslUlmRBgDPXTSFx61nrA8w3HnnB
-         jiO48/wBjY9ATJ1CiCs8pQbzqi+CPyMUD7VJzynEdGC7iEhWqi2wiMxXsSWYiUDIQt
-         A3kKL2pQXkopi7jn30+fSIP85KMOScBqm+z9JZHWR2G9Pnhp71ylIv9Hk7UHqh5TFW
-         vROrJiyF+MkB5CSUYjMTwfvPtGA4K1mbCgJkjG4HhaTUDUqd2aSATsYWThH1CNVAP/
-         Q0tdc6VQmrdT+I+jgvtFLagljNriJV7jZByMhdj/HNW8K7kIBTiLovJvYIp5rkp81v
-         RPoj3hmNJbrCA==
-Date:   Mon, 28 Feb 2022 14:06:06 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D039F3F1A7
+        for <linux-hyperv@vger.kernel.org>; Tue,  1 Mar 2022 08:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1646124119;
+        bh=dZm4dVdpcvNRhKnzE3iapZ6aqr4LkpURHZ0F0cP2Ffk=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=WNozuzhh51MkPB6e5T6zDNZ9rtSg3VDRJWH1IDwZSfpJJa3XmxTsuEmO5tG+IrS9x
+         sENmzqV0KRI+6VpVte7znN/e6JiOzWz/Ks05zoUusuYUk8lTVyfJ5DWP6AsPSMfX5K
+         E04N9kSL9W50Y50K2H9Txk52qlMh20NMXd7vjuVfNOH0ohrD+UckfyarzdSIPJK+2N
+         qqFl+dL87t/4REdj419Fhfn3RyK1OG4nT+5YxRXcSrStFV+KB1/8ra3R3aMeFSKKTl
+         YJSrqr9uWK39ooxO7RjeY9lWE5+6KYf4kwswy0k+TQdYiM/qC3T1XIOSR++hi4xCHJ
+         yjHyNwqXa9PFA==
+Received: by mail-ed1-f72.google.com with SMTP id l14-20020a056402344e00b0041593c729adso351129edc.18
+        for <linux-hyperv@vger.kernel.org>; Tue, 01 Mar 2022 00:41:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=dZm4dVdpcvNRhKnzE3iapZ6aqr4LkpURHZ0F0cP2Ffk=;
+        b=3s271xhDUirIaunCCOGdk+KME9mREXa75WU+20TLn3CQxVbVtr2aLsxlKWdWhlJWt+
+         eg1YP0j71DRW91Xn1NwmVOhLooMp7NspMyNagM9vivlIDi4AUR7hbyW2ybFiJX0sVI2x
+         9PINvF/K47rFAVB7ohSuPqtTQitnsn1qJyzXZlvL8x3Ax/C20z7M6Hkum6XRQa0GFKvO
+         Fao4JHalns1OCD2jE98/FJEfQld9KiKMUid0mjpzC9YcQHsmoN5WWoBbz0wuWR7U64Ya
+         ts+i4Ma3qIpHG0t5bM1o7LTzp3o36JuYmS2JItejz7Vfzl3xfh6BZ4P2hXkG/Z0VfTD/
+         rHew==
+X-Gm-Message-State: AOAM530FtTatdpNfHgsFJRKsdY+KURGz8mtO9tZsV1pOeBfnFPVq6c/X
+        MqymCz5bD00L50ZbtIxiI8/V/mojtdYu+tBVHDNsMb4Vz0VMPtNm7p05g/UCr+npT84GTACJlGO
+        HB7qNsB6tQmc8HDiYwiiEYeE1ndGncAbHnWg4Hi0YQQ==
+X-Received: by 2002:a17:907:248a:b0:69b:ba2d:62cd with SMTP id zg10-20020a170907248a00b0069bba2d62cdmr18284908ejb.212.1646124119341;
+        Tue, 01 Mar 2022 00:41:59 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxkLsXZPJFLzXPV5FGYgxl+qkbahIyWcZp4Gh4Ixdg/+bf55XzGLZMALWtwePubTl5fD9ILsg==
+X-Received: by 2002:a17:907:248a:b0:69b:ba2d:62cd with SMTP id zg10-20020a170907248a00b0069bba2d62cdmr18284886ejb.212.1646124119100;
+        Tue, 01 Mar 2022 00:41:59 -0800 (PST)
+Received: from [192.168.0.135] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
+        by smtp.gmail.com with ESMTPSA id bo14-20020a170906d04e00b006ce98d9c3e3sm5116757ejb.194.2022.03.01.00.41.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Mar 2022 00:41:58 -0800 (PST)
+Message-ID: <59ba1fd5-4be5-278f-47df-d26c341da73a@canonical.com>
+Date:   Tue, 1 Mar 2022 09:41:57 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v3 05/11] PCI: Use driver_set_override() instead of
+ open-coding
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Stuart Yoder <stuyoder@gmail.com>,
@@ -69,48 +101,44 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         virtualization@lists.linux-foundation.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v3 05/11] PCI: Use driver_set_override() instead of
- open-coding
-Message-ID: <20220228200606.GA516338@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220227135214.145599-6-krzysztof.kozlowski@canonical.com>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220228200606.GA516338@bhelgaas>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220228200606.GA516338@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Feb 27, 2022 at 02:52:08PM +0100, Krzysztof Kozlowski wrote:
-> Use a helper for seting driver_override to reduce amount of duplicated
-> code. Make the driver_override field const char, because it is not
-> modified by the core and it matches other subsystems.
-
-s/seting/setting/
-or even better, s/for seting/to set/
-
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> -	char		*driver_override; /* Driver name to force a match */
-> +	/*
-> +	 * Driver name to force a match.
-> +	 * Do not set directly, because core frees it.
-> +	 * Use driver_set_override() to set or clear it.
-
-Wrap this comment to fill 78 columns or so.
-
-> +	 */
-> +	const char	*driver_override;
->  
->  	unsigned long	priv_flags;	/* Private flags for the PCI driver */
->  
-> -- 
-> 2.32.0
+On 28/02/2022 21:06, Bjorn Helgaas wrote:
+> On Sun, Feb 27, 2022 at 02:52:08PM +0100, Krzysztof Kozlowski wrote:
+>> Use a helper for seting driver_override to reduce amount of duplicated
+>> code. Make the driver_override field const char, because it is not
+>> modified by the core and it matches other subsystems.
 > 
+> s/seting/setting/
+> or even better, s/for seting/to set/
+> 
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+>> -	char		*driver_override; /* Driver name to force a match */
+>> +	/*
+>> +	 * Driver name to force a match.
+>> +	 * Do not set directly, because core frees it.
+>> +	 * Use driver_set_override() to set or clear it.
+> 
+> Wrap this comment to fill 78 columns or so.
+
+Thanks, I'll fix both.
+
+
+Best regards,
+Krzysztof
