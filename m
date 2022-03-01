@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 515504C94B8
+	by mail.lfdr.de (Postfix) with ESMTP id E74F34C94BA
 	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 20:46:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237281AbiCATrO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S237278AbiCATrO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Tue, 1 Mar 2022 14:47:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52192 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237275AbiCATrN (ORCPT
+        with ESMTP id S237276AbiCATrN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 1 Mar 2022 14:47:13 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A72636C97B;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA7666C97F;
         Tue,  1 Mar 2022 11:46:30 -0800 (PST)
 Received: from IOURIT-Z4.ntdev.corp.microsoft.com (unknown [192.182.151.181])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 50E3B20B6C50;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7DF8C20B6C14;
         Tue,  1 Mar 2022 11:46:30 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 50E3B20B6C50
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7DF8C20B6C14
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1646163990;
-        bh=nDepy9wB8rSWoVL308Nf1ElS27yvrRsmPKpZp5ABW8U=;
+        bh=tZnS3vdELV26cJ4keov1MczMe6TQNJGiOKn7Z3zdTTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eM0d9ZS6aXOtZd7twhrnnq8YprfJ3jH95jV0QN/MVh5P8kmwGBF+GUHvJd1Vdzz1N
-         iioXRg98q9GDncpZ6R8z+5cv+5xFMDcRd1+HRFTkJ7HmdbmGRTxJYnUzVLidT+pCU+
-         nEzdgCNo2HMB7/dSCAdzDBV2uKIXLB1QILEu4X28=
+        b=A9ItmDbTycKzUZfUhN2BOqp7irBa6xy+0PVIRrKt2uH7L2VB62F0dioPUyZjyMMKN
+         UJJdGn+q9yNODLz0beRgg6nhOICSdmxcqYb8nWaQwoLKEDTRnSY/dOqLNiIFwzIhPo
+         zTi37FzW2kUxVnn3CLjhhQHDRkmn2mbITKvPxYQ0=
 From:   Iouri Tarassov <iourit@linux.microsoft.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, linux-hyperv@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, spronovo@microsoft.com,
         spronovo@linux.microsoft.com, gregkh@linuxfoundation.org
-Subject: [PATCH v3 02/30] drivers: hv: dxgkrnl: Driver initialization and loading
-Date:   Tue,  1 Mar 2022 11:45:49 -0800
-Message-Id: <739cf89e71ff72436d7ca3f846881dfb45d07a6a.1646163378.git.iourit@linux.microsoft.com>
+Subject: [PATCH v3 03/30] drivers: hv: dxgkrnl: Add VM bus message support, initialize VM bus channels.
+Date:   Tue,  1 Mar 2022 11:45:50 -0800
+Message-Id: <fde2024f8cd2d2ca2ed9a461298b7914c78226e6.1646163378.git.iourit@linux.microsoft.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
 References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
@@ -49,267 +49,101 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-- Create skeleton and add basic functionality for the
-hyper-v compute device driver (dxgkrnl).
+Implement support for sending/receiving VM bus messages between
+the host and the guest.
 
-- Register for PCI and VM bus driver notifications and
-handle initialization of VM bus channels.
-
-- Connect the dxgkrnl module to the drivers/hv/ Makefile and Kconfig
-
-- Create a MAINTAINERS entry
-
-A VM bus channel is a communication interface between the hyper-v guest
-and the host. The are two type of VM bus channels, used in the driver:
-  - the global channel
-  - per virtual compute device channel
-
-A PCI device is created for each virtual compute device, projected
-by the host. The device vendor is PCI_VENDOR_ID_MICROSOFT and device
-id is PCI_DEVICE_ID_VIRTUAL_RENDER. dxg_pci_probe_device handles
-arrival of such devices. The PCI config space of the virtual compute
-device has luid of the corresponding virtual compute device VM
-bus channel. This is how the compute device adapter objects are
-linked to VM bus channels.
-
-VM bus interface version is exchanged by reading/writing the PCI config
-space of the virtual compute device.
-
-The IO space is used to handle CPU accessible compute device
-allocations. Hyper-v allocates IO space for the global VM bus channel.
+Initialize the VM bus channels and notify the host about IO space
+settings of the VM bus global channel.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 ---
- MAINTAINERS                    |   7 +
- drivers/hv/Kconfig             |   2 +
- drivers/hv/Makefile            |   1 +
- drivers/hv/dxgkrnl/Kconfig     |  26 ++
- drivers/hv/dxgkrnl/Makefile    |   5 +
- drivers/hv/dxgkrnl/dxgkrnl.h   | 119 ++++++++
- drivers/hv/dxgkrnl/dxgmodule.c | 531 +++++++++++++++++++++++++++++++++
- include/uapi/misc/d3dkmthk.h   |  23 ++
- 8 files changed, 714 insertions(+)
- create mode 100644 drivers/hv/dxgkrnl/Kconfig
- create mode 100644 drivers/hv/dxgkrnl/Makefile
- create mode 100644 drivers/hv/dxgkrnl/dxgkrnl.h
- create mode 100644 drivers/hv/dxgkrnl/dxgmodule.c
- create mode 100644 include/uapi/misc/d3dkmthk.h
+ drivers/hv/dxgkrnl/Makefile    |   2 +-
+ drivers/hv/dxgkrnl/dxgkrnl.h   |  14 ++
+ drivers/hv/dxgkrnl/dxgmodule.c |   7 +
+ drivers/hv/dxgkrnl/dxgvmbus.c  | 413 +++++++++++++++++++++++++++++++++
+ drivers/hv/dxgkrnl/dxgvmbus.h  |  86 +++++++
+ drivers/hv/dxgkrnl/hmgr.h      |  75 ++++++
+ drivers/hv/dxgkrnl/ioctl.c     |  24 ++
+ drivers/hv/dxgkrnl/misc.h      |  72 ++++++
+ include/uapi/misc/d3dkmthk.h   |  34 +++
+ 9 files changed, 726 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/hv/dxgkrnl/dxgvmbus.c
+ create mode 100644 drivers/hv/dxgkrnl/dxgvmbus.h
+ create mode 100644 drivers/hv/dxgkrnl/hmgr.h
+ create mode 100644 drivers/hv/dxgkrnl/ioctl.c
+ create mode 100644 drivers/hv/dxgkrnl/misc.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a2bd991db512..5856e09d834c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8841,6 +8841,13 @@ F:	Documentation/devicetree/bindings/mtd/ti,am654-hbmc.yaml
- F:	drivers/mtd/hyperbus/
- F:	include/linux/mtd/hyperbus.h
- 
-+Hyper-V vGPU DRIVER
-+M:	Iouri Tarassov <iourit@microsoft.com>
-+L:	linux-hyperv@vger.kernel.org
-+S:	Supported
-+F:	drivers/hv/dxgkrnl/
-+F:	include/uapi/misc/d3dkmthk.h
-+
- HYPERVISOR VIRTUAL CONSOLE DRIVER
- L:	linuxppc-dev@lists.ozlabs.org
- S:	Odd Fixes
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index dd12af20e467..7006f7b66200 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -29,4 +29,6 @@ config HYPERV_BALLOON
- 	help
- 	  Select this option to enable Hyper-V Balloon driver.
- 
-+source "drivers/hv/dxgkrnl/Kconfig"
-+
- endmenu
-diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
-index d76df5c8c2a9..aa1cbdb5d0d2 100644
---- a/drivers/hv/Makefile
-+++ b/drivers/hv/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
- obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
- obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
-+obj-$(CONFIG_DXGKRNL)		+= dxgkrnl/
- 
- CFLAGS_hv_trace.o = -I$(src)
- CFLAGS_hv_balloon.o = -I$(src)
-diff --git a/drivers/hv/dxgkrnl/Kconfig b/drivers/hv/dxgkrnl/Kconfig
-new file mode 100644
-index 000000000000..bcd92bbff939
---- /dev/null
-+++ b/drivers/hv/dxgkrnl/Kconfig
-@@ -0,0 +1,26 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Configuration for the hyper-v virtual compute driver (dxgkrnl)
-+#
-+
-+config DXGKRNL
-+	tristate "Microsoft Paravirtualized GPU support"
-+	depends on HYPERV
-+	depends on 64BIT || COMPILE_TEST
-+	help
-+	  This driver supports paravirtualized virtual compute devices, exposed
-+	  by Microsoft Hyper-V when Linux is running inside of a virtual machine
-+	  hosted by Windows. The virtual machines needs to be configured to use
-+	  host compute adapters. The driver name is dxgkrnl.
-+
-+	  An example of such virtual machine is a  Windows Subsystem for
-+	  Linux container. When such container is instantiated, the Windows host
-+	  assigns compatible host GPU adapters to the container. The corresponding
-+	  virtual GPU devices appear on the PCI bus in the container. These
-+	  devices are enumerated and accessed by this driver.
-+
-+	  Communications with the driver are done by using the Microsoft libdxcore
-+	  library, which translates the D3DKMT interface
-+	  <https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/d3dkmthk/>
-+	  to the driver IOCTLs. The virtual GPU devices are paravirtualized,
-+	  which means that access to the hardware is done in the host. The driver
-+	  communicates with the host using Hyper-V VM bus communication channels.
 diff --git a/drivers/hv/dxgkrnl/Makefile b/drivers/hv/dxgkrnl/Makefile
-new file mode 100644
-index 000000000000..052f8bd62ad3
---- /dev/null
+index 052f8bd62ad3..76349064b60a 100644
+--- a/drivers/hv/dxgkrnl/Makefile
 +++ b/drivers/hv/dxgkrnl/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Makefile for the hyper-v compute device driver (dxgkrnl).
-+
-+obj-$(CONFIG_DXGKRNL)	+= dxgkrnl.o
-+dxgkrnl-y		:= dxgmodule.o
+@@ -2,4 +2,4 @@
+ # Makefile for the hyper-v compute device driver (dxgkrnl).
+ 
+ obj-$(CONFIG_DXGKRNL)	+= dxgkrnl.o
+-dxgkrnl-y		:= dxgmodule.o
++dxgkrnl-y		:= dxgmodule.o dxgvmbus.o
 diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
-new file mode 100644
-index 000000000000..6b3e9334bce8
---- /dev/null
+index 6b3e9334bce8..533f3bb3ece2 100644
+--- a/drivers/hv/dxgkrnl/dxgkrnl.h
 +++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-@@ -0,0 +1,119 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+@@ -29,6 +29,7 @@
+ 
+ struct dxgadapter;
+ 
++#include "misc.h"
+ #include <uapi/misc/d3dkmthk.h>
+ 
+ struct dxgvmbuschannel {
+@@ -87,6 +88,13 @@ struct dxgglobal {
+ 
+ extern struct dxgglobal		*dxgglobal;
+ 
++int dxgglobal_init_global_channel(void);
++void dxgglobal_destroy_global_channel(void);
++struct vmbus_channel *dxgglobal_get_vmbus(void);
++struct dxgvmbuschannel *dxgglobal_get_dxgvmbuschannel(void);
++int dxgglobal_acquire_channel_lock(void);
++void dxgglobal_release_channel_lock(void);
 +
-+/*
-+ * Copyright (c) 2019, Microsoft Corporation.
-+ *
-+ * Author:
-+ *   Iouri Tarassov <iourit@linux.microsoft.com>
-+ *
-+ * Dxgkrnl Graphics Driver
-+ * Headers for internal objects
-+ *
-+ */
+ struct dxgprocess {
+ 	/* Placeholder */
+ };
+@@ -116,4 +124,10 @@ static inline void guid_to_luid(guid_t *guid, struct winluid *luid)
+ #define DXGK_VMBUS_INTERFACE_VERSION			40
+ #define DXGK_VMBUS_LAST_COMPATIBLE_INTERFACE_VERSION	16
+ 
++void dxgvmb_initialize(void);
++int dxgvmb_send_set_iospace_region(u64 start, u64 len,
++				   struct vmbus_gpadl *shared_mem_gpadl);
 +
-+#ifndef _DXGKRNL_H
-+#define _DXGKRNL_H
++int ntstatus2int(struct ntstatus status);
 +
-+#include <linux/uuid.h>
-+#include <linux/kernel.h>
-+#include <linux/mutex.h>
-+#include <linux/semaphore.h>
-+#include <linux/refcount.h>
-+#include <linux/rwsem.h>
-+#include <linux/atomic.h>
-+#include <linux/spinlock.h>
-+#include <linux/gfp.h>
-+#include <linux/miscdevice.h>
-+#include <linux/pci.h>
-+#include <linux/hyperv.h>
-+
-+struct dxgadapter;
-+
-+#include <uapi/misc/d3dkmthk.h>
-+
-+struct dxgvmbuschannel {
-+	struct vmbus_channel	*channel;
-+	struct hv_device	*hdev;
-+	spinlock_t		packet_list_mutex;
-+	struct list_head	packet_list_head;
-+	struct kmem_cache	*packet_cache;
-+	atomic64_t		packet_request_id;
-+};
-+
-+int dxgvmbuschannel_init(struct dxgvmbuschannel *ch, struct hv_device *hdev);
-+void dxgvmbuschannel_destroy(struct dxgvmbuschannel *ch);
-+void dxgvmbuschannel_receive(void *ctx);
-+
-+/*
-+ * The structure defines an offered vGPU vm bus channel.
-+ */
-+struct dxgvgpuchannel {
-+	struct list_head	vgpu_ch_list_entry;
-+	struct winluid		adapter_luid;
-+	struct hv_device	*hdev;
-+};
-+
-+struct dxgglobal {
-+	struct dxgvmbuschannel	channel;
-+	struct delayed_work	dwork;
-+	struct hv_device	*hdev;
-+	u32			num_adapters;
-+	u32			vmbus_ver;	/* Interface version */
-+	struct resource		*mem;
-+	u64			mmiospace_base;
-+	u64			mmiospace_size;
-+	struct miscdevice	dxgdevice;
-+	struct mutex		device_mutex;
-+
-+	/*  list of created  processes */
-+	struct list_head	plisthead;
-+	struct mutex		plistmutex;
-+
-+	/*
-+	 * List of the vGPU VM bus channels (dxgvgpuchannel)
-+	 * Protected by device_mutex
-+	 */
-+	struct list_head	vgpu_ch_list_head;
-+
-+	/* protects acces to the global VM bus channel */
-+	struct rw_semaphore	channel_lock;
-+
-+	bool			dxg_dev_initialized;
-+	bool			vmbus_registered;
-+	bool			pci_registered;
-+	bool			global_channel_initialized;
-+	bool			async_msg_enabled;
-+};
-+
-+extern struct dxgglobal		*dxgglobal;
-+
-+struct dxgprocess {
-+	/* Placeholder */
-+};
-+
-+void init_ioctls(void);
-+long dxgk_compat_ioctl(struct file *f, unsigned int p1, unsigned long p2);
-+long dxgk_unlocked_ioctl(struct file *f, unsigned int p1, unsigned long p2);
-+
-+static inline void guid_to_luid(guid_t *guid, struct winluid *luid)
-+{
-+	*luid = *(struct winluid *)&guid->b[0];
-+}
-+
-+/*
-+ * VM bus interface
-+ *
-+ */
-+
-+/*
-+ * The interface version is used to ensure that the host and the guest use the
-+ * same VM bus protocol. It needs to be incremented every time the VM bus
-+ * interface changes. DXGK_VMBUS_LAST_COMPATIBLE_INTERFACE_VERSION is
-+ * incremented each time the earlier versions of the interface are no longer
-+ * compatible with the current version.
-+ */
-+#define DXGK_VMBUS_INTERFACE_VERSION_OLD		27
-+#define DXGK_VMBUS_INTERFACE_VERSION			40
-+#define DXGK_VMBUS_LAST_COMPATIBLE_INTERFACE_VERSION	16
-+
-+#endif
+ #endif
 diff --git a/drivers/hv/dxgkrnl/dxgmodule.c b/drivers/hv/dxgkrnl/dxgmodule.c
-new file mode 100644
-index 000000000000..412c37bc592d
---- /dev/null
+index 412c37bc592d..78f233e354b9 100644
+--- a/drivers/hv/dxgkrnl/dxgmodule.c
 +++ b/drivers/hv/dxgkrnl/dxgmodule.c
-@@ -0,0 +1,531 @@
+@@ -296,6 +296,13 @@ int dxgglobal_init_global_channel(void)
+ 		goto error;
+ 	}
+ 
++	ret = dxgvmb_send_set_iospace_region(dxgglobal->mmiospace_base,
++					     dxgglobal->mmiospace_size, 0);
++	if (ret < 0) {
++		pr_err("send_set_iospace_region failed");
++		goto error;
++	}
++
+ 	hv_set_drvdata(dxgglobal->hdev, dxgglobal);
+ 
+ 	dxgglobal->dxgdevice.minor = MISC_DYNAMIC_MINOR;
+diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
+new file mode 100644
+index 000000000000..399dec02a3a1
+--- /dev/null
++++ b/drivers/hv/dxgkrnl/dxgvmbus.c
+@@ -0,0 +1,413 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/*
@@ -319,535 +153,417 @@ index 000000000000..412c37bc592d
 + *   Iouri Tarassov <iourit@linux.microsoft.com>
 + *
 + * Dxgkrnl Graphics Driver
-+ * Interface with Linux kernel, PCI driver and the VM bus driver
++ * VM bus interface implementation
 + *
 + */
 +
-+#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/completion.h>
++#include <linux/slab.h>
 +#include <linux/eventfd.h>
 +#include <linux/hyperv.h>
-+#include <linux/pci.h>
-+
++#include <linux/mman.h>
++#include <linux/delay.h>
++#include <linux/pagemap.h>
 +#include "dxgkrnl.h"
-+
-+/*
-+ * Pointer to the global device data. By design
-+ * there is a single vGPU device on the VM bus and a single /dev/dxg device
-+ * is created.
-+ */
-+struct dxgglobal *dxgglobal;
-+
-+#define DXGKRNL_VERSION			0x2216
-+#define PCI_VENDOR_ID_MICROSOFT		0x1414
-+#define PCI_DEVICE_ID_VIRTUAL_RENDER	0x008E
++#include "dxgvmbus.h"
 +
 +#undef pr_fmt
 +#define pr_fmt(fmt)	"dxgk: " fmt
 +
-+//
-+// Interface from dxgglobal
-+//
++#define RING_BUFSIZE (256 * 1024)
 +
-+struct vmbus_channel *dxgglobal_get_vmbus(void)
-+{
-+	return dxgglobal->channel.channel;
-+}
++/*
++ * The structure is used to track VM bus packets, waiting for completion.
++ */
++struct dxgvmbuspacket {
++	struct list_head packet_list_entry;
++	u64 request_id;
++	struct completion wait;
++	void *buffer;
++	u32 buffer_length;
++	int status;
++	bool completed;
++};
 +
-+struct dxgvmbuschannel *dxgglobal_get_dxgvmbuschannel(void)
-+{
-+	return &dxgglobal->channel;
-+}
++struct dxgvmb_ext_header {
++	/* Offset from the start of the message to DXGKVMB_COMMAND_BASE */
++	u32		command_offset;
++	u32		reserved;
++	struct winluid	vgpu_luid;
++};
 +
-+int dxgglobal_acquire_channel_lock(void)
++#define VMBUSMESSAGEONSTACK	64
++
++struct dxgvmbusmsg {
++/* Points to the allocated buffer */
++	struct dxgvmb_ext_header	*hdr;
++/* Points to dxgkvmb_command_vm_to_host or dxgkvmb_command_vgpu_to_host */
++	void				*msg;
++/* The vm bus channel, used to pass the message to the host */
++	struct dxgvmbuschannel		*channel;
++/* Message size in bytes including the header and the payload */
++	u32				size;
++/* Buffer used for small messages */
++	char				msg_on_stack[VMBUSMESSAGEONSTACK];
++};
++
++struct dxgvmbusmsgres {
++/* Points to the allocated buffer */
++	struct dxgvmb_ext_header	*hdr;
++/* Points to dxgkvmb_command_vm_to_host or dxgkvmb_command_vgpu_to_host */
++	void				*msg;
++/* The vm bus channel, used to pass the message to the host */
++	struct dxgvmbuschannel		*channel;
++/* Message size in bytes including the header, the payload and the result */
++	u32				size;
++/* Result buffer size in bytes */
++	u32				res_size;
++/* Points to the result within the allocated buffer */
++	void				*res;
++};
++
++static int init_message(struct dxgvmbusmsg *msg,
++			struct dxgprocess *process, u32 size)
 +{
-+	down_read(&dxgglobal->channel_lock);
-+	if (dxgglobal->channel.channel == NULL) {
-+		pr_err("Failed to acquire global channel lock");
-+		return -ENODEV;
++	bool use_ext_header = dxgglobal->vmbus_ver >=
++			      DXGK_VMBUS_INTERFACE_VERSION;
++
++	if (use_ext_header)
++		size += sizeof(struct dxgvmb_ext_header);
++	msg->size = size;
++	if (size <= VMBUSMESSAGEONSTACK) {
++		msg->hdr = (void *)msg->msg_on_stack;
++		memset(msg->hdr, 0, size);
 +	} else {
-+		return 0;
++		msg->hdr = vzalloc(size);
++		if (msg->hdr == NULL)
++			return -ENOMEM;
++	}
++	if (use_ext_header) {
++		msg->msg = (char *)&msg->hdr[1];
++		msg->hdr->command_offset = sizeof(msg->hdr[0]);
++	} else {
++		msg->msg = (char *)msg->hdr;
++	}
++	msg->channel = &dxgglobal->channel;
++	return 0;
++}
++
++static void free_message(struct dxgvmbusmsg *msg, struct dxgprocess *process)
++{
++	if (msg->hdr && (char *)msg->hdr != msg->msg_on_stack)
++		vfree(msg->hdr);
++}
++
++/*
++ * Helper functions
++ */
++
++int ntstatus2int(struct ntstatus status)
++{
++	if (NT_SUCCESS(status))
++		return (int)status.v;
++	switch (status.v) {
++	case STATUS_OBJECT_NAME_COLLISION:
++		return -EEXIST;
++	case STATUS_NO_MEMORY:
++		return -ENOMEM;
++	case STATUS_INVALID_PARAMETER:
++		return -EINVAL;
++	case STATUS_OBJECT_NAME_INVALID:
++	case STATUS_OBJECT_NAME_NOT_FOUND:
++		return -ENOENT;
++	case STATUS_TIMEOUT:
++		return -EAGAIN;
++	case STATUS_BUFFER_TOO_SMALL:
++		return -EOVERFLOW;
++	case STATUS_DEVICE_REMOVED:
++		return -ENODEV;
++	case STATUS_ACCESS_DENIED:
++		return -EACCES;
++	case STATUS_NOT_SUPPORTED:
++		return -EPERM;
++	case STATUS_ILLEGAL_INSTRUCTION:
++		return -EOPNOTSUPP;
++	case STATUS_INVALID_HANDLE:
++		return -EBADF;
++	case STATUS_GRAPHICS_ALLOCATION_BUSY:
++		return -EINPROGRESS;
++	case STATUS_OBJECT_TYPE_MISMATCH:
++		return -EPROTOTYPE;
++	case STATUS_NOT_IMPLEMENTED:
++		return -EPERM;
++	default:
++		return -EINVAL;
 +	}
 +}
 +
-+void dxgglobal_release_channel_lock(void)
-+{
-+	up_read(&dxgglobal->channel_lock);
-+}
-+
-+/*
-+ * File operations for the /dev/dxg device
-+ */
-+
-+static int dxgk_open(struct inode *n, struct file *f)
-+{
-+	return 0;
-+}
-+
-+static int dxgk_release(struct inode *n, struct file *f)
-+{
-+	return 0;
-+}
-+
-+static ssize_t dxgk_read(struct file *f, char __user *s, size_t len,
-+			 loff_t *o)
-+{
-+	pr_debug("file read\n");
-+	return 0;
-+}
-+
-+static ssize_t dxgk_write(struct file *f, const char __user *s, size_t len,
-+			  loff_t *o)
-+{
-+	pr_debug("file write\n");
-+	return len;
-+}
-+
-+const struct file_operations dxgk_fops = {
-+	.owner = THIS_MODULE,
-+	.open = dxgk_open,
-+	.release = dxgk_release,
-+	.write = dxgk_write,
-+	.read = dxgk_read,
-+};
-+
-+/*
-+ * Interface with the PCI driver
-+ */
-+
-+/*
-+ * Part of the PCI config space of the vGPU device is used for vGPU
-+ * configuration data. Reading/writing of the PCI config space is forwarded
-+ * to the host.
-+ */
-+
-+/* vGPU VM bus channel instance ID */
-+#define DXGK_VMBUS_CHANNEL_ID_OFFSET 192
-+/* DXGK_VMBUS_INTERFACE_VERSION (u32) */
-+#define DXGK_VMBUS_VERSION_OFFSET	(DXGK_VMBUS_CHANNEL_ID_OFFSET + \
-+					sizeof(guid_t))
-+/* Luid of the virtual GPU on the host (struct winluid) */
-+#define DXGK_VMBUS_VGPU_LUID_OFFSET	(DXGK_VMBUS_VERSION_OFFSET + \
-+					sizeof(u32))
-+/* The guest writes its capavilities to this adderss */
-+#define DXGK_VMBUS_GUESTCAPS_OFFSET	(DXGK_VMBUS_VERSION_OFFSET + \
-+					sizeof(u32))
-+
-+/* Capabilities of the guest driver, reported to the host */
-+struct dxgk_vmbus_guestcaps {
-+	union {
-+		struct {
-+			u32	wsl2		: 1;
-+			u32	reserved	: 31;
-+		};
-+		u32 guest_caps;
-+	};
-+};
-+
-+/*
-+ * A helper function to read PCI config space.
-+ */
-+static int dxg_pci_read_dwords(struct pci_dev *dev, int offset, int size,
-+			       void *val)
-+{
-+	int off = offset;
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < size / sizeof(int); i++) {
-+		ret = pci_read_config_dword(dev, off, &((int *)val)[i]);
-+		if (ret) {
-+			pr_err("Failed to read PCI config: %d", off);
-+			return ret;
-+		}
-+		off += sizeof(int);
-+	}
-+	return 0;
-+}
-+
-+static int dxg_pci_probe_device(struct pci_dev *dev,
-+				const struct pci_device_id *id)
++int dxgvmbuschannel_init(struct dxgvmbuschannel *ch, struct hv_device *hdev)
 +{
 +	int ret;
-+	guid_t guid;
-+	u32 vmbus_interface_ver = DXGK_VMBUS_INTERFACE_VERSION;
-+	struct winluid vgpu_luid = {};
-+	struct dxgk_vmbus_guestcaps guest_caps = {.wsl2 = 1};
 +
-+	mutex_lock(&dxgglobal->device_mutex);
++	ch->hdev = hdev;
++	spin_lock_init(&ch->packet_list_mutex);
++	INIT_LIST_HEAD(&ch->packet_list_head);
++	atomic64_set(&ch->packet_request_id, 0);
 +
-+	if (dxgglobal->vmbus_ver == 0)  {
-+		/* Report capabilities to the host */
-+
-+		ret = pci_write_config_dword(dev, DXGK_VMBUS_GUESTCAPS_OFFSET,
-+					guest_caps.guest_caps);
-+		if (ret)
-+			goto cleanup;
-+
-+		/* Negotiate the VM bus version */
-+
-+		ret = pci_read_config_dword(dev, DXGK_VMBUS_VERSION_OFFSET,
-+					&vmbus_interface_ver);
-+		if (ret == 0 && vmbus_interface_ver != 0)
-+			dxgglobal->vmbus_ver = vmbus_interface_ver;
-+		else
-+			dxgglobal->vmbus_ver = DXGK_VMBUS_INTERFACE_VERSION_OLD;
-+
-+		if (dxgglobal->vmbus_ver < DXGK_VMBUS_INTERFACE_VERSION)
-+			goto read_channel_id;
-+
-+		ret = pci_write_config_dword(dev, DXGK_VMBUS_VERSION_OFFSET,
-+					DXGK_VMBUS_INTERFACE_VERSION);
-+		if (ret)
-+			goto cleanup;
-+
-+		if (dxgglobal->vmbus_ver > DXGK_VMBUS_INTERFACE_VERSION)
-+			dxgglobal->vmbus_ver = DXGK_VMBUS_INTERFACE_VERSION;
-+	}
-+
-+read_channel_id:
-+
-+	/* Get the VM bus channel ID for the virtual GPU */
-+	ret = dxg_pci_read_dwords(dev, DXGK_VMBUS_CHANNEL_ID_OFFSET,
-+				sizeof(guid), (int *)&guid);
-+	if (ret)
++	ch->packet_cache = kmem_cache_create("DXGK packet cache",
++					     sizeof(struct dxgvmbuspacket), 0,
++					     0, NULL);
++	if (ch->packet_cache == NULL) {
++		pr_err("packet_cache alloc failed");
++		ret = -ENOMEM;
 +		goto cleanup;
-+
-+	if (dxgglobal->vmbus_ver >= DXGK_VMBUS_INTERFACE_VERSION) {
-+		ret = dxg_pci_read_dwords(dev, DXGK_VMBUS_VGPU_LUID_OFFSET,
-+					  sizeof(vgpu_luid), &vgpu_luid);
-+		if (ret)
-+			goto cleanup;
 +	}
 +
-+	pr_debug("Adapter channel: %pUb\n", &guid);
-+	pr_debug("Vmbus interface version: %d\n",
-+		dxgglobal->vmbus_ver);
-+	pr_debug("Host vGPU luid: %x-%x\n",
-+		vgpu_luid.b, vgpu_luid.a);
++	hdev->channel->max_pkt_size = DXG_MAX_VM_BUS_PACKET_SIZE;
++	ret = vmbus_open(hdev->channel, RING_BUFSIZE, RING_BUFSIZE,
++			 NULL, 0, dxgvmbuschannel_receive, ch);
++	if (ret) {
++		pr_err("vmbus_open failed: %d", ret);
++		goto cleanup;
++	}
++
++	ch->channel = hdev->channel;
 +
 +cleanup:
 +
-+	mutex_unlock(&dxgglobal->device_mutex);
-+
-+	if (ret)
-+		pr_debug("err: %s %d", __func__, ret);
 +	return ret;
 +}
 +
-+static void dxg_pci_remove_device(struct pci_dev *dev)
++void dxgvmbuschannel_destroy(struct dxgvmbuschannel *ch)
 +{
-+	/* Placeholder */
++	kmem_cache_destroy(ch->packet_cache);
++	ch->packet_cache = NULL;
++
++	if (ch->channel) {
++		vmbus_close(ch->channel);
++		ch->channel = NULL;
++	}
 +}
 +
-+static struct pci_device_id dxg_pci_id_table = {
-+	.vendor = PCI_VENDOR_ID_MICROSOFT,
-+	.device = PCI_DEVICE_ID_VIRTUAL_RENDER,
-+	.subvendor = PCI_ANY_ID,
-+	.subdevice = PCI_ANY_ID
-+};
-+
-+static struct pci_driver dxg_pci_drv = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = &dxg_pci_id_table,
-+	.probe = dxg_pci_probe_device,
-+	.remove = dxg_pci_remove_device
-+};
-+
-+/*
-+ * Interface with the VM bus driver
-+ */
-+
-+static int dxgglobal_getiospace(struct dxgglobal *dxgglobal)
++static void command_vm_to_host_init1(struct dxgkvmb_command_vm_to_host *command,
++				     enum dxgkvmb_commandtype_global type)
 +{
-+	/* Get mmio space for the global channel */
-+	struct hv_device *hdev = dxgglobal->hdev;
-+	struct vmbus_channel *channel = hdev->channel;
-+	resource_size_t pot_start = 0;
-+	resource_size_t pot_end = -1;
-+	int ret;
-+
-+	dxgglobal->mmiospace_size = channel->offermsg.offer.mmio_megabytes;
-+	if (dxgglobal->mmiospace_size == 0) {
-+		pr_debug("zero mmio space is offered\n");
-+		return -ENOMEM;
-+	}
-+	dxgglobal->mmiospace_size <<= 20;
-+	pr_debug("mmio offered: %llx\n",
-+		dxgglobal->mmiospace_size);
-+
-+	ret = vmbus_allocate_mmio(&dxgglobal->mem, hdev, pot_start, pot_end,
-+				  dxgglobal->mmiospace_size, 0x10000, false);
-+	if (ret) {
-+		pr_err("Unable to allocate mmio memory: %d\n", ret);
-+		return ret;
-+	}
-+	dxgglobal->mmiospace_size = dxgglobal->mem->end -
-+	    dxgglobal->mem->start + 1;
-+	dxgglobal->mmiospace_base = dxgglobal->mem->start;
-+	pr_info("mmio allocated %llx  %llx %llx %llx\n",
-+		dxgglobal->mmiospace_base,
-+		dxgglobal->mmiospace_size,
-+		dxgglobal->mem->start, dxgglobal->mem->end);
-+
-+	return 0;
++	command->command_type = type;
++	command->process.v = 0;
++	command->command_id = 0;
++	command->channel_type = DXGKVMB_VM_TO_HOST;
 +}
 +
-+int dxgglobal_init_global_channel(void)
++static void process_inband_packet(struct dxgvmbuschannel *channel,
++				  struct vmpacket_descriptor *desc)
 +{
-+	int ret = 0;
++	u32 packet_length = hv_pkt_datalen(desc);
++	struct dxgkvmb_command_host_to_vm *packet;
 +
-+	ret = dxgvmbuschannel_init(&dxgglobal->channel, dxgglobal->hdev);
-+	if (ret) {
-+		pr_err("dxgvmbuschannel_init failed: %d\n", ret);
-+		goto error;
-+	}
-+
-+	ret = dxgglobal_getiospace(dxgglobal);
-+	if (ret) {
-+		pr_err("getiospace failed: %d\n", ret);
-+		goto error;
-+	}
-+
-+	hv_set_drvdata(dxgglobal->hdev, dxgglobal);
-+
-+	dxgglobal->dxgdevice.minor = MISC_DYNAMIC_MINOR;
-+	dxgglobal->dxgdevice.name = "dxg";
-+	dxgglobal->dxgdevice.fops = &dxgk_fops;
-+	dxgglobal->dxgdevice.mode = 0666;
-+	ret = misc_register(&dxgglobal->dxgdevice);
-+	if (ret) {
-+		pr_err("misc_register failed: %d", ret);
-+		goto error;
-+	}
-+	dxgglobal->dxg_dev_initialized = true;
-+
-+error:
-+	return ret;
-+}
-+
-+void dxgglobal_destroy_global_channel(void)
-+{
-+	down_write(&dxgglobal->channel_lock);
-+
-+	dxgglobal->global_channel_initialized = false;
-+
-+	if (dxgglobal->dxg_dev_initialized) {
-+		misc_deregister(&dxgglobal->dxgdevice);
-+		dxgglobal->dxg_dev_initialized = false;
-+	}
-+
-+	if (dxgglobal->mem) {
-+		vmbus_free_mmio(dxgglobal->mmiospace_base,
-+				dxgglobal->mmiospace_size);
-+		dxgglobal->mem = NULL;
-+	}
-+
-+	dxgvmbuschannel_destroy(&dxgglobal->channel);
-+
-+	if (dxgglobal->hdev) {
-+		hv_set_drvdata(dxgglobal->hdev, NULL);
-+		dxgglobal->hdev = NULL;
-+	}
-+
-+	up_write(&dxgglobal->channel_lock);
-+}
-+
-+static const struct hv_vmbus_device_id id_table[] = {
-+	/* Per GPU Device GUID */
-+	{ HV_GPUP_DXGK_VGPU_GUID },
-+	/* Global Dxgkgnl channel for the virtual machine */
-+	{ HV_GPUP_DXGK_GLOBAL_GUID },
-+	{ }
-+};
-+
-+static int dxg_probe_vmbus(struct hv_device *hdev,
-+			   const struct hv_vmbus_device_id *dev_id)
-+{
-+	int ret = 0;
-+	struct winluid luid;
-+	struct dxgvgpuchannel *vgpuch;
-+
-+	mutex_lock(&dxgglobal->device_mutex);
-+
-+	if (uuid_le_cmp(hdev->dev_type, id_table[0].guid) == 0) {
-+		/* This is a new virtual GPU channel */
-+		guid_to_luid(&hdev->channel->offermsg.offer.if_instance, &luid);
-+		pr_debug("vGPU channel: %pUb",
-+			    &hdev->channel->offermsg.offer.if_instance);
-+		vgpuch = vzalloc(sizeof(struct dxgvgpuchannel));
-+		if (vgpuch == NULL) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+		vgpuch->adapter_luid = luid;
-+		vgpuch->hdev = hdev;
-+		list_add_tail(&vgpuch->vgpu_ch_list_entry,
-+			      &dxgglobal->vgpu_ch_list_head);
-+	} else if (uuid_le_cmp(hdev->dev_type, id_table[1].guid) == 0) {
-+		/* This is the global Dxgkgnl channel */
-+		pr_debug("Global channel: %pUb",
-+			    &hdev->channel->offermsg.offer.if_instance);
-+		if (dxgglobal->hdev) {
-+			/* This device should appear only once */
-+			pr_err("global channel already present\n");
-+			ret = -EBADE;
-+			goto error;
-+		}
-+		dxgglobal->hdev = hdev;
++	if (packet_length < sizeof(struct dxgkvmb_command_host_to_vm)) {
++		pr_err("Invalid global packet");
 +	} else {
-+		/* Unknown device type */
-+		pr_err("probe: unknown device type\n");
-+		ret = -EBADE;
-+		goto error;
++		packet = hv_pkt_data(desc);
++		pr_debug("global packet %d",
++				packet->command_type);
++		switch (packet->command_type) {
++		case DXGK_VMBCOMMAND_SIGNALGUESTEVENT:
++		case DXGK_VMBCOMMAND_SIGNALGUESTEVENTPASSIVE:
++			break;
++		case DXGK_VMBCOMMAND_SENDWNFNOTIFICATION:
++			break;
++		default:
++			pr_err("unexpected host message %d",
++					packet->command_type);
++		}
 +	}
-+
-+error:
-+
-+	mutex_unlock(&dxgglobal->device_mutex);
-+
-+	if (ret)
-+		pr_debug("err: %s %d", __func__, ret);
-+	return ret;
 +}
 +
-+static int dxg_remove_vmbus(struct hv_device *hdev)
++static void process_completion_packet(struct dxgvmbuschannel *channel,
++				      struct vmpacket_descriptor *desc)
 +{
-+	int ret = 0;
-+	struct dxgvgpuchannel *vgpu_channel;
++	struct dxgvmbuspacket *packet = NULL;
++	struct dxgvmbuspacket *entry;
++	u32 packet_length = hv_pkt_datalen(desc);
++	unsigned long flags;
 +
-+	mutex_lock(&dxgglobal->device_mutex);
-+
-+	if (uuid_le_cmp(hdev->dev_type, id_table[0].guid) == 0) {
-+		pr_debug("Remove virtual GPU channel\n");
-+		list_for_each_entry(vgpu_channel,
-+				    &dxgglobal->vgpu_ch_list_head,
-+				    vgpu_ch_list_entry) {
-+			if (vgpu_channel->hdev == hdev) {
-+				list_del(&vgpu_channel->vgpu_ch_list_entry);
-+				vfree(vgpu_channel);
-+				break;
++	spin_lock_irqsave(&channel->packet_list_mutex, flags);
++	list_for_each_entry(entry, &channel->packet_list_head,
++			    packet_list_entry) {
++		if (desc->trans_id == entry->request_id) {
++			packet = entry;
++			list_del(&packet->packet_list_entry);
++			packet->completed = true;
++			break;
++		}
++	}
++	spin_unlock_irqrestore(&channel->packet_list_mutex, flags);
++	if (packet) {
++		if (packet->buffer_length) {
++			if (packet_length < packet->buffer_length) {
++				pr_debug("invalid size %d Expected:%d",
++					    packet_length,
++					    packet->buffer_length);
++				packet->status = -EOVERFLOW;
++			} else {
++				memcpy(packet->buffer, hv_pkt_data(desc),
++				       packet->buffer_length);
 +			}
 +		}
-+	} else if (uuid_le_cmp(hdev->dev_type, id_table[1].guid) == 0) {
-+		pr_debug("Remove global channel device\n");
-+		dxgglobal_destroy_global_channel();
++		complete(&packet->wait);
 +	} else {
-+		/* Unknown device type */
-+		pr_err("remove: unknown device type\n");
-+		ret = -EBADE;
++		pr_err("did not find packet to complete");
++	}
++}
++
++/* Receive callback for messages from the host */
++void dxgvmbuschannel_receive(void *ctx)
++{
++	struct dxgvmbuschannel *channel = ctx;
++	struct vmpacket_descriptor *desc;
++	u32 packet_length = 0;
++
++	foreach_vmbus_pkt(desc, channel->channel) {
++		packet_length = hv_pkt_datalen(desc);
++		pr_debug("next packet (id, size, type): %llu %d %d",
++			desc->trans_id, packet_length, desc->type);
++		if (desc->type == VM_PKT_COMP) {
++			process_completion_packet(channel, desc);
++		} else {
++			if (desc->type != VM_PKT_DATA_INBAND)
++				pr_err("unexpected packet type");
++			else
++				process_inband_packet(channel, desc);
++		}
++	}
++}
++
++int dxgvmb_send_sync_msg(struct dxgvmbuschannel *channel,
++			 void *command,
++			 u32 cmd_size,
++			 void *result,
++			 u32 result_size)
++{
++	int ret;
++	struct dxgvmbuspacket *packet = NULL;
++	struct dxgkvmb_command_vm_to_host *cmd1;
++
++	if (cmd_size > DXG_MAX_VM_BUS_PACKET_SIZE ||
++	    result_size > DXG_MAX_VM_BUS_PACKET_SIZE) {
++		pr_err("%s invalid data size", __func__);
++		return -EINVAL;
 +	}
 +
-+	mutex_unlock(&dxgglobal->device_mutex);
++	packet = kmem_cache_alloc(channel->packet_cache, 0);
++	if (packet == NULL) {
++		pr_err("kmem_cache_alloc failed");
++		return -ENOMEM;
++	}
++
++	pr_debug("send_sync_msg global: %d %p %d %d",
++		cmd1->command_type, command, cmd_size, result_size);
++
++	packet->request_id = atomic64_inc_return(&channel->packet_request_id);
++	init_completion(&packet->wait);
++	packet->buffer = result;
++	packet->buffer_length = result_size;
++	packet->status = 0;
++	packet->completed = false;
++	spin_lock_irq(&channel->packet_list_mutex);
++	list_add_tail(&packet->packet_list_entry, &channel->packet_list_head);
++	spin_unlock_irq(&channel->packet_list_mutex);
++
++	ret = vmbus_sendpacket(channel->channel, command, cmd_size,
++			       packet->request_id, VM_PKT_DATA_INBAND,
++			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
++	if (ret) {
++		pr_err("vmbus_sendpacket failed: %x", ret);
++		spin_lock_irq(&channel->packet_list_mutex);
++		list_del(&packet->packet_list_entry);
++		spin_unlock_irq(&channel->packet_list_mutex);
++		goto cleanup;
++	}
++
++	pr_debug("waiting completion: %llu", packet->request_id);
++	ret = wait_for_completion_killable(&packet->wait);
++	if (ret) {
++		pr_err("wait_for_complition failed: %x", ret);
++		spin_lock_irq(&channel->packet_list_mutex);
++		if (!packet->completed)
++			list_del(&packet->packet_list_entry);
++		spin_unlock_irq(&channel->packet_list_mutex);
++		goto cleanup;
++	}
++	pr_debug("completion done: %llu %x",
++		packet->request_id, packet->status);
++	ret = packet->status;
++
++cleanup:
++
++	kmem_cache_free(channel->packet_cache, packet);
++	if (ret < 0)
++		pr_debug("%s failed: %x", __func__, ret);
++	return ret;
++}
++
++static int
++dxgvmb_send_sync_msg_ntstatus(struct dxgvmbuschannel *channel,
++			      void *command, u32 cmd_size)
++{
++	struct ntstatus status;
++	int ret;
++
++	ret = dxgvmb_send_sync_msg(channel, command, cmd_size,
++				   &status, sizeof(status));
++	if (ret >= 0)
++		ret = ntstatus2int(status);
++	return ret;
++}
++
++/*
++ * Global messages to the host
++ */
++
++int dxgvmb_send_set_iospace_region(u64 start, u64 len,
++	struct vmbus_gpadl *shared_mem_gpadl)
++{
++	int ret;
++	struct dxgkvmb_command_setiospaceregion *command;
++	struct dxgvmbusmsg msg;
++
++	ret = init_message(&msg, NULL, sizeof(*command));
++	if (ret)
++		return ret;
++	command = (void *)msg.msg;
++
++	ret = dxgglobal_acquire_channel_lock();
++	if (ret < 0)
++		goto cleanup;
++
++	command_vm_to_host_init1(&command->hdr,
++				 DXGK_VMBCOMMAND_SETIOSPACEREGION);
++	command->start = start;
++	command->length = len;
++	if (command->shared_page_gpadl)
++		command->shared_page_gpadl = shared_mem_gpadl->gpadl_handle;
++	ret = dxgvmb_send_sync_msg_ntstatus(&dxgglobal->channel, msg.hdr,
++					    msg.size);
++	if (ret < 0)
++		pr_err("send_set_iospace_region failed %x", ret);
++
++	dxgglobal_release_channel_lock();
++cleanup:
++	free_message(&msg, NULL);
 +	if (ret)
 +		pr_debug("err: %s %d", __func__, ret);
 +	return ret;
 +}
 +
-+MODULE_DEVICE_TABLE(vmbus, id_table);
-+
-+static struct hv_driver dxg_drv = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = id_table,
-+	.probe = dxg_probe_vmbus,
-+	.remove = dxg_remove_vmbus,
-+	.driver = {
-+		   .probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+		    },
-+};
-+
-+/*
-+ * Interface with Linux kernel
-+ */
-+
-+static int dxgglobal_create(void)
-+{
-+	int ret = 0;
-+
-+	dxgglobal = vzalloc(sizeof(struct dxgglobal));
-+	if (!dxgglobal)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&dxgglobal->plisthead);
-+	mutex_init(&dxgglobal->plistmutex);
-+	mutex_init(&dxgglobal->device_mutex);
-+
-+	INIT_LIST_HEAD(&dxgglobal->vgpu_ch_list_head);
-+
-+	init_rwsem(&dxgglobal->channel_lock);
-+
-+	pr_debug("dxgglobal_init end\n");
-+	return ret;
-+}
-+
-+static void dxgglobal_destroy(void)
-+{
-+	if (dxgglobal) {
-+		if (dxgglobal->vmbus_registered)
-+			vmbus_driver_unregister(&dxg_drv);
-+
-+		dxgglobal_destroy_global_channel();
-+
-+		if (dxgglobal->pci_registered)
-+			pci_unregister_driver(&dxg_pci_drv);
-+
-+		vfree(dxgglobal);
-+		dxgglobal = NULL;
-+	}
-+}
-+
-+/*
-+ * Driver entry points
-+ */
-+
-+static int __init dxg_drv_init(void)
-+{
-+	int ret;
-+
-+
-+	ret = dxgglobal_create();
-+	if (ret) {
-+		pr_err("dxgglobal_init failed");
-+		return -ENOMEM;
-+	}
-+
-+	ret = vmbus_driver_register(&dxg_drv);
-+	if (ret) {
-+		pr_err("vmbus_driver_register failed: %d", ret);
-+		return ret;
-+	}
-+	dxgglobal->vmbus_registered = true;
-+
-+	pr_info("%s  Version: %x", __func__, DXGKRNL_VERSION);
-+
-+	ret = pci_register_driver(&dxg_pci_drv);
-+	if (ret) {
-+		pr_err("pci_driver_register failed: %d", ret);
-+		return ret;
-+	}
-+	dxgglobal->pci_registered = true;
-+
-+	init_ioctls();
-+
-+	return 0;
-+}
-+
-+static void __exit dxg_drv_exit(void)
-+{
-+	dxgglobal_destroy();
-+}
-+
-+module_init(dxg_drv_init);
-+module_exit(dxg_drv_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Microsoft Dxgkrnl virtual GPU Driver");
-diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
+diff --git a/drivers/hv/dxgkrnl/dxgvmbus.h b/drivers/hv/dxgkrnl/dxgvmbus.h
 new file mode 100644
-index 000000000000..bdb7bc325d1a
+index 000000000000..d6136fd1ce9a
 --- /dev/null
-+++ b/include/uapi/misc/d3dkmthk.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++++ b/drivers/hv/dxgkrnl/dxgvmbus.h
+@@ -0,0 +1,86 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +
 +/*
 + * Copyright (c) 2019, Microsoft Corporation.
@@ -856,20 +572,317 @@ index 000000000000..bdb7bc325d1a
 + *   Iouri Tarassov <iourit@linux.microsoft.com>
 + *
 + * Dxgkrnl Graphics Driver
-+ * User mode WDDM interface definitions
++ * VM bus interface with the host definitions
 + *
 + */
 +
-+#ifndef _D3DKMTHK_H
-+#define _D3DKMTHK_H
++#ifndef _DXGVMBUS_H
++#define _DXGVMBUS_H
 +
-+/* Matches Windows LUID definition */
-+struct winluid {
-+	__u32 a;
-+	__u32 b;
++#define DXG_MAX_VM_BUS_PACKET_SIZE	(1024 * 128)
++
++enum dxgkvmb_commandchanneltype {
++	DXGKVMB_VGPU_TO_HOST,
++	DXGKVMB_VM_TO_HOST,
++	DXGKVMB_HOST_TO_VM
 +};
 +
-+#endif /* _D3DKMTHK_H */
++/*
++ *
++ * Commands, sent to the host via the guest global VM bus channel
++ * DXG_GUEST_GLOBAL_VMBUS
++ *
++ */
++
++enum dxgkvmb_commandtype_global {
++	DXGK_VMBCOMMAND_VM_TO_HOST_FIRST	= 1000,
++	DXGK_VMBCOMMAND_CREATEPROCESS	= DXGK_VMBCOMMAND_VM_TO_HOST_FIRST,
++	DXGK_VMBCOMMAND_DESTROYPROCESS		= 1001,
++	DXGK_VMBCOMMAND_OPENSYNCOBJECT		= 1002,
++	DXGK_VMBCOMMAND_DESTROYSYNCOBJECT	= 1003,
++	DXGK_VMBCOMMAND_CREATENTSHAREDOBJECT	= 1004,
++	DXGK_VMBCOMMAND_DESTROYNTSHAREDOBJECT	= 1005,
++	DXGK_VMBCOMMAND_SIGNALFENCE		= 1006,
++	DXGK_VMBCOMMAND_NOTIFYPROCESSFREEZE	= 1007,
++	DXGK_VMBCOMMAND_NOTIFYPROCESSTHAW	= 1008,
++	DXGK_VMBCOMMAND_QUERYETWSESSION		= 1009,
++	DXGK_VMBCOMMAND_SETIOSPACEREGION	= 1010,
++	DXGK_VMBCOMMAND_COMPLETETRANSACTION	= 1011,
++	DXGK_VMBCOMMAND_SHAREOBJECTWITHHOST	= 1021,
++	DXGK_VMBCOMMAND_INVALID_VM_TO_HOST
++};
++
++/*
++ * Commands, sent by the host to the VM
++ */
++enum dxgkvmb_commandtype_host_to_vm {
++	DXGK_VMBCOMMAND_SIGNALGUESTEVENT,
++	DXGK_VMBCOMMAND_PROPAGATEPRESENTHISTORYTOKEN,
++	DXGK_VMBCOMMAND_SETGUESTDATA,
++	DXGK_VMBCOMMAND_SIGNALGUESTEVENTPASSIVE,
++	DXGK_VMBCOMMAND_SENDWNFNOTIFICATION,
++	DXGK_VMBCOMMAND_INVALID_HOST_TO_VM
++};
++
++struct dxgkvmb_command_vm_to_host {
++	u64				command_id;
++	struct d3dkmthandle		process;
++	enum dxgkvmb_commandchanneltype	channel_type;
++	enum dxgkvmb_commandtype_global	command_type;
++};
++
++struct dxgkvmb_command_host_to_vm {
++	u64					command_id;
++	struct d3dkmthandle			process;
++	u32					channel_type	: 8;
++	u32					async_msg	: 1;
++	u32					reserved	: 23;
++	enum dxgkvmb_commandtype_host_to_vm	command_type;
++};
++
++/* Returns ntstatus */
++struct dxgkvmb_command_setiospaceregion {
++	struct dxgkvmb_command_vm_to_host hdr;
++	u64				start;
++	u64				length;
++	u32				shared_page_gpadl;
++};
++
++#endif /* _DXGVMBUS_H */
+diff --git a/drivers/hv/dxgkrnl/hmgr.h b/drivers/hv/dxgkrnl/hmgr.h
+new file mode 100644
+index 000000000000..b8b8f3ae5939
+--- /dev/null
++++ b/drivers/hv/dxgkrnl/hmgr.h
+@@ -0,0 +1,75 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Copyright (c) 2019, Microsoft Corporation.
++ *
++ * Author:
++ *   Iouri Tarassov <iourit@linux.microsoft.com>
++ *
++ * Dxgkrnl Graphics Driver
++ * Handle manager definitions
++ *
++ */
++
++#ifndef _HMGR_H_
++#define _HMGR_H_
++
++#include "misc.h"
++
++struct hmgrentry;
++
++/*
++ * Handle manager table.
++ *
++ * Implementation notes:
++ *   A list of free handles is built on top of the array of table entries.
++ *   free_handle_list_head is the index of the first entry in the list.
++ *   m_FreeHandleListTail is the index of an entry in the list, which is
++ *   HMGRTABLE_MIN_FREE_ENTRIES from the head. It means that when a handle is
++ *   freed, the next time the handle can be re-used is after allocating
++ *   HMGRTABLE_MIN_FREE_ENTRIES number of handles.
++ *   Handles are allocated from the start of the list and free handles are
++ *   inserted after the tail of the list.
++ *
++ */
++struct hmgrtable {
++	struct dxgprocess	*process;
++	struct hmgrentry	*entry_table;
++	u32			free_handle_list_head;
++	u32			free_handle_list_tail;
++	u32			table_size;
++	u32			free_count;
++	struct rw_semaphore	table_lock;
++};
++
++/*
++ * Handle entry data types.
++ */
++#define HMGRENTRY_TYPE_BITS 5
++
++enum hmgrentry_type {
++	HMGRENTRY_TYPE_FREE				= 0,
++	HMGRENTRY_TYPE_DXGADAPTER			= 1,
++	HMGRENTRY_TYPE_DXGSHAREDRESOURCE		= 2,
++	HMGRENTRY_TYPE_DXGDEVICE			= 3,
++	HMGRENTRY_TYPE_DXGRESOURCE			= 4,
++	HMGRENTRY_TYPE_DXGALLOCATION			= 5,
++	HMGRENTRY_TYPE_DXGOVERLAY			= 6,
++	HMGRENTRY_TYPE_DXGCONTEXT			= 7,
++	HMGRENTRY_TYPE_DXGSYNCOBJECT			= 8,
++	HMGRENTRY_TYPE_DXGKEYEDMUTEX			= 9,
++	HMGRENTRY_TYPE_DXGPAGINGQUEUE			= 10,
++	HMGRENTRY_TYPE_DXGDEVICESYNCOBJECT		= 11,
++	HMGRENTRY_TYPE_DXGPROCESS			= 12,
++	HMGRENTRY_TYPE_DXGSHAREDVMOBJECT		= 13,
++	HMGRENTRY_TYPE_DXGPROTECTEDSESSION		= 14,
++	HMGRENTRY_TYPE_DXGHWQUEUE			= 15,
++	HMGRENTRY_TYPE_DXGREMOTEBUNDLEOBJECT		= 16,
++	HMGRENTRY_TYPE_DXGCOMPOSITIONSURFACEOBJECT	= 17,
++	HMGRENTRY_TYPE_DXGCOMPOSITIONSURFACEPROXY	= 18,
++	HMGRENTRY_TYPE_DXGTRACKEDWORKLOAD		= 19,
++	HMGRENTRY_TYPE_LIMIT		= ((1 << HMGRENTRY_TYPE_BITS) - 1),
++	HMGRENTRY_TYPE_MONITOREDFENCE	= HMGRENTRY_TYPE_LIMIT + 1,
++};
++
++#endif
+diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
+new file mode 100644
+index 000000000000..277e25e5d8c6
+--- /dev/null
++++ b/drivers/hv/dxgkrnl/ioctl.c
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright (c) 2019, Microsoft Corporation.
++ *
++ * Author:
++ *   Iouri Tarassov <iourit@linux.microsoft.com>
++ *
++ * Dxgkrnl Graphics Driver
++ * Ioctl implementation
++ *
++ */
++
++#include <linux/eventfd.h>
++#include <linux/file.h>
++#include <linux/fs.h>
++#include <linux/anon_inodes.h>
++#include <linux/mman.h>
++
++#include "dxgkrnl.h"
++#include "dxgvmbus.h"
++
++#undef pr_fmt
++#define pr_fmt(fmt)	"dxgk: " fmt
+diff --git a/drivers/hv/dxgkrnl/misc.h b/drivers/hv/dxgkrnl/misc.h
+new file mode 100644
+index 000000000000..9fa3c7c8c3f5
+--- /dev/null
++++ b/drivers/hv/dxgkrnl/misc.h
+@@ -0,0 +1,72 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Copyright (c) 2019, Microsoft Corporation.
++ *
++ * Author:
++ *   Iouri Tarassov <iourit@linux.microsoft.com>
++ *
++ * Dxgkrnl Graphics Driver
++ * Misc definitions
++ *
++ */
++
++#ifndef _MISC_H_
++#define _MISC_H_
++
++extern const struct d3dkmthandle zerohandle;
++
++/*
++ * Synchronization lock hierarchy.
++ *
++ * The higher enum value, the higher is the lock order.
++ * When a lower lock ois held, the higher lock should not be acquired.
++ *
++ * channel_lock
++ * device_mutex
++ */
++
++/*
++ * Some of the Windows return codes, which needs to be translated to Linux
++ * IOCTL return codes. Positive values are success codes and need to be
++ * returned from the driver IOCTLs. libdxcore.so depends on returning
++ * specific return codes.
++ */
++#define STATUS_SUCCESS					((int)(0))
++#define	STATUS_OBJECT_NAME_INVALID			((int)(0xC0000033L))
++#define	STATUS_DEVICE_REMOVED				((int)(0xC00002B6L))
++#define	STATUS_INVALID_HANDLE				((int)(0xC0000008L))
++#define	STATUS_ILLEGAL_INSTRUCTION			((int)(0xC000001DL))
++#define	STATUS_NOT_IMPLEMENTED				((int)(0xC0000002L))
++#define	STATUS_PENDING					((int)(0x00000103L))
++#define	STATUS_ACCESS_DENIED				((int)(0xC0000022L))
++#define	STATUS_BUFFER_TOO_SMALL				((int)(0xC0000023L))
++#define	STATUS_OBJECT_TYPE_MISMATCH			((int)(0xC0000024L))
++#define	STATUS_GRAPHICS_ALLOCATION_BUSY			((int)(0xC01E0102L))
++#define	STATUS_NOT_SUPPORTED				((int)(0xC00000BBL))
++#define	STATUS_TIMEOUT					((int)(0x00000102L))
++#define	STATUS_INVALID_PARAMETER			((int)(0xC000000DL))
++#define	STATUS_NO_MEMORY				((int)(0xC0000017L))
++#define	STATUS_OBJECT_NAME_COLLISION			((int)(0xC0000035L))
++#define STATUS_OBJECT_NAME_NOT_FOUND			((int)(0xC0000034L))
++
++
++#define NT_SUCCESS(status)				(status.v >= 0)
++
++#ifndef DEBUG
++
++#define DXGKRNL_ASSERT(exp)
++
++#else
++
++#define DXGKRNL_ASSERT(exp)	\
++do {				\
++	if (!(exp)) {		\
++		dump_stack();	\
++		BUG_ON(true);	\
++	}			\
++} while (0)
++
++#endif /* DEBUG */
++
++#endif /* _MISC_H_ */
+diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
+index bdb7bc325d1a..2b9ed954a520 100644
+--- a/include/uapi/misc/d3dkmthk.h
++++ b/include/uapi/misc/d3dkmthk.h
+@@ -14,6 +14,40 @@
+ #ifndef _D3DKMTHK_H
+ #define _D3DKMTHK_H
+ 
++/*
++ * This structure matches the definition of D3DKMTHANDLE in Windows.
++ * The handle is opaque in user mode. It is used by user mode applications to
++ * represent kernel mode objects, created by dxgkrnl.
++ */
++struct d3dkmthandle {
++	union {
++		struct {
++			__u32 instance	:  6;
++			__u32 index	: 24;
++			__u32 unique	: 2;
++		};
++		__u32 v;
++	};
++};
++
++/*
++ * VM bus messages return Windows' NTSTATUS, which is integer and only negative
++ * value indicates a failure. A positive number is a success and needs to be
++ * returned to user mode as the IOCTL return code. Negative status codes are
++ * converted to Linux error codes.
++ */
++struct ntstatus {
++	union {
++		struct {
++			int code	: 16;
++			int facility	: 13;
++			int customer	: 1;
++			int severity	: 2;
++		};
++		int v;
++	};
++};
++
+ /* Matches Windows LUID definition */
+ struct winluid {
+ 	__u32 a;
 -- 
 2.35.1
 
