@@ -2,110 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3531A4C935A
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 19:37:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3524A4C948C
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 20:41:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234327AbiCASiP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Mar 2022 13:38:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37806 "EHLO
+        id S235143AbiCATmX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Mar 2022 14:42:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237095AbiCASiI (ORCPT
+        with ESMTP id S232112AbiCATmX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Mar 2022 13:38:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEFB25EB0;
-        Tue,  1 Mar 2022 10:37:26 -0800 (PST)
+        Tue, 1 Mar 2022 14:42:23 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D683465495;
+        Tue,  1 Mar 2022 11:41:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 91235B81BFB;
-        Tue,  1 Mar 2022 18:37:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D9E0C340EE;
-        Tue,  1 Mar 2022 18:37:23 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="aQfeTqt3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1646159840;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VSlbgJdpoP+AY+bV5mfkN+zErWZpSrp0RJgkPDVSc0A=;
-        b=aQfeTqt3Blqmd7xwmnnemPOkABs2OSRQfD3vrWDfSpclMht5sVb5NhIpVgxjRlEiCLkj7u
-        TWiA9VszkWjvxE0Yx8q/qb/9de6ZpRvFOxGB1JCkF6eZfpa4GxXxMZ/IWhlVmVPlgRK2e5
-        TKYSF2+nWIzlxjGcVXAAqFsV6gVdKi4=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 61d2a11b (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
-        Tue, 1 Mar 2022 18:37:20 +0000 (UTC)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-2dc0364d2ceso5938327b3.7;
-        Tue, 01 Mar 2022 10:37:18 -0800 (PST)
-X-Gm-Message-State: AOAM533aWgITWalmDDlDTyk01ub1VY3yAnLIG9sIfSRQ0gWxD6mJQdbF
-        LnsLkRs33jUjOwpRvgltivZHmvFIxVgMa1kgT8I=
-X-Google-Smtp-Source: ABdhPJxjsymwg5XYl+9GOoc41diKHCjvuVitOGfsmWq8BKG7jLc7Bwscjb/8sbN68Rx5awXeXGZ28M5wy+3vS8Wf7hE=
-X-Received: by 2002:a81:8984:0:b0:2db:6b04:be0c with SMTP id
- z126-20020a818984000000b002db6b04be0cmr13093941ywf.2.1646159837032; Tue, 01
- Mar 2022 10:37:17 -0800 (PST)
-MIME-Version: 1.0
-References: <Yh4+9+UpanJWAIyZ@zx2c4.com> <223f858c-34c5-3ccd-b9e8-7585a976364d@redhat.com>
- <Yh5JwK6toc/zBNL7@zx2c4.com> <20220301121419-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20220301121419-mutt-send-email-mst@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 1 Mar 2022 19:37:06 +0100
-X-Gmail-Original-Message-ID: <CAHmME9qieLUDVoPYZPo=N8NCL1T-RzQ4p7kCFv3PKFUkhWZPsw@mail.gmail.com>
-Message-ID: <CAHmME9qieLUDVoPYZPo=N8NCL1T-RzQ4p7kCFv3PKFUkhWZPsw@mail.gmail.com>
-Subject: Re: propagating vmgenid outward and upward
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Laszlo Ersek <lersek@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7246761632;
+        Tue,  1 Mar 2022 19:41:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58888C340EE;
+        Tue,  1 Mar 2022 19:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1646163700;
+        bh=C1fiXSQzp/6mGSE4wF5VaDuuI40Za2PZjhJbinmIoDs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sFIIaOr3qhOtKIiGkw47+sRkCTakK6s4LOKKAyeJYuUR4/NwdOwfdasXUZZE+y2dN
+         qTfAkZtm3bVoFwgnBR5c5AAcIWhrEK1eSu+jJttv2IPEGbRWp65T3CHVpPdKS0aQpb
+         RsAEvhp7ssUECvOQfFWuscCf7xqrvhDIw/AQ44yk=
+Date:   Tue, 1 Mar 2022 20:41:37 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         KVM list <kvm@vger.kernel.org>,
         QEMU Developers <qemu-devel@nongnu.org>,
         linux-hyperv@vger.kernel.org,
         Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         Alexander Graf <graf@amazon.com>,
         "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        adrian@parity.io,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+        adrian@parity.io, Laszlo Ersek <lersek@redhat.com>,
+        Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>,
         Dominik Brodowski <linux@dominikbrodowski.net>,
         Jann Horn <jannh@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
         Linux PM <linux-pm@vger.kernel.org>,
         Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: propagating vmgenid outward and upward
+Message-ID: <Yh528WPZrQn5s7vO@kroah.com>
+References: <Yh4+9+UpanJWAIyZ@zx2c4.com>
+ <Yh5fbe71BTT6xc8h@kroah.com>
+ <CAHmME9oGcp7HNLeieptMKztgg7Fq4MnOuAEsiFJxsLbmjSuFCw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHmME9oGcp7HNLeieptMKztgg7Fq4MnOuAEsiFJxsLbmjSuFCw@mail.gmail.com>
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Michael,
+On Tue, Mar 01, 2022 at 07:24:11PM +0100, Jason A. Donenfeld wrote:
+> Hi Greg,
+> 
+> On Tue, Mar 1, 2022 at 7:01 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > A notifier block like this makes sense, but why tie onto the PM_ stuff?
+> > This isn't power management issues, it's a system-wide change that I am
+> > sure others will want to know about that doesn't reflect any power
+> > changes.
+> >
+> > As much as I hate adding new notifiers in the kernel, that might be all
+> > you need here.
+> 
+> You might indeed be right. I guess I was thinking that "resuming from
+> suspend" and "resuming from a VM fork" are kind of the same thing.
+> There _is_ a certain kind of similarity between the two. I was hoping
+> if the similarity was a strong enough one, maybe it'd make sense to do
+> them together rather than adding another notifier. But I suppose you
+> disagree, and it sounds like Rafael might too --
+> <https://lore.kernel.org/lkml/CAJZ5v0g+GihH_b9YvwuHzdrUVNGXOeabOznDC1vK6qLi8gtSTQ@mail.gmail.com/>.
 
-On Tue, Mar 1, 2022 at 6:17 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> Hmm okay, so it's a performance optimization... some batching then? Do
-> you really need to worry about every packet? Every 64 packets not
-> enough?  Packets are after all queued at NICs etc, and VM fork can
-> happen after they leave wireguard ...
+Hey, nice, we agree!  :)
 
-Unfortunately, yes, this is an "every packet" sort of thing -- if the
-race is to be avoided in a meaningful way. It's really extra bad:
-ChaCha20 and AES-CTR work by xoring a secret stream of bytes with
-plaintext to produce a ciphertext. If you use that same secret stream
-and xor it with a second plaintext and transmit that too, an attacker
-can combine the two different ciphertexts to learn things about the
-original plaintext.
+> Code-wise for me with WireGuard it's of course appealing to treat them
+> the same, since it's like a one line change, but if I need to add a
+> new notifier call there, it's not the end of the world.
 
-But, anyway, it seems like the race is here to stay given what we have
-_currently_ available with the virtual hardware. That's why I'm
-focused on trying to get something going that's the least bad with
-what we've currently got, which is racy by design. How vitally
-important is it to have something that doesn't race in the far future?
-I don't know, really. It seems plausible that that ACPI notifier
-triggers so early that nothing else really even has a chance, so the
-race concern is purely theoretical. But I haven't tried to measure
-that so I'm not sure.
+I know there are other places in the kernel that would like to be
+notified when they have been moved to another machine so that they can
+do things like determine if the CPU functionality has changed (or not),
+and perhaps do other types of device reconfiguration.  Right now the
+kernel does not have any way of knowing this, so it makes sense that if
+the platform (i.e. ACPI here) has a way of creating such a event, it
+should and then we can start tieing in other subsystems to use it
+as-needed.
 
-Jason
+thanks,
+
+greg k-h
