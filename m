@@ -2,123 +2,160 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D8654C914E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 18:17:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43CB54C917C
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 18:28:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236439AbiCARSd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Mar 2022 12:18:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43286 "EHLO
+        id S236465AbiCAR3K (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Mar 2022 12:29:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236430AbiCARSc (ORCPT
+        with ESMTP id S232563AbiCAR3J (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Mar 2022 12:18:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 01B4231DF1
-        for <linux-hyperv@vger.kernel.org>; Tue,  1 Mar 2022 09:17:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646155063;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vU3c8INkyRrLYmMmG6yRKZ1MJ2tssrI6rFUsT1snRg0=;
-        b=LI4N+48OsQHomdrVNAKBoKHpxQ6dNDSuA78AkSTP8QwHedAMzOhXdyeS00T/50xPBloNcX
-        HyYjg43K8VRh4r+JyuxAviDrja0RJCHUk4UcI0KVDuCNvzSxRJ/1DGV+J+I8LrSnvlhYyp
-        daAzQ33kuecB+0qpuNjelobBFi8Eotc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-612-8DudDMA1PH2V2aHs9p2jew-1; Tue, 01 Mar 2022 12:17:41 -0500
-X-MC-Unique: 8DudDMA1PH2V2aHs9p2jew-1
-Received: by mail-wr1-f72.google.com with SMTP id x15-20020a5d6b4f000000b001ee6c0aa287so3565466wrw.9
-        for <linux-hyperv@vger.kernel.org>; Tue, 01 Mar 2022 09:17:40 -0800 (PST)
+        Tue, 1 Mar 2022 12:29:09 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A9E6B4D
+        for <linux-hyperv@vger.kernel.org>; Tue,  1 Mar 2022 09:28:27 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id p184-20020a1c29c1000000b0037f76d8b484so1836830wmp.5
+        for <linux-hyperv@vger.kernel.org>; Tue, 01 Mar 2022 09:28:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Y86hBfPWj9E4aTo+XMBrAu6Y5p4SQMawkPD4Q/SuKPY=;
+        b=ifR445Ptk0kZIwyK/iR5LauUeexT4h+Xm5fWIS9UfHsJTwIXI+TBUH0b1B1nklV58Q
+         e3posB9tDmWAuXNqOByYa8OEIeuEgFpyIkDoWKkxe1RAiCnFE6ZEzQVCpMvS62fGzNFV
+         nWcw5JV2lmoD9jxvmDMFuNVsgy/NwYWUQ6a0I1zB2e5jSr3/JFEIp9xW/NRIDhtT+/y6
+         uvAB7/5ZICC2qcmaHb2EAlpVYU+L8My5syB7aELi6iajmzjea09g2vNncJq3GY6hv/nP
+         g2d17hu4ZYUIRYCXpyuRUhAY/Kr9r3k7MyrtDEVfLOZZZFWPJ239r6w7DpTzLNolCHHw
+         A62A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vU3c8INkyRrLYmMmG6yRKZ1MJ2tssrI6rFUsT1snRg0=;
-        b=k9d8WMVgRiGZYSE3Ek/idpi32Xp0Oj/WC0Qw/y5Pixu1yqgqOMjO+T8os2uCfyAhzz
-         mdr/htu4/9U63t08s5n8sP8Dw9JgwJmOXD/eKBKq68JXD/LyYFMh49xArbwsbGb9ACnS
-         9bA/kcsKCgsfTMSNdwP67TnyC/SjGxOzCeB16bHwOYLDmqUTu8kwK9BI/Ufy69OmEXHR
-         wFVzt1eVs6xoWouVGsgSd3JNyZncKfyQemLtwaIiucvTSbDxRB/J7vF/d8dfv2bucZVU
-         1urh5jcW8d/KGnwnzra2PGV0QKvXDJgjvZEhOn9msofF8AIOoTtE6IV7P6w4SBZ4K6ro
-         iDXA==
-X-Gm-Message-State: AOAM531vu0a3LbVp3DekGnB1iMwYAvoh3fok3/fLMnn43GH9VLGU24tT
-        ykEj+3yjUwLd0vtDDaf5N9FkymzNY5eDnlo0BoqaziKm5TLuJG+WjkuLiR7DV3t55yQrD2IkunF
-        o4nJ+PK0rJcCZcZ4ZAG7/ZwkE
-X-Received: by 2002:a5d:61ca:0:b0:1f0:22ef:bb9f with SMTP id q10-20020a5d61ca000000b001f022efbb9fmr1534532wrv.56.1646155059889;
-        Tue, 01 Mar 2022 09:17:39 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzm0/sILq9s5oSrG8KTBgACJNRqT1mtZa0IVWQDeU62j8WMqO9Pb3os150cIhmIfKb7xYMP0Q==
-X-Received: by 2002:a5d:61ca:0:b0:1f0:22ef:bb9f with SMTP id q10-20020a5d61ca000000b001f022efbb9fmr1534511wrv.56.1646155059630;
-        Tue, 01 Mar 2022 09:17:39 -0800 (PST)
-Received: from redhat.com ([2.53.2.184])
-        by smtp.gmail.com with ESMTPSA id w26-20020a7bc11a000000b0037bf8fa8c02sm2970118wmi.13.2022.03.01.09.17.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Mar 2022 09:17:38 -0800 (PST)
-Date:   Tue, 1 Mar 2022 12:17:33 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Laszlo Ersek <lersek@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, qemu-devel@nongnu.org,
-        linux-hyperv@vger.kernel.org, linux-crypto@vger.kernel.org,
-        graf@amazon.com, mikelley@microsoft.com,
-        gregkh@linuxfoundation.org, adrian@parity.io, berrange@redhat.com,
-        linux@dominikbrodowski.net, jannh@google.com, rafael@kernel.org,
-        len.brown@intel.com, pavel@ucw.cz, linux-pm@vger.kernel.org,
-        colmmacc@amazon.com, tytso@mit.edu, arnd@arndb.de
-Subject: Re: propagating vmgenid outward and upward
-Message-ID: <20220301121419-mutt-send-email-mst@kernel.org>
-References: <Yh4+9+UpanJWAIyZ@zx2c4.com>
- <223f858c-34c5-3ccd-b9e8-7585a976364d@redhat.com>
- <Yh5JwK6toc/zBNL7@zx2c4.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Y86hBfPWj9E4aTo+XMBrAu6Y5p4SQMawkPD4Q/SuKPY=;
+        b=GhBbFgwOCJz4zhfhwt2bTawP9aVKuAzXTFaPCmUNooCNv+/PxNLol1Y10YZosB4KUg
+         QNPo3X3ftbK9eG0FfzTobFqu7pBhBVHgNsM23BAQtxoYyfH66G4x0dH1TRzmZJ+ErpQW
+         jFsQEUYB0LMYfkoCm8qQIV+XHXh65bxkOra6NQHsiyXmzvZnQz8Xyo5f1k6Z37XmyXD+
+         wgB+DBYp+gk9qxcvVxEKmLLnYwLEYR/8gxA/eTjLz1RxIN2A+7B0zSmJMzM8WldYc/jg
+         dNK8drLrXWXffSPRNCsuLBzA0Dlm0F/0AxOY6gKkEgcVNSKPGCHslVsWOt7u8d+JVUvQ
+         cNSQ==
+X-Gm-Message-State: AOAM533nxuaDCuClJzyv2WVU7cpdUX8a4MPVs+RBS+ZXkhBCpmY8ireK
+        YOVOw8BQ4nu+baFQ1c2qjixmBw==
+X-Google-Smtp-Source: ABdhPJyP4zzjkBPeDrhk1IU4HHA4Z4mVRSeyWw7DiZ4BmjKx+FbF6/CkwhxttMvqrC0XO+mqNoqKvQ==
+X-Received: by 2002:a05:600c:a4b:b0:37b:ea2b:5583 with SMTP id c11-20020a05600c0a4b00b0037bea2b5583mr18173339wmq.139.1646155705687;
+        Tue, 01 Mar 2022 09:28:25 -0800 (PST)
+Received: from [192.168.86.34] (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
+        by smtp.googlemail.com with ESMTPSA id c4-20020adfed84000000b001e5b8d5b8dasm20457807wro.36.2022.03.01.09.28.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Mar 2022 09:28:24 -0800 (PST)
+Message-ID: <5f481315-021c-39d6-8c6c-91918851ab13@linaro.org>
+Date:   Tue, 1 Mar 2022 17:28:22 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yh5JwK6toc/zBNL7@zx2c4.com>
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v3 10/11] slimbus: qcom-ngd: Fix kfree() of static memory
+ on setting driver_override
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>, stable@vger.kernel.org
+References: <20220227135214.145599-1-krzysztof.kozlowski@canonical.com>
+ <20220227135329.145862-4-krzysztof.kozlowski@canonical.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <20220227135329.145862-4-krzysztof.kozlowski@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Mar 01, 2022 at 05:28:48PM +0100, Jason A. Donenfeld wrote:
-> Hi Laszlo,
-> 
-> On Tue, Mar 01, 2022 at 05:15:21PM +0100, Laszlo Ersek wrote:
-> > > If we had a "pull" model, rather than just expose a 16-byte unique
-> > > identifier, the vmgenid virtual hardware would _also_ expose a
-> > > word-sized generation counter, which would be incremented every time the
-> > > unique ID changed. Then, every time we would touch the RNG, we'd simply
-> > > do an inexpensive check of this memremap()'d integer, and reinitialize
-> > > with the unique ID if the integer changed.
-> > 
-> > Does the vmgenid spec (as-is) preclude the use of the 16-byte identifier
-> > like this?
-> > 
-> > After all, once you locate the identifier via the ADDR object, you could
-> > perhaps consult it every time you were about to touch the RNG.
-> 
-> No, you could in fact do this, and there'd be nothing wrong with that
-> from a spec perspective. You could even vDSO it all the way through
-> onward to userspace. However, doing a 16-byte atomic memcmp on
-> each-and-every packet is really a non-starter. For that kind of "check
-> it in the hot path" thing to be viable, you really want it to be a
-> counter that is word-sized. The "pull"-model involves pulling on every
-> single packet in order to be better than the "push"-model. Anyway, even
-> with a word-sized counter, it's unclear whether the costs of checking on
-> every packet would be worth it to everyone, but at least it's more
-> tenable than a 16-byte whammy.
-> 
-> Jason
 
-Hmm okay, so it's a performance optimization... some batching then? Do
-you really need to worry about every packet? Every 64 packets not
-enough?  Packets are after all queued at NICs etc, and VM fork can
-happen after they leave wireguard ...
 
--- 
-MST
+On 27/02/2022 13:53, Krzysztof Kozlowski wrote:
+> The driver_override field from platform driver should not be initialized
+> from static memory (string literal) because the core later kfree() it,
+> for example when driver_override is set via sysfs.
+> 
+> Use dedicated helper to set driver_override properly.
+> 
+> Fixes: 917809e2280b ("slimbus: ngd: Add qcom SLIMBus NGD driver")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 
+LGTM,
+
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+> ---
+>   drivers/slimbus/qcom-ngd-ctrl.c | 13 ++++++++++++-
+>   1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+> index 7040293c2ee8..e5d9fdb81eb0 100644
+> --- a/drivers/slimbus/qcom-ngd-ctrl.c
+> +++ b/drivers/slimbus/qcom-ngd-ctrl.c
+> @@ -1434,6 +1434,7 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+>   	const struct of_device_id *match;
+>   	struct device_node *node;
+>   	u32 id;
+> +	int ret;
+>   
+>   	match = of_match_node(qcom_slim_ngd_dt_match, parent->of_node);
+>   	data = match->data;
+> @@ -1455,7 +1456,17 @@ static int of_qcom_slim_ngd_register(struct device *parent,
+>   		}
+>   		ngd->id = id;
+>   		ngd->pdev->dev.parent = parent;
+> -		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
+> +
+> +		ret = driver_set_override(&ngd->pdev->dev,
+> +					  &ngd->pdev->driver_override,
+> +					  QCOM_SLIM_NGD_DRV_NAME,
+> +					  strlen(QCOM_SLIM_NGD_DRV_NAME));
+> +		if (ret) {
+> +			platform_device_put(ngd->pdev);
+> +			kfree(ngd);
+> +			of_node_put(node);
+> +			return ret;
+> +		}
+>   		ngd->pdev->dev.of_node = node;
+>   		ctrl->ngd = ngd;
+>   
