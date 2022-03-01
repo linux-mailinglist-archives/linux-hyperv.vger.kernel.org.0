@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9598D4C94DE
+	by mail.lfdr.de (Postfix) with ESMTP id 403584C94DD
 	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 20:48:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237355AbiCATr1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Mar 2022 14:47:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52378 "EHLO
+        id S237359AbiCATr3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Mar 2022 14:47:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237305AbiCATrT (ORCPT
+        with ESMTP id S237313AbiCATrU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Mar 2022 14:47:19 -0500
+        Tue, 1 Mar 2022 14:47:20 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7FE0D6D38F;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 994DF6D392;
         Tue,  1 Mar 2022 11:46:34 -0800 (PST)
 Received: from IOURIT-Z4.ntdev.corp.microsoft.com (unknown [192.182.151.181])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D151420B490B;
-        Tue,  1 Mar 2022 11:46:32 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D151420B490B
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0788620B7178;
+        Tue,  1 Mar 2022 11:46:33 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0788620B7178
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1646163992;
-        bh=UABm5fI+6AdGzqAqrH+XCehjWA4RVlPeH2n7LAghWN8=;
+        s=default; t=1646163993;
+        bh=rOyjGJgM1o6RjFg5Zfo5pAwME3P8gb3cJ/SdT65l3yU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/tRQLG9lbiqqExelMoP3F/4aFUNtjrCBC5kE+TVI+8uLi7Mo1c+OBEwdfgSXJ8PY
-         TOUQ1VQ3O7rAE+en6TVgfRwZ0tt4wecNFfZuFAXcZELAgd5XGcivHLTRJqgA0B2DUg
-         VE6BmhSoGB1QsFjzU/1nz0T/Nn+OZCdvY/4t7VSs=
+        b=ZaoQkHrGgtsfKt4RUH+ofCZ/XjG4ALb6Y8YXiCaPH+1ckJuiZwPe1jhrdIW/l0hAV
+         hbl26IYjxxZhKEskm0f5Ab/VD5LUz86U94FjHWMRr44kGFYZJE7GByAqr4KCRt9Bvh
+         o/ebKhtMKp1tmXOoN7yG+OBu/GDAtOFLfL2y2Z+E=
 From:   Iouri Tarassov <iourit@linux.microsoft.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, linux-hyperv@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, spronovo@microsoft.com,
         spronovo@linux.microsoft.com, gregkh@linuxfoundation.org
-Subject: [PATCH v3 15/30] drivers: hv: dxgkrnl: Creation of paging queue objects.
-Date:   Tue,  1 Mar 2022 11:46:02 -0800
-Message-Id: <894d2c4f4089602f318b4f2aff6c5532653a6b19.1646163378.git.iourit@linux.microsoft.com>
+Subject: [PATCH v3 16/30] drivers: hv: dxgkrnl: Submit execution commands to the compute device
+Date:   Tue,  1 Mar 2022 11:46:03 -0800
+Message-Id: <f37f6c441dcc27a9260388f82b3ea04ade414700.1646163378.git.iourit@linux.microsoft.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
 References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
@@ -49,303 +49,170 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Implement ioctls for creation/destruction of the paging queue objects:
-  - LX_DXCREATEPAGINGQUEUE,
-  - LX_DXDESTROYPAGINGQUEUE
+Implements ioctls for submission of compute device buffers for execution:
+  - LX_DXSUBMITCOMMAND
+    The ioctl is used to submit a command buffer to the device,
+    working in the "packet scheduling" mode.
 
-Paging queue objects (dxgpagingqueue) contain operations, which
-handle residency of device accessible allocations. An allocation is
-resident, when the device has access to it. For example, the allocation
-resides in local device memory or device page tables point to system
-memory which is made non-pageable.
+  - LX_DXSUBMITCOMMANDTOHWQUEUE
+  The ioctl is used to submit a command buffer to the device,
+  working in the "hardware scheduling" mode.
 
-Each paging queue has an associated monitored fence sync object, which
-is used to detect when a paging operation is completed.
+To improve performance both ioctls use asynchronous VM bus messages
+to communicate with the host as these are high frequency operations.
 
 Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
 ---
- drivers/hv/dxgkrnl/dxgadapter.c |  89 +++++++++++++++
- drivers/hv/dxgkrnl/dxgkrnl.h    |  24 +++++
- drivers/hv/dxgkrnl/dxgprocess.c |   4 +
- drivers/hv/dxgkrnl/dxgvmbus.c   |  74 +++++++++++++
- drivers/hv/dxgkrnl/dxgvmbus.h   |  17 +++
- drivers/hv/dxgkrnl/ioctl.c      | 184 ++++++++++++++++++++++++++++++++
- include/uapi/misc/d3dkmthk.h    |  27 +++++
- 7 files changed, 419 insertions(+)
+ drivers/hv/dxgkrnl/dxgkrnl.h  |   6 ++
+ drivers/hv/dxgkrnl/dxgvmbus.c | 111 +++++++++++++++++++++++++++++
+ drivers/hv/dxgkrnl/dxgvmbus.h |  14 ++++
+ drivers/hv/dxgkrnl/ioctl.c    | 129 ++++++++++++++++++++++++++++++++++
+ include/uapi/misc/d3dkmthk.h  |  58 +++++++++++++++
+ 5 files changed, 318 insertions(+)
 
-diff --git a/drivers/hv/dxgkrnl/dxgadapter.c b/drivers/hv/dxgkrnl/dxgadapter.c
-index cdc057371bfe..b162a37cf389 100644
---- a/drivers/hv/dxgkrnl/dxgadapter.c
-+++ b/drivers/hv/dxgkrnl/dxgadapter.c
-@@ -282,6 +282,7 @@ struct dxgdevice *dxgdevice_create(struct dxgadapter *adapter,
- void dxgdevice_stop(struct dxgdevice *device)
- {
- 	struct dxgallocation *alloc;
-+	struct dxgpagingqueue *pqueue;
- 	struct dxgsyncobject *syncobj;
- 
- 	pr_debug("%s: %p", __func__, device);
-@@ -292,6 +293,10 @@ void dxgdevice_stop(struct dxgdevice *device)
- 	dxgdevice_release_alloc_list_lock(device);
- 
- 	hmgrtable_lock(&device->process->handle_table, DXGLOCK_EXCL);
-+	list_for_each_entry(pqueue, &device->pqueue_list_head,
-+			    pqueue_list_entry) {
-+		dxgpagingqueue_stop(pqueue);
-+	}
- 	list_for_each_entry(syncobj, &device->syncobj_list_head,
- 			    syncobj_list_entry) {
- 		dxgsyncobject_stop(syncobj);
-@@ -379,6 +384,17 @@ void dxgdevice_destroy(struct dxgdevice *device)
- 		dxgdevice_release_context_list_lock(device);
- 	}
- 
-+	{
-+		struct dxgpagingqueue *tmp;
-+		struct dxgpagingqueue *pqueue;
-+
-+		pr_debug("destroying paging queues\n");
-+		list_for_each_entry_safe(pqueue, tmp, &device->pqueue_list_head,
-+					 pqueue_list_entry) {
-+			dxgpagingqueue_destroy(pqueue);
-+		}
-+	}
-+
- 	/* Guest handles need to be released before the host handles */
- 	hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
- 	if (device->handle_valid) {
-@@ -711,6 +727,26 @@ void dxgdevice_release(struct kref *refcount)
- 	vfree(device);
- }
- 
-+void dxgdevice_add_paging_queue(struct dxgdevice *device,
-+				struct dxgpagingqueue *entry)
-+{
-+	dxgdevice_acquire_alloc_list_lock(device);
-+	list_add_tail(&entry->pqueue_list_entry, &device->pqueue_list_head);
-+	dxgdevice_release_alloc_list_lock(device);
-+}
-+
-+void dxgdevice_remove_paging_queue(struct dxgpagingqueue *pqueue)
-+{
-+	struct dxgdevice *device = pqueue->device;
-+
-+	dxgdevice_acquire_alloc_list_lock(device);
-+	if (pqueue->pqueue_list_entry.next) {
-+		list_del(&pqueue->pqueue_list_entry);
-+		pqueue->pqueue_list_entry.next = NULL;
-+	}
-+	dxgdevice_release_alloc_list_lock(device);
-+}
-+
- void dxgdevice_add_syncobj(struct dxgdevice *device,
- 			   struct dxgsyncobject *syncobj)
- {
-@@ -894,6 +930,59 @@ void dxgallocation_destroy(struct dxgallocation *alloc)
- 	vfree(alloc);
- }
- 
-+struct dxgpagingqueue *dxgpagingqueue_create(struct dxgdevice *device)
-+{
-+	struct dxgpagingqueue *pqueue;
-+
-+	pqueue = vzalloc(sizeof(*pqueue));
-+	if (pqueue) {
-+		pqueue->device = device;
-+		pqueue->process = device->process;
-+		pqueue->device_handle = device->handle;
-+		dxgdevice_add_paging_queue(device, pqueue);
-+	}
-+	return pqueue;
-+}
-+
-+void dxgpagingqueue_stop(struct dxgpagingqueue *pqueue)
-+{
-+	int ret;
-+
-+	if (pqueue->mapped_address) {
-+		ret = dxg_unmap_iospace(pqueue->mapped_address, PAGE_SIZE);
-+		pr_debug("fence is unmapped %d %p",
-+			    ret, pqueue->mapped_address);
-+		pqueue->mapped_address = NULL;
-+	}
-+}
-+
-+void dxgpagingqueue_destroy(struct dxgpagingqueue *pqueue)
-+{
-+	struct dxgprocess *process = pqueue->process;
-+
-+	pr_debug("%s %p %x\n", __func__, pqueue, pqueue->handle.v);
-+
-+	dxgpagingqueue_stop(pqueue);
-+
-+	hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
-+	if (pqueue->handle.v) {
-+		hmgrtable_free_handle(&process->handle_table,
-+				      HMGRENTRY_TYPE_DXGPAGINGQUEUE,
-+				      pqueue->handle);
-+		pqueue->handle.v = 0;
-+	}
-+	if (pqueue->syncobj_handle.v) {
-+		hmgrtable_free_handle(&process->handle_table,
-+				      HMGRENTRY_TYPE_MONITOREDFENCE,
-+				      pqueue->syncobj_handle);
-+		pqueue->syncobj_handle.v = 0;
-+	}
-+	hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
-+	if (pqueue->device)
-+		dxgdevice_remove_paging_queue(pqueue);
-+	vfree(pqueue);
-+}
-+
- struct dxgprocess_adapter *dxgprocess_adapter_create(struct dxgprocess *process,
- 						     struct dxgadapter *adapter)
- {
 diff --git a/drivers/hv/dxgkrnl/dxgkrnl.h b/drivers/hv/dxgkrnl/dxgkrnl.h
-index 74f412b0d6f5..a9aaefe9c168 100644
+index a9aaefe9c168..2a2a69169e71 100644
 --- a/drivers/hv/dxgkrnl/dxgkrnl.h
 +++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-@@ -89,6 +89,16 @@ int dxgvmbuschannel_init(struct dxgvmbuschannel *ch, struct hv_device *hdev);
- void dxgvmbuschannel_destroy(struct dxgvmbuschannel *ch);
- void dxgvmbuschannel_receive(void *ctx);
- 
-+struct dxgpagingqueue {
-+	struct dxgdevice	*device;
-+	struct dxgprocess	*process;
-+	struct list_head	pqueue_list_entry;
-+	struct d3dkmthandle	device_handle;
-+	struct d3dkmthandle	handle;
-+	struct d3dkmthandle	syncobj_handle;
-+	void			*mapped_address;
-+};
-+
- /*
-  * The structure describes an event, which will be signaled by
-  * a message from host.
-@@ -112,6 +122,10 @@ struct dxghosteventcpu {
- 	bool			remove_from_list;
- };
- 
-+struct dxgpagingqueue *dxgpagingqueue_create(struct dxgdevice *device);
-+void dxgpagingqueue_destroy(struct dxgpagingqueue *pqueue);
-+void dxgpagingqueue_stop(struct dxgpagingqueue *pqueue);
-+
- /*
-  * This is GPU synchronization object, which is used to synchronize execution
-  * between GPU contextx/hardware queues or for tracking GPU execution progress.
-@@ -503,6 +517,9 @@ void dxgdevice_remove_alloc_safe(struct dxgdevice *dev,
- 				 struct dxgallocation *a);
- void dxgdevice_add_resource(struct dxgdevice *dev, struct dxgresource *res);
- void dxgdevice_remove_resource(struct dxgdevice *dev, struct dxgresource *res);
-+void dxgdevice_add_paging_queue(struct dxgdevice *dev,
-+				struct dxgpagingqueue *pqueue);
-+void dxgdevice_remove_paging_queue(struct dxgpagingqueue *pqueue);
- void dxgdevice_add_syncobj(struct dxgdevice *dev, struct dxgsyncobject *so);
- void dxgdevice_remove_syncobj(struct dxgsyncobject *so);
- bool dxgdevice_is_active(struct dxgdevice *dev);
-@@ -742,6 +759,13 @@ dxgvmb_send_create_context(struct dxgadapter *adapter,
- int dxgvmb_send_destroy_context(struct dxgadapter *adapter,
- 				struct dxgprocess *process,
- 				struct d3dkmthandle h);
-+int dxgvmb_send_create_paging_queue(struct dxgprocess *pr,
-+				    struct dxgdevice *dev,
-+				    struct d3dkmt_createpagingqueue *args,
-+				    struct dxgpagingqueue *pq);
-+int dxgvmb_send_destroy_paging_queue(struct dxgprocess *process,
-+				     struct dxgadapter *adapter,
-+				     struct d3dkmthandle h);
- int dxgvmb_send_create_allocation(struct dxgprocess *pr, struct dxgdevice *dev,
- 				  struct d3dkmt_createallocation *args,
- 				  struct d3dkmt_createallocation *__user inargs,
-diff --git a/drivers/hv/dxgkrnl/dxgprocess.c b/drivers/hv/dxgkrnl/dxgprocess.c
-index 32aad8bfa1a5..d4199995d279 100644
---- a/drivers/hv/dxgkrnl/dxgprocess.c
-+++ b/drivers/hv/dxgkrnl/dxgprocess.c
-@@ -278,6 +278,10 @@ struct dxgdevice *dxgprocess_device_by_object_handle(struct dxgprocess *process,
- 			device_handle =
- 			    ((struct dxgcontext *)obj)->device_handle;
- 			break;
-+		case HMGRENTRY_TYPE_DXGPAGINGQUEUE:
-+			device_handle =
-+			    ((struct dxgpagingqueue *)obj)->device_handle;
-+			break;
- 		case HMGRENTRY_TYPE_DXGHWQUEUE:
- 			device_handle =
- 			    ((struct dxghwqueue *)obj)->device_handle;
+@@ -776,6 +776,9 @@ int dxgvmb_send_create_allocation(struct dxgprocess *pr, struct dxgdevice *dev,
+ int dxgvmb_send_destroy_allocation(struct dxgprocess *pr, struct dxgdevice *dev,
+ 				   struct d3dkmt_destroyallocation2 *args,
+ 				   struct d3dkmthandle *alloc_handles);
++int dxgvmb_send_submit_command(struct dxgprocess *pr,
++			       struct dxgadapter *adapter,
++			       struct d3dkmt_submitcommand *args);
+ int dxgvmb_send_create_sync_object(struct dxgprocess *pr,
+ 				   struct dxgadapter *adapter,
+ 				   struct d3dkmt_createsynchronizationobject2
+@@ -818,6 +821,9 @@ int dxgvmb_send_destroy_hwqueue(struct dxgprocess *process,
+ int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
+ 				   struct dxgadapter *adapter,
+ 				   struct d3dkmt_queryadapterinfo *args);
++int dxgvmb_send_submit_command_hwqueue(struct dxgprocess *process,
++				       struct dxgadapter *adapter,
++				       struct d3dkmt_submitcommandtohwqueue *a);
+ int dxgvmb_send_open_sync_object_nt(struct dxgprocess *process,
+ 				    struct dxgvmbuschannel *channel,
+ 				    struct d3dkmt_opensyncobjectfromnthandle2
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.c b/drivers/hv/dxgkrnl/dxgvmbus.c
-index 5d292858edec..fcfd5544f651 100644
+index fcfd5544f651..eeb7cb76e1a5 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.c
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.c
-@@ -1147,6 +1147,80 @@ int dxgvmb_send_destroy_context(struct dxgadapter *adapter,
+@@ -1886,6 +1886,60 @@ int dxgvmb_send_get_stdalloc_data(struct dxgdevice *device,
  	return ret;
  }
  
-+int dxgvmb_send_create_paging_queue(struct dxgprocess *process,
-+				    struct dxgdevice *device,
-+				    struct d3dkmt_createpagingqueue *args,
-+				    struct dxgpagingqueue *pqueue)
++int dxgvmb_send_submit_command(struct dxgprocess *process,
++			       struct dxgadapter *adapter,
++			       struct d3dkmt_submitcommand *args)
 +{
-+	struct dxgkvmb_command_createpagingqueue_return result;
-+	struct dxgkvmb_command_createpagingqueue *command;
 +	int ret;
++	u32 cmd_size;
++	struct dxgkvmb_command_submitcommand *command;
++	u32 hbufsize = args->num_history_buffers * sizeof(struct d3dkmthandle);
 +	struct dxgvmbusmsg msg = {.hdr = NULL};
 +
-+	ret = init_message(&msg, device->adapter, process, sizeof(*command));
++	cmd_size = sizeof(struct dxgkvmb_command_submitcommand) +
++	    hbufsize + args->priv_drv_data_size;
++
++	ret = init_message(&msg, adapter, process, cmd_size);
 +	if (ret)
 +		goto cleanup;
 +	command = (void *)msg.msg;
 +
++	ret = copy_from_user(&command[1], args->history_buffer_array,
++			     hbufsize);
++	if (ret) {
++		pr_err("%s failed to copy history buffer", __func__);
++		ret = -EINVAL;
++		goto cleanup;
++	}
++	ret = copy_from_user((u8 *) &command[1] + hbufsize,
++			     args->priv_drv_data, args->priv_drv_data_size);
++	if (ret) {
++		pr_err("%s failed to copy history priv data", __func__);
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
 +	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_CREATEPAGINGQUEUE,
++				   DXGK_VMBCOMMAND_SUBMITCOMMAND,
 +				   process->host_handle);
 +	command->args = *args;
-+	args->paging_queue.v = 0;
 +
-+	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size, &result,
-+				   sizeof(result));
-+	if (ret < 0) {
-+		pr_err("send_create_paging_queue failed %x", ret);
-+		goto cleanup;
++	if (dxgglobal->async_msg_enabled) {
++		command->hdr.async_msg = 1;
++		ret = dxgvmb_send_async_msg(msg.channel, msg.hdr, msg.size);
++	} else {
++		ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr,
++						    msg.size);
 +	}
-+
-+	args->paging_queue = result.paging_queue;
-+	args->sync_object = result.sync_object;
-+	args->fence_cpu_virtual_address =
-+	    dxg_map_iospace(result.fence_storage_physical_address, PAGE_SIZE,
-+			    PROT_READ | PROT_WRITE, true);
-+	if (args->fence_cpu_virtual_address == NULL) {
-+		ret = -ENOMEM;
-+		goto cleanup;
-+	}
-+	pqueue->mapped_address = args->fence_cpu_virtual_address;
-+	pqueue->handle = args->paging_queue;
 +
 +cleanup:
++
 +	free_message(&msg, process);
 +	if (ret)
 +		pr_debug("err: %s %d", __func__, ret);
 +	return ret;
 +}
 +
-+int dxgvmb_send_destroy_paging_queue(struct dxgprocess *process,
-+				     struct dxgadapter *adapter,
-+				     struct d3dkmthandle h)
+ static void set_result(struct d3dkmt_createsynchronizationobject2 *args,
+ 		       u64 fence_gpu_va, u8 *va)
+ {
+@@ -2404,3 +2458,60 @@ int dxgvmb_send_query_adapter_info(struct dxgprocess *process,
+ 		pr_debug("err: %s %d", __func__, ret);
+ 	return ret;
+ }
++
++int dxgvmb_send_submit_command_hwqueue(struct dxgprocess *process,
++				       struct dxgadapter *adapter,
++				       struct d3dkmt_submitcommandtohwqueue
++				       *args)
 +{
-+	int ret;
-+	struct dxgkvmb_command_destroypagingqueue *command;
++	int ret = -EINVAL;
++	u32 cmd_size;
++	struct dxgkvmb_command_submitcommandtohwqueue *command;
++	u32 primaries_size = args->num_primaries * sizeof(struct d3dkmthandle);
 +	struct dxgvmbusmsg msg = {.hdr = NULL};
 +
-+	ret = init_message(&msg, adapter, process, sizeof(*command));
++	cmd_size = sizeof(*command) + args->priv_drv_data_size + primaries_size;
++	ret = init_message(&msg, adapter, process, cmd_size);
 +	if (ret)
 +		goto cleanup;
 +	command = (void *)msg.msg;
 +
-+	command_vgpu_to_host_init2(&command->hdr,
-+				   DXGK_VMBCOMMAND_DESTROYPAGINGQUEUE,
-+				   process->host_handle);
-+	command->paging_queue = h;
++	if (primaries_size) {
++		ret = copy_from_user(&command[1], args->written_primaries,
++					 primaries_size);
++		if (ret) {
++			pr_err("%s failed to copy primaries handles", __func__);
++			ret = -EINVAL;
++			goto cleanup;
++		}
++	}
++	if (args->priv_drv_data_size) {
++		ret = copy_from_user((char *)&command[1] + primaries_size,
++				      args->priv_drv_data,
++				      args->priv_drv_data_size);
++		if (ret) {
++			pr_err("%s failed to copy primaries data", __func__);
++			ret = -EINVAL;
++			goto cleanup;
++		}
++	}
 +
-+	ret = dxgvmb_send_sync_msg(msg.channel, msg.hdr, msg.size, NULL, 0);
++	command_vgpu_to_host_init2(&command->hdr,
++				   DXGK_VMBCOMMAND_SUBMITCOMMANDTOHWQUEUE,
++				   process->host_handle);
++	command->args = *args;
++
++	if (dxgglobal->async_msg_enabled) {
++		command->hdr.async_msg = 1;
++		ret = dxgvmb_send_async_msg(msg.channel, msg.hdr, msg.size);
++	} else {
++		ret = dxgvmb_send_sync_msg_ntstatus(msg.channel, msg.hdr,
++						    msg.size);
++	}
 +
 +cleanup:
 +	free_message(&msg, process);
@@ -353,59 +220,48 @@ index 5d292858edec..fcfd5544f651 100644
 +		pr_debug("err: %s %d", __func__, ret);
 +	return ret;
 +}
-+
- static int
- copy_private_data(struct d3dkmt_createallocation *args,
- 		  struct dxgkvmb_command_createallocation *command,
 diff --git a/drivers/hv/dxgkrnl/dxgvmbus.h b/drivers/hv/dxgkrnl/dxgvmbus.h
-index a4000b3a1743..10ec7efa4f27 100644
+index 10ec7efa4f27..d65412a57a7c 100644
 --- a/drivers/hv/dxgkrnl/dxgvmbus.h
 +++ b/drivers/hv/dxgkrnl/dxgvmbus.h
-@@ -462,6 +462,23 @@ struct dxgkvmb_command_destroycontext {
- 	struct d3dkmthandle	context;
+@@ -314,6 +314,20 @@ struct dxgkvmb_command_flushdevice {
+ 	enum dxgdevice_flushschedulerreason	reason;
  };
  
-+struct dxgkvmb_command_createpagingqueue {
++struct dxgkvmb_command_submitcommand {
 +	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmt_createpagingqueue	args;
++	struct d3dkmt_submitcommand	args;
++	/* HistoryBufferHandles */
++	/* PrivateDriverData    */
 +};
 +
-+struct dxgkvmb_command_createpagingqueue_return {
-+	struct d3dkmthandle	paging_queue;
-+	struct d3dkmthandle	sync_object;
-+	u64			fence_storage_physical_address;
-+	u64			fence_storage_offset;
-+};
-+
-+struct dxgkvmb_command_destroypagingqueue {
++struct dxgkvmb_command_submitcommandtohwqueue {
 +	struct dxgkvmb_command_vgpu_to_host hdr;
-+	struct d3dkmthandle	paging_queue;
++	struct d3dkmt_submitcommandtohwqueue args;
++	/* Written primaries */
++	/* PrivateDriverData */
 +};
 +
- struct dxgkvmb_command_createsyncobject {
- 	struct dxgkvmb_command_vgpu_to_host hdr;
- 	struct d3dkmt_createsynchronizationobject2 args;
+ struct dxgkvmb_command_createallocation_allocinfo {
+ 	u32				flags;
+ 	u32				priv_drv_data_size;
 diff --git a/drivers/hv/dxgkrnl/ioctl.c b/drivers/hv/dxgkrnl/ioctl.c
-index 111a63235627..8992679de5c4 100644
+index 8992679de5c4..38d28d1792df 100644
 --- a/drivers/hv/dxgkrnl/ioctl.c
 +++ b/drivers/hv/dxgkrnl/ioctl.c
-@@ -1034,6 +1034,186 @@ static int dxgk_destroy_hwqueue(struct dxgprocess *process,
+@@ -1935,6 +1935,131 @@ dxgk_destroy_allocation(struct dxgprocess *process, void *__user inargs)
  	return ret;
  }
  
 +static int
-+dxgk_create_paging_queue(struct dxgprocess *process, void *__user inargs)
++dxgk_submit_command(struct dxgprocess *process, void *__user inargs)
 +{
-+	struct d3dkmt_createpagingqueue args;
++	int ret;
++	struct d3dkmt_submitcommand args;
 +	struct dxgdevice *device = NULL;
 +	struct dxgadapter *adapter = NULL;
-+	struct dxgpagingqueue *pqueue = NULL;
-+	int ret;
-+	struct d3dkmthandle host_handle = {};
-+	bool device_lock_acquired = false;
 +
 +	pr_debug("ioctl: %s", __func__);
-+
 +	ret = copy_from_user(&args, inargs, sizeof(args));
 +	if (ret) {
 +		pr_err("%s failed to copy input args", __func__);
@@ -413,98 +269,68 @@ index 111a63235627..8992679de5c4 100644
 +		goto cleanup;
 +	}
 +
-+	/*
-+	 * The call acquires reference on the device. It is safe to access the
-+	 * adapter, because the device holds reference on it.
-+	 */
-+	device = dxgprocess_device_by_handle(process, args.device);
++	if (args.broadcast_context_count > D3DDDI_MAX_BROADCAST_CONTEXT ||
++	    args.broadcast_context_count == 0) {
++		pr_err("invalid number of contexts");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	if (args.priv_drv_data_size > DXG_MAX_VM_BUS_PACKET_SIZE) {
++		pr_err("invalid private data size");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	if (args.num_history_buffers > 1024) {
++		pr_err("invalid number of history buffers");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	if (args.num_primaries > DXG_MAX_VM_BUS_PACKET_SIZE) {
++		pr_err("invalid number of primaries");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	device = dxgprocess_device_by_object_handle(process,
++						    HMGRENTRY_TYPE_DXGCONTEXT,
++						    args.broadcast_context[0]);
 +	if (device == NULL) {
 +		ret = -EINVAL;
 +		goto cleanup;
 +	}
 +
-+	ret = dxgdevice_acquire_lock_shared(device);
-+	if (ret < 0)
-+		goto cleanup;
-+
-+	device_lock_acquired = true;
 +	adapter = device->adapter;
-+
 +	ret = dxgadapter_acquire_lock_shared(adapter);
 +	if (ret < 0) {
 +		adapter = NULL;
 +		goto cleanup;
 +	}
 +
-+	pqueue = dxgpagingqueue_create(device);
-+	if (pqueue == NULL) {
-+		ret = -ENOMEM;
-+		goto cleanup;
-+	}
-+
-+	ret = dxgvmb_send_create_paging_queue(process, device, &args, pqueue);
-+	if (ret >= 0) {
-+		host_handle = args.paging_queue;
-+
-+		ret = copy_to_user(inargs, &args, sizeof(args));
-+		if (ret < 0) {
-+			pr_err("%s failed to copy input args", __func__);
-+			goto cleanup;
-+		}
-+
-+		hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
-+		ret = hmgrtable_assign_handle(&process->handle_table, pqueue,
-+					      HMGRENTRY_TYPE_DXGPAGINGQUEUE,
-+					      host_handle);
-+		if (ret >= 0) {
-+			pqueue->handle = host_handle;
-+			ret = hmgrtable_assign_handle(&process->handle_table,
-+						NULL,
-+						HMGRENTRY_TYPE_MONITOREDFENCE,
-+						args.sync_object);
-+			if (ret >= 0)
-+				pqueue->syncobj_handle = args.sync_object;
-+		}
-+		hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
-+		/* should not fail after this */
-+	}
++	ret = dxgvmb_send_submit_command(process, adapter, &args);
 +
 +cleanup:
 +
-+	if (ret < 0) {
-+		if (pqueue)
-+			dxgpagingqueue_destroy(pqueue);
-+		if (host_handle.v)
-+			dxgvmb_send_destroy_paging_queue(process,
-+							 adapter,
-+							 host_handle);
-+	}
-+
 +	if (adapter)
 +		dxgadapter_release_lock_shared(adapter);
-+
-+	if (device) {
-+		if (device_lock_acquired)
-+			dxgdevice_release_lock_shared(device);
++	if (device)
 +		kref_put(&device->device_kref, dxgdevice_release);
-+	}
 +
 +	pr_debug("ioctl:%s %s %d", errorstr(ret), __func__, ret);
 +	return ret;
 +}
 +
 +static int
-+dxgk_destroy_paging_queue(struct dxgprocess *process, void *__user inargs)
++dxgk_submit_command_to_hwqueue(struct dxgprocess *process, void *__user inargs)
 +{
-+	struct d3dddi_destroypagingqueue args;
-+	struct dxgpagingqueue *paging_queue = NULL;
 +	int ret;
-+	struct d3dkmthandle device_handle = {};
++	struct d3dkmt_submitcommandtohwqueue args;
 +	struct dxgdevice *device = NULL;
 +	struct dxgadapter *adapter = NULL;
 +
 +	pr_debug("ioctl: %s", __func__);
-+
 +	ret = copy_from_user(&args, inargs, sizeof(args));
 +	if (ret) {
 +		pr_err("%s failed to copy input args", __func__);
@@ -512,38 +338,23 @@ index 111a63235627..8992679de5c4 100644
 +		goto cleanup;
 +	}
 +
-+	hmgrtable_lock(&process->handle_table, DXGLOCK_EXCL);
-+	paging_queue = hmgrtable_get_object_by_type(&process->handle_table,
-+						HMGRENTRY_TYPE_DXGPAGINGQUEUE,
-+						args.paging_queue);
-+	if (paging_queue) {
-+		device_handle = paging_queue->device_handle;
-+		hmgrtable_free_handle(&process->handle_table,
-+				      HMGRENTRY_TYPE_DXGPAGINGQUEUE,
-+				      args.paging_queue);
-+		hmgrtable_free_handle(&process->handle_table,
-+				      HMGRENTRY_TYPE_MONITOREDFENCE,
-+				      paging_queue->syncobj_handle);
-+		paging_queue->syncobj_handle.v = 0;
-+		paging_queue->handle.v = 0;
-+	}
-+	hmgrtable_unlock(&process->handle_table, DXGLOCK_EXCL);
-+
-+	/*
-+	 * The call acquires reference on the device. It is safe to access the
-+	 * adapter, because the device holds reference on it.
-+	 */
-+	if (device_handle.v)
-+		device = dxgprocess_device_by_handle(process, device_handle);
-+	if (device == NULL) {
++	if (args.priv_drv_data_size > DXG_MAX_VM_BUS_PACKET_SIZE) {
++		pr_err("invalid private data size");
 +		ret = -EINVAL;
 +		goto cleanup;
 +	}
 +
-+	ret = dxgdevice_acquire_lock_shared(device);
-+	if (ret < 0) {
-+		kref_put(&device->device_kref, dxgdevice_release);
-+		device = NULL;
++	if (args.num_primaries > DXG_MAX_VM_BUS_PACKET_SIZE) {
++		pr_err("invalid number of primaries");
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	device = dxgprocess_device_by_object_handle(process,
++						    HMGRENTRY_TYPE_DXGHWQUEUE,
++						    args.hwqueue);
++	if (device == NULL) {
++		ret = -EINVAL;
 +		goto cleanup;
 +	}
 +
@@ -554,98 +365,130 @@ index 111a63235627..8992679de5c4 100644
 +		goto cleanup;
 +	}
 +
-+	ret = dxgvmb_send_destroy_paging_queue(process, adapter,
-+					       args.paging_queue);
-+
-+	dxgpagingqueue_destroy(paging_queue);
++	ret = dxgvmb_send_submit_command_hwqueue(process, adapter, &args);
 +
 +cleanup:
 +
 +	if (adapter)
 +		dxgadapter_release_lock_shared(adapter);
-+
-+	if (device) {
-+		dxgdevice_release_lock_shared(device);
++	if (device)
 +		kref_put(&device->device_kref, dxgdevice_release);
-+	}
 +
 +	pr_debug("ioctl:%s %s %d", errorstr(ret), __func__, ret);
 +	return ret;
 +}
 +
  static int
- get_standard_alloc_priv_data(struct dxgdevice *device,
- 			     struct d3dkmt_createstandardallocation *alloc_info,
-@@ -3570,6 +3750,8 @@ void init_ioctls(void)
- 		  LX_DXDESTROYCONTEXT);
- 	SET_IOCTL(/*0x6 */ dxgk_create_allocation,
- 		  LX_DXCREATEALLOCATION);
-+	SET_IOCTL(/*0x7 */ dxgk_create_paging_queue,
-+		  LX_DXCREATEPAGINGQUEUE);
+ dxgk_submit_signal_to_hwqueue(struct dxgprocess *process, void *__user inargs)
+ {
+@@ -3754,6 +3879,8 @@ void init_ioctls(void)
+ 		  LX_DXCREATEPAGINGQUEUE);
  	SET_IOCTL(/*0x9 */ dxgk_query_adapter_info,
  		  LX_DXQUERYADAPTERINFO);
++	SET_IOCTL(/*0xf */ dxgk_submit_command,
++		  LX_DXSUBMITCOMMAND);
  	SET_IOCTL(/*0x10 */ dxgk_create_sync_object,
-@@ -3590,6 +3772,8 @@ void init_ioctls(void)
- 		  LX_DXDESTROYDEVICE);
- 	SET_IOCTL(/*0x1b */ dxgk_destroy_hwqueue,
- 		  LX_DXDESTROYHWQUEUE);
-+	SET_IOCTL(/*0x1c */ dxgk_destroy_paging_queue,
-+		  LX_DXDESTROYPAGINGQUEUE);
- 	SET_IOCTL(/*0x1d */ dxgk_destroy_sync_object,
- 		  LX_DXDESTROYSYNCHRONIZATIONOBJECT);
- 	SET_IOCTL(/*0x31 */ dxgk_signal_sync_object_cpu,
+ 		  LX_DXCREATESYNCHRONIZATIONOBJECT);
+ 	SET_IOCTL(/*0x11 */ dxgk_signal_sync_object,
+@@ -3782,6 +3909,8 @@ void init_ioctls(void)
+ 		  LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU);
+ 	SET_IOCTL(/*0x33 */ dxgk_signal_sync_object_gpu2,
+ 		  LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU2);
++	SET_IOCTL(/*0x34 */ dxgk_submit_command_to_hwqueue,
++		  LX_DXSUBMITCOMMANDTOHWQUEUE);
+ 	SET_IOCTL(/*0x35 */ dxgk_submit_wait_to_hwqueue,
+ 		  LX_DXSUBMITWAITFORSYNCOBJECTSTOHWQUEUE);
+ 	SET_IOCTL(/*0x36 */ dxgk_submit_signal_to_hwqueue,
 diff --git a/include/uapi/misc/d3dkmthk.h b/include/uapi/misc/d3dkmthk.h
-index 0b3cbe8ddcab..a35e02c4cf17 100644
+index a35e02c4cf17..fe0b391d7f6b 100644
 --- a/include/uapi/misc/d3dkmthk.h
 +++ b/include/uapi/misc/d3dkmthk.h
-@@ -207,6 +207,29 @@ struct d3dddi_createhwqueueflags {
- 	};
+@@ -54,6 +54,8 @@ struct winluid {
+ 	__u32 b;
  };
  
-+enum d3dddi_pagingqueue_priority {
-+	_D3DDDI_PAGINGQUEUE_PRIORITY_BELOW_NORMAL	= -1,
-+	_D3DDDI_PAGINGQUEUE_PRIORITY_NORMAL		= 0,
-+	_D3DDDI_PAGINGQUEUE_PRIORITY_ABOVE_NORMAL	= 1,
++#define D3DDDI_MAX_WRITTEN_PRIMARIES		16
++
+ #define D3DKMT_CREATEALLOCATION_MAX		1024
+ #define D3DKMT_ADAPTERS_MAX			64
+ #define D3DDDI_MAX_BROADCAST_CONTEXT		64
+@@ -521,6 +523,58 @@ struct d3dkmt_destroysynchronizationobject {
+ 	struct d3dkmthandle	sync_object;
+ };
+ 
++struct d3dkmt_submitcommandflags {
++	__u32					null_rendering:1;
++	__u32					present_redirected:1;
++	__u32					reserved:30;
 +};
 +
-+struct d3dkmt_createpagingqueue {
-+	struct d3dkmthandle		device;
-+	enum d3dddi_pagingqueue_priority priority;
-+	struct d3dkmthandle		paging_queue;
-+	struct d3dkmthandle		sync_object;
++struct d3dkmt_submitcommand {
++	__u64					command_buffer;
++	__u32					command_length;
++	struct d3dkmt_submitcommandflags	flags;
++	__u64					present_history_token;
++	__u32					broadcast_context_count;
++	struct d3dkmthandle	broadcast_context[D3DDDI_MAX_BROADCAST_CONTEXT];
++	__u32					reserved;
 +#ifdef __KERNEL__
-+	void				*fence_cpu_virtual_address;
++	void					*priv_drv_data;
 +#else
-+	__u64				fence_cpu_virtual_address;
++	__u64					priv_drv_data;
 +#endif
-+	__u32				physical_adapter_index;
++	__u32					priv_drv_data_size;
++	__u32					num_primaries;
++	struct d3dkmthandle	written_primaries[D3DDDI_MAX_WRITTEN_PRIMARIES];
++	__u32					num_history_buffers;
++	__u32					reserved1;
++#ifdef __KERNEL__
++	struct d3dkmthandle			*history_buffer_array;
++#else
++	__u64					history_buffer_array;
++#endif
 +};
 +
-+struct d3dddi_destroypagingqueue {
-+	struct d3dkmthandle		paging_queue;
++struct d3dkmt_submitcommandtohwqueue {
++	struct d3dkmthandle	hwqueue;
++	__u32			reserved;
++	__u64			hwqueue_progress_fence_id;
++	__u64			command_buffer;
++	__u32			command_length;
++	__u32			priv_drv_data_size;
++#ifdef __KERNEL__
++	void			*priv_drv_data;
++#else
++	__u64			priv_drv_data;
++#endif
++	__u32			num_primaries;
++	__u32			reserved1;
++#ifdef __KERNEL__
++	struct d3dkmthandle	*written_primaries;
++#else
++	__u64			written_primaries;
++#endif
 +};
 +
- enum d3dkmdt_gdisurfacetype {
- 	_D3DKMDT_GDISURFACE_INVALID				= 0,
- 	_D3DKMDT_GDISURFACE_TEXTURE				= 1,
-@@ -886,6 +909,8 @@ struct d3dkmt_enumadapters3 {
- 	_IOWR(0x47, 0x05, struct d3dkmt_destroycontext)
- #define LX_DXCREATEALLOCATION		\
- 	_IOWR(0x47, 0x06, struct d3dkmt_createallocation)
-+#define LX_DXCREATEPAGINGQUEUE		\
-+	_IOWR(0x47, 0x07, struct d3dkmt_createpagingqueue)
+ enum d3dkmt_standardallocationtype {
+ 	_D3DKMT_STANDARDALLOCATIONTYPE_EXISTINGHEAP	= 1,
+ 	_D3DKMT_STANDARDALLOCATIONTYPE_CROSSADAPTER	= 2,
+@@ -913,6 +967,8 @@ struct d3dkmt_enumadapters3 {
+ 	_IOWR(0x47, 0x07, struct d3dkmt_createpagingqueue)
  #define LX_DXQUERYADAPTERINFO		\
  	_IOWR(0x47, 0x09, struct d3dkmt_queryadapterinfo)
++#define LX_DXSUBMITCOMMAND		\
++	_IOWR(0x47, 0x0f, struct d3dkmt_submitcommand)
  #define LX_DXCREATESYNCHRONIZATIONOBJECT \
-@@ -904,6 +929,8 @@ struct d3dkmt_enumadapters3 {
- 	_IOWR(0x47, 0x18, struct d3dkmt_createhwqueue)
- #define LX_DXDESTROYHWQUEUE		\
- 	_IOWR(0x47, 0x1b, struct d3dkmt_destroyhwqueue)
-+#define LX_DXDESTROYPAGINGQUEUE		\
-+	_IOWR(0x47, 0x1c, struct d3dddi_destroypagingqueue)
- #define LX_DXDESTROYDEVICE		\
- 	_IOWR(0x47, 0x19, struct d3dkmt_destroydevice)
- #define LX_DXDESTROYSYNCHRONIZATIONOBJECT \
+ 	_IOWR(0x47, 0x10, struct d3dkmt_createsynchronizationobject2)
+ #define LX_DXSIGNALSYNCHRONIZATIONOBJECT \
+@@ -941,6 +997,8 @@ struct d3dkmt_enumadapters3 {
+ 	_IOWR(0x47, 0x32, struct d3dkmt_signalsynchronizationobjectfromgpu)
+ #define LX_DXSIGNALSYNCHRONIZATIONOBJECTFROMGPU2 \
+ 	_IOWR(0x47, 0x33, struct d3dkmt_signalsynchronizationobjectfromgpu2)
++#define LX_DXSUBMITCOMMANDTOHWQUEUE	\
++	_IOWR(0x47, 0x34, struct d3dkmt_submitcommandtohwqueue)
+ #define LX_DXSUBMITSIGNALSYNCOBJECTSTOHWQUEUE \
+ 	_IOWR(0x47, 0x35, struct d3dkmt_submitsignalsyncobjectstohwqueue)
+ #define LX_DXSUBMITWAITFORSYNCOBJECTSTOHWQUEUE \
 -- 
 2.35.1
 
