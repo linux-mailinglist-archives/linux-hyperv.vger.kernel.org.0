@@ -2,32 +2,32 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A87254C89B1
+	by mail.lfdr.de (Postfix) with ESMTP id 3D2FE4C89AE
 	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 11:53:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231738AbiCAKyM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S234384AbiCAKyM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Tue, 1 Mar 2022 05:54:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232098AbiCAKyL (ORCPT
+        with ESMTP id S231738AbiCAKyL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 1 Mar 2022 05:54:11 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6253726578;
-        Tue,  1 Mar 2022 02:53:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0BB2654C;
+        Tue,  1 Mar 2022 02:53:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=FLoPcwp8W110QTyBUFSAYe56vwqhsB+0w1jgowBLDrQ=; b=x4Ls4LGXlw3mqit2JgZ989HyZb
-        T5qpKmQGteCGW5NyuTbuloRJzt7HhHDSWBkn6XMthvcPktTNRGiMhEjm3jNCxNFXallKVQH7jYfkV
-        yMP1NQbMBXexGqNGRQAxlptnMjCU6iBaEsSYx496tSDH97RR6D0tylDgXaeXfMovaKcRHhD1mlnuz
-        OQ2BdFcAyA097bBGDwCVXhJV6sp+r3vCa43JaFB+f/7FaiduK6PaxwT2gDQredky9tC0CHGWz/iGt
-        MF2HppH9e3IKlAYjXSzy/Ts9RTiST6h6Fjh5rDDovAP92KH/7Uv2VhH/n7QVymPp/mWYAgqqJl+PH
-        rhUuKZnQ==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=fpYq2gch6ejmPkcFKPjSyDr7OAs4OQSLe0uyAoUEPa0=; b=fPAUDOwUGnyXtx+hZA5zj2Ej4o
+        HV9I6mYI0fayhovoE3oLXfq8qlMel6pFXXEc1mFWZvLXjhqfrbEyGhTBlOaKUDjaA5CMiNeYGJSlR
+        GdeXeohIETuTXXnuIlqxqGPh/VMWo8hZjPyELE8feSOsKIkrkw8+qaC6yMhYVu17XpDc82M+q7Bjt
+        P632yeVc6VELpePyjZp8VgOAEAH7yaxooKuzgDiHjXqCwex8uGIgNuXO8DeKOfVen/Dat6rNPrxN6
+        ijjP0c7VtoQrVKhle4tTPRFAXwLIjwChLUwuVEdyRedzAx7rh05DpVyMdlXZjiKBQ/Hagn5ofY1Vr
+        BAWrqPTg==;
 Received: from [2.53.44.23] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nP083-00GCvx-8y; Tue, 01 Mar 2022 10:53:16 +0000
+        id 1nP086-00GCwl-PS; Tue, 01 Mar 2022 10:53:19 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     iommu@lists.linux-foundation.org
 Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
@@ -46,10 +46,12 @@ Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
         linux-pci@vger.kernel.org
-Subject: cleanup swiotlb initialization v4
-Date:   Tue,  1 Mar 2022 12:52:59 +0200
-Message-Id: <20220301105311.885699-1-hch@lst.de>
+Subject: [PATCH 01/12] dma-direct: use is_swiotlb_active in dma_direct_map_page
+Date:   Tue,  1 Mar 2022 12:53:00 +0200
+Message-Id: <20220301105311.885699-2-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220301105311.885699-1-hch@lst.de>
+References: <20220301105311.885699-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -63,32 +65,28 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi all,
+Use the more specific is_swiotlb_active check instead of checking the
+global swiotlb_force variable.
 
-this series tries to clean up the swiotlb initialization, including
-that of swiotlb-xen.  To get there is also removes the x86 iommu table
-infrastructure that massively obsfucates the initialization path.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ kernel/dma/direct.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Git tree:
+diff --git a/kernel/dma/direct.h b/kernel/dma/direct.h
+index 4632b0f4f72eb..4dc16e08c7e1a 100644
+--- a/kernel/dma/direct.h
++++ b/kernel/dma/direct.h
+@@ -91,7 +91,7 @@ static inline dma_addr_t dma_direct_map_page(struct device *dev,
+ 		return swiotlb_map(dev, phys, size, dir, attrs);
+ 
+ 	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
+-		if (swiotlb_force != SWIOTLB_NO_FORCE)
++		if (is_swiotlb_active(dev))
+ 			return swiotlb_map(dev, phys, size, dir, attrs);
+ 
+ 		dev_WARN_ONCE(dev, 1,
+-- 
+2.30.2
 
-    git://git.infradead.org/users/hch/misc.git swiotlb-init-cleanup
-
-Gitweb:
-
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/swiotlb-init-cleanup
-
-Changes since v3:
- - fix a compilation issue on some powerpc configfs
- - fix and cleanup how forced bounce buffering is enabled for
-   guest memory encryption
-
-Changes since v2:
- - make ppc_swiotlb_flags actually work again
- - also force enable swiotlb for guest encrypted memory to cater
-   to hyperv which doesn't set the host encrypted memory flag
-
-Changes since v1:
- - skip IOMMU initialization on Xen PV kernels
- - various small whitespace / typo fixes
-
-Diffstat:
