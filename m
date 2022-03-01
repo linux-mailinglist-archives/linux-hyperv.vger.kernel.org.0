@@ -2,189 +2,218 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6B94C987C
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 23:47:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 249894C9896
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 23:57:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbiCAWsO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Mar 2022 17:48:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
+        id S231726AbiCAW61 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Mar 2022 17:58:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236873AbiCAWsM (ORCPT
+        with ESMTP id S229980AbiCAW60 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Mar 2022 17:48:12 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 774EE1006;
-        Tue,  1 Mar 2022 14:47:30 -0800 (PST)
-Received: from [192.168.1.17] (unknown [192.182.151.181])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CF2DB20B7178;
-        Tue,  1 Mar 2022 14:47:29 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF2DB20B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1646174849;
-        bh=S6SRPI0pzF1hjnbAwFpvZmH6Qkngwy3kEvZqlm+bSFo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=hkYuRV0F3NwZHInUasPgj0Ci4zD8mGkLdNzsFT/8FMJlEhd10EXkNT4hmxYng6BOU
-         WT7Tzf/oK6ykIVhyQI88ohiXEMHKBRG3TJ/GmfvjD2nzytddUWQNSEOYMA0p6jAi1F
-         lB6qGtln2/xGSsR5XpPrAPhUrw0HHpmbziJEEJIQ=
-Message-ID: <208d42df-3dbf-a9b0-6c68-7cded8e2007d@linux.microsoft.com>
-Date:   Tue, 1 Mar 2022 14:47:28 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v3 02/30] drivers: hv: dxgkrnl: Driver initialization and
- loading
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+        Tue, 1 Mar 2022 17:58:26 -0500
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7373463C9;
+        Tue,  1 Mar 2022 14:57:43 -0800 (PST)
+Received: by mail-wm1-f51.google.com with SMTP id bg16-20020a05600c3c9000b00380f6f473b0so2184109wmb.1;
+        Tue, 01 Mar 2022 14:57:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JpAXOTURWqHul9DmLjuZI2b96sOIIpns+4hIROH1Uz4=;
+        b=KDFsTIJfRfqMmFBKv9ARC4wtvWSPW1eg5xo9zPgCCmuQFDcR9Xe8w55sVirZYegyZJ
+         riKYQA27bYzSUJ7Y2g93ZJbE3LJLfzOQwkxH7KQx93KBTbZl3KVjF9muzGAxIZZgZCv2
+         pSGBxwIEUvTEzMB1rOJFPZNByPzneKILBYb0+idg09eUkiwGWC0BzHez1UYImyKKf0bS
+         Ygbd3eSzPI8kgE53ns2Cr0EQ3abB5DanMCJ3VUwJp7xy5+wnKxT6S1gJ+sxHoSS7mbG+
+         LooTZOxBTNtwUx1W0xIXBDAfrXwwXKJaYflb/cQ6FLogyVu15jZS0jTryyark7VuRnzT
+         6j2A==
+X-Gm-Message-State: AOAM5313+nO8cFj7DHTW2qps2Gg75hfi/ia5Pr2vD/ohkTKxKVOtiizP
+        dn2FCPZHr6djqC90PqLwgnM=
+X-Google-Smtp-Source: ABdhPJyt6LuvSvDaLczFggZ6xS0goostNIyZjV4qyzKbtpncLrymUmgXlJnYODk49vzoqLLX37L2ag==
+X-Received: by 2002:a05:600c:384b:b0:381:10bc:9e43 with SMTP id s11-20020a05600c384b00b0038110bc9e43mr13840234wmr.181.1646175462041;
+        Tue, 01 Mar 2022 14:57:42 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id k15-20020adff28f000000b001f018230b86sm3064767wro.44.2022.03.01.14.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Mar 2022 14:57:41 -0800 (PST)
+Date:   Tue, 1 Mar 2022 22:57:40 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Iouri Tarassov <iourit@linux.microsoft.com>
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spronovo@microsoft.com, spronovo@linux.microsoft.com
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spronovo@microsoft.com,
+        spronovo@linux.microsoft.com, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v3 03/30] drivers: hv: dxgkrnl: Add VM bus message
+ support, initialize VM bus channels.
+Message-ID: <20220301225740.ued3v26oez5lcuqf@liuwe-devbox-debian-v2>
 References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
- <739cf89e71ff72436d7ca3f846881dfb45d07a6a.1646163378.git.iourit@linux.microsoft.com>
- <Yh6F9cG6/SV6Fq8Q@kroah.com>
- <20220301222321.yradz24nuyhzh7om@liuwe-devbox-debian-v2>
-From:   Iouri Tarassov <iourit@linux.microsoft.com>
-In-Reply-To: <20220301222321.yradz24nuyhzh7om@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+ <fde2024f8cd2d2ca2ed9a461298b7914c78226e6.1646163378.git.iourit@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fde2024f8cd2d2ca2ed9a461298b7914c78226e6.1646163378.git.iourit@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 3/1/2022 2:23 PM, Wei Liu wrote:
-> On Tue, Mar 01, 2022 at 09:45:41PM +0100, Greg KH wrote:
-> > On Tue, Mar 01, 2022 at 11:45:49AM -0800, Iouri Tarassov wrote:
-> > > - Create skeleton and add basic functionality for the
-> > > hyper-v compute device driver (dxgkrnl).
-> > > 
-> > > - Register for PCI and VM bus driver notifications and
-> > > handle initialization of VM bus channels.
-> > > 
-> > > - Connect the dxgkrnl module to the drivers/hv/ Makefile and Kconfig
-> > > 
-> > > - Create a MAINTAINERS entry
-> > > 
-> > > A VM bus channel is a communication interface between the hyper-v guest
-> > > and the host. The are two type of VM bus channels, used in the driver:
-> > >   - the global channel
-> > >   - per virtual compute device channel
-> > > 
-> > > A PCI device is created for each virtual compute device, projected
-> > > by the host. The device vendor is PCI_VENDOR_ID_MICROSOFT and device
-> > > id is PCI_DEVICE_ID_VIRTUAL_RENDER. dxg_pci_probe_device handles
-> > > arrival of such devices. The PCI config space of the virtual compute
-> > > device has luid of the corresponding virtual compute device VM
-> > > bus channel. This is how the compute device adapter objects are
-> > > linked to VM bus channels.
-> > > 
-> > > VM bus interface version is exchanged by reading/writing the PCI config
-> > > space of the virtual compute device.
-> > > 
-> > > The IO space is used to handle CPU accessible compute device
-> > > allocations. Hyper-v allocates IO space for the global VM bus channel.
-> > > 
-> > > Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
-> > 
-> > Please work with internal developers to get reviews from them first,
-> > before requiring the kernel community to point out basic issues.  It
-> > will save you a lot of time and stop us from feeling like we are having
-> > our time wasted.
-> > 
-> > Some simple examples below that your coworkers should have caught:
-> > 
-> > > --- /dev/null
-> > > +++ b/drivers/hv/dxgkrnl/dxgkrnl.h
-> > > @@ -0,0 +1,119 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +
-> > > +/*
-> > > + * Copyright (c) 2019, Microsoft Corporation.
-> > 
-> > It is now 2022 :)
-> > 
-> > > +void init_ioctls(void);
-> > 
-> > That is a horrible global function name you just added to the kernel's
-> > namespace for a single driver :(
-> > 
-> > > +long dxgk_unlocked_ioctl(struct file *f, unsigned int p1, unsigned long p2);
-> > > +
-> > > +static inline void guid_to_luid(guid_t *guid, struct winluid *luid)
-> > > +{
-> > > +	*luid = *(struct winluid *)&guid->b[0];
-> > 
-> > Why is the cast needed?  Shouldn't you use real types in your
-> > structures?
-> > 
-> > > +/*
-> > > + * The interface version is used to ensure that the host and the guest use the
-> > > + * same VM bus protocol. It needs to be incremented every time the VM bus
-> > > + * interface changes. DXGK_VMBUS_LAST_COMPATIBLE_INTERFACE_VERSION is
-> > > + * incremented each time the earlier versions of the interface are no longer
-> > > + * compatible with the current version.
-> > > + */
-> > > +#define DXGK_VMBUS_INTERFACE_VERSION_OLD		27
-> > > +#define DXGK_VMBUS_INTERFACE_VERSION			40
-> > > +#define DXGK_VMBUS_LAST_COMPATIBLE_INTERFACE_VERSION	16
-> > 
-> > Where do these numbers come from, the hypervisor specification?
-> > 
-> > > +/*
-> > > + * Pointer to the global device data. By design
-> > > + * there is a single vGPU device on the VM bus and a single /dev/dxg device
-> > > + * is created.
-> > > + */
-> > > +struct dxgglobal *dxgglobal;
-> > 
-> > No, make this per-device, NEVER have a single device for your driver.
-> > The Linux driver model makes it harder to do it this way than to do it
-> > correctly.  Do it correctly please and have no global structures like
-> > this.
-> > 
->
-> This may not be as big an issue as you thought. The device discovery is
-> still done via the normal VMBus probing routine. For all intents and
-> purposes the dxgglobal structure can be broken down into per device
-> fields and a global structure which contains the protocol versioning
-> information -- my understanding is there will always be a global
-> structure to hold information related to the backend, regardless of how
-> many devices there are.
->
-> I definitely think splitting is doable, but I also understand why Iouri
-> does not want to do it _now_ given there is no such a model for multiple
-> devices yet, so anything we put into the per-device structure could be
-> incomplete and it requires further changing when such a model arrives
-> later.
->
-> Iouri, please correct me if I have the wrong mental model here.
->
-> All in all, I hope this is not going to be a deal breaker for the
-> acceptance of this driver.
->
-> Thanks,
-> Wei.
+The subject line is too long. Also, no period at the end please.
 
-I agree with Wei that there always be global driver data.
+You can write it as:
 
-The driver reflects what the host offers and also it must provide the same
-interface to user mode as the host driver does. This is because we want the
-user mode clients to use the same device interface as if they are working on
-the host directly.
+drivers: hv: dxgkrnl: Add VMBus message support and initialize channels
 
-By design a single global VMBus channel is offered by the host and a single
-/dev/dxg device is created. The /dev/dxg device provides interface to enumerate
-virtual compute devices via an ioctl.
+On Tue, Mar 01, 2022 at 11:45:50AM -0800, Iouri Tarassov wrote:
+[...]
+> +
+> +struct dxgvmbusmsgres {
+> +/* Points to the allocated buffer */
+> +	struct dxgvmb_ext_header	*hdr;
+> +/* Points to dxgkvmb_command_vm_to_host or dxgkvmb_command_vgpu_to_host */
+> +	void				*msg;
+> +/* The vm bus channel, used to pass the message to the host */
+> +	struct dxgvmbuschannel		*channel;
+> +/* Message size in bytes including the header, the payload and the result */
+> +	u32				size;
+> +/* Result buffer size in bytes */
+> +	u32				res_size;
+> +/* Points to the result within the allocated buffer */
+> +	void				*res;
 
-If we are to change this model, we would need to make changes to user mode
-clients, which is a big re-design change, affecting many hardware vendors.
+Please align the comments with their fields.
 
-Thanks
-Iouri
-  
+> +};
+> +
+[...]
+> +static void process_inband_packet(struct dxgvmbuschannel *channel,
+> +				  struct vmpacket_descriptor *desc)
+> +{
+> +	u32 packet_length = hv_pkt_datalen(desc);
+> +	struct dxgkvmb_command_host_to_vm *packet;
+> +
+> +	if (packet_length < sizeof(struct dxgkvmb_command_host_to_vm)) {
+> +		pr_err("Invalid global packet");
+> +	} else {
+> +		packet = hv_pkt_data(desc);
+> +		pr_debug("global packet %d",
+> +				packet->command_type);
 
+Unnecessary line wrap.
+
+> +		switch (packet->command_type) {
+> +		case DXGK_VMBCOMMAND_SIGNALGUESTEVENT:
+> +		case DXGK_VMBCOMMAND_SIGNALGUESTEVENTPASSIVE:
+> +			break;
+> +		case DXGK_VMBCOMMAND_SENDWNFNOTIFICATION:
+> +			break;
+> +		default:
+> +			pr_err("unexpected host message %d",
+> +					packet->command_type);
+> +		}
+> +	}
+> +}
+> +
+[...]
+> +
+> +/* Receive callback for messages from the host */
+> +void dxgvmbuschannel_receive(void *ctx)
+> +{
+> +	struct dxgvmbuschannel *channel = ctx;
+> +	struct vmpacket_descriptor *desc;
+> +	u32 packet_length = 0;
+> +
+> +	foreach_vmbus_pkt(desc, channel->channel) {
+> +		packet_length = hv_pkt_datalen(desc);
+> +		pr_debug("next packet (id, size, type): %llu %d %d",
+> +			desc->trans_id, packet_length, desc->type);
+> +		if (desc->type == VM_PKT_COMP) {
+> +			process_completion_packet(channel, desc);
+> +		} else {
+> +			if (desc->type != VM_PKT_DATA_INBAND)
+> +				pr_err("unexpected packet type");
+
+This can potentially flood the guest if the backend is misbehaving.
+We've seen flooding before so would definitely not want more of it.
+Please consider using the ratelimit version pr_err.
+
+The same comment goes for all other pr calls in repeatedly called paths.
+I can see the value of having precise output from the pr_debug a few
+lines above though.
+
+> +			else
+> +				process_inband_packet(channel, desc);
+> +		}
+> +	}
+> +}
+> +
+[...]
+> +int dxgvmb_send_set_iospace_region(u64 start, u64 len,
+> +	struct vmbus_gpadl *shared_mem_gpadl)
+> +{
+> +	int ret;
+> +	struct dxgkvmb_command_setiospaceregion *command;
+> +	struct dxgvmbusmsg msg;
+> +
+> +	ret = init_message(&msg, NULL, sizeof(*command));
+> +	if (ret)
+> +		return ret;
+> +	command = (void *)msg.msg;
+> +
+> +	ret = dxgglobal_acquire_channel_lock();
+> +	if (ret < 0)
+> +		goto cleanup;
+> +
+> +	command_vm_to_host_init1(&command->hdr,
+> +				 DXGK_VMBCOMMAND_SETIOSPACEREGION);
+> +	command->start = start;
+> +	command->length = len;
+> +	if (command->shared_page_gpadl)
+> +		command->shared_page_gpadl = shared_mem_gpadl->gpadl_handle;
+
+shared_mem_gpadl should be checked to be non-null. There is at least one
+call site passes 0 to it.
+
+> +	ret = dxgvmb_send_sync_msg_ntstatus(&dxgglobal->channel, msg.hdr,
+> +					    msg.size);
+> +	if (ret < 0)
+> +		pr_err("send_set_iospace_region failed %x", ret);
+> +
+> +	dxgglobal_release_channel_lock();
+> +cleanup:
+> +	free_message(&msg, NULL);
+> +	if (ret)
+> +		pr_debug("err: %s %d", __func__, ret);
+> +	return ret;
+> +}
+> +
+[...]
+> +
+> +
+> +#define NT_SUCCESS(status)				(status.v >= 0)
+> +
+> +#ifndef DEBUG
+> +
+> +#define DXGKRNL_ASSERT(exp)
+> +
+> +#else
+> +
+> +#define DXGKRNL_ASSERT(exp)	\
+> +do {				\
+> +	if (!(exp)) {		\
+> +		dump_stack();	\
+> +		BUG_ON(true);	\
+> +	}			\
+> +} while (0)
+
+
+You can just use BUG_ON(exp), right? BUG_ON calls panic, which already
+dumps the stack when CONFIG_DEBUG_VERBOSE is set.
+
+Thanks,
+Wei.
