@@ -2,62 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20DC64C8FF9
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 17:15:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C97F4C9036
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Mar 2022 17:21:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236091AbiCAQQ0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Mar 2022 11:16:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42318 "EHLO
+        id S236184AbiCAQWa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Mar 2022 11:22:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236096AbiCAQQW (ORCPT
+        with ESMTP id S236173AbiCAQW3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Mar 2022 11:16:22 -0500
+        Tue, 1 Mar 2022 11:22:29 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5267F954A3
-        for <linux-hyperv@vger.kernel.org>; Tue,  1 Mar 2022 08:15:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 647855C37A
+        for <linux-hyperv@vger.kernel.org>; Tue,  1 Mar 2022 08:21:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646151340;
+        s=mimecast20190719; t=1646151706;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=3grHwAXXbGYwyAryp9bJyqsNbw74zcSGCcHBAqcfYSk=;
-        b=LO1ccq1bBGNc6YkEHBQ/lGxI7H972bXkJhF0b9WUbHc9fnDzGRQbUWwFyJayrqI/v3UTjK
-        i26/W227fkriMXlaxGNCRyoJujyd0BKKYcjCc2jZJAszyykft8FEjku2YdPcvci3v8J8Y9
-        gmc0zO7UZK3qf+yzCq+W8KtsUruFrbA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Ac9WfGbistjFm7LiKvOxeSDYCD8Gg7LmnqbwLdMfizE=;
+        b=YciBP/kMmqJs//YjcgPVvWP1V3yfCDXlvxxJoY/jDI74Zu03GwE61qJiPnxWufrfygRIUG
+        sCMC/iW7t0Qw110FZ1X3QTTyG/k6U5I6G92s3s/OrkXkJEiksXJR6HZnS8dptYm/h5N2b6
+        jYDp0WQmHRhisIc1XFIBEhm9gn/DyeI=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-599-6HVYFuQtMwm2zVtRCXzZeQ-1; Tue, 01 Mar 2022 11:15:35 -0500
-X-MC-Unique: 6HVYFuQtMwm2zVtRCXzZeQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 315BE180FD76;
-        Tue,  1 Mar 2022 16:15:31 +0000 (UTC)
-Received: from lacos-laptop-7.usersys.redhat.com (unknown [10.39.194.186])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33EF52ED97;
-        Tue,  1 Mar 2022 16:15:22 +0000 (UTC)
-Subject: Re: propagating vmgenid outward and upward
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ us-mta-77--JGCNMP5PUGusJnE8OIvzA-1; Tue, 01 Mar 2022 11:21:45 -0500
+X-MC-Unique: -JGCNMP5PUGusJnE8OIvzA-1
+Received: by mail-wm1-f70.google.com with SMTP id m21-20020a7bcf35000000b00380e364b5d2so1442672wmg.2
+        for <linux-hyperv@vger.kernel.org>; Tue, 01 Mar 2022 08:21:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ac9WfGbistjFm7LiKvOxeSDYCD8Gg7LmnqbwLdMfizE=;
+        b=mH9hsah2prdXmKGhARAYdM7rTz34XQnlIckq3CwVLnQDpTFUVra/3ynkDnWpIhLX84
+         a5mDiYnb0OTxxG0IQeri/HYetepqgFTYmjopAqBNdUq/bh8IbHFaSMB5Q5IEqaacvrqx
+         6mzrszaEp2feS2kUHWhtnhChyP+MZRoxZ1PdAcqy5RaclYiwHW5gYElc2AjmVfB+YS+L
+         /FC7px0wFFHf7cdU4e7WeYRVlGc1xQXJSukk6BmZqKqKjFFQbTbpTluaDBbLbn9uR4bs
+         NK51U3nF486NbedwcCShzzDg+ZFoCH9NvjafxLy+j6FPqrnI0j2pgiUe+9vCUTqPLcfb
+         fvYA==
+X-Gm-Message-State: AOAM533z1fZ9yFM3xjCrouPuDNhod6sK8QvtBlC+0/4TXXV3IYU3AGSI
+        Cv5ttQu/+FL5r/Yyi6FSQRD5zsNvCwilWBOTaAnwousSfOlZnu6NdueFVkaRctUGEJjhAJLljmO
+        D4s3IQ0yFnZyARU4cWJBayNxi
+X-Received: by 2002:a05:6000:cd:b0:1ed:bd9f:69d2 with SMTP id q13-20020a05600000cd00b001edbd9f69d2mr20113289wrx.288.1646151703916;
+        Tue, 01 Mar 2022 08:21:43 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJycgS5isqXU9GIuQLrDF3y/TWM3GmZs396UxSScNJGQw1IAMBBON7t0NccxM4wyd8pXTsUTlw==
+X-Received: by 2002:a05:6000:cd:b0:1ed:bd9f:69d2 with SMTP id q13-20020a05600000cd00b001edbd9f69d2mr20113254wrx.288.1646151703601;
+        Tue, 01 Mar 2022 08:21:43 -0800 (PST)
+Received: from redhat.com ([2.53.2.184])
+        by smtp.gmail.com with ESMTPSA id m34-20020a05600c3b2200b00380e3225af9sm3294866wms.0.2022.03.01.08.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Mar 2022 08:21:42 -0800 (PST)
+Date:   Tue, 1 Mar 2022 11:21:38 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         qemu-devel@nongnu.org, linux-hyperv@vger.kernel.org,
         linux-crypto@vger.kernel.org, graf@amazon.com,
         mikelley@microsoft.com, gregkh@linuxfoundation.org,
-        adrian@parity.io, berrange@redhat.com, linux@dominikbrodowski.net,
-        jannh@google.com, mst@redhat.com, rafael@kernel.org,
+        adrian@parity.io, lersek@redhat.com, berrange@redhat.com,
+        linux@dominikbrodowski.net, jannh@google.com, rafael@kernel.org,
         len.brown@intel.com, pavel@ucw.cz, linux-pm@vger.kernel.org,
         colmmacc@amazon.com, tytso@mit.edu, arnd@arndb.de
+Subject: Re: propagating vmgenid outward and upward
+Message-ID: <20220301111459-mutt-send-email-mst@kernel.org>
 References: <Yh4+9+UpanJWAIyZ@zx2c4.com>
-From:   Laszlo Ersek <lersek@redhat.com>
-Message-ID: <223f858c-34c5-3ccd-b9e8-7585a976364d@redhat.com>
-Date:   Tue, 1 Mar 2022 17:15:21 +0100
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <Yh4+9+UpanJWAIyZ@zx2c4.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -69,7 +83,7 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 03/01/22 16:42, Jason A. Donenfeld wrote:
+On Tue, Mar 01, 2022 at 04:42:47PM +0100, Jason A. Donenfeld wrote:
 > Hey folks,
 > 
 > Having finally wrapped up development of the initial vmgenid driver, I
@@ -98,34 +112,22 @@ On 03/01/22 16:42, Jason A. Donenfeld wrote:
 > word-sized generation counter, which would be incremented every time the
 > unique ID changed. Then, every time we would touch the RNG, we'd simply
 > do an inexpensive check of this memremap()'d integer, and reinitialize
-> with the unique ID if the integer changed.
-
-Does the vmgenid spec (as-is) preclude the use of the 16-byte identifier
-like this?
-
-After all, once you locate the identifier via the ADDR object, you could
-perhaps consult it every time you were about to touch the RNG. Perhaps
-with the help of 16-byte atomic (?) operations, you could maintain a
-copy of the identifier elsewhere, and detect (atomically, upon each RNG
-access) whether the identifier has changed, without waiting for the Notify.
-
-We'd require (or assume) the hypervisors to modify the identifier in
-guest RAM before resuming execution of the guest. And we'd have to delay
-RNG accesses in the guest kernel until after the vmgenid device -- or
-its absence -- were discovered.
-
-Just a random guesss.
-
-Thanks
-Laszlo
-
-> In this way, the race would
+> with the unique ID if the integer changed. In this way, the race would
 > be entirely eliminated. We would then be able to propagate this outwards
 > to other drivers, by just exporting an extern symbol, in the manner of
 > `jiffies`, and propagate it upwards to userspace, by putting it in the
 > vDSO, in the manner of gettimeofday. And like that, there'd be no
 > terrible async thing and things would work pretty easily.
-> 
+
+I am not sure what the difference is though. So we have a 16 byte unique
+value and you would prefer a dword counter. How is the former not a
+superset of the later?  I'm not sure how safe it is to expose it to
+userspace specifically, but rest of text talks about exposing it to a
+kernel driver so maybe not an issue? So what makes interrupt driven
+required, and why not just remap and read existing vmgenid in the pull
+manner?  What did I miss?
+
+
 > But that's not what we have, because Microsoft didn't collaborate with
 > anybody on this, and now it's implemented in several hypervisors. Given
 > that I'm already spending considerable time working on the RNG, entirely
@@ -216,5 +218,4 @@ Laszlo
 > 
 > Regards,
 > Jason
-> 
 
