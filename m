@@ -2,146 +2,171 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3AF64CA39C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 12:26:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 688154CA442
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 12:53:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241343AbiCBL1a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Mar 2022 06:27:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58276 "EHLO
+        id S237334AbiCBLyW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Mar 2022 06:54:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241297AbiCBL1a (ORCPT
+        with ESMTP id S235302AbiCBLyV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Mar 2022 06:27:30 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86BA66622D;
-        Wed,  2 Mar 2022 03:26:47 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2419161804;
-        Wed,  2 Mar 2022 11:26:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D16F9C340F1;
-        Wed,  2 Mar 2022 11:26:45 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="FLziEXpf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1646220402;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fufxSPRIOrmbnPbDC6hJ7ttxshIW5aGS9pJhSWhnCM4=;
-        b=FLziEXpf2l0WTAhzSsctWfFPyoNczuf0yET5OvrmfeoHkbQdJJUnS5q+NI+vrChRlkMr3x
-        174jqFOO+Z3Pr5c79Gii5Ryw0Vd9q9Ey0Hlr2keq9mQvPlFbNmRp37DUVNhIihEZDWJZG5
-        HjPNCU02XchGOwdc6y1fEsx970Bts6c=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a4166dc6 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
-        Wed, 2 Mar 2022 11:26:41 +0000 (UTC)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2dbc48104beso13440867b3.5;
-        Wed, 02 Mar 2022 03:26:40 -0800 (PST)
-X-Gm-Message-State: AOAM531CCPFcEGKBbRNRGtYXkH9nqJ+pu4T+FHrfbpHSC9V4hrNo0nv0
-        rosp0lWDaH02FtNz1efiEeJ2262x3AcFLqhgPQc=
-X-Google-Smtp-Source: ABdhPJxbaslGOWNMYlqRkibxJ2ICArMnaBOXMWHprS75pC5WtpgRWsCTpsPEORMZE4FcmdBod69a3hNDLa7CXaxndsk=
-X-Received: by 2002:a81:1143:0:b0:2db:ccb4:b0a1 with SMTP id
- 64-20020a811143000000b002dbccb4b0a1mr9951120ywr.499.1646220398624; Wed, 02
- Mar 2022 03:26:38 -0800 (PST)
+        Wed, 2 Mar 2022 06:54:21 -0500
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3143AB0EBD;
+        Wed,  2 Mar 2022 03:53:38 -0800 (PST)
+Received: by mail-wr1-f43.google.com with SMTP id bk29so2375307wrb.4;
+        Wed, 02 Mar 2022 03:53:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XY6dOIHv3yCkAU7WwLMsImSV4WkNa/CQsBsSl28qGtg=;
+        b=jmQfEq/vpDxAe+EHUS0Q4YvyMIAMxzXJGmQ8+32/z9l0DJH9KNW+pSkF8WZ83dYx+H
+         /qGMTFo3Drzq7ew/h2OWJjEI+mdqUNROhkMGonsPEOrPcucWsFK+80WtFiZcE1plI78n
+         tfNqeqCQsBMh3c/l5rh9sz5CjuDUDwj17Wn1W4M43YGKcT6Osh1Ud9h7l6Vm8m9fa1pG
+         BjzfhEaakZYcPk2NzfNNuMKpskMqWzSe9osPJUFeiQnFU4EsKmdHzxXEC/lJMCrgxGA4
+         gFoyiqPQp8mznjWjISqmKjdd3zbENk1Lsnm6T+cYCHjti0RN9NOpgPh7Ib6orV3+/Ido
+         2Cjw==
+X-Gm-Message-State: AOAM531YEpGfwKWdHBePzaTHlJDJLjb7p2AZ1HWUjY8cJJmZ4u1154/a
+        KV0mEVc5epheoFvkCn8Vl2I=
+X-Google-Smtp-Source: ABdhPJwIDUbYiY4aCi4VVrdNo3TXYAZ5KxSeI6sokMU1uNP1Mg9Shsv6w5X4RG7chrs+dwf72qUK2w==
+X-Received: by 2002:a05:6000:18ab:b0:1f0:1581:fdcf with SMTP id b11-20020a05600018ab00b001f01581fdcfmr5492711wri.490.1646222016686;
+        Wed, 02 Mar 2022 03:53:36 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id x3-20020a5d6b43000000b001e317fb86ecsm16481386wrw.57.2022.03.02.03.53.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Mar 2022 03:53:36 -0800 (PST)
+Date:   Wed, 2 Mar 2022 11:53:34 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Iouri Tarassov <iourit@linux.microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spronovo@microsoft.com, spronovo@linux.microsoft.com
+Subject: Re: [PATCH v3 02/30] drivers: hv: dxgkrnl: Driver initialization and
+ loading
+Message-ID: <20220302115334.wemdkznokszlzcpe@liuwe-devbox-debian-v2>
+References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
+ <739cf89e71ff72436d7ca3f846881dfb45d07a6a.1646163378.git.iourit@linux.microsoft.com>
+ <Yh6F9cG6/SV6Fq8Q@kroah.com>
+ <20220301222321.yradz24nuyhzh7om@liuwe-devbox-debian-v2>
+ <Yh8ia7nJNN7ISR1l@kroah.com>
 MIME-Version: 1.0
-References: <Yh4+9+UpanJWAIyZ@zx2c4.com> <223f858c-34c5-3ccd-b9e8-7585a976364d@redhat.com>
- <Yh5JwK6toc/zBNL7@zx2c4.com> <20220301121419-mutt-send-email-mst@kernel.org>
- <CAHmME9qieLUDVoPYZPo=N8NCL1T-RzQ4p7kCFv3PKFUkhWZPsw@mail.gmail.com> <20220302031738-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20220302031738-mutt-send-email-mst@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 2 Mar 2022 12:26:27 +0100
-X-Gmail-Original-Message-ID: <CAHmME9pf-bjnZuweoLqoFEmPy1OK7ogEgGEAva1T8uVTufhCuw@mail.gmail.com>
-Message-ID: <CAHmME9pf-bjnZuweoLqoFEmPy1OK7ogEgGEAva1T8uVTufhCuw@mail.gmail.com>
-Subject: Re: propagating vmgenid outward and upward
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Laszlo Ersek <lersek@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        linux-hyperv@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Alexander Graf <graf@amazon.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        adrian@parity.io,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Jann Horn <jannh@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yh8ia7nJNN7ISR1l@kroah.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hey Michael,
+On Wed, Mar 02, 2022 at 08:53:15AM +0100, Greg KH wrote:
+> On Tue, Mar 01, 2022 at 10:23:21PM +0000, Wei Liu wrote:
+> > > > +struct dxgglobal *dxgglobal;
+> > > 
+> > > No, make this per-device, NEVER have a single device for your driver.
+> > > The Linux driver model makes it harder to do it this way than to do it
+> > > correctly.  Do it correctly please and have no global structures like
+> > > this.
+> > > 
+> > 
+> > This may not be as big an issue as you thought. The device discovery is
+> > still done via the normal VMBus probing routine. For all intents and
+> > purposes the dxgglobal structure can be broken down into per device
+> > fields and a global structure which contains the protocol versioning
+> > information -- my understanding is there will always be a global
+> > structure to hold information related to the backend, regardless of how
+> > many devices there are.
+> 
+> Then that is wrong and needs to be fixed.  Drivers should almost never
+> have any global data, that is not how Linux drivers work.  What happens
+> when you get a second device in your system for this?  Major rework
+> would have to happen and the code will break.  Handle that all now as it
+> takes less work to make this per-device than it does to have a global
+> variable.
+> 
 
-Thanks for the benchmark.
+It is perhaps easier to draw parallel from an existing driver. I feel
+like we're talking past each other.
 
-On Wed, Mar 2, 2022 at 9:30 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> So yes, the overhead is higher by 50% which seems a lot but it's from a
-> very small number, so I don't see why it's a show stopper, it's not by a
-> factor of 10 such that we should sacrifice safety by default. Maybe a
-> kernel flag that removes the read replacing it with an interrupt will
-> do.
->
-> In other words, premature optimization is the root of all evil.
+Let's look at drivers/iommu/intel/iommu.c. There are a bunch of lists
+like `static LIST_HEAD(dmar_rmrr_units)`. During the probing phase, new
+units will be added to the list. I this the current code is following
+this model. dxgglobal fulfills the role of a list.
 
-Unfortunately I don't think it's as simple as that for several reasons.
+Setting aside the question of whether it makes sense to keep a copy of
+the per-VM state in each device instance, I can see the code be changed
+to:
 
-First, I'm pretty confident a beefy Intel machine can mostly hide
-non-dependent comparisons in the memory access and have the problem
-mostly go away. But this is much less the case on, say, an in-order
-MIPS32r2, which isn't just "some crappy ISA I'm using for the sake of
-argument," but actually the platform on which a lot of networking and
-WireGuard stuff runs, so I do care about it. There, we have 4
-reads/comparisons which can't pipeline nearly as well.
+    struct mutex device_mutex; /* split out from dxgglobal */
+    static LIST_HEAD(dxglist);
+    
+    /* Rename struct dxgglobal to struct dxgstate */
+    struct dxgstate {
+       struct list_head dxglist; /* link for dxglist */
+       /* ... original fields sans device_mutex */
+    }
 
-There's also the atomicity aspect, which I think makes your benchmark
-not quite accurate. Those 16 bytes could change between the first and
-second word (or between the Nth and N+1th word for N<=3 on 32-bit).
-What if in that case the word you read second doesn't change, but the
-word you read first did? So then you find yourself having to do a
-hi-lo-hi dance. And then consider the 32-bit case, where that's even
-more annoying. This is just one of those things that comes up when you
-compare the semantics of a "large unique ID" and "word-sized counter",
-as general topics. (My suggestion is that vmgenid provide both.)
+    /*
+     * Provide a bunch of helpers manipulate the list. Called in probe /
+     * remove etc.
+     */
+    struct dxgstate *find_dxgstate(...);
+    void remove_dxgstate(...);
+    int add_dxgstate(...);
 
-Finally, there's a slightly storage aspect, where adding 16 bytes to a
-per-key struct is a little bit heavier than adding 4 bytes and might
-bust a cache line without sufficient care, care which always has some
-cost in one way or another.
+This model is well understood and used in tree. It is just that it
+doesn't provide much value in doing this now since the list will only
+contain one element. I hope that you're not saying we cannot even use a
+per-module pointer to quickly get the data structure we want to use,
+right?
 
-So I just don't know if it's realistic to impose a 16-byte per-packet
-comparison all the time like that. I'm familiar with WireGuard
-obviously, but there's also cifs and maybe even wifi and bluetooth,
-and who knows what else, to care about too. Then there's the userspace
-discussion. I can't imagine a 16-byte hotpath comparison being
-accepted as implementable.
+Are you suggesting Iouri use dev_set_drvdata to stash the dxgstate
+into the device object? I think that can be done too.
 
-> And I feel if linux
-> DTRT and reads the 16 bytes then hypervisor vendors will be motivated to
-> improve and add a 4 byte unique one. As long as linux is interrupt
-> driven there's no motivation for change.
+The code can be changed as:
 
-I reeeeeally don't want to get pulled into the politics of this on the
-hypervisor side. I assume an improved thing would begin with QEMU and
-Firecracker or something collaborating because they're both open
-source and Amazon people seem interested. And then pressure builds for
-Microsoft and VMware to do it on their side. And then we get this all
-nicely implemented in the kernel. In the meantime, though, I'm not
-going to refuse to address the problem entirely just because the
-virtual hardware is less than perfect; I'd rather make the most with
-what we've got while still being somewhat reasonable from an
-implementation perspective.
+    /* Rename struct dxgglobal to dxgstate and remove unneeded fields */
+    struct dxgstate { ... };
 
-Jason
+    static int dxg_probe_vmbus(...) {
+
+        /* probe successfully */
+
+	struct dxgstate *state = kmalloc(...);
+	/* Fill in dxgstate with information from backend */
+
+	/* hdev->dev is the device object from the core driver framework */
+	dev_set_drvdata(&hdev->dev, state);
+    }
+
+    static int dxg_remove_vmbus(...) {
+        /* Normal stuff here ...*/
+
+	struct dxgstate *state = dev_get_drvdata(...);
+	dev_set_drvdata(..., NULL);
+	kfree(state);
+    }
+
+    /* In all other functions */
+    void do_things(...) {
+        struct dxgstate *state = dev_get_drvdata(...);
+
+	/* Use state in place of where dxgglobal was needed */
+
+    }
+
+Iouri, notice this doesn't change anything regarding how userspace is
+designed. This is about how kernel organises its data.
+
+I hope what I wrote above can bring our understanding closer.
+
+Thanks,
+Wei.
