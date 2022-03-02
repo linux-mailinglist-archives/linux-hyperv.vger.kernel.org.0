@@ -2,43 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3504CAF9E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 21:21:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA0B44CAFF5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 21:34:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233102AbiCBUVv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Mar 2022 15:21:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        id S229573AbiCBUf2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Mar 2022 15:35:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238020AbiCBUVu (ORCPT
+        with ESMTP id S231263AbiCBUf2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Mar 2022 15:21:50 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351C3CA0D0;
-        Wed,  2 Mar 2022 12:21:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EAD83B82217;
-        Wed,  2 Mar 2022 20:21:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D33C004E1;
-        Wed,  2 Mar 2022 20:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1646252463;
-        bh=TbPfqvLDgAnMp5ltWMw/6z2C84cSoa1KkRYE/VyZtRw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KISMtzdU9znwz/epSuDnr0sjPIuK8ujGADnt3b1I3wCZjGosYA3w9F8zKEXf6lbX1
-         RciFmxzE+9ujXNmmXqQzyTpCCSTjlzTwkemJ83TgmGBkYKlhbtQNdMq0CruH1mPKQa
-         IVOvE/YSoO2twnhk7Wtzb9Ajrxdz63nhCnzOkhDQ=
-Date:   Wed, 2 Mar 2022 21:20:59 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
+        Wed, 2 Mar 2022 15:35:28 -0500
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA6D5AA73;
+        Wed,  2 Mar 2022 12:34:44 -0800 (PST)
+Received: by mail-wr1-f49.google.com with SMTP id m6so4601304wrr.10;
+        Wed, 02 Mar 2022 12:34:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9E1Gw4+rs3O1SDqvrlAIeVXWi4IR/tSpwpoKpax7Rfo=;
+        b=i1GS/q5DuakYgNxrzDPFiAlgjHvyTjPS5+aDE36hZaMxjvIBQIiCn49VKe+arJT3Yh
+         /QA8n5tAqAn+Wiu3VwLxCXMA7mlKfHXhFrxUCao1ZaUltOFYjdJIpwoMICWx11F+1qPG
+         X2kUQGfYFFTBHqfoxmxoL21PuMTUJp7i+gSrmwtd5SQuBTOQ46rnKmmnROy6DqQK/03t
+         zGG7D9ckenKAh4Jq8IqlrziPGMs0mXNysmhF4jFeWeeb5nEVVlQDZXcpZkGPh/xkJBBj
+         A2ms1pMPEXG+0D5YEb9a8d/66nmStINsAzrC4re4RoqDqQeurbJrJa/pmpM5a74LcfPa
+         bxQQ==
+X-Gm-Message-State: AOAM532WjQnUaZbQKZPVzwnk0lBvGFVnKb9ij8zkCvhbaMYWxD31SD/0
+        GMfglv9Wq+vdUoquuxvLp0c=
+X-Google-Smtp-Source: ABdhPJxiHpcBYXTzhl1QAXBe6qiGYiDETVvLNqNe4BXPTQREY5EVhtRPyir85t8G8YMQW4rCh91Mvw==
+X-Received: by 2002:a5d:68c6:0:b0:1ed:e119:23e6 with SMTP id p6-20020a5d68c6000000b001ede11923e6mr24063358wrw.654.1646253282698;
+        Wed, 02 Mar 2022 12:34:42 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id l12-20020a5d6d8c000000b001efd2c071dbsm55423wrs.20.2022.03.02.12.34.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Mar 2022 12:34:42 -0800 (PST)
+Date:   Wed, 2 Mar 2022 20:34:40 +0000
+From:   Wei Liu <wei.liu@kernel.org>
 To:     Iouri Tarassov <iourit@linux.microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
+Cc:     Wei Liu <wei.liu@kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         spronovo@microsoft.com, spronovo@linux.microsoft.com
 Subject: Re: [PATCH v3 02/30] drivers: hv: dxgkrnl: Driver initialization and
  loading
-Message-ID: <Yh/Rq9PwWZAN8Mu2@kroah.com>
+Message-ID: <20220302203440.inzt6z6mxhs56wab@liuwe-devbox-debian-v2>
 References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
  <739cf89e71ff72436d7ca3f846881dfb45d07a6a.1646163378.git.iourit@linux.microsoft.com>
  <Yh6F9cG6/SV6Fq8Q@kroah.com>
@@ -51,10 +60,10 @@ Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 In-Reply-To: <6ac1dd87-3c78-66ca-c526-d1f6cf253400@linux.microsoft.com>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -171,26 +180,24 @@ On Wed, Mar 02, 2022 at 10:49:15AM -0800, Iouri Tarassov wrote:
 > I can certainly remove dxgglobal and keep the  pointer to the global
 > state in the device object.
 > 
+
+No, no more global pointer needed. You just call dev_drv_setdata in the
+place that you assign to the global pointer.
+
 > This will require passing of the global pointer to all functions, which
 > need to access it.
 > 
+
+And in the place you need the global pointer, call dev_drv_getdata.
+
 > 
 > Maybe my understanding of the Greg's suggestion was not correct. I
 > thought the suggestion was
 > 
 > to have multiple /dev/dxgN devices (one per virtual compute device).
-
-You have one device per HV device, as the bus already provides you.
-That's all you really need, right?  Who would be opening the same device
-node multiple times?
-
 > This would change how the user mode
-> clients enumerate and communicate with compute devices.
+> 
 
-What does userspace have to do here?  It should just open the device
-node that is present when needed.  How will there be multiple userspace
-clients for a single HV device?
+No. You still have only one /dev/dxg here.
 
-thanks,
-
-greg k-h
+Wei.
