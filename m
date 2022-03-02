@@ -2,135 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BFD54CA2AE
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 12:01:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3AF64CA39C
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 12:26:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241167AbiCBLCU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Mar 2022 06:02:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
+        id S241343AbiCBL1a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Mar 2022 06:27:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241175AbiCBLCR (ORCPT
+        with ESMTP id S241297AbiCBL1a (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Mar 2022 06:02:17 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E5426F499
-        for <linux-hyperv@vger.kernel.org>; Wed,  2 Mar 2022 03:01:34 -0800 (PST)
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        Wed, 2 Mar 2022 06:27:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86BA66622D;
+        Wed,  2 Mar 2022 03:26:47 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 9BDB33F601
-        for <linux-hyperv@vger.kernel.org>; Wed,  2 Mar 2022 11:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646218892;
-        bh=Si9sQ7yLz6JK6Nen6lACTBVX2ecHMiwS0ByLXYRxjJA=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=pLSvMdDulJ05pxvaVpoKjZv/j7P9qWQA3vDXV3M0gXO2ZWu/B8wnzxIXfWR7GhUCK
-         uNEeUkggCFsxOtUbDiYQrTnCg0tL9MA34v5qn2otWZ/DTTmc+hz+Ym7Gnz7LOB9Vk4
-         IVHFfGKidhRX/RlpDbeH5cSkrUXQldipZcuQa9wI2yfA4ryyn0FqALa8seUPQbfjCA
-         ThMiQyDCmLN+o5WYVPDX4wWUYFkNYbsgad8GZX8QSuKe4aJjbGhkk12hyK2p3mKEG0
-         kb9DBje4AQueKp0Usjxbo1Jv1V4cin4KuVTg+Ey4mbY/3+8X3/oW9eQ7cTyGJzg9lI
-         auHCONcUh9i8g==
-Received: by mail-wm1-f69.google.com with SMTP id n31-20020a05600c3b9f00b003812242973aso694322wms.4
-        for <linux-hyperv@vger.kernel.org>; Wed, 02 Mar 2022 03:01:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Si9sQ7yLz6JK6Nen6lACTBVX2ecHMiwS0ByLXYRxjJA=;
-        b=FdGP21A9lGwgEIy2h8LWhMWsQmwudw0n4E4yG4hfEi8sA+ir6j+DBhCmyezQEXiOlH
-         9wKayfZf0SE11eFxbTFhRYOoVTk5VOmQsnHcP4fkc1ikdFjLefWqAEvKm9VvAaXmMiUU
-         i6aEPYzm2hmjJz2U+KaIzRsUqzpy00R4rkvZ9VPw15qRXlTyZrp0xtAg6ZuGgVnYb0Mm
-         xe1sbKIc1sViQ+lW5zr7h37OQSXpJZP7CUI6FSCJWuSLhVr5eMo85Uy2lCmowLxxNeVN
-         2SB/DJfKe5zFpTa6601HiJUmMM3gKAbFPt0XCCHzmqN3RuvJc8sd5NUx1xsIAcd+b5YF
-         5jeQ==
-X-Gm-Message-State: AOAM533SIdClDp7G7L5qKg6LvF8JPZXuU0ztENv6WwtlYnORwiex3H2t
-        PdsJIKjINnDzZ6/PsnA8fCVjvehJeQlJFOnFxlH9UE6UUjZHQCgzEd+WRy0qA9eD9cRdzOKf658
-        bSCAaLrJt9D3aoLepsy2oIhj1UQ80RVNC758yne0uSw==
-X-Received: by 2002:a05:6402:369a:b0:413:81b5:7b64 with SMTP id ej26-20020a056402369a00b0041381b57b64mr22935779edb.163.1646218881673;
-        Wed, 02 Mar 2022 03:01:21 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwaXIpVKlG8abGyix74I9rTqmFoJz7zygw3QnLROE8hwqkRWj9/wBCxZT5ACGsypW51MBpi7Q==
-X-Received: by 2002:a05:6402:369a:b0:413:81b5:7b64 with SMTP id ej26-20020a056402369a00b0041381b57b64mr22935729edb.163.1646218881424;
-        Wed, 02 Mar 2022 03:01:21 -0800 (PST)
-Received: from [192.168.0.136] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id et3-20020a170907294300b006d6534ef273sm5617821ejc.156.2022.03.02.03.01.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Mar 2022 03:01:20 -0800 (PST)
-Message-ID: <22099da9-fad0-a5fb-f45a-484635ca485f@canonical.com>
-Date:   Wed, 2 Mar 2022 12:01:19 +0100
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2419161804;
+        Wed,  2 Mar 2022 11:26:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D16F9C340F1;
+        Wed,  2 Mar 2022 11:26:45 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="FLziEXpf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1646220402;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fufxSPRIOrmbnPbDC6hJ7ttxshIW5aGS9pJhSWhnCM4=;
+        b=FLziEXpf2l0WTAhzSsctWfFPyoNczuf0yET5OvrmfeoHkbQdJJUnS5q+NI+vrChRlkMr3x
+        174jqFOO+Z3Pr5c79Gii5Ryw0Vd9q9Ey0Hlr2keq9mQvPlFbNmRp37DUVNhIihEZDWJZG5
+        HjPNCU02XchGOwdc6y1fEsx970Bts6c=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a4166dc6 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
+        Wed, 2 Mar 2022 11:26:41 +0000 (UTC)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2dbc48104beso13440867b3.5;
+        Wed, 02 Mar 2022 03:26:40 -0800 (PST)
+X-Gm-Message-State: AOAM531CCPFcEGKBbRNRGtYXkH9nqJ+pu4T+FHrfbpHSC9V4hrNo0nv0
+        rosp0lWDaH02FtNz1efiEeJ2262x3AcFLqhgPQc=
+X-Google-Smtp-Source: ABdhPJxbaslGOWNMYlqRkibxJ2ICArMnaBOXMWHprS75pC5WtpgRWsCTpsPEORMZE4FcmdBod69a3hNDLa7CXaxndsk=
+X-Received: by 2002:a81:1143:0:b0:2db:ccb4:b0a1 with SMTP id
+ 64-20020a811143000000b002dbccb4b0a1mr9951120ywr.499.1646220398624; Wed, 02
+ Mar 2022 03:26:38 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 06/11] s390: cio: Use driver_set_override() instead of
- open-coding
-Content-Language: en-US
-To:     Vineeth Vijayan <vneethv@linux.ibm.com>,
+References: <Yh4+9+UpanJWAIyZ@zx2c4.com> <223f858c-34c5-3ccd-b9e8-7585a976364d@redhat.com>
+ <Yh5JwK6toc/zBNL7@zx2c4.com> <20220301121419-mutt-send-email-mst@kernel.org>
+ <CAHmME9qieLUDVoPYZPo=N8NCL1T-RzQ4p7kCFv3PKFUkhWZPsw@mail.gmail.com> <20220302031738-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20220302031738-mutt-send-email-mst@kernel.org>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Wed, 2 Mar 2022 12:26:27 +0100
+X-Gmail-Original-Message-ID: <CAHmME9pf-bjnZuweoLqoFEmPy1OK7ogEgGEAva1T8uVTufhCuw@mail.gmail.com>
+Message-ID: <CAHmME9pf-bjnZuweoLqoFEmPy1OK7ogEgGEAva1T8uVTufhCuw@mail.gmail.com>
+Subject: Re: propagating vmgenid outward and upward
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Laszlo Ersek <lersek@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        linux-hyperv@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Alexander Graf <graf@amazon.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        adrian@parity.io,
+        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Jann Horn <jannh@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20220227135214.145599-1-krzysztof.kozlowski@canonical.com>
- <20220227135214.145599-7-krzysztof.kozlowski@canonical.com>
- <b2295eba-722a-67e2-baae-20dac9d72625@linux.ibm.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <b2295eba-722a-67e2-baae-20dac9d72625@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 01/03/2022 17:01, Vineeth Vijayan wrote:
-> 
-> On 2/27/22 14:52, Krzysztof Kozlowski wrote:
->> Use a helper for seting driver_override to reduce amount of duplicated
->> code. Make the driver_override field const char, because it is not
->> modified by the core and it matches other subsystems.
-> s/seting/setting/
-> 
-> Also could you please change the title to start with "s390/cio:"
-> instead of "s390 : cio"
-> 
+Hey Michael,
 
-Sure, thanks for review!
+Thanks for the benchmark.
 
+On Wed, Mar 2, 2022 at 9:30 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+> So yes, the overhead is higher by 50% which seems a lot but it's from a
+> very small number, so I don't see why it's a show stopper, it's not by a
+> factor of 10 such that we should sacrifice safety by default. Maybe a
+> kernel flag that removes the read replacing it with an interrupt will
+> do.
+>
+> In other words, premature optimization is the root of all evil.
 
-Best regards,
-Krzysztof
+Unfortunately I don't think it's as simple as that for several reasons.
+
+First, I'm pretty confident a beefy Intel machine can mostly hide
+non-dependent comparisons in the memory access and have the problem
+mostly go away. But this is much less the case on, say, an in-order
+MIPS32r2, which isn't just "some crappy ISA I'm using for the sake of
+argument," but actually the platform on which a lot of networking and
+WireGuard stuff runs, so I do care about it. There, we have 4
+reads/comparisons which can't pipeline nearly as well.
+
+There's also the atomicity aspect, which I think makes your benchmark
+not quite accurate. Those 16 bytes could change between the first and
+second word (or between the Nth and N+1th word for N<=3 on 32-bit).
+What if in that case the word you read second doesn't change, but the
+word you read first did? So then you find yourself having to do a
+hi-lo-hi dance. And then consider the 32-bit case, where that's even
+more annoying. This is just one of those things that comes up when you
+compare the semantics of a "large unique ID" and "word-sized counter",
+as general topics. (My suggestion is that vmgenid provide both.)
+
+Finally, there's a slightly storage aspect, where adding 16 bytes to a
+per-key struct is a little bit heavier than adding 4 bytes and might
+bust a cache line without sufficient care, care which always has some
+cost in one way or another.
+
+So I just don't know if it's realistic to impose a 16-byte per-packet
+comparison all the time like that. I'm familiar with WireGuard
+obviously, but there's also cifs and maybe even wifi and bluetooth,
+and who knows what else, to care about too. Then there's the userspace
+discussion. I can't imagine a 16-byte hotpath comparison being
+accepted as implementable.
+
+> And I feel if linux
+> DTRT and reads the 16 bytes then hypervisor vendors will be motivated to
+> improve and add a 4 byte unique one. As long as linux is interrupt
+> driven there's no motivation for change.
+
+I reeeeeally don't want to get pulled into the politics of this on the
+hypervisor side. I assume an improved thing would begin with QEMU and
+Firecracker or something collaborating because they're both open
+source and Amazon people seem interested. And then pressure builds for
+Microsoft and VMware to do it on their side. And then we get this all
+nicely implemented in the kernel. In the meantime, though, I'm not
+going to refuse to address the problem entirely just because the
+virtual hardware is less than perfect; I'd rather make the most with
+what we've got while still being somewhat reasonable from an
+implementation perspective.
+
+Jason
