@@ -2,76 +2,91 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B3574CA82A
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 15:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 770814CA848
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Mar 2022 15:35:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242681AbiCBObT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Mar 2022 09:31:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42172 "EHLO
+        id S243108AbiCBOge (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Mar 2022 09:36:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243106AbiCBOaX (ORCPT
+        with ESMTP id S243105AbiCBOgd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Mar 2022 09:30:23 -0500
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF586C7E64;
-        Wed,  2 Mar 2022 06:29:03 -0800 (PST)
-Received: by mail-wm1-f50.google.com with SMTP id 7-20020a05600c228700b00385fd860f49so522922wmf.0;
-        Wed, 02 Mar 2022 06:29:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u1uRIjELuAIT1ZdKPoFbKLM6B7n19acx/Ml5oN1/Sgo=;
-        b=J6V9rf3W5QcP/b7nmKxXt/bgdCFDa/Mwhlo6ktS40eaYWRMpibbdzP3cymGyp5F6LO
-         PJW2W4WVJHgPZYOLGDk7AF5zo1r1XS2viIxgwJiWrzZm8yF/s1YkrmDrCDDa3iSzjQ1q
-         J+o4W0DMC/SNcma+T0/0h/HiUBbsb27/nwEp8pyew1YgztlRn/u5gEfFjqVI5yoBh0CL
-         iGUZgbH6x8Du4uVwZHShT42H/jN78oYDbKseLnO9PUsUCra0O2DyUYK4TXmyrwF9w8aU
-         z2bcGVep4cbFkccq1SQvbucJemVleNmnsw+ltgjNyn9JGgyHbyeJbL7VxcT9FDy6zQB4
-         oRyw==
-X-Gm-Message-State: AOAM531OZ5DggP3DZFwWc47p3NUJeCMYq7mfbOT3kPcJEYTn5Moi9RZn
-        gK5xzo5a171m5JKXsihc1js=
-X-Google-Smtp-Source: ABdhPJwjvW/iEsr/yoeBUz+tCiWoRjuXWWG5bQtcXTgbZ3ykMPh1U73cqUPXi286lwjvjWuwofwCyQ==
-X-Received: by 2002:a05:600c:1e84:b0:381:6c56:ebcc with SMTP id be4-20020a05600c1e8400b003816c56ebccmr63096wmb.28.1646231342063;
-        Wed, 02 Mar 2022 06:29:02 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g7-20020a5d5407000000b001e2628b6490sm16865278wrv.17.2022.03.02.06.29.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 06:29:01 -0800 (PST)
-Date:   Wed, 2 Mar 2022 14:29:00 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Iouri Tarassov <iourit@linux.microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spronovo@microsoft.com,
-        spronovo@linux.microsoft.com, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v3 30/30] drivers: hv: dxgkrnl: Add support to map guest
- pages by host
-Message-ID: <20220302142900.6ziddzoes2oovhzi@liuwe-devbox-debian-v2>
-References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
- <7e303134ccd13b25080f7ebde5dc57f302972d55.1646163379.git.iourit@linux.microsoft.com>
+        Wed, 2 Mar 2022 09:36:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E67C4B67;
+        Wed,  2 Mar 2022 06:35:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1980F615ED;
+        Wed,  2 Mar 2022 14:35:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65885C340ED;
+        Wed,  2 Mar 2022 14:35:47 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TYEG0cFg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1646231746;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XGuMnK4OOgPCMwUmyaWZFFbNaYrxtgoILBjeCR8rojk=;
+        b=TYEG0cFgyV9/JXbncaM4Z4+kmqmWkOAaZHoc8I/mCAGlDB9vYaT74K6vhubYquTDWAr+qk
+        v4va5LWGM9xSmKOFJQRJgMOXGQqwJBuBgQz3jKkYz4vmBqYRv7Uvd1SvjJO2p45ulW0WKc
+        B12ugOBKyN0QfjbUkssv2iT7UBk9rnE=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6f2e4d35 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
+        Wed, 2 Mar 2022 14:35:45 +0000 (UTC)
+Date:   Wed, 2 Mar 2022 15:35:40 +0100
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-hyperv@vger.kernel.org,
+        linux-crypto@vger.kernel.org, graf@amazon.com,
+        mikelley@microsoft.com, gregkh@linuxfoundation.org,
+        adrian@parity.io, lersek@redhat.com, berrange@redhat.com,
+        linux@dominikbrodowski.net, jannh@google.com, mst@redhat.com,
+        rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
+        linux-pm@vger.kernel.org, colmmacc@amazon.com, tytso@mit.edu,
+        arnd@arndb.de
+Subject: Re: propagating vmgenid outward and upward
+Message-ID: <Yh+AvDzzxGjt240m@zx2c4.com>
+References: <Yh4+9+UpanJWAIyZ@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7e303134ccd13b25080f7ebde5dc57f302972d55.1646163379.git.iourit@linux.microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <Yh4+9+UpanJWAIyZ@zx2c4.com>
+X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Mar 01, 2022 at 11:46:17AM -0800, Iouri Tarassov wrote:
-[...]
-> @@ -1393,6 +1396,7 @@ int create_existing_sysmem(struct dxgdevice *device,
->  	pr_debug("   Alloc size: %lld", alloc_size);
->  
->  	dxgalloc->cpu_address = (void *)sysmem;
-> +
+Hey again,
 
-Well this is just adding a blank line. Please avoid changes like this...
+On Tue, Mar 01, 2022 at 04:42:47PM +0100, Jason A. Donenfeld wrote:
+> For (B), it's a little bit trickier. But I think our options follow the
+> same rubric. We can expose a generation counter in the vDSO, with
+> semantics akin to the extern integer I described above. Or we could
+> expose that counter in a file that userspace could poll() on and receive
+> notifications that way. Or perhaps a third way. I'm all ears here.
+> Alex's team from Amazon last year proposed something similar to the vDSO
+> idea, except using mmap on a sysfs file, though from what I can tell,
+> that wound up being kind of complicated. Due to the fact that we're
+> _already_ racy, I think I'm most inclined at this point toward the
+> poll() approach for the same reasons as I prefer a notifier_block. But
+> on userspace I could be convinced otherwise, and I'd be interested in
+> totally different ideas here too.
 
-Thanks,
-Wei.
+I implemented the poll() case here in 15 lines of code and found it
+remarkably simple to do:
+
+https://lore.kernel.org/lkml/20220302143331.654426-1-Jason@zx2c4.com/
+
+This is just a PoC/RFC for the sake of having something tangible to look
+at for this thread. It is notable to me, though, that implementing this
+was so minimal.
+
+Regards,
+Jason
