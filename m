@@ -2,68 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 568084CB457
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Mar 2022 02:35:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 150314CB4B4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Mar 2022 03:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231322AbiCCBZ6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Mar 2022 20:25:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49546 "EHLO
+        id S231564AbiCCCCQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Mar 2022 21:02:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231249AbiCCBZ5 (ORCPT
+        with ESMTP id S231580AbiCCCCP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Mar 2022 20:25:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A921DA7B;
-        Wed,  2 Mar 2022 17:25:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C31C661150;
-        Thu,  3 Mar 2022 01:25:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2074AC340F2;
-        Thu,  3 Mar 2022 01:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646270712;
-        bh=OIWkR7Zp9BS5KcWgPGvH+7lGxsauASKPDzT5dWHRzcg=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=fyTcnY079RGVSWj1/bqnWf9UBPrXZmiZ32cJHGCuHKFrvhhlGSoeO8XnjyAULGbxy
-         xuEeYIRqhVQfty7l070VwdiiUBm+vhQMOyp1/UPCRCwJW1H8chwVFdTWSqF8JxQ7i6
-         pmngu4i/qw99iSRs7nF8V/KUQPfZMnX0OhdBfoyB3K0uXmVGkSCue1VhFC37hRyoHl
-         lqT9JrJPLf0sbQoGpagSmC+bBJdDfAOOQZXY1qQ2kFojarLkPJJigndyp3UGVx/CEp
-         1XnqlJ8dDyOAxVpGwUR+l8DwgqcaHVrJmCy/f+O96VijhpAG5o/2FbsTqBKQIZTLrT
-         qEo+TADXZ7B8A==
-Date:   Wed, 2 Mar 2022 17:25:10 -0800 (PST)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, x86@kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
- swiotlb
-In-Reply-To: <20220302081500.GB23075@lst.de>
-Message-ID: <alpine.DEB.2.22.394.2203021709470.3261@ubuntu-linux-20-04-desktop>
-References: <20220301105311.885699-1-hch@lst.de> <20220301105311.885699-12-hch@lst.de> <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop> <20220302081500.GB23075@lst.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Wed, 2 Mar 2022 21:02:15 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61070D4F;
+        Wed,  2 Mar 2022 18:01:31 -0800 (PST)
+Received: from [192.168.1.17] (unknown [192.182.151.181])
+        by linux.microsoft.com (Postfix) with ESMTPSA id ED49A20B7178;
+        Wed,  2 Mar 2022 18:01:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ED49A20B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1646272891;
+        bh=HRZWLfNLDmejiTzerK5LeZIGiDIHUtm5/ESNLuqANEM=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=oZXOSRjP4itPe4fMkFXrDW6V1SPbBXePMXlLhljEFwarHfzUCuRLKoXKoxBnOvq/l
+         0PrbX6o+yRCMts8oLOzhoO+oNVXCQWgxFqokBXFE2bL7WVHMAmkr5v9UWD/hTGQ7xs
+         qScEaJ1z0RiKBp7isGUL86fpUPuGVYk8mvsjN6tg=
+Message-ID: <6371e5d5-1d18-49df-1c4c-9d8cb49be3e3@linux.microsoft.com>
+Date:   Wed, 2 Mar 2022 18:01:30 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 02/30] drivers: hv: dxgkrnl: Driver initialization and
+ loading
+Content-Language: en-US
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spronovo@microsoft.com, spronovo@linux.microsoft.com,
+        gregkh@linuxfoundation.org
+References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
+ <739cf89e71ff72436d7ca3f846881dfb45d07a6a.1646163378.git.iourit@linux.microsoft.com>
+ <20220301220636.mqrzq7h3epfw3u3x@liuwe-devbox-debian-v2>
+From:   Iouri Tarassov <iourit@linux.microsoft.com>
+In-Reply-To: <20220301220636.mqrzq7h3epfw3u3x@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,84 +57,62 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 2 Mar 2022, Christoph Hellwig wrote:
-> On Tue, Mar 01, 2022 at 06:55:47PM -0800, Stefano Stabellini wrote:
-> > Unrelated to this specific patch series: now that I think about it, if
-> > io_tlb_default_mem.nslabs is already allocated by the time xen_mm_init
-> > is called, wouldn't we potentially have an issue with the GFP flags used
-> > for the earlier allocation (e.g. GFP_DMA32 not used)? Maybe something
-> > for another day.
-> 
-> swiotlb_init allocates low memory from meblock, which is roughly
-> equivalent to GFP_DMA allocations, so we'll be fine.
-> 
-> > > @@ -143,10 +141,15 @@ static int __init xen_mm_init(void)
-> > >  	if (!xen_swiotlb_detect())
-> > >  		return 0;
-> > >  
-> > > -	rc = xen_swiotlb_init();
-> > >  	/* we can work with the default swiotlb */
-> > > -	if (rc < 0 && rc != -EEXIST)
-> > > -		return rc;
-> > > +	if (!io_tlb_default_mem.nslabs) {
-> > > +		if (!xen_initial_domain())
-> > > +			return -EINVAL;
+
+On 3/1/2022 2:06 PM, Wei Liu wrote:
+> I will skip things that are pointed out by Greg.
+>
+> On Tue, Mar 01, 2022 at 11:45:49AM -0800, Iouri Tarassov wrote:
+> > - Create skeleton and add basic functionality for the
+> > hyper-v compute device driver (dxgkrnl).
 > > 
-> > I don't think we need this xen_initial_domain() check. It is all
-> > already sorted out by the xen_swiotlb_detect() check above.
-> 
-> Is it?
-> 
-> static inline int xen_swiotlb_detect(void)
-> {
-> 	if (!xen_domain())
-> 		return 0;
-> 	if (xen_feature(XENFEAT_direct_mapped))
-> 		return 1;
-> 	/* legacy case */
-> 	if (!xen_feature(XENFEAT_not_direct_mapped) && xen_initial_domain())
-> 		return 1;
-> 	return 0;
-> }
+> > - Register for PCI and VM bus driver notifications and
+> > handle initialization of VM bus channels.
+> > 
+> > - Connect the dxgkrnl module to the drivers/hv/ Makefile and Kconfig
+> > 
+> > - Create a MAINTAINERS entry
+> > 
+> > A VM bus channel is a communication interface between the hyper-v guest
+> > and the host. The are two type of VM bus channels, used in the driver:
+> >   - the global channel
+> >   - per virtual compute device channel
+> > 
+>
+> Same comment regarding the spelling of VMBus and Hyper-V. Please fix
+> other instances in code and comments.
+>
+> > A PCI device is created for each virtual compute device, projected
+> > by the host. The device vendor is PCI_VENDOR_ID_MICROSOFT and device
+> > id is PCI_DEVICE_ID_VIRTUAL_RENDER. dxg_pci_probe_device handles
+> > arrival of such devices. The PCI config space of the virtual compute
+> > device has luid of the corresponding virtual compute device VM
+> > bus channel. This is how the compute device adapter objects are
+> > linked to VM bus channels.
+> > 
+> > VM bus interface version is exchanged by reading/writing the PCI config
+> > space of the virtual compute device.
+> > 
+> > The IO space is used to handle CPU accessible compute device
+> > allocations. Hyper-v allocates IO space for the global VM bus channel.
+> > 
+> > Signed-off-by: Iouri Tarassov <iourit@linux.microsoft.com>
+> > ---
+> [...]
+> > +static inline void guid_to_luid(guid_t *guid, struct winluid *luid)
+> > +{
+> > +	*luid = *(struct winluid *)&guid->b[0];
+> > +}
+>
+> This should be moved to the header where luid is defined -- presumably
+> this is useful for other things in the future too.
+>
+> Also, please provide a comment on why this conversion is okay.
+>
+The definition of the structure is in the public header. I do not think it makes sense to move the function there. It is a detail of the internal implementation. There is no official conversion of GUID to LUID.
 
-It used to be that we had a
+The comment will be added.
 
-  if (!xen_initial_domain())
-      return -EINVAL;
-
-check in the initialization of swiotlb-xen on ARM. Then we replaced it
-with the more sophisticated xen_swiotlb_detect().
-
-The reason is that swiotlb-xen on ARM relies on Dom0 being 1:1 mapped
-(guest physical addresses == physical addresses). Recent changes in Xen
-allowed also DomUs to be 1:1 mapped. Changes still under discussion will
-allow Dom0 not to be 1:1 mapped.
-
-So, before all the Xen-side changes, knowing what was going to happen, I
-introduced a clearer interface: XENFEAT_direct_mapped and
-XENFEAT_not_direct_mapped tell us whether the guest (Linux) is 1:1
-mapped or not. If it is 1:1 mapped then Linux can take advantage of
-swiotlb-xen. Now xen_swiotlb_detect() returns true if Linux is 1:1
-mapped.
-
-Then of course there is the legacy case. That's taken care of by:
-
- 	if (!xen_feature(XENFEAT_not_direct_mapped) && xen_initial_domain())
- 		return 1;
-
-The intention is to say that if
-XENFEAT_direct_mapped/XENFEAT_not_direct_mapped are not present, then
-use xen_initial_domain() like we did before.
-
-So if xen_swiotlb_detect() returns true we know that Linux is either
-dom0 (xen_initial_domain() == true) or we have very good reasons to
-think we should initialize swiotlb-xen anyway
-(xen_feature(XENFEAT_direct_mapped) == true).
+Thanks
+Iouri
 
 
-> I think I'd keep it as-is for now, as my planned next step would be to
-> fold xen-swiotlb into swiotlb entirely.
-
-Thinking more about it we actually need to drop the xen_initial_domain()
-check otherwise some cases won't be functional (Dom0 not 1:1 mapped, or
-DomU 1:1 mapped).
