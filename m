@@ -2,181 +2,371 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 453C54CDC4B
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Mar 2022 19:22:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55DD54CDC6F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Mar 2022 19:28:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236363AbiCDSXW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Mar 2022 13:23:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
+        id S241681AbiCDS3p (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Mar 2022 13:29:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241576AbiCDSXR (ORCPT
+        with ESMTP id S241677AbiCDS3n (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Mar 2022 13:23:17 -0500
-Received: from na01-obe.outbound.protection.outlook.com (mail-eus2azon11021023.outbound.protection.outlook.com [52.101.57.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97708FEB;
-        Fri,  4 Mar 2022 10:22:29 -0800 (PST)
+        Fri, 4 Mar 2022 13:29:43 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD2926C968;
+        Fri,  4 Mar 2022 10:28:54 -0800 (PST)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 224HCat4015308;
+        Fri, 4 Mar 2022 18:27:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=E41W9AB7/X2xx7UrWdagdqfWZZYBGIFtIK/VhE/09OQ=;
+ b=lC4dawYdb0VDvsY75ChKSioIuBPZEi0JorEE4gTIX8lDtVtzBMK/SNXOgt1bwaENOShK
+ HvNpEFIlzDDaqB7pO/Os4pXUI7jBwrvhZ9gh2PBuHIsM6q3w5TYwLSRxMA2HsaCRCEjf
+ hQTA4/BvlLpty73Q7neEpY3oaF2+aAuH+Rl1TyT14xRQRiTc7r9HO0cn79HxphXKNQFK
+ i8D2E1BS8iTU6+QX9t8RWDKnpWrvfh0MtF3NkMf++3lXkuyLNy4CK0J63xYWr5tiRi4O
+ TN3WYFosocYY5hhAbAnKYQ0VQHcXSB4fJOQxf17vd2KxK5B+uwG+rF2RHP8vad9TSw6T Fg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ek4ht2j6s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Mar 2022 18:27:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 224IH39h128219;
+        Fri, 4 Mar 2022 18:27:55 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2171.outbound.protection.outlook.com [104.47.59.171])
+        by aserp3020.oracle.com with ESMTP id 3ek4j92jn9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Mar 2022 18:27:55 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KJhzUxNJ3pFhAk2kNergmaVHFAD5qDc5u7cGMRFWmmVRQ3H1qxHcXGLe5TzpW5ZxElGUiDPmoiGg4w3ariMgfcp3gT/fEqKbmNF1tbInVgAKLyfsbnrBh4RK3AQjCXaP29jbdL59tlFDmnK6QZoF2SI3U/z7GDs0CWDihiputE12JEnmuthzKJilR5+u/41+dRh+1RfW/yK2Xf1sJFEahcvvtx5YPxwseBueKoYKPrctlsc6dWb0PIo9VbMnc/vGeIqDApyGNFM2ulbx41vsA2SjdAfCHhLlwsYp3wsvuhernKbPKNtzlys+gVP4SamJYbeyo+4spJqqQXWRZNXfxA==
+ b=gmmU5gxqtTr0n+hCoWI4tOvvTPlA0iNC9lieqh7D6KBl9+VYFbX5YZ7mE8PO7dt4YTfly8E9CZssq1vb1aLngQSZayuFw7PcvDL76LDW9nkRWaFrfCGyb+ubmAZZFGrJR2GMuLzk17XKR6avI8K0u2ekDP/FSHpAJ7DjGdL9pNcWomXxvUDhkK63I1jYZ+P0/Npitjr+XjEMkCue/ryuC9Xg8r4lpxz6CwJYHUjtAxJMkYhQE1UfqqnS5eHYSDC386C2ScrnmpJF8CWlgOepXDjwaAA/FRhqMTYSMSCW5lz8D+pJpDmHt+sV6oZbc25hJ/1+zOlPc43yW4XOGlou8w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R6OctvuttFA4ofmCTH5DUcgF1vihquh9jjAHl+pd2Cw=;
- b=DS6buJurgV6sF/LQmz5Gvr1iQ7t7vKiKAR4yP8ym65CMm7m2BcuyEJBkIPHj4C8z2S/2PhkN9TVBIk5NvIzF4GXUN0+xDIagVJZ9TqPSO/kQNpRQuwBF6JeElicE/wegPvZqd4ns2Lzcqqx6sMwNiZhcwQaQmAaFLACfp+FDWBlYlP+2Fe7yScFSttmbEAByXCjtqlmXY60WlnOXVEeEiycZm4L+jHN9my3nMU02zIyRLJyepEMxtV04uhH0r67TNgrLkGzQV98XOoAGjZ6Y1KVnUpC2kt9YKWAucDO7JT9ecRfw1BDxia7NyD5CTIFILBp8sT+9kFBZvVat8lo6Qw==
+ bh=E41W9AB7/X2xx7UrWdagdqfWZZYBGIFtIK/VhE/09OQ=;
+ b=UojoVXG6sM5Z8jSUl/ZAJrk99MoyYBQOncH3STNycdd0MLK/i9Xf9S0jeUTDpXqeCKiLp6dgkYErVC6u7e0HqDqm0Cx8UNug0J+pQ0Zw2jHzGKdPX38xlVr9YbVAktxZH579V5xI6e+al0V5qLERMBE8Etbdt3xfPOS+aNr0R9pjYI7XMFDukbjhqGia8fw5bNyTN10fgDuxWgohxdw0GkZRuJqP9pdHqXYnZWDL3KLvGpwWsdiGJe36tzs5vq4tBoiWj6LZ3FQH5wlbmOUzXlm7adA4aHWdlXW2fNT84pvJ9zMnNpVP/iGWIO1d4R15B5pj6phO/ddlvFqWza+7ag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R6OctvuttFA4ofmCTH5DUcgF1vihquh9jjAHl+pd2Cw=;
- b=JjRW/uYa+4vKqqH9g60OMIuuRAD2Vmi9Q56aeF1d92xF3R5GHeE3sGR01TClVKHUVS4jATErNu69ieyujIBkQt5AoQzOyN9SOrswXJuSWvlwaPvA44EaQW4LcyfiP6AnoYAVl6GXkPV50U3sIS91smKG7uNAd26j6qwguIpuh7o=
-Received: from MN0PR21MB3098.namprd21.prod.outlook.com (2603:10b6:208:376::14)
- by DM5PR2101MB1031.namprd21.prod.outlook.com (2603:10b6:4:9e::12) with
+ bh=E41W9AB7/X2xx7UrWdagdqfWZZYBGIFtIK/VhE/09OQ=;
+ b=V/2Xe5dianinvARdqhn/uw3gmqOXWhpf7J/M2IJ++1z2wussNs2j65WKX856pegCRblzwxGLT6yIV2qwLjg04lQDTv7II2sI0djzD/6IE2pVQXnqQzGAQn+EMX1ONlQLHXX21GPKez9bPLAbaO3JVqVUBCszkdM7eKryUf8e5Fw=
+Received: from BYAPR10MB2663.namprd10.prod.outlook.com (2603:10b6:a02:a9::20)
+ by DM5PR10MB1849.namprd10.prod.outlook.com (2603:10b6:3:10b::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.1; Fri, 4 Mar
- 2022 18:22:26 +0000
-Received: from MN0PR21MB3098.namprd21.prod.outlook.com
- ([fe80::a0b3:c840:b085:5d7b]) by MN0PR21MB3098.namprd21.prod.outlook.com
- ([fe80::a0b3:c840:b085:5d7b%8]) with mapi id 15.20.5061.008; Fri, 4 Mar 2022
- 18:22:25 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Fri, 4 Mar
+ 2022 18:27:53 +0000
+Received: from BYAPR10MB2663.namprd10.prod.outlook.com
+ ([fe80::a0d5:610d:bcf:9b47]) by BYAPR10MB2663.namprd10.prod.outlook.com
+ ([fe80::a0d5:610d:bcf:9b47%4]) with mapi id 15.20.5038.017; Fri, 4 Mar 2022
+ 18:27:53 +0000
+Subject: Re: [PATCH 10/12] swiotlb: add a SWIOTLB_ANY flag to lift the low
+ memory restriction
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc:     "x86@kernel.org" <x86@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] arm64: hyperv: make the format of 'Hyper-V: Host Build'
- output match x86
-Thread-Topic: [PATCH] arm64: hyperv: make the format of 'Hyper-V: Host Build'
- output match x86
-Thread-Index: AQHYL8LQL41ZzF55KkyfGoaa5iiK06yvh+Lw
-Date:   Fri, 4 Mar 2022 18:22:25 +0000
-Message-ID: <MN0PR21MB309826D5A9E262A65E0E07F9D7059@MN0PR21MB3098.namprd21.prod.outlook.com>
-References: <20220304122425.1638370-1-vkuznets@redhat.com>
-In-Reply-To: <20220304122425.1638370-1-vkuznets@redhat.com>
-Accept-Language: en-US
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "tboot-devel@lists.sourceforge.net" 
+        <tboot-devel@lists.sourceforge.net>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20220301105311.885699-1-hch@lst.de>
+ <20220301105311.885699-11-hch@lst.de>
+ <MN0PR21MB3098F7AFC85BE5D83B0E64E5D7059@MN0PR21MB3098.namprd21.prod.outlook.com>
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+Message-ID: <556312e4-da86-b980-475c-1cfd7818ffdc@oracle.com>
+Date:   Fri, 4 Mar 2022 10:27:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+In-Reply-To: <MN0PR21MB3098F7AFC85BE5D83B0E64E5D7059@MN0PR21MB3098.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=491fc4c7-ed6b-4cee-8d16-5888f4cfbe87;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-03-04T18:14:35Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67f62ee6-e1a9-47b8-5e3c-08d9fe0bef17
-x-ms-traffictypediagnostic: DM5PR2101MB1031:EE_
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-ms-exchange-atpmessageproperties: SA|SL
-x-microsoft-antispam-prvs: <DM5PR2101MB103110F3449332E6ACBEB60ED7059@DM5PR2101MB1031.namprd21.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1WoAiPpcoh+Y1fMaMAtifEJkDF9qZFiMy8ULewrtkT/eNcGE+HDulBV340NR/PeTTSDQiNUxTIMkQE+IfDtkA0vXJRMmGDIc3miCwrYYoWJI1AcqTWDdc4Mju36kyTxNtjFM+WILvYTilGtVTJcIy8UEQ1phEBDngstLa1l6/0FIm5gWdouQGIMQYAVeft0KjoPJhIqT+LnZyv+KCjfyNYNAlw4HAM3Ww3otZHNLsneqsi+8WFokkn2/ysYHvA5xU268n3rhp6SNV7Z9b6fQkcSTNkGjBkCuctAONMdDzBW3WKbaV9GcFsOiZMq0w4a2RThBJE+1accmzI08EpxHdm3s9PzekZWM9XDtaCjP+NVZf3e2X7j8nsPU4ohty5XEfNkbC2JWRU4L7R3/NCle1wRGgkgfIG1n6V4OF3EwI7D+OlYqMQeDAxA+wpRjNsxJF1fDr+8Oo0aYMo06xRpTd1yt0IjV/Mt5h+F0cc/akKVvS7bmTSaIVHCO1fcw7PKc4tZksjd0QcPx6MFR987PkX+qbNCVu3NAMdtxeEcV6Z8NizSaNZzzjKmy7SUNVJUhtYEtusbLBFEBzheLnTjOvO4zAun3SiavCtCoBDbaTFzLGrOwvhuxf2p8F7OIID+q/ivTI8zswK0LI9x3yLQqhfSoX1GRcoDMIcyOnED6rAiY3JULN3ivK+psJPL8cH+9CEvqmX4P7e4sP7riVtusK0wGT4YsCS++rQdl5a7Htq1S1sdBmbXtYJ/Wo8yWYqGQ
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3098.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(5660300002)(66446008)(82960400001)(10290500003)(66946007)(66556008)(64756008)(2906002)(66476007)(508600001)(122000001)(82950400001)(110136005)(4326008)(86362001)(54906003)(8936002)(76116006)(55016003)(52536014)(8676002)(316002)(38100700002)(38070700005)(6506007)(83380400001)(8990500004)(33656002)(7696005)(9686003)(71200400001)(26005)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?5h9eD0xa1b9kcKr58b4h3J5RvQ3DYRnF5pfPYogLfPThzWx8cJttNjU4CDfH?=
- =?us-ascii?Q?YpfBoAAR0vkjiFHBFisYF7pjUo9Qk4xPmeCsUtW7zRf6rtaAQERiG1sX+9mW?=
- =?us-ascii?Q?xqu3WU1rQZylQwpAdmga8tL83BaaPsiym5kvY09Zv50tkIc5PA6JI0wrQdnf?=
- =?us-ascii?Q?xzHVPnxWeE8WYjHCXItJoyRYfKoANAW7IRIgKBs41JnoGJ4+AtlaRJLRKlCv?=
- =?us-ascii?Q?h1Jk/bzDaQhoXd/4Yg5Ukto54ux5LdLLGtnmWlCk5O06OsiEi64hYY9hPUhP?=
- =?us-ascii?Q?FvwlSi9n/BgXToIO6lUEef+QNFLUlBUBf+5aBVDv7TB7Ib4nG0N9jX4TtHeg?=
- =?us-ascii?Q?mq3QVESqv9hCYaX1fDS7wOGR/i3VlHdv9x8j4WASAvbKIK4zs7PQFqce1wA6?=
- =?us-ascii?Q?/dnM6JXQTAFSnRvqq2l6csoNNljIFHH2dvvNss27NQJcZ7YClXAEO+OxhlYz?=
- =?us-ascii?Q?iv5shImYtDajDzUNoEsABK6iRvYBI+K/ouWlvkuQ/1f1np4uGJMP4ct0tUIH?=
- =?us-ascii?Q?kpkKb5m9PkiG8EU45WqB08EN+zHr0k9D+R8dDFfaTzOGqz8Ixeu7qnJQNU7o?=
- =?us-ascii?Q?ehFAW6/YDBo6ZALAoKixHy6Crl4JZi5AYxpEwO077rRcEaQ/LzG5iGEwSG5K?=
- =?us-ascii?Q?56Sbc/TcVtAa9TuxQgVQw2EFWyGaND/oYRlcxuRr/ZnAN6JgsAqZWh9vrwmt?=
- =?us-ascii?Q?fObtkbI5dxTfvIism9PNSDLyuB7PlLQ4n+RakIBsad8TDLRqptjZU67gfEpl?=
- =?us-ascii?Q?k9qy+EH5YunFIj9ZQmyDqHI/2AVdqNZ4kVgq1zmh98ljPAgJWUjho0xfb9zr?=
- =?us-ascii?Q?aqe61L7muV2TdYKNdQdE7YO+FT3TdHd+h2Dues8yTAG2AmgzfnEypNEFtGw3?=
- =?us-ascii?Q?zVgyclBHJH5xLzasnJpV8IzMLyyzyHjkkRwrQNsELKcr1b3vUNdAWTKh2qqJ?=
- =?us-ascii?Q?jXiBZ71YvfgEwtMx39od3qNuXfORzyCgrzjyny1qp70d8ekxhq/I/V8bnC83?=
- =?us-ascii?Q?5MAAdRfLlHhv1RpZ8iQ7L83SLu6bUAGGb3V+sHTpIGW2zD3XEbCx0ZdNJRZ1?=
- =?us-ascii?Q?a2FVYpuP0ZNtnmcb6TCqMGnJLW7Erof3wsVhF+yXWe9knGPXMxeqhAu/9Dd8?=
- =?us-ascii?Q?guia/qOGRAN6RgMWYnonn6OHTc945INAyEfVT9AUww4lKqcDeS8gL/PSRfIQ?=
- =?us-ascii?Q?B7+Xdk8hm8RE7JNdjdvqSHO7HzGXqnjT+KubWiM1bcIwlAlGUINNj3Qwgz+Y?=
- =?us-ascii?Q?8mh3P/H6+Llp8nsjMvyhS/FuGke1XNbf640Yi3SEQ9L7+Mek+HkFPqrviUoW?=
- =?us-ascii?Q?3bZggXXCrmFvoKRvvuq85ZpuR07N8gYm+siro+e6JZaT8oNSwzcHES6DfwxO?=
- =?us-ascii?Q?IdzbWT6Q4gAw2ypoa278+0qcDcyevAvbL8sQo559uGf4Jd8lzbQ0YiasXXRM?=
- =?us-ascii?Q?9wvo3w1usnff3D+QiFylhMjDm+WDV/QGqPRr5pIYsCsikZYmc/bIDg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0035.namprd03.prod.outlook.com
+ (2603:10b6:a03:33e::10) To BYAPR10MB2663.namprd10.prod.outlook.com
+ (2603:10b6:a02:a9::20)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2de9445d-3444-479f-1615-08d9fe0cb225
+X-MS-TrafficTypeDiagnostic: DM5PR10MB1849:EE_
+X-Microsoft-Antispam-PRVS: <DM5PR10MB1849E5A16214D1BA5A77FBE8F0059@DM5PR10MB1849.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: T0nDl+o7gSSkYKtGZad7dLh0S5JfaMzvaWYqwDDJ8s+UKGiONT/n29WbPW+Q2xqq28sADWCKP/E0JoHZWjiQJ/FERWnftp0tsAy6+rdi/bNYkOHIwcS+aK8rcD2bJhwaaByI8Fq2FgrJQRyiHtfrB7mloNoyGhKWXUQU85rFCzfkXQbeMQbzs8g3uH3KBhpFdGQQBS24OoQqCEL+JDHT2MWGkl9NBhk6BLF4+yH52mKGo4t5yEOdO13w7qgRaqHx9jBDKUIU9HA/WHH5F6RPI0/qlZQeAUvR8f0AFDjU8bwOwCixBJ4KfHj0KkivCk/4+s1qalHpJzxZBZ0dj4orRF0qvkX40I1qfVSvf5KyBvE8eHoObBSYq2EvqjIYoSZwEZcMS79FW3Tv3ckEudgEYL5tSeRD8pSqypnrAC1PG3ScGuIZRiQGtluu9B48ewHv2koxTXlilx54qYWXktWVDLplvL/OKwWCv1e1yP0wOkOm60Ts73LOH64lNfEx9qd4XsNKb0jYQaYGvQci4N5qEstR76O+wNHUXAFGsQ+h4LoC8T48Q08OsHDIFg80AY/AiMfkZ+KvsaSrqI9sp47uZ7NHVCDP5XafFI3K6LAMTR+0qCKfwRnNFzivCq4y86uIcO3RhUUjpmMjlNRGzfXbOO0aFcWa7bjswoXs8KGdcjDYq3lKPtd1ebSyu9UIWcJyqaD515wprvzc5bxYU3EE/pR4bQuVbsJMKKlhNvRfV66+STlcM+4yurZnpd73OCn0X2DW9cX8rNA3k20JYyyjgdX+gEqqmvionG4sECAjO+Dp+RQahBlCKI0xCWu1p4g4aqusOhzao9VeEdA/6T0m/SQzyr9tP1PtgnfVi1rdaeg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2663.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(7416002)(186003)(5660300002)(44832011)(31686004)(110136005)(6506007)(508600001)(8936002)(38100700002)(2616005)(8676002)(53546011)(86362001)(66476007)(66556008)(66946007)(83380400001)(2906002)(6512007)(966005)(316002)(6486002)(4326008)(54906003)(31696002)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WDAxZkZDSWV6MFc4a2h2VnBGUzBNQjE3MTVNMWhmL3ZEbnJyaGlwS3VpK0NG?=
+ =?utf-8?B?cTRXaU91WmFqNE1xYnZXczA1VjhUeHRpUlpaSDVjTzZvYjBVMGtmMU04OGVy?=
+ =?utf-8?B?bTNHdGVrWm1MclZ5NHJrNzZnY0U4aUdBMk1rdHFJTitZbDhUVWRrSjlyNVZu?=
+ =?utf-8?B?WUQxRUxzemhIWnRLa09Wa3UzdzNsL1hPTjMxY0FycGNHT0R5anNybG03dzlh?=
+ =?utf-8?B?Q0NGbzZjQ1lUdDJ4UEhNTFBqbHhCc0QyTm9TNWZmNDM3N0dnWWJNd0V4VmJN?=
+ =?utf-8?B?Q21LVkRac1pwZFVNb0RWTGExSDQ1SndoU21Cd2JFMHpSQzVwaFRLem9iR1hz?=
+ =?utf-8?B?SkJuM01LVVZadFR4ek9sbGdsOUpjRVRYaUFYZ3oyZFVTd09SZHVrT1ZGNS9V?=
+ =?utf-8?B?SzBHaSt6N3JrdUZldm55VVAzSlZ4T3N5NnVvcUg0Y0JGMkhERHFNZkJHY3oz?=
+ =?utf-8?B?ZEhBRUJZYzUzcVRKb0cvdlNSbmF3bXkxWFFrSFh5UVl3RUR1eVdmbC9UNHQ4?=
+ =?utf-8?B?cm9id2JkcTBWWWtxMzByU0RyLyt4THp4UXFIWVJIZnZJV3RyVE1sVUNrZks1?=
+ =?utf-8?B?bG1LOEJWd2pTZGJpQzdjb0V5K2trazkxY3lkSldmRzZKaGxTb3VJSXIzSVFJ?=
+ =?utf-8?B?RXhHc1VaQ0pNYUFmSWlGMWdQamhIMlNXQTdzRERod3IrVDhQbFRwTzYvd1o1?=
+ =?utf-8?B?Z3E1dnN3VkdQbUgyZ0ZGZ0RPTUdoL3UzWFlmWDh6bE11VHFKUzlNclRvTTZu?=
+ =?utf-8?B?RXpGNkJHNWh3a3V6UEgrS3pGS0YwWlB5a1pBaUZHek0yczBQdFZLOXoyaVFZ?=
+ =?utf-8?B?Sm1GQ3hNSDNRa1NvTDZIOHVqdnRqU0ZIV0thQzNHbkNJVlRNa3A0Z1JRaDNZ?=
+ =?utf-8?B?U2E0Z0kxeEkzbUZuVFFsSzROTENZWHRjT2R2SmhZVnhGRVhUbGRPaUVKUHJF?=
+ =?utf-8?B?cEc0Z29FZlBZVVdSbXRXcWV1N3hibU93TTh2aDF6bW91TWFLcTNnYVlhSzFJ?=
+ =?utf-8?B?dEpKdmdGd1M2MHkrcmZhNkZOREZLZDh0aFZXamQ3dTJEbzVOWVlXdGxjNVNZ?=
+ =?utf-8?B?SjNqcTR6YUNFdmRzTVMyaGZYVlBPWXBlbkQ0cWhiUWFDbWJGNTZsbG1nekVV?=
+ =?utf-8?B?dDErcmZHM214RFZYUXl3WVI0RTdCWnc0TUJqSHFCTWVFTzFCWmhrUkRGaDJx?=
+ =?utf-8?B?bVlqUXdudmd5d0FWL0VVS0VoQ3dUSzFoZmpxeGdXNUFqeCt1ZXBWTDcyNnVP?=
+ =?utf-8?B?WjZUa1M5U0xaQ3JtcEhkWDZBc0ErVHp3K1ZJOTZQaFN2d21FdjlSYVFtQTJk?=
+ =?utf-8?B?S1ExUmNnT2ZVUWhJdmRrQTZlWlAyd05MR2R1NldTMTB4TllGL2RROTVzK3ZL?=
+ =?utf-8?B?MWlVdkZxblNWSGhnb3MyTS9xNDB6K3d1dkp4bmFlNnhEZ0RyV2I3ZndwNU5P?=
+ =?utf-8?B?cEpuaDhlbVY0T25sUFBXdjJUTjlrQWc0UzJ6dktoSWR4VHZhdzc5Skh1Wm1t?=
+ =?utf-8?B?QnVUZlZQeVplUlY3Tm9uT1ZmOUhWTFZMcVJDdERrM09WbVJ6S0sxRXFUTTY5?=
+ =?utf-8?B?aU42V2pSOHpyelZOeWFSTmxyL2xDME53N1dGeTRiU3kxeVI5QzRBZENtQU9y?=
+ =?utf-8?B?U2szeCtMQ2tNUCtHMXFmR0d6cGNzSXhtQUh0TVRpTDZaYzllWFZhc1ZSWkd0?=
+ =?utf-8?B?WGJVelNBTEE5dnUyZWdjTUhRSFdwZ0RXWGlOQWlqQ3AvWk1BNlIrM3gvL0Jl?=
+ =?utf-8?B?RzROUStBemFGRmwzYk1ENHlMVy80ZlAxV1FoM3pHVnpYVFVKOWxCWEZDQVJa?=
+ =?utf-8?B?cnlNa0JnT2lSTHk1bnc2L3JNRFJUM3NtU0NxTGx1T0hvN0ZqRUFIOHNxbnNo?=
+ =?utf-8?B?WmpXSSt3aUtOTStnakZRWFRhU0ZXWEhuM1NocHRXZ0lnaUlKeFNUV0laS2dB?=
+ =?utf-8?B?d0sveUhUOStDdENwTUdPYVkyK2RjYU5FZHNUbTJaWVpKRmVjOE1kaU4ycE5T?=
+ =?utf-8?B?K25aeC9hbWFCUzd4b0s2VlV3NXVlYXcrSGpId3ZobWl5RjczZ2FCZGpObEl3?=
+ =?utf-8?B?bWZNa3RvRFBaU0xpR1VSU05vWm02MHZFV1Bnd01OUVFFdmRUdERsTW9KUUg4?=
+ =?utf-8?B?TDdaUnAvWnJwSncyK25FeUhaaTA5RXFsMTFaQnhjcVpNSkxtN2VucE54NzNz?=
+ =?utf-8?Q?8krf42B7GoJ7C4N+k6IUVJ2E4YZ1f/POPV04CHKAW+Eu?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2de9445d-3444-479f-1615-08d9fe0cb225
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2663.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3098.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67f62ee6-e1a9-47b8-5e3c-08d9fe0bef17
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2022 18:22:25.7217
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2022 18:27:53.4129
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gx++tlXYXsc1M/MtlpBcVGVYN7Q4EX9YF9SGDEQ2mNlUUVnJnnnYbW6JZefEBiT/OyOsWk6merxXi8HWEGB4d7AK+eWfg6g6sE45JkrPoJk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1031
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GKjFR8zhBR98XVYezKj18C7MPnB6fFzjs1UYx9YrejjusZjdFSq5Qum0RiztGuGIRBVn8bLyEMuMzoSyLt3oHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR10MB1849
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10276 signatures=690470
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2203040092
+X-Proofpoint-ORIG-GUID: 5zkTEFZIUil-jkep0W3bngAeAxQzK4mA
+X-Proofpoint-GUID: 5zkTEFZIUil-jkep0W3bngAeAxQzK4mA
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Friday, March 4, 2022 4:=
-24 AM
->=20
-> Currently, the following is observed on Hyper-V/ARM:
->=20
->  Hyper-V: Host Build 10.0.22477.1061-1-0
->=20
-> This differs from similar output on x86:
->=20
->  Hyper-V Host Build:20348-10.0-1-0.1138
->=20
-> and this is inconvenient. As x86 was the first to introduce the current
-> format and to not break existing tools parsing it, change the format on
-> ARM to match.
+Hi Michael,
 
-Interesting.  I had explicitly output this line differently on ARM64 so
-that the output is in the standard form of a Windows version number,
-which is what the Host Build value actually is.  My intent is to fix the
-x86 side as well.  I had not anticipated there being automated parsing
-of these strings.
+On 3/4/22 10:12 AM, Michael Kelley (LINUX) wrote:
+> From: Christoph Hellwig <hch@lst.de> Sent: Tuesday, March 1, 2022 2:53 AM
+>>
+>> Power SVM wants to allocate a swiotlb buffer that is not restricted to low memory for
+>> the trusted hypervisor scheme.  Consolidate the support for this into the swiotlb_init
+>> interface by adding a new flag.
+> 
+> Hyper-V Isolated VMs want to do the same thing of not restricting the swiotlb
+> buffer to low memory.  That's what Tianyu Lan's patch set[1] is proposing.
+> Hyper-V synthetic devices have no DMA addressing limitations, and the
+> likelihood of using a PCI pass-thru device with addressing limitations in an
+> Isolated VM seems vanishingly small.
+> 
+> So could use of the SWIOTLB_ANY flag be generalized?  Let Hyper-V init
+> code set the flag before swiotlb_init() is called.  Or provide a CONFIG
+> variable that Hyper-V Isolated VMs could set.
 
-I had also put the colon in the place to be consistent with most
-other Hyper-V messages.  I know:  picky, picky. :-)
+I used to send 64-bit swiotlb, while at that time people thought it was the same
+as Restricted DMA patchset.
 
-What's the impact of changing the tools that parse it so that
-either version could be handled?
+https://lore.kernel.org/all/20210203233709.19819-1-dongli.zhang@oracle.com/
 
-Michael
+However, I do not think Restricted DMA patchset is going to supports 64-bit (or
+high memory) DMA. Is this what you are looking for?
 
->=20
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/arm64/hyperv/mshyperv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-> index bbbe351e9045..7b9c1c542a77 100644
-> --- a/arch/arm64/hyperv/mshyperv.c
-> +++ b/arch/arm64/hyperv/mshyperv.c
-> @@ -60,8 +60,8 @@ static int __init hyperv_init(void)
->  	b =3D result.as32.b;
->  	c =3D result.as32.c;
->  	d =3D result.as32.d;
-> -	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
-> -		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
-> +	pr_info("Hyper-V Host Build:%d-%d.%d-%d-%d.%d\n",
-> +		a, b >> 16, b & 0xFFFF, c, d >> 24, d & 0xFFFFFF);
->=20
->  	ret =3D hv_common_init();
->  	if (ret)
-> --
-> 2.35.1
+Dongli Zhang
+
+> 
+> Michael
+> 
+> [1] https://urldefense.com/v3/__https://lore.kernel.org/lkml/20220209122302.213882-1-ltykernel@gmail.com/__;!!ACWV5N9M2RV99hQ!fUx4fMgdQIrqJDDy-pbv9xMeyHX0rC6iN8176LWjylI2_lsjy03gysm0-lAbV1Yb7_g$ 
+> 
+>>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> ---
+>>  arch/powerpc/include/asm/svm.h       |  4 ----
+>>  arch/powerpc/include/asm/swiotlb.h   |  1 +
+>>  arch/powerpc/kernel/dma-swiotlb.c    |  1 +
+>>  arch/powerpc/mm/mem.c                |  5 +----
+>>  arch/powerpc/platforms/pseries/svm.c | 26 +-------------------------
+>>  include/linux/swiotlb.h              |  1 +
+>>  kernel/dma/swiotlb.c                 |  9 +++++++--
+>>  7 files changed, 12 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/svm.h b/arch/powerpc/include/asm/svm.h
+>> index 7546402d796af..85580b30aba48 100644
+>> --- a/arch/powerpc/include/asm/svm.h
+>> +++ b/arch/powerpc/include/asm/svm.h
+>> @@ -15,8 +15,6 @@ static inline bool is_secure_guest(void)
+>>  	return mfmsr() & MSR_S;
+>>  }
+>>
+>> -void __init svm_swiotlb_init(void);
+>> -
+>>  void dtl_cache_ctor(void *addr);
+>>  #define get_dtl_cache_ctor()	(is_secure_guest() ? dtl_cache_ctor : NULL)
+>>
+>> @@ -27,8 +25,6 @@ static inline bool is_secure_guest(void)
+>>  	return false;
+>>  }
+>>
+>> -static inline void svm_swiotlb_init(void) {}
+>> -
+>>  #define get_dtl_cache_ctor() NULL
+>>
+>>  #endif /* CONFIG_PPC_SVM */
+>> diff --git a/arch/powerpc/include/asm/swiotlb.h
+>> b/arch/powerpc/include/asm/swiotlb.h
+>> index 3c1a1cd161286..4203b5e0a88ed 100644
+>> --- a/arch/powerpc/include/asm/swiotlb.h
+>> +++ b/arch/powerpc/include/asm/swiotlb.h
+>> @@ -9,6 +9,7 @@
+>>  #include <linux/swiotlb.h>
+>>
+>>  extern unsigned int ppc_swiotlb_enable;
+>> +extern unsigned int ppc_swiotlb_flags;
+>>
+>>  #ifdef CONFIG_SWIOTLB
+>>  void swiotlb_detect_4g(void);
+>> diff --git a/arch/powerpc/kernel/dma-swiotlb.c b/arch/powerpc/kernel/dma-
+>> swiotlb.c
+>> index fc7816126a401..ba256c37bcc0f 100644
+>> --- a/arch/powerpc/kernel/dma-swiotlb.c
+>> +++ b/arch/powerpc/kernel/dma-swiotlb.c
+>> @@ -10,6 +10,7 @@
+>>  #include <asm/swiotlb.h>
+>>
+>>  unsigned int ppc_swiotlb_enable;
+>> +unsigned int ppc_swiotlb_flags;
+>>
+>>  void __init swiotlb_detect_4g(void)
+>>  {
+>> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c index
+>> e1519e2edc656..a4d65418c30a9 100644
+>> --- a/arch/powerpc/mm/mem.c
+>> +++ b/arch/powerpc/mm/mem.c
+>> @@ -249,10 +249,7 @@ void __init mem_init(void)
+>>  	 * back to to-down.
+>>  	 */
+>>  	memblock_set_bottom_up(true);
+>> -	if (is_secure_guest())
+>> -		svm_swiotlb_init();
+>> -	else
+>> -		swiotlb_init(ppc_swiotlb_enable, 0);
+>> +	swiotlb_init(ppc_swiotlb_enable, ppc_swiotlb_flags);
+>>  #endif
+>>
+>>  	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE); diff --git
+>> a/arch/powerpc/platforms/pseries/svm.c b/arch/powerpc/platforms/pseries/svm.c
+>> index c5228f4969eb2..3b4045d508ec8 100644
+>> --- a/arch/powerpc/platforms/pseries/svm.c
+>> +++ b/arch/powerpc/platforms/pseries/svm.c
+>> @@ -28,7 +28,7 @@ static int __init init_svm(void)
+>>  	 * need to use the SWIOTLB buffer for DMA even if dma_capable() says
+>>  	 * otherwise.
+>>  	 */
+>> -	swiotlb_force = SWIOTLB_FORCE;
+>> +	ppc_swiotlb_flags |= SWIOTLB_ANY | SWIOTLB_FORCE;
+>>
+>>  	/* Share the SWIOTLB buffer with the host. */
+>>  	swiotlb_update_mem_attributes();
+>> @@ -37,30 +37,6 @@ static int __init init_svm(void)  }  machine_early_initcall(pseries,
+>> init_svm);
+>>
+>> -/*
+>> - * Initialize SWIOTLB. Essentially the same as swiotlb_init(), except that it
+>> - * can allocate the buffer anywhere in memory. Since the hypervisor doesn't have
+>> - * any addressing limitation, we don't need to allocate it in low addresses.
+>> - */
+>> -void __init svm_swiotlb_init(void)
+>> -{
+>> -	unsigned char *vstart;
+>> -	unsigned long bytes, io_tlb_nslabs;
+>> -
+>> -	io_tlb_nslabs = (swiotlb_size_or_default() >> IO_TLB_SHIFT);
+>> -	io_tlb_nslabs = ALIGN(io_tlb_nslabs, IO_TLB_SEGSIZE);
+>> -
+>> -	bytes = io_tlb_nslabs << IO_TLB_SHIFT;
+>> -
+>> -	vstart = memblock_alloc(PAGE_ALIGN(bytes), PAGE_SIZE);
+>> -	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, false))
+>> -		return;
+>> -
+>> -
+>> -	memblock_free(vstart, PAGE_ALIGN(io_tlb_nslabs << IO_TLB_SHIFT));
+>> -	panic("SVM: Cannot allocate SWIOTLB buffer");
+>> -}
+>> -
+>>  int set_memory_encrypted(unsigned long addr, int numpages)  {
+>>  	if (!cc_platform_has(CC_ATTR_MEM_ENCRYPT))
+>> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h index
+>> dcecf953f7997..ee655f2e4d28b 100644
+>> --- a/include/linux/swiotlb.h
+>> +++ b/include/linux/swiotlb.h
+>> @@ -15,6 +15,7 @@ struct scatterlist;
+>>
+>>  #define SWIOTLB_VERBOSE	(1 << 0) /* verbose initialization */
+>>  #define SWIOTLB_FORCE	(1 << 1) /* force bounce buffering */
+>> +#define SWIOTLB_ANY	(1 << 2) /* allow any memory for the buffer */
+>>
+>>  /*
+>>   * Maximum allowable number of contiguous slabs to map, diff --git
+>> a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c index 1a40c71c4d51a..77cf73dc20a78
+>> 100644
+>> --- a/kernel/dma/swiotlb.c
+>> +++ b/kernel/dma/swiotlb.c
+>> @@ -275,8 +275,13 @@ void __init swiotlb_init(bool addressing_limit, unsigned int
+>> flags)
+>>  	if (swiotlb_force_disable)
+>>  		return;
+>>
+>> -	/* Get IO TLB memory from the low pages */
+>> -	tlb = memblock_alloc_low(bytes, PAGE_SIZE);
+>> +	/*
+>> +	 * By default allocate the bonuce buffer memory from low memory.
+>> +	 */
+>> +	if (flags & SWIOTLB_ANY)
+>> +		tlb = memblock_alloc(bytes, PAGE_SIZE);
+>> +	else
+>> +		tlb = memblock_alloc_low(bytes, PAGE_SIZE);
+>>  	if (!tlb)
+>>  		goto fail;
+>>  	if (swiotlb_init_with_tbl(tlb, default_nslabs, flags))
+>> --
+>> 2.30.2
+> 
+> 
