@@ -2,86 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 683B94CC96F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Mar 2022 23:49:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 628FB4CD42C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Mar 2022 13:24:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234962AbiCCWuV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Mar 2022 17:50:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
+        id S234738AbiCDMZX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Mar 2022 07:25:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233243AbiCCWuU (ORCPT
+        with ESMTP id S232740AbiCDMZW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Mar 2022 17:50:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFFEBF5413;
-        Thu,  3 Mar 2022 14:49:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 4 Mar 2022 07:25:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E4AF1B018C
+        for <linux-hyperv@vger.kernel.org>; Fri,  4 Mar 2022 04:24:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646396673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=aq65+bpnjtXS9LRe8ZYemtc30hGHcnGxIQBdfQAG9Cc=;
+        b=XGFhb1T9+jgEj5XqcDckx9/B8iKIdqMfOs7f3bmgNlHsg5ViJy7P/RYRBwbk+ORTPin2Q+
+        G2d/Rqv7Md+knuymp6J+27h9v/LNUTuXkJ9PYblRI6B5A0Ba9OquCj4hsK53ADi3heXK3j
+        9hwOx/cioiyWvC5AYwHWlAe4/l5zl4o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-122-N9HDgfL-O1WzoMJsH2VmOQ-1; Fri, 04 Mar 2022 07:24:30 -0500
+X-MC-Unique: N9HDgfL-O1WzoMJsH2VmOQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EF3B7B826F4;
-        Thu,  3 Mar 2022 22:49:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF27C004E1;
-        Thu,  3 Mar 2022 22:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646347770;
-        bh=8T7CokGxWBKJfPW1pG0VCMscny/1l39AXb6Fw4feFiI=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=mDE8XGmJRPXC3FhUExxfC/Tg8r8q5kqje46aVpKcSpgATjCrTOmm8dyL5+N0ARFUl
-         igEkDLka8/5AR112e4UmftTK6LTw6MIVEq72/1WbVxD/BN6jvq1CQNSmYNX2eOZkoM
-         C7Y6r4k/M1DH2K4tAUOZ5dfMEE8n9On9bbDAQYejM/m/pVednlfOiQ+0ILLxk+xuq6
-         0Hivc3idTv5Og15E95hL8KOwRNZ6gfWfd8YTyoWKgbowpFGJ7UwyLwEnr/Ub/zQ8kx
-         OW2VcyhCSn0JN1ypiUZLYah5Kofhllw9xygmCFN3oPTfqf6bSdXRFiDe95KnoglrOU
-         yMQm9xneH86Yg==
-Date:   Thu, 3 Mar 2022 14:49:29 -0800 (PST)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        iommu@lists.linux-foundation.org, x86@kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DBD8800423;
+        Fri,  4 Mar 2022 12:24:29 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.40.194.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9364A7D704;
+        Fri,  4 Mar 2022 12:24:26 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
         linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
- swiotlb
-In-Reply-To: <20220303105931.GA15137@lst.de>
-Message-ID: <alpine.DEB.2.22.394.2203031447120.3261@ubuntu-linux-20-04-desktop>
-References: <20220301105311.885699-1-hch@lst.de> <20220301105311.885699-12-hch@lst.de> <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop> <20220302081500.GB23075@lst.de> <alpine.DEB.2.22.394.2203021709470.3261@ubuntu-linux-20-04-desktop>
- <20220303105931.GA15137@lst.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: hyperv: make the format of 'Hyper-V: Host Build' output match x86
+Date:   Fri,  4 Mar 2022 13:24:25 +0100
+Message-Id: <20220304122425.1638370-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 3 Mar 2022, Christoph Hellwig wrote:
-> On Wed, Mar 02, 2022 at 05:25:10PM -0800, Stefano Stabellini wrote:
-> > Thinking more about it we actually need to drop the xen_initial_domain()
-> > check otherwise some cases won't be functional (Dom0 not 1:1 mapped, or
-> > DomU 1:1 mapped).
-> 
-> Hmm, but that would be the case even before this series, right?
+Currently, the following is observed on Hyper-V/ARM:
 
-Before this series we only have the xen_swiotlb_detect() check in
-xen_mm_init, we don't have a second xen_initial_domain() check.
+ Hyper-V: Host Build 10.0.22477.1061-1-0
 
-The issue is that this series is adding one more xen_initial_domain()
-check in xen_mm_init.
+This differs from similar output on x86:
+
+ Hyper-V Host Build:20348-10.0-1-0.1138
+
+and this is inconvenient. As x86 was the first to introduce the current
+format and to not break existing tools parsing it, change the format on
+ARM to match.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/arm64/hyperv/mshyperv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+index bbbe351e9045..7b9c1c542a77 100644
+--- a/arch/arm64/hyperv/mshyperv.c
++++ b/arch/arm64/hyperv/mshyperv.c
+@@ -60,8 +60,8 @@ static int __init hyperv_init(void)
+ 	b = result.as32.b;
+ 	c = result.as32.c;
+ 	d = result.as32.d;
+-	pr_info("Hyper-V: Host Build %d.%d.%d.%d-%d-%d\n",
+-		b >> 16, b & 0xFFFF, a,	d & 0xFFFFFF, c, d >> 24);
++	pr_info("Hyper-V Host Build:%d-%d.%d-%d-%d.%d\n",
++		a, b >> 16, b & 0xFFFF, c, d >> 24, d & 0xFFFFFF);
+ 
+ 	ret = hv_common_init();
+ 	if (ret)
+-- 
+2.35.1
+
