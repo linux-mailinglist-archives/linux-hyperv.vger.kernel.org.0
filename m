@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D8C34D01E2
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Mar 2022 15:51:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5584D01E5
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Mar 2022 15:51:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243501AbiCGOv5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Mar 2022 09:51:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
+        id S233842AbiCGOwA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Mar 2022 09:52:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243460AbiCGOvy (ORCPT
+        with ESMTP id S243531AbiCGOv4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Mar 2022 09:51:54 -0500
+        Mon, 7 Mar 2022 09:51:56 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0BE989027E
-        for <linux-hyperv@vger.kernel.org>; Mon,  7 Mar 2022 06:50:52 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD07C90CED
+        for <linux-hyperv@vger.kernel.org>; Mon,  7 Mar 2022 06:50:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646664651;
+        s=mimecast20190719; t=1646664654;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rlVYgUkdWRyYsMOIFcOnRDf5aAd17ft9dtYdjY2xq6w=;
-        b=Bd6eIJ2Q9HxQ3F8DvWVHnKlr5HQt0CVj1Cj73hCYgqg4UrTI5fZDoQ1sBVregscq9WJMbs
-        +wZvmA4BhWOZwvbsxwxxZeDPDHk+AXwEJlA2KXFHXAROWdU0H/GZNTzBTii1MQdfCBrgu9
-        7rAN551LTM6V1++PDO4NVU/gJzTjdvY=
+        bh=0tDVPG+cSC0wZSZXXfWO0Gv51YvV+L3gtZb8BmeIrIg=;
+        b=dV99z52CIlEen6VzqLv70GPLNEiAf1QGUQY88TMuzf5Md7W+wAbn9e5Zd7Xm4vvbBzSN2M
+        RHgk31o2NvnKP3QZjjaC7Ca0rZRvk6ksYtl7uF9lLgrCaGZ6DC6bbLf9nVBQJx5pzCu72H
+        QkPYoPJYDNuZfhL+Nv1/6o5E5k/xHlU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-492-pFf_aL_KPBiuFik1sJZDbQ-1; Mon, 07 Mar 2022 09:50:48 -0500
-X-MC-Unique: pFf_aL_KPBiuFik1sJZDbQ-1
+ us-mta-280-YLL5bB4BMGKzBhyImxwLwg-1; Mon, 07 Mar 2022 09:50:49 -0500
+X-MC-Unique: YLL5bB4BMGKzBhyImxwLwg-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6DCC1091DA0;
-        Mon,  7 Mar 2022 14:50:45 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C97C5218;
+        Mon,  7 Mar 2022 14:50:48 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.193.244])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BC897F0D6;
-        Mon,  7 Mar 2022 14:50:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 201B67F0D6;
+        Mon,  7 Mar 2022 14:50:45 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
@@ -47,9 +47,9 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         linux-hyperv@vger.kernel.org,
         Siddharth Chandrasekaran <sidcha@amazon.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 07/19] KVM: x86: hyper-v: Create a separate ring for Direct TLB flush
-Date:   Mon,  7 Mar 2022 15:50:11 +0100
-Message-Id: <20220307145023.1913205-8-vkuznets@redhat.com>
+Subject: [PATCH RFC 08/19] KVM: x86: hyper-v: Use preallocated buffer in 'struct kvm_vcpu_hv' instead of on-stack 'sparse_banks'
+Date:   Mon,  7 Mar 2022 15:50:12 +0100
+Message-Id: <20220307145023.1913205-9-vkuznets@redhat.com>
 In-Reply-To: <20220307145023.1913205-1-vkuznets@redhat.com>
 References: <20220307145023.1913205-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -66,110 +66,68 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-To handle Direct TLB flush requests from L2 KVM needs to use a
-separate ring from regular Hyper-V TLB flush requests: e.g. when a
-request to flush something in L2 is made, the target vCPU can
-transition from L2 to L1, receive a request to flush a GVA for L1 and
-then try to enter L2 back. The first request needs to be processed
-then. Similarly, requests to flush GVAs in L1 must wait until L2
-exits to L1.
+To make kvm_hv_flush_tlb() ready to handle Direct TLB flush request
+KVM needs to allow for all 64 sparse vCPU banks regardless of KVM_MAX_VCPUs
+as L1 may use vCPU overcommit for L2. To avoid growing on-stack allocation,
+make 'sparse_banks' part of per-vCPU 'struct kvm_vcpu_hv' which is
+allocated dynamically.
 
-No functional change yet as KVM doesn't handle Direct TLB flush
-requests from L2 yet.
+Note: sparse_set_to_vcpu_mask() keeps using on-stack allocation as it
+won't be used to handle Direct TLB flush requests.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h |  3 ++-
- arch/x86/kvm/hyperv.c           |  7 ++++---
- arch/x86/kvm/hyperv.h           | 17 ++++++++++++++---
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 3 +++
+ arch/x86/kvm/hyperv.c           | 6 ++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 299f73d06680..750ac4055d0c 100644
+index 750ac4055d0c..1fce8232a2e9 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -613,7 +613,8 @@ struct kvm_vcpu_hv {
- 		u32 syndbg_cap_eax; /* HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES.EAX */
- 	} cpuid_cache;
+@@ -615,6 +615,9 @@ struct kvm_vcpu_hv {
  
--	struct kvm_vcpu_hv_tlbflush_ring tlb_flush_ring;
-+	/* Two rings for regular Hyper-V TLB flush and Direct TLB flush */
-+	struct kvm_vcpu_hv_tlbflush_ring tlb_flush_ring[2];
+ 	/* Two rings for regular Hyper-V TLB flush and Direct TLB flush */
+ 	struct kvm_vcpu_hv_tlbflush_ring tlb_flush_ring[2];
++
++	/* Preallocated buffer for handling hypercalls passing sparse vCPU set */
++	u64 sparse_banks[64];
  };
  
  /* Xen HVM per vcpu emulation context */
 diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 7efa34fb15ef..9dfc122d5eca 100644
+index 9dfc122d5eca..b88e44a126b8 100644
 --- a/arch/x86/kvm/hyperv.c
 +++ b/arch/x86/kvm/hyperv.c
-@@ -946,7 +946,8 @@ static int kvm_hv_vcpu_init(struct kvm_vcpu *vcpu)
+@@ -1969,13 +1969,14 @@ void kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
  
- 	hv_vcpu->vp_index = vcpu->vcpu_idx;
- 
--	spin_lock_init(&hv_vcpu->tlb_flush_ring.write_lock);
-+	spin_lock_init(&hv_vcpu->tlb_flush_ring[0].write_lock);
-+	spin_lock_init(&hv_vcpu->tlb_flush_ring[1].write_lock);
- 
- 	return 0;
- }
-@@ -1874,7 +1875,7 @@ static void hv_tlb_flush_ring_enqueue(struct kvm_vcpu *vcpu, bool flush_all,
- 	if (!hv_vcpu)
- 		return;
- 
--	tlb_flush_ring = &hv_vcpu->tlb_flush_ring;
-+	tlb_flush_ring = &hv_vcpu->tlb_flush_ring[0];
- 
- 	spin_lock_irqsave(&tlb_flush_ring->write_lock, flags);
- 
-@@ -1934,7 +1935,7 @@ void kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
- 		return;
- 	}
- 
--	tlb_flush_ring = &hv_vcpu->tlb_flush_ring;
-+	tlb_flush_ring = kvm_hv_get_tlb_flush_ring(vcpu);
- 	read_idx = READ_ONCE(tlb_flush_ring->read_idx);
- 	write_idx = READ_ONCE(tlb_flush_ring->write_idx);
- 
-diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
-index 83960d1bdb1f..137f906eb8c3 100644
---- a/arch/x86/kvm/hyperv.h
-+++ b/arch/x86/kvm/hyperv.h
-@@ -22,6 +22,7 @@
- #define __ARCH_X86_KVM_HYPERV_H__
- 
- #include <linux/kvm_host.h>
-+#include "x86.h"
- 
- /*
-  * The #defines related to the synthetic debugger are required by KDNet, but
-@@ -147,15 +148,25 @@ int kvm_vm_ioctl_hv_eventfd(struct kvm *kvm, struct kvm_hyperv_eventfd *args);
- int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
- 		     struct kvm_cpuid_entry2 __user *entries);
- 
-+static inline struct kvm_vcpu_hv_tlbflush_ring *kvm_hv_get_tlb_flush_ring(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-+
-+	if (!is_guest_mode(vcpu))
-+		return &hv_vcpu->tlb_flush_ring[0];
-+
-+	return &hv_vcpu->tlb_flush_ring[1];
-+}
- 
- static inline void kvm_hv_vcpu_empty_flush_tlb(struct kvm_vcpu *vcpu)
+ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
  {
--	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-+	struct kvm_vcpu_hv_tlbflush_ring *tlb_flush_ring;
++	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
++	u64 *sparse_banks = hv_vcpu->sparse_banks;
+ 	struct kvm *kvm = vcpu->kvm;
+ 	struct hv_tlb_flush_ex flush_ex;
+ 	struct hv_tlb_flush flush;
+ 	DECLARE_BITMAP(vcpu_mask, KVM_MAX_VCPUS);
+ 	u64 entries[KVM_HV_TLB_FLUSH_RING_SIZE - 2];
+ 	u64 valid_bank_mask;
+-	u64 sparse_banks[KVM_HV_MAX_SPARSE_VCPU_SET_BITS];
+ 	struct kvm_vcpu *v;
+ 	unsigned long i;
+ 	bool all_cpus, all_addr;
+@@ -2127,11 +2128,12 @@ static void kvm_hv_send_ipi_to_many(struct kvm *kvm, u32 vector,
  
--	if (!hv_vcpu)
-+	if (!to_hv_vcpu(vcpu))
- 		return;
- 
--	hv_vcpu->tlb_flush_ring.read_idx = hv_vcpu->tlb_flush_ring.write_idx;
-+	tlb_flush_ring = kvm_hv_get_tlb_flush_ring(vcpu);
-+	tlb_flush_ring->read_idx = tlb_flush_ring->write_idx;
- }
- void kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu);
+ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+ {
++	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
++	u64 *sparse_banks = hv_vcpu->sparse_banks;
+ 	struct kvm *kvm = vcpu->kvm;
+ 	struct hv_send_ipi_ex send_ipi_ex;
+ 	struct hv_send_ipi send_ipi;
+ 	unsigned long valid_bank_mask;
+-	u64 sparse_banks[KVM_HV_MAX_SPARSE_VCPU_SET_BITS];
+ 	u32 vector;
+ 	bool all_cpus;
  
 -- 
 2.35.1
