@@ -2,171 +2,278 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C6794D3C7E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Mar 2022 23:02:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 038CB4D3D75
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Mar 2022 00:14:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235683AbiCIWD3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 9 Mar 2022 17:03:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46322 "EHLO
+        id S237759AbiCIXP1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Mar 2022 18:15:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232704AbiCIWD3 (ORCPT
+        with ESMTP id S234634AbiCIXPZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 9 Mar 2022 17:03:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4656EBD0;
-        Wed,  9 Mar 2022 14:02:28 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E989EB823C9;
-        Wed,  9 Mar 2022 22:02:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BCA4C340EE;
-        Wed,  9 Mar 2022 22:02:24 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="T1fuvT6G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1646863339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=inreFAnh9tqy7Qlx+a012zOsU9dSDc7ob/YEs/Oahuw=;
-        b=T1fuvT6GNklQFVlKRs5Fx3/lhU5a5lY+x4d3BmbJ1TqqIVlkrwaQIbxgmi6jwH9EAOFwCQ
-        rckR7B4h3E1/mdErRIlTDIzh3wvR1gGfJ9wLYG3LURJpc1KOhyCQRKHvDssSim+a8W5OGT
-        Z5JNAqH3kaCA8JlF0U6Vt+/w9ac/tRk=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 168a9f66 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
-        Wed, 9 Mar 2022 22:02:19 +0000 (UTC)
-Received: by mail-yb1-f175.google.com with SMTP id z30so7271091ybi.2;
-        Wed, 09 Mar 2022 14:02:18 -0800 (PST)
-X-Gm-Message-State: AOAM5321QAGWIjalmdN5yIkXmh06FE1GRZ5qPlmzgJxwoyHDGnuFgE6B
-        SosUaNvGpd76yKzRtTrsvQxBOnOylnRykDM4t8k=
-X-Google-Smtp-Source: ABdhPJyCUVD8T4qqYuq1h5ED6rk/6Kw1l+qk/ag1MpB3SuWxlea1B5XdqPkq5wTPm3WvOPgfJuy34sJfOcw4H5dA8AQ=
-X-Received: by 2002:a25:2312:0:b0:629:60d6:7507 with SMTP id
- j18-20020a252312000000b0062960d67507mr1596488ybj.267.1646863335346; Wed, 09
- Mar 2022 14:02:15 -0800 (PST)
+        Wed, 9 Mar 2022 18:15:25 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DB04FE7ADD;
+        Wed,  9 Mar 2022 15:14:24 -0800 (PST)
+Received: from [172.22.27.9] (c-98-237-171-22.hsd1.wa.comcast.net [98.237.171.22])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4721020B7178;
+        Wed,  9 Mar 2022 15:14:24 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4721020B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1646867664;
+        bh=R07LKaCxs9bLlD/bvwmu+6ZWycoJX8y57OtLA6XdF4Q=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=K1M3aQ+IKRpaTFhjpCcZhnWKE9qiyBS7/SWgwHytAiByJ4rbyrw5KgOjKtpQYoPm0
+         6NT4eNjxU/Z/NqshCOxYzID1sX797N9WLmQqHV5whe5yar//ZdAaicwsnPKM9zA4hK
+         C9xefpj/Fr0en28xcWQJ/Z24QFgkBNpE2KGiOeXQ=
+Message-ID: <932dce51-c868-d0e8-ef4c-bc7c8c58d997@linux.microsoft.com>
+Date:   Wed, 9 Mar 2022 15:14:24 -0800
 MIME-Version: 1.0
-References: <Yh4+9+UpanJWAIyZ@zx2c4.com> <c5181fb5-38fb-f261-9de5-24655be1c749@amazon.com>
-In-Reply-To: <c5181fb5-38fb-f261-9de5-24655be1c749@amazon.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 9 Mar 2022 15:02:04 -0700
-X-Gmail-Original-Message-ID: <CAHmME9rTMDkE7UA3_wg87mrDVYps+YaHw+dZwF0EbM0zC4pQQw@mail.gmail.com>
-Message-ID: <CAHmME9rTMDkE7UA3_wg87mrDVYps+YaHw+dZwF0EbM0zC4pQQw@mail.gmail.com>
-Subject: Re: propagating vmgenid outward and upward
-To:     Alexander Graf <graf@amazon.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        linux-hyperv@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        adrian@parity.io, Laszlo Ersek <lersek@redhat.com>,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Jann Horn <jannh@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v3 02/30] drivers: hv: dxgkrnl: Driver initialization and
+ loading
+Content-Language: en-US
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Iouri Tarassov <iourit@linux.microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spronovo@microsoft.com
+References: <719fe06b7cbe9ac12fa4a729e810e3383ab421c1.1646163378.git.iourit@linux.microsoft.com>
+ <739cf89e71ff72436d7ca3f846881dfb45d07a6a.1646163378.git.iourit@linux.microsoft.com>
+ <Yh6F9cG6/SV6Fq8Q@kroah.com>
+ <20220301222321.yradz24nuyhzh7om@liuwe-devbox-debian-v2>
+ <Yh8ia7nJNN7ISR1l@kroah.com>
+ <20220302115334.wemdkznokszlzcpe@liuwe-devbox-debian-v2>
+ <6ac1dd87-3c78-66ca-c526-d1f6cf253400@linux.microsoft.com>
+ <Yh/Rq9PwWZAN8Mu2@kroah.com>
+ <78df3646-4df6-5e2b-2f6e-e14824b08d85@linux.microsoft.com>
+ <YiC/k1pKTUV12APe@kroah.com>
+From:   Steve Pronovost <spronovo@linux.microsoft.com>
+In-Reply-To: <YiC/k1pKTUV12APe@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Alex,
 
-On Wed, Mar 9, 2022 at 3:10 AM Alexander Graf <graf@amazon.com> wrote:
-> > The vmgenid driver basically works, though it is racy, because that ACPI
-> > notification can arrive after the system is already running again. This
+On 3/3/22 05:16, Greg KH wrote:
+> On Wed, Mar 02, 2022 at 02:27:05PM -0800, Iouri Tarassov wrote:
+>> On 3/2/2022 12:20 PM, Greg KH wrote:
+>>> On Wed, Mar 02, 2022 at 10:49:15AM -0800, Iouri Tarassov wrote:
+>>>> On 3/2/2022 3:53 AM, Wei Liu wrote:
+>>>>> On Wed, Mar 02, 2022 at 08:53:15AM +0100, Greg KH wrote:
+>>>>>> On Tue, Mar 01, 2022 at 10:23:21PM +0000, Wei Liu wrote:
+>>>>>>>>> +struct dxgglobal *dxgglobal;
+>>>>>>>> No, make this per-device, NEVER have a single device for your driver.
+>>>>>>>> The Linux driver model makes it harder to do it this way than to do it
+>>>>>>>> correctly.  Do it correctly please and have no global structures like
+>>>>>>>> this.
+>>>>>>>>
+>>>>>>> This may not be as big an issue as you thought. The device discovery is
+>>>>>>> still done via the normal VMBus probing routine. For all intents and
+>>>>>>> purposes the dxgglobal structure can be broken down into per device
+>>>>>>> fields and a global structure which contains the protocol versioning
+>>>>>>> information -- my understanding is there will always be a global
+>>>>>>> structure to hold information related to the backend, regardless of how
+>>>>>>> many devices there are.
+>>>>>> Then that is wrong and needs to be fixed.  Drivers should almost never
+>>>>>> have any global data, that is not how Linux drivers work.  What happens
+>>>>>> when you get a second device in your system for this?  Major rework
+>>>>>> would have to happen and the code will break.  Handle that all now as it
+>>>>>> takes less work to make this per-device than it does to have a global
+>>>>>> variable.
+>>>>>>
+>>>>> It is perhaps easier to draw parallel from an existing driver. I feel
+>>>>> like we're talking past each other.
+>>>>>
+>>>>> Let's look at drivers/iommu/intel/iommu.c. There are a bunch of lists
+>>>>> like `static LIST_HEAD(dmar_rmrr_units)`. During the probing phase, new
+>>>>> units will be added to the list. I this the current code is following
+>>>>> this model. dxgglobal fulfills the role of a list.
+>>>>>
+>>>>> Setting aside the question of whether it makes sense to keep a copy of
+>>>>> the per-VM state in each device instance, I can see the code be changed
+>>>>> to:
+>>>>>
+>>>>>     struct mutex device_mutex; /* split out from dxgglobal */
+>>>>>     static LIST_HEAD(dxglist);
+>>>>>     
+>>>>>     /* Rename struct dxgglobal to struct dxgstate */
+>>>>>     struct dxgstate {
+>>>>>        struct list_head dxglist; /* link for dxglist */
+>>>>>        /* ... original fields sans device_mutex */
+>>>>>     }
+>>>>>
+>>>>>     /*
+>>>>>      * Provide a bunch of helpers manipulate the list. Called in probe /
+>>>>>      * remove etc.
+>>>>>      */
+>>>>>     struct dxgstate *find_dxgstate(...);
+>>>>>     void remove_dxgstate(...);
+>>>>>     int add_dxgstate(...);
+>>>>>
+>>>>> This model is well understood and used in tree. It is just that it
+>>>>> doesn't provide much value in doing this now since the list will only
+>>>>> contain one element. I hope that you're not saying we cannot even use a
+>>>>> per-module pointer to quickly get the data structure we want to use,
+>>>>> right?
+>>>>>
+>>>>> Are you suggesting Iouri use dev_set_drvdata to stash the dxgstate
+>>>>> into the device object? I think that can be done too.
+>>>>>
+>>>>> The code can be changed as:
+>>>>>
+>>>>>     /* Rename struct dxgglobal to dxgstate and remove unneeded fields */
+>>>>>     struct dxgstate { ... };
+>>>>>
+>>>>>     static int dxg_probe_vmbus(...) {
+>>>>>
+>>>>>         /* probe successfully */
+>>>>>
+>>>>> 	struct dxgstate *state = kmalloc(...);
+>>>>> 	/* Fill in dxgstate with information from backend */
+>>>>>
+>>>>> 	/* hdev->dev is the device object from the core driver framework */
+>>>>> 	dev_set_drvdata(&hdev->dev, state);
+>>>>>     }
+>>>>>
+>>>>>     static int dxg_remove_vmbus(...) {
+>>>>>         /* Normal stuff here ...*/
+>>>>>
+>>>>> 	struct dxgstate *state = dev_get_drvdata(...);
+>>>>> 	dev_set_drvdata(..., NULL);
+>>>>> 	kfree(state);
+>>>>>     }
+>>>>>
+>>>>>     /* In all other functions */
+>>>>>     void do_things(...) {
+>>>>>         struct dxgstate *state = dev_get_drvdata(...);
+>>>>>
+>>>>> 	/* Use state in place of where dxgglobal was needed */
+>>>>>
+>>>>>     }
+>>>>>
+>>>>> Iouri, notice this doesn't change anything regarding how userspace is
+>>>>> designed. This is about how kernel organises its data.
+>>>>>
+>>>>> I hope what I wrote above can bring our understanding closer.
+>>>>>
+>>>>> Thanks,
+>>>>> Wei.
+>>>>
+>>>> I can certainly remove dxgglobal and keep the  pointer to the global
+>>>> state in the device object.
+>>>>
+>>>> This will require passing of the global pointer to all functions, which
+>>>> need to access it.
+>>>>
+>>>>
+>>>> Maybe my understanding of the Greg's suggestion was not correct. I
+>>>> thought the suggestion was
+>>>>
+>>>> to have multiple /dev/dxgN devices (one per virtual compute device).
+>>> You have one device per HV device, as the bus already provides you.
+>>> That's all you really need, right?  Who would be opening the same device
+>>> node multiple times?
+>>>> This would change how the user mode
+>>>> clients enumerate and communicate with compute devices.
+>>> What does userspace have to do here?  It should just open the device
+>>> node that is present when needed.  How will there be multiple userspace
+>>> clients for a single HV device?
+>>
+>> Dxgkrnl creates a single user mode visible device node /dev/dxg.
+> When you do that, you have a device to put all of your data on.  Use
+> that.
 >
+>> It has
+>> nothing to do with a specific hardware compute device on the host. Its
+>> purpose is to provide services (IOCTLs) to enumerate and manage virtual
+>> compute devices, which represent hardware devices on the host. The VMBus
+>> devices are not used directly by user mode clients in the current design.
+> That's horrid, why not just export the virtual compute devices properly
+> through individual device nodes instead?
 >
-> I believe enough people already pointed out that this assumption is
-> incorrect. The thing that is racy about VMGenID is the interrupt based
-> notification.
-
-I'm having a hard time figuring out what's different between your
-statement and mine. I said that the race is due to the notification.
-You said that the race is due to the notification. What subtle thing
-am I missing here that would lead you to say that my assumption is
-incorrect? Or did you just misread?
-
-> The actual identifier is updated before the VM resumes
-> from its clone operation, so if you match on that you will know whether
-> you are in a new or old world. And that is enough to create
-> transactions: Save the identifier before a "crypto transaction",
-> validate before you finish, if they don't match, abort, reseed and replay.
-
-Right. But more than just transactions, it's useful to preventing key
-reuse vulnerabilities, in which case, you store the current identifier
-just before an ephemeral key is generated, and then subsequently check
-to see that the identifier hasn't changed before transmitting anything
-related to that key.
-
-> If you follow the logic at the beginning of the mail, you can create
-> something race free if you consume the hardware VMGenID counter. You can
-> not make it race free if you rely on the interrupt mechanism.
-
-Yes, as mentioned and discussed in depth before. However, your use of
-the word "counter" is problematic. Vmgenid is not a counter. It's a
-unique identifier. That means you can't compare it with a single word
-comparison but have to compare all of the 16 bytes. That seems
-potentially expensive. It's for that reason that I suggested
-augmenting the vmgenid spec with an additional word-sized _counter_
-that could be mapped into the kernels and into userspaces.
-
-> So following that train of thought, if you expose the hardware VMGenID
-> to user space, you could allow user space to act race free based on
-> VMGenID. That means consumers of user space RNGs could validate whether
-> the ID is identical between the beginning of the crypto operation and
-> the end.
-
-Right.
-
-> However, there are more complicated cases as well. What do you do with
-> Samba for example? It needs to generate a new SID after the clone.
-> That's a super heavy operation. Do you want to have smbd constantly poll
-> on the VMGenID just to see whether it needs to kick off some
-> administrative actions?
-
-Were it a single word-sized integer, mapped into memory, that wouldn't
-be much of a problem at all. It could constantly read this before and
-after every operation. The problem is that it's 16 bytes and
-understandably applications don't want to deal with that clunkiness.
-
-> In that case, all we would need from the kernel is an easily readable
-> GenID that changes
-
-Actually, no, you need even less than that. All that's required is a
-sysfs/procfs file that can be poll()'d on. It doesn't need to have any
-content. When poll() returns readable, the VM has been forked. Then
-userspace rngs and other things like that can call getrandom() to
-receive a fresh value to mix into whatever their operation is. Since
-all we're talking about here is _event notification_, all we need is
-that event, which is what poll() provides.
-
-> I'm also not a super big fan of putting all that logic into systemd. It
-> means applications need to create their own notification mechanisms to
-> pass that cloning notification into actual processes. Don't we have any
-> mechanism that applications and libraries could use to natively get an
-> event when the GenID changes?
-
-Yes. poll() can do this. For the purposes of discussion, I've posted
-an implementation of this idea here:
-https://lore.kernel.org/lkml/20220309215907.77526-1-Jason@zx2c4.com/
-
-What I'm sort of leaning toward is doing something like that patch,
-and then later if vmgenid ever grows an additional word-sized counter,
-moving to explore the race-free approach. Given the amount of
-programming required to actually implement the race-free approach
-(transactions and careful study of each case), the poll() file
-approach might be a medium-grade compromise for the time being.
-Evidently that's what Microsoft decided too.
-
-Jason
+> In essence, you are creating a new syscall here to manage and handle
+> devices for just your driver with the use of this ioctl.  That's
+> generally a bad idea.
+>
+>> Virtual compute devices are shared between processes. There could be a
+>> Cuda application, Gimp and a Direct3D12 application working at the same
+>> time.
+> Why are all of those applications sharing anything?  How are they
+> sharing anything?  If you need to share something across processes, use
+> the existing inter-process ways of sharing stuff that we have today (12+
+> different apis and counting).  Don't create yet-another-one just for
+> your tiny little driver here.  That's rude to the rest of the kernel.
+>
+>> This is what I mean by saying that there are multiple user mode
+>> clients who use the /dev/dxg driver interface. Each of this applications
+>> will open the /dev/dxg device node and enumerate/use virtual compute
+>> devices.
+> That seems like an odd model to follow.  How many virtual devices do you
+> support?  Is there a limit?  Why not just enumerate them all to start
+> with?  Or if there are too many, why not do it like the raw device and
+> have a single device node that is used to create the virtual devices you
+> wish to use?
+>
+>> If we change the way how the virtual compute devices are visible to user
+>> mode, the Cuda runtime, Direct3D runtime would need to be changed.
+> We do not care about existing userspace code at this point in time, you
+> are trying to get the kernel api correct here.  Once you have done that,
+> then you can go fix up your userspace code to work properly.  Anything
+> that came before today is pointless here, right?  :)
+>
+>> I think we agreed that I will keep the global driver state in the device
+>> object as Wei suggested and remove global variables. There still will be
+>> a single /dev/dxg device node. Correct?
+> I do not know, as I can't figure out your goals here at all, sorry.
+>
+> Please go work with some experienced Linux developers in your company.
+> They should be the ones answering these questions for you, not me :)
+>
+> thanks,
+>
+> greg k-h
+Thanks Greg and folks for all the feedback. The userspace API provided  
+by this driver is specifically designed to match the Windows compute  
+device abstraction in order to light up a large eco-system of graphics  
+and compute APIs in our various virtualized Linux environment. This is  
+a pretty critical design point as this is the only way we can scale to  
+such a vast eco-system of APIs and their related tools. This enables  
+APIs and framework which are available natively on Linux, such as  
+CUDA, OpenGL, OpenCL, OpenVINO, OneAPI/L0, TensorFlow, Pytorch, soon  
+Vulkan and more in the future and allows them to share the host GPU or  
+compute device when run under our hypervisor. Most of these APIs sit  
+directly on top of our userspace API and changing that abstraction  
+would have major implications. Our D3D/DML userspace components are  
+only implementation details for a subset of those APIs.
+ 
+We have millions of developers experiencing and enjoying various Linux  
+distributions through our Windows Subsystem for Linux (WSL) and this  
+gives them a way to get hardware acceleration in a large number of  
+important scenarios. WSL makes it trivial for developers to try out  
+Linux totally risk free on over a billion devices, without having to  
+commit to a native install upfront or understand and manually manage  
+VMs. We think this is a pretty valuable proposition to both the  
+Windows and the Linux community and one which has definitely been  
+quite popular.
+ 
+That being said, we recognize that our virtualization approach makes  
+some folks in the community uncomfortable and the resulting userspace  
+API exposed by our driver will look a bit different than typical Linux  
+driver. Taking into consideration feedback and reception, we decided  
+to pause our upstream effort for this driver. We will keep our driver  
+open source and available in our downstream kernel tree for folks who  
+wants to leverage it in their private kernel.
+ 
+Thanks, Steve
