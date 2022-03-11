@@ -2,55 +2,24 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 237AC4D5893
-	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Mar 2022 04:01:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB2AA4D58C8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Mar 2022 04:21:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345868AbiCKDBg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Mar 2022 22:01:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
+        id S238738AbiCKDWK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Mar 2022 22:22:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345876AbiCKDBe (ORCPT
+        with ESMTP id S232062AbiCKDWK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Mar 2022 22:01:34 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE1E1A8CA5
-        for <linux-hyperv@vger.kernel.org>; Thu, 10 Mar 2022 19:00:28 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id 9so6585167pll.6
-        for <linux-hyperv@vger.kernel.org>; Thu, 10 Mar 2022 19:00:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8Ji+Sz/InlU6NQ7/bE8a/j0QT0u2BBcoHxouEcw237Q=;
-        b=1ZI8yU4UrELG2xrC/mfVd6A+FaeFF+xwtztLkZtCvmLCL9ZEErSZpHk7iQwh9qdQJj
-         SUBcUc27Sn3R/NDBARB+reFk7UerEKN27Xn5YWdz6mz8Jkos8eGNMf+ibZAcuuIh5TM1
-         p5deuroKIfLra3z9yBeBmKSt91D4QZ23PgzE84zPNcgGJZ4/off5QhP0PkuaSRnlVMhw
-         inxMAToYVOeyAlvs043dpXiYqDF+T2B2necAj66KcoyJMwxg+owdBtezDI376bf51u4e
-         xWC9bvDsuaTmpexOzT7M7beDXBJT7IR7F732Ylxj56jsBX0jM3y1RZnzT9o9LHQvHo+g
-         xfdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8Ji+Sz/InlU6NQ7/bE8a/j0QT0u2BBcoHxouEcw237Q=;
-        b=k/NLmHJGEltZJFwUsMlISvUrB6jUCdFahE+K+rn63w97QElJUy/ghH+QSDHPEaRjhN
-         byDMB9KaWfgWTUhL3ETl+EGNkqF7g5qhGgkbK2M7c7h+AbZGyK+xM7vKY1PqejNeyDmU
-         SWvXLaq8o3HsKqNHXmIycuOPC4XwNiMKHlxe45paM9soQf5OjOE6GjFrcK9J1aSDcSvx
-         YBahJoId65lfpeCsHxmv6pNiy+W7Ef5oNfYxkCDFgC9XeumFn9W6/oSuEJzLKSzn3DLW
-         p2RMTM6DSQt1IYDUUy/a/kEr57QDRGLArg3L/xGp/DmwDD0Yh8CFniNjeU2WtYzXK2Ag
-         9Llw==
-X-Gm-Message-State: AOAM5333ab7e2OJDD9Q2lKeqk7AF0zJ8YfRZ1PbkqUUSVfrdXn8aPEn4
-        6GiaaaxbAdFhv/zTQO6u3+p51w==
-X-Google-Smtp-Source: ABdhPJyVzrAMFLjoDnwq/ceXZU7fnb7H49S/WbDrtkMb1ng1xAfGPAuqFHWqw0NU4l1IITHvfuZHxA==
-X-Received: by 2002:a17:90a:c504:b0:1bf:6d9f:65a6 with SMTP id k4-20020a17090ac50400b001bf6d9f65a6mr8653580pjt.204.1646967627714;
-        Thu, 10 Mar 2022 19:00:27 -0800 (PST)
-Received: from hermes.local (204-195-112-199.wavecable.com. [204.195.112.199])
-        by smtp.gmail.com with ESMTPSA id u10-20020a6540ca000000b0037445e95c93sm6673005pgp.15.2022.03.10.19.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 19:00:27 -0800 (PST)
-Date:   Thu, 10 Mar 2022 19:00:24 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>
+        Thu, 10 Mar 2022 22:22:10 -0500
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F195DD463;
+        Thu, 10 Mar 2022 19:21:03 -0800 (PST)
+Received: from localhost.localdomain (unknown [124.16.138.126])
+        by APP-01 (Coremail) with SMTP id qwCowADn7_sEwCpi2aYEAw--.16627S2;
+        Fri, 11 Mar 2022 11:20:37 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     stephen@networkplumber.org
 Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
         kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
@@ -58,16 +27,34 @@ Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
         kpsingh@kernel.org, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] hv_netvsc: Add check for kvmalloc_array
-Message-ID: <20220310190024.0eaa76b9@hermes.local>
-In-Reply-To: <20220311024344.2037906-1-jiasheng@iscas.ac.cn>
-References: <20220311024344.2037906-1-jiasheng@iscas.ac.cn>
+        bpf@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH] hv_netvsc: Add check for kvmalloc_array
+Date:   Fri, 11 Mar 2022 11:20:35 +0800
+Message-Id: <20220311032035.2037962-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: qwCowADn7_sEwCpi2aYEAw--.16627S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFW3Jw4xCrW3Wr15tr1fJFb_yoWDCrX_ur
+        48urnxZr4UCryrKF47tFy7Zr9Yyw4vqF1fZFW2qrZ3JFy8ArW7W3WrZrnrXrWfur4Y9F9x
+        C3ZrAF4Yv39FgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbaAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+        8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
+        Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
+        x4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
+        1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j
+        6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+        UvcSsGvfC2KfnxnUUI43ZEXa7sRidbbtUUUUU==
+X-Originating-IP: [124.16.138.126]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,18 +62,34 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, 11 Mar 2022 10:43:44 +0800
-Jiasheng Jiang <jiasheng@iscas.ac.cn> wrote:
+As the potential failure of the kvmalloc_array(),
+it should be better to check and restore the 'data'
+if fails in order to avoid the dereference of the
+NULL pointer.
 
-> +	if (!pcpu_sum) {
-> +		for (j = 0; j < i; j++)
-> +			data[j] = 0;
-> +		return
+Fixes: 6ae746711263 ("hv_netvsc: Add per-cpu ethtool stats for netvsc")
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+---
+ drivers/net/hyperv/netvsc_drv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Why is unrolled zero (memset) needed? The data area comes from
-ethtool_get_stats and is already zeroed (vzalloc).
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 3646469433b1..018c4a5f6f44 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1587,6 +1587,12 @@ static void netvsc_get_ethtool_stats(struct net_device *dev,
+ 	pcpu_sum = kvmalloc_array(num_possible_cpus(),
+ 				  sizeof(struct netvsc_ethtool_pcpu_stats),
+ 				  GFP_KERNEL);
++	if (!pcpu_sum) {
++		for (j = 0; j < i; j++)
++			data[j] = 0;
++		return;
++	}
++
+ 	netvsc_get_pcpu_stats(dev, pcpu_sum);
+ 	for_each_present_cpu(cpu) {
+ 		struct netvsc_ethtool_pcpu_stats *this_sum = &pcpu_sum[cpu];
+-- 
+2.25.1
 
-
-There does look like at TOCTOU error here with on the number of stats.
-Code doesn't look hotplug safe.
-Not sure, but that issue might have been raised during review.
