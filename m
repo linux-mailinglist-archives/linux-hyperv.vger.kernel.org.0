@@ -2,85 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 074154D58CB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Mar 2022 04:21:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3150E4D5BB5
+	for <lists+linux-hyperv@lfdr.de>; Fri, 11 Mar 2022 07:43:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232062AbiCKDWT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Mar 2022 22:22:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
+        id S1343852AbiCKGo5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 11 Mar 2022 01:44:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345775AbiCKDWS (ORCPT
+        with ESMTP id S232738AbiCKGo5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Mar 2022 22:22:18 -0500
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9216E1A8067;
-        Thu, 10 Mar 2022 19:21:15 -0800 (PST)
-Received: from localhost.localdomain (unknown [124.16.138.126])
-        by APP-01 (Coremail) with SMTP id qwCowAA3PvocwCpieagEAw--.41793S2;
-        Fri, 11 Mar 2022 11:21:00 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     stephen@networkplumber.org
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        hawk@kernel.org, john.fastabend@gmail.com, andrii@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        kpsingh@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Jiasheng Jiang <jiasheng@iscas.ac.cn>
+        Fri, 11 Mar 2022 01:44:57 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87EE319CCCA;
+        Thu, 10 Mar 2022 22:43:54 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3534FB8299A;
+        Fri, 11 Mar 2022 06:43:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8722C340EC;
+        Fri, 11 Mar 2022 06:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1646981032;
+        bh=TAmKSWfM8MT8+nWEF/VhEG/ZJrPdgq10gXaV9KWbhGY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o+LTthpBiwXFgN2AXoXR3dkBllQINaKMB1MVLJ9fNYGsc33egvUleMos9C/Ers5Xy
+         0aEsi7MyMo1LTO9pReh2ngHcWv3tBkSMJs7arcNj5FfwvhZHpBeAcF2ucLoONOjTwm
+         lzB2WbNkenxYx1bvG4vVTVW8w6wx1VAlmaBnFX58=
+Date:   Fri, 11 Mar 2022 07:43:48 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Cc:     stephen@networkplumber.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, davem@davemloft.net, kuba@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+        john.fastabend@gmail.com, andrii@kernel.org, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com, kpsingh@kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Subject: Re: [PATCH] hv_netvsc: Add check for kvmalloc_array
-Date:   Fri, 11 Mar 2022 11:20:59 +0800
-Message-Id: <20220311032059.2038014-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+Message-ID: <YirvpH4+KTyH2xTe@kroah.com>
+References: <20220311032035.2037962-1-jiasheng@iscas.ac.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: qwCowAA3PvocwCpieagEAw--.41793S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrCFWfZF17Aw4rKF15ZrW5KFg_yoWxGFbEgr
-        9agr1kCa98XryYva1UZr4jvr4IyFy5Zr1I9a1kX3sxZ34rA3y7Wr1kKrsY9FWxWrWFkFs7
-        KFyay3yvq3Z0vjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-        8cxan2IY04v7MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-        WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-        67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-        IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r4j6FyUMIIF
-        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-        VjvjDU0xZFpf9x0JUg4SrUUUUU=
-X-Originating-IP: [124.16.138.126]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220311032035.2037962-1-jiasheng@iscas.ac.cn>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, 11 Mar 2022 11:00:24 +0800
-Stephen Hemminger <stephen@networkplumber.org> wrote:
->> +	if (!pcpu_sum) {
->> +		for (j = 0; j < i; j++)
->> +			data[j] = 0;
->> +		return
+On Fri, Mar 11, 2022 at 11:20:35AM +0800, Jiasheng Jiang wrote:
+> As the potential failure of the kvmalloc_array(),
+> it should be better to check and restore the 'data'
+> if fails in order to avoid the dereference of the
+> NULL pointer.
 > 
-> Why is unrolled zero (memset) needed? The data area comes from
-> ethtool_get_stats and is already zeroed (vzalloc).
+> Fixes: 6ae746711263 ("hv_netvsc: Add per-cpu ethtool stats for netvsc")
+> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+> ---
+>  drivers/net/hyperv/netvsc_drv.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> 
-> There does look like at TOCTOU error here with on the number of stats.
-> Code doesn't look hotplug safe.
-> Not sure, but that issue might have been raised during review.
+> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+> index 3646469433b1..018c4a5f6f44 100644
+> --- a/drivers/net/hyperv/netvsc_drv.c
+> +++ b/drivers/net/hyperv/netvsc_drv.c
+> @@ -1587,6 +1587,12 @@ static void netvsc_get_ethtool_stats(struct net_device *dev,
+>  	pcpu_sum = kvmalloc_array(num_possible_cpus(),
+>  				  sizeof(struct netvsc_ethtool_pcpu_stats),
+>  				  GFP_KERNEL);
+> +	if (!pcpu_sum) {
+> +		for (j = 0; j < i; j++)
+> +			data[j] = 0;
+> +		return;
+> +	}
 
-I unrolled the 'data area' since the three 'for loops' before
-have already assigned the value to the data area.
-And I have not found any review about it.
+How did you test this to verify it is correct?
 
-Thanks,
-Jiang
+thanks,
 
+greg k-h
