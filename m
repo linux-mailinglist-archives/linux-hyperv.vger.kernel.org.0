@@ -2,32 +2,32 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 873774D7BB9
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Mar 2022 08:32:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 165D04D7BC4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Mar 2022 08:32:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236681AbiCNHdX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Mar 2022 03:33:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47306 "EHLO
+        id S236692AbiCNHda (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Mar 2022 03:33:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236666AbiCNHdK (ORCPT
+        with ESMTP id S235438AbiCNHdX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Mar 2022 03:33:10 -0400
+        Mon, 14 Mar 2022 03:33:23 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F5740A2D;
-        Mon, 14 Mar 2022 00:32:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9264E40E47;
+        Mon, 14 Mar 2022 00:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=PXzvxDuJ7dtq4MEwSJLJWBZwmoZU9P9omOl6CdJuIoM=; b=qiuq87bYuaIlaiP0CNaY36Vw2E
-        eRadO6nXlKLFyymOzH7mAwQgeK4fEKmdRvF6EjtdqK6+MbDIOpkQiH+QdW80NTaMs30eyNTyE8Tmg
-        xFZRbGO0LcYfGQuCTWKgMJnzCl+u0P4/fgJMtF3taDNIcjh1uSBVkVIECGoChzB8GkRiKr8LnKX3u
-        6GNxIeUiA+DizSoHt6RIqvYjOaVp03itnUL9qBG06/2pqM7shQiyVji3SqadJOIwzwmiBbcIGlXvU
-        +hGhlJ94coaCT4H/vaPwPH1xU9garA4YArn7xfz6IqfQCCp1++XWmvY/xfmXvDkNEPMfCy/gu7s3t
-        M0LxkcQA==;
+        bh=fPQX1tW6oEG+I0H/rxZDFlkVrHm+7UqYHxDjUft+pbI=; b=UaUDSuTfz++xf50tkHNiHGXJZq
+        cJ7jDE7eLn4++IV9Tll52n1Vyta7Quk7g2f3APPp8NZQ82J9lVEH0b+2sz77Kx5Ag19nVkSSMOHca
+        Q+4rQuVGpmGgZutzMpfA5u3XmfFPI5bVsb07TCve+RRWDWakNpqhwENvwDSHO4BZduNpBFXaySMjE
+        UGCLRYOwl0Xqsbq+YUPpW34dps/onEFHOIF/iOXPMh3FmAWkYnxr8hf3aefQd6Yzrs5k6KcfnvkBt
+        bVljteU+8Uox68Ji5IQ+EVsDkRO+On8IRzUH/KkmbM7cukrYjUNKbL5VWd44MaREvLr7mZQKNZUnB
+        NK1I2pAQ==;
 Received: from [46.140.54.162] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nTfBE-0044YU-6n; Mon, 14 Mar 2022 07:31:48 +0000
+        id 1nTfBH-0044b2-Bx; Mon, 14 Mar 2022 07:31:52 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     iommu@lists.linux-foundation.org
 Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
@@ -46,10 +46,10 @@ Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
         linux-pci@vger.kernel.org,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>
-Subject: [PATCH 05/15] arm/xen: don't check for xen_initial_domain() in xen_create_contiguous_region
-Date:   Mon, 14 Mar 2022 08:31:19 +0100
-Message-Id: <20220314073129.1862284-6-hch@lst.de>
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 06/15] MIPS/octeon: use swiotlb_init instead of open coding it
+Date:   Mon, 14 Mar 2022 08:31:20 +0100
+Message-Id: <20220314073129.1862284-7-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220314073129.1862284-1-hch@lst.de>
 References: <20220314073129.1862284-1-hch@lst.de>
@@ -66,44 +66,66 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Stefano Stabellini <sstabellini@kernel.org>
+Use the generic swiotlb initialization helper instead of open coding it.
 
-It used to be that Linux enabled swiotlb-xen when running a dom0 on ARM.
-Since f5079a9a2a31 "xen/arm: introduce XENFEAT_direct_mapped and
-XENFEAT_not_direct_mapped", Linux detects whether to enable or disable
-swiotlb-xen based on the new feature flags: XENFEAT_direct_mapped and
-XENFEAT_not_direct_mapped.
-
-However, there is still a leftover xen_initial_domain() check in
-xen_create_contiguous_region. Remove the check as
-xen_create_contiguous_region is only called by swiotlb-xen during
-initialization. If xen_create_contiguous_region is called, we know Linux
-is running 1:1 mapped so there is no need for additional checks.
-
-Also update the in-code comment.
-
-Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- arch/arm/xen/mm.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/mips/cavium-octeon/dma-octeon.c | 15 ++-------------
+ arch/mips/pci/pci-octeon.c           |  2 +-
+ 2 files changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
-index a7e54a087b802..28c2070602535 100644
---- a/arch/arm/xen/mm.c
-+++ b/arch/arm/xen/mm.c
-@@ -122,10 +122,7 @@ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
- 				 unsigned int address_bits,
- 				 dma_addr_t *dma_handle)
- {
--	if (!xen_initial_domain())
--		return -EINVAL;
--
--	/* we assume that dom0 is mapped 1:1 for now */
-+	/* the domain is 1:1 mapped to use swiotlb-xen */
- 	*dma_handle = pstart;
- 	return 0;
+diff --git a/arch/mips/cavium-octeon/dma-octeon.c b/arch/mips/cavium-octeon/dma-octeon.c
+index df70308db0e69..fb7547e217263 100644
+--- a/arch/mips/cavium-octeon/dma-octeon.c
++++ b/arch/mips/cavium-octeon/dma-octeon.c
+@@ -186,15 +186,12 @@ phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr)
+ 	return daddr;
  }
+ 
+-char *octeon_swiotlb;
+-
+ void __init plat_swiotlb_setup(void)
+ {
+ 	phys_addr_t start, end;
+ 	phys_addr_t max_addr;
+ 	phys_addr_t addr_size;
+ 	size_t swiotlbsize;
+-	unsigned long swiotlb_nslabs;
+ 	u64 i;
+ 
+ 	max_addr = 0;
+@@ -236,15 +233,7 @@ void __init plat_swiotlb_setup(void)
+ 	if (OCTEON_IS_OCTEON2() && max_addr >= 0x100000000ul)
+ 		swiotlbsize = 64 * (1<<20);
+ #endif
+-	swiotlb_nslabs = swiotlbsize >> IO_TLB_SHIFT;
+-	swiotlb_nslabs = ALIGN(swiotlb_nslabs, IO_TLB_SEGSIZE);
+-	swiotlbsize = swiotlb_nslabs << IO_TLB_SHIFT;
+-
+-	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+-	if (!octeon_swiotlb)
+-		panic("%s: Failed to allocate %zu bytes align=%lx\n",
+-		      __func__, swiotlbsize, PAGE_SIZE);
+ 
+-	if (swiotlb_init_with_tbl(octeon_swiotlb, swiotlb_nslabs, 1) == -ENOMEM)
+-		panic("Cannot allocate SWIOTLB buffer");
++	swiotlb_adjust_size(swiotlbsize);
++	swiotlb_init(1);
+ }
+diff --git a/arch/mips/pci/pci-octeon.c b/arch/mips/pci/pci-octeon.c
+index fc29b85cfa926..e457a18cbdc59 100644
+--- a/arch/mips/pci/pci-octeon.c
++++ b/arch/mips/pci/pci-octeon.c
+@@ -664,7 +664,7 @@ static int __init octeon_pci_setup(void)
+ 
+ 		/* BAR1 movable regions contiguous to cover the swiotlb */
+ 		octeon_bar1_pci_phys =
+-			virt_to_phys(octeon_swiotlb) & ~((1ull << 22) - 1);
++			io_tlb_default_mem.start & ~((1ull << 22) - 1);
+ 
+ 		for (index = 0; index < 32; index++) {
+ 			union cvmx_pci_bar1_indexx bar1_index;
 -- 
 2.30.2
 
