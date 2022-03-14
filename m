@@ -2,82 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE7644D7DA1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Mar 2022 09:35:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35B1E4D8A90
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Mar 2022 18:12:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229772AbiCNIgd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Mar 2022 04:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48300 "EHLO
+        id S242936AbiCNROD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Mar 2022 13:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231548AbiCNIga (ORCPT
+        with ESMTP id S233904AbiCNROB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Mar 2022 04:36:30 -0400
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E4A531340;
-        Mon, 14 Mar 2022 01:35:20 -0700 (PDT)
-Received: from localhost.localdomain (unknown [124.16.138.126])
-        by APP-01 (Coremail) with SMTP id qwCowACnrfk1_i5ixhxyAw--.16154S2;
-        Mon, 14 Mar 2022 16:35:02 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     gregkh@linuxfoundation.org
-Cc:     stephen@networkplumber.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, davem@davemloft.net, kuba@kernel.org,
+        Mon, 14 Mar 2022 13:14:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34A0271D;
+        Mon, 14 Mar 2022 10:12:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1983160F3B;
+        Mon, 14 Mar 2022 17:12:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B97C340E9;
+        Mon, 14 Mar 2022 17:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647277967;
+        bh=GEY5cKGvA2rl2PigOsyiq7MnGmDB/pky0S3ErxRuSCk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nt4X6hyiY9aAs5k99yBOnO+JmQiOfPRMOI1+KMBG13zKzbJ5QXgoxnyRbZzoDennH
+         wyucaNOjjNByzNozmYuuJ/AaP9dX/8ImGm+M2xF1hMDpjYko+k7z8Y87juWN+98uuj
+         jAxz+wiMinO+1Be+KldpWOTpDsaM1fAck6SAWBnKgddeLXYpNJgyHYN2GUz/2qZlHb
+         tN3yuzM/aU8zLKe9Bb8fT+sj30Bhx1mJxjqOVp+2Ur8vFZzurJAJQ1gURawPuFm5R5
+         B+AfS0VIMbBH0zOAqgC2hIWUyvp8/6Vdjcsh3HHizc4jpJU5r9XnFS7zJb1Aw+cfG4
+         TMSGFJRfqizkw==
+Date:   Mon, 14 Mar 2022 10:12:45 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Cc:     gregkh@linuxfoundation.org, stephen@networkplumber.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
         ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
         john.fastabend@gmail.com, andrii@kernel.org, kafai@fb.com,
         songliubraving@fb.com, yhs@fb.com, kpsingh@kernel.org,
         linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
 Subject: Re: [PATCH] hv_netvsc: Add check for kvmalloc_array
-Date:   Mon, 14 Mar 2022 16:35:00 +0800
-Message-Id: <20220314083500.2501146-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+Message-ID: <20220314101245.1589ec82@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20220314083500.2501146-1-jiasheng@iscas.ac.cn>
+References: <20220314083500.2501146-1-jiasheng@iscas.ac.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: qwCowACnrfk1_i5ixhxyAw--.16154S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYq7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87
-        Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-        6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
-        CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
-        M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2
-        IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-        6r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-        AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-        s7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-        0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUeYLvDUUUU
-X-Originating-IP: [124.16.138.126]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Mar 14, 2022 at 04:13:59PM +0800, Greg KH wrote:
->> The failure of allocation is not included in the tests.
->> And as far as I know, there is not any tool that has the
->> ability to fail the allocation.
+On Mon, 14 Mar 2022 16:35:00 +0800 Jiasheng Jiang wrote:
+> On Mon, Mar 14, 2022 at 04:13:59PM +0800, Greg KH wrote:
+> >> The failure of allocation is not included in the tests.
+> >> And as far as I know, there is not any tool that has the
+> >> ability to fail the allocation.  
+> > 
+> > There are tools that do this.
+> >   
 > 
-> There are tools that do this.
-> 
+> Thanks, could you please tell me the tools?
 
-Thanks, could you please tell me the tools?
+Google "linux kernel fail allocation test"
+second result is "Fault injection capabilities infrastructure"
+which is what you're looking for.
 
-Jiang
-
->> But I think that for safety, the cost of redundant and harmless
->> check is acceptable.
->> Also, checking after allocation is a good program pattern.
-> 
-> That's fine, it's how you clean up that is the problem that not everyone
-> gets correct, which is why it is good to verify that you do not
-> introduce problems.
-
+Please try harder next time.
