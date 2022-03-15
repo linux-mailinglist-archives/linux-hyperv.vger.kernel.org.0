@@ -2,46 +2,29 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD56F4D90AF
-	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Mar 2022 01:00:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 058E74D94A7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 15 Mar 2022 07:36:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245412AbiCOABU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Mar 2022 20:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50462 "EHLO
+        id S244591AbiCOGhg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 15 Mar 2022 02:37:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244433AbiCOABS (ORCPT
+        with ESMTP id S235433AbiCOGhf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Mar 2022 20:01:18 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D0F23BE4;
-        Mon, 14 Mar 2022 17:00:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 67599CE17D7;
-        Tue, 15 Mar 2022 00:00:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82170C340E9;
-        Tue, 15 Mar 2022 00:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647302404;
-        bh=qF2Kiv1yBWM6zFZu7vu4vkmgVsDPPK9bUwo+CMzG77s=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=CxQznLVvPAMHVLObot/GbKAGNBs3wp/Zo7J//e5fa5RGl/JAcrYpHk7dFYXJ+dCyc
-         yFp/t/ucQtYgdUQQRIyugjt0bw6neR65fWz4Mw2wQpqjjnNDOhxJr7SqJvB+dScWOI
-         FWaPNn7YRGzQ0CCDI4WX3HGCjk3WcedTK4ZKrUhQL/ZjI62kK/fSKVT6fnNg8LwsV7
-         O+N86nVOy9ALX/s25HJpQGYpv30ak+B6D/CFn8xWL4gwGSW9Q/HStnRPdXpxBq2xEr
-         XfmlQm0hAt72Py8IAnH8MpwztAqekJ4fXRmnodDkCqvESbpDzlwteZaCwLl1CvtOpX
-         4SrZDmHAzylBg==
-Date:   Mon, 14 Mar 2022 17:00:02 -0700 (PDT)
-From:   Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To:     Christoph Hellwig <hch@lst.de>
-cc:     iommu@lists.linux-foundation.org, x86@kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tue, 15 Mar 2022 02:37:35 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9AD4A3F9;
+        Mon, 14 Mar 2022 23:36:24 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2BC5468AFE; Tue, 15 Mar 2022 07:36:18 +0100 (CET)
+Date:   Tue, 15 Mar 2022 07:36:18 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Juergen Gross <jgross@suse.com>,
         Joerg Roedel <joro@8bytes.org>,
         David Woodhouse <dwmw2@infradead.org>,
@@ -53,31 +36,167 @@ cc:     iommu@lists.linux-foundation.org, x86@kernel.org,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH 13/15] swiotlb: merge swiotlb-xen initialization into
- swiotlb
-In-Reply-To: <20220314073129.1862284-14-hch@lst.de>
-Message-ID: <alpine.DEB.2.22.394.2203141659210.3497@ubuntu-linux-20-04-desktop>
-References: <20220314073129.1862284-1-hch@lst.de> <20220314073129.1862284-14-hch@lst.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Subject: Re: [PATCH 12/15] swiotlb: provide swiotlb_init variants that
+ remap the buffer
+Message-ID: <20220315063618.GA1244@lst.de>
+References: <20220314073129.1862284-1-hch@lst.de> <20220314073129.1862284-13-hch@lst.de> <4d800aa8-5e38-1ad9-284f-1754c83d0f8a@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d800aa8-5e38-1ad9-284f-1754c83d0f8a@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 14 Mar 2022, Christoph Hellwig wrote:
-> Reuse the generic swiotlb initialization for xen-swiotlb.  For ARM/ARM64
-> this works trivially, while for x86 xen_swiotlb_fixup needs to be passed
-> as the remap argument to swiotlb_init_remap/swiotlb_init_late.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Mon, Mar 14, 2022 at 06:39:21PM -0400, Boris Ostrovsky wrote:
+> This is IO_TLB_MIN_SLABS, isn't it? (Xen code didn't say so but that's what it meant to say I believe)
 
-For arch/arm/xen and drivers/xen/swiotlb-xen.c
+Yes, that makes much more sense.  I've switched the patch to use
+IO_TLB_MIN_SLABS and drop the 2MB comment in both places.
 
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Can I get a review with that fixed up?
+
+---
+From 153085bf3e6e69d676bef0fb96395a86fb8122f5 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Mon, 14 Mar 2022 08:02:57 +0100
+Subject: swiotlb: provide swiotlb_init variants that remap the buffer
+
+To shared more code between swiotlb and xen-swiotlb, offer a
+swiotlb_init_remap interface and add a remap callback to
+swiotlb_init_late that will allow Xen to remap the buffer the
+buffer without duplicating much of the logic.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/x86/pci/sta2x11-fixup.c |  2 +-
+ include/linux/swiotlb.h      |  5 ++++-
+ kernel/dma/swiotlb.c         | 36 +++++++++++++++++++++++++++++++++---
+ 3 files changed, 38 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/pci/sta2x11-fixup.c b/arch/x86/pci/sta2x11-fixup.c
+index c7e6faf59a861..7368afc039987 100644
+--- a/arch/x86/pci/sta2x11-fixup.c
++++ b/arch/x86/pci/sta2x11-fixup.c
+@@ -57,7 +57,7 @@ static void sta2x11_new_instance(struct pci_dev *pdev)
+ 		int size = STA2X11_SWIOTLB_SIZE;
+ 		/* First instance: register your own swiotlb area */
+ 		dev_info(&pdev->dev, "Using SWIOTLB (size %i)\n", size);
+-		if (swiotlb_init_late(size, GFP_DMA))
++		if (swiotlb_init_late(size, GFP_DMA, NULL))
+ 			dev_emerg(&pdev->dev, "init swiotlb failed\n");
+ 	}
+ 	list_add(&instance->list, &sta2x11_instance_list);
+diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+index ee655f2e4d28b..7b50c82f84ce9 100644
+--- a/include/linux/swiotlb.h
++++ b/include/linux/swiotlb.h
+@@ -36,8 +36,11 @@ struct scatterlist;
+ 
+ int swiotlb_init_with_tbl(char *tlb, unsigned long nslabs, unsigned int flags);
+ unsigned long swiotlb_size_or_default(void);
++void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
++	int (*remap)(void *tlb, unsigned long nslabs));
++int swiotlb_init_late(size_t size, gfp_t gfp_mask,
++	int (*remap)(void *tlb, unsigned long nslabs));
+ extern int swiotlb_late_init_with_tbl(char *tlb, unsigned long nslabs);
+-int swiotlb_init_late(size_t size, gfp_t gfp_mask);
+ extern void __init swiotlb_update_mem_attributes(void);
+ 
+ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev, phys_addr_t phys,
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 79641c446d284..b3d4f24fb5f5e 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -256,9 +256,11 @@ int __init swiotlb_init_with_tbl(char *tlb, unsigned long nslabs,
+  * Statically reserve bounce buffer space and initialize bounce buffer data
+  * structures for the software IO TLB used to implement the DMA API.
+  */
+-void __init swiotlb_init(bool addressing_limit, unsigned int flags)
++void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
++		int (*remap)(void *tlb, unsigned long nslabs))
+ {
+-	size_t bytes = PAGE_ALIGN(default_nslabs << IO_TLB_SHIFT);
++	unsigned long nslabs = default_nslabs;
++	size_t bytes;
+ 	void *tlb;
+ 
+ 	if (!addressing_limit && !swiotlb_force_bounce)
+@@ -271,12 +273,23 @@ void __init swiotlb_init(bool addressing_limit, unsigned int flags)
+ 	 * allow to pick a location everywhere for hypervisors with guest
+ 	 * memory encryption.
+ 	 */
++retry:
++	bytes = PAGE_ALIGN(default_nslabs << IO_TLB_SHIFT);
+ 	if (flags & SWIOTLB_ANY)
+ 		tlb = memblock_alloc(bytes, PAGE_SIZE);
+ 	else
+ 		tlb = memblock_alloc_low(bytes, PAGE_SIZE);
+ 	if (!tlb)
+ 		goto fail;
++	if (remap && remap(tlb, nslabs) < 0) {
++		memblock_free(tlb, PAGE_ALIGN(bytes));
++
++		if (nslabs <= IO_TLB_MIN_SLABS)
++			panic("%s: Failed to remap %zu bytes\n",
++			      __func__, bytes);
++		nslabs = max(1024UL, ALIGN(nslabs >> 1, IO_TLB_SEGSIZE));
++		goto retry;
++	}
+ 	if (swiotlb_init_with_tbl(tlb, default_nslabs, flags))
+ 		goto fail_free_mem;
+ 	return;
+@@ -287,12 +300,18 @@ void __init swiotlb_init(bool addressing_limit, unsigned int flags)
+ 	pr_warn("Cannot allocate buffer");
+ }
+ 
++void __init swiotlb_init(bool addressing_limit, unsigned int flags)
++{
++	return swiotlb_init_remap(addressing_limit, flags, NULL);
++}
++
+ /*
+  * Systems with larger DMA zones (those that don't support ISA) can
+  * initialize the swiotlb later using the slab allocator if needed.
+  * This should be just like above, but with some error catching.
+  */
+-int swiotlb_init_late(size_t size, gfp_t gfp_mask)
++int swiotlb_init_late(size_t size, gfp_t gfp_mask,
++		int (*remap)(void *tlb, unsigned long nslabs))
+ {
+ 	unsigned long nslabs = ALIGN(size >> IO_TLB_SHIFT, IO_TLB_SEGSIZE);
+ 	unsigned long bytes;
+@@ -303,6 +322,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask)
+ 	if (swiotlb_force_disable)
+ 		return 0;
+ 
++retry:
+ 	order = get_order(nslabs << IO_TLB_SHIFT);
+ 	nslabs = SLABS_PER_PAGE << order;
+ 	bytes = nslabs << IO_TLB_SHIFT;
+@@ -317,6 +337,16 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask)
+ 
+ 	if (!vstart)
+ 		return -ENOMEM;
++	if (remap)
++		rc = remap(vstart, nslabs);
++	if (rc) {
++		free_pages((unsigned long)vstart, order);
++ 
++		if (IO_TLB_MIN_SLABS <= 1024)
++			return rc;
++		nslabs = max(1024UL, ALIGN(nslabs >> 1, IO_TLB_SEGSIZE));
++		goto retry;
++	}
+ 
+ 	if (order != get_order(bytes)) {
+ 		pr_warn("only able to allocate %ld MB\n",
+-- 
+2.30.2
+
