@@ -2,65 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC33F4DB440
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Mar 2022 16:09:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE5054DB56A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Mar 2022 16:55:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357036AbiCPPK1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 16 Mar 2022 11:10:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44136 "EHLO
+        id S1357395AbiCPP4f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 16 Mar 2022 11:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357035AbiCPPKZ (ORCPT
+        with ESMTP id S1357364AbiCPP4e (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 16 Mar 2022 11:10:25 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3EB66AE5
-        for <linux-hyperv@vger.kernel.org>; Wed, 16 Mar 2022 08:09:10 -0700 (PDT)
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3F5123F7DE
-        for <linux-hyperv@vger.kernel.org>; Wed, 16 Mar 2022 15:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1647443349;
-        bh=pKuO1Pnb8DTWNu323Li1Km8nI1auNgT3IB1hncz5HlI=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version;
-        b=McokPTS/JAa4crhfzSeGn4dqu8lLPLmVAZ0Ek2Ukv4qLNIHe6fCnKzj3FxwziZ6bY
-         2tHiCWDa5rsUslpxgxxnIiyq8A+lTQxMlTBYBaX3KwbC201jvYeDh78xWu5TFB4sa/
-         Nk+U1XGjY2kVoYIWAnyYgXKrrqAhJdeKCCsTC1AtAWmg2G+NIY7ap9zYh0/FjBhUxN
-         dAgYF4t8F1BsZXjuqvuXtlHI4kbUHjymrko0WIdu+cg85JfsHPiinCT7E+O/7Ozw8r
-         Ok1r0FWxDingrAkpF6g9U1b6Fapkci5MpPST1TOZjUIMRA4cd7eKLzTBYmG5pE6FDx
-         FAWlBsgzu3RGg==
-Received: by mail-wm1-f72.google.com with SMTP id 26-20020a05600c22da00b00388307f3503so1160735wmg.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 16 Mar 2022 08:09:09 -0700 (PDT)
+        Wed, 16 Mar 2022 11:56:34 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944945F4F0;
+        Wed, 16 Mar 2022 08:55:19 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id hw13so5077104ejc.9;
+        Wed, 16 Mar 2022 08:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xrv4PFSyhAtwnCAL/pjWyzmn6e9Q3pw3qGeeMjVLkWc=;
+        b=ThLCeQCLe60XloIENcKZTLtoa92AsszbMGtlE1VP85Nj8ONYeGAtPtd3THFkwuE1R4
+         Rb+p8levz1Kkk/esESpsWOOce4y/GAs3zE/h/Iq8JTZadMNMhSzoXuCsi65zQcSj9uj9
+         roUu7BL6G2KSrbQdMUcXxa1eBfn7GLPhFdgtrRtKQ1B6XjhvDCk1M6WlSKyn57HnuVDa
+         81Zd+YwZwjEFy9IgsZIWqi9+OJ0hcLCs/C3anzU5mAn4GgUA+5ei9x+U8aPDc4PlCURW
+         8DQSGQ08z9c9bhp4uK79m+ecf2bqZ6sdte5Pd0FZyKDC2WwgAQ/cfFk5gcysCgAmWYjH
+         wmBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pKuO1Pnb8DTWNu323Li1Km8nI1auNgT3IB1hncz5HlI=;
-        b=foW7E9BoTmTAQT4eyGNplVqTuUg7eKNZWQ+TiahpDNtqJ+CcgTcUkBXDseP7heeTiv
-         YuoG5onIh/jTn4isRHzwCC3lA+3d9lomz7NRmRq1B7+5uLFJ75Lh9FcIoX/qTwEqpoO4
-         3KJRXTcW7G4JXNcksR4faH8bb1bywVMtdspF00KmbsssztPW9CsuawlZiEpocBKyLnKE
-         0ju3jUayY8KqUdtI7aYyxoZpjKk+/+bhRtQRQkMUPNmmxVgRRTEDD6zGpcDQWygJlWZG
-         oJtHzN0wVZU2fO+VAHQxgfcWSwKmgfA0FLNflPLfFqQ6W0snkFsYSvmDkHi5YGbw6wCo
-         5RFA==
-X-Gm-Message-State: AOAM532Pkt6iag8LTrHWELj6TVTFZisOpVSV4UYNmiALv58wzQGX6YnB
-        FOPDqpqW4ITil6wzUcYs7RDOQP9L0mbygwkPTKrFeMpgWyYMlL+puW1DSmbDhrJt6rQBBJAKZ0r
-        YHv9AxGtGPu1AqdqE2/hxShEj9QQne5NLpyP7GKJqVQ==
-X-Received: by 2002:a05:600c:3508:b0:38b:cc1f:a99b with SMTP id h8-20020a05600c350800b0038bcc1fa99bmr6311368wmq.197.1647443348139;
-        Wed, 16 Mar 2022 08:09:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwvsOYZ+nBmu9loCTPKjgh/9mwESfnIbe8Inxn1yryPkv1+wBIJxw3Cp/IL2PJnd3eHgVih9w==
-X-Received: by 2002:a05:600c:3508:b0:38b:cc1f:a99b with SMTP id h8-20020a05600c350800b0038bcc1fa99bmr6311319wmq.197.1647443347937;
-        Wed, 16 Mar 2022 08:09:07 -0700 (PDT)
-Received: from localhost.localdomain (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id u18-20020adfdd52000000b001f04e9f215fsm1895105wrm.53.2022.03.16.08.09.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Mar 2022 08:09:05 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stuart Yoder <stuyoder@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xrv4PFSyhAtwnCAL/pjWyzmn6e9Q3pw3qGeeMjVLkWc=;
+        b=jZbVG83EaNe51cfcqEo9zhXvbP0JhZmRa5ZQhstJYLcyw5r96NRrK+Quf/tVffXkRC
+         s4KfTzJCbYt6XC3lKngK7Pt9Cg8ORMH9LLnB+SDHbXt9IKMZfKa5bLo1VL9zjdsPtn0H
+         SqVNrKJp6hIjfAUDBJh0GMLgbC5PtvvPaXMhe1V+Y+r5o/vZTrbZntfJXz5ZcPvMonlN
+         DT22h5wzva3KgO7A9Ms9tGDqMTRKUfhMPkrW+D48QnGLV3u0A8INbVEZ43VF/B4RG5/q
+         DCedcz06rkUE02MyfAx2f927LmGrNhCkZnoQRIILqlyw0vy7Jn0wsDzDZ+Ns5lSCSQLi
+         jQHw==
+X-Gm-Message-State: AOAM532FM1C5NuMF+Jefu/fmEKnWuwFxwfW4y5qzanz2YoWIcBTMkeY7
+        lVwHu1j6CbKdJUvidv7pmqkKuZydHQWmUgZOtDA=
+X-Google-Smtp-Source: ABdhPJx7tfhflG1OGwg4hJv+lc6fCCCsMyBIcaeP4g7aVOZtvesN3U3Aevmj9sLhxYjH7UWlro+fkCpgMa2F3+GK74E=
+X-Received: by 2002:a17:907:6e01:b0:6d0:562c:e389 with SMTP id
+ sd1-20020a1709076e0100b006d0562ce389mr499870ejc.497.1647446118072; Wed, 16
+ Mar 2022 08:55:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220316150533.421349-1-krzysztof.kozlowski@canonical.com> <20220316150533.421349-2-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220316150533.421349-2-krzysztof.kozlowski@canonical.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 16 Mar 2022 17:54:04 +0200
+Message-ID: <CAHp75VeaQdzUKJSKzH9FjbmON5asqH799AS8OzHGoDiRnJifNw@mail.gmail.com>
+Subject: Re: [PATCH v5 01/11] driver: platform: Add helper for safer setting
+ of driver_override
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -75,144 +71,97 @@ Cc:     Stuart Yoder <stuyoder@gmail.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
         virtualization@lists.linux-foundation.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v5 11/11] rpmsg: Fix kfree() of static memory on setting driver_override
-Date:   Wed, 16 Mar 2022 16:08:03 +0100
-Message-Id: <20220316150803.421897-5-krzysztof.kozlowski@canonical.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220316150533.421349-1-krzysztof.kozlowski@canonical.com>
-References: <20220316150533.421349-1-krzysztof.kozlowski@canonical.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The driver_override field from platform driver should not be initialized
-from static memory (string literal) because the core later kfree() it,
-for example when driver_override is set via sysfs.
+On Wed, Mar 16, 2022 at 5:06 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
 
-Use dedicated helper to set driver_override properly.
+...
 
-Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
-Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/rpmsg/rpmsg_core.c     |  3 ++-
- drivers/rpmsg/rpmsg_internal.h | 11 +++++++++--
- drivers/rpmsg/rpmsg_ns.c       | 14 ++++++++++++--
- include/linux/rpmsg.h          |  6 ++++--
- 4 files changed, 27 insertions(+), 7 deletions(-)
+> +int driver_set_override(struct device *dev, const char **override,
+> +                       const char *s, size_t len)
+> +{
+> +       const char *new, *old;
+> +       char *cp;
 
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index 79368a957d89..95fc283f6af7 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -400,7 +400,8 @@ field##_store(struct device *dev, struct device_attribute *attr,	\
- 	      const char *buf, size_t sz)				\
- {									\
- 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);		\
--	char *new, *old;						\
-+	const char *old;						\
-+	char *new;							\
- 									\
- 	new = kstrndup(buf, sz, GFP_KERNEL);				\
- 	if (!new)							\
-diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-index d4b23fd019a8..dd1f4ed616b6 100644
---- a/drivers/rpmsg/rpmsg_internal.h
-+++ b/drivers/rpmsg/rpmsg_internal.h
-@@ -95,9 +95,16 @@ int rpmsg_release_channel(struct rpmsg_device *rpdev,
- static inline int rpmsg_ctrldev_register_device(struct rpmsg_device *rpdev)
- {
- 	strcpy(rpdev->id.name, "rpmsg_ctrl");
--	rpdev->driver_override = "rpmsg_ctrl";
-+	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-+				  "rpmsg_ctrl", strlen("rpmsg_ctrl"));
-+	if (ret)
-+		return ret;
- 
--	return rpmsg_register_device(rpdev);
-+	ret = rpmsg_register_device(rpdev);
-+	if (ret)
-+		kfree(rpdev->driver_override);
-+
-+	return ret;
- }
- 
- #endif
-diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
-index 762ff1ae279f..95a51543f5ad 100644
---- a/drivers/rpmsg/rpmsg_ns.c
-+++ b/drivers/rpmsg/rpmsg_ns.c
-@@ -20,12 +20,22 @@
-  */
- int rpmsg_ns_register_device(struct rpmsg_device *rpdev)
- {
-+	int ret;
-+
- 	strcpy(rpdev->id.name, "rpmsg_ns");
--	rpdev->driver_override = "rpmsg_ns";
-+	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-+				  "rpmsg_ns", strlen("rpmsg_ns"));
-+	if (ret)
-+		return ret;
-+
- 	rpdev->src = RPMSG_NS_ADDR;
- 	rpdev->dst = RPMSG_NS_ADDR;
- 
--	return rpmsg_register_device(rpdev);
-+	ret = rpmsg_register_device(rpdev);
-+	if (ret)
-+		kfree(rpdev->driver_override);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(rpmsg_ns_register_device);
- 
-diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-index 02fa9116cd60..20c8cd1cde21 100644
---- a/include/linux/rpmsg.h
-+++ b/include/linux/rpmsg.h
-@@ -41,7 +41,9 @@ struct rpmsg_channel_info {
-  * rpmsg_device - device that belong to the rpmsg bus
-  * @dev: the device struct
-  * @id: device id (used to match between rpmsg drivers and devices)
-- * @driver_override: driver name to force a match
-+ * @driver_override: driver name to force a match; do not set directly,
-+ *                   because core frees it; use driver_set_override() to
-+ *                   set or clear it.
-  * @src: local address
-  * @dst: destination address
-  * @ept: the rpmsg endpoint of this channel
-@@ -51,7 +53,7 @@ struct rpmsg_channel_info {
- struct rpmsg_device {
- 	struct device dev;
- 	struct rpmsg_device_id id;
--	char *driver_override;
-+	const char *driver_override;
- 	u32 src;
- 	u32 dst;
- 	struct rpmsg_endpoint *ept;
+> +       if (!dev || !override || !s)
+> +               return -EINVAL;
+
+Sorry, I didn't pay much attention on this. First of all, I would drop
+dev checks and simply require that dev should be valid. Do you expect
+this can be called when dev is invalid? I would like to hear if it's
+anything but theoretical. Second one, is the !s requirement. Do I
+understand correctly that the string must be always present? But then
+how we NULify the override? Is it possible? Third one is absence of
+len check. See below.
+
+> +       /*
+> +        * The stored value will be used in sysfs show callback (sysfs_emit()),
+> +        * which has a length limit of PAGE_SIZE and adds a trailing newline.
+> +        * Thus we can store one character less to avoid truncation during sysfs
+> +        * show.
+> +        */
+> +       if (len >= (PAGE_SIZE - 1))
+> +               return -EINVAL;
+
+I would relax this to make sure we can use it if \n is within this limit.
+
+> +       cp = strnchr(s, len, '\n');
+> +       if (cp)
+> +               len = cp - s;
+> +
+> +       new = kstrndup(s, len, GFP_KERNEL);
+
+Here is a word about the len check.
+
+> +       if (!new)
+
+If len == 0, this won't trigger and you have something very
+interesting as a result.
+
+One way is to use ZERO_PTR_OR_NULL() another is explicitly check for 0
+and issue a (different?) error code.
+
+> +               return -ENOMEM;
+> +
+> +       device_lock(dev);
+> +       old = *override;
+> +       if (cp != s) {
+> +               *override = new;
+> +       } else {
+> +               kfree(new);
+> +               *override = NULL;
+> +       }
+> +       device_unlock(dev);
+> +
+> +       kfree(old);
+> +
+> +       return 0;
+> +}
+
 -- 
-2.32.0
-
+With Best Regards,
+Andy Shevchenko
