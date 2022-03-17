@@ -2,32 +2,32 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 472A54DCC26
-	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Mar 2022 18:15:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6DD44DCC32
+	for <lists+linux-hyperv@lfdr.de>; Thu, 17 Mar 2022 18:19:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233108AbiCQRQr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 17 Mar 2022 13:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
+        id S236818AbiCQRVB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 17 Mar 2022 13:21:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230168AbiCQRQq (ORCPT
+        with ESMTP id S230168AbiCQRVA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 17 Mar 2022 13:16:46 -0400
+        Thu, 17 Mar 2022 13:21:00 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B87C5211EC0;
-        Thu, 17 Mar 2022 10:15:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1CC03E9966;
+        Thu, 17 Mar 2022 10:19:43 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BBB71682;
-        Thu, 17 Mar 2022 10:15:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D273E1682;
+        Thu, 17 Mar 2022 10:19:42 -0700 (PDT)
 Received: from [10.57.42.204] (unknown [10.57.42.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E1CE3F7B4;
-        Thu, 17 Mar 2022 10:15:26 -0700 (PDT)
-Message-ID: <9c52c5a0-163d-e2dd-d95b-9f382e665215@arm.com>
-Date:   Thu, 17 Mar 2022 17:15:22 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 132683F7B4;
+        Thu, 17 Mar 2022 10:19:39 -0700 (PDT)
+Message-ID: <d480c8ea-f047-2854-b1cf-041475b451db@arm.com>
+Date:   Thu, 17 Mar 2022 17:19:36 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
  Thunderbird/91.6.2
-Subject: Re: [PATCH 4/4 RESEND] PCI: hv: Propagate coherence from VMbus device
- to PCI device
+Subject: Re: [PATCH 2/4 RESEND] dma-mapping: Add wrapper function to set
+ dma_coherent
 Content-Language: en-GB
 To:     Michael Kelley <mikelley@microsoft.com>, sthemmin@microsoft.com,
         kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -38,9 +38,9 @@ To:     Michael Kelley <mikelley@microsoft.com>, sthemmin@microsoft.com,
         linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         iommu@lists.linux-foundation.org
 References: <1647534311-2349-1-git-send-email-mikelley@microsoft.com>
- <1647534311-2349-5-git-send-email-mikelley@microsoft.com>
+ <1647534311-2349-3-git-send-email-mikelley@microsoft.com>
 From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <1647534311-2349-5-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1647534311-2349-3-git-send-email-mikelley@microsoft.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
@@ -53,87 +53,42 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On 2022-03-17 16:25, Michael Kelley via iommu wrote:
-> PCI pass-thru devices in a Hyper-V VM are represented as a VMBus
-> device and as a PCI device.  The coherence of the VMbus device is
-> set based on the VMbus node in ACPI, but the PCI device has no
-> ACPI node and defaults to not hardware coherent.  This results
-> in extra software coherence management overhead on ARM64 when
-> devices are hardware coherent.
-> 
-> Fix this by propagating the coherence of the VMbus device to the
-> PCI device.  There's no effect on x86/x64 where devices are
-> always hardware coherent.
-> 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->   drivers/pci/controller/pci-hyperv.c | 17 +++++++++++++----
->   1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index ae0bc2f..14276f5 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -49,6 +49,7 @@
->   #include <linux/refcount.h>
->   #include <linux/irqdomain.h>
->   #include <linux/acpi.h>
-> +#include <linux/dma-map-ops.h>
->   #include <asm/mshyperv.h>
->   
->   /*
-> @@ -2142,9 +2143,9 @@ static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
->   }
->   
->   /*
-> - * Set NUMA node for the devices on the bus
-> + * Set NUMA node and DMA coherence for the devices on the bus
->    */
-> -static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
-> +static void hv_pci_assign_properties(struct hv_pcibus_device *hbus)
->   {
->   	struct pci_dev *dev;
->   	struct pci_bus *bus = hbus->bridge->bus;
-> @@ -2167,6 +2168,14 @@ static void hv_pci_assign_numa_node(struct hv_pcibus_device *hbus)
->   				     numa_map_to_online_node(
->   					     hv_dev->desc.virtual_numa_node));
->   
-> +		/*
-> +		 * On ARM64, propagate the DMA coherence from the VMbus device
-> +		 * to the corresponding PCI device. On x86/x64, these calls
-> +		 * have no effect because DMA is always hardware coherent.
-> +		 */
-> +		dev_set_dma_coherent(&dev->dev,
-> +			dev_is_dma_coherent(&hbus->hdev->device));
+> Add a wrapper function to set dma_coherent, avoiding the need for
+> complex #ifdef's when setting it in architecture independent code.
 
-Eww... if you really have to do this, I'd prefer to see a proper 
-hv_dma_configure() helper implemented and wired up to 
-pci_dma_configure(). Although since it's a generic property I guess at 
-worst pci_dma_configure could perhaps propagate coherency from the host 
-bridge to its children by itself in the absence of any other firmware 
-info. And it's built-in so could use arch_setup_dma_ops() like everyone 
-else.
+No. It might happen to work out on the architectures you're looking at, 
+but if Hyper-V were ever to support, say, AArch32 VMs you might see the 
+problem. arch_setup_dma_ops() is the tool for this job.
 
 Robin.
 
-> +
->   		put_pcichild(hv_dev);
->   	}
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>   include/linux/dma-map-ops.h | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
+> index 0d5b06b..3350e7a 100644
+> --- a/include/linux/dma-map-ops.h
+> +++ b/include/linux/dma-map-ops.h
+> @@ -254,11 +254,20 @@ static inline bool dev_is_dma_coherent(struct device *dev)
+>   {
+>   	return dev->dma_coherent;
 >   }
-> @@ -2191,7 +2200,7 @@ static int create_root_hv_pci_bus(struct hv_pcibus_device *hbus)
->   		return error;
+> +static inline void dev_set_dma_coherent(struct device *dev,
+> +		bool coherent)
+> +{
+> +	dev->dma_coherent = coherent;
+> +}
+>   #else
+>   static inline bool dev_is_dma_coherent(struct device *dev)
+>   {
+>   	return true;
+>   }
+> +static inline void dev_set_dma_coherent(struct device *dev,
+> +		bool coherent)
+> +{
+> +}
+>   #endif /* CONFIG_ARCH_HAS_DMA_COHERENCE_H */
 >   
->   	pci_lock_rescan_remove();
-> -	hv_pci_assign_numa_node(hbus);
-> +	hv_pci_assign_properties(hbus);
->   	pci_bus_assign_resources(bridge->bus);
->   	hv_pci_assign_slots(hbus);
->   	pci_bus_add_devices(bridge->bus);
-> @@ -2458,7 +2467,7 @@ static void pci_devices_present_work(struct work_struct *work)
->   		 */
->   		pci_lock_rescan_remove();
->   		pci_scan_child_bus(hbus->bridge->bus);
-> -		hv_pci_assign_numa_node(hbus);
-> +		hv_pci_assign_properties(hbus);
->   		hv_pci_assign_slots(hbus);
->   		pci_unlock_rescan_remove();
->   		break;
+>   void *arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
