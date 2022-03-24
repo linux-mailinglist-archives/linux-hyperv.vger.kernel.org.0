@@ -2,61 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECCA74E6582
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Mar 2022 15:42:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 167C64E66BE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Mar 2022 17:15:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351144AbiCXOn2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 24 Mar 2022 10:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
+        id S1345791AbiCXQQp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 24 Mar 2022 12:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351331AbiCXOnU (ORCPT
+        with ESMTP id S240781AbiCXQQo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 24 Mar 2022 10:43:20 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AFEEDAA02A;
-        Thu, 24 Mar 2022 07:41:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 708AA1515;
-        Thu, 24 Mar 2022 07:41:48 -0700 (PDT)
-Received: from [10.57.41.19] (unknown [10.57.41.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B8173F73D;
-        Thu, 24 Mar 2022 07:41:45 -0700 (PDT)
-Message-ID: <e3cf16f2-e9d7-b169-cccf-038df5acdb79@arm.com>
-Date:   Thu, 24 Mar 2022 14:41:41 +0000
+        Thu, 24 Mar 2022 12:16:44 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eus2azon11021025.outbound.protection.outlook.com [52.101.57.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96E149F10;
+        Thu, 24 Mar 2022 09:15:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ney3aY/UN0eylN6mWGRvuU04JErNjYHSzcy194FXoMA/rD6aE/7QBO5zyzjnO352YLMfu0hzpF6nJf2yQiZLux/MuQvAx3XbYdVKX4Dsv1Q/M8578ewvplDFFlzQwpJOGXczjeM2q6+YtZE5kRGubdChv//yJHsMbsZnbVOVfaNkjHjPTQJ8WrNk9BHWkQo9F7xWYFeGT0MX4QbLTKTWSKDWa8XP95RA5aQH6uME27oCSdH60r7lXTfgvjHS8wWjkTaCHk+5Xlz3tNOxEcIh7/xoU0DMaHQ4TTe/5VQSRPGnl3NnsVBCJ5vXcqo7PjgmIl8dmlYfIa28SfTEyCqPAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=itBxWx6tDcrya8iixhcLhuxoHC5tL999NwyEf1OxrJ0=;
+ b=ER//+5kIMbTHIFYGeMapidtv8W3gLcsqRMxVupUIGU5ekvJN15QJ/jbDUFG2eOBMUPN6TDvsnnlyzjAUAO55uiLjfFKlySTyid/NllC6+MBkKXY5ck7xhe5rEDIRm04BgP0fMEaDScQLbgBP8sat1+GB4R3zMe7DC/FWQ+get5p3Tt0kxBzbu/4Qct91XzxejLHnQjLsSh0J9OmadjMwFDiz5woxgCWSIewkuJE+TuQ3NgMvJ3rfn6vMs79TDqCZzqxGqhxa7EwYhB/g/uagsXa7ISXJ3RoUaNtYUmCdUZrrEB9VX7PTa1PucI5o8xOQJ5t/41iUBxJtbQ8C8/Hqzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=itBxWx6tDcrya8iixhcLhuxoHC5tL999NwyEf1OxrJ0=;
+ b=dqgaET7bdvh1IoBlm09EelBnYGm4UMhpY+vFT5m1Bj/ytoZWxZvSw4K6rrR7IJkh5nZlrNNlraWyykx+1PcIf0+aRWOkFuwRqESFqQeyCUEhdZVviCXByd5LOxzGcFMr9Ph0V2l2CdsuXp5/cveenBt98ZA7eNNamuzhMDIHqKI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
+ by BY5PR21MB1411.namprd21.prod.outlook.com (2603:10b6:a03:238::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.10; Thu, 24 Mar
+ 2022 16:15:09 +0000
+Received: from DM6PR21MB1514.namprd21.prod.outlook.com
+ ([fe80::f8aa:99ff:9265:bb6b]) by DM6PR21MB1514.namprd21.prod.outlook.com
+ ([fe80::f8aa:99ff:9265:bb6b%4]) with mapi id 15.20.5123.010; Thu, 24 Mar 2022
+ 16:15:09 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     sthemmin@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, rafael@kernel.org,
+        lenb@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH v3 0/2] Fix coherence for VMbus and PCI pass-thru devices in Hyper-V VM
+Date:   Thu, 24 Mar 2022 09:14:50 -0700
+Message-Id: <1648138492-2191-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR04CA0253.namprd04.prod.outlook.com
+ (2603:10b6:303:88::18) To DM6PR21MB1514.namprd21.prod.outlook.com
+ (2603:10b6:5:22d::11)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v2 1/2] Drivers: hv: vmbus: Propagate VMbus coherence to
- each VMbus device
-Content-Language: en-GB
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-References: <1648067472-13000-1-git-send-email-mikelley@microsoft.com>
- <1648067472-13000-2-git-send-email-mikelley@microsoft.com>
- <f984116a-c748-ada0-c073-6e62f486b4f5@arm.com>
- <PH0PR21MB3025C5DFB189B9609F7A601FD7199@PH0PR21MB3025.namprd21.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <PH0PR21MB3025C5DFB189B9609F7A601FD7199@PH0PR21MB3025.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5654b487-5a85-4c95-70e4-08da0db1774f
+X-MS-TrafficTypeDiagnostic: BY5PR21MB1411:EE_
+X-MS-Exchange-AtpMessageProperties: SA|SL
+X-Microsoft-Antispam-PRVS: <BY5PR21MB1411F06DFFB871E32EADFF23D7199@BY5PR21MB1411.namprd21.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8J7Ds/8naHFTJhwSwQuL0tPIxZZWTeb7nK36k2ZG/sRW0WRB+LbPoYORswWBEWSNDlxEAicp8JgF+WwABfgcEgpvP/CMUDQ31+ikZKlfYyFg2gQmPhgNchNIvnPO4FxBLaFZmYWt0jKoHZO8LB8ZLxIIe46AZD6g4wWh9RZTtfi2E/VhppgGMz4qLCmzMWYDt02WHTourBq1QhYy4lic+ai98Cgq+ccC1sCkgXSnRGZ9BpEfQ52dsoIeRU0Gny2A2S6/uvRHdp+2n5sWnWGmGYhLuJoyMgPutnv17AzCib0TTTeFadFjvz5TZz1VFSnfMFocUuupvbcYiz02GiGmXp0efOth/oNJZJWSAxIv5TjYCTRE1MwdkoeRDZePl7xvVNClp6FLuK5WQW8wlxtFC8ilqtxRXZ2pp78/rZFkw//Bhe+hn3mA/kPneLqeQ7jlhe11e+XIWV9Dd8j498pou4JkAugExc3xcWfTORkERHio6nPBCp4+Xd/NKmOPq0GzIcJh8f8MpJu6YriUdLXA9wbKqDlLJyNx3DbTvxdAajk4M/wph+zcrPXnyLUosi7Rj1qb2z7uxn15f3EyOUKRY5/xPWely3V4Ob0qUp9bECDPMgTybxcqZejFotlcPBU6CshSrqlOBsHqTF1wUQAQs9L7B5DJOa4suKhvihopkeiZ9pVmA7HK6lAKbC5wFgciqGOdDV7NmEvCUoZPFh0A9ZfPhE7vmD+ALxgxeQ+eq51tufMdC9tGHQJo+0DaRCirnDBCzV4mKsczN2x/RiSbkg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(2906002)(6666004)(6506007)(52116002)(2616005)(6512007)(26005)(107886003)(186003)(8676002)(4326008)(10290500003)(6486002)(508600001)(66476007)(66556008)(86362001)(316002)(66946007)(36756003)(921005)(82950400001)(8936002)(7416002)(82960400001)(5660300002)(38100700002)(38350700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ElI+3o71OGQWNDIkFokiE1FrS/MFxK1IQ2aVjb52VCf0A7Xmr90ENUC3dO4c?=
+ =?us-ascii?Q?3fE2NcfMmLPJPnM49KgNPjvQbXDqV70By7iVHfpiywdmNdW40qlQbkvietqT?=
+ =?us-ascii?Q?b97mVbCXWMLZJXK0EXm/4GFcQahoOw+g5qlgM+ML7RRroD5Q3ooHZYTqwftN?=
+ =?us-ascii?Q?tCFeWZeyEHuowJ1fCReS/c60krG5LplFYf26Th4qhg6GY55Hv3elEnEZCEeX?=
+ =?us-ascii?Q?2Uc6SEIgAbbxuQVYzVSnzkFYiaiZq8V3PosT2FQotn5Z7oaGxYF2jDJvF1Yh?=
+ =?us-ascii?Q?3cU+9OPS4r8Ala7rhWzzB9yl0+xX6DVrj8E0Z9NwH90geIdgNKF5zqkKKWAf?=
+ =?us-ascii?Q?/UTkMRyWdFPKM68o3pe1xxF+xbqDSKD9JtYDPI1C0U4tn8PuUQ8ir00X5C7e?=
+ =?us-ascii?Q?NpLoge6mP24llGobgbljb/ZahV3CbbdS5qitjZj1SJTXEF1IugqTWJBH5hur?=
+ =?us-ascii?Q?guJJBEbMKIhGpg9GDL26R08rmMDVbbinaQJW7YlIU06AR0ZviCRnJV0T8Guy?=
+ =?us-ascii?Q?xQr82SDSl0tRPZD/V2CJ641rIsrzivk/RvdajfYzwlP8vrIDpHWoWJ1P4u1V?=
+ =?us-ascii?Q?mpWAArIgRYwhU0/Ue/Uy3WGIktp25H3n6282EXCBNAI8gqmaw7+CexPCnE8b?=
+ =?us-ascii?Q?k2oT9MtCsaEOL9zQAajR5F//AVpcz7dnfRj0qzUJYUrblbfvO97T6KXn5Br8?=
+ =?us-ascii?Q?oaQ2LsOmmgTpICQ98I5R8k0EUOX0ZFSzV2rEp05dtmLVgh81bO0nRCe0wXem?=
+ =?us-ascii?Q?I2NEr7OPyZw0GSn3xT+2hKmGC/T/B6HU17bqkK6+5g89/KlMTzczyG2RI7Rs?=
+ =?us-ascii?Q?6iQAcyjiliijZL6j8NpSQL20W2hk6j7/U/0YNCyk11FnsEPikKMS62XSXefF?=
+ =?us-ascii?Q?YC232opKD34JILSomZjqBICpz/FoY1j9n3ygBHsmVZIa3DqSWMFeDbk1Hsj+?=
+ =?us-ascii?Q?BpYnkzNp1WFG9bX5z78/U6D1sab47N9UhSykjD+5yCnSOGpyEUn/edrTO4ev?=
+ =?us-ascii?Q?7o9RwDDeSnZgf7+/IUyvjkxjDIVYXSPcc06zhqc9BA5ZqWbm/8eHADY1OdGG?=
+ =?us-ascii?Q?W1Is2FPjFnDEn3a2Y7V1hQ9dbJPt4z+7QjxD0WLhRM4ShLbA+0HLGCFbcfw8?=
+ =?us-ascii?Q?IsOX7RYLkoTc4E86ZkkiU27t3h3WjXDEh0LXo4PpEFHOMYPEJ0hl4wInlsk1?=
+ =?us-ascii?Q?2uS72f7pm52fngZ2h1i/caqZHttMOHq35VhpI9ZHP+tSjaBpCN3gCYaxkF4u?=
+ =?us-ascii?Q?+7T35oBsuA4kn3xjsGsxFIDLK+VbSNJFsd5aJnu7HrXgsTDNsntF3FIQhku7?=
+ =?us-ascii?Q?74FYYWxXDvRgUQvXlyhqNizYgZDutXIZiKKIPIjiUKMAecP4OPj8VbTyKTUU?=
+ =?us-ascii?Q?9kJiPhBLq0WVcxqoCXCoO2AWn5YsFLCbIsWQ/IxUifRlEy+5sXmxgu1sk6lo?=
+ =?us-ascii?Q?6rjMQyZ7PhnXpXKMoerEpot/B7dS21J04RFVqhTGGXbO7G9fZVox+6uJdfGs?=
+ =?us-ascii?Q?Dr2SeJjrdWns7K9f2yxtjZBQfNt6S2B7SfeaSHynqx+olIWACV3XY3/mkP1x?=
+ =?us-ascii?Q?cjD36Az+EKnNN2uu3C6kiRi4EXAPHAWjejzO7g79RNpg7XJsRl2O0lNwBSQk?=
+ =?us-ascii?Q?y+iSHcc3KnqECX+EsbjgEwIz17q+A2xZrIvHMIqUmevcXmGwj+oSqlnAuIIf?=
+ =?us-ascii?Q?LI1DFkJIiLyK1nFYz4rsT+0BwTf5lo7urd90x87j7lEj0bFZpNKOkjinI19E?=
+ =?us-ascii?Q?NbI6oJi1rRCFjOkvP1hgJiA19miVcvk=3D?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5654b487-5a85-4c95-70e4-08da0db1774f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2022 16:15:08.9813
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LSwKy6zSEoJtWRTKa3joc9u33G78/3VjVLIzhLZlEU1J3TYXefbw/jpQybCnuIObKXpvRigsqITinjB8ox8iwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1411
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,158 +123,42 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2022-03-24 13:18, Michael Kelley (LINUX) wrote:
-> From: Robin Murphy <robin.murphy@arm.com> Sent: Thursday, March 24, 2022 4:59 AM
->>
->> On 2022-03-23 20:31, Michael Kelley wrote:
->>> VMbus synthetic devices are not represented in the ACPI DSDT -- only
->>> the top level VMbus device is represented. As a result, on ARM64
->>> coherence information in the _CCA method is not specified for
->>> synthetic devices, so they default to not hardware coherent.
->>> Drivers for some of these synthetic devices have been recently
->>> updated to use the standard DMA APIs, and they are incurring extra
->>> overhead of unneeded software coherence management.
->>>
->>> Fix this by propagating coherence information from the VMbus node
->>> in ACPI to the individual synthetic devices. There's no effect on
->>> x86/x64 where devices are always hardware coherent.
->>>
->>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
->>> ---
->>>    drivers/hv/hv_common.c         | 11 +++++++++++
->>>    drivers/hv/vmbus_drv.c         | 23 +++++++++++++++++++++++
->>>    include/asm-generic/mshyperv.h |  1 +
->>>    3 files changed, 35 insertions(+)
->>>
->>> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
->>> index 181d16b..820e814 100644
->>> --- a/drivers/hv/hv_common.c
->>> +++ b/drivers/hv/hv_common.c
->>> @@ -20,6 +20,7 @@
->>>    #include <linux/panic_notifier.h>
->>>    #include <linux/ptrace.h>
->>>    #include <linux/slab.h>
->>> +#include <linux/dma-map-ops.h>
->>>    #include <asm/hyperv-tlfs.h>
->>>    #include <asm/mshyperv.h>
->>>
->>> @@ -216,6 +217,16 @@ bool hv_query_ext_cap(u64 cap_query)
->>>    }
->>>    EXPORT_SYMBOL_GPL(hv_query_ext_cap);
->>>
->>> +void hv_setup_dma_ops(struct device *dev, bool coherent)
->>> +{
->>> +	/*
->>> +	 * Hyper-V does not offer a vIOMMU in the guest
->>> +	 * VM, so pass 0/NULL for the IOMMU settings
->>> +	 */
->>> +	arch_setup_dma_ops(dev, 0, 0, NULL, coherent);
->>> +}
->>> +EXPORT_SYMBOL_GPL(hv_setup_dma_ops);
->>> +
->>>    bool hv_is_hibernation_supported(void)
->>>    {
->>>    	return !hv_root_partition && acpi_sleep_state_supported(ACPI_STATE_S4);
->>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
->>> index 12a2b37..2d2c54c 100644
->>> --- a/drivers/hv/vmbus_drv.c
->>> +++ b/drivers/hv/vmbus_drv.c
->>> @@ -905,6 +905,14 @@ static int vmbus_probe(struct device *child_device)
->>>    	struct hv_device *dev = device_to_hv_device(child_device);
->>>    	const struct hv_vmbus_device_id *dev_id;
->>>
->>> +	/*
->>> +	 * On ARM64, propagate the DMA coherence setting from the top level
->>> +	 * VMbus ACPI device to the child VMbus device being added here.
->>> +	 * On x86/x64 coherence is assumed and these calls have no effect.
->>> +	 */
->>> +	hv_setup_dma_ops(child_device,
->>> +		device_get_dma_attr(&hv_acpi_dev->dev) == DEV_DMA_COHERENT);
->>
->> Would you mind hooking up the hv_bus.dma_configure method to do this?
->> Feel free to fold hv_setup_dma_ops entirely into that if you're not
->> likely to need to call it from anywhere else.
-> 
-> I'm pretty sure using hv_bus.dma_configure() is doable.  A separate
-> hv_setup_dma_ops() is still needed because arch_setup_dma_ops() isn't
-> exported and this VMbus driver can be built as a module.
+Hyper-V VMs have VMbus synthetic devices and PCI pass-thru devices that are added
+dynamically via the VMbus protocol and are not represented in the ACPI DSDT. Only
+the top level VMbus node exists in the DSDT. As such, on ARM64 these devices don't
+pick up coherence information and default to not hardware coherent.  This results
+in extra software coherence management overhead since the synthetic devices are
+always hardware coherent. PCI pass-thru devices are also hardware coherent in all
+current usage scenarios.
 
-Ah, right you are, I keep forgetting that.
+Fix this by propagating coherence information from the top level VMbus node in
+the DSDT to all VMbus synthetic devices and PCI pass-thru devices. While smaller
+granularity of control would be better, basing on the VMbus node in the DSDT
+gives as escape path if a future scenario arises with devices that are not
+hardware coherent.
 
->>> +
->>>    	dev_id = hv_vmbus_get_id(drv, dev);
->>>    	if (drv->probe) {
->>>    		ret = drv->probe(dev, dev_id);
->>> @@ -2428,6 +2436,21 @@ static int vmbus_acpi_add(struct acpi_device *device)
->>>
->>>    	hv_acpi_dev = device;
->>>
->>> +	/*
->>> +	 * Older versions of Hyper-V for ARM64 fail to include the _CCA
->>> +	 * method on the top level VMbus device in the DSDT. But devices
->>> +	 * are hardware coherent in all current Hyper-V use cases, so fix
->>> +	 * up the ACPI device to behave as if _CCA is present and indicates
->>> +	 * hardware coherence.
->>> +	 */
->>> +	ACPI_COMPANION_SET(&device->dev, device);
->>> +	if (IS_ENABLED(CONFIG_ACPI_CCA_REQUIRED) &&
->>> +	    device_get_dma_attr(&device->dev) == DEV_DMA_NOT_SUPPORTED) {
->>> +		pr_info("No ACPI _CCA found; assuming coherent device I/O\n");
->>> +		device->flags.cca_seen = true;
->>> +		device->flags.coherent_dma = true;
->>> +	}
->>
->> I'm not the biggest fan of this, especially since I'm not convinced that
->> there are any out-of-support deployments of ARM64 Hyper-V that can't be
->> updated. However I suppose it's not "real" firmware, and one Hyper-V
->> component is at liberty to hack another Hyper-V component's data if it
->> really wants to...
-> 
-> Agreed, it's a hack.  But Hyper-V instances are out there as part of
-> Windows 10/11 on ARM64 PCs, and they run ARM64 VMs for the
-> Windows Subsystem for Linux.  Microsoft gets pilloried for breaking
-> stuff, and this removes the potential for that happening if someone
-> runs a new Linux kernel version in that VM.
+Changes since v2:
+* Move coherence propagation for VMbus synthetic devices to a separate
+  .dma_configure function instead of the .probe fucntion [Robin Murphy]
 
-And actually that one's on me as well - for some reason I was thinking 
-that this had never worked, and therefore you could likely get a Hyper-V 
-update pushed out long before users get this patch through distros, but 
-of course it only becomes an issue now because previously there was no 
-connection to any ACPI node at all. As I said, personally I'm happy to 
-consider this a Hyper-V internal workaround, but if anyone else objects 
-to poking at the ACPI flags, I suppose you've also got the fallback 
-option of flipping it around and making the ACPI_COMPANION_SET() 
-conditional, so that the behaviour for older versions remains entirely 
-unchanged. If it happens, feel free to keep my ack for that approach too.
+Changes since v1:
+* Use device_get_dma_attr() instead of acpi_get_dma_attr(), eliminating the
+  need to export acpi_get_dma_attr() [Robin Murphy]
+* Use arch_setup_dma_ops() to set device coherence [Robin Murphy]
+* Move handling of missing _CCA to vmbus_acpi_add() so it is only done once
+* Rework handling of PCI devices so existing code in pci_dma_configure()
+  just works
 
-Cheers,
-Robin.
+Michael Kelley (2):
+  Drivers: hv: vmbus: Propagate VMbus coherence to each VMbus device
+  PCI: hv: Propagate coherence from VMbus device to PCI device
 
-> 
-> Michael
-> 
->>
->> If you can hook up .dma_configure, or clarify if it wouldn't work,
->>
->> Acked-by: Robin Murphy <robin.murphy@arm.com>
->>
->> Cheers,
->> Robin.
->>
->>> +
->>>    	result = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
->>>    					vmbus_walk_resources, NULL);
->>>
->>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
->>> index c08758b..c05d2ce 100644
->>> --- a/include/asm-generic/mshyperv.h
->>> +++ b/include/asm-generic/mshyperv.h
->>> @@ -269,6 +269,7 @@ static inline int cpumask_to_vpset_noself(struct hv_vpset
->> *vpset,
->>>    u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
->>>    void hyperv_cleanup(void);
->>>    bool hv_query_ext_cap(u64 cap_query);
->>> +void hv_setup_dma_ops(struct device *dev, bool coherent);
->>>    void *hv_map_memory(void *addr, unsigned long size);
->>>    void hv_unmap_memory(void *addr);
->>>    #else /* CONFIG_HYPERV */
+ drivers/hv/hv_common.c              | 11 +++++++++++
+ drivers/hv/vmbus_drv.c              | 31 +++++++++++++++++++++++++++++++
+ drivers/pci/controller/pci-hyperv.c |  9 +++++++++
+ include/asm-generic/mshyperv.h      |  1 +
+ 4 files changed, 52 insertions(+)
+
+-- 
+1.8.3.1
+
