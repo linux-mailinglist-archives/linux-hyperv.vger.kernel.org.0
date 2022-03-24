@@ -2,45 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D80B94E66C2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Mar 2022 17:15:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 171504E66C9
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Mar 2022 17:15:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351603AbiCXQQq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 24 Mar 2022 12:16:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51484 "EHLO
+        id S1351615AbiCXQQr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 24 Mar 2022 12:16:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245544AbiCXQQp (ORCPT
+        with ESMTP id S1351600AbiCXQQq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 24 Mar 2022 12:16:45 -0400
+        Thu, 24 Mar 2022 12:16:46 -0400
 Received: from na01-obe.outbound.protection.outlook.com (mail-eus2azon11021025.outbound.protection.outlook.com [52.101.57.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0819549F38;
-        Thu, 24 Mar 2022 09:15:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350F049FB7;
+        Thu, 24 Mar 2022 09:15:14 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BxRJ24tuQQVj5Vu9rO6EckGweek8gyIY6STWKauZVoLDDqNKjJR/HCBJlOXO//RohXsfDdI6SlFIbfUdolUGgSVYf7lePOGPY4zyK6A2IT4eWpuoS54Kkie1FoJuRqNOox7sXnZcIwdW29WaWeavEwwlQoVbMJJRWDPFRBUtnZLZZEWsb4JA4vJkJY58/3UlofKri5byirkGLfm65U93/SbWN9yzO3gKovjEcDZLxEN4ofF5JMfCyFPUmtU56vS2uoYiXlcXuwt7l0rajQC8Giu23LXQe29uvVPM6NiusguINDVytR9r5vLvVqWOV+sqqHpvta2VyxoUrEyb6a87Rw==
+ b=SA6TRA0+bwF6JundqA4AoeSWROD5COFICNGO65Jomd+ffpY47A4LwXsIkLHaGQ6sj02uvQ49dtYFOIjoSWOsLmh9pc7GYNIvSus1aOYPS0/LHurndk+H3ZuSjvbDrisJIVu7F7H8Xa6tbOU33YDPYhmr/KpadGox2S7fNQkiRnxYtBpnGmXaHeH5NK4NAeje1BpcwxwkglYn1tsAKoYgmhQUIOLCIWp/IK3uJyvnwZ03UC9Ld21HD09leezGbtE2ik+ZnoEkQN278/D1fzSJhQFqjsEZU+aNH0xwt9eUH0foPD7uW06B6l/c/nkY/QcT+c+c5K3+3+5GzzQ9P9+1zw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=biFUfiA/jAdCiBEnXAvKTtwhAz4EgqSY6slGmCLX+BI=;
- b=n99/EIrBxHNfzv141smWCL//kAAdRgWrc2UcpXRQ12plTKv5XiKwIUjEvFTRnHzB3XNRfy2vw0OiF7b6mVwN9k3xXChUrJEqioGF8P67+a1Sslp3VGshK0PKZOwE8M6/yEkfD1jFusHHMPzowtX164EBHx6eZaQHls+z/XWs27oFcjN4fgE7GK1KfVMcJz5QFfVdvFLS1IVgJOKmPbOObTI26AXKXrvf2N8Bpe3puaYhGt0whgTNltm/BUNmtJyTdatDtyjeGofBsxkiK0eDgQ4E+rcg0sHKMN9yyO9g0ruNRhGxWW6xlntoAfzRrVGi5+xqbUG9xRdGfDeGjFG9iQ==
+ bh=cE74jggk/LMNOtLMIV90q30xNMRXi88xMxhkXHWxUYQ=;
+ b=ZsAh2nqwQa7J3hvDY3eHx7dRpP5cBTKZbFtTlmljZqPVVU1x3DaWsr2Ab//sO8FX1xx0jCOvtdeSxG6KL1LabHDt8WNI/B8/75z36HWS8b88ZUHNW8blTSBdr5X/76OUGgfx9ICunFQweZSn9gTah/JYTRCXl96uPXhFm5vHiaGp/R9eA+dhsTVwcFzIeW5/prA8OVI+R37bnFZveN+zej5KmntA/n0ewbHRl3vVWv40UYdqdQm2B+y8GrODEoUrCTTF3QNUdT6O5vzzOtAoLitCyz6Rog5MASL5wyWvgwo59hDHdmJFHZOT/0yD/RiGgh0g6RiwUJbw5ybuTshMSQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=biFUfiA/jAdCiBEnXAvKTtwhAz4EgqSY6slGmCLX+BI=;
- b=WvniPoVcRL+khYRMMV3nYVWAVToL/VCIXgQbzh/0Tev2cAUv1Bos9tpRQ4G8q1fQYHCJGOef+08y4EAncHqcwVjQ3f1SwNkmwe1gsXJz8JnFX3HoUTJA8ZR8cR+43bhZOerbCxJhH+cDPYW1S8wK329boFx3usQ5Ahdkq+mdZbs=
+ bh=cE74jggk/LMNOtLMIV90q30xNMRXi88xMxhkXHWxUYQ=;
+ b=V+cWx5qO5suFZFK50EN++8iQeiyjkLEtONRwvC4+2cCuc0VJwH7tcYtgROYUmgy8fVIIXrduIxSmj+NgoM33a1LoFVKLoRhEjH/uZKyf+A1mYv7gXHDzGun+FH/BXJkZS3Z0V/UbjnegUQlJ9DC0hVt/8/5rCmSEnUXoPjO/NzA=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 Received: from DM6PR21MB1514.namprd21.prod.outlook.com (2603:10b6:5:22d::11)
  by BY5PR21MB1411.namprd21.prod.outlook.com (2603:10b6:a03:238::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.10; Thu, 24 Mar
- 2022 16:15:10 +0000
+ 2022 16:15:11 +0000
 Received: from DM6PR21MB1514.namprd21.prod.outlook.com
  ([fe80::f8aa:99ff:9265:bb6b]) by DM6PR21MB1514.namprd21.prod.outlook.com
  ([fe80::f8aa:99ff:9265:bb6b%4]) with mapi id 15.20.5123.010; Thu, 24 Mar 2022
- 16:15:10 +0000
+ 16:15:11 +0000
 From:   Michael Kelley <mikelley@microsoft.com>
 To:     sthemmin@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
         wei.liu@kernel.org, decui@microsoft.com, rafael@kernel.org,
@@ -51,9 +51,9 @@ To:     sthemmin@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
         linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         iommu@lists.linux-foundation.org
 Cc:     mikelley@microsoft.com
-Subject: [PATCH v3 1/2] Drivers: hv: vmbus: Propagate VMbus coherence to each VMbus device
-Date:   Thu, 24 Mar 2022 09:14:51 -0700
-Message-Id: <1648138492-2191-2-git-send-email-mikelley@microsoft.com>
+Subject: [PATCH v3 2/2] PCI: hv: Propagate coherence from VMbus device to PCI device
+Date:   Thu, 24 Mar 2022 09:14:52 -0700
+Message-Id: <1648138492-2191-3-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1648138492-2191-1-git-send-email-mikelley@microsoft.com>
 References: <1648138492-2191-1-git-send-email-mikelley@microsoft.com>
@@ -64,56 +64,56 @@ X-ClientProxiedBy: MW4PR04CA0253.namprd04.prod.outlook.com
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3b515034-5274-4921-22d1-08da0db17845
+X-MS-Office365-Filtering-Correlation-Id: bb3c36de-932b-4d15-c6ac-08da0db17900
 X-MS-TrafficTypeDiagnostic: BY5PR21MB1411:EE_
 X-MS-Exchange-AtpMessageProperties: SA|SL
-X-Microsoft-Antispam-PRVS: <BY5PR21MB1411C968135CBFF963A59E30D7199@BY5PR21MB1411.namprd21.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <BY5PR21MB14110C734C9A9396C31FC9B0D7199@BY5PR21MB1411.namprd21.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1sVY4gSxryuWZZbQExtFG4+84OyYgUU0EnOgkT5JWgEvAZeL94NlKlK3O2VIrGHAoSCVjvnfiVojJTDza/qPjZMn465rsSiDqV7OI1/1GcI+G+7f0wPhr7nXTqgQeuYegNmumE4lLbw4y4tX5sRgtnXNz+YdQJRT03AJxk8xsPGR3e9d7m1zbyp+zE9rLAXpxCJXSXkuKrH//gjdF73dMVjykFjNZIIQLV6GsHW9St7xAuAHylG3fo3p62o0qC04Hoa77c/7nPsEMJBjZOwYgnXAN+W4L1aikhVPEB3DckgHrIU9x4gHyH+ANvRSCwqN6U6k27WSRXmDx8lG2KsS/HJ4uAmtvsk6dAR/82nC8VpLP+e2093LIAbgxx75ae2S8CI7g2e9h/YQIq1bAyeZsxoZQFDqh3m8P5w67QPCZHR+TH7q6xK6ZJ/r2o/2jSBQlC98JFS9lsMLiXxmpiBkC9qzwN+mGk/KuyINxPshKs3ZMCQ22pyoSbp+SvBigEH/OIYi7i6wNqLhNmDw4G2vPamV8XGeZ5evyKJ7HBpXZ72vFsLLWfctss0eUJcfIObFAkufExx18VQVhv4OFpMthyElaLT+4Wt9eM9HaJCSN+iMwqIsLHHnA64oePAt6wu6UG/ui9jdiOpgq0m6zr7L+k0flv379pEcy/VqH4XrFTtobpukD9zohyNKm7fEC6Nkn1VQo1IleVxBXjp+FTFP0gJ1gxe5bGkuPLUB/2+SuZk/caBGwM764FXTnNMdLYiGiJy47zV0oQpbq89rYJVzGQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(2906002)(6666004)(6506007)(52116002)(2616005)(83380400001)(6512007)(26005)(107886003)(186003)(8676002)(4326008)(10290500003)(6486002)(508600001)(66476007)(66556008)(86362001)(316002)(66946007)(36756003)(921005)(82950400001)(8936002)(7416002)(82960400001)(5660300002)(38100700002)(38350700002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: J5U/FY2T2iJarJzLTbno/tIe+WUDannNPb10hCTyRBG7RR7vUCaotv6LVcSDuDMlGEQxyn2MMuxrxT8cKsBhQ1lYeHKpPoLswBoGaIG5aEPB/2skxdbG9MG4/8OoJSR+uhQ9Yj+oroIMHq5DltWaZamYNNe35aWYTA/S5NM3pS7BMbY6Yc3F05BtyHsbfjZYYo7sA6hwvDXhZNeMNGoyEvte2IWEigDqe7L7ID35HMSHoIT58rDs9LBBws4oBCw0qSTseHn9q/I21bQcOAcgYfP1OZndjCw4yXOqnIxw/M+udt7leLkuMBeb6kwtfAJTubyQWvdhbGmdF7O0A6FpLZ3kRqHnE6KnK0wPZpadO3HSTgNwNDouYQyh1C4xj5zoJbWpCk1H96FktUy/RSpaLGZx0i06hPOLFs2JzTE5xxE9m7F14sOZ0ZHLJFhNlnNLYmnjS70c9A6u7qFC+CAO3+BDGfpSMR0lIrvorNT+o5h7kER3VJJNdqnMBYoGzOkEjd2CaipUpyM36Dw8kO4/Ey/Yke1LRcMenpY6XbSAWA9TWkzAfW4CwugHg1SlOvmIwBng3PYFrPgqhmgOs+cf+9PI3lZGrUMlXAgLrYrHYeOZTz/fdtF+NmI6Gzrk4VwYeuAZHfxMQdrnlL0tXV2em4HsS39H7d2ZPRuwbaRDzYuITVTMCLzNDyo0fCEyC/iZxDtuUEcWgkZHUVFcRpyAGBCvose+6dScgoR0cYC6sh6beAetIMzbMjer2BYkik8/SH25SCN3hIJ+8UdvPqqB+g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1514.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(2906002)(6666004)(6506007)(52116002)(2616005)(6512007)(26005)(107886003)(186003)(8676002)(4326008)(10290500003)(6486002)(508600001)(66476007)(66556008)(86362001)(316002)(66946007)(36756003)(921005)(82950400001)(8936002)(7416002)(82960400001)(5660300002)(38100700002)(38350700002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cKYq/0mVEloguQpKnPIDmWvxJ/tkxdbwCCMLdYC+LfC1y/USAif9tXb1hawz?=
- =?us-ascii?Q?M75V1sDL7Rb6apSazx8lWxo7nLXPJFJYcvl3oYgqA3v7iLGaJV3WBqi9Sa36?=
- =?us-ascii?Q?Nefv7GTBPAUgS2ypZP48DVF2+YdEZYm2eKKGCfn0w4Rri3hOtQPgQ+VL83mX?=
- =?us-ascii?Q?vCgBY2VoQfWlVBRn6AeO5LpHRVbko18USk9t/03Qu1VRou7eFBDi65QwbEZU?=
- =?us-ascii?Q?UdLrNV3bJAgkSkPsF4xfVD/C6bY260SWu3XT7NP6EQPmEfDIjXGa+mY6XS+a?=
- =?us-ascii?Q?eWwLSPt9AWZnxS2fKG+83wzFT8fAMlIIbIWMmRM7yrBxvu9UvdCNwRlidqDm?=
- =?us-ascii?Q?I8W1SmWgPgznFRhvd3xsskIa6QJha4kl3yp7xqz/js10uECN2gGlIiksPSR1?=
- =?us-ascii?Q?AWbPBKxIjEt+2l1SEABCt5au2BwW8oM+TmkDmMqNsF8v/MtD6Fn+FhfAMlqu?=
- =?us-ascii?Q?7hei/BONFWOzOrVhhhkmuASPQ13kQkb+YYu+2Y0r96Q65r4mld0iF629XXjJ?=
- =?us-ascii?Q?VxMiIoP3BI/sbRzi+Y8yzxrpksnGxreOywfj/O+IxqRZZYl2QvWOfwTHhtw5?=
- =?us-ascii?Q?BdBajI8l2DhI8WpwLC7KC7vpV37VP84K/tBTlvno8+JLKAV0VkR4qDcY4YdK?=
- =?us-ascii?Q?VoE94+1q/Y8e3X1X8dKfPX7S5GOmkc75hxrHhXfQ0SIAHX0htDVCZidAYTxB?=
- =?us-ascii?Q?YDTNKgIQnuFMtONJHG9XcTV4bO/gMB8IZfofjcLa0ewCVNPkGhT/qfUMY1RS?=
- =?us-ascii?Q?XoJIb87G4O6S2Iq0vJYfnpYRsNOeN/twmSzoRnFb7k02Kj6+EZg1alWS0Lxr?=
- =?us-ascii?Q?uhNi3zJ8tPhzUb325cdoVVyW+aGI8WLZGCYbRGDiPQORtegVLqwidceXIR6/?=
- =?us-ascii?Q?Z2HJGKVwH/Jr2LyigrLFg3cIffp3m1+msj2d2EDvxG7b4jqh42mnJw4I0qhs?=
- =?us-ascii?Q?RsI2/u6R9Vn/SnO+6f19O74jx+LZfeemclGSQS+/6x6WOJstldPFCHDFswJb?=
- =?us-ascii?Q?mUFlrteZgC5htvP3z1J4LdjtUSFkccI812txbF0eD67RfOo54kZTvAgUmNIS?=
- =?us-ascii?Q?tNIX5Q7i7AlLwRmodCIdSt0mU7pm9zm3BkJJk70vJlS3KcKrfvIhWXGbTs6T?=
- =?us-ascii?Q?sJIOGkD13CUJXf8KgTwmgNSB02clRMSnv0Wae+bpcLB24zCQHG4C2T5hieFP?=
- =?us-ascii?Q?f+FniznvYTHbGR+MJ+kDVHvH1PR5dKBbLs+47ZZ/h/RQ2xx4UMeYqpxuNYJw?=
- =?us-ascii?Q?I4zey/sQWKxCorAWg3IHFZES3KbfaiSXRFmyAWzzr3DWCu4x7oZq7fTLN3o5?=
- =?us-ascii?Q?QMzkmjJ1626croS0Ojle94AQ1g6b0cZFhSQX20vpvfDlEW/AQqgeej/PBvWj?=
- =?us-ascii?Q?tYfrCv5AALM4g81rQLYO3gFCLCGRyACI//TtTSBANRvZVfbdfxrv/5RPNVNN?=
- =?us-ascii?Q?WXdJk3MnQxqe4Zen0GVvMSrgvFgAhs06CSprcdVsJYuxE+u0SzF7kGYe5eGn?=
- =?us-ascii?Q?ywA8hE6Om55rY9yli/TLBpG4fBELpNA7k0sbdqHLM9DAvAJE5byZpTp10zp8?=
- =?us-ascii?Q?MUiriNaXUz11AVrub398Dm+v+6jlq8fTZysr33Rup0bgQXxHxPkI6yRmMVrG?=
- =?us-ascii?Q?7y5Ma14YiwK2C+Ux+8iAivodmXKJm33LBX9ZFHOXkkpFFljc9+1bKW/JtcGd?=
- =?us-ascii?Q?A1L+EUOhql2nai/rjCMg4QlWdRStP/6hlQ3/fTigFyTvwQtavwXpE42iNSDr?=
- =?us-ascii?Q?JxVBzPq5j7Th34cpfwvvgFb+vl0Trgw=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sYSPpkHkc2hBJ9xM1eTcE1luKHO0LMWb0tgRiV7cAk3psFLu2oPTz2pI5ikD?=
+ =?us-ascii?Q?+BEICoj4LT5rh18iZQ6WCr7uDJVH9QH7dPTEITny0AmZTA80N+p1bPWx/zh3?=
+ =?us-ascii?Q?KhQLrzUH6MjiC9yVD9OI4gatBFYegHPTXuwWjlr5TchFYCOlwX9BNCASk6x+?=
+ =?us-ascii?Q?6AnUNVOc3QAnsLDOWG/NIykrEqAI0jsuMEEFDS576tdlke1fLVHw3u59R4ED?=
+ =?us-ascii?Q?uM2hUGAc04toOV40RcVH8JYGZdy+IMD36HDq/F0y4qeXWCKVx+Fc9ZnuzgM1?=
+ =?us-ascii?Q?6dFGpxSUCejzIY6p6LIBXB3cFiQPIQzrxbbvAmaP9tkr7dOJpgXxalmOM0UX?=
+ =?us-ascii?Q?5oQToK2Bf8uZ8IACtHB2lseNxdS6U/mFDZjNj4TnwQZWoq0ALOehk3rNVxGF?=
+ =?us-ascii?Q?S9saezXrD5+zWWGNwprqdaH/4MT2Mxhpp+m1sc9mkVd+0S1M9iuSbq6t8/D9?=
+ =?us-ascii?Q?h3yTEWATOhvJocSPcuewOhVGq4bjCKPvS2GiZhbLR4egB+tbgsLNkYqrCNGq?=
+ =?us-ascii?Q?eCOL41uJ/77tzgFdK5/0kvFfr0q6RFWtpEHjfl88DVsugpGNbGnsBRq/nIzY?=
+ =?us-ascii?Q?ZQtklUhJ0HhMtY0fovNw9lL2kFDOQCAYqT4Mj8K2G/5GYRQubUX4qt7kIP5d?=
+ =?us-ascii?Q?urWxHB2emQWuDppQP7EyfllLXqI0v3WvUCUALNLnzXON22/N3bwVCPDgNVfw?=
+ =?us-ascii?Q?RFDX5jhX3Mz8F0dtcdUxevD+e5gNhQlbj7A2aSAnM0B4EC5R+W/5t/gE4c4H?=
+ =?us-ascii?Q?W9cMBo4pkcqfoUAairBuYSeYQxPnlEoTYUyr+ekg65Pwvc/j66BIGFkMogqF?=
+ =?us-ascii?Q?1Vex+fhVIn24zdRoj3Sny/LQE2W6KyAVSV6AsgkRDVY6saOg+BJZqSgTe9dP?=
+ =?us-ascii?Q?HoNyz4AhGJYpMF2iokQArweMYppGobG2UEQ/RL8tA27Ryk2HAO6BqGg+qNri?=
+ =?us-ascii?Q?M9MYbathwKZC9mpUqxomoMrZa7IlvLbDXHSRN80+4R0c8csJOJshwWvJaUW5?=
+ =?us-ascii?Q?g0W4gB9bXis10QuqWMV1Sa26RXOqAIHvrM3hokRZfHOT3dppkuLyK7GDXIwf?=
+ =?us-ascii?Q?pEQi9C9bep828nKO1oSkVjsefit05tjsOCCu/39BWfWWI/h12dLjfb5QNYae?=
+ =?us-ascii?Q?rqXu6mcB3wITDGiJcOhN+cRFEpBuMyeww4mihfvrNBtdFaHi72CIrDrIUkMY?=
+ =?us-ascii?Q?USYx2Y9Z3rD63RGK4YKFSA/RiZ8/tm/sQt3tof++OTKd7cM8M9GBo19hX/Vd?=
+ =?us-ascii?Q?zYRxuvesB6qhHMEXDVqkbjxj9e+pQDMRKcLsxXYxaYTtibuSRa1bEG0kgiOQ?=
+ =?us-ascii?Q?VHZbHtJlM/MTJ47t6IryLbasi+w5rS1ZhfiV0fkDxvNQFEmA3NtfTdHeceil?=
+ =?us-ascii?Q?z5rhxI9oXPgSe12n0Us7crXtxKxdDb9uFDVFdj8w6h3tZx8smlFhdm90Hq3D?=
+ =?us-ascii?Q?rS1lHWNiO2WLhdT5iREFpArW8mlaSKMFOWBUyBEio8SIxeIrfJzYFPzjhMFp?=
+ =?us-ascii?Q?LWRv5mzGhvni6PGdCHFVxf+dN6Yy74ZEmmDJVZ3iE8/WO6cdD6keNyVzdhv4?=
+ =?us-ascii?Q?5Qw1uLH7jKFYzs63d8cRXYjBYyosoylTjFQw5xIA1aJfc/9KP6NfbR1iA8UG?=
+ =?us-ascii?Q?MvHlp+DAXIvPRMeG0Pixjd596xAeencziQCjJ7t9q0Njv/gn+Tig5gxKrhcZ?=
+ =?us-ascii?Q?UVSd+d8tKK0IQkLzaPuzbMSJxGY7rsHbxc/8IqyV+Xcmc8hs8ABEFKaY4F6H?=
+ =?us-ascii?Q?hVzACm5z4soPzEHhitT9Jj1StPu1u6Q=3D?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b515034-5274-4921-22d1-08da0db17845
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb3c36de-932b-4d15-c6ac-08da0db17900
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1514.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2022 16:15:10.6115
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2022 16:15:11.8212
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dzHAZMaghVoTkWY/g+YmJeqNFsiSskrEbM520BYLcj7rP0yxjf3PRyzvC2Q1f4itjpNk8pSiMor6qvv8uPm5dw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: IxVHIs606MZYdd07fL9rlXN+HFZ3VzhcM7pW3kurNfyN+HFPUImUuqiQYsGX54PH4ZsdyXpzqJmm+BX8U8umzg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1411
 X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -125,123 +125,45 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-VMbus synthetic devices are not represented in the ACPI DSDT -- only
-the top level VMbus device is represented. As a result, on ARM64
-coherence information in the _CCA method is not specified for
-synthetic devices, so they default to not hardware coherent.
-Drivers for some of these synthetic devices have been recently
-updated to use the standard DMA APIs, and they are incurring extra
-overhead of unneeded software coherence management.
+PCI pass-thru devices in a Hyper-V VM are represented as a VMBus
+device and as a PCI device.  The coherence of the VMbus device is
+set based on the VMbus node in ACPI, but the PCI device has no
+ACPI node and defaults to not hardware coherent.  This results
+in extra software coherence management overhead on ARM64 when
+devices are hardware coherent.
 
-Fix this by propagating coherence information from the VMbus node
-in ACPI to the individual synthetic devices. There's no effect on
-x86/x64 where devices are always hardware coherent.
+Fix this by setting up the PCI host bus so that normal
+PCI mechanisms will propagate the coherence of the VMbus
+device to the PCI device. There's no effect on x86/x64 where
+devices are always hardware coherent.
 
 Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
 Acked-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/hv/hv_common.c         | 11 +++++++++++
- drivers/hv/vmbus_drv.c         | 31 +++++++++++++++++++++++++++++++
- include/asm-generic/mshyperv.h |  1 +
- 3 files changed, 43 insertions(+)
+ drivers/pci/controller/pci-hyperv.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 181d16b..820e814 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -20,6 +20,7 @@
- #include <linux/panic_notifier.h>
- #include <linux/ptrace.h>
- #include <linux/slab.h>
-+#include <linux/dma-map-ops.h>
- #include <asm/hyperv-tlfs.h>
- #include <asm/mshyperv.h>
- 
-@@ -216,6 +217,16 @@ bool hv_query_ext_cap(u64 cap_query)
- }
- EXPORT_SYMBOL_GPL(hv_query_ext_cap);
- 
-+void hv_setup_dma_ops(struct device *dev, bool coherent)
-+{
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index ae0bc2f..88b3b56 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3404,6 +3404,15 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	hbus->bridge->domain_nr = dom;
+ #ifdef CONFIG_X86
+ 	hbus->sysdata.domain = dom;
++#elif defined(CONFIG_ARM64)
 +	/*
-+	 * Hyper-V does not offer a vIOMMU in the guest
-+	 * VM, so pass 0/NULL for the IOMMU settings
++	 * Set the PCI bus parent to be the corresponding VMbus
++	 * device. Then the VMbus device will be assigned as the
++	 * ACPI companion in pcibios_root_bridge_prepare() and
++	 * pci_dma_configure() will propagate device coherence
++	 * information to devices created on the bus.
 +	 */
-+	arch_setup_dma_ops(dev, 0, 0, NULL, coherent);
-+}
-+EXPORT_SYMBOL_GPL(hv_setup_dma_ops);
-+
- bool hv_is_hibernation_supported(void)
- {
- 	return !hv_root_partition && acpi_sleep_state_supported(ACPI_STATE_S4);
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 12a2b37..5c3b29a 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -921,6 +921,21 @@ static int vmbus_probe(struct device *child_device)
- }
++	hbus->sysdata.parent = hdev->device.parent;
+ #endif
  
- /*
-+ * vmbus_dma_configure -- Configure DMA coherence for VMbus device
-+ */
-+static int vmbus_dma_configure(struct device *child_device)
-+{
-+	/*
-+	 * On ARM64, propagate the DMA coherence setting from the top level
-+	 * VMbus ACPI device to the child VMbus device being added here.
-+	 * On x86/x64 coherence is assumed and these calls have no effect.
-+	 */
-+	hv_setup_dma_ops(child_device,
-+		device_get_dma_attr(&hv_acpi_dev->dev) == DEV_DMA_COHERENT);
-+	return 0;
-+}
-+
-+/*
-  * vmbus_remove - Remove a vmbus device
-  */
- static void vmbus_remove(struct device *child_device)
-@@ -1040,6 +1055,7 @@ static void vmbus_device_release(struct device *device)
- 	.remove =		vmbus_remove,
- 	.probe =		vmbus_probe,
- 	.uevent =		vmbus_uevent,
-+	.dma_configure =	vmbus_dma_configure,
- 	.dev_groups =		vmbus_dev_groups,
- 	.drv_groups =		vmbus_drv_groups,
- 	.bus_groups =		vmbus_bus_groups,
-@@ -2428,6 +2444,21 @@ static int vmbus_acpi_add(struct acpi_device *device)
- 
- 	hv_acpi_dev = device;
- 
-+	/*
-+	 * Older versions of Hyper-V for ARM64 fail to include the _CCA
-+	 * method on the top level VMbus device in the DSDT. But devices
-+	 * are hardware coherent in all current Hyper-V use cases, so fix
-+	 * up the ACPI device to behave as if _CCA is present and indicates
-+	 * hardware coherence.
-+	 */
-+	ACPI_COMPANION_SET(&device->dev, device);
-+	if (IS_ENABLED(CONFIG_ACPI_CCA_REQUIRED) &&
-+	    device_get_dma_attr(&device->dev) == DEV_DMA_NOT_SUPPORTED) {
-+		pr_info("No ACPI _CCA found; assuming coherent device I/O\n");
-+		device->flags.cca_seen = true;
-+		device->flags.coherent_dma = true;
-+	}
-+
- 	result = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
- 					vmbus_walk_resources, NULL);
- 
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index c08758b..c05d2ce 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -269,6 +269,7 @@ static inline int cpumask_to_vpset_noself(struct hv_vpset *vpset,
- u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
- void hyperv_cleanup(void);
- bool hv_query_ext_cap(u64 cap_query);
-+void hv_setup_dma_ops(struct device *dev, bool coherent);
- void *hv_map_memory(void *addr, unsigned long size);
- void hv_unmap_memory(void *addr);
- #else /* CONFIG_HYPERV */
+ 	hbus->hdev = hdev;
 -- 
 1.8.3.1
 
