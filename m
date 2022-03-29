@@ -2,91 +2,85 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 400544EAE4B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 29 Mar 2022 15:20:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F41764EB5C5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Mar 2022 00:19:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234222AbiC2NWX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 29 Mar 2022 09:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44622 "EHLO
+        id S236591AbiC2WUs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 29 Mar 2022 18:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237228AbiC2NWW (ORCPT
+        with ESMTP id S236522AbiC2WUq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 29 Mar 2022 09:22:22 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5641BEA8;
-        Tue, 29 Mar 2022 06:20:39 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id l9-20020a05600c4f0900b0038ccd1b8642so1177127wmq.0;
-        Tue, 29 Mar 2022 06:20:39 -0700 (PDT)
+        Tue, 29 Mar 2022 18:20:46 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4376B4133F
+        for <linux-hyperv@vger.kernel.org>; Tue, 29 Mar 2022 15:19:03 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id bi13-20020a05600c3d8d00b0038c2c33d8f3so122145wmb.4
+        for <linux-hyperv@vger.kernel.org>; Tue, 29 Mar 2022 15:19:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:mime-version:content-transfer-encoding
+         :content-description:subject:to:from:date:reply-to;
+        bh=+v//v9bV1cKxYYqp6E5HrJfuFydY/JXcjMGnmfr7lM0=;
+        b=FJ0eh8tU06EWQ41+9chGyITwUAQXL7CsZuHSHpKc5xiQXEpN1uCBi3KJCIAsP0sO6s
+         uzre6e7te8FaENR1KxBeXRRP4gLeJGQCN/b7b/O9sKUuNG1+6Ukx9pJ49l5kxcIJdfKQ
+         a84OoERDhxNtilyeTbTOJxDQLhyQ3tm4jOWEcp1iqgTfgiHJhI9ShMZ+aqD7q1eNTMsR
+         fWWP4WVJDTY716lGSGEHEljQ0z8oa/Wm3WK3/3fliOR9ffVENIwprifB8CdJ1TOCu2sl
+         IzzD9MkP28zN5lgNXDRbkwTgFLXaWBdvBBVHcVh73kLkpmwbQTX4napdSe4XvLYp0alK
+         UgaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XKTqZIz9JeHSISPinldYjkY8di7f/5w6ccPx7r2EMfs=;
-        b=4rGqTaUXW7yeFJtt0BuRHoBPXUtJQJBtIt7IE0BHMLTXnGGnqs25SC79wGVvuMGnoj
-         wjWQBhy7L/jWR5Hd+q5WOp7UGdLZC6Z+wA7M2TR2ioOf8hHuAU6+9cuqlXjFs1um03oi
-         vX8ok9OnRar36ExK5Ul42muPWARaL0Ky5RHd1wsoFnWEFQ4mM9P0UDq0HW25LeOnVYlL
-         yfewiQLL0EHrOs/scyo5mm1KhVqq2vyuCS5ujTcWyV4FF2cKUj7fqlv7kMcxWTWPZXiP
-         ma2RuMMlKoyWhExgwgK+Jn+njY/michYH7SxO3LSqxlvhsIdriNGU/8L0Z3VwSlr8rcz
-         S11w==
-X-Gm-Message-State: AOAM530tcMrh7BdfSAmXUwCaQCeWt8aoNGGAizyVqY4R+avkL4jJjAJW
-        2V7pxc8AUXH+BI7cJwNcKy4=
-X-Google-Smtp-Source: ABdhPJwdNlS6AjgkfIPNK8gfKDsWUJC+PTZeEYJpNvdu2Zdo6uZKQnVrvlt9tCWMXb0Erc+rXAqadw==
-X-Received: by 2002:a7b:c5cd:0:b0:38c:8b1b:d220 with SMTP id n13-20020a7bc5cd000000b0038c8b1bd220mr6835620wmk.118.1648560038007;
-        Tue, 29 Mar 2022 06:20:38 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n37-20020a05600c3ba500b0038cc9d6ff5bsm2202162wms.4.2022.03.29.06.20.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Mar 2022 06:20:37 -0700 (PDT)
-Date:   Tue, 29 Mar 2022 13:20:35 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        vkuznets@redhat.com, decui@microsoft.com
-Subject: Re: [PATCH 1/1] hv: drivers: vmbus: Prevent load re-ordering when
- reading ring buffer
-Message-ID: <20220329132035.k6zjsp6lpx4xm3k5@liuwe-devbox-debian-v2>
-References: <1648394710-33480-1-git-send-email-mikelley@microsoft.com>
- <20220328231233.GA102571@anparri>
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:content-description:subject:to:from:date
+         :reply-to;
+        bh=+v//v9bV1cKxYYqp6E5HrJfuFydY/JXcjMGnmfr7lM0=;
+        b=v6e8jvzppRSbCcgRPBAfg/WEEVcoIvrQp1ZYswm4hJBDadqbhn0rp5hzvQ9E6bB86z
+         1BLYbBtW3sZuZSlMwBPyntHCwkBELANkYPutG0t7mNgBmqTLKe/+RbrRj+KTYa7ztkdx
+         Ei1FHoMPvoqBDqylwg0gLHkGzms3jBCzOAYU1ky+fO35CicG61B5OpVRYJPiYUYglcpN
+         9EBoxJiaAkFj5gCJ378hb2ybFEsholZm4mRnzLAcpOkht13tT1GpGXvf8faEJAYPCdA4
+         PT6bYAD5rZR2VCP/zkNppW6NDJMm9u7++tMRtiJktdiLOKzlgxQi93J1LryvWqxRRfoQ
+         KQzg==
+X-Gm-Message-State: AOAM532DUqUGvuSD8QbvNKeTv/qLQfllT/n0bvLB6l3VUgoVQYs4CGAf
+        EmEIfCAUS+X+ZqHFCf4Mfus=
+X-Google-Smtp-Source: ABdhPJwfA6lfA48j9JcVoFWhEfpHzD35Av7gAe7E+50sF8fN9ROUTollvT8BdvHHQapxFrMyWbC8Xg==
+X-Received: by 2002:a05:600c:3b8c:b0:38c:c1a8:7571 with SMTP id n12-20020a05600c3b8c00b0038cc1a87571mr1528483wms.136.1648592341785;
+        Tue, 29 Mar 2022 15:19:01 -0700 (PDT)
+Received: from [172.20.10.4] ([197.210.71.189])
+        by smtp.gmail.com with ESMTPSA id x3-20020a5d6b43000000b001e317fb86ecsm15642619wrw.57.2022.03.29.15.18.57
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Tue, 29 Mar 2022 15:19:01 -0700 (PDT)
+Message-ID: <624385d5.1c69fb81.af85d.d5c6@mx.google.com>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220328231233.GA102571@anparri>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Gefeliciteerd, er is geld aan je gedoneerd
+To:     Recipients <adeboyejofolashade55@gmail.com>
+From:   adeboyejofolashade55@gmail.com
+Date:   Tue, 29 Mar 2022 23:18:52 +0100
+Reply-To: mike.weirsky.foundation003@gmail.com
+X-Spam-Status: No, score=2.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,T_US_DOLLARS_3
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Mar 29, 2022 at 01:12:33AM +0200, Andrea Parri wrote:
-> On Sun, Mar 27, 2022 at 08:25:10AM -0700, Michael Kelley wrote:
-> > When reading a packet from a host-to-guest ring buffer, there is no
-> > memory barrier between reading the write index (to see if there is
-> > a packet to read) and reading the contents of the packet. The Hyper-V
-> > host uses store-release when updating the write index to ensure that
-> > writes of the packet data are completed first. On the guest side,
-> > the processor can reorder and read the packet data before the write
-> > index, and sometimes get stale packet data. Getting such stale packet
-> > data has been observed in a reproducible case in a VM on ARM64.
-> > 
-> > Fix this by using virt_load_acquire() to read the write index,
-> > ensuring that reads of the packet data cannot be reordered
-> > before it. Preventing such reordering is logically correct, and
-> > with this change, getting stale data can no longer be reproduced.
-> > 
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> 
-> Reviewed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> 
-> Nit: subject prefix -> "Drivers: hv: vmbus:".
+Beste begunstigde,
 
-Applied to hyperv-fixes. Thanks.
+ Je hebt een liefdadigheidsdonatie van ($ 10.000.000,00) van Mr. Mike Weirs=
+ky, een winnaar van een powerball-jackpotloterij van $ 273 miljoen.  Ik don=
+eer aan 5 willekeurige personen als je deze e-mail ontvangt, dan is je e-ma=
+il geselecteerd na een spin-ball. Ik heb vrijwillig besloten om het bedrag =
+van $ 10 miljoen USD aan jou te doneren als een van de geselecteerde 5, om =
+mijn winst te verifi=EBren
+ =
 
-> 
-> Thanks,
->   Andrea
+  Vriendelijk antwoord op: mike.weirsky.foundation003@gmail.com
+ Voor uw claim.
