@@ -2,85 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F41764EB5C5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Mar 2022 00:19:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D11E4EB6C5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Mar 2022 01:31:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236591AbiC2WUs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 29 Mar 2022 18:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
+        id S233214AbiC2XdF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 29 Mar 2022 19:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236522AbiC2WUq (ORCPT
+        with ESMTP id S240552AbiC2Xcq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 29 Mar 2022 18:20:46 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4376B4133F
-        for <linux-hyperv@vger.kernel.org>; Tue, 29 Mar 2022 15:19:03 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id bi13-20020a05600c3d8d00b0038c2c33d8f3so122145wmb.4
-        for <linux-hyperv@vger.kernel.org>; Tue, 29 Mar 2022 15:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:mime-version:content-transfer-encoding
-         :content-description:subject:to:from:date:reply-to;
-        bh=+v//v9bV1cKxYYqp6E5HrJfuFydY/JXcjMGnmfr7lM0=;
-        b=FJ0eh8tU06EWQ41+9chGyITwUAQXL7CsZuHSHpKc5xiQXEpN1uCBi3KJCIAsP0sO6s
-         uzre6e7te8FaENR1KxBeXRRP4gLeJGQCN/b7b/O9sKUuNG1+6Ukx9pJ49l5kxcIJdfKQ
-         a84OoERDhxNtilyeTbTOJxDQLhyQ3tm4jOWEcp1iqgTfgiHJhI9ShMZ+aqD7q1eNTMsR
-         fWWP4WVJDTY716lGSGEHEljQ0z8oa/Wm3WK3/3fliOR9ffVENIwprifB8CdJ1TOCu2sl
-         IzzD9MkP28zN5lgNXDRbkwTgFLXaWBdvBBVHcVh73kLkpmwbQTX4napdSe4XvLYp0alK
-         UgaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:content-description:subject:to:from:date
-         :reply-to;
-        bh=+v//v9bV1cKxYYqp6E5HrJfuFydY/JXcjMGnmfr7lM0=;
-        b=v6e8jvzppRSbCcgRPBAfg/WEEVcoIvrQp1ZYswm4hJBDadqbhn0rp5hzvQ9E6bB86z
-         1BLYbBtW3sZuZSlMwBPyntHCwkBELANkYPutG0t7mNgBmqTLKe/+RbrRj+KTYa7ztkdx
-         Ei1FHoMPvoqBDqylwg0gLHkGzms3jBCzOAYU1ky+fO35CicG61B5OpVRYJPiYUYglcpN
-         9EBoxJiaAkFj5gCJ378hb2ybFEsholZm4mRnzLAcpOkht13tT1GpGXvf8faEJAYPCdA4
-         PT6bYAD5rZR2VCP/zkNppW6NDJMm9u7++tMRtiJktdiLOKzlgxQi93J1LryvWqxRRfoQ
-         KQzg==
-X-Gm-Message-State: AOAM532DUqUGvuSD8QbvNKeTv/qLQfllT/n0bvLB6l3VUgoVQYs4CGAf
-        EmEIfCAUS+X+ZqHFCf4Mfus=
-X-Google-Smtp-Source: ABdhPJwfA6lfA48j9JcVoFWhEfpHzD35Av7gAe7E+50sF8fN9ROUTollvT8BdvHHQapxFrMyWbC8Xg==
-X-Received: by 2002:a05:600c:3b8c:b0:38c:c1a8:7571 with SMTP id n12-20020a05600c3b8c00b0038cc1a87571mr1528483wms.136.1648592341785;
-        Tue, 29 Mar 2022 15:19:01 -0700 (PDT)
-Received: from [172.20.10.4] ([197.210.71.189])
-        by smtp.gmail.com with ESMTPSA id x3-20020a5d6b43000000b001e317fb86ecsm15642619wrw.57.2022.03.29.15.18.57
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 29 Mar 2022 15:19:01 -0700 (PDT)
-Message-ID: <624385d5.1c69fb81.af85d.d5c6@mx.google.com>
-Content-Type: text/plain; charset="iso-8859-1"
+        Tue, 29 Mar 2022 19:32:46 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5482D2B260;
+        Tue, 29 Mar 2022 16:31:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id A6953CE1BFB;
+        Tue, 29 Mar 2022 23:31:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B770C2BBE4;
+        Tue, 29 Mar 2022 23:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648596659;
+        bh=olgtT6FewsbbSzY2KR3/opVw6l4AyJdbQzHKvg6cQWg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ckJ81WBU0rBsNq8nACQmS7TncLpvlUwXOZcZpTzCy8wbhYywWXvwiC4mieNI+ajQX
+         dBjO2hHVpzs+v2SEKW82oz/SSnn1RFx9aeDC/ZoA02wEtOlepMXanXdNgWCtOVfpu8
+         kmuGuez58o7uWdfrCabormL4WpvwpunirnBvEUmsqWlJbqrOGlC265o4hNN7Ln2w+H
+         2NWJuejngYNrTdyHmuGmZgXwS41JoS+Q+gwyCuVRp4vaIR3BOTJLRhvt1k10+BVT7m
+         JGvcHijQNyFJ/oTLOj0RIzLgOY2nvaiMpVedDWrApSM3vyaAZavz0c/CWFl+L8OaSB
+         KvIGCKhqhCjhg==
+Date:   Tue, 29 Mar 2022 18:30:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        boqun.feng@gmail.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: hv: Remove unused function
+ hv_set_msi_entry_from_desc()
+Message-ID: <20220329233057.GA1643812@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Gefeliciteerd, er is geld aan je gedoneerd
-To:     Recipients <adeboyejofolashade55@gmail.com>
-From:   adeboyejofolashade55@gmail.com
-Date:   Tue, 29 Mar 2022 23:18:52 +0100
-Reply-To: mike.weirsky.foundation003@gmail.com
-X-Spam-Status: No, score=2.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,T_US_DOLLARS_3
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220317085130.36388-1-yuehaibing@huawei.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Beste begunstigde,
+On Thu, Mar 17, 2022 at 04:51:30PM +0800, YueHaibing wrote:
+> This patch fix the following build error:
+> 
+> drivers/pci/controller/pci-hyperv.c:769:13: error: ‘hv_set_msi_entry_from_desc’ defined but not used [-Werror=unused-function]
+>   769 | static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> 
+> On arm64 hv_set_msi_entry_from_desc() is not used anymore since
+> commit d06957d7a692 ("PCI: hv: Avoid the retarget interrupt hypercall in irq_unmask() on ARM64").
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
- Je hebt een liefdadigheidsdonatie van ($ 10.000.000,00) van Mr. Mike Weirs=
-ky, een winnaar van een powerball-jackpotloterij van $ 273 miljoen.  Ik don=
-eer aan 5 willekeurige personen als je deze e-mail ontvangt, dan is je e-ma=
-il geselecteerd na een spin-ball. Ik heb vrijwillig besloten om het bedrag =
-van $ 10 miljoen USD aan jou te doneren als een van de geselecteerde 5, om =
-mijn winst te verifi=EBren
- =
+Applied to for-linus for v5.18, thanks!
 
-  Vriendelijk antwoord op: mike.weirsky.foundation003@gmail.com
- Voor uw claim.
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 8 --------
+>  1 file changed, 8 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index df84d221e3de..558b35aba610 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -766,14 +766,6 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *irqd)
+>  	return irqd->parent_data->hwirq;
+>  }
+>  
+> -static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+> -				       struct msi_desc *msi_desc)
+> -{
+> -	msi_entry->address = ((u64)msi_desc->msg.address_hi << 32) |
+> -			      msi_desc->msg.address_lo;
+> -	msi_entry->data = msi_desc->msg.data;
+> -}
+> -
+>  /*
+>   * @nr_bm_irqs:		Indicates the number of IRQs that were allocated from
+>   *			the bitmap.
+> -- 
+> 2.17.1
+> 
