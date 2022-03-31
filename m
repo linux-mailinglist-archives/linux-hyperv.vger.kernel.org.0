@@ -2,43 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 801344EE215
-	for <lists+linux-hyperv@lfdr.de>; Thu, 31 Mar 2022 21:47:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 210C14EE24E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 31 Mar 2022 22:05:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234813AbiCaTtY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 31 Mar 2022 15:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53144 "EHLO
+        id S237170AbiCaUGd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 31 Mar 2022 16:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232587AbiCaTtY (ORCPT
+        with ESMTP id S229923AbiCaUGc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 31 Mar 2022 15:49:24 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2090.outbound.protection.outlook.com [40.107.236.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C469424059B;
-        Thu, 31 Mar 2022 12:47:35 -0700 (PDT)
+        Thu, 31 Mar 2022 16:06:32 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2115.outbound.protection.outlook.com [40.107.92.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823CB18FAD1;
+        Thu, 31 Mar 2022 13:04:44 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hgl3J6SkSuhk+fWmGKVVgUr7IeXctTiTW7YVuy08MKo51EL5QEvG0405T/bfwug5xliBo5SjTwU04X3oNlJJ16JnB7jJxg1cxJOMintlet+isoX7vD7R+ngVyP9uykfT/3hcjxnfEVrxlFAeEiszSEUsV9XUofb+KnXuQclTng4LcD//kwULcIXkT6GSL4npJMJIqI+RSIyhQO4bMRr1l6DCANt55JIplkZj4IjznkzD+vrbPRQG2GcOUy70HXpUdW6FN9mKqwoHkIpZrYe/KDfkYuqu8HbHvr4zWnLAhlrHbvw84IGElBqpMN6Go4NuVmTIEaWF2k4SWfyGALlumg==
+ b=W8CMr5bRxS3lBHNIg0XnxyBqA6gAVZ07DrnxNIhVArBEYLm9BFytJd7hCvBIdvOF4/ECTvcmo3Fub0WYOoKpRpDAeqnL9jiQ7XXgVYhN4fl9JEmOaJCFS/Bw0O6qxkYzjYLSdcefU4aYUIL32wtrGhiMrTdzDrHO5TPqlRvlI/di9kNGrLGEHn7qh3F2NI6CfyGdy4Qa4ecPNOni8L7FBH6nm1uNVZA37oQiVhp36L1WMd8EcepexvqaT400jcd3SEnfaUeapHdj4RIOCKDq2pLfsDxkped7A0Dt4ijrkbsVlWewBJ4r3lc7NHrHh/da0+riMtLmUw0NpjKtdeA0mg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nosk05GVNurNh1lVT+G90Oet8Eig7ZbE9adIXe9vruw=;
- b=C8bKNCmmSQGYqUz+YdRgrlJfyRUwXZEbuNSeadnYsopyrfijmc8ydb4IkhKXcAKpIkjplBfV/1XxSmf2WppWLg74X6u2lsPLr/atxlPzxxAf0yEXVzbbBo6POsWxhIOs9potD5gS1qIhMVX99hngMdFPawOaeU9CTWYsiW4ynliOI+ykdBZx0RPiHT90grKtGHwlIRZFVVBLatZNdNnt8SxCaagaOTE2ksoI/H8H5mFbfS7aJnHuIHF/WwvLfHzWy+bnwHZMupmKmV0zwhaHywSF3f/4IB+hv74NCFwGFGyYAeG4/nRJQ3wkkpyv0MoqGR90VEK0PuOFA2+ovqsg2w==
+ bh=qSfiyWnkNnTt0zRCVRZyQus/1+vLSCKk2RrZUUY54OQ=;
+ b=EOXexepcMUlv7W1evFSWyxr1SToERJfQVW2bdeX8tAvrJSmorcQCGtuWTCjjlqFM2g7HZn0klJ6IOLUzAvziVbakh6ikk2gclwgGe0NK8uEShTHRxd6jL663WMexJEn/gVP+OpB5Qx0mAkpBqRmPDN+mA4xjQUuQXPq1yhlCICzuAvn6o8SvYaVJOaj/cdfuxIJuLwPDr1sM5D73/NmMCKgFfitbeXzH/I0CkgEzDIxkkpsk/9NUlukhlVVnKiIe7ioHwCVnSLScKJeeX/Xtf+CoFB56ZvDlw37w4pvZ7THYYa+8KcKoBrrSZnvDikTMJGK9WZXM8KCQfbb06lHbSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nosk05GVNurNh1lVT+G90Oet8Eig7ZbE9adIXe9vruw=;
- b=hM1X5Lrckw2rA2+cFgpZcwQKYqn2G74vntRLQQVouS+kQ1s3LcENZ2FDYSnqmN/yPnugKUTZ/B3YAlBhjunF2rpb20K8IwnaDMaZaxdrAlOOA0Q1bud7AhOqBnJMxanzL4euSFM1A5JwKTDhHoYWyJbWuKu7u3zrOo3/ammkhj8=
+ bh=qSfiyWnkNnTt0zRCVRZyQus/1+vLSCKk2RrZUUY54OQ=;
+ b=PUua1oCSpkS63FfrJLMnQckBG48HbH1Au2OxBkhaWc1S4kof3yctgGCrnbnBLeFnQ7KJolxZiIdS4VumLMzLbT0XSbmZTL9g65KxaVIxVCYmuYZMdDmdxXgqN/si0PKZrIdIk/ZeIGAJonLr/6Y6dLjPmx+uQy20W+LWscWKM74=
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by DM5PR2101MB1110.namprd21.prod.outlook.com (2603:10b6:4:a5::39) with
+ by MW4PR21MB1954.namprd21.prod.outlook.com (2603:10b6:303:7d::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.9; Thu, 31 Mar
- 2022 19:47:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.20; Thu, 31 Mar
+ 2022 20:04:40 +0000
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::e516:76e:5421:5b22]) by PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::e516:76e:5421:5b22%5]) with mapi id 15.20.5144.011; Thu, 31 Mar 2022
- 19:47:33 +0000
+ 20:04:40 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
         KY Srinivasan <kys@microsoft.com>,
@@ -53,82 +53,82 @@ To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
 CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 3/4] Drivers: hv: vmbus: Introduce
- vmbus_sendpacket_getid()
-Thread-Topic: [RFC PATCH 3/4] Drivers: hv: vmbus: Introduce
- vmbus_sendpacket_getid()
-Thread-Index: AQHYQrIr8owmhjFajEK7f8RcR8eP46zZ6ThQ
-Date:   Thu, 31 Mar 2022 19:47:32 +0000
-Message-ID: <PH0PR21MB3025F80C3F90284900C3D128D7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
+Subject: RE: [RFC PATCH 4/4] PCI: hv: Fix synchronization between channel
+ callback and hv_compose_msi_msg()
+Thread-Topic: [RFC PATCH 4/4] PCI: hv: Fix synchronization between channel
+ callback and hv_compose_msi_msg()
+Thread-Index: AQHYQrIrpTQ6MYpPrkWe6EvPnUGST6zZ7BHw
+Date:   Thu, 31 Mar 2022 20:04:40 +0000
+Message-ID: <PH0PR21MB302522DE89BB5A0F59B1C29AD7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
 References: <20220328144244.100228-1-parri.andrea@gmail.com>
- <20220328144244.100228-4-parri.andrea@gmail.com>
-In-Reply-To: <20220328144244.100228-4-parri.andrea@gmail.com>
+ <20220328144244.100228-5-parri.andrea@gmail.com>
+In-Reply-To: <20220328144244.100228-5-parri.andrea@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d76cdaaf-8326-48a1-9f04-8828409b7be3;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-03-31T19:41:24Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6d67715b-9df6-4af7-9179-72b17aa4ec7c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-03-31T19:51:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1f3c6492-4217-439e-b598-08da134f4c61
-x-ms-traffictypediagnostic: DM5PR2101MB1110:EE_
+x-ms-office365-filtering-correlation-id: 26b8a88f-69b8-4dbc-7c88-08da1351b0a4
+x-ms-traffictypediagnostic: MW4PR21MB1954:EE_
 x-ms-exchange-atpmessageproperties: SA|SL
-x-microsoft-antispam-prvs: <DM5PR2101MB11106A9D4AECF6E91C7AC972D7E19@DM5PR2101MB1110.namprd21.prod.outlook.com>
+x-microsoft-antispam-prvs: <MW4PR21MB1954BE6F5F5024982FE5AC57D7E19@MW4PR21MB1954.namprd21.prod.outlook.com>
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NtapmmPVsKYzcuV6FhcmVKhsuF+4+GkcaV4oRpBWTS3OMgGq4R2pBRav8S1NGZoPmfFB7tzYp6gvOOILQqcKD5Fpjq4gCMVutj/FY8qKZniJH+kNiKY9YClqbNlTvnWeawTy91atu7gDbfITCeWgETwLfJRcW/wmDFfDV/YIgOobJh1Xq8VkXYxJYi3inyzMkA5Z1RESYHYoGXKP6feTEurjDunXnN/swDUiCtS5GamwvDTqBt53GfXLQKsk7hcD+YXR2PEqgb2rwrTAcMCYYyFDrmgWv9Sol86Fise2pWKKlP2YlIFPnOxDlVtRPui8g7ZSi7pNzqFM9UvxLNRB+R19RfgyAfCRWO+T5Bc7+bCOXppvSrG5wXtahPKLOCvT55uUww3ouC+m+fVwu1zanBsm5Iuo5qCYHWaMH2meOXjnDmrNYIdh9QGYHbdce/i0eTNiBzWE+3yjI1Ec/ZrJiNWly8vIN6sAtN+YY6AucoW6dTvNCI3sLz32UwAhOzmiAUOPPypyAp8d75BYQdeuGRtryyMyvUXxMAwLFRHNmbS2V0/HVRJ1B82rJ7ErT+NSeVCgY/9zF+xeXkscgBfVhVqnrjC9wjOS7bEd+pXovAkc4jKiLiUgvrkogUjcqEzgk0Bx5rMudPBvl4RfDRPz+5EYnpyVD7k9OTTpz24UwOWY9irUoPSCdiLtjwCcD37f7dr2N2HjaNjVcHZWMarz/9A87lL8ZE+l+hVpjoAMJ/bms8CX49dY0XGn2r1PJt1GWR/kIbSRc1s2jZcemvEwHA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(66556008)(66446008)(4326008)(66476007)(76116006)(9686003)(66946007)(8676002)(52536014)(64756008)(86362001)(316002)(921005)(26005)(122000001)(8936002)(508600001)(10290500003)(38100700002)(54906003)(7696005)(38070700005)(6506007)(8990500004)(5660300002)(82960400001)(82950400001)(71200400001)(2906002)(55016003)(186003)(33656002)(110136005)(83380400001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: h+A39dRSIt1C91YbpSlv1A1/g4kIq316lg0xon8SkFD4KyLzwKC4c/SIgVALbOMriyYoOfgzxuHd5PXmbxjnZ8dLAunEjW0lJ+viijmz3PM7b2rSXMhS67pcr0Tq9Pok0y1+Ue0iN2XTT9uwkEq8SxXDThzS07u4aI76G+z6qUT1MzUukCf3e5wL/dBcWYHQACjKYVXTVpHV1SJdgEB3rU5hsWJLiYWgNae1+1GbWxptn3C4UkkRqATQAgmTDo7j7HleEwh4vwMdcJKv+4o27PYR9IF+OMLBlgo2/Y+s5o28sqUydFE0b2yGe74qVGEQN9BPOcamN4wNMICrUGc9lWqsBcuNCox9+FMnDozat6+h9VRebgjMXenihZaRJszgrwxKG0qGivY9QfLq/QmmabtXLTo4ijkIHkpypMkulZNrgJC7UxcCUwYyVERW8rlpeWCYfChpfC7Cg3TcNoYjZZIsTo34OioYZIxi8SnCsWmAD3WWFrg393OYPsP49jGA+rsUXzmP2f6J1Sue7G3KhhueYMK5f1Q4YI1vH/YPMFaYluy9wIc6X/ix+HIfc8pnOWIiB2obXO+/+1kiopyMTsfPE0ScXnlM7XMKRXL8MCwPqHt3hAWHKRF4YycC9bshWLIMTpuB32QEBitaQCU98gDSY/LK2wPfR6J0RQhcwQfJLCg6LLyDRbkbZ/HNKIEzvcJg8BrQg51TJivNxU7EtHEo3PJnzAWeIeS8rtj9a3uG5d8HS7SCKhWAsJt0Q4gvTWqaSajW6bFpTggwPYoM5A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(83380400001)(26005)(186003)(8936002)(38100700002)(38070700005)(6506007)(316002)(110136005)(7696005)(86362001)(9686003)(2906002)(54906003)(10290500003)(508600001)(8676002)(55016003)(52536014)(122000001)(33656002)(76116006)(8990500004)(66946007)(66556008)(82950400001)(66446008)(64756008)(66476007)(4326008)(5660300002)(921005)(82960400001)(71200400001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?YnONsQWmFtuWF8tNaTfBVb+Yrs2Ba7BaKBjT0U/eQi9Aj8BcdM6wpH54aDBY?=
- =?us-ascii?Q?S+GsHYrbwMJhG1Y5a9VgxviHv7nTuTL4ZB7jJK69hBKzFHBbXadZcNai3CDR?=
- =?us-ascii?Q?Mm8KoLtVGVEWFp8p/E0UaGnU0ydxmJkw8/Yk8/2FBS11h+baj1TQSevVAl+5?=
- =?us-ascii?Q?fruxWO6pZSowHaxjbZ+RRUf2IZncOFWdqS12sr6PkanIfh2ZaM4DvZu0Fxju?=
- =?us-ascii?Q?VnD6UDpsKMMD+lQfRLqDL16BEh3CAwhGAdWswATjVQ2gjNOyen+XjG9Ddggw?=
- =?us-ascii?Q?aTuRus1MTf/OsVmTodZk8WbU0HEwGctZJKNmKU+/iB3RTerj2Mb8LoJn5ZIa?=
- =?us-ascii?Q?YcGdwmvBXABr5PF3GKSf9rqb3EQES1skSqLDqYzu+AX+hqZpIuV5AYVbOdTz?=
- =?us-ascii?Q?gvimUt8U1Ez4L/SltFqiZCc6+dHjnVYsKSFq57M1ENPu9QN/mEiN1b6SWKqo?=
- =?us-ascii?Q?kzid4rqS+smm+Oh9VYzJseIQRk/Rc7dEQUlBoULmZkn6eJPOn/4ZRp3w4fH/?=
- =?us-ascii?Q?nTZuCZKTNuceLrh91ewRd63T0GOdc22UEiKV897WBrSQJuohx67Yck4clrR5?=
- =?us-ascii?Q?sBtPkRvCaXxj75dS7iHIBlr83TxSXc90WbZ0B1MpDFgsG0nC6F2QF/3VCntl?=
- =?us-ascii?Q?DsJXQ6OINtgWXnZNDuCZv8BJ8OSLOV5RJOpQieX54CJFm8XZhU96AVaEjsS1?=
- =?us-ascii?Q?lOZSeuF429TYoRnNqKLH4Z0JH36aY5VFK9UyCSKX42QY3B5milVBk3IFB5k8?=
- =?us-ascii?Q?YZd9BAE1EGdcBgh4N0VDInaalqONDxeK8Exw9S7ppB8l1rObI/pzwHgQCywW?=
- =?us-ascii?Q?x07ArKDOCOaQ/cSkvYz5D8oQSyTlPkhRLefdpMG0SvZ7E2mhWfHLC5g5p9SP?=
- =?us-ascii?Q?b9YmFkuDf2Y9UA93LYr/JEU6Zzgjt9lUHMFu0mkSII6JEhVIixjc78SCUWun?=
- =?us-ascii?Q?VLeS5zy1+aHtTmF4o1J4tWHOzPBN6uNx0GBY4cFnI/Q/tCB+RHx0XwSOSEW/?=
- =?us-ascii?Q?gAqr0ZQGS1M8V+2C7usaNwz3Tffvrijs3GHtjGVZb2aIePhHenhj0KNzC8Jr?=
- =?us-ascii?Q?T0fIpjQtJ8gCsVJjiVbtkdNK3pX8nVdPjMi04NuIZEiSaxbMiNu/dtCIYMdB?=
- =?us-ascii?Q?fyAhj5F3uYTjhbnKnPq0gwZuqlBuYMMfLgvGiwiJMqdbP5ZSR3EYS4m9LoH9?=
- =?us-ascii?Q?yUQNI0vWueiHb860b7b6r1O7DaPF8AwLy9a1iR9O8bWDEQs9fsiW9HY/YIbk?=
- =?us-ascii?Q?RQezZ6ExUaC/T5S+k82oGPdOAvkpj+/ryTBjyWUorOuaDdVfGbaYvszDJ3jm?=
- =?us-ascii?Q?M+Fu9RAFDUTBDeKdIFvsCuzLNCGxV8Givaifuxh85uG8+asyUaJx/RC3rDar?=
- =?us-ascii?Q?B9AwAqZqWDTVEE7aXiRo4IIFt3kixgFSSPoOoOf/BPTmzUR9hkTtBBZdyKUV?=
- =?us-ascii?Q?qYbvwHTLAwknOvZWYP+TdsOXbLj0UINsaEQSeP/bBgvR+vYvnjoVXuq7JhQr?=
- =?us-ascii?Q?lf+GsjlkbeqhPY6cHzpQ4nm/IvsrRr/g4faA3Reufqi2VIR6Wvb4mVZWh4r8?=
- =?us-ascii?Q?0JuPsC3oEHLhgTyQzaLqWcHJP2zaaJMDRXafECOCs47oknl1e16aQqcXZV2W?=
- =?us-ascii?Q?VVpa/YwlN5kzrnscdR9m8i6J4ubmkRrv1KhXj/rmkOAgh/+YhSL/F2nKj44Q?=
- =?us-ascii?Q?qs6vbh0qvDS05gsmzbIW3WY1KVV+YfytGLLg6UUnz3WFGdRAJgRXbGTu/zPD?=
- =?us-ascii?Q?yAqH8oVCEosGFpXi3xOlKB5eNkGP/Tg=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?srYO5P/ZT1J4xUEIjpdLCkVJj0aprdG4BOOGBfptSIwkpt3AB8gJaTs9NE3a?=
+ =?us-ascii?Q?0MC9Kdye8godft75c0mXzWTMN2f3xznd7oe/v617ok5b3pMYK69AfTN1q6Kn?=
+ =?us-ascii?Q?HRdfOuWqF8CPNmJ8vBL1ekodGInkik6HhZJc/jZZS6wbhzZa2FizIBX/M7Wz?=
+ =?us-ascii?Q?T+9ShwRBqg1pFwswcCo2Trzz107H2xO4EI2imTWsF8V8/qx4bOlW8Z1V9lQS?=
+ =?us-ascii?Q?yobmlkeDfrF/pNI4ksSkxQpfinvqNZTpaKunRA/Ikm349KN5XkoPK9DFv7kK?=
+ =?us-ascii?Q?zMQzm/D0s6MKrAZ//NirEd7mEedAVd47J+PMmLOsnG1jB1qNMdLO/9669KAI?=
+ =?us-ascii?Q?s4fGYoBw28CCnScXKMyu8F3V3dvniczz67/K3Ml9maAlkiJPM+e/pL5jWvUF?=
+ =?us-ascii?Q?7ijaMa/+9Vg1NhzLDeKLRL0GwHucKWwBuLSvXIMGzYR0g1tiYffB6+iIOkv2?=
+ =?us-ascii?Q?ICIlFzx15yxq8mmlWzBp1ObTlsUpm8zVmh9vK4et7w6UINTAVcF5rHVzuP+V?=
+ =?us-ascii?Q?2PykAu66QSkJ9uF8VM0WnrtOoC+CKnzfO3r/JvqP6LePKFKpKuAhzhaGmWAD?=
+ =?us-ascii?Q?UTr8wqjV/cYwIqGhWWj8iY0wGCad0ITxVTYw2sFP5zWAglL+FuQGPOYBOoqh?=
+ =?us-ascii?Q?GljL474BlSye9zqzra+PwmqOqv/Ij/hAcWISgD9IA0UJr4obFmVqr9mNJW/M?=
+ =?us-ascii?Q?W4g/x4/MPaCL8KZQ+XLWofvK9AX7yRCrjJLej6napic1gkgzM0K3pmEsaAZ4?=
+ =?us-ascii?Q?uvO0+IlTHrx8fc/2Jac0akAcDvUG7Adfsx3cQpIDQnvJ5Gu4o19ifFhTGw4x?=
+ =?us-ascii?Q?OwDadgxi5vI+8Q2IUoAf1wA0HEB/Kkgkt+xyEyT+wdbT6PSxBXcShTV3+sIq?=
+ =?us-ascii?Q?2V4Y7g5w6MAticjuGF8Ob9xTjZEy84EW9/ae+Yi3eBgDDKCg9fO4ln3F0fHA?=
+ =?us-ascii?Q?YSrfrNbNyb6XqCOLQmrFcLvD647Bqa4WlgHwCx3wP2KPg99BSQKeclNCslUx?=
+ =?us-ascii?Q?f52yrJROovL+L7J+eWE3+yePhLnnvcipNQ3V0FNhF0wiWqhDPd+uFx4gFZKf?=
+ =?us-ascii?Q?+5qmGQeXpsJc+lDR9IL36drs0GAzAwK3Q5iliaxhFpv+E+TUQOCD6nTmcv/1?=
+ =?us-ascii?Q?0a5ifpsz7fuAAt9vr7FM7kIXIwCOhsYrHPRy0Hyj//BMuoXLKZvRUX3RIjrq?=
+ =?us-ascii?Q?vE4HEAix6xFSOT1TDGBg+rwZqGJztU4g8XkSwcQWcRE/Dappkuk55MpYwpeY?=
+ =?us-ascii?Q?vtcuLgK7Iv+YHYuUf8Kn0nWoBjopTBWpqQuhCJl/HC9BsanGG5HUZ25vD0Cx?=
+ =?us-ascii?Q?59iQ5/YP0zHavtN5fFkBi1ooJQziArN5DQgPNaDGBb0r6Tdx7MZ2BklT0b8u?=
+ =?us-ascii?Q?pMxEJhKtn0cRU5oyRdreAunhvZNNa07v+qPL14lenBQTEiRcOtCbAy4YMPGO?=
+ =?us-ascii?Q?/zorFn5Xt7ucrXQx7QmXdea202+bySjQwdwzocZ+XB1FH3ZlnR04mJ4acHmt?=
+ =?us-ascii?Q?o8XC6vAOnr0xY3eMYs0z7v6rGQRF6sWUXrAhg67GEREUV9NbtKmnxOCTr0db?=
+ =?us-ascii?Q?X5ZA30osj9uMHjLQMccvddphRhIwjxxfA94Up0cGD9o2sI9rx3d7GwRyaaQ1?=
+ =?us-ascii?Q?Qytd9sRZUqnkTUVuIcQg9OnTOHOBLlexc2C9346aYuPSGhcE9sRG3sRdCmE8?=
+ =?us-ascii?Q?2tJe02PJ77WY9upPgXpR4glh49OAaZK3z3fvIJkyYN7HD/OlRZXK+5apF5s7?=
+ =?us-ascii?Q?dKcwRamAH/7FIuD4cuFvYQbPnlz0xIc=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f3c6492-4217-439e-b598-08da134f4c61
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2022 19:47:32.9612
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26b8a88f-69b8-4dbc-7c88-08da1351b0a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2022 20:04:40.0445
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eYDGzGVBZuEMDmBYQmMsbK9IERM4p2lzeRKK4cvKRYZOmPXomYGbyU8E321sqShIQRHqpP3ig4VbZ1RGNmgyXJlfc2mTwP7YPFVOm22sQmI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1110
+X-MS-Exchange-CrossTenant-userprincipalname: ZO3ncNd0AMmVDrPYuniO7BqMN4QNoPxoSriMX0zvmcKrtvdFGQEDhsusAf/0xLxltWI8UelK3cRyEbsxlHp5tKSFlO4CzdOuGJkSFbyg2KM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1954
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -138,178 +138,219 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Monday, March=
  28, 2022 7:43 AM
 >=20
-> The function can be used to send a VMbus packet and retrieve the
-> corresponding transaction ID.  It will be used by hv_pci.
+> Dexuan wrote:
 >=20
-> No functional change.
+>   "[...]  when we disable AccelNet, the host PCI VSP driver sends a
+>    PCI_EJECT message first, and the channel callback may set
+>    hpdev->state to hv_pcichild_ejecting on a different CPU.  This can
+>    cause hv_compose_msi_msg() to exit from the loop and 'return', and
+>    the on-stack variable 'ctxt' is invalid.  Now, if the response
+>    message from the host arrives, the channel callback will try to
+>    access the invalid 'ctxt' variable, and this may cause a crash."
 >=20
+> Schematically:
+>=20
+>   Hyper-V sends PCI_EJECT msg
+>     hv_pci_onchannelcallback()
+>       state =3D hv_pcichild_ejecting
+>                                        hv_compose_msi_msg()
+>                                          alloc and init comp_pkt
+>                                          state =3D=3D hv_pcichild_ejectin=
+g
+>   Hyper-V sends VM_PKT_COMP msg
+>     hv_pci_onchannelcallback()
+>       retrieve address of comp_pkt
+>                                          'free' comp_pkt and return
+>       comp_pkt->completion_func()
+>=20
+> Dexuan also showed how the crash can be triggered after introducing
+> suitable delays in the driver code, thus validating the 'assumption'
+> that the host can still normally respond to the guest's compose_msi
+> request after the host has started to eject the PCI device.
+>=20
+> Fix the synchronization by leveraging the requestor lock as follows:
+>=20
+>   - Before 'return'-ing in hv_compose_msi_msg(), remove the ID (while
+>     holding the requestor lock) associated to the completion packet.
+>=20
+>   - Retrieve the address *and call ->completion_func() within a same
+>     (requestor) critical section in hv_pci_onchannelcallback().
+>=20
+> Fixes: de0aa7b2f97d3 ("PCI: hv: Fix 2 hang issues in hv_compose_msi_msg()=
+")
+> Reported-by: Wei Hu <weh@microsoft.com>
+> Reported-by: Dexuan Cui <decui@microsoft.com>
 > Suggested-by: Michael Kelley <mikelley@microsoft.com>
 > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > ---
->  drivers/hv/channel.c      | 38 ++++++++++++++++++++++++++++++++------
->  drivers/hv/hyperv_vmbus.h |  2 +-
->  drivers/hv/ring_buffer.c  |  4 +++-
->  include/linux/hyperv.h    |  7 +++++++
->  4 files changed, 43 insertions(+), 8 deletions(-)
+>  drivers/pci/controller/pci-hyperv.c | 83 ++++++++++++++++++++++++++---
+>  1 file changed, 77 insertions(+), 6 deletions(-)
 >=20
-> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> index a253eee3aeb1a..3eaa41c7ce15f 100644
-> --- a/drivers/hv/channel.c
-> +++ b/drivers/hv/channel.c
-> @@ -1022,11 +1022,13 @@ void vmbus_close(struct vmbus_channel *channel)
->  EXPORT_SYMBOL_GPL(vmbus_close);
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index 9f963a46b8298..8876b318173f0 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1662,6 +1662,55 @@ static u32 hv_compose_msi_req_v3(
+>  	return sizeof(*int_pkt);
+>  }
 >=20
->  /**
-> - * vmbus_sendpacket() - Send the specified buffer on the given channel
-> + * vmbus_sendpacket_getid() - Send the specified buffer on the given cha=
-nnel
->   * @channel: Pointer to vmbus_channel structure
->   * @buffer: Pointer to the buffer you want to send the data from.
->   * @bufferlen: Maximum size of what the buffer holds.
->   * @requestid: Identifier of the request
-> + * @trans_id: Identifier of the transaction associated to this request, =
-if
-> + *            the send is successful; undefined, otherwise.
->   * @type: Type of packet that is being sent e.g. negotiate, time
->   *	  packet etc.
->   * @flags: 0 or VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
-> @@ -1036,8 +1038,8 @@ EXPORT_SYMBOL_GPL(vmbus_close);
->   *
->   * Mainly used by Hyper-V drivers.
->   */
-> -int vmbus_sendpacket(struct vmbus_channel *channel, void *buffer,
-> -			   u32 bufferlen, u64 requestid,
-> +int vmbus_sendpacket_getid(struct vmbus_channel *channel, void *buffer,
-> +			   u32 bufferlen, u64 requestid, u64 *trans_id,
->  			   enum vmbus_packet_type type, u32 flags)
->  {
->  	struct vmpacket_descriptor desc;
-> @@ -1063,7 +1065,31 @@ int vmbus_sendpacket(struct vmbus_channel *channel=
-,
-> void *buffer,
->  	bufferlist[2].iov_base =3D &aligned_data;
->  	bufferlist[2].iov_len =3D (packetlen_aligned - packetlen);
->=20
-> -	return hv_ringbuffer_write(channel, bufferlist, num_vecs, requestid);
-> +	return hv_ringbuffer_write(channel, bufferlist, num_vecs, requestid, tr=
-ans_id);
-> +}
-> +EXPORT_SYMBOL(vmbus_sendpacket_getid);
-> +
-> +/**
-> + * vmbus_sendpacket() - Send the specified buffer on the given channel
-> + * @channel: Pointer to vmbus_channel structure
-> + * @buffer: Pointer to the buffer you want to send the data from.
-> + * @bufferlen: Maximum size of what the buffer holds.
-> + * @requestid: Identifier of the request
-> + * @type: Type of packet that is being sent e.g. negotiate, time
-> + *	  packet etc.
-> + * @flags: 0 or VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
-> + *
-> + * Sends data in @buffer directly to Hyper-V via the vmbus.
-> + * This will send the data unparsed to Hyper-V.
-> + *
-> + * Mainly used by Hyper-V drivers.
-> + */
-> +int vmbus_sendpacket(struct vmbus_channel *channel, void *buffer,
-> +		     u32 bufferlen, u64 requestid,
-> +		     enum vmbus_packet_type type, u32 flags)
+> +/* As in vmbus_request_addr() but without the requestor lock */
+> +static u64 __hv_pci_request_addr(struct vmbus_channel *channel, u64 tran=
+s_id)
 > +{
-> +	return vmbus_sendpacket_getid(channel, buffer, bufferlen,
-> +				      requestid, NULL, type, flags);
->  }
->  EXPORT_SYMBOL(vmbus_sendpacket);
+> +	struct vmbus_requestor *rqstor =3D &channel->requestor;
+> +	u64 req_addr;
+> +
+> +	if (trans_id >=3D rqstor->size ||
+> +	    !test_bit(trans_id, rqstor->req_bitmap))
+> +		return VMBUS_RQST_ERROR;
+> +
+> +	req_addr =3D rqstor->req_arr[trans_id];
+> +	rqstor->req_arr[trans_id] =3D rqstor->next_request_id;
+> +	rqstor->next_request_id =3D trans_id;
+> +
+> +	bitmap_clear(rqstor->req_bitmap, trans_id, 1);
+> +
+> +	return req_addr;
+> +}
+> +
+> +/*
+> + * Clear/remove @trans_id from @channel's requestor, provided the memory
+> + * address stored at @trans_id equals @rqst_addr.
+> + */
+> +static void hv_pci_request_addr_match(struct vmbus_channel *channel,
+> +				      u64 trans_id, u64 rqst_addr)
+> +{
+> +	struct vmbus_requestor *rqstor =3D &channel->requestor;
+> +	unsigned long flags;
+> +	u64 req_addr;
+> +
+> +	spin_lock_irqsave(&rqstor->req_lock, flags);
+> +
+> +	if (trans_id >=3D rqstor->size ||
+> +	    !test_bit(trans_id, rqstor->req_bitmap)) {
+> +		spin_unlock_irqrestore(&rqstor->req_lock, flags);
+> +		return;
+> +	}
+> +
+> +	req_addr =3D rqstor->req_arr[trans_id];
+> +	if (req_addr =3D=3D rqst_addr) {
+> +		rqstor->req_arr[trans_id] =3D rqstor->next_request_id;
+> +		rqstor->next_request_id =3D trans_id;
+> +
+> +		bitmap_clear(rqstor->req_bitmap, trans_id, 1);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&rqstor->req_lock, flags);
+> +}
+> +
+
+Even though these two new functions are used only in the Hyper-V
+vPCI driver, it seems like they should go in drivers/hv/channel.c
+along with vmbus_next_request_id() and vmbus_request_addr().
+And maybe vmbus_request_addr(), which gets the spin lock,
+could be implemented to call the new version above that
+assumes the spin lock is already held.  Also, the new function
+that requires matching on the rqst_addr might also be folded
+into common code via an optional rqst_addr argument.
+
+>  /**
+>   * hv_compose_msi_msg() - Supplies a valid MSI address/data
+>   * @data:	Everything about this MSI
+> @@ -1691,7 +1740,7 @@ static void hv_compose_msi_msg(struct irq_data *dat=
+a,
+> struct msi_msg *msg)
+>  			struct pci_create_interrupt3 v3;
+>  		} int_pkts;
+>  	} __packed ctxt;
+> -
+> +	u64 trans_id;
+>  	u32 size;
+>  	int ret;
 >=20
-> @@ -1122,7 +1148,7 @@ int vmbus_sendpacket_pagebuffer(struct vmbus_channe=
-l
-> *channel,
->  	bufferlist[2].iov_base =3D &aligned_data;
->  	bufferlist[2].iov_len =3D (packetlen_aligned - packetlen);
->=20
-> -	return hv_ringbuffer_write(channel, bufferlist, 3, requestid);
-> +	return hv_ringbuffer_write(channel, bufferlist, 3, requestid, NULL);
->  }
->  EXPORT_SYMBOL_GPL(vmbus_sendpacket_pagebuffer);
->=20
-> @@ -1160,7 +1186,7 @@ int vmbus_sendpacket_mpb_desc(struct vmbus_channel
-> *channel,
->  	bufferlist[2].iov_base =3D &aligned_data;
->  	bufferlist[2].iov_len =3D (packetlen_aligned - packetlen);
->=20
-> -	return hv_ringbuffer_write(channel, bufferlist, 3, requestid);
-> +	return hv_ringbuffer_write(channel, bufferlist, 3, requestid, NULL);
->  }
->  EXPORT_SYMBOL_GPL(vmbus_sendpacket_mpb_desc);
->=20
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 3a1f007b678a0..64c0b9cbe183b 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -181,7 +181,7 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info
-> *ring_info);
->=20
->  int hv_ringbuffer_write(struct vmbus_channel *channel,
->  			const struct kvec *kv_list, u32 kv_count,
-> -			u64 requestid);
-> +			u64 requestid, u64 *trans_id);
->=20
->  int hv_ringbuffer_read(struct vmbus_channel *channel,
->  		       void *buffer, u32 buflen, u32 *buffer_actual_len,
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 71efacb909659..c8561c80c460c 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -283,7 +283,7 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info
-> *ring_info)
->  /* Write to the ring buffer. */
->  int hv_ringbuffer_write(struct vmbus_channel *channel,
->  			const struct kvec *kv_list, u32 kv_count,
-> -			u64 requestid)
-> +			u64 requestid, u64 *trans_id)
->  {
->  	int i;
->  	u32 bytes_avail_towrite;
-> @@ -354,6 +354,8 @@ int hv_ringbuffer_write(struct vmbus_channel *channel=
-,
+> @@ -1753,10 +1802,10 @@ static void hv_compose_msi_msg(struct irq_data *d=
+ata,
+> struct msi_msg *msg)
+>  		goto free_int_desc;
 >  	}
->  	desc =3D hv_get_ring_buffer(outring_info) + old_write;
->  	desc->trans_id =3D (rqst_id =3D=3D VMBUS_NO_RQSTOR) ? requestid : rqst_=
-id;
-> +	if (trans_id)
-> +		*trans_id =3D desc->trans_id;
-
-This line should *not* read the trans_id out of the ring buffer, since that
-memory is shared with the Hyper-V host and subject to being maliciously
-changed by the host.  Need to set *trans_id only from local variables, and
-somehow ensure the compiler doesn't generate code that reads the value
-from the ring buffer.  Maybe mark the desc->trans_id field as volatile, or =
-cast
-it as such?  Or does WRITE_ONCE() work when setting it?
-
-Michael
-
 >=20
->  	/* Set previous packet start */
->  	prev_indices =3D hv_get_ring_bufferindices(outring_info);
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index fe2e0179ed51e..a7cb596d893b1 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -1161,6 +1161,13 @@ extern int vmbus_open(struct vmbus_channel *channe=
-l,
+> -	ret =3D vmbus_sendpacket(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
+> -			       size, (unsigned long)&ctxt.pci_pkt,
+> -			       VM_PKT_DATA_INBAND,
+> -			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+> +	ret =3D vmbus_sendpacket_getid(hpdev->hbus->hdev->channel, &ctxt.int_pk=
+ts,
+> +				     size, (unsigned long)&ctxt.pci_pkt,
+> +				     &trans_id, VM_PKT_DATA_INBAND,
+> +
+> VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+>  	if (ret) {
+>  		dev_err(&hbus->hdev->device,
+>  			"Sending request for interrupt failed: 0x%x",
+> @@ -1835,6 +1884,16 @@ static void hv_compose_msi_msg(struct irq_data *da=
+ta,
+> struct msi_msg *msg)
 >=20
->  extern void vmbus_close(struct vmbus_channel *channel);
+>  enable_tasklet:
+>  	tasklet_enable(&channel->callback_event);
+> +	/*
+> +	 * The completion packet on the stack becomes invalid after 'return';
+> +	 * remove the ID from the VMbus requestor if the identifier is still
+> +	 * mapped to/associated with the packet.  (The identifier could have
+> +	 * been 're-used', i.e., already removed and (re-)mapped.)
+> +	 *
+> +	 * Cf. hv_pci_onchannelcallback().
+> +	 */
+> +	hv_pci_request_addr_match(channel, trans_id,
+> +				  (unsigned long)&ctxt.pci_pkt);
+>  free_int_desc:
+>  	kfree(int_desc);
+>  drop_reference:
+> @@ -2700,6 +2759,8 @@ static void hv_pci_onchannelcallback(void *context)
+>  	int ret;
+>  	struct hv_pcibus_device *hbus =3D context;
+>  	struct vmbus_channel *chan =3D hbus->hdev->channel;
+> +	struct vmbus_requestor *rqstor =3D &chan->requestor;
+> +	unsigned long flags;
+>  	u32 bytes_recvd;
+>  	u64 req_id, req_addr;
+>  	struct vmpacket_descriptor *desc;
+> @@ -2747,17 +2808,27 @@ static void hv_pci_onchannelcallback(void *contex=
+t)
+>  		switch (desc->type) {
+>  		case VM_PKT_COMP:
 >=20
-> +extern int vmbus_sendpacket_getid(struct vmbus_channel *channel,
-> +				  void *buffer,
-> +				  u32 bufferLen,
-> +				  u64 requestid,
-> +				  u64 *trans_id,
-> +				  enum vmbus_packet_type type,
-> +				  u32 flags);
->  extern int vmbus_sendpacket(struct vmbus_channel *channel,
->  				  void *buffer,
->  				  u32 bufferLen,
+> -			req_addr =3D chan->request_addr_callback(chan, req_id);
+> +			spin_lock_irqsave(&rqstor->req_lock, flags);
+
+Obtaining the lock (and releasing it below) might be better abstracted into
+a lock_requestor() and unlock_requestor() pair that are implemented in
+drivers/hv/channel.c along with the other related functions.
+
+> +			req_addr =3D __hv_pci_request_addr(chan, req_id);
+>  			if (req_addr =3D=3D VMBUS_RQST_ERROR) {
+> +				spin_unlock_irqrestore(&rqstor->req_lock, flags);
+>  				dev_warn_ratelimited(&hbus->hdev->device,
+>  						     "Invalid request ID\n");
+>  				break;
+>  			}
+>  			comp_packet =3D (struct pci_packet *)req_addr;
+>  			response =3D (struct pci_response *)buffer;
+> +			/*
+> +			 * Call ->completion_func() within the critical section to make
+> +			 * sure that the packet pointer is still valid during the call:
+> +			 * here 'valid' means that there's a task still waiting for the
+> +			 * completion, and that the packet data is still on the waiting
+> +			 * task's stack.  Cf. hv_compose_msi_msg().
+> +			 */
+>  			comp_packet->completion_func(comp_packet->compl_ctxt,
+>  						     response,
+>  						     bytes_recvd);
+> +			spin_unlock_irqrestore(&rqstor->req_lock, flags);
+>  			break;
+>=20
+>  		case VM_PKT_DATA_INBAND:
 > --
 > 2.25.1
 
