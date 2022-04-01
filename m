@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D2284EF814
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Apr 2022 18:37:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 791F04EF84A
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Apr 2022 18:45:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244926AbiDAQja (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 1 Apr 2022 12:39:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
+        id S1348714AbiDAQq5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 1 Apr 2022 12:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243238AbiDAQgU (ORCPT
+        with ESMTP id S1349519AbiDAQqu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 1 Apr 2022 12:36:20 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932D360ABA;
-        Fri,  1 Apr 2022 09:09:27 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id y10so3499766edv.7;
-        Fri, 01 Apr 2022 09:09:27 -0700 (PDT)
+        Fri, 1 Apr 2022 12:46:50 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC87170084;
+        Fri,  1 Apr 2022 09:30:19 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id bh17so6945606ejb.8;
+        Fri, 01 Apr 2022 09:30:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=OsRh1+OUJjafmw1DLalzmHZY/d86wBXtRZCzuhQ9mCU=;
-        b=CyaAXZ+IZKz9gQ7HVvoq92nHK87TtxUVRVI+dFs2B2UzLDczPui7Zt+1vUbmgx3Bdt
-         dpkGF1v81vHMc3grDBckD5+il7kl40JL+LMt+glIHncxGx42UclHTuL+3qQhARf5up8N
-         VYAPCe5GDasxGVJG81cP9vsjjlvjLoYOWgiyObxxMnwnGxPWXeBNFSNTaKqi/FmvrO+n
-         cpm0PirjT1Ego1eSZj2BOi3r0ESuibWg+TNdxIiE16r+fJeqD58K2Y2fokGGZxHciWzk
-         WijuccdcZfn+O8TFWAdhtCW11jP4jquKrxZZMHZQdWrBmCI7sakO9I41pBw8+JcKMa56
-         l9FA==
+        bh=4pIkLo492sJgn0Tf5PhOvHnbsFGJpe4T4zxP4i8IhZ8=;
+        b=eJ7zC+euchPUgDMoXaWTQCW7vfXQStXEn1D8Dq4IVZcxPuYjYzt0EBr649lpuwLDhw
+         i176K1V1oqZfdTdS2tNQm4ICUc+vrLusSPSI4b2/mwtv6AIsB/Damt8/C/nZdWmbEAbh
+         R6aQj1xI8iejSzxLOeRPxrGMGOQPb8IRrD+3ASkMuDGqGro9g972js4U8jq5KGpoMHNk
+         ENikHv3l5mskWlqd3E4c7cuQ0t2GB+VhGQgeC0cqv19Yo66ZQeaf246o5AwDiem9Y+mc
+         D1v1/H7CgrQqx3Be7xJMLCeTLpCfaAJOfmbHheaXXhTVCwEsCGI7kSferCQqoT8zLi34
+         lGoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=OsRh1+OUJjafmw1DLalzmHZY/d86wBXtRZCzuhQ9mCU=;
-        b=SE8/ecDw2ERYSDtcNTnVxa0uG9QGL1hak47UYukw5vwvflOfHhxXcsDh0RtI68d38b
-         TbHTiKXaue5thcli90lTnzgMsgQViml+nEbFDen4hUYutOc8FXTr/iZresHV69uSyMik
-         KN7g2HsMiYHTlWufuT2ajBVYB/h+eiL3w/EwB+MR+YYSdnGEe8i7jU5k9rz5d8k9sfUe
-         xXzae0k8YMuwczpN9y3k71AuCjJDloX8zVRuMDylkbJQhZsD0k6cUZiXrCVidDFQ7iWD
-         mUK15ru7+MDm3R7Onazg68wK/1IeKa1xHHFoCfZAuik8UkGktjhbUwWv0AWbQaT2E3m9
-         chbw==
-X-Gm-Message-State: AOAM533pCuzN8T0vGuvkeBUGSFL4c4co6Dd4db/sYu8lNuesMuFwV9WA
-        g0oeSx1bkgewij65s53aww0=
-X-Google-Smtp-Source: ABdhPJzv5bt7f0IiLlBql9Y5PWwGhZWdPagcJ+jWbTiZA17jQAlP+7vQNkZuTUH5vvkRzeIERD4AwA==
-X-Received: by 2002:a05:6402:4250:b0:419:5e89:a40f with SMTP id g16-20020a056402425000b004195e89a40fmr21974008edb.319.1648829365926;
-        Fri, 01 Apr 2022 09:09:25 -0700 (PDT)
+        bh=4pIkLo492sJgn0Tf5PhOvHnbsFGJpe4T4zxP4i8IhZ8=;
+        b=ZdZqoLV0AwqdxAqjmXqfzq3m85d9+76TAAazUKopwN19yjFTiX9gADlR1aisSxiL/n
+         AdKUP040R3HI3xlyG8cpMlnAsZsdoE/IyAuizR01uy7TsiNFz668jYgFMWltoHwoxl6Y
+         N441R443Jdz1vQMlglsO3Hu+FnguzNkI2xJwuY6y8ezhJhvMam6S3mF5Bt8CafBgk5ty
+         cqA5pAnZFNr+3IcOS5Yjw8z2ssJl7b1P9iq0foWFXw9SL2i9eBRE7mQEIsMnyJITKKIq
+         LAfKbtJg+DaNh0L4oPuX+kzD3ypKAXKl6N9C89uyu+Bwcr30nPo3P7LFC87TY7SUDcc+
+         DGag==
+X-Gm-Message-State: AOAM5337RGEdy6YAvim8wRj8zmjhXwwczc2dwrWCOKpD3Ivxc/yAha4F
+        JhO1quxdDU0r/4PhrL647/Y=
+X-Google-Smtp-Source: ABdhPJwwKTx/Rq9p1R4bFoYOHcHDYCrElfThpYQj1HJFm/AhAXq1BAVKn9QLCAV+OsKEVUWIbbJJTw==
+X-Received: by 2002:a17:907:97cc:b0:6df:83bc:314c with SMTP id js12-20020a17090797cc00b006df83bc314cmr515522ejc.587.1648830618325;
+        Fri, 01 Apr 2022 09:30:18 -0700 (PDT)
 Received: from anparri (host-82-59-4-232.retail.telecomitalia.it. [82.59.4.232])
-        by smtp.gmail.com with ESMTPSA id a21-20020a170906275500b006d10c07fabesm1158632ejd.201.2022.04.01.09.09.24
+        by smtp.gmail.com with ESMTPSA id o8-20020a17090611c800b006e4de0c89bbsm607804eja.198.2022.04.01.09.30.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Apr 2022 09:09:25 -0700 (PDT)
-Date:   Fri, 1 Apr 2022 18:09:22 +0200
+        Fri, 01 Apr 2022 09:30:17 -0700 (PDT)
+Date:   Fri, 1 Apr 2022 18:30:15 +0200
 From:   Andrea Parri <parri.andrea@gmail.com>
 To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 Cc:     KY Srinivasan <kys@microsoft.com>,
@@ -63,16 +63,16 @@ Cc:     KY Srinivasan <kys@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/4] Drivers: hv: vmbus: Introduce
- vmbus_sendpacket_getid()
-Message-ID: <20220401160922.GB437893@anparri>
+Subject: Re: [RFC PATCH 4/4] PCI: hv: Fix synchronization between channel
+ callback and hv_compose_msi_msg()
+Message-ID: <20220401163015.GC437893@anparri>
 References: <20220328144244.100228-1-parri.andrea@gmail.com>
- <20220328144244.100228-4-parri.andrea@gmail.com>
- <PH0PR21MB3025F80C3F90284900C3D128D7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
+ <20220328144244.100228-5-parri.andrea@gmail.com>
+ <PH0PR21MB302522DE89BB5A0F59B1C29AD7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH0PR21MB3025F80C3F90284900C3D128D7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
+In-Reply-To: <PH0PR21MB302522DE89BB5A0F59B1C29AD7E19@PH0PR21MB3025.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -83,23 +83,85 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> > @@ -354,6 +354,8 @@ int hv_ringbuffer_write(struct vmbus_channel *channel,
-> >  	}
-> >  	desc = hv_get_ring_buffer(outring_info) + old_write;
-> >  	desc->trans_id = (rqst_id == VMBUS_NO_RQSTOR) ? requestid : rqst_id;
-> > +	if (trans_id)
-> > +		*trans_id = desc->trans_id;
+> > @@ -1662,6 +1662,55 @@ static u32 hv_compose_msi_req_v3(
+> >  	return sizeof(*int_pkt);
+> >  }
+> > 
+> > +/* As in vmbus_request_addr() but without the requestor lock */
+> > +static u64 __hv_pci_request_addr(struct vmbus_channel *channel, u64 trans_id)
+> > +{
+> > +	struct vmbus_requestor *rqstor = &channel->requestor;
+> > +	u64 req_addr;
+> > +
+> > +	if (trans_id >= rqstor->size ||
+> > +	    !test_bit(trans_id, rqstor->req_bitmap))
+> > +		return VMBUS_RQST_ERROR;
+> > +
+> > +	req_addr = rqstor->req_arr[trans_id];
+> > +	rqstor->req_arr[trans_id] = rqstor->next_request_id;
+> > +	rqstor->next_request_id = trans_id;
+> > +
+> > +	bitmap_clear(rqstor->req_bitmap, trans_id, 1);
+> > +
+> > +	return req_addr;
+> > +}
+> > +
+> > +/*
+> > + * Clear/remove @trans_id from @channel's requestor, provided the memory
+> > + * address stored at @trans_id equals @rqst_addr.
+> > + */
+> > +static void hv_pci_request_addr_match(struct vmbus_channel *channel,
+> > +				      u64 trans_id, u64 rqst_addr)
+> > +{
+> > +	struct vmbus_requestor *rqstor = &channel->requestor;
+> > +	unsigned long flags;
+> > +	u64 req_addr;
+> > +
+> > +	spin_lock_irqsave(&rqstor->req_lock, flags);
+> > +
+> > +	if (trans_id >= rqstor->size ||
+> > +	    !test_bit(trans_id, rqstor->req_bitmap)) {
+> > +		spin_unlock_irqrestore(&rqstor->req_lock, flags);
+> > +		return;
+> > +	}
+> > +
+> > +	req_addr = rqstor->req_arr[trans_id];
+> > +	if (req_addr == rqst_addr) {
+> > +		rqstor->req_arr[trans_id] = rqstor->next_request_id;
+> > +		rqstor->next_request_id = trans_id;
+> > +
+> > +		bitmap_clear(rqstor->req_bitmap, trans_id, 1);
+> > +	}
+> > +
+> > +	spin_unlock_irqrestore(&rqstor->req_lock, flags);
+> > +}
+> > +
 > 
-> This line should *not* read the trans_id out of the ring buffer, since that
-> memory is shared with the Hyper-V host and subject to being maliciously
-> changed by the host.  Need to set *trans_id only from local variables, and
-> somehow ensure the compiler doesn't generate code that reads the value
-> from the ring buffer.  Maybe mark the desc->trans_id field as volatile, or cast
-> it as such?  Or does WRITE_ONCE() work when setting it?
+> Even though these two new functions are used only in the Hyper-V
+> vPCI driver, it seems like they should go in drivers/hv/channel.c
+> along with vmbus_next_request_id() and vmbus_request_addr().
+> And maybe vmbus_request_addr(), which gets the spin lock,
+> could be implemented to call the new version above that
+> assumes the spin lock is already held.  Also, the new function
+> that requires matching on the rqst_addr might also be folded
+> into common code via an optional rqst_addr argument.
 
-I'd stick to WRITE_ONCE() (with a comment).
+Noted.
 
-Good catch!
+
+> > @@ -2747,17 +2808,27 @@ static void hv_pci_onchannelcallback(void *context)
+> >  		switch (desc->type) {
+> >  		case VM_PKT_COMP:
+> > 
+> > -			req_addr = chan->request_addr_callback(chan, req_id);
+> > +			spin_lock_irqsave(&rqstor->req_lock, flags);
+> 
+> Obtaining the lock (and releasing it below) might be better abstracted into
+> a lock_requestor() and unlock_requestor() pair that are implemented in
+> drivers/hv/channel.c along with the other related functions.
+
+Seems like these helpers should go 'inline' in <linux/hyper.h>, let me
+do it...
 
 Thanks,
   Andrea
