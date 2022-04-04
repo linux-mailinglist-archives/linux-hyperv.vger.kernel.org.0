@@ -2,194 +2,161 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C34A4F0C21
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Apr 2022 20:39:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAA104F0E85
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Apr 2022 07:06:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355171AbiDCSl2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 3 Apr 2022 14:41:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50876 "EHLO
+        id S1355720AbiDDFIR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 4 Apr 2022 01:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376335AbiDCSlP (ORCPT
+        with ESMTP id S235494AbiDDFIQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 3 Apr 2022 14:41:15 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720961B780
-        for <linux-hyperv@vger.kernel.org>; Sun,  3 Apr 2022 11:38:36 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id r11-20020a1c440b000000b0038ccb70e239so815743wma.3
-        for <linux-hyperv@vger.kernel.org>; Sun, 03 Apr 2022 11:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ibpfD7Stpc4SjKvYaB/H7uRmvQIg2a/DOTBSRfVQ9Vc=;
-        b=jdVVmHC1IJIqgXMutaed/G3PGD26wk719AI/PW9kxK3ySfevwIP6RdoAD1A7CW6azt
-         0KTthlCdasmIa97/PS2sabtNr0wdH1fMA320c8Iuhz5DQSX6Fq18qNgUXDtUvtts3Eau
-         HzvcKrxCatQP/CRPOv7F8wezTuemE/BaelY4GSlMz/L9inDUMiF5EewAPsZMeXmsAZaU
-         KZb4RUobGx7F1jdlGeL0fw0W7Vw471qwjjDElYuGXSwqZBMh6buNT/9ntN5uWvpxxSmr
-         MNverMP8cz5L+kVZ2e8dHb7vLrwtPu84uOlrotbcNVeBmm7nVUtvuumF/XJVAv/kTG4H
-         o8uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ibpfD7Stpc4SjKvYaB/H7uRmvQIg2a/DOTBSRfVQ9Vc=;
-        b=mjcpJvySguVG1r6BIQf2rIuduvcLvQu8kGDVojbpPNkPPFqLnm9HiqRErluJegZ0x3
-         gOg9v8hjh6o5VVRm79a8lkumCQh+XbSIXsKSXNM8gCLBSpGXflHnG1mczXa9KAcaJhBc
-         KsQaolHfcs1bbGzighRZkIySnxtw7pOZ5jT/ec97y7tSbSSP51/w2bzCUqvfQuLeAv7T
-         s4NQQ0Nue283FZkpEUwemoey/LTCyuKaJ4BOBAknd2X0iP8cMCzrEL0FFIQMYT9CAZOY
-         gD6og9X6wI/I0+2dhfYfPnCd+a/bbtm5VkpIHpiqT4MQxru401g4yWLZjsu1YmTIpeaa
-         mnIA==
-X-Gm-Message-State: AOAM533/2a1qJnNMnBIiyumspb6EA0MsbEONviBhGil/sWbNMPsIA131
-        XnP6E5mldAv3wJIX10qigOgAVw==
-X-Google-Smtp-Source: ABdhPJx3vCnnYYTVJBodVHG1+VBLJ7McXIjsKHK5pv9AMbUcFE1k+EFeK78ttVOKwP/bMzrZ3vfORQ==
-X-Received: by 2002:a05:600c:34ce:b0:38c:a579:944a with SMTP id d14-20020a05600c34ce00b0038ca579944amr16519132wmq.113.1649011114192;
-        Sun, 03 Apr 2022 11:38:34 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id l28-20020a05600c1d1c00b0038e72a95ec4sm593851wms.13.2022.04.03.11.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Apr 2022 11:38:33 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stuart Yoder <stuyoder@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 12/12] rpmsg: Fix kfree() of static memory on setting driver_override
-Date:   Sun,  3 Apr 2022 20:37:58 +0200
-Message-Id: <20220403183758.192236-13-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220403183758.192236-1-krzysztof.kozlowski@linaro.org>
-References: <20220403183758.192236-1-krzysztof.kozlowski@linaro.org>
+        Mon, 4 Apr 2022 01:08:16 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5006935255;
+        Sun,  3 Apr 2022 22:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=KJNpqDmInpKNb0Ba6QeWsT+B+VJPRpifPEMByOx0SBg=; b=2xQrfIxcemUjQVz4pRH4tfgiVa
+        3XIS0/qYlgyD0IPcbkT+CtyJYQ+N/Mqk258vsL/HrJ9HMlcUeHKFXtKovNh7o7atoMd2f3vKTCcUg
+        KHfpkpJdTNcrL38s2CroJ+aqT+9ezFQ2X8ReztMbBgCVgY1ouP8LtD6Hu/GXM0SuMrRr2i9sJFvGZ
+        LEIXHmcRo+SqA+FqqjEZAXIcrE7HAkzJRJHErCMVKXPmI5rhQWdqKTyD4gEpiXPodWFJo6gN0/P5g
+        EWuZp+Nfd0G7hWSN8tzUu5T5ISbTSQNqmWELzJb7TpltEMHqH4dECM38unbtlxp6dxC9bACDoNciX
+        ZXG1SgVA==;
+Received: from 089144211060.atnat0020.highway.a1.net ([89.144.211.60] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nbEug-00D8mu-0p; Mon, 04 Apr 2022 05:06:03 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org
+Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Subject: cleanup swiotlb initialization v8
+Date:   Mon,  4 Apr 2022 07:05:44 +0200
+Message-Id: <20220404050559.132378-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The driver_override field from platform driver should not be initialized
-from static memory (string literal) because the core later kfree() it,
-for example when driver_override is set via sysfs.
+Hi all,
 
-Use dedicated helper to set driver_override properly.
+this series tries to clean up the swiotlb initialization, including
+that of swiotlb-xen.  To get there is also removes the x86 iommu table
+infrastructure that massively obsfucates the initialization path.
 
-Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
-Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/rpmsg/rpmsg_internal.h | 13 +++++++++++--
- drivers/rpmsg/rpmsg_ns.c       | 14 ++++++++++++--
- include/linux/rpmsg.h          |  6 ++++--
- 3 files changed, 27 insertions(+), 6 deletions(-)
+Git tree:
 
-diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-index d4b23fd019a8..1a2fb8edf5d3 100644
---- a/drivers/rpmsg/rpmsg_internal.h
-+++ b/drivers/rpmsg/rpmsg_internal.h
-@@ -94,10 +94,19 @@ int rpmsg_release_channel(struct rpmsg_device *rpdev,
-  */
- static inline int rpmsg_ctrldev_register_device(struct rpmsg_device *rpdev)
- {
-+	int ret;
-+
- 	strcpy(rpdev->id.name, "rpmsg_ctrl");
--	rpdev->driver_override = "rpmsg_ctrl";
-+	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-+				  "rpmsg_ctrl", strlen("rpmsg_ctrl"));
-+	if (ret)
-+		return ret;
-+
-+	ret = rpmsg_register_device(rpdev);
-+	if (ret)
-+		kfree(rpdev->driver_override);
- 
--	return rpmsg_register_device(rpdev);
-+	return ret;
- }
- 
- #endif
-diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
-index 762ff1ae279f..95a51543f5ad 100644
---- a/drivers/rpmsg/rpmsg_ns.c
-+++ b/drivers/rpmsg/rpmsg_ns.c
-@@ -20,12 +20,22 @@
-  */
- int rpmsg_ns_register_device(struct rpmsg_device *rpdev)
- {
-+	int ret;
-+
- 	strcpy(rpdev->id.name, "rpmsg_ns");
--	rpdev->driver_override = "rpmsg_ns";
-+	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
-+				  "rpmsg_ns", strlen("rpmsg_ns"));
-+	if (ret)
-+		return ret;
-+
- 	rpdev->src = RPMSG_NS_ADDR;
- 	rpdev->dst = RPMSG_NS_ADDR;
- 
--	return rpmsg_register_device(rpdev);
-+	ret = rpmsg_register_device(rpdev);
-+	if (ret)
-+		kfree(rpdev->driver_override);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(rpmsg_ns_register_device);
- 
-diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-index 02fa9116cd60..20c8cd1cde21 100644
---- a/include/linux/rpmsg.h
-+++ b/include/linux/rpmsg.h
-@@ -41,7 +41,9 @@ struct rpmsg_channel_info {
-  * rpmsg_device - device that belong to the rpmsg bus
-  * @dev: the device struct
-  * @id: device id (used to match between rpmsg drivers and devices)
-- * @driver_override: driver name to force a match
-+ * @driver_override: driver name to force a match; do not set directly,
-+ *                   because core frees it; use driver_set_override() to
-+ *                   set or clear it.
-  * @src: local address
-  * @dst: destination address
-  * @ept: the rpmsg endpoint of this channel
-@@ -51,7 +53,7 @@ struct rpmsg_channel_info {
- struct rpmsg_device {
- 	struct device dev;
- 	struct rpmsg_device_id id;
--	char *driver_override;
-+	const char *driver_override;
- 	u32 src;
- 	u32 dst;
- 	struct rpmsg_endpoint *ept;
--- 
-2.32.0
+    git://git.infradead.org/users/hch/misc.git swiotlb-init-cleanup
 
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/swiotlb-init-cleanup
+
+Changes since v7:
+ - rebased to Linux 5.18-rc1
+ - better document the lower bound swiotlb size for xen-swiotlb
+ - improve the nslabs calculation for the retry case in
+   swiotlb_init_remap and swiotlb_init_late
+
+Changes since v6:
+ - use IO_TLB_MIN_SLABS instead of open coding the constant
+ - call the remap callback later in swiotlb_init_late
+ - set SWIOTLB_ANY for xen/x86
+
+Changes since v5:
+ - split a patch into three
+ - fix setting x86_swiotlb_enable for Xen
+ - fix a comment about forced bounce buffering for guest memory
+   encryption
+ - remove the xen_initial_domain check from
+   xen_create_contiguous_region
+
+Changes since v3:
+ - fix a compilation issue on some powerpc configfs
+ - fix and cleanup how forced bounce buffering is enabled for
+   guest memory encryption
+
+Changes since v2:
+ - make ppc_swiotlb_flags actually work again
+ - also force enable swiotlb for guest encrypted memory to cater
+   to hyperv which doesn't set the host encrypted memory flag
+
+Changes since v1:
+ - skip IOMMU initialization on Xen PV kernels
+ - various small whitespace / typo fixes
+
+Diffstat:
+ arch/ia64/include/asm/iommu_table.h      |    7 -
+ arch/x86/include/asm/iommu_table.h       |  102 -------------------
+ arch/x86/include/asm/swiotlb.h           |   30 -----
+ arch/x86/kernel/pci-iommu_table.c        |   77 --------------
+ arch/x86/kernel/pci-swiotlb.c            |   77 --------------
+ arch/x86/xen/pci-swiotlb-xen.c           |   96 ------------------
+ b/arch/arm/mm/init.c                     |    6 -
+ b/arch/arm/xen/mm.c                      |   26 ++--
+ b/arch/arm64/mm/init.c                   |    6 -
+ b/arch/ia64/mm/init.c                    |    4 
+ b/arch/mips/cavium-octeon/dma-octeon.c   |   15 --
+ b/arch/mips/loongson64/dma.c             |    2 
+ b/arch/mips/pci/pci-octeon.c             |    2 
+ b/arch/mips/sibyte/common/dma.c          |    2 
+ b/arch/powerpc/include/asm/svm.h         |    4 
+ b/arch/powerpc/include/asm/swiotlb.h     |    1 
+ b/arch/powerpc/kernel/dma-swiotlb.c      |    1 
+ b/arch/powerpc/mm/mem.c                  |    6 -
+ b/arch/powerpc/platforms/pseries/setup.c |    3 
+ b/arch/powerpc/platforms/pseries/svm.c   |   26 ----
+ b/arch/riscv/mm/init.c                   |    8 -
+ b/arch/s390/mm/init.c                    |    3 
+ b/arch/x86/include/asm/dma-mapping.h     |   12 --
+ b/arch/x86/include/asm/gart.h            |    5 
+ b/arch/x86/include/asm/iommu.h           |    8 +
+ b/arch/x86/include/asm/xen/page.h        |    5 
+ b/arch/x86/include/asm/xen/swiotlb-xen.h |    2 
+ b/arch/x86/kernel/Makefile               |    2 
+ b/arch/x86/kernel/amd_gart_64.c          |    5 
+ b/arch/x86/kernel/aperture_64.c          |   14 --
+ b/arch/x86/kernel/cpu/mshyperv.c         |    8 -
+ b/arch/x86/kernel/pci-dma.c              |  114 +++++++++++++++++----
+ b/arch/x86/kernel/tboot.c                |    1 
+ b/arch/x86/kernel/vmlinux.lds.S          |   12 --
+ b/arch/x86/mm/mem_encrypt_amd.c          |    3 
+ b/arch/x86/pci/sta2x11-fixup.c           |    2 
+ b/arch/x86/xen/Makefile                  |    2 
+ b/drivers/iommu/amd/init.c               |    6 -
+ b/drivers/iommu/amd/iommu.c              |    5 
+ b/drivers/iommu/intel/dmar.c             |    6 -
+ b/drivers/xen/swiotlb-xen.c              |  132 -------------------------
+ b/include/linux/dmar.h                   |    6 -
+ b/include/linux/swiotlb.h                |   22 ++--
+ b/include/trace/events/swiotlb.h         |   29 +----
+ b/include/xen/arm/page.h                 |    1 
+ b/include/xen/swiotlb-xen.h              |    8 +
+ b/kernel/dma/direct.h                    |    2 
+ b/kernel/dma/swiotlb.c                   |  163 ++++++++++++++-----------------
+ 48 files changed, 252 insertions(+), 827 deletions(-)
