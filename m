@@ -2,74 +2,70 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C81E04F0F42
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Apr 2022 08:22:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCAFB4F0FD6
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Apr 2022 09:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352977AbiDDGXr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 4 Apr 2022 02:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
+        id S1377614AbiDDHMN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 4 Apr 2022 03:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243164AbiDDGXW (ORCPT
+        with ESMTP id S1377615AbiDDHMM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 4 Apr 2022 02:23:22 -0400
-Received: from mail1.bemta36.messagelabs.com (mail1.bemta36.messagelabs.com [85.158.142.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991DC3819D;
-        Sun,  3 Apr 2022 23:21:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-        s=170520fj; t=1649053283; i=@fujitsu.com;
-        bh=b7vEbVpHlcau47iLeXRDHN/idN8gpdHUoNjZroKIPeE=;
-        h=Date:To:Cc:Subject:Message-ID:Reply-To:References:MIME-Version:
-         Content-Type:In-Reply-To:From;
-        b=AaIuI+NVYBx0pSQjblOU1uOigYvSV6YRIjvJ66Vklj/Ejksf411E887/O2drI5l/Q
-         SMZMyGyRF3qkUYgkKGzVhdiGqL6Y/4WVKwpoWtiERltD5l8WYanb/1W7nTf+htR9q8
-         l2EKb9PC/E+uGcX7wgAryjzycCyybMmwdSUFjfIhXXYAdynlS9JHmetNa0asK32Xrg
-         CzUwHoWPlEjCwUVCaNdh+7KtcfEUi22V9juMg/QzN/L4tqYWqo3mvmyOxYa24UdcW+
-         luiOexRQlX/nLZV54FX47w9lftfJhmpUZl9KG6PxCLwmYxMKGrKoyc41A6F2kykIZn
-         7fjn8hi79IEIQ==
-Authentication-Results: mx.messagelabs.com; spf=pass 
-  (server-7.tower-528.messagelabs.com: domain of fujitsu.com designates 
-  85.158.142.210 as permitted sender) smtp.mailfrom=fujitsu.com; dkim=none 
-  (message not signed); dmarc=pass (p=none sp=none adkim=r aspf=r) 
-  header.from=fujitsu.com
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSbUxTVxiAe257LxdCyW3RcajotNsSRmzXEpW
-  zuC3G8OMOCWN/EMVYb+mF1rUVe9sJYgIbEKRbCRWIirPUiTo+Vmv50AzHJojCBjIJne2Myxxl
-  UeYYk2y4NJD10vixf0/Oc97n/fOSQuknhIxkS62sxcwY5USc6J23yCbF3vosrWo5tBaNjHyKo
-  YGRQtTt7CXQ7eM1IuRsbxSi9s5hDLm/2Yo+C6ajulPeGHT+7AxAvukfcdTsnCfQ/NE5HNX5eg
-  Ead90kUN9CNYEazlQJUXhxGUfX5kM46vRo0KXHUzHoetMAjp54p3G02NOIbYN06JoLo2smlwi
-  6y9UFaO/Hjwi6+4s02tdRR9Cu0ffp7rYKujFwAdATJ84Aut+9gNFD81Miuj9YSdB/zfwkoi/2
-  +EX0gm9dLrUbN5i1B0r34Xr3nZ+JkqNppfbrf+OVYFFuB7GklDoNYLU/L8o2+MjrAjyLqFfh5
-  c6eGJ5XUXI4MzseeY8jhVRHHGweDa+IRCofBm56VlhMpcOq/n5hNPQKPO1fIvgBMfUgFrYufY
-  5HRTk89q1DFB2QwNGToRUWUmkwsPwQswMywmvghWWSx1gqD95reJ3/AakUGG5fJHheHcl7zo4
-  C/gtBvQFnHUwDkLS80Gx5odnyvOkGwg7wttZiKNZbTYzBqFCrVAq1erNiC1Kkb1IyhxWMkrUp
-  Clmz1cJErJI5xClZjlNyZaZCo05pZq0+ELkRHZcJr4Bg/b/KQZBMYvLV4j/sWVppgvaArkzPc
-  HqNxWZkuUGQQpJyKG7jncTCFrOlRQZj5NKeakjGy1eJW3kt5koYE2cojqrvwAZZkniHIyIoXu
-  ht5mdjT290EqyVJYqBQCCQxpewFpPB+n8/C5JIIE8U5/KVeIPZ+qw+G1mMRRbPjb3LL7Yyz5W
-  sEkt4kFTrDmz9faL4cUCyfeK34Jrd/2wPLH/0/f4m77r8sZmFiUF714mpQ84M4j4orKYU3S9X
-  iHuTaXpYec7l8idU3G7csGtb3VjRr3szN+l7Lw4Jb5FW55uJKeE+TJh8f1AjzXDiBXez5/w3i
-  jyck9iSNzTu+eWOJ2xzbRZNk+vBDt1Jx0PBLnT40kaYXTZ2RV5/1ZSbX6WkajQ7v5y8d3dn7d
-  c/pNrOfTA8EH98/RHW7ZUVtanKUzuCexw5Bbmqfc6Y2oOprW6g3fNS8/msrwSqI9kaRagr872
-  rt1I+LLgheaIr65NnqC5vXDKfOrZfTcqGg76c1/6sDmXlHCyXDclFnJ5RpwktHPMfZBBxiR4E
-  AAA=
-X-Env-Sender: Alan.Robinson@fujitsu.com
-X-Msg-Ref: server-7.tower-528.messagelabs.com!1649053277!135886!1
-X-Originating-IP: [62.60.8.148]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.85.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 8161 invoked from network); 4 Apr 2022 06:21:18 -0000
-Received: from unknown (HELO mailhost1.uk.fujitsu.com) (62.60.8.148)
-  by server-7.tower-528.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 4 Apr 2022 06:21:18 -0000
-Received: from nera.osd.abg.fsc.net ([172.17.20.8])
-        by mailhost1.uk.fujitsu.com (8.14.5/8.14.5) with SMTP id 2346Jn5d030109;
-        Mon, 4 Apr 2022 07:19:56 +0100
-Received: by nera.osd.abg.fsc.net (Postfix, from userid 5004)
-        id 1A288174782; Mon,  4 Apr 2022 08:19:46 +0200 (CEST)
-Date:   Mon, 4 Apr 2022 08:19:46 +0200
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mon, 4 Apr 2022 03:12:12 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD403AA6F;
+        Mon,  4 Apr 2022 00:10:11 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2341piQn020990;
+        Mon, 4 Apr 2022 07:09:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=cfVaDeBc+xYAEJUW1i4rR6c2Eono9lckX0H6AxfZXuo=;
+ b=wyJNA4OUMYbbD5pyPny9T8yboUMbbBU8QOK50WX/8TdkNg3oO1BVLlQS9FpExs/96jKt
+ NNLu4pDCAq5PoYQJKQwYn3BqPcdB/ComU9DR0I5KCz5HdWEw+OTjGiXZdNvdhZZA6SJ8
+ MNvUR6kYHQ45D3+JEca7eEhldX6WhmvhKblobm2kf2RoyLsymy/CRRA9ed1HCkxGKgES
+ maVa3ZtmPWFCcW2djIpMxd3BDJUd4NWvP6p2f+ahicOFTDS6JVanxYo9mstaDwfilTZm
+ dcUxeKfbO9HDQLYOpk6+P0os/9lTuXjjdJ/squV4xh85Wi/dzWj2FGB1NX14g7OcsMY8 jw== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3f6d92t95d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Apr 2022 07:09:13 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 23470ITt031697;
+        Mon, 4 Apr 2022 07:09:12 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2104.outbound.protection.outlook.com [104.47.58.104])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3f6cx1x32k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Apr 2022 07:09:12 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O1wUASXnQl7ry1oF8Z6q3t3j3oqmFMXmP5h0sCJFECFMkmKgLagxF5DP1frmG8vp9cJtVOATy+ifDT7NqhFbkS03rWBz9snjHgcKe89zyyaAS+/Bjn36n1sExIj+MfyXv8eA4bywurk+WZIRXgeouJX8thRF3ryy9Z+FCbU4zd2X4D+2BPhXn4tExZmIETBikB2Th+f8zzhAgsRBshd5uR1t+obh8sOtqPS7wwxndHLOcOG/KDuHoXJtXRXCPANfCauveiajKAG94hQsgEqzdOysZFahMzb9zx9WA6PYhmGK/KLZyTrC7CVrcfwGv9DEeLZ+cF04tIsQsf00ZQFbRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cfVaDeBc+xYAEJUW1i4rR6c2Eono9lckX0H6AxfZXuo=;
+ b=Iqit9bam3RE28mDD2RrOdX9GCjxVwaDJUgeUl3DA5imGwFetlS4EQVIkBiYv0C4ges/9SpEUCI7UKyUY/xc9ebDHvy4cjjtK819DKam8+8/kzWerdAsWO3EoBvnj9lRpoRBqdiczt51HHJClUU7mqKAc/BWVIhMqNr/KIooDaSBvGRIySAizGJtSKYdf85z1H1vYB+AdzdnjuYVvNP1bKwHJzNxG5pJ45qcNYlZir/rZmlOTB3xj1+lSr9GsEeCpQouHQ/Zm/Ng4HYWZCeWY+7nm/t/gaPQWeiewVHidP6fAQNvYrbrRPUx0OMPw4Be7kstWA4P9+qY0B1y+fT7PRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cfVaDeBc+xYAEJUW1i4rR6c2Eono9lckX0H6AxfZXuo=;
+ b=N6HL3attkP/oERoO/RmZ4JOwAWTfXAcmLmRhA6Cte3umeVlxEeAWXiFSE7fMvgwn6sInCA73akxWsdWXra2U0jplJ5NOGSZ3YUiEug/tJgoWsyMMdVuv/W7sbK8M3ERMoYyrzK7WdQQgT6Bl/9NwWgm9KTlrlXkviyXc/eXbA1Q=
+Received: from BYAPR10MB2663.namprd10.prod.outlook.com (2603:10b6:a02:a9::20)
+ by BN6PR1001MB2340.namprd10.prod.outlook.com (2603:10b6:405:30::36) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Mon, 4 Apr
+ 2022 07:09:10 +0000
+Received: from BYAPR10MB2663.namprd10.prod.outlook.com
+ ([fe80::6c4e:65d8:4e2d:d942]) by BYAPR10MB2663.namprd10.prod.outlook.com
+ ([fe80::6c4e:65d8:4e2d:d942%7]) with mapi id 15.20.5123.031; Mon, 4 Apr 2022
+ 07:09:10 +0000
+Subject: Re: [PATCH 12/15] swiotlb: provide swiotlb_init variants that remap
+ the buffer
+To:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org
+Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
@@ -79,80 +75,113 @@ Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "tboot-devel@lists.sourceforge.net" 
-        <tboot-devel@lists.sourceforge.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 12/15] swiotlb: provide swiotlb_init variants that remap
- the buffer
-Message-ID: <20220404061946.GA1905@ts.fujitsu.com>
-Reply-To: Alan.Robinson@fujitsu.com
-Mail-Followup-To: Alan.Robinson@fujitsu.com, Christoph Hellwig <hch@lst.de>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "tboot-devel@lists.sourceforge.net" <tboot-devel@lists.sourceforge.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
 References: <20220404050559.132378-1-hch@lst.de>
- <67c1784af6f24f3e871ddfb1478e821c@FR3P281MB0843.DEUP281.PROD.OUTLOOK.COM>
+ <20220404050559.132378-13-hch@lst.de>
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+Message-ID: <54ec407f-eda2-6e28-90f9-eb48b2ec8763@oracle.com>
+Date:   Mon, 4 Apr 2022 00:09:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+In-Reply-To: <20220404050559.132378-13-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0258.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0::23) To BYAPR10MB2663.namprd10.prod.outlook.com
+ (2603:10b6:a02:a9::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67c1784af6f24f3e871ddfb1478e821c@FR3P281MB0843.DEUP281.PROD.OUTLOOK.COM>
-X-sent-by-me: robin@sanpedro
-User-Agent: Mutt/1.9.3 (2018-01-21)
-From:   Alan.Robinson@fujitsu.com (Alan Robinson)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d850cdbc-933c-4a65-b2d0-08da160a0416
+X-MS-TrafficTypeDiagnostic: BN6PR1001MB2340:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR1001MB2340E896B177E99B615501CEF0E59@BN6PR1001MB2340.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aX8/C9LNeDD1ritQCp/1YZyln1l87AxIe7JjjwdthQ+0b9dJOdRmyiriJtHBUK/O4ZBWdVGy3C8TXqofsgyUpydVOWv37YtnkBqft59hdQayrZoBqx66U0KgK6Y1c/i3iOEdxkJxUgGUybB9vrPpmASWUx0DKjWim5Pv5L1IM5a1PpxFbzT+oI2PmTdKttl/GM6GfW3ubpnMm2SNHA0h4s/CVjWYHbWkUcJrBFpMSXUaeZHIfcpmrtMP4iGIxcvRt73UrgCI3Exk4VxfoG5hrG+S3LzD1F2jMfoGhq2ew7nrsiuI7s7Gcgq9RH81zsLEmapIBseYipeef0KltLjJCoyyt+rCFv4eEYHRZWThEzz+InY1SacscvD7DuRCoppdRu3q3ZhL558dSx0XFbYhwE+F6/3xpdbudUDX9enMTrQMHmvv9rZze/XXoPwPOEUT4bQQLKIcRo2/Mt37DPXxmh8f1kB/S3w5pEe1qMRBXKzvBLxY9+TMtC7DPYqf7eT3nudKeXBQrhYewWqf+DoaYpfN3lAnvn0IDvFdBEQWuuOGiX/739PxgUJ3TCiyOkzCM5cc7rPuM8Y6K3Ckn6vPGiqA228YFPTymozmWOiJPXXntqLPf8QNEOnQglqGPJseOj1/A1tawxs7Am12ni9PlGzgoXN7BOC/U5Dmf2rMgIeWyK/woRFewT5bqLcb4ooFpfpWgjuPy7ptgZu6vjkt8Zd7lY3HWU1aXbNz8KWqwfE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2663.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(86362001)(31696002)(53546011)(2906002)(6512007)(83380400001)(6506007)(8676002)(31686004)(66556008)(36756003)(4326008)(316002)(66476007)(66946007)(54906003)(7416002)(6486002)(508600001)(5660300002)(44832011)(8936002)(2616005)(186003)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ak9PRzROa1F2VVQxN3RkMDA2V2w3QjNmbnZGNWw5NW4vUXFTZWEwVmRJZmVZ?=
+ =?utf-8?B?blRvQ2ZWTHZFN1BXUDZlSjFSbjJKZU8yRktYQTdCWms3dVc4eTRRWldNaGFQ?=
+ =?utf-8?B?dk4yc01jbnV3a2xYTnp0NmxScjdsQUpUTGdDa25VOWNJdFZ1Ti9mWEJVL0Nj?=
+ =?utf-8?B?N3dndWxEWHd2QWhBRVJ5Smt3aGZPQTVmRnVzYXE0SmlaRFdaUmpoSHBHT3Zx?=
+ =?utf-8?B?MGxielBWYzhYclNRbUVxODJoYTR1OHV6WFNVVWNTKzFzU2J3cmNrYVdVZGNH?=
+ =?utf-8?B?OUdGOGxuVFdlTy9vS0dWajJ4eGdXakFpNDhOMTJJeldHZ0RXemV3MmUrenY4?=
+ =?utf-8?B?ZGdua2loQmhyN1pzeElWVmhwUXBkOXNCWUxicjZ1LzJldEhYNlpwTmZzMFFU?=
+ =?utf-8?B?dytNT29YbTVCQ2N4eFl3dGszQWVNUW5qMGJTdXZoMGoyUGhCVXZVREZYc3Ri?=
+ =?utf-8?B?d3VhZjhHRE8vMW1wZHQwMEpkVDk0cTB0UWgxTEpDVkp2WUJ2VlBRTmcxelBS?=
+ =?utf-8?B?ZmRhaW1wMXp6N0Q4ZXB3UEZOQVllbi91M292TWl5SW9Hd3l6WDZ6ZnVJK2xV?=
+ =?utf-8?B?Yk1nUzgycHFzYXdobjRKZVdkbXFkKzIwcGJFQlVqY2V2QnB6QjRobHhXMU0y?=
+ =?utf-8?B?T09JTmlpSG9HUjBTL0R0Yk94SllpTW5iQjlWTTYrVHlXV0JaTTM4WkFnQzNq?=
+ =?utf-8?B?U2hLNlRPc3Vld3BvRUZKQndZUEFUVG5ZeUpDaW10cmF5YkJOWjZjWFlJOXNG?=
+ =?utf-8?B?N282REdaVTdNMVlYL3BWMHJZSE1QUXJvTVUrTURhK0tJK1UwK01OUlI1TXAx?=
+ =?utf-8?B?dzljcFFzMkphZXBNNkt6Nmk4am9lc0FOelBHTGxtTDNiV282T3Z0YmNPaTRo?=
+ =?utf-8?B?d01FQ3RNY2dsMnlMN3RaU1FYR3VNbE5kMVlFSGU4Q2l0aVgzODI1V3FhejFj?=
+ =?utf-8?B?YmhMUDk1NmpSWVBlNzhIMmJLQ1ZpR0lDRkdoUUkwOTI5ZnhhVWJwZE5OZ2l1?=
+ =?utf-8?B?Y05qMzdmcGVnN09KOTdRVjk2dlF2Z2xENGpaQ0xCOGJFRlZQaEJQNmVkZUwy?=
+ =?utf-8?B?aVh4VzB6SmYzeElKR3B3cG1BWGkwaUtKSVpDemwxSDhFVlM5ckFOYktlSzdM?=
+ =?utf-8?B?M0F2dXpzUkZuTTRlc1EzSkFkNDAyRnZKY1E3S0pRSHBEaDRKVTBwbGJGME5z?=
+ =?utf-8?B?bzBOWEFhRDhoR1FBSzJ3TzBkL0lxeURUN3Z5Z0xtOEp4UlB6dkFKMk1jOW9o?=
+ =?utf-8?B?a2p5SE5GUm8xSkRkQUxOUWtrYm5ZWWZqRGlYWXZUTzY5SGJUYm9jRGNuYTNY?=
+ =?utf-8?B?Qlc3b3NSbno1N1lrY0o4eVN6Tm9jeTNiUlc3ZzhDeVFMRXQ3ay9rbTMzV1Zk?=
+ =?utf-8?B?ZEtZMzNVMnhoY3ZLbkZpUEp6Tmpva1ZzNm1sZUtPVG9mTjlLZU9VNWVtdjBJ?=
+ =?utf-8?B?YnIzNTh6d2p0ekdCY1ZzSlFubmg2c0daTEZNZEtuY052bFlWL0hNalJHSVRN?=
+ =?utf-8?B?RzJEYVNhWDFmVlhHS0VLb1hXbWxDMW9lMlR3RmFOVjlSa1ArdGFVNFFzTUhT?=
+ =?utf-8?B?c0FSa0M5Z0UvMVNOMkI5TjFlRk9YVVpBL1p6VHJOMGlBMXFaK3VmeUVvQmda?=
+ =?utf-8?B?YTFSS2JGN003V0NsYStvMWV5YklTNCsxNldXN2gySjNsNDE0K2o3NWJxODFx?=
+ =?utf-8?B?OUFjVEdBU1RSZGE5RVdTK1JLb3RJWGdPeHZxOFN4VTlTZFpzWHNSS2FCajMz?=
+ =?utf-8?B?eWg5WjN6U0ZXQXNoYUI3c3FXZ0R1UmRJU2swSCtLQTZ3Zm83ai9PNlRqTnhu?=
+ =?utf-8?B?U3dJSXk3b0JQWEdhbFJlZTZOV2d5SCt1Q2c5Y3psaE9kVzdvU0tUR3E4YXJI?=
+ =?utf-8?B?SEJHT0xpWGN0VG0yVkJmMXAwb0FvT1hNbWxjUWhZTGU0R282Vld2WU1wOHNO?=
+ =?utf-8?B?aDFVZC8yd3BYZ3V2Z3hPMTh1TWh3UW5NQU5uYjlUeTh0S21QL0ZCTnNCYXJX?=
+ =?utf-8?B?a1YyY2tkNUNUMzI0V3ZlaWNHM203UGZRZlY5aHBlS09hTlhKVVJsTkJhcnJR?=
+ =?utf-8?B?V0cxcG8zaWgvR2UyU2VwaFI4K2hhdy8rOEthVEtlYkF5UWZQNDlGSUhqNEVx?=
+ =?utf-8?B?dWhkdDlMUUwzcHZYd3dFbnBSTnYrT0pNaG9HQjRjUzNIZngzS3Rteklaa1Z5?=
+ =?utf-8?B?enZaWW5uamZaTE56V2xSQkVBNDNpbHJ4N0Eydi9EZDJyZk0vRXZDYlFSM3Fh?=
+ =?utf-8?B?VjgzdnRnOWxiODc5UzY4Y2JUZkMrTWdjUjdTUGxJQVZSNk9lMDJWbXlZQTEr?=
+ =?utf-8?B?VEszNENBazU5Z1JWTnhtTmlraDZadnBJVFF0b0JaM1NMSmVjV3k5clIva2ND?=
+ =?utf-8?Q?NrVBx07mFvEL67XyezraO+YHCpa5MIlvMOAAk?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d850cdbc-933c-4a65-b2d0-08da160a0416
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2663.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2022 07:09:10.3239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q6hB9PUkQroZregA5CgGo5ZUdZppcT2DmA+1CIUiOMJqsmmHEgss7AQSrF4z7Kh1q6JwXRnc1vlCCMTYxE7v5g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1001MB2340
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.850
+ definitions=2022-04-04_02:2022-03-30,2022-04-04 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204040042
+X-Proofpoint-ORIG-GUID: hxCO3FgQKWRWKinXDhtkSBFm1Q-03idM
+X-Proofpoint-GUID: hxCO3FgQKWRWKinXDhtkSBFm1Q-03idM
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Christoph,
 
-On Mon, Apr 04, 2022 at 05:05:56AM +0000, Christoph Hellwig wrote:
-> From: Christoph Hellwig <hch@lst.de>
-> Subject: [PATCH 12/15] swiotlb: provide swiotlb_init variants that remap
->  the buffer
-> 
+
+On 4/3/22 10:05 PM, Christoph Hellwig wrote:
 > To shared more code between swiotlb and xen-swiotlb, offer a
 > swiotlb_init_remap interface and add a remap callback to
 > swiotlb_init_late that will allow Xen to remap the buffer the
-
-s/the buffer//
-
 > buffer without duplicating much of the logic.
-
-Alan
-
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
@@ -270,6 +299,12 @@ Alan
 > +	if (rc) {
 > +		free_pages((unsigned long)vstart, order);
 > + 
+
+"warning: 1 line adds whitespace errors." above when I was applying the patch
+for test.
+
+Dongli Zhang
+
 > +		nslabs = ALIGN(nslabs >> 1, IO_TLB_SEGSIZE);
 > +		if (nslabs < IO_TLB_MIN_SLABS)
 > +			return rc;
@@ -278,6 +313,4 @@ Alan
 >  	rc = swiotlb_late_init_with_tbl(vstart, nslabs);
 >  	if (rc)
 >  		free_pages((unsigned long)vstart, order);
-> -- 
-> 2.30.2
 > 
