@@ -2,94 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B3AE4F5EA0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Apr 2022 15:04:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B8D34F6431
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Apr 2022 18:07:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230311AbiDFMu6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Apr 2022 08:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36686 "EHLO
+        id S236556AbiDFPyb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Apr 2022 11:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230460AbiDFMuK (ORCPT
+        with ESMTP id S236612AbiDFPyJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Apr 2022 08:50:10 -0400
-X-Greylist: delayed 66 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 06 Apr 2022 01:53:52 PDT
-Received: from mail.codelabs.ch (mail.codelabs.ch [IPv6:2a02:168:860f:1::35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBC415DA84;
-        Wed,  6 Apr 2022 01:53:52 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.codelabs.ch (Postfix) with ESMTP id E956B220003;
-        Wed,  6 Apr 2022 10:37:05 +0200 (CEST)
-Received: from mail.codelabs.ch ([127.0.0.1])
-        by localhost (fenrir.codelabs.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id USzK58Cg8Xho; Wed,  6 Apr 2022 10:37:04 +0200 (CEST)
-Received: from skyhawk.codelabs.local (unknown [IPv6:2a02:169:803:0:f7fb:8040:b3e4:bffe])
-        by mail.codelabs.ch (Postfix) with ESMTPSA id ACB1A220001;
-        Wed,  6 Apr 2022 10:37:04 +0200 (CEST)
-From:   Reto Buerki <reet@codelabs.ch>
-To:     dwmw2@infradead.org
-Cc:     x86@kernel.org, kvm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        maz@misterjones.org, decui@microsoft.com
-Subject: [PATCH] x86/msi: Fix msi message data shadow struct
-Date:   Wed,  6 Apr 2022 10:36:24 +0200
-Message-Id: <20220406083624.38739-2-reet@codelabs.ch>
-In-Reply-To: <20220406083624.38739-1-reet@codelabs.ch>
-References: <20201024213535.443185-13-dwmw2@infradead.org>
- <20220406083624.38739-1-reet@codelabs.ch>
+        Wed, 6 Apr 2022 11:54:09 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83EF4E83C7;
+        Wed,  6 Apr 2022 06:16:14 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id b19so3130498wrh.11;
+        Wed, 06 Apr 2022 06:16:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XackL+WLlGuGuj2h9oRi+3NQ/yFqIkV4Wc+UFjwvBBc=;
+        b=uZDgSnLO8jXoGP7lLvS4f7p77ZcGpnSQqhiJViys7Z/oQnn8p0uZ/zQJg2Cb0ua1+1
+         BfUu7EdqSZMG9pRYPE9AUSLV4IdTDcHuHFUpQpSFggnd6Q/2bZBuQ51m0cH+Ycp5c7Oy
+         F3hcVqc8GG92ew5er7RUD8UIkNok1gX/dEt3wA59Ht7GBhHFLotDzuhYr91e7HAnGsdr
+         u7fYfjPdbCw+2XDnlGxIjCBV732k2w74R5OxgVCfOVz2352+uY8CvwGyp95hk2FrgF00
+         uezWfpcPt4xjuJr2zZEANA8DM/x1VKZRJElYrNFfxsuoXeZtGF7eYAfWPlkfcYAgFKOY
+         8iQg==
+X-Gm-Message-State: AOAM531vi3PK6hq++oGJjs0NBxTTCFH15zdLsT2s+cSB6lH3+kil1XrP
+        oDwHEMSqkhj6b4HjuLobqj4=
+X-Google-Smtp-Source: ABdhPJzfTh43mvodajOKzJRynF7Wkr53y8/yq1kEUtt9kVH3x2nUdU43TIQod50mWPGT8qCNKjNS/g==
+X-Received: by 2002:a5d:5886:0:b0:206:db4:f12b with SMTP id n6-20020a5d5886000000b002060db4f12bmr6856930wrf.455.1649250973190;
+        Wed, 06 Apr 2022 06:16:13 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id q16-20020adff950000000b00205aa05fa03sm14679587wrr.58.2022.04.06.06.16.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Apr 2022 06:16:12 -0700 (PDT)
+Date:   Wed, 6 Apr 2022 13:16:10 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Drivers: hv: balloon: Temporary fixes for ARM64
+Message-ID: <20220406131610.7qbzlhqxkbxktrqs@liuwe-devbox-debian-v2>
+References: <20220325023212.1570049-1-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220325023212.1570049-1-boqun.feng@gmail.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The x86 MSI message data is 32 bits in total and is either in
-compatibility or remappable format, see Intel Virtualization Technology
-for Directed I/O, section 5.1.2.
+On Fri, Mar 25, 2022 at 10:32:10AM +0800, Boqun Feng wrote:
+> v1: https://lore.kernel.org/lkml/20220223131548.2234326-1-boqun.feng@gmail.com/
+> Boqun Feng (2):
+>   Drivers: hv: balloon: Support status report for larger page sizes
+>   Drivers: hv: balloon: Disable balloon and hot-add accordingly
+> 
 
-Fixes: 6285aa50736 ("x86/msi: Provide msi message shadow structs")
-Signed-off-by: Reto Buerki <reet@codelabs.ch>
-Signed-off-by: Adrian-Ken Rueegsegger <ken@codelabs.ch>
----
- arch/x86/include/asm/msi.h | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
-index b85147d75626..d71c7e8b738d 100644
---- a/arch/x86/include/asm/msi.h
-+++ b/arch/x86/include/asm/msi.h
-@@ -12,14 +12,17 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
- /* Structs and defines for the X86 specific MSI message format */
- 
- typedef struct x86_msi_data {
--	u32	vector			:  8,
--		delivery_mode		:  3,
--		dest_mode_logical	:  1,
--		reserved		:  2,
--		active_low		:  1,
--		is_level		:  1;
--
--	u32	dmar_subhandle;
-+	union {
-+		struct {
-+			u32	vector			:  8,
-+				delivery_mode		:  3,
-+				dest_mode_logical	:  1,
-+				reserved		:  2,
-+				active_low		:  1,
-+				is_level		:  1;
-+		};
-+		u32	dmar_subhandle;
-+	};
- } __attribute__ ((packed)) arch_msi_msg_data_t;
- #define arch_msi_msg_data	x86_msi_data
- 
--- 
-2.30.2
-
+Applied to hyperv-fixes. Thanks!
