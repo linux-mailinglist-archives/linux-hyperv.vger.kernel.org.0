@@ -2,73 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 331C74F64A0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Apr 2022 18:08:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCF444F6D51
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Apr 2022 23:48:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236967AbiDFQCQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Apr 2022 12:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
+        id S229957AbiDFVud (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Apr 2022 17:50:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236974AbiDFQCC (ORCPT
+        with ESMTP id S236205AbiDFVtw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Apr 2022 12:02:02 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85980348A71;
-        Wed,  6 Apr 2022 06:32:17 -0700 (PDT)
-Received: by mail-wr1-f41.google.com with SMTP id w21so3269401wra.2;
-        Wed, 06 Apr 2022 06:32:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n45/GQllZHpLsSoIaHGeu++4C66jNNYdi31f28sovEQ=;
-        b=UnoNUO9eVWdgTG9eVN4np9BxMZg1jsbMXnLDOaGHtjK10AlaV3nZvAYU1umYLoqopD
-         EBi9jjiYCEfNhmhaY/FQ0Q0YosFk6W2ekX9dstigxQVlTJZ7grOT/NnHNPVtl6fFMXky
-         Qc+kMKqEg9jX04NEAv6uQSiIMb3c+T/qXYoi58ZBpOzlbM3Te40/Rm6XDP6iG9zYlAqG
-         8ufjj5m7Xzg15kPpTSiQv5RT+c3LmUHKzDI0EezReJsH+Yo80k0pCap6jqrU97ey673d
-         jjNn1ZaALwwfI56c0RvafewmnJriiHPEOJPHlccXkUVR4BwTX1n+KvfBOl8/T4SCNQQ+
-         xfKg==
-X-Gm-Message-State: AOAM532X5dMG41IGgtzlmHoaLLffFC04MQwjSoImcokyBF3U1jXkAK0P
-        9O49yC/HgINvpVW2s0CN/yfNjI+8rjM=
-X-Google-Smtp-Source: ABdhPJxcxIpy7JDc5Ls7wU3C37/axtuG+ZXQuIBn6gy/2cz3FWJ5prdc0Yn9bD5aVCVgvmjrVvxOQw==
-X-Received: by 2002:a5d:6cc1:0:b0:206:116e:f9c2 with SMTP id c1-20020a5d6cc1000000b00206116ef9c2mr6769900wrc.376.1649251936022;
-        Wed, 06 Apr 2022 06:32:16 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id r14-20020a0560001b8e00b00205918bd86esm14510902wru.78.2022.04.06.06.32.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 06:32:15 -0700 (PDT)
-Date:   Wed, 6 Apr 2022 13:32:13 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Replace smp_store_mb() with
- virt_store_mb()
-Message-ID: <20220406133213.4ngvbhducifjxval@liuwe-devbox-debian-v2>
-References: <20220328154457.100872-1-parri.andrea@gmail.com>
+        Wed, 6 Apr 2022 17:49:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4C02AE6;
+        Wed,  6 Apr 2022 14:38:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A68B61BA2;
+        Wed,  6 Apr 2022 21:38:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA37C385A5;
+        Wed,  6 Apr 2022 21:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649281079;
+        bh=A0fW3syI/3Or0fXGJCHpbOxcC3mWosW/4h17ME4o2Wo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U8zTYeiU+sYoQrmOOlzp8mbxsrFjNGCWUiWe59vTNc/4rCC8bctgHQnXZcdf20iSP
+         Ry8P63L8FZcYs/lUGGRY39S+zNI/DmcCtToumgR/Kq3PTl1X6+s6lsB/G6hXL1rghS
+         9TsAUNRmYWxgb0rY3v6+Od87VEd/ae9W9SCae8F1oFejA6V+FIhs97O6ksqxaP+jIV
+         taFGoVPLWJcCsODHHXSKpVyV6bdYnf3GE/ylYZRSQWkB/hamlt6hwSoiQAhtDHtL1m
+         0iS4eFO8jgpEGGPyF8daaf7PFjI27A7BUvri4GtsLw9nMQxNyglVNh5ZiMGrZicwN+
+         7gwjoloqd8stg==
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, pabeni@redhat.com, edumazet@google.com,
+        Jakub Kicinski <kuba@kernel.org>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, kpsingh@kernel.org, hawk@kernel.org,
+        linux-hyperv@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH net-next 1/3] net: hyperv: remove use of bpf_op_t
+Date:   Wed,  6 Apr 2022 14:37:52 -0700
+Message-Id: <20220406213754.731066-2-kuba@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220406213754.731066-1-kuba@kernel.org>
+References: <20220406213754.731066-1-kuba@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220328154457.100872-1-parri.andrea@gmail.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Mar 28, 2022 at 05:44:57PM +0200, Andrea Parri (Microsoft) wrote:
-> Following the recommendation in Documentation/memory-barriers.txt for
-> virtual machine guests.
-> 
-> Fixes: 8b6a877c060ed ("Drivers: hv: vmbus: Replace the per-CPU channel lists with a global array of channels")
-> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Following patch will hide that typedef. There seems to be
+no strong reason for hyperv to use it, so let's not.
 
-Applied to hyperv-fixes. Thanks.
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+CC: kys@microsoft.com
+CC: haiyangz@microsoft.com
+CC: sthemmin@microsoft.com
+CC: wei.liu@kernel.org
+CC: decui@microsoft.com
+CC: pabeni@redhat.com
+CC: ast@kernel.org
+CC: daniel@iogearbox.net
+CC: andrii@kernel.org
+CC: kafai@fb.com
+CC: songliubraving@fb.com
+CC: yhs@fb.com
+CC: john.fastabend@gmail.com
+CC: kpsingh@kernel.org
+CC: hawk@kernel.org
+CC: linux-hyperv@vger.kernel.org
+CC: bpf@vger.kernel.org
+---
+ drivers/net/hyperv/netvsc_bpf.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
+index 7856905414eb..232c4a0efd7b 100644
+--- a/drivers/net/hyperv/netvsc_bpf.c
++++ b/drivers/net/hyperv/netvsc_bpf.c
+@@ -137,7 +137,6 @@ int netvsc_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+ int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
+ {
+ 	struct netdev_bpf xdp;
+-	bpf_op_t ndo_bpf;
+ 	int ret;
+ 
+ 	ASSERT_RTNL();
+@@ -145,8 +144,7 @@ int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
+ 	if (!vf_netdev)
+ 		return 0;
+ 
+-	ndo_bpf = vf_netdev->netdev_ops->ndo_bpf;
+-	if (!ndo_bpf)
++	if (!vf_netdev->netdev_ops->ndo_bpf)
+ 		return 0;
+ 
+ 	memset(&xdp, 0, sizeof(xdp));
+@@ -157,7 +155,7 @@ int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
+ 	xdp.command = XDP_SETUP_PROG;
+ 	xdp.prog = prog;
+ 
+-	ret = ndo_bpf(vf_netdev, &xdp);
++	ret = vf_netdev->netdev_ops->ndo_bpf(vf_netdev, &xdp);
+ 
+ 	if (ret && prog)
+ 		bpf_prog_put(prog);
+-- 
+2.34.1
+
