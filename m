@@ -2,54 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 846CD4F7256
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 04:54:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8281D4F74BD
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 06:32:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233159AbiDGC4d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Apr 2022 22:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
+        id S239614AbiDGEeD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Apr 2022 00:34:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbiDGC4d (ORCPT
+        with ESMTP id S238977AbiDGEeC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Apr 2022 22:56:33 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AA1114FC0;
-        Wed,  6 Apr 2022 19:54:34 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id dr20so7985805ejc.6;
-        Wed, 06 Apr 2022 19:54:34 -0700 (PDT)
+        Thu, 7 Apr 2022 00:34:02 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586331E480C;
+        Wed,  6 Apr 2022 21:32:02 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id dr20so8264771ejc.6;
+        Wed, 06 Apr 2022 21:32:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M7QuqGXibgOQy0pEz/HDPB8sGsU+FPSqjY3hnu+QJvQ=;
-        b=cJFr7C/2zw4qQ/ZJ/S2oEtd79Lcy2POVWiMDtiRaMp127fHQ0OCoLy+Vt38uAjTlIL
-         ihktq7YDKs5Bc0pn2w867AUjFkkV79Mwa0iSIoeRS/4GOyKppugMW85KUL8BEQfoSSAg
-         jgmE6pYABo4IwQfwWJpaOUXUyWMAwnC0xOo50LHLNDKFQesP/WQw8XHfrsMd2QzgNkjd
-         x+sv3gkIxJHURPKST4XwjPkLuXfgRq5ZzPxpAwPmAHgjZRQ13+4tCCjA/bd1vAbJhdvU
-         5zB+8T6h4cx9UpXf5eguvdUUkgOFSqroxs9Q+x2otFDH6VwH/lg4bUz5tXoxsnJVB6cL
-         K6qQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1CuzqFrxMqG3XYIX/bx1pbK4YvXnBuesuH56PsPYPfM=;
+        b=NEFNQmYrf1jAQsRLH7fbnE/rwwQPMLwrJALUEiKJkY3Qp0A7Id/Vbffrdt93Z+kGvK
+         CzfI7V1BqhCQgt1DMJhnc/B9AoqVVENnVzUivMQbagJpjKhnYMxx+bLHSQpSa2Rztdpj
+         Jwn1ePMj7aLSiU/laHPkw/fsQWl6fzEXTJINh1I21YUy9VUyYnFh1cVr2YWhZTcGyddD
+         EBxghZmeLRhoBHh6Vtk4/uIR0rGCepNdUBU5wi+mHQHwp0jWFEIDOKuxi/LOfD7ceYf9
+         v91nKyKw5w6JpztYvTU8zevgiHCCTzMd94Fq/HP+f0tDj94uc09QtIlM3D6MBKRdPaPL
+         tg+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M7QuqGXibgOQy0pEz/HDPB8sGsU+FPSqjY3hnu+QJvQ=;
-        b=ez18im5gNOWamp+pPz55hQLTA6wrATBzjNnSsaga6p0GDswz5W2DuGZJc1a6cPpT4O
-         spi3oY7MRA6sTrNT5xFJVp4NMQ4eisGu2WNj8DymJY0d+UJNZlz7K0Fq1zd91RULTaFb
-         QLrlMuf0euRLTulOnjGgbdNR5zl2rcozXzGYgVwoNKYAYeH2RYzT56Oms2C3FOTlcmOH
-         taWLCxDoyJJprNeS59SR+fTBfd7vYVS1VSKxySzhQruHd640jZOyLOr+ZOviZWTNZxr5
-         5dP7CZpTATJoxvRD3z2KQoKWBasNF5KTSEofHyFBrtc/lV5zKg2XIdnQxPumj6IeyNlC
-         iWUQ==
-X-Gm-Message-State: AOAM530jTCWW5+aSS5cyLCPjiX953olkGG2B/TZX4HvNjvYKYfespnIo
-        4Jupiz1D+fyLOb3vh/64d1bUskgzhLo=
-X-Google-Smtp-Source: ABdhPJyMneW8CmB/Y7VLqcqrpNOq+Sj2iQlxd7q/+ro1SXTmN3yptfKqg8/lskBjKh65YWmv0toRyw==
-X-Received: by 2002:a17:906:b157:b0:6d0:9f3b:a6aa with SMTP id bt23-20020a170906b15700b006d09f3ba6aamr11135532ejb.365.1649300073244;
-        Wed, 06 Apr 2022 19:54:33 -0700 (PDT)
-Received: from anparri (host-87-11-75-174.retail.telecomitalia.it. [87.11.75.174])
-        by smtp.gmail.com with ESMTPSA id qp27-20020a170907207b00b006e66a4e924bsm5707995ejb.201.2022.04.06.19.54.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1CuzqFrxMqG3XYIX/bx1pbK4YvXnBuesuH56PsPYPfM=;
+        b=ocRkHj7VRJBDDPy4Y2+RDjkBTakzAch3wYaRf7fmstQ/GZ51BDzuuRfUiDUq2DdBlp
+         6UTSUpIzXf0fVSP/2BzYZh+rXR93W40YJBJ1DCs5n+JXGLTOkYRXhQMVnuDsSH/bxlH0
+         mTFgayA3130LcvBMH+3uWO1Ar/LFOVhKKvpxFeIujDcH4f79LahDfSwmt9Na2fi8iWnK
+         3WqMlvmPg0rXES1+mrdX/J3yFkNR1EM0IfTCasaWawZSj7qknTrVZGyMUIv1b+qRCUXq
+         Sm7yjqVwXjlzglxR07fXQ3RWiYai5OD+Cs/A58JBNMywRYZBWeK++GEzbUvtk07zlxjD
+         p/hA==
+X-Gm-Message-State: AOAM530Tx9ZvldzgjUsF+JszfQ36OIZShk0JibhVxc487EeTf2+K80Kh
+        lhjvt7VtS6xWHMHemEtlQvs=
+X-Google-Smtp-Source: ABdhPJx4yR4sFcGTnVPf0+nQFkzMzk01S333bAdQdTNYZQL4Dw/MVO/pK1U9GpoCjtqJWpwMvDSNkw==
+X-Received: by 2002:a17:907:7255:b0:6e7:e853:73b8 with SMTP id ds21-20020a170907725500b006e7e85373b8mr11975266ejc.172.1649305920692;
+        Wed, 06 Apr 2022 21:32:00 -0700 (PDT)
+Received: from anparri.mshome.net (host-87-11-75-174.retail.telecomitalia.it. [87.11.75.174])
+        by smtp.gmail.com with ESMTPSA id ke11-20020a17090798eb00b006e7fbf53398sm3531341ejc.129.2022.04.06.21.31.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 19:54:32 -0700 (PDT)
-Date:   Thu, 7 Apr 2022 04:54:25 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
+        Wed, 06 Apr 2022 21:32:00 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -61,16 +60,14 @@ To:     KY Srinivasan <kys@microsoft.com>,
         Krzysztof Wilczynski <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/4] Drivers: hv: vmbus: Remove special code for
- unsolicited messages
-Message-ID: <20220407025425.GA32474@anparri>
-References: <20220328144244.100228-1-parri.andrea@gmail.com>
- <20220328144244.100228-2-parri.andrea@gmail.com>
+        linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH 0/6] PCI: hv: VMbus requestor and related fixes
+Date:   Thu,  7 Apr 2022 06:30:22 +0200
+Message-Id: <20220407043028.379534-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220328144244.100228-2-parri.andrea@gmail.com>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -81,54 +78,42 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Mar 28, 2022 at 04:42:41PM +0200, Andrea Parri (Microsoft) wrote:
-> vmbus_requestor has included code for handling unsolicited messages
-> since its introduction with commit e8b7db38449ac ("Drivers: hv: vmbus:
-> Add vmbus_requestor data structure for VMBus hardening"); such code was
-> motivated by the early use of vmbus_requestor from storvsc.  Since
-> storvsc moved to a tag-based mechanism to generate/retrieve request IDs
-> with commit bf5fd8cae3c8f ("scsi: storvsc: Use blk_mq_unique_tag() to
-> generate requestIDs"), the special handling of unsolicited messages in
-> vmbus_requestor is not useful and can be removed.
+Changes since RFC [1]:
 
-As it turns out, this is not quite right.  In particular...
+  - Rebase on hyperv-fixes (although more likely -next material)
+  - Fix handling of messages with transaction ID of 0
+  - Avoid reading trans_id from the ring buffer
+  - Move hv_pci_request_addr_match()&co. to VMbus
+  - Introduce primitives to lock and unlock the requestor
+  - Improve comments and log messages
 
+The series got bigger (mainly due to a certain re-factoring in VMbus): the
+hv_pci changes are in patches #2 and #6.  Let me stress that the "PCI: hv"
+patches and the "Drivers: hv: vmbus" patches below are inter-dependent.
 
-> @@ -1243,11 +1243,7 @@ u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
->  
->  	spin_unlock_irqrestore(&rqstor->req_lock, flags);
->  
-> -	/*
-> -	 * Cannot return an ID of 0, which is reserved for an unsolicited
-> -	 * message from Hyper-V.
-> -	 */
-> -	return current_id + 1;
-> +	return current_id;
-
-Hyper-V treats requests with ID of 0 as "non-transactional" and it does
-not respond to such requests.
-
-
-> @@ -1268,15 +1264,8 @@ u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id)
->  	if (!channel->rqstor_size)
->  		return VMBUS_NO_RQSTOR;
->  
-> -	/* Hyper-V can send an unsolicited message with ID of 0 */
-> -	if (!trans_id)
-> -		return trans_id;
-
-This remains problematic: I will elaborate and propose some solution in
-the next iteration (to be sent shortly).
+[1] https://lkml.kernel.org/r/20220328144244.100228-1-parri.andrea@gmail.com
 
 Thanks,
   Andrea
 
-> -
->  	spin_lock_irqsave(&rqstor->req_lock, flags);
->  
-> -	/* Data corresponding to trans_id is stored at trans_id - 1 */
-> -	trans_id--;
-> -
->  	/* Invalid trans_id */
->  	if (trans_id >= rqstor->size || !test_bit(trans_id, rqstor->req_bitmap)) {
->  		spin_unlock_irqrestore(&rqstor->req_lock, flags);
+Andrea Parri (Microsoft) (6):
+  Drivers: hv: vmbus: Fix handling of messages with transaction ID of
+    zero
+  PCI: hv: Use vmbus_requestor to generate transaction IDs for VMbus
+    hardening
+  Drivers: hv: vmbus: Introduce vmbus_sendpacket_getid()
+  Drivers: hv: vmbus: Introduce vmbus_request_addr_match()
+  Drivers: hv: vmbus: Introduce {lock,unlock}_requestor()
+  PCI: hv: Fix synchronization between channel callback and
+    hv_compose_msi_msg()
+
+ drivers/hv/channel.c                | 116 +++++++++++++++++++++-------
+ drivers/hv/hyperv_vmbus.h           |   2 +-
+ drivers/hv/ring_buffer.c            |  14 +++-
+ drivers/pci/controller/pci-hyperv.c |  68 ++++++++++++----
+ include/linux/hyperv.h              |  27 +++++++
+ 5 files changed, 179 insertions(+), 48 deletions(-)
+
+-- 
+2.25.1
+
