@@ -2,124 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E351C4F74E8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 06:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A7494F7570
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 07:42:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240767AbiDGEo4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Apr 2022 00:44:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53370 "EHLO
+        id S237801AbiDGFn6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Apr 2022 01:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240750AbiDGEox (ORCPT
+        with ESMTP id S230486AbiDGFn5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Apr 2022 00:44:53 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29DED1017F0;
-        Wed,  6 Apr 2022 21:42:51 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id dr20so8297902ejc.6;
-        Wed, 06 Apr 2022 21:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n4HcXuOXAZE6zoHCC/T33DPT/bULLpPnOSYZG5xwNiM=;
-        b=OYCMJRqmnh+B04rA+lkcc6Tlxx/poyV9w7qffpk4eAaYIEU3DKUsnhDwnIxKU96asq
-         2NIgU9uLB3YkkzlgSAnq0ZPUrN/vC+Nq0K7hDQCZdFRC6e4fSdUigklwY/7f4WXMaW8x
-         YZ47E5a982hGjh6fepld1dKvkAmch7se4vGCilW+j6dsX2yQ8U1STz4WkwJf9nwtPMjC
-         Lx7TCjiJdQ74ZTwN612hxYTgsnWCrhMbTg9+zZYWeReSDkPR6NbY/20/VzaAQYY40Far
-         +2Dz3KIjT+AUYIjo17uM3qsRp61sE8+ofojcRhaI6MMEz6gpDLbaZ94ofPgdp4PHnEaU
-         e+Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n4HcXuOXAZE6zoHCC/T33DPT/bULLpPnOSYZG5xwNiM=;
-        b=qKu5gWzSeRh1+pIxdqFKR4yRacWNjohu7a7yxYWW7X/KjEbBHxU6AgA0Ku7poWAZvm
-         DZ1aNRLFWGn2+yJ8MrqFE9CZV+CCCzclgO7tvbUq/72XqzvNZnMeFvW+J2xmj1apodew
-         ooYqPHsyYXBnJgyrdN/5eiHnCFF8Wr8gMePWd7VI31sajoB6FToyqsBccN+Isq5CmY1k
-         1UiqXTwg9NdzMQvQizujEV7mnhbziy0MfeGDtGmgcg2n392youXGlQB5yw39GRK5o+u1
-         CJ7PGgOtkurS+wmry/bUeBTBfwOcgZHC5brAj/ZkYQxS3Pf6ewW3SKRFqZen0LUX942F
-         kLdw==
-X-Gm-Message-State: AOAM530vNH1QmfdZ/9OhrQUhUxW8MbOfdR74QmEWZzU6GBobIRb2dlhs
-        kkyAg7chlSPYvpI16F7oBqY=
-X-Google-Smtp-Source: ABdhPJxrygnMfLK8eagvxGviFG90GKXnm04NyWO6ssvyhvKoxhRK6ZP9BtRjtVzfuNBoGZXcylcLNg==
-X-Received: by 2002:a17:907:6d96:b0:6df:f199:6a7c with SMTP id sb22-20020a1709076d9600b006dff1996a7cmr11603771ejc.137.1649306569679;
-        Wed, 06 Apr 2022 21:42:49 -0700 (PDT)
-Received: from anparri.mshome.net (host-87-11-75-174.retail.telecomitalia.it. [87.11.75.174])
-        by smtp.gmail.com with ESMTPSA id e3-20020a170906374300b006e7f060bf6asm4199455ejc.207.2022.04.06.21.42.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 21:42:49 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Martin Petersen <martin.petersen@oracle.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] hv_netvsc: Print value of invalid ID in netvsc_send_{completion,tx_complete}()
-Date:   Thu,  7 Apr 2022 06:40:34 +0200
-Message-Id: <20220407044034.379971-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220407044034.379971-1-parri.andrea@gmail.com>
-References: <20220407044034.379971-1-parri.andrea@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Thu, 7 Apr 2022 01:43:57 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C41577F225;
+        Wed,  6 Apr 2022 22:41:58 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5830C20DFD98;
+        Wed,  6 Apr 2022 22:41:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5830C20DFD98
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1649310118;
+        bh=njAIMfs922GPPSTZYstgn/XjmiDRTEg/G01+i37o7Ew=;
+        h=From:To:Subject:Date:From;
+        b=j5o50bjdJUDIA5A6qKqsW9cfwf9wepQSz6Wa+2c+S4CQkSdUzsLXA0SOgESIQ5d6h
+         vMjxbauMK8gFbJz+DqOOzhSk8W3wirQacEf//ryKU+Pg/Yg6Z+7RC49Q+yBExCuo/P
+         d6waJqGjx9CxLqCz9dvPEq2IdZic+8TveLjThcQo=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
+        daniel@ffwll.ch, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, decui@microsoft.com
+Subject: [PATCH] drm/hyperv: Added error message for fb size greater then allocated
+Date:   Wed,  6 Apr 2022 22:41:52 -0700
+Message-Id: <1649310112-25848-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-16.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DOS_RCVD_IP_TWICE_B,ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-That being useful for debugging purposes.
+From: saurabh <saurabh@localhost.localdomain>
 
-Notice that the packet descriptor is in "private" guest memory, so
-that Hyper-V can not tamper with it.
+Added error message when the size of requested framebuffer is more then
+the allocated size by vmbus mmio region for framebuffer
 
-While at it, remove two unnecessary u64-casts.
-
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Signed-off-by: saurabh <saurabh@localhost.localdomain>
 ---
- drivers/net/hyperv/netvsc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 9442f751ad3aa..4061af5baaea3 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -792,9 +792,9 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
- 	int queue_sends;
- 	u64 cmd_rqst;
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+index e82b815f83a6..92587f0b7694 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+@@ -123,8 +123,11 @@ static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
+ 	if (fb->format->format != DRM_FORMAT_XRGB8888)
+ 		return -EINVAL;
  
--	cmd_rqst = channel->request_addr_callback(channel, (u64)desc->trans_id);
-+	cmd_rqst = channel->request_addr_callback(channel, desc->trans_id);
- 	if (cmd_rqst == VMBUS_RQST_ERROR) {
--		netdev_err(ndev, "Incorrect transaction id\n");
-+		netdev_err(ndev, "Invalid transaction ID %llx\n", desc->trans_id);
- 		return;
- 	}
+-	if (fb->pitches[0] * fb->height > hv->fb_size)
++	if (fb->pitches[0] * fb->height > hv->fb_size) {
++		drm_err(&hv->dev, "hv->hdev, fb size requested by process %s for %d X %d (pitch %d) is greater then allocated size %ld\n",
++		current->comm, fb->width, fb->height, fb->pitches[0], hv->fb_size);
+ 		return -EINVAL;
++	}
  
-@@ -854,9 +854,9 @@ static void netvsc_send_completion(struct net_device *ndev,
- 	/* First check if this is a VMBUS completion without data payload */
- 	if (!msglen) {
- 		cmd_rqst = incoming_channel->request_addr_callback(incoming_channel,
--								   (u64)desc->trans_id);
-+								   desc->trans_id);
- 		if (cmd_rqst == VMBUS_RQST_ERROR) {
--			netdev_err(ndev, "Invalid transaction id\n");
-+			netdev_err(ndev, "Invalid transaction ID %llx\n", desc->trans_id);
- 			return;
- 		}
- 
+ 	return 0;
+ }
 -- 
-2.25.1
+2.31.1
 
