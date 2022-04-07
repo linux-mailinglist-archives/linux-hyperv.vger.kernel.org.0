@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F3B14F74C6
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 06:32:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7559C4F74D2
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 06:32:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240677AbiDGEeX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Apr 2022 00:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
+        id S240687AbiDGEeY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Apr 2022 00:34:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240639AbiDGEeR (ORCPT
+        with ESMTP id S238977AbiDGEeS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Apr 2022 00:34:17 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB28A1E6F80;
-        Wed,  6 Apr 2022 21:32:17 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id r10so5000580eda.1;
-        Wed, 06 Apr 2022 21:32:17 -0700 (PDT)
+        Thu, 7 Apr 2022 00:34:18 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BFC1E816B;
+        Wed,  6 Apr 2022 21:32:19 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id n6so8233344ejc.13;
+        Wed, 06 Apr 2022 21:32:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XzsO0OH64I9oYEuJ3bY1ziODzwl46OGR5ery+8e6tc4=;
-        b=Kqciknive9KvGUbs71Z+2JUtJqRbxHRIRvk+3wCe2zKZjAe2FuZN5Iw9V+bM4ShVas
-         zrCB6gvQQzXb0V5n1G3OUBkHlbuTZ2y7v7/IfbgCC9yKDBDkBafTuz9SdYdFrc1fFxZq
-         5JDHnt+nXlL1JrgYi0qtmAiexcbooenX81b5mTWw+ZxLUwCOD3aXy/0OdZFYnuIdROf4
-         YOkCPhWIj45uea7nw5GwQV7RyelvZKYDKrYcT0VYzDYYj7isyL3QCtZWK4YKSLae5H2w
-         E2hP7/cKNk6OtoTnAawWd8wiZ/V0hV6GJohSCq9tDuLJRpESMbP1T9/yMPfQ4oftGxff
-         nVow==
+        bh=YeGL7lzBfsKJziEcGc06vjizc2vur51ZL5S8EuTAwZw=;
+        b=F54Lu3n41OZgyScu9We50U8ODKJ+j4XTgJi5+ISj8520Kevyg8EhNJFxqlcTxWMwjM
+         zQxrXX8xCqjlj9y84u8+DXqPK0mytpDmRZAP24zEM1D2nHAraSocombPlalItxS7kvgI
+         +loq4sazD48S3UgrvloGuAB2y/J+AeupGJQItOMObywN/pdI5qmi/Mna92v84XCKzuDw
+         PxxzBqa2z4QIFHjmRZYrGCdZfsfnRCoCrZzhr8pMFl3plkoBFnsx74rD1al8rEAOcOy0
+         PnACIX/pGkSKd60zprf7eCF6tmDYFbqvorPtQLLq47sqWbVek2eEVJNaiWIdIID6dKfE
+         AqMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XzsO0OH64I9oYEuJ3bY1ziODzwl46OGR5ery+8e6tc4=;
-        b=x1YSwQuxsfCFlDJ179K7zNzL/Eea2pTr9GGuierg7cczoJpwXrC81mbC7hpFEZvDxB
-         72Lo99D8N+3g5SC6WkxgI0NDCryYKAa2PYQ8P9HQJj0B/9HeXMMu/Ik9PlEwxJMZUBaT
-         iyD80OSc/95MXsZyjdzJuOe+H/2TMSQhGZgMU8W5Aaaje34JNnH7LbbE+Zab+8MThNHu
-         713dPUvUKh7eVlxhpO2e7vlH/nsWXlEefZ+BWl8IVRH1YKrTvHvnHWB/O08lpXuF50lV
-         KZJWMh6LWzLG2eZkFovajXtyvqOzIKb7TEoimgDL+DvSGzTUWGCJhQ7h4GlEMCYXyLHR
-         D+AA==
-X-Gm-Message-State: AOAM530ZwPRKkHSLfR3sUAug23V9muHJkXlaoVZDxeW4UgUbPbyX+Ff+
-        R1qtBpMOGp+s4ggM0zL4h0s=
-X-Google-Smtp-Source: ABdhPJxvbHS6Z5yrJL4QnjMLuMR2ia6OQV2phjaGSlfbQ5cEiI6213i9pD6/nJTh40E7oiTIYXjsVQ==
-X-Received: by 2002:a05:6402:190d:b0:41b:a70d:1367 with SMTP id e13-20020a056402190d00b0041ba70d1367mr12116188edz.155.1649305936485;
-        Wed, 06 Apr 2022 21:32:16 -0700 (PDT)
+        bh=YeGL7lzBfsKJziEcGc06vjizc2vur51ZL5S8EuTAwZw=;
+        b=0yhuuq3S0Qj4jBG3VlTZ+U8NVReV9PAe5fEHo+IY5euS62RsieuWX9jRZXrqwF8xqw
+         +DVkBabJOTjadbpQqBdbKV/OA35gzDj1E/+5R8EYaTVXz8zEw7RLyr2MKOcB4rZnVNOe
+         sTEPkYSbXtX8m510nj7/ou51X6ve4Esc5Xp7/FPQvFm6iItahffczxf0plvajo3kLAyh
+         VdxgSLVhWLiho3u14eAeC+QmkIvzLLYXUxtf+Yq3RBcr40mODf5PPugPv2El0tqpsoyp
+         43PTocuYM9cexI07L1y3f9jNvVOr0AEC9h3f6v03YTse6KcIJFgH+AgCc0anZNX0KE6e
+         OSMg==
+X-Gm-Message-State: AOAM5301mBt/14VaVnSIbAVtEjKCZS5SLzLK0d8h+rNfSJNKmcbje1LS
+        3WhFBXUfHgIopUs5rU7JuHI=
+X-Google-Smtp-Source: ABdhPJxzAw6z+Kr7CeDU3lk5MWo4uT91DzsFchXuq/QeynrICu0+t8Y62KmD4gcCStkUJ1T7V4cXBg==
+X-Received: by 2002:a17:907:a088:b0:6e4:dad7:1b1f with SMTP id hu8-20020a170907a08800b006e4dad71b1fmr11236607ejc.84.1649305938504;
+        Wed, 06 Apr 2022 21:32:18 -0700 (PDT)
 Received: from anparri.mshome.net (host-87-11-75-174.retail.telecomitalia.it. [87.11.75.174])
-        by smtp.gmail.com with ESMTPSA id ke11-20020a17090798eb00b006e7fbf53398sm3531341ejc.129.2022.04.06.21.32.15
+        by smtp.gmail.com with ESMTPSA id ke11-20020a17090798eb00b006e7fbf53398sm3531341ejc.129.2022.04.06.21.32.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 21:32:16 -0700 (PDT)
+        Wed, 06 Apr 2022 21:32:18 -0700 (PDT)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -62,9 +62,9 @@ To:     KY Srinivasan <kys@microsoft.com>,
 Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 4/6] Drivers: hv: vmbus: Introduce vmbus_request_addr_match()
-Date:   Thu,  7 Apr 2022 06:30:26 +0200
-Message-Id: <20220407043028.379534-5-parri.andrea@gmail.com>
+Subject: [PATCH 5/6] Drivers: hv: vmbus: Introduce {lock,unlock}_requestor()
+Date:   Thu,  7 Apr 2022 06:30:27 +0200
+Message-Id: <20220407043028.379534-6-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220407043028.379534-1-parri.andrea@gmail.com>
 References: <20220407043028.379534-1-parri.andrea@gmail.com>
@@ -80,140 +80,88 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The function can be used to retrieve and clear/remove a transation ID
-from a channel requestor, provided the memory address corresponding to
-the ID equals a specified address.  The function, and its 'lockless'
-variant __vmbus_request_addr_match(), will be used by hv_pci.
-
-Refactor vmbus_request_addr() to reuse the 'newly' introduced code.
+To abtract the lock and unlock operations on the requestor spin lock.
+The helpers will come in handy in hv_pci.
 
 No functional change.
 
 Suggested-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 ---
- drivers/hv/channel.c   | 65 ++++++++++++++++++++++++++++++------------
- include/linux/hyperv.h |  5 ++++
- 2 files changed, 52 insertions(+), 18 deletions(-)
+ drivers/hv/channel.c   | 11 +++++------
+ include/linux/hyperv.h | 15 +++++++++++++++
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 585a8084848bf..49f10a603a091 100644
+index 49f10a603a091..56f7e06c673e4 100644
 --- a/drivers/hv/channel.c
 +++ b/drivers/hv/channel.c
-@@ -1279,17 +1279,11 @@ u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
- }
- EXPORT_SYMBOL_GPL(vmbus_next_request_id);
- 
--/*
-- * vmbus_request_addr - Returns the memory address stored at @trans_id
-- * in @rqstor. Uses a spin lock to avoid race conditions.
-- * @channel: Pointer to the VMbus channel struct
-- * @trans_id: Request id sent back from Hyper-V. Becomes the requestor's
-- * next request id.
-- */
--u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id)
-+/* As in vmbus_request_addr_match() but without the requestor lock */
-+u64 __vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
-+			       u64 rqst_addr)
- {
- 	struct vmbus_requestor *rqstor = &channel->requestor;
--	unsigned long flags;
- 	u64 req_addr;
- 
- 	/* Check rqstor has been initialized */
-@@ -1300,25 +1294,60 @@ u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id)
- 	if (!trans_id)
- 		return VMBUS_RQST_ERROR;
+@@ -1252,12 +1252,12 @@ u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
+ 	if (!channel->rqstor_size)
+ 		return VMBUS_NO_RQSTOR;
  
 -	spin_lock_irqsave(&rqstor->req_lock, flags);
--
- 	/* Data corresponding to trans_id is stored at trans_id - 1 */
- 	trans_id--;
++	lock_requestor(channel, flags);
+ 	current_id = rqstor->next_request_id;
  
- 	/* Invalid trans_id */
--	if (trans_id >= rqstor->size || !test_bit(trans_id, rqstor->req_bitmap)) {
+ 	/* Requestor array is full */
+ 	if (current_id >= rqstor->size) {
 -		spin_unlock_irqrestore(&rqstor->req_lock, flags);
-+	if (trans_id >= rqstor->size || !test_bit(trans_id, rqstor->req_bitmap))
++		unlock_requestor(channel, flags);
  		return VMBUS_RQST_ERROR;
--	}
+ 	}
  
- 	req_addr = rqstor->req_arr[trans_id];
--	rqstor->req_arr[trans_id] = rqstor->next_request_id;
--	rqstor->next_request_id = trans_id;
-+	if (rqst_addr == VMBUS_RQST_ADDR_ANY || req_addr == rqst_addr) {
-+		rqstor->req_arr[trans_id] = rqstor->next_request_id;
-+		rqstor->next_request_id = trans_id;
+@@ -1267,7 +1267,7 @@ u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
+ 	/* The already held spin lock provides atomicity */
+ 	bitmap_set(rqstor->req_bitmap, current_id, 1);
  
--	/* The already held spin lock provides atomicity */
--	bitmap_clear(rqstor->req_bitmap, trans_id, 1);
-+		/* The already held spin lock provides atomicity */
-+		bitmap_clear(rqstor->req_bitmap, trans_id, 1);
-+	}
-+
-+	return req_addr;
-+}
-+EXPORT_SYMBOL_GPL(__vmbus_request_addr_match);
-+
-+/*
-+ * vmbus_request_addr_match - Clears/removes @trans_id from the @channel's
-+ * requestor, provided the memory address stored at @trans_id equals @rqst_addr
-+ * (or provided @rqst_addr matches the sentinel value VMBUS_RQST_ADDR_ANY).
-+ *
-+ * Returns the memory address stored at @trans_id, or VMBUS_RQST_ERROR if
-+ * @trans_id is not contained in the requestor.
-+ *
-+ * Acquires and releases the requestor spin lock.
-+ */
-+u64 vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
-+			     u64 rqst_addr)
-+{
-+	struct vmbus_requestor *rqstor = &channel->requestor;
-+	unsigned long flags;
-+	u64 req_addr;
+-	spin_unlock_irqrestore(&rqstor->req_lock, flags);
++	unlock_requestor(channel, flags);
  
-+	spin_lock_irqsave(&rqstor->req_lock, flags);
-+	req_addr = __vmbus_request_addr_match(channel, trans_id, rqst_addr);
- 	spin_unlock_irqrestore(&rqstor->req_lock, flags);
-+
+ 	/*
+ 	 * Cannot return an ID of 0, which is reserved for an unsolicited
+@@ -1327,13 +1327,12 @@ EXPORT_SYMBOL_GPL(__vmbus_request_addr_match);
+ u64 vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
+ 			     u64 rqst_addr)
+ {
+-	struct vmbus_requestor *rqstor = &channel->requestor;
+ 	unsigned long flags;
+ 	u64 req_addr;
+ 
+-	spin_lock_irqsave(&rqstor->req_lock, flags);
++	lock_requestor(channel, flags);
+ 	req_addr = __vmbus_request_addr_match(channel, trans_id, rqst_addr);
+-	spin_unlock_irqrestore(&rqstor->req_lock, flags);
++	unlock_requestor(channel, flags);
+ 
  	return req_addr;
  }
-+EXPORT_SYMBOL_GPL(vmbus_request_addr_match);
-+
-+/*
-+ * vmbus_request_addr - Returns the memory address stored at @trans_id
-+ * in @rqstor. Uses a spin lock to avoid race conditions.
-+ * @channel: Pointer to the VMbus channel struct
-+ * @trans_id: Request id sent back from Hyper-V. Becomes the requestor's
-+ * next request id.
-+ */
-+u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id)
-+{
-+	return vmbus_request_addr_match(channel, trans_id, VMBUS_RQST_ADDR_ANY);
-+}
- EXPORT_SYMBOL_GPL(vmbus_request_addr);
 diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index a7cb596d893b1..c77d78f34b96a 100644
+index c77d78f34b96a..015e4ceb43029 100644
 --- a/include/linux/hyperv.h
 +++ b/include/linux/hyperv.h
-@@ -788,6 +788,7 @@ struct vmbus_requestor {
- 
- #define VMBUS_NO_RQSTOR U64_MAX
- #define VMBUS_RQST_ERROR (U64_MAX - 1)
-+#define VMBUS_RQST_ADDR_ANY U64_MAX
- /* NetVSC-specific */
- #define VMBUS_RQST_ID_NO_RESPONSE (U64_MAX - 2)
- /* StorVSC-specific */
-@@ -1042,6 +1043,10 @@ struct vmbus_channel {
+@@ -1042,6 +1042,21 @@ struct vmbus_channel {
+ 	u32 max_pkt_size;
  };
  
++#define lock_requestor(channel, flags)					\
++do {									\
++	struct vmbus_requestor *rqstor = &(channel)->requestor;		\
++									\
++	spin_lock_irqsave(&rqstor->req_lock, flags);			\
++} while (0)
++
++static __always_inline void unlock_requestor(struct vmbus_channel *channel,
++					     unsigned long flags)
++{
++	struct vmbus_requestor *rqstor = &channel->requestor;
++
++	spin_unlock_irqrestore(&rqstor->req_lock, flags);
++}
++
  u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr);
-+u64 __vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
-+			       u64 rqst_addr);
-+u64 vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
-+			     u64 rqst_addr);
- u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id);
- 
- static inline bool is_hvsock_channel(const struct vmbus_channel *c)
+ u64 __vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
+ 			       u64 rqst_addr);
 -- 
 2.25.1
 
