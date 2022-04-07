@@ -2,112 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03A144F8236
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 16:54:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF8D14F84FE
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 18:29:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242849AbiDGO4E (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Apr 2022 10:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53226 "EHLO
+        id S236547AbiDGQbS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Apr 2022 12:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344324AbiDGO4D (ORCPT
+        with ESMTP id S230077AbiDGQbR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Apr 2022 10:56:03 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA941EC616;
-        Thu,  7 Apr 2022 07:54:02 -0700 (PDT)
-Received: by mail-wm1-f53.google.com with SMTP id q20so3732750wmq.1;
-        Thu, 07 Apr 2022 07:54:02 -0700 (PDT)
+        Thu, 7 Apr 2022 12:31:17 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61639AF1FB;
+        Thu,  7 Apr 2022 09:29:12 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id l36so10450432ybj.12;
+        Thu, 07 Apr 2022 09:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NDM7wlMq64JzrOWsB+7BgQsvGKPEysooG41+nOUmUp0=;
+        b=KVKDK10IKH4hrbWXVdHXMgr7bRQOJ1oaOsNvUM3pw5sLy/QGpajD5M0JmmIj0hcT4C
+         RreBmGFooTRgUbrJg/cUIjQSvre/H3DogX5vOfUb+oJbSm1fgryOaxHZIiG0yoyII9OP
+         z8SIxf3voNWu32GFXzTOVbqS2h3XTHXICU9vbVT5QY0R/BD9t9FUaRa/uMeC+dXFchD8
+         p9if1WAU9tmrooVu9Un2iHQEoMvXlTdcnl91ODWRx2RurFvlydITOGZcz/q7Plonk0Ay
+         Jj48eozySQ7kwpRVrFWhdMl9mkR9lBX0TAJZbNdqSmbELGHKPGFKLv+5e70QWka8L5Hv
+         f7kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=2quiVS5lI5pGNZBTe6ox280MwNH8HDfpHT/u6CqkRgw=;
-        b=gAnBl+rvIlAkU9wTLEnNidVtiZobjTRlf9wimgDNjjMSZwlqQU9joua7Wf57vPV2Ip
-         jvTS534nNCaNprQjMDIXuk86UWOD6X1HWplVQUhns8n206klFAE69lketsdWfsKglKMf
-         6ZLixFZF5aJQ4Tf9kDxHgC13jq30Ayv+3uyljTpEbEzjws2pFHXhj3WAhjJRetmr0IAY
-         IZ6adGpneXOjqqlJ3DunHiix1VEMSFZiuZ4AfWDvtJhA5dvrHVT/RG8QKxM276y1AM0+
-         xNUoKdKZQH2HOfcX/BoJb4bzmzX9eor+3rMgsybtU+NE2VHnyR9RA4X9mjhIrWjJb3j/
-         m00Q==
-X-Gm-Message-State: AOAM531GccRLzCStfuQDorY4De2PMHKjzX/NC8/PDQeCedO2Z13ykm3s
-        ulG0SEg8KcuavmSLYJZNpxS8+QcDUvw=
-X-Google-Smtp-Source: ABdhPJxDy17/TTh6YO6BE6Y3WkyWgxgVz/eJY3iQUSot3fbp2xBJvmrxpW+mu86675CUHKgw4Q5FVQ==
-X-Received: by 2002:a1c:46c5:0:b0:38e:6a96:1aa0 with SMTP id t188-20020a1c46c5000000b0038e6a961aa0mr12777360wma.186.1649343233891;
-        Thu, 07 Apr 2022 07:53:53 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n65-20020a1c2744000000b003862bfb509bsm7732264wmn.46.2022.04.07.07.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Apr 2022 07:53:53 -0700 (PDT)
-Date:   Thu, 7 Apr 2022 14:53:51 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-        sthemmin@microsoft.com, Michael Kelley <mikelley@microsoft.com>
-Subject: [GIT PULL] Hyper-V fixes for 5.18-rc2
-Message-ID: <20220407145351.n5nnpcp4rqusrqnh@liuwe-devbox-debian-v2>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NDM7wlMq64JzrOWsB+7BgQsvGKPEysooG41+nOUmUp0=;
+        b=qs/NcFB5xmfM4YP4owAYP0d26ShsZ6qocnPMQxHPYpfBwX7Wk+cQ1ABmpyLWdabwT4
+         UYBYAlIqxlqBk6WhH7W+uoT3YtdGUUFRvssfvYzG0OCMb37IjhiQ4HgEHW0Gc+WNIvO1
+         ckZ1hFOCJymTb0Oif9gHmXR7q2vdzxxHoJYRNzoDihwoX9DyREyscPJQDVUc/qUQKgg8
+         CiddJ7pYDnjy6z04dD3cykJrTtRLJboT9/rZ3wTisCgKKrRe8GN8lHe1w3PlmbSzKN3G
+         DpaZL/0k3KbRca5J5OpDLB7zXXgcR0mU5i/dl3mp2iaWmIUOlaKaoSgSSiQWcHZpJHuA
+         gKXQ==
+X-Gm-Message-State: AOAM532HG0Mbiaojje/uFubD+YmSA6tdXuwq0T7s+X3bYg9FsRKKq+sy
+        VdU/QnLrOlgBIrzNnL+Kp9f50WTEtpC9quV69KM=
+X-Google-Smtp-Source: ABdhPJyghH3SAS7jw4XD4ro17jnPvwM4geTQKWtoA4Skyngk8dgdvRIXCcwVkW3zJsVO4yB7KIYeo+N681NWg1Dj3rY=
+X-Received: by 2002:a25:9783:0:b0:63e:f532:8374 with SMTP id
+ i3-20020a259783000000b0063ef5328374mr109005ybo.415.1649348944476; Thu, 07 Apr
+ 2022 09:29:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+References: <1649312827-728-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1649312827-728-1-git-send-email-ssengar@linux.microsoft.com>
+From:   Deepak Rawat <drawat.floss@gmail.com>
+Date:   Thu, 7 Apr 2022 09:28:53 -0700
+Message-ID: <CAHFnvW2V0tz25D4YMxYMNqYs5uMkbjEoc6p93e6naBhvybzmoQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/hyperv: Added error message for fb size greater
+ then allocated
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     ssengar@microsoft.com, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+On Wed, Apr 6, 2022 at 11:27 PM Saurabh Sengar
+<ssengar@linux.microsoft.com> wrote:
+>
+> Added error message when the size of requested framebuffer is more then
+> the allocated size by vmbus mmio region for framebuffer
+>
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+> v1 -> v2 : Corrected Sign-off
+>
+>  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> index e82b815..92587f0 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> @@ -123,8 +123,11 @@ static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
+>         if (fb->format->format != DRM_FORMAT_XRGB8888)
+>                 return -EINVAL;
+>
+> -       if (fb->pitches[0] * fb->height > hv->fb_size)
+> +       if (fb->pitches[0] * fb->height > hv->fb_size) {
+> +               drm_err(&hv->dev, "hv->hdev, fb size requested by process %s for %d X %d (pitch %d) is greater then allocated size %ld\n",
+> +               current->comm, fb->width, fb->height, fb->pitches[0], hv->fb_size);
 
-The following changes since commit f443e374ae131c168a065ea1748feac6b2e76613:
+Any reason to add an error message here. Since this function is called
+whenever there is an update, avoid printing an error here.
 
-  Linux 5.17 (2022-03-20 13:14:17 -0700)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20220407
-
-for you to fetch changes up to eaa03d34535872d29004cb5cf77dc9dec1ba9a25:
-
-  Drivers: hv: vmbus: Replace smp_store_mb() with virt_store_mb() (2022-04-06 13:31:58 +0000)
-
-----------------------------------------------------------------
-hyperv-fixes for 5.18-rc2
-  - Correctly propagate coherence information for VMbus devices (Michael
-    Kelley)
-  - Disable balloon and memory hot-add on ARM64 temporarily (Boqun Feng)
-  - Use barrier to prevent reording when reading ring buffer (Michael
-    Kelley)
-  - Use virt_store_mb in favour of smp_store_mb (Andrea Parri)
-  - Fix VMbus device object initialization (Andrea Parri)
-  - Deactivate sysctl_record_panic_msg on isolated guest (Andrea Parri)
-  - Fix a crash when unloading VMbus module (Guilherme G. Piccoli)
-----------------------------------------------------------------
-Andrea Parri (Microsoft) (3):
-      Drivers: hv: vmbus: Deactivate sysctl_record_panic_msg by default in isolated guests
-      Drivers: hv: vmbus: Fix initialization of device object in vmbus_device_register()
-      Drivers: hv: vmbus: Replace smp_store_mb() with virt_store_mb()
-
-Boqun Feng (2):
-      Drivers: hv: balloon: Support status report for larger page sizes
-      Drivers: hv: balloon: Disable balloon and hot-add accordingly
-
-Guilherme G. Piccoli (1):
-      Drivers: hv: vmbus: Fix potential crash on module unload
-
-Michael Kelley (3):
-      Drivers: hv: vmbus: Propagate VMbus coherence to each VMbus device
-      PCI: hv: Propagate coherence from VMbus device to PCI device
-      Drivers: hv: vmbus: Prevent load re-ordering when reading ring buffer
-
- drivers/hv/channel_mgmt.c           |  6 ++--
- drivers/hv/hv_balloon.c             | 49 +++++++++++++++++++++++++---
- drivers/hv/hv_common.c              | 11 +++++++
- drivers/hv/ring_buffer.c            | 11 ++++++-
- drivers/hv/vmbus_drv.c              | 65 ++++++++++++++++++++++++++++++-------
- drivers/pci/controller/pci-hyperv.c |  9 +++++
- include/asm-generic/mshyperv.h      |  1 +
- 7 files changed, 132 insertions(+), 20 deletions(-)
+>                 return -EINVAL;
+> +       }
+>
+>         return 0;
+>  }
+> --
+> 1.8.3.1
+>
