@@ -2,43 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B9114F7606
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 08:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B58CC4F7D90
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 13:07:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241095AbiDGG3W (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Apr 2022 02:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40504 "EHLO
+        id S233339AbiDGLJk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Apr 2022 07:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241087AbiDGG3P (ORCPT
+        with ESMTP id S234265AbiDGLJi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Apr 2022 02:29:15 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5C8F51F6879;
-        Wed,  6 Apr 2022 23:27:16 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 06DFD20DFD9E;
-        Wed,  6 Apr 2022 23:27:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06DFD20DFD9E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1649312836;
-        bh=+Pnzj39Opt9yrx6cP1jUMpJnfuLDJgNSePHcqtwwDY8=;
-        h=From:To:Subject:Date:From;
-        b=bfBTwX2cJDZnXkN6fE8iivJWmkTXZ97SKxT7RSl8439jhgpzbi8q4OUOHjIFya9jO
-         O9VulIr3MzonZaX32ngeo+gt2fUxSoqKc5gTtgEmWgAHbCSeBF3IK58sSLL1jV7Za8
-         v1w3zVYlWDBmOf1EtH+oqNG3Ak6ZeESe0G4HyLWk=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
-        daniel@ffwll.ch, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, decui@microsoft.com
-Subject: [PATCH v2] drm/hyperv: Added error message for fb size greater then allocated
-Date:   Wed,  6 Apr 2022 23:27:07 -0700
-Message-Id: <1649312827-728-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-16.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DOS_RCVD_IP_TWICE_B,ENV_AND_HDR_SPF_MATCH,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
+        Thu, 7 Apr 2022 07:09:38 -0400
+X-Greylist: delayed 94491 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 07 Apr 2022 04:07:36 PDT
+Received: from mail.codelabs.ch (mail.codelabs.ch [109.202.192.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CF75007D;
+        Thu,  7 Apr 2022 04:07:35 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.codelabs.ch (Postfix) with ESMTP id 8AC6B220002;
+        Thu,  7 Apr 2022 13:07:32 +0200 (CEST)
+Received: from mail.codelabs.ch ([127.0.0.1])
+        by localhost (fenrir.codelabs.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id H1ereBzHd7rt; Thu,  7 Apr 2022 13:07:31 +0200 (CEST)
+Received: from skyhawk.codelabs.ch (unknown [IPv6:2a02:168:860f:0:34fa:d8d6:c16a:a546])
+        by mail.codelabs.ch (Postfix) with ESMTPSA id 6A8E3220001;
+        Thu,  7 Apr 2022 13:07:31 +0200 (CEST)
+From:   Reto Buerki <reet@codelabs.ch>
+To:     tglx@linutronix.de, dwmw2@infradead.org
+Cc:     x86@kernel.org, kvm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        pbonzini@redhat.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, maz@misterjones.org,
+        decui@microsoft.com
+Subject: [PATCH] x86/msi: Fix msi message data shadow struct
+Date:   Thu,  7 Apr 2022 13:06:47 +0200
+Message-Id: <20220407110647.67372-1-reet@codelabs.ch>
+In-Reply-To: <87pmltzwtr.ffs@tglx>
+References: <87pmltzwtr.ffs@tglx>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,33 +48,48 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Added error message when the size of requested framebuffer is more then
-the allocated size by vmbus mmio region for framebuffer
+The x86 MSI message data is 32 bits in total and is either in
+compatibility or remappable format, see Intel Virtualization Technology
+for Directed I/O, section 5.1.2.
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Fixes: 6285aa50736 ("x86/msi: Provide msi message shadow structs")
+Co-developed-by: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Signed-off-by: Adrian-Ken Rueegsegger <ken@codelabs.ch>
+Signed-off-by: Reto Buerki <reet@codelabs.ch>
 ---
-v1 -> v2 : Corrected Sign-off
+ arch/x86/include/asm/msi.h | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index e82b815..92587f0 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -123,8 +123,11 @@ static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
- 	if (fb->format->format != DRM_FORMAT_XRGB8888)
- 		return -EINVAL;
+diff --git a/arch/x86/include/asm/msi.h b/arch/x86/include/asm/msi.h
+index b85147d75626..d71c7e8b738d 100644
+--- a/arch/x86/include/asm/msi.h
++++ b/arch/x86/include/asm/msi.h
+@@ -12,14 +12,17 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ /* Structs and defines for the X86 specific MSI message format */
  
--	if (fb->pitches[0] * fb->height > hv->fb_size)
-+	if (fb->pitches[0] * fb->height > hv->fb_size) {
-+		drm_err(&hv->dev, "hv->hdev, fb size requested by process %s for %d X %d (pitch %d) is greater then allocated size %ld\n",
-+		current->comm, fb->width, fb->height, fb->pitches[0], hv->fb_size);
- 		return -EINVAL;
-+	}
+ typedef struct x86_msi_data {
+-	u32	vector			:  8,
+-		delivery_mode		:  3,
+-		dest_mode_logical	:  1,
+-		reserved		:  2,
+-		active_low		:  1,
+-		is_level		:  1;
+-
+-	u32	dmar_subhandle;
++	union {
++		struct {
++			u32	vector			:  8,
++				delivery_mode		:  3,
++				dest_mode_logical	:  1,
++				reserved		:  2,
++				active_low		:  1,
++				is_level		:  1;
++		};
++		u32	dmar_subhandle;
++	};
+ } __attribute__ ((packed)) arch_msi_msg_data_t;
+ #define arch_msi_msg_data	x86_msi_data
  
- 	return 0;
- }
 -- 
-1.8.3.1
+2.30.2
 
