@@ -2,78 +2,96 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D76154F851A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 18:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 642A84F8676
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 19:44:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345774AbiDGQpR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Apr 2022 12:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60220 "EHLO
+        id S1346523AbiDGRpz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Apr 2022 13:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233715AbiDGQpQ (ORCPT
+        with ESMTP id S1346524AbiDGRpy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Apr 2022 12:45:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3751AE1AE;
-        Thu,  7 Apr 2022 09:43:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A6CA60C76;
-        Thu,  7 Apr 2022 16:43:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7581BC385A0;
-        Thu,  7 Apr 2022 16:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649349792;
-        bh=a266PekklTC2Eu8Vl/iZdDHr+C+o/zghnzCuVrxEuI8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=L0hI+mMotdmuXweWRkJbgxRmU8icvo1IYRXQvmXENHeUMsuHeysryAjLOjQLbfZsh
-         qNufiirbl4W+Vi5OzPPeidPDY9430rxqXTJSJqI0+17OB1LTlJNSdxjbgjuSthVH3B
-         CXfzhEgTfjNEKVfAPF+x9vIfr8WYENeGKs1L9bzbWRKuuuh32lPlE+jrEnNCA9517y
-         d0KkYTXZQhNug0RYFTmDYR/Z6hFY7yPNarKxcoN+5ladf9xXZL5t2chsjZphULBUCP
-         MwtAKFbRHsGU8xrXb1WN8pA7R1dBeBoJzH58oRMqSmgZ9NLscl6YPFg7b/nsTzjWj1
-         qHf8Oz17fdOFw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2AF16E8DD18;
-        Thu,  7 Apr 2022 16:43:12 +0000 (UTC)
-Subject: Re: [GIT PULL] Hyper-V fixes for 5.18-rc2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220407145351.n5nnpcp4rqusrqnh@liuwe-devbox-debian-v2>
-References: <20220407145351.n5nnpcp4rqusrqnh@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220407145351.n5nnpcp4rqusrqnh@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20220407
-X-PR-Tracked-Commit-Id: eaa03d34535872d29004cb5cf77dc9dec1ba9a25
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 42e7a03d3badebd4e70aea5362d6914dfc7c220b
-Message-Id: <164934979217.4180.6246520562938858652.pr-tracker-bot@kernel.org>
-Date:   Thu, 07 Apr 2022 16:43:12 +0000
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-        sthemmin@microsoft.com, Michael Kelley <mikelley@microsoft.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Thu, 7 Apr 2022 13:45:54 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B8136228D02;
+        Thu,  7 Apr 2022 10:43:52 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+        id 602E320DFDAB; Thu,  7 Apr 2022 10:43:52 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 602E320DFDAB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1649353432;
+        bh=EoJK1cBRSxo9Ig4qPEGnpUnvdRWX31TX6ZeHZVK0Sw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XqTrtOYyF1p+M94p4/7WCsFlHG51vKhNy4mvHF4IgNrX88YCoKDmGlber6C+PU7Je
+         gm7T1wrWqdvjjNBzFQIkbv2z3IsbJSfObH0naSckjoJTo6dyU9tRsbwEomKpsOlzGX
+         10snADbS+QSCPY6kQMgDFDAXyqvFMlVEJ759PBSU=
+Date:   Thu, 7 Apr 2022 10:43:52 -0700
+From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To:     Deepak Rawat <drawat.floss@gmail.com>
+Cc:     ssengar@microsoft.com, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: Re: [PATCH v2] drm/hyperv: Added error message for fb size greater
+ then allocated
+Message-ID: <20220407174352.GA10647@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1649312827-728-1-git-send-email-ssengar@linux.microsoft.com>
+ <CAHFnvW2V0tz25D4YMxYMNqYs5uMkbjEoc6p93e6naBhvybzmoQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHFnvW2V0tz25D4YMxYMNqYs5uMkbjEoc6p93e6naBhvybzmoQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The pull request you sent on Thu, 7 Apr 2022 14:53:51 +0000:
+On Thu, Apr 07, 2022 at 09:28:53AM -0700, Deepak Rawat wrote:
+> On Wed, Apr 6, 2022 at 11:27 PM Saurabh Sengar
+> <ssengar@linux.microsoft.com> wrote:
+> >
+> > Added error message when the size of requested framebuffer is more then
+> > the allocated size by vmbus mmio region for framebuffer
+> >
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> > v1 -> v2 : Corrected Sign-off
+> >
+> >  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> > index e82b815..92587f0 100644
+> > --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> > +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> > @@ -123,8 +123,11 @@ static int hyperv_pipe_check(struct drm_simple_display_pipe *pipe,
+> >         if (fb->format->format != DRM_FORMAT_XRGB8888)
+> >                 return -EINVAL;
+> >
+> > -       if (fb->pitches[0] * fb->height > hv->fb_size)
+> > +       if (fb->pitches[0] * fb->height > hv->fb_size) {
+> > +               drm_err(&hv->dev, "hv->hdev, fb size requested by process %s for %d X %d (pitch %d) is greater then allocated size %ld\n",
+> > +               current->comm, fb->width, fb->height, fb->pitches[0], hv->fb_size);
+> 
+> Any reason to add an error message here. Since this function is called
+> whenever there is an update, avoid printing an error here.
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20220407
+Recently we hit an issue where userspace application was programing the bigger size buffer then the actual allocated size for framebuffer by hyperv vmbus. This resulted in black screen, and there was no error message it was failing silently and took a
+ while to debug this issue. Although the function will be called in each update but this error is printed only in fatal case where pipeline is fail to set the crtc for desired resolution.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/42e7a03d3badebd4e70aea5362d6914dfc7c220b
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> 
+> >                 return -EINVAL;
+> > +       }
+> >
+> >         return 0;
+> >  }
+> > --
+> > 1.8.3.1
+> >
