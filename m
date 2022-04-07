@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7559C4F74D2
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 06:32:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAA204F74CB
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Apr 2022 06:32:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240687AbiDGEeY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Apr 2022 00:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
+        id S240666AbiDGEe1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Apr 2022 00:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238977AbiDGEeS (ORCPT
+        with ESMTP id S240674AbiDGEeU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Apr 2022 00:34:18 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BFC1E816B;
-        Wed,  6 Apr 2022 21:32:19 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id n6so8233344ejc.13;
-        Wed, 06 Apr 2022 21:32:19 -0700 (PDT)
+        Thu, 7 Apr 2022 00:34:20 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452111E869E;
+        Wed,  6 Apr 2022 21:32:22 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id bh17so8285066ejb.8;
+        Wed, 06 Apr 2022 21:32:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YeGL7lzBfsKJziEcGc06vjizc2vur51ZL5S8EuTAwZw=;
-        b=F54Lu3n41OZgyScu9We50U8ODKJ+j4XTgJi5+ISj8520Kevyg8EhNJFxqlcTxWMwjM
-         zQxrXX8xCqjlj9y84u8+DXqPK0mytpDmRZAP24zEM1D2nHAraSocombPlalItxS7kvgI
-         +loq4sazD48S3UgrvloGuAB2y/J+AeupGJQItOMObywN/pdI5qmi/Mna92v84XCKzuDw
-         PxxzBqa2z4QIFHjmRZYrGCdZfsfnRCoCrZzhr8pMFl3plkoBFnsx74rD1al8rEAOcOy0
-         PnACIX/pGkSKd60zprf7eCF6tmDYFbqvorPtQLLq47sqWbVek2eEVJNaiWIdIID6dKfE
-         AqMw==
+        bh=fnlZDRRS7PR+XhZFKAMVuyrkTCKVrR39UF+kw4DUCS0=;
+        b=BM9yF4lax9++9+ia/3A+nNKqN4zI6aKd9ErEK1F9b9SLYKIxtr/GuRoFFKh01k+5Gl
+         7FYHRR/KzDJ1DMWQgccwTYACFks3lG9azjO5G93lyabu9XFUF338NE+BtZRzEbJN8LG3
+         Bx0En7Cg1wBs4tXHuI+88Z7xY74SAzL2t2DSKMYVzMfnOeGqu49IEGF+jlvOn9l0ANhF
+         d50+VqMjiUIZQuYIFujVSLXMX9olUig6tOoBtGBtgZQBu8v8Ft8pWPiRWRD6mF11N5cZ
+         NDzgWg+Gagqm5NWS3ZyyuBfELYhxu53g37Hz834vXKEhgL7L2wVltekkBi7gaHfBp5Wv
+         Kc9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YeGL7lzBfsKJziEcGc06vjizc2vur51ZL5S8EuTAwZw=;
-        b=0yhuuq3S0Qj4jBG3VlTZ+U8NVReV9PAe5fEHo+IY5euS62RsieuWX9jRZXrqwF8xqw
-         +DVkBabJOTjadbpQqBdbKV/OA35gzDj1E/+5R8EYaTVXz8zEw7RLyr2MKOcB4rZnVNOe
-         sTEPkYSbXtX8m510nj7/ou51X6ve4Esc5Xp7/FPQvFm6iItahffczxf0plvajo3kLAyh
-         VdxgSLVhWLiho3u14eAeC+QmkIvzLLYXUxtf+Yq3RBcr40mODf5PPugPv2El0tqpsoyp
-         43PTocuYM9cexI07L1y3f9jNvVOr0AEC9h3f6v03YTse6KcIJFgH+AgCc0anZNX0KE6e
-         OSMg==
-X-Gm-Message-State: AOAM5301mBt/14VaVnSIbAVtEjKCZS5SLzLK0d8h+rNfSJNKmcbje1LS
-        3WhFBXUfHgIopUs5rU7JuHI=
-X-Google-Smtp-Source: ABdhPJxzAw6z+Kr7CeDU3lk5MWo4uT91DzsFchXuq/QeynrICu0+t8Y62KmD4gcCStkUJ1T7V4cXBg==
-X-Received: by 2002:a17:907:a088:b0:6e4:dad7:1b1f with SMTP id hu8-20020a170907a08800b006e4dad71b1fmr11236607ejc.84.1649305938504;
-        Wed, 06 Apr 2022 21:32:18 -0700 (PDT)
+        bh=fnlZDRRS7PR+XhZFKAMVuyrkTCKVrR39UF+kw4DUCS0=;
+        b=CDbjziNummREBnzuEpBs5xm0EYJeyvUWiblHCQyXljvqQr087GyRnCoPo8Z8kJpV2C
+         zGDnl0jyTMIfMRzTs3czKQQNDQ0W6L3ad+jvEAABuyloOQM61C7EK/BzChcM/4bYQCaB
+         nsODnlrj+2VzPJfgPWmVNJTsyIBGCDOMiTbBhYr7N+DdkhUDzaxJ620A37ikRQ2C+sm/
+         L5iQGtzhhHwpbrD+lFTH5/0+rzkjbz+g9bwP+F7a9dpGwsNwaJXOuq43wmZ8asoTgeks
+         L8tlxHHsXprtwyzi8CVQp0zux6Uzp6iz0uIX4F+pGb7fNq1kFLJTKrsEan6SdklbyfFa
+         zfOw==
+X-Gm-Message-State: AOAM531ZiEZRR2UE84tfvKUBxp4CNsjTSO2KpvhtKS/a5FbGkp9POCt+
+        JKzKZZWD9kqMOvFMAEDKx0M=
+X-Google-Smtp-Source: ABdhPJzz9E6ugccX49b5so3/0qNL929ZI5Flwv/RHmpUhYr2mojndRYy9BSupaQ4p5pdfzbcYFNLEQ==
+X-Received: by 2002:a17:907:60c8:b0:6da:83f0:9eaa with SMTP id hv8-20020a17090760c800b006da83f09eaamr11172034ejc.605.1649305940725;
+        Wed, 06 Apr 2022 21:32:20 -0700 (PDT)
 Received: from anparri.mshome.net (host-87-11-75-174.retail.telecomitalia.it. [87.11.75.174])
-        by smtp.gmail.com with ESMTPSA id ke11-20020a17090798eb00b006e7fbf53398sm3531341ejc.129.2022.04.06.21.32.17
+        by smtp.gmail.com with ESMTPSA id ke11-20020a17090798eb00b006e7fbf53398sm3531341ejc.129.2022.04.06.21.32.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Apr 2022 21:32:18 -0700 (PDT)
+        Wed, 06 Apr 2022 21:32:20 -0700 (PDT)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -62,9 +62,9 @@ To:     KY Srinivasan <kys@microsoft.com>,
 Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 5/6] Drivers: hv: vmbus: Introduce {lock,unlock}_requestor()
-Date:   Thu,  7 Apr 2022 06:30:27 +0200
-Message-Id: <20220407043028.379534-6-parri.andrea@gmail.com>
+Subject: [PATCH 6/6] PCI: hv: Fix synchronization between channel callback and hv_compose_msi_msg()
+Date:   Thu,  7 Apr 2022 06:30:28 +0200
+Message-Id: <20220407043028.379534-7-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220407043028.379534-1-parri.andrea@gmail.com>
 References: <20220407043028.379534-1-parri.andrea@gmail.com>
@@ -80,88 +80,139 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-To abtract the lock and unlock operations on the requestor spin lock.
-The helpers will come in handy in hv_pci.
+Dexuan wrote:
 
-No functional change.
+  "[...]  when we disable AccelNet, the host PCI VSP driver sends a
+   PCI_EJECT message first, and the channel callback may set
+   hpdev->state to hv_pcichild_ejecting on a different CPU.  This can
+   cause hv_compose_msi_msg() to exit from the loop and 'return', and
+   the on-stack variable 'ctxt' is invalid.  Now, if the response
+   message from the host arrives, the channel callback will try to
+   access the invalid 'ctxt' variable, and this may cause a crash."
 
+Schematically:
+
+  Hyper-V sends PCI_EJECT msg
+    hv_pci_onchannelcallback()
+      state = hv_pcichild_ejecting
+                                       hv_compose_msi_msg()
+                                         alloc and init comp_pkt
+                                         state == hv_pcichild_ejecting
+  Hyper-V sends VM_PKT_COMP msg
+    hv_pci_onchannelcallback()
+      retrieve address of comp_pkt
+                                         'free' comp_pkt and return
+      comp_pkt->completion_func()
+
+Dexuan also showed how the crash can be triggered after introducing
+suitable delays in the driver code, thus validating the 'assumption'
+that the host can still normally respond to the guest's compose_msi
+request after the host has started to eject the PCI device.
+
+Fix the synchronization by leveraging the requestor lock as follows:
+
+  - Before 'return'-ing in hv_compose_msi_msg(), remove the ID (while
+    holding the requestor lock) associated to the completion packet.
+
+  - Retrieve the address *and call ->completion_func() within a same
+    (requestor) critical section in hv_pci_onchannelcallback().
+
+Fixes: de0aa7b2f97d3 ("PCI: hv: Fix 2 hang issues in hv_compose_msi_msg()")
+Reported-by: Wei Hu <weh@microsoft.com>
+Reported-by: Dexuan Cui <decui@microsoft.com>
 Suggested-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 ---
- drivers/hv/channel.c   | 11 +++++------
- include/linux/hyperv.h | 15 +++++++++++++++
- 2 files changed, 20 insertions(+), 6 deletions(-)
+The "Fixes:" tag is mainly a reference: a back-port would depend
+on the entire series (which, in turn, shouldn't be backported to
+commits preceding bf5fd8cae3c8f).
 
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index 49f10a603a091..56f7e06c673e4 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -1252,12 +1252,12 @@ u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
- 	if (!channel->rqstor_size)
- 		return VMBUS_NO_RQSTOR;
+ drivers/pci/controller/pci-hyperv.c | 33 +++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index c1322ac37cda9..f1d794f8a5ef1 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1695,7 +1695,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 			struct pci_create_interrupt3 v3;
+ 		} int_pkts;
+ 	} __packed ctxt;
+-
++	u64 trans_id;
+ 	u32 size;
+ 	int ret;
  
--	spin_lock_irqsave(&rqstor->req_lock, flags);
-+	lock_requestor(channel, flags);
- 	current_id = rqstor->next_request_id;
- 
- 	/* Requestor array is full */
- 	if (current_id >= rqstor->size) {
--		spin_unlock_irqrestore(&rqstor->req_lock, flags);
-+		unlock_requestor(channel, flags);
- 		return VMBUS_RQST_ERROR;
+@@ -1757,10 +1757,10 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		goto free_int_desc;
  	}
  
-@@ -1267,7 +1267,7 @@ u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
- 	/* The already held spin lock provides atomicity */
- 	bitmap_set(rqstor->req_bitmap, current_id, 1);
+-	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
+-			       size, (unsigned long)&ctxt.pci_pkt,
+-			       VM_PKT_DATA_INBAND,
+-			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
++	ret = vmbus_sendpacket_getid(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
++				     size, (unsigned long)&ctxt.pci_pkt,
++				     &trans_id, VM_PKT_DATA_INBAND,
++				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+ 	if (ret) {
+ 		dev_err(&hbus->hdev->device,
+ 			"Sending request for interrupt failed: 0x%x",
+@@ -1839,6 +1839,15 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
  
--	spin_unlock_irqrestore(&rqstor->req_lock, flags);
-+	unlock_requestor(channel, flags);
+ enable_tasklet:
+ 	tasklet_enable(&channel->callback_event);
++	/*
++	 * The completion packet on the stack becomes invalid after 'return';
++	 * remove the ID from the VMbus requestor if the identifier is still
++	 * mapped to/associated with the packet.  (The identifier could have
++	 * been 're-used', i.e., already removed and (re-)mapped.)
++	 *
++	 * Cf. hv_pci_onchannelcallback().
++	 */
++	vmbus_request_addr_match(channel, trans_id, (unsigned long)&ctxt.pci_pkt);
+ free_int_desc:
+ 	kfree(int_desc);
+ drop_reference:
+@@ -2717,6 +2726,7 @@ static void hv_pci_onchannelcallback(void *context)
+ 	struct pci_dev_inval_block *inval;
+ 	struct pci_dev_incoming *dev_message;
+ 	struct hv_pci_dev *hpdev;
++	unsigned long flags;
  
- 	/*
- 	 * Cannot return an ID of 0, which is reserved for an unsolicited
-@@ -1327,13 +1327,12 @@ EXPORT_SYMBOL_GPL(__vmbus_request_addr_match);
- u64 vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
- 			     u64 rqst_addr)
- {
--	struct vmbus_requestor *rqstor = &channel->requestor;
- 	unsigned long flags;
- 	u64 req_addr;
+ 	buffer = kmalloc(bufferlen, GFP_ATOMIC);
+ 	if (!buffer)
+@@ -2751,8 +2761,11 @@ static void hv_pci_onchannelcallback(void *context)
+ 		switch (desc->type) {
+ 		case VM_PKT_COMP:
  
--	spin_lock_irqsave(&rqstor->req_lock, flags);
-+	lock_requestor(channel, flags);
- 	req_addr = __vmbus_request_addr_match(channel, trans_id, rqst_addr);
--	spin_unlock_irqrestore(&rqstor->req_lock, flags);
-+	unlock_requestor(channel, flags);
+-			req_addr = chan->request_addr_callback(chan, req_id);
++			lock_requestor(chan, flags);
++			req_addr = __vmbus_request_addr_match(chan, req_id,
++							      VMBUS_RQST_ADDR_ANY);
+ 			if (req_addr == VMBUS_RQST_ERROR) {
++				unlock_requestor(chan, flags);
+ 				dev_warn_ratelimited(&hbus->hdev->device,
+ 						     "Invalid transaction ID %llx\n",
+ 						     req_id);
+@@ -2760,9 +2773,17 @@ static void hv_pci_onchannelcallback(void *context)
+ 			}
+ 			comp_packet = (struct pci_packet *)req_addr;
+ 			response = (struct pci_response *)buffer;
++			/*
++			 * Call ->completion_func() within the critical section to make
++			 * sure that the packet pointer is still valid during the call:
++			 * here 'valid' means that there's a task still waiting for the
++			 * completion, and that the packet data is still on the waiting
++			 * task's stack.  Cf. hv_compose_msi_msg().
++			 */
+ 			comp_packet->completion_func(comp_packet->compl_ctxt,
+ 						     response,
+ 						     bytes_recvd);
++			unlock_requestor(chan, flags);
+ 			break;
  
- 	return req_addr;
- }
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index c77d78f34b96a..015e4ceb43029 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1042,6 +1042,21 @@ struct vmbus_channel {
- 	u32 max_pkt_size;
- };
- 
-+#define lock_requestor(channel, flags)					\
-+do {									\
-+	struct vmbus_requestor *rqstor = &(channel)->requestor;		\
-+									\
-+	spin_lock_irqsave(&rqstor->req_lock, flags);			\
-+} while (0)
-+
-+static __always_inline void unlock_requestor(struct vmbus_channel *channel,
-+					     unsigned long flags)
-+{
-+	struct vmbus_requestor *rqstor = &channel->requestor;
-+
-+	spin_unlock_irqrestore(&rqstor->req_lock, flags);
-+}
-+
- u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr);
- u64 __vmbus_request_addr_match(struct vmbus_channel *channel, u64 trans_id,
- 			       u64 rqst_addr);
+ 		case VM_PKT_DATA_INBAND:
 -- 
 2.25.1
 
