@@ -2,43 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57CEF4F993F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Apr 2022 17:20:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5B094F9942
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Apr 2022 17:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234939AbiDHPWU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 8 Apr 2022 11:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35080 "EHLO
+        id S237491AbiDHPXO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 8 Apr 2022 11:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231562AbiDHPWS (ORCPT
+        with ESMTP id S237478AbiDHPXF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 8 Apr 2022 11:22:18 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-eus2azon11021020.outbound.protection.outlook.com [52.101.57.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB3735275;
-        Fri,  8 Apr 2022 08:20:14 -0700 (PDT)
+        Fri, 8 Apr 2022 11:23:05 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eus2azon11021026.outbound.protection.outlook.com [52.101.57.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0E9106136;
+        Fri,  8 Apr 2022 08:21:01 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m5MXzqTV3UBoe/MuAgi/pPEPxnAEjeuAgILZCgWPwCKxbc00wOYWiIu9UmO6rbDJdgotZPHApi1ivsEkEHYrG8Xww/WHvT8sfJGIo8bu7SlbjLTXPRSj4qSEold+Tc63ei7019w4OB1qiai/BJZ268NMhqFfhoSw38Hoe615cRA64S/KGazMhLw7TYMUNYMyzJJLlrel7HgUA967Bynky6jQwz56qeg9JI98me0gI0g93M9OdVLIcv7T4lpsKUOrQHsO7nXCTcjexrirm+COyh3Y4HydCipPZJrhpMvWSigXNchv1hgFdah1hLUq2KwYicFgKBrf8chTQCjQMc7fVg==
+ b=LHzqoa7FhIq8oeR6Rny/XzaNJ7Faqw1R2iN8DSKmeraDd3JztE5Bi5J2M4N2q6EwfAY77nBDbFTDF7LRNVNKeUO0rueJGsuHsRuy4RsDYSHRcmPK+C4OteeHmZRlS0QYp2sPrqNvz8NfST9YVSArtexKjR3QhAuqJ0HFRuwOCtKpHQqijsbV0Qdkt5K3zLros/dHfCKKoMG5F5wKLZuX2DIbVicQ3kIk15huEKSNSzp2BHzGeW9PWGOMu+46dp+SWsOp/nP/jqgxoqgrB+poYykuArerfDEtW0gho8F6RhWNjcyagLyJob8mwBrk07Ci9I0mxGUMJUos8HIWZl9j9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dWVmxXJnhKJVjqYdg7E9lRS5IeF2phA5m9Udi+YUzBo=;
- b=TcHoEkQ5tbGfbbZea/RWlE0sa1QwKDtir4QOgeTwMSv+GgKLifpUfESWplgxJhx6X/nkYvMKoPCKPCqunhIPjSbSB40KZnOj6KrXN6BjL5Pv7bHxAqnGtD/CHrQ0Tb/icmwEiT0bLNfLKbAeadE1dIND5YjJn6m4zZtPZ/F3EFhUjACbz38HsTaJ6PRs+/meAogNy1HRH/OrC4pcs08qv6xGm3ejVL3934dQ2Juue4I6ncxYmHnb+7oQT8NW7tb0KWKzwPvVkE+MZB+fTyAzeELxNnVh2Vfu2kJrqkbVPFOHdr6yIkTwkqt4PdtcRBACkCZ5fAYhlIlazNfV3Wm/LQ==
+ bh=cY84QR2+JrKW70/qub8dh9hhgRPzRDWPEIisSGgWbys=;
+ b=XaUpLJCr8T4mDORyR8r+kYmbqv6wRk8EPaGx26Ec/TCPDLqJxpHoI7SaykfM09500KBkBKFyIZfvFHNky8Jczd5mY+ejQYNJ0M50EsVA8vjOhQFH03L+bd/io/XNnNrRXgONvxZfJl/cprABwkLuSiCexO82WTQB9juI3BWj+NwMoxMlxXhfFSRQi4luPtm5cd9cXFuejcp6wfeKZ7rAIfHnV2QEU5w/mQrTV+nSP24YPUb5dzxUF+lu/8weiLFNgftLVskHOdb1InUjbvFY0mzoKPbUS9/vFSQ1wl5HO3eXvNmSYgoAcheYlfcpWpf5LSk1RWjn/+t44aDBAlp8lA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dWVmxXJnhKJVjqYdg7E9lRS5IeF2phA5m9Udi+YUzBo=;
- b=B30ZdIxyDyZPNmR6Zyjg1SYGHCyaphm7ngeLGHdmV2NhSSj0j8iliJ6cgJy2gCJ6N4EZYuUO/5K8FF9SPiJVWn6O1v32AE/LFBYKN2PKmWIJoV7+HGScIS9Xz2KOR8t+l4Fx9FC03IZkxr4rkOlpGei3OlQV7DM5a9O6w22hK7g=
+ bh=cY84QR2+JrKW70/qub8dh9hhgRPzRDWPEIisSGgWbys=;
+ b=cP6AJ5B2ZrDV8WaVIujRIcozJ7kBfNWV3LD/ooDDE6dJ15u4UI+J9quA+cnfY3eyPgS18wASJ0yKngAfh8r4z1yo+vlGBHaCde7kOb5QPlTF52ybNlvGX3nbMyXDzsDA0kuK7ZcWLUlT89N6UASSWd+KeP00zgFPuD587DlYHIc=
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
  by PH0PR21MB1341.namprd21.prod.outlook.com (2603:10b6:510:105::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.12; Fri, 8 Apr
- 2022 15:20:12 +0000
+ 2022 15:20:59 +0000
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::ac09:6e1b:de72:2b2f]) by PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::ac09:6e1b:de72:2b2f%7]) with mapi id 15.20.5164.012; Fri, 8 Apr 2022
- 15:20:12 +0000
+ 15:20:59 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
         KY Srinivasan <kys@microsoft.com>,
@@ -53,77 +53,77 @@ To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
 CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/6] PCI: hv: Use vmbus_requestor to generate transaction
- IDs for VMbus hardening
-Thread-Topic: [PATCH 2/6] PCI: hv: Use vmbus_requestor to generate transaction
- IDs for VMbus hardening
-Thread-Index: AQHYSjh19ZDCbbuTN069SFH91pvil6zmIsIg
-Date:   Fri, 8 Apr 2022 15:20:12 +0000
-Message-ID: <PH0PR21MB302542ADED8A99414518ADA4D7E99@PH0PR21MB3025.namprd21.prod.outlook.com>
+Subject: RE: [PATCH 3/6] Drivers: hv: vmbus: Introduce
+ vmbus_sendpacket_getid()
+Thread-Topic: [PATCH 3/6] Drivers: hv: vmbus: Introduce
+ vmbus_sendpacket_getid()
+Thread-Index: AQHYSjh8t1fe6EAQhkmpRN0WBS1kJKzmI9ww
+Date:   Fri, 8 Apr 2022 15:20:59 +0000
+Message-ID: <PH0PR21MB3025A51EC8C8BEB72A8A2ED3D7E99@PH0PR21MB3025.namprd21.prod.outlook.com>
 References: <20220407043028.379534-1-parri.andrea@gmail.com>
- <20220407043028.379534-3-parri.andrea@gmail.com>
-In-Reply-To: <20220407043028.379534-3-parri.andrea@gmail.com>
+ <20220407043028.379534-4-parri.andrea@gmail.com>
+In-Reply-To: <20220407043028.379534-4-parri.andrea@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a85c7daa-1210-4063-af95-b47322760852;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-04-08T15:16:20Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4cb9885d-c7c9-4e0a-9ffb-6ec0cfa9f1b0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-04-08T15:20:16Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cbb21b4b-ec6d-460b-9197-08da197346d0
+x-ms-office365-filtering-correlation-id: 3e91daeb-2831-44df-e498-08da197362cd
 x-ms-traffictypediagnostic: PH0PR21MB1341:EE_
 x-ms-exchange-atpmessageproperties: SA|SL
-x-microsoft-antispam-prvs: <PH0PR21MB1341221E3A81328F000FEB13D7E99@PH0PR21MB1341.namprd21.prod.outlook.com>
+x-microsoft-antispam-prvs: <PH0PR21MB134157B9E8150AF40AFDA6C4D7E99@PH0PR21MB1341.namprd21.prod.outlook.com>
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WdJ9smSvaZjIMESQ4Z8rWW/OlhpdQ11aAmSf44tB1/zrAkZwuFu3CIu016NfWHUC9e5YYCAs1R/hhGEbBPar8dOn+aPQW8zRqWaSqk8ngBFf5jVV41hqWt/RVKLQrYjnGvSSaesIbku5vYI1fQ2q+ZlKT32STHr/s4SUtU6eRuZDWwCX1eoGOlLk4n0PWyfqFcKqyC5lFcHlbotmFIOQfuv1Pd7Psk63QuXNEr3t5Gj/AYP9yHvZmClM2nk4NYFxFmZq0RRyKUkz57XTCKihmgGpKS0CeS+VKpa4RMbodIKFgl6A0vo65Ftq6lw7lZO95ia8pylfPgsFiq6JLiKUvKciGREC76KhKMwTNFyAyRi07oPHcbPfPjcs9RUAj4qpG7nVv1CenimYQVqCmZaS1ky6sBOsgaqBK7rYpYmJCn76V+maYqljnns1S3CSCyXM6nSFe/p5f/xr1fOPcjfesbiY7I5vgjRq8Bf6RDsowxNIP5vyxXg3GQg60gyEdFvI3rx7a1puqhQjVVrl6Y4yCeoJta5rWNzNLK5EcQQMyHj23DjWhDf3LZ2KHbjjVzwnmd9jZiSmibjB+g4fgEH/+S1l7YsbAR4FGJcRA2exo7wEDFOkynym01fs88dVQMQMtLtRfGiIoCNjpTKJRrgiE2xHV0kgBBUUXwGRkTKe7VjOhxV5M75sociP32Fsp+9ePIdSquUWCMbOqnDbjR4U+CUIl1NaMyx7DpOqUJmmra/8iQrk7el5BWa6K6IFhR6fAqgc22ZCevE0Rn9f4q20Ug==
+x-microsoft-antispam-message-info: 8WjNaqzl4B6aycsVncW9Bh6oPHo7iYzuH8qECCoe7xcGZ1lTDQpK3bdEPEcjh8r6NdEpXOYiRd6LwmUSyisEiI5wDMGjsBKV6AeYgafPR9S5TWe764kHbIVJWjaqfY8RVeaqNZdexpKMT/bu+I8bFCsoD+wgLP+wJe/EgkOhVKxY6b3UidvYqiEjSXy9jj82Uw7bBhl+uICIy2lRsbFR2BYepISwbI3AmjB4jkNxOoLJRDKzdTyvZTSzifZ5Bbjmx8AYjDjpgeI09/hMPa2s7E07b5Fpm3mmYYCkLQmFIrjIQ0iRNpQXIGxDn1yvuL32+XHgifKjH7MxkaJjcOLY8A/lN3OT0Mb7RDgY52gXC4p9pk0ppn3Vfi5rLT6NpuDkUlivh5pYTbhZWKNdKGWGQWHU4wYwE6GqeuRxkOkwQhbKDOh3HnZj1sI1Naj4dHV6BnefGR+x4Nif0vYvA/SWszlEZ8nZg8Is6d42Jhs+tkkS+z/BS0EJ6J/eScRdvrH49AjTl3pmkONsTEvNYHhd2UYjHPB95JBagWm7Fnl3XaouzIhhLO9pEGzInQqNnbZrT/b5zidvRNFJUNxrzsIRLbnqbet9hDbVgV8kHrIhqIiMnacNaNaSQ61ZcOfIUGPuUsb/qLrJPbE0LgDwfIH9WxzEJvv7Lx8/59826qMiGegsPp2bKuXPku/zgfzs/2oePn+mqfziK5ieJvBSKet73P/7WTUUdD3hwXHCE1miqHTA93URyKv18vOHT/gHZieypcRgDvCReX1d+/AreevwCQ==
 x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(9686003)(10290500003)(7696005)(6506007)(316002)(66476007)(71200400001)(82960400001)(86362001)(921005)(8990500004)(8936002)(38070700005)(82950400001)(76116006)(66446008)(2906002)(33656002)(38100700002)(66556008)(110136005)(5660300002)(55016003)(122000001)(8676002)(64756008)(4326008)(508600001)(186003)(83380400001)(26005)(66946007)(54906003)(52536014);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0Lw47yTq1bqHY7fHF8jZyrrx6qZGKJCrMxTobA2oJpAmMAwraIui73eZvTK8?=
- =?us-ascii?Q?ZNwXyjuDyvVXPa1svtc0NvLh0oRlyJSt0Eg218yI9U0SCkUsyLbLoM2szN5M?=
- =?us-ascii?Q?yQMgDneHIxfCBPEcxEiC0x3zeLTftyBx2YbEIIF7eYxd4hPA15xCHr+KoxQt?=
- =?us-ascii?Q?neSK1gzBBqrkHupS4Vn5fHNCMULFq8guPrCs7zcByLfzLjkrUmcBakFiBmXT?=
- =?us-ascii?Q?BLO2Bt1NCHEz7Q1ESfafIfTRzlxslrzNUX/YGcdgV/M1SjCbAuIvWnnzyva5?=
- =?us-ascii?Q?gfTfrdLPWtsc7UiEWDFic8AgbnWB3Xa4lSdiV+mKRFkXmoSTswYLuW0TqLax?=
- =?us-ascii?Q?Hiciey/J4IQi2m4NYVwamKzB8qz82wHpxSqKryMxnmbhCDAthH+u6p5W9W1F?=
- =?us-ascii?Q?D+zoHdoC5XvSI+Qa2/x/2U0Kk11LENpH3dkYnm+VZFdGxGFvpI6a3zEleWHX?=
- =?us-ascii?Q?ZZ/aEtr/HIv/xGqSeJPJpvY+ke7ZaAfiugD7hlrcYupx0frfTObwh7Xa37uo?=
- =?us-ascii?Q?SezBCoHVmZzochqkfmhQuUTW1mHjfEJTXr4LXDVpMeDH8CUuqN0VIMPn0LLI?=
- =?us-ascii?Q?R7a9wcLkNHk562JqSnm5QPSol9chvn443ndGvlpcJcORgvQ0bnQVixa1Zu5E?=
- =?us-ascii?Q?4Psc7m/tVIAo3VfwJZkJMj8sUMZ8vAkxQL/olu2LZrW8Oye62Mk9G3t7qmAP?=
- =?us-ascii?Q?aQ+n+5mY2RVaEJFa+Gs4WN+ggBbRVsqmgOooKZBs5fhrUg3wXPjYbynE+Llk?=
- =?us-ascii?Q?E+ofGzC1Uc9fj3qG4vrVL+OnSlS4aAYP99Es6E4QMkf4G3sDGKV1Tteep6Cz?=
- =?us-ascii?Q?nFqO/f6ouvSQgj3q85Ty1mEMoBfp3cqhQX//bkulRWygrr2Wh4qWpJI7kPYE?=
- =?us-ascii?Q?psGuUuBtT5LtUla8fSAl0wSnxXidAd9X0R3BNLOf/fuQW4HV0LmSAYLbtWXt?=
- =?us-ascii?Q?EKgTkJHyF0rQiK2Vj5hVTdmqFG9nVg3jSi4vVnKsGkYGqDKXXgmipR1po7jV?=
- =?us-ascii?Q?T7n3UaxE8zv/aEfVbQotwgCOT9wz8TaBGPQvuD/dQlvHJK8dkMYSoXH25QMC?=
- =?us-ascii?Q?OufusO7h/SUTd+SgjJ15um9iXe7h9yBa7bwD9de9Mxl7q+OeUf60XzWs9pAe?=
- =?us-ascii?Q?znQo75qke1K7nre72M6ZT72jWaXGWhi6XVnH22n2a/RNgiPpW1lNStD0+qOa?=
- =?us-ascii?Q?muOq4FRw/iG28t2sW8sy3MoktLpOWf6gCX0QxhVB0Eb4oZQovj9zgiZ8DCBu?=
- =?us-ascii?Q?uLMex2M19V/dAQM1ZSXHTeCdRJo8sXRjnclVZg4SYWKLyAHUyoWeX5GrESQJ?=
- =?us-ascii?Q?3xAsqQlSBRF+xtoTqJJjbp2NZqVxPF0OJdKpciYRw3p3VZCL4LoCUSBtnBnU?=
- =?us-ascii?Q?dHzbFnM8vwi48iR6oz07+oUC2G7zNWJrvDi+WC1GZl1i7xnpagnLRhBrZ1iC?=
- =?us-ascii?Q?YHUPQLXVza0z5UyQ3jhrUxzVtWkb563zn2xGm+ygiZ9kF89Tb/bw2uxvzitN?=
- =?us-ascii?Q?DJUFLsJnvswyErv/i+MqpN5OpZ1GSjOwt2QXYV4J3dc38bObF8X9HZE0Zb7+?=
- =?us-ascii?Q?0JdQQ7XiSZWzKWeXt0GY/WKhMDwzi4+RvIlMvcZlBcF8L00VrqNV1fAhVKDg?=
- =?us-ascii?Q?Z6SIxcmQhRqBqizysOkjp0+9jXFPBk7QLx9LrR1oddJsOyHEIWZxNpJeZ0bB?=
- =?us-ascii?Q?jN8778kmYsiI+kzooBbBG5m8FuIDT+Iea9+sQULthCfgntA+UQgzmPZG//Ch?=
- =?us-ascii?Q?7AW8haWHeE0t0Qz8v/57ICJfTKZXlDg=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ZjL69JzUUwaAw181HNJDtS1AVuQ5MR8DgcJnTlfcWdfxYlRsfBxLUbTpnfke?=
+ =?us-ascii?Q?B8ygv0OvfnifCSKfNuzqXuTBuO/8wbyd+0uOih7CnEm0c/Y7yx+fx7fy08bC?=
+ =?us-ascii?Q?QsVrjsv6DteMDDHJHB/Y2oVb6U5Y+3RVI+zp22i6xufUpkJrWHoA3jGVoLaa?=
+ =?us-ascii?Q?oIfGgXddFpbLY6GbZHM/PRazgVLx9m9wx1BEyAXGwfniE1HKa0lzk1rvCnuZ?=
+ =?us-ascii?Q?3w6XrYQ/35drMsnVdIzEejSWSLWCwKwX7YKxsetBRfMG540m5cFVcRHYVcE9?=
+ =?us-ascii?Q?pH1RCKij00Q7s8X5usnekvSX0zUgA/zyZq0zBl9pNSKZffmDgChVYg4g3D8z?=
+ =?us-ascii?Q?AQ8BT84pZXSa42NWRR56ukgUjYcd0Ok+zsedqs8JGIS5L7NYeGwE3uOlgd34?=
+ =?us-ascii?Q?Cliqs2siaqq6TLagV/TV1KmNR0zahTBWmAXXJ9Y2xndptoH/VokEQFfQtBuu?=
+ =?us-ascii?Q?1mjEnHPD9GJEBycFzTxLDWDGAkl2snlsnjke2ef3d5NJ+5b2Cl/NWk76fyQa?=
+ =?us-ascii?Q?kgdogImxBHU8cZieQOK96wkIUG+rdj5ulgA769qe+el09lPpyZet1Pekgtip?=
+ =?us-ascii?Q?GmNGT36X8022MFvySD5WMWtP9Rqm24u7xirXkuHGXNG+7qxxVpNPuGIo4kjL?=
+ =?us-ascii?Q?zlsGkGpQwhL0U21Q497FSxg7Lw7yTD0BL6lGMvpfTj1SVYqq9kHfuYEcCbvn?=
+ =?us-ascii?Q?wKA7MoLahkmpv5SeaY3qt8+3WzcmwRqps7tYjKCVUf28JjKRV4BdPPIdZA7T?=
+ =?us-ascii?Q?xIha5ujh386x8D6W6SjgBs45dc5nvqyh2JjGiOp9JjSc0suTQKZO4ECuygOB?=
+ =?us-ascii?Q?XBfeiLv30LbMj+PVDN3zbyO/2Z/VR6HvhbBUpEQqw2zhTcJPjNXiSm+x8G0Y?=
+ =?us-ascii?Q?ldK19CUKaGclo9z3wK+Z/ExGNLFXs2U5M3lZdmKboHiDWlbDm2+KxY/MDRE9?=
+ =?us-ascii?Q?Vb9jY6lULCs3u6k6bd4p1DOeW9TT+gfvhxnuobSxsW+sOsthBkZekSsqLZRM?=
+ =?us-ascii?Q?pkqGhdMBSerIRqG40S+67Z23FOz6Z5XDfxW5r7yFayRRUKHmfkaVgArxnRl4?=
+ =?us-ascii?Q?A3tGsZ+D3eW0r95erpWF3O/xrzAKKkYqpieXLuour+w0hK2YPGrHIq+6vfyq?=
+ =?us-ascii?Q?Tva9tqeYOib5NPgqQTElOq5cCEjUMa08Kydc9DMoh76g73nq2l9TK6IJbiDx?=
+ =?us-ascii?Q?R/GGJ0UU5sO65QkLGC4BEU7io8EOSfPTZxW7zYeOhOCvbP2bTSxp9tVkUDVX?=
+ =?us-ascii?Q?jakA3J3Z7W2XhDtjpU+/WGRQhwuN+rscOfoun+KCWN1+dxQMju9juAgn3dSF?=
+ =?us-ascii?Q?KlrK9uOVkeNSNTXlnNInt5oYfO2YKOBU0/1wObpHyzzzdZOA1rnl3hkOm1ON?=
+ =?us-ascii?Q?GL3/IU/aRY2I2Iqn2gnnLw0dvIXATtY9ksI80CROBTktNPwM3nseEJxLZI2u?=
+ =?us-ascii?Q?RsSuqPOigJxrZFRQvflHNVkz/x6BSWQbhNietELVXcdxx4k/mUmFk0FpFGIz?=
+ =?us-ascii?Q?Y4jrHQOgrikZQmdpLqd6AquXCgfveIZrgWCrzI9/bWF4NKsHSW5+B5L5JkvN?=
+ =?us-ascii?Q?0QtbPavBE/e5+aQDukYRlUj6DtsV3amMNvei78kaB/Mt7iNU/AbPfk/8xrBY?=
+ =?us-ascii?Q?+vBZRJWR4ccdcT5wagNdOpa61txoBp9g86gk7fDkAxAad/u0HJ38wSA8wzTP?=
+ =?us-ascii?Q?4lBPmOz/3ESG3HImWgK7CWizalw71gfacWDqfoBVz7ztvIxw7H9dDRiEmsdd?=
+ =?us-ascii?Q?F+YHF+2gW4GoPrM5a8dAA8OBrnzNUz8=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbb21b4b-ec6d-460b-9197-08da197346d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2022 15:20:12.4803
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e91daeb-2831-44df-e498-08da197362cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2022 15:20:59.4324
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: woFsQFGTvtoCem+oslNY7aBZQ+zLemfszWatBL1o6C/SMyOS8POlpRealkRl69RrtfZThv99uDpOKTokXvogdWLPiE0NEhluiL3C+nO7KRA=
+X-MS-Exchange-CrossTenant-userprincipalname: DCJygHYcIwXcj35hvLPOAPPQ9anQi2YNnHWMx1Gu4gwnT2oqOTs2caX7gsEjTMK5WLieYtOYyoubROF0Ghhywaz6xgfKhmbakhlIdM/GhcU=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB1341
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -138,133 +138,186 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Wednesday, Ap=
 ril 6, 2022 9:30 PM
 >=20
-> Currently, pointers to guest memory are passed to Hyper-V as transaction
-> IDs in hv_pci.  In the face of errors or malicious behavior in Hyper-V,
-> hv_pci should not expose or trust the transaction IDs returned by
-> Hyper-V to be valid guest memory addresses.  Instead, use small integers
-> generated by vmbus_requestor as request (transaction) IDs.
+> The function can be used to send a VMbus packet and retrieve the
+> corresponding transaction ID.  It will be used by hv_pci.
+>=20
+> No functional change.
 >=20
 > Suggested-by: Michael Kelley <mikelley@microsoft.com>
 > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > ---
->  drivers/pci/controller/pci-hyperv.c | 39 +++++++++++++++++++++--------
->  1 file changed, 29 insertions(+), 10 deletions(-)
+>  drivers/hv/channel.c      | 38 ++++++++++++++++++++++++++++++++------
+>  drivers/hv/hyperv_vmbus.h |  2 +-
+>  drivers/hv/ring_buffer.c  | 14 +++++++++++---
+>  include/linux/hyperv.h    |  7 +++++++
+>  4 files changed, 51 insertions(+), 10 deletions(-)
 >=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 88b3b56d05228..c1322ac37cda9 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -91,6 +91,13 @@ static enum pci_protocol_version_t pci_protocol_versio=
-ns[] =3D {
->  /* space for 32bit serial number as string */
->  #define SLOT_NAME_SIZE 11
+> diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> index 20fc8d50a0398..585a8084848bf 100644
+> --- a/drivers/hv/channel.c
+> +++ b/drivers/hv/channel.c
+> @@ -1022,11 +1022,13 @@ void vmbus_close(struct vmbus_channel *channel)
+>  EXPORT_SYMBOL_GPL(vmbus_close);
 >=20
-> +/*
-> + * Size of requestor for VMbus; the value is based on the observation
-> + * that having more than one request outstanding is 'rare', and so 64
-> + * should be generous in ensuring that we don't ever run out.
-> + */
-> +#define HV_PCI_RQSTOR_SIZE 64
-> +
->  /*
->   * Message Types
+>  /**
+> - * vmbus_sendpacket() - Send the specified buffer on the given channel
+> + * vmbus_sendpacket_getid() - Send the specified buffer on the given cha=
+nnel
+>   * @channel: Pointer to vmbus_channel structure
+>   * @buffer: Pointer to the buffer you want to send the data from.
+>   * @bufferlen: Maximum size of what the buffer holds.
+>   * @requestid: Identifier of the request
+> + * @trans_id: Identifier of the transaction associated to this request, =
+if
+> + *            the send is successful; undefined, otherwise.
+>   * @type: Type of packet that is being sent e.g. negotiate, time
+>   *	  packet etc.
+>   * @flags: 0 or VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+> @@ -1036,8 +1038,8 @@ EXPORT_SYMBOL_GPL(vmbus_close);
+>   *
+>   * Mainly used by Hyper-V drivers.
 >   */
-> @@ -1407,7 +1414,7 @@ static void hv_int_desc_free(struct hv_pci_dev *hpd=
-ev,
->  	int_pkt->wslot.slot =3D hpdev->desc.win_slot.slot;
->  	int_pkt->int_desc =3D *int_desc;
->  	vmbus_sendpacket(hpdev->hbus->hdev->channel, int_pkt, sizeof(*int_pkt),
-> -			 (unsigned long)&ctxt.pkt, VM_PKT_DATA_INBAND, 0);
-> +			 0, VM_PKT_DATA_INBAND, 0);
->  	kfree(int_desc);
+> -int vmbus_sendpacket(struct vmbus_channel *channel, void *buffer,
+> -			   u32 bufferlen, u64 requestid,
+> +int vmbus_sendpacket_getid(struct vmbus_channel *channel, void *buffer,
+> +			   u32 bufferlen, u64 requestid, u64 *trans_id,
+>  			   enum vmbus_packet_type type, u32 flags)
+>  {
+>  	struct vmpacket_descriptor desc;
+> @@ -1063,7 +1065,31 @@ int vmbus_sendpacket(struct vmbus_channel *channel=
+,
+> void *buffer,
+>  	bufferlist[2].iov_base =3D &aligned_data;
+>  	bufferlist[2].iov_len =3D (packetlen_aligned - packetlen);
+>=20
+> -	return hv_ringbuffer_write(channel, bufferlist, num_vecs, requestid);
+> +	return hv_ringbuffer_write(channel, bufferlist, num_vecs, requestid, tr=
+ans_id);
+> +}
+> +EXPORT_SYMBOL(vmbus_sendpacket_getid);
+> +
+> +/**
+> + * vmbus_sendpacket() - Send the specified buffer on the given channel
+> + * @channel: Pointer to vmbus_channel structure
+> + * @buffer: Pointer to the buffer you want to send the data from.
+> + * @bufferlen: Maximum size of what the buffer holds.
+> + * @requestid: Identifier of the request
+> + * @type: Type of packet that is being sent e.g. negotiate, time
+> + *	  packet etc.
+> + * @flags: 0 or VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED
+> + *
+> + * Sends data in @buffer directly to Hyper-V via the vmbus.
+> + * This will send the data unparsed to Hyper-V.
+> + *
+> + * Mainly used by Hyper-V drivers.
+> + */
+> +int vmbus_sendpacket(struct vmbus_channel *channel, void *buffer,
+> +		     u32 bufferlen, u64 requestid,
+> +		     enum vmbus_packet_type type, u32 flags)
+> +{
+> +	return vmbus_sendpacket_getid(channel, buffer, bufferlen,
+> +				      requestid, NULL, type, flags);
 >  }
+>  EXPORT_SYMBOL(vmbus_sendpacket);
 >=20
-> @@ -2649,7 +2656,7 @@ static void hv_eject_device_work(struct work_struct=
- *work)
->  	ejct_pkt->message_type.type =3D PCI_EJECTION_COMPLETE;
->  	ejct_pkt->wslot.slot =3D hpdev->desc.win_slot.slot;
->  	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
-> -			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
-> +			 sizeof(*ejct_pkt), 0,
->  			 VM_PKT_DATA_INBAND, 0);
+> @@ -1122,7 +1148,7 @@ int vmbus_sendpacket_pagebuffer(struct vmbus_channe=
+l
+> *channel,
+>  	bufferlist[2].iov_base =3D &aligned_data;
+>  	bufferlist[2].iov_len =3D (packetlen_aligned - packetlen);
 >=20
->  	/* For the get_pcichild() in hv_pci_eject_device() */
-> @@ -2696,8 +2703,9 @@ static void hv_pci_onchannelcallback(void *context)
->  	const int packet_size =3D 0x100;
->  	int ret;
->  	struct hv_pcibus_device *hbus =3D context;
-> +	struct vmbus_channel *chan =3D hbus->hdev->channel;
->  	u32 bytes_recvd;
-> -	u64 req_id;
-> +	u64 req_id, req_addr;
->  	struct vmpacket_descriptor *desc;
->  	unsigned char *buffer;
->  	int bufferlen =3D packet_size;
-> @@ -2715,8 +2723,8 @@ static void hv_pci_onchannelcallback(void *context)
->  		return;
+> -	return hv_ringbuffer_write(channel, bufferlist, 3, requestid);
+> +	return hv_ringbuffer_write(channel, bufferlist, 3, requestid, NULL);
+>  }
+>  EXPORT_SYMBOL_GPL(vmbus_sendpacket_pagebuffer);
 >=20
->  	while (1) {
-> -		ret =3D vmbus_recvpacket_raw(hbus->hdev->channel, buffer,
-> -					   bufferlen, &bytes_recvd, &req_id);
-> +		ret =3D vmbus_recvpacket_raw(chan, buffer, bufferlen,
-> +					   &bytes_recvd, &req_id);
+> @@ -1160,7 +1186,7 @@ int vmbus_sendpacket_mpb_desc(struct vmbus_channel
+> *channel,
+>  	bufferlist[2].iov_base =3D &aligned_data;
+>  	bufferlist[2].iov_len =3D (packetlen_aligned - packetlen);
 >=20
->  		if (ret =3D=3D -ENOBUFS) {
->  			kfree(buffer);
-> @@ -2743,11 +2751,14 @@ static void hv_pci_onchannelcallback(void *contex=
-t)
->  		switch (desc->type) {
->  		case VM_PKT_COMP:
+> -	return hv_ringbuffer_write(channel, bufferlist, 3, requestid);
+> +	return hv_ringbuffer_write(channel, bufferlist, 3, requestid, NULL);
+>  }
+>  EXPORT_SYMBOL_GPL(vmbus_sendpacket_mpb_desc);
 >=20
-> -			/*
-> -			 * The host is trusted, and thus it's safe to interpret
-> -			 * this transaction ID as a pointer.
-> -			 */
-> -			comp_packet =3D (struct pci_packet *)req_id;
-> +			req_addr =3D chan->request_addr_callback(chan, req_id);
-> +			if (req_addr =3D=3D VMBUS_RQST_ERROR) {
-> +				dev_warn_ratelimited(&hbus->hdev->device,
-> +						     "Invalid transaction ID %llx\n",
-> +						     req_id);
-
-This handling of a bad requestID error is a bit different from storvsc
-and netvsc.  They both use dev_err().  Earlier in the storvsc and netvsc
-cases, I remember some discussion about whether to rate limit these errors,
-and evidently we decided not to.  I think we should be consistent unless
-there's a specific reason not to.
-
-
-> +				break;
-> +			}
-> +			comp_packet =3D (struct pci_packet *)req_addr;
->  			response =3D (struct pci_response *)buffer;
->  			comp_packet->completion_func(comp_packet->compl_ctxt,
->  						     response,
-> @@ -3428,6 +3439,10 @@ static int hv_pci_probe(struct hv_device *hdev,
->  		goto free_dom;
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 3a1f007b678a0..64c0b9cbe183b 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -181,7 +181,7 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info
+> *ring_info);
+>=20
+>  int hv_ringbuffer_write(struct vmbus_channel *channel,
+>  			const struct kvec *kv_list, u32 kv_count,
+> -			u64 requestid);
+> +			u64 requestid, u64 *trans_id);
+>=20
+>  int hv_ringbuffer_read(struct vmbus_channel *channel,
+>  		       void *buffer, u32 buflen, u32 *buffer_actual_len,
+> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+> index 3d215d9dec433..e101b11f95e5d 100644
+> --- a/drivers/hv/ring_buffer.c
+> +++ b/drivers/hv/ring_buffer.c
+> @@ -283,7 +283,7 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info
+> *ring_info)
+>  /* Write to the ring buffer. */
+>  int hv_ringbuffer_write(struct vmbus_channel *channel,
+>  			const struct kvec *kv_list, u32 kv_count,
+> -			u64 requestid)
+> +			u64 requestid, u64 *trans_id)
+>  {
+>  	int i;
+>  	u32 bytes_avail_towrite;
+> @@ -294,7 +294,7 @@ int hv_ringbuffer_write(struct vmbus_channel *channel=
+,
+>  	unsigned long flags;
+>  	struct hv_ring_buffer_info *outring_info =3D &channel->outbound;
+>  	struct vmpacket_descriptor *desc =3D kv_list[0].iov_base;
+> -	u64 rqst_id =3D VMBUS_NO_RQSTOR;
+> +	u64 __trans_id, rqst_id =3D VMBUS_NO_RQSTOR;
+>=20
+>  	if (channel->rescind)
+>  		return -ENODEV;
+> @@ -353,7 +353,15 @@ int hv_ringbuffer_write(struct vmbus_channel *channe=
+l,
+>  		}
 >  	}
+>  	desc =3D hv_get_ring_buffer(outring_info) + old_write;
+> -	desc->trans_id =3D (rqst_id =3D=3D VMBUS_NO_RQSTOR) ? requestid : rqst_=
+id;
+> +	__trans_id =3D (rqst_id =3D=3D VMBUS_NO_RQSTOR) ? requestid : rqst_id;
+> +	/*
+> +	 * Ensure the compiler doesn't generate code that reads the value of
+> +	 * the transaction ID from the ring buffer, which is shared with the
+> +	 * Hyper-V host and subject to being changed at any time.
+> +	 */
+> +	WRITE_ONCE(desc->trans_id, __trans_id);
+> +	if (trans_id)
+> +		*trans_id =3D __trans_id;
 >=20
-> +	hdev->channel->next_request_id_callback =3D vmbus_next_request_id;
-> +	hdev->channel->request_addr_callback =3D vmbus_request_addr;
-> +	hdev->channel->rqstor_size =3D HV_PCI_RQSTOR_SIZE;
-> +
->  	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0=
-,
->  			 hv_pci_onchannelcallback, hbus);
->  	if (ret)
-> @@ -3758,6 +3773,10 @@ static int hv_pci_resume(struct hv_device *hdev)
+>  	/* Set previous packet start */
+>  	prev_indices =3D hv_get_ring_bufferindices(outring_info);
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index fe2e0179ed51e..a7cb596d893b1 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -1161,6 +1161,13 @@ extern int vmbus_open(struct vmbus_channel *channe=
+l,
 >=20
->  	hbus->state =3D hv_pcibus_init;
+>  extern void vmbus_close(struct vmbus_channel *channel);
 >=20
-> +	hdev->channel->next_request_id_callback =3D vmbus_next_request_id;
-> +	hdev->channel->request_addr_callback =3D vmbus_request_addr;
-> +	hdev->channel->rqstor_size =3D HV_PCI_RQSTOR_SIZE;
-> +
->  	ret =3D vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0=
-,
->  			 hv_pci_onchannelcallback, hbus);
->  	if (ret)
+> +extern int vmbus_sendpacket_getid(struct vmbus_channel *channel,
+> +				  void *buffer,
+> +				  u32 bufferLen,
+> +				  u64 requestid,
+> +				  u64 *trans_id,
+> +				  enum vmbus_packet_type type,
+> +				  u32 flags);
+>  extern int vmbus_sendpacket(struct vmbus_channel *channel,
+>  				  void *buffer,
+>  				  u32 bufferLen,
 > --
 > 2.25.1
 
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
