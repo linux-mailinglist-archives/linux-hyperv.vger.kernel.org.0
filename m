@@ -2,87 +2,131 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1C4A4FCBE2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 03:30:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B34A4FCD76
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 06:08:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233223AbiDLBc3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Apr 2022 21:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
+        id S235937AbiDLEJv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Apr 2022 00:09:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbiDLBc2 (ORCPT
+        with ESMTP id S229772AbiDLEJu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Apr 2022 21:32:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AD113D23;
-        Mon, 11 Apr 2022 18:30:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FEA661047;
-        Tue, 12 Apr 2022 01:30:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 703FCC385AA;
-        Tue, 12 Apr 2022 01:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649727011;
-        bh=y0SHa5ehdasmyuILDO1pFKt4qKWN4fredmH2EEpE8XI=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=VuA3HDCnGKJ4u1TuBPUNVg1+BmE5AOdFSCaQSYMSuQriF3zGi6x8ZP4Y4Gi5ermLb
-         pTbeHpTTMNOLqQMU3FH8WIm5eL9Ciqh9OTeR/78Eief/QPzdVCdhldxr6ResvU88Ik
-         wMjapP3aXDAxz4RnI2yNpXXCRe4hNo+/FbEwv9VbbTWRH+rb1M25d3W7xEYd/P0gsS
-         N3xjgTqWrwmfGir4EZvl20B1IgdLE3P7OPI7jsec8fz2GzAIeb5wPgjxqQkQnGMLUu
-         Cae/kRnU2QMadxRJwKY8qPI2NpnpfvsoPhW6NDZhWKGZrpvI6C2SAC3INuNof8/T1H
-         8wXPU726a2o6g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 561D7E85B76;
-        Tue, 12 Apr 2022 01:30:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 12 Apr 2022 00:09:50 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CF0902FFCE;
+        Mon, 11 Apr 2022 21:07:33 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+        id 682E7205657E; Mon, 11 Apr 2022 21:07:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 682E7205657E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1649736453;
+        bh=Ttzy8BQ9PlMSUQQk7cuuFBxQLGJvmjKf1avgoHfG0Jo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OUgRs7uht0+gzG3Y7HoAoh1/dD5KFCf8VL8+wClpj57ksmFdvagPUCaH2LgiHXSEg
+         4OAk2AE3kR8dZ/iCBaEqZWDlCYAalakHpuFMMddeQZ1gFMSF4glhkbqZQ9XACk79hg
+         KMenDvoISCAWLu+imtKZNc+DoZrHWZ1zYq/Bputw=
+Date:   Mon, 11 Apr 2022 21:07:33 -0700
+From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Subject: Re: [PATCH v3] drm/hyperv: Added error message for fb size greater
+ than allocated
+Message-ID: <20220412040733.GA6074@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1649650437-17977-1-git-send-email-ssengar@linux.microsoft.com>
+ <BYAPR21MB1270B3CFBE674EB0A7537180BFEA9@BYAPR21MB1270.namprd21.prod.outlook.com>
+ <20220411075555.GA15355@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <DM6PR21MB1275F532C58CF5CE7F67D7E8BFEA9@DM6PR21MB1275.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] hv_netvsc: Add support for XDP_REDIRECT
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164972701134.31190.7243820472815913361.git-patchwork-notify@kernel.org>
-Date:   Tue, 12 Apr 2022 01:30:11 +0000
-References: <1649362894-20077-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1649362894-20077-1-git-send-email-haiyangz@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        kys@microsoft.com, sthemmin@microsoft.com, olaf@aepfle.de,
-        vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR21MB1275F532C58CF5CE7F67D7E8BFEA9@DM6PR21MB1275.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu,  7 Apr 2022 13:21:34 -0700 you wrote:
-> Handle XDP_REDIRECT action in netvsc driver.
-> Also, transparently pass ndo_xdp_xmit to VF when available.
+On Mon, Apr 11, 2022 at 07:02:19PM +0000, Dexuan Cui wrote:
+> > From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+> > Sent: Monday, April 11, 2022 12:56 AM
+> > > >...
+> > > > -	if (fb->pitches[0] * fb->height > hv->fb_size)
+> > > > +	if (fb->pitches[0] * fb->height > hv->fb_size) {
+> > > > +		drm_err(&hv->dev, "hv->hdev, fb size requested by process %s
+> > > > for %d X %d (pitch %d) is greater than allocated size %ld\n",
+> > > Should we use drm_err_ratelimited() instead of drm_err()?
+> > 
+> > The error is not produced in good cases, for every resolution change which is
+> > violating this error should print once.
 > 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  drivers/net/hyperv/hyperv_net.h |  69 ++++++++++++++-
->  drivers/net/hyperv/netvsc.c     |   8 +-
->  drivers/net/hyperv/netvsc_bpf.c |  95 +++++++++++++++++++-
->  drivers/net/hyperv/netvsc_drv.c | 150 +++++++++++++-------------------
->  4 files changed, 228 insertions(+), 94 deletions(-)
+> Thanks for the clarification! Then drm_err() looks good to me.
+> 
+> > I suggest having it print every time some application tries to violate the policy
+> > set at boot time.
+> > If we use ratelimit many resolutions error change will be suppressed. Please let
+> > me know your thoughts.
+>  
+> > >
+> > > The line exceeds 80 chars.
+> > 
+> > At first I tried braking the line to respect 80 character boundary, but
+> > checkpatch.pl reported it as a problem.
+> > And these new lines are suggested by checkpatch.pl itself.
+> > Looks the recent rule realted to 80 charachters are changed. Ref :
+> > ...
+> 
+> Good to know! Thanks for sharing the link!
+> 
+> FYI, the default max_line_length in scripts/checkpatch.pl is 100 now:
+>  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bdc48fa11e46f
+> 
+> "80-chars" is still preferred, but isn't a hard limit. I also noticed
+> "never break user-visible strings such as printk messages ", so yes you're 
+> correct. It's perfectly fine to have a not-too-long string that exceeds 80 chars.
+> 
 
-Here is the summary with links:
-  - [net-next] hv_netvsc: Add support for XDP_REDIRECT
-    https://git.kernel.org/netdev/net-next/c/1cb9d3b6185b
+Good information ! thank you for digging this.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> > > > +		current->comm, fb->width, fb->height, fb->pitches[0], hv->fb_size);
+> > > >  		return -EINVAL;
+> > > > +	}
+> > >
+> > > Maybe we can use the below:
+> > > 	drm_err_ratelimited(&hv->dev, "%s: requested %dX%d (pitch %d) "
+> > >                      "exceeds fb_size %ld\n",
+> > >                      current->comm, fb->width, fb->height,
+> > >                      fb->pitches[0], hv->fb_size);
+> > >
+> > > Note: the first chars of last 3 lines should align with the "&" in the
+> > > same column. Please run "scripts/checkpatch.pl" against the patch.
+> > 
+> > I have tested checkpatch.pl before sending, for the current patch there is no
+> > problem from checkpatch.pl
+> 
+> The line is 138-char long, which seems a little longer to me :-)
+> IMO we can make it shorter, e.g. be removing the part "hv->hdev as the
+> "drm_err(&hv->dev," already tells us which device it's.
 
+Ok, will make it shorter.
 
+> 
+> BTW, if we run the script with --strict, it reports the below:
+> 
+> # scripts/checkpatch.pl --strict 0001-drm-hyperv-Added-error-message-for-fb-size-greater-t.patch
+> CHECK: Alignment should match open parenthesis
+> #28: FILE: drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:127:
+> +               drm_err(&hv->dev, "hv->hdev, fb size requested by process %s for %d X %d (pitch %d) is greater than allocated size %ld\n",
+> +               current->comm, fb->width, fb->height, fb->pitches[0], hv->fb_size);
+Sure, will fix this.
