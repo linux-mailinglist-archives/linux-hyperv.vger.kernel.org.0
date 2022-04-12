@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C843E4FCB43
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 03:02:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1C4A4FCBE2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 03:30:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238865AbiDLBD6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Apr 2022 21:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
+        id S233223AbiDLBc3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Apr 2022 21:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348314AbiDLA7U (ORCPT
+        with ESMTP id S230259AbiDLBc2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Apr 2022 20:59:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F48377D9;
-        Mon, 11 Apr 2022 17:52:35 -0700 (PDT)
+        Mon, 11 Apr 2022 21:32:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AD113D23;
+        Mon, 11 Apr 2022 18:30:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CBA6960C26;
-        Tue, 12 Apr 2022 00:52:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3785CC385AB;
-        Tue, 12 Apr 2022 00:52:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FEA661047;
+        Tue, 12 Apr 2022 01:30:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 703FCC385AA;
+        Tue, 12 Apr 2022 01:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649724748;
-        bh=+hLm5oVQl3rCOm+Tv3ZDVA98eqa1DK4EZn9zi/zyyP0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dPie/Toisa2LUl1i7+xwE9f6oaFGQXC1VIv4I6sWLssd9zRIH/o2PVv50vuswCk1h
-         JgbkmKsACMy6L7wISIHuX6QsMQV4Y38HFp1pXUtY7m/Ks+4qhDN15Cjo9K7b4TLjAt
-         4EhMtluQbBotF3G0tKgpTdX580aZuLb+wfm1hlqHWNoo7k2P6Xp1gyOrLMNTnTt4zZ
-         IZH1Ou4leT6W9mgYrU3iewyiC+SdEiRKFilC7WbazqDTSgkgM6gv46oGhtivrBwjZX
-         Tlmr9uHz3DGqq6oo+1D9WsPgXU2dBNUyjop2AXfRCWUu0FVSTf7o7fAIzD/Zuk1uNj
-         AYUDlei8PC6Bg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/11] Drivers: hv: vmbus: Prevent load re-ordering when reading ring buffer
-Date:   Mon, 11 Apr 2022 20:52:12 -0400
-Message-Id: <20220412005222.351554-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220412005222.351554-1-sashal@kernel.org>
-References: <20220412005222.351554-1-sashal@kernel.org>
+        s=k20201202; t=1649727011;
+        bh=y0SHa5ehdasmyuILDO1pFKt4qKWN4fredmH2EEpE8XI=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=VuA3HDCnGKJ4u1TuBPUNVg1+BmE5AOdFSCaQSYMSuQriF3zGi6x8ZP4Y4Gi5ermLb
+         pTbeHpTTMNOLqQMU3FH8WIm5eL9Ciqh9OTeR/78Eief/QPzdVCdhldxr6ResvU88Ik
+         wMjapP3aXDAxz4RnI2yNpXXCRe4hNo+/FbEwv9VbbTWRH+rb1M25d3W7xEYd/P0gsS
+         N3xjgTqWrwmfGir4EZvl20B1IgdLE3P7OPI7jsec8fz2GzAIeb5wPgjxqQkQnGMLUu
+         Cae/kRnU2QMadxRJwKY8qPI2NpnpfvsoPhW6NDZhWKGZrpvI6C2SAC3INuNof8/T1H
+         8wXPU726a2o6g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 561D7E85B76;
+        Tue, 12 Apr 2022 01:30:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] hv_netvsc: Add support for XDP_REDIRECT
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164972701134.31190.7243820472815913361.git-patchwork-notify@kernel.org>
+Date:   Tue, 12 Apr 2022 01:30:11 +0000
+References: <1649362894-20077-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1649362894-20077-1-git-send-email-haiyangz@microsoft.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        kys@microsoft.com, sthemmin@microsoft.com, olaf@aepfle.de,
+        vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -59,55 +59,30 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+Hello:
 
-[ Upstream commit b6cae15b5710c8097aad26a2e5e752c323ee5348 ]
+This patch was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-When reading a packet from a host-to-guest ring buffer, there is no
-memory barrier between reading the write index (to see if there is
-a packet to read) and reading the contents of the packet. The Hyper-V
-host uses store-release when updating the write index to ensure that
-writes of the packet data are completed first. On the guest side,
-the processor can reorder and read the packet data before the write
-index, and sometimes get stale packet data. Getting such stale packet
-data has been observed in a reproducible case in a VM on ARM64.
+On Thu,  7 Apr 2022 13:21:34 -0700 you wrote:
+> Handle XDP_REDIRECT action in netvsc driver.
+> Also, transparently pass ndo_xdp_xmit to VF when available.
+> 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  drivers/net/hyperv/hyperv_net.h |  69 ++++++++++++++-
+>  drivers/net/hyperv/netvsc.c     |   8 +-
+>  drivers/net/hyperv/netvsc_bpf.c |  95 +++++++++++++++++++-
+>  drivers/net/hyperv/netvsc_drv.c | 150 +++++++++++++-------------------
+>  4 files changed, 228 insertions(+), 94 deletions(-)
 
-Fix this by using virt_load_acquire() to read the write index,
-ensuring that reads of the packet data cannot be reordered
-before it. Preventing such reordering is logically correct, and
-with this change, getting stale data can no longer be reproduced.
+Here is the summary with links:
+  - [net-next] hv_netvsc: Add support for XDP_REDIRECT
+    https://git.kernel.org/netdev/net-next/c/1cb9d3b6185b
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Link: https://lore.kernel.org/r/1648394710-33480-1-git-send-email-mikelley@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hv/ring_buffer.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-index 74c1dfb8183b..6b08e9d9b382 100644
---- a/drivers/hv/ring_buffer.c
-+++ b/drivers/hv/ring_buffer.c
-@@ -340,7 +340,16 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
- static u32 hv_pkt_iter_avail(const struct hv_ring_buffer_info *rbi)
- {
- 	u32 priv_read_loc = rbi->priv_read_index;
--	u32 write_loc = READ_ONCE(rbi->ring_buffer->write_index);
-+	u32 write_loc;
-+
-+	/*
-+	 * The Hyper-V host writes the packet data, then uses
-+	 * store_release() to update the write_index.  Use load_acquire()
-+	 * here to prevent loads of the packet data from being re-ordered
-+	 * before the read of the write_index and potentially getting
-+	 * stale data.
-+	 */
-+	write_loc = virt_load_acquire(&rbi->ring_buffer->write_index);
- 
- 	if (write_loc >= priv_read_loc)
- 		return write_loc - priv_read_loc;
+You are awesome, thank you!
 -- 
-2.35.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
