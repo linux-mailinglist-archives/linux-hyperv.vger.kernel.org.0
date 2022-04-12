@@ -2,49 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32D284FC9A0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 02:45:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2E734FCA4C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 02:51:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242750AbiDLAsG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Apr 2022 20:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
+        id S244218AbiDLAxo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Apr 2022 20:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242732AbiDLAsE (ORCPT
+        with ESMTP id S244287AbiDLAwK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Apr 2022 20:48:04 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642632ED66;
-        Mon, 11 Apr 2022 17:45:48 -0700 (PDT)
+        Mon, 11 Apr 2022 20:52:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D35DE3335E;
+        Mon, 11 Apr 2022 17:47:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 10CA2B8186F;
-        Tue, 12 Apr 2022 00:45:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E9F9C385BB;
-        Tue, 12 Apr 2022 00:45:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FE0661802;
+        Tue, 12 Apr 2022 00:47:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EDDC385AA;
+        Tue, 12 Apr 2022 00:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649724345;
-        bh=9WpKRmzPIMz90Vitck4aKghxMNPz4j5Xq4Pusf3jXaU=;
+        s=k20201202; t=1649724465;
+        bh=z/kFIHTi3UeaAZ8mjORTzvJwPmIHQorlx+Diwh4dnNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OFblDA1EBB/X1yythFSKEX22KixprECoYJ3+OrrUTn5PEoWFUNzxwcKxK43e/DWgv
-         Db5VsRyfAbtp/mlATztTHpJ1VeHjHnNE1tsZjoMvG1ZxNA+BZ0XK2ICyFcxDUe/zYi
-         pCQ9Rk1TTAYa6ZRY0eo94Hg4VK/bbFBguS+HZM2DU9jJf2jUjI9hkUolot4kp8T2bE
-         NwSgQEENu2bw1y/pgjYRuGK9k7F2+MYrzQQRaQV50eVZ0JTjMJCxagtmLp8HEMhyqR
-         jP7ILTnV9b6sAbmdKyGuFj150U62jVCaZ79Mztezc5C3+HoS2Y7P9qKlb5VdNqL6f2
-         Ay33iXhl6OIyA==
+        b=BQqQ1nlSqBLT/k/HT+RGDRmCHMJkiseRORi3QQJSBzgjnIMLGAoMC2LHuI2wcCMQv
+         nsE8CNR7b2zX5uxLDnw48syQJTSo8iZ3QMpaz9UDqpjFqVFUT6f3RFzPIkgPhZVGJQ
+         vazHIZfj6G+F/c90sBds7hwSzWUWxbcymg0R0X1YvrM4L/mqlCNqD9tJTRzUYSYggH
+         5SlBAtIjmBi9XmBWEFJU90w1WnVDCuGaHDGWrmIs38ZR4ciyMBf/xxk3i68n8k9lrB
+         XMSPJHuwhUhf0lr3ZZTg9CHVz/HIdOZUNHmgGNKbigUBUDYG8blyhwb+j71QotqlLe
+         fkEWaT1lkZeCA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.17 31/49] Drivers: hv: balloon: Disable balloon and hot-add accordingly
-Date:   Mon, 11 Apr 2022 20:43:49 -0400
-Message-Id: <20220412004411.349427-31-sashal@kernel.org>
+Cc:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 12/41] Drivers: hv: vmbus: Deactivate sysctl_record_panic_msg by default in isolated guests
+Date:   Mon, 11 Apr 2022 20:46:24 -0400
+Message-Id: <20220412004656.350101-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220412004411.349427-1-sashal@kernel.org>
-References: <20220412004411.349427-1-sashal@kernel.org>
+In-Reply-To: <20220412004656.350101-1-sashal@kernel.org>
+References: <20220412004656.350101-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,93 +59,74 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com>
+From: "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 
-[ Upstream commit be5802795cf8d0b881745fa9ba7790293b382280 ]
+[ Upstream commit 9f8b577f7b43b2170628d6c537252785dcc2dcea ]
 
-Currently there are known potential issues for balloon and hot-add on
-ARM64:
+hv_panic_page might contain guest-sensitive information, do not dump it
+over to Hyper-V by default in isolated guests.
 
-*	Unballoon requests from Hyper-V should only unballoon ranges
-	that are guest page size aligned, otherwise guests cannot handle
-	because it's impossible to partially free a page. This is a
-	problem when guest page size > 4096 bytes.
+While at it, update some comments in hyperv_{panic,die}_event().
 
-*	Memory hot-add requests from Hyper-V should provide the NUMA
-	node id of the added ranges or ARM64 should have a functional
-	memory_add_physaddr_to_nid(), otherwise the node id is missing
-	for add_memory().
-
-These issues require discussions on design and implementation. In the
-meanwhile, post_status() is working and essential to guest monitoring.
-Therefore instead of disabling the entire hv_balloon driver, the
-ballooning (when page size > 4096 bytes) and hot-add are disabled
-accordingly for now. Once the issues are fixed, they can be re-enable in
-these cases.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lore.kernel.org/r/20220325023212.1570049-3-boqun.feng@gmail.com
+Reported-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Link: https://lore.kernel.org/r/20220301141135.2232-1-parri.andrea@gmail.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv_balloon.c | 36 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+ drivers/hv/vmbus_drv.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 439f99b8b5de..3cf334c46c31 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -1653,6 +1653,38 @@ static void disable_page_reporting(void)
- 	}
- }
- 
-+static int ballooning_enabled(void)
-+{
-+	/*
-+	 * Disable ballooning if the page size is not 4k (HV_HYP_PAGE_SIZE),
-+	 * since currently it's unclear to us whether an unballoon request can
-+	 * make sure all page ranges are guest page size aligned.
-+	 */
-+	if (PAGE_SIZE != HV_HYP_PAGE_SIZE) {
-+		pr_info("Ballooning disabled because page size is not 4096 bytes\n");
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
-+static int hot_add_enabled(void)
-+{
-+	/*
-+	 * Disable hot add on ARM64, because we currently rely on
-+	 * memory_add_physaddr_to_nid() to get a node id of a hot add range,
-+	 * however ARM64's memory_add_physaddr_to_nid() always return 0 and
-+	 * DM_MEM_HOT_ADD_REQUEST doesn't have the NUMA node information for
-+	 * add_memory().
-+	 */
-+	if (IS_ENABLED(CONFIG_ARM64)) {
-+		pr_info("Memory hot add disabled on ARM64\n");
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
- static int balloon_connect_vsp(struct hv_device *dev)
- {
- 	struct dm_version_request version_req;
-@@ -1724,8 +1756,8 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	 * currently still requires the bits to be set, so we have to add code
- 	 * to fail the host's hot-add and balloon up/down requests, if any.
- 	 */
--	cap_msg.caps.cap_bits.balloon = 1;
--	cap_msg.caps.cap_bits.hot_add = 1;
-+	cap_msg.caps.cap_bits.balloon = ballooning_enabled();
-+	cap_msg.caps.cap_bits.hot_add = hot_add_enabled();
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 44bd0b6ff505..75e0a0994619 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -76,8 +76,8 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
  
  	/*
- 	 * Specify our alignment requirements as it relates
+ 	 * Hyper-V should be notified only once about a panic.  If we will be
+-	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+-	 * the notification here.
++	 * doing hv_kmsg_dump() with kmsg data later, don't do the notification
++	 * here.
+ 	 */
+ 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+ 	    && hyperv_report_reg()) {
+@@ -99,8 +99,8 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+ 
+ 	/*
+ 	 * Hyper-V should be notified only once about a panic.  If we will be
+-	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+-	 * the notification here.
++	 * doing hv_kmsg_dump() with kmsg data later, don't do the notification
++	 * here.
+ 	 */
+ 	if (hyperv_report_reg())
+ 		hyperv_report_panic(regs, val, true);
+@@ -1545,14 +1545,20 @@ static int vmbus_bus_init(void)
+ 	if (ret)
+ 		goto err_connect;
+ 
++	if (hv_is_isolation_supported())
++		sysctl_record_panic_msg = 0;
++
+ 	/*
+ 	 * Only register if the crash MSRs are available
+ 	 */
+ 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
+ 		u64 hyperv_crash_ctl;
+ 		/*
+-		 * Sysctl registration is not fatal, since by default
+-		 * reporting is enabled.
++		 * Panic message recording (sysctl_record_panic_msg)
++		 * is enabled by default in non-isolated guests and
++		 * disabled by default in isolated guests; the panic
++		 * message recording won't be available in isolated
++		 * guests should the following registration fail.
+ 		 */
+ 		hv_ctl_table_hdr = register_sysctl_table(hv_root_table);
+ 		if (!hv_ctl_table_hdr)
 -- 
 2.35.1
 
