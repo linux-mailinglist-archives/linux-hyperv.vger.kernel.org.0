@@ -2,49 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 524F44FCA5B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 02:51:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 376404FCB3B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Apr 2022 03:02:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244136AbiDLAxn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Apr 2022 20:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45908 "EHLO
+        id S1344669AbiDLBDo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Apr 2022 21:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343652AbiDLAxS (ORCPT
+        with ESMTP id S1343948AbiDLA5J (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Apr 2022 20:53:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A00C33E38;
-        Mon, 11 Apr 2022 17:48:10 -0700 (PDT)
+        Mon, 11 Apr 2022 20:57:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E592625EB8;
+        Mon, 11 Apr 2022 17:49:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A8004617E7;
-        Tue, 12 Apr 2022 00:48:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF9BDC385AA;
-        Tue, 12 Apr 2022 00:48:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8DAA8B819A7;
+        Tue, 12 Apr 2022 00:49:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F147C385AD;
+        Tue, 12 Apr 2022 00:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649724489;
-        bh=9WpKRmzPIMz90Vitck4aKghxMNPz4j5Xq4Pusf3jXaU=;
+        s=k20201202; t=1649724582;
+        bh=oeyh0lVaDlwDWlKs2RBO8CFapC5V+Qr1deEGbcU334c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nx0EiLq+GGDnJhc6GjqygV5RL/N0Mbeq5USKY7DVDu7XfpUkdd2IEQbiMDVnBKMZF
-         rAvFsJ1fQ5DogUqEO+0vgg/VAyDfxbFQCOUbHR6juHv1JKhtZLvZUG+rm8ZUhPA6uO
-         D5zJwajyyuwfBJqdlQXaNqmXS/VW8Ao1cvKzJUn0glhO74f798e40EeI8GshKmUVIA
-         1BHIZCAQKoZejJAuhwAtizQUP3WTMrkLpgcqJgkXoSfD9Ie7ecB9BHxpNQVrhBPFuo
-         mUkIrla+0Bb6JKmnZ5tzPvW8vNEnd8PBiUbofa+BHKOpsc0xArV2s3MY0+bc0BaPHV
-         12nzx6zu77aPg==
+        b=F2eRNS8ILwNPU6K1m4ApbQGuki3WUYNhbAXutGdGcAuBqTqzTh7bs0UldQD9tWFdM
+         R2cm1A3FItJA4Okxn4KIAjCqmHaKiJ35z6lvxYsaBMdyLSqxR+KnfSWqlkl6UpxtNk
+         pacE06Z3mhA1oBRu1/0si5cNQQ7Kg9XQcqMVCANDrpDEwZtSrhgFTw4rWACeyGFmuz
+         VKJOGIvp9fi6dGF6GKcDFjZAuSAqg/xhPCNUweAJUFY660LUICtKgSU00QS3kGQS3G
+         cc/AwBykwsFpQ6B94aTJHr5pnfzdaq36qF51Rbildrep8eTK7uKufr5tuuzTd0PXW0
+         pLJSMGbkLV3qw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
         Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
         kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         decui@microsoft.com, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 25/41] Drivers: hv: balloon: Disable balloon and hot-add accordingly
-Date:   Mon, 11 Apr 2022 20:46:37 -0400
-Message-Id: <20220412004656.350101-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 10/30] Drivers: hv: vmbus: Prevent load re-ordering when reading ring buffer
+Date:   Mon, 11 Apr 2022 20:48:44 -0400
+Message-Id: <20220412004906.350678-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220412004656.350101-1-sashal@kernel.org>
-References: <20220412004656.350101-1-sashal@kernel.org>
+In-Reply-To: <20220412004906.350678-1-sashal@kernel.org>
+References: <20220412004906.350678-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,93 +59,55 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com>
+From: Michael Kelley <mikelley@microsoft.com>
 
-[ Upstream commit be5802795cf8d0b881745fa9ba7790293b382280 ]
+[ Upstream commit b6cae15b5710c8097aad26a2e5e752c323ee5348 ]
 
-Currently there are known potential issues for balloon and hot-add on
-ARM64:
+When reading a packet from a host-to-guest ring buffer, there is no
+memory barrier between reading the write index (to see if there is
+a packet to read) and reading the contents of the packet. The Hyper-V
+host uses store-release when updating the write index to ensure that
+writes of the packet data are completed first. On the guest side,
+the processor can reorder and read the packet data before the write
+index, and sometimes get stale packet data. Getting such stale packet
+data has been observed in a reproducible case in a VM on ARM64.
 
-*	Unballoon requests from Hyper-V should only unballoon ranges
-	that are guest page size aligned, otherwise guests cannot handle
-	because it's impossible to partially free a page. This is a
-	problem when guest page size > 4096 bytes.
+Fix this by using virt_load_acquire() to read the write index,
+ensuring that reads of the packet data cannot be reordered
+before it. Preventing such reordering is logically correct, and
+with this change, getting stale data can no longer be reproduced.
 
-*	Memory hot-add requests from Hyper-V should provide the NUMA
-	node id of the added ranges or ARM64 should have a functional
-	memory_add_physaddr_to_nid(), otherwise the node id is missing
-	for add_memory().
-
-These issues require discussions on design and implementation. In the
-meanwhile, post_status() is working and essential to guest monitoring.
-Therefore instead of disabling the entire hv_balloon driver, the
-ballooning (when page size > 4096 bytes) and hot-add are disabled
-accordingly for now. Once the issues are fixed, they can be re-enable in
-these cases.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lore.kernel.org/r/20220325023212.1570049-3-boqun.feng@gmail.com
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+Link: https://lore.kernel.org/r/1648394710-33480-1-git-send-email-mikelley@microsoft.com
 Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv_balloon.c | 36 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+ drivers/hv/ring_buffer.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index 439f99b8b5de..3cf334c46c31 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -1653,6 +1653,38 @@ static void disable_page_reporting(void)
- 	}
- }
- 
-+static int ballooning_enabled(void)
-+{
-+	/*
-+	 * Disable ballooning if the page size is not 4k (HV_HYP_PAGE_SIZE),
-+	 * since currently it's unclear to us whether an unballoon request can
-+	 * make sure all page ranges are guest page size aligned.
-+	 */
-+	if (PAGE_SIZE != HV_HYP_PAGE_SIZE) {
-+		pr_info("Ballooning disabled because page size is not 4096 bytes\n");
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
-+static int hot_add_enabled(void)
-+{
-+	/*
-+	 * Disable hot add on ARM64, because we currently rely on
-+	 * memory_add_physaddr_to_nid() to get a node id of a hot add range,
-+	 * however ARM64's memory_add_physaddr_to_nid() always return 0 and
-+	 * DM_MEM_HOT_ADD_REQUEST doesn't have the NUMA node information for
-+	 * add_memory().
-+	 */
-+	if (IS_ENABLED(CONFIG_ARM64)) {
-+		pr_info("Memory hot add disabled on ARM64\n");
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
- static int balloon_connect_vsp(struct hv_device *dev)
+diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+index 356e22159e83..769851b6e74c 100644
+--- a/drivers/hv/ring_buffer.c
++++ b/drivers/hv/ring_buffer.c
+@@ -378,7 +378,16 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
+ static u32 hv_pkt_iter_avail(const struct hv_ring_buffer_info *rbi)
  {
- 	struct dm_version_request version_req;
-@@ -1724,8 +1756,8 @@ static int balloon_connect_vsp(struct hv_device *dev)
- 	 * currently still requires the bits to be set, so we have to add code
- 	 * to fail the host's hot-add and balloon up/down requests, if any.
- 	 */
--	cap_msg.caps.cap_bits.balloon = 1;
--	cap_msg.caps.cap_bits.hot_add = 1;
-+	cap_msg.caps.cap_bits.balloon = ballooning_enabled();
-+	cap_msg.caps.cap_bits.hot_add = hot_add_enabled();
+ 	u32 priv_read_loc = rbi->priv_read_index;
+-	u32 write_loc = READ_ONCE(rbi->ring_buffer->write_index);
++	u32 write_loc;
++
++	/*
++	 * The Hyper-V host writes the packet data, then uses
++	 * store_release() to update the write_index.  Use load_acquire()
++	 * here to prevent loads of the packet data from being re-ordered
++	 * before the read of the write_index and potentially getting
++	 * stale data.
++	 */
++	write_loc = virt_load_acquire(&rbi->ring_buffer->write_index);
  
- 	/*
- 	 * Specify our alignment requirements as it relates
+ 	if (write_loc >= priv_read_loc)
+ 		return write_loc - priv_read_loc;
 -- 
 2.35.1
 
