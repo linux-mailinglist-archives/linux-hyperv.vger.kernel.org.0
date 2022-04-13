@@ -2,123 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46F984FF7BB
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Apr 2022 15:37:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 983AC500029
+	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Apr 2022 22:48:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233721AbiDMNjZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 13 Apr 2022 09:39:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47386 "EHLO
+        id S233769AbiDMUuU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 13 Apr 2022 16:50:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231599AbiDMNjX (ORCPT
+        with ESMTP id S232532AbiDMUuU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 13 Apr 2022 09:39:23 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC0C5F240;
-        Wed, 13 Apr 2022 06:37:01 -0700 (PDT)
+        Wed, 13 Apr 2022 16:50:20 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A4350470;
+        Wed, 13 Apr 2022 13:47:57 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id l7so6387843ejn.2;
+        Wed, 13 Apr 2022 13:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1649857021; x=1681393021;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Vl6SQiy5vu9EZTWkVBhNnZBEyiT+stKz3fv32aZTWs0=;
-  b=bxlBvB6nfaS2ovpRpaIxWlnyRshBBWJ/KzHkAUPjJYrxr55A6b8yhfX/
-   QFQDXuFBjkTGEqpSEgbC+j9t2q9GvUsjzX+1cvfMS9dmgluqxb9CvM5W0
-   PHiWu+Vi4zoZDgrthNFqyvaytqB3DDlf/5EPkTARUV5bxGXtu412oC4Qp
-   I=;
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 13 Apr 2022 06:37:01 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2022 06:37:01 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 13 Apr 2022 06:36:40 -0700
-Received: from jhugo-lnx.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 13 Apr 2022 06:36:39 -0700
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <jakeo@microsoft.com>
-CC:     <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <quic_jhugo@quicinc.com>
-Subject: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI vector
-Date:   Wed, 13 Apr 2022 07:36:21 -0600
-Message-ID: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CAAnlEczhzmwiiUomiVlc0ZiocMImLzsGeEoBJQeHzQ=;
+        b=c3nT3xD7XU0MWgpY86pi4lDdID4ySVqTE/1C98vzR0kJiHPonHeBH0GU1HuChqUGyE
+         UpBag1pr//pEDDgun7N9oygVdwEPe/QHh7AhwZJ7E29hnK02IHlPW3qjiPjdrNMUKjUB
+         m/ACRO66qRVpY1HeV58JF45hOWiJua00SMUqpJ3TdWTm2R3vX9oAv1q4WVhqcog0URfB
+         3dO3944uavA6O6mgkfhFzXP/09jyvz7VRUJY2qFUdhrFfWkOKsMmWBpNCSgWi2XAcCV/
+         VRcgD97YhYV8sK0NlvmIDpaU0JqTMmafIjyi8hrqKy9AYmwgKBe0EYwHVr34YZ/F5Lw8
+         YTCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CAAnlEczhzmwiiUomiVlc0ZiocMImLzsGeEoBJQeHzQ=;
+        b=uGiCN/sm3ZShroWH4ut+uELjpxzs9rDcKkb7XO69VkZyddm/Ms5uMFJc2jidzdOE2B
+         YTML8O8ZEaS8/WAi8b4C3u7V2/lm5x5ohkIgyNxYDh4Jk5hJgukXJbr0pIFJljf6S9k2
+         LigHBxpwV1myyu/DXC0px/4P+MHJzGo2t9vms7PcC4vlxdUfc5FlnuMWdUb9YAQ0HDot
+         tfcebIxADg2hPA5zzopxLXa8e7ELUAWlg6gYgKxUZWALq2jky0PzwjG8J4BCva69efR/
+         wPlrYJqPcyWtm3wYxQE/9KVcGIzSGC2n+YcW5DPLCrnM6G+4qKTBon5Q4YfyWo6Tt+4E
+         XFAg==
+X-Gm-Message-State: AOAM530zC+Hzi3ilYrPo0ijdlhAs03tVWrZIPVQIJ+egYan8FcF70O1H
+        GsiTok+tWb9RcOCy+rgxivc=
+X-Google-Smtp-Source: ABdhPJz5FFD/9vp0qQEvMaltsIVTNbvBYFnN863Pr155FR4NkEaORH9Jnyt5J40E+ppbX3kTSaW2vw==
+X-Received: by 2002:a17:907:7296:b0:6e8:97c1:a7ef with SMTP id dt22-20020a170907729600b006e897c1a7efmr13352185ejc.262.1649882875639;
+        Wed, 13 Apr 2022 13:47:55 -0700 (PDT)
+Received: from anparri.mshome.net (host-79-52-64-69.retail.telecomitalia.it. [79.52.64.69])
+        by smtp.gmail.com with ESMTPSA id u6-20020a170906408600b006e87d654270sm5021ejj.44.2022.04.13.13.47.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Apr 2022 13:47:54 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [RFC PATCH 0/6] hv_sock: Hardening changes
+Date:   Wed, 13 Apr 2022 22:47:36 +0200
+Message-Id: <20220413204742.5539-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-If the allocation of multiple MSI vectors for multi-MSI fails in the core
-PCI framework, the framework will retry the allocation as a single MSI
-vector, assuming that meets the min_vecs specified by the requesting
-driver.
+Miscellaneous changes to "harden" the hv_sock driver and enable it
+in isolated guests.  The diff in ring_buffer.c, hyperv.h is due to
+a consequent refactoring/code elimination (patch #6).
 
-Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
-domain to implement that for x86.  The VECTOR domain does not support
-multi-MSI, so the alloc will always fail and fallback to a single MSI
-allocation.
+Applies to v5.18-rc2.
 
-In short, Hyper-V advertises a capability it does not implement.
+Thanks,
+  Andrea
 
-Hyper-V can support multi-MSI because it coordinates with the hypervisor
-to map the MSIs in the IOMMU's interrupt remapper, which is something the
-VECTOR domain does not have.  Therefore the fix is simple - copy what the
-x86 IOMMU drivers (AMD/Intel-IR) do by removing
-X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
-pci_msi_prepare().
+Andrea Parri (Microsoft) (6):
+  hv_sock: Check hv_pkt_iter_first_raw()'s return value
+  hv_sock: Copy packets sent by Hyper-V out of the ring buffer
+  hv_sock: Add validation for untrusted Hyper-V values
+  hv_sock: Initialize send_buf in hvs_stream_enqueue()
+  Drivers: hv: vmbus: Accept hv_sock offers in isolated guests
+  Drivers: hv: vmbus: Refactor the ring-buffer iterator functions
 
-Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
----
+ drivers/hv/channel_mgmt.c        |  9 ++++--
+ drivers/hv/ring_buffer.c         | 11 ++++----
+ include/linux/hyperv.h           | 48 ++++++++++----------------------
+ net/vmw_vsock/hyperv_transport.c | 24 ++++++++++++----
+ 4 files changed, 46 insertions(+), 46 deletions(-)
 
-v2:
--Fix grammatical mistake in added comment
-
- drivers/pci/controller/pci-hyperv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index d270a204..1cbe24b 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -614,7 +614,16 @@ static void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
- static int hv_msi_prepare(struct irq_domain *domain, struct device *dev,
- 			  int nvec, msi_alloc_info_t *info)
- {
--	return pci_msi_prepare(domain, dev, nvec, info);
-+	int ret = pci_msi_prepare(domain, dev, nvec, info);
-+
-+	/*
-+	 * By using the interrupt remapper in the hypervisor IOMMU, contiguous
-+	 * CPU vectors is not needed for multi-MSI
-+	 */
-+	if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI)
-+		info->flags &= ~X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
-+
-+	return ret;
- }
- 
- /**
 -- 
-2.7.4
+2.25.1
 
