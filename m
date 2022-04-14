@@ -2,199 +2,121 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE15D501080
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Apr 2022 16:45:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B051250185F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Apr 2022 18:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244608AbiDNNeq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 14 Apr 2022 09:34:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
+        id S237591AbiDNQKi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 14 Apr 2022 12:10:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245019AbiDNN2Z (ORCPT
+        with ESMTP id S1359760AbiDNPrR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 14 Apr 2022 09:28:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 91A1DA94C9
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Apr 2022 06:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649942491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=76LjVH/W5ULitQM1ID+xMK8IwGQrTK8V+5VzYil7/l0=;
-        b=bgInNoLYQhA3OptxWzr2d0MUfd5qt+b9RvVf6vJGbcuq8SlyQ0nLeiiuWTaWPjlp2ddLlu
-        lsEkwmXHJgxndD8LrSEZR3sXIonemU/jRGyrYF4Z67Ccc3GLxyfV1vW8k1tBeRmU8+5ucr
-        y4CEp6m0JRvu4juOepdtMqoxlDM+UYA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-42-NL0AfjXgOs-niHezPGTypg-1; Thu, 14 Apr 2022 09:21:27 -0400
-X-MC-Unique: NL0AfjXgOs-niHezPGTypg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 90D473C02B5E;
-        Thu, 14 Apr 2022 13:21:26 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.40.195.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DEC287C28;
-        Thu, 14 Apr 2022 13:21:24 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 34/34] KVM: x86: Rename 'enable_direct_tlbflush' to 'enable_l2_tlb_flush'
-Date:   Thu, 14 Apr 2022 15:20:13 +0200
-Message-Id: <20220414132013.1588929-35-vkuznets@redhat.com>
-In-Reply-To: <20220414132013.1588929-1-vkuznets@redhat.com>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
+        Thu, 14 Apr 2022 11:47:17 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A745F61D1;
+        Thu, 14 Apr 2022 08:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+        :In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=6sMmhzgZCrm6waVxP9z2dHOgrG0ZsUX1GrMhTQVx3XE=; b=htOTffnGnm8zSygfrWwW7s68j+
+        o/8A7s8CcStsUleAWtAwwdPLZY/dteSvmaaQX4ry8g/5oxsjKrcHjIjKJaObrZkKO0TnnAYy4SMSG
+        0LMpl7n9rrVyNcd1hjDQY2gH2tqd11Ucwh8e0jXl5zD1vfUdG0FPyAhadJkYta7tb0LVrXN7/Z8hl
+        HN5VyZ6/Xcwd/ftPW5Lm24MGgTcRIJ/z6niVxOXyErPQukcxB30fXaEIJFO3lLp8O8h4MZ3xMU1d4
+        W/P4+Fvka0a6Ih4HY/loN5mIzgyG6FyybT9Zdr/ANuW302BJ8MYsG/Q7LZsUmhNXKahgbUfaZc/8N
+        i//ObZjA==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nf1ST-00536t-Fi; Thu, 14 Apr 2022 15:32:33 +0000
+Message-ID: <75a7b583-187d-569d-5ed0-2bb0e1b1ec7b@infradead.org>
+Date:   Thu, 14 Apr 2022 08:32:26 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 5.4 004/475] hv: utils: add PTP_1588_CLOCK to Kconfig to
+ fix build
+Content-Language: en-US
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        =?UTF-8?Q?Petr_=c5=a0tetiar?= <ynezz@true.cz>
+References: <20220414110855.141582785@linuxfoundation.org>
+ <20220414110855.274446341@linuxfoundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20220414110855.274446341@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-To make terminology between Hyper-V-on-KVM and KVM-on-Hyper-V consistent,
-rename 'enable_direct_tlbflush' to 'enable_l2_tlb_flush'. The change
-eliminates the use of confusing 'direct' and adds the missing underscore.
 
-No functional change.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/include/asm/kvm-x86-ops.h | 2 +-
- arch/x86/include/asm/kvm_host.h    | 2 +-
- arch/x86/kvm/svm/svm_onhyperv.c    | 2 +-
- arch/x86/kvm/svm/svm_onhyperv.h    | 6 +++---
- arch/x86/kvm/vmx/vmx.c             | 6 +++---
- arch/x86/kvm/x86.c                 | 6 +++---
- 6 files changed, 12 insertions(+), 12 deletions(-)
+On 4/14/22 06:06, Greg Kroah-Hartman wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> commit 1dc2f2b81a6a9895da59f3915760f6c0c3074492 upstream.
+> 
+> The hyperv utilities use PTP clock interfaces and should depend a
+> a kconfig symbol such that they will be built as a loadable module or
+> builtin so that linker errors do not happen.
+> 
+> Prevents these build errors:
+> 
+> ld: drivers/hv/hv_util.o: in function `hv_timesync_deinit':
+> hv_util.c:(.text+0x37d): undefined reference to `ptp_clock_unregister'
+> ld: drivers/hv/hv_util.o: in function `hv_timesync_init':
+> hv_util.c:(.text+0x738): undefined reference to `ptp_clock_register'
+> 
+> Fixes: 3716a49a81ba ("hv_utils: implement Hyper-V PTP source")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Link: https://lore.kernel.org/r/20211126023316.25184-1-rdunlap@infradead.org
+> Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> Cc: Petr Štetiar <ynezz@true.cz>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/hv/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -17,6 +17,7 @@ config HYPERV_TIMER
+>  config HYPERV_UTILS
+>  	tristate "Microsoft Hyper-V Utilities driver"
+>  	depends on HYPERV && CONNECTOR && NLS
+> +	depends on PTP_1588_CLOCK_OPTIONAL
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 96e4e9842dfc..1e13612a6446 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -121,7 +121,7 @@ KVM_X86_OP_OPTIONAL(vm_move_enc_context_from)
- KVM_X86_OP(get_msr_feature)
- KVM_X86_OP(can_emulate_instruction)
- KVM_X86_OP(apic_init_signal_blocked)
--KVM_X86_OP_OPTIONAL(enable_direct_tlbflush)
-+KVM_X86_OP_OPTIONAL(enable_l2_tlb_flush)
- KVM_X86_OP_OPTIONAL(migrate_timers)
- KVM_X86_OP(msr_filter_changed)
- KVM_X86_OP(complete_emulated_msr)
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 168600490bd1..f4fd6da1f565 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1526,7 +1526,7 @@ struct kvm_x86_ops {
- 					void *insn, int insn_len);
- 
- 	bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
--	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
-+	int (*enable_l2_tlb_flush)(struct kvm_vcpu *vcpu);
- 
- 	void (*migrate_timers)(struct kvm_vcpu *vcpu);
- 	void (*msr_filter_changed)(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/svm/svm_onhyperv.c b/arch/x86/kvm/svm/svm_onhyperv.c
-index 8cdc62c74a96..69a7014d1cef 100644
---- a/arch/x86/kvm/svm/svm_onhyperv.c
-+++ b/arch/x86/kvm/svm/svm_onhyperv.c
-@@ -14,7 +14,7 @@
- #include "kvm_onhyperv.h"
- #include "svm_onhyperv.h"
- 
--int svm_hv_enable_direct_tlbflush(struct kvm_vcpu *vcpu)
-+int svm_hv_enable_l2_tlb_flush(struct kvm_vcpu *vcpu)
- {
- 	struct hv_enlightenments *hve;
- 	struct hv_partition_assist_pg **p_hv_pa_pg =
-diff --git a/arch/x86/kvm/svm/svm_onhyperv.h b/arch/x86/kvm/svm/svm_onhyperv.h
-index e2fc59380465..d6ec4aeebedb 100644
---- a/arch/x86/kvm/svm/svm_onhyperv.h
-+++ b/arch/x86/kvm/svm/svm_onhyperv.h
-@@ -13,7 +13,7 @@
- 
- static struct kvm_x86_ops svm_x86_ops;
- 
--int svm_hv_enable_direct_tlbflush(struct kvm_vcpu *vcpu);
-+int svm_hv_enable_l2_tlb_flush(struct kvm_vcpu *vcpu);
- 
- static inline void svm_hv_init_vmcb(struct vmcb *vmcb)
- {
-@@ -51,8 +51,8 @@ static inline void svm_hv_hardware_setup(void)
- 
- 			vp_ap->nested_control.features.directhypercall = 1;
- 		}
--		svm_x86_ops.enable_direct_tlbflush =
--				svm_hv_enable_direct_tlbflush;
-+		svm_x86_ops.enable_l2_tlb_flush =
-+				svm_hv_enable_l2_tlb_flush;
- 	}
- }
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a81e44852f54..2b3c73b49dcb 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -461,7 +461,7 @@ static unsigned long host_idt_base;
- static bool __read_mostly enlightened_vmcs = true;
- module_param(enlightened_vmcs, bool, 0444);
- 
--static int hv_enable_direct_tlbflush(struct kvm_vcpu *vcpu)
-+static int hv_enable_l2_tlb_flush(struct kvm_vcpu *vcpu)
- {
- 	struct hv_enlightened_vmcs *evmcs;
- 	struct hv_partition_assist_pg **p_hv_pa_pg =
-@@ -8151,8 +8151,8 @@ static int __init vmx_init(void)
- 		}
- 
- 		if (ms_hyperv.nested_features & HV_X64_NESTED_DIRECT_FLUSH)
--			vmx_x86_ops.enable_direct_tlbflush
--				= hv_enable_direct_tlbflush;
-+			vmx_x86_ops.enable_l2_tlb_flush
-+				= hv_enable_l2_tlb_flush;
- 
- 	} else {
- 		enlightened_vmcs = false;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index d3839e648ab3..d620c56bc526 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4365,7 +4365,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 			kvm_x86_ops.nested_ops->get_state(NULL, NULL, 0) : 0;
- 		break;
- 	case KVM_CAP_HYPERV_DIRECT_TLBFLUSH:
--		r = kvm_x86_ops.enable_direct_tlbflush != NULL;
-+		r = kvm_x86_ops.enable_l2_tlb_flush != NULL;
- 		break;
- 	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
- 		r = kvm_x86_ops.nested_ops->enable_evmcs != NULL;
-@@ -5275,10 +5275,10 @@ static int kvm_vcpu_ioctl_enable_cap(struct kvm_vcpu *vcpu,
- 		}
- 		return r;
- 	case KVM_CAP_HYPERV_DIRECT_TLBFLUSH:
--		if (!kvm_x86_ops.enable_direct_tlbflush)
-+		if (!kvm_x86_ops.enable_l2_tlb_flush)
- 			return -ENOTTY;
- 
--		return static_call(kvm_x86_enable_direct_tlbflush)(vcpu);
-+		return static_call(kvm_x86_enable_l2_tlb_flush)(vcpu);
- 
- 	case KVM_CAP_HYPERV_ENFORCE_CPUID:
- 		return kvm_hv_set_enforce_cpuid(vcpu, cap->args[0]);
+AFAICT PTP_1588_CLOCK_OPTIONAL does not exist in 5.4 kernels,
+so this should not be used there.
+
+>  	help
+>  	  Select this option to enable the Hyper-V Utilities.
+>  
+> 
+> 
+
 -- 
-2.35.1
-
+~Randy
