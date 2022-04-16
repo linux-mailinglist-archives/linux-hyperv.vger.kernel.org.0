@@ -2,134 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9232E502E35
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Apr 2022 19:05:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B96385034EC
+	for <lists+linux-hyperv@lfdr.de>; Sat, 16 Apr 2022 09:51:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236808AbiDORIP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 15 Apr 2022 13:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
+        id S230160AbiDPHwt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 16 Apr 2022 03:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356101AbiDORIB (ORCPT
+        with ESMTP id S230234AbiDPHwZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 15 Apr 2022 13:08:01 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF4A84EFD;
-        Fri, 15 Apr 2022 10:05:32 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id g20so10524400edw.6;
-        Fri, 15 Apr 2022 10:05:32 -0700 (PDT)
+        Sat, 16 Apr 2022 03:52:25 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69173100743
+        for <linux-hyperv@vger.kernel.org>; Sat, 16 Apr 2022 00:49:38 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id k14so10113930pga.0
+        for <linux-hyperv@vger.kernel.org>; Sat, 16 Apr 2022 00:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tPz8jhLel5NCB/c+wgUxB3HxNS9jpiNK/WGqp6Lz5oE=;
-        b=bmzvRoxXUYN08ImLI8GChiltnBZ++UpOwMCJABu0q9+yZCFc6P3KmJ+eCUxf3GUNTz
-         JmCY41h0LXy/oh3PT2JmAfv+662KfBG6RdJqoAA59mbedZm/Bw/zjBJvPOs8drW6CfXh
-         8hGFU2cKLx9xQlfYDUlA98Huv0jMJTUicz33uiImtlh3l31R1KL1TC9/W1gbhw4+GXCl
-         WLBQzr69B3R3z2gz2UtPVSWgIr3g6auVvg7E9jAXa5vG3Bm8wUjgXWr6LMT9epg91v4d
-         8UmzLTu0bcUX0GQS6oOKvRmauc4kFRpClp3vivZyMZIWnmaFdU7K+B9Fn9PbR1ny/lVx
-         e0PQ==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=bJd2DIgtyK+bZCVQpMa9XLiI7bVnFQgVFeGzbZ6bXamjrEFIUCNaIDR9YpvR5iTRQC
+         EoRjHn2hxdGgHpTmUXoJLhLdkz8kw8CpdMkf+RjOM2yxgJf0M2w5tnzpw0NiczM9cGQm
+         aTRY2J48j2+AVBVM6ZplapTERLwB7sqpQHn0KTPy+GATyEE1HlWbU25nZewZyTln9PiO
+         eb2iuPe3VcoLkYjZ6tmC44EeIcF1BzRiek/y+/+gg720T1wEvd/5m2iOgdTIUS3isI5Z
+         q2z1OdX/gYACU6OexrbNcXzEKBC+MKUq0Bm7V68HpmeyS3D5tFhEEP1iOfnkPKJo7x6w
+         XtNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tPz8jhLel5NCB/c+wgUxB3HxNS9jpiNK/WGqp6Lz5oE=;
-        b=nXLXG9fpHM347tttGn+gbdC+D5tKOGRfWryt0BsUCzCveNBA0H88OgxDdHqVHvTSje
-         vMVJRn3an/JJfSUtUwigV6R2yvNGvbk6zORqI3Ukvul0Q+aOwGDBruZr1eD6BqFFXa1l
-         /c6zVkD4u5bDUzAHtR7HrLjyQ5R0dtDlxpItmGFqULoJktFaD928STlerivVdSyzR36K
-         xr+7rhdzfndwfBKXFo3TR3QSTcCJEEjZVd9a5V+7hOkfipwNbS3hmYCd+4Tn2tFphV61
-         RpOtR4irR944Ew3pDwEr3Pfha3/XyIuI/4tcx/IShKEDePsFfNmDVvt5WZKsHNXvzzgf
-         WpcA==
-X-Gm-Message-State: AOAM533HztuxpYNl1pCtIrmkVUu6RbI0Zi2KOxu35r4irJ98HPYHeVBS
-        K/kR3kfY6Lke4O6XTKAz1KE=
-X-Google-Smtp-Source: ABdhPJxSQFT54MjAvSnz6QJUYmMr6+4q4fWd+q3ggPokB7m4jqJCd2gNdAzt7nGClmnxKUX3+u1uLQ==
-X-Received: by 2002:a05:6402:14b:b0:418:d06e:5d38 with SMTP id s11-20020a056402014b00b00418d06e5d38mr211943edu.90.1650042331209;
-        Fri, 15 Apr 2022 10:05:31 -0700 (PDT)
-Received: from anparri (host-79-52-64-69.retail.telecomitalia.it. [79.52.64.69])
-        by smtp.gmail.com with ESMTPSA id ee17-20020a056402291100b0041fe1e4e342sm2842777edb.27.2022.04.15.10.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Apr 2022 10:05:30 -0700 (PDT)
-Date:   Fri, 15 Apr 2022 19:05:23 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 6/6] Drivers: hv: vmbus: Refactor the ring-buffer
- iterator functions
-Message-ID: <20220415170523.GB97823@anparri>
-References: <20220413204742.5539-1-parri.andrea@gmail.com>
- <20220413204742.5539-7-parri.andrea@gmail.com>
- <PH0PR21MB302516C5334076716966B7EED7EE9@PH0PR21MB3025.namprd21.prod.outlook.com>
- <20220415070031.GE2961@anparri>
- <20220415162811.GA47513@anparri>
- <PH0PR21MB3025ECBC7D7102B539A7705AD7EE9@PH0PR21MB3025.namprd21.prod.outlook.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=qEqPyIO8lMrrAYNZ01yg84RrqadxV7xxLHWNlaffuSLFN+4lv4wn4y2+0EIB/r6Hc2
+         OAT/EkGYbdnSxwghkt2JJZSOk2O01roEwfQ15sunuTbzMuzgCkNXkyS3j/VHmC8BRSp1
+         7GLQ1r9LqjDEmT4C529GfDr87AgwgHBiRYCmhYqr0UXv776yuiURx6XI9sSq88cswaNi
+         43YzUonnw+VKkdpweN7WL/MHWPbGm2DR+GPi+zd/M4EUNaToB7qIAIConKYaDZL4UYf3
+         I7WySD6MKmzELZv0uQZvmso9agiq6AYvPxK7lXCJBer8r7YAedmikCyZYAM9wcJQGOCS
+         351g==
+X-Gm-Message-State: AOAM530qQuuekCi3F7aBQYViajMOps6xTQAHBf017cJDUOq3QD35iSLg
+        74x8NTlnd6MO1jpiZp+FMeNRTqIEGbFNeV6CCgGXpcozoBs=
+X-Google-Smtp-Source: ABdhPJzPQ782jxaaybf4v05kBQtFRTzv0MMrux20NcZ4Q10XmGrK6dnUIabFDBNBmBOv8fFyQY5zqzYAgf4Cnc3KaCc=
+X-Received: by 2002:a92:508:0:b0:2cb:ebd8:a76b with SMTP id
+ q8-20020a920508000000b002cbebd8a76bmr1009500ile.156.1650095366830; Sat, 16
+ Apr 2022 00:49:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH0PR21MB3025ECBC7D7102B539A7705AD7EE9@PH0PR21MB3025.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6638:1309:0:0:0:0 with HTTP; Sat, 16 Apr 2022 00:49:26
+ -0700 (PDT)
+Reply-To: daniel.seyba@yahoo.com
+From:   Seyba Daniel <royhalton13@gmail.com>
+Date:   Sat, 16 Apr 2022 09:49:26 +0200
+Message-ID: <CALSxb2w9zQYotuLcRSCPns53ksvT9UrEMVx-1Cp1f8RE7er3cA@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:542 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [royhalton13[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [royhalton13[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 04:44:50PM +0000, Michael Kelley (LINUX) wrote:
-> From: Andrea Parri <parri.andrea@gmail.com> Sent: Friday, April 15, 2022 9:28 AM
-> > 
-> > On Fri, Apr 15, 2022 at 09:00:31AM +0200, Andrea Parri wrote:
-> > > > > @@ -470,7 +471,6 @@ struct vmpacket_descriptor *hv_pkt_iter_first_raw(struct
-> > > > > vmbus_channel *channel)
-> > > > >
-> > > > >  	return (struct vmpacket_descriptor *)(hv_get_ring_buffer(rbi) + rbi-
-> > > > > >priv_read_index);
-> > > > >  }
-> > > > > -EXPORT_SYMBOL_GPL(hv_pkt_iter_first_raw);
-> > > >
-> > > > Does hv_pkt_iter_first_raw() need to be retained at all as a
-> > > > separate function?  I think after these changes, the only caller
-> > > > is hv_pkt_iter_first(), in which case the code could just go
-> > > > inline in hv_pkt_iter_first().  Doing that combining would
-> > > > also allow the elimination of the duplicate call to
-> > > > hv_pkt_iter_avail().
-> > 
-> > Back to this, can you clarify what you mean by "the elimination of..."?
-> > After moving the function "inline", hv_pkt_iter_avail() would be called
-> > in to check for a non-NULL descriptor (in the inline function) and later
-> > in the computation of bytes_avail.
-> 
-> I was thinking something like this:
-> 
-> bytes_avail = hv_pkt_iter_avail(rbi);
-> if (bytes_avail < sizeof(struct vmpacket_descriptor))
-> 	return NULL;
-> bytes_avail = min(rbi->pkt_buffer_size, bytes_avail);
-> 
-> desc = (struct vmpacket_descriptor *)(hv_get_ring_buffer(rbi) + rbi->priv_read_index);
+Hello,
 
-Thanks for the clarification, I've applied it.
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-  Andrea
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
+So please confirm interest by responding back.
 
-> And for that matter, hv_pkt_iter_avail() is now only called in one place.
-> It's a judgment call whether to keep it as a separate helper function vs.
-> inlining it in hv_pkt_iter_first() as well.  I'm OK either way.
-> 
-> 
-> Michael
-> 
-> 
+My dearest regards
+
+Seyba Daniel
