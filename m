@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFCC1506C53
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Apr 2022 14:25:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48224506C60
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Apr 2022 14:25:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352281AbiDSM0r (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 19 Apr 2022 08:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45014 "EHLO
+        id S244832AbiDSM0y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 19 Apr 2022 08:26:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244603AbiDSM0h (ORCPT
+        with ESMTP id S1352284AbiDSM0k (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 19 Apr 2022 08:26:37 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9B636333;
-        Tue, 19 Apr 2022 05:23:55 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id t11so32485395eju.13;
-        Tue, 19 Apr 2022 05:23:55 -0700 (PDT)
+        Tue, 19 Apr 2022 08:26:40 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C738F366A0;
+        Tue, 19 Apr 2022 05:23:57 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id z12so21033472edl.2;
+        Tue, 19 Apr 2022 05:23:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=njoqsjCkwXkJtdNecMo/g2MUiVV2iM+3H9WZkjrom64=;
-        b=T+BJ0CoPzwTVz0sJC7p3ea6aiM3LNaQJG681SWvIk7KbBiMEOpk6LTy6OgUfJiIsGk
-         SJ2LrcJ2aGDX9wiDURXhAUlW3SV/A9LjBuTwPn9kKaXMdsy/aEH30FAFi2P7ORSnhbNr
-         4V8cjeUGHCNbJiQhgOPzqhWnMkNt2g5e+TSiISQnHdR3AkOO6VYw5QJAblWQpatU4vyy
-         p5D3ZNImcjcwqs7ScP+X+goiFXDtQkKAyOUya1gKhKgSS6RAQ5kqHr75lGr4o/WBjqk5
-         xK72APTXGbPMEyGZgGJRboF9WGw98XtINBp4FiWierkyld0pEk4Yh3QMKJaCEyie/Z4z
-         s6hg==
+        bh=e+5KAN+1gGGEcZk/bVdKuKM/QW/CVm3QE/hSUlqBVr4=;
+        b=CZlCg/CgiiTQDkg8mMqM/P6wU7s3WyA7gIYybU8X6zVlegvcHncMgsSxdba+wM59jV
+         /AHce/xuR1rKlb3u7z3vminRhYFYCI+ViA0YLwpoYBsoGes73SNsCH1HtiUy2+thx/qP
+         0B/6ntzyNRibw+H8B4uQ5JHKtyopCZanmWtXygmN5pzg4+VMzDpzQt60eGnbUHqtmCJU
+         Acmj5FwuZOumZOcwAlKcTpehkhA0GYnY7TJaA9qeVvScPMiwzI9CCEI9gyVaaQNo7VUT
+         zNzLC0JHAubOgeHwMU3s8Sm9+zKsFY8kkgtpOg9jga1EqqwzBN/VH8MmzoRoY5HrAwzz
+         vi0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=njoqsjCkwXkJtdNecMo/g2MUiVV2iM+3H9WZkjrom64=;
-        b=OqMa3M+8xkY0kzegiGGunJ69KcgzATWshRq7QhqoblpC+9VCbCckPvS45ANzxe8ME5
-         gJctd9Z/MwXMDCoSzmE5vOkBsuECEw9URPUjI9TI8HP73SBF6R6KAMDl6n8lyo/KDs+p
-         CB+yHNj6qROo7eTv9S/sbjv3r8V/zg9HOfay2S4A6VPgx1psxZXeFZaSIBOR4biLVhUp
-         444Po0DnLkJhprB7C/PgtLr8QnsowYPKFOjTBkrG7MaYReizeaoVXxORjhFxKp7foaMT
-         s8JThZevJWGj22E8JVsuqKxScDSvUPikQ21anNludLwkR9Zu7NRebkxVGAchVuR17Fmm
-         12lA==
-X-Gm-Message-State: AOAM5317E9OaCxqNvLr/CkHjvWUgiU6JaoSENoWb6i4dzXEyXTgUIvXl
-        Ufm7VU/oZp4Yp1bnEel8nxU=
-X-Google-Smtp-Source: ABdhPJxEcmNyjH29mq3GbIquHL3s/bZTQcAzcZjXsFf+i9EmpdzE/eWAI3rFHj0Rhx3nZaW7SeP8qQ==
-X-Received: by 2002:a17:907:3f0f:b0:6ef:e43f:f3e7 with SMTP id hq15-20020a1709073f0f00b006efe43ff3e7mr2054068ejc.758.1650371034030;
-        Tue, 19 Apr 2022 05:23:54 -0700 (PDT)
+        bh=e+5KAN+1gGGEcZk/bVdKuKM/QW/CVm3QE/hSUlqBVr4=;
+        b=NpzlmnGnl7JYLXRTbcg7GARofU6+i+b8HK7xThKYYcjzPPGnvkTLsj6gmFuaqG2tm6
+         qx8lOAWsLEk+P5hbchLO60d/O5jVYzrXUjD5c+0jyb257twfVOA4aRpkcujZ74aemoFV
+         8jLymX4Ot+5nGuB/c6sDvSMlVRjblnzN3p7mTpEJbts6ksM/Klb6/8/BaADnrpn8gD21
+         g8kit0R9dplbZ0ChFDSXHspCU04m7cociQZ3WMey1JNuDk1aoZAwrgs3mO479Zwjyad1
+         16O11FRb3GgmURdli1jnV0dC3DFlffIKxqzd5miYTIykgYIX/vkfrZhwZDF8WalreOwO
+         HTbA==
+X-Gm-Message-State: AOAM53362PTRlHPHdTMW51IhZkVtFr7XYWXNctcg1uRHs+tVqmdKfG7q
+        oE44tzeEosVOBR3c0ST0/DU=
+X-Google-Smtp-Source: ABdhPJzqVbeIg4CkpgbBc1vVsN/rrixxtmiOUwQVI5pA9uDsyD6QFhizkUR41/HIEDocsebckxD0jw==
+X-Received: by 2002:a05:6402:2741:b0:41f:69dc:9bcd with SMTP id z1-20020a056402274100b0041f69dc9bcdmr17102553edd.239.1650371036322;
+        Tue, 19 Apr 2022 05:23:56 -0700 (PDT)
 Received: from anparri.mshome.net (host-82-53-3-95.retail.telecomitalia.it. [82.53.3.95])
-        by smtp.gmail.com with ESMTPSA id z21-20020a170906435500b006e8669fae36sm5644685ejm.189.2022.04.19.05.23.52
+        by smtp.gmail.com with ESMTPSA id z21-20020a170906435500b006e8669fae36sm5644685ejm.189.2022.04.19.05.23.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Apr 2022 05:23:53 -0700 (PDT)
+        Tue, 19 Apr 2022 05:23:55 -0700 (PDT)
 From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -62,9 +62,9 @@ To:     KY Srinivasan <kys@microsoft.com>,
 Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH v2 1/6] Drivers: hv: vmbus: Fix handling of messages with transaction ID of zero
-Date:   Tue, 19 Apr 2022 14:23:20 +0200
-Message-Id: <20220419122325.10078-2-parri.andrea@gmail.com>
+Subject: [PATCH v2 2/6] PCI: hv: Use vmbus_requestor to generate transaction IDs for VMbus hardening
+Date:   Tue, 19 Apr 2022 14:23:21 +0200
+Message-Id: <20220419122325.10078-3-parri.andrea@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220419122325.10078-1-parri.andrea@gmail.com>
 References: <20220419122325.10078-1-parri.andrea@gmail.com>
@@ -80,65 +80,118 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-vmbus_request_addr() returns 0 (zero) if the transaction ID passed
-to as argument is 0.  This is unfortunate for two reasons: first,
-netvsc_send_completion() does not check for a NULL cmd_rqst (before
-dereferencing the corresponding NVSP message); second, 0 is a *valid*
-value of cmd_rqst in netvsc_send_tx_complete(), cf. the call of
-vmbus_sendpacket() in netvsc_send_pkt().
+Currently, pointers to guest memory are passed to Hyper-V as transaction
+IDs in hv_pci.  In the face of errors or malicious behavior in Hyper-V,
+hv_pci should not expose or trust the transaction IDs returned by
+Hyper-V to be valid guest memory addresses.  Instead, use small integers
+generated by vmbus_requestor as request (transaction) IDs.
 
-vmbus_request_addr() has included the code in question since its
-introduction with commit e8b7db38449ac ("Drivers: hv: vmbus: Add
-vmbus_requestor data structure for VMBus hardening"); such code was
-motivated by the early use of vmbus_requestor by hv_storvsc.  Since
-hv_storvsc moved to a tag-based mechanism to generate and retrieve
-transaction IDs with commit bf5fd8cae3c8f ("scsi: storvsc: Use
-blk_mq_unique_tag() to generate requestIDs"), vmbus_request_addr()
-can be modified to return VMBUS_RQST_ERROR if the ID is 0.  This
-change solves the issues in hv_netvsc (and makes the handling of
-messages with transaction ID of 0 consistent with the semantics
-"the ID is not contained in the requestor/invalid ID").
-
-vmbus_next_request_id(), vmbus_request_addr() should still reserve
-the ID of 0 for Hyper-V, because Hyper-V will "ignore" (not respond
-to) VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED packets/requests with
-transaction ID of 0 from the guest.
-
-Fixes: bf5fd8cae3c8f ("scsi: storvsc: Use blk_mq_unique_tag() to generate requestIDs")
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 ---
-The above hv_netvsc issues precede bf5fd8cae3c8f; however, these
-changes should not be backported to earlier commits since such a
-back-port would 'break' hv_storvsc.
+ drivers/pci/controller/pci-hyperv.c | 39 +++++++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
 
- drivers/hv/channel.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-index dc5c35210c16a..20fc8d50a0398 100644
---- a/drivers/hv/channel.c
-+++ b/drivers/hv/channel.c
-@@ -1245,7 +1245,9 @@ u64 vmbus_next_request_id(struct vmbus_channel *channel, u64 rqst_addr)
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 88b3b56d05228..0252b4bbc8d15 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -91,6 +91,13 @@ static enum pci_protocol_version_t pci_protocol_versions[] = {
+ /* space for 32bit serial number as string */
+ #define SLOT_NAME_SIZE 11
  
- 	/*
- 	 * Cannot return an ID of 0, which is reserved for an unsolicited
--	 * message from Hyper-V.
-+	 * message from Hyper-V; Hyper-V does not acknowledge (respond to)
-+	 * VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED requests with ID of
-+	 * 0 sent by the guest.
- 	 */
- 	return current_id + 1;
++/*
++ * Size of requestor for VMbus; the value is based on the observation
++ * that having more than one request outstanding is 'rare', and so 64
++ * should be generous in ensuring that we don't ever run out.
++ */
++#define HV_PCI_RQSTOR_SIZE 64
++
+ /*
+  * Message Types
+  */
+@@ -1407,7 +1414,7 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+ 	int_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	int_pkt->int_desc = *int_desc;
+ 	vmbus_sendpacket(hpdev->hbus->hdev->channel, int_pkt, sizeof(*int_pkt),
+-			 (unsigned long)&ctxt.pkt, VM_PKT_DATA_INBAND, 0);
++			 0, VM_PKT_DATA_INBAND, 0);
+ 	kfree(int_desc);
  }
-@@ -1270,7 +1272,7 @@ u64 vmbus_request_addr(struct vmbus_channel *channel, u64 trans_id)
  
- 	/* Hyper-V can send an unsolicited message with ID of 0 */
- 	if (!trans_id)
--		return trans_id;
-+		return VMBUS_RQST_ERROR;
+@@ -2649,7 +2656,7 @@ static void hv_eject_device_work(struct work_struct *work)
+ 	ejct_pkt->message_type.type = PCI_EJECTION_COMPLETE;
+ 	ejct_pkt->wslot.slot = hpdev->desc.win_slot.slot;
+ 	vmbus_sendpacket(hbus->hdev->channel, ejct_pkt,
+-			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
++			 sizeof(*ejct_pkt), 0,
+ 			 VM_PKT_DATA_INBAND, 0);
  
- 	spin_lock_irqsave(&rqstor->req_lock, flags);
+ 	/* For the get_pcichild() in hv_pci_eject_device() */
+@@ -2696,8 +2703,9 @@ static void hv_pci_onchannelcallback(void *context)
+ 	const int packet_size = 0x100;
+ 	int ret;
+ 	struct hv_pcibus_device *hbus = context;
++	struct vmbus_channel *chan = hbus->hdev->channel;
+ 	u32 bytes_recvd;
+-	u64 req_id;
++	u64 req_id, req_addr;
+ 	struct vmpacket_descriptor *desc;
+ 	unsigned char *buffer;
+ 	int bufferlen = packet_size;
+@@ -2715,8 +2723,8 @@ static void hv_pci_onchannelcallback(void *context)
+ 		return;
  
+ 	while (1) {
+-		ret = vmbus_recvpacket_raw(hbus->hdev->channel, buffer,
+-					   bufferlen, &bytes_recvd, &req_id);
++		ret = vmbus_recvpacket_raw(chan, buffer, bufferlen,
++					   &bytes_recvd, &req_id);
+ 
+ 		if (ret == -ENOBUFS) {
+ 			kfree(buffer);
+@@ -2743,11 +2751,14 @@ static void hv_pci_onchannelcallback(void *context)
+ 		switch (desc->type) {
+ 		case VM_PKT_COMP:
+ 
+-			/*
+-			 * The host is trusted, and thus it's safe to interpret
+-			 * this transaction ID as a pointer.
+-			 */
+-			comp_packet = (struct pci_packet *)req_id;
++			req_addr = chan->request_addr_callback(chan, req_id);
++			if (req_addr == VMBUS_RQST_ERROR) {
++				dev_err(&hbus->hdev->device,
++					"Invalid transaction ID %llx\n",
++					req_id);
++				break;
++			}
++			comp_packet = (struct pci_packet *)req_addr;
+ 			response = (struct pci_response *)buffer;
+ 			comp_packet->completion_func(comp_packet->compl_ctxt,
+ 						     response,
+@@ -3428,6 +3439,10 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 		goto free_dom;
+ 	}
+ 
++	hdev->channel->next_request_id_callback = vmbus_next_request_id;
++	hdev->channel->request_addr_callback = vmbus_request_addr;
++	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
++
+ 	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+ 			 hv_pci_onchannelcallback, hbus);
+ 	if (ret)
+@@ -3758,6 +3773,10 @@ static int hv_pci_resume(struct hv_device *hdev)
+ 
+ 	hbus->state = hv_pcibus_init;
+ 
++	hdev->channel->next_request_id_callback = vmbus_next_request_id;
++	hdev->channel->request_addr_callback = vmbus_request_addr;
++	hdev->channel->rqstor_size = HV_PCI_RQSTOR_SIZE;
++
+ 	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
+ 			 hv_pci_onchannelcallback, hbus);
+ 	if (ret)
 -- 
 2.25.1
 
