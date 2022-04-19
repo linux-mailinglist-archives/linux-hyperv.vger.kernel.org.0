@@ -2,77 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 985B2506C5B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Apr 2022 14:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA3F5507175
+	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Apr 2022 17:13:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352331AbiDSM1D (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 19 Apr 2022 08:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45832 "EHLO
+        id S1353690AbiDSPPn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 19 Apr 2022 11:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352332AbiDSM0v (ORCPT
+        with ESMTP id S244276AbiDSPPm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 19 Apr 2022 08:26:51 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F453630B;
-        Tue, 19 Apr 2022 05:24:07 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 11so15996928edw.0;
-        Tue, 19 Apr 2022 05:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=j9vVuKoFEUiAyR7uHlRWZOSe/ValeOqxLUrvDR3GU6A=;
-        b=UI3zSmDvVjSx3x59YT49ml46fOa2/gH7mpzyEwcgftQOKtwNdEbUOAIDY5Q/hL+sKA
-         uzbTUVkfv1BmEvyNIWb0Cz5mO5pJlCp9Jejgc72KTEnk5HFyD7ZMi7VUuT4fpzmc9u37
-         JGAjUj7WXDODpzlE1+42uBEPfS1GBjcBfBPEWkB+kE7B74d8QtO/fzawhGQ3OSPy9qR6
-         yMYCRDl1xNLOTOpefyVWmpteVpSkFKbwNHoUJSTewIv3OMro7YfCFCcamI9UP0igBszl
-         9dfO6IOIlSQUyKkwF2pW9dErF2UVDUtT06YMgaarnGBMGLlUdR0/N6uQNcOa70mNbFxY
-         THnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=j9vVuKoFEUiAyR7uHlRWZOSe/ValeOqxLUrvDR3GU6A=;
-        b=Fwclr8NzuzrKB7uIZmQRsIyv189cJxrICuOcoOfUk/7/+dmT7/dLVnWVgvBwvv7oNj
-         MnszkuH8hYTGk+I9VBYNaNUAP05+J5nvfzxFzHSJ/aTDgXrgwMj2oNg4t3k/zvxp87ME
-         dvWfRTA7YBBQsGawi+QBEaseb64oJJ9jHgHUxPqYTfWpiunvgd7XnYa1aS0dbaZOQ+U5
-         Zq7KNJt1donL5EmfXZALX2Ta7mlxZzJqkEA8dEp2h4ha7atb2veGgzsErIkeo6PP2xfi
-         crZZpn3Eyv7T75GjhoX6Y2i2/lpf09d0okYsgB8fv2F24a5D4rBhMjcGBAtxYMBW6iwl
-         n/Aw==
-X-Gm-Message-State: AOAM532mgSRL2aiwRfelHF9cUIeJE7zyFaINVCpgpHOlBT2MDHIsyT/a
-        AXh/vOgA3x7vfb0Qnv0UD3M=
-X-Google-Smtp-Source: ABdhPJwER2iIHbaJTcgShZKvo6stLL+1j9ZpSjYitNR6t4O4i1nSfwp/iVr7lNu+bDxW/YOV0NKekA==
-X-Received: by 2002:aa7:dcd3:0:b0:41d:70e4:bf4d with SMTP id w19-20020aa7dcd3000000b0041d70e4bf4dmr17093932edu.223.1650371046380;
-        Tue, 19 Apr 2022 05:24:06 -0700 (PDT)
-Received: from anparri.mshome.net (host-82-53-3-95.retail.telecomitalia.it. [82.53.3.95])
-        by smtp.gmail.com with ESMTPSA id z21-20020a170906435500b006e8669fae36sm5644685ejm.189.2022.04.19.05.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Apr 2022 05:24:05 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH v2 6/6] PCI: hv: Fix synchronization between channel callback and hv_compose_msi_msg()
-Date:   Tue, 19 Apr 2022 14:23:25 +0200
-Message-Id: <20220419122325.10078-7-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220419122325.10078-1-parri.andrea@gmail.com>
-References: <20220419122325.10078-1-parri.andrea@gmail.com>
+        Tue, 19 Apr 2022 11:15:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83E535847;
+        Tue, 19 Apr 2022 08:12:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 80498B81A3C;
+        Tue, 19 Apr 2022 15:12:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873D8C385A7;
+        Tue, 19 Apr 2022 15:12:55 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Q/37OvJm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+        t=1650381170;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MQyU07hi01iEyPXxllEOCsC9A0SZXJB5Wi7OpTYio9w=;
+        b=Q/37OvJmn6L6JA4hxc+U0Bn3ttmZ0CZK7DJgmf01GPUpJjg128RaHv5HvvhszqeqWVGnDL
+        l2SlbN/Xi0ms/oUYvl2yitT4K4ENydlAVTCInOxrGQapJh2v0VztNLHKWKgpPG0QUe+Y1P
+        ctRzvD0PsnFwOfRBcf+wRwQBHLblAwA=
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 275d05c0 (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
+        Tue, 19 Apr 2022 15:12:50 +0000 (UTC)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-2edbd522c21so175482327b3.13;
+        Tue, 19 Apr 2022 08:12:48 -0700 (PDT)
+X-Gm-Message-State: AOAM533gVCPqMvHGE/tc0zxBalXqRCbGFQ8VeIEKp8ciYRx1Rox1hYxO
+        Ls3I2/BcRbpBLbDfvj+sJVaaZvyqGlYZereFgXY=
+X-Google-Smtp-Source: ABdhPJwPT8kpwudgm4aOLhhyxVPvw6QiVqCwGpv5AaqyiB3KI2pHaKNZHoMfD/PEIqVraDr3btr5C9vb1YaKvou13Fo=
+X-Received: by 2002:a0d:c005:0:b0:2eb:d29d:8bf5 with SMTP id
+ b5-20020a0dc005000000b002ebd29d8bf5mr17186902ywd.404.1650381167579; Tue, 19
+ Apr 2022 08:12:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+References: <Yh4+9+UpanJWAIyZ@zx2c4.com> <c5181fb5-38fb-f261-9de5-24655be1c749@amazon.com>
+ <CAHmME9rTMDkE7UA3_wg87mrDVYps+YaHw+dZwF0EbM0zC4pQQw@mail.gmail.com> <47137806-9162-0f60-e830-1a3731595c8c@amazon.com>
+In-Reply-To: <47137806-9162-0f60-e830-1a3731595c8c@amazon.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 19 Apr 2022 17:12:36 +0200
+X-Gmail-Original-Message-ID: <CAHmME9pwfKfKp_qqbmAO5tEaQSZ5srCO5COThK3vWZR4avRF1g@mail.gmail.com>
+Message-ID: <CAHmME9pwfKfKp_qqbmAO5tEaQSZ5srCO5COThK3vWZR4avRF1g@mail.gmail.com>
+Subject: Re: propagating vmgenid outward and upward
+To:     Alexander Graf <graf@amazon.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        linux-hyperv@vger.kernel.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        adrian@parity.io, Laszlo Ersek <lersek@redhat.com>,
+        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Jann Horn <jannh@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,143 +81,34 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dexuan wrote:
+Hey Alex,
 
-  "[...]  when we disable AccelNet, the host PCI VSP driver sends a
-   PCI_EJECT message first, and the channel callback may set
-   hpdev->state to hv_pcichild_ejecting on a different CPU.  This can
-   cause hv_compose_msi_msg() to exit from the loop and 'return', and
-   the on-stack variable 'ctxt' is invalid.  Now, if the response
-   message from the host arrives, the channel callback will try to
-   access the invalid 'ctxt' variable, and this may cause a crash."
+On Thu, Mar 10, 2022 at 12:18 PM Alexander Graf <graf@amazon.com> wrote:
+> I agree on the slightly racy compromise and that it's a step into the
+> right direction. Doing this is a no brainer IMHO and I like the proc
+> based poll approach.
 
-Schematically:
+Alright. I'm going to email a more serious patch for that in the next
+few hours and you can have a look. Let's do that for 5.19.
 
-  Hyper-V sends PCI_EJECT msg
-    hv_pci_onchannelcallback()
-      state = hv_pcichild_ejecting
-                                       hv_compose_msi_msg()
-                                         alloc and init comp_pkt
-                                         state == hv_pcichild_ejecting
-  Hyper-V sends VM_PKT_COMP msg
-    hv_pci_onchannelcallback()
-      retrieve address of comp_pkt
-                                         'free' comp_pkt and return
-      comp_pkt->completion_func()
+> I have an additional problem you might have an idea for with the poll
+> based path. In addition to the clone notification, I'd need to know at
+> which point everyone who was listening to a clone notification is
+> finished acting up it. If I spawn a tiny VM to do "work", I want to know
+> when it's safe to hand requests into it. How do I find out when that
+> point in time is?
 
-Dexuan also showed how the crash can be triggered after introducing
-suitable delays in the driver code, thus validating the 'assumption'
-that the host can still normally respond to the guest's compose_msi
-request after the host has started to eject the PCI device.
+Seems tricky to solve. Even a count of current waiters and a
+generation number won't be sufficient, since it wouldn't take into
+account users who haven't _yet_ gotten to waiting. But maybe it's not
+the right problem to solve? Or somehow not necessary? For example, if
+the problem is a bit more constrained a solution becomes easier: you
+have a fixed/known set of readers that you know about, and you
+guarantee that they're all waiting before the fork. Then after the
+fork, they all do something to alert you in their poll()er, and you
+count up how many alerts you get until it matches the number of
+expected waiters. Would that work? It seems like anything more general
+than that is just butting heads with the racy compromise we're already
+making.
 
-Fix the synchronization by leveraging the requestor lock as follows:
-
-  - Before 'return'-ing in hv_compose_msi_msg(), remove the ID (while
-    holding the requestor lock) associated to the completion packet.
-
-  - Retrieve the address *and call ->completion_func() within a same
-    (requestor) critical section in hv_pci_onchannelcallback().
-
-Reported-by: Wei Hu <weh@microsoft.com>
-Reported-by: Dexuan Cui <decui@microsoft.com>
-Suggested-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
-v1 included:
-
-Fixes: de0aa7b2f97d3 ("PCI: hv: Fix 2 hang issues in hv_compose_msi_msg()")
-
-as a reference, but not a reference for the stable-kernel bots.
-The back-port would depend on the entire series which, in turn,
-shouldn't be backported to commits preceding bf5fd8cae3c8f.
-
- drivers/pci/controller/pci-hyperv.c | 33 +++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 0252b4bbc8d15..59f0197b94c78 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1695,7 +1695,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 			struct pci_create_interrupt3 v3;
- 		} int_pkts;
- 	} __packed ctxt;
--
-+	u64 trans_id;
- 	u32 size;
- 	int ret;
- 
-@@ -1757,10 +1757,10 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		goto free_int_desc;
- 	}
- 
--	ret = vmbus_sendpacket(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
--			       size, (unsigned long)&ctxt.pci_pkt,
--			       VM_PKT_DATA_INBAND,
--			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-+	ret = vmbus_sendpacket_getid(hpdev->hbus->hdev->channel, &ctxt.int_pkts,
-+				     size, (unsigned long)&ctxt.pci_pkt,
-+				     &trans_id, VM_PKT_DATA_INBAND,
-+				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	if (ret) {
- 		dev_err(&hbus->hdev->device,
- 			"Sending request for interrupt failed: 0x%x",
-@@ -1839,6 +1839,15 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 
- enable_tasklet:
- 	tasklet_enable(&channel->callback_event);
-+	/*
-+	 * The completion packet on the stack becomes invalid after 'return';
-+	 * remove the ID from the VMbus requestor if the identifier is still
-+	 * mapped to/associated with the packet.  (The identifier could have
-+	 * been 're-used', i.e., already removed and (re-)mapped.)
-+	 *
-+	 * Cf. hv_pci_onchannelcallback().
-+	 */
-+	vmbus_request_addr_match(channel, trans_id, (unsigned long)&ctxt.pci_pkt);
- free_int_desc:
- 	kfree(int_desc);
- drop_reference:
-@@ -2717,6 +2726,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-+	unsigned long flags;
- 
- 	buffer = kmalloc(bufferlen, GFP_ATOMIC);
- 	if (!buffer)
-@@ -2751,8 +2761,11 @@ static void hv_pci_onchannelcallback(void *context)
- 		switch (desc->type) {
- 		case VM_PKT_COMP:
- 
--			req_addr = chan->request_addr_callback(chan, req_id);
-+			lock_requestor(chan, flags);
-+			req_addr = __vmbus_request_addr_match(chan, req_id,
-+							      VMBUS_RQST_ADDR_ANY);
- 			if (req_addr == VMBUS_RQST_ERROR) {
-+				unlock_requestor(chan, flags);
- 				dev_err(&hbus->hdev->device,
- 					"Invalid transaction ID %llx\n",
- 					req_id);
-@@ -2760,9 +2773,17 @@ static void hv_pci_onchannelcallback(void *context)
- 			}
- 			comp_packet = (struct pci_packet *)req_addr;
- 			response = (struct pci_response *)buffer;
-+			/*
-+			 * Call ->completion_func() within the critical section to make
-+			 * sure that the packet pointer is still valid during the call:
-+			 * here 'valid' means that there's a task still waiting for the
-+			 * completion, and that the packet data is still on the waiting
-+			 * task's stack.  Cf. hv_compose_msi_msg().
-+			 */
- 			comp_packet->completion_func(comp_packet->compl_ctxt,
- 						     response,
- 						     bytes_recvd);
-+			unlock_requestor(chan, flags);
- 			break;
- 
- 		case VM_PKT_DATA_INBAND:
--- 
-2.25.1
-
+Jason
