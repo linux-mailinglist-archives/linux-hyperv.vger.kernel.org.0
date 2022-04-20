@@ -2,122 +2,106 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75B435084C4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Apr 2022 11:20:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EEED508A7D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Apr 2022 16:16:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377157AbiDTJW6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Apr 2022 05:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50976 "EHLO
+        id S1358302AbiDTOTK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Apr 2022 10:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359423AbiDTJW4 (ORCPT
+        with ESMTP id S1380138AbiDTOSi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Apr 2022 05:22:56 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B98D275D8
-        for <linux-hyperv@vger.kernel.org>; Wed, 20 Apr 2022 02:20:10 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id g13so2247704ejb.4
-        for <linux-hyperv@vger.kernel.org>; Wed, 20 Apr 2022 02:20:09 -0700 (PDT)
+        Wed, 20 Apr 2022 10:18:38 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0BB443C7;
+        Wed, 20 Apr 2022 07:13:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=nAIc8jlNaoNP4j8LrfgKPUem0987eG/5mImWoVHHT10=;
-        b=rSRtnZiF0xfnneRi/FQEzgnTo4L29Yzksiymt9g7h909EamxwG1M03+cfLGJz2BCOj
-         30CAL0kYOBVzStPIrvYb0monKtCFSnzsD3kwCqSU+bWHouMJvSzgKzZ6TdGkdgNy2yzz
-         C01rq4MLEeIVrGL5bI2/gmeJphR7o7jGVzdRCQK8jV3eM/SIu9DarQScr8dPeApgsm4q
-         PVkvnWdJ0MciYcWlYYKEOAtj/lRtmYDnu4oNkN19u4GUIU3PjvK/cEdkwCiD73LdOoQg
-         xyjB1TqyC1taYNXURg86XIpc8UnubKhBcODOIH7ohGWzGoAIPK9A3eD02O9kuRE3/jfE
-         /lCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=nAIc8jlNaoNP4j8LrfgKPUem0987eG/5mImWoVHHT10=;
-        b=69QsOHV1NKwM3Mg1sPIs+sp5/tKF0cD2lKE/KW+egvB5dBTniwh1drjgg02KSzW1PA
-         eBibdK9T/MgOjZRQxtrmwsP0LYODjdIOBkCWBAADzaKBhjak9iGL4wWZheGwcwjjgd+8
-         EnUsKHlxw470ywlbutdDXgKMf4CnhUb5CkMdhywOGf/FDqwS6lXgv0/HmPgdEZ93ioqN
-         2N+mEYn/zoFORTBTgc9rZEq6KCSZ4ObiOlRHVMMRA7F3S9OWbcxhvD2v85SzX8jJ8NGU
-         /+IjC5UT5vrbdk/hyFunCFqIRP3M4AS2U4JS89qbmLHX/gNC7x6SnLQQBjce6UFdlH/0
-         bOIw==
-X-Gm-Message-State: AOAM531QgD7J2KFZdehUmtui4PpCWx44J5Ks5mn8isp2xQamvF79BgDL
-        tdDPvhoPsgXhxNU70LhRpMLw4Q==
-X-Google-Smtp-Source: ABdhPJzOe0WrGTYQeCapieJbroGE75Jk3m16hGQK/9UYOPl2KmErfi3BqssRPBI5BShzU5h2D40NFw==
-X-Received: by 2002:a17:906:7a51:b0:6e8:8e6c:f182 with SMTP id i17-20020a1709067a5100b006e88e6cf182mr17160922ejo.506.1650446408596;
-        Wed, 20 Apr 2022 02:20:08 -0700 (PDT)
-Received: from [192.168.0.223] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id kx5-20020a170907774500b006e1382b8192sm6643906ejc.147.2022.04.20.02.20.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Apr 2022 02:20:08 -0700 (PDT)
-Message-ID: <529de1fd-7e98-1634-c61e-0e69ddcd9e73@linaro.org>
-Date:   Wed, 20 Apr 2022 11:20:06 +0200
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1650464005; x=1682000005;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xSVtxqfp4JLpW3WWMuvDsq9oB3gov9dYbIhWlNNxBEo=;
+  b=fGaX0bEOO3yLXFTRbq+fdgafIeGDFeJSRJ9m20mLf12anuDBZWeoG+og
+   QfEEp6aSbz2pKHDakxjmBfzwFh0s/avH/K+alifaEr0LCaeNlHyxOctpG
+   tIY8TBua3yeqAxX1pkTfuuQ9zVPinzSU+BoajTVh3oPALYm40g8WX2iOr
+   k=;
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 20 Apr 2022 07:13:25 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2022 07:13:24 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Wed, 20 Apr 2022 07:13:24 -0700
+Received: from [10.226.58.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 20 Apr
+ 2022 07:13:23 -0700
+Message-ID: <2100eed4-8081-6070-beaf-7c6ba65ad9be@quicinc.com>
+Date:   Wed, 20 Apr 2022 08:13:22 -0600
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v7 00/12] Fix broken usage of driver_override (and kfree
- of static memory)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI
+ vector
 Content-Language: en-US
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Stuart Yoder <stuyoder@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20220419113435.246203-1-krzysztof.kozlowski@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220419113435.246203-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
+        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
+        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <jakeo@microsoft.com>
+CC:     <bjorn.andersson@linaro.org>, <linux-hyperv@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
+From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
+In-Reply-To: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-8.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 19/04/2022 13:34, Krzysztof Kozlowski wrote:
+On 4/13/2022 7:36 AM, Jeffrey Hugo wrote:
+> If the allocation of multiple MSI vectors for multi-MSI fails in the core
+> PCI framework, the framework will retry the allocation as a single MSI
+> vector, assuming that meets the min_vecs specified by the requesting
+> driver.
+> 
+> Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
+> domain to implement that for x86.  The VECTOR domain does not support
+> multi-MSI, so the alloc will always fail and fallback to a single MSI
+> allocation.
+> 
+> In short, Hyper-V advertises a capability it does not implement.
+> 
+> Hyper-V can support multi-MSI because it coordinates with the hypervisor
+> to map the MSIs in the IOMMU's interrupt remapper, which is something the
+> VECTOR domain does not have.  Therefore the fix is simple - copy what the
+> x86 IOMMU drivers (AMD/Intel-IR) do by removing
+> X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
+> pci_msi_prepare().
+> 
+> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> ---
 
-Hi Greg, Rafael,
+Ping?
 
-The patchset was for some time on the lists, got some reviews, some
-changes/feedback which I hope I applied/responded.
+I don't see this in -next, nor have I seen any replies.  It is possible 
+I have missed some kind of update, but currently I'm wondering if this 
+change is progressing or not.  If there is some kind of process used in 
+this area, I'm not familiar with it, so I would appreciate an introduction.
 
-Entire set depends on the driver core changes, so maybe you could pick
-up everything via drivers core tree?
+Thanks
 
-> Dependencies (and stable):
-> ==========================
-> 1. All patches, including last three fixes, depend on the first patch
->    introducing the helper.
-> 2. The last three commits - fixes - are probably not backportable
->    directly, because of this dependency. I don't know how to express
->    this dependency here, since stable-kernel-rules.rst mentions only commits as
->    possible dependencies.
-
-
-Best regards,
-Krzysztof
+-Jeff
