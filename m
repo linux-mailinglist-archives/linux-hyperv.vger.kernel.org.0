@@ -2,59 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6AAC50A136
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Apr 2022 15:51:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E10A250A169
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Apr 2022 15:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384863AbiDUNx5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 21 Apr 2022 09:53:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32960 "EHLO
+        id S1387084AbiDUOBo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 21 Apr 2022 10:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1387645AbiDUNx4 (ORCPT
+        with ESMTP id S244840AbiDUOBk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 21 Apr 2022 09:53:56 -0400
+        Thu, 21 Apr 2022 10:01:40 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 01CB713F97
-        for <linux-hyperv@vger.kernel.org>; Thu, 21 Apr 2022 06:51:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 77B3D37AAE
+        for <linux-hyperv@vger.kernel.org>; Thu, 21 Apr 2022 06:58:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1650549065;
+        s=mimecast20190719; t=1650549529;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=9X5WXrysF88Ouj/slnEAN9ILrlD7gwjjZO9fEL4BbEQ=;
-        b=GTSRfaAYaznYDSI/X9hE5BSC/oHMz9Mb02073TIcuR9Kk+ZHZ396fbTW+h1qW+BXJE+h1+
-        QOk7JvSD0z0aLKEq1lvlJhq+9dzHjMoyGNHlkAru5thKNOL8YzOOKQJtHeqaqc4deDRwjs
-        ogyr/tkr6PWKMoqyeHWbe6FRgYFYTyY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=FCDdTtfh+cTEbBhGHl6TDA/w0vVS1GSM5e8sY5ZehTw=;
+        b=NFxtqG+ent5tyig8uUSSYtm2Yw+WwGApBjD7cjJzdT827tVMrRK8AxhiX9wk7An5SkSk4p
+        5eBePbASd5aDooNfV/ZpyHFAsqD8bdpTqu/224aiob5lRN7KZuDE0W/O1qfnjkY8pNyIQI
+        YVvEjJygnazrcbQOCyohM1Qa0yKM6aw=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-497-DzuHkyoVOCG0u2YNH8XEAg-1; Thu, 21 Apr 2022 09:51:03 -0400
-X-MC-Unique: DzuHkyoVOCG0u2YNH8XEAg-1
-Received: by mail-ej1-f69.google.com with SMTP id sa27-20020a1709076d1b00b006e8b357a2e7so2522467ejc.14
-        for <linux-hyperv@vger.kernel.org>; Thu, 21 Apr 2022 06:51:03 -0700 (PDT)
+ us-mta-209-6bh5edTxNPGZEWR25MfVDA-1; Thu, 21 Apr 2022 09:58:46 -0400
+X-MC-Unique: 6bh5edTxNPGZEWR25MfVDA-1
+Received: by mail-ej1-f72.google.com with SMTP id mp18-20020a1709071b1200b006e7f314ecb3so2539303ejc.23
+        for <linux-hyperv@vger.kernel.org>; Thu, 21 Apr 2022 06:58:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9X5WXrysF88Ouj/slnEAN9ILrlD7gwjjZO9fEL4BbEQ=;
-        b=DTlF1GrsJUB89eu/1CUN3/pURJEWZZnsFYQF+MfGqveZ6YQBUdjqTb9Ziutx7lEE/U
-         9kZcq8DRYo58hcEjyvHq8hoDrea9CUO8O7XyLWqlAc7YenpjVqcMQp/oHhRr2sk1qtB1
-         nbj8+xCF4SVE2NYLnJqH6zAmGtxf3WSNQGVDIn7fAJ09zPcom3k+9FZZzBig0pgijyBV
-         DBk2PNjbFF6+Nw6iaidp2/+bErXWlGhF41GbDesXeKSE5Hx4/bbCB/W3QmjUSkp+48Qc
-         8x2qdDrFHHxnWfXfPdvAZ24Uk1JDPoYWDqhE+chXf6mERTzJ7U7uar8hNd7VTdSjHPom
-         d7ag==
-X-Gm-Message-State: AOAM533ozB4aK5MqQkOfVFHRdbUv+UlR/jwEGKLIlRY2CL68mAVxTFIK
-        1moihXfkPPEG2an8YPXIoAMgLJeJFichqmTIIc8XKAYvCNOtqecD+ClMPkEu5mAhNLcEIZgeC2W
-        yPZvUIXznbnB+raxwKIzqhTW7
-X-Received: by 2002:a05:6402:26cd:b0:423:b43d:8b09 with SMTP id x13-20020a05640226cd00b00423b43d8b09mr28005749edd.400.1650549062687;
-        Thu, 21 Apr 2022 06:51:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyTS+Y4ILLrJT3QP2BpwpnOM5BPXge8ufksj1+vy8uCme6m2CyXJ309d3wnCuvShf6eaPoQKg==
-X-Received: by 2002:a05:6402:26cd:b0:423:b43d:8b09 with SMTP id x13-20020a05640226cd00b00423b43d8b09mr28005722edd.400.1650549062455;
-        Thu, 21 Apr 2022 06:51:02 -0700 (PDT)
+        bh=FCDdTtfh+cTEbBhGHl6TDA/w0vVS1GSM5e8sY5ZehTw=;
+        b=qXgtIa0/UsLBdzxO0SRcTKX4a/Od3gwgvj17qILJgg72WqkAG/JFtNTxAbxcE7FsN0
+         HxcbRb0+/GII9haiFCTmDaw4UDooI9iIL4egvaHVE6fg3urLYk/tNPDDDxdJZysn5xZd
+         bmO/OL3Fl62amZloJNcCDXvV0/Gjz35YO3670dwpdRL6kQFf6mkTIOpWfrG88VIlmWaT
+         DAtgBCvBpKT8zooIIw9lRYH67+112SyjAQKAi9KF/KcKFpwdaGVzTJp/OBHCgnRacbyN
+         PzXjBvzSfhk/zbMnL+SV5CYvlRXO4/+tHO8S5OHy3dRLZSnmjYQK+cJMBJjoX8WrjkHZ
+         IKVg==
+X-Gm-Message-State: AOAM531OgED8VQWdQylTyI+sA5rN2J/qz4BsXa634oS2m2RY2ULiNIec
+        6Aq4tMgwiignti/net4guELL1zPWhJGn52kUXBbrV5ex6hnHgTVLl+uOMLYFkPU9cmr3s7enSE4
+        gXZHjDGie99B0ohGpAlCMner+
+X-Received: by 2002:a05:6402:50d1:b0:423:f4a2:95c7 with SMTP id h17-20020a05640250d100b00423f4a295c7mr18677813edb.91.1650549525253;
+        Thu, 21 Apr 2022 06:58:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx4JGn8p7OAUTHSbJC7sBsOiSljB3wcQ48NL5S76jPutkqPECOtv4rN6ZvZhqHRw9AZzzPQ5Q==
+X-Received: by 2002:a05:6402:50d1:b0:423:f4a2:95c7 with SMTP id h17-20020a05640250d100b00423f4a295c7mr18677794edb.91.1650549525081;
+        Thu, 21 Apr 2022 06:58:45 -0700 (PDT)
 Received: from sgarzare-redhat ([217.171.75.76])
-        by smtp.gmail.com with ESMTPSA id d7-20020a170906174700b006e80a7e3111sm8096281eje.17.2022.04.21.06.51.00
+        by smtp.gmail.com with ESMTPSA id s1-20020a056402036100b004240a3fc6b4sm3043298edw.82.2022.04.21.06.58.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Apr 2022 06:51:01 -0700 (PDT)
-Date:   Thu, 21 Apr 2022 15:50:57 +0200
+        Thu, 21 Apr 2022 06:58:44 -0700 (PDT)
+Date:   Thu, 21 Apr 2022 15:58:39 +0200
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
 Cc:     KY Srinivasan <kys@microsoft.com>,
@@ -67,51 +67,92 @@ Cc:     KY Srinivasan <kys@microsoft.com>,
         Paolo Abeni <pabeni@redhat.com>, linux-hyperv@vger.kernel.org,
         virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] hv_sock: Check hv_pkt_iter_first_raw()'s return value
-Message-ID: <20220421135057.57whrntjdv25jqpl@sgarzare-redhat>
+Subject: Re: [PATCH 2/5] hv_sock: Copy packets sent by Hyper-V out of the
+ ring buffer
+Message-ID: <20220421135839.2fj6fk6bvlrau73o@sgarzare-redhat>
 References: <20220420200720.434717-1-parri.andrea@gmail.com>
- <20220420200720.434717-2-parri.andrea@gmail.com>
+ <20220420200720.434717-3-parri.andrea@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220420200720.434717-2-parri.andrea@gmail.com>
+In-Reply-To: <20220420200720.434717-3-parri.andrea@gmail.com>
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 10:07:16PM +0200, Andrea Parri (Microsoft) wrote:
->The function returns NULL if the ring buffer doesn't contain enough
->readable bytes to constitute a packet descriptor.  The ring buffer's
->write_index is in memory which is shared with the Hyper-V host, an
->erroneous or malicious host could thus change its value and overturn
->the result of hvs_stream_has_data().
+On Wed, Apr 20, 2022 at 10:07:17PM +0200, Andrea Parri (Microsoft) wrote:
+>Pointers to VMbus packets sent by Hyper-V are used by the hv_sock driver
+>within the guest VM.  Hyper-V can send packets with erroneous values or
+>modify packet fields after they are processed by the guest.  To defend
+>against these scenarios, copy the incoming packet after validating its
+>length and offset fields using hv_pkt_iter_{first,next}().  In this way,
+>the packet can no longer be modified by the host.
 >
 >Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 >---
-> net/vmw_vsock/hyperv_transport.c | 2 ++
-> 1 file changed, 2 insertions(+)
+> net/vmw_vsock/hyperv_transport.c | 9 +++++++--
+> 1 file changed, 7 insertions(+), 2 deletions(-)
 >
 >diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
->index e111e13b66604..943352530936e 100644
+>index 943352530936e..8c37d07017fc4 100644
 >--- a/net/vmw_vsock/hyperv_transport.c
 >+++ b/net/vmw_vsock/hyperv_transport.c
->@@ -603,6 +603,8 @@ static ssize_t hvs_stream_dequeue(struct vsock_sock *vsk, struct msghdr *msg,
+>@@ -78,6 +78,9 @@ struct hvs_send_buf {
+> 					 ALIGN((payload_len), 8) + \
+> 					 VMBUS_PKT_TRAILER_SIZE)
+>
+>+/* Upper bound on the size of a VMbus packet for hv_sock */
+>+#define HVS_MAX_PKT_SIZE	HVS_PKT_LEN(HVS_MTU_SIZE)
+>+
+> union hvs_service_id {
+> 	guid_t	srv_id;
+>
+>@@ -378,6 +381,8 @@ static void hvs_open_connection(struct vmbus_channel *chan)
+> 		rcvbuf = ALIGN(rcvbuf, HV_HYP_PAGE_SIZE);
+> 	}
+>
+>+	chan->max_pkt_size = HVS_MAX_PKT_SIZE;
+>+
+
+premise, I don't know HyperV channels :-(
+
+Is this change necessary to use hv_pkt_iter_first() instead of 
+hv_pkt_iter_first_raw()?
+
+If yes, then please mention that you set this value in the commit 
+message, otherwise maybe better to have a separate patch.
+
+Thanks,
+Stefano
+
+> 	ret = vmbus_open(chan, sndbuf, rcvbuf, NULL, 0, hvs_channel_cb,
+> 			 conn_from_host ? new : sk);
+> 	if (ret != 0) {
+>@@ -602,7 +607,7 @@ static ssize_t hvs_stream_dequeue(struct vsock_sock *vsk, struct msghdr *msg,
+> 		return -EOPNOTSUPP;
 >
 > 	if (need_refill) {
-> 		hvs->recv_desc = hv_pkt_iter_first_raw(hvs->chan);
->+		if (!hvs->recv_desc)
->+			return -ENOBUFS;
+>-		hvs->recv_desc = hv_pkt_iter_first_raw(hvs->chan);
+>+		hvs->recv_desc = hv_pkt_iter_first(hvs->chan);
+> 		if (!hvs->recv_desc)
+> 			return -ENOBUFS;
 > 		ret = hvs_update_recv_data(hvs);
-> 		if (ret)
-> 			return ret;
+>@@ -618,7 +623,7 @@ static ssize_t hvs_stream_dequeue(struct vsock_sock *vsk, struct msghdr *msg,
+>
+> 	hvs->recv_data_len -= to_read;
+> 	if (hvs->recv_data_len == 0) {
+>-		hvs->recv_desc = hv_pkt_iter_next_raw(hvs->chan, hvs->recv_desc);
+>+		hvs->recv_desc = hv_pkt_iter_next(hvs->chan, hvs->recv_desc);
+> 		if (hvs->recv_desc) {
+> 			ret = hvs_update_recv_data(hvs);
+> 			if (ret)
 >-- 
 >2.25.1
 >
-
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
