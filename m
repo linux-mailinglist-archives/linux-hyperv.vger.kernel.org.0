@@ -2,62 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC1B650E4AF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Apr 2022 17:47:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A17E50E4BF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Apr 2022 17:50:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242994AbiDYPud (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 25 Apr 2022 11:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60252 "EHLO
+        id S234767AbiDYPxE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Apr 2022 11:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242987AbiDYPu3 (ORCPT
+        with ESMTP id S237184AbiDYPxD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 25 Apr 2022 11:50:29 -0400
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD30114811;
-        Mon, 25 Apr 2022 08:47:24 -0700 (PDT)
-Received: by mail-wr1-f53.google.com with SMTP id k2so1050719wrd.5;
-        Mon, 25 Apr 2022 08:47:24 -0700 (PDT)
+        Mon, 25 Apr 2022 11:53:03 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED20BA9;
+        Mon, 25 Apr 2022 08:49:59 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id ay36-20020a05600c1e2400b0038ebc885115so158641wmb.1;
+        Mon, 25 Apr 2022 08:49:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=N+T1uFPvpk+TduyCL4G0Lj8jCl9tpg3TC+NZTTHptlQ=;
-        b=gnbi5e6bs1AJIPkNhhik3bDbXSFhmlu6YiFF11e8OSaT1EqP/juZY83oc63tHeY7yi
-         P6VnPJFYtYJjp1y35PZsDROgyDb5n3WFi5yAtViWXJt1mOKuAHF1FSGk5zicdOxK1G2r
-         8FeqOPcqK0wPMLZ7vjkAgtU2BYAajx6Xcog8cW5P4Bde1EibDEEhp2EwZ+oG312de2Ci
-         kZmGEsRx9jt2gGZbk7UPJkeEYf8LEJjNuJyFLc5c8cBmK1F09zcVkiyYn4o6FYVEyTJT
-         YdJtz/H/lxYzrKIQTMBvJ9VQgq/W5Xx7WazW2URTAcUBG52YtIRju5b53PnPuDBwPsfS
-         6TVg==
-X-Gm-Message-State: AOAM530glSJd0pN1x7GF2hydDnSyY8gRa+gl64+J+qTD7JiIr5RH1RvS
-        /tLMnozbAFWdkxSPfulVTfQ=
-X-Google-Smtp-Source: ABdhPJzeHBcy+eirxYwlBNqy9SGdHBCiIZ2bHe4FTpA1rEMp3ZPsyGKv/vGBFibEfEDeX1eJPju45Q==
-X-Received: by 2002:adf:d1c7:0:b0:20a:963a:1c9f with SMTP id b7-20020adfd1c7000000b0020a963a1c9fmr15001365wrd.221.1650901642851;
-        Mon, 25 Apr 2022 08:47:22 -0700 (PDT)
+        bh=dINFpaCbS4KzhGo60nkrcp0X5fb+XY1bioBgslMItlI=;
+        b=UKvvysUHP1ODfZ4oBgPfQMz7yr93KTJJ7r5NIDTl+ysoXCIsCZ2yhWxx8yu0ZeCmo/
+         8imZMdqFItCNpCOmfB4rtYMzS6gJ0ZOPi/BzjT/yG8wxAG5Nm2mTkyYy42V38+mMtvov
+         fO2AqSRwA/8iKx3RQtcmdOXoD6g2C++Lw30I0QSO8T0b2fvCYyWLsXdCoJgx83TD8QvJ
+         Z/SD3EnakXa6EVPGQM9ac8ZM16Bw6xYCUG8OiV/3bLAFdjS6Ey/q2rAbplNmgnsKPoem
+         Duc6uU9I0zeas4ftlVo5XUk5w4QWFCB8FoFdya71oRMumw7lpQrkEW9r0O6Z5fWKnBbG
+         CY7g==
+X-Gm-Message-State: AOAM531iyG3Nf1WzHghTX6otEZOaEW2WtvAnNpd1tNhofV4Z7HOq+C4j
+        sCiuD3lALhgQNF1ZivBJ2jY=
+X-Google-Smtp-Source: ABdhPJxWqIm+ih+s8pj8ArXHDUSbPCVgSHcKX5S0d8LU9XSVFZo4TYRONo+EF4yClNue90Hli2DmXA==
+X-Received: by 2002:a05:600c:348f:b0:393:dcff:f95b with SMTP id a15-20020a05600c348f00b00393dcfff95bmr14491615wmq.76.1650901797718;
+        Mon, 25 Apr 2022 08:49:57 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id y9-20020a05600015c900b0020adb0e106asm4217430wry.93.2022.04.25.08.47.22
+        by smtp.gmail.com with ESMTPSA id u16-20020a05600c441000b0038ebcbadcedsm13816593wmn.2.2022.04.25.08.49.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Apr 2022 08:47:22 -0700 (PDT)
-Date:   Mon, 25 Apr 2022 15:47:21 +0000
+        Mon, 25 Apr 2022 08:49:57 -0700 (PDT)
+Date:   Mon, 25 Apr 2022 15:49:55 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH v3 07/34] x86/hyperv: Introduce
- HV_MAX_SPARSE_VCPU_BANKS/HV_VCPUS_PER_SPARSE_BANK constants
-Message-ID: <20220425154721.xunncuuuzs55nwc7@liuwe-devbox-debian-v2>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
- <20220414132013.1588929-8-vkuznets@redhat.com>
+To:     Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        jakeo@microsoft.com, bjorn.andersson@linaro.org,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: hv: Fix multi-MSI to allow more than one MSI
+ vector
+Message-ID: <20220425154955.2glxbfeln47m4cin@liuwe-devbox-debian-v2>
+References: <1649856981-14649-1-git-send-email-quic_jhugo@quicinc.com>
+ <2100eed4-8081-6070-beaf-7c6ba65ad9be@quicinc.com>
+ <20220425153344.lgo3kdnrbef75jcq@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220414132013.1588929-8-vkuznets@redhat.com>
+In-Reply-To: <20220425153344.lgo3kdnrbef75jcq@liuwe-devbox-debian-v2>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -68,39 +66,46 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 03:19:46PM +0200, Vitaly Kuznetsov wrote:
-> It may not come clear from where the magical '64' value used in
-> __cpumask_to_vpset() come from. Moreover, '64' means both the maximum
-> sparse bank number as well as the number of vCPUs per bank. Add defines
-> to make things clear. These defines are also going to be used by KVM.
+On Mon, Apr 25, 2022 at 03:33:44PM +0000, Wei Liu wrote:
+> On Wed, Apr 20, 2022 at 08:13:22AM -0600, Jeffrey Hugo wrote:
+> > On 4/13/2022 7:36 AM, Jeffrey Hugo wrote:
+> > > If the allocation of multiple MSI vectors for multi-MSI fails in the core
+> > > PCI framework, the framework will retry the allocation as a single MSI
+> > > vector, assuming that meets the min_vecs specified by the requesting
+> > > driver.
+> > > 
+> > > Hyper-V advertises that multi-MSI is supported, but reuses the VECTOR
+> > > domain to implement that for x86.  The VECTOR domain does not support
+> > > multi-MSI, so the alloc will always fail and fallback to a single MSI
+> > > allocation.
+> > > 
+> > > In short, Hyper-V advertises a capability it does not implement.
+> > > 
+> > > Hyper-V can support multi-MSI because it coordinates with the hypervisor
+> > > to map the MSIs in the IOMMU's interrupt remapper, which is something the
+> > > VECTOR domain does not have.  Therefore the fix is simple - copy what the
+> > > x86 IOMMU drivers (AMD/Intel-IR) do by removing
+> > > X86_IRQ_ALLOC_CONTIGUOUS_VECTORS after calling the VECTOR domain's
+> > > pci_msi_prepare().
+> > > 
+> > > Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> > > Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> > > Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> > > ---
+> > 
+> > Ping?
+> > 
+> > I don't see this in -next, nor have I seen any replies.  It is possible I
+> > have missed some kind of update, but currently I'm wondering if this change
+> > is progressing or not.  If there is some kind of process used in this area,
+> > I'm not familiar with it, so I would appreciate an introduction.
 > 
-> No functional change.
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  include/asm-generic/hyperv-tlfs.h |  5 +++++
->  include/asm-generic/mshyperv.h    | 11 ++++++-----
->  2 files changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index fdce7a4cfc6f..020ca9bdbb79 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -399,6 +399,11 @@ struct hv_vpset {
->  	u64 bank_contents[];
->  } __packed;
->  
-> +/* The maximum number of sparse vCPU banks which can be encoded by 'struct hv_vpset' */
-> +#define HV_MAX_SPARSE_VCPU_BANKS (64)
-> +/* The number of vCPUs in one sparse bank */
-> +#define HV_VCPUS_PER_SPARSE_BANK (64)
+> I expect the PCI maintainers to pick this up. If I don't see this picked
+> up in this week I will apply it to hyperv-next.
 
-I think replacing the magic number with a macro is a good thing.
-
-Where do you get these names? Did you make them up yourself?
-
-I'm trying to dig into internal code to find the most appropriate names,
-but I couldn't find any so far. Michael, do you have insight here?
+Actually I will pick this up via hyperv-next, because there is another
+series which will also touch this driver but at the some time depend on
+vmbus changes. I can fix up any potential conflicts easily.
 
 Thanks,
 Wei.
