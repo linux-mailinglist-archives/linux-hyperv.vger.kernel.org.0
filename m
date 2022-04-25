@@ -2,34 +2,34 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A965250E92D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Apr 2022 21:09:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 077ED50E952
+	for <lists+linux-hyperv@lfdr.de>; Mon, 25 Apr 2022 21:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244777AbiDYTNA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 25 Apr 2022 15:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55968 "EHLO
+        id S244891AbiDYTTb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Apr 2022 15:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235743AbiDYTM7 (ORCPT
+        with ESMTP id S239109AbiDYTTa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 25 Apr 2022 15:12:59 -0400
+        Mon, 25 Apr 2022 15:19:30 -0400
 Received: from smtp.smtpout.orange.fr (smtp07.smtpout.orange.fr [80.12.242.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8C66EB26
-        for <linux-hyperv@vger.kernel.org>; Mon, 25 Apr 2022 12:09:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BB6387B9
+        for <linux-hyperv@vger.kernel.org>; Mon, 25 Apr 2022 12:16:16 -0700 (PDT)
 Received: from [192.168.1.18] ([86.243.180.246])
         by smtp.orange.fr with ESMTPA
-        id j45gnYOhTjXpHj45gnJl9o; Mon, 25 Apr 2022 21:09:51 +0200
+        id j4BrnYRN3jXpHj4BrnJm6d; Mon, 25 Apr 2022 21:16:15 +0200
 X-ME-Helo: [192.168.1.18]
 X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Mon, 25 Apr 2022 21:09:51 +0200
+X-ME-Date: Mon, 25 Apr 2022 21:16:15 +0200
 X-ME-IP: 86.243.180.246
-Message-ID: <7b62c83b-e284-ce43-a229-2b7774edaf95@wanadoo.fr>
-Date:   Mon, 25 Apr 2022 21:09:44 +0200
+Message-ID: <19a812b3-73b4-7e5a-8885-ec652598a5ce@wanadoo.fr>
+Date:   Mon, 25 Apr 2022 21:16:06 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
 Subject: Re: [PATCH v3 07/34] x86/hyperv: Introduce
  HV_MAX_SPARSE_VCPU_BANKS/HV_VCPUS_PER_SPARSE_BANK constants
-Content-Language: en-ZA
+Content-Language: fr
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <seanjc@google.com>,
@@ -46,14 +46,12 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
-
-Hi,
 
 Le 14/04/2022 à 15:19, Vitaly Kuznetsov a écrit :
 > It may not come clear from where the magical '64' value used in
@@ -109,6 +107,14 @@ Le 14/04/2022 à 15:19, Vitaly Kuznetsov a écrit :
 > -	for (vcpu_bank = 0; vcpu_bank <= hv_max_vp_index / 64; vcpu_bank++)
 > +	for (vcpu_bank = 0; vcpu_bank <= max_vcpu_bank; vcpu_bank++)
 >   		vpset->bank_contents[vcpu_bank] = 0;
+
+and here:
+	bitmap_clear(vpset->bank_contents, 0, hv_max_vp_index);
+or maybe even if it is safe to do so:
+	bitmap_zero(vpset->bank_contents, hv_max_vp_index);
+
+CJ
+
 >   
 >   	/*
 > @@ -236,8 +237,8 @@ static inline int __cpumask_to_vpset(struct hv_vpset *vpset,
@@ -121,16 +127,5 @@ Le 14/04/2022 à 15:19, Vitaly Kuznetsov a écrit :
 > +		vcpu_offset = vcpu % HV_VCPUS_PER_SPARSE_BANK;
 >   		__set_bit(vcpu_offset, (unsigned long *)
 >   			  &vpset->bank_contents[vcpu_bank]);
-
-Here, we could also use directly:
-	__set_bit(vcpu, vpset->bank_contents);
-
-This is simpler, more readable (IMHO) and also makes 'vcpu_offset' useless.
-And in case gcc is not able to optimize it by itself, this should also 
-save a few cycles.
-
-Just my 2c,
-CJ
-
 >   		if (vcpu_bank >= nr_bank)
 
