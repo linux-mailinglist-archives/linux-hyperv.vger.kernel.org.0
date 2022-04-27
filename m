@@ -2,35 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 260485125ED
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Apr 2022 00:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE2FD5125AF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Apr 2022 00:52:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233479AbiD0Wzh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Apr 2022 18:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60806 "EHLO
+        id S238657AbiD0Wyi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 27 Apr 2022 18:54:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238241AbiD0Wxo (ORCPT
+        with ESMTP id S238247AbiD0Wyd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Apr 2022 18:53:44 -0400
+        Wed, 27 Apr 2022 18:54:33 -0400
 Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7757C8A305;
-        Wed, 27 Apr 2022 15:50:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5912D8AE7C;
+        Wed, 27 Apr 2022 15:50:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
         s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=9bJIN4/MOEhLx8CsVfKAquGTzb1mVDbHr+j6ymCNHAs=; b=S+EoVVMbG0R6l0pBfRnMsKZosp
-        2PXBHwhmghS5Lvs4v4GQMUSqpGyoQ5U6Zbnyj6sMhUP4BCGILxO7PkeMyVqV/H8eeh+l7ihT1MYQn
-        6lRWijWvq/MbBgY8W5xo5rf6VIJ8bQ3A6HUNn+RlRorsijlroe/vsascbDWK+dCTLeTv/edmbXzZt
-        IkkQl7Ezob0EK5zEWLgIk+XPPHoVSiw2Ov7kaRBDa36NQrRgmO2O3HFxvBLZEYb5QzmHEcsWLMOdr
-        YdjDzKF3as62X+/HBzxjW/bJqz3Ux15HOHGOCZtJDgeQcPUWNNi8PdpLZsxk0QJWHs39xjqIBwc58
-        XGSV7jaw==;
+        bh=jw69MD++mJtoVz+5OF/yDyT7SM6GG1QVsO5qZnTbfPY=; b=R4BaLs+44BYJptao8GvC8ttDH3
+        QBY0eMxhKSzWFCpxMbR+Fbp293MCB3zvPYgTPMf/b3OkQdSjP24E3L8e4Mxpy4tg+aM7LX40+eANn
+        E9NmhqtSLVcTKfq6OAtiABfZVuEeL7pK/Jggwsb0Z66SwiIPgUgdk8N8FAOWtcyDE4pUFXnvlOs4u
+        KY15nvIzaU7LDhXzbLelthG04bdK8jQeGFwa+aWfBFuZkkmcHkGvkm9AzL5O497raBTZiIXIwFkMO
+        bBhCSNyrOC33WN5GrpTyqWn82roSYAhC1Njfns6EapEQdXDs5qCmdq3kXZk6bj6zjDvwVdiy1jwJ3
+        PjTlDVgw==;
 Received: from [179.113.53.197] (helo=localhost)
         by fanzine2.igalia.com with esmtpsa 
         (Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-        id 1njqU9-0001ye-3z; Thu, 28 Apr 2022 00:50:14 +0200
+        id 1njqUS-0001zw-SF; Thu, 28 Apr 2022 00:50:33 +0200
 From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 To:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
         kexec@lists.infradead.org
@@ -58,11 +58,14 @@ Cc:     linux-kernel@vger.kernel.org,
         paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
         senozhatsky@chromium.org, stern@rowland.harvard.edu,
         tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, Marc Zyngier <maz@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH 02/30] ARM: kexec: Disable IRQs/FIQs also on crash CPUs shutdown path
-Date:   Wed, 27 Apr 2022 19:48:56 -0300
-Message-Id: <20220427224924.592546-3-gpiccoli@igalia.com>
+        will@kernel.org, Arjan van de Ven <arjan@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Xiaoming Ni <nixiaoming@huawei.com>
+Subject: [PATCH 03/30] notifier: Add panic notifiers info and purge trailing whitespaces
+Date:   Wed, 27 Apr 2022 19:48:57 -0300
+Message-Id: <20220427224924.592546-4-gpiccoli@igalia.com>
 X-Mailer: git-send-email 2.36.0
 In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
@@ -77,45 +80,49 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Currently the regular CPU shutdown path for ARM disables IRQs/FIQs
-in the secondary CPUs - smp_send_stop() calls ipi_cpu_stop(), which
-is responsible for that. This makes sense, since we're turning off
-such CPUs, putting them in an endless busy-wait loop.
+Although many notifiers are mentioned in the comments, the panic
+notifiers infrastructure is not. Also, the file contains some
+trailing whitespaces. This commit fix both issues.
 
-Problem is that there is an alternative path for disabling CPUs,
-in the form of function crash_smp_send_stop(), used for kexec/panic
-paths. This functions relies in a SMP call that also triggers a
-busy-wait loop [at machine_crash_nonpanic_core()], but *without*
-disabling interrupts. This might lead to odd scenarios, like early
-interrupts in the boot of kexec'd kernel or even interrupts in
-other CPUs while the main one still works in the panic path and
-assumes all secondary CPUs are (really!) off.
-
-This patch mimics the ipi_cpu_stop() interrupt disable mechanism
-in the crash CPU shutdown path, hence disabling IRQs/FIQs in all
-secondary CPUs in the kexec/panic path as well.
-
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Xiaoming Ni <nixiaoming@huawei.com>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- arch/arm/kernel/machine_kexec.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/notifier.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index f567032a09c0..ef788ee00519 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -86,6 +86,9 @@ void machine_crash_nonpanic_core(void *unused)
- 	set_cpu_online(smp_processor_id(), false);
- 	atomic_dec(&waiting_for_crash_ipi);
+diff --git a/include/linux/notifier.h b/include/linux/notifier.h
+index 87069b8459af..0589896fc7bd 100644
+--- a/include/linux/notifier.h
++++ b/include/linux/notifier.h
+@@ -201,12 +201,12 @@ static inline int notifier_to_errno(int ret)
  
-+	local_fiq_disable();
-+	local_irq_disable();
+ /*
+  *	Declared notifiers so far. I can imagine quite a few more chains
+- *	over time (eg laptop power reset chains, reboot chain (to clean 
++ *	over time (eg laptop power reset chains, reboot chain (to clean
+  *	device units up), device [un]mount chain, module load/unload chain,
+- *	low memory chain, screenblank chain (for plug in modular screenblankers) 
++ *	low memory chain, screenblank chain (for plug in modular screenblankers)
+  *	VC switch chains (for loadable kernel svgalib VC switch helpers) etc...
+  */
+- 
 +
- 	while (1) {
- 		cpu_relax();
- 		wfe();
+ /* CPU notfiers are defined in include/linux/cpu.h. */
+ 
+ /* netdevice notifiers are defined in include/linux/netdevice.h */
+@@ -217,6 +217,8 @@ static inline int notifier_to_errno(int ret)
+ 
+ /* Virtual Terminal events are defined in include/linux/vt.h. */
+ 
++/* Panic notifiers are defined in include/linux/panic_notifier.h. */
++
+ #define NETLINK_URELEASE	0x0001	/* Unicast netlink socket released */
+ 
+ /* Console keyboard events.
 -- 
 2.36.0
 
