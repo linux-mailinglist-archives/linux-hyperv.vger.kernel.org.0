@@ -2,63 +2,68 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54A04511156
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Apr 2022 08:40:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71FB55112D6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Apr 2022 09:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239163AbiD0GnY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Apr 2022 02:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49874 "EHLO
+        id S1359056AbiD0HwB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 27 Apr 2022 03:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238758AbiD0GnX (ORCPT
+        with ESMTP id S1359050AbiD0HwA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Apr 2022 02:43:23 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786B61117F;
-        Tue, 26 Apr 2022 23:40:11 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 0AC381F388;
-        Wed, 27 Apr 2022 06:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1651041610; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VMMhCTg9Mz44tbBAcPnS8dTXZRe/T0RsJs3CgplUBHw=;
-        b=BGRU2O86KAhV+N0TXXa4Lzh5zasnW0BIvE0vflcAP9c1JUYO32qYZYHNH5dTYytFPDrMJ1
-        Y7ySJZ94UG3/nmRYRlg8JSO0EoK8vT47ctmZ/+X1gBp167njPwojwdEneikLUusJ9S3NL5
-        DWlc8ZgW9ExXInKOj9DK6zx847Qy0HE=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 46A641323E;
-        Wed, 27 Apr 2022 06:40:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id vsHyD0nlaGIoFAAAMHmgww
-        (envelope-from <jgross@suse.com>); Wed, 27 Apr 2022 06:40:09 +0000
-Message-ID: <49e33b14-b439-340b-aa59-a6c77daa4929@suse.com>
-Date:   Wed, 27 Apr 2022 08:40:08 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 2/2] virtio: replace
- arch_has_restricted_virtio_memory_access()
-Content-Language: en-US
-To:     Heiko Carstens <hca@linux.ibm.com>, Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Wed, 27 Apr 2022 03:52:00 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B2E1171FC;
+        Wed, 27 Apr 2022 00:48:50 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id x17so1647153lfa.10;
+        Wed, 27 Apr 2022 00:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=PywqmiP2x+ADUigZQGCOhRXDGd7/GFP8SZ7Y3X8ZjnQ=;
+        b=PF54JF+N2HYubzvXAUiKVBsDwnGvSCdcPnMH75kfT8z7wXKwEvXuw2qpE3LOuszhGS
+         eYkxjlYJZMmhB3whtQRkNe9XFD4ljwnsGe44hVnqO37UNB+KeJU5sTtEBHa+r8F/uod7
+         a1PB3qH4xBVstey3ZVHXlo1urtAoHcTH5QY4y5Ii5iAb7SjT4ZvZqYm4Wxz39DVL8Ji4
+         qORLQMvDfFpck8bDeFkscRLoNwHTUX6QmV1dSo0AMNBGQyoxV/r2iPPVHgxrafIJGuh0
+         TC3atBJRHrSMm65sUKWUSzHg1JQ63cmtiHRRDSBdnghJfOF3lOvcwSXTzJimtBwexq6e
+         75dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=PywqmiP2x+ADUigZQGCOhRXDGd7/GFP8SZ7Y3X8ZjnQ=;
+        b=WqGbw5liyogTSmMw51BUZBwzsIg3dwmHZbnoEPMi9SWG58nNoeMJI3x122EXrepGI9
+         T2ogVyzGabrXlV69LpmV5TVv6AHokHP99aoVLzXlRdffJ2cskxGBpMZ60hkJHNnIyHo7
+         tA+/DZyijVt5IhhGI0Bg6It2CGAUzBUZVzJ8KrnAY5EpiCS3dGa9FTUU73HSR/b/CnI7
+         VtJxe3DmuIXXsyKcMoJ9VcubWly8AXzny0XwH/8lBqLbpYvgPZ0oq8+E8nDgaHY8qb/z
+         R5X3RnHca16LiEdTXigdRbP/b+EIWt7VkqC/Lkozn0IhlsdqopwZI/K3iuryHVmcZln+
+         VPZg==
+X-Gm-Message-State: AOAM530LPjr4obzXSDH5+4SyAQOkPj2bpGZ8L9ztbuODV4ZuPs/nh3uH
+        VruyT1a7nG9V3+jOvQpEqdGhwFviHJY=
+X-Google-Smtp-Source: ABdhPJxqEWDZ6p9UjNTr9pT0/9M/LyGUg5Jot6OcqYp8CexBP0v6xAINOFNhx5NM7CwSiXCPq9kIZg==
+X-Received: by 2002:a05:6512:31c2:b0:471:ad85:9553 with SMTP id j2-20020a05651231c200b00471ad859553mr18585166lfe.330.1651045728347;
+        Wed, 27 Apr 2022 00:48:48 -0700 (PDT)
+Received: from [192.168.1.7] ([212.22.223.21])
+        by smtp.gmail.com with ESMTPSA id l7-20020a2e9087000000b0024f24a78dfdsm309710ljg.93.2022.04.27.00.48.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Apr 2022 00:48:47 -0700 (PDT)
+Subject: Re: [PATCH 0/2] kernel: add new infrastructure for platform_has()
+ support
+To:     Juergen Gross <jgross@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, linux-s390@vger.kernel.org,
         linux-hyperv@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -69,163 +74,174 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Oleksandr Tyshchenko <olekstysh@gmail.com>
+        Christoph Hellwig <hch@infradead.org>
 References: <20220426134021.11210-1-jgross@suse.com>
- <20220426134021.11210-3-jgross@suse.com> <Ymgtb2dSNYz7DBqx@zn.tnic>
- <YmhNNrLW+tM2gnZB@osiris>
-From:   Juergen Gross <jgross@suse.com>
-In-Reply-To: <YmhNNrLW+tM2gnZB@osiris>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------S4HLpMY97WHW4YGrYFa7I3Pk"
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   Oleksandr <olekstysh@gmail.com>
+Message-ID: <9aa13b10-7342-461c-38a5-eb56d7e69b23@gmail.com>
+Date:   Wed, 27 Apr 2022 10:48:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20220426134021.11210-1-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------S4HLpMY97WHW4YGrYFa7I3Pk
-Content-Type: multipart/mixed; boundary="------------w0zPX6ei5mincRTkBIeAwr5i";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Heiko Carstens <hca@linux.ibm.com>, Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- Stephen Hemminger <sthemmin@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, "Michael S. Tsirkin"
- <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Christoph Hellwig <hch@infradead.org>,
- Oleksandr Tyshchenko <olekstysh@gmail.com>
-Message-ID: <49e33b14-b439-340b-aa59-a6c77daa4929@suse.com>
-Subject: Re: [PATCH 2/2] virtio: replace
- arch_has_restricted_virtio_memory_access()
-References: <20220426134021.11210-1-jgross@suse.com>
- <20220426134021.11210-3-jgross@suse.com> <Ymgtb2dSNYz7DBqx@zn.tnic>
- <YmhNNrLW+tM2gnZB@osiris>
-In-Reply-To: <YmhNNrLW+tM2gnZB@osiris>
 
---------------w0zPX6ei5mincRTkBIeAwr5i
-Content-Type: multipart/mixed; boundary="------------e82U6XVXXlBrBuGa7pUvQIO7"
+On 26.04.22 16:40, Juergen Gross wrote:
 
---------------e82U6XVXXlBrBuGa7pUvQIO7
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Hello Juergen, all
 
-T24gMjYuMDQuMjIgMjE6NTEsIEhlaWtvIENhcnN0ZW5zIHdyb3RlOg0KPiBPbiBUdWUsIEFw
-ciAyNiwgMjAyMiBhdCAwNzozNTo0M1BNICswMjAwLCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6
-DQo+PiBPbiBUdWUsIEFwciAyNiwgMjAyMiBhdCAwMzo0MDoyMVBNICswMjAwLCBKdWVyZ2Vu
-IEdyb3NzIHdyb3RlOg0KPj4+ICAgLyogcHJvdGVjdGVkIHZpcnR1YWxpemF0aW9uICovDQo+
-Pj4gICBzdGF0aWMgdm9pZCBwdl9pbml0KHZvaWQpDQo+Pj4gICB7DQo+Pj4gICAJaWYgKCFp
-c19wcm90X3ZpcnRfZ3Vlc3QoKSkNCj4+PiAgIAkJcmV0dXJuOw0KPj4+ICAgDQo+Pj4gKwlw
-bGF0Zm9ybV9zZXRfZmVhdHVyZShQTEFURk9STV9WSVJUSU9fUkVTVFJJQ1RFRF9NRU1fQUND
-RVNTKTsNCj4+DQo+PiBLaW5kYSBsb25nLWlzaCBmb3IgbXkgdGFzdGUuIEknbGwgcHJvYmFi
-bHkgY2FsbCBpdDoNCj4+DQo+PiAJcGxhdGZvcm1fc2V0KCkNCj4+DQo+PiBhcyBpdCBpcyBp
-bXBsaWNpdCB0aGF0IGl0IHNldHMgYSBmZWF0dXJlIGJpdC4NCj4gDQo+IC4uLmFuZCBwbGF0
-Zm9ybV9jbGVhcigpLCBpbnN0ZWFkIG9mIHBsYXRmb3JtX3Jlc2V0X2ZlYXR1cmUoKSBwbGVh
-c2UuDQoNCkZpbmUgd2l0aCBtZS4NCg0KPiANCj4+IEluIGFueSBjYXNlLCB5ZWFoLCBsb29r
-cyBvayBhdCBhIHF1aWNrIGdsYW5jZS4gSXQgd291bGQgb2J2aW91c2x5IG5lZWQNCj4+IGZv
-ciBtb3JlIHBlb3BsZSB0byBsb29rIGF0IGl0IGFuZCBzYXkgd2hldGhlciBpdCBtYWtlcyBz
-ZW5zZSB0byB0aGVtIGFuZA0KPj4gd2hldGhlciB0aGF0J3MgZmluZSB0byBoYXZlIGluIGdl
-bmVyaWMgY29kZSBidXQgc28gZmFyLCB0aGUgZXhwZXJpZW5jZQ0KPj4gd2l0aCBjY19wbGF0
-Zm9ybV8qIHNheXMgdGhhdCBpdCBzZWVtcyB0byB3b3JrIG9rIGluIGdlbmVyaWMgY29kZS4N
-Cj4gDQo+IFdlIF9jb3VsZF8gY29udmVydCBzMzkwJ3MgbWFjaGluZSBmbGFncyB0byB0aGlz
-IG1lY2hhbmlzbS4gVGhvc2UgZmxhZ3MNCj4gYXJlIGhpc3RvcmljYWxseSBwZXItY3B1LCBi
-dXQgaWYgSSdtIG5vdCBtaXN0YWtlbiBub25lIG9mIHRoZW0gaXMNCj4gcGVyZm9ybWFuY2Ug
-Y3JpdGljYWwgYW55bW9yZSwgYW5kIHRob3NlIHdobyBhcmUgY291bGQvc2hvdWxkIHByb2Jh
-Ymx5DQo+IHRyYW5zZm9ybWVkIHRvIGp1bXAgbGFiZWxzIG9yIGFsdGVybmF0aXZlcyBhbnl3
-YXkuDQoNCkkgd2FzIHBsYW5uaW5nIHRvIGxvb2sgYXQgdGhlIHg4NiBjcHUgZmVhdHVyZXMg
-dG8gc2VlIHdoZXRoZXIgc29tZSBvZg0KdGhvc2UgbWlnaHQgYmUgY2FuZGlkYXRlcyB0byBi
-ZSBzd2l0Y2hlZCB0byBwbGF0Zm9ybSBmZWF0dXJlcyBpbnN0ZWFkLg0KDQoNCkp1ZXJnZW4N
-Cg==
---------------e82U6XVXXlBrBuGa7pUvQIO7
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+> In another patch series [1] the need has come up to have support for
+> a generic feature flag infrastructure.
+>
+> This patch series is introducing that infrastructure and adds the first
+> use case.
+>
+> I have decided to use a similar interface as the already known x86
+> cpu_has() function. As the new infrastructure is meant to be usable for
+> general and arch-specific feature flags, the flags are being spread
+> between a general bitmap and an arch specific one.
+>
+> The bitmaps start all being zero, single features can be set or reset
+> at any time by using the related platform_[re]set_feature() functions.
+>
+> The platform_has() function is using a simple test_bit() call for now,
+> further optimization might be added when needed.
+>
+> [1]: https://lore.kernel.org/lkml/1650646263-22047-1-git-send-email-olekstysh@gmail.com/T/#t
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+I have tested the series on Arm64 in the context of xen-virtio enabling 
+work. I didn't see any issues with it. Thank you.
 
-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
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
+I reworked patch #3 [1] to use new functionality:
 
---------------e82U6XVXXlBrBuGa7pUvQIO7--
 
---------------w0zPX6ei5mincRTkBIeAwr5i--
+diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+index ec5b082..f3b9e20 100644
+--- a/arch/arm/xen/enlighten.c
++++ b/arch/arm/xen/enlighten.c
+@@ -438,6 +438,8 @@ static int __init xen_guest_init(void)
+         if (!xen_domain())
+                 return 0;
 
---------------S4HLpMY97WHW4YGrYFa7I3Pk
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
++       xen_set_restricted_virtio_memory_access();
++
+         if (!acpi_disabled)
+                 xen_acpi_guest_init();
+         else
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index 517a9d8..8b71b1d 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -195,6 +195,8 @@ static void __init xen_hvm_guest_init(void)
+         if (xen_pv_domain())
+                 return;
 
------BEGIN PGP SIGNATURE-----
++       xen_set_restricted_virtio_memory_access();
++
+         init_hvm_pv_info();
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmJo5UgFAwAAAAAACgkQsN6d1ii/Ey+n
-HAgAlI5tgqXfIHi9klo7ckJBdbCjT2EvYU2yTBe7BacJ6ocCDc+0WxtX4/ckT9AImG4krsTHVb0K
-SQ6XTp1DtFKIsFbvK9T3z6eSwe1v+nSe3E+5Eym+GFcl8KdMCSvm06H+/rWGBa4eQasYftWopVLd
-bzywDXij4CbKqhHiELGFQR1xO+iOQxJA3vjTFSXq+ZemjPXIEBCU2p/nTnspcpVh+sN4T3tAjVgi
-rUUf4obOqAbi1fdTlgEZSBgyu108VYYWE2oBZZ2Al5QRmdK/PMIw081eOt20Vi315rvWCpAy/nIY
-unnqv1osxafnDog4t4KjQi4QGmxMbZndp636gvQwyQ==
-=vLJU
------END PGP SIGNATURE-----
+         reserve_shared_info();
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 5038edb..fcd5d5d 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -109,6 +109,8 @@ static DEFINE_PER_CPU(struct tls_descs, 
+shadow_tls_desc);
 
---------------S4HLpMY97WHW4YGrYFa7I3Pk--
+  static void __init xen_pv_init_platform(void)
+  {
++       xen_set_restricted_virtio_memory_access();
++
+         populate_extra_pte(fix_to_virt(FIX_PARAVIRT_BOOTMAP));
+
+         set_fixmap(FIX_PARAVIRT_BOOTMAP, xen_start_info->shared_info);
+diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
+index 313a9127..a7bd8ce 100644
+--- a/drivers/xen/Kconfig
++++ b/drivers/xen/Kconfig
+@@ -339,4 +339,15 @@ config XEN_GRANT_DMA_OPS
+         bool
+         select DMA_OPS
+
++config XEN_VIRTIO
++       bool "Xen virtio support"
++       depends on VIRTIO
++       select XEN_GRANT_DMA_OPS
++       help
++         Enable virtio support for running as Xen guest. Depending on the
++         guest type this will require special support on the backend side
++         (qemu or kernel, depending on the virtio device types used).
++
++         If in doubt, say n.
++
+  endmenu
+diff --git a/include/xen/xen.h b/include/xen/xen.h
+index a99bab8..e2849c9 100644
+--- a/include/xen/xen.h
++++ b/include/xen/xen.h
+@@ -52,6 +52,14 @@ bool xen_biovec_phys_mergeable(const struct bio_vec 
+*vec1,
+  extern u64 xen_saved_max_mem_size;
+  #endif
+
++#include <linux/platform-feature.h>
++
++static inline void xen_set_restricted_virtio_memory_access(void)
++{
++       if (IS_ENABLED(CONFIG_XEN_VIRTIO) && xen_domain())
++ platform_set_feature(PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS);
++}
++
+  #ifdef CONFIG_XEN_UNPOPULATED_ALLOC
+  int xen_alloc_unpopulated_pages(unsigned int nr_pages, struct page 
+**pages);
+  void xen_free_unpopulated_pages(unsigned int nr_pages, struct page 
+**pages);
+(END)
+
+
+[1] 
+https://lore.kernel.org/lkml/1650646263-22047-4-git-send-email-olekstysh@gmail.com/
+
+
+>
+> Juergen Gross (2):
+>    kernel: add platform_has() infrastructure
+>    virtio: replace arch_has_restricted_virtio_memory_access()
+>
+>   MAINTAINERS                            |  8 +++++++
+>   arch/s390/Kconfig                      |  1 -
+>   arch/s390/mm/init.c                    | 13 +++--------
+>   arch/x86/Kconfig                       |  1 -
+>   arch/x86/kernel/cpu/mshyperv.c         |  5 ++++-
+>   arch/x86/mm/mem_encrypt.c              |  6 ------
+>   arch/x86/mm/mem_encrypt_identity.c     |  5 +++++
+>   drivers/virtio/Kconfig                 |  6 ------
+>   drivers/virtio/virtio.c                |  5 ++---
+>   include/asm-generic/Kbuild             |  1 +
+>   include/asm-generic/platform-feature.h |  8 +++++++
+>   include/linux/platform-feature.h       | 30 ++++++++++++++++++++++++++
+>   include/linux/virtio_config.h          |  9 --------
+>   kernel/Makefile                        |  2 +-
+>   kernel/platform-feature.c              |  7 ++++++
+>   15 files changed, 69 insertions(+), 38 deletions(-)
+>   create mode 100644 include/asm-generic/platform-feature.h
+>   create mode 100644 include/linux/platform-feature.h
+>   create mode 100644 kernel/platform-feature.c
+>
+-- 
+Regards,
+
+Oleksandr Tyshchenko
+
