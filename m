@@ -2,222 +2,113 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7836C5117F2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Apr 2022 14:47:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75C19511AB7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Apr 2022 16:57:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234604AbiD0Msq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Apr 2022 08:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
+        id S235367AbiD0NQy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 27 Apr 2022 09:16:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234583AbiD0Mso (ORCPT
+        with ESMTP id S235375AbiD0NQw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Apr 2022 08:48:44 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8593525B;
-        Wed, 27 Apr 2022 05:45:33 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 7A51F1F74D;
-        Wed, 27 Apr 2022 12:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1651063532; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f7ZHfk6vc4zgMEvq1EHLWCpOl8Ctk3WE3DXvA6Vjt/4=;
-        b=LiLK+JGui8QqQfh8W0x16+mObrzQ4Fje12HfJW7hZ94icLHhk5/gxq7NXXopwsraglIWhT
-        Qd+AOsn2O2Sdx7LAy0xcvnBIeKxo3jyuqUv8fKgeFG52VhHZAC84a1GKao9KAOQYtVsvJz
-        LsOjzmiktuf5OEUJjFiQxiW5Rg42mrI=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8719C1323E;
-        Wed, 27 Apr 2022 12:45:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id KZu6H+s6aWKXRAAAMHmgww
-        (envelope-from <jgross@suse.com>); Wed, 27 Apr 2022 12:45:31 +0000
-Message-ID: <3f15f128-4d77-14e2-20ca-ea2e4a7d4181@suse.com>
-Date:   Wed, 27 Apr 2022 14:45:31 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Content-Language: en-US
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Wed, 27 Apr 2022 09:16:52 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B7E4993B;
+        Wed, 27 Apr 2022 06:12:56 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id b24so1877894edu.10;
+        Wed, 27 Apr 2022 06:12:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y1MPivJ71DUTG2ptog6r0HYX3a/d3mDJNSwkKFhB8Qs=;
+        b=J9z7Wkh4fQH+gqjh4dmtAu7+WFRRxrFjaU7d33Y/DOgeyuEwb+ExMM4P9rm14PkjKH
+         0gjK+bceotqd1JduXB4AwAMTUB6qgWeth1DJgyoMoP3tTIwzZpUvjxflaH2mp1LWUXDP
+         wkstiAJxqlvImbXJpwYFe+Qec2wTa3JUGv67YZz9iB5PB/sjJA5NxRR8WetY+YgwGJdq
+         IbJY8jRtd61Nw0AdWmq+eh2w0Q5KxNDbpZTM08HQNp8I5X2OT4sQ2dL0bskiqbUMcYnO
+         VG/uJw46E2P8L98HB6oWJqkB5Mpu53oBjlxF40aJQ3bxcBdxiEos0QMFPRdPF/5VI8sk
+         6xbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y1MPivJ71DUTG2ptog6r0HYX3a/d3mDJNSwkKFhB8Qs=;
+        b=CD87h55WfyjYg+p3ymi3YkFJUldHvygiGbDWW6f69qt8EuyVHTH8hvZOEhyFgvT/oP
+         nu9/P8HjxIcjffC3e4A8ilIObOPP6Myxj5sZql/OB+82BOnzCjCd2UeRsmuK0d+bOjgx
+         EqxZMR8+BJX99u0ryuPtmJtLEYzfrCgRbx7Ilcoe5ClUmGGnc39QcNVmkvxsR4a0UyFh
+         Y8sZhffBqiyKOPD+LtO4XRQxLIzsgj8JCL3AtDQAN6yAAms2ILsbxPRal/7n5ZyKK8Z/
+         ulJ5bCS8NCwa+xyG5lBb70GcJUsS0YC9d3Xdq9smjoFveZt+Z91oGhj4nEhr3x+ZisgS
+         nX7A==
+X-Gm-Message-State: AOAM532dA62rpXbX4LtzjpsS8WtDTOlKaT7zC0O/L9rndJm/fsQS1+D2
+        TpWW6zGYQ1JNNECt2TR932s=
+X-Google-Smtp-Source: ABdhPJxfUbhE4AOOIR4P5nh9VWfbfWwj+uLWk4co7udiK3uIOtQhfRvPaoh6MBb7bsrC0f9TTUseXg==
+X-Received: by 2002:a05:6402:27d0:b0:41a:68bf:ff26 with SMTP id c16-20020a05640227d000b0041a68bfff26mr30392127ede.102.1651065175014;
+        Wed, 27 Apr 2022 06:12:55 -0700 (PDT)
+Received: from anparri.mshome.net (host-79-49-65-106.retail.telecomitalia.it. [79.49.65.106])
+        by smtp.gmail.com with ESMTPSA id u6-20020a170906124600b006e843964f9asm6668987eja.55.2022.04.27.06.12.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Apr 2022 06:12:54 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Oleksandr Tyshchenko <olekstysh@gmail.com>
-References: <20220426134021.11210-1-jgross@suse.com>
- <20220426134021.11210-3-jgross@suse.com> <Ymgtb2dSNYz7DBqx@zn.tnic>
- <YmhNNrLW+tM2gnZB@osiris> <49e33b14-b439-340b-aa59-a6c77daa4929@suse.com>
- <Ymk2gXuNGFhIQ2zQ@zn.tnic>
-From:   Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH 2/2] virtio: replace
- arch_has_restricted_virtio_memory_access()
-In-Reply-To: <Ymk2gXuNGFhIQ2zQ@zn.tnic>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------5RSoFKl9gkDkNvOmD7dR6fME"
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Michael Kelley <mikelley@microsoft.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH v2 0/5] hv_sock: Hardening changes
+Date:   Wed, 27 Apr 2022 15:12:20 +0200
+Message-Id: <20220427131225.3785-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------5RSoFKl9gkDkNvOmD7dR6fME
-Content-Type: multipart/mixed; boundary="------------WqbtrtgMwxh4M25yqpBhfhy8";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux-foundation.org,
- Arnd Bergmann <arnd@arndb.de>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- Stephen Hemminger <sthemmin@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, "Michael S. Tsirkin"
- <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Christoph Hellwig <hch@infradead.org>,
- Oleksandr Tyshchenko <olekstysh@gmail.com>
-Message-ID: <3f15f128-4d77-14e2-20ca-ea2e4a7d4181@suse.com>
-Subject: Re: [PATCH 2/2] virtio: replace
- arch_has_restricted_virtio_memory_access()
-References: <20220426134021.11210-1-jgross@suse.com>
- <20220426134021.11210-3-jgross@suse.com> <Ymgtb2dSNYz7DBqx@zn.tnic>
- <YmhNNrLW+tM2gnZB@osiris> <49e33b14-b439-340b-aa59-a6c77daa4929@suse.com>
- <Ymk2gXuNGFhIQ2zQ@zn.tnic>
-In-Reply-To: <Ymk2gXuNGFhIQ2zQ@zn.tnic>
+Changes since v1[1]:
+  - Expand commit message of patch #2
+  - Coding style changes
 
---------------WqbtrtgMwxh4M25yqpBhfhy8
-Content-Type: multipart/mixed; boundary="------------lFn82CY4z1MtnopLJeWnduYk"
+Changes since RFC[2]:
+  - Massage changelogs, fix typo
+  - Drop "hv_sock: Initialize send_buf in hvs_stream_enqueue()"
+  - Remove style/newline change
+  - Remove/"inline" hv_pkt_iter_first_raw()
 
---------------lFn82CY4z1MtnopLJeWnduYk
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Applies to v5.18-rc4.
 
-T24gMjcuMDQuMjIgMTQ6MjYsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gT24gV2VkLCBB
-cHIgMjcsIDIwMjIgYXQgMDg6NDA6MDhBTSArMDIwMCwgSnVlcmdlbiBHcm9zcyB3cm90ZToN
-Cj4+IEkgd2FzIHBsYW5uaW5nIHRvIGxvb2sgYXQgdGhlIHg4NiBjcHUgZmVhdHVyZXMgdG8g
-c2VlIHdoZXRoZXIgc29tZSBvZg0KPj4gdGhvc2UgbWlnaHQgYmUgY2FuZGlkYXRlcyB0byBi
-ZSBzd2l0Y2hlZCB0byBwbGF0Zm9ybSBmZWF0dXJlcyBpbnN0ZWFkLg0KPiANCj4gSSdkIHNh
-eSAibmV2ZXIgdG91Y2ggYSBydW5uaW5nIHN5c3RlbSIgdW5sZXNzIHRoZSBwbGF0Zm9ybSBm
-ZWF0dXJlcyBhcmUNCj4gb2YgYW4gYWR2YW50YWdlLi4uDQoNCkRlcGVuZHMgb24gdGhlIHVz
-ZSBjYXNlIElNSE8uDQoNCkFsbCBmZWF0dXJlcyBiZWluZyBiYXNlZCBvbiBhIGNwdWlkIGJp
-dCBhcmUgbm8gY2FuZGlkYXRlcy4gU2FtZSBhcHBsaWVzDQp0byBhbGwgZmVhdHVyZXMgdXNl
-ZCBmb3IgYWx0ZXJuYXRpdmUgaGFuZGxpbmcgKGFzc3VtaW5nIHdlIGRvbid0IHdhbnQNCnRv
-IGV4cGFuZCB0aGF0IHRvIHBsYXRmb3JtIGZlYXR1cmVzKS4NCg0KSSByZWFsbHkgaGF2ZSBu
-byBpZGVhIHdoZXRoZXIgdGhpcyB3aWxsIGxlYXZlIGFueSBjYW5kaWRhdGVzLiBJbiBjYXNl
-DQppdCBkb2VzLCBpdCBtaWdodCBiZSBpbnRlcmVzdGluZyB0byBzd2l0Y2ggdGhvc2UgaW4g
-b3JkZXIgdG8gc2F2ZSBzb21lDQpwZXItY3B1IGJpdHMuDQoNCk90aGVyIGNhbmRpZGF0ZXMg
-bWlnaHQgYmUgdGhlIHg4Nl9sZWdhY3lfZmVhdHVyZXMuDQoNCg0KSnVlcmdlbg0K
---------------lFn82CY4z1MtnopLJeWnduYk
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+  Andrea
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+[1] https://lkml.kernel.org/r/20220420200720.434717-1-parri.andrea@gmail.com
+[2] https://lkml.kernel.org/r/20220413204742.5539-1-parri.andrea@gmail.com
 
-xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
-oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
-kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
-1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
-BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
-N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
-PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
-FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
-UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
-vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
-+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
-qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
-tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
-Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
-CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
-RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
-8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
-BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
-SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
-7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
-nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
-AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
-Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
-hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
-w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
-VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
-OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
-/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
-c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
-F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
-k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
-wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
-5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
-TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
-N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
-AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
-0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
-Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
-LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
-we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
-v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
-Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
-534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
-b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
-yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
-suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
+Andrea Parri (Microsoft) (5):
+  hv_sock: Check hv_pkt_iter_first_raw()'s return value
+  hv_sock: Copy packets sent by Hyper-V out of the ring buffer
+  hv_sock: Add validation for untrusted Hyper-V values
+  Drivers: hv: vmbus: Accept hv_sock offers in isolated guests
+  Drivers: hv: vmbus: Refactor the ring-buffer iterator functions
 
---------------lFn82CY4z1MtnopLJeWnduYk--
+ drivers/hv/channel_mgmt.c        |  8 ++++--
+ drivers/hv/ring_buffer.c         | 32 ++++++---------------
+ include/linux/hyperv.h           | 48 ++++++++++----------------------
+ net/vmw_vsock/hyperv_transport.c | 21 +++++++++++---
+ 4 files changed, 47 insertions(+), 62 deletions(-)
 
---------------WqbtrtgMwxh4M25yqpBhfhy8--
+-- 
+2.25.1
 
---------------5RSoFKl9gkDkNvOmD7dR6fME
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmJpOusFAwAAAAAACgkQsN6d1ii/Ey+J
-OQf/eUrJzkec/zE1iDKcyCbxADGvHuoQyWnYHfvAB7VqIJ5P8IyobJW0GEt+L9K8PkJ+fgDqhl+Q
-DLBculdTiZCP7wh6Q0zXUvrPHMyUQafp9NHctNSSJurMdndFqvSM+TKuNGZaVDTvsSZfgAGaBy63
-VKKADB1mJo2S0fG9wvLrirCyn1rKvPYhfdErZuqS078u9Mj4V4YmE3uz6WqSFUfnqJwBlAGZXM4X
-4cbBEgQ8WPfhkyNKi18UOMTQaWEnVkLBJjmeXJ4hGtbTcJFLpAbSKPIJTWv6jI+U9Ca5xjSIw6zt
-PgaS84cJYWG2/xJoqqxt6EVIA4wCf66w6+bFTXyOCw==
-=lXDm
------END PGP SIGNATURE-----
-
---------------5RSoFKl9gkDkNvOmD7dR6fME--
