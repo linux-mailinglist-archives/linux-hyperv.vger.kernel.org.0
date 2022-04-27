@@ -2,355 +2,234 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60D82512284
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Apr 2022 21:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96EB8512565
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Apr 2022 00:41:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233142AbiD0T1Y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Apr 2022 15:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56870 "EHLO
+        id S233660AbiD0WpJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 27 Apr 2022 18:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233183AbiD0T1X (ORCPT
+        with ESMTP id S233295AbiD0WpI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Apr 2022 15:27:23 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA20932D;
-        Wed, 27 Apr 2022 12:24:10 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id k12so4853168lfr.9;
-        Wed, 27 Apr 2022 12:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=pmg9eRfQpwcLMR5lkJg14lCHYf1jgo1mZ8R/uEh2NcM=;
-        b=dgGddCVJMZenF3RahHHFuLmMOw5tyQ9QfPuTkQWIWU2Qil2Cn3gpire3r84vt/zxxb
-         E8Kq75bD5kabWgZ31jZQl9FL9ySi4AVbeIB+vV1gamCoouQuDxbcFdkCNRifSn5jcyIu
-         9PgRZUGFf4sU3Y2Y5J5wnjchOddTK0+u6wjiO6aJdhpOThZNWJGBNd7CMPpyMqaKUPpz
-         Sl9X3JHmrjWUenjAPR9EEqpY4IX/LZXG2eIIqXczUjT7dEEpbmtOywC5NgdmS1QGpvte
-         lcekBiOeNQvbYveziicyBVl8FjSNJDKJ1yAEEo4gzBVlj7xdlehklvpgxDMWhk2AhZGB
-         sGjw==
+        Wed, 27 Apr 2022 18:45:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 14C7225C45
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Apr 2022 15:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651099314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4Q6+PayGphb3zKZnUdKR+LTCV+SuNJxanUj+aw0RLUU=;
+        b=QMsTBO/bJ0KJNNJLxNLu+HlJ2GzGEeW4Yti+cG3p2r1AFDPs5rTUceRXPpYrA1cjyZZTip
+        MThM676sM04QTel8y1t5oKAACe5YIxAZlis4daDaleA7vSuQra4cRJPK+ibXMfF1F/DvZN
+        FifnL9+4+S8O4tnblIsFwFOZk7IO08k=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-502-WWInyMO7MDOysjIV0jRxjg-1; Wed, 27 Apr 2022 18:41:53 -0400
+X-MC-Unique: WWInyMO7MDOysjIV0jRxjg-1
+Received: by mail-il1-f197.google.com with SMTP id j4-20020a92c204000000b002caad37af3fso755232ilo.22
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Apr 2022 15:41:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=pmg9eRfQpwcLMR5lkJg14lCHYf1jgo1mZ8R/uEh2NcM=;
-        b=keBRWrE0YnJXCQwCJGvFV3Dn+xppYiCg2OI39WM4mvRaw1bOVcnFbNcrJKpz5So9PY
-         WvAgzUwCtaaDnxLshGm7hF5Ky6pBGjLghvEQkG9/v/kEVTjYhZlkZF0MBjCBP0zTfxB1
-         HusMwc9fTgmP7iWmSxH8l8aooYqg/z3f/E0FvGLo86/1vZxN0STFGpqs+2blXNAhaAH3
-         PtcLVdzgpg/pEduHB7k/MuMpsZgKbs9NXSMGHnIgp4GOUzopGhVVAJYHGqnaCWOhEqxw
-         pZPSaMlNcRatzasH9BXXluSIl2OP+Iyn20u2PATT+fMlV4we6Gvx+550NV6xj1HKij9s
-         DWXA==
-X-Gm-Message-State: AOAM53287GHw5piiZoznz8oS9ljaocS6UiV6kea3Knf01bcr0uCE1/iP
-        6wGB+QnyG0uNXZ6x1F0Sb58=
-X-Google-Smtp-Source: ABdhPJzo+xYrfyRoYNmBe0lc6s+9QZp/3p32wuIOdd0rLs+DCuZcQyF13esAG5AU3FOGUaqQXyA1Nw==
-X-Received: by 2002:ac2:5a47:0:b0:471:fdbe:910b with SMTP id r7-20020ac25a47000000b00471fdbe910bmr14912506lfn.315.1651087448735;
-        Wed, 27 Apr 2022 12:24:08 -0700 (PDT)
-Received: from [192.168.1.7] ([212.22.223.21])
-        by smtp.gmail.com with ESMTPSA id p16-20020a056512313000b004722373eda4sm439639lfd.92.2022.04.27.12.24.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Apr 2022 12:24:08 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] virtio: replace
- arch_has_restricted_virtio_memory_access()
-To:     Juergen Gross <jgross@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=4Q6+PayGphb3zKZnUdKR+LTCV+SuNJxanUj+aw0RLUU=;
+        b=pC8jO7rb01LyN8DEeqS49FnuKgCZL7HvNakCv5eTMGB8fSXjSnJ6NaJ5SAYumpV7fO
+         bMyTkizVA0CONR2FXZ7qMERwX9ZJ8jxNlwYgw+ip+L5pRFsBaXQOaqm5/hrMDXp7QeKD
+         a3atC3uDGHqbi2zgzqrwm/PSoWxBkYyRA6M/aCMB6J+YE61Y17GOEW4CJuzyfxCLPprT
+         FrDASeYHVuJBLGtZi2RNRE35RdwAacB7eV0dFfEeO8nRxSPYay5IITr1JOz4Oh8Gi5RG
+         6A/DsRvbZm/OYBNvwqhtUabXW6BF4x6jeOwKsu7VXKr19923FyCRXC/TjhcHT978ksrO
+         u5jQ==
+X-Gm-Message-State: AOAM532GSItVE3oEaWeytnidqneO0P4GWvALlWOn4Ovq9jzf72OzFKGZ
+        kqDRHGkt4q9lPitR97Txejf3ox52P/DFHJi9UJixxe0LqZJn0QzDbh7KJ4HfZlc8hUQnbJBpdzu
+        fFR0J1Li/bB/v2vUfJXmNalxB
+X-Received: by 2002:a05:6602:1211:b0:654:94db:fa48 with SMTP id y17-20020a056602121100b0065494dbfa48mr12622903iot.48.1651099311090;
+        Wed, 27 Apr 2022 15:41:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxWQb90mvXltObvc4vVxwPkTBtgpQEpfxBIyrAqvOvyNj0f9DUNqMXetDikuTEcPJOCq9Hsw==
+X-Received: by 2002:a05:6602:1211:b0:654:94db:fa48 with SMTP id y17-20020a056602121100b0065494dbfa48mr12622885iot.48.1651099310872;
+        Wed, 27 Apr 2022 15:41:50 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id g5-20020a5d8c85000000b0065726e18c0csm12223712ion.22.2022.04.27.15.41.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Apr 2022 15:41:50 -0700 (PDT)
+Date:   Wed, 27 Apr 2022 16:41:47 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jake Oshins <jakeo@microsoft.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20220427153336.11091-1-jgross@suse.com>
- <20220427153336.11091-3-jgross@suse.com>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <9668d693-73f6-99e2-3931-bb5683c4afe2@gmail.com>
-Date:   Wed, 27 Apr 2022 22:24:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce VM
+ boot time
+Message-ID: <20220427164147.330a0bc8.alex.williamson@redhat.com>
+In-Reply-To: <SN4PR2101MB0878E466880C047D3A0D0C92ABFB9@SN4PR2101MB0878.namprd21.prod.outlook.com>
+References: <BYAPR21MB12705103ED8F2B7024A22438BFF49@BYAPR21MB1270.namprd21.prod.outlook.com>
+        <YmgheiPOApuiLcK6@lpieralisi>
+        <BYAPR21MB127041D9BF1A4708B620BA30BFFB9@BYAPR21MB1270.namprd21.prod.outlook.com>
+        <SN4PR2101MB0878E466880C047D3A0D0C92ABFB9@SN4PR2101MB0878.namprd21.prod.outlook.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20220427153336.11091-3-jgross@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Tue, 26 Apr 2022 19:25:43 +0000
+Jake Oshins <jakeo@microsoft.com> wrote:
 
-On 27.04.22 18:33, Juergen Gross wrote:
+> > -----Original Message-----
+> > From: Dexuan Cui <decui@microsoft.com>
+> > Sent: Tuesday, April 26, 2022 11:32 AM
+> > To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Jake Oshins <jakeo@microsoft.com>; Bjorn Helgaas <helgaas@kernel.org>;
+> > bhelgaas@google.com; Alex Williamson <alex.williamson@redhat.com>;
+> > wei.liu@kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> > linux-hyperv@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Michael Kelley (LINUX) <mikelley@microsoft.com>;
+> > robh@kernel.org; kw@linux.com; kvm@vger.kernel.org
+> > Subject: RE: [PATCH] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce
+> > VM boot time
+> >   
+> > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Sent: Tuesday, April 26, 2022 9:45 AM  
+> > > > ...
+> > > > Sorry I don't quite follow. pci-hyperv allocates MMIO for the bridge
+> > > > window in hv_pci_allocate_bridge_windows() and registers the MMIO
+> > > > ranges to the core PCI driver via pci_add_resource(), and later the
+> > > > core PCI driver probes the bus/device(s), validates the BAR sizes
+> > > > and the pre-initialized BAR values, and uses the BAR configuration.
+> > > > IMO the whole process doesn't require the bit PCI_COMMAND_MEMORY to
+> > > > be pre-set, and there should be no issue to delay setting the bit to
+> > > > a PCI device device's .probe() -> pci_enable_device().  
+> > >
+> > > IIUC you want to bootstrap devices with PCI_COMMAND_MEMORY clear
+> > > (otherwise PCI core would toggle it on and off for eg BAR sizing).
+> > >
+> > > Is that correct ?  
+> > 
+> > Yes, that's the exact purpose of this patch.
+> > 
+> > Do you see any potential architectural issue with the patch?
+> > From my reading of the core PCI code, it looks like this should be safe.
+> > 
+> > Jake has some concerns that I don't quite follow.
+> > @Jake, could you please explain the concerns with more details?
+> >   
+> 
+> First, let me say that I really don't know whether this is an issue.
+> I know it's an issue with other operating system kernels.  I'm
+> curious whether the Linux kernel / Linux PCI driver would behave in a
+> way that has an issue here.
+> 
+> The VM has a window of address space into which it chooses to put PCI
+> device's BARs.  The guest OS will generally pick the value that is
+> within the BAR, by default, but it can theoretically place the device
+> in any free address space.  The subset of the VM's memory address
+> space which can be populated by devices' BARs is finite, and
+> generally not particularly large.
 
+AIUI, if the firmware has programmed the BAR addresses, Linux will
+generally try to leave them alone, it's only unprogrammed devices or
+when using the pci=realloc option that we'll try to shuffle things
+around.
 
-Hello Juergen, all
+If you talk to bare metal system firmware developers, you might find
+disagreement regarding whether the OS or system firmware owns the
+device address space, which I believe also factors into our handling of
+the memory space enable bit of the command register.  Minimally, system
+firmware is required to allocate resources and enable boot devices, and
+often these are left enabled after the hand-off to the OS.  This might
+include some peripherals, for instance legacy emulation on a USB
+keyboard might leave the USB host controller enabled.  There are also
+more devious use cases, where there might be device monitoring running
+across the bus under the OS, perhaps via SMI or other means, where if
+we start moving devices around, that could theoretically break.
 
-> Instead of using arch_has_restricted_virtio_memory_access() together
-> with CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS, replace those
-> with platform_has() and a new platform feature
-> PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS.
->
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> ---
-> V2:
-> - move setting of PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS in SEV case
->    to sev_setup_arch().
+However, I don't really see any obvious problems with your proposal
+that we simply leave the memory enable bit in the hand-off state.
 
+> Imagine a VM that is configured with 25 NVMe controllers, each of
+> which requires 64KiB of address space.  (This is just an example.)
+> At first boot, all of these NVMe controllers are packed into address
+> space, one after the other.
+> 
+> While that VM is running, one of the 25 NVMe controllers fails and is
+> replaced with an NVMe controller from a separate manufacturer, but
+> this one requires 128KiB of memory, for some reason.  Perhaps it
+> implements the "controller buffer" feature of NVMe.  It doesn't fit
+> in the hole that was vacated by the failed NVMe controller, so it
+> needs to be placed somewhere else in address space.  This process
+> continues over months, with several more failures and replacements.
+> Eventually, the address space is very fragmented.
+> 
+> At some point, there is an attempt to place an NVMe controller into
+> the VM but there is no contiguous block of address space free which
+> would allow that NVMe controller to operate.  There is, however,
+> enough total address space if the other, currently functioning, NVMe
+> controllers are moved from the address space that they are using to
+> other ranges, consolidating their usage and reducing fragmentation.
+> Let's call this a rebalancing of memory resources.
+> 
+> When the NVMe controllers are moved, a new value is written into
+> their BAR.  In general, the PCI spec would require that you clear the
+> memory enable bit in the command register (PCI_COMMAND_MEMORY) during
+> this move operation, both so that there's never a moment when two
+> devices are occupying the same address space and because writing a
+> 64-bit BAR atomically isn't possible.  This is the reason that I
+> originally wrote the code in this driver to unmap the device from the
+> VM's address space when the memory enable bit is cleared.
+> 
+> What I don't know is whether this sequence of operations can ever
+> happen in Linux, or perhaps in a VM running Linux.  Will it rebalance
+> resources in order to consolidate address space?  If it will, will
+> this involve clearing the memory enable bit to ensure that two
+> devices never overlap?
 
-V2 works as fine as V1 did. I have tested on Arm64 in the context of 
-xen-virtio enabling work [1]. Thank you!
+Once the OS is running and drivers are attached to devices, any
+reshuffling of resources for those devices would require coordination
+of the driver to release the resources and reprogram them.  Even if an
+atomic update of the BAR were possible, that can't account for possible
+in-flight use cases, such as p2p DMA.
 
+There were a couple sessions from the 2019 Linux Plumbers conference
+that might be useful to review regarding these issues.  IIRC the
+first[1] was specifically looking at whether we could do partial BAR
+allocations for NVMe devices, where we might have functionality but
+reduced performance or features with a partial mapping.  In your
+example, perhaps we're replacing a device with one that has twice the
+BAR space, but is functional with only half that, so we can slide it
+into the same slot as the previous device.  This would likely mean
+enlightening the PCI core with device or class specific information.
+I've not followed whether anything occurred here.
 
-Just small NIT below.
+The second[2] (next session, same recording) discusses problems around
+resource allocation and dynamic reallocation.  Again, I haven't
+followed further discussions here, but I don't expect much has changed.
+Thanks,
 
+Alex
 
-> ---
->   arch/s390/Kconfig                |  1 -
->   arch/s390/mm/init.c              | 13 +++----------
->   arch/x86/Kconfig                 |  1 -
->   arch/x86/kernel/cpu/mshyperv.c   |  5 ++++-
->   arch/x86/mm/mem_encrypt.c        |  6 ------
->   arch/x86/mm/mem_encrypt_amd.c    |  4 ++++
->   drivers/virtio/Kconfig           |  6 ------
->   drivers/virtio/virtio.c          |  5 ++---
->   include/linux/platform-feature.h |  3 ++-
->   include/linux/virtio_config.h    |  9 ---------
->   10 files changed, 15 insertions(+), 38 deletions(-)
->
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index e084c72104f8..f97a22ae69a8 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -772,7 +772,6 @@ menu "Virtualization"
->   config PROTECTED_VIRTUALIZATION_GUEST
->   	def_bool n
->   	prompt "Protected virtualization guest support"
-> -	select ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
->   	help
->   	  Select this option, if you want to be able to run this
->   	  kernel as a protected virtualization KVM guest.
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 86ffd0d51fd5..2c3b451813ed 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -31,6 +31,7 @@
->   #include <linux/cma.h>
->   #include <linux/gfp.h>
->   #include <linux/dma-direct.h>
-> +#include <linux/platform-feature.h>
->   #include <asm/processor.h>
->   #include <linux/uaccess.h>
->   #include <asm/pgalloc.h>
-> @@ -168,22 +169,14 @@ bool force_dma_unencrypted(struct device *dev)
->   	return is_prot_virt_guest();
->   }
->   
-> -#ifdef CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-> -
-> -int arch_has_restricted_virtio_memory_access(void)
-> -{
-> -	return is_prot_virt_guest();
-> -}
-> -EXPORT_SYMBOL(arch_has_restricted_virtio_memory_access);
-> -
-> -#endif
-> -
->   /* protected virtualization */
->   static void pv_init(void)
->   {
->   	if (!is_prot_virt_guest())
->   		return;
->   
-> +	platform_set(PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS);
-> +
->   	/* make sure bounce buffers are shared */
->   	swiotlb_force = SWIOTLB_FORCE;
->   	swiotlb_init(1);
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index b0142e01002e..20ac72546ae4 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -1515,7 +1515,6 @@ config X86_CPA_STATISTICS
->   config X86_MEM_ENCRYPT
->   	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
->   	select DYNAMIC_PHYSICAL_MASK
-> -	select ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
->   	def_bool n
->   
->   config AMD_MEM_ENCRYPT
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index 4b67094215bb..965518b9d14b 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -19,6 +19,7 @@
->   #include <linux/i8253.h>
->   #include <linux/random.h>
->   #include <linux/swiotlb.h>
-> +#include <linux/platform-feature.h>
->   #include <asm/processor.h>
->   #include <asm/hypervisor.h>
->   #include <asm/hyperv-tlfs.h>
-> @@ -347,8 +348,10 @@ static void __init ms_hyperv_init_platform(void)
->   #endif
->   		/* Isolation VMs are unenlightened SEV-based VMs, thus this check: */
->   		if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
-> -			if (hv_get_isolation_type() != HV_ISOLATION_TYPE_NONE)
-> +			if (hv_get_isolation_type() != HV_ISOLATION_TYPE_NONE) {
->   				cc_set_vendor(CC_VENDOR_HYPERV);
-> +				platform_set(PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS);
-> +			}
->   		}
->   	}
->   
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index 50d209939c66..9b6a7c98b2b1 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -76,9 +76,3 @@ void __init mem_encrypt_init(void)
->   
->   	print_mem_encrypt_feature_info();
->   }
-> -
-> -int arch_has_restricted_virtio_memory_access(void)
-> -{
-> -	return cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT);
-> -}
-> -EXPORT_SYMBOL_GPL(arch_has_restricted_virtio_memory_access);
-
-I assume, everywhere where <linux/virtio_config.h> was specifically 
-included only for sake of arch_has_restricted_virtio_memory_access(), 
-the inclusion of <linux/virtio_config.h>
-
-could be removed now.
-
-
-> diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-> index 6169053c2854..39b71084d36b 100644
-> --- a/arch/x86/mm/mem_encrypt_amd.c
-> +++ b/arch/x86/mm/mem_encrypt_amd.c
-> @@ -21,6 +21,7 @@
->   #include <linux/dma-mapping.h>
->   #include <linux/virtio_config.h>
->   #include <linux/cc_platform.h>
-> +#include <linux/platform-feature.h>
->   
->   #include <asm/tlbflush.h>
->   #include <asm/fixmap.h>
-> @@ -206,6 +207,9 @@ void __init sev_setup_arch(void)
->   	size = total_mem * 6 / 100;
->   	size = clamp_val(size, IO_TLB_DEFAULT_SIZE, SZ_1G);
->   	swiotlb_adjust_size(size);
-> +
-> +	/* Set restricted memory access for virtio. */
-> +	platform_set(PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS);
->   }
->   
->   static unsigned long pg_level_to_pfn(int level, pte_t *kpte, pgprot_t *ret_prot)
-> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> index b5adf6abd241..a6dc8b5846fe 100644
-> --- a/drivers/virtio/Kconfig
-> +++ b/drivers/virtio/Kconfig
-> @@ -6,12 +6,6 @@ config VIRTIO
->   	  bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
->   	  or CONFIG_S390_GUEST.
->   
-> -config ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-> -	bool
-> -	help
-> -	  This option is selected if the architecture may need to enforce
-> -	  VIRTIO_F_ACCESS_PLATFORM
-> -
->   config VIRTIO_PCI_LIB
->   	tristate
->   	help
-> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> index 22f15f444f75..371e16b18381 100644
-> --- a/drivers/virtio/virtio.c
-> +++ b/drivers/virtio/virtio.c
-> @@ -5,6 +5,7 @@
->   #include <linux/module.h>
->   #include <linux/idr.h>
->   #include <linux/of.h>
-> +#include <linux/platform-feature.h>
->   #include <uapi/linux/virtio_ids.h>
->   
->   /* Unique numbering for virtio devices. */
-> @@ -170,12 +171,10 @@ EXPORT_SYMBOL_GPL(virtio_add_status);
->   static int virtio_features_ok(struct virtio_device *dev)
->   {
->   	unsigned status;
-> -	int ret;
->   
->   	might_sleep();
->   
-> -	ret = arch_has_restricted_virtio_memory_access();
-> -	if (ret) {
-> +	if (platform_has(PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS)) {
->   		if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
->   			dev_warn(&dev->dev,
->   				 "device must provide VIRTIO_F_VERSION_1\n");
-> diff --git a/include/linux/platform-feature.h b/include/linux/platform-feature.h
-> index 6ed859928b97..5e2f08554b38 100644
-> --- a/include/linux/platform-feature.h
-> +++ b/include/linux/platform-feature.h
-> @@ -6,7 +6,8 @@
->   #include <asm/platform-feature.h>
->   
->   /* The platform features are starting with the architecture specific ones. */
-> -#define PLATFORM_FEAT_N				(0 + PLATFORM_ARCH_FEAT_N)
-> +#define PLATFORM_VIRTIO_RESTRICTED_MEM_ACCESS	(0 + PLATFORM_ARCH_FEAT_N)
-
-I would add a sentence describing the purpose of that "common" feature.
-
-
-> +#define PLATFORM_FEAT_N				(1 + PLATFORM_ARCH_FEAT_N)
->   
->   void platform_set(unsigned int feature);
->   void platform_clear(unsigned int feature);
-> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> index b341dd62aa4d..79498298519d 100644
-> --- a/include/linux/virtio_config.h
-> +++ b/include/linux/virtio_config.h
-> @@ -559,13 +559,4 @@ static inline void virtio_cwrite64(struct virtio_device *vdev,
->   		_r;							\
->   	})
->   
-> -#ifdef CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-> -int arch_has_restricted_virtio_memory_access(void);
-> -#else
-> -static inline int arch_has_restricted_virtio_memory_access(void)
-> -{
-> -	return 0;
-> -}
-> -#endif /* CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS */
-> -
->   #endif /* _LINUX_VIRTIO_CONFIG_H */
-
-
-[1] 
-https://lore.kernel.org/lkml/1650646263-22047-1-git-send-email-olekstysh@gmail.com/T/#mf3eaee90da6bb2c52a4c4b36b9989dacc4e9c597
-
-
--- 
-Regards,
-
-Oleksandr Tyshchenko
+[1]https://youtu.be/ozlQ1XQreac?list=PLVsQ_xZBEyN1PDehCCAiztGf45K_D6txS&t=6481
+[2]https://youtu.be/ozlQ1XQreac?list=PLVsQ_xZBEyN1PDehCCAiztGf45K_D6txS&t=7980
 
