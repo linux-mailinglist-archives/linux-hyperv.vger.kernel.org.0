@@ -2,126 +2,70 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1360D513690
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Apr 2022 16:14:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07B9A51369F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Apr 2022 16:14:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348180AbiD1OQo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 28 Apr 2022 10:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39860 "EHLO
+        id S230021AbiD1ORt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 28 Apr 2022 10:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348176AbiD1OQm (ORCPT
+        with ESMTP id S1348098AbiD1ORs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 28 Apr 2022 10:16:42 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC680B715D
-        for <linux-hyperv@vger.kernel.org>; Thu, 28 Apr 2022 07:13:24 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id i8so2051058ila.5
-        for <linux-hyperv@vger.kernel.org>; Thu, 28 Apr 2022 07:13:24 -0700 (PDT)
+        Thu, 28 Apr 2022 10:17:48 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E095B714A;
+        Thu, 28 Apr 2022 07:14:34 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id n8so4484318plh.1;
+        Thu, 28 Apr 2022 07:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=bCT2JlxzOcDaE6ycYVbjB0p6hzfQxFS5OmPVl0XHT4A=;
-        b=ByPVeKDwQRcuSB47O0Zefv/dFt5S0aRWMNs2oJF7maE4wXnsormuysnBE3KE+1D9p9
-         PB3FB3BjkOR/97x+74MBqA5RA9WqHK53ukE6KnmiwNvHyxwXKz6iLxoZSM4bciItAhHz
-         gddQYhhdQpsolBOdwDYZPGvNMFMyqb4ql/QD0=
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tCLwNfkt8IkQwQwgXeFCHqx3e0FBGJobOavs3qCFjyE=;
+        b=GE2h5rv5yNN4+7vkguJ2Fs9FpsVIhiTfyGcCgE7FFlDs7vtxejc0u1OXVkDMpWSpY5
+         dPso+ae+h9Ubany5Nbo8AV9rGptAD7NUxqzWOXzcYLSAX77gbMKbS2SPpise1cqEJ7PF
+         YEH7XUWWVudC88Wq+WjW6srlVdmfU1ZTwZJK+sDFiZwmHFCqnWmF/f02yj238C8n3/m5
+         eNFA8e5mnXqWtbdwEEXlq2PU8+3hzL8XhZld2iq/aHXWicnDlj8s66wCKUhB/y4bmcjI
+         z1MCL6R0jhwhmGiEt5SQI+rAWNifmU4J8NgbSqNarF0FhzIqOd13nSFwEwlc0T5yXR3c
+         YClA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bCT2JlxzOcDaE6ycYVbjB0p6hzfQxFS5OmPVl0XHT4A=;
-        b=BsP2S80Tuz0u9xgTVQ9m03QwwDTIaIEZ6s1L1vEDKib27wlQUWKSvTR+8gFLKHXddE
-         /5fz5Zff9ZtUjapLEnxNPSHJ7arPqqwJblkKQEItLy+wPP0T/1UppCGekMXeXJV6YZyY
-         Q8NjOvC0sBHV9BVtHEYkJkttbhSRfPX12rvFyzP+gwxBq1yv0L46mrXZaSVsSxEA9mFA
-         NxNKkSbyZMVwO3oNKd6P3Yvdf8W6wPvlI67tJ0zztoxNfzttu1siR8+gCLlEOLR7Cruq
-         dwJo2wRYPObp9skHCiyHzpNhp39a74Hs1hUdFWunt+DToiylGpB+6LgxG50DESGqVSoX
-         R1AQ==
-X-Gm-Message-State: AOAM532Qw1a3702dZD/dmCAak4sQ/cT32E7pfbd7EY2xkciWg7wyAO4q
-        j5gM83YbqDU9ZHd9j9BQEO7XmQ==
-X-Google-Smtp-Source: ABdhPJw448TngRonNTsTASYhGkruvfda4Cqi/x7py0vOs1UkbxiFSjNKZ9c5oG5pi/4oeINikW5dJA==
-X-Received: by 2002:a92:cac3:0:b0:2c9:a265:4cab with SMTP id m3-20020a92cac3000000b002c9a2654cabmr13504351ilq.241.1651155203895;
-        Thu, 28 Apr 2022 07:13:23 -0700 (PDT)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id y21-20020a6bc415000000b00648da092c8esm4431ioa.14.2022.04.28.07.13.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Apr 2022 07:13:23 -0700 (PDT)
-Message-ID: <4cae140c-982a-6b9f-661c-4e0fdfa3297b@ieee.org>
-Date:   Thu, 28 Apr 2022 09:13:19 -0500
+        bh=tCLwNfkt8IkQwQwgXeFCHqx3e0FBGJobOavs3qCFjyE=;
+        b=pBKyeHUA1Lpm7+qK08PgAA4Inkx8paywCQupDt55/ohYN72nGqE5gyVZNFku0q2wu2
+         BH+XcvOjJ1HzQqaFMe4Xv4F5pllIj1YtfQ6Q/kjUZx5C6HodqYPQkp6g5JCpCVRDJ4RR
+         Nr7zkFPF2KzjHo2z/IdH2G9Q8oW2PPQuhZJUNCg521uxKuS258NvRG9QZ3fWxMbWYjxm
+         plcjStn505TmeOvrUmF+j+2XLzYaS2S+L7SI5TEqYp7NPQB9tGRthKCfxjrtod9CeMZs
+         C4mcQ2mA8C+GD8RQ/DckSUClzJyMo20nUioSqswMNNa7z2DJsq7dCTB3bszf6KxU4c3V
+         UWfA==
+X-Gm-Message-State: AOAM5327GVzDG/68DMYMT9nP9fxLj3sSC/r6GPXTkIoIpLK/wpmh4XVp
+        mrRW1LCjA+JGOE9YIaldJro=
+X-Google-Smtp-Source: ABdhPJwpmHijuE7ZXlhdSTBhFqZEOROLYSOTgh9Uo7dkFKloVMWxiGYHSLCXstNQSnnAEy9YkBvoEQ==
+X-Received: by 2002:a17:903:22c6:b0:15d:45d8:8f8a with SMTP id y6-20020a17090322c600b0015d45d88f8amr11088920plg.31.1651155273140;
+        Thu, 28 Apr 2022 07:14:33 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:f:de19:84:6ee0:6f2e])
+        by smtp.gmail.com with ESMTPSA id d8-20020a056a00198800b004fab740dbe6sm65331pfl.15.2022.04.28.07.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Apr 2022 07:14:32 -0700 (PDT)
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        michael.h.kelley@microsoft.com, kys@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
+        hch@lst.de, wei.liu@kernel.org, parri.andrea@gmail.com,
+        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
+        andi.kleen@intel.com, kirill.shutemov@intel.com
+Subject: [RFC PATCH 0/2] swiotlb: Introduce swiotlb device allocation function 
+Date:   Thu, 28 Apr 2022 10:14:27 -0400
+Message-Id: <20220428141429.1637028-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH 21/30] panic: Introduce the panic pre-reboot notifier list
-Content-Language: en-US
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        kexec@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, coresight@lists.linaro.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
-        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
-        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        corbet@lwn.net, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, Alex Elder <elder@kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Chris Zankel <chris@zankel.net>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Corey Minyard <minyard@acm.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        James Morse <james.morse@arm.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, Pavel Machek <pavel@ucw.cz>,
-        Richard Henderson <rth@twiddle.net>,
-        Richard Weinberger <richard@nod.at>,
-        Robert Richter <rric@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Wei Liu <wei.liu@kernel.org>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-22-gpiccoli@igalia.com>
-From:   Alex Elder <elder@ieee.org>
-In-Reply-To: <20220427224924.592546-22-gpiccoli@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -129,67 +73,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 4/27/22 5:49 PM, Guilherme G. Piccoli wrote:
-> This patch renames the panic_notifier_list to panic_pre_reboot_list;
-> the idea is that a subsequent patch will refactor the panic path
-> in order to better split the notifiers, running some of them very
-> early, some of them not so early [but still before kmsg_dump()] and
-> finally, the rest should execute late, after kdump. The latter ones
-> are now in the panic pre-reboot list - the name comes from the idea
-> that these notifiers execute before panic() attempts rebooting the
-> machine (if that option is set).
-> 
-> We also took the opportunity to clean-up useless header inclusions,
-> improve some notifier block declarations (e.g. in ibmasm/heartbeat.c)
-> and more important, change some priorities - we hereby set 2 notifiers
-> to run late in the list [iss_panic_event() and the IPMI panic_event()]
-> due to the risks they offer (may not return, for example).
-> Proper documentation is going to be provided in a subsequent patch,
-> that effectively refactors the panic path.
-> 
-> Cc: Alex Elder <elder@kernel.org>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-For "drivers/net/ipa/ipa_smp2p.c":
+Traditionally swiotlb was not performance critical because it was only
+used for slow devices. But in some setups, like TDX/SEV confidential
+guests, all IO has to go through swiotlb. Currently swiotlb only has a
+single lock. Under high IO load with multiple CPUs this can lead to
+significant lock contention on the swiotlb lock.
 
-Acked-by: Alex Elder <elder@kernel.org>
+This patchset splits the swiotlb into individual areas which have their
+own lock. When there are swiotlb map/allocate request, allocate io tlb
+buffer from areas averagely and free the allocation back to the associated
+area.
 
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Corey Minyard <minyard@acm.org>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Matt Turner <mattst88@gmail.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Max Filippov <jcmvbkbc@gmail.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Richard Henderson <rth@twiddle.net>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Robert Richter <rric@kernel.org>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> ---
-> 
+Patch 2 introduces an helper function to allocate bounce buffer
+from default IO tlb pool for devices with new IO TLB block unit
+and set up IO TLB area for device queues to avoid spinlock overhead.
+The area number is set by device driver according queue number.
 
-. . .
+The network test between traditional VM and Confidential VM.
+The throughput improves from ~20Gb/s to ~34Gb/s  with this patchset.
+
+Tianyu Lan (2):
+  swiotlb: Split up single swiotlb lock
+  Swiotlb: Add device bounce buffer allocation interface
+
+ include/linux/swiotlb.h |  58 +++++++
+ kernel/dma/swiotlb.c    | 340 +++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 362 insertions(+), 36 deletions(-)
+
+-- 
+2.25.1
+
