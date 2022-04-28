@@ -2,79 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D48D85137AC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Apr 2022 17:04:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A56F05137B7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Apr 2022 17:05:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348733AbiD1PHc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 28 Apr 2022 11:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37474 "EHLO
+        id S1343735AbiD1PIf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 28 Apr 2022 11:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343735AbiD1PHa (ORCPT
+        with ESMTP id S1348671AbiD1PIe (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 28 Apr 2022 11:07:30 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02087B3DD4;
-        Thu, 28 Apr 2022 08:04:16 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id l16-20020a05600c1d1000b00394011013e8so2462149wms.1;
-        Thu, 28 Apr 2022 08:04:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aOn3QWkuh0ydUrhyFT9ChUTB/QLPIdqyaS5nxDi3weo=;
-        b=Aen6B2I/EbFtvivoFjRY0zzxXbeN2UOioDt8BTr975YRb97xotWpaB/qxk92MCDIii
-         C6x6yxfTKkXqLXEJT6l1pOZEGzJkr3rCtH3XIsAvTrJyvtDQwpyAoiN/48s++nAR3pGG
-         ZHhXS9u8m5ljrsCK4xK4zs47AkSivBK7CJjYImPf00et5DsHtMUCMLeFCGmng5y2oTB3
-         c81Utk1nKh5Wctx0ITaIURQmYD4lBX1B0eVM1s266Nxb3bgCbI+JTqf2l16kcyFZAzP4
-         8MhL6H9SoLqsOrnX5j39yCgL9yhhP8V4HbWgio2saluKQZa84mpSIlERCyRyqCHXKWga
-         WciQ==
-X-Gm-Message-State: AOAM530YzhsQaPzoHQYfgPsxWQ2Z5AQBO0EzZEVAktKGlEeeTflKRzCL
-        PiGSYLpMnQ885gwfIKYYfR/5cngbI3s=
-X-Google-Smtp-Source: ABdhPJx8sgR6B7xHw7l1C9SXEHaH+hh2lrlTScVm4bP4RKwU51USBkK8Ka4+0C9buvTS8s/LQAMuww==
-X-Received: by 2002:a05:600c:651:b0:381:3d7b:40e0 with SMTP id p17-20020a05600c065100b003813d7b40e0mr40403517wmm.17.1651158254597;
-        Thu, 28 Apr 2022 08:04:14 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id g13-20020a5d64ed000000b0020a9e488976sm110523wri.25.2022.04.28.08.04.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Apr 2022 08:04:14 -0700 (PDT)
-Date:   Thu, 28 Apr 2022 15:04:12 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH hyperv-next v2 0/5] hv_sock: Hardening changes
-Message-ID: <20220428150412.ligbpeltkhevdat6@liuwe-devbox-debian-v2>
-References: <20220428145107.7878-1-parri.andrea@gmail.com>
+        Thu, 28 Apr 2022 11:08:34 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE52192A1;
+        Thu, 28 Apr 2022 08:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DyT65p8JLEwgliFAAtKUa16bmBnVnf06R0IAvK3Qq+8=; b=cxd4QAK5yB3utYqNw3LEJ1Z64h
+        7q/EJ9fWB0z1urAmfvR1lCEk96vihnZPspPUndgNgKA1F9vpWlArIHTIR8oMzHVhAwDY1bABEcEjY
+        0jLay+38PVJ7uU0/6/FHo9I13nZEjXXqjjGik9BAxcigXOmKfnuf1So6FGpiM3S9Ssl0+9yRlSi/T
+        ux/N4EApX9dSRm65GpfBU1EUnAmo38emdVnjdcvI8CKUl7A/cVT9/Ojpp0t8H5y7ec5j82GoQFHP3
+        czvjO1kgb6cgysZ3Zr8rj65fGwsByl72HmzhPIMuw5hAQVGUcD1tynztPvdzTojer/FQJqmZKiKg+
+        hZbd7iTA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nk5he-007aFM-B6; Thu, 28 Apr 2022 15:05:10 +0000
+Date:   Thu, 28 Apr 2022 08:05:10 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tianyu Lan <ltykernel@gmail.com>, m.szyprowski@samsung.com,
+        michael.h.kelley@microsoft.com, kys@microsoft.com,
+        parri.andrea@gmail.com, thomas.lendacky@amd.com,
+        wei.liu@kernel.org, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, konrad.wilk@oracle.com,
+        linux-kernel@vger.kernel.org, kirill.shutemov@intel.com,
+        iommu@lists.linux-foundation.org, andi.kleen@intel.com,
+        brijesh.singh@amd.com, vkuznets@redhat.com, hch@lst.de
+Subject: Re: [RFC PATCH 1/2] swiotlb: Split up single swiotlb lock
+Message-ID: <YmqtJr5lxDruT/9s@infradead.org>
+References: <20220428141429.1637028-1-ltykernel@gmail.com>
+ <20220428141429.1637028-2-ltykernel@gmail.com>
+ <e7b644f0-6c90-fe99-792d-75c38505dc54@arm.com>
+ <YmqonHKBT8ftYHgY@infradead.org>
+ <1517d2f0-08d6-a532-7810-2161b2dff421@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220428145107.7878-1-parri.andrea@gmail.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <1517d2f0-08d6-a532-7810-2161b2dff421@linux.intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Apr 28, 2022 at 04:51:02PM +0200, Andrea Parri (Microsoft) wrote:
-> 
-> Andrea Parri (Microsoft) (5):
->   hv_sock: Check hv_pkt_iter_first_raw()'s return value
->   hv_sock: Copy packets sent by Hyper-V out of the ring buffer
->   hv_sock: Add validation for untrusted Hyper-V values
->   Drivers: hv: vmbus: Accept hv_sock offers in isolated guests
->   Drivers: hv: vmbus: Refactor the ring-buffer iterator functions
+On Thu, Apr 28, 2022 at 07:55:39AM -0700, Andi Kleen wrote:
+> At least for TDX need parallelism with a single device for performance.
 
-Applied to hyperv-next. Thanks.
+So find a way to make it happen without exposing details to random
+drivers.
