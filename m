@@ -2,31 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7612C514A68
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Apr 2022 15:24:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B416514AFD
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Apr 2022 15:47:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359728AbiD2N1S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Apr 2022 09:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41852 "EHLO
+        id S1376377AbiD2Nuv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 29 Apr 2022 09:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232889AbiD2N1R (ORCPT
+        with ESMTP id S1352209AbiD2Nuu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Apr 2022 09:27:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4C5C8651;
-        Fri, 29 Apr 2022 06:23:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6171F62298;
-        Fri, 29 Apr 2022 13:23:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1EA1C385A4;
-        Fri, 29 Apr 2022 13:23:52 +0000 (UTC)
-Date:   Fri, 29 Apr 2022 09:23:51 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+        Fri, 29 Apr 2022 09:50:50 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85220CB031;
+        Fri, 29 Apr 2022 06:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=C2OEpCl3NbPTnDM8xzX2S4IX9JfHaO7AlvKh6b2mc6o=; b=pqe8NQsff608mhiYOzk5PDnm3n
+        SqpJEt2cMOf7fKd9x6EBmHDeHOX5PyCqZaiQd+rsoiJqYRJfq3hy0YC1K+f5G6E1EYGyBkHkky/4o
+        A4sr1jLh/ZiZsTRb8VvM35RQhf4WjzvO8x5RrxtfBf8C8C5PVdUgz7Ik51+zFewe+U63oi8LhMtjA
+        jsMfNQ3e75qfSDrR+BCOQg4pDZsV5C5nFo1cAeFeQ7vSqL72QRCGkkh8ptmyZp43zUawgc2bKvA+V
+        5dpGhl6WFgQXUob6WnQm5VHnfuqrvgLJ/w/gTZOEZRu0JtLeyWnhBKRg4Xfo6FA1ZDb4qCsQBNlya
+        WoHGALzQ==;
+Received: from [179.113.53.197] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1nkQxe-0007JF-GW; Fri, 29 Apr 2022 15:47:06 +0200
+Message-ID: <832eecc5-9569-1d95-6ab8-f029b660dfcb@igalia.com>
+Date:   Fri, 29 Apr 2022 10:46:35 -0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 17/30] tracing: Improve panic/die notifiers
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
         kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com, coresight@lists.linaro.org,
         linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
@@ -51,47 +65,58 @@ Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         paulmck@kernel.org, peterz@infradead.org, senozhatsky@chromium.org,
         stern@rowland.harvard.edu, tglx@linutronix.de, vgoyal@redhat.com,
         vkuznets@redhat.com, will@kernel.org
-Subject: Re: [PATCH 17/30] tracing: Improve panic/die notifiers
-Message-ID: <20220429092351.10bca4dd@gandalf.local.home>
-In-Reply-To: <b8771b37-01f5-f50b-dbb3-9db4ee26e67e@gmail.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
-        <20220427224924.592546-18-gpiccoli@igalia.com>
-        <b8771b37-01f5-f50b-dbb3-9db4ee26e67e@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+ <20220427224924.592546-18-gpiccoli@igalia.com>
+ <b8771b37-01f5-f50b-dbb3-9db4ee26e67e@gmail.com>
+ <20220429092351.10bca4dd@gandalf.local.home>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20220429092351.10bca4dd@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, 29 Apr 2022 12:22:44 +0300
-Sergei Shtylyov <sergei.shtylyov@gmail.com> wrote:
-
-> > +	switch (ev) {
-> > +	case DIE_OOPS:
-> > +		do_dump = 1;
-> > +		break;
-> > +	case PANIC_NOTIFIER:
-> > +		do_dump = 1;
-> > +		break;  
+On 29/04/2022 10:23, Steven Rostedt wrote:
+> On Fri, 29 Apr 2022 12:22:44 +0300
+> Sergei Shtylyov <sergei.shtylyov@gmail.com> wrote:
 > 
->    Why not:
+>>> +	switch (ev) {
+>>> +	case DIE_OOPS:
+>>> +		do_dump = 1;
+>>> +		break;
+>>> +	case PANIC_NOTIFIER:
+>>> +		do_dump = 1;
+>>> +		break;  
+>>
+>>    Why not:
+>>
+>> 	case DIE_OOPS:
+>> 	case PANIC_NOTIFIER:
+>> 		do_dump = 1;
+>> 		break;
 > 
-> 	case DIE_OOPS:
-> 	case PANIC_NOTIFIER:
-> 		do_dump = 1;
-> 		break;
+> Agreed.
+> 
+> Other than that.
+> 
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> -- Steve
 
-Agreed.
+Thanks Sergei and Steven, good idea! I thought about the switch change
+you propose, but I confess I got a bit confused by the "fallthrough"
+keyword - do I need to use it?
 
-Other than that.
+About the s/int/bool, for sure! Not sure why I didn't use bool at
+first...heheh
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cheers,
 
--- Steve
+
+Guilherme
