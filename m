@@ -2,293 +2,214 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F20514CBF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Apr 2022 16:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8997514D4C
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Apr 2022 16:37:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357643AbiD2O3T (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Apr 2022 10:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48534 "EHLO
+        id S1377501AbiD2Ojn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 29 Apr 2022 10:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356195AbiD2O3T (ORCPT
+        with ESMTP id S1377679AbiD2Oj0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Apr 2022 10:29:19 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F332DA145F;
-        Fri, 29 Apr 2022 07:26:00 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id l11-20020a17090a49cb00b001d923a9ca99so7440325pjm.1;
-        Fri, 29 Apr 2022 07:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=XJdlUsUfqr6vxkPKuGRk9hrtLAlMOAFa8tdCT2FkzTU=;
-        b=eszp6sR0PjzzLhwJT5W3nCqjKctaT8ylnNZcxmuYI0hKQmfI3WXSZbl62ALdaR76np
-         oIOTXMjy8cf3rJpDXryOD119ShbM42uhbM9eLALBsIkWyCCoXW8TPOmrKue6j/0xQLPR
-         oa+R5AomZGGINa9FISFtIVAUePioIE+YmvyJxygRuAXhGs+YbGXwQ2mbT2YDL9wEpkoh
-         ImXmZf9WK+iVpobBcSMDaEk9xW8f1wMi4X7mVeMc3CM9b4qPt/XUjbR2kYTjnuGNt3gT
-         FWWLQ6EfQKXRJ9oLNurPJIciH9FrhvNPl+MzrQELCgsmLW8Ad7D3HpsmkuXNsWXy8ioh
-         cDBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=XJdlUsUfqr6vxkPKuGRk9hrtLAlMOAFa8tdCT2FkzTU=;
-        b=RXuA42oBbgJoIDyCnLvfF94tLItEh5+4zyaM+89NqVPhnIwz9xRWXO/IDAudOZncqk
-         rcopO0yK65y1Aj67iPTAOmuy94+bn/emn3XveRR2IbBQLLHT7WqLxePDlas8eBgrPCRn
-         rBIwfo8jJycb6ImKId8XyPIHYfB+ncEUIVehtbfzO4rUg8QLB69RlU2kg1lYDAskciw5
-         yYcxA9OPp04R6rLJnifj5RakfiGkEMl0FR0EspafHH6qd8EXKe5keI2LE1BRsZvfGozz
-         u7691QNKAYivlBMUzkW7NRDuovGJtguK3/J6Jd+ZFmCecXk0dUFIj+YQcXk0MLtApI9U
-         AWLQ==
-X-Gm-Message-State: AOAM5300WT3NRPBVsvRLA3gWnbN4o3uxIW06mKhP+8KMIvZYwcpwskMc
-        wX+O6v6PxN+oGFQx+J//oX0=
-X-Google-Smtp-Source: ABdhPJxWn/FK4fFSMV41dEGN/94EH8xCM2oBufHBUGl4zEaQ5ZNq36ReAdYyVyZDmSOJlfacrgyP2Q==
-X-Received: by 2002:a17:90b:4a4c:b0:1d9:4c8e:8d3d with SMTP id lb12-20020a17090b4a4c00b001d94c8e8d3dmr4137374pjb.215.1651242360250;
-        Fri, 29 Apr 2022 07:26:00 -0700 (PDT)
-Received: from ?IPV6:2404:f801:0:5:8000::597? ([2404:f801:9000:18:efec::597])
-        by smtp.gmail.com with ESMTPSA id l14-20020a17090aec0e00b001d8ace370cbsm14422673pjy.54.2022.04.29.07.25.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Apr 2022 07:25:59 -0700 (PDT)
-Message-ID: <c0e70b17-cdf1-4fd8-f807-e4b9ccad44fd@gmail.com>
-Date:   Fri, 29 Apr 2022 22:25:53 +0800
+        Fri, 29 Apr 2022 10:39:26 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AEBC27B33;
+        Fri, 29 Apr 2022 07:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZdZBPtTkXvskvklO0DqGHW3vJ6Arb57ZyicMdsmwPPs=; b=Id0YxwZLmWV943xSSctc382COx
+        slYd+Mbgd8mluBGRTtubiqJcFH7Jw+KCfrIBUuJ6IBjkEi3jycQJ/GZIWCNzfYdJZGxOzIKlAq9i5
+        NGU7dMo+j6aXXuC9zPnllvKUmp4j7d1NBQPsBNjzH1goO9ZNvF9j+05V5SxGqrz8IpFC/ke6Hqou9
+        ZUhvlX5vvgSwWpU57PqA3cf0RcC09NkmKHiXH92FbdJDx27V/PJs6cBfrjjyUhrMtQCOhvF+z0Tsu
+        zF1ocWG4HwYZ0G6pmdbbbK4PGRnRNWBCGP+4DKIndhzsOY9kfvz7NjpBrTKt1RM1gSIvJ0Gc9QwYA
+        dmc3mStA==;
+Received: from [179.113.53.197] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1nkRiK-0009WD-3O; Fri, 29 Apr 2022 16:35:20 +0200
+Message-ID: <4a7d9670-92f8-3e12-a619-aaa64adca093@igalia.com>
+Date:   Fri, 29 Apr 2022 11:34:51 -0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [RFC PATCH] swiotlb: Add Child IO TLB mem support
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 12/30] parisc: Replace regular spinlock with spin_trylock
+ on panic path
 Content-Language: en-US
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     hch@infradead.org, robin.murphy@arm.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, brijesh.singh@amd.com, konrad.wilk@oracle.com,
-        hch@lst.de, wei.liu@kernel.org, parri.andrea@gmail.com,
-        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
-        andi.kleen@intel.com, kirill.shutemov@intel.com,
-        m.szyprowski@samsung.com, michael.h.kelley@microsoft.com,
-        kys@microsoft.com
-References: <e7b644f0-6c90-fe99-792d-75c38505dc54@arm.com>
- <20220429142147.1725184-1-ltykernel@gmail.com>
-Organization: Microsft
-In-Reply-To: <20220429142147.1725184-1-ltykernel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Helge Deller <deller@gmx.de>, akpm@linux-foundation.org,
+        bhe@redhat.com, pmladek@suse.com, kexec@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
+        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
+        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
+        halves@canonical.com, fabiomirmar@gmail.com,
+        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
+        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-13-gpiccoli@igalia.com>
+ <6a7c924a-54a9-c5ea-8a9d-3ea92987b436@gmx.de>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <6a7c924a-54a9-c5ea-8a9d-3ea92987b436@gmx.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 4/29/2022 10:21 PM, Tianyu Lan wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On 28/04/2022 13:55, Helge Deller wrote:
+> [...]
+> You may add:
+> Acked-by: Helge Deller <deller@gmx.de> # parisc
 > 
-> Traditionally swiotlb was not performance critical because it was only
-> used for slow devices. But in some setups, like TDX/SEV confidential
-> guests, all IO has to go through swiotlb. Currently swiotlb only has a
-> single lock. Under high IO load with multiple CPUs this can lead to
-> significant lock contention on the swiotlb lock.
-> 
-> This patch adds child IO TLB mem support to resolve spinlock overhead
-> among device's queues. Each device may allocate IO tlb mem and setup
-> child IO TLB mem according to queue number. Swiotlb code allocates
-> bounce buffer among child IO tlb mem iterately.
-> 
+> Helge
 
-Hi Robin and Christoph:
-       According to Robin idea. I draft this patch. Please have a look 
-and check whether it's right diection.
+Thanks Helge, added!
+Cheers,
 
-Thanks.
 
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->   include/linux/swiotlb.h |  7 +++
->   kernel/dma/swiotlb.c    | 96 ++++++++++++++++++++++++++++++++++++-----
->   2 files changed, 93 insertions(+), 10 deletions(-)
+Guilherme
+
 > 
-> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-> index 7ed35dd3de6e..4a3f6a7b4b7e 100644
-> --- a/include/linux/swiotlb.h
-> +++ b/include/linux/swiotlb.h
-> @@ -89,6 +89,9 @@ extern enum swiotlb_force swiotlb_force;
->    * @late_alloc:	%true if allocated using the page allocator
->    * @force_bounce: %true if swiotlb bouncing is forced
->    * @for_alloc:  %true if the pool is used for memory allocation
-> + * @child_nslot:The number of IO TLB slot in the child IO TLB mem.
-> + * @num_child:  The child io tlb mem number in the pool.
-> + * @child_start:The child index to start searching in the next round.
->    */
->   struct io_tlb_mem {
->   	phys_addr_t start;
-> @@ -102,6 +105,10 @@ struct io_tlb_mem {
->   	bool late_alloc;
->   	bool force_bounce;
->   	bool for_alloc;
-> +	unsigned int num_child;
-> +	unsigned int child_nslot;
-> +	unsigned int child_start;
-> +	struct io_tlb_mem *child;
->   	struct io_tlb_slot {
->   		phys_addr_t orig_addr;
->   		size_t alloc_size;
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index e2ef0864eb1e..382fa2288645 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -207,6 +207,25 @@ static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
->   		mem->force_bounce = true;
->   
->   	spin_lock_init(&mem->lock);
-> +
-> +	if (mem->num_child) {
-> +		mem->child_nslot = nslabs / mem->num_child;
-> +		mem->child_start = 0;
-> +
-> +		/*
-> +		 * Initialize child IO TLB mem, divide IO TLB pool
-> +		 * into child number. Reuse parent mem->slot in the
-> +		 * child mem->slot.
-> +		 */
-> +		for (i = 0; i < mem->num_child; i++) {
-> +			mem->num_child = 0;
-> +			mem->child[i].slots = mem->slots + i * mem->child_nslot;
-> +			swiotlb_init_io_tlb_mem(&mem->child[i],
-> +				start + ((i * mem->child_nslot) << IO_TLB_SHIFT),
-> +				mem->child_nslot, late_alloc);
-> +		}
-> +	}
-> +
->   	for (i = 0; i < mem->nslabs; i++) {
->   		mem->slots[i].list = IO_TLB_SEGSIZE - io_tlb_offset(i);
->   		mem->slots[i].orig_addr = INVALID_PHYS_ADDR;
-> @@ -336,16 +355,18 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
->   
->   	mem->slots = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
->   		get_order(array_size(sizeof(*mem->slots), nslabs)));
-> -	if (!mem->slots) {
-> -		free_pages((unsigned long)vstart, order);
-> -		return -ENOMEM;
-> -	}
-> +	if (!mem->slots)
-> +		goto error_slots;
->   
->   	set_memory_decrypted((unsigned long)vstart, bytes >> PAGE_SHIFT);
->   	swiotlb_init_io_tlb_mem(mem, virt_to_phys(vstart), nslabs, true);
->   
->   	swiotlb_print_info();
->   	return 0;
-> +
-> +error_slots:
-> +	free_pages((unsigned long)vstart, order);
-> +	return -ENOMEM;
->   }
->   
->   void __init swiotlb_exit(void)
-> @@ -483,10 +504,11 @@ static unsigned int wrap_index(struct io_tlb_mem *mem, unsigned int index)
->    * Find a suitable number of IO TLB entries size that will fit this request and
->    * allocate a buffer from that IO TLB pool.
->    */
-> -static int swiotlb_find_slots(struct device *dev, phys_addr_t orig_addr,
-> -			      size_t alloc_size, unsigned int alloc_align_mask)
-> +static int swiotlb_do_find_slots(struct io_tlb_mem *mem,
-> +				 struct device *dev, phys_addr_t orig_addr,
-> +				 size_t alloc_size,
-> +				 unsigned int alloc_align_mask)
->   {
-> -	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
->   	unsigned long boundary_mask = dma_get_seg_boundary(dev);
->   	dma_addr_t tbl_dma_addr =
->   		phys_to_dma_unencrypted(dev, mem->start) & boundary_mask;
-> @@ -565,6 +587,46 @@ static int swiotlb_find_slots(struct device *dev, phys_addr_t orig_addr,
->   	return index;
->   }
->   
-> +static int swiotlb_find_slots(struct device *dev, phys_addr_t orig_addr,
-> +			      size_t alloc_size, unsigned int alloc_align_mask)
-> +{
-> +	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
-> +	struct io_tlb_mem *child_mem = mem;
-> +	int start = 0, i = 0, index;
-> +
-> +	if (mem->num_child) {
-> +		i = start = mem->child_start;
-> +		mem->child_start = (mem->child_start + 1) % mem->num_child;
-> +		child_mem = mem->child;
-> +	}
-> +
-> +	do {
-> +		index = swiotlb_do_find_slots(child_mem + i, dev, orig_addr,
-> +					      alloc_size, alloc_align_mask);
-> +		if (index >= 0)
-> +			return i * mem->child_nslot + index;
-> +		if (++i >= mem->num_child)
-> +			i = 0;
-> +	} while (i != start);
-> +
-> +	return -1;
-> +}
-> +
-> +static unsigned long mem_used(struct io_tlb_mem *mem)
-> +{
-> +	int i;
-> +	unsigned long used = 0;
-> +
-> +	if (mem->num_child) {
-> +		for (i = 0; i < mem->num_child; i++)
-> +			used += mem->child[i].used;
-> +	} else {
-> +		used = mem->used;
-> +	}
-> +
-> +	return used;
-> +}
-> +
->   phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
->   		size_t mapping_size, size_t alloc_size,
->   		unsigned int alloc_align_mask, enum dma_data_direction dir,
-> @@ -594,7 +656,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
->   		if (!(attrs & DMA_ATTR_NO_WARN))
->   			dev_warn_ratelimited(dev,
->   	"swiotlb buffer is full (sz: %zd bytes), total %lu (slots), used %lu (slots)\n",
-> -				 alloc_size, mem->nslabs, mem->used);
-> +				     alloc_size, mem->nslabs, mem_used(mem));
->   		return (phys_addr_t)DMA_MAPPING_ERROR;
->   	}
->   
-> @@ -617,9 +679,9 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
->   	return tlb_addr;
->   }
->   
-> -static void swiotlb_release_slots(struct device *dev, phys_addr_t tlb_addr)
-> +static void swiotlb_do_release_slots(struct io_tlb_mem *mem,
-> +				     struct device *dev, phys_addr_t tlb_addr)
->   {
-> -	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
->   	unsigned long flags;
->   	unsigned int offset = swiotlb_align_offset(dev, tlb_addr);
->   	int index = (tlb_addr - offset - mem->start) >> IO_TLB_SHIFT;
-> @@ -660,6 +722,20 @@ static void swiotlb_release_slots(struct device *dev, phys_addr_t tlb_addr)
->   	spin_unlock_irqrestore(&mem->lock, flags);
->   }
->   
-> +static void swiotlb_release_slots(struct device *dev, phys_addr_t tlb_addr)
-> +{
-> +	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
-> +	int index, offset;
-> +
-> +	if (mem->num_child) {
-> +		offset = swiotlb_align_offset(dev, tlb_addr);	
-> +		index = (tlb_addr - offset - mem->start) >> IO_TLB_SHIFT;
-> +		mem = &mem->child[index / mem->child_nslot];
-> +	}
-> +
-> +	swiotlb_do_release_slots(mem, dev, tlb_addr);
-> +}
-> +
->   /*
->    * tlb_addr is the physical address of the bounce buffer to unmap.
->    */
+> 
+>> ---
+>>  arch/parisc/include/asm/pdc.h |  1 +
+>>  arch/parisc/kernel/firmware.c | 27 +++++++++++++++++++++++----
+>>  drivers/parisc/power.c        | 17 ++++++++++-------
+>>  3 files changed, 34 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/arch/parisc/include/asm/pdc.h b/arch/parisc/include/asm/pdc.h
+>> index b643092d4b98..7a106008e258 100644
+>> --- a/arch/parisc/include/asm/pdc.h
+>> +++ b/arch/parisc/include/asm/pdc.h
+>> @@ -83,6 +83,7 @@ int pdc_do_firm_test_reset(unsigned long ftc_bitmap);
+>>  int pdc_do_reset(void);
+>>  int pdc_soft_power_info(unsigned long *power_reg);
+>>  int pdc_soft_power_button(int sw_control);
+>> +int pdc_soft_power_button_panic(int sw_control);
+>>  void pdc_io_reset(void);
+>>  void pdc_io_reset_devices(void);
+>>  int pdc_iodc_getc(void);
+>> diff --git a/arch/parisc/kernel/firmware.c b/arch/parisc/kernel/firmware.c
+>> index 6a7e315bcc2e..0e2f70b592f4 100644
+>> --- a/arch/parisc/kernel/firmware.c
+>> +++ b/arch/parisc/kernel/firmware.c
+>> @@ -1232,15 +1232,18 @@ int __init pdc_soft_power_info(unsigned long *power_reg)
+>>  }
+>>
+>>  /*
+>> - * pdc_soft_power_button - Control the soft power button behaviour
+>> - * @sw_control: 0 for hardware control, 1 for software control
+>> + * pdc_soft_power_button{_panic} - Control the soft power button behaviour
+>> + * @sw_control: 0 for hardware control, 1 for software control
+>>   *
+>>   *
+>>   * This PDC function places the soft power button under software or
+>>   * hardware control.
+>> - * Under software control the OS may control to when to allow to shut
+>> - * down the system. Under hardware control pressing the power button
+>> + * Under software control the OS may control to when to allow to shut
+>> + * down the system. Under hardware control pressing the power button
+>>   * powers off the system immediately.
+>> + *
+>> + * The _panic version relies in spin_trylock to prevent deadlock
+>> + * on panic path.
+>>   */
+>>  int pdc_soft_power_button(int sw_control)
+>>  {
+>> @@ -1254,6 +1257,22 @@ int pdc_soft_power_button(int sw_control)
+>>  	return retval;
+>>  }
+>>
+>> +int pdc_soft_power_button_panic(int sw_control)
+>> +{
+>> +	int retval;
+>> +	unsigned long flags;
+>> +
+>> +	if (!spin_trylock_irqsave(&pdc_lock, flags)) {
+>> +		pr_emerg("Couldn't enable soft power button\n");
+>> +		return -EBUSY; /* ignored by the panic notifier */
+>> +	}
+>> +
+>> +	retval = mem_pdc_call(PDC_SOFT_POWER, PDC_SOFT_POWER_ENABLE, __pa(pdc_result), sw_control);
+>> +	spin_unlock_irqrestore(&pdc_lock, flags);
+>> +
+>> +	return retval;
+>> +}
+>> +
+>>  /*
+>>   * pdc_io_reset - Hack to avoid overlapping range registers of Bridges devices.
+>>   * Primarily a problem on T600 (which parisc-linux doesn't support) but
+>> diff --git a/drivers/parisc/power.c b/drivers/parisc/power.c
+>> index 456776bd8ee6..8512884de2cf 100644
+>> --- a/drivers/parisc/power.c
+>> +++ b/drivers/parisc/power.c
+>> @@ -37,7 +37,6 @@
+>>  #include <linux/module.h>
+>>  #include <linux/init.h>
+>>  #include <linux/kernel.h>
+>> -#include <linux/notifier.h>
+>>  #include <linux/panic_notifier.h>
+>>  #include <linux/reboot.h>
+>>  #include <linux/sched/signal.h>
+>> @@ -175,16 +174,21 @@ static void powerfail_interrupt(int code, void *x)
+>>
+>>
+>>
+>> -/* parisc_panic_event() is called by the panic handler.
+>> - * As soon as a panic occurs, our tasklets above will not be
+>> - * executed any longer. This function then re-enables the
+>> - * soft-power switch and allows the user to switch off the system
+>> +/*
+>> + * parisc_panic_event() is called by the panic handler.
+>> + *
+>> + * As soon as a panic occurs, our tasklets above will not
+>> + * be executed any longer. This function then re-enables
+>> + * the soft-power switch and allows the user to switch off
+>> + * the system. We rely in pdc_soft_power_button_panic()
+>> + * since this version spin_trylocks (instead of regular
+>> + * spinlock), preventing deadlocks on panic path.
+>>   */
+>>  static int parisc_panic_event(struct notifier_block *this,
+>>  		unsigned long event, void *ptr)
+>>  {
+>>  	/* re-enable the soft-power switch */
+>> -	pdc_soft_power_button(0);
+>> +	pdc_soft_power_button_panic(0);
+>>  	return NOTIFY_DONE;
+>>  }
+>>
+>> @@ -193,7 +197,6 @@ static struct notifier_block parisc_panic_block = {
+>>  	.priority	= INT_MAX,
+>>  };
+>>
+>> -
+>>  static int __init power_init(void)
+>>  {
+>>  	unsigned long ret;
+> 
