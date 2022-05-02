@@ -2,261 +2,192 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4512251587D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Apr 2022 00:36:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8D65516B7C
+	for <lists+linux-hyperv@lfdr.de>; Mon,  2 May 2022 09:58:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381535AbiD2WjQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Apr 2022 18:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
+        id S1383602AbiEBIBm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 2 May 2022 04:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244398AbiD2WjP (ORCPT
+        with ESMTP id S1376532AbiEBIBl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Apr 2022 18:39:15 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746B3986C8;
-        Fri, 29 Apr 2022 15:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KYNDBRYGzikXjzeP27ZJ4t/kgY9V1S1pNOCPI8BnGe8=; b=JT0K6BBCWKsaQymCLnJQaj/kvq
-        7Y1QKfar8fCW1mBanEmBmavL+D5scKDYAiv+Of/1HRFoX5MBCl5YZC28TmWOdUUkF79M5XuV0xuXA
-        v1gbxygEk8ExNgZKIAJmst62yXS49qdhdclQ0HpxXcHSkInmueEoQ8sxt8GK1dgkp3lrFANactIr6
-        owme4UXa4bPRXwJl27nOJHEpmMOv8h6kOal3gO6YkUDEDSWCgod9VcuYizHGTaTCXAhQFrHVOF1Fo
-        gyvc6I1Xl1Nz4QEoDGGy6DcOx8hQdBZ3SL8vuhOA2s2+e+h8l4Dvo0+AMgZTV5lbKle4rwJcb9Bd/
-        P9qftm1A==;
-Received: from [179.113.53.197] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1nkZD8-0003TG-7D; Sat, 30 Apr 2022 00:35:38 +0200
-Message-ID: <2787b476-6366-1c83-db80-0393da417497@igalia.com>
-Date:   Fri, 29 Apr 2022 19:35:09 -0300
+        Mon, 2 May 2022 04:01:41 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020016.outbound.protection.outlook.com [52.101.61.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DC029CB3;
+        Mon,  2 May 2022 00:58:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F3dkt7+nCLig1weRU071EqvTJRkOBP46J8KG81Hqizu7ELsNu7xjPmr2n6KAeHLcinr1piNe0DWYsrQwRpw4OX6YmWjd9AlR9mUs/N0ijwHYUCO864cvpU4xOEOJCQmZU+7fg5lq1ubAtqr7nMxyI4YmjglHDraMOiDeHcwuD1fU1cphHAG3SYIl1GAPAA/w7D7ZtUHSlNmTzvgrwwSU7O9oSzrRe0+ymuEht7bXzMaXliWHIrglVmBTVWTlLdbNidQ8X9TZ0DsK0JsfcUyd5HcrCt9SRaRShIjnMP+HBGbq60fu21l0H3OG+GW5rrq5izY/kZs1s648ZcDUriUpWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gbUIZVvmh/wiSrp8bG5PwsR2tyAoOE4BtdcOQuS4gw8=;
+ b=ZF4KZnVpdG1yjwuiUczfbnR1vsGKrxZEaF6lGsUFsdrvZqtvg+Z6Q+3GYE75aKNq7sijHafvakrDM3aTZzVkvezqklo847S0B3veMe60C1MVyLK2mD+L1n5QTzWekWqSAR/eZbVpeJbrM0FdfAm2fWwKr/9nx/3rLnMcVVyonw0KsXvdYngB8NbniWDO1JwANdN5irpIy5T3ntiJu2rWx/nfg8TMVXJO+yFvgS+MypUglz4xuYRcPlaFkb6cMnoXdkKq9TRiCBJmJn/QIYBDnZvuAb3gtlFTnWUC6oXoLhEKxpnNV8WcyNgZNkenLgeAt4qxEI/dW7T5qbrG1uLdwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gbUIZVvmh/wiSrp8bG5PwsR2tyAoOE4BtdcOQuS4gw8=;
+ b=R/MZlXYoj7gtUivT9O6/Jebuq6FfJZyXZMhddcf2ISMzrdsgoyUhc8vpg5S1I+agQCuihdquZEGSAL6UpTpSa2lklLeI5j9n3WsslhC57ixRsOutJFI+1Ag0mvh7cm6B2I5ujaLbtGR91ikDqhlymukaF9FK5P15Itz4D8mjDgE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26) by BN6PR21MB0273.namprd21.prod.outlook.com
+ (2603:10b6:404:9b::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.4; Mon, 2 May
+ 2022 07:43:41 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::c45a:9279:12d9:eca1]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::c45a:9279:12d9:eca1%9]) with mapi id 15.20.5250.004; Mon, 2 May 2022
+ 07:43:41 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, robh@kernel.org, kw@linux.com,
+        helgaas@kernel.org, alex.williamson@redhat.com,
+        boqun.feng@gmail.com, Boqun.Feng@microsoft.com
+Cc:     jakeo@microsoft.com, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v2] PCI: hv: Do not set PCI_COMMAND_MEMORY to reduce VM boot time
+Date:   Mon,  2 May 2022 00:42:55 -0700
+Message-Id: <20220502074255.16901-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0065.namprd03.prod.outlook.com
+ (2603:10b6:303:b6::10) To BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:37::26)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 16/30] drivers/hv/vmbus, video/hyperv_fb: Untangle and
- refactor Hyper-V panic notifiers
-Content-Language: en-US
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
-        "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
-        "halves@canonical.com" <halves@canonical.com>,
-        "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
-        "alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "dyoung@redhat.com" <dyoung@redhat.com>,
-        "feng.tang@intel.com" <feng.tang@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hidehiro.kawai.ez@hitachi.com" <hidehiro.kawai.ez@hitachi.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "vgoyal@redhat.com" <vgoyal@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-17-gpiccoli@igalia.com>
- <PH0PR21MB30250C9246FFF36AFB1DFDECD7FC9@PH0PR21MB3025.namprd21.prod.outlook.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <PH0PR21MB30250C9246FFF36AFB1DFDECD7FC9@PH0PR21MB3025.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5684d03c-f94f-4c9f-bfe3-08da2c0f7a04
+X-MS-TrafficTypeDiagnostic: BN6PR21MB0273:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR21MB027380E4184691E1EE328911BFC19@BN6PR21MB0273.namprd21.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DsG/otRtLmDOZ27E4aMWpTfukSFTmBvAtoL1VHtTnJLXC1nJKYH/sDCguZxUIpKEo/n+u1+0pgPJ1izbLlu3805O9b1CjglwdrDoLsQlLkWihUGXPKQJ4B6e/CuFrOVDcccOgt4mY8j9hdMbdRi8FB/W5eGo7Y57qNw5pvLjfsUkw9xzH12BBEit8H6Ee1D0OxQQNDLe3judKcmZNHWEoqOu8YsWeaY93uVJhGJ6VUQl74LD9Si7nV6AOjGHtVGQsvRLtkUb0is3r9XoWGNwceiU97+B/fJ2Oi6rjAyOHtnOGxEdtUNYL/QZmIjJEFbBMs5w1qAVRNR4u9Wl2ImeWyBCpcPICwrUf4BD5FA3Zywm5nzbuLb249o7/94OLEzX0lDLRQVB06t1nWTgX/1ibTZ+uCaU24p1b4MbCDx6+jxUQ727t1S9/FC7g82NGXwAC4+wWxPIn0vORxuNJ/2oAt9G5Wvq9ewzBCRIlfY0XLReO5j0D1gR4oUDbycdz7Auro70V3sfOb6WNdyXY3DR6qcuJ6cEzagGv/7Vi1o5e+GJY1uAy9HbsU1yKc9YGxzXYBWdiKjWwmAl7GQHvHkQ71xMG3nlXWUiFxkL5XBtt5Y7u76OD+ytlPUw0JDspIJ8YtsAFCe600e1xdv6gOScOTIVhuVEXHDn/w2Xpfoo0DcNQq+Ho7wzP2CzD9WVoW9n5AAPme3m5pklmJVeGdGejOPWWGKDSqD/p5aFzTUWZjMEzaSVui0Fce6wKE7fCjpXcnSRppP3KrbiXLwcMQ2vZ7cRBfJh7aZ18U1uqF3JNiiAdlRIEUqkRLHwr30MGR1Uc4QTa6v1sk+pxoYEzB+SdaWzizUGx0jPNGe+kLDv9J8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(6486002)(966005)(38100700002)(6512007)(86362001)(4326008)(8676002)(1076003)(6666004)(316002)(10290500003)(6636002)(186003)(66946007)(66556008)(66476007)(2616005)(82950400001)(6506007)(508600001)(52116002)(921005)(107886003)(7416002)(83380400001)(5660300002)(2906002)(8936002)(82960400001)(36756003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1ABnBg/7F1yvDCGpM9KcBPeAceozRRCc2HSQx7VW/QrcwkgBVtJRT5SIAXNB?=
+ =?us-ascii?Q?ozjEVupnOFSK4NIRLcb5qVukgA2cZSwvCTv08oNrY1FxYbjIrLgcKVCFz5rd?=
+ =?us-ascii?Q?5TlFNFu1bcPIlqY7od8qA3Okqxq+Ujq05zG/eqZxBOurO0n0Q8bkF63U78bX?=
+ =?us-ascii?Q?K59f57aX4bhuqU6vMhkciie5dSHizv2AEzT/A9gS9NW9YOFpiADmeOQC5uPR?=
+ =?us-ascii?Q?WWC1pmXjEjUHCHm56w+Zg9vlZ/e8k6pinI08W7/xqLWJtB8NhybpORvcG2Zf?=
+ =?us-ascii?Q?zPVEAztxZPpGc3xQf2NlA4VZBLU9sKltRT3KvzLu9Up8T7ieBnaPIbJPygmg?=
+ =?us-ascii?Q?5TRlW/LgJDEOmFs6gPJnhQoM8yCMDJBT0uM25I4zXQBgjHRmje5Zsx7hk9St?=
+ =?us-ascii?Q?REbCTZW2TiZA2Tj1fHjLAXW6CL4e8WwU2UlK54GwLhazq1vUhxZj/mNnsdGE?=
+ =?us-ascii?Q?tyOnJ5YSud/RzmvXufmBmcKJYULPae/4hUWwaP+xq4LrzTZsCZ/z4R42WLMP?=
+ =?us-ascii?Q?9FQ0NQkKjw/9m/pQMiKnYmjcLobA61RhpTMQQp0Nv3QksZ66VWgp2vpy6f2J?=
+ =?us-ascii?Q?2mjVm6q3C1/nd6LsG7CJLTif1T5Vv2su/Ol+SL2cPZIf9b9WA22rzVQ11Poy?=
+ =?us-ascii?Q?SwZcV5iG/z7ERy1PjNpimggsH+iibTwZ1AbQvosB2VqMjG4OtKKvGhRN7yLV?=
+ =?us-ascii?Q?68wk3+/GyKQRD27shv5VHIh2kDO1Mmp+Ou2GLzh4lDu0WFzF1u62A4wIhigP?=
+ =?us-ascii?Q?nUD7+6mkRN/taQmCKuu04TAkMQby/r4UQxP6E0CevnIMesJX4iBtU0WML30V?=
+ =?us-ascii?Q?RqioBq/BC+BYm00G6mEsxL7vr+3ccjSByYEZw/t/2dmVFYuUfKgmROxZzrFm?=
+ =?us-ascii?Q?8hpAPYlNFiVzMFOSCOcEvcOx+aC3jg9dGiL1mJljKsF8hbn1Q/ct5aa7EcrY?=
+ =?us-ascii?Q?NhwxX92fmBoTY+PXh5hjLyuKwvpjcbyZh0eKlX5QO59RUA5mLo8gK5xr6HIg?=
+ =?us-ascii?Q?3KbP2bPLk39UyDIE7zNK3tr7ptyYTcSlIRhd9scrj2OlFEk7PLeRNhPI3Vit?=
+ =?us-ascii?Q?2Lu8D/mx8fgWtYNaussSO+jKTksDcHcunxCquQgtGc5d0QNyUCOXh0Esh0sG?=
+ =?us-ascii?Q?U0AiDgaczn2X6XQbGLkGVYIbXYkIMsPKwSm36Tyc4ut+WHCYUDlKmdTK0PTK?=
+ =?us-ascii?Q?VmhrhAt67Hhtoq2FhgNTp4TJnvbFjASkz3vOqnvuymlusXlyqW4zKejeAlYy?=
+ =?us-ascii?Q?OZqceYWz/m2pyp8bJSB6/PtrFMrLWUijyjjf/6jdLLo2578B2+2A8PQJtIZ+?=
+ =?us-ascii?Q?sL+3GF0aB8dJK9zkZr/iUp8+ivfrS9pqMyJIsveQaiLW6k+MrkfW4RNon+RI?=
+ =?us-ascii?Q?Hszec5bjkGM6ZrGjfp7rysN/JO4U+t9ZodEyr76B17qyJe+Z+ugx/wjDmQV/?=
+ =?us-ascii?Q?B6WKSEpppehdOBe2GBAQyCIjXNDYY99+7JGot3hTHo/yOU/0oHt7bq32CppV?=
+ =?us-ascii?Q?FgoFJCr34PksLSnDP32Qjfgc4gGCKA4Zl0Km4KpRL+Wc5NKy60zxgzXQluO+?=
+ =?us-ascii?Q?okGTRKKDWs2jnlcMLbHEHEfg2Qiu2bAnA8MqLVisbhFrsgybpwzpJj4n8Zlv?=
+ =?us-ascii?Q?s8aiBdHOrq5nl3R9RfhmHRlalSGqhmZbSEC43SWi/dHmX0q73iKON5LwZBBS?=
+ =?us-ascii?Q?lYJNNzMTL5VzbvpHxgS1tAnfeocC94e0hyiwgb/xkeINpwH47Hy6GDe05uDB?=
+ =?us-ascii?Q?ywi4kwKaWx97cnJHQ8VJ2NM5W7BWqbSg/NpnRghlPWmUE8sClGGzO+qxaAST?=
+X-MS-Exchange-AntiSpam-MessageData-1: weL/5FPy0baCtA==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5684d03c-f94f-4c9f-bfe3-08da2c0f7a04
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2022 07:43:41.4009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yE8rfMz+nda6DqZAkyKlFR4Gu6jtYygSE7ZgGjsPcDAgR6zxty4psOxYy2fMqKVCk/OAgsCX8SmhtI+8YVly+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0273
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Michael, first of all thanks for the great review, much appreciated.
-Some comments inline below:
+Currently when the pci-hyperv driver finishes probing and initializing the
+PCI device, it sets the PCI_COMMAND_MEMORY bit; later when the PCI device
+is registered to the core PCI subsystem, the core PCI driver's BAR detection
+and initialization code toggles the bit multiple times, and each toggling of
+the bit causes the hypervisor to unmap/map the virtual BARs from/to the
+physical BARs, which can be slow if the BAR sizes are huge, e.g., a Linux VM
+with 14 GPU devices has to spend more than 3 minutes on BAR detection and
+initialization, causing a long boot time.
 
-On 29/04/2022 14:16, Michael Kelley (LINUX) wrote:
-> [...]
->> hypervisor I/O completion), so we postpone that to run late. But more
->> relevant: this *same* vmbus unloading happens in the crash_shutdown()
->> handler, so if kdump is set, we can safely skip this panic notifier and
->> defer such clean-up to the kexec crash handler.
-> 
-> While the last sentence is true for Hyper-V on x86/x64, it's not true for
-> Hyper-V on ARM64.  x86/x64 has the 'machine_ops' data structure
-> with the ability to provide a custom crash_shutdown() function, which
-> Hyper-V does in the form of hv_machine_crash_shutdown().  But ARM64
-> has no mechanism to provide such a custom function that will eventually
-> do the needed vmbus_initiate_unload() before running kdump.
-> 
-> I'm not immediately sure what the best solution is for ARM64.  At this
-> point, I'm just pointing out the problem and will think about the tradeoffs
-> for various possible solutions.  Please do the same yourself. :-)
-> 
+Reduce the boot time by not setting the PCI_COMMAND_MEMORY bit when we
+register the PCI device (there is no need to have it set in the first place).
+The bit stays off till the PCI device driver calls pci_enable_device().
+With this change, the boot time of such a 14-GPU VM is reduced by almost
+3 minutes.
 
-Oh, you're totally right! I just assumed ARM64 would the the same, my
-bad. Just to propose some alternatives, so you/others can also discuss
-here and we can reach a consensus about the trade-offs:
+Link: https://lore.kernel.org/lkml/20220419220007.26550-1-decui@microsoft.com/
+Tested-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Jake Oshins <jakeo@microsoft.com>
 
-(a) We could forget about this change, and always do the clean-up here,
-not relying in machine_crash_shutdown().
-Pro: really simple, behaves the same as it is doing currently.
-Con: less elegant/concise, doesn't allow arm64 customization.
+---
 
-(b) Add a way to allow ARM64 customization of shutdown crash handler.
-Pro: matches x86, more customizable, improves arm64 arch code.
-Con: A tad more complex.
+Changes in v2:
+	Added Michael's Reviewed-by, Lorenzo's Acked-by, and a Link.
+	Rewrote the commit message by following Lorenzo's suggestion.
 
-Also, a question that came-up: if ARM64 has no way of calling special
-crash shutdown handler, how can you execute hv_stimer_cleanup() and
-hv_synic_disable_regs() there? Or are they not required in ARM64?
+	Thanks all for the informatie discussion!
 
+@ Wei Liu: Lorenzo agrees that this patch can go via the Hyper-V tree's
+hyperv-next branch (the patch should not go via the hyperv-fixes branch),
+but in general we should keep the PCI folks in the review loop for PCI
+hyper-V changes: https://lore.kernel.org/lkml/YmuzOJy%2F6F5wSjY7@lpieralisi/
 
->>
->> (c) There is also a Hyper-V framebuffer panic notifier, which relies in
->> doing a vmbus operation that demands a valid connection. So, we must
->> order this notifier with the panic notifier from vmbus_drv.c, in order to
->> guarantee that the framebuffer code executes before the vmbus connection
->> is unloaded.
-> 
-> Patch 21 of this set puts the Hyper-V FB panic notifier on the pre_reboot
-> notifier list, which means it won't execute before the VMbus connection
-> unload in the case of kdump.   This notifier is making sure that Hyper-V
-> is notified about the last updates made to the frame buffer before the
-> panic, so maybe it needs to be put on the hypervisor notifier list.  It
-> sends a message to Hyper-V over its existing VMbus channel, but it
-> does not wait for a reply.  It does, however, obtain a spin lock on the
-> ring buffer used to communicate with Hyper-V.   Unless someone has
-> a better suggestion, I'm inclined to take the risk of blocking on that
-> spin lock.
+ drivers/pci/controller/pci-hyperv.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-The logic behind that was: when kdump is set, we'd skip the vmbus
-disconnect on notifiers, deferring that to crash_shutdown(), logic this
-one refuted in the above discussion on ARM64 (one more Pro argument to
-the idea of refactoring aarch64 code to allow a custom crash shutdown
-handler heh). But you're right, for the default level 2, we skip the
-pre_reboot notifiers on kdump, effectively skipping this notifier.
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index d270a204324e..f9fbbd8d94db 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2082,12 +2082,17 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
+ 				}
+ 			}
+ 			if (high_size <= 1 && low_size <= 1) {
+-				/* Set the memory enable bit. */
+-				_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2,
+-							 &command);
+-				command |= PCI_COMMAND_MEMORY;
+-				_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2,
+-							  command);
++				/*
++				 * No need to set the PCI_COMMAND_MEMORY bit as
++				 * the core PCI driver doesn't require the bit
++				 * to be pre-set. Actually here we intentionally
++				 * keep the bit off so that the PCI BAR probing
++				 * in the core PCI driver doesn't cause Hyper-V
++				 * to unnecessarily unmap/map the virtual BARs
++				 * from/to the physical BARs multiple times.
++				 * This reduces the VM boot time significantly
++				 * if the BAR sizes are huge.
++				 */
+ 				break;
+ 			}
+ 		}
+-- 
+2.17.1
 
-Some ideas of what we can do here:
-
-I) we could change the framebuffer notifier to rely on trylocks, instead
-of risking a lockup scenario, and with that, we can execute it before
-the vmbus disconnect in the hypervisor list;
-
-II) we ignore the hypervisor notifier in case of kdump _by default_, and
-if the users don't want that, they can always set the panic notifier
-level to 4 and run all notifiers prior to kdump; would that be terrible
-you think? Kdump users might don't care about the framebuffer...
-
-III) we go with approach (b) above and refactor arm64 code to allow the
-custom crash handler on kdump time, then [with point (I) above] the
-logic proposed in this series is still valid - seems more and more the
-most correct/complete solution.
-
-In any case, I guess we should avoid workarounds if possible and do the
-things the best way we can, to encompass all (or almost all) the
-possible scenarios and don't force things on users (like enforcing panic
-notifier level 4 for Hyper-V or something like this...)
-
-More feedback from you / Hyper-V folks is pretty welcome about this.
-
-
-> 
->> [...]
-> The "Fixes:" tags imply that these changes should be backported to older
-> longterm kernel versions, which I don't think is the case.  There is a
-> dependency on Patch 14 of your series where PANIC_NOTIFIER is
-> introduced.
-> 
-
-Oh, this was more related with archeology of the kernel. When I'm
-investigating stuff, I really want to understand why code was added and
-that usually require some time git blaming stuff, so having that pronto
-in the commit message is a bonus.
-
-But of course we don't need to use the Fixes tag for that, easy to only
-mention it in the text. A secondary benefit by using this tag is to
-indicate this is a _real fix_ to some code, and not an improvement, but
-as you say, I agree we shouldn't backport it to previous releases having
-or not the Fixes tag (AFAIK it's not mandatory to backport stuff with
-Fixes tag).
-
-
->> [...]
->> + * intrincated is the relation of this notifier with Hyper-V framebuffer
-> 
-> s/intrincated/intricate/
-
-Thanks, fixed in V2!
-
-
->
->> [...]
->> +static int hv_panic_vmbus_unload(struct notifier_block *nb, unsigned long val,
->>  			      void *args)
->> +{
->> +	if (!kexec_crash_loaded())
-> 
-> I'm not clear on the purpose of this condition.  I think it means
-> we will skip the vmbus_initiate_unload() if a panic occurs in the
-> kdump kernel.  Is there a reason a panic in the kdump kernel
-> should be treated differently?  Or am I misunderstanding?
-
-This is really related with the point discussed in the top of this
-response - I assumed both ARM64/x86_64 would behave the same and
-disconnect the vmbus through the custom crash handler when kdump is set,
-so worth skipping it here in the notifier. But that's not true for ARM64
-as you pointed, so this guard against kexec is really part of the
-decision/discussion on what to do with ARM64 heh
-
-Cheers!
