@@ -2,107 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5328E518804
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 May 2022 17:10:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BDF45187F2
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 May 2022 17:09:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236393AbiECPNc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 May 2022 11:13:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40726 "EHLO
+        id S237963AbiECPLv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 May 2022 11:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237856AbiECPNb (ORCPT
+        with ESMTP id S237914AbiECPLm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 May 2022 11:13:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B10EF3A706
-        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 08:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651590593;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=q8KRyeOIJowwgq1LjuL92i0OyzQpFO6OlQ5jrqBwiaQ=;
-        b=ONI3K06SDHzgIhiEA7pFS9NinIdHrgEPUH3vax1Amzp2RcTLs1rl84I8C2971I9s00EAW6
-        BzDPr2gPbIkL1yAh6fVecILNRTSNf2XJaMTeFdBVjytU4iHqoBtcHNHw2LVr/90hzn3x2p
-        f4zCC6RhadlUZly0xQp4Gy92AhdX6LA=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-671-fQSgJ7TjPFyp34PKXHJwjg-1; Tue, 03 May 2022 11:09:24 -0400
-X-MC-Unique: fQSgJ7TjPFyp34PKXHJwjg-1
-Received: by mail-lf1-f72.google.com with SMTP id h15-20020ac24daf000000b00472586ed83dso4163300lfe.22
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 08:09:24 -0700 (PDT)
+        Tue, 3 May 2022 11:11:42 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4D53A5EB;
+        Tue,  3 May 2022 08:08:10 -0700 (PDT)
+Received: by mail-wr1-f54.google.com with SMTP id i5so23759914wrc.13;
+        Tue, 03 May 2022 08:08:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=q8KRyeOIJowwgq1LjuL92i0OyzQpFO6OlQ5jrqBwiaQ=;
-        b=2QO1eF+hBujY+Dh+UasmlpjHWbvWXdQo6WvPOGB2kMEBftGJonZqnQtCbOUX2bnwea
-         va4uOkJnQHuPd1uQO1CI7QRRuIeYUWSmbBr1d2VEilVnvi2CqkPJP7RS2yWsKrdx8iHO
-         LmrJ71UHKjeYIiT4fqmgYhg8CyzMPFfHd7MJP1Rmh1/sN9Zn+BeDS5gcE+jJOBWeoV2Z
-         jq6ZQ7Zkc203jxT5GkoINshHwUudrQ6SQ0luGhf1RtxKLDWFso9NTPMvC+vzoaUedZG+
-         MNcnsTF5XhJ50w/D53OG9ESV3b+TMP22BGLkGLnUppJPAMftiysRYnEf+oIwcVDmgw0j
-         xtEw==
-X-Gm-Message-State: AOAM533NL/6RuE47ZoAw9R8yO9N57Gb2tsQthunFfgqgKGc7QXOauMGQ
-        N6yNbE4b6HOsKTikqStpm4ewCzgJ5gLP+CzIlHWvu1O5zVj3VzIJvVzmsrUXEp8rt4Jzg6MCDJC
-        fehdA3iXjq8mDpKVV51f3hNbH
-X-Received: by 2002:a5d:64c1:0:b0:20c:6ff9:3a61 with SMTP id f1-20020a5d64c1000000b0020c6ff93a61mr4770688wri.709.1651590080961;
-        Tue, 03 May 2022 08:01:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyFddadb0RhMqbED3cKhIrdL1UAliMUxLFrwK6VNOQYuEXW0q5ELPbxKJShs+8DVKmBmOBFgQ==
-X-Received: by 2002:a5d:64c1:0:b0:20c:6ff9:3a61 with SMTP id f1-20020a5d64c1000000b0020c6ff93a61mr4770661wri.709.1651590080743;
-        Tue, 03 May 2022 08:01:20 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id t1-20020adfba41000000b0020c6fa5a797sm3344358wrg.91.2022.05.03.08.01.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OFDYOtaeBYWdI/VdYgSv21m5XBBjgU/ODz2WZHmBn3Q=;
+        b=v/IhySNd6YcyBWVPAJtPlG6svioReVtcopsRuRY4B++F0yOS8zFCjbJriymv90zE1K
+         RPBvBVl3eg7fjCYKRRJSFFRy9CWyyUPrt2hRs+oORJg8DZIipB2RZFqGubvbVIhY9xNj
+         3ANpybjIjSIsrFeo9CiloyOauZxWMH1pstne0RVvlVG4VvFilpvVFNZmIy+tK0dq/o0C
+         lhW+3Lzn/c/dRmsMJ67bJQSP4JVzC8TpghjKD6hxDmoQW3FLz+PqWF9cTzQRis32dXZx
+         dWnKgzXg4QBg5Au/It48ni12rLM/TvGongRXls6DwZQTcnaxVmmx3MG1FhBuOxxJ8j4U
+         vPUg==
+X-Gm-Message-State: AOAM533T1GLgy/nFj9IUg3XjMHF6tbVCzTONkdGPshts75yC9Ce7cQdY
+        eyk2E9Lld0jQuGFb+r496Ss=
+X-Google-Smtp-Source: ABdhPJxUHgC+z861mLwWBsRMd0+WqwbQOXHy1VunvJ23KhKxVuDMs2AqWeh+/Td2z8ZSYIVytBegWQ==
+X-Received: by 2002:a05:6000:1acd:b0:20c:726a:3840 with SMTP id i13-20020a0560001acd00b0020c726a3840mr3707076wry.507.1651590489041;
+        Tue, 03 May 2022 08:08:09 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id g17-20020adfbc91000000b0020c5253d8f3sm11729850wrh.63.2022.05.03.08.08.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 08:01:20 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/34] KVM: x86: hyper-v: Fine-grained TLB flush + L2
- TLB flush feature
-In-Reply-To: <20220414132013.1588929-1-vkuznets@redhat.com>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
-Date:   Tue, 03 May 2022 17:01:19 +0200
-Message-ID: <87bkwe3bk0.fsf@redhat.com>
+        Tue, 03 May 2022 08:08:08 -0700 (PDT)
+Date:   Tue, 3 May 2022 15:08:06 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v4] drm/hyperv: Add error message for fb size greater
+ than allocated
+Message-ID: <20220503150806.neeemkwlexmyqsnd@liuwe-devbox-debian-v2>
+References: <1649737739-10113-1-git-send-email-ssengar@linux.microsoft.com>
+ <BYAPR21MB127064CAEA28FBBFB34672C3BFED9@BYAPR21MB1270.namprd21.prod.outlook.com>
+ <20220503145016.GA25079@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220503145016.GA25079@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+On Tue, May 03, 2022 at 07:50:16AM -0700, Saurabh Singh Sengar wrote:
+> On Tue, Apr 12, 2022 at 05:06:07AM +0000, Dexuan Cui wrote:
+> > > From: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > > Sent: Monday, April 11, 2022 9:29 PM
+> > >  ...
+> > > Add error message when the size of requested framebuffer is more than
+> > > the allocated size by vmbus mmio region for framebuffer
+> > 
+> > The line lacks a period, but I guess the maintainer may help fix it for you :-)
+> >  
+> > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > 
+> > Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> 
+> Can this be queued for next ? please let me know in case any clarification required.
 
-> Changes since v1:
-
-This should've beed 'since v2', obviously.
-
-...
-
->
-> Currently, KVM handles HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} requests
-> by flushing the whole VPID and this is sub-optimal. This series introduces
-> the required mechanism to make handling of these requests more 
-> fine-grained by flushing individual GVAs only (when requested). On this
-> foundation, "Direct Virtual Flush" Hyper-V feature is implemented. The 
-> feature allows L0 to handle Hyper-V TLB flush hypercalls directly at
-> L0 without the need to reflect the exit to L1. This has at least two
-> benefits: reflecting vmexit and the consequent vmenter are avoided + L0
-> has precise information whether the target vCPU is actually running (and
-> thus requires a kick).
-
-FWIW, patches still apply cleanly to kvm/queue so probably there's no
-need to resend.
-
--- 
-Vitaly
-
+Applied to hyperv-next. Thanks.
