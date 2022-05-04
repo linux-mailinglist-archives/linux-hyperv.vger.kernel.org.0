@@ -2,177 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89FF651A4F0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 18:09:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5360B51A5A7
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 18:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353079AbiEDQMn convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-hyperv@lfdr.de>); Wed, 4 May 2022 12:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
+        id S1353516AbiEDQl0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 May 2022 12:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353060AbiEDQMl (ORCPT
+        with ESMTP id S236727AbiEDQl0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 May 2022 12:12:41 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9F50B28E3E
-        for <linux-hyperv@vger.kernel.org>; Wed,  4 May 2022 09:09:03 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-304-235WxlwhNjKFdg4Xv28oCg-1; Wed, 04 May 2022 17:08:18 +0100
-X-MC-Unique: 235WxlwhNjKFdg4Xv28oCg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.32; Wed, 4 May 2022 17:08:15 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.033; Wed, 4 May 2022 17:08:15 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-CC:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithp@keithp.com>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        "Baowen Zheng" <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        Christian Brauner <brauner@kernel.org>,
-        =?iso-8859-1?Q?Christian_G=F6ttsche?= <cgzones@googlemail.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        "David Gow" <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "Dmitry Kasatkin" <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        "Eugeniu Rosca" <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "Hante Meuleman" <hante.meuleman@broadcom.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "kunit-dev@googlegroups.com" <kunit-dev@googlegroups.com>,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Lars-Peter Clausen" <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux1394-devel@lists.sourceforge.net" 
-        <linux1394-devel@lists.sourceforge.net>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        "Luiz Augusto von Dentz" <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Max Filippov" <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        =?iso-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "Rich Felker" <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "SHA-cyfmac-dev-list@infineon.com" <SHA-cyfmac-dev-list@infineon.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        "wcn36xx@lists.infradead.org" <wcn36xx@lists.infradead.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        "Yang Yingliang" <yangyingliang@huawei.com>
-Subject: RE: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
-Thread-Topic: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
-Thread-Index: AQHYX80GRJFxZRupFEigWcMQWGiaSK0O4MfQ
-Date:   Wed, 4 May 2022 16:08:15 +0000
-Message-ID: <bc2efc31d25e4f42a98f0a5d7a8ad88a@AcuMS.aculab.com>
-References: <20220504014440.3697851-1-keescook@chromium.org>
- <20220504014440.3697851-3-keescook@chromium.org>
- <d3b73d80f66325fdfaf2d1f00ea97ab3db03146a.camel@sipsolutions.net>
- <202205040819.DEA70BD@keescook>
-In-Reply-To: <202205040819.DEA70BD@keescook>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 4 May 2022 12:41:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B27915711;
+        Wed,  4 May 2022 09:37:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B0776173C;
+        Wed,  4 May 2022 16:37:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF45C385A5;
+        Wed,  4 May 2022 16:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651682268;
+        bh=V+QU5Ck1Av3E648KurQxRONGcMlBXtqGZJYSH/Lz7Jg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nV0ROtRk44A/R5zrV14YsrAh09tiQG/JDufZj3/l8WmfyIYkDeV8BCq2lUdirvl89
+         D/q0zzHNIU6GuPv48nixEHv1pPomWMQ28PPi+d8B65ufAupleq1x3ziv1Ju4kM7Z96
+         IKvlT1By591p1qHv5wDDZOxtkTuJgy90H+ZFHVWEaxIGRU66uu1dWoEt3+yK3kWDGw
+         xc/MfPjZMSM9ZeRziHkMI7KCUldJGOLVpJs/gG9KYQAEKXs5JdDEk9zbY4Eem3lxC5
+         iuXhX3h3iIDLCvv+JwmLkOgPN4wjdvQE7hYylTVKz2e6ITYGyksEuumgZK3T4Ar7fc
+         Crb/+h7PpooZw==
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, pabeni@redhat.com, edumazet@google.com,
+        Jakub Kicinski <kuba@kernel.org>, rafal@milecki.pl,
+        f.fainelli@gmail.com, opendmb@gmail.com, dmichail@fungible.com,
+        hauke@hauke-m.de, tariqt@nvidia.com, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, shshaikh@marvell.com, manishc@marvell.com,
+        jiri@resnulli.us, hayashi.kunihiko@socionext.com,
+        peppe.cavallaro@st.com, alexandre.torgue@foss.st.com,
+        joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
+        grygorii.strashko@ti.com, elder@kernel.org, wintera@linux.ibm.com,
+        wenjia@linux.ibm.com, svens@linux.ibm.com,
+        mathew.j.martineau@linux.intel.com, matthieu.baerts@tessares.net,
+        s-vadapalli@ti.com, chi.minghao@zte.com.cn,
+        linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        mptcp@lists.linux.dev
+Subject: [PATCH net-next 1/2] net: switch to netif_napi_add_tx()
+Date:   Wed,  4 May 2022 09:37:24 -0700
+Message-Id: <20220504163725.550782-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -180,47 +65,350 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Kees Cook
-> Sent: 04 May 2022 16:38
-...
-> > >     struct something *instance = NULL;
-> > >     int rc;
-> > >
-> > >     rc = mem_to_flex_dup(&instance, byte_array, count, GFP_KERNEL);
-> > >     if (rc)
-> > >         return rc;
-> >
-> > This seems rather awkward, having to set it to NULL, then checking rc
-> > (and possibly needing a separate variable for it), etc.
-> 
-> I think the errno return is completely required. I had an earlier version
-> of this that was much more like a drop-in replacement for memcpy that
-> would just truncate or panic, and when I had it all together, I could
-> just imagine hearing Linus telling me to start over because it was unsafe
-> (truncation may be just as bad as overflow) and disruptive ("never BUG"),
-> and that it should be recoverable. So, I rewrote it all to return a
-> __must_check errno.
-> 
-> Requiring instance to be NULL is debatable, but I feel pretty strongly
-> about it because it does handle a class of mistakes (resource leaks),
-> and it's not much of a burden to require a known-good starting state.
+Switch net callers to the new API not requiring
+the NAPI_POLL_WEIGHT argument.
 
-Why not make it look like malloc() since it seems to be malloc().
-That gives a much better calling convention.
-Passing pointers and integers by reference can generate horrid code.
-(Mostly because it stops the compiler keeping values in registers.)
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+CC: rafal@milecki.pl
+CC: f.fainelli@gmail.com
+CC: opendmb@gmail.com
+CC: dmichail@fungible.com
+CC: hauke@hauke-m.de
+CC: tariqt@nvidia.com
+CC: kys@microsoft.com
+CC: haiyangz@microsoft.com
+CC: sthemmin@microsoft.com
+CC: wei.liu@kernel.org
+CC: decui@microsoft.com
+CC: shshaikh@marvell.com
+CC: manishc@marvell.com
+CC: jiri@resnulli.us
+CC: hayashi.kunihiko@socionext.com
+CC: peppe.cavallaro@st.com
+CC: alexandre.torgue@foss.st.com
+CC: joabreu@synopsys.com
+CC: mcoquelin.stm32@gmail.com
+CC: grygorii.strashko@ti.com
+CC: elder@kernel.org
+CC: wintera@linux.ibm.com
+CC: wenjia@linux.ibm.com
+CC: svens@linux.ibm.com
+CC: mathew.j.martineau@linux.intel.com
+CC: matthieu.baerts@tessares.net
+CC: s-vadapalli@ti.com
+CC: chi.minghao@zte.com.cn
+CC: linux-rdma@vger.kernel.org
+CC: linux-hyperv@vger.kernel.org
+CC: mptcp@lists.linux.dev
+---
+ drivers/net/ethernet/broadcom/bcm4908_enet.c       | 2 +-
+ drivers/net/ethernet/broadcom/bcmsysport.c         | 2 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     | 3 +--
+ drivers/net/ethernet/fungible/funeth/funeth_main.c | 3 +--
+ drivers/net/ethernet/lantiq_xrx200.c               | 4 ++--
+ drivers/net/ethernet/mellanox/mlx4/en_cq.c         | 3 +--
+ drivers/net/ethernet/microsoft/mana/mana_en.c      | 2 +-
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c     | 9 ++++-----
+ drivers/net/ethernet/rocker/rocker_main.c          | 3 +--
+ drivers/net/ethernet/socionext/sni_ave.c           | 3 +--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 5 ++---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c           | 4 ++--
+ drivers/net/ethernet/ti/cpsw.c                     | 5 ++---
+ drivers/net/ethernet/ti/cpsw_new.c                 | 5 ++---
+ drivers/net/ethernet/ti/netcp_core.c               | 2 +-
+ drivers/net/ipa/gsi.c                              | 4 ++--
+ drivers/net/tun.c                                  | 3 +--
+ drivers/s390/net/qeth_core_main.c                  | 3 +--
+ net/mptcp/protocol.c                               | 4 ++--
+ 19 files changed, 29 insertions(+), 40 deletions(-)
 
-If you want the type information inside the 'function'
-use a #define so that the use is:
-
-	mem_to_flex_dup(instance, byte_array, count, GFP_KERNEL);
-	if (!instance)
-		return ...
-(or use ERR_PTR() etc).
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/net/ethernet/broadcom/bcm4908_enet.c b/drivers/net/ethernet/broadcom/bcm4908_enet.c
+index 4a2622b05ee1..c131d8118489 100644
+--- a/drivers/net/ethernet/broadcom/bcm4908_enet.c
++++ b/drivers/net/ethernet/broadcom/bcm4908_enet.c
+@@ -722,7 +722,7 @@ static int bcm4908_enet_probe(struct platform_device *pdev)
+ 	netdev->min_mtu = ETH_ZLEN;
+ 	netdev->mtu = ETH_DATA_LEN;
+ 	netdev->max_mtu = ENET_MTU_MAX;
+-	netif_tx_napi_add(netdev, &enet->tx_ring.napi, bcm4908_enet_poll_tx, NAPI_POLL_WEIGHT);
++	netif_napi_add_tx(netdev, &enet->tx_ring.napi, bcm4908_enet_poll_tx);
+ 	netif_napi_add(netdev, &enet->rx_ring.napi, bcm4908_enet_poll_rx, NAPI_POLL_WEIGHT);
+ 
+ 	err = register_netdev(netdev);
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 60dde29974bf..a4ce96bb3903 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -1517,7 +1517,7 @@ static int bcm_sysport_init_tx_ring(struct bcm_sysport_priv *priv,
+ 	/* Initialize SW view of the ring */
+ 	spin_lock_init(&ring->lock);
+ 	ring->priv = priv;
+-	netif_tx_napi_add(priv->netdev, &ring->napi, bcm_sysport_tx_poll, 64);
++	netif_napi_add_tx(priv->netdev, &ring->napi, bcm_sysport_tx_poll);
+ 	ring->index = index;
+ 	ring->size = size;
+ 	ring->clean_index = 0;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+index bf1ec8fdc2ad..65606351634e 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -2671,8 +2671,7 @@ static void bcmgenet_init_tx_ring(struct bcmgenet_priv *priv,
+ 				  DMA_END_ADDR);
+ 
+ 	/* Initialize Tx NAPI */
+-	netif_tx_napi_add(priv->dev, &ring->napi, bcmgenet_tx_poll,
+-			  NAPI_POLL_WEIGHT);
++	netif_napi_add_tx(priv->dev, &ring->napi, bcmgenet_tx_poll);
+ }
+ 
+ /* Initialize a RDMA ring */
+diff --git a/drivers/net/ethernet/fungible/funeth/funeth_main.c b/drivers/net/ethernet/fungible/funeth/funeth_main.c
+index 67dd02ed1fa3..9485cf699c5d 100644
+--- a/drivers/net/ethernet/fungible/funeth/funeth_main.c
++++ b/drivers/net/ethernet/fungible/funeth/funeth_main.c
+@@ -330,8 +330,7 @@ static int fun_alloc_queue_irqs(struct net_device *dev, unsigned int ntx,
+ 			return PTR_ERR(irq);
+ 
+ 		fp->num_tx_irqs++;
+-		netif_tx_napi_add(dev, &irq->napi, fun_txq_napi_poll,
+-				  NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(dev, &irq->napi, fun_txq_napi_poll);
+ 	}
+ 
+ 	for (i = fp->num_rx_irqs; i < nrx; i++) {
+diff --git a/drivers/net/ethernet/lantiq_xrx200.c b/drivers/net/ethernet/lantiq_xrx200.c
+index 5712c3e94be8..5edb68a8aab1 100644
+--- a/drivers/net/ethernet/lantiq_xrx200.c
++++ b/drivers/net/ethernet/lantiq_xrx200.c
+@@ -615,8 +615,8 @@ static int xrx200_probe(struct platform_device *pdev)
+ 	/* setup NAPI */
+ 	netif_napi_add(net_dev, &priv->chan_rx.napi, xrx200_poll_rx,
+ 		       NAPI_POLL_WEIGHT);
+-	netif_tx_napi_add(net_dev, &priv->chan_tx.napi, xrx200_tx_housekeeping,
+-			  NAPI_POLL_WEIGHT);
++	netif_napi_add_tx(net_dev, &priv->chan_tx.napi,
++			  xrx200_tx_housekeeping);
+ 
+ 	platform_set_drvdata(pdev, priv);
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_cq.c b/drivers/net/ethernet/mellanox/mlx4/en_cq.c
+index d5fc72b1a36f..6affbd241264 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_cq.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_cq.c
+@@ -147,8 +147,7 @@ int mlx4_en_activate_cq(struct mlx4_en_priv *priv, struct mlx4_en_cq *cq,
+ 	switch (cq->type) {
+ 	case TX:
+ 		cq->mcq.comp = mlx4_en_tx_irq;
+-		netif_tx_napi_add(cq->dev, &cq->napi, mlx4_en_poll_tx_cq,
+-				  NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(cq->dev, &cq->napi, mlx4_en_poll_tx_cq);
+ 		napi_enable(&cq->napi);
+ 		break;
+ 	case RX:
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index b7d3ba1b4d17..06f853c5c141 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1371,7 +1371,7 @@ static int mana_create_txq(struct mana_port_context *apc,
+ 
+ 		gc->cq_table[cq->gdma_id] = cq->gdma_cq;
+ 
+-		netif_tx_napi_add(net, &cq->napi, mana_poll, NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(net, &cq->napi, mana_poll);
+ 		napi_enable(&cq->napi);
+ 
+ 		mana_gd_ring_cq(cq->gdma_cq, SET_ARM_BIT);
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+index bcf3746220df..8d43ca282956 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_io.c
+@@ -1608,8 +1608,8 @@ int qlcnic_82xx_napi_add(struct qlcnic_adapter *adapter,
+ 	if (qlcnic_check_multi_tx(adapter) && !adapter->ahw->diag_test) {
+ 		for (ring = 0; ring < adapter->drv_tx_rings; ring++) {
+ 			tx_ring = &adapter->tx_ring[ring];
+-			netif_tx_napi_add(netdev, &tx_ring->napi, qlcnic_tx_poll,
+-				       NAPI_POLL_WEIGHT);
++			netif_napi_add_tx(netdev, &tx_ring->napi,
++					  qlcnic_tx_poll);
+ 		}
+ 	}
+ 
+@@ -2138,9 +2138,8 @@ int qlcnic_83xx_napi_add(struct qlcnic_adapter *adapter,
+ 	    !(adapter->flags & QLCNIC_TX_INTR_SHARED)) {
+ 		for (ring = 0; ring < adapter->drv_tx_rings; ring++) {
+ 			tx_ring = &adapter->tx_ring[ring];
+-			netif_tx_napi_add(netdev, &tx_ring->napi,
+-				       qlcnic_83xx_msix_tx_poll,
+-				       NAPI_POLL_WEIGHT);
++			netif_napi_add_tx(netdev, &tx_ring->napi,
++					  qlcnic_83xx_msix_tx_poll);
+ 		}
+ 	}
+ 
+diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
+index 3fcea211716c..fc83ec23bd1d 100644
+--- a/drivers/net/ethernet/rocker/rocker_main.c
++++ b/drivers/net/ethernet/rocker/rocker_main.c
+@@ -2573,8 +2573,7 @@ static int rocker_probe_port(struct rocker *rocker, unsigned int port_number)
+ 	rocker_port_dev_addr_init(rocker_port);
+ 	dev->netdev_ops = &rocker_port_netdev_ops;
+ 	dev->ethtool_ops = &rocker_port_ethtool_ops;
+-	netif_tx_napi_add(dev, &rocker_port->napi_tx, rocker_port_poll_tx,
+-			  NAPI_POLL_WEIGHT);
++	netif_napi_add_tx(dev, &rocker_port->napi_tx, rocker_port_poll_tx);
+ 	netif_napi_add(dev, &rocker_port->napi_rx, rocker_port_poll_rx,
+ 		       NAPI_POLL_WEIGHT);
+ 	rocker_carrier_init(rocker_port);
+diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
+index 2c48f8b8ab71..f0c8de2c6075 100644
+--- a/drivers/net/ethernet/socionext/sni_ave.c
++++ b/drivers/net/ethernet/socionext/sni_ave.c
+@@ -1689,8 +1689,7 @@ static int ave_probe(struct platform_device *pdev)
+ 	/* Register as a NAPI supported driver */
+ 	netif_napi_add(ndev, &priv->napi_rx, ave_napi_poll_rx,
+ 		       NAPI_POLL_WEIGHT);
+-	netif_tx_napi_add(ndev, &priv->napi_tx, ave_napi_poll_tx,
+-			  NAPI_POLL_WEIGHT);
++	netif_napi_add_tx(ndev, &priv->napi_tx, ave_napi_poll_tx);
+ 
+ 	platform_set_drvdata(pdev, ndev);
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 7c834c02e084..99fa1bd43f47 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -6759,9 +6759,8 @@ static void stmmac_napi_add(struct net_device *dev)
+ 				       NAPI_POLL_WEIGHT);
+ 		}
+ 		if (queue < priv->plat->tx_queues_to_use) {
+-			netif_tx_napi_add(dev, &ch->tx_napi,
+-					  stmmac_napi_poll_tx,
+-					  NAPI_POLL_WEIGHT);
++			netif_napi_add_tx(dev, &ch->tx_napi,
++					  stmmac_napi_poll_tx);
+ 		}
+ 		if (queue < priv->plat->rx_queues_to_use &&
+ 		    queue < priv->plat->tx_queues_to_use) {
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+index b7ebd741f284..34197c67f8d9 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -2032,8 +2032,8 @@ static int am65_cpsw_nuss_ndev_add_tx_napi(struct am65_cpsw_common *common)
+ 	for (i = 0; i < common->tx_ch_num; i++) {
+ 		struct am65_cpsw_tx_chn *tx_chn = &common->tx_chns[i];
+ 
+-		netif_tx_napi_add(common->dma_ndev, &tx_chn->napi_tx,
+-				  am65_cpsw_nuss_tx_poll, NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(common->dma_ndev, &tx_chn->napi_tx,
++				  am65_cpsw_nuss_tx_poll);
+ 
+ 		ret = devm_request_irq(dev, tx_chn->irq,
+ 				       am65_cpsw_nuss_tx_irq,
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 662435e36805..ed66c4d4d830 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -1640,9 +1640,8 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	netif_napi_add(ndev, &cpsw->napi_rx,
+ 		       cpsw->quirk_irq ? cpsw_rx_poll : cpsw_rx_mq_poll,
+ 		       NAPI_POLL_WEIGHT);
+-	netif_tx_napi_add(ndev, &cpsw->napi_tx,
+-			  cpsw->quirk_irq ? cpsw_tx_poll : cpsw_tx_mq_poll,
+-			  NAPI_POLL_WEIGHT);
++	netif_napi_add_tx(ndev, &cpsw->napi_tx,
++			  cpsw->quirk_irq ? cpsw_tx_poll : cpsw_tx_mq_poll);
+ 
+ 	/* register the network device */
+ 	SET_NETDEV_DEV(ndev, dev);
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index b33781ed760e..12341796af2f 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -1417,10 +1417,9 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
+ 				       cpsw->quirk_irq ?
+ 				       cpsw_rx_poll : cpsw_rx_mq_poll,
+ 				       NAPI_POLL_WEIGHT);
+-			netif_tx_napi_add(ndev, &cpsw->napi_tx,
++			netif_napi_add_tx(ndev, &cpsw->napi_tx,
+ 					  cpsw->quirk_irq ?
+-					  cpsw_tx_poll : cpsw_tx_mq_poll,
+-					  NAPI_POLL_WEIGHT);
++					  cpsw_tx_poll : cpsw_tx_mq_poll);
+ 		}
+ 
+ 		napi_ndev = ndev;
+diff --git a/drivers/net/ethernet/ti/netcp_core.c b/drivers/net/ethernet/ti/netcp_core.c
+index 21b0e961eab5..b15d44261e76 100644
+--- a/drivers/net/ethernet/ti/netcp_core.c
++++ b/drivers/net/ethernet/ti/netcp_core.c
+@@ -2096,7 +2096,7 @@ static int netcp_create_interface(struct netcp_device *netcp_device,
+ 
+ 	/* NAPI register */
+ 	netif_napi_add(ndev, &netcp->rx_napi, netcp_rx_poll, NAPI_POLL_WEIGHT);
+-	netif_tx_napi_add(ndev, &netcp->tx_napi, netcp_tx_poll, NAPI_POLL_WEIGHT);
++	netif_napi_add_tx(ndev, &netcp->tx_napi, netcp_tx_poll);
+ 
+ 	/* Register the network device */
+ 	ndev->dev_id		= 0;
+diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
+index bc981043cc80..db4cb2de218c 100644
+--- a/drivers/net/ipa/gsi.c
++++ b/drivers/net/ipa/gsi.c
+@@ -1614,8 +1614,8 @@ static int gsi_channel_setup_one(struct gsi *gsi, u32 channel_id)
+ 	gsi_channel_program(channel, true);
+ 
+ 	if (channel->toward_ipa)
+-		netif_tx_napi_add(&gsi->dummy_dev, &channel->napi,
+-				  gsi_channel_poll, NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(&gsi->dummy_dev, &channel->napi,
++				  gsi_channel_poll);
+ 	else
+ 		netif_napi_add(&gsi->dummy_dev, &channel->napi,
+ 			       gsi_channel_poll, NAPI_POLL_WEIGHT);
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index dbe4c0a4be2c..87a635aac008 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -268,8 +268,7 @@ static void tun_napi_init(struct tun_struct *tun, struct tun_file *tfile,
+ 	tfile->napi_enabled = napi_en;
+ 	tfile->napi_frags_enabled = napi_en && napi_frags;
+ 	if (napi_en) {
+-		netif_tx_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
+-				  NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(tun->dev, &tfile->napi, tun_napi_poll);
+ 		napi_enable(&tfile->napi);
+ 	}
+ }
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index ae85179ca49a..9e54fe76a9b2 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -7099,8 +7099,7 @@ int qeth_open(struct net_device *dev)
+ 
+ 	local_bh_disable();
+ 	qeth_for_each_output_queue(card, queue, i) {
+-		netif_tx_napi_add(dev, &queue->napi, qeth_tx_poll,
+-				  NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(dev, &queue->napi, qeth_tx_poll);
+ 		napi_enable(&queue->napi);
+ 		napi_schedule(&queue->napi);
+ 	}
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 52ed2c0ac901..7a9e2545884f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3786,8 +3786,8 @@ void __init mptcp_proto_init(void)
+ 	for_each_possible_cpu(cpu) {
+ 		delegated = per_cpu_ptr(&mptcp_delegated_actions, cpu);
+ 		INIT_LIST_HEAD(&delegated->head);
+-		netif_tx_napi_add(&mptcp_napi_dev, &delegated->napi, mptcp_napi_poll,
+-				  NAPI_POLL_WEIGHT);
++		netif_napi_add_tx(&mptcp_napi_dev, &delegated->napi,
++				  mptcp_napi_poll);
+ 		napi_enable(&delegated->napi);
+ 	}
+ 
+-- 
+2.34.1
 
