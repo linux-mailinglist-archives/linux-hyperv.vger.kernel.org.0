@@ -2,79 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13D4351B080
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 23:27:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB2451B18C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 00:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237440AbiEDVbE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 May 2022 17:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
+        id S236501AbiEDWEq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 May 2022 18:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235839AbiEDVbC (ORCPT
+        with ESMTP id S1378943AbiEDWEp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 May 2022 17:31:02 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620E446665;
-        Wed,  4 May 2022 14:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dpN78FnXP8xKsKthCe3ePYGrznnidWC78ijJKGIis+s=; b=VzNshjcWDWgTdIjmwACWbnjJ/H
-        mQcB13lNG3fglzHQC/FUqdo2dvwKWsRAKNIc/TJuBa97Z8kYuf2lpVRvpBu62ga3ovDrsi08aDNiE
-        OlqogXHjD4qsmKbgS2LbXN2AOGnhdCvdtCVo6IDt0imworVavUuV/zNlIT6mNaTQhnLm07TNtoK4m
-        Ihl3ULKYuFP6cuYPQF485CZFlEA6oPcsLGDcH0IfHz/dstflDSmqrZB+ksN5MQ7uiQlVVpBT+K7Ib
-        0RM9kXieFgdNepPjq9LySneGSuViPcHimXjyBUf5+knfLf159kvuFYr1c8xkwmLdvzZ/p8/HjZAHo
-        dOADxIVQ==;
-Received: from [179.113.53.197] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1nmMWW-0004FF-4B; Wed, 04 May 2022 23:27:04 +0200
-Message-ID: <976c2d62-09e7-9f8d-d978-12749a2f70e6@igalia.com>
-Date:   Wed, 4 May 2022 18:26:28 -0300
+        Wed, 4 May 2022 18:04:45 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E09EF4ECF4;
+        Wed,  4 May 2022 15:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651701667; x=1683237667;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=85T/HK3Ljm2OuJ86i6TaZqpi0qkXHVTYq3nEoDDs7nc=;
+  b=i3u25cL6o2Y65CwElAv9tAq+Ef5nXiJdQOyQTinHD9DsLWNLEGPiKUcm
+   KQbBoNzLYnd7lE3f0xcOJxDR/+K+q0k6sHdNVdPueXdOS5gXhr89flbxl
+   5BCAJyTmW/CPESasalL7FLBIhJ5+XPKOJa79hb6RACgnYL6hke/8gwNwB
+   T/BAaTY+H1SY0hIVISh3qP2li8Y+KKEoFJwOGqRbWP/qbbRCuF/wMOqHo
+   Y4vsX1T9PqlINa5BjzJNrxihZYFPEPDowHXvyattXhrdYYCjSI1AkqCob
+   1smoDJmbDmXTMK1Z4sTAiqNyGkclC2XjS9ivd3IAypDm+doEb2uGaKo6K
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10337"; a="266754783"
+X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
+   d="scan'208";a="266754783"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 15:01:07 -0700
+X-IronPort-AV: E=Sophos;i="5.91,199,1647327600"; 
+   d="scan'208";a="621003539"
+Received: from jsbradle-mobl1.amr.corp.intel.com ([10.212.185.245])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2022 15:01:03 -0700
+Date:   Wed, 4 May 2022 15:01:01 -0700 (PDT)
+From:   Mat Martineau <mathew.j.martineau@linux.intel.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+cc:     davem@davemloft.net, netdev@vger.kernel.org, pabeni@redhat.com,
+        edumazet@google.com, rafal@milecki.pl, f.fainelli@gmail.com,
+        opendmb@gmail.com, dmichail@fungible.com, hauke@hauke-m.de,
+        tariqt@nvidia.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        shshaikh@marvell.com, manishc@marvell.com, jiri@resnulli.us,
+        hayashi.kunihiko@socionext.com, peppe.cavallaro@st.com,
+        alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+        mcoquelin.stm32@gmail.com, grygorii.strashko@ti.com,
+        elder@kernel.org, wintera@linux.ibm.com, wenjia@linux.ibm.com,
+        svens@linux.ibm.com, matthieu.baerts@tessares.net,
+        s-vadapalli@ti.com, chi.minghao@zte.com.cn,
+        linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next 1/2] net: switch to netif_napi_add_tx()
+In-Reply-To: <20220504163725.550782-1-kuba@kernel.org>
+Message-ID: <eb4dc61f-59a-794-d915-cfabbe469369@linux.intel.com>
+References: <20220504163725.550782-1-kuba@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 07/30] mips: ip22: Reword PANICED to PANICKED and remove
- useless header
-Content-Language: en-US
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
-        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
-        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-8-gpiccoli@igalia.com>
- <20220504203224.GA23475@alpha.franken.de>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20220504203224.GA23475@alpha.franken.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,12 +70,44 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 04/05/2022 17:32, Thomas Bogendoerfer wrote:
-> [...]
-> 
-> applied to mips-next.
-> 
-> Thomas.
-> 
+On Wed, 4 May 2022, Jakub Kicinski wrote:
 
-Thanks a bunch Thomas =)
+> Switch net callers to the new API not requiring
+> the NAPI_POLL_WEIGHT argument.
+>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+
+...
+
+> net/mptcp/protocol.c                               | 4 ++--
+> 19 files changed, 29 insertions(+), 40 deletions(-)
+>
+
+For the MPTCP content:
+
+Acked-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
+
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 52ed2c0ac901..7a9e2545884f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3786,8 +3786,8 @@ void __init mptcp_proto_init(void)
+> 	for_each_possible_cpu(cpu) {
+> 		delegated = per_cpu_ptr(&mptcp_delegated_actions, cpu);
+> 		INIT_LIST_HEAD(&delegated->head);
+> -		netif_tx_napi_add(&mptcp_napi_dev, &delegated->napi, mptcp_napi_poll,
+> -				  NAPI_POLL_WEIGHT);
+> +		netif_napi_add_tx(&mptcp_napi_dev, &delegated->napi,
+> +				  mptcp_napi_poll);
+> 		napi_enable(&delegated->napi);
+> 	}
+>
+> -- 
+> 2.34.1
+>
+>
+
+--
+Mat Martineau
+Intel
