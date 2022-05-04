@@ -2,158 +2,276 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FD7C519FFF
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 14:51:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB60751A338
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 17:08:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350048AbiEDMyq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 May 2022 08:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
+        id S1351911AbiEDPMG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 May 2022 11:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350025AbiEDMyn (ORCPT
+        with ESMTP id S230402AbiEDPMF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 May 2022 08:54:43 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68AA3340DF;
-        Wed,  4 May 2022 05:51:07 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id l18so2675774ejc.7;
-        Wed, 04 May 2022 05:51:07 -0700 (PDT)
+        Wed, 4 May 2022 11:12:05 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCE03616A
+        for <linux-hyperv@vger.kernel.org>; Wed,  4 May 2022 08:08:28 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id l11-20020a17090a49cb00b001d923a9ca99so1484230pjm.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 04 May 2022 08:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4oUj7O1NwJKsfpkZYyH3UkjfTQ0Yjl6gl4HxIj+8zVw=;
-        b=MEb2d+PxSJCuqZOwnllnt/62Wd7GMRUtBYnzNjs1ff4SKu/3pNBjnpeboa0sajWeJp
-         89hF2rFzTdEKo5hnkFVjq2JBX0Ky70LKfZGDIJBiGJljv7pcb8/uvG9JNunt0wq4hgad
-         VYwy9I5C6Ns1qPuCxNbIqi1j6ze7sEueUidGiMDOUpA8eq4eIZ1ew9Qua9CQdsHSllEU
-         nU2g5QaYxUtQe0nvMuD78LLBTlaod7OTxK9wC/P0h/GbJo+x/RBsRQCS/KPTdU0P76ZC
-         zCXARGNTDcY0fTpIK02bJM0KBij9teAtnDVn76mBRYqBcoKf5dUo6O9M25Qcp74HGAvL
-         pl5Q==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Qb+1GrJs8SRgE6Wq+GlmzxuejfTqdKZ3b89DzJavSQw=;
+        b=QW7CQXai9IiD71Wvf+o2VYxsrI+DMXmN1vsS0b5DV0rtrX+G8r3eGzQnrLgcSNLS6o
+         18VjexLmt9t17aqS0qc4jCF5CPslGIy/SB1vEauI+iOiw3aemKigwzjm7wU//Osg3Pbt
+         9wMF/4HUhAaX0invtmDD41DdrKFbACP1VK8u0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4oUj7O1NwJKsfpkZYyH3UkjfTQ0Yjl6gl4HxIj+8zVw=;
-        b=oacBXH+TpRFsdA/SE9mykVZ6kKiQJDKAFJgb3/5g4jSVW4nDPId+dRlaUeE0TGErew
-         9OfYovcy3atvhsS8xCR8cC64M4NYEz+zPrd/8klOBVcS44BmGtGt8S+Ws/T+4ETG5JBM
-         tSb7txjqvFFy/AIsuLp+tfp2Gr8QRHT3zk6SdU7cSMSAzlmHQJjQOAMqGAt4VaNDoNMp
-         R2SLfXvcoKQlqS8zPY/O5EMotyNChFqwFdUjXwUESHec3zcWJchO9Q7tXmm5eJ5ZWPSB
-         8PlngQm46ABUnk6RLHdubpbk9v1zY7dgowuCRkljDpIZQ6YJQ2XXTrvcKXOUEu8kt6eP
-         w02w==
-X-Gm-Message-State: AOAM5304yNc6FThkEFZgBfbV1mG/psJFzuk4LRioB6HPCd72dYgkTqKv
-        3lAa76a09mbyybh6u0uVlhc=
-X-Google-Smtp-Source: ABdhPJzKz5xW6gV7XNgNc0HAq4cChXpUz/hEyX9kk5b86BCBFvkIE27EFe9Pe8Mk0bZ1ZMgwJEuCEA==
-X-Received: by 2002:a17:906:8301:b0:6e4:896d:59b1 with SMTP id j1-20020a170906830100b006e4896d59b1mr19397788ejx.396.1651668665762;
-        Wed, 04 May 2022 05:51:05 -0700 (PDT)
-Received: from anparri.mshome.net (host-2-117-178-169.business.telecomitalia.it. [2.117.178.169])
-        by smtp.gmail.com with ESMTPSA id hz7-20020a1709072ce700b006f3ef214dc9sm5743045ejc.47.2022.05.04.05.51.04
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qb+1GrJs8SRgE6Wq+GlmzxuejfTqdKZ3b89DzJavSQw=;
+        b=AVTUUaqEZrTuzNYkbNqiuFT2gTsKCxgee8rXcxFQv6kHP0X+ZfVq0IOAPSfgwsC27M
+         rmMyjTBU4qCHSYfZh0iJFGnTviAggcgMozuE/YjOwUVgiDSod9oB5rEbGipmcR1CJfxy
+         Xi+DYDjOGV4N99TcCzngqY3C/yBfhWqOD/lYXxESQ99hCTpVMCVlZhY17QRhK2mOg4zF
+         gQrgtI5RwHhynclIqeVD+UvFcqhOMP6J1zsOVOTMyVYGgyXbN3GUFMlLdyvq8vJNbTvd
+         x7XRV1X6UXmHWHoKZVMOZqqBPKbXe7bUzRAlblXh1T0+J/T/pEpBFXt9JbXMrTISJsDv
+         378A==
+X-Gm-Message-State: AOAM532An/f76nUOc3DSonYH3YM9cB24Wzv3IikLTKXZD4HlH40JBT9s
+        7WELArPrxTs6ektPGAis7Atx5Q==
+X-Google-Smtp-Source: ABdhPJxppSZTl5CKjnq8a5hBmltXmdlckYUA+zJjxmwbiUJP9s+fG0NYe/ezZfchAEYBzvKm6cdN0g==
+X-Received: by 2002:a17:90a:e7d2:b0:1dc:3762:c72d with SMTP id kb18-20020a17090ae7d200b001dc3762c72dmr10809021pjb.243.1651676908004;
+        Wed, 04 May 2022 08:08:28 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q10-20020a170902bd8a00b0015e8d4eb2c8sm8430976pls.274.2022.05.04.08.08.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 May 2022 05:51:05 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     KY Srinivasan <kys@microsoft.com>,
+        Wed, 04 May 2022 08:08:27 -0700 (PDT)
+Date:   Wed, 4 May 2022 08:08:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kalle Valo <kvalo@kernel.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, wcn36xx@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hulk Robot <hulkci@huawei.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>,
+        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        llvm@lists.linux.dev, Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 2/2] PCI: hv: Fix synchronization between channel callback and hv_pci_bus_exit()
-Date:   Wed,  4 May 2022 14:50:39 +0200
-Message-Id: <20220504125039.2598-3-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220504125039.2598-1-parri.andrea@gmail.com>
-References: <20220504125039.2598-1-parri.andrea@gmail.com>
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Wei Liu <wei.liu@kernel.org>, xen-devel@lists.xenproject.org,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: Re: [PATCH 10/32] wcn36xx: Use mem_to_flex_dup() with struct
+ wcn36xx_hal_ind_msg
+Message-ID: <202205040730.161645EC@keescook>
+References: <20220504014440.3697851-1-keescook@chromium.org>
+ <20220504014440.3697851-11-keescook@chromium.org>
+ <8735hpc0q1.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8735hpc0q1.fsf@kernel.org>
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-[ Similarly to commit a765ed47e4516 ("PCI: hv: Fix synchronization
-  between channel callback and hv_compose_msi_msg()"): ]
+On Wed, May 04, 2022 at 08:42:46AM +0300, Kalle Valo wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > As part of the work to perform bounds checking on all memcpy() uses,
+> > replace the open-coded a deserialization of bytes out of memory into a
+> > trailing flexible array by using a flex_array.h helper to perform the
+> > allocation, bounds checking, and copying.
+> >
+> > Cc: Loic Poulain <loic.poulain@linaro.org>
+> > Cc: Kalle Valo <kvalo@kernel.org>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Paolo Abeni <pabeni@redhat.com>
+> > Cc: wcn36xx@lists.infradead.org
+> > Cc: linux-wireless@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> [...]
+> 
+> > --- a/drivers/net/wireless/ath/wcn36xx/smd.h
+> > +++ b/drivers/net/wireless/ath/wcn36xx/smd.h
+> > @@ -46,8 +46,8 @@ struct wcn36xx_fw_msg_status_rsp {
+> >  
+> >  struct wcn36xx_hal_ind_msg {
+> >  	struct list_head list;
+> > -	size_t msg_len;
+> > -	u8 msg[];
+> > +	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(size_t, msg_len);
+> > +	DECLARE_FLEX_ARRAY_ELEMENTS(u8, msg);
+> 
+> This affects readability quite a lot and tbh I don't like it. Isn't
+> there any simpler way to solve this?
 
-The (on-stack) teardown packet becomes invalid once the completion
-timeout in hv_pci_bus_exit() has expired and hv_pci_bus_exit() has
-returned.  Prevent the channel callback from accessing the invalid
-packet by removing the ID associated to such packet from the VMbus
-requestor in hv_pci_bus_exit().
+Similar to how I plumbed member names into __mem_to_flex(), I could do
+the same for __mem_to_flex_dup(). That way if the struct member aliases
+(DECLARE_FLEX...)  aren't added, the longer form of the helper could
+be used. Instead of:
 
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
----
- drivers/pci/controller/pci-hyperv.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+	if (mem_to_flex_dup(&msg_ind, buf, len, GFP_ATOMIC)) {
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 9a3e17b682eb7..db4b3f86726b2 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -3620,6 +3620,7 @@ static int hv_pci_probe(struct hv_device *hdev,
- static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- {
- 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-+	struct vmbus_channel *chan = hdev->channel;
- 	struct {
- 		struct pci_packet teardown_packet;
- 		u8 buffer[sizeof(struct pci_message)];
-@@ -3627,13 +3628,14 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 	struct hv_pci_compl comp_pkt;
- 	struct hv_pci_dev *hpdev, *tmp;
- 	unsigned long flags;
-+	u64 trans_id;
- 	int ret;
- 
- 	/*
- 	 * After the host sends the RESCIND_CHANNEL message, it doesn't
- 	 * access the per-channel ringbuffer any longer.
- 	 */
--	if (hdev->channel->rescind)
-+	if (chan->rescind)
- 		return 0;
- 
- 	if (!keep_devs) {
-@@ -3670,16 +3672,26 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
- 	pkt.teardown_packet.compl_ctxt = &comp_pkt;
- 	pkt.teardown_packet.message[0].type = PCI_BUS_D0EXIT;
- 
--	ret = vmbus_sendpacket(hdev->channel, &pkt.teardown_packet.message,
--			       sizeof(struct pci_message),
--			       (unsigned long)&pkt.teardown_packet,
--			       VM_PKT_DATA_INBAND,
--			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-+	ret = vmbus_sendpacket_getid(chan, &pkt.teardown_packet.message,
-+				     sizeof(struct pci_message),
-+				     (unsigned long)&pkt.teardown_packet,
-+				     &trans_id, VM_PKT_DATA_INBAND,
-+				     VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	if (ret)
- 		return ret;
- 
--	if (wait_for_completion_timeout(&comp_pkt.host_event, 10 * HZ) == 0)
-+	if (wait_for_completion_timeout(&comp_pkt.host_event, 10 * HZ) == 0) {
-+		/*
-+		 * The completion packet on the stack becomes invalid after
-+		 * 'return'; remove the ID from the VMbus requestor if the
-+		 * identifier is still mapped to/associated with the packet.
-+		 *
-+		 * Cf. hv_pci_onchannelcallback().
-+		 */
-+		vmbus_request_addr_match(chan, trans_id,
-+					 (unsigned long)&pkt.teardown_packet);
- 		return -ETIMEDOUT;
-+	}
- 
- 	return 0;
- }
+it would be:
+
+	if (__mem_to_flex_dup(&msg_ind, /* self */, msg,
+			      msg_len, buf, len, GFP_ATOMIC)) {
+
+This was how I'd written the helpers in an earlier version, but it
+seemed much cleaner to avoid repeating structure layout details at each
+call site.
+
+I couldn't find any other way to encode the needed information. It'd be
+wonderful if C would let us do:
+
+	struct wcn36xx_hal_ind_msg {
+		struct list_head list;
+		size_t msg_len;
+		u8 msg[msg_len];
+	}
+
+And provide some kind of interrogation:
+
+	__builtin_flex_array_member(msg_ind) -> msg_ind->msg
+	__builtin_flex_array_count(msg_ind)  -> msg_ind->msg_len
+
+My hope would be to actually use the member aliases to teach things like
+-fsanitize=array-bounds about flexible arrays. If it encounters a
+structure with the aliases, it could add the instrumentation to do the
+bounds checking of things like:
+
+	msg_ind->msg[42]; /* check that 42 is < msg_ind->msg_len */
+
+I also wish I could find a way to make the proposed macros "forward
+portable" into proposed C syntax above, but this eluded me as well.
+For example:
+
+	struct wcn36xx_hal_ind_msg {
+		size_t msg_len;
+		struct list_head list;
+		BOUNDED_FLEX_ARRAY(u8, msg, msg_len);
+	}
+
+	#ifdef CC_HAS_DYNAMIC_ARRAY_LEN
+	# define BOUNDED_FLEX_ARRAY(type, name, bounds)	type name[bounds]
+	#else
+	# define BOUNDED_FLEX_ARRAY(type, name, bounds)			\
+		magic_alias_of msg_len __flex_array_elements_count;	\
+		union {							\
+			type name[];					\
+			type __flex_array_elements[];			\
+		}
+	#endif
+
+But I couldn't sort out the "magic_alias_of" syntax that wouldn't force
+structures into having the count member immediately before the flex
+array, which would impose more limitations on where this could be
+used...
+
+Anyway, I'm open to ideas on how to improve this!
+
+-Kees
+
 -- 
-2.25.1
-
+Kees Cook
