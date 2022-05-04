@@ -2,100 +2,164 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBE4A5190DB
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 00:07:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B4985193A5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 03:47:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243356AbiECWBL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 May 2022 18:01:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
+        id S245487AbiEDBvQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 May 2022 21:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243349AbiECWBL (ORCPT
+        with ESMTP id S245258AbiEDBvK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 May 2022 18:01:11 -0400
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90878424A0
-        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 14:57:37 -0700 (PDT)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-deb9295679so18559517fac.6
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 14:57:37 -0700 (PDT)
+        Tue, 3 May 2022 21:51:10 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E03E30564
+        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 18:47:33 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id v11so7681pff.6
+        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 18:47:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=czLZHU7MG6H1spBLHXY5jaZbzV59tXkMuN+Ck8Z7wc4=;
-        b=hhWjsHnmVba6J3iaRJaO09nZL4LxjIq8C9W91LOfNC4XgTIwgTHymewopsSR7xhrbE
-         wJfMPDofFT9Orm5X1Xmnq6csdeG70AmAjQHsJ6oidSvnu+c5NqT0zTpfwvGt6c7imJaY
-         Yx4JIofQGY7s+yKOtcqFuF1p2zpjcELmsl0YE=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sclcWESS1vfOtw+/lNSZNu/Le9PHpJZ15I1QqAAnvbk=;
+        b=aAevwHR9bd3JwLUN2/LQ5c9sjKYomRXHOOzT8MO771crgcUz3lq0Os/XqytwNxvtUl
+         OUsDFPJQodMi3Gdr6qEsX6JPLYzpX2mmV6xIquzdXHmOBlRoXebJSJEipFEaZ36NWHtd
+         8ThHw67NIdrIhrBqNV3S6GthwijgxDY2pMUM4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=czLZHU7MG6H1spBLHXY5jaZbzV59tXkMuN+Ck8Z7wc4=;
-        b=EoRkpdFcplrbHSbRMqjn+wPerRcmwI2sOsovuxhrCftBX9gK4rNNmtJPPqlKAygh0y
-         wVLnoOEtLirNzC0wkn6DEOR/AyGx7Z8MvHtRoBfOCcsuJ/c8tdzxIGjtSrwgDuNtCPre
-         VDqe4d2D72v/rg5yI0Z6h1C3QIONbDs1gzv/oSh3B65S05tqmbdfbub75jckjwA/VyaT
-         vrICrRF/fZUJHlE/s2hyw2sVUn8AQc+XokmZyyl0+IldAtxuI897ph1KQ8fHFpXZ7Khv
-         FyAo02jTuQHc+lwF2yLMlg/h6mjCAO81u3ND3BdxSfEtjzZI0L7OxJDK8B0m9zyYqU4M
-         eNUw==
-X-Gm-Message-State: AOAM532ofefZt/AS9S5W2rBJaBhx+Kft7wkfA5mVayw7HX5n9i72CJds
-        9ogiHGLME4qbQv7Q6y0dL7kR6bwJR3N+0w==
-X-Google-Smtp-Source: ABdhPJyVsChIARCLBB9cAlFO2MRkDDQCf+DkC5BDs44DzRfulAgwftNhm+t6YNnlNZioZa5HeBqcOw==
-X-Received: by 2002:a05:6870:32d4:b0:ec:ced6:1d6d with SMTP id r20-20020a05687032d400b000ecced61d6dmr2705831oac.27.1651615056214;
-        Tue, 03 May 2022 14:57:36 -0700 (PDT)
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
-        by smtp.gmail.com with ESMTPSA id l2-20020a4ad9c2000000b0035eb4e5a6b7sm5347080oou.13.2022.05.03.14.57.34
-        for <linux-hyperv@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 May 2022 14:57:35 -0700 (PDT)
-Received: by mail-oi1-f181.google.com with SMTP id y63so19600002oia.7
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 14:57:34 -0700 (PDT)
-X-Received: by 2002:a05:6808:219a:b0:325:93fc:e0fd with SMTP id
- be26-20020a056808219a00b0032593fce0fdmr2775646oib.241.1651615054192; Tue, 03
- May 2022 14:57:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220427224924.592546-1-gpiccoli@igalia.com> <20220427224924.592546-5-gpiccoli@igalia.com>
- <CAE=gft5Pq25L4KFoPWbftkPF-JN1ex2yws77mMJ4GQnn9W0L2g@mail.gmail.com> <adcf6d0e-c37c-6ede-479e-29959d03d8c0@igalia.com>
-In-Reply-To: <adcf6d0e-c37c-6ede-479e-29959d03d8c0@igalia.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 3 May 2022 14:56:58 -0700
-X-Gmail-Original-Message-ID: <CAE=gft623NxqetRssrZnaRmJLSP4BT5=-sVVwtYoHuspO_gULQ@mail.gmail.com>
-Message-ID: <CAE=gft623NxqetRssrZnaRmJLSP4BT5=-sVVwtYoHuspO_gULQ@mail.gmail.com>
-Subject: Re: [PATCH 04/30] firmware: google: Convert regular spinlock into
- trylock on panic path
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, bhe@redhat.com,
-        pmladek@suse.com, kexec@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Jonathan Corbet <corbet@lwn.net>, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de,
-        Kees Cook <keescook@chromium.org>, luto@kernel.org,
-        mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
-        peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, Alan Stern <stern@rowland.harvard.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com,
-        vkuznets@redhat.com, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sclcWESS1vfOtw+/lNSZNu/Le9PHpJZ15I1QqAAnvbk=;
+        b=nvWDvm61DPv8W26Re7ILADU9FgSz1rqj8mJWwQe8kZ1F3EtjS/JAdo7CqOT1J6jLFC
+         NQjeXipD5Pw3OjzFk3/zqex/TYmFtlmJqls0GZi0XyUZWPUyicxAdoaOproTauCA90+f
+         ltONK43rYfQNSH0+TWIq+nRANDt5TkFwRfk88AXqjWsjl7asxVJlNb05YNFl0s+lVgeQ
+         uVOAgzORjAdhg6eax2Y/JPZwFvQxg1vBHiivfK41L+H/H7UvaQJiQfDj67WTN8AStWFF
+         oCtGCH90dNg5jD0rObz4lQgRIvIngWjil989Dr/57HTrMmNsiUoRV2MQmHHrt2kb+RA/
+         QveQ==
+X-Gm-Message-State: AOAM530RkDo4LLtN4xGWCvREYIQP5KW3WVXlwHjIqLP/ACcbZ/Wl+FKk
+        Xpf3AteV3L1dPV+gjUYKPRsLIg==
+X-Google-Smtp-Source: ABdhPJzUPi96Fjb/DQUWQvNyerGs6VtmC5g6wU2czv4Ww7LsLvQHH1GWpZX27vEgkGgQ9anjBam12g==
+X-Received: by 2002:a05:6a00:140f:b0:4e0:6995:9c48 with SMTP id l15-20020a056a00140f00b004e069959c48mr18620378pfu.59.1651628852898;
+        Tue, 03 May 2022 18:47:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v24-20020a170902e8d800b0015ea8b4b8f3sm3957768plg.263.2022.05.03.18.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 May 2022 18:47:32 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
         David Gow <davidgow@google.com>,
-        Julius Werner <jwerner@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hulk Robot <hulkci@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
+        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: [PATCH 00/32] Introduce flexible array struct memcpy() helpers
+Date:   Tue,  3 May 2022 18:44:09 -0700
+Message-Id: <20220504014440.3697851-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6778; h=from:subject; bh=NBPx/kHPxccGjkqS1SEj//lWw761DgDLlzW6gj8lDu4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicdqAMDKbiuLQ8pX7zUwKdz8OKsd8xesPXEJn90lJ iEErvqmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnHagAAKCRCJcvTf3G3AJjEaD/ sFb+hZKXd2lFEv0+WnlWvb0j4ta2t/UZVhsNUWQNDJHAVtv+Zlu02MxnR0jdR0CBnsA3iKMPIFMmfD pdgs6dba5/tH1Iyi6jW+wJXwtek/3ey7ygj+u19Odj4PSt0QygwmNm6MjSvTES52gqKWv74MU5t5xz L/SasXg+UAUYtWgal3FtLixo//9nvHNO1pQXa0nIFsWFnV/HFJgtQ4lutI26Hj2oKn8G30z3GHGSn4 1IRXOAidSEkPmoGdbgk1b5NrcIB4dDVp1bZOWVQ48/ez1pipyXC5BUmkDkC/X1S5WnuU0ZQ0UW1Grm 3khhO+QcGTzdaxvhpnGpJechhRJETE1ML25oQrj3M1NNy97RDl4CAzoWJillKIvj0+U+3eRoIKQc09 jVarH3JkPknzz7xPutFPSXX+ZRRa9ZIrntaHAJu8fM/gDMHvlhMmoSO/MpZW8uL4xNo34dAwBiIsfO 3kXWSB5poclt6J8JY4UGRwxeS2Ccjolknj9sm/IfEioLedUmK04grKYVaFhwm/AgWMQXfLQYxU4UVg LzieTWMmZ+uNuV5sEynHPDSzGXpTKhNmWdH0WmkjYCGd9FIF8ySFxwKVRfGpnPqbVGVOMqmYz9piV5 jE5S5aSXLfYPuj0uiXQg9UZZfkTvEGuBLHq71VsZwciiyvWRhtAG4UU4gmcQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -106,89 +170,134 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Guilherme,
+Hi,
 
-On Tue, May 3, 2022 at 12:12 PM Guilherme G. Piccoli
-<gpiccoli@igalia.com> wrote:
->
-> On 03/05/2022 15:03, Evan Green wrote:
-> > [...]
-> > gsmi_shutdown_reason() is a common function called in other scenarios
-> > as well, like reboot and thermal trip, where it may still make sense
-> > to wait to acquire a spinlock. Maybe we should add a parameter to
-> > gsmi_shutdown_reason() so that you can get your change on panic, but
-> > we don't convert other callbacks into try-fail scenarios causing us to
-> > miss logs.
-> >
->
-> Hi Evan, thanks for your feedback, much appreciated!
-> What I've done in other cases like this was to have a helper checking
-> the spinlock in the panic notifier - if we can acquire that, go ahead
-> but if not, bail out. For a proper example of an implementation, check
-> patch 13 of the series:
-> https://lore.kernel.org/lkml/20220427224924.592546-14-gpiccoli@igalia.com/ .
->
-> Do you agree with that, or prefer really a parameter in
-> gsmi_shutdown_reason() ? I'll follow your choice =)
+This is the next phase of memcpy() buffer bounds checking[1], which
+starts by adding a new set of helpers to address common code patterns
+that result in memcpy() usage that can't be easily verified by the
+compiler (i.e. dynamic bounds due to flexible arrays). The runtime WARN
+from memcpy has been posted before, but now there's more context around
+alternatives for refactoring false positives, etc.
 
-I'm fine with either, thanks for the link. Mostly I want to make sure
-other paths to gsmi_shutdown_reason() aren't also converted to a try.
+The core of this series is patches 2 (flex_array.h), 3 (flex_array
+KUnit), and 4 (runtime memcpy WARN). Patch 1 is a fix to land before 4
+(and I can send separately), and everything else are examples of what the
+conversions look like for one of the helpers, mem_to_flex_dup(). These
+will need to land via their respective trees, but they all depend on
+patch 2, which I'm hoping to land in the coming merge window.
 
->
->
-> > Though thinking more about it, is this really a Good Change (TM)? The
-> > spinlock itself already disables interrupts, meaning the only case
-> > where this change makes a difference is if the panic happens from
-> > within the function that grabbed the spinlock (in which case the
-> > callback is also likely to panic), or in an NMI that panics within
-> > that window. The downside of this change is that if one core was
-> > politely working through an event with the lock held, and another core
-> > panics, we now might lose the panic log, even though it probably would
-> > have gone through fine assuming the other core has a chance to
-> > continue.
->
-> My feeling is that this is a good change, indeed - a lot of places are
-> getting changed like this, in this series.
->
-> Reasoning: the problem with your example is that, by default, secondary
-> CPUs are disabled in the panic path, through an IPI mechanism. IPIs take
-> precedence and interrupt the work in these CPUs, effectively
-> interrupting the "polite work" with the lock held heh
+I'm happy to also point out that the conversions (patches 5+) are actually
+a net reduction in lines of code:
+ 49 files changed, 154 insertions(+), 244 deletions(-)
 
-The IPI can only interrupt a CPU with irqs disabled if the IPI is an
-NMI. I haven't looked before to see if we use NMI IPIs to corral the
-other CPUs on panic. On x86, I grepped my way down to
-native_stop_other_cpus(), which looks like it does a normal IPI, waits
-1 second, then does an NMI IPI. So, if a secondary CPU has the lock
-held, on x86 it has roughly 1s to finish what it's doing and re-enable
-interrupts before smp_send_stop() brings the NMI hammer down. I think
-this should be more than enough time for the secondary CPU to get out
-and release the lock.
+Anyway, please let me know what you think. And apologies in advance
+if this is spammy; the CC list got rather large due to the "treewide"
+nature of the example conversions.
 
-So then it makes sense to me that you're fixing cases where we
-panicked with the lock held, or hung with the lock held. Given the 1
-second grace period x86 gives us, I'm on board, as that helps mitigate
-the risk that we bailed out early with the try and should have spun a
-bit longer instead. Thanks.
+Also available here:
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=flexcpy/next-20220502
 
--Evan
+-Kees
 
->
-> Then, such CPU is put to sleep and we finally reach the panic notifier
-> hereby discussed, in the main CPU. If the other CPU was shut-off *with
-> the lock held*, it's never finishing such work, so the lock is never to
-> be released. Conclusion: the spinlock can't be acquired, hence we broke
-> the machine (which is already broken, given it's panic) in the path of
-> this notifier.
-> This should be really rare, but..possible. So I think we should protect
-> against this scenario.
->
-> We can grab others' feedback if you prefer, and of course you have the
-> rights to refuse this change in the gsmi code, but from my
-> point-of-view, I don't see any advantage in just assume the risk,
-> specially since the change is very very simple.
->
-> Cheers,
->
->
-> Guilherme
+[1] https://lwn.net/Articles/864521/
+
+Kees Cook (32):
+  netlink: Avoid memcpy() across flexible array boundary
+  Introduce flexible array struct memcpy() helpers
+  flex_array: Add Kunit tests
+  fortify: Add run-time WARN for cross-field memcpy()
+  brcmfmac: Use mem_to_flex_dup() with struct brcmf_fweh_queue_item
+  iwlwifi: calib: Prepare to use mem_to_flex_dup()
+  iwlwifi: calib: Use mem_to_flex_dup() with struct iwl_calib_result
+  iwlwifi: mvm: Use mem_to_flex_dup() with struct ieee80211_key_conf
+  p54: Use mem_to_flex_dup() with struct p54_cal_database
+  wcn36xx: Use mem_to_flex_dup() with struct wcn36xx_hal_ind_msg
+  nl80211: Use mem_to_flex_dup() with struct cfg80211_cqm_config
+  cfg80211: Use mem_to_flex_dup() with struct cfg80211_bss_ies
+  mac80211: Use mem_to_flex_dup() with several structs
+  af_unix: Use mem_to_flex_dup() with struct unix_address
+  802/garp: Use mem_to_flex_dup() with struct garp_attr
+  802/mrp: Use mem_to_flex_dup() with struct mrp_attr
+  net/flow_offload: Use mem_to_flex_dup() with struct flow_action_cookie
+  firewire: Use __mem_to_flex_dup() with struct iso_interrupt_event
+  afs: Use mem_to_flex_dup() with struct afs_acl
+  ASoC: sigmadsp: Use mem_to_flex_dup() with struct sigmadsp_data
+  soc: qcom: apr: Use mem_to_flex_dup() with struct apr_rx_buf
+  atags_proc: Use mem_to_flex_dup() with struct buffer
+  Bluetooth: Use mem_to_flex_dup() with struct
+    hci_op_configure_data_path
+  IB/hfi1: Use mem_to_flex_dup() for struct tid_rb_node
+  Drivers: hv: utils: Use mem_to_flex_dup() with struct cn_msg
+  ima: Use mem_to_flex_dup() with struct modsig
+  KEYS: Use mem_to_flex_dup() with struct user_key_payload
+  selinux: Use mem_to_flex_dup() with xfrm and sidtab
+  xtensa: Use mem_to_flex_dup() with struct property
+  usb: gadget: f_fs: Use mem_to_flex_dup() with struct ffs_buffer
+  xenbus: Use mem_to_flex_dup() with struct read_buffer
+  esas2r: Use __mem_to_flex() with struct atto_ioctl
+
+ arch/arm/kernel/atags_proc.c                  |  12 +-
+ arch/xtensa/platforms/xtfpga/setup.c          |   9 +-
+ drivers/firewire/core-cdev.c                  |   7 +-
+ drivers/hv/hv_utils_transport.c               |   7 +-
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c     |   7 +-
+ drivers/infiniband/hw/hfi1/user_exp_rcv.h     |   4 +-
+ drivers/net/wireless/ath/wcn36xx/smd.c        |   8 +-
+ drivers/net/wireless/ath/wcn36xx/smd.h        |   4 +-
+ .../broadcom/brcm80211/brcmfmac/fweh.c        |  11 +-
+ drivers/net/wireless/intel/iwlwifi/dvm/agn.h  |   2 +-
+ .../net/wireless/intel/iwlwifi/dvm/calib.c    |  23 +-
+ .../net/wireless/intel/iwlwifi/dvm/ucode.c    |   8 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c  |   8 +-
+ drivers/net/wireless/intersil/p54/eeprom.c    |   8 +-
+ drivers/net/wireless/intersil/p54/p54.h       |   4 +-
+ drivers/scsi/esas2r/atioctl.h                 |   1 +
+ drivers/scsi/esas2r/esas2r_ioctl.c            |  11 +-
+ drivers/soc/qcom/apr.c                        |  12 +-
+ drivers/usb/gadget/function/f_fs.c            |  11 +-
+ drivers/xen/xenbus/xenbus_dev_frontend.c      |  12 +-
+ fs/afs/internal.h                             |   4 +-
+ fs/afs/xattr.c                                |   7 +-
+ include/keys/user-type.h                      |   4 +-
+ include/linux/flex_array.h                    | 637 ++++++++++++++++++
+ include/linux/fortify-string.h                |  70 +-
+ include/linux/of.h                            |   3 +-
+ include/linux/string.h                        |   1 +
+ include/net/af_unix.h                         |  14 +-
+ include/net/bluetooth/hci.h                   |   4 +-
+ include/net/cfg80211.h                        |   4 +-
+ include/net/flow_offload.h                    |   4 +-
+ include/net/garp.h                            |   4 +-
+ include/net/mac80211.h                        |   4 +-
+ include/net/mrp.h                             |   4 +-
+ include/uapi/linux/connector.h                |   4 +-
+ include/uapi/linux/firewire-cdev.h            |   4 +-
+ include/uapi/linux/netlink.h                  |   1 +
+ include/uapi/linux/stddef.h                   |  14 +
+ include/uapi/linux/xfrm.h                     |   4 +-
+ lib/Kconfig.debug                             |  12 +-
+ lib/Makefile                                  |   1 +
+ lib/flex_array_kunit.c                        | 523 ++++++++++++++
+ net/802/garp.c                                |   9 +-
+ net/802/mrp.c                                 |   9 +-
+ net/bluetooth/hci_request.c                   |   9 +-
+ net/core/flow_offload.c                       |   7 +-
+ net/mac80211/cfg.c                            |  22 +-
+ net/mac80211/ieee80211_i.h                    |  12 +-
+ net/netlink/af_netlink.c                      |   5 +-
+ net/unix/af_unix.c                            |   7 +-
+ net/wireless/core.h                           |   4 +-
+ net/wireless/nl80211.c                        |  15 +-
+ net/wireless/scan.c                           |  21 +-
+ security/integrity/ima/ima_modsig.c           |  12 +-
+ security/keys/user_defined.c                  |   7 +-
+ security/selinux/ss/sidtab.c                  |   9 +-
+ security/selinux/xfrm.c                       |   7 +-
+ sound/soc/codecs/sigmadsp.c                   |  11 +-
+ 58 files changed, 1409 insertions(+), 253 deletions(-)
+ create mode 100644 include/linux/flex_array.h
+ create mode 100644 lib/flex_array_kunit.c
+
+-- 
+2.32.0
+
