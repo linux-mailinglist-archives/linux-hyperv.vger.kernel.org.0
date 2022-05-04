@@ -2,47 +2,47 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1C03519416
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 03:49:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C004C51942F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 03:50:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343619AbiEDBxO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 May 2022 21:53:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56942 "EHLO
+        id S245519AbiEDBxc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 May 2022 21:53:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343624AbiEDBwy (ORCPT
+        with ESMTP id S245755AbiEDBwa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 May 2022 21:52:54 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6703833E1C
-        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 18:48:25 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d15so171541plh.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 18:48:25 -0700 (PDT)
+        Tue, 3 May 2022 21:52:30 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0ADD43ADB
+        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 18:48:04 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id i1so157284plg.7
+        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 18:48:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=P7uM3xoAcE7zuGNsfEYVdWWhl8RQOVkTgxnXHqQm9tk=;
-        b=Ttm1udnLhK1uzAB04KBRSr/POGM0kwPI1bs4XPEU6UEtgK8/23ubm+dxeV4+X853RT
-         0+Il5Jok8kr0+FDj5VV/8TyC5lx1HeS1NOnJkl2lVk9pme8hyn7Y1lYALOBUqbtoGYi3
-         cAWN4x8Bl4pcx02o/CTto17Eyhwd5u2uMzQSw=
+        bh=jHmaho/x33MqcwhAHjzMaEbYW3Sn2ucNcqc26yK2kNU=;
+        b=P8OaWDj1i9vMS2YXwPGohhK4T/Iw+CyPZ/W6hEEhH6k1LaC96jgeOuZ+dQGCL7k52R
+         9vedbYNUSwVa5cTgkoS7mq60UIXNgrNEh8xt0xCvSUKOkKMHizwfjhRvtgim24nhUgRa
+         9onXSvEkUpL1rmnA+09r2XcsNzTJwLrKjOBuk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=P7uM3xoAcE7zuGNsfEYVdWWhl8RQOVkTgxnXHqQm9tk=;
-        b=ULCmjxs8ozS8xG0kAjIVbMpUYZIHBvtaYEm0JDygxR6EANh+EwV5CZF/JutwVaFXo3
-         Hhqum6z2vLxlQw9JiUis+QfRs18BCRaqSGEjB5Tqf95V0YOXSrrT33yQMbiy5qT631iL
-         m8X8TkvdFO1XUhxCXlYDXEHZ0rUvXuTlH4iJ9D15eUeDf0smYIitjDHFU9zC4WYFgkAc
-         +oRXYMD4T41jmbudVSjPX0g/lRKre0SRVFAcdyM+tdi14FNz7PrapnYGLFI8KmYM+Szp
-         E24NAfcYLtrvTOrAd8+pfWxJeJ5gZvRPjbRhoeDDTpVzGYwHJhQMglsWVMtn5X9tziFA
-         tZJw==
-X-Gm-Message-State: AOAM532HoHbPGL+e33e0ubfB79EeV36MjanERAHnN7ZPV1Ty7qms8lnD
-        dPU/reI1Up74X+5rkTp19DSvLA==
-X-Google-Smtp-Source: ABdhPJxlINiFv6UJHBX+/eJqyerMOceaIDiYJHkzj2pPV40RgErLtQ31Acn4ZOqZFTEIOPf1xFj0AA==
-X-Received: by 2002:a17:90b:3b42:b0:1dc:5cdf:5649 with SMTP id ot2-20020a17090b3b4200b001dc5cdf5649mr7783206pjb.239.1651628861490;
-        Tue, 03 May 2022 18:47:41 -0700 (PDT)
+        bh=jHmaho/x33MqcwhAHjzMaEbYW3Sn2ucNcqc26yK2kNU=;
+        b=mUlLldbOiT9aZCQxNTZuTDMdX+f5kGrGy2rXks0Nd7S9p/waMtuDmUvlBkaKtB+8HK
+         K4hOlaBBzn988nzPeeF+9pui7RJ52u4JaIYsNA306/Nxx9NrtME2RpLnRZqIQDM+0SNG
+         9DSTfXUpDD3blPpnsnsaCmZsY1iY2scYpFTB8QgEWVuQIw2kxXZeVLML43C5xgxSiTgE
+         VNz+p3ny6WhBtsZszSespfIArBDM5IIPqSQO33NMcbevQNrPZP0B6pmRgYaGUNA3eVUJ
+         kdZf96/mmDiTockOLlNlUmtCILKfdQ+N8SHLVs0/Tk7RLYmXS6gPgSUmIkhUNh3n1w0E
+         EGsg==
+X-Gm-Message-State: AOAM532D+he1D3pP6YhHZTGv6TJz8+G9U4DtGswQEiRCgyAmIZCdVKPj
+        nRJqqxf6N6AIo5mrmRRtZVXGQA==
+X-Google-Smtp-Source: ABdhPJw/YslU2yUBia+w/4PurFJMBiRJ5IDYAc+d7ObCpClWIglgELelEBFuL7QqIQfyj8Do+oUJyg==
+X-Received: by 2002:a17:903:248:b0:155:e660:b774 with SMTP id j8-20020a170903024800b00155e660b774mr19737712plh.174.1651628859441;
+        Tue, 03 May 2022 18:47:39 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id on13-20020a17090b1d0d00b001d9acbc3b4esm2003067pjb.47.2022.05.03.18.47.38
+        by smtp.gmail.com with ESMTPSA id x5-20020aa79a45000000b004fa743ba3f9sm7108890pfj.2.2022.05.03.18.47.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 03 May 2022 18:47:39 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -52,8 +52,8 @@ Cc:     Kees Cook <keescook@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         Eric Dumazet <edumazet@google.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         Alexei Starovoitov <ast@kernel.org>,
         alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
         Andrew Gabbasov <andrew_gabbasov@mentor.com>,
@@ -152,19 +152,19 @@ Cc:     Kees Cook <keescook@chromium.org>,
         xen-devel@lists.xenproject.org,
         Xiu Jianfeng <xiujianfeng@huawei.com>,
         Yang Yingliang <yangyingliang@huawei.com>
-Subject: [PATCH 11/32] nl80211: Use mem_to_flex_dup() with struct cfg80211_cqm_config
-Date:   Tue,  3 May 2022 18:44:20 -0700
-Message-Id: <20220504014440.3697851-12-keescook@chromium.org>
+Subject: [PATCH 12/32] cfg80211: Use mem_to_flex_dup() with struct cfg80211_bss_ies
+Date:   Tue,  3 May 2022 18:44:21 -0700
+Message-Id: <20220504014440.3697851-13-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220504014440.3697851-1-keescook@chromium.org>
 References: <20220504014440.3697851-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2217; h=from:subject; bh=rRfAu1/k1e5caQg21/8VBHhysNqsP1FR5GA2AHrLW6w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicdqDYqJpVuI+Da24TYyn7rK2cAZcih+2ZRWaGUhg VviQcPmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnHagwAKCRCJcvTf3G3AJjdwD/ 9GoZycFvhK6h6fbIQwuLO60vgqzr+JFBMz2boSXTBJSryctNsbZrwuvUuiBZUKC1y9sGE+SgzQm0T7 WzDZtyTlGmT1CZjKFpgdCfMbuMLVROkIwwyYoraeYFirZmIIRURYhLoAsJh4ZeL+hi8jOWnaV5ClMm GpAX4WW1YsM9YRJimQri0QE7pLQKGb80KxVsDgul4e0OUj1wYZTYbTgr98Zpysc1nSby6oGnxfPJ5B GvVh8QA/SYaCCMlYyUKr3bjTLrKOZ0NSnt6bAW38OpCXj8344D0TsfmO6tGo0jkheFbpEhSFjRi0Lj 1/+lxcBQ3jvc7zB+0Q5hpVWgX0kC+MxgbmIRdXF66gXOY9KMZzGl6dt9Fdm0xQWH6kFZlX7zpOBeHx To/pgX+EVE7aw6zudBInH3vlkkTYIklAIL/O9ajINZfL2HKHTp1XgnQdpa0KDyxqJilBhkXXekcKjn s7KJFzs28RJWqn+YgyJ+4W4uA6XLQvHdqVGZu5zS748KLU05KkgCeTW+Wm195aiMdUvqPG1QyqpCX5 1oMep8SXDkjOyDi6DnWcfFivJfrpKBqXU3oWsvXdBRhX+fVXmfr/E7qrARl1smC7xBgqWCcJf152Rh nwFocx9Hoo9dTUkHbkM4z/OFi36I6ENfaPOS+x9fFE1riA7xPsrh1gW6nwwA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4271; h=from:subject; bh=zLIoLyad9bBq8i+CHRJcAMhW5JgPaoyM4x0VIL3Wjf8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicdqDR3XqoFSprf0Mf1o1HYj7dBBBP7wDZ118xdTx ToM0RNGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnHagwAKCRCJcvTf3G3AJpDCD/ wMlRRCUB8XTmCXlLdvPCGb5ACTTMa3Km0myBmfsx6i7FkHxAEfNtllJsJZ1xGdv/WP8g4XEUJ0zuGC 7wsRbPVl7sHYNyFiAu9iXMMSYvJVG0G1YrRXdH2A3UhX8o4+JfEVNj7XazhRyhM9cIwvTR0hQBUIKJ OO0TtkviYxesRpL1xBvgYIcCWjxEvNdpsGjAfF7Wn6Ml1dOstypUTb2ulq7hIf7BX8w63KuqOXZx6V eQKW4gi3cQO3gPoEWsv9zeDktQzxWbaMN212KDtDCB76/UH1i+QQg8eLLlaSQ/55nnf45kUX75sHkI zDmnUC7uL8hJaFE7/98/TeYKsLAgbyP1/MwzniEWgtSaLkPJj+BDTLhK4+jBB7zxpXsyQsyJXmfWnN 69jBTE8Z6ldaOWiCaA2dwzQcHNWXsHvzTspOWk/Tiv7AIUHd8Nqe4ecJtsbDBBxQU21ogSn3TNlfat 3ZCTfW1XDttiZNSK2Rit27Gb0LCzE4nKpVwxT5qmFoGk/jjq2ZfP1uWkMyv4TOb/bfGw5ZiXtTJwtA 22mI6CUOQ9lCD1lIB2WdB8z0yibGypy9fbuDpeqzg6v+weYYD4cY0Q38ZtkdzpABByyOAlmZm7iXIU /hIQA44hD8/vgfuYEgBfavnXALP3koZt6viHAklNZAsuY6wiAG9ZgR2ZT8XQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -181,60 +181,114 @@ Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Eric Dumazet <edumazet@google.com>
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
-Cc: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- net/wireless/core.h    |  4 ++--
- net/wireless/nl80211.c | 15 ++++-----------
- 2 files changed, 6 insertions(+), 13 deletions(-)
+ include/net/cfg80211.h |  4 ++--
+ net/wireless/scan.c    | 21 ++++++---------------
+ 2 files changed, 8 insertions(+), 17 deletions(-)
 
-diff --git a/net/wireless/core.h b/net/wireless/core.h
-index 3a7dbd63d8c6..899d111993c6 100644
---- a/net/wireless/core.h
-+++ b/net/wireless/core.h
-@@ -295,8 +295,8 @@ struct cfg80211_beacon_registration {
- struct cfg80211_cqm_config {
- 	u32 rssi_hyst;
- 	s32 last_rssi_event_value;
--	int n_rssi_thresholds;
--	s32 rssi_thresholds[];
-+	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(int, n_rssi_thresholds);
-+	DECLARE_FLEX_ARRAY_ELEMENTS(s32, rssi_thresholds);
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index 68713388b617..fa236015f6ef 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -2600,9 +2600,9 @@ struct cfg80211_inform_bss {
+ struct cfg80211_bss_ies {
+ 	u64 tsf;
+ 	struct rcu_head rcu_head;
+-	int len;
++	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(int, len);
+ 	bool from_beacon;
+-	u8 data[];
++	DECLARE_FLEX_ARRAY_ELEMENTS(u8, data);
  };
  
- void cfg80211_destroy_ifaces(struct cfg80211_registered_device *rdev);
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 945ed87d12e0..70df7132cce8 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -12096,21 +12096,14 @@ static int nl80211_set_cqm_rssi(struct genl_info *info,
+ /**
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index 4a6d86432910..9f53d05c6aaa 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -1932,7 +1932,7 @@ cfg80211_inform_single_bss_data(struct wiphy *wiphy,
+ 				gfp_t gfp)
+ {
+ 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wiphy);
+-	struct cfg80211_bss_ies *ies;
++	struct cfg80211_bss_ies *ies = NULL;
+ 	struct ieee80211_channel *channel;
+ 	struct cfg80211_internal_bss tmp = {}, *res;
+ 	int bss_type;
+@@ -1978,13 +1978,10 @@ cfg80211_inform_single_bss_data(struct wiphy *wiphy,
+ 	 * override the IEs pointer should we have received an earlier
+ 	 * indication of Probe Response data.
+ 	 */
+-	ies = kzalloc(sizeof(*ies) + ielen, gfp);
+-	if (!ies)
++	if (mem_to_flex_dup(&ies, ie, ielen, gfp))
+ 		return NULL;
+-	ies->len = ielen;
+ 	ies->tsf = tsf;
+ 	ies->from_beacon = false;
+-	memcpy(ies->data, ie, ielen);
  
- 	wdev_lock(wdev);
- 	if (n_thresholds) {
--		struct cfg80211_cqm_config *cqm_config;
-+		struct cfg80211_cqm_config *cqm_config = NULL;
+ 	switch (ftype) {
+ 	case CFG80211_BSS_FTYPE_BEACON:
+@@ -2277,7 +2274,7 @@ cfg80211_update_notlisted_nontrans(struct wiphy *wiphy,
+ 	size_t ielen = len - offsetof(struct ieee80211_mgmt,
+ 				      u.probe_resp.variable);
+ 	size_t new_ie_len;
+-	struct cfg80211_bss_ies *new_ies;
++	struct cfg80211_bss_ies *new_ies = NULL;
+ 	const struct cfg80211_bss_ies *old;
+ 	u8 cpy_len;
  
--		cqm_config = kzalloc(struct_size(cqm_config, rssi_thresholds,
--						 n_thresholds),
--				     GFP_KERNEL);
--		if (!cqm_config) {
--			err = -ENOMEM;
-+		err = mem_to_flex_dup(&cqm_config, thresholds, n_thresholds,
-+				      GFP_KERNEL);
-+		if (err)
- 			goto unlock;
--		}
+@@ -2314,8 +2311,7 @@ cfg80211_update_notlisted_nontrans(struct wiphy *wiphy,
+ 	if (!new_ie)
+ 		return;
  
- 		cqm_config->rssi_hyst = hysteresis;
--		cqm_config->n_rssi_thresholds = n_thresholds;
--		memcpy(cqm_config->rssi_thresholds, thresholds,
--		       flex_array_size(cqm_config, rssi_thresholds,
--				       n_thresholds));
+-	new_ies = kzalloc(sizeof(*new_ies) + new_ie_len, GFP_ATOMIC);
+-	if (!new_ies)
++	if (mem_to_flex_dup(&new_ies, new_ie, new_ie_len, GFP_ATOMIC))
+ 		goto out_free;
  
- 		wdev->cqm_config = cqm_config;
+ 	pos = new_ie;
+@@ -2333,10 +2329,8 @@ cfg80211_update_notlisted_nontrans(struct wiphy *wiphy,
+ 	memcpy(pos, mbssid + cpy_len, ((ie + ielen) - (mbssid + cpy_len)));
+ 
+ 	/* update ie */
+-	new_ies->len = new_ie_len;
+ 	new_ies->tsf = le64_to_cpu(mgmt->u.probe_resp.timestamp);
+ 	new_ies->from_beacon = ieee80211_is_beacon(mgmt->frame_control);
+-	memcpy(new_ies->data, new_ie, new_ie_len);
+ 	if (ieee80211_is_probe_resp(mgmt->frame_control)) {
+ 		old = rcu_access_pointer(nontrans_bss->proberesp_ies);
+ 		rcu_assign_pointer(nontrans_bss->proberesp_ies, new_ies);
+@@ -2363,7 +2357,7 @@ cfg80211_inform_single_bss_frame_data(struct wiphy *wiphy,
+ 				      gfp_t gfp)
+ {
+ 	struct cfg80211_internal_bss tmp = {}, *res;
+-	struct cfg80211_bss_ies *ies;
++	struct cfg80211_bss_ies *ies = NULL;
+ 	struct ieee80211_channel *channel;
+ 	bool signal_valid;
+ 	struct ieee80211_ext *ext = NULL;
+@@ -2442,14 +2436,11 @@ cfg80211_inform_single_bss_frame_data(struct wiphy *wiphy,
+ 		capability = le16_to_cpu(mgmt->u.probe_resp.capab_info);
  	}
+ 
+-	ies = kzalloc(sizeof(*ies) + ielen, gfp);
+-	if (!ies)
++	if (mem_to_flex_dup(&ies, variable, ielen, gfp))
+ 		return NULL;
+-	ies->len = ielen;
+ 	ies->tsf = le64_to_cpu(mgmt->u.probe_resp.timestamp);
+ 	ies->from_beacon = ieee80211_is_beacon(mgmt->frame_control) ||
+ 			   ieee80211_is_s1g_beacon(mgmt->frame_control);
+-	memcpy(ies->data, variable, ielen);
+ 
+ 	if (ieee80211_is_probe_resp(mgmt->frame_control))
+ 		rcu_assign_pointer(tmp.pub.proberesp_ies, ies);
 -- 
 2.32.0
 
