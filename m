@@ -2,257 +2,165 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58D1651960B
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 05:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C73B2519634
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 06:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344370AbiEDDlQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 May 2022 23:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44444 "EHLO
+        id S1344474AbiEDEGb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 May 2022 00:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240155AbiEDDlP (ORCPT
+        with ESMTP id S1344456AbiEDEGa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 May 2022 23:41:15 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7282F27FE1
-        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 20:37:37 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id i24so157459pfa.7
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 20:37:37 -0700 (PDT)
+        Wed, 4 May 2022 00:06:30 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDEA1A393;
+        Tue,  3 May 2022 21:02:55 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-2f7d19cac0bso2986207b3.13;
+        Tue, 03 May 2022 21:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lsBVjxx2frcPFNjY4/BLqdzh7cys7mpO3LyMH5LAbSE=;
-        b=e/seADFb6dKCy5O35I2lb3QkGM1U1AG+HWJjIUEuWUaLYiQ/bRCqVwsL3BCOvWYEuK
-         9qpY1aU7RmqPGGBT5JUv2H6Jc6siGFaT+PVsx+FN+n4iHis5NM0gOyiK9HY2IIWzLhh4
-         mk3V/alwvU0/DDln8pB7kZALicerW3KUceFLU=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W3/oD3hhUgmP5e/isgUbw7+g1PPBvghdLqlobIHop/4=;
+        b=VLwwz523wVa5T9+YMAiWIa2hQHB+9nrcrvf6MxAWFdvLCo0x1OnGKzj1cFBLowgXMa
+         F45SzWgIU3s+cSzh6BKHqDYlqYUoOTlP/DSwTzBpXDEpugMjFGpv5L5yL1nWB2xwnQJD
+         EeuRYbdH8HBV17g62T1SShvp34T9BuYwrJThnLnDnLJhdGSa0nZK8W8UurXcxl8Ll3aI
+         CuFmoN3Ew3mEJT3PjNLT1g9uvz9IyHrcrnUAfAPHzOOpxOGBnh1C8FOhSOJQF400AJeW
+         WMnxtjNXFOq3SFw9wIAD4v+TZIaajPa6RX6TP2zKpwNrgXwk+AxEfopbLgEXRwClGZVE
+         vz0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lsBVjxx2frcPFNjY4/BLqdzh7cys7mpO3LyMH5LAbSE=;
-        b=Ia4A3SS1zd1BDAb7DJaCKD5doyojZD44GiVtl0+OZeCTQXhNce7RvgrT4SG/5fQPXb
-         4l5CYUumGX2CylqEUAP1N5jVfFyo3O8G70MIoPxilGClRo4WQZn3FAfTJQDaJeRBdP12
-         Rll/NkHFTObpsg8WEtj902Cn+mjePjcFEyDHd8XD6cXvfm+zY7ALDzRFgMghHFxW8rCI
-         5f2kZTBgfORvoDo2G6ZPjmFDR9Od/s9iIspL2CcXFdJvdX/o2sLa1ww1EoycfLpPFoGX
-         Nloh4VMffxQ5FFLc2FvJzaQ7fdIFn6FlIaoVMm+N2v7oyez9wZtVmN9LQqxpdO8QskhK
-         yNjg==
-X-Gm-Message-State: AOAM531Ux/vv/XqDY+BxE1/8yQp133Ay/gJP9umrmpf31sJJjf0bDSAD
-        YFYu/lEf6oav868jG6O/vssvxL+TNwLd4A==
-X-Google-Smtp-Source: ABdhPJwD/uvCKEJ4PY5hYyja46c4g0gVoPoVIrAV6/UTN/22EI1oLPF2GDVC1zkPD9qJOD+dW3FeWQ==
-X-Received: by 2002:a63:8c1a:0:b0:3ab:35a9:5f8f with SMTP id m26-20020a638c1a000000b003ab35a95f8fmr16187660pgd.598.1651635457000;
-        Tue, 03 May 2022 20:37:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j17-20020a62b611000000b0050dc7628170sm7022939pff.74.2022.05.03.20.37.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 20:37:36 -0700 (PDT)
-Date:   Tue, 3 May 2022 20:37:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rich Felker <dalias@aerifal.cx>,
-        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Christian Brauner <brauner@kernel.org>,
-        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hulk Robot <hulkci@huawei.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Yang Yingliang <yangyingliang@huawei.com>
-Subject: Re: [PATCH 01/32] netlink: Avoid memcpy() across flexible array
- boundary
-Message-ID: <202205032027.B2A9FB4AA@keescook>
-References: <20220504014440.3697851-1-keescook@chromium.org>
- <20220504014440.3697851-2-keescook@chromium.org>
- <20220504033105.GA13667@embeddedor>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W3/oD3hhUgmP5e/isgUbw7+g1PPBvghdLqlobIHop/4=;
+        b=twBu9CF423epoCsB4SI7ml13eOKvfyAV70hxGZbC4D4mPNidsK/JNLUzts8Y56s1Hj
+         G4PYA0XA3PrMcpoTAzdKu2gTx/GXSkEBGNj4b2IYf7n94ZUKzOHMEsxlZRgQ4EEBjE7f
+         mgMMoGIekSFA+Q2bJI3uDkzgK9LBPnYUG2vEsCIrOEaxIvFYEtAfOsZESEZVjF39yUmu
+         djcu/bG0IQpOjhxPZFHHyDtk6sVOWmYkyidHiZ5yNxnLUyF6U90WHTwfjs4iXjIPTl47
+         jE4uZea5iAfRjsj5uzAsKcijJvmQwT0F6eV7aGaUzC8/+drhj1OXm+bKfHkHQZGYcwLx
+         K8TQ==
+X-Gm-Message-State: AOAM533ppJVRTubUJtPhG+loDC0wc3vHfvKJnXR5zHP07AeA5+X/ZZia
+        2CBcFeuvGeWmbyTtgZQgMtIsgnJ2W6RaPfJRbs0=
+X-Google-Smtp-Source: ABdhPJwwVfviWqFjK/Glcs4mY8hURf2iUgeAvKOXOZreMUDCs5xJ8WBeFHrhRnAuZFlZ+hOGuZ9iZ95Q7xe95PrG0k4=
+X-Received: by 2002:a05:690c:9e:b0:2e9:b625:1be2 with SMTP id
+ be30-20020a05690c009e00b002e9b6251be2mr18279825ywb.48.1651636974377; Tue, 03
+ May 2022 21:02:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220504033105.GA13667@embeddedor>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <1651509391-2058-1-git-send-email-mikelley@microsoft.com> <1651509391-2058-5-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1651509391-2058-5-git-send-email-mikelley@microsoft.com>
+From:   Deepak Rawat <drawat.floss@gmail.com>
+Date:   Tue, 3 May 2022 21:02:44 -0700
+Message-ID: <CAHFnvW3TDTh_iRpF5zH4uPKnB+_AisniVgam=Fj_Gog6KOfKrQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] drm/hyperv: Remove support for Hyper-V 2008 and 2008R2/Win7
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     K Y Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, deller@gmx.de,
+        dri-devel@lists.freedesktop.org, linux-scsi@vger.kernel.org,
+        linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 03, 2022 at 10:31:05PM -0500, Gustavo A. R. Silva wrote:
-> On Tue, May 03, 2022 at 06:44:10PM -0700, Kees Cook wrote:
-> [...]
-> > diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-> > index 1b5a9c2e1c29..09346aee1022 100644
-> > --- a/net/netlink/af_netlink.c
-> > +++ b/net/netlink/af_netlink.c
-> > @@ -2445,7 +2445,10 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
-> >  			  NLMSG_ERROR, payload, flags);
-> >  	errmsg = nlmsg_data(rep);
-> >  	errmsg->error = err;
-> > -	memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg) ? nlh->nlmsg_len : sizeof(*nlh));
-> > +	errmsg->msg = *nlh;
-> > +	if (payload > sizeof(*errmsg))
-> > +		memcpy(errmsg->msg.nlmsg_payload, nlh->nlmsg_payload,
-> > +		       nlh->nlmsg_len - sizeof(*nlh));
-> 
-> They have nlmsg_len()[1] for the length of the payload without the header:
-> 
-> /**
->  * nlmsg_len - length of message payload
->  * @nlh: netlink message header
->  */
-> static inline int nlmsg_len(const struct nlmsghdr *nlh)
-> {
-> 	return nlh->nlmsg_len - NLMSG_HDRLEN;
-> }
+On Mon, May 2, 2022 at 9:37 AM Michael Kelley <mikelley@microsoft.com> wrote:
+>
+> The DRM Hyper-V driver has special case code for running on the first
+> released versions of Hyper-V: 2008 and 2008 R2/Windows 7.  These versions
+> are now out of support (except for extended security updates) and lack
+> support for performance features that are needed for effective production
+> usage of Linux guests.
+>
+> The negotiation of the VMbus protocol versions required by these old
+> Hyper-V versions has been removed from the VMbus driver.  So now remove
+> the handling of these VMbus protocol versions from the DRM Hyper-V
+> driver.
+>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 23 +++++++----------------
+>  1 file changed, 7 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> index c0155c6..76a182a 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> @@ -18,16 +18,16 @@
+>  #define SYNTHVID_VERSION(major, minor) ((minor) << 16 | (major))
+>  #define SYNTHVID_VER_GET_MAJOR(ver) (ver & 0x0000ffff)
+>  #define SYNTHVID_VER_GET_MINOR(ver) ((ver & 0xffff0000) >> 16)
+> +
+> +/* Support for VERSION_WIN7 is removed. #define is retained for reference. */
+>  #define SYNTHVID_VERSION_WIN7 SYNTHVID_VERSION(3, 0)
+>  #define SYNTHVID_VERSION_WIN8 SYNTHVID_VERSION(3, 2)
+>  #define SYNTHVID_VERSION_WIN10 SYNTHVID_VERSION(3, 5)
+>
+> -#define SYNTHVID_DEPTH_WIN7 16
+>  #define SYNTHVID_DEPTH_WIN8 32
+> -#define SYNTHVID_FB_SIZE_WIN7 (4 * 1024 * 1024)
+> +#define SYNTHVID_WIDTH_WIN8 1600
+> +#define SYNTHVID_HEIGHT_WIN8 1200
+>  #define SYNTHVID_FB_SIZE_WIN8 (8 * 1024 * 1024)
+> -#define SYNTHVID_WIDTH_MAX_WIN7 1600
+> -#define SYNTHVID_HEIGHT_MAX_WIN7 1200
+>
+>  enum pipe_msg_type {
+>         PIPE_MSG_INVALID,
+> @@ -496,12 +496,6 @@ int hyperv_connect_vsp(struct hv_device *hdev)
+>         case VERSION_WIN8:
+>         case VERSION_WIN8_1:
+>                 ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN8);
+> -               if (!ret)
+> -                       break;
+> -               fallthrough;
+> -       case VERSION_WS2008:
+> -       case VERSION_WIN7:
+> -               ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN7);
+>                 break;
+>         default:
+>                 ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN10);
+> @@ -513,18 +507,15 @@ int hyperv_connect_vsp(struct hv_device *hdev)
+>                 goto error;
+>         }
+>
+> -       if (hv->synthvid_version == SYNTHVID_VERSION_WIN7)
+> -               hv->screen_depth = SYNTHVID_DEPTH_WIN7;
+> -       else
+> -               hv->screen_depth = SYNTHVID_DEPTH_WIN8;
+> +       hv->screen_depth = SYNTHVID_DEPTH_WIN8;
+>
+>         if (hyperv_version_ge(hv->synthvid_version, SYNTHVID_VERSION_WIN10)) {
+>                 ret = hyperv_get_supported_resolution(hdev);
+>                 if (ret)
+>                         drm_err(dev, "Failed to get supported resolution from host, use default\n");
+>         } else {
+> -               hv->screen_width_max = SYNTHVID_WIDTH_MAX_WIN7;
+> -               hv->screen_height_max = SYNTHVID_HEIGHT_MAX_WIN7;
+> +               hv->screen_width_max = SYNTHVID_WIDTH_WIN8;
+> +               hv->screen_height_max = SYNTHVID_HEIGHT_WIN8;
+>         }
+>
+>         hv->mmio_megabytes = hdev->channel->offermsg.offer.mmio_megabytes;
 
-Oh, hm, yeah, that would be much cleaner. The relationship between
-"payload" and nlmsg_len is confusing in here. :)
+Do we need a new version for Windows 11? If the synthetic device
+version is decoupled from Windows version, then I guess we can rename
+the macro to reflect that.
 
-So, this should be simpler:
+Reviewed-by: Deepak Rawat <drawat.floss@gmail.com>
 
--	memcpy(&errmsg->msg, nlh, payload > sizeof(*errmsg) ? nlh->nlmsg_len : sizeof(*nlh));
-+	errmsg->msg = *nlh;
-+	memcpy(errmsg->msg.nlmsg_payload, nlh->nlmsg_payload, nlmsg_len(nlh));
-
-It's actually this case that triggered my investigation in __bos(1)'s
-misbehavior around sub-structs, since this case wasn't getting silenced:
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
-
-It still feels like it should be possible to get this right without
-splitting the memcpy, though. Hmpf.
-
-> (would that function use some sanitization, though? what if nlmsg_len is
-> somehow manipulated to be less than NLMSG_HDRLEN?...)
-
-Maybe something like:
-
-static inline int nlmsg_len(const struct nlmsghdr *nlh)
-{
-	if (WARN_ON(nlh->nlmsg_len < NLMSG_HDRLEN))
-		return 0;
-	return nlh->nlmsg_len - NLMSG_HDRLEN;
-}
-
-> Also, it seems there is at least one more instance of this same issue:
-> 
-> diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
-> index 16ae92054baa..d06184b94af5 100644
-> --- a/net/netfilter/ipset/ip_set_core.c
-> +++ b/net/netfilter/ipset/ip_set_core.c
-> @@ -1723,7 +1723,8 @@ call_ad(struct net *net, struct sock *ctnl, struct sk_buff *skb,
->                                   nlh->nlmsg_seq, NLMSG_ERROR, payload, 0);
->                 errmsg = nlmsg_data(rep);
->                 errmsg->error = ret;
-> -               memcpy(&errmsg->msg, nlh, nlh->nlmsg_len);
-> +               errmsg->msg = *nlh;
-> +               memcpy(errmsg->msg.nlmsg_payload, nlh->nlmsg_payload, nlmsg_len(nlh));
-
-Ah, yes, nice catch!
-
->                 cmdattr = (void *)&errmsg->msg + min_len;
-> 
->                 ret = nla_parse(cda, IPSET_ATTR_CMD_MAX, cmdattr,
-> 
 > --
-> Gustavo
-> 
-> [1] https://elixir.bootlin.com/linux/v5.18-rc5/source/include/net/netlink.h#L577
-
--- 
-Kees Cook
+> 1.8.3.1
+>
