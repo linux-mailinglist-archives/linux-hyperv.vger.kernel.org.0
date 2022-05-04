@@ -2,165 +2,197 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C73B2519634
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 06:03:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B82D35196FC
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 07:43:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344474AbiEDEGb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 May 2022 00:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59928 "EHLO
+        id S1344696AbiEDFqx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 4 May 2022 01:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344456AbiEDEGa (ORCPT
+        with ESMTP id S230474AbiEDFqv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 May 2022 00:06:30 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDEA1A393;
-        Tue,  3 May 2022 21:02:55 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-2f7d19cac0bso2986207b3.13;
-        Tue, 03 May 2022 21:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W3/oD3hhUgmP5e/isgUbw7+g1PPBvghdLqlobIHop/4=;
-        b=VLwwz523wVa5T9+YMAiWIa2hQHB+9nrcrvf6MxAWFdvLCo0x1OnGKzj1cFBLowgXMa
-         F45SzWgIU3s+cSzh6BKHqDYlqYUoOTlP/DSwTzBpXDEpugMjFGpv5L5yL1nWB2xwnQJD
-         EeuRYbdH8HBV17g62T1SShvp34T9BuYwrJThnLnDnLJhdGSa0nZK8W8UurXcxl8Ll3aI
-         CuFmoN3Ew3mEJT3PjNLT1g9uvz9IyHrcrnUAfAPHzOOpxOGBnh1C8FOhSOJQF400AJeW
-         WMnxtjNXFOq3SFw9wIAD4v+TZIaajPa6RX6TP2zKpwNrgXwk+AxEfopbLgEXRwClGZVE
-         vz0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W3/oD3hhUgmP5e/isgUbw7+g1PPBvghdLqlobIHop/4=;
-        b=twBu9CF423epoCsB4SI7ml13eOKvfyAV70hxGZbC4D4mPNidsK/JNLUzts8Y56s1Hj
-         G4PYA0XA3PrMcpoTAzdKu2gTx/GXSkEBGNj4b2IYf7n94ZUKzOHMEsxlZRgQ4EEBjE7f
-         mgMMoGIekSFA+Q2bJI3uDkzgK9LBPnYUG2vEsCIrOEaxIvFYEtAfOsZESEZVjF39yUmu
-         djcu/bG0IQpOjhxPZFHHyDtk6sVOWmYkyidHiZ5yNxnLUyF6U90WHTwfjs4iXjIPTl47
-         jE4uZea5iAfRjsj5uzAsKcijJvmQwT0F6eV7aGaUzC8/+drhj1OXm+bKfHkHQZGYcwLx
-         K8TQ==
-X-Gm-Message-State: AOAM533ppJVRTubUJtPhG+loDC0wc3vHfvKJnXR5zHP07AeA5+X/ZZia
-        2CBcFeuvGeWmbyTtgZQgMtIsgnJ2W6RaPfJRbs0=
-X-Google-Smtp-Source: ABdhPJwwVfviWqFjK/Glcs4mY8hURf2iUgeAvKOXOZreMUDCs5xJ8WBeFHrhRnAuZFlZ+hOGuZ9iZ95Q7xe95PrG0k4=
-X-Received: by 2002:a05:690c:9e:b0:2e9:b625:1be2 with SMTP id
- be30-20020a05690c009e00b002e9b6251be2mr18279825ywb.48.1651636974377; Tue, 03
- May 2022 21:02:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <1651509391-2058-1-git-send-email-mikelley@microsoft.com> <1651509391-2058-5-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1651509391-2058-5-git-send-email-mikelley@microsoft.com>
-From:   Deepak Rawat <drawat.floss@gmail.com>
-Date:   Tue, 3 May 2022 21:02:44 -0700
-Message-ID: <CAHFnvW3TDTh_iRpF5zH4uPKnB+_AisniVgam=Fj_Gog6KOfKrQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] drm/hyperv: Remove support for Hyper-V 2008 and 2008R2/Win7
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     K Y Srinivasan <kys@microsoft.com>,
+        Wed, 4 May 2022 01:46:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545CD2610B;
+        Tue,  3 May 2022 22:43:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D7F9360B6B;
+        Wed,  4 May 2022 05:43:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1EF2C385A5;
+        Wed,  4 May 2022 05:42:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651642995;
+        bh=JrTxy6eXsiDtGM/F/9OTUVdSC11/W1yM6qcTiJhEEWY=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=ptNmZdYs+o6KHSEb902G1QgyncrLgIYxwRjyZ9+W9VTxnFGJHKAdTcbe0JtEXzd4l
+         aYwCxztA+GFA6BxNwpRJ+fwdrhYF+K4ZZZLdzPKi8lBBWFO/VNZwdIAlyDMFIxmOWz
+         hAmvQ+5DrbHNQghYSGB1afStWvfnMlPcYreVpeGPzS9YPA/9Y4p/yFDlQcLqjzbi/7
+         oTPIz0yt7M1rWvdVDxqtNaenj2/snIMXH2fVjjBqgI4xeMRFMaS+uomXQ38nO6fIxg
+         l9QT60aMp2PNBolRmvUG9+MmaPk4GD+QjG/dwTaQmabfDmxvYb7M7hfSFb2fcWpc9I
+         jV5YMv8gNlmpA==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, wcn36xx@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        Christian =?utf-8?Q?G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hulk Robot <hulkci@huawei.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>,
+        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        llvm@lists.linux.dev, Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nuno =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, deller@gmx.de,
-        dri-devel@lists.freedesktop.org, linux-scsi@vger.kernel.org,
-        linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Wei Liu <wei.liu@kernel.org>, xen-devel@lists.xenproject.org,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: Re: [PATCH 10/32] wcn36xx: Use mem_to_flex_dup() with struct wcn36xx_hal_ind_msg
+References: <20220504014440.3697851-1-keescook@chromium.org>
+        <20220504014440.3697851-11-keescook@chromium.org>
+Date:   Wed, 04 May 2022 08:42:46 +0300
+In-Reply-To: <20220504014440.3697851-11-keescook@chromium.org> (Kees Cook's
+        message of "Tue, 3 May 2022 18:44:19 -0700")
+Message-ID: <8735hpc0q1.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 2, 2022 at 9:37 AM Michael Kelley <mikelley@microsoft.com> wrote:
->
-> The DRM Hyper-V driver has special case code for running on the first
-> released versions of Hyper-V: 2008 and 2008 R2/Windows 7.  These versions
-> are now out of support (except for extended security updates) and lack
-> support for performance features that are needed for effective production
-> usage of Linux guests.
->
-> The negotiation of the VMbus protocol versions required by these old
-> Hyper-V versions has been removed from the VMbus driver.  So now remove
-> the handling of these VMbus protocol versions from the DRM Hyper-V
-> driver.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 23 +++++++----------------
->  1 file changed, 7 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> index c0155c6..76a182a 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> @@ -18,16 +18,16 @@
->  #define SYNTHVID_VERSION(major, minor) ((minor) << 16 | (major))
->  #define SYNTHVID_VER_GET_MAJOR(ver) (ver & 0x0000ffff)
->  #define SYNTHVID_VER_GET_MINOR(ver) ((ver & 0xffff0000) >> 16)
-> +
-> +/* Support for VERSION_WIN7 is removed. #define is retained for reference. */
->  #define SYNTHVID_VERSION_WIN7 SYNTHVID_VERSION(3, 0)
->  #define SYNTHVID_VERSION_WIN8 SYNTHVID_VERSION(3, 2)
->  #define SYNTHVID_VERSION_WIN10 SYNTHVID_VERSION(3, 5)
->
-> -#define SYNTHVID_DEPTH_WIN7 16
->  #define SYNTHVID_DEPTH_WIN8 32
-> -#define SYNTHVID_FB_SIZE_WIN7 (4 * 1024 * 1024)
-> +#define SYNTHVID_WIDTH_WIN8 1600
-> +#define SYNTHVID_HEIGHT_WIN8 1200
->  #define SYNTHVID_FB_SIZE_WIN8 (8 * 1024 * 1024)
-> -#define SYNTHVID_WIDTH_MAX_WIN7 1600
-> -#define SYNTHVID_HEIGHT_MAX_WIN7 1200
->
->  enum pipe_msg_type {
->         PIPE_MSG_INVALID,
-> @@ -496,12 +496,6 @@ int hyperv_connect_vsp(struct hv_device *hdev)
->         case VERSION_WIN8:
->         case VERSION_WIN8_1:
->                 ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN8);
-> -               if (!ret)
-> -                       break;
-> -               fallthrough;
-> -       case VERSION_WS2008:
-> -       case VERSION_WIN7:
-> -               ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN7);
->                 break;
->         default:
->                 ret = hyperv_negotiate_version(hdev, SYNTHVID_VERSION_WIN10);
-> @@ -513,18 +507,15 @@ int hyperv_connect_vsp(struct hv_device *hdev)
->                 goto error;
->         }
->
-> -       if (hv->synthvid_version == SYNTHVID_VERSION_WIN7)
-> -               hv->screen_depth = SYNTHVID_DEPTH_WIN7;
-> -       else
-> -               hv->screen_depth = SYNTHVID_DEPTH_WIN8;
-> +       hv->screen_depth = SYNTHVID_DEPTH_WIN8;
->
->         if (hyperv_version_ge(hv->synthvid_version, SYNTHVID_VERSION_WIN10)) {
->                 ret = hyperv_get_supported_resolution(hdev);
->                 if (ret)
->                         drm_err(dev, "Failed to get supported resolution from host, use default\n");
->         } else {
-> -               hv->screen_width_max = SYNTHVID_WIDTH_MAX_WIN7;
-> -               hv->screen_height_max = SYNTHVID_HEIGHT_MAX_WIN7;
-> +               hv->screen_width_max = SYNTHVID_WIDTH_WIN8;
-> +               hv->screen_height_max = SYNTHVID_HEIGHT_WIN8;
->         }
->
->         hv->mmio_megabytes = hdev->channel->offermsg.offer.mmio_megabytes;
+Kees Cook <keescook@chromium.org> writes:
 
-Do we need a new version for Windows 11? If the synthetic device
-version is decoupled from Windows version, then I guess we can rename
-the macro to reflect that.
-
-Reviewed-by: Deepak Rawat <drawat.floss@gmail.com>
-
-> --
-> 1.8.3.1
+> As part of the work to perform bounds checking on all memcpy() uses,
+> replace the open-coded a deserialization of bytes out of memory into a
+> trailing flexible array by using a flex_array.h helper to perform the
+> allocation, bounds checking, and copying.
 >
+> Cc: Loic Poulain <loic.poulain@linaro.org>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: wcn36xx@lists.infradead.org
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+[...]
+
+> --- a/drivers/net/wireless/ath/wcn36xx/smd.h
+> +++ b/drivers/net/wireless/ath/wcn36xx/smd.h
+> @@ -46,8 +46,8 @@ struct wcn36xx_fw_msg_status_rsp {
+>  
+>  struct wcn36xx_hal_ind_msg {
+>  	struct list_head list;
+> -	size_t msg_len;
+> -	u8 msg[];
+> +	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(size_t, msg_len);
+> +	DECLARE_FLEX_ARRAY_ELEMENTS(u8, msg);
+
+This affects readability quite a lot and tbh I don't like it. Isn't
+there any simpler way to solve this?
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
