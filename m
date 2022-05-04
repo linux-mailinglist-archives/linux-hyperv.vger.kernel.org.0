@@ -2,59 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CE265193FB
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 03:49:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C03519416
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 May 2022 03:49:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343641AbiEDBwz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 3 May 2022 21:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
+        id S1343619AbiEDBxO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 3 May 2022 21:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245641AbiEDBw1 (ORCPT
+        with ESMTP id S1343624AbiEDBwy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 3 May 2022 21:52:27 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C10D94198E
-        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 18:47:41 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id i24so5576pfa.7
-        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 18:47:41 -0700 (PDT)
+        Tue, 3 May 2022 21:52:54 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6703833E1C
+        for <linux-hyperv@vger.kernel.org>; Tue,  3 May 2022 18:48:25 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d15so171541plh.2
+        for <linux-hyperv@vger.kernel.org>; Tue, 03 May 2022 18:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OUtFJC5/TKCmTq7i/wF9dXPYB7F9m5Fe+Glt57epyug=;
-        b=LA1DuW2pq5PcEvMCaSGHJyuI7WWCw3brL8SvS9+2zVb7L13DgPnUJao9oTWLzzgmb0
-         FDFEPcC6DrQfzS+lsrgByCwuE3V59hlwMRxN4HndNJubDx+3EuT5ltBW8juSZqsKA86J
-         6Mk0HEWOn29+r/VVptC8G26Rp5mKAXoQSht84=
+        bh=P7uM3xoAcE7zuGNsfEYVdWWhl8RQOVkTgxnXHqQm9tk=;
+        b=Ttm1udnLhK1uzAB04KBRSr/POGM0kwPI1bs4XPEU6UEtgK8/23ubm+dxeV4+X853RT
+         0+Il5Jok8kr0+FDj5VV/8TyC5lx1HeS1NOnJkl2lVk9pme8hyn7Y1lYALOBUqbtoGYi3
+         cAWN4x8Bl4pcx02o/CTto17Eyhwd5u2uMzQSw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OUtFJC5/TKCmTq7i/wF9dXPYB7F9m5Fe+Glt57epyug=;
-        b=gqwXQNUR6vF+JV+MBV2lCZLNvf8wpAXnSITJT+ptvG6oS3HMB3orghs5YE+YlfXsss
-         Hduvd2ic5TYB4Zp6VbXT5lJ/dyhHa9BFbozwrkxs+VI+7oxicR7/RztzdWFASZ+e9Mgr
-         gHtiWGijWTfMYkRj4LAz9ib+ohHJg3V6SuBlc5MdvtypetshRw5XpCZelwXfE+bPToKR
-         taRuAc2L4MO2tr/1knY3gFLPWLGqUw3J4b42ZQTvoj+irVyrfCgmgXb3l9VWwH4u+gJy
-         dX3fQO+BvFSk926hE1RK7t/Uxxq1lOTw95AaGVRegID6VRTLamXcSEUDDYWk75BPjzoW
-         vmrw==
-X-Gm-Message-State: AOAM530kYEcIOxTXMKALbRBE5lFiTLTZgLq8YVuj9oclZCcBjjJn2tMy
-        qoHNrL//QksdnW3hFr3xVu8Epw==
-X-Google-Smtp-Source: ABdhPJwT+HpwroAcLEOh/whz+04BMlDA8QRyKASs96Yn7JFIogcBzSznpVM6BSo5Oye2dEgT1IAP3A==
-X-Received: by 2002:a63:de12:0:b0:3ab:7c33:2894 with SMTP id f18-20020a63de12000000b003ab7c332894mr15993343pgg.187.1651628861170;
+        bh=P7uM3xoAcE7zuGNsfEYVdWWhl8RQOVkTgxnXHqQm9tk=;
+        b=ULCmjxs8ozS8xG0kAjIVbMpUYZIHBvtaYEm0JDygxR6EANh+EwV5CZF/JutwVaFXo3
+         Hhqum6z2vLxlQw9JiUis+QfRs18BCRaqSGEjB5Tqf95V0YOXSrrT33yQMbiy5qT631iL
+         m8X8TkvdFO1XUhxCXlYDXEHZ0rUvXuTlH4iJ9D15eUeDf0smYIitjDHFU9zC4WYFgkAc
+         +oRXYMD4T41jmbudVSjPX0g/lRKre0SRVFAcdyM+tdi14FNz7PrapnYGLFI8KmYM+Szp
+         E24NAfcYLtrvTOrAd8+pfWxJeJ5gZvRPjbRhoeDDTpVzGYwHJhQMglsWVMtn5X9tziFA
+         tZJw==
+X-Gm-Message-State: AOAM532HoHbPGL+e33e0ubfB79EeV36MjanERAHnN7ZPV1Ty7qms8lnD
+        dPU/reI1Up74X+5rkTp19DSvLA==
+X-Google-Smtp-Source: ABdhPJxlINiFv6UJHBX+/eJqyerMOceaIDiYJHkzj2pPV40RgErLtQ31Acn4ZOqZFTEIOPf1xFj0AA==
+X-Received: by 2002:a17:90b:3b42:b0:1dc:5cdf:5649 with SMTP id ot2-20020a17090b3b4200b001dc5cdf5649mr7783206pjb.239.1651628861490;
         Tue, 03 May 2022 18:47:41 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d14-20020aa7868e000000b0050dc76281a3sm6929562pfo.125.2022.05.03.18.47.37
+        by smtp.gmail.com with ESMTPSA id on13-20020a17090b1d0d00b001d9acbc3b4esm2003067pjb.47.2022.05.03.18.47.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 03 May 2022 18:47:39 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A . R . Silva" <gustavoars@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Kalle Valo <kvalo@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, wcn36xx@lists.infradead.org,
+        Paolo Abeni <pabeni@redhat.com>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
         Alexei Starovoitov <ast@kernel.org>,
         alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
         Andrew Gabbasov <andrew_gabbasov@mentor.com>,
@@ -101,9 +100,8 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Johan Hedberg <johan.hedberg@gmail.com>,
         Johannes Berg <johannes.berg@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
         John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>,
+        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
         Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
         kunit-dev@googlegroups.com,
         Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
@@ -120,7 +118,8 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        llvm@lists.linux.dev, Louis Peens <louis.peens@corigine.com>,
+        llvm@lists.linux.dev, Loic Poulain <loic.poulain@linaro.org>,
+        Louis Peens <louis.peens@corigine.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
         Marc Dionne <marc.dionne@auristor.com>,
@@ -149,17 +148,18 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
         Udipto Goswami <quic_ugoswami@quicinc.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Wei Liu <wei.liu@kernel.org>, xen-devel@lists.xenproject.org,
+        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
+        xen-devel@lists.xenproject.org,
         Xiu Jianfeng <xiujianfeng@huawei.com>,
         Yang Yingliang <yangyingliang@huawei.com>
-Subject: [PATCH 10/32] wcn36xx: Use mem_to_flex_dup() with struct wcn36xx_hal_ind_msg
-Date:   Tue,  3 May 2022 18:44:19 -0700
-Message-Id: <20220504014440.3697851-11-keescook@chromium.org>
+Subject: [PATCH 11/32] nl80211: Use mem_to_flex_dup() with struct cfg80211_cqm_config
+Date:   Tue,  3 May 2022 18:44:20 -0700
+Message-Id: <20220504014440.3697851-12-keescook@chromium.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220504014440.3697851-1-keescook@chromium.org>
 References: <20220504014440.3697851-1-keescook@chromium.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2631; h=from:subject; bh=Msy2+XfnfeHEfU9VZJ5tdjPuaYOOARhkHxIAzZX3hrE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicdqCU5cwj3opYKUJRuHiQ6yrF7a8I32dTqix7rZH epN2AJmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnHaggAKCRCJcvTf3G3AJlHYD/ wPCLYVdBQwlOASKzq0go8+yQ9WXYDGyw7A8O0OnAVu3fIR1Fz5Lc4pY5x32WjVh8glBxJBPELf/CJL MNaKgMdTHQ7NA2hxtEc7bQM+t4sMdVV5x1MYPoH8LFiI3+Tvt13YvoQ+E1WZ0t2qqUC8zhxbH36dxW Bc0wCumlz/0FK9T//W8qmXHq+YCTZhpOj4lIosW7Ic80QXG9vfEguHz+8nSw2PXbpXiLtiKMXYVPis NcxiHBa5qoFp2VamsSe418quush6XqJxmFvLZl7mtiboKYYYu2/qPzI5A37FAbPIGCru3jMXR/tCbm Q/hHT9bgmoM7Gg13G5tslRAOTf4pY5AWKIKHlUwbJswOg2FEBoabSKGh058NrhtgM0MjsUnbiDiOZ5 aO0FKd7cJsVfNFB7uZ3+4sBW8mA109abyB33FJQ/eJ+s21q6pPofkO9ECLZme3sqINH5kUfMBZEGbc CCwh1fPl5ZjvS1fXH/PGcDGjsAPJyMdcuEmaFNP9/8CuF7AfC9V9oEUOZ4lm0ofCSU0/fD12keSaj3 IHfhVbZKNV1ZZFfOUd6M2qngKUJR4ZbYTuwFlDxka/MvOQ2XJ1z5dhL/T/KTejeZjeDoZmMeDtRSc8 Toe4QQtXjKsYj/+iwJSz5/80d1lP2aqDJFhk1y/i4XSNcgPBCqcyBiQzMbsQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2217; h=from:subject; bh=rRfAu1/k1e5caQg21/8VBHhysNqsP1FR5GA2AHrLW6w=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBicdqDYqJpVuI+Da24TYyn7rK2cAZcih+2ZRWaGUhg VviQcPmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYnHagwAKCRCJcvTf3G3AJjdwD/ 9GoZycFvhK6h6fbIQwuLO60vgqzr+JFBMz2boSXTBJSryctNsbZrwuvUuiBZUKC1y9sGE+SgzQm0T7 WzDZtyTlGmT1CZjKFpgdCfMbuMLVROkIwwyYoraeYFirZmIIRURYhLoAsJh4ZeL+hi8jOWnaV5ClMm GpAX4WW1YsM9YRJimQri0QE7pLQKGb80KxVsDgul4e0OUj1wYZTYbTgr98Zpysc1nSby6oGnxfPJ5B GvVh8QA/SYaCCMlYyUKr3bjTLrKOZ0NSnt6bAW38OpCXj8344D0TsfmO6tGo0jkheFbpEhSFjRi0Lj 1/+lxcBQ3jvc7zB+0Q5hpVWgX0kC+MxgbmIRdXF66gXOY9KMZzGl6dt9Fdm0xQWH6kFZlX7zpOBeHx To/pgX+EVE7aw6zudBInH3vlkkTYIklAIL/O9ajINZfL2HKHTp1XgnQdpa0KDyxqJilBhkXXekcKjn s7KJFzs28RJWqn+YgyJ+4W4uA6XLQvHdqVGZu5zS748KLU05KkgCeTW+Wm195aiMdUvqPG1QyqpCX5 1oMep8SXDkjOyDi6DnWcfFivJfrpKBqXU3oWsvXdBRhX+fVXmfr/E7qrARl1smC7xBgqWCcJf152Rh nwFocx9Hoo9dTUkHbkM4z/OFi36I6ENfaPOS+x9fFE1riA7xPsrh1gW6nwwA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -177,67 +177,64 @@ replace the open-coded a deserialization of bytes out of memory into a
 trailing flexible array by using a flex_array.h helper to perform the
 allocation, bounds checking, and copying.
 
-Cc: Loic Poulain <loic.poulain@linaro.org>
-Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: wcn36xx@lists.infradead.org
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
+Cc: Eric Dumazet <edumazet@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/ath/wcn36xx/smd.c | 8 ++------
- drivers/net/wireless/ath/wcn36xx/smd.h | 4 ++--
- 2 files changed, 4 insertions(+), 8 deletions(-)
+ net/wireless/core.h    |  4 ++--
+ net/wireless/nl80211.c | 15 ++++-----------
+ 2 files changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/wcn36xx/smd.c b/drivers/net/wireless/ath/wcn36xx/smd.c
-index dc3805609284..106af0a2ffc4 100644
---- a/drivers/net/wireless/ath/wcn36xx/smd.c
-+++ b/drivers/net/wireless/ath/wcn36xx/smd.c
-@@ -3343,7 +3343,7 @@ int wcn36xx_smd_rsp_process(struct rpmsg_device *rpdev,
- 	const struct wcn36xx_hal_msg_header *msg_header = buf;
- 	struct ieee80211_hw *hw = priv;
- 	struct wcn36xx *wcn = hw->priv;
--	struct wcn36xx_hal_ind_msg *msg_ind;
-+	struct wcn36xx_hal_ind_msg *msg_ind = NULL;
- 	wcn36xx_dbg_dump(WCN36XX_DBG_SMD_DUMP, "SMD <<< ", buf, len);
- 
- 	switch (msg_header->msg_type) {
-@@ -3407,16 +3407,12 @@ int wcn36xx_smd_rsp_process(struct rpmsg_device *rpdev,
- 	case WCN36XX_HAL_DELETE_STA_CONTEXT_IND:
- 	case WCN36XX_HAL_PRINT_REG_INFO_IND:
- 	case WCN36XX_HAL_SCAN_OFFLOAD_IND:
--		msg_ind = kmalloc(struct_size(msg_ind, msg, len), GFP_ATOMIC);
--		if (!msg_ind) {
-+		if (mem_to_flex_dup(&msg_ind, buf, len, GFP_ATOMIC)) {
- 			wcn36xx_err("Run out of memory while handling SMD_EVENT (%d)\n",
- 				    msg_header->msg_type);
- 			return -ENOMEM;
- 		}
- 
--		msg_ind->msg_len = len;
--		memcpy(msg_ind->msg, buf, len);
--
- 		spin_lock(&wcn->hal_ind_lock);
- 		list_add_tail(&msg_ind->list, &wcn->hal_ind_queue);
- 		queue_work(wcn->hal_ind_wq, &wcn->hal_ind_work);
-diff --git a/drivers/net/wireless/ath/wcn36xx/smd.h b/drivers/net/wireless/ath/wcn36xx/smd.h
-index 3fd598ac2a27..76ecac46f36b 100644
---- a/drivers/net/wireless/ath/wcn36xx/smd.h
-+++ b/drivers/net/wireless/ath/wcn36xx/smd.h
-@@ -46,8 +46,8 @@ struct wcn36xx_fw_msg_status_rsp {
- 
- struct wcn36xx_hal_ind_msg {
- 	struct list_head list;
--	size_t msg_len;
--	u8 msg[];
-+	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(size_t, msg_len);
-+	DECLARE_FLEX_ARRAY_ELEMENTS(u8, msg);
+diff --git a/net/wireless/core.h b/net/wireless/core.h
+index 3a7dbd63d8c6..899d111993c6 100644
+--- a/net/wireless/core.h
++++ b/net/wireless/core.h
+@@ -295,8 +295,8 @@ struct cfg80211_beacon_registration {
+ struct cfg80211_cqm_config {
+ 	u32 rssi_hyst;
+ 	s32 last_rssi_event_value;
+-	int n_rssi_thresholds;
+-	s32 rssi_thresholds[];
++	DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(int, n_rssi_thresholds);
++	DECLARE_FLEX_ARRAY_ELEMENTS(s32, rssi_thresholds);
  };
  
- struct wcn36xx;
+ void cfg80211_destroy_ifaces(struct cfg80211_registered_device *rdev);
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 945ed87d12e0..70df7132cce8 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -12096,21 +12096,14 @@ static int nl80211_set_cqm_rssi(struct genl_info *info,
+ 
+ 	wdev_lock(wdev);
+ 	if (n_thresholds) {
+-		struct cfg80211_cqm_config *cqm_config;
++		struct cfg80211_cqm_config *cqm_config = NULL;
+ 
+-		cqm_config = kzalloc(struct_size(cqm_config, rssi_thresholds,
+-						 n_thresholds),
+-				     GFP_KERNEL);
+-		if (!cqm_config) {
+-			err = -ENOMEM;
++		err = mem_to_flex_dup(&cqm_config, thresholds, n_thresholds,
++				      GFP_KERNEL);
++		if (err)
+ 			goto unlock;
+-		}
+ 
+ 		cqm_config->rssi_hyst = hysteresis;
+-		cqm_config->n_rssi_thresholds = n_thresholds;
+-		memcpy(cqm_config->rssi_thresholds, thresholds,
+-		       flex_array_size(cqm_config, rssi_thresholds,
+-				       n_thresholds));
+ 
+ 		wdev->cqm_config = cqm_config;
+ 	}
 -- 
 2.32.0
 
