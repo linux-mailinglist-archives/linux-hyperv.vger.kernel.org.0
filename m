@@ -2,309 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D282951C078
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 15:19:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5387151C082
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 15:20:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379126AbiEENXB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 May 2022 09:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35226 "EHLO
+        id S236579AbiEENXj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 May 2022 09:23:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236579AbiEENW6 (ORCPT
+        with ESMTP id S1379120AbiEENXf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 May 2022 09:22:58 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE58542EC9;
-        Thu,  5 May 2022 06:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=WOqM4DKEC8qEB5Nc8Asp0yMdSAPt0BrvJUl7fGL2K2o=;
-        t=1651756758; x=1652966358; b=VlPjU//FNXa2+XxsG73YHHulvZS9LU1Ok/2Gr9U1udS3ClE
-        gggIn61BX96CpB7Ev+Na+syeXPKWxqroWgqIhhVP9CcvNs+ZUeF9ru4Hgk5+IJYQFsVqZ/jpcfF6b
-        +cYxGWJCtu7d22kSwdnXxhbbkUvm0YOS0PSvMRyuLmd3/IUHs69f64s5/PkDAYh6/9dg+xKKoqLkL
-        MK7v/u3ZQBkLUUCMZ8d2YxNKjC2UIKIbu17RYhSwkQTUP9KyJG8aVfpDoZD+Pj7tFfaRoDSTF49fC
-        dWqQ6DUUZRcVUBWBnlwDbyxvb4M45fmuQnwHrqOAL+nt+iG9j3PRoD0+FZJ2Jyjg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.95)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1nmbLD-002nmQ-2E;
-        Thu, 05 May 2022 15:16:23 +0200
-Message-ID: <970a674df04271b5fd1971b495c6b11a996c20c2.camel@sipsolutions.net>
-Subject: Re: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Keith Packard <keithp@keithp.com>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Christian Brauner <brauner@kernel.org>,
-        Christian =?ISO-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        David Gow <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        keyrings@vger.kernel.org, kunit-dev@googlegroups.com,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Rich Felker <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Yang Yingliang <yangyingliang@huawei.com>
-Date:   Thu, 05 May 2022 15:16:19 +0200
-In-Reply-To: <202205040819.DEA70BD@keescook>
-References: <20220504014440.3697851-1-keescook@chromium.org>
-         <20220504014440.3697851-3-keescook@chromium.org>
-         <d3b73d80f66325fdfaf2d1f00ea97ab3db03146a.camel@sipsolutions.net>
-         <202205040819.DEA70BD@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        Thu, 5 May 2022 09:23:35 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADD656F94;
+        Thu,  5 May 2022 06:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1DNfkVatFPseIRLRTaf5GG9N3vrErBYge1wmaOwIZns=; b=LZPrJ/vjUPasOI43ov6ddZJwu/
+        p0j9nUctyDj+SFAaWk7zI/PPi78KLqVLLq7RTp94cYeImH/Oz48mhUea8dNQwA1mwowWHdOQsW6Eg
+        J9jMvU+x/33EcKgIVyWm0n8bR0BGRO5lxV56aAC+ZiKkzr7QN6HHEuJe/z6LDqeVex0+JBQrvmL32
+        aVZeBYzmKvwP1cTw04LEGcx5Ku3dP26Y06ygZFvgIBF4N9l3WAyf1CRHjPuNa99Apa0axXvsaCvB2
+        XF+dUTRht+ESY831J5TV75e00FEes8HLRzqS9eAvvPd25eOysvNknOidWwX4l6Ek+jpeGolt7tcpV
+        USHVIKPg==;
+Received: from [179.113.53.197] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1nmbOP-0001q2-IE; Thu, 05 May 2022 15:19:41 +0200
+Message-ID: <3a52c5ac-e8c3-64dc-d94f-e210ccb19a70@igalia.com>
+Date:   Thu, 5 May 2022 10:19:27 -0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-malware-bazaar: not-scanned
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: Should arm64 have a custom crash shutdown handler?
+Content-Language: en-US
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        will Deacon <will@kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ard Biesheuvel <ardb@kernel.org>, broonie@kernel.org,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com>
+ <874k24igjf.wl-maz@kernel.org>
+ <92645c41-96fd-2755-552f-133675721a24@igalia.com>
+ <YnPIwjLMDXgII1vf@FVFF77S0Q05N.cambridge.arm.com>
+ <3bee47db-f771-b502-82a3-d6fac388aa89@igalia.com>
+ <YnPN33qN7oVQa4fA@FVFF77S0Q05N.cambridge.arm.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <YnPN33qN7oVQa4fA@FVFF77S0Q05N.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 2022-05-04 at 08:38 -0700, Kees Cook wrote:
+On 05/05/2022 10:15, Mark Rutland wrote:
+> [...]
+> Without a strong justification, we wouldn't add such hooks to arm64.
 > 
-> It seemed like requiring a structure be rearranged to take advantage of
-> the "automatic layout introspection" wasn't very friendly. On the other
-> hand, looking at the examples, most of them are already neighboring
-> members. Hmmm.
-
-A lot of them are, and many could be, though not all.
-
-> > or so? The long and duplicated DECLARE_FLEX_ARRAY_ELEMENTS_COUNT and
-> > DECLARE_FLEX_ARRAY_ELEMENTS seems a bit tedious to me, at least in cases
-> > where the struct layout is not the most important thing (or it's already
-> > at the end anyway).
+> Could you start by trying to use the notifiers, and if you encounter a problem,
+> *then* we consider an alternative? That should mean we have a concrete reason.
 > 
-> The names aren't great, but I wanted to distinguish "elements" as the
-> array not the count. Yay naming.
+> Thanks,
+> Mark.
 
-:-)
+That's a good idea Mark. I'm not expert in Hyper-V - I could try that
+for a fact, but let's see if Michael has a strong reason on why this
+need to be done in arch code and panic notifiers aren't enough.
 
-> However, perhaps the solution is to have _both_. i.e using
-> BOUNDED_FLEX_ARRAY(count_type, count_name, array_type, array_name) for
-> the "neighboring" case, and the DECLARE...{ELEMENTS,COUNT} for the
-> "split" case.
-
-Seems reasonable to me.
-
-> And DECLARE_FLEX_ARRAY_ELEMENTS could actually be expanded to include
-> the count_name too, so both methods could be "forward portable" to a
-> future where C grew the syntax for bounded flex arrays.
-
-I guess I don't see that happening :)
-
-> > This seems rather awkward, having to set it to NULL, then checking rc
-> > (and possibly needing a separate variable for it), etc.
-> 
-> I think the errno return is completely required. I had an earlier version
-> of this that was much more like a drop-in replacement for memcpy that
-> would just truncate or panic, 
-> 
-
-Oh, I didn't mean to imply it should truncate or panic or such - but if
-it returns a pointer it can still be an ERR_PTR() or NULL instead of
-having this separate indication, which even often confuses static type
-checkers since they don't always see the "errno == 0 <=> ptr != NULL"
-relation.
-
-So not saying you shouldn't have any error return - clearly you need
-that, just saying that I'm not sure that having the two separated is
-great.
+Thanks,
 
 
-> Requiring instance to be NULL is debatable, but I feel pretty strongly
-> about it because it does handle a class of mistakes (resource leaks),
-> and it's not much of a burden to require a known-good starting state.
-
-Yeah, dunno, I guess I'm slightly more on the side of not requiring it,
-since we don't do the same for kmalloc() etc. and probably really
-wouldn't want to add kmalloc_s() that does it ;-)
-
-I mean, you _could_ go there:
-
-int kmalloc_s(void **ptr, size_t size, gfp_t gfp)
-{
-  void *ret;
-
-  if (*ptr)
-    return -EINVAL;
-
-  ret = kmalloc(size, gfp);
-  if (!ret)
-    return -ENOMEM;
-  *ptr = ret;
-  return 0;  
-}
-
-right? But we don't really do that, and I'm not sure it'd be a win if
-done over the whole code base.
-
-So I'm not really sure why this aspect here should need to be different,
-except of course that you already need the input argument for the magic.
-
-But we could still have (this prototype is theoretical, of course, it
-cannot be implemented in C):
-
-void *mem_to_flex_dup(void *ptr, const void *data, size_t elements,
-                      gfp_t gfp);
-
-
-which isn't really that much better though.
-
-And btw, while I was writing it down I was looking to see if it should
-be "size_t elements" or "size_t len" (like memcpy), it took me some time
-to figure out, and I was looking at the examples:
-
- 1) most of them actually use __u8 or some variant thereof, so you
-    could probably add an even simpler macro like
-       BOUNDED_FLEX_DATA(int, bytes, data)
-    which has the u8 type internally.
-
- 2) Unless I'm confusing myself, you got the firewire change wrong,
-    because __mem_to_flex_dup takes the "elements_count", but the
-    memcpy() there wasn't multiplied by the sizeof(element)? Or maybe
-    the fact that it was declared as __u32 header[0] is wrong, and it
-    should be __u8, but it's all very confusing, and I'm really not
-    sure about this at all.
-
-
-
-One "perhaps you'll laugh me out of the room" suggestion might be to
-actually be able to initialize the whole thing too?
-
-
-mydata = flex_struct_alloc(mydata, GFP_KERNEL,
-                           variable_data, variable_len,
-                           .member = 1,
-                           .another = 2);
-
-(the ordering can't really be otherwise since you have to use
-__VA_ARGS__).
-
-That might reduce some more code too, though I guess it's quite some
-additional magic ... :)
-
-
-> > but still, honestly, I don't like it. As APIs go, it feels a bit
-> > cumbersome and awkward to use, and you really need everyone to use this,
-> > and not say "uh what, I'll memcpy() instead".
-> 
-> Sure, and I have tried to get it down as small as possible. The earlier
-> "just put all the member names in every call" version was horrid. :P
-
-:-D
-
-> I
-> realize it's more work to check errno, but the memcpy() API we've all
-> been trained to use is just plain dangerous. I don't think it's
-> unreasonable to ask people to retrain themselves to avoid it. All that
-> said, yes, I want it to be as friendly as possible.
-> 
-> > Maybe there should also be a realloc() version of it?
-> 
-> Sure! Seems reasonable. I'd like to see the code pattern for this
-> though. Do you have any examples?
-
-I was going to point to struct cfg80211_bss_ies, but I realize now
-they're RCU-managed, so we never resize them anyway ... So maybe it's
-less common than I thought it might be.
-
-I suppose you know better since you converted a lot of stuff already :-)
-
-johannes
+Guilherme
