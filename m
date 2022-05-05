@@ -2,52 +2,51 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39F3E51C936
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 21:33:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F43A51CA22
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 22:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385194AbiEETgW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 May 2022 15:36:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49426 "EHLO
+        id S1385667AbiEEUMk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 May 2022 16:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385144AbiEETgE (ORCPT
+        with ESMTP id S231878AbiEEUMi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 May 2022 15:36:04 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C785C65C
-        for <linux-hyperv@vger.kernel.org>; Thu,  5 May 2022 12:32:20 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id n18so5331173plg.5
-        for <linux-hyperv@vger.kernel.org>; Thu, 05 May 2022 12:32:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EOewjZKogNzEx9zFkxTiwVeX9O73E8+rxUrKCGLnZxg=;
-        b=TgYp87XeMuHw4kfuuIYKyJ5xg3Bf+EBlgFpOVZz9+/0BPs+Z6azVvmnOICk6zx2eTE
-         tczIFjF07XtN/n9uGmSnmZf+pbPbkOzW9u24HVcBrKjfFRAXW8suN/eYiFsQiaSTDjAj
-         AGDsgPRlkyLVEDH7ZM2ezggNxFIlqaWFz6sF8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EOewjZKogNzEx9zFkxTiwVeX9O73E8+rxUrKCGLnZxg=;
-        b=V57eky9GqxO7Sd4UzecYnu6+0JDW+3kKn43KfGNFAR+5RRPZQAL1hTnZ1RM+CDANhI
-         kPWPYm++Z/xESRHI0m5CXcRUOdk9ddsymV4ELjjGHFAyeHgGLPSVI5wO/YqZU8rtyJKI
-         C/TYFzZ4+k1JRkN8SWLI1j5npRLnND/awzLqaS2AnR+DlaT7t/IbrlDTP+acffLpK84e
-         jaBrwdeTDYOpwjr37O6iwGdCM2Leyuu3pIdaNZqINjQFMmCnvHa+NLrNyZC+qkBn0NtT
-         SZS37ShHi93tT+ZJdgkXI7SIbGFTWWpvO3sA2zGH6xsk7w74Vhzn6vdajJCURaLTAsO2
-         zcUw==
-X-Gm-Message-State: AOAM533t5brbGWC10/Ir+btnWvpi0hJfHtlCaENYICClzwJrIsvdaFf/
-        d8PopVKn3W7hHvjGmB+3Ib0lqQ==
-X-Google-Smtp-Source: ABdhPJyYVTC3IlPABWaYFjuUxUPmftJikWm0tSMiHJQXGEPyNPhTGmOnvVXhpQMvhvSdSnY3GHaMBA==
-X-Received: by 2002:a17:90b:388b:b0:1dc:515e:1b0c with SMTP id mu11-20020a17090b388b00b001dc515e1b0cmr8065877pjb.224.1651779139576;
-        Thu, 05 May 2022 12:32:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n11-20020a170903404b00b0015e8d4eb250sm1889338pla.154.2022.05.05.12.32.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 12:32:19 -0700 (PDT)
-Date:   Thu, 5 May 2022 12:32:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Keith Packard <keithp@keithp.com>
+        Thu, 5 May 2022 16:12:38 -0400
+Received: from elaine.keithp.com (home.keithp.com [63.227.221.253])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 108FF5F273;
+        Thu,  5 May 2022 13:08:57 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by elaine.keithp.com (Postfix) with ESMTP id 83FE93F3296E;
+        Thu,  5 May 2022 13:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
+        t=1651781336; bh=FYwb/JL7BiNf1ERDNYW+QEpxdN3SDh8ueitySQdIrBQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Np/XZ4pFy233AB0Yh+gi2AcW/e9+t3y/fWG6qdh4wkqzGzyv/5d60R37rlx2q0dkx
+         ZcA/OHcd/fQ1CoFSDxr0Vi8FXjWjSwahx9raUDyKmUlHDNFden+UlqdoPoL9lb3N6j
+         z/Qqv9Wa2pLIQ3ZQ4WNbOu4gllTZvT8Le/cE0WdmezbxN7Lo811QY78xROKox4aoxD
+         YtJ5TG07Cfh89+3GGGmDQQjL7bmwxYOqopOZ5A82byaJA6k7cohAwc8JRFZ33WFxKZ
+         /7mx5KCwL1wU3NFmP6UKOcEgk9zOwdOR12cnrjAgCLv/62+PIg/yKTdgVBApfc2HeW
+         bh24dG0NyBe9A==
+X-Virus-Scanned: Debian amavisd-new at keithp.com
+Received: from elaine.keithp.com ([127.0.0.1])
+        by localhost (elaine.keithp.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id 3ymvkLxX0ErD; Thu,  5 May 2022 13:08:56 -0700 (PDT)
+Received: from keithp.com (koto.keithp.com [192.168.11.2])
+        by elaine.keithp.com (Postfix) with ESMTPSA id 120663F3296D;
+        Thu,  5 May 2022 13:08:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
+        t=1651781336; bh=FYwb/JL7BiNf1ERDNYW+QEpxdN3SDh8ueitySQdIrBQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Np/XZ4pFy233AB0Yh+gi2AcW/e9+t3y/fWG6qdh4wkqzGzyv/5d60R37rlx2q0dkx
+         ZcA/OHcd/fQ1CoFSDxr0Vi8FXjWjSwahx9raUDyKmUlHDNFden+UlqdoPoL9lb3N6j
+         z/Qqv9Wa2pLIQ3ZQ4WNbOu4gllTZvT8Le/cE0WdmezbxN7Lo811QY78xROKox4aoxD
+         YtJ5TG07Cfh89+3GGGmDQQjL7bmwxYOqopOZ5A82byaJA6k7cohAwc8JRFZ33WFxKZ
+         /7mx5KCwL1wU3NFmP6UKOcEgk9zOwdOR12cnrjAgCLv/62+PIg/yKTdgVBApfc2HeW
+         bh24dG0NyBe9A==
+Received: by keithp.com (Postfix, from userid 1000)
+        id A1FFA1E601B9; Thu,  5 May 2022 13:08:55 -0700 (PDT)
+From:   Keith Packard <keithp@keithp.com>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Johannes Berg <johannes@sipsolutions.net>,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Francis Laniel <laniel_francis@privacyrequired.com>,
@@ -70,7 +69,7 @@ Cc:     Johannes Berg <johannes@sipsolutions.net>,
         Bradley Grove <linuxdrivers@attotech.com>,
         brcm80211-dev-list.pdl@broadcom.com,
         Christian Brauner <brauner@kernel.org>,
-        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
+        Christian =?utf-8?Q?G=C3=B6ttsche?= <cgzones@googlemail.com>,
         Christian Lamparter <chunkeey@googlemail.com>,
         Chris Zankel <chris@zankel.net>,
         Cong Wang <cong.wang@bytedance.com>,
@@ -131,7 +130,7 @@ Cc:     Johannes Berg <johannes@sipsolutions.net>,
         Muchun Song <songmuchun@bytedance.com>,
         Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        Nuno =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>,
         Paolo Abeni <pabeni@redhat.com>,
         Paul Moore <paul@paul-moore.com>,
         Rich Felker <dalias@aerifal.cx>,
@@ -152,48 +151,80 @@ Cc:     Johannes Berg <johannes@sipsolutions.net>,
         Xiu Jianfeng <xiujianfeng@huawei.com>,
         Yang Yingliang <yangyingliang@huawei.com>
 Subject: Re: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
-Message-ID: <202205051228.4D5B8CD624@keescook>
+In-Reply-To: <202205051228.4D5B8CD624@keescook>
 References: <20220504014440.3697851-1-keescook@chromium.org>
  <20220504014440.3697851-3-keescook@chromium.org>
  <d3b73d80f66325fdfaf2d1f00ea97ab3db03146a.camel@sipsolutions.net>
  <202205040819.DEA70BD@keescook>
  <970a674df04271b5fd1971b495c6b11a996c20c2.camel@sipsolutions.net>
- <871qx8qabo.fsf@keithp.com>
+ <871qx8qabo.fsf@keithp.com> <202205051228.4D5B8CD624@keescook>
+Date:   Thu, 05 May 2022 13:08:55 -0700
+Message-ID: <87pmkrpwrs.fsf@keithp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871qx8qabo.fsf@keithp.com>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, May 05, 2022 at 08:16:11AM -0700, Keith Packard wrote:
-> Johannes Berg <johannes@sipsolutions.net> writes:
-> 
-> > Yeah, dunno, I guess I'm slightly more on the side of not requiring it,
-> > since we don't do the same for kmalloc() etc. and probably really
-> > wouldn't want to add kmalloc_s() that does it ;-)
-> 
-> I suspect the number of bugs this catches will be small, but they'll be
-> in places where the flow of control is complicated. What we want is to
-> know that there's no "real" value already present. I'd love it if we
-> could make the macro declare a new name (yeah, I know, mixing
-> declarations and code).
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I don't think I can do a declaration and an expression statement at the
-same time with different scopes, but that would be kind of cool. We did
-just move to c11 to gain the in-loop iterator declarations...
+Kees Cook <keescook@chromium.org> writes:
 
-> Of course, we could also end up with people writing a wrapping macro
-> that sets the variable to NULL before invoking the underlying macro...
+> I don't think I can do a declaration and an expression statement at the
+> same time with different scopes, but that would be kind of cool. We did
+> just move to c11 to gain the in-loop iterator declarations...
 
-I hope it won't come to that! :)
+Yeah, you'd end up creating a statement-level macro, and I think that
+would have poor syntax:
 
--- 
-Kees Cook
+        mem_to_flex_dup(struct something *instance, rc, byte_array,
+                        count, GFP_KERNEL);
+        if (rc)
+           return rc;
+
+I bet you've already considered the simpler form:
+
+        struct something *instance =3D mem_to_flex_dup(byte_array, count, G=
+FP_KERNEL);
+        if (IS_ERR(instance))
+            return PTR_ERR(instance);
+
+This doesn't allow you to require a new name, so you effectively lose
+the check you're trying to insist upon.
+
+Some way to ask the compiler 'is this reference dead?' would be nice --
+it knows if a valid pointer was passed to free, or if a variable has not
+been initialized, after all; we just need that exposed at the source
+level.
+
+=2D-=20
+=2Dkeith
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEw4O3eCVWE9/bQJ2R2yIaaQAAABEFAmJ0LtcACgkQ2yIaaQAA
+ABHC0hAAr3uHP5hrK0TrjV0miTlsckS+Z8SZ2+xvHioDubRTMMdfP79BMu5ndZB4
+QaRps+OPUgs6f0p8V2N5qN2jruvrUHrKXQyiIjdsRQmUp+3qyvpjuYrtNDeHHTD2
+vfM0b48EgU8kkiVZH9ksTQ/b48dkf2r7GYLnmd3VO/LkFTymGVqvodKSYl/6dZOZ
+x7yTZYIRcbsjqPumSocldZhrYNuDwDWd3K2voU8pDD202q2xk3BpatYQOCnRYAzk
+Le8pCTMAkJmy3VcKuORvTyRaq0/AvjfjEVHVP9ucCk68zGEU1/egKnkv3iQ5b7UY
+RzyQTJSlFZQv2EomuxRRhmKQ/Ubqr//1Y5P8FLqQjJFdocf7x/wCkMdE5X/WZhIN
+tjA64pkC+b20mi6NQ5XouaUSTBKTnU44rsSCWsabc+fBx96Arj1tMJCrOoqYCWpy
+yg2mbeB3A55aDXAVSoC9vKoeleOJER70z7sOfycFpLPcO/XAoDOUOlfH46McYIIK
+0xMfYCih17SZ/wY5s/NAamDnihpT26Zkm028+XJtQdxgyS3rSIjH+TxqQ3dpl+Tq
+q78xgiJ/GBR6QVyfdgbWEbXlJUOTIA1gtT+YvkC9NwhJszdT72psVFUXtZraEaRs
++XEV7uZeDpyI0x1VGRqSDZgJtavhxjCqeR9SZ21Vch7I0NhT24I=
+=lS49
+-----END PGP SIGNATURE-----
+--=-=-=--
