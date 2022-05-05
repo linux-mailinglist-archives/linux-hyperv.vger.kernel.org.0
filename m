@@ -2,188 +2,215 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF0E051C307
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 16:52:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 689DC51C3C5
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 17:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380857AbiEEOzm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 May 2022 10:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46602 "EHLO
+        id S1357466AbiEEPZf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 May 2022 11:25:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380855AbiEEOzl (ORCPT
+        with ESMTP id S232495AbiEEPZd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 May 2022 10:55:41 -0400
-Received: from us-smtp-delivery-74.mimecast.com (us-smtp-delivery-74.mimecast.com [170.10.133.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DABFF56FBB
-        for <linux-hyperv@vger.kernel.org>; Thu,  5 May 2022 07:52:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651762321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uM+ofZNcfgbacCYmlCH29DRYVtctL+nEHY0EJrvY55Y=;
-        b=dP6hJhmd2QIHKkFr3nMaBruaUmhfmeTbGlM7mCVtkUY3Kr5vO6mG/SM0tXbBnDxtPNk27+
-        yKn8Vd4Pj2uGWBl2FeYxVtpCEG2X4XjYx22g6AIhUvcYWpExUutfj1OiQIcjrvgA4Utq3J
-        vFZ5xsjaiYEZUP34K9/b4Jw8T20wsKs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-142-hMhhV9LYMjO7y3kbLHcm9Q-1; Thu, 05 May 2022 10:51:57 -0400
-X-MC-Unique: hMhhV9LYMjO7y3kbLHcm9Q-1
-Received: by mail-wm1-f72.google.com with SMTP id g14-20020a1c4e0e000000b0039425ef54d6so1843781wmh.9
-        for <linux-hyperv@vger.kernel.org>; Thu, 05 May 2022 07:51:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=uM+ofZNcfgbacCYmlCH29DRYVtctL+nEHY0EJrvY55Y=;
-        b=qxdA73jiAtm8BRUIQyb0tyeD5xWBhCgxaF8qGUnti7/IbP9WFIyOau8b81WbCaK8yU
-         A2/yiKJnpQBMTiKXMeLf43/C12KvBcuAwiRJvLKunJyo2OJtS0sO52U3DlMJqGeKyIP8
-         lHiR5vF6lSmXrkGZG8Sl8TMaUtWdvxkkv+ns6i12q92BK7iytpcxXag2xNctLJDlOxkr
-         Kyd6OSdMxTQQ5M5UgP3T27W8IclAun6BBbFXWHuv3BAg2TawX+axgV7rVGSAXoh3/Szx
-         qK3zGh/Wgk0DcPA1DXpWZHsfwy9ZTcf/6WJl9obBsc4vEZ+UoT0sRjTkwhPc2kbl3yAj
-         Rwjw==
-X-Gm-Message-State: AOAM531P64KkCSJIl7dCuZTMIVD0A8QKYlkO7fAqQJJ3FlZ3RN9ADN4H
-        6HvQYJlqjU2TwfkwVGxZ3LP2wBdXCVpFPz5UFlsYDFF4qdOzEUuvaUn2NLKQF5q4D0sV0tADt99
-        7tyjilaHAVao1hRYfeMewaOp/lx9Tu1KmUdXqX5O7iOQF76H2ll/sL44nWW67n0zT1J8leXtGHO
-        fq
-X-Received: by 2002:a1c:6a1a:0:b0:394:272e:5bdf with SMTP id f26-20020a1c6a1a000000b00394272e5bdfmr5347734wmc.55.1651762316214;
-        Thu, 05 May 2022 07:51:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwzZ199d4B0hb5YxHFT/G5vw6e8Q1vc2C0FJNM5txW7lPwaFe4IrmxdRb6YfGAM2P9o3lQ5lw==
-X-Received: by 2002:a1c:6a1a:0:b0:394:272e:5bdf with SMTP id f26-20020a1c6a1a000000b00394272e5bdfmr5347690wmc.55.1651762315893;
-        Thu, 05 May 2022 07:51:55 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 25-20020a05600c029900b003942a244ed1sm1524096wmk.22.2022.05.05.07.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 07:51:55 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ard Biesheuvel <ardb@kernel.org>, broonie@kernel.org,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: Should arm64 have a custom crash shutdown handler?
-In-Reply-To: <YnPf3KPBXDNTpQoG@FVFF77S0Q05N.cambridge.arm.com>
-References: <427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com>
- <874k24igjf.wl-maz@kernel.org>
- <92645c41-96fd-2755-552f-133675721a24@igalia.com>
- <YnPIwjLMDXgII1vf@FVFF77S0Q05N.cambridge.arm.com>
- <3bee47db-f771-b502-82a3-d6fac388aa89@igalia.com>
- <878rrg13zb.fsf@redhat.com>
- <YnPf3KPBXDNTpQoG@FVFF77S0Q05N.cambridge.arm.com>
-Date:   Thu, 05 May 2022 16:51:54 +0200
-Message-ID: <87y1zgyqut.fsf@redhat.com>
+        Thu, 5 May 2022 11:25:33 -0400
+X-Greylist: delayed 338 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 05 May 2022 08:21:52 PDT
+Received: from elaine.keithp.com (home.keithp.com [63.227.221.253])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91427554A8;
+        Thu,  5 May 2022 08:21:52 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by elaine.keithp.com (Postfix) with ESMTP id 373F23F3296A;
+        Thu,  5 May 2022 08:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
+        t=1651763774; bh=O3aXJOWYxVTqOu3VmcXxOiZZOhMrUjqY/t6cXMT24+E=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=M3zB+WUy+cYZq4HgtgtbfmLljWbRpIeJ5Zkg9r1D71YqvPlgOkiQ4tXheXCRGUa8+
+         RMuby4CqFAMCoPUIrwdzYTZDTf78io+RFFo6OcdGBDUFDZRaGhZfKKcTtwdj7WCFy4
+         6tn6om4NwF6owZoCYEHNTlN4dA5iODmOFbhrxNDmu4q/fHHXFfSRYzNqzWEthWHBp3
+         hB3E0o3k1G8NwFJfKh9rQpVZYZLwPg6CF6he0rk/+KFPQLpotGYN+CgB1L7QQOYecl
+         ymeV9rACfLcKoB95CZdy6K628IEeM8t07ROlSN+X9O0IbQydzX/BQ3xj9k+MYZwzPf
+         UxJC+uQh0iuJw==
+X-Virus-Scanned: Debian amavisd-new at keithp.com
+Received: from elaine.keithp.com ([127.0.0.1])
+        by localhost (elaine.keithp.com [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id AExLuWAu_LJ4; Thu,  5 May 2022 08:16:13 -0700 (PDT)
+Received: from keithp.com (koto.keithp.com [192.168.11.2])
+        by elaine.keithp.com (Postfix) with ESMTPSA id 046443F32465;
+        Thu,  5 May 2022 08:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
+        t=1651763773; bh=O3aXJOWYxVTqOu3VmcXxOiZZOhMrUjqY/t6cXMT24+E=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=krSTvH+KcMYcsYiJs+brgDawkHD6ep7gtAt/7ImbSH+PVnVS6n5TIWQoiUP+PjBfQ
+         TTV9zZEzFSNSLzQmSsEIJT24ancVfic/4tw1+i19H4UqIv2Soci174vL3i+L8WgOn3
+         3GAVx4Wwdu1vRPL7EVqx5qPLOOTreMDXIScBgNd+X5AcHfMZWw538tPrPoKpSSqHZH
+         dCLZclbzdDsdQUL6m86l3cbny8WccVcefFqv7gslHwR8P3ZsfbW/X+4PLXD3hTeyro
+         XMqcEagdrGN5NURX0L6R0oPpkf8LkkkUJo0DYZf6b68EQ+TuLV1TgvwIq/q3gwMiYO
+         4YgvEK7vCGplw==
+Received: by keithp.com (Postfix, from userid 1000)
+        id 4874D1E601B9; Thu,  5 May 2022 08:16:12 -0700 (PDT)
+From:   Keith Packard <keithp@keithp.com>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Francis Laniel <laniel_francis@privacyrequired.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Tadeusz Struk <tadeusz.struk@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arend van Spriel <aspriel@gmail.com>,
+        Baowen Zheng <baowen.zheng@corigine.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        Christian Brauner <brauner@kernel.org>,
+        Christian =?utf-8?Q?G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Chris Zankel <chris@zankel.net>,
+        Cong Wang <cong.wang@bytedance.com>,
+        David Gow <davidgow@google.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Eli Cohen <elic@nvidia.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Hulk Robot <hulkci@huawei.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        John Keeping <john@metanate.com>,
+        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
+        keyrings@vger.kernel.org, kunit-dev@googlegroups.com,
+        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux1394-devel@lists.sourceforge.net,
+        linux-afs@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Louis Peens <louis.peens@corigine.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nuno =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Rich Felker <dalias@aerifal.cx>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        SHA-cyfmac-dev-list@infineon.com,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Subject: Re: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
+In-Reply-To: <970a674df04271b5fd1971b495c6b11a996c20c2.camel@sipsolutions.net>
+References: <20220504014440.3697851-1-keescook@chromium.org>
+ <20220504014440.3697851-3-keescook@chromium.org>
+ <d3b73d80f66325fdfaf2d1f00ea97ab3db03146a.camel@sipsolutions.net>
+ <202205040819.DEA70BD@keescook>
+ <970a674df04271b5fd1971b495c6b11a996c20c2.camel@sipsolutions.net>
+Date:   Thu, 05 May 2022 08:16:11 -0700
+Message-ID: <871qx8qabo.fsf@keithp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Mark Rutland <mark.rutland@arm.com> writes:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, May 05, 2022 at 03:52:24PM +0200, Vitaly Kuznetsov wrote:
->> "Guilherme G. Piccoli" <gpiccoli@igalia.com> writes:
->> 
->> > On 05/05/2022 09:53, Mark Rutland wrote:
->> >> [...]
->> >> Looking at those, the cleanup work is all arch-specific. What exactly would we
->> >> need to do on arm64, and why does it need to happen at that point specifically?
->> >> On arm64 we don't expect as much paravirtualization as on x86, so it's not
->> >> clear to me whether we need anything at all.
->> >> 
->> >>> Anyway, the idea here was to gather a feedback on how "receptive" arm64
->> >>> community would be to allow such customization, appreciated your feedback =)
->> >> 
->> >> ... and are you trying to do this for Hyper-V or just using that as an example?
->> >> 
->> >> I think we're not going to be very receptive without a more concrete example of
->> >> what you want.
->> >> 
->> >> What exactly do *you* need, and *why*? Is that for Hyper-V or another hypervisor?
->> >> 
->> >> Thanks
->> >> Mark.
->> >
->> > Hi Mark, my plan would be doing that for Hyper-V - kind of the same
->> > code, almost. For example, in hv_crash_handler() there is a stimer
->> > clean-up and the vmbus unload - my understanding is that this same code
->> > would need to run in arm64. Michael Kelley is CCed, he was discussing
->> > with me in the panic notifiers thread and may elaborate more on the needs.
->> >
->> > But also (not related with my specific plan), I've seen KVM quiesce code
->> > on x86 as well [see kvm_crash_shutdown() on arch/x86] , I'm not sure if
->> > this is necessary for arm64 or if this already executing in some
->> > abstracted form, I didn't dig deep - probably Vitaly is aware of that,
->> > hence I've CCed him here.
->> 
->> Speaking about the difference between reboot notifiers call chain and
->> machine_ops.crash_shutdown for KVM/x86, the main difference is that
->> reboot notifier is called on some CPU while the VM is fully functional,
->> this way we may e.g. still use IPIs (see kvm_pv_reboot_notify() doing
->> on_each_cpu()). When we're in a crash situation,
->> machine_ops.crash_shutdown is called on the CPU which crashed. We can't
->> count on IPIs still being functional so we do the very basic minimum so
->> *this* CPU can boot kdump kernel. There's no guarantee other CPUs can
->> still boot but normally we do kdump with 'nprocs=1'.
->
-> Sure; IIUC the IPI problem doesn't apply to arm64, though, since that doesn't
-> use a PV mechanism (and practically speaking will either be GICv2 or GICv3).
->
+Johannes Berg <johannes@sipsolutions.net> writes:
 
-This isn't really about PV: when the kernel is crashing, you have no
-idea what's going on on other CPUs, they may be crashing too, locked in
-a tight loop, ... so sending an IPI there to do some work and expecting
-it to report back is dangerous.
+> Yeah, dunno, I guess I'm slightly more on the side of not requiring it,
+> since we don't do the same for kmalloc() etc. and probably really
+> wouldn't want to add kmalloc_s() that does it ;-)
 
->> For Hyper-V, the situation is similar: hv_crash_handler() intitiates
->> VMbus unload on the crashing CPU only, there's no mechanism to do
->> 'global' unload so other CPUs will likely not be able to connect Vmbus
->> devices in kdump kernel but this should not be necessary.
->
-> Given kdump is best-effort (and we can't rely on secondary CPUs even making it
-> into the kdump kernel), I also don't think that should be necessary.
+I suspect the number of bugs this catches will be small, but they'll be
+in places where the flow of control is complicated. What we want is to
+know that there's no "real" value already present. I'd love it if we
+could make the macro declare a new name (yeah, I know, mixing
+declarations and code).
 
-Yes, exactly.
+Of course, we could also end up with people writing a wrapping macro
+that sets the variable to NULL before invoking the underlying macro...
 
->
->> There's a crash_kexec_post_notifiers mechanism which can be used instead
->> but it's disabled by default so using machine_ops.crash_shutdown is
->> better.
->
-> Another option is to defer this to the kdump kernel. On arm64 at least, we know
-> if we're in a kdump kernel early on, and can reset some state based upon that.
->
-> Looking at x86's hyperv_cleanup(), everything relevant to arm64 can be deferred
-> to just before the kdump kernel detects and initializes anything relating to
-> hyperv. So AFAICT we could have hyperv_init() check is_kdump_kernel() prior to
-> the first hypercall, and do the cleanup/reset there.
+=2D-=20
+=2Dkeith
 
-In theory yes, it is possible to try sending CHANNELMSG_UNLOAD on kdump
-kernel boot and not upon crash, I don't remember if this approach was
-tried in the past. 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> Maybe we need more data for the vmbus bits? ... if so it seems that could blow
-> up anyway when the first kernel was tearing down.
+-----BEGIN PGP SIGNATURE-----
 
-Not sure I understood what you mean... From what I remember, there were
-issues with CHANNELMSG_UNLOAD handling on the Hyper-V host side in the
-past (it was taking *minutes* for the host to reply) but this is
-orthogonal to the fact that we need to do this cleanup so kdump kernel
-is able to connect to Vmbus devices again.
-
--- 
-Vitaly
-
+iQIzBAEBCAAdFiEEw4O3eCVWE9/bQJ2R2yIaaQAAABEFAmJz6jsACgkQ2yIaaQAA
+ABGQAg/+NFgE01jSUQAsZc8G2KY9qfifpQ5rzrWtedUNXoOhcAo33tvPHnED0AxP
+Q4MXv/X4TRCTOD/5aBjZeKgy9I9G2jYbZq9iYf5uaD9zIECpE5XyznDZzo15cWBE
+B+W7olq9dqiARf6CuwNpYCjB8zv2ubR42c+faTCJNM63owpN9xpGT/7OEbE0HoKg
+TawmusqNU2nOkT82kjh1iVoK0BbmPSATiKkCH9ZpUVQYOQvsyieFtAlQREms/pip
+ccnHssDAaV1dgAg2NlKDzU30XA3rIIsfX+v3Bh+CWoj77Az7IO8+/V+nmNm5GHyy
+bs8LUQY3Z7/otHyGVfjVN9eU6LcEvstr7tOPLWxF0h+YxJk12uKhUZnmt4NisYrL
+uOcx/MC4y6tx9+kdn1U5KoV+O/ekhW/N/WwYcE6YUYZeol3Ahpve77B7uzLbwyOj
+TMLF83DtVqGLwl1y5mdKUfdeUeYhVMYo+eaq0ChKHdYdKj9ra2BaL1oiTc3lKqVW
+FdHX7C9qLA4LsTzfuDiEQDOrnwMDXhvtQrysTOjlQLIcivarCfxIKQw0co8Vubug
+sceCDXCr5qY2cCr51YqbDSVqEXK5Dos7IGlIyIlZH0YCktIbgOGTEPZDcidplXy2
+LWWWFIK6Viz1AgjSRxRU24qmTbFCFLZdboKDuzsCHG8HDByLmNM=
+=BTwc
+-----END PGP SIGNATURE-----
+--=-=-=--
