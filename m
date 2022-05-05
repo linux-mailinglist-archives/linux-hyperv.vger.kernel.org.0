@@ -2,216 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EAFB51B663
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 05:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E17F51B8F4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 09:29:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240695AbiEEDSi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 4 May 2022 23:18:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46126 "EHLO
+        id S1343975AbiEEHc5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 May 2022 03:32:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240713AbiEEDSf (ORCPT
+        with ESMTP id S1344667AbiEEHcy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 4 May 2022 23:18:35 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 313F44FC6C
-        for <linux-hyperv@vger.kernel.org>; Wed,  4 May 2022 20:14:55 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id v12so4308447wrv.10
-        for <linux-hyperv@vger.kernel.org>; Wed, 04 May 2022 20:14:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ucVUJA/3XuUnAZZDdzrSa00V5OM/xNG80G7w+rY/AM=;
-        b=TuxTKLvOuI4WPEKhesTppN+S/ZTkV+RZI5Wf5W2p+hsrw7/gyfISF8EIiT+rnx8Zu6
-         zyyiN1wYwPcxjcCA2Sf5xnxirRkddqYIXy2R06dd7qAEUind0ZWDkOOMEqGzEQWPzWzC
-         ZTGq5qihhGmXwhHHxuYfhzg3wQjnC+ThZO+LDVhD9+QIb89VKx3wO1YbUFwWrxXrBCMa
-         SL8UA4+69pMFcpj8M2pJPoNe1J5xXeNZwxQABf1kR5+ALPhLTrYwt5fLtjpY8BeYkBF4
-         nHH6g/sC5IM5M9d/Ecm/JssJwuDneWf8+Vn5nXmTehGUz+AEuc9+Pt2ztZNda+z83bgG
-         KQkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ucVUJA/3XuUnAZZDdzrSa00V5OM/xNG80G7w+rY/AM=;
-        b=bfVze9k1q1azMSW4l/MlGl7QHuO++cTqMkmWoQniUh5tSlRDai/WeuAh10eDaAKfED
-         DhjxscA3rc0tpg9uIsToBg29P68zFuZcA8XbG9IjSTl9NhskMmohO59PYPcy0k88d6op
-         Wu9qAVZV/aSGKCUNikRk3YTsBFLj8tRinVRze/emWPQCx4LoZKj/66D3EryhHxCc5QgS
-         tgwY6FaW55TS5ViebxV8SEQ89d02jzGYaRB49EldKvyUcjOKima1XFE9A0WPt3v4uA+Y
-         pH5uhsVIimKHa1wwnk7aDpRr2OkoxDFhmZG3NQMf1oE65A6dmMCPntACw+E1+EJxtbf+
-         +qZA==
-X-Gm-Message-State: AOAM532HIBxiEodHPfDavtJoW8VdH6JHR5HrkE3V1zOya1fz7RwUPeX7
-        JnZ4c8jfPPjS6qeayhmxqLMEuw3TgZAAZ12oUGmF
-X-Google-Smtp-Source: ABdhPJzVMX+BMHIo/6Rx3rt/EGt5DUCiA1Xs3vZE5oz5hLJkbM0bMmp2okAEnKI/au/mDAitpvRIKuXqsxBU1V8TuLw=
-X-Received: by 2002:a5d:590d:0:b0:20a:c3eb:2584 with SMTP id
- v13-20020a5d590d000000b0020ac3eb2584mr18412244wrd.18.1651720493308; Wed, 04
- May 2022 20:14:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220504014440.3697851-1-keescook@chromium.org>
- <20220504014440.3697851-29-keescook@chromium.org> <CAHC9VhT5Y=ENiSyb=S-NVbGX63sLOv4nVuR_GS-yww6tiz0wYA@mail.gmail.com>
- <20220504234324.GA12556@embeddedor>
-In-Reply-To: <20220504234324.GA12556@embeddedor>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 4 May 2022 23:14:42 -0400
-Message-ID: <CAHC9VhRJC4AxeDsGpdphfJD4WzgaeBsdONHnixBzft5u_cE-Dw@mail.gmail.com>
-Subject: Re: [PATCH 28/32] selinux: Use mem_to_flex_dup() with xfrm and sidtab
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
-        netdev@vger.kernel.org, selinux@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Christian Brauner <brauner@kernel.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Rich Felker <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 5 May 2022 03:32:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F231047AEF;
+        Thu,  5 May 2022 00:29:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C38261CE9;
+        Thu,  5 May 2022 07:29:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F1EC385A4;
+        Thu,  5 May 2022 07:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651735752;
+        bh=3F5JYiDZI5MLnm7uZGVodg2E+7gWDAjHwFt/B9Hgii0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tkI5pCVlh0Q8k9Skj3PToWNe7TkQE6dczw9b1XbChJwGiUw8vQJIdEGYExtDgtyDu
+         dSPED1QOWv1YGUx33erJp1vMVEaoG2aWiqTSAdej1AZYVgU5tay7HBCMffxP7LRfMh
+         0XTDAavxcgYvw77LF0soHRnjU2l0Mn4e9BwnRjPL7wmSPMx3RsDKVey54JDBCzgbWs
+         vQv05u8V9dBp+fbXvOP7Ade3J737bGTbhpu7a0doZ+NsbYxqfhvgTuKShgqpvww5em
+         XlYCnoLsBSUI8iPdRaDE/9N+YqriDKTARvowEqk2tSriSZyT0idrAk0tJgmO4CMPLg
+         MmSlAVGQpqyEA==
+Received: from 82-132-244-133.dab.02.net ([82.132.244.133] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nmVvB-0098Td-CF; Thu, 05 May 2022 08:29:09 +0100
+Date:   Thu, 05 May 2022 08:29:08 +0100
+Message-ID: <874k24igjf.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        will Deacon <will@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>, mark.rutland@arm.com,
         Russell King <linux@armlinux.org.uk>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Yang Yingliang <yangyingliang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Ard Biesheuvel <ardb@kernel.org>, broonie@kernel.org,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: Should arm64 have a custom crash shutdown handler?
+In-Reply-To: <427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com>
+References: <427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.244.133
+X-SA-Exim-Rcpt-To: gpiccoli@igalia.com, catalin.marinas@arm.com, will@kernel.org, mikelley@microsoft.com, vkuznets@redhat.com, mark.rutland@arm.com, linux@armlinux.org.uk, ardb@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 4, 2022 at 7:34 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
+On Wed, 04 May 2022 21:00:42 +0100,
+"Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+> 
+> Hi folks, this email is to ask feedback / trigger a discussion about the
+> concept of custom crash shutdown handler, that is "missing" in arm64
+> while it's present in many architectures [mips, powerpc, x86, sh (!)].
+> 
+> Currently, when we kexec in arm64, the function machine_crash_shutdown()
+> is called as a handler to disable CPUs and (potentially) do extra
+> quiesce work. In the aforementioned architectures, there's a way to
+> override this function, if for example an hypervisor wish to have its
+> guests running their own custom shutdown machinery.
 >
-> Hi Paul,
->
-> On Wed, May 04, 2022 at 06:57:28PM -0400, Paul Moore wrote:
-> > On Tue, May 3, 2022 at 9:57 PM Kees Cook <keescook@chromium.org> wrote:
->
-> [..]
->
-> > > +++ b/include/uapi/linux/xfrm.h
-> > > @@ -31,9 +31,9 @@ struct xfrm_id {
-> > >  struct xfrm_sec_ctx {
-> > >         __u8    ctx_doi;
-> > >         __u8    ctx_alg;
-> > > -       __u16   ctx_len;
-> > > +       __DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(__u16, ctx_len);
-> > >         __u32   ctx_sid;
-> > > -       char    ctx_str[0];
-> > > +       __DECLARE_FLEX_ARRAY_ELEMENTS(char, ctx_str);
-> > >  };
-> >
-> > While I like the idea of this in principle, I'd like to hear about the
-> > testing you've done on these patches.  A previous flex array
-> > conversion in the audit uapi headers ended up causing a problem with
->
-> I'm curious about which commit caused those problems...?
+> For powerpc/mips, the approach is a generic shutdown function that might
+> call other handler-registered functions, whereas x86/sh relies in the
+> "machine_ops" structure, having the crash shutdown as a callback in such
+> struct.
+> 
+> The usage for that is very broad, but heavy users are hypervisors like
+> Hyper-V / KVM (CCed Michael and Vitaly here for this reason). The
+> discussion about the need for that in arm64 is from another thread [0],
+> so before start implementing/playing with that, I'd like to ask ARM64
+> community if there is any feedback and in case it's positive, what is
+> the best implementation strategy (struct callback vs. handler call), etc.
+> 
+> I've CCed ARM64/ARM32 maintainers plus extra people I found as really
+> involved with ARM architecture - sorry if I added people I shouldn't or
+> if I forgot somebody (though the ARM mailing-list is CC).
 
-Commit ed98ea2128b6 ("audit: replace zero-length array with
-flexible-array member"), however, as I said earlier, the problem was
-actually with SWIG, it just happened to be triggered by the kernel
-commit.  There was a brief fedora-devel mail thread about the problem,
-see the link below:
+I have the feeling that you are conflating two different things here:
 
-* https://www.spinics.net/lists/fedora-devel/msg297991.html
+(1) general shutdown/reboot, whether this because of a crash or not
 
-To reiterate, I'm supportive of changes like this, but I would like to
-hear how it was tested to ensure there are no unexpected problems with
-userspace.  If there are userspace problems it doesn't mean we can't
-make changes like this, it just means we need to ensure that the
-userspace issues are resolved first.
+(2) kexec, for which the whole point is that it is possible to handle
+*everything* from within the kernel
+
+On arm64:
+
+(1) is already abstracted via PSCI. The hypervisor can do whatever it
+wants there (KVM, not needing anything, just forwards this to
+userspace for fun and profit -- if something has to be done, the VMM
+is the right spot). I expect other hypervisors to do the same thing
+(and that's what the architecture expects anyway).
+
+(2) must, by definition, fit into the architectural envelope. If you
+need help from another entity in the system to be able to kexec,
+something is broken, because the hypervisor doesn't implement the
+architecture correctly (and frankly, we really don't need much to be
+able to kexec).
+
+Not having any 'machine_ops' indirection was a conscious decision on
+arm64, if only to avoid the nightmare that 32bit was at a time with
+every single platform doing their own stuff. Introducing them would
+not be an improvement, but simply the admission that hypervisors are
+simply too broken for words. And I don't buy the "but x86 has it!"
+argument. x86 is a nightmare of PV mess that we can happily ignore,
+because we don't do PV for core operations at all.
+
+If something has to be done to quiesce the system, it probably is
+related to the system topology, and must be linked to it. We already
+have these requirements in order to correctly stop ongoing DMA, shut
+down IOMMUs, and other similar stuff. What other requirements does
+your favourite hypervisor have?
+
+Thanks,
+
+	M.
 
 -- 
-paul-moore.com
+Without deviation from the norm, progress is not possible.
