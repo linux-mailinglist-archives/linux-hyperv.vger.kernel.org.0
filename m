@@ -2,244 +2,305 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2637151C839
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 20:44:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1954551C88C
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 20:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384541AbiEESsW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 May 2022 14:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54576 "EHLO
+        id S1352593AbiEETBX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 May 2022 15:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344848AbiEESsB (ORCPT
+        with ESMTP id S1343580AbiEETBW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 May 2022 14:48:01 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB44357127
-        for <linux-hyperv@vger.kernel.org>; Thu,  5 May 2022 11:39:19 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id a15-20020a17090ad80f00b001dc2e23ad84so8750675pjv.4
-        for <linux-hyperv@vger.kernel.org>; Thu, 05 May 2022 11:39:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bIDYG8oUb6Mu7NvJ6XCyJeRsH11vzTSCPCwxqfuBo6Q=;
-        b=TAsZfcIzZ1Euc/qIeEg34BQq2COz7cgqBz00GoicuXUNf9pdGcbnWHwxzUdfUr95G6
-         aZkeIr2DXfy8REqoWNWUrHkDO72sG3i0jXoJwl1ByCdJe4nI3ufTivSeF9XGTyVfZSBt
-         E8X9FJkYlIIwFcdiPVlMoWZYSaWqjlfPLGIK0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bIDYG8oUb6Mu7NvJ6XCyJeRsH11vzTSCPCwxqfuBo6Q=;
-        b=ct3JH5T0CNwunZq/SK6Quq8KIRXayPLa4y0Mj9qjiIGYRF9hvsh3PUiUjdxJofUXrS
-         2zjuK3TLPV7A2dix8ed8yoQAI6ZqjM3DOcbuj93FEDKQvZzJ4LmKHdwx+tLeNhBWjDWC
-         4J9CcbKk9CjnT/sKgdrYw2gzKle8T+qbbaRhPfqaGZEpMdzC1HI8rFvUp+HnFS2U2Vpz
-         D5oUyfQEA1pcTorFkrqRUkiwiAiiYZP/HKdamjk1oYUbVkKtoQEoA6a9PN2yI7rjNT+q
-         nAQJKdGtS5V8oYjhUNuyoEnxqOO4IC3n+V7zB2KitxpCRAreFdvdqNtlJqFzoqew3VIc
-         CsjA==
-X-Gm-Message-State: AOAM530OUcSjJVgko3WW3Tfelin8D0dj2wPuk3/NAPKTv7bi7tA0APTL
-        vGu9lVA1GUEjABk51wR+oJTvBw==
-X-Google-Smtp-Source: ABdhPJwhJknux9s/+qFqH2XgmMgiW2vZym5kO8XlabzZGnT4KBaHxWpUmQRgMpcqhaJmjVSWVeT9nQ==
-X-Received: by 2002:a17:902:c78b:b0:15c:e5dc:4f63 with SMTP id w11-20020a170902c78b00b0015ce5dc4f63mr28835867pla.90.1651775959148;
-        Thu, 05 May 2022 11:39:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f10-20020a170902860a00b0015e8d4eb1fcsm1871783plo.70.2022.05.05.11.39.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 May 2022 11:39:18 -0700 (PDT)
-Date:   Thu, 5 May 2022 11:39:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
-        netdev@vger.kernel.org, selinux@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Christian Brauner <brauner@kernel.org>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        Keith Packard <keithp@keithp.com>, keyrings@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Rich Felker <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Yang Yingliang <yangyingliang@huawei.com>
-Subject: Re: [PATCH 28/32] selinux: Use mem_to_flex_dup() with xfrm and sidtab
-Message-ID: <202205051124.6D80ABAE32@keescook>
-References: <20220504014440.3697851-1-keescook@chromium.org>
- <20220504014440.3697851-29-keescook@chromium.org>
- <CAHC9VhT5Y=ENiSyb=S-NVbGX63sLOv4nVuR_GS-yww6tiz0wYA@mail.gmail.com>
- <20220504234324.GA12556@embeddedor>
- <CAHC9VhRJC4AxeDsGpdphfJD4WzgaeBsdONHnixBzft5u_cE-Dw@mail.gmail.com>
+        Thu, 5 May 2022 15:01:22 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7CD3633C;
+        Thu,  5 May 2022 11:57:41 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 245IsCDC021810;
+        Thu, 5 May 2022 18:56:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=XNUaK5MXNumQ2GC419CM2tT56hGe0D54FACFQZzubag=;
+ b=gSD1byPqJD9U14RM7yqXNGjhCvGv5EceJcS49ikn+rpVMYCw5l/cE2/RfhpfxgDrdFXF
+ bkw+3uP6vU/C7MIPvjf+1/BQcDGTmd58m1jCKBcC75Xc3IwagCsVfPCOPegq8b4MZ3p/
+ mQN9mkPuV1Btua3UKzIpudLBdtJkA5WoYucCFThdzTDSpYwo6Nc6tDpcKD+hvfEHi+OM
+ CWja8vfEeVW5JzydzGv1uvP94K0n/yjRgwV8RQXFJagBheg9E5Imh/dRMjKSs9LZirwJ
+ /CWejco2WiCA9LRB8XRjw7cjAD2OqALQniaNM+6CBO4ZnFoxNe9gtVMrz4B16UghR6hV VA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fvm92012c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 May 2022 18:56:22 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 245IuAu6029325;
+        Thu, 5 May 2022 18:56:21 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fvm92011f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 May 2022 18:56:21 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 245IbA58012918;
+        Thu, 5 May 2022 18:55:39 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 3ftp7fvexe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 May 2022 18:55:39 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 245ItaGm14352888
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 May 2022 18:55:36 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8B81D11C05B;
+        Thu,  5 May 2022 18:55:36 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6820611C04C;
+        Thu,  5 May 2022 18:55:10 +0000 (GMT)
+Received: from [9.211.36.212] (unknown [9.211.36.212])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 May 2022 18:55:10 +0000 (GMT)
+Message-ID: <3c34d8e2-6f84-933f-a4ed-338cd300d6b0@linux.ibm.com>
+Date:   Fri, 6 May 2022 00:25:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 08/30] powerpc/setup: Refactor/untangle panic notifiers
+Content-Language: en-US
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+        kexec@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, coresight@lists.linaro.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
+        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+        corbet@lwn.net, d.hatayama@jp.fujitsu.com,
+        dave.hansen@linux.intel.com, dyoung@redhat.com,
+        feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-9-gpiccoli@igalia.com>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <20220427224924.592546-9-gpiccoli@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FmL43udCg7zOaYTyNU5fYcYIiC3L3tsY
+X-Proofpoint-ORIG-GUID: op15TFwB187r4kWWn80Xf8P42QMt9UB1
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhRJC4AxeDsGpdphfJD4WzgaeBsdONHnixBzft5u_cE-Dw@mail.gmail.com>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-05_08,2022-05-05_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 clxscore=1011 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205050125
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 04, 2022 at 11:14:42PM -0400, Paul Moore wrote:
-> On Wed, May 4, 2022 at 7:34 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > Hi Paul,
-> >
-> > On Wed, May 04, 2022 at 06:57:28PM -0400, Paul Moore wrote:
-> > > On Tue, May 3, 2022 at 9:57 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > [..]
-> >
-> > > > +++ b/include/uapi/linux/xfrm.h
-> > > > @@ -31,9 +31,9 @@ struct xfrm_id {
-> > > >  struct xfrm_sec_ctx {
-> > > >         __u8    ctx_doi;
-> > > >         __u8    ctx_alg;
-> > > > -       __u16   ctx_len;
-> > > > +       __DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(__u16, ctx_len);
-> > > >         __u32   ctx_sid;
-> > > > -       char    ctx_str[0];
-> > > > +       __DECLARE_FLEX_ARRAY_ELEMENTS(char, ctx_str);
-> > > >  };
-> > >
-> > > While I like the idea of this in principle, I'd like to hear about the
-> > > testing you've done on these patches.  A previous flex array
-> > > conversion in the audit uapi headers ended up causing a problem with
-> >
-> > I'm curious about which commit caused those problems...?
+
+
+On 28/04/22 4:19 am, Guilherme G. Piccoli wrote:
+> The panic notifiers infrastructure is a bit limited in the scope of
+> the callbacks - basically every kind of functionality is dropped
+> in a list that runs in the same point during the kernel panic path.
+> This is not really on par with the complexities and particularities
+> of architecture / hypervisors' needs, and a refactor is ongoing.
 > 
-> Commit ed98ea2128b6 ("audit: replace zero-length array with
-> flexible-array member"), however, as I said earlier, the problem was
-> actually with SWIG, it just happened to be triggered by the kernel
-> commit.  There was a brief fedora-devel mail thread about the problem,
-> see the link below:
+> As part of this refactor, it was observed that powerpc has 2 notifiers,
+> with mixed goals: one is just a KASLR offset dumper, whereas the other
+> aims to hard-disable IRQs (necessary on panic path), warn firmware of
+> the panic event (fadump) and run low-level platform-specific machinery
+> that might stop kernel execution and never come back.
 > 
-> * https://www.spinics.net/lists/fedora-devel/msg297991.html
+> Clearly, the 2nd notifier has opposed goals: disable IRQs / fadump
+> should run earlier while low-level platform actions should
+> run late since it might not even return. Hence, this patch decouples
+> the notifiers splitting them in three:
+> 
+> - First one is responsible for hard-disable IRQs and fadump,
+> should run early;
+> 
+> - The kernel KASLR offset dumper is really an informative notifier,
+> harmless and may run at any moment in the panic path;
+> 
+> - The last notifier should run last, since it aims to perform
+> low-level actions for specific platforms, and might never return.
+> It is also only registered for 2 platforms, pseries and ps3.
+> 
+> The patch better documents the notifiers and clears the code too,
+> also removing a useless header.
+> 
+> Currently no functionality change should be observed, but after
+> the planned panic refactor we should expect more panic reliability
+> with this patch.
+> 
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-Wow, that's pretty weird -- it looks like SWIG was scraping the headers
-to build its conversions? I assume SWIG has been fixed now?
+The change looks good. I have tested it on an LPAR (ppc64).
 
-> To reiterate, I'm supportive of changes like this, but I would like to
-> hear how it was tested to ensure there are no unexpected problems with
-> userspace.  If there are userspace problems it doesn't mean we can't
-> make changes like this, it just means we need to ensure that the
-> userspace issues are resolved first.
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
 
-Well, as this is the first and only report of any problems with [0] -> []
-conversions (in UAPI or anywhere) that I remember seeing, and they've
-been underway since at least v5.9, I hadn't been doing any new testing.
-
-So, for this case, I guess I should ask what tests you think would be
-meaningful here? Anything using #include should be fine:
-https://codesearch.debian.net/search?q=linux%2Fxfrm.h&literal=1&perpkg=1
-Which leaves just this, which may be doing something weird:
-
-libabigail_2.0-1/tests/data/test-diff-filter/test-PR27569-v0.abi
-        </data-member>
-        <data-member access="public" layout-offset-in-bits="128">
-          <var-decl name="seq_hi" type-id="3f1a6b60" visibility="default" filepath="include/uapi/linux/xfrm.h" line="97" column="1"/>
-        </data-member>
-        <data-member access="public" layout-offset-in-bits="160">
-
-But I see that SWIG doesn't show up in a search for linux/audit.h:
-https://codesearch.debian.net/search?q=linux%2Faudit.h&literal=1&perpkg=1
-
-So this may not be a sufficient analysis...
-
--- 
-Kees Cook
+> ---
+> 
+> We'd like to thanks specially the MiniCloud infrastructure [0] maintainers,
+> that allow us to test PowerPC code in a very complete, functional and FREE
+> environment (there's no need even for adding a credit card, like many "free"
+> clouds require ¬¬ ).
+> 
+> [0] https://openpower.ic.unicamp.br/minicloud
+> 
+>   arch/powerpc/kernel/setup-common.c | 74 ++++++++++++++++++++++--------
+>   1 file changed, 54 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+> index 518ae5aa9410..52f96b209a96 100644
+> --- a/arch/powerpc/kernel/setup-common.c
+> +++ b/arch/powerpc/kernel/setup-common.c
+> @@ -23,7 +23,6 @@
+>   #include <linux/console.h>
+>   #include <linux/screen_info.h>
+>   #include <linux/root_dev.h>
+> -#include <linux/notifier.h>
+>   #include <linux/cpu.h>
+>   #include <linux/unistd.h>
+>   #include <linux/serial.h>
+> @@ -680,8 +679,25 @@ int check_legacy_ioport(unsigned long base_port)
+>   }
+>   EXPORT_SYMBOL(check_legacy_ioport);
+>   
+> -static int ppc_panic_event(struct notifier_block *this,
+> -                             unsigned long event, void *ptr)
+> +/*
+> + * Panic notifiers setup
+> + *
+> + * We have 3 notifiers for powerpc, each one from a different "nature":
+> + *
+> + * - ppc_panic_fadump_handler() is a hypervisor notifier, which hard-disables
+> + *   IRQs and deal with the Firmware-Assisted dump, when it is configured;
+> + *   should run early in the panic path.
+> + *
+> + * - dump_kernel_offset() is an informative notifier, just showing the KASLR
+> + *   offset if we have RANDOMIZE_BASE set.
+> + *
+> + * - ppc_panic_platform_handler() is a low-level handler that's registered
+> + *   only if the platform wishes to perform final actions in the panic path,
+> + *   hence it should run late and might not even return. Currently, only
+> + *   pseries and ps3 platforms register callbacks.
+> + */
+> +static int ppc_panic_fadump_handler(struct notifier_block *this,
+> +				    unsigned long event, void *ptr)
+>   {
+>   	/*
+>   	 * panic does a local_irq_disable, but we really
+> @@ -691,45 +707,63 @@ static int ppc_panic_event(struct notifier_block *this,
+>   
+>   	/*
+>   	 * If firmware-assisted dump has been registered then trigger
+> -	 * firmware-assisted dump and let firmware handle everything else.
+> +	 * its callback and let the firmware handles everything else.
+>   	 */
+>   	crash_fadump(NULL, ptr);
+> -	if (ppc_md.panic)
+> -		ppc_md.panic(ptr);  /* May not return */
+> +
+>   	return NOTIFY_DONE;
+>   }
+>   
+> -static struct notifier_block ppc_panic_block = {
+> -	.notifier_call = ppc_panic_event,
+> -	.priority = INT_MIN /* may not return; must be done last */
+> -};
+> -
+> -/*
+> - * Dump out kernel offset information on panic.
+> - */
+>   static int dump_kernel_offset(struct notifier_block *self, unsigned long v,
+>   			      void *p)
+>   {
+>   	pr_emerg("Kernel Offset: 0x%lx from 0x%lx\n",
+>   		 kaslr_offset(), KERNELBASE);
+>   
+> -	return 0;
+> +	return NOTIFY_DONE;
+>   }
+>   
+> +static int ppc_panic_platform_handler(struct notifier_block *this,
+> +				      unsigned long event, void *ptr)
+> +{
+> +	/*
+> +	 * This handler is only registered if we have a panic callback
+> +	 * on ppc_md, hence NULL check is not needed.
+> +	 * Also, it may not return, so it runs really late on panic path.
+> +	 */
+> +	ppc_md.panic(ptr);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block ppc_fadump_block = {
+> +	.notifier_call = ppc_panic_fadump_handler,
+> +	.priority = INT_MAX, /* run early, to notify the firmware ASAP */
+> +};
+> +
+>   static struct notifier_block kernel_offset_notifier = {
+> -	.notifier_call = dump_kernel_offset
+> +	.notifier_call = dump_kernel_offset,
+> +};
+> +
+> +static struct notifier_block ppc_panic_block = {
+> +	.notifier_call = ppc_panic_platform_handler,
+> +	.priority = INT_MIN, /* may not return; must be done last */
+>   };
+>   
+>   void __init setup_panic(void)
+>   {
+> +	/* Hard-disables IRQs + deal with FW-assisted dump (fadump) */
+> +	atomic_notifier_chain_register(&panic_notifier_list,
+> +				       &ppc_fadump_block);
+> +
+>   	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0)
+>   		atomic_notifier_chain_register(&panic_notifier_list,
+>   					       &kernel_offset_notifier);
+>   
+> -	/* PPC64 always does a hard irq disable in its panic handler */
+> -	if (!IS_ENABLED(CONFIG_PPC64) && !ppc_md.panic)
+> -		return;
+> -	atomic_notifier_chain_register(&panic_notifier_list, &ppc_panic_block);
+> +	/* Low-level platform-specific routines that should run on panic */
+> +	if (ppc_md.panic)
+> +		atomic_notifier_chain_register(&panic_notifier_list,
+> +					       &ppc_panic_block);
+>   }
+>   
+>   #ifdef CONFIG_CHECK_CACHE_COHERENCY
