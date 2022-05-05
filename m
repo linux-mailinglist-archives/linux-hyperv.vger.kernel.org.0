@@ -2,215 +2,182 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 689DC51C3C5
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 17:21:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FEF651C43D
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 May 2022 17:48:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357466AbiEEPZf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 May 2022 11:25:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
+        id S1381422AbiEEPvL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 May 2022 11:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232495AbiEEPZd (ORCPT
+        with ESMTP id S1381430AbiEEPvI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 May 2022 11:25:33 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 05 May 2022 08:21:52 PDT
-Received: from elaine.keithp.com (home.keithp.com [63.227.221.253])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91427554A8;
-        Thu,  5 May 2022 08:21:52 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by elaine.keithp.com (Postfix) with ESMTP id 373F23F3296A;
-        Thu,  5 May 2022 08:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
-        t=1651763774; bh=O3aXJOWYxVTqOu3VmcXxOiZZOhMrUjqY/t6cXMT24+E=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=M3zB+WUy+cYZq4HgtgtbfmLljWbRpIeJ5Zkg9r1D71YqvPlgOkiQ4tXheXCRGUa8+
-         RMuby4CqFAMCoPUIrwdzYTZDTf78io+RFFo6OcdGBDUFDZRaGhZfKKcTtwdj7WCFy4
-         6tn6om4NwF6owZoCYEHNTlN4dA5iODmOFbhrxNDmu4q/fHHXFfSRYzNqzWEthWHBp3
-         hB3E0o3k1G8NwFJfKh9rQpVZYZLwPg6CF6he0rk/+KFPQLpotGYN+CgB1L7QQOYecl
-         ymeV9rACfLcKoB95CZdy6K628IEeM8t07ROlSN+X9O0IbQydzX/BQ3xj9k+MYZwzPf
-         UxJC+uQh0iuJw==
-X-Virus-Scanned: Debian amavisd-new at keithp.com
-Received: from elaine.keithp.com ([127.0.0.1])
-        by localhost (elaine.keithp.com [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id AExLuWAu_LJ4; Thu,  5 May 2022 08:16:13 -0700 (PDT)
-Received: from keithp.com (koto.keithp.com [192.168.11.2])
-        by elaine.keithp.com (Postfix) with ESMTPSA id 046443F32465;
-        Thu,  5 May 2022 08:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=keithp.com; s=mail;
-        t=1651763773; bh=O3aXJOWYxVTqOu3VmcXxOiZZOhMrUjqY/t6cXMT24+E=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=krSTvH+KcMYcsYiJs+brgDawkHD6ep7gtAt/7ImbSH+PVnVS6n5TIWQoiUP+PjBfQ
-         TTV9zZEzFSNSLzQmSsEIJT24ancVfic/4tw1+i19H4UqIv2Soci174vL3i+L8WgOn3
-         3GAVx4Wwdu1vRPL7EVqx5qPLOOTreMDXIScBgNd+X5AcHfMZWw538tPrPoKpSSqHZH
-         dCLZclbzdDsdQUL6m86l3cbny8WccVcefFqv7gslHwR8P3ZsfbW/X+4PLXD3hTeyro
-         XMqcEagdrGN5NURX0L6R0oPpkf8LkkkUJo0DYZf6b68EQ+TuLV1TgvwIq/q3gwMiYO
-         4YgvEK7vCGplw==
-Received: by keithp.com (Postfix, from userid 1000)
-        id 4874D1E601B9; Thu,  5 May 2022 08:16:12 -0700 (PDT)
-From:   Keith Packard <keithp@keithp.com>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Francis Laniel <laniel_francis@privacyrequired.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Tadeusz Struk <tadeusz.struk@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arend van Spriel <aspriel@gmail.com>,
-        Baowen Zheng <baowen.zheng@corigine.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        Christian Brauner <brauner@kernel.org>,
-        Christian =?utf-8?Q?G=C3=B6ttsche?= <cgzones@googlemail.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Cong Wang <cong.wang@bytedance.com>,
-        David Gow <davidgow@google.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        devicetree@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eli Cohen <elic@nvidia.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        John Keeping <john@metanate.com>,
-        Juergen Gross <jgross@suse.com>, Kalle Valo <kvalo@kernel.org>,
-        keyrings@vger.kernel.org, kunit-dev@googlegroups.com,
-        Kuniyuki Iwashima <kuniyu@amazon.co.jp>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux1394-devel@lists.sourceforge.net,
-        linux-afs@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, llvm@lists.linux.dev,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Louis Peens <louis.peens@corigine.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Nathan Chancellor <nathan@kernel.org>, netdev@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nuno =?utf-8?Q?S=C3=A1?= <nuno.sa@analog.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Rich Felker <dalias@aerifal.cx>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, selinux@vger.kernel.org,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        SHA-cyfmac-dev-list@infineon.com,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>, Tom Rix <trix@redhat.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Yang Yingliang <yangyingliang@huawei.com>
-Subject: Re: [PATCH 02/32] Introduce flexible array struct memcpy() helpers
-In-Reply-To: <970a674df04271b5fd1971b495c6b11a996c20c2.camel@sipsolutions.net>
-References: <20220504014440.3697851-1-keescook@chromium.org>
- <20220504014440.3697851-3-keescook@chromium.org>
- <d3b73d80f66325fdfaf2d1f00ea97ab3db03146a.camel@sipsolutions.net>
- <202205040819.DEA70BD@keescook>
- <970a674df04271b5fd1971b495c6b11a996c20c2.camel@sipsolutions.net>
-Date:   Thu, 05 May 2022 08:16:11 -0700
-Message-ID: <871qx8qabo.fsf@keithp.com>
+        Thu, 5 May 2022 11:51:08 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9489D5A0A7;
+        Thu,  5 May 2022 08:47:28 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id y3so9475858ejo.12;
+        Thu, 05 May 2022 08:47:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6sJ8UuODEy3NC6wyCpHZf8GiAWg9BWqDIv7/vSFvVBs=;
+        b=EjOOhWbYDU3SdlmPcoe+jlVMvl5YgLqzID/surXAgZRU4Xo6aBfLbci+MMGBB79Ud+
+         NWSXjGHGXczwvdDuoNM3PWnrCmoff6Lj2TooAT5BnhuXlGzOPv3erGWba6WXCQR9rA7o
+         vCi96/ZmSXQFrAlOcuMQWsV6dTqMelYLsi/jQos6sxomVR/Kvq4qlM9c798YdGVBnm78
+         QM8oFkVOLGKGPSPE513RfEg+/609Z+pMWdbFNc0gGxEzTSIjadoWnYkFt6kH/WKm4NQY
+         29m9CLPpl+7t7me7yckFjFiw/bO+0nERMSuEaRQ54FSRBKyCJjj7DoHLqfV5ivddoNI+
+         Dipw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6sJ8UuODEy3NC6wyCpHZf8GiAWg9BWqDIv7/vSFvVBs=;
+        b=ANKVDvV6zDXx69lq61d9vrwtF/atkF/bsUrLZ235zRrRogm2ipJAwDHbFiCZKAnPTa
+         lRle3w9AjnkjuyYq1L8P3PvMMVcvuxLLdr6rRIOZJblTW/krYLe0QES8Th+kO8BHB+w/
+         8HYMxVktXkRAhlCnZXshzawDNhP7Ys2vM3VaOSWYBYq2rif0RgOYuGitsFUS4BKQMxVo
+         eOCFaV0YsAdVIqcBXU87nHlHqF95x7YA9K2j/wV4wHigQ4vvFLnGhpGduyxoR5+Zu/nZ
+         Mwj67np3ZE/b1HWiRgtUmmJecqdTCThTcZi5qlCJhiSTCcOOhEz7NpIyDODKjP0hnege
+         RPJw==
+X-Gm-Message-State: AOAM530yJcu83AE+TT39Vk7Prq50GXuXXxSMh8to78OCLFhzyGzG1wtJ
+        sI20s194aTjlHDVww2ca7Pg=
+X-Google-Smtp-Source: ABdhPJxwkONT0UWZFN8XHbEChQ886c6yFdJ4cQycMR2HBIpwM0AaoQ8mPzUfyK93Ixo9YYGEt/8gfQ==
+X-Received: by 2002:a17:907:60d6:b0:6f5:39f:c62d with SMTP id hv22-20020a17090760d600b006f5039fc62dmr2435315ejc.718.1651765646953;
+        Thu, 05 May 2022 08:47:26 -0700 (PDT)
+Received: from anparri (host-194-243-14-89.business.telecomitalia.it. [194.243.14.89])
+        by smtp.gmail.com with ESMTPSA id cm9-20020a0564020c8900b00428148d19besm980793edb.14.2022.05.05.08.47.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 08:47:25 -0700 (PDT)
+Date:   Thu, 5 May 2022 17:47:17 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, brijesh.singh@amd.com,
+        venu.busireddy@oracle.com, michael.roth@amd.com,
+        Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com, jroedel@suse.de,
+        michael.h.kelley@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com
+Subject: Re: [PATCH] x86/Hyper-V: Add SEV negotiate protocol support in
+ Isolation VM
+Message-ID: <20220505154717.GA3526@anparri>
+References: <20220505131502.402259-1-ltykernel@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220505131502.402259-1-ltykernel@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 05, 2022 at 09:15:02AM -0400, Tianyu Lan wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> Hyper-V Isolation VM code uses sev_es_ghcb_hv_call() to read/write MSR
+> via GHCB page. The SEV-ES guest should negotiate GHCB version before
+> reading/writing MSR via GHCB page. Expose sev_es_negotiate_protocol()
+> and sev_es_terminate() from AMD SEV code and negotiate GHCB version in
+> hyperv_init_ghcb() fro Hyper-V Isolation VM.
+> 
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Johannes Berg <johannes@sipsolutions.net> writes:
+Applied to tip's x86/sev and checked that this can fix the regression (to
+be introduced) by commit 2ea29c5abbc2 ("x86/sev: Save the negotiated GHCB
+version"):
 
-> Yeah, dunno, I guess I'm slightly more on the side of not requiring it,
-> since we don't do the same for kmalloc() etc. and probably really
-> wouldn't want to add kmalloc_s() that does it ;-)
+Tested-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 
-I suspect the number of bugs this catches will be small, but they'll be
-in places where the flow of control is complicated. What we want is to
-know that there's no "real" value already present. I'd love it if we
-could make the macro declare a new name (yeah, I know, mixing
-declarations and code).
+Nits: (in the commit message) fro -> for, Isolation VM -> Isolated VM
 
-Of course, we could also end up with people writing a wrapping macro
-that sets the variable to NULL before invoking the underlying macro...
+Thanks,
+  Andrea
 
-=2D-=20
-=2Dkeith
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEw4O3eCVWE9/bQJ2R2yIaaQAAABEFAmJz6jsACgkQ2yIaaQAA
-ABGQAg/+NFgE01jSUQAsZc8G2KY9qfifpQ5rzrWtedUNXoOhcAo33tvPHnED0AxP
-Q4MXv/X4TRCTOD/5aBjZeKgy9I9G2jYbZq9iYf5uaD9zIECpE5XyznDZzo15cWBE
-B+W7olq9dqiARf6CuwNpYCjB8zv2ubR42c+faTCJNM63owpN9xpGT/7OEbE0HoKg
-TawmusqNU2nOkT82kjh1iVoK0BbmPSATiKkCH9ZpUVQYOQvsyieFtAlQREms/pip
-ccnHssDAaV1dgAg2NlKDzU30XA3rIIsfX+v3Bh+CWoj77Az7IO8+/V+nmNm5GHyy
-bs8LUQY3Z7/otHyGVfjVN9eU6LcEvstr7tOPLWxF0h+YxJk12uKhUZnmt4NisYrL
-uOcx/MC4y6tx9+kdn1U5KoV+O/ekhW/N/WwYcE6YUYZeol3Ahpve77B7uzLbwyOj
-TMLF83DtVqGLwl1y5mdKUfdeUeYhVMYo+eaq0ChKHdYdKj9ra2BaL1oiTc3lKqVW
-FdHX7C9qLA4LsTzfuDiEQDOrnwMDXhvtQrysTOjlQLIcivarCfxIKQw0co8Vubug
-sceCDXCr5qY2cCr51YqbDSVqEXK5Dos7IGlIyIlZH0YCktIbgOGTEPZDcidplXy2
-LWWWFIK6Viz1AgjSRxRU24qmTbFCFLZdboKDuzsCHG8HDByLmNM=
-=BTwc
------END PGP SIGNATURE-----
---=-=-=--
+> ---
+>  arch/x86/hyperv/hv_init.c    | 8 ++++++++
+>  arch/x86/include/asm/sev.h   | 6 ++++++
+>  arch/x86/kernel/sev-shared.c | 4 ++--
+>  3 files changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 8b392b6b7b93..56e2c34e7d64 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -29,6 +29,7 @@
+>  #include <clocksource/hyperv_timer.h>
+>  #include <linux/highmem.h>
+>  #include <linux/swiotlb.h>
+> +#include <asm/sev.h>
+>  
+>  int hyperv_init_cpuhp;
+>  u64 hv_current_partition_id = ~0ull;
+> @@ -70,6 +71,13 @@ static int hyperv_init_ghcb(void)
+>  	ghcb_base = (void **)this_cpu_ptr(hv_ghcb_pg);
+>  	*ghcb_base = ghcb_va;
+>  
+> +	/* Negotiate GHCB Version. */
+> +	if (!sev_es_negotiate_protocol())
+> +		sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_PROT_UNSUPPORTED);
+> +
+> +	/* Write ghcb page back after negotiating protocol. */
+> +	wrmsrl(MSR_AMD64_SEV_ES_GHCB, ghcb_gpa);
+> +	VMGEXIT();
+>  	return 0;
+>  }
+>  
+> diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+> index 19514524f0f8..ad69c1dc081b 100644
+> --- a/arch/x86/include/asm/sev.h
+> +++ b/arch/x86/include/asm/sev.h
+> @@ -161,6 +161,9 @@ extern enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+>  					  struct es_em_ctxt *ctxt,
+>  					  u64 exit_code, u64 exit_info_1,
+>  					  u64 exit_info_2);
+> +extern bool sev_es_negotiate_protocol(void);
+> +extern void sev_es_terminate(unsigned int set, unsigned int reason);
+> +
+>  static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs)
+>  {
+>  	int rc;
+> @@ -226,6 +229,9 @@ static inline int snp_issue_guest_request(u64 exit_code, struct snp_req_data *in
+>  {
+>  	return -ENOTTY;
+>  }
+> +
+> +static bool sev_es_negotiate_protocol(void) { return false; }
+> +static void sev_es_terminate(unsigned int set, unsigned int reason) { }
+>  #endif
+>  
+>  #endif
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index 2b4270d5559e..bffc38f0d5ed 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -86,7 +86,7 @@ static bool __init sev_es_check_cpu_features(void)
+>  	return true;
+>  }
+>  
+> -static void __noreturn sev_es_terminate(unsigned int set, unsigned int reason)
+> +void __noreturn sev_es_terminate(unsigned int set, unsigned int reason)
+>  {
+>  	u64 val = GHCB_MSR_TERM_REQ;
+>  
+> @@ -137,7 +137,7 @@ static void snp_register_ghcb_early(unsigned long paddr)
+>  		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_REGISTER);
+>  }
+>  
+> -static bool sev_es_negotiate_protocol(void)
+> +bool sev_es_negotiate_protocol(void)
+>  {
+>  	u64 val;
+>  
+> -- 
+> 2.25.1
+> 
