@@ -2,61 +2,40 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 651DB51CC92
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 May 2022 01:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E893C51CE7A
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 May 2022 04:16:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345533AbiEEXUS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 May 2022 19:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56548 "EHLO
+        id S1387734AbiEFBDK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 5 May 2022 21:03:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1386640AbiEEXUO (ORCPT
+        with ESMTP id S232783AbiEFBDH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 May 2022 19:20:14 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233905DBD3
-        for <linux-hyperv@vger.kernel.org>; Thu,  5 May 2022 16:16:31 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id e2so7891752wrh.7
-        for <linux-hyperv@vger.kernel.org>; Thu, 05 May 2022 16:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BNb5FwciOrnmYbDhJp90kHEHFZ0681UtkEHiY9rBD84=;
-        b=Ohr3X3EP78LxuYDKhnz8KuPiuz1PhY8VlacN2n0UZF33p11lrzHmoTg5FkuLveaWWc
-         B+PHWzpGocOw99rYrrwOT2j6K7yl6TZjHfwiwfQv58T2SgC8RJjpZCrBvbUHRa3tAEjw
-         vBvW2uixSk3X4wocsWWICUIdWEyFIPpXBQF7km3BjP4lO/AiOmnrqBvYof/Hmrk8g3Ui
-         VsyTbQQECGTWGpH9GRnc/7V1pdbEyCgAuGzq4iO4E+9FajCsxUmBzSMnYaru+xQE/MDx
-         VovhSYGTu5JLsFhCQL0rb2sLJwJC/ZTQ8Ao2n8UXvDJkacdd5/9qZgjSKryNtgTW6CEs
-         aKmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BNb5FwciOrnmYbDhJp90kHEHFZ0681UtkEHiY9rBD84=;
-        b=D3P962ErRgDWeaK/Rw4P5Qn9N8ZUcROH1vf8NXpsAGdUr8UNmzsIJrdwZXLG12Kj3c
-         1IhIBkQEf6F4tbXQgl9OlMhOeMrYjSB1dTsPudvQCC0LpkBb2XmBo5jNlfuKYtjzDFba
-         l8o4KhoFziKB0qLn5ww7IPRZQv6FAhkd/uGKn+mY1h5uHNufnPljVAEEm8TA42nX68XG
-         XpeMKCt6z1oOFfvIhQDX5SBABnnJ5xKG5WAVdsvBf6uzQ1sJQP2dwKUKnrekl//6lZZS
-         jMP6pTGqOXU3Ve9n3WGa4ppufFnkA3XhwoBfUV7DeDg5rYtKs0F47IUAWbTpgbI4BCrW
-         i9cg==
-X-Gm-Message-State: AOAM533+vNlB7/NcssDwcbHMIsbOarV229CRizdekKqUwTQFWzdlK+hi
-        5KxS7lEJYyR02LaQHtpELFahbgJbgKDt43iDKpsn
-X-Google-Smtp-Source: ABdhPJyI6zIzqRKP45wkz/HSJ9ebgV2/QaH+Jh5XG21YfFQB+clnUfHaAanM4WnjOyZZ77zPKKT04iIWWkNblva8IBo=
-X-Received: by 2002:a5d:590d:0:b0:20a:c3eb:2584 with SMTP id
- v13-20020a5d590d000000b0020ac3eb2584mr325652wrd.18.1651792589559; Thu, 05 May
- 2022 16:16:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220504014440.3697851-1-keescook@chromium.org>
- <20220504014440.3697851-29-keescook@chromium.org> <CAHC9VhT5Y=ENiSyb=S-NVbGX63sLOv4nVuR_GS-yww6tiz0wYA@mail.gmail.com>
- <20220504234324.GA12556@embeddedor> <CAHC9VhRJC4AxeDsGpdphfJD4WzgaeBsdONHnixBzft5u_cE-Dw@mail.gmail.com>
- <202205051124.6D80ABAE32@keescook>
-In-Reply-To: <202205051124.6D80ABAE32@keescook>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 5 May 2022 19:16:18 -0400
-Message-ID: <CAHC9VhT3EDCZEP1og3H_PGFETE6403HUHw7aQb_wDMwJnWeb3Q@mail.gmail.com>
-Subject: Re: [PATCH 28/32] selinux: Use mem_to_flex_dup() with xfrm and sidtab
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Thu, 5 May 2022 21:03:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818AC5EDF8;
+        Thu,  5 May 2022 17:59:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1BB04B82C77;
+        Fri,  6 May 2022 00:59:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63365C385A4;
+        Fri,  6 May 2022 00:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651798762;
+        bh=QHLpCYQAf4+qvwVPngV5l8IrNs1LORlQXrnupp83GZw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a5h2RHlNwK/5saAV7Ze/fjqvxdNmdEP8Axbp3ZZz7Hb5HDtHWJBCICfECaYxNkXEK
+         ANaNwCofZgiA1UzwJUSX+qaaSp0LS6eClnugCA0zNkRsSnX38kOKxMuzQLu9h9Aru9
+         61ul4/dcC/OBr5AmN74lb9td0B+IF4J82IuVNIPK2nsKrAPfVCrr4z9QwhtHrtczp2
+         tU8no/CqNF5wz/W4zNS+sWsHYpLVGoMGocTLtu6Tpa/HKE7L4BgiDVJ4hOXO4evxSg
+         lfdeEuJUJMH7Tm4XyyRc7XgDnv8GxTr/iVsNxRCeJxXLe6iCxRyC+SfurDpCblt3Iv
+         VNSJYc2ryzMfw==
+Date:   Thu, 5 May 2022 20:08:22 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Kees Cook <keescook@chromium.org>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
@@ -64,7 +43,7 @@ Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Eric Paris <eparis@parisplace.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Xiu Jianfeng <xiujianfeng@huawei.com>,
-        =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Christian =?iso-8859-1?Q?G=F6ttsche?= <cgzones@googlemail.com>,
         netdev@vger.kernel.org, selinux@vger.kernel.org,
         Alexei Starovoitov <ast@kernel.org>,
         alsa-devel@alsa-project.org, Al Viro <viro@zeniv.linux.org.uk>,
@@ -143,7 +122,7 @@ Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Mimi Zohar <zohar@linux.ibm.com>,
         Muchun Song <songmuchun@bytedance.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
+        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
         Paolo Abeni <pabeni@redhat.com>,
         Rich Felker <dalias@aerifal.cx>,
         Rob Herring <robh+dt@kernel.org>,
@@ -161,96 +140,122 @@ Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         wcn36xx@lists.infradead.org, Wei Liu <wei.liu@kernel.org>,
         xen-devel@lists.xenproject.org,
         Yang Yingliang <yangyingliang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Subject: Re: [PATCH 28/32] selinux: Use mem_to_flex_dup() with xfrm and sidtab
+Message-ID: <20220506010822.GA18891@embeddedor>
+References: <20220504014440.3697851-1-keescook@chromium.org>
+ <20220504014440.3697851-29-keescook@chromium.org>
+ <CAHC9VhT5Y=ENiSyb=S-NVbGX63sLOv4nVuR_GS-yww6tiz0wYA@mail.gmail.com>
+ <20220504234324.GA12556@embeddedor>
+ <CAHC9VhRJC4AxeDsGpdphfJD4WzgaeBsdONHnixBzft5u_cE-Dw@mail.gmail.com>
+ <202205051124.6D80ABAE32@keescook>
+ <CAHC9VhT3EDCZEP1og3H_PGFETE6403HUHw7aQb_wDMwJnWeb3Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhT3EDCZEP1og3H_PGFETE6403HUHw7aQb_wDMwJnWeb3Q@mail.gmail.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, May 5, 2022 at 2:39 PM Kees Cook <keescook@chromium.org> wrote:
-> On Wed, May 04, 2022 at 11:14:42PM -0400, Paul Moore wrote:
-> > On Wed, May 4, 2022 at 7:34 PM Gustavo A. R. Silva
-> > <gustavoars@kernel.org> wrote:
-> > >
-> > > Hi Paul,
-> > >
-> > > On Wed, May 04, 2022 at 06:57:28PM -0400, Paul Moore wrote:
-> > > > On Tue, May 3, 2022 at 9:57 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > [..]
-> > >
-> > > > > +++ b/include/uapi/linux/xfrm.h
-> > > > > @@ -31,9 +31,9 @@ struct xfrm_id {
-> > > > >  struct xfrm_sec_ctx {
-> > > > >         __u8    ctx_doi;
-> > > > >         __u8    ctx_alg;
-> > > > > -       __u16   ctx_len;
-> > > > > +       __DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(__u16, ctx_len);
-> > > > >         __u32   ctx_sid;
-> > > > > -       char    ctx_str[0];
-> > > > > +       __DECLARE_FLEX_ARRAY_ELEMENTS(char, ctx_str);
-> > > > >  };
+On Thu, May 05, 2022 at 07:16:18PM -0400, Paul Moore wrote:
+> On Thu, May 5, 2022 at 2:39 PM Kees Cook <keescook@chromium.org> wrote:
+> > On Wed, May 04, 2022 at 11:14:42PM -0400, Paul Moore wrote:
+> > > On Wed, May 4, 2022 at 7:34 PM Gustavo A. R. Silva
+> > > <gustavoars@kernel.org> wrote:
 > > > >
-> > > > While I like the idea of this in principle, I'd like to hear about the
-> > > > testing you've done on these patches.  A previous flex array
-> > > > conversion in the audit uapi headers ended up causing a problem with
+> > > > Hi Paul,
+> > > >
+> > > > On Wed, May 04, 2022 at 06:57:28PM -0400, Paul Moore wrote:
+> > > > > On Tue, May 3, 2022 at 9:57 PM Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > [..]
+> > > >
+> > > > > > +++ b/include/uapi/linux/xfrm.h
+> > > > > > @@ -31,9 +31,9 @@ struct xfrm_id {
+> > > > > >  struct xfrm_sec_ctx {
+> > > > > >         __u8    ctx_doi;
+> > > > > >         __u8    ctx_alg;
+> > > > > > -       __u16   ctx_len;
+> > > > > > +       __DECLARE_FLEX_ARRAY_ELEMENTS_COUNT(__u16, ctx_len);
+> > > > > >         __u32   ctx_sid;
+> > > > > > -       char    ctx_str[0];
+> > > > > > +       __DECLARE_FLEX_ARRAY_ELEMENTS(char, ctx_str);
+> > > > > >  };
+> > > > >
+> > > > > While I like the idea of this in principle, I'd like to hear about the
+> > > > > testing you've done on these patches.  A previous flex array
+> > > > > conversion in the audit uapi headers ended up causing a problem with
+> > > >
+> > > > I'm curious about which commit caused those problems...?
 > > >
-> > > I'm curious about which commit caused those problems...?
+> > > Commit ed98ea2128b6 ("audit: replace zero-length array with
+> > > flexible-array member"), however, as I said earlier, the problem was
+> > > actually with SWIG, it just happened to be triggered by the kernel
+> > > commit.  There was a brief fedora-devel mail thread about the problem,
+> > > see the link below:
+> > >
+> > > * https://www.spinics.net/lists/fedora-devel/msg297991.html
 > >
-> > Commit ed98ea2128b6 ("audit: replace zero-length array with
-> > flexible-array member"), however, as I said earlier, the problem was
-> > actually with SWIG, it just happened to be triggered by the kernel
-> > commit.  There was a brief fedora-devel mail thread about the problem,
-> > see the link below:
+> > Wow, that's pretty weird -- it looks like SWIG was scraping the headers
+> > to build its conversions? I assume SWIG has been fixed now?
+> 
+> I honestly don't know, the audit userspace was hacking around it with
+> some header file duplication/munging last I heard, but I try to avoid
+> having to touch Steve's audit userspace code.
+> 
+> > > To reiterate, I'm supportive of changes like this, but I would like to
+> > > hear how it was tested to ensure there are no unexpected problems with
+> > > userspace.  If there are userspace problems it doesn't mean we can't
+> > > make changes like this, it just means we need to ensure that the
+> > > userspace issues are resolved first.
 > >
-> > * https://www.spinics.net/lists/fedora-devel/msg297991.html
->
-> Wow, that's pretty weird -- it looks like SWIG was scraping the headers
-> to build its conversions? I assume SWIG has been fixed now?
+> > Well, as this is the first and only report of any problems with [0] -> []
+> > conversions (in UAPI or anywhere) that I remember seeing, and they've
+> > been underway since at least v5.9, I hadn't been doing any new testing.
+> 
+> ... and for whatever it is worth, I wasn't expecting it to be a
+> problem either.  Surprise :)
+> 
+> > So, for this case, I guess I should ask what tests you think would be
+> > meaningful here? Anything using #include should be fine:
+> > https://codesearch.debian.net/search?q=linux%2Fxfrm.h&literal=1&perpkg=1
+> > Which leaves just this, which may be doing something weird:
+> >
+> > libabigail_2.0-1/tests/data/test-diff-filter/test-PR27569-v0.abi
+> >         </data-member>
+> >         <data-member access="public" layout-offset-in-bits="128">
+> >           <var-decl name="seq_hi" type-id="3f1a6b60" visibility="default" filepath="include/uapi/linux/xfrm.h" line="97" column="1"/>
+> >         </data-member>
+> >         <data-member access="public" layout-offset-in-bits="160">
+> >
+> > But I see that SWIG doesn't show up in a search for linux/audit.h:
+> > https://codesearch.debian.net/search?q=linux%2Faudit.h&literal=1&perpkg=1
+> >
+> > So this may not be a sufficient analysis...
+> 
+> I think from a practical perspective ensuring that the major IPsec/IKE
+> tools, e.g. the various *SWANs, that know about labeled IPSec still
+> build and can set/get the SA/SPD labels correctly would be sufficient.
+> I seriously doubt there would be any problems, but who knows.
 
-I honestly don't know, the audit userspace was hacking around it with
-some header file duplication/munging last I heard, but I try to avoid
-having to touch Steve's audit userspace code.
+There are certainly some cases in which the transformation of
+zero-length arrays into flexible-array members can bring some issues
+to the surface[1][2]. This is the first time that we know of one of
+them in user-space. However, we haven't transformed the arrays in
+UAPI yet (with the exception of a couple of cases[3][4]). But that
+is something that we are planning to try soon[5].
 
-> > To reiterate, I'm supportive of changes like this, but I would like to
-> > hear how it was tested to ensure there are no unexpected problems with
-> > userspace.  If there are userspace problems it doesn't mean we can't
-> > make changes like this, it just means we need to ensure that the
-> > userspace issues are resolved first.
->
-> Well, as this is the first and only report of any problems with [0] -> []
-> conversions (in UAPI or anywhere) that I remember seeing, and they've
-> been underway since at least v5.9, I hadn't been doing any new testing.
+--
+Gustavo
 
-... and for whatever it is worth, I wasn't expecting it to be a
-problem either.  Surprise :)
-
-> So, for this case, I guess I should ask what tests you think would be
-> meaningful here? Anything using #include should be fine:
-> https://codesearch.debian.net/search?q=linux%2Fxfrm.h&literal=1&perpkg=1
-> Which leaves just this, which may be doing something weird:
->
-> libabigail_2.0-1/tests/data/test-diff-filter/test-PR27569-v0.abi
->         </data-member>
->         <data-member access="public" layout-offset-in-bits="128">
->           <var-decl name="seq_hi" type-id="3f1a6b60" visibility="default" filepath="include/uapi/linux/xfrm.h" line="97" column="1"/>
->         </data-member>
->         <data-member access="public" layout-offset-in-bits="160">
->
-> But I see that SWIG doesn't show up in a search for linux/audit.h:
-> https://codesearch.debian.net/search?q=linux%2Faudit.h&literal=1&perpkg=1
->
-> So this may not be a sufficient analysis...
-
-I think from a practical perspective ensuring that the major IPsec/IKE
-tools, e.g. the various *SWANs, that know about labeled IPSec still
-build and can set/get the SA/SPD labels correctly would be sufficient.
-I seriously doubt there would be any problems, but who knows.
-
--- 
-paul-moore.com
+[1] https://github.com/KSPP/linux/issues?q=invalid+use+of+flexible+array
+[2] https://github.com/KSPP/linux/issues?q=invalid+application+of+%E2%80%98sizeof%E2%80%99+to+incomplete+type
+[3] https://git.kernel.org/linus/db243b796439c0caba47865564d8acd18a301d18
+[4] https://git.kernel.org/linus/d6cdad870358128c1e753e6258e295ab8a5a2429
+[5] https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/commit/?h=for-next/kspp-fam0-uapi
