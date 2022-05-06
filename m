@@ -2,91 +2,166 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20B8651D289
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 May 2022 09:48:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE6F51D61E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 May 2022 13:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1389697AbiEFHvu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 6 May 2022 03:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42430 "EHLO
+        id S1350709AbiEFLFS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 6 May 2022 07:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1389679AbiEFHvs (ORCPT
+        with ESMTP id S1391128AbiEFLFQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 6 May 2022 03:51:48 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D60674F8;
-        Fri,  6 May 2022 00:48:06 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id bv19so12893072ejb.6;
-        Fri, 06 May 2022 00:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ft3fc9QL1+iQ008reNvM/ifI2x+9VqujLjdVk3BAeKE=;
-        b=OZk+O/7KtBby4smjTuDPTjrl3oDJTDhPtG5EGl8/TXE5iHBSCTMIv4DRcnawTyo5dv
-         tdYP82kIiXUngTkDdS2y1NofcKP4v/2S1CHtAksTdkCqrHFp1DCbT1v9aoXXIB6vzaCo
-         mm6hPQatzFU8dQ1Uca2EkRR7VQAaXdk5IY+JJlVTxktUE+ofK/3BDkRpsL8MBhmNOub2
-         Z0IYw6QW1sW8pCmY73iaRLLTu6FJETywMGthz52s6RtQ6kuRpQAurIAYF3zMbCFnrpEn
-         zjTd2qO99mmDTGE618ALE3847Y74DtMdLlEO80jFvIXKWHSY4kWT2Lz+pPTzM5oLCEds
-         4mhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ft3fc9QL1+iQ008reNvM/ifI2x+9VqujLjdVk3BAeKE=;
-        b=fKsXpu8ue8QVJO+amlLP0E/pdnu2rYaGljq6JUSRJX5IXTPRELlIJO/INV5kzSerIt
-         hZ7+uB2jKjvKVm35mTENMnwDQ8Ja2wLKoMUdu7d92CcEfCwzqsvF5szP8Gj9W+g8nXuh
-         ssCZtOt2GomD5TwFyCHV7uk+hgz4R3r9Fc84kdVhOUNNXUB/aK29CuoNNBd0ZqpPZHfY
-         SplLM783gSwpnO7tM5sM139OwHkkoxLgwEvSMWjM1UOY5ocSlE3sS8xzA9YdIEHybDaO
-         Eq6Ix42BFAock/23VoKpED2CAaOLJNmv0jtL0yl5IfBZOCeZobeetGgiil3lwiobKklx
-         a1MA==
-X-Gm-Message-State: AOAM532gSMtbfFQ1EbAE1Kw/MMKmYIBl60CgE5IW6yPgxviT8jeIln7i
-        vWh+Fam6RvghK5TcUfolqDY=
-X-Google-Smtp-Source: ABdhPJxT5lhpMaFwTxXFJilaqKfKKUZHKY6ygUe4sfy0YWuUtl3iNp7QH09j+YPPh1tnTwimBcK+2Q==
-X-Received: by 2002:a17:907:62a9:b0:6da:7953:4df0 with SMTP id nd41-20020a17090762a900b006da79534df0mr1858291ejc.316.1651823284534;
-        Fri, 06 May 2022 00:48:04 -0700 (PDT)
-Received: from anparri (host-2-117-178-169.business.telecomitalia.it. [2.117.178.169])
-        by smtp.gmail.com with ESMTPSA id gz12-20020a170906f2cc00b006f3ef214de8sm1602215ejb.78.2022.05.06.00.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 May 2022 00:48:04 -0700 (PDT)
-Date:   Fri, 6 May 2022 09:47:55 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] PCI: hv: Add validation for untrusted Hyper-V values
-Message-ID: <20220506074755.GA239213@anparri>
-References: <20220504125039.2598-1-parri.andrea@gmail.com>
- <20220504125039.2598-2-parri.andrea@gmail.com>
- <PH0PR21MB302509DA8BE0B347E1916F00D7C29@PH0PR21MB3025.namprd21.prod.outlook.com>
+        Fri, 6 May 2022 07:05:16 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7056266F9C;
+        Fri,  6 May 2022 04:01:33 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 437CF1042;
+        Fri,  6 May 2022 04:01:33 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.65.197])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 48AB53FA31;
+        Fri,  6 May 2022 04:01:31 -0700 (PDT)
+Date:   Fri, 6 May 2022 12:01:27 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ard Biesheuvel <ardb@kernel.org>, broonie@kernel.org,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: Should arm64 have a custom crash shutdown handler?
+Message-ID: <YnUAB9gkv5SBk4p6@FVFF77S0Q05N>
+References: <427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com>
+ <874k24igjf.wl-maz@kernel.org>
+ <92645c41-96fd-2755-552f-133675721a24@igalia.com>
+ <YnPIwjLMDXgII1vf@FVFF77S0Q05N.cambridge.arm.com>
+ <3bee47db-f771-b502-82a3-d6fac388aa89@igalia.com>
+ <878rrg13zb.fsf@redhat.com>
+ <YnPf3KPBXDNTpQoG@FVFF77S0Q05N.cambridge.arm.com>
+ <87y1zgyqut.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH0PR21MB302509DA8BE0B347E1916F00D7C29@PH0PR21MB3025.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <87y1zgyqut.fsf@redhat.com>
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> I don't see any issues with the code here.  But check the function
-> q_resource_requirements().  Doesn't it need the same treatment as you've
-> done above with hv_pci_compose_compl()?   For completeness, the
-> fix for q_resource_requirements() should be included in this patch as well.
+On Thu, May 05, 2022 at 04:51:54PM +0200, Vitaly Kuznetsov wrote:
+> Mark Rutland <mark.rutland@arm.com> writes:
+> 
+> > On Thu, May 05, 2022 at 03:52:24PM +0200, Vitaly Kuznetsov wrote:
+> >> "Guilherme G. Piccoli" <gpiccoli@igalia.com> writes:
+> >> 
+> >> > On 05/05/2022 09:53, Mark Rutland wrote:
+> >> >> [...]
+> >> >> Looking at those, the cleanup work is all arch-specific. What exactly would we
+> >> >> need to do on arm64, and why does it need to happen at that point specifically?
+> >> >> On arm64 we don't expect as much paravirtualization as on x86, so it's not
+> >> >> clear to me whether we need anything at all.
+> >> >> 
+> >> >>> Anyway, the idea here was to gather a feedback on how "receptive" arm64
+> >> >>> community would be to allow such customization, appreciated your feedback =)
+> >> >> 
+> >> >> ... and are you trying to do this for Hyper-V or just using that as an example?
+> >> >> 
+> >> >> I think we're not going to be very receptive without a more concrete example of
+> >> >> what you want.
+> >> >> 
+> >> >> What exactly do *you* need, and *why*? Is that for Hyper-V or another hypervisor?
+> >> >> 
+> >> >> Thanks
+> >> >> Mark.
+> >> >
+> >> > Hi Mark, my plan would be doing that for Hyper-V - kind of the same
+> >> > code, almost. For example, in hv_crash_handler() there is a stimer
+> >> > clean-up and the vmbus unload - my understanding is that this same code
+> >> > would need to run in arm64. Michael Kelley is CCed, he was discussing
+> >> > with me in the panic notifiers thread and may elaborate more on the needs.
+> >> >
+> >> > But also (not related with my specific plan), I've seen KVM quiesce code
+> >> > on x86 as well [see kvm_crash_shutdown() on arch/x86] , I'm not sure if
+> >> > this is necessary for arm64 or if this already executing in some
+> >> > abstracted form, I didn't dig deep - probably Vitaly is aware of that,
+> >> > hence I've CCed him here.
+> >> 
+> >> Speaking about the difference between reboot notifiers call chain and
+> >> machine_ops.crash_shutdown for KVM/x86, the main difference is that
+> >> reboot notifier is called on some CPU while the VM is fully functional,
+> >> this way we may e.g. still use IPIs (see kvm_pv_reboot_notify() doing
+> >> on_each_cpu()). When we're in a crash situation,
+> >> machine_ops.crash_shutdown is called on the CPU which crashed. We can't
+> >> count on IPIs still being functional so we do the very basic minimum so
+> >> *this* CPU can boot kdump kernel. There's no guarantee other CPUs can
+> >> still boot but normally we do kdump with 'nprocs=1'.
+> >
+> > Sure; IIUC the IPI problem doesn't apply to arm64, though, since that doesn't
+> > use a PV mechanism (and practically speaking will either be GICv2 or GICv3).
+> >
+> 
+> This isn't really about PV: when the kernel is crashing, you have no
+> idea what's going on on other CPUs, they may be crashing too, locked in
+> a tight loop, ... so sending an IPI there to do some work and expecting
+> it to report back is dangerous.
 
-Yes, indeed.  Will do for v2.
+Sorry, I misunderstood what you meant about IPIs. I thought you meant that some
+enlightened IPI mechanism might be broken, rather than you simply cannot rely
+on secondary CPUs to do anything (which is true regardless of whether the
+kernel is running under a hypervisor).
+
+So I understand not calling all the regular reboot notifiers in case they do
+something like that, but it seems like we should be able to do that with a
+panic notifier, since that could *should* follow the principle that you can't
+rely on a working IPI.
+
+[...]
+
+> >> There's a crash_kexec_post_notifiers mechanism which can be used instead
+> >> but it's disabled by default so using machine_ops.crash_shutdown is
+> >> better.
+> >
+> > Another option is to defer this to the kdump kernel. On arm64 at least, we know
+> > if we're in a kdump kernel early on, and can reset some state based upon that.
+> >
+> > Looking at x86's hyperv_cleanup(), everything relevant to arm64 can be deferred
+> > to just before the kdump kernel detects and initializes anything relating to
+> > hyperv. So AFAICT we could have hyperv_init() check is_kdump_kernel() prior to
+> > the first hypercall, and do the cleanup/reset there.
+> 
+> In theory yes, it is possible to try sending CHANNELMSG_UNLOAD on kdump
+> kernel boot and not upon crash, I don't remember if this approach was
+> tried in the past. 
+> 
+> > Maybe we need more data for the vmbus bits? ... if so it seems that could blow
+> > up anyway when the first kernel was tearing down.
+> 
+> Not sure I understood what you mean... From what I remember, there were
+> issues with CHANNELMSG_UNLOAD handling on the Hyper-V host side in the
+> past (it was taking *minutes* for the host to reply) but this is
+> orthogonal to the fact that we need to do this cleanup so kdump kernel
+> is able to connect to Vmbus devices again.
+
+I was thinking that if it was necessary to have some context (e.g. pointers to
+buffers which are active) in order to do the teardown, it might be painful to
+do that in the kdump kernel itself.
+
+Otherwise, I think doing the teardown in the kdump kernel itself would be
+preferable, since there's a greater likelihood that kernel infrastructure will
+work relative to doing that in the kernel which crashed, and it gives the kdump
+kernel the option to detect when something cannot be torn down, and not use
+that feature.
 
 Thanks,
-  Andrea
+Mark.
+ 
