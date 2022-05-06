@@ -2,127 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6A7251CE21
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 May 2022 04:16:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2E4751D19E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 May 2022 08:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1387886AbiEFBYA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 5 May 2022 21:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45526 "EHLO
+        id S1386415AbiEFGux (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 6 May 2022 02:50:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1387844AbiEFBX6 (ORCPT
+        with ESMTP id S1386438AbiEFGuv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 5 May 2022 21:23:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91929C2D;
-        Thu,  5 May 2022 18:20:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E29A62029;
-        Fri,  6 May 2022 01:20:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1082EC385B4;
-        Fri,  6 May 2022 01:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651800015;
-        bh=4sE3ggOy+dlpQdbHbeyDY3gRDDi9ok/3eqQEzCi+FZM=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=kzwLOw6JqC+w2wVVoacvJm9uu12CQct/IMjI/mjVIzNPw3m+np6ldV0/iix2ZGMYF
-         j4oMPMaBxzg7De8UdDyKDV9oHm7vtT8IoZ0AMEN/elTXUPWNTqbQWf/e4ZnR+TH+tG
-         eQVyDBzMV5g+j0hMY3bc/F813aKlvK/SwCGcBiyhV8EFr8dl74lKmtH5pQWPVcJJDo
-         oHxfdakfVzWq7X70b0RTBgU5XJntEsD8JmLkozKPCqzQMoASmssnwDeatKtq2arfUb
-         A2h0Krhjf+M7OmY8bhMeyQ7TPSsjC1e972PJSxM0SGfyJ8RGTb+1f3TH3yFKJMwAjK
-         376bYn/4cVA2Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E6C47F03876;
-        Fri,  6 May 2022 01:20:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 6 May 2022 02:50:51 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2AA66ADC;
+        Thu,  5 May 2022 23:47:05 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id e5so5402300pgc.5;
+        Thu, 05 May 2022 23:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:reply-to:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=SVrPke/lqrjA1eruVK5ZqtuF2QDsH4+WE7DbjG6xz4w=;
+        b=p5Zkf2hHffFiPP9THSRb07u7RWxN20fY/fGHkeVuflQRrjwRSBK9cd2sUeO7pql7Ih
+         eIgkGJhho1A5j8qGewXD9EiULFIRrKPe3jvxZ5DYF+wi3TXzIu1sp4Patebacss0A1MF
+         4S+Ipj3D0yzhmsbYG9bCQD9SkCycdGP3kHms8TLXeclu7ZmQulb3Qxh+xKqvpHywI0Kt
+         tb4u7jXZ4kRdFzzDGaVF551Yn4qMoWZtA38LkhVh9kLSwHQG54EhPROfqVEzEGg/kBP6
+         t+aNIs9dKzP6K315J43S7a7x+9Cm4uZYmQGdO3FXSLViXQlq3uzinNap+q0rS83JX1xK
+         CvSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:reply-to
+         :subject:content-language:to:cc:references:from:organization
+         :in-reply-to:content-transfer-encoding;
+        bh=SVrPke/lqrjA1eruVK5ZqtuF2QDsH4+WE7DbjG6xz4w=;
+        b=ccGZBGjY5ydvl2cT67jkC1rzWH6y3aWkDsteVmJAH1qbjvHznfc3o/+5p6tSpaiu+c
+         oUeDw9u3NEVRvILIAF4gNfmdHUavF8czSJPagHFSgITogQaExjVOOb+z6I1LnViv9rBf
+         kGIkXV0ipvvltdLI0Ikf8DNKhshZlVeEMWUjJmgL5Zr6Of1U9PITHS+DT/aPkl755Ukm
+         5HpdD/cHhafScwC6RV2oLT3r0BapMWYccxZ8LOK/pHSGniSww5tKsAP45o/M58w+sRV8
+         Ue3w6nviC5fDdwc+CYY91UPDVBZAYYdeywMrKNwTK16TXEPI5oGvo2S3MKifCRlFDR73
+         0JIA==
+X-Gm-Message-State: AOAM532YCMOzwPOrw1lAG5mQrWKGPozPW54m5uUHP+2D4OfjJcKaZZmQ
+        S6OJW3Jqljy7v/HPI+taxC4=
+X-Google-Smtp-Source: ABdhPJzPCYq+ZUPdXkfsCgdKUyuAi+Z0T9m4yjZSYC7CCbfoNU37JvO5+LqitStjiWBR+F5oahslKQ==
+X-Received: by 2002:a63:d07:0:b0:3c2:7317:24c8 with SMTP id c7-20020a630d07000000b003c2731724c8mr1591014pgl.109.1651819624715;
+        Thu, 05 May 2022 23:47:04 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:6:8000::e2? ([2404:f801:9000:18:efed::e2])
+        by smtp.gmail.com with ESMTPSA id y1-20020aa79e01000000b0050dc7628175sm2560205pfq.79.2022.05.05.23.46.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 May 2022 23:47:04 -0700 (PDT)
+Message-ID: <6a00a53b-0653-4f82-3f7a-7374ec9b0ab8@gmail.com>
+Date:   Fri, 6 May 2022 14:46:54 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 1/2] net: switch to netif_napi_add_tx()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <165180001494.16316.16139936183700758910.git-patchwork-notify@kernel.org>
-Date:   Fri, 06 May 2022 01:20:14 +0000
-References: <20220504163725.550782-1-kuba@kernel.org>
-In-Reply-To: <20220504163725.550782-1-kuba@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, pabeni@redhat.com,
-        edumazet@google.com, rafal@milecki.pl, f.fainelli@gmail.com,
-        opendmb@gmail.com, dmichail@fungible.com, hauke@hauke-m.de,
-        tariqt@nvidia.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        shshaikh@marvell.com, manishc@marvell.com, jiri@resnulli.us,
-        hayashi.kunihiko@socionext.com, peppe.cavallaro@st.com,
-        alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-        mcoquelin.stm32@gmail.com, grygorii.strashko@ti.com,
-        elder@kernel.org, wintera@linux.ibm.com, wenjia@linux.ibm.com,
-        svens@linux.ibm.com, mathew.j.martineau@linux.intel.com,
-        matthieu.baerts@tessares.net, s-vadapalli@ti.com,
-        chi.minghao@zte.com.cn, linux-rdma@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mptcp@lists.linux.dev
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Reply-To: tiala@microsoft.com
+Subject: Re: [PATCH] x86/Hyper-V: Add SEV negotiate protocol support in
+ Isolation VM
+Content-Language: en-US
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, brijesh.singh@amd.com,
+        venu.busireddy@oracle.com, michael.roth@amd.com,
+        Tianyu.Lan@microsoft.com, thomas.lendacky@amd.com, jroedel@suse.de,
+        michael.h.kelley@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com
+References: <20220505131502.402259-1-ltykernel@gmail.com>
+ <20220505154717.GA3526@anparri>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Organization: Microsft
+In-Reply-To: <20220505154717.GA3526@anparri>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
-
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed,  4 May 2022 09:37:24 -0700 you wrote:
-> Switch net callers to the new API not requiring
-> the NAPI_POLL_WEIGHT argument.
+On 5/5/2022 11:47 PM, Andrea Parri wrote:
+> On Thu, May 05, 2022 at 09:15:02AM -0400, Tianyu Lan wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> Hyper-V Isolation VM code uses sev_es_ghcb_hv_call() to read/write MSR
+>> via GHCB page. The SEV-ES guest should negotiate GHCB version before
+>> reading/writing MSR via GHCB page. Expose sev_es_negotiate_protocol()
+>> and sev_es_terminate() from AMD SEV code and negotiate GHCB version in
+>> hyperv_init_ghcb() fro Hyper-V Isolation VM.
+>>
+>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > 
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> ---
-> CC: rafal@milecki.pl
-> CC: f.fainelli@gmail.com
-> CC: opendmb@gmail.com
-> CC: dmichail@fungible.com
-> CC: hauke@hauke-m.de
-> CC: tariqt@nvidia.com
-> CC: kys@microsoft.com
-> CC: haiyangz@microsoft.com
-> CC: sthemmin@microsoft.com
-> CC: wei.liu@kernel.org
-> CC: decui@microsoft.com
-> CC: shshaikh@marvell.com
-> CC: manishc@marvell.com
-> CC: jiri@resnulli.us
-> CC: hayashi.kunihiko@socionext.com
-> CC: peppe.cavallaro@st.com
-> CC: alexandre.torgue@foss.st.com
-> CC: joabreu@synopsys.com
-> CC: mcoquelin.stm32@gmail.com
-> CC: grygorii.strashko@ti.com
-> CC: elder@kernel.org
-> CC: wintera@linux.ibm.com
-> CC: wenjia@linux.ibm.com
-> CC: svens@linux.ibm.com
-> CC: mathew.j.martineau@linux.intel.com
-> CC: matthieu.baerts@tessares.net
-> CC: s-vadapalli@ti.com
-> CC: chi.minghao@zte.com.cn
-> CC: linux-rdma@vger.kernel.org
-> CC: linux-hyperv@vger.kernel.org
-> CC: mptcp@lists.linux.dev
+> Applied to tip's x86/sev and checked that this can fix the regression (to
+> be introduced) by commit 2ea29c5abbc2 ("x86/sev: Save the negotiated GHCB
+> version"):
 > 
-> [...]
+> Tested-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> 
+> Nits: (in the commit message) fro -> for, Isolation VM -> Isolated VM
+> 
 
-Here is the summary with links:
-  - [net-next,1/2] net: switch to netif_napi_add_tx()
-    https://git.kernel.org/netdev/net-next/c/16d083e28f1a
-  - [net-next,2/2] net: move snowflake callers to netif_napi_add_tx_weight()
-    https://git.kernel.org/netdev/net-next/c/8d602e1a132e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Nice catch! Thanks.
