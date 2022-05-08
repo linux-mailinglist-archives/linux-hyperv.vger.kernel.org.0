@@ -2,240 +2,199 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1EDD51E812
-	for <lists+linux-hyperv@lfdr.de>; Sat,  7 May 2022 17:13:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 721D451EEB9
+	for <lists+linux-hyperv@lfdr.de>; Sun,  8 May 2022 17:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1446593AbiEGPRS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 7 May 2022 11:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
+        id S234992AbiEHPrZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 8 May 2022 11:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446592AbiEGPRO (ORCPT
+        with ESMTP id S234977AbiEHPrW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 7 May 2022 11:17:14 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11021017.outbound.protection.outlook.com [52.101.62.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3FC2D1FD;
-        Sat,  7 May 2022 08:13:27 -0700 (PDT)
+        Sun, 8 May 2022 11:47:22 -0400
+Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.56.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EEFD2AF4;
+        Sun,  8 May 2022 08:43:30 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HVSkkcGbrgTf4QpcqbR9x6oF7rtWaf4M3t/uSf1DKPRF/Fm1kFQ9hRncEM1o3sV5omt837u33uhg7g1kiE9GXsSG3GX3mseqz4L5WbqlRniobpiyvPp76FRAqmMatr9C/BCRQc3iF+IpdrVrdfohfokPiPNLFXENq3HQ/cWaCrcbJMWse6+JjZfmXiC1NSWuMsQ/9Xv1OJNdwtqzhR3CMapQkBA+4rPEMMG/wnqIsLLZdQgAqHuST9gMtzi9+hzE+WZggHD7IS3J+JAlXmISDgVhptggyaHIhuR33/HxL2gm7PLWTEXRJl4kkipmoHlL8JkWlSkFoEVEYXXSxx5hsA==
+ b=nJPkIOktC0vKkD51dyC9cg/ETtislFkNWOTFbGhg7l3WbS4pnLqUFI0425yjVhmku/POOSJg9QSb88wR3lDIL8xeE/sVYFj6z+0/BDAEJrh/8LYcoEEti8TX3w1mt6n7Kbk89e/UjnS7t3vr6BaibWYJT91KP6kc8s8tKTPslu/zQU6BAIOREH5PBvubewj8xUZAse7T1/vLkXJVQsGzMwblnLTNPpk/TFI9qWOB84NlTFr0ZqKfpJWA3yU/LmHLAAzsTFtUGh9U2SMgUBODZ2CKQYWw7qA8ZUsm6hE+sXRIac5Z6TW16ynwxi/TfYVfoNBuYg5VEbjt8xH8yvA5TA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F2+yf/0qMV+3VolXZJKdupKHHLKWPSGlE7Qbkm17iq8=;
- b=ka7V7gX0Wpk8Y+xhVQuLhhpZI1I5JGQHoiAiQaZemIYPzA6sAEbz/w9QzGEib77WCfcYMqErNhPMgtkYbohmJEdqBQEmwv653wNXWEMizZBWGqtkEL85QgYYNPB8DGUfGVf98LTBTmpcguAbaXyJoMke0aT8WqgZ0xzC9NQDhYTMD9DnnI7KYXK4oyFlnemaC4/f9kRLDTffabs8pVgWcHQejr+bo9jcEbHbG6Qb0ib9uh13R1S1Gm1Hfz8Qhcjx/8Bt7V+sEx7FEV3tUhml9zp/D49nqym+vP3qz+i6ZqdskoDv+ppkmHXIFS3qO1CWHdTHdQAfShqp5y5KUOttTw==
+ bh=Io4v1qZ4VuuDx4ZlU6GWfhMS1DUFo/uWtelqd63x/FA=;
+ b=IPrp/zbx+orGY4WuHqZ6vYqlK7VAJz0L5jEN1fpRKiCvW3iC/URujx1pUSjT15G6+r4oxzC7LIcIfAt50kiwFJpbOdNFClb4MFh20HfqfYJk8haotpu1/25qrkYTeZaCHNeqNolZ6+hI7/4Equ7zc0xtOoKAUSwC7mvXklpGsNxYGiAV8kbnMuskNS+VX9Id7NfIgc42TpFxMqs/0QlpD5nWPiSniXTEKhnl+EQ2cbWNRBVJD50+GJbPiu4iR1W8PhBdiqUx7WbmViZy1txjp9TpJcdiKt3PvewgjpV4QzjFm80U6s7gn9zseBRe8NTX1vYHRCigm96FTg8k8lWo9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F2+yf/0qMV+3VolXZJKdupKHHLKWPSGlE7Qbkm17iq8=;
- b=UbeI+gcss+mB/FnwrXslyD7ORqAyY8fVrS9+T08xGpsPxq7aF/hxdaLboW4/xanp0VxSYxPzEC1XSlgWkWRaSfc1cmPzcJ/5LYLnU3erasvXRPUgJjjvZezHObDpfWpND9AS+5v3Wh3bTFjGHhG0f7CZrNBSOm58XCvB9Kj+vgc=
+ bh=Io4v1qZ4VuuDx4ZlU6GWfhMS1DUFo/uWtelqd63x/FA=;
+ b=HuMOotT66vEJ8HZSu6dXTw2HZTCyh7em6EhJZp1pxczNTYe1phiis+dBSSYD68KQi6R5OgQKoRc/nnZxL5/TQYbVmDmCnhyRPkVVYd5NRc7mfK+YZRC5KjYsgl2gWioiWSHUxSj6xo95yCo8YZ+SsxxmEtAGlWvnku5RbDUJVek=
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by BL1PR21MB3355.namprd21.prod.outlook.com (2603:10b6:208:39f::11) with
+ by PH7PR21MB3239.namprd21.prod.outlook.com (2603:10b6:510:1db::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.11; Sat, 7 May
- 2022 15:13:25 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.4; Sun, 8 May
+ 2022 15:43:27 +0000
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::dd77:2d4d:329e:87df]) by PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::dd77:2d4d:329e:87df%7]) with mapi id 15.20.5273.003; Sat, 7 May 2022
- 15:13:25 +0000
+ ([fe80::dd77:2d4d:329e:87df%7]) with mapi id 15.20.5273.004; Sun, 8 May 2022
+ 15:43:26 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Shradha Gupta <shradhagupta@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] hv: hv_balloon: Fixed an issue in the earor handling code
- if probe failed
-Thread-Topic: [PATCH] hv: hv_balloon: Fixed an issue in the earor handling
- code if probe failed
-Thread-Index: AQHYW6yhjP3rzhGGekOq2Q4DOOtaJK0Tf8qg
-Date:   Sat, 7 May 2022 15:13:24 +0000
-Message-ID: <PH0PR21MB3025EB93E33F29C913CA4193D7C49@PH0PR21MB3025.namprd21.prod.outlook.com>
-References: <20220429093635.GA4945@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To: <20220429093635.GA4945@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+        vkuznets <vkuznets@redhat.com>, Dexuan Cui <decui@microsoft.com>,
+        "drawat.floss@gmail.com" <drawat.floss@gmail.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "deller@gmx.de" <deller@gmx.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Subject: RE: [PATCH 0/4] Remove support for Hyper-V 2008 and 2008R2/Win7
+Thread-Topic: [PATCH 0/4] Remove support for Hyper-V 2008 and 2008R2/Win7
+Thread-Index: AQHYXkLb/0Gxv7HlzkaWTmgmFwYc5a0O+reAgAYm6dA=
+Date:   Sun, 8 May 2022 15:43:26 +0000
+Message-ID: <PH0PR21MB302590D20E95D9076FDA9C99D7C79@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <1651509391-2058-1-git-send-email-mikelley@microsoft.com>
+ <20220504172307.GB1623@bug>
+In-Reply-To: <20220504172307.GB1623@bug>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0e77974a-034e-406a-9052-3104d94ba396;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-07T14:05:56Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8b1d71e0-6984-4f3d-8c15-012dd89651d7;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-08T15:19:56Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e972b6b8-6138-4beb-89c7-08da303c21b7
-x-ms-traffictypediagnostic: BL1PR21MB3355:EE_
-x-microsoft-antispam-prvs: <BL1PR21MB3355D6B916121C25F4AC9FF7D7C49@BL1PR21MB3355.namprd21.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: f4c30418-69ff-4c7c-2632-08da31097e0c
+x-ms-traffictypediagnostic: PH7PR21MB3239:EE_
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PH7PR21MB3239CB83092CA8E1A2459B38D7C79@PH7PR21MB3239.namprd21.prod.outlook.com>
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ye0+BZMt/FB0+E9rQmitVWYz1L8wuRB6unMeJzz9pj7PvR16UTSFW39WD2lQt2ETScSEsf8HaoTvTvtPhi3+ym9Ao67gOqHLS5P68qnDVUBSQvWoKYcx7V8+d9oj2ntJMDPMu/XKKUveNk9ZL2kzZ0tpQbYPJb2qm1vQ/q0OlOKDeDu0btpht5hJyJHF3CIqiTD++zfxK7wA7bIS87BSQHH6Qbm1hzX1CsHhhaTPdRLI7qWFcFCv1wUuctdkWs54qiy3k6RbCj2jfYCAxcqg6E6q1BBHDeaAmQzrP3K9IhU4bSU/RJNKlXMEHRSuHrHFqlahYM6BNE1EyGjzDy/QG2f9GhAcPtvT+6SzNPYOiiON5YWhIMZRLnWVJoBlCFdY3M69Br3RqGPJynXiT77TzKKoi+06WE6lnakILOooRoVs8V8S76UypZMM7MIPxv6FpD0EXnL2Ut+ptQ/Z/S3+QOmASwylGUjsZfdZZiJLdafICTGApqE4uURRnSdJAniH4zDnEgHHWigF63rRhIIiK8G1Wz0LYwu5WYjVbcMov56/l+bsUsIdI1JWC9Rk2Bzrfcpov14ND3yBam+tABmmCtGRMTHfpPWVi4746U6ARG93jHczAOBZieba6gXE/qlnsbLi4Eafn8d4iPzEA5fA293Rd4aX3d22NUOkq658aDg3QHSJLReL1fNrKB2HdVJubSZViItlbFaF7u74qet4A6zbSkynIIoyocPfeMGNCsYgORQhB74N+JI3dK3Dn/Wb
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(83380400001)(26005)(122000001)(82960400001)(6506007)(9686003)(82950400001)(8936002)(2906002)(55016003)(33656002)(52536014)(8990500004)(5660300002)(10290500003)(508600001)(316002)(110136005)(64756008)(66446008)(71200400001)(38070700005)(38100700002)(8676002)(66476007)(186003)(86362001)(66556008)(66946007)(76116006)(7696005);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: 0luIiSe8Gt3sGlai75oT3tOiz+OBwbIR7T22Ob5SOi07oTGE9EQXsdrZku4hR8YCv0IWWNEpNHf0fn6kohThwtyCXlGDXYgB7YAkSJ8IPpvrLpWzKTq0cc6pA62NFCpg0Qn1s8KbNW3C3siIGeZuLPHtrAazQNFdHFNwkwSaaBQW8dJBp/hSJoZEdJ3CoXBluPaPispKSaW456xAX/Mu46HWkiuoXgsau4DoKfQ+g0Wxb5wufkqsPCwcRQxhAt8mtnOQ4qJbnIQkJNnae0+clNRNqH/5vKIF1vK+t0MnqqPXjDRRzmLwvgwLTss8P3eZh7Co07EDaWpBNl0lsHPtyTMhD4hzwQobQLaUylQ3NCyfr1hGTmKgiV0PaOSoVk4HyNSkEf/vmCsGum5mN4VEZd0hchG8blmB8a+NWJBcYEL6aQHEMiAmeX+cTCmp10pWFI74FKMPX5Ky89lwknXIuwrs+VVCY1qg6S/ZeuS7wNW3KI8cLo4tRYj1haqm5MfA/0HlAqy43ebrIX/WVB7X8JFiLX7xDfZNbGQiisNLNlpLY/fgYLatBKfiWsGnjjL0/jBC4ujfHANKzbw5f7IeFmkWdUeKuxt8zlrWv8CR2Y7BVPxzzJgd2XyaT3tJVx97iWRs0pO3QwTI0sMQn+5+SzN4cRVmlXlY4Paa7uHJ3qITGjnzQYapqLfNbFbXkMO8KhN5wzOULWXX0ruH2l4a6+tnZ2sDjb41ycCyM/lbC38v4XRz4mYcfC/j+Yy4CmKl
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(508600001)(71200400001)(6506007)(86362001)(186003)(26005)(7696005)(9686003)(2906002)(7416002)(5660300002)(83380400001)(8990500004)(55016003)(82960400001)(82950400001)(122000001)(66946007)(76116006)(66556008)(10290500003)(54906003)(316002)(6916009)(38100700002)(38070700005)(66476007)(33656002)(8936002)(52536014)(4326008)(8676002)(64756008)(66446008);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?K/70jXQeDl3OUKrnctAryp5bW5vJpOTxWyX5Tzq6v8tcz2WPSHCcd7x2jB3q?=
- =?us-ascii?Q?h0rIZIbePhnoK6sewhIFBQ5XyDwIXJXHTuLEaqeLf7d7CI3vRwBnVWANXXYb?=
- =?us-ascii?Q?ZWiv7yM6A5zgF4eZ/sixhWomxkXUB/gXWR0Lypm2/mV+b5S+B7tKlBjbC99P?=
- =?us-ascii?Q?5yl+eCyF0CUjqqJ7pYqgjk15KJFC7zxZVqhl5LphAvmNmuyXOKGHJ/JmS8jh?=
- =?us-ascii?Q?EIKGnC3PBIa1lyNIF7OECEqYgql3FTGgFKvUXYHQURevbPP2Kl/+3iZM2pEI?=
- =?us-ascii?Q?tvPSAD3AGcU9rps0dzHBDwh7hguzkl/cIeyRzCM1CNzQgEeI6Xz1O3/h1XtI?=
- =?us-ascii?Q?QjdoxVohRag1ZgejgGDZ5OgqZQJ29T4EP/Pq7Ty8N3Ch6XLKuUo3MIzoEG39?=
- =?us-ascii?Q?QPNdLlaHLL9wr81kiP7TOglXREvK2HKEun9IfQd9LHxjA+tn/m+ivQltV21Z?=
- =?us-ascii?Q?lh6VHjy3TBVGTFL13yJKEdPYPT4AsA654GDS43grtlKqq8bmT9N95sqqco6U?=
- =?us-ascii?Q?bEbCAa8z6L1Q0iJAibLbn3h603NVBJKtx1nDP9Bl5of/jSAv39un7Mo862rO?=
- =?us-ascii?Q?E1ti5ghnLDpeBRc6lNO8WLdWzOB6dd/wL2f9IILe2kng1xqzJq3V3sa9kEgS?=
- =?us-ascii?Q?ofy2HzTv6KhkSGW/xkqIvB1VLnP9J43NK7Gqr2TR3RMCSPosCnunleQ12ydT?=
- =?us-ascii?Q?8EE3rPrhuoyfIvyJI6tICzbKqMuPosPLafSIStoCkBoWBqO8sGncYHBj+57C?=
- =?us-ascii?Q?BxDDcFGGxT7fXqYtzmYG+lM2NIQSx+v/PEVGHg0Zwo8k/1iDaj1AZ0T4Lrls?=
- =?us-ascii?Q?R9X/R8Z9RaV+P8oSLPTL+D0TCGRYwDYWUbxyLGemeOEZ1uzlg/npZncUM9jD?=
- =?us-ascii?Q?JXYK3oU3UI94ZAMgAkBjhG+9vy9pX86G17u5tbPSDnCuvQ+UqRJxb/yNxai8?=
- =?us-ascii?Q?QmBwfzwK5axaMAYDpdpyUGzapK60eEA6UXMtZ7ayvX4Z0kF8L36G4dS254ur?=
- =?us-ascii?Q?nzwXL7qJS60CIrWvvuaPA/XGqBI7YwzlQ5XWjKWdG09Q1GX59eqN14tj6kXL?=
- =?us-ascii?Q?hU4+Y6BlTm4Ts4zLufnCaVvbQTVLPYhPc/RGYz/u8FLidg7YSMQIVmTTOqaG?=
- =?us-ascii?Q?42CUldQL29TkMgxaCRmcerAkIBNh1nNbX5Cxm2zxJ6+S+oMrpiaBAi9/kMVn?=
- =?us-ascii?Q?5464krrr4dc9nb+RhlEhkxK9fJEOH3qokm1CJuFGjwMxe0oPqDJlG0tQ5PBT?=
- =?us-ascii?Q?onASO8VsmiIZtWq2H2cPBzQ1kouJklrqa++s/axn5UZlKmcFpH4jRuUI0RCS?=
- =?us-ascii?Q?4NXl2uzC3Axhn9IIB+2IQLRvG7yDmPI82PXdlHAZp19GiAP2ERm5DGNP6Nzt?=
- =?us-ascii?Q?Un55cUMobREBWFyIsKV6/5US6G2QVlKXU2P/NYmgwTVMhIShNtw7v0nihOzW?=
- =?us-ascii?Q?XPa9sc7Y9Hdo9WTm/G3TtruGdgQytd5yHiZ4q90CJimKWjrqyhlmExTRcFJj?=
- =?us-ascii?Q?uhJ8K44HQvNonynuftMk9+bEdAeAGCImK1EFph3VdjuXFsaeyVZK+9LW84a0?=
- =?us-ascii?Q?+yWxKD10SKK626wxEEbzfqiRKaUC0Z9BK2SHKRjx6egDiQXzPK8bjKZ+Dowo?=
- =?us-ascii?Q?DhGvLuWd2vz0I/wV1bKch7vNC4Y1WhOBiWq+QvtlsNRDwmlDPJPk9jbkHqrI?=
- =?us-ascii?Q?pco/WeGODvP6YWU+a1VdliV3J46P49eyp+LsdG2vpn2cyLEh8St109ZvdnJT?=
- =?us-ascii?Q?CDXtGLiNPzIpZR2xxYGXzLan2ELpfOk=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Tapt2rRKKa54NJyQaERGxzr9DrQliRPnnuz0Z7EsGPFsQyaZjlgYUijrJibi?=
+ =?us-ascii?Q?OKX8kEJBF5BRpj9UNZthvu94wz8xnJrsdBAbuEXzzhypjshDS2ZqZDkg2bOM?=
+ =?us-ascii?Q?nVtx+f/5TQZlH6GH48hPML0WLT5f5ttLGG7V1AXDfMJg+xR+fHKkSdwx/vSz?=
+ =?us-ascii?Q?894uAmNylQjK0wBJ5nPxGHJnpW9k9h+AbC3RpVIF6cIlKdYOp/LjaSHl5aeL?=
+ =?us-ascii?Q?RLBpug4yW9GULSVJpxfeya6fEZkhSdoDEZkLou/vStm+5TDV8oJNRJDjGaRS?=
+ =?us-ascii?Q?MXqb7kHemNYEnGpXmBk4YWGaZTlX460wxMMxvUkdhkK3JAc3v1Yep5j66x1d?=
+ =?us-ascii?Q?XtDdoVC5mVzf+y+Dblob2mplxwkaESVYYmhMpF62R34ISwOLfhQROjNickKd?=
+ =?us-ascii?Q?vnSq/GBgEQ4W/ASE72AqPrzpuxqnkRyFXfJL+Czp7/4wnlSU14c6HDqfnWI1?=
+ =?us-ascii?Q?4x9iAuOtO9FuSZnkr2ImxxpcniqLEMiv2MZOuUQ7Xd2pzdo3iYuL7ulWHWxv?=
+ =?us-ascii?Q?US2N8LkMFfK2v2SYwWe8VxH0BBjm3YkZVd1C6Sc0tuyapTPDwVNNcZwhV41c?=
+ =?us-ascii?Q?wrHxDXyJDhg/4aq3tlqnRE3S9c08surcMxZ4Hp6ZZ8DbgTltAdsnRIXQfg3G?=
+ =?us-ascii?Q?AXssk5Lbuwra05YBzk3MVukUDA5cVUOQ1JS3jWLm7hdfaB1qINWy5/GM2pkS?=
+ =?us-ascii?Q?yvNV19wY5SgvaQwA68ibn27plK2r0/xVb7xZskLVeP7/4Gx5tZfogreQCUpp?=
+ =?us-ascii?Q?3M4IDnB0THcnJYatgz2yOI0W77671aYx/Noa5QP0CGaK9BHwv6IqYcOxLNYK?=
+ =?us-ascii?Q?27ikyB7cphzE8bh+g/Uwxoq36CRzMiHjXw28fA8lv3Av3ZmqERr5YHizocIi?=
+ =?us-ascii?Q?eT2DP+OzaoBMogjFc3L9NiOo927W7gdMcAwu2pxa8Z7WMldfeKdzs4sB3Qn9?=
+ =?us-ascii?Q?aRFy3xNHnyFoLd3ZIXgy93uIUVLuw3ogi4DnpNh//iu3Vum+UCP69b6u8Mtu?=
+ =?us-ascii?Q?8hae4R9rva5a5/ilAtn/WPopAuYIU2iKartku82KsWGRaj7yTR3QWxjgVatK?=
+ =?us-ascii?Q?6+CDQOTV+73mLPIPNU16QKgAlsa/6bKVhJYCMCj4zsTvglwVenG3ScvRR891?=
+ =?us-ascii?Q?ij8HnzwQ05cVX++0eVFEi+oGpBU46aDe6ObiYWK8Tk71OmnkGLzgVwVetmzd?=
+ =?us-ascii?Q?9ki6EacHiMhQqz0JCfs3Tq21jMt+ptVbwqzWWli0ADR+FyWVWLPGkFZut9ja?=
+ =?us-ascii?Q?qMACnqf+txRTI7lXfLUbD4rJ/3LMK5TFxyEHmdLwRpL6MXVV818PU5proT3A?=
+ =?us-ascii?Q?OTSYNwm6rjuslxQpspSmC7m0grERlD7Q3ddjR+bHZVcHerO7KjKF7A4bO17c?=
+ =?us-ascii?Q?beI9e8n2KAs8wzNV4F9oU49ODRjeJjJLHYI1yiEF/Kemy1U8N4NV08iHDc5o?=
+ =?us-ascii?Q?XWUnVCMlK7VQn2TxARV3stwml+enV4BAOi8OMJge+mX/T6LdsfcIlSDvKOuU?=
+ =?us-ascii?Q?/+p2K9mOy6ANA53EOwX1olgqZ8fDjucv5zJbuPeEIA0VaOetZHOnmHr1Q2NX?=
+ =?us-ascii?Q?2hQhLrFgBQ0xhtXL9xpRkBHeT0W4BLLQKpW6XlgUlzxjRzrSy5Pd2l7t1G+i?=
+ =?us-ascii?Q?PvEVIEEHz0ThgZp1cmw3K+VBPtVa9lMtNiYHJoNch3nMmybbK1LnUHA7k0YX?=
+ =?us-ascii?Q?mHA2vNM0RAwJM4QgfvePZfhWsgK1keKo+8uyF65UsDPjCtnM0aM1zwLxzAln?=
+ =?us-ascii?Q?BUs5ZVeDoWeyezUA+hYWqm6rk/ww/wg=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e972b6b8-6138-4beb-89c7-08da303c21b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2022 15:13:24.7643
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4c30418-69ff-4c7c-2632-08da31097e0c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2022 15:43:26.5088
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f1D+Rw+sF3iTZeXl0tz1iRL+OpEgcSps59jKqmBmhaCPNjB22RE9lWAsRn+Fi5kUoDCT9Le/RYfYbKBa5PeUd8Be/6+Ayx/LefcVQoeAYUQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3355
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-MS-Exchange-CrossTenant-userprincipalname: TO0BucS/nes4teMlv23YTecINYjeUBXD7KDETcJyW70fU5CV+LNoBImXzOJ1uwAcm6KT4NMu0oZRZ7JqI7OW+3EIu8XeHjChDcxQ50UFq2c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3239
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Shradha Gupta <shradhagupta@microsoft.com>
-> Subject: [PATCH] hv: hv_balloon: Fixed an issue in the earor handling cod=
-e if probe failed
-
-Typo in the "Subject" line --  'earor' should be 'error'.   Also the prefix
-to use has varied historically, but is either "hv_balloon:" or the full
-"Drivers: hv: balloon:".   Use one of those two prefixes rather than
-creating yet another variant.
-
-And let me suggest simpler wording.  For example:
-
-hv_balloon: Fix balloon_probe() and balloon_remove() error handling
-
+From: Pavel Machek <pavel@ucw.cz> Sent: Wednesday, May 4, 2022 10:23 AM
 >=20
-> If the balloon_probe() function fails, we do some cleanup and similar
-> functions are called again when after this a balloon_remove()
-> call is made. This fix makes sure that the cleanup is not called
-> twice. Also made sure if dm_state is DM_INIT_ERROR, the clean up is
-> already done properly.
-
-I don't think this commit message is quite correct.  There is indeed
-some missing cleanup in balloon_probe() if balloon_connect_vsp() fails.
-But if balloon_probe() fails, balloon_remove() will never be called, so
-there's no duplicate cleanup in that scenario.
-
-But if balloon_resume() fails, then balloon_remove() could be
-called at some point and mistakenly do duplicate cleanup.  That's
-how balloon_remove() could be called with dm_state set to
-DM_INIT_ERROR.=20
-
-Also commit messages should generally not use language like "this
-patch" or "this fix".  Just state the change in the imperative
-voice.
-
-I would suggest wording such as the following:
-
-Add missing cleanup in balloon_probe() if the call to
-balloon_connect_vsp() fails.  Also correctly handle cleanup in
-balloon_remove() when dm_state is DM_INIT_ERROR because
-balloon_resume() failed.
-
+> Hi!
 >=20
-> Signed-off-by: Shradha Gupta <shradhagupta@microsoft.com>
-> ---
->  drivers/hv/hv_balloon.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
+> > Linux code for running as a Hyper-V guest includes special cases for th=
+e
+> > first released versions of Hyper-V: 2008 and 2008R2/Windows 7. These
+> > versions were very thinly used for running Linux guests when first
+> > released more than 12 years ago, and they are now out of support
+> > (except for extended security updates). As initial versions, they
+> > lack the performance features needed for effective production usage
+> > of Linux guests. In total, there's no need to continue to support
+> > the latest Linux kernels on these versions of Hyper-V.
+> >
+> > Simplify the code for running on Hyper-V by removing the special
+> > cases. This includes removing the negotiation of the VMbus protocol
+> > versions for 2008 and 2008R2, and the special case code based on
+> > those VMbus protocol versions. Changes are in the core VMbus code and
+> > several drivers for synthetic VMbus devices.
 >=20
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index eee7402cfc02..7c62c1c3ffc7 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1841,8 +1841,13 @@ static int balloon_probe(struct hv_device *dev,
->  	hv_set_drvdata(dev, &dm_device);
+> > 2008 and 2008R2, so if the broader Linux kernel community surfaces
+> > a reason why this clean-up should not be done now, we can wait.
+> > But I think we want to eventually stop carrying around this extra
+> > baggage, and based on discussions with the Hyper-V team within
+> > Microsoft, we're already past the point that it has any value.
 >=20
->  	ret =3D balloon_connect_vsp(dev);
-> -	if (ret !=3D 0)
-> +	if (ret !=3D 0) {
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +		unregister_memory_notifier(&hv_memory_nb);
-> +		restore_online_page_callback(&hv_online_page);
-> +#endif
->  		return ret;
-> +	}
-
-Rather than coding the cleanup steps directly under the "if"
-statement, I would suggest using "goto connect_error", and adding
-a "connect_error" label immediately after the vmbus_close() in
-the "probe_error" sequence.  This approach avoids some
-duplicate code.
-
+> Normal way to do such deprecations is to put printks in first, then hide =
+it
+> under config option noone sets, and wait for year or so if anyone complai=
+ns.
 >=20
->  	enable_page_reporting();
->  	dm_device.state =3D DM_INITIALIZED;
-> @@ -1882,12 +1887,14 @@ static int balloon_remove(struct hv_device *dev)
->  	cancel_work_sync(&dm->ha_wrk.wrk);
->=20
->  	kthread_stop(dm->thread);
-> -	disable_page_reporting();
-> -	vmbus_close(dev->channel);
-> +	if (dm_device.state !=3D DM_INIT_ERROR) {
-> +		disable_page_reporting();
-> +		vmbus_close(dev->channel);
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -	unregister_memory_notifier(&hv_memory_nb);
-> -	restore_online_page_callback(&hv_online_page);
-> +		unregister_memory_notifier(&hv_memory_nb);
-> +		restore_online_page_callback(&hv_online_page);
->  #endif
-> +	}
 
-This case where dm_device.state !=3D DM_INIT_ERROR can only
-occur when balloon_resume() fails.   Looking at balloon_resume(),
-its error handling code has already done the cleanup except for
-disable_page_reporting().   A call to disable_page_reporting()
-needs to be done somewhere for this case, and for consistency
-balloon_resume() is probably the best place.
+Are there any examples of doing these deprecation steps that you can
+point me to?  I did not see anything in the Documentation directory
+covering the deprecation process you describe.
 
-I would also suggest adding a comment just above the new "if"
-statement you've added, indicating that the case being handled
-is when balloon_resume() fails.  Again, balloon_remove() won't
-be called if balloon_probe() fails, so it is a little bit surprising
-to end up in balloon_remove() with the state being DM_INIT_ERROR.
+I'd also make the case that we are already well down the deprecation
+path.  For at least the last 5 years, the public Microsoft documentation
+for Linux guests has listed Hyper-V 2012 R2 as the earliest supported
+Hyper-V version.  Other current and new Microsoft products aren't
+supported on Hyper-V 2008/Win7 either -- the usual Word/Excel/
+PowerPoint, etc. fall into this category as well as Windows 10 and Windows
+11 as guests.  So for a rare user who might still be using Hyper-V
+2008/Win7, there's no reasonable expectation of being able to run
+the latest upstream Linux kernel on Hyper-V 2008/Win7.  Other
+current software doesn't.
+
+Given that running Linux guests on Hyper-V sort of implicitly
+combines Microsoft commercial thinking and Linux open source
+thinking about version support, I could see putting the old Hyper-V
+version support under a config option that defaults to "no", with a=20
+deprecation comment, and seeing if that garners any complaints.
+But given the broader situation with Hyper-V 2008/Win7, in my
+judgment even that is more cautious than we need to be.
 
 Michael
 
->  	spin_lock_irqsave(&dm_device.ha_lock, flags);
->  	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
->  		list_for_each_entry_safe(gap, tmp_gap, &has->gap_list, list) {
-> --
-> 2.17.1
+> We can't really remove code that is in use.
 >=20
-
+> Best regards,
+> 									Pavel
