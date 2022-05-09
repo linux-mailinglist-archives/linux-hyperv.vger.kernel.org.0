@@ -2,296 +2,157 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30F1152012D
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 May 2022 17:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADF85520158
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 May 2022 17:45:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238363AbiEIPfq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 May 2022 11:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41946 "EHLO
+        id S238593AbiEIPsv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 9 May 2022 11:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238342AbiEIPfo (ORCPT
+        with ESMTP id S238415AbiEIPsu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 May 2022 11:35:44 -0400
-X-Greylist: delayed 484 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 09 May 2022 08:31:49 PDT
-Received: from esa5.fujitsucc.c3s2.iphmx.com (esa5.fujitsucc.c3s2.iphmx.com [68.232.159.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576B41BE10D
-        for <linux-hyperv@vger.kernel.org>; Mon,  9 May 2022 08:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1652110310; x=1683646310;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=xS2ZDM92CvkpLSnJq7Jznk26/ZMDw29ra/drEifi+4M=;
-  b=hNeciEQe27y7CV/MwYoZKeEgOrketSq0Us0l+KWkzlEQE8Afq2ppBWqc
-   USbiGSHH0vNSnBy5i9PfCmT5Aq5bLuCAayAnfFbju0gmhO32LkWwoxvCC
-   ySobAIQ1JJ8v6KJmnrPjXK9FAL68gEJSFvwI4E6N4dfxbs4i/eqoHqtIN
-   GkdhJVbcEtyqRdYBf3BBA1yfkdMQqm7xcHpNvCrQjk8iP+3uHbzWgPz8y
-   gfb9zxMsQOkABjq/NqvFYW/geV35WNzFS7O71/HfHKW76GYEKk7ndOJTb
-   h/Bi8tKe1bEZ+67Np4YKb0OKtXCNNRve3Ccg4tkiI5EDd44RKq8/Fa3fE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10342"; a="55509155"
-X-IronPort-AV: E=Sophos;i="5.91,211,1647270000"; 
-   d="scan'208";a="55509155"
-Received: from mail-os0jpn01lp2110.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.110])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 00:16:12 +0900
+        Mon, 9 May 2022 11:48:50 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020018.outbound.protection.outlook.com [52.101.61.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFB3248E25;
+        Mon,  9 May 2022 08:44:55 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KP0CFKYRNmTXTmwL9JG0oC4GQgkB/pl4TAXCxaquTQi2mpfikgwQYy0i8q2i6vPeVpaH2GuK7gBuR63t1JW1LUNFxAjNVersbC9h8TdiBjflezHpU53Q82lnXPLv4wirYyJRKEuA73ZQCrb57ZakIuUVwqcJ+JrPKcYeATrnxhN28xpHXiJO2rffSK1Jw5uxRkQfFPudZpwdXRfmJr8fD9Fp4hSxcYDf9d2dYPWTHymwX3/ZrvUs3NQQnno5t2u1Tkf53IqwaAxjVtkhkHSIHVvIL8BkcyVOYUH1NXbXYQQxKeT5PLbIV2LxAq3TnGTE4TncUGKkynpMGLIjrmygdQ==
+ b=Maf6WrImUpSwew+c1vtIc9cXsLMvBuc/ZwMurFV3HHYFzokyzYp3eHuxBpBW486wzH4SZuH3h6fd9OwO9IRMZvgzeA4Gw0U43RkyMoMYMOnNjf2Paf5D9lZNoBpjkm+5qoI3GFtRJgGt1jxYEOK8fjWhKVzrKOPz4na3UalXSYjMf939CiR7xiLDiB8Pc6mOFY4Y/wRX6qj2GwZ+2Z0ozeSbB7Jm+WFbWvzKqN2P3ZQ0++zOHuEyRqY/k6QnmxMIV25IxAc4BlOXmbxaDICWFbNM1SUWF8v1V9+lqUJlQWpdxqCLlJgJhiHpb76n1arlAOysPRSuI6U27SkNp9uNbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MlXVxI2FnzGbvIu/CWm8gKBJ3ZWwolqRQs9xSfL0o60=;
- b=H+1Tk6iUFRaot1orKC1GRgl1SqDJXk5D2hXPcq48LhPh7gXvRwAju3ZJFbMzj6OjqSUOxrUqwP5QxUHlUtIwQf9Sbv11I8FuhMTDnHm9jTlJ8XnYR8eRZuGiGabL9xVnbfLrXmvTitKevsolEAyiCz8BKyZgayo7SIJbDtYciudVYTh5smc2WUV4/Xf5hw9rGx7ax2cfKXWimUANarDTZNV/KntgpM+JGW52DuY0ow3ik4XUuMIis57FWFq1Ij/VGkKE6W9VYUcyujJ6hW+y+zp3dDojEsR4nIytU/riRvA36esOaKgCTxTbJmvx932z0jUkCFfaf4RSuOsaN4+Itg==
+ bh=RzRA2V9vqI+OVzyyxRNmHHBpbTde/RWyLzB04bZWcQg=;
+ b=MrsPb8m5Lrj427MbkbIycVHNjEtX0SuDs0uQFZ+6AHzox3uylY+E0Nh4vw73R+mf2rE8MZfzukG1XnGlU0hvdxLO8BXiaoncVuihRSMncBce7a9+iY7kiEbycKIlDevUM11Kq51ttrgK+v5MV/RbsoawZLCBqxxylyNdecCviBPM0wpyQf13Sz+j+xleOQcfZiwf+AoVopJBJBRHyWr8jugb9RuwaR5BW1yvgX1SUKtKySPmJYLpSVq2yEXoKpnyTRSgsrjedTN48Uv7ht9t+7K83dReO8Z0GZNiZmQqm4CP8EAGiYx1pOM+34ASsgtPJ9flCf/rYMHkYxKYoAI03g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MlXVxI2FnzGbvIu/CWm8gKBJ3ZWwolqRQs9xSfL0o60=;
- b=h3jSOTQ/49e3CdAkGQmnT0kRfsZxVeHwnmHFjQIrg5SEwgadX6SIM218KZ4TTXnCicgDCVAuNJ5K36tGTV1PjiR6VVO4vPyaEXnMWkJYWxSMBENMBLbvoa90+8Vm3enWQ2GtCp7sSMFxA1XVsdggp5hIBlPRt0gWqyL7U6Qy1YM=
-Received: from TYAPR01MB6507.jpnprd01.prod.outlook.com (2603:1096:400:a2::7)
- by TYCPR01MB7578.jpnprd01.prod.outlook.com (2603:1096:400:f3::9) with
+ bh=RzRA2V9vqI+OVzyyxRNmHHBpbTde/RWyLzB04bZWcQg=;
+ b=bfyyByxRYlnmcIBDRlFvApPG6PcxVszfWk+hvOKd0nzkga8jpTff5Q5zges6r/uCggAQ2KmAALbaBM+0gcb7UWVemVEBZOzKy4wNLBcN/AnyrL14iHdNhLXf+iaxv11gELW0cD47tDTeQhQlgfadnRil+VHifobEQI9diuUoWHk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by MWHPR2101MB0873.namprd21.prod.outlook.com (2603:10b6:301:7e::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.18; Mon, 9 May
- 2022 15:16:09 +0000
-Received: from TYAPR01MB6507.jpnprd01.prod.outlook.com
- ([fe80::dd9:8ea4:f7a3:bba1]) by TYAPR01MB6507.jpnprd01.prod.outlook.com
- ([fe80::dd9:8ea4:f7a3:bba1%5]) with mapi id 15.20.5227.023; Mon, 9 May 2022
- 15:16:09 +0000
-From:   "d.hatayama@fujitsu.com" <d.hatayama@fujitsu.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
-        "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
-        "halves@canonical.com" <halves@canonical.com>,
-        "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
-        "alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "dyoung@redhat.com" <dyoung@redhat.com>,
-        "feng.tang@intel.com" <feng.tang@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "mikelley@microsoft.com" <mikelley@microsoft.com>,
-        "hidehiro.kawai.ez@hitachi.com" <hidehiro.kawai.ez@hitachi.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "vgoyal@redhat.com" <vgoyal@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "d.hatayama@fujitsu.com" <d.hatayama@fujitsu.com>
-Subject: Re: [PATCH 24/30] panic: Refactor the panic path
-Thread-Topic: [PATCH 24/30] panic: Refactor the panic path
-Thread-Index: AQHYWooYRc5K2GmPwUyqsvUuWmK42q0WuNLD
-Date:   Mon, 9 May 2022 15:16:08 +0000
-Message-ID: <TYAPR01MB6507D01F5694BC33628BB7DB95C69@TYAPR01MB6507.jpnprd01.prod.outlook.com>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
-In-Reply-To: <20220427224924.592546-25-gpiccoli@igalia.com>
-Accept-Language: en-US, ja-JP
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=True;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2022-05-09T15:16:07.522Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;
-suggested_attachment_session_id: 7401546d-aea9-ffcc-3451-b3d59ad5888b
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cb59992a-950f-4d9b-bb1c-08da31ced84d
-x-ms-traffictypediagnostic: TYCPR01MB7578:EE_
-x-microsoft-antispam-prvs: <TYCPR01MB75785B3922D747397677C56195C69@TYCPR01MB7578.jpnprd01.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /EPiPQ1iE6MAZZ3/WceQFfMaYOr3hQFI/B3njzUVTDpd2qqrdleVcVSpf2FVTxNNtbalFncurAfPSJh1TGekcVWhzGdngBQ1+1y4fpWxXGD4YbqP27hsV7t4f7edAJIa9NqvJ6n7aibYfCzJx3iCrgiakRvsQh+iG5l9bKWYIK9lR7U4sye5Ffr14bJM2DpODKZvgppK8wyMgyMnjj9zz9lKGpjtILIclyn9Cfxq7iI638lUEA+mX4g4zSn1iKbKIJuWOJ3wgQ4jYqCBsSjpaxF1HlO5mWp7q0WJMtlCD0BjB0ch6tZlY4AQFxnYjeUGNuxeoCOm1YjAXRB9jem+BLs2lLj2CUbfNKym9+HxzC2Pv6xmsq0K3lYUsZZPcvE6+2d0lcxXWKVWm7YLPqOKlRiwnw4OI2vDsNJI4/8LrtAiqLYsnmqIlUTgnHPK7io6xN9jXchkeV3Q9sjEe4hhdahLh1dwAB8LYIGr617lu+R8whOHRJa4M5tWuF2EvZ62teL7MYNxzCHbmiACl3mgo5ShSQ0DDxRTasN1jxNptwPdxEF7mHZIjH/caTRYuN3gomF2nisqKzgGg4spIBbsN2pZXB2htS0vpAAc+pFjcEK/Tyjvjsahu/O5fdELQCKYR+Lwd1Bwj2cvdOJquN0ygm/3FOS0+8mAEr4IZfbABNALU/lSCwrulCmPjai/zOTT7PqtftdxjvSq3wSowSe8pQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB6507.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38100700002)(5660300002)(52536014)(85182001)(86362001)(38070700005)(83380400001)(82960400001)(122000001)(508600001)(186003)(6506007)(7416002)(8936002)(2906002)(107886003)(55016003)(71200400001)(7366002)(26005)(110136005)(8676002)(4326008)(9686003)(54906003)(33656002)(64756008)(66446008)(66476007)(66556008)(66946007)(76116006)(316002)(7406005)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?Q2ZoaFpvc0xSMVIydW9vRDUvemw1eXFIbUlmTmRuc0dEdVEwZzdFcTlC?=
- =?iso-2022-jp?B?MnBtd2NvZ2tkTVRnYzZHdDRGSi85MXhRNGhoV2hSb2daYm1hTm94RXJx?=
- =?iso-2022-jp?B?THdsTjhIUDg4c21tTzdSYzZ0c2l3VTFtdTRmWTZyM3pMV1BZV1E4YnF5?=
- =?iso-2022-jp?B?KzNibHMwSGUrQ3RTK2tXemw5VEZQN1FaUXhONTRHSTBWU2FqSEJwLzRQ?=
- =?iso-2022-jp?B?N29OTmV1bkIrR1huOVN6L3hBaURRRm9Wb21vMXlwNjJiSnRzbFNBbDJS?=
- =?iso-2022-jp?B?Kzgrd1p5bXBESGdrakpDUFdIa1pyNTdRRFp6RnE0YWpEcG4zL1RtY2tk?=
- =?iso-2022-jp?B?amlvbUpJNTZOcTlkWVdsb2dFdk94OXdRbHM1WDF6Wkd2Zk5zb09rTlRD?=
- =?iso-2022-jp?B?M0YyOEVaaSt6dUdwTldNRU00am4relFSbm4wSVNuYktiMWszMTRGUU5k?=
- =?iso-2022-jp?B?bWJ3bWJqMVA3TE9kWENrdE5QQUp2aDZ6SjhaRFRQd2tQUVVQUXI5V3po?=
- =?iso-2022-jp?B?dGQzdGFTQkxXRy8yRW5RK2IwR3l5RHo1M1I0bmdYa1dhcS9NQ3luV013?=
- =?iso-2022-jp?B?TTlXYmgzSXl1ZnVVMGlOc3dMTTFFbXhkYzJldmZRL3NOZVVzU2RucDFU?=
- =?iso-2022-jp?B?TjNXengxZ3I5UFY3amdYeDN0ZDhlTnFpYkVpUXRLaTlNaGNKc2JsZGlz?=
- =?iso-2022-jp?B?S0tSQ2NKMkdqQzlud0hUSEJ5OXM2TkJnN3A3NG1TKzJCdG9NWWhPQ0pl?=
- =?iso-2022-jp?B?ZlRQSDBjdU1WWW5QOEdkbTlDYjF5YkhrVmMwcnNoMndIemRXZnRRNm1O?=
- =?iso-2022-jp?B?aW45cWFXVDZLSHRKVm9JVU5ROWJYNFV3aHlvNFFXTkVla013NTN1c3Zy?=
- =?iso-2022-jp?B?NTZsbEhFRE1BY1NQdnQreVU3dGlmMm1MN3ZYQUIzRTMrSG9CaC9rMm03?=
- =?iso-2022-jp?B?UHpJN0k2Nk0wWkcrZEJkZTJ1czZoK1JNZEY4VGdPWmEzQ1JJSDV1Q0xa?=
- =?iso-2022-jp?B?QzNveU5nWmIwc1IyR0dRcDZmb2VESHY0MWw0VjBvRnJRNG84WGpnbmRp?=
- =?iso-2022-jp?B?NWpwSUR2WXljdVA3OGpyNHZGcW10WjdFdUlFYWI5dlN1ZnhPZncrNGNw?=
- =?iso-2022-jp?B?NVhDNW1NbU1iQjZxRU1sQktJMjNrZ09rMWRmbWo0eWd1Y21Pd3FUcGlU?=
- =?iso-2022-jp?B?TzhWNmlTbUI5djY4eTRNSStjekdqcjc2QlRPSGp6bzY2LzdKRXkxOUVN?=
- =?iso-2022-jp?B?clJRRjhsbWFKT3F0TjY2cEJqMWl1aTdnOGZPOU8rN1d4VnIza2wxOHpw?=
- =?iso-2022-jp?B?YUJscjlYOTRjSVE0VXVqUUNiSHVYRE44QmRSUGV3WjJxT1JOSkxjeVVR?=
- =?iso-2022-jp?B?SDVDc1ZlL2VKb2xxUFAvR05SVC9oOVZVUVYrU1BTUlhLb0p2VEN6WG0x?=
- =?iso-2022-jp?B?dHcycEVHVmEzRmpjQldpWHd5dXdnTFBUbi9FQkd6NTg5VTJuMGJDQnZ2?=
- =?iso-2022-jp?B?NlBKb3hrQThvTkpoK2xPU1kwSUg1MDhvbVlHOWpIamR4OXJhQmxEdDBx?=
- =?iso-2022-jp?B?MEdFdXJXYkpCaGwrMmJBaUNaUnFVL2xKY2lpY0p6cHhpNFdTNG9MUVIv?=
- =?iso-2022-jp?B?Q0RMUTZJTmVKWEVmMDNrYnFOT3l2aUFzTmFxV09kQSs5eCthQXkwdmsw?=
- =?iso-2022-jp?B?SGRsSnkzK3c3V3N1V0FaYVFFMGFKTG5FUU8rTmFVT3N1ekx0cDBVbDlv?=
- =?iso-2022-jp?B?QXV3UTRCTlN1WGo2MWQwSVo4c2VGUnk0aVNNNFJzd3BNOVB2ZCtMWmxP?=
- =?iso-2022-jp?B?dGlzVjVNQnQ2b01aWXhRdXJtRGVJWGZsSXBJZ1VGMWlFR2NESjFTcVlw?=
- =?iso-2022-jp?B?M1JELzNUd013T1ByVGF1Ykh0Nm91MW5xai9ZUU5lRjFsdHdEQ0NtUnNR?=
- =?iso-2022-jp?B?L00xTkhpaithV1pYY1krR05zUTZYTFZPUk9RU0xtSkhhRmhpdFc4RGNX?=
- =?iso-2022-jp?B?eTFpMnd0QlloT0plSm9NdjBuakFweWUwRGtqUjVsNVovRkRob0c0TDQr?=
- =?iso-2022-jp?B?cW1PZ3FYRHBtc3Q2c1FwOFR1Lzk5czhMenVER01OZm9Xa2VwSjM4a1Vm?=
- =?iso-2022-jp?B?OUFBTFpRdTBiY3lqTXIvVHNhN2JWZHVra2dTTFhaTzRFSmh1c0taRERB?=
- =?iso-2022-jp?B?YTdqeGI3dWRDYTYzR1lYcTF1T3dHZ1RGWXYza1cvM0lxUGtldDhmUVZv?=
- =?iso-2022-jp?B?c1dJelE5d1hSV3hybS9VUVN4aEh0aTRPSDd3OElVZVdaSUlxY2wwd2lR?=
- =?iso-2022-jp?B?Slh6TFJjMXMrN25OaG9ibS9hQWZkYmNVb0RFZ1d0aFZLcU5lNUpzV1lX?=
- =?iso-2022-jp?B?YjBEZlRDZE1CeGMyaWRMa1dvT05rVW9RUG1WOUl4aHRkenoyTjFXaitY?=
- =?iso-2022-jp?B?YW1oQ001bUIyRFJYdUJTdzlKekt0WndWSEJpaXU5dzhkVEpOb3p4TzIr?=
- =?iso-2022-jp?B?MUdoTXV6ZVIycy9nblliVHY4clRkRTNlcVNwdWhhQWM4UlBFTDZBYmw0?=
- =?iso-2022-jp?B?ME5aQThQQT0=?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.4; Mon, 9 May
+ 2022 15:44:53 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::9cb4:220e:396:42a9]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::9cb4:220e:396:42a9%5]) with mapi id 15.20.5273.004; Mon, 9 May 2022
+ 15:44:52 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH 1/1] x86/hyperv: Disable hardlockup detector by default in Hyper-V guests
+Date:   Mon,  9 May 2022 08:44:23 -0700
+Message-Id: <1652111063-6535-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR04CA0276.namprd04.prod.outlook.com
+ (2603:10b6:303:89::11) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
 MIME-Version: 1.0
-X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 88888478-607c-4207-008a-08da31d2dbcb
+X-MS-TrafficTypeDiagnostic: MWHPR2101MB0873:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR2101MB087388C9E2ABC49911B0787FD7C69@MWHPR2101MB0873.namprd21.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GSzZ7F5nls6m5zH39uncmYVTfLOtjOMk437HrxFzfMhVlaTCBeaByx/V71DWQNk5XORkpfvYVItdcpe2cxxe9Fgwr2v/TcyBIIFOj4SaaIHdCMDc4kfx9sDaj35bpCmOYf0N+ZfxwMm7ZSH6LnhzLYkF34IQmUFtEa59wMA0lcVQv/ontZg3rRQRA1uwTxl+OugNKuUOfrfz2lYTITFY3SN3MO4RjojfsN5xBHn/hXE13apbHeDNe4jhjMhWoxASHWUACuz0PYYpXqQx/CULZe4sfaExoY/nvgknoGcBq/x//RsHYP2OBGu678L5M8ej2zHZcIqLruI//W0C+Vfsx0lRsLa5bVWSejZesDSIaN9Z5AYl0CGLzzOVjL/AZMUwSdwfSMrVnxOYJcso4tHsBjLJgs7xLI/2OJ4/qWcXN/zn1NlXSuc2zcFJThZ15DaTZxXzXE0ov/wrGJ7QRQC6zyAZHUqbbBreIAG368ayfFOkAre1MYH6MeTO14BKPLR2PuJ1cNMTzmv+vLb5qbeymFKzI1+dtADsqOe9lBpjf6yCW0knJstbPsjGNil7P43k6MBSG5BIb63aHma1QLIcYnxdMhfRXX97gR5HVJVDdGlb/S71Ta294FodJpOOxNQc33rSyrC6P+8BOye2FK/2Ks02tCyMXzPqdVKxFUcVuHKABxpJ/+QsKIj+RlTf+QrRphNrfH5FMvM13HhxLpSTOro6+E/ghBg7rRTRUY3st1XsJH5rFCF+O/GqzZGGc3/MwsrypbFfu632Zgsq3CZamQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(186003)(26005)(6666004)(6512007)(52116002)(6486002)(66476007)(86362001)(6506007)(2906002)(508600001)(66556008)(66946007)(8676002)(4326008)(36756003)(107886003)(83380400001)(2616005)(921005)(10290500003)(82960400001)(82950400001)(316002)(5660300002)(38350700002)(8936002)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m58dEOXfsZVkxNL0zaeP4h3xcqD6o09Btd5hdEzrs7QQbJAZuBDES5DCZQ5j?=
+ =?us-ascii?Q?+tC38+0BV1GZof0Ji45l6OFOi/dzQVl6yNNJ8OH9IH5vBsjV8BipM0xDN3Xy?=
+ =?us-ascii?Q?ZJUL4qt1X3zhMlEQh7XFxzi7TD1cYfpckhDSrJI9ntDA5KO344NprSy+cL6j?=
+ =?us-ascii?Q?HPayw7g6/9IYaOCyvk92wKPE3YDJIwa4gfN+fr0lD44oOsszSFzyucIH2ibL?=
+ =?us-ascii?Q?PX+pgOFTQkUTHgecwddCJIfSrgKbv1zdTCp00107cADPwNL0CYz0c9IXxO8B?=
+ =?us-ascii?Q?ko2+HYIzJPbrpwEaZKT14X4v7jcA8nKpWu/PseIvbBNpjc3z88lfijuCL5LW?=
+ =?us-ascii?Q?t+JPmlU8XkA3Pkuk1ATxps0hpt9ZadQJOucYZhH7atiWvV8xpkYo4E+W4Ju9?=
+ =?us-ascii?Q?YAhAZA1fBS0KZ4104sC+4XwOtmbdSB6S8OG9n/at+1WMXjFyWgf8Usr6V/+c?=
+ =?us-ascii?Q?gQ8GIb3mx8Auu/8jWi1mO6HjcD25vg1wB9H/gxBZLYB+ot5Kj+ZblQYqKsdT?=
+ =?us-ascii?Q?wyHUx6a/qPpnOs1yFV251Ode3eyZbUOrME18rXCAhrHXKFAHvN8KK1vBY2R+?=
+ =?us-ascii?Q?Dm6UflmMo0i2W2Omi4B9XjgmvDjA2P+Kf7+maDByOPPL6x02vxsVIIYOCbcw?=
+ =?us-ascii?Q?eAJ+7q+EJDSTfEdw+1LHmW9NxSYEoTyJJCH22o6oDgu90rC8pLkk4ArSK26W?=
+ =?us-ascii?Q?minP5CTAWEDv9GT15LxVBLGA/U5Bvy6uEH9RrqkQIo7I9C0zV1OVX0yA7Pq/?=
+ =?us-ascii?Q?Xm3ohUATOG7ucGQx+tGFjfvnzbQ+DzZvHNVw9Q8VZjYZTLK5wAgem8X4XSbf?=
+ =?us-ascii?Q?uyPthwyCRoq8Ql2oBRpyOJmcYB+whM0Rr9rscwKIRZ7K7VvzBsEdmvqc7nhw?=
+ =?us-ascii?Q?HZb4LH5SLtHEetjpVVM8ir2WVdmf2tRPq+z+S0Xrq4Cs02lEjvmz1bw8u4nW?=
+ =?us-ascii?Q?adTTYxIx6Q08T66pfolsTwFw9YwJgalamA4sL2zCNANZcCX/Ljy/uzqPyt+Z?=
+ =?us-ascii?Q?b967sts5nF/tgo5L+5Pi/5dBLdqrYZk+0TeVH49gjuj7jkNvYv5dx1zwY5c1?=
+ =?us-ascii?Q?0YPSusfObKWHy5Imk78+dNTmdanmPMUFUhjPvAGOQGxJJvUEOQotaAoItKMy?=
+ =?us-ascii?Q?LBJfa7Dr4RlNdZmILFH3NMAxID//w1b1zt+OsbXjCGcFIk/GUuZh8LOXcu2v?=
+ =?us-ascii?Q?WzPiAPr9afuk9eRLq6QEaG5hG+a5C2EB8LafhiSoJlU2Y8so/PwZCQdWrAzl?=
+ =?us-ascii?Q?5fT+rD60z7+mEQ1M2p0I79yRr/CHrzvrzYJTVBB2R20VBS8EsWwi1RQFBld0?=
+ =?us-ascii?Q?v/w1t1miCA4KKA//jgy6srpgGK87CXYX2E5xkOpRcrs9zsY5mAxI+u1+qID5?=
+ =?us-ascii?Q?uu4nNieacG3hXOQT1gtgfxdxNBfYyVIMXIvhiuCPJtVf/LI7iWXkfnj8cFXD?=
+ =?us-ascii?Q?21F5MS9WTL11YGLScAObV0xNKnhMEqZI2u4wPvxy2KIsi4vnpkk3crk8BENu?=
+ =?us-ascii?Q?oWo0c29DMfn5/mqFsZKwSvKt2ugXddoaber3VCP9SHUZiamk7OrvfjcJ32BV?=
+ =?us-ascii?Q?l2naMW/i6ObVSq5uTYgWXD5vcmRKmBVDZEoQnRyLN/9PxUl31oNRCYqqe7IS?=
+ =?us-ascii?Q?l57oCZnmYnbLH9G97s9Qznb2dIjThwctmQyY51BBLEqX1dlT2gGXnC1BGqh4?=
+ =?us-ascii?Q?Tmw/zLoPLJsGnMNR/wUZiWIEr2JQ0TEPhQNSVnrtpglCCpzAVbMNb1k+Yu7a?=
+ =?us-ascii?Q?Acsw/Iu68iFcTS2Wk0clO7cTp3z+vX8=3D?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88888478-607c-4207-008a-08da31d2dbcb
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYAPR01MB6507.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb59992a-950f-4d9b-bb1c-08da31ced84d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2022 15:16:08.8030
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2022 15:44:52.7903
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q5IRFdj2tV7IAxoGvUQ3KW79KqhlLrLxHCiqQH9LHk/aZve0Mz95uDPlSCWwe/uJV5hchYymXmHVnJXclB022HSy1r9hKQtbFufztomtIsU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB7578
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +nL39en3llB7P1hTmNvF91ZwxLyPKCYi+umRYAyDTNjEaxiVMG68T+GiSLT5F4OHOZAFj0QKg1/bWGKw/AemrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0873
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sorry for the delayed response. Unfortunately, I had 10 days holidays=0A=
-until yesterday...=0A=
-=0A=
->  .../admin-guide/kernel-parameters.txt         |  42 ++-=0A=
->  include/linux/panic_notifier.h                |   1 +=0A=
->  kernel/kexec_core.c                           |   8 +-=0A=
->  kernel/panic.c                                | 292 +++++++++++++-----=
-=0A=
->  .../selftests/pstore/pstore_crash_test        |   5 +-=0A=
->  5 files changed, 252 insertions(+), 96 deletions(-)=0A=
-> =0A=
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt=0A=
-> index 3f1cc5e317ed..8d3524060ce3 100644=0A=
-> --- a/Documentation/admin-guide/kernel-parameters.txt=0A=
-> +++ b/Documentation/admin-guide/kernel-parameters.txt=0A=
-...snip...=0A=
-> @@ -3784,6 +3791,33 @@=0A=
->                         timeout < 0: reboot immediately=0A=
->                         Format: <timeout>=0A=
-> =0A=
-> +       panic_notifiers_level=3D=0A=
-> +                       [KNL] Set the panic notifiers execution order.=0A=
-> +                       Format: <unsigned int>=0A=
-> +                       We currently have 4 lists of panic notifiers; bas=
-ed=0A=
-> +                       on the functionality and risk (for panic success)=
- the=0A=
-> +                       callbacks are added in a given list. The lists ar=
-e:=0A=
-> +                       - hypervisor/FW notification list (low risk);=0A=
-> +                       - informational list (low/medium risk);=0A=
-> +                       - pre_reboot list (higher risk);=0A=
-> +                       - post_reboot list (only run late in panic and af=
-ter=0A=
-> +                       kdump, not configurable for now).=0A=
-> +                       This parameter defines the ordering of the first =
-3=0A=
-> +                       lists with regards to kdump; the levels determine=
-=0A=
-> +                       which set of notifiers execute before kdump. The=
-=0A=
-> +                       accepted levels are:=0A=
-> +                       0: kdump is the first thing to run, NO list is=0A=
-> +                       executed before kdump.=0A=
-> +                       1: only the hypervisor list is executed before kd=
-ump.=0A=
-> +                       2 (default level): the hypervisor list and (*if*=
-=0A=
-=0A=
-Hmmm, why are you trying to change default setting?=0A=
-=0A=
-Based on the current design of kdump, it's natural to put what the=0A=
-handlers for these level 1 and level 2 handlers do in=0A=
-machine_crash_shutdown(), as these are necessary by default, right?=0A=
-=0A=
-Or have you already tried that and figured out it's difficult in some=0A=
-reason and reached the current design? If so, why is that difficult?=0A=
-Could you point to if there is already such discussion online?=0A=
-=0A=
-kdump is designed to perform as little things as possible before=0A=
-transferring the execution to the 2nd kernel in order to increase=0A=
-reliability. Just detour to panic() increases risks of kdump failure=0A=
-in the sense of increasing the executed codes in the abnormal=0A=
-situation, which is very the note in the explanation of=0A=
-crash_kexec_post_notifiers.=0A=
-=0A=
-Also, the current implementation of crash_kexec_post_notifiers uses=0A=
-the panic notifier, but this is not from the technical=0A=
-reason. Ideally, it should have been implemented in the context of=0A=
-crash_kexec() independently of panic().=0A=
-=0A=
-That is, it looks to me that, in addition to changing design of panic=0A=
-notifier, you are trying to integrate shutdown code of the crash kexec=0A=
-and the panic paths. If so, this is a big design change for kdump.=0A=
-I'm concerned about increase of reliability. I'd like you to discuss=0A=
-them carefully.=0A=
-=0A=
-Thanks.=0A=
-HATAYAMA, Daisuke=0A=
-=0A=
+In newer versions of Hyper-V, the x86/x64 PMU can be virtualized
+into guest VMs by explicitly enabling it. Linux kernels are typically
+built to automatically enable the hardlockup detector if the PMU is
+found. To prevent the possibility of false positives due to the
+vagaries of VM scheduling, disable the PMU-based hardlockup detector
+by default in a VM on Hyper-V.  The hardlockup detector can still be
+enabled by overriding the default with the nmi_watchdog=1 option on
+the kernel boot line or via sysctl at runtime.
+
+This change mimics the approach taken with KVM guests in
+commit 692297d8f968 ("watchdog: introduce the hardlockup_detector_disable()
+function").
+
+Linux on ARM64 does not provide a PMU-based hardlockup detector, so
+there's no corresponding disable in the Hyper-V init code on ARM64.
+
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+---
+ arch/x86/kernel/cpu/mshyperv.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 5b8f2c3..8316139 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -457,6 +457,8 @@ static void __init ms_hyperv_init_platform(void)
+ 	 */
+ 	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
+ 		mark_tsc_unstable("running on Hyper-V");
++
++	hardlockup_detector_disable();
+ }
+ 
+ static bool __init ms_hyperv_x2apic_available(void)
+-- 
+1.8.3.1
+
