@@ -2,46 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 721D451EEB9
-	for <lists+linux-hyperv@lfdr.de>; Sun,  8 May 2022 17:51:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84C2951FA51
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 May 2022 12:50:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234992AbiEHPrZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 8 May 2022 11:47:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
+        id S229993AbiEIKu4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 9 May 2022 06:50:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234977AbiEHPrW (ORCPT
+        with ESMTP id S230443AbiEIKuR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 8 May 2022 11:47:22 -0400
-Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.56.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EEFD2AF4;
-        Sun,  8 May 2022 08:43:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nJPkIOktC0vKkD51dyC9cg/ETtislFkNWOTFbGhg7l3WbS4pnLqUFI0425yjVhmku/POOSJg9QSb88wR3lDIL8xeE/sVYFj6z+0/BDAEJrh/8LYcoEEti8TX3w1mt6n7Kbk89e/UjnS7t3vr6BaibWYJT91KP6kc8s8tKTPslu/zQU6BAIOREH5PBvubewj8xUZAse7T1/vLkXJVQsGzMwblnLTNPpk/TFI9qWOB84NlTFr0ZqKfpJWA3yU/LmHLAAzsTFtUGh9U2SMgUBODZ2CKQYWw7qA8ZUsm6hE+sXRIac5Z6TW16ynwxi/TfYVfoNBuYg5VEbjt8xH8yvA5TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Io4v1qZ4VuuDx4ZlU6GWfhMS1DUFo/uWtelqd63x/FA=;
- b=IPrp/zbx+orGY4WuHqZ6vYqlK7VAJz0L5jEN1fpRKiCvW3iC/URujx1pUSjT15G6+r4oxzC7LIcIfAt50kiwFJpbOdNFClb4MFh20HfqfYJk8haotpu1/25qrkYTeZaCHNeqNolZ6+hI7/4Equ7zc0xtOoKAUSwC7mvXklpGsNxYGiAV8kbnMuskNS+VX9Id7NfIgc42TpFxMqs/0QlpD5nWPiSniXTEKhnl+EQ2cbWNRBVJD50+GJbPiu4iR1W8PhBdiqUx7WbmViZy1txjp9TpJcdiKt3PvewgjpV4QzjFm80U6s7gn9zseBRe8NTX1vYHRCigm96FTg8k8lWo9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Io4v1qZ4VuuDx4ZlU6GWfhMS1DUFo/uWtelqd63x/FA=;
- b=HuMOotT66vEJ8HZSu6dXTw2HZTCyh7em6EhJZp1pxczNTYe1phiis+dBSSYD68KQi6R5OgQKoRc/nnZxL5/TQYbVmDmCnhyRPkVVYd5NRc7mfK+YZRC5KjYsgl2gWioiWSHUxSj6xo95yCo8YZ+SsxxmEtAGlWvnku5RbDUJVek=
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by PH7PR21MB3239.namprd21.prod.outlook.com (2603:10b6:510:1db::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.4; Sun, 8 May
- 2022 15:43:27 +0000
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::dd77:2d4d:329e:87df]) by PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::dd77:2d4d:329e:87df%7]) with mapi id 15.20.5273.004; Sun, 8 May 2022
- 15:43:26 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     KY Srinivasan <kys@microsoft.com>,
+        Mon, 9 May 2022 06:50:17 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770DC2181E4;
+        Mon,  9 May 2022 03:44:49 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id b19so18818194wrh.11;
+        Mon, 09 May 2022 03:44:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oLgVaTlTDXgUX6d5oxdF7XG7KD8YlqPFqEct4VY7hn0=;
+        b=7bN7J8VsOe6NdV+3pMrVlJpTsLIJPGvez/qwbnnCKrKLHXhCyr3hkrjij4hEHh5uTt
+         AOtljiaW2m3GmOY5aR+mgeY9RtmFhA09rJPGys1QaK+mDcCBV2PQ+K9lkeDR7/s70jk9
+         e8tg+bXHEyEWLOWRjUZBhtYdDJ3V+MiK19pbuqqv5ZARmGsSjjTWrEjjkw0mJduTEoca
+         Nx52yAjCTAbPhptJh53bAiKTbLqAZBLJ6pv+V890J0k6N77qsdPwqSSoec+0BGxksIyF
+         7xta393YI+MekATkEpnF7T3quUcEQL4+sqxowd28ShUyYB3nQTtT2jXAaGSvcnbqASht
+         05eQ==
+X-Gm-Message-State: AOAM531pGfMX1OZidal7u+pddrjV4UPtMOAvLWe6ylB1RCmGrR4/8F2x
+        18UQKUPJJkuLOTeU9RuJ7Vs=
+X-Google-Smtp-Source: ABdhPJwDKaChWloXe++r5p1goEJJuS40KKco4mLZWce3U6q798YBSkWjgoJuS1gFOHxVdXkf6GhOpA==
+X-Received: by 2002:a5d:590d:0:b0:20a:c3eb:2584 with SMTP id v13-20020a5d590d000000b0020ac3eb2584mr13000908wrd.18.1652093087866;
+        Mon, 09 May 2022 03:44:47 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id q1-20020adf9dc1000000b0020c5253d8b8sm11582748wre.4.2022.05.09.03.44.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 May 2022 03:44:47 -0700 (PDT)
+Date:   Mon, 9 May 2022 10:44:45 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
@@ -57,144 +56,131 @@ CC:     KY Srinivasan <kys@microsoft.com>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
         "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
-Subject: RE: [PATCH 0/4] Remove support for Hyper-V 2008 and 2008R2/Win7
-Thread-Topic: [PATCH 0/4] Remove support for Hyper-V 2008 and 2008R2/Win7
-Thread-Index: AQHYXkLb/0Gxv7HlzkaWTmgmFwYc5a0O+reAgAYm6dA=
-Date:   Sun, 8 May 2022 15:43:26 +0000
-Message-ID: <PH0PR21MB302590D20E95D9076FDA9C99D7C79@PH0PR21MB3025.namprd21.prod.outlook.com>
+Subject: Re: [PATCH 0/4] Remove support for Hyper-V 2008 and 2008R2/Win7
+Message-ID: <20220509104445.umicxfdpy65nm4us@liuwe-devbox-debian-v2>
 References: <1651509391-2058-1-git-send-email-mikelley@microsoft.com>
  <20220504172307.GB1623@bug>
-In-Reply-To: <20220504172307.GB1623@bug>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8b1d71e0-6984-4f3d-8c15-012dd89651d7;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-08T15:19:56Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f4c30418-69ff-4c7c-2632-08da31097e0c
-x-ms-traffictypediagnostic: PH7PR21MB3239:EE_
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PH7PR21MB3239CB83092CA8E1A2459B38D7C79@PH7PR21MB3239.namprd21.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0luIiSe8Gt3sGlai75oT3tOiz+OBwbIR7T22Ob5SOi07oTGE9EQXsdrZku4hR8YCv0IWWNEpNHf0fn6kohThwtyCXlGDXYgB7YAkSJ8IPpvrLpWzKTq0cc6pA62NFCpg0Qn1s8KbNW3C3siIGeZuLPHtrAazQNFdHFNwkwSaaBQW8dJBp/hSJoZEdJ3CoXBluPaPispKSaW456xAX/Mu46HWkiuoXgsau4DoKfQ+g0Wxb5wufkqsPCwcRQxhAt8mtnOQ4qJbnIQkJNnae0+clNRNqH/5vKIF1vK+t0MnqqPXjDRRzmLwvgwLTss8P3eZh7Co07EDaWpBNl0lsHPtyTMhD4hzwQobQLaUylQ3NCyfr1hGTmKgiV0PaOSoVk4HyNSkEf/vmCsGum5mN4VEZd0hchG8blmB8a+NWJBcYEL6aQHEMiAmeX+cTCmp10pWFI74FKMPX5Ky89lwknXIuwrs+VVCY1qg6S/ZeuS7wNW3KI8cLo4tRYj1haqm5MfA/0HlAqy43ebrIX/WVB7X8JFiLX7xDfZNbGQiisNLNlpLY/fgYLatBKfiWsGnjjL0/jBC4ujfHANKzbw5f7IeFmkWdUeKuxt8zlrWv8CR2Y7BVPxzzJgd2XyaT3tJVx97iWRs0pO3QwTI0sMQn+5+SzN4cRVmlXlY4Paa7uHJ3qITGjnzQYapqLfNbFbXkMO8KhN5wzOULWXX0ruH2l4a6+tnZ2sDjb41ycCyM/lbC38v4XRz4mYcfC/j+Yy4CmKl
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(508600001)(71200400001)(6506007)(86362001)(186003)(26005)(7696005)(9686003)(2906002)(7416002)(5660300002)(83380400001)(8990500004)(55016003)(82960400001)(82950400001)(122000001)(66946007)(76116006)(66556008)(10290500003)(54906003)(316002)(6916009)(38100700002)(38070700005)(66476007)(33656002)(8936002)(52536014)(4326008)(8676002)(64756008)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Tapt2rRKKa54NJyQaERGxzr9DrQliRPnnuz0Z7EsGPFsQyaZjlgYUijrJibi?=
- =?us-ascii?Q?OKX8kEJBF5BRpj9UNZthvu94wz8xnJrsdBAbuEXzzhypjshDS2ZqZDkg2bOM?=
- =?us-ascii?Q?nVtx+f/5TQZlH6GH48hPML0WLT5f5ttLGG7V1AXDfMJg+xR+fHKkSdwx/vSz?=
- =?us-ascii?Q?894uAmNylQjK0wBJ5nPxGHJnpW9k9h+AbC3RpVIF6cIlKdYOp/LjaSHl5aeL?=
- =?us-ascii?Q?RLBpug4yW9GULSVJpxfeya6fEZkhSdoDEZkLou/vStm+5TDV8oJNRJDjGaRS?=
- =?us-ascii?Q?MXqb7kHemNYEnGpXmBk4YWGaZTlX460wxMMxvUkdhkK3JAc3v1Yep5j66x1d?=
- =?us-ascii?Q?XtDdoVC5mVzf+y+Dblob2mplxwkaESVYYmhMpF62R34ISwOLfhQROjNickKd?=
- =?us-ascii?Q?vnSq/GBgEQ4W/ASE72AqPrzpuxqnkRyFXfJL+Czp7/4wnlSU14c6HDqfnWI1?=
- =?us-ascii?Q?4x9iAuOtO9FuSZnkr2ImxxpcniqLEMiv2MZOuUQ7Xd2pzdo3iYuL7ulWHWxv?=
- =?us-ascii?Q?US2N8LkMFfK2v2SYwWe8VxH0BBjm3YkZVd1C6Sc0tuyapTPDwVNNcZwhV41c?=
- =?us-ascii?Q?wrHxDXyJDhg/4aq3tlqnRE3S9c08surcMxZ4Hp6ZZ8DbgTltAdsnRIXQfg3G?=
- =?us-ascii?Q?AXssk5Lbuwra05YBzk3MVukUDA5cVUOQ1JS3jWLm7hdfaB1qINWy5/GM2pkS?=
- =?us-ascii?Q?yvNV19wY5SgvaQwA68ibn27plK2r0/xVb7xZskLVeP7/4Gx5tZfogreQCUpp?=
- =?us-ascii?Q?3M4IDnB0THcnJYatgz2yOI0W77671aYx/Noa5QP0CGaK9BHwv6IqYcOxLNYK?=
- =?us-ascii?Q?27ikyB7cphzE8bh+g/Uwxoq36CRzMiHjXw28fA8lv3Av3ZmqERr5YHizocIi?=
- =?us-ascii?Q?eT2DP+OzaoBMogjFc3L9NiOo927W7gdMcAwu2pxa8Z7WMldfeKdzs4sB3Qn9?=
- =?us-ascii?Q?aRFy3xNHnyFoLd3ZIXgy93uIUVLuw3ogi4DnpNh//iu3Vum+UCP69b6u8Mtu?=
- =?us-ascii?Q?8hae4R9rva5a5/ilAtn/WPopAuYIU2iKartku82KsWGRaj7yTR3QWxjgVatK?=
- =?us-ascii?Q?6+CDQOTV+73mLPIPNU16QKgAlsa/6bKVhJYCMCj4zsTvglwVenG3ScvRR891?=
- =?us-ascii?Q?ij8HnzwQ05cVX++0eVFEi+oGpBU46aDe6ObiYWK8Tk71OmnkGLzgVwVetmzd?=
- =?us-ascii?Q?9ki6EacHiMhQqz0JCfs3Tq21jMt+ptVbwqzWWli0ADR+FyWVWLPGkFZut9ja?=
- =?us-ascii?Q?qMACnqf+txRTI7lXfLUbD4rJ/3LMK5TFxyEHmdLwRpL6MXVV818PU5proT3A?=
- =?us-ascii?Q?OTSYNwm6rjuslxQpspSmC7m0grERlD7Q3ddjR+bHZVcHerO7KjKF7A4bO17c?=
- =?us-ascii?Q?beI9e8n2KAs8wzNV4F9oU49ODRjeJjJLHYI1yiEF/Kemy1U8N4NV08iHDc5o?=
- =?us-ascii?Q?XWUnVCMlK7VQn2TxARV3stwml+enV4BAOi8OMJge+mX/T6LdsfcIlSDvKOuU?=
- =?us-ascii?Q?/+p2K9mOy6ANA53EOwX1olgqZ8fDjucv5zJbuPeEIA0VaOetZHOnmHr1Q2NX?=
- =?us-ascii?Q?2hQhLrFgBQ0xhtXL9xpRkBHeT0W4BLLQKpW6XlgUlzxjRzrSy5Pd2l7t1G+i?=
- =?us-ascii?Q?PvEVIEEHz0ThgZp1cmw3K+VBPtVa9lMtNiYHJoNch3nMmybbK1LnUHA7k0YX?=
- =?us-ascii?Q?mHA2vNM0RAwJM4QgfvePZfhWsgK1keKo+8uyF65UsDPjCtnM0aM1zwLxzAln?=
- =?us-ascii?Q?BUs5ZVeDoWeyezUA+hYWqm6rk/ww/wg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <PH0PR21MB302590D20E95D9076FDA9C99D7C79@PH0PR21MB3025.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4c30418-69ff-4c7c-2632-08da31097e0c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2022 15:43:26.5088
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TO0BucS/nes4teMlv23YTecINYjeUBXD7KDETcJyW70fU5CV+LNoBImXzOJ1uwAcm6KT4NMu0oZRZ7JqI7OW+3EIu8XeHjChDcxQ50UFq2c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3239
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR21MB302590D20E95D9076FDA9C99D7C79@PH0PR21MB3025.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Pavel Machek <pavel@ucw.cz> Sent: Wednesday, May 4, 2022 10:23 AM
->=20
-> Hi!
->=20
-> > Linux code for running as a Hyper-V guest includes special cases for th=
-e
-> > first released versions of Hyper-V: 2008 and 2008R2/Windows 7. These
-> > versions were very thinly used for running Linux guests when first
-> > released more than 12 years ago, and they are now out of support
-> > (except for extended security updates). As initial versions, they
-> > lack the performance features needed for effective production usage
-> > of Linux guests. In total, there's no need to continue to support
-> > the latest Linux kernels on these versions of Hyper-V.
-> >
-> > Simplify the code for running on Hyper-V by removing the special
-> > cases. This includes removing the negotiation of the VMbus protocol
-> > versions for 2008 and 2008R2, and the special case code based on
-> > those VMbus protocol versions. Changes are in the core VMbus code and
-> > several drivers for synthetic VMbus devices.
->=20
-> > 2008 and 2008R2, so if the broader Linux kernel community surfaces
-> > a reason why this clean-up should not be done now, we can wait.
-> > But I think we want to eventually stop carrying around this extra
-> > baggage, and based on discussions with the Hyper-V team within
-> > Microsoft, we're already past the point that it has any value.
->=20
-> Normal way to do such deprecations is to put printks in first, then hide =
-it
-> under config option noone sets, and wait for year or so if anyone complai=
-ns.
->=20
+On Sun, May 08, 2022 at 03:43:26PM +0000, Michael Kelley (LINUX) wrote:
+> From: Pavel Machek <pavel@ucw.cz> Sent: Wednesday, May 4, 2022 10:23 AM
+> > 
+> > Hi!
+> > 
+> > > Linux code for running as a Hyper-V guest includes special cases for the
+> > > first released versions of Hyper-V: 2008 and 2008R2/Windows 7. These
+> > > versions were very thinly used for running Linux guests when first
+> > > released more than 12 years ago, and they are now out of support
+> > > (except for extended security updates). As initial versions, they
+> > > lack the performance features needed for effective production usage
+> > > of Linux guests. In total, there's no need to continue to support
+> > > the latest Linux kernels on these versions of Hyper-V.
+> > >
+> > > Simplify the code for running on Hyper-V by removing the special
+> > > cases. This includes removing the negotiation of the VMbus protocol
+> > > versions for 2008 and 2008R2, and the special case code based on
+> > > those VMbus protocol versions. Changes are in the core VMbus code and
+> > > several drivers for synthetic VMbus devices.
+> > 
+> > > 2008 and 2008R2, so if the broader Linux kernel community surfaces
+> > > a reason why this clean-up should not be done now, we can wait.
+> > > But I think we want to eventually stop carrying around this extra
+> > > baggage, and based on discussions with the Hyper-V team within
+> > > Microsoft, we're already past the point that it has any value.
+> > 
+> > Normal way to do such deprecations is to put printks in first, then hide it
+> > under config option noone sets, and wait for year or so if anyone complains.
+> > 
+> 
+> Are there any examples of doing these deprecation steps that you can
+> point me to?  I did not see anything in the Documentation directory
+> covering the deprecation process you describe.
+> 
+> I'd also make the case that we are already well down the deprecation
+> path.  For at least the last 5 years, the public Microsoft documentation
+> for Linux guests has listed Hyper-V 2012 R2 as the earliest supported
+> Hyper-V version.  Other current and new Microsoft products aren't
+> supported on Hyper-V 2008/Win7 either -- the usual Word/Excel/
+> PowerPoint, etc. fall into this category as well as Windows 10 and Windows
+> 11 as guests.  So for a rare user who might still be using Hyper-V
+> 2008/Win7, there's no reasonable expectation of being able to run
+> the latest upstream Linux kernel on Hyper-V 2008/Win7.  Other
+> current software doesn't.
+> 
+> Given that running Linux guests on Hyper-V sort of implicitly
+> combines Microsoft commercial thinking and Linux open source
+> thinking about version support, I could see putting the old Hyper-V
+> version support under a config option that defaults to "no", with a 
+> deprecation comment, and seeing if that garners any complaints.
+> But given the broader situation with Hyper-V 2008/Win7, in my
+> judgment even that is more cautious than we need to be.
+> 
 
-Are there any examples of doing these deprecation steps that you can
-point me to?  I did not see anything in the Documentation directory
-covering the deprecation process you describe.
+In general we should trust the judgement from the main developers.
 
-I'd also make the case that we are already well down the deprecation
-path.  For at least the last 5 years, the public Microsoft documentation
-for Linux guests has listed Hyper-V 2012 R2 as the earliest supported
-Hyper-V version.  Other current and new Microsoft products aren't
-supported on Hyper-V 2008/Win7 either -- the usual Word/Excel/
-PowerPoint, etc. fall into this category as well as Windows 10 and Windows
-11 as guests.  So for a rare user who might still be using Hyper-V
-2008/Win7, there's no reasonable expectation of being able to run
-the latest upstream Linux kernel on Hyper-V 2008/Win7.  Other
-current software doesn't.
+There have been recent examples that things are dropped without any
+deprecation warnings. See below.
 
-Given that running Linux guests on Hyper-V sort of implicitly
-combines Microsoft commercial thinking and Linux open source
-thinking about version support, I could see putting the old Hyper-V
-version support under a config option that defaults to "no", with a=20
-deprecation comment, and seeing if that garners any complaints.
-But given the broader situation with Hyper-V 2008/Win7, in my
-judgment even that is more cautious than we need to be.
+By and large the usefulness of the code in kernel relies on a lot of
+factors. In this particular case, I don't think adding a KCONFIG makes
+sense. Printing a warning in _guest_ won't help. Whoever still runs
+these ancient versions has had ample warnings.
 
-Michael
+Thanks,
+Wei.
 
-> We can't really remove code that is in use.
->=20
-> Best regards,
-> 									Pavel
+commit c645a883df34ee10b884ec921e850def54b7f461
+Author:     NeilBrown <neilb@suse.de>
+AuthorDate: Thu Sep 2 11:15:29 2021 +1000
+Commit:     J. Bruce Fields <bfields@redhat.com>
+CommitDate: Sat Oct 2 15:51:10 2021 -0400
+
+    NFSD: drop support for ancient filehandles
+
+    Filehandles not in the "new" or "version 1" format have not been handed
+    out for new mounts since Linux 2.4 which was released 20 years ago.
+    I think it is safe to say that no such file handles are still in use,
+    and that we can drop support for them.
+
+    Signed-off-by: NeilBrown <neilb@suse.de>
+    Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+
+commit 9b472e85d098a40b84dd8b33fbf8a15ab1452025
+Author:     Nick Desaulniers <ndesaulniers@google.com>
+AuthorDate: Thu May 6 18:04:54 2021 -0700
+Commit:     Linus Torvalds <torvalds@linux-foundation.org>
+CommitDate: Fri May 7 00:26:32 2021 -0700
+
+    gcov: clang: drop support for clang-10 and older
+
+    LLVM changed the expected function signatures for llvm_gcda_start_file()
+    and llvm_gcda_emit_function() in the clang-11 release.  Drop the older
+    implementations and require folks to upgrade their compiler if they're
+    interested in GCOV support.
+
+    Link: https://reviews.llvm.org/rGcdd683b516d147925212724b09ec6fb792a40041
+    Link: https://reviews.llvm.org/rG13a633b438b6500ecad9e4f936ebadf3411d0f44
+    Link: https://lkml.kernel.org/r/20210312224132.3413602-3-ndesaulniers@google.com
+    Link: https://lkml.kernel.org/r/20210413183113.2977432-1-ndesaulniers@google.com
+    Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+    Suggested-by: Nathan Chancellor <nathan@kernel.org>
+    Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+    Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+    Reviewed-by: Fangrui Song <maskray@google.com>
+    Cc: Prasad Sodagudi <psodagud@quicinc.com>
+    Cc: Johannes Berg <johannes.berg@intel.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
