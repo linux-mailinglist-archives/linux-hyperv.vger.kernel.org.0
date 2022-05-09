@@ -2,157 +2,513 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADF85520158
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 May 2022 17:45:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB1E5201AF
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 May 2022 17:53:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238593AbiEIPsv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 May 2022 11:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
+        id S238662AbiEIP4z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 9 May 2022 11:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238415AbiEIPsu (ORCPT
+        with ESMTP id S238709AbiEIP4v (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 May 2022 11:48:50 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020018.outbound.protection.outlook.com [52.101.61.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFB3248E25;
-        Mon,  9 May 2022 08:44:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Maf6WrImUpSwew+c1vtIc9cXsLMvBuc/ZwMurFV3HHYFzokyzYp3eHuxBpBW486wzH4SZuH3h6fd9OwO9IRMZvgzeA4Gw0U43RkyMoMYMOnNjf2Paf5D9lZNoBpjkm+5qoI3GFtRJgGt1jxYEOK8fjWhKVzrKOPz4na3UalXSYjMf939CiR7xiLDiB8Pc6mOFY4Y/wRX6qj2GwZ+2Z0ozeSbB7Jm+WFbWvzKqN2P3ZQ0++zOHuEyRqY/k6QnmxMIV25IxAc4BlOXmbxaDICWFbNM1SUWF8v1V9+lqUJlQWpdxqCLlJgJhiHpb76n1arlAOysPRSuI6U27SkNp9uNbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RzRA2V9vqI+OVzyyxRNmHHBpbTde/RWyLzB04bZWcQg=;
- b=MrsPb8m5Lrj427MbkbIycVHNjEtX0SuDs0uQFZ+6AHzox3uylY+E0Nh4vw73R+mf2rE8MZfzukG1XnGlU0hvdxLO8BXiaoncVuihRSMncBce7a9+iY7kiEbycKIlDevUM11Kq51ttrgK+v5MV/RbsoawZLCBqxxylyNdecCviBPM0wpyQf13Sz+j+xleOQcfZiwf+AoVopJBJBRHyWr8jugb9RuwaR5BW1yvgX1SUKtKySPmJYLpSVq2yEXoKpnyTRSgsrjedTN48Uv7ht9t+7K83dReO8Z0GZNiZmQqm4CP8EAGiYx1pOM+34ASsgtPJ9flCf/rYMHkYxKYoAI03g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RzRA2V9vqI+OVzyyxRNmHHBpbTde/RWyLzB04bZWcQg=;
- b=bfyyByxRYlnmcIBDRlFvApPG6PcxVszfWk+hvOKd0nzkga8jpTff5Q5zges6r/uCggAQ2KmAALbaBM+0gcb7UWVemVEBZOzKy4wNLBcN/AnyrL14iHdNhLXf+iaxv11gELW0cD47tDTeQhQlgfadnRil+VHifobEQI9diuUoWHk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
- by MWHPR2101MB0873.namprd21.prod.outlook.com (2603:10b6:301:7e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.4; Mon, 9 May
- 2022 15:44:53 +0000
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::9cb4:220e:396:42a9]) by DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::9cb4:220e:396:42a9%5]) with mapi id 15.20.5273.004; Mon, 9 May 2022
- 15:44:52 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH 1/1] x86/hyperv: Disable hardlockup detector by default in Hyper-V guests
-Date:   Mon,  9 May 2022 08:44:23 -0700
-Message-Id: <1652111063-6535-1-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR04CA0276.namprd04.prod.outlook.com
- (2603:10b6:303:89::11) To DM6PR21MB1370.namprd21.prod.outlook.com
- (2603:10b6:5:16b::28)
+        Mon, 9 May 2022 11:56:51 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281EC201312
+        for <linux-hyperv@vger.kernel.org>; Mon,  9 May 2022 08:52:55 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id iq2-20020a17090afb4200b001d93cf33ae9so17345101pjb.5
+        for <linux-hyperv@vger.kernel.org>; Mon, 09 May 2022 08:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CAxFYwx9au8ndjamrxPXEwi/2awSLBgQaCrWU0hhgV8=;
+        b=sFEfltNQCVk2gKdSF95eO+6o5Oi9iHPAu9XMn5y7AVrB1PpZKrmSauv2vxy2epRHmZ
+         NSr62ka7zLG3Gl54pw2fv1HHOqJzmWG+qcYMGudJBID58EtUah//Q/zwiMX8Beifo5Lh
+         iXK5FpZRJsooYlIrPkKyk6xy3QQYJz/0u49tSn3qe+yDBvjo3SSASrt46ZFrb6+hHFvW
+         H7/yN/ph8EWKTn0C9heTUB8cdpuCpaAeBHKYWIuDAIJkN6Hj0/oODbz/oRPz+ovRDe/T
+         g9WoeDulJNTK3wKvSf95Pd6PuXhjpO0IWRLXy6yWL9wRfFaZ8a0IDJZWtt84gKIK5eWZ
+         z7iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CAxFYwx9au8ndjamrxPXEwi/2awSLBgQaCrWU0hhgV8=;
+        b=nsx0wLxE77io2f1KtALzjF3pXv4ll/DzQXiaboe6fG8vZrbxyxBjcUKe9i1Epoikx4
+         HPu1jNEPua60MyiNw6Nesv1GmGdCLRTKCHEsjtIL7Xz3o36W3AWXrE7yim01t/kn1xcJ
+         ivjN8jY2BfKMKiPOpUIVQ8M8Gyc0gD8g2p+yG/LIi5tULu4Or1llXuup/OnmqSTQ3OpB
+         X+pxTnWBB2b25YGDd47R3C++0AqdS+g0OhX1PKlu5fm9KHPXC1YTih94Dp/3h1nQusOo
+         rMw6bAANcLRTZFcoCMn4swYzitqLQ5jhM8w+cvWVSWkGly7QyguifBohp6P7TfCEi4lb
+         edcA==
+X-Gm-Message-State: AOAM533mbqEFHsbJzcSNwm0dWW/oBH85k4VAyBkkvbABDVFsViY8tlda
+        wM9EDGGxEaGF/360RweMMR2blQ==
+X-Google-Smtp-Source: ABdhPJysrIMHQqC/1OMD5SyWpentMn8Vwv24RP/WWPrWWVvg2aHHDob94JmsHZxC4PVEzZOqPXHCmA==
+X-Received: by 2002:a17:90b:1091:b0:1d8:b371:4b29 with SMTP id gj17-20020a17090b109100b001d8b3714b29mr26584916pjb.234.1652111574246;
+        Mon, 09 May 2022 08:52:54 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id c2-20020aa79522000000b0050dc7628164sm8941672pfp.62.2022.05.09.08.52.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 May 2022 08:52:53 -0700 (PDT)
+Date:   Mon, 9 May 2022 15:52:49 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, coresight@lists.linaro.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
+        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+        corbet@lwn.net, d.hatayama@jp.fujitsu.com,
+        dave.hansen@linux.intel.com, dyoung@redhat.com,
+        feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org, "David P . Reed" <dpreed@deepplum.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 01/30] x86/crash,reboot: Avoid re-disabling VMX in all
+ CPUs on crash/restart
+Message-ID: <Ynk40U/KA+hLBZRC@google.com>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-2-gpiccoli@igalia.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 88888478-607c-4207-008a-08da31d2dbcb
-X-MS-TrafficTypeDiagnostic: MWHPR2101MB0873:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR2101MB087388C9E2ABC49911B0787FD7C69@MWHPR2101MB0873.namprd21.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GSzZ7F5nls6m5zH39uncmYVTfLOtjOMk437HrxFzfMhVlaTCBeaByx/V71DWQNk5XORkpfvYVItdcpe2cxxe9Fgwr2v/TcyBIIFOj4SaaIHdCMDc4kfx9sDaj35bpCmOYf0N+ZfxwMm7ZSH6LnhzLYkF34IQmUFtEa59wMA0lcVQv/ontZg3rRQRA1uwTxl+OugNKuUOfrfz2lYTITFY3SN3MO4RjojfsN5xBHn/hXE13apbHeDNe4jhjMhWoxASHWUACuz0PYYpXqQx/CULZe4sfaExoY/nvgknoGcBq/x//RsHYP2OBGu678L5M8ej2zHZcIqLruI//W0C+Vfsx0lRsLa5bVWSejZesDSIaN9Z5AYl0CGLzzOVjL/AZMUwSdwfSMrVnxOYJcso4tHsBjLJgs7xLI/2OJ4/qWcXN/zn1NlXSuc2zcFJThZ15DaTZxXzXE0ov/wrGJ7QRQC6zyAZHUqbbBreIAG368ayfFOkAre1MYH6MeTO14BKPLR2PuJ1cNMTzmv+vLb5qbeymFKzI1+dtADsqOe9lBpjf6yCW0knJstbPsjGNil7P43k6MBSG5BIb63aHma1QLIcYnxdMhfRXX97gR5HVJVDdGlb/S71Ta294FodJpOOxNQc33rSyrC6P+8BOye2FK/2Ks02tCyMXzPqdVKxFUcVuHKABxpJ/+QsKIj+RlTf+QrRphNrfH5FMvM13HhxLpSTOro6+E/ghBg7rRTRUY3st1XsJH5rFCF+O/GqzZGGc3/MwsrypbFfu632Zgsq3CZamQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(186003)(26005)(6666004)(6512007)(52116002)(6486002)(66476007)(86362001)(6506007)(2906002)(508600001)(66556008)(66946007)(8676002)(4326008)(36756003)(107886003)(83380400001)(2616005)(921005)(10290500003)(82960400001)(82950400001)(316002)(5660300002)(38350700002)(8936002)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m58dEOXfsZVkxNL0zaeP4h3xcqD6o09Btd5hdEzrs7QQbJAZuBDES5DCZQ5j?=
- =?us-ascii?Q?+tC38+0BV1GZof0Ji45l6OFOi/dzQVl6yNNJ8OH9IH5vBsjV8BipM0xDN3Xy?=
- =?us-ascii?Q?ZJUL4qt1X3zhMlEQh7XFxzi7TD1cYfpckhDSrJI9ntDA5KO344NprSy+cL6j?=
- =?us-ascii?Q?HPayw7g6/9IYaOCyvk92wKPE3YDJIwa4gfN+fr0lD44oOsszSFzyucIH2ibL?=
- =?us-ascii?Q?PX+pgOFTQkUTHgecwddCJIfSrgKbv1zdTCp00107cADPwNL0CYz0c9IXxO8B?=
- =?us-ascii?Q?ko2+HYIzJPbrpwEaZKT14X4v7jcA8nKpWu/PseIvbBNpjc3z88lfijuCL5LW?=
- =?us-ascii?Q?t+JPmlU8XkA3Pkuk1ATxps0hpt9ZadQJOucYZhH7atiWvV8xpkYo4E+W4Ju9?=
- =?us-ascii?Q?YAhAZA1fBS0KZ4104sC+4XwOtmbdSB6S8OG9n/at+1WMXjFyWgf8Usr6V/+c?=
- =?us-ascii?Q?gQ8GIb3mx8Auu/8jWi1mO6HjcD25vg1wB9H/gxBZLYB+ot5Kj+ZblQYqKsdT?=
- =?us-ascii?Q?wyHUx6a/qPpnOs1yFV251Ode3eyZbUOrME18rXCAhrHXKFAHvN8KK1vBY2R+?=
- =?us-ascii?Q?Dm6UflmMo0i2W2Omi4B9XjgmvDjA2P+Kf7+maDByOPPL6x02vxsVIIYOCbcw?=
- =?us-ascii?Q?eAJ+7q+EJDSTfEdw+1LHmW9NxSYEoTyJJCH22o6oDgu90rC8pLkk4ArSK26W?=
- =?us-ascii?Q?minP5CTAWEDv9GT15LxVBLGA/U5Bvy6uEH9RrqkQIo7I9C0zV1OVX0yA7Pq/?=
- =?us-ascii?Q?Xm3ohUATOG7ucGQx+tGFjfvnzbQ+DzZvHNVw9Q8VZjYZTLK5wAgem8X4XSbf?=
- =?us-ascii?Q?uyPthwyCRoq8Ql2oBRpyOJmcYB+whM0Rr9rscwKIRZ7K7VvzBsEdmvqc7nhw?=
- =?us-ascii?Q?HZb4LH5SLtHEetjpVVM8ir2WVdmf2tRPq+z+S0Xrq4Cs02lEjvmz1bw8u4nW?=
- =?us-ascii?Q?adTTYxIx6Q08T66pfolsTwFw9YwJgalamA4sL2zCNANZcCX/Ljy/uzqPyt+Z?=
- =?us-ascii?Q?b967sts5nF/tgo5L+5Pi/5dBLdqrYZk+0TeVH49gjuj7jkNvYv5dx1zwY5c1?=
- =?us-ascii?Q?0YPSusfObKWHy5Imk78+dNTmdanmPMUFUhjPvAGOQGxJJvUEOQotaAoItKMy?=
- =?us-ascii?Q?LBJfa7Dr4RlNdZmILFH3NMAxID//w1b1zt+OsbXjCGcFIk/GUuZh8LOXcu2v?=
- =?us-ascii?Q?WzPiAPr9afuk9eRLq6QEaG5hG+a5C2EB8LafhiSoJlU2Y8so/PwZCQdWrAzl?=
- =?us-ascii?Q?5fT+rD60z7+mEQ1M2p0I79yRr/CHrzvrzYJTVBB2R20VBS8EsWwi1RQFBld0?=
- =?us-ascii?Q?v/w1t1miCA4KKA//jgy6srpgGK87CXYX2E5xkOpRcrs9zsY5mAxI+u1+qID5?=
- =?us-ascii?Q?uu4nNieacG3hXOQT1gtgfxdxNBfYyVIMXIvhiuCPJtVf/LI7iWXkfnj8cFXD?=
- =?us-ascii?Q?21F5MS9WTL11YGLScAObV0xNKnhMEqZI2u4wPvxy2KIsi4vnpkk3crk8BENu?=
- =?us-ascii?Q?oWo0c29DMfn5/mqFsZKwSvKt2ugXddoaber3VCP9SHUZiamk7OrvfjcJ32BV?=
- =?us-ascii?Q?l2naMW/i6ObVSq5uTYgWXD5vcmRKmBVDZEoQnRyLN/9PxUl31oNRCYqqe7IS?=
- =?us-ascii?Q?l57oCZnmYnbLH9G97s9Qznb2dIjThwctmQyY51BBLEqX1dlT2gGXnC1BGqh4?=
- =?us-ascii?Q?Tmw/zLoPLJsGnMNR/wUZiWIEr2JQ0TEPhQNSVnrtpglCCpzAVbMNb1k+Yu7a?=
- =?us-ascii?Q?Acsw/Iu68iFcTS2Wk0clO7cTp3z+vX8=3D?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88888478-607c-4207-008a-08da31d2dbcb
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2022 15:44:52.7903
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +nL39en3llB7P1hTmNvF91ZwxLyPKCYi+umRYAyDTNjEaxiVMG68T+GiSLT5F4OHOZAFj0QKg1/bWGKw/AemrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2101MB0873
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; boundary="J4vquNhda08TmTtV"
+Content-Disposition: inline
+In-Reply-To: <20220427224924.592546-2-gpiccoli@igalia.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In newer versions of Hyper-V, the x86/x64 PMU can be virtualized
-into guest VMs by explicitly enabling it. Linux kernels are typically
-built to automatically enable the hardlockup detector if the PMU is
-found. To prevent the possibility of false positives due to the
-vagaries of VM scheduling, disable the PMU-based hardlockup detector
-by default in a VM on Hyper-V.  The hardlockup detector can still be
-enabled by overriding the default with the nmi_watchdog=1 option on
-the kernel boot line or via sysctl at runtime.
 
-This change mimics the approach taken with KVM guests in
-commit 692297d8f968 ("watchdog: introduce the hardlockup_detector_disable()
-function").
+--J4vquNhda08TmTtV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Linux on ARM64 does not provide a PMU-based hardlockup detector, so
-there's no corresponding disable in the Hyper-V init code on ARM64.
+I find the shortlog to be very confusing, the bug has nothing to do with disabling
+VMX and I distinctly remember wrapping VMXOFF with exception fixup to prevent doom
+if VMX is already disabled :-).  The issue is really that nmi_shootdown_cpus() doesn't
+play nice with being called twice.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+On Wed, Apr 27, 2022, Guilherme G. Piccoli wrote:
+> In the panic path we have a list of functions to be called, the panic
+> notifiers - such callbacks perform various actions in the machine's
+> last breath, and sometimes users want them to run before kdump. We
+> have the parameter "crash_kexec_post_notifiers" for that. When such
+> parameter is used, the function "crash_smp_send_stop()" is executed
+> to poweroff all secondary CPUs through the NMI-shootdown mechanism;
+> part of this process involves disabling virtualization features in
+> all CPUs (except the main one).
+> 
+> Now, in the emergency restart procedure we have also a way of
+> disabling VMX in all CPUs, using the same NMI-shootdown mechanism;
+> what happens though is that in case we already NMI-disabled all CPUs,
+> the emergency restart fails due to a second addition of the same items
+> in the NMI list, as per the following log output:
+> 
+> sysrq: Trigger a crash
+> Kernel panic - not syncing: sysrq triggered crash
+> [...]
+> Rebooting in 2 seconds..
+> list_add double add: new=<addr1>, prev=<addr2>, next=<addr1>.
+> ------------[ cut here ]------------
+> kernel BUG at lib/list_debug.c:29!
+> invalid opcode: 0000 [#1] PREEMPT SMP PTI
+
+Call stacks for the two callers would be very, very helpful.
+
+> In order to reproduce the problem, users just need to set the kernel
+> parameter "crash_kexec_post_notifiers" *without* kdump set in any
+> system with the VMX feature present.
+> 
+> Since there is no benefit in re-disabling VMX in all CPUs in case
+> it was already done, this patch prevents that by guarding the restart
+> routine against doubly issuing NMIs unnecessarily. Notice we still
+> need to disable VMX locally in the emergency restart.
+> 
+> Fixes: ed72736183c4 ("x86/reboot: Force all cpus to exit VMX root if VMX is supported)
+> Fixes: 0ee59413c967 ("x86/panic: replace smp_send_stop() with kdump friendly version in panic path")
+> Cc: David P. Reed <dpreed@deepplum.com>
+> Cc: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
+>  arch/x86/include/asm/cpu.h |  1 +
+>  arch/x86/kernel/crash.c    |  8 ++++----
+>  arch/x86/kernel/reboot.c   | 14 ++++++++++++--
+>  3 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index 86e5e4e26fcb..b6a9062d387f 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -36,6 +36,7 @@ extern int _debug_hotplug_cpu(int cpu, int action);
+>  #endif
+>  #endif
+>  
+> +extern bool crash_cpus_stopped;
+>  int mwait_usable(const struct cpuinfo_x86 *);
+>  
+>  unsigned int x86_family(unsigned int sig);
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index e8326a8d1c5d..71dd1a990e8d 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -42,6 +42,8 @@
+>  #include <asm/crash.h>
+>  #include <asm/cmdline.h>
+>  
+> +bool crash_cpus_stopped;
+> +
+>  /* Used while preparing memory map entries for second kernel */
+>  struct crash_memmap_data {
+>  	struct boot_params *params;
+> @@ -108,9 +110,7 @@ void kdump_nmi_shootdown_cpus(void)
+>  /* Override the weak function in kernel/panic.c */
+>  void crash_smp_send_stop(void)
+>  {
+> -	static int cpus_stopped;
+> -
+> -	if (cpus_stopped)
+> +	if (crash_cpus_stopped)
+>  		return;
+>  
+>  	if (smp_ops.crash_stop_other_cpus)
+> @@ -118,7 +118,7 @@ void crash_smp_send_stop(void)
+>  	else
+>  		smp_send_stop();
+>  
+> -	cpus_stopped = 1;
+> +	crash_cpus_stopped = true;
+
+This feels like were just adding more duct tape to the mess.  nmi_shootdown() is
+still unsafe for more than one caller, and it takes a _lot_ of staring and searching
+to understand that crash_smp_send_stop() is invoked iff CONFIG_KEXEC_CORE=y, i.e.
+that it will call smp_ops.crash_stop_other_cpus() and not just smp_send_stop().
+
+Rather than shared a flag between two relatively unrelated functions, what if we
+instead disabling virtualization in crash_nmi_callback() and then turn the reboot
+call into a nop if an NMI shootdown has already occurred?  That will also add a
+bit of documentation about multiple shootdowns not working.
+
+And I believe there's also a lurking bug in native_machine_emergency_restart() that
+can be fixed with cleanup.  SVM can also block INIT and so should be disabled during
+an emergency reboot.
+
+The attached patches are compile tested only.  If they seem sane, I'll post an
+official mini series.
+
+>  }
+>  
+>  #else
+> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> index fa700b46588e..2fc42b8402ac 100644
+> --- a/arch/x86/kernel/reboot.c
+> +++ b/arch/x86/kernel/reboot.c
+> @@ -589,8 +589,18 @@ static void native_machine_emergency_restart(void)
+>  	int orig_reboot_type = reboot_type;
+>  	unsigned short mode;
+>  
+> -	if (reboot_emergency)
+> -		emergency_vmx_disable_all();
+> +	/*
+> +	 * We can reach this point in the end of panic path, having
+> +	 * NMI-disabled all secondary CPUs. This process involves
+> +	 * disabling the CPU virtualization technologies, so if that
+> +	 * is the case, we only miss disabling the local CPU VMX...
+> +	 */
+> +	if (reboot_emergency) {
+> +		if (!crash_cpus_stopped)
+> +			emergency_vmx_disable_all();
+> +		else
+> +			cpu_emergency_vmxoff();
+> +	}
+>  
+>  	tboot_shutdown(TB_SHUTDOWN_REBOOT);
+>  
+> -- 
+> 2.36.0
+> 
+
+--J4vquNhda08TmTtV
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-x86-crash-Disable-virt-in-core-NMI-crash-handler-to-.patch"
+
+From 8a4573b7cf3a3e49b409ba3a504934de181c259d Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Mon, 9 May 2022 07:36:34 -0700
+Subject: [PATCH 1/2] x86/crash: Disable virt in core NMI crash handler to
+ avoid double list_add
+
+Disable virtualization in crash_nmi_callback() and skip the requested NMI
+shootdown if a shootdown has already occurred, i.e. a callback has been
+registered.  The NMI crash shootdown path doesn't play nice with multiple
+invocations, e.g. attempting to register the NMI handler multiple times
+will trigger a double list_add() and hang the sytem (in addition to
+multiple other issues).  If "crash_kexec_post_notifiers" is specified on
+the kernel command line, panic() will invoke crash_smp_send_stop() and
+result in a second call to nmi_shootdown_cpus() during
+native_machine_emergency_restart().
+
+Invoke the callback _before_ disabling virtualization, as the current
+VMCS needs to be cleared before doing VMXOFF.  Note, this results in a
+subtle change in ordering between disabling virtualization and stopping
+Intel PT on the responding CPUs.  While VMX and Intel PT do interact,
+VMXOFF and writes to MSR_IA32_RTIT_CTL do not induce faults between one
+another, which is all that matters when panicking.
+
+WARN if nmi_shootdown_cpus() is called a second time with anything other
+than the reboot path's "nop" handler, as bailing means the requested
+isn't being invoked.  Punt true handling of multiple shootdown callbacks
+until there's an actual use case for doing so (beyond disabling
+virtualization).
+
+Extract the disabling logic to a common helper to deduplicate code, and
+to prepare for doing the shootdown in the emergency reboot path if SVM
+is supported.
+
+Note, prior to commit ed72736183c4 ("x86/reboot: Force all cpus to exit
+VMX root if VMX is supported), nmi_shootdown_cpus() was subtly protected
+against a second invocation by a cpu_vmx_enabled() check as the kdump
+handler would disable VMX if it ran first.
+
+Fixes: ed72736183c4 ("x86/reboot: Force all cpus to exit VMX root if VMX is supported)
+Cc: stable@vger.kernel.org
+Reported-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/reboot.h |  1 +
+ arch/x86/kernel/crash.c       | 16 +--------------
+ arch/x86/kernel/reboot.c      | 38 ++++++++++++++++++++++++++++++++---
+ 3 files changed, 37 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 5b8f2c3..8316139 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -457,6 +457,8 @@ static void __init ms_hyperv_init_platform(void)
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index 04c17be9b5fd..8f2da36435a6 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -25,6 +25,7 @@ void __noreturn machine_real_restart(unsigned int type);
+ #define MRR_BIOS	0
+ #define MRR_APM		1
+ 
++void cpu_crash_disable_virtualization(void);
+ typedef void (*nmi_shootdown_cb)(int, struct pt_regs*);
+ void nmi_panic_self_stop(struct pt_regs *regs);
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback);
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index e8326a8d1c5d..fe0cf83843ba 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -81,15 +81,6 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
  	 */
- 	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
- 		mark_tsc_unstable("running on Hyper-V");
-+
-+	hardlockup_detector_disable();
+ 	cpu_crash_vmclear_loaded_vmcss();
+ 
+-	/* Disable VMX or SVM if needed.
+-	 *
+-	 * We need to disable virtualization on all CPUs.
+-	 * Having VMX or SVM enabled on any CPU may break rebooting
+-	 * after the kdump kernel has finished its task.
+-	 */
+-	cpu_emergency_vmxoff();
+-	cpu_emergency_svm_disable();
+-
+ 	/*
+ 	 * Disable Intel PT to stop its logging
+ 	 */
+@@ -148,12 +139,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+ 	 */
+ 	cpu_crash_vmclear_loaded_vmcss();
+ 
+-	/* Booting kdump kernel with VMX or SVM enabled won't work,
+-	 * because (among other limitations) we can't disable paging
+-	 * with the virt flags.
+-	 */
+-	cpu_emergency_vmxoff();
+-	cpu_emergency_svm_disable();
++	cpu_crash_disable_virtualization();
+ 
+ 	/*
+ 	 * Disable Intel PT to stop its logging
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index fa700b46588e..f9543a4e9b09 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -528,9 +528,9 @@ static inline void kb_wait(void)
+ 	}
  }
  
- static bool __init ms_hyperv_x2apic_available(void)
--- 
-1.8.3.1
+-static void vmxoff_nmi(int cpu, struct pt_regs *regs)
++static void nmi_shootdown_nop(int cpu, struct pt_regs *regs)
+ {
+-	cpu_emergency_vmxoff();
++	/* Nothing to do, the NMI shootdown handler disables virtualization. */
+ }
+ 
+ /* Use NMIs as IPIs to tell all CPUs to disable virtualization */
+@@ -554,7 +554,7 @@ static void emergency_vmx_disable_all(void)
+ 		__cpu_emergency_vmxoff();
+ 
+ 		/* Halt and exit VMX root operation on the other CPUs. */
+-		nmi_shootdown_cpus(vmxoff_nmi);
++		nmi_shootdown_cpus(nmi_shootdown_nop);
+ 	}
+ }
+ 
+@@ -802,6 +802,18 @@ static nmi_shootdown_cb shootdown_callback;
+ static atomic_t waiting_for_crash_ipi;
+ static int crash_ipi_issued;
+ 
++void cpu_crash_disable_virtualization(void)
++{
++	/*
++	 * Disable virtualization, i.e. VMX or SVM, so that INIT is recognized
++	 * during reboot.  VMX blocks INIT if the CPU is post-VMXON, and SVM
++	 * blocks INIT if GIF=0.  Note, CLGI #UDs if SVM isn't enabled, so it's
++	 * easier to just disable SVM unconditionally.
++	 */
++	cpu_emergency_vmxoff();
++	cpu_emergency_svm_disable();
++}
++
+ static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
+ {
+ 	int cpu;
+@@ -819,6 +831,12 @@ static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
+ 
+ 	shootdown_callback(cpu, regs);
+ 
++	/*
++	 * Prepare the CPU for reboot _after_ invoking the callback so that the
++	 * callback can safely use virtualization instructions, e.g. VMCLEAR.
++	 */
++	cpu_crash_disable_virtualization();
++
+ 	atomic_dec(&waiting_for_crash_ipi);
+ 	/* Assume hlt works */
+ 	halt();
+@@ -840,6 +858,20 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ 	unsigned long msecs;
+ 	local_irq_disable();
+ 
++	/*
++	 * Invoking multiple callbacks is not currently supported, registering
++	 * the NMI handler twice will cause a list_add() double add BUG().
++	 * The exception is the "nop" handler in the emergency reboot path,
++	 * which can run after e.g. kdump's shootdown.  Do nothing if the crash
++	 * handler has already run, i.e. has already prepared other CPUs, the
++	 * reboot path doesn't have any work of its to do, it just needs to
++	 * ensure all CPUs have prepared for reboot.
++	 */
++	if (shootdown_callback) {
++		WARN_ON_ONCE(callback != nmi_shootdown_nop);
++		return;
++	}
++
+ 	/* Make a note of crashing cpu. Will be used in NMI callback. */
+ 	crashing_cpu = safe_smp_processor_id();
+ 
 
+base-commit: 2764011106d0436cb44702cfb0981339d68c3509
+-- 
+2.36.0.512.ge40c2bad7a-goog
+
+
+--J4vquNhda08TmTtV
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0002-x86-reboot-Disable-virtualization-in-an-emergency-if.patch"
+
+From ce4b8fb50962c00a9bb29663e96501e90d68bd8b Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Mon, 9 May 2022 08:28:14 -0700
+Subject: [PATCH 2/2] x86/reboot: Disable virtualization in an emergency if SVM
+ is supported
+
+Disable SVM on all CPUs via NMI shootdown during an emergency reboot.
+Like VMX, SVM can block INIT and thus prevent bringing up other CPUs via
+INIT-SIPI-SIPI.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kernel/reboot.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index f9543a4e9b09..33c1f4883b27 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -533,27 +533,29 @@ static void nmi_shootdown_nop(int cpu, struct pt_regs *regs)
+ 	/* Nothing to do, the NMI shootdown handler disables virtualization. */
+ }
+ 
+-/* Use NMIs as IPIs to tell all CPUs to disable virtualization */
+-static void emergency_vmx_disable_all(void)
++static void emergency_reboot_disable_virtualization(void)
+ {
+ 	/* Just make sure we won't change CPUs while doing this */
+ 	local_irq_disable();
+ 
+ 	/*
+-	 * Disable VMX on all CPUs before rebooting, otherwise we risk hanging
+-	 * the machine, because the CPU blocks INIT when it's in VMX root.
++	 * Disable virtualization on all CPUs before rebooting to avoid hanging
++	 * the system, as VMX and SVM block INIT when running in the host
+ 	 *
+ 	 * We can't take any locks and we may be on an inconsistent state, so
+-	 * use NMIs as IPIs to tell the other CPUs to exit VMX root and halt.
++	 * use NMIs as IPIs to tell the other CPUs to disable VMX/SVM and halt.
+ 	 *
+-	 * Do the NMI shootdown even if VMX if off on _this_ CPU, as that
+-	 * doesn't prevent a different CPU from being in VMX root operation.
++	 * Do the NMI shootdown even if virtualization is off on _this_ CPU, as
++	 * other CPUs may have virtualization enabled.
+ 	 */
+-	if (cpu_has_vmx()) {
+-		/* Safely force _this_ CPU out of VMX root operation. */
+-		__cpu_emergency_vmxoff();
++	if (cpu_has_vmx() || cpu_has_svm(NULL)) {
++		/* Safely force _this_ CPU out of VMX/SVM operation. */
++		if (cpu_has_vmx())
++			__cpu_emergency_vmxoff();
++		else
++			cpu_emergency_svm_disable();
+ 
+-		/* Halt and exit VMX root operation on the other CPUs. */
++		/* Disable VMX/SVM and halt on other CPUs. */
+ 		nmi_shootdown_cpus(nmi_shootdown_nop);
+ 	}
+ }
+@@ -590,7 +592,7 @@ static void native_machine_emergency_restart(void)
+ 	unsigned short mode;
+ 
+ 	if (reboot_emergency)
+-		emergency_vmx_disable_all();
++		emergency_reboot_disable_virtualization();
+ 
+ 	tboot_shutdown(TB_SHUTDOWN_REBOOT);
+ 
+-- 
+2.36.0.512.ge40c2bad7a-goog
+
+
+--J4vquNhda08TmTtV--
