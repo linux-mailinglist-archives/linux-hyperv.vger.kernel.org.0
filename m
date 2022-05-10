@@ -2,37 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 759B3521C72
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 May 2022 16:33:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 519FE521CD9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 May 2022 16:48:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343555AbiEJOhf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 10 May 2022 10:37:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
+        id S1344898AbiEJOwJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 10 May 2022 10:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344626AbiEJOfJ (ORCPT
+        with ESMTP id S1345246AbiEJOvK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 10 May 2022 10:35:09 -0400
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44F72DD793;
-        Tue, 10 May 2022 06:54:12 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4KyKJp4qqdz4yTd;
-        Tue, 10 May 2022 23:54:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1652190848;
-        bh=RKiZUE5HvPhTVnUibJtmltdG/qpHsl+mSP0bgs2lHhQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Z05kSyfn/tRZEkMC+xx0iIJQ7Am+MQO7HLgvv0mZSHOcfpqTom2o/uwqzS0x8Mf2S
-         +MV9rZ+Fzf71f3gh47v8ZN6FuQpE+0hL2e6Ug+4kF9Y6fEpYke0W/joqSUA70Lwp5I
-         4Ppma9tFa9PkRNG20BN4X8MRlMpJ63sRO/S19u9v0FZlEHa4Js3eqk1sS3wGAa85dR
-         +Jh96R1o2OAtJhZFfuVMo1EZ8CMSa8mkEAFP0AyoLzOV+kygqKbLAfKRxs3fKgbcsD
-         1Vaxn4RMiVSaImYmC7RQ1ktIs3LG4P5Jb+tgoFnzybYroBhkWvfkc77elbZWKz1nx/
-         2xhke52QkhhQQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tue, 10 May 2022 10:51:10 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9574D2631E2;
+        Tue, 10 May 2022 07:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vlPcmXA97Qhtkz3pBw6LdXf1X8P0UYvVzj4VthO5jgc=; b=e9qBavzt7iSXqotIL+kEfOWSDC
+        iVRppT3Hb/vZk3YrAi/b/1Sks4coJ4CDDP+7PsBf/3PYaPFt1gdo8rsOdKqYQ7smquEWj28eStWqL
+        CRF+oqCbuJG6ZM1a8GSMIH+b891MTAxbko/s3bV28TSILNPx0vJS6lKq9Hi1OrpvIOMJ2yAsDH+AE
+        5UZLLIZnAX0XkUOFElR9JGQkkK04aCtF/juYrAyo+JJs0W0WZech05pCgMVZEF/gDbG3lXHdR+nlg
+        gc7p3pNqQj2cprKtyF3OhhaP7dxC5PNGfWWqohU3giKekM5UQ60wlcwHLGqdoJfnT4tcYUBBcGgto
+        etn8qzNQ==;
+Received: from [177.183.162.244] (helo=[192.168.0.5])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1noQa0-000AUZ-9j; Tue, 10 May 2022 16:11:12 +0200
+Message-ID: <58837e3d-0e2a-42ac-f198-9fe7be7aa823@igalia.com>
+Date:   Tue, 10 May 2022 11:10:40 -0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH 08/30] powerpc/setup: Refactor/untangle panic notifiers
+Content-Language: en-US
+To:     Michael Ellerman <mpe@ellerman.id.au>,
         Hari Bathini <hbathini@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
@@ -61,40 +67,55 @@ Cc:     linux-kernel@vger.kernel.org,
         will@kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Nicholas Piggin <npiggin@gmail.com>,
         Paul Mackerras <paulus@samba.org>, akpm@linux-foundation.org
-Subject: Re: [PATCH 08/30] powerpc/setup: Refactor/untangle panic notifiers
-In-Reply-To: <f9c3de3c-1709-a1aa-2ece-c9fbfd5e6d6a@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
  <20220427224924.592546-9-gpiccoli@igalia.com>
  <3c34d8e2-6f84-933f-a4ed-338cd300d6b0@linux.ibm.com>
  <f9c3de3c-1709-a1aa-2ece-c9fbfd5e6d6a@igalia.com>
-Date:   Tue, 10 May 2022 23:53:56 +1000
-Message-ID: <87fslh8pe3.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+ <87fslh8pe3.fsf@mpe.ellerman.id.au>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <87fslh8pe3.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-"Guilherme G. Piccoli" <gpiccoli@igalia.com> writes:
-> On 05/05/2022 15:55, Hari Bathini wrote:
->> [...] 
->> The change looks good. I have tested it on an LPAR (ppc64).
->> 
->> Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
->> 
->
-> Hi Michael. do you think it's possible to add this one to powerpc/next
-> (or something like that), or do you prefer a V2 with his tag?
+On 10/05/2022 10:53, Michael Ellerman wrote:
+> "Guilherme G. Piccoli" <gpiccoli@igalia.com> writes:
+>> On 05/05/2022 15:55, Hari Bathini wrote:
+>>> [...] 
+>>> The change looks good. I have tested it on an LPAR (ppc64).
+>>>
+>>> Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+>>>
+>>
+>> Hi Michael. do you think it's possible to add this one to powerpc/next
+>> (or something like that), or do you prefer a V2 with his tag?
+> 
+> Ah sorry, I assumed it was going in as part of the whole series. I guess
+> I misread the cover letter.
+> 
+> So you want me to take this patch on its own via the powerpc tree?
+> 
+> cheers
 
-Ah sorry, I assumed it was going in as part of the whole series. I guess
-I misread the cover letter.
+Hi Michael, thanks for the prompt response!
 
-So you want me to take this patch on its own via the powerpc tree?
+You didn't misread, that was the plan heh
+But some maintainers start to take patches and merge in their trees, and
+in the end, it seems to make sense - almost half of this series are
+fixes or clean-ups, that are not really necessary to get merged altogether.
 
-cheers
+So, if you can take this one, I'd appreciate - it'll make V2 a bit
+smaller =)
+
+Cheers,
+
+
+Guilherme
