@@ -2,74 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA345520B44
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 May 2022 04:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F47A520BB5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 May 2022 05:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234150AbiEJCfA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 9 May 2022 22:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49164 "EHLO
+        id S235033AbiEJDLU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 9 May 2022 23:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233957AbiEJCe7 (ORCPT
+        with ESMTP id S234844AbiEJDLT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 9 May 2022 22:34:59 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5984A903;
-        Mon,  9 May 2022 19:31:03 -0700 (PDT)
+        Mon, 9 May 2022 23:11:19 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4566200F54;
+        Mon,  9 May 2022 20:07:22 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id s14so15609581plk.8;
+        Mon, 09 May 2022 20:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1652149864; x=1683685864;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IKRAL7XY/mwrUJ3XdTZuL5qjFP9GtucT6g9//4mC5Ng=;
-  b=fzKcn1pI2+i4Q0jmEbxXG459HqQROy3xLEnqpG1Ctpvwf4/KJIx5WvZm
-   vN3glHbZhywlMOfZxvokYJ7LJIFXYQybaJHH+btMgnnPtGViaOWKnNMUj
-   8qJTlr7ltjMHEbU1hIgITyzDvtUaHeKe70w3YjRHSkZfkBzW+d6pRqZiO
-   Y=;
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 09 May 2022 19:31:04 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2022 19:31:02 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Mon, 9 May 2022 19:31:02 -0700
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 9 May 2022
- 19:31:01 -0700
-Message-ID: <f9c9940e-306b-af5e-1be2-70ce1ee5cd73@quicinc.com>
-Date:   Mon, 9 May 2022 20:31:00 -0600
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:reply-to:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=eyb6HE0aStupgdY5e1T3X6/fpQLUuJk/A7MCfbx8it0=;
+        b=WAuXlFov5rxE53WVcRZLApGiCFyRF7LhHaC7fZmHhqVWfxb/xkpI33YIvGUh594l33
+         KWn5cKehBBbnw/LBOU59yNJ6Z0KoT1kBWPr8qTvZau/wI/XckGhSzeHXCvrHyL5fLBzD
+         zd4qYishGbUGqebip/6dDGzzL1ImMQqL0WGTJKOPSVboiL1WjUPACAHy9KpbCocWWoeK
+         3pmwvIlYGG4vO8WAnHGg9QsxwICIf7XhJyKwNI9EISOUvxTfole9rclv0Tas0qSrFKgz
+         9jQFWbBd+rxAWOn5YEAZRBwsFNNNWNQn8W4MkpdwlisIpSaT+H+YkOVAJ6JH7qFwQadT
+         2yWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:reply-to
+         :subject:content-language:to:cc:references:from:organization
+         :in-reply-to:content-transfer-encoding;
+        bh=eyb6HE0aStupgdY5e1T3X6/fpQLUuJk/A7MCfbx8it0=;
+        b=LXWD49Jve4W/1ZvMHWPNR1Vnmu4YE6N4L3pyo85CxxSRkv90m14N/uAOqw70OidN8z
+         fRyrK03NDZC/p0h1Wh1ZsTQszdyiehGHp0FNq8J+agq/PbnR/2kypeZnZHmt53BBvdML
+         2QnOdAu7+STu/MrQ/q2FCp6jH02RHiaHflytIkVgdhhl/iuxOEUCmVfA5bIVnadMvO3s
+         b5A7mwALshOL5QMmk7ZVVEM5CdWqOxGSuKOTfOVIO/XmjDnKqM/NAczfI9iwSjXElIK1
+         qvAM98Fg12bKMbf1V5JZ2/6YEWVZYeJkCDPDOPGmNNAmqi79ZJ1GlqARs/0v4tDd3Urv
+         YfQA==
+X-Gm-Message-State: AOAM533QOUOtvP5sKI1TEQQoAGmNM+wh96dUd2TqPu1/1Kb8jecRGt+2
+        cNm+1OKdts4iT4U+oZe3Dt4=
+X-Google-Smtp-Source: ABdhPJyvTuAE2lqBQDTIpJPUYkLP0W1nBRHHGgimK7qiGCE3o7KbKoH9b6m9bDMfK9bNd1ene+5LZg==
+X-Received: by 2002:a17:90a:db51:b0:1dc:9da2:793b with SMTP id u17-20020a17090adb5100b001dc9da2793bmr28972739pjx.77.1652152042333;
+        Mon, 09 May 2022 20:07:22 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:6:8000::78? ([2404:f801:9000:18:efed::78])
+        by smtp.gmail.com with ESMTPSA id n1-20020a170902d2c100b0015eafc485c8sm606664plc.289.2022.05.09.20.07.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 20:07:21 -0700 (PDT)
+Message-ID: <24726c1c-42a8-e2f2-2222-0676c8a3869f@gmail.com>
+Date:   Tue, 10 May 2022 11:07:13 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH 0/2] hyperv compose_msi_msg fixups
+ Thunderbird/91.9.0
+Reply-To: tiala@microsoft.com
+Subject: Re: [PATCH] x86/Hyper-V: Add SEV negotiate protocol support in
+ Isolation VM
 Content-Language: en-US
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC:     Jake Oshins <jakeo@microsoft.com>,
-        David Zhang <dazhan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1652132902-27109-1-git-send-email-quic_jhugo@quicinc.com>
- <BYAPR21MB1270A640D62BBEFB1ECE1307BFC69@BYAPR21MB1270.namprd21.prod.outlook.com>
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <BYAPR21MB1270A640D62BBEFB1ECE1307BFC69@BYAPR21MB1270.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, brijesh.singh@amd.com, venu.busireddy@oracle.com,
+        michael.roth@amd.com, Tianyu.Lan@microsoft.com,
+        thomas.lendacky@amd.com, jroedel@suse.de,
+        michael.h.kelley@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        parri.andrea@gmail.com
+References: <20220505131502.402259-1-ltykernel@gmail.com>
+ <YnmaSB2WCJwqaZae@zn.tnic>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Organization: Microsft
+In-Reply-To: <YnmaSB2WCJwqaZae@zn.tnic>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,14 +86,37 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/9/2022 5:23 PM, Dexuan Cui wrote:
->> From: Jeffrey Hugo <quic_jhugo@quicinc.com>
->> Sent: Monday, May 9, 2022 2:48 PM
+On 5/10/2022 6:48 AM, Borislav Petkov wrote:
+> On Thu, May 05, 2022 at 09:15:02AM -0400, Tianyu Lan wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> Hyper-V Isolation VM code uses sev_es_ghcb_hv_call() to read/write MSR
+>> via GHCB page. The SEV-ES guest should negotiate GHCB version before
+>> reading/writing MSR via GHCB page.
 > 
-> Thank you Jeff for working out the patches!
+> Why is that?
+> 
+>> Expose sev_es_negotiate_protocol() and sev_es_terminate() from AMD SEV
+>> code
+> 
+> Yeah, you keep wanting to expose random SEV-specific code and when we
+> go and change it in the future, you'll come complaining that we broke
+> hyperv.
+> 
+> I think it might be a lot better if you implement your own functions:
+> for example, looking at sev_es_negotiate_protocol() - it uses only
+> primitives which you can use because, well, VMGEXIT() is simply a
+> wrapper around the asm insn and sev_es_wr_ghcb_msr() is simply writing
+> into the MSR.
+> 
+> Ditto for sev_es_terminate().
+> 
+> And sev_es_ghcb_hv_call() too, for that matter. You can define your own.
+> 
+> IOW, you're much better off using those primitives and creating your own
+> functions than picking out random SEV-functions and then us breaking
+> your isolation VM stuff.
+> 
 
-Thanks for the feedback and reviews.  This certainly would have been 
-more challenging without your assistance.
-
--Jeff
+OK. I got it. Thanks for your suggestion.
 
