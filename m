@@ -2,51 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8072D521652
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 May 2022 15:04:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 759B3521C72
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 May 2022 16:33:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240479AbiEJNIs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 10 May 2022 09:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
+        id S1343555AbiEJOhf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 10 May 2022 10:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233776AbiEJNIr (ORCPT
+        with ESMTP id S1344626AbiEJOfJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 10 May 2022 09:08:47 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A17281368;
-        Tue, 10 May 2022 06:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ERCDIneY1Q4o8JFrn6huil0jOKhd5NF1nm9+poeBUGY=; b=C1bwe/Dp28hHJCcth6j9FIvLRX
-        pDXbwTw3GNkAuVoDVZ2t1Ig0Ha8VAgFyN1qfYHmoUYQVyDRHd7IRdBkOHux1OzR9Q7hmNC/ZbkDNy
-        i9N1ZP1KkXJYzqp8Xch5cykWJAl8GjhN23tq785F2kRMcqVY6TftmyHyPJZTtkL8PDJb7GYsR63+v
-        CyHpUemygecHOqy6UnkI5sacYa9DSfBokIBgO1vbgxAO3Lo/ZpYDMcX65a4mJHituF1N7bEMHTqnl
-        wjibh2hSmhpgeMzHripimwe7gT4RuGZfcia5HzNoWvLT/w9CiRN4l1p9e5qQ/+lp5TdT6UNVMzl77
-        9RtLUAvA==;
-Received: from [177.183.162.244] (helo=[192.168.0.5])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1noPXc-0005Ct-K8; Tue, 10 May 2022 15:04:40 +0200
-Message-ID: <c23f408f-d030-b599-19b4-8561d511ef73@igalia.com>
-Date:   Tue, 10 May 2022 10:04:08 -0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 04/30] firmware: google: Convert regular spinlock into
- trylock on panic path
-Content-Language: en-US
-To:     Petr Mladek <pmladek@suse.com>, Evan Green <evgreen@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, bhe@redhat.com,
-        kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        Tue, 10 May 2022 10:35:09 -0400
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44F72DD793;
+        Tue, 10 May 2022 06:54:12 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4KyKJp4qqdz4yTd;
+        Tue, 10 May 2022 23:54:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1652190848;
+        bh=RKiZUE5HvPhTVnUibJtmltdG/qpHsl+mSP0bgs2lHhQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Z05kSyfn/tRZEkMC+xx0iIJQ7Am+MQO7HLgvv0mZSHOcfpqTom2o/uwqzS0x8Mf2S
+         +MV9rZ+Fzf71f3gh47v8ZN6FuQpE+0hL2e6Ug+4kF9Y6fEpYke0W/joqSUA70Lwp5I
+         4Ppma9tFa9PkRNG20BN4X8MRlMpJ63sRO/S19u9v0FZlEHa4Js3eqk1sS3wGAa85dR
+         +Jh96R1o2OAtJhZFfuVMo1EZ8CMSa8mkEAFP0AyoLzOV+kygqKbLAfKRxs3fKgbcsD
+         1Vaxn4RMiVSaImYmC7RQ1ktIs3LG4P5Jb+tgoFnzybYroBhkWvfkc77elbZWKz1nx/
+         2xhke52QkhhQQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Hari Bathini <hbathini@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
         linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        pmladek@suse.com, kexec@lists.infradead.org, bhe@redhat.com,
         linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
         linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
@@ -54,108 +48,53 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>, bhe@redhat.com,
         sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
         x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
         halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Jonathan Corbet <corbet@lwn.net>, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
+        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
         mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de,
-        Kees Cook <keescook@chromium.org>, luto@kernel.org,
-        mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
-        peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, Alan Stern <stern@rowland.harvard.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com,
-        vkuznets@redhat.com, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        David Gow <davidgow@google.com>,
-        Julius Werner <jwerner@chromium.org>
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>, akpm@linux-foundation.org
+Subject: Re: [PATCH 08/30] powerpc/setup: Refactor/untangle panic notifiers
+In-Reply-To: <f9c3de3c-1709-a1aa-2ece-c9fbfd5e6d6a@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-5-gpiccoli@igalia.com>
- <CAE=gft5Pq25L4KFoPWbftkPF-JN1ex2yws77mMJ4GQnn9W0L2g@mail.gmail.com>
- <adcf6d0e-c37c-6ede-479e-29959d03d8c0@igalia.com> <YnpOv4hAPV4b+6v4@alley>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <YnpOv4hAPV4b+6v4@alley>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+ <20220427224924.592546-9-gpiccoli@igalia.com>
+ <3c34d8e2-6f84-933f-a4ed-338cd300d6b0@linux.ibm.com>
+ <f9c3de3c-1709-a1aa-2ece-c9fbfd5e6d6a@igalia.com>
+Date:   Tue, 10 May 2022 23:53:56 +1000
+Message-ID: <87fslh8pe3.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 10/05/2022 08:38, Petr Mladek wrote:
-> [...]
-> I see two more alternative solutions:
-> 
-> 1st variant is a trick already used in console write() callbacks.
-> They do trylock() when oops_in_progress is set. They remember
-> the result to prevent double unlock when printing Oops messages and
-> the system will try to continue working. For example:
-> 
-> pl011_console_write(struct console *co, const char *s, unsigned int count)
-> {
-> [...]
-> 	int locked = 1;
-> [...]
-> 	if (uap->port.sysrq)
-> 		locked = 0;
-> 	else if (oops_in_progress)
-> 		locked = spin_trylock(&uap->port.lock);
-> 	else
-> 		spin_lock(&uap->port.lock);
-> 
-> [...]
-> 
-> 	if (locked)
-> 		spin_unlock(&uap->port.lock);
-> }
-> 
-> 
-> 2nd variant is to check panic_cpu variable. It is used in printk.c.
-> We might move the function to panic.h:
-> 
-> static bool panic_in_progress(void)
-> {
-> 	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
-> }
-> 
-> and then do:
-> 
-> 	if (panic_in_progress()) {
-> 		...
+"Guilherme G. Piccoli" <gpiccoli@igalia.com> writes:
+> On 05/05/2022 15:55, Hari Bathini wrote:
+>> [...] 
+>> The change looks good. I have tested it on an LPAR (ppc64).
+>> 
+>> Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+>> 
+>
+> Hi Michael. do you think it's possible to add this one to powerpc/next
+> (or something like that), or do you prefer a V2 with his tag?
 
-Thanks for the review Petr! I feel alternative two is way better, it
-checks for panic - the oops_in_progress isn't really enough, since we
-can call panic() directly, not necessarily through an oops path, correct?
+Ah sorry, I assumed it was going in as part of the whole series. I guess
+I misread the cover letter.
 
-For me, we could stick with the lock check, but I'll defer to Evan - I
-didn't work the V2 patch yet, what do you prefer Evan?
+So you want me to take this patch on its own via the powerpc tree?
 
-
-> [...]
-> As already mentioned in the other reply, panic() sometimes stops
-> the other CPUs using NMI, for example, see kdump_nmi_shootdown_cpus().
-> 
-> Another situation is when the CPU using the lock ends in some
-> infinite loop because something went wrong. The system is in
-> an unpredictable state during panic().
-> 
-> I am not sure if this is possible with the code under gsmi_dev.lock
-> but such things really happen during panic() in other subsystems.
-> Using trylock in the panic() code path is a good practice.
-> 
-> Best Regards,
-> Petr
-
-Makes total sense, thanks for confirming!
-Cheers,
-
-
-Guilherme
+cheers
