@@ -2,241 +2,153 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9208F523721
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 17:23:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 844EC523A9B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 18:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242665AbiEKPXc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 May 2022 11:23:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41970 "EHLO
+        id S1344969AbiEKQsC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 May 2022 12:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343577AbiEKPXa (ORCPT
+        with ESMTP id S233496AbiEKQsA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 May 2022 11:23:30 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A02E51596;
-        Wed, 11 May 2022 08:23:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1652282609; x=1683818609;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jyk3mHBzL3GP52KkY0E3l3kR0Ar4/ziX8ARz3mXJ8GQ=;
-  b=hkbEw0xztPty37n0CsUvH3AQCeAHNoVYlgZuK3OzkAIEUQW9LUPh4MhT
-   /jNw5/qY2dajoztGleT3BVFhPeT4AkCrPnxU9HAtnieotE+6WKp3ZmSSP
-   qINc1xAqyVaIF519i50Re+qDTtu7ypbvED4AvKIjvpGgfXLuj2l+RYHbU
-   4=;
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 11 May 2022 08:23:29 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 08:23:28 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 11 May 2022 08:23:28 -0700
-Received: from jhugo-lnx.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 11 May 2022 08:23:27 -0700
-From:   Jeffrey Hugo <quic_jhugo@quicinc.com>
-To:     <kys@microsoft.com>, <haiyangz@microsoft.com>,
-        <sthemmin@microsoft.com>, <wei.liu@kernel.org>,
-        <decui@microsoft.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>
-CC:     <jakeo@microsoft.com>, <dazhan@microsoft.com>,
-        <linux-hyperv@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <quic_jhugo@quicinc.com>
-Subject: [PATCH v2 2/2] PCI: hv: Fix interrupt mapping for multi-MSI
-Date:   Wed, 11 May 2022 09:23:19 -0600
-Message-ID: <1652282599-21643-1-git-send-email-quic_jhugo@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 11 May 2022 12:48:00 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCDE6B7DB;
+        Wed, 11 May 2022 09:47:58 -0700 (PDT)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24BESoKr028080;
+        Wed, 11 May 2022 16:46:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=tjIW4ViQYza/lnoDnWyOhboEO5kjiPdt7taCyynzKFw=;
+ b=lxUbqAEO3GqUpU+Tuw2IWXF1fzXIGSDn1j9FVHjMmFIPrrH/+bQrVN9PaaYcbEJhBJIr
+ 7d0t++ZFM6UKMdcnwcUF0YasHW2SP51KwmfPJnRgOou9+kRarIXLa3hIMjmu5cX5t3FO
+ 6rItwaIor28IfP+e6c0HY1HIerMLLjGg06tg70umpoMhCUKjDu0piWYCrZz/VisJ+s0b
+ 0DuyX+X+ttOZsVNhvwPdzqfPCbp/RA3MDqZWBEVZBj0PN/wvhGTqQYzQ4imgN+k8TjhU
+ NC3v9IrNMZOoN56TSdKZo20ktYuMVwJV19grssXUZ/JxpGndCu9D0HmYa5fO310s9Ten QA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g0etx3406-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 May 2022 16:46:00 +0000
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24BGebih023228;
+        Wed, 11 May 2022 16:45:59 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g0etx33y1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 May 2022 16:45:59 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24BGgY6p030999;
+        Wed, 11 May 2022 16:45:56 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3fwgd8wsc9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 May 2022 16:45:55 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24BGjqsM27197764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 May 2022 16:45:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA0B35204E;
+        Wed, 11 May 2022 16:45:52 +0000 (GMT)
+Received: from osiris (unknown [9.145.80.86])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id B9FCE52050;
+        Wed, 11 May 2022 16:45:50 +0000 (GMT)
+Date:   Wed, 11 May 2022 18:45:49 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-leds@vger.kernel.org, pmladek@suse.com, bhe@redhat.com,
+        akpm@linux-foundation.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        kexec@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
+        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+        corbet@lwn.net, d.hatayama@jp.fujitsu.com,
+        dave.hansen@linux.intel.com, dyoung@redhat.com,
+        feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org
+Subject: Re: [PATCH 22/30] panic: Introduce the panic post-reboot notifier
+ list
+Message-ID: <YnvoPe2cTS31qbjb@osiris>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-23-gpiccoli@igalia.com>
+ <7017c234-7c73-524a-11b6-fefdd5646f59@igalia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7017c234-7c73-524a-11b6-fefdd5646f59@igalia.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: P8jYmW-Xe3lS0Lxn9LfjJuLQx8-pWyu5
+X-Proofpoint-ORIG-GUID: 3EoVOe4XNkWaSjwGnBLNECSOqY142ccD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-11_07,2022-05-11_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 phishscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=429 bulkscore=0 impostorscore=0
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2205110076
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-According to Dexuan, the hypervisor folks beleive that multi-msi
-allocations are not correct.  compose_msi_msg() will allocate multi-msi
-one by one.  However, multi-msi is a block of related MSIs, with alignment
-requirements.  In order for the hypervisor to allocate properly aligned
-and consecutive entries in the IOMMU Interrupt Remapping Table, there
-should be a single mapping request that requests all of the multi-msi
-vectors in one shot.
+On Mon, May 09, 2022 at 11:16:10AM -0300, Guilherme G. Piccoli wrote:
+> On 27/04/2022 19:49, Guilherme G. Piccoli wrote:
+> > Currently we have 3 notifier lists in the panic path, which will
+> > be wired in a way to allow the notifier callbacks to run in
+> > different moments at panic time, in a subsequent patch.
+> > 
+> > But there is also an odd set of architecture calls hardcoded in
+> > the end of panic path, after the restart machinery. They're
+> > responsible for late time tunings / events, like enabling a stop
+> > button (Sparc) or effectively stopping the machine (s390).
+> > 
+> > This patch introduces yet another notifier list to offer the
+> > architectures a way to add callbacks in such late moment on
+> > panic path without the need of ifdefs / hardcoded approaches.
+> > 
+> > Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> > Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Heiko Carstens <hca@linux.ibm.com>
+> > Cc: Sven Schnelle <svens@linux.ibm.com>
+> > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
+> Hey S390/SPARC folks, sorry for the ping!
+> 
+> Any reviews on this V1 would be greatly appreciated, I'm working on V2
+> and seeking feedback in the non-reviewed patches.
 
-Dexuan suggests detecting the multi-msi case and composing a single
-request related to the first MSI.  Then for the other MSIs in the same
-block, use the cached information.  This appears to be viable, so do it.
+Sorry, missed that this is quite s390 specific. So, yes, this looks
+good to me and nice to see that one of the remaining CONFIG_S390 in
+common code will be removed!
 
-Suggested-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Tested-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/pci/controller/pci-hyperv.c | 60 ++++++++++++++++++++++++++++++-------
- 1 file changed, 50 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 5e2e637..e439b81 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1525,6 +1525,10 @@ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
- 		u8 buffer[sizeof(struct pci_delete_interrupt)];
- 	} ctxt;
- 
-+	if (!int_desc->vector_count) {
-+		kfree(int_desc);
-+		return;
-+	}
- 	memset(&ctxt, 0, sizeof(ctxt));
- 	int_pkt = (struct pci_delete_interrupt *)&ctxt.pkt.message;
- 	int_pkt->message_type.type =
-@@ -1609,12 +1613,12 @@ static void hv_pci_compose_compl(void *context, struct pci_response *resp,
- 
- static u32 hv_compose_msi_req_v1(
- 	struct pci_create_interrupt *int_pkt, struct cpumask *affinity,
--	u32 slot, u8 vector)
-+	u32 slot, u8 vector, u8 vector_count)
- {
- 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE;
- 	int_pkt->wslot.slot = slot;
- 	int_pkt->int_desc.vector = vector;
--	int_pkt->int_desc.vector_count = 1;
-+	int_pkt->int_desc.vector_count = vector_count;
- 	int_pkt->int_desc.delivery_mode = DELIVERY_MODE;
- 
- 	/*
-@@ -1637,14 +1641,14 @@ static int hv_compose_msi_req_get_cpu(struct cpumask *affinity)
- 
- static u32 hv_compose_msi_req_v2(
- 	struct pci_create_interrupt2 *int_pkt, struct cpumask *affinity,
--	u32 slot, u8 vector)
-+	u32 slot, u8 vector, u8 vector_count)
- {
- 	int cpu;
- 
- 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE2;
- 	int_pkt->wslot.slot = slot;
- 	int_pkt->int_desc.vector = vector;
--	int_pkt->int_desc.vector_count = 1;
-+	int_pkt->int_desc.vector_count = vector_count;
- 	int_pkt->int_desc.delivery_mode = DELIVERY_MODE;
- 	cpu = hv_compose_msi_req_get_cpu(affinity);
- 	int_pkt->int_desc.processor_array[0] =
-@@ -1656,7 +1660,7 @@ static u32 hv_compose_msi_req_v2(
- 
- static u32 hv_compose_msi_req_v3(
- 	struct pci_create_interrupt3 *int_pkt, struct cpumask *affinity,
--	u32 slot, u32 vector)
-+	u32 slot, u32 vector, u8 vector_count)
- {
- 	int cpu;
- 
-@@ -1664,7 +1668,7 @@ static u32 hv_compose_msi_req_v3(
- 	int_pkt->wslot.slot = slot;
- 	int_pkt->int_desc.vector = vector;
- 	int_pkt->int_desc.reserved = 0;
--	int_pkt->int_desc.vector_count = 1;
-+	int_pkt->int_desc.vector_count = vector_count;
- 	int_pkt->int_desc.delivery_mode = DELIVERY_MODE;
- 	cpu = hv_compose_msi_req_get_cpu(affinity);
- 	int_pkt->int_desc.processor_array[0] =
-@@ -1695,6 +1699,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	struct cpumask *dest;
- 	struct compose_comp_ctxt comp;
- 	struct tran_int_desc *int_desc;
-+	struct msi_desc *msi_desc;
-+	u8 vector, vector_count;
- 	struct {
- 		struct pci_packet pci_pkt;
- 		union {
-@@ -1716,7 +1722,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		return;
- 	}
- 
--	pdev = msi_desc_to_pci_dev(irq_data_get_msi_desc(data));
-+	msi_desc  = irq_data_get_msi_desc(data);
-+	pdev = msi_desc_to_pci_dev(msi_desc);
- 	dest = irq_data_get_effective_affinity_mask(data);
- 	pbus = pdev->bus;
- 	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
-@@ -1729,6 +1736,36 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	if (!int_desc)
- 		goto drop_reference;
- 
-+	if (!msi_desc->pci.msi_attrib.is_msix && msi_desc->nvec_used > 1) {
-+		/*
-+		 * If this is not the first MSI of Multi MSI, we already have
-+		 * a mapping.  Can exit early.
-+		 */
-+		if (msi_desc->irq != data->irq) {
-+			data->chip_data = int_desc;
-+			int_desc->address = msi_desc->msg.address_lo |
-+					    (u64)msi_desc->msg.address_hi << 32;
-+			int_desc->data = msi_desc->msg.data +
-+					 (data->irq - msi_desc->irq);
-+			msg->address_hi = msi_desc->msg.address_hi;
-+			msg->address_lo = msi_desc->msg.address_lo;
-+			msg->data = int_desc->data;
-+			put_pcichild(hpdev);
-+			return;
-+		}
-+		/*
-+		 * The vector we select here is a dummy value.  The correct
-+		 * value gets sent to the hypervisor in unmask().  This needs
-+		 * to be aligned with the count, and also not zero.  Multi-msi
-+		 * is powers of 2 up to 32, so 32 will always work here.
-+		 */
-+		vector = 32;
-+		vector_count = msi_desc->nvec_used;
-+	} else {
-+		vector = hv_msi_get_int_vector(data);
-+		vector_count = 1;
-+	}
-+
- 	memset(&ctxt, 0, sizeof(ctxt));
- 	init_completion(&comp.comp_pkt.host_event);
- 	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
-@@ -1739,7 +1776,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
- 					dest,
- 					hpdev->desc.win_slot.slot,
--					hv_msi_get_int_vector(data));
-+					vector,
-+					vector_count);
- 		break;
- 
- 	case PCI_PROTOCOL_VERSION_1_2:
-@@ -1747,14 +1785,16 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
- 					dest,
- 					hpdev->desc.win_slot.slot,
--					hv_msi_get_int_vector(data));
-+					vector,
-+					vector_count);
- 		break;
- 
- 	case PCI_PROTOCOL_VERSION_1_4:
- 		size = hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
- 					dest,
- 					hpdev->desc.win_slot.slot,
--					hv_msi_get_int_vector(data));
-+					vector,
-+					vector_count);
- 		break;
- 
- 	default:
--- 
-2.7.4
-
+For the s390 bits:
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
