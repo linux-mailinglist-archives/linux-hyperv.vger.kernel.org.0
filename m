@@ -2,211 +2,87 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 764525232F2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 14:19:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D97B5235CE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 16:41:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233765AbiEKMTi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 May 2022 08:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33686 "EHLO
+        id S238423AbiEKOlx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 May 2022 10:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242389AbiEKMTb (ORCPT
+        with ESMTP id S240952AbiEKOlw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 May 2022 08:19:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F1EF068983
-        for <linux-hyperv@vger.kernel.org>; Wed, 11 May 2022 05:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652271569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5XtCAnwLhNu7gFR9U60fmOVLexudYij0/1/sWcFMxkY=;
-        b=bZtFE+z22UQwLeUMSWl+5idjsSGF+Lf5dIuTmtGOYT7GqLTGqjQO1XfRrcQhZprgrytIoQ
-        Vyb7/I5UMVvS+kVLpdq2hudEhVKo61wPaR4olM/YxSE6CGX6tApoz0GLVHwP6jofEGQ2S6
-        AcLNHrLqDU27FzVL2ZbgFe9bGBZVeWc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-483-rue3oaBuOF-DIJ-l_vhFUQ-1; Wed, 11 May 2022 08:19:22 -0400
-X-MC-Unique: rue3oaBuOF-DIJ-l_vhFUQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 744F9185A794;
-        Wed, 11 May 2022 12:19:21 +0000 (UTC)
-Received: from starship (unknown [10.40.192.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DE72438BD8;
-        Wed, 11 May 2022 12:19:18 +0000 (UTC)
-Message-ID: <b6cc44cb6cb0ac61c4b919406827be532e8b8cd7.camel@redhat.com>
-Subject: Re: [PATCH v3 33/34] KVM: selftests: hyperv_svm_test: Introduce L2
- TLB flush test
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 11 May 2022 15:19:18 +0300
-In-Reply-To: <20220414132013.1588929-34-vkuznets@redhat.com>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
-         <20220414132013.1588929-34-vkuznets@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+        Wed, 11 May 2022 10:41:52 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB8962124;
+        Wed, 11 May 2022 07:41:51 -0700 (PDT)
+Received: by mail-wm1-f44.google.com with SMTP id k126-20020a1ca184000000b003943fd07180so1358671wme.3;
+        Wed, 11 May 2022 07:41:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=raSRRTCAVGSx3TYDCF2KseubaUXW02wZiWAl7TPOzDs=;
+        b=mq1rz1X+YQh2fcPq+AIQHeVM/QqY7++9HXLrtiBSmzyLi0w92GD/pwfEEMVA3SxLTe
+         pOD9n385lQapFQ2Q7oUpHnaztxWDemPfjcaWdSQxvf+8yz71+xrljpZ4VlnuGrPrjZsv
+         U8L2eS/46u2nBhrjYtELpIewwwF/GJiHCjNFGuPoKB2OiOvF5VrTiQnMR2v0TDNEpk25
+         t/K2ZBr0BEcVrTQQLGDeN3BM+OfYX3JWn0A7nEiVhKT/MpKdj/LMIGN8T/MAB1mFOiWR
+         fF85CSAmVq+77ppUshx+XAvM5puEMLcbUomjdW9fX+sSftegngNfeQbVYLclrOXWFE0R
+         N+KQ==
+X-Gm-Message-State: AOAM531WeJBGgE7tPnG8CZmzIZEgiY6Y6joJdbS6/mvjRcPb39vq4Jku
+        7eCVrRJyrPSxacwMIZVdq9c=
+X-Google-Smtp-Source: ABdhPJz5fmaX4Xe+GcXRLoVZXNKjCRiu5LoxVTskT4iU3Dwc852RhmKZ/z+ZT7+gBP8EmIvzaiyaTg==
+X-Received: by 2002:a05:600c:2844:b0:393:f6fb:5897 with SMTP id r4-20020a05600c284400b00393f6fb5897mr5332055wmb.66.1652280109603;
+        Wed, 11 May 2022 07:41:49 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id p8-20020a5d48c8000000b0020c5253d907sm1825838wrs.83.2022.05.11.07.41.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 07:41:49 -0700 (PDT)
+Date:   Wed, 11 May 2022 14:41:24 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        jakeo@microsoft.com, dazhan@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] hyperv compose_msi_msg fixups
+Message-ID: <20220511144124.rj7inq6zy6bgbii4@liuwe-devbox-debian-v2>
+References: <1652132902-27109-1-git-send-email-quic_jhugo@quicinc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1652132902-27109-1-git-send-email-quic_jhugo@quicinc.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 2022-04-14 at 15:20 +0200, Vitaly Kuznetsov wrote:
-> Enable Hyper-V L2 TLB flush and check that Hyper-V TLB flush hypercalls
-> from L2 don't exit to L1 unless 'TlbLockCount' is set in the Partition
-> assist page.
+On Mon, May 09, 2022 at 03:48:20PM -0600, Jeffrey Hugo wrote:
+> While multi-MSI appears to work with pci-hyperv.c, there was a concern about
+> how linux was doing the ITRE allocations.  Patch 2 addresses the concern.
 > 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  .../selftests/kvm/x86_64/hyperv_svm_test.c    | 60 +++++++++++++++++--
->  1 file changed, 56 insertions(+), 4 deletions(-)
+> However, patch 2 exposed an issue with how compose_msi_msg() was freeing a
+> previous allocation when called for the Nth time.  Imagine a driver using
+> pci_alloc_irq_vectors() to request 32 MSIs.  This would cause compose_msi_msg()
+> to be called 32 times, once for each MSI.  With patch 2, MSI0 would allocate
+> the ITREs needed, and MSI1-31 would use the cached information.  Then the driver
+> uses request_irq() on MSI1-17.  This would call compose_msi_msg() again on those
+> MSIs, which would again use the cached information.  Then unmask() would be
+> called to retarget the MSIs to the right VCPU vectors.  Finally, the driver
+> calls request_irq() on MSI0.  This would call conpose_msi_msg(), which would
+> free the block of 32 MSIs, and allocate a new block.  This would undo the
+> retarget of MSI1-17, and likely leave those MSIs targeting invalid VCPU vectors.
+> This is addressed by patch 1, which is introduced first to prevent a regression.
 > 
-> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c b/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
-> index 21f5ca9197da..99f0a2ead7df 100644
-> --- a/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
-> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
-> @@ -42,11 +42,24 @@ struct hv_enlightenments {
->   */
->  #define VMCB_HV_NESTED_ENLIGHTENMENTS (1U << 31)
->  
-> +#define HV_SVM_EXITCODE_ENL 0xF0000000
-> +#define HV_SVM_ENL_EXITCODE_TRAP_AFTER_FLUSH   (1)
-> +
->  static inline void vmmcall(void)
->  {
->  	__asm__ __volatile__("vmmcall");
->  }
->  
-> +static inline void hypercall(u64 control, vm_vaddr_t arg1, vm_vaddr_t arg2)
-> +{
-> +	asm volatile("mov %3, %%r8\n"
-> +		     "vmmcall"
-> +		     : "+c" (control), "+d" (arg1)
-> +		     :  "r" (arg2)
-> +		     : "cc", "memory", "rax", "rbx", "r8", "r9", "r10",
-> +		       "r11", "r12", "r13", "r14", "r15");
-> +}
+> Jeffrey Hugo (2):
+>   PCI: hv: Reuse existing ITRE allocation in compose_msi_msg()
+>   PCI: hv: Fix interrupt mapping for multi-MSI
+> 
 
-Yes, this code should really be put in a common file :)
-
-> +
->  void l2_guest_code(void)
->  {
->  	GUEST_SYNC(3);
-> @@ -62,11 +75,21 @@ void l2_guest_code(void)
->  
->  	GUEST_SYNC(5);
->  
-> +	/* L2 TLB flush tests */
-> +	hypercall(HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE | HV_HYPERCALL_FAST_BIT, 0x0,
-> +		  HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES | HV_FLUSH_ALL_PROCESSORS);
-> +	rdmsr(MSR_FS_BASE);
-> +	hypercall(HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE | HV_HYPERCALL_FAST_BIT, 0x0,
-> +		  HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES | HV_FLUSH_ALL_PROCESSORS);
-> +	/* Make sure we're not issuing Hyper-V TLB flush call again */
-> +	__asm__ __volatile__ ("mov $0xdeadbeef, %rcx");
-> +
->  	/* Done, exit to L1 and never come back.  */
->  	vmmcall();
->  }
->  
-> -static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
-> +static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
-> +						    vm_vaddr_t pgs_gpa)
->  {
->  	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
->  	struct vmcb *vmcb = svm->vmcb;
-> @@ -75,13 +98,23 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
->  
->  	GUEST_SYNC(1);
->  
-> -	wrmsr(HV_X64_MSR_GUEST_OS_ID, (u64)0x8100 << 48);
-> +	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
-> +	wrmsr(HV_X64_MSR_HYPERCALL, pgs_gpa);
-> +	enable_vp_assist(svm->vp_assist_gpa, svm->vp_assist);
->  
->  	GUEST_ASSERT(svm->vmcb_gpa);
->  	/* Prepare for L2 execution. */
->  	generic_svm_setup(svm, l2_guest_code,
->  			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
->  
-> +	/* L2 TLB flush setup */
-> +	hve->partition_assist_page = svm->partition_assist_gpa;
-> +	hve->hv_enlightenments_control.nested_flush_hypercall = 1;
-> +	hve->hv_vm_id = 1;
-> +	hve->hv_vp_id = 1;
-> +	current_vp_assist->nested_control.features.directhypercall = 1;
-> +	*(u32 *)(svm->partition_assist) = 0;
-> +
->  	GUEST_SYNC(2);
->  	run_guest(vmcb, svm->vmcb_gpa);
->  	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-> @@ -116,6 +149,20 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
->  	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_MSR);
->  	vmcb->save.rip += 2; /* rdmsr */
->  
-> +
-> +	/*
-> +	 * L2 TLB flush test. First VMCALL should be handled directly by L0,
-> +	 * no VMCALL exit expected.
-> +	 */
-> +	run_guest(vmcb, svm->vmcb_gpa);
-> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_MSR);
-> +	vmcb->save.rip += 2; /* rdmsr */
-> +	/* Enable synthetic vmexit */
-> +	*(u32 *)(svm->partition_assist) = 1;
-> +	run_guest(vmcb, svm->vmcb_gpa);
-> +	GUEST_ASSERT(vmcb->control.exit_code == HV_SVM_EXITCODE_ENL);
-> +	GUEST_ASSERT(vmcb->control.exit_info_1 == HV_SVM_ENL_EXITCODE_TRAP_AFTER_FLUSH);
-> +
->  	run_guest(vmcb, svm->vmcb_gpa);
->  	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
->  	GUEST_SYNC(6);
-> @@ -126,7 +173,7 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
->  int main(int argc, char *argv[])
->  {
->  	vm_vaddr_t nested_gva = 0;
-> -
-> +	vm_vaddr_t hcall_page;
->  	struct kvm_vm *vm;
->  	struct kvm_run *run;
->  	struct ucall uc;
-> @@ -141,7 +188,12 @@ int main(int argc, char *argv[])
->  	vcpu_set_hv_cpuid(vm, VCPU_ID);
->  	run = vcpu_state(vm, VCPU_ID);
->  	vcpu_alloc_svm(vm, &nested_gva);
-> -	vcpu_args_set(vm, VCPU_ID, 1, nested_gva);
-> +
-> +	hcall_page = vm_vaddr_alloc_pages(vm, 1);
-> +	memset(addr_gva2hva(vm, hcall_page), 0x0,  getpagesize());
-> +
-> +	vcpu_args_set(vm, VCPU_ID, 2, nested_gva, addr_gva2gpa(vm, hcall_page));
-> +	vcpu_set_msr(vm, VCPU_ID, HV_X64_MSR_VP_INDEX, VCPU_ID);
->  
->  	for (stage = 1;; stage++) {
->  		_vcpu_run(vm, VCPU_ID);
-
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-
-Best regards,
-	Maxim Levitsky
-
-
+Applied to hyperv-next. Thanks.
