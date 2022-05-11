@@ -2,119 +2,100 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E68A7523ED4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 22:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 080EA52404A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 May 2022 00:32:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242114AbiEKUYT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 May 2022 16:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60436 "EHLO
+        id S1348764AbiEKWc0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 May 2022 18:32:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238984AbiEKUYR (ORCPT
+        with ESMTP id S235676AbiEKWcZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 May 2022 16:24:17 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0345A72E01;
-        Wed, 11 May 2022 13:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LCKlEcL/+gLbho7zoJo89g9MDYx2GFkg8N7n1nlW+0g=; b=MQpyMZ3nMM+SlSF0Ic+7AggIHS
-        wWCWxLFJNdpcNC/qKw1wNJR3uSo8xMkfiJlq7d2aikSbZG9yuq1pfGOyawWDcFgWnRsla4fbF455Y
-        3RXCIUoMIO9o6uix81B+J++RZraHoxYIg5AFTEzg2KmNpXSrs7BEjvRicrp5TYhs6s3mYN27kkyAz
-        njPDxaRSeQ75fkZPzqisnL9xIuav4szhmycF8VItK7avDyCoEE8U/Zs7xTZO8x+jizmxi0qGskMhG
-        GsWdK7oyZ7kJDFhpPsgWAmAhF7aiE+T5aNpN2RQ5WYTzC7ql7jtRy3esjCfYNiJNCeB+2D6JHceeB
-        Ayva3vzg==;
-Received: from [177.183.162.244] (helo=[192.168.0.5])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1noss0-000Aod-US; Wed, 11 May 2022 22:23:41 +0200
-Message-ID: <4b003501-f5c3-cd66-d222-88d98c93e141@igalia.com>
-Date:   Wed, 11 May 2022 17:22:22 -0300
+        Wed, 11 May 2022 18:32:25 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD3D62A18;
+        Wed, 11 May 2022 15:32:24 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id k27so4180020edk.4;
+        Wed, 11 May 2022 15:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rL9q1a1EeCnS72sAyvjARKItZ8kxxTTeGVdvVhBpEkQ=;
+        b=I84mYgaqMn3/HHXjspIHPNSz0fiSYhIrS1/hW5nAV5jByjcVzW2lpGByw9DBQ5GZKS
+         bnOiwe4MoO33cHXCl3IYfh3ZgRgNpN56PR+P+Qx8DlNdk/b1EESeOWh9FOLUiKCbZ7aD
+         xk3X6N4IXfOPAx9VxECn1jP4sVOj/ufTMycGkboHetx+fCzW41bBYLOhGaeGtFtnLwO2
+         H1evJSAa1QwgKEFuOgkox/tw32lmZSt4cbWpY6vna74Rt3VDZaUsKSm0AJ2vyhAZY7cB
+         w7mb0Otpzs7rcFMEU/VkS2ytYkqZj0vTfqzTs9MNOxjlTyO97hH3i3LydDm66iUibq/k
+         fD4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rL9q1a1EeCnS72sAyvjARKItZ8kxxTTeGVdvVhBpEkQ=;
+        b=wyFUz+S+dKsVdsFlZp2p4b/IVVs1GgkRYrXfF+Je7nIDBAkXjwosHFhIZG83H+TP/O
+         FaEZIE2ptKt7aCHf/L9z9UH8CROW5WYjFTVOSsgP9PyR9cpHJ+eR7eBhP+T76FqRMMTz
+         RCoc4lk+0JIaDSt5S7RVFQ4y4Z+wBvhNmQ/4SqasVk5GURNyaHVVteRC/Xj3nHPWxyih
+         GBCbHqk6D7p3FQae1fPYKPFA4H6Pu2n56EXaBIajznZOncTdwcYSxlFWJmDtFmHOK/k2
+         Q6yOwjzNNogDyLhx3wAP65CJtHSi5uFM/yWi7FgLWdwFSGNbRawr3/qoP+AnTYtTsYGk
+         Aqtw==
+X-Gm-Message-State: AOAM531ZLclms8c4Zjs3JXDTUlvr0SHL8IVCrEA5+uCO5JQYEsFjcxMM
+        19rahYhiOOPxmS2CpBkuewAkYmuwmGU=
+X-Google-Smtp-Source: ABdhPJz1X8XoNDPt8R0juMrba4PxJQPDZf5jjyy4BuqH4w+BlYcyN5Tp9et9hEXfuoCKrYqtKahRaA==
+X-Received: by 2002:aa7:c0c4:0:b0:425:c776:6f17 with SMTP id j4-20020aa7c0c4000000b00425c7766f17mr31121586edp.131.1652308342427;
+        Wed, 11 May 2022 15:32:22 -0700 (PDT)
+Received: from anparri.mshome.net (host-79-30-69-23.retail.telecomitalia.it. [79.30.69.23])
+        by smtp.gmail.com with ESMTPSA id f1-20020a1709064dc100b006fa84a0af2asm1468456ejw.16.2022.05.11.15.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 15:32:21 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Subject: [PATCH v2 0/2] PCI: hv: Hardening changes
+Date:   Thu, 12 May 2022 00:32:05 +0200
+Message-Id: <20220511223207.3386-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 11/30] um: Improve panic notifiers consistency and
- ordering
-Content-Language: en-US
-To:     Petr Mladek <pmladek@suse.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Richard Weinberger <richard@nod.at>
-Cc:     akpm@linux-foundation.org, bhe@redhat.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
-        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
-        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-12-gpiccoli@igalia.com> <Ynp2hRodh04K3pzK@alley>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <Ynp2hRodh04K3pzK@alley>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 10/05/2022 11:28, Petr Mladek wrote:
-> [...]
-> It is not clear to me why user mode linux should not care about
-> the other notifiers. It might be because I do not know much
-> about the user mode linux.
-> 
-> Is the because they always create core dump or are never running
-> in a hypervisor or ...?
-> 
-> AFAIK, the notifiers do many different things. For example, there
-> is a notifier that disables RCU watchdog, print some extra
-> information. Why none of them make sense here?
->
+Changes since v1[1]:
+  - Add validation in q_resource_requirements()
 
-Hi Petr, my understanding is that UML is a form of running Linux as a
-regular userspace process for testing purposes. With that said, as soon
-as we exit in the error path, less "pollution" would happen, so users
-can use GDB to debug the core dump for example.
+Patch #2 depends on changes in hyperv-next.  (Acknowledging that hyperv
+is entering EOM, for review.)
 
-In later patches of this series (when we split the panic notifiers in 3
-lists) these UML notifiers run in the pre-reboot list, so they run after
-the informational notifiers for example (in the default level).
-But without the list split we cannot order properly, so my gut feeling
-is that makes sense to run them rather earlier than later in the panic
-process...
+Thanks,
+  Andrea
 
-Maybe Anton / Johannes / Richard could give their opinions - appreciate
-that, I'm not attached to the priority here, it's more about users'
-common usage of UML I can think of...
+[1] https://lkml.kernel.org/r/20220504125039.2598-1-parri.andrea@gmail.com
 
-Cheers,
+Andrea Parri (Microsoft) (2):
+  PCI: hv: Add validation for untrusted Hyper-V values
+  PCI: hv: Fix synchronization between channel callback and
+    hv_pci_bus_exit()
 
+ drivers/pci/controller/pci-hyperv.c | 59 +++++++++++++++++++++--------
+ 1 file changed, 43 insertions(+), 16 deletions(-)
 
-Guilherme
+-- 
+2.25.1
+
