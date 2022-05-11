@@ -2,153 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 844EC523A9B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 18:48:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E956C523BE4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 19:51:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344969AbiEKQsC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 May 2022 12:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38230 "EHLO
+        id S244989AbiEKRvc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 May 2022 13:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233496AbiEKQsA (ORCPT
+        with ESMTP id S1345812AbiEKRvb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 May 2022 12:48:00 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCDE6B7DB;
-        Wed, 11 May 2022 09:47:58 -0700 (PDT)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24BESoKr028080;
-        Wed, 11 May 2022 16:46:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=tjIW4ViQYza/lnoDnWyOhboEO5kjiPdt7taCyynzKFw=;
- b=lxUbqAEO3GqUpU+Tuw2IWXF1fzXIGSDn1j9FVHjMmFIPrrH/+bQrVN9PaaYcbEJhBJIr
- 7d0t++ZFM6UKMdcnwcUF0YasHW2SP51KwmfPJnRgOou9+kRarIXLa3hIMjmu5cX5t3FO
- 6rItwaIor28IfP+e6c0HY1HIerMLLjGg06tg70umpoMhCUKjDu0piWYCrZz/VisJ+s0b
- 0DuyX+X+ttOZsVNhvwPdzqfPCbp/RA3MDqZWBEVZBj0PN/wvhGTqQYzQ4imgN+k8TjhU
- NC3v9IrNMZOoN56TSdKZo20ktYuMVwJV19grssXUZ/JxpGndCu9D0HmYa5fO310s9Ten QA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g0etx3406-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 May 2022 16:46:00 +0000
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24BGebih023228;
-        Wed, 11 May 2022 16:45:59 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g0etx33y1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 May 2022 16:45:59 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24BGgY6p030999;
-        Wed, 11 May 2022 16:45:56 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 3fwgd8wsc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 May 2022 16:45:55 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24BGjqsM27197764
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 May 2022 16:45:52 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA0B35204E;
-        Wed, 11 May 2022 16:45:52 +0000 (GMT)
-Received: from osiris (unknown [9.145.80.86])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id B9FCE52050;
-        Wed, 11 May 2022 16:45:50 +0000 (GMT)
-Date:   Wed, 11 May 2022 18:45:49 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-leds@vger.kernel.org, pmladek@suse.com, bhe@redhat.com,
-        akpm@linux-foundation.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kexec@lists.infradead.org, linux-tegra@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
-        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
-        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        corbet@lwn.net, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org
-Subject: Re: [PATCH 22/30] panic: Introduce the panic post-reboot notifier
- list
-Message-ID: <YnvoPe2cTS31qbjb@osiris>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-23-gpiccoli@igalia.com>
- <7017c234-7c73-524a-11b6-fefdd5646f59@igalia.com>
+        Wed, 11 May 2022 13:51:31 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B4D4839F;
+        Wed, 11 May 2022 10:51:30 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id k126-20020a1ca184000000b003943fd07180so1652670wme.3;
+        Wed, 11 May 2022 10:51:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WQGxLtNoh2A/ECrPGH0MG2WOSwIRhsRl05qWLoUIhKc=;
+        b=B8V0XQ8Cg2dWrsPzvWCpgHYnWDsBL+V6f1lY389lJW5m8hubKSZ6D1uuzAimSf6tpY
+         7t2eDTfMZSeaVOEOj723+LuQOHrmZkkGbmtroduY00CXphLRofGH000xeC/+uFFNS86X
+         7BWGwLxI+rRXKmMafqpmhZXVYpqTATWb/qUNVE4OHa4yT/rUm0xEkxkERqTU7/k3lQc7
+         qMOwJHNlmJHW4nuxcd6rZhal8KNUOp3Qq+3wJ9FHTzGfKLdeK8pBZYJk3LGjgInSNt07
+         5kPmDo+CuypZfCEZNPYlIbtlSXfpujjAmvDTsro/3sRv7vlvgvIQeTI8SxUfRE/rllcc
+         QHGw==
+X-Gm-Message-State: AOAM533vDD0yrFRRwbVKW5fgyVKhc351xx67otoAMGl5Q9B2wTG0kaZq
+        9ZLXk1PuMfanHscHyJxVu8+eTedQJ6c=
+X-Google-Smtp-Source: ABdhPJzzYvMP2x6heJp40ACS+Y59uZMrdJ58/WzlFFCkCHpOK55xWUK1YSFC+WBM3UBpA7NQrop7cw==
+X-Received: by 2002:a7b:c350:0:b0:38c:6d3c:6c8 with SMTP id l16-20020a7bc350000000b0038c6d3c06c8mr5990227wmj.45.1652291488581;
+        Wed, 11 May 2022 10:51:28 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id d10-20020a5d6dca000000b0020cd0762f37sm2236906wrz.107.2022.05.11.10.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 10:51:27 -0700 (PDT)
+Date:   Wed, 11 May 2022 17:51:26 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        jakeo@microsoft.com, dazhan@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] hyperv compose_msi_msg fixups
+Message-ID: <20220511175126.ezrayygwqmrvm7ql@liuwe-devbox-debian-v2>
+References: <1652282533-21502-1-git-send-email-quic_jhugo@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7017c234-7c73-524a-11b6-fefdd5646f59@igalia.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: P8jYmW-Xe3lS0Lxn9LfjJuLQx8-pWyu5
-X-Proofpoint-ORIG-GUID: 3EoVOe4XNkWaSjwGnBLNECSOqY142ccD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-11_07,2022-05-11_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 malwarescore=0 phishscore=0 mlxscore=0 adultscore=0
- suspectscore=0 mlxlogscore=429 bulkscore=0 impostorscore=0
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2202240000 definitions=main-2205110076
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1652282533-21502-1-git-send-email-quic_jhugo@quicinc.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 09, 2022 at 11:16:10AM -0300, Guilherme G. Piccoli wrote:
-> On 27/04/2022 19:49, Guilherme G. Piccoli wrote:
-> > Currently we have 3 notifier lists in the panic path, which will
-> > be wired in a way to allow the notifier callbacks to run in
-> > different moments at panic time, in a subsequent patch.
-> > 
-> > But there is also an odd set of architecture calls hardcoded in
-> > the end of panic path, after the restart machinery. They're
-> > responsible for late time tunings / events, like enabling a stop
-> > button (Sparc) or effectively stopping the machine (s390).
-> > 
-> > This patch introduces yet another notifier list to offer the
-> > architectures a way to add callbacks in such late moment on
-> > panic path without the need of ifdefs / hardcoded approaches.
-> > 
-> > Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> > Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Heiko Carstens <hca@linux.ibm.com>
-> > Cc: Sven Schnelle <svens@linux.ibm.com>
-> > Cc: Vasily Gorbik <gor@linux.ibm.com>
-> > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+On Wed, May 11, 2022 at 09:22:11AM -0600, Jeffrey Hugo wrote:
+> While multi-MSI appears to work with pci-hyperv.c, there was a concern about
+> how linux was doing the ITRE allocations.  Patch 2 addresses the concern.
 > 
-> Hey S390/SPARC folks, sorry for the ping!
+> However, patch 2 exposed an issue with how compose_msi_msg() was freeing a
+> previous allocation when called for the Nth time.  Imagine a driver using
+> pci_alloc_irq_vectors() to request 32 MSIs.  This would cause compose_msi_msg()
+> to be called 32 times, once for each MSI.  With patch 2, MSI0 would allocate
+> the ITREs needed, and MSI1-31 would use the cached information.  Then the driver
+> uses request_irq() on MSI1-17.  This would call compose_msi_msg() again on those
+> MSIs, which would again use the cached information.  Then unmask() would be
+> called to retarget the MSIs to the right VCPU vectors.  Finally, the driver
+> calls request_irq() on MSI0.  This would call conpose_msi_msg(), which would
+> free the block of 32 MSIs, and allocate a new block.  This would undo the
+> retarget of MSI1-17, and likely leave those MSIs targeting invalid VCPU vectors.
+> This is addressed by patch 1, which is introduced first to prevent a regression.
 > 
-> Any reviews on this V1 would be greatly appreciated, I'm working on V2
-> and seeking feedback in the non-reviewed patches.
+> Jeffrey Hugo (2):
+>   PCI: hv: Reuse existing ITRE allocation in compose_msi_msg()
+>   PCI: hv: Fix interrupt mapping for multi-MSI
 
-Sorry, missed that this is quite s390 specific. So, yes, this looks
-good to me and nice to see that one of the remaining CONFIG_S390 in
-common code will be removed!
-
-For the s390 bits:
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Applied this version to hyperv-next. Thanks.
