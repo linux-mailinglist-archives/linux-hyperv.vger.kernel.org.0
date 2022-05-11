@@ -2,90 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B521523143
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 13:14:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0661523151
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 May 2022 13:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233591AbiEKLNd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 11 May 2022 07:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
+        id S231445AbiEKLSn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 May 2022 07:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239026AbiEKLN3 (ORCPT
+        with ESMTP id S230203AbiEKLSl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 11 May 2022 07:13:29 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C9D41EE090;
-        Wed, 11 May 2022 04:13:24 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 9864A1F37E;
-        Wed, 11 May 2022 11:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1652267602; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Wed, 11 May 2022 07:18:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5BB006FD31
+        for <linux-hyperv@vger.kernel.org>; Wed, 11 May 2022 04:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652267919;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FC1sflG6Id2SKeEdl4FJxU/B3titx078hgJ9iLge96M=;
-        b=PzdYpVjDm9GZjow/EUq37H7ookCOkOdew3j+O3sWtMh70hNVOnxtZzKqOPpZDQnacwtKh8
-        hTKee3j+Sl0MntfBuf4Onekv+PULsWjOAIitLyhS1jfqtNLxp3KL+emXCY3ZW29THEdaU3
-        +LT7bZxhID8yMwqQ2reWXTGMidRsh/s=
-Received: from suse.cz (pathway.suse.cz [10.100.12.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        bh=5SpU8h+anLAEDK5AFg9jxxiakjWHWP4XsmDh4/r5tkU=;
+        b=Eo86f67vVQhhvhDcw8LiA8A8czVoXwvB8sdVSml01sJZhZ/jkCoDBhakw2yqe1Ysr7vt2s
+        O2ziiDPx5ZJFTSEt0HBHsnKloCoIr8PHvJRsmTXbr66yBgFbZODEr7GJrPTTujpZQbp6f2
+        06fBGhr5nBJ7EJP59/yydsXoV/e2G6k=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-88-zzSF0wJaMC-uBoYMme6tvg-1; Wed, 11 May 2022 07:18:35 -0400
+X-MC-Unique: zzSF0wJaMC-uBoYMme6tvg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id BC7822C141;
-        Wed, 11 May 2022 11:13:20 +0000 (UTC)
-Date:   Wed, 11 May 2022 13:13:20 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Evan Green <evgreen@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>, bhe@redhat.com,
-        kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Jonathan Corbet <corbet@lwn.net>, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, Kees Cook <keescook@chromium.org>,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, senozhatsky@chromium.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com,
-        vkuznets@redhat.com, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        David Gow <davidgow@google.com>,
-        Julius Werner <jwerner@chromium.org>
-Subject: Re: [PATCH 04/30] firmware: google: Convert regular spinlock into
- trylock on panic path
-Message-ID: <20220511111320.GB26047@pathway.suse.cz>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-5-gpiccoli@igalia.com>
- <CAE=gft5Pq25L4KFoPWbftkPF-JN1ex2yws77mMJ4GQnn9W0L2g@mail.gmail.com>
- <adcf6d0e-c37c-6ede-479e-29959d03d8c0@igalia.com>
- <YnpOv4hAPV4b+6v4@alley>
- <20220510132015.38923cb2@gandalf.local.home>
- <87h75xkwg9.fsf@jogness.linutronix.de>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A162B2932490;
+        Wed, 11 May 2022 11:18:34 +0000 (UTC)
+Received: from starship (unknown [10.40.192.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 467B1400DFBB;
+        Wed, 11 May 2022 11:18:32 +0000 (UTC)
+Message-ID: <6594a8d2b28426f5f3a34d9b71f007de4cd19b69.camel@redhat.com>
+Subject: Re: [PATCH v3 01/34] KVM: x86: hyper-v: Resurrect dedicated
+ KVM_REQ_HV_TLB_FLUSH flag
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 11 May 2022 14:18:31 +0300
+In-Reply-To: <20220414132013.1588929-2-vkuznets@redhat.com>
+References: <20220414132013.1588929-1-vkuznets@redhat.com>
+         <20220414132013.1588929-2-vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h75xkwg9.fsf@jogness.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -93,42 +69,74 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue 2022-05-10 21:46:38, John Ogness wrote:
-> On 2022-05-10, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >> As already mentioned in the other reply, panic() sometimes stops the
-> >> other CPUs using NMI, for example, see kdump_nmi_shootdown_cpus().
-> >> 
-> >> Another situation is when the CPU using the lock ends in some
-> >> infinite loop because something went wrong. The system is in
-> >> an unpredictable state during panic().
-> >> 
-> >> I am not sure if this is possible with the code under gsmi_dev.lock
-> >> but such things really happen during panic() in other subsystems.
-> >> Using trylock in the panic() code path is a good practice.
-> >
-> > I believe that Peter Zijlstra had a special spin lock for NMIs or
-> > early printk, where it would not block if the lock was held on the
-> > same CPU. That is, if an NMI happened and paniced while this lock was
-> > held on the same CPU, it would not deadlock. But it would block if the
-> > lock was held on another CPU.
+On Thu, 2022-04-14 at 15:19 +0200, Vitaly Kuznetsov wrote:
+> In preparation to implementing fine-grained Hyper-V TLB flush and
+> L2 TLB flush, resurrect dedicated KVM_REQ_HV_TLB_FLUSH request bit. As
+> KVM_REQ_TLB_FLUSH_GUEST is a stronger operation, clear KVM_REQ_HV_TLB_FLUSH
+> request in kvm_service_local_tlb_flush_requests() when
+> KVM_REQ_TLB_FLUSH_GUEST was also requested.
 > 
-> Yes. And starting with 5.19 it will be carrying the name that _you_ came
-> up with (cpu_sync):
+> No functional change intended.
 > 
-> printk_cpu_sync_get_irqsave()
-> printk_cpu_sync_put_irqrestore()
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 2 ++
+>  arch/x86/kvm/hyperv.c           | 4 ++--
+>  arch/x86/kvm/x86.c              | 6 +++++-
+>  3 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 2c20f715f009..1de3ad9308d8 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -105,6 +105,8 @@
+>  	KVM_ARCH_REQ_FLAGS(30, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>  #define KVM_REQ_MMU_FREE_OBSOLETE_ROOTS \
+>  	KVM_ARCH_REQ_FLAGS(31, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+> +#define KVM_REQ_HV_TLB_FLUSH \
+> +	KVM_ARCH_REQ_FLAGS(32, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>  
+>  #define CR0_RESERVED_BITS                                               \
+>  	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 46f9dfb60469..b402ad059eb9 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1876,11 +1876,11 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>  	 * analyze it here, flush TLB regardless of the specified address space.
+>  	 */
+>  	if (all_cpus) {
+> -		kvm_make_all_cpus_request(kvm, KVM_REQ_TLB_FLUSH_GUEST);
+> +		kvm_make_all_cpus_request(kvm, KVM_REQ_HV_TLB_FLUSH);
+>  	} else {
+>  		sparse_set_to_vcpu_mask(kvm, sparse_banks, valid_bank_mask, vcpu_mask);
+>  
+> -		kvm_make_vcpus_request_mask(kvm, KVM_REQ_TLB_FLUSH_GUEST, vcpu_mask);
+> +		kvm_make_vcpus_request_mask(kvm, KVM_REQ_HV_TLB_FLUSH, vcpu_mask);
+>  	}
+>  
+>  ret_success:
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index ab336f7c82e4..f633cff8cd7f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3360,8 +3360,12 @@ void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu)
+>  	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
+>  		kvm_vcpu_flush_tlb_current(vcpu);
+>  
+> -	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu))
+> +	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu)) {
+>  		kvm_vcpu_flush_tlb_guest(vcpu);
+> +		kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
+> +	} else if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu)) {
+> +		kvm_vcpu_flush_tlb_guest(vcpu);
+> +	}
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_service_local_tlb_flush_requests);
+>  
 
-There is a risk that this lock might become a big kernel lock.
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
-This special lock would need to be used even during normal
-system operation. It does not make sense to suddenly start using
-another lock during panic.
+Best regards,
+	Maxim Levitsky
 
-So I think that we should think twice before using it.
-I would prefer using trylock of the original lock when
-possible during panic.
-
-It is possible that I miss something.
-
-Best Regards,
-Petr
