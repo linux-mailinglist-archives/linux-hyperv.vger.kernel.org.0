@@ -2,460 +2,258 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 166B2524F4E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 12 May 2022 16:03:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A8705250E1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 12 May 2022 17:08:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354927AbiELODX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 12 May 2022 10:03:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
+        id S1355404AbiELPIg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 12 May 2022 11:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354934AbiELODW (ORCPT
+        with ESMTP id S1352937AbiELPIf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 12 May 2022 10:03:22 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E272F562E2;
-        Thu, 12 May 2022 07:03:17 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 600DB21B2F;
-        Thu, 12 May 2022 14:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1652364196; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LqB96ySSQJ4ly+3J+rYGGuH/Fd7fkvILEbloF31pDTM=;
-        b=q3SRuDuz1bsrtNT6AQbijhKvd/E1pyV5ISS04f4B5Eo/MpxJkThlvlpzsrdXZrusqFVq1r
-        7s+CTa1eDnSZSlcSzDLMEjhXIjmmjm5vpsFw4wJd/0EtFszB2sl8NlJGjykorM6dG2+lpF
-        5FiP1kelHffEWxoWnmRZqh37k1tv6Lg=
-Received: from suse.cz (unknown [10.100.208.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 5C2702C141;
-        Thu, 12 May 2022 14:03:13 +0000 (UTC)
-Date:   Thu, 12 May 2022 16:03:10 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     akpm@linux-foundation.org, bhe@redhat.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, coresight@lists.linaro.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
-        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
-        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        corbet@lwn.net, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org
-Subject: Re: [PATCH 24/30] panic: Refactor the panic path
-Message-ID: <Yn0TnsWVxCcdB2yO@alley>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
+        Thu, 12 May 2022 11:08:35 -0400
+Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.57.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 770A21B0929;
+        Thu, 12 May 2022 08:08:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ie4d6xLClA7Q69mh/RY2z9pjk6X8YjIB5oX+qQo2mMuwdJZF5ijb+KMV6FW89F14s9UbSOLeQxypIp4w8n2+sy9N8qOiuLFs/Z1HQKTvIFSKLZXQsdYazaHivAIS+JHy8zz/ApNxwnXfVXdyN07D7HjoQSMAlubF2vkGKpWqrdQPVJ4XBjlNVYOXdfWVnME++R3NOgEOBZni3WKKqn05aEQkeqkkbepDmOwHL1jfAyKT5GSROy1pwK4jD3WkBYPXt6ZQQ9oZuchkn1frSYyo6mg2qH6xoqmm0x4eQxJ3ueq8bzYnRMljJifXz4Ex8dZ6HRJOArtnf0WMmlRwpMmj/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HsCaggoYv8oI1OcHo1WMenc1EIh5XdJwDyUe0+Fat7M=;
+ b=EAnpjs7UDjmRxIHYZ1MP6Q7pIhaKQbtQoXupnO//G0FW8qBKZtd+Uxj99EVTSrdLJuCCuZ7MmtcloAp9/tF/GWKqNeu2K7fguQ/7ZNzlaaduUT9ssoQ3y4NlCXNTE94AOStd7xmnIX4gRsDspWEO/rdQQnDZ3gg2o/NkkpOdlMfKPUWue93u0f5OUcd+siK58pGqtzqYDfhaEwMNQtfGYQZzTnSuIKpGz62Vvlqqr+su+u4w2pLMWZLc5DJAZqHVwfdq1g+O5Jvkkgg/XrLrG8Fi0nyL8wUPLeGIM9W4jy5kCDKOU8TsYseMFmAn5VEnToq8ksZvipkaO3vdMMVFOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HsCaggoYv8oI1OcHo1WMenc1EIh5XdJwDyUe0+Fat7M=;
+ b=JjdM9jJegfdlrhbbdOuHUjIqN8EskN+mFB9NmwcbVTgESxQETe2ObUFto2DNVtsgmSVQ1/cFqSyDDRhdBFEZ5AC9M60QW4TrCC40OZfdTDLHfmSwrb0/kSINJpI9TUK5hUmUt8wUWoBC9ZBBy5qHm9AFKsVl/GhfX7lTUYMf3PM=
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
+ by PH0PR21MB2032.namprd21.prod.outlook.com (2603:10b6:510:ab::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.5; Thu, 12 May
+ 2022 15:08:29 +0000
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::dd77:2d4d:329e:87df]) by PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::dd77:2d4d:329e:87df%7]) with mapi id 15.20.5273.005; Thu, 12 May 2022
+ 15:08:29 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/2] PCI: hv: Add validation for untrusted Hyper-V
+ values
+Thread-Topic: [PATCH v2 1/2] PCI: hv: Add validation for untrusted Hyper-V
+ values
+Thread-Index: AQHYZYcAaXhxM5JNcUufOEzq14TQAa0bWMyA
+Date:   Thu, 12 May 2022 15:08:29 +0000
+Message-ID: <PH0PR21MB302562C4833FA2A1E6F97CC2D7CB9@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <20220511223207.3386-1-parri.andrea@gmail.com>
+ <20220511223207.3386-2-parri.andrea@gmail.com>
+In-Reply-To: <20220511223207.3386-2-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=392705c7-1670-4704-b753-ca9c04c000fe;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-12T15:06:59Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6dd5bdf2-b2eb-490c-8a5a-08da342945c9
+x-ms-traffictypediagnostic: PH0PR21MB2032:EE_
+x-microsoft-antispam-prvs: <PH0PR21MB2032537CAF6165E1D82CC73AD7CB9@PH0PR21MB2032.namprd21.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YduW0axstcIxz0qMGKPKi+CtSmvAW8jg0MLQQnYGceQMGmFPdC1SMZO+unTafAsVPkhEBgOWbkbLk99ZU7PwReW97eY1iiUWfFa90kQnf3uiFIbQX0an06NcO3AmYSQeX/+lCP0U8fT8kV7z0mMIeZisuT14fd/6t8X98Nn9zB+jSUhCgrFZ5/VZIPm6O/5LLJ7qu8E4hKsCjvbvb7kaiBwxld85ID9FeS1/HvSk+iCMHCNsQ/HeAodGenW3MTTIxgEk9mH7qqsw3YKhPIkDIVTa4+QrH7oFW0jI76wDBbXo/B71T7rCOwL2IPiOBaRlCC6G4Ea87sMzWiNgJv0E6rZ05GXlhAQQB/DOO06Vct+EsfkXxDsBvHqy03pauL6xY2OZ+BQWFulbjE9/THG2VM80kmWJdKY/mWNedRvSQCbmQVjsJqDUyfX4ql6hQGnxKs0x1I0/qyPtPwTlwnGZW5ij8LFRFEvLICG0TNzYh79hpHW4gUrEY5djH+NGYOyzJ6fOzEAWZrMwihcIZsxybUv3AI9iuUGgCOjlLy8O5NdSPZI90TvQnUFsRo7LuXKcFe4FdE8ScCsd1LUicoKgW82Nq5+Zw80sjdcfzmM/klHd2NB1z1+9yArPrn0ER0zQLt4WLFUtmhfzttpO4pneQ58JmDr2Wsesi+Y+lv8KBCoLJNB/6PeOmW6refiBTHXUZrzZQNAk3x2EsNmBz2Kvi+1k4cE0aLMDtOV8kjqPn/3lRhmsgem5hy/oJ2INnghfGmecSPEWOWqz1lOucCS3sw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(82960400001)(82950400001)(38070700005)(38100700002)(7696005)(921005)(2906002)(5660300002)(10290500003)(122000001)(54906003)(316002)(110136005)(6506007)(71200400001)(83380400001)(4326008)(66476007)(8676002)(66446008)(66946007)(66556008)(64756008)(8936002)(33656002)(508600001)(8990500004)(76116006)(186003)(86362001)(52536014)(9686003)(26005)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?H4UVVVuNKZ5Ph0b1X66gzKTGjFQtZDXg9dhigwDexPRkKiOYjaxC5Ea7/KFT?=
+ =?us-ascii?Q?7cuKJS/fsa0CoCfrvmu2MniewlMiP6UNQEoFo9T77EIwaWXXxGapxFTcVORJ?=
+ =?us-ascii?Q?CB8bP/BZtZ8bi/4bx7vPuIRI3JI9cq+giVLQPMvY62ULzWW4N/PMBKD5wxgV?=
+ =?us-ascii?Q?Yj5NJc/70epExdWVLmeRLk7+tQJLD0Ef5CyIqYqCbbQPoqF48z0oM2VA9eJ0?=
+ =?us-ascii?Q?XZJf4y0oYUcEEtXQSU4L0c9GRV7LRn4IFg+cDZSUkgsukbX0iMwngNKHprK7?=
+ =?us-ascii?Q?Ts9QKtOcpVGBxNiqJ3cUj68BZP8jcdgcCKjbp0VxN//mxNgaWpNOf/26UWVx?=
+ =?us-ascii?Q?N5yijsl/dtMlDNVo38fWbJUwPjGAyjsVjwse4DRdL0/WFbDkXuBAhV+9S3Vx?=
+ =?us-ascii?Q?8FPjyJRi0osfJ+gO3L2m1prRxseQyMif90+kbnlN3Be5GvP0GuokRw+ZncP1?=
+ =?us-ascii?Q?IdgQLX5afoufhb4xMllxlJZWv8qQkACIVgF8fV1Vxq73ySoRWWsSuEAHuGxM?=
+ =?us-ascii?Q?3D2otcUoHhnPbRB8m3J2Vy6Ev2spkRuMb1plKwRmaWomBrKsuIJ21wufnJcD?=
+ =?us-ascii?Q?TYC1hJ+/xZANojx3QboPElJr6lgFZ08DHf4YesINh5k6OMU3CSFhonOAKMfB?=
+ =?us-ascii?Q?snxU6bL2EM1NAWBvJpl/hUexuHJhXoCbx6J/pvB5t94KsYl6tHwrgkehDSn7?=
+ =?us-ascii?Q?blXOdb91RVsxSMU93qxgPj/6Mjq7GdNsVJHTe3FYiVRipU1N4y4NlCjkZxuL?=
+ =?us-ascii?Q?Xh94h9qt52yJehv407FOAnOsou0t4toFRTmgsaviUSt8GXr9ZVjUelEmGIwj?=
+ =?us-ascii?Q?ajWjAKOAR+9V1w4znUkFESufjenLhUCTgu15XASu+ZoSWujFD+PzeI7PxLtv?=
+ =?us-ascii?Q?/e6tV0SrGdmxGmYADC4BJvhCiCd/YqvAZJhScIKNZjWnsWFcjBL0pNnGGKq9?=
+ =?us-ascii?Q?ufDFlkjyRCtsc0xjrsqKdTETV5R3Qx6Qj3fqEQmclv1EY+Ez/C7AF5KsvTYa?=
+ =?us-ascii?Q?UyBBYTVfNor+MoK9xZ2+wrixRVfsoBu5v41NTgLgsYiMFyXsR80KneCG5EDS?=
+ =?us-ascii?Q?3AnPoBlucE/4VgBRQWnROrpxfuATgGpxE2ieu4qHsG56gUVSIdRv/40afDI0?=
+ =?us-ascii?Q?tQMjCxb9erTNQFV5GMvwtc5Bk9B+Opl64wc77ivDP/guPhGSQLU7gifHW0TY?=
+ =?us-ascii?Q?5/LXHl+Gmnb3x33hdNiu1qPI9Ly2RUwDrsVTIo1fNAnEJ5rA5k4JNjPLS68X?=
+ =?us-ascii?Q?M0HMsJYPeMqIodbxGuC0mFk1xhNeEUWW/HCKWBIWjM87mfFJ60BHMU4f8/f9?=
+ =?us-ascii?Q?MHzhec9C5dD6OI781dbPg2GlaTuvCcoqh14VvGmv1V5NStYMhkITvOPgXf32?=
+ =?us-ascii?Q?OTrL1M3zwBWB07LeWYwPR+zPfSmCqZmtscIxngpZasR4lKyoLFwN7lF/FdhT?=
+ =?us-ascii?Q?dayoRy3c6UEQ28EkxN0OwKFMLycP5f1T7VGPdR8b0QJ0/Ltaeyp4kSiWoDK/?=
+ =?us-ascii?Q?o3QGTFZy1yciVhm2pN1LkWRO8e2qNEsKjFyeQHR3a004XL7W30ZLeAlJ+Pg+?=
+ =?us-ascii?Q?hdU8ukqE01P1BrAYBARKCvxyETMl5/WsUaoKged5iUG9SfbCuzSXL8YD5Q5P?=
+ =?us-ascii?Q?AlA+e1AXJC+XKYNmo+4WnlTzaLtRVPAaYkUTdobe/FbY1qETnKLuiBKKoJwD?=
+ =?us-ascii?Q?ziRAg7S49I+QJcuOj4tdAY0t6frDQXphKQNHihQiZimn02Jb8UILRU6foLzp?=
+ =?us-ascii?Q?MNgQD5HvmzPgMG1REOQ0TSUmqFATx98=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220427224924.592546-25-gpiccoli@igalia.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dd5bdf2-b2eb-490c-8a5a-08da342945c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2022 15:08:29.5186
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oaAnoU3fsBV2e1ZaX/V2kZvy4Wb5e62+wR/PAUM4UaeiCWji0blowOIE2qjU/FaicWjp+cDamhzAeYOL1I29UQxiJx+u56MUXErvq0ILaVE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB2032
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello,
-
-first, I am sorry for stepping into the discussion so late.
-I was busy with some other stuff and this patchset is far
-from trivial.
-
-Second, thanks a lot for putting so much effort into it.
-Most of the changes look pretty good, especially all
-the fixes of particular notifiers and split into
-four lists.
-
-Though this patch will need some more love. See below
-for more details.
-
-
-On Wed 2022-04-27 19:49:18, Guilherme G. Piccoli wrote:
-> The panic() function is somewhat convoluted - a lot of changes were
-> made over the years, adding comments that might be misleading/outdated
-> now, it has a code structure that is a bit complex to follow, with
-> lots of conditionals, for example. The panic notifier list is something
-> else - a single list, with multiple callbacks of different purposes,
-> that run in a non-deterministic order and may affect hardly kdump
-> reliability - see the "crash_kexec_post_notifiers" workaround-ish flag.
-> 
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3784,6 +3791,33 @@
->  			timeout < 0: reboot immediately
->  			Format: <timeout>
->  
-> +	panic_notifiers_level=
-> +			[KNL] Set the panic notifiers execution order.
-> +			Format: <unsigned int>
-> +			We currently have 4 lists of panic notifiers; based
-> +			on the functionality and risk (for panic success) the
-> +			callbacks are added in a given list. The lists are:
-> +			- hypervisor/FW notification list (low risk);
-> +			- informational list (low/medium risk);
-> +			- pre_reboot list (higher risk);
-> +			- post_reboot list (only run late in panic and after
-> +			kdump, not configurable for now).
-> +			This parameter defines the ordering of the first 3
-> +			lists with regards to kdump; the levels determine
-> +			which set of notifiers execute before kdump. The
-> +			accepted levels are:
-
-This talks only about kdump. The reality is much more complicated.
-The level affect the order of:
-
-    + notifiers vs. kdump
-    + notifiers vs. crash_dump
-    + crash_dump vs. kdump
-
-There might theoretically many variants of the ordering of kdump,
-crash_dump, and the 4 notifier list. Some variants do not make
-much sense. You choose 5 variants and tried to select them by
-a level number.
-
-The question is if we really could easily describe the meaning this
-way. It is not only about a "level" of notifiers before kdump. It is
-also about the ordering of crash_dump vs. kdump. IMHO, "level"
-semantic does not fit there.
-
-Maybe more parameters might be easier to understand the effect.
-Anyway, we first need to agree on the chosen variants.
-I am going to discuss it more in the code, see below.
-
-
-
-> +			0: kdump is the first thing to run, NO list is
-> +			executed before kdump.
-> +			1: only the hypervisor list is executed before kdump.
-> +			2 (default level): the hypervisor list and (*if*
-> +			there's any kmsg_dumper defined) the informational
-> +			list are executed before kdump.
-> +			3: both the hypervisor and the informational lists
-> +			(always) execute before kdump.
-> +			4: the 3 lists (hypervisor, info and pre_reboot)
-> +			execute before kdump - this behavior is analog to the
-> +			deprecated parameter "crash_kexec_post_notifiers".
-> +
->  	panic_print=	Bitmask for printing system info when panic happens.
->  			User can chose combination of the following bits:
->  			bit 0: print all tasks info
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -183,6 +195,112 @@ static void panic_print_sys_info(bool console_flush)
->  		ftrace_dump(DUMP_ALL);
+From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Wednesday, Ma=
+y 11, 2022 3:32 PM
+>=20
+> For additional robustness in the face of Hyper-V errors or malicious
+> behavior, validate all values that originate from packets that Hyper-V
+> has sent to the guest in the host-to-guest ring buffer.  Ensure that
+> invalid values cannot cause data being copied out of the bounds of the
+> source buffer in hv_pci_onchannelcallback().
+>=20
+> While at it, remove a redundant validation in hv_pci_generic_compl():
+> hv_pci_onchannelcallback() already ensures that all processed incoming
+> packets are "at least as large as [in fact larger than] a response".
+>=20
+> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 33 +++++++++++++++++++++--------
+>  1 file changed, 24 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index e439b810f974b..a06e2cf946580 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -981,11 +981,7 @@ static void hv_pci_generic_compl(void *context, stru=
+ct
+> pci_response *resp,
+>  {
+>  	struct hv_pci_compl *comp_pkt =3D context;
+>=20
+> -	if (resp_packet_size >=3D offsetofend(struct pci_response, status))
+> -		comp_pkt->completion_status =3D resp->status;
+> -	else
+> -		comp_pkt->completion_status =3D -1;
+> -
+> +	comp_pkt->completion_status =3D resp->status;
+>  	complete(&comp_pkt->host_event);
 >  }
->  
-> +/*
-> + * Helper that accumulates all console flushing routines executed on panic.
-> + */
-> +static void console_flushing(void)
-> +{
-> +#ifdef CONFIG_VT
-> +	unblank_screen();
-> +#endif
-> +	console_unblank();
-> +
-> +	/*
-> +	 * In this point, we may have disabled other CPUs, hence stopping the
-> +	 * CPU holding the lock while still having some valuable data in the
-> +	 * console buffer.
-> +	 *
-> +	 * Try to acquire the lock then release it regardless of the result.
-> +	 * The release will also print the buffers out. Locks debug should
-> +	 * be disabled to avoid reporting bad unlock balance when panic()
-> +	 * is not being called from OOPS.
-> +	 */
-> +	debug_locks_off();
-> +	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-> +
-> +	panic_print_sys_info(true);
-> +}
-> +
-> +#define PN_HYPERVISOR_BIT	0
-> +#define PN_INFO_BIT		1
-> +#define PN_PRE_REBOOT_BIT	2
-> +#define PN_POST_REBOOT_BIT	3
-> +
-> +/*
-> + * Determine the order of panic notifiers with regards to kdump.
-> + *
-> + * This function relies in the "panic_notifiers_level" kernel parameter
-> + * to determine how to order the notifiers with regards to kdump. We
-> + * have currently 5 levels. For details, please check the kernel docs for
-> + * "panic_notifiers_level" at Documentation/admin-guide/kernel-parameters.txt.
-> + *
-> + * Default level is 2, which means the panic hypervisor and informational
-> + * (unless we don't have any kmsg_dumper) lists will execute before kdump.
-> + */
-> +static void order_panic_notifiers_and_kdump(void)
-> +{
-> +	/*
-> +	 * The parameter "crash_kexec_post_notifiers" is deprecated, but
-> +	 * valid. Users that set it want really all panic notifiers to
-> +	 * execute before kdump, so it's effectively the same as setting
-> +	 * the panic notifiers level to 4.
-> +	 */
-> +	if (panic_notifiers_level >= 4 || crash_kexec_post_notifiers)
-> +		return;
-> +
-> +	/*
-> +	 * Based on the level configured (smaller than 4), we clear the
-> +	 * proper bits in "panic_notifiers_bits". Notice that this bitfield
-> +	 * is initialized with all notifiers set.
-> +	 */
-> +	switch (panic_notifiers_level) {
-> +	case 3:
-> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> +		break;
-> +	case 2:
-> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> +
-> +		if (!kmsg_has_dumpers())
-> +			clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> +		break;
-> +	case 1:
-> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> +		clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> +		break;
-> +	case 0:
-> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> +		clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> +		clear_bit(PN_HYPERVISOR_BIT, &panic_notifiers_bits);
-> +		break;
+>=20
+> @@ -1606,8 +1602,13 @@ static void hv_pci_compose_compl(void *context, st=
+ruct
+> pci_response *resp,
+>  	struct pci_create_int_response *int_resp =3D
+>  		(struct pci_create_int_response *)resp;
+>=20
+> +	if (resp_packet_size < sizeof(*int_resp)) {
+> +		comp_pkt->comp_pkt.completion_status =3D -1;
+> +		goto out;
 > +	}
-> +}
->
-> +/*
-> + * Set of helpers to execute the panic notifiers only once.
-> + * Just the informational notifier cares about the return.
-> + */
-> +static inline bool notifier_run_once(struct atomic_notifier_head head,
-> +				     char *buf, long bit)
-> +{
-> +	if (test_and_change_bit(bit, &panic_notifiers_bits)) {
-> +		atomic_notifier_call_chain(&head, PANIC_NOTIFIER, buf);
-> +		return true;
-> +	}
-> +	return false;
-> +}
+>  	comp_pkt->comp_pkt.completion_status =3D resp->status;
+>  	comp_pkt->int_desc =3D int_resp->int_desc;
+> +out:
+>  	complete(&comp_pkt->comp_pkt.host_event);
+>  }
+>=20
+> @@ -2291,12 +2292,14 @@ static void q_resource_requirements(void *context=
+,
+> struct pci_response *resp,
+>  	struct q_res_req_compl *completion =3D context;
+>  	struct pci_q_res_req_response *q_res_req =3D
+>  		(struct pci_q_res_req_response *)resp;
+> +	s32 status;
+>  	int i;
+>=20
+> -	if (resp->status < 0) {
+> +	status =3D (resp_packet_size < sizeof(*q_res_req)) ? -1 : resp->status;
+> +	if (status < 0) {
+>  		dev_err(&completion->hpdev->hbus->hdev->device,
+>  			"query resource requirements failed: %x\n",
+> -			resp->status);
+> +			status);
+>  	} else {
+>  		for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
+>  			completion->hpdev->probed_bar[i] =3D
+> @@ -2848,7 +2851,8 @@ static void hv_pci_onchannelcallback(void *context)
+>  			case PCI_BUS_RELATIONS:
+>=20
+>  				bus_rel =3D (struct pci_bus_relations *)buffer;
+> -				if (bytes_recvd <
+> +				if (bytes_recvd < sizeof(*bus_rel) ||
+> +				    bytes_recvd <
+>  					struct_size(bus_rel, func,
+>  						    bus_rel->device_count)) {
+>  					dev_err(&hbus->hdev->device,
+> @@ -2862,7 +2866,8 @@ static void hv_pci_onchannelcallback(void *context)
+>  			case PCI_BUS_RELATIONS2:
+>=20
+>  				bus_rel2 =3D (struct pci_bus_relations2 *)buffer;
+> -				if (bytes_recvd <
+> +				if (bytes_recvd < sizeof(*bus_rel2) ||
+> +				    bytes_recvd <
+>  					struct_size(bus_rel2, func,
+>  						    bus_rel2->device_count)) {
+>  					dev_err(&hbus->hdev->device,
+> @@ -2876,6 +2881,11 @@ static void hv_pci_onchannelcallback(void *context=
+)
+>  			case PCI_EJECT:
+>=20
+>  				dev_message =3D (struct pci_dev_incoming *)buffer;
+> +				if (bytes_recvd < sizeof(*dev_message)) {
+> +					dev_err(&hbus->hdev->device,
+> +						"eject message too small\n");
+> +					break;
+> +				}
+>  				hpdev =3D get_pcichild_wslot(hbus,
+>  						      dev_message->wslot.slot);
+>  				if (hpdev) {
+> @@ -2887,6 +2897,11 @@ static void hv_pci_onchannelcallback(void *context=
+)
+>  			case PCI_INVALIDATE_BLOCK:
+>=20
+>  				inval =3D (struct pci_dev_inval_block *)buffer;
+> +				if (bytes_recvd < sizeof(*inval)) {
+> +					dev_err(&hbus->hdev->device,
+> +						"invalidate message too small\n");
+> +					break;
+> +				}
+>  				hpdev =3D get_pcichild_wslot(hbus,
+>  							   inval->wslot.slot);
+>  				if (hpdev) {
+> --
+> 2.25.1
 
-Here is the code using the above functions. It helps to discuss
-the design and logic.
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-<kernel/panic.c>
-	order_panic_notifiers_and_kdump();
-
-	/* If no level, we should kdump ASAP. */
-	if (!panic_notifiers_level)
-		__crash_kexec(NULL);
-
-	crash_smp_send_stop();
-	panic_notifier_hypervisor_once(buf);
-
-	if (panic_notifier_info_once(buf))
-		kmsg_dump(KMSG_DUMP_PANIC);
-
-	panic_notifier_pre_reboot_once(buf);
-
-	__crash_kexec(NULL);
-
-	panic_notifier_hypervisor_once(buf);
-
-	if (panic_notifier_info_once(buf))
-		kmsg_dump(KMSG_DUMP_PANIC);
-
-	panic_notifier_pre_reboot_once(buf);
-</kernel/panic.c>
-
-I have to say that the logic is very unclear. Almost all
-functions are called twice:
-
-   + __crash_kexec()
-   + kmsg_dump()
-   + panic_notifier_hypervisor_once()
-   + panic_notifier_pre_reboot_once()
-   + panic_notifier_info_once()
-
-It is pretty hard to find what functions are always called in the same
-order and where the order can be inverted.
-
-The really used code path is defined by order_panic_notifiers_and_kdump()
-that encodes "level" into "bits". The bits are then flipped in
-panic_notifier_*_once() calls that either do something or not.
-kmsg_dump() is called according to the bit flip.
-
-It is an interesting approach. I guess that you wanted to avoid too
-many if/then/else levels in panic(). But honestly, it looks like
-a black magic to me.
-
-IMHO, it is always easier to follow if/then/else logic than using
-a translation table that requires additional bit flips when
-a value is used more times.
-
-Also I guess that it is good proof that "level" abstraction does
-not fit here. Normal levels would not need this kind of magic.
-
-
-OK, the question is how to make it better. Let's start with
-a clear picture of the problem:
-
-1. panic() has basically two funtions:
-
-      + show/store debug information (optional ways and amount)
-      + do something with the system (reboot, stay hanged)
-
-
-2. There are 4 ways how to show/store the information:
-
-      + tell hypervisor to store what it is interested about
-      + crash_dump
-      + kmsg_dump()
-      + consoles
-
-  , where crash_dump and consoles are special:
-
-     + crash_dump does not return. Instead it ends up with reboot.
-
-     + Consoles work transparently. They just need an extra flush
-       before reboot or staying hanged.
-
-
-3. The various notifiers do things like:
-
-     + tell hypervisor about the crash
-     + print more information (also stop watchdogs)
-     + prepare system for reboot (touch some interfaces)
-     + prepare system for staying hanged (blinking)
-
-   Note that it pretty nicely matches the 4 notifier lists.
-
-
-Now, we need to decide about the ordering. The main area is how
-to store the debug information. Consoles are transparent so
-the quesition is about:
-
-     + hypervisor
-     + crash_dump
-     + kmsg_dump
-
-Some people need none and some people want all. There is a
-risk that system might hung at any stage. This why people want to
-make the order configurable.
-
-But crash_dump() does not return when it succeeds. And kmsg_dump()
-users havn't complained about hypervisor problems yet. So, that
-two variants might be enough:
-
-    + crash_dump (hypervisor, kmsg_dump as fallback)
-    + hypervisor, kmsg_dump, crash_dump
-
-One option "panic_prefer_crash_dump" should be enough.
-And the code might look like:
-
-void panic()
-{
-[...]
-	dump_stack();
-	kgdb_panic(buf);
-
-	< ---  here starts the reworked code --- >
-
-	/* crash dump is enough when enabled and preferred. */
-	if (panic_prefer_crash_dump)
-		__crash_kexec(NULL);
-
-	/* Stop other CPUs and focus on handling the panic state. */
-	if (has_kexec_crash_image)
-		crash_smp_send_stop();
-	else
-		smp_send_stop()
-
-	/* Notify hypervisor about the system panic. */
-	atomic_notifier_call_chain(&panic_hypervisor_list, 0, NULL);
-
-	/*
-	 * No need to risk extra info when there is no kmsg dumper
-	 * registered.
-	 */
-	if (!has_kmsg_dumper())
-		__crash_kexec(NULL);
-
-	/* Add extra info from different subsystems. */
-	atomic_notifier_call_chain(&panic_info_list, 0, NULL);
-
-	kmsg_dump(KMSG_DUMP_PANIC);
-	__crash_kexec(NULL);
-
-	/* Flush console */
-	unblank_screen();
-	console_unblank();
-	debug_locks_off();
-	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-
-	if (panic_timeout > 0) {
-		delay()
-	}
-
-	/*
-	 * Prepare system for eventual reboot and allow custom
-	 * reboot handling.
-	 */
-	atomic_notifier_call_chain(&panic_reboot_list, 0, NULL);
-
-	if (panic_timeout != 0) {
-		reboot();
-	}
-
-	/*
-	 * Prepare system for the infinite waiting, for example,
-	 * setup blinking.
-	 */
-	atomic_notifier_call_chain(&panic_loop_list, 0, NULL);
-
-	infinite_loop();
-}
-
-
-__crash_kexec() is there 3 times but otherwise the code looks
-quite straight forward.
-
-Note 1: I renamed the two last notifier list. The name 'post-reboot'
-	did sound strange from the logical POV ;-)
-
-Note 2: We have to avoid the possibility to call "reboot" list
-	before kmsg_dump(). All callbacks providing info
-	have to be in the info list. It a callback combines
-	info and reboot functionality then it should be split.
-
-	There must be another way to calm down problematic
-	info callbacks. And it has to be solved when such
-	a problem is reported. Is there any known issue, please?
-
-It is possible that I have missed something important.
-But I would really like to make the logic as simple as possible.
-
-Best Regards,
-Petr
