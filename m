@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D7AD528640
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 May 2022 16:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7935C52868F
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 May 2022 16:11:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244137AbiEPOCF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 16 May 2022 10:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41640 "EHLO
+        id S244383AbiEPOLh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 16 May 2022 10:11:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235347AbiEPOCD (ORCPT
+        with ESMTP id S244479AbiEPOLL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 16 May 2022 10:02:03 -0400
+        Mon, 16 May 2022 10:11:11 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290271A389;
-        Mon, 16 May 2022 07:02:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3778F2AF7;
+        Mon, 16 May 2022 07:11:10 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 2362F21F5C;
-        Mon, 16 May 2022 14:02:00 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTP id 8469521F6D;
+        Mon, 16 May 2022 14:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1652709720; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1652710268; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=6xX/Xo1YcyoxhDGVtD+3aF7M9NKMVvtDcsL11SFSAQU=;
-        b=UAEfoymfYf+QAbCzE3oYFS/LnW9rFBs924Unv93LKXY9GoxfXpJbDSZbNYQc1AwPujLxjA
-        jmh7TvIJcQUwFXF0iE9L66PiKtfkKtU88t+hUCpM3m0czPO3TM37NQr+8KouKC5lf5Okex
-        k2McswvfGUIvb+tozWKmApBRPL9ucl0=
+        bh=dmHPB9vjv1LBmNrF4zaonBMXasUoClA4XRHwK4fdG3Q=;
+        b=uHHoYScC3vOzAq1rF/GezErIJTTCAnG26YueVBaMYGI4KIiBuE4CJEi5I5FkSHuHNJvOhi
+        jBbeahpPdNTqQb9qWzy8wQwtiwj/B2njZ1Svs0P1iMsaZXkpVlpc6Bgj/6IAHlnD6RNRY+
+        7obFqakfVm+qw0H2R1BXYJwwfwabCHA=
 Received: from suse.cz (unknown [10.100.201.202])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id D43112C141;
-        Mon, 16 May 2022 14:01:57 +0000 (UTC)
-Date:   Mon, 16 May 2022 16:01:57 +0200
+        by relay2.suse.de (Postfix) with ESMTPS id C9CB72C141;
+        Mon, 16 May 2022 14:11:06 +0000 (UTC)
+Date:   Mon, 16 May 2022 16:11:06 +0200
 From:   Petr Mladek <pmladek@suse.com>
 To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 Cc:     akpm@linux-foundation.org, bhe@redhat.com,
@@ -59,50 +59,36 @@ Cc:     akpm@linux-foundation.org, bhe@redhat.com,
         paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
         senozhatsky@chromium.org, stern@rowland.harvard.edu,
         tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        David Gow <davidgow@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Doug Berger <opendmb@gmail.com>,
-        Evan Green <evgreen@chromium.org>,
+        will@kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Hari Bathini <hbathini@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Julius Werner <jwerner@chromium.org>,
-        Justin Chen <justinpopo6@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Markus Mayer <mmayer@broadcom.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
         Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>, Pavel Machek <pavel@ucw.cz>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        zhenwei pi <pizhenwei@bytedance.com>
-Subject: Re: [PATCH 19/30] panic: Add the panic hypervisor notifier list
-Message-ID: <YoJZVZl/MH0KiE/J@alley>
+        Paul Mackerras <paulus@samba.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: Re: [PATCH 20/30] panic: Add the panic informational notifier list
+Message-ID: <YoJbeuTNBXOIypSH@alley>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-20-gpiccoli@igalia.com>
+ <20220427224924.592546-21-gpiccoli@igalia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220427224924.592546-20-gpiccoli@igalia.com>
+In-Reply-To: <20220427224924.592546-21-gpiccoli@igalia.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -113,154 +99,38 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed 2022-04-27 19:49:13, Guilherme G. Piccoli wrote:
-> The goal of this new panic notifier is to allow its users to register
-> callbacks to run very early in the panic path. This aims hypervisor/FW
-> notification mechanisms as well as simple LED functions, and any other
-> simple and safe mechanism that should run early in the panic path; more
-> dangerous callbacks should execute later.
+On Wed 2022-04-27 19:49:14, Guilherme G. Piccoli wrote:
+> The goal of this new panic notifier is to allow its users to
+> register callbacks to run earlier in the panic path than they
+> currently do. This aims at informational mechanisms, like dumping
+> kernel offsets and showing device error data (in case it's simple
+> registers reading, for example) as well as mechanisms to disable
+> log flooding (like hung_task detector / RCU warnings) and the
+> tracing dump_on_oops (when enabled).
 > 
-> For now, the patch is almost a no-op (although it changes a bit the
-> ordering in which some panic notifiers are executed). In a subsequent
-> patch, the panic path will be refactored, then the panic hypervisor
-> notifiers will effectively run very early in the panic path.
+> Any (non-invasive) information that should be provided before
+> kmsg_dump() as well as log flooding preventing code should fit
+> here, as long it offers relatively low risk for kdump.
 > 
-> We also defer documenting it all properly in the subsequent refactor
-> patch. While at it, we removed some useless header inclusions and
-> fixed some notifiers return too (by using the standard NOTIFY_DONE).
+> For now, the patch is almost a no-op, although it changes a bit
+> the ordering in which some panic notifiers are executed - specially
+> affected by this are the notifiers responsible for disabling the
+> hung_task detector / RCU warnings, which now run first. In a
+> subsequent patch, the panic path will be refactored, then the
+> panic informational notifiers will effectively run earlier,
+> before ksmg_dump() (and usually before kdump as well).
+> 
+> We also defer documenting it all properly in the subsequent
+> refactor patch. Finally, while at it, we removed some useless
+> header inclusions too.
+> 
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-> --- a/arch/mips/sgi-ip22/ip22-reset.c
-> +++ b/arch/mips/sgi-ip22/ip22-reset.c
-> @@ -195,7 +195,7 @@ static int __init reboot_setup(void)
->  	}
->  
->  	timer_setup(&blink_timer, blink_timeout, 0);
-> -	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
-> +	atomic_notifier_chain_register(&panic_hypervisor_list, &panic_block);
+All notifiers moved in this patch seems to fit well the "info"
+notifier list. The patch looks good from this POV.
 
-This notifier enables blinking. It is not much safe. It calls
-mod_timer() that takes a lock internally.
-
-This kind of functionality should go into the last list called
-before panic() enters the infinite loop. IMHO, all the blinking
-stuff should go there.
-
->  
->  	return 0;
->  }
-> diff --git a/arch/mips/sgi-ip32/ip32-reset.c b/arch/mips/sgi-ip32/ip32-reset.c
-> index 18d1c115cd53..9ee1302c9d13 100644
-> --- a/arch/mips/sgi-ip32/ip32-reset.c
-> +++ b/arch/mips/sgi-ip32/ip32-reset.c
-> @@ -145,7 +144,7 @@ static __init int ip32_reboot_setup(void)
->  	pm_power_off = ip32_machine_halt;
->  
->  	timer_setup(&blink_timer, blink_timeout, 0);
-> -	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
-> +	atomic_notifier_chain_register(&panic_hypervisor_list, &panic_block);
-
-Same here. Should be done only before the "loop".
-
->  
->  	return 0;
->  }
-> --- a/drivers/firmware/google/gsmi.c
-> +++ b/drivers/firmware/google/gsmi.c
-> @@ -1034,7 +1034,7 @@ static __init int gsmi_init(void)
->  
->  	register_reboot_notifier(&gsmi_reboot_notifier);
->  	register_die_notifier(&gsmi_die_notifier);
-> -	atomic_notifier_chain_register(&panic_notifier_list,
-> +	atomic_notifier_chain_register(&panic_hypervisor_list,
->  				       &gsmi_panic_notifier);
-
-I am not sure about this one. It looks like some logging or
-pre_reboot stuff.
-
-
->  
->  	printk(KERN_INFO "gsmi version " DRIVER_VERSION " loaded\n");
-> --- a/drivers/leds/trigger/ledtrig-activity.c
-> +++ b/drivers/leds/trigger/ledtrig-activity.c
-> @@ -247,7 +247,7 @@ static int __init activity_init(void)
->  	int rc = led_trigger_register(&activity_led_trigger);
->  
->  	if (!rc) {
-> -		atomic_notifier_chain_register(&panic_notifier_list,
-> +		atomic_notifier_chain_register(&panic_hypervisor_list,
->  					       &activity_panic_nb);
-
-The notifier is trivial. It just sets a variable.
-
-But still, it is about blinking and should be done
-in the last "loop" list.
-
-
->  		register_reboot_notifier(&activity_reboot_nb);
->  	}
-> --- a/drivers/leds/trigger/ledtrig-heartbeat.c
-> +++ b/drivers/leds/trigger/ledtrig-heartbeat.c
-> @@ -190,7 +190,7 @@ static int __init heartbeat_trig_init(void)
->  	int rc = led_trigger_register(&heartbeat_led_trigger);
->  
->  	if (!rc) {
-> -		atomic_notifier_chain_register(&panic_notifier_list,
-> +		atomic_notifier_chain_register(&panic_hypervisor_list,
->  					       &heartbeat_panic_nb);
-
-Same here. Blinking => loop list.
-
->  		register_reboot_notifier(&heartbeat_reboot_nb);
->  	}
-> diff --git a/drivers/misc/bcm-vk/bcm_vk_dev.c b/drivers/misc/bcm-vk/bcm_vk_dev.c
-> index a16b99bdaa13..d9d5199cdb2b 100644
-> --- a/drivers/misc/bcm-vk/bcm_vk_dev.c
-> +++ b/drivers/misc/bcm-vk/bcm_vk_dev.c
-> @@ -1446,7 +1446,7 @@ static int bcm_vk_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  
->  	/* register for panic notifier */
->  	vk->panic_nb.notifier_call = bcm_vk_on_panic;
-> -	err = atomic_notifier_chain_register(&panic_notifier_list,
-> +	err = atomic_notifier_chain_register(&panic_hypervisor_list,
->  					     &vk->panic_nb);
-
-It seems to reset some hardware or so. IMHO, it should go into the
-pre-reboot list.
-
-
->  	if (err) {
->  		dev_err(dev, "Fail to register panic notifier\n");
-> --- a/drivers/power/reset/ltc2952-poweroff.c
-> +++ b/drivers/power/reset/ltc2952-poweroff.c
-> @@ -279,7 +279,7 @@ static int ltc2952_poweroff_probe(struct platform_device *pdev)
->  	pm_power_off = ltc2952_poweroff_kill;
->  
->  	data->panic_notifier.notifier_call = ltc2952_poweroff_notify_panic;
-> -	atomic_notifier_chain_register(&panic_notifier_list,
-> +	atomic_notifier_chain_register(&panic_hypervisor_list,
->  				       &data->panic_notifier);
-
-I looks like this somehow triggers the reboot. IMHO, it should go
-into the pre_reboot list.
-
->  	dev_info(&pdev->dev, "probe successful\n");
->  
-> --- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-> +++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-> @@ -814,7 +814,7 @@ static int brcmstb_pm_probe(struct platform_device *pdev)
->  		goto out;
->  	}
->  
-> -	atomic_notifier_chain_register(&panic_notifier_list,
-> +	atomic_notifier_chain_register(&panic_hypervisor_list,
->  				       &brcmstb_pm_panic_nb);
-
-I am not sure about this one. It instruct some HW to preserve DRAM.
-IMHO, it better fits into pre_reboot category but I do not have
-strong opinion.
-
->  
->  	pm_power_off = brcmstb_pm_poweroff;
+I still have to review the rest of the patches to see if it
+is complete.
 
 Best Regards,
 Petr
