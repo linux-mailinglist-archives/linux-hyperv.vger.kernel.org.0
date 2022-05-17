@@ -2,122 +2,171 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7A3352A437
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 16:04:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AF2A52A462
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 16:12:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348399AbiEQOEq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 May 2022 10:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40414 "EHLO
+        id S1348502AbiEQOMB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 May 2022 10:12:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348377AbiEQOEp (ORCPT
+        with ESMTP id S1348525AbiEQOLI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 May 2022 10:04:45 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D794C425
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 07:04:42 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id s14so17437832plk.8
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 07:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FL8Ln+qoBhX9Z9FzXxUqdcLvxSZEspo40DkXeEXhtoc=;
-        b=JaoGHjtrtmahXTjOEk2a2EB4qunemIRJYfJ5tpCsscKfgRqLqN/Z7hJ369fh3UUdOF
-         ui7KgZXcB83KE7l4oo/LITOB78y7n5hsj7ayEtp5IVpIVNaW1jb0FHR92R9VZiUe5EF7
-         TJHHWfycpEo/mb+f2n2c/h6x3OfmWKpLhypxDemrTm+1B3pFFjv9jdc7u5eYiu4NQoaW
-         5eOd2T5hm5QdCEkC0oJNGroSW3uKegHK9ib3SBkWzdCeo6O6uyIojKc2pLC/vRZfe1Ow
-         Vsgsun3kdtvd+v6HRJBBhE1Ko2ylHo0wRbA3PBE06QkaiA2AaKziUM4wvbQWKfLojZ6E
-         FyDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FL8Ln+qoBhX9Z9FzXxUqdcLvxSZEspo40DkXeEXhtoc=;
-        b=CiiqM/U+wx2LfcEXZicwebU03mmhmx5o4xb0HVkb/p9bYRKUAGytpvoLB3wBCr6KNN
-         SCpPz6NkuFk1nvetZjU1Kkn4UMzGRwKRM4RKJ4bbHAGngBqMM42ge/6qAVlerg7C5qeW
-         9T++ehekkfQa+mLVjd3WIZNWxwt7tG6HJt+m9g+Te4VC5KE4B5R2HgIkRxU/A5RvYojq
-         kyWKXfPM36JcOnRzdi0RCSZ0B4yqTSzE0XSSCjQ9f786h71WJkxziEr0ExAm3rOHTBP9
-         eed9hj126Zgd9D8IOpgPZUgBKsHY38LbTwe/Te33qnef0/kNXP7szhifD2nlQT2sm4eU
-         UJ6g==
-X-Gm-Message-State: AOAM533NrYstOAcZSUuXWK70tL9bH8U2KfvfodSWZWN5elQ7sdYEwBYU
-        e3qOIhNvfDCbVbihJGhbrgdp6OD2a4mDNA==
-X-Google-Smtp-Source: ABdhPJwmn22f1sBhUOHh7YAS6Vi2ghXPT3IC1P1JAdjnNQBZ3qawrb+j203LVSupTRggD/UU9gWRRg==
-X-Received: by 2002:a17:903:2308:b0:15f:3797:a755 with SMTP id d8-20020a170903230800b0015f3797a755mr22473094plh.122.1652796281822;
-        Tue, 17 May 2022 07:04:41 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id cm17-20020a17090afa1100b001d954837197sm1684392pjb.22.2022.05.17.07.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 07:04:39 -0700 (PDT)
-Date:   Tue, 17 May 2022 14:04:35 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 11/34] KVM: x86: hyper-v: Use preallocated buffer in
- 'struct kvm_vcpu_hv' instead of on-stack 'sparse_banks'
-Message-ID: <YoOrc2hPF/QpJNeo@google.com>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
- <20220414132013.1588929-12-vkuznets@redhat.com>
- <YoKunaNKDjYx7C21@google.com>
- <87k0akuv1o.fsf@redhat.com>
+        Tue, 17 May 2022 10:11:08 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1FB9EAE;
+        Tue, 17 May 2022 07:11:06 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 67D211F8CA;
+        Tue, 17 May 2022 14:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1652796665; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UazRNADyyJz2HI+RS6R0a4/dm7+XkEeyBn9yGoLISk0=;
+        b=BKp7+FEVfq6NcVwdI04E/j1IXhL8fav2W9wQb6/2V+MLS4zVCpGBL04+5kiZPUHpPEWWSJ
+        UCuw6cy5UFA5oDKAHRw0jxrGspZnMX7jbttS2tX8QWMEWQryA8mHzjbrpe5MfzzbeKkAE+
+        HL6pRS/de3kEkB9TyLHSW9ZDBKYUAwA=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 10D772C141;
+        Tue, 17 May 2022 14:11:04 +0000 (UTC)
+Date:   Tue, 17 May 2022 16:11:00 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "bhe@redhat.com" <bhe@redhat.com>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
+        "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
+        "halves@canonical.com" <halves@canonical.com>,
+        "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
+        "alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "dyoung@redhat.com" <dyoung@redhat.com>,
+        "Tang, Feng" <feng.tang@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mikelley@microsoft.com" <mikelley@microsoft.com>,
+        "hidehiro.kawai.ez@hitachi.com" <hidehiro.kawai.ez@hitachi.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "paulmck@kernel.org" <paulmck@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "vgoyal@redhat.com" <vgoyal@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "will@kernel.org" <will@kernel.org>, Alex Elder <elder@kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Chris Zankel <chris@zankel.net>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Corey Minyard <minyard@acm.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        James Morse <james.morse@arm.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, Pavel Machek <pavel@ucw.cz>,
+        Richard Weinberger <richard@nod.at>,
+        Robert Richter <rric@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH 21/30] panic: Introduce the panic pre-reboot notifier list
+Message-ID: <YoOs9GJ5Ovq63u5Q@alley>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-22-gpiccoli@igalia.com>
+ <YoJgcC8c6LaKADZV@alley>
+ <63a74b56-89ef-8d1f-d487-cdb986aab798@igalia.com>
+ <bed66b9467254a5a8bafc1983dad643a@intel.com>
+ <e895ce94-e6b9-caf6-e5d3-06bf0149445c@igalia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k0akuv1o.fsf@redhat.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <e895ce94-e6b9-caf6-e5d3-06bf0149445c@igalia.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 17, 2022, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
+On Mon 2022-05-16 13:33:51, Guilherme G. Piccoli wrote:
+> On 16/05/2022 13:18, Luck, Tony wrote:
+> >> [...]
+> > Would it be possible to have some global "kdump is configured + enabled" flag?
+> > 
+> > Then notifiers could make an informed choice on whether to deep dive to
+> > get all the possible details (when there is no kdump) or just skim the high
+> > level stuff (to maximize chance of getting a successful kdump).
+> > 
+> > -Tony
 > 
-> > On Thu, Apr 14, 2022, Vitaly Kuznetsov wrote:
-> >> To make kvm_hv_flush_tlb() ready to handle L2 TLB flush requests, KVM needs
-> >> to allow for all 64 sparse vCPU banks regardless of KVM_MAX_VCPUs as L1
-> >> may use vCPU overcommit for L2. To avoid growing on-stack allocation, make
-> >> 'sparse_banks' part of per-vCPU 'struct kvm_vcpu_hv' which is allocated
-> >> dynamically.
-> >> 
-> >> Note: sparse_set_to_vcpu_mask() keeps using on-stack allocation as it
-> >> won't be used to handle L2 TLB flush requests.
-> >
-> > I think it's worth using stronger language; handling TLB flushes for L2 _can't_
-> > use sparse_set_to_vcpu_mask() because KVM has no idea how to translate an L2
-> > vCPU index to an L1 vCPU.  I found the above mildly confusing because it didn't
-> > call out "vp_bitmap" and so I assumed the note referred to yet another sparse_banks
-> > "allocation".  And while vp_bitmap is related to sparse_banks, it tracks something
-> > entirely different.
-> >
-> > Something like?
-> >
-> > Note: sparse_set_to_vcpu_mask() can never be used to handle L2 requests as
-> > KVM can't translate L2 vCPU indices to L1 vCPUs, i.e. its vp_bitmap array
-> > is still bounded by the number of L1 vCPUs and so can remain an on-stack
-> > allocation.
-> 
-> My brain is probably tainted by looking at all this for some time so I
-> really appreciate such improvements, thanks :)
-> 
-> I wouldn't, however, say "never" ('never say never' :-)): KVM could've
-> kept 2-level reverse mapping up-to-date:
-> 
-> KVM -> L2 VM list -> L2 vCPU ids -> L1 vCPUs which run them
-> 
-> making it possible for KVM to quickly translate between L2 VP IDs and L1
-> vCPUs. I don't do this in the series and just record L2 VM_ID/VP_ID for
-> each L1 vCPU so I have to go over them all for each request. The
-> optimization is, however, possible and we may get to it if really big
-> Windows VMs become a reality.
+> Good idea Tony! What if I wire a kexec_crash_loaded() in the notifier?
 
-Out of curiosity, is L1 "required" to provides the L2 => L1 translation/map?
+I like this idea.
+
+One small problem is that kexec_crash_loaded() has valid result
+only under kexec_mutex. On the other hand, it should stay true
+once loaded so that the small race window should be innocent.
+
+> With that, are you/Petr/Dinh OK in moving it for the info list?
+
+Sounds good to me.
+
+Best Regards,
+Petr
