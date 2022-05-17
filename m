@@ -2,150 +2,253 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A1B252A3D8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 15:51:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B76B52A3F6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 15:57:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229828AbiEQNvZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 May 2022 09:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32852 "EHLO
+        id S1346172AbiEQN5i (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 May 2022 09:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348265AbiEQNvW (ORCPT
+        with ESMTP id S232153AbiEQN5h (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 May 2022 09:51:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C05C526100
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 06:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652795479;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Tue, 17 May 2022 09:57:37 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94673C4A1;
+        Tue, 17 May 2022 06:57:35 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 5FD4E1F8CA;
+        Tue, 17 May 2022 13:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1652795854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=DI+2TLyotaAB4m8Wk/Jy92LMvHUEqA+a9jwjfCWo8vE=;
-        b=Lemx0RyDzmFfXbMk/JGU6L5UDgmCjXE1RmwbyHwHV5HKLjq2U6JH+8J0W1tfvU8QT47NjC
-        T5Rj3aFSLE1t6y0zyaI5nrIFFKdiOetiL53PUsetVA5vRi+B1gt2RS3y6zcfYKi/KGtpoH
-        AnZDlm8vQZxFZ9/mgiNdsXUB1dQJfTU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-30-7tmdrCc7OOWauOPz9d56Dg-1; Tue, 17 May 2022 09:51:18 -0400
-X-MC-Unique: 7tmdrCc7OOWauOPz9d56Dg-1
-Received: by mail-wm1-f72.google.com with SMTP id p24-20020a1c5458000000b003945d2ffc6eso8209827wmi.5
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 06:51:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=DI+2TLyotaAB4m8Wk/Jy92LMvHUEqA+a9jwjfCWo8vE=;
-        b=GXrRLhndTsMSAOManu0nOv3dS6JPZhGnEsq5yoPqKTsGTTRc/yns0w+wQng/jTgV+m
-         1oHbmIUb9wcCiRtYqil9Qyx+pahSnmyurKE3yWO/eDb1Y+79i5ibYP427gNxUXWVz+YQ
-         3FKXDJL8ZgoUGd56uEt3we7+GtVs7+bf9ilgHmb3JLOAVixFyIHOtYKOi5jakP71QYDf
-         st7l+ZIrFVpMRDCXwj2Vv2kN/3R7oOAek/qpWpcVtsXSiXQ23SZz50QPpvuNjn36VmTT
-         VHhsFBbznprW1UbezfemKj+GgW4InaNYvmHttWFiYN0HdwSLx46y0jx80N3R38h4TG7X
-         0mhA==
-X-Gm-Message-State: AOAM532L5Y0Z2U1TOFoEzSQJRSNzWkG7kTm90QBhSPl1cHbp8gItmxio
-        hSPufu9PUuFdfSgj88G2QsAqnNsIB7zZ1IdLpHlIQHWsvv424wh98jCuu51RjpfP31tJ2FxoWwu
-        PkK4Xo0/RPTFdMWwjnJHo3TCC
-X-Received: by 2002:a5d:595f:0:b0:20d:97d:4d14 with SMTP id e31-20020a5d595f000000b0020d097d4d14mr8262070wri.549.1652795477334;
-        Tue, 17 May 2022 06:51:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxGzb/41GwD8L8W8DX4aDq6yMVVszSErv2Y5yTV9eLtgY7MvadoakIwpfSvObshosUucUtTEA==
-X-Received: by 2002:a5d:595f:0:b0:20d:97d:4d14 with SMTP id e31-20020a5d595f000000b0020d097d4d14mr8262048wri.549.1652795477119;
-        Tue, 17 May 2022 06:51:17 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id o16-20020adf8b90000000b0020c5253d8e0sm12819325wra.44.2022.05.17.06.51.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 06:51:16 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 11/34] KVM: x86: hyper-v: Use preallocated buffer in
- 'struct kvm_vcpu_hv' instead of on-stack 'sparse_banks'
-In-Reply-To: <YoKunaNKDjYx7C21@google.com>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
- <20220414132013.1588929-12-vkuznets@redhat.com>
- <YoKunaNKDjYx7C21@google.com>
-Date:   Tue, 17 May 2022 15:51:15 +0200
-Message-ID: <87k0akuv1o.fsf@redhat.com>
+        bh=F/28g65NUYRrE0kqo9hb+aIMt4lDnxj7qFXJPB2SFKQ=;
+        b=La0hw1fimyOXZWGy7NhUralYCHdeUAgxZ7Jx2l4teL3ZObgxCoYN3MJlutKivdf7Tw8ScF
+        Jcou2BEeZy+SMDvZr2KkytW34i2oUnUQq/Rvj3HIt6rmBgE0M6mmkljwufeUEZWWTXnkMR
+        l7FZzEHlQDvQ7gIrbLVQoj/qRxAknBE=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 47D802C141;
+        Tue, 17 May 2022 13:57:32 +0000 (UTC)
+Date:   Tue, 17 May 2022 15:57:29 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     David Gow <davidgow@google.com>, Evan Green <evgreen@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        akpm@linux-foundation.org, bhe@redhat.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
+        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
+        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
+        halves@canonical.com, fabiomirmar@gmail.com,
+        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
+        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Doug Berger <opendmb@gmail.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>, Pavel Machek <pavel@ucw.cz>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        zhenwei pi <pizhenwei@bytedance.com>
+Subject: Re: [PATCH 19/30] panic: Add the panic hypervisor notifier list
+Message-ID: <YoOpyW1+q+Z5as78@alley>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-20-gpiccoli@igalia.com>
+ <YoJZVZl/MH0KiE/J@alley>
+ <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+On Mon 2022-05-16 12:06:17, Guilherme G. Piccoli wrote:
+> Thanks for the review!
+> 
+> I agree with the blinking stuff, I can rework and add all LED/blinking
+> stuff into the loop list, it does make sense. I'll comment a bit in the
+> others below...
+> 
+> On 16/05/2022 11:01, Petr Mladek wrote:
+> >> --- a/drivers/firmware/google/gsmi.c
+> >> +++ b/drivers/firmware/google/gsmi.c
+> >> @@ -1034,7 +1034,7 @@ static __init int gsmi_init(void)
+> >>  
+> >>  	register_reboot_notifier(&gsmi_reboot_notifier);
+> >>  	register_die_notifier(&gsmi_die_notifier);
+> >> -	atomic_notifier_chain_register(&panic_notifier_list,
+> >> +	atomic_notifier_chain_register(&panic_hypervisor_list,
+> >>  				       &gsmi_panic_notifier);
+> > 
+> > I am not sure about this one. It looks like some logging or
+> > pre_reboot stuff.
+> > 
+> 
+> Disagree here. I'm looping Google maintainers, so they can comment.
+> (CCed Evan, David, Julius)
+> 
+> This notifier is clearly a hypervisor notification mechanism. I've fixed
+> a locking stuff there (in previous patch), I feel it's low-risk but even
+> if it's mid-risk, the class of such callback remains a perfect fit with
+> the hypervisor list IMHO.
 
-> On Thu, Apr 14, 2022, Vitaly Kuznetsov wrote:
->> To make kvm_hv_flush_tlb() ready to handle L2 TLB flush requests, KVM needs
->> to allow for all 64 sparse vCPU banks regardless of KVM_MAX_VCPUs as L1
->> may use vCPU overcommit for L2. To avoid growing on-stack allocation, make
->> 'sparse_banks' part of per-vCPU 'struct kvm_vcpu_hv' which is allocated
->> dynamically.
->> 
->> Note: sparse_set_to_vcpu_mask() keeps using on-stack allocation as it
->> won't be used to handle L2 TLB flush requests.
->
-> I think it's worth using stronger language; handling TLB flushes for L2 _can't_
-> use sparse_set_to_vcpu_mask() because KVM has no idea how to translate an L2
-> vCPU index to an L1 vCPU.  I found the above mildly confusing because it didn't
-> call out "vp_bitmap" and so I assumed the note referred to yet another sparse_banks
-> "allocation".  And while vp_bitmap is related to sparse_banks, it tracks something
-> entirely different.
->
-> Something like?
->
-> Note: sparse_set_to_vcpu_mask() can never be used to handle L2 requests as
-> KVM can't translate L2 vCPU indices to L1 vCPUs, i.e. its vp_bitmap array
-> is still bounded by the number of L1 vCPUs and so can remain an on-stack
-> allocation.
+It is similar to drivers/soc/bcm/brcmstb/pm/pm-arm.c.
+See below for another idea.
 
-My brain is probably tainted by looking at all this for some time so I
-really appreciate such improvements, thanks :)
+> >> --- a/drivers/misc/bcm-vk/bcm_vk_dev.c
+> >> +++ b/drivers/misc/bcm-vk/bcm_vk_dev.c
+> >> @@ -1446,7 +1446,7 @@ static int bcm_vk_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >>  
+> >>  	/* register for panic notifier */
+> >>  	vk->panic_nb.notifier_call = bcm_vk_on_panic;
+> >> -	err = atomic_notifier_chain_register(&panic_notifier_list,
+> >> +	err = atomic_notifier_chain_register(&panic_hypervisor_list,
+> >>  					     &vk->panic_nb);
+> > 
+> > It seems to reset some hardware or so. IMHO, it should go into the
+> > pre-reboot list.
+> 
+> Mixed feelings here, I'm looping Broadcom maintainers to comment.
+> (CC Scott and Broadcom list)
+> 
+> I'm afraid it breaks kdump if this device is not reset beforehand - it's
+> a doorbell write, so not high risk I think...
+> 
+> But in case the not-reset device can be probed normally in kdump kernel,
+> then I'm fine in moving this to the reboot list! I don't have the HW to
+> test myself.
 
-I wouldn't, however, say "never" ('never say never' :-)): KVM could've
-kept 2-level reverse mapping up-to-date:
+Good question. Well, it if has to be called before kdump then
+even "hypervisor" list is a wrong place because is not always
+called before kdump.
 
-KVM -> L2 VM list -> L2 vCPU ids -> L1 vCPUs which run them
 
-making it possible for KVM to quickly translate between L2 VP IDs and L1
-vCPUs. I don't do this in the series and just record L2 VM_ID/VP_ID for
-each L1 vCPU so I have to go over them all for each request. The
-optimization is, however, possible and we may get to it if really big
-Windows VMs become a reality.
+> >> --- a/drivers/power/reset/ltc2952-poweroff.c
+> >> +++ b/drivers/power/reset/ltc2952-poweroff.c
+> >> @@ -279,7 +279,7 @@ static int ltc2952_poweroff_probe(struct platform_device *pdev)
+> >>  	pm_power_off = ltc2952_poweroff_kill;
+> >>  
+> >>  	data->panic_notifier.notifier_call = ltc2952_poweroff_notify_panic;
+> >> -	atomic_notifier_chain_register(&panic_notifier_list,
+> >> +	atomic_notifier_chain_register(&panic_hypervisor_list,
+> >>  				       &data->panic_notifier);
+> > 
+> > I looks like this somehow triggers the reboot. IMHO, it should go
+> > into the pre_reboot list.
+> 
+> Mixed feeling again here - CCing the maintainers for comments (Sebastian
+> / PM folks).
+> 
+> This is setting a variable only, and once it's set (data->kernel_panic
+> is the bool's name), it just bails out the IRQ handler and a timer
+> setting - this timer seems kinda tricky, so bailing out ASAP makes sense
+> IMHO.
 
->
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  arch/x86/include/asm/kvm_host.h | 3 +++
->>  arch/x86/kvm/hyperv.c           | 6 ++++--
->>  2 files changed, 7 insertions(+), 2 deletions(-)
->> 
->> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->> index 058061621872..837c07e213de 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -619,6 +619,9 @@ struct kvm_vcpu_hv {
->>  	} cpuid_cache;
->>  
->>  	struct kvm_vcpu_hv_tlb_flush_ring tlb_flush_ring[HV_NR_TLB_FLUSH_RINGS];
->> +
->> +	/* Preallocated buffer for handling hypercalls passing sparse vCPU set */
->> +	u64 sparse_banks[64];
->
-> Shouldn't this be HV_MAX_SPARSE_VCPU_BANKS?
->
+IMHO, the timer informs the hardware that the system is still alive
+in the middle of panic(). If the timer is not working then the
+hardware (chip) will think that the system frozen in panic()
+and will power off the system. See the comments in
+drivers/power/reset/ltc2952-poweroff.c:
 
-It certainly should, thanks!
+ * The following GPIOs are used:
+ * - trigger (input)
+ *     A level change indicates the shut-down trigger. If it's state reverts
+ *     within the time-out defined by trigger_delay, the shut down is not
+ *     executed. If no pin is assigned to this input, the driver will start the
+ *     watchdog toggle immediately. The chip will only power off the system if
+ *     it is requested to do so through the kill line.
+ *
+ * - watchdog (output)
+ *     Once a shut down is triggered, the driver will toggle this signal,
+ *     with an internal (wde_interval) to stall the hardware shut down.
 
--- 
-Vitaly
+IMHO, we really have to keep it alive until we reach the reboot stage.
 
+Another question is how it actually works when the interrupts are
+disabled during panic() and the timer callbacks are not handled.
+
+
+> > [...]
+> >> --- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+> >> +++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+> >> @@ -814,7 +814,7 @@ static int brcmstb_pm_probe(struct platform_device *pdev)
+> >>  		goto out;
+> >>  	}
+> >>  
+> >> -	atomic_notifier_chain_register(&panic_notifier_list,
+> >> +	atomic_notifier_chain_register(&panic_hypervisor_list,
+> >>  				       &brcmstb_pm_panic_nb);
+> > 
+> > I am not sure about this one. It instruct some HW to preserve DRAM.
+> > IMHO, it better fits into pre_reboot category but I do not have
+> > strong opinion.
+> 
+> Disagree here, I'm CCing Florian for information.
+> 
+> This notifier preserves RAM so it's *very interesting* if we have
+> kmsg_dump() for example, but maybe might be also relevant in case kdump
+> kernel is configured to store something in a persistent RAM (then,
+> without this notifier, after kdump reboots the system data would be lost).
+
+I see. It is actually similar problem as with
+drivers/firmware/google/gsmi.c.
+
+I does similar things like kmsg_dump() so it should be called in
+the same location (after info notifier list and before kdump).
+
+A solution might be to put it at these notifiers at the very
+end of the "info" list or make extra "dump" notifier list.
+
+Best Regards,
+Petr
