@@ -2,45 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AC4852A873
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 18:46:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 244B852A8C9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 19:03:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351134AbiEQQqw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 May 2022 12:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39254 "EHLO
+        id S1351294AbiEQRDC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 May 2022 13:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351098AbiEQQqv (ORCPT
+        with ESMTP id S1351286AbiEQRDB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 May 2022 12:46:51 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D07464EDF0;
-        Tue, 17 May 2022 09:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SayoV/bDRPXgJ3Ch+E1XrP+3ZKBsDTlU6fUN8lp8tUA=; b=NFkpBbcNKXWz56FUYb1Bkzyxr7
-        6pY/CyDxLh4gcyoAU547/3Tabh/NOqK7gz3NyBwq82xJqiEBF4takjF5Ea4MxM1+r5wku8pOVYUcB
-        ywM/ZaJlNeBGlkQDKAAkvdKcd6hk5MAb9a5XNcjDCG3MlNSgk+v7vfXWUOesl/qG/NSZ4K/pjk0dM
-        SubvLJBNURMO5WMoXdrxUQfhd0uSTHup7fDjOSHoKefOTjSKlQG/UGn8QEvdGVnYTtMgbwm4d3/K8
-        B+J9kKyINLLhiDLqbwoDlrvd49iM915Hk5YhXi74qG93lapXX9eWm/gnnOawNxBPCH4bdsTvQIyr9
-        Yagr/AQw==;
-Received: from 200-161-159-120.dsl.telesp.net.br ([200.161.159.120] helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1nr0L8-008hJL-On; Tue, 17 May 2022 18:46:30 +0200
-Message-ID: <599b72f6-76a4-8e6d-5432-56fb1ffd7e0b@igalia.com>
-Date:   Tue, 17 May 2022 13:45:51 -0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 21/30] panic: Introduce the panic pre-reboot notifier list
-Content-Language: en-US
-To:     Petr Mladek <pmladek@suse.com>, "Luck, Tony" <tony.luck@intel.com>,
+        Tue, 17 May 2022 13:03:01 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B914339D;
+        Tue, 17 May 2022 10:03:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652806980; x=1684342980;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wPndYlW5xEVdpcc0zA72NXu9ypQzfs4FPZzk6VJMkkY=;
+  b=E6G3ldzPD5ig+NOHm3uUhmmKyCOpiFukwEEZN44mGoqTeXEdbdfw+54i
+   MfU5oqDXSCbrrrvCbE1PbO6tCvc0/ujp0eInlhXAJzbqUmnYl8c8cl0xx
+   nvBxMtW7ZG+ZbqValn2tSdtB8S6ufEPhiga+FXYRM9g2uZux15Xku7Fjv
+   n4U+zmQ9y2VuCsaNZGr7bmg1A0a9kBKt0V3Jq9+oyJ5EqNm4VMbeWzTau
+   pEARQDCByUAmm5UjlOTVRBz39ZEj3GqFKiWAqG5uoXzQkn6sCqNUtExse
+   WAc8YZw5fu16sBtoiouqaY+RbPDv1S8BPINTNA1dHWZ6WQ1a9fkNK+Zta
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10350"; a="258814403"
+X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
+   d="scan'208";a="258814403"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2022 10:02:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,233,1647327600"; 
+   d="scan'208";a="700144313"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga004.jf.intel.com with ESMTP; 17 May 2022 10:02:32 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 17 May 2022 10:02:32 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 17 May 2022 10:02:31 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2308.027;
+ Tue, 17 May 2022 10:02:31 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Petr Mladek <pmladek@suse.com>,
         Dinh Nguyen <dinguyen@kernel.org>
-Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
         "bhe@redhat.com" <bhe@redhat.com>,
         "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -104,80 +117,69 @@ Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Chris Zankel <chris@zankel.net>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Corey Minyard <minyard@acm.org>,
+        "Corey Minyard" <minyard@acm.org>,
         Dexuan Cui <decui@microsoft.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
+        "Heiko Carstens" <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
         Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
         "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
         James Morse <james.morse@arm.com>,
         Johannes Berg <johannes@sipsolutions.net>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Matt Turner <mattst88@gmail.com>,
+        "Matt Turner" <mattst88@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Max Filippov <jcmvbkbc@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Paul Mackerras <paulus@samba.org>, Pavel Machek <pavel@ucw.cz>,
-        Richard Weinberger <richard@nod.at>,
+        "Richard Weinberger" <richard@nod.at>,
         Robert Richter <rric@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, Wei Liu <wei.liu@kernel.org>
+        "Vasily Gorbik" <gor@linux.ibm.com>, Wei Liu <wei.liu@kernel.org>
+Subject: RE: [PATCH 21/30] panic: Introduce the panic pre-reboot notifier list
+Thread-Topic: [PATCH 21/30] panic: Introduce the panic pre-reboot notifier
+ list
+Thread-Index: AQHYWooLnXaT7guJw0OCpuGv/IkEoK0iJCSAgAAZuAD//40QkIAAesuAgAFqbACAACtDgP//jcxA
+Date:   Tue, 17 May 2022 17:02:31 +0000
+Message-ID: <06d85642fef24bc482642d669242654b@intel.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
  <20220427224924.592546-22-gpiccoli@igalia.com> <YoJgcC8c6LaKADZV@alley>
  <63a74b56-89ef-8d1f-d487-cdb986aab798@igalia.com>
  <bed66b9467254a5a8bafc1983dad643a@intel.com>
  <e895ce94-e6b9-caf6-e5d3-06bf0149445c@igalia.com> <YoOs9GJ5Ovq63u5Q@alley>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <YoOs9GJ5Ovq63u5Q@alley>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+ <599b72f6-76a4-8e6d-5432-56fb1ffd7e0b@igalia.com>
+In-Reply-To: <599b72f6-76a4-8e6d-5432-56fb1ffd7e0b@igalia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.6.401.20
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 17/05/2022 11:11, Petr Mladek wrote:
-> [...]
->>> Then notifiers could make an informed choice on whether to deep dive to
->>> get all the possible details (when there is no kdump) or just skim the high
->>> level stuff (to maximize chance of getting a successful kdump).
->>>
->>> -Tony
->>
->> Good idea Tony! What if I wire a kexec_crash_loaded() in the notifier?
-> 
-> I like this idea.
-> 
-> One small problem is that kexec_crash_loaded() has valid result
-> only under kexec_mutex. On the other hand, it should stay true
-> once loaded so that the small race window should be innocent.
-> 
->> With that, are you/Petr/Dinh OK in moving it for the info list?
-> 
-> Sounds good to me.
-> 
-> Best Regards,
-> Petr
-
-Perfect, I'll do that for V2 then =)
-
-Tony / Dinh - can I just *skip* this notifier *if kdump* is set or else
-we run the code as-is? Does that make sense to you?
-
-I'll postpone it to run almost in the end of info list (last position is
-for panic_print).
-
-Thanks,
-
-
-Guilherme
+PiBUb255IC8gRGluaCAtIGNhbiBJIGp1c3QgKnNraXAqIHRoaXMgbm90aWZpZXIgKmlmIGtkdW1w
+KiBpcyBzZXQgb3IgZWxzZQ0KPiB3ZSBydW4gdGhlIGNvZGUgYXMtaXM/IERvZXMgdGhhdCBtYWtl
+IHNlbnNlIHRvIHlvdT8NCg0KVGhlICJza2lwIiBvcHRpb24gc291bmRzIGxpa2UgaXQgbmVlZHMg
+c29tZSBzcGVjaWFsIGZsYWcgYXNzb2NpYXRlZCB3aXRoDQphbiBlbnRyeSBvbiB0aGUgbm90aWZp
+ZXIgY2hhaW4uIEJ1dCB0aGVyZSBhcmUgb3RoZXIgbm90aWZpZXIgY2hhaW5zIC4uLiBzbyB0aGF0
+DQpzb3VuZHMgbWVzc3kgdG8gbWUuDQoNCkp1c3QgYWxsIHRoZSBub3RpZmllcnMgaW4gcHJpb3Jp
+dHkgb3JkZXIuIElmIGFueSB3YW50IHRvIHRha2UgZGlmZmVyZW50IGFjdGlvbnMNCmJhc2VkIG9u
+IGtkdW1wIHN0YXR1cywgY2hhbmdlIHRoZSBjb2RlLiBUaGF0IHNlZW1zIG1vcmUgZmxleGlibGUg
+dGhhbg0KYW4gImFsbCBvciBub3RoaW5nIiBhcHByb2FjaCBieSBza2lwcGluZy4NCg0KLVRvbnkN
+Cg==
