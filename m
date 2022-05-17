@@ -2,80 +2,79 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FBFC52A49C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 16:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2336852A581
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 May 2022 16:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348773AbiEQOUF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 May 2022 10:20:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54266 "EHLO
+        id S1349514AbiEQO7y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 May 2022 10:59:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348736AbiEQOUE (ORCPT
+        with ESMTP id S240850AbiEQO7x (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 May 2022 10:20:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 324043465B
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 07:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652797201;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WYXjJfd1pESNYbrTTSqKIx0/7SN9768efdFnzL3MuFI=;
-        b=HMq2GmXYxEaXuM8Ey6vwONEN7AnmKX00NK9IKU2MXeOZF9oZKSQJF8gt82D9V6Bksz37Qq
-        g98xBlxuZemk0kGvWN0i7BW+yfR1BjK7oxOqWlyGD1Kw2Zyfh8PalIINPGV8vRmUNVwvOG
-        cKlg+USEZ6RTXwq8uTR8KlfkxF5ditA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-643-4KaXnNZLMkO6NXArvgX2Gg-1; Tue, 17 May 2022 10:19:59 -0400
-X-MC-Unique: 4KaXnNZLMkO6NXArvgX2Gg-1
-Received: by mail-wm1-f71.google.com with SMTP id r187-20020a1c44c4000000b003970bec7fd9so1179971wma.9
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 07:19:57 -0700 (PDT)
+        Tue, 17 May 2022 10:59:53 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92644B87B
+        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 07:59:51 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id ej7so2471038qvb.13
+        for <linux-hyperv@vger.kernel.org>; Tue, 17 May 2022 07:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Tr4AALZAcgwN+FDcDi87udLeLPWs7ZAJ5eWXrFs/jlw=;
+        b=lXoa1En3yZsvkJXX4fuc+7NHLvgNe+4aH70ouZjesRaJiFMXxX3QG3dsf1t5fkrHcb
+         Q8gmODYofe2MNMy1TlXekQuey0cpzxYl3vDW46FRA52AmehrCMEYrd4QWaOy8MeNpl7n
+         r2yRQaaRg1vKoHAskReKzSNsHzUKAFzqElkPIEBcZy3mlGI3b6d3rlaY5P12JlQs7UWd
+         QLNWlpQ27uK+EAd2OXnozD8WszrLY7zYOUN/aZzWwDPhI8oQerbmRCZqrKlH5G+DbRRC
+         rv7+mMxfFlLS1KzK4rWDUMW1nZocWhEwhzR9/aOyS48LCiph4jdfVp12q2437zUeTfhE
+         E0SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=WYXjJfd1pESNYbrTTSqKIx0/7SN9768efdFnzL3MuFI=;
-        b=0pLB4p9/mZy9f52qAh3MkThJO2KjP7lSboZAXlgtDyPQYPRAgEo1a4YLwIIIrpeFVa
-         ojjKwXGi0t0UAavozcJFs5HNz+0vyrE1XqDV4lxCCDS9noxiwTCvH59dvvt0TkvyQ05g
-         8parfxjLvPtd/UKLGQ4dkIasRVkcFKWg5A9k7XrVDVUzc/tY7Spg6NRY4Fa/vXEAfQNm
-         FcCvZjuiFLtjij8L/E/h8Qj8j5F29GIxUUtl787oxgoPbqPuKqZJGoUhhw+cAPcWenPh
-         LMik4ZsUaBLvKl/ri91VueG2D+ikResu7OLo0Jxi52kclshug2wgxYBLHMZQo8n4ID+m
-         OpWQ==
-X-Gm-Message-State: AOAM532fEa9G5wiJJN5Fb35/Npi32miQ9PmZSfi3L292B9sM7BmHq3GC
-        NOORjJMI5EkHr1xkgsL9/Us0W3OsQrcCwQAngab6srBBM3dij/Xw+Mxh9QGr+1wUPLSasHOxj83
-        gSoeNWtv6S5m2m/q8Qc8SOn3H
-X-Received: by 2002:adf:dbce:0:b0:20c:f507:8ef9 with SMTP id e14-20020adfdbce000000b0020cf5078ef9mr15547839wrj.29.1652797196157;
-        Tue, 17 May 2022 07:19:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwm14vhveID3bnS4gZAuVd6DkGKO0v6KagNzfJE1Coe3sRC7u5JOMFT94nzhjZXGCVG8ILlNw==
-X-Received: by 2002:adf:dbce:0:b0:20c:f507:8ef9 with SMTP id e14-20020adfdbce000000b0020cf5078ef9mr15547827wrj.29.1652797195922;
-        Tue, 17 May 2022 07:19:55 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id c22-20020a05600c0a5600b003944821105esm2061670wmq.2.2022.05.17.07.19.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Tr4AALZAcgwN+FDcDi87udLeLPWs7ZAJ5eWXrFs/jlw=;
+        b=Ccxb1Wkw8xSnUHifIU8kaX5ezdBB0bc92fA+k3p/XgNzSEW/84A98KMZc3xnuL/x3Q
+         6oXeMpuVFSsa46pNuJOfQzq9z3/ALI0FODlZk5sCajXMJjfrsmPzWvA/KnHc9jpzVS/m
+         qWL9vLFFEmwGlpAOkxXz1VEHFC2oqYWIJm272/xHD8GkidGLNgiRJkwWIsNLHAtwM8Pf
+         VGegUv/f4s4eXhw8LYTuY5SRhSwbri1OBGrRVxBFbmmcaS4xcD0wYkIhrBPMS/S5f4Gw
+         uwd9KKsP3HoXLVT/1jNDqsFOtCPhLjVCmvfFXkDU5Y+ir89IHtF/u4gK02jW+8sPce0r
+         s6VQ==
+X-Gm-Message-State: AOAM532ucf2S/fzZYe+ckuC4CFIQhN0ABAu8TyD8smz3gyqG5ml9uRsx
+        4yE+WGZYZqNWUpJr0EMeWGYjCQ==
+X-Google-Smtp-Source: ABdhPJx0troKsku15aanl/7FKxHDc5w10XHBWKlnQ8Fmx7m1X3jRjlIfgLoQRfI9MNsqxTicoEk4/w==
+X-Received: by 2002:a05:6214:27c2:b0:45b:9ee:7310 with SMTP id ge2-20020a05621427c200b0045b09ee7310mr20771589qvb.85.1652799591107;
+        Tue, 17 May 2022 07:59:51 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id 16-20020a370710000000b0069fc13ce1d7sm7735790qkh.8.2022.05.17.07.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 May 2022 07:19:55 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 11/34] KVM: x86: hyper-v: Use preallocated buffer in
- 'struct kvm_vcpu_hv' instead of on-stack 'sparse_banks'
-In-Reply-To: <YoOrc2hPF/QpJNeo@google.com>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
- <20220414132013.1588929-12-vkuznets@redhat.com>
- <YoKunaNKDjYx7C21@google.com> <87k0akuv1o.fsf@redhat.com>
- <YoOrc2hPF/QpJNeo@google.com>
-Date:   Tue, 17 May 2022 16:19:54 +0200
-Message-ID: <87h75outpx.fsf@redhat.com>
+        Tue, 17 May 2022 07:59:50 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1nqyft-0084Ur-Sq; Tue, 17 May 2022 11:59:49 -0300
+Date:   Tue, 17 May 2022 11:59:49 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     longli@microsoft.com
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 05/12] net: mana: Set the DMA device max page size
+Message-ID: <20220517145949.GH63055@ziepe.ca>
+References: <1652778276-2986-1-git-send-email-longli@linuxonhyperv.com>
+ <1652778276-2986-6-git-send-email-longli@linuxonhyperv.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1652778276-2986-6-git-send-email-longli@linuxonhyperv.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,64 +82,18 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+On Tue, May 17, 2022 at 02:04:29AM -0700, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
+> 
+> The system chooses default 64K page size if the device does not specify
+> the max page size the device can handle for DMA. This do not work well
+> when device is registering large chunk of memory in that a large page size
+> is more efficient.
+> 
+> Set it to the maximum hardware supported page size.
 
-> On Tue, May 17, 2022, Vitaly Kuznetsov wrote:
->> Sean Christopherson <seanjc@google.com> writes:
->> 
->> > On Thu, Apr 14, 2022, Vitaly Kuznetsov wrote:
->> >> To make kvm_hv_flush_tlb() ready to handle L2 TLB flush requests, KVM needs
->> >> to allow for all 64 sparse vCPU banks regardless of KVM_MAX_VCPUs as L1
->> >> may use vCPU overcommit for L2. To avoid growing on-stack allocation, make
->> >> 'sparse_banks' part of per-vCPU 'struct kvm_vcpu_hv' which is allocated
->> >> dynamically.
->> >> 
->> >> Note: sparse_set_to_vcpu_mask() keeps using on-stack allocation as it
->> >> won't be used to handle L2 TLB flush requests.
->> >
->> > I think it's worth using stronger language; handling TLB flushes for L2 _can't_
->> > use sparse_set_to_vcpu_mask() because KVM has no idea how to translate an L2
->> > vCPU index to an L1 vCPU.  I found the above mildly confusing because it didn't
->> > call out "vp_bitmap" and so I assumed the note referred to yet another sparse_banks
->> > "allocation".  And while vp_bitmap is related to sparse_banks, it tracks something
->> > entirely different.
->> >
->> > Something like?
->> >
->> > Note: sparse_set_to_vcpu_mask() can never be used to handle L2 requests as
->> > KVM can't translate L2 vCPU indices to L1 vCPUs, i.e. its vp_bitmap array
->> > is still bounded by the number of L1 vCPUs and so can remain an on-stack
->> > allocation.
->> 
->> My brain is probably tainted by looking at all this for some time so I
->> really appreciate such improvements, thanks :)
->> 
->> I wouldn't, however, say "never" ('never say never' :-)): KVM could've
->> kept 2-level reverse mapping up-to-date:
->> 
->> KVM -> L2 VM list -> L2 vCPU ids -> L1 vCPUs which run them
->> 
->> making it possible for KVM to quickly translate between L2 VP IDs and L1
->> vCPUs. I don't do this in the series and just record L2 VM_ID/VP_ID for
->> each L1 vCPU so I have to go over them all for each request. The
->> optimization is, however, possible and we may get to it if really big
->> Windows VMs become a reality.
->
-> Out of curiosity, is L1 "required" to provides the L2 => L1 translation/map?
->
+For RDMA devices this should be set to the largest segment size an
+ib_sge can take in when posting work. It should not be the page size
+of MR. 2M is a weird number for that, are you sure it is right?
 
-To make this "Direct Virtual Flush" feature work? Yes, it is:
-
-...
-"
-Before enabling it, the L1 hypervisor must configure the following
-additional fields of the enlightened VMCS:
-- VpId: ID of the virtual processor that the enlightened VMCS controls.
-- VmId: ID of the virtual machine that the enlightened VMCS belongs to.
-- PartitionAssistPage: Guest physical address of the partition assist
-page.
-"
-
--- 
-Vitaly
-
+Jason
