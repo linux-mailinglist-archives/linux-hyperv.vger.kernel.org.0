@@ -2,130 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A174F52C2AD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 May 2022 20:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 382DC52C568
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 May 2022 23:22:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241642AbiERSsq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 May 2022 14:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40146 "EHLO
+        id S243060AbiERVFz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 May 2022 17:05:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241624AbiERSso (ORCPT
+        with ESMTP id S243062AbiERVFw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 May 2022 14:48:44 -0400
-Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.57.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F2A1229FC4;
-        Wed, 18 May 2022 11:48:42 -0700 (PDT)
+        Wed, 18 May 2022 17:05:52 -0400
+X-Greylist: delayed 54396 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 18 May 2022 14:05:40 PDT
+Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.57.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAC2121;
+        Wed, 18 May 2022 14:05:39 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ORjIX3K9KvGpNb9+kDvkOPfyh2ECipH8uYWV2bdLeugCjTtt/xXRmdr2yqeT3x/Lzk4s886zOSnbKpVbLdjF9PYSo+rXrBWnnWqklHE5UsjnXTLya98daZ2KI8Y5qDhKNHFNng1eW2Z4oloMmuzQo+TarKzDJIwY98W/WtsJTXr+fmB2Ce7n5fPs/92RNh5J/Jo/7MSdZFky6dYuKY0xkZMBFbbED26A+/XO+Gr/ANd3NIO4Xk9QOIgD3/oK5MFhj6U6rhNsIx2mzDFhL2VZOvhX8HGaYN4+M9J0hE/REuk3NEbLvdy55dEQdxxCNT8KwX+vN6xAPRlrAAF4QCh+kA==
+ b=HYG/XAc30djqxIpItMsMAPNr8IR4Mtn28HnGmx5WfcwlPqL3qmwHEbK8t5rcK6HlDzRkNCkZQHZENYhccP1zDZtccXnuS1ZaOURpLOobPpcSRMcK3YlNBNicf1O3oXo2G/Ojyad+4aInOqRFndX/lJYd4ghlcFO1aPAGv+U2BQ1dGXMDjIyEtya41/4POSFgax3TctuSJW5UuD45AX6d4xTPMfKRVso9Z3tdDuc5fJTahIAAplgmaF5+uiK8Aqm07izdisI6CkKTJPUUqT+Ern9wY7SD//4XwTCC2AyvhstkZ1BhyCvi8wUbu/TT1DRHh0Ne0FGQ858uXctcEyrlkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oQw6Jzetz1t2EDL5xkzmn+pB87CgLVc8HHTholg8nLo=;
- b=Km9MZneBZogEeys6dvQyXYIG1u65+pJdPayeNs2cOL13UPlki2J7VmTwsPRx5zX7P+7axnAfluUIeDZ5LJoOrtlWCgnzjQjOzIiUDToOuELzqdrovwY9aITm4a3vP/A8DKQbz9diNrbsGVhQmcTpJP+DHxGh+8ZWLnbEXbLZRj7e8dFpXOmdm9SQ99Idm2PbZ+IsJ09tG2M8lRsVSYbUPcU3E6Vn1HPJEglkInQ3PIapxJFaGUfrbXvADEtNRGCOlVSwWUbe2QwrWoqq0aulqzYKLRxWDpFyjaFHfqQmV75BsArfKaHOYPki8ODbEg2RRxx/aH6go1K4TohfTL9gCQ==
+ bh=VDowKvb964dF9cPooB6ZyXC3VGWUadXmMgGTWKuibbc=;
+ b=e7gH1Uz31L1oskK5XymXE708/v6xpTdDdB33Ju5IpbTurzoXPeZeLDffB3GmPHmmlTbsyZooYVZk15MwVm3TBZAW+Hdhc7RFzXH4laKJAi22389/EXBrp2WxKftYsfkiPztgzaXz63tqLReV4DXklLiCcJNcmpDTY4tHPOohB/uUqJNCYfj6REJRzkF/j4Hkyyk2ykAStXvsssjGtUVrFVvHutstpdZjowxhN433qBGBgpGF4nExZcQ1F8496YweauRbqNwPtsocT3S2/Qnl7QN9drQrij72fkUvsACVvwAzc/648AzJzAvzcMNB848WPMs05uIQcI55YLCeyNbRVg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oQw6Jzetz1t2EDL5xkzmn+pB87CgLVc8HHTholg8nLo=;
- b=SHya0iQRI1mVmZRLuetlXyqRtFkY6//K0DjZ4ERvbpfLGSkZpn/ha5hrsTAkUgxSiWvHyOMVa2A2U0vDX1+By8v+ls9Mg7szDc7HcicFzFTrpXu4IBXwTrw5LwWIMiIyZZF/tkLGC4X/ylaM8O1pvlzzZV89Z9QnE6JQdxItySw=
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com (2603:10b6:a03:105::15)
- by CH2PR21MB1399.namprd21.prod.outlook.com (2603:10b6:610:8e::23) with
+ bh=VDowKvb964dF9cPooB6ZyXC3VGWUadXmMgGTWKuibbc=;
+ b=PkaPl2B+a5I88JdxVOO9uZRoGAeHSbnZy0fY7ZpxlJxJs6hTEQnvGUfJKEoYN7Nrq8Ya/6qcIeWoIK+u2qA0HLRQMzp/lMHZHTTKd7FuETMeM/SEEmNwXIJCXoylQ41NpGrK8jCuox62g7Uq2+nQ9dAVMoQBNmLykgPaljn+VDg=
+Received: from BL1PR21MB3283.namprd21.prod.outlook.com (2603:10b6:208:39b::8)
+ by PH7PR21MB3381.namprd21.prod.outlook.com (2603:10b6:510:1dd::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.7; Wed, 18 May
- 2022 18:48:39 +0000
-Received: from BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::942c:e0f2:568:5335]) by BYAPR21MB1270.namprd21.prod.outlook.com
- ([fe80::942c:e0f2:568:5335%7]) with mapi id 15.20.5293.004; Wed, 18 May 2022
- 18:48:39 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.5; Wed, 18 May
+ 2022 21:05:22 +0000
+Received: from BL1PR21MB3283.namprd21.prod.outlook.com
+ ([fe80::e0d1:ed2f:325a:8393]) by BL1PR21MB3283.namprd21.prod.outlook.com
+ ([fe80::e0d1:ed2f:325a:8393%9]) with mapi id 15.20.5273.005; Wed, 18 May 2022
+ 21:05:22 +0000
+From:   Ajay Sharma <sharmaajay@microsoft.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Long Li <longli@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Saurabh Sengar <ssengar@linux.microsoft.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-CC:     Saurabh Singh Sengar <ssengar@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "deller@gmx.de" <deller@gmx.de>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] video: hyperv_fb: Allow resolutions with size > 64 MB for
- Gen1
-Thread-Topic: [PATCH] video: hyperv_fb: Allow resolutions with size > 64 MB
- for Gen1
-Thread-Index: AQHYX9YSthbGf8K4qEaTeH9fJ7H5Eq0O8UBQgBYbEhA=
-Date:   Wed, 18 May 2022 18:48:39 +0000
-Message-ID: <BYAPR21MB1270E4CBA78869748D28C81BBFD19@BYAPR21MB1270.namprd21.prod.outlook.com>
-References: <1651067273-6635-1-git-send-email-ssengar@linux.microsoft.com>
- <20220428143746.sya775ro5zi3kgm3@liuwe-devbox-debian-v2>
- <DM5PR21MB1749EE7458996FF22AAA9AF8CAC39@DM5PR21MB1749.namprd21.prod.outlook.com>
- <BYAPR21MB12702855D53B456E898ED5E0BFC39@BYAPR21MB1270.namprd21.prod.outlook.com>
-In-Reply-To: <BYAPR21MB12702855D53B456E898ED5E0BFC39@BYAPR21MB1270.namprd21.prod.outlook.com>
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Ajay Sharma <sharmaajay@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH 05/12] net: mana: Set the DMA device max
+ page size
+Thread-Topic: [EXTERNAL] Re: [PATCH 05/12] net: mana: Set the DMA device max
+ page size
+Thread-Index: AQHYac0t/cR6HA52CUOHz8pr+lzroa0jKeeAgABLXKCAAAGZgIAABm1QgABEpQCAAFjD8IAAs9+AgABQTyA=
+Date:   Wed, 18 May 2022 21:05:22 +0000
+Message-ID: <BL1PR21MB32831207F674356EAF8EE600D6D19@BL1PR21MB3283.namprd21.prod.outlook.com>
+References: <1652778276-2986-1-git-send-email-longli@linuxonhyperv.com>
+ <1652778276-2986-6-git-send-email-longli@linuxonhyperv.com>
+ <20220517145949.GH63055@ziepe.ca>
+ <PH7PR21MB3263EFA8F624F681C3B57636CECE9@PH7PR21MB3263.namprd21.prod.outlook.com>
+ <20220517193515.GN63055@ziepe.ca>
+ <PH7PR21MB3263C44368F02B8AF8521C4ACECE9@PH7PR21MB3263.namprd21.prod.outlook.com>
+ <20220518000356.GO63055@ziepe.ca>
+ <BL1PR21MB3283790E8270ED6C639AAB0DD6D19@BL1PR21MB3283.namprd21.prod.outlook.com>
+ <20220518160525.GP63055@ziepe.ca>
+In-Reply-To: <20220518160525.GP63055@ziepe.ca>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ea6efad5-303e-4efd-b054-9cb15ed3afe4;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-04T16:37:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4ba93844-31f5-48dd-aa44-7fc96505cabc;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-18T20:52:51Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e5551556-c117-4d63-d185-08da38ff05e8
-x-ms-traffictypediagnostic: CH2PR21MB1399:EE_
-x-microsoft-antispam-prvs: <CH2PR21MB13997861355A31055BB1DD38BFD19@CH2PR21MB1399.namprd21.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: 8da95963-13fe-481e-2628-08da39121f85
+x-ms-traffictypediagnostic: PH7PR21MB3381:EE_
+x-microsoft-antispam-prvs: <PH7PR21MB33811F9CD392ADAA5CED9A14D6D19@PH7PR21MB3381.namprd21.prod.outlook.com>
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: blZLNtbc7VNI8xE47iOvBSTdWLq2z0cfNLYn3D7KIBApDCyz4MkxToAA8WeArEpxOsMTWAdb5MGco/7IFULbKkHwTSHOBAYNOuDA1VERHhS23PojBwy1JF4D6eSpdRg3u31+uuCIbU96KA1lbFa2LeJ8pHkyOzkXlZkoJqLrkyCYKiHpSVDD6FngsKIFuUss0vkhS83vbvi4cMGHtWNfTRvJK/vlp7b4R4hbxwzKEx09Lty2y3D2MuP2aUjqu5LcUKFlYv7D2QspooN74E2eoLVAOHSqBiYBTMh0X16tXy9V7rrpFbd7EVrhxJOtmfU5K/KDnn5IN6+hg6MYnKNU99FrvAclgUnI97M4cdVflzHNCVIvc1muKZqCgmFr12L03M2XhshZUjrH6rrIX4WQ+2kxlLgNoayuU6TFEeGss7Dj1J7zZlgHjErrT8sIICFn4Pwa86gUOBVgPIsHPKstu5+PZL1fmFtIzKOXj1SubCI3xpiXytcz0lNxLwcd3JJTOfyfR//a0dZp0KO59w7om6/lkGKGPtMAuMnbE1Uef3CNL2p3EeRa/CYDauNCZv/HvSuCvBKPX0PmPuxaQajN3uzCrNyZ/nNKxKncYInY6UBJ/rxNUUIXfj9HO77bPatY7KvicnX9U/VNpZyuL7aq9BWOd/XSTGwPcXJOdMlmHJZNtHdPkPObeOuNYLB11tRJlzDcoSWgW+2KLKnL9mQ6BskJC5XIpGmeT4E7Dv8IXJovMxzmieQfIpSHDqKkNDJP
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1270.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(82950400001)(10290500003)(82960400001)(55016003)(8936002)(83380400001)(2906002)(7696005)(122000001)(186003)(38070700005)(52536014)(508600001)(5660300002)(8990500004)(86362001)(71200400001)(38100700002)(64756008)(66446008)(66946007)(66556008)(66476007)(33656002)(110136005)(54906003)(6636002)(9686003)(8676002)(4326008)(76116006)(26005)(53546011)(6506007)(316002);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: yQl6IGbKM8l8Je0Yx54hVEDRK/4Syot/l6dLyA5KWqsgwn55uwRzMHWqcUioqrGELTRBqgpSAgYL5SIZRHk+H9EiWjGMj5N/p2mtcW7iKHY5JydWwA51CvNBnedhHf67S1T7SQo454InaLT/3vQuWGSSJiYDIitm8z1K5iOLg50hsbxGfYcSWBFMn2jYuctyiKWXCEFeG9mzGvQBn/OzuLuL2pqQzi7ey1c41mfZZsvOdeeMRG3lIMqPuGRpNAUH3xlju9eDRvhZn6RpNL3wzqmgxqjJjMsUWwsjW4axjE7Ba/CSSggfaaZQCCJqe1/J/Wv8Bym9CpLQOS0n4qkvY4q+lrDEB+PF3AlbwZzEyx/GEGi6szyit6RqIG3NkBmKqSTis3Tp9/8cCxmHJVK6oFT0SgfGEYxHVwL3b2yyx+3YLB+x2R6tFvbrixeh1qHuyX9FB9OTY4CFeYaTlJnkLHGrOI6mePh+oP3LxrjXIdiXbGR1c9ecSnKYWO0nLejzS2gkue3/AeSBUPIfFYBJNLgnShohf7zpkMJvBiqL5gSkRWq1xsL2NManPYkEoGfD2Sh7K/ls1GIYvObSBzJf1MHoKqQXuyVe0DYASOX/CLlLFfNZ7AgBCm5HKIj4U/SkMHBQkOiDCPppvpWZ3i3Eu26fpLJi1bXwlWZRinXuErgwpjlKVXE3guACLe3MXDBwhKtdU6QX82WB+lTBTIsUUL81kdvdCb6NvECKzB7PkF2OD6jzEdanFZmAIoFt7LX5
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR21MB3283.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(966005)(83380400001)(33656002)(7416002)(186003)(107886003)(316002)(122000001)(66556008)(76116006)(66446008)(8676002)(66476007)(64756008)(4326008)(82960400001)(66946007)(71200400001)(82950400001)(86362001)(38070700005)(38100700002)(55016003)(508600001)(52536014)(53546011)(8936002)(6506007)(6916009)(9686003)(10290500003)(54906003)(8990500004)(2906002)(7696005)(5660300002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?U88ijy1eueUT6J02ke14aBlUvVeBrBbf4TntqSmdve2LBxT0Zr8nJmK+celB?=
- =?us-ascii?Q?l98XBiDPY0hEtlLaqFZCpIJBm99T1bfrEKSO0bgWIrk691rHE4shPm6nLcQo?=
- =?us-ascii?Q?mlZhLhMW0/FtZJ81D46pzjH4dnFcOiGwZuVjG7t3qBW2UZbZaTPT6jeRwrJk?=
- =?us-ascii?Q?+ulJZEPSy22B+vvROGxSx3ooonNREQrdTrHW4+iUYDyqoa3XefeEbVGcuUmR?=
- =?us-ascii?Q?bMWSYWVEZg8eJTyO9B3FgPLP0q5xIyxDYcQuIRoOsXwuq8QEJYc3wJ8ZuYeR?=
- =?us-ascii?Q?d9jqAgaE/WEMjdsGLfwDlkMcCzXOO3GhMclU190OOQgjJfO1/8rzCcxgG3sC?=
- =?us-ascii?Q?A/olLdxHKebkLnlCPT6Hxd2Kfh+Cyz8r6benl33oCrw7inRsNoBQK9qG2jx6?=
- =?us-ascii?Q?c1Y9Z0sgVyYgkyaAW6c5S1276pOekHp2QdXUqbrlrzH3UXWoPL1Wo7a1qoNi?=
- =?us-ascii?Q?xL+BzmZyS488Ri9QjmS1Mav49VHPF6GlVrOAaavbSSzSVekctm6RU5zwcKc4?=
- =?us-ascii?Q?3WPYWAkwixQ0hGLyd2EGR0igLpKDK1OmrvuvzAJN3Tl4Jof0/OxjLmDJvTRK?=
- =?us-ascii?Q?U87OhFcCzNn4PbGr2vsW3PGmaNVZjirNa7yMu8QgvAHQcCLFgMPOPE2riz1M?=
- =?us-ascii?Q?z+ppDSqVbac76j/0Ub6JxL2aR2TDvVqVMhoDi63QWRbAd5LOlJfu6Xtogrhw?=
- =?us-ascii?Q?nQqAhH+mvFOD2gpv3b818cval2/bEQNsV+DytoaaSxJprn1ns2w5nTm2ycgH?=
- =?us-ascii?Q?cuE4yK7woDJ+jbeVrc7OG6jMtAia+iAQs96czwhS4mh6VPZtu+/k27ZD8wUk?=
- =?us-ascii?Q?QofIr7SoPHOw4fXK1jgRsMhYh+Bbpp93CYH9cRg+JpFB37k7aoTyUr8veMqL?=
- =?us-ascii?Q?OnUYbCeWgMvN2eJKeJmBacEYg+lQZQutgQ9VIekd2+OiyvakxSM6J8S4u0g0?=
- =?us-ascii?Q?DJkQFitqkiIxei01vCmv+xaRBXWn2coa5qZbLA3L3Vhk0WDYqeuEHouHtTGb?=
- =?us-ascii?Q?BXDg/ffzKaqqdvZuXxZAa+pplVnDB2EAXKg8C2d/1N+6EurBzThjdmVyYf/Z?=
- =?us-ascii?Q?CgdfTDJIZ3WArvGE66REDYpnRHfdKc+Yw2V7pL5FGVi160z/bNVhtmjXZQRI?=
- =?us-ascii?Q?XWbuN/PzwzqkY45RFY6b+Cbd1zCy2wKIPjxvzWgZJ5+OwjMOp9+N+0sTfzo4?=
- =?us-ascii?Q?jKcnff7VNJMxlQQlgkdETC30mZ1gHmuyVAfnlO25Svi+uqFAfcEbZlcQmahc?=
- =?us-ascii?Q?2ubSYLn+IxDB+b4pwtTusEuaaMgep8tbeTUFdtqN0YflX5utIoaydslnmNCN?=
- =?us-ascii?Q?v5phP3/B/36IgnJfkyZnTSPAon39eEMjwD9NoL0GuUTK5qad11kIqMVNxRDi?=
- =?us-ascii?Q?oLgiDAAE0JiC6gAwT8wd8vtDJo1CuKA2MqpnrDdU3fC4oQhqSeQFQepkHisi?=
- =?us-ascii?Q?nE7rc/vq60LA7Qdoqvf1HPJha5sKVVRIvaxxoq5MxO5x0Dd6d8YWomjF0K8X?=
- =?us-ascii?Q?bfjWZbWxiq/bbQQYdQOf/19JR5AkXsliJ3LinIxr0rgEo9YVzakwrbsR3T6/?=
- =?us-ascii?Q?4j8OAWnX0GWkMWhwGYdcgSyHhY33b46FDpD8175AjlCjogr9uo5cMJiuPjiG?=
- =?us-ascii?Q?Z8KdHN9JwMFUzEa0GMxbpyg4TqaLQa89ymFtJlrUJEdScjtx/9UHnqEFuu6t?=
- =?us-ascii?Q?SE2D4d6/sYshtOe1ObLirw3oRzK765P34zqQIheEIDa3vT3edORlfMxWV4jT?=
- =?us-ascii?Q?U+YyPu/PGg=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?gqe695CfWuUVT38KzOt4J1UMEzEU7RROSWb0+oFo4YNaYx+4zDVvb2cQsmBL?=
+ =?us-ascii?Q?R1lNS3uHDcPDd7Xz96pVyK4tkrEl5sarweHPoaoRB4+6OX1Me1StnRgv/S/m?=
+ =?us-ascii?Q?WoJQnmbE6TEy90Nml83G4f3CBY7pWH7eJRa/9kPj6IEnOwfNATiqMUUQdNy9?=
+ =?us-ascii?Q?nMatT/ChFBM3TI4SdJ/6vmeablUp+ZVoa2lH6POO0pCA36hrrHN0ay1rjP2w?=
+ =?us-ascii?Q?zwDua2OkhTbc+vanBM7CnCGapKxrwo1HW0F7KcEqk8vWPAvZAhbH04bba856?=
+ =?us-ascii?Q?AmeWYi7XDbICwgEbORlBrptiu8OgZ1OnHwYgMR5W/9xgmCdZ0MFj7srZM8qu?=
+ =?us-ascii?Q?HGWqbHsq3E4ghoIpELjQXgqb6As084Aned0MFyB0tsx4ou3K2GfqDzg1mi5t?=
+ =?us-ascii?Q?bgIpzSXYliIO34LNip7X/KHZsjIxPvdF2M0pdemEXVqnUkwCz1yHqYc9/UAw?=
+ =?us-ascii?Q?DgT3vCpiZPeUN48HQWkn4owAzMsrVYBHa/3YVTbpzZO5Sn1t3M5RZbgUz3W6?=
+ =?us-ascii?Q?3WpbNihuawWRZeqA2nywVT5sp2MGQjfmMGBmKJ4p7x4fmD8PJJh6HGtQKIU5?=
+ =?us-ascii?Q?sExYdmtKwamFAi6ChRoBN3JWiPd1u4DPm7XUcun7N/ppIlCKR0IkzsZ0fUnZ?=
+ =?us-ascii?Q?4o9Sflmn/f7yHRMpe6hCd+OaG5fSot0/F3B7GM6havXqVcnpqoxh+iEnFN/X?=
+ =?us-ascii?Q?iZIAeCaAYH6E/z1qHPjOM1Atx6sK1Yx1gbXKsokc5bB4qaK2IdFf0n1f0SdJ?=
+ =?us-ascii?Q?BdQbYKTqBHbPyD4g8OKUtIvN66NKH3VpUS7II4F5s4uCz1ug26t3qrzUVKG3?=
+ =?us-ascii?Q?G2n98Mf5nUbOpVTi2GKLTg56jef1V9eem7thmLCmdoBuXh02j8J2tyt6lF7R?=
+ =?us-ascii?Q?7R5c4xcKLJ4H40HfU+dzIOayoyB2zIU4blP4RQ9rr/aX1brxZQx+YSsXqdHw?=
+ =?us-ascii?Q?xuQXyVNKrJyxnYc7CbUHpVknHYEpS0DgDSEPoq4P8PwiZbWElFGs8IZrao+V?=
+ =?us-ascii?Q?1UYzWw0n+fwVQI5V+/fZbDSA4j4cBni7/6R4OeEiC6F1QB5QoggfLQ96eX6U?=
+ =?us-ascii?Q?w7MDGtRYmz/0+VQ9KJ5w3CTegV4op0NU+kL/nz9nrWdnQh1nbMrju+kjtsUX?=
+ =?us-ascii?Q?wqIpYQ9Hz0fLlTffafOwVNcpZzx42IfhOebWQqHkIkHefqsAgbNramhuqchw?=
+ =?us-ascii?Q?BT2sDFCiTfFkAOJQOzbgG1wHXMYeSgowSZCedTbWbRpxfsTxnufXcXg1FPHL?=
+ =?us-ascii?Q?lmuVBn/e35+4bWir43wIfZyF7QQ0xaoMzvmlCZCHBiDsHUXhU5Xxjbo57ibE?=
+ =?us-ascii?Q?3A0EJflPWVtEWEW1X1OqXQMtT2F7LhLdQo0UfM2m5muQLiYiu2zkUViYAgo5?=
+ =?us-ascii?Q?r2V57BBIJWUTPAlCa45NjCZURam29CYa2r+6RxTLqx4mqDojwZdyP2rIT+2e?=
+ =?us-ascii?Q?Emx+WaJSKRDCpW2CqtT7eyMK3yhGT7rvzh+3YbLKIjC/8moer9vn7qLtJWkB?=
+ =?us-ascii?Q?bK6+LmT9bcov25g4RUssZYhP0OgjfbZJAO1ze9QwLdr6KA46vqDAyKbU0RSQ?=
+ =?us-ascii?Q?wgNcPnthp2Q5+FQNTzxn2IU5TuzB+5XWdlhN/3BpVgbtIvE2Ee4oJhxLWS+Q?=
+ =?us-ascii?Q?F8npAJqlzhQzvob0/L+7k1HmaofAMrZo5DYg5pvrlqdTluJ1oqE3byMF1F1f?=
+ =?us-ascii?Q?CLNwwVowjkDUvTApMrKedvAJsuQk7QsZNF4Un4TVISd4EAQh8zCGeGCo3jhE?=
+ =?us-ascii?Q?TwS+Cl8QsA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1270.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5551556-c117-4d63-d185-08da38ff05e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2022 18:48:39.2606
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR21MB3283.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8da95963-13fe-481e-2628-08da39121f85
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2022 21:05:22.6311
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eEeiATNxx1co9MMGH2G9zC78j7/Ng/9OKeQfZ971BGnuqKgWQlrcIS72eCKWhSRnYCJ9+JLacsJJMF9D3GuoFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1399
+X-MS-Exchange-CrossTenant-userprincipalname: cAz9dx3tBMHxabvxuNqFZx/HMFeFkQbhzapG4DqzJBsMdlw8e6kLZUdMqJfdG5j0vYCHrQ0R2vhyc1YxiOzm08ShXUb27G9m1DLCFhE34F0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3381
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
@@ -136,44 +143,110 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Wednesday, May 4, 2022 10:05 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>;
-> > ...
-> > When I initially implemented this driver 10 years ago, I believe there
-> > was smaller limit for the fb... But I think this patch is good for the
-> > newer MMIO alloc scheme. I hope to see reviews also from
-> >  @Dexuan Cui @Michael Kelley (LINUX) who are more familiar with
-> > the PCI/BAR/MMIO area.
-> >
-> > Thanks,
-> > - Haiyang
->=20
-> The patch looks good to me but I suggest we check with the Hyper-V
-> team to figure out how a Gen1 Windows VM supports a higher
-> resolution that needs a VRAM size of more than 64MB. Just in case we
-> miss something..
->=20
-> Thanks,
-> -- Dexuan
+Sorry , I am not able to follow. Below is the reference efa driver implemen=
+tation :
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+static int efa_device_init(struct efa_com_dev *edev, struct pci_dev *pdev)
+{
+	int dma_width;
+	int err;
 
-Saurabh checked this with Hyper-V team, who said there is no
-Generation 1-specific block for larger VRAM sizes in Windows VM.
+	err =3D efa_com_dev_reset(edev, EFA_REGS_RESET_NORMAL);
+	if (err)
+		return err;
 
-When the driver was originally developed, we didn't have the API
-vmbus_allocate_mmio(), and I guess we just used the PCI device's BAR
-address for simplicity, and didn't realize the restriction with very high
-resolutions that require >64 MB VRAM. It looks like the synthetic
-VMBus framebuffer device doesn't have to use the same MMIO range
-used by the Hyper-V legacy PCI framebuffer device, so the patch
-looks good to me.
+	err =3D efa_com_validate_version(edev);
+	if (err)
+		return err;
 
-BTW, please check the hyperv-drm driver as well:
-drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-I think we should make the same change there to support 7680x4320
-for Gen1 VMs.
+	dma_width =3D efa_com_get_dma_width(edev);
+	if (dma_width < 0) {
+		err =3D dma_width;
+		return err;
+	}
 
-Thanks,
-Dexuan
+	err =3D dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(dma_width));
+	if (err) {
+		dev_err(&pdev->dev, "dma_set_mask_and_coherent failed %d\n", err);
+		return err;
+	}
+
+	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
+	return 0;
+}
+
+static int efa_register_mr(struct ib_pd *ibpd, struct efa_mr *mr, u64 start=
+,
+			   u64 length, u64 virt_addr, int access_flags)
+{
+	struct efa_dev *dev =3D to_edev(ibpd->device);
+	struct efa_com_reg_mr_params params =3D {};
+	struct efa_com_reg_mr_result result =3D {};
+	struct pbl_context pbl;
+	unsigned int pg_sz;
+	int inline_size;
+	int err;
+
+	params.pd =3D to_epd(ibpd)->pdn;
+	params.iova =3D virt_addr;
+	params.mr_length_in_bytes =3D length;
+	params.permissions =3D access_flags;
+
+	pg_sz =3D ib_umem_find_best_pgsz(mr->umem,
+				       dev->dev_attr.page_size_cap,
+				       virt_addr);
+....
+}
+
+Ideally we would like to read it from HW, but currently we are hardcoding t=
+he bitmap. I can change the commit message if you feel that is misleading .
+Something along the lines :
+RDMA/mana: Use API to get contiguous memory blocks aligned to device suppor=
+ted page size
+
+Use the ib_umem_find_best_pgsz() and rdma_for_each_block() API when
+registering an MR instead of coding it in the driver.
+
+ib_umem_find_best_pgsz() is used to find the best suitable page size
+which replaces the existing efa_cont_pages() implementation.
+rdma_for_each_block() is used to iterate the umem in aligned contiguous mem=
+ory blocks.
+
+
+Ajay=20
+
+
+-----Original Message-----
+From: Jason Gunthorpe <jgg@ziepe.ca>=20
+Sent: Wednesday, May 18, 2022 9:05 AM
+To: Ajay Sharma <sharmaajay@microsoft.com>
+Cc: Long Li <longli@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Haiy=
+ang Zhang <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.c=
+om>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui <decui@microsoft.com>; David =
+S. Miller <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>; Paolo Ab=
+eni <pabeni@redhat.com>; Leon Romanovsky <leon@kernel.org>; linux-hyperv@vg=
+er.kernel.org; netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-=
+rdma@vger.kernel.org
+Subject: Re: [EXTERNAL] Re: [PATCH 05/12] net: mana: Set the DMA device max=
+ page size
+
+[You don't often get email from jgg@ziepe.ca. Learn why this is important a=
+t https://aka.ms/LearnAboutSenderIdentification.]
+
+On Wed, May 18, 2022 at 05:59:00AM +0000, Ajay Sharma wrote:
+> Thanks Long.
+> Hello Jason,
+> I am the author of the patch.
+> To your comment below :
+> " As I've already said, you are supposed to set the value that limits to =
+ib_sge and *NOT* the value that is related to ib_umem_find_best_pgsz. It is=
+ usually 2G because the ib_sge's typically work on a 32 bit length."
+>
+> The ib_sge is limited by the __sg_alloc_table_from_pages() which uses=20
+> ib_dma_max_seg_size() which is what is set by the eth driver using=20
+> dma_set_max_seg_size() . Currently our hw does not support PTEs larger=20
+> than 2M.
+
+*sigh* again it has nothing to do with *PTEs* in the HW.
+
+Jason
