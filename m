@@ -2,80 +2,80 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BAC952BA0F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 18 May 2022 14:38:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 041B652BC19
+	for <lists+linux-hyperv@lfdr.de>; Wed, 18 May 2022 16:16:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236559AbiERM0I (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 18 May 2022 08:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42164 "EHLO
+        id S237416AbiERMr2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 18 May 2022 08:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236531AbiERM0H (ORCPT
+        with ESMTP id S237757AbiERMqa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 18 May 2022 08:26:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C4E7E1054C
-        for <linux-hyperv@vger.kernel.org>; Wed, 18 May 2022 05:26:03 -0700 (PDT)
+        Wed, 18 May 2022 08:46:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE11E1660B1
+        for <linux-hyperv@vger.kernel.org>; Wed, 18 May 2022 05:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652876762;
+        s=mimecast20190719; t=1652877790;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ag47svcSletw0D4Eogws0bEKxZvRytmFQIh9SFkLfx4=;
-        b=QCkJApX+Q5QgZBI8RGvYMzgbJBh9PYz5FKOjS96wCFNvQIT0iRq0MWOMXrdOa+kNZFLsiL
-        nZhEpS7eAzawdzdTk/MVBF1vRmOq+jEO4oTXTpHMQe4Zff7a9q9HTLzeLuaA8+IZiRFYFo
-        7mtbH5CRydG875vVxv+nFTx/RQ7T14w=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=8sp1AZTsVwKlhQc+YaMhxHvmVTkY1Ldp+tQJ/IC5G3M=;
+        b=iZ5QASfTGD5gt+sBfljrNgRJNtJzkIyRMG0bZaYnirEK6k9abbu6QsW2z+9zLJFYuhiaKN
+        eoyG/bkjcWGDaLsQ5j10C7dPw7PIhTD37sMpUIYPCQlAzNnp79OEBEwb5ARmKL+2tXTR96
+        E++zzvGH9sUvhzOjzahtvDfwc+Kupiw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-221-8ZTKT17FMXaSengRyvDzdA-1; Wed, 18 May 2022 08:26:01 -0400
-X-MC-Unique: 8ZTKT17FMXaSengRyvDzdA-1
-Received: by mail-wm1-f69.google.com with SMTP id p24-20020a1c5458000000b003945d2ffc6eso810129wmi.5
-        for <linux-hyperv@vger.kernel.org>; Wed, 18 May 2022 05:26:01 -0700 (PDT)
+ us-mta-110-hXAjqZ4NO0WAuHIYFpqXqQ-1; Wed, 18 May 2022 08:43:09 -0400
+X-MC-Unique: hXAjqZ4NO0WAuHIYFpqXqQ-1
+Received: by mail-wr1-f70.google.com with SMTP id x4-20020a5d4444000000b0020d130e8a36so551169wrr.9
+        for <linux-hyperv@vger.kernel.org>; Wed, 18 May 2022 05:43:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=ag47svcSletw0D4Eogws0bEKxZvRytmFQIh9SFkLfx4=;
-        b=t7ThWqVELlg3O6SQ5wZeJOFV45mxr2z83NipK6t5sTFjMGwd/+OMLaWbVRGdi3KQmc
-         w0iST1vJO2CvnecAhKNHtLvH5qgPDQnPUs4E7AlyTI61GHp6CZdEUhMyoXf8gV5sXgVD
-         NyzcLkRDqeycf2ekIhJg52/TzfpnZJMi1sN3zpFo3ufkczmLl4weKvqiAQQ+CTCj09gm
-         7WQPr1REmwWX15zoIij5evwliAyvo4mDehCqJXCRCrn2ks4Ngig0OmesT25tI98TVAoJ
-         PCRoCstk7loBYs9vf0FITIM8io0G+8YtbgAGTAJofZLtA0Z/4RHxsYiYYPAHHjc64MKv
-         aD0A==
-X-Gm-Message-State: AOAM530yIjAlfDMybzdHH245EJVHNDaCGtjUyAkCfHm/dcTX10thS/Yb
-        AoIpEWRzxSQJtAMRvbZdfJpWCupQspcRo6+ANMsAMUAiYRw0LGUStInSoDg+VbVpgmiIuC6lhCD
-        iXPK+dZ3xPJB8Tr1tn8+AnOmM
-X-Received: by 2002:adf:a3c2:0:b0:20c:fecc:8885 with SMTP id m2-20020adfa3c2000000b0020cfecc8885mr17227552wrb.463.1652876760559;
-        Wed, 18 May 2022 05:26:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxyFe+DsM9kcPagpIFfjB+7zvo4FOC76fHVKjk0i0QZnOytmXb9D8WdrAJ15H8IDDhLd4O/kw==
-X-Received: by 2002:adf:a3c2:0:b0:20c:fecc:8885 with SMTP id m2-20020adfa3c2000000b0020cfecc8885mr17227532wrb.463.1652876760300;
-        Wed, 18 May 2022 05:26:00 -0700 (PDT)
+        bh=8sp1AZTsVwKlhQc+YaMhxHvmVTkY1Ldp+tQJ/IC5G3M=;
+        b=EqyLKdminrfsAQg9qAF26mWtjSHy10eQP41oD97S5cn1nJbzbrXAk5T2XV92iUJdWs
+         zZpLHsr4FbdOy0j88Hz+HeJWH6F5gGmCYtKb+73D9/LA0qOIHh8XIwDjPX6h1FJeTwtd
+         sipaqdjIbxq0Uu7eiHjvUH40ZAYZT3LSrYSnBODQ5fv6XQD0yNyyNeij/Y0rCUJPjuBO
+         BMmaXFgkm6pI4hNcbwJRlmvI/DZ4bftTEknb+tVJEVqRsUvHlZIKw17ZSPgYKxBblhNw
+         rl9MY6jyfE5v8p0HUQxuLtX2vvuHHSPhMTopH+EBqOrkFV9U1Lt3XLpbkm8bDY5wcapE
+         XI2g==
+X-Gm-Message-State: AOAM531pj8uD2rurDAsAAB4PBlmr9Qd4N1vHjj+0g3617q5oUEn6Vp+j
+        A+V7KVg8RYSUzIw4APXTI1ghM0e8l/GZyhlA4h89VhIXBgAscEnnVOxXGmi73VXMbGw9SOm5obR
+        Fm/yCOBtoWaSuXwnudM80dpdE
+X-Received: by 2002:a05:600c:4f15:b0:394:8ea0:bb45 with SMTP id l21-20020a05600c4f1500b003948ea0bb45mr25964701wmq.206.1652877788567;
+        Wed, 18 May 2022 05:43:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyhEfV7UD7ccFso+2Cr2aFdjNKyFXmOetoImfKzVeTI8YIwgYAJmh/GUkPIje9ETqc0ZXPaMw==
+X-Received: by 2002:a05:600c:4f15:b0:394:8ea0:bb45 with SMTP id l21-20020a05600c4f1500b003948ea0bb45mr25964676wmq.206.1652877788335;
+        Wed, 18 May 2022 05:43:08 -0700 (PDT)
 Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id c13-20020adfc04d000000b0020d0351dbb6sm1964394wrf.80.2022.05.18.05.25.59
+        by smtp.gmail.com with ESMTPSA id f1-20020a5d64c1000000b0020c5253d927sm1990018wri.115.2022.05.18.05.43.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 May 2022 05:25:59 -0700 (PDT)
+        Wed, 18 May 2022 05:43:07 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
 Cc:     Sean Christopherson <seanjc@google.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 13/34] KVM: nSVM: Keep track of Hyper-V
- hv_vm_id/hv_vp_id
-In-Reply-To: <30b0e63c0a2d3c3c40edb47af6d80e452f1e69fa.camel@redhat.com>
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v3 14/34] KVM: x86: Introduce .post_hv_l2_tlb_flush()
+ nested hook
+In-Reply-To: <deae695da02d7f22dcfa4635eec53ab61baf9026.camel@redhat.com>
 References: <20220414132013.1588929-1-vkuznets@redhat.com>
- <20220414132013.1588929-14-vkuznets@redhat.com>
- <30b0e63c0a2d3c3c40edb47af6d80e452f1e69fa.camel@redhat.com>
-Date:   Wed, 18 May 2022 14:25:59 +0200
-Message-ID: <874k1nuiw8.fsf@redhat.com>
+ <20220414132013.1588929-15-vkuznets@redhat.com>
+ <deae695da02d7f22dcfa4635eec53ab61baf9026.camel@redhat.com>
+Date:   Wed, 18 May 2022 14:43:07 +0200
+Message-ID: <871qwrui3o.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,89 +86,135 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 Maxim Levitsky <mlevitsk@redhat.com> writes:
 
 > On Thu, 2022-04-14 at 15:19 +0200, Vitaly Kuznetsov wrote:
->> Similar to nSVM, KVM needs to know L2's VM_ID/VP_ID and Partition
->> assist page address to handle L2 TLB flush requests.
+>> Hyper-V supports injecting synthetic L2->L1 exit after performing
+>> L2 TLB flush operation but the procedure is vendor specific.
+>> Introduce .post_hv_l2_tlb_flush() nested hook for it.
 >> 
 >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 >> ---
->>  arch/x86/kvm/svm/hyperv.h | 16 ++++++++++++++++
->>  arch/x86/kvm/svm/nested.c |  2 ++
->>  2 files changed, 18 insertions(+)
+>>  arch/x86/include/asm/kvm_host.h |  1 +
+>>  arch/x86/kvm/Makefile           |  3 ++-
+>>  arch/x86/kvm/svm/hyperv.c       | 11 +++++++++++
+>>  arch/x86/kvm/svm/hyperv.h       |  2 ++
+>>  arch/x86/kvm/svm/nested.c       |  1 +
+>>  arch/x86/kvm/vmx/evmcs.c        |  4 ++++
+>>  arch/x86/kvm/vmx/evmcs.h        |  1 +
+>>  arch/x86/kvm/vmx/nested.c       |  1 +
+>>  8 files changed, 23 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/x86/kvm/svm/hyperv.c
 >> 
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>> index 8b2a52bf26c0..ce62fde5f4ff 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -1558,6 +1558,7 @@ struct kvm_x86_nested_ops {
+>>  	int (*enable_evmcs)(struct kvm_vcpu *vcpu,
+>>  			    uint16_t *vmcs_version);
+>>  	uint16_t (*get_evmcs_version)(struct kvm_vcpu *vcpu);
+>> +	void (*post_hv_l2_tlb_flush)(struct kvm_vcpu *vcpu);
+>>  };
+>>  
+>>  struct kvm_x86_init_ops {
+>> diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+>> index 30f244b64523..b6d53b045692 100644
+>> --- a/arch/x86/kvm/Makefile
+>> +++ b/arch/x86/kvm/Makefile
+>> @@ -25,7 +25,8 @@ kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o \
+>>  			   vmx/evmcs.o vmx/nested.o vmx/posted_intr.o
+>>  kvm-intel-$(CONFIG_X86_SGX_KVM)	+= vmx/sgx.o
+>>  
+>> -kvm-amd-y		+= svm/svm.o svm/vmenter.o svm/pmu.o svm/nested.o svm/avic.o svm/sev.o
+>> +kvm-amd-y		+= svm/svm.o svm/vmenter.o svm/pmu.o svm/nested.o svm/avic.o \
+>> +			   svm/sev.o svm/hyperv.o
+>>  
+>>  ifdef CONFIG_HYPERV
+>>  kvm-amd-y		+= svm/svm_onhyperv.o
+>> diff --git a/arch/x86/kvm/svm/hyperv.c b/arch/x86/kvm/svm/hyperv.c
+>> new file mode 100644
+>> index 000000000000..c0749fc282fe
+>> --- /dev/null
+>> +++ b/arch/x86/kvm/svm/hyperv.c
+>> @@ -0,0 +1,11 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * AMD SVM specific code for Hyper-V on KVM.
+>> + *
+>> + * Copyright 2022 Red Hat, Inc. and/or its affiliates.
+>> + */
+>> +#include "hyperv.h"
+>> +
+>> +void svm_post_hv_l2_tlb_flush(struct kvm_vcpu *vcpu)
+>> +{
+>> +}
 >> diff --git a/arch/x86/kvm/svm/hyperv.h b/arch/x86/kvm/svm/hyperv.h
->> index 7d6d97968fb9..8cf702fed7e5 100644
+>> index 8cf702fed7e5..a2b0d7580b0d 100644
 >> --- a/arch/x86/kvm/svm/hyperv.h
 >> +++ b/arch/x86/kvm/svm/hyperv.h
->> @@ -9,6 +9,7 @@
->>  #include <asm/mshyperv.h>
+>> @@ -48,4 +48,6 @@ static inline void nested_svm_hv_update_vm_vp_ids(struct kvm_vcpu *vcpu)
+>>  	hv_vcpu->nested.vp_id = hve->hv_vp_id;
+>>  }
 >>  
->>  #include "../hyperv.h"
->> +#include "svm.h"
->>  
->>  /*
->>   * Hyper-V uses the software reserved 32 bytes in VMCB
->> @@ -32,4 +33,19 @@ struct hv_enlightenments {
->>   */
->>  #define VMCB_HV_NESTED_ENLIGHTENMENTS VMCB_SW
->>  
->> +static inline void nested_svm_hv_update_vm_vp_ids(struct kvm_vcpu *vcpu)
->> +{
->> +	struct vcpu_svm *svm = to_svm(vcpu);
->> +	struct hv_enlightenments *hve =
->> +		(struct hv_enlightenments *)svm->nested.ctl.reserved_sw;
->
-> Small nitpick:
->
-> Can we use this as an opportunity to rename the 'reserved_sw' to \
-> 'hv_enlightenments' or something, because that is what it is?
->
-> Also the reserved_sw is an array, which is confusing, since from first look,
-> it looks like we have a pointer dereference here.
->
-
-Well, that's what it is in Hyper-V world and so far we didn't give it
-another meaning in KVM but in theory it is not impossible, e.g. we can
-use this area to speed up nested KVM on KVM.
-
-AMD calls this "Reserved for Host usage" so we can probably rename it to 
-'reserved_host' but I'm not sure it's worth the hassle...
-
->
->
->> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
->> +
->> +	if (!hv_vcpu)
->> +		return;
->> +
->> +	hv_vcpu->nested.pa_page_gpa = hve->partition_assist_page;
->> +	hv_vcpu->nested.vm_id = hve->hv_vm_id;
->> +	hv_vcpu->nested.vp_id = hve->hv_vp_id;
->> +}
+>> +void svm_post_hv_l2_tlb_flush(struct kvm_vcpu *vcpu);
 >> +
 >>  #endif /* __ARCH_X86_KVM_SVM_HYPERV_H__ */
 >> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
->> index bed5e1692cef..2d1a76343404 100644
+>> index 2d1a76343404..de3f27301b5c 100644
 >> --- a/arch/x86/kvm/svm/nested.c
 >> +++ b/arch/x86/kvm/svm/nested.c
->> @@ -826,6 +826,8 @@ int nested_svm_vmrun(struct kvm_vcpu *vcpu)
+>> @@ -1665,4 +1665,5 @@ struct kvm_x86_nested_ops svm_nested_ops = {
+>>  	.get_nested_state_pages = svm_get_nested_state_pages,
+>>  	.get_state = svm_get_nested_state,
+>>  	.set_state = svm_set_nested_state,
+>> +	.post_hv_l2_tlb_flush = svm_post_hv_l2_tlb_flush,
+>>  };
+>> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+>> index 87e3dc10edf4..e390e67496df 100644
+>> --- a/arch/x86/kvm/vmx/evmcs.c
+>> +++ b/arch/x86/kvm/vmx/evmcs.c
+>> @@ -437,3 +437,7 @@ int nested_enable_evmcs(struct kvm_vcpu *vcpu,
 >>  
->>  	svm->nested.nested_run_pending = 1;
->>  
->> +	nested_svm_hv_update_vm_vp_ids(vcpu);
+>>  	return 0;
+>>  }
 >> +
->>  	if (enter_svm_guest_mode(vcpu, vmcb12_gpa, vmcb12, true))
->>  		goto out_exit_err;
+>> +void vmx_post_hv_l2_tlb_flush(struct kvm_vcpu *vcpu)
+>> +{
+>> +}
+>> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+>> index 8d70f9aea94b..b120b0ead4f3 100644
+>> --- a/arch/x86/kvm/vmx/evmcs.h
+>> +++ b/arch/x86/kvm/vmx/evmcs.h
+>> @@ -244,5 +244,6 @@ int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+>>  			uint16_t *vmcs_version);
+>>  void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata);
+>>  int nested_evmcs_check_controls(struct vmcs12 *vmcs12);
+>> +void vmx_post_hv_l2_tlb_flush(struct kvm_vcpu *vcpu);
 >>  
+>>  #endif /* __KVM_X86_VMX_EVMCS_H */
+>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>> index ee88921c6156..cc6c944b5815 100644
+>> --- a/arch/x86/kvm/vmx/nested.c
+>> +++ b/arch/x86/kvm/vmx/nested.c
+>> @@ -6850,4 +6850,5 @@ struct kvm_x86_nested_ops vmx_nested_ops = {
+>>  	.write_log_dirty = nested_vmx_write_pml_buffer,
+>>  	.enable_evmcs = nested_enable_evmcs,
+>>  	.get_evmcs_version = nested_get_evmcs_version,
+>> +	.post_hv_l2_tlb_flush = vmx_post_hv_l2_tlb_flush,
+>>  };
 >
-> That won't work after migration, since this won't be called
-> if we migrate with nested guest running.
 >
+> I think that the name of the function is misleading, since it is not called
+> after each L2 HV tlb flush, but only after a flush which needs to inject
+> that synthetic VM exit.
 >
-> I think that nested_svm_hv_update_vm_vp_ids should be called 
-> from enter_svm_guest_mode.
+> I think something like 'inject_synthetic_l2_hv_tlb_flush_vmexit' 
+> (not a good name IMHO, but you get the idea) would be better.
 >
 
-Oh that's a good one, thanks! This could've been a hard to debug issue.
+Naming is hard indeed,
+
+hv_inject_synthetic_vmexit_post_tlb_flush()
+
+seems to be accurate.
 
 -- 
 Vitaly
