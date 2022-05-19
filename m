@@ -2,93 +2,292 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77AD852E0B5
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 May 2022 01:44:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2DF52E0BF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 May 2022 01:45:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242111AbiESXou (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 May 2022 19:44:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48260 "EHLO
+        id S1343743AbiESXpS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 May 2022 19:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343794AbiESXoq (ORCPT
+        with ESMTP id S1343734AbiESXpQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 May 2022 19:44:46 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6A311E480
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 16:44:41 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id 10so2617969plj.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 16:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=T7TMhWp0SAA5jCPI+KmjChJGEDhSNE7gjRtO2nBQMRY=;
-        b=BzegkdqL04SDprwN3BH/yJoSzWsLHcyLmAGGCEygbOdvHy4tYEJYBiKWOptkLQozzC
-         HyDWCA3IvrWI9y/I4CdWbk1sDNCn/9d0MLbjeECNUWs6jJoKwb6C8dLGQ0frIy+owMvD
-         ONHfSqTfyu6HoAcMV78W6yWv3NOt4V5b+TtXodoAwFzCRyIx3dBKRQIhKfejJpFNDlSY
-         JxhrLMvqg9MGPoYnDAxQlJZvV24y3ef+V+o+GBOiZaWeH+8UpkEP9qfU8M7zaHpNZOMx
-         HdD4qBq8iNGMti572kJjIMhTiHehFb817O24qw59XZQ+rnuGBMn6vVQYxK1Ronei/2aV
-         YJoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T7TMhWp0SAA5jCPI+KmjChJGEDhSNE7gjRtO2nBQMRY=;
-        b=c49rPlpukoB4Gm0e5jPW+hsy11g2roUGo8uJittINss4q4Fa4saxuL5F8v2sDB8zm7
-         maAqOFvGEAVYtVYG9S2n6mk3w2NnXnl9y3KlAESbiHIb0y9kBiC6DdBlR/O8E0ln5Ysb
-         2HaKp81o4t3OIqoe7qYuQ2AjptiWFaRWV41Gs8hi0E/McrgWczYnKpPEc522xZLT+RDc
-         ObuyzuLSfdleXxIaTP7xnzlIoUDsP2Yy2i3FaILliMmmW4J/qTQavxuTalC9852QH0j2
-         WHzLNYkcTT5saEUylgMs0fAOOwDKt8KOecfS1GoFUts++K4+9f1f/VBlnYXW6AaW/dio
-         laPQ==
-X-Gm-Message-State: AOAM5301KkvPxqIs7oqP9CnSqKfY/mfmnVACixRuf3yYOA3U0h//ARHP
-        wiZTOE72MnZND5HEk3cbM12o7KN533Ul5w==
-X-Google-Smtp-Source: ABdhPJyHFOCMJV+CyCoxWknfQ8NqR0JS4gDvoJu+C1UV67ZhJqkTrdelVCUD8uOqNzc2ybutuw8y7A==
-X-Received: by 2002:a17:902:c409:b0:161:b135:87c9 with SMTP id k9-20020a170902c40900b00161b13587c9mr7135944plk.94.1653003869609;
-        Thu, 19 May 2022 16:44:29 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id q22-20020a17090aa01600b001cd4989ff5esm352938pjp.37.2022.05.19.16.44.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 May 2022 16:44:29 -0700 (PDT)
-Date:   Thu, 19 May 2022 23:44:25 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 20/34] KVM: x86: KVM_REQ_TLB_FLUSH_CURRENT is a
- superset of KVM_REQ_HV_TLB_FLUSH too
-Message-ID: <YobWWW1gzZtmL6BO@google.com>
-References: <20220414132013.1588929-1-vkuznets@redhat.com>
- <20220414132013.1588929-21-vkuznets@redhat.com>
- <6c9add3244d86080ccd8c3c72a37b9ee112d45b8.camel@redhat.com>
- <87mtfdubro.fsf@redhat.com>
+        Thu, 19 May 2022 19:45:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 37F3611991D
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 16:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653003914;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xcqeqNHBqLaEPFvaMSIdVsHM/2ssgjepqSc89Z+McDY=;
+        b=cH1jZ7B9s6QPsLL95flJcVUTqhu/a/tgBUpghaM5U6BI16PpGbL0aFbZt3tCOe0LuHUd1p
+        9Ag8XSB23ERy2dy9dibS8wRkFYY7oTZKGNoiOANIJKG3KWOtYWosuDQR4zKR+E6Ce+bJCZ
+        dO967Y0vDCSFGo7+e6Ic1TcGvCPGhxs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-671-51qE-HMZMJ-_l5k-QlXFHg-1; Thu, 19 May 2022 19:45:10 -0400
+X-MC-Unique: 51qE-HMZMJ-_l5k-QlXFHg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A41B685A5AA;
+        Thu, 19 May 2022 23:45:07 +0000 (UTC)
+Received: from localhost (ovpn-12-42.pek2.redhat.com [10.72.12.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4ABA5492C14;
+        Thu, 19 May 2022 23:45:06 +0000 (UTC)
+Date:   Fri, 20 May 2022 07:45:02 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     "michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Dave Young <dyoung@redhat.com>, d.hatayama@jp.fujitsu.com,
+        akpm@linux-foundation.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
+        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+        corbet@lwn.net, dave.hansen@linux.intel.com, feng.tang@intel.com,
+        gregkh@linuxfoundation.org, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org
+Subject: Re: [PATCH 24/30] panic: Refactor the panic path
+Message-ID: <20220519234502.GA194232@MiWiFi-R3L-srv>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-25-gpiccoli@igalia.com>
+ <Yn0TnsWVxCcdB2yO@alley>
+ <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87mtfdubro.fsf@redhat.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, May 19, 2022, Vitaly Kuznetsov wrote:
-> This, however, made me think there's room for optimization here. In some
-> cases, when both KVM_REQ_TLB_FLUSH_CURRENT and KVM_REQ_TLB_FLUSH_GUEST
-> were requested, there's no need to flush twice, e.g. on SVM
-> .flush_tlb_current == .flush_tlb_guest. I'll probably not go into this
-> territory with this series as it's already fairly big, just something
-> for the future.
+On 05/15/22 at 07:47pm, Guilherme G. Piccoli wrote:
+> On 12/05/2022 11:03, Petr Mladek wrote:
+...... 
+> > OK, the question is how to make it better. Let's start with
+> > a clear picture of the problem:
+> > 
+> > 1. panic() has basically two funtions:
+> > 
+> >       + show/store debug information (optional ways and amount)
+> >       + do something with the system (reboot, stay hanged)
+> > 
+> > 
+> > 2. There are 4 ways how to show/store the information:
+> > 
+> >       + tell hypervisor to store what it is interested about
+> >       + crash_dump
+> >       + kmsg_dump()
+> >       + consoles
+> > 
+> >   , where crash_dump and consoles are special:
+> > 
+> >      + crash_dump does not return. Instead it ends up with reboot.
+> > 
+> >      + Consoles work transparently. They just need an extra flush
+> >        before reboot or staying hanged.
+> > 
+> > 
+> > 3. The various notifiers do things like:
+> > 
+> >      + tell hypervisor about the crash
+> >      + print more information (also stop watchdogs)
+> >      + prepare system for reboot (touch some interfaces)
+> >      + prepare system for staying hanged (blinking)
+> > 
+> >    Note that it pretty nicely matches the 4 notifier lists.
+> > 
+> 
+> I really appreciate the summary skill you have, to convert complex
+> problems in very clear and concise ideas. Thanks for that, very useful!
+> I agree with what was summarized above.
 
-Definitely not worth your time.  On VMX, CURRENT isn't a superset of GUEST when
-EPT is enabled.  And on SVM, the flush doesn't actually occur until VM-Enter, i.e.
-the redundant flush is just an extra write to svm->vmcb->control.tlb_ctl (or an
-extra decrement of asid_generation).
+I want to say the similar words to Petr's reviewing comment when I went
+through the patches and traced each reviewing sub-thread to try to
+catch up. Petr has reivewed this series so carefully and given many
+comments I want to ack immediately.
+
+I agree with most of the suggestions from Petr to this patch, except of
+one tiny concern, please see below inline comment.
+
+> 
+> 
+> > Now, we need to decide about the ordering. The main area is how
+> > to store the debug information. Consoles are transparent so
+> > the quesition is about:
+> > 
+> >      + hypervisor
+> >      + crash_dump
+> >      + kmsg_dump
+> > 
+> > Some people need none and some people want all. There is a
+> > risk that system might hung at any stage. This why people want to
+> > make the order configurable.
+> > 
+> > But crash_dump() does not return when it succeeds. And kmsg_dump()
+> > users havn't complained about hypervisor problems yet. So, that
+> > two variants might be enough:
+> > 
+> >     + crash_dump (hypervisor, kmsg_dump as fallback)
+> >     + hypervisor, kmsg_dump, crash_dump
+> > 
+> > One option "panic_prefer_crash_dump" should be enough.
+> > And the code might look like:
+> > 
+> > void panic()
+> > {
+> > [...]
+> > 	dump_stack();
+> > 	kgdb_panic(buf);
+> > 
+> > 	< ---  here starts the reworked code --- >
+> > 
+> > 	/* crash dump is enough when enabled and preferred. */
+> > 	if (panic_prefer_crash_dump)
+> > 		__crash_kexec(NULL);
+
+I like the proposed skeleton of panic() and code style suggested by
+Petr very much. About panic_prefer_crash_dump which might need be added,
+I hope it has a default value true. This makes crash_dump execute at
+first by default just as before, unless people specify
+panic_prefer_crash_dump=0|n|off to disable it. Otherwise we need add
+panic_prefer_crash_dump=1 in kernel and in our distros to enable kdump,
+this is inconsistent with the old behaviour.
+
+> > 
+> > 	/* Stop other CPUs and focus on handling the panic state. */
+> > 	if (has_kexec_crash_image)
+> > 		crash_smp_send_stop();
+> > 	else
+> > 		smp_send_stop()
+> > 
+> 
+> Here we have a very important point. Why do we need 2 variants of SMP
+> CPU stopping functions? I disagree with that - my understanding of this
+> after some study in architectures is that the crash_() variant is
+> "stronger", should work in all cases and if not, we should fix that -
+> that'd be a bug.
+> 
+> Such variant either maps to smp_send_stop() (in various architectures,
+> including XEN/x86) or overrides the basic function with more proper
+> handling for panic() case...I don't see why we still need such
+> distinction, if you / others have some insight about that, I'd like to
+> hear =)
+> 
+> 
+> > 	/* Notify hypervisor about the system panic. */
+> > 	atomic_notifier_call_chain(&panic_hypervisor_list, 0, NULL);
+> > 
+> > 	/*
+> > 	 * No need to risk extra info when there is no kmsg dumper
+> > 	 * registered.
+> > 	 */
+> > 	if (!has_kmsg_dumper())
+> > 		__crash_kexec(NULL);
+> > 
+> > 	/* Add extra info from different subsystems. */
+> > 	atomic_notifier_call_chain(&panic_info_list, 0, NULL);
+> > 
+> > 	kmsg_dump(KMSG_DUMP_PANIC);
+> > 	__crash_kexec(NULL);
+> > 
+> > 	/* Flush console */
+> > 	unblank_screen();
+> > 	console_unblank();
+> > 	debug_locks_off();
+> > 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> > 
+> > 	if (panic_timeout > 0) {
+> > 		delay()
+> > 	}
+> > 
+> > 	/*
+> > 	 * Prepare system for eventual reboot and allow custom
+> > 	 * reboot handling.
+> > 	 */
+> > 	atomic_notifier_call_chain(&panic_reboot_list, 0, NULL);
+> 
+> You had the order of panic_reboot_list VS. consoles flushing inverted.
+> It might make sense, although I didn't do that in V1...
+> Are you OK in having a helper for console flushing, as I did in V1? It
+> makes code of panic() a bit less polluted / more focused I feel.
+> 
+> 
+> > 
+> > 	if (panic_timeout != 0) {
+> > 		reboot();
+> > 	}
+> > 
+> > 	/*
+> > 	 * Prepare system for the infinite waiting, for example,
+> > 	 * setup blinking.
+> > 	 */
+> > 	atomic_notifier_call_chain(&panic_loop_list, 0, NULL);
+> > 
+> > 	infinite_loop();
+> > }
+> > 
+> > 
+> > __crash_kexec() is there 3 times but otherwise the code looks
+> > quite straight forward.
+> > 
+> > Note 1: I renamed the two last notifier list. The name 'post-reboot'
+> > 	did sound strange from the logical POV ;-)
+> > 
+> > Note 2: We have to avoid the possibility to call "reboot" list
+> > 	before kmsg_dump(). All callbacks providing info
+> > 	have to be in the info list. It a callback combines
+> > 	info and reboot functionality then it should be split.
+> > 
+> > 	There must be another way to calm down problematic
+> > 	info callbacks. And it has to be solved when such
+> > 	a problem is reported. Is there any known issue, please?
+> > 
+> > It is possible that I have missed something important.
+> > But I would really like to make the logic as simple as possible.
+> 
+> OK, I agree with you! It's indeed simpler and if others agree, I can
+> happily change the logic to what you proposed. Although...currently the
+> "crash_kexec_post_notifiers" allows to call _all_ panic_reboot_list
+> callbacks _before kdump_.
+> 
+> We need to mention this change in the commit messages, but I really
+> would like to hear the opinions of heavy users of notifiers (as
+> Michael/Hyper-V) and the kdump interested parties (like Baoquan / Dave
+> Young / Hayatama). If we all agree on such approach, will change that
+> for V2 =)
+> 
+> Thanks again Petr, for the time spent in such detailed review!
+> Cheers,
+> 
+> 
+> Guilherme
+> 
+
