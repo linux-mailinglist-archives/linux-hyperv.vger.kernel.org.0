@@ -2,139 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A3F652D2EB
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 May 2022 14:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5897252D3C4
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 May 2022 15:20:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238077AbiESMtF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 May 2022 08:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50842 "EHLO
+        id S230395AbiESNUP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 May 2022 09:20:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238028AbiESMtE (ORCPT
+        with ESMTP id S238662AbiESNUN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 May 2022 08:49:04 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61383B41CD
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 05:49:03 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id v11so4637226qkf.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 05:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZYNVM4/IO7V0fYNlQI5NvKWUT/yRQDy6ZvaTZbyqfac=;
-        b=mJWbE0QEIqGVvxszguDCXk6HwPAW7vSyy5sd3KThi4tH55htbFfVr/pC0ToJ9Wjpa1
-         NMmJnnauuKYVCnsnAXjrwKHeXhHl8ZPuLdHTFaFsHnnnmZs/DR1fBs0GWnkicU365rSs
-         MDd0k6/yu9md8zAjjRbTMI3qMGHSL2wGEXHcaHNOhg7ATegQxyCdQWMpnJjS9kEMrpsw
-         qAf5/l3VqY4vD1G5EoG5q0Ppuy/F+LqgJQy7AHg2mM4GxpxngJov49ELqlDU312VZzAS
-         x0NZG6iAjVCyxWGkBA/EzzSF3qXZiUBc5CNglAFiNWxAi2Te8oEllwRgTQe+Qirgs8yO
-         AkHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZYNVM4/IO7V0fYNlQI5NvKWUT/yRQDy6ZvaTZbyqfac=;
-        b=6qOPPQJy8yHwKQiZepUi9Pf6moSNy0uYQ9FyE0SvrUrbExtW8xNbuGwzE/06Rdg317
-         6tdVPiBIQhwUsKkL8y9gXyenWD0sj/OT/307AT6ujKIqhoeCq0JZnC9r7wMPgFGnL4A2
-         Lt5kHAxLR38c8iDFck7d3x0itJSr6jRDvisKGczoM+S58sJnxziXTIMMtWh3VpqLEGAe
-         /+x0GZ3Fv9/gCJZj6zPbZBkpQTC2MUPmr6XeICMzfin6mj/GvLYro1J2q81BdCDfd5N/
-         w8NdCXOvhBGccNVn3aAqyWxIurIpHaWf9c5nCTeIn/mQkcqKvDSMMXUF2mS2okZMZEPW
-         tbCA==
-X-Gm-Message-State: AOAM530l0gBKVC6H38MvjKJl3Trx3OvVZ0L0nF+3IcxbWyL3WqZqvWcH
-        p1O37gD/5+/hPVqcPItOrYjjoQ==
-X-Google-Smtp-Source: ABdhPJwC7dyR0Qk9BGcWgMtmzQUq9wbfQt5NmHbKY9nEqa9QgAxBxse0MPnEsgUdrJlcKLQUc1t5uA==
-X-Received: by 2002:a37:6883:0:b0:6a3:42ae:e17b with SMTP id d125-20020a376883000000b006a342aee17bmr524511qkc.59.1652964542542;
-        Thu, 19 May 2022 05:49:02 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id p7-20020a37a607000000b0069fc13ce24dsm1250439qke.126.2022.05.19.05.49.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 May 2022 05:49:01 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1nrfaO-008vEJ-VD; Thu, 19 May 2022 09:49:00 -0300
-Date:   Thu, 19 May 2022 09:49:00 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Long Li <longli@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH 12/12] RDMA/mana_ib: Add a driver for Microsoft Azure
- Network Adapter
-Message-ID: <20220519124900.GR63055@ziepe.ca>
-References: <1652778276-2986-1-git-send-email-longli@linuxonhyperv.com>
- <1652778276-2986-13-git-send-email-longli@linuxonhyperv.com>
- <20220517152409.GJ63055@ziepe.ca>
- <PH7PR21MB326393A3D6BF619C2A7B4A42CED09@PH7PR21MB3263.namprd21.prod.outlook.com>
+        Thu, 19 May 2022 09:20:13 -0400
+X-Greylist: delayed 514 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 May 2022 06:20:12 PDT
+Received: from mail.sysgo.com (mail.sysgo.com [159.69.174.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1E3C8BF6;
+        Thu, 19 May 2022 06:20:12 -0700 (PDT)
+Date:   Thu, 19 May 2022 15:11:27 +0200
+From:   Vit Kabele <vit.kabele@sysgo.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, decui@microsoft.com,
+        kys@microsoft.com, rudolf.marek@sysgo.com, vit@kabele.me,
+        wei.liu@kernel.org
+Subject: Hyper-V: Question about initializing hypercall interface
+Message-ID: <YoZB/+EYDDfowVbs@czspare1-lap.sysgo.cz>
+Mail-Followup-To: Vit Kabele <vit.kabele@sysgo.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, kys@microsoft.com, rudolf.marek@sysgo.com,
+        vit@kabele.me, wei.liu@kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH7PR21MB326393A3D6BF619C2A7B4A42CED09@PH7PR21MB3263.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, May 19, 2022 at 05:57:01AM +0000, Long Li wrote:
+Hello,
 
-> > > +
-> > > +	err = ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd),
-> > > +udata->inlen));
-> > 
-> > Skeptical this min is correct, many other drivers get this wrong.
-> 
-> I think this is correct. This is to prevent user-mode passing more data that may overrun the kernel buffer.
+I'm playing with the Hyper-V interface described in the documentation
+here [1] (version 6.0b) and I noticed inconsistency between the
+document and the actual code in arch/x86/hyperv/hv_init.c.
 
-And what happens when udata->inlen is, say, 0?
- 
-> > > +	// map to the page indexed by ucontext->doorbell
-> > 
-> > Not kernel style, be sure to run checkpatch and fix the egregious things.
-> > 
-> > > +static void mana_ib_disassociate_ucontext(struct ib_ucontext
-> > > +*ibcontext) { }
-> > 
-> > Does this driver actually support disassociate? Don't define this function if it
-> > doesn't.
-> > 
-> > I didn't see any mmap zapping so I guess it doesn't.
-> 
-> The user-mode deals with zapping.
-> I see the following comments on rdma_umap_priv_init():
-> 
-> /* RDMA drivers supporting disassociation must have their user space designed
->  * to cope in some way with their IO pages going to the zero page. */
-> 
-> Is there any other additional work for the kernel driver to support
-> disassociate? It seems uverbs_user_mmap_disassociate() has done all
-> the zapping when destroying a ucontext.
+Section 3.13 Establishing the Hypercall Interface states:
 
-Nope, that looks OK then
- 
-> I will open PR to rdma-core. The current version of the driver
-> supports queue pair type IB_QPT_RAW_PACKET. The test case will be
-> limited to querying device and load/unload. Running traffic tests
-> will require DPDK (or other user-mode program making use of
-> IB_QPT_RAW_PACKET).
-> 
-> Is it acceptable to develop test cases for this driver without
-> traffic/data tests?
+> 5. The guest checks the Enable Hypercall Page bit. If it is set, the
+> interface is already active, and steps 6 and 7 should be omitted. 
+> 6.  The guest finds a page within its GPA space, preferably one that
+> is not occupied by RAM, MMIO, and so on. If the page is occupied, the
+> guest should avoid using the underlying page for other purposes. 
+> 7.  The guest writes a new value to the Hypercall MSR
+> (HV_X64_MSR_HYPERCALL) that includes the GPA from step 6 and sets the
+> Enable Hypercall Page bit to enable the interface.
 
-I'm not keen on that, even EFA was able to do simple traffic.
+Yet the code in hv_init.c seems to skip the step 5. and performs the
+steps 6. and 7. unconditionally. Snippet below.
 
-Even with RAW_PACKET I would expect the driver to be able to send/recv
-using standard verbs as RAW_PACKET is a common feature.
+```
+rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+hypercall_msr.enable = 1;
 
-Jason
+if (hv_root_partition) {
+	...
+} else {
+    hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
+    wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+}
+```
+
+1/ I thought that the specification is written in a way that allows
+hypervisor to locate the hypercall page on its own (for whatever reason)
+and just announce the location to the guest by setting the Enable bit in
+the MSR on initial read. A guest should then not attempt to remap the
+page (point 5. above), but instead create kernel mapping to the page
+reported by the hypervisor.
+
+2/ The Lock bit (bit 1) is ignored in the Linux implementation. If the
+hypervisor starts with Lock bit set, the init function allocates the
+hv_hypercall_pg and writes the value to the MSR, then:
+	a/ If the hypervisor ignores the write, the MSR remains unchanged,
+		but the global variable is already set. Attempt to do a
+		hypercall ends with call to undefined memory, because the code
+		in hv_do_hypercall() checks the global variable against NULL,
+		which will pass.
+	b/ The hypervisor injects #GP, in which case the guest crashes.
+
+Do I understand the specification correctly? If yes, then the issues
+here are real issues. If my understanding is wrong, what do I miss?
+
+-- 
+Best regards,
+Vit Kabele
+
+[1]: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/tlfs
