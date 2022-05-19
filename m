@@ -2,137 +2,130 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 635F052CF04
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 May 2022 11:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F8252CF0F
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 May 2022 11:12:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235123AbiESJJG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 May 2022 05:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
+        id S235828AbiESJMT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 19 May 2022 05:12:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231249AbiESJJF (ORCPT
+        with ESMTP id S232460AbiESJMS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 May 2022 05:09:05 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA032192A0;
-        Thu, 19 May 2022 02:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1652951329;
-        bh=mow7febAtsiXYt2cZHELtD6fs3k1Y7cifTC+AMdNbm0=;
-        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=Q7XUbDCe/LyabFtLQpRjysmhHzaRsSwCdcHc+mrcAYOGzcs0LSXZcRCcgzgnBy/im
-         w+l4DmLAMLok/mR0RApY5ubSsczXO26OtS5cuCfWdj/j11+fJqiMDdQVwzB+Maye2l
-         9Ad5tc97i0BWDshy7GVopNg7faEfOkjyEGZq970k=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.20.60] ([92.116.152.7]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MacOW-1nKCLL02Ic-00cAlv; Thu, 19
- May 2022 11:08:49 +0200
-Message-ID: <4d8738fd-f8da-9e6b-3dae-f6b8f3bf6a73@gmx.de>
-Date:   Thu, 19 May 2022 11:08:39 +0200
+        Thu, 19 May 2022 05:12:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7948956C37
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 02:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652951535;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C7uZ8GjzotyzPb+OIEuRVJxWtUaoDnZX9WfGiYxdAlI=;
+        b=hK8hRnGUqAkKIsrpfZ/bT5SdR/JcrssYTHE7eJitMQ6YXM+7RbaT0Ow05VS0XbmYQ8ihcT
+        GgALWwb2OZb72I2COAX96EgfW9C0yQzIe6PldIPi2f36+3CI//yO+3iDaBa/xZ+VcsjnZE
+        AdU4Tsm8ycHo7cWVDOnp199PSYOuITY=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-637-Qc85o3aANUSXMmwpoeQPXg-1; Thu, 19 May 2022 05:12:14 -0400
+X-MC-Unique: Qc85o3aANUSXMmwpoeQPXg-1
+Received: by mail-wr1-f69.google.com with SMTP id p10-20020adfaa0a000000b0020c4829af5fso1327083wrd.16
+        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 02:12:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=C7uZ8GjzotyzPb+OIEuRVJxWtUaoDnZX9WfGiYxdAlI=;
+        b=FlKnHByJ+HJ1JNiXcGtrxlVh5YxYTZSIRnbfyB5wwAa84w/nRNWEslLrLnZLX3SvCs
+         +Ot6EADf7BD8nsnj/d1haB5ZriezLgRLXZqM1PryjxtrvQr15nHzdOcnNAgbq/RxilxM
+         4Sv3DIeCn9AjzSd8UTnfa4KTvOC52hmQAfROP/3ZsdjnXue/V4YZ2On77C5RbyqqNnzS
+         hdGJlM5lRtCiZc+k8j/a/26bnd2W8Qkv22ZEaqWF0r+xT1SioUfnwetM0tQrNQ7fCoCN
+         K42RO5XmNy5yw0i3jkWB3c6eLQzD1VWoEsta/nplLWQkWjxOasRLM8rwSz+rXSRDc7xG
+         fz5g==
+X-Gm-Message-State: AOAM531Uoar3wldhocnTb9opH60A1IfgXyOD/y41CM6rGnsxxQuuicuM
+        u1ffdaix9UkcLgI25oevLLDfVV5xKXWgeB1hhjIg27OCEG+h757UMU/yb61lUdmSQTBov72o1SZ
+        P1He5BFz8lFElVoikdFqqHaBi
+X-Received: by 2002:a05:600c:24a:b0:394:4ce6:57db with SMTP id 10-20020a05600c024a00b003944ce657dbmr3314842wmj.193.1652951533219;
+        Thu, 19 May 2022 02:12:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwAjJ9ypKrE9q84MzsZpXh8nKsN8Ag++Nlblpj2jTGJaJr1Jf9MyW+TEzh6O3hOz+eJ6ih0Ag==
+X-Received: by 2002:a05:600c:24a:b0:394:4ce6:57db with SMTP id 10-20020a05600c024a00b003944ce657dbmr3314812wmj.193.1652951532964;
+        Thu, 19 May 2022 02:12:12 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id d15-20020a1c730f000000b00394975e14f4sm3750939wmb.8.2022.05.19.02.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 May 2022 02:12:12 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v3 20/34] KVM: x86: KVM_REQ_TLB_FLUSH_CURRENT is a
+ superset of KVM_REQ_HV_TLB_FLUSH too
+In-Reply-To: <6c9add3244d86080ccd8c3c72a37b9ee112d45b8.camel@redhat.com>
+References: <20220414132013.1588929-1-vkuznets@redhat.com>
+ <20220414132013.1588929-21-vkuznets@redhat.com>
+ <6c9add3244d86080ccd8c3c72a37b9ee112d45b8.camel@redhat.com>
+Date:   Thu, 19 May 2022 11:12:11 +0200
+Message-ID: <87mtfdubro.fsf@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH] video: hyperv_fb: Allow resolutions with size > 64 MB for
- Gen1
-Content-Language: en-US
-To:     Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Saurabh Sengar <ssengar@linux.microsoft.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1651067273-6635-1-git-send-email-ssengar@linux.microsoft.com>
- <20220428143746.sya775ro5zi3kgm3@liuwe-devbox-debian-v2>
- <DM5PR21MB1749EE7458996FF22AAA9AF8CAC39@DM5PR21MB1749.namprd21.prod.outlook.com>
- <BYAPR21MB12702855D53B456E898ED5E0BFC39@BYAPR21MB1270.namprd21.prod.outlook.com>
- <BYAPR21MB1270E4CBA78869748D28C81BBFD19@BYAPR21MB1270.namprd21.prod.outlook.com>
-From:   Helge Deller <deller@gmx.de>
-In-Reply-To: <BYAPR21MB1270E4CBA78869748D28C81BBFD19@BYAPR21MB1270.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fsFTwQueqwO4oFMtMruopc536RUFH/jkjJGavwLAcqZycaqXjKl
- aOAvA6Enmc0kqQQBV3TrqonTive5CT4O7gHe3MPJeNp2X3m8uC/4yhlJhTnkHSVOq6jNsJZ
- v3BydNMRZ8uTe/2zMOG16g07i7t21L6nbs3nv+u6TW4jgO40HSSpKJ6M/0spwbCIMRamRin
- tu2qJeojqc8oIoTY2lSWA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kJTEzCKtHG8=:XiqDKXyew94g1dpZi0TwlA
- PI6J0k4AAHKobwYovTrfVaXEm8F4JyhC+lr8mJG935rELkCzoEgSCbo4lJ9C/YR+/R7D3risN
- LCxwMbiP/ZpCG7MFH3XXcMyKN6KVMCjYAp3abd21AQagjT7+saBZ+QjOhXCu1QwsD0yf/muTX
- Cn6IUz1RnMjdqeY33hPV2Xbk8WZogBBVe9wCcUAv3eAUkWSqdoLm/irfDqXGceHxpRDZZi2vq
- ERk05zg2PRZCs+gi4oJm9c2zVBZ+x5V+D+CyziskVSE4ifvl5TnhtxYsBQ8kk3/Ue+4twmR6q
- OjwfYLbWrXlp29LAD+cIvhrjHD2SlcyRm8B6ScHgmceENSc+osWH50hn869MWRVLXOPeRaOdk
- TxzpP9UhwAfW+XLGXz5FDqJz66oiOB3nC5dkReSNotUNh674tZoNc/8qons0pvYo6YbDxvLWe
- CkpDHsrlObQynU2r/1M57t6MA+WxTjLXW1aheDA8HXKBqNivNt+Ph7QrG21qoTy7ba4G2AGUL
- ZQfsoriUSL0jnZt6ciRDmAws1ymcirrcSr3RXNztktIioOncHoQoJFpDhqg+4BOjBPMOGDGc/
- zqjAciADxqQyjBhnaJ+kwBiGn3upVG1xyFyzztTUf9FSAib31g9CqNfkiJmmkTl4kVeyyJHN5
- tdqNhebU9tH7eayKcEwTi+dI7U0V2p+6k37xi2JmV8WzqgkiJd24BA/Uun6kPlLoezJnyvnDJ
- 2UywPA/FOaFnPzaVhnDd3EjfMRj/SozEDrdoanTRZczROatEovDguAZlSDAkHo38PmJ7gLqW1
- SjWP/XvR0klkJw9LdqEHV91CJMozYOLisbOnfk8hCMJhsqovNMoRHaPhiDdxg5rvM9lB2FE5M
- rP/AgHGawmZD72sCyKK9bbSETGN+BaJjBNfFCnMEReEryS00hKhIRO3x8JYguuhFY3WIwDpnl
- m3uaWc3VafpSCo2WedlHiPHiV2JjITrDKayTfuGQopb4uobHLGDhIGJp2Vt7NAjRnyUye1hLs
- SJxLeX13NccWP/m3vmSvndxTefv50l9wr8KKdxuTjVzI6gDImgX6O5eFsVXyEGEvGcmTzZIsT
- LI1zrywtOLR7OdrjOi9bLeob6a6fkoAdM3pjUQwY3Qcmq5iK/QEVk6Apg==
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/18/22 20:48, Dexuan Cui wrote:
->> From: Dexuan Cui <decui@microsoft.com>
->> Sent: Wednesday, May 4, 2022 10:05 AM
->> To: Haiyang Zhang <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org=
->;
->>> ...
->>> When I initially implemented this driver 10 years ago, I believe there
->>> was smaller limit for the fb... But I think this patch is good for the
->>> newer MMIO alloc scheme. I hope to see reviews also from
->>>  @Dexuan Cui @Michael Kelley (LINUX) who are more familiar with
->>> the PCI/BAR/MMIO area.
->>>
->>> Thanks,
->>> - Haiyang
->>
->> The patch looks good to me but I suggest we check with the Hyper-V
->> team to figure out how a Gen1 Windows VM supports a higher
->> resolution that needs a VRAM size of more than 64MB. Just in case we
->> miss something..
->>
->> Thanks,
->> -- Dexuan
+Maxim Levitsky <mlevitsk@redhat.com> writes:
+
+> On Thu, 2022-04-14 at 15:19 +0200, Vitaly Kuznetsov wrote:
+>> KVM_REQ_TLB_FLUSH_CURRENT is an even stronger operation than
+>> KVM_REQ_TLB_FLUSH_GUEST so KVM_REQ_HV_TLB_FLUSH needs not to be
+>> processed after it.
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  arch/x86/kvm/x86.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index e5aec386d299..d3839e648ab3 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -3357,8 +3357,11 @@ static inline void kvm_vcpu_flush_tlb_current(struct kvm_vcpu *vcpu)
+>>   */
+>>  void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu)
+>>  {
+>> -	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
+>> +	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu)) {
+>>  		kvm_vcpu_flush_tlb_current(vcpu);
+>> +		if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu))
+>> +			kvm_hv_vcpu_empty_flush_tlb(vcpu);
+>> +	}
+>>  
+>>  	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu)) {
+>>  		kvm_vcpu_flush_tlb_guest(vcpu);
 >
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
 >
-> Saurabh checked this with Hyper-V team, who said there is no
-> Generation 1-specific block for larger VRAM sizes in Windows VM.
+> I think that this patch should be moved near patch 1 and/or even squished with it.
 >
-> When the driver was originally developed, we didn't have the API
-> vmbus_allocate_mmio(), and I guess we just used the PCI device's BAR
-> address for simplicity, and didn't realize the restriction with very hig=
-h
-> resolutions that require >64 MB VRAM. It looks like the synthetic
-> VMBus framebuffer device doesn't have to use the same MMIO range
-> used by the Hyper-V legacy PCI framebuffer device, so the patch
-> looks good to me.
 
-Thanks for the review, Dexuan!
+Sure, will merge.
 
-I've applied this patch now to the fbdev git tree.
+This, however, made me think there's room for optimization here. In some
+cases, when both KVM_REQ_TLB_FLUSH_CURRENT and KVM_REQ_TLB_FLUSH_GUEST
+were requested, there's no need to flush twice, e.g. on SVM
+.flush_tlb_current == .flush_tlb_guest. I'll probably not go into this
+territory with this series as it's already fairly big, just something
+for the future.
 
-> BTW, please check the hyperv-drm driver as well:
-> drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> I think we should make the same change there to support 7680x4320
-> for Gen1 VMs.
+-- 
+Vitaly
 
-Haiyang, can you check that as well and send another patch for
-the drm tree ?
-
-Helge
