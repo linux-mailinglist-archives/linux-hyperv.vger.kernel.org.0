@@ -2,174 +2,132 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87CA352E616
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 May 2022 09:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 415D752EAAE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 May 2022 13:24:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346269AbiETHUu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 20 May 2022 03:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49484 "EHLO
+        id S232405AbiETLYc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 20 May 2022 07:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346276AbiETHUs (ORCPT
+        with ESMTP id S232303AbiETLYb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 20 May 2022 03:20:48 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89F07140C5;
-        Fri, 20 May 2022 00:20:45 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0B96320F9C0D;
-        Fri, 20 May 2022 00:20:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0B96320F9C0D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1653031245;
-        bh=l3C4NInvgKvz4oi7EOLCuKiDCvtT7GIwKr04BZ3Yohk=;
-        h=From:To:Subject:Date:From;
-        b=WOzpWrc1VnMzae6Ns5L09zG0PwZGswch3brRhEKx3VaK3VEAJJYxiLLdzrFpkLY03
-         oigcapwqqaPR67ezwnSJ3jtrV1pZntK7/1PT+LaFHbFcAD8fM47nMhhxlq+d77BxC/
-         Oo9b+nTyDzatXyR959qwn0noqBErS3AREqQRoT6Y=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
-        daniel@ffwll.ch, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com, haiyangz@microsoft.com
-Subject: [PATCH] drm/hyperv : Removing the restruction of VRAM allocation with PCI bar size
-Date:   Fri, 20 May 2022 00:20:40 -0700
-Message-Id: <1653031240-13623-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        Fri, 20 May 2022 07:24:31 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA58B36CE;
+        Fri, 20 May 2022 04:24:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DGPrrkXTp6oI8cbbgByz5QLKv15GNHxUgmjuIwTAy/E=; b=eqnE/suLTpG3xbkMCBtDpxLY3n
+        NIRgLQiaBi0sCvdNCD4AFRLhJwRt1fDLW5HSSGFY7WXFEGFCYXn6Q0dC8gIFph3vTjXA6DvyBiQwz
+        I5PwxVn4HFAkq1g0udGCDh7f8awWYDjllyLtGAcRh6eSoRE6OIuNpAwHVy7SfEQenDYcne2doKiCl
+        jXXzZQlRm486qDYGQtQ0jW8Ms6RtpLdk65Qcz7YJ7/YEdFvKdb+dzF1Re9Q6nwXZnFrLVKgAD5Mwb
+        LfHsy0RngN1antwERG5D/EtoEWfAXqtoLg2k7TzZKasJtkGm7zpf+kH+Fd2GGS1HnQh8pXfJiIePS
+        VAbFF/9w==;
+Received: from 200-161-159-120.dsl.telesp.net.br ([200.161.159.120] helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1ns0jj-00Cb4k-Od; Fri, 20 May 2022 13:24:04 +0200
+Message-ID: <ded31ec0-076b-2c5b-0fe6-0c274954821f@igalia.com>
+Date:   Fri, 20 May 2022 08:23:33 -0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 24/30] panic: Refactor the panic path
+Content-Language: en-US
+To:     Baoquan He <bhe@redhat.com>, Petr Mladek <pmladek@suse.com>
+Cc:     "michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Dave Young <dyoung@redhat.com>, d.hatayama@jp.fujitsu.com,
+        akpm@linux-foundation.org, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
+        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
+        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+        corbet@lwn.net, dave.hansen@linux.intel.com, feng.tang@intel.com,
+        gregkh@linuxfoundation.org, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-25-gpiccoli@igalia.com> <Yn0TnsWVxCcdB2yO@alley>
+ <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
+ <20220519234502.GA194232@MiWiFi-R3L-srv>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20220519234502.GA194232@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-There were two different approaches getting used in this driver to
-allocate vram:
-	1. VRAM allocation from PCI region for Gen1
-	2. VRAM alloaction from MMIO region for Gen2
-First approach limilts the vram to PCI BAR size, which is 64 MB in most
-legacy systems. This limits the maximum resolution to be restricted to
-64 MB size, and with recent conclusion on fbdev issue its concluded to have
-similar allocation strategy for both Gen1 and Gen2. This patch unifies
-the Gen1 and Gen2 vram allocation strategy.
+On 19/05/2022 20:45, Baoquan He wrote:
+> [...]
+>> I really appreciate the summary skill you have, to convert complex
+>> problems in very clear and concise ideas. Thanks for that, very useful!
+>> I agree with what was summarized above.
+> 
+> I want to say the similar words to Petr's reviewing comment when I went
+> through the patches and traced each reviewing sub-thread to try to
+> catch up. Petr has reivewed this series so carefully and given many
+> comments I want to ack immediately.
+> 
+> I agree with most of the suggestions from Petr to this patch, except of
+> one tiny concern, please see below inline comment.
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
-FBdev patch Ref :
-https://lore.kernel.org/lkml/20220428143746.sya775ro5zi3kgm3@liuwe-devbox-debian-v2/T/
+Hi Baoquan, thanks! I'm glad you're also reviewing that =)
 
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 76 ++-----------------------
- 1 file changed, 4 insertions(+), 72 deletions(-)
 
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-index 4a8941fa0815..a32afd84f361 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-@@ -69,57 +69,8 @@ static struct pci_driver hyperv_pci_driver = {
- 	.remove =	hyperv_pci_remove,
- };
- 
--static int hyperv_setup_gen1(struct hyperv_drm_device *hv)
--{
--	struct drm_device *dev = &hv->dev;
--	struct pci_dev *pdev;
--	int ret;
--
--	pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
--			      PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
--	if (!pdev) {
--		drm_err(dev, "Unable to find PCI Hyper-V video\n");
--		return -ENODEV;
--	}
--
--	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &hyperv_driver);
--	if (ret) {
--		drm_err(dev, "Not able to remove boot fb\n");
--		return ret;
--	}
--
--	if (pci_request_region(pdev, 0, DRIVER_NAME) != 0)
--		drm_warn(dev, "Cannot request framebuffer, boot fb still active?\n");
--
--	if ((pdev->resource[0].flags & IORESOURCE_MEM) == 0) {
--		drm_err(dev, "Resource at bar 0 is not IORESOURCE_MEM\n");
--		ret = -ENODEV;
--		goto error;
--	}
--
--	hv->fb_base = pci_resource_start(pdev, 0);
--	hv->fb_size = pci_resource_len(pdev, 0);
--	if (!hv->fb_base) {
--		drm_err(dev, "Resource not available\n");
--		ret = -ENODEV;
--		goto error;
--	}
--
--	hv->fb_size = min(hv->fb_size,
--			  (unsigned long)(hv->mmio_megabytes * 1024 * 1024));
--	hv->vram = devm_ioremap(&pdev->dev, hv->fb_base, hv->fb_size);
--	if (!hv->vram) {
--		drm_err(dev, "Failed to map vram\n");
--		ret = -ENOMEM;
--	}
--
--error:
--	pci_dev_put(pdev);
--	return ret;
--}
--
--static int hyperv_setup_gen2(struct hyperv_drm_device *hv,
--			     struct hv_device *hdev)
-+static int hyperv_setup_gen(struct hyperv_drm_device *hv,
-+			    struct hv_device *hdev)
- {
- 	struct drm_device *dev = &hv->dev;
- 	int ret;
-@@ -181,10 +132,7 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
- 		goto err_hv_set_drv_data;
- 	}
- 
--	if (efi_enabled(EFI_BOOT))
--		ret = hyperv_setup_gen2(hv, hdev);
--	else
--		ret = hyperv_setup_gen1(hv);
-+	ret = hyperv_setup_gen(hv, hdev);
- 
- 	if (ret)
- 		goto err_vmbus_close;
-@@ -225,29 +173,13 @@ static int hyperv_vmbus_remove(struct hv_device *hdev)
- {
- 	struct drm_device *dev = hv_get_drvdata(hdev);
- 	struct hyperv_drm_device *hv = to_hv(dev);
--	struct pci_dev *pdev;
- 
- 	drm_dev_unplug(dev);
- 	drm_atomic_helper_shutdown(dev);
- 	vmbus_close(hdev->channel);
- 	hv_set_drvdata(hdev, NULL);
- 
--	/*
--	 * Free allocated MMIO memory only on Gen2 VMs.
--	 * On Gen1 VMs, release the PCI device
--	 */
--	if (efi_enabled(EFI_BOOT)) {
--		vmbus_free_mmio(hv->mem->start, hv->fb_size);
--	} else {
--		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
--				      PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
--		if (!pdev) {
--			drm_err(dev, "Unable to find PCI Hyper-V video\n");
--			return -ENODEV;
--		}
--		pci_release_region(pdev, 0);
--		pci_dev_put(pdev);
--	}
-+	vmbus_free_mmio(hv->mem->start, hv->fb_size);
- 
- 	return 0;
- }
--- 
-2.25.1
+> [...]
+> 
+> I like the proposed skeleton of panic() and code style suggested by
+> Petr very much. About panic_prefer_crash_dump which might need be added,
+> I hope it has a default value true. This makes crash_dump execute at
+> first by default just as before, unless people specify
+> panic_prefer_crash_dump=0|n|off to disable it. Otherwise we need add
+> panic_prefer_crash_dump=1 in kernel and in our distros to enable kdump,
+> this is inconsistent with the old behaviour.
 
+I'd like to understand better why the crash_kexec() must always be the
+first thing in your use case. If we keep that behavior, we'll see all
+sorts of workarounds - see the last patches of this series, Hyper-V and
+PowerPC folks hardcoded "crash_kexec_post_notifiers" in order to force
+execution of their relevant notifiers (like the vmbus disconnect,
+specially in arm64 that has no custom machine_crash_shutdown, or the
+fadump case in ppc). This led to more risk in kdump.
+
+The thing is: with the notifiers' split, we tried to keep only the most
+relevant/necessary stuff in this first list, things that ultimately
+should improve kdump reliability or if not, at least not break it. My
+feeling is that, with this series, we should change the idea/concept
+that kdump must run first nevertheless, not matter what. We're here
+trying to accommodate the antagonistic goals of hypervisors that need
+some clean-up (even for kdump to work) VS. kdump users, that wish a
+"pristine" system reboot ASAP after the crash.
+
+Cheers,
+
+
+Guilherme
