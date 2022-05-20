@@ -2,292 +2,174 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A2DF52E0BF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 May 2022 01:45:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87CA352E616
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 May 2022 09:20:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343743AbiESXpS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 19 May 2022 19:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
+        id S1346269AbiETHUu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 20 May 2022 03:20:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343734AbiESXpQ (ORCPT
+        with ESMTP id S1346276AbiETHUs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 19 May 2022 19:45:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 37F3611991D
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 May 2022 16:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1653003914;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xcqeqNHBqLaEPFvaMSIdVsHM/2ssgjepqSc89Z+McDY=;
-        b=cH1jZ7B9s6QPsLL95flJcVUTqhu/a/tgBUpghaM5U6BI16PpGbL0aFbZt3tCOe0LuHUd1p
-        9Ag8XSB23ERy2dy9dibS8wRkFYY7oTZKGNoiOANIJKG3KWOtYWosuDQR4zKR+E6Ce+bJCZ
-        dO967Y0vDCSFGo7+e6Ic1TcGvCPGhxs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-671-51qE-HMZMJ-_l5k-QlXFHg-1; Thu, 19 May 2022 19:45:10 -0400
-X-MC-Unique: 51qE-HMZMJ-_l5k-QlXFHg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A41B685A5AA;
-        Thu, 19 May 2022 23:45:07 +0000 (UTC)
-Received: from localhost (ovpn-12-42.pek2.redhat.com [10.72.12.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4ABA5492C14;
-        Thu, 19 May 2022 23:45:06 +0000 (UTC)
-Date:   Fri, 20 May 2022 07:45:02 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     "michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Dave Young <dyoung@redhat.com>, d.hatayama@jp.fujitsu.com,
-        akpm@linux-foundation.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
-        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
-        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        corbet@lwn.net, dave.hansen@linux.intel.com, feng.tang@intel.com,
-        gregkh@linuxfoundation.org, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org
-Subject: Re: [PATCH 24/30] panic: Refactor the panic path
-Message-ID: <20220519234502.GA194232@MiWiFi-R3L-srv>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
- <Yn0TnsWVxCcdB2yO@alley>
- <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Fri, 20 May 2022 03:20:48 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89F07140C5;
+        Fri, 20 May 2022 00:20:45 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0B96320F9C0D;
+        Fri, 20 May 2022 00:20:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0B96320F9C0D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1653031245;
+        bh=l3C4NInvgKvz4oi7EOLCuKiDCvtT7GIwKr04BZ3Yohk=;
+        h=From:To:Subject:Date:From;
+        b=WOzpWrc1VnMzae6Ns5L09zG0PwZGswch3brRhEKx3VaK3VEAJJYxiLLdzrFpkLY03
+         oigcapwqqaPR67ezwnSJ3jtrV1pZntK7/1PT+LaFHbFcAD8fM47nMhhxlq+d77BxC/
+         Oo9b+nTyDzatXyR959qwn0noqBErS3AREqQRoT6Y=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
+        daniel@ffwll.ch, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, haiyangz@microsoft.com
+Subject: [PATCH] drm/hyperv : Removing the restruction of VRAM allocation with PCI bar size
+Date:   Fri, 20 May 2022 00:20:40 -0700
+Message-Id: <1653031240-13623-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 05/15/22 at 07:47pm, Guilherme G. Piccoli wrote:
-> On 12/05/2022 11:03, Petr Mladek wrote:
-...... 
-> > OK, the question is how to make it better. Let's start with
-> > a clear picture of the problem:
-> > 
-> > 1. panic() has basically two funtions:
-> > 
-> >       + show/store debug information (optional ways and amount)
-> >       + do something with the system (reboot, stay hanged)
-> > 
-> > 
-> > 2. There are 4 ways how to show/store the information:
-> > 
-> >       + tell hypervisor to store what it is interested about
-> >       + crash_dump
-> >       + kmsg_dump()
-> >       + consoles
-> > 
-> >   , where crash_dump and consoles are special:
-> > 
-> >      + crash_dump does not return. Instead it ends up with reboot.
-> > 
-> >      + Consoles work transparently. They just need an extra flush
-> >        before reboot or staying hanged.
-> > 
-> > 
-> > 3. The various notifiers do things like:
-> > 
-> >      + tell hypervisor about the crash
-> >      + print more information (also stop watchdogs)
-> >      + prepare system for reboot (touch some interfaces)
-> >      + prepare system for staying hanged (blinking)
-> > 
-> >    Note that it pretty nicely matches the 4 notifier lists.
-> > 
-> 
-> I really appreciate the summary skill you have, to convert complex
-> problems in very clear and concise ideas. Thanks for that, very useful!
-> I agree with what was summarized above.
+There were two different approaches getting used in this driver to
+allocate vram:
+	1. VRAM allocation from PCI region for Gen1
+	2. VRAM alloaction from MMIO region for Gen2
+First approach limilts the vram to PCI BAR size, which is 64 MB in most
+legacy systems. This limits the maximum resolution to be restricted to
+64 MB size, and with recent conclusion on fbdev issue its concluded to have
+similar allocation strategy for both Gen1 and Gen2. This patch unifies
+the Gen1 and Gen2 vram allocation strategy.
 
-I want to say the similar words to Petr's reviewing comment when I went
-through the patches and traced each reviewing sub-thread to try to
-catch up. Petr has reivewed this series so carefully and given many
-comments I want to ack immediately.
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+FBdev patch Ref :
+https://lore.kernel.org/lkml/20220428143746.sya775ro5zi3kgm3@liuwe-devbox-debian-v2/T/
 
-I agree with most of the suggestions from Petr to this patch, except of
-one tiny concern, please see below inline comment.
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 76 ++-----------------------
+ 1 file changed, 4 insertions(+), 72 deletions(-)
 
-> 
-> 
-> > Now, we need to decide about the ordering. The main area is how
-> > to store the debug information. Consoles are transparent so
-> > the quesition is about:
-> > 
-> >      + hypervisor
-> >      + crash_dump
-> >      + kmsg_dump
-> > 
-> > Some people need none and some people want all. There is a
-> > risk that system might hung at any stage. This why people want to
-> > make the order configurable.
-> > 
-> > But crash_dump() does not return when it succeeds. And kmsg_dump()
-> > users havn't complained about hypervisor problems yet. So, that
-> > two variants might be enough:
-> > 
-> >     + crash_dump (hypervisor, kmsg_dump as fallback)
-> >     + hypervisor, kmsg_dump, crash_dump
-> > 
-> > One option "panic_prefer_crash_dump" should be enough.
-> > And the code might look like:
-> > 
-> > void panic()
-> > {
-> > [...]
-> > 	dump_stack();
-> > 	kgdb_panic(buf);
-> > 
-> > 	< ---  here starts the reworked code --- >
-> > 
-> > 	/* crash dump is enough when enabled and preferred. */
-> > 	if (panic_prefer_crash_dump)
-> > 		__crash_kexec(NULL);
-
-I like the proposed skeleton of panic() and code style suggested by
-Petr very much. About panic_prefer_crash_dump which might need be added,
-I hope it has a default value true. This makes crash_dump execute at
-first by default just as before, unless people specify
-panic_prefer_crash_dump=0|n|off to disable it. Otherwise we need add
-panic_prefer_crash_dump=1 in kernel and in our distros to enable kdump,
-this is inconsistent with the old behaviour.
-
-> > 
-> > 	/* Stop other CPUs and focus on handling the panic state. */
-> > 	if (has_kexec_crash_image)
-> > 		crash_smp_send_stop();
-> > 	else
-> > 		smp_send_stop()
-> > 
-> 
-> Here we have a very important point. Why do we need 2 variants of SMP
-> CPU stopping functions? I disagree with that - my understanding of this
-> after some study in architectures is that the crash_() variant is
-> "stronger", should work in all cases and if not, we should fix that -
-> that'd be a bug.
-> 
-> Such variant either maps to smp_send_stop() (in various architectures,
-> including XEN/x86) or overrides the basic function with more proper
-> handling for panic() case...I don't see why we still need such
-> distinction, if you / others have some insight about that, I'd like to
-> hear =)
-> 
-> 
-> > 	/* Notify hypervisor about the system panic. */
-> > 	atomic_notifier_call_chain(&panic_hypervisor_list, 0, NULL);
-> > 
-> > 	/*
-> > 	 * No need to risk extra info when there is no kmsg dumper
-> > 	 * registered.
-> > 	 */
-> > 	if (!has_kmsg_dumper())
-> > 		__crash_kexec(NULL);
-> > 
-> > 	/* Add extra info from different subsystems. */
-> > 	atomic_notifier_call_chain(&panic_info_list, 0, NULL);
-> > 
-> > 	kmsg_dump(KMSG_DUMP_PANIC);
-> > 	__crash_kexec(NULL);
-> > 
-> > 	/* Flush console */
-> > 	unblank_screen();
-> > 	console_unblank();
-> > 	debug_locks_off();
-> > 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-> > 
-> > 	if (panic_timeout > 0) {
-> > 		delay()
-> > 	}
-> > 
-> > 	/*
-> > 	 * Prepare system for eventual reboot and allow custom
-> > 	 * reboot handling.
-> > 	 */
-> > 	atomic_notifier_call_chain(&panic_reboot_list, 0, NULL);
-> 
-> You had the order of panic_reboot_list VS. consoles flushing inverted.
-> It might make sense, although I didn't do that in V1...
-> Are you OK in having a helper for console flushing, as I did in V1? It
-> makes code of panic() a bit less polluted / more focused I feel.
-> 
-> 
-> > 
-> > 	if (panic_timeout != 0) {
-> > 		reboot();
-> > 	}
-> > 
-> > 	/*
-> > 	 * Prepare system for the infinite waiting, for example,
-> > 	 * setup blinking.
-> > 	 */
-> > 	atomic_notifier_call_chain(&panic_loop_list, 0, NULL);
-> > 
-> > 	infinite_loop();
-> > }
-> > 
-> > 
-> > __crash_kexec() is there 3 times but otherwise the code looks
-> > quite straight forward.
-> > 
-> > Note 1: I renamed the two last notifier list. The name 'post-reboot'
-> > 	did sound strange from the logical POV ;-)
-> > 
-> > Note 2: We have to avoid the possibility to call "reboot" list
-> > 	before kmsg_dump(). All callbacks providing info
-> > 	have to be in the info list. It a callback combines
-> > 	info and reboot functionality then it should be split.
-> > 
-> > 	There must be another way to calm down problematic
-> > 	info callbacks. And it has to be solved when such
-> > 	a problem is reported. Is there any known issue, please?
-> > 
-> > It is possible that I have missed something important.
-> > But I would really like to make the logic as simple as possible.
-> 
-> OK, I agree with you! It's indeed simpler and if others agree, I can
-> happily change the logic to what you proposed. Although...currently the
-> "crash_kexec_post_notifiers" allows to call _all_ panic_reboot_list
-> callbacks _before kdump_.
-> 
-> We need to mention this change in the commit messages, but I really
-> would like to hear the opinions of heavy users of notifiers (as
-> Michael/Hyper-V) and the kdump interested parties (like Baoquan / Dave
-> Young / Hayatama). If we all agree on such approach, will change that
-> for V2 =)
-> 
-> Thanks again Petr, for the time spent in such detailed review!
-> Cheers,
-> 
-> 
-> Guilherme
-> 
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+index 4a8941fa0815..a32afd84f361 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+@@ -69,57 +69,8 @@ static struct pci_driver hyperv_pci_driver = {
+ 	.remove =	hyperv_pci_remove,
+ };
+ 
+-static int hyperv_setup_gen1(struct hyperv_drm_device *hv)
+-{
+-	struct drm_device *dev = &hv->dev;
+-	struct pci_dev *pdev;
+-	int ret;
+-
+-	pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
+-			      PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
+-	if (!pdev) {
+-		drm_err(dev, "Unable to find PCI Hyper-V video\n");
+-		return -ENODEV;
+-	}
+-
+-	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, &hyperv_driver);
+-	if (ret) {
+-		drm_err(dev, "Not able to remove boot fb\n");
+-		return ret;
+-	}
+-
+-	if (pci_request_region(pdev, 0, DRIVER_NAME) != 0)
+-		drm_warn(dev, "Cannot request framebuffer, boot fb still active?\n");
+-
+-	if ((pdev->resource[0].flags & IORESOURCE_MEM) == 0) {
+-		drm_err(dev, "Resource at bar 0 is not IORESOURCE_MEM\n");
+-		ret = -ENODEV;
+-		goto error;
+-	}
+-
+-	hv->fb_base = pci_resource_start(pdev, 0);
+-	hv->fb_size = pci_resource_len(pdev, 0);
+-	if (!hv->fb_base) {
+-		drm_err(dev, "Resource not available\n");
+-		ret = -ENODEV;
+-		goto error;
+-	}
+-
+-	hv->fb_size = min(hv->fb_size,
+-			  (unsigned long)(hv->mmio_megabytes * 1024 * 1024));
+-	hv->vram = devm_ioremap(&pdev->dev, hv->fb_base, hv->fb_size);
+-	if (!hv->vram) {
+-		drm_err(dev, "Failed to map vram\n");
+-		ret = -ENOMEM;
+-	}
+-
+-error:
+-	pci_dev_put(pdev);
+-	return ret;
+-}
+-
+-static int hyperv_setup_gen2(struct hyperv_drm_device *hv,
+-			     struct hv_device *hdev)
++static int hyperv_setup_gen(struct hyperv_drm_device *hv,
++			    struct hv_device *hdev)
+ {
+ 	struct drm_device *dev = &hv->dev;
+ 	int ret;
+@@ -181,10 +132,7 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
+ 		goto err_hv_set_drv_data;
+ 	}
+ 
+-	if (efi_enabled(EFI_BOOT))
+-		ret = hyperv_setup_gen2(hv, hdev);
+-	else
+-		ret = hyperv_setup_gen1(hv);
++	ret = hyperv_setup_gen(hv, hdev);
+ 
+ 	if (ret)
+ 		goto err_vmbus_close;
+@@ -225,29 +173,13 @@ static int hyperv_vmbus_remove(struct hv_device *hdev)
+ {
+ 	struct drm_device *dev = hv_get_drvdata(hdev);
+ 	struct hyperv_drm_device *hv = to_hv(dev);
+-	struct pci_dev *pdev;
+ 
+ 	drm_dev_unplug(dev);
+ 	drm_atomic_helper_shutdown(dev);
+ 	vmbus_close(hdev->channel);
+ 	hv_set_drvdata(hdev, NULL);
+ 
+-	/*
+-	 * Free allocated MMIO memory only on Gen2 VMs.
+-	 * On Gen1 VMs, release the PCI device
+-	 */
+-	if (efi_enabled(EFI_BOOT)) {
+-		vmbus_free_mmio(hv->mem->start, hv->fb_size);
+-	} else {
+-		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
+-				      PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
+-		if (!pdev) {
+-			drm_err(dev, "Unable to find PCI Hyper-V video\n");
+-			return -ENODEV;
+-		}
+-		pci_release_region(pdev, 0);
+-		pci_dev_put(pdev);
+-	}
++	vmbus_free_mmio(hv->mem->start, hv->fb_size);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
