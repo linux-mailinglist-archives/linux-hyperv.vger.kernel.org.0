@@ -2,87 +2,79 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5C752F738
-	for <lists+linux-hyperv@lfdr.de>; Sat, 21 May 2022 03:00:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5B7A52FAD8
+	for <lists+linux-hyperv@lfdr.de>; Sat, 21 May 2022 13:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243790AbiEUBAO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 20 May 2022 21:00:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49362 "EHLO
+        id S242459AbiEULMD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 21 May 2022 07:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244884AbiEUBAO (ORCPT
+        with ESMTP id S242243AbiEULMB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 20 May 2022 21:00:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5441B092B;
-        Fri, 20 May 2022 18:00:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CAF1861E9F;
-        Sat, 21 May 2022 01:00:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2FDD2C36AE3;
-        Sat, 21 May 2022 01:00:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653094812;
-        bh=zilOOzTtILoXvxONEgyn+Rv3B2It2oRDDPX55bj6z2E=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=g6UQT8pKfgBZR5yyFueB7jOkKjwCcLsaCUlaktjrtHzkHB7C+nF4bhxs6Sk0awoDH
-         Zb7O8wz0yncFe0x16s05Ukb0tckP55PtdoG3Qkptx5pTE5i/DeZHPCCIt2lZFVD+Hq
-         nBupqWr3dAtTQ66Rpo1ZIlUUW3XJZ08S/iweRYV4p6JAfVSRl/H4+2AtUO7BsAxWpE
-         RJ61jeChyBiwBZNqHzgqutG8mK/RmcTm3i0HJyQTicmrDiedAOH+GEzsDAo8UXiKnY
-         W0SNrMUN9REmxatczEAUwyYgzP2VERa8jDsuiyyjvajLGSAi+GOf9A1nP9Nb9jfMQG
-         /oENKRsqPI9hg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 167F7F03935;
-        Sat, 21 May 2022 01:00:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 21 May 2022 07:12:01 -0400
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F3822AC6C;
+        Sat, 21 May 2022 04:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=w6FEaixBY/UPa4VrqVSgQE2Iu1UffwUZOqZRzmF5TYY=;
+  b=m9JZWQkUhgWrZPNnyHVxkb370164+e/4WNlBb2dJOBYBOMp7nG4kQ0t6
+   xybvrxFZW/vW9Rs48aFcJk6Owx+Tkp0ehEK0aLJxCGqnIq8G3M3cfhzaQ
+   LNuFhuNhVlIuvP0RoXw9hHvLAOFpTORAx3E6Q4DmvjVjD0euVYpHuw6U3
+   g=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="5.91,242,1647298800"; 
+   d="scan'208";a="14727907"
+Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 13:11:54 +0200
+From:   Julia Lawall <Julia.Lawall@inria.fr>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>
+Cc:     kernel-janitors@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: storvsc: fix typo in comment
+Date:   Sat, 21 May 2022 13:10:22 +0200
+Message-Id: <20220521111145.81697-12-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] hv_netvsc: Fix potential dereference of NULL pointer
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <165309481208.5645.11194329096449346020.git-patchwork-notify@kernel.org>
-Date:   Sat, 21 May 2022 01:00:12 +0000
-References: <1652962188-129281-1-git-send-email-lyz_cs@pku.edu.cn>
-In-Reply-To: <1652962188-129281-1-git-send-email-lyz_cs@pku.edu.cn>
-To:     =?utf-8?b?5YiY5rC45b+XIDxseXpfY3NAcGt1LmVkdS5jbj4=?=@ci.codeaurora.org
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        kuba@kernel.org, pabeni@redhat.com, sashal@kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fuyq@stu.pku.edu.cn
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+Spelling mistake (triple letters) in comment.
+Detected with the help of Coccinelle.
 
-This patch was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-On Thu, 19 May 2022 05:09:48 -0700 you wrote:
-> The return value of netvsc_devinfo_get()
-> needs to be checked to avoid use of NULL
-> pointer in case of an allocation failure.
-> 
-> Fixes: 0efeea5fb ("hv_netvsc: Add the support of hibernation")
-> 
-> Signed-off-by: Yongzhi Liu <lyz_cs@pku.edu.cn>
-> 
-> [...]
+---
+ drivers/scsi/storvsc_drv.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Here is the summary with links:
-  - hv_netvsc: Fix potential dereference of NULL pointer
-    https://git.kernel.org/netdev/net/c/eb4c07889647
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 5585e9d30bbf..3a9d7bac26f7 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -538,7 +538,7 @@ static void storvsc_host_scan(struct work_struct *work)
+ 	host = host_device->host;
+ 	/*
+ 	 * Before scanning the host, first check to see if any of the
+-	 * currrently known devices have been hot removed. We issue a
++	 * currently known devices have been hot removed. We issue a
+ 	 * "unit ready" command against all currently known devices.
+ 	 * This I/O will result in an error for devices that have been
+ 	 * removed. As part of handling the I/O error, we remove the device.
 
