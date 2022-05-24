@@ -2,121 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A958F531FD5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 May 2022 02:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E73F532012
+	for <lists+linux-hyperv@lfdr.de>; Tue, 24 May 2022 03:02:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbiEXA3X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 May 2022 20:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53466 "EHLO
+        id S232312AbiEXBCb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 May 2022 21:02:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbiEXA3W (ORCPT
+        with ESMTP id S232054AbiEXBCa (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 May 2022 20:29:22 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020024.outbound.protection.outlook.com [52.101.61.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8308AE41;
-        Mon, 23 May 2022 17:29:21 -0700 (PDT)
+        Mon, 23 May 2022 21:02:30 -0400
+Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.57.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD05E9BAD6;
+        Mon, 23 May 2022 18:02:27 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NupLhyP3DPME9lPVRgGtvrYI/7M3on9Imo5SVE+3d+ivogN0xZtxsgE0wUW9c6V6f4feFfKNEYeaVOtvQVdmJuOXifVzohWTTXxphpwx86DIiqnLf+Pqj3UJiix7poffXeTpxKk0eLdFEEVtGqCt340ffaNe5pEf4uNFpXWych0tCsJZJp6mEtcCmBovrr09Q9uCp3rD2wCl7m5ujd5bmRlsF2ae2l0df4tMMmQzIDrB3Hge1zOQjKqsBwZI/YtkxAYDhNKGKRTw2PPKpcMbwM97fNcHfoXiFkCJpiWDj18UxHaEr/KKNFLZUWBigIC+vKS6VRaYXL09PU5T6hBV1A==
+ b=dx26PUpchc+JZEETYRNiVTNV/Ac6jkaAlSXLRIlt9RjnRqeAyI7JuMiJFJFp/cNMY3CzrfLnqFn3VgH2j4Km7z4OvoPoow9AFhPXZWmxtFFWLelTwTazTRP+tdSkXUVffAEkLgmTu7BsCRFylOw8tLGNr3022vCKRyB8j/NYQcorz2avC9e9xrAyqyYmyF55sEMMFgX8DlbqsQTIPBEzPIaq7KI3rZasKIXzJ+T4wpxGosxgbn4h2HNncEjnOuMdVBuB8veywc2rItyOJNHv0IteNJpWdDoCgOCTr1cxILa0hzI4uTXRAyu8MMb2pYtNO4EVnVhSryBHIBaHguhgFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xD9Oi9vSjSbK/5grgozcXPJmANkftv0CWTUe/G5enXk=;
- b=mgIoqczSPIy42naxPB7o/XjoRPG7su2U4Y+wS4w5o5tF//EM9sde0sZW6g74Owt1sgFXSd2eEiqplOTYxJshh6KG3KGjhMDBGCyINHbAFzUp6ZeFGcoO+lS/H9Ip/XgYigMxm2ntENS/Hfj0Sl7YXKcx8rhyfeXDTD6+QUxImdai2yf66Y+U8TvrSAyOdRBRBu7LQcb9ZJWfDWoWeYu6eEGrHewcJ0QXtPlbQVvfAwOUONda8EwKRRd/z88uwaXgvWk9LRSeh9NtPj5NyVnadmlge05KHeWcrOGXeOF8OflDZFlQhaiMSTMQZX2NXAwKgIjN+Bh2SQ6E9UWUSYSybA==
+ bh=kvxC4AREBKz8IFsbR3hltKh2mxtBhQBxkmpBeR6BWrs=;
+ b=ihjg555ga08F9TN4J7nAB8PGo8ujOU+/rstUiYCf67W4pJbgrrgdbidumk7j2IBmC8uaTFHZvCbir8SWx3QmSVxqGU2YYrp9v248FTtHr4K9hY6N/P3skhZVJomVoUDPGi7hm69r+fRcA+wrKuf05riCxblO9+tfHFhTb8bXzbtDj0AnbZZlgIblFDukFSd4aggOR0rkT6tuWYaW7BgL91ZX38NlvfI19jrCVRn4Cp/SLFi9NsSmoqVvueHo/46+VDyc5Fsk03UFdiyOShbj0JBIsZ52v1F/kFGGRTQ0a2Mc/a9AKzoQEY+WTaPEp0guPV3dLjMNtcSwin2yPWWPAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xD9Oi9vSjSbK/5grgozcXPJmANkftv0CWTUe/G5enXk=;
- b=fM/xllqWvDsIwM+ZO1akKAONvaQ1opKf4Vm3frNgrN5LVEtFMteMkQz7HTn4DozHcncxq++Mp8PkmOdHU2YW4CuQlTOe9H6iM1VNwueIR5midM+J0ExDR8u+TcIRB0/vudiMa1nsEvTvQU0lciiC6p9q3j+GrXUkZ9/8fBQxX30=
+ bh=kvxC4AREBKz8IFsbR3hltKh2mxtBhQBxkmpBeR6BWrs=;
+ b=Vyy9C6Gh5ORpHQyayTr56GYI8CPny4hxufRSxwVeEMks5JnyWecaIkH5KqvsSnjEiSfLvFFTpqXX1bOBcHOpXaPrpg+74gh2HSLyOoUdC1+hPntuwWueEwH//ALqM8iUlwZGrWgkNAsshUXQ2shRdGEGmsDMsg0YqffZnrZpNtM=
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by IA1PR21MB3544.namprd21.prod.outlook.com (2603:10b6:208:3e3::12) with
+ by CH2PR21MB1494.namprd21.prod.outlook.com (2603:10b6:610:88::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.2; Tue, 24 May
- 2022 00:29:18 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.1; Tue, 24 May
+ 2022 01:02:24 +0000
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::3506:defe:c88a:8580]) by PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::3506:defe:c88a:8580%9]) with mapi id 15.20.5314.003; Tue, 24 May 2022
- 00:29:18 +0000
+ 01:02:24 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v2] hv_balloon: Fix balloon_probe() and balloon_remove()
- error handling
-Thread-Topic: [PATCH v2] hv_balloon: Fix balloon_probe() and balloon_remove()
- error handling
-Thread-Index: AQHYaOCSNsDFis8MBkOPc7b1F2CeM60tODog
-Date:   Tue, 24 May 2022 00:29:18 +0000
-Message-ID: <PH0PR21MB3025868F7B32571C7D009BBFD7D79@PH0PR21MB3025.namprd21.prod.outlook.com>
-References: <20220516045058.GA7933@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To: <20220516045058.GA7933@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        Long Li <longli@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] scsi: storvsc: Removing Pre Win8 related logic
+Thread-Topic: [PATCH v2] scsi: storvsc: Removing Pre Win8 related logic
+Thread-Index: AQHYbqx4Ocxj6TRpwU+PggU07BF0pq0tMvmQ
+Date:   Tue, 24 May 2022 01:02:24 +0000
+Message-ID: <PH0PR21MB30252D1E47B4753D00E0B248D7D79@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <1653313994-8139-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1653313994-8139-1-git-send-email-ssengar@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1dab3ed3-1df2-4e16-85b0-2dfb88e2c37e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-24T00:27:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9bfdbada-d3e5-4e3c-839e-63fd5d7f955b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-24T00:49:44Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c6d23c2c-5a69-4b3d-b077-08da3d1c70c6
-x-ms-traffictypediagnostic: IA1PR21MB3544:EE_
-x-microsoft-antispam-prvs: <IA1PR21MB3544021B1891CDC80870632CD7D79@IA1PR21MB3544.namprd21.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: fe742d12-e27c-4207-aefd-08da3d21103b
+x-ms-traffictypediagnostic: CH2PR21MB1494:EE_
+x-microsoft-antispam-prvs: <CH2PR21MB14940E580236883B7F65D3D7D7D79@CH2PR21MB1494.namprd21.prod.outlook.com>
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IzLHpDHU2t8MuZUj1G+pyudIdyITD3tQcRE/IhkY2N5y6qHZ4Ry1Ct/RI9+tP+axxMOdQa83NvrPY1YT7AS2F8KLNhlPRNMUPe/Ocgl1XU4/l3T8s7NVppRth2ojsk1necwMGqyNNb3l/eDDs2RTiCgU+Q+AKfw6KPHgfTbIx1Y59vp89UvBz0s8tpsVy4LpBl1e2pzu5s8op3t28khsg+p3DmbV6qEJ/lZS1OnwjyzG48h+G9leQsCyIN8gFi2V05XBE/5hzHOe60aQHzRXUaDlpRoGNRKr+AzpCuD66vnINfOY6fbV6W1o07R/wsj4O/VDMfwUupsWFDy7laK6HoErfEFdokvSVW/gZXWQQGZAbRci16B2hsHc538sb+k5TXxrZCJIBIDrGdJhpTBsGhmtKs31SWXzvvF9K2EOCyzJSWt71h2Zs1cXDrU/l8lBQTTLIKpTYTW9rqytjQZgx5u64gFi8O1Y3HCFina/Js87XG09CCAoWhGnekdxwAN9YCOq1JKX1m9uSGeynbfdUpE2x8/CgCiJaZByXRdukPC+mVeB4A8PjSPJdhb/eMmwi89gQy/poMSyJKYzzptRUOoscmD/Fa7A2etD0HLCmoosh8kPYiCH9DBMQckO5Kg7nSKXLnCLuLiz1vz6SPdDSNESCrvXQlOrge9B07ijeRni7P9Cuh8DJ4CnQp6vmxnn92tVX+qqF9vJFi3sG7aZf29GZQYGd9aVHZJojhRdpVFgdtTpuZaKpmn22sOH0/MT
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(2906002)(110136005)(82950400001)(6636002)(508600001)(55016003)(316002)(33656002)(71200400001)(83380400001)(186003)(8990500004)(122000001)(66946007)(6506007)(66476007)(38100700002)(66446008)(8676002)(86362001)(66556008)(82960400001)(76116006)(9686003)(10290500003)(26005)(64756008)(5660300002)(7696005)(52536014)(8936002)(38070700005);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: nFnQjhBrxPSTH3AK0enhrPxJddHcsnFZJ46ioMlU1YoZolCy78px1jlqiqY8OYMBABpp/VJxAl2EvFgzBDP+xm/83nzH+S4sdKFrep1aUqL3cK8kRc8hydkeJa80a3SDSEYfPwq2HIf3RCFhSjsGb23+t6nLpuoOhNbAAoVsTVHqmt9W4SiIgmetWuBzUjlHMHDHlp13BTJw+shbaTdWpGnQkYL7II9gw/bZd77ON0U3M180NDf4NP0TxcjP7pbF2PcxqY6N9fIO8sfuZFehQygRauzQD6QyW9z/LjoEpplAPeoRM/tjgZUS96m5hLvv6WdDIC0cb/yLK88pj4scHMfQnjyTNCAJBZ4vQ11bM7iPWAMnOoOB5OJOi1YQUjkR9lpaJpnxHfRG0TpWRqc9PMGrZ4g1QCjuDL8B7sM/sjZmgvcNFXZ9bd5zbODVbrIvfgy73vDnFwyvVU7leV5dWNXIMRCD4DLGxHTgIZElg/u2KoA5qwhsi7j6LEE6eQuCtOMhwoRQyuRLM7cLTQ9hsGNWa6+LI2lww2HzbXYtZ7zkc3aESiUYNq6xutHqI4JqU8ShUMzYQ460kvuLAEepqgZ6Jd7TNKNI5GltCWOwhvnFIWzPq4KV6urlukMe6rMHA8kNuS/kmpRgZx6fWhqFKi7CLE1j/mkezOkdGjJ1lt/AHAgedQOZ8tkNNlY8DEFsXxALYwUbsw5H4wmfqiqgTdRav1CGKf936eZR2B1zSv3wL5oRWBAqzIkd1TPFE5eH3jSIlu8fK4mLVcxykKs4fQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(451199009)(66946007)(122000001)(71200400001)(9686003)(5660300002)(66556008)(66476007)(83380400001)(33656002)(8936002)(76116006)(86362001)(52536014)(7696005)(6506007)(30864003)(508600001)(316002)(82950400001)(38100700002)(82960400001)(55016003)(26005)(110136005)(38070700005)(64756008)(186003)(8990500004)(66446008)(10290500003)(921005)(2906002)(8676002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?CP8V67dIZVIo+/pjOkYIrf44jZCEAkzpFGEIa/Ky76nuQgQYF3CWiqCtqGHy?=
- =?us-ascii?Q?jyvXV3skHa4p6d3AmdLFOYZFugB6LXuj/EgjJs4fdoS6+DI2oEPpsySBJmRc?=
- =?us-ascii?Q?mZpzL7dGzfKDvpCguSaZQ5SymCC2nFlbRUHt9ltizdGlCpNNk+4USg0SIm0c?=
- =?us-ascii?Q?7Fg/szGADybszBGmqM28ohAZB/nqyho5ktjV5yymHnMTDW6JQ+ZUD+CHAq/T?=
- =?us-ascii?Q?6WYInho/mbs7nTHVm3SSFm1wrQ3yDoy34OblX2xSUlImDIr53bx1nf4sZbmS?=
- =?us-ascii?Q?VrhgJDHPVv456sO8cQpWxhSb51UYEEgCCLcqLmDE9gzH+o2P2a01Gs+8qw/V?=
- =?us-ascii?Q?j10rYvf+hErNzB3bF8KcDoyfUbqGKssWCNYs5D3In5qqpW+MkiS6X1UoSDjI?=
- =?us-ascii?Q?8+I4zmiDxj7uy+vFygb9waF4Qd72mLPZ0NrwRimjEUk086kCYWPcvmkHKt8l?=
- =?us-ascii?Q?8mmnI+ARu2BqANm10JorWiIPTyAx5XRmzXQO0BPqdBM/H9EGSEaw2XBe/Hyi?=
- =?us-ascii?Q?an5GhGCOPd0LCclNUpfmC/oDEjaPPzNfVS4nxWgCA6ND0cEbGGJHIQsuSf0y?=
- =?us-ascii?Q?/kCBcFZnpz9Q9NAOpTNaC3MYarwFldF+ScJAcD9mdnqmYernc4yiNBwz+VuZ?=
- =?us-ascii?Q?a5+JtuuK9ViLfc2aLZB/5MStjPR33iB2skm22xu/6Tc35TaFViTDqyUCx/Ne?=
- =?us-ascii?Q?dD/6hmF8qoxdodyxax4x/2x11VI3QxvqawJYz8StB/l3SQg6Uw0knRQqKmNq?=
- =?us-ascii?Q?qKxC7y4LFm7FnSEpbyQ1jqz3STbGN+mZTP8w3Xx5FeBKo+ZbB/mr3LtIQnDV?=
- =?us-ascii?Q?YteophXWdN4h23pNTHO/iZGVzuGo0Xguo6ADV82+RWIQYs060JbO96iyUGQN?=
- =?us-ascii?Q?cm2E/4503hDiVQNPowerfYiWsbBc2xcF4VqbsbfVc7Sp2WZw1AA3SsXeSraH?=
- =?us-ascii?Q?CEdYciDKE2iRs1E03qRmlwnohpO/h2BtoBsZmu0+zQis9mvsJKBqKpw39NYo?=
- =?us-ascii?Q?Kzuw/oi2kQYPvzgFzavUydFEgjomLi2HmaZyhA+aXB3mxSgbazU8DN74EIiM?=
- =?us-ascii?Q?7R8J7fh/IJbOcZmeEv4unTC/TUG5RbVKQuTGFz8UEWtmGTvkaKGFWoSMMrzA?=
- =?us-ascii?Q?cYpRr1fYS3+u35eFPKxhhznyxsIOiHCxfWH05+LSkkR9F/duvH/quQqMQUP6?=
- =?us-ascii?Q?CtDxesJyQdccKZgBJvmtY8QV6PbelOftEZ2nrCKWttBvMf3XTSFTWx0duPa2?=
- =?us-ascii?Q?CIgT3EClSXX23hnwbf4n/j47bvwQ6h6EOTWXhnhJQ2dERCqtjE8GM2S/zhpk?=
- =?us-ascii?Q?Nb2oI57bIgTxpmkrRM/5QIHH83HkVFz07LGx8/kvm+uCPQC8Nb/A8hpXla1s?=
- =?us-ascii?Q?Yhgz1rVnj7G4fFjnxVnWr41LeEHy5hPFhal9NzBR4n49NuQQ/SvTzZqClNvu?=
- =?us-ascii?Q?H9YxTKBwehyRu5YCe0+pZQgPvCTyaxqw1fFbiv9dxlrdKDTK0hjUuX8LX4FK?=
- =?us-ascii?Q?M5GkhjLIwqj1xaOZ9Mhdhg6Q89wGIdefjgB5qNk5ZcOkWuQG95uKAh03mEyc?=
- =?us-ascii?Q?HpZPoa80U8V44s1dgLQQmPPQ9GddllGN94tXpN0WHxOAg40GroLEPqQ+UXQ8?=
- =?us-ascii?Q?7wNx+LD4CWxNbdIGxmCF/BaFoi2bk5s1nmI21SLUP88/uh2eItXVteIliLdT?=
- =?us-ascii?Q?AgglDLeslMogDXUd/88PwZT1+1voAeRKBR7dTpXE9HHHbdlgL6EemM4Kcjjt?=
- =?us-ascii?Q?mCylJuPLeOvUpNv0JY9+5BjqKqtfDS0=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?N85ve8z5MbGvCjFAmQ9FaAEVdXlzH52AVIBjqCgqq4WnIVksGFlc/AjKSiSi?=
+ =?us-ascii?Q?z7yVEaz3DEMSNIw5UaO+mvEN7AgBC9qwe7r6ggFYIIrFTm/5kfP6xl/FuQ7I?=
+ =?us-ascii?Q?rl7DkRspAjEN7PK+bG+tiYM/XzsMqhTmW2se1FSYWqyMo4obA4q0b5jQUslq?=
+ =?us-ascii?Q?ej1DhxssBFP+yRUPlNucWfzvyUwyCjPsJECbTQWUOE9r0HxMQZxyBs3/sBPb?=
+ =?us-ascii?Q?B1SYfs5jXl6r+Ml96bXD1ySD8vviBFFi95yepTZo0FyK00HrxIRgEqQwy5YY?=
+ =?us-ascii?Q?KobL2RLSnNGrk8JgdwDe+6Ivfmtv7gjeyXEMjWBU/YbPoi9+Uau9ooon7Ipf?=
+ =?us-ascii?Q?ILMPgE0Jmly3+dC/i88E4jEi9i7dekGtZYdAM2Zc3fFNMGWTbNcCYCFpLIF6?=
+ =?us-ascii?Q?Erkr61G1/TWRSb01q2vQTlhqOiv4eWkw0m+8z+P/28Eu5LEQ9CpRhYVL2/iO?=
+ =?us-ascii?Q?s4JCjNCi85bVZX33zeERqKtVx7qlOkJbN4quFQBJKdx8+AjAo0d5+skqIqV4?=
+ =?us-ascii?Q?kzwIIGFvHXVhVJkejPPDSGCKD/oVYRFPsYX9OiqPBDN4B91f79kOaHRKLTHv?=
+ =?us-ascii?Q?KOdn5lNCnJ5Ut+C/m8+kSj59DyXGNuGS97u9hAxl6yDcMhmJBpBeimnldQV0?=
+ =?us-ascii?Q?8g4h9trbqUlxKIR48MvuoeNvOWH6AG+M4uX/T/Ps/kry413JyFEVsGACyiSf?=
+ =?us-ascii?Q?99L/EFDeFMIVgCTkpm2DwNr4uq6pmFlIFp4ND7sI1r+2Ptg3WlfLcD8ZBuul?=
+ =?us-ascii?Q?A8C4jaCRtetgyl+OV55E5GaEsw2PKXCPI7quGQwzCwclAE4TDZxPcPf0BRql?=
+ =?us-ascii?Q?b+w70JvO6A8R9aRXnV6X4jDzpyYuOrBv0u7iH2YgcHgnMR2OF61JNNvmOTip?=
+ =?us-ascii?Q?C7tm/U6teGIvLRFAQ+jZ+dbuEzLPJX0bOz0zjIII3NSLqZIfL/2qU3BCQFFA?=
+ =?us-ascii?Q?Fqk2RYbnF32zDC9VJsoFueEHlFdEVkkv8F8+9ZGpzY6bTpD2Mc8s50uEynYk?=
+ =?us-ascii?Q?ZwtJ+RMizD3cPfbVgJy4NGQqAyMUeMcNvPpeaxx90iQKpYcp+5npI5Hd+6Z9?=
+ =?us-ascii?Q?DtJHSzIb0ei1VM9nQfLeqgDmFn4BBOwuFqdsTIOWjqGrol5w+KxLuk231PwI?=
+ =?us-ascii?Q?cHiuVyUZW+OoWJQknOO/AeH0APlXKbJs7z7HuhdHEvXuGCreVm3xOpYgtg2E?=
+ =?us-ascii?Q?t9HzjsKkGh3BJJeRiruaGTMde9MS60oZhPWq0NaG36apC7rcTV4DH5SkcDCJ?=
+ =?us-ascii?Q?vkpkJsH9UZ7EKfLm41amHczoBJHKtpqlMObB3a1hAJP1Al0t9PMSqPthIc/w?=
+ =?us-ascii?Q?d6X0BMBwcuM20JAxSjeVBVtqV9f6RvPlX8NFjv4a3iefx3FhBPcIsNM6BURA?=
+ =?us-ascii?Q?ic1ogSwiPdX7MM89Pl+uYYRg2M1mquoZ++zpHP29oMLKd4592Ih3l/MQ9Kvq?=
+ =?us-ascii?Q?5jLP3/5oyDtD4vSex4MhaVp0wHgE9HV5DZouN/lCmoSOhmxbV/nNkAptAgv+?=
+ =?us-ascii?Q?6RXHyI9Y002T+WTuDT5gZ9ZJcUpfpFgD2snOHbpkOnmXfvW4vwTGtZpD2dEl?=
+ =?us-ascii?Q?5s0GsQ5BJEPK1ekxM8+L8njBzaIxrarM4X0Zd4JehRS6HzBkNL1afL7hst9O?=
+ =?us-ascii?Q?9j6sFMbTUTHDVgp3/Ug74IMwA3hVnxt8cFO4LNh98i24pFclfQivILBwYnJc?=
+ =?us-ascii?Q?aVfj93h17appYKtaBIxnpKdDd9taqTpQvJcNkYzt+zrYXmhvnkc4zovtSB3o?=
+ =?us-ascii?Q?J+g88KmqKQVPPiYA9jsT1NrDABYEqwE=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6d23c2c-5a69-4b3d-b077-08da3d1c70c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2022 00:29:18.6325
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe742d12-e27c-4207-aefd-08da3d21103b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2022 01:02:24.1752
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /+2ExgWoUlTQkDGZBPiZXEeRtigvDriqycNzBLDMknFCxLoTAdQ/YvjJ/bl5FxjCVasO0moUgu/p5R2Ou6Z6Txe5NXOrpSHUVnhD2p5VtHk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3544
+X-MS-Exchange-CrossTenant-userprincipalname: WQtxOTtsW6ceI7wZVDGh1hYvGy7oVtPvJQApBvakNFpW26TdTlhstWem7HyQdPgRYdsCAedwruFw/SXSzKV6Nw/kmU4R50QDDxzodc1swdw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1494
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -127,86 +131,390 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
 >=20
-> Add missing cleanup in balloon_probe() if the call to
-> balloon_connect_vsp() fails.  Also correctly handle cleanup in
-> balloon_remove() when dm_state is DM_INIT_ERROR because
-> balloon_resume() failed.
+> The latest storvsc code has already removed the support for windows 7 and
+> earlier. There is still some code logic reamining which is there to suppo=
+rt
+> pre Windows 8 OS. This patch removes these stale logic.
+> This patch majorly does three things :
 >=20
-> Signed-off-by: Shradha Gupta <shradhagupta@microsoft.com>
+> 1. Removes vmscsi_size_delta and its logic, as the vmscsi_request struct =
+is
+> same for all the OS post windows 8 there is no need of delta.
+> 2. Simplify sense_buffer_size logic, as there is single buffer size for
+> all the post windows 8 OS.
+> 3. Embed the vmscsi_win8_extension structure inside the vmscsi_request,
+> as there is no separate handling required for different OS.
 >=20
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 > ---
+> v2 : 1. Added error message for old Hyper-V versions
+>      2. Removed a check "vmstor_proto_version >=3D VMSTOR_PROTO_VERSION_W=
+IN8",
+> which will always be true
 >=20
-> Changes in v2:
-> * Use a goto instead of inline code to handle the cleanup
->    in balloon_probe()
-> * Add a comment in balloon_remove() explaining the
->    cleanup scenario
-> * Add missing disable of page reporting when resume
->    from hibernation fails
+>  drivers/scsi/storvsc_drv.c | 148 ++++++++++---------------------------
+>  1 file changed, 40 insertions(+), 108 deletions(-)
 >=20
-> ---
->  drivers/hv/hv_balloon.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index 5585e9d30bbf..dd9cde6331bc 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -137,18 +137,16 @@ struct hv_fc_wwn_packet {
+>  #define STORVSC_MAX_CMD_LEN			0x10
 >=20
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index eee7402cfc02..98fcfb516bbc 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -1842,7 +1842,7 @@ static int balloon_probe(struct hv_device *dev,
+>  #define POST_WIN7_STORVSC_SENSE_BUFFER_SIZE	0x14
+> -#define PRE_WIN8_STORVSC_SENSE_BUFFER_SIZE	0x12
 >=20
->  	ret =3D balloon_connect_vsp(dev);
->  	if (ret !=3D 0)
-> -		return ret;
-> +		goto connect_error;
+>  #define STORVSC_SENSE_BUFFER_SIZE		0x14
+>  #define STORVSC_MAX_BUF_LEN_WITH_PADDING	0x14
 >=20
->  	enable_page_reporting();
->  	dm_device.state =3D DM_INITIALIZED;
-> @@ -1861,6 +1861,7 @@ static int balloon_probe(struct hv_device *dev,
->  	dm_device.thread  =3D NULL;
->  	disable_page_reporting();
->  	vmbus_close(dev->channel);
-> +connect_error:
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  	unregister_memory_notifier(&hv_memory_nb);
->  	restore_online_page_callback(&hv_online_page);
-> @@ -1882,12 +1883,21 @@ static int balloon_remove(struct hv_device *dev)
->  	cancel_work_sync(&dm->ha_wrk.wrk);
->=20
->  	kthread_stop(dm->thread);
-> -	disable_page_reporting();
-> -	vmbus_close(dev->channel);
-> +
-> +	/*
-> +	 * This is to handle the case when balloon_resume()
-> +	 * call has failed and some cleanup has been done as
-> +	 * a part of the error handling.
-> +	 */
-> +	if (dm_device.state !=3D DM_INIT_ERROR) {
-> +		disable_page_reporting();
-> +		vmbus_close(dev->channel);
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -	unregister_memory_notifier(&hv_memory_nb);
-> -	restore_online_page_callback(&hv_online_page);
-> +		unregister_memory_notifier(&hv_memory_nb);
-> +		restore_online_page_callback(&hv_online_page);
->  #endif
-> +	}
-> +
->  	spin_lock_irqsave(&dm_device.ha_lock, flags);
->  	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
->  		list_for_each_entry_safe(gap, tmp_gap, &has->gap_list, list) {
-> @@ -1948,6 +1958,7 @@ static int balloon_resume(struct hv_device *dev)
->  	vmbus_close(dev->channel);
->  out:
->  	dm_device.state =3D DM_INIT_ERROR;
-> +	disable_page_reporting();
->  #ifdef CONFIG_MEMORY_HOTPLUG
->  	unregister_memory_notifier(&hv_memory_nb);
->  	restore_online_page_callback(&hv_online_page);
-> --
-> 2.17.1
+>  /*
+> - * Sense buffer size changed in win8; have a run-time
+> - * variable to track the size we should use.  This value will
+> - * likely change during protocol negotiation but it is valid
+> - * to start by assuming pre-Win8.
+> + * Sense buffer size was differnt pre win8 but those OS are not supporte=
+d any
+> + * more starting 5.19 kernel. This results in to supporting a single val=
+ue from
+> + * win8 onwards.
+>   */
+> -static int sense_buffer_size =3D PRE_WIN8_STORVSC_SENSE_BUFFER_SIZE;
+> +static int sense_buffer_size =3D POST_WIN7_STORVSC_SENSE_BUFFER_SIZE;
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+I think you could remove the sense_buffer_size variable
+as well as POST_WIN7_STORVSC_SENSE_BUFFER_SIZE.  Just
+use STORVSC_SENSE_BUFFER_SIZE in the two places still left
+where the variable is used.
+
+Michael
+
+>=20
+>  /*
+>   * The storage protocol version is determined during the
+> @@ -177,18 +175,6 @@ do {
+> 	\
+>  		dev_warn(&(dev)->device, fmt, ##__VA_ARGS__);	\
+>  } while (0)
+>=20
+> -struct vmscsi_win8_extension {
+> -	/*
+> -	 * The following were added in Windows 8
+> -	 */
+> -	u16 reserve;
+> -	u8  queue_tag;
+> -	u8  queue_action;
+> -	u32 srb_flags;
+> -	u32 time_out_value;
+> -	u32 queue_sort_ey;
+> -} __packed;
+> -
+>  struct vmscsi_request {
+>  	u16 length;
+>  	u8 srb_status;
+> @@ -214,46 +200,23 @@ struct vmscsi_request {
+>  	/*
+>  	 * The following was added in win8.
+>  	 */
+> -	struct vmscsi_win8_extension win8_extension;
+> +	u16 reserve;
+> +	u8  queue_tag;
+> +	u8  queue_action;
+> +	u32 srb_flags;
+> +	u32 time_out_value;
+> +	u32 queue_sort_ey;
+>=20
+>  } __attribute((packed));
+>=20
+>  /*
+> - * The list of storage protocols in order of preference.
+> + * The list of windows version in order of preference.
+>   */
+> -struct vmstor_protocol {
+> -	int protocol_version;
+> -	int sense_buffer_size;
+> -	int vmscsi_size_delta;
+> -};
+>=20
+> -
+> -static const struct vmstor_protocol vmstor_protocols[] =3D {
+> -	{
+> +static const int protocol_version[] =3D {
+>  		VMSTOR_PROTO_VERSION_WIN10,
+> -		POST_WIN7_STORVSC_SENSE_BUFFER_SIZE,
+> -		0
+> -	},
+> -	{
+>  		VMSTOR_PROTO_VERSION_WIN8_1,
+> -		POST_WIN7_STORVSC_SENSE_BUFFER_SIZE,
+> -		0
+> -	},
+> -	{
+>  		VMSTOR_PROTO_VERSION_WIN8,
+> -		POST_WIN7_STORVSC_SENSE_BUFFER_SIZE,
+> -		0
+> -	},
+> -	{
+> -		VMSTOR_PROTO_VERSION_WIN7,
+> -		PRE_WIN8_STORVSC_SENSE_BUFFER_SIZE,
+> -		sizeof(struct vmscsi_win8_extension),
+> -	},
+> -	{
+> -		VMSTOR_PROTO_VERSION_WIN6,
+> -		PRE_WIN8_STORVSC_SENSE_BUFFER_SIZE,
+> -		sizeof(struct vmscsi_win8_extension),
+> -	}
+>  };
+>=20
+>=20
+> @@ -409,9 +372,7 @@ static void storvsc_on_channel_callback(void *context=
+);
+>  #define STORVSC_IDE_MAX_CHANNELS			1
+>=20
+>  /*
+> - * Upper bound on the size of a storvsc packet. vmscsi_size_delta is not
+> - * included in the calculation because it is set after STORVSC_MAX_PKT_S=
+IZE
+> - * is used in storvsc_connect_to_vsp
+> + * Upper bound on the size of a storvsc packet.
+>   */
+>  #define STORVSC_MAX_PKT_SIZE (sizeof(struct vmpacket_descriptor) +\
+>  			      sizeof(struct vstor_packet))
+> @@ -452,17 +413,6 @@ struct storvsc_device {
+>  	unsigned char path_id;
+>  	unsigned char target_id;
+>=20
+> -	/*
+> -	 * The size of the vmscsi_request has changed in win8. The
+> -	 * additional size is because of new elements added to the
+> -	 * structure. These elements are valid only when we are talking
+> -	 * to a win8 host.
+> -	 * Track the correction to size we need to apply. This value
+> -	 * will likely change during protocol negotiation but it is
+> -	 * valid to start by assuming pre-Win8.
+> -	 */
+> -	int vmscsi_size_delta;
+> -
+>  	/*
+>  	 * Max I/O, the device can support.
+>  	 */
+> @@ -795,8 +745,7 @@ static void  handle_multichannel_storage(struct hv_de=
+vice
+> *device, int max_chns)
+>  	vstor_packet->sub_channel_count =3D num_sc;
+>=20
+>  	ret =3D vmbus_sendpacket(device->channel, vstor_packet,
+> -			       (sizeof(struct vstor_packet) -
+> -			       stor_device->vmscsi_size_delta),
+> +			       sizeof(struct vstor_packet),
+>  			       VMBUS_RQST_INIT,
+>  			       VM_PKT_DATA_INBAND,
+>  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+> @@ -864,8 +813,7 @@ static int storvsc_execute_vstor_op(struct hv_device =
+*device,
+>  	vstor_packet->flags =3D REQUEST_COMPLETION_FLAG;
+>=20
+>  	ret =3D vmbus_sendpacket(device->channel, vstor_packet,
+> -			       (sizeof(struct vstor_packet) -
+> -			       stor_device->vmscsi_size_delta),
+> +			       sizeof(struct vstor_packet),
+>  			       VMBUS_RQST_INIT,
+>  			       VM_PKT_DATA_INBAND,
+>  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+> @@ -915,14 +863,13 @@ static int storvsc_channel_init(struct hv_device *d=
+evice, bool
+> is_fc)
+>  	 * Query host supported protocol version.
+>  	 */
+>=20
+> -	for (i =3D 0; i < ARRAY_SIZE(vmstor_protocols); i++) {
+> +	for (i =3D 0; i < ARRAY_SIZE(protocol_version); i++) {
+>  		/* reuse the packet for version range supported */
+>  		memset(vstor_packet, 0, sizeof(struct vstor_packet));
+>  		vstor_packet->operation =3D
+>  			VSTOR_OPERATION_QUERY_PROTOCOL_VERSION;
+>=20
+> -		vstor_packet->version.major_minor =3D
+> -			vmstor_protocols[i].protocol_version;
+> +		vstor_packet->version.major_minor =3D protocol_version[i];
+>=20
+>  		/*
+>  		 * The revision number is only used in Windows; set it to 0.
+> @@ -936,21 +883,16 @@ static int storvsc_channel_init(struct hv_device *d=
+evice, bool
+> is_fc)
+>  			return -EINVAL;
+>=20
+>  		if (vstor_packet->status =3D=3D 0) {
+> -			vmstor_proto_version =3D
+> -				vmstor_protocols[i].protocol_version;
+> -
+> -			sense_buffer_size =3D
+> -				vmstor_protocols[i].sense_buffer_size;
+> -
+> -			stor_device->vmscsi_size_delta =3D
+> -				vmstor_protocols[i].vmscsi_size_delta;
+> +			vmstor_proto_version =3D protocol_version[i];
+>=20
+>  			break;
+>  		}
+>  	}
+>=20
+> -	if (vstor_packet->status !=3D 0)
+> +	if (vstor_packet->status !=3D 0) {
+> +		dev_err(&device->device, "Obsolete Hyper-V version\n");
+>  		return -EINVAL;
+> +	}
+>=20
+>=20
+>  	memset(vstor_packet, 0, sizeof(struct vstor_packet));
+> @@ -986,11 +928,10 @@ static int storvsc_channel_init(struct hv_device *d=
+evice, bool
+> is_fc)
+>  	cpumask_set_cpu(device->channel->target_cpu,
+>  			&stor_device->alloced_cpus);
+>=20
+> -	if (vmstor_proto_version >=3D VMSTOR_PROTO_VERSION_WIN8) {
+> -		if (vstor_packet->storage_channel_properties.flags &
+> -		    STORAGE_CHANNEL_SUPPORTS_MULTI_CHANNEL)
+> -			process_sub_channels =3D true;
+> -	}
+> +	if (vstor_packet->storage_channel_properties.flags &
+> +	    STORAGE_CHANNEL_SUPPORTS_MULTI_CHANNEL)
+> +		process_sub_channels =3D true;
+> +
+>  	stor_device->max_transfer_bytes =3D
+>  		vstor_packet->storage_channel_properties.max_transfer_bytes;
+>=20
+> @@ -1289,8 +1230,8 @@ static void storvsc_on_channel_callback(void *conte=
+xt)
+>  		struct storvsc_cmd_request *request =3D NULL;
+>  		u32 pktlen =3D hv_pkt_datalen(desc);
+>  		u64 rqst_id =3D desc->trans_id;
+> -		u32 minlen =3D rqst_id ? sizeof(struct vstor_packet) -
+> -			stor_device->vmscsi_size_delta : sizeof(enum
+> vstor_packet_operation);
+> +		u32 minlen =3D rqst_id ? sizeof(struct vstor_packet) :
+> +			sizeof(enum vstor_packet_operation);
+>=20
+>  		if (pktlen < minlen) {
+>  			dev_err(&device->device,
+> @@ -1346,7 +1287,7 @@ static void storvsc_on_channel_callback(void *conte=
+xt)
+>  		}
+>=20
+>  		memcpy(&request->vstor_packet, packet,
+> -		       (sizeof(struct vstor_packet) - stor_device->vmscsi_size_delta))=
+;
+> +		       sizeof(struct vstor_packet));
+>  		complete(&request->wait_event);
+>  	}
+>  }
+> @@ -1557,8 +1498,7 @@ static int storvsc_do_io(struct hv_device *device,
+>  found_channel:
+>  	vstor_packet->flags |=3D REQUEST_COMPLETION_FLAG;
+>=20
+> -	vstor_packet->vm_srb.length =3D (sizeof(struct vmscsi_request) -
+> -					stor_device->vmscsi_size_delta);
+> +	vstor_packet->vm_srb.length =3D sizeof(struct vmscsi_request);
+>=20
+>=20
+>  	vstor_packet->vm_srb.sense_info_length =3D sense_buffer_size;
+> @@ -1574,13 +1514,11 @@ static int storvsc_do_io(struct hv_device *device=
+,
+>  		ret =3D vmbus_sendpacket_mpb_desc(outgoing_channel,
+>  				request->payload, request->payload_sz,
+>  				vstor_packet,
+> -				(sizeof(struct vstor_packet) -
+> -				stor_device->vmscsi_size_delta),
+> +				sizeof(struct vstor_packet),
+>  				(unsigned long)request);
+>  	} else {
+>  		ret =3D vmbus_sendpacket(outgoing_channel, vstor_packet,
+> -			       (sizeof(struct vstor_packet) -
+> -				stor_device->vmscsi_size_delta),
+> +			       sizeof(struct vstor_packet),
+>  			       (unsigned long)request,
+>  			       VM_PKT_DATA_INBAND,
+>  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+> @@ -1684,8 +1622,7 @@ static int storvsc_host_reset_handler(struct scsi_c=
+mnd
+> *scmnd)
+>  	vstor_packet->vm_srb.path_id =3D stor_device->path_id;
+>=20
+>  	ret =3D vmbus_sendpacket(device->channel, vstor_packet,
+> -			       (sizeof(struct vstor_packet) -
+> -				stor_device->vmscsi_size_delta),
+> +			       sizeof(struct vstor_packet),
+>  			       VMBUS_RQST_RESET,
+>  			       VM_PKT_DATA_INBAND,
+>  			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
+> @@ -1778,31 +1715,31 @@ static int storvsc_queuecommand(struct Scsi_Host =
+*host,
+> struct scsi_cmnd *scmnd)
+>=20
+>  	memset(&cmd_request->vstor_packet, 0, sizeof(struct vstor_packet));
+>  	vm_srb =3D &cmd_request->vstor_packet.vm_srb;
+> -	vm_srb->win8_extension.time_out_value =3D 60;
+> +	vm_srb->time_out_value =3D 60;
+>=20
+> -	vm_srb->win8_extension.srb_flags |=3D
+> +	vm_srb->srb_flags |=3D
+>  		SRB_FLAGS_DISABLE_SYNCH_TRANSFER;
+>=20
+>  	if (scmnd->device->tagged_supported) {
+> -		vm_srb->win8_extension.srb_flags |=3D
+> +		vm_srb->srb_flags |=3D
+>  		(SRB_FLAGS_QUEUE_ACTION_ENABLE |
+> SRB_FLAGS_NO_QUEUE_FREEZE);
+> -		vm_srb->win8_extension.queue_tag =3D SP_UNTAGGED;
+> -		vm_srb->win8_extension.queue_action =3D SRB_SIMPLE_TAG_REQUEST;
+> +		vm_srb->queue_tag =3D SP_UNTAGGED;
+> +		vm_srb->queue_action =3D SRB_SIMPLE_TAG_REQUEST;
+>  	}
+>=20
+>  	/* Build the SRB */
+>  	switch (scmnd->sc_data_direction) {
+>  	case DMA_TO_DEVICE:
+>  		vm_srb->data_in =3D WRITE_TYPE;
+> -		vm_srb->win8_extension.srb_flags |=3D SRB_FLAGS_DATA_OUT;
+> +		vm_srb->srb_flags |=3D SRB_FLAGS_DATA_OUT;
+>  		break;
+>  	case DMA_FROM_DEVICE:
+>  		vm_srb->data_in =3D READ_TYPE;
+> -		vm_srb->win8_extension.srb_flags |=3D SRB_FLAGS_DATA_IN;
+> +		vm_srb->srb_flags |=3D SRB_FLAGS_DATA_IN;
+>  		break;
+>  	case DMA_NONE:
+>  		vm_srb->data_in =3D UNKNOWN_TYPE;
+> -		vm_srb->win8_extension.srb_flags |=3D
+> SRB_FLAGS_NO_DATA_TRANSFER;
+> +		vm_srb->srb_flags |=3D SRB_FLAGS_NO_DATA_TRANSFER;
+>  		break;
+>  	default:
+>  		/*
+> @@ -2004,7 +1941,6 @@ static int storvsc_probe(struct hv_device *device,
+>  	init_waitqueue_head(&stor_device->waiting_to_drain);
+>  	stor_device->device =3D device;
+>  	stor_device->host =3D host;
+> -	stor_device->vmscsi_size_delta =3D sizeof(struct vmscsi_win8_extension)=
+;
+>  	spin_lock_init(&stor_device->lock);
+>  	hv_set_drvdata(device, stor_device);
+>  	dma_set_min_align_mask(&device->device, HV_HYP_PAGE_SIZE - 1);
+> @@ -2217,10 +2153,6 @@ static int __init storvsc_drv_init(void)
+>  	 * than the ring buffer size since that page is reserved for
+>  	 * the ring buffer indices) by the max request size (which is
+>  	 * vmbus_channel_packet_multipage_buffer + struct vstor_packet + u64)
+> -	 *
+> -	 * The computation underestimates max_outstanding_req_per_channel
+> -	 * for Win7 and older hosts because it does not take into account
+> -	 * the vmscsi_size_delta correction to the max request size.
+>  	 */
+>  	max_outstanding_req_per_channel =3D
+>  		((storvsc_ringbuffer_size - PAGE_SIZE) /
+> --
+> 2.25.1
 
