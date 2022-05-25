@@ -2,133 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A945E533096
-	for <lists+linux-hyperv@lfdr.de>; Tue, 24 May 2022 20:41:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 129DA5338FB
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 May 2022 11:01:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236357AbiEXSlc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 24 May 2022 14:41:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50476 "EHLO
+        id S231624AbiEYJBp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 May 2022 05:01:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240398AbiEXSla (ORCPT
+        with ESMTP id S229441AbiEYJBo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 24 May 2022 14:41:30 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020019.outbound.protection.outlook.com [52.101.61.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4BD659B;
-        Tue, 24 May 2022 11:41:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eWg3AhoVEu5ZbBQz9lyLYA/Ks4HSA6DkXTv7L6YQp4qwxEOALh+3RjkSmwIDYbIHECT0wLbc0Mzl+RSYIFT81iAyZHXxit1VM7ZXMyKDXen64z+8O20GEMLpzOstMb5fC9kFtM5VtWpC+mJUbiMVC6kFqu009uG7PVQDwBAxCvcFjPsGhhocOgaLQixqsbf8k9kSsj9FSCd10sKl/d2N9NT9w9yAoZxQWElsw9OVc4Jc/P9xymwy0Arxp1jcUfNvP19sTDH35nZYiG+v1951JSLN+s00PtCbE16nFuwLDP+rELi2NX885mrFRS/M4grpkYKm33tjWWyJFjhx5FNxKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q3qlcocSP8BUFlybByfjZ9ROwh9eluRA97ogmXDKZK8=;
- b=YCtIMRJrEnG0auH1w+74DsBRDxqSu534rf63MX7urAuo/AXGHGUDERQvWSMs2WbpY9zfHnoaiDFJIG2WE8tJ7YaKvGYZg88YRj3AYtvgZEnflROmLO5a+/nr7ky657//coJIXSl7BC/nxDfUi7/KtybdhhPO4IJg7coZC2Up8GSqv23EBeBFeFXjYZtNerwG9FHCCHpZwcN/IJ63qjEe8Ivj3M8iIYi8U9p3jNbrg5htmDPTT+xXbjXo9+VvXyv1So7BqP6hJUXCXYR+91Z1Du0uJIyovuRfWRCO/YbDWLmJ0Fb5U4okj9SGQAlhxhAu+34l7Er0kP08gIMENuVyjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q3qlcocSP8BUFlybByfjZ9ROwh9eluRA97ogmXDKZK8=;
- b=FWgHRUeazRBf+MRxS4yIXGg5MJcws5PZ/MyG32UUIPbcQmWzfFV2CE8xK4AEHx2WEbTGYa0wJzsgmkVvyApT0Ufw8FrZtoWMkFUx5+6rh+jomRGQGCY8GjbpeNMTp/Zlg2X4LaH8GxbTgHgXJ9J6BbRT0HHDwMhL9rOW03gVcJg=
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
- by BY5PR21MB1507.namprd21.prod.outlook.com (2603:10b6:a03:231::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.5; Tue, 24 May
- 2022 18:41:26 +0000
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::bdc5:cad:529a:4cdd]) by PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::bdc5:cad:529a:4cdd%7]) with mapi id 15.20.5293.007; Tue, 24 May 2022
- 18:41:26 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: RE: [Patch v2 12/12] RDMA/mana_ib: Add a driver for Microsoft Azure
- Network Adapter
-Thread-Topic: [Patch v2 12/12] RDMA/mana_ib: Add a driver for Microsoft Azure
- Network Adapter
-Thread-Index: AQHYb0wvDWXrk3scZU2/WA8c5XDlf60uEYQAgABGBHA=
-Date:   Tue, 24 May 2022 18:41:25 +0000
-Message-ID: <PH7PR21MB3263ABDFC1425CD3DC39F05DCED79@PH7PR21MB3263.namprd21.prod.outlook.com>
-References: <1653382572-14788-1-git-send-email-longli@linuxonhyperv.com>
- <1653382572-14788-13-git-send-email-longli@linuxonhyperv.com>
- <20220524141044.GA2666396@nvidia.com>
-In-Reply-To: <20220524141044.GA2666396@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=71dd7b9e-736d-4b5d-859b-26ed593c0621;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-05-24T18:21:18Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f276129e-d1ba-46c3-52a3-08da3db5021f
-x-ms-traffictypediagnostic: BY5PR21MB1507:EE_
-x-microsoft-antispam-prvs: <BY5PR21MB1507E601291BAAACA8F50B1FCED79@BY5PR21MB1507.namprd21.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XbSKq2ZQnQ0Jeo9knZILjd2QViaz0P1QsKS44g/LcpPVwpB+YSSGCNAHIwQTPAknLJlWAk2YF2wCrLwyehlQpiceMnMW51sqUbrMXc+HvcZjUsoyuBi2cv/xBLQ9Yk48Zn+XvSqlEEWBaxsx2uZuao+7jsM3DvM2c1stWj7TZHTGgeX/Skqyuzf2yFjjJGUPnlmYnZfDqXTTaDy7lokDY1i8l+DvHxUMfdVfkuQPaysnMPoUjJQy50VsSOibq0NAALUCTQguWpIATU0odrwrECPbOpwQQRLdYt9XaTqlZL/nAdv3F8+QdvYz0bht9jHZxiOmviV1k2TVTxrxIRgDwM3ZOP9SSlqP8DvBcvCdiRXEDoXZiSm2gJUBsd4wkS6c+wy7jVlt8MJx7E6FFjdAs5HyRwCwNb8aXh42fKR5RndU7e8ANxx5nBxqsV+P0O/BNlCAQHSPfvuGz4DGcTA+fUkY0CmdKS2AWP3apTGhW/2+4BdEOCkmYW2nqba12ptvIZbvzqSCT/0uigPKM9w/Lfzt/u4q4mdwqQ//0pJG/Nr0Jlz4S2zgi77VsDi2k+zEmoxa5ErHqk2/IVCYafyHeCjgZ1Bt6Dhh3iW6qhjhZ+gTQ8QwomKK0cLxFRUTNnNbDioo7HxZI3pJRYCFmgoek2cYod+DfzMUc+cPGA3WFsCaJXTxcEP29KZj7iOUYhWfa7goUXkGAxiu8YvwpPFFbnnabop1cJf53ZRx/0fA6X7O/D2k3ahPtqUYQj7gB2uB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(47530400004)(451199009)(122000001)(508600001)(82950400001)(38070700005)(10290500003)(26005)(8990500004)(5660300002)(71200400001)(4326008)(55016003)(7696005)(33656002)(9686003)(6506007)(82960400001)(66946007)(86362001)(8676002)(52536014)(7416002)(316002)(4744005)(8936002)(76116006)(6916009)(54906003)(66446008)(64756008)(2906002)(38100700002)(66476007)(66556008)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?W+IWmT67/TgNLywgR47oeJO5O27xy04Z1ek/BTCn+ja/LbDYI/n6Lxg3bFp/?=
- =?us-ascii?Q?PfMaxABU9anwxZ0/oobJn4CneaDUr0y0BREWnVwM6/qQOiO8MGD524jek5VQ?=
- =?us-ascii?Q?xKYmMngL9+Vu8zxrhPHJ43CAD7rulqwWP+WOMWMT2DlzPYo2uQgITgYapEc2?=
- =?us-ascii?Q?X6KRtMbvTWiyvCT4K72b3q0MloVwqS0MJvDAdwjQm5NrdY/+0P4gLorEGzuY?=
- =?us-ascii?Q?G0juY2Bhz7DWxBQDe1SJS69CNQC6JDnHsN1nudBiSHJ8gpen5jod51d2bMbx?=
- =?us-ascii?Q?XeikG9RvHcLwXCyP+EBUn3J/92JFPb+Jw3gEQZpGLVf6OPEr65QKAsokQ0L8?=
- =?us-ascii?Q?tBJuzi1yRoS2ajuZw8YiiiecyjduqhweO73FntAAdjaye1KwIGgiSNGapmio?=
- =?us-ascii?Q?ZM9vCs8qzYWHzQ8hTgLI8tPK6gaOdd1Owv2LTA3pf/9LO8kKGWJZd1hkaal7?=
- =?us-ascii?Q?O4kStIYnRbrtIR8EGHQ9SaeCxjoPopG1BBUGXh5jCeFjouL2p5dEap+1Wb0h?=
- =?us-ascii?Q?QXgQpDl8Lr/pYL6wb9TpCnw2UmTatHzAKb35BJBhUwDQGgb3vWw2SjirYt4O?=
- =?us-ascii?Q?3+PsTIiX9E0lfP6C8lOmfBfz52Eo2/sdXinslSttJwiDbZI9jBK4ip3Dsu+G?=
- =?us-ascii?Q?6DY3DQCoysUODPAiK5G6iczw0obN7LJwh7pEkkukIxyG/bXIfhthyWndOOT9?=
- =?us-ascii?Q?9lqATGRTq5ZgiZ3Mc7Aeaz5Hv2kU8P6cY3la4C6xPzmgxU0Np03UexZXRH4H?=
- =?us-ascii?Q?B/eLKDDiCxdDrvu0ebTSdbr3xXFU7ggJXysVHfH7ayvd71nJNYrAKCOZoh/c?=
- =?us-ascii?Q?aWY1GIysVOa5FottRTnGnrKFLtqwY+qOV0EW+8eX5txe80tta1+sjVSGAY3j?=
- =?us-ascii?Q?65wox7GFCAogqeFIr5vyDavYpjjpF1BDNWcTCsSVQtAPJHqJBKaqOzOUnzBb?=
- =?us-ascii?Q?B15E1E5+WPkIY/4t/HmEsVONdpeyONseI2ZgVOKZiTRCZ1xQ0TEbPUwf0jfw?=
- =?us-ascii?Q?RMk2wx/1L9xa6ypLX26hlgr3oweR08Cx3szoVCa5P4OMLdCEUazvp8N6V2Rm?=
- =?us-ascii?Q?oYJ8D5vDodSJ6VXdV2118vg72ZF83nr49CajNQv8DPTab58wuuBsZAkYzvot?=
- =?us-ascii?Q?B7yl9CYEScKusE8P6GuBNjlnpLisvFZp3Ygj6drr5u7lIxCdlGSxcPsIk003?=
- =?us-ascii?Q?/JpdsgUxMPu9jxSovbif0rIyBvCnzAg8+iRsakTXU//3WdXc2soUN6Omvm2q?=
- =?us-ascii?Q?zbhfTRyTvLjskYkScd/1w6Be6Sg+KSCKAZLeGaE/UpMKOe+6sAMU/oXUK+qA?=
- =?us-ascii?Q?CN4HLQN7oRvPPSUd9MibxRZyT1YrRxKcPGkszN7WA8+XUnRbhkk0Zct7VhAi?=
- =?us-ascii?Q?SrpCAKvrqQndPTnElmH/IuzQEniXgpCIv/6H9TrX6H22fTAPLP2oWyVQ73n/?=
- =?us-ascii?Q?QfOKj1WEnjxMmPvoTQ1bbRvpvPq6n0JDPhOlXDgjB6HIhcQsWNr3qZRpSA1O?=
- =?us-ascii?Q?2UL3SN2PGmp4nI4mMUESbuN8MD5GC1Ve0JTcnuI7myKQFSEBnoNQxw/L+QpU?=
- =?us-ascii?Q?m5fS9BFGYixAQBY+XUDPX/nKoqMaog1pgxGwjnSZRmdbnitoQmdofQ2oBHRC?=
- =?us-ascii?Q?whcbYLgQeMb0x3upcUbiE9Zr9uDZH4SWVNyz2ph7mFw0Ol5gpQ+9zGtfodOu?=
- =?us-ascii?Q?LHh/QAe2zuvUjxmuvMvlZSlrW6pK/11FetpiKFRonDLpCuOSAkTrBbKeCzwd?=
- =?us-ascii?Q?jNszvnEgfA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 May 2022 05:01:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4431E70379
+        for <linux-hyperv@vger.kernel.org>; Wed, 25 May 2022 02:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653469302;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tLBPWQQvrOSiKLIaPoKAfuBwkmz16sId4m2leQ2f53c=;
+        b=KF4kqq/v7TyorSYBC5Jtlka3nlIT2TrH7QR5YyJTJHGnelqMhDHkaag9zO1VZC+2v3yp/x
+        Sh2GcGAlDBwb/OIqlFisf1iJCZxSKGO9MYe4p7z872+Ae18hacxNNEhFxySr7xHoowB33v
+        CQ8K/x/dY/okqi+AjwfYvFFgvoi1APc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-39-AmhJS0JJPXW50qzk5sH7sw-1; Wed, 25 May 2022 05:01:38 -0400
+X-MC-Unique: AmhJS0JJPXW50qzk5sH7sw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BE14A801228;
+        Wed, 25 May 2022 09:01:36 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.40.194.186])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BECC340CFD0B;
+        Wed, 25 May 2022 09:01:34 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/37] KVM: x86: hyper-v: Fine-grained TLB flush + L2 TLB flush features
+Date:   Wed, 25 May 2022 11:00:56 +0200
+Message-Id: <20220525090133.1264239-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f276129e-d1ba-46c3-52a3-08da3db5021f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2022 18:41:26.0079
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 41FwmvkH+9D1iICZazFt9JW9UPQ+ogAWCIBd3Qtumn/yZapNak0NjJjJLsBlmYduzleV9nKiWOnx8s46vW8HEQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1507
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -136,29 +63,131 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> Subject: Re: [Patch v2 12/12] RDMA/mana_ib: Add a driver for Microsoft
-> Azure Network Adapter
->=20
-> On Tue, May 24, 2022 at 01:56:12AM -0700, longli@linuxonhyperv.com wrote:
-> > +struct mana_ib_qp {
-> > +	struct ib_qp ibqp;
-> > +
-> > +	// Send queue info
-> > +	struct ib_umem *sq_umem;
-> > +	int sqe;
-> > +	u64 sq_gdma_region;
-> > +	u64 sq_id;
->=20
-> There are still lots of coding style violations. Can you get someone from
-> Microsoft to help you make patches in the expected form?
+Main changes since v3:
+- Rebase to the latest kvm/queue.
+- Use 'kfifo' instead of a homegrown ring structure. [Max]
+- TLB flush selftest rework, swap PTE from the main vCPU instead of
+  exiting to the host to do so [Max]. Some APIs were exported to
+  support the change.
+- Reuse some common functions in selftests [Max]
+- Statistics: increment vcpu->stat.tlb_flush for each fifo entry
+  instead of each flushed GVA [inspired by Sean]
+- A number of comments added/altered [Max, Sean]
+- Other minor tweaks.
 
-I'm sorry, I will fix all the style issues. clang-format and checkpatch.pl =
-didn't catch those.
+Original description:
 
-Long
+Currently, KVM handles HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} requests
+by flushing the whole VPID and this is sub-optimal. This series introduces
+the required mechanism to make handling of these requests more 
+fine-grained by flushing individual GVAs only (when requested). On this
+foundation, "Direct Virtual Flush" Hyper-V feature is implemented. The 
+feature allows L0 to handle Hyper-V TLB flush hypercalls directly at
+L0 without the need to reflect the exit to L1. This has at least two
+benefits: reflecting vmexit and the consequent vmenter are avoided + L0
+has precise information whether the target vCPU is actually running (and
+thus requires a kick).
 
->=20
-> Also, please don't repost until the next rc1.
->=20
-> Thanks,
-> Jason
+Sean Christopherson (1):
+  KVM: x86: hyper-v: Add helper to read hypercall data for array
+
+Vitaly Kuznetsov (36):
+  KVM: x86: Rename 'enable_direct_tlbflush' to 'enable_l2_tlb_flush'
+  KVM: x86: hyper-v: Resurrect dedicated KVM_REQ_HV_TLB_FLUSH flag
+  KVM: x86: hyper-v: Introduce TLB flush fifo
+  KVM: x86: hyper-v: Handle HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls
+    gently
+  KVM: x86: hyper-v: Expose support for extended gva ranges for flush
+    hypercalls
+  KVM: x86: Prepare kvm_hv_flush_tlb() to handle L2's GPAs
+  x86/hyperv: Introduce
+    HV_MAX_SPARSE_VCPU_BANKS/HV_VCPUS_PER_SPARSE_BANK constants
+  KVM: x86: hyper-v: Use
+    HV_MAX_SPARSE_VCPU_BANKS/HV_VCPUS_PER_SPARSE_BANK instead of raw
+    '64'
+  KVM: x86: hyper-v: Don't use sparse_set_to_vcpu_mask() in
+    kvm_hv_send_ipi()
+  KVM: x86: hyper-v: Create a separate fifo for L2 TLB flush
+  KVM: x86: hyper-v: Use preallocated buffer in 'struct kvm_vcpu_hv'
+    instead of on-stack 'sparse_banks'
+  KVM: nVMX: Keep track of hv_vm_id/hv_vp_id when eVMCS is in use
+  KVM: nSVM: Keep track of Hyper-V hv_vm_id/hv_vp_id
+  KVM: x86: Introduce .hv_inject_synthetic_vmexit_post_tlb_flush()
+    nested hook
+  KVM: x86: hyper-v: Introduce kvm_hv_is_tlb_flush_hcall()
+  KVM: x86: hyper-v: L2 TLB flush
+  KVM: x86: hyper-v: Introduce fast guest_hv_cpuid_has_l2_tlb_flush()
+    check
+  x86/hyperv: Fix 'struct hv_enlightened_vmcs' definition
+  KVM: nVMX: hyper-v: Enable L2 TLB flush
+  KVM: nSVM: hyper-v: Enable L2 TLB flush
+  KVM: x86: Expose Hyper-V L2 TLB flush feature
+  KVM: selftests: Better XMM read/write helpers
+  KVM: selftests: Move HYPERV_LINUX_OS_ID definition to a common header
+  KVM: selftests: Move the function doing Hyper-V hypercall to a common
+    header
+  KVM: selftests: Hyper-V PV IPI selftest
+  KVM: selftests: Fill in vm->vpages_mapped bitmap in virt_map() too
+  KVM: selftests: Export vm_vaddr_unused_gap() to make it possible to
+    request unmapped ranges
+  KVM: selftests: Export _vm_get_page_table_entry() and struct
+    pageTableEntry/pageUpperEntry definitions
+  KVM: selftests: Hyper-V PV TLB flush selftest
+  KVM: selftests: Sync 'struct hv_enlightened_vmcs' definition with
+    hyperv-tlfs.h
+  KVM: selftests: nVMX: Allocate Hyper-V partition assist page
+  KVM: selftests: nSVM: Allocate Hyper-V partition assist and VP assist
+    pages
+  KVM: selftests: Sync 'struct hv_vp_assist_page' definition with
+    hyperv-tlfs.h
+  KVM: selftests: evmcs_test: Introduce L2 TLB flush test
+  KVM: selftests: Move Hyper-V VP assist page enablement out of evmcs.h
+  KVM: selftests: hyperv_svm_test: Introduce L2 TLB flush test
+
+ arch/x86/include/asm/hyperv-tlfs.h            |   6 +-
+ arch/x86/include/asm/kvm-x86-ops.h            |   2 +-
+ arch/x86/include/asm/kvm_host.h               |  41 +-
+ arch/x86/kvm/Makefile                         |   3 +-
+ arch/x86/kvm/hyperv.c                         | 324 +++++++--
+ arch/x86/kvm/hyperv.h                         |  49 ++
+ arch/x86/kvm/svm/hyperv.c                     |  18 +
+ arch/x86/kvm/svm/hyperv.h                     |  37 +
+ arch/x86/kvm/svm/nested.c                     |  30 +-
+ arch/x86/kvm/svm/svm_onhyperv.c               |   2 +-
+ arch/x86/kvm/svm/svm_onhyperv.h               |   6 +-
+ arch/x86/kvm/trace.h                          |  21 +-
+ arch/x86/kvm/vmx/evmcs.c                      |  24 +
+ arch/x86/kvm/vmx/evmcs.h                      |  11 +
+ arch/x86/kvm/vmx/nested.c                     |  32 +
+ arch/x86/kvm/vmx/vmx.c                        |   6 +-
+ arch/x86/kvm/x86.c                            |  19 +-
+ arch/x86/kvm/x86.h                            |   1 +
+ include/asm-generic/hyperv-tlfs.h             |   5 +
+ include/asm-generic/mshyperv.h                |  11 +-
+ tools/testing/selftests/kvm/.gitignore        |   2 +
+ tools/testing/selftests/kvm/Makefile          |   4 +-
+ .../selftests/kvm/include/kvm_util_base.h     |   1 +
+ .../selftests/kvm/include/x86_64/evmcs.h      |  40 +-
+ .../selftests/kvm/include/x86_64/hyperv.h     |  62 ++
+ .../selftests/kvm/include/x86_64/processor.h  | 104 ++-
+ .../selftests/kvm/include/x86_64/svm_util.h   |  10 +
+ .../selftests/kvm/include/x86_64/vmx.h        |   4 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |   7 +-
+ .../testing/selftests/kvm/lib/x86_64/hyperv.c |  21 +
+ .../selftests/kvm/lib/x86_64/processor.c      |  36 +-
+ tools/testing/selftests/kvm/lib/x86_64/svm.c  |  10 +
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c  |   7 +
+ .../testing/selftests/kvm/x86_64/evmcs_test.c |  43 +-
+ .../selftests/kvm/x86_64/hyperv_features.c    |  22 +-
+ .../testing/selftests/kvm/x86_64/hyperv_ipi.c | 352 ++++++++++
+ .../selftests/kvm/x86_64/hyperv_svm_test.c    |  54 +-
+ .../selftests/kvm/x86_64/hyperv_tlb_flush.c   | 663 ++++++++++++++++++
+ 38 files changed, 1881 insertions(+), 209 deletions(-)
+ create mode 100644 arch/x86/kvm/svm/hyperv.c
+ create mode 100644 tools/testing/selftests/kvm/lib/x86_64/hyperv.c
+ create mode 100644 tools/testing/selftests/kvm/x86_64/hyperv_ipi.c
+ create mode 100644 tools/testing/selftests/kvm/x86_64/hyperv_tlb_flush.c
+
+-- 
+2.35.3
+
