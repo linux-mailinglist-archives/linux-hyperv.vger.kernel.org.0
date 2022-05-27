@@ -2,148 +2,224 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 956AA5357FC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 May 2022 05:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACC2B535879
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 May 2022 06:30:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237751AbiE0DAR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 26 May 2022 23:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
+        id S241600AbiE0EaJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 May 2022 00:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235641AbiE0DAQ (ORCPT
+        with ESMTP id S241986AbiE0EaI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 26 May 2022 23:00:16 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A133352532;
-        Thu, 26 May 2022 20:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653620415; x=1685156415;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=y1f7TyXlnUDOQ7rphuzrQfvrJQvroyl/QHEjX2HTuLQ=;
-  b=C3gWp1GtagrRArb3wqsJVnMzx9r59niXYBh0E14EWNsyhz7c9ArJi9XX
-   y0gag+1eh+xgScBHVuWrPtzhU77Ql2CBnF0GATGZmOnCV0rnsnM3im2sR
-   DVFQoG/oj4NIFX1hriLC+0eCF8UnGzZvrDLO7hgKprPwFU+AWte4Iw5J2
-   fB4IT19rYv++WJ1SqVoR/GRqeCgR4nfYiLdrnYVGIn1wBy/3azdVyEu2L
-   OFYBM3al1nM+xKJzMtrCpXuHPhr6HIA+V3IPZTuD/1PqFjif8EDGHCBnd
-   ezXhHk2SWl7/yHDFb7SMn8bmEBarCjSGJoJIm/pG5dxoUTS3yl/toZx5g
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10359"; a="254235823"
-X-IronPort-AV: E=Sophos;i="5.91,254,1647327600"; 
-   d="scan'208";a="254235823"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2022 20:00:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,254,1647327600"; 
-   d="scan'208";a="560516946"
-Received: from yy-desk-7060.sh.intel.com (HELO localhost) ([10.239.159.76])
-  by orsmga002.jf.intel.com with ESMTP; 26 May 2022 20:00:12 -0700
-Date:   Fri, 27 May 2022 11:00:11 +0800
-From:   Yuan Yao <yuan.yao@linux.intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/37] KVM: x86: hyper-v: Resurrect dedicated
- KVM_REQ_HV_TLB_FLUSH flag
-Message-ID: <20220527030011.akn43rpmususefs3@yy-desk-7060>
-References: <20220525090133.1264239-1-vkuznets@redhat.com>
- <20220525090133.1264239-3-vkuznets@redhat.com>
+        Fri, 27 May 2022 00:30:08 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 832ADEC3E6;
+        Thu, 26 May 2022 21:30:02 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+        id D9AB320B71D5; Thu, 26 May 2022 21:30:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9AB320B71D5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1653625801;
+        bh=42Z9fNBmmifkuVx5f5pfyzCv7xT30xcWjT3LjPfgQG0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SsZ1Xq44KlVO0sHf/LjDDqz7ECT/8fcMNRXqAilohLBazEQxZEgcSXE1iLRd3AOka
+         n2hjLHQv8/4+vtC4bbAUIA2h8+nUTr0RPXxLF0fE7YXKG2qmgM+2QQNd4PK0nqZI5M
+         Po+wQk7CwpUOtrKwaaZ7Xjlq9l4K1UM1lvPjDELQ=
+Date:   Thu, 26 May 2022 21:30:01 -0700
+From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>
+Subject: Re: [PATCH] Drivers: hv: vmbus: Adding isolated cpu support for
+ channel interrupts mapping
+Message-ID: <20220527043001.GA25943@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1653591314-7077-1-git-send-email-ssengar@linux.microsoft.com>
+ <PH0PR21MB3025DD41E24D239C0ECB11A9D7D99@PH0PR21MB3025.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220525090133.1264239-3-vkuznets@redhat.com>
-User-Agent: NeoMutt/20171215
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <PH0PR21MB3025DD41E24D239C0ECB11A9D7D99@PH0PR21MB3025.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 25, 2022 at 11:00:58AM +0200, Vitaly Kuznetsov wrote:
-> In preparation to implementing fine-grained Hyper-V TLB flush and
-> L2 TLB flush, resurrect dedicated KVM_REQ_HV_TLB_FLUSH request bit. As
-> KVM_REQ_TLB_FLUSH_GUEST/KVM_REQ_TLB_FLUSH_GUEST/KVM_REQ_TLB_FLUSH_CURRENT
+On Thu, May 26, 2022 at 08:45:33PM +0000, Michael Kelley (LINUX) wrote:
+> From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Thursday, May 26, 2022 11:55 AM
+> 
+> > Subject: [PATCH] Drivers: hv: vmbus: Adding isolated cpu support for channel interrupts
+> > mapping
+> 
+> Let me suggest a more compact and precise Subject:
+> 
+> Drivers: hv: vmbus: Don't assign VMbus channel interrupts to isolated CPUs
+[sss]: ok
 
-Duplicated KVM_REQ_TLB_FLUSH_GUEST here ?
+> 
+> > 
+> > Adding support for vmbus channels to take isolated cpu in consideration
+> > while assigning interrupt to different cpus. This also prevents user from
+> > setting any isolated cpu to vmbus channel interrupt assignment by sysfs
+> > entry. Isolated cpu can be configured by kernel command line parameter
+> > 'isolcpus=managed_irq,<#cpu>'.
+> 
+> Also, for the commit statement:
+> 
+> When initially assigning a VMbus channel interrupt to a CPU, don't choose
+> a managed IRQ isolated CPU (as specified on the kernel boot line with
+> parameter 'isolcpus=managed_irq,<#cpu>').  Also, when using sysfs to
+> change the CPU that a VMbus channel will interrupt, don't allow changing
+> to a managed IRQ isolated CPU.  
+>
+[sss] : ok 
+> > 
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> >  drivers/hv/channel_mgmt.c | 18 ++++++++++++------
+> >  drivers/hv/vmbus_drv.c    |  6 ++++++
+> >  2 files changed, 18 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> > index 97d8f56..e1fe029 100644
+> > --- a/drivers/hv/channel_mgmt.c
+> > +++ b/drivers/hv/channel_mgmt.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/cpu.h>
+> >  #include <linux/hyperv.h>
+> >  #include <asm/mshyperv.h>
+> > +#include <linux/sched/isolation.h>
+> > 
+> >  #include "hyperv_vmbus.h"
+> > 
+> > @@ -728,16 +729,20 @@ static void init_vp_index(struct vmbus_channel *channel)
+> >  	u32 i, ncpu = num_online_cpus();
+> >  	cpumask_var_t available_mask;
+> >  	struct cpumask *allocated_mask;
+> > +	const struct cpumask *hk_mask = housekeeping_cpumask(HK_TYPE_MANAGED_IRQ);
+> >  	u32 target_cpu;
+> >  	int numa_node;
+> > 
+> >  	if (!perf_chn ||
+> > -	    !alloc_cpumask_var(&available_mask, GFP_KERNEL)) {
+> > +	    !alloc_cpumask_var(&available_mask, GFP_KERNEL) ||
+> > +	    cpumask_empty(hk_mask)) {
+> >  		/*
+> >  		 * If the channel is not a performance critical
+> >  		 * channel, bind it to VMBUS_CONNECT_CPU.
+> >  		 * In case alloc_cpumask_var() fails, bind it to
+> >  		 * VMBUS_CONNECT_CPU.
+> > +		 * If all the cpus are isolated, bind it to
+> > +		 * VMBUS_CONNECT_CPU.
+> >  		 */
+> >  		channel->target_cpu = VMBUS_CONNECT_CPU;
+> >  		if (perf_chn)
+> > @@ -758,17 +763,19 @@ static void init_vp_index(struct vmbus_channel *channel)
+> >  		}
+> >  		allocated_mask = &hv_context.hv_numa_map[numa_node];
+> > 
+> > -		if (cpumask_equal(allocated_mask, cpumask_of_node(numa_node))) {
+> > +retry:
+> > +		cpumask_xor(available_mask, allocated_mask, cpumask_of_node(numa_node));
+> 
+> There's a bug here that existed in the code prior to this patch.  The code
+> checks to make sure cpumask_of_node(numa_node) is not empty, and then
+> later references cpumask_of_node(numa_node) again.  But in between the
+> check and the use, one or more CPUs could go offline, leaving 
+> cpumask_of_node(numa_node) empty since that array of cpumasks contains
+> only online CPUs.  In such a case, execution could get stuck in an infinite
+> loop with available_mask being empty.
+> 
+> The solution is to call cpus_read_lock() before starting the main "for"
+> loop and then call cpus_read_unlock() at the end.  This lock will prevent
+> CPUs from going offline, and hence ensure that the node mask can't
+> become empty.   You'll notice that target_cpu_store() uses that lock
+> to prevent a similar problem.
+> 
+> Fixing this locking problem should probably be a separate patch.
+> 
+> Michael
+[sss] : Got it, will send this fix after this patch review is complete.
 
-> are stronger operations, clear KVM_REQ_HV_TLB_FLUSH request in
-> kvm_service_local_tlb_flush_requests() when any of these were also
-> requested.
+> 
+> > +		cpumask_and(available_mask, available_mask, hk_mask);
+> > +
+> > +		if (cpumask_empty(available_mask)) {
+> >  			/*
+> >  			 * We have cycled through all the CPUs in the node;
+> >  			 * reset the allocated map.
+> >  			 */
+> >  			cpumask_clear(allocated_mask);
+> > +			goto retry;
+> >  		}
+> > 
+> > -		cpumask_xor(available_mask, allocated_mask,
+> > -			    cpumask_of_node(numa_node));
+> > -
+> >  		target_cpu = cpumask_first(available_mask);
+> >  		cpumask_set_cpu(target_cpu, allocated_mask);
+> > 
+> > @@ -778,7 +785,6 @@ static void init_vp_index(struct vmbus_channel *channel)
+> >  	}
+> > 
+> >  	channel->target_cpu = target_cpu;
+> > -
+> >  	free_cpumask_var(available_mask);
+> >  }
+> 
+> Removing the blank line above is a gratuitous change that isn't needed.
+> Generally, a patch should avoid such changes unless the purpose of
+> the patch is code cleanup.
 >
-> No (real) functional change intended.
->
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  2 ++
->  arch/x86/kvm/hyperv.c           |  4 ++--
->  arch/x86/kvm/x86.c              | 10 ++++++++--
->  3 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 151880cfab9e..92509ee6ae1b 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -105,6 +105,8 @@
->  	KVM_ARCH_REQ_FLAGS(30, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->  #define KVM_REQ_MMU_FREE_OBSOLETE_ROOTS \
->  	KVM_ARCH_REQ_FLAGS(31, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
-> +#define KVM_REQ_HV_TLB_FLUSH \
-> +	KVM_ARCH_REQ_FLAGS(32, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->
->  #define CR0_RESERVED_BITS                                               \
->  	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index 46f9dfb60469..b402ad059eb9 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -1876,11 +1876,11 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  	 * analyze it here, flush TLB regardless of the specified address space.
->  	 */
->  	if (all_cpus) {
-> -		kvm_make_all_cpus_request(kvm, KVM_REQ_TLB_FLUSH_GUEST);
-> +		kvm_make_all_cpus_request(kvm, KVM_REQ_HV_TLB_FLUSH);
->  	} else {
->  		sparse_set_to_vcpu_mask(kvm, sparse_banks, valid_bank_mask, vcpu_mask);
->
-> -		kvm_make_vcpus_request_mask(kvm, KVM_REQ_TLB_FLUSH_GUEST, vcpu_mask);
-> +		kvm_make_vcpus_request_mask(kvm, KVM_REQ_HV_TLB_FLUSH, vcpu_mask);
->  	}
->
->  ret_success:
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 891507b2eca5..f98503431f8d 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3363,11 +3363,17 @@ static inline void kvm_vcpu_flush_tlb_current(struct kvm_vcpu *vcpu)
->   */
->  void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu)
->  {
-> -	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
-> +	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu)) {
->  		kvm_vcpu_flush_tlb_current(vcpu);
-> +		kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
-> +	}
->
-> -	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu))
-> +	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu)) {
-> +		kvm_vcpu_flush_tlb_guest(vcpu);
-> +		kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
-> +	} else if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu)) {
->  		kvm_vcpu_flush_tlb_guest(vcpu);
-> +	}
->  }
->  EXPORT_SYMBOL_GPL(kvm_service_local_tlb_flush_requests);
->
-> --
-> 2.35.3
->
+[sss] : Got in by mistake, will remove
+
+> > 
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index 714d549..23660a8 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/kernel_stat.h>
+> >  #include <linux/clockchips.h>
+> >  #include <linux/cpu.h>
+> > +#include <linux/sched/isolation.h>
+> >  #include <linux/sched/task_stack.h>
+> > 
+> >  #include <linux/delay.h>
+> > @@ -1770,6 +1771,11 @@ static ssize_t target_cpu_store(struct vmbus_channel
+> > *channel,
+> >  	if (target_cpu >= nr_cpumask_bits)
+> >  		return -EINVAL;
+> > 
+> > +	if (!cpumask_test_cpu(target_cpu, housekeeping_cpumask(HK_TYPE_MANAGED_IRQ))) {
+> > +		dev_err(&channel->device_obj->device,
+> > +			"cpu (%d) is isolated, can't be assigned\n", target_cpu);
+> 
+> I don't think a message should be output here.  The other errors in this
+> function don't output a message.  Generally, the kernel doesn't output
+> a message just because a user provided bad input.  Doing so makes it
+> too easy for a user (even a sysadmin) to cause the kernel to go wild
+> outputting messages.
+> 
+> Michael
+> 
+[sss] : sure, will remove
+
+> > +		return -EINVAL;
+> > +	}
+> >  	/* No CPUs should come up or down during this. */
+> >  	cpus_read_lock();
+> > 
+> > --
+> > 1.8.3.1
