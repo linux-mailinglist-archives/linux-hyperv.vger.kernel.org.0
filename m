@@ -2,315 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E90536041
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 May 2022 13:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A430F5362A8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 May 2022 14:38:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238676AbiE0LsL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 May 2022 07:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58478 "EHLO
+        id S235036AbiE0MiZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 May 2022 08:38:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351904AbiE0Lrw (ORCPT
+        with ESMTP id S244530AbiE0MiD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 May 2022 07:47:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 749B013C096
-        for <linux-hyperv@vger.kernel.org>; Fri, 27 May 2022 04:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1653651793;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cwtSE0b0Kap2XlkQ7keZo11av4qenVk73lRytgMZ82Q=;
-        b=WUv7wGLfTl2gBdmnyu6IHnkFP15FbKIw1p6sytzcdaE9iJVK0qUqHyrwLvoQ+nr0M/srUz
-        YZs2dNahBmeuHcvf5PfKU36yk6vlgQQWUtrg2PeeUDcFDs6nmOeZKXK95hXJjhEcRX4gPv
-        KNqxj2wDtixjAwImIVaaPnNWlZ3oNVg=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-177-RmvWIZ3cPMiAzBGcazr4Yw-1; Fri, 27 May 2022 07:43:12 -0400
-X-MC-Unique: RmvWIZ3cPMiAzBGcazr4Yw-1
-Received: by mail-ej1-f69.google.com with SMTP id tc8-20020a1709078d0800b006ff04b9bac4so2284457ejc.15
-        for <linux-hyperv@vger.kernel.org>; Fri, 27 May 2022 04:43:12 -0700 (PDT)
+        Fri, 27 May 2022 08:38:03 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D3F1A8E21;
+        Fri, 27 May 2022 05:20:59 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id s14so3995785plk.8;
+        Fri, 27 May 2022 05:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:reply-to:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=iJRtC6FZ8/ulUwIgZS39WaHh+o9Ilrp1wW7JFepItc0=;
+        b=qSLrw/xH/l+UVkirRAZz/8FZ0ZZjL5uSuxHX7LIvFmTyb2UbiCPcMLJ7FPei3UtAUG
+         /ngnpOH2XTctk2kEZnq1GlxnsaUo07pYEaINTbsCgqrOHFJQt24gZQ+ILHVpJtEzyjME
+         4UrYxkBjVTiElekXp+gzuW+XAGU6/RtkFdOXe+8dCI4p/cXb8vCquU8DfILasd9urWSo
+         KHl1WoMhA+RFZrgD0SzbVWJBhfTAXtdoOWgI9FuBo/sPpuLmHrpwM/ULSW9MXKoel/hj
+         SOkK23tv+gEHbYe80ZKZG6/zw7Y4B7GfXZTNIaeke82Up93gcA/IDSi6cSpXHo/eaf+S
+         8+fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=cwtSE0b0Kap2XlkQ7keZo11av4qenVk73lRytgMZ82Q=;
-        b=e8Y04c8JC/roibqlhJqw+VIAa6UZy3uyRzI949IYej3BjB9v2yPNTUEal5BurXY52S
-         GU8gjYsEQJk+SSpOA4kKYvbbsO2OfKb/0VObH4UqJpIpIfYUGIcSF7myXjxd/jSQvFN1
-         aHxErCz92l2jLatOa7N76E+ex07X1jsGoE2u3sLCxw03RBgPGJBD9jBjiWF+Hv5AJ/dy
-         KxJcXx0uqM/PLVYWf9KJ3ztYxvcFPGYpIZbuY2pXGL5oA7DnULuyMn/mqOXu9VUTmxwB
-         MRhSLArAae/28iSMqPq4Z48gl/g3J7zFjVvK/X+P8VN6D3qzzYWVdGwGsKiyN4nCy8CL
-         WQjA==
-X-Gm-Message-State: AOAM5316mb1Kg9Q9XRGvxzIyAxhWErgNFpks7VIXGhmprgJ03pefOBMw
-        7r6B6jEVoJsMSM93lRsFLaC99WyXPOF2PDz7lhjw+t0ZFJbfhySg8oV0AAXtSJaew7WG6364Ri3
-        C0QBcrxjRs4hY+iYfUROk1m2N
-X-Received: by 2002:a17:906:7217:b0:6fe:9448:6142 with SMTP id m23-20020a170906721700b006fe94486142mr37290932ejk.241.1653651790903;
-        Fri, 27 May 2022 04:43:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyTxyZvA1ixqnVSaX2I+ibcHZfYsvQCjJQOryDC4sHU4QD8REMvk4JBt16Gg4/MiScG2dgpvw==
-X-Received: by 2002:a17:906:7217:b0:6fe:9448:6142 with SMTP id m23-20020a170906721700b006fe94486142mr37290901ejk.241.1653651790624;
-        Fri, 27 May 2022 04:43:10 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id bq8-20020a170906d0c800b006feb71acbb3sm1386134ejb.105.2022.05.27.04.43.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 May 2022 04:43:10 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Yuan Yao <yuan.yao@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 05/37] KVM: x86: hyper-v: Handle
- HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls gently
-In-Reply-To: <20220527083930.okdenkvxephom5wq@yy-desk-7060>
-References: <20220525090133.1264239-1-vkuznets@redhat.com>
- <20220525090133.1264239-6-vkuznets@redhat.com>
- <20220527083930.okdenkvxephom5wq@yy-desk-7060>
-Date:   Fri, 27 May 2022 13:43:09 +0200
-Message-ID: <87ilprqjzm.fsf@redhat.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:reply-to
+         :subject:content-language:to:cc:references:from:organization
+         :in-reply-to:content-transfer-encoding;
+        bh=iJRtC6FZ8/ulUwIgZS39WaHh+o9Ilrp1wW7JFepItc0=;
+        b=IadmFGgIBN5MiOuyC90KPCx7/qMyYhSEPcE7+u2jVfyPyYS3b32xJ/DtgLYnpqyBhL
+         YOJwsGcQ+bi/pT3hptDW7HCRdS52SeM1J0OKI4NCDz7JZhfrCXauGqmE0c7Qy3ksG3g5
+         GcdGTfPUq4gsfxpVpDo+9tMyZVzvZ6bH6EhZgplvV/B/mH1l+Cg1Q5pGA+ClevVacl4b
+         r1Ap/vD7Csw9kKsst8U40kOlYOZb59ciTEQr+ra5KeR6o7z1CQvPhBrCChKwQE51FvvW
+         fHeKk3tj+vI/+rqzKs68c4fE0w/zSO3+SlYJanBCYbmXgRNcgE316MUpfqJutsVvNmlJ
+         rruA==
+X-Gm-Message-State: AOAM532neNjBGPbbwBT1Tn4oVcnf/E6ynMWF14+VNqBovPIrVPA1xMJA
+        5rFc8Jz7F82eoREgWNfbnpU=
+X-Google-Smtp-Source: ABdhPJyhM4+yaDnivdy5jmDUaKkUnBpSnlKSW9KCRZAyRvH55Ju8bIw6KCyC4TQtzI1iKBxbIA25WA==
+X-Received: by 2002:a17:903:2305:b0:163:64c7:f9ff with SMTP id d5-20020a170903230500b0016364c7f9ffmr11636415plh.46.1653654059447;
+        Fri, 27 May 2022 05:20:59 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:5:8000::597? ([2404:f801:9000:18:efec::597])
+        by smtp.gmail.com with ESMTPSA id c11-20020a170902d48b00b0015ea8b4b8f3sm3463974plg.263.2022.05.27.05.20.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 May 2022 05:20:58 -0700 (PDT)
+Message-ID: <56243d2b-d7f6-9e45-d5fd-3af7767d52e3@gmail.com>
+Date:   Fri, 27 May 2022 20:20:50 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Reply-To: tiala@microsoft.com
+Subject: Re: [RFC PATCH V3 2/2] net: netvsc: Allocate per-device swiotlb
+ bounce buffer for netvsc
+Content-Language: en-US
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "andi.kleen@intel.com" <andi.kleen@intel.com>,
+        "kirill.shutemov" <kirill.shutemov@intel.com>
+References: <20220526120113.971512-1-ltykernel@gmail.com>
+ <20220526120113.971512-3-ltykernel@gmail.com>
+ <BYAPR21MB12706372826A3ABAEF42E716BFD99@BYAPR21MB1270.namprd21.prod.outlook.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Organization: Microsft
+In-Reply-To: <BYAPR21MB12706372826A3ABAEF42E716BFD99@BYAPR21MB1270.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Yuan Yao <yuan.yao@linux.intel.com> writes:
-
-> On Wed, May 25, 2022 at 11:01:01AM +0200, Vitaly Kuznetsov wrote:
->> Currently, HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls are handled
->> the exact same way as HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE{,EX}: by
->> flushing the whole VPID and this is sub-optimal. Switch to handling
->> these requests with 'flush_tlb_gva()' hooks instead. Use the newly
->> introduced TLB flush fifo to queue the requests.
->>
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  arch/x86/kvm/hyperv.c | 102 +++++++++++++++++++++++++++++++++++++-----
->>  1 file changed, 90 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
->> index 762b0b699fdf..576749973727 100644
->> --- a/arch/x86/kvm/hyperv.c
->> +++ b/arch/x86/kvm/hyperv.c
->> @@ -1806,32 +1806,84 @@ static u64 kvm_get_sparse_vp_set(struct kvm *kvm, struct kvm_hv_hcall *hc,
->>  				  sparse_banks, consumed_xmm_halves, offset);
->>  }
->>
->> -static void hv_tlb_flush_enqueue(struct kvm_vcpu *vcpu)
->> +static int kvm_hv_get_tlb_flush_entries(struct kvm *kvm, struct kvm_hv_hcall *hc, u64 entries[],
->> +					int consumed_xmm_halves, gpa_t offset)
->> +{
->> +	return kvm_hv_get_hc_data(kvm, hc, hc->rep_cnt, hc->rep_cnt,
->> +				  entries, consumed_xmm_halves, offset);
->> +}
->> +
->> +static void hv_tlb_flush_enqueue(struct kvm_vcpu *vcpu, u64 *entries, int count)
->>  {
->>  	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
->>  	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
->>  	u64 entry = KVM_HV_TLB_FLUSHALL_ENTRY;
->> +	unsigned long flags;
->>
->>  	if (!hv_vcpu)
->>  		return;
->>
->>  	tlb_flush_fifo = &hv_vcpu->tlb_flush_fifo;
->>
->> -	kfifo_in_spinlocked(&tlb_flush_fifo->entries, &entry, 1, &tlb_flush_fifo->write_lock);
->> +	spin_lock_irqsave(&tlb_flush_fifo->write_lock, flags);
->> +
->> +	/*
->> +	 * All entries should fit on the fifo leaving one free for 'flush all'
->> +	 * entry in case another request comes in. In case there's not enough
->> +	 * space, just put 'flush all' entry there.
->> +	 */
->> +	if (count && entries && count < kfifo_avail(&tlb_flush_fifo->entries)) {
->> +		WARN_ON(kfifo_in(&tlb_flush_fifo->entries, entries, count) != count);
->> +		goto out_unlock;
->> +	}
->> +
->> +	/*
->> +	 * Note: full fifo always contains 'flush all' entry, no need to check the
->> +	 * return value.
->> +	 */
->> +	kfifo_in(&tlb_flush_fifo->entries, &entry, 1);
->> +
->> +out_unlock:
->> +	spin_unlock_irqrestore(&tlb_flush_fifo->write_lock, flags);
->>  }
->>
->>  void kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
->
-> Where's the caller to this kvm_hv_vcpu_flush_tlb() ?
-> I didn't see th caller in patch 1-22 and remains are
-> self-testing patches, any thing I missed ?
-
-No, I screwed up. It was present in
-kvm_service_local_tlb_flush_requests() in previous versions but somehow
-disappeared. This also means that I haven't tested this properly.
-
-Thanks for catching this! v5 is coming to rescue!
 
 
->
->>  {
->>  	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
->>  	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
->> +	u64 entries[KVM_HV_TLB_FLUSH_FIFO_SIZE];
->> +	int i, j, count;
->> +	gva_t gva;
->>
->> -	kvm_vcpu_flush_tlb_guest(vcpu);
->> -
->> -	if (!hv_vcpu)
->> +	if (!tdp_enabled || !hv_vcpu) {
->> +		kvm_vcpu_flush_tlb_guest(vcpu);
->>  		return;
->> +	}
->>
->>  	tlb_flush_fifo = &hv_vcpu->tlb_flush_fifo;
->>
->> +	count = kfifo_out(&tlb_flush_fifo->entries, entries, KVM_HV_TLB_FLUSH_FIFO_SIZE);
+On 5/27/2022 2:43 AM, Dexuan Cui wrote:
+>> From: Tianyu Lan <ltykernel@gmail.com>
+>> Sent: Thursday, May 26, 2022 5:01 AM
+>> ...
+>> @@ -119,6 +124,10 @@ static void netvsc_subchan_work(struct work_struct
+>> *w)
+>>   			nvdev->max_chn = 1;
+>>   			nvdev->num_chn = 1;
+>>   		}
 >> +
->> +	for (i = 0; i < count; i++) {
->> +		if (entries[i] == KVM_HV_TLB_FLUSHALL_ENTRY)
->> +			goto out_flush_all;
->> +
->> +		/*
->> +		 * Lower 12 bits of 'address' encode the number of additional
->> +		 * pages to flush.
->> +		 */
->> +		gva = entries[i] & PAGE_MASK;
->> +		for (j = 0; j < (entries[i] & ~PAGE_MASK) + 1; j++)
->> +			static_call(kvm_x86_flush_tlb_gva)(vcpu, gva + j * PAGE_SIZE);
->> +
->> +		++vcpu->stat.tlb_flush;
->> +	}
->> +	goto out_empty_ring;
->> +
->> +out_flush_all:
->> +	kvm_vcpu_flush_tlb_guest(vcpu);
->> +
->> +out_empty_ring:
->>  	kfifo_reset_out(&tlb_flush_fifo->entries);
->>  }
->>
->> @@ -1841,11 +1893,21 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->>  	struct hv_tlb_flush_ex flush_ex;
->>  	struct hv_tlb_flush flush;
->>  	DECLARE_BITMAP(vcpu_mask, KVM_MAX_VCPUS);
->> +	/*
->> +	 * Normally, there can be no more than 'KVM_HV_TLB_FLUSH_FIFO_SIZE'
->> +	 * entries on the TLB flush fifo. The last entry, however, needs to be
->> +	 * always left free for 'flush all' entry which gets placed when
->> +	 * there is not enough space to put all the requested entries.
->> +	 */
->> +	u64 __tlb_flush_entries[KVM_HV_TLB_FLUSH_FIFO_SIZE - 1];
->> +	u64 *tlb_flush_entries;
->>  	u64 valid_bank_mask;
->>  	u64 sparse_banks[KVM_HV_MAX_SPARSE_VCPU_SET_BITS];
->>  	struct kvm_vcpu *v;
->>  	unsigned long i;
->>  	bool all_cpus;
->> +	int consumed_xmm_halves = 0;
->> +	gpa_t data_offset;
->>
->>  	/*
->>  	 * The Hyper-V TLFS doesn't allow more than 64 sparse banks, e.g. the
->> @@ -1861,10 +1923,12 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->>  			flush.address_space = hc->ingpa;
->>  			flush.flags = hc->outgpa;
->>  			flush.processor_mask = sse128_lo(hc->xmm[0]);
->> +			consumed_xmm_halves = 1;
->>  		} else {
->>  			if (unlikely(kvm_read_guest(kvm, hc->ingpa,
->>  						    &flush, sizeof(flush))))
->>  				return HV_STATUS_INVALID_HYPERCALL_INPUT;
->> +			data_offset = sizeof(flush);
->>  		}
->>
->>  		trace_kvm_hv_flush_tlb(flush.processor_mask,
->> @@ -1888,10 +1952,12 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->>  			flush_ex.flags = hc->outgpa;
->>  			memcpy(&flush_ex.hv_vp_set,
->>  			       &hc->xmm[0], sizeof(hc->xmm[0]));
->> +			consumed_xmm_halves = 2;
->>  		} else {
->>  			if (unlikely(kvm_read_guest(kvm, hc->ingpa, &flush_ex,
->>  						    sizeof(flush_ex))))
->>  				return HV_STATUS_INVALID_HYPERCALL_INPUT;
->> +			data_offset = sizeof(flush_ex);
->>  		}
->>
->>  		trace_kvm_hv_flush_tlb_ex(flush_ex.hv_vp_set.valid_bank_mask,
->> @@ -1907,25 +1973,37 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->>  			return HV_STATUS_INVALID_HYPERCALL_INPUT;
->>
->>  		if (all_cpus)
->> -			goto do_flush;
->> +			goto read_flush_entries;
->>
->>  		if (!hc->var_cnt)
->>  			goto ret_success;
->>
->> -		if (kvm_get_sparse_vp_set(kvm, hc, sparse_banks, 2,
->> -					  offsetof(struct hv_tlb_flush_ex,
->> -						   hv_vp_set.bank_contents)))
->> +		if (kvm_get_sparse_vp_set(kvm, hc, sparse_banks, consumed_xmm_halves,
->> +					  data_offset))
->> +			return HV_STATUS_INVALID_HYPERCALL_INPUT;
->> +		data_offset += hc->var_cnt * sizeof(sparse_banks[0]);
->> +		consumed_xmm_halves += hc->var_cnt;
->> +	}
->> +
->> +read_flush_entries:
->> +	if (hc->code == HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE ||
->> +	    hc->code == HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX ||
->> +	    hc->rep_cnt > ARRAY_SIZE(__tlb_flush_entries)) {
->> +		tlb_flush_entries = NULL;
->> +	} else {
->> +		if (kvm_hv_get_tlb_flush_entries(kvm, hc, __tlb_flush_entries,
->> +						consumed_xmm_halves, data_offset))
->>  			return HV_STATUS_INVALID_HYPERCALL_INPUT;
->> +		tlb_flush_entries = __tlb_flush_entries;
->>  	}
->>
->> -do_flush:
->>  	/*
->>  	 * vcpu->arch.cr3 may not be up-to-date for running vCPUs so we can't
->>  	 * analyze it here, flush TLB regardless of the specified address space.
->>  	 */
->>  	if (all_cpus) {
->>  		kvm_for_each_vcpu(i, v, kvm)
->> -			hv_tlb_flush_enqueue(v);
->> +			hv_tlb_flush_enqueue(v, tlb_flush_entries, hc->rep_cnt);
->>
->>  		kvm_make_all_cpus_request(kvm, KVM_REQ_HV_TLB_FLUSH);
->>  	} else {
->> @@ -1935,7 +2013,7 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->>  			v = kvm_get_vcpu(kvm, i);
->>  			if (!v)
->>  				continue;
->> -			hv_tlb_flush_enqueue(v);
->> +			hv_tlb_flush_enqueue(v, tlb_flush_entries, hc->rep_cnt);
->>  		}
->>
->>  		kvm_make_vcpus_request_mask(kvm, KVM_REQ_HV_TLB_FLUSH, vcpu_mask);
->> --
->> 2.35.3
->>
->
+>> +		/* Allocate boucne buffer.*/
+>> +		swiotlb_device_allocate(&hdev->device, nvdev->num_chn,
+>> +				10 * IO_TLB_BLOCK_UNIT);
+>>   	}
+> 
+> Looks like swiotlb_device_allocate() is not called if the netvsc device
+> has only 1 primary channel and no sub-schannel, e.g. in the case of
+> single-vCPU VM?
 
--- 
-Vitaly
+When there is only sinlge，there seems not to be much performance
+penalty. But you are right, we should keep the same behavior when single 
+CPU and multi CPU. Will update in the next version.
+
+Thanks.
 
