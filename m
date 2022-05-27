@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E604535A3B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 27 May 2022 09:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9C72535AA3
+	for <lists+linux-hyperv@lfdr.de>; Fri, 27 May 2022 09:44:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239354AbiE0HWW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 27 May 2022 03:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
+        id S232238AbiE0HoF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 27 May 2022 03:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238882AbiE0HWW (ORCPT
+        with ESMTP id S1347281AbiE0HoF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 27 May 2022 03:22:22 -0400
+        Fri, 27 May 2022 03:44:05 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 33C7056C29;
-        Fri, 27 May 2022 00:22:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 120B3580E3;
+        Fri, 27 May 2022 00:44:04 -0700 (PDT)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D530120B56AF;
-        Fri, 27 May 2022 00:22:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D530120B56AF
+        by linux.microsoft.com (Postfix) with ESMTPSA id AE81A20B894E;
+        Fri, 27 May 2022 00:44:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE81A20B894E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1653636140;
-        bh=PlZcd/dODcl1W11F7uDMCkDb/HUQUqELj/xwFcJVQyQ=;
+        s=default; t=1653637443;
+        bh=BqceaaB5hBl3Vdpl++pTxf2fnnPWlB8F9bTl6Y9k448=;
         h=From:To:Subject:Date:From;
-        b=CPVHsBvOkUsDWmysmw+HU6g7EV6BFEU9MDPHj5TF3iG3A36N5GIRuTxtoDzKWykcF
-         NOZdxITAn5eeOeUP1mlA4S0yG3LTbGtXBomezb8EuSu/0UADcKcDIjgQzIIilUDN33
-         krbNcu3lklng2hSoBSJnVU8opyxcbYwF2xmlUYhk=
+        b=qw7Y2r8RIOI00XuOdIDpCshUlX8CV8et9wcK8CMOlcJ16rAZ2Ch/MimR2gv8uZUrJ
+         I4St6RhB1yecJFKPO0PUEtrVc98XZIOShAC1IvObhWvoeArmSw61roc+uScxlK5o/S
+         fos4AtRaRrOHv3DkG2irs8atet5Mf6bFTvEl+hpo=
 From:   Saurabh Sengar <ssengar@linux.microsoft.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
         wei.liu@kernel.org, decui@microsoft.com,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         ssengar@microsoft.com, mikelley@microsoft.com
-Subject: [PATCH v2] Drivers: hv: vmbus: Don't assign VMbus channel interrupts to isolated CPUs
-Date:   Fri, 27 May 2022 00:22:16 -0700
-Message-Id: <1653636136-19643-1-git-send-email-ssengar@linux.microsoft.com>
+Subject: [RESEND PATCH v2] Drivers: hv: vmbus: Don't assign VMbus channel interrupts to isolated CPUs
+Date:   Fri, 27 May 2022 00:43:59 -0700
+Message-Id: <1653637439-23060-1-git-send-email-ssengar@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -56,16 +56,17 @@ managed IRQ isolated CPU.
 
 Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 ---
-v2: * better commit message
+v2: * Resending v2 with minor correction, please discard the earlier v2
+    * better commit message
     * Added back empty line, removed by mistake
     * Removed error print for sysfs error
 
- drivers/hv/channel_mgmt.c | 18 ++++++++++++------
+ drivers/hv/channel_mgmt.c | 17 ++++++++++++-----
  drivers/hv/vmbus_drv.c    |  4 ++++
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 97d8f56..e1fe029 100644
+index 97d8f56..127a05b 100644
 --- a/drivers/hv/channel_mgmt.c
 +++ b/drivers/hv/channel_mgmt.c
 @@ -21,6 +21,7 @@
@@ -121,14 +122,6 @@ index 97d8f56..e1fe029 100644
 -
  		target_cpu = cpumask_first(available_mask);
  		cpumask_set_cpu(target_cpu, allocated_mask);
- 
-@@ -778,7 +785,6 @@ static void init_vp_index(struct vmbus_channel *channel)
- 	}
- 
- 	channel->target_cpu = target_cpu;
--
- 	free_cpumask_var(available_mask);
- }
  
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
 index 714d549..547ae33 100644
