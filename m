@@ -2,106 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87BFB5376FC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 May 2022 10:51:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98700538BDF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 May 2022 09:16:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233685AbiE3Ijj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 30 May 2022 04:39:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50906 "EHLO
+        id S240566AbiEaHQv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 31 May 2022 03:16:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231968AbiE3Ijj (ORCPT
+        with ESMTP id S234371AbiEaHQu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 30 May 2022 04:39:39 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 848F9643F;
-        Mon, 30 May 2022 01:39:38 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2A7D420BA5D8;
-        Mon, 30 May 2022 01:39:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A7D420BA5D8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1653899978;
-        bh=isQm+mC6yQ0sCy8PaEq3jIAYfeo6j5NEVgjYF1/d2VQ=;
-        h=From:To:Subject:Date:From;
-        b=QiJ6Q5H4Cxr7tpdjLd9/Zo4nh7OqYynFyIfiqUdZCvEyjR3PgKtAY8AtZKU1G+WMt
-         WIkICuv/HhEA1XD2EqC4cNsNi1zzRhavo0D/Q+M8bTZ4bapK4hCGVfUNlGkLxACOz3
-         Vt5rCNURYrMKN7nznkz8xpN0cB6kdN/vWF1UKM9g=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com,
-        martin.petersen@oracle.com, jejb@linux.ibm.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ssengar@microsoft.com, mikelley@microsoft.com
-Subject: [PATCH] scsi: storvsc: Enabling WRITE_SAME
-Date:   Mon, 30 May 2022 01:39:33 -0700
-Message-Id: <1653899973-21039-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        Tue, 31 May 2022 03:16:50 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88B0433AD;
+        Tue, 31 May 2022 00:16:48 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 42FE068B05; Tue, 31 May 2022 09:16:40 +0200 (CEST)
+Date:   Tue, 31 May 2022 09:16:39 +0200
+From:   "hch@lst.de" <hch@lst.de>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Tianyu Lan <ltykernel@gmail.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "andi.kleen@intel.com" <andi.kleen@intel.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kirill.shutemov" <kirill.shutemov@intel.com>
+Subject: Re: [RFC PATCH V2 1/2] swiotlb: Add Child IO TLB mem support
+Message-ID: <20220531071639.GA23482@lst.de>
+References: <20220502125436.23607-1-ltykernel@gmail.com> <20220502125436.23607-2-ltykernel@gmail.com> <YoH+mbxQAp/2XGyG@infradead.org> <PH0PR21MB30258D2B3B727A9BCEE039FCD7DD9@PH0PR21MB3025.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR21MB30258D2B3B727A9BCEE039FCD7DD9@PH0PR21MB3025.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This driver already has code logic for WRITE_SAME, but was never working
-because of a bug where WRITE_SAME is disabled at scsi controller level.
-Apparently if WRITE_SAME is disabled at scsi controller level it takes
-precedence over disk level setting. This patch fixes this bug, and enables
-this feature only for VMSTOR protocol version 10.0 and above.
+On Mon, May 30, 2022 at 01:52:37AM +0000, Michael Kelley (LINUX) wrote:
+> B) The contents of the memory buffer must transition between
+> encrypted and not encrypted.  The hardware doesn't provide
+> any mechanism to do such a transition "in place".  The only
+> way to transition is for the CPU to copy the contents between
+> an encrypted area and an unencrypted area of memory.
+> 
+> Because of (B), we're stuck needing bounce buffers.  There's no
+> way to avoid them with the current hardware.  Tianyu also pointed
+> out not wanting to expose uninitialized guest memory to the host,
+> so, for example, sharing a read buffer with the host requires that
+> it first be initialized to zero.
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
- drivers/scsi/storvsc_drv.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Ok, B is a deal breaker.  I just brought this in because I've received
+review comments that state bouncing is just the easiest option for
+now and we could map it into the hypervisor in the future.  But at
+least for SEV that does not seem like an option without hardware
+changes.
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index ca35309..3e55687 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -50,6 +50,7 @@
-  * Win8: 5.1
-  * Win8.1: 6.0
-  * Win10: 6.2
-+ * Win10.1: 10.0
-  */
- 
- #define VMSTOR_PROTO_VERSION(MAJOR_, MINOR_)	((((MAJOR_) & 0xff) << 8) | \
-@@ -59,6 +60,7 @@
- #define VMSTOR_PROTO_VERSION_WIN8	VMSTOR_PROTO_VERSION(5, 1)
- #define VMSTOR_PROTO_VERSION_WIN8_1	VMSTOR_PROTO_VERSION(6, 0)
- #define VMSTOR_PROTO_VERSION_WIN10	VMSTOR_PROTO_VERSION(6, 2)
-+#define VMSTOR_PROTO_VERSION_WIN10_1	VMSTOR_PROTO_VERSION(10, 0)
- 
- /*  Packet structure describing virtual storage requests. */
- enum vstor_packet_operation {
-@@ -205,6 +207,7 @@ struct vmscsi_request {
-  */
- 
- static const int protocol_version[] = {
-+		VMSTOR_PROTO_VERSION_WIN10_1,
- 		VMSTOR_PROTO_VERSION_WIN10,
- 		VMSTOR_PROTO_VERSION_WIN8_1,
- 		VMSTOR_PROTO_VERSION_WIN8,
-@@ -1558,7 +1561,7 @@ static int storvsc_device_configure(struct scsi_device *sdevice)
- 			break;
- 		}
- 
--		if (vmstor_proto_version >= VMSTOR_PROTO_VERSION_WIN10)
-+		if (vmstor_proto_version >= VMSTOR_PROTO_VERSION_WIN10_1)
- 			sdevice->no_write_same = 0;
- 	}
- 
-@@ -1845,7 +1848,6 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	.this_id =		-1,
- 	/* Ensure there are no gaps in presented sgls */
- 	.virt_boundary_mask =	PAGE_SIZE-1,
--	.no_write_same =	1,
- 	.track_queue_depth =	1,
- 	.change_queue_depth =	storvsc_change_queue_depth,
- };
--- 
-1.8.3.1
+> We should reset and make sure we agree on the top-level approach.
+> 1) We want general scalability improvements to swiotlb.  These
+>     improvements should scale to high CPUs counts (> 100) and for
+>     multiple NUMA nodes.
+> 2) Drivers should not require any special knowledge of swiotlb to
+>     benefit from the improvements.  No new swiotlb APIs should be
+>     need to be used by drivers -- the swiotlb scalability improvements
+>     should be transparent.
+> 3) The scalability improvements should not be based on device
+>     boundaries since a single device may have multiple channels
+>     doing bounce buffering on multiple CPUs in parallel.
 
+Agreed to all counts.
+
+> The patch from Andi Kleen [3] (not submitted upstream, but referenced
+> by Tianyu as the basis for his patches) seems like a good starting point
+> for meeting the top-level approach.
+
+Yes, I think doing per-cpu and/or per-node scaling sounds like the
+right general approach. Why was this never sent out?
+
+> Andi and Robin had some
+> back-and-forth about Andi's patch that I haven't delved into yet, but
+> getting that worked out seems like a better overall approach.  I had
+> an offline chat with Tianyu, and he would agree as well.
+
+Where was this discussion?
