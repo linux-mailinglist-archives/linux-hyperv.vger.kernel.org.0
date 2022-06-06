@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B231053E341
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Jun 2022 10:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5D4B53E2DF
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Jun 2022 10:55:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232094AbiFFIiK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Jun 2022 04:38:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38038 "EHLO
+        id S232079AbiFFIiT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 Jun 2022 04:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232051AbiFFIiG (ORCPT
+        with ESMTP id S232083AbiFFIiI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Jun 2022 04:38:06 -0400
+        Mon, 6 Jun 2022 04:38:08 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 795AD2182F
-        for <linux-hyperv@vger.kernel.org>; Mon,  6 Jun 2022 01:37:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F0D2286CF
+        for <linux-hyperv@vger.kernel.org>; Mon,  6 Jun 2022 01:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654504676;
+        s=mimecast20190719; t=1654504682;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hp82BU+I7MuWflxbH4EWx7W3vuzx9MsZrRsI8zYTBvY=;
-        b=eTEtWJB5U5nIyyWKEU/6//iC7ex4a1CAWu7PjI67lGFxU6lzz28P2ows9IzJ+RNW3Oq0PP
-        wThesjqB1s9Yi2t+ADXAOhhPnioHrdRxWox/JRFvaPIgjjBK/nq/Okft8vHWZm07VY9cs1
-        3D5l4Bz/d8/ePs4ACxP39GJWLtI5j7s=
+        bh=U1sMy8xaJxhqapgk5p9GIXqaotAkSrql7bAakOStiUU=;
+        b=QzL5A9m5o+NTNyu4MelDn6HgUN3JKqdnpXbGg3b/RUgRb61rixZy4WPox5Se/4T94hBOhA
+        ZympZ/rgRf4cS0WSbcud3Kc9M22hTFagHGsNxAQzF4KFD+qz3dC04OpkvF3amJaHGTRB2E
+        VvoXHbUjB8LCcamDdPIxoYZH5a5iuH0=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-665-ElNrg5xgP3-yZxgFY3UPIg-1; Mon, 06 Jun 2022 04:37:55 -0400
-X-MC-Unique: ElNrg5xgP3-yZxgFY3UPIg-1
+ us-mta-215-oHQyy_xaM1a3F5E4XNy49Q-1; Mon, 06 Jun 2022 04:37:57 -0400
+X-MC-Unique: oHQyy_xaM1a3F5E4XNy49Q-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BB8D73C19021;
-        Mon,  6 Jun 2022 08:37:54 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5733C1C16B42;
+        Mon,  6 Jun 2022 08:37:57 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.193.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D45DF1121314;
-        Mon,  6 Jun 2022 08:37:52 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 069FD1121314;
+        Mon,  6 Jun 2022 08:37:54 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <seanjc@google.com>,
@@ -48,9 +48,9 @@ Cc:     Sean Christopherson <seanjc@google.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 24/38] KVM: selftests: Better XMM read/write helpers
-Date:   Mon,  6 Jun 2022 10:36:41 +0200
-Message-Id: <20220606083655.2014609-25-vkuznets@redhat.com>
+Subject: [PATCH v6 25/38] KVM: selftests: Move HYPERV_LINUX_OS_ID definition to a common header
+Date:   Mon,  6 Jun 2022 10:36:42 +0200
+Message-Id: <20220606083655.2014609-26-vkuznets@redhat.com>
 In-Reply-To: <20220606083655.2014609-1-vkuznets@redhat.com>
 References: <20220606083655.2014609-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -59,7 +59,7 @@ Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,129 +67,57 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-set_xmm()/get_xmm() helpers are fairly useless as they only read 64 bits
-from 128-bit registers. Moreover, these helpers are not used. Borrow
-_kvm_read_sse_reg()/_kvm_write_sse_reg() from KVM limiting them to
-XMM0-XMM8 for now.
+HYPERV_LINUX_OS_ID needs to be written to HV_X64_MSR_GUEST_OS_ID by
+each Hyper-V specific selftest.
 
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- .../selftests/kvm/include/x86_64/processor.h  | 70 ++++++++++---------
- 1 file changed, 36 insertions(+), 34 deletions(-)
+ tools/testing/selftests/kvm/include/x86_64/hyperv.h  | 3 +++
+ tools/testing/selftests/kvm/x86_64/hyperv_features.c | 5 ++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-index 4fd870f37b9e..9ac244fdce73 100644
---- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-@@ -315,71 +315,73 @@ static inline void cpuid(uint32_t *eax, uint32_t *ebx,
- 	    : "memory");
- }
+diff --git a/tools/testing/selftests/kvm/include/x86_64/hyperv.h b/tools/testing/selftests/kvm/include/x86_64/hyperv.h
+index b66910702c0a..f0a8a93694b2 100644
+--- a/tools/testing/selftests/kvm/include/x86_64/hyperv.h
++++ b/tools/testing/selftests/kvm/include/x86_64/hyperv.h
+@@ -185,4 +185,7 @@
+ /* hypercall options */
+ #define HV_HYPERCALL_FAST_BIT		BIT(16)
  
--#define SET_XMM(__var, __xmm) \
--	asm volatile("movq %0, %%"#__xmm : : "r"(__var) : #__xmm)
-+typedef u32		__attribute__((vector_size(16))) sse128_t;
-+#define __sse128_u	union { sse128_t vec; u64 as_u64[2]; u32 as_u32[4]; }
-+#define sse128_lo(x)	({ __sse128_u t; t.vec = x; t.as_u64[0]; })
-+#define sse128_hi(x)	({ __sse128_u t; t.vec = x; t.as_u64[1]; })
++/* Proper HV_X64_MSR_GUEST_OS_ID value */
++#define HYPERV_LINUX_OS_ID ((u64)0x8100 << 48)
++
+ #endif /* !SELFTEST_KVM_HYPERV_H */
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_features.c b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
+index 672915ce73d8..98c020356925 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_features.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
+@@ -14,7 +14,6 @@
+ #include "hyperv.h"
  
--static inline void set_xmm(int n, unsigned long val)
-+static inline void read_sse_reg(int reg, sse128_t *data)
- {
--	switch (n) {
-+	switch (reg) {
- 	case 0:
--		SET_XMM(val, xmm0);
-+		asm("movdqa %%xmm0, %0" : "=m"(*data));
- 		break;
- 	case 1:
--		SET_XMM(val, xmm1);
-+		asm("movdqa %%xmm1, %0" : "=m"(*data));
- 		break;
- 	case 2:
--		SET_XMM(val, xmm2);
-+		asm("movdqa %%xmm2, %0" : "=m"(*data));
- 		break;
- 	case 3:
--		SET_XMM(val, xmm3);
-+		asm("movdqa %%xmm3, %0" : "=m"(*data));
- 		break;
- 	case 4:
--		SET_XMM(val, xmm4);
-+		asm("movdqa %%xmm4, %0" : "=m"(*data));
- 		break;
- 	case 5:
--		SET_XMM(val, xmm5);
-+		asm("movdqa %%xmm5, %0" : "=m"(*data));
- 		break;
- 	case 6:
--		SET_XMM(val, xmm6);
-+		asm("movdqa %%xmm6, %0" : "=m"(*data));
- 		break;
- 	case 7:
--		SET_XMM(val, xmm7);
-+		asm("movdqa %%xmm7, %0" : "=m"(*data));
- 		break;
-+	default:
-+		BUG();
- 	}
- }
+ #define VCPU_ID 0
+-#define LINUX_OS_ID ((u64)0x8100 << 48)
  
--#define GET_XMM(__xmm)							\
--({									\
--	unsigned long __val;						\
--	asm volatile("movq %%"#__xmm", %0" : "=r"(__val));		\
--	__val;								\
--})
--
--static inline unsigned long get_xmm(int n)
-+static inline void write_sse_reg(int reg, const sse128_t *data)
- {
--	assert(n >= 0 && n <= 7);
--
--	switch (n) {
-+	switch (reg) {
- 	case 0:
--		return GET_XMM(xmm0);
-+		asm("movdqa %0, %%xmm0" : : "m"(*data));
-+		break;
- 	case 1:
--		return GET_XMM(xmm1);
-+		asm("movdqa %0, %%xmm1" : : "m"(*data));
-+		break;
- 	case 2:
--		return GET_XMM(xmm2);
-+		asm("movdqa %0, %%xmm2" : : "m"(*data));
-+		break;
- 	case 3:
--		return GET_XMM(xmm3);
-+		asm("movdqa %0, %%xmm3" : : "m"(*data));
-+		break;
- 	case 4:
--		return GET_XMM(xmm4);
-+		asm("movdqa %0, %%xmm4" : : "m"(*data));
-+		break;
- 	case 5:
--		return GET_XMM(xmm5);
-+		asm("movdqa %0, %%xmm5" : : "m"(*data));
-+		break;
- 	case 6:
--		return GET_XMM(xmm6);
-+		asm("movdqa %0, %%xmm6" : : "m"(*data));
-+		break;
- 	case 7:
--		return GET_XMM(xmm7);
-+		asm("movdqa %0, %%xmm7" : : "m"(*data));
-+		break;
-+	default:
-+		BUG();
- 	}
--
--	/* never reached */
--	return 0;
- }
+ extern unsigned char rdmsr_start;
+ extern unsigned char rdmsr_end;
+@@ -127,7 +126,7 @@ static void guest_hcall(vm_vaddr_t pgs_gpa, struct hcall_data *hcall)
+ 	int i = 0;
+ 	u64 res, input, output;
  
- static inline void cpu_relax(void)
+-	wrmsr(HV_X64_MSR_GUEST_OS_ID, LINUX_OS_ID);
++	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
+ 	wrmsr(HV_X64_MSR_HYPERCALL, pgs_gpa);
+ 
+ 	while (hcall->control) {
+@@ -230,7 +229,7 @@ static void guest_test_msrs_access(void)
+ 			 */
+ 			msr->idx = HV_X64_MSR_GUEST_OS_ID;
+ 			msr->write = 1;
+-			msr->write_val = LINUX_OS_ID;
++			msr->write_val = HYPERV_LINUX_OS_ID;
+ 			msr->available = 1;
+ 			break;
+ 		case 3:
 -- 
 2.35.3
 
