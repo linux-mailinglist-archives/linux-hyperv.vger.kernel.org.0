@@ -2,61 +2,80 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1120053E20E
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Jun 2022 10:53:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A3BA53F881
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Jun 2022 10:47:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232009AbiFFIim (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Jun 2022 04:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
+        id S238470AbiFGIq4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Jun 2022 04:46:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232215AbiFFIif (ORCPT
+        with ESMTP id S238468AbiFGIqo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Jun 2022 04:38:35 -0400
+        Tue, 7 Jun 2022 04:46:44 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35941326CE
-        for <linux-hyperv@vger.kernel.org>; Mon,  6 Jun 2022 01:38:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8FDFCE5284
+        for <linux-hyperv@vger.kernel.org>; Tue,  7 Jun 2022 01:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654504709;
+        s=mimecast20190719; t=1654591576;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6i4ig/R8rMzs2AbGp9PmmaZ4npm6FEPMuif5WYyDsbY=;
-        b=XbZ0LO749ktcDSyAaCoZ3G+fCisNQOyLdpOuWm2kLhZMLlamMQY79mZyfpcA2Zqa7GE/d+
-        y8aOAnoGG8mE3S3co2zNhlAR9y6HzfmbfyLOOthvaIA0uhQEd4fpehtCKQRVMr9N55le6L
-        BfFLuP9VpZVJIJC1E+Kh/7fJWdrPAdA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=xI1BfmQ1tmnR7pC5S7JA4VoggSPGIGxH2wHdSDEj2eY=;
+        b=b+nWARemPmx5WnLeb8nxgyVdoiMf/M4WwiMM9lYVO1Iw07BX4eVytczhwWsjAMFT1QL7Wt
+        NXJKhYYXvsKdwmaMhwR0naY+qA71Ca9y55keUVeJtvD0pBKyQDhEGhxx8MG2+kmzoWRwcM
+        +DQx4WG/HrekEzHuv2LfINZzZUOa+XQ=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-177-QWR_hF7GPK6fOJfI4vehdw-1; Mon, 06 Jun 2022 04:38:28 -0400
-X-MC-Unique: QWR_hF7GPK6fOJfI4vehdw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2FD2C80418C;
-        Mon,  6 Jun 2022 08:38:28 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.40.193.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33CAA1121314;
-        Mon,  6 Jun 2022 08:38:26 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+ us-mta-631-7z53oRMMP9-zMWmZzsTrSw-1; Tue, 07 Jun 2022 04:46:15 -0400
+X-MC-Unique: 7z53oRMMP9-zMWmZzsTrSw-1
+Received: by mail-qv1-f72.google.com with SMTP id br5-20020ad446a5000000b0046a672e304aso4726445qvb.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 07 Jun 2022 01:46:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=xI1BfmQ1tmnR7pC5S7JA4VoggSPGIGxH2wHdSDEj2eY=;
+        b=5nQOaIVtsxnc7ig2Z80Ws9481LhN3fEYVmRMDqo0hOsnseFygVn3ycrwzLuPMW/hGQ
+         r2SiSOf1OWjNaKAQszYsExYUm96M47G/ChJCptiIyZMDrk0Ik+xA9NrkryKTgpnuKEBN
+         dnDOBY/uYZgaFDtn90nOJpuJl+nwUa83gW+kDDoJLT/Ng4imDN/vJWdT9R+bBAu9wL/g
+         c7t2qJk2nWmNIUGXFbWC6+kjrTYTe/7IUstN3ys2rbpzy2wi2YP/y5rug6N6fz9/LKqm
+         mlw2m7qXEKtpvV8qftjbCB/L4ZjubayVfk7FhTbveBgTm2p8R8RKhCotJExXEZRUOMcU
+         aLBw==
+X-Gm-Message-State: AOAM533ByGSl5dch85SnzJrwS8fZe/CXsTMZyhb9qwWlMLu/fSvmvyff
+        IUeVOF2Lcs8N+cVWS5ij6ihb2DvsN0tOLwsN53eXip56fm8YHK1VI5YGRF7hwfRrMNad45+1WbU
+        eh3UD3gtVZL35dPpnIf2rNNW0
+X-Received: by 2002:ac8:578d:0:b0:2f3:e61d:df9e with SMTP id v13-20020ac8578d000000b002f3e61ddf9emr21797464qta.181.1654591575260;
+        Tue, 07 Jun 2022 01:46:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz7za2/FDRtffmJ1CIimVYvMn+o4/Op1dXsBZwSHG55CAOEduxCodQmfpxNLBNuQ7GdVOdjWw==
+X-Received: by 2002:ac8:578d:0:b0:2f3:e61d:df9e with SMTP id v13-20020ac8578d000000b002f3e61ddf9emr21797445qta.181.1654591575018;
+        Tue, 07 Jun 2022 01:46:15 -0700 (PDT)
+Received: from [10.35.4.238] (bzq-82-81-161-50.red.bezeqint.net. [82.81.161.50])
+        by smtp.gmail.com with ESMTPSA id u22-20020ac87516000000b002f92b74ba99sm11416797qtq.13.2022.06.07.01.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 01:46:14 -0700 (PDT)
+Message-ID: <420b6cfdeab348f93c0de20ef07b66663fe5030c.camel@redhat.com>
+Subject: Re: [PATCH v6 02/38] KVM: x86: hyper-v: Resurrect dedicated
+ KVM_REQ_HV_TLB_FLUSH flag
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <seanjc@google.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Siddharth Chandrasekaran <sidcha@amazon.de>,
         Yuan Yao <yuan.yao@linux.intel.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 38/38] KVM: selftests: hyperv_svm_test: Introduce L2 TLB flush test
-Date:   Mon,  6 Jun 2022 10:36:55 +0200
-Message-Id: <20220606083655.2014609-39-vkuznets@redhat.com>
-In-Reply-To: <20220606083655.2014609-1-vkuznets@redhat.com>
+Date:   Tue, 07 Jun 2022 11:46:10 +0300
+In-Reply-To: <20220606083655.2014609-3-vkuznets@redhat.com>
 References: <20220606083655.2014609-1-vkuznets@redhat.com>
+         <20220606083655.2014609-3-vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-2.fc34) 
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
 X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -67,126 +86,96 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Enable Hyper-V L2 TLB flush and check that Hyper-V TLB flush hypercalls
-from L2 don't exit to L1 unless 'TlbLockCount' is set in the Partition
-assist page.
+On Mon, 2022-06-06 at 10:36 +0200, Vitaly Kuznetsov wrote:
+> In preparation to implementing fine-grained Hyper-V TLB flush and
+> L2 TLB flush, resurrect dedicated KVM_REQ_HV_TLB_FLUSH request bit.
+> As
+> KVM_REQ_TLB_FLUSH_GUEST/KVM_REQ_TLB_FLUSH_CURRENT are stronger
+> operations,
+> clear KVM_REQ_HV_TLB_FLUSH request in
+> kvm_service_local_tlb_flush_requests()
+> when any of these were also requested.
+> 
+> No (real) functional change intended.
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  2 ++
+>  arch/x86/kvm/hyperv.c           |  4 ++--
+>  arch/x86/kvm/x86.c              | 10 ++++++++--
+>  3 files changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h
+> b/arch/x86/include/asm/kvm_host.h
+> index 8699f715d867..7a6a6f47b603 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -108,6 +108,8 @@
+>         KVM_ARCH_REQ_FLAGS(30, KVM_REQUEST_WAIT |
+> KVM_REQUEST_NO_WAKEUP)
+>  #define KVM_REQ_MMU_FREE_OBSOLETE_ROOTS \
+>         KVM_ARCH_REQ_FLAGS(31, KVM_REQUEST_WAIT |
+> KVM_REQUEST_NO_WAKEUP)
+> +#define KVM_REQ_HV_TLB_FLUSH \
+> +       KVM_ARCH_REQ_FLAGS(32, KVM_REQUEST_WAIT |
+> KVM_REQUEST_NO_WAKEUP)
+>  
+>  #define
+> CR0_RESERVED_BITS                                               \
+>         (~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM |
+> X86_CR0_TS \
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 46f9dfb60469..b402ad059eb9 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1876,11 +1876,11 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu
+> *vcpu, struct kvm_hv_hcall *hc)
+>          * analyze it here, flush TLB regardless of the specified
+> address space.
+>          */
+>         if (all_cpus) {
+> -               kvm_make_all_cpus_request(kvm,
+> KVM_REQ_TLB_FLUSH_GUEST);
+> +               kvm_make_all_cpus_request(kvm, KVM_REQ_HV_TLB_FLUSH);
+>         } else {
+>                 sparse_set_to_vcpu_mask(kvm, sparse_banks,
+> valid_bank_mask, vcpu_mask);
+>  
+> -               kvm_make_vcpus_request_mask(kvm,
+> KVM_REQ_TLB_FLUSH_GUEST, vcpu_mask);
+> +               kvm_make_vcpus_request_mask(kvm,
+> KVM_REQ_HV_TLB_FLUSH, vcpu_mask);
+>         }
+>  
+>  ret_success:
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 67732e658e76..80cd3eb5e7de 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3353,11 +3353,17 @@ static inline void
+> kvm_vcpu_flush_tlb_current(struct kvm_vcpu *vcpu)
+>   */
+>  void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu)
+>  {
+> -       if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
+> +       if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu)) {
+>                 kvm_vcpu_flush_tlb_current(vcpu);
+> +               kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
+> +       }
+>  
+> -       if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu))
+> +       if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu)) {
+> +               kvm_vcpu_flush_tlb_guest(vcpu);
+> +               kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
+> +       } else if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu)) {
+>                 kvm_vcpu_flush_tlb_guest(vcpu);
+> +       }
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_service_local_tlb_flush_requests);
+>  
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- .../selftests/kvm/x86_64/hyperv_svm_test.c    | 54 +++++++++++++++++--
- 1 file changed, 50 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c b/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
-index 994b33fd8724..2d938523ae27 100644
---- a/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
-@@ -42,6 +42,9 @@ struct hv_enlightenments {
-  */
- #define VMCB_HV_NESTED_ENLIGHTENMENTS (1U << 31)
- 
-+#define HV_SVM_EXITCODE_ENL 0xF0000000
-+#define HV_SVM_ENL_EXITCODE_TRAP_AFTER_FLUSH   (1)
-+
- void l2_guest_code(void)
- {
- 	GUEST_SYNC(3);
-@@ -57,11 +60,25 @@ void l2_guest_code(void)
- 
- 	GUEST_SYNC(5);
- 
-+	/* L2 TLB flush tests */
-+	hyperv_hypercall(HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE |
-+			 HV_HYPERCALL_FAST_BIT, 0x0,
-+			 HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES |
-+			 HV_FLUSH_ALL_PROCESSORS);
-+	rdmsr(MSR_FS_BASE);
-+	hyperv_hypercall(HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE |
-+			 HV_HYPERCALL_FAST_BIT, 0x0,
-+			 HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES |
-+			 HV_FLUSH_ALL_PROCESSORS);
-+	/* Make sure we're not issuing Hyper-V TLB flush call again */
-+	__asm__ __volatile__ ("mov $0xdeadbeef, %rcx");
-+
- 	/* Done, exit to L1 and never come back.  */
- 	vmmcall();
- }
- 
--static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
-+static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm,
-+						    vm_vaddr_t pgs_gpa)
- {
- 	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
- 	struct vmcb *vmcb = svm->vmcb;
-@@ -70,13 +87,23 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
- 
- 	GUEST_SYNC(1);
- 
--	wrmsr(HV_X64_MSR_GUEST_OS_ID, (u64)0x8100 << 48);
-+	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
-+	wrmsr(HV_X64_MSR_HYPERCALL, pgs_gpa);
-+	enable_vp_assist(svm->vp_assist_gpa, svm->vp_assist);
- 
- 	GUEST_ASSERT(svm->vmcb_gpa);
- 	/* Prepare for L2 execution. */
- 	generic_svm_setup(svm, l2_guest_code,
- 			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
- 
-+	/* L2 TLB flush setup */
-+	hve->partition_assist_page = svm->partition_assist_gpa;
-+	hve->hv_enlightenments_control.nested_flush_hypercall = 1;
-+	hve->hv_vm_id = 1;
-+	hve->hv_vp_id = 1;
-+	current_vp_assist->nested_control.features.directhypercall = 1;
-+	*(u32 *)(svm->partition_assist) = 0;
-+
- 	GUEST_SYNC(2);
- 	run_guest(vmcb, svm->vmcb_gpa);
- 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-@@ -111,6 +138,20 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
- 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_MSR);
- 	vmcb->save.rip += 2; /* rdmsr */
- 
-+
-+	/*
-+	 * L2 TLB flush test. First VMCALL should be handled directly by L0,
-+	 * no VMCALL exit expected.
-+	 */
-+	run_guest(vmcb, svm->vmcb_gpa);
-+	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_MSR);
-+	vmcb->save.rip += 2; /* rdmsr */
-+	/* Enable synthetic vmexit */
-+	*(u32 *)(svm->partition_assist) = 1;
-+	run_guest(vmcb, svm->vmcb_gpa);
-+	GUEST_ASSERT(vmcb->control.exit_code == HV_SVM_EXITCODE_ENL);
-+	GUEST_ASSERT(vmcb->control.exit_info_1 == HV_SVM_ENL_EXITCODE_TRAP_AFTER_FLUSH);
-+
- 	run_guest(vmcb, svm->vmcb_gpa);
- 	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
- 	GUEST_SYNC(6);
-@@ -121,7 +162,7 @@ static void __attribute__((__flatten__)) guest_code(struct svm_test_data *svm)
- int main(int argc, char *argv[])
- {
- 	vm_vaddr_t nested_gva = 0;
--
-+	vm_vaddr_t hcall_page;
- 	struct kvm_vm *vm;
- 	struct kvm_run *run;
- 	struct ucall uc;
-@@ -136,7 +177,12 @@ int main(int argc, char *argv[])
- 	vcpu_set_hv_cpuid(vm, VCPU_ID);
- 	run = vcpu_state(vm, VCPU_ID);
- 	vcpu_alloc_svm(vm, &nested_gva);
--	vcpu_args_set(vm, VCPU_ID, 1, nested_gva);
-+
-+	hcall_page = vm_vaddr_alloc_pages(vm, 1);
-+	memset(addr_gva2hva(vm, hcall_page), 0x0,  getpagesize());
-+
-+	vcpu_args_set(vm, VCPU_ID, 2, nested_gva, addr_gva2gpa(vm, hcall_page));
-+	vcpu_set_msr(vm, VCPU_ID, HV_X64_MSR_VP_INDEX, VCPU_ID);
- 
- 	for (stage = 1;; stage++) {
- 		_vcpu_run(vm, VCPU_ID);
--- 
-2.35.3
+Best regards,
+	Maxim Levitsky
 
