@@ -2,100 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF0DF545F78
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jun 2022 10:41:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D80EC546A80
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Jun 2022 18:35:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347469AbiFJIki (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 10 Jun 2022 04:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44892 "EHLO
+        id S1349789AbiFJQei (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 10 Jun 2022 12:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241270AbiFJIki (ORCPT
+        with ESMTP id S1349742AbiFJQd6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 10 Jun 2022 04:40:38 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E341A5;
-        Fri, 10 Jun 2022 01:40:37 -0700 (PDT)
-Received: by mail-wm1-f46.google.com with SMTP id l2-20020a05600c4f0200b0039c55c50482so803940wmq.0;
-        Fri, 10 Jun 2022 01:40:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ztq4k3KUPkKf4HUs/0KYVoq6RFzFscI/AU5d2/079VY=;
-        b=0Z/HATVtdJxGJ4Fd4/G/QwZILxgDvo86fBR/vnqIrUkKCki5H3ma+9nQPJxAks0OK5
-         WRy7yL3br6970z+NBFo+uYCsAGbY/ndtgWnNhwBTUalcE1M9mGqQhEBHH29XAOmP/qez
-         x8UJrtQ62zSgzRnSmZmnd0b+vkl5QX+FATScGm98RH3ncUEyA1z//EFzF08DtFeLwDdk
-         m6kE6HIUkJwvETF7Zz3IkJ9Zz4erLaLvyeKEK3S3tYDQhcgobAxSfHxH/67jGXhON+2s
-         +4oOuWPNxeb46X1o9cPcbC7jpYIr3Ge2wz4rpTQWshpo17HvMWReEyledcSnalbXhtWb
-         zq7g==
-X-Gm-Message-State: AOAM5335dW+en9sKVFy214ndBvMXvCGE1gLBk4t1mzuYQnD7+i+SpDTj
-        FH0zxHCP61LudLCkE5S48Fg=
-X-Google-Smtp-Source: ABdhPJyQtOeBG1bBmUjSZGZ8BW8JYMPPtMA6gpFagh2WNHrMfZnGM2P6qHsHBdknbAwB+oOQ/gdRFA==
-X-Received: by 2002:a05:600c:190b:b0:39c:7704:74a4 with SMTP id j11-20020a05600c190b00b0039c770474a4mr4333763wmq.92.1654850435757;
-        Fri, 10 Jun 2022 01:40:35 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id 123-20020a1c1981000000b003975c7058bfsm2172199wmz.12.2022.06.10.01.40.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jun 2022 01:40:35 -0700 (PDT)
-Date:   Fri, 10 Jun 2022 08:40:33 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Saurabh Sengar <ssengar@linux.microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Saurabh Singh Sengar <ssengar@microsoft.com>
-Subject: Re: [PATCH] Drivers: hv: vmbus: Release cpu lock in error case
-Message-ID: <20220610084033.r6llz4dadlw6gyoz@liuwe-devbox-debian-v2>
-References: <1654794996-13244-1-git-send-email-ssengar@linux.microsoft.com>
- <PH0PR21MB30259484AB91D8EA2DEBD3E7D7A79@PH0PR21MB3025.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH0PR21MB30259484AB91D8EA2DEBD3E7D7A79@PH0PR21MB3025.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        Fri, 10 Jun 2022 12:33:58 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B69A590BE;
+        Fri, 10 Jun 2022 09:33:50 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C1D2820BE632;
+        Fri, 10 Jun 2022 09:33:49 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C1D2820BE632
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1654878829;
+        bh=/b3rhCsLk+dR82/EPLL1D6TioCvSqpU+hE4SbKy13BQ=;
+        h=From:To:Subject:Date:From;
+        b=esKR0fKGIjBKjCu22T0Ap88L1UL6DlJf8mLhdNXsQPKzuaxFB9YVh7a2uwUtR/Bj7
+         gQypSQBNqC601gqM1jlGlI2pe67YLyXVF6yaJNKZCjF6bRc99lpDOd3K0tHGhzmw8R
+         UpYuWjEY0C0pRcnBMPEYJlzTMMf6hemFYyB0+ot0=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ssengar@microsoft.com, mikelley@microsoft.com
+Subject: [PATCH] scsi: storvsc: Correct sysfs parameters as per Hyper-V storvsc requirement
+Date:   Fri, 10 Jun 2022 09:33:44 -0700
+Message-Id: <1654878824-25691-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 05:39:06PM +0000, Michael Kelley (LINUX) wrote:
-> From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Thursday, June 9, 2022 10:17 AM
-> > 
-> > In case of invalid sub channel, release cpu lock before returning.
-> > 
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> >  drivers/hv/channel_mgmt.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> > index 280b529..5b12040 100644
-> > --- a/drivers/hv/channel_mgmt.c
-> > +++ b/drivers/hv/channel_mgmt.c
-> > @@ -639,6 +639,7 @@ static void vmbus_process_offer(struct vmbus_channel
-> > *newchannel)
-> >  		 */
-> >  		if (newchannel->offermsg.offer.sub_channel_index == 0) {
-> >  			mutex_unlock(&vmbus_connection.channel_mutex);
-> > +			cpus_read_unlock();
-> >  			/*
-> >  			 * Don't call free_channel(), because newchannel->kobj
-> >  			 * is not initialized yet.
-> > --
-> > 1.8.3.1
-> 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> 
+This patch corrects 3 parameters:
+1. Correct the sysfs entry for maximum hardware transfer limit of single
+   transfer (max_hw_sectors_kb) by setting max_sectors, this was set to
+   default value 512kb before.
+2. Correct SGL memory offset alignment as per Hyper-V page size.
+3. Correct sg_tablesize which accounts for max SGL segments entries in a
+   single SGL.
 
-The bug comes from a949e86c0d780.
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+ drivers/scsi/storvsc_drv.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-Added a Fixes tag and applied to hyperv-fixes. Thanks.
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index ca3530982e52..3e032660ae36 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1844,7 +1844,7 @@ static struct scsi_host_template scsi_driver = {
+ 	.cmd_per_lun =		2048,
+ 	.this_id =		-1,
+ 	/* Ensure there are no gaps in presented sgls */
+-	.virt_boundary_mask =	PAGE_SIZE-1,
++	.virt_boundary_mask =	HV_HYP_PAGE_SIZE - 1,
+ 	.no_write_same =	1,
+ 	.track_queue_depth =	1,
+ 	.change_queue_depth =	storvsc_change_queue_depth,
+@@ -1969,11 +1969,31 @@ static int storvsc_probe(struct hv_device *device,
+ 	/* max cmd length */
+ 	host->max_cmd_len = STORVSC_MAX_CMD_LEN;
+ 
++	/* max_hw_sectors_kb */
++	host->max_sectors = (stor_device->max_transfer_bytes) >> 9;
+ 	/*
+-	 * set the table size based on the info we got
+-	 * from the host.
++	 * There are 2 requirements for Hyper-V storvsc sgl segments,
++	 * based on which the below calculation for max segments is
++	 * done:
++	 *
++	 * 1. Except for the first and last sgl segment, all sgl segments
++	 *    should be align to HV_HYP_PAGE_SIZE, that also means the
++	 *    maximum number of segments in a sgl can be calculated by
++	 *    dividing the total max transfer length by HV_HYP_PAGE_SIZE.
++	 *
++	 * 2. Except for the first and last, each entry in the SGL must
++	 *    have an offset that is a multiple of HV_HYP_PAGE_SIZE,
++	 *    whereas the complete length of transfer may not be aligned
++	 *    to HV_HYP_PAGE_SIZE always. This can result in 2 cases:
++	 *    Example for unaligned case: Let's say the total transfer
++	 *    length is 6 KB, the max segments will be 3 (1,4,1).
++	 *    Example for aligned case: Let's say the total transfer length
++	 *    is 8KB, then max segments will still be 3(2,4,2) and not 4.
++	 *    4 (read next higher value) segments will only be required
++	 *    once the length is at least 2 bytes more then 8KB (read any
++	 *    HV_HYP_PAGE_SIZE aligned length).
+ 	 */
+-	host->sg_tablesize = (stor_device->max_transfer_bytes >> PAGE_SHIFT);
++	host->sg_tablesize = ((stor_device->max_transfer_bytes - 2) >> HV_HYP_PAGE_SHIFT) + 2;
+ 	/*
+ 	 * For non-IDE disks, the host supports multiple channels.
+ 	 * Set the number of HW queues we are supporting.
+-- 
+2.25.1
+
