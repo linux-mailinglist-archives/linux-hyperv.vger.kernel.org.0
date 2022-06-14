@@ -2,141 +2,175 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBB4754A9FC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jun 2022 09:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF4354AB44
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jun 2022 09:57:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351301AbiFNHGB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 14 Jun 2022 03:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38754 "EHLO
+        id S1351346AbiFNH4B (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Jun 2022 03:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231504AbiFNHGB (ORCPT
+        with ESMTP id S234522AbiFNH4A (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 14 Jun 2022 03:06:01 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 462C3252B0;
-        Tue, 14 Jun 2022 00:06:00 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E161F20C29E6;
-        Tue, 14 Jun 2022 00:05:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E161F20C29E6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1655190359;
-        bh=+3/54BhUR1W1pwPgw+oEYfy2SbEZH8TjXALpQuOqiIw=;
-        h=From:To:Subject:Date:From;
-        b=iC7d5RxcZxM6pDwfI6AUbnj8lG9co9+2yaTpyTf2Runnz7aYgwMCV1FbKs3dkidmG
-         hLZKPLkEtBdSOfkngpeFBwBYqh0OC1MV8+RtCKnyS2D3iTWUNr4nwiasLwnzFAwmzu
-         J4u9pSZVTwnDYk7o6vkMFVUGU+N4O9rbaErrmjF8=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-hyperv@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ssengar@microsoft.com, mikelley@microsoft.com
-Subject: [PATCH v3] scsi: storvsc: Correct reporting of Hyper-V I/O size limits
-Date:   Tue, 14 Jun 2022 00:05:55 -0700
-Message-Id: <1655190355-28722-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 14 Jun 2022 03:56:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A372B27B27
+        for <linux-hyperv@vger.kernel.org>; Tue, 14 Jun 2022 00:55:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655193358;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bqvjbHl4O7aAazVjgU0+rYNf6xag116Xp+xxmxTG8u8=;
+        b=EwoWCFem5nJO4taVaL8QoV4v+w/DLAHb849IdEa9JxFs284CabG90cR1BMElZpfoD4ARp1
+        Gufm2scyxty/vWYZrkWT7f81YjyiLFAHB9N4ufNN7YOEi+a74YrdKLrtFOOAWL/+n6nmbh
+        2VHYnVLVvT8AtX4dt2xQMM5obpKISA8=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-203-U9-JGX29PFudJ4626KY83Q-1; Tue, 14 Jun 2022 03:55:57 -0400
+X-MC-Unique: U9-JGX29PFudJ4626KY83Q-1
+Received: by mail-qv1-f69.google.com with SMTP id dw10-20020a0562140a0a00b004644636cc8fso5396226qvb.22
+        for <linux-hyperv@vger.kernel.org>; Tue, 14 Jun 2022 00:55:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=bqvjbHl4O7aAazVjgU0+rYNf6xag116Xp+xxmxTG8u8=;
+        b=HhkiL7NujeDz++59rNLM/iMydsn05DsGeuqoLVX7w2N0cNjr2yQC13vE4Czmjg7Fq6
+         NKIonvgt0Sw8uUD8AgTCbpQDiSCeMZLXOgHGrzfgmKjoKk3wR6Fp4QlFaYFsNYCnRcFT
+         F7MvERKSP706vREeTT/590fFUexGfZg/I+U2oKZheSjL20q1KslqEKn1bhbQK0dRsyGS
+         gPRZmSrw5L11JCSYGplkG2v3adQgixEeHfep2hGm/6xP9Z+1lczk42+S9gBv8Jxh5WKM
+         MYWPXq28Yh6pNL6H3O5+apm0OmghlXHbxfOLvhYqrSZeIbyBSzDXD9H8hoh3MC6/jGRT
+         Uwwg==
+X-Gm-Message-State: AOAM532Y+dgLylOpLkvP3DsiqZnRTky2rM8KflvZ4TuS6B1cin4oX/W5
+        MqYJ4Qn18cZDkqM/a86oSUmH2eHLFqHJcuS3W35hNNaWfoMxylMqdNMAVzyMQAIjqzSXR7wDk6z
+        TXl7rC3zkx/4DIVQ++TLin6R3
+X-Received: by 2002:a05:620a:258f:b0:680:f657:d3d0 with SMTP id x15-20020a05620a258f00b00680f657d3d0mr2953315qko.707.1655193357130;
+        Tue, 14 Jun 2022 00:55:57 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxu05MQJVTTSqmNxmxBqfO72WFs2b0o9N2r99njW9ULp29VrSo+Y87mnXLsjrb79IGBDz6pnQ==
+X-Received: by 2002:a05:620a:258f:b0:680:f657:d3d0 with SMTP id x15-20020a05620a258f00b00680f657d3d0mr2953293qko.707.1655193356780;
+        Tue, 14 Jun 2022 00:55:56 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-113-202.dyn.eolo.it. [146.241.113.202])
+        by smtp.gmail.com with ESMTPSA id y21-20020a05620a44d500b006a36b0d7f27sm9244895qkp.76.2022.06.14.00.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jun 2022 00:55:56 -0700 (PDT)
+Message-ID: <cd01402d7567184c39fc0cc884cd58232b2e65c9.camel@redhat.com>
+Subject: Re: [PATCH net-next,2/2] net: mana: Add support of XDP_REDIRECT
+ action
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     decui@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
+        paulros@microsoft.com, shacharr@microsoft.com, olaf@aepfle.de,
+        vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 14 Jun 2022 09:55:48 +0200
+In-Reply-To: <1654811828-25339-3-git-send-email-haiyangz@microsoft.com>
+References: <1654811828-25339-1-git-send-email-haiyangz@microsoft.com>
+         <1654811828-25339-3-git-send-email-haiyangz@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Current code is based on the idea that the max number of SGL entries
-also determines the max size of an I/O request.  While this idea was
-true in older versions of the storvsc driver when SGL entry length
-was limited to 4 Kbytes, commit 3d9c3dcc58e9 ("scsi: storvsc: Enable
-scatterlist entry lengths > 4Kbytes") removed that limitation. It's
-now theoretically possible for the block layer to send requests that
-exceed the maximum size supported by Hyper-V. This problem doesn't
-currently happen in practice because the block layer defaults to a
-512 Kbyte maximum, while Hyper-V in Azure supports 2 Mbyte I/O sizes.
-But some future configuration of Hyper-V could have a smaller max I/O
-size, and the block layer could exceed that max.
+On Thu, 2022-06-09 at 14:57 -0700, Haiyang Zhang wrote:
+> Support XDP_REDIRECT action
+> 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-Fix this by correctly setting max_sectors as well as sg_tablesize to
-reflect the maximum I/O size that Hyper-V reports. While allowing
-I/O sizes larger than the block layer default of 512 Kbytes doesn’t
-provide any noticeable performance benefit in the tests we ran, it's
-still appropriate to report the correct underlying Hyper-V capabilities
-to the Linux block layer.
+You really should expand the changelog a little bit...
 
-Also tweak the virt_boundary_mask to reflect that the required
-alignment derives from Hyper-V communication using a 4 Kbyte page size,
-and not on the guest page size, which might be bigger (eg. ARM64).
+> ---
+>  drivers/net/ethernet/microsoft/mana/mana.h    |  6 ++
+>  .../net/ethernet/microsoft/mana/mana_bpf.c    | 64 +++++++++++++++++++
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 13 +++-
+>  .../ethernet/microsoft/mana/mana_ethtool.c    | 12 +++-
+>  4 files changed, 93 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana.h b/drivers/net/ethernet/microsoft/mana/mana.h
+> index f198b34c232f..d58be64374c8 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana.h
+> +++ b/drivers/net/ethernet/microsoft/mana/mana.h
+> @@ -53,12 +53,14 @@ struct mana_stats_rx {
+>  	u64 bytes;
+>  	u64 xdp_drop;
+>  	u64 xdp_tx;
+> +	u64 xdp_redirect;
+>  	struct u64_stats_sync syncp;
+>  };
+>  
+>  struct mana_stats_tx {
+>  	u64 packets;
+>  	u64 bytes;
+> +	u64 xdp_xmit;
+>  	struct u64_stats_sync syncp;
+>  };
+>  
+> @@ -311,6 +313,8 @@ struct mana_rxq {
+>  	struct bpf_prog __rcu *bpf_prog;
+>  	struct xdp_rxq_info xdp_rxq;
+>  	struct page *xdp_save_page;
+> +	bool xdp_flush;
+> +	int xdp_rc; /* XDP redirect return code */
+>  
+>  	/* MUST BE THE LAST MEMBER:
+>  	 * Each receive buffer has an associated mana_recv_buf_oob.
+> @@ -396,6 +400,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming);
+>  void mana_remove(struct gdma_dev *gd, bool suspending);
+>  
+>  void mana_xdp_tx(struct sk_buff *skb, struct net_device *ndev);
+> +int mana_xdp_xmit(struct net_device *ndev, int n, struct xdp_frame **frames,
+> +		  u32 flags);
+>  u32 mana_run_xdp(struct net_device *ndev, struct mana_rxq *rxq,
+>  		 struct xdp_buff *xdp, void *buf_va, uint pkt_len);
+>  struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+> index 1d2f948b5c00..421fd39ff3a8 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+> @@ -32,9 +32,55 @@ void mana_xdp_tx(struct sk_buff *skb, struct net_device *ndev)
+>  	ndev->stats.tx_dropped++;
+>  }
+>  
+> +static int mana_xdp_xmit_fm(struct net_device *ndev, struct xdp_frame *frame,
+> +			    u16 q_idx)
+> +{
+> +	struct sk_buff *skb;
+> +
+> +	skb = xdp_build_skb_from_frame(frame, ndev);
+> +	if (unlikely(!skb))
+> +		return -ENOMEM;
 
-Fixes: 3d9c3dcc58e9 ("scsi: storvsc: Enable scatter list entry lengths > 4Kbytes")
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
-V3
-  - Remove single quotes around the 'Fixes' tag
-  - max_tx_bytes -> max_xfer_bytes
-  - Added empty line at start of comment
+... especially considering this implementation choice: converting the
+xdp frame to an skb in very bad for performances.
 
- drivers/scsi/storvsc_drv.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+You could implement a mana xmit helper working on top of the xdp_frame
+struct, and use it here.
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index ca35309..fe000da 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -1844,7 +1844,7 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *scmnd)
- 	.cmd_per_lun =		2048,
- 	.this_id =		-1,
- 	/* Ensure there are no gaps in presented sgls */
--	.virt_boundary_mask =	PAGE_SIZE-1,
-+	.virt_boundary_mask =	HV_HYP_PAGE_SIZE - 1,
- 	.no_write_same =	1,
- 	.track_queue_depth =	1,
- 	.change_queue_depth =	storvsc_change_queue_depth,
-@@ -1895,6 +1895,7 @@ static int storvsc_probe(struct hv_device *device,
- 	int target = 0;
- 	struct storvsc_device *stor_device;
- 	int max_sub_channels = 0;
-+	u32 max_xfer_bytes;
- 
- 	/*
- 	 * We support sub-channels for storage on SCSI and FC controllers.
-@@ -1968,12 +1969,28 @@ static int storvsc_probe(struct hv_device *device,
- 	}
- 	/* max cmd length */
- 	host->max_cmd_len = STORVSC_MAX_CMD_LEN;
--
- 	/*
--	 * set the table size based on the info we got
--	 * from the host.
-+	 * Any reasonable Hyper-V configuration should provide
-+	 * max_transfer_bytes value aligning to HV_HYP_PAGE_SIZE,
-+	 * protecting it from any weird value.
-+	 */
-+	max_xfer_bytes = round_down(stor_device->max_transfer_bytes, HV_HYP_PAGE_SIZE);
-+	/* max_hw_sectors_kb */
-+	host->max_sectors = max_xfer_bytes >> 9;
-+	/*
-+	 * There are 2 requirements for Hyper-V storvsc sgl segments,
-+	 * based on which the below calculation for max segments is
-+	 * done:
-+	 *
-+	 * 1. Except for the first and last sgl segment, all sgl segments
-+	 *    should be align to HV_HYP_PAGE_SIZE, that also means the
-+	 *    maximum number of segments in a sgl can be calculated by
-+	 *    dividing the total max transfer length by HV_HYP_PAGE_SIZE.
-+	 *
-+	 * 2. Except for the first and last, each entry in the SGL must
-+	 *    have an offset that is a multiple of HV_HYP_PAGE_SIZE.
- 	 */
--	host->sg_tablesize = (stor_device->max_transfer_bytes >> PAGE_SHIFT);
-+	host->sg_tablesize = (max_xfer_bytes >> HV_HYP_PAGE_SHIFT) + 1;
- 	/*
- 	 * For non-IDE disks, the host supports multiple channels.
- 	 * Set the number of HW queues we are supporting.
--- 
-1.8.3.1
+Additionally you could consider revisiting the XDP_TX path: currently
+it builds a skb from the xdp_buff to xmit it locally, while it could
+resort to a much cheaper xdp_buff to xdp_frame conversion.
+
+The traditional way to handle all the above is keep all the
+XDP_TX/XDP_REDIRECT bits in the device-specific _run_xdp helper, that
+will additional avoid several conditionals in mana_rx_skb(). 
+
+The above refactoring would probably require a bit of work, but it will
+pay-off for sure and will become more costily with time. Your choice ;)
+
+But at the very least we need a better changelog here.
+
+Cheers,
+
+Paolo
 
