@@ -2,80 +2,139 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BF4354AB44
-	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jun 2022 09:57:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C797554B2C2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 14 Jun 2022 16:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351346AbiFNH4B (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 14 Jun 2022 03:56:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48014 "EHLO
+        id S237699AbiFNOJG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 14 Jun 2022 10:09:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234522AbiFNH4A (ORCPT
+        with ESMTP id S236030AbiFNOJG (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 14 Jun 2022 03:56:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A372B27B27
-        for <linux-hyperv@vger.kernel.org>; Tue, 14 Jun 2022 00:55:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655193358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bqvjbHl4O7aAazVjgU0+rYNf6xag116Xp+xxmxTG8u8=;
-        b=EwoWCFem5nJO4taVaL8QoV4v+w/DLAHb849IdEa9JxFs284CabG90cR1BMElZpfoD4ARp1
-        Gufm2scyxty/vWYZrkWT7f81YjyiLFAHB9N4ufNN7YOEi+a74YrdKLrtFOOAWL/+n6nmbh
-        2VHYnVLVvT8AtX4dt2xQMM5obpKISA8=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-203-U9-JGX29PFudJ4626KY83Q-1; Tue, 14 Jun 2022 03:55:57 -0400
-X-MC-Unique: U9-JGX29PFudJ4626KY83Q-1
-Received: by mail-qv1-f69.google.com with SMTP id dw10-20020a0562140a0a00b004644636cc8fso5396226qvb.22
-        for <linux-hyperv@vger.kernel.org>; Tue, 14 Jun 2022 00:55:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=bqvjbHl4O7aAazVjgU0+rYNf6xag116Xp+xxmxTG8u8=;
-        b=HhkiL7NujeDz++59rNLM/iMydsn05DsGeuqoLVX7w2N0cNjr2yQC13vE4Czmjg7Fq6
-         NKIonvgt0Sw8uUD8AgTCbpQDiSCeMZLXOgHGrzfgmKjoKk3wR6Fp4QlFaYFsNYCnRcFT
-         F7MvERKSP706vREeTT/590fFUexGfZg/I+U2oKZheSjL20q1KslqEKn1bhbQK0dRsyGS
-         gPRZmSrw5L11JCSYGplkG2v3adQgixEeHfep2hGm/6xP9Z+1lczk42+S9gBv8Jxh5WKM
-         MYWPXq28Yh6pNL6H3O5+apm0OmghlXHbxfOLvhYqrSZeIbyBSzDXD9H8hoh3MC6/jGRT
-         Uwwg==
-X-Gm-Message-State: AOAM532Y+dgLylOpLkvP3DsiqZnRTky2rM8KflvZ4TuS6B1cin4oX/W5
-        MqYJ4Qn18cZDkqM/a86oSUmH2eHLFqHJcuS3W35hNNaWfoMxylMqdNMAVzyMQAIjqzSXR7wDk6z
-        TXl7rC3zkx/4DIVQ++TLin6R3
-X-Received: by 2002:a05:620a:258f:b0:680:f657:d3d0 with SMTP id x15-20020a05620a258f00b00680f657d3d0mr2953315qko.707.1655193357130;
-        Tue, 14 Jun 2022 00:55:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxu05MQJVTTSqmNxmxBqfO72WFs2b0o9N2r99njW9ULp29VrSo+Y87mnXLsjrb79IGBDz6pnQ==
-X-Received: by 2002:a05:620a:258f:b0:680:f657:d3d0 with SMTP id x15-20020a05620a258f00b00680f657d3d0mr2953293qko.707.1655193356780;
-        Tue, 14 Jun 2022 00:55:56 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-113-202.dyn.eolo.it. [146.241.113.202])
-        by smtp.gmail.com with ESMTPSA id y21-20020a05620a44d500b006a36b0d7f27sm9244895qkp.76.2022.06.14.00.55.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jun 2022 00:55:56 -0700 (PDT)
-Message-ID: <cd01402d7567184c39fc0cc884cd58232b2e65c9.camel@redhat.com>
-Subject: Re: [PATCH net-next,2/2] net: mana: Add support of XDP_REDIRECT
- action
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-Cc:     decui@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        paulros@microsoft.com, shacharr@microsoft.com, olaf@aepfle.de,
-        vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 14 Jun 2022 09:55:48 +0200
-In-Reply-To: <1654811828-25339-3-git-send-email-haiyangz@microsoft.com>
-References: <1654811828-25339-1-git-send-email-haiyangz@microsoft.com>
-         <1654811828-25339-3-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        Tue, 14 Jun 2022 10:09:06 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020019.outbound.protection.outlook.com [52.101.61.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C8B2F656;
+        Tue, 14 Jun 2022 07:09:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AXOMQK4e7SIf10CN3lPFlOw1+6nZpRArHUjfYZjEKtcQQNCVR7eTTbm3W4DOgmFLQz89FP1yoa9UFqN8m1F+kMpwPIw5laGpeqQjWCOoy+2G1Q7fVXcCwEtlvhKZKRhDlNMjCO2xO3IABVn6ksP6U7AGKnPM739YeVT4MiNvKkpP+1fMLWWD6AGjzrGLk+JqU/XG+F7pCPxzMLVuNc2qfdEu+wDXYKJGwsI5ej3JA6v0D2SQTzYzzegjCd4swbBwqUwRdMpeM4B5GO+kNZ9i/x3IEk8DYFzyWf79c70ycqsLfsQfEN9+Sc34T5wI63a79apzJDlJKcRtn9xigkj5xg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mlCbX4y+EpD4bAmx4i7BayW2nZutXbmTA+OPMPTl2U8=;
+ b=oMdq2z6mrPx83EfqilZDAan8ZB/soiY5fmms3CsA58VYJtwqeHFps3FSDsEQueKiHMU0zGWZUXw0+svqJXkFNnUwwZSaiknszD4DxbUm9uxN4Y3CdwdUpv6bdlMpVU5PxF6dBOUOwUc3Wo7mSh8cnMrkQpa7pOES1MnerQJHBw7BaaQit7m5AEukY7++BI32VqgZefuhqboVAw2wzcaLQCbcRP2gT0QR/TOJC7nTc9M1FJfXSsvdj2FGVf3749FBqUfkgikM0zLsvtFbmtCaesQLoI+L52+zrLJhAy3TBz0yZD4eWgdR/gZUq9f2zjcRZBaI/J0+U5GXirrdYBN06A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mlCbX4y+EpD4bAmx4i7BayW2nZutXbmTA+OPMPTl2U8=;
+ b=TabMFQKxhcsTJaTCZKP2vjBlGSY0N0hyBvphEei1PZZBAF/Hgpqg1rU+ehm53SH9JrN5yENyXPq3n5MLiqm8uYpz2Iybo72fYRT8AyK2u1qcpCvQ86Dm4gWecOuoreEh5u3kZjhBtNz7F+9vwOv8MrjVjFwxhrv4lO9RS/eU32U=
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
+ by SJ0PR21MB1321.namprd21.prod.outlook.com (2603:10b6:a03:3e4::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.9; Tue, 14 Jun
+ 2022 14:09:02 +0000
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::68ad:e4ac:8035:900e]) by PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::68ad:e4ac:8035:900e%4]) with mapi id 15.20.5373.006; Tue, 14 Jun 2022
+ 14:09:01 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>
+Subject: RE: [PATCH v3] scsi: storvsc: Correct reporting of Hyper-V I/O size
+ limits
+Thread-Topic: [PATCH v3] scsi: storvsc: Correct reporting of Hyper-V I/O size
+ limits
+Thread-Index: AQHYf701tPdktC3ax02uUg8gWJQYyK1O8MLg
+Date:   Tue, 14 Jun 2022 14:09:01 +0000
+Message-ID: <PH0PR21MB3025150F804BC499FADC9379D7AA9@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <1655190355-28722-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1655190355-28722-1-git-send-email-ssengar@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6cadea2e-07f4-4cb3-b774-d6cec83e527d;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-06-14T14:07:44Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: db71ab44-21a3-4d49-9089-08da4e0f6eda
+x-ms-traffictypediagnostic: SJ0PR21MB1321:EE_
+x-microsoft-antispam-prvs: <SJ0PR21MB1321223708A480B52E7D8D60D7AA9@SJ0PR21MB1321.namprd21.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dU4/hTUS0PNe8NHfa1toT01OF8S32mjhAcuyHPU0hrJFsdHEs+4OWgWIhnYQcDlVFcwmy/TCklAaCTes9ewoxWlyT5UJF0TZYPY/tLoSvRKHIkzR8xPWs5OTueVpUgL3jGSLoTNVlMT6Q+Q2Bj9+liwbuRL7EaMVSZmOb2AzqW8fF0MEUiR802vtCr6ryrcuOT4DAEdD9yqercDjrMZb5BgHvqZPE0+7M3eRVMqsbbp9vgWrcNnTB/0lYzUHkgXyUoBJrIWn4Op11kFBp+TzYlPDC1WGjRjqgPx0V/XBPNn5cx/m14QX54SCCMF6EdboCJMclTccTF7rNb6zom/MM5KkZPk5TN+fMy9LO2pMSZLiG1bAOpyUhn/GUvvrkxO/rFyiDxY3nY4e/fvxrMnW8u2IMJXUfowefA2rh4Rydg9z1kwQUFFQNoeMEjWcjLc5bdFyMYLIalkU8b0LjaFBfYqZ9W7FlKL8Krh4/W1zJmBzhGIHzfkGz/OwFj1T6LAmymihM9YRe5xCEHROw3QWPMPwovSSW1JWd+9W8cT8zxnnrL6fYkCDY3hxaWfEDlsuMbzMMbMVDKJYohqnflf0+He7lLEzGs3PE17TH+78dInU4y4pTcV4Uicq89sLYPB/XQCl/CwE6wrF80bFOZGVjXkugJ1PuzTBSSMY4WTqEw8NQYFkNqzvuw9xxxNELWLg42oN+ZQnpgzq8lqKEMxK/4jigEqqcZaheAQ3qmFtKV9tZP6oeBAkvhsQOt6Y04w7YP9QaFXDaIWndKeSbrf1RQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(451199009)(33656002)(55016003)(38070700005)(5660300002)(8936002)(8676002)(52536014)(71200400001)(508600001)(64756008)(76116006)(66476007)(66556008)(66946007)(8990500004)(2906002)(316002)(6636002)(66446008)(110136005)(10290500003)(86362001)(26005)(186003)(82960400001)(82950400001)(6506007)(7696005)(921005)(38100700002)(83380400001)(122000001)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZjlFVlBib2VSVUI3S0IwaDlRbjZHODVwM0hqWVRHU252dWFjWm9VQ3o1bVBR?=
+ =?utf-8?B?TE9palJwUDlvejRIYlpzelZiY2RmbmtPcU5lS2dFUUlzOXJ5Yk90aG8yVVln?=
+ =?utf-8?B?MVF0bHc2NERxcEVRTjVZOTU1Z1p6cm1ZNTR6S3lOVG50eVNzSENhSzd6bEdZ?=
+ =?utf-8?B?VzZzcDkrY0VvdHRaTW1BNGgyQk8yT1MyY0JsaXVyTUhiWStLL3k2RWs1TkVp?=
+ =?utf-8?B?Wng3YlFkUkRXaUlmMDNST2dWV0cvTkdOSlZ6ZHR1WFVQcHhnbW11aE45TzFF?=
+ =?utf-8?B?Q3hNNXFLNS9XV3o1Z29aT1N1SGl3c1R2elRuclozc1lLbGNGdVBOYzV0aTBC?=
+ =?utf-8?B?Rk93dmE0WGhjY0trRVZaOVZrOVZmalFMNndTUXBCTnNxNDRsRHBTRFB0NzhM?=
+ =?utf-8?B?Yy9iYTBDZXdrZUZGYmtNZ0I2Zm53L1MrWEEyYzd4bmIyYzNIazErek1DWWpD?=
+ =?utf-8?B?NUQ2Y0xraU54THVVazVxQS92NXZpa1hta2k4MmVBT0hGNW0yL1RybGwrSExY?=
+ =?utf-8?B?KzV6Uk1jWDlPS2c1eXhIemVSOGtBVzQxeDVLbWtRbVdWL3Q2bnlTRGFieG8v?=
+ =?utf-8?B?MVBNM0VGaTJwZFhFOVFkc3dCWHN6Zm9lRXJhUmY4SkJqdDZwSE41Wk9IQi9V?=
+ =?utf-8?B?dWl5c2JXNnNIYUFsK0cwUWhZMVdzMmhqQysxdytLcll6QUszVjFiUHRBSXhZ?=
+ =?utf-8?B?bmRHQU80YTZTTmNvUVhiQy9JT0JwdDNEUFJzNnZqSUZMT3pTR1ExcEllRXdI?=
+ =?utf-8?B?Ulp4aEpmV2tPemE2M3hvNGdBKzdUY0tnRmNYYnR4d2xBMHB2VVMxeXZtUFRi?=
+ =?utf-8?B?cCtweUFVRWI3MlNuZVo0K1dqRFlpWkdLdHhzM1RnMVQ0cklDcjRzcUZTOEx4?=
+ =?utf-8?B?eUtkZmRqSGFBRW91TlIvVjhSU0g2cWozdnFMRWkxUURWTkVRdEZZUUFaWXhi?=
+ =?utf-8?B?L2R1b0xzK3dyUVdaekllc1pvTUU1cVVVS3huYVBVdzd0Yi8rWUJHZmIxUCtY?=
+ =?utf-8?B?bmNKVFpxOURqWnZNaVJuelVMcDJTSU82MFV4YisxdXJCMXBWTEVKTjBaemVn?=
+ =?utf-8?B?Q3NIcjZCNjM2K0JLY3RFU05WNlhSL1JVUnAzSVVjemdPcFlkQVFxMlUyU2h1?=
+ =?utf-8?B?TUNydEoxckVjZlVRejlBYjBpMTJTMnJjbTJSR1Z3RkFGVncralB0UmJTSzA4?=
+ =?utf-8?B?cFJzRTd4a3ZaTEVScm5ORXpDeUFLWjdZOFd3KytBaWhBZ3pkVTNrMXZKYUtI?=
+ =?utf-8?B?R2NJU2huZXBQWnliUFFOTWl4Z0c4RXlmdjhjYTVLVHVhNTRTcmR6OHhwQVBZ?=
+ =?utf-8?B?amtLTHBJdXBmNVRpRi9XY2VtNHBVVnc3dkdOVXFtYnJSYnQ5MU1lRjhqL2hG?=
+ =?utf-8?B?V0REUno5aC9NclU3YTFEZGo0cjBaK1dYZGx4T2w5b3hzWmEwS3JNTjBsUDFP?=
+ =?utf-8?B?aGhMTGVQTHpqN1l5bXBacDUvNlFlS1U1MzRpdFFoUmhQL0FVdG5YdzNieWdz?=
+ =?utf-8?B?dHlLaXBnaW5iMW13czV3RWJhUnhITkRzSWxKc1RYR3hZR1FJaFQ4dWdoa2R6?=
+ =?utf-8?B?SzVraUNUdGZrMVBxWXVnQk5nTGM3NFpzc2ZHKzVianJPS09hRGZjU1FjTGR1?=
+ =?utf-8?B?Y1dnRW9nektVckc4ZHdhcWNZUVk3Q1V0dDNnYkRzejA4U2tWTlZ3MmdyaXZo?=
+ =?utf-8?B?QXJ4Z2NxbFBBZzBzeWJ1Y3RGWmFvWEgzUnFYWWNCZHZhRXVNWTBLbWJBL2ZS?=
+ =?utf-8?B?UllQSkNjMHFlRGROUi9ycWFneDZoc085bjgzL0UyQVhLaFpoVFlyTGtMOXVX?=
+ =?utf-8?B?RzZTN3lNU0RGYnl2ZXhWL1YzciswUXpTU2w0UTgzZXFxR0prbkpiZk5FRXpF?=
+ =?utf-8?B?OURrU1p3Ulg3bUNMVGQxOHVlN0p5bjI5WlM5emVsdHJiaW1KRlNWK25BQWpF?=
+ =?utf-8?B?eGF0WUtCd2hOVFFxWk5hVlQxQkpsc0VWYW9xcWtrNkF0STc4amoySEpiNERJ?=
+ =?utf-8?B?cW0vMVNMVHorQWN2UGlLZldEMVB6eGhvZC9GNDhUVUNCRFpSOHJUM0RvZFBz?=
+ =?utf-8?B?bEozZURHSG44enJhYzJFSmlLNzFDZlNScXhtMVpydlJmNjJJOUZ0QllndHhZ?=
+ =?utf-8?B?eS9pZXBXUk55NDdjbU55cDArUk1scGlKZ2xXWHhEcmxwYW1DRFBQblJ1VlhL?=
+ =?utf-8?B?eVZpUjh4SkJra25LTWpSamNDOXo2S0ZtYjJ4WVNsRDJIU25MYzh6aEd5aGVs?=
+ =?utf-8?B?d1hwZUFnU09WWDJvc1NjTHo5cG1yUFVEQzFUdW5DUFNldUl5Q2dzSjc0djll?=
+ =?utf-8?B?bTllWkpMNnJhWTF2M2hnbDNqempPRDVVOTIrZFRBU2xhaUdiSkhFU3Y1TDlG?=
+ =?utf-8?Q?ZSmVC9S8sG7fOta0=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db71ab44-21a3-4d49-9089-08da4e0f6eda
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2022 14:09:01.7483
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7kmacuWyWatdNpyaH2dbwxTfwjBmuacl5ZgMlNlBkFsB9if1XQEQq+2bBk4GQr50UXktzfXyvzSk4rMNwdXsfiIVw9LDNO8vmu1PDu+fg6w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1321
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,94 +142,79 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 2022-06-09 at 14:57 -0700, Haiyang Zhang wrote:
-> Support XDP_REDIRECT action
-> 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-
-You really should expand the changelog a little bit...
-
-> ---
->  drivers/net/ethernet/microsoft/mana/mana.h    |  6 ++
->  .../net/ethernet/microsoft/mana/mana_bpf.c    | 64 +++++++++++++++++++
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 13 +++-
->  .../ethernet/microsoft/mana/mana_ethtool.c    | 12 +++-
->  4 files changed, 93 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana.h b/drivers/net/ethernet/microsoft/mana/mana.h
-> index f198b34c232f..d58be64374c8 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana.h
-> +++ b/drivers/net/ethernet/microsoft/mana/mana.h
-> @@ -53,12 +53,14 @@ struct mana_stats_rx {
->  	u64 bytes;
->  	u64 xdp_drop;
->  	u64 xdp_tx;
-> +	u64 xdp_redirect;
->  	struct u64_stats_sync syncp;
->  };
->  
->  struct mana_stats_tx {
->  	u64 packets;
->  	u64 bytes;
-> +	u64 xdp_xmit;
->  	struct u64_stats_sync syncp;
->  };
->  
-> @@ -311,6 +313,8 @@ struct mana_rxq {
->  	struct bpf_prog __rcu *bpf_prog;
->  	struct xdp_rxq_info xdp_rxq;
->  	struct page *xdp_save_page;
-> +	bool xdp_flush;
-> +	int xdp_rc; /* XDP redirect return code */
->  
->  	/* MUST BE THE LAST MEMBER:
->  	 * Each receive buffer has an associated mana_recv_buf_oob.
-> @@ -396,6 +400,8 @@ int mana_probe(struct gdma_dev *gd, bool resuming);
->  void mana_remove(struct gdma_dev *gd, bool suspending);
->  
->  void mana_xdp_tx(struct sk_buff *skb, struct net_device *ndev);
-> +int mana_xdp_xmit(struct net_device *ndev, int n, struct xdp_frame **frames,
-> +		  u32 flags);
->  u32 mana_run_xdp(struct net_device *ndev, struct mana_rxq *rxq,
->  		 struct xdp_buff *xdp, void *buf_va, uint pkt_len);
->  struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> index 1d2f948b5c00..421fd39ff3a8 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> @@ -32,9 +32,55 @@ void mana_xdp_tx(struct sk_buff *skb, struct net_device *ndev)
->  	ndev->stats.tx_dropped++;
->  }
->  
-> +static int mana_xdp_xmit_fm(struct net_device *ndev, struct xdp_frame *frame,
-> +			    u16 q_idx)
-> +{
-> +	struct sk_buff *skb;
-> +
-> +	skb = xdp_build_skb_from_frame(frame, ndev);
-> +	if (unlikely(!skb))
-> +		return -ENOMEM;
-
-... especially considering this implementation choice: converting the
-xdp frame to an skb in very bad for performances.
-
-You could implement a mana xmit helper working on top of the xdp_frame
-struct, and use it here.
-
-Additionally you could consider revisiting the XDP_TX path: currently
-it builds a skb from the xdp_buff to xmit it locally, while it could
-resort to a much cheaper xdp_buff to xdp_frame conversion.
-
-The traditional way to handle all the above is keep all the
-XDP_TX/XDP_REDIRECT bits in the device-specific _run_xdp helper, that
-will additional avoid several conditionals in mana_rx_skb(). 
-
-The above refactoring would probably require a bit of work, but it will
-pay-off for sure and will become more costily with time. Your choice ;)
-
-But at the very least we need a better changelog here.
-
-Cheers,
-
-Paolo
-
+RnJvbTogU2F1cmFiaCBTZW5nYXIgPHNzZW5nYXJAbGludXgubWljcm9zb2Z0LmNvbT4gU2VudDog
+VHVlc2RheSwgSnVuZSAxNCwgMjAyMiAxMjowNiBBTQ0KPiANCj4gQ3VycmVudCBjb2RlIGlzIGJh
+c2VkIG9uIHRoZSBpZGVhIHRoYXQgdGhlIG1heCBudW1iZXIgb2YgU0dMIGVudHJpZXMNCj4gYWxz
+byBkZXRlcm1pbmVzIHRoZSBtYXggc2l6ZSBvZiBhbiBJL08gcmVxdWVzdC4gIFdoaWxlIHRoaXMg
+aWRlYSB3YXMNCj4gdHJ1ZSBpbiBvbGRlciB2ZXJzaW9ucyBvZiB0aGUgc3RvcnZzYyBkcml2ZXIg
+d2hlbiBTR0wgZW50cnkgbGVuZ3RoDQo+IHdhcyBsaW1pdGVkIHRvIDQgS2J5dGVzLCBjb21taXQg
+M2Q5YzNkY2M1OGU5ICgic2NzaTogc3RvcnZzYzogRW5hYmxlDQo+IHNjYXR0ZXJsaXN0IGVudHJ5
+IGxlbmd0aHMgPiA0S2J5dGVzIikgcmVtb3ZlZCB0aGF0IGxpbWl0YXRpb24uIEl0J3MNCj4gbm93
+IHRoZW9yZXRpY2FsbHkgcG9zc2libGUgZm9yIHRoZSBibG9jayBsYXllciB0byBzZW5kIHJlcXVl
+c3RzIHRoYXQNCj4gZXhjZWVkIHRoZSBtYXhpbXVtIHNpemUgc3VwcG9ydGVkIGJ5IEh5cGVyLVYu
+IFRoaXMgcHJvYmxlbSBkb2Vzbid0DQo+IGN1cnJlbnRseSBoYXBwZW4gaW4gcHJhY3RpY2UgYmVj
+YXVzZSB0aGUgYmxvY2sgbGF5ZXIgZGVmYXVsdHMgdG8gYQ0KPiA1MTIgS2J5dGUgbWF4aW11bSwg
+d2hpbGUgSHlwZXItViBpbiBBenVyZSBzdXBwb3J0cyAyIE1ieXRlIEkvTyBzaXplcy4NCj4gQnV0
+IHNvbWUgZnV0dXJlIGNvbmZpZ3VyYXRpb24gb2YgSHlwZXItViBjb3VsZCBoYXZlIGEgc21hbGxl
+ciBtYXggSS9PDQo+IHNpemUsIGFuZCB0aGUgYmxvY2sgbGF5ZXIgY291bGQgZXhjZWVkIHRoYXQg
+bWF4Lg0KPiANCj4gRml4IHRoaXMgYnkgY29ycmVjdGx5IHNldHRpbmcgbWF4X3NlY3RvcnMgYXMg
+d2VsbCBhcyBzZ190YWJsZXNpemUgdG8NCj4gcmVmbGVjdCB0aGUgbWF4aW11bSBJL08gc2l6ZSB0
+aGF0IEh5cGVyLVYgcmVwb3J0cy4gV2hpbGUgYWxsb3dpbmcNCj4gSS9PIHNpemVzIGxhcmdlciB0
+aGFuIHRoZSBibG9jayBsYXllciBkZWZhdWx0IG9mIDUxMiBLYnl0ZXMgZG9lc27igJl0DQo+IHBy
+b3ZpZGUgYW55IG5vdGljZWFibGUgcGVyZm9ybWFuY2UgYmVuZWZpdCBpbiB0aGUgdGVzdHMgd2Ug
+cmFuLCBpdCdzDQo+IHN0aWxsIGFwcHJvcHJpYXRlIHRvIHJlcG9ydCB0aGUgY29ycmVjdCB1bmRl
+cmx5aW5nIEh5cGVyLVYgY2FwYWJpbGl0aWVzDQo+IHRvIHRoZSBMaW51eCBibG9jayBsYXllci4N
+Cj4gDQo+IEFsc28gdHdlYWsgdGhlIHZpcnRfYm91bmRhcnlfbWFzayB0byByZWZsZWN0IHRoYXQg
+dGhlIHJlcXVpcmVkDQo+IGFsaWdubWVudCBkZXJpdmVzIGZyb20gSHlwZXItViBjb21tdW5pY2F0
+aW9uIHVzaW5nIGEgNCBLYnl0ZSBwYWdlIHNpemUsDQo+IGFuZCBub3Qgb24gdGhlIGd1ZXN0IHBh
+Z2Ugc2l6ZSwgd2hpY2ggbWlnaHQgYmUgYmlnZ2VyIChlZy4gQVJNNjQpLg0KPiANCj4gRml4ZXM6
+IDNkOWMzZGNjNThlOSAoInNjc2k6IHN0b3J2c2M6IEVuYWJsZSBzY2F0dGVyIGxpc3QgZW50cnkg
+bGVuZ3RocyA+IDRLYnl0ZXMiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBTYXVyYWJoIFNlbmdhciA8c3Nl
+bmdhckBsaW51eC5taWNyb3NvZnQuY29tPg0KPiAtLS0NCj4gVjMNCj4gICAtIFJlbW92ZSBzaW5n
+bGUgcXVvdGVzIGFyb3VuZCB0aGUgJ0ZpeGVzJyB0YWcNCj4gICAtIG1heF90eF9ieXRlcyAtPiBt
+YXhfeGZlcl9ieXRlcw0KPiAgIC0gQWRkZWQgZW1wdHkgbGluZSBhdCBzdGFydCBvZiBjb21tZW50
+DQo+IA0KPiAgZHJpdmVycy9zY3NpL3N0b3J2c2NfZHJ2LmMgfCAyNyArKysrKysrKysrKysrKysr
+KysrKysrLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCA1IGRlbGV0
+aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS9zdG9ydnNjX2Rydi5jIGIv
+ZHJpdmVycy9zY3NpL3N0b3J2c2NfZHJ2LmMNCj4gaW5kZXggY2EzNTMwOS4uZmUwMDBkYSAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9zY3NpL3N0b3J2c2NfZHJ2LmMNCj4gKysrIGIvZHJpdmVycy9z
+Y3NpL3N0b3J2c2NfZHJ2LmMNCj4gQEAgLTE4NDQsNyArMTg0NCw3IEBAIHN0YXRpYyBpbnQgc3Rv
+cnZzY19xdWV1ZWNvbW1hbmQoc3RydWN0IFNjc2lfSG9zdCAqaG9zdCwNCj4gc3RydWN0IHNjc2lf
+Y21uZCAqc2NtbmQpDQo+ICAJLmNtZF9wZXJfbHVuID0JCTIwNDgsDQo+ICAJLnRoaXNfaWQgPQkJ
+LTEsDQo+ICAJLyogRW5zdXJlIHRoZXJlIGFyZSBubyBnYXBzIGluIHByZXNlbnRlZCBzZ2xzICov
+DQo+IC0JLnZpcnRfYm91bmRhcnlfbWFzayA9CVBBR0VfU0laRS0xLA0KPiArCS52aXJ0X2JvdW5k
+YXJ5X21hc2sgPQlIVl9IWVBfUEFHRV9TSVpFIC0gMSwNCj4gIAkubm9fd3JpdGVfc2FtZSA9CTEs
+DQo+ICAJLnRyYWNrX3F1ZXVlX2RlcHRoID0JMSwNCj4gIAkuY2hhbmdlX3F1ZXVlX2RlcHRoID0J
+c3RvcnZzY19jaGFuZ2VfcXVldWVfZGVwdGgsDQo+IEBAIC0xODk1LDYgKzE4OTUsNyBAQCBzdGF0
+aWMgaW50IHN0b3J2c2NfcHJvYmUoc3RydWN0IGh2X2RldmljZSAqZGV2aWNlLA0KPiAgCWludCB0
+YXJnZXQgPSAwOw0KPiAgCXN0cnVjdCBzdG9ydnNjX2RldmljZSAqc3Rvcl9kZXZpY2U7DQo+ICAJ
+aW50IG1heF9zdWJfY2hhbm5lbHMgPSAwOw0KPiArCXUzMiBtYXhfeGZlcl9ieXRlczsNCj4gDQo+
+ICAJLyoNCj4gIAkgKiBXZSBzdXBwb3J0IHN1Yi1jaGFubmVscyBmb3Igc3RvcmFnZSBvbiBTQ1NJ
+IGFuZCBGQyBjb250cm9sbGVycy4NCj4gQEAgLTE5NjgsMTIgKzE5NjksMjggQEAgc3RhdGljIGlu
+dCBzdG9ydnNjX3Byb2JlKHN0cnVjdCBodl9kZXZpY2UgKmRldmljZSwNCj4gIAl9DQo+ICAJLyog
+bWF4IGNtZCBsZW5ndGggKi8NCj4gIAlob3N0LT5tYXhfY21kX2xlbiA9IFNUT1JWU0NfTUFYX0NN
+RF9MRU47DQo+IC0NCj4gIAkvKg0KPiAtCSAqIHNldCB0aGUgdGFibGUgc2l6ZSBiYXNlZCBvbiB0
+aGUgaW5mbyB3ZSBnb3QNCj4gLQkgKiBmcm9tIHRoZSBob3N0Lg0KPiArCSAqIEFueSByZWFzb25h
+YmxlIEh5cGVyLVYgY29uZmlndXJhdGlvbiBzaG91bGQgcHJvdmlkZQ0KPiArCSAqIG1heF90cmFu
+c2Zlcl9ieXRlcyB2YWx1ZSBhbGlnbmluZyB0byBIVl9IWVBfUEFHRV9TSVpFLA0KPiArCSAqIHBy
+b3RlY3RpbmcgaXQgZnJvbSBhbnkgd2VpcmQgdmFsdWUuDQo+ICsJICovDQo+ICsJbWF4X3hmZXJf
+Ynl0ZXMgPSByb3VuZF9kb3duKHN0b3JfZGV2aWNlLT5tYXhfdHJhbnNmZXJfYnl0ZXMsIEhWX0hZ
+UF9QQUdFX1NJWkUpOw0KPiArCS8qIG1heF9od19zZWN0b3JzX2tiICovDQo+ICsJaG9zdC0+bWF4
+X3NlY3RvcnMgPSBtYXhfeGZlcl9ieXRlcyA+PiA5Ow0KPiArCS8qDQo+ICsJICogVGhlcmUgYXJl
+IDIgcmVxdWlyZW1lbnRzIGZvciBIeXBlci1WIHN0b3J2c2Mgc2dsIHNlZ21lbnRzLA0KPiArCSAq
+IGJhc2VkIG9uIHdoaWNoIHRoZSBiZWxvdyBjYWxjdWxhdGlvbiBmb3IgbWF4IHNlZ21lbnRzIGlz
+DQo+ICsJICogZG9uZToNCj4gKwkgKg0KPiArCSAqIDEuIEV4Y2VwdCBmb3IgdGhlIGZpcnN0IGFu
+ZCBsYXN0IHNnbCBzZWdtZW50LCBhbGwgc2dsIHNlZ21lbnRzDQo+ICsJICogICAgc2hvdWxkIGJl
+IGFsaWduIHRvIEhWX0hZUF9QQUdFX1NJWkUsIHRoYXQgYWxzbyBtZWFucyB0aGUNCj4gKwkgKiAg
+ICBtYXhpbXVtIG51bWJlciBvZiBzZWdtZW50cyBpbiBhIHNnbCBjYW4gYmUgY2FsY3VsYXRlZCBi
+eQ0KPiArCSAqICAgIGRpdmlkaW5nIHRoZSB0b3RhbCBtYXggdHJhbnNmZXIgbGVuZ3RoIGJ5IEhW
+X0hZUF9QQUdFX1NJWkUuDQo+ICsJICoNCj4gKwkgKiAyLiBFeGNlcHQgZm9yIHRoZSBmaXJzdCBh
+bmQgbGFzdCwgZWFjaCBlbnRyeSBpbiB0aGUgU0dMIG11c3QNCj4gKwkgKiAgICBoYXZlIGFuIG9m
+ZnNldCB0aGF0IGlzIGEgbXVsdGlwbGUgb2YgSFZfSFlQX1BBR0VfU0laRS4NCj4gIAkgKi8NCj4g
+LQlob3N0LT5zZ190YWJsZXNpemUgPSAoc3Rvcl9kZXZpY2UtPm1heF90cmFuc2Zlcl9ieXRlcyA+
+PiBQQUdFX1NISUZUKTsNCj4gKwlob3N0LT5zZ190YWJsZXNpemUgPSAobWF4X3hmZXJfYnl0ZXMg
+Pj4gSFZfSFlQX1BBR0VfU0hJRlQpICsgMTsNCj4gIAkvKg0KPiAgCSAqIEZvciBub24tSURFIGRp
+c2tzLCB0aGUgaG9zdCBzdXBwb3J0cyBtdWx0aXBsZSBjaGFubmVscy4NCj4gIAkgKiBTZXQgdGhl
+IG51bWJlciBvZiBIVyBxdWV1ZXMgd2UgYXJlIHN1cHBvcnRpbmcuDQo+IC0tDQo+IDEuOC4zLjEN
+Cg0KUmV2aWV3ZWQtYnk6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0K
+DQo=
