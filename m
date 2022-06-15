@@ -2,102 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12EF154CB78
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jun 2022 16:37:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B0E54D0E8
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Jun 2022 20:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240731AbiFOOh4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 15 Jun 2022 10:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52594 "EHLO
+        id S1358448AbiFOS2x (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 15 Jun 2022 14:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230160AbiFOOhz (ORCPT
+        with ESMTP id S241911AbiFOS2u (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 15 Jun 2022 10:37:55 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4708D13CE1;
-        Wed, 15 Jun 2022 07:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=75kgVCcqOPOLeu4JBiLLFab/dM4uNZ1dcLuvpDx9ZCg=; b=kAIWl67VuUe8cBDkmFOZTh4b+J
-        Uy6PgE2+CwIEzhFEfsXCTAadcMkk5TefuTIBHvgzxNrjmUz+/r/f3fMBR5i8mMC7UweLMh9MkeJoD
-        97gkOJRUGibA77qDy9s4vL7NkQkS1Sv+TX4WpruLFHmbGvImVgE9LeYadgdIraA8AGxMlB+PxaWy/
-        1adKvJuvvpCbTsZosCqi5SMDlMupfKEgEY7JpKMS8HhvbF7gyowCTheRqW0YX0S9D05qpW9G1fKLt
-        DJUWQ6k8Tz/HxaHb6kuJRSWnDBXrsJA/DQco3hh/lFSm8XLWvSeNFNfH2bKr+ugXM0hH/Gw2zl2s+
-        laFslj7w==;
-Received: from 179.red-81-39-194.dynamicip.rima-tde.net ([81.39.194.179] helo=[192.168.15.167])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1o1U8m-002LYs-SW; Wed, 15 Jun 2022 16:37:04 +0200
-Message-ID: <362f6520-8209-1721-823c-11928338f57d@igalia.com>
-Date:   Wed, 15 Jun 2022 11:36:39 +0200
+        Wed, 15 Jun 2022 14:28:50 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41703C499;
+        Wed, 15 Jun 2022 11:28:49 -0700 (PDT)
+Received: by mail-wr1-f41.google.com with SMTP id c21so16512570wrb.1;
+        Wed, 15 Jun 2022 11:28:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B1SFZ6MZWRb+dA4s/bCJZ/ZRO+w+dyhlktivoc3kZFU=;
+        b=kpmoCEusZIUb5cAtZvecB91+JUuCEJJSF39RxiQxrd0dLbg/59ReB6RSrwcMc/SBRF
+         49zPlC2I1JJk3GZh0BbmixH/jO4ZKbEw4NRziRoMGEAksMFeyMxMjnw6lLyKAFYwvxKu
+         YK2j1zlwUhWSbKq2cdNNlUrsM2WYRwXlEgrCZLgHmXQCrx52b6rviYf8M3ZaXiZUFSBJ
+         wetzU8SWwGLh++So50oe0EneSutVBlSFam4VeX2e84hc7R2bV9bE8naTeL3HKPtrnFna
+         0P3SWueuH3886IG2bu8IbhfW7ZW+pWRMQwFGCqJvudIbFG3i/BsXy/5n4oqLmiVLULtU
+         kl3w==
+X-Gm-Message-State: AJIora9z0pRTxy4FB8YrPxOZZwuRqJFQHNjgWt70jHVVxtPLeuRsfheK
+        NuwxnBDE+/kOxIVRtaDVM6c=
+X-Google-Smtp-Source: AGRyM1uVqkRyKPo9IPy3Znjd5I3YXbPg0SecgRP3nQPk9x9/HkOToyOmF/NisS4GUV9w/gu3cI4eOg==
+X-Received: by 2002:adf:fd0a:0:b0:210:32dc:7519 with SMTP id e10-20020adffd0a000000b0021032dc7519mr1043351wrr.181.1655317728299;
+        Wed, 15 Jun 2022 11:28:48 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id j20-20020a5d6e54000000b00212a83b93f3sm15386971wrz.88.2022.06.15.11.28.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 11:28:47 -0700 (PDT)
+Date:   Wed, 15 Jun 2022 18:28:46 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Tianyu Lan <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>
+Subject: Re: [PATCH V3] x86/Hyper-V: Add SEV negotiate protocol support in
+ Isolation VM
+Message-ID: <20220615182846.oliacmkrivhh5kx7@liuwe-devbox-debian-v2>
+References: <20220614014553.1915929-1-ltykernel@gmail.com>
+ <PH0PR21MB30252886961F6D7EA7B7EBE6D7AA9@PH0PR21MB3025.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 24/30] panic: Refactor the panic path
-Content-Language: en-US
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     bhe@redhat.com, d.hatayama@jp.fujitsu.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Mark Rutland <mark.rutland@arm.com>, mikelley@microsoft.com,
-        vkuznets@redhat.com, akpm@linux-foundation.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
-        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
-        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        corbet@lwn.net, dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com, gregkh@linuxfoundation.org,
-        hidehiro.kawai.ez@hitachi.com, jgross@suse.com,
-        john.ogness@linutronix.de, keescook@chromium.org, luto@kernel.org,
-        mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
-        peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, will@kernel.org
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
- <87fskzuh11.fsf@email.froward.int.ebiederm.org>
- <0d084eed-4781-c815-29c7-ac62c498e216@igalia.com> <Yqic0R8/UFqTbbMD@alley>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <Yqic0R8/UFqTbbMD@alley>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR21MB30252886961F6D7EA7B7EBE6D7AA9@PH0PR21MB3025.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Perfect Petr, thanks for your feedback!
+On Tue, Jun 14, 2022 at 04:50:36PM +0000, Michael Kelley (LINUX) wrote:
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Monday, June 13, 2022 6:46 PM
+> > 
+> > Hyper-V Isolation VM current code uses sev_es_ghcb_hv_call()
+> > to read/write MSR via GHCB page and depends on the sev code.
+> > This may cause regression when sev code changes interface
+> > design.
+> > 
+> > The latest SEV-ES code requires to negotiate GHCB version before
+> > reading/writing MSR via GHCB page and sev_es_ghcb_hv_call() doesn't
+> > work for Hyper-V Isolation VM. Add Hyper-V ghcb related implementation
+> > to decouple SEV and Hyper-V code. Negotiate GHCB version in the
+> > hyperv_init() and use the version to communicate with Hyper-V
+> > in the ghcb hv call function.
+> > 
+> > Fixes: 2ea29c5abbc2 ("x86/sev: Save the negotiated GHCB version")
+> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > ---
+> > Change since v1:
+> >        - Negotiate ghcb version in Hyper-V init.
+> >        - use native_wrmsrl() instead of native_wrmsr() in the
+> >        	 wr_ghcb_msr().
+> > ---
+> >  arch/x86/hyperv/hv_init.c       |  6 +++
+> >  arch/x86/hyperv/ivm.c           | 84 ++++++++++++++++++++++++++++++---
+> >  arch/x86/include/asm/mshyperv.h |  4 ++
+> >  3 files changed, 88 insertions(+), 6 deletions(-)
+> > 
+> 
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> 
 
-I'll be out for some weeks, but after that what I'm doing is to split
-the series in 2 parts:
-
-(a) The general fixes, which should be reviewed by subsystem maintainers
-and even merged individually by them.
-
-(b) The proper panic refactor, which includes the notifiers list split,
-etc. I'll think about what I consider the best solution for the
-crash_dump required ones, and will try to split in very simple patches
-to make it easier to review.
-
-Cheers,
-
-
-Guilherme
+Applied to hyperv-fixes. Thanks.
