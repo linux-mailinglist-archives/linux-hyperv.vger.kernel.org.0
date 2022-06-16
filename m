@@ -2,89 +2,170 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E7854DDE9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jun 2022 11:10:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE4A054E51A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Jun 2022 16:40:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359426AbiFPJKU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Jun 2022 05:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36548 "EHLO
+        id S1377741AbiFPOkV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Jun 2022 10:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359112AbiFPJKT (ORCPT
+        with ESMTP id S230393AbiFPOkR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Jun 2022 05:10:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA8E52E75;
-        Thu, 16 Jun 2022 02:10:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DC2A9B82330;
-        Thu, 16 Jun 2022 09:10:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 646AEC3411C;
-        Thu, 16 Jun 2022 09:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655370614;
-        bh=v3LzgN/UAeNgTRLw78tfLU45yvH+bg2GM46GCAKKCOk=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=aou3pE7C2Gn3QjhYNlzk6UvJxqzpRGAtvhjPipzb/UlW5J3OUHvYZfZSU8c1JtI2W
-         lqUw03b0WSx9VfM1R0DWUjA7NmJJIN2F5/qIVad6iesgoYEC2JhqQASJ2JGfl9HJ/1
-         OPCNOPJzKq0oYJPkRC7tXtCUqAP/r+maRUnN5q17NdgIRVYJ8LG274UkjG7muBuPNz
-         mx+XTAvhHqnUKOyu+Xh/P5243hXsxoV8YYSOegephqZ5lWsj630LHFYB9NDK/Dk5vT
-         //QzhIRA1qtiVq6CiS/zdO3+VM6PYBh0cOlpwazirnnoLY+UxO0qh/p/oRiMVnYd2b
-         LLeJYY/7+to7Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 446CDE7385C;
-        Thu, 16 Jun 2022 09:10:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 16 Jun 2022 10:40:17 -0400
+Received: from mail.sysgo.com (mail.sysgo.com [159.69.174.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B797245784;
+        Thu, 16 Jun 2022 07:40:15 -0700 (PDT)
+Date:   Thu, 16 Jun 2022 16:40:10 +0200
+From:   Vit Kabele <vit.kabele@sysgo.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        kys@microsoft.com
+Subject: [RFC PATCH] Hyper-V: Initialize crash reporting before vmbus
+Message-ID: <YqtAyitIGRAHL7V0@czspare1-lap.sysgo.cz>
+Mail-Followup-To: Vit Kabele <vit.kabele@sysgo.com>,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        linux-kernel@vger.kernel.org, kys@microsoft.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next,v2,0/2] net: mana: Add PF and XDP_REDIRECT support
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <165537061427.3948.3823927999620148456.git-patchwork-notify@kernel.org>
-Date:   Thu, 16 Jun 2022 09:10:14 +0000
-References: <1655238535-19257-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1655238535-19257-1-git-send-email-haiyangz@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        decui@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        paulros@microsoft.com, shacharr@microsoft.com, olaf@aepfle.de,
-        vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+The Hyper-V crash reporting feature is initialized after a successful
+vmbus setup. The reporting feature however does not require vmbus at all
+and Windows guests can indeed use the reporting capabilities even with
+the minimal Hyper-V implementation (as described in the Minimal
+Requirements document).
 
-This series was applied to netdev/net-next.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
+Reorder the initialization callbacks so that the crash reporting
+callbacks are registered before the vmbus initialization starts.
 
-On Tue, 14 Jun 2022 13:28:53 -0700 you wrote:
-> The patch set adds PF and XDP_REDIRECT support.
-> 
-> Dexuan Cui (1):
->   net: mana: Add the Linux MANA PF driver
-> 
-> Haiyang Zhang (1):
->   net: mana: Add support of XDP_REDIRECT action
-> 
-> [...]
+Nevertheless, I am not sure about following:
 
-Here is the summary with links:
-  - [net-next,v2,1/2] net: mana: Add the Linux MANA PF driver
-    https://git.kernel.org/netdev/net-next/c/1566e7d6206f
-  - [net-next,v2,2/2] net: mana: Add support of XDP_REDIRECT action
-    https://git.kernel.org/netdev/net-next/c/7a8938cd024d
+1/ The vmbus_initiate_unload function is called within the panic handler
+even when the vmbus initialization does not finish (there might be no
+vmbus at all). This should probably not be problem because the vmbus
+unload function always checks for current connection state and does
+nothing when this is "DISCONNECTED". For better readability, it might be
+better to add separate panic notifier for vmbus and crash reporting.
 
-You are awesome, thank you!
+2/ Wouldn't it be better to extract the whole reporting capability out
+of the vmbus module, so that it stays present in the kernel even when
+the vmbus module is possibly unloaded?
+
+Signed-off-by: Vit Kabele <vit.kabele@sysgo.com>
+
+---
+ drivers/hv/vmbus_drv.c | 77 +++++++++++++++++++++++-------------------
+ 1 file changed, 42 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 714d549b7b46..97873f03aa7a 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1509,41 +1509,6 @@ static int vmbus_bus_init(void)
+ 	if (hv_is_isolation_supported())
+ 		sysctl_record_panic_msg = 0;
+ 
+-	/*
+-	 * Only register if the crash MSRs are available
+-	 */
+-	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
+-		u64 hyperv_crash_ctl;
+-		/*
+-		 * Panic message recording (sysctl_record_panic_msg)
+-		 * is enabled by default in non-isolated guests and
+-		 * disabled by default in isolated guests; the panic
+-		 * message recording won't be available in isolated
+-		 * guests should the following registration fail.
+-		 */
+-		hv_ctl_table_hdr = register_sysctl_table(hv_root_table);
+-		if (!hv_ctl_table_hdr)
+-			pr_err("Hyper-V: sysctl table register error");
+-
+-		/*
+-		 * Register for panic kmsg callback only if the right
+-		 * capability is supported by the hypervisor.
+-		 */
+-		hyperv_crash_ctl = hv_get_register(HV_REGISTER_CRASH_CTL);
+-		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG)
+-			hv_kmsg_dump_register();
+-
+-		register_die_notifier(&hyperv_die_block);
+-	}
+-
+-	/*
+-	 * Always register the panic notifier because we need to unload
+-	 * the VMbus channel connection to prevent any VMbus
+-	 * activity after the VM panics.
+-	 */
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-			       &hyperv_panic_block);
+-
+ 	vmbus_request_offers();
+ 
+ 	return 0;
+@@ -2675,6 +2640,46 @@ static struct syscore_ops hv_synic_syscore_ops = {
+ 	.resume = hv_synic_resume,
+ };
+ 
++static void __init crash_reporting_init(void)
++{
++	/*
++	 * Only register if the crash MSRs are available
++	 */
++	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
++		u64 hyperv_crash_ctl;
++		/*
++		 * Panic message recording (sysctl_record_panic_msg)
++		 * is enabled by default in non-isolated guests and
++		 * disabled by default in isolated guests; the panic
++		 * message recording won't be available in isolated
++		 * guests should the following registration fail.
++		 */
++		hv_ctl_table_hdr = register_sysctl_table(hv_root_table);
++		if (!hv_ctl_table_hdr)
++			pr_err("Hyper-V: sysctl table register error");
++
++		/*
++		 * Register for panic kmsg callback only if the right
++		 * capability is supported by the hypervisor.
++		 */
++		hyperv_crash_ctl = hv_get_register(HV_REGISTER_CRASH_CTL);
++		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG)
++			hv_kmsg_dump_register();
++
++		register_die_notifier(&hyperv_die_block);
++	}
++
++	/*
++	 * Always register the panic notifier because we need to unload
++	 * the VMbus channel connection to prevent any VMbus
++	 * activity after the VM panics.
++	 */
++	atomic_notifier_chain_register(&panic_notifier_list,
++			       &hyperv_panic_block);
++
++
++}
++
+ static int __init hv_acpi_init(void)
+ {
+ 	int ret, t;
+@@ -2687,6 +2692,8 @@ static int __init hv_acpi_init(void)
+ 
+ 	init_completion(&probe_event);
+ 
++	crash_reporting_init();
++
+ 	/*
+ 	 * Get ACPI resources first.
+ 	 */
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+2.30.2
