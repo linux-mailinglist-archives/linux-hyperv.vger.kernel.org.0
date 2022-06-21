@@ -2,108 +2,186 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51361552EB4
-	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Jun 2022 11:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 224045532AF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 21 Jun 2022 14:59:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349540AbiFUJkm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 21 Jun 2022 05:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52476 "EHLO
+        id S1350894AbiFUM67 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 21 Jun 2022 08:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349250AbiFUJkJ (ORCPT
+        with ESMTP id S233208AbiFUM66 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 21 Jun 2022 05:40:09 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A17F27CFD
-        for <linux-hyperv@vger.kernel.org>; Tue, 21 Jun 2022 02:39:57 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id t1so23500198ybd.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 21 Jun 2022 02:39:57 -0700 (PDT)
+        Tue, 21 Jun 2022 08:58:58 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DCE2A2;
+        Tue, 21 Jun 2022 05:58:56 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id eq6so11915905edb.6;
+        Tue, 21 Jun 2022 05:58:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=NKhg6kSkfnglJlsPDVUWhCY3Iibudx7OhZC5CePFgeNekYJKNrcmU8wB8gkktmjPqY
-         f0o4DET3nwW7oGb1WQAmWVCm6yLISrVrQXMY/9qoCppMNLX7K/jA/JZ+JMs1mNT38j+N
-         qSlM2vTiSOIkQo5cZ6oY4dkMVda7fWn0vzKRT295Q67AStI8u0BTanvw38uSxo4IMvFm
-         mtbeFJOQugEk6bmbrSLJZHxNWvSEoU0AT9TQz59V3jAGDZbWiI6U0Fx8UlroTYMr9wGQ
-         +xC78kHT5AZK7k/f6wmWhdDj3ThC5Cy20ctCKCcYvb/idPExEpgvQXB/UX/ziCu3vO07
-         Q2/g==
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=PN1gz29FFWaPhyNAiNXSx3lrGEyj3A20CvuOZ9ZGnOA=;
+        b=aj2GC+C3rG9sFJPCCeRcQmRqTzKpjP+9EaeQeq8htWK6s5WkeSZS2FUhyzpYLS/yWD
+         eq4p2mTvR7HbHuvGAJosDtHN4KM5H95ir3ddri2elgdc4k6Gmyv69+ne/Gs4dy6g4edS
+         tMs/Kv9F8vSQXmO0lBlaHC5XXUjjY7BW7XYSMDAhMwJ38Fe2ciQX/RKWwcV1O6QFHKpK
+         gLKgh08pExpiVikg8tIFKWfE1+0a5YqwldDHjfvzQ/rUl6V4eozPb5yABx0xzKA0bCLu
+         w25P6Lwi58PBHCzNvYlRMGf02nHlTOWhkRTUUXSUZ0/rAtb3jZ++5NOJQMxcUP06/jBo
+         z25A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=LxLTGY+Sh94+NlORLedhBzweXr6Apz0TuYsMXJwmqemMZ9XLx9Tu3hUl619HHPCY8m
-         toKWP14zSrxe7q6Cecm6HdgN4xZR+Xpb8fq7Flnlu1LCJ2d1m9pL2ISVMZptEY0pg1dh
-         DM6o7dnZTlg5RiX8kRrwSk1de22l7h9HL0sBPulvdffjqzLli2cu5R1HLrVfbybQufz2
-         3fXvqYJd80O/SpG8MP6SwtxBmlzsbZ2PuRG/AEyuf/CxoKlmVk2Uaevv7kbvPH+DUZuM
-         HOnvAdO0wVS0EvDu7K3jsJwrB8IR4kzLU+4VjoQfIyZaQJT4XzgU1ZEJWMZVCIMNIH72
-         txVw==
-X-Gm-Message-State: AJIora81qE6oIR/tJI004tpIP2ZffRvzJqIwBCkjP8+86RlANEGH2whG
-        BYoJfUcSc8cy9WT2lL4sQRRKLddsKdJ8JnvgOmddNhzEbNvjm5jH
-X-Google-Smtp-Source: AGRyM1sTF/SvvxCyraPE52znD36ZX02jNmxmam87lP8bWzXT3yTfChS1a9JgJI9LjBXh9tpS4qLO5E/t+5efudcEruY=
-X-Received: by 2002:a0d:d7c7:0:b0:317:bfe8:4f2 with SMTP id
- z190-20020a0dd7c7000000b00317bfe804f2mr12417910ywd.276.1655804384555; Tue, 21
- Jun 2022 02:39:44 -0700 (PDT)
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :subject:content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=PN1gz29FFWaPhyNAiNXSx3lrGEyj3A20CvuOZ9ZGnOA=;
+        b=PuHdseKo2OAvoTxiOg1nXDHYcWsIoLMzQ+l7mlRNGprTlZvfBJsepx5tAGCyJwrAyE
+         hQ0XUBdeuBs+JGCsUEO6/ZQg9QNw5V8jZwB/UNrl7JZ4Eyw+BWr+fa7UdvPc+U8rx6fP
+         dOuyWTjOEXKbE2eBvKDV+6zLttFpRvBs1WL5MFQJ1XNCcmJbYcCTQE4a5Vm39D2cNAiO
+         YGKpfxBgPvOhsPnX7aYXI6Lt8OA8GcYmGGeRt+YLJZ3d0smLw9KMRXZVnwaBECjtU9TH
+         RatAr+ps+KRS3u1R+1btsa8ymMeHO9DIC/gg8tsGVxAhvu9epDJxUywwZmajlLsG/1Bl
+         6H+A==
+X-Gm-Message-State: AJIora+pVkIkGjx2kJIszJpDmWMw077FrfUCfeqGFJkQQlCeFr5+LhFY
+        zGjsdZI0Q/e0h15qpGYnt4hn3bhH5nk=
+X-Google-Smtp-Source: AGRyM1uHjiwz+YFBo6alPO/8jYq69f3aXQdVTR6nGy8rAH64GA1wbGkq3sCGafwVxTGmE5k/OeSF5A==
+X-Received: by 2002:aa7:c681:0:b0:42f:b180:bb3d with SMTP id n1-20020aa7c681000000b0042fb180bb3dmr34623722edq.191.1655816335265;
+        Tue, 21 Jun 2022 05:58:55 -0700 (PDT)
+Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
+        by smtp.googlemail.com with ESMTPSA id h12-20020a05640250cc00b004358cec9ce1sm3620502edb.65.2022.06.21.05.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jun 2022 05:58:54 -0700 (PDT)
+Sender: Paolo Bonzini <paolo.bonzini@gmail.com>
+Message-ID: <17a2e85a-a1f2-99e1-fc69-1baed2275bd5@redhat.com>
+Date:   Tue, 21 Jun 2022 14:58:51 +0200
 MIME-Version: 1.0
-Received: by 2002:a05:7010:e10a:b0:2d9:e631:94d0 with HTTP; Tue, 21 Jun 2022
- 02:39:44 -0700 (PDT)
-Reply-To: dimitryedik@gmail.com
-From:   Dimitry Edik <lsbthdwrds@gmail.com>
-Date:   Tue, 21 Jun 2022 02:39:44 -0700
-Message-ID: <CAGrL05aBO8rbFuij24J-APa+Luis69gEjhj35iv_GZfkHCVYDQ@mail.gmail.com>
-Subject: Dear Partner,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b2f listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [lsbthdwrds[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
-        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v7 10/39] KVM: x86: hyper-v: Don't use
+ sparse_set_to_vcpu_mask() in kvm_hv_send_ipi()
+Content-Language: en-US
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220613133922.2875594-1-vkuznets@redhat.com>
+ <20220613133922.2875594-11-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <20220613133922.2875594-11-vkuznets@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Dear,
+On 6/13/22 15:38, Vitaly Kuznetsov wrote:
+> Get rid of on-stack allocation of vcpu_mask and optimize kvm_hv_send_ipi()
+> for a smaller number of vCPUs in the request. When Hyper-V TLB flush
+> is in  use, HvSendSyntheticClusterIpi{,Ex} calls are not commonly used to
+> send IPIs to a large number of vCPUs (and are rarely used in general).
+> 
+> Introduce hv_is_vp_in_sparse_set() to directly check if the specified
+> VP_ID is present in sparse vCPU set.
+> 
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>   arch/x86/kvm/hyperv.c | 37 ++++++++++++++++++++++++++-----------
+>   1 file changed, 26 insertions(+), 11 deletions(-)
 
-My Name is Dimitry Edik from Russia A special assistance to my Russia
-boss who deals in oil import and export He was killed by the Ukraine
-soldiers at the border side. He supplied
-oil to the Philippines company and he was paid over 90 per cent of the
-transaction and the remaining $18.6 Million dollars have been paid into a
-Taiwan bank in the Philippines..i want a partner that will assist me
-with the claims. Is a (DEAL ) 40% for you and 60% for me
-I have all information for the claims.
-Kindly read and reply to me back is 100 per cent risk-free
+I'm a bit confused by this patch being in this series.
 
-Yours Sincerely
-Dimitry Edik
+Just to be clear, PV IPI does *not* support the VP_ID, right?  And since 
+patch 12 only affects the sparse banks, the patch does not have any 
+other dependency.  Is this correct?
+
+Paolo
+
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index f41153c71beb..269a5fcca31b 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1747,6 +1747,25 @@ static void sparse_set_to_vcpu_mask(struct kvm *kvm, u64 *sparse_banks,
+>   	}
+>   }
+>   
+> +static bool hv_is_vp_in_sparse_set(u32 vp_id, u64 valid_bank_mask, u64 sparse_banks[])
+> +{
+> +	int bank, sbank = 0;
+> +
+> +	if (!test_bit(vp_id / HV_VCPUS_PER_SPARSE_BANK,
+> +		      (unsigned long *)&valid_bank_mask))
+> +		return false;
+> +
+> +	for_each_set_bit(bank, (unsigned long *)&valid_bank_mask,
+> +			 KVM_HV_MAX_SPARSE_VCPU_SET_BITS) {
+> +		if (bank == vp_id / HV_VCPUS_PER_SPARSE_BANK)
+> +			break;
+> +		sbank++;
+> +	}
+> +
+> +	return test_bit(vp_id % HV_VCPUS_PER_SPARSE_BANK,
+> +			(unsigned long *)&sparse_banks[sbank]);
+> +}
+> +
+>   struct kvm_hv_hcall {
+>   	u64 param;
+>   	u64 ingpa;
+> @@ -2029,8 +2048,8 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>   		((u64)hc->rep_cnt << HV_HYPERCALL_REP_COMP_OFFSET);
+>   }
+>   
+> -static void kvm_send_ipi_to_many(struct kvm *kvm, u32 vector,
+> -				 unsigned long *vcpu_bitmap)
+> +static void kvm_hv_send_ipi_to_many(struct kvm *kvm, u32 vector,
+> +				    u64 *sparse_banks, u64 valid_bank_mask)
+>   {
+>   	struct kvm_lapic_irq irq = {
+>   		.delivery_mode = APIC_DM_FIXED,
+> @@ -2040,7 +2059,10 @@ static void kvm_send_ipi_to_many(struct kvm *kvm, u32 vector,
+>   	unsigned long i;
+>   
+>   	kvm_for_each_vcpu(i, vcpu, kvm) {
+> -		if (vcpu_bitmap && !test_bit(i, vcpu_bitmap))
+> +		if (sparse_banks &&
+> +		    !hv_is_vp_in_sparse_set(kvm_hv_get_vpindex(vcpu),
+> +					    valid_bank_mask,
+> +					    sparse_banks))
+>   			continue;
+>   
+>   		/* We fail only when APIC is disabled */
+> @@ -2053,7 +2075,6 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>   	struct kvm *kvm = vcpu->kvm;
+>   	struct hv_send_ipi_ex send_ipi_ex;
+>   	struct hv_send_ipi send_ipi;
+> -	DECLARE_BITMAP(vcpu_mask, KVM_MAX_VCPUS);
+>   	u64 valid_bank_mask;
+>   	u64 sparse_banks[KVM_HV_MAX_SPARSE_VCPU_SET_BITS];
+>   	u32 vector;
+> @@ -2115,13 +2136,7 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>   	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
+>   		return HV_STATUS_INVALID_HYPERCALL_INPUT;
+>   
+> -	if (all_cpus) {
+> -		kvm_send_ipi_to_many(kvm, vector, NULL);
+> -	} else {
+> -		sparse_set_to_vcpu_mask(kvm, sparse_banks, valid_bank_mask, vcpu_mask);
+> -
+> -		kvm_send_ipi_to_many(kvm, vector, vcpu_mask);
+> -	}
+> +	kvm_hv_send_ipi_to_many(kvm, vector, all_cpus ? NULL : sparse_banks, valid_bank_mask);
+>   
+>   ret_success:
+>   	return HV_STATUS_SUCCESS;
+
