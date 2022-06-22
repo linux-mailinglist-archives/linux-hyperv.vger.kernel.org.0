@@ -2,74 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAB3E554E54
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 17:04:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13F5A55516F
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 18:44:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358883AbiFVPEC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jun 2022 11:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
+        id S1358620AbiFVQok (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jun 2022 12:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358967AbiFVPDz (ORCPT
+        with ESMTP id S1357635AbiFVQoj (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jun 2022 11:03:55 -0400
-Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A645E3C732
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 08:03:51 -0700 (PDT)
-Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-101cdfddfacso14643068fac.7
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 08:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
-        b=lmXhPRDXrnlbYClAFJkfHZYdowqXsf1nTuDLZnU/Y1W/T6TJ8ApbIv950i47frAtN/
-         OtndHJQoWJG+weygm2GuosJduERMEzUHLtTF4oGKopzqXa+c5O1ob2p5JuwuGNaCZz0D
-         0k2iO6ZG6gpeVsjTt5A+NLMvCH8qDkpG8Ex3xIMBpunG6BNJWrlCGLJYo7boJK6pvBIx
-         W4x550ST0gVpK9sdxwL58OfMVVl7H7xG/39bSvJCxipLUGbdwSBY6WRzvY6hd28wfB/N
-         vDKUfqITg8PxsgA4g6gEDGmS0K0dBg3KSntFmGDvcmLKkvSy/F4e+TYysqkO/txSQBCJ
-         afFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
-        b=qP9kiibvc7ksZxOUdtW0cDKu5AVUACGQGWwrc7hwrzgnaDS45V0zKIs4nMb/FTjQp8
-         mUb8UvRXJ91VV9jGQUIi862UFRgSrAF+c8/vG7vYX9TGGup2Kfg4c2gYmKNn9dZivbnu
-         ic6rhGspvA7j+5rs75gwnsCSF9Nd+dvEKuytSI35cJRD5POyP2MKSZKRShcW8qxQSZbt
-         pAJ1gBgr5bFLZOCXzr5BHgxG4A3pPicaIuU/qASU2BgH+tm9QhmlpgqTc+g8sAoo/BQf
-         51jQtFP9pZ7aMonq5AvWPki4c4AOO7m2NCsq6SNpzMO6Kg1L3Hcn6F1xD4I8K7hJ/6cb
-         kRtA==
-X-Gm-Message-State: AJIora9F/3FYIUg3lMoj2O4rAsSRa7Z848K+sK55M54EstQqqppNuApo
-        V0MveRgKZiNf8twaYyXm/ZuPwoqTO0NjKGjlYEH15DZl8igamA83
-X-Google-Smtp-Source: AGRyM1ulxotWsDV/SS5wzW6q4zt5LXu3F658bS4StYWI/FgPuIBqBz38zqk7aydOTm9FXxU+wDfnf428k+eRTEG/aD8=
-X-Received: by 2002:a17:90b:1988:b0:1ec:f52d:90d4 with SMTP id
- mv8-20020a17090b198800b001ecf52d90d4mr1796737pjb.70.1655910220864; Wed, 22
- Jun 2022 08:03:40 -0700 (PDT)
+        Wed, 22 Jun 2022 12:44:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CF54E377F3
+        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 09:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655916277;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nXInkxXdvpzKoIOUQRdrxKmFesJ62JJWfaKiG5PimjI=;
+        b=B3fJN5I/xx7Y/moTabyKQgrim0nATm7c3CrRtwCVnj06iyCnjv0KS0mjAJw2fdttr8t+k3
+        MhGzP4TgRG37uyfrCTlHZo0Q+k3Edrlsm7asX+J4j/WUcgIDGbD2IJMkgra6UdAMQH1rbS
+        vehjPryPUeRZc/MU+kZjVvxaGNq+H1w=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-191-QYI5K5ENM2KDmJd9UP0YeQ-1; Wed, 22 Jun 2022 12:44:35 -0400
+X-MC-Unique: QYI5K5ENM2KDmJd9UP0YeQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D8C61384F807;
+        Wed, 22 Jun 2022 16:44:34 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.40.195.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F96140CFD0A;
+        Wed, 22 Jun 2022 16:44:32 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC v1 00/10] KVM: nVMX: Use vmcs_config for setting up nested VMX MSRs
+Date:   Wed, 22 Jun 2022 18:44:22 +0200
+Message-Id: <20220622164432.194640-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a17:903:2308:b0:16a:1b3f:f74b with HTTP; Wed, 22 Jun 2022
- 08:03:40 -0700 (PDT)
-Reply-To: sales0212@asonmedsystemsinc.com
-From:   Prasad Ronni <lerwickfinance7@gmail.com>
-Date:   Wed, 22 Jun 2022 16:03:40 +0100
-Message-ID: <CAFkto5vTxj70kORZJZdwOGowXjsZ399eo6DJj=8T==7paSuHTw@mail.gmail.com>
-Subject: Service Needed.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+vmcs_config is a sanitized version of host VMX MSRs where some controls are
+filtered out (e.g. when Enlightened VMCS is enabled, some know bugs are 
+discovered, some inconsistencies in controls are detected,...) but
+nested_vmx_setup_ctls_msrs() uses raw host MSRs instead. This may end up
+in exposing undesired controls to L1. Switch to using vmcs_config instead.
+
+RFC part: vmcs_config's sanitization now is a mix of "what can't be enabled"
+and "what KVM doesn't want" and we need to separate these as for nested VMX
+MSRs only the first category makes sense. This gives vmcs_config a slightly
+different meaning "controls which can be (theoretically) used". An alternative
+approach would be to store sanitized host MSRs values separately, sanitize
+them and and use in nested_vmx_setup_ctls_msrs() but currently I don't see
+any benefits. Comments welcome!
+
+Very lightly tested with KVM selftests / kvm-unit-tests.
+
+Vitaly Kuznetsov (10):
+  KVM: VMX: Move CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering out of
+    setup_vmcs_config()
+  KVM: VMX: Add missing CPU based VM execution controls to vmcs_config
+  KVM: VMX: Move CPU_BASED_{CR3_LOAD,CR3_STORE,INVLPG}_EXITING filtering
+    out of setup_vmcs_config()
+  KVM: VMX: Add missing VMEXIT controls to vmcs_config
+  KVM: VMX: Add missing VMENTRY controls to vmcs_config
+  KVM: nVMX: Use sanitized allowed-1 bits for VMX control MSRs
+  KVM: VMX: Store required-1 VMX controls in vmcs_config
+  KVM: nVMX: Use sanitized required-1 bits for VMX control MSRs
+  KVM: VMX: Cache MSR_IA32_VMX_MISC in vmcs_config
+  KVM: nVMX: Use cached host MSR_IA32_VMX_MISC value for setting up
+    nested MSR
+
+ arch/x86/kvm/vmx/capabilities.h | 16 +++---
+ arch/x86/kvm/vmx/nested.c       | 37 +++++---------
+ arch/x86/kvm/vmx/nested.h       |  2 +-
+ arch/x86/kvm/vmx/vmx.c          | 91 +++++++++++++++++++++++++--------
+ 4 files changed, 94 insertions(+), 52 deletions(-)
+
 -- 
-Hi,
+2.35.3
 
-Are you currently open to work as our executive company representative
-on contractual basis working remotely? If yes, we will be happy to
-share more details. Looking forward to your response.
-
-Regards,
