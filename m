@@ -2,129 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6889F554BC6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 15:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24E1F554BF4
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 15:59:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357559AbiFVNu4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jun 2022 09:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42320 "EHLO
+        id S236998AbiFVN7e (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jun 2022 09:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232302AbiFVNu4 (ORCPT
+        with ESMTP id S1358032AbiFVN7W (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jun 2022 09:50:56 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02382F01C;
-        Wed, 22 Jun 2022 06:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655905855; x=1687441855;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=3CohyWmUtUrTBDe+BBE5Y7WDYYBZ1KvVKXJdpbgQSK4=;
-  b=IddE3mk8uIEVU7Cg9GnCssuaErFul+OLkFL5C4+K7fOv33Fwyw4COL6V
-   fC/IUYzYgboyHJX/6IIfBBPNdZVvK8onIDABob53mls0Z4BWWgMcSQ/rj
-   D7sW0CXwknUUJzIjycbVSaHZ7IMbDE7Zy2MZZmPOPPoXN2HKH8j8AemBz
-   fzhj0pCr25WuVHd2P5yHAAqMn5CE739O1JQgjGnn/0xqrOJ1sLNmNSoWw
-   B7Z4lj3D4EYkU7UJiSNqZ5unRv8y3A8/CWzj/tyXSY1+SNmw5kBYLf8Qy
-   Hi0Xtjm+IgR3fWsbzijPmKEPLi200eERO8T+kPEdG2YOSDgpHeyDDpmr+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10385"; a="269139957"
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="269139957"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 06:50:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="730356568"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Jun 2022 06:50:50 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 22 Jun 2022 16:50:50 +0300
-Date:   Wed, 22 Jun 2022 16:50:50 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     drawat.floss@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
-        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        jani.nikula@linux.intel.com,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] drm/hyperv-drm: Include framebuffer and EDID headers
-Message-ID: <YrMeOiMIg89Pwr7R@intel.com>
-References: <20220622083413.12573-1-tzimmermann@suse.de>
+        Wed, 22 Jun 2022 09:59:22 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC4F12E9CB;
+        Wed, 22 Jun 2022 06:59:21 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id e40so11489600eda.2;
+        Wed, 22 Jun 2022 06:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=9Lavx5c1gZGH6D19ZXIDMtTZay0309C+BWs9+IAVz0I=;
+        b=Pj1n1a6fbgdD2JeIQGM58CL7RsalreWUtHsGCU6D1ZjemWs0ZfzXSLEdP/dMMesiZn
+         hY1rXd7843yfVEk3mAY0zfLNQh40yrzCep28FkRHNG/uBCQaQ/5mWytO8MKKdwp6q7Re
+         zoGphS0sbXIYKyBV8AzDpNHKybdct5XnI4vTid5duW2+0G4DnV9n6dDzvM8bgaT2mEv/
+         MucCglOUu1rkCKJaZQtD5BPYBRuUhhh+S9WocEYQSzaOiGxooa6NWWXds1ODiv25LklV
+         XgQfP9ElgoKCTxZfWrAoEh8fKKmi52gUd75QiD9OkDiNaJ5RQQYubd8x/LJY4z5Rt5Z3
+         e94g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :subject:content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=9Lavx5c1gZGH6D19ZXIDMtTZay0309C+BWs9+IAVz0I=;
+        b=iDb4Vhx+ANVrkBZ7Fg/hn5v0MhZdYdCGhsAQZ7sl3Eis9SJEWExdigjPe9IT1VUwaF
+         dF2NfPGpMngkZiyOkJOCweJGt093R4BN7m17+l62y1nvwbtDKa0Gwo1RDdSW1BsVNLTz
+         koMwB8vvZnk6cul/zSgGAjAjhWpb8hfolqziADXck7ddFUxW7JegqCDoCQTHbXQaa0j/
+         9uoqnhgeWxpK3vg55LobQRWE/R9NOVAysFFqmoegfmJhLLHfL2nBsDbPgSOJaNnUn5zC
+         M39OEmxAOqhOgBQg2Z92kh2Qr4NuB7Sh8WyGQ5cIe8GRf0RDq60uSAy+y6rSfWq0mCpI
+         rRVg==
+X-Gm-Message-State: AJIora/miX+HLRA4bmCzuPEOFt/TJY7XGoYxVaiz8uOwlx2lTOdWhLCZ
+        YoWkzynb/FHtU75mhmtRQ1k93LNjzTg=
+X-Google-Smtp-Source: AGRyM1v64YQr6UsDXpYkeHRqSDu6hX5yxgearHX++4CYzFqTvST+homTskG1nEoq7V91mig6yhGEuw==
+X-Received: by 2002:aa7:de1a:0:b0:435:7d11:9717 with SMTP id h26-20020aa7de1a000000b004357d119717mr4295116edv.148.1655906360105;
+        Wed, 22 Jun 2022 06:59:20 -0700 (PDT)
+Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
+        by smtp.googlemail.com with ESMTPSA id 9-20020a170906310900b0071cbc7487e1sm8744079ejx.69.2022.06.22.06.59.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jun 2022 06:59:19 -0700 (PDT)
+Sender: Paolo Bonzini <paolo.bonzini@gmail.com>
+Message-ID: <36f2de4e-43fe-7280-8cac-f44de89b2b98@redhat.com>
+Date:   Wed, 22 Jun 2022 15:59:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220622083413.12573-1-tzimmermann@suse.de>
-X-Patchwork-Hint: comment
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v7 10/39] KVM: x86: hyper-v: Don't use
+ sparse_set_to_vcpu_mask() in kvm_hv_send_ipi()
+Content-Language: en-US
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220613133922.2875594-1-vkuznets@redhat.com>
+ <20220613133922.2875594-11-vkuznets@redhat.com>
+ <17a2e85a-a1f2-99e1-fc69-1baed2275bd5@redhat.com> <87zgi640mm.fsf@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <87zgi640mm.fsf@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jun 22, 2022 at 10:34:13AM +0200, Thomas Zimmermann wrote:
-> Fix a number of compile errors by including the correct header
-> files. Examples are shown below.
+On 6/21/22 15:17, Vitaly Kuznetsov wrote:
+>>
+>> Just to be clear, PV IPI does*not*  support the VP_ID, right?
+> Hm, with Hyper-V PV IPI hypercall vCPUs are also addressed by their
+> VP_IDs, not by their APIC ids so similar to Hyper-V PV TLB flush we need
+> to convert the supplied set (either flat u64 bitmask of VP_IDs for
+> non-EX hypercall or a sparse set for -EX).
 > 
->   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c: In function 'hyperv_blit_to_vram_rect':
->   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:25:48: error: invalid use of undefined type 'struct drm_framebuffer'
->    25 |         struct hyperv_drm_device *hv = to_hv(fb->dev);
->       |                                                ^~
-> 
->   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c: In function 'hyperv_connector_get_modes':
->   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:59:17: error: implicit declaration of function 'drm_add_modes_noedid' [-Werror=implicit-function-declaration]
->    59 |         count = drm_add_modes_noedid(connector,
->       |                 ^~~~~~~~~~~~~~~~~~~~
-> 
->   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:62:9: error: implicit declaration of function 'drm_set_preferred_mode'; did you mean 'drm_mm_reserve_node'? [-Werror=implicit-function-declaration]
->    62 |         drm_set_preferred_mode(connector, hv->preferred_width,
->       |         ^~~~~~~~~~~~~~~~~~~~~~
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
 
-Presumably should be
-Fixes: 720cf96d8fec ("drm: Drop drm_framebuffer.h from drm_crtc.h")
-Fixes: 255490f9150d ("drm: Drop drm_edid.h from drm_crtc.h")
+So this means the series needs a v8, right?
 
-Mea culpa
-
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
-> Cc: Deepak Rawat <drawat.floss@gmail.com>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: <stable@vger.kernel.org> # v5.14+
-> ---
->  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> index 27f4fcb058f9..b8e64dd8d3a6 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-> @@ -7,9 +7,11 @@
->  
->  #include <drm/drm_damage_helper.h>
->  #include <drm/drm_drv.h>
-> +#include <drm/drm_edid.h>
->  #include <drm/drm_fb_helper.h>
->  #include <drm/drm_format_helper.h>
->  #include <drm/drm_fourcc.h>
-> +#include <drm/drm_framebuffer.h>
->  #include <drm/drm_gem_atomic_helper.h>
->  #include <drm/drm_gem_framebuffer_helper.h>
->  #include <drm/drm_gem_shmem_helper.h>
-> -- 
-> 2.36.1
-
--- 
-Ville Syrjälä
-Intel
+Paolo
