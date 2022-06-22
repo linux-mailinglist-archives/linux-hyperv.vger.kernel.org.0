@@ -2,107 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30AE4554CFE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 16:29:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAB3E554E54
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 17:04:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235661AbiFVO3X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jun 2022 10:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53538 "EHLO
+        id S1358883AbiFVPEC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jun 2022 11:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358478AbiFVO2v (ORCPT
+        with ESMTP id S1358967AbiFVPDz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jun 2022 10:28:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 086972FE45
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 07:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655908128;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=x34IRi49NgING8whuhdPrWa3tANXSDCipF9OzN2jvL4=;
-        b=LC/nLSAgU8lNYX1aYqvIv4mPIggit84hM6rJ6TA6IU/dV22Og2RKHjFBo5q3+ewRukHXMH
-        cJzMDjw86JHLO0mzvwhdNUhUD9Okzdb5PjVIN0CNgP9uetGWh+elMsLMp8wFH1zIX/PSSq
-        1sMu/20hbEI+GNiMB6Uj+NuwOoVnm4c=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-34-N5nYTWIMOCqTZKCRJJPowg-1; Wed, 22 Jun 2022 10:28:46 -0400
-X-MC-Unique: N5nYTWIMOCqTZKCRJJPowg-1
-Received: by mail-wm1-f70.google.com with SMTP id k15-20020a7bc40f000000b0039c4b7f7d09so7912403wmi.8
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 07:28:45 -0700 (PDT)
+        Wed, 22 Jun 2022 11:03:55 -0400
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A645E3C732
+        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 08:03:51 -0700 (PDT)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-101cdfddfacso14643068fac.7
+        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 08:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=lmXhPRDXrnlbYClAFJkfHZYdowqXsf1nTuDLZnU/Y1W/T6TJ8ApbIv950i47frAtN/
+         OtndHJQoWJG+weygm2GuosJduERMEzUHLtTF4oGKopzqXa+c5O1ob2p5JuwuGNaCZz0D
+         0k2iO6ZG6gpeVsjTt5A+NLMvCH8qDkpG8Ex3xIMBpunG6BNJWrlCGLJYo7boJK6pvBIx
+         W4x550ST0gVpK9sdxwL58OfMVVl7H7xG/39bSvJCxipLUGbdwSBY6WRzvY6hd28wfB/N
+         vDKUfqITg8PxsgA4g6gEDGmS0K0dBg3KSntFmGDvcmLKkvSy/F4e+TYysqkO/txSQBCJ
+         afFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=x34IRi49NgING8whuhdPrWa3tANXSDCipF9OzN2jvL4=;
-        b=8PyoaBA75VYRf1+xdPSuoQBetQ9SFAi/VbxeXZPXVpjv5fakFTngSaSDqVAGbtvZu7
-         G52pt+VK3CispjZsLvv4TMil5BMwidIILvpMP5mkUMKEczpgVaseVEr/wYklGA7FoUxs
-         wkCygLfwIqMD54cw8MlTrJfcP+VSnp+NhyR2ERgAKdS+T7buEyWg+cZd49S7peH4vL+X
-         Qazfm3c0cg+FgXN3sY7uqz7c8icsefsTKqgNB2LncIx1+p3N6KXVl+RGpeYjm8Wz1Tt+
-         PJj/4BGvhYYL+e+JaY41iNXTXauiGhQWjOtyFq+/jBpArFgA+6+BMkTrGhtEvYbUY7Ua
-         uajg==
-X-Gm-Message-State: AJIora+hLRRKG1BEunItZkhngU9VaFC/GrbMZTJxIFLw3XmhYrhyJ3a7
-        v2BVpr5kRWU29XULT/h4lUAJFoCfGV8fEQthohX7NEGTdFlQlWJ6lkcysAGqOfQtTPgp3SBb3ZH
-        /ICXibUgsi9/rJsIPTIYiSY4P
-X-Received: by 2002:a5d:5984:0:b0:219:e396:d3d1 with SMTP id n4-20020a5d5984000000b00219e396d3d1mr3649483wri.701.1655908124725;
-        Wed, 22 Jun 2022 07:28:44 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vuhyEjREFg3dGcH7vFPn3yakH8vgcXSr8DuJhoDWbuzWlidbf8KyA6iZoKwjJuqao0HuIjng==
-X-Received: by 2002:a5d:5984:0:b0:219:e396:d3d1 with SMTP id n4-20020a5d5984000000b00219e396d3d1mr3649464wri.701.1655908124542;
-        Wed, 22 Jun 2022 07:28:44 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id c130-20020a1c3588000000b0039c798b2dc5sm25959911wma.8.2022.06.22.07.28.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jun 2022 07:28:44 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <seanjc@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        Yuan Yao <yuan.yao@linux.intel.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 10/39] KVM: x86: hyper-v: Don't use
- sparse_set_to_vcpu_mask() in kvm_hv_send_ipi()
-In-Reply-To: <36f2de4e-43fe-7280-8cac-f44de89b2b98@redhat.com>
-References: <20220613133922.2875594-1-vkuznets@redhat.com>
- <20220613133922.2875594-11-vkuznets@redhat.com>
- <17a2e85a-a1f2-99e1-fc69-1baed2275bd5@redhat.com>
- <87zgi640mm.fsf@redhat.com>
- <36f2de4e-43fe-7280-8cac-f44de89b2b98@redhat.com>
-Date:   Wed, 22 Jun 2022 16:28:43 +0200
-Message-ID: <87tu8cydpg.fsf@redhat.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=qP9kiibvc7ksZxOUdtW0cDKu5AVUACGQGWwrc7hwrzgnaDS45V0zKIs4nMb/FTjQp8
+         mUb8UvRXJ91VV9jGQUIi862UFRgSrAF+c8/vG7vYX9TGGup2Kfg4c2gYmKNn9dZivbnu
+         ic6rhGspvA7j+5rs75gwnsCSF9Nd+dvEKuytSI35cJRD5POyP2MKSZKRShcW8qxQSZbt
+         pAJ1gBgr5bFLZOCXzr5BHgxG4A3pPicaIuU/qASU2BgH+tm9QhmlpgqTc+g8sAoo/BQf
+         51jQtFP9pZ7aMonq5AvWPki4c4AOO7m2NCsq6SNpzMO6Kg1L3Hcn6F1xD4I8K7hJ/6cb
+         kRtA==
+X-Gm-Message-State: AJIora9F/3FYIUg3lMoj2O4rAsSRa7Z848K+sK55M54EstQqqppNuApo
+        V0MveRgKZiNf8twaYyXm/ZuPwoqTO0NjKGjlYEH15DZl8igamA83
+X-Google-Smtp-Source: AGRyM1ulxotWsDV/SS5wzW6q4zt5LXu3F658bS4StYWI/FgPuIBqBz38zqk7aydOTm9FXxU+wDfnf428k+eRTEG/aD8=
+X-Received: by 2002:a17:90b:1988:b0:1ec:f52d:90d4 with SMTP id
+ mv8-20020a17090b198800b001ecf52d90d4mr1796737pjb.70.1655910220864; Wed, 22
+ Jun 2022 08:03:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Received: by 2002:a17:903:2308:b0:16a:1b3f:f74b with HTTP; Wed, 22 Jun 2022
+ 08:03:40 -0700 (PDT)
+Reply-To: sales0212@asonmedsystemsinc.com
+From:   Prasad Ronni <lerwickfinance7@gmail.com>
+Date:   Wed, 22 Jun 2022 16:03:40 +0100
+Message-ID: <CAFkto5vTxj70kORZJZdwOGowXjsZ399eo6DJj=8T==7paSuHTw@mail.gmail.com>
+Subject: Service Needed.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-
-> On 6/21/22 15:17, Vitaly Kuznetsov wrote:
->>>
->>> Just to be clear, PV IPI does*not*  support the VP_ID, right?
->> Hm, with Hyper-V PV IPI hypercall vCPUs are also addressed by their
->> VP_IDs, not by their APIC ids so similar to Hyper-V PV TLB flush we need
->> to convert the supplied set (either flat u64 bitmask of VP_IDs for
->> non-EX hypercall or a sparse set for -EX).
->> 
->
-> So this means the series needs a v8, right?
->
-
-No, I was just trying to explaini what the patch is doing in the series,
-it looks good to me (but I'm biased, of course).
-
 -- 
-Vitaly
+Hi,
 
+Are you currently open to work as our executive company representative
+on contractual basis working remotely? If yes, we will be happy to
+share more details. Looking forward to your response.
+
+Regards,
