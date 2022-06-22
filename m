@@ -2,114 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 767AE55462A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 14:10:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04ECB554722
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 14:11:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356163AbiFVKyj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jun 2022 06:54:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40158 "EHLO
+        id S234528AbiFVL5n (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jun 2022 07:57:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356759AbiFVKyc (ORCPT
+        with ESMTP id S233286AbiFVL5m (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jun 2022 06:54:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647563BBC1;
-        Wed, 22 Jun 2022 03:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=h6Ni4JY3NSS01Nb6TQNOQZ0HSFRdoJBUQ6dpTFFJhdY=; b=JyZxBr61+7LNv2xOpLLWy09ECs
-        vXy9cu8Ppj0Kz441rbC9FXoY/AYGrnLU8edkf3+09otEtbWkxjeQdtMWfeGTao48tTp/skcnsCPhv
-        YE/YhvZycdAO7sdt3v1ZmKoDyW1MLxzIhQDMzh5PcHLQlKdrTetEBnHoTfeDyAdysxXKji2UTfiOE
-        uniVcOW8H52tnK/dOCU740qNa3JpbRpT0tQkKke9pJ5vlscSN3X7P+IWYvKH1ZCutvs0LYIHWz4ve
-        W3eEO9m8exFyOPu6rLAGqVCJrSLKJLGAGDrFdsdANidX80xJ8bgIYFLIje0mLfJ/uJDSyq4y0r+he
-        hMuBFJ3w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o3y03-00A1BF-EA; Wed, 22 Jun 2022 10:54:19 +0000
-Date:   Wed, 22 Jun 2022 03:54:19 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     corbet@lwn.net, hch@infradead.org, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, paulmck@kernel.org,
-        akpm@linux-foundation.org, bp@suse.de, tglx@linutronix.de,
-        songmuchun@bytedance.com, rdunlap@infradead.org,
-        damien.lemoal@opensource.wdc.com, michael.h.kelley@microsoft.com,
-        kys@microsoft.com, Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        iommu@lists.linux-foundation.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        wei.liu@kernel.org, parri.andrea@gmail.com,
-        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
-        kirill.shutemov@intel.com, andi.kleen@intel.com,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [RFC PATCH V4 1/1] swiotlb: Split up single swiotlb lock
-Message-ID: <YrL02y/fYxDkDRlA@infradead.org>
-References: <20220617144741.921308-1-ltykernel@gmail.com>
+        Wed, 22 Jun 2022 07:57:42 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52FCC3D1F2;
+        Wed, 22 Jun 2022 04:57:40 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 959DC5C0378;
+        Wed, 22 Jun 2022 07:57:39 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 22 Jun 2022 07:57:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm1; t=1655899059; x=1655985459; bh=EDZINAL0dh
+        ot/5O6dbWbEFDkXIECpYf2fk3aenKmV6k=; b=bSvUVjyTHbR5vn/+n2sdvpDCjD
+        H29wGGKn+fs4zjKtmiErj9NRDgi0x7lP/cVQo6OgsVzG0hV6GMjJ0TvdvA7y0mdG
+        j792Fo1YnHyFNIfXUAZe5LGcjxHOdCvSi8+n3MYewqGC5nLTK0vRbsIv6jy6p71r
+        QlZ+zVPVObId12j3Je0zfH8JY598ZSuzVgnJuL4vpAUmckPXYM3yAZkeUP2rz1vR
+        Qwg5E0c9Ar2G1SFCGS9RuQLok3dBkO10WQKYNDidGKKiDYWyVY0uFO75SjMP5htr
+        wnNJAZswW5HizI8VkZr+UtUMmRpZGPvYGNO+dwVwCwkqBOa9K/AW1QSjzeFQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1655899059; x=1655985459; bh=EDZINAL0dhot/5O6dbWbEFDkXIEC
+        pYf2fk3aenKmV6k=; b=MHerYSMF1AmZB/bD9DOu7ptexDtjiOveuP0WJQ1c395L
+        7KvnNcYokIJN9u6GAUg7XMHREBf5mr5QhWwe/vwocshnyvga31cnEDhpFeRiUape
+        y/DFvI11vBBZK4wGo0CMyPIqJa1G/qZOac4E4iNtcYCLN8PxFeerl+2nhorU5iy8
+        pe3bwub8C+ramWsinv3PNTSQoo+rCdchTeKrHLJc/u4FF83rsgxGSTQTzvQ+7ljE
+        gJJE8rG8BzOGphE8dA3hXb2QsWXyuNHm0aHtQ2M+49Wd+7IR6xPmN0GOnpQ2fPJB
+        bNLgWwuKmvjwhHvBgJNcc1Lh24UXduXEDpQ6rROkrQ==
+X-ME-Sender: <xms:swOzYhi8okQfdJdzUW-FBJgFRxi3grHENjCwAGw3Lo_QApcvjwPnBw>
+    <xme:swOzYmDCXeyoW8ULkeXopUO5DKfxvanJmaLrBUQNqdzlwqkizF098dz5tjuPJD6Km
+    BQmEfn5gPtFZJv2t9U>
+X-ME-Received: <xmr:swOzYhFbbkjsRuP0QWb6312eJKijSUnTR7kE04BUfNoGkUZnj56yb0seIXhGdGhrupymlGtEL4CMvkoz2YGJ3ZwBZDdhCbxzcwoBW7M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudefhedggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeetfefffefgkedtfefgledugfdtjeefjedvtddtkeetieffjedvgfehheff
+    hfevudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:swOzYmR4XfO87KjovWHMYW2kNkhaxL-EO0EZa-bXKJuhOsDKUrH1lQ>
+    <xmx:swOzYuzeaYnLwFoHWwoEo79mXNxA13juS4omoKUf68Bscivck7RxOA>
+    <xmx:swOzYs6O0ko4WNy3ctmwVpsCj5eMdkJtly1zkwH44Et6QzoxhzOyGw>
+    <xmx:swOzYtkpHhwPaRCY_how9p1IWXUCDaMqL_i37flYYfEo-bVFe_hCBw>
+Feedback-ID: i8771445c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 22 Jun 2022 07:57:38 -0400 (EDT)
+Date:   Wed, 22 Jun 2022 13:57:36 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     drawat.floss@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, ville.syrjala@linux.intel.com,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] drm/hyperv-drm: Include framebuffer and EDID headers
+Message-ID: <20220622115736.yr7wjqvwpxvl2scf@houat>
+References: <20220622083413.12573-1-tzimmermann@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bmfhgomxypr4cpai"
 Content-Disposition: inline
-In-Reply-To: <20220617144741.921308-1-ltykernel@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220622083413.12573-1-tzimmermann@suse.de>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks,
 
-this looks pretty good to me.  A few comments below:
+--bmfhgomxypr4cpai
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 17, 2022 at 10:47:41AM -0400, Tianyu Lan wrote:
-> +/**
-> + * struct io_tlb_area - IO TLB memory area descriptor
-> + *
-> + * This is a single area with a single lock.
-> + *
-> + * @used:	The number of used IO TLB block.
-> + * @index:	The slot index to start searching in this area for next round.
-> + * @lock:	The lock to protect the above data structures in the map and
-> + *		unmap calls.
-> + */
-> +struct io_tlb_area {
-> +	unsigned long used;
-> +	unsigned int index;
-> +	spinlock_t lock;
-> +};
+On Wed, Jun 22, 2022 at 10:34:13AM +0200, Thomas Zimmermann wrote:
+> Fix a number of compile errors by including the correct header
+> files. Examples are shown below.
+>=20
+>   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c: In function 'hyperv_bli=
+t_to_vram_rect':
+>   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:25:48: error: invalid us=
+e of undefined type 'struct drm_framebuffer'
+>    25 |         struct hyperv_drm_device *hv =3D to_hv(fb->dev);
+>       |                                                ^~
+>=20
+>   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c: In function 'hyperv_con=
+nector_get_modes':
+>   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:59:17: error: implicit d=
+eclaration of function 'drm_add_modes_noedid' [-Werror=3Dimplicit-function-=
+declaration]
+>    59 |         count =3D drm_add_modes_noedid(connector,
+>       |                 ^~~~~~~~~~~~~~~~~~~~
+>=20
+>   ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:62:9: error: implicit de=
+claration of function 'drm_set_preferred_mode'; did you mean 'drm_mm_reserv=
+e_node'? [-Werror=3Dimplicit-function-declaration]
+>    62 |         drm_set_preferred_mode(connector, hv->preferred_width,
+>       |         ^~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic vid=
+eo device")
+> Cc: Deepak Rawat <drawat.floss@gmail.com>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: <stable@vger.kernel.org> # v5.14+
 
-This can go into swiotlb.c.
+Acked-by: Maxime Ripard <maxime@cerno.tech>
 
-> +void __init swiotlb_adjust_nareas(unsigned int nareas);
+Maxime
 
-And this should be marked static.
+--bmfhgomxypr4cpai
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +#define DEFAULT_NUM_AREAS 1
+-----BEGIN PGP SIGNATURE-----
 
-I'd drop this define, the magic 1 and a > 1 comparism seems to
-convey how it is used much better as the checks aren't about default
-or not, but about larger than one.
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYrMDsAAKCRDj7w1vZxhR
+xVKHAP4+fghoYl/e6tA6tIITV3ihFjhSsVHXohssoD9H/fngoQEA3Cvk0TKKwmlg
+zNItzz6F6hBwWuO4+XuRUDPZh0ACuQw=
+=wMzT
+-----END PGP SIGNATURE-----
 
-I also think that we want some good way to size the default, e.g.
-by number of CPUs or memory size.
-
-> +void __init swiotlb_adjust_nareas(unsigned int nareas)
-> +{
-> +	if (!is_power_of_2(nareas)) {
-> +		pr_err("swiotlb: Invalid areas parameter %d.\n", nareas);
-> +		return;
-> +	}
-> +
-> +	default_nareas = nareas;
-> +
-> +	pr_info("area num %d.\n", nareas);
-> +	/* Round up number of slabs to the next power of 2.
-> +	 * The last area is going be smaller than the rest if
-> +	 * default_nslabs is not power of two.
-> +	 */
-
-Please follow the normal kernel comment style with a /* on its own line.
-
+--bmfhgomxypr4cpai--
