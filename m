@@ -2,73 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31F11553FDE
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 03:08:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 344E355465A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 14:10:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236380AbiFVBIz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 21 Jun 2022 21:08:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33308 "EHLO
+        id S1353735AbiFVIeR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jun 2022 04:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229917AbiFVBIy (ORCPT
+        with ESMTP id S1350684AbiFVIeR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 21 Jun 2022 21:08:54 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 174243191A
-        for <linux-hyperv@vger.kernel.org>; Tue, 21 Jun 2022 18:08:54 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id ej4so17769586edb.7
-        for <linux-hyperv@vger.kernel.org>; Tue, 21 Jun 2022 18:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=aaUerIhcmrWygpieSDEiCvn0lG8dVQuGWs6LuxTeDyw=;
-        b=MK/Dm5hYjOeXxnDrdl3mAvfmvgwG1lPqx34F3XAtnMDeXHIpGCGVv+hyuEuQ34+aae
-         xDgx+GaY/2QwhLM7pGLCPulD0jh9mKrVxx+mhVcdBxOMHiSZguoYTIWTRfdRJB8JjYdK
-         o475RKnH23C2lOa7b5ooHU8mMrw3M44qvGfP+J16k1JtaIive/ipGyXIGjCWwHQzZ+XI
-         Vm8maIrvrWuDvfsitR7DtAXVR+1uVzqGSz2Ww84impfw3huf0lPiehR2rxwT1NNhVwdF
-         hgSWnrsO/E6tmh8J512I1QJaVV5Cb67BhAraRnwZ+e5TW71S1GKi1tv5ygpyDw6VKfgZ
-         A7Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=aaUerIhcmrWygpieSDEiCvn0lG8dVQuGWs6LuxTeDyw=;
-        b=0bpdTvXtiiEUq5kkoxWKtNTQ8XYJl/nYpnd8ATCBvNt7SISiDpQenKvYUxL15riaqh
-         w4oQOTbyWbweUCqnESjt3J5ERmdXd5nokQqwp/eKl+E6cnbZHZpZJ1HZhp31ENW3Ozuy
-         5S66K0id/ivojPIuAkVQMBmkybuk7w4OTIXOOiOaZNqrIgwDp+H/puhZlAE9sNmwKxvZ
-         61gJLlQqgDMsDEAvsxckEHRtDpAV7tBFlMeiVQzYUKWugMlagPFSTpSdYTu/kYbLFXjF
-         n1jbUzaMOhgoH9IUglQoUe17ceH72p0QpFxYqodIKCMKqIT15KWpZhOnOPIDzCj6E5Mq
-         GwqA==
-X-Gm-Message-State: AJIora/uUpIGNAz70DbBkT2hbY3qUy0oVicFSP9vmCa/OeQOQwUiWcTN
-        9WwVUf5bjzHF5uUDSTeJaqjXM/A3Gs9j5oo6POg=
-X-Google-Smtp-Source: AGRyM1vqLqGie65pjUJBoSdo7dAxwnModrvE4dJSvcQ/u21jn7mSyarxyaY4yfj2k4TcXo3ujT+popsjoDlzOcFGHVk=
-X-Received: by 2002:a05:6402:2752:b0:433:3a08:27b1 with SMTP id
- z18-20020a056402275200b004333a0827b1mr1076731edd.235.1655860132599; Tue, 21
- Jun 2022 18:08:52 -0700 (PDT)
+        Wed, 22 Jun 2022 04:34:17 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268B32622;
+        Wed, 22 Jun 2022 01:34:16 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id D881F1FAFD;
+        Wed, 22 Jun 2022 08:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1655886854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=O1EOyoPBau9TPG/tVZpTYxGahQsskO0hXdQhQeaV5ZI=;
+        b=1kKI8CIouoYNcAsmKhFEPHTiHTc35Pgsbv2AwOxKjg2kYZxS3dqdHBIqk05LAqEqqxMNzV
+        fAz9GtRquUOjc4/HpiZ3BObBLPqdQCWMF/sLaA7tZp6Egw1p9sfeLm41zknuJl5rx7HJvP
+        MN8zfd6PNdyGYOV6ZF2a34FO3BlhGkY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1655886854;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=O1EOyoPBau9TPG/tVZpTYxGahQsskO0hXdQhQeaV5ZI=;
+        b=F9hRTr2toRP77B+V7zp51+ilujZVnD4qUBoSIEyoLokkg8Z35pgLer5jFa3VUDZBALY0Ye
+        JrYKpI/kDjAgFUDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A05C6134A9;
+        Wed, 22 Jun 2022 08:34:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id dCEvJgbUsmIPDAAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Wed, 22 Jun 2022 08:34:14 +0000
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+To:     drawat.floss@gmail.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, ville.syrjala@linux.intel.com,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH] drm/hyperv-drm: Include framebuffer and EDID headers
+Date:   Wed, 22 Jun 2022 10:34:13 +0200
+Message-Id: <20220622083413.12573-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Sender: emiliahunt50@gmail.com
-Received: by 2002:a17:907:a40b:0:0:0:0 with HTTP; Tue, 21 Jun 2022 18:08:52
- -0700 (PDT)
-From:   Gerrate Kriz <gerratekriz@gmail.com>
-Date:   Wed, 22 Jun 2022 01:08:52 +0000
-X-Google-Sender-Auth: DdR27jtrGMeI0graHe1Nr7n7raM
-Message-ID: <CAMXpgEO-g3vSt6NufWPCd214qwxPwYTmj5nppi=sSyZ8N8Vnjw@mail.gmail.com>
-Subject: re
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---=20
-Ol=C3=A1,
-Posso falar com voc=C3=AA por favor?
+Fix a number of compile errors by including the correct header
+files. Examples are shown below.
 
-Gerrate Kriz
+  ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c: In function 'hyperv_blit_to_vram_rect':
+  ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:25:48: error: invalid use of undefined type 'struct drm_framebuffer'
+   25 |         struct hyperv_drm_device *hv = to_hv(fb->dev);
+      |                                                ^~
+
+  ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c: In function 'hyperv_connector_get_modes':
+  ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:59:17: error: implicit declaration of function 'drm_add_modes_noedid' [-Werror=implicit-function-declaration]
+   59 |         count = drm_add_modes_noedid(connector,
+      |                 ^~~~~~~~~~~~~~~~~~~~
+
+  ../drivers/gpu/drm/hyperv/hyperv_drm_modeset.c:62:9: error: implicit declaration of function 'drm_set_preferred_mode'; did you mean 'drm_mm_reserve_node'? [-Werror=implicit-function-declaration]
+   62 |         drm_set_preferred_mode(connector, hv->preferred_width,
+      |         ^~~~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
+Cc: Deepak Rawat <drawat.floss@gmail.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: linux-hyperv@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: <stable@vger.kernel.org> # v5.14+
+---
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+index 27f4fcb058f9..b8e64dd8d3a6 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+@@ -7,9 +7,11 @@
+ 
+ #include <drm/drm_damage_helper.h>
+ #include <drm/drm_drv.h>
++#include <drm/drm_edid.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_format_helper.h>
+ #include <drm/drm_fourcc.h>
++#include <drm/drm_framebuffer.h>
+ #include <drm/drm_gem_atomic_helper.h>
+ #include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_gem_shmem_helper.h>
+-- 
+2.36.1
+
