@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C18555176
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 18:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27EA255517C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Jun 2022 18:46:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359862AbiFVQoq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Jun 2022 12:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46872 "EHLO
+        id S1376299AbiFVQov (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Jun 2022 12:44:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359826AbiFVQop (ORCPT
+        with ESMTP id S1359826AbiFVQot (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Jun 2022 12:44:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E140031917
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 09:44:44 -0700 (PDT)
+        Wed, 22 Jun 2022 12:44:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 82DC937BCE
+        for <linux-hyperv@vger.kernel.org>; Wed, 22 Jun 2022 09:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655916284;
+        s=mimecast20190719; t=1655916286;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qAGjG0pbpGd/rh2Rbpr2drl+brFnF3phOBJXafg5QB8=;
-        b=fX7KoN4/2+MR/QIXLy4/enrhOfaNcwpXahAeZjNY644NpqjLrqN0PThf+toOZhnNU73oC6
-        BGjuSMuZ0NvyspLn4bod+0yyGS1NhiNrcBsXP6Q6yf4rvpz6S7ygKjA7DY6m0LP0nYa6GN
-        znBAeC2aHdkvfKNc8ByZGge5FGX0GkQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=pPzUDtn7MUBOJvHbms5ez003D0L9U3ISPpMur3dPFnU=;
+        b=KYA1IkeScGzgQ/ZJxYSB57yJwXVUef9Kzp1cwv5I03lRONmk+jJ6SAbcnmqneSQJcwJXEw
+        m5Sq9qrxd38K15WSOa3ZBmH6PvSg6BVAaoJnF+6O9Fh1ZuG1VZmrduykfYZKSd6BjurTaC
+        VYcDcRH2rR/fMzJK47oujs8JAyjq/i0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-612-geKJJIBENcKhCbbMkcSdGw-1; Wed, 22 Jun 2022 12:44:40 -0400
-X-MC-Unique: geKJJIBENcKhCbbMkcSdGw-1
+ us-mta-241-OWK7qWCaNfm25c58Cceq7w-1; Wed, 22 Jun 2022 12:44:42 -0400
+X-MC-Unique: OWK7qWCaNfm25c58Cceq7w-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C3E7811E76;
-        Wed, 22 Jun 2022 16:44:39 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C3A5129DD9A2;
+        Wed, 22 Jun 2022 16:44:41 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.195.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EF5B40CFD0A;
-        Wed, 22 Jun 2022 16:44:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94FA640CFD0A;
+        Wed, 22 Jun 2022 16:44:39 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
@@ -46,9 +46,9 @@ Cc:     Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RFC v1 02/10] KVM: VMX: Add missing CPU based VM execution controls to vmcs_config
-Date:   Wed, 22 Jun 2022 18:44:24 +0200
-Message-Id: <20220622164432.194640-3-vkuznets@redhat.com>
+Subject: [PATCH RFC v1 03/10] KVM: VMX: Move CPU_BASED_{CR3_LOAD,CR3_STORE,INVLPG}_EXITING filtering out of setup_vmcs_config()
+Date:   Wed, 22 Jun 2022 18:44:25 +0200
+Message-Id: <20220622164432.194640-4-vkuznets@redhat.com>
 In-Reply-To: <20220622164432.194640-1-vkuznets@redhat.com>
 References: <20220622164432.194640-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -57,8 +57,8 @@ Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -67,39 +67,26 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 24da9e93bdab..01294a2fc1c1 100644
+index 01294a2fc1c1..4583de7f0324 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2483,8 +2483,14 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	      CPU_BASED_INVLPG_EXITING |
- 	      CPU_BASED_RDPMC_EXITING;
+@@ -4293,6 +4293,16 @@ static u32 vmx_exec_control(struct vcpu_vmx *vmx)
+ 			  CPU_BASED_MONITOR_TRAP_FLAG |
+ 			  CPU_BASED_PAUSE_EXITING);
  
--	opt = CPU_BASED_TPR_SHADOW |
-+	opt = CPU_BASED_INTR_WINDOW_EXITING |
-+	      CPU_BASED_RDTSC_EXITING |
-+	      CPU_BASED_TPR_SHADOW |
-+	      CPU_BASED_NMI_WINDOW_EXITING |
-+	      CPU_BASED_USE_IO_BITMAPS |
-+	      CPU_BASED_MONITOR_TRAP_FLAG |
- 	      CPU_BASED_USE_MSR_BITMAPS |
-+	      CPU_BASED_PAUSE_EXITING |
- 	      CPU_BASED_ACTIVATE_SECONDARY_CONTROLS |
- 	      CPU_BASED_ACTIVATE_TERTIARY_CONTROLS;
- 	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_PROCBASED_CTLS,
-@@ -4280,6 +4286,13 @@ static u32 vmx_exec_control(struct vcpu_vmx *vmx)
- {
- 	u32 exec_control = vmcs_config.cpu_based_exec_ctrl;
- 
-+	exec_control &= ~(CPU_BASED_INTR_WINDOW_EXITING |
-+			  CPU_BASED_RDTSC_EXITING |
-+			  CPU_BASED_NMI_WINDOW_EXITING |
-+			  CPU_BASED_USE_IO_BITMAPS |
-+			  CPU_BASED_MONITOR_TRAP_FLAG |
-+			  CPU_BASED_PAUSE_EXITING);
++	if (vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_ENABLE_EPT) {
++		/*
++		 * CR3 accesses and invlpg don't need to cause VM Exits when EPT
++		 * enabled.
++		 */
++		exec_control &= ~(CPU_BASED_CR3_LOAD_EXITING |
++				  CPU_BASED_CR3_STORE_EXITING |
++				  CPU_BASED_INVLPG_EXITING);
++	}
 +
  #ifdef CONFIG_X86_64
  	if (exec_control & CPU_BASED_TPR_SHADOW)
