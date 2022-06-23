@@ -2,33 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6C23558084
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jun 2022 18:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D86FF55830C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Jun 2022 19:24:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbiFWQwX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Jun 2022 12:52:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50164 "EHLO
+        id S233796AbiFWRX7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Jun 2022 13:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233911AbiFWQvy (ORCPT
+        with ESMTP id S234304AbiFWRXc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Jun 2022 12:51:54 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3B8AA;
-        Thu, 23 Jun 2022 09:51:53 -0700 (PDT)
+        Thu, 23 Jun 2022 13:23:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E246B647B6;
+        Thu, 23 Jun 2022 10:01:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id D4E27CE25D9;
-        Thu, 23 Jun 2022 16:51:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E212C3411B;
-        Thu, 23 Jun 2022 16:51:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EEA19615A5;
+        Thu, 23 Jun 2022 17:01:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC878C3411B;
+        Thu, 23 Jun 2022 17:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1656003110;
-        bh=8TOfhpl50F0yWhLMPAOE/9uebwUQU6puY1X5AmEb9kA=;
+        s=korg; t=1656003701;
+        bh=KQhB+Ayk9PXWPbqAsbee6FxnioeW5+Enw6TCr46ztJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ursa1TToGPUCzOfXc080coIDEU4P9i9LpVB+5Dp6+A5ndy6nG1ymK3j85ddPEjlIR
-         5gu/yWnIu0df8p22pCMZ9eVgBc7stdPCG6NttsOkN2+JCFyh7PH4iJp7VvkXqXtDUZ
-         QBtN9NJS/geZQ7+fWf6ZFg4r5JUbZ9Pr6pwtmRTY=
+        b=nuH+h6r7MEnVf0RSdzaXTEc+noqMw6AT9BFoXJsKATu8GZiJu7A69SRk74kZ5Faxs
+         CyOrOCwZz0e/F9JOVjkmhepdeCNMq3lucW1rhV0SMM90uHSxedxhYyssyEwZGOyQIW
+         FTubBRiLqB+uHEenCW2wGPB4R2AOldJ41FMB72bA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -44,12 +44,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
         x86@kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH 4.9 082/264] random: remove unused irq_flags argument from add_interrupt_randomness()
-Date:   Thu, 23 Jun 2022 18:41:15 +0200
-Message-Id: <20220623164346.390524772@linuxfoundation.org>
+Subject: [PATCH 4.14 060/237] random: remove unused irq_flags argument from add_interrupt_randomness()
+Date:   Thu, 23 Jun 2022 18:41:34 +0200
+Message-Id: <20220623164344.884449137@linuxfoundation.org>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220623164344.053938039@linuxfoundation.org>
-References: <20220623164344.053938039@linuxfoundation.org>
+In-Reply-To: <20220623164343.132308638@linuxfoundation.org>
+References: <20220623164343.132308638@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -109,7 +109,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
   * 	void add_disk_randomness(struct gendisk *disk);
   *	void add_hwgenerator_randomness(const char *buffer, size_t count,
   *					size_t entropy);
-@@ -1323,7 +1323,7 @@ static __u32 get_reg(struct fast_pool *f
+@@ -1271,7 +1271,7 @@ static __u32 get_reg(struct fast_pool *f
  	return *ptr;
  }
  
@@ -120,8 +120,8 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	struct fast_pool	*fast_pool = this_cpu_ptr(&irq_randomness);
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -828,7 +828,7 @@ static void vmbus_isr(void)
- 			tasklet_schedule(hv_context.msg_dpc[cpu]);
+@@ -1064,7 +1064,7 @@ static void vmbus_isr(void)
+ 			tasklet_schedule(&hv_cpu->msg_dpc);
  	}
  
 -	add_interrupt_randomness(HYPERVISOR_CALLBACK_VECTOR, 0);
@@ -131,7 +131,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  
 --- a/include/linux/random.h
 +++ b/include/linux/random.h
-@@ -34,7 +34,7 @@ static inline void add_latent_entropy(vo
+@@ -35,7 +35,7 @@ static inline void add_latent_entropy(vo
  
  extern void add_input_randomness(unsigned int type, unsigned int code,
  				 unsigned int value) __latent_entropy;
@@ -142,7 +142,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  extern int wait_for_random_bytes(void);
 --- a/kernel/irq/handle.c
 +++ b/kernel/irq/handle.c
-@@ -184,7 +184,7 @@ irqreturn_t handle_irq_event_percpu(stru
+@@ -186,7 +186,7 @@ irqreturn_t handle_irq_event_percpu(stru
  
  	retval = __handle_irq_event_percpu(desc, &flags);
  
