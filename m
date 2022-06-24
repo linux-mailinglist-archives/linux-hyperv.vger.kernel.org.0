@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AA7D558C1B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Jun 2022 02:09:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1B39558C23
+	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Jun 2022 02:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbiFXAJo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Jun 2022 20:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42736 "EHLO
+        id S229437AbiFXAMf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Jun 2022 20:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbiFXAJn (ORCPT
+        with ESMTP id S229593AbiFXAMW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Jun 2022 20:09:43 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F8556FB6
-        for <linux-hyperv@vger.kernel.org>; Thu, 23 Jun 2022 17:09:41 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 184so868553pga.12
-        for <linux-hyperv@vger.kernel.org>; Thu, 23 Jun 2022 17:09:41 -0700 (PDT)
+        Thu, 23 Jun 2022 20:12:22 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A365D105
+        for <linux-hyperv@vger.kernel.org>; Thu, 23 Jun 2022 17:12:21 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id k7so647630plg.7
+        for <linux-hyperv@vger.kernel.org>; Thu, 23 Jun 2022 17:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=kmIOcSZ0XyvR8utlTv5b37APzufzmKu6KXV604cAkks=;
-        b=PFe18VaFhnS2ZT5vucNtUjtMrbL5fT+p1wHxfF79shjK8OTNjP53aakMa2b+zVXkuc
-         CmA8KDew4qpMkvB6Yk5ZQ4WTjrLuHnFR6dyH+m8BPa6dHem6Em6vDpPKN/etuMv+GIPX
-         jNlPai9N3MGMUF97DkaQORnNzm1lA7ZI7U2mny/9lnqMi4EZ99EHlf3CNPiiBeBypOVE
-         Yapf26UfzsiC40UcMcnUwh4BOqyrrHAi/tg1RBSN7ThyTMI2f6qokY8M3DIs9fBGQ6YR
-         vCu2CgQcMubPd4aHpb/Plffwgn5V7kQAPWkC38EyQoe/PfanOtJxDvYcHeyFV5t5dcvO
-         ScjA==
+        bh=7t5NX7+PWQirm0TfbCUOmSknXtu+ymL/PYjukdREVgg=;
+        b=AjJ4YI9hzcHPMR3I7ooaCBJEv48bl8Q32Mo8hzpcUTLwAcJLwRSFxYtetfbhZ+Pbg4
+         BMI9ERvL8I/Yk8tgKyNVZ0SFEC86KHhBUn6AXxsoTCDMhb/NRhDOdr9IYXh8m5VzF775
+         2cs7djnBEBlsnSFUOF8gN7aqL9cK0ucyemA5qpYr+cd3nLKLY6Eb5RGDzEJGseA05MeL
+         wHdA7K8/uVfMMzDdLLSTzT6GmXgTZMn4YH4cCNhxP7iYiqo9iEsnySr1uWTocJSEgXbW
+         GFg7gsdItfriHRngsb9enc8dQyAb1J29KrhtE9hP1LKPPJqwqWi9CKFw9WaHXpsP4NiH
+         hW7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=kmIOcSZ0XyvR8utlTv5b37APzufzmKu6KXV604cAkks=;
-        b=7QjRA2xVzh+aUlLK+0DQWjYEKWaJP2eplUUBodYktlqRQIX4F6D/I2wN7PByICzLjs
-         v5/FNoipvYQI52Kp2g1WS/ZPfs4fgC9QU0chQBF7dapRI4ephgvkxeJB07sF+sTeTJQK
-         mnI69MUTVdx5B0lyJhRIfCf4pBgXMvMlfqrCW3jsPZJmutbZV3DlxdD3UiR/weLXBH4q
-         O1lAjdHnatsb+RpxSS8TnpWSQv6/C4VZBUTpK2zo13Y+UEqCsR9ED24OHDiDwoZWTB0T
-         WucGg1fe5Kq1CY8SZpS6S6VRjFDJqHDKNlAKVX6NoyOuRUYfGofGfbw1501V7GEAPNl6
-         QBtg==
-X-Gm-Message-State: AJIora+52D7z8SBYl/cXk6WnMkTrTA5bvQ1EtHMBxgLJiCLzjmNEouln
-        lZZJuT7h0GLKP051IXf5oMrpVqDXEoEalw==
-X-Google-Smtp-Source: AGRyM1vOU2JOxzyPmhn3SCTphsf1lpqO4zI/+wpXbPVC8mkQutvYrMGQoOaRm82CH9BNGfIrgKqQHg==
-X-Received: by 2002:a63:371e:0:b0:40c:f411:6768 with SMTP id e30-20020a63371e000000b0040cf4116768mr9519656pga.471.1656029380480;
-        Thu, 23 Jun 2022 17:09:40 -0700 (PDT)
+        bh=7t5NX7+PWQirm0TfbCUOmSknXtu+ymL/PYjukdREVgg=;
+        b=QO5X0tcsTjIFG578o4NlSUnvBjo/lxYTrr9RDNA2IrNlVvEsk5boyaRld7OfxXLEa6
+         JeGjdM6VNjqqEnApxyVNqMh2aJSH2fK90etu0FwHR7L0RujrLu+rV3NXkes+0bxS09Nq
+         hyHiQ7cxccV0Ph9nz09pEoXOFfHtSghrCoa3KSKDHlAQPuujt3CyeRlpJwPIwYK6fT5d
+         vS9mhHXxRSXhJtONoRfjpQ75qJT64YhsS3fZgi35QsbaHW52GL1eyfsXuYCqGfzHAMTH
+         GtYwtPIWqz4TsNXaREL1+iqDyaXSUx7IZ9UR7ZJM9cJ1C4texw0/tudTfJ3tTVZYOp7f
+         a2bQ==
+X-Gm-Message-State: AJIora8Cg9FLGDKz4NK5ktz3PN0+45Pa5e4Cv7fAC45edH2DoiCojsrs
+        ROcuqfT2oKUSxBady3kSoGe7cA==
+X-Google-Smtp-Source: AGRyM1s6jmuW56VoKuYkPF34C9mlc8YlBGh5LtOuEdtqsnHErPrqpLFl+cg1Zup/cnGDsRdzlYByfw==
+X-Received: by 2002:a17:90b:4f8c:b0:1ec:d1bf:8c64 with SMTP id qe12-20020a17090b4f8c00b001ecd1bf8c64mr658357pjb.66.1656029541332;
+        Thu, 23 Jun 2022 17:12:21 -0700 (PDT)
 Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
-        by smtp.gmail.com with ESMTPSA id z11-20020aa7888b000000b0052516db7123sm229410pfe.35.2022.06.23.17.09.39
+        by smtp.gmail.com with ESMTPSA id a7-20020a1709027d8700b0016a4ca6516dsm348760plm.278.2022.06.23.17.12.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jun 2022 17:09:39 -0700 (PDT)
-Date:   Fri, 24 Jun 2022 00:09:36 +0000
+        Thu, 23 Jun 2022 17:12:20 -0700 (PDT)
+Date:   Fri, 24 Jun 2022 00:12:17 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -57,15 +57,15 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v1 01/10] KVM: VMX: Move
- CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering out of setup_vmcs_config()
-Message-ID: <YrUAwPJTrYNT+zIt@google.com>
+Subject: Re: [PATCH RFC v1 02/10] KVM: VMX: Add missing CPU based VM
+ execution controls to vmcs_config
+Message-ID: <YrUBYTXRxBGYsd1a@google.com>
 References: <20220622164432.194640-1-vkuznets@redhat.com>
- <20220622164432.194640-2-vkuznets@redhat.com>
+ <20220622164432.194640-3-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220622164432.194640-2-vkuznets@redhat.com>
+In-Reply-To: <20220622164432.194640-3-vkuznets@redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -77,53 +77,48 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Maybe say "dynamically enabled" or so instead of "missing"?
+
 On Wed, Jun 22, 2022, Vitaly Kuznetsov wrote:
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/kvm/vmx/vmx.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+>  arch/x86/kvm/vmx/vmx.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 > 
 > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 5e14e4c40007..24da9e93bdab 100644
+> index 24da9e93bdab..01294a2fc1c1 100644
 > --- a/arch/x86/kvm/vmx/vmx.c
 > +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2490,11 +2490,6 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+> @@ -2483,8 +2483,14 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>  	      CPU_BASED_INVLPG_EXITING |
+>  	      CPU_BASED_RDPMC_EXITING;
+>  
+> -	opt = CPU_BASED_TPR_SHADOW |
+> +	opt = CPU_BASED_INTR_WINDOW_EXITING |
+> +	      CPU_BASED_RDTSC_EXITING |
+> +	      CPU_BASED_TPR_SHADOW |
+> +	      CPU_BASED_NMI_WINDOW_EXITING |
+> +	      CPU_BASED_USE_IO_BITMAPS |
+> +	      CPU_BASED_MONITOR_TRAP_FLAG |
+>  	      CPU_BASED_USE_MSR_BITMAPS |
+> +	      CPU_BASED_PAUSE_EXITING |
+>  	      CPU_BASED_ACTIVATE_SECONDARY_CONTROLS |
+>  	      CPU_BASED_ACTIVATE_TERTIARY_CONTROLS;
 >  	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_PROCBASED_CTLS,
->  				&_cpu_based_exec_control) < 0)
->  		return -EIO;
-> -#ifdef CONFIG_X86_64
-> -	if (_cpu_based_exec_control & CPU_BASED_TPR_SHADOW)
-> -		_cpu_based_exec_control &= ~CPU_BASED_CR8_LOAD_EXITING &
-> -					   ~CPU_BASED_CR8_STORE_EXITING;
-
-Eww, who does a double "~" with an "&"?
-
-> -#endif
->  	if (_cpu_based_exec_control & CPU_BASED_ACTIVATE_SECONDARY_CONTROLS) {
->  		min2 = 0;
->  		opt2 = SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES |
-> @@ -4285,6 +4280,12 @@ static u32 vmx_exec_control(struct vcpu_vmx *vmx)
+> @@ -4280,6 +4286,13 @@ static u32 vmx_exec_control(struct vcpu_vmx *vmx)
 >  {
 >  	u32 exec_control = vmcs_config.cpu_based_exec_ctrl;
 >  
-> +#ifdef CONFIG_X86_64
-> +	if (exec_control & CPU_BASED_TPR_SHADOW)
-> +		exec_control &= ~CPU_BASED_CR8_LOAD_EXITING &
-> +			~CPU_BASED_CR8_STORE_EXITING;
-
-If you shove this done a few lines, then you can have a single set of #ifdefs,
-and avoid restoring the controls a few lines later if it turns out KVM isn't
-enabling the TPR shadow, e.g. (with fixup to use the more canonical ~(x | y)
-pattern).
-
-	if (!cpu_need_tpr_shadow(&vmx->vcpu))
-		exec_control &= ~CPU_BASED_TPR_SHADOW;
-
-#ifdef CONFIG_X86_64
-	if (exec_control & CPU_BASED_TPR_SHADOW)
-		exec_control &= ~(CPU_BASED_CR8_LOAD_EXITING |
-				  CPU_BASED_CR8_STORE_EXITING);
-	else
-		exec_control |= CPU_BASED_CR8_STORE_EXITING |
-				CPU_BASED_CR8_LOAD_EXITING;
-#endif
+> +	exec_control &= ~(CPU_BASED_INTR_WINDOW_EXITING |
+> +			  CPU_BASED_RDTSC_EXITING |
+> +			  CPU_BASED_NMI_WINDOW_EXITING |
+> +			  CPU_BASED_USE_IO_BITMAPS |
+> +			  CPU_BASED_MONITOR_TRAP_FLAG |
+> +			  CPU_BASED_PAUSE_EXITING);
+> +
+>  #ifdef CONFIG_X86_64
+>  	if (exec_control & CPU_BASED_TPR_SHADOW)
+>  		exec_control &= ~CPU_BASED_CR8_LOAD_EXITING &
+> -- 
+> 2.35.3
+> 
