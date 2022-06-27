@@ -2,127 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05A5D55CDC9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jun 2022 15:04:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 787C555E363
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jun 2022 15:36:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237767AbiF0PNL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 27 Jun 2022 11:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
+        id S238334AbiF0PdC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 27 Jun 2022 11:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238004AbiF0PNF (ORCPT
+        with ESMTP id S238262AbiF0PcL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 27 Jun 2022 11:13:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38DBC60DA
-        for <linux-hyperv@vger.kernel.org>; Mon, 27 Jun 2022 08:13:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656342782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ARdvDRYqFQEpUSYWNh7p3WDzIDlCQtznR2856ZwQR38=;
-        b=gW6/t2nJH8PAXDixQuQKnj/aHKA22vqsvEjs2CKz3/J+I8ul3HapcF9EMvCfJOzpnxtSvb
-        uuz0iVQXIClDIDSuR+zbt4wqYNr9hy2OcZ08yY8ovSSMY+DeeeIT8ddSJ/rrTvIkZ51A8M
-        rGkXTIt27RCmjiGsvEMsEpJVAC7+KoQ=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-647-KMsKkiIkOiGFBK8F1BhQeg-1; Mon, 27 Jun 2022 11:13:01 -0400
-X-MC-Unique: KMsKkiIkOiGFBK8F1BhQeg-1
-Received: by mail-ed1-f69.google.com with SMTP id g7-20020a056402424700b00435ac9c7a8bso7384968edb.14
-        for <linux-hyperv@vger.kernel.org>; Mon, 27 Jun 2022 08:13:00 -0700 (PDT)
+        Mon, 27 Jun 2022 11:32:11 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B371A07F;
+        Mon, 27 Jun 2022 08:31:54 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id q18so8456650pld.13;
+        Mon, 27 Jun 2022 08:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iZDC1AGRQHEGpUuB3ISkYbuot/iQPwlOXTIDim4MzLc=;
+        b=O+GWloioEOJpO0XyXVRSMZTQsER89gKRWgIfzRViNiUH+wc06BhSdI/DYNimqD0H/7
+         +pBzmJ7cigXalaMs2EYCeYKV+G6WBWbR7VsAdyeDZvbyF635dgSBJ9nXlWkul7FYLsu8
+         gAtMXnwoSaQlBXInB76dUgvLj6KmA/5ZhOoN5PXuJRteFiHKTnGTlUuAh61yLcYZn323
+         AGGQSk+5H0R6Snc1R2Toqjss7pGQnsZttUZ8diX7VWTqboNL5/2x0EEKY7FPIvyhj3+l
+         8U+0xCg4eQ3aluY9uc5Aw2N+SRaH40XIYSKcjsS9Uk6Yh8XYwdhjkXZpQ/NAeL8ogA9R
+         2+yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ARdvDRYqFQEpUSYWNh7p3WDzIDlCQtznR2856ZwQR38=;
-        b=SQNea8wCDxDThdjTRIjlom+bScvD/7kBYJ3IfKL99p0aPxgoV0G94D6j3oICyuIEHs
-         41Jyrs4OI2JZzInyuoU6j9ili0rfY5S3GQtuvNJ1A1YpOVAoSPl9SzCPEO1zK8YKCuek
-         CBezAs13JcVBlpojc+oBwmWhiLozAwwPE+mRYsMUTkSH9Pvob9MKU+TXRFNe3d7t0kLw
-         reoqwoCx44khmRgv7xFWRzqRHT8cDxceYYOzEEyRla5/FiIa3F4FrJtlhNJX5HXme6TD
-         Ni2XmpKn0kUi0V9EF7ogSogR+UrIw3Wiv2lE8a6TVqqjobUnMXrEMV7zFtbLidUtM8+k
-         jT2g==
-X-Gm-Message-State: AJIora9HHqpv+Lus4l/lirn0NUNFMmgrQILS9AfF71XYyGzzxUjpb9Ru
-        56+03rYbG3IT4JV8m1NL91OeRhihhcIalQo7xSkAEPHyAPyIT6Qr4VkJA+xRSW8QIbOF5ITx7Wn
-        qfjS1rJCjLSL8rh2jqlh80uoA
-X-Received: by 2002:a17:906:5512:b0:726:be2c:a2e5 with SMTP id r18-20020a170906551200b00726be2ca2e5mr2270030ejp.88.1656342779601;
-        Mon, 27 Jun 2022 08:12:59 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1ujLOPA2JVmlJ+R4KMLfx0HjYsH41cRwgwuV7mZUbliS5V6Ns2xRIbDBxPpYaLhiDmvcPjGPQ==
-X-Received: by 2002:a17:906:5512:b0:726:be2c:a2e5 with SMTP id r18-20020a170906551200b00726be2ca2e5mr2270015ejp.88.1656342779400;
-        Mon, 27 Jun 2022 08:12:59 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id w13-20020a170906d20d00b00726298147b1sm5049433ejz.161.2022.06.27.08.12.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iZDC1AGRQHEGpUuB3ISkYbuot/iQPwlOXTIDim4MzLc=;
+        b=QqGRFvPCY2XcHSHrdqmje5aY3Cn6u+jtFZfp06+llDLBu19y2Oq38IADxWdb9UuElQ
+         7VihEbJVnh3Mm75TAd0zuc4kZBBiLeUNcirpD4mmpc/eJ7hZ0UdvB1YdmfokE66GZQNk
+         PXou5khJJd4M6iRa5jRxSlNctWOHprHvzVMt1H4gx4f5YItfZSrjmDA6qd2DL9Mcp12R
+         jqHXA4HHlLrmviIVozXapM+d7lZ3h1XjD3rz+p/Soc9qZg9z4Eb7qWKqfVoR1yfyybwA
+         jhfwqN50OVn0hFDf+CQPX5AZ39Iq92AEsFbxR3TkSDln6Y6iZozTS8zOWl+PZh6gypO6
+         TiuA==
+X-Gm-Message-State: AJIora+o4rl4RcGjPs8P0ruJRd9y7Ot3HbJqnILvn2HLjGB2WolycIHF
+        kS91AU3oz2vvv8fwjsLs2RM=
+X-Google-Smtp-Source: AGRyM1sEiEhuPfofrRLQqFzFlVdXiZYLCqnhQsSu7hoQrMhPrjLPj9CQQVl/oAKCcOOKm40jQb6U7g==
+X-Received: by 2002:a17:902:cec4:b0:16a:1fc3:b6e6 with SMTP id d4-20020a170902cec400b0016a1fc3b6e6mr15435957plg.129.1656343914201;
+        Mon, 27 Jun 2022 08:31:54 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:36:f0eb:a18:55d7:977b])
+        by smtp.gmail.com with ESMTPSA id y6-20020aa78f26000000b005251ec8bb5bsm7595705pfr.199.2022.06.27.08.31.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 08:12:58 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v1 02/10] KVM: VMX: Add missing CPU based VM
- execution controls to vmcs_config
-In-Reply-To: <YrUBYTXRxBGYsd1a@google.com>
-References: <20220622164432.194640-1-vkuznets@redhat.com>
- <20220622164432.194640-3-vkuznets@redhat.com>
- <YrUBYTXRxBGYsd1a@google.com>
-Date:   Mon, 27 Jun 2022 17:12:58 +0200
-Message-ID: <87wnd2uolh.fsf@redhat.com>
+        Mon, 27 Jun 2022 08:31:53 -0700 (PDT)
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     corbet@lwn.net, rafael@kernel.org, len.brown@intel.com,
+        pavel@ucw.cz, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        paulmck@kernel.org, akpm@linux-foundation.org,
+        keescook@chromium.org, songmuchun@bytedance.com,
+        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
+        michael.h.kelley@microsoft.com, kys@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        vkuznets@redhat.com, wei.liu@kernel.org, parri.andrea@gmail.com,
+        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
+        kirill.shutemov@intel.com, andi.kleen@intel.com
+Subject: [PATCH 0/2] swiotlb: Split up single swiotlb lock
+Date:   Mon, 27 Jun 2022 11:31:48 -0400
+Message-Id: <20220627153150.106995-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-> Maybe say "dynamically enabled" or so instead of "missing"?
->
+Traditionally swiotlb was not performance critical because it was only
+used for slow devices. But in some setups, like TDX/SEV confidential
+guests, all IO has to go through swiotlb. Currently swiotlb only has a
+single lock. Under high IO load with multiple CPUs this can lead to
+significat lock contention on the swiotlb lock.
 
-...
+Patch 1 is to introduce swiotlb area concept and split up single swiotlb
+lock.
+Patch 2 set swiotlb area number with lapic number
 
-> On Wed, Jun 22, 2022, Vitaly Kuznetsov wrote:
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  arch/x86/kvm/vmx/vmx.c | 15 ++++++++++++++-
->>  1 file changed, 14 insertions(+), 1 deletion(-)
->> 
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 24da9e93bdab..01294a2fc1c1 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -2483,8 +2483,14 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->>  	      CPU_BASED_INVLPG_EXITING |
->>  	      CPU_BASED_RDPMC_EXITING;
->>  
->> -	opt = CPU_BASED_TPR_SHADOW |
->> +	opt = CPU_BASED_INTR_WINDOW_EXITING |
->> +	      CPU_BASED_RDTSC_EXITING |
->> +	      CPU_BASED_TPR_SHADOW |
->> +	      CPU_BASED_NMI_WINDOW_EXITING |
->> +	      CPU_BASED_USE_IO_BITMAPS |
->> +	      CPU_BASED_MONITOR_TRAP_FLAG |
->>  	      CPU_BASED_USE_MSR_BITMAPS |
->> +	      CPU_BASED_PAUSE_EXITING |
->>  	      CPU_BASED_ACTIVATE_SECONDARY_CONTROLS |
->>  	      CPU_BASED_ACTIVATE_TERTIARY_CONTROLS;
 
-CPU_BASED_INTR_WINDOW_EXITING and CPU_BASED_NMI_WINDOW_EXITING are
-actually "dynamically enabled" but CPU_BASED_RDTSC_EXITING/
-CPU_BASED_USE_IO_BITMAPS/ CPU_BASED_MONITOR_TRAP_FLAG /
-CPU_BASED_PAUSE_EXITING are not (and I found the first two immediately
-after implementing 'macro shananigans' you suggested, of course :-), KVM
-just doesn't use them for L1. So this is going to get splitted in two
-patches.
+Tianyu Lan (2):
+  swiotlb: Split up single swiotlb lock
+  x86/ACPI: Set swiotlb area according to the number of lapic entry in
+    MADT
+
+ .../admin-guide/kernel-parameters.txt         |   4 +-
+ arch/x86/kernel/acpi/boot.c                   |   3 +
+ include/linux/swiotlb.h                       |  27 +++
+ kernel/dma/swiotlb.c                          | 202 ++++++++++++++----
+ 4 files changed, 197 insertions(+), 39 deletions(-)
 
 -- 
-Vitaly
+2.25.1
 
