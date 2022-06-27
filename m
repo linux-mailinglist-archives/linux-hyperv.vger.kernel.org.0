@@ -2,85 +2,79 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 234E455ADB1
-	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Jun 2022 02:03:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05A5D55CDC9
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jun 2022 15:04:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233332AbiFZADk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 25 Jun 2022 20:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39922 "EHLO
+        id S237767AbiF0PNL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 27 Jun 2022 11:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233541AbiFZADj (ORCPT
+        with ESMTP id S238004AbiF0PNF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 25 Jun 2022 20:03:39 -0400
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A647E13F03
-        for <linux-hyperv@vger.kernel.org>; Sat, 25 Jun 2022 17:03:38 -0700 (PDT)
-Received: by mail-qv1-xf2c.google.com with SMTP id cu16so9972968qvb.7
-        for <linux-hyperv@vger.kernel.org>; Sat, 25 Jun 2022 17:03:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uzBv+rLiOMQN1QJ1CAlWRVrSA/M0AyPQIUhJ4NlvMOE=;
-        b=DuSHNIG60LiWNKf6jLN1j6RVigzx0qhdEesKDgOV6wCISOLAQI7oQlLZ/pFMrGS7uL
-         hfcEwE0OB9CtMtMYxyMiNYaG81IkT4C7Ua/QhOEJnd39panh+4ltOP/BIBAEV3y1R9GA
-         gv/uHXrgxGI6bX2M8ODhkxbSUoYXIQKyd3l/SN/UakjuIzb9CfFxYw4rJ1i++aOpA7Ar
-         28C4xehBv/LYcrSDI0eWRkL2H7mbfx8qErhO3Q+c3I7RJcgd1K95DRVGNFv533NU9SJR
-         LJCRdDJqjgWOpL8hXm0Btn05S45hfiod4wR8rAV4Po2MD/PXo22z8w15OPX/cpr44Fsz
-         wgfQ==
+        Mon, 27 Jun 2022 11:13:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38DBC60DA
+        for <linux-hyperv@vger.kernel.org>; Mon, 27 Jun 2022 08:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656342782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ARdvDRYqFQEpUSYWNh7p3WDzIDlCQtznR2856ZwQR38=;
+        b=gW6/t2nJH8PAXDixQuQKnj/aHKA22vqsvEjs2CKz3/J+I8ul3HapcF9EMvCfJOzpnxtSvb
+        uuz0iVQXIClDIDSuR+zbt4wqYNr9hy2OcZ08yY8ovSSMY+DeeeIT8ddSJ/rrTvIkZ51A8M
+        rGkXTIt27RCmjiGsvEMsEpJVAC7+KoQ=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-647-KMsKkiIkOiGFBK8F1BhQeg-1; Mon, 27 Jun 2022 11:13:01 -0400
+X-MC-Unique: KMsKkiIkOiGFBK8F1BhQeg-1
+Received: by mail-ed1-f69.google.com with SMTP id g7-20020a056402424700b00435ac9c7a8bso7384968edb.14
+        for <linux-hyperv@vger.kernel.org>; Mon, 27 Jun 2022 08:13:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uzBv+rLiOMQN1QJ1CAlWRVrSA/M0AyPQIUhJ4NlvMOE=;
-        b=KhaIVGiEYgssLaw4AGyC0b5hOseuYrSQoo/ILJ2D40fs3PwJHUA73MWYZLmhWIMv0J
-         ATYalSILzDWafrdKtFU7DRHgOkxHJX6oUtMSqyAfkeuiHQzXMD8wypgDqxkPIyg5acFu
-         ZlJKHS2T2ctcewIn7RDtp7ioZRM3shFo91KGD20Ar1fO1hSYB10BSHecF2CsiQ+AUeyI
-         9S1x4Dhqbgi3PSGxeVIIwIPkqvCFsnDGJ8+jdzVhpNH2Gh4MINePyPSQmWTri0Xz9+4O
-         QLjKricoMEZPmTXqbSmaPlM3nyIngOPA2WhmqetulWmeL/hIWT5DjCtovxvaJ02ptBiF
-         KSKQ==
-X-Gm-Message-State: AJIora/BKDCjL1Lpa1THI405/gUyOWGP+JKAp+Wuwhddus4YmCfTANF5
-        bV5OESoso4pTcSMVFV4ZaMotdQ==
-X-Google-Smtp-Source: AGRyM1tE4BoFBAJJvdfxmP6e/GRmO8k9uiseuk8Afwuboo2RrknpwMgvTsRL6ljMihM8ni/ZMauTrg==
-X-Received: by 2002:a05:6214:c2c:b0:470:a060:4543 with SMTP id a12-20020a0562140c2c00b00470a0604543mr4509412qvd.49.1656201817425;
-        Sat, 25 Jun 2022 17:03:37 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
-        by smtp.gmail.com with ESMTPSA id h18-20020ac87772000000b002f905347586sm4168554qtu.14.2022.06.25.17.03.36
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ARdvDRYqFQEpUSYWNh7p3WDzIDlCQtznR2856ZwQR38=;
+        b=SQNea8wCDxDThdjTRIjlom+bScvD/7kBYJ3IfKL99p0aPxgoV0G94D6j3oICyuIEHs
+         41Jyrs4OI2JZzInyuoU6j9ili0rfY5S3GQtuvNJ1A1YpOVAoSPl9SzCPEO1zK8YKCuek
+         CBezAs13JcVBlpojc+oBwmWhiLozAwwPE+mRYsMUTkSH9Pvob9MKU+TXRFNe3d7t0kLw
+         reoqwoCx44khmRgv7xFWRzqRHT8cDxceYYOzEEyRla5/FiIa3F4FrJtlhNJX5HXme6TD
+         Ni2XmpKn0kUi0V9EF7ogSogR+UrIw3Wiv2lE8a6TVqqjobUnMXrEMV7zFtbLidUtM8+k
+         jT2g==
+X-Gm-Message-State: AJIora9HHqpv+Lus4l/lirn0NUNFMmgrQILS9AfF71XYyGzzxUjpb9Ru
+        56+03rYbG3IT4JV8m1NL91OeRhihhcIalQo7xSkAEPHyAPyIT6Qr4VkJA+xRSW8QIbOF5ITx7Wn
+        qfjS1rJCjLSL8rh2jqlh80uoA
+X-Received: by 2002:a17:906:5512:b0:726:be2c:a2e5 with SMTP id r18-20020a170906551200b00726be2ca2e5mr2270030ejp.88.1656342779601;
+        Mon, 27 Jun 2022 08:12:59 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1ujLOPA2JVmlJ+R4KMLfx0HjYsH41cRwgwuV7mZUbliS5V6Ns2xRIbDBxPpYaLhiDmvcPjGPQ==
+X-Received: by 2002:a17:906:5512:b0:726:be2c:a2e5 with SMTP id r18-20020a170906551200b00726be2ca2e5mr2270015ejp.88.1656342779400;
+        Mon, 27 Jun 2022 08:12:59 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id w13-20020a170906d20d00b00726298147b1sm5049433ejz.161.2022.06.27.08.12.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jun 2022 17:03:36 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1o5FkV-001s2q-Pc; Sat, 25 Jun 2022 21:03:35 -0300
-Date:   Sat, 25 Jun 2022 21:03:35 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ajay Sharma <sharmaajay@microsoft.com>
-Cc:     Long Li <longli@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "shiraz.saleem@intel.com" <shiraz.saleem@intel.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: [EXTERNAL] [Patch v4 12/12] RDMA/mana_ib: Add a driver for
- Microsoft Azure Network Adapter
-Message-ID: <20220626000335.GL23621@ziepe.ca>
-References: <1655345240-26411-1-git-send-email-longli@linuxonhyperv.com>
- <1655345240-26411-13-git-send-email-longli@linuxonhyperv.com>
- <DM4PR21MB32967BB85B7B022671ECADD1D6B79@DM4PR21MB3296.namprd21.prod.outlook.com>
+        Mon, 27 Jun 2022 08:12:58 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v1 02/10] KVM: VMX: Add missing CPU based VM
+ execution controls to vmcs_config
+In-Reply-To: <YrUBYTXRxBGYsd1a@google.com>
+References: <20220622164432.194640-1-vkuznets@redhat.com>
+ <20220622164432.194640-3-vkuznets@redhat.com>
+ <YrUBYTXRxBGYsd1a@google.com>
+Date:   Mon, 27 Jun 2022 17:12:58 +0200
+Message-ID: <87wnd2uolh.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM4PR21MB32967BB85B7B022671ECADD1D6B79@DM4PR21MB3296.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,16 +82,47 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Jun 25, 2022 at 04:20:19AM +0000, Ajay Sharma wrote:
-> Hello Maintainers,
->  Any idea when these patches would make it into the next kernel release ?
+Sean Christopherson <seanjc@google.com> writes:
 
-New rdma drivers typically take a long time to get merged due to their
-typical huge size. Currently I'm working through ERDMA. Reviewing the
-ERDMA submission would be helpful, I generally prefer it if people
-proposing new drivers review other new drivers being submitted.
+> Maybe say "dynamically enabled" or so instead of "missing"?
+>
 
-In this case it seems smaller, so you might make this cycle, though I
-haven't even opened the userspace portion yet.
+...
 
-Jason
+> On Wed, Jun 22, 2022, Vitaly Kuznetsov wrote:
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  arch/x86/kvm/vmx/vmx.c | 15 ++++++++++++++-
+>>  1 file changed, 14 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index 24da9e93bdab..01294a2fc1c1 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -2483,8 +2483,14 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>>  	      CPU_BASED_INVLPG_EXITING |
+>>  	      CPU_BASED_RDPMC_EXITING;
+>>  
+>> -	opt = CPU_BASED_TPR_SHADOW |
+>> +	opt = CPU_BASED_INTR_WINDOW_EXITING |
+>> +	      CPU_BASED_RDTSC_EXITING |
+>> +	      CPU_BASED_TPR_SHADOW |
+>> +	      CPU_BASED_NMI_WINDOW_EXITING |
+>> +	      CPU_BASED_USE_IO_BITMAPS |
+>> +	      CPU_BASED_MONITOR_TRAP_FLAG |
+>>  	      CPU_BASED_USE_MSR_BITMAPS |
+>> +	      CPU_BASED_PAUSE_EXITING |
+>>  	      CPU_BASED_ACTIVATE_SECONDARY_CONTROLS |
+>>  	      CPU_BASED_ACTIVATE_TERTIARY_CONTROLS;
+
+CPU_BASED_INTR_WINDOW_EXITING and CPU_BASED_NMI_WINDOW_EXITING are
+actually "dynamically enabled" but CPU_BASED_RDTSC_EXITING/
+CPU_BASED_USE_IO_BITMAPS/ CPU_BASED_MONITOR_TRAP_FLAG /
+CPU_BASED_PAUSE_EXITING are not (and I found the first two immediately
+after implementing 'macro shananigans' you suggested, of course :-), KVM
+just doesn't use them for L1. So this is going to get splitted in two
+patches.
+
+-- 
+Vitaly
+
