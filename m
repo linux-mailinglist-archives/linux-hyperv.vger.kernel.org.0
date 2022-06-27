@@ -2,120 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5B9955CDD0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jun 2022 15:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7632655CA10
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jun 2022 14:57:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238248AbiF0PdB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 27 Jun 2022 11:33:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51452 "EHLO
+        id S236005AbiF0QEu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 27 Jun 2022 12:04:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238342AbiF0PcM (ORCPT
+        with ESMTP id S230347AbiF0QEt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 27 Jun 2022 11:32:12 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC101A390;
-        Mon, 27 Jun 2022 08:31:57 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id v126so5270755pgv.11;
-        Mon, 27 Jun 2022 08:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LCgfBJhENgb3ojrVqpq/GHPBaWKu1KifC83EuVi6Y6g=;
-        b=dI9T0VKsh98NfrTIu4AWRJ/2IXmjraWq+1P1LN/hLe29wRLZaR5rvvsVpTVGGWRsLM
-         oRPcmybL+9qjIg6JEHoGAgGOFL/kGAFCsWLK7WCM0XkUuNwWOox1ThAs8KlnRPUzQcWt
-         lLXhKF+E22CnMCpYiFyIF3YJPLw2bIZpNYTTkS1OfiFBIkhO+xMuQ3FTM2eDbKtI6xTk
-         1g/RosEGWW+aSKl566bZiWTywkleIjLQbsyLbh6bujMdhFvi6SkuXCgqzDnInJkA6X9V
-         jxbkwdw0mafLIfRF2n+cmdU+c4npLFqnyiJ5MPEI7fj+2r7UycP6rBI7HtPEscl+zfdY
-         9fNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LCgfBJhENgb3ojrVqpq/GHPBaWKu1KifC83EuVi6Y6g=;
-        b=3LOTwc92XC+sGQz68weoKEH1whtkpTxUClFUWM2CZdH7yQTvgNNiDz1x+lHyE+jy+7
-         gUmvqPzg3pMSm+2gKX/gf1Bz2i9QMwiXnDf+qZhApXfrMRX5c377MqL+MUicuPHs8/+d
-         stypQwoA5xqWk8+Crk2VbbYuvWqVAdms4g1ESmMOymZXRlO7gPXHJi1A93PFQxh1AtRx
-         L0qfB2nwuu3Gof7ktmM7kuwVYokeNYg0gXgdj4VQXtX/ulWqdKco6kQzS5c7cK9xt3z0
-         EcrgV1hkDEY0JTlS476D9Bp4aF/ehhv7xUX5bCe0Ao+tppHhsw38obsvnoqKtWN2xLkU
-         Bxxg==
-X-Gm-Message-State: AJIora9MxRGm3jh0GvG4acycfqo98w9y3tr9bkweDimzhZ6xbV9tt5vy
-        05QItMjUmoA4BmXsGiTu020=
-X-Google-Smtp-Source: AGRyM1u5LW9AITaIesZzlz5OplsMuM7fKSzm3w1NSzCcIsHcbNdQtjNjluJWhAENtSD4tzySP2ykWA==
-X-Received: by 2002:a05:6a00:17a8:b0:525:537a:b0df with SMTP id s40-20020a056a0017a800b00525537ab0dfmr15547134pfg.71.1656343916526;
-        Mon, 27 Jun 2022 08:31:56 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:36:f0eb:a18:55d7:977b])
-        by smtp.gmail.com with ESMTPSA id y6-20020aa78f26000000b005251ec8bb5bsm7595705pfr.199.2022.06.27.08.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 08:31:55 -0700 (PDT)
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     corbet@lwn.net, rafael@kernel.org, len.brown@intel.com,
-        pavel@ucw.cz, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        paulmck@kernel.org, akpm@linux-foundation.org,
-        keescook@chromium.org, songmuchun@bytedance.com,
-        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
-        michael.h.kelley@microsoft.com, kys@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        iommu@lists.linux-foundation.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        vkuznets@redhat.com, wei.liu@kernel.org, parri.andrea@gmail.com,
-        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
-        kirill.shutemov@intel.com, andi.kleen@intel.com,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 2/2] x86/ACPI: Set swiotlb area according to the number of lapic entry in MADT
-Date:   Mon, 27 Jun 2022 11:31:50 -0400
-Message-Id: <20220627153150.106995-3-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220627153150.106995-1-ltykernel@gmail.com>
-References: <20220627153150.106995-1-ltykernel@gmail.com>
+        Mon, 27 Jun 2022 12:04:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6DA7BB1E7
+        for <linux-hyperv@vger.kernel.org>; Mon, 27 Jun 2022 09:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656345887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LYkNIEs5Mn24fJrau8L4ZctBwCdXRpyqBWYk8TuQ9zI=;
+        b=H8coPp1XQVKZmnpwotZJiKG0e9OQXX2ZbOtc8SmRjNk5XMyFtBsbIUKJWvyy7IcLU00YRd
+        PtJ4i2Ur5wUGnCND5qy5r975h4KUIdbkIbq7rdB+2b/KT3IpaWIitJXTkmrXW1NNxEH7S4
+        Ji03qf8SopKK3+M3Oqv+0BdL+tZel3o=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-629-4VZnuFsLOpWKkzjSQeBrlg-1; Mon, 27 Jun 2022 12:04:44 -0400
+X-MC-Unique: 4VZnuFsLOpWKkzjSQeBrlg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A46E680418F;
+        Mon, 27 Jun 2022 16:04:43 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.40.192.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A9006C15D40;
+        Mon, 27 Jun 2022 16:04:41 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/14] KVM: nVMX: Use vmcs_config for setting up nested VMX MSRs
+Date:   Mon, 27 Jun 2022 18:04:26 +0200
+Message-Id: <20220627160440.31857-1-vkuznets@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Changes since RFC:
+- "KVM: VMX: Extend VMX controls macro shenanigans" PATCH added and the
+  infrastructure is later used in other patches [Sean] PATCHes 1-3 added
+  to support the change.
+- "KVM: VMX: Clear controls obsoleted by EPT at runtime, not setup" PATCH
+  added [Sean].
+- Commit messages added.
 
-When initialize swiotlb bounce buffer, smp_init() has not been
-called and cpu number can not be got from num_online_cpus().
-Use the number of lapic entry to set swiotlb area number and
-keep swiotlb area number equal to cpu number on the x86 platform.
+vmcs_config is a sanitized version of host VMX MSRs where some controls are
+filtered out (e.g. when Enlightened VMCS is enabled, some know bugs are 
+discovered, some inconsistencies in controls are detected,...) but
+nested_vmx_setup_ctls_msrs() uses raw host MSRs instead. This may end up
+in exposing undesired controls to L1. Switch to using vmcs_config instead.
 
-Based-on-idea-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
- arch/x86/kernel/acpi/boot.c | 3 +++
- 1 file changed, 3 insertions(+)
+Sean Christopherson (1):
+  KVM: VMX: Clear controls obsoleted by EPT at runtime, not setup
 
-diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-index 907cc98b1938..7e13499f2c10 100644
---- a/arch/x86/kernel/acpi/boot.c
-+++ b/arch/x86/kernel/acpi/boot.c
-@@ -22,6 +22,7 @@
- #include <linux/efi-bgrt.h>
- #include <linux/serial_core.h>
- #include <linux/pgtable.h>
-+#include <linux/swiotlb.h>
- 
- #include <asm/e820/api.h>
- #include <asm/irqdomain.h>
-@@ -1131,6 +1132,8 @@ static int __init acpi_parse_madt_lapic_entries(void)
- 		return count;
- 	}
- 
-+	swiotlb_adjust_nareas(max(count, x2count));
-+
- 	x2count = acpi_table_parse_madt(ACPI_MADT_TYPE_LOCAL_X2APIC_NMI,
- 					acpi_parse_x2apic_nmi, 0);
- 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_LOCAL_APIC_NMI,
+Vitaly Kuznetsov (13):
+  KVM: VMX: Check VM_ENTRY_IA32E_MODE in setup_vmcs_config()
+  KVM: VMX: Check CPU_BASED_{INTR,NMI}_WINDOW_EXITING in
+    setup_vmcs_config()
+  KVM: VMX: Tweak the special handling of SECONDARY_EXEC_ENCLS_EXITING
+    in setup_vmcs_config()
+  KVM: VMX: Extend VMX controls macro shenanigans
+  KVM: VMX: Move CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering out of
+    setup_vmcs_config()
+  KVM: VMX: Add missing VMEXIT controls to vmcs_config
+  KVM: VMX: Add missing VMENTRY controls to vmcs_config
+  KVM: VMX: Add missing CPU based VM execution controls to vmcs_config
+  KVM: nVMX: Use sanitized allowed-1 bits for VMX control MSRs
+  KVM: VMX: Store required-1 VMX controls in vmcs_config
+  KVM: nVMX: Use sanitized required-1 bits for VMX control MSRs
+  KVM: VMX: Cache MSR_IA32_VMX_MISC in vmcs_config
+  KVM: nVMX: Use cached host MSR_IA32_VMX_MISC value for setting up
+    nested MSR
+
+ arch/x86/kvm/vmx/capabilities.h |  16 +--
+ arch/x86/kvm/vmx/nested.c       |  37 +++---
+ arch/x86/kvm/vmx/nested.h       |   2 +-
+ arch/x86/kvm/vmx/vmx.c          | 198 ++++++++++++++------------------
+ arch/x86/kvm/vmx/vmx.h          | 118 +++++++++++++++++++
+ 5 files changed, 229 insertions(+), 142 deletions(-)
+
 -- 
-2.25.1
+2.35.3
 
