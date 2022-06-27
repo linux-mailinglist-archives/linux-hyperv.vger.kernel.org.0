@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9137955C3A6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jun 2022 14:48:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51A4155CCE6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Jun 2022 15:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238556AbiF0QFQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 27 Jun 2022 12:05:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
+        id S238820AbiF0QFS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 27 Jun 2022 12:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238359AbiF0QFJ (ORCPT
+        with ESMTP id S238819AbiF0QFL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 27 Jun 2022 12:05:09 -0400
+        Mon, 27 Jun 2022 12:05:11 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E0D90D112
-        for <linux-hyperv@vger.kernel.org>; Mon, 27 Jun 2022 09:05:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B7398140A6
+        for <linux-hyperv@vger.kernel.org>; Mon, 27 Jun 2022 09:05:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656345901;
+        s=mimecast20190719; t=1656345902;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FdBtbGdvCAibb668SrONgPMQlyuwvj1BdAUlTTRRb8g=;
-        b=i+166g5DGq+Dq9+hkRXOLenuSNeLRM8lzBW7VEEtCXp3N0b97YR7i8TZlxb2Xmjrt+6B/i
-        JFrRjzzR/D2bqOlH4onKZnBu7HJhpytMc4sa0o/2mwr1KMx8gyMWg/SqztWyTPxOpgIYVu
-        9Au8NYYHmYIO1baIZqo+GX9p6O3vdhg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=feJ0aVW0ZN/V9x7W7O15cz8iuEECArCO+H1GRTID+6E=;
+        b=Duwyt1fm66eaAn249mxLSMzUMiHb/kMJ8iwDoLBnqrNpMt9b2nP7XyT18oyULKVKK6RiQg
+        HLLIWJ0QkMjaadpWlaAsR+9YemM/w7jRiLhST3lKCrX3YtDl4gEjXhiKgorYbIXKFLJTmo
+        0rDNJqLiwdXsJH5ms0lXrvwUCCx2d8c=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-574-AAY6IcZ3MdOfnaxIVSzvtw-1; Mon, 27 Jun 2022 12:04:57 -0400
-X-MC-Unique: AAY6IcZ3MdOfnaxIVSzvtw-1
+ us-mta-356-koBi4J2JOCCHoyXH5KNV_Q-1; Mon, 27 Jun 2022 12:04:59 -0400
+X-MC-Unique: koBi4J2JOCCHoyXH5KNV_Q-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2ECDC801755;
-        Mon, 27 Jun 2022 16:04:57 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 268E03C11744;
+        Mon, 27 Jun 2022 16:04:59 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.192.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E0ECC2810D;
-        Mon, 27 Jun 2022 16:04:55 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B12DC26E98;
+        Mon, 27 Jun 2022 16:04:57 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>
@@ -46,9 +46,9 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/14] KVM: VMX: Add missing VMEXIT controls to vmcs_config
-Date:   Mon, 27 Jun 2022 18:04:32 +0200
-Message-Id: <20220627160440.31857-7-vkuznets@redhat.com>
+Subject: [PATCH 07/14] KVM: VMX: Add missing VMENTRY controls to vmcs_config
+Date:   Mon, 27 Jun 2022 18:04:33 +0200
+Message-Id: <20220627160440.31857-8-vkuznets@redhat.com>
 In-Reply-To: <20220627160440.31857-1-vkuznets@redhat.com>
 References: <20220627160440.31857-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -66,49 +66,47 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 As a preparation to reusing the result of setup_vmcs_config() in
-nested VMX MSR setup, add the VMEXIT controls which KVM doesn't
-use but supports for nVMX to KVM_OPT_VMX_VM_EXIT_CONTROLS and
-filter them out in vmx_vmexit_ctrl().
+nested VMX MSR setup, add the VMENTRY controls which KVM doesn't
+use but supports for nVMX to KVM_OPT_VMX_VM_ENTRY_CONTROLS and
+filter them out in vmx_vmentry_ctrl().
 
 No functional change intended.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 4 ++++
- arch/x86/kvm/vmx/vmx.h | 3 +++
- 2 files changed, 7 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 3 +++
+ arch/x86/kvm/vmx/vmx.h | 4 +++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d28f85801ade..15191b3e5538 100644
+index 15191b3e5538..3846a8c7102a 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4202,6 +4202,10 @@ static u32 vmx_vmexit_ctrl(void)
+@@ -4184,6 +4184,9 @@ static u32 vmx_vmentry_ctrl(void)
  {
- 	u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
+ 	u32 vmentry_ctrl = vmcs_config.vmentry_ctrl;
  
 +	/* Not used by KVM but supported for nesting. */
-+	vmexit_ctrl &= ~(VM_EXIT_SAVE_IA32_PAT | VM_EXIT_SAVE_IA32_EFER |
-+			 VM_EXIT_SAVE_VMX_PREEMPTION_TIMER);
++	vmentry_ctrl &= ~(VM_ENTRY_SMM | VM_ENTRY_DEACT_DUAL_MONITOR);
 +
  	if (vmx_pt_mode_is_system())
- 		vmexit_ctrl &= ~(VM_EXIT_PT_CONCEAL_PIP |
- 				 VM_EXIT_CLEAR_IA32_RTIT_CTL);
+ 		vmentry_ctrl &= ~(VM_ENTRY_PT_CONCEAL_PIP |
+ 				  VM_ENTRY_LOAD_IA32_RTIT_CTL);
 diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 540febecac92..5e9127f39c19 100644
+index 5e9127f39c19..6b44f4c1d45f 100644
 --- a/arch/x86/kvm/vmx/vmx.h
 +++ b/arch/x86/kvm/vmx/vmx.h
-@@ -498,8 +498,11 @@ static inline u8 vmx_get_rvi(void)
+@@ -478,7 +478,9 @@ static inline u8 vmx_get_rvi(void)
+ 		__KVM_REQ_VMX_VM_ENTRY_CONTROLS
  #endif
- #define KVM_OPT_VMX_VM_EXIT_CONTROLS				\
- 	      (VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |		\
-+	      VM_EXIT_SAVE_IA32_PAT |				\
- 	      VM_EXIT_LOAD_IA32_PAT |				\
-+	      VM_EXIT_SAVE_IA32_EFER |				\
- 	      VM_EXIT_LOAD_IA32_EFER |				\
-+	      VM_EXIT_SAVE_VMX_PREEMPTION_TIMER |		\
- 	      VM_EXIT_CLEAR_BNDCFGS |				\
- 	      VM_EXIT_PT_CONCEAL_PIP |				\
- 	      VM_EXIT_CLEAR_IA32_RTIT_CTL)
+ #define KVM_OPT_VMX_VM_ENTRY_CONTROLS				\
+-	(VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |			\
++	(VM_ENTRY_SMM |						\
++	VM_ENTRY_DEACT_DUAL_MONITOR |				\
++	VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |			\
+ 	VM_ENTRY_LOAD_IA32_PAT |				\
+ 	VM_ENTRY_LOAD_IA32_EFER |				\
+ 	VM_ENTRY_LOAD_BNDCFGS |					\
 -- 
 2.35.3
 
