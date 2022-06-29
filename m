@@ -2,96 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECEF35603FD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 17:13:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73E51560931
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 20:33:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234153AbiF2PIj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jun 2022 11:08:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        id S229714AbiF2Sd4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jun 2022 14:33:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234159AbiF2PHo (ORCPT
+        with ESMTP id S229582AbiF2Sdz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jun 2022 11:07:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D25E42CC9B
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 08:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656515259;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=agIhwFkjRHnLjbHDFtkyB4dQ5eVn9ReXWie5804CCQ4=;
-        b=X8RWbbI28XxYKk7xsMaEzoS2W0nlRMr6R4DIFfjk/wBpZSuO3ha6BXASAsBw4X7bmc9rMP
-        tk/W1rYIJI7Xh8eutVmTSC4NbvggfwWzFoN6CILNgPbbD+riW9jZy1ejAWm26oNifjQFaN
-        M1DEWeGWVm3H9BLX+vzjzRLtbQOUh3E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-517-WOQH6bKhO8GxBvave998XA-1; Wed, 29 Jun 2022 11:07:35 -0400
-X-MC-Unique: WOQH6bKhO8GxBvave998XA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F05F1811E81;
-        Wed, 29 Jun 2022 15:07:34 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.40.192.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C7C1B40EC002;
-        Wed, 29 Jun 2022 15:07:32 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wed, 29 Jun 2022 14:33:55 -0400
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9D52CC9E
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:33:54 -0700 (PDT)
+Received: by mail-oi1-x22e.google.com with SMTP id be10so22799699oib.7
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:33:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VBpBPb1JfgBVQOcK+q3lL0dbcx1PPlhvFD2bZ/S2vPM=;
+        b=cu3axz7wBc7nVAreYd1L+Pb1byOJ4uMLiVp94gUpynZw+v9m5YCZkr5s69wFhzhl+a
+         jhOmBimVo5SaABiaB9knVqdVsIsCE7z0OYVKR6GgEJXsbdjaOpjn3Odi2cabtINH4DSY
+         b82g2o2mPlWGhpxi66h3OcqMGqsHaaF+6spqX647DqGr57AX1tsJ9xfD71x7HlaVwQHS
+         oFzHGb+IA3WGZbtNz9ibL9f2jUGoqCfjzac2DyZAKKIYVKMk9nP4pn7vhwYsYrgmU8Sm
+         Iq5+TzpmdT0z5Lm/7MQMkqME74GTXatyxIGj9FM2GYMJKDVEV3fLGXL92OvpyxsEFcgr
+         G5eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VBpBPb1JfgBVQOcK+q3lL0dbcx1PPlhvFD2bZ/S2vPM=;
+        b=RYH2yTB0E/PdWZmB77vfRhFnPp/CCSGxKWEx9vXbk9at6+vYNokMGlDY2McpLDRWf/
+         UBNP2gKsAbbEt4frzFqIYhRNAUjHjeUiuwMpkq8dz+nPPj5BqEiBogouj6ignjU2jbBY
+         Qey/ilvCJ+L5RLYUlZ/D3AojS7lALcLbyN0VUR0xkSD5tPuRDZ2VGYlHnZaqaqTWadqs
+         NGptDIBvTL6fu5eol3UGiy+fW5dXYJP2YR47hWRv1x+JDtBkO6WlzkvlqNN9YJHnyPNv
+         D4TL9kUf9v1Grfu2MdgWpDdfPE2AyhQhdg3GRb3v0w7PmQeD3lnufTiXgNTBJrDBq9Xx
+         l8Ng==
+X-Gm-Message-State: AJIora9WbKjBglnRbW7fczvydHt8+FwNgzb6DVthyvdgq0km3pXvlRzC
+        HHNaa1+lFcEzmT1mMVvpmCT0JRHUQ7Xg1zatK8er0Q==
+X-Google-Smtp-Source: AGRyM1seb9ITh5NsU0tHCNYxwXwACqSmvjKgR2tK0f4RLChSSyXyYg7yXv5s1kKqgxyLniM5ahYMgcRakmBf29KW7j4=
+X-Received: by 2002:a05:6808:2124:b0:335:7483:f62d with SMTP id
+ r36-20020a056808212400b003357483f62dmr4011416oiw.112.1656527634087; Wed, 29
+ Jun 2022 11:33:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-28-vkuznets@redhat.com>
+In-Reply-To: <20220629150625.238286-28-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 29 Jun 2022 11:33:43 -0700
+Message-ID: <CALMp9eRvaiz32TiOwEN0HXn3n8r3fkeJCKVmiBVuXrcUagRzXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 27/28] KVM: VMX: Cache MSR_IA32_VMX_MISC in vmcs_config
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 28/28] KVM: nVMX: Use cached host MSR_IA32_VMX_MISC value for setting up nested MSR
-Date:   Wed, 29 Jun 2022 17:06:25 +0200
-Message-Id: <20220629150625.238286-29-vkuznets@redhat.com>
-In-Reply-To: <20220629150625.238286-1-vkuznets@redhat.com>
-References: <20220629150625.238286-1-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-vmcs_config has cased host MSR_IA32_VMX_MISC value, use it for setting
-up nested MSR_IA32_VMX_MISC in nested_vmx_setup_ctls_msrs() and avoid the
-redundant rdmsr().
-
-No (real) functional change intended.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 8af56be48a43..8b63642157a5 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -6754,10 +6754,7 @@ void nested_vmx_setup_ctls_msrs(struct vmcs_config *vmcs_conf, u32 ept_caps)
- 		msrs->secondary_ctls_high |= SECONDARY_EXEC_ENCLS_EXITING;
- 
- 	/* miscellaneous data */
--	rdmsr(MSR_IA32_VMX_MISC,
--		msrs->misc_low,
--		msrs->misc_high);
--	msrs->misc_low &= VMX_MISC_SAVE_EFER_LMA;
-+	msrs->misc_low = (u32)vmcs_conf->misc & VMX_MISC_SAVE_EFER_LMA;
- 	msrs->misc_low |=
- 		MSR_IA32_VMX_MISC_VMWRITE_SHADOW_RO_FIELDS |
- 		VMX_MISC_EMULATED_PREEMPTION_TIMER_RATE |
--- 
-2.35.3
-
+On Wed, Jun 29, 2022 at 8:07 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Like other host VMX control MSRs, MSR_IA32_VMX_MISC can be cached in
+> vmcs_config to avoid the need to re-read it later, e.g. from
+> cpu_has_vmx_intel_pt() or cpu_has_vmx_shadow_vmcs().
+>
+> No (real) functional change intended.
+>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
