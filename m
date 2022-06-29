@@ -2,61 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2F94560221
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 16:11:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 125AE5603CF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 17:06:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233614AbiF2OJf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jun 2022 10:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
+        id S233312AbiF2PGg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jun 2022 11:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233557AbiF2OJe (ORCPT
+        with ESMTP id S232912AbiF2PGe (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jun 2022 10:09:34 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C842CE04;
-        Wed, 29 Jun 2022 07:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vIUxXrfRpQPd8e40gcqC8UVMd7+p4lDNzJaouIvbYRY=; b=PmT2nEDFXm3So1eVE1/jDd8HHf
-        SBr1ovtXhZNGhEX3cO3TljW/uC3u7F2rVs/Q4lNzxuv3f2n6g63cbtVdF0FT4qPSnkzoYtlB4fTqg
-        EzgiixJE9MccFEPbvyjXv1iPzdKnUgK50Uh2pYgItsyr1gRT7Ue5MgiX6FI8/PsxwMCofGp1Gv2xv
-        lSGsyL4aeAa83SX+OfZRPpp0ETDDXkwXHMXa+p9rRAL+eB2mAF1kh4M20vJFDw0uJiUGtaetgqJdt
-        CgxAToCea/ywbU4/orOn0Q84PEghm6gYSuqpJC1Hr51fgxajTItnSpV6Ky3dp12IMeAp3BJPkP/qK
-        aBg/2ENA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o6YNU-00CPbk-1y; Wed, 29 Jun 2022 14:09:12 +0000
-Date:   Wed, 29 Jun 2022 07:09:12 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     corbet@lwn.net, rafael@kernel.org, len.brown@intel.com,
-        pavel@ucw.cz, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        paulmck@kernel.org, akpm@linux-foundation.org,
-        keescook@chromium.org, songmuchun@bytedance.com,
-        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
-        michael.h.kelley@microsoft.com, kys@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        iommu@lists.linux-foundation.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        vkuznets@redhat.com, wei.liu@kernel.org, parri.andrea@gmail.com,
-        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
-        kirill.shutemov@intel.com, andi.kleen@intel.com,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 1/2] swiotlb: Split up single swiotlb lock
-Message-ID: <YrxdCHRTRS62pAON@infradead.org>
-References: <20220627153150.106995-1-ltykernel@gmail.com>
- <20220627153150.106995-2-ltykernel@gmail.com>
+        Wed, 29 Jun 2022 11:06:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3A9CC13CED
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 08:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656515192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rVgaRC1iHp+TixDi6SmECfMb1vkUScvqSyrOozckYA8=;
+        b=c2JvxTPOpH0/EG76RE8PvHG/SnsCsh5edWUkxgitBBuuQu4SV63/U13XnULJwTQE1eripW
+        VABa9uO/99VD8iSfXTY2UUCssJ188Pzr17UCxqb3vbw0i8MaZ7InDxDm2W4jXmwteoyCp+
+        Wp+Ftr3mdFzPVVvecttyTpeMUxh33/o=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-306-wJTPDIUQMzivuzqhkwJ-wA-1; Wed, 29 Jun 2022 11:06:29 -0400
+X-MC-Unique: wJTPDIUQMzivuzqhkwJ-wA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 593781C0898F;
+        Wed, 29 Jun 2022 15:06:28 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.40.192.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A347040EC002;
+        Wed, 29 Jun 2022 15:06:26 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/28] KVM: VMX: Support TscScaling and EnclsExitingBitmap with eVMCS + use vmcs_config for L1 VMX MSRs
+Date:   Wed, 29 Jun 2022 17:05:57 +0200
+Message-Id: <20220629150625.238286-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220627153150.106995-2-ltykernel@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,35 +62,104 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 11:31:49AM -0400, Tianyu Lan wrote:
-> +/**
-> + * struct io_tlb_area - IO TLB memory area descriptor
-> + *
-> + * This is a single area with a single lock.
-> + *
-> + * @used:	The number of used IO TLB block.
-> + * @index:	The slot index to start searching in this area for next round.
-> + * @lock:	The lock to protect the above data structures in the map and
-> + *		unmap calls.
-> + */
-> +struct io_tlb_area {
-> +	unsigned long used;
-> +	unsigned int index;
-> +	spinlock_t lock;
-> +};
+This series combines previously sent:
+- "[PATCH 00/11] KVM: VMX: Support TscScaling and EnclsExitingBitmap
+ with eVMCS" 
+(https://lore.kernel.org/kvm/20220621155830.60115-1-vkuznets@redhat.com/)
+and 
+- "[PATCH 00/14] KVM: nVMX: Use vmcs_config for setting up nested VMX MSRs"
+(https://lore.kernel.org/kvm/20220627160440.31857-1-vkuznets@redhat.com/)
 
-As already mentioned last time, please move this into swiotlb.c,
-swiotlb.h only uses a pointer to this structure.
+this is done to address Jim's concern that any changes to L1 VMX control
+MSRs will inevitably break live migration. This version should not produce
+changes.
 
->  static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
-> -		unsigned long nslabs, unsigned int flags, bool late_alloc)
-> +				    unsigned long nslabs, unsigned int flags,
-> +				    bool late_alloc, unsigned int nareas)
+Original description:
 
-Nit: the two tab indentation for prototype continuations is a lot easier
-to maintain, so don't graciously switch away from it.
+Enlightened VMCS v1 definition was updates to include fields for the
+following features:
+    - PerfGlobalCtrl
+    - EnclsExitingBitmap
+    - TSC scaling
+    - GuestLbrCtl
+    - CET
+    - SSP
 
-> +			alloc_size - (offset + ((i - slot_index) << IO_TLB_SHIFT));
+Add support for EnclsExitingBitmap and TSC scaling to KVM. PerfGlobalCtrl 
+doesn't work correctly with Win11, don't enable it yet. SSP, CET and 
+GuestLbrCtl are not currently supported by KVM.
 
-Overly long line here.
+Note: adding new field for KVM on Hyper-V case is easy but adding them to
+Hyper-V on KVM requires some work to not break live migration as we never
+expected this to happen without eVMCS version update. The series introduces
+new KVM_CAP_HYPERV_ENLIGHTENED_VMCS2 capability and a notion of KVM 
+internal 'Enlightened VMCS revision'.
+
+While on it, implement Sean's idea to use vmcs_config for setting up
+L1 VMX control MSRs instead of re-reading host MSRs.
+
+Sean Christopherson (1):
+  KVM: VMX: Clear controls obsoleted by EPT at runtime, not setup
+
+Vitaly Kuznetsov (27):
+  KVM: x86: hyper-v: Expose access to debug MSRs in the partition
+    privilege flags
+  x86/hyperv: Fix 'struct hv_enlightened_vmcs' definition
+  x86/hyperv: Update 'struct hv_enlightened_vmcs' definition
+  KVM: VMX: Define VMCS-to-EVMCS conversion for the new fields
+  KVM: nVMX: Support several new fields in eVMCSv1
+  KVM: nVMX: Introduce KVM_CAP_HYPERV_ENLIGHTENED_VMCS2
+  KVM: selftests: Switch to KVM_CAP_HYPERV_ENLIGHTENED_VMCS2
+  KVM: VMX: Support TSC scaling with enlightened VMCS
+  KVM: selftests: Add ENCLS_EXITING_BITMAP{,HIGH} VMCS fields
+  KVM: selftests: Switch to updated eVMCSv1 definition
+  KVM: selftests: Enable TSC scaling in evmcs selftest
+  KVM: VMX: Enable VM_{EXIT,ENTRY}_LOAD_IA32_PERF_GLOBAL_CTRL for KVM on
+    Hyper-V
+  KVM: VMX: Get rid of eVMCS specific VMX controls sanitization
+  KVM: VMX: Check VM_ENTRY_IA32E_MODE in setup_vmcs_config()
+  KVM: VMX: Check CPU_BASED_{INTR,NMI}_WINDOW_EXITING in
+    setup_vmcs_config()
+  KVM: VMX: Tweak the special handling of SECONDARY_EXEC_ENCLS_EXITING
+    in setup_vmcs_config()
+  KVM: VMX: Extend VMX controls macro shenanigans
+  KVM: VMX: Move CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering out of
+    setup_vmcs_config()
+  KVM: VMX: Add missing VMEXIT controls to vmcs_config
+  KVM: VMX: Add missing VMENTRY controls to vmcs_config
+  KVM: VMX: Add missing CPU based VM execution controls to vmcs_config
+  KVM: VMX: Move LOAD_IA32_PERF_GLOBAL_CTRL errata handling out of
+    setup_vmcs_config()
+  KVM: nVMX: Use sanitized allowed-1 bits for VMX control MSRs
+  KVM: VMX: Store required-1 VMX controls in vmcs_config
+  KVM: nVMX: Use sanitized required-1 bits for VMX control MSRs
+  KVM: VMX: Cache MSR_IA32_VMX_MISC in vmcs_config
+  KVM: nVMX: Use cached host MSR_IA32_VMX_MISC value for setting up
+    nested MSR
+
+ Documentation/virt/kvm/api.rst                |  43 ++-
+ arch/x86/include/asm/hyperv-tlfs.h            |  19 +-
+ arch/x86/include/asm/kvm_host.h               |   2 +-
+ arch/x86/kvm/hyperv.c                         |   1 +
+ arch/x86/kvm/vmx/capabilities.h               |  16 +-
+ arch/x86/kvm/vmx/evmcs.c                      | 135 ++++++---
+ arch/x86/kvm/vmx/evmcs.h                      |  34 ++-
+ arch/x86/kvm/vmx/nested.c                     |  80 ++++--
+ arch/x86/kvm/vmx/nested.h                     |   2 +-
+ arch/x86/kvm/vmx/vmx.c                        | 269 +++++++++---------
+ arch/x86/kvm/vmx/vmx.h                        | 133 ++++++++-
+ arch/x86/kvm/x86.c                            |  15 +-
+ include/asm-generic/hyperv-tlfs.h             |   2 +
+ include/uapi/linux/kvm.h                      |   3 +-
+ .../selftests/kvm/include/kvm_util_base.h     |   8 +
+ .../selftests/kvm/include/x86_64/evmcs.h      |  46 ++-
+ .../selftests/kvm/include/x86_64/vmx.h        |   2 +
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c  |   5 +-
+ .../testing/selftests/kvm/x86_64/evmcs_test.c |  33 ++-
+ .../selftests/kvm/x86_64/hyperv_cpuid.c       |   2 +-
+ .../kvm/x86_64/vmx_set_nested_state_test.c    |   2 +-
+ 21 files changed, 597 insertions(+), 255 deletions(-)
+
+-- 
+2.35.3
 
