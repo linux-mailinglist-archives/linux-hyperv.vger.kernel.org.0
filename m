@@ -2,57 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FD7F560943
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 20:37:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 102035609D5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 20:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbiF2She (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jun 2022 14:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50506 "EHLO
+        id S230492AbiF2S4w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jun 2022 14:56:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbiF2Sh0 (ORCPT
+        with ESMTP id S230418AbiF2S4v (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jun 2022 14:37:26 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2903B015
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:37:25 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id n12-20020a9d64cc000000b00616ebd87fc4so3968537otl.7
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:37:25 -0700 (PDT)
+        Wed, 29 Jun 2022 14:56:51 -0400
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4672E0A4
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:56:50 -0700 (PDT)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-101e1a33fe3so22613702fac.11
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PaRp7sZ9pT6Fzdv3ZScb3FYkSVAIhU7p3YcLa6CAkcA=;
-        b=Ni0aNaonaAvtN8XBj3KHLXAe5Ml+1uTgE5dkIpCjjpyHkADS7VIc9iV2hfkoT5wn02
-         WwclfjXNFqcKh1tLNDsviVvyTGydXpGg/9XX4ddJfMNWi2q+cQI85VUFYv2zZOj4J1BW
-         LrfBIfDt+/GbxG8GuWVRDNLy4GBhr9IHDnuOC7bChrGWbB9k+GW8hsgMARQor5D1lM9L
-         D93WUgpmCTJeMlVs3GWwNlUShAQgA+jtq7ZKeoWUXFoBF4CdG1+v6TjaBdncJbQDNi8w
-         cWN7UqTmj28XvzC3INxW0piHnK+xHOVM+2yYw2OakH6Xd9Syzk2WJpZ1CN5OBEKcT/7G
-         0IPg==
+        bh=5p870x4sNIuh+XUc5mOSvBDrkyHrhB4Hd3tt75IAjfA=;
+        b=UUooucx0ccngcWB8VSsOa2u/k1LGuqvJP+libwKuXia3x3OyoLVO44bFMx/uxUeanz
+         ZUGraFLwk5TmFGNbtWP/mAjU0r+M+xxAv8+3fm6gbEaSHM4pTKUad1dndi0LrotCdd9m
+         AohEFOPScHRcLu0EqYCrgvdZoh4Eajoc76Rgvgvu+CacPIGaFGhbX5ScFozpyiK2lBu8
+         Wo01f3UwDb89mDvvGDR1zsx1iAvTYSZ7IjFrBtCNHA3QnAWNZuH2Ic1JV7dycIrhvC9J
+         DCdMC6O/GGc1BygckQugPSiphL5P0cy3GAuJ7onw6ljJ70mg6RiiaCiOv601U5i5pNNe
+         cFsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PaRp7sZ9pT6Fzdv3ZScb3FYkSVAIhU7p3YcLa6CAkcA=;
-        b=nCOXy48Lc0V5wSyxG/7lejvKQKSfzuFKH5voz4PRKXBKoXdEIo+3lcJc5oHPthI0s8
-         /yvyHJjthFQUOq/v7YXFpHhQ3ZXIQSnqy1CcyrD5T2TOq6M31FCkCW5YZVfaxXWMc5Sy
-         DYKRgqamVpompn+nZvsLj2rrnBHUPrMW0HpS+cfnKmAY/9JX1FeZ+lByjDeKDNFGJLat
-         oZep1gYQ7Ir9nqsGRxE6xE3MW/PRIlwgZW8qrS6pviosTYbpg260U97r9lKXe/9i9Qax
-         NLrPxUzZ2GdQKWJcJunMho6KC408M5fCQa91wB+xZI24E6dFY2DdkEDHNBMa+r2p1OGU
-         PqHw==
-X-Gm-Message-State: AJIora9RQcgC4U7sDhdlKkNMM7PbfInDKzfT/rYpD/4g8Zv8ZUgASkeG
-        u6K1Gah+Tkn5i11PR7qu9eesytrLDR8LOQIfzUTSFg==
-X-Google-Smtp-Source: AGRyM1uwmRwJtBJbAjDBszCqW/QovNsVpnMcD6vb39n9hiioGfwdFOA4bNnvWRWv81jMrK5m4kMcmXq+ObZ8Y3GFQvc=
-X-Received: by 2002:a05:6830:1d5b:b0:616:de98:2556 with SMTP id
- p27-20020a0568301d5b00b00616de982556mr2213754oth.367.1656527845061; Wed, 29
- Jun 2022 11:37:25 -0700 (PDT)
+        bh=5p870x4sNIuh+XUc5mOSvBDrkyHrhB4Hd3tt75IAjfA=;
+        b=7w0jgiHWtIZRFap9cAjQCDEbfFSnF3P9F1S6OsYsNoRAGNgOwLuJZpKwJTpbDrsCoc
+         umK7HdmqRWxecIC6e+FD+wg7pHnXrx851RmDZMoq7blpgzDURBuaGnJ80yPiIMsic3c/
+         U4VhyXFJxbcpMRDqs692n3imNIRzbMB5nkpCt015ur5SLxZZ1IDTtsPHFzIjVIGS0UM2
+         dfP2miU/+WX6biILYHMm05/dCL2ar/Lfj1Zm4mHoUHGQOcE6IUBeKiPvPCCf0VihsoHb
+         RVWHhBLmgbJf9IYXNPVAG0wpi83EbvKJJKJEdqfBEZMFp+0qobeFRRU7/8F6Mbb2l+Sg
+         iM4A==
+X-Gm-Message-State: AJIora8eH40Cl/LoY4VGcCTbnqxW5M4EE49Bi8EZHN+vPDqtAqX9wXtQ
+        OWEjrm37XP/kswsqNaY5H4Q7V7DBz6Ydxcbbu8a8lA==
+X-Google-Smtp-Source: AGRyM1sSX+/x4ZUI5F+rgABEpZPnoRUQplDBXBh1k9TvYrHW5wV7Zl0uk9sDKEVl9e7TqEKOK5sbutSFxpkYXpkjUIc=
+X-Received: by 2002:a05:6870:c596:b0:101:6409:ae62 with SMTP id
+ ba22-20020a056870c59600b001016409ae62mr3941507oab.112.1656529010120; Wed, 29
+ Jun 2022 11:56:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-29-vkuznets@redhat.com>
-In-Reply-To: <20220629150625.238286-29-vkuznets@redhat.com>
+References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-17-vkuznets@redhat.com>
+In-Reply-To: <20220629150625.238286-17-vkuznets@redhat.com>
 From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 29 Jun 2022 11:37:14 -0700
-Message-ID: <CALMp9eRCbgYVGtAwpDWhytQSjeGeAOuqKZXVg3RpV92uKV5u0A@mail.gmail.com>
-Subject: Re: [PATCH v2 28/28] KVM: nVMX: Use cached host MSR_IA32_VMX_MISC
- value for setting up nested MSR
+Date:   Wed, 29 Jun 2022 11:56:38 -0700
+Message-ID: <CALMp9eS_iAijAk4pdK1tjLbRp3XH-PhR1mX4gaSXztWPXJpfkA@mail.gmail.com>
+Subject: Re: [PATCH v2 16/28] KVM: VMX: Tweak the special handling of
+ SECONDARY_EXEC_ENCLS_EXITING in setup_vmcs_config()
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
@@ -74,14 +74,53 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Wed, Jun 29, 2022 at 8:07 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >
-> vmcs_config has cased host MSR_IA32_VMX_MISC value, use it for setting
-> up nested MSR_IA32_VMX_MISC in nested_vmx_setup_ctls_msrs() and avoid the
-> redundant rdmsr().
+> SECONDARY_EXEC_ENCLS_EXITING is conditionally added to the 'optional'
+> checklist in setup_vmcs_config() but there's little value in doing so.
+> First, as the control is optional, we can always check for its
+> presence, no harm done. Second, the only real value cpu_has_sgx() check
+> gives is that on the CPUs which support SECONDARY_EXEC_ENCLS_EXITING but
+> don't support SGX, the control is not getting enabled. It's highly unlikely
+> such CPUs exist but it's possible that some hypervisors expose broken vCPU
+> models.
 >
-> No (real) functional change intended.
-
-Just imaginary functional change? :-)
-
+> Preserve cpu_has_sgx() check but filter the result of adjust_vmx_controls()
+> instead of the input.
 >
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 89a3bbafa5af..e32d91006b80 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2528,9 +2528,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>                         SECONDARY_EXEC_PT_CONCEAL_VMX |
+>                         SECONDARY_EXEC_ENABLE_VMFUNC |
+>                         SECONDARY_EXEC_BUS_LOCK_DETECTION |
+> -                       SECONDARY_EXEC_NOTIFY_VM_EXITING;
+> -               if (cpu_has_sgx())
+> -                       opt2 |= SECONDARY_EXEC_ENCLS_EXITING;
+> +                       SECONDARY_EXEC_NOTIFY_VM_EXITING |
+> +                       SECONDARY_EXEC_ENCLS_EXITING;
+> +
+>                 if (adjust_vmx_controls(min2, opt2,
+>                                         MSR_IA32_VMX_PROCBASED_CTLS2,
+>                                         &_cpu_based_2nd_exec_control) < 0)
+> @@ -2577,6 +2577,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>                 vmx_cap->vpid = 0;
+>         }
+>
+> +       if (!cpu_has_sgx())
+> +               _cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_ENCLS_EXITING;
+
+NYC, but why is there a leading underscore here?
+
+>         if (_cpu_based_exec_control & CPU_BASED_ACTIVATE_TERTIARY_CONTROLS) {
+>                 u64 opt3 = TERTIARY_EXEC_IPI_VIRT;
+>
+> --
+> 2.35.3
+>
 Reviewed-by: Jim Mattson <jmattson@google.com>
