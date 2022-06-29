@@ -2,32 +2,32 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 004DE5601EC
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 16:07:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2F94560221
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 16:11:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232367AbiF2OFe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jun 2022 10:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
+        id S233614AbiF2OJf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jun 2022 10:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230281AbiF2OFd (ORCPT
+        with ESMTP id S233557AbiF2OJe (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jun 2022 10:05:33 -0400
+        Wed, 29 Jun 2022 10:09:34 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE73D2A251;
-        Wed, 29 Jun 2022 07:05:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C842CE04;
+        Wed, 29 Jun 2022 07:09:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AdnOUixFaogrIHpTOlzBgm/evJyLH1AoH6sNGHs7rbw=; b=qmpdXaujtrOzhGFxHHFi13Bm1J
-        gCSK8vuAHJjN+MEZ6dknO6RyA2A4rowbq52NOjL0ixWi6EHF5CcNomLJsrvDzy070xpeb+dLUwAuX
-        anrkbObQPDTcRpTvJOHClFyrhy2O565MHOyNkUP5BioQ9ARaoqZQv9fKUFcHtkW5KBxDvGw01suxN
-        WSl2EXInD8ayYEhgbP5c8hLQ6eIHaqkqkdary0J2Y5WrQW5kV1Ag7B27ckzI6ENiq18aRzSPvM8iJ
-        ik4F+h1SzY475L2QXGEW+6hMSgDDsaIOdTEsHACLzHLCMY2M5X+9UKfDYKkRuMriM1IgWHbeQGbO3
-        LZ96O5AA==;
+        bh=vIUxXrfRpQPd8e40gcqC8UVMd7+p4lDNzJaouIvbYRY=; b=PmT2nEDFXm3So1eVE1/jDd8HHf
+        SBr1ovtXhZNGhEX3cO3TljW/uC3u7F2rVs/Q4lNzxuv3f2n6g63cbtVdF0FT4qPSnkzoYtlB4fTqg
+        EzgiixJE9MccFEPbvyjXv1iPzdKnUgK50Uh2pYgItsyr1gRT7Ue5MgiX6FI8/PsxwMCofGp1Gv2xv
+        lSGsyL4aeAa83SX+OfZRPpp0ETDDXkwXHMXa+p9rRAL+eB2mAF1kh4M20vJFDw0uJiUGtaetgqJdt
+        CgxAToCea/ywbU4/orOn0Q84PEghm6gYSuqpJC1Hr51fgxajTItnSpV6Ky3dp12IMeAp3BJPkP/qK
+        aBg/2ENA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o6YJN-00CNma-5V; Wed, 29 Jun 2022 14:04:57 +0000
-Date:   Wed, 29 Jun 2022 07:04:57 -0700
+        id 1o6YNU-00CPbk-1y; Wed, 29 Jun 2022 14:09:12 +0000
+Date:   Wed, 29 Jun 2022 07:09:12 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Tianyu Lan <ltykernel@gmail.com>
 Cc:     corbet@lwn.net, rafael@kernel.org, len.brown@intel.com,
@@ -45,15 +45,14 @@ Cc:     corbet@lwn.net, rafael@kernel.org, len.brown@intel.com,
         thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
         kirill.shutemov@intel.com, andi.kleen@intel.com,
         Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 2/2] x86/ACPI: Set swiotlb area according to the number
- of lapic entry in MADT
-Message-ID: <YrxcCZKvFYjxLf9n@infradead.org>
+Subject: Re: [PATCH 1/2] swiotlb: Split up single swiotlb lock
+Message-ID: <YrxdCHRTRS62pAON@infradead.org>
 References: <20220627153150.106995-1-ltykernel@gmail.com>
- <20220627153150.106995-3-ltykernel@gmail.com>
+ <20220627153150.106995-2-ltykernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220627153150.106995-3-ltykernel@gmail.com>
+In-Reply-To: <20220627153150.106995-2-ltykernel@gmail.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -65,13 +64,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 11:31:50AM -0400, Tianyu Lan wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> 
-> When initialize swiotlb bounce buffer, smp_init() has not been
-> called and cpu number can not be got from num_online_cpus().
-> Use the number of lapic entry to set swiotlb area number and
-> keep swiotlb area number equal to cpu number on the x86 platform.
+On Mon, Jun 27, 2022 at 11:31:49AM -0400, Tianyu Lan wrote:
+> +/**
+> + * struct io_tlb_area - IO TLB memory area descriptor
+> + *
+> + * This is a single area with a single lock.
+> + *
+> + * @used:	The number of used IO TLB block.
+> + * @index:	The slot index to start searching in this area for next round.
+> + * @lock:	The lock to protect the above data structures in the map and
+> + *		unmap calls.
+> + */
+> +struct io_tlb_area {
+> +	unsigned long used;
+> +	unsigned int index;
+> +	spinlock_t lock;
+> +};
 
-Can we reorder that initialization?  Because I really hate having
-to have an arch hook in every architecture.
+As already mentioned last time, please move this into swiotlb.c,
+swiotlb.h only uses a pointer to this structure.
+
+>  static void swiotlb_init_io_tlb_mem(struct io_tlb_mem *mem, phys_addr_t start,
+> -		unsigned long nslabs, unsigned int flags, bool late_alloc)
+> +				    unsigned long nslabs, unsigned int flags,
+> +				    bool late_alloc, unsigned int nareas)
+
+Nit: the two tab indentation for prototype continuations is a lot easier
+to maintain, so don't graciously switch away from it.
+
+> +			alloc_size - (offset + ((i - slot_index) << IO_TLB_SHIFT));
+
+Overly long line here.
+
