@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3436560400
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 17:13:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7392C56043C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 17:14:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233836AbiF2PHF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jun 2022 11:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40038 "EHLO
+        id S233877AbiF2PHN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jun 2022 11:07:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233829AbiF2PGz (ORCPT
+        with ESMTP id S233809AbiF2PHB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jun 2022 11:06:55 -0400
+        Wed, 29 Jun 2022 11:07:01 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1705913CD3
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 08:06:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 78A6C12762
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 08:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656515214;
+        s=mimecast20190719; t=1656515219;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NjkLB4A+R0viOg+bQbca/divUcEXpQYDgr2soMIUIog=;
-        b=DFJ3oCKTMbDyC3vb1vL4FT0bj2Ak/ZLAF2v9BZ0+h5xbxrzZfiZzFF0r2WhPaH+sz6K9o6
-        t2d8G1Rjo3YWpIPwulElM2lt2Tdr89X4u5rtx7K7g04lCdC5eLwTUgZGiil8rlGq8zzwth
-        /Tv9Wugud2V4mjZ+Hze/w0nabtl1bSI=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=RaB1fq3wTWP/kZS7ooNpBTL5jS+GbfNO15gG3YtTEOw=;
+        b=Ho107PjjVlCcNI3+xWxvxU5Rksdi0fSHJ2sWgcqeT83M4WOAz+BOSSXzwLBWNWypah9kWp
+        gPecNTlyXURdkctuVTePMK5XZMNp298VMfZWMr7tJONoRmX4ukbM6eNoDbZJb55TUSQscd
+        Wbx8B4+j+XMoC+HfmlcZpLZ3EIUnLHE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-303-qdZUodd2N8-RyZilk_Wp2w-1; Wed, 29 Jun 2022 11:06:52 -0400
-X-MC-Unique: qdZUodd2N8-RyZilk_Wp2w-1
+ us-mta-369-dblMEyabOgCg2eDccCc8Tw-1; Wed, 29 Jun 2022 11:06:54 -0400
+X-MC-Unique: dblMEyabOgCg2eDccCc8Tw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E44733C10698;
-        Wed, 29 Jun 2022 15:06:49 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 452E81035341;
+        Wed, 29 Jun 2022 15:06:52 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.192.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6EBFD40EC002;
-        Wed, 29 Jun 2022 15:06:47 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 35ABC40EC002;
+        Wed, 29 Jun 2022 15:06:50 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>
@@ -46,9 +46,9 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/28] KVM: selftests: Add ENCLS_EXITING_BITMAP{,HIGH} VMCS fields
-Date:   Wed, 29 Jun 2022 17:06:06 +0200
-Message-Id: <20220629150625.238286-10-vkuznets@redhat.com>
+Subject: [PATCH v2 10/28] KVM: selftests: Switch to updated eVMCSv1 definition
+Date:   Wed, 29 Jun 2022 17:06:07 +0200
+Message-Id: <20220629150625.238286-11-vkuznets@redhat.com>
 In-Reply-To: <20220629150625.238286-1-vkuznets@redhat.com>
 References: <20220629150625.238286-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -65,27 +65,98 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The updated Enlightened VMCS definition has 'encls_exiting_bitmap'
-field which needs mapping to VMCS, add the missing encoding.
+Update Enlightened VMCS definition in selftests from KVM and switch to
+using EVMCS_REVISION 2 which supports these new fields.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- tools/testing/selftests/kvm/include/x86_64/vmx.h | 2 ++
- 1 file changed, 2 insertions(+)
+ .../selftests/kvm/include/x86_64/evmcs.h      | 47 +++++++++++++++++--
+ 1 file changed, 43 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/x86_64/vmx.h b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-index cc3604f8f1d3..5292d30fb7f2 100644
---- a/tools/testing/selftests/kvm/include/x86_64/vmx.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-@@ -208,6 +208,8 @@ enum vmcs_field {
- 	VMWRITE_BITMAP_HIGH		= 0x00002029,
- 	XSS_EXIT_BITMAP			= 0x0000202C,
- 	XSS_EXIT_BITMAP_HIGH		= 0x0000202D,
-+	ENCLS_EXITING_BITMAP		= 0x0000202E,
-+	ENCLS_EXITING_BITMAP_HIGH	= 0x0000202F,
- 	TSC_MULTIPLIER			= 0x00002032,
- 	TSC_MULTIPLIER_HIGH		= 0x00002033,
- 	GUEST_PHYSICAL_ADDRESS		= 0x00002400,
+diff --git a/tools/testing/selftests/kvm/include/x86_64/evmcs.h b/tools/testing/selftests/kvm/include/x86_64/evmcs.h
+index b6d6c73f68dc..ee95286159d1 100644
+--- a/tools/testing/selftests/kvm/include/x86_64/evmcs.h
++++ b/tools/testing/selftests/kvm/include/x86_64/evmcs.h
+@@ -17,7 +17,7 @@
+ #define u64 uint64_t
+ 
+ #define EVMCS_VERSION 1
+-#define EVMCS_REVISION 1
++#define EVMCS_REVISION 2
+ 
+ extern bool enable_evmcs;
+ 
+@@ -204,14 +204,25 @@ struct hv_enlightened_vmcs {
+ 		u32 reserved:30;
+ 	} hv_enlightenments_control;
+ 	u32 hv_vp_id;
+-
++	u32 padding32_2;
+ 	u64 hv_vm_id;
+ 	u64 partition_assist_page;
+ 	u64 padding64_4[4];
+ 	u64 guest_bndcfgs;
+-	u64 padding64_5[7];
++	u64 guest_ia32_perf_global_ctrl;
++	u64 guest_ia32_s_cet;
++	u64 guest_ssp;
++	u64 guest_ia32_int_ssp_table_addr;
++	u64 guest_ia32_lbr_ctl;
++	u64 padding64_5[2];
+ 	u64 xss_exit_bitmap;
+-	u64 padding64_6[7];
++	u64 host_ia32_perf_global_ctrl;
++	u64 encls_exiting_bitmap;
++	u64 tsc_multiplier;
++	u64 host_ia32_s_cet;
++	u64 host_ssp;
++	u64 host_ia32_int_ssp_table_addr;
++	u64 padding64_6;
+ };
+ 
+ #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_NONE                     0
+@@ -657,6 +668,18 @@ static inline int evmcs_vmread(uint64_t encoding, uint64_t *value)
+ 	case VIRTUAL_PROCESSOR_ID:
+ 		*value = current_evmcs->virtual_processor_id;
+ 		break;
++	case HOST_IA32_PERF_GLOBAL_CTRL:
++		*value = current_evmcs->host_ia32_perf_global_ctrl;
++		break;
++	case GUEST_IA32_PERF_GLOBAL_CTRL:
++		*value = current_evmcs->guest_ia32_perf_global_ctrl;
++		break;
++	case ENCLS_EXITING_BITMAP:
++		*value = current_evmcs->encls_exiting_bitmap;
++		break;
++	case TSC_MULTIPLIER:
++		*value = current_evmcs->tsc_multiplier;
++		break;
+ 	default: return 1;
+ 	}
+ 
+@@ -1170,6 +1193,22 @@ static inline int evmcs_vmwrite(uint64_t encoding, uint64_t value)
+ 		current_evmcs->virtual_processor_id = value;
+ 		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_XLAT;
+ 		break;
++	case HOST_IA32_PERF_GLOBAL_CTRL:
++		current_evmcs->host_ia32_perf_global_ctrl = value;
++		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1;
++		break;
++	case GUEST_IA32_PERF_GLOBAL_CTRL:
++		current_evmcs->guest_ia32_perf_global_ctrl = value;
++		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1;
++		break;
++	case ENCLS_EXITING_BITMAP:
++		current_evmcs->encls_exiting_bitmap = value;
++		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP2;
++		break;
++	case TSC_MULTIPLIER:
++		current_evmcs->tsc_multiplier = value;
++		current_evmcs->hv_clean_fields &= ~HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP2;
++		break;
+ 	default: return 1;
+ 	}
+ 
 -- 
 2.35.3
 
