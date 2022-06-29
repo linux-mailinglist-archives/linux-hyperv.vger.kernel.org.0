@@ -2,57 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 102035609D5
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 20:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1831E560B04
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 22:28:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230492AbiF2S4w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jun 2022 14:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42044 "EHLO
+        id S230041AbiF2U2h (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jun 2022 16:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230418AbiF2S4v (ORCPT
+        with ESMTP id S230022AbiF2U2f (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jun 2022 14:56:51 -0400
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4672E0A4
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:56:50 -0700 (PDT)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-101e1a33fe3so22613702fac.11
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 11:56:50 -0700 (PDT)
+        Wed, 29 Jun 2022 16:28:35 -0400
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E461705C
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 13:28:34 -0700 (PDT)
+Received: by mail-oi1-x22e.google.com with SMTP id e131so23156305oif.13
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 13:28:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5p870x4sNIuh+XUc5mOSvBDrkyHrhB4Hd3tt75IAjfA=;
-        b=UUooucx0ccngcWB8VSsOa2u/k1LGuqvJP+libwKuXia3x3OyoLVO44bFMx/uxUeanz
-         ZUGraFLwk5TmFGNbtWP/mAjU0r+M+xxAv8+3fm6gbEaSHM4pTKUad1dndi0LrotCdd9m
-         AohEFOPScHRcLu0EqYCrgvdZoh4Eajoc76Rgvgvu+CacPIGaFGhbX5ScFozpyiK2lBu8
-         Wo01f3UwDb89mDvvGDR1zsx1iAvTYSZ7IjFrBtCNHA3QnAWNZuH2Ic1JV7dycIrhvC9J
-         DCdMC6O/GGc1BygckQugPSiphL5P0cy3GAuJ7onw6ljJ70mg6RiiaCiOv601U5i5pNNe
-         cFsg==
+        bh=KimsAoqWoBrckvrcWpjK4MOnhaDZP2RBKEz3EuP/iv0=;
+        b=QHei7/5WL4hfbeuAzCg4LaoNAqlQ2HGQMzjAP0kBgkQJ5H5joM7A64WoPajiwd+Nx+
+         s8o6ZDbyUw3coAAFdaWkwagdkTSSy1V8gYj4lxaqO5xIl/hMMi+/fHzAC9NonvcY3W1f
+         2gqs9vB5JhKGTIuVKeWbwQZm+OsR+mz+BNOj2QNi1zChQxJmCUPTSe8nuZ2yQMuVFm1o
+         +0/vMxfMP4wnXc8B7vxMS7GzZ9xZyhUZGsX9znUXgHwJ2xuNicMKx/yljOJGxVFX2rl3
+         0r6zYQ2nC6gKwjNIGKM2m2qvFc3EVDsP6dvht4lpI0Z1w9EcKX74Huo1hSapRM2+8xFX
+         7sWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5p870x4sNIuh+XUc5mOSvBDrkyHrhB4Hd3tt75IAjfA=;
-        b=7w0jgiHWtIZRFap9cAjQCDEbfFSnF3P9F1S6OsYsNoRAGNgOwLuJZpKwJTpbDrsCoc
-         umK7HdmqRWxecIC6e+FD+wg7pHnXrx851RmDZMoq7blpgzDURBuaGnJ80yPiIMsic3c/
-         U4VhyXFJxbcpMRDqs692n3imNIRzbMB5nkpCt015ur5SLxZZ1IDTtsPHFzIjVIGS0UM2
-         dfP2miU/+WX6biILYHMm05/dCL2ar/Lfj1Zm4mHoUHGQOcE6IUBeKiPvPCCf0VihsoHb
-         RVWHhBLmgbJf9IYXNPVAG0wpi83EbvKJJKJEdqfBEZMFp+0qobeFRRU7/8F6Mbb2l+Sg
-         iM4A==
-X-Gm-Message-State: AJIora8eH40Cl/LoY4VGcCTbnqxW5M4EE49Bi8EZHN+vPDqtAqX9wXtQ
-        OWEjrm37XP/kswsqNaY5H4Q7V7DBz6Ydxcbbu8a8lA==
-X-Google-Smtp-Source: AGRyM1sSX+/x4ZUI5F+rgABEpZPnoRUQplDBXBh1k9TvYrHW5wV7Zl0uk9sDKEVl9e7TqEKOK5sbutSFxpkYXpkjUIc=
-X-Received: by 2002:a05:6870:c596:b0:101:6409:ae62 with SMTP id
- ba22-20020a056870c59600b001016409ae62mr3941507oab.112.1656529010120; Wed, 29
- Jun 2022 11:56:50 -0700 (PDT)
+        bh=KimsAoqWoBrckvrcWpjK4MOnhaDZP2RBKEz3EuP/iv0=;
+        b=p/IC6undD8pYGbSwMchn+gW5d/aQTn1kKbljRQJjuAyBchCCBU9p/n0zcUjdHrETeO
+         T64Wqh8IwDB6jRo2LneQH2o8CZU32x1IqeTGebzLHLdKbx8RFzv3kE+7Luo7PTjvqqAY
+         lGEhvszqF4np58r4io6UT+xLYMroTkXtDWzUtkESSY9LXyjTCT0FkaNi8OHLn5jpsiC3
+         le7oh6tcFqDucpUWSPRVtisn1YEtWsE/az3TyeGEPvJwbDB5ex8F/ZEKYXvkc2nHYlki
+         eeLvAJ8kgif2LfLoo/lpmtRpCyK7xjuf81+hkmyHqJNoY3UZHE3vw9XzUGiSLAWn3TCG
+         vw4A==
+X-Gm-Message-State: AJIora8/AGF4ce7/xxZkpjoyXbBVVrHCqM5RtI/L6MhonkqsGK3LymHp
+        ly6HtKxhF610iAg1y1Ha/KAQkKKK4TrwIAAc/kcbgA==
+X-Google-Smtp-Source: AGRyM1u0hjO1hiivU9zp5lyMVFAHT9bs3enwDIbNjIaz38j/SCm8ezqQYsGur2WDnSfxG9bJLrv+n90SrLQNKQ6uMrQ=
+X-Received: by 2002:a05:6808:2124:b0:335:7483:f62d with SMTP id
+ r36-20020a056808212400b003357483f62dmr4297123oiw.112.1656534513612; Wed, 29
+ Jun 2022 13:28:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-17-vkuznets@redhat.com>
-In-Reply-To: <20220629150625.238286-17-vkuznets@redhat.com>
+References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-15-vkuznets@redhat.com>
+In-Reply-To: <20220629150625.238286-15-vkuznets@redhat.com>
 From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 29 Jun 2022 11:56:38 -0700
-Message-ID: <CALMp9eS_iAijAk4pdK1tjLbRp3XH-PhR1mX4gaSXztWPXJpfkA@mail.gmail.com>
-Subject: Re: [PATCH v2 16/28] KVM: VMX: Tweak the special handling of
- SECONDARY_EXEC_ENCLS_EXITING in setup_vmcs_config()
+Date:   Wed, 29 Jun 2022 13:28:22 -0700
+Message-ID: <CALMp9eRZAJ3srAtEXFy2nZ4ms9xPz=Zqi6B=tXo9_kHRLvoAMg@mail.gmail.com>
+Subject: Re: [PATCH v2 14/28] KVM: VMX: Check VM_ENTRY_IA32E_MODE in setup_vmcs_config()
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
@@ -65,7 +64,7 @@ X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,52 +73,62 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Wed, Jun 29, 2022 at 8:07 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >
-> SECONDARY_EXEC_ENCLS_EXITING is conditionally added to the 'optional'
-> checklist in setup_vmcs_config() but there's little value in doing so.
-> First, as the control is optional, we can always check for its
-> presence, no harm done. Second, the only real value cpu_has_sgx() check
-> gives is that on the CPUs which support SECONDARY_EXEC_ENCLS_EXITING but
-> don't support SGX, the control is not getting enabled. It's highly unlikely
-> such CPUs exist but it's possible that some hypervisors expose broken vCPU
-> models.
+> VM_ENTRY_IA32E_MODE control is toggled dynamically by vmx_set_efer()
+> and setup_vmcs_config() doesn't check its existence. On the contrary,
+> nested_vmx_setup_ctls_msrs() doesn set it on x86_64. Add the missing
+> check and filter the bit out in vmx_vmentry_ctrl().
 >
-> Preserve cpu_has_sgx() check but filter the result of adjust_vmx_controls()
-> instead of the input.
+> No (real) functional change intended as all existing CPUs supporting
+> long mode and VMX are supposed to have it.
 >
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/kvm/vmx/vmx.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  arch/x86/kvm/vmx/vmx.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
 >
 > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 89a3bbafa5af..e32d91006b80 100644
+> index 83feb70d44a9..da8bbba38d0e 100644
 > --- a/arch/x86/kvm/vmx/vmx.c
 > +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2528,9 +2528,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->                         SECONDARY_EXEC_PT_CONCEAL_VMX |
->                         SECONDARY_EXEC_ENABLE_VMFUNC |
->                         SECONDARY_EXEC_BUS_LOCK_DETECTION |
-> -                       SECONDARY_EXEC_NOTIFY_VM_EXITING;
-> -               if (cpu_has_sgx())
-> -                       opt2 |= SECONDARY_EXEC_ENCLS_EXITING;
-> +                       SECONDARY_EXEC_NOTIFY_VM_EXITING |
-> +                       SECONDARY_EXEC_ENCLS_EXITING;
+> @@ -2610,6 +2610,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>                 _pin_based_exec_control &= ~PIN_BASED_POSTED_INTR;
+>
+>         min = VM_ENTRY_LOAD_DEBUG_CONTROLS;
+> +#ifdef CONFIG_X86_64
+> +       min |= VM_ENTRY_IA32E_MODE;
+> +#endif
+>         opt = VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |
+>               VM_ENTRY_LOAD_IA32_PAT |
+>               VM_ENTRY_LOAD_IA32_EFER |
+> @@ -4242,9 +4245,15 @@ static u32 vmx_vmentry_ctrl(void)
+>         if (vmx_pt_mode_is_system())
+>                 vmentry_ctrl &= ~(VM_ENTRY_PT_CONCEAL_PIP |
+>                                   VM_ENTRY_LOAD_IA32_RTIT_CTL);
+> -       /* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically */
+> -       return vmentry_ctrl &
+> -               ~(VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL | VM_ENTRY_LOAD_IA32_EFER);
+> +       /*
+> +        * Loading of EFER, VM_ENTRY_IA32E_MODE, and PERF_GLOBAL_CTRL
+> +        * are toggled dynamically.
+> +        */
+Nit: Previously, this could be read as "loading of (EFER and
+PERF_GLOBAL_CTRL)." Since "loading" doesn't apply to IA32e mode,
+you've lost "loading" of PERF_GLOBAL_CONTROL. Also, why drop the
+VM_ENTRY prefix from the MSRs and not from IA32e mode?
+Perhaps:
+
+/*
+ * IA32e mode, and loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically.
+ */
+
+> +       vmentry_ctrl &= ~(VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |
+> +                         VM_ENTRY_LOAD_IA32_EFER |
+> +                         VM_ENTRY_IA32E_MODE);
 > +
->                 if (adjust_vmx_controls(min2, opt2,
->                                         MSR_IA32_VMX_PROCBASED_CTLS2,
->                                         &_cpu_based_2nd_exec_control) < 0)
-> @@ -2577,6 +2577,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->                 vmx_cap->vpid = 0;
->         }
+> +       return vmentry_ctrl;
+>  }
 >
-> +       if (!cpu_has_sgx())
-> +               _cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_ENCLS_EXITING;
-
-NYC, but why is there a leading underscore here?
-
->         if (_cpu_based_exec_control & CPU_BASED_ACTIVATE_TERTIARY_CONTROLS) {
->                 u64 opt3 = TERTIARY_EXEC_IPI_VIRT;
->
+>  static u32 vmx_vmexit_ctrl(void)
 > --
 > 2.35.3
 >
