@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A7EB5603F0
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 17:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28F7256043B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Jun 2022 17:14:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233941AbiF2PHy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Jun 2022 11:07:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
+        id S233926AbiF2PIV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Jun 2022 11:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234048AbiF2PHb (ORCPT
+        with ESMTP id S233964AbiF2PHS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Jun 2022 11:07:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12A6B3584D
-        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 08:07:23 -0700 (PDT)
+        Wed, 29 Jun 2022 11:07:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD61C2E9DD
+        for <linux-hyperv@vger.kernel.org>; Wed, 29 Jun 2022 08:07:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656515243;
+        s=mimecast20190719; t=1656515235;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oZ/Ff6mbs5uGR3sDQYcJy6LByb2WzZkmnNTebt78Wjk=;
-        b=XoKqzlB3ZwAdgBHJI3fglRBqDCPSuaEPwhdzgcdXPAcJqbs/4yRqQPsbt0LJtdOrH4gaWP
-        SmFBoRoPjMgsWZSLTfkyloGufytW7lbBGR9NP6iPxSAQ6Jro+Ps47Woxb/VYkCogCBHk5i
-        PuJ4bE84KelHnZiqn3fLIvff2KmY5yA=
+        bh=qg4VAqoRxLU9S6SiCst12xv/W6F6a5KULdlIKyb1Uj0=;
+        b=Cw0ExhwlmboiQt10MNKoQ6nMpwa8j6axKEpcrVSjm7VNLsUg1llpAcqY6RkQTddfljPvEh
+        oC/c8TYZWfyBSzOT5H2FeuurxgzxvGCjofirvAz9UpmJ+dsmQspVGmvfb2aQtNcOcMD0GX
+        TsXEOD17k3lNa6wG0EnGZKrnUOInI+k=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-461-nEvQGxF1MA-dIkJNefw5nA-1; Wed, 29 Jun 2022 11:07:12 -0400
-X-MC-Unique: nEvQGxF1MA-dIkJNefw5nA-1
+ us-mta-244-gkiJ03skMrKmby9IoTycjg-1; Wed, 29 Jun 2022 11:07:13 -0400
+X-MC-Unique: gkiJ03skMrKmby9IoTycjg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B7B2C801233;
-        Wed, 29 Jun 2022 15:07:10 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDD8B1019C8E;
+        Wed, 29 Jun 2022 15:07:12 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.192.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9564740EC002;
-        Wed, 29 Jun 2022 15:07:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B5BD40EC002;
+        Wed, 29 Jun 2022 15:07:10 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>
@@ -46,18 +46,18 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 18/28] KVM: VMX: Move CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering out of setup_vmcs_config()
-Date:   Wed, 29 Jun 2022 17:06:15 +0200
-Message-Id: <20220629150625.238286-19-vkuznets@redhat.com>
+Subject: [PATCH v2 19/28] KVM: VMX: Add missing VMEXIT controls to vmcs_config
+Date:   Wed, 29 Jun 2022 17:06:16 +0200
+Message-Id: <20220629150625.238286-20-vkuznets@redhat.com>
 In-Reply-To: <20220629150625.238286-1-vkuznets@redhat.com>
 References: <20220629150625.238286-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,52 +66,49 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 As a preparation to reusing the result of setup_vmcs_config() in
-nested VMX MSR setup, move CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering
-to vmx_exec_control().
+nested VMX MSR setup, add the VMEXIT controls which KVM doesn't
+use but supports for nVMX to KVM_OPT_VMX_VM_EXIT_CONTROLS and
+filter them out in vmx_vmexit_ctrl().
 
 No functional change intended.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 4 ++++
+ arch/x86/kvm/vmx/vmx.h | 3 +++
+ 2 files changed, 7 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6836c0e5d52e..b1bc85d8744d 100644
+index b1bc85d8744d..e5ab77ed37e4 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2479,11 +2479,6 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 				MSR_IA32_VMX_PROCBASED_CTLS,
- 				&_cpu_based_exec_control) < 0)
- 		return -EIO;
--#ifdef CONFIG_X86_64
--	if (_cpu_based_exec_control & CPU_BASED_TPR_SHADOW)
--		_cpu_based_exec_control &= ~CPU_BASED_CR8_LOAD_EXITING &
--					   ~CPU_BASED_CR8_STORE_EXITING;
--#endif
- 	if (_cpu_based_exec_control & CPU_BASED_ACTIVATE_SECONDARY_CONTROLS) {
- 		if (adjust_vmx_controls(KVM_REQ_VMX_SECONDARY_VM_EXEC_CONTROL,
- 					KVM_OPT_VMX_SECONDARY_VM_EXEC_CONTROL,
-@@ -4249,13 +4244,17 @@ static u32 vmx_exec_control(struct vcpu_vmx *vmx)
- 	if (vmx->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)
- 		exec_control &= ~CPU_BASED_MOV_DR_EXITING;
+@@ -4197,6 +4197,10 @@ static u32 vmx_vmexit_ctrl(void)
+ {
+ 	u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
  
--	if (!cpu_need_tpr_shadow(&vmx->vcpu)) {
-+	if (!cpu_need_tpr_shadow(&vmx->vcpu))
- 		exec_control &= ~CPU_BASED_TPR_SHADOW;
++	/* Not used by KVM but supported for nesting. */
++	vmexit_ctrl &= ~(VM_EXIT_SAVE_IA32_PAT | VM_EXIT_SAVE_IA32_EFER |
++			 VM_EXIT_SAVE_VMX_PREEMPTION_TIMER);
 +
- #ifdef CONFIG_X86_64
-+	if (exec_control & CPU_BASED_TPR_SHADOW)
-+		exec_control &= ~(CPU_BASED_CR8_LOAD_EXITING |
-+				  CPU_BASED_CR8_STORE_EXITING);
-+	else
- 		exec_control |= CPU_BASED_CR8_STORE_EXITING |
- 				CPU_BASED_CR8_LOAD_EXITING;
+ 	if (vmx_pt_mode_is_system())
+ 		vmexit_ctrl &= ~(VM_EXIT_PT_CONCEAL_PIP |
+ 				 VM_EXIT_CLEAR_IA32_RTIT_CTL);
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 2a5dbb8330a9..d4503a38735b 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -499,8 +499,11 @@ static inline u8 vmx_get_rvi(void)
  #endif
--	}
- 	if (!enable_ept)
- 		exec_control |= CPU_BASED_CR3_STORE_EXITING |
- 				CPU_BASED_CR3_LOAD_EXITING  |
+ #define KVM_OPT_VMX_VM_EXIT_CONTROLS				\
+ 	      (VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |		\
++	      VM_EXIT_SAVE_IA32_PAT |				\
+ 	      VM_EXIT_LOAD_IA32_PAT |				\
++	      VM_EXIT_SAVE_IA32_EFER |				\
+ 	      VM_EXIT_LOAD_IA32_EFER |				\
++	      VM_EXIT_SAVE_VMX_PREEMPTION_TIMER |		\
+ 	      VM_EXIT_CLEAR_BNDCFGS |				\
+ 	      VM_EXIT_PT_CONCEAL_PIP |				\
+ 	      VM_EXIT_CLEAR_IA32_RTIT_CTL)
 -- 
 2.35.3
 
