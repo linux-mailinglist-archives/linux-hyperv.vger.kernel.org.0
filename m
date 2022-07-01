@@ -2,66 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7938563A9D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 22:12:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F6B563AAB
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 22:12:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232143AbiGAUK6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S232153AbiGAUK6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Fri, 1 Jul 2022 16:10:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231812AbiGAUKv (ORCPT
+        with ESMTP id S231634AbiGAUKu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 1 Jul 2022 16:10:51 -0400
+        Fri, 1 Jul 2022 16:10:50 -0400
 Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67561EAD7;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9C3101E3;
         Fri,  1 Jul 2022 13:10:48 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 28AC058020B;
-        Fri,  1 Jul 2022 16:01:10 -0400 (EDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id B24605802E7;
+        Fri,  1 Jul 2022 16:01:22 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 01 Jul 2022 16:01:10 -0400
+  by compute2.internal (MEProxy); Fri, 01 Jul 2022 16:01:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
-         s=fm3; t=1656705670; x=1656712870; bh=h3WN3AcddFJuwhQ39XPEdgr5t
-        ejPWmRF9a5JWUKLi6w=; b=mK5frjjpRETCdaizhOvpq/mQo5UlOZqfHCt356wLu
-        +SqVP3qKJ9LvP7YyRWEopUxCgCJ/Co0nb1GRIXbVwdtlJ5JrYoRlSvc+27WDag9+
-        3jqJC6Nc5lLjDB1EbFnpv2S6VMiJgoGG3ESQyrzvFx4wbwb1+hfvfkj14nzE1iZ9
-        iHVs2Uh7tOwAj5coKNt98E1KuIr4Dy7ZidSi8Si+tRxxbGIc8g9/Wkp/PXxkdKWp
-        GwXvkDhS2Mkt7Y8U+OzIUgUEfaENyM7PjR+7UVXgmM8J+652ddmFvBKyk157w8wr
-        Skl8C3hKCbHheCLVFZJbuy7hz1/cffoSdxxCfnrh8YV+w==
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1656705682; x=1656712882; bh=1g
+        Yq3VbEkPVty/pd1tEYQnVO1uU7x5LYLlMSe3zbDrE=; b=bdIu56u5NUcFW5hvaK
+        2/laTWzN8GTHoYTAZXrQlwuGxUO/51vWxcPMTA2kgfltyNMsvcq9NazmXFT1M9hf
+        Yy7nInyHLoEyitpTjDbv3GYoUVgLpWSo40ttAnfTRma7mvNYsPbG1mejs2Qgcb3t
+        LbFItmmgx0ui1jMDv36Wq3t0B7zszJ1O7HYnTX+/01o0+2PoRscDY1WPAVAiDqzA
+        lL8KiMkDxHJI+62Lumh+214ubp82KV2hgQ6WmN9StyO1UxZc5Jrl4uDo5CIcMf+v
+        w3d+EflqLt3LJ6h3D97ccfd/v3Oe7fE6Pop4QYptsoopZcfNSmaoapHf/0dyMeat
+        KJjA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:message-id
-        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-        1656705670; x=1656712870; bh=h3WN3AcddFJuwhQ39XPEdgr5tejPWmRF9a5
-        JWUKLi6w=; b=hcCVwh1PvSeKLtV/WWesjzpJEJOw4znKr5Z/2vhxnZuKQA9kLw4
-        /4+bCBG81guTmscsfsRlkY2MRf/An6IfLb4PqUB9cFC2NzaudqFlvP/yY19K+3XC
-        pDHCoLiIcwUV2Xv5FAIqCmEYAOVR+oCL2f261uukUnOGmb9sZJ1Wjru1FpMPNx9q
-        O20C8qlSGZIk/uqxcd6LnT2yDuqwiTmpUUWND72se1ELzfF/mrU6icJu6Gm0jlH3
-        iWOFR5OoOCZxlEPQplc7c7ud1SjE6qek/nk6mnJ70FNjkvapXHjyVwlAV5qpv1MZ
-        45+fzYTFXAvc9YboPqeOQ31my0wQpPDiZ5Q==
-X-ME-Sender: <xms:e1K_YqJAKXaKPgqyd59ldyt87npfqKJCG8Fa8IiJ1JGRiUiSXx5JZg>
-    <xme:e1K_YiIt8LjVqOvwpx_JqZXxhJz3pskkEoDpx0DfqF9QwrmlD77DvYrLphtzsH91c
-    60EnwaE7sSCA8LhkQ>
-X-ME-Received: <xmr:e1K_YqsbiJXFwsSStjJJO67Bifhg0yOnU6Z4_h1F4ezRCF_0D6gcyJ1rBH7JskXj8BCpGV4CECN0ypLF1eSiq5ghfDtA6Nb3u4bteUm49CHrPVJYe6DLnAKCGajaiAQKWL5-Lw>
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1656705682; x=1656712882; bh=1gYq3VbEkPVty
+        /pd1tEYQnVO1uU7x5LYLlMSe3zbDrE=; b=IIGVa/3L4rIIDkpm5x9kJF4p4zPgE
+        bekRQi2xgDfEmYrxPVdTUgxGIsZGgD0mmbIIymHEeJR6lUkDl7AgH4weEwbRvI39
+        z+3v4BNWVNKOg4Y3UKxsTxHjzdvdNIGGn03gzsHuwPtkq11popiSb4aRYBnIvyaL
+        L3pj53Cf9IJhHuC3KtMRhkQ9lEVDTzotxVI7nK9L+t1iY2zY5ZlKJF5XkZlzy1kW
+        qRxbxA7qUT5pUcyoRZWtPspZfkyMkSc2u3lh/Z1BI0SuCIzlQIrm1Ogt1M9ktsDh
+        yae+YwhKLB+1GibJY4Yhz0XeYPpHVyQA4KoXzDl26EyU2QNQe5gKGx26w==
+X-ME-Sender: <xms:iFK_YvH3FMyAZsKRZV3A0GprYtQC7s68B_MPFguwTi0KU6kqxq0xRQ>
+    <xme:iFK_YsUz0pMrVbXNSrGo0uGc-HB3zbb4nrlZSFsuHkdbMUP1sdU3HElrNL2KF-oGh
+    b34XdWEa03EJqcOog>
+X-ME-Received: <xmr:iFK_YhJh_1EQiu0zTxxgTBMM1Zw1nveGQHWRXFwuPPHyhoxhahmD-kB5FtEfBUWeLd1zUD8TKcYVLdTH_AwtDSrjfUIvksQpn43lCZI1ulvIDzhZY9rSagRLZXsv73Fdp0MsGA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudehfedgudeggecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
-    frrghtthgvrhhnpeekheffteehtdetfffgfeetteejvdefleeuvedufffguedtjedvheel
-    vddvfffhveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
-    ugdrohhrgh
-X-ME-Proxy: <xmx:e1K_YvbVVgQANbs4tH6mMUrH5LaNLres37xpgQFzFinmY6f7nPb4Fg>
-    <xmx:e1K_YhbiP6yq2Gi3AoIAcfhp4QohMreFnvgTLD9awWXIWatRIZ3Cjw>
-    <xmx:e1K_YrCjgb2M3iT9zxycFn46jQ9pLIWED1rqKrx13LiM_I0tfM9RnQ>
-    <xmx:hlK_YgfaZPstR3sDyiLp39VIN104HgzzMuXBbFWrwe3H_JzEL7MHlA>
+    enucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpedukeetueduhedtleetvefguddvvdejhfefudelgfduveeggeeh
+    gfdufeeitdevteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:iFK_YtHsbbj2iuY_FeCxakuRenry44VSu2B-fzKnQnYneTvRe9spSw>
+    <xmx:iFK_YlVfgRQNrxDo7Ai87dgvpBDjHa2HPao95ZSvgWSmF7Y8euI5pA>
+    <xmx:iFK_YoOR_g9PNyYJVLJ7TkcK34rcKMKV3h6pUl542yueucyJ1Rv_Gw>
+    <xmx:klK_Yuc4LCTmGZISjXfSPMcDk1VujGGWEKmzte1mSHk4yVLCHyf3JA>
 Feedback-ID: i0ad843c9:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 1 Jul 2022 16:00:57 -0400 (EDT)
+ 1 Jul 2022 16:01:10 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc:     Samuel Holland <samuel@sholland.org>,
@@ -115,11 +115,14 @@ Cc:     Samuel Holland <samuel@sholland.org>,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-parisc@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: [PATCH v3 0/8] genirq: Provide real IRQ affinity masks in non-SMP configs
-Date:   Fri,  1 Jul 2022 15:00:48 -0500
-Message-Id: <20220701200056.46555-1-samuel@sholland.org>
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v3 1/8] irqchip/mips-gic: Only register IPI domain when SMP is enabled
+Date:   Fri,  1 Jul 2022 15:00:49 -0500
+Message-Id: <20220701200056.46555-2-samuel@sholland.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220701200056.46555-1-samuel@sholland.org>
+References: <20220701200056.46555-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -132,71 +135,176 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This series solves some inconsistency with how IRQ affinity masks are
-handled between SMP and non-SMP configurations.
+The MIPS GIC irqchip driver may be selected in a uniprocessor
+configuration, but it unconditionally registers an IPI domain.
 
-In non-SMP configs, an IRQ's true affinity is always cpumask_of(0), so
-irq_{,data_}get_affinity_mask now return that, instead of returning an
-uninitialized per-IRQ cpumask. This change makes iterating over the
-affinity mask do the right thing in both SMP and non-SMP configurations.
+Limit the part of the driver dealing with IPIs to only be compiled when
+GENERIC_IRQ_IPI is enabled, which corresponds to an SMP configuration.
 
-To accomplish that:
- - patches 1-3 disable some library code that was broken anyway on !SMP
- - patches 4-7 refactor the code so that irq_{,data_}get_affinity_mask
-   can return a const cpumask, since that is what cpumask_of provides
- - patch 8 drops the per-IRQ cpumask and replaces it with cpumask_of(0)
-
-This series was split from the v2 series here, which uses the new
-behavior in the RISC-V PLIC irqchip driver:
-
-https://lore.kernel.org/lkml/20220616064028.57933-1-samuel@sholland.org/
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
 
 Changes in v3:
  - New patch to fix build errors in uniprocessor MIPS configs
- - New patch to drop irq_init_effective_affinity
- - New patch to introduce irq_data_update_affinity
- - New patch to make the returned cpumasks const
- - Use cpumask_of(0) instead of cpu_possible_mask
 
-Changes in v2:
- - New patch to prevent GENERIC_IRQ_IPI from being selected on !SMP
+ drivers/irqchip/Kconfig        |  3 +-
+ drivers/irqchip/irq-mips-gic.c | 80 +++++++++++++++++++++++-----------
+ 2 files changed, 56 insertions(+), 27 deletions(-)
 
-Samuel Holland (8):
-  irqchip/mips-gic: Only register IPI domain when SMP is enabled
-  genirq: GENERIC_IRQ_IPI depends on SMP
-  genirq: GENERIC_IRQ_EFFECTIVE_AFF_MASK depends on SMP
-  genirq: Drop redundant irq_init_effective_affinity
-  genirq: Refactor accessors to use irq_data_get_affinity_mask
-  genirq: Add and use an irq_data_update_affinity helper
-  genirq: Return a const cpumask from irq_data_get_affinity_mask
-  genirq: Provide an IRQ affinity mask in non-SMP configs
-
- arch/alpha/kernel/irq.c              |  2 +-
- arch/arm/mach-hisi/Kconfig           |  2 +-
- arch/ia64/kernel/iosapic.c           |  2 +-
- arch/ia64/kernel/irq.c               |  4 +-
- arch/ia64/kernel/msi_ia64.c          |  4 +-
- arch/mips/cavium-octeon/octeon-irq.c |  4 +-
- arch/parisc/kernel/irq.c             |  2 +-
- arch/sh/kernel/irq.c                 |  7 +--
- arch/x86/hyperv/irqdomain.c          |  2 +-
- arch/xtensa/kernel/irq.c             |  7 +--
- drivers/iommu/hyperv-iommu.c         |  2 +-
- drivers/irqchip/Kconfig              | 19 +++----
- drivers/irqchip/irq-bcm6345-l1.c     |  4 +-
- drivers/irqchip/irq-mips-gic.c       | 80 +++++++++++++++++++---------
- drivers/parisc/iosapic.c             |  2 +-
- drivers/pci/controller/pci-hyperv.c  | 10 ++--
- drivers/sh/intc/chip.c               |  2 +-
- drivers/xen/events/events_base.c     |  7 +--
- include/linux/irq.h                  | 34 ++++++++----
- kernel/irq/Kconfig                   |  2 +
- kernel/irq/chip.c                    |  8 +--
- kernel/irq/debugfs.c                 |  2 +-
- kernel/irq/ipi.c                     | 16 +++---
- kernel/irq/manage.c                  | 10 +---
- 24 files changed, 140 insertions(+), 94 deletions(-)
-
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 1f23a6be7d88..d26a4ff7c99f 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -322,7 +322,8 @@ config KEYSTONE_IRQ
+ 
+ config MIPS_GIC
+ 	bool
+-	select GENERIC_IRQ_IPI
++	select GENERIC_IRQ_IPI if SMP
++	select IRQ_DOMAIN_HIERARCHY
+ 	select MIPS_CM
+ 
+ config INGENIC_IRQ
+diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
+index ff89b36267dd..8a9efb6ae587 100644
+--- a/drivers/irqchip/irq-mips-gic.c
++++ b/drivers/irqchip/irq-mips-gic.c
+@@ -52,13 +52,15 @@ static DEFINE_PER_CPU_READ_MOSTLY(unsigned long[GIC_MAX_LONGS], pcpu_masks);
+ 
+ static DEFINE_SPINLOCK(gic_lock);
+ static struct irq_domain *gic_irq_domain;
+-static struct irq_domain *gic_ipi_domain;
+ static int gic_shared_intrs;
+ static unsigned int gic_cpu_pin;
+ static unsigned int timer_cpu_pin;
+ static struct irq_chip gic_level_irq_controller, gic_edge_irq_controller;
++
++#ifdef CONFIG_GENERIC_IRQ_IPI
+ static DECLARE_BITMAP(ipi_resrv, GIC_MAX_INTRS);
+ static DECLARE_BITMAP(ipi_available, GIC_MAX_INTRS);
++#endif /* CONFIG_GENERIC_IRQ_IPI */
+ 
+ static struct gic_all_vpes_chip_data {
+ 	u32	map;
+@@ -472,9 +474,11 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int virq,
+ 	u32 map;
+ 
+ 	if (hwirq >= GIC_SHARED_HWIRQ_BASE) {
++#ifdef CONFIG_GENERIC_IRQ_IPI
+ 		/* verify that shared irqs don't conflict with an IPI irq */
+ 		if (test_bit(GIC_HWIRQ_TO_SHARED(hwirq), ipi_resrv))
+ 			return -EBUSY;
++#endif /* CONFIG_GENERIC_IRQ_IPI */
+ 
+ 		err = irq_domain_set_hwirq_and_chip(d, virq, hwirq,
+ 						    &gic_level_irq_controller,
+@@ -567,6 +571,8 @@ static const struct irq_domain_ops gic_irq_domain_ops = {
+ 	.map = gic_irq_domain_map,
+ };
+ 
++#ifdef CONFIG_GENERIC_IRQ_IPI
++
+ static int gic_ipi_domain_xlate(struct irq_domain *d, struct device_node *ctrlr,
+ 				const u32 *intspec, unsigned int intsize,
+ 				irq_hw_number_t *out_hwirq,
+@@ -670,6 +676,48 @@ static const struct irq_domain_ops gic_ipi_domain_ops = {
+ 	.match = gic_ipi_domain_match,
+ };
+ 
++static int gic_register_ipi_domain(struct device_node *node)
++{
++	struct irq_domain *gic_ipi_domain;
++	unsigned int v[2], num_ipis;
++
++	gic_ipi_domain = irq_domain_add_hierarchy(gic_irq_domain,
++						  IRQ_DOMAIN_FLAG_IPI_PER_CPU,
++						  GIC_NUM_LOCAL_INTRS + gic_shared_intrs,
++						  node, &gic_ipi_domain_ops, NULL);
++	if (!gic_ipi_domain) {
++		pr_err("Failed to add IPI domain");
++		return -ENXIO;
++	}
++
++	irq_domain_update_bus_token(gic_ipi_domain, DOMAIN_BUS_IPI);
++
++	if (node &&
++	    !of_property_read_u32_array(node, "mti,reserved-ipi-vectors", v, 2)) {
++		bitmap_set(ipi_resrv, v[0], v[1]);
++	} else {
++		/*
++		 * Reserve 2 interrupts per possible CPU/VP for use as IPIs,
++		 * meeting the requirements of arch/mips SMP.
++		 */
++		num_ipis = 2 * num_possible_cpus();
++		bitmap_set(ipi_resrv, gic_shared_intrs - num_ipis, num_ipis);
++	}
++
++	bitmap_copy(ipi_available, ipi_resrv, GIC_MAX_INTRS);
++
++	return 0;
++}
++
++#else /* !CONFIG_GENERIC_IRQ_IPI */
++
++static inline int gic_register_ipi_domain(struct device_node *node)
++{
++	return 0;
++}
++
++#endif /* !CONFIG_GENERIC_IRQ_IPI */
++
+ static int gic_cpu_startup(unsigned int cpu)
+ {
+ 	/* Enable or disable EIC */
+@@ -688,11 +736,12 @@ static int gic_cpu_startup(unsigned int cpu)
+ static int __init gic_of_init(struct device_node *node,
+ 			      struct device_node *parent)
+ {
+-	unsigned int cpu_vec, i, gicconfig, v[2], num_ipis;
++	unsigned int cpu_vec, i, gicconfig;
+ 	unsigned long reserved;
+ 	phys_addr_t gic_base;
+ 	struct resource res;
+ 	size_t gic_len;
++	int ret;
+ 
+ 	/* Find the first available CPU vector. */
+ 	i = 0;
+@@ -780,30 +829,9 @@ static int __init gic_of_init(struct device_node *node,
+ 		return -ENXIO;
+ 	}
+ 
+-	gic_ipi_domain = irq_domain_add_hierarchy(gic_irq_domain,
+-						  IRQ_DOMAIN_FLAG_IPI_PER_CPU,
+-						  GIC_NUM_LOCAL_INTRS + gic_shared_intrs,
+-						  node, &gic_ipi_domain_ops, NULL);
+-	if (!gic_ipi_domain) {
+-		pr_err("Failed to add IPI domain");
+-		return -ENXIO;
+-	}
+-
+-	irq_domain_update_bus_token(gic_ipi_domain, DOMAIN_BUS_IPI);
+-
+-	if (node &&
+-	    !of_property_read_u32_array(node, "mti,reserved-ipi-vectors", v, 2)) {
+-		bitmap_set(ipi_resrv, v[0], v[1]);
+-	} else {
+-		/*
+-		 * Reserve 2 interrupts per possible CPU/VP for use as IPIs,
+-		 * meeting the requirements of arch/mips SMP.
+-		 */
+-		num_ipis = 2 * num_possible_cpus();
+-		bitmap_set(ipi_resrv, gic_shared_intrs - num_ipis, num_ipis);
+-	}
+-
+-	bitmap_copy(ipi_available, ipi_resrv, GIC_MAX_INTRS);
++	ret = gic_register_ipi_domain(node);
++	if (ret)
++		return ret;
+ 
+ 	board_bind_eic_interrupt = &gic_bind_eic_interrupt;
+ 
 -- 
 2.35.1
 
