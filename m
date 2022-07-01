@@ -2,56 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CE4E56374A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 18:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9868056374F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 18:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbiGAQBs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 1 Jul 2022 12:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        id S231345AbiGAQDN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 1 Jul 2022 12:03:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbiGAQBs (ORCPT
+        with ESMTP id S231297AbiGAQDL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 1 Jul 2022 12:01:48 -0400
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469CF17058
-        for <linux-hyperv@vger.kernel.org>; Fri,  1 Jul 2022 09:01:47 -0700 (PDT)
-Received: by mail-ot1-x331.google.com with SMTP id e14-20020a9d018e000000b00618ca3183a0so1517506ote.13
-        for <linux-hyperv@vger.kernel.org>; Fri, 01 Jul 2022 09:01:47 -0700 (PDT)
+        Fri, 1 Jul 2022 12:03:11 -0400
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 006F5CD6
+        for <linux-hyperv@vger.kernel.org>; Fri,  1 Jul 2022 09:03:10 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id u199so4166190oie.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 01 Jul 2022 09:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NHKjS2hX5qBuSevK018Q0TVoONckTzwODc2zQK9vjyQ=;
-        b=aVwAlVX4fKbZdP/EKT3dzLHmALrXN8O3FO1/AUQriNS28v22Nn+K/O2w9wrCeXH5qi
-         AXC65wcOqGFnNJXQP/sO2NEX2EO98w7iWl4GtGJpw9GMa5WtFfdiJuWB1xec8aZmLnwD
-         TFMTS7BAVjRYYnjKM8y65NSgUnzGyA4DjHJiegb3HrEql909j3nCoI3W8w+AlN49o5k4
-         JT9UcfafdfaqI+2tPjbanL6R8+TAbrOmF1c8qpbpDmSPeM/4pAyaBLhKoVFqpEXKze7p
-         9dctBXgoPMozD3gHYIZG3wevOSovfhGJbqHG4iykmvzMf7O3MmW2Ic+kbaa9KBFV2UKI
-         0kow==
+        bh=rqJwHgmuBoxIt5vyJ91QW4DLByGUx5uWYxmbDTSBAHs=;
+        b=VywtSoL1CTz2IcDC1UnChIFSEQg26g5qy3uVpJLlxOiDpHgfueGl+AJ2Ho7YdeL1VJ
+         diXLfccXWkdUu56eOBb8/T2Z553tlASEgvNics8H0nnjUgbetB1LEKE6VCtkx/4dX0ic
+         SY3RbTlUCn7kqm9AIL8X0FBlHikbBrjeO7os283DggS+b+pnndUbWtodmPIaNmqkelC3
+         BW4pt+hE86H7pIMhlscJmimNRkl+Aun0/qxu4gMfR+NN4IPN8B0zKGQ0xpqoCTPT3+An
+         tJR+gKNwy1M2gF8Sa8e/P+CaL1pxLKIbMUTO/Rosb7iqcHHEB2dFti+dSDF3E8Ni9X2Z
+         sQAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NHKjS2hX5qBuSevK018Q0TVoONckTzwODc2zQK9vjyQ=;
-        b=zhLBGRQukZe+XjlWjpzcrCDRPmC5J8PScVnt3wZZDhb5H00KLDhwUwUsImDiaNDWwK
-         E8q3D9Pzl70Qj6IWwrtEKI2C5OqIMpR9jCsLjPsZKARWFt4J0nMeB/zz+z2mDqdvQp6u
-         +pQ3PmFye7hKdXbgsrI5SUbdFx3ZAnbirVm2HhLiBeDe1+1ZUAQ7QqvOIdxi9m2rl8PI
-         RwvjOpet2rlx/4atkqcBmLy+JxPlFxmrHrxIuACb1qAXKM2lpVWk/EVrB9zJk6ri3/a4
-         zbWt2zOKOJPgEcsdowPmikyOkeiFuWrhbvFtt5twriGvlMYx1vaWuq8XHitY8Inz/FtA
-         DSTQ==
-X-Gm-Message-State: AJIora+P9FQNvgqwZdd5xnta3Y4V1QZJFZCzTgbKEUMO+61CGJqF6Wlh
-        aNn0DB7YaW8BkBY2BBisJBoQeIbhiN29t2WcAn2KWA==
-X-Google-Smtp-Source: AGRyM1sYv/9MPLC4DdfRBlT3X+vlDLtvMlHsgI/OE8H/Uvz85QXs+Bry0pQdAoVDgjsjXg+EgUBCYocqS3mrH8MIzkc=
-X-Received: by 2002:a05:6830:14:b0:616:dcbd:e53e with SMTP id
- c20-20020a056830001400b00616dcbde53emr6534039otp.267.1656691306392; Fri, 01
- Jul 2022 09:01:46 -0700 (PDT)
+        bh=rqJwHgmuBoxIt5vyJ91QW4DLByGUx5uWYxmbDTSBAHs=;
+        b=dLm6uiVdWisPxWHHiKCNzVKG9ptRn+CE7rJp6PJ30sm2T7g+GZRWBJvow9zy5oLQZ9
+         Ni8igct9eDSTy3vvewiIfhe+yrC2R2nJYK5l1leZ/rBztgdDJlCqefhV2kspt3zJyai4
+         rsMPxQ54Ji89sAYZpELnyay2bVIuuT4meX/94ZtC0tWxAh5MZB+dzn/pgjhgflR8Mwrs
+         YlVfIM18WGg06Hmq4jkE1E+kbtjyfSYcbCqjERHl2P9HTgGNFxoziHBZqwXnN8lOYW8j
+         LrZcoZBmaAPXEHZeA8d5QhBrJZjoE4O46PcXorxrYTrSOYlJch4OtrA78nDFJ3sE2hXx
+         QvIg==
+X-Gm-Message-State: AJIora+jCpRxFOIUs+1NUy2yt8zCz2hNtY9l8VuP6ZqlaFWtKgQMcw/b
+        tWkasjScFFWbm2dLDhBQjYnaEqmgccf3wQbstE/RoA==
+X-Google-Smtp-Source: AGRyM1uRa9Sidpo3z6KZT3YxqtiTxT8O/4sGDDwSBBqVSkVSRDKb4+wrt9ouf45phdlZFYvPXTUA07bEPbYOM0DUm48=
+X-Received: by 2002:a05:6808:2124:b0:335:7483:f62d with SMTP id
+ r36-20020a056808212400b003357483f62dmr10390571oiw.112.1656691390201; Fri, 01
+ Jul 2022 09:03:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-21-vkuznets@redhat.com>
-In-Reply-To: <20220629150625.238286-21-vkuznets@redhat.com>
+References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-20-vkuznets@redhat.com>
+In-Reply-To: <20220629150625.238286-20-vkuznets@redhat.com>
 From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 1 Jul 2022 09:01:35 -0700
-Message-ID: <CALMp9eTVAOCvWQ-3A6VmwhJk6skES9phMPC3O-za7Rk05SfVTg@mail.gmail.com>
-Subject: Re: [PATCH v2 20/28] KVM: VMX: Add missing VMENTRY controls to vmcs_config
+Date:   Fri, 1 Jul 2022 09:02:59 -0700
+Message-ID: <CALMp9eQjxwNLEV6f-xh+7DpfZ=og_Zf0B9isDqSa2KPMaj8wgg@mail.gmail.com>
+Subject: Re: [PATCH v2 19/28] KVM: VMX: Add missing VMEXIT controls to vmcs_config
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
@@ -64,7 +64,7 @@ X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,51 +74,11 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 On Wed, Jun 29, 2022 at 8:07 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >
 > As a preparation to reusing the result of setup_vmcs_config() in
-> nested VMX MSR setup, add the VMENTRY controls which KVM doesn't
-> use but supports for nVMX to KVM_OPT_VMX_VM_ENTRY_CONTROLS and
-> filter them out in vmx_vmentry_ctrl().
+> nested VMX MSR setup, add the VMEXIT controls which KVM doesn't
+> use but supports for nVMX to KVM_OPT_VMX_VM_EXIT_CONTROLS and
+> filter them out in vmx_vmexit_ctrl().
 >
 > No functional change intended.
 >
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 3 +++
->  arch/x86/kvm/vmx/vmx.h | 4 +++-
->  2 files changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index e5ab77ed37e4..b774b6391e0e 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4179,6 +4179,9 @@ static u32 vmx_vmentry_ctrl(void)
->  {
->         u32 vmentry_ctrl = vmcs_config.vmentry_ctrl;
->
-> +       /* Not used by KVM but supported for nesting. */
-> +       vmentry_ctrl &= ~(VM_ENTRY_SMM | VM_ENTRY_DEACT_DUAL_MONITOR);
-> +
-
-LOL! KVM does not emulate the dual-monitor treatment of SMIs and SMM.
-Do we actually claim to support these VM-entry controls today?!?
-
->         if (vmx_pt_mode_is_system())
->                 vmentry_ctrl &= ~(VM_ENTRY_PT_CONCEAL_PIP |
->                                   VM_ENTRY_LOAD_IA32_RTIT_CTL);
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index d4503a38735b..7ada8410a037 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -479,7 +479,9 @@ static inline u8 vmx_get_rvi(void)
->                 __KVM_REQ_VMX_VM_ENTRY_CONTROLS
->  #endif
->  #define KVM_OPT_VMX_VM_ENTRY_CONTROLS                          \
-> -       (VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |                  \
-> +       (VM_ENTRY_SMM |                                         \
-> +       VM_ENTRY_DEACT_DUAL_MONITOR |                           \
-> +       VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |                   \
->         VM_ENTRY_LOAD_IA32_PAT |                                \
->         VM_ENTRY_LOAD_IA32_EFER |                               \
->         VM_ENTRY_LOAD_BNDCFGS |                                 \
-> --
-> 2.35.3
->
+Reviewed-by: Jim Mattson <jmattson@google.com>
