@@ -2,66 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05C9C563A85
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 22:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC647563AC8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 22:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbiGAUK5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 1 Jul 2022 16:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231676AbiGAUKu (ORCPT
-        <rfc822;linux-hyperv@vger.kernel.org>);
+        id S231566AbiGAUKu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Fri, 1 Jul 2022 16:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230475AbiGAUKt (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Fri, 1 Jul 2022 16:10:49 -0400
+X-Greylist: delayed 575 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 01 Jul 2022 13:10:48 PDT
 Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E547724A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78FF1BF72;
         Fri,  1 Jul 2022 13:10:48 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D5ADC580285;
-        Fri,  1 Jul 2022 16:01:29 -0400 (EDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4055A5802F0;
+        Fri,  1 Jul 2022 16:01:36 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 01 Jul 2022 16:01:29 -0400
+  by compute2.internal (MEProxy); Fri, 01 Jul 2022 16:01:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
         :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1656705689; x=1656712889; bh=f2
-        gTOnVVlawVp6N5bLg8smmhsDaH+rFeOulG3ok0Jrc=; b=S00usAZDc/YM64VNCn
-        FjrEnQNeYOIV4LNXFxrNe+DvmbJ1spyaNknAlkMKCOYdB8xZAB6BY9sx7dI8cRwD
-        aNrKuvCkIxj/PKyZRFpy+snzjxdT/wGYVUKvGizh4ybfVco0jpNkt9KuqI3lODmv
-        VgMOfXezM/xbArBQvHUjLN61LUq2x7L0hMa6QJigRe0ReXc8M/xo9kR71pvG5fav
-        zb0DMcwbxYzRwjHctt2+SKmtMgzgd0yTB8uENd3D0VqTECGgquIpAjLlEagHYC3j
-        iGuAmAltKJ2/jWPPQ1vs09gP9bynvMqw+WFPrd9CKAWkKbcNwG53wW45gJRugpgB
-        7etg==
+        :subject:subject:to:to; s=fm3; t=1656705696; x=1656712896; bh=D0
+        9F9v2OsTHtUMBckCisA3fh+Z9dxIk2ZgixoBozn6s=; b=ewPaKoSkHX2BJXiLrX
+        5+oSIjybcWAklW5wxV0V+2224R1S5aSbhX/ZumtO+pevNUEajJ4W+xkdb1xobtmO
+        5XYTY4EQgS3vI31X9KpJqpcSStss2CBfMnsdLsoEi24/QiILGCKcwtKmT3IHTl3M
+        Mv1Py5jjNaGrcKT545FKqrpJreT45hH04ngq4b9+jLCXhOz/SJLgVou/odMMcxHf
+        jE7L5Oa7EAAx5jIAr6O1i4neJfVW0AS/PUT6wWsmA07a/DS+FN2RC5D0zeLTTFHO
+        gxpbBrSPW1wLPGNr1k53E8cUdIxhDr0COGRwcsfZT5hqn7efH9ktohj1e3H0gw2y
+        IDKw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
         :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
         :message-id:mime-version:references:reply-to:sender:subject
         :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1656705689; x=1656712889; bh=f2gTOnVVlawVp
-        6N5bLg8smmhsDaH+rFeOulG3ok0Jrc=; b=p8dJ+iBG+yyKxcHv8Ird4QI+8K5e2
-        deriiVPbLfaAp7jH0aTFXbKRlCyn1EkHQyKB2khg8+haSRMztqOCdPVXCF1Z0WCH
-        XMZ2dC520GBYyCM3t4JRbY69RiaW08lpNIFhNE6+kx66gd+4fAfUbrwSyPs6mbPc
-        nB4SQ4rjMwxLFceJ639l6X5Gnfabx0+YkFVX26GUHctAf/ClGo5S4UwBUh4m9yPh
-        5lA0hUcpMSQycZcnZaO6J6XLkQxj0nrANK1+St4Vqj9eYNEZlQb3hS2C/cwKEL+5
-        BILChd6I7vOuP7X0g3FgLvTGrvQkLzGX2qG9+nUpNgkqLUj+CVjSJhhdQ==
-X-ME-Sender: <xms:lVK_YvMmv4ox1Eme9_eVm7hG98FH-UgFJb0oHUzgJo8sA_XFPRxfzA>
-    <xme:lVK_Yp8DXLpqeSNLMrpiZQDvQSkKhvABFdw5gwEoYfjWHhRkkQPOyIiDrHvopn-gK
-    IdJbuVQ556syyMePg>
-X-ME-Received: <xmr:lVK_YuS8YjQHh6ATVN-N4qX2fapbY-KSFXLVNMLNNU3la4fhZVjZ3PEBhHGMgyvtfYJwcKnlGeDVe5f_RB6iDTTAKBt_f8gdCnW9mFED1WsqFUsldFlpUIHZTBu7mGIVas_bhA>
+        :x-sasl-enc; s=fm2; t=1656705696; x=1656712896; bh=D09F9v2OsTHtU
+        MBckCisA3fh+Z9dxIk2ZgixoBozn6s=; b=TBQ5zmWoRj8elXqnGUzA7FTSfUjgW
+        8okx2QN7XCl3ky8WadN5LKY6hzwdOfA9BJ0eXRmer/tFEiAUvbmU6wyJhpcSQZgj
+        Rmt76VA2NSnO3ovcCIK5WjyW5TFWl9HMcuavVAdkHsJTygI2nPusqodgPFJV4ZxT
+        L/edAsj355kbI6l/RzXXpdx9yUIvX2RXPv6ueqmRU44epIbZ+yjNJpk1CA53x/K2
+        6amlSq383hivdloACmsNrkmMJ+PWpdATylN2kVPVACnX4rT6i/tvFuKDeoqp86hr
+        Enu7oREUdbzL42YZLwjDCYWMY8dHPJjpHxLTP4IgdrwaIjKWoEmRjseFA==
+X-ME-Sender: <xms:nFK_YllnnRr_sciHqyPrgkD6BfM39zvsg08F5osTHcg_sR-Wy70VOw>
+    <xme:nFK_Yg0T4Xs609Ou5ecwzclnL5FBE5F6rJ1z1kAvq9AADLi3didfXi2Wxyr8n3TpT
+    mi7NakNtF0ybkEmZg>
+X-ME-Received: <xmr:nFK_YroiT8Opzgg4mdQnQVspyugX-2Yp7TSWYjWSc_Gb3Z8jy7_oEVH24qDxlp30FU5OF6EH21X8QO2bXW2VYXXm05wIsfBRtq4vhrPsEdruTaavuMPiuUbOCX2QMSVYSGH3Vw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudehfedgudeggecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
     enucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghm
     uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
     ggtffrrghtthgvrhhnpedukeetueduhedtleetvefguddvvdejhfefudelgfduveeggeeh
-    gfdufeeitdevteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    gfdufeeitdevteenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfh
     hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:lVK_Yjux0iKsqVqtDdBsTLFTukN4c0i-NDydJA7FsffE7qkd6SRhLg>
-    <xmx:lVK_Ync8mOd5Hs3XKGkkxQQutCnfzJtCXnCoUWrkxN9GQqvqdz4-EA>
-    <xmx:lVK_Yv1Ev9KmbIm3eUXMINBReiNIuyQcc8fQ3WcdbBD2eNMZPxFqzw>
-    <xmx:mVK_YimYxP6DsLw8htRlTj1olHyqAnO6Ea3SMp1xmXtGFF9Eh_CABA>
+X-ME-Proxy: <xmx:nFK_YllRQNY4ItnskcF3wZbSLRLA3CEAGpYupD7J2qW5peJo-ruNIQ>
+    <xmx:nFK_Yj1dyGrStlLWi3Ibk1qa3a0DHtHuehPp5qlPfFiYZ8f76dMmZA>
+    <xmx:nFK_YksdN9ZGevKx8SgkWwqLy8z5Ru1bwIDqa-wLH1UTAjSTVJD4JQ>
+    <xmx:oFK_Ym2-Tx0kPJpXYNb6tkjCsCFHW9yYiblMWutR_FFjjXDpmGWUnQ>
 Feedback-ID: i0ad843c9:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 1 Jul 2022 16:01:23 -0400 (EDT)
+ 1 Jul 2022 16:01:30 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
 Cc:     Samuel Holland <samuel@sholland.org>,
@@ -115,11 +116,10 @@ Cc:     Samuel Holland <samuel@sholland.org>,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-parisc@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v3 2/8] genirq: GENERIC_IRQ_IPI depends on SMP
-Date:   Fri,  1 Jul 2022 15:00:50 -0500
-Message-Id: <20220701200056.46555-3-samuel@sholland.org>
+        x86@kernel.org, xen-devel@lists.xenproject.org
+Subject: [PATCH v3 3/8] genirq: GENERIC_IRQ_EFFECTIVE_AFF_MASK depends on SMP
+Date:   Fri,  1 Jul 2022 15:00:51 -0500
+Message-Id: <20220701200056.46555-4-samuel@sholland.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220701200056.46555-1-samuel@sholland.org>
 References: <20220701200056.46555-1-samuel@sholland.org>
@@ -135,48 +135,113 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The generic IPI code depends on the IRQ affinity mask being allocated
-and initialized. This will not be the case if SMP is disabled. Fix up
-the remaining driver that selected GENERIC_IRQ_IPI in a non-SMP config.
+An IRQ's effective affinity can only be different from its configured
+affinity if there are multiple CPUs. Make it clear that this option is
+only meaningful when SMP is enabled. Most of the relevant code in
+irqdesc.c is already hidden behind CONFIG_SMP anyway.
 
-Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
 
-(no changes since v2)
+(no changes since v1)
 
-Changes in v2:
- - New patch to prevent GENERIC_IRQ_IPI from being selected on !SMP
+ arch/arm/mach-hisi/Kconfig |  2 +-
+ drivers/irqchip/Kconfig    | 14 +++++++-------
+ kernel/irq/Kconfig         |  1 +
+ 3 files changed, 9 insertions(+), 8 deletions(-)
 
- drivers/irqchip/Kconfig | 2 +-
- kernel/irq/Kconfig      | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/mach-hisi/Kconfig b/arch/arm/mach-hisi/Kconfig
+index 75cccbd3f05f..7b3440687176 100644
+--- a/arch/arm/mach-hisi/Kconfig
++++ b/arch/arm/mach-hisi/Kconfig
+@@ -40,7 +40,7 @@ config ARCH_HIP04
+ 	select HAVE_ARM_ARCH_TIMER
+ 	select MCPM if SMP
+ 	select MCPM_QUAD_CLUSTER if SMP
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+ 	help
+ 	  Support for Hisilicon HiP04 SoC family
+ 
 diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index d26a4ff7c99f..5dd98a81efc8 100644
+index 5dd98a81efc8..462adac905a6 100644
 --- a/drivers/irqchip/Kconfig
 +++ b/drivers/irqchip/Kconfig
-@@ -177,7 +177,7 @@ config MADERA_IRQ
- config IRQ_MIPS_CPU
+@@ -8,7 +8,7 @@ config IRQCHIP
+ config ARM_GIC
+ 	bool
+ 	select IRQ_DOMAIN_HIERARCHY
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+ 
+ config ARM_GIC_PM
+ 	bool
+@@ -34,7 +34,7 @@ config ARM_GIC_V3
+ 	bool
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	select PARTITION_PERCPU
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+ 
+ config ARM_GIC_V3_ITS
+ 	bool
+@@ -76,7 +76,7 @@ config ARMADA_370_XP_IRQ
  	bool
  	select GENERIC_IRQ_CHIP
--	select GENERIC_IRQ_IPI if SYS_SUPPORTS_MULTITHREADING
-+	select GENERIC_IRQ_IPI if SMP && SYS_SUPPORTS_MULTITHREADING
- 	select IRQ_DOMAIN
- 	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
+ 	select PCI_MSI if PCI
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
  
+ config ALPINE_MSI
+ 	bool
+@@ -112,7 +112,7 @@ config BCM6345_L1_IRQ
+ 	bool
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+ 
+ config BCM7038_L1_IRQ
+ 	tristate "Broadcom STB 7038-style L1/L2 interrupt controller driver"
+@@ -120,7 +120,7 @@ config BCM7038_L1_IRQ
+ 	default ARCH_BRCMSTB || BMIPS_GENERIC
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+ 
+ config BCM7120_L2_IRQ
+ 	tristate "Broadcom STB 7120-style L2 interrupt controller driver"
+@@ -179,7 +179,7 @@ config IRQ_MIPS_CPU
+ 	select GENERIC_IRQ_CHIP
+ 	select GENERIC_IRQ_IPI if SMP && SYS_SUPPORTS_MULTITHREADING
+ 	select IRQ_DOMAIN
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+ 
+ config CLPS711X_IRQCHIP
+ 	bool
+@@ -294,7 +294,7 @@ config VERSATILE_FPGA_IRQ_NR
+ config XTENSA_MX
+ 	bool
+ 	select IRQ_DOMAIN
+-	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
++	select GENERIC_IRQ_EFFECTIVE_AFF_MASK if SMP
+ 
+ config XILINX_INTC
+ 	bool "Xilinx Interrupt Controller IP"
 diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-index 10929eda9825..fc760d064a65 100644
+index fc760d064a65..db3d174c53d4 100644
 --- a/kernel/irq/Kconfig
 +++ b/kernel/irq/Kconfig
-@@ -82,6 +82,7 @@ config IRQ_FASTEOI_HIERARCHY_HANDLERS
- # Generic IRQ IPI support
- config GENERIC_IRQ_IPI
- 	bool
-+	depends on SMP
- 	select IRQ_DOMAIN_HIERARCHY
+@@ -24,6 +24,7 @@ config GENERIC_IRQ_SHOW_LEVEL
  
- # Generic MSI interrupt support
+ # Supports effective affinity mask
+ config GENERIC_IRQ_EFFECTIVE_AFF_MASK
++       depends on SMP
+        bool
+ 
+ # Support for delayed migration from interrupt context
 -- 
 2.35.1
 
