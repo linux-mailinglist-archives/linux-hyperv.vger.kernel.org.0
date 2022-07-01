@@ -2,57 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46EF056376F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 18:11:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5264A5637D8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  1 Jul 2022 18:26:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbiGAQLZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 1 Jul 2022 12:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33576 "EHLO
+        id S232086AbiGAQ0p (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 1 Jul 2022 12:26:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbiGAQLZ (ORCPT
+        with ESMTP id S232036AbiGAQ0p (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 1 Jul 2022 12:11:25 -0400
-Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086CB22531
-        for <linux-hyperv@vger.kernel.org>; Fri,  1 Jul 2022 09:11:23 -0700 (PDT)
-Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-10bab338f70so4108711fac.7
-        for <linux-hyperv@vger.kernel.org>; Fri, 01 Jul 2022 09:11:23 -0700 (PDT)
+        Fri, 1 Jul 2022 12:26:45 -0400
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30CA4160B
+        for <linux-hyperv@vger.kernel.org>; Fri,  1 Jul 2022 09:26:43 -0700 (PDT)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-fe023ab520so4149820fac.10
+        for <linux-hyperv@vger.kernel.org>; Fri, 01 Jul 2022 09:26:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=th/OZKsYSESx9TWxFTTi5dH44gpyPseNGCExyUZ8aDM=;
-        b=LoOMWKLvTVcyZJc4X3JvlhF56XLwUnl+kOwd70ngWyYFDVoG1vb/R/9xqh+b5DwIxg
-         u2uu0Ql+QCP39i1zC42qNL7t9oOGap2JtxyT6Df7YtDQDOGtivSQk10ndMFfFOWdCpBa
-         X+hepZEAI6YvlOVNCpAougBgpeb1XnbCWcgaEINrajBiv1CVpmK76D5Hcvh7Zo4xv53I
-         ky91MfSV2ugj3kPLCTC87wHfQfw2haNcLr53bKZgOrwmFHUEgrfCXSl05fCQAwkx4V3l
-         XFuLuNxSeMB80/QVdFqE27kkL3g+VXHJ31XQlfHs3pCF2xkRFfFNGw2KeYyxAkZHwcuV
-         xKYw==
+        bh=K26MwrAuUteiZyWEOzDvbm+FiqummBqIOV2xCXu76yM=;
+        b=Ixmg3++rgJ8IUJE7we0mxCXtZMmmsiY6hst+fVyftGVwB60OGjmkQodnPu56rSx26x
+         AzHgNxP6GiQdmczQ7Bp8/Zni0M9iKk6KvYkBtr8/Ur1zNzuArnrGSaZfQE7+ehh+AqGz
+         O7VW/P4YJkz0y6i59iigxbpO10P9ogp7SYgzb7y8uZoZtvG2EQel/v4LgNCfsuAV/v4O
+         O8afSWKTcvg0JsuU+fKaxZqdlnTIDaViI8MdxbHcDLUAdLHyneysHfldfmbXen1l8tI5
+         o0WMlhmThr7f4GF3lf9xjsTeiEv3tx93rUY/C8Dk19cQ/1/Asy4Rsq/pcnLA6LEsjLNl
+         azsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=th/OZKsYSESx9TWxFTTi5dH44gpyPseNGCExyUZ8aDM=;
-        b=3gbQ50wpuN4miQjiXZB0Z48yylI9O6jCE94RwVWVAQRFEcK9tj0tU8NBXoSutIgvsh
-         7JI8/6vhMtgjT4xsWVHrMypRXxElrbT3XpotEmYUUrWsx8nHts2oIhq80dx8cr1AKGfo
-         h3AhqgFoE79jk5QzdZvf5WDvzzidNpCOz1wwV6gb+kFLKfh1+3oVIdkuQxGJduzxbt4A
-         uKIQucl2UwSLln2EGQXx7cTYkqOlBRqbkSwExPdelMFtDpu7rxiiS6ljjKJvJ3Iv6Tsj
-         8PuJ30dWBHRFh8uMjbGS1SgyXyx9zSbVkauzyi1tqt3He85bZ0qplecn71lhhC8P7QCO
-         C4Gw==
-X-Gm-Message-State: AJIora9ucPWvBWZhL0tVuGJONft+wcnS8HtrxiG8uw90Vp3JGpflaaDw
-        I7yDiEH2FDx03u7yxcmkGazI6+zMiezwFnzSIIvAuA==
-X-Google-Smtp-Source: AGRyM1v1dypOfwQzuDbf/FEZzJjt9K7fM75kBXYp8UrdBkcNPky7TWEsADN9EJewLVvxwLiZlhT+oUa6bkBUcOUErfI=
+        bh=K26MwrAuUteiZyWEOzDvbm+FiqummBqIOV2xCXu76yM=;
+        b=ukOfaHluFgX6UnuBB0y/+9MjB5hqhwc+qrhCIdxD74yArIBnIZ/49ZrQeGY1RN6Nw7
+         k2/ahjqNsNUNWn2nAxZOKmoK2OGALAf+BQqtqYYasHq6n/Lnht3B0qFESNjCnZYFCoTg
+         +tB89kepS5KTg1LqIw86hm807HohdjVk4juM4iHg1x7tpE/PaIyqNzKdkb1mpICc1XbO
+         yi0Ed+qLrqnVIyk87gMsoKqmXksFEB0nkXHYumV9xXYJnccqIjE+rs1juzdZxumIVvHO
+         8b5z9VhtNSyx6zNchOegax8QNYM+qTJNwbzIboHcu+fPjY1xnE9i0r5CiBGqrg/waQGR
+         4Dpw==
+X-Gm-Message-State: AJIora+WvqYBqIkzytdJ2WzXi5jLkKxNGqqJXxkqaCFYaENt7jRjGyzC
+        P9Hc8B/4LFPw8giKoVrfap8BOoIAcXkXA3jDwmZa+w==
+X-Google-Smtp-Source: AGRyM1v52Mm1Cwsg5w6e8h2FpdML7f7TtaQZ5JZagakdFptTcCoj3+hl7//M3/+nWSpUjkRcOmP69M304ybLd1p4xuM=
 X-Received: by 2002:a05:6870:d3c7:b0:104:9120:8555 with SMTP id
- l7-20020a056870d3c700b0010491208555mr8784189oag.181.1656691882207; Fri, 01
- Jul 2022 09:11:22 -0700 (PDT)
+ l7-20020a056870d3c700b0010491208555mr8825797oag.181.1656692802766; Fri, 01
+ Jul 2022 09:26:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-23-vkuznets@redhat.com>
-In-Reply-To: <20220629150625.238286-23-vkuznets@redhat.com>
+References: <20220629150625.238286-1-vkuznets@redhat.com> <20220629150625.238286-24-vkuznets@redhat.com>
+In-Reply-To: <20220629150625.238286-24-vkuznets@redhat.com>
 From:   Jim Mattson <jmattson@google.com>
-Date:   Fri, 1 Jul 2022 09:11:11 -0700
-Message-ID: <CALMp9eRA0v6BK6KG81ZE_iLKF6VNXxemN=E4gAE4AM-V4gkdHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 22/28] KVM: VMX: Clear controls obsoleted by EPT at
- runtime, not setup
+Date:   Fri, 1 Jul 2022 09:26:31 -0700
+Message-ID: <CALMp9eTmRLHQej1a4bFtpmRxaLaEJfwpDdvcZGbR54PFRjx+6g@mail.gmail.com>
+Subject: Re: [PATCH v2 23/28] KVM: VMX: Move LOAD_IA32_PERF_GLOBAL_CTRL errata
+ handling out of setup_vmcs_config()
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
@@ -74,16 +74,138 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Wed, Jun 29, 2022 at 8:07 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >
-> From: Sean Christopherson <seanjc@google.com>
->
-> Clear the CR3 and INVLPG interception controls at runtime based on
-> whether or not EPT is being _used_, as opposed to clearing the bits at
-> setup if EPT is _supported_ in hardware, and then restoring them when EPT
-> is not used.  Not mucking with the base config will allow using the base
-> config as the starting point for emulating the VMX capability MSRs.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Nit: These controls aren't "obsoleted" by EPT; they're just no longer required.
+> As a preparation to reusing the result of setup_vmcs_config() for setting
+> up nested VMX control MSRs, move LOAD_IA32_PERF_GLOBAL_CTRL errata handling
+> to vmx_vmexit_ctrl()/vmx_vmentry_ctrl() and print the warning from
+> hardware_setup(). While it seems reasonable to not expose
+> LOAD_IA32_PERF_GLOBAL_CTRL controls to L1 hypervisor on buggy CPUs,
+> such change would inevitably break live migration from older KVMs
+> where the controls are exposed. Keep the status quo for know, L1 hypervisor
+> itself is supposed to take care of the errata.
 
-Reviewed-by: Jim Mattson <jmattson@google.com>
+It can only do that if L1 doesn't lie about the model. This is why
+F/M/S checks are, in general, evil.
+
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 62 ++++++++++++++++++++++++++----------------
+>  1 file changed, 38 insertions(+), 24 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index fb58b0be953d..5f7ef1f8d2c6 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2416,6 +2416,31 @@ static bool cpu_has_sgx(void)
+>         return cpuid_eax(0) >= 0x12 && (cpuid_eax(0x12) & BIT(0));
+>  }
+>
+> +/*
+> + * Some cpus support VM_{ENTRY,EXIT}_IA32_PERF_GLOBAL_CTRL but they
+> + * can't be used due to an errata where VM Exit may incorrectly clear
+
+Nit: erratum (singular), or drop the 'an' to refer to errata (plural).
+
+> + * IA32_PERF_GLOBAL_CTRL[34:32].  Workaround the errata by using the
+
+Nit: workaround (one word) is a noun. The verb form is "work around."
+
+> + * MSR load mechanism to switch IA32_PERF_GLOBAL_CTRL.
+> + */
+> +static bool cpu_has_perf_global_ctrl_bug(void)
+> +{
+> +       if (boot_cpu_data.x86 == 0x6) {
+> +               switch (boot_cpu_data.x86_model) {
+> +               case 26: /* AAK155 */
+> +               case 30: /* AAP115 */
+> +               case 37: /* AAT100 */
+> +               case 44: /* BC86,AAY89,BD102 */
+> +               case 46: /* BA97 */
+
+Nit: Replace decimal model numbers with mnemonics. See
+https://lore.kernel.org/kvm/20220629222221.986645-1-jmattson@google.com/.
+
+> +                       return true;
+> +               default:
+> +                       break;
+> +               }
+> +       }
+> +
+> +       return false;
+> +}
+
+Is it worth either (a) memoizing the result, or (b) toggling a static
+branch? Or am I prematurely optimizing?
+
+> +
+> +
+>  static __init int adjust_vmx_controls(u32 ctl_min, u32 ctl_opt,
+>                                       u32 msr, u32 *result)
+>  {
+> @@ -2572,30 +2597,6 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>                 _vmexit_control &= ~x_ctrl;
+>         }
+>
+> -       /*
+> -        * Some cpus support VM_{ENTRY,EXIT}_IA32_PERF_GLOBAL_CTRL but they
+> -        * can't be used due to an errata where VM Exit may incorrectly clear
+> -        * IA32_PERF_GLOBAL_CTRL[34:32].  Workaround the errata by using the
+> -        * MSR load mechanism to switch IA32_PERF_GLOBAL_CTRL.
+> -        */
+> -       if (boot_cpu_data.x86 == 0x6) {
+> -               switch (boot_cpu_data.x86_model) {
+> -               case 26: /* AAK155 */
+> -               case 30: /* AAP115 */
+> -               case 37: /* AAT100 */
+> -               case 44: /* BC86,AAY89,BD102 */
+> -               case 46: /* BA97 */
+> -                       _vmentry_control &= ~VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
+> -                       _vmexit_control &= ~VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
+> -                       pr_warn_once("kvm: VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL "
+> -                                       "does not work properly. Using workaround\n");
+> -                       break;
+> -               default:
+> -                       break;
+> -               }
+> -       }
+> -
+> -
+>         rdmsr(MSR_IA32_VMX_BASIC, vmx_msr_low, vmx_msr_high);
+>
+>         /* IA-32 SDM Vol 3B: VMCS size is never greater than 4kB. */
+> @@ -4188,6 +4189,10 @@ static u32 vmx_vmentry_ctrl(void)
+>                           VM_ENTRY_LOAD_IA32_EFER |
+>                           VM_ENTRY_IA32E_MODE);
+>
+> +
+> +       if (cpu_has_perf_global_ctrl_bug())
+> +               vmentry_ctrl &= ~VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
+> +
+>         return vmentry_ctrl;
+>  }
+>
+> @@ -4202,6 +4207,10 @@ static u32 vmx_vmexit_ctrl(void)
+>         if (vmx_pt_mode_is_system())
+>                 vmexit_ctrl &= ~(VM_EXIT_PT_CONCEAL_PIP |
+>                                  VM_EXIT_CLEAR_IA32_RTIT_CTL);
+> +
+> +       if (cpu_has_perf_global_ctrl_bug())
+> +               vmexit_ctrl &= ~VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
+> +
+>         /* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically */
+>         return vmexit_ctrl &
+>                 ~(VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL | VM_EXIT_LOAD_IA32_EFER);
+> @@ -8117,6 +8126,11 @@ static __init int hardware_setup(void)
+>         if (setup_vmcs_config(&vmcs_config, &vmx_capability) < 0)
+>                 return -EIO;
+>
+> +       if (cpu_has_perf_global_ctrl_bug()) {
+> +               pr_warn_once("kvm: VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL "
+> +                            "does not work properly. Using workaround\n");
+> +       }
+> +
+>         if (boot_cpu_has(X86_FEATURE_NX))
+>                 kvm_enable_efer_bits(EFER_NX);
+>
+> --
+> 2.35.3
+>
