@@ -2,314 +2,255 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0027A56485A
-	for <lists+linux-hyperv@lfdr.de>; Sun,  3 Jul 2022 17:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AA4056673B
+	for <lists+linux-hyperv@lfdr.de>; Tue,  5 Jul 2022 12:00:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232199AbiGCPWO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 3 Jul 2022 11:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35676 "EHLO
+        id S229902AbiGEKAt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 5 Jul 2022 06:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230446AbiGCPWN (ORCPT
+        with ESMTP id S229978AbiGEKAs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 3 Jul 2022 11:22:13 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7835C559D;
-        Sun,  3 Jul 2022 08:22:09 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id a11so8194520ljb.5;
-        Sun, 03 Jul 2022 08:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=7h/oDkelqUvQhnXMEHsIGaLApBCL4bVp/zpTNjHKaa0=;
-        b=Ajde41bE2wU0CLXRYXxA4RUv0bp0nc6vv24Jkv3jO+pNmgV5SruaUwkgdZh2uTckb2
-         LjwBe+5chzPdn9GsqinhSMRPDH/BkAH/rWbDiCgv3b73DzTdIIwCuu7rSSyi6XgKQgam
-         QzYkv4hEeMuDSoYQBiHL7V7XX8PuwVWoX68+MhlsNYB1tpAW+qusPDMIKzVjewkktdka
-         B8RzQXojCPXGgXsFV0Py1qu3xQ+dQ+Ph5W2hTs/NfGpTe8YoyNytz8Jxlg3eba2Qpapr
-         0dHtsjY/VCs3nDTxh/rSpBzNfE0J7lWIPD0uFnZAO2fN8qfYU1kzNyc0DtqVW3j5bPa6
-         jQig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=7h/oDkelqUvQhnXMEHsIGaLApBCL4bVp/zpTNjHKaa0=;
-        b=SEh/L2/IwM+8X+EYW/d9V+NLQeHJljo3ZMCLaN/0nI9/mNNeYOseL/KSj+UdejcU5f
-         M6G4A0FBxvMjOzBNpOBxZvqHqUH1TxtaT6Rw3FmL3N/rGYkXf8Jdd2teyHohU898Zeu8
-         5YotdNeTrpXZJiYcb2bmrYOSpPUQq71vLW+VhJ5gHila11sfu0RI+URxoFmdKh1qMTpE
-         lujhwdQFcBtbt3pdowTBVclP+L2BW2YOo5yoREVbNIV5aufgg6gCEpEZ7mGCisAlg8yn
-         NIgPoe9QBwJ0vu0FxMJMqqI3iiTQa1v8WlZ3nUIeCJ3u/cjf+Bt2RAabzF/mzL519q/Q
-         5M7g==
-X-Gm-Message-State: AJIora+dXoR765ehfTIhs2GNiZMzADbqQbBjoOIh00GOV290PHu+DZNr
-        Zcr2YAN10bJXtG84jykjRmE=
-X-Google-Smtp-Source: AGRyM1trX48ruuzycgoteqtLbzXdO1QJTxFK4a9qaPKv/Ind+sZ8MDYf+3trOk+5IJ6FZryqObKQIg==
-X-Received: by 2002:a2e:9941:0:b0:25b:c885:3143 with SMTP id r1-20020a2e9941000000b0025bc8853143mr14475290ljj.477.1656861727485;
-        Sun, 03 Jul 2022 08:22:07 -0700 (PDT)
-Received: from [192.168.1.7] ([212.22.223.21])
-        by smtp.gmail.com with ESMTPSA id s10-20020a056512202a00b0047255d21132sm4758576lfs.97.2022.07.03.08.22.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Jul 2022 08:22:06 -0700 (PDT)
-Subject: Re: [PATCH v3 6/8] genirq: Add and use an irq_data_update_affinity
- helper
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Chris Zankel <chris@zankel.net>,
-        Colin Ian King <colin.king@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Tue, 5 Jul 2022 06:00:48 -0400
+X-Greylist: delayed 961 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Jul 2022 03:00:47 PDT
+Received: from relay.virtuozzo.com (relay.virtuozzo.com [130.117.225.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543AEF585
+        for <linux-hyperv@vger.kernel.org>; Tue,  5 Jul 2022 03:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=virtuozzo.com; s=relay; h=MIME-Version:Message-Id:Date:Subject:From:
+        Content-Type; bh=2bv4Qa1JijZagoYaDRFxFSllxGwvGd5BuOhB4LGXUdQ=; b=y2bocfdDQxZK
+        k820Is17UxapFIH87Egr+2fS3mSilxlRmVwIkU0ibzn05TangdXeDLP8VKL2uQzfsgEbsQHOZReGm
+        evPxqc7asK1WUf7VpZ3+m8GccVY+sCKLKPfsa4CsVn6pgQhZu0zgcT4PwCrfT9ZUe4Sa5OXVs6DDg
+        y2bmM=;
+Received: from [192.168.16.236] (helo=vzdev.sw.ru)
+        by relay.virtuozzo.com with esmtp (Exim 4.95)
+        (envelope-from <alexander.atanasov@virtuozzo.com>)
+        id 1o8f6W-008lVt-WF;
+        Tue, 05 Jul 2022 11:44:25 +0200
+From:   Alexander Atanasov <alexander.atanasov@virtuozzo.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Helge Deller <deller@gmx.de>, Ingo Molnar <mingo@redhat.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Juergen Gross <jgross@suse.com>,
-        Julia Lawall <Julia.Lawall@inria.fr>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Maximilian Heyne <mheyne@amazon.de>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        Rich Felker <dalias@libc.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Sven Schnelle <svens@stackframe.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Wei Liu <wei.liu@kernel.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        iommu@lists.linux-foundation.org, iommu@lists.linux.dev,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hyperv@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-References: <20220701200056.46555-1-samuel@sholland.org>
- <20220701200056.46555-7-samuel@sholland.org>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <c7171195-796a-e61e-f270-864985adc5c3@gmail.com>
-Date:   Sun, 3 Jul 2022 18:22:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc:     kernel@openvz.org,
+        Alexander Atanasov <alexander.atanasov@virtuozzo.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/1] Create debugfs file with hyper-v balloon usage information
+Date:   Tue,  5 Jul 2022 09:44:09 +0000
+Message-Id: <20220705094410.30050-1-alexander.atanasov@virtuozzo.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <20220701200056.46555-7-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Allow the guest to know how much it is ballooned by the host.
+It is useful when debugging out of memory conditions.
 
-On 01.07.22 23:00, Samuel Holland wrote:
+When host gets back memory from the guest it is accounted
+as used memory in the guest but the guest have no way to know
+how much it is actually ballooned.
 
+Expose current state, flags and max possible memory to the guest.
+While at it - fix a 10+ years old typo.
 
-Hello Samuel
-
-> Some architectures and irqchip drivers modify the cpumask returned by
-> irq_data_get_affinity_mask, usually by copying in to it. This is
-> problematic for uniprocessor configurations, where the affinity mask
-> should be constant, as it is known at compile time.
->
-> Add and use a setter for the affinity mask, following the pattern of
-> irq_data_update_effective_affinity. This allows the getter function to
-> return a const cpumask pointer.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->
-> Changes in v3:
->   - New patch to introduce irq_data_update_affinity
->
->   arch/alpha/kernel/irq.c          | 2 +-
->   arch/ia64/kernel/iosapic.c       | 2 +-
->   arch/ia64/kernel/irq.c           | 4 ++--
->   arch/ia64/kernel/msi_ia64.c      | 4 ++--
->   arch/parisc/kernel/irq.c         | 2 +-
->   drivers/irqchip/irq-bcm6345-l1.c | 4 ++--
->   drivers/parisc/iosapic.c         | 2 +-
->   drivers/sh/intc/chip.c           | 2 +-
->   drivers/xen/events/events_base.c | 7 ++++---
->   include/linux/irq.h              | 6 ++++++
->   10 files changed, 21 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/alpha/kernel/irq.c b/arch/alpha/kernel/irq.c
-> index f6d2946edbd2..15f2effd6baf 100644
-> --- a/arch/alpha/kernel/irq.c
-> +++ b/arch/alpha/kernel/irq.c
-> @@ -60,7 +60,7 @@ int irq_select_affinity(unsigned int irq)
->   		cpu = (cpu < (NR_CPUS-1) ? cpu + 1 : 0);
->   	last_cpu = cpu;
->   
-> -	cpumask_copy(irq_data_get_affinity_mask(data), cpumask_of(cpu));
-> +	irq_data_update_affinity(data, cpumask_of(cpu));
->   	chip->irq_set_affinity(data, cpumask_of(cpu), false);
->   	return 0;
->   }
-> diff --git a/arch/ia64/kernel/iosapic.c b/arch/ia64/kernel/iosapic.c
-> index 35adcf89035a..99300850abc1 100644
-> --- a/arch/ia64/kernel/iosapic.c
-> +++ b/arch/ia64/kernel/iosapic.c
-> @@ -834,7 +834,7 @@ iosapic_unregister_intr (unsigned int gsi)
->   	if (iosapic_intr_info[irq].count == 0) {
->   #ifdef CONFIG_SMP
->   		/* Clear affinity */
-> -		cpumask_setall(irq_get_affinity_mask(irq));
-> +		irq_data_update_affinity(irq_get_irq_data(irq), cpu_all_mask);
->   #endif
->   		/* Clear the interrupt information */
->   		iosapic_intr_info[irq].dest = 0;
-> diff --git a/arch/ia64/kernel/irq.c b/arch/ia64/kernel/irq.c
-> index ecef17c7c35b..275b9ea58c64 100644
-> --- a/arch/ia64/kernel/irq.c
-> +++ b/arch/ia64/kernel/irq.c
-> @@ -57,8 +57,8 @@ static char irq_redir [NR_IRQS]; // = { [0 ... NR_IRQS-1] = 1 };
->   void set_irq_affinity_info (unsigned int irq, int hwid, int redir)
->   {
->   	if (irq < NR_IRQS) {
-> -		cpumask_copy(irq_get_affinity_mask(irq),
-> -			     cpumask_of(cpu_logical_id(hwid)));
-> +		irq_data_update_affinity(irq_get_irq_data(irq),
-> +					 cpumask_of(cpu_logical_id(hwid)));
->   		irq_redir[irq] = (char) (redir & 0xff);
->   	}
->   }
-> diff --git a/arch/ia64/kernel/msi_ia64.c b/arch/ia64/kernel/msi_ia64.c
-> index df5c28f252e3..025e5133c860 100644
-> --- a/arch/ia64/kernel/msi_ia64.c
-> +++ b/arch/ia64/kernel/msi_ia64.c
-> @@ -37,7 +37,7 @@ static int ia64_set_msi_irq_affinity(struct irq_data *idata,
->   	msg.data = data;
->   
->   	pci_write_msi_msg(irq, &msg);
-> -	cpumask_copy(irq_data_get_affinity_mask(idata), cpumask_of(cpu));
-> +	irq_data_update_affinity(idata, cpumask_of(cpu));
->   
->   	return 0;
->   }
-> @@ -132,7 +132,7 @@ static int dmar_msi_set_affinity(struct irq_data *data,
->   	msg.address_lo |= MSI_ADDR_DEST_ID_CPU(cpu_physical_id(cpu));
->   
->   	dmar_msi_write(irq, &msg);
-> -	cpumask_copy(irq_data_get_affinity_mask(data), mask);
-> +	irq_data_update_affinity(data, mask);
->   
->   	return 0;
->   }
-> diff --git a/arch/parisc/kernel/irq.c b/arch/parisc/kernel/irq.c
-> index 0fe2d79fb123..5ebb1771b4ab 100644
-> --- a/arch/parisc/kernel/irq.c
-> +++ b/arch/parisc/kernel/irq.c
-> @@ -315,7 +315,7 @@ unsigned long txn_affinity_addr(unsigned int irq, int cpu)
->   {
->   #ifdef CONFIG_SMP
->   	struct irq_data *d = irq_get_irq_data(irq);
-> -	cpumask_copy(irq_data_get_affinity_mask(d), cpumask_of(cpu));
-> +	irq_data_update_affinity(d, cpumask_of(cpu));
->   #endif
->   
->   	return per_cpu(cpu_data, cpu).txn_addr;
-> diff --git a/drivers/irqchip/irq-bcm6345-l1.c b/drivers/irqchip/irq-bcm6345-l1.c
-> index 142a7431745f..6899e37810a8 100644
-> --- a/drivers/irqchip/irq-bcm6345-l1.c
-> +++ b/drivers/irqchip/irq-bcm6345-l1.c
-> @@ -216,11 +216,11 @@ static int bcm6345_l1_set_affinity(struct irq_data *d,
->   		enabled = intc->cpus[old_cpu]->enable_cache[word] & mask;
->   		if (enabled)
->   			__bcm6345_l1_mask(d);
-> -		cpumask_copy(irq_data_get_affinity_mask(d), dest);
-> +		irq_data_update_affinity(d, dest);
->   		if (enabled)
->   			__bcm6345_l1_unmask(d);
->   	} else {
-> -		cpumask_copy(irq_data_get_affinity_mask(d), dest);
-> +		irq_data_update_affinity(d, dest);
->   	}
->   	raw_spin_unlock_irqrestore(&intc->lock, flags);
->   
-> diff --git a/drivers/parisc/iosapic.c b/drivers/parisc/iosapic.c
-> index 8a3b0c3a1e92..3a8c98615634 100644
-> --- a/drivers/parisc/iosapic.c
-> +++ b/drivers/parisc/iosapic.c
-> @@ -677,7 +677,7 @@ static int iosapic_set_affinity_irq(struct irq_data *d,
->   	if (dest_cpu < 0)
->   		return -1;
->   
-> -	cpumask_copy(irq_data_get_affinity_mask(d), cpumask_of(dest_cpu));
-> +	irq_data_update_affinity(d, cpumask_of(dest_cpu));
->   	vi->txn_addr = txn_affinity_addr(d->irq, dest_cpu);
->   
->   	spin_lock_irqsave(&iosapic_lock, flags);
-> diff --git a/drivers/sh/intc/chip.c b/drivers/sh/intc/chip.c
-> index 358df7510186..828d81e02b37 100644
-> --- a/drivers/sh/intc/chip.c
-> +++ b/drivers/sh/intc/chip.c
-> @@ -72,7 +72,7 @@ static int intc_set_affinity(struct irq_data *data,
->   	if (!cpumask_intersects(cpumask, cpu_online_mask))
->   		return -1;
->   
-> -	cpumask_copy(irq_data_get_affinity_mask(data), cpumask);
-> +	irq_data_update_affinity(data, cpumask);
->   
->   	return IRQ_SET_MASK_OK_NOCOPY;
->   }
-> diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-> index 46d9295d9a6e..5e8321f43cbd 100644
-> --- a/drivers/xen/events/events_base.c
-> +++ b/drivers/xen/events/events_base.c
-> @@ -528,9 +528,10 @@ static void bind_evtchn_to_cpu(evtchn_port_t evtchn, unsigned int cpu,
->   	BUG_ON(irq == -1);
->   
->   	if (IS_ENABLED(CONFIG_SMP) && force_affinity) {
-> -		cpumask_copy(irq_get_affinity_mask(irq), cpumask_of(cpu));
-> -		cpumask_copy(irq_get_effective_affinity_mask(irq),
-> -			     cpumask_of(cpu));
-> +		struct irq_data *data = irq_get_irq_data(irq);
-> +
-> +		irq_data_update_affinity(data, cpumask_of(cpu));
-> +		irq_data_update_effective_affinity(data, cpumask_of(cpu));
->   	}
+Signed-off-by: Alexander Atanasov <alexander.atanasov@virtuozzo.com>
+---
+ drivers/hv/hv_balloon.c | 127 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 126 insertions(+), 1 deletion(-)
 
 
+Note - no attempt to handle guest vs host page size difference
+is made - see ballooning_enabled.
+Basicly if balloon page size != guest page size balloon is off.
 
-Nit: commit description says about reusing irq_data_update_affinity() 
-only, but here we also reuse irq_data_update_effective_affinity(), so I 
-would mention that in the description.
-
-Reviewed-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com> # Xen bits
-
-
-[snip]
-
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 91e8a72eee14..b7b87d168d46 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -11,6 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/jiffies.h>
+ #include <linux/mman.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+@@ -248,7 +249,7 @@ struct dm_capabilities_resp_msg {
+  * num_committed: Committed memory in pages.
+  * page_file_size: The accumulated size of all page files
+  *		   in the system in pages.
+- * zero_free: The nunber of zero and free pages.
++ * zero_free: The number of zero and free pages.
+  * page_file_writes: The writes to the page file in pages.
+  * io_diff: An indicator of file cache efficiency or page file activity,
+  *	    calculated as File Cache Page Fault Count - Page Read Count.
+@@ -567,6 +568,14 @@ struct hv_dynmem_device {
+ 	__u32 version;
+ 
+ 	struct page_reporting_dev_info pr_dev_info;
++
++#ifdef CONFIG_DEBUG_FS
++	/*
++	 * Maximum number of pages that can be hot_add-ed
++	 */
++	__u64 max_dynamic_page_count;
++#endif
++
+ };
+ 
+ static struct hv_dynmem_device dm_device;
+@@ -1078,6 +1087,9 @@ static void process_info(struct hv_dynmem_device *dm, struct dm_info_msg *msg)
+ 
+ 			pr_info("Max. dynamic memory size: %llu MB\n",
+ 				(*max_page_count) >> (20 - HV_HYP_PAGE_SHIFT));
++#ifdef CONFIG_DEBUG_FS
++			dm->max_dynamic_page_count = *max_page_count;
++#endif
+ 		}
+ 
+ 		break;
+@@ -1807,6 +1819,115 @@ static int balloon_connect_vsp(struct hv_device *dev)
+ 	return ret;
+ }
+ 
++/*
++ * DEBUGFS Interface
++ */
++#ifdef CONFIG_DEBUG_FS
++
++/**
++ * virtio_balloon_debug_show - shows statistics of balloon operations.
++ * @f: pointer to the &struct seq_file.
++ * @offset: ignored.
++ *
++ * Provides the statistics that can be accessed in virtio-balloon in the debugfs.
++ *
++ * Return: zero on success or an error code.
++ */
++static int hv_balloon_debug_show(struct seq_file *f, void *offset)
++{
++	struct hv_dynmem_device *dm = f->private;
++	unsigned long num_pages_committed;
++	char *sname;
++
++	seq_printf(f, "%-22s: %u.%u\n", "host_version",
++				DYNMEM_MAJOR_VERSION(dm->version),
++				DYNMEM_MINOR_VERSION(dm->version));
++
++	seq_printf(f, "%-22s:", "capabilities");
++	if (ballooning_enabled())
++		seq_puts(f, " enabled");
++
++	if (hot_add_enabled())
++		seq_puts(f, " hot_add");
++
++	seq_puts(f, "\n");
++
++	seq_printf(f, "%-22s: %u", "state", dm->state);
++	switch (dm->state) {
++	case DM_INITIALIZING:
++			sname = "Initializing";
++			break;
++	case DM_INITIALIZED:
++			sname = "Initialized";
++			break;
++	case DM_BALLOON_UP:
++			sname = "Balloon Up";
++			break;
++	case DM_BALLOON_DOWN:
++			sname = "Balloon Down";
++			break;
++	case DM_HOT_ADD:
++			sname = "Hot Add";
++			break;
++	case DM_INIT_ERROR:
++			sname = "Error";
++			break;
++	default:
++			sname = "Unknown";
++	}
++	seq_printf(f, " (%s)\n", sname);
++
++	/* HV Page Size */
++	seq_printf(f, "%-22s: %ld\n", "page_size", HV_HYP_PAGE_SIZE);
++
++	/* Pages added with hot_add */
++	seq_printf(f, "%-22s: %u\n", "pages_added", dm->num_pages_added);
++
++	/* pages that are "onlined"/used from pages_added */
++	seq_printf(f, "%-22s: %u\n", "pages_onlined", dm->num_pages_onlined);
++
++	/* pages we have given back to host */
++	seq_printf(f, "%-22s: %u\n", "pages_ballooned", dm->num_pages_ballooned);
++
++	num_pages_committed = vm_memory_committed();
++	num_pages_committed += dm->num_pages_ballooned +
++				(dm->num_pages_added > dm->num_pages_onlined ?
++				dm->num_pages_added - dm->num_pages_onlined : 0) +
++				compute_balloon_floor();
++	seq_printf(f, "%-22s: %lu\n", "total_pages_commited",
++				num_pages_committed);
++
++	seq_printf(f, "%-22s: %llu\n", "max_dynamic_page_count",
++				dm->max_dynamic_page_count);
++
++	return 0;
++}
++
++DEFINE_SHOW_ATTRIBUTE(hv_balloon_debug);
++
++static void  hv_balloon_debugfs_init(struct hv_dynmem_device *b)
++{
++	debugfs_create_file("hv-balloon", 0444, NULL, b,
++			&hv_balloon_debug_fops);
++}
++
++static void  hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
++{
++	debugfs_remove(debugfs_lookup("hv-balloon", NULL));
++}
++
++#else
++
++static inline void hv_balloon_debugfs_init(struct hv_dynmem_device  *b)
++{
++}
++
++static inline void hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
++{
++}
++
++#endif	/* CONFIG_DEBUG_FS */
++
+ static int balloon_probe(struct hv_device *dev,
+ 			 const struct hv_vmbus_device_id *dev_id)
+ {
+@@ -1854,6 +1975,8 @@ static int balloon_probe(struct hv_device *dev,
+ 		goto probe_error;
+ 	}
+ 
++	hv_balloon_debugfs_init(&dm_device);
++
+ 	return 0;
+ 
+ probe_error:
+@@ -1879,6 +2002,8 @@ static int balloon_remove(struct hv_device *dev)
+ 	if (dm->num_pages_ballooned != 0)
+ 		pr_warn("Ballooned pages: %d\n", dm->num_pages_ballooned);
+ 
++	hv_balloon_debugfs_exit(dm);
++
+ 	cancel_work_sync(&dm->balloon_wrk.wrk);
+ 	cancel_work_sync(&dm->ha_wrk.wrk);
+ 
 -- 
-Regards,
-
-Oleksandr Tyshchenko
+2.25.1
 
