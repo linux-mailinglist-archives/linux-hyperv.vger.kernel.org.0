@@ -2,95 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F874568B35
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jul 2022 16:29:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F15A569153
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jul 2022 20:02:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232239AbiGFO3V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jul 2022 10:29:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52080 "EHLO
+        id S234102AbiGFSCN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Jul 2022 14:02:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233494AbiGFO3U (ORCPT
+        with ESMTP id S233810AbiGFSCM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jul 2022 10:29:20 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D7DD72658;
-        Wed,  6 Jul 2022 07:29:19 -0700 (PDT)
-Received: from [192.168.1.87] (unknown [122.171.17.200])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8CB0920DDC9F;
-        Wed,  6 Jul 2022 07:29:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8CB0920DDC9F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1657117759;
-        bh=PFSLHpgWMBD62kPT/Dh5GcD1zjQveXoTA7H8jWtS0Rg=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=jVZr9LrBR+IQGvZ5v0LFYRVWxc1CeuB0lMfFdHnt8C13yOgKFb1e72XpViMLqryKn
-         p/V7BnBEwX7D8eTdxSh5EbmPxRA2LHEWM9N6nRP1Tl3YSgTpuU8FJ8lAGmzUGTKruO
-         S+gW/SgtBRBLdxC7zGczPfmLf1iEG6MZSnaCQhtQ=
-Message-ID: <1c4bc0cf-6665-3fe6-28d8-8e9613e3f9d4@linux.microsoft.com>
-Date:   Wed, 6 Jul 2022 19:59:09 +0530
+        Wed, 6 Jul 2022 14:02:12 -0400
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B8D2982A;
+        Wed,  6 Jul 2022 11:02:11 -0700 (PDT)
+Received: by mail-wr1-f42.google.com with SMTP id s1so23132200wra.9;
+        Wed, 06 Jul 2022 11:02:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MasjB4ti5D0nWT5bZJTXtMcJnOkBN1+uFVq/8iV4VKs=;
+        b=yu1aQTs7WkcJ4kh9JGIWPWeCA0t2+XlcbxrWbfoEskEA3JBNk2j353lHwk71M7qL3E
+         vpAnMHxrkNihs5+x3WiCXQpefaFdl5VfUvzPrlbW5WKMznnsCsrfLoShP+8DsACGZzMY
+         qvJog6pv8cGmp8Mvhwv1PdAejAWPoZTDYejDOvaUDyYnOipcoe8JqJlbIi5iYDtC+AMI
+         2CuKzbG1EmovX96TKLFH4w5K94smRFgzvguXj97OUO1BcbyYD5eGza6ex7081udSw8HI
+         OtQeCuYOyQ/vY9gucGhjChEPyEiq9yrFDoHvZhparA7/4lak4M9Phuz718DcwK4GSQRq
+         Qzzg==
+X-Gm-Message-State: AJIora/mg3DzKCbmoWVvsQD862FCNUFFX69hAhBg7j4MSwmgfXX1W/1E
+        h0WrBIkhHHCDGI/x0vgxLsw=
+X-Google-Smtp-Source: AGRyM1tk/U4/6eCYpFPdnfxUnu5ItxivRnpw+FlWiwuiHP6kV0yGCCQgDA5ISI8avG5T8OlQIWHpOg==
+X-Received: by 2002:a05:6000:2cf:b0:21b:a920:182c with SMTP id o15-20020a05600002cf00b0021ba920182cmr39869750wry.317.1657130530233;
+        Wed, 06 Jul 2022 11:02:10 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id u1-20020a5d6ac1000000b0021b95bcaf7fsm8780497wrw.59.2022.07.06.11.02.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Jul 2022 11:02:09 -0700 (PDT)
+Date:   Wed, 6 Jul 2022 18:02:02 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Alexander Atanasov <alexander.atanasov@virtuozzo.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        kernel@openvz.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] Create debugfs file with hyper-v balloon usage
+ information
+Message-ID: <20220706180202.bzbm6boi232bruct@liuwe-devbox-debian-v2>
+References: <20220705094410.30050-1-alexander.atanasov@virtuozzo.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] scsi: storvsc: Prevent running tasklet for long
-Content-Language: en-US
-To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-hyperv@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ssengar@microsoft.com, mikelley@microsoft.com
-References: <1657035141-2132-1-git-send-email-ssengar@linux.microsoft.com>
- <b4fea161-41c5-a03e-747b-316c74eb986c@linux.microsoft.com>
- <20220706095358.GA3320@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
-In-Reply-To: <20220706095358.GA3320@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220705094410.30050-1-alexander.atanasov@virtuozzo.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 06-07-2022 15:23, Saurabh Singh Sengar wrote:
-> On Wed, Jul 06, 2022 at 02:44:42PM +0530, Praveen Kumar wrote:
->> On 05-07-2022 21:02, Saurabh Sengar wrote:
->>> There can be scenarios where packets in ring buffer are continuously
->>> getting queued from upper layer and dequeued from storvsc interrupt
->>> handler, such scenarios can hold the foreach_vmbus_pkt loop (which is
->>> executing as a tasklet) for a long duration. Theoretically its possible
->>> that this loop executes forever. Add a condition to limit execution of
->>> this tasklet for finite amount of time to avoid such hazardous scenarios.
->>>
->>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
->>> ---
->>>  drivers/scsi/storvsc_drv.c | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
->>> index fe000da..0c428cb 100644
->>> --- a/drivers/scsi/storvsc_drv.c
->>> +++ b/drivers/scsi/storvsc_drv.c
->>> @@ -60,6 +60,9 @@
->>>  #define VMSTOR_PROTO_VERSION_WIN8_1	VMSTOR_PROTO_VERSION(6, 0)
->>>  #define VMSTOR_PROTO_VERSION_WIN10	VMSTOR_PROTO_VERSION(6, 2)
->>>  
->>> +/* channel callback timeout in ms */
->>> +#define CALLBACK_TIMEOUT		5
->>
->> If I may, it would be good if we have the CALLBACK_TIMEOUT configurable based upon user's requirement with default value to '5'.
->> I assume, this value '5' fits best to the use-case which we are trying to resolve here. Thanks.
-> 
-> Agree, how about adding a sysfs entry for this parameter
-> 
+On Tue, Jul 05, 2022 at 09:44:09AM +0000, Alexander Atanasov wrote:
+[...]
+> +/*
+> + * DEBUGFS Interface
+> + */
+> +#ifdef CONFIG_DEBUG_FS
+> +
+> +/**
+> + * virtio_balloon_debug_show - shows statistics of balloon operations.
 
-Sounds good to me. Thanks.
+C&P error here. :-)
 
-Regards,
+> + * @f: pointer to the &struct seq_file.
+> + * @offset: ignored.
+> + *
+> + * Provides the statistics that can be accessed in virtio-balloon in the debugfs.
+> + *
 
-~Praveen.
+Ditto.
+
+Wei.
