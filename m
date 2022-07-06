@@ -2,70 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0552569547
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 00:27:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96581569557
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 00:30:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234094AbiGFW1O (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jul 2022 18:27:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33590 "EHLO
+        id S234142AbiGFWaM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Jul 2022 18:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233884AbiGFW1O (ORCPT
+        with ESMTP id S233907AbiGFWaL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jul 2022 18:27:14 -0400
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6406A2B194
-        for <linux-hyperv@vger.kernel.org>; Wed,  6 Jul 2022 15:27:13 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id s27so15145986pga.13
-        for <linux-hyperv@vger.kernel.org>; Wed, 06 Jul 2022 15:27:13 -0700 (PDT)
+        Wed, 6 Jul 2022 18:30:11 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07EAF15A06
+        for <linux-hyperv@vger.kernel.org>; Wed,  6 Jul 2022 15:30:11 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id a15so15652119pfv.13
+        for <linux-hyperv@vger.kernel.org>; Wed, 06 Jul 2022 15:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=8En5VcDzJpRZUJVBlGHl7Q0Kg1P7kPCrXjhE+LYfN5M=;
-        b=kUIIVGCvERQEwyak3xqYOSlBxS1t7NuI8dhRO8VQaU9LIJ4OHWPVFlkNrzzG8/4+4h
-         9bMaqgsk8h471N0EWcKC28ueATACcd427UQJ08RGW/XfwbnTa9KOCj6Gj5+JKtgkIYNg
-         mV42Sjkr8T7U+CFhVFGY2RkyxyF1dHwogJs/8kX8bMg77uOzJehO6zidjkXV+rS4rx28
-         aX5yARkMcygsr/w43e7dqgSElHUG8h+okUWK+0TP0E7BCzKWbPcwMXc08LxXEtzyKbNl
-         9oG04V8LDumUHN+BuX8c1em1gW0L+Y2EwVQw3ihOm5eJlblVDdaqBA/R8rsisN0ySVGr
-         ownA==
+        bh=iKA8akOzbkf4tNDc6jfn4CUsITOKN9yZnmEgDBs/SyQ=;
+        b=q6a3Irt0falLmlOdgWGFnxHk8Agc+WjZBDzCqkjggQvyzWvyJRYgbbruahzFU3UMAO
+         rijRQsr2J25PLeGwnp+Nykv+fu5KZ8KAIRn2Q00ZTduG2VN33D6+E27CZ57cDZdylV07
+         NGSStd34KnxDkaHKTrMxnFoF4CUspgWJjmiE4D/WBVxvDyAjl2H1FZ6p2AbC8JZY1oYF
+         erHmqIE7H/fr1T38eniUYrxC2g1AMIk390+P4dpRtGWvxFy6wzItDj0zY+M4iJdkYYRY
+         ypV3OPyDukfxEG109qbDOAESZ4G9jHLj7AoAPelNTdiXLGhTOATvm5xkVn0zI6l2OrF3
+         uABQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=8En5VcDzJpRZUJVBlGHl7Q0Kg1P7kPCrXjhE+LYfN5M=;
-        b=KpxYHlG/bfgf7dOcMdYGsVtT1q6LAedwGUHqd7HlBuKJ+vw5q75qQmilSPe46E7eIr
-         9PRLl7ADaAYV4GrXnIpg3d44pdzKVPCoymwQUIN6SDX6r3PdZ0mANVDiH1yBrZawu/UO
-         ij71zMzwQmnH7PTEXSIkVFlIy5VdNz+7If2Hf0cJWOlhskrhxASP4tSD1sppbZLEkvhg
-         TvkfOItOkGJk4HQEd/UP+F6JkVT8cMa1Nw413PKY67Iyyn6ZbQvRU9potzUW1kkKfLkk
-         6G0l2At4+VokDajfSWu7kI7CLwtX+36e5KiXxDLXiDwYaib+OOaqOsxW2Ardphq2AuPf
-         X5tA==
-X-Gm-Message-State: AJIora9yZ5yTnsw6CmUkcUdadsw5PjQnJz+L4rrRJUVPvlUdBUN1eRUo
-        d/O2sy4Xwn5vCUBDAwLFEQ3Oew==
-X-Google-Smtp-Source: AGRyM1vHvu+U2FyKN0UOsLIZn0q60hIVl9H32PwcOuMvAe5bhsFNxwgb8QQ+Rs8X2STgT9XFwF4Qyw==
-X-Received: by 2002:a17:902:f708:b0:153:839f:bf2c with SMTP id h8-20020a170902f70800b00153839fbf2cmr49549892plo.113.1657146432846;
-        Wed, 06 Jul 2022 15:27:12 -0700 (PDT)
+        bh=iKA8akOzbkf4tNDc6jfn4CUsITOKN9yZnmEgDBs/SyQ=;
+        b=crWhsUDNdIxaSbmkl+Smh1A88VUZ7n/oluhyEuY+GKcd4Kk/Djk4BJGtftWNP3rAte
+         51o5cxGqW4gnhzi+FQnMLF8wGElOCY3CEy//7ln3Mq6K7wLTrfIef9Acz7h75elae5cf
+         osxdRNnn2avhZi8bUX+iAHkOPShuFVr7knS1TJHPR4daYBarWmnUVN6ICbXd36Wg7SRv
+         N9apfsYoxcNxPTpali6zdkwnxQDl09KmV+H+cMjZkCyLbWNYXmW3PhwRVAeTVxlhE7v+
+         4DyRbZ62C5dwGa0L3TeVt3NG3HU7iMK+cwtU5rAbJs0fYTA3CAOb+6dN9Lr/XKsf8oMi
+         9jJQ==
+X-Gm-Message-State: AJIora9UUN6QYuUDtHeAXi+PfM4PN27DZg9lOHOS2pZFDTfZ+c7FRVfN
+        MIr3qhC/FjLibtewho3tWlzZDA==
+X-Google-Smtp-Source: AGRyM1sLT1U7pR8GVCabA1hqq2+btL+DQYe73v4JeLKC365avmWaP7/FZnlh9V7Qy3kZGK00OgD8og==
+X-Received: by 2002:a17:902:dad1:b0:16a:75cb:5d97 with SMTP id q17-20020a170902dad100b0016a75cb5d97mr49535733plx.64.1657146610443;
+        Wed, 06 Jul 2022 15:30:10 -0700 (PDT)
 Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
-        by smtp.gmail.com with ESMTPSA id e17-20020aa798d1000000b00525496442ccsm25310656pfm.216.2022.07.06.15.27.12
+        by smtp.gmail.com with ESMTPSA id n11-20020a170902968b00b0016a11b9aeb3sm26092000plp.224.2022.07.06.15.30.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 15:27:12 -0700 (PDT)
-Date:   Wed, 6 Jul 2022 22:27:08 +0000
+        Wed, 06 Jul 2022 15:30:09 -0700 (PDT)
+Date:   Wed, 6 Jul 2022 22:30:05 +0000
 From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
+        kvm@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/28] KVM: VMX: Get rid of eVMCS specific VMX
- controls sanitization
-Message-ID: <YsYMPCr3/ig0xPFj@google.com>
-References: <20220629150625.238286-1-vkuznets@redhat.com>
- <20220629150625.238286-14-vkuznets@redhat.com>
+Subject: Re: [PATCH 00/14] KVM: nVMX: Use vmcs_config for setting up nested
+ VMX MSRs
+Message-ID: <YsYM7VbPRQKflZrZ@google.com>
+References: <20220627160440.31857-1-vkuznets@redhat.com>
+ <CALMp9eQL2a+mStk-cLwVX6NVqwAso2UYxAO7UD=Xi2TSGwUM2A@mail.gmail.com>
+ <87y1xgubot.fsf@redhat.com>
+ <CALMp9eSBLcvuNDquvSfUnaF3S3f4ZkzqDRSsz-v93ZeX=xnssg@mail.gmail.com>
+ <87letgu68x.fsf@redhat.com>
+ <CALMp9eQ35g8GpwObYBJRxjuxZAC8P_HNMMaC0v0uZeC+pMeW_Q@mail.gmail.com>
+ <87czeru9cp.fsf@redhat.com>
+ <CALMp9eQ5Sqv3RP8kipSbpfnvef_Sc1xr1+g53fwr0a=bhzgAhg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220629150625.238286-14-vkuznets@redhat.com>
+In-Reply-To: <CALMp9eQ5Sqv3RP8kipSbpfnvef_Sc1xr1+g53fwr0a=bhzgAhg@mail.gmail.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -77,13 +83,21 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jun 29, 2022, Vitaly Kuznetsov wrote:
-> With the updated eVMCSv1 definition, there's no known 'problematic'
-> controls which are exposed in VMX control MSRs but are not present in
-> eVMCSv1. Get rid of the filtering.
+On Wed, Jun 29, 2022, Jim Mattson wrote:
+> On Wed, Jun 29, 2022 at 2:06 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> 
+> > For PERF_GLOBAL_CTRL errata:
+> > - We can move the filtering to vmx_vmexit_ctrl()/vmx_vmentry_ctrl()
+> > preserving the status quo: KVM doesn't use the feature but it is exposed
+> > to L1 hypervisor (and L1 hypervisor presumably has the same check and
+> > doesn't use the feature. FWIW, the workaround was added in 2011 and the
+> > erratas it references appeared in 2010, this means that the affected
+> > CPUs are quite old, modern proprietary hypervisors won't likely boot
+> > there).
+> Sadly, Nehalem and Westmere are well-supported by KVM today, and we
+> will probably still continue to support them for at least another
+> decade. They both have EPT, unrestricted guest, and other VT-x2
+> features that KVM still considers optional.
 
-Ah, this patch is confusing until one realizes that this is dropping the "filtering"
-for what controls/features _KVM_ uses, whereas nested_evmcs_filter_control_msr()
-filters controls that are presented to L1.
-
-Can you add something to clarify that in the changelog?
+Nehalem doesn't have unrestricted guest.  Nehalem is the only generation with EPT
+but not unrestricted guest.
