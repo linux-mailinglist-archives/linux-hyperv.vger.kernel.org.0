@@ -2,68 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D13568677
-	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jul 2022 13:11:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F874568B35
+	for <lists+linux-hyperv@lfdr.de>; Wed,  6 Jul 2022 16:29:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232602AbiGFLJu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jul 2022 07:09:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48610 "EHLO
+        id S232239AbiGFO3V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 6 Jul 2022 10:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231841AbiGFLJu (ORCPT
+        with ESMTP id S233494AbiGFO3U (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jul 2022 07:09:50 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 884D117044
-        for <linux-hyperv@vger.kernel.org>; Wed,  6 Jul 2022 04:09:47 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-311-n6jVGVqMNVOvegGlWXrg4g-1; Wed, 06 Jul 2022 12:09:44 +0100
-X-MC-Unique: n6jVGVqMNVOvegGlWXrg4g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.36; Wed, 6 Jul 2022 12:09:43 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.036; Wed, 6 Jul 2022 12:09:43 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Praveen Kumar' <kumarpraveen@linux.microsoft.com>,
-        Saurabh Sengar <ssengar@linux.microsoft.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "decui@microsoft.com" <decui@microsoft.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ssengar@microsoft.com" <ssengar@microsoft.com>,
-        "mikelley@microsoft.com" <mikelley@microsoft.com>
-Subject: RE: [PATCH] scsi: storvsc: Prevent running tasklet for long
-Thread-Topic: [PATCH] scsi: storvsc: Prevent running tasklet for long
-Thread-Index: AQHYkRjhlVfTnLUZGEKVRk7w2SiyFK1xLt+A
-Date:   Wed, 6 Jul 2022 11:09:43 +0000
-Message-ID: <a9af8d8d5ee24d19a87c3353a4e8941d@AcuMS.aculab.com>
+        Wed, 6 Jul 2022 10:29:20 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D7DD72658;
+        Wed,  6 Jul 2022 07:29:19 -0700 (PDT)
+Received: from [192.168.1.87] (unknown [122.171.17.200])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8CB0920DDC9F;
+        Wed,  6 Jul 2022 07:29:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8CB0920DDC9F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1657117759;
+        bh=PFSLHpgWMBD62kPT/Dh5GcD1zjQveXoTA7H8jWtS0Rg=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=jVZr9LrBR+IQGvZ5v0LFYRVWxc1CeuB0lMfFdHnt8C13yOgKFb1e72XpViMLqryKn
+         p/V7BnBEwX7D8eTdxSh5EbmPxRA2LHEWM9N6nRP1Tl3YSgTpuU8FJ8lAGmzUGTKruO
+         S+gW/SgtBRBLdxC7zGczPfmLf1iEG6MZSnaCQhtQ=
+Message-ID: <1c4bc0cf-6665-3fe6-28d8-8e9613e3f9d4@linux.microsoft.com>
+Date:   Wed, 6 Jul 2022 19:59:09 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] scsi: storvsc: Prevent running tasklet for long
+Content-Language: en-US
+To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-hyperv@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ssengar@microsoft.com, mikelley@microsoft.com
 References: <1657035141-2132-1-git-send-email-ssengar@linux.microsoft.com>
  <b4fea161-41c5-a03e-747b-316c74eb986c@linux.microsoft.com>
-In-Reply-To: <b4fea161-41c5-a03e-747b-316c74eb986c@linux.microsoft.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
+ <20220706095358.GA3320@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
+In-Reply-To: <20220706095358.GA3320@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,21 +57,40 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogUHJhdmVlbiBLdW1hcg0KPiBTZW50OiAwNiBKdWx5IDIwMjIgMTA6MTUNCj4gDQo+IE9u
-IDA1LTA3LTIwMjIgMjE6MDIsIFNhdXJhYmggU2VuZ2FyIHdyb3RlOg0KPiA+IFRoZXJlIGNhbiBi
-ZSBzY2VuYXJpb3Mgd2hlcmUgcGFja2V0cyBpbiByaW5nIGJ1ZmZlciBhcmUgY29udGludW91c2x5
-DQo+ID4gZ2V0dGluZyBxdWV1ZWQgZnJvbSB1cHBlciBsYXllciBhbmQgZGVxdWV1ZWQgZnJvbSBz
-dG9ydnNjIGludGVycnVwdA0KPiA+IGhhbmRsZXIsIHN1Y2ggc2NlbmFyaW9zIGNhbiBob2xkIHRo
-ZSBmb3JlYWNoX3ZtYnVzX3BrdCBsb29wICh3aGljaCBpcw0KPiA+IGV4ZWN1dGluZyBhcyBhIHRh
-c2tsZXQpIGZvciBhIGxvbmcgZHVyYXRpb24uIFRoZW9yZXRpY2FsbHkgaXRzIHBvc3NpYmxlDQo+
-ID4gdGhhdCB0aGlzIGxvb3AgZXhlY3V0ZXMgZm9yZXZlci4gQWRkIGEgY29uZGl0aW9uIHRvIGxp
-bWl0IGV4ZWN1dGlvbiBvZg0KPiA+IHRoaXMgdGFza2xldCBmb3IgZmluaXRlIGFtb3VudCBvZiB0
-aW1lIHRvIGF2b2lkIHN1Y2ggaGF6YXJkb3VzIHNjZW5hcmlvcy4NCg0KRG9lcyB0aGlzIHJlYWxs
-eSBtYWtlIG11Y2ggZGlmZmVyZW5jZT8NCg0KSSdkIGd1ZXNzIHRoZSB0YXNrbGV0IGdldHMgaW1t
-ZWRpYXRlbHkgcmVzY2hlZHVsZWQgYXMgc29vbiBhcw0KdGhlIHVwcGVyIGxheWVyIHF1ZXVlcyBh
-bm90aGVyIHBhY2tldD8NCg0KT3IgZG8geW91IGdldCBhIGRpZmZlcmVudCAnYnVnJyB3aGVyZSBp
-dCBpcyBuZXZlciB3b2tlbiBhZ2Fpbg0KYmVjYXVzZSB0aGUgcmluZyBpcyBzdHVjayBmdWxsPw0K
-DQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQs
-IE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86
-IDEzOTczODYgKFdhbGVzKQ0K
+On 06-07-2022 15:23, Saurabh Singh Sengar wrote:
+> On Wed, Jul 06, 2022 at 02:44:42PM +0530, Praveen Kumar wrote:
+>> On 05-07-2022 21:02, Saurabh Sengar wrote:
+>>> There can be scenarios where packets in ring buffer are continuously
+>>> getting queued from upper layer and dequeued from storvsc interrupt
+>>> handler, such scenarios can hold the foreach_vmbus_pkt loop (which is
+>>> executing as a tasklet) for a long duration. Theoretically its possible
+>>> that this loop executes forever. Add a condition to limit execution of
+>>> this tasklet for finite amount of time to avoid such hazardous scenarios.
+>>>
+>>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>> ---
+>>>  drivers/scsi/storvsc_drv.c | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+>>> index fe000da..0c428cb 100644
+>>> --- a/drivers/scsi/storvsc_drv.c
+>>> +++ b/drivers/scsi/storvsc_drv.c
+>>> @@ -60,6 +60,9 @@
+>>>  #define VMSTOR_PROTO_VERSION_WIN8_1	VMSTOR_PROTO_VERSION(6, 0)
+>>>  #define VMSTOR_PROTO_VERSION_WIN10	VMSTOR_PROTO_VERSION(6, 2)
+>>>  
+>>> +/* channel callback timeout in ms */
+>>> +#define CALLBACK_TIMEOUT		5
+>>
+>> If I may, it would be good if we have the CALLBACK_TIMEOUT configurable based upon user's requirement with default value to '5'.
+>> I assume, this value '5' fits best to the use-case which we are trying to resolve here. Thanks.
+> 
+> Agree, how about adding a sysfs entry for this parameter
+> 
 
+Sounds good to me. Thanks.
+
+Regards,
+
+~Praveen.
