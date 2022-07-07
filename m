@@ -2,133 +2,139 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA0DD56A917
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 19:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2357E56A9B3
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 19:34:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235943AbiGGRHQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Jul 2022 13:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
+        id S231146AbiGGRer (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Jul 2022 13:34:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235267AbiGGRHP (ORCPT
+        with ESMTP id S235862AbiGGReq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Jul 2022 13:07:15 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3241B4D4C6;
-        Thu,  7 Jul 2022 10:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HovvFFoY7D838hXPBREd1aNwqat8RfYwwK9QiIIVY3U=; b=WqLQNmwKPMLPy2wckZKCKxD3R7
-        8CxT62mp7vdl5Gus1MdpnQTGSiKK2U0lJVJmQunwIC+fZp+s7kN7EJm0uPu80sOF5Ysa11jb16Ht9
-        sjfuVDGyb8SiE1sntIVqLi4d1VRo7/fy7K62YDyR2n0P1DMp4Pwa1GkDx5FPIW8Tl5USpHnOnwoyI
-        ASE+YNxkfaSv63xI4W+POjieNQj3mAUb2/kOXYWEMIPXtStgVujuPj/OvjXRow0adYe4FJ+Vg/Oyc
-        JVsPbpc/ze1q8BMiSf3WlCbjuO3EUj4vhdfHeMWZa0pZURzoCznZGa99ogqoljhQX72r2Mr2zitQa
-        NDjqWo0Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o9Uxw-00H9AX-54; Thu, 07 Jul 2022 17:07:00 +0000
-Date:   Thu, 7 Jul 2022 10:07:00 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     corbet@lwn.net, hch@infradead.org, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, paulmck@kernel.org, bp@suse.de,
-        akpm@linux-foundation.org, keescook@chromium.org, pmladek@suse.com,
-        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
-        michael.h.kelley@microsoft.com, kys@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        iommu@lists.linux-foundation.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
-        wei.liu@kernel.org, parri.andrea@gmail.com,
-        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
-        kirill.shutemov@intel.com, andi.kleen@intel.com,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH V3] swiotlb: Split up single swiotlb lock
-Message-ID: <YscStPk/IXW9PPmh@infradead.org>
-References: <20220707082436.447984-1-ltykernel@gmail.com>
+        Thu, 7 Jul 2022 13:34:46 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964863337C
+        for <linux-hyperv@vger.kernel.org>; Thu,  7 Jul 2022 10:34:45 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id bf13so6711262pgb.11
+        for <linux-hyperv@vger.kernel.org>; Thu, 07 Jul 2022 10:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OZkWdgnoDbGquEz4BY21XA5EPvYhUnSdDHMgpi45vYE=;
+        b=aGoS0rpC+B/tEvOv7NxuN+Y7Pz+rK2bekFpku9LPo2Efm45YbwFdW7HuhOwqzB7uD6
+         V4Emw9rT8b8duwWHgu03PVNsnP/gISTXS/rnEEYzDb7bKQeiIXPygnmawDlVnYGTZE5m
+         xsJYflAreHSAYanGagTOSnBOb/9tT9fljaAVPrZUO+9P8YtGV30pnrV8OIOpyNMbti7C
+         6l93nCMfKR+FM8G04fBWS+NE8Syz66hv7Xz6x5hqBbtlKeGaPryaRYSkPG0GTt3K5YUB
+         YLLLoSX62qgOzLYwASZl23mwveiqM7PiVGxBtTdOOEx/TtPeFJb9TwPhB3Hz14WPj1Z5
+         WRww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OZkWdgnoDbGquEz4BY21XA5EPvYhUnSdDHMgpi45vYE=;
+        b=KONeeN9X0Xi4lF25ES68qFR6dImr6xAp66D9xyJpOvKfI/kQCnlKCE1KSy2CV6TFcV
+         N/Bt0rAR4gXWhEupSTXVUO2GrJnCPBeu/ro8IgQcMjFLvKGr+EQzjrA+1j6NeovHAllB
+         mItQZWYmm3bCX+Zzu6X7xbhyVlIwUOYOvmX58DYzUnxjHkK214hSJM0Ug373O5W3/d/O
+         9NWJpu0OP4n2iGqT0WGgBG4UmEafB7rNi9xQ4JWF346XJJrLvwF9bkr5fzdj3vpTTm+F
+         8rkbDUGq5wuPBn5qg3Blz4zrp+AmZIV11ykK22Gx6VXnOVARAhRJdZWp8F5dePIySr+a
+         s+eQ==
+X-Gm-Message-State: AJIora/77aQh8AfbcnCToQPo3MsTygLzJH8WWDWeWTFSmxgg5fNSFZrq
+        OVet/DlZLvCgLUHllCErhpe0Dg==
+X-Google-Smtp-Source: AGRyM1sSBy47ob/FtIIC3SZjUaHxjOTEMYeykT695pMIsoflrGgSlcKyy5/HgZwBDzRBgYmuGjT39A==
+X-Received: by 2002:a63:a46:0:b0:412:b1d6:94cf with SMTP id z6-20020a630a46000000b00412b1d694cfmr5688478pgk.373.1657215284911;
+        Thu, 07 Jul 2022 10:34:44 -0700 (PDT)
+Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
+        by smtp.gmail.com with ESMTPSA id o66-20020a625a45000000b0052a53f8ece3sm50268pfb.42.2022.07.07.10.34.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 10:34:44 -0700 (PDT)
+Date:   Thu, 7 Jul 2022 17:34:40 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Fully initialize 'struct kvm_lapic_irq' in
+ kvm_pv_kick_cpu_op()
+Message-ID: <YscZMCBpuoJUlQ+H@google.com>
+References: <20220628133057.107344-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220707082436.447984-1-ltykernel@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220628133057.107344-1-vkuznets@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jul 07, 2022 at 04:24:36AM -0400, Tianyu Lan wrote:
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Tue, Jun 28, 2022, Vitaly Kuznetsov wrote:
+> 'vector' and 'trig_mode' fields of 'struct kvm_lapic_irq' are left
+> uninitialized in kvm_pv_kick_cpu_op(). While these fields are normally
+> not needed for APIC_DM_REMRD, they're still referenced by
+> __apic_accept_irq() for trace_kvm_apic_accept_irq(). Fully initialize
+> the structure to avoid consuming random stack memory.
 > 
-> Traditionally swiotlb was not performance critical because it was only
-> used for slow devices. But in some setups, like TDX/SEV confidential
-> guests, all IO has to go through swiotlb. Currently swiotlb only has a
-> single lock. Under high IO load with multiple CPUs this can lead to
-> significat lock contention on the swiotlb lock.
+> Fixes: a183b638b61c ("KVM: x86: make apic_accept_irq tracepoint more generic")
+> Reported-by: syzbot+d6caa905917d353f0d07@syzkaller.appspotmail.com
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/x86.c | 18 ++++++++++--------
+>  1 file changed, 10 insertions(+), 8 deletions(-)
 > 
-> This patch splits the swiotlb bounce buffer pool into individual areas
-> which have their own lock. Each CPU tries to allocate in its own area
-> first. Only if that fails does it search other areas. On freeing the
-> allocation is freed into the area where the memory was originally
-> allocated from.
-> 
-> Area number can be set via swiotlb kernel parameter and is default
-> to be possible cpu number. If possible cpu number is not power of
-> 2, area number will be round up to the next power of 2.
-> 
-> This idea from Andi Kleen patch(https://github.com/intel/tdx/commit/
-> 4529b5784c141782c72ec9bd9a92df2b68cb7d45).
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 567d13405445..8a98608dad4f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9340,15 +9340,17 @@ static int kvm_pv_clock_pairing(struct kvm_vcpu *vcpu, gpa_t paddr,
+>   */
+>  static void kvm_pv_kick_cpu_op(struct kvm *kvm, int apicid)
+>  {
+> -	struct kvm_lapic_irq lapic_irq;
+> -
+> -	lapic_irq.shorthand = APIC_DEST_NOSHORT;
+> -	lapic_irq.dest_mode = APIC_DEST_PHYSICAL;
+> -	lapic_irq.level = 0;
+> -	lapic_irq.dest_id = apicid;
+> -	lapic_irq.msi_redir_hint = false;
+> +	struct kvm_lapic_irq lapic_irq = {
+> +		.vector = 0,
+> +		.delivery_mode = APIC_DM_REMRD,
+> +		.dest_mode = APIC_DEST_PHYSICAL,
+> +		.level = false,
+> +		.trig_mode = 0,
+> +		.shorthand = APIC_DEST_NOSHORT,
+> +		.dest_id = apicid,
+> +		.msi_redir_hint = false
+> +	};
 
-Thanks, this looks much better.  I think there is a small problem
-with how default_nareas is set - we need to use 0 as the default
-so that an explicit command line value of 1 works.  Als have you
-checked the interaction with swiotlb_adjust_size in detail?
+What if we rely on the compiler to zero-initialize omitted fields?  E.g.
 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 5536d2cd69d30..85b1c29dd0eb8 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -70,7 +70,7 @@ struct io_tlb_mem io_tlb_default_mem;
- phys_addr_t swiotlb_unencrypted_base;
- 
- static unsigned long default_nslabs = IO_TLB_DEFAULT_SIZE >> IO_TLB_SHIFT;
--static unsigned long default_nareas = 1;
-+static unsigned long default_nareas;
- 
- /**
-  * struct io_tlb_area - IO TLB memory area descriptor
-@@ -90,7 +90,10 @@ struct io_tlb_area {
- 
- static void swiotlb_adjust_nareas(unsigned int nareas)
- {
--	if (!is_power_of_2(nareas))
-+	if (default_nareas)
-+		return;
-+
-+	if (nareas > 1 && !is_power_of_2(nareas))
- 		nareas = roundup_pow_of_two(nareas);
- 
- 	default_nareas = nareas;
-@@ -338,8 +341,7 @@ void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
- 		panic("%s: Failed to allocate %zu bytes align=0x%lx\n",
- 		      __func__, alloc_size, PAGE_SIZE);
- 
--	if (default_nareas == 1)
--		swiotlb_adjust_nareas(num_possible_cpus());
-+	swiotlb_adjust_nareas(num_possible_cpus());
- 
- 	mem->areas = memblock_alloc(sizeof(struct io_tlb_area) *
- 		default_nareas, SMP_CACHE_BYTES);
-@@ -410,8 +412,7 @@ int swiotlb_init_late(size_t size, gfp_t gfp_mask,
- 			(PAGE_SIZE << order) >> 20);
- 	}
- 
--	if (default_nareas == 1)
--		swiotlb_adjust_nareas(num_possible_cpus());
-+	swiotlb_adjust_nareas(num_possible_cpus());
- 
- 	area_order = get_order(array_size(sizeof(*mem->areas),
- 		default_nareas));
+	/*
+	 * All other fields are unused for APIC_DM_REMRD, but may be consumed by
+	 * common code, e.g. for tracing.  Defer initialization to the compiler.
+	 */
+	struct kvm_lapic_irq lapic_irq = {
+		.delivery_mode = APIC_DM_REMRD,
+		.dest_mode = APIC_DEST_PHYSICAL,
+		.shorthand = APIC_DEST_NOSHORT,
+		.dest_id = apicid,
+	};
+
+KVM doesn't actually care about the vector, level, trig_mode, etc... for its magic
+magic DM_REMRD, i.e. using 0/false is completely arbitrary.  
+
+>  
+> -	lapic_irq.delivery_mode = APIC_DM_REMRD;
+>  	kvm_irq_delivery_to_apic(kvm, NULL, &lapic_irq, NULL);
+>  }
+>  
+> -- 
+> 2.35.3
+> 
