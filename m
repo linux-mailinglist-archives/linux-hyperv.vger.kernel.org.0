@@ -2,115 +2,165 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CC4156A667
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 16:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A3F256A7D4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 18:18:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236375AbiGGO6v (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 7 Jul 2022 10:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49028 "EHLO
+        id S236280AbiGGQSG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Jul 2022 12:18:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236742AbiGGO6T (ORCPT
+        with ESMTP id S236210AbiGGQSF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 7 Jul 2022 10:58:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6BC63338
-        for <linux-hyperv@vger.kernel.org>; Thu,  7 Jul 2022 07:57:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657205868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BPPyfbm7cP61/jDVpNfbjlUmaFCLU4YcNzeyYG8WmXc=;
-        b=dBXBk+Df5Pj5p9vcoHut1p1ZjxXRc/8OnZzY1jwPeKahGX59HI/vT+unF7GRzTWeHVVh/E
-        oxm+PFujqoznfgYyF4rONJhpXMUj582AAosA1ugTk6Dv3Ln8RyT30z0gi25Sn4Uq1xgnPl
-        fMs4xlXlTvNad9fFSNCdi9v7HN8ID9w=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-164-YpzdQTdNM6-1vumSglSzfw-1; Thu, 07 Jul 2022 10:57:47 -0400
-X-MC-Unique: YpzdQTdNM6-1vumSglSzfw-1
-Received: by mail-wm1-f72.google.com with SMTP id t4-20020a1c7704000000b003a2cfaeca37so675698wmi.5
-        for <linux-hyperv@vger.kernel.org>; Thu, 07 Jul 2022 07:57:47 -0700 (PDT)
+        Thu, 7 Jul 2022 12:18:05 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4AD1570A
+        for <linux-hyperv@vger.kernel.org>; Thu,  7 Jul 2022 09:18:03 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id bf13so6343592pgb.11
+        for <linux-hyperv@vger.kernel.org>; Thu, 07 Jul 2022 09:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=g4b8V9nVein02SaaRGxSEkwK4bSbPWw2wYDtDzzfHkA=;
+        b=S1wqm/1JGuzFumHfm8KgkZ/ZmuKwtDo7fOVy8TDe4S/6DZZF3DOLf/U+gCQWD7X5dW
+         mOlMPSMknLjb/VmC2bG7nJf/9Oyzf7DWQ5dfsGmm0+816UKihjMTzDE4R7trWFTzTZeR
+         NWvkfug0M9MD2cvqAjyz2cOMPYl1YxrQSj9H5UTOUFTo3AddFXwj+fk6Cw58HSbuADVc
+         rmx1tsUG28aI4sdXBlAgR9llS9ESRbYQcIbH3zOCC8h+hIP1vOJGTApjsKon1xSF0J0/
+         5MAOO5uFIvqcZ61Yybujt6Q0k/6WH1YWdQIbTnVc2y7815JWlP4Uk2siX41L4Xknj8uj
+         ZsdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=BPPyfbm7cP61/jDVpNfbjlUmaFCLU4YcNzeyYG8WmXc=;
-        b=6olkgyR6muifUQZSgD5ctu3ntEMRYs7c7X1otMIvFPuNAloBfhsz8yic4f1/FwxPnh
-         CMTmeW1vopN/s/ENbP/qRWbsE/mDGZ4Fg2ZrFxsNGVzkI1vjke5egJWRCfHA8ifFVtqQ
-         owhB/YaG9WfUOWdYlA+OxEWlTVnEa9sZNiZ0EFG5fVHoheHBXJKcixqmwTfW7hCJ8+K7
-         6C40kgt/U++43/dGPxxsYc5Z/4qJskaz34U4BjLKm9blBFlkka+VdUjC1swH4FgQ8SEb
-         zPtQtRHkMtsChCSQNkTOnudn0JcgZL6CWddG5aM70LY1tjIXGV4RRMzvNbKdSnxSES3l
-         9T+A==
-X-Gm-Message-State: AJIora8K+V/LSxvDtLNQCe03DctavznITQEOwG3GganjOkD59AH7pGTB
-        lgIrRQ/aBWJSP6iO/1wTEGdrpcymrTxsvW6VHAI/B1A5L1mP7qvCl9jsxZLKAseIxrj2npwh3G/
-        JblHysxa78mWOw+HrnXWWiWZW
-X-Received: by 2002:a05:600c:3511:b0:3a1:9992:f72f with SMTP id h17-20020a05600c351100b003a19992f72fmr5166863wmq.164.1657205866241;
-        Thu, 07 Jul 2022 07:57:46 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1u0/E4oQnfuVVwr2Quhckj80YkdpdC1DUvgHP9mLEG3FQiLuZoO9arVkl3lDbI9tW7XUnCGwg==
-X-Received: by 2002:a05:600c:3511:b0:3a1:9992:f72f with SMTP id h17-20020a05600c351100b003a19992f72fmr5166839wmq.164.1657205866008;
-        Thu, 07 Jul 2022 07:57:46 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id y8-20020adfee08000000b0021d6e49e4ebsm9673078wrn.10.2022.07.07.07.57.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=g4b8V9nVein02SaaRGxSEkwK4bSbPWw2wYDtDzzfHkA=;
+        b=owS/XXhF+RIRdNv/xttCNHBe8/q4UE4haSaGstKqdB3CNOpw/IsMm+q3vRzmvx6XRd
+         y5RKZc+B6fn3kPqbD+FPWZo/cxUyPloApGu6dLVc6opqJ4KtYJ9lhzNB6mc1yGeqXdKM
+         6ECi6uBMgEsS3/j802OP8k/0H9lZ5R8liABclbCkv07kSPgCaFi7diyKBJy1ZWu08Ofp
+         0qB5c/O3kN1z61AaDZ0MJk9HFUCehtugBUmHdBCtKQ/wxpRsCG9JvTN8koxRW2Bc+ZKn
+         cEXXV+6rcGWPCfLMJOUkZjDEd8fqfUeC4hcpEAFwjra0l9diYgFS5kMoJ0j4MrGmVVw9
+         3hHw==
+X-Gm-Message-State: AJIora9RFwulUvq1cREJsHwOXOoXwSkk2Xt1zrUJlYSkqeHFVjepKmLx
+        1z4PveRDFRs0TxSWV5z1iY6E9Q==
+X-Google-Smtp-Source: AGRyM1uBhqcLgaC/a3j9kzPspaK/sXU9dO4WK60ec34W+P36XvLkfgxxzr991p2xaa3KxJ2iq2PdCg==
+X-Received: by 2002:a17:90a:db96:b0:1ef:8c86:eb09 with SMTP id h22-20020a17090adb9600b001ef8c86eb09mr6043973pjv.22.1657210683045;
+        Thu, 07 Jul 2022 09:18:03 -0700 (PDT)
+Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
+        by smtp.gmail.com with ESMTPSA id cq13-20020a056a00330d00b005255489187fsm27060777pfb.135.2022.07.07.09.18.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 07:57:45 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        Jim Mattson <jmattson@google.com>
+        Thu, 07 Jul 2022 09:18:02 -0700 (PDT)
+Date:   Thu, 7 Jul 2022 16:17:58 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 22/28] KVM: VMX: Clear controls obsoleted by EPT at
- runtime, not setup
-In-Reply-To: <CALMp9eRA0v6BK6KG81ZE_iLKF6VNXxemN=E4gAE4AM-V4gkdHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 06/28] KVM: nVMX: Introduce
+ KVM_CAP_HYPERV_ENLIGHTENED_VMCS2
+Message-ID: <YscHNur0OsViyyDJ@google.com>
 References: <20220629150625.238286-1-vkuznets@redhat.com>
- <20220629150625.238286-23-vkuznets@redhat.com>
- <CALMp9eRA0v6BK6KG81ZE_iLKF6VNXxemN=E4gAE4AM-V4gkdHQ@mail.gmail.com>
-Date:   Thu, 07 Jul 2022 16:57:44 +0200
-Message-ID: <87wncpotqv.fsf@redhat.com>
+ <20220629150625.238286-7-vkuznets@redhat.com>
+ <YsYAPL1UUKJB3/MJ@google.com>
+ <87o7y1qm5t.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o7y1qm5t.fsf@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Jim Mattson <jmattson@google.com> writes:
+On Thu, Jul 07, 2022, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+> > On Wed, Jun 29, 2022, Vitaly Kuznetsov wrote:
+> >> Turns out Enlightened VMCS can gain new fields without version change
+> >> and KVM_CAP_HYPERV_ENLIGHTENED_VMCS which KVM currently has cant's
+> >> handle this reliably. In particular, just updating the current definition
+> >> of eVMCSv1 with the new fields and adjusting the VMX MSR filtering will
+> >> inevitably break live migration to older KVMs. Note: enabling eVMCS and
+> >> setting VMX feature MSR can happen in any order.
+> >> 
+> >> Introduce a notion of KVM internal "Enlightened VMCS revision" and add
+> >> a new capability allowing to add fields to Enlightened VMCS while keeping
+> >> its version.
+> >
+> > Bumping a "minor" version number in KVM is going to be a nightmare.  KVM is going
+> > to be stuck "supporting" old revisions in perpetuity, and userspace will be forced
+> > to keep track of which features are available with which arbitrary revision (is
+> > that information even communicated to userspace?).
+> 
+> My brain is certainly tainted with how we enable this in QEMU but why
+> would userspace be interested in which features are actually filtered
+> out?
 
-> On Wed, Jun 29, 2022 at 8:07 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->>
->> From: Sean Christopherson <seanjc@google.com>
->>
->> Clear the CR3 and INVLPG interception controls at runtime based on
->> whether or not EPT is being _used_, as opposed to clearing the bits at
->> setup if EPT is _supported_ in hardware, and then restoring them when EPT
->> is not used.  Not mucking with the base config will allow using the base
->> config as the starting point for emulating the VMX capability MSRs.
->>
->> Signed-off-by: Sean Christopherson <seanjc@google.com>
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Nit: These controls aren't "obsoleted" by EPT; they're just no longer
-> required.
+For all the same reasons userspace wants to know what hardware features are
+supported by hardware and KVM.
 
-Sean,
+> Currently (again, by QEMU), eVMCS is treated as a purely software
+> feature. When enabled, certain controls are filtered out "under the
+> hood" as VMX MSRs reported to VMM remain unfiltered (see
+> '!msr_info->host_initiated' in vmx_get_msr()). Same stays true with any
+> new revision: VMM's job is just to check that a) all hardware features
+> are supported on both source and destination and b) the requested 'eVMCS
+> revision' is supported by both. No need to know what's filtered out and
+> what isn't.
 
-I'm going to update the subject line to "KVM: VMX: Clear controls
-unneded with EPT at runtime, not setup" retaining your authorship in v3
-(if there are no objections, of course).
+But users will inevitably want to know exactly what features a platform supports
+for a given configuration.  E.g. if KVM only supported pre-configured CPU models,
+KVM would need to document what features are supported by each model, and userspace
+would have very little flexibility in terms of what features are exposed to the
+guest.  That's an exaggerated example as there are far more CPUID features than
+eVMCS features, but it's the same underlying concept.
 
->
-> Reviewed-by: Jim Mattson <jmattson@google.com>
->
+> > I think a more maintainable approach would be to expose the "filtered" VMX MSRs to
+> > userspace, e.g. add KVM_GET_EVMCS_VMX_MSRS.  Then KVM just needs to document what
+> > the "filters" are for KVM versions that don't support KVM_GET_EVMCS_VMX_MSRS.
+> > KVM itself doesn't need to maintain version information because it's userspace's
+> > responsibility to ensure that userspace doesn't try to migrate to a KVM that doesn't
+> > support the desired feature set.
+> 
+> That would be a reasonable (but complex for VMM) approach too but I
+> don't think we need this (and this patch introducing 'eVMCS revisions'
+> to this matter):
 
-Thanks!
+But userspace already has to deal with that complexity in raw VMX MSRs.  The
+filtered values will always be a subset of the unfiltered values, so if eVMCS
+will be exposed to the guest, userspace can simply treat the filtered set as the
+baseline supported set, i.e. the userspace logic could simply be:
 
--- 
-Vitaly
+	if (expose_evmcs)
+		get_evmcs_vmx_msrs(&msrs);
+	else
+		get_vmx_msrs(&msrs);
 
+
+Userspace will need to take on more complexity if userspace wants to expose features
+that are supported in hardware but not with eVMCS active, but I don't see the point
+in doing so because AFAICT KVM will just override and filter the VMX MSRs anyways
+when eVMCS is enabled, i.e. userspace _can't_ expose the unfiltered VMX MSRs to the
+guest when eVMCS is enabled.
+
+> luckily, Microsoft added a new PV CPUID feature bit inidicating the support
+> for the new features in eVMCSv1 so KVM can just observe whether the bit was
+> set by VMM or not and filter accordingly.
+
+If there's a CPUID feature bit, why does KVM need to invent its own revision scheme?
+
+> > That also avoids messes like unnecessarily blocking migration from "incompatible"
+> > revisions when running on hardware that doesn't even support the control.
+> 
+> Well yea, in case the difference between 'eVMCS revisions' is void
+> because the hardware doesn't support these, it would still be possible
+> to migrate to an older KVM which doesn't support the new revision but
+> I'd stay strict: if a newer revision was requested it must be supported,
+> no matter the hardware.
