@@ -2,102 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96581569557
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 00:30:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D642E569A22
+	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Jul 2022 07:59:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234142AbiGFWaM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 6 Jul 2022 18:30:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
+        id S230197AbiGGF6q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 7 Jul 2022 01:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233907AbiGFWaL (ORCPT
+        with ESMTP id S229927AbiGGF6p (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 6 Jul 2022 18:30:11 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07EAF15A06
-        for <linux-hyperv@vger.kernel.org>; Wed,  6 Jul 2022 15:30:11 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id a15so15652119pfv.13
-        for <linux-hyperv@vger.kernel.org>; Wed, 06 Jul 2022 15:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iKA8akOzbkf4tNDc6jfn4CUsITOKN9yZnmEgDBs/SyQ=;
-        b=q6a3Irt0falLmlOdgWGFnxHk8Agc+WjZBDzCqkjggQvyzWvyJRYgbbruahzFU3UMAO
-         rijRQsr2J25PLeGwnp+Nykv+fu5KZ8KAIRn2Q00ZTduG2VN33D6+E27CZ57cDZdylV07
-         NGSStd34KnxDkaHKTrMxnFoF4CUspgWJjmiE4D/WBVxvDyAjl2H1FZ6p2AbC8JZY1oYF
-         erHmqIE7H/fr1T38eniUYrxC2g1AMIk390+P4dpRtGWvxFy6wzItDj0zY+M4iJdkYYRY
-         ypV3OPyDukfxEG109qbDOAESZ4G9jHLj7AoAPelNTdiXLGhTOATvm5xkVn0zI6l2OrF3
-         uABQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iKA8akOzbkf4tNDc6jfn4CUsITOKN9yZnmEgDBs/SyQ=;
-        b=crWhsUDNdIxaSbmkl+Smh1A88VUZ7n/oluhyEuY+GKcd4Kk/Djk4BJGtftWNP3rAte
-         51o5cxGqW4gnhzi+FQnMLF8wGElOCY3CEy//7ln3Mq6K7wLTrfIef9Acz7h75elae5cf
-         osxdRNnn2avhZi8bUX+iAHkOPShuFVr7knS1TJHPR4daYBarWmnUVN6ICbXd36Wg7SRv
-         N9apfsYoxcNxPTpali6zdkwnxQDl09KmV+H+cMjZkCyLbWNYXmW3PhwRVAeTVxlhE7v+
-         4DyRbZ62C5dwGa0L3TeVt3NG3HU7iMK+cwtU5rAbJs0fYTA3CAOb+6dN9Lr/XKsf8oMi
-         9jJQ==
-X-Gm-Message-State: AJIora9UUN6QYuUDtHeAXi+PfM4PN27DZg9lOHOS2pZFDTfZ+c7FRVfN
-        MIr3qhC/FjLibtewho3tWlzZDA==
-X-Google-Smtp-Source: AGRyM1sLT1U7pR8GVCabA1hqq2+btL+DQYe73v4JeLKC365avmWaP7/FZnlh9V7Qy3kZGK00OgD8og==
-X-Received: by 2002:a17:902:dad1:b0:16a:75cb:5d97 with SMTP id q17-20020a170902dad100b0016a75cb5d97mr49535733plx.64.1657146610443;
-        Wed, 06 Jul 2022 15:30:10 -0700 (PDT)
-Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
-        by smtp.gmail.com with ESMTPSA id n11-20020a170902968b00b0016a11b9aeb3sm26092000plp.224.2022.07.06.15.30.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 15:30:09 -0700 (PDT)
-Date:   Wed, 6 Jul 2022 22:30:05 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        kvm@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/14] KVM: nVMX: Use vmcs_config for setting up nested
- VMX MSRs
-Message-ID: <YsYM7VbPRQKflZrZ@google.com>
-References: <20220627160440.31857-1-vkuznets@redhat.com>
- <CALMp9eQL2a+mStk-cLwVX6NVqwAso2UYxAO7UD=Xi2TSGwUM2A@mail.gmail.com>
- <87y1xgubot.fsf@redhat.com>
- <CALMp9eSBLcvuNDquvSfUnaF3S3f4ZkzqDRSsz-v93ZeX=xnssg@mail.gmail.com>
- <87letgu68x.fsf@redhat.com>
- <CALMp9eQ35g8GpwObYBJRxjuxZAC8P_HNMMaC0v0uZeC+pMeW_Q@mail.gmail.com>
- <87czeru9cp.fsf@redhat.com>
- <CALMp9eQ5Sqv3RP8kipSbpfnvef_Sc1xr1+g53fwr0a=bhzgAhg@mail.gmail.com>
+        Thu, 7 Jul 2022 01:58:45 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E967B2F013;
+        Wed,  6 Jul 2022 22:58:44 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 96BA568AA6; Thu,  7 Jul 2022 07:58:40 +0200 (CEST)
+Date:   Thu, 7 Jul 2022 07:58:40 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Anvin <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, iommu@lists.linux.dev,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [RFC PATCH 2/2] dma-direct: Fix dma_direct_{alloc,free}() for
+ Hyperv-V IVMs
+Message-ID: <20220707055840.GA13401@lst.de>
+References: <20220706195027.76026-1-parri.andrea@gmail.com> <20220706195027.76026-3-parri.andrea@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALMp9eQ5Sqv3RP8kipSbpfnvef_Sc1xr1+g53fwr0a=bhzgAhg@mail.gmail.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220706195027.76026-3-parri.andrea@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jun 29, 2022, Jim Mattson wrote:
-> On Wed, Jun 29, 2022 at 2:06 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> 
-> > For PERF_GLOBAL_CTRL errata:
-> > - We can move the filtering to vmx_vmexit_ctrl()/vmx_vmentry_ctrl()
-> > preserving the status quo: KVM doesn't use the feature but it is exposed
-> > to L1 hypervisor (and L1 hypervisor presumably has the same check and
-> > doesn't use the feature. FWIW, the workaround was added in 2011 and the
-> > erratas it references appeared in 2010, this means that the affected
-> > CPUs are quite old, modern proprietary hypervisors won't likely boot
-> > there).
-> Sadly, Nehalem and Westmere are well-supported by KVM today, and we
-> will probably still continue to support them for at least another
-> decade. They both have EPT, unrestricted guest, and other VT-x2
-> features that KVM still considers optional.
+On Wed, Jul 06, 2022 at 09:50:27PM +0200, Andrea Parri (Microsoft) wrote:
+> @@ -305,6 +306,21 @@ void *dma_direct_alloc(struct device *dev, size_t size,
+>  		ret = page_address(page);
+>  		if (dma_set_decrypted(dev, ret, size))
+>  			goto out_free_pages;
+> +#ifdef CONFIG_HAS_IOMEM
+> +		/*
+> +		 * Remap the pages in the unencrypted physical address space
+> +		 * when dma_unencrypted_base is set (e.g., for Hyper-V AMD
+> +		 * SEV-SNP isolated guests).
+> +		 */
+> +		if (dma_unencrypted_base) {
+> +			phys_addr_t ret_pa = virt_to_phys(ret);
+> +
+> +			ret_pa += dma_unencrypted_base;
+> +			ret = memremap(ret_pa, size, MEMREMAP_WB);
+> +			if (!ret)
+> +				goto out_encrypt_pages;
+> +		}
+> +#endif
 
-Nehalem doesn't have unrestricted guest.  Nehalem is the only generation with EPT
-but not unrestricted guest.
+
+So:
+
+this needs to move into dma_set_decrypted, otherwise we don't handle
+the dma_alloc_pages case (never mind that this is pretty unreadable).
+
+Which then again largely duplicates the code in swiotlb.  So I think
+what we need here is a low-level helper that does the
+set_memory_decrypted and memremap.  I'm not quite sure where it
+should go, but maybe some of the people involved with memory
+encryption might have good ideas.  unencrypted_base should go with
+it and then both swiotlb and dma-direct can call it.
+
+> +	/*
+> +	 * If dma_unencrypted_base is set, the virtual address returned by
+> +	 * dma_direct_alloc() is in the vmalloc address range.
+> +	 */
+> +	if (!dma_unencrypted_base && is_vmalloc_addr(cpu_addr)) {
+>  		vunmap(cpu_addr);
+>  	} else {
+>  		if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_CLEAR_UNCACHED))
+>  			arch_dma_clear_uncached(cpu_addr, size);
+> +#ifdef CONFIG_HAS_IOMEM
+> +		if (dma_unencrypted_base) {
+> +			memunmap(cpu_addr);
+> +			/* re-encrypt the pages using the original address */
+> +			cpu_addr = page_address(pfn_to_page(PHYS_PFN(
+> +					dma_to_phys(dev, dma_addr))));
+> +		}
+> +#endif
+>  		if (dma_set_encrypted(dev, cpu_addr, size))
+
+Same on the unmap side.  It might also be worth looking into reordering
+the checks in some form instead o that raw dma_unencrypted_base check
+before the unmap.
