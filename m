@@ -2,129 +2,159 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FE4F56B9EA
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Jul 2022 14:43:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A6F256B9F7
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Jul 2022 14:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238028AbiGHMn6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 8 Jul 2022 08:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34712 "EHLO
+        id S238060AbiGHMoa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 8 Jul 2022 08:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237695AbiGHMn6 (ORCPT
+        with ESMTP id S238052AbiGHMo3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 8 Jul 2022 08:43:58 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A3165593;
-        Fri,  8 Jul 2022 05:43:57 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1112)
-        id 2B929204C3FB; Fri,  8 Jul 2022 05:43:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2B929204C3FB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1657284237;
-        bh=mQklIKku3pJkCpsILZUFKU3IMBOUE5LuHgsfE1Y7rHg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NwHRksgZjSvlFmeFFZ5U6tUS3HvnrNQ/Qa/WMG1a7a2HmKTunhyaZBAvmuVZXe1yi
-         zSgZ/zwXoc7JFamjgegHtaF7W7LecOHSieHSI+ZNPIknLIJMo3pV460RxVMqwHd+VU
-         /3+tPEDQegd0I6jqHHrwn1y2X10PqwszK8Zd6++8=
-Date:   Fri, 8 Jul 2022 05:43:57 -0700
-From:   Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        'Praveen Kumar' <kumarpraveen@linux.microsoft.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "decui@microsoft.com" <decui@microsoft.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ssengar@microsoft.com" <ssengar@microsoft.com>,
-        "mikelley@microsoft.com" <mikelley@microsoft.com>
-Subject: Re: [PATCH] scsi: storvsc: Prevent running tasklet for long
-Message-ID: <20220708124357.GA26068@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1657035141-2132-1-git-send-email-ssengar@linux.microsoft.com>
- <b4fea161-41c5-a03e-747b-316c74eb986c@linux.microsoft.com>
- <a9af8d8d5ee24d19a87c3353a4e8941d@AcuMS.aculab.com>
- <20220708104203.GA10366@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+        Fri, 8 Jul 2022 08:44:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 03C3D13F86
+        for <linux-hyperv@vger.kernel.org>; Fri,  8 Jul 2022 05:44:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657284268;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=og2F5W6+9WT1C1Kw9t/+eCrqcYEdBDo/kmOC6lhEAFQ=;
+        b=Ip9KLVdUX4wGlnYYJeH13Ievt/tWE+XItebU1ngIE/rx7PFaLo69FGt97NhdlSjIHQ0l93
+        X5D1y7ZrZJYWMEQNHje0Rd0+DNkX2TMF9nDRW73rJbVo2K36Nu4nHcswATswQHunil45h6
+        vWd8Gy55p9Pr5/s5zhtjukdJB7X5iAw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-257-6j4k9ehaMRCuc2SPFtI-GQ-1; Fri, 08 Jul 2022 08:44:25 -0400
+X-MC-Unique: 6j4k9ehaMRCuc2SPFtI-GQ-1
+Received: by mail-wr1-f72.google.com with SMTP id n5-20020adf8b05000000b00219ece7272bso3818235wra.8
+        for <linux-hyperv@vger.kernel.org>; Fri, 08 Jul 2022 05:44:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=og2F5W6+9WT1C1Kw9t/+eCrqcYEdBDo/kmOC6lhEAFQ=;
+        b=x4pah7M7SnRnkavDw7CyMdxvCUOd6jtTD2NDFYOri/nCCqcA+MnjR0rL0Dn62ioNUQ
+         0KGjOu1SHBHctMOzvVFnvsQV1tUJAT4OndRxuw2TaAkcPt3fu0ZPgK8qxx4a2WLHqJPA
+         OFg0T8PyetEqbKF6PJa9C/FKXY/VDKcwbhKeHK8AAH8zDZGbncQJ/9jZBQzA3tfjVCS7
+         8vFkVRbxRJGiL1I/ANUm2wRH41Urd20FBj3sE7KPJHwl3EL+fvsJZCupicJ5eH15r60B
+         K+aRWQnxbEaugS+pc4Z6/sUkbjSiZX5RYWcVslG3S8VXFSAiDqZy2j6ox+C2iXxWdVi0
+         VIsg==
+X-Gm-Message-State: AJIora+OfyqPyEpt8hgXpGHxFYn64ovxcLa+qszx3h9NAsKU+ERm0ZFc
+        CPDiQhrVssp7XI4bKa9XFkt59TuU11nknrxZrnD1hHswRAnnwf3FtjCvDL4acN8DOcU8t/kgYKv
+        bWMkkzoJ8SYfA/wSTRqO5965r
+X-Received: by 2002:a7b:c3cd:0:b0:3a1:95b6:3fd0 with SMTP id t13-20020a7bc3cd000000b003a195b63fd0mr3477624wmj.75.1657284263782;
+        Fri, 08 Jul 2022 05:44:23 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1ujgsgeIbwU5waLbajwPocytxadwSUtOmLGxGcjzp1zhfqje44S6b5BwhXOgjW+1K914IxbSg==
+X-Received: by 2002:a7b:c3cd:0:b0:3a1:95b6:3fd0 with SMTP id t13-20020a7bc3cd000000b003a195b63fd0mr3477584wmj.75.1657284263262;
+        Fri, 08 Jul 2022 05:44:23 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id l5-20020a05600c4f0500b003a04e6410e0sm1980040wmq.33.2022.07.08.05.44.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Jul 2022 05:44:22 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Fully initialize 'struct kvm_lapic_irq' in
+ kvm_pv_kick_cpu_op()
+In-Reply-To: <YscZMCBpuoJUlQ+H@google.com>
+References: <20220628133057.107344-1-vkuznets@redhat.com>
+ <YscZMCBpuoJUlQ+H@google.com>
+Date:   Fri, 08 Jul 2022 14:44:21 +0200
+Message-ID: <87r12vpye2.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220708104203.GA10366@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jul 08, 2022 at 03:42:03AM -0700, Saurabh Singh Sengar wrote:
-> On Wed, Jul 06, 2022 at 11:09:43AM +0000, David Laight wrote:
-> > From: Praveen Kumar
-> > > Sent: 06 July 2022 10:15
-> > > 
-> > > On 05-07-2022 21:02, Saurabh Sengar wrote:
-> > > > There can be scenarios where packets in ring buffer are continuously
-> > > > getting queued from upper layer and dequeued from storvsc interrupt
-> > > > handler, such scenarios can hold the foreach_vmbus_pkt loop (which is
-> > > > executing as a tasklet) for a long duration. Theoretically its possible
-> > > > that this loop executes forever. Add a condition to limit execution of
-> > > > this tasklet for finite amount of time to avoid such hazardous scenarios.
-> > 
-> > Does this really make much difference?
-> > 
-> > I'd guess the tasklet gets immediately rescheduled as soon as
-> > the upper layer queues another packet?
-> > 
-> > Or do you get a different 'bug' where it is never woken again
-> > because the ring is stuck full?
-> > 
-> > 	David
-> 
-> My initial understanding was that staying in a tasklet for "too long" may not be a
-> good idea, however I was not sure what the "too long" value be, thus we are thinking
-> to provide this parameter as a configurable sysfs entry. I couldn't find any linux
-> doc justifying this, so please correct me here if I am mistaken.
+Sean Christopherson <seanjc@google.com> writes:
 
-Staying in tasklet for "too long" is only an issue if you have other imporant
-work to do. You might be interested in improving fairness/latency of various
-kinds of workloads vs. storvsc:
-* different storage devices
-* storvsc vs. netdevs
-* storvsc vs. userspace
+> On Tue, Jun 28, 2022, Vitaly Kuznetsov wrote:
+>> 'vector' and 'trig_mode' fields of 'struct kvm_lapic_irq' are left
+>> uninitialized in kvm_pv_kick_cpu_op(). While these fields are normally
+>> not needed for APIC_DM_REMRD, they're still referenced by
+>> __apic_accept_irq() for trace_kvm_apic_accept_irq(). Fully initialize
+>> the structure to avoid consuming random stack memory.
+>> 
+>> Fixes: a183b638b61c ("KVM: x86: make apic_accept_irq tracepoint more generic")
+>> Reported-by: syzbot+d6caa905917d353f0d07@syzkaller.appspotmail.com
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  arch/x86/kvm/x86.c | 18 ++++++++++--------
+>>  1 file changed, 10 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index 567d13405445..8a98608dad4f 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -9340,15 +9340,17 @@ static int kvm_pv_clock_pairing(struct kvm_vcpu *vcpu, gpa_t paddr,
+>>   */
+>>  static void kvm_pv_kick_cpu_op(struct kvm *kvm, int apicid)
+>>  {
+>> -	struct kvm_lapic_irq lapic_irq;
+>> -
+>> -	lapic_irq.shorthand = APIC_DEST_NOSHORT;
+>> -	lapic_irq.dest_mode = APIC_DEST_PHYSICAL;
+>> -	lapic_irq.level = 0;
+>> -	lapic_irq.dest_id = apicid;
+>> -	lapic_irq.msi_redir_hint = false;
+>> +	struct kvm_lapic_irq lapic_irq = {
+>> +		.vector = 0,
+>> +		.delivery_mode = APIC_DM_REMRD,
+>> +		.dest_mode = APIC_DEST_PHYSICAL,
+>> +		.level = false,
+>> +		.trig_mode = 0,
+>> +		.shorthand = APIC_DEST_NOSHORT,
+>> +		.dest_id = apicid,
+>> +		.msi_redir_hint = false
+>> +	};
+>
+> What if we rely on the compiler to zero-initialize omitted fields?  E.g.
+>
+> 	/*
+> 	 * All other fields are unused for APIC_DM_REMRD, but may be consumed by
+> 	 * common code, e.g. for tracing.  Defer initialization to the compiler.
+> 	 */
+> 	struct kvm_lapic_irq lapic_irq = {
+> 		.delivery_mode = APIC_DM_REMRD,
+> 		.dest_mode = APIC_DEST_PHYSICAL,
+> 		.shorthand = APIC_DEST_NOSHORT,
+> 		.dest_id = apicid,
+> 	};
+>
+> KVM doesn't actually care about the vector, level, trig_mode, etc... for its magic
+> magic DM_REMRD, i.e. using 0/false is completely arbitrary.  
 
-Which one are you trying to address? Or is performance the highest concern?
-Then you would likely prefer to keep polling as long as possible.
+Honestly, I just always forget whether zero-initializing of omitted
+fields is a de-facto or de-jure standard. We don't care much whether
+these fields are zero of not but some random values in tracing may
+confuse an unprepared reader.
 
-> We have also considered the networking drivers NAPI budget feature while deciding
-> this approach, where softirq exits once the budget is crossed. This budget feature
-> act as a performance tuning parameter for driver, and also can help with ring buffer
-> overflow. I believe similar reasons are true for scsi softirq as well.
-> 
-> NAPI budget Ref : https://wiki.linuxfoundation.org/networking/napi.
-> 
-> - Saurabh
+I'll send v2 with your amendment.
 
-Reading code here https://elixir.bootlin.com/linux/latest/source/drivers/hv/connection.c#L448,
-it looks like if you restricted storvsc to only process a finite amount of
-packets per call you would achieve the *budget* effect. You would get called
-again if there are more packets to consume and there is already a timeout in
-that function. Having two different timeouts at these 2 levels will have weird
-interactions.
+>
+>>  
+>> -	lapic_irq.delivery_mode = APIC_DM_REMRD;
+>>  	kvm_irq_delivery_to_apic(kvm, NULL, &lapic_irq, NULL);
+>>  }
+>>  
+>> -- 
+>> 2.35.3
+>> 
+>
 
-There is also the irq_poll facility that exists for the block layer and serves
-a similar purpose as NAPI. You would need to switch to using HV_CALL_ISR.
+-- 
+Vitaly
 
-Jeremi
-
-> 
-> 
-> > 
-> > -
-> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> > Registration No: 1397386 (Wales)
