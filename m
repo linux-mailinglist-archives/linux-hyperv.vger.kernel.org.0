@@ -2,54 +2,73 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C55D956BA15
-	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Jul 2022 14:53:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EB9256BBC1
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Jul 2022 16:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237866AbiGHMv6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 8 Jul 2022 08:51:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41112 "EHLO
+        id S237862AbiGHO1t (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 8 Jul 2022 10:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232561AbiGHMv6 (ORCPT
+        with ESMTP id S237385AbiGHO1s (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 8 Jul 2022 08:51:58 -0400
+        Fri, 8 Jul 2022 10:27:48 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 98E871CFD8
-        for <linux-hyperv@vger.kernel.org>; Fri,  8 Jul 2022 05:51:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 74E5CB7DC
+        for <linux-hyperv@vger.kernel.org>; Fri,  8 Jul 2022 07:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657284716;
+        s=mimecast20190719; t=1657290467;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=4z5lVkD+jQzqil2s6scsQObiDe7cMFhAFbJRur6ZF58=;
-        b=dumBIvlo2KIwLbaicZE5ZjfNA72o0g5CjVJOxeOqErOgoQk96B6z9gL0eCTQgR2//5SOZ+
-        jKwH9m5Q3SerlM3MHlLza8LP/ylbZpkmWwXlZ10TUHJvZLkHwWBogiUhROjgeWv0TL5mAi
-        IghDvdjGnGAN+Cm5MzzMNwEt3KAZngY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+         in-reply-to:in-reply-to:references:references;
+        bh=TgSz10/9BsFZpGAIEkp0ySVetokqd5lKigRRrfTtX48=;
+        b=VPBDbjy1ATanClTQL2ecrBfrsbHdjo4fpPHcjWN+vDanvZA+r3eJGYS0xpVbfXr2nNJILB
+        mkIuqmFKdc6iDjEkBqkQaFMmoM/zI/MgROCN3r+H0gPvAFxNMUguqiLft+V77Z0KpG4S8Q
+        4MBFaf+ws6FnCSZO+SpQe2h1Va9hsu4=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-281-ZDpnN98bN82azesetvG9Vg-1; Fri, 08 Jul 2022 08:51:52 -0400
-X-MC-Unique: ZDpnN98bN82azesetvG9Vg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4939E80A0AE;
-        Fri,  8 Jul 2022 12:51:52 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.40.193.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1ADC02026D64;
-        Fri,  8 Jul 2022 12:51:48 +0000 (UTC)
+ us-mta-671-3Yr7ycRWOnqfHQ_hwESruw-1; Fri, 08 Jul 2022 10:27:46 -0400
+X-MC-Unique: 3Yr7ycRWOnqfHQ_hwESruw-1
+Received: by mail-wm1-f72.google.com with SMTP id m17-20020a05600c3b1100b003a04a2f4936so1051884wms.6
+        for <linux-hyperv@vger.kernel.org>; Fri, 08 Jul 2022 07:27:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=TgSz10/9BsFZpGAIEkp0ySVetokqd5lKigRRrfTtX48=;
+        b=K/DyFECoBPElS2sZVMUdP5KmFM0FqYtfMLpBU5SaqycnaIqoYnEa5ux0xUYSENmhUn
+         Y8D3A6zDotuMiSP1IZcGBGACrNFmez7YPfPws7W0ESeWHa/Zx6w9pMkgcQZQ9iPfVPXL
+         MK+M9EsN1vmNMZjtkwW8ZfzvZu2W3dxWzpBgBuashIx3TxPI7XMBKDZte6z7a5pL8AZD
+         5y5UVGjMW1sbJR7z13dlhrUANBuvgq4o+rU6mbxtRHaEeOeaxLYpwfcMfLKCAH563dPd
+         i7m8G1D3pynbCcI77hnVpS5Wyx1NYFFCPi3CTgwYJEG3YQnZbkZHkv4e7k/7AnoBaw1U
+         xWBg==
+X-Gm-Message-State: AJIora+wy+d3Sythpqtv9xf7qn/wwHc87tfZsHck98u/0ai9swcW/Q6S
+        Y1XFeGro3DvYw0x2tfJhpdbQcmvHN5Ati9pPKetS598OaOK8CdkXZ12m+ChS7Dab7Uf/vGhdcq9
+        oMhmFGJvoT8eDncv7RJqY8+ob
+X-Received: by 2002:adf:efc7:0:b0:21d:9412:7d54 with SMTP id i7-20020adfefc7000000b0021d94127d54mr556191wrp.230.1657290464829;
+        Fri, 08 Jul 2022 07:27:44 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sVca1hCqgfCicFr9JuOmeFXakjNABoNNlhHLLByVKShUtTdzfE9ZgweqHWfo2pmAH7s/5t7w==
+X-Received: by 2002:adf:efc7:0:b0:21d:9412:7d54 with SMTP id i7-20020adfefc7000000b0021d94127d54mr556175wrp.230.1657290464654;
+        Fri, 08 Jul 2022 07:27:44 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id ay26-20020a5d6f1a000000b0021baf5e590dsm41084417wrb.71.2022.07.08.07.27.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Jul 2022 07:27:43 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-hyperv@vger.kernel.org
 Cc:     Sean Christopherson <seanjc@google.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] KVM: x86: Fully initialize 'struct kvm_lapic_irq' in kvm_pv_kick_cpu_op()
-Date:   Fri,  8 Jul 2022 14:51:47 +0200
-Message-Id: <20220708125147.593975-1-vkuznets@redhat.com>
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2] KVM: x86: Fully initialize 'struct kvm_lapic_irq' in
+ kvm_pv_kick_cpu_op()
+In-Reply-To: <20220708125147.593975-1-vkuznets@redhat.com>
+References: <20220708125147.593975-1-vkuznets@redhat.com>
+Date:   Fri, 08 Jul 2022 16:27:42 +0200
+Message-ID: <87let3ptlt.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,53 +79,20 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-'vector' and 'trig_mode' fields of 'struct kvm_lapic_irq' are left
-uninitialized in kvm_pv_kick_cpu_op(). While these fields are normally
-not needed for APIC_DM_REMRD, they're still referenced by
-__apic_accept_irq() for trace_kvm_apic_accept_irq(). Fully initialize
-the structure to avoid consuming random stack memory.
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
 
-Fixes: a183b638b61c ("KVM: x86: make apic_accept_irq tracepoint more generic")
-Reported-by: syzbot+d6caa905917d353f0d07@syzkaller.appspotmail.com
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-- Changes since v1:
-  Only set fields which matter for APIC_DM_REMRD and defer
-  initialization of the rest to the compiler [Sean].
----
- arch/x86/kvm/x86.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+> 'vector' and 'trig_mode' fields of 'struct kvm_lapic_irq' are left
+> uninitialized in kvm_pv_kick_cpu_op(). While these fields are normally
+> not needed for APIC_DM_REMRD, they're still referenced by
+> __apic_accept_irq() for trace_kvm_apic_accept_irq(). Fully initialize
+> the structure to avoid consuming random stack memory.
+>
+> Fixes: a183b638b61c ("KVM: x86: make apic_accept_irq tracepoint more generic")
+> Reported-by: syzbot+d6caa905917d353f0d07@syzkaller.appspotmail.com
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 567d13405445..6364da034462 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9340,15 +9340,17 @@ static int kvm_pv_clock_pairing(struct kvm_vcpu *vcpu, gpa_t paddr,
-  */
- static void kvm_pv_kick_cpu_op(struct kvm *kvm, int apicid)
- {
--	struct kvm_lapic_irq lapic_irq;
--
--	lapic_irq.shorthand = APIC_DEST_NOSHORT;
--	lapic_irq.dest_mode = APIC_DEST_PHYSICAL;
--	lapic_irq.level = 0;
--	lapic_irq.dest_id = apicid;
--	lapic_irq.msi_redir_hint = false;
-+	/*
-+	 * All other fields are unused for APIC_DM_REMRD, but may be consumed by
-+	 * common code, e.g. for tracing. Defer initialization to the compiler.
-+	 */
-+	struct kvm_lapic_irq lapic_irq = {
-+		.delivery_mode = APIC_DM_REMRD,
-+		.dest_mode = APIC_DEST_PHYSICAL,
-+		.shorthand = APIC_DEST_NOSHORT,
-+		.dest_id = apicid,
-+	};
- 
--	lapic_irq.delivery_mode = APIC_DM_REMRD;
- 	kvm_irq_delivery_to_apic(kvm, NULL, &lapic_irq, NULL);
- }
- 
+The patch was sent to linux-hyperv@ by mistake, my apologies.
+
 -- 
-2.35.3
+Vitaly
 
