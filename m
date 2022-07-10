@@ -2,137 +2,195 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4416556CB0B
-	for <lists+linux-hyperv@lfdr.de>; Sat,  9 Jul 2022 20:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77B4456D0B0
+	for <lists+linux-hyperv@lfdr.de>; Sun, 10 Jul 2022 20:15:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbiGISRL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 9 Jul 2022 14:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
+        id S229495AbiGJSPA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 10 Jul 2022 14:15:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbiGISRL (ORCPT
+        with ESMTP id S229476AbiGJSO7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 9 Jul 2022 14:17:11 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ADFC1D0DA
-        for <linux-hyperv@vger.kernel.org>; Sat,  9 Jul 2022 11:17:09 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id n7so1659098ioo.7
-        for <linux-hyperv@vger.kernel.org>; Sat, 09 Jul 2022 11:17:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=Evu+1KvIAIQqxBNHUYqv/sTrx80iWnMG6c0ad8xVl2U=;
-        b=NZSaHJN0WdnY0C6r5vn/4w3aqmWnMGMkXaV7koH55StAFLfFG9IOy9H71I8P/Ubl2Q
-         pNiyTlNx8/wYWOSRKrvMiPJBa9757+RHgSliX8CMpjPTNB08V5EV2GiBzGuxdpydT54E
-         oDPkhT1wQcNWdB9ZqOIVV9ps4G1Jj/1yew9raHO0N8kc3lTR9toAeySb4RXKr2LWn8Yx
-         LCbFEm4fQvkyDvi0DEzYh9npNC3lNzEhTyBAcxizxGs3Ax4pF6Nic6/SLC+AmnWPJyMO
-         cwK1C6ai4CYOGRw75yyGjcN98ofwOWiwsUS4+Wyp0CAQa4aDOkel+12mnQG56Sb2NpzJ
-         Rm4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=Evu+1KvIAIQqxBNHUYqv/sTrx80iWnMG6c0ad8xVl2U=;
-        b=HCCADAP+5OfM5cV4D08GJyNLBimvI8BTh8IxkBIu/oBSe10RqkBvhWLtnjZ6pKj+pH
-         uCP5wGvv/GFgkPkx8SSfXhiKFluvaL1yx4Wd+kQVZ6UB1V/LU7dEKyJ8YLKry8+AUKld
-         Mjst8DiGNb0ypZcKHCGblkTPiZAfhX7ktY3iYIojpbhHd6yh4dZsM5PbSAgunersRFqb
-         F+iTChWOTJP2LOZcVTjIqLYYsHf3YB3sIxnjtahg9OFQ0PP77c+0lw6AykNFJu1hMo0v
-         DPgb4V40uxipUccrL1PTBesmkaRFoHbzHnPsqxhT5fVKh7DAN8gvvosmEaQQEi2p1Bi4
-         YNFw==
-X-Gm-Message-State: AJIora+j4M96ffWdogY9IPix+upr51dPnZE9qO0DRVQQZbujipt/13yT
-        2SMpn2qiIfuzvhwk3DhNP3wZinKN4D9Rxs//jOQ=
-X-Google-Smtp-Source: AGRyM1uS6/jaMS69325RTj3NUCwwn9i8WBGyQWCWp+/trq1ajF4if2UQyKSG0KwmxvymyR+DGMO580o3g6LO2UaK9IU=
-X-Received: by 2002:a05:6602:1346:b0:669:35d4:1a81 with SMTP id
- i6-20020a056602134600b0066935d41a81mr5352014iov.112.1657390628613; Sat, 09
- Jul 2022 11:17:08 -0700 (PDT)
+        Sun, 10 Jul 2022 14:14:59 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C5E0D6252;
+        Sun, 10 Jul 2022 11:14:58 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 51B5B204C41B; Sun, 10 Jul 2022 11:14:58 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 51B5B204C41B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1657476898;
+        bh=nGGZGIK6XLCZSbEZ1/OXjmDPFwgUs7UXTafZHcI4weA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=L2rBPxAIXmzEDtfVlcnmfOW1ImTkmiS9MkWSYI+VZlgAa5TyiEgoaE6X0WZptftvF
+         UBd+8VelYU6+oYokZWk5lmHrjY/oDJey35+sHnVD1u6qrlSawb9jBC4BLnFYCJ3gLm
+         w3jAC5LN5/jHfqQc6hkU4FjjZMMkwOekZVsuy64I=
+Date:   Sun, 10 Jul 2022 11:14:58 -0700
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Shradha Gupta <shradhagupta@microsoft.com>,
+        Praveen Kumar <kumarpraveen@microsoft.com>
+Subject: [PATCH v2] Drivers: hv: vm_bus: Handle vmbus rescind calls after
+ vmbus is suspended
+Message-ID: <20220710181458.GA20827@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 MIME-Version: 1.0
-Sender: patriciajohn728@gmail.com
-Received: by 2002:a4f:f8c6:0:0:0:0:0 with HTTP; Sat, 9 Jul 2022 11:17:07 -0700 (PDT)
-From:   MRS HANNAH VANDRAD <h.vandrad@gmail.com>
-Date:   Sat, 9 Jul 2022 11:17:07 -0700
-X-Google-Sender-Auth: zujOUhsr-JZbADnR9pexuKI485E
-Message-ID: <CANFVa24_qdUD452kURiPB8u-HySg4M8Gfd=H9ZPWw+rYDAempw@mail.gmail.com>
-Subject: Greetings My dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.8 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_8,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:d2d listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [patriciajohn728[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [patriciajohn728[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
-        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
-        *  2.9 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Greetings My dear,
+Add a flag to indicate that the vmbus is suspended so we should ignore
+any offer message. Add a new work_queue for rescind msg, so we could drain
+it along with other offer work_queues upon suspension.
+It was observed that in some hibernation related scenario testing, after
+vmbus_bus_suspend() we get rescind offer message for the vmbus. This would
+lead to processing of a rescind message for a channel that has already been
+suspended.
 
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
 
-=C2=A0=C2=A0 This letter might be a surprise to you, But I believe that you=
- will
-be honest to fulfill my final wish. I bring peace and love to you. It
-is by the grace of god, I had no choice than to do what is lawful and
-right in the sight of God for eternal life and in the sight of man for
-witness of god=E2=80=99s mercy and glory upon my life. My dear, I sent this
-mail praying it will find you in a good condition, since I myself am
-in a very critical health condition in which I sleep every night
-without knowing if I may be alive to seethe next day. I am Mrs.Hannah
-Vandrad, a widow suffering from a long time illness. I have some funds
-I inherited from my late husband, the sum of($11,000,000.00, Eleven
-Million Dollars) my Doctor told me recently that I have serious
-sickness which is a cancer problem. What disturbs me most is my stroke
-sickness. Having known my condition, I decided to donate this fund to
-a good person that will utilize it the way I am going to instruct
-herein. I need a very honest and God fearing person=C2=A0who can claim this
-money and use it for Charity works, for orphanages and gives justice
-and help to the poor, needy and widows says The Lord." Jeremiah
-22:15-16.=E2=80=9C and also build schools for less privilege that will be
-named after my late husband if possible and to promote the word of god
-and the effort that the house of god is maintained.
+Changes in v2:
+* Rename the ignore_offer_rescind_msg flag to ignore_any_offer_msg, to
+  indicate that the flag can cause any offer message to be dropped.
+* Remove redundent tasklet_enable(), tasklet_disable() calls around
+  ignore_any_offer_msg flag when value is changed from true to false.
+* Add comment about tasklet_enable() providing memory barrier.
+* In vmbus_bus_suspend() after we drain all workqueues, remove the code
+  to wait for any offer_in_progress
 
-=C2=A0I do not want a situation where this money will be used in an ungodly
-manner. That's why I'm taking this decision. I'm not afraid of death,
-so I know where I'm going. I accept this decision because I do not
-have any child who will inherit this money after I die. Please I want
-your sincere and urgent answer to know if you will be able to execute
-this project, and I will give you more information on how the fund
-will be transferred to your bank account. May the grace, peace, love
-and the truth in the Word of god be with you and all those that you
-love and=C2=A0 care for.
+---
+ drivers/hv/connection.c   | 11 +++++++++++
+ drivers/hv/hyperv_vmbus.h |  7 +++++++
+ drivers/hv/vmbus_drv.c    | 29 +++++++++++++++++++++--------
+ 3 files changed, 39 insertions(+), 8 deletions(-)
 
-I am waiting for your reply.
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 6218bbf6863a..eca7afd366d6 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -171,6 +171,14 @@ int vmbus_connect(void)
+ 		goto cleanup;
+ 	}
+ 
++	vmbus_connection.rescind_work_queue =
++		create_workqueue("hv_vmbus_rescind");
++	if (!vmbus_connection.rescind_work_queue) {
++		ret = -ENOMEM;
++		goto cleanup;
++	}
++	vmbus_connection.ignore_any_offer_msg = false;
++
+ 	vmbus_connection.handle_primary_chan_wq =
+ 		create_workqueue("hv_pri_chan");
+ 	if (!vmbus_connection.handle_primary_chan_wq) {
+@@ -357,6 +365,9 @@ void vmbus_disconnect(void)
+ 	if (vmbus_connection.handle_primary_chan_wq)
+ 		destroy_workqueue(vmbus_connection.handle_primary_chan_wq);
+ 
++	if (vmbus_connection.rescind_work_queue)
++		destroy_workqueue(vmbus_connection.rescind_work_queue);
++
+ 	if (vmbus_connection.work_queue)
+ 		destroy_workqueue(vmbus_connection.work_queue);
+ 
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 4f5b824b16cf..dc673edf053c 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -261,6 +261,13 @@ struct vmbus_connection {
+ 	struct workqueue_struct *work_queue;
+ 	struct workqueue_struct *handle_primary_chan_wq;
+ 	struct workqueue_struct *handle_sub_chan_wq;
++	struct workqueue_struct *rescind_work_queue;
++
++	/*
++	 * On suspension of the vmbus, the accumulated offer messages
++	 * must be dropped.
++	 */
++	bool ignore_any_offer_msg;
+ 
+ 	/*
+ 	 * The number of sub-channels and hv_sock channels that should be
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 547ae334e5cd..4ba0eb2441cf 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1160,7 +1160,9 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 			 * work queue: the RESCIND handler can not start to
+ 			 * run before the OFFER handler finishes.
+ 			 */
+-			schedule_work(&ctx->work);
++			if (vmbus_connection.ignore_any_offer_msg)
++				break;
++			queue_work(vmbus_connection.rescind_work_queue, &ctx->work);
+ 			break;
+ 
+ 		case CHANNELMSG_OFFERCHANNEL:
+@@ -1186,6 +1188,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 			 * to the CPUs which will execute the offer & rescind
+ 			 * works by the time these works will start execution.
+ 			 */
++			if (vmbus_connection.ignore_any_offer_msg)
++				break;
+ 			atomic_inc(&vmbus_connection.offer_in_progress);
+ 			fallthrough;
+ 
+@@ -2446,15 +2450,20 @@ static int vmbus_acpi_add(struct acpi_device *device)
+ #ifdef CONFIG_PM_SLEEP
+ static int vmbus_bus_suspend(struct device *dev)
+ {
++	struct hv_per_cpu_context *hv_cpu = per_cpu_ptr(
++			hv_context.cpu_context, VMBUS_CONNECT_CPU);
+ 	struct vmbus_channel *channel, *sc;
+ 
+-	while (atomic_read(&vmbus_connection.offer_in_progress) != 0) {
+-		/*
+-		 * We wait here until the completion of any channel
+-		 * offers that are currently in progress.
+-		 */
+-		usleep_range(1000, 2000);
+-	}
++	tasklet_disable(&hv_cpu->msg_dpc);
++	vmbus_connection.ignore_any_offer_msg = true;
++	/* The tasklet_enable() takes care of providing a memory barrier */
++	tasklet_enable(&hv_cpu->msg_dpc);
++
++	/* Drain all the workqueues as we are in suspend */
++	drain_workqueue(vmbus_connection.rescind_work_queue);
++	drain_workqueue(vmbus_connection.work_queue);
++	drain_workqueue(vmbus_connection.handle_primary_chan_wq);
++	drain_workqueue(vmbus_connection.handle_sub_chan_wq);
+ 
+ 	mutex_lock(&vmbus_connection.channel_mutex);
+ 	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
+@@ -2527,10 +2536,14 @@ static int vmbus_bus_suspend(struct device *dev)
+ 
+ static int vmbus_bus_resume(struct device *dev)
+ {
++	struct hv_per_cpu_context *hv_cpu = per_cpu_ptr(
++			hv_context.cpu_context, VMBUS_CONNECT_CPU);
+ 	struct vmbus_channel_msginfo *msginfo;
+ 	size_t msgsize;
+ 	int ret;
+ 
++	vmbus_connection.ignore_any_offer_msg = false;
++
+ 	/*
+ 	 * We only use the 'vmbus_proto_version', which was in use before
+ 	 * hibernation, to re-negotiate with the host.
+-- 
+2.17.1
 
-May God Bless you,
-
-=C2=A0Mrs. Hannah Vandrad.
