@@ -2,110 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93E27570972
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Jul 2022 19:49:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56DA2570979
+	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Jul 2022 19:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230492AbiGKRs7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Jul 2022 13:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
+        id S231392AbiGKRus (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 11 Jul 2022 13:50:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230327AbiGKRs5 (ORCPT
+        with ESMTP id S229476AbiGKRur (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Jul 2022 13:48:57 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2090.outbound.protection.outlook.com [40.107.244.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE55313F1E;
-        Mon, 11 Jul 2022 10:48:56 -0700 (PDT)
+        Mon, 11 Jul 2022 13:50:47 -0400
+Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.56.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C0B7749A;
+        Mon, 11 Jul 2022 10:50:46 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TIywPVsFO5pUsknAwerEEpwN4V4Dh7zjSGmoQVVdrIzc1pzpmrAszg0LnrxO1e/EqI4PbFhBPu54W4SeBa/qDVuwVULJnykKR7QkIAHASgTpeympEQ5qQcuY7kS66t6N4t5LC/YC4t8+DltyCKZA54irvFEoXJcemC2tFFzn0Rt226iBO5oPxawdiCMmuU94OHj16PRGmh7xWkznqGLPYzbNZDe8h4SYnC8whMAkrkOd8N4ZDxuGBMyKD9v2PWn/dy+immDw+H+B75KJuU5Z2Xbi4cUhL/o3ajJt/yvo9iPkuoY6cGAau5iZDwot/srHt2uiyw5rgRtnhsBPZvSpZQ==
+ b=CZaWbb8p4tIyVYkA2aX5GPKIfH1fEg/9wqT1NLTKJsXKGEBJiQuxz92bT2C59FG00XKDzYhGn5JqInBhxVOvKh/Hzw0tjbeJn0F2EQjhZ9vgpVgfn6ddzsZZWsavZhuZfKWu3+0vc9sET29tmvrfPYXiSITL+Shz7IKr6pNdft/yImrVa9x7XPdM3O0nnIEg7sP6LsOpC7C7tjtwkAPP+tIUoBKK3B6IT0OTlLKutF7X+5GUciTI0BKquGdo6jUU/Fgfv0C0zkkN3BACB6GczebR7O0BWfZB8HaVNCs0srUSsIRC3fW0AHxhHom6r9gIS8vlHyQBx17vWzOJIOAv9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iFtmH13/jDA3heSMON/hN8D0/8/ZJBChjjes3eOKhvA=;
- b=PyNOjvjnKQlPH4Pbpik7V6grZMYtLTUnKHvBhmz9SLNL26ZUU8Zh51Zh0WyVyrgzDDL8Ojgr2+k6QeWOWrrEZFeDZOgqP5PBYXwgDiAk5ijj0etBcvlJL5SjuiA0oRga3W8/WvLcDluLENqQ2nyIQhQ8eEm9AOhJvHOA89AkCEQlZyaI1UGnNi+nqGqiuYbLjEc3b1IovWyl9li2w//jGZZBeITgcap4c2hIWvI+WQT6n+C3NvqUElWGSDRfW5xxLCDslchpDcmLVYSD3+vFIe9KxVaeJTB8RDVcc9uIHhAUyeKaVXBsdx+tMZVOrVuLZg/gJ53+4iFAg4l6FJfgIg==
+ bh=JLTeJEWO4RTkpg84ea16Dz//7CVMtw5jPglp/NIhsIE=;
+ b=fXEszrgcM0GePt8Ol/tkz0vMygfH11yaSgTk8LH/FkbohudIDAwONHAbIgE/mph+gQgrUbSUfZpXqpdVKUgBx73ZMbjMJoLcPE3GS8vWUDi9L/Ity8mooB6+BwTF+3SGesh1fgN4QuIR514r8hbaSKNAzUghMEf/70TnZratTc3bI1e+4iYywkRwXfPIhmGHHbiFoo0dhX7D5G8CcEyc4QUDB+cihP5wLhRyDndcGVgavAQLMpHk+IM+QATEGgWYR7MM5+TUqfvoaGp2fqICm/OGTbMjutJITTw0dN9S9v3wBzWdn3X6vPMuX2jHaSzFnueNICblzt+R21FiBv8qlQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iFtmH13/jDA3heSMON/hN8D0/8/ZJBChjjes3eOKhvA=;
- b=JYM41o0AGLj1ytMZAxGORV2UKppIgctVYifnLGppzbAODkBNHyRN4G8WOOp+lDgUlhHq9TFNJMAX5dVT9SR/4KE7gy2SmaPu7LDm1/WIVDwZmCBo/Xfxbvh7z4qsAST5RisH4PhkGNTF5HpyAzL6lsmfmu5gTfgtZ44JYcTTBi8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
- by DM6PR21MB1321.namprd21.prod.outlook.com (2603:10b6:5:175::8) with
+ bh=JLTeJEWO4RTkpg84ea16Dz//7CVMtw5jPglp/NIhsIE=;
+ b=UdCIUGpvFB3JVNOz6XXn3lhxqkUfjOHM3MmGR7IrqouHCLRbRM6cLZCHKULK+mfoYoJ96JrDV91Q2lzHyb997uESdr8p2Yppxs7fOCDeCP4P1/ymUrldEGw0UvFVJLJsl14fopfQVXc1p994SIgwPGFEKklMLrx+kINPYi9atFU=
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
+ by IA1PR21MB3544.namprd21.prod.outlook.com (2603:10b6:208:3e3::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.7; Mon, 11 Jul
- 2022 17:48:53 +0000
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::684f:525a:aab1:bba6]) by DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::684f:525a:aab1:bba6%4]) with mapi id 15.20.5417.010; Mon, 11 Jul 2022
- 17:48:53 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH v2 3/3] Documentation: hyperv: Add overview of clocks and timers
-Date:   Mon, 11 Jul 2022 10:48:24 -0700
-Message-Id: <1657561704-12631-4-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1657561704-12631-1-git-send-email-mikelley@microsoft.com>
-References: <1657561704-12631-1-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MW2PR2101CA0013.namprd21.prod.outlook.com
- (2603:10b6:302:1::26) To DM6PR21MB1370.namprd21.prod.outlook.com
- (2603:10b6:5:16b::28)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.4; Mon, 11 Jul
+ 2022 17:50:44 +0000
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::3dca:41a6:b47f:15f8]) by PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::3dca:41a6:b47f:15f8%5]) with mapi id 15.20.5458.003; Mon, 11 Jul 2022
+ 17:50:44 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Shradha Gupta <shradhagupta@microsoft.com>,
+        Praveen Kumar <kumarpraveen@microsoft.com>
+Subject: RE: [PATCH v3] Drivers: hv: vm_bus: Handle vmbus rescind calls after
+ vmbus is suspended
+Thread-Topic: [PATCH v3] Drivers: hv: vm_bus: Handle vmbus rescind calls after
+ vmbus is suspended
+Thread-Index: AQHYlNxab8YrKFdxe02s5L7O/5XspK15c4RQ
+Date:   Mon, 11 Jul 2022 17:50:43 +0000
+Message-ID: <PH0PR21MB3025AC6A419A5BB7B408DD20D7879@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <20220711041147.GA5569@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To: <20220711041147.GA5569@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c19b6a6d-f0ed-4e40-95f9-7fcb0dc48090;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-07-11T17:49:50Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 56c3fdb9-05c6-41f2-ba1f-08da6365e0ba
+x-ms-traffictypediagnostic: IA1PR21MB3544:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ctSlEqtyfu21fbLz5LaKnKLPxR5GJ9IWTwl7MlsHjjkC1yE9sYeT8gRwJJIW8Zy5nzMQoE0k0rdHKG+Wn8GcS+cNOYPX3BgB25RqpbXO1c2Cy/SY0t7alLBO6zR8/k6X0g4fHv42kyd2MdC7sDL+f7/1gpvdsDz/ltMAPM5tfrRdEMujA3x5GCmdpdDOZMJiHoXmZO7CgD3SLIwjRayT/bojEakPL/mo/5xOsHKGTbPmzcpsmX3gNxQ/xMcu8UAgLSprP/3n9QOfqXR4aSZKferXCOAKt5B3HNUn9l3IKZAwZ97kmeH6yKo3KxyC58HS1hinA1gCapRFPzXltRIOVbwwuS7Dt8Ro8tZzp2Ov9+JodIYYqYyDt/WLlCQWtxW1/SXTTKBJiQSNmBuwoNB5NuLLtGNK4+RDaPUKttV0HgmFpjWVSjGO25NFZuPH6siSjk8OqqNniaDV8aXQzmYdmMtAnuwW3LAIbbiu6pn2txEyXwmFnJLMrMFkcMd7yYx8vJLt5881UwOYSBc1cYzOXeAXczYTrcxcp63P6J/mWphdarMK9yqX1fSPCrHQ+bkBLbzYITuz0J3amXy7dvTN/AYW/gZNX35mEnYKvgWuqeEWhc+EtVHfEiYpung4z+pG7jWzkbIPmSIjoLlj0XPufDmBXnAMG5DjJnEVLiiUJas09DW5OSJdWZbuWEi/MHvTpgXgvWju/DaiBHSbgBVtcohrj+l3Q5aK5CLieuOomT1wzOc3C0/WHhPt2nn+dQI3hgi9cQ6EunySkKY3j49PqFeQ/OWkbOUV5b861JZJ+1avt9L/CI+iPLKgR69sBhiy4VayRFRsyn4pOkrTWWmKnl9aMNSLvzFFIl57LR6Ot3U=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(136003)(376002)(366004)(396003)(39860400002)(451199009)(38070700005)(71200400001)(82950400001)(82960400001)(76116006)(122000001)(478600001)(66476007)(66446008)(64756008)(8676002)(66556008)(4326008)(66946007)(83380400001)(110136005)(54906003)(10290500003)(316002)(186003)(86362001)(107886003)(41300700001)(38100700002)(9686003)(26005)(5660300002)(33656002)(8936002)(52536014)(8990500004)(55016003)(2906002)(15650500001)(7696005)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xKoHFtinAvIvsdLqs5lDfyVxf7hnsZXA+/i6dy9HuMGbHKt3ltIfEymUTqqX?=
+ =?us-ascii?Q?RAHENFOhz+phhYNP2nOdnloi+pIk9GBvkq93+JMcGKavhkKFl9pyL07wlLsR?=
+ =?us-ascii?Q?1pvGkoqGEigqc/zQhyk2pRgqeMar5XP6ocUGoTWFJf1r7KdoGJGRG49XgN21?=
+ =?us-ascii?Q?Vd8paIotabNekYeYJIoo/F3ls4+5NH7NTMpjJVxd48q0YWORG3nCWqM3wqW9?=
+ =?us-ascii?Q?P7NIQed0YbUndus1GDTbwQet8PnkcEkMC3F8iQTF+Jq+rRFt7rx6dYb+wIce?=
+ =?us-ascii?Q?ewQWk6qEPfDIL6BVizCqvnue273dfzGEy+khCKFPIkqeD1UlezNuT171/fa9?=
+ =?us-ascii?Q?PPbScmPn/+dk7cU8pQKlMjKVyYH7cZdDNoyPcHb02bVLWy7a4nlsISbVkFKm?=
+ =?us-ascii?Q?h4OdS5WTEgEZGt4XHYUlK26jWDTOlZWOD7PsfuBxb+72LvzS6wJ4341tmTIB?=
+ =?us-ascii?Q?AmcXsoB5vedtJTzMjnY4bie3ggYaDgwxCsBwuVBdS/1F2T6MNGLSaanWKQqZ?=
+ =?us-ascii?Q?L93Ns5WYmylrdA6Ngsp3AjW1+4Di53FFKHaTavLEsRhF44xj0hbOxK72k+J3?=
+ =?us-ascii?Q?0PI4IT8PywEghx3bY9NxrKtR1L/52WS2p0IAWpU8iZASCMY0O4dokmQE8q2I?=
+ =?us-ascii?Q?pqsSRnWLpnceT51Y1BIDFI9z1FClkBRc2QrklmvxtKfqJvCRVFuKmo9XBPXY?=
+ =?us-ascii?Q?d5hjjYejibrhaV3GUHlTpzfSCPYX8b0TH2YOqD96QcPHG9O5warV29KndJo3?=
+ =?us-ascii?Q?IQdvDAxzlG7942wLVASdVphYCN6i2z3yhehXUqZZkQx0w61Rw2v98Io2oJUW?=
+ =?us-ascii?Q?hO9wYcs28nirlLBnBr9sSVbtq7jeB1d+qrKPhrYnD2trwKWfsiBGufu2OuK4?=
+ =?us-ascii?Q?iEcxE86kiuRCQ9O8aaTPv7ioIqOMQHh7OvXzKPG6xIb+jmOe4XezNZ1KqFdk?=
+ =?us-ascii?Q?/5XF5C9RITkAEQdmLHSCzVqMRZhChBNAo4m9Y4IOViJcn5w8K0S60K23hY0k?=
+ =?us-ascii?Q?zPrhnM0cuO3mjpzNz/ISTl2nQE0lSwOuNMrqnHoZbEdGc7R9A5pTHytgm/8i?=
+ =?us-ascii?Q?MSTPtNrm6lPKhD1MPiFoy9a8kbNtCiWqis7jd58/LcunqSRjY1aQ0/zxa503?=
+ =?us-ascii?Q?WCdt/1itxS4MOnANO94kYUl7z7LBRjb4F/2qQd90DJ3jLfLgRKUZLUFqNdUt?=
+ =?us-ascii?Q?kgopAqGxcRi6e5p5zJ7fZgHZD+CMySmEEV2xYaJvkP3XCMS75139x8OVA/+u?=
+ =?us-ascii?Q?H8v8pAOy7Zcj8HpA30CCdlzey3Pma/Izxj1IA/t1wueEgn1WNrLCEo5woz5r?=
+ =?us-ascii?Q?zpKnfiYKN4f2WX4afNWRhc82t69r5Vkm+lFmRIbmGnoMgOzXaBsnec/ZF8pI?=
+ =?us-ascii?Q?CGA1b/CGoVtONAN5uXi8C7xlW0mSy1pNLfeQShqLKvX+HTkxCC+HsoTJFp8D?=
+ =?us-ascii?Q?dCEz+A3qw9MWlRBG1zl0P3EcGaYfuxHM6Sw0KeaFCGMrZrmqG0FNIwEdfntl?=
+ =?us-ascii?Q?hwLdPNwVYpEjYCQzV6rjYC7+26tNlNcjBm9IWpenJzy5YphOMaI6aWT6en5/?=
+ =?us-ascii?Q?LMZlfUBADE3Vty/+Xz44OpZRp400j5//h8rF5tJYzPbU95tsdbXU0JT/DeaA?=
+ =?us-ascii?Q?dg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 05373536-fd54-4737-47c6-08da63659f05
-X-MS-TrafficTypeDiagnostic: DM6PR21MB1321:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zBamVFkqnbUHYNjVgAyZMcZfcvpxtPV69ErwbgKGshBcldpGP1bP8wWcoWISRapzJmInddQ+L8+084EcENIEsskKLKWJGToJY+rpiddLyCV1GSIhZ7y7bIqyLXzbXeqXeMPm5dTCwheqorJQQXmr95hnyr3wj6WVSkAYh/0pitEsytvwkaPdDN8QgOHRX6a0nwlWUzaGdsYoFpusBlPV7R08+vCn/uvwFIfXHoz3iMzoWys+syLt+nTl6NCBJnYc8RqUKXSjANE6bq1zOzzVyWUjbYu7peZNbZ3vGTEvKfGnR9IviUB6RqJidxdHDU9KL6eSeR4g3xCdqQh3Q6gPqfaWKcUmZLH82l7/QQ41CDGxn3eq61RhKAmtJaMj28vFq9pgoOTGwpZ1bEyDHuFr6eaccWHAvONTvkh1d3PI9HajiJwbmmxq3AbDiQ6kz0b37DJX5znadQCSvyW02RGQXs5ri3zaC7PLsOooUX9Ik0v+BrF+g0elvu/pX45Iw+YHuS7pSXXjyHzuHozAUXM7GdbHlgy+l6VpRevv+njta54pivE9/evKuh4fRn4OXSZ9mvzmkHQWbXprpkIB6O78k7NYdEjHlu/icDUM1CpYsl+wFVG9ezZgvyVsjZMOCeQbmxOEUmoWYn5M+0TIFZWHMLIo/58HoLXKG0YDBfuTc3L7v2Rl8bcqc9GZ+Acm0S2GUe8TMfaLveeY5iVe+4WuElyC4D3quSvhAg6KBANvsn9mQJv8QclHqXl5djxWDEQ2YUIqKqpok4d5FYCk65ULz4Qo0fNablQvADW2RMcNw7w/PgQZWlUHgdDbQS2rpjthXYJCH7d7SBM7957+kn6LcszWXl0YWnzk3eGVeZb4MRg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(451199009)(26005)(82950400001)(8936002)(5660300002)(2906002)(36756003)(6506007)(82960400001)(66476007)(10290500003)(478600001)(86362001)(4326008)(66946007)(8676002)(6486002)(66556008)(41300700001)(2616005)(38100700002)(83380400001)(107886003)(6512007)(186003)(38350700002)(6666004)(316002)(52116002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9ffaIQhFF6llqRwumtkRn1qhBTCfTkuS4gVADjmX1WmFtJMZwHuuhU7RbPgh?=
- =?us-ascii?Q?uUy/FMRKMIwPtA1MTjjqY8slqKWfFsnSkou4U/aQKqFxgekwce7v46KvtYrC?=
- =?us-ascii?Q?Q9br35DTwZ1c5HUFgcFuNaEqGCvLdaDsY/WmX7ZcWENgBw8HbEw/T2Qx2KKs?=
- =?us-ascii?Q?59ZW8Rn71HyDvX9KrFJf7OpTnieg8b2+AAwce/Ul3NyOeelEMMQw6xNH1DOT?=
- =?us-ascii?Q?6X3QkV0PdtCS7YCUATmKEuOvGX4diej0cRVBzDp0SnWghpNPxC3SgbzY9AHb?=
- =?us-ascii?Q?VeuteUz1iISK1DqBPkveTEE2xTtz7Op3uaX9pW/Fzj8+HOqhBucZKI0yk1jb?=
- =?us-ascii?Q?gQUF3/xPz9GDOsk5V4x4wXA9yEMKd2z2SxLcqBcko6XI+GiQfwB762yGiDzL?=
- =?us-ascii?Q?NLsUVqTshSIF6SOHnm//+WJz4jz60rmP0ot9BMvNjwyfS2y3oVAGRBoU6dOQ?=
- =?us-ascii?Q?/LGaCu6LSJcHZbcXyL5pauig7/APbApQAFw2AulKt8zjsuDhFmUTJP4zPMAl?=
- =?us-ascii?Q?lXbA7bjTzrO+a2joxwICc4IWocQgLEE0XxBcrMbCa69uq+yBU5d5I43Uhss/?=
- =?us-ascii?Q?x+8CEi1UR6DCsZpS39pg9KLFGZ/IQxH4PMDJR9NZ7c3H+hzygFFfh6D9SaJn?=
- =?us-ascii?Q?iFKqcTiiHGlSoNSYcvjvEyzVspBdUMCp0pQV1npSeQYQx8dBTi5r2r2oHRmd?=
- =?us-ascii?Q?/CmqjqlRaLyORFamS7eNHr1k9UMxuClrR3XqZfMXB+avHAAd5svM6+LbddmA?=
- =?us-ascii?Q?WZiNaCuRKXmNSvegYHWQZj0U5bLaBrbl3VpyR76yILqtpenpteAaMgKGCKjv?=
- =?us-ascii?Q?Vaw3dosi6c/14jDYLrZLNqCFFiSO8+uc7UwgHDLv1tJLJC5rFkHRpNyPGcin?=
- =?us-ascii?Q?pGViBIQDTl02KB6TKzFxz9dt55YBjwxmFSHPy3/t2DON6Cdj/SBOsdZwVvFV?=
- =?us-ascii?Q?H+hnuI2P5wiGVsq6DtZfaYwpo5iazdSWmcHrm94YAziA0d8nSoo9MAd6No7J?=
- =?us-ascii?Q?4vEvfYhuOFBoRzdF/lldHIKQ7GYxgj+DiB5+NzrXbtYK/vY3YoD05TVu78mV?=
- =?us-ascii?Q?/+CG3C/A4gPEClf8iC8a9f/HRLe4B9hUOKy9euQ/N0aT5sj6NyrtBcuCuv+e?=
- =?us-ascii?Q?krRDFj24XtOofv0v5EVmnZhaPc9XuV8MpT1DTIskZKAp5Ecnu5daRBg4UJ4F?=
- =?us-ascii?Q?V54Ny7JCk03FdR7CMoNzg1+c44L8anxqRxLwsdauYMSCICHEOHNOcXlQ8oy5?=
- =?us-ascii?Q?pPmEm2Qa5h3RzsIOb9wC7/AnPMMq/WJB+uyoUInDQ8UF89k87zD3plxMcWHL?=
- =?us-ascii?Q?MNVKTy0h0uCmAJ5m4GwEaa0or+fmSIV0ZmqKO8MkAxMsAGojeqYeNbHm0xuT?=
- =?us-ascii?Q?Pcpi9Qaqx61qQrJlLqfiq0WUtf0Ut7EY5mlIETmX5UjNefuAvVRBOhc5AQox?=
- =?us-ascii?Q?NLDK2aYMROEarv3Sf9p/rHs/2yLF8SLpzA64g2O7JCFp8cX6lDXnL8yw3PP0?=
- =?us-ascii?Q?mrVnsnls5FTSVXL0Eix7Lz7kztCpxgt4QcplhZskITMoqbS5dHYYeHA+bxaa?=
- =?us-ascii?Q?Xj5y1UDWh85IzWWyNFi6DRSGICP27jKZxJXT2czq?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05373536-fd54-4737-47c6-08da63659f05
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jul 2022 17:48:53.8366
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56c3fdb9-05c6-41f2-ba1f-08da6365e0ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2022 17:50:43.9214
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cxpNBuaQPdanFdY4dhEdtQDoTVqb7Xs8QcaEfD3bpbM/NrobBYuy8iPB3VytC/GdIjCyc5nvVVeD913cqHhNPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1321
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tYHno6tqyzYNXjUaFQX2yaARPrqaSdrVM7HzTCrGLysyT+Pi4ruI1WFPnzNChiyLM2jU8nNd/1KEdIPWZ9Lg0+TFgpzHfmfk7BrjhvgFuG0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3544
 X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -116,104 +126,143 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add documentation topic for clocks and timers when running as a
-guest on Hyper-V.
+From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Sunday, July 1=
+0, 2022 9:12 PM
+>=20
+> Add a flag to indicate that the vmbus is suspended so we should ignore
+> any offer message. Add a new work_queue for rescind msg, so we could drai=
+n
+> it along with other offer work_queues upon suspension.
+> It was observed that in some hibernation related scenario testing, after
+> vmbus_bus_suspend() we get rescind offer message for the vmbus. This woul=
+d
+> lead to processing of a rescind message for a channel that has already be=
+en
+> suspended.
+>=20
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> ---
+>=20
+> Changes in v3:
+> * Remove unused variable hv_cpu from vmbus_bus_resume() call
+>=20
+> ---
+>  drivers/hv/connection.c   | 11 +++++++++++
+>  drivers/hv/hyperv_vmbus.h |  7 +++++++
+>  drivers/hv/vmbus_drv.c    | 27 +++++++++++++++++++--------
+>  3 files changed, 37 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index 6218bbf6863a..eca7afd366d6 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -171,6 +171,14 @@ int vmbus_connect(void)
+>  		goto cleanup;
+>  	}
+>=20
+> +	vmbus_connection.rescind_work_queue =3D
+> +		create_workqueue("hv_vmbus_rescind");
+> +	if (!vmbus_connection.rescind_work_queue) {
+> +		ret =3D -ENOMEM;
+> +		goto cleanup;
+> +	}
+> +	vmbus_connection.ignore_any_offer_msg =3D false;
+> +
+>  	vmbus_connection.handle_primary_chan_wq =3D
+>  		create_workqueue("hv_pri_chan");
+>  	if (!vmbus_connection.handle_primary_chan_wq) {
+> @@ -357,6 +365,9 @@ void vmbus_disconnect(void)
+>  	if (vmbus_connection.handle_primary_chan_wq)
+>  		destroy_workqueue(vmbus_connection.handle_primary_chan_wq);
+>=20
+> +	if (vmbus_connection.rescind_work_queue)
+> +		destroy_workqueue(vmbus_connection.rescind_work_queue);
+> +
+>  	if (vmbus_connection.work_queue)
+>  		destroy_workqueue(vmbus_connection.work_queue);
+>=20
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 4f5b824b16cf..dc673edf053c 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -261,6 +261,13 @@ struct vmbus_connection {
+>  	struct workqueue_struct *work_queue;
+>  	struct workqueue_struct *handle_primary_chan_wq;
+>  	struct workqueue_struct *handle_sub_chan_wq;
+> +	struct workqueue_struct *rescind_work_queue;
+> +
+> +	/*
+> +	 * On suspension of the vmbus, the accumulated offer messages
+> +	 * must be dropped.
+> +	 */
+> +	bool ignore_any_offer_msg;
+>=20
+>  	/*
+>  	 * The number of sub-channels and hv_sock channels that should be
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 547ae334e5cd..23c680d1a0f5 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1160,7 +1160,9 @@ void vmbus_on_msg_dpc(unsigned long data)
+>  			 * work queue: the RESCIND handler can not start to
+>  			 * run before the OFFER handler finishes.
+>  			 */
+> -			schedule_work(&ctx->work);
+> +			if (vmbus_connection.ignore_any_offer_msg)
+> +				break;
+> +			queue_work(vmbus_connection.rescind_work_queue, &ctx->work);
+>  			break;
+>=20
+>  		case CHANNELMSG_OFFERCHANNEL:
+> @@ -1186,6 +1188,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+>  			 * to the CPUs which will execute the offer & rescind
+>  			 * works by the time these works will start execution.
+>  			 */
+> +			if (vmbus_connection.ignore_any_offer_msg)
+> +				break;
+>  			atomic_inc(&vmbus_connection.offer_in_progress);
+>  			fallthrough;
+>=20
+> @@ -2446,15 +2450,20 @@ static int vmbus_acpi_add(struct acpi_device *dev=
+ice)
+>  #ifdef CONFIG_PM_SLEEP
+>  static int vmbus_bus_suspend(struct device *dev)
+>  {
+> +	struct hv_per_cpu_context *hv_cpu =3D per_cpu_ptr(
+> +			hv_context.cpu_context, VMBUS_CONNECT_CPU);
+>  	struct vmbus_channel *channel, *sc;
+>=20
+> -	while (atomic_read(&vmbus_connection.offer_in_progress) !=3D 0) {
+> -		/*
+> -		 * We wait here until the completion of any channel
+> -		 * offers that are currently in progress.
+> -		 */
+> -		usleep_range(1000, 2000);
+> -	}
+> +	tasklet_disable(&hv_cpu->msg_dpc);
+> +	vmbus_connection.ignore_any_offer_msg =3D true;
+> +	/* The tasklet_enable() takes care of providing a memory barrier */
+> +	tasklet_enable(&hv_cpu->msg_dpc);
+> +
+> +	/* Drain all the workqueues as we are in suspend */
+> +	drain_workqueue(vmbus_connection.rescind_work_queue);
+> +	drain_workqueue(vmbus_connection.work_queue);
+> +	drain_workqueue(vmbus_connection.handle_primary_chan_wq);
+> +	drain_workqueue(vmbus_connection.handle_sub_chan_wq);
+>=20
+>  	mutex_lock(&vmbus_connection.channel_mutex);
+>  	list_for_each_entry(channel, &vmbus_connection.chn_list, listentry) {
+> @@ -2531,6 +2540,8 @@ static int vmbus_bus_resume(struct device *dev)
+>  	size_t msgsize;
+>  	int ret;
+>=20
+> +	vmbus_connection.ignore_any_offer_msg =3D false;
+> +
+>  	/*
+>  	 * We only use the 'vmbus_proto_version', which was in use before
+>  	 * hibernation, to re-negotiate with the host.
+> --
+> 2.17.1
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- Documentation/virt/hyperv/clocks.rst | 73 ++++++++++++++++++++++++++++++++++++
- Documentation/virt/hyperv/index.rst  |  1 +
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/virt/hyperv/clocks.rst
-
-diff --git a/Documentation/virt/hyperv/clocks.rst b/Documentation/virt/hyperv/clocks.rst
-new file mode 100644
-index 0000000..2da2879
---- /dev/null
-+++ b/Documentation/virt/hyperv/clocks.rst
-@@ -0,0 +1,73 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Clocks and Timers
-+=================
-+
-+arm64
-+-----
-+On arm64, Hyper-V virtualizes the ARMv8 architectural system counter
-+and timer. Guest VMs use this virtualized hardware as the Linux
-+clocksource and clockevents via the standard arm_arch_timer.c
-+driver, just as they would on bare metal. Linux vDSO support for the
-+architectural system counter is functional in guest VMs on Hyper-V.
-+While Hyper-V also provides a synthetic system clock and four synthetic
-+per-CPU timers as described in the TLFS, they are not used by the
-+Linux kernel in a Hyper-V guest on arm64.  However, older versions
-+of Hyper-V for arm64 only partially virtualize the ARMv8
-+architectural timer, such that the timer does not generate
-+interrupts in the VM. Because of this limitation, running current
-+Linux kernel versions on these older Hyper-V versions requires an
-+out-of-tree patch to use the Hyper-V synthetic clocks/timers instead.
-+
-+x86/x64
-+-------
-+On x86/x64, Hyper-V provides guest VMs with a synthetic system clock
-+and four synthetic per-CPU timers as described in the TLFS. Hyper-V
-+also provides access to the virtualized TSC via the RDTSC and
-+related instructions. These TSC instructions do not trap to
-+the hypervisor and so provide excellent performance in a VM.
-+Hyper-V performs TSC calibration, and provides the TSC frequency
-+to the guest VM via a synthetic MSR.  Hyper-V initialization code
-+in Linux reads this MSR to get the frequency, so it skips TSC
-+calibration and sets tsc_reliable. Hyper-V provides virtualized
-+versions of the PIT (in Hyper-V  Generation 1 VMs only), local
-+APIC timer, and RTC. Hyper-V does not provide a virtualized HPET in
-+guest VMs.
-+
-+The Hyper-V synthetic system clock can be read via a synthetic MSR,
-+but this access traps to the hypervisor. As a faster alternative,
-+the guest can configure a memory page to be shared between the guest
-+and the hypervisor.  Hyper-V populates this memory page with a
-+64-bit scale value and offset value. To read the synthetic clock
-+value, the guest reads the TSC and then applies the scale and offset
-+as described in the Hyper-V TLFS. The resulting value advances
-+at a constant 10 MHz frequency. In the case of a live migration
-+to a host with a different TSC frequency, Hyper-V adjusts the
-+scale and offset values in the shared page so that the 10 MHz
-+frequency is maintained.
-+
-+Starting with Windows Server 2022 Hyper-V, Hyper-V uses hardware
-+support for TSC frequency scaling to enable live migration of VMs
-+across Hyper-V hosts where the TSC frequency may be different.
-+When a Linux guest detects that this Hyper-V functionality is
-+available, it prefers to use Linux's standard TSC-based clocksource.
-+Otherwise, it uses the clocksource for the Hyper-V synthetic system
-+clock implemented via the shared page (identified as
-+"hyperv_clocksource_tsc_page").
-+
-+The Hyper-V synthetic system clock is available to user space via
-+vDSO, and gettimeofday() and related system calls can execute
-+entirely in user space.  The vDSO is implemented by mapping the
-+shared page with scale and offset values into user space.  User
-+space code performs the same algorithm of reading the TSC and
-+appying the scale and offset to get the constant 10 MHz clock.
-+
-+Linux clockevents are based on Hyper-V synthetic timer 0. While
-+Hyper-V offers 4 synthetic timers for each CPU, Linux only uses
-+timer 0. Interrupts from stimer0 are recorded on the "HVS" line in
-+/proc/interrupts.  Clockevents based on the virtualized PIT and
-+local APIC timer also work, but the Hyper-V synthetic timer is
-+preferred.
-+
-+The driver for the Hyper-V synthetic system clock and timers is
-+drivers/clocksource/hyperv_timer.c.
-diff --git a/Documentation/virt/hyperv/index.rst b/Documentation/virt/hyperv/index.rst
-index caa43ab..4a7a1b7 100644
---- a/Documentation/virt/hyperv/index.rst
-+++ b/Documentation/virt/hyperv/index.rst
-@@ -9,3 +9,4 @@ Hyper-V Enlightenments
- 
-    overview
-    vmbus
-+   clocks
--- 
-1.8.3.1
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
