@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D87457191A
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:54:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08067571920
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:55:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232963AbiGLLyo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 12 Jul 2022 07:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
+        id S232070AbiGLLy7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Jul 2022 07:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232747AbiGLLy3 (ORCPT
+        with ESMTP id S232912AbiGLLyl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 12 Jul 2022 07:54:29 -0400
+        Tue, 12 Jul 2022 07:54:41 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E27684B0DB
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:54:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AE234B521C
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657626843;
+        s=mimecast20190719; t=1657626857;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MXVihHkqE7HqNYcD5UDFlY8SMlA1TWGMKcVtlGwdJ3Y=;
-        b=L6QB3ccPTCKth4sW1FmD+wdGBSlD72hZpgRodRJQRqLi65NrLFq9zj7RCJmDgQQ9yo+pp9
-        BavFTx2vdzd01/MAqGl7k3AEeXySAO+0CV+uDIq5AEwbuDu1Gn0BSj1upmeH/SwnsZGz0b
-        5E5dQ5e0rHBMVx6MV/fZlGog5tItgXA=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=K/Y45MWLvtRZQAQMme1NWCA15wADRq0pOspGW9SWYbc=;
+        b=JvlkMhTpI6Qo8JKmSPvk/lfydowUSFpIrCwzd9TglBkMAf9Myr0G3h+Cq4uCEACrB1pIC3
+        ewRra4sOz9aKfVECOtsy/oC+ZQbE85fMSMCr4r6IgM1bfCRIxtr1qOhDkpwrHB5t9k7wyC
+        Lk351XqcClr59F/OLx/Ac9OGHaBtHBY=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-261-CqbVIQsHPlOHlFMC-cfANA-1; Tue, 12 Jul 2022 07:54:02 -0400
-X-MC-Unique: CqbVIQsHPlOHlFMC-cfANA-1
-Received: by mail-qv1-f72.google.com with SMTP id eb3-20020ad44e43000000b00472e7d52ce6so1665752qvb.17
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:54:01 -0700 (PDT)
+ us-mta-21-8DjfxmfoPES7-LGk2GN8gA-1; Tue, 12 Jul 2022 07:54:16 -0400
+X-MC-Unique: 8DjfxmfoPES7-LGk2GN8gA-1
+Received: by mail-qk1-f197.google.com with SMTP id a7-20020a37b107000000b006af3bc02282so7685432qkf.21
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:54:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=MXVihHkqE7HqNYcD5UDFlY8SMlA1TWGMKcVtlGwdJ3Y=;
-        b=j/Bnd+1K1S+h8xPXgt2tngoX7D7mmZw+M8B9ot4P4SvDDbbSqowWd0Lw0PdiftIRE2
-         uIbYsVb9AnRkxkQnScixlqwtwEyxtbn3TVWqwmTEDf1TBJTjsZ1M85FlfMhGMQIjtSIg
-         A0f74z5UfiuO17EMElFC+Ms3Wyl4/iWIg/6qtAWbCUdXtR0/FhDHbZkCBl+f5p9GDD1y
-         cGHGZx+VWur1HJdTgEUJxzDdq0mp3FiDFiYGBFZa8ges26zpX98iPY1bM5jpLpXEJ5EX
-         YLZ2bk68rWCEkIJOJ0v1Lrg78QiLpjawYFcqLqSyMyra3+tNckn/3aoNKCkreeqCrncP
-         yQfg==
-X-Gm-Message-State: AJIora8GdMfrmrvFkGEtbdNQ1XnbgZscdG/0Yp3pKR92YNzcHLnLdT3k
-        NKvG45BX0RdtzBecho/Mzu0/KDOWd4nqtTt1ydQHmwInTD8yY0eo7sXqUcyR/dbhep4h89asnp2
-        t5HRpX7q9nDhbl/rKRqQlpkvs
-X-Received: by 2002:ac8:5714:0:b0:31b:940a:fafa with SMTP id 20-20020ac85714000000b0031b940afafamr17809918qtw.599.1657626841474;
-        Tue, 12 Jul 2022 04:54:01 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uUWqywJxNVVGmzGsA8HJhUrPDaHrj+/VepaC0lqpjY0BEEAqHUxBL5RsVu7mtuvakOVn1yJw==
-X-Received: by 2002:ac8:5714:0:b0:31b:940a:fafa with SMTP id 20-20020ac85714000000b0031b940afafamr17809905qtw.599.1657626841213;
-        Tue, 12 Jul 2022 04:54:01 -0700 (PDT)
+        bh=K/Y45MWLvtRZQAQMme1NWCA15wADRq0pOspGW9SWYbc=;
+        b=UXgpI/la6xy68Uh5yAr44/I3bWCvippmT8MZNqoaphvJvENtRBXp9l9u+soxaBQBUW
+         Sk5ZobxtKvS/BpNz/ppMlLzJKwEVmDL6JelqX9EpilXyz9Rn19dpgyLu7NVbJCr3DvHI
+         MOU4wTk5ddd4B/HU+LwaU4Su3YXhbhl7rXFVTA/HkyDiGyUIzQZHtskgJcqjrYJqSMfU
+         AWw3GJZt3om/1NcArmJk3K13i9zbitKL0e61avmxw10LZgTUA+MD/vYnPSwghRBrSftb
+         QrjlXe4Jf9xuJuqe96s0R0P5EH8PQvEbgR7DXWqXuETSoXdb6zuM5S/pShSuDhhv2nCc
+         IvYQ==
+X-Gm-Message-State: AJIora8nnz6sp+YJNyZSTDIeB4WiOqSORa0SM3kisQjF3jjPEX6bwsqE
+        9HiVwxSV7zzu6NU/5SVP+mxeu4ENU5tJnrzGSTiIadejbPTq8Nf8Kb1cGT8EOVYja6mkBmsW1M9
+        VDu3T+glV2uO9GQVTIKPS6lsJ
+X-Received: by 2002:a05:620a:2991:b0:6b5:9921:6bb6 with SMTP id r17-20020a05620a299100b006b599216bb6mr3861381qkp.553.1657626856318;
+        Tue, 12 Jul 2022 04:54:16 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uttgtgZ9z3Hy3T6ZIJ02RXN1KbaDIKXQ51OXBaCi+NRy80KGVyzDnRNPyv/kz+rtPXo5jpVw==
+X-Received: by 2002:a05:620a:2991:b0:6b5:9921:6bb6 with SMTP id r17-20020a05620a299100b006b599216bb6mr3861367qkp.553.1657626856113;
+        Tue, 12 Jul 2022 04:54:16 -0700 (PDT)
 Received: from [10.35.4.238] (bzq-82-81-161-50.red.bezeqint.net. [82.81.161.50])
-        by smtp.gmail.com with ESMTPSA id bi23-20020a05620a319700b006a6c552736asm8577657qkb.119.2022.07.12.04.53.58
+        by smtp.gmail.com with ESMTPSA id v24-20020a05622a189800b0031e99798d70sm7529905qtc.29.2022.07.12.04.54.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 04:54:00 -0700 (PDT)
-Message-ID: <9d5579f4667944d3186e5c1597c88126ef8d52a6.camel@redhat.com>
-Subject: Re: [PATCH v3 09/25] KVM: VMX: nVMX: Support TSC scaling and
- PERF_GLOBAL_CTRL with enlightened VMCS
+        Tue, 12 Jul 2022 04:54:15 -0700 (PDT)
+Message-ID: <c3cf37f3dd115286db53df6fa175d7ee729610d4.camel@redhat.com>
+Subject: Re: [PATCH v3 10/25] KVM: selftests: Enable TSC scaling in evmcs
+ selftest
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
@@ -66,14 +66,14 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 12 Jul 2022 14:53:57 +0300
-In-Reply-To: <20220708144223.610080-10-vkuznets@redhat.com>
+Date:   Tue, 12 Jul 2022 14:54:11 +0300
+In-Reply-To: <20220708144223.610080-11-vkuznets@redhat.com>
 References: <20220708144223.610080-1-vkuznets@redhat.com>
-         <20220708144223.610080-10-vkuznets@redhat.com>
+         <20220708144223.610080-11-vkuznets@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-5.fc34) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -85,285 +85,97 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Fri, 2022-07-08 at 16:42 +0200, Vitaly Kuznetsov wrote:
-> Enlightened VMCS v1 got updated and now includes the required fields
-> for TSC scaling and loading PERF_GLOBAL_CTRL upon VMENTER/VMEXIT
-> features. For Hyper-V on KVM enablement, KVM can just observe VMX control
-> MSRs and use the features (with or without eVMCS) when
-> possible. Hyper-V on KVM case is trickier because of live migration:
-> the new features require explicit enablement from VMM to not break
-> it. Luckily, the updated eVMCS revision comes with a feature bit in
-> CPUID.0x4000000A.EBX.
-
-Very tiny nitpick about the commit summary. It might make sense instead
-of specifying which new fields added, just say that this patch
-updates the EVMCS to 2022 revision, or something, because the patch
-series as a whole addes some other fields (even if as commented out),
-and a new cpuid bit to detect the new eVMCS revision.
-
-Again, this is a very tiny nitpick, feel free to ignore.
-
+> The updated Enlightened VMCS v1 definition enables TSC scaling, test
+> that SECONDARY_EXEC_TSC_SCALING can now be enabled.
 > 
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/kvm/hyperv.c     |  2 +-
->  arch/x86/kvm/vmx/evmcs.c  | 88 +++++++++++++++++++++++++++++++--------
->  arch/x86/kvm/vmx/evmcs.h  | 17 ++------
->  arch/x86/kvm/vmx/nested.c |  2 +-
->  arch/x86/kvm/vmx/vmx.c    |  2 +-
->  5 files changed, 78 insertions(+), 33 deletions(-)
+>  .../testing/selftests/kvm/x86_64/evmcs_test.c | 31 +++++++++++++++++--
+>  1 file changed, 29 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index b666902da4d9..406c5e273983 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -2562,7 +2562,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  		case HYPERV_CPUID_NESTED_FEATURES:
->  			ent->eax = evmcs_ver;
->  			ent->eax |= HV_X64_NESTED_MSR_BITMAP;
-> -
-> +			ent->ebx |= HV_X64_NESTED_EVMCS1_2022_UPDATE;
->  			break;
->  
->  		case HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS:
-> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-> index 8bea5dea0341..52a53debd806 100644
-> --- a/arch/x86/kvm/vmx/evmcs.c
-> +++ b/arch/x86/kvm/vmx/evmcs.c
-> @@ -368,7 +368,60 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
->  	return 0;
->  }
->  
-> -void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata)
-> +enum evmcs_v1_revision {
-> +	EVMCSv1_2016,
-> +	EVMCSv1_2022,
-> +};
+> diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+> index 8dda527cc080..80135b98dc3b 100644
+> --- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+> @@ -18,6 +18,9 @@
+>  
+>  #include "vmx.h"
+>  
+> +/* Test flags */
+> +#define HOST_HAS_TSC_SCALING BIT(0)
 > +
-> +enum evmcs_unsupported_ctrl_type {
-> +	EVMCS_EXIT_CTLS,
-> +	EVMCS_ENTRY_CTLS,
-> +	EVMCS_2NDEXEC,
-> +	EVMCS_PINCTRL,
-> +	EVMCS_VMFUNC,
-> +};
+>  static int ud_count;
+>  
+>  static void guest_ud_handler(struct ex_regs *regs)
+> @@ -64,11 +67,14 @@ void l2_guest_code(void)
+>         vmcall();
+>         rdmsr_gs_base(); /* intercepted */
+>  
+> +       /* TSC scaling */
+> +       vmcall();
 > +
-> +static u32 evmcs_get_unsupported_ctls(struct kvm_vcpu *vcpu,
-> +				      enum evmcs_unsupported_ctrl_type ctrl_type)
-Tiny nitpick: line break not aligned in the above.
-
-> +{
-> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-> +	enum evmcs_v1_revision evmcs_rev = EVMCSv1_2016;
+>         /* Done, exit to L1 and never come back.  */
+>         vmcall();
+>  }
+>  
+> -void guest_code(struct vmx_pages *vmx_pages)
+> +void guest_code(struct vmx_pages *vmx_pages, u64 test_flags)
+>  {
+>  #define L2_GUEST_STACK_SIZE 64
+>         unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
+> @@ -150,6 +156,18 @@ void guest_code(struct vmx_pages *vmx_pages)
+>         GUEST_ASSERT(vmreadz(VM_EXIT_REASON) == EXIT_REASON_VMCALL);
+>         GUEST_SYNC(11);
+>  
+> +       if (test_flags & HOST_HAS_TSC_SCALING) {
+> +               GUEST_ASSERT((rdmsr(MSR_IA32_VMX_PROCBASED_CTLS2) >> 32) &
+> +                            SECONDARY_EXEC_TSC_SCALING);
+> +               /* Try enabling TSC scaling */
+> +               vmwrite(SECONDARY_VM_EXEC_CONTROL, vmreadz(SECONDARY_VM_EXEC_CONTROL) |
+> +                       SECONDARY_EXEC_TSC_SCALING);
+> +               vmwrite(TSC_MULTIPLIER, 1);
+> +       }
+> +       GUEST_ASSERT(!vmresume());
+> +       GUEST_ASSERT(vmreadz(VM_EXIT_REASON) == EXIT_REASON_VMCALL);
+> +       GUEST_SYNC(12);
 > +
-> +	if (!hv_vcpu)
-> +		return 0;
+>         /* Try enlightened vmptrld with an incorrect GPA */
+>         evmcs_vmptrld(0xdeadbeef, vmx_pages->enlightened_vmcs);
+>         GUEST_ASSERT(vmlaunch());
+> @@ -204,6 +222,7 @@ int main(int argc, char *argv[])
+>         struct kvm_vm *vm;
+>         struct kvm_run *run;
+>         struct ucall uc;
+> +       u64 test_flags = 0;
+>         int stage;
+>  
+>         vm = vm_create_with_one_vcpu(&vcpu, guest_code);
+> @@ -212,11 +231,19 @@ int main(int argc, char *argv[])
+>         TEST_REQUIRE(kvm_has_cap(KVM_CAP_NESTED_STATE));
+>         TEST_REQUIRE(kvm_has_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS));
+>  
+> +       if ((kvm_get_feature_msr(MSR_IA32_VMX_PROCBASED_CTLS2) >> 32) &
+> +           SECONDARY_EXEC_TSC_SCALING) {
+> +               test_flags |= HOST_HAS_TSC_SCALING;
+> +               pr_info("TSC scaling is supported, adding to test\n");
+> +       } else {
+> +               pr_info("TSC scaling is not supported\n");
+> +       }
 > +
-> +	if (hv_vcpu->cpuid_cache.nested_ebx & HV_X64_NESTED_EVMCS1_2022_UPDATE)
-> +		evmcs_rev = EVMCSv1_2022;
-> +
-> +	switch (ctrl_type) {
-> +	case EVMCS_EXIT_CTLS:
-> +		if (evmcs_rev == EVMCSv1_2016)
-> +			return EVMCS1_UNSUPPORTED_VMEXIT_CTRL |
-> +				VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
-> +		else
-> +			return EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
-> +	case EVMCS_ENTRY_CTLS:
-> +		if (evmcs_rev == EVMCSv1_2016)
-> +			return EVMCS1_UNSUPPORTED_VMENTRY_CTRL |
-> +				VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
-> +		else
-> +			return EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
-> +	case EVMCS_2NDEXEC:
-> +		if (evmcs_rev == EVMCSv1_2016)
-> +			return EVMCS1_UNSUPPORTED_2NDEXEC |
-> +				SECONDARY_EXEC_TSC_SCALING;
-> +		else
-> +			return EVMCS1_UNSUPPORTED_2NDEXEC;
-> +	case EVMCS_PINCTRL:
-> +		return EVMCS1_UNSUPPORTED_PINCTRL;
-> +	case EVMCS_VMFUNC:
-> +		return EVMCS1_UNSUPPORTED_VMFUNC;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void nested_evmcs_filter_control_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 *pdata)
->  {
->  	u32 ctl_low = (u32)*pdata;
->  	u32 ctl_high = (u32)(*pdata >> 32);
-> @@ -380,72 +433,73 @@ void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata)
->  	switch (msr_index) {
->  	case MSR_IA32_VMX_EXIT_CTLS:
->  	case MSR_IA32_VMX_TRUE_EXIT_CTLS:
-> -		ctl_high &= ~EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
-> +		ctl_high &= ~evmcs_get_unsupported_ctls(vcpu, EVMCS_EXIT_CTLS);
->  		break;
->  	case MSR_IA32_VMX_ENTRY_CTLS:
->  	case MSR_IA32_VMX_TRUE_ENTRY_CTLS:
-> -		ctl_high &= ~EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
-> +		ctl_high &= ~evmcs_get_unsupported_ctls(vcpu, EVMCS_ENTRY_CTLS);
->  		break;
->  	case MSR_IA32_VMX_PROCBASED_CTLS2:
-> -		ctl_high &= ~EVMCS1_UNSUPPORTED_2NDEXEC;
-> +		ctl_high &= ~evmcs_get_unsupported_ctls(vcpu, EVMCS_2NDEXEC);
->  		break;
->  	case MSR_IA32_VMX_TRUE_PINBASED_CTLS:
->  	case MSR_IA32_VMX_PINBASED_CTLS:
-> -		ctl_high &= ~EVMCS1_UNSUPPORTED_PINCTRL;
-> +		ctl_high &= ~evmcs_get_unsupported_ctls(vcpu, EVMCS_PINCTRL);
->  		break;
->  	case MSR_IA32_VMX_VMFUNC:
-> -		ctl_low &= ~EVMCS1_UNSUPPORTED_VMFUNC;
-> +		ctl_low &= ~evmcs_get_unsupported_ctls(vcpu, EVMCS_VMFUNC);
->  		break;
->  	}
->  
->  	*pdata = ctl_low | ((u64)ctl_high << 32);
->  }
->  
-> -int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
-> +int nested_evmcs_check_controls(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
->  {
->  	int ret = 0;
->  	u32 unsupp_ctl;
->  
->  	unsupp_ctl = vmcs12->pin_based_vm_exec_control &
-> -		EVMCS1_UNSUPPORTED_PINCTRL;
-> +		evmcs_get_unsupported_ctls(vcpu, EVMCS_PINCTRL);
->  	if (unsupp_ctl) {
->  		trace_kvm_nested_vmenter_failed(
-> -			"eVMCS: unsupported pin-based VM-execution controls",
-> +			"eVMCS: unsupported pin-based VM-execution controls: ",
->  			unsupp_ctl);
->  		ret = -EINVAL;
->  	}
->  
->  	unsupp_ctl = vmcs12->secondary_vm_exec_control &
-> -		EVMCS1_UNSUPPORTED_2NDEXEC;
-> +		evmcs_get_unsupported_ctls(vcpu, EVMCS_2NDEXEC);
->  	if (unsupp_ctl) {
->  		trace_kvm_nested_vmenter_failed(
-> -			"eVMCS: unsupported secondary VM-execution controls",
-> +			"eVMCS: unsupported secondary VM-execution controls: ",
->  			unsupp_ctl);
->  		ret = -EINVAL;
->  	}
->  
->  	unsupp_ctl = vmcs12->vm_exit_controls &
-> -		EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
-> +		evmcs_get_unsupported_ctls(vcpu, EVMCS_EXIT_CTLS);
->  	if (unsupp_ctl) {
->  		trace_kvm_nested_vmenter_failed(
-> -			"eVMCS: unsupported VM-exit controls",
-> +			"eVMCS: unsupported VM-exit controls: ",
->  			unsupp_ctl);
->  		ret = -EINVAL;
->  	}
->  
->  	unsupp_ctl = vmcs12->vm_entry_controls &
-> -		EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
-> +		evmcs_get_unsupported_ctls(vcpu, EVMCS_ENTRY_CTLS);
->  	if (unsupp_ctl) {
->  		trace_kvm_nested_vmenter_failed(
-> -			"eVMCS: unsupported VM-entry controls",
-> +			"eVMCS: unsupported VM-entry controls: ",
->  			unsupp_ctl);
->  		ret = -EINVAL;
->  	}
->  
-> -	unsupp_ctl = vmcs12->vm_function_control & EVMCS1_UNSUPPORTED_VMFUNC;
-> +	unsupp_ctl = vmcs12->vm_function_control &
-> +		evmcs_get_unsupported_ctls(vcpu, EVMCS_VMFUNC);
->  	if (unsupp_ctl) {
->  		trace_kvm_nested_vmenter_failed(
-> -			"eVMCS: unsupported VM-function controls",
-> +			"eVMCS: unsupported VM-function controls: ",
->  			unsupp_ctl);
->  		ret = -EINVAL;
->  	}
-> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
-> index f886a8ff0342..4b809c79ae63 100644
-> --- a/arch/x86/kvm/vmx/evmcs.h
-> +++ b/arch/x86/kvm/vmx/evmcs.h
-> @@ -37,16 +37,9 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
->   *	EPTP_LIST_ADDRESS               = 0x00002024,
->   *	VMREAD_BITMAP                   = 0x00002026,
->   *	VMWRITE_BITMAP                  = 0x00002028,
-> - *
-> - *	TSC_MULTIPLIER                  = 0x00002032,
->   *	PLE_GAP                         = 0x00004020,
->   *	PLE_WINDOW                      = 0x00004022,
->   *	VMX_PREEMPTION_TIMER_VALUE      = 0x0000482E,
-> - *      GUEST_IA32_PERF_GLOBAL_CTRL     = 0x00002808,
-> - *      HOST_IA32_PERF_GLOBAL_CTRL      = 0x00002c04,
-> - *
-> - * Currently unsupported in KVM:
-> - *	GUEST_IA32_RTIT_CTL		= 0x00002814,
->   */
->  #define EVMCS1_UNSUPPORTED_PINCTRL (PIN_BASED_POSTED_INTR | \
->  				    PIN_BASED_VMX_PREEMPTION_TIMER)
-> @@ -58,12 +51,10 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
->  	 SECONDARY_EXEC_ENABLE_PML |					\
->  	 SECONDARY_EXEC_ENABLE_VMFUNC |					\
->  	 SECONDARY_EXEC_SHADOW_VMCS |					\
-> -	 SECONDARY_EXEC_TSC_SCALING |					\
->  	 SECONDARY_EXEC_PAUSE_LOOP_EXITING)
->  #define EVMCS1_UNSUPPORTED_VMEXIT_CTRL					\
-> -	(VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |				\
-> -	 VM_EXIT_SAVE_VMX_PREEMPTION_TIMER)
-> -#define EVMCS1_UNSUPPORTED_VMENTRY_CTRL (VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL)
-> +	(VM_EXIT_SAVE_VMX_PREEMPTION_TIMER)
-> +#define EVMCS1_UNSUPPORTED_VMENTRY_CTRL (0)
->  #define EVMCS1_UNSUPPORTED_VMFUNC (VMX_VMFUNC_EPTP_SWITCHING)
->  
->  struct evmcs_field {
-> @@ -243,7 +234,7 @@ bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 *evmcs_gpa);
->  uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu);
->  int nested_enable_evmcs(struct kvm_vcpu *vcpu,
->  			uint16_t *vmcs_version);
-> -void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata);
-> -int nested_evmcs_check_controls(struct vmcs12 *vmcs12);
-> +void nested_evmcs_filter_control_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 *pdata);
-> +int nested_evmcs_check_controls(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12);
->  
->  #endif /* __KVM_X86_VMX_EVMCS_H */
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 4fc84f0f5875..dcf3ee645212 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -2891,7 +2891,7 @@ static int nested_vmx_check_controls(struct kvm_vcpu *vcpu,
->  		return -EINVAL;
->  
->  	if (to_vmx(vcpu)->nested.enlightened_vmcs_enabled)
-> -		return nested_evmcs_check_controls(vmcs12);
-> +		return nested_evmcs_check_controls(vcpu, vmcs12);
->  
->  	return 0;
->  }
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index c30115b9cb33..b4915d841357 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1858,7 +1858,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		 */
->  		if (!msr_info->host_initiated &&
->  		    vmx->nested.enlightened_vmcs_enabled)
-> -			nested_evmcs_filter_control_msr(msr_info->index,
-> +			nested_evmcs_filter_control_msr(vcpu, msr_info->index,
->  							&msr_info->data);
->  		break;
->  	case MSR_IA32_RTIT_CTL:
-
-
-Looks all good.
+>         vcpu_set_hv_cpuid(vcpu);
+>         vcpu_enable_evmcs(vcpu);
+>  
+>         vcpu_alloc_vmx(vm, &vmx_pages_gva);
+> -       vcpu_args_set(vcpu, 1, vmx_pages_gva);
+> +       vcpu_args_set(vcpu, 2, vmx_pages_gva, test_flags);
+>  
+>         vm_init_descriptor_tables(vm);
+>         vcpu_init_descriptor_tables(vcpu);
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
 Best regards,
 	Maxim Levitsky
-
 
 
 
