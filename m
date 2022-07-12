@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0AEA57192D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9903457192E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:56:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232186AbiGLL4I (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 12 Jul 2022 07:56:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36260 "EHLO
+        id S233007AbiGLL42 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Jul 2022 07:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232887AbiGLLzd (ORCPT
+        with ESMTP id S232894AbiGLL4J (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 12 Jul 2022 07:55:33 -0400
+        Tue, 12 Jul 2022 07:56:09 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 53B35B6289
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:55:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 79F5F2C65F
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:55:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657626911;
+        s=mimecast20190719; t=1657626928;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qjIYMYGc62E0BbWvxRB7WEHJptMLkEdJ4uHka19dQgQ=;
-        b=U0Um5aoPLoyDAbFcMDXjc43hdiYlx3efyNY5p0RvQqjqzH6z/UWjmflHBijVLBwUDo1vM3
-        YHM2h8flG7yXPUXPQDbK6XqGvjfFsSvzpictbrrV2AvkUzOLoMcRmIHRZ8RnGbSwU5s95I
-        HSoUzCPOLrBe68qMv4wv1R2D1DDm++A=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=TxYc8FmcSZX19QdaoX57VBf+h6VrEjjyMH8mCeM7LKM=;
+        b=at4t0fxrVcrDWImFkn11ltQok9OQEwNSh1+4Kk3UhLn5QD+D9i2cBQzcpQJwEOLB/v4Lt+
+        tEBtWiPH2VP3fNHjcIJlKn1khyXZ1IG841pcg+ZafLBtITC+FgsGtPufJeyJG8Nkc2k2py
+        ng7fE62aSVbi2v1uNX+Uuw3V9apKH8s=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-55-UgdlYltBPPWaCLP6J058iw-1; Tue, 12 Jul 2022 07:55:08 -0400
-X-MC-Unique: UgdlYltBPPWaCLP6J058iw-1
-Received: by mail-qk1-f197.google.com with SMTP id e128-20020a376986000000b006af6adf035cso7561847qkc.8
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:55:08 -0700 (PDT)
+ us-mta-427-LZKIqBJhN26BYxwbkeaSzg-1; Tue, 12 Jul 2022 07:55:27 -0400
+X-MC-Unique: LZKIqBJhN26BYxwbkeaSzg-1
+Received: by mail-qk1-f198.google.com with SMTP id bj31-20020a05620a191f00b006b5a69786fcso823880qkb.15
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:55:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=qjIYMYGc62E0BbWvxRB7WEHJptMLkEdJ4uHka19dQgQ=;
-        b=rKyPTKRG5VvTL3eJraiJtIZ6wU0tpDyFKwbsDp3FryBwozagTrAtOk0gXyJDn0q+6d
-         GcJuxlnoIPk6ZOzyQkT2a/i2+2hC4xKia3UsO8rTSGzlw5yDfjSEtZZx1idw3ArY7xnX
-         nI8YwwQAVGkc04lCSXOgPnZs+5QKz++YyrXlTb3HtjqpdXfCZ3ymnTvdhr8Dh7uLtHgG
-         75tsDVergpU7+XucG9Tc9Lpey/Y3gob5yQpxdfI0hgV23VcTzQ3/37TroWDjYIyW8TTX
-         PoqBFRXX/7OlVBhjwDBSLBJCU/wSbQFPU/GuhgZU8c+ldboGlpxJcf4HU6unBhrvUydA
-         QAkA==
-X-Gm-Message-State: AJIora/9898CwL3s9zqI8xbZ5UhmoBsErG13N7d8WOICsjFurXKRtdUT
-        3PFr3jxkkJ0wqkHDcykHMU1qD4XJmKrAoPoYCbX+hJBf7iMoRWnwdn+hTbiXAtTQ0d74SohFmDr
-        VrwVfJyCeQKfoAMtMmWnuhMf0
-X-Received: by 2002:ac8:5b50:0:b0:31e:ac0f:8aa3 with SMTP id n16-20020ac85b50000000b0031eac0f8aa3mr12462566qtw.435.1657626907709;
-        Tue, 12 Jul 2022 04:55:07 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1slSf1BriwdzlNAC9gslv5iv7v/Dul11Kb2D11OfX783hkIDavHA5m8MsNcXYI+d+ZlUswq1Q==
-X-Received: by 2002:ac8:5b50:0:b0:31e:ac0f:8aa3 with SMTP id n16-20020ac85b50000000b0031eac0f8aa3mr12462554qtw.435.1657626907499;
-        Tue, 12 Jul 2022 04:55:07 -0700 (PDT)
+        bh=TxYc8FmcSZX19QdaoX57VBf+h6VrEjjyMH8mCeM7LKM=;
+        b=R7qNN5kz/CsNElPGrBGHXXKdP5nQsY2E3Ismvlgw6G4Z2Ds6TsES/uMo5Gl9lb8Q5o
+         rD5cCC2Ae2lpIq1uYTmkgD8TNX7qp2CPzdvhDJBq3kQ0RX9uZKiTBPZAMdrgyNkZhCJk
+         CB9+mnrdbrZQZoiU7Y7Sh5akb03pOMf+Eoj9GQbyLdpWx+UemcvKU4s2Gj8exZMNJwMP
+         ayqI8F/L2FrCLeOcO9YdDVblEsGUNnQvJRSBBZPd5AC4HOxHA56ayiu5pZcA1b89JuDH
+         GiEf2eVJYOnxoG1fR1EGIvf/18rpl9ZozcwQfB7cOC6AO3/jvwbWIZ1fBRNcyv0V2Jlg
+         wjIg==
+X-Gm-Message-State: AJIora+58eblXom4eCbDncXWNecflc+8yuJ2OHOgVP7gU2lKHm70yTmc
+        ZfOKQHARycmTGivZUUh/J3YUuROeEV5csAuN8/vtzitEONVcmvAfI2mODmFgxjksCaNIWiFfFH0
+        JJcShn9XKL+jOoCm7Od92jWpa
+X-Received: by 2002:ac8:5f84:0:b0:31e:bbb6:3f58 with SMTP id j4-20020ac85f84000000b0031ebbb63f58mr3828189qta.504.1657626926670;
+        Tue, 12 Jul 2022 04:55:26 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1t+PsQiRk3OobSIYFRNy3K14uwIRMOmE8I5n5Xc9II1g3oU04c4BSzhmLcj83GEUunset6W0w==
+X-Received: by 2002:ac8:5f84:0:b0:31e:bbb6:3f58 with SMTP id j4-20020ac85f84000000b0031ebbb63f58mr3828179qta.504.1657626926452;
+        Tue, 12 Jul 2022 04:55:26 -0700 (PDT)
 Received: from [10.35.4.238] (bzq-82-81-161-50.red.bezeqint.net. [82.81.161.50])
-        by smtp.gmail.com with ESMTPSA id t10-20020a05620a450a00b006b54e630a98sm3035507qkp.96.2022.07.12.04.55.05
+        by smtp.gmail.com with ESMTPSA id bp39-20020a05620a45a700b006af10bd3635sm8390385qkb.57.2022.07.12.04.55.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 04:55:06 -0700 (PDT)
-Message-ID: <67e0fb26400844f05c4ffba16bf80ea2496b79df.camel@redhat.com>
-Subject: Re: [PATCH v3 12/25] KVM: VMX: Check VM_ENTRY_IA32E_MODE in
- setup_vmcs_config()
+        Tue, 12 Jul 2022 04:55:25 -0700 (PDT)
+Message-ID: <4cfe01772c1d89cdae5d3bf895f49b22b7086559.camel@redhat.com>
+Subject: Re: [PATCH v3 13/25] KVM: VMX: Check
+ CPU_BASED_{INTR,NMI}_WINDOW_EXITING in setup_vmcs_config()
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
@@ -66,10 +66,10 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 12 Jul 2022 14:55:03 +0300
-In-Reply-To: <20220708144223.610080-13-vkuznets@redhat.com>
+Date:   Tue, 12 Jul 2022 14:55:22 +0300
+In-Reply-To: <20220708144223.610080-14-vkuznets@redhat.com>
 References: <20220708144223.610080-1-vkuznets@redhat.com>
-         <20220708144223.610080-13-vkuznets@redhat.com>
+         <20220708144223.610080-14-vkuznets@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-5.fc34) 
 MIME-Version: 1.0
@@ -85,55 +85,78 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Fri, 2022-07-08 at 16:42 +0200, Vitaly Kuznetsov wrote:
-> VM_ENTRY_IA32E_MODE control is toggled dynamically by vmx_set_efer()
-> and setup_vmcs_config() doesn't check its existence. On the contrary,
-> nested_vmx_setup_ctls_msrs() doesn set it on x86_64. Add the missing
-> check and filter the bit out in vmx_vmentry_ctrl().
+> CPU_BASED_{INTR,NMI}_WINDOW_EXITING controls are toggled dynamically by
+> vmx_enable_{irq,nmi}_window, handle_interrupt_window(), handle_nmi_window()
+> but setup_vmcs_config() doesn't check their existence. Add the check and
+> filter the controls out in vmx_exec_control().
 > 
-> No (real) functional change intended as all existing CPUs supporting
-> long mode and VMX are supposed to have it.
+> Note: KVM explicitly supports CPUs without VIRTUAL_NMIS and all these CPUs
+> are supposedly lacking NMI_WINDOW_EXITING too. Adjust cpu_has_virtual_nmis()
+> accordingly.
 > 
-> Reviewed-by: Jim Mattson <jmattson@google.com>
+> No functional change intended.
+> 
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/kvm/vmx/vmx.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
+>  arch/x86/kvm/vmx/capabilities.h | 3 ++-
+>  arch/x86/kvm/vmx/vmx.c          | 8 +++++++-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
 > 
+> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+> index 069d8d298e1d..07e7492fe72a 100644
+> --- a/arch/x86/kvm/vmx/capabilities.h
+> +++ b/arch/x86/kvm/vmx/capabilities.h
+> @@ -82,7 +82,8 @@ static inline bool cpu_has_vmx_basic_inout(void)
+>  
+>  static inline bool cpu_has_virtual_nmis(void)
+>  {
+> -       return vmcs_config.pin_based_exec_ctrl & PIN_BASED_VIRTUAL_NMIS;
+> +       return vmcs_config.pin_based_exec_ctrl & PIN_BASED_VIRTUAL_NMIS &&
+> +               vmcs_config.cpu_based_exec_ctrl & CPU_BASED_NMI_WINDOW_EXITING;
+>  }
+
+Oh, a bit offtopic, I see how VMX handles the case of no support of vNMI,
+VMX has no IRET intercept, and so it cheats by using regular interrupt window
+and assuming that NMI hanlder will not enable normal interrupts....
+Oh well....
+
+>  
+>  static inline bool cpu_has_vmx_preemption_timer(void)
 > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index dd905ad72637..1aaec4d19e1b 100644
+> index 1aaec4d19e1b..ce54f13d8da1 100644
 > --- a/arch/x86/kvm/vmx/vmx.c
 > +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2610,6 +2610,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->                 _pin_based_exec_control &= ~PIN_BASED_POSTED_INTR;
+> @@ -2487,10 +2487,12 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>               CPU_BASED_MWAIT_EXITING |
+>               CPU_BASED_MONITOR_EXITING |
+>               CPU_BASED_INVLPG_EXITING |
+> -             CPU_BASED_RDPMC_EXITING;
+> +             CPU_BASED_RDPMC_EXITING |
+> +             CPU_BASED_INTR_WINDOW_EXITING;
 >  
->         min = VM_ENTRY_LOAD_DEBUG_CONTROLS;
-> +#ifdef CONFIG_X86_64
-> +       min |= VM_ENTRY_IA32E_MODE;
-> +#endif
->         opt = VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |
->               VM_ENTRY_LOAD_IA32_PAT |
->               VM_ENTRY_LOAD_IA32_EFER |
-> @@ -4242,9 +4245,14 @@ static u32 vmx_vmentry_ctrl(void)
->         if (vmx_pt_mode_is_system())
->                 vmentry_ctrl &= ~(VM_ENTRY_PT_CONCEAL_PIP |
->                                   VM_ENTRY_LOAD_IA32_RTIT_CTL);
-> -       /* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically */
-> -       return vmentry_ctrl &
-> -               ~(VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL | VM_ENTRY_LOAD_IA32_EFER);
-> +       /*
-> +        * IA32e mode, and loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically.
-> +        */
-> +       vmentry_ctrl &= ~(VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |
-> +                         VM_ENTRY_LOAD_IA32_EFER |
-> +                         VM_ENTRY_IA32E_MODE);
+>         opt = CPU_BASED_TPR_SHADOW |
+>               CPU_BASED_USE_MSR_BITMAPS |
+> +             CPU_BASED_NMI_WINDOW_EXITING |
+>               CPU_BASED_ACTIVATE_SECONDARY_CONTROLS |
+>               CPU_BASED_ACTIVATE_TERTIARY_CONTROLS;
+>         if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_PROCBASED_CTLS,
+> @@ -4299,6 +4301,10 @@ static u32 vmx_exec_control(struct vcpu_vmx *vmx)
+>  {
+>         u32 exec_control = vmcs_config.cpu_based_exec_ctrl;
+>  
+> +       /* INTR_WINDOW_EXITING and NMI_WINDOW_EXITING are toggled dynamically */
+> +       exec_control &= ~(CPU_BASED_INTR_WINDOW_EXITING |
+> +                         CPU_BASED_NMI_WINDOW_EXITING);
 > +
-> +       return vmentry_ctrl;
->  }
+>         if (vmx->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)
+>                 exec_control &= ~CPU_BASED_MOV_DR_EXITING;
 >  
->  static u32 vmx_vmexit_ctrl(void)
+
+Also makes sense.
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
 Best regards,
 	Maxim Levitsky
+
 
