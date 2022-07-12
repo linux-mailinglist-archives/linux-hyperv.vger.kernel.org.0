@@ -2,79 +2,64 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEF65570A41
-	for <lists+linux-hyperv@lfdr.de>; Mon, 11 Jul 2022 21:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49120571262
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 08:44:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229641AbiGKTBg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 11 Jul 2022 15:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44096 "EHLO
+        id S229709AbiGLGoY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Jul 2022 02:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbiGKTBf (ORCPT
+        with ESMTP id S231184AbiGLGoX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 11 Jul 2022 15:01:35 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D1127172;
-        Mon, 11 Jul 2022 12:01:34 -0700 (PDT)
-Received: by mail-wr1-f46.google.com with SMTP id q9so8213447wrd.8;
-        Mon, 11 Jul 2022 12:01:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GCvXsFqmGcG182YLyR0NaWgqK0wvYaWydrJj/u6gK+k=;
-        b=pgRErxg1JOZ1QLvAi/T1PcH6l5eVssilD+YNVxIqU458lWtudVXP6W9F/rgfGcjKDE
-         yvw/VCNJ9AHG+anH33N9LAz55tont7U3+zoIMW/Y3Q15UNctUlZR3E6QSHsGv+lWZSpj
-         c0M7b+Yi0jwgJksXULkDoIwPAvGKaRVWlPi0ddbpMCon1g3xjOeF4pgBcR1blwY+ct/0
-         qhTxRwGpdWbbVlq7mN9FB4BjetEN8IE/84xqRU6dLgpvvzK8HmeqzZCjqvwJI/sw2PuM
-         +gy7WNR3baDFcLhi53gJhw1DE6cHE4HD7oGBqLlte2hgleu70GKZbUW9y46SplVape92
-         870w==
-X-Gm-Message-State: AJIora9H7r6N61lp1WmshYTHJsEbnHZ1Y/SqmEH7UVMIEHvOHRTMCCNX
-        Sbp7D6wRunANP2iQuLAZx0A=
-X-Google-Smtp-Source: AGRyM1scmNY4S0Xl2+XqeMETn5g9lEyU8dbM9QTy11CtbUUt2Tl01RBApZpORr/SubhUuaWXk1Ujcw==
-X-Received: by 2002:adf:979b:0:b0:21d:868a:7f3b with SMTP id s27-20020adf979b000000b0021d868a7f3bmr17948046wrb.451.1657566092969;
-        Mon, 11 Jul 2022 12:01:32 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id j5-20020adff545000000b0021d864d4461sm6364819wrp.83.2022.07.11.12.01.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 12:01:32 -0700 (PDT)
-Date:   Mon, 11 Jul 2022 19:01:20 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc:     ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
-        daniel@ffwll.ch, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com, haiyangz@microsoft.com,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH v2] drm/hyperv : Removing the restruction of VRAM
- allocation with PCI bar size
-Message-ID: <20220711190120.jbbbwmp5rhlopuoh@liuwe-devbox-debian-v2>
-References: <1653143019-20032-1-git-send-email-ssengar@linux.microsoft.com>
+        Tue, 12 Jul 2022 02:44:23 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC2CA37190;
+        Mon, 11 Jul 2022 23:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=swJefpXncEluK9yw4UzvA4sA1DCzOw/wXgNu2apBFQg=; b=yiO5Hr/u2nR7lagixpbqvT8rVc
+        Ay0EFIElSbZHWvZ3O/VQgB4/UoLDsPySlkZyYWz8nLXmlojBnhGbldHwYjcA/fPgzreE5eG9MuFHa
+        kpgMlolQWm5p+ybiN6wppJl+PHFSSmH5NPLpLkL+lvWDru3M8e3dY6JdDe47WZWcjZt2FNZqAgdoF
+        yiQh02YgZ9aSuc/HkY05SSx2rCXViPOYSCpSOT2NcUeNc5MvBgLNx0NJVx7shsjcNqjhv0UZd7h02
+        fBsz11CSDnZo+4dUDLnfY5CyPcWTzZ+LqIiLHKAGGdTuOhdQQyHwCSMp6YzoOaNORqfXOE7KCBrr4
+        e+s4noXQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oB9cr-0086KR-CV; Tue, 12 Jul 2022 06:44:05 +0000
+Date:   Mon, 11 Jul 2022 23:44:05 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     corbet@lwn.net, hch@infradead.org, m.szyprowski@samsung.com,
+        robin.murphy@arm.com, paulmck@kernel.org, bp@suse.de,
+        keescook@chromium.org, akpm@linux-foundation.org, pmladek@suse.com,
+        rdunlap@infradead.org, damien.lemoal@opensource.wdc.com,
+        michael.h.kelley@microsoft.com, kys@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        iommu@lists.linux-foundation.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com,
+        wei.liu@kernel.org, parri.andrea@gmail.com,
+        thomas.lendacky@amd.com, linux-hyperv@vger.kernel.org,
+        kirill.shutemov@intel.com, andi.kleen@intel.com,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH V4] swiotlb: Split up single swiotlb lock
+Message-ID: <Ys0YNdvNip5kB27V@infradead.org>
+References: <20220708161544.522312-1-ltykernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1653143019-20032-1-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20220708161544.522312-1-ltykernel@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, May 21, 2022 at 07:23:39AM -0700, Saurabh Sengar wrote:
-> There were two different approaches getting used in this driver to
-> allocate vram:
-> 	1. VRAM allocation from PCI region for Gen1
-> 	2. VRAM alloaction from MMIO region for Gen2
-> First approach limilts the vram to PCI BAR size, which is 64 MB in most
-> legacy systems. This limits the maximum resolution to be restricted to
-> 64 MB size, and with recent conclusion on fbdev issue its concluded to have
-> similar allocation strategy for both Gen1 and Gen2. This patch unifies
-> the Gen1 and Gen2 vram allocation strategy.
-> 
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reviewed-by: Deepak Rawat <drawat.floss@gmail.com>
+Thanks,
 
-Applied to hyperv-next. Thanks.
+applied to the dma-mapping tree.
