@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EFC4571937
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:57:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F7B857193D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233046AbiGLL5Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 12 Jul 2022 07:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36532 "EHLO
+        id S232965AbiGLL5r (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Jul 2022 07:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232834AbiGLL5H (ORCPT
+        with ESMTP id S232414AbiGLL5X (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 12 Jul 2022 07:57:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C320D4B
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:57:05 -0700 (PDT)
+        Tue, 12 Jul 2022 07:57:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 22584B5D3F
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:57:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657627024;
+        s=mimecast20190719; t=1657627039;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3ne2+6mQ+Olc8xUTQbYHS1Uk/HE21HVTiNLAnJ6kuYc=;
-        b=S447IunVeJwNaGpEaGjADwCNnwuy65i6R/1GVOV5ZjFK42qRzAwDD8/Q1cBSOHCs4OBRlA
-        38RB24dTkuR9Q8kCNRCYzlCi7LxmNJhI/ZwR/YBscjOWAvI6s8oMVPf5NQgmqWtxMKcce2
-        kUbO+r1jqgt9MuYVW4EcUkrU/z13U3o=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=olaRyc5m79LX2YhKauQNe+T3doYLi+ybnhrejxK98CE=;
+        b=TJ1AxfvxO6K1rnNK4A9c/Bv0dApp/g7D/rfJtq4bEGomcrNMuPGKJtbhJYPgON5WNInuFC
+        InREvzyXccyp9IHk1rx5sKo3WilEaTHoiLNaJ7/SBA90RfPEaREWYvp8E68fTrv8TPdd7U
+        CtRFa7t8qAO8xXxM2UsaXiRMF8OfJyA=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-25-nkPGkCzxO1CWZqjbM144Jw-1; Tue, 12 Jul 2022 07:57:03 -0400
-X-MC-Unique: nkPGkCzxO1CWZqjbM144Jw-1
-Received: by mail-qv1-f70.google.com with SMTP id ld6-20020a056214418600b00472ffe4640eso1670943qvb.13
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:57:03 -0700 (PDT)
+ us-mta-98-RaVtIlmJM12odnXzDSEryw-1; Tue, 12 Jul 2022 07:57:17 -0400
+X-MC-Unique: RaVtIlmJM12odnXzDSEryw-1
+Received: by mail-qk1-f200.google.com with SMTP id s9-20020a05620a254900b006b54dd4d6deso7584053qko.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:57:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=3ne2+6mQ+Olc8xUTQbYHS1Uk/HE21HVTiNLAnJ6kuYc=;
-        b=6oaDXMeWBzMPYk7Bf4CsrgGPr4wje3vEX0OtityLg080wHpWSW844Bx8UBu9pGZEtt
-         Y0WMynpqexIKQQbOFWUVz23izIA+PSDcD/vx/6Q/MaHxIhj53plrGbuJCGH36Bxu8Q/T
-         g1mlBaMKhfU0LJ6eqR+gYlUuaGMKXXeRLkz5Zgjlz2rtN+ZN+PZxqpxYmpGfozklG/jc
-         uLEWSnnz73NoRla29MNrlJzrRfXXwA+wEwI69wyyjAYi22Xshfd+j4l5ojeVm+6C1hwD
-         g8itdghXZ1m633FOXwln+sjsZYgTdC9xthgWktguIBUovPtfwdq7aCmbOrgy5gbfClSs
-         TcFA==
-X-Gm-Message-State: AJIora+Ht4pqaQ3WQyc/lc5lN2mY862Tl4JrKv6aUm5reqMvXkter3Im
-        ffwfxtYcbp6st7EHcFG7feckSniIZ0xJGEH82AbPMlB9QdCOAfoStRqWZ12Bawn8IKB5yZyQ3x7
-        vIeP8lBIyJjsWIybTcruoB9UV
-X-Received: by 2002:a05:6214:f22:b0:472:f00d:7e14 with SMTP id iw2-20020a0562140f2200b00472f00d7e14mr16687974qvb.20.1657627023059;
-        Tue, 12 Jul 2022 04:57:03 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tuqCewMUF6qq2QaY5sl7A6uBGYI/u8wZ95DM2kKbiwQVsePtNXNWXdEb9l++OUOfjeAuQZ8Q==
-X-Received: by 2002:a05:6214:f22:b0:472:f00d:7e14 with SMTP id iw2-20020a0562140f2200b00472f00d7e14mr16687959qvb.20.1657627022899;
-        Tue, 12 Jul 2022 04:57:02 -0700 (PDT)
+        bh=olaRyc5m79LX2YhKauQNe+T3doYLi+ybnhrejxK98CE=;
+        b=Ysh7wSVjHa9gRGgf//qi2mpxlLTpbLyQPXs8sQ4VZZ5neBWiZOv0DI1GXwSGmWsGUP
+         XNREBj7+JOmbRwmdPrFAd3/3s2RzEg0mAeZV3pG+oUrG95XA61ofh4vE/tu3CoGO5de4
+         MusZIFXRocuDUh3Y+eDg36YhaSX8JT1APhJ10mHVI57JG/j9XiKesU3Jsyg6FDbPnqQ1
+         HTqMlw8+go2RRcHeH06TwvILBNQVV5em4haaiPjm7tSwium/wbJ0yMsUo+LKXyUpDZnr
+         0qZCSVwSuwYGpSkVqTREWNeMJt/hnbE8vf35SfjYt08//yQ/amOR6d7hAbaqAOohAdy5
+         Mr6w==
+X-Gm-Message-State: AJIora+ybBg999fEwHvT78ow4LJMhwWGZDQYwXhLH/RJGm8YTKpQ5OPK
+        YWJZUVpf/w6Tae1wCzYlv3/hOPgQKk0bLjqGRfqMgJGCgNZkIhkGmQcl8OepvPlGq6LW3p0l41u
+        9tj8ySS/LqPQOK3GawyuiUdDg
+X-Received: by 2002:ac8:5a4a:0:b0:31e:c15f:c1f9 with SMTP id o10-20020ac85a4a000000b0031ec15fc1f9mr1802433qta.12.1657627037538;
+        Tue, 12 Jul 2022 04:57:17 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1urHh4ODy0b6XiDk4WThbx6/yS3IFDPugQq8wMUsZi0/m+3IrBehtXOQ128Owji6o19BTZj8A==
+X-Received: by 2002:ac8:5a4a:0:b0:31e:c15f:c1f9 with SMTP id o10-20020ac85a4a000000b0031ec15fc1f9mr1802350qta.12.1657627036023;
+        Tue, 12 Jul 2022 04:57:16 -0700 (PDT)
 Received: from [10.35.4.238] (bzq-82-81-161-50.red.bezeqint.net. [82.81.161.50])
-        by smtp.gmail.com with ESMTPSA id bj17-20020a05620a191100b006a6ad90a117sm9030691qkb.105.2022.07.12.04.57.00
+        by smtp.gmail.com with ESMTPSA id n7-20020ae9c307000000b006a34a22bc60sm8400241qkg.9.2022.07.12.04.57.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 04:57:02 -0700 (PDT)
-Message-ID: <b648160c9bbf81f820b0c0bc8512c4e28fb1fc33.camel@redhat.com>
-Subject: Re: [PATCH v3 16/25] KVM: VMX: Move
- CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering out of setup_vmcs_config()
+        Tue, 12 Jul 2022 04:57:15 -0700 (PDT)
+Message-ID: <031867fe65f26f7e2d37cc41ec071b3aea98ee90.camel@redhat.com>
+Subject: Re: [PATCH v3 17/25] KVM: VMX: Add missing VMEXIT controls to
+ vmcs_config
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
@@ -66,17 +66,17 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 12 Jul 2022 14:56:58 +0300
-In-Reply-To: <20220708144223.610080-17-vkuznets@redhat.com>
+Date:   Tue, 12 Jul 2022 14:57:11 +0300
+In-Reply-To: <20220708144223.610080-18-vkuznets@redhat.com>
 References: <20220708144223.610080-1-vkuznets@redhat.com>
-         <20220708144223.610080-17-vkuznets@redhat.com>
+         <20220708144223.610080-18-vkuznets@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-5.fc34) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,57 +86,54 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Fri, 2022-07-08 at 16:42 +0200, Vitaly Kuznetsov wrote:
 > As a preparation to reusing the result of setup_vmcs_config() in
-> nested VMX MSR setup, move CPU_BASED_CR8_{LOAD,STORE}_EXITING filtering
-> to vmx_exec_control().
+> nested VMX MSR setup, add the VMEXIT controls which KVM doesn't
+> use but supports for nVMX to KVM_OPT_VMX_VM_EXIT_CONTROLS and
+> filter them out in vmx_vmexit_ctrl().
 > 
 > No functional change intended.
 > 
 > Reviewed-by: Jim Mattson <jmattson@google.com>
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/kvm/vmx/vmx.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+>  arch/x86/kvm/vmx/vmx.c | 4 ++++
+>  arch/x86/kvm/vmx/vmx.h | 3 +++
+>  2 files changed, 7 insertions(+)
 > 
 > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 93ca9ff8e641..d7170990f469 100644
+> index d7170990f469..2fb89bdcbbd8 100644
 > --- a/arch/x86/kvm/vmx/vmx.c
 > +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2479,11 +2479,6 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->                                 MSR_IA32_VMX_PROCBASED_CTLS,
->                                 &_cpu_based_exec_control) < 0)
->                 return -EIO;
-> -#ifdef CONFIG_X86_64
-> -       if (_cpu_based_exec_control & CPU_BASED_TPR_SHADOW)
-> -               _cpu_based_exec_control &= ~CPU_BASED_CR8_LOAD_EXITING &
-> -                                          ~CPU_BASED_CR8_STORE_EXITING;
-> -#endif
->         if (_cpu_based_exec_control & CPU_BASED_ACTIVATE_SECONDARY_CONTROLS) {
->                 if (adjust_vmx_controls(KVM_REQ_VMX_SECONDARY_VM_EXEC_CONTROL,
->                                         KVM_OPT_VMX_SECONDARY_VM_EXEC_CONTROL,
-> @@ -4248,13 +4243,17 @@ static u32 vmx_exec_control(struct vcpu_vmx *vmx)
->         if (vmx->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)
->                 exec_control &= ~CPU_BASED_MOV_DR_EXITING;
+> @@ -4196,6 +4196,10 @@ static u32 vmx_vmexit_ctrl(void)
+>  {
+>         u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
 >  
-> -       if (!cpu_need_tpr_shadow(&vmx->vcpu)) {
-> +       if (!cpu_need_tpr_shadow(&vmx->vcpu))
->                 exec_control &= ~CPU_BASED_TPR_SHADOW;
+> +       /* Not used by KVM but supported for nesting. */
+> +       vmexit_ctrl &= ~(VM_EXIT_SAVE_IA32_PAT | VM_EXIT_SAVE_IA32_EFER |
+> +                        VM_EXIT_SAVE_VMX_PREEMPTION_TIMER);
 > +
->  #ifdef CONFIG_X86_64
-> +       if (exec_control & CPU_BASED_TPR_SHADOW)
-> +               exec_control &= ~(CPU_BASED_CR8_LOAD_EXITING |
-> +                                 CPU_BASED_CR8_STORE_EXITING);
-> +       else
->                 exec_control |= CPU_BASED_CR8_STORE_EXITING |
->                                 CPU_BASED_CR8_LOAD_EXITING;
+>         if (vmx_pt_mode_is_system())
+>                 vmexit_ctrl &= ~(VM_EXIT_PT_CONCEAL_PIP |
+>                                  VM_EXIT_CLEAR_IA32_RTIT_CTL);
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 89eaab3495a6..e9c392398f1b 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -498,8 +498,11 @@ static inline u8 vmx_get_rvi(void)
 >  #endif
-> -       }
->         if (!enable_ept)
->                 exec_control |= CPU_BASED_CR3_STORE_EXITING |
->                                 CPU_BASED_CR3_LOAD_EXITING  |
+>  #define KVM_OPT_VMX_VM_EXIT_CONTROLS                           \
+>               (VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |             \
+> +             VM_EXIT_SAVE_IA32_PAT |                           \
+>               VM_EXIT_LOAD_IA32_PAT |                           \
+> +             VM_EXIT_SAVE_IA32_EFER |                          \
+>               VM_EXIT_LOAD_IA32_EFER |                          \
+> +             VM_EXIT_SAVE_VMX_PREEMPTION_TIMER |               \
+>               VM_EXIT_CLEAR_BNDCFGS |                           \
+>               VM_EXIT_PT_CONCEAL_PIP |                          \
+>               VM_EXIT_CLEAR_IA32_RTIT_CTL)
+
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
 Best regards,
 	Maxim Levitsky
-
 
