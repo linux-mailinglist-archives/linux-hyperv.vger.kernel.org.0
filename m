@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6F8F5718DB
-	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:49:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF5B85718E4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 12 Jul 2022 13:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbiGLLtS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 12 Jul 2022 07:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        id S232330AbiGLLvB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 12 Jul 2022 07:51:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231961AbiGLLtR (ORCPT
+        with ESMTP id S229634AbiGLLvA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 12 Jul 2022 07:49:17 -0400
+        Tue, 12 Jul 2022 07:51:00 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9597F1C931
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:49:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3542332D99
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657626554;
+        s=mimecast20190719; t=1657626659;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MhycE2vEwnb9k/UxKYsjDnSNw/br2B5mjJJO+OCBKJk=;
-        b=ehznDEmkGM2ONKd+Uo0Q2cYNEmIOn7L4pWRFrjSH8CKPBqZ2+VOipBsrBdDVUJnpaoteTg
-        WjS0y7jKt3UYrfamVO59A4CNa03rnvwBExy8hzorTVbVHvQQwQeDLMtfcK9pC8P2mShHF9
-        C4uP9QtM9oWBhA87sLLyqtJtNg/MitE=
+        bh=uhQ1e32cAsQhl7wXXe/WWIG20tXbjxkVpQUAq7qDxOA=;
+        b=e6gkFO3haJJaErLYrfz8P81EztknmcQyUVMgT/J9s3IQLTHeyRbiFIxtBbe/2+HMyqSXJv
+        Rm+DDuG0QNz00Fwl8sTvUW+cv1vNJEkU5F6IGB+EO3QOeTFFD0qXR/DvMOYgf4QTsSgCRZ
+        BMiX9Lm+7VpY1Wpgia+5e8/2e/Ew53g=
 Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
  [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-260-Vh0l74L7PCiyxZV2anG4uQ-1; Tue, 12 Jul 2022 07:49:13 -0400
-X-MC-Unique: Vh0l74L7PCiyxZV2anG4uQ-1
-Received: by mail-qt1-f198.google.com with SMTP id j29-20020ac8405d000000b0031e9bb077dfso6731418qtl.15
-        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:49:13 -0700 (PDT)
+ us-mta-210-IdbcfXRCMQaioHJFzQ84-Q-1; Tue, 12 Jul 2022 07:50:56 -0400
+X-MC-Unique: IdbcfXRCMQaioHJFzQ84-Q-1
+Received: by mail-qt1-f198.google.com with SMTP id o22-20020ac87c56000000b0031d4ab81b21so6697581qtv.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 12 Jul 2022 04:50:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=MhycE2vEwnb9k/UxKYsjDnSNw/br2B5mjJJO+OCBKJk=;
-        b=6p05qTlMOetjgzQ+rJdqiFIrk2JKVQE+NeiUFy7cfo5yB7o9m0EL5lVvFQ9bF3xvi9
-         8eoiGrFrkQza3h+AplCTdDnW4mdSgKr3IttQj1HLBpI22nM41fDDLZnZcrWPcS/poXlP
-         E3vx86aLmKBzMfKLqFrGqEY+Wsp47wWfmA9i9OnL3LN05uVyBfnloiJ7UpMImCgbj4Uw
-         a9kJ8X6WPcjFP3eNw61pN7m9rdWBDL1kkiG/Xf2vN5RXcQ8tQbn9hSWACEQgJR7v5nX6
-         02XL8q8cNt36l9ITSO9a6DWWDDed1VwOmJH2Pc3LX2KnnExGhADF534fPwXkkirMVURT
-         f7ng==
-X-Gm-Message-State: AJIora+xvqD627eDRQjy+L2ePMAONLXXv/INH7HNaT/IS3VXNAag7TaD
-        t80NBQ19Fp8HLbHUSD8+rdRQcP24KMtec+4H699dsWVNGwthwe4nniCqM454uZlSkFNmPf5iDDC
-        w3gf5lJVHFRtWmp0FlcMDc4CY
-X-Received: by 2002:a05:622a:1a1b:b0:31e:b7c8:b6cb with SMTP id f27-20020a05622a1a1b00b0031eb7c8b6cbmr5750535qtb.175.1657626552897;
-        Tue, 12 Jul 2022 04:49:12 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1s34OKcGuKrWbIoEXwTK/WXOI2GkPYpqBLQQTkv+ldrVvzF+HzU3Am9Cir8DCWD7cHNtNoTFQ==
-X-Received: by 2002:a05:622a:1a1b:b0:31e:b7c8:b6cb with SMTP id f27-20020a05622a1a1b00b0031eb7c8b6cbmr5750518qtb.175.1657626552708;
-        Tue, 12 Jul 2022 04:49:12 -0700 (PDT)
+        bh=uhQ1e32cAsQhl7wXXe/WWIG20tXbjxkVpQUAq7qDxOA=;
+        b=4PqqIzTsh4MEJVp+9fDvta9prpa+03LkcJ7JI2cl+jPDYMAQ3gSs4dJXJiYyvw5Aoo
+         v5xesYppbQGjhMVzdjgjhfA8i0hLHZg7pwWV511CUjoWyt/35cDrSkpaHLm7uldYEFz/
+         A9foJXxiwGvGS7qMP/Cu/IgD0SQp43kfYmd0tHAc/Co9VMmDqb+hSwN9trMCkCrY2E1v
+         nDd3H2fK4heTU0mBkqjLuifsnwo3YfK+Zrl8PLIOlVcXk9BvtwpVq4+Lj7xEiY/+rodV
+         Td6dz7b4/B/LygF8KQQsZP8znlZU2DyFCiPy+VIHh0SVRNXtwq+ant5oHjxU6yL9yy4c
+         TCvw==
+X-Gm-Message-State: AJIora8DFBcW/WDFjB6VmGzV7dvA5TDCX47Q6OC0+5X6aFvKL3yHelpA
+        qfnSNmB91N7IwYK4U8E4MErviISVl4rRExLNAesRve56+NL8cDngzcwlEyws99n5xkyt+OG3itS
+        46LtiHoHz0eDU+Xw4wzVpRKOP
+X-Received: by 2002:a05:620a:40c2:b0:6af:d667:532a with SMTP id g2-20020a05620a40c200b006afd667532amr14752331qko.616.1657626655802;
+        Tue, 12 Jul 2022 04:50:55 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1v2qGVQTARKu0OjXoQGwV0zbnGFEiKyJpZiqtkaR4OpRY56uw0+iih/cRGTBYSWBzdYmsApRg==
+X-Received: by 2002:a05:620a:40c2:b0:6af:d667:532a with SMTP id g2-20020a05620a40c200b006afd667532amr14752322qko.616.1657626655602;
+        Tue, 12 Jul 2022 04:50:55 -0700 (PDT)
 Received: from [10.35.4.238] (bzq-82-81-161-50.red.bezeqint.net. [82.81.161.50])
-        by smtp.gmail.com with ESMTPSA id m6-20020a05620a290600b006a758ce2ae1sm9729262qkp.104.2022.07.12.04.49.10
+        by smtp.gmail.com with ESMTPSA id bq37-20020a05620a46a500b006a36b0d7f27sm9080067qkb.76.2022.07.12.04.50.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 04:49:12 -0700 (PDT)
-Message-ID: <6a92c7b3ab9932ebfb459841021f2cc1de03b5e1.camel@redhat.com>
-Subject: Re: [PATCH v3 01/25] KVM: x86: hyper-v: Expose access to debug MSRs
- in the partition privilege flags
+        Tue, 12 Jul 2022 04:50:55 -0700 (PDT)
+Message-ID: <488553b9a51b5c0f7f20dae5857278f38da01226.camel@redhat.com>
+Subject: Re: [PATCH v3 04/25] KVM: VMX: Define VMCS-to-EVMCS conversion for
+ the new fields
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
@@ -66,10 +66,10 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 12 Jul 2022 14:49:08 +0300
-In-Reply-To: <20220708144223.610080-2-vkuznets@redhat.com>
+Date:   Tue, 12 Jul 2022 14:50:51 +0300
+In-Reply-To: <20220708144223.610080-5-vkuznets@redhat.com>
 References: <20220708144223.610080-1-vkuznets@redhat.com>
-         <20220708144223.610080-2-vkuznets@redhat.com>
+         <20220708144223.610080-5-vkuznets@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-5.fc34) 
 MIME-Version: 1.0
@@ -84,50 +84,83 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, 2022-07-08 at 16:41 +0200, Vitaly Kuznetsov wrote:
-> For some features, Hyper-V spec defines two separate CPUID bits: one
-> listing whether the feature is supported or not and another one showing
-> whether guest partition was granted access to the feature ("partition
-> privilege mask"). 'Debug MSRs available' is one of such features. Add
-> the missing 'access' bit.
+On Fri, 2022-07-08 at 16:42 +0200, Vitaly Kuznetsov wrote:
+> Enlightened VMCS v1 definition was updated with new fields, support
+> them in KVM by defining VMCS-to-EVMCS conversion.
 > 
-> Fixes: f97f5a56f597 ("x86/kvm/hyper-v: Add support for synthetic debugger interface")
+> Note: SSP, CET and Guest LBR features are not supported by KVM yet and
+> the corresponding fields are not defined in 'enum vmcs_field', leave
+> them commented out for now.
+> 
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/kvm/hyperv.c             | 1 +
->  include/asm-generic/hyperv-tlfs.h | 2 ++
->  2 files changed, 3 insertions(+)
+>  arch/x86/kvm/vmx/evmcs.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index e2e95a6fccfd..e08189211d9a 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -2496,6 +2496,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  			ent->eax |= HV_MSR_RESET_AVAILABLE;
->  			ent->eax |= HV_MSR_REFERENCE_TSC_AVAILABLE;
->  			ent->eax |= HV_ACCESS_FREQUENCY_MSRS;
-> +			ent->eax |= HV_ACCESS_DEBUG_MSRS;
->  			ent->eax |= HV_ACCESS_REENLIGHTENMENT;
+> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+> index 6a61b1ae7942..8bea5dea0341 100644
+> --- a/arch/x86/kvm/vmx/evmcs.c
+> +++ b/arch/x86/kvm/vmx/evmcs.c
+> @@ -28,6 +28,8 @@ const struct evmcs_field vmcs_field_to_evmcs_1[] = {
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1),
+>  	EVMCS1_FIELD(HOST_IA32_EFER, host_ia32_efer,
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1),
+> +	EVMCS1_FIELD(HOST_IA32_PERF_GLOBAL_CTRL, host_ia32_perf_global_ctrl,
+> +		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1),
+>  	EVMCS1_FIELD(HOST_CR0, host_cr0,
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1),
+>  	EVMCS1_FIELD(HOST_CR3, host_cr3,
+> @@ -78,6 +80,8 @@ const struct evmcs_field vmcs_field_to_evmcs_1[] = {
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+>  	EVMCS1_FIELD(GUEST_IA32_EFER, guest_ia32_efer,
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+> +	EVMCS1_FIELD(GUEST_IA32_PERF_GLOBAL_CTRL, guest_ia32_perf_global_ctrl,
+> +		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+>  	EVMCS1_FIELD(GUEST_PDPTR0, guest_pdptr0,
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+>  	EVMCS1_FIELD(GUEST_PDPTR1, guest_pdptr1,
+> @@ -126,6 +130,28 @@ const struct evmcs_field vmcs_field_to_evmcs_1[] = {
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+>  	EVMCS1_FIELD(XSS_EXIT_BITMAP, xss_exit_bitmap,
+>  		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP2),
+> +	EVMCS1_FIELD(ENCLS_EXITING_BITMAP, encls_exiting_bitmap,
+> +		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP2),
+> +	EVMCS1_FIELD(TSC_MULTIPLIER, tsc_multiplier,
+> +		     HV_VMX_ENLIGHTENED_CLEAN_FIELD_CONTROL_GRP2),
+> +	/*
+> +	 * Not used by KVM:
+> +	 *
+> +	 * EVMCS1_FIELD(0x00006828, guest_ia32_s_cet,
+> +	 *	     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+> +	 * EVMCS1_FIELD(0x0000682A, guest_ssp,
+> +	 *	     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_BASIC),
+
+> +	 * EVMCS1_FIELD(0x0000682C, guest_ia32_int_ssp_table_addr,
+> +	 *	     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+
+
+> +	 * EVMCS1_FIELD(0x00002816, guest_ia32_lbr_ctl,
+> +	 *	     HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_GRP1),
+
+> +	 * EVMCS1_FIELD(0x00006C18, host_ia32_s_cet,
+> +	 *	     HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1),
+
+> +	 * EVMCS1_FIELD(0x00006C1A, host_ssp,
+> +	 *	     HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1),
+> +	 * EVMCS1_FIELD(0x00006C1C, host_ia32_int_ssp_table_addr,
+> +	 *	     HV_VMX_ENLIGHTENED_CLEAN_FIELD_HOST_GRP1),
+> +	 */
+
 >  
->  			ent->ebx |= HV_POST_MESSAGES;
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index fdce7a4cfc6f..1d99dd296a76 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -70,6 +70,8 @@
->  #define HV_MSR_GUEST_IDLE_AVAILABLE		BIT(10)
->  /* Partition local APIC and TSC frequency registers available */
->  #define HV_ACCESS_FREQUENCY_MSRS		BIT(11)
-> +/* Debug MSRs available */
-> +#define HV_ACCESS_DEBUG_MSRS			BIT(12)
->  /* AccessReenlightenmentControls privilege */
->  #define HV_ACCESS_REENLIGHTENMENT		BIT(13)
->  /* AccessTscInvariantControls privilege */
+>  	/* 64 bit read only */
+>  	EVMCS1_FIELD(GUEST_PHYSICAL_ADDRESS, guest_physical_address,
 
 
-I guess you mean HV_FEATURE_DEBUG_MSRS_AVAILABLE and the new HV_ACCESS_DEBUG_MSRS
+I checked the Intel's SDM for encodings of the unused fields,
+and checked the [1] for the clean bits.
+All look good but as usual I could have missed something.
 
-I checked the spec and the bits match, so I guess:
+[1] https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/datatypes/hv_vmx_enlightened_vmcs
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
