@@ -2,61 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07B88574869
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Jul 2022 11:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E900F574895
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Jul 2022 11:22:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238098AbiGNJRW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 14 Jul 2022 05:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
+        id S238175AbiGNJWw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 14 Jul 2022 05:22:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237944AbiGNJQx (ORCPT
+        with ESMTP id S237834AbiGNJWf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 14 Jul 2022 05:16:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B16DE481F4
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Jul 2022 02:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657790076;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UjsNm2Jv3oaUf3Eo8JPqiZa30xi6lvau/0XmuvFshsw=;
-        b=WZwnbKW82lXKkvk4Fl+AWXumdEfMkwUl25ITftnNA8OroVkDHHUPzFiFH4Tch32b+GfYXO
-        fm/4bfIUFk8Z5MSHNzePJxVCKtzo8TUjbhsSYeFvg9iYgDm2grKRcgTNLzovUhphEaGMEW
-        BKQxcym9UPfZt1Xpca3ioiJGtl0ry8s=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-426-YCDDQresObKSa9XCUyP33A-1; Thu, 14 Jul 2022 05:14:34 -0400
-X-MC-Unique: YCDDQresObKSa9XCUyP33A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BD20B3C01DE4;
-        Thu, 14 Jul 2022 09:14:33 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.40.194.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B79F2166B26;
-        Thu, 14 Jul 2022 09:14:31 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thu, 14 Jul 2022 05:22:35 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5B1C13D5D;
+        Thu, 14 Jul 2022 02:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657790430; x=1689326430;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=Hxg4gO6Jxz/Xms9zjmnevBwshVx92baqpiGUsry7Yz0=;
+  b=kZZpCx0lIaIaM5yKJ7PSt7o8UXqJQKQtuyszEhfK7pjPofmsfo1So9lw
+   w6V2kVShM3QbYpJKAkMRhsqVZxSy1SBQQvuCMuJhDf2rJvGUJBs4wsaC6
+   +vh9GpBylNiMeFs1F5DzJz8yfohKs+pLLUC/6hZ+n13Ti90IBQtpYprnE
+   0GaKJNGY8zfQ2rMk1Dkh8rp2WAFDfoIaLB39O0BlQUbDK+V2Dm4cWcjwX
+   uQzyJjInG1F+UC+qure9MAGFJkdHLcD6b3Xd6V9ylbVHhXyHksrW7SBFV
+   pfGpVehn872LDCNSxJdnOBqxITBkhAksu9ybqiRAADZEr3Tn80t04544B
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10407"; a="349429849"
+X-IronPort-AV: E=Sophos;i="5.92,269,1650956400"; 
+   d="scan'208";a="349429849"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 02:20:30 -0700
+X-IronPort-AV: E=Sophos;i="5.92,269,1650956400"; 
+   d="scan'208";a="593307408"
+Received: from wmoyer-mobl3.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.212.86.31])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2022 02:20:27 -0700
+Message-ID: <2802b8c36ad3741701e04ec5f52d2e9b849a90e3.camel@intel.com>
+Subject: Re: [PATCH v4 07/25] KVM: selftests: Add
+ ENCLS_EXITING_BITMAP{,HIGH} VMCS fields
+From:   Kai Huang <kai.huang@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>
 Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 25/25] KVM: nVMX: Use cached host MSR_IA32_VMX_MISC value for setting up nested MSR
-Date:   Thu, 14 Jul 2022 11:13:27 +0200
-Message-Id: <20220714091327.1085353-26-vkuznets@redhat.com>
-In-Reply-To: <20220714091327.1085353-1-vkuznets@redhat.com>
+Date:   Thu, 14 Jul 2022 21:20:25 +1200
+In-Reply-To: <20220714091327.1085353-8-vkuznets@redhat.com>
 References: <20220714091327.1085353-1-vkuznets@redhat.com>
+         <20220714091327.1085353-8-vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,35 +67,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-vmcs_config has cached host MSR_IA32_VMX_MISC value, use it for setting
-up nested MSR_IA32_VMX_MISC in nested_vmx_setup_ctls_msrs() and avoid the
-redundant rdmsr().
+On Thu, 2022-07-14 at 11:13 +0200, Vitaly Kuznetsov wrote:
+> The updated Enlightened VMCS definition has 'encls_exiting_bitmap'
+> field which needs mapping to VMCS, add the missing encoding.
+>=20
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/include/x86_64/vmx.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/vmx.h b/tools/tes=
+ting/selftests/kvm/include/x86_64/vmx.h
+> index cc3604f8f1d3..5292d30fb7f2 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/vmx.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/vmx.h
+> @@ -208,6 +208,8 @@ enum vmcs_field {
+>  	VMWRITE_BITMAP_HIGH		=3D 0x00002029,
+>  	XSS_EXIT_BITMAP			=3D 0x0000202C,
+>  	XSS_EXIT_BITMAP_HIGH		=3D 0x0000202D,
+> +	ENCLS_EXITING_BITMAP		=3D 0x0000202E,
+> +	ENCLS_EXITING_BITMAP_HIGH	=3D 0x0000202F,
+>  	TSC_MULTIPLIER			=3D 0x00002032,
+>  	TSC_MULTIPLIER_HIGH		=3D 0x00002033,
+>  	GUEST_PHYSICAL_ADDRESS		=3D 0x00002400,
 
-No (real) functional change intended.
+Reviewed-by: Kai Huang <kai.huang@intel.com>
 
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+--=20
+Thanks,
+-Kai
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 3d386c663fac..8026dab71086 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -6754,10 +6754,7 @@ void nested_vmx_setup_ctls_msrs(struct vmcs_config *vmcs_conf, u32 ept_caps)
- 		msrs->secondary_ctls_high |= SECONDARY_EXEC_ENCLS_EXITING;
- 
- 	/* miscellaneous data */
--	rdmsr(MSR_IA32_VMX_MISC,
--		msrs->misc_low,
--		msrs->misc_high);
--	msrs->misc_low &= VMX_MISC_SAVE_EFER_LMA;
-+	msrs->misc_low = (u32)vmcs_conf->misc & VMX_MISC_SAVE_EFER_LMA;
- 	msrs->misc_low |=
- 		MSR_IA32_VMX_MISC_VMWRITE_SHADOW_RO_FIELDS |
- 		VMX_MISC_EMULATED_PREEMPTION_TIMER_RATE |
--- 
-2.35.3
 
