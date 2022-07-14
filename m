@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A08A5749D6
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Jul 2022 11:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F7F05749DE
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Jul 2022 11:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238087AbiGNJ5m (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 14 Jul 2022 05:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37028 "EHLO
+        id S231812AbiGNJ7f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 14 Jul 2022 05:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237582AbiGNJ52 (ORCPT
+        with ESMTP id S233253AbiGNJ7c (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 14 Jul 2022 05:57:28 -0400
+        Thu, 14 Jul 2022 05:59:32 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3F6150184
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Jul 2022 02:57:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7E66A630D
+        for <linux-hyperv@vger.kernel.org>; Thu, 14 Jul 2022 02:59:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657792639;
+        s=mimecast20190719; t=1657792770;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=due5AmS56nwKHQURWRio6Jj0V5YHWUHW3moonKZbp+k=;
-        b=jKt76gTpcOjv4x+mHomcPP6DK2cyJQWVEE9y7Tl5r+YlyLzRUdNs0vwUn0UhlB/XMiEK1U
-        ASCXnK976G9hXN6PnGyJv4a3D3VFlhhMYmRZv5pvU7YA7VjSSFC0zrZTw5gIbCz0z0CRdp
-        NNmxU+fUrs+S3bUt0fgODD5lE2roQoY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=zXjYUn/LR7t2A7uSGt42ou7GfATznOMUig3WAXqM26I=;
+        b=dT0dvZPF/eF1I2wT/FMwNAWTd1pOMYAQMsmjUTnifRTfF0ITXTxRWDWVJUDuqIB4P4isAY
+        WZ4ygg3p/yVetPAovW8OgyVWpNmvwm69U3+fK1P4w0xy3vogwLNA/rC7hv9UEPO4bxBE6C
+        a2UlakKc9oTism/jDmLAvTovVkfFDLE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-649-sE857LCnPjqUd4lSny2T7Q-1; Thu, 14 Jul 2022 05:57:18 -0400
-X-MC-Unique: sE857LCnPjqUd4lSny2T7Q-1
-Received: by mail-wr1-f72.google.com with SMTP id o1-20020adfba01000000b0021b90bd28d2so424513wrg.14
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Jul 2022 02:57:18 -0700 (PDT)
+ us-mta-303-f_YOJsA_MmOugI9uDVBcow-1; Thu, 14 Jul 2022 05:59:29 -0400
+X-MC-Unique: f_YOJsA_MmOugI9uDVBcow-1
+Received: by mail-wm1-f71.google.com with SMTP id n21-20020a7bc5d5000000b003a2ff4d7a9bso528547wmk.9
+        for <linux-hyperv@vger.kernel.org>; Thu, 14 Jul 2022 02:59:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=due5AmS56nwKHQURWRio6Jj0V5YHWUHW3moonKZbp+k=;
-        b=gYNNAkYm329bGmvdNtVavN8ejdJIB29ZwDxs0a5cZLklTrkJc0BmM42sLIuy5mngOj
-         JkYRUMHtpG4hVUDtkEtU5QRZ7B632qn/ah8wWmlN3NkfBGCCqvJ0bFHCfn99W/hWvMA6
-         NRRY8WlWcBRoGC3pVAH0u0VtPF5R5+G9X6dNrvuYTjgxXXQ8WKfXIr0syfUX4x/qsZZW
-         q3j3sAtlQnG2Sb1ovdFQ11Jo3iolcJv/MhmqYtxgqEzJH5ZxI8GLpOUcxoTx7WLcSQYu
-         obbwZI+WohCNW2VJYDYeACKiZaC2pFN60N3PRgddZePj9SWQW6kfZ6qMUkfPcG0A1Stu
-         761w==
-X-Gm-Message-State: AJIora9X4T4UQRG+D3l0FDilo4h82cSPmiAfuIf67k+wJzb94Ji82jIN
-        DZQkkEYTHoTBCdqEAveznussEKgUpKmiLUXufFDr5ydh1OUwP1bn+8kx/8/IpBUMl4xoHL8IXG4
-        uXSho4an3LitmcSOxWOIPcuEe
-X-Received: by 2002:a5d:6e8d:0:b0:21d:7adc:7102 with SMTP id k13-20020a5d6e8d000000b0021d7adc7102mr7322820wrz.9.1657792637713;
-        Thu, 14 Jul 2022 02:57:17 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1thfI/HeBALlz1MpWK7X8M2igq3/FhpwNnjJ1ZYgqajB1pTOb1ykpm1uWMRTuBXxCFL8QuxDg==
-X-Received: by 2002:a5d:6e8d:0:b0:21d:7adc:7102 with SMTP id k13-20020a5d6e8d000000b0021d7adc7102mr7322802wrz.9.1657792637491;
-        Thu, 14 Jul 2022 02:57:17 -0700 (PDT)
+        bh=zXjYUn/LR7t2A7uSGt42ou7GfATznOMUig3WAXqM26I=;
+        b=n+KcotCDtTb/ikiIJp30Mv5CV1dLKQciGaI6YfMdLrOQeI0u+RTi5Z68q+DVODiEdX
+         B8MWibJfGKQY8X/tg9AUQtHtQv6bpvot9r7ZLZUQW4w8Rwm5UvOL5miJZXYiPRvVitsB
+         w1ArK6M8eHOQLDfKVDFywPSs9AcI7I7WVREmIVzJhRRXDCn5FnXDQOqF2wdKWqEIxUHX
+         aSwqbYB40TG/PCWbrQQYgqNUwBDBJzN7eQS5m5PKsDDRpJguaeAvm26EAFIEI4qi3vF9
+         7nLPXvpAUL+BZL/rh8KrfRxM46tYSEvjaQZTIwXtBFVHW6nveUPg/LYkcTq3lscSlMuO
+         PmvA==
+X-Gm-Message-State: AJIora8AD0i8FExoGsnBdziJj48D5lWmp1H8bs/f2bqD5b2ZQsHdi+cP
+        xBDwuS++1Dr1L/wkMipTHiULXHWCPKcfclEdlqc3UMI906vrNydY3LpkvJP9NzkLnEBmXI/MKr9
+        ojDV2peL7V3xQJ6tOuSeQABuL
+X-Received: by 2002:a05:6000:184f:b0:21d:a1fb:4581 with SMTP id c15-20020a056000184f00b0021da1fb4581mr7681663wri.651.1657792768129;
+        Thu, 14 Jul 2022 02:59:28 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1v00Jsb6xlCiW+CE/1WE8v9/+VZRxbnmbKMKK2zx0OxH5+3894bMwSHl46djcMyHIlcOpK15Q==
+X-Received: by 2002:a05:6000:184f:b0:21d:a1fb:4581 with SMTP id c15-20020a056000184f00b0021da1fb4581mr7681655wri.651.1657792767963;
+        Thu, 14 Jul 2022 02:59:27 -0700 (PDT)
 Received: from [10.35.4.238] (bzq-82-81-161-50.red.bezeqint.net. [82.81.161.50])
-        by smtp.gmail.com with ESMTPSA id o12-20020adfca0c000000b0021dbaa4f38dsm1287018wrh.18.2022.07.14.02.57.15
+        by smtp.gmail.com with ESMTPSA id p6-20020a05600c358600b003a2e2ba94ecsm4693716wmq.40.2022.07.14.02.59.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 02:57:16 -0700 (PDT)
-Message-ID: <aff0dd9ba5d5730435a92e6a90dc15bb6eae5977.camel@redhat.com>
-Subject: Re: [PATCH v4 03/25] x86/hyperv: Update 'struct
- hv_enlightened_vmcs' definition
+        Thu, 14 Jul 2022 02:59:27 -0700 (PDT)
+Message-ID: <849757ed499c4190762a28a1bbf819382abaf22c.camel@redhat.com>
+Subject: Re: [PATCH v4 06/25] KVM: x86: hyper-v: Cache
+ HYPERV_CPUID_NESTED_FEATURES CPUID leaf
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
@@ -66,17 +66,17 @@ Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 14 Jul 2022 12:57:15 +0300
-In-Reply-To: <20220714091327.1085353-4-vkuznets@redhat.com>
+Date:   Thu, 14 Jul 2022 12:59:25 +0300
+In-Reply-To: <20220714091327.1085353-7-vkuznets@redhat.com>
 References: <20220714091327.1085353-1-vkuznets@redhat.com>
-         <20220714091327.1085353-4-vkuznets@redhat.com>
+         <20220714091327.1085353-7-vkuznets@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.4 (3.40.4-5.fc34) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,81 +85,80 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Thu, 2022-07-14 at 11:13 +0200, Vitaly Kuznetsov wrote:
-> Updated Hyper-V Enlightened VMCS specification lists several new
-> fields for the following features:
+> KVM has to check guest visible HYPERV_CPUID_NESTED_FEATURES.EBX CPUID
+> leaf to know which Enlightened VMCS definition to use (original or 2022
+> update). Cache the leaf along with other Hyper-V CPUID feature leaves
+> to make the check quick.
 > 
-> - PerfGlobalCtrl
-> - EnclsExitingBitmap
-> - Tsc Scaling
-> - GuestLbrCtl
-> - CET
-> - SSP
-> 
-> Update the definition. The updated definition is available only when
-> CPUID.0x4000000A.EBX BIT(0) is '1'. Add a define for it as well.
-> 
-> Note: The latest TLFS is available at
-> https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/tlfs
+> While on it, wipe the whole 'hv_vcpu->cpuid_cache' with memset() instead
+> of having to zero each particular member when the corresponding CPUID entry
+> was not found.
 > 
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  arch/x86/include/asm/hyperv-tlfs.h | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
+>  arch/x86/include/asm/kvm_host.h |  2 ++
+>  arch/x86/kvm/hyperv.c           | 17 ++++++++---------
+>  2 files changed, 10 insertions(+), 9 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 6f0acc45e67a..ebc27017fa48 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -138,6 +138,17 @@
->  #define HV_X64_NESTED_GUEST_MAPPING_FLUSH              BIT(18)
->  #define HV_X64_NESTED_MSR_BITMAP                       BIT(19)
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index de5a149d0971..077ec9cf3169 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -616,6 +616,8 @@ struct kvm_vcpu_hv {
+>                 u32 enlightenments_eax; /* HYPERV_CPUID_ENLIGHTMENT_INFO.EAX */
+>                 u32 enlightenments_ebx; /* HYPERV_CPUID_ENLIGHTMENT_INFO.EBX */
+>                 u32 syndbg_cap_eax; /* HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES.EAX */
+> +               u32 nested_eax; /* HYPERV_CPUID_NESTED_FEATURES.EAX */
+> +               u32 nested_ebx; /* HYPERV_CPUID_NESTED_FEATURES.EBX */
+>         } cpuid_cache;
+>  };
 >  
-> +/*
-> + * Nested quirks. These are HYPERV_CPUID_NESTED_FEATURES.EBX bits.
-> + *
-> + * Note: HV_X64_NESTED_EVMCS1_2022_UPDATE is not currently documented in any
-> + * published TLFS version. When the bit is set, nested hypervisor can use
-> + * 'updated' eVMCSv1 specification (perf_global_ctrl, s_cet, ssp, lbr_ctl,
-> + * encls_exiting_bitmap, tsc_multiplier fields which were missing in 2016
-> + * specification).
-> + */
-> +#define HV_X64_NESTED_EVMCS1_2022_UPDATE               BIT(0)
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index e08189211d9a..a8e4944ca110 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -2005,31 +2005,30 @@ void kvm_hv_set_cpuid(struct kvm_vcpu *vcpu)
+>  
+>         hv_vcpu = to_hv_vcpu(vcpu);
+>  
+> +       memset(&hv_vcpu->cpuid_cache, 0, sizeof(hv_vcpu->cpuid_cache));
 > +
->  /*
->   * This is specific to AMD and specifies that enlightened TLB flush is
->   * supported. If guest opts in to this feature, ASID invalidations only
-> @@ -559,9 +570,20 @@ struct hv_enlightened_vmcs {
->         u64 partition_assist_page;
->         u64 padding64_4[4];
->         u64 guest_bndcfgs;
-> -       u64 padding64_5[7];
-> +       u64 guest_ia32_perf_global_ctrl;
-> +       u64 guest_ia32_s_cet;
-> +       u64 guest_ssp;
-> +       u64 guest_ia32_int_ssp_table_addr;
-> +       u64 guest_ia32_lbr_ctl;
-> +       u64 padding64_5[2];
->         u64 xss_exit_bitmap;
-> -       u64 padding64_6[7];
-> +       u64 encls_exiting_bitmap;
-> +       u64 host_ia32_perf_global_ctrl;
-> +       u64 tsc_multiplier;
-> +       u64 host_ia32_s_cet;
-> +       u64 host_ssp;
-> +       u64 host_ia32_int_ssp_table_addr;
-> +       u64 padding64_6;
->  } __packed;
+>         entry = kvm_find_cpuid_entry(vcpu, HYPERV_CPUID_FEATURES, 0);
+>         if (entry) {
+>                 hv_vcpu->cpuid_cache.features_eax = entry->eax;
+>                 hv_vcpu->cpuid_cache.features_ebx = entry->ebx;
+>                 hv_vcpu->cpuid_cache.features_edx = entry->edx;
+> -       } else {
+> -               hv_vcpu->cpuid_cache.features_eax = 0;
+> -               hv_vcpu->cpuid_cache.features_ebx = 0;
+> -               hv_vcpu->cpuid_cache.features_edx = 0;
+>         }
 >  
->  #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_NONE                    0
+>         entry = kvm_find_cpuid_entry(vcpu, HYPERV_CPUID_ENLIGHTMENT_INFO, 0);
+>         if (entry) {
+>                 hv_vcpu->cpuid_cache.enlightenments_eax = entry->eax;
+>                 hv_vcpu->cpuid_cache.enlightenments_ebx = entry->ebx;
+> -       } else {
+> -               hv_vcpu->cpuid_cache.enlightenments_eax = 0;
+> -               hv_vcpu->cpuid_cache.enlightenments_ebx = 0;
+>         }
+>  
+>         entry = kvm_find_cpuid_entry(vcpu, HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES, 0);
+>         if (entry)
+>                 hv_vcpu->cpuid_cache.syndbg_cap_eax = entry->eax;
+> -       else
+> -               hv_vcpu->cpuid_cache.syndbg_cap_eax = 0;
+> +
+> +       entry = kvm_find_cpuid_entry(vcpu, HYPERV_CPUID_NESTED_FEATURES, 0);
+> +       if (entry) {
+> +               hv_vcpu->cpuid_cache.nested_eax = entry->eax;
+> +               hv_vcpu->cpuid_cache.nested_ebx = entry->ebx;
+> +       }
+>  }
+>  
+>  int kvm_hv_set_enforce_cpuid(struct kvm_vcpu *vcpu, bool enforce)
 
-All look good now.
-
-I really don't like the new 'online' TLFS spec - as you said,
-they can indeed change it any moment without any traces.
-
-Seems it was done with good intentions, and it much easier to use,
-but they should also provide a PDF, or at least some form or archive of
-these web pages.
+Makes sense, looks good.
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
