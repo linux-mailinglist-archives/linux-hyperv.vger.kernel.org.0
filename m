@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D00C9574FFE
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Jul 2022 15:52:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 127C857500B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Jul 2022 15:53:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240233AbiGNNwr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 14 Jul 2022 09:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
+        id S240354AbiGNNxL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 14 Jul 2022 09:53:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240178AbiGNNvu (ORCPT
+        with ESMTP id S240158AbiGNNwX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 14 Jul 2022 09:51:50 -0400
+        Thu, 14 Jul 2022 09:52:23 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA6FB62A6E
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Jul 2022 06:50:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 60488643CE
+        for <linux-hyperv@vger.kernel.org>; Thu, 14 Jul 2022 06:51:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657806657;
+        s=mimecast20190719; t=1657806665;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PcXj7rF+YNeWDy75jVAivm7WbSpMYmPCUqIi3ZpKFPs=;
-        b=Evf3btRwZ1sQ/v+6uLjIenuZ9RHbKlfUlf1ppc+yzLW2R0baQlDZ8JJxvSb/VBoAJal9BC
-        gn4+MbPyzpAuc86gelsKr6R8u0wrSr+KfRug2520I7iMmh1idavVcVRYBgs6ojHfjXKOsR
-        pl+u0OocuiHFUWU1Jr+swmVrRrKD4jM=
+        bh=UhUjnL8jffpBRvdK+83caHcfCkV1B7jouem6M9M/8vA=;
+        b=dLzEp2muRpQCRgqVP/ZZTOVY0nR9/QerlOGNT/n46GUc6GPA4VyJpE4fKo1NLUY79N0xti
+        3aZRuGjWXNTeBGrK9HSS1ERs/BIKiaoDqG2yPvL0EVvCbcEFLhQTeBI+p29yqYajsPxNaK
+        l1Pcq1mWsP9lUyhdVaIpr1JZgrY8V68=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-86-pOrfX_VfMl--0DEhCcmt0g-1; Thu, 14 Jul 2022 09:50:54 -0400
-X-MC-Unique: pOrfX_VfMl--0DEhCcmt0g-1
+ us-mta-262-cJFuRoHLMJqQJVz9P-yJ_A-1; Thu, 14 Jul 2022 09:50:56 -0400
+X-MC-Unique: cJFuRoHLMJqQJVz9P-yJ_A-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D83B803301;
-        Thu, 14 Jul 2022 13:50:53 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 869DD811E84;
+        Thu, 14 Jul 2022 13:50:55 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.194.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56BB12166B26;
-        Thu, 14 Jul 2022 13:50:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B108F2166B26;
+        Thu, 14 Jul 2022 13:50:53 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <seanjc@google.com>,
@@ -48,9 +48,9 @@ Cc:     Sean Christopherson <seanjc@google.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 34/39] KVM: selftests: nSVM: Allocate Hyper-V partition assist and VP assist pages
-Date:   Thu, 14 Jul 2022 15:49:24 +0200
-Message-Id: <20220714134929.1125828-35-vkuznets@redhat.com>
+Subject: [PATCH v8 35/39] KVM: selftests: Sync 'struct hv_vp_assist_page' definition with hyperv-tlfs.h
+Date:   Thu, 14 Jul 2022 15:49:25 +0200
+Message-Id: <20220714134929.1125828-36-vkuznets@redhat.com>
 In-Reply-To: <20220714134929.1125828-1-vkuznets@redhat.com>
 References: <20220714134929.1125828-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -67,58 +67,52 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In preparation to testing Hyper-V L2 TLB flush hypercalls, allocate VP
-assist and Partition assist pages and link them to 'struct svm_test_data'.
+'struct hv_vp_assist_page' definition doesn't match TLFS. Also, define
+'struct hv_nested_enlightenments_control' and use it instead of opaque
+'__u64'.
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- tools/testing/selftests/kvm/include/x86_64/svm_util.h | 10 ++++++++++
- tools/testing/selftests/kvm/lib/x86_64/svm.c          | 10 ++++++++++
- 2 files changed, 20 insertions(+)
+ .../selftests/kvm/include/x86_64/evmcs.h      | 22 ++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/x86_64/svm_util.h b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
-index 136ba6a5d027..3922e4842c68 100644
---- a/tools/testing/selftests/kvm/include/x86_64/svm_util.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
-@@ -36,6 +36,16 @@ struct svm_test_data {
- 	void *msr; /* gva */
- 	void *msr_hva;
- 	uint64_t msr_gpa;
-+
-+	/* Hyper-V VP assist page */
-+	void *vp_assist; /* gva */
-+	void *vp_assist_hva;
-+	uint64_t vp_assist_gpa;
-+
-+	/* Hyper-V Partition assist page */
-+	void *partition_assist; /* gva */
-+	void *partition_assist_hva;
-+	uint64_t partition_assist_gpa;
- };
+diff --git a/tools/testing/selftests/kvm/include/x86_64/evmcs.h b/tools/testing/selftests/kvm/include/x86_64/evmcs.h
+index 367e027cd2a4..721e119783a5 100644
+--- a/tools/testing/selftests/kvm/include/x86_64/evmcs.h
++++ b/tools/testing/selftests/kvm/include/x86_64/evmcs.h
+@@ -20,14 +20,26 @@
  
- #define stgi()			\
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/svm.c b/tools/testing/selftests/kvm/lib/x86_64/svm.c
-index 37e9c0a923e0..98a47bf4cb2f 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/svm.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/svm.c
-@@ -47,6 +47,16 @@ vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva)
- 	svm->msr_gpa = addr_gva2gpa(vm, (uintptr_t)svm->msr);
- 	memset(svm->msr_hva, 0, getpagesize());
+ extern bool enable_evmcs;
  
-+	svm->vp_assist = (void *)vm_vaddr_alloc_page(vm);
-+	svm->vp_assist_hva = addr_gva2hva(vm, (uintptr_t)svm->vp_assist);
-+	svm->vp_assist_gpa = addr_gva2gpa(vm, (uintptr_t)svm->vp_assist);
-+	memset(svm->vp_assist_hva, 0, getpagesize());
++struct hv_nested_enlightenments_control {
++	struct {
++		__u32 directhypercall:1;
++		__u32 reserved:31;
++	} features;
++	struct {
++		__u32 reserved;
++	} hypercallControls;
++} __packed;
 +
-+	svm->partition_assist = (void *)vm_vaddr_alloc_page(vm);
-+	svm->partition_assist_hva = addr_gva2hva(vm, (uintptr_t)svm->partition_assist);
-+	svm->partition_assist_gpa = addr_gva2gpa(vm, (uintptr_t)svm->partition_assist);
-+	memset(svm->partition_assist_hva, 0, getpagesize());
-+
- 	*p_svm_gva = svm_gva;
- 	return svm;
- }
++/* Define virtual processor assist page structure. */
+ struct hv_vp_assist_page {
+ 	__u32 apic_assist;
+-	__u32 reserved;
+-	__u64 vtl_control[2];
+-	__u64 nested_enlightenments_control[2];
+-	__u32 enlighten_vmentry;
++	__u32 reserved1;
++	__u64 vtl_control[3];
++	struct hv_nested_enlightenments_control nested_control;
++	__u8 enlighten_vmentry;
++	__u8 reserved2[7];
+ 	__u64 current_nested_vmcs;
+-};
++} __packed;
+ 
+ struct hv_enlightened_vmcs {
+ 	u32 revision_id;
 -- 
 2.35.3
 
