@@ -2,44 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C4B157A8B9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 19 Jul 2022 23:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7487A57A99B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jul 2022 00:04:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232349AbiGSVBw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 19 Jul 2022 17:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47826 "EHLO
+        id S239085AbiGSWE6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 19 Jul 2022 18:04:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230311AbiGSVBv (ORCPT
+        with ESMTP id S235993AbiGSWE5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 19 Jul 2022 17:01:51 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722BE42AC4;
-        Tue, 19 Jul 2022 14:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=R5Au+5U/0PLhoUTkyt9QA4es8I+MEovmCKFKZno3xlw=; b=FX69N5uKCeIMKuHjP1gW9zQcx+
-        cZ+RBGNWHCiZ1K9Yvamb599ZzzU0UKt/NjOwLP/J0QAvsrgHUmFEtnwxwuZnC0T404AcJl/z/lLFA
-        Cu0/wNp+5JLPzsw2YiZzwqKr5Fut3jJYDe8l5CiVdpHW4BW2pdYH2gdRQR96NS5jodJAVgnx17oGX
-        +jdnJrGAWA1um3adlNKSIlABEXA8qikH0tBAEZDOh9oVfBSeQbv7929xyi3jwHKUEc8doKv4gLm8G
-        MLNOFO4hCK5CqOOfgMHGG4su+x/q2GeE6TP6tz55u50QhZUUVxA/u6Hmq44eRBgsp5tli7U+kYcvJ
-        Uk0asL7w==;
-Received: from 200-100-212-117.dial-up.telesp.net.br ([200.100.212.117] helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oDuLT-006k9d-IH; Tue, 19 Jul 2022 23:01:32 +0200
-Message-ID: <8ef53978-f26e-89e3-8b04-6f0eb183f200@igalia.com>
-Date:   Tue, 19 Jul 2022 18:00:39 -0300
+        Tue, 19 Jul 2022 18:04:57 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60F65FAFB;
+        Tue, 19 Jul 2022 15:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658268296; x=1689804296;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pvIxtNbWUdkbgcKb5Tspz0IgM/n/C0XFuT/gdjfEdHk=;
+  b=d+9SoWBzvY4RspCH01rdb72G1r3CGCbPL9uQvNpH6FCxp6/lvul4S8JU
+   dOyt6cNy8PmGlH+xpm8UQ9yPJOJctF50vMNCIO4ZlNWCDGMB/WPy4iz8O
+   zaTXOmIP4jlQN7Ad8K9XpfoE5TduQ0TLP1bpbMU8e/oaeNSbAVYabHDE2
+   WYPuL1EfiNOhGHY2tCmXOjkclFoMSXUWrUckT7UeUrD+nPo1KFs88bX2A
+   /OdjxZ/pao3S67KXaCQAxsFgx5AWiQ5ke3kw9drc/wiICv60bu1G+UgLp
+   eRnzszEaKyD+32QKpWW3LLQKrtlXrsdHmnUFmgYMmjvbTe48R1xRX2JKj
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="350603408"
+X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
+   d="scan'208";a="350603408"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 15:04:56 -0700
+X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
+   d="scan'208";a="843817003"
+Received: from avandeve-mobl.amr.corp.intel.com (HELO [10.209.102.45]) ([10.209.102.45])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 15:04:53 -0700
+Message-ID: <4a9d64b5-0fa4-8294-c78c-37394a156325@linux.intel.com>
+Date:   Tue, 19 Jul 2022 15:04:52 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
 Subject: Re: [PATCH v2 09/13] notifier: Show function names on notifier
  routines if DEBUG_NOTIFIERS is set
 Content-Language: en-US
-To:     Arjan van de Ven <arjan@linux.intel.com>,
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
         kexec@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -64,28 +70,31 @@ References: <20220719195325.402745-1-gpiccoli@igalia.com>
  <e292e128-d732-e770-67d7-b6ed947cec7b@linux.intel.com>
  <8e201d99-78a8-d68c-6d33-676a1ba5a6ee@igalia.com>
  <c297ad10-fe5e-c2ee-5762-e037d051fe3b@linux.intel.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <c297ad10-fe5e-c2ee-5762-e037d051fe3b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+ <8ef53978-f26e-89e3-8b04-6f0eb183f200@igalia.com>
+From:   Arjan van de Ven <arjan@linux.intel.com>
+In-Reply-To: <8ef53978-f26e-89e3-8b04-6f0eb183f200@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 19/07/2022 17:48, Arjan van de Ven wrote:
-> [...]
-> I would totally support an approach where instead of pr_info, there's a tracepoint
-> for these events (and that shouldnt' need to be conditional on a config option)
+On 7/19/2022 2:00 PM, Guilherme G. Piccoli wrote:
+> On 19/07/2022 17:48, Arjan van de Ven wrote:
+>> [...]
+>> I would totally support an approach where instead of pr_info, there's a tracepoint
+>> for these events (and that shouldnt' need to be conditional on a config option)
+>>
+>> that's not what the patch does though.
 > 
-> that's not what the patch does though.
+> This is a good idea Arjan! We could use trace events or pr_debug() -
+> which one do you prefer?
+> 
 
-This is a good idea Arjan! We could use trace events or pr_debug() -
-which one do you prefer?
+I'd go for a trace point to be honest
 
-With that, we could maybe remove this Kconfig option, having it always
-enabled, what do you think ?
