@@ -2,116 +2,116 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7328257C062
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Jul 2022 01:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3B3657C0FD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Jul 2022 01:42:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229801AbiGTXAR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Jul 2022 19:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51286 "EHLO
+        id S231389AbiGTXmO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Jul 2022 19:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiGTXAQ (ORCPT
+        with ESMTP id S231231AbiGTXmN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Jul 2022 19:00:16 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6342919C2E;
-        Wed, 20 Jul 2022 16:00:14 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id v21so210861plo.0;
-        Wed, 20 Jul 2022 16:00:14 -0700 (PDT)
+        Wed, 20 Jul 2022 19:42:13 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C8D48E8E
+        for <linux-hyperv@vger.kernel.org>; Wed, 20 Jul 2022 16:42:11 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id k7so198561qkj.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 20 Jul 2022 16:42:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=O60CXwG50CMNbFlPYhSbwiVpECXcVQR97MrNWudYYbU=;
-        b=GV87zx+h1LsYC4vg5VgjnB9AbrOjX45i+veof+k4QSYkZQ54zna7rGlFeOH4O/Dx5u
-         z32IGlZuePn4MH5P8UWLmLjFd1EmmjYN/+DWNoTMO1N3xjx7JwR59cN+qeQRNBnO7LKu
-         IYZVMZFPCneCJ5lua2KLUs5BT//OUWtxsAgN51D6jfGjhFyN24iIzFoUUi4zYB7uwE3z
-         B9GmsZUveR8gWujcMGePBGnnw4oU/rapQuenZ8yPATDmDwQxRoAnAd7Qc/We7bvqp5HS
-         695RMT5n0WYh1A6MVbKKIcrv4wRyKEBDHHZi5y5Tm8rXNUOiPb+zL08D3wU/GXas45Rt
-         sBzQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W0m+zaV/t9IfMCsWddU/BD/INu7/IDz+95VLsqfyLlk=;
+        b=U3yy46ize2deAZrpfJnMv8YMz8IGVBTnhJcNPjIo6TTb4pcJ+2Rf0HGhY3BbVcCoWV
+         Fr6INq63FCKPdfGdT5sCcLQZ66CU1vzCoHoPBI0mRx57jWPTUrS0g23L/KjiSFAwgK+H
+         GO1ZJiWGPLaOR8bFzBjThFgxzhauTq5H8Ad5+6uwjMjSl/nfzhtcdI3wIRqNptpEJG+U
+         jwSMlDrGPttQJtFu4an9vV+ShopsjhzcaZ5xQTRm0xyxBBGA30nLu3urNMzTKaoyWP2f
+         UTSIu+6q3QG1VRi/P/fHe3ypCskf/KZ6FoqFqMNWVUl/YO7cyrklzl1QWXowrdWg5hgg
+         DvIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=O60CXwG50CMNbFlPYhSbwiVpECXcVQR97MrNWudYYbU=;
-        b=NWcuyDTaXFeMC7Igk82MwwqPt8qCdKxJsrmpzQYy6stxPZ4SYARxXmvDDRepk5P5/z
-         Y+b9ITC7/vKSJrS4bVasavAYnr2cuu5cIdXlG+eS/tarRPhNKqZd7hXNP8FJI3bbdi/f
-         PP4+X5U7nW6PwgP9ts6Jq2X6L4iFy5e9pWspIRNSOD6JehE4vLZiG2XWmtNorLfnbkOa
-         j5pYgrv3h/q830eUUCdfVW+ZPvpi9doZXwEgyfE713E+pJn5LPxhtDW/GADrZkMLYqrC
-         JYhmZDWeanSJBc9KXmglK0NIwh6xqgp9KxUuNzumCVPUlUb1kiWxPCan45tejS9JmwEP
-         QdMQ==
-X-Gm-Message-State: AJIora/iYkL04lmZtd49pjnwyJT91IygelgOpIUksjSTQFGCyvt3tJPF
-        vlm9oB5BoiE1J00ZJIKgXGw=
-X-Google-Smtp-Source: AGRyM1s87lbItSmnHSuhbYCOPsPC7+W+QdNmf7JWp1I8Kuwuy8PBsh19YZaIFJjUB1rZOtW9Pej3cg==
-X-Received: by 2002:a17:902:aa0b:b0:16b:c4a6:1dc9 with SMTP id be11-20020a170902aa0b00b0016bc4a61dc9mr41133063plb.83.1658358013694;
-        Wed, 20 Jul 2022 16:00:13 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z2-20020aa79f82000000b005252ab25363sm149366pfr.206.2022.07.20.16.00.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W0m+zaV/t9IfMCsWddU/BD/INu7/IDz+95VLsqfyLlk=;
+        b=dlorZjCQ/DDfuS38h6UkW1imqAIBpU+cteiWAHGZMqenAtnMNbVNEtZvmXC0R/GGJs
+         N4WQBiuPdjUeGjd0MQdUBWx6EYEbjNby5UkPyVThPVoORsSUopt+4xeV7xALlj4tx806
+         oLX5U7ztxIteazNHbUSCYCYqjmHlBJgYWfl6OWSHHSyr3C+vohwSIc/gXTDHTImffBqw
+         BJnIdW7+1WbUP0kf6EjGtiovw3jgzBNgfNDi0lFkn/F9WxX8NsZrE4oFTIfLL3tHTF/p
+         5qsMiUyXcTwgLscJ/y8EmtUg2uEo8yqHbe2ZQ9385DFssuamLY9lRiv/9QvUW4Cy7HZv
+         lv3w==
+X-Gm-Message-State: AJIora+FJhfohiDczzVqNnf+3sUG3F3Lwb2ilf2SSdL8SYxJE2/zqWII
+        2UpS5yFwyxoI3UOeJDGrP9IBSg==
+X-Google-Smtp-Source: AGRyM1sNUsHEctZwjSnaPLK4IglthMasJNe6r6fUvGUFoDocPR+S9bJKHQmOgtSIqhnD9Bw+dxK6qg==
+X-Received: by 2002:a37:555:0:b0:6b5:dace:f589 with SMTP id 82-20020a370555000000b006b5dacef589mr15076898qkf.444.1658360530482;
+        Wed, 20 Jul 2022 16:42:10 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id z8-20020ac84308000000b0031ee1f0c420sm379908qtm.10.2022.07.20.16.42.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Jul 2022 16:00:13 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        kexec@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
-        kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
-        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
-        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, Brian Norris <computersforpeace@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Markus Mayer <mmayer@broadcom.com>
-Subject: Re: [PATCH v2 04/13] soc: bcm: brcmstb: Document panic notifier action and remove useless header
-Date:   Wed, 20 Jul 2022 16:00:09 -0700
-Message-Id: <20220720230009.2478166-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220719195325.402745-5-gpiccoli@igalia.com>
-References: <20220719195325.402745-1-gpiccoli@igalia.com> <20220719195325.402745-5-gpiccoli@igalia.com>
+        Wed, 20 Jul 2022 16:42:09 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1oEJKT-001hih-C9; Wed, 20 Jul 2022 20:42:09 -0300
+Date:   Wed, 20 Jul 2022 20:42:09 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Long Li <longli@microsoft.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "shiraz.saleem@intel.com" <shiraz.saleem@intel.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: [Patch v4 03/12] net: mana: Handle vport sharing between devices
+Message-ID: <20220720234209.GP5049@ziepe.ca>
+References: <1655345240-26411-1-git-send-email-longli@linuxonhyperv.com>
+ <1655345240-26411-4-git-send-email-longli@linuxonhyperv.com>
+ <SN6PR2101MB13272044B91D6E37F7F5124FBF879@SN6PR2101MB1327.namprd21.prod.outlook.com>
+ <PH7PR21MB3263F08C111C5D06C99CC32ACE869@PH7PR21MB3263.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR21MB3263F08C111C5D06C99CC32ACE869@PH7PR21MB3263.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, 19 Jul 2022 16:53:17 -0300, "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
-> The panic notifier of this driver is very simple code-wise, just a
-> memory write to a special position with some numeric code. But this
-> is not clear from the semantic point-of-view, and there is no public
-> documentation about that either.
+On Tue, Jul 12, 2022 at 06:48:09PM +0000, Long Li wrote:
+> > > @@ -563,9 +581,19 @@ static int mana_cfg_vport(struct
+> > > mana_port_context *apc, u32 protection_dom_id,
+> > >
+> > >  	apc->tx_shortform_allowed = resp.short_form_allowed;
+> > >  	apc->tx_vp_offset = resp.tx_vport_offset;
+> > > +
+> > > +	netdev_info(apc->ndev, "Configured vPort %llu PD %u DB %u\n",
+> > > +		    apc->port_handle, protection_dom_id, doorbell_pg_id);
+> > Should this be netdev_dbg()?
+> > The log buffer can be flooded if there are many vPorts per VF PCI device and
+> > there are a lot of VFs.
 > 
-> After discussing this in the mailing-lists [0] and having Florian
-> explained it very well, document that in the code for the future
-> generations asking the same questions. Also, while at it, remove
-> a useless header.
-> 
-> [0] https://lore.kernel.org/lkml/781cafb0-8d06-8b56-907a-5175c2da196a@gmail.com
-> 
-> Cc: Brian Norris <computersforpeace@gmail.com>
-> Cc: Doug Berger <opendmb@gmail.com>
-> Cc: Justin Chen <justinpopo6@gmail.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Markus Mayer <mmayer@broadcom.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> 
-> ---
+> The reason netdev_info () is used is that this message is important
+> for troubleshooting initial setup issues with Ethernet driver. We
+> rely on user to get this configured right to share the same hardware
+> port between Ethernet and RDMA driver. As far as I know, there is no
+> easy way for a driver to "take over" an exclusive hardware resource
+> from another driver.
 
-Applied to https://github.com/Broadcom/stblinux/commits/drivers/next, thanks!
---
-Florian
+This seems like a really strange statement.
+
+Exactly how does all of this work?
+
+Jason
