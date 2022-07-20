@@ -2,55 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7487A57A99B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jul 2022 00:04:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8451557AD55
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Jul 2022 03:44:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239085AbiGSWE6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 19 Jul 2022 18:04:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43944 "EHLO
+        id S241231AbiGTBoN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 19 Jul 2022 21:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235993AbiGSWE5 (ORCPT
+        with ESMTP id S240063AbiGTBoM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 19 Jul 2022 18:04:57 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60F65FAFB;
-        Tue, 19 Jul 2022 15:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658268296; x=1689804296;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pvIxtNbWUdkbgcKb5Tspz0IgM/n/C0XFuT/gdjfEdHk=;
-  b=d+9SoWBzvY4RspCH01rdb72G1r3CGCbPL9uQvNpH6FCxp6/lvul4S8JU
-   dOyt6cNy8PmGlH+xpm8UQ9yPJOJctF50vMNCIO4ZlNWCDGMB/WPy4iz8O
-   zaTXOmIP4jlQN7Ad8K9XpfoE5TduQ0TLP1bpbMU8e/oaeNSbAVYabHDE2
-   WYPuL1EfiNOhGHY2tCmXOjkclFoMSXUWrUckT7UeUrD+nPo1KFs88bX2A
-   /OdjxZ/pao3S67KXaCQAxsFgx5AWiQ5ke3kw9drc/wiICv60bu1G+UgLp
-   eRnzszEaKyD+32QKpWW3LLQKrtlXrsdHmnUFmgYMmjvbTe48R1xRX2JKj
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="350603408"
-X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
-   d="scan'208";a="350603408"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 15:04:56 -0700
-X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
-   d="scan'208";a="843817003"
-Received: from avandeve-mobl.amr.corp.intel.com (HELO [10.209.102.45]) ([10.209.102.45])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 15:04:53 -0700
-Message-ID: <4a9d64b5-0fa4-8294-c78c-37394a156325@linux.intel.com>
-Date:   Tue, 19 Jul 2022 15:04:52 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 09/13] notifier: Show function names on notifier
- routines if DEBUG_NOTIFIERS is set
-Content-Language: en-US
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        kexec@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
-        kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
+        Tue, 19 Jul 2022 21:44:12 -0400
+X-Greylist: delayed 61 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 19 Jul 2022 18:44:09 PDT
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.167])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271EA116D
+        for <linux-hyperv@vger.kernel.org>; Tue, 19 Jul 2022 18:44:08 -0700 (PDT)
+X-KPN-MessageId: 48b152f4-07cd-11ed-92d5-005056abbe64
+Received: from smtp.kpnmail.nl (unknown [10.31.155.39])
+        by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+        id 48b152f4-07cd-11ed-92d5-005056abbe64;
+        Wed, 20 Jul 2022 03:42:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=xs4all.nl; s=xs4all01;
+        h=content-type:mime-version:message-id:subject:to:from:date;
+        bh=rJFJglb4/UlXPUAHi1JzAHBD/M9s09bPsFmPwi9LOVE=;
+        b=K+cK7q+3qNmRzBhVqnrb6dcvzHwTNPb0eIHNfYy+/w9+5NhJGbV4DGkcBa1KUI0oE0OnCKtb5VKsW
+         LBKidygns/An+tmmTcJlAhuoay2aJjeeiCNVbTnTJzIAWDDdO8D1ZIK0F2S6YnaJRALGwkDW5hyNiw
+         FVnqretpsqOtryhtSVt95SRQwlK+f4XfUyyZwt9HFoV8bZ0RziblHCGN29eCMfURmr8ud2muyNUPpY
+         zzTh3AZb/rYAvinh6li1lZLbR/g/ewjqq/uMdSHwFDqXM4EHdlWg1OqUy84NWH+GUIfHEXnjlsdDM6
+         3lIuKGlcofXTuBTPowWEM6pmbH5ny1w==
+X-KPN-MID: 33|X/FwXldpKQeT69J14RQrO3wWCDlNHTXiDFH+z4/5b410baHBlVm0Lo5m+k0owV3
+ TzWwt78voBp9KvHnL1iswi5re4OiCxH/fUHIxGdjKB4U=
+X-KPN-VerifiedSender: Yes
+X-CMASSUN: 33|kw9TlpbAUpy2EFas4/riRupArFIg6BG1fOWsU6N4exHkaFUlNJ5+lQgOtSkXTgm
+ dJHzaYn3cIm9roNAMOgcphw==
+X-Originating-IP: 86.86.234.244
+Received: from wim.jer (86-86-234-244.fixed.kpn.net [86.86.234.244])
+        by smtp.xs4all.nl (Halon) with ESMTPSA
+        id 4a3e2c51-07cd-11ed-b8b0-005056ab7447;
+        Wed, 20 Jul 2022 03:43:02 +0200 (CEST)
+Date:   Wed, 20 Jul 2022 03:43:00 +0200
+From:   Jeroen Roovers <jer@xs4all.nl>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
+        halves@canonical.com, fabiomirmar@gmail.com,
         alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
         arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
         d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
@@ -61,40 +58,175 @@ Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
         senozhatsky@chromium.org, stern@rowland.harvard.edu,
         tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Xiaoming Ni <nixiaoming@huawei.com>
+        will@kernel.org, linux-parisc@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>
+Subject: Re: [PATCH v2 07/13] parisc: Replace regular spinlock with
+ spin_trylock on panic path
+Message-ID: <20220720034300.6d2905b8@wim.jer>
+In-Reply-To: <20220719195325.402745-8-gpiccoli@igalia.com>
 References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-10-gpiccoli@igalia.com>
- <e292e128-d732-e770-67d7-b6ed947cec7b@linux.intel.com>
- <8e201d99-78a8-d68c-6d33-676a1ba5a6ee@igalia.com>
- <c297ad10-fe5e-c2ee-5762-e037d051fe3b@linux.intel.com>
- <8ef53978-f26e-89e3-8b04-6f0eb183f200@igalia.com>
-From:   Arjan van de Ven <arjan@linux.intel.com>
-In-Reply-To: <8ef53978-f26e-89e3-8b04-6f0eb183f200@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        <20220719195325.402745-8-gpiccoli@igalia.com>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 7/19/2022 2:00 PM, Guilherme G. Piccoli wrote:
-> On 19/07/2022 17:48, Arjan van de Ven wrote:
->> [...]
->> I would totally support an approach where instead of pr_info, there's a tracepoint
->> for these events (and that shouldnt' need to be conditional on a config option)
->>
->> that's not what the patch does though.
-> 
-> This is a good idea Arjan! We could use trace events or pr_debug() -
-> which one do you prefer?
-> 
+     Hi Guilherme,
 
-I'd go for a trace point to be honest
+On Tue, 19 Jul 2022 16:53:20 -0300
+"Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
 
+> The panic notifiers' callbacks execute in an atomic context, with
+> interrupts/preemption disabled, and all CPUs not running the panic
+> function are off, so it's very dangerous to wait on a regular
+> spinlock, there's a risk of deadlock.
+> 
+> Refactor the panic notifier of parisc/power driver to make use
+> of spin_trylock - for that, we've added a second version of the
+> soft-power function. Also, some comments were reorganized and
+> trailing white spaces, useless header inclusion and blank lines
+> were removed.
+> 
+> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+> Acked-by: Helge Deller <deller@gmx.de> # parisc
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
+> ---
+> 
+> V2:
+> - Added Helge's ACK - thanks!
+> 
+>  arch/parisc/include/asm/pdc.h |  1 +
+>  arch/parisc/kernel/firmware.c | 27 +++++++++++++++++++++++----
+>  drivers/parisc/power.c        | 17 ++++++++++-------
+>  3 files changed, 34 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/parisc/include/asm/pdc.h
+> b/arch/parisc/include/asm/pdc.h index b643092d4b98..7a106008e258
+> 100644 --- a/arch/parisc/include/asm/pdc.h
+> +++ b/arch/parisc/include/asm/pdc.h
+> @@ -83,6 +83,7 @@ int pdc_do_firm_test_reset(unsigned long
+> ftc_bitmap); int pdc_do_reset(void);
+>  int pdc_soft_power_info(unsigned long *power_reg);
+>  int pdc_soft_power_button(int sw_control);
+> +int pdc_soft_power_button_panic(int sw_control);
+>  void pdc_io_reset(void);
+>  void pdc_io_reset_devices(void);
+>  int pdc_iodc_getc(void);
+> diff --git a/arch/parisc/kernel/firmware.c
+> b/arch/parisc/kernel/firmware.c index 6a7e315bcc2e..0e2f70b592f4
+> 100644 --- a/arch/parisc/kernel/firmware.c
+> +++ b/arch/parisc/kernel/firmware.c
+> @@ -1232,15 +1232,18 @@ int __init pdc_soft_power_info(unsigned long
+> *power_reg) }
+>  
+>  /*
+> - * pdc_soft_power_button - Control the soft power button behaviour
+> - * @sw_control: 0 for hardware control, 1 for software control 
+> + * pdc_soft_power_button{_panic} - Control the soft power button
+> behaviour
+> + * @sw_control: 0 for hardware control, 1 for software control
+>   *
+>   *
+>   * This PDC function places the soft power button under software or
+>   * hardware control.
+> - * Under software control the OS may control to when to allow to
+> shut 
+> - * down the system. Under hardware control pressing the power button 
+> + * Under software control the OS may control to when to allow to shut
+> + * down the system. Under hardware control pressing the power button
+>   * powers off the system immediately.
+> + *
+> + * The _panic version relies in spin_trylock to prevent deadlock
+> + * on panic path.
+
+in => on
+
+>   */
+>  int pdc_soft_power_button(int sw_control)
+>  {
+> @@ -1254,6 +1257,22 @@ int pdc_soft_power_button(int sw_control)
+>  	return retval;
+>  }
+>  
+> +int pdc_soft_power_button_panic(int sw_control)
+> +{
+> +	int retval;
+> +	unsigned long flags;
+> +
+> +	if (!spin_trylock_irqsave(&pdc_lock, flags)) {
+> +		pr_emerg("Couldn't enable soft power button\n");
+> +		return -EBUSY; /* ignored by the panic notifier */
+> +	}
+> +
+> +	retval = mem_pdc_call(PDC_SOFT_POWER, PDC_SOFT_POWER_ENABLE,
+> __pa(pdc_result), sw_control);
+> +	spin_unlock_irqrestore(&pdc_lock, flags);
+> +
+> +	return retval;
+> +}
+> +
+>  /*
+>   * pdc_io_reset - Hack to avoid overlapping range registers of
+> Bridges devices.
+>   * Primarily a problem on T600 (which parisc-linux doesn't support)
+> but diff --git a/drivers/parisc/power.c b/drivers/parisc/power.c
+> index 456776bd8ee6..8512884de2cf 100644
+> --- a/drivers/parisc/power.c
+> +++ b/drivers/parisc/power.c
+> @@ -37,7 +37,6 @@
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> -#include <linux/notifier.h>
+>  #include <linux/panic_notifier.h>
+>  #include <linux/reboot.h>
+>  #include <linux/sched/signal.h>
+> @@ -175,16 +174,21 @@ static void powerfail_interrupt(int code, void
+> *x) 
+>  
+>  
+> -/* parisc_panic_event() is called by the panic handler.
+> - * As soon as a panic occurs, our tasklets above will not be
+> - * executed any longer. This function then re-enables the 
+> - * soft-power switch and allows the user to switch off the system
+> +/*
+> + * parisc_panic_event() is called by the panic handler.
+> + *
+> + * As soon as a panic occurs, our tasklets above will not
+> + * be executed any longer. This function then re-enables
+> + * the soft-power switch and allows the user to switch off
+> + * the system. We rely in pdc_soft_power_button_panic()
+> + * since this version spin_trylocks (instead of regular
+> + * spinlock), preventing deadlocks on panic path.
+>   */
+>  static int parisc_panic_event(struct notifier_block *this,
+>  		unsigned long event, void *ptr)
+>  {
+>  	/* re-enable the soft-power switch */
+> -	pdc_soft_power_button(0);
+> +	pdc_soft_power_button_panic(0);
+>  	return NOTIFY_DONE;
+>  }
+>  
+> @@ -193,7 +197,6 @@ static struct notifier_block parisc_panic_block =
+> { .priority	= INT_MAX,
+>  };
+>  
+> -
+>  static int __init power_init(void)
+>  {
+>  	unsigned long ret;
+
+
+Kind regards,
+     jer
