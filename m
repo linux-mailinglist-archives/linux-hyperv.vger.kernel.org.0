@@ -2,47 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A34D857C14D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Jul 2022 02:06:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13A3657C17E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Jul 2022 02:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbiGUAGR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 20 Jul 2022 20:06:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43300 "EHLO
+        id S230137AbiGUAPI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 20 Jul 2022 20:15:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiGUAGQ (ORCPT
+        with ESMTP id S230105AbiGUAPG (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 20 Jul 2022 20:06:16 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11021022.outbound.protection.outlook.com [52.101.62.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6675730F42;
-        Wed, 20 Jul 2022 17:06:15 -0700 (PDT)
+        Wed, 20 Jul 2022 20:15:06 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eastus2azon11021026.outbound.protection.outlook.com [52.101.57.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869BC1F8;
+        Wed, 20 Jul 2022 17:15:05 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wcypu8Rn3QpzVrYjMjKhdolmGCUIXzNbvGAbhTq4HybmQJzbcOAIF+81NTJaXpzdrQBPU51qtkRYV1e08Ikud6W7VfNgVS5K/WbLVqYuPvaQX4NFFuQnm3ajFfkwDfWyDCxk68WEuohZbpcA4dgnZuKgYGOBc5zGg3bYX5jfogYdqqKHkk6rjYVnvQ3pNZqrthmumQX9fdpbXMxbYrCyMGn32gnkp2emeM8nRJESwRTxmz/X4uOE8oM2dM2jezl4R9ijjAhNCZXAi4g4N93leQWQo3QlIB/8e8FZYOcXn/ipi+Atth/ry3AFNHR905MgHvFEu7P7ViE+O/to7ot5eg==
+ b=kOldlqkJr3cknuFyuI/sLabEVbryoOylwf+dA9Di94GdWWv/DX3e5SwdWQskiz9RcOQ9T4qzN3/nxah8ADboNnYh9X/wTcWQc5WoqXQJJvDn9r9wyucwV9j9zIBcstgeARZz/vn67A+X7QPHWZV+5d0KDuiEXDHxbVZnh3fAmZh2AV8Y4OZs2ElQprGJrTizMGrnx/yxGlYIG6QlVpkKT1pxdx57+jEHx4ZQMRKfDzubCoGCnb258jeMSkthNOUjDGAV7EpSLWpgbQC1feS6SxWdNOR35QbTX0po1EjR2zhuXpyA9cp+l29Z679lDRZF5H0cZxx50v4kNYfHAMBuHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ph2HWtgEXxltMMeeA2RKHyCIesYQhw4XkKq2hJUcRW8=;
- b=k0HbZibYRwbWW+LTjNhNxDfgFhmNAFld/VdoSdTxA7xdoRTjsll0V4yddvo1hf0LfZSMbwbfXR5AJ5Phfbe6w3jdpsDQITxYVVtJKA/abBaPEiPrAGyEoMfdyH0j427Bj+D5o9WrFoWgLNMB+THDbik3XzOHNo5/UmyTh/y9XVYk2LwgUOpSgQrX41vucdKoO106sSIwIIpNCVJOt7bbi003cJ+HiUg07gzdPheSC1OLE5sl2N6lRLXa2MH3vmUhDq8Kom/CE9mM6LaRly8M2JHSW6qGMuyDVCs8UesCXbL5Al8rigO/USqoAjZ0PERVpHg173RBjxkhRM91r7t0gw==
+ bh=8HSSWmkLZpwPlAP7IqbuM2a7Ok/uUYjFUCLwbe27C5c=;
+ b=n5AHRRbiz0HBlDxiPhyVxftGsjrEd6dy8ZQHhVf2McJNRSvWWDDcvwSrP6x+rIZu6+i6xHvGBx2Y4v9GVidEs+xmtj57dDZwY/mt75C0e+q8wDpx+ot+pg2CbS8ABEBz6RCva9a33PZphPfJfIFAAnKx7FG3H4kbRTMz9DZyZJnCtmDDGRqPKpiYNEwjhPIlZcEzhY6Ifm0L+aDrkKhKl7tHXXPvXY7gkht4WYjCC/m5riwDr2LUp86sDzfN2xec7KTFXrzIJ4ZcJQvo7mVDO2UAber8SjI/oturfiSG4AuR+VRMMAoZHBetiRpdtGidXm3eZfLa9OZ5asD46Z8YYA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ph2HWtgEXxltMMeeA2RKHyCIesYQhw4XkKq2hJUcRW8=;
- b=CQPnEjvhfTpizCJvghIgbpC3O5qHjhbRPdReY70tBCIQSUkjV0Sm5Q02Pzd3fnLGMW4U/UUrVq4tc8ORrGOL0h6zkpPwsVHbPgMV0Vtv/icsy4UDauUihOU6RpJg95JOSGKP2DQhS6IjrAsebxyMm9Bwvq66ryV1KDqlOHaqSvc=
+ bh=8HSSWmkLZpwPlAP7IqbuM2a7Ok/uUYjFUCLwbe27C5c=;
+ b=iac3Sv8CsJ63XV773TfBvuuLGHhOc1C8P2wvo8ZrNnR88NSqmVUPDRvjuMzKQt7ShK8iDVh4HJ0L5k2eKBR7BoC3XvImbwX3lUldAmRBnH10e/uOh1EIlXBHQlBjCKUBAeGVFDc2qZs5a/oXKvyv12b7fLMpifmGS2rwJ8S9VjE=
 Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
- by SA0PR21MB1929.namprd21.prod.outlook.com (2603:10b6:806:e1::17) with
+ by MN0PR21MB3580.namprd21.prod.outlook.com (2603:10b6:208:3d3::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.1; Thu, 21 Jul
- 2022 00:06:13 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.4; Thu, 21 Jul
+ 2022 00:15:02 +0000
 Received: from PH7PR21MB3263.namprd21.prod.outlook.com
  ([fe80::69ca:919f:a635:db5a]) by PH7PR21MB3263.namprd21.prod.outlook.com
  ([fe80::69ca:919f:a635:db5a%7]) with mapi id 15.20.5482.001; Thu, 21 Jul 2022
- 00:06:12 +0000
+ 00:15:02 +0000
 From:   Long Li <longli@microsoft.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Dexuan Cui <decui@microsoft.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>,
@@ -57,74 +56,75 @@ CC:     Dexuan Cui <decui@microsoft.com>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: RE: [Patch v4 03/12] net: mana: Handle vport sharing between devices
-Thread-Topic: [Patch v4 03/12] net: mana: Handle vport sharing between devices
-Thread-Index: AQHYgSXY1SrlgLfyyEyOddi806gORa14hJeAgAK137CADOflgIAABSdw
-Date:   Thu, 21 Jul 2022 00:06:12 +0000
-Message-ID: <PH7PR21MB3263F5FD2FA4BA6669C21509CE919@PH7PR21MB3263.namprd21.prod.outlook.com>
+Subject: RE: [Patch v4 06/12] net: mana: Define data structures for protection
+ domain and memory registration
+Thread-Topic: [Patch v4 06/12] net: mana: Define data structures for
+ protection domain and memory registration
+Thread-Index: AQHYgSXZ4igJqU39v027Ac2C5KX/MK14iO8AgA+Z1ACAAAZm0A==
+Date:   Thu, 21 Jul 2022 00:15:02 +0000
+Message-ID: <PH7PR21MB3263DE7395EEF72796323D0BCE919@PH7PR21MB3263.namprd21.prod.outlook.com>
 References: <1655345240-26411-1-git-send-email-longli@linuxonhyperv.com>
- <1655345240-26411-4-git-send-email-longli@linuxonhyperv.com>
- <SN6PR2101MB13272044B91D6E37F7F5124FBF879@SN6PR2101MB1327.namprd21.prod.outlook.com>
- <PH7PR21MB3263F08C111C5D06C99CC32ACE869@PH7PR21MB3263.namprd21.prod.outlook.com>
- <20220720234209.GP5049@ziepe.ca>
-In-Reply-To: <20220720234209.GP5049@ziepe.ca>
+ <1655345240-26411-7-git-send-email-longli@linuxonhyperv.com>
+ <SN6PR2101MB13276E8879F455D06318118EBF879@SN6PR2101MB1327.namprd21.prod.outlook.com>
+ <20220720234336.GR5049@ziepe.ca>
+In-Reply-To: <20220720234336.GR5049@ziepe.ca>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=952ff3b5-bbab-4714-ae30-9eeffd76dc4a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-07-21T00:00:35Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=82c29ab0-52e5-4657-acc2-fadb8db6b951;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-07-21T00:06:30Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 70359c4b-5b69-4125-3e7e-08da6aacd2bc
-x-ms-traffictypediagnostic: SA0PR21MB1929:EE_
+x-ms-office365-filtering-correlation-id: 51a14604-265e-4bcc-9cb3-08da6aae0e7b
+x-ms-traffictypediagnostic: MN0PR21MB3580:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: j4VYvCLcwSA4mLbfH9A1Rs7+ugnUsD71sNYe+UmRQIUFZCDV+lv4rqkGThyGLYMEqVNeSch8W+xBDNfr/LEQr70VqoNiqNXh7BktLoxqw2mrDR0jIzeJ5Q3McZ+5+XxfDRc9+VSOoiMRsCaS8L587va+X+XmBnbFkKiAKJ8ATpDTLeyax4R2E6BS7cvY5OSj9Lrh/W4m9VQDC+LzIaPHLuca4fD48t8KWdN2S+EK59ZLugye/dlMeQUtWKuuMZjCELg1xhBdfptnGbGsqjgUl3UucMVmE9tVjbZmmL2HATBDNwalAnJERFoVcML4NhHAGLyyHsu5GJn0RqQ+HvMwe0Vh8ge+vggrz2uhky8V4gNbEqKAFMsUmLLmrNigeLBWzJmTbH3g06LQKEUxHY2GpKAyThTOkXTbmRTURGfsYQ9/7avoknSsvf2+N7mBlccdpQMBEsAbP+SQbKT7jN4l142VNxW9O5piwjFjhpAcVK//gF3Ip+1Urs1yR8SOJbzasGFWIL8QxEEAIn2XTpI+Lb3ITMO93EgGGA+obsntnFn7lcIjlsuKLuVaZ5Gg7iONHvMMZrN6J2cbv26gftiPnTnRgNd/lJrj9PUxRWiK4qvVy7/JV2MI80/vwJL2oVI19ziruOE1WjvliROWh7DxdlckSxsRgs9tkUe4zUW+7nFzBCMzWFRw03PiyHjS/R0F0p8v0kWdce6xIKzhpXc90z5u62QpG7mCtkx+w+mfnVASq4c2SUi/J/u3zwwHKdjtdrLqjqyghwdLZlmPiEKO/BmSQ413IHe7XdcVtgOuiuGOKrjx0njJG6Ba4I1huu5MwyE86TRPER9jos/Z+ISPshyguGYN/1bYFbiLpxqyNvo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(39860400002)(136003)(346002)(366004)(451199009)(8990500004)(8676002)(2906002)(86362001)(52536014)(41300700001)(33656002)(9686003)(83380400001)(26005)(186003)(7696005)(7416002)(6506007)(478600001)(5660300002)(8936002)(316002)(54906003)(6916009)(82950400001)(71200400001)(10290500003)(122000001)(66946007)(4326008)(64756008)(66446008)(66476007)(55016003)(38070700005)(76116006)(66556008)(82960400001)(38100700002);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: p9RBDaVYC8UyiPDcNWKjnLR35WDirvtLHiEf0GzXNzUEhSReW1D2dQW4bY9d2kP48yNPu564hWHL4vFMA+xJAAWQg2t/5dV9dWcl1XAJjlcG3rYnmfl+TIIGRXOd4kaYfE7jqNC+SAS/ldYFROnfxry7+bDiP4yiBE2nfSNGpNJj3rHUVUJtNj0a3RgQgUnLbn38qja3YdIx90Tx+mjlaUle2uUw4o3gKJwKQpA2fBL99MlLD3wG/HKd0pKfL19ivYrKNGizfREUqqQS3+zi9f6RrpEeRLZAXanhlUdvksZ42aT1Bu+h2DVZxBxvI9gwD1dl0sS+QmYdxdwgGai6Hwc6D5uJFpdKPSnbkPG85QsqLLc8Pd0fp7YuqOUEyZaWJKHQsRRWlU4BS00oEyxCvglR0pz3tMEw516HiolxOQlH5j+0kbc1ZnrDpBgx3HZoEmWgNJ4wyWbhBnfpQwN0HZ3kj8XnkyncKHQPyhICxHuwwBIHdB9Fqwcqp5Nm2VvuirrIi5/sZ25uDspyaHNiLiE/vbc4qY8JR7Pm5G+fgwQry9yf9MJVOTsySfWrIqljI53BudVeZvcuGFECyqcqMw86B6xNzXufLpFzHlGppOxJ/KMkOR4GNL6+9mOEB9+7Htp3hp8MBRitAiwsUoZwWU7e9OhUb9SrxPgvpIZdzrIobImJWC4TvMYI2mMw5H3X/XkQjlcBKbF0AVNJSIaOXF/FAI9yrATh94K8TiVJ9TPuc/8Sd+rZ9pfXVx+Pco0eRuJ7mBWq67D3qiC0O6i4h89YTmTQ7mqqRczjZOwx+lDkeGFGngEUAZJP6xeDHVdSaLzKSD3QBs6Xkknpi+IpgP4+MY+VjP0K8bl6P4ZRmIo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(366004)(376002)(396003)(136003)(39860400002)(451199009)(66446008)(6636002)(83380400001)(66556008)(4326008)(10290500003)(86362001)(38070700005)(186003)(26005)(8676002)(54906003)(66946007)(71200400001)(76116006)(7416002)(64756008)(55016003)(6506007)(110136005)(66476007)(7696005)(8990500004)(122000001)(38100700002)(82960400001)(5660300002)(478600001)(52536014)(9686003)(2906002)(8936002)(41300700001)(82950400001)(33656002)(316002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?I4yb2CCHcxrEOrGWV+jLbxS4VGnOBwm1SR5pSfCIIK3dKbf8pqEiMFyThT3n?=
- =?us-ascii?Q?wySxRdqEix6KzUvRtP+D9QQ7tbdeYFvR5jmhXOn46n+wtdnC8oXSbWCQVTze?=
- =?us-ascii?Q?I5X5l4Go9lsxIHloMjJi8I/izoLp0GOzBobR/2D1zk5YFsHfkBc0YoLn83uB?=
- =?us-ascii?Q?b49VixbUmG6VfXZ6YPN+w4QlBJ0DVafWxsF1TKBm3sPw6UJvin50bUiB8Hsu?=
- =?us-ascii?Q?dEYdWYqGBou02C8m2Vo8oGdAE3eTF3bTtfxGkRSg/SvUUQU0ksAMzxwhPDQ3?=
- =?us-ascii?Q?SqNFVxSrUSR9hqoSdxswNJoHvxhzGIRb+8G71IWHiu9NCjDAZyzynYLpPPPv?=
- =?us-ascii?Q?+VLB6jMueEdlSwnTMcy2b3X2h1VT2WH5XuXRXt5DV39dt5QSXuKV3B0uKqLw?=
- =?us-ascii?Q?1lMtzl1eu6nf93SQeAhZERAOR+/AEREvcDGrRDmEIDiQ69cpAdoM944P4eRz?=
- =?us-ascii?Q?n76A7/rXWW4lFgefRL9/NcYfv38aTb6d7IJGxkIKtmd7E8zhhXImNTnvgBGn?=
- =?us-ascii?Q?NfLi0edgvgLGoOjagYkYuGozp9uXyAWU7jXSqd8EnAtI99dTo9ZPJDO2KMKo?=
- =?us-ascii?Q?urb8xKTZ80MHpUFbbXhUbBkGaQNqEBG79LTEL59rEXTuEX+jr4rTD8IFW9qm?=
- =?us-ascii?Q?8d4GxoGMEdX/wAwT3TGHVNI8w4G7dTfewUbtdFNzidsbr/aVEgoLypaxTZWw?=
- =?us-ascii?Q?prmznR04gnPLeVpl+D6UVXqxQ7OkmZGP7mCXOriHhU7Sf2CAUmnaumIUjHZN?=
- =?us-ascii?Q?92kN5l+P7QLAilANDtz+cuaIpZ0oJoDBqe0w4zBGkH81buwfDjBXdrHNwub7?=
- =?us-ascii?Q?MDh79jlWR3RqZnjuoO27/NrF2nPF9YnYF/xFJUFPm699OrccKi3vUpdsYqx/?=
- =?us-ascii?Q?sgDL0RgHK5zDanPdsBp2lyiPc1iMh88d8OLlt52vZzAbar1U9mifm3wJSr58?=
- =?us-ascii?Q?s2vFXudmKtZM+GiPieLSkiTJzlkPof+HEAgD9zCZGO0nZb5NFUTgNmMPOAKH?=
- =?us-ascii?Q?8pUukJk7vEBdOLwdjTOO2yfnmpryE+zQVTWeoVpcrdAV6Yz62f4TNBRkZFjj?=
- =?us-ascii?Q?NukNVXjqZPhIJENBhsCj80QNCNxn7wnvW6U1c6r3v2Nl+Ua2O4kiCE2xFrEV?=
- =?us-ascii?Q?c812be0HeRsYmpLiREyEffFyCxVE80WrID1u2/GKLj2ZU6R9uHKzLERTdTrf?=
- =?us-ascii?Q?JSQF9Xkd+VW+ppZs/Bh3ljy0zxBwmE1LFY/Mp0/fqIKfbW9xUSCvR6Q1WUnL?=
- =?us-ascii?Q?ZzuHDyIseSxUDKWtB/m9BmIUpKRjsb3tjnTXiT5AJyB2jmLmdAB8w4Bqs2Y4?=
- =?us-ascii?Q?QMqUD+38lw73UkZBbsyJr3NAucuIDi0fd+YdMb9GCBOKElALtigxdNOVaDzU?=
- =?us-ascii?Q?pbdRXsi5DZDyGCZdUp15v7FugBTRf7Bd/dybmb/r7vNPv1ARiZuLI6MAe2H+?=
- =?us-ascii?Q?CiUQ0HlrWDW4uGcSDlg4EnMitGk56yt+QLXi1yYqym54MBpWFNUkil4YwLUA?=
- =?us-ascii?Q?1MW0BtW+ed2ZmETFJqtBwapbQNd5MqIHrDejEpolFtUlBA8TY6H0VR+y+dFW?=
- =?us-ascii?Q?acxOqgB6uGPRrDqZPi1rsd9kIJ5+T9X0CJXeKIjJ?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BmPfKJGf/mmHOGA78I5+gWueP8HvjHuHsgu0TqxEgFgmOnydH2kKO0QPvdBs?=
+ =?us-ascii?Q?FkvzcwLx2I2bB0wnLSGoq1KaZ1tC+cGvhi1eQvyzWTpw5iIbYl31cjm4mzne?=
+ =?us-ascii?Q?JAWWiHNJebFkGAq1OJMkmAi8MQLzbZL7q1VH1e8dtl9BfQRos8gPq8n/EGNu?=
+ =?us-ascii?Q?wheMEr+X3uWu+3X79cq1cBVZnvhkoQqLJpJfALZs48G9ycBDm9AM8mDDwi85?=
+ =?us-ascii?Q?shTs4UCsfLOjaw8lr3/JrRTexoRKk88uHXPlTZgwyJvP3G9P2rYWkJN+M6fT?=
+ =?us-ascii?Q?49SHwjD/hH4jnaLtTWLlCC9HPflXLpKLeqFQKGcN75vsng/GPUGFJG6E/8La?=
+ =?us-ascii?Q?GIpi10pfJ9MZvTso/7E/8/WhCu/KjvBTgdxZMam5ABUQmVFYEB/9ghjyOjgG?=
+ =?us-ascii?Q?QgtVJNhwN6QoTyH83RVccg0O30WunWtUQXv0XugVLSrtCK+aucp4oJnKHYqN?=
+ =?us-ascii?Q?VDSpAdjZRilOJ4UvFO4FuEfaZbUlEBcMne7vMSy3Pq3tDQu8OLjjPkre5pFq?=
+ =?us-ascii?Q?S3C5N0ognRXKBRfVGtzjgosMsLTrfeTTo8h94UENU/T0QV2cjdK/cmgIO2w/?=
+ =?us-ascii?Q?8j9sRXUy0zN14D2x1jkIjzbaek964U25WYTDVIp+d1cyykWK+VNMDYGaAw5y?=
+ =?us-ascii?Q?oOBFYZJ/btq8ehGnrgFG5LsneDWaaSIYm3XjgAhmHgs/bIs49xeVMXOLtLzK?=
+ =?us-ascii?Q?xlRh/Q13RMaFOFGYubIGxn4Ni2G2xpbBqHu/pP/M0cSBQ8TlGDz/hmRSuYNB?=
+ =?us-ascii?Q?0uTiB0lxmXG17XBfYjlQwbRmCrNxZ6hOa7aeb0PotOLmmMHe0I74r3d2uU1Q?=
+ =?us-ascii?Q?m5Rq7PIGGD5qN6raXzZnTwNxEU5H71rFXuc+/4i7zcPaqdrUIO61OF536zbM?=
+ =?us-ascii?Q?VXMU7sOjv6Eej1HT4iOK/0YstQMxKUtnd7DPReeC4URuVLd+yO101hUIChXZ?=
+ =?us-ascii?Q?ombiZRgDH/izK40jUAA44Szlc+01kja9saQPMFOylQHq4T0ljFQiTDV0GNC1?=
+ =?us-ascii?Q?9LmbAWpTGt/SPas6XRcsj4Gv5+NLQeCJTaFVr7qInCD+QhMILLoOQFq8QLf5?=
+ =?us-ascii?Q?Ef1xHj5KScRX0ETOn40y7dPtn13RCE7RczKgRjN5U/qWZADUtSHmiPATk1qg?=
+ =?us-ascii?Q?v/YuPaYS6RGO8W5ghgrEHqgKXJ56HpOLDy/MwZxb4l6g5Bu0PuwcG8tsXvoj?=
+ =?us-ascii?Q?RM1Ywy3I55sqfk1EHU1RPIXLz82PoJNrtOPaDlmcPJNKFraiphI5CMzGvEle?=
+ =?us-ascii?Q?Pd9rVubaEImc0PBaMsSIg/6Uhr1m6yBRReYmJ1KcZ38NDqV4HYmT3IUiVYG2?=
+ =?us-ascii?Q?xyDBLYye6CmMbB4jQqcTBwubunBZTUsRbnos2t08CmvJp698hVXe3a1wkd9T?=
+ =?us-ascii?Q?6xvMn4IeBkEleWyHAkcpz8UxBKtDaYT01uf8MMrBa4Ln+8XNL/Nyp86KJnJp?=
+ =?us-ascii?Q?dcymxTwD69XrVs9EuwqMfdh4VBCizfTf9OTTAQSB4+y2F4GdH1tuHq3PkuK6?=
+ =?us-ascii?Q?qQl/2ZxifF7FIb/Q1DCfJAyTRmfFEaLFrljaE1XR9gpzTU2kiadK+iEmnOs3?=
+ =?us-ascii?Q?ymMjZ0WBSb13pGYR6NxZ9sCFpQPotdUNoNPu/nKp?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70359c4b-5b69-4125-3e7e-08da6aacd2bc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2022 00:06:12.8504
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51a14604-265e-4bcc-9cb3-08da6aae0e7b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2022 00:15:02.5869
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PmMjTah1Xa+rGSQsbOSex3kNcHKGw+a3v24YKCzSgdN4F3T3JgUmkvN5GaJYPXQRJ+9zVKvvzaDEESB3gD0AAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1929
+X-MS-Exchange-CrossTenant-userprincipalname: QZo0NMIJvSnlHwoskEur3K8bcm7OB8/sDNSyCxRJDempxtqqY+OtcuUmH34RNmS7dx0AlwxOpnfh8IPgCoqdzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3580
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=ham
@@ -135,43 +135,44 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> Subject: Re: [Patch v4 03/12] net: mana: Handle vport sharing between
-> devices
+> Subject: Re: [Patch v4 06/12] net: mana: Define data structures for prote=
+ction
+> domain and memory registration
 >=20
-> On Tue, Jul 12, 2022 at 06:48:09PM +0000, Long Li wrote:
-> > > > @@ -563,9 +581,19 @@ static int mana_cfg_vport(struct
-> > > > mana_port_context *apc, u32 protection_dom_id,
-> > > >
-> > > >  	apc->tx_shortform_allowed =3D resp.short_form_allowed;
-> > > >  	apc->tx_vp_offset =3D resp.tx_vport_offset;
-> > > > +
-> > > > +	netdev_info(apc->ndev, "Configured vPort %llu PD %u DB %u\n",
-> > > > +		    apc->port_handle, protection_dom_id, doorbell_pg_id);
-> > > Should this be netdev_dbg()?
-> > > The log buffer can be flooded if there are many vPorts per VF PCI
-> > > device and there are a lot of VFs.
+> On Mon, Jul 11, 2022 at 01:29:08AM +0000, Dexuan Cui wrote:
+> > > From: longli@linuxonhyperv.com <longli@linuxonhyperv.com>
+> > > Sent: Wednesday, June 15, 2022 7:07 PM
+> > >
+> > > The MANA hardware support protection domain and memory
+> registration
+> > > for
+> > s/support/supports
 > >
-> > The reason netdev_info () is used is that this message is important
-> > for troubleshooting initial setup issues with Ethernet driver. We rely
-> > on user to get this configured right to share the same hardware port
-> > between Ethernet and RDMA driver. As far as I know, there is no easy
-> > way for a driver to "take over" an exclusive hardware resource from
-> > another driver.
+> > > diff --git a/drivers/net/ethernet/microsoft/mana/gdma.h
+> > > b/drivers/net/ethernet/microsoft/mana/gdma.h
+> > > index f945755760dc..b1bec8ab5695 100644
+> > > --- a/drivers/net/ethernet/microsoft/mana/gdma.h
+> > > +++ b/drivers/net/ethernet/microsoft/mana/gdma.h
+> > > @@ -27,6 +27,10 @@ enum gdma_request_type {
+> > >  	GDMA_CREATE_DMA_REGION		=3D 25,
+> > >  	GDMA_DMA_REGION_ADD_PAGES	=3D 26,
+> > >  	GDMA_DESTROY_DMA_REGION		=3D 27,
+> > > +	GDMA_CREATE_PD			=3D 29,
+> > > +	GDMA_DESTROY_PD			=3D 30,
+> > > +	GDMA_CREATE_MR			=3D 31,
+> > > +	GDMA_DESTROY_MR			=3D 32,
+> > These are not used in this patch. They're used in the 12th patch for
+> > the first time. Can we move these to that patch?
 >=20
-> This seems like a really strange statement.
->=20
-> Exactly how does all of this work?
+> This looks like RDMA code anyhow, why is it under net/ethernet?
 >=20
 > Jason
 
-"vport" is a hardware resource that can either be used by an Ethernet devic=
-e, or an RDMA device. But it can't be used by both at the same time. The "v=
-port" is associated with a protection domain and doorbell, it's programmed =
-in the hardware. Outgoing traffic is enforced on this vport based on how it=
- is programmed.
+This header file belongs to the GDMA layer (as its filename implies) . It's=
+ a hardware communication layer used by both ethernet and RDMA for communic=
+ating with the hardware.
 
-Hardware is not responsible for tracking which one is using this "vport", i=
-t's up to the software to make sure it's correctly configured for that devi=
-ce.
+Some of the RDMA functionalities are implemented at GDMA layer in the PF ru=
+nning on the host, so the message definitions are also there.
 
 Long
