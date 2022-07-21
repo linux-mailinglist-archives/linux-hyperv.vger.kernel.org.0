@@ -2,87 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BE0E57C694
-	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Jul 2022 10:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94BA757C759
+	for <lists+linux-hyperv@lfdr.de>; Thu, 21 Jul 2022 11:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232562AbiGUIjr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 21 Jul 2022 04:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39422 "EHLO
+        id S232113AbiGUJRQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 21 Jul 2022 05:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232466AbiGUIjd (ORCPT
+        with ESMTP id S230092AbiGUJRQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 21 Jul 2022 04:39:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A4B8D7E836
-        for <linux-hyperv@vger.kernel.org>; Thu, 21 Jul 2022 01:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658392770;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rHQddct22+s5hmZWBuML5igjaqME1krrl4DYXrpi1tg=;
-        b=WSVl24JoDaDFsrQQhI9eSxB8EMRE0srmRNtFw2SdawZ6VaYOisFEdg4iO2tNNHkl2WSTAC
-        muSrxnQKItSHjijToIPFOgHR0ehnxFkP10qy1DtMrvpOasnejQVlvEAeZfyG+diceERviW
-        oVVpPaaTDCuJ8lQ4gbSJhlxfRzFzm+8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-120-ygyzZ5PQOESkKZz9Bu2uiQ-1; Thu, 21 Jul 2022 04:39:28 -0400
-X-MC-Unique: ygyzZ5PQOESkKZz9Bu2uiQ-1
-Received: by mail-wr1-f69.google.com with SMTP id h1-20020adfa4c1000000b0021e43452547so149052wrb.9
-        for <linux-hyperv@vger.kernel.org>; Thu, 21 Jul 2022 01:39:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=rHQddct22+s5hmZWBuML5igjaqME1krrl4DYXrpi1tg=;
-        b=up4rhQxjThtF/8v4rCdClCbsREFZrx//1QttEKY+AEytbz2+ILVGXUk5kv8z5qpbtu
-         irQXby6hNFkB0oVExWm8HlbMfO0qqVTzgkJ9MAAns1FlbzzNgJhibuKJpvtuE0LbrHx7
-         NtJZ4xDBx5c+I2RHc1lnwGS9j/5zOgODpwPA+q10YRpoNuH1SoxJqV7Uh/+qC3v8Sl6d
-         MvFjzYspduJp5EcWUXkJfHzOZQrZ2nMTw0JJ/aFtCmrjk8BnxDXiZ9vrvt7vm4x7ODe9
-         fwQc1spAz9Rh74Hl9JOx5Lm2JS4IE7Uytqk8sraqtzuAUL8z1ViRBBbjSdLwLZXGxFvu
-         Gf9g==
-X-Gm-Message-State: AJIora/vJKFYJa8WZ9xWfTKDkvwqVQSAAu94UfAdfqoYL5ns2yFuN2HN
-        vsJlyWyxRkvf5AN2u48dFWasKuQb0+KAWO5kEJZw7OfFqo6R+PQ1Oc9RlQHvYugyFp7NxUrOXKC
-        EctQkjd1jR7/eMxVceg3OOi83
-X-Received: by 2002:a5d:59a9:0:b0:21d:7ee2:8f90 with SMTP id p9-20020a5d59a9000000b0021d7ee28f90mr33649031wrr.598.1658392767582;
-        Thu, 21 Jul 2022 01:39:27 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tgI04aD7Jw1LlQvxlJXF9GNlLvKMC9uf9PkUQtkjjLkNil8vUimbCbuG4SwLNzapNrDsFc9Q==
-X-Received: by 2002:a5d:59a9:0:b0:21d:7ee2:8f90 with SMTP id p9-20020a5d59a9000000b0021d7ee28f90mr33649009wrr.598.1658392767222;
-        Thu, 21 Jul 2022 01:39:27 -0700 (PDT)
-Received: from [192.168.1.129] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id j20-20020a5d6e54000000b0021d65e9d449sm1168696wrz.73.2022.07.21.01.39.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jul 2022 01:39:26 -0700 (PDT)
-Message-ID: <c31541b0-ef84-6018-1ba1-cff3a33f4954@redhat.com>
-Date:   Thu, 21 Jul 2022 10:39:25 +0200
+        Thu, 21 Jul 2022 05:17:16 -0400
+Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729222B1B6;
+        Thu, 21 Jul 2022 02:17:09 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=chengyou@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VK.Qu92_1658395024;
+Received: from 192.168.0.4(mailfrom:chengyou@linux.alibaba.com fp:SMTPD_---0VK.Qu92_1658395024)
+          by smtp.aliyun-inc.com;
+          Thu, 21 Jul 2022 17:17:06 +0800
+Message-ID: <f030aeab-b503-8381-53f5-15862e1333b0@linux.alibaba.com>
+Date:   Thu, 21 Jul 2022 17:17:03 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] fbdev: Fix order of arguments to
- aperture_remove_conflicting_devices()
-Content-Language: en-US
-To:     Thomas Zimmermann <tzimmermann@suse.de>, deller@gmx.de
-Cc:     linux-fbdev@vger.kernel.org,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        linux-hyperv@vger.kernel.org,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.11.0
+From:   Cheng Xu <chengyou@linux.alibaba.com>
+Subject: Re: [Patch v4 12/12] RDMA/mana_ib: Add a driver for Microsoft Azure
+ Network Adapter
+To:     longli@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        kernel test robot <lkp@intel.com>
-References: <20220721081655.16128-1-tzimmermann@suse.de>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <20220721081655.16128-1-tzimmermann@suse.de>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, edumazet@google.com,
+        shiraz.saleem@intel.com, Ajay Sharma <sharmaajay@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+References: <1655345240-26411-1-git-send-email-longli@linuxonhyperv.com>
+ <1655345240-26411-13-git-send-email-longli@linuxonhyperv.com>
+Content-Language: en-US
+In-Reply-To: <1655345240-26411-13-git-send-email-longli@linuxonhyperv.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -90,54 +55,108 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Thomas,
 
-On 7/21/22 10:16, Thomas Zimmermann wrote:
-> Reverse the order of the final two arguments when calling
-> aperture_remove_conflicting_devices(). An error report is available
-> at [1].
+
+On 6/16/22 10:07 AM, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Fixes: 8d69d008f44c ("fbdev: Convert drivers to aperture helpers")
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Javier Martinez Canillas <javierm@redhat.com>
-> Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-hyperv@vger.kernel.org
-> Link: https://lore.kernel.org/lkml/202207202040.jS1WcTzN-lkp@intel.com/ # 1
-> ---
->  drivers/video/fbdev/aty/radeon_base.c | 2 +-
->  drivers/video/fbdev/hyperv_fb.c       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
-> index e5e362b8c9da..0a8199985d52 100644
-> --- a/drivers/video/fbdev/aty/radeon_base.c
-> +++ b/drivers/video/fbdev/aty/radeon_base.c
-> @@ -2243,7 +2243,7 @@ static int radeon_kick_out_firmware_fb(struct pci_dev *pdev)
->  	resource_size_t base = pci_resource_start(pdev, 0);
->  	resource_size_t size = pci_resource_len(pdev, 0);
->  
-> -	return aperture_remove_conflicting_devices(base, size, KBUILD_MODNAME, false);
-> +	return aperture_remove_conflicting_devices(base, size, false, KBUILD_MODNAME);
->  }
 
-I also missed that the order wasn't correct when reviewing.
+<...>
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com> 
+> +
+> +static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
+> +				 struct ib_qp_init_attr *attr,
+> +				 struct ib_udata *udata)
+> +{
+> +	struct mana_ib_pd *pd = container_of(ibpd, struct mana_ib_pd, ibpd);
+> +	struct mana_ib_qp *qp = container_of(ibqp, struct mana_ib_qp, ibqp);
+> +	struct mana_ib_dev *mdev =
+> +		container_of(ibpd->device, struct mana_ib_dev, ib_dev);
+> +	struct mana_ib_cq *send_cq =
+> +		container_of(attr->send_cq, struct mana_ib_cq, ibcq);
+> +	struct ib_ucontext *ib_ucontext = ibpd->uobject->context;
+> +	struct mana_ib_create_qp_resp resp = {};
+> +	struct mana_ib_ucontext *mana_ucontext;
+> +	struct gdma_dev *gd = mdev->gdma_dev;
+> +	struct mana_ib_create_qp ucmd = {};
+> +	struct mana_obj_spec wq_spec = {};
+> +	struct mana_obj_spec cq_spec = {};
+> +	struct mana_port_context *mpc;
+> +	struct mana_context *mc;
+> +	struct net_device *ndev;
+> +	struct ib_umem *umem;
+> +	int err;
+> +	u32 port;
+> +
+> +	mana_ucontext =
+> +		container_of(ib_ucontext, struct mana_ib_ucontext, ibucontext);
+> +	mc = gd->driver_data;
+> +
+> +	if (udata->inlen < sizeof(ucmd))
+> +		return -EINVAL;
+> +
+> +	err = ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd), udata->inlen));
+> +	if (err) {
+> +		ibdev_dbg(&mdev->ib_dev,
+> +			  "Failed to copy from udata create qp-raw, %d\n", err);
+> +		return -EFAULT;
+> +	}
+> +
+> +	/* IB ports start with 1, MANA Ethernet ports start with 0 */
+> +	port = ucmd.port;
+> +	if (ucmd.port > mc->num_ports)
+> +		return -EINVAL;
+> +
+> +	if (attr->cap.max_send_wr > MAX_SEND_BUFFERS_PER_QUEUE) {
+> +		ibdev_dbg(&mdev->ib_dev,
+> +			  "Requested max_send_wr %d exceeding limit\n",
+> +			  attr->cap.max_send_wr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (attr->cap.max_send_sge > MAX_TX_WQE_SGL_ENTRIES) {
+> +		ibdev_dbg(&mdev->ib_dev,
+> +			  "Requested max_send_sge %d exceeding limit\n",
+> +			  attr->cap.max_send_sge);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ndev = mc->ports[port - 1];
+> +	mpc = netdev_priv(ndev);
+> +	ibdev_dbg(&mdev->ib_dev, "port %u ndev %p mpc %p\n", port, ndev, mpc);
+> +
+> +	err = mana_ib_cfg_vport(mdev, port - 1, pd, mana_ucontext->doorbell);
+> +	if (err)
+> +		return -ENODEV;
+> +
+> +	qp->port = port;
+> +
+> +	ibdev_dbg(&mdev->ib_dev, "ucmd sq_buf_addr 0x%llx port %u\n",
+> +		  ucmd.sq_buf_addr, ucmd.port);
+> +
+> +	umem = ib_umem_get(ibpd->device, ucmd.sq_buf_addr, ucmd.sq_buf_size,
+> +			   IB_ACCESS_LOCAL_WRITE);
+> +	if (IS_ERR(umem)) {
+> +		err = PTR_ERR(umem);
+> +		ibdev_dbg(&mdev->ib_dev,
+> +			  "Failed to get umem for create qp-raw, err %d\n",
+> +			  err);
+> +		goto err_free_vport;
+> +	}
+> +	qp->sq_umem = umem;
+> +
+> +	err = mana_ib_gd_create_dma_region(mdev, qp->sq_umem,
+> +					   &qp->sq_gdma_region, PAGE_SIZE);
+> +	if (err) {
+> +		ibdev_err(&mdev->ib_dev,
+> +			  "Failed to create dma region for create qp-raw, %d\n",
+> +			  err);
 
--- 
-Best regards,
+It is better not print in userspace-triggered paths.
 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+There are also same issues in other paths.
+
+Thanks,
+Cheng Xu
+
 
