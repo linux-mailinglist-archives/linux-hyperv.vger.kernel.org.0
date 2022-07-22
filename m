@@ -2,105 +2,158 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3708357E558
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Jul 2022 19:22:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B818A57E690
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Jul 2022 20:33:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235150AbiGVRWc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 22 Jul 2022 13:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43878 "EHLO
+        id S236359AbiGVSdn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 22 Jul 2022 14:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232706AbiGVRWc (ORCPT
+        with ESMTP id S231304AbiGVSdk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 22 Jul 2022 13:22:32 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2149854642;
-        Fri, 22 Jul 2022 10:22:31 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id b11so9611315eju.10;
-        Fri, 22 Jul 2022 10:22:31 -0700 (PDT)
+        Fri, 22 Jul 2022 14:33:40 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12A27D1D0
+        for <linux-hyperv@vger.kernel.org>; Fri, 22 Jul 2022 11:33:32 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id f3-20020a17090ac28300b001f22d62bfbcso3978775pjt.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 22 Jul 2022 11:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=YkC3eY7Vl6bSmPtjcXgP6cjyIo/TnsfJzy20Et5wz7c=;
-        b=KN5yd+53sH4Wb8HPNnZgi8AEjMBzBJZ2b0S99H1pJSSGFaXJ5zhfd3Yct+FeSd08g4
-         DRP86PSFIY+OF7m4l51JNbIb3qM1rWn2atS6imjcTzB9Gecg63D9PqJfnmlBh8Z82HpX
-         Qee1NLvmL+kiMW4EkgFLZgWGjRsExUoFQ2OH3EKwTTwmb2es8bvaKAv7fQzH3jfuZITt
-         CHDL+XfVc6Qzb/+525qvwryYxfoBJcBdQCg73/z3r6vydOqYKYBv+C2KftA4L/1hp79X
-         Lo94Rmj5clKKZFn1Y3eyWsZbtxw6KUYmPesRNrwIwGFtZ1fdFvzt4Gi4TY/vy2cSjuE2
-         t3cA==
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=noDnWIH945nYgd1IiYOQ6TJtVYekdnDkLQnIipIagMU=;
+        b=jVhPFnyqezO242A9rU/EcxTdX+FAeH8OuE27PfesXzWSky/o9OqxHPqlu1jhIBcG4P
+         HuuyY/2BeItQYXyjdqD7rR6I5JHv4PwObRmJWn79HVdTtrcwBLu77JGwYaACBaQcrsdg
+         UPeXEH78SV/8c3jWgOPSA3AN/lgMcxqvF9jKDxThSjGnA7V1L24uCn+o69bbHkWmHsSa
+         xHxyuM3ERDTjMx+OQS7OtvXOull1CofacQb+GU/KQxMSDg0O7DPyQ0bNdg9uO4x9buBs
+         CF/6HZKBv4nUA0bVUdy72SuU1jGygvLJfnXsDPF/BJE00VFB0x90dpa8q2rfignc1e9z
+         PsHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=YkC3eY7Vl6bSmPtjcXgP6cjyIo/TnsfJzy20Et5wz7c=;
-        b=yCzN3LyWSEdhTPqnGjTJuqyS0fWYXBwrMYKbBYvTxo0O/wKjYBDlwQckwjT8UpfaTS
-         saMybCv6TMAQ2SqYl7fGPKOhM1ZvO1fQZASAriQpsDGTXjr64Qs2zdLB3dG6WrprpuK7
-         umtme8XVlreU9kEC7J9U2B/ZzSaucHQtUcAehQpQZkMg29PCz2K6DjMSe74tyLrYgWJn
-         2z6oLCfPRR/lrVR/6VeApWgxV+P/TZFc0ItQlUgDSVJ8eaIUa9Gf05X3KXB5iu6K/++7
-         S72I34Z9NN5PTU4o2NN8gRAwVqNCWk7nc1xxedit53KX1+GPF/q+ciFdCSkZqhQmpbvv
-         gzng==
-X-Gm-Message-State: AJIora8IAacT7nWLav8nZnco1d2sN2l6WCefQF4kLgTMqTxXACzulu/Q
-        zjpFBCCK1pQ0jLSryLlNLDs=
-X-Google-Smtp-Source: AGRyM1swhtBRtCTeArxoepNlVydfAHn99mPfz+udv+1XrqoqrvjzL6vRX3Y19KQPBHuFjWxdmjpCFA==
-X-Received: by 2002:a17:906:9be4:b0:72b:cf9:99d8 with SMTP id de36-20020a1709069be400b0072b0cf999d8mr665118ejc.747.1658510549556;
-        Fri, 22 Jul 2022 10:22:29 -0700 (PDT)
-Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
-        by smtp.googlemail.com with ESMTPSA id ej22-20020a056402369600b00437d3e6c4c7sm2816248edb.53.2022.07.22.10.22.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Jul 2022 10:22:29 -0700 (PDT)
-Sender: Paolo Bonzini <paolo.bonzini@gmail.com>
-Message-ID: <0741719d-17b4-96fe-1ee8-5f22cf3e255b@redhat.com>
-Date:   Fri, 22 Jul 2022 19:22:27 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v4 01/25] KVM: x86: hyper-v: Expose access to debug MSRs
- in the partition privilege flags
-Content-Language: en-US
-To:     Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=noDnWIH945nYgd1IiYOQ6TJtVYekdnDkLQnIipIagMU=;
+        b=xSwRoYNSxk5OAG6GcF4oaKL/XW/IzKTRtwj+2y0vUmaYRMqTE5pfryBWpMlLFarMRG
+         D+DcdJJ4FwjDIeI8yqMCoR/Wk3kJEAHlQ8oxyTXrDBu8VyK+0B6Ase0qBGpZ/2jONiKv
+         rpx7+1AbloVY7laV2FYU2Sl6mDumstd7xtnza8MSj8IY6+UOl7NpHE6u0pwxpKD9zhBU
+         HmvJWAw1/9eHhUk9y1IouLtq+2NnrNJnYd83EzvSJKSWnq/ej8hsyPzgwBiZrdtRnwxa
+         UzhFWUf7tGSMYIl+bfJ3tjIk89CVojj8aXSYZuSLb7ka7I+4yko/ANmc3hd9hiexgcqw
+         gvcQ==
+X-Gm-Message-State: AJIora8qmCu46BGdNgKve9A7VkTq5j+PPp5JPQiuJ9l6jUJv2N5BJPQl
+        wVkNf3aOO6JWqomGQ+tqjgGpkg==
+X-Google-Smtp-Source: AGRyM1vooHqa5wrwrNbFSpSF2H5z7YmhDdBJN9zSZYd034/OZ1dr/E7PbcgBA1tQXU9huTb7+YBNZA==
+X-Received: by 2002:a17:90b:4f41:b0:1f0:4785:b9a8 with SMTP id pj1-20020a17090b4f4100b001f04785b9a8mr18151723pjb.224.1658514812148;
+        Fri, 22 Jul 2022 11:33:32 -0700 (PDT)
+Received: from google.com (123.65.230.35.bc.googleusercontent.com. [35.230.65.123])
+        by smtp.gmail.com with ESMTPSA id a16-20020aa78e90000000b0052b29fd7982sm4202604pfr.85.2022.07.22.11.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Jul 2022 11:33:31 -0700 (PDT)
+Date:   Fri, 22 Jul 2022 18:33:27 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 15/25] KVM: VMX: Extend VMX controls macro shenanigans
+Message-ID: <YtrtdylmyolAHToz@google.com>
 References: <20220714091327.1085353-1-vkuznets@redhat.com>
- <20220714091327.1085353-2-vkuznets@redhat.com> <YtnIgQOPbcZOQK2D@google.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <YtnIgQOPbcZOQK2D@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+ <20220714091327.1085353-16-vkuznets@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220714091327.1085353-16-vkuznets@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 7/21/22 23:43, Sean Christopherson wrote:
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index c284a605e453..ca91547034e4 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -1282,7 +1282,7 @@ static bool hv_check_msr_access(struct kvm_vcpu_hv *hv_vcpu, u32 msr)
->          case HV_X64_MSR_SYNDBG_OPTIONS:
->          case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
->                  return hv_vcpu->cpuid_cache.features_edx &
-> -                       HV_FEATURE_DEBUG_MSRS_AVAILABLE;
-> +                       HV_ACCESS_DEBUG_MSRS;
->          default:
->                  break;
->          }
-> 
+On Thu, Jul 14, 2022, Vitaly Kuznetsov wrote:
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index 286c88e285ea..89eaab3495a6 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -467,6 +467,113 @@ static inline u8 vmx_get_rvi(void)
+>  	return vmcs_read16(GUEST_INTR_STATUS) & 0xff;
+>  }
+>  
+> +#define __KVM_REQ_VMX_VM_ENTRY_CONTROLS				\
+> +	(VM_ENTRY_LOAD_DEBUG_CONTROLS)
+> +#ifdef CONFIG_X86_64
+> +	#define KVM_REQ_VMX_VM_ENTRY_CONTROLS			\
+> +		(__KVM_REQ_VMX_VM_ENTRY_CONTROLS |		\
+> +		VM_ENTRY_IA32E_MODE)
 
-Yes, and this will need some kind of hack in QEMU to expose both CPUID 
-bits.  Fortunately hv-syndbg shouldn't be in much use in the wild, so I 
-think we can avoid quirks etc.
+This breaks 32-bit builds, but at least we know the assert works!
 
-Paolo
+vmx_set_efer() toggles VM_ENTRY_IA32E_MODE without a CONFIG_X86_64 guard.  That
+should be easy enough to fix since KVM should never allow EFER_LMA.  Compile 
+tested patch at the bottom.
+
+More problematic is that clang-13 doesn't like the new asserts, and even worse gives
+a very cryptic error.  I don't have bandwidth to look into this at the moment, and
+probably won't next week either.
+
+ERROR: modpost: "__compiletime_assert_533" [arch/x86/kvm/kvm-intel.ko] undefined!
+ERROR: modpost: "__compiletime_assert_531" [arch/x86/kvm/kvm-intel.ko] undefined!
+ERROR: modpost: "__compiletime_assert_532" [arch/x86/kvm/kvm-intel.ko] undefined!
+ERROR: modpost: "__compiletime_assert_530" [arch/x86/kvm/kvm-intel.ko] undefined!
+make[2]: *** [scripts/Makefile.modpost:128: modules-only.symvers] Error 1
+make[1]: *** [Makefile:1753: modules] Error 2
+make[1]: *** Waiting for unfinished jobs....
+
+
+> +#else
+> +	#define KVM_REQ_VMX_VM_ENTRY_CONTROLS			\
+> +		__KVM_REQ_VMX_VM_ENTRY_CONTROLS
+> +#endif
+
+EFER.LMA patch, compile tested only.
+
+---
+From: Sean Christopherson <seanjc@google.com>
+Date: Fri, 22 Jul 2022 18:26:21 +0000
+Subject: [PATCH] KVM: VMX: Don't toggle VM_ENTRY_IA32E_MODE for 32-bit
+ kernels/KVM
+
+Don't toggle VM_ENTRY_IA32E_MODE in 32-bit kernels/KVM and instead bug
+the VM if KVM attempts to run the guest with EFER.LMA=1.  KVM doesn't
+support running 64-bit guests with 32-bit hosts.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index bff97babf381..8623607e596d 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2894,10 +2894,15 @@ int vmx_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ 		return 0;
+
+ 	vcpu->arch.efer = efer;
++#ifdef CONFIG_X86_64
+ 	if (efer & EFER_LMA)
+ 		vm_entry_controls_setbit(vmx, VM_ENTRY_IA32E_MODE);
+ 	else
+ 		vm_entry_controls_clearbit(vmx, VM_ENTRY_IA32E_MODE);
++#else
++	if (KVM_BUG_ON(efer & EFER_LMA, vcpu->kvm))
++		return 1;
++#endif
+
+ 	vmx_setup_uret_msrs(vmx);
+ 	return 0;
+
+base-commit: e22e2665637151a321433b2bb705f5c3b8da40bc
+--
+
