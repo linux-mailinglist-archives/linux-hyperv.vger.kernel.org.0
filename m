@@ -2,123 +2,154 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6A7858070C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jul 2022 00:06:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAB4F5808D4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jul 2022 02:53:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbiGYWGX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 25 Jul 2022 18:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49240 "EHLO
+        id S230247AbiGZAx4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 25 Jul 2022 20:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbiGYWGW (ORCPT
+        with ESMTP id S229755AbiGZAxz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 25 Jul 2022 18:06:22 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489F0222AA;
-        Mon, 25 Jul 2022 15:06:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YyhxX2mWLvi9NimhQGcKzGIHUcpD9uFByKnTgfQXT2w=; b=PGkpTuxYoVATcBmmo5QpTR9OdU
-        CwxiCUUyg+Y43WZFKPZI8tVhTGlbReOvxwRy9vN5xlFY3Picc9q02QVGon0mk2qr+gc0H6DI1xkdA
-        Ocae0c8zKyVjxHiL0K7bl4oQZhe8iJrhJtaQD9dZsgzJVrcCJZAzsov/XHxJWKbmbo5ftSD95pWKz
-        UFCnlx6Icb4+P+rIPF6DDujCPBhMW2lOCenPqvqjXpVKjdwjx9mBL17sU/cCfl+FmUrx7l2Dspgvf
-        whmOYidPV6T/it/Bz3pnx0XUGVjPveeRJzlInsHK3oB41Rw1lJRpzg9VZc6aVCj990v9DlchEvxp+
-        pb2gaO3A==;
-Received: from [177.51.67.168] (helo=[192.168.43.24])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oG6D1-006U4U-LN; Tue, 26 Jul 2022 00:05:52 +0200
-Message-ID: <da0ed272-1d47-dd1f-9ad3-46b5adba2dec@igalia.com>
-Date:   Mon, 25 Jul 2022 19:05:18 -0300
+        Mon, 25 Jul 2022 20:53:55 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020015.outbound.protection.outlook.com [52.101.61.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9356527165;
+        Mon, 25 Jul 2022 17:53:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z4S2ZtXqefYr60kt50U5o0g16LyDitLXoO5pdzaipqOT0do8CaJ5/J9GquFLVUujiSEc9ImGzeh6NlItAlXNL/ZRFRgnmy+K48IBGzwKHCP3rvgk9yCUQpNYRz3YmD5Nnlw4ecxBN7UM2lfl18XSy+6McEZFaW0T88hoaxpeb84VJLYAgx4LgKA6Hn3UviLg59/KgLEWClJWtlMK8GvbqgxF4QdRyukpqr5lp5KxDb510ZAqKHzpeCSjcCxYdU8gl7RJ7UxHDTHxWoze8rMpS6tAIkt+tcoLQ2OzFv09IGNtadBSTSpR9W+IX//Gc2MhJdhLq97mHp9KPAQDkJcdng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MhrnOe1aU/VZgfb3owNjE8RU8xShsRt0TaHpEnM7AF0=;
+ b=jFnKsd7NUu/Ky7iccy6KHM7lyL1qMvWaXIFmnrwNPGNs0rZZelA3QVK2ZY4Ej7eMebgEa2AExqxAu8vawu6LTo2ywu8D7M/c9gNO7Hu5IS1MqhzavCMlrFjrMKEldCkGQ20zrmqCS4rIzR+GsGe7MuNzECW+vcoQAmolPnbNvtLSKDMTiNyFMRng/rydSSLZmrqlTclfbIvX32Ka1VKQJs5LHVJIRmZIyRTvmJXKcruKUkItFiO0mVr4akrpDFt67hqdgfOEBmJjtPXLZHk9vtTvNeot4aGBOjIiTG08pQoFciB6Gkp0J/9bcxxR5toqm4vC+nLP1lWcD2PQsTBO0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MhrnOe1aU/VZgfb3owNjE8RU8xShsRt0TaHpEnM7AF0=;
+ b=jOy5M5HU++KaJ6x/dNfR0y2/MxJY/mM/BdDrX+WrskDiY4oW3NzyvqIXsRPOFE0eF65mx0d3zp8mIF3yxayv6sDxT+EX6TISrORduLuX/D0JFG0BDTVly4irW+r+3EY3Zv6N29FhTrmGO617rojfI/zp6xijmzwGpKSP2Wb3wm8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by SA0PR21MB1881.namprd21.prod.outlook.com (2603:10b6:806:e6::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.1; Tue, 26 Jul
+ 2022 00:53:52 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::684f:525a:aab1:bba6]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::684f:525a:aab1:bba6%5]) with mapi id 15.20.5504.001; Tue, 26 Jul 2022
+ 00:53:52 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     sthemmin@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, joro@8bytes.org,
+        will@kernel.org, robin.murphy@arm.com, samuel@sholland.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        iommu@lists.linux.dev
+Cc:     mikelley@microsoft.com
+Subject: [PATCH 1/1] iommu/hyper-v: Use helper instead of directly accessing affinity
+Date:   Mon, 25 Jul 2022 17:53:40 -0700
+Message-Id: <1658796820-2261-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0128.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::13) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 11/13] video/hyperv_fb: Avoid taking busy spinlock on
- panic path
-Content-Language: en-US
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
-        "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
-        "halves@canonical.com" <halves@canonical.com>,
-        "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
-        "alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "dyoung@redhat.com" <dyoung@redhat.com>,
-        "feng.tang@intel.com" <feng.tang@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hidehiro.kawai.ez@hitachi.com" <hidehiro.kawai.ez@hitachi.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "vgoyal@redhat.com" <vgoyal@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-12-gpiccoli@igalia.com>
- <PH0PR21MB30252061CD7F2FD15BD77F7ED7959@PH0PR21MB3025.namprd21.prod.outlook.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <PH0PR21MB30252061CD7F2FD15BD77F7ED7959@PH0PR21MB3025.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 33c4d571-afba-45c4-0b54-08da6ea14ecb
+X-MS-TrafficTypeDiagnostic: SA0PR21MB1881:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ctmpSN4cM+EbvMdqurYev6u7w92BONEvVrFOMqsj4h+lSgs9Itz8WwFmRKIZIRdVpato7HxQt+zA7WBJNpKo+Dz3E1IkPoBKVgdDdFvuAsP6plzl2W4Y8mlvhWk2JYeHfEwtf8UbQyfY8oIFrZ0yMLoq4Chk8v5f3wN6XJ5nmDlxW9utefq+eTre426AKxCKrnFTS2jlkhX1gd5mGlaiGEFF58LOv3RE/tfWIxI25Dqcf2KrDDQq4UY0KiTLjbteV9P2llHHL0JZzc1UgWbhMJf2Ot6x7mEiOCQ4mdts/se2vUdU6TtDzqFPxAyPAXmp8hZnvkZ8QDZkzEyRAsl6aanXpTpHGzFemcQRaGlogs2xX9naJ4vvGHj66NoeQgeZCd+mnQXB2BUeuo1ZBah5nzyiejQBWIWsXXNoTsXWIrhH1m1YBEWRvsKZuDoS04aEWAdpfQXOYCZKzZcBjlKStfOf1XlQfMEKMVOHBdbA78VWI1YEtwaI675A7zMMKyaLqGxX4c96P0eEamRc/23Z90X9AULUccQSrNUtTaoeTZcUi0rIk7CrbGu6jxOnV0uS8P/+3oAqeQvn+9+XJdEPJizHTGdafHNcShlNA9C4r1RvjCCVPiB38Hxznu3lQFBeACdBq+NqQVPCc5W7yDsibZ0QdR28CDjYJO5k8vTw1mZW2HKzrsDkV7gqm3nvinvlSpAYxsILDbuq+w7k4uJvelJ6xeZBwa0KJUbthemKBePmIXQLBl7HTZARktYttmKCg0CGUQYmRyKMnUPK+qnNyvPwevn8agdC9ZRLrf9kIPkWNW7BuXORAjwdk/b3mVaJiYngKusmhjIAGr9r39DJz7NKPge1BIelJjUXbaZj3Ys=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(366004)(396003)(346002)(39860400002)(376002)(451199009)(52116002)(6506007)(186003)(6512007)(478600001)(6666004)(2906002)(26005)(316002)(36756003)(8936002)(107886003)(41300700001)(6486002)(66476007)(83380400001)(86362001)(66556008)(921005)(82960400001)(38100700002)(5660300002)(82950400001)(10290500003)(66946007)(2616005)(38350700002)(8676002)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WKb9iN3LCqTqJqldI37P/6QbnRfKC6o31R0bNe0CUE0JpuzJDWjAO+J6DzSs?=
+ =?us-ascii?Q?7S/9l3bxoTHNOmty5kEGuVKxKBTYw1qqklorWjfw1UK0VYuLpjgOsC15nmnf?=
+ =?us-ascii?Q?ITeJJEI+3/J52nF5LAMjLCyJt8cnBp6/h773E3bC/vde0oO3ael8MbO0oyDh?=
+ =?us-ascii?Q?HT9x8Hl6KJvykH6Xu//kZWj5ce5QtfceTkotaU4QUK3MvrSyPv5Ee9lUa/6m?=
+ =?us-ascii?Q?c03zSUu5c2twSEgf3cHASqzPV6u4mZWyomPN6Fn7IeTcvIiJ5freTPIp9SX8?=
+ =?us-ascii?Q?D8SJL39+9eEZ4J7H9ZFSk57t/voFbmqmrEGBiB0yz0srWmVdNsMT+SoWc2X0?=
+ =?us-ascii?Q?oX/nlw5w39lLsDLvzSwp2B1O6BVVmjeuBDSSx6TxttLSKrcx1kL4wNZzpNkH?=
+ =?us-ascii?Q?IHu8l0cgD41K36GMtqkdozcQcRt4jBPI+iejaOdMZ9B9g52q9RotauyCGr4i?=
+ =?us-ascii?Q?jPbj78hVqZutfly3I6PphtTvW0U43awKK7yCanAIVzp+llqM00VzLME77lTV?=
+ =?us-ascii?Q?SP2So1K338bebMjoNRiDlvbyD6Vjh4c06ON8jbMHjPB+Hhtsba4E68i44R0U?=
+ =?us-ascii?Q?uMs370GXxTD4yWyOUe5jSy9X+ReA9gBfV6CzIQGPUuviPscy/WBPWEFEym5l?=
+ =?us-ascii?Q?DAKyQlIVvK+CB5z/YrxmN4kQcHP+GjvMtjbjj1EWL+iDRyVoN96Ru/kbb0Yc?=
+ =?us-ascii?Q?LmtEh6id1P53TvnG52qGuWB9Kna435QJulS55yGORYSJgABvklj5b7g2mPYr?=
+ =?us-ascii?Q?RStzlAp9Md1BJX4WJG9qQjBZtqQmk1vO1VHkWUHaO9uye8+6CHHlNIiR4dn9?=
+ =?us-ascii?Q?F46ZAOLBXFH8lovz1LwLPSvG2Yr/a24pZyPoMxJHYiVQDhUJCweJPm9r6O19?=
+ =?us-ascii?Q?7i973yqIh3wl5c1LOwehlzxFKX7uO76k69wbF0ZeSRN13V7xKVPdssQARNxf?=
+ =?us-ascii?Q?4yWhp41cgulCLvGLtq5irK4DuRJ5dDmdoipmEebzdbCIr+a4BelC0ITM5VFJ?=
+ =?us-ascii?Q?QH80MHIizqMWngFZrtrShh7/qfrg7zWHaIMDGRP6U611aDLrI9PnpRZjLxA3?=
+ =?us-ascii?Q?dZcyecOsn/7Kbzv7TA7cekE6fhJW67RYjNxy7N+004bLW60/U5TuDcU1MWcs?=
+ =?us-ascii?Q?MaOkoFE5MsTcUNa4jJ1XYGbeqYh14MPlqqvkGOZs52bYst9E9EuXf5SXV/0B?=
+ =?us-ascii?Q?M1zM/c6PsQavtD3pJ+t+Oo+21joU3St6BJKuQM99x8zDOkHULMEq9hn0J1nF?=
+ =?us-ascii?Q?Tk/tDA1MSaWC/cOit/kK719qDlRP3539FsXkK+qRYl6PQGqB/L0pLWfP91Wg?=
+ =?us-ascii?Q?Ggq2+jy02uncPw0Pp4kdBnqgfrUccYDIH7Skx+z6/cTsiXi+MAg07mvelljR?=
+ =?us-ascii?Q?rUgDnSDpKiOqYR5vYPcOX1hcaSisQB96JsbTvbSFu3diheQBMqkRPtHsjwma?=
+ =?us-ascii?Q?KJ5QE/O8sWlXp4RvM7+dj0zjw8681a9YKxxPkuDMllemBGVGFJDg+RotgsWd?=
+ =?us-ascii?Q?kEelp4B0T6s9DYn9YF7wVjC8CgC1wdbz9PyKBDO7CR2NPN/JPBpfk5rfF57L?=
+ =?us-ascii?Q?4HaTmTTDXqgt1ORV3JYgTu+WL6+Mqiy0TgRNr233?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33c4d571-afba-45c4-0b54-08da6ea14ecb
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2022 00:53:51.8472
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oZ0e6mcbkhCQ3HKqYNp9T71W63AccmsJrRRaNiW7oZE4rV+QSOUpfDfE3CtBip3vyOHpZBQAn1zLKXi9PSG1mw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1881
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 25/07/2022 15:09, Michael Kelley (LINUX) wrote:
-> [...]
->> +bool hv_ringbuffer_spinlock_busy(struct vmbus_channel *channel)
->> +{
->> +	struct hv_ring_buffer_info *rinfo = &channel->outbound;
->> +
->> +	if (spin_is_locked(&rinfo->ring_lock))
->> +		return true;
->> +
->> +	return false;
-> 
-> Could simplify the code as just:
-> 
-> 	return spin_is_locked(&rinfo->ring_lock);
-> 
+Recent changes to solve inconsistencies in handling IRQ masks #ifdef
+out the affinity field in irq_common_data for non-SMP configurations.
+The current code in hyperv_irq_remapping_alloc() gets a compiler error
+in that case.
 
-Sure, makes sense! Thanks for the suggestion, I'll do that for V3.
-Cheers,
+Fix this by using the new irq_data_update_affinity() helper, which
+handles the non-SMP case correctly.
 
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+---
+ drivers/iommu/hyperv-iommu.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Guilherme
+diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+index 51bd66a..e190bb8 100644
+--- a/drivers/iommu/hyperv-iommu.c
++++ b/drivers/iommu/hyperv-iommu.c
+@@ -68,7 +68,6 @@ static int hyperv_irq_remapping_alloc(struct irq_domain *domain,
+ {
+ 	struct irq_alloc_info *info = arg;
+ 	struct irq_data *irq_data;
+-	struct irq_desc *desc;
+ 	int ret = 0;
+ 
+ 	if (!info || info->type != X86_IRQ_ALLOC_TYPE_IOAPIC || nr_irqs > 1)
+@@ -90,8 +89,7 @@ static int hyperv_irq_remapping_alloc(struct irq_domain *domain,
+ 	 * Hypver-V IO APIC irq affinity should be in the scope of
+ 	 * ioapic_max_cpumask because no irq remapping support.
+ 	 */
+-	desc = irq_data_to_desc(irq_data);
+-	cpumask_copy(desc->irq_common_data.affinity, &ioapic_max_cpumask);
++	irq_data_update_affinity(irq_data, &ioapic_max_cpumask);
+ 
+ 	return 0;
+ }
+-- 
+1.8.3.1
+
