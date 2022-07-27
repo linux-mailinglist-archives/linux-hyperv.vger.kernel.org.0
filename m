@@ -2,114 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ECE058157F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Jul 2022 16:38:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEDBC58256E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Jul 2022 13:33:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233005AbiGZOi0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 26 Jul 2022 10:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47734 "EHLO
+        id S230073AbiG0Ldj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 27 Jul 2022 07:33:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239277AbiGZOiZ (ORCPT
+        with ESMTP id S229719AbiG0Ldi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 26 Jul 2022 10:38:25 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F223F13F85;
-        Tue, 26 Jul 2022 07:38:24 -0700 (PDT)
-Received: by mail-wr1-f54.google.com with SMTP id h8so20436272wrw.1;
-        Tue, 26 Jul 2022 07:38:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WpHEQnE8K/vPoI4Otp4u/E57Oasf5iTB9YBte/yldMI=;
-        b=iIIIkgkOQm601uXCbHpjR1m1Av3K/zVUGlLholiDwsQCsIaF7my7plncavf4mj7wff
-         T2AHRm8a9M+gii4wU3TKPVbsaB3X/fuUPT+pJmn9TXAuKpe9iZSGRURuTc2I42xGdZgz
-         PbWtlqmDfniShtTmDbdOXOCavLbNHcHYB5tAX7EarxtWHCzAhRY+eIWylVXjQ8mD5gzg
-         /2Ha81kiqQ2VG4JwOyi1iyVk/XG22QzrwwD6NIaxE3rmVgkrxvyQEYFHnum8JN8+FqFL
-         OXAwsnIurum2zsqI/VU2eaLHhOhfl1u6Xx+wwK4UowMqlBM+A6AOBHjMzuvWlJIhDMcD
-         ZWtQ==
-X-Gm-Message-State: AJIora8oyyH22K8YCNu7kZUfjr9GJExEg7qaEcEEyG/PO8UYG43bc2Cn
-        usH0VYM8eTI+5JJFOzhI3WGqNnq6Og8=
-X-Google-Smtp-Source: AGRyM1uNrqBOWOIEvwQhVpPiHZP6UanlaaWN/rdWs5pVkMRmu7BOIZXnafEasMFfzIq/SAfWo73ZKA==
-X-Received: by 2002:adf:db8e:0:b0:21e:4536:a934 with SMTP id u14-20020adfdb8e000000b0021e4536a934mr11377937wri.331.1658846303394;
-        Tue, 26 Jul 2022 07:38:23 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id r11-20020a5d498b000000b0021e42e7c7dbsm15037988wrq.83.2022.07.26.07.38.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 07:38:22 -0700 (PDT)
-Date:   Tue, 26 Jul 2022 14:38:21 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "samuel@sholland.org" <samuel@sholland.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: Re: [PATCH 1/1] iommu/hyper-v: Use helper instead of directly
- accessing affinity
-Message-ID: <20220726143821.ezgm5quwcdsagpwf@liuwe-devbox-debian-v2>
-References: <1658796820-2261-1-git-send-email-mikelley@microsoft.com>
- <Yt+Uro8y219/MNFE@8bytes.org>
- <20220726130909.jnj5etogffm4b2c5@liuwe-devbox-debian-v2>
- <PH0PR21MB30257E59393883842CDE0992D7949@PH0PR21MB3025.namprd21.prod.outlook.com>
+        Wed, 27 Jul 2022 07:33:38 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FD813CDE
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Jul 2022 04:33:38 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id D9A06385B0;
+        Wed, 27 Jul 2022 11:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1658921616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=C/ujbkbzfIYXci1rwj67ijrwaq7vCSnZqWDXbrC8XL8=;
+        b=FM4SgFXZeQApNPkJ0m0oOP812NFzJHsSyvdYnDss717uNjhXFHXxYUdZQH4PjHqF7pcGyj
+        iDABGkkWCsO4H868F63C4ly+bYfPOztNXVILjDwB0gm1nSjBVUhw9K9cCUUPIU4wIJ9Z4t
+        UpBsSBqsf/AE2PLjzw9qFYMOpIhy76Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1658921616;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=C/ujbkbzfIYXci1rwj67ijrwaq7vCSnZqWDXbrC8XL8=;
+        b=uzU/jXEZ6GFjBP7V5/NXwh4MZovSxj5TYbRwhqd0lLPIm5qhcE8o/MiW3rSJn+QCsrv69F
+        F2hTvYPG4InPbbCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 89E4813A8E;
+        Wed, 27 Jul 2022 11:33:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id TdyvIJAi4WJmBAAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Wed, 27 Jul 2022 11:33:36 +0000
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+To:     sam@ravnborg.org, noralf@tronnes.org, daniel@ffwll.ch,
+        airlied@linux.ie, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, airlied@redhat.com,
+        javierm@redhat.com, drawat.floss@gmail.com, kraxel@redhat.com,
+        david@lechnology.com, jose.exposito89@gmail.com
+Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH 00/12] drm/format-helper: Move to struct iosys_map
+Date:   Wed, 27 Jul 2022 13:33:00 +0200
+Message-Id: <20220727113312.22407-1-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH0PR21MB30257E59393883842CDE0992D7949@PH0PR21MB3025.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 26, 2022 at 01:48:35PM +0000, Michael Kelley (LINUX) wrote:
-> From: Wei Liu <wei.liu@kernel.org> Sent: Tuesday, July 26, 2022 6:09 AM
-> > 
-> > On Tue, Jul 26, 2022 at 09:15:58AM +0200, Joerg Roedel wrote:
-> > > Hi Michael,
-> > >
-> > > On Mon, Jul 25, 2022 at 05:53:40PM -0700, Michael Kelley wrote:
-> > > > Recent changes to solve inconsistencies in handling IRQ masks #ifdef
-> > > > out the affinity field in irq_common_data for non-SMP configurations.
-> > > > The current code in hyperv_irq_remapping_alloc() gets a compiler error
-> > > > in that case.
-> > > >
-> > > > Fix this by using the new irq_data_update_affinity() helper, which
-> > > > handles the non-SMP case correctly.
-> > > >
-> > > > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > >
-> > > Please add a fixes tag.
-> > >
-> > > Where is the change which breaks this currently, in some subsystem tree
-> > > or already upstream?
-> > >
-> > 
-> > The offending patch aa081358 is in linux-next.
-> > 
-> > > In case it is still in a maintainers tree, this patch should be applied
-> > > there. Here is my
-> > >
-> > > Acked-by: Joerg Roedel <jroedel@suse.de>
-> > 
-> > I can take this patch via hyperv-next. This is a good improvement
-> > anyway.
-> 
-> I don't think this patch should go via hyperv-next.  The helper
-> function is introduced in the linux-next patch in the irq/irqchip-next tree,
-> so this patch should go through irq/irqchip-next to avoid creating an
-> interdependency.
+Change format-conversion helpers to use struct iosys_map for source
+and destination buffers. Update all users. Also prepare interface for
+multi-plane color formats.
 
-This is fine too.
+The format-conversion helpers mostly used to convert to I/O memory
+or system memory. To actual memory type depended on the usecase. We
+now have drivers upcomming that do the conversion entirely in system
+memory. It's a good opportunity to stream-line the interface of the
+conversion helpers to use struct iosys_map. Source and destination
+buffers can now be either in system or in I/O memory. Note that the
+implementation still only supports source buffers in system memory.
 
-Wei.
+This patchset also changes the interface to support multi-plane
+color formats, where the values for each component are stored in
+distinct memory locations. Converting from RGBRGBRGB to RRRGGGBBB
+would require a single source buffer with RGB values and 3 destination
+buffers for the R, G and B values. Conversion-helper interfaces now
+support this.
+
+Thomas Zimmermann (12):
+  drm/format-helper: Provide drm_fb_blit()
+  drm/format-helper: Merge drm_fb_memcpy() and drm_fb_memcpy_toio()
+  drm/format-helper: Convert drm_fb_swab() to struct iosys_map
+  drm/format-helper: Rework XRGB8888-to-RGBG332 conversion
+  drm/format-helper: Rework XRGB8888-to-RGBG565 conversion
+  drm/format-helper: Rework XRGB8888-to-RGB888 conversion
+  drm/format-helper: Rework RGB565-to-XRGB8888 conversion
+  drm/format-helper: Rework RGB888-to-XRGB8888 conversion
+  drm/format-helper: Rework XRGB8888-to-XRGB2101010 conversion
+  drm/format-helper: Rework XRGB8888-to-GRAY8 conversion
+  drm/format-helper: Rework XRGB8888-to-MONO conversion
+  drm/format-helper: Move destination-buffer handling into internal
+    helper
+
+ drivers/gpu/drm/drm_format_helper.c           | 379 +++++++++---------
+ drivers/gpu/drm/drm_mipi_dbi.c                |   9 +-
+ drivers/gpu/drm/gud/gud_pipe.c                |  20 +-
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c   |  11 +-
+ drivers/gpu/drm/mgag200/mgag200_mode.c        |  11 +-
+ drivers/gpu/drm/solomon/ssd130x.c             |   7 +-
+ .../gpu/drm/tests/drm_format_helper_test.c    |  14 +-
+ drivers/gpu/drm/tiny/cirrus.c                 |  19 +-
+ drivers/gpu/drm/tiny/repaper.c                |   6 +-
+ drivers/gpu/drm/tiny/simpledrm.c              |  18 +-
+ drivers/gpu/drm/tiny/st7586.c                 |   5 +-
+ include/drm/drm_format_helper.h               |  56 ++-
+ 12 files changed, 294 insertions(+), 261 deletions(-)
+
+
+base-commit: 15fbed4f822211fbb7653c2b8591594d92de9551
+prerequisite-patch-id: c2b2f08f0eccc9f5df0c0da49fa1d36267deb11d
+prerequisite-patch-id: c67e5d886a47b7d0266d81100837557fda34cb24
+prerequisite-patch-id: 3f204510fcbf9530d6540bd8e6128cce598988b6
+-- 
+2.37.1
+
