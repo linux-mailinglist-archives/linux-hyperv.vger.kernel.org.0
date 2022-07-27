@@ -2,62 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5372758264B
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Jul 2022 14:22:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57D57582657
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Jul 2022 14:24:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232302AbiG0MWx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Jul 2022 08:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36028 "EHLO
+        id S232339AbiG0MYa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 27 Jul 2022 08:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232346AbiG0MWw (ORCPT
+        with ESMTP id S232921AbiG0MY1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Jul 2022 08:22:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 448AE45F60
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Jul 2022 05:22:51 -0700 (PDT)
+        Wed, 27 Jul 2022 08:24:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1BACF40BCC
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Jul 2022 05:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658924570;
+        s=mimecast20190719; t=1658924666;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=k2Ka0CTSNUje69lzv8PJ/TPp2RlYweVKt52OqRvsIcU=;
-        b=hCNsxit3sOgekOMXCX8vEkyote23KAqAiukuUs+eZ4Uur2AsQhGq5uzID4UwjiR9q84m1K
-        R3rP6m8isCm2miaFcS9tMxt0aJUKhr2GQyZwGAGD43IuI0+wa03hAtVAG5hdW3PiYxNomM
-        MQX330eS8hk2g1PP9RAUpbJ2AM9sCgU=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=dapYisiCBXlgZkwMi+Hyveg1G9f8dLox6yKCT12ZMlw=;
+        b=Os9ibwKHZCbV2+07ovnFkq/xVnf2YPtkViszeCBPjsjHVAy1TpnUTxZo6doZR9hEeHGpk4
+        seSBsffdsuVwkbLIrNUfNURoOIR8kxVk7p0ubnuKAnuZD87G/rOVGu1ORb5fOu3AHy4aF2
+        bebSaPaArp2zEqgFM1b8WCV+qtFJER4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-301-trxhIGc7NEamOe6JwpqVjQ-1; Wed, 27 Jul 2022 08:22:48 -0400
-X-MC-Unique: trxhIGc7NEamOe6JwpqVjQ-1
-Received: by mail-wm1-f71.google.com with SMTP id p2-20020a05600c1d8200b003a3262d9c51so1086265wms.6
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Jul 2022 05:22:48 -0700 (PDT)
+ us-mta-454-275-AYizMi6S_lZ2bGgFqw-1; Wed, 27 Jul 2022 08:24:24 -0400
+X-MC-Unique: 275-AYizMi6S_lZ2bGgFqw-1
+Received: by mail-wr1-f69.google.com with SMTP id h9-20020adfa4c9000000b0021ee4a48ea7so109409wrb.10
+        for <linux-hyperv@vger.kernel.org>; Wed, 27 Jul 2022 05:24:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=k2Ka0CTSNUje69lzv8PJ/TPp2RlYweVKt52OqRvsIcU=;
-        b=WtUcBeSBOTr5bbvqoUuSXmUwqmDkZo1ZtENi28pM7I622Np6arkHqbN0qhWTTndXI9
-         2xCQ/RsA6TqRCahcLN5mb7/RiVr6R+C2Ls3D0q2JO+ddiIXr1FZzM5E2mIgpI4JgxYSI
-         jSTjOMwgsisNqBk9B6SZH3cClL1PKlBRhFgPVBA5TU7yW4OaEd9DLsXc8wc9uSizZo5b
-         f8e3SwvKrbGTo/5f3fOC+6VURIoxNgazKS+itOG8TrM/8M5GlBNLK55fDAQhRC+TzhVk
-         yvh6H0WoTt6F7lHmFV2pVx1bsLjJt6fuYfRy+mFn6dGp/fl2hu5QFJup1k/AYiXuIiGF
-         dRDw==
-X-Gm-Message-State: AJIora8mVwF+2RAaKkZOoUL+GGW0jOBkZYU03GErXtyVhRJGHE1P0Gps
-        ArTlAiDrfb0P+6lhy/T3QIMInNi1mYq2i/Nh2ADpWy1/AiRgXW2Mk8Itx5AsrUDYOIiH2cgALIC
-        +T7EoXTnm1m2L/ZFuw4//ZYGN
-X-Received: by 2002:a7b:ca57:0:b0:3a3:205d:2533 with SMTP id m23-20020a7bca57000000b003a3205d2533mr2850194wml.67.1658924567789;
-        Wed, 27 Jul 2022 05:22:47 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1teiq1UKtrMdPdEkg4fkBnI9UGCnKXnu+86rN3hnX5P6j17GO3+sGhJ6NqbsUNOXvFAHuGSxQ==
-X-Received: by 2002:a7b:ca57:0:b0:3a3:205d:2533 with SMTP id m23-20020a7bca57000000b003a3205d2533mr2850159wml.67.1658924567308;
-        Wed, 27 Jul 2022 05:22:47 -0700 (PDT)
+        bh=dapYisiCBXlgZkwMi+Hyveg1G9f8dLox6yKCT12ZMlw=;
+        b=k8H2cJv8mR2HhiD6A13iyV/THWNFwGER04x7gfwz1U+0PGUl3EZZee/25XTs/LBQzV
+         lWLyijIKaf5FporXQmoT4AqNbMMxAFG2bC33Ons7wjJvpspOYw6Llve7R2QV9MXb7FD0
+         rmQ5kqoFFd5pUTF5jpgpr3mh+ywrxkGhcWyCpRjO0ldO2OGm1HiiS0JDgAS9bR4uZLtC
+         nHVkfWYjDE90pwwpyBehc/SuxV1ivlbtsNL2alp3rffvAXqx2k8dUL03NbDaQVqARrPN
+         xcudFnW8EkVCDp12Jm8y9kVyHyQAR/QjXbfW6CDKpNrDkx/Wb+lTuLKZGKP9ItpTIAME
+         fBPQ==
+X-Gm-Message-State: AJIora9i+8wyfQG2Xf5Ct2jxbzE69wKJ944PydiWFUxfbHiHjCWw9ciC
+        ZvEYupUv80K1hRSLOUHw8ocsvKH1peR74fbFwLYfZix+tIwABn6q/aeDnh/TLyoixGbiY+oc7at
+        VnDMofPOC+qTrAOQQRN1hDY3S
+X-Received: by 2002:a05:6000:1541:b0:21d:b298:96be with SMTP id 1-20020a056000154100b0021db29896bemr13644422wry.206.1658924663472;
+        Wed, 27 Jul 2022 05:24:23 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vC2MGRjFi3qSHZ2fm0BkjEDxRi6ABSiXhvcdsFTw4lBpGNZw6+Ua7w1AgH+IiVMbwoDfqM2g==
+X-Received: by 2002:a05:6000:1541:b0:21d:b298:96be with SMTP id 1-20020a056000154100b0021db29896bemr13644403wry.206.1658924663274;
+        Wed, 27 Jul 2022 05:24:23 -0700 (PDT)
 Received: from sgarzare-redhat (host-79-46-200-178.retail.telecomitalia.it. [79.46.200.178])
-        by smtp.gmail.com with ESMTPSA id f5-20020adff445000000b0021e5f32ade7sm13639242wrp.68.2022.07.27.05.22.45
+        by smtp.gmail.com with ESMTPSA id bg26-20020a05600c3c9a00b003a3279b9037sm2308365wmb.16.2022.07.27.05.24.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jul 2022 05:22:46 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 14:22:41 +0200
+        Wed, 27 Jul 2022 05:24:22 -0700 (PDT)
+Date:   Wed, 27 Jul 2022 14:24:17 +0200
 From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jorgen Hansen <jhansen@vmware.com>,
-        Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         "edumazet@google.com" <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -76,17 +75,16 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>
-Subject: Re: [RFC PATCH v2 3/9] vmci/vsock: use 'target' in notify_poll_in,
- callback
-Message-ID: <20220727122241.mrafnepbelcboo5i@sgarzare-redhat>
+Subject: Re: [RFC PATCH v2 5/9] vsock: SO_RCVLOWAT transport set callback
+Message-ID: <20220727122417.jvdfjnuybk3mwxkq@sgarzare-redhat>
 References: <19e25833-5f5c-f9b9-ac0f-1945ea17638d@sberdevices.ru>
- <355f4bb6-82e7-2400-83e9-c704a7ef92f3@sberdevices.ru>
+ <8baa2e3a-af6b-c0fe-9bfb-7cf89506474a@sberdevices.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <355f4bb6-82e7-2400-83e9-c704a7ef92f3@sberdevices.ru>
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+In-Reply-To: <8baa2e3a-af6b-c0fe-9bfb-7cf89506474a@sberdevices.ru>
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -95,52 +93,62 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-@Jorgen can you take a look at this series, especially this patch?
-
-Maybe we need to update the comments in the else branch, something like
-s/there is nothing/there is not enough data
-
-Thanks,
-Stefano
-
-On Mon, Jul 25, 2022 at 08:01:01AM +0000, Arseniy Krasnov wrote:
->This callback controls setting of POLLIN,POLLRDNORM output bits of poll()
->syscall,but in some cases,it is incorrectly to set it, when socket has
->at least 1 bytes of available data. Use 'target' which is already exists
->and equal to sk_rcvlowat in this case.
+On Mon, Jul 25, 2022 at 08:05:28AM +0000, Arseniy Krasnov wrote:
+>This adds transport specific callback for SO_RCVLOWAT, because in some
+>transports it may be difficult to know current available number of bytes
+>ready to read. Thus, when SO_RCVLOWAT is set, transport may reject it.
 >
 >Signed-off-by: Arseniy Krasnov <AVKrasnov@sberdevices.ru>
 >---
-> net/vmw_vsock/vmci_transport_notify.c        | 2 +-
-> net/vmw_vsock/vmci_transport_notify_qstate.c | 2 +-
-> 2 files changed, 2 insertions(+), 2 deletions(-)
+> include/net/af_vsock.h   |  1 +
+> net/vmw_vsock/af_vsock.c | 19 +++++++++++++++++++
+> 2 files changed, 20 insertions(+)
 >
->diff --git a/net/vmw_vsock/vmci_transport_notify.c b/net/vmw_vsock/vmci_transport_notify.c
->index d69fc4b595ad..1684b85b0660 100644
->--- a/net/vmw_vsock/vmci_transport_notify.c
->+++ b/net/vmw_vsock/vmci_transport_notify.c
->@@ -340,7 +340,7 @@ vmci_transport_notify_pkt_poll_in(struct sock *sk,
-> {
-> 	struct vsock_sock *vsk = vsock_sk(sk);
+>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>index f742e50207fb..eae5874bae35 100644
+>--- a/include/net/af_vsock.h
+>+++ b/include/net/af_vsock.h
+>@@ -134,6 +134,7 @@ struct vsock_transport {
+> 	u64 (*stream_rcvhiwat)(struct vsock_sock *);
+> 	bool (*stream_is_active)(struct vsock_sock *);
+> 	bool (*stream_allow)(u32 cid, u32 port);
+>+	int (*set_rcvlowat)(struct vsock_sock *, int);
 >
->-	if (vsock_stream_has_data(vsk)) {
->+	if (vsock_stream_has_data(vsk) >= target) {
-> 		*data_ready_now = true;
-> 	} else {
-> 		/* We can't read right now because there is nothing in the
->diff --git a/net/vmw_vsock/vmci_transport_notify_qstate.c b/net/vmw_vsock/vmci_transport_notify_qstate.c
->index 0f36d7c45db3..a40407872b53 100644
->--- a/net/vmw_vsock/vmci_transport_notify_qstate.c
->+++ b/net/vmw_vsock/vmci_transport_notify_qstate.c
->@@ -161,7 +161,7 @@ vmci_transport_notify_pkt_poll_in(struct sock *sk,
-> {
-> 	struct vsock_sock *vsk = vsock_sk(sk);
+> 	/* SEQ_PACKET. */
+> 	ssize_t (*seqpacket_dequeue)(struct vsock_sock *vsk, struct msghdr *msg,
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index 63a13fa2686a..b7a286db4af1 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -2130,6 +2130,24 @@ vsock_connectible_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+> 	return err;
+> }
 >
->-	if (vsock_stream_has_data(vsk)) {
->+	if (vsock_stream_has_data(vsk) >= target) {
-> 		*data_ready_now = true;
-> 	} else {
-> 		/* We can't read right now because there is nothing in the
->-- 
->2.25.1
+>+static int vsock_set_rcvlowat(struct sock *sk, int val)
+>+{
+>+	const struct vsock_transport *transport;
+>+	struct vsock_sock *vsk;
+>+	int err = 0;
+>+
+>+	vsk = vsock_sk(sk);
+>+	transport = vsk->transport;
+
+`transport` can be NULL if the user call SO_RCVLOWAT before we assign 
+it, so we should check it.
+
+I think if the transport implements `set_rcvlowat`, maybe we should set 
+there sk->sk_rcvlowat, so I would do something like that:
+
+     if (transport && transport->set_rcvlowat)
+         err = transport->set_rcvlowat(vsk, val);
+     else
+         WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
+
+     return err;
+
+In addition I think we should check that val does not exceed 
+vsk->buffer_size, something similar of what tcp_set_rcvlowat() does.
+
+Thanks,
+Stefano
 
