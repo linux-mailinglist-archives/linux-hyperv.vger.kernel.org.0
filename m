@@ -2,77 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95BF35826C6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Jul 2022 14:37:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 451B9583860
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Jul 2022 08:05:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233225AbiG0MhX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 27 Jul 2022 08:37:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51314 "EHLO
+        id S233174AbiG1GE6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 28 Jul 2022 02:04:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233256AbiG0MhW (ORCPT
+        with ESMTP id S229832AbiG1GE5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 27 Jul 2022 08:37:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69EED2F39D
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Jul 2022 05:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658925439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4LWH5gfewkP2m9y0QehAONnCxfwoC2hdUW6P/cyixj4=;
-        b=HpjPtU64ks1460Xc4VG8XXeDM6jCE1gw3Cddw/nP3G6rZgWfWbeTDvcRBhYEt/PFgmwCHz
-        6T34KZZkBssm9SKHTyUVQ1PXO92LpSOy9LBj7c8ha8p08WO/fs/j62OBYsTqQ/ubwkefYm
-        954tXQyJpir+t322UBpSom2FkT+Yjoo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-306-paMaFv4LMjSkMwatklq4SA-1; Wed, 27 Jul 2022 08:37:17 -0400
-X-MC-Unique: paMaFv4LMjSkMwatklq4SA-1
-Received: by mail-wm1-f70.google.com with SMTP id r82-20020a1c4455000000b003a300020352so8997875wma.5
-        for <linux-hyperv@vger.kernel.org>; Wed, 27 Jul 2022 05:37:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4LWH5gfewkP2m9y0QehAONnCxfwoC2hdUW6P/cyixj4=;
-        b=e0M4MKPHuLUenxXKDVC3W2Se7BJPEvK7TYpkCISPLYdJDIlaar7ZVWFvtvXLg4PnAc
-         RNNcIaWFsf3cTzBiCRPDKSW+w6s42rGebhyaWRPlyYwwy/pop2TgSSq6cnAHzd9ZoJTW
-         BjNHpUhjoBac60ZxEpJ1KG7R7OLmn3i3W7gykDZwhb3wclf+NOy1Ixi1x2vLwfAZ++ky
-         lcFyUh0ryzBYUvYk1x5S6Gj+W7Ig3Vc3qID9yV9W/9RRcKf/QZ0/j2CsxuxVDd7cAeIG
-         WOlfQQm8JgG/R9HGOmiGzzjGDErncZ7RGUqjDtocnwQRYPizfR+RDxcXnpvdzx6DJkZT
-         h51w==
-X-Gm-Message-State: AJIora8zwe1KYpfY9B8turTUFvRXReiteims+RIUHFZjlXi2KJUDLtV+
-        wvOVCvEh2HhPCgsy+UF/ipAvwMqLmlehw92LRZeAWzsGmKHWytxeGgvyD79YRwzKsewhgpZ2y/C
-        FE5DiDHSWmIG24qthtkHHFib9
-X-Received: by 2002:adf:d1e8:0:b0:21d:ac9c:983d with SMTP id g8-20020adfd1e8000000b0021dac9c983dmr13770280wrd.629.1658925436044;
-        Wed, 27 Jul 2022 05:37:16 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vJrWqBiaq6uBMB03xiUMkRFhOPCI0fFvUqiEuTuZWyTbuHIhoAAyTdDFMM07jJhUESZdjGNg==
-X-Received: by 2002:adf:d1e8:0:b0:21d:ac9c:983d with SMTP id g8-20020adfd1e8000000b0021dac9c983dmr13770264wrd.629.1658925435819;
-        Wed, 27 Jul 2022 05:37:15 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-46-200-178.retail.telecomitalia.it. [79.46.200.178])
-        by smtp.gmail.com with ESMTPSA id u9-20020adff889000000b0020fcaba73bcsm16755266wrp.104.2022.07.27.05.37.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jul 2022 05:37:15 -0700 (PDT)
-Date:   Wed, 27 Jul 2022 14:37:10 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
+        Thu, 28 Jul 2022 02:04:57 -0400
+Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CE65C952;
+        Wed, 27 Jul 2022 23:04:51 -0700 (PDT)
+Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
+        by mail.sberdevices.ru (Postfix) with ESMTP id 565445FD0D;
+        Thu, 28 Jul 2022 09:04:49 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+        s=mail; t=1658988289;
+        bh=MoEuNgethiYS1LyovyEQkePt4IF0Rd4EfDLSvvIR3tU=;
+        h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
+        b=HjQ+X93Dlp5K0j56HqHFvWdixdQMCd2tusGXewSlLr+gpH4QzJ+ufmFfeavAoqWqu
+         TECFjSNH66CQpoKWUlu9oAt2nTicz/f7jYjGEaCC7E2OXCctj/W2txY4NBN3wS72dQ
+         GOJ5ioRC1PPUrW74/S1yY5mRVlWnc5KJGs9bICR0WYlAdvetJ4i7HUWroQhwmvIrLM
+         uhJ0lEd2xJCYGpGPrOqrQcNP3zslWGRefz3Y+dIDQDf6Us062YREuSqw1RNnpb8MJh
+         Owri1gz5iqp9z7HxHijAcqHa4GmEMdvfwx/2DObsofzLfZTm/tg9k1RvmZmlC09d4m
+         8xHcqxjzTLnvw==
+Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
+        by mail.sberdevices.ru (Postfix) with ESMTP;
+        Thu, 28 Jul 2022 09:04:44 +0300 (MSK)
+From:   Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
         "edumazet@google.com" <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
         "kys@microsoft.com" <kys@microsoft.com>,
         "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
         "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
+        "Dexuan Cui" <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
         Krasnov Arseniy <oxffffaa@gmail.com>,
         "virtualization@lists.linux-foundation.org" 
         <virtualization@lists.linux-foundation.org>,
@@ -81,111 +52,70 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>
-Subject: Re: [RFC PATCH v2 0/9] vsock: updates for SO_RCVLOWAT handling
-Message-ID: <20220727123710.pwzy6ag3gavotxda@sgarzare-redhat>
+Subject: Re: [RFC PATCH v2 1/9] vsock: use sk_rcvlowat to set
+ POLLIN/POLLRDNORM
+Thread-Topic: [RFC PATCH v2 1/9] vsock: use sk_rcvlowat to set
+ POLLIN/POLLRDNORM
+Thread-Index: AQHYn/weV9iJ1kN02k+zjfwbZg+yc62R81OAgAEqRoA=
+Date:   Thu, 28 Jul 2022 06:04:25 +0000
+Message-ID: <bc6328cf-ddf8-5e7c-31d9-ea346c81c5b0@sberdevices.ru>
 References: <19e25833-5f5c-f9b9-ac0f-1945ea17638d@sberdevices.ru>
+ <aafc654d-5b42-aa18-bf74-f5277d549f73@sberdevices.ru>
+ <20220727121709.z26dspwegqeiv55x@sgarzare-redhat>
+In-Reply-To: <20220727121709.z26dspwegqeiv55x@sgarzare-redhat>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.1.12]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7CD917DE2BA46949973DDFDA04BE97E5@sberdevices.ru>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <19e25833-5f5c-f9b9-ac0f-1945ea17638d@sberdevices.ru>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-KSMG-Rule-ID: 4
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiPhishing: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/07/28 02:09:00 #19985101
+X-KSMG-AntiVirus-Status: Clean, skipped
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Arseniy,
-
-On Mon, Jul 25, 2022 at 07:54:05AM +0000, Arseniy Krasnov wrote:
->Hello,
->
->This patchset includes some updates for SO_RCVLOWAT:
->
->1) af_vsock:
->   During my experiments with zerocopy receive, i found, that in some
->   cases, poll() implementation violates POSIX: when socket has non-
->   default SO_RCVLOWAT(e.g. not 1), poll() will always set POLLIN and
->   POLLRDNORM bits in 'revents' even number of bytes available to read
->   on socket is smaller than SO_RCVLOWAT value. In this case,user sees
->   POLLIN flag and then tries to read data(for example using  'read()'
->   call), but read call will be blocked, because  SO_RCVLOWAT logic is
->   supported in dequeue loop in af_vsock.c. But the same time,  POSIX
->   requires that:
->
->   "POLLIN     Data other than high-priority data may be read without
->               blocking.
->    POLLRDNORM Normal data may be read without blocking."
->
->   See https://www.open-std.org/jtc1/sc22/open/n4217.pdf, page 293.
->
->   So, we have, that poll() syscall returns POLLIN, but read call will
->   be blocked.
->
->   Also in man page socket(7) i found that:
->
->   "Since Linux 2.6.28, select(2), poll(2), and epoll(7) indicate a
->   socket as readable only if at least SO_RCVLOWAT bytes are available."
->
->   I checked TCP callback for poll()(net/ipv4/tcp.c, tcp_poll()), it
->   uses SO_RCVLOWAT value to set POLLIN bit, also i've tested TCP with
->   this case for TCP socket, it works as POSIX required.
->
->   I've added some fixes to af_vsock.c and virtio_transport_common.c,
->   test is also implemented.
->
->2) virtio/vsock:
->   It adds some optimization to wake ups, when new data arrived. Now,
->   SO_RCVLOWAT is considered before wake up sleepers who wait new data.
->   There is no sense, to kick waiter, when number of available bytes
->   in socket's queue < SO_RCVLOWAT, because if we wake up reader in
->   this case, it will wait for SO_RCVLOWAT data anyway during dequeue,
->   or in poll() case, POLLIN/POLLRDNORM bits won't be set, so such
->   exit from poll() will be "spurious". This logic is also used in TCP
->   sockets.
-
-Nice, it looks good!
-
->
->3) vmci/vsock:
->   Same as 2), but i'm not sure about this changes. Will be very good,
->   to get comments from someone who knows this code.
-
-I CCed VMCI maintainers to the patch and also to this cover, maybe 
-better to keep them in the loop for next versions.
-
-(Jorgen's and Rajesh's emails bounced back, so I'm CCing here only 
-Bryan, Vishnu, and pv-drivers@vmware.com)
-
->
->4) Hyper-V:
->   As Dexuan Cui mentioned, for Hyper-V transport it is difficult to
->   support SO_RCVLOWAT, so he suggested to disable this feature for
->   Hyper-V.
-
-I left a couple of comments in some patches, but it seems to me to be in 
-a good state :-)
-
-I would just suggest a bit of a re-organization of the series (the 
-patches are fine, just the order):
-   - introduce vsock_set_rcvlowat()
-   - disabling it for hv_sock
-   - use 'target' in virtio transports
-   - use 'target' in vmci transports
-   - use sock_rcvlowat in vsock_poll()
-     I think is better to pass sock_rcvlowat() as 'target' when the
-     transports are already able to use it
-   - add vsock_data_ready()
-   - use vsock_data_ready() in virtio transports
-   - use vsock_data_ready() in vmci transports
-   - tests
-
-What do you think?
-
-Thanks,
-Stefano
-
+T24gMjcuMDcuMjAyMiAxNToxNywgU3RlZmFubyBHYXJ6YXJlbGxhIHdyb3RlOg0KPiBPbiBNb24s
+IEp1bCAyNSwgMjAyMiBhdCAwNzo1Njo1OUFNICswMDAwLCBBcnNlbml5IEtyYXNub3Ygd3JvdGU6
+DQo+PiBCb3RoIGJpdHMgaW5kaWNhdGUsIHRoYXQgbmV4dCBkYXRhIHJlYWQgY2FsbCB3b24ndCBi
+ZSBibG9ja2VkLCBidXQgd2hlbg0KPj4gc2tfcmN2bG93YXQgaXMgbm90IDEsIHRoZXNlIGJpdHMg
+d2lsbCBiZSBzZXQgYnkgcG9sbCBhbnl3YXksIHRodXMgd2hlbg0KPj4gdXNlciB0cmllcyB0byBk
+ZXF1ZXVlIGRhdGEsaXQgd2lsbCB3YWl0IHVudGlsIHNrX3Jjdmxvd2F0IGJ5dGVzIG9mIGRhdGEN
+Cj4+IHdpbGwgYmUgYXZhaWxhYmxlLg0KPj4NCj4gDQo+IFRoZSBwYXRjaCBMR1RNLCBidXQgSSBz
+dWdnZXN0IHlvdSB0byByZXdyaXRlIHRoZSB0aXRsZSBhbmQgY29tbWl0IG9mIHRoZSBtZXNzYWdl
+IHRvIGJldHRlciBleHBsYWluIHdoYXQgdGhpcyBwYXRjaCBkb2VzIChwYXNzIHNvY2tfcmN2bG93
+YXQgdG8gbm90aWZ5X3BvbGxfaW4gYXMgdGFyZ2V0KSBhbmQgdGhlbiBleHBsYWluIHdoeSBhcyB5
+b3UgYWxyZWFkeSBkaWQgKHRvIHNldCBQT0xMSU4vUE9MTFJETk9STSBvbmx5IHdoZW4gdGFyZ2V0
+IGlzIHJlYWNoZWQpLg0KT2ssIGkgc2VlLiBBY2sNCj4gDQo+IFRoYW5rcywNCj4gU3RlZmFubw0K
+PiANCj4+IFNpZ25lZC1vZmYtYnk6IEFyc2VuaXkgS3Jhc25vdiA8QVZLcmFzbm92QHNiZXJkZXZp
+Y2VzLnJ1Pg0KPj4gLS0tDQo+PiBuZXQvdm13X3Zzb2NrL2FmX3Zzb2NrLmMgfCAzICsrLQ0KPj4g
+MSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRp
+ZmYgLS1naXQgYS9uZXQvdm13X3Zzb2NrL2FmX3Zzb2NrLmMgYi9uZXQvdm13X3Zzb2NrL2FmX3Zz
+b2NrLmMNCj4+IGluZGV4IGYwNGFiZjY2MmVjNi4uNjNhMTNmYTI2ODZhIDEwMDY0NA0KPj4gLS0t
+IGEvbmV0L3Ztd192c29jay9hZl92c29jay5jDQo+PiArKysgYi9uZXQvdm13X3Zzb2NrL2FmX3Zz
+b2NrLmMNCj4+IEBAIC0xMDY2LDggKzEwNjYsOSBAQCBzdGF0aWMgX19wb2xsX3QgdnNvY2tfcG9s
+bChzdHJ1Y3QgZmlsZSAqZmlsZSwgc3RydWN0IHNvY2tldCAqc29jaywNCj4+IMKgwqDCoMKgwqDC
+oMKgIGlmICh0cmFuc3BvcnQgJiYgdHJhbnNwb3J0LT5zdHJlYW1faXNfYWN0aXZlKHZzaykgJiYN
+Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgIShzay0+c2tfc2h1dGRvd24gJiBSQ1ZfU0hVVERP
+V04pKSB7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJvb2wgZGF0YV9yZWFkeV9ub3cgPSBm
+YWxzZTsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGludCB0YXJnZXQgPSBzb2NrX3Jjdmxv
+d2F0KHNrLCAwLCBJTlRfTUFYKTsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaW50IHJldCA9
+IHRyYW5zcG9ydC0+bm90aWZ5X3BvbGxfaW4oDQo+PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgdnNrLCAxLCAmZGF0YV9yZWFkeV9ub3cpOw0KPj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHZzaywgdGFyZ2V0LCAmZGF0YV9yZWFkeV9ub3cp
+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocmV0IDwgMCkgew0KPj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1hc2sgfD0gRVBPTExFUlI7DQo+PiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIH0gZWxzZSB7DQo+PiAtLcKgDQo+PiAyLjI1LjENCj4gDQoNCg==
