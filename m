@@ -2,151 +2,283 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECBEF58566B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Jul 2022 23:20:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38B68585A69
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Jul 2022 14:27:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbiG2VUO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 29 Jul 2022 17:20:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37114 "EHLO
+        id S234365AbiG3M1n (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 30 Jul 2022 08:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbiG2VUN (ORCPT
+        with ESMTP id S230135AbiG3M1n (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 29 Jul 2022 17:20:13 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-eastus2azon11021016.outbound.protection.outlook.com [52.101.57.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D355510FF;
-        Fri, 29 Jul 2022 14:20:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kSQFKEWCDXUn528q07y7BOYh3njdcL9RWgfGzyWp7BR5VcXs2JWZIS91C8HxfKbHqYtpM+zWDaiITRCJwPpZlZb6hvZ83cxmtIrrE0HocHkttPPHtQS/VbSmEWxI+9QgTVu+ph+nIxkWoNdefe2VqoZZO/zeeRhuyaE9i6kKDrbhqaDfmQPF/Mgb0YQ5CZFdpUj6ZlUz9vXbBGXwxEUUM2mpYlk/retofT0fmWcteu7RyU2KNlFOa6WJ9JFdmDe4R/tP28wb6dhY5vbMYcxpghOmt4BsXxpIGB9Z+jz9v/NBAFgbichqkE6VHJDI97Nw4QB9DwecFRUd/mir5gUgfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CkfbWhKdI7PUvS3YAhschkTylo6r9+YiV0KI/meSpzo=;
- b=DsQY79Gk5AhwgRMJa4AHfXKNjhEuVfLJeQpv/XOWonDKw/0LNWY6o/TneE9JoLw25nBkyqC4gAsqp+X/sWxBTMPpw/p+7tDYRWG2YBvb90spc+LFA4AgOw6w6TrC+pXDNcQjyAF1NBNieCE3cFEh+SEvPgXRVSISzqmXYFRFqcuqer52JUWXarvKedoc1nN+8GN5mbMye8oSOWSQtNCW2sYTyNhQqo0Qig8Q/H+4B7fo/bGnn5Q016UDCdWcpJFjFo63NIxfZk3vAAhzeDAGzprvF19QI8HmRcNMp+JTwGL8QLPVjbZHy3oaPCVqxMmp8gXnjZ70bPcR3e+MyvBLIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CkfbWhKdI7PUvS3YAhschkTylo6r9+YiV0KI/meSpzo=;
- b=jP+/dTGBkXVkG4fQQmMVmRNHdZo0SGcd4q4ACa6IAHQNHtVWafKhRIUVsyWEt4qbiQl29eEjoB9KqnzxeT1iXXp7j+f5pP4oPCD5vt0hLjvuvtVA4hBXkHV/TrmU+ybVPYQsNGcuk8zBK9HODW7GyWY9RPu0oXhJgnsoSqvIckg=
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
- by SJ1PR21MB3744.namprd21.prod.outlook.com (2603:10b6:a03:454::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.7; Fri, 29 Jul
- 2022 21:20:09 +0000
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::69ca:919f:a635:db5a]) by PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::69ca:919f:a635:db5a%5]) with mapi id 15.20.5504.009; Fri, 29 Jul 2022
- 21:20:05 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "shiraz.saleem@intel.com" <shiraz.saleem@intel.com>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: RE: [Patch v4 03/12] net: mana: Handle vport sharing between devices
-Thread-Topic: [Patch v4 03/12] net: mana: Handle vport sharing between devices
-Thread-Index: AQHYgSXY1SrlgLfyyEyOddi806gORa14hJeAgAK137CADOflgIAABSdwgAD1agCAADIx8IAADwKAgAcIraCABZU2AIAAHszQ
-Date:   Fri, 29 Jul 2022 21:20:05 +0000
-Message-ID: <PH7PR21MB3263E741EA5AA017A2AB5602CE999@PH7PR21MB3263.namprd21.prod.outlook.com>
-References: <1655345240-26411-1-git-send-email-longli@linuxonhyperv.com>
- <1655345240-26411-4-git-send-email-longli@linuxonhyperv.com>
- <SN6PR2101MB13272044B91D6E37F7F5124FBF879@SN6PR2101MB1327.namprd21.prod.outlook.com>
- <PH7PR21MB3263F08C111C5D06C99CC32ACE869@PH7PR21MB3263.namprd21.prod.outlook.com>
- <20220720234209.GP5049@ziepe.ca>
- <PH7PR21MB3263F5FD2FA4BA6669C21509CE919@PH7PR21MB3263.namprd21.prod.outlook.com>
- <20220721143858.GV5049@ziepe.ca>
- <PH7PR21MB326339501D9CA5ABE69F8AE9CE919@PH7PR21MB3263.namprd21.prod.outlook.com>
- <20220721183219.GA6833@ziepe.ca>
- <PH7PR21MB326304834D36451E7609D102CE999@PH7PR21MB3263.namprd21.prod.outlook.com>
- <YuQxIKxGAvUIwVmj@ziepe.ca>
-In-Reply-To: <YuQxIKxGAvUIwVmj@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0927ad60-bacb-4c7f-b9eb-dfc5674d1dfc;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-07-29T21:02:45Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e31e0b0c-3e44-4288-2a3a-08da71a81b32
-x-ms-traffictypediagnostic: SJ1PR21MB3744:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X3RYCe7PpEev+dTb0oCnfV+d8I77ORxsxyz81C3WSUrVV2+VWvV2CUDzYbLSgWR5no01qfXvKDi/EC2xsA1PsUU081oYOdUTAqfdV3hUUkc3QCROry/SQ+EML+pqksTASTRYuH/gqVJxfKqEZI5yZt9R0mRlxxUlw2ZxEHkp48EoovAwWQjL0PUm1rMJgYTC3hJKiRnanzf7wh/4Inbc6jfJCH4ugKdM3xDtraCBOmYGekMPPjbCvA7AqISZiWCWCb4qckqnHeNcbXd1osTPudaSgfME+a/R++AXO4jz0WNxX0jJYgm3xsuez6BRUC2pt9aH4MVzjvVrBQ6s848jaYA691lBkIs4iU1hpPjSFSzS2Ul50yZ8fQ2qMJ+gQCzL2F8ey0YAJAAd6bOJuWYan2URUp4nGJtAKIf+a1oDFlaytyQu6TJpYguodm/9sW0XIk+kY+OItHvmycLF6cV4pZRhRr8JiN20KfE3pcgd1BWaWCksqXVFDBxym1k0XZBHJi6b94OcC2uhv9oLb2KroinI+hiML3Kimalqmbxy0IlokxN1+cfvuOmwcqs3nCHSHVWwHI9cdDJQFyh5H6v4db04CTLCiTbO1c0kge1rwvek+s54m4A7yRJjmfMD+d0Nc+843dgVIwJ2tNNESTEGY7VupUwWtgL89MlueAsl3qtgFbCC5ZPy64Zx+a5qh78Ydc+Vvvxu4484N1RMYZnZN6ak79lVFMZTKwHJRHYMK6jR732S8AraA3hHXX5XkNLM6LRq9e6xls0id+3bcxf+ARQpLH6Z/P1QGTWR78A1xLidUrtXqDQ0M+K4o8te4eR92SCNKp//jrT/akJPVdUjRGrpNZR5x8e10jAUDWUSOpU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(366004)(396003)(136003)(39860400002)(376002)(451199009)(478600001)(5660300002)(41300700001)(8936002)(7416002)(6506007)(82950400001)(82960400001)(55016003)(316002)(38070700005)(52536014)(54906003)(6916009)(10290500003)(38100700002)(86362001)(122000001)(8676002)(66476007)(66946007)(66556008)(4744005)(66446008)(64756008)(76116006)(8990500004)(4326008)(33656002)(71200400001)(9686003)(2906002)(186003)(26005)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?deAEnCxUsiqhlsgayw/eFtxGrUw+s7mB0CgeN41pXTCQCb5pnVki18kEeA/R?=
- =?us-ascii?Q?E7kPuW+H8EHeX5WjU9NJ1DQOOhGXga8uD8CBOrVN3gWb2JoST8PBalzVJtH7?=
- =?us-ascii?Q?CW0azhhx1seo0WyAGfN27liit2ehgZPkFpZY89EwgRXxSp9zAOUTKImTEeFq?=
- =?us-ascii?Q?isIERDVywocLwPG0yUS+ur611uuDux3NgNpdchVDkDDyqQEvuvNY1/QFpiMm?=
- =?us-ascii?Q?P0MJNTrh8wupa840TwOqYJSpOPsx14cMSc98QRS+BaCC2GctssQzBAjLuWZm?=
- =?us-ascii?Q?bDYXFlpINrP1oLoGeZM3WcUE8yH08fGhSwdJGDrlumk5yA4hldeul2DVjvJo?=
- =?us-ascii?Q?leYZXrHXhd4/KeBEY2qwXdCfi36v6rKst/8yYtGVkLsGO5ZoQRVyRu4LesBz?=
- =?us-ascii?Q?jGGqWDGlaoaD7Ho9hdHrd0R2+vxRYb/uUBFlED3yjtW1FFhPCJvcPpA0MgdW?=
- =?us-ascii?Q?GIuThOX3BRgmgXT0qO/MZwoV7LNMRhhfWaDp1eaDWoIwESaskMe4IJETkOMZ?=
- =?us-ascii?Q?acH6BRi16zvpHNxUlBOd+qZZzWlUQ2uEE0nPOLv84nZ8NrMpEAFkJaa38EOf?=
- =?us-ascii?Q?oCk4OGYGmVqeWbIOI2uiF+BcUbbs6n9SzNuw1m4y4dLd7neaja9IUjTGitBn?=
- =?us-ascii?Q?qnhchXAFZuhND0cr5N1hWCIZqNrrios+nKQtINs2N4RBokHV+Bq7+YW7fE//?=
- =?us-ascii?Q?Rg2Bmdl9BDBIu57W1vMfeRMh4wW3Mv8QJxdjQ8//0pPITE8y5kjzG77DKH3i?=
- =?us-ascii?Q?NJzahQASQis3nrzboF8BLZ94zv5g/jucGFQAVTFflHGDi99lh1yXq9m1vc/W?=
- =?us-ascii?Q?a6sRkDyQnVZBPFmoRZCQS8O0Nu6qzIcaThlSAvjyJDFMWIIVfHao0OvgLFz4?=
- =?us-ascii?Q?vznXFvkzwgVLTFFPgfjnCPDHiGm5aigJgR99zMJX1CYAUmHmw7jm436KzElS?=
- =?us-ascii?Q?igBrLTIdaUC5tN7n85FFH6IgAp+vxCrNZIK5JC5JPbrr5m7wIYo568honToE?=
- =?us-ascii?Q?tRiCnMEvZOL/lEVBi6GLlvCjLHcufe7LeW4Mhqgq251/kLDlDjJVoqGf1TWJ?=
- =?us-ascii?Q?8kONXhbkuV3KufDLq8M9rxfFveIzLEC66swH4vHWz/6utW0JQ674Bml3guQs?=
- =?us-ascii?Q?Twx3GDCr/sQ03eR2ZLFE0STU0XP6VvYNzi+qhejG9td7BlUCarPH7EtiTO/+?=
- =?us-ascii?Q?E9qjTNJ33bkFbxEr46t/Q+WR+I99+mJuxIiZdrJXg1NeuZi3YCcWU/czdQ6V?=
- =?us-ascii?Q?9yUKKPLiv8vEECfvA5U9X2PwGacIAM4UzDkvc+yYVB/zAryKXhehNebbfQA5?=
- =?us-ascii?Q?/2pgZMLzCDuTkxvF5r8M4fMczWU3iF7bbpXeyRCmCQhCMI4d/Vq/mZc2Ko3G?=
- =?us-ascii?Q?Hp9ttqlcoLBdIhVxiboxKLCUlGzT6i31rBP/cCElRCilWaZzC5lCh0+0CC96?=
- =?us-ascii?Q?V6OhCFzKm5CChTNBkiGU4mta+HVzDZojXQY0h+gQrdrNHetgg+lLlnA+hEqh?=
- =?us-ascii?Q?2cGKPxeknFJ/ic5Q1h0BbzbFawOGsnjAGTjLnzh68WTFdDlEurF6rpBBIjtZ?=
- =?us-ascii?Q?BGMnOsjFWTVIf2pshVqzin9GEwuNKKLer3BWOWdG?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 30 Jul 2022 08:27:43 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C654E647A
+        for <linux-hyperv@vger.kernel.org>; Sat, 30 Jul 2022 05:27:41 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id l22so8779489wrz.7
+        for <linux-hyperv@vger.kernel.org>; Sat, 30 Jul 2022 05:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=y251+SMw9dFcMWhUuvxqMsxuuJVpgWF8D/ESUIMfYm8=;
+        b=fu9SwVvu/AtCgZPViD9wD1lgJOrCBVDJgZd5mwHhlo7AaPmP8TyeSjJocGTY7y0njg
+         +MqlORRbFyuDjeduj9GSrGQLwPor/DYpgX7VV6vgEwcKSfOEz9vjCGC6US8o+VisUAMx
+         YY1s+Fu5eSjEb6r6MEpWs25IM7iY4VjmEf1pi5urS5rtTz/OVTLp0zV7eaSh0/s1cS2n
+         Y70FcaRyjljifjG5STsnKeln/+ievQf1gdp3Jg4Ob6q+2B1vCiDa8W+RUtbIahNqcOje
+         sCZDPmi+B4FWH5YXzE0t483rIrsRl7fU4RgHziC3GNTEQmObGr6KZPNec/ZC7bcDGlR1
+         0Few==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=y251+SMw9dFcMWhUuvxqMsxuuJVpgWF8D/ESUIMfYm8=;
+        b=bhZ6g39y05UUF+cuIskR83QxSYkTvEIR6l6L4e1Ht0wCUs40Y0eq8T2+GN3Y5CjhQ2
+         wQzoSOhMfZfiv9GAVEDu0yHRirYN0I5XsCswFW3RWzsaj0hr72E0JT8BbZ7j6892bm69
+         TkTs/H5cPIaAZKlBhVBxeU98DzbVoeL0r3RbMQb9MrT4Y9VHQ0X+GJXKqNfsKGMStxzX
+         91yzjagtBNf13oGkyShSV4y85IXhhJj0lcH+WyJBiSOe0GTmNPrzFmjrxH5/5lJdOnmW
+         ikPqcPt2DVAuw068Bad7bIkA46GXHZ7k5qVP3Kra6R3t67SLV+yQPODdmqukUwfko7ZL
+         0P/g==
+X-Gm-Message-State: ACgBeo06c9mMohoqdHfSoRrae6e92uHExjfwNYbQfLuQImXBw/eSnNCU
+        EsagHRbpitsl7ddUdiSCJtU=
+X-Google-Smtp-Source: AA6agR6YTlIJruWlAlXRtoIxG9zqyTFlFOf3MS8bEvDBJKvULEr5qoXMm8uva23JEwe2iTvW4EQD5g==
+X-Received: by 2002:a05:6000:547:b0:218:5f6a:f5db with SMTP id b7-20020a056000054700b002185f6af5dbmr5105690wrf.480.1659184060271;
+        Sat, 30 Jul 2022 05:27:40 -0700 (PDT)
+Received: from elementary ([94.73.33.57])
+        by smtp.gmail.com with ESMTPSA id z7-20020a05600c220700b003a3188bef63sm7544067wml.11.2022.07.30.05.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Jul 2022 05:27:39 -0700 (PDT)
+Date:   Sat, 30 Jul 2022 14:27:37 +0200
+From:   =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     sam@ravnborg.org, noralf@tronnes.org, daniel@ffwll.ch,
+        airlied@linux.ie, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com, airlied@redhat.com,
+        javierm@redhat.com, drawat.floss@gmail.com, kraxel@redhat.com,
+        david@lechnology.com, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 05/12] drm/format-helper: Rework XRGB8888-to-RGBG565
+ conversion
+Message-ID: <20220730122737.GA108772@elementary>
+References: <20220727113312.22407-1-tzimmermann@suse.de>
+ <20220727113312.22407-6-tzimmermann@suse.de>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e31e0b0c-3e44-4288-2a3a-08da71a81b32
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jul 2022 21:20:05.0439
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OEPT4cCaCKkrcYEIlWxhIDmeT4EyaiGTcauAaJB0ZNxwjbVycgpTA90gqgM+4ErqnoNIXi9ETSezEiwlJZ5T5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR21MB3744
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220727113312.22407-6-tzimmermann@suse.de>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> > the Mellanox NICs implement the RAW_QP. IMHO, it's better to have the
-> > user explicitly decide whether to use Ethernet or RDMA RAW_QP on a
-> > specific port.
->=20
-> It should all be carefully documented someplace.
+Hi Thomas,
 
-The use case for RAW_QP is from user-mode. Is it acceptable that we documen=
-t the detailed usage in rdma-core?
+On Wed, Jul 27, 2022 at 01:33:05PM +0200, Thomas Zimmermann wrote:
+> Update XRGB8888-to-RGB565 conversion to support struct iosys_map
+> and convert all users. Although these are single-plane color formats,
+> the new interface supports multi-plane formats for consistency with
+> drm_fb_blit().
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-Long
+Tested-by: José Expósito <jose.exposito89@gmail.com>
+Reviewed-by: José Expósito <jose.exposito89@gmail.com>
+
+In order to continue working on the missing tests for drm_format_helper
+I rebased your series on top of drm-misc-next and fixed the conflicts
+in the tests [1]. It is an easy fix, but feel free to copy & paste the
+code if you want to save a couple of minutes.
+
+FWIW, I ran the existing test for RGB565 on little and big endian archs
+and they are working as expected.
+
+Jose
+
+[1] https://github.com/JoseExposito/linux/commit/175af3a6b6b9b8013e9925c06b4951fffbbce15b
+
+> ---
+>  drivers/gpu/drm/drm_format_helper.c | 59 +++++++++++------------------
+>  drivers/gpu/drm/drm_mipi_dbi.c      |  4 +-
+>  drivers/gpu/drm/gud/gud_pipe.c      |  3 +-
+>  drivers/gpu/drm/tiny/cirrus.c       |  3 +-
+>  include/drm/drm_format_helper.h     |  9 ++---
+>  5 files changed, 30 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+> index 2b5c3746ff4a..8bf5655f5ce0 100644
+> --- a/drivers/gpu/drm/drm_format_helper.c
+> +++ b/drivers/gpu/drm/drm_format_helper.c
+> @@ -330,9 +330,9 @@ static void drm_fb_xrgb8888_to_rgb565_swab_line(void *dbuf, const void *sbuf,
+>  
+>  /**
+>   * drm_fb_xrgb8888_to_rgb565 - Convert XRGB8888 to RGB565 clip buffer
+> - * @dst: RGB565 destination buffer
+> - * @dst_pitch: Number of bytes between two consecutive scanlines within dst
+> - * @vaddr: XRGB8888 source buffer
+> + * @dst: Array of RGB565 destination buffers
+> + * @dst_pitch: Array of numbers of bytes between two consecutive scanlines within dst
+> + * @vmap: Array of XRGB8888 source buffer
+>   * @fb: DRM framebuffer
+>   * @clip: Clip rectangle area to copy
+>   * @swab: Swap bytes
+> @@ -340,43 +340,31 @@ static void drm_fb_xrgb8888_to_rgb565_swab_line(void *dbuf, const void *sbuf,
+>   * Drivers can use this function for RGB565 devices that don't natively
+>   * support XRGB8888.
+>   */
+> -void drm_fb_xrgb8888_to_rgb565(void *dst, unsigned int dst_pitch, const void *vaddr,
+> -			       const struct drm_framebuffer *fb, const struct drm_rect *clip,
+> -			       bool swab)
+> +void drm_fb_xrgb8888_to_rgb565(struct iosys_map *dst, const unsigned int *dst_pitch,
+> +			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+> +			       const struct drm_rect *clip, bool swab)
+>  {
+> +	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> +		0, 0, 0, 0
+> +	};
+> +	void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels);
+> +
+>  	if (swab)
+> -		drm_fb_xfrm(dst, dst_pitch, 2, vaddr, fb, clip, false,
+> -			    drm_fb_xrgb8888_to_rgb565_swab_line);
+> +		xfrm_line = drm_fb_xrgb8888_to_rgb565_swab_line;
+>  	else
+> -		drm_fb_xfrm(dst, dst_pitch, 2, vaddr, fb, clip, false,
+> -			    drm_fb_xrgb8888_to_rgb565_line);
+> -}
+> -EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
+> +		xfrm_line = drm_fb_xrgb8888_to_rgb565_line;
+>  
+> -/**
+> - * drm_fb_xrgb8888_to_rgb565_toio - Convert XRGB8888 to RGB565 clip buffer
+> - * @dst: RGB565 destination buffer (iomem)
+> - * @dst_pitch: Number of bytes between two consecutive scanlines within dst
+> - * @vaddr: XRGB8888 source buffer
+> - * @fb: DRM framebuffer
+> - * @clip: Clip rectangle area to copy
+> - * @swab: Swap bytes
+> - *
+> - * Drivers can use this function for RGB565 devices that don't natively
+> - * support XRGB8888.
+> - */
+> -void drm_fb_xrgb8888_to_rgb565_toio(void __iomem *dst, unsigned int dst_pitch,
+> -				    const void *vaddr, const struct drm_framebuffer *fb,
+> -				    const struct drm_rect *clip, bool swab)
+> -{
+> -	if (swab)
+> -		drm_fb_xfrm_toio(dst, dst_pitch, 2, vaddr, fb, clip, false,
+> -				 drm_fb_xrgb8888_to_rgb565_swab_line);
+> +	if (!dst_pitch)
+> +		dst_pitch = default_dst_pitch;
+> +
+> +	if (dst[0].is_iomem)
+> +		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 2, vmap[0].vaddr, fb, clip,
+> +				 false, xfrm_line);
+>  	else
+> -		drm_fb_xfrm_toio(dst, dst_pitch, 2, vaddr, fb, clip, false,
+> -				 drm_fb_xrgb8888_to_rgb565_line);
+> +		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 2, vmap[0].vaddr, fb, clip,
+> +			    false, xfrm_line);
+>  }
+> -EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565_toio);
+> +EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
+>  
+>  static void drm_fb_xrgb8888_to_rgb888_line(void *dbuf, const void *sbuf, unsigned int pixels)
+>  {
+> @@ -605,8 +593,7 @@ int drm_fb_blit(struct iosys_map *dst, const unsigned int *dst_pitch, uint32_t d
+>  
+>  	} else if (dst_format == DRM_FORMAT_RGB565) {
+>  		if (fb_format == DRM_FORMAT_XRGB8888) {
+> -			drm_fb_xrgb8888_to_rgb565_toio(dst[0].vaddr_iomem, dst_pitch[0],
+> -						       vmap[0].vaddr, fb, clip, false);
+> +			drm_fb_xrgb8888_to_rgb565(dst, dst_pitch, vmap, fb, clip, false);
+>  			return 0;
+>  		}
+>  	} else if (dst_format == DRM_FORMAT_RGB888) {
+> diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
+> index 973a75585cad..d0bdbcb96705 100644
+> --- a/drivers/gpu/drm/drm_mipi_dbi.c
+> +++ b/drivers/gpu/drm/drm_mipi_dbi.c
+> @@ -206,7 +206,6 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+>  	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
+>  	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
+>  	struct iosys_map dst_map = IOSYS_MAP_INIT_VADDR(dst);
+> -	void *src;
+>  	int ret;
+>  
+>  	ret = drm_gem_fb_begin_cpu_access(fb, DMA_FROM_DEVICE);
+> @@ -216,7 +215,6 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+>  	ret = drm_gem_fb_vmap(fb, map, data);
+>  	if (ret)
+>  		goto out_drm_gem_fb_end_cpu_access;
+> -	src = data[0].vaddr; /* TODO: Use mapping abstraction properly */
+>  
+>  	switch (fb->format->format) {
+>  	case DRM_FORMAT_RGB565:
+> @@ -226,7 +224,7 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+>  			drm_fb_memcpy(&dst_map, NULL, data, fb, clip);
+>  		break;
+>  	case DRM_FORMAT_XRGB8888:
+> -		drm_fb_xrgb8888_to_rgb565(dst, 0, src, fb, clip, swap);
+> +		drm_fb_xrgb8888_to_rgb565(&dst_map, NULL, data, fb, clip, swap);
+>  		break;
+>  	default:
+>  		drm_err_once(fb->dev, "Format is not supported: %p4cc\n",
+> diff --git a/drivers/gpu/drm/gud/gud_pipe.c b/drivers/gpu/drm/gud/gud_pipe.c
+> index 426a3ae6cc50..a43eb6645352 100644
+> --- a/drivers/gpu/drm/gud/gud_pipe.c
+> +++ b/drivers/gpu/drm/gud/gud_pipe.c
+> @@ -198,7 +198,8 @@ static int gud_prep_flush(struct gud_device *gdrm, struct drm_framebuffer *fb,
+>  		} else if (format->format == DRM_FORMAT_RGB332) {
+>  			drm_fb_xrgb8888_to_rgb332(&dst, NULL, map_data, fb, rect);
+>  		} else if (format->format == DRM_FORMAT_RGB565) {
+> -			drm_fb_xrgb8888_to_rgb565(buf, 0, vaddr, fb, rect, gud_is_big_endian());
+> +			drm_fb_xrgb8888_to_rgb565(&dst, NULL, map_data, fb, rect,
+> +						  gud_is_big_endian());
+>  		} else if (format->format == DRM_FORMAT_RGB888) {
+>  			drm_fb_xrgb8888_to_rgb888(buf, 0, vaddr, fb, rect);
+>  		} else {
+> diff --git a/drivers/gpu/drm/tiny/cirrus.c b/drivers/gpu/drm/tiny/cirrus.c
+> index 73fb9f63d227..9cd398e4700b 100644
+> --- a/drivers/gpu/drm/tiny/cirrus.c
+> +++ b/drivers/gpu/drm/tiny/cirrus.c
+> @@ -335,8 +335,7 @@ static int cirrus_fb_blit_rect(struct drm_framebuffer *fb,
+>  
+>  	} else if (fb->format->cpp[0] == 4 && cirrus->cpp == 2) {
+>  		iosys_map_incr(&dst, drm_fb_clip_offset(cirrus->pitch, fb->format, rect));
+> -		drm_fb_xrgb8888_to_rgb565_toio(dst.vaddr_iomem, cirrus->pitch, vaddr, fb, rect,
+> -					       false);
+> +		drm_fb_xrgb8888_to_rgb565(&dst, &cirrus->pitch, vmap, fb, rect, false);
+>  
+>  	} else if (fb->format->cpp[0] == 4 && cirrus->cpp == 3) {
+>  		iosys_map_incr(&dst, drm_fb_clip_offset(cirrus->pitch, fb->format, rect));
+> diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_helper.h
+> index 3c28f099e3ed..9f1d45d7ce84 100644
+> --- a/include/drm/drm_format_helper.h
+> +++ b/include/drm/drm_format_helper.h
+> @@ -23,12 +23,9 @@ void drm_fb_swab(struct iosys_map *dst, const unsigned int *dst_pitch,
+>  void drm_fb_xrgb8888_to_rgb332(struct iosys_map *dst, const unsigned int *dst_pitch,
+>  			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+>  			       const struct drm_rect *clip);
+> -void drm_fb_xrgb8888_to_rgb565(void *dst, unsigned int dst_pitch, const void *vaddr,
+> -			       const struct drm_framebuffer *fb, const struct drm_rect *clip,
+> -			       bool swab);
+> -void drm_fb_xrgb8888_to_rgb565_toio(void __iomem *dst, unsigned int dst_pitch,
+> -				    const void *vaddr, const struct drm_framebuffer *fb,
+> -				    const struct drm_rect *clip, bool swab);
+> +void drm_fb_xrgb8888_to_rgb565(struct iosys_map *dst, const unsigned int *dst_pitch,
+> +			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+> +			       const struct drm_rect *clip, bool swab);
+>  void drm_fb_xrgb8888_to_rgb888(void *dst, unsigned int dst_pitch, const void *src,
+>  			       const struct drm_framebuffer *fb, const struct drm_rect *clip);
+>  void drm_fb_xrgb8888_to_rgb888_toio(void __iomem *dst, unsigned int dst_pitch,
+> -- 
+> 2.37.1
+> 
