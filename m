@@ -2,78 +2,84 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EC05587CAC
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Aug 2022 14:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C0C587CD7
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Aug 2022 15:03:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232569AbiHBMxF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Aug 2022 08:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38080 "EHLO
+        id S236210AbiHBNDx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Aug 2022 09:03:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232842AbiHBMxD (ORCPT
+        with ESMTP id S236320AbiHBNDv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 2 Aug 2022 08:53:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BB456DFC5
-        for <linux-hyperv@vger.kernel.org>; Tue,  2 Aug 2022 05:53:02 -0700 (PDT)
+        Tue, 2 Aug 2022 09:03:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EFE871B7BF
+        for <linux-hyperv@vger.kernel.org>; Tue,  2 Aug 2022 06:03:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659444781;
+        s=mimecast20190719; t=1659445430;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=5ikm4kV/UdS8r7b2LACfyNidZ5DHXkyUZcz44yJZqUQ=;
-        b=H48DgtWvVHEXw1/gjBdYkrA9Jk6FWxjU/5BQ0pS2nfhRTPyzc8prdLaV7oDEW+iod+Sa36
-        WRTGeDywXumacUVi5mp9vz1jhXUyYGfril9z++8RbKatv9S59fU1YaTgewqQ4rC2Zeg09b
-        0TPae/n8DuCHLCEmBpICwAWe1kt+7R8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=q9G2G8Gu5RKJUdwRd8+XrMp7icbYEK8BR98QSXem+dE=;
+        b=TMDX5rlJI50Fx9abWglZbphTmZTWg/xv/1D6O7EyE4aId4xcLxTao18bnjUJVdS24VvaYI
+        aNfn9xywEtxCMvlWuULAaj5B7KAn0CKU6eigqBsIaN6zxYr0Yu+ndKjsSXYvHMgv9IVhiq
+        Zq8qg6t8qdJi8tbwhrRX22/CwYo0Sjc=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-209-0lLGs7i2NbGfm2DejzK7yQ-1; Tue, 02 Aug 2022 08:52:58 -0400
-X-MC-Unique: 0lLGs7i2NbGfm2DejzK7yQ-1
-Received: by mail-wm1-f71.google.com with SMTP id r10-20020a05600c284a00b003a2ff6c9d6aso9484676wmb.4
-        for <linux-hyperv@vger.kernel.org>; Tue, 02 Aug 2022 05:52:58 -0700 (PDT)
+ us-mta-502-w4FAm-_jNjqVMeZRF9z5AQ-1; Tue, 02 Aug 2022 09:03:41 -0400
+X-MC-Unique: w4FAm-_jNjqVMeZRF9z5AQ-1
+Received: by mail-wr1-f69.google.com with SMTP id t12-20020adfa2cc000000b0021e564cde06so3509728wra.17
+        for <linux-hyperv@vger.kernel.org>; Tue, 02 Aug 2022 06:03:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=5ikm4kV/UdS8r7b2LACfyNidZ5DHXkyUZcz44yJZqUQ=;
-        b=Rr1JV5NmbbSVcCD7shBohieLPaDZzUJIhsUNiz+uH8ebgXkZWZxOB6EA9fCaOLriuw
-         AjkjcUROo+u9OArbtzczZSXe4SCY+XYUWKLLhZhPD0NQmDUtOtwFimaL0m2OUe9/hO7V
-         LWTs8a1RsRmDW2ACbpZQKWo4tawgTkiZVD2nHiAR4iC2rPl2JvnYTJ+IKlI5Nqax0g22
-         xmVECzmfgEUW2CFEyP0DyiKNMOPO97EhDHdJzPjToiTl+0QsEPvpFc1Bc75I6L6EoX43
-         T5qrXWSPfyLqVrKQ1jRlv4vuzVxkFvlp4NOdwOVNGa/eENEwwvWCjtufMdWKCGAXjL/S
-         zAYQ==
-X-Gm-Message-State: ACgBeo0PXQbS7M6QokTx5i3pyJKRyBeLSkZTBYH/WP2AFthM3x0VcRLo
-        /Ztax5tLIEPUTSYZbSQ1SRz2hrZWckshAHbp0m/D7wXy8qS9yegmeoNdoOLgXfrMyDgeeePJf4c
-        2RB4YHpp+GgsvGpAmgi+vOZMK
-X-Received: by 2002:adf:efc3:0:b0:21f:15aa:1b40 with SMTP id i3-20020adfefc3000000b0021f15aa1b40mr11167755wrp.159.1659444777641;
-        Tue, 02 Aug 2022 05:52:57 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR53vslDjhAhACNp2Z0SdysXb8V4ku9F/Q9BfjcKTCX8Mhagp7O22Wv6hJv6kZKMItFdg5F7vg==
-X-Received: by 2002:adf:efc3:0:b0:21f:15aa:1b40 with SMTP id i3-20020adfefc3000000b0021f15aa1b40mr11167735wrp.159.1659444777341;
-        Tue, 02 Aug 2022 05:52:57 -0700 (PDT)
+        bh=q9G2G8Gu5RKJUdwRd8+XrMp7icbYEK8BR98QSXem+dE=;
+        b=FvMWkUhnajSdylqv4I5cRo/UEuaEEfraD3+NuxhSRetjKrKjyeYDgteMutqZU43iiD
+         IJoAGVHU/MEN+GSG0oc0P/QpSu7C3VJc6u/z1bTwv74bAPyS5cGVxY8p2zgrpC5Xq9GF
+         bSwdhPvN/sIJ1gOD0FtBXan11HcoHOtsD64qULJpcGKC1sCJ83LTO9QYzCJeSCayjYOa
+         0lGLs+AKBkqju+dNOgcDkoDM1ty51YGz/oAcZe0ibOvDdzL0Z4JkM5Cag7dQc+Ni9RwJ
+         2D2bBfB4d6hPFw+71r9+T5O2/uG9AYp+tGnXp2O7fA+5i3DVpfvQlKcS9eEHCjhDag5q
+         a/lg==
+X-Gm-Message-State: ACgBeo0N9nWngdYgNX7cAGKQohBGntQuE9kfvicCjxJ9Hk2Nt0kEBI8m
+        Q0RbuuAw6CcCJRCR2PA4gnSTd4LmWKF1YXyh02S6Yijgz4hKdCaqd2lTHMbc42sgrL8XjX/ONo9
+        M95NAnTP803SvQLhL4Dz8oar9
+X-Received: by 2002:a5d:64e2:0:b0:21d:38e8:2497 with SMTP id g2-20020a5d64e2000000b0021d38e82497mr12253759wri.142.1659445420265;
+        Tue, 02 Aug 2022 06:03:40 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6DOS3SQRla4MpJdwzB2g2Z3+URqWp8A6RPEqmiNSoJz93I9qLSiQKDBTUSjxU0zCoo/8ZISQ==
+X-Received: by 2002:a5d:64e2:0:b0:21d:38e8:2497 with SMTP id g2-20020a5d64e2000000b0021d38e82497mr12253733wri.142.1659445419933;
+        Tue, 02 Aug 2022 06:03:39 -0700 (PDT)
 Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id ba4-20020a0560001c0400b002205f0890eesm8621527wrb.77.2022.08.02.05.52.56
+        by smtp.gmail.com with ESMTPSA id f11-20020a05600c4e8b00b003a31673515bsm26399540wmq.7.2022.08.02.06.03.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Aug 2022 05:52:56 -0700 (PDT)
+        Tue, 02 Aug 2022 06:03:37 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org,
         Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 14/25] KVM: VMX: Tweak the special handling of
- SECONDARY_EXEC_ENCLS_EXITING in setup_vmcs_config()
-In-Reply-To: <YtnPEem7q1i+4VBN@google.com>
+Subject: Re: [PATCH v4 09/25] KVM: VMX: nVMX: Support TSC scaling and
+ PERF_GLOBAL_CTRL with enlightened VMCS
+In-Reply-To: <62ac29cb-3270-a810-bad1-3692da448016@redhat.com>
 References: <20220714091327.1085353-1-vkuznets@redhat.com>
- <20220714091327.1085353-15-vkuznets@redhat.com>
- <YtnPEem7q1i+4VBN@google.com>
-Date:   Tue, 02 Aug 2022 14:52:55 +0200
-Message-ID: <87o7x224ew.fsf@redhat.com>
+ <20220714091327.1085353-10-vkuznets@redhat.com>
+ <YtnMIkFI469Ub9vB@google.com>
+ <48de7ea7-fc1a-6a83-3d6f-e04d26ea2f05@redhat.com>
+ <Yt7ehL0HfR3b97FQ@google.com>
+ <870d507d-a516-5601-4d21-2bfd571cf008@redhat.com>
+ <YuMKBzeB2cE/NZ2K@google.com>
+ <62ac29cb-3270-a810-bad1-3692da448016@redhat.com>
+Date:   Tue, 02 Aug 2022 15:03:35 +0200
+Message-ID: <87les623x4.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,75 +88,28 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-> On Thu, Jul 14, 2022, Vitaly Kuznetsov wrote:
->> SECONDARY_EXEC_ENCLS_EXITING is conditionally added to the 'optional'
->> checklist in setup_vmcs_config() but there's little value in doing so.
->> First, as the control is optional, we can always check for its
->> presence, no harm done. Second, the only real value cpu_has_sgx() check
->> gives is that on the CPUs which support SECONDARY_EXEC_ENCLS_EXITING but
->> don't support SGX, the control is not getting enabled. It's highly unlikely
->> such CPUs exist but it's possible that some hypervisors expose broken vCPU
->> models.
+> On 7/29/22 00:13, Sean Christopherson wrote:
+>> The only flaw in this is if KVM gets handed a CPUID model that enumerates support
+>> for 2025 (or whenever the next update comes) but not 2022.  Hmm, though if Microsoft
+>> defines each new "version" as a full superset, then even that theoretical bug goes
+>> away.  I'm happy to be optimistic for once and give this a shot.  I definitely like
+>> that it makes it easier to see the deltas between versions.
 >
-> It's not just broken vCPU models, SGX can be "soft-disabled" on bare metal, e.g. if
-> software writes MCE control MSRs or there's an uncorrectable #MC (may not be the
-> case on all platforms).  This is architectural behavior and needs to be handled in
-> KVM.  Obviously if SGX gets disabled after KVM is loaded then we're out of luck, but
-> having the ENCL-exiting control without SGX being enabled is 100% valid.
->
-> As for why KVM bothers with the check, it's to work around a suspected hardware
-> or XuCode bug (I'm still a bit shocked that's public now :-) ) where SGX got
-> _hard_ disabled across S3 on some CPUs and made the fields magically disappear.
-> The workaround was to soft-disable SGX in BIOS so that KVM wouldn't attempt to
-> enable the ENCLS-exiting control
+> Okay, I have queued the series but I still haven't gone through all the 
+> comments.
 
-Oh, thanks for this insight, I had no idea! I'll adjust my commit
-message accordingly.
+The biggest problem with this version is the EFER.LMA problem on i386
+discovered (and, thankfully, fixed in the suggested patch) by
+Sean. To address this and all other comment I'm going to put together a
+v5 on top of the current kvm/queue (as I don't yet see any of this stuff
+there).
 
->
->> Preserve cpu_has_sgx() check but filter the result of adjust_vmx_controls()
->> instead of the input.
->> 
->> Reviewed-by: Jim Mattson <jmattson@google.com>
->> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  arch/x86/kvm/vmx/vmx.c | 9 ++++++---
->>  1 file changed, 6 insertions(+), 3 deletions(-)
->> 
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index ce54f13d8da1..566be73c6509 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -2528,9 +2528,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->>  			SECONDARY_EXEC_PT_CONCEAL_VMX |
->>  			SECONDARY_EXEC_ENABLE_VMFUNC |
->>  			SECONDARY_EXEC_BUS_LOCK_DETECTION |
->> -			SECONDARY_EXEC_NOTIFY_VM_EXITING;
->> -		if (cpu_has_sgx())
->> -			opt2 |= SECONDARY_EXEC_ENCLS_EXITING;
->> +			SECONDARY_EXEC_NOTIFY_VM_EXITING |
->> +			SECONDARY_EXEC_ENCLS_EXITING;
->> +
->>  		if (adjust_vmx_controls(min2, opt2,
->>  					MSR_IA32_VMX_PROCBASED_CTLS2,
->>  					&_cpu_based_2nd_exec_control) < 0)
->> @@ -2577,6 +2577,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->>  		vmx_cap->vpid = 0;
->>  	}
->>  
->> +	if (!cpu_has_sgx())
->> +		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_ENCLS_EXITING;
->> +
->>  	if (_cpu_based_exec_control & CPU_BASED_ACTIVATE_TERTIARY_CONTROLS) {
->>  		u64 opt3 = TERTIARY_EXEC_IPI_VIRT;
->>  
->> -- 
->> 2.35.3
->> 
->
+>  So this will _not_ be in the 5.21 pull request.
+
+At first I thought you meant 5.20 but then I got the pun: 5.20 will
+likely become 6.0 and so 5.21 pull request will just never happen :-)
 
 -- 
 Vitaly
