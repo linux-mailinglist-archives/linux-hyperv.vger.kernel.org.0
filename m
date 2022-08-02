@@ -2,131 +2,167 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 380AD5878A4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Aug 2022 10:04:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A1A85878CC
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 Aug 2022 10:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236283AbiHBIEi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 2 Aug 2022 04:04:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
+        id S235865AbiHBIOd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 Aug 2022 04:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232855AbiHBIEg (ORCPT
+        with ESMTP id S233206AbiHBIOc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 2 Aug 2022 04:04:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1088A3F32B
-        for <linux-hyperv@vger.kernel.org>; Tue,  2 Aug 2022 01:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659427474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PnAgHb+qwkYr0eoeRI+miU3649J+IzbjO84fBGvUAWw=;
-        b=ihqJzcGU3ZhASUCcOzoJasC+r9lQ+V6kqXCro63hqoRwTJ//sNo3AHntquIWc9Lk9NojGc
-        ckaOC9o2Jprfk+Y/wo4ETTRnpNrLjbtdsSxQh2xgPj5c6Vuv9huVvi9qXMgoJobA+6XmTZ
-        hMW8pqplBmYsn5LfWm8d6cEkTaLVEIU=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-36-w2TG4_AZO9Cj4KyK8Vx7UA-1; Tue, 02 Aug 2022 04:04:29 -0400
-X-MC-Unique: w2TG4_AZO9Cj4KyK8Vx7UA-1
-Received: by mail-qv1-f69.google.com with SMTP id cv14-20020ad44d8e000000b004760bec67a8so3883888qvb.14
-        for <linux-hyperv@vger.kernel.org>; Tue, 02 Aug 2022 01:04:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=PnAgHb+qwkYr0eoeRI+miU3649J+IzbjO84fBGvUAWw=;
-        b=YmuEr7sivqyZTvzNzEqJJoPYZMdgyWLRV6ufFz+9iObPciKCDHxVC48/eSBWWcB1mK
-         +pBUe5dXyu7uDZD2w1651Bl79HAqqgEH5obajYPOjnyC5R1HX1XUpBo0C6JE9O1mrLaL
-         pPo6bV1mkcm4UFB8UUORleNHMDK9jfwQLbdNwHDH0eMJjB4jg0umMk1P4KW6DxM/Ljcy
-         WOOL7fz5iIBM4PU0DnX61pQdfVGiXvxpYDS1DeVo5e4vfBdgTJYIrrIj/FJjc+dLPmQL
-         q2ZcdEun99XwW28O+ktrgJpkinLMmXBL/SodaE9vFslJdUZONX+xvaoTRQP0NxBjfvQ3
-         u8DQ==
-X-Gm-Message-State: AJIora/+qT3Fj93a7qLB51hZkuFEvpNzKy3d5Xc9EU7xsNHS6MGRbPnR
-        N672+ZEN+vbI4wnHjBeXtHFIJWcyHGFAahaX9CIjadETMEAs/0sgNsU1MZRdZgeR2rFk0KihAzY
-        +EYJXiGdgui4uFFYeb7NSQyok
-X-Received: by 2002:ac8:5b96:0:b0:31f:1931:b2b1 with SMTP id a22-20020ac85b96000000b0031f1931b2b1mr17183320qta.17.1659427468873;
-        Tue, 02 Aug 2022 01:04:28 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1t8d3getE7v6ehQxa40+uRjwcWSGfnrWrzaZU1/gX3jMXiALvanlrDyYV5QWSN3xAJSiT9vUw==
-X-Received: by 2002:ac8:5b96:0:b0:31f:1931:b2b1 with SMTP id a22-20020ac85b96000000b0031f1931b2b1mr17183303qta.17.1659427468660;
-        Tue, 02 Aug 2022 01:04:28 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-46-200-178.retail.telecomitalia.it. [79.46.200.178])
-        by smtp.gmail.com with ESMTPSA id g18-20020a05620a40d200b006b8d1914504sm636431qko.22.2022.08.02.01.04.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Aug 2022 01:04:28 -0700 (PDT)
-Date:   Tue, 2 Aug 2022 10:04:17 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Vishnu Dasa <vdasa@vmware.com>
-Cc:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
-        Bryan Tan <bryantan@vmware.com>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Krasnov Arseniy <oxffffaa@gmail.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        kernel <kernel@sberdevices.ru>
-Subject: Re: [RFC PATCH v2 0/9] vsock: updates for SO_RCVLOWAT handling
-Message-ID: <20220802080417.xyfwdidlirklr4oj@sgarzare-redhat>
-References: <19e25833-5f5c-f9b9-ac0f-1945ea17638d@sberdevices.ru>
- <20220727123710.pwzy6ag3gavotxda@sgarzare-redhat>
- <D7315A7C-D288-4BDC-A8BF-B8631D8664BA@vmware.com>
+        Tue, 2 Aug 2022 04:14:32 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB0E540BDE;
+        Tue,  2 Aug 2022 01:14:31 -0700 (PDT)
+Received: from [192.168.1.87] (unknown [122.171.18.126])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0FF1120FEB3D;
+        Tue,  2 Aug 2022 01:14:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0FF1120FEB3D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1659428071;
+        bh=e9jMP+l1EBs7edkrR5yZ/P6HawFIJg7Wsf/tP8c1hH0=;
+        h=Date:Subject:To:References:From:In-Reply-To:From;
+        b=sXcg7ueT90KrfILlIRM1HvHe29gKYoqSsyMQQeLTWwjG/2yXmE0aR2uVg0MLLbabt
+         bFLzzVExKfHih7h+hz22WEJriYgk9tSIr380HorDd/SRNsmSyQsKfrYRToXiqRvEob
+         v/XBrdiMYQPyzKMTC6bhLKTBeUWwNFvx6GIrQrRE=
+Message-ID: <33983fa2-c9a8-1ac1-2f75-8360a077cfc2@linux.microsoft.com>
+Date:   Tue, 2 Aug 2022 13:44:23 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <D7315A7C-D288-4BDC-A8BF-B8631D8664BA@vmware.com>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] Drivers: hv: vmbus: Optimize vmbus_on_event
+Content-Language: en-US
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+References: <1658741848-4210-1-git-send-email-ssengar@linux.microsoft.com>
+From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
+In-Reply-To: <1658741848-4210-1-git-send-email-ssengar@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Vishnu,
+On 25-07-2022 15:07, Saurabh Sengar wrote:
+> In the vmbus_on_event loop, 2 jiffies timer will not serve the purpose if
+> callback_fn takes longer. For effective use move this check inside of
+> callback functions where needed. Out of all the VMbus drivers using
+> vmbus_on_event, only storvsc has a high packet volume, thus add this limit
+> only in storvsc callback for now.
+> There is no apparent benefit of loop itself because this tasklet will be
+> scheduled anyway again if there are packets left in ring buffer. This
+> patch removes this unnecessary loop as well.
+> 
 
-On Tue, Aug 02, 2022 at 05:35:22AM +0000, Vishnu Dasa wrote:
->> On Jul 27, 2022, at 5:37 AM, Stefano Garzarella <sgarzare@redhat.com> 
->> wrote:
->> Hi Arseniy,
->>
->> On Mon, Jul 25, 2022 at 07:54:05AM +0000, Arseniy Krasnov wrote:
+In my understanding the loop was for optimizing the host to guest signaling for batched channels.
+And the loop ensures that we process all the posted messages from the host before returning from the respective callbacks.
 
-[...]
+Am I missing something here.
 
->>>
->>> 3) vmci/vsock:
->>>  Same as 2), but i'm not sure about this changes. Will be very good,
->>>  to get comments from someone who knows this code.
->>
->> I CCed VMCI maintainers to the patch and also to this cover, maybe
->> better to keep them in the loop for next versions.
->>
->> (Jorgen's and Rajesh's emails bounced back, so I'm CCing here only
->> Bryan, Vishnu, and pv-drivers@vmware.com)
->
->Hi Stefano,
->Jorgen and Rajesh are no longer with VMware.  There's a patch in
->flight to remove Rajesh from the MAINTAINERS file (Jorgen is already
->removed).
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  drivers/hv/connection.c    | 33 ++++++++++++++-------------------
+>  drivers/scsi/storvsc_drv.c |  9 +++++++++
+>  2 files changed, 23 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index eca7afd..9dc27e5 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -431,34 +431,29 @@ struct vmbus_channel *relid2channel(u32 relid)
+>  void vmbus_on_event(unsigned long data)
+>  {
+>  	struct vmbus_channel *channel = (void *) data;
+> -	unsigned long time_limit = jiffies + 2;
+> +	void (*callback_fn)(void *context);
+>  
+>  	trace_vmbus_on_event(channel);
+>  
+>  	hv_debug_delay_test(channel, INTERRUPT_DELAY);
+> -	do {
+> -		void (*callback_fn)(void *);
+>  
+> -		/* A channel once created is persistent even when
+> -		 * there is no driver handling the device. An
+> -		 * unloading driver sets the onchannel_callback to NULL.
+> -		 */
+> -		callback_fn = READ_ONCE(channel->onchannel_callback);
+> -		if (unlikely(callback_fn == NULL))
+> -			return;
+> -
+> -		(*callback_fn)(channel->channel_callback_context);
+> +	/* A channel once created is persistent even when
+> +	 * there is no driver handling the device. An
+> +	 * unloading driver sets the onchannel_callback to NULL.
+> +	 */
+> +	callback_fn = READ_ONCE(channel->onchannel_callback);
+> +	if (unlikely(!callback_fn))
+> +		return;
+>  
+> -		if (channel->callback_mode != HV_CALL_BATCHED)
+> -			return;
+> +	(*callback_fn)(channel->channel_callback_context);
+>  
+> -		if (likely(hv_end_read(&channel->inbound) == 0))
+> -			return;
+> +	if (channel->callback_mode != HV_CALL_BATCHED)
+> +		return;
+>  
+> -		hv_begin_read(&channel->inbound);
+> -	} while (likely(time_before(jiffies, time_limit)));
+> +	if (likely(hv_end_read(&channel->inbound) == 0))
+> +		return;
+>  
+> -	/* The time limit (2 jiffies) has been reached */
+> +	hv_begin_read(&channel->inbound);
+>  	tasklet_schedule(&channel->callback_event);
+>  }
+>  
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index fe000da..c457e6b 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -60,6 +60,9 @@
+>  #define VMSTOR_PROTO_VERSION_WIN8_1	VMSTOR_PROTO_VERSION(6, 0)
+>  #define VMSTOR_PROTO_VERSION_WIN10	VMSTOR_PROTO_VERSION(6, 2)
+>  
+> +/* channel callback timeout in ms */
+> +#define CALLBACK_TIMEOUT               2
+> +
+>  /*  Packet structure describing virtual storage requests. */
+>  enum vstor_packet_operation {
+>  	VSTOR_OPERATION_COMPLETE_IO		= 1,
+> @@ -1204,6 +1207,7 @@ static void storvsc_on_channel_callback(void *context)
+>  	struct hv_device *device;
+>  	struct storvsc_device *stor_device;
+>  	struct Scsi_Host *shost;
+> +	unsigned long time_limit = jiffies + msecs_to_jiffies(CALLBACK_TIMEOUT);
+>  
+>  	if (channel->primary_channel != NULL)
+>  		device = channel->primary_channel->device_obj;
+> @@ -1224,6 +1228,11 @@ static void storvsc_on_channel_callback(void *context)
+>  		u32 minlen = rqst_id ? sizeof(struct vstor_packet) :
+>  			sizeof(enum vstor_packet_operation);
+>  
+> +		if (unlikely(time_after(jiffies, time_limit))) {
+> +			hv_pkt_iter_close(channel);
+> +			return;
+> +		}
+> +
+>  		if (pktlen < minlen) {
+>  			dev_err(&device->device,
+>  				"Invalid pkt: id=%llu, len=%u, minlen=%u\n",
 
-Thanks for the update! I will contact you and Bryan for any questions 
-with VMCI in the future :-)
+Regards,
 
-Stefano
-
+~Praveen.
