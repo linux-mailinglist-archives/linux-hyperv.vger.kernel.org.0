@@ -2,177 +2,138 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD76588692
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Aug 2022 06:37:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FE5F588949
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 Aug 2022 11:21:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235352AbiHCEhN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 3 Aug 2022 00:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60038 "EHLO
+        id S234178AbiHCJVy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 3 Aug 2022 05:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiHCEhL (ORCPT
+        with ESMTP id S235286AbiHCJVx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 3 Aug 2022 00:37:11 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 53A395467B;
-        Tue,  2 Aug 2022 21:37:10 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id 0565520FFC0C; Tue,  2 Aug 2022 21:37:10 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0565520FFC0C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1659501430;
-        bh=aGFADYTmhfG3G/nJc1EU3o6+heuDU6xMfrYwIst6ego=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gOeW3fl49V+aGkpBFee5/bhUVVHJSX4+034spdXmC4DqX6J1l6qFfEdd1f2q98zvR
-         Yr76dKo8cooAPN6qlCidReDpiQcmoqPLBXuJzZU+84ePQb9tGYdZnUoIyaE5Pn/tQy
-         he/DTnIOzmApIFQwgJFeqAwmS3AJPlF15f5ZpAnk=
-Date:   Tue, 2 Aug 2022 21:37:09 -0700
-From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Optimize vmbus_on_event
-Message-ID: <20220803043709.GA26795@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1658741848-4210-1-git-send-email-ssengar@linux.microsoft.com>
- <33983fa2-c9a8-1ac1-2f75-8360a077cfc2@linux.microsoft.com>
+        Wed, 3 Aug 2022 05:21:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7501950732
+        for <linux-hyperv@vger.kernel.org>; Wed,  3 Aug 2022 02:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659518511;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wC3/PO//oorDVUr2wMWH5HeOq129lBqXeyqiPu4d5kY=;
+        b=iGuhZM8GEJVF208/FEBK/+yqF11Wo3CFORPoCkyDLXzsLM18IMBmnW7Y9DCX+fye1n7qNG
+        tdtP7z/c9GeCKd/ASfY4QZfRQW5Tv+SM503TFVg96TYfpPK17XcN3dFeYj7AR005UqQRdT
+        v9QoavFn61Zc3k/u73dnlWXWKPC9aSA=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-638-pfCCUwv0NiOp6IpbbF09sw-1; Wed, 03 Aug 2022 05:21:47 -0400
+X-MC-Unique: pfCCUwv0NiOp6IpbbF09sw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 20B4D1C06ED1;
+        Wed,  3 Aug 2022 09:21:46 +0000 (UTC)
+Received: from localhost (ovpn-13-216.pek2.redhat.com [10.72.13.216])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5FB4E2026D4C;
+        Wed,  3 Aug 2022 09:21:44 +0000 (UTC)
+Date:   Wed, 3 Aug 2022 17:21:41 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     akpm@linux-foundation.org, pmladek@suse.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
+        halves@canonical.com, fabiomirmar@gmail.com,
+        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
+        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org, Arjan van de Ven <arjan@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Xiaoming Ni <nixiaoming@huawei.com>
+Subject: Re: [PATCH v2 02/13] notifier: Add panic notifiers info and purge
+ trailing whitespaces
+Message-ID: <Yuo+JVGsYm1V8Asx@MiWiFi-R3L-srv>
+References: <20220719195325.402745-1-gpiccoli@igalia.com>
+ <20220719195325.402745-3-gpiccoli@igalia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <33983fa2-c9a8-1ac1-2f75-8360a077cfc2@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220719195325.402745-3-gpiccoli@igalia.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks for your review, please find my comment inline.
+On 07/19/22 at 04:53pm, Guilherme G. Piccoli wrote:
+> Although many notifiers are mentioned in the comments, the panic
+> notifiers infrastructure is not. Also, the file contains some
+> trailing whitespaces. Fix both issues here.
+> 
+> Cc: Arjan van de Ven <arjan@linux.intel.com>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Xiaoming Ni <nixiaoming@huawei.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
+> ---
+> 
+> V2:
+> - no change.
+> 
+>  include/linux/notifier.h | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/notifier.h b/include/linux/notifier.h
+> index aef88c2d1173..d5b01f2e3fcc 100644
+> --- a/include/linux/notifier.h
+> +++ b/include/linux/notifier.h
+> @@ -208,12 +208,12 @@ static inline int notifier_to_errno(int ret)
+>  
+>  /*
+>   *	Declared notifiers so far. I can imagine quite a few more chains
+> - *	over time (eg laptop power reset chains, reboot chain (to clean 
+> + *	over time (eg laptop power reset chains, reboot chain (to clean
+>   *	device units up), device [un]mount chain, module load/unload chain,
+> - *	low memory chain, screenblank chain (for plug in modular screenblankers) 
+> + *	low memory chain, screenblank chain (for plug in modular screenblankers)
+>   *	VC switch chains (for loadable kernel svgalib VC switch helpers) etc...
+>   */
+> - 
+> +
+>  /* CPU notfiers are defined in include/linux/cpu.h. */
+>  
+>  /* netdevice notifiers are defined in include/linux/netdevice.h */
+> @@ -224,6 +224,8 @@ static inline int notifier_to_errno(int ret)
+>  
+>  /* Virtual Terminal events are defined in include/linux/vt.h. */
+>  
+> +/* Panic notifiers are defined in include/linux/panic_notifier.h. */
+> +
 
-On Tue, Aug 02, 2022 at 01:44:23PM +0530, Praveen Kumar wrote:
-> On 25-07-2022 15:07, Saurabh Sengar wrote:
-> > In the vmbus_on_event loop, 2 jiffies timer will not serve the purpose if
-> > callback_fn takes longer. For effective use move this check inside of
-> > callback functions where needed. Out of all the VMbus drivers using
-> > vmbus_on_event, only storvsc has a high packet volume, thus add this limit
-> > only in storvsc callback for now.
-> > There is no apparent benefit of loop itself because this tasklet will be
-> > scheduled anyway again if there are packets left in ring buffer. This
-> > patch removes this unnecessary loop as well.
-> > 
-> 
-> In my understanding the loop was for optimizing the host to guest signaling for batched channels.
-> And the loop ensures that we process all the posted messages from the host before returning from the respective callbacks.
-> 
-> Am I missing something here.
+LGTM,
 
-Out of all the drivers using vmbus_on_event, only storvsc have high packet volume.
-The callback for storvsc is storvsc_on_channel_callback function which anyway has
-loop to check if there are any completion packets left. After this change when we
-move timeout inside storvsc callback, there is a possibility it comes back from
-callback leaving packets in ring buffer, for such cases the tasklet will be rescheduled.
-This function handles single ring buffer per call there is no batching.
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
-- Saurabh
+>  #define NETLINK_URELEASE	0x0001	/* Unicast netlink socket released */
+>  
+>  /* Console keyboard events.
+> -- 
+> 2.37.1
 > 
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> >  drivers/hv/connection.c    | 33 ++++++++++++++-------------------
-> >  drivers/scsi/storvsc_drv.c |  9 +++++++++
-> >  2 files changed, 23 insertions(+), 19 deletions(-)
-> > 
-> > diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> > index eca7afd..9dc27e5 100644
-> > --- a/drivers/hv/connection.c
-> > +++ b/drivers/hv/connection.c
-> > @@ -431,34 +431,29 @@ struct vmbus_channel *relid2channel(u32 relid)
-> >  void vmbus_on_event(unsigned long data)
-> >  {
-> >  	struct vmbus_channel *channel = (void *) data;
-> > -	unsigned long time_limit = jiffies + 2;
-> > +	void (*callback_fn)(void *context);
-> >  
-> >  	trace_vmbus_on_event(channel);
-> >  
-> >  	hv_debug_delay_test(channel, INTERRUPT_DELAY);
-> > -	do {
-> > -		void (*callback_fn)(void *);
-> >  
-> > -		/* A channel once created is persistent even when
-> > -		 * there is no driver handling the device. An
-> > -		 * unloading driver sets the onchannel_callback to NULL.
-> > -		 */
-> > -		callback_fn = READ_ONCE(channel->onchannel_callback);
-> > -		if (unlikely(callback_fn == NULL))
-> > -			return;
-> > -
-> > -		(*callback_fn)(channel->channel_callback_context);
-> > +	/* A channel once created is persistent even when
-> > +	 * there is no driver handling the device. An
-> > +	 * unloading driver sets the onchannel_callback to NULL.
-> > +	 */
-> > +	callback_fn = READ_ONCE(channel->onchannel_callback);
-> > +	if (unlikely(!callback_fn))
-> > +		return;
-> >  
-> > -		if (channel->callback_mode != HV_CALL_BATCHED)
-> > -			return;
-> > +	(*callback_fn)(channel->channel_callback_context);
-> >  
-> > -		if (likely(hv_end_read(&channel->inbound) == 0))
-> > -			return;
-> > +	if (channel->callback_mode != HV_CALL_BATCHED)
-> > +		return;
-> >  
-> > -		hv_begin_read(&channel->inbound);
-> > -	} while (likely(time_before(jiffies, time_limit)));
-> > +	if (likely(hv_end_read(&channel->inbound) == 0))
-> > +		return;
-> >  
-> > -	/* The time limit (2 jiffies) has been reached */
-> > +	hv_begin_read(&channel->inbound);
-> >  	tasklet_schedule(&channel->callback_event);
-> >  }
-> >  
-> > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> > index fe000da..c457e6b 100644
-> > --- a/drivers/scsi/storvsc_drv.c
-> > +++ b/drivers/scsi/storvsc_drv.c
-> > @@ -60,6 +60,9 @@
-> >  #define VMSTOR_PROTO_VERSION_WIN8_1	VMSTOR_PROTO_VERSION(6, 0)
-> >  #define VMSTOR_PROTO_VERSION_WIN10	VMSTOR_PROTO_VERSION(6, 2)
-> >  
-> > +/* channel callback timeout in ms */
-> > +#define CALLBACK_TIMEOUT               2
-> > +
-> >  /*  Packet structure describing virtual storage requests. */
-> >  enum vstor_packet_operation {
-> >  	VSTOR_OPERATION_COMPLETE_IO		= 1,
-> > @@ -1204,6 +1207,7 @@ static void storvsc_on_channel_callback(void *context)
-> >  	struct hv_device *device;
-> >  	struct storvsc_device *stor_device;
-> >  	struct Scsi_Host *shost;
-> > +	unsigned long time_limit = jiffies + msecs_to_jiffies(CALLBACK_TIMEOUT);
-> >  
-> >  	if (channel->primary_channel != NULL)
-> >  		device = channel->primary_channel->device_obj;
-> > @@ -1224,6 +1228,11 @@ static void storvsc_on_channel_callback(void *context)
-> >  		u32 minlen = rqst_id ? sizeof(struct vstor_packet) :
-> >  			sizeof(enum vstor_packet_operation);
-> >  
-> > +		if (unlikely(time_after(jiffies, time_limit))) {
-> > +			hv_pkt_iter_close(channel);
-> > +			return;
-> > +		}
-> > +
-> >  		if (pktlen < minlen) {
-> >  			dev_err(&device->device,
-> >  				"Invalid pkt: id=%llu, len=%u, minlen=%u\n",
-> 
-> Regards,
-> 
-> ~Praveen.
+
