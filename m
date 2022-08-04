@@ -2,106 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 924EB589648
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Aug 2022 04:51:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 851435896CC
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Aug 2022 06:04:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237347AbiHDCvu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 3 Aug 2022 22:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42484 "EHLO
+        id S237693AbiHDEEF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 4 Aug 2022 00:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231136AbiHDCvt (ORCPT
+        with ESMTP id S229476AbiHDEEE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 3 Aug 2022 22:51:49 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020025.outbound.protection.outlook.com [52.101.61.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C9655A152;
-        Wed,  3 Aug 2022 19:51:45 -0700 (PDT)
+        Thu, 4 Aug 2022 00:04:04 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eastus2azon11021020.outbound.protection.outlook.com [52.101.57.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3084B4A2;
+        Wed,  3 Aug 2022 21:04:03 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d24HRGXcBIMXZWHYY2iMNXpMrXxXJDro51SpY45tcGPWSkgjZbnkrJxSLJBzRlWv2m4t1tpD5Jpry2CQ+5m+upySEr/mRGkWsJO2v0oHRR1DlA+mIAo+U2AqDcsI2NH0zsJtZx1t5O3dOousSa16uKuruJB7xWbiTqgDPzKJLY0k6z2qWP5Kzij0cLdBiNHWmMdZj3EZXIE/Quw6JeExSwbNH4IUEtyRqxeZULtJB8Fs7P3eDmVxD3TXUXuNEWvx7oPNFxdt6SLTNUR2fMSMHl6ue/WKivEgz1STc9XsQI5VDE+sEz5QYzS6Z4S2kycosyQ7sWVcXPvIh0OotcZPJw==
+ b=D1a5ATszyVSxsVo7W/T+27El5MQmZ/YSj9Cze1ZQ9St/P1nkIR9lrkyZZJELC0bi6TSlYZGSwOB2I3kTBBwl8opeBcVT+3SpgUmZrP+T1+KqslN5/f484yZb5kxOAMwcNBZXv11t6bjNekBx2/urM6/2Y0g2maA1xdxZoVw3uYF3CX5Hy991FJUl+k0MTSvE1iTXn+lwPH1TSEbPJXFNIAhiT19mw253E3SZ8VrX4VsbgnCARmepNqrwRxCGrMex/YJM2kQB9S/lVV0bvcA7clzhaIeEpg6H6yPYMiQe7n8CSp7x4B1Q1aF/cybypkQm/GIv+u/WGfQvF2FFWZqGYA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lJQCVZ/J+5d7AAF27L5HlwYSoRVZ8W2BQd5NomtEgU4=;
- b=FdXhGya3T/UJsyn66fZ29YDx+BKfZV67KKZedMvkfJ+TMWQdxyhHyuOz/KURVbi75/2/m9oIo1PxbRmPQdBuwHVTWZh2j3nmqFZMQcCfcedis6DxTkL4Qz0n8prafJ9irJ4FSDLRRWVEFsHy11pTr3a3SWWMtLSDFk7rlG4KJsFE0yVB6gGVgd8XxirLgdeKnxiEOVL2HlCLH5fRA7r6DOkHYSymTdcNVkxN+5zZXmSdq2sRd+BPll7Ckicmyia3JLeFnBqFgTlsOEM2k4B94Bdx6WzJw9UzYeTM8XoSYdEUiUdp7sxrrT6aJWK79scFQAjDGrQdKbve6p1xooFiQg==
+ bh=EMc19bCpWzkVv1sj+dRk0zP3GtBh45Tt7Lgxo+DB25s=;
+ b=Knxwac84MgRJ5WaxsnrV5a0mljPQowqx1g04PIgZJCgQ8ohtsVl8H9DwkBvIprz6XEM19QkGUJFKPLuhgF5O4r2TIryVNYixrQ0cSH/GNaN6CSoWIhXFxL8bONWN1CqP6s1t+wEw1AxO3zg8K0vqTN5pwv3pv+6C5am2E4/md8eqWJfcLyttjN1Xu1pHsg5ra9FmRnFyc6p/E6OSfe1c3tfxxyMG0dIL7llXlzTfHgTgl/AvePw90QILoKuHUEmXqQXUWqvTmbDx0VVw8v3SiLuAdEyOs3py/mmRv95YJpLY8xPaK2UmW0mA60WQJudl1WCTGxCA3j9R0JHkkG8HGg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lJQCVZ/J+5d7AAF27L5HlwYSoRVZ8W2BQd5NomtEgU4=;
- b=akxbpzEg4l81LUGVbEPLaTTEP7NfebgDikbhfdfCg9tN7H5qPXTXWZ27bTvbOEaqFl+/H9u9vBHZTZihpH1Wr7mVVOtSzCiT9MI03giSY3Y8AAeWhZgEdIn5WOUD0tt8lOnJiSj0Ri/mlqHF2pVJxHbxFgcGgl5nMtPBlJ9fP40=
-Authentication-Results: dkim=none (message not signed)
+ bh=EMc19bCpWzkVv1sj+dRk0zP3GtBh45Tt7Lgxo+DB25s=;
+ b=AXxwne9Dtzho7CCB7GB9GbU4aPb4Xq3jh0tzVH95xOSQRvV+FQJQ2dS8neFtWVpgcbPYqBvt4laHwfV8c8j+mUkylV0dkueemcXyNpJv9FiiAPyu+YdP5fo3Vnxh9vILzyowXNTfMtvoXr3QJ7UMNaHpka24NW1KQZzbk4DFSaQ=
+Received: from BY3PR21MB3033.namprd21.prod.outlook.com (2603:10b6:a03:3b3::5)
+ by BL1PR21MB3138.namprd21.prod.outlook.com (2603:10b6:208:396::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.15; Thu, 4 Aug
+ 2022 04:04:01 +0000
+Received: from BY3PR21MB3033.namprd21.prod.outlook.com
+ ([fe80::4867:9c4e:6d50:9323]) by BY3PR21MB3033.namprd21.prod.outlook.com
+ ([fe80::4867:9c4e:6d50:9323%9]) with mapi id 15.20.5504.014; Thu, 4 Aug 2022
+ 04:04:01 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Optimize vmbus_on_event
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Optimize vmbus_on_event
+Thread-Index: AQHYoAoueW63y7moXkuKWcsAMhIgaK2eJ72A
+Date:   Thu, 4 Aug 2022 04:04:01 +0000
+Message-ID: <BY3PR21MB30331D04EE8F21FE84902676D79F9@BY3PR21MB3033.namprd21.prod.outlook.com>
+References: <1658741848-4210-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1658741848-4210-1-git-send-email-ssengar@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9572c281-a7fa-47f2-ad9c-563c49ecf63e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-08-04T03:40:15Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:30::23) by CH2PR21MB1414.namprd21.prod.outlook.com
- (2603:10b6:610:87::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.13; Thu, 4 Aug
- 2022 02:51:43 +0000
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::1d7f:eec5:68f7:aa1]) by BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::1d7f:eec5:68f7:aa1%9]) with mapi id 15.20.5504.014; Thu, 4 Aug 2022
- 02:51:42 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     quic_jhugo@quicinc.com, wei.liu@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
-        lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        robh@kernel.org, kw@linux.com, helgaas@kernel.org,
-        alex.williamson@redhat.com, boqun.feng@gmail.com,
-        Boqun.Feng@microsoft.com
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        Carl Vanderlip <quic_carlv@quicinc.com>
-Subject: [PATCH] PCI: hv: Only reuse existing IRTE allocation for Multi-MSI
-Date:   Wed,  3 Aug 2022 19:51:04 -0700
-Message-Id: <20220804025104.15673-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MW2PR16CA0054.namprd16.prod.outlook.com
- (2603:10b6:907:1::31) To BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:30::23)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf955b04-e51a-4391-0e90-08da75ce5d1d
+x-ms-traffictypediagnostic: BL1PR21MB3138:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: j6A8Y0WLc1GysGUDzvDemZAL/IIUYD/rtz2AfjedAv+aJ9DzRpDrrnJbi27EXKHuTlQJu9wy3v5ypnm/oE6rqKXmTL6RuLGSGP+bCNqp/05SoyK41pW0NaD/C3zEesK4vlZAA7V8h3qWb/qEQ+U0Mp9lNDzlWcwOOta4S0Da08RG5IrpoalXCctzIoITIaDsiX+X+G8MJoo/wQdCkZREbyeJiQ6YkTEQwi9JnEmouz891TRDLIvsISeeMWXgxdmVl3GhXA87AAx5zowZjKqq5l8Wu5suj7BMCM1ZBKtdER2Skl5yqj10EY16QV9SeDkbeGX2cpEv7Vd/sh8834E75GYu2BxVO3NJzFKHHWIMo8TqygsBphpaORAVf51S2ztRwVsjq8T2fwvvV0W5oqn0yrBfrhzSLeU5v25eHhfSK9kzk3CxibYuuj6/eouGSGhpEO2beaQ2aNIx2PxcVsKImiOXyBwW0sVZs81KBOohbI5wjRoOZ0OoD+F/mbFjHEuXlPdz/qSE2kjlT0NHDm+unrJ6ls8Z1EQDe738L3CgP+LSzjKKfhPLS+M434N0LQFXp5m5Vftsx4zE8Vup03FZIV/gf9t0Y6DqSOayCUgudtcj7SXCvGZZeXInu4KC/JmDEOXTTbi1niZV6RB589uTqaNtxVAgtW0ECp5c4CkW+FEe1dl/Tm4TAAuRrsuiylQZQGpUZmLGDBUQybPCx4eTFKc4cC2lpmSyqYKl0igIFDlKw25DGNvZNuyCec3rp3ExA7Fkm1WeGz6Ajg7k4BXW9ZSlT8/Ddj1wOHxJeKEIxebhyUfJlE/B3qpNf+lj09WFAn7ARcZKfEBWUTE1/nIbddbmQJSFpoDYyXNeZNXJBqoPUVRfnoS6gJNzNmvAnDIe
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR21MB3033.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(136003)(376002)(396003)(39860400002)(346002)(451199009)(8676002)(5660300002)(66946007)(76116006)(8990500004)(66556008)(66476007)(64756008)(55016003)(66446008)(52536014)(8936002)(2906002)(122000001)(38070700005)(82950400001)(82960400001)(33656002)(38100700002)(86362001)(316002)(921005)(41300700001)(478600001)(71200400001)(26005)(110136005)(10290500003)(83380400001)(9686003)(7696005)(6506007)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0+Og+OmnC4FoiwXuosuy5BWHwlZAdYp4WfBPGR/0a+QUe54ZQMsZjCY7VTU4?=
+ =?us-ascii?Q?YsC3gwExqksy17L123ft9h28i3dsSQqHT1ktRs6YEFUFbnO9+ikpjV88KeOK?=
+ =?us-ascii?Q?RFiYoEmm9yEgWa+sWPVTMQc3MLPevgEWtJC65tYfSsRcctrQeyEm0j+fJ5mp?=
+ =?us-ascii?Q?Ju7TDYqbJIB0YQJ/hPMLykUvGmSahDaF0Gyq7q4uymqYRf6X18riyHh66oUY?=
+ =?us-ascii?Q?qLKSlU7JV1d/EkUfq6Sk0Aqwlir7o0CPL+F5Nja/cbIkbuvU0ozUNppCzAcZ?=
+ =?us-ascii?Q?MytQjge28pFTcDujO8l1MICe9W001D/eLYrpnEnq8XAeLjp3GF/9StHEiKea?=
+ =?us-ascii?Q?/dzZ5LV9wls4kL2lvcCwWTW06oQDNN3I1iNVJ/xzsG9Jze+jHH+4ydModowB?=
+ =?us-ascii?Q?Tqr9IKPnuobgexwxfBZDrks3mtLtJ080wnKV7l15EKpdXf1mlJCb08RmDycD?=
+ =?us-ascii?Q?yjZJRylky0mC9GODq+WERPyTux0+biO0b8K1iNna/OWli7B8iIMYVHm4RTXG?=
+ =?us-ascii?Q?Znm90Y5NTtmmLNwawAY5VNb33BaDJpg/t4LUHm+mPc4pBtGJIVeRSQUl1++t?=
+ =?us-ascii?Q?tZcHbU66ZUxPzjlURDC11ikiQ2wIWjqXHzaCTQXTcLDqTh9FnZdN/CqsC2mf?=
+ =?us-ascii?Q?HNsGrjnetIhgoYMsw7D6HRaQU2FhAOcRzKEq2ohRDejx1lzMbWgoD0R708p7?=
+ =?us-ascii?Q?gRoMAT5BhYs8wBCjMqDxebrl4c99GJoTZ5R9idp7efZ8/vu/or4pmBx5QyfT?=
+ =?us-ascii?Q?cPpbMmHxZHJ6ASKOe/n0PxOL9Nju9xQLCSggTZq5EsybZkh5UR1rrWyIea9b?=
+ =?us-ascii?Q?jKg89E+an1f/rBSXRw777gYjjRlWjO5R/5Ou2f9HApXu7ZKBOHjDU0PL62N9?=
+ =?us-ascii?Q?Cr7geYhlV8LQA1lDuNEBnUUgSJETgA3nt4lLxh8qgcJyXgTntIruQkg94C9l?=
+ =?us-ascii?Q?T/gP8onWC0IrvoDHccXqYH7rVcEzkKLSrp5h66bxnFl+5UhB5m5HVaidl+nx?=
+ =?us-ascii?Q?O2R153wAcbRjfwZm4lr4J1qngQGvx4WUPhRatFlMlDNM0QaIBP7aJKCHh50j?=
+ =?us-ascii?Q?z+qosqmkoeRLyhMqNrMtLsAJrhwabHx9ZKoYPtuE3V5WA89IWO4wAcFLdGLt?=
+ =?us-ascii?Q?pgrTfZ4xwppt0mOyy7bwk85IfCG9jAY848s90aPJcBg+TC4L04WksHUWyquy?=
+ =?us-ascii?Q?FJKdgk8u7gFUllZ8rolTsu/L2Hbhj8mRsApzlhRYM3trJ2KjBS3Ijw57W7aK?=
+ =?us-ascii?Q?UMRLvaN9/lBraHhKbtzAM4AeGsOBl/T3Onw6FnmIgFGxh99uxuml/BG8uNio?=
+ =?us-ascii?Q?qtKf+Y4Kv2sEvg7seqchBiYuXnte1HEiD2zFW+xfQSGbpaMRzpD5ZpHcvlv3?=
+ =?us-ascii?Q?F1AyRFat+MKPVkhTVqjJQNHPjRBxAlmS5ybm9mHw3fzQ9rOUwDRuT5GXdWeY?=
+ =?us-ascii?Q?dnXhBNCOfl/ee2GVE9d9nF47hKFrsnF8Nj8BLjnRRJ0fkYI8MpXyEfsgBLZ7?=
+ =?us-ascii?Q?JKH3qmTMhoO7FVgW6yTJnrtHqGXygBER6Fs7Mggc37AjdG7KPYUWoqyHmP5A?=
+ =?us-ascii?Q?CoVVptkOAT+XW3YCYTaTqPmQ73ft5gp7X8E7iZdZPfT60pwRK+Uc3SNDtasL?=
+ =?us-ascii?Q?ww=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 664cd105-2ada-4237-b4ed-08da75c442eb
-X-MS-TrafficTypeDiagnostic: CH2PR21MB1414:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KO9a3nIgkDxrPy7G4xbRlwlk/xm3YJmTj3cvxUZJNa7361IkNbxQpagSS6Fpu2zNPE6jq44mO7PURzjeZ1wbAsbN98EE5dq4dQ+xpLDeyMllIu7nr98D+y59Z+DgDsq3nYZRHy9716c+d0sknAQ9q3oAlV8VlWMciaOB8FzOvB64Th+l+GGs5DVmn36Xe+c8B66ucIFPrs0aaiGFVF7y/wf5PRSnn8mziTptg3sWO6HJOgQ+/kB9l+wGdww84UlWGKBdFhDVhdVFYHbPKxYN41Ily8pHb6/NR4oXeHFHJsv2CaBBJjsEezw56D8t29E8/6JN89SsQ/KOBrMOqgTjApZGs/jWAfQMJoUR7Udm8QK0xLNruS9ca1x/kLncP44iQ20p/5iOXeEmKA+stTQNsFPyvkBBFVtrPAdN3z1hp4uqSzPH4TgaabDGM044x37Lj9v3JSQgYgvxbXR1KG9RzqJ0OvLUD0GT2qXCxsj11wJ6bSDmxiUFYE5ZyRfyJrwybXZqmtdot3471slBFsbv/R5blTdlM8zPZxGUPSkI2pb+zC6vXf0NJ2nQ1bx9Qq/lRyUwUnP6vX2GCgS2JwLW+9MfUMGgD+lkTdABCvENvZ1W1dEUItYrW1W07DpCupGrnxqXB47aRGDj+Xukvd/j6KJMm2shDAoa9ZHeuSH0uZ1nKlYdQR0g//1tJ5xV5deFU3Rmdjvy0T7/nu95j6yd45sWg83+uRSfT8YQ3NTjbSMMj9tXNn0Akfl2kRFvKZ2CoccvhNa2+zTYy2PuHRxzvfS6rzg5OgLC6Y5HdHZvDxOH98K2T402ZyKiNxXNIOdCB7ri98zSrOPgsnNwg/yxtg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(451199009)(6512007)(2616005)(6666004)(66476007)(2906002)(41300700001)(3450700001)(52116002)(83380400001)(1076003)(6506007)(38100700002)(36756003)(5660300002)(8936002)(66946007)(82960400001)(82950400001)(54906003)(478600001)(8676002)(316002)(6486002)(6636002)(921005)(7416002)(66556008)(186003)(4326008)(86362001)(10290500003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MqzdvrfXbpINaDA6Xa8Lw8KJxy2d9p05tFX7Yjx7KxYOjGszDeRZ6fm/EzFT?=
- =?us-ascii?Q?Qc/F3yo6fFU5UnrvIRW5ckg5MsviEjM+xhl1Oabjdhx9C0eRH47E27LZG5J9?=
- =?us-ascii?Q?wTI8v/k3G9z7BDgdxLtzkMipjVf6uEEm7Hx7kwHFHWx+/oo7UL9gT6+BrABv?=
- =?us-ascii?Q?uPbBRyCbQkd4+SHrWjnWWs6Yi8fGb7Tkt0l4fv2g9Fn5Hry81UJcYquqOyCp?=
- =?us-ascii?Q?ofMvV2AiIpNnOhhMACWZyDZf75BisfK9ckR9edx5XcSem6m38kzd9b1boNU+?=
- =?us-ascii?Q?w3I2w1NIixklEYvl2oo112w7jUWDC0WHuI+Lm0ZKOSqgGaepsnQsEve16zBz?=
- =?us-ascii?Q?kzDFN4IwlADJL443SrWecX6NBz/KSp3NdEpB2oZuS4NxEGz0Rzfz5fEIuRw2?=
- =?us-ascii?Q?w/bkpvRIT1HSTDq4mZN9qMX3LcDmrutYvUOU/FCvE5ah9nJB/Nok+qeI4ddw?=
- =?us-ascii?Q?n9pKbXlMmsEGcrFlUcg7OUBHsuKt7MsnP0ATLADysDYc0CjiHw1mhuQseNSj?=
- =?us-ascii?Q?a/0nt+KF6Ox5bFq0FtH9T/ceBgCFjMdWE7y3j+dMhmI59agU2d8vxI3yCsv9?=
- =?us-ascii?Q?C8/6RIk5dyb9a6Dp07LDiD8soBZ057K91KfQhgt/WevDDIc6xvAhiyceCJk0?=
- =?us-ascii?Q?vlbn+Hs0Twzn5eLxiS9Oo8EpoPTO8djUpBXmihYax8t41H2xOGdHT4BU1OQH?=
- =?us-ascii?Q?mQUt2cvm+0/gNc7JKnCxBUaCaSMeEX6S3xVH97UF3BJVC8XTo4mi/RULZFdS?=
- =?us-ascii?Q?IU3IbQC2W8hMNUi5tA3thYrjDu8DtPoySmHXm0cE/nw+DHbU1J3LgRtwytzq?=
- =?us-ascii?Q?W9c4GzfRI+eV+x37GkGq/HdFxBQzNoY1NnWdQZ3rKFmTxmIA6XePRL/7LK7X?=
- =?us-ascii?Q?24KYJC1aFMkqOFnVUqLSxUADcQbHms5J2sqwt+z/Qlak0A2GWvJcKdxRQoeU?=
- =?us-ascii?Q?Xp4MAYcNAdQWn6GiKPICx/BDnyYuKvulNJnLBvUvrU52nq37H5ElFFqr125N?=
- =?us-ascii?Q?l9AQcpIp/mRkSYTab9oZ2BfauQIJ4GoKGsY9MwkdslbbZzht6AbcIuq+h223?=
- =?us-ascii?Q?y/++6HKXRKntOL1IAExpkLj6rK8nRNwPRAR0aOcmyBxH7A3Lu2MotRMx+02x?=
- =?us-ascii?Q?3/VI+vc5e9VUSvRwCJJQ8WD3LlfTIq4eWSfdyHONWRKULqP3HcwNondPvign?=
- =?us-ascii?Q?OqwPV2aVX9yzh5e8o8JWMM/3HA42oeTSoSVi5gtCOLoNQ5DVg1L9c4kZQz8q?=
- =?us-ascii?Q?tQKsWIUQhDpaFz5U6JVezohOICSHVm1/h8+IcUSXb5354P5MBhi5KxAxthfc?=
- =?us-ascii?Q?J53BnU5DUx0XxPZZa069P1xF2QDEivp+eas6pLIAXfM/CqSKH6RMAVnm9yXt?=
- =?us-ascii?Q?THLvt9qWPYMJrF9TDRXW1/p8E0Sb8KT2Rm9AI2Z5wve3Y1BXX5ofoMdJdNN8?=
- =?us-ascii?Q?UEapUPh+BE5Lqax1Sr3KZhlUlei7ThtSaA0Oh6/32DbjYAZCPdeWa236OtvD?=
- =?us-ascii?Q?Hux1dxf6K031vFagfVBOB7EWUrjSP9eOz71BKc1IQxU/87uXpIIixfzY1vI4?=
- =?us-ascii?Q?RO0DZSQtZMQHJJ4okrxVYa58rmlOFXHy2/zZHcV0dEt2XrbaYnQxG86+YFkP?=
- =?us-ascii?Q?/yqguN4zORIgnQJqtPKCk3mHmEUgBDTHj0tj93Oz9cfR?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1414
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3138
 X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
@@ -112,100 +117,116 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Jeffrey's 4 recent patches added Multi-MSI support to the pci-hyperv driver.
-Unluckily, one of the patches, i.e., b4b77778ecc5, causes a regression to a
-fio test for the Azure VM SKU Standard L64s v2 (64 AMD vCPUs, 8 NVMe drives):
+From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Monday, July 25, 2=
+022 2:37 AM
+>=20
+> In the vmbus_on_event loop, 2 jiffies timer will not serve the purpose if
+> callback_fn takes longer. For effective use move this check inside of
+> callback functions where needed. Out of all the VMbus drivers using
+> vmbus_on_event, only storvsc has a high packet volume, thus add this limi=
+t
+> only in storvsc callback for now.
+> There is no apparent benefit of loop itself because this tasklet will be
+> scheduled anyway again if there are packets left in ring buffer. This
+> patch removes this unnecessary loop as well.
+>=20
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  drivers/hv/connection.c    | 33 ++++++++++++++-------------------
+>  drivers/scsi/storvsc_drv.c |  9 +++++++++
+>  2 files changed, 23 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index eca7afd..9dc27e5 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -431,34 +431,29 @@ struct vmbus_channel *relid2channel(u32 relid)
+>  void vmbus_on_event(unsigned long data)
+>  {
+>  	struct vmbus_channel *channel =3D (void *) data;
+> -	unsigned long time_limit =3D jiffies + 2;
+> +	void (*callback_fn)(void *context);
+>=20
+>  	trace_vmbus_on_event(channel);
+>=20
+>  	hv_debug_delay_test(channel, INTERRUPT_DELAY);
+> -	do {
+> -		void (*callback_fn)(void *);
+>=20
+> -		/* A channel once created is persistent even when
+> -		 * there is no driver handling the device. An
+> -		 * unloading driver sets the onchannel_callback to NULL.
+> -		 */
+> -		callback_fn =3D READ_ONCE(channel->onchannel_callback);
+> -		if (unlikely(callback_fn =3D=3D NULL))
+> -			return;
+> -
+> -		(*callback_fn)(channel->channel_callback_context);
+> +	/* A channel once created is persistent even when
+> +	 * there is no driver handling the device. An
+> +	 * unloading driver sets the onchannel_callback to NULL.
+> +	 */
+> +	callback_fn =3D READ_ONCE(channel->onchannel_callback);
+> +	if (unlikely(!callback_fn))
+> +		return;
+>=20
+> -		if (channel->callback_mode !=3D HV_CALL_BATCHED)
+> -			return;
+> +	(*callback_fn)(channel->channel_callback_context);
+>=20
+> -		if (likely(hv_end_read(&channel->inbound) =3D=3D 0))
+> -			return;
+> +	if (channel->callback_mode !=3D HV_CALL_BATCHED)
+> +		return;
+>=20
+> -		hv_begin_read(&channel->inbound);
+> -	} while (likely(time_before(jiffies, time_limit)));
+> +	if (likely(hv_end_read(&channel->inbound) =3D=3D 0))
+> +		return;
+>=20
+> -	/* The time limit (2 jiffies) has been reached */
+> +	hv_begin_read(&channel->inbound);
+>  	tasklet_schedule(&channel->callback_event);
+>  }
+>=20
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index fe000da..c457e6b 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -60,6 +60,9 @@
+>  #define VMSTOR_PROTO_VERSION_WIN8_1	VMSTOR_PROTO_VERSION(6, 0)
+>  #define VMSTOR_PROTO_VERSION_WIN10	VMSTOR_PROTO_VERSION(6, 2)
+>=20
+> +/* channel callback timeout in ms */
+> +#define CALLBACK_TIMEOUT               2
+> +
+>  /*  Packet structure describing virtual storage requests. */
+>  enum vstor_packet_operation {
+>  	VSTOR_OPERATION_COMPLETE_IO		=3D 1,
+> @@ -1204,6 +1207,7 @@ static void storvsc_on_channel_callback(void *conte=
+xt)
+>  	struct hv_device *device;
+>  	struct storvsc_device *stor_device;
+>  	struct Scsi_Host *shost;
+> +	unsigned long time_limit =3D jiffies + msecs_to_jiffies(CALLBACK_TIMEOU=
+T);
+>=20
+>  	if (channel->primary_channel !=3D NULL)
+>  		device =3D channel->primary_channel->device_obj;
+> @@ -1224,6 +1228,11 @@ static void storvsc_on_channel_callback(void *cont=
+ext)
+>  		u32 minlen =3D rqst_id ? sizeof(struct vstor_packet) :
+>  			sizeof(enum vstor_packet_operation);
+>=20
+> +		if (unlikely(time_after(jiffies, time_limit))) {
+> +			hv_pkt_iter_close(channel);
+> +			return;
+> +		}
+> +
+>  		if (pktlen < minlen) {
+>  			dev_err(&device->device,
+>  				"Invalid pkt: id=3D%llu, len=3D%u, minlen=3D%u\n",
+> --
+> 1.8.3.1
 
-when fio runs against all the 8 NVMe drives, it runs fine with a low io-depth
-(e.g., 2 or 4); when fio runs with a high io-depth (e.g., 256), somehow
-queue-29 of each NVMe drive suddenly no longer receives any interrupts, and
-the NVMe core code has to abort the queue after a timeout of 30 seconds, and
-then queue-29 starts to receive interrupts again for several seconds, and
-later queue-29 no longer receives interrupts again, and this pattern repeats:
-
-[  223.891249] nvme nvme2: I/O 320 QID 29 timeout, aborting
-[  223.896231] nvme nvme0: I/O 320 QID 29 timeout, aborting
-[  223.898340] nvme nvme4: I/O 832 QID 29 timeout, aborting
-[  259.471309] nvme nvme2: I/O 320 QID 29 timeout, aborting
-[  259.476493] nvme nvme0: I/O 321 QID 29 timeout, aborting
-[  259.482967] nvme nvme0: I/O 322 QID 29 timeout, aborting
-
-Some other symptoms are: the throughput of the NVMe drives drops due to
-commit b4b77778ecc5. When the fio test is running, the kernel prints some
-soft lock-up messages from time to time.
-
-Commit b4b77778ecc5 itself looks good, and at the moment it's unclear where
-the issue is. While the issue is being investigated, restore the old behavior
-in hv_compose_msi_msg(), i.e., don't reuse the existing IRTE allocation for
-single-MSI and MSI-X. This is a stopgap for the above NVMe issue.
-
-Fixes: b4b77778ecc5 ("PCI: hv: Reuse existing IRTE allocation in compose_msi_msg()")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Cc: Carl Vanderlip <quic_carlv@quicinc.com>
----
- drivers/pci/controller/pci-hyperv.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index db814f7b93ba..65d0dab25deb 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1701,6 +1701,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	struct compose_comp_ctxt comp;
- 	struct tran_int_desc *int_desc;
- 	struct msi_desc *msi_desc;
-+	bool multi_msi;
- 	u8 vector, vector_count;
- 	struct {
- 		struct pci_packet pci_pkt;
-@@ -1714,8 +1715,16 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	u32 size;
- 	int ret;
- 
--	/* Reuse the previous allocation */
--	if (data->chip_data) {
-+	msi_desc = irq_data_get_msi_desc(data);
-+	multi_msi = !msi_desc->pci.msi_attrib.is_msix &&
-+		    msi_desc->nvec_used > 1;
-+	/*
-+	 * Reuse the previous allocation for Multi-MSI. This is required for
-+	 * Multi-MSI and is optional for single-MSI and MSI-X. Note: for now,
-+	 * don't reuse the previous allocation for MSI-X because this causes
-+	 * unreliable interrupt delivery for some NVMe devices.
-+	 */
-+	if (data->chip_data && multi_msi) {
- 		int_desc = data->chip_data;
- 		msg->address_hi = int_desc->address >> 32;
- 		msg->address_lo = int_desc->address & 0xffffffff;
-@@ -1723,7 +1732,6 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		return;
- 	}
- 
--	msi_desc  = irq_data_get_msi_desc(data);
- 	pdev = msi_desc_to_pci_dev(msi_desc);
- 	dest = irq_data_get_effective_affinity_mask(data);
- 	pbus = pdev->bus;
-@@ -1733,11 +1741,18 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	if (!hpdev)
- 		goto return_null_message;
- 
-+	/* Free any previous message that might have already been composed. */
-+	if (data->chip_data && !multi_msi) {
-+		int_desc = data->chip_data;
-+		data->chip_data = NULL;
-+		hv_int_desc_free(hpdev, int_desc);
-+	}
-+
- 	int_desc = kzalloc(sizeof(*int_desc), GFP_ATOMIC);
- 	if (!int_desc)
- 		goto drop_reference;
- 
--	if (!msi_desc->pci.msi_attrib.is_msix && msi_desc->nvec_used > 1) {
-+	if (multi_msi) {
- 		/*
- 		 * If this is not the first MSI of Multi MSI, we already have
- 		 * a mapping.  Can exit early.
--- 
-2.25.1
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
