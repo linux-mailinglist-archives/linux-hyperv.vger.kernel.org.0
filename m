@@ -2,92 +2,64 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 101B358ADD8
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Aug 2022 18:05:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74FD258AF34
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Aug 2022 19:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240996AbiHEQFq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 5 Aug 2022 12:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
+        id S241286AbiHERxG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 5 Aug 2022 13:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241227AbiHEQFn (ORCPT
+        with ESMTP id S241564AbiHERw5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 5 Aug 2022 12:05:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2F69915A1C
-        for <linux-hyperv@vger.kernel.org>; Fri,  5 Aug 2022 09:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659715540;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KO2+Lhn1y2XnVi7bI4Cc5ciAkJZHya2Xso0bWfCh5JA=;
-        b=asfYgS+LNK+c7OobwJ43vYVFp1dTTK4pR7dzyZvc5SkdUhABvQscgEH5YtMCiEMp/3DW/O
-        z8zEYNgwtr/W9HFj1mtwbh7JdJOpDCBl+PY8UA0+PDuWYXXUjTJXRauU6jt9eM+ZF2ohhs
-        gm00aj/bRF/E24eduiU3/MWU/L2bjp4=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-27-zv4v7QvWOhSCKLYm3IpN3g-1; Fri, 05 Aug 2022 12:05:39 -0400
-X-MC-Unique: zv4v7QvWOhSCKLYm3IpN3g-1
-Received: by mail-qt1-f197.google.com with SMTP id u12-20020a05622a010c00b0031ef5b46dc0so2192944qtw.16
-        for <linux-hyperv@vger.kernel.org>; Fri, 05 Aug 2022 09:05:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=KO2+Lhn1y2XnVi7bI4Cc5ciAkJZHya2Xso0bWfCh5JA=;
-        b=uGWKyKJdqFaUNt5eYoeFqsMYvIeUsNHXNtzYmLCUZ63BEi2NdsXyez0YWbIus/41Ms
-         Ksredn9kUGJ6sche0Uhz+8+mBbUYwPLOE9e3gNMDYGRj47jIkw6zCFnwr80Mio4Qgyw5
-         uQoSett5jCTiFKakHYS0MlfEyXUkemDjaTuXFWQ/ZE2zMGplzW0F8Uv/ORB+3vIE38ca
-         OaYl6wRgWhEHyD30DFdiOhxGoSh7JJRm9AR+/jBrpqOYRr0s7OCgCdGYlW/L78tS7v+V
-         YxEZm+N560H3gEnwU9WSWYgN+sxRMoHJ2gNJh9hTQ87saSlCDuar3IV8XA6LJwUZo207
-         mPxw==
-X-Gm-Message-State: ACgBeo3QAowd3Ah87IJSHORanfqJft3jvn6qYR8wFsCzLjIWoqtYK+5L
-        PQMtME0FvPqtm3fFToID1khl7iAKWXvUslhJkaapFt3XpVdls7HXFdjDm+kocEC7FZAAbzhzbmS
-        aChqjp6FjNJjOmRfl2ld74qjE
-X-Received: by 2002:ad4:5ce3:0:b0:474:71c0:adf3 with SMTP id iv3-20020ad45ce3000000b0047471c0adf3mr6391529qvb.47.1659715538464;
-        Fri, 05 Aug 2022 09:05:38 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6V/dJ4FYdWc2pXQmkRsGFLohJ8WPMbtbN/X/1uVIpxzDhT0pzdU07XUiuvIlyTbScoDMAaoA==
-X-Received: by 2002:ad4:5ce3:0:b0:474:71c0:adf3 with SMTP id iv3-20020ad45ce3000000b0047471c0adf3mr6391470qvb.47.1659715538111;
-        Fri, 05 Aug 2022 09:05:38 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-46-200-178.retail.telecomitalia.it. [79.46.200.178])
-        by smtp.gmail.com with ESMTPSA id z9-20020a05622a028900b003422c7ccbc5sm2577102qtw.59.2022.08.05.09.05.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Aug 2022 09:05:37 -0700 (PDT)
-Date:   Fri, 5 Aug 2022 18:05:28 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Krasnov Arseniy <oxffffaa@gmail.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        kernel <kernel@sberdevices.ru>
-Subject: Re: [RFC PATCH v3 0/9] vsock: updates for SO_RCVLOWAT handling
-Message-ID: <20220805160528.4jzyrjppdftrvdr5@sgarzare-redhat>
-References: <2ac35e2c-26a8-6f6d-2236-c4692600db9e@sberdevices.ru>
+        Fri, 5 Aug 2022 13:52:57 -0400
+Received: from mailrelay3-1.pub.mailoutpod1-cph3.one.com (mailrelay3-1.pub.mailoutpod1-cph3.one.com [46.30.210.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F75378583
+        for <linux-hyperv@vger.kernel.org>; Fri,  5 Aug 2022 10:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ravnborg.org; s=rsa1;
+        h=in-reply-to:content-transfer-encoding:content-type:mime-version:references:
+         message-id:subject:cc:to:from:date:from;
+        bh=ftAwZ++mdcxKPdKhik4xoJUk/80Q6jo7HipKzZB6FB0=;
+        b=Gamf2hz84h58aV31UYLbq+O2B+/GC6tTyh2TM4K1iyetiV1UgMU7865DuYqMoQS8aBEG+Hdum156e
+         Ve82kNqHCduL6fruZn4QObYhOkmzbo5/ROqLiCGEhcY/3Jfs0IQ3Fo9MLsrFn8ysvtB5Ncpk33t+Yh
+         0BWYh9Dj0uZtnjopZZW5fIc1e4X33zcJ0bDcASrZIgPvqPNrI+VhCxJ3lFujuKr4Lwb4NxAC2nKyl7
+         k1oBiBXdWhfW+1vLapTL82WjB/QPzHgCc2xVRVi77fgniykZepkz9Wv1h8XzCkHtvD7Iol55npO/at
+         1bcUPUwWE7EUBKbBBnx/yqz4dFKLqHQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+        d=ravnborg.org; s=ed1;
+        h=in-reply-to:content-transfer-encoding:content-type:mime-version:references:
+         message-id:subject:cc:to:from:date:from;
+        bh=ftAwZ++mdcxKPdKhik4xoJUk/80Q6jo7HipKzZB6FB0=;
+        b=r8sdVmnR4v+eQnbgwaseVF2x0Df0+mlxjrrEasP4UTypQLLDhRqTBqv5JOC1mcmKjJFJi4iijbqxv
+         aNyewfQBw==
+X-HalOne-Cookie: 263fd95a98dc585b1a1e06b295ca0b988c269500
+X-HalOne-ID: 6bb1c18c-14e7-11ed-be82-d0431ea8bb03
+Received: from mailproxy2.cst.dirpod4-cph3.one.com (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+        by mailrelay3.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 6bb1c18c-14e7-11ed-be82-d0431ea8bb03;
+        Fri, 05 Aug 2022 17:52:49 +0000 (UTC)
+Date:   Fri, 5 Aug 2022 19:52:48 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     noralf@tronnes.org, daniel@ffwll.ch, airlied@linux.ie,
+        mripard@kernel.org, maarten.lankhorst@linux.intel.com,
+        airlied@redhat.com, javierm@redhat.com, drawat.floss@gmail.com,
+        kraxel@redhat.com, david@lechnology.com, jose.exposito89@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 12/12] drm/format-helper: Move destination-buffer
+ handling into internal helper
+Message-ID: <Yu1Y8JZCd+wuV2R1@ravnborg.org>
+References: <20220727113312.22407-1-tzimmermann@suse.de>
+ <20220727113312.22407-13-tzimmermann@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <2ac35e2c-26a8-6f6d-2236-c4692600db9e@sberdevices.ru>
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220727113312.22407-13-tzimmermann@suse.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -95,104 +67,333 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Arseniy,
-sorry but I didn't have time to review this series. I will definitely do 
-it next Monday!
+Hi Thomas,
 
-Have a nice weekend,
-Stefano
+On Wed, Jul 27, 2022 at 01:33:12PM +0200, Thomas Zimmermann wrote:
+> The format-convertion helpers handle several cases for different
+> values of destination buffer and pitch. Move that code into the
+> internal helper drm_fb_xfrm() and avoid quite a bit of duplucation.
 
-On Wed, Aug 03, 2022 at 01:48:06PM +0000, Arseniy Krasnov wrote:
->Hello,
->
->This patchset includes some updates for SO_RCVLOWAT:
->
->1) af_vsock:
->   During my experiments with zerocopy receive, i found, that in some
->   cases, poll() implementation violates POSIX: when socket has non-
->   default SO_RCVLOWAT(e.g. not 1), poll() will always set POLLIN and
->   POLLRDNORM bits in 'revents' even number of bytes available to read
->   on socket is smaller than SO_RCVLOWAT value. In this case,user sees
->   POLLIN flag and then tries to read data(for example using  'read()'
->   call), but read call will be blocked, because  SO_RCVLOWAT logic is
->   supported in dequeue loop in af_vsock.c. But the same time,  POSIX
->   requires that:
->
->   "POLLIN     Data other than high-priority data may be read without
->               blocking.
->    POLLRDNORM Normal data may be read without blocking."
->
->   See https://www.open-std.org/jtc1/sc22/open/n4217.pdf, page 293.
->
->   So, we have, that poll() syscall returns POLLIN, but read call will
->   be blocked.
->
->   Also in man page socket(7) i found that:
->
->   "Since Linux 2.6.28, select(2), poll(2), and epoll(7) indicate a
->   socket as readable only if at least SO_RCVLOWAT bytes are available."
->
->   I checked TCP callback for poll()(net/ipv4/tcp.c, tcp_poll()), it
->   uses SO_RCVLOWAT value to set POLLIN bit, also i've tested TCP with
->   this case for TCP socket, it works as POSIX required.
->
->   I've added some fixes to af_vsock.c and virtio_transport_common.c,
->   test is also implemented.
->
->2) virtio/vsock:
->   It adds some optimization to wake ups, when new data arrived. Now,
->   SO_RCVLOWAT is considered before wake up sleepers who wait new data.
->   There is no sense, to kick waiter, when number of available bytes
->   in socket's queue < SO_RCVLOWAT, because if we wake up reader in
->   this case, it will wait for SO_RCVLOWAT data anyway during dequeue,
->   or in poll() case, POLLIN/POLLRDNORM bits won't be set, so such
->   exit from poll() will be "spurious". This logic is also used in TCP
->   sockets.
->
->3) vmci/vsock:
->   Same as 2), but i'm not sure about this changes. Will be very good,
->   to get comments from someone who knows this code.
->
->4) Hyper-V:
->   As Dexuan Cui mentioned, for Hyper-V transport it is difficult to
->   support SO_RCVLOWAT, so he suggested to disable this feature for
->   Hyper-V.
->
->Thank You
->
->Arseniy Krasnov(9):
-> vsock: SO_RCVLOWAT transport set callback
-> hv_sock: disable SO_RCVLOWAT support
-> virtio/vsock: use 'target' in notify_poll_in callback
-> vmci/vsock: use 'target' in notify_poll_in callback
-> vsock: pass sock_rcvlowat to notify_poll_in as target
-> vsock: add API call for data ready
-> virtio/vsock: check SO_RCVLOWAT before wake up reader
-> vmci/vsock: check SO_RCVLOWAT before wake up reader
-> vsock_test: POLLIN + SO_RCVLOWAT test
->
-> include/net/af_vsock.h                       |   2 +
-> net/vmw_vsock/af_vsock.c                     |  38 +++++++++-
-> net/vmw_vsock/hyperv_transport.c             |   7 ++
-> net/vmw_vsock/virtio_transport_common.c      |   7 +-
-> net/vmw_vsock/vmci_transport_notify.c        |  10 +--
-> net/vmw_vsock/vmci_transport_notify_qstate.c |  12 +--
-> tools/testing/vsock/vsock_test.c             | 107 +++++++++++++++++++++++++++
-> 7 files changed, 166 insertions(+), 17 deletions(-)
->
-> Changelog:
->
-> v1 -> v2:
-> 1) Patches for VMCI transport(same as for virtio-vsock).
-> 2) Patches for Hyper-V transport(disabling SO_RCVLOWAT setting).
-> 3) Waiting logic in test was updated(sleep() -> poll()).
->
-> v2 -> v3:
-> 1) Patches were reordered.
-> 2) Commit message updated in 0005.
-> 3) Check 'transport' pointer in 0001 for NULL.
-> 4) Check 'value' in 0001 for > buffer_size.
->
->-- 
->2.25.1
+This is very nice patch that should come before all the conversion
+patches - but then you have had to come up with another name.
+So I think this is fine.
 
+A few comments below, mostly in the same area as the comments from José.
+
+	Sam
+
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+>  drivers/gpu/drm/drm_format_helper.c | 169 +++++++++++-----------------
+>  1 file changed, 64 insertions(+), 105 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+> index d296d181659d..35aebdb90165 100644
+> --- a/drivers/gpu/drm/drm_format_helper.c
+> +++ b/drivers/gpu/drm/drm_format_helper.c
+> @@ -41,11 +41,11 @@ unsigned int drm_fb_clip_offset(unsigned int pitch, const struct drm_format_info
+>  }
+>  EXPORT_SYMBOL(drm_fb_clip_offset);
+>  
+> -/* TODO: Make this functon work with multi-plane formats. */
+> -static int drm_fb_xfrm(void *dst, unsigned long dst_pitch, unsigned long dst_pixsize,
+> -		       const void *vaddr, const struct drm_framebuffer *fb,
+> -		       const struct drm_rect *clip, bool vaddr_cached_hint,
+> -		       void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels))
+> +/* TODO: Make this function work with multi-plane formats. */
+> +static int __drm_fb_xfrm(void *dst, unsigned long dst_pitch, unsigned long dst_pixsize,
+> +			 const void *vaddr, const struct drm_framebuffer *fb,
+> +			 const struct drm_rect *clip, bool vaddr_cached_hint,
+> +			 void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels))
+>  {
+>  	unsigned long linepixels = drm_rect_width(clip);
+>  	unsigned long lines = drm_rect_height(clip);
+> @@ -84,11 +84,11 @@ static int drm_fb_xfrm(void *dst, unsigned long dst_pitch, unsigned long dst_pix
+>  	return 0;
+>  }
+>  
+> -/* TODO: Make this functon work with multi-plane formats. */
+> -static int drm_fb_xfrm_toio(void __iomem *dst, unsigned long dst_pitch, unsigned long dst_pixsize,
+> -			    const void *vaddr, const struct drm_framebuffer *fb,
+> -			    const struct drm_rect *clip, bool vaddr_cached_hint,
+> -			    void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels))
+> +/* TODO: Make this function work with multi-plane formats. */
+> +static int __drm_fb_xfrm_toio(void __iomem *dst, unsigned long dst_pitch, unsigned long dst_pixsize,
+> +			      const void *vaddr, const struct drm_framebuffer *fb,
+> +			      const struct drm_rect *clip, bool vaddr_cached_hint,
+> +			      void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels))
+>  {
+>  	unsigned long linepixels = drm_rect_width(clip);
+>  	unsigned long lines = drm_rect_height(clip);
+> @@ -129,6 +129,29 @@ static int drm_fb_xfrm_toio(void __iomem *dst, unsigned long dst_pitch, unsigned
+>  	return 0;
+>  }
+>  
+> +/* TODO: Make this function work with multi-plane formats. */
+> +static int drm_fb_xfrm(struct iosys_map *dst,
+> +		       const unsigned int *dst_pitch, const u8 *dst_pixsize,
+> +		       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+> +		       const struct drm_rect *clip, bool vaddr_cached_hint,
+> +		       void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels))
+> +{
+Just to repeat myself a little, this assumes src (vmap) is always system
+memory (not io).
+
+> +	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> +		0, 0, 0, 0
+> +	};
+> +
+> +	if (!dst_pitch)
+> +		dst_pitch = default_dst_pitch;
+> +
+> +	if (dst[0].is_iomem)
+> +		return __drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], dst_pixsize[0],
+> +					  vmap[0].vaddr, fb, clip, false, xfrm_line);
+> +	else
+> +		return __drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], dst_pixsize[0],
+> +				     vmap[0].vaddr, fb, clip, false, xfrm_line);
+
+It looks like vaddr_cached_hint is always false, so can we remove it?
+
+> +}
+> +
+> +
+>  /**
+>   * drm_fb_memcpy - Copy clip buffer
+>   * @dst: Array of destination buffers
+> @@ -213,14 +236,10 @@ void drm_fb_swab(struct iosys_map *dst, const unsigned int *dst_pitch,
+>  		 const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+>  		 const struct drm_rect *clip, bool cached)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> -	};
+>  	const struct drm_format_info *format = fb->format;
+> -	u8 cpp = format->cpp[0];
+>  	void (*swab_line)(void *dbuf, const void *sbuf, unsigned int npixels);
+>  
+> -	switch (cpp) {
+> +	switch (format->cpp[0]) {
+>  	case 4:
+>  		swab_line = drm_fb_swab32_line;
+>  		break;
+> @@ -230,21 +249,10 @@ void drm_fb_swab(struct iosys_map *dst, const unsigned int *dst_pitch,
+>  	default:
+>  		drm_warn_once(fb->dev, "Format %p4cc has unsupported pixel size.\n",
+>  			      &format->format);
+> -		swab_line = NULL;
+> -		break;
+> -	}
+> -	if (!swab_line)
+>  		return;
+> +	}
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst->is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], cpp,
+> -				 vmap[0].vaddr, fb, clip, cached, swab_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], cpp, vmap[0].vaddr, fb,
+> -			    clip, cached, swab_line);
+> +	drm_fb_xfrm(dst, dst_pitch, format->cpp, vmap, fb, clip, cached, swab_line);
+
+In this case we pass fb->format-cpp as dst_pitch - so we could retreive
+is via the fb pointer.
+
+>  }
+>  EXPORT_SYMBOL(drm_fb_swab);
+>  
+> @@ -277,19 +285,12 @@ void drm_fb_xrgb8888_to_rgb332(struct iosys_map *dst, const unsigned int *dst_pi
+>  			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+>  			       const struct drm_rect *clip)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> +	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
+> +		1,
+>  	};
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst[0].is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 1, vmap[0].vaddr, fb, clip,
+> -				 false, drm_fb_xrgb8888_to_rgb332_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 1, vmap[0].vaddr, fb, clip,
+> -			    false, drm_fb_xrgb8888_to_rgb332_line);
+> +	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
+> +		    drm_fb_xrgb8888_to_rgb332_line);
+
+Here we construct the dst_pixsize.
+What is needed to make us trust fb->format->cpp so we can just fetch the
+info from format_info and drop dst_pixsize?
+
+I do not see any lookup being necessary here or in the functions below.
+
+If we use cpp (or even better using a helper function that avoid the
+deprecated cpp), then adding support for planes is simpler. For now
+dst_pixsize only pass the size for the first plane and there are a lot
+of updates required to support additional planes.
+
+Maybe I miss something obvious?!?
+
+
+>  }
+>  EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb332);
+>  
+> @@ -344,9 +345,10 @@ void drm_fb_xrgb8888_to_rgb565(struct iosys_map *dst, const unsigned int *dst_pi
+>  			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+>  			       const struct drm_rect *clip, bool swab)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> +	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
+> +		2,
+>  	};
+> +
+>  	void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels);
+>  
+>  	if (swab)
+> @@ -354,15 +356,7 @@ void drm_fb_xrgb8888_to_rgb565(struct iosys_map *dst, const unsigned int *dst_pi
+>  	else
+>  		xfrm_line = drm_fb_xrgb8888_to_rgb565_line;
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst[0].is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 2, vmap[0].vaddr, fb, clip,
+> -				 false, xfrm_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 2, vmap[0].vaddr, fb, clip,
+> -			    false, xfrm_line);
+> +	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false, xfrm_line);
+>  }
+>  EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
+>  
+> @@ -396,19 +390,12 @@ void drm_fb_xrgb8888_to_rgb888(struct iosys_map *dst, const unsigned int *dst_pi
+>  			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+>  			       const struct drm_rect *clip)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> +	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
+> +		3,
+>  	};
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst[0].is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 3, vmap[0].vaddr, fb,
+> -				 clip, false, drm_fb_xrgb8888_to_rgb888_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 3, vmap[0].vaddr, fb,
+> -			    clip, false, drm_fb_xrgb8888_to_rgb888_line);
+> +	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
+> +		    drm_fb_xrgb8888_to_rgb888_line);
+>  }
+>  EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb888);
+>  
+> @@ -435,19 +422,12 @@ static void drm_fb_rgb565_to_xrgb8888(struct iosys_map *dst, const unsigned int
+>  				      const struct drm_framebuffer *fb,
+>  				      const struct drm_rect *clip)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> +	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
+> +		4,
+>  	};
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst[0].is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 4, vmap[0].vaddr, fb,
+> -				 clip, false, drm_fb_rgb565_to_xrgb8888_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 4, vmap[0].vaddr, fb,
+> -			    clip, false, drm_fb_rgb565_to_xrgb8888_line);
+> +	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
+> +		    drm_fb_rgb565_to_xrgb8888_line);
+>  }
+>  
+>  static void drm_fb_rgb888_to_xrgb8888_line(void *dbuf, const void *sbuf, unsigned int pixels)
+> @@ -470,19 +450,12 @@ static void drm_fb_rgb888_to_xrgb8888(struct iosys_map *dst, const unsigned int
+>  				      const struct drm_framebuffer *fb,
+>  				      const struct drm_rect *clip)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> +	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
+> +		4,
+>  	};
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst[0].is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 4, vmap[0].vaddr, fb,
+> -				 clip, false, drm_fb_rgb888_to_xrgb8888_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 4, vmap[0].vaddr, fb,
+> -			    clip, false, drm_fb_rgb888_to_xrgb8888_line);
+> +	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
+> +		    drm_fb_rgb888_to_xrgb8888_line);
+>  }
+>  
+>  static void drm_fb_xrgb8888_to_xrgb2101010_line(void *dbuf, const void *sbuf, unsigned int pixels)
+> @@ -518,19 +491,12 @@ void drm_fb_xrgb8888_to_xrgb2101010(struct iosys_map *dst, const unsigned int *d
+>  				    const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+>  				    const struct drm_rect *clip)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> +	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
+> +		4,
+>  	};
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst[0].is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 4, vmap[0].vaddr, fb,
+> -				 clip, false, drm_fb_xrgb8888_to_xrgb2101010_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 4, vmap[0].vaddr, fb,
+> -			    clip, false, drm_fb_xrgb8888_to_xrgb2101010_line);
+> +	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
+> +		    drm_fb_xrgb8888_to_xrgb2101010_line);
+>  }
+>  
+>  static void drm_fb_xrgb8888_to_gray8_line(void *dbuf, const void *sbuf, unsigned int pixels)
+> @@ -571,19 +537,12 @@ void drm_fb_xrgb8888_to_gray8(struct iosys_map *dst, const unsigned int *dst_pit
+>  			      const struct iosys_map *vmap, const struct drm_framebuffer *fb,
+>  			      const struct drm_rect *clip)
+>  {
+> -	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
+> -		0, 0, 0, 0
+> +	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
+> +		1,
+>  	};
+>  
+> -	if (!dst_pitch)
+> -		dst_pitch = default_dst_pitch;
+> -
+> -	if (dst[0].is_iomem)
+> -		drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], 1, vmap[0].vaddr, fb,
+> -				 clip, false, drm_fb_xrgb8888_to_gray8_line);
+> -	else
+> -		drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], 1, vmap[0].vaddr, fb,
+> -			    clip, false, drm_fb_xrgb8888_to_gray8_line);
+> +	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
+> +		    drm_fb_xrgb8888_to_gray8_line);
+>  }
+>  EXPORT_SYMBOL(drm_fb_xrgb8888_to_gray8);
+>  
+> -- 
+> 2.37.1
