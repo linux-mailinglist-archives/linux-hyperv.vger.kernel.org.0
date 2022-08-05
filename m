@@ -2,224 +2,197 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6F4858A1D8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 Aug 2022 22:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 101B358ADD8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Aug 2022 18:05:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232467AbiHDUVl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 4 Aug 2022 16:21:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40616 "EHLO
+        id S240996AbiHEQFq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 5 Aug 2022 12:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232290AbiHDUVl (ORCPT
+        with ESMTP id S241227AbiHEQFn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 4 Aug 2022 16:21:41 -0400
-Received: from mailrelay1-1.pub.mailoutpod1-cph3.one.com (mailrelay1-1.pub.mailoutpod1-cph3.one.com [46.30.210.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004DC24F34
-        for <linux-hyperv@vger.kernel.org>; Thu,  4 Aug 2022 13:21:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ravnborg.org; s=rsa1;
-        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-         from:date:from;
-        bh=xkSnPbTttnxOhHWTBnilIh0iHoBa5HPmoRojRGu+rVw=;
-        b=cIuQo9kdQVfww7Tfs8gxYbsDbajcRrM/bIAV0pQCxJA+4c7ZujYPHgzN6O6O3c/9Qp1tL2yVFxoTx
-         3Jti7XviA6W3WJRJl708DA7GSPJoKBS1gDOWRJzl75RkJp3OhQARY8mB707XDzJop0jXPT2IoRyU8Z
-         kBv6Fg4AfcQUHWc9xh0wQLQSdjHHmIIoRLvpi632dMc0lhz7bRqkERs0aI5vIfQE+eRdQEvpS3eOV/
-         WbMJP+91TfUksy3YbURfSabRRbBNR1KmQmSY7ILS7Is0Mw9fkO2z0bxfndKuZHp3NbJ8ycnXZFxB4C
-         O+CLr4CCxl2Adfj6omuVL8Wy4a33KKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-        d=ravnborg.org; s=ed1;
-        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-         from:date:from;
-        bh=xkSnPbTttnxOhHWTBnilIh0iHoBa5HPmoRojRGu+rVw=;
-        b=3LNCwAyKtI0MEwXkv05EBHzW+t17UxR4LaEFhQ0lnxOKrpPmLg7QagJoTVuSjMec8dVInzCq6cwuF
-         W3LIO95AA==
-X-HalOne-Cookie: 26ad2c18fe4e8288730b6c2192e64739cc5e5ff9
-X-HalOne-ID: 0ab3fe06-1433-11ed-a6ca-d0431ea8a283
-Received: from mailproxy4.cst.dirpod4-cph3.one.com (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-        by mailrelay1.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
-        id 0ab3fe06-1433-11ed-a6ca-d0431ea8a283;
-        Thu, 04 Aug 2022 20:21:37 +0000 (UTC)
-Date:   Thu, 4 Aug 2022 22:21:36 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     noralf@tronnes.org, daniel@ffwll.ch, airlied@linux.ie,
-        mripard@kernel.org, maarten.lankhorst@linux.intel.com,
-        airlied@redhat.com, javierm@redhat.com, drawat.floss@gmail.com,
-        kraxel@redhat.com, david@lechnology.com, jose.exposito89@gmail.com,
-        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 11/12] drm/format-helper: Rework XRGB8888-to-MONO
- conversion
-Message-ID: <YuwqUMqRwxr2yyqW@ravnborg.org>
-References: <20220727113312.22407-1-tzimmermann@suse.de>
- <20220727113312.22407-12-tzimmermann@suse.de>
+        Fri, 5 Aug 2022 12:05:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2F69915A1C
+        for <linux-hyperv@vger.kernel.org>; Fri,  5 Aug 2022 09:05:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659715540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KO2+Lhn1y2XnVi7bI4Cc5ciAkJZHya2Xso0bWfCh5JA=;
+        b=asfYgS+LNK+c7OobwJ43vYVFp1dTTK4pR7dzyZvc5SkdUhABvQscgEH5YtMCiEMp/3DW/O
+        z8zEYNgwtr/W9HFj1mtwbh7JdJOpDCBl+PY8UA0+PDuWYXXUjTJXRauU6jt9eM+ZF2ohhs
+        gm00aj/bRF/E24eduiU3/MWU/L2bjp4=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-27-zv4v7QvWOhSCKLYm3IpN3g-1; Fri, 05 Aug 2022 12:05:39 -0400
+X-MC-Unique: zv4v7QvWOhSCKLYm3IpN3g-1
+Received: by mail-qt1-f197.google.com with SMTP id u12-20020a05622a010c00b0031ef5b46dc0so2192944qtw.16
+        for <linux-hyperv@vger.kernel.org>; Fri, 05 Aug 2022 09:05:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=KO2+Lhn1y2XnVi7bI4Cc5ciAkJZHya2Xso0bWfCh5JA=;
+        b=uGWKyKJdqFaUNt5eYoeFqsMYvIeUsNHXNtzYmLCUZ63BEi2NdsXyez0YWbIus/41Ms
+         Ksredn9kUGJ6sche0Uhz+8+mBbUYwPLOE9e3gNMDYGRj47jIkw6zCFnwr80Mio4Qgyw5
+         uQoSett5jCTiFKakHYS0MlfEyXUkemDjaTuXFWQ/ZE2zMGplzW0F8Uv/ORB+3vIE38ca
+         OaYl6wRgWhEHyD30DFdiOhxGoSh7JJRm9AR+/jBrpqOYRr0s7OCgCdGYlW/L78tS7v+V
+         YxEZm+N560H3gEnwU9WSWYgN+sxRMoHJ2gNJh9hTQ87saSlCDuar3IV8XA6LJwUZo207
+         mPxw==
+X-Gm-Message-State: ACgBeo3QAowd3Ah87IJSHORanfqJft3jvn6qYR8wFsCzLjIWoqtYK+5L
+        PQMtME0FvPqtm3fFToID1khl7iAKWXvUslhJkaapFt3XpVdls7HXFdjDm+kocEC7FZAAbzhzbmS
+        aChqjp6FjNJjOmRfl2ld74qjE
+X-Received: by 2002:ad4:5ce3:0:b0:474:71c0:adf3 with SMTP id iv3-20020ad45ce3000000b0047471c0adf3mr6391529qvb.47.1659715538464;
+        Fri, 05 Aug 2022 09:05:38 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6V/dJ4FYdWc2pXQmkRsGFLohJ8WPMbtbN/X/1uVIpxzDhT0pzdU07XUiuvIlyTbScoDMAaoA==
+X-Received: by 2002:ad4:5ce3:0:b0:474:71c0:adf3 with SMTP id iv3-20020ad45ce3000000b0047471c0adf3mr6391470qvb.47.1659715538111;
+        Fri, 05 Aug 2022 09:05:38 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-46-200-178.retail.telecomitalia.it. [79.46.200.178])
+        by smtp.gmail.com with ESMTPSA id z9-20020a05622a028900b003422c7ccbc5sm2577102qtw.59.2022.08.05.09.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Aug 2022 09:05:37 -0700 (PDT)
+Date:   Fri, 5 Aug 2022 18:05:28 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Krasnov Arseniy <oxffffaa@gmail.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        kernel <kernel@sberdevices.ru>
+Subject: Re: [RFC PATCH v3 0/9] vsock: updates for SO_RCVLOWAT handling
+Message-ID: <20220805160528.4jzyrjppdftrvdr5@sgarzare-redhat>
+References: <2ac35e2c-26a8-6f6d-2236-c4692600db9e@sberdevices.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20220727113312.22407-12-tzimmermann@suse.de>
-X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,URIBL_BLACK autolearn=no autolearn_force=no
-        version=3.4.6
+In-Reply-To: <2ac35e2c-26a8-6f6d-2236-c4692600db9e@sberdevices.ru>
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jul 27, 2022 at 01:33:11PM +0200, Thomas Zimmermann wrote:
-> Update XRGB8888-to-MONO conversion to support struct iosys_map
-> and convert all users. Although these are single-plane color formats,
-> the new interface supports multi-plane formats for consistency with
-> drm_fb_blit().
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  drivers/gpu/drm/drm_format_helper.c | 28 +++++++++++++++++++---------
->  drivers/gpu/drm/solomon/ssd130x.c   |  7 ++++---
->  drivers/gpu/drm/tiny/repaper.c      |  6 +++++-
->  include/drm/drm_format_helper.h     |  5 +++--
->  4 files changed, 31 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-> index 521932fac491..d296d181659d 100644
-> --- a/drivers/gpu/drm/drm_format_helper.c
-> +++ b/drivers/gpu/drm/drm_format_helper.c
-> @@ -680,9 +680,9 @@ static void drm_fb_gray8_to_mono_line(void *dbuf, const void *sbuf, unsigned int
->  
->  /**
->   * drm_fb_xrgb8888_to_mono - Convert XRGB8888 to monochrome
-It should be documented that this only supports system memory (no io
-memory support).
+Hi Arseniy,
+sorry but I didn't have time to review this series. I will definitely do 
+it next Monday!
 
-	Sam
+Have a nice weekend,
+Stefano
 
-> - * @dst: monochrome destination buffer (0=black, 1=white)
-> - * @dst_pitch: Number of bytes between two consecutive scanlines within dst
-> - * @vaddr: XRGB8888 source buffer
-> + * @dst: Array of monochrome destination buffers (0=black, 1=white)
-> + * @dst_pitch: Array of numbers of bytes between two consecutive scanlines within dst
-> + * @vmap: Array of XRGB8888 source buffers
->   * @fb: DRM framebuffer
->   * @clip: Clip rectangle area to copy
->   *
-> @@ -700,26 +700,36 @@ static void drm_fb_gray8_to_mono_line(void *dbuf, const void *sbuf, unsigned int
->   * x-coordinate that is a multiple of 8, then the caller must take care itself
->   * of supplying a suitable clip rectangle.
->   */
-> -void drm_fb_xrgb8888_to_mono(void *dst, unsigned int dst_pitch, const void *vaddr,
-> -			     const struct drm_framebuffer *fb, const struct drm_rect *clip)
-> +void drm_fb_xrgb8888_to_mono(struct iosys_map *dst, const unsigned int *dst_pitch,
-> +			     const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-> +			     const struct drm_rect *clip)
->  {
-> +	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
-> +		0, 0, 0, 0
-> +	};
->  	unsigned int linepixels = drm_rect_width(clip);
->  	unsigned int lines = drm_rect_height(clip);
->  	unsigned int cpp = fb->format->cpp[0];
->  	unsigned int len_src32 = linepixels * cpp;
->  	struct drm_device *dev = fb->dev;
-> +	void *vaddr = vmap[0].vaddr;
-> +	unsigned int dst_pitch_0;
->  	unsigned int y;
-> -	u8 *mono = dst, *gray8;
-> +	u8 *mono = dst[0].vaddr, *gray8;
->  	u32 *src32;
->  
->  	if (drm_WARN_ON(dev, fb->format->format != DRM_FORMAT_XRGB8888))
->  		return;
->  
-> +	if (!dst_pitch)
-> +		dst_pitch = default_dst_pitch;
-> +	dst_pitch_0 = dst_pitch[0];
-> +
->  	/*
->  	 * The mono destination buffer contains 1 bit per pixel
->  	 */
-> -	if (!dst_pitch)
-> -		dst_pitch = DIV_ROUND_UP(linepixels, 8);
-> +	if (!dst_pitch_0)
-> +		dst_pitch_0 = DIV_ROUND_UP(linepixels, 8);
->  
->  	/*
->  	 * The cma memory is write-combined so reads are uncached.
-> @@ -744,7 +754,7 @@ void drm_fb_xrgb8888_to_mono(void *dst, unsigned int dst_pitch, const void *vadd
->  		drm_fb_xrgb8888_to_gray8_line(gray8, src32, linepixels);
->  		drm_fb_gray8_to_mono_line(mono, gray8, linepixels);
->  		vaddr += fb->pitches[0];
-> -		mono += dst_pitch;
-> +		mono += dst_pitch_0;
->  	}
->  
->  	kfree(src32);
-> diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
-> index 5a3e3b78cd9e..aa7329a65c98 100644
-> --- a/drivers/gpu/drm/solomon/ssd130x.c
-> +++ b/drivers/gpu/drm/solomon/ssd130x.c
-> @@ -537,11 +537,11 @@ static void ssd130x_clear_screen(struct ssd130x_device *ssd130x)
->  	kfree(buf);
->  }
->  
-> -static int ssd130x_fb_blit_rect(struct drm_framebuffer *fb, const struct iosys_map *map,
-> +static int ssd130x_fb_blit_rect(struct drm_framebuffer *fb, const struct iosys_map *vmap,
->  				struct drm_rect *rect)
->  {
->  	struct ssd130x_device *ssd130x = drm_to_ssd130x(fb->dev);
-> -	void *vmap = map->vaddr; /* TODO: Use mapping abstraction properly */
-> +	struct iosys_map dst;
->  	unsigned int dst_pitch;
->  	int ret = 0;
->  	u8 *buf = NULL;
-> @@ -555,7 +555,8 @@ static int ssd130x_fb_blit_rect(struct drm_framebuffer *fb, const struct iosys_m
->  	if (!buf)
->  		return -ENOMEM;
->  
-> -	drm_fb_xrgb8888_to_mono(buf, dst_pitch, vmap, fb, rect);
-> +	iosys_map_set_vaddr(&dst, buf);
-> +	drm_fb_xrgb8888_to_mono(&dst, &dst_pitch, vmap, fb, rect);
->  
->  	ssd130x_update_rect(ssd130x, buf, rect);
->  
-> diff --git a/drivers/gpu/drm/tiny/repaper.c b/drivers/gpu/drm/tiny/repaper.c
-> index 013790c45d0a..0cdf6ab8fcc5 100644
-> --- a/drivers/gpu/drm/tiny/repaper.c
-> +++ b/drivers/gpu/drm/tiny/repaper.c
-> @@ -513,6 +513,8 @@ static int repaper_fb_dirty(struct drm_framebuffer *fb)
->  {
->  	struct drm_gem_cma_object *cma_obj = drm_fb_cma_get_gem_obj(fb, 0);
->  	struct repaper_epd *epd = drm_to_epd(fb->dev);
-> +	unsigned int dst_pitch = 0;
-> +	struct iosys_map dst, vmap;
->  	struct drm_rect clip;
->  	int idx, ret = 0;
->  	u8 *buf = NULL;
-> @@ -541,7 +543,9 @@ static int repaper_fb_dirty(struct drm_framebuffer *fb)
->  	if (ret)
->  		goto out_free;
->  
-> -	drm_fb_xrgb8888_to_mono(buf, 0, cma_obj->vaddr, fb, &clip);
-> +	iosys_map_set_vaddr(&dst, buf);
-> +	iosys_map_set_vaddr(&vmap, cma_obj->vaddr);
-> +	drm_fb_xrgb8888_to_mono(&dst, &dst_pitch, &vmap, fb, &clip);
->  
->  	drm_gem_fb_end_cpu_access(fb, DMA_FROM_DEVICE);
->  
-> diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_helper.h
-> index 68087c982497..1e1d8f356cc1 100644
-> --- a/include/drm/drm_format_helper.h
-> +++ b/include/drm/drm_format_helper.h
-> @@ -40,7 +40,8 @@ int drm_fb_blit(struct iosys_map *dst, const unsigned int *dst_pitch, uint32_t d
->  		const struct iosys_map *vmap, const struct drm_framebuffer *fb,
->  		const struct drm_rect *rect);
->  
-> -void drm_fb_xrgb8888_to_mono(void *dst, unsigned int dst_pitch, const void *src,
-> -			     const struct drm_framebuffer *fb, const struct drm_rect *clip);
-> +void drm_fb_xrgb8888_to_mono(struct iosys_map *dst, const unsigned int *dst_pitch,
-> +			     const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-> +			     const struct drm_rect *clip);
->  
->  #endif /* __LINUX_DRM_FORMAT_HELPER_H */
-> -- 
-> 2.37.1
+On Wed, Aug 03, 2022 at 01:48:06PM +0000, Arseniy Krasnov wrote:
+>Hello,
+>
+>This patchset includes some updates for SO_RCVLOWAT:
+>
+>1) af_vsock:
+>   During my experiments with zerocopy receive, i found, that in some
+>   cases, poll() implementation violates POSIX: when socket has non-
+>   default SO_RCVLOWAT(e.g. not 1), poll() will always set POLLIN and
+>   POLLRDNORM bits in 'revents' even number of bytes available to read
+>   on socket is smaller than SO_RCVLOWAT value. In this case,user sees
+>   POLLIN flag and then tries to read data(for example using  'read()'
+>   call), but read call will be blocked, because  SO_RCVLOWAT logic is
+>   supported in dequeue loop in af_vsock.c. But the same time,  POSIX
+>   requires that:
+>
+>   "POLLIN     Data other than high-priority data may be read without
+>               blocking.
+>    POLLRDNORM Normal data may be read without blocking."
+>
+>   See https://www.open-std.org/jtc1/sc22/open/n4217.pdf, page 293.
+>
+>   So, we have, that poll() syscall returns POLLIN, but read call will
+>   be blocked.
+>
+>   Also in man page socket(7) i found that:
+>
+>   "Since Linux 2.6.28, select(2), poll(2), and epoll(7) indicate a
+>   socket as readable only if at least SO_RCVLOWAT bytes are available."
+>
+>   I checked TCP callback for poll()(net/ipv4/tcp.c, tcp_poll()), it
+>   uses SO_RCVLOWAT value to set POLLIN bit, also i've tested TCP with
+>   this case for TCP socket, it works as POSIX required.
+>
+>   I've added some fixes to af_vsock.c and virtio_transport_common.c,
+>   test is also implemented.
+>
+>2) virtio/vsock:
+>   It adds some optimization to wake ups, when new data arrived. Now,
+>   SO_RCVLOWAT is considered before wake up sleepers who wait new data.
+>   There is no sense, to kick waiter, when number of available bytes
+>   in socket's queue < SO_RCVLOWAT, because if we wake up reader in
+>   this case, it will wait for SO_RCVLOWAT data anyway during dequeue,
+>   or in poll() case, POLLIN/POLLRDNORM bits won't be set, so such
+>   exit from poll() will be "spurious". This logic is also used in TCP
+>   sockets.
+>
+>3) vmci/vsock:
+>   Same as 2), but i'm not sure about this changes. Will be very good,
+>   to get comments from someone who knows this code.
+>
+>4) Hyper-V:
+>   As Dexuan Cui mentioned, for Hyper-V transport it is difficult to
+>   support SO_RCVLOWAT, so he suggested to disable this feature for
+>   Hyper-V.
+>
+>Thank You
+>
+>Arseniy Krasnov(9):
+> vsock: SO_RCVLOWAT transport set callback
+> hv_sock: disable SO_RCVLOWAT support
+> virtio/vsock: use 'target' in notify_poll_in callback
+> vmci/vsock: use 'target' in notify_poll_in callback
+> vsock: pass sock_rcvlowat to notify_poll_in as target
+> vsock: add API call for data ready
+> virtio/vsock: check SO_RCVLOWAT before wake up reader
+> vmci/vsock: check SO_RCVLOWAT before wake up reader
+> vsock_test: POLLIN + SO_RCVLOWAT test
+>
+> include/net/af_vsock.h                       |   2 +
+> net/vmw_vsock/af_vsock.c                     |  38 +++++++++-
+> net/vmw_vsock/hyperv_transport.c             |   7 ++
+> net/vmw_vsock/virtio_transport_common.c      |   7 +-
+> net/vmw_vsock/vmci_transport_notify.c        |  10 +--
+> net/vmw_vsock/vmci_transport_notify_qstate.c |  12 +--
+> tools/testing/vsock/vsock_test.c             | 107 +++++++++++++++++++++++++++
+> 7 files changed, 166 insertions(+), 17 deletions(-)
+>
+> Changelog:
+>
+> v1 -> v2:
+> 1) Patches for VMCI transport(same as for virtio-vsock).
+> 2) Patches for Hyper-V transport(disabling SO_RCVLOWAT setting).
+> 3) Waiting logic in test was updated(sleep() -> poll()).
+>
+> v2 -> v3:
+> 1) Patches were reordered.
+> 2) Commit message updated in 0005.
+> 3) Check 'transport' pointer in 0001 for NULL.
+> 4) Check 'value' in 0001 for > buffer_size.
+>
+>-- 
+>2.25.1
+
