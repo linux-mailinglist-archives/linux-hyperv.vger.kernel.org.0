@@ -2,111 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B17358BBAD
-	for <lists+linux-hyperv@lfdr.de>; Sun,  7 Aug 2022 17:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9023958BCEE
+	for <lists+linux-hyperv@lfdr.de>; Sun,  7 Aug 2022 22:44:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235037AbiHGPtJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 7 Aug 2022 11:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49720 "EHLO
+        id S231411AbiHGUoj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 7 Aug 2022 16:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbiHGPtI (ORCPT
+        with ESMTP id S229507AbiHGUoi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 7 Aug 2022 11:49:08 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076FB95AB;
-        Sun,  7 Aug 2022 08:49:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a5evKL0dxZts3vCV7sxGwPKkDHYfYVKHor4w3PAWq2c=; b=UgGUADWMWMdDX5W8sGGx3nbKJG
-        AyM7ZqrY3yIDLwhLgALxOOJOECEOo5OQS5ih+S5YxzxuCBHGQDtjqOYnfuVd1QY/S0lbrTrxNFHpY
-        Bro6Oe1QYCxHOwwuzSAMX9Ztw5K7CMBYUdkIG4k00taEVXehekd48/vX2B4Tt3rHc5cAKZ2ZdZyIq
-        B0LQrO9dG7ieDm45SHEcp8eQHM3Q1AUmE1kS6N6hBmg2Dp3Fd5IgZJvoAIKWK9M8w/IR4wZ/aAAbo
-        voQpoRP6X3DitgWapEOWxQp3OQv+ZQuNJbfakbxcntbmu5bBXwSsbnb9bgbIrl6WxIGEm7EI/J0Kt
-        EqMN83vA==;
-Received: from [187.56.70.103] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oKiWT-001239-V7; Sun, 07 Aug 2022 17:49:02 +0200
-Message-ID: <612c2d54-59db-9d2c-cea3-2ffcfcaffec9@igalia.com>
-Date:   Sun, 7 Aug 2022 12:48:36 -0300
+        Sun, 7 Aug 2022 16:44:38 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8550B62E6;
+        Sun,  7 Aug 2022 13:44:37 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id l4so8799049wrm.13;
+        Sun, 07 Aug 2022 13:44:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=PR3j4bog8pPMOjA9orzRxcsnCEIbbXpovcv+p87CHi4=;
+        b=OH21hVGzWusfdyaZjo5YaXtZflDRXzE2AYWMoPVtax3YmOCW4SFPBZSFzAP7Y5b2tZ
+         0+8reXgNh/eXmf0tz6HqDbynyFds8pIWpH5hJBD7yBK0b+nycibcry9VHpQ/cJqTB5SY
+         h4v5FIOQfeQ3Tp3nhYpajGjOZTw/yGG0tEYKshlLQw0edRvIPVPMM86T4ZGNjAPtz/1x
+         NtOApFqC6T8acyAa9KbvD5JMMpeA+bIa69t21EGBBYIi9HZachWI0SVDSeTls44F2Wkx
+         TNT0CaLmGDeBpWNpuAd2+3Vy8wmkahgwS/VFjmSsEvXarwYIAEMlvXGeKb+yikANjqRb
+         7l9w==
+X-Gm-Message-State: ACgBeo3pLSmCrFODYTKu2toJVoB5frNnz34pygBj0syTcPBLZVpFu9Vf
+        Pf/Lub+fpHS4rmAaFcN6AYKdr4vzOVc=
+X-Google-Smtp-Source: AA6agR484PVx2gjGv91YCXEUs4vjgAODNVSeUDoaQ6sgiJv+n3uJDFEBGN8/l1lS0V7VLWvi406drw==
+X-Received: by 2002:adf:fb43:0:b0:21a:22eb:da43 with SMTP id c3-20020adffb43000000b0021a22ebda43mr9491379wrs.347.1659905075751;
+        Sun, 07 Aug 2022 13:44:35 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b4-20020adff904000000b0021e9fafa601sm9707536wrr.22.2022.08.07.13.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Aug 2022 13:44:35 -0700 (PDT)
+Date:   Sun, 7 Aug 2022 20:44:33 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        sthemmin@microsoft.com, Michael Kelley <mikelley@microsoft.com>
+Subject: [GIT PULL] Hyper-V next patches
+Message-ID: <20220807204433.k4lcpmfbradclnnq@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 10/13] EDAC/altera: Skip the panic notifier if kdump is
- loaded
-Content-Language: en-US
-To:     kexec@lists.infradead.org, Tony Luck <tony.luck@intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>, linux-edac@vger.kernel.org
-Cc:     akpm@linux-foundation.org, bhe@redhat.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
-        kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
-        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
-        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, pmladek@suse.com
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-11-gpiccoli@igalia.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20220719195325.402745-11-gpiccoli@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 19/07/2022 16:53, Guilherme G. Piccoli wrote:
-> The altera_edac panic notifier performs some data collection with
-> regards errors detected; such code relies in the regmap layer to
-> perform reads/writes, so the code is abstracted and there is some
-> risk level to execute that, since the panic path runs in atomic
-> context, with interrupts/preemption and secondary CPUs disabled.
-> 
-> Users want the information collected in this panic notifier though,
-> so in order to balance the risk/benefit, let's skip the altera panic
-> notifier if kdump is loaded. While at it, remove a useless header
-> and encompass a macro inside the sole ifdef block it is used.
-> 
-> Cc: Dinh Nguyen <dinguyen@kernel.org>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> 
-> ---
-> 
-> V2:
-> - new patch, based on the discussion in [0].
-> [0] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
-> 
->  drivers/edac/altera_edac.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
-> [...]
+Hi Linus
 
-Hey Tony / Dinh, do you think this patch is good, based on the
-discussion we had [0] last iteration?
+The following changes since commit 32346491ddf24599decca06190ebca03ff9de7f8:
 
-Thanks in advance,
+  Linux 5.19-rc6 (2022-07-10 14:40:51 -0700)
 
+are available in the Git repository at:
 
-Guilherme
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20220807
 
+for you to fetch changes up to d180e0a1be6cea2b7436fadbd1c96aecdf3c46c7:
 
-[0]
-https://lore.kernel.org/lkml/599b72f6-76a4-8e6d-5432-56fb1ffd7e0b@igalia.com/
+  Drivers: hv: Create debugfs file with hyper-v balloon usage information (2022-07-18 11:19:02 +0000)
+
+----------------------------------------------------------------
+hyperv-next 20220807
+
+A few miscellaneous patches. There is no large patch series for this
+merge window.
+
+Their subject lines are self-explanatory so I don't bother summarizing
+them.
+----------------------------------------------------------------
+Alexander Atanasov (1):
+      Drivers: hv: Create debugfs file with hyper-v balloon usage information
+
+Samuel Holland (1):
+      PCI: hv: Take a const cpumask in hv_compose_msi_req_get_cpu()
+
+Saurabh Sengar (1):
+      drm/hyperv : Removing the restruction of VRAM allocation with PCI bar size
+
+Shradha Gupta (1):
+      Drivers: hv: vm_bus: Handle vmbus rescind calls after vmbus is suspended
+
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c |  74 +----------------
+ drivers/hv/connection.c                 |  11 +++
+ drivers/hv/hv_balloon.c                 | 135 ++++++++++++++++++++++++++++++--
+ drivers/hv/hyperv_vmbus.h               |   7 ++
+ drivers/hv/vmbus_drv.c                  |  27 +++++--
+ drivers/pci/controller/pci-hyperv.c     |   2 +-
+ 6 files changed, 170 insertions(+), 86 deletions(-)
