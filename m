@@ -2,193 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 295F858AFC9
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 Aug 2022 20:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B46758BB99
+	for <lists+linux-hyperv@lfdr.de>; Sun,  7 Aug 2022 17:37:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241398AbiHESfG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 5 Aug 2022 14:35:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
+        id S233908AbiHGPhW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 7 Aug 2022 11:37:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241378AbiHESfF (ORCPT
+        with ESMTP id S233356AbiHGPhW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 5 Aug 2022 14:35:05 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-cusazon11020020.outbound.protection.outlook.com [52.101.61.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A54D7B1C0;
-        Fri,  5 Aug 2022 11:35:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I9Em5BbH64ZNXKaIFbw/61dO8/9eE3vEA8+fGqYuH/eFoSNqupJtoQLJht5Ch1CPQqTDXGk+zcAE2pch7YWi9Eb5GvoBBoLdui3Fsy4ZvTe8yINdwJ7KhMDImoZdwhVkN7nyOnWmQxjNns6F5qQZMSycDCDEbtGRHSRMijPDhSZdz/4zhR8BaVllNwamHcl6mMQiJVYScNT68BZqG2JnX4LdJvCUtyue8SKE9Xg9WWfUTf6+3mQDINvxrXEL68DVd6651b7EmcoKhQTKZr5oOVhbT/518LSD8YRrJoi1+PLTk66xi3i9fqc0EFq9Uq1L81eEKTx8Py6BUL0zkxY0VA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MYP8DjgNImKn3Sumv0DM+z5UnJhXqDJL7y/sHXX3kiY=;
- b=arKCUgojMaX2bdKvYL09QzDFaoW/eQf4jWDly1wj+2BmTIn1PZxWpWwjgWS1XvpuLKNWu4jr0IffF7/mCLFSNtw3zeMqiZhFZEE+I5bI+48bLkNsRwnsDHtutrdEkjKClKLfK9EgWrcbttLbU00Ntit9+FpW4R2lnB3Vlth8k1E9NvCjzVcrMMaWYyiWHSohH8shwG9MOYWKTQ2Ih7mlYinw+Fn2leqp/p1VFtJ0oT4CNJpuativNWPoC1OLOc2grr5siltXqDR+KMOL8h1/ugqUy5R59qP3irGJ6C03mXmEsqWaXdNLgdOmQZnyoVuFblMWib6kyWqhBQ4DtP11KA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MYP8DjgNImKn3Sumv0DM+z5UnJhXqDJL7y/sHXX3kiY=;
- b=O9eDccU5XWattU0UI4OiH7+DMBlIvl0l+0TfuLH8aN0qak6LExK/W7dhMyggKEad8+10Jibd2MmB0vJBABfI/x4lgRU2k2vKVqpepxkoPRbF2BHSky+XRiLrt5OQrd8xM88dHu5rO/+b9VC1IuYle0e6AEWcGHTa8djfuhA+soI=
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by CH2PR21MB1431.namprd21.prod.outlook.com (2603:10b6:610:5d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Fri, 5 Aug
- 2022 18:35:02 +0000
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::29af:3ad1:b654:63b8]) by PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::29af:3ad1:b654:63b8%6]) with mapi id 15.20.5525.005; Fri, 5 Aug 2022
- 18:35:01 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Deepak Rawat <drawat.floss@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: RE: [PATCH] drm/hyperv: Fix an error handling path in
- hyperv_vmbus_probe()
-Thread-Topic: [PATCH] drm/hyperv: Fix an error handling path in
- hyperv_vmbus_probe()
-Thread-Index: AQHYpRhoWdKqZI1ivUaFNPBsm/0vva2gp4OA
-Date:   Fri, 5 Aug 2022 18:35:01 +0000
-Message-ID: <PH0PR21MB3025D61C85CD6E724919A9D8D79E9@PH0PR21MB3025.namprd21.prod.outlook.com>
-References: <7dfa372af3e35fbb1d6f157183dfef2e4512d3be.1659297696.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <7dfa372af3e35fbb1d6f157183dfef2e4512d3be.1659297696.git.christophe.jaillet@wanadoo.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fe3841fb-4099-4e82-98b0-b322b10f7934;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-08-05T18:26:17Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6d09bf18-c340-4f59-bc20-08da7711354b
-x-ms-traffictypediagnostic: CH2PR21MB1431:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rvmo36Kvlxkw08YxnOcQyRTS/WXwtsua2J5U+tQMz6gqoTMXlAAaS18lGIeCOAdbcALB/Tud63nFdzUmKC3tu0cE5yBBfgDVGgworFAhYQsALrdB6UnLK5Tr+qgs2lIryLRsSPRDRWlu4tj2Cbbdl8ntMJP0wiA8l0mHUGXhMp1PuV29DvndssTtIhTf/HWpyuoVd56anCtMpYUaf/7CTjkPT/OyXICv1A2VAYtexNZWt0pYhdGVZkZMaj9IxRkWYa8cb0EEUw2u7nLkjCGjZAIjQth52W4+R600QuNtEv5f/SRUKymFoLNNAk7rbA1kjH3I1xCxHnYrp5NzmIWjeIEaJO9r3b+356Gq1aTJCZjWABs7wyAA0uIGuoZg6MVmXHhUMAALSlgaC1N+ck/p+QsS4tYspPyRVziq7y0QsDXLD9hWaiLe6EX6h65aavEEIslvpDaj0aUmcAoM1kR33SCfG2MPSeV0j4LlPT46Od7H7lJrBHd8m8ojvTha7z4xfo/CnuFTb78RQkIkcvhiAT5Q26r9VXe12o7cyGEqlQJ4YLTRF+e9iY6V2PLPjZuVzzs5upoDJkxbqqi/nlbp9531bJjm3G7zxP5+8ALSTjmI3ROdqiRMxdD1GGtXVRbTGQko2ZSMRVmTB2NbiUxkwTbXr4aVEdPU5hCDAqs9h53liX1QkaYRwoAb/pvStglyGaGxCBU1H2ZwnMPG/LfvnOEB9/7KjAUKmKYIDeBKmj0KFeICcdCuhBu88hID483eD4knMnIFSyOJI6wHEJ6hXwm4Of/K0U/C89MZLt2UuLLRh5vy1gGbDsSiFVhFYMiYdluWO80kTkBUmvAxar3fh6/tme812118gb6UMn5OTnA=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(451199009)(110136005)(5660300002)(52536014)(8990500004)(8936002)(33656002)(316002)(66476007)(66946007)(54906003)(64756008)(76116006)(66446008)(4326008)(8676002)(55016003)(66556008)(71200400001)(478600001)(10290500003)(7696005)(122000001)(38100700002)(38070700005)(6506007)(41300700001)(86362001)(9686003)(26005)(82950400001)(186003)(82960400001)(2906002)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?lNipHprEqhPu0jlqATcy5bqSyLj/kYseTT6u41n5ZeKb76ySpVdeNiJsc0Oq?=
- =?us-ascii?Q?lcXtUMI9hQ506boccLjrYfhtFq3d7Rtrc24j0WpI00QRhLqQwUJsd4D92xLX?=
- =?us-ascii?Q?p9YDrT5knC+XIW/Z72hn9U8KcRfe8LayOlLbocS9xPHzQKDgkmthzJnV9YtK?=
- =?us-ascii?Q?yVJO1TmkYQfjyhQmWRBKofSljjjfpx+8y0EF8UZAHtQ1aJSQOsExJ2GPEUjo?=
- =?us-ascii?Q?M86Wc1NhGQ2A0bGv5gvO7QoGpxrBFm5qTnKaZ0VnkrhTv/2BQIfx0foZbTKH?=
- =?us-ascii?Q?wtaj84Gf0qItN269NzE8TNO8dKkxQomPih1cqO47UcyLjkzytAFB1X5de9d7?=
- =?us-ascii?Q?czBJ6AWdPA5HznITfXENhRaNJe5vaX1Y/w8iS7CvxKdINOcfEsJfJB55AHq4?=
- =?us-ascii?Q?fy6WV714UonucGcysY6sO9k/lStU+Su6iXvyr9IqyugxFD2pPpOyhaCwEgWB?=
- =?us-ascii?Q?RL7+948F05InS8G7sSG1qyCLeM6lJKS1kK5sVRoF0mxJiZMGKjqgj3UPmMLZ?=
- =?us-ascii?Q?LhCbxgdIyhufzZG9BnikKx+VrCnF3Ab7/31XgNAA8FmO01FE7HySiOeEoOEr?=
- =?us-ascii?Q?DpycPFl8P5KR+1In85DQ80VY2IOMk/f/u/TExwg5obyiSNMEwhUWEqy/yOb3?=
- =?us-ascii?Q?ja23UYQ5drY3pDCZBCOZTOAbA1r+I9PTjpW/rlp1Cky+4ZbYCXRg317flC20?=
- =?us-ascii?Q?oSQXL/oWSYtGIPeGGFWJRsiIdAy1dx+NyQ4AMWmVoPLrunnSy9vv59vRMBXR?=
- =?us-ascii?Q?NL6NFmlP77a2fYE7HygNbrV1G3qRneT4V14ls+5QEs9A69vmevVoBRhickB3?=
- =?us-ascii?Q?QrNCU03eGbid9a93VHqSj/sd5eaIp6KWWBbikoUcd/tediUL/O1uw8fqNCg6?=
- =?us-ascii?Q?8/NTSYEry4lk3XGXZx6IZTpwauZXVF7fBxxI2UjDUw87nbUDY249dOYejYnO?=
- =?us-ascii?Q?aLDHB0BoAig68C9drlAhjypijMENfjiBKREvX9exGUNckR5HGj/gb0tEiDOj?=
- =?us-ascii?Q?gvxacfmhusvnM/LoxARBscRRWxBRMMwnJSzRQB/62QNRr/oZSm7FpbXBquTX?=
- =?us-ascii?Q?u9LrQj9TLzS03L5P8s7cgaWxtDCtcicetYvP0vGMlEhGZJ/zOtQsW1uZOuzf?=
- =?us-ascii?Q?dBwEICq4ZFo0jkB4it1TjI6dhD0jMOId58EDYBLATfUA72wRwXhA9OLMpckP?=
- =?us-ascii?Q?Bv/ZqsLv9ddE/vzPqRryT2utTXr/YrURZDHfBN6WK+7veH9SGG999T0KIfib?=
- =?us-ascii?Q?uyXExTuMU2wbeUlk0K/b84suvC3sX1wGMJ4c2vFgUYclqDSXKsNCcOF3gtck?=
- =?us-ascii?Q?6ImQZ1KlZzenBcBuI4M9ng5dWmEYmwFelLOTW2rCNX7plA23Fm4NIT09Lnsz?=
- =?us-ascii?Q?4ve5BorvsJqrimIOXMBRV3vGgMYHcMrmfPBzzJYTeVV5gNQYEcZN3d6hjjPa?=
- =?us-ascii?Q?VSnsrO8Jh79O2kYRITd8yDLQT7m3S1lrkg7doVMiMe0aUpizc6MNHlfAJItj?=
- =?us-ascii?Q?n+IOY/dx88btuMmX+jjhhxbwWlJU6km1BSPMmbWmOzP1Ix5ZFqdZ10gtCWD3?=
- =?us-ascii?Q?hnEY6+qnKxsjuAHJmO+Ex+JDk1pg6DpJDeyOHMJT1fRgVWZpl0MMFMKemPAP?=
- =?us-ascii?Q?mw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 7 Aug 2022 11:37:22 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFED3626B;
+        Sun,  7 Aug 2022 08:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=l55pJQcZ1NtSw92ANqP6zdKYAHPUxRJf02byqPAHpeU=; b=J41lFEvKvGWs40UEuQ3L9XZjX9
+        0qgdt79wCDmsaIgb0pFUl3+A5LSvtbQq2Sr6agU2ozxeFF0C4fcJGnnGXT4jj69p+z6jglRBoPVOD
+        ARccBb4jXL6eFywTBIwUncZHajIY/5M7JjAm2w/RY1KQzj1hMm35Eu+eIAFLqwaGwVr+Kq7J06JOW
+        Sgdb6BmP5a43VejM51kP1wj/janEK2e6BRT3a+uKEGvqGreEsrJqrbOnSGxRITccwNju33yHhdOZQ
+        Bm2aj+RIUHvJa5EkUFnTQDtMrJA6EKxcIbg5//OVfNyFfIQITA1+hC1Pml2hGRkwkNWrrDrtZDVRe
+        SxKiUOoQ==;
+Received: from [187.56.70.103] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1oKiKD-0011fz-IR; Sun, 07 Aug 2022 17:36:21 +0200
+Message-ID: <5b1805ff-eb9f-8575-ceb0-9d2e768f3589@igalia.com>
+Date:   Sun, 7 Aug 2022 12:35:56 -0300
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1431
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 01/13] ARM: Disable FIQs (but not IRQs) on CPUs
+ shutdown paths
+Content-Language: en-US
+To:     kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     bhe@redhat.com, pmladek@suse.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
+        kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
+        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
+        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org
+References: <20220719195325.402745-1-gpiccoli@igalia.com>
+ <20220719195325.402745-2-gpiccoli@igalia.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20220719195325.402745-2-gpiccoli@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr> Sent: Sunday, July=
- 31, 2022 1:02 PM
->=20
-> hyperv_setup_vram() calls vmbus_allocate_mmio().
-> This must be undone in the error handling path of the probe, as already
-> done in the remove function.
->=20
-> This patch depends on commit a0ab5abced55 ("drm/hyperv : Removing the
-> restruction of VRAM allocation with PCI bar size").
-> Without it, something like what is done in commit e048834c209a
-> ("drm/hyperv: Fix device removal on Gen1 VMs") should be done.
-
-Should the above paragraph be below the '---' as a comment, rather than
-part of the commit message?  It's more about staging instructions than a
-long-term record of the actual functional/code change.
-
->=20
-> Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic vid=
-eo device")
-
-I wonder if the Fixes: dependency should be on a0ab5abced55.  As you noted,
-this patch won't apply cleanly on stable kernel versions that lack that com=
-mit,
-so we'll need a separate patch for stable if we want to make the fix there.
-
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-All that said, the fix looks good, so
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-
+On 19/07/2022 16:53, Guilherme G. Piccoli wrote:
+> Currently the regular CPU shutdown path for ARM disables IRQs/FIQs
+> in the secondary CPUs - smp_send_stop() calls ipi_cpu_stop(), which
+> is responsible for that. IRQs are architecturally masked when we
+> take an interrupt, but FIQs are high priority than IRQs, hence they
+> aren't masked. With that said, it makes sense to disable FIQs here,
+> but there's no need for (re-)disabling IRQs.
+> 
+> More than that: there is an alternative path for disabling CPUs,
+> in the form of function crash_smp_send_stop(), which is used for
+> kexec/panic path. This function relies on a SMP call that also
+> triggers a busy-wait loop [at machine_crash_nonpanic_core()], but
+> without disabling FIQs. This might lead to odd scenarios, like
+> early interrupts in the boot of kexec'd kernel or even interrupts
+> in secondary "disabled" CPUs while the main one still works in the
+> panic path and assumes all secondary CPUs are (really!) off.
+> 
+> So, let's disable FIQs in both paths and *not* disable IRQs a second
+> time, since they are already masked in both paths by the architecture.
+> This way, we keep both CPU quiesce paths consistent and safe.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Michael Kelley <mikelley@microsoft.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
 > ---
->  drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> index 6d11e7938c83..fc8b4e045f5d 100644
-> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
-> @@ -133,7 +133,6 @@ static int hyperv_vmbus_probe(struct hv_device *hdev,
->  	}
->=20
->  	ret =3D hyperv_setup_vram(hv, hdev);
-> -
->  	if (ret)
->  		goto err_vmbus_close;
->=20
-> @@ -150,18 +149,20 @@ static int hyperv_vmbus_probe(struct hv_device *hde=
-v,
->=20
->  	ret =3D hyperv_mode_config_init(hv);
->  	if (ret)
-> -		goto err_vmbus_close;
-> +		goto err_free_mmio;
->=20
->  	ret =3D drm_dev_register(dev, 0);
->  	if (ret) {
->  		drm_err(dev, "Failed to register drm driver.\n");
-> -		goto err_vmbus_close;
-> +		goto err_free_mmio;
->  	}
->=20
->  	drm_fbdev_generic_setup(dev, 0);
->=20
->  	return 0;
->=20
-> +err_free_mmio:
-> +	vmbus_free_mmio(hv->mem->start, hv->fb_size);
->  err_vmbus_close:
->  	vmbus_close(hdev->channel);
->  err_hv_set_drv_data:
-> --
-> 2.34.1
+> 
+> V2:
+> - Small wording improvement (thanks Michael Kelley);
+> - Only disable FIQs, since IRQs are masked by architecture
+> definition when we take an interrupt. Thanks a lot Russell
+> and Marc for the discussion [0].
+> 
+> Should we add a Fixes tag here? If so, maybe the proper target is:
+> b23065313297 ("ARM: 6522/1: kexec: Add call to non-crashing cores through IPI")
+> 
+> [0] https://lore.kernel.org/lkml/Ymxcaqy6DwhoQrZT@shell.armlinux.org.uk/
+> 
+>  arch/arm/kernel/machine_kexec.c | 2 ++
+>  arch/arm/kernel/smp.c           | 5 ++---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> [...]
 
+Hi Mark / Russell, do you think this one is good enough or is there room
+for improvement?
+
+Appreciate the reviews!
+Cheers,
+
+
+Guilherme
