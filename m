@@ -2,73 +2,147 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 825C458C8C8
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Aug 2022 14:54:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 276A758CA9B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Aug 2022 16:36:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237483AbiHHMya (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Aug 2022 08:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39124 "EHLO
+        id S243611AbiHHOgf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Aug 2022 10:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242305AbiHHMyR (ORCPT
+        with ESMTP id S243340AbiHHOgb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Aug 2022 08:54:17 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E4AE0DA
-        for <linux-hyperv@vger.kernel.org>; Mon,  8 Aug 2022 05:54:15 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id E34663794B;
-        Mon,  8 Aug 2022 12:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1659963253; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PpJarha6z0rKO4iGWeUHIs8U6UBo13PMzmnwdB3iIL8=;
-        b=jE2JPKzJRTMqn0//vaR0hU/DjyoTGqJqplwfxjHWq1OnodCGlS3P8xBz2BciIEp+i7L7dR
-        UL8jrMPWC/rv0pVf1E08lHDgaBKqp8Ksnb9UeK3nxaaVQ9jZn0k2+LwcDAnKmLwUcyB+Tm
-        yRF3abrI9vNwp7FVw4486gmVJhpOHYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1659963253;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PpJarha6z0rKO4iGWeUHIs8U6UBo13PMzmnwdB3iIL8=;
-        b=rpbcmPob7PcowGROvEtnYSgk8lM82PWkcTv3P2VmhnAneqk3Odto7pZOuZ2EesoIv3Yep/
-        ujmc8QOInRp/YHCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8910013ADE;
-        Mon,  8 Aug 2022 12:54:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id aNp0IHUH8WLHUgAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Mon, 08 Aug 2022 12:54:13 +0000
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     sam@ravnborg.org, jose.exposito89@gmail.com, javierm@redhat.com,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, noralf@tronnes.org,
-        drawat.floss@gmail.com, lucas.demarchi@intel.com,
-        david@lechnology.com, kraxel@redhat.com
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v2 14/14] drm/format-helper: Rename parameter vmap to src
-Date:   Mon,  8 Aug 2022 14:54:06 +0200
-Message-Id: <20220808125406.20752-15-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220808125406.20752-1-tzimmermann@suse.de>
+        Mon, 8 Aug 2022 10:36:31 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED60565B5
+        for <linux-hyperv@vger.kernel.org>; Mon,  8 Aug 2022 07:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659969390; x=1691505390;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=fmeZTjfgs4eZF5t7T3PM5i96lpqQxIPhzGO5evQQA1Q=;
+  b=TpGohKXSJKA/oGTA5vT/tks6mBVgKwrpGvB3bcn1FHus057aE8HV1z/M
+   tZoj4+rknvYWZw4WWI48sv+fMiQrHyEnEFka4FLuuti8HK5Fops88k9Sg
+   /ngMkxnVXMnTuYihjHr5x5zo7PVqY8gQO14HE/32o8r6IBAFcsXt38MJL
+   eAqeT2N1IaeIX4f9rRSRJo6BPI7nboyas1gwaMd6JH9z1ebAigeiqucii
+   qxShLlDehvoYt+W42t0p9KjE2v6YR22O9b9gUJOyEoE58F5i8UqzrcmGR
+   1bmWFtO7DCSulLp5HKUN7IsHVnC8WYS0pPWL+ZDuVmAPPBohLDuu6LvjQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10433"; a="273656608"
+X-IronPort-AV: E=Sophos;i="5.93,222,1654585200"; 
+   d="scan'208";a="273656608"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2022 07:36:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,222,1654585200"; 
+   d="scan'208";a="746662826"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Aug 2022 07:36:21 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Mon, 8 Aug 2022 07:36:20 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28 via Frontend Transport; Mon, 8 Aug 2022 07:36:20 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.175)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.28; Mon, 8 Aug 2022 07:36:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KLiRoz4RurB3evpPM68N/+dTn0oDL3bk59/gRJiz6X40tP6/1rpPlTN3ej1XCEGmB+jwZrJiwK42Nf0Qpv3WN+C5BVn4NQlbMpFSTkfKPAMq0KEssI4x9M1HPOCYWgMfloY0JOCikr7AZ3zEKOPnEdgApxxBRx/iiRUkbJMeeAQiBfoYyPCQWtomVZKutKfWY3bLxRhP/V8YZ2ES3bd6nLjfMd4wqNTX3K1Q+XZYp8SWPzhX9n7+Xgb7Y2liA0BtHC8V2uJ87VqyAKdn4wKIemUKcqdhtUAEj1WEAx9ldqm7I6ZQM8uRG3vNjqEeFHFb+pSzMGYvXXb4XeD9iOfCjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PAUrB4q5NNDSZKWxPRYLEZz9ujF/e8psHroXj9w879U=;
+ b=WZzpaovLrToXmTr5Eo/mGApyn5daKUSYvtRnhDDzUGmyzf6Hw6AM38uTlOOwTuCStFZxav0I/4tcvkEqiWJaMaa5ueHg9ZSeiB73rn7Vdg2EsXQlXOIC69c5Q9ETU6mScP7G/S2zpzktKy8odwnlmBQZ8GcNK6N8hQkOtqqtGHZaC9vPnaLNVl37z7ApogNPjSOTeA6a8inVPX8tbX7Zm/RpGT0RBPwUwNlVnejzfCA4ela6BRSW1YxgvgV4w5PGHLI+LO1V0MBk/wg1Q2uyKDvmPKGQQ3bxo3psYpi7a1lz513TK8nA1SYtnj5tga8c+alFmuidYjTiIdlyO94ANg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by SA1PR11MB6782.namprd11.prod.outlook.com (2603:10b6:806:25e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.16; Mon, 8 Aug
+ 2022 14:36:18 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::a012:82da:5edb:513]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::a012:82da:5edb:513%8]) with mapi id 15.20.5504.019; Mon, 8 Aug 2022
+ 14:36:18 +0000
+Date:   Mon, 8 Aug 2022 07:36:16 -0700
+From:   Lucas De Marchi <lucas.demarchi@intel.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+CC:     <sam@ravnborg.org>, <jose.exposito89@gmail.com>,
+        <javierm@redhat.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <noralf@tronnes.org>, <drawat.floss@gmail.com>,
+        <david@lechnology.com>, <kraxel@redhat.com>,
+        <linux-hyperv@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 01/14] iosys-map: Add IOSYS_MAP_INIT_VADDR_IOMEM()
+Message-ID: <20220808143616.2oefccxjntucfun6@ldmartin-desk2.lan>
 References: <20220808125406.20752-1-tzimmermann@suse.de>
+ <20220808125406.20752-2-tzimmermann@suse.de>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220808125406.20752-2-tzimmermann@suse.de>
+X-ClientProxiedBy: SJ0PR05CA0150.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d::35) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5c12f9ab-9fbb-47bd-2c87-08da794b5b20
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6782:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sXIBxcmNaIAKcySNPXBvdYWeMhvEzTGT4Hh1qT8luSR0F2/nle1BBtAJYgC1ysyWABbFDI5PzSjhP7MJlUxyuYnXBsvlo1jsS/4MApjprm6rm9bpQw5hk8vz7/4V2Ip+V/kMrsOvRQ2oWM2FHzoAqp8v1ZVXdHQCaftFgEqvkOJA5L+tSyj09wmHrCf9VwItgIkLVj2cMjarrv9FMoFlTPOODcSHoZRdFelf9bz+L3x1bbEZiIpWYA+fygAJjPoB7cxXQz2FgnEhVb0jJJ11O3+XhUCU8Vd9geAhS9JkstzbZzxKSptgxSI6tcODIjnvAN1l+K3vrb1MayeyIUDeRFyIejNXAUpd8p6Ah2hNGHfghf7qfJ5V9WsiSNHymBcKP5QKqYkHgX2OCyA+fSGnBR5u6TOQuEWXwdXinU0ybqK+ejdWOTVnNpg8FgwqUv5t3jlOjWh2HWDMYNaw/G8PDeYUjyen1mHQ9dIpnJVXU7Tv9HAmzm+kNznPWNN8OeYifSOZW5Tw+hE4DWcu39ZsYXvQ676CjaZ+sJQsttOaDIgs2D+bSnDevn5eQNQMUWlRLbiqDOtfhPd0bUkz0ygSnFGIvgXhCpFuWrzNnPXPuWkOuYNeeQ+flZ2FKycZ2mpewpz9RioVYu3w2l6gm6Dc/15mrxYIs0WCV6eQQllJw9ii9HUjwnNwVVgb0ZEuqrQtFVq+0tJxHcrz72nBNB2iqE9hA42j/ApB8djPOXeaT2GlZEjn9Q/osZY3USBdpjnR
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(39860400002)(366004)(136003)(376002)(346002)(83380400001)(6916009)(316002)(82960400001)(1076003)(186003)(26005)(9686003)(6506007)(6512007)(86362001)(41300700001)(478600001)(8936002)(7416002)(5660300002)(4326008)(2906002)(36756003)(66946007)(38100700002)(66476007)(66556008)(8676002)(6486002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3BtHBb/pqX4UNq5zrkjAD4y+YXTunGmtacokiJF1ZkLoMNtTxeUc0x2yOQwc?=
+ =?us-ascii?Q?DPw72U2bI/+uKEaXv3QdWTTqXPfJMsGyRxU2y28Hs/PWh+k9hgaNdf/Qa89g?=
+ =?us-ascii?Q?GMR7Qhc7wXQ4AozOlhxyljSk2o2ovHL2ngRhWnvIMf8dXfxZhd/7SxOUvALe?=
+ =?us-ascii?Q?RSTMlixsJdi/en8vEhyIfHEKO2yAIOoZgNWLejJzvrj0CvXFL08RoowOVdet?=
+ =?us-ascii?Q?fW+FlzNZb5LiCJjURx4yvwjAHwKto6M/OdZabo2Z1dipmVQnupjT2ufHdlZg?=
+ =?us-ascii?Q?imS8P6PbsKXLci5DTGD4x+ypOKairjH8SKPl+8NkvFQTNwgB4DecRVlMeeBd?=
+ =?us-ascii?Q?boNKOwU20P8oXNnrAt0bS9+JVvtOrtECr+LYoGezXqZ3AAsJBl4P483roj5I?=
+ =?us-ascii?Q?b1u3W5ycbby9/CzL6Fyk+ib+847FK1tkj8fZHLsx67FFYkUEE512gJQ/dW32?=
+ =?us-ascii?Q?bUpD+805++l3MAJ1hfzXaEu1fp2I+08U4bXCa/3kQ98Aja03qpelcvWRBhhq?=
+ =?us-ascii?Q?QbYqlb9pGiMG0s2RJzzMDenepasFDqJCw+mdtbeb1r7tyfhLoh3VXEw4HvPE?=
+ =?us-ascii?Q?mn+Cs7w9HuI1X/uIgh9yq90yqRQO2w7N4xmzm/4xFFKw+G/quxnoMTl8id3m?=
+ =?us-ascii?Q?+v12Sal/2ETnB3FCq4OaAFZ9k/5I5Gq4hponkOCNIjeRTWI8IL86geJTsAkI?=
+ =?us-ascii?Q?EhLDtJXS6EDZQ0hHR2yZ8jupobLJV1NvEMhcs1LuBrpCmRunQa+TzFktz9CB?=
+ =?us-ascii?Q?ZMksw7Hg3Nhp6DHJXH5TIA8+h+HmIYUJIN0aW+rl24yTwSoDkJDdsYnJZ/ux?=
+ =?us-ascii?Q?k5v56NjLNgMeQMGfULcxzDILy/vuVW76x3lUJkueom6DwMxrmaYeammBiQZj?=
+ =?us-ascii?Q?nesquumsUwY291wGf5Tw+Ow1RS056rPsaIp1Gx0VLFPRLc9ZXapeI/IX/P/Y?=
+ =?us-ascii?Q?BiZ7Kk00tqlrDKfNpzPvym+YpR/JAu084xhmiMOr9ZVh7riDzhPuM49GlfJ0?=
+ =?us-ascii?Q?kKt9ZP7q77GvkYA2o9ZWZ6S4IKbrMTL/Lnj3MnStf5MOiukSBqSO8wzVwW24?=
+ =?us-ascii?Q?vZ7UmtoccZFq9spfXQ80bPrAKdK9eUOkQpekADA1Jr50ZGKLPDj8v0IBNru0?=
+ =?us-ascii?Q?3LVYRW7oBTjWxnL0hNTCnSTzzZdOh14W93awuCmgFk1sRu1xQVYFaPq9wPVE?=
+ =?us-ascii?Q?V3FV4o5PFpP+VxXtTT+27znEQXZ+SFx4mJP04CkB+hICF8RXLMIhsUA4A9yM?=
+ =?us-ascii?Q?xrcSXtGRTS+KGnOZBict4eRZ0uPhGOW6/8IRU3lcTXankkoXPJdDnFbD0obm?=
+ =?us-ascii?Q?70QJaABSuH4ahc/uH5E5gaoTiy5BQqAUZ8+cDHU4yrB/BR+aL02OM3ZyW+TU?=
+ =?us-ascii?Q?JORr7rOIA6bk6FewthwlkiIT750N8Gs0HY3d1PdkkPAw3UxFUtjwDUznHa6E?=
+ =?us-ascii?Q?ZNd3/kfKSrvKTc2hKBl9HhhQwelCfFpIFoOrjbRkqLDdwFAXlwi6UQr9m+85?=
+ =?us-ascii?Q?w3Ljxf1YQ8cLj9SWCzwsoZK3syoE9gEre77wuEG+quHe4FAC1X2dblh2RYHV?=
+ =?us-ascii?Q?GoZp3f2SIhbl8GnPYt/TPsh4VQkHT+UV/SlcKWf1ixgaX/mhrZXCK0gqRi1/?=
+ =?us-ascii?Q?qw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c12f9ab-9fbb-47bd-2c87-08da794b5b20
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2022 14:36:18.5939
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UrNMURFLSevJkbkPPJxdMI0Fscv+4PDI1L13l/gUaqz3eslokFQxQYotZdt4/wEiwT4Fo87vOBsrZC5Qm1nzGsAI+Xskx2AnStp/LK2n6v0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6782
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,474 +150,57 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The name the parameter vmap to src in all functions. The parameter
-contains the locations of the source data and the new name says that.
+On Mon, Aug 08, 2022 at 02:53:53PM +0200, Thomas Zimmermann wrote:
+>Add IOSYS_MAP_INIT_VADDR_IOMEM() for static init of variables of type
+>struct iosys_map.
+>
+>Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/gpu/drm/drm_format_helper.c | 106 ++++++++++++++--------------
- include/drm/drm_format_helper.h     |  18 ++---
- 2 files changed, 62 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-index 0fec3b68db95..56642816fdff 100644
---- a/drivers/gpu/drm/drm_format_helper.c
-+++ b/drivers/gpu/drm/drm_format_helper.c
-@@ -132,7 +132,7 @@ static int __drm_fb_xfrm_toio(void __iomem *dst, unsigned long dst_pitch, unsign
- /* TODO: Make this function work with multi-plane formats. */
- static int drm_fb_xfrm(struct iosys_map *dst,
- 		       const unsigned int *dst_pitch, const u8 *dst_pixsize,
--		       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+		       const struct iosys_map *src, const struct drm_framebuffer *fb,
- 		       const struct drm_rect *clip, bool vaddr_cached_hint,
- 		       void (*xfrm_line)(void *dbuf, const void *sbuf, unsigned int npixels))
- {
-@@ -143,13 +143,13 @@ static int drm_fb_xfrm(struct iosys_map *dst,
- 	if (!dst_pitch)
- 		dst_pitch = default_dst_pitch;
- 
--	/* TODO: handle vmap in I/O memory here */
-+	/* TODO: handle src in I/O memory here */
- 	if (dst[0].is_iomem)
- 		return __drm_fb_xfrm_toio(dst[0].vaddr_iomem, dst_pitch[0], dst_pixsize[0],
--					  vmap[0].vaddr, fb, clip, vaddr_cached_hint, xfrm_line);
-+					  src[0].vaddr, fb, clip, vaddr_cached_hint, xfrm_line);
- 	else
- 		return __drm_fb_xfrm(dst[0].vaddr, dst_pitch[0], dst_pixsize[0],
--				     vmap[0].vaddr, fb, clip, vaddr_cached_hint, xfrm_line);
-+				     src[0].vaddr, fb, clip, vaddr_cached_hint, xfrm_line);
- }
- 
- /**
-@@ -157,13 +157,13 @@ static int drm_fb_xfrm(struct iosys_map *dst,
-  * @dst: Array of destination buffers
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of source buffers
-+ * @src: Array of source buffers
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  *
-  * This function copies parts of a framebuffer to display memory. Destination and
-  * framebuffer formats must match. No conversion takes place. The parameters @dst,
-- * @dst_pitch and @vmap refer to arrays. Each array must have at least as many entries
-+ * @dst_pitch and @src refer to arrays. Each array must have at least as many entries
-  * as there are planes in @fb's format. Each entry stores the value for the format's
-  * respective color plane at the same index.
-  *
-@@ -171,7 +171,7 @@ static int drm_fb_xfrm(struct iosys_map *dst,
-  * top-left corner).
-  */
- void drm_fb_memcpy(struct iosys_map *dst, const unsigned int *dst_pitch,
--		   const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+		   const struct iosys_map *src, const struct drm_framebuffer *fb,
- 		   const struct drm_rect *clip)
- {
- 	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
-@@ -190,16 +190,16 @@ void drm_fb_memcpy(struct iosys_map *dst, const unsigned int *dst_pitch,
- 		size_t len_i = DIV_ROUND_UP(drm_rect_width(clip) * bpp_i, 8);
- 		unsigned int dst_pitch_i = dst_pitch[i];
- 		struct iosys_map dst_i = dst[i];
--		struct iosys_map vmap_i = vmap[i];
-+		struct iosys_map src_i = src[i];
- 
- 		if (!dst_pitch_i)
- 			dst_pitch_i = len_i;
- 
--		iosys_map_incr(&vmap_i, clip_offset(clip, fb->pitches[i], cpp_i));
-+		iosys_map_incr(&src_i, clip_offset(clip, fb->pitches[i], cpp_i));
- 		for (y = 0; y < lines; y++) {
--			/* TODO: handle vmap_i in I/O memory here */
--			iosys_map_memcpy_to(&dst_i, 0, vmap_i.vaddr, len_i);
--			iosys_map_incr(&vmap_i, fb->pitches[i]);
-+			/* TODO: handle src_i in I/O memory here */
-+			iosys_map_memcpy_to(&dst_i, 0, src_i.vaddr, len_i);
-+			iosys_map_incr(&src_i, fb->pitches[i]);
- 			iosys_map_incr(&dst_i, dst_pitch_i);
- 		}
- 	}
-@@ -231,14 +231,14 @@ static void drm_fb_swab32_line(void *dbuf, const void *sbuf, unsigned int pixels
-  * @dst: Array of destination buffers
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of source buffers
-+ * @src: Array of source buffers
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  * @cached: Source buffer is mapped cached (eg. not write-combined)
-  *
-  * This function copies parts of a framebuffer to display memory and swaps per-pixel
-  * bytes during the process. Destination and framebuffer formats must match. The
-- * parameters @dst, @dst_pitch and @vmap refer to arrays. Each array must have at
-+ * parameters @dst, @dst_pitch and @src refer to arrays. Each array must have at
-  * least as many entries as there are planes in @fb's format. Each entry stores the
-  * value for the format's respective color plane at the same index. If @cached is
-  * false a temporary buffer is used to cache one pixel line at a time to speed up
-@@ -248,7 +248,7 @@ static void drm_fb_swab32_line(void *dbuf, const void *sbuf, unsigned int pixels
-  * top-left corner).
-  */
- void drm_fb_swab(struct iosys_map *dst, const unsigned int *dst_pitch,
--		 const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+		 const struct iosys_map *src, const struct drm_framebuffer *fb,
- 		 const struct drm_rect *clip, bool cached)
- {
- 	const struct drm_format_info *format = fb->format;
-@@ -268,7 +268,7 @@ void drm_fb_swab(struct iosys_map *dst, const unsigned int *dst_pitch,
- 		return;
- 	}
- 
--	drm_fb_xfrm(dst, dst_pitch, &cpp, vmap, fb, clip, cached, swab_line);
-+	drm_fb_xfrm(dst, dst_pitch, &cpp, src, fb, clip, cached, swab_line);
- }
- EXPORT_SYMBOL(drm_fb_swab);
- 
-@@ -292,13 +292,13 @@ static void drm_fb_xrgb8888_to_rgb332_line(void *dbuf, const void *sbuf, unsigne
-  * @dst: Array of RGB332 destination buffers
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of XRGB8888 source buffers
-+ * @src: Array of XRGB8888 source buffers
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  *
-  * This function copies parts of a framebuffer to display memory and converts the
-  * color format during the process. Destination and framebuffer formats must match. The
-- * parameters @dst, @dst_pitch and @vmap refer to arrays. Each array must have at
-+ * parameters @dst, @dst_pitch and @src refer to arrays. Each array must have at
-  * least as many entries as there are planes in @fb's format. Each entry stores the
-  * value for the format's respective color plane at the same index.
-  *
-@@ -308,14 +308,14 @@ static void drm_fb_xrgb8888_to_rgb332_line(void *dbuf, const void *sbuf, unsigne
-  * Drivers can use this function for RGB332 devices that don't support XRGB8888 natively.
-  */
- void drm_fb_xrgb8888_to_rgb332(struct iosys_map *dst, const unsigned int *dst_pitch,
--			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			       const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			       const struct drm_rect *clip)
- {
- 	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
- 		1,
- 	};
- 
--	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
-+	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, src, fb, clip, false,
- 		    drm_fb_xrgb8888_to_rgb332_line);
- }
- EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb332);
-@@ -360,14 +360,14 @@ static void drm_fb_xrgb8888_to_rgb565_swab_line(void *dbuf, const void *sbuf,
-  * @dst: Array of RGB565 destination buffers
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of XRGB8888 source buffer
-+ * @src: Array of XRGB8888 source buffer
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  * @swab: Swap bytes
-  *
-  * This function copies parts of a framebuffer to display memory and converts the
-  * color format during the process. Destination and framebuffer formats must match. The
-- * parameters @dst, @dst_pitch and @vmap refer to arrays. Each array must have at
-+ * parameters @dst, @dst_pitch and @src refer to arrays. Each array must have at
-  * least as many entries as there are planes in @fb's format. Each entry stores the
-  * value for the format's respective color plane at the same index.
-  *
-@@ -377,7 +377,7 @@ static void drm_fb_xrgb8888_to_rgb565_swab_line(void *dbuf, const void *sbuf,
-  * Drivers can use this function for RGB565 devices that don't support XRGB8888 natively.
-  */
- void drm_fb_xrgb8888_to_rgb565(struct iosys_map *dst, const unsigned int *dst_pitch,
--			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			       const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			       const struct drm_rect *clip, bool swab)
- {
- 	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
-@@ -391,7 +391,7 @@ void drm_fb_xrgb8888_to_rgb565(struct iosys_map *dst, const unsigned int *dst_pi
- 	else
- 		xfrm_line = drm_fb_xrgb8888_to_rgb565_line;
- 
--	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false, xfrm_line);
-+	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, src, fb, clip, false, xfrm_line);
- }
- EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
- 
-@@ -415,13 +415,13 @@ static void drm_fb_xrgb8888_to_rgb888_line(void *dbuf, const void *sbuf, unsigne
-  * @dst: Array of RGB888 destination buffers
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of XRGB8888 source buffers
-+ * @src: Array of XRGB8888 source buffers
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  *
-  * This function copies parts of a framebuffer to display memory and converts the
-  * color format during the process. Destination and framebuffer formats must match. The
-- * parameters @dst, @dst_pitch and @vmap refer to arrays. Each array must have at
-+ * parameters @dst, @dst_pitch and @src refer to arrays. Each array must have at
-  * least as many entries as there are planes in @fb's format. Each entry stores the
-  * value for the format's respective color plane at the same index.
-  *
-@@ -432,14 +432,14 @@ static void drm_fb_xrgb8888_to_rgb888_line(void *dbuf, const void *sbuf, unsigne
-  * support XRGB8888.
-  */
- void drm_fb_xrgb8888_to_rgb888(struct iosys_map *dst, const unsigned int *dst_pitch,
--			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			       const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			       const struct drm_rect *clip)
- {
- 	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
- 		3,
- 	};
- 
--	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
-+	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, src, fb, clip, false,
- 		    drm_fb_xrgb8888_to_rgb888_line);
- }
- EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb888);
-@@ -463,7 +463,7 @@ static void drm_fb_rgb565_to_xrgb8888_line(void *dbuf, const void *sbuf, unsigne
- }
- 
- static void drm_fb_rgb565_to_xrgb8888(struct iosys_map *dst, const unsigned int *dst_pitch,
--				      const struct iosys_map *vmap,
-+				      const struct iosys_map *src,
- 				      const struct drm_framebuffer *fb,
- 				      const struct drm_rect *clip)
- {
-@@ -471,7 +471,7 @@ static void drm_fb_rgb565_to_xrgb8888(struct iosys_map *dst, const unsigned int
- 		4,
- 	};
- 
--	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
-+	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, src, fb, clip, false,
- 		    drm_fb_rgb565_to_xrgb8888_line);
- }
- 
-@@ -491,7 +491,7 @@ static void drm_fb_rgb888_to_xrgb8888_line(void *dbuf, const void *sbuf, unsigne
- }
- 
- static void drm_fb_rgb888_to_xrgb8888(struct iosys_map *dst, const unsigned int *dst_pitch,
--				      const struct iosys_map *vmap,
-+				      const struct iosys_map *src,
- 				      const struct drm_framebuffer *fb,
- 				      const struct drm_rect *clip)
- {
-@@ -499,7 +499,7 @@ static void drm_fb_rgb888_to_xrgb8888(struct iosys_map *dst, const unsigned int
- 		4,
- 	};
- 
--	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
-+	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, src, fb, clip, false,
- 		    drm_fb_rgb888_to_xrgb8888_line);
- }
- 
-@@ -526,13 +526,13 @@ static void drm_fb_xrgb8888_to_xrgb2101010_line(void *dbuf, const void *sbuf, un
-  * @dst: Array of XRGB2101010 destination buffers
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of XRGB8888 source buffers
-+ * @src: Array of XRGB8888 source buffers
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  *
-  * This function copies parts of a framebuffer to display memory and converts the
-  * color format during the process. Destination and framebuffer formats must match. The
-- * parameters @dst, @dst_pitch and @vmap refer to arrays. Each array must have at
-+ * parameters @dst, @dst_pitch and @src refer to arrays. Each array must have at
-  * least as many entries as there are planes in @fb's format. Each entry stores the
-  * value for the format's respective color plane at the same index.
-  *
-@@ -543,14 +543,14 @@ static void drm_fb_xrgb8888_to_xrgb2101010_line(void *dbuf, const void *sbuf, un
-  * natively.
-  */
- void drm_fb_xrgb8888_to_xrgb2101010(struct iosys_map *dst, const unsigned int *dst_pitch,
--				    const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+				    const struct iosys_map *src, const struct drm_framebuffer *fb,
- 				    const struct drm_rect *clip)
- {
- 	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
- 		4,
- 	};
- 
--	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
-+	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, src, fb, clip, false,
- 		    drm_fb_xrgb8888_to_xrgb2101010_line);
- }
- 
-@@ -576,13 +576,13 @@ static void drm_fb_xrgb8888_to_gray8_line(void *dbuf, const void *sbuf, unsigned
-  * @dst: Array of 8-bit grayscale destination buffers
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of XRGB8888 source buffers
-+ * @src: Array of XRGB8888 source buffers
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  *
-  * This function copies parts of a framebuffer to display memory and converts the
-  * color format during the process. Destination and framebuffer formats must match. The
-- * parameters @dst, @dst_pitch and @vmap refer to arrays. Each array must have at
-+ * parameters @dst, @dst_pitch and @src refer to arrays. Each array must have at
-  * least as many entries as there are planes in @fb's format. Each entry stores the
-  * value for the format's respective color plane at the same index.
-  *
-@@ -597,14 +597,14 @@ static void drm_fb_xrgb8888_to_gray8_line(void *dbuf, const void *sbuf, unsigned
-  * ITU BT.601 is being used for the RGB -> luma (brightness) conversion.
-  */
- void drm_fb_xrgb8888_to_gray8(struct iosys_map *dst, const unsigned int *dst_pitch,
--			      const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			      const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			      const struct drm_rect *clip)
- {
- 	static const u8 dst_pixsize[DRM_FORMAT_MAX_PLANES] = {
- 		1,
- 	};
- 
--	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, vmap, fb, clip, false,
-+	drm_fb_xfrm(dst, dst_pitch, dst_pixsize, src, fb, clip, false,
- 		    drm_fb_xrgb8888_to_gray8_line);
- }
- EXPORT_SYMBOL(drm_fb_xrgb8888_to_gray8);
-@@ -615,14 +615,14 @@ EXPORT_SYMBOL(drm_fb_xrgb8888_to_gray8);
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-  * @dst_format:	FOURCC code of the display's color format
-- * @vmap:	The framebuffer memory to copy from
-+ * @src:	The framebuffer memory to copy from
-  * @fb:		The framebuffer to copy from
-  * @clip:	Clip rectangle area to copy
-  *
-  * This function copies parts of a framebuffer to display memory. If the
-  * formats of the display and the framebuffer mismatch, the blit function
-  * will attempt to convert between them during the process. The parameters @dst,
-- * @dst_pitch and @vmap refer to arrays. Each array must have at least as many
-+ * @dst_pitch and @src refer to arrays. Each array must have at least as many
-  * entries as there are planes in @dst_format's format. Each entry stores the
-  * value for the format's respective color plane at the same index.
-  *
-@@ -635,7 +635,7 @@ EXPORT_SYMBOL(drm_fb_xrgb8888_to_gray8);
-  * a negative error code otherwise.
-  */
- int drm_fb_blit(struct iosys_map *dst, const unsigned int *dst_pitch, uint32_t dst_format,
--		const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+		const struct iosys_map *src, const struct drm_framebuffer *fb,
- 		const struct drm_rect *clip)
- {
- 	uint32_t fb_format = fb->format->format;
-@@ -651,30 +651,30 @@ int drm_fb_blit(struct iosys_map *dst, const unsigned int *dst_pitch, uint32_t d
- 		dst_format = DRM_FORMAT_XRGB2101010;
- 
- 	if (dst_format == fb_format) {
--		drm_fb_memcpy(dst, dst_pitch, vmap, fb, clip);
-+		drm_fb_memcpy(dst, dst_pitch, src, fb, clip);
- 		return 0;
- 
- 	} else if (dst_format == DRM_FORMAT_RGB565) {
- 		if (fb_format == DRM_FORMAT_XRGB8888) {
--			drm_fb_xrgb8888_to_rgb565(dst, dst_pitch, vmap, fb, clip, false);
-+			drm_fb_xrgb8888_to_rgb565(dst, dst_pitch, src, fb, clip, false);
- 			return 0;
- 		}
- 	} else if (dst_format == DRM_FORMAT_RGB888) {
- 		if (fb_format == DRM_FORMAT_XRGB8888) {
--			drm_fb_xrgb8888_to_rgb888(dst, dst_pitch, vmap, fb, clip);
-+			drm_fb_xrgb8888_to_rgb888(dst, dst_pitch, src, fb, clip);
- 			return 0;
- 		}
- 	} else if (dst_format == DRM_FORMAT_XRGB8888) {
- 		if (fb_format == DRM_FORMAT_RGB888) {
--			drm_fb_rgb888_to_xrgb8888(dst, dst_pitch, vmap, fb, clip);
-+			drm_fb_rgb888_to_xrgb8888(dst, dst_pitch, src, fb, clip);
- 			return 0;
- 		} else if (fb_format == DRM_FORMAT_RGB565) {
--			drm_fb_rgb565_to_xrgb8888(dst, dst_pitch, vmap, fb, clip);
-+			drm_fb_rgb565_to_xrgb8888(dst, dst_pitch, src, fb, clip);
- 			return 0;
- 		}
- 	} else if (dst_format == DRM_FORMAT_XRGB2101010) {
- 		if (fb_format == DRM_FORMAT_XRGB8888) {
--			drm_fb_xrgb8888_to_xrgb2101010(dst, dst_pitch, vmap, fb, clip);
-+			drm_fb_xrgb8888_to_xrgb2101010(dst, dst_pitch, src, fb, clip);
- 			return 0;
- 		}
- 	}
-@@ -708,13 +708,13 @@ static void drm_fb_gray8_to_mono_line(void *dbuf, const void *sbuf, unsigned int
-  * @dst: Array of monochrome destination buffers (0=black, 1=white)
-  * @dst_pitch: Array of numbers of bytes between the start of two consecutive scanlines
-  *             within @dst; can be NULL if scanlines are stored next to each other.
-- * @vmap: Array of XRGB8888 source buffers
-+ * @src: Array of XRGB8888 source buffers
-  * @fb: DRM framebuffer
-  * @clip: Clip rectangle area to copy
-  *
-  * This function copies parts of a framebuffer to display memory and converts the
-  * color format during the process. Destination and framebuffer formats must match. The
-- * parameters @dst, @dst_pitch and @vmap refer to arrays. Each array must have at
-+ * parameters @dst, @dst_pitch and @src refer to arrays. Each array must have at
-  * least as many entries as there are planes in @fb's format. Each entry stores the
-  * value for the format's respective color plane at the same index.
-  *
-@@ -734,7 +734,7 @@ static void drm_fb_gray8_to_mono_line(void *dbuf, const void *sbuf, unsigned int
-  * then the result is converted from grayscale to monochrome.
-  */
- void drm_fb_xrgb8888_to_mono(struct iosys_map *dst, const unsigned int *dst_pitch,
--			     const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			     const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			     const struct drm_rect *clip)
- {
- 	static const unsigned int default_dst_pitch[DRM_FORMAT_MAX_PLANES] = {
-@@ -745,7 +745,7 @@ void drm_fb_xrgb8888_to_mono(struct iosys_map *dst, const unsigned int *dst_pitc
- 	unsigned int cpp = fb->format->cpp[0];
- 	unsigned int len_src32 = linepixels * cpp;
- 	struct drm_device *dev = fb->dev;
--	void *vaddr = vmap[0].vaddr;
-+	void *vaddr = src[0].vaddr;
- 	unsigned int dst_pitch_0;
- 	unsigned int y;
- 	u8 *mono = dst[0].vaddr, *gray8;
-diff --git a/include/drm/drm_format_helper.h b/include/drm/drm_format_helper.h
-index 1e1d8f356cc1..caa181194335 100644
---- a/include/drm/drm_format_helper.h
-+++ b/include/drm/drm_format_helper.h
-@@ -15,33 +15,33 @@ unsigned int drm_fb_clip_offset(unsigned int pitch, const struct drm_format_info
- 				const struct drm_rect *clip);
- 
- void drm_fb_memcpy(struct iosys_map *dst, const unsigned int *dst_pitch,
--		   const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+		   const struct iosys_map *src, const struct drm_framebuffer *fb,
- 		   const struct drm_rect *clip);
- void drm_fb_swab(struct iosys_map *dst, const unsigned int *dst_pitch,
--		 const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+		 const struct iosys_map *src, const struct drm_framebuffer *fb,
- 		 const struct drm_rect *clip, bool cached);
- void drm_fb_xrgb8888_to_rgb332(struct iosys_map *dst, const unsigned int *dst_pitch,
--			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			       const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			       const struct drm_rect *clip);
- void drm_fb_xrgb8888_to_rgb565(struct iosys_map *dst, const unsigned int *dst_pitch,
--			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			       const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			       const struct drm_rect *clip, bool swab);
- void drm_fb_xrgb8888_to_rgb888(struct iosys_map *dst, const unsigned int *dst_pitch,
--			       const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			       const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			       const struct drm_rect *clip);
- void drm_fb_xrgb8888_to_xrgb2101010(struct iosys_map *dst, const unsigned int *dst_pitch,
--				    const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+				    const struct iosys_map *src, const struct drm_framebuffer *fb,
- 				    const struct drm_rect *clip);
- void drm_fb_xrgb8888_to_gray8(struct iosys_map *dst, const unsigned int *dst_pitch,
--			      const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			      const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			      const struct drm_rect *clip);
- 
- int drm_fb_blit(struct iosys_map *dst, const unsigned int *dst_pitch, uint32_t dst_format,
--		const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+		const struct iosys_map *src, const struct drm_framebuffer *fb,
- 		const struct drm_rect *rect);
- 
- void drm_fb_xrgb8888_to_mono(struct iosys_map *dst, const unsigned int *dst_pitch,
--			     const struct iosys_map *vmap, const struct drm_framebuffer *fb,
-+			     const struct iosys_map *src, const struct drm_framebuffer *fb,
- 			     const struct drm_rect *clip);
- 
- #endif /* __LINUX_DRM_FORMAT_HELPER_H */
--- 
-2.37.1
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
 
+Lucas De Marchi
+
+>---
+> include/linux/iosys-map.h | 15 ++++++++++++++-
+> 1 file changed, 14 insertions(+), 1 deletion(-)
+>
+>diff --git a/include/linux/iosys-map.h b/include/linux/iosys-map.h
+>index a533cae189d7..cb71aa616bd3 100644
+>--- a/include/linux/iosys-map.h
+>+++ b/include/linux/iosys-map.h
+>@@ -46,10 +46,13 @@
+>  *
+>  *	iosys_map_set_vaddr(&map, 0xdeadbeaf);
+>  *
+>- * To set an address in I/O memory, use iosys_map_set_vaddr_iomem().
+>+ * To set an address in I/O memory, use IOSYS_MAP_INIT_VADDR_IOMEM() or
+>+ * iosys_map_set_vaddr_iomem().
+>  *
+>  * .. code-block:: c
+>  *
+>+ *	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(0xdeadbeaf);
+>+ *
+>  *	iosys_map_set_vaddr_iomem(&map, 0xdeadbeaf);
+>  *
+>  * Instances of struct iosys_map do not have to be cleaned up, but
+>@@ -121,6 +124,16 @@ struct iosys_map {
+> 		.is_iomem = false,	\
+> 	}
+>
+>+/**
+>+ * IOSYS_MAP_INIT_VADDR_IOMEM - Initializes struct iosys_map to an address in I/O memory
+>+ * @vaddr_iomem_:	An I/O-memory address
+>+ */
+>+#define IOSYS_MAP_INIT_VADDR_IOMEM(vaddr_iomem_)	\
+>+	{						\
+>+		.vaddr_iomem = (vaddr_iomem_),		\
+>+		.is_iomem = true,			\
+>+	}
+>+
+> /**
+>  * IOSYS_MAP_INIT_OFFSET - Initializes struct iosys_map from another iosys_map
+>  * @map_:	The dma-buf mapping structure to copy from
+>-- 
+>2.37.1
+>
