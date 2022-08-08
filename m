@@ -2,59 +2,59 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51FE358C64B
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Aug 2022 12:23:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6913858C668
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Aug 2022 12:30:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242473AbiHHKXv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Aug 2022 06:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45450 "EHLO
+        id S241796AbiHHKaa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Aug 2022 06:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235539AbiHHKXu (ORCPT
+        with ESMTP id S237524AbiHHKaZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Aug 2022 06:23:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D5C741277F
-        for <linux-hyperv@vger.kernel.org>; Mon,  8 Aug 2022 03:23:48 -0700 (PDT)
+        Mon, 8 Aug 2022 06:30:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 799C113F4E
+        for <linux-hyperv@vger.kernel.org>; Mon,  8 Aug 2022 03:30:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659954227;
+        s=mimecast20190719; t=1659954623;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=CZ+7qMtAooG6dh841vB4xXZOc4YcIi/wWT2HlYib+T4=;
-        b=ZycgCR8hdsG9QNG4pRzDFFbZxv5bk4c6N2WUcWNTueflOhRu38XAEz20HHIZbuguLIKidB
-        gziOahRPbop4bXKkM8ords/mp9zTRMG5K0dVUif/ZKKWJ9fIFqANumlWzseL/eW0BDefeE
-        0W7ALKQe2UQ7bi4q0Q2QNpBysl7u6l0=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=GcMiTNAh1hTDrL+vg0EvQccfaH3LEJ6CT3JlnBgaxfg=;
+        b=YFqQh7jt32bdhrRTURvsMgO/RlI+NgvsrBznXdaQQloplX0kK3AnlNv/R/eXyyXBJadaop
+        P/8Qj5Zj2uBY36kh6iowH3TjEt3o7QkExUuCNlXvj+D5SyJeBwitU/DHXfPqksFXodbVZM
+        fxZAZ43Ypizptvbs7Bm97cDAZfvEqO0=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-650-IhPzsTXwOQ-h5ZhL9mUmvg-1; Mon, 08 Aug 2022 06:23:46 -0400
-X-MC-Unique: IhPzsTXwOQ-h5ZhL9mUmvg-1
-Received: by mail-qt1-f200.google.com with SMTP id g22-20020ac85816000000b00342b02072ceso5919086qtg.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 08 Aug 2022 03:23:46 -0700 (PDT)
+ us-mta-135-XdSMmbdJOz-FMBcbSh0I1Q-1; Mon, 08 Aug 2022 06:30:22 -0400
+X-MC-Unique: XdSMmbdJOz-FMBcbSh0I1Q-1
+Received: by mail-qk1-f198.google.com with SMTP id i15-20020a05620a404f00b006b55998179bso7541558qko.4
+        for <linux-hyperv@vger.kernel.org>; Mon, 08 Aug 2022 03:30:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=CZ+7qMtAooG6dh841vB4xXZOc4YcIi/wWT2HlYib+T4=;
-        b=ba+vSMoPjXDBJ5lF+ao7ueV/G6PCkPHyIdjCzxjdozqfUpWANCK9B7tvTkuLxSQO2Y
-         A8769lqLS0MgL1lwIKGeRTO6tfAiZN+AxqHXWP3WgIihFraAyAUmBp2MRrJi02NPW7eF
-         afcG++a2ZhB7tgpj/n1vdK9huerG3A1sy/xL75CJcllY9++oq+y55qfDLl43QrpeG7Ib
-         e6k6G5khvxzcb8WQRKVqiTexbCWvpswtl/zEQcfi0Y0Y3jwO8uACs7ty+vc0DGj0gKyp
-         EtNXAIgcYwXmyUZZGWNg/lijySOWvHNCnve8kdvb08M6dWY8RH2lqJ9Z9pZgwAMvveOz
-         QMlQ==
-X-Gm-Message-State: ACgBeo2zXHLGlGffp7E484nfodvFzw3Giy7ySLIGCM5y2Spt9bK5Rjm4
-        WtvRWmzCBmgllgDmctDx+q4g6wG0uFWuae1Dq6yi7QcRjcBt6EmhkFBXoYm4nrCkrdM+5exdfQW
-        Ss4K7QEvpJ1/jvn1aFp+jVa1r
-X-Received: by 2002:ac8:7d4e:0:b0:31f:33db:69bc with SMTP id h14-20020ac87d4e000000b0031f33db69bcmr15622450qtb.482.1659954226113;
-        Mon, 08 Aug 2022 03:23:46 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6JBzf5xAfbbDtzMbPLn2U0H6BGM6n6lSlv4ISjtq6rY6A09Oo3blf5b3eQhOOQ/S3L7JLDWA==
-X-Received: by 2002:ac8:7d4e:0:b0:31f:33db:69bc with SMTP id h14-20020ac87d4e000000b0031f33db69bcmr15622424qtb.482.1659954225867;
-        Mon, 08 Aug 2022 03:23:45 -0700 (PDT)
+        bh=GcMiTNAh1hTDrL+vg0EvQccfaH3LEJ6CT3JlnBgaxfg=;
+        b=M1GiC2pPgcg+464mdKw0m7PZgu7khR+ORFAENFkMsheWy0KOSVDkR9BR9MncMwHgce
+         56SFQC+XABdsTCRJBHikSMghX28W9t42ch00scbFKHfHYZ9fIabw2DgLA/bwg0ATPVw2
+         ai5VSyBimA+bR2SJGRmyZzZuMVLej847YnYtrAzznWSkXYzpkLozOm4OzKttqfEhSMNj
+         E9xicHdcyexf4/4sedbywE60GuAgjOUTez9lGWd0wXn5/nMHXFFuXVwiIqqccEh9K/oW
+         mXkeIA2OtC4U19i34tS8Xi9dCQc/CtIRtHokufYjqS1MZFkH28BLp+hv/yBWovrHmWoH
+         O+oA==
+X-Gm-Message-State: ACgBeo0odBsyAJFSGk6+E5vZw1V+Hm7ixwGqTObyHaofonDhWyTc/joJ
+        ByilQX1mUlIqR5rZs3ABG5gHw24PG1YEmzeJRPP/q/GVmH6S6Yf9tsflmmBZ1o3cH3warngpdWv
+        aYrXj1Ifg6DkQOBjJDCf8Fudf
+X-Received: by 2002:a37:2f03:0:b0:6b5:f8d9:7eab with SMTP id v3-20020a372f03000000b006b5f8d97eabmr13681296qkh.79.1659954622003;
+        Mon, 08 Aug 2022 03:30:22 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR4XGLj1VfcJFS+ebiNnab2ZLX5E3Tf208Zo5b4se2GNkoL41B1DWrzqhZGDT4lGv++JCSXVQA==
+X-Received: by 2002:a37:2f03:0:b0:6b5:f8d9:7eab with SMTP id v3-20020a372f03000000b006b5f8d97eabmr13681272qkh.79.1659954621774;
+        Mon, 08 Aug 2022 03:30:21 -0700 (PDT)
 Received: from sgarzare-redhat (host-79-46-200-178.retail.telecomitalia.it. [79.46.200.178])
-        by smtp.gmail.com with ESMTPSA id k5-20020a05620a414500b006b93ef659c3sm4308518qko.39.2022.08.08.03.23.40
+        by smtp.gmail.com with ESMTPSA id g6-20020ac80706000000b0034068f9d8fcsm7431142qth.20.2022.08.08.03.30.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Aug 2022 03:23:44 -0700 (PDT)
-Date:   Mon, 8 Aug 2022 12:23:35 +0200
+        Mon, 08 Aug 2022 03:30:21 -0700 (PDT)
+Date:   Mon, 8 Aug 2022 12:30:11 +0200
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -79,16 +79,17 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>
 Subject: Re: [RFC PATCH v3 1/9] vsock: SO_RCVLOWAT transport set callback
-Message-ID: <20220808102335.nkviqobpgcmcaqhn@sgarzare-redhat>
+Message-ID: <CAGxU2F513N+0sB0fEz4EF7+NeELhW9w9Rk6hh5K7QQO+eXRymA@mail.gmail.com>
 References: <2ac35e2c-26a8-6f6d-2236-c4692600db9e@sberdevices.ru>
  <45822644-8e37-1625-5944-63fd5fc20dd3@sberdevices.ru>
+ <20220808102335.nkviqobpgcmcaqhn@sgarzare-redhat>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <45822644-8e37-1625-5944-63fd5fc20dd3@sberdevices.ru>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220808102335.nkviqobpgcmcaqhn@sgarzare-redhat>
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -96,108 +97,103 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 03, 2022 at 01:51:05PM +0000, Arseniy Krasnov wrote:
->This adds transport specific callback for SO_RCVLOWAT, because in some
->transports it may be difficult to know current available number of bytes
->ready to read. Thus, when SO_RCVLOWAT is set, transport may reject it.
+On Mon, Aug 8, 2022 at 12:23 PM Stefano Garzarella <sgarzare@redhat.com> wrote:
 >
->Signed-off-by: Arseniy Krasnov <AVKrasnov@sberdevices.ru>
->---
-> include/net/af_vsock.h   |  1 +
-> net/vmw_vsock/af_vsock.c | 25 +++++++++++++++++++++++++
-> 2 files changed, 26 insertions(+)
+> On Wed, Aug 03, 2022 at 01:51:05PM +0000, Arseniy Krasnov wrote:
+> >This adds transport specific callback for SO_RCVLOWAT, because in some
+> >transports it may be difficult to know current available number of bytes
+> >ready to read. Thus, when SO_RCVLOWAT is set, transport may reject it.
+> >
+> >Signed-off-by: Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+> >---
+> > include/net/af_vsock.h   |  1 +
+> > net/vmw_vsock/af_vsock.c | 25 +++++++++++++++++++++++++
+> > 2 files changed, 26 insertions(+)
+> >
+> >diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> >index f742e50207fb..eae5874bae35 100644
+> >--- a/include/net/af_vsock.h
+> >+++ b/include/net/af_vsock.h
+> >@@ -134,6 +134,7 @@ struct vsock_transport {
+> >       u64 (*stream_rcvhiwat)(struct vsock_sock *);
+> >       bool (*stream_is_active)(struct vsock_sock *);
+> >       bool (*stream_allow)(u32 cid, u32 port);
+> >+      int (*set_rcvlowat)(struct vsock_sock *, int);
 >
->diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
->index f742e50207fb..eae5874bae35 100644
->--- a/include/net/af_vsock.h
->+++ b/include/net/af_vsock.h
->@@ -134,6 +134,7 @@ struct vsock_transport {
-> 	u64 (*stream_rcvhiwat)(struct vsock_sock *);
-> 	bool (*stream_is_active)(struct vsock_sock *);
-> 	bool (*stream_allow)(u32 cid, u32 port);
->+	int (*set_rcvlowat)(struct vsock_sock *, int);
-
-checkpatch suggests to add identifier names. For some we put them in, 
-for others we didn't, but I suggest putting them in for the new ones 
-because I think it's clearer too.
-
-WARNING: function definition argument 'struct vsock_sock *' should also 
-have an identifier name
-#25: FILE: include/net/af_vsock.h:137:
-+	int (*set_rcvlowat)(struct vsock_sock *, int);
-
-WARNING: function definition argument 'int' should also have an identifier name
-#25: FILE: include/net/af_vsock.h:137:
-+	int (*set_rcvlowat)(struct vsock_sock *, int);
-
-total: 0 errors, 2 warnings, 0 checks, 44 lines checked
-
+> checkpatch suggests to add identifier names. For some we put them in,
+> for others we didn't, but I suggest putting them in for the new ones
+> because I think it's clearer too.
 >
-> 	/* SEQ_PACKET. */
-> 	ssize_t (*seqpacket_dequeue)(struct vsock_sock *vsk, struct msghdr *msg,
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index f04abf662ec6..016ad5ff78b7 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -2129,6 +2129,30 @@ vsock_connectible_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
-> 	return err;
-> }
+> WARNING: function definition argument 'struct vsock_sock *' should also
+> have an identifier name
+> #25: FILE: include/net/af_vsock.h:137:
+> +       int (*set_rcvlowat)(struct vsock_sock *, int);
 >
->+static int vsock_set_rcvlowat(struct sock *sk, int val)
->+{
->+	const struct vsock_transport *transport;
->+	struct vsock_sock *vsk;
->+	int err = 0;
->+
->+	vsk = vsock_sk(sk);
->+
->+	if (val > vsk->buffer_size)
->+		return -EINVAL;
->+
->+	transport = vsk->transport;
->+
->+	if (!transport)
->+		return -EOPNOTSUPP;
-
-I don't know whether it is better in this case to write it in 
-sk->sk_rcvlowat, maybe we can return EOPNOTSUPP only when the trasport 
-is assigned and set_rcvlowat is not defined. This is because usually the 
-options are set just after creation, when the transport is practically 
-unassigned.
-
-I mean something like this:
-
-         if (transport) {
-                 if (transport->set_rcvlowat)
-                         return transport->set_rcvlowat(vsk, val);
-                 else
-                         return -EOPNOTSUPP;
-         }
-
-         WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
-
-         return 0;
-
->+
->+	if (transport->set_rcvlowat)
->+		err = transport->set_rcvlowat(vsk, val);
->+	else
->+		WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
->+
->+	return err;
->+}
->+
-> static const struct proto_ops vsock_stream_ops = {
-> 	.family = PF_VSOCK,
-> 	.owner = THIS_MODULE,
->@@ -2148,6 +2172,7 @@ static const struct proto_ops vsock_stream_ops = {
-> 	.recvmsg = vsock_connectible_recvmsg,
-> 	.mmap = sock_no_mmap,
-> 	.sendpage = sock_no_sendpage,
->+	.set_rcvlowat = vsock_set_rcvlowat,
-> };
+> WARNING: function definition argument 'int' should also have an identifier name
+> #25: FILE: include/net/af_vsock.h:137:
+> +       int (*set_rcvlowat)(struct vsock_sock *, int);
 >
-> static const struct proto_ops vsock_seqpacket_ops = {
->-- 
->2.25.1
+> total: 0 errors, 2 warnings, 0 checks, 44 lines checked
+>
+> >
+> >       /* SEQ_PACKET. */
+> >       ssize_t (*seqpacket_dequeue)(struct vsock_sock *vsk, struct msghdr *msg,
+> >diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> >index f04abf662ec6..016ad5ff78b7 100644
+> >--- a/net/vmw_vsock/af_vsock.c
+> >+++ b/net/vmw_vsock/af_vsock.c
+> >@@ -2129,6 +2129,30 @@ vsock_connectible_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+> >       return err;
+> > }
+> >
+> >+static int vsock_set_rcvlowat(struct sock *sk, int val)
+> >+{
+> >+      const struct vsock_transport *transport;
+> >+      struct vsock_sock *vsk;
+> >+      int err = 0;
+> >+
+> >+      vsk = vsock_sk(sk);
+> >+
+> >+      if (val > vsk->buffer_size)
+> >+              return -EINVAL;
+> >+
+> >+      transport = vsk->transport;
+> >+
+> >+      if (!transport)
+> >+              return -EOPNOTSUPP;
+>
+> I don't know whether it is better in this case to write it in
+> sk->sk_rcvlowat, maybe we can return EOPNOTSUPP only when the trasport
+> is assigned and set_rcvlowat is not defined. This is because usually the
+> options are set just after creation, when the transport is practically
+> unassigned.
+>
+> I mean something like this:
+>
+>          if (transport) {
+>                  if (transport->set_rcvlowat)
+>                          return transport->set_rcvlowat(vsk, val);
+>                  else
+>                          return -EOPNOTSUPP;
+>          }
+>
+>          WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
+>
+>          return 0;
+
+Since hv_sock implements `set_rcvlowat` to return EOPNOTSUPP. maybe we 
+can just do the following:
+
+        if (transport && transport->set_rcvlowat)
+                return transport->set_rcvlowat(vsk, val);
+
+        WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
+        return 0;
+
+That is, the default behavior is to set sk->sk_rcvlowat, but for 
+transports that want a different behavior, they need to define 
+set_rcvlowat() (like hv_sock).
+
+Thanks,
+Stefano
 
