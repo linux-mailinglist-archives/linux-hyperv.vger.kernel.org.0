@@ -2,38 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 568D258C351
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Aug 2022 08:31:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51FE358C64B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Aug 2022 12:23:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234504AbiHHGbd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Aug 2022 02:31:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34772 "EHLO
+        id S242473AbiHHKXv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 Aug 2022 06:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233495AbiHHGbc (ORCPT
+        with ESMTP id S235539AbiHHKXu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Aug 2022 02:31:32 -0400
-Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A761BCBA;
-        Sun,  7 Aug 2022 23:31:28 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mail.sberdevices.ru (Postfix) with ESMTP id 463005FD04;
-        Mon,  8 Aug 2022 09:31:24 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1659940284;
-        bh=IjKJpx3bmBabF6bKC/I/OqMndOebQIAA5aw0VvYd9ZQ=;
-        h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-        b=AUrQdSs6DQ8UdZb02KAq+95S+2eZlEg9avlZHf18KO3uXS0NoeCE3KPNuw8hM8ekG
-         Bnno3pn6vDb31/uHLgusz8wI/2Jw8mM8eH48LOXTMsk3Z2aULSKiRQoa5gkK/pc3kH
-         7y6pgIhTK4MCiKMuNqHSOdcSxSnFZHvnXioTf1Q9ph/oebnaf+tHrz5Zt2EzUEOZvA
-         1KuGHgcXV2p8Z1KgLQN92xly+0Cq6ti5Z2HmE+vcZ37HYFFRyqh6JU5rtf8JMMIBMs
-         K1owIwZgVrI+SpvZ5gOTinQ7FFKxYxFJIPEjce+Quwf0lVFsPkvEKXZXLEbNo4bkq9
-         TShpNmr3ylRvw==
-Received: from S-MS-EXCH02.sberdevices.ru (S-MS-EXCH02.sberdevices.ru [172.16.1.5])
-        by mail.sberdevices.ru (Postfix) with ESMTP;
-        Mon,  8 Aug 2022 09:31:19 +0300 (MSK)
-From:   Arseniy Krasnov <AVKrasnov@sberdevices.ru>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
+        Mon, 8 Aug 2022 06:23:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D5C741277F
+        for <linux-hyperv@vger.kernel.org>; Mon,  8 Aug 2022 03:23:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659954227;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CZ+7qMtAooG6dh841vB4xXZOc4YcIi/wWT2HlYib+T4=;
+        b=ZycgCR8hdsG9QNG4pRzDFFbZxv5bk4c6N2WUcWNTueflOhRu38XAEz20HHIZbuguLIKidB
+        gziOahRPbop4bXKkM8ords/mp9zTRMG5K0dVUif/ZKKWJ9fIFqANumlWzseL/eW0BDefeE
+        0W7ALKQe2UQ7bi4q0Q2QNpBysl7u6l0=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-650-IhPzsTXwOQ-h5ZhL9mUmvg-1; Mon, 08 Aug 2022 06:23:46 -0400
+X-MC-Unique: IhPzsTXwOQ-h5ZhL9mUmvg-1
+Received: by mail-qt1-f200.google.com with SMTP id g22-20020ac85816000000b00342b02072ceso5919086qtg.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 08 Aug 2022 03:23:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=CZ+7qMtAooG6dh841vB4xXZOc4YcIi/wWT2HlYib+T4=;
+        b=ba+vSMoPjXDBJ5lF+ao7ueV/G6PCkPHyIdjCzxjdozqfUpWANCK9B7tvTkuLxSQO2Y
+         A8769lqLS0MgL1lwIKGeRTO6tfAiZN+AxqHXWP3WgIihFraAyAUmBp2MRrJi02NPW7eF
+         afcG++a2ZhB7tgpj/n1vdK9huerG3A1sy/xL75CJcllY9++oq+y55qfDLl43QrpeG7Ib
+         e6k6G5khvxzcb8WQRKVqiTexbCWvpswtl/zEQcfi0Y0Y3jwO8uACs7ty+vc0DGj0gKyp
+         EtNXAIgcYwXmyUZZGWNg/lijySOWvHNCnve8kdvb08M6dWY8RH2lqJ9Z9pZgwAMvveOz
+         QMlQ==
+X-Gm-Message-State: ACgBeo2zXHLGlGffp7E484nfodvFzw3Giy7ySLIGCM5y2Spt9bK5Rjm4
+        WtvRWmzCBmgllgDmctDx+q4g6wG0uFWuae1Dq6yi7QcRjcBt6EmhkFBXoYm4nrCkrdM+5exdfQW
+        Ss4K7QEvpJ1/jvn1aFp+jVa1r
+X-Received: by 2002:ac8:7d4e:0:b0:31f:33db:69bc with SMTP id h14-20020ac87d4e000000b0031f33db69bcmr15622450qtb.482.1659954226113;
+        Mon, 08 Aug 2022 03:23:46 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6JBzf5xAfbbDtzMbPLn2U0H6BGM6n6lSlv4ISjtq6rY6A09Oo3blf5b3eQhOOQ/S3L7JLDWA==
+X-Received: by 2002:ac8:7d4e:0:b0:31f:33db:69bc with SMTP id h14-20020ac87d4e000000b0031f33db69bcmr15622424qtb.482.1659954225867;
+        Mon, 08 Aug 2022 03:23:45 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-46-200-178.retail.telecomitalia.it. [79.46.200.178])
+        by smtp.gmail.com with ESMTPSA id k5-20020a05620a414500b006b93ef659c3sm4308518qko.39.2022.08.08.03.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Aug 2022 03:23:44 -0700 (PDT)
+Date:   Mon, 8 Aug 2022 12:23:35 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
         "edumazet@google.com" <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
@@ -41,11 +65,11 @@ CC:     "David S. Miller" <davem@davemloft.net>,
         "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
         "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "Dexuan Cui" <decui@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Bryan Tan <bryantan@vmware.com>,
         Vishnu Dasa <vdasa@vmware.com>,
-        "VMware PV-Drivers Reviewers" <pv-drivers@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
         Krasnov Arseniy <oxffffaa@gmail.com>,
         "virtualization@lists.linux-foundation.org" 
         <virtualization@lists.linux-foundation.org>,
@@ -54,112 +78,126 @@ CC:     "David S. Miller" <davem@davemloft.net>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>
-Subject: Re: [RFC PATCH v3 0/9] vsock: updates for SO_RCVLOWAT handling
-Thread-Topic: [RFC PATCH v3 0/9] vsock: updates for SO_RCVLOWAT handling
-Thread-Index: AQHYpz+pcvNrW+Wes06KlvYKyF5H+a2gSZIAgAQWkgA=
-Date:   Mon, 8 Aug 2022 06:30:31 +0000
-Message-ID: <6f32ea12-f209-d921-ce1b-efa7c74a4f63@sberdevices.ru>
+Subject: Re: [RFC PATCH v3 1/9] vsock: SO_RCVLOWAT transport set callback
+Message-ID: <20220808102335.nkviqobpgcmcaqhn@sgarzare-redhat>
 References: <2ac35e2c-26a8-6f6d-2236-c4692600db9e@sberdevices.ru>
- <20220805160528.4jzyrjppdftrvdr5@sgarzare-redhat>
-In-Reply-To: <20220805160528.4jzyrjppdftrvdr5@sgarzare-redhat>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.1.12]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A2120B128FC9C64C8E0D6F3918815143@sberdevices.ru>
-Content-Transfer-Encoding: base64
+ <45822644-8e37-1625-5944-63fd5fc20dd3@sberdevices.ru>
 MIME-Version: 1.0
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/08/08 03:38:00 #20075575
-X-KSMG-AntiVirus-Status: Clean, skipped
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <45822644-8e37-1625-5944-63fd5fc20dd3@sberdevices.ru>
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-T24gMDUuMDguMjAyMiAxOTowNSwgU3RlZmFubyBHYXJ6YXJlbGxhIHdyb3RlOg0KPiBIaSBBcnNl
-bml5LA0KPiBzb3JyeSBidXQgSSBkaWRuJ3QgaGF2ZSB0aW1lIHRvIHJldmlldyB0aGlzIHNlcmll
-cy4gSSB3aWxsIGRlZmluaXRlbHkgZG8gaXQgbmV4dCBNb25kYXkhDQo+IA0KPiBIYXZlIGEgbmlj
-ZSB3ZWVrZW5kLA0KPiBTdGVmYW5vDQpIZWxsbywNCm5vIHByb2JsZW0NCg0KVGhhbmsgWW91DQo+
-IA0KPiBPbiBXZWQsIEF1ZyAwMywgMjAyMiBhdCAwMTo0ODowNlBNICswMDAwLCBBcnNlbml5IEty
-YXNub3Ygd3JvdGU6DQo+PiBIZWxsbywNCj4+DQo+PiBUaGlzIHBhdGNoc2V0IGluY2x1ZGVzIHNv
-bWUgdXBkYXRlcyBmb3IgU09fUkNWTE9XQVQ6DQo+Pg0KPj4gMSkgYWZfdnNvY2s6DQo+PiDCoCBE
-dXJpbmcgbXkgZXhwZXJpbWVudHMgd2l0aCB6ZXJvY29weSByZWNlaXZlLCBpIGZvdW5kLCB0aGF0
-IGluIHNvbWUNCj4+IMKgIGNhc2VzLCBwb2xsKCkgaW1wbGVtZW50YXRpb24gdmlvbGF0ZXMgUE9T
-SVg6IHdoZW4gc29ja2V0IGhhcyBub24tDQo+PiDCoCBkZWZhdWx0IFNPX1JDVkxPV0FUKGUuZy4g
-bm90IDEpLCBwb2xsKCkgd2lsbCBhbHdheXMgc2V0IFBPTExJTiBhbmQNCj4+IMKgIFBPTExSRE5P
-Uk0gYml0cyBpbiAncmV2ZW50cycgZXZlbiBudW1iZXIgb2YgYnl0ZXMgYXZhaWxhYmxlIHRvIHJl
-YWQNCj4+IMKgIG9uIHNvY2tldCBpcyBzbWFsbGVyIHRoYW4gU09fUkNWTE9XQVQgdmFsdWUuIElu
-IHRoaXMgY2FzZSx1c2VyIHNlZXMNCj4+IMKgIFBPTExJTiBmbGFnIGFuZCB0aGVuIHRyaWVzIHRv
-IHJlYWQgZGF0YShmb3IgZXhhbXBsZSB1c2luZ8KgICdyZWFkKCknDQo+PiDCoCBjYWxsKSwgYnV0
-IHJlYWQgY2FsbCB3aWxsIGJlIGJsb2NrZWQsIGJlY2F1c2XCoCBTT19SQ1ZMT1dBVCBsb2dpYyBp
-cw0KPj4gwqAgc3VwcG9ydGVkIGluIGRlcXVldWUgbG9vcCBpbiBhZl92c29jay5jLiBCdXQgdGhl
-IHNhbWUgdGltZSzCoCBQT1NJWA0KPj4gwqAgcmVxdWlyZXMgdGhhdDoNCj4+DQo+PiDCoCAiUE9M
-TElOwqDCoMKgwqAgRGF0YSBvdGhlciB0aGFuIGhpZ2gtcHJpb3JpdHkgZGF0YSBtYXkgYmUgcmVh
-ZCB3aXRob3V0DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBibG9ja2luZy4NCj4+IMKg
-wqAgUE9MTFJETk9STSBOb3JtYWwgZGF0YSBtYXkgYmUgcmVhZCB3aXRob3V0IGJsb2NraW5nLiIN
-Cj4+DQo+PiDCoCBTZWUgaHR0cHM6Ly93d3cub3Blbi1zdGQub3JnL2p0YzEvc2MyMi9vcGVuL240
-MjE3LnBkZiwgcGFnZSAyOTMuDQo+Pg0KPj4gwqAgU28sIHdlIGhhdmUsIHRoYXQgcG9sbCgpIHN5
-c2NhbGwgcmV0dXJucyBQT0xMSU4sIGJ1dCByZWFkIGNhbGwgd2lsbA0KPj4gwqAgYmUgYmxvY2tl
-ZC4NCj4+DQo+PiDCoCBBbHNvIGluIG1hbiBwYWdlIHNvY2tldCg3KSBpIGZvdW5kIHRoYXQ6DQo+
-Pg0KPj4gwqAgIlNpbmNlIExpbnV4IDIuNi4yOCwgc2VsZWN0KDIpLCBwb2xsKDIpLCBhbmQgZXBv
-bGwoNykgaW5kaWNhdGUgYQ0KPj4gwqAgc29ja2V0IGFzIHJlYWRhYmxlIG9ubHkgaWYgYXQgbGVh
-c3QgU09fUkNWTE9XQVQgYnl0ZXMgYXJlIGF2YWlsYWJsZS4iDQo+Pg0KPj4gwqAgSSBjaGVja2Vk
-IFRDUCBjYWxsYmFjayBmb3IgcG9sbCgpKG5ldC9pcHY0L3RjcC5jLCB0Y3BfcG9sbCgpKSwgaXQN
-Cj4+IMKgIHVzZXMgU09fUkNWTE9XQVQgdmFsdWUgdG8gc2V0IFBPTExJTiBiaXQsIGFsc28gaSd2
-ZSB0ZXN0ZWQgVENQIHdpdGgNCj4+IMKgIHRoaXMgY2FzZSBmb3IgVENQIHNvY2tldCwgaXQgd29y
-a3MgYXMgUE9TSVggcmVxdWlyZWQuDQo+Pg0KPj4gwqAgSSd2ZSBhZGRlZCBzb21lIGZpeGVzIHRv
-IGFmX3Zzb2NrLmMgYW5kIHZpcnRpb190cmFuc3BvcnRfY29tbW9uLmMsDQo+PiDCoCB0ZXN0IGlz
-IGFsc28gaW1wbGVtZW50ZWQuDQo+Pg0KPj4gMikgdmlydGlvL3Zzb2NrOg0KPj4gwqAgSXQgYWRk
-cyBzb21lIG9wdGltaXphdGlvbiB0byB3YWtlIHVwcywgd2hlbiBuZXcgZGF0YSBhcnJpdmVkLiBO
-b3csDQo+PiDCoCBTT19SQ1ZMT1dBVCBpcyBjb25zaWRlcmVkIGJlZm9yZSB3YWtlIHVwIHNsZWVw
-ZXJzIHdobyB3YWl0IG5ldyBkYXRhLg0KPj4gwqAgVGhlcmUgaXMgbm8gc2Vuc2UsIHRvIGtpY2sg
-d2FpdGVyLCB3aGVuIG51bWJlciBvZiBhdmFpbGFibGUgYnl0ZXMNCj4+IMKgIGluIHNvY2tldCdz
-IHF1ZXVlIDwgU09fUkNWTE9XQVQsIGJlY2F1c2UgaWYgd2Ugd2FrZSB1cCByZWFkZXIgaW4NCj4+
-IMKgIHRoaXMgY2FzZSwgaXQgd2lsbCB3YWl0IGZvciBTT19SQ1ZMT1dBVCBkYXRhIGFueXdheSBk
-dXJpbmcgZGVxdWV1ZSwNCj4+IMKgIG9yIGluIHBvbGwoKSBjYXNlLCBQT0xMSU4vUE9MTFJETk9S
-TSBiaXRzIHdvbid0IGJlIHNldCwgc28gc3VjaA0KPj4gwqAgZXhpdCBmcm9tIHBvbGwoKSB3aWxs
-IGJlICJzcHVyaW91cyIuIFRoaXMgbG9naWMgaXMgYWxzbyB1c2VkIGluIFRDUA0KPj4gwqAgc29j
-a2V0cy4NCj4+DQo+PiAzKSB2bWNpL3Zzb2NrOg0KPj4gwqAgU2FtZSBhcyAyKSwgYnV0IGknbSBu
-b3Qgc3VyZSBhYm91dCB0aGlzIGNoYW5nZXMuIFdpbGwgYmUgdmVyeSBnb29kLA0KPj4gwqAgdG8g
-Z2V0IGNvbW1lbnRzIGZyb20gc29tZW9uZSB3aG8ga25vd3MgdGhpcyBjb2RlLg0KPj4NCj4+IDQp
-IEh5cGVyLVY6DQo+PiDCoCBBcyBEZXh1YW4gQ3VpIG1lbnRpb25lZCwgZm9yIEh5cGVyLVYgdHJh
-bnNwb3J0IGl0IGlzIGRpZmZpY3VsdCB0bw0KPj4gwqAgc3VwcG9ydCBTT19SQ1ZMT1dBVCwgc28g
-aGUgc3VnZ2VzdGVkIHRvIGRpc2FibGUgdGhpcyBmZWF0dXJlIGZvcg0KPj4gwqAgSHlwZXItVi4N
-Cj4+DQo+PiBUaGFuayBZb3UNCj4+DQo+PiBBcnNlbml5IEtyYXNub3YoOSk6DQo+PiB2c29jazog
-U09fUkNWTE9XQVQgdHJhbnNwb3J0IHNldCBjYWxsYmFjaw0KPj4gaHZfc29jazogZGlzYWJsZSBT
-T19SQ1ZMT1dBVCBzdXBwb3J0DQo+PiB2aXJ0aW8vdnNvY2s6IHVzZSAndGFyZ2V0JyBpbiBub3Rp
-ZnlfcG9sbF9pbiBjYWxsYmFjaw0KPj4gdm1jaS92c29jazogdXNlICd0YXJnZXQnIGluIG5vdGlm
-eV9wb2xsX2luIGNhbGxiYWNrDQo+PiB2c29jazogcGFzcyBzb2NrX3Jjdmxvd2F0IHRvIG5vdGlm
-eV9wb2xsX2luIGFzIHRhcmdldA0KPj4gdnNvY2s6IGFkZCBBUEkgY2FsbCBmb3IgZGF0YSByZWFk
-eQ0KPj4gdmlydGlvL3Zzb2NrOiBjaGVjayBTT19SQ1ZMT1dBVCBiZWZvcmUgd2FrZSB1cCByZWFk
-ZXINCj4+IHZtY2kvdnNvY2s6IGNoZWNrIFNPX1JDVkxPV0FUIGJlZm9yZSB3YWtlIHVwIHJlYWRl
-cg0KPj4gdnNvY2tfdGVzdDogUE9MTElOICsgU09fUkNWTE9XQVQgdGVzdA0KPj4NCj4+IGluY2x1
-ZGUvbmV0L2FmX3Zzb2NrLmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCB8wqDCoCAyICsNCj4+IG5ldC92bXdfdnNvY2svYWZfdnNvY2suY8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDM4ICsrKysrKysrKy0NCj4+IG5ldC92bXdf
-dnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDcg
-KysNCj4+IG5ldC92bXdfdnNvY2svdmlydGlvX3RyYW5zcG9ydF9jb21tb24uY8KgwqDCoMKgwqAg
-fMKgwqAgNyArLQ0KPj4gbmV0L3Ztd192c29jay92bWNpX3RyYW5zcG9ydF9ub3RpZnkuY8KgwqDC
-oMKgwqDCoMKgIHzCoCAxMCArLS0NCj4+IG5ldC92bXdfdnNvY2svdm1jaV90cmFuc3BvcnRfbm90
-aWZ5X3FzdGF0ZS5jIHzCoCAxMiArLS0NCj4+IHRvb2xzL3Rlc3RpbmcvdnNvY2svdnNvY2tfdGVz
-dC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTA3ICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKw0KPj4gNyBmaWxlcyBjaGFuZ2VkLCAxNjYgaW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25z
-KC0pDQo+Pg0KPj4gQ2hhbmdlbG9nOg0KPj4NCj4+IHYxIC0+IHYyOg0KPj4gMSkgUGF0Y2hlcyBm
-b3IgVk1DSSB0cmFuc3BvcnQoc2FtZSBhcyBmb3IgdmlydGlvLXZzb2NrKS4NCj4+IDIpIFBhdGNo
-ZXMgZm9yIEh5cGVyLVYgdHJhbnNwb3J0KGRpc2FibGluZyBTT19SQ1ZMT1dBVCBzZXR0aW5nKS4N
-Cj4+IDMpIFdhaXRpbmcgbG9naWMgaW4gdGVzdCB3YXMgdXBkYXRlZChzbGVlcCgpIC0+IHBvbGwo
-KSkuDQo+Pg0KPj4gdjIgLT4gdjM6DQo+PiAxKSBQYXRjaGVzIHdlcmUgcmVvcmRlcmVkLg0KPj4g
-MikgQ29tbWl0IG1lc3NhZ2UgdXBkYXRlZCBpbiAwMDA1Lg0KPj4gMykgQ2hlY2sgJ3RyYW5zcG9y
-dCcgcG9pbnRlciBpbiAwMDAxIGZvciBOVUxMLg0KPj4gNCkgQ2hlY2sgJ3ZhbHVlJyBpbiAwMDAx
-IGZvciA+IGJ1ZmZlcl9zaXplLg0KPj4NCj4+IC0twqANCj4+IDIuMjUuMQ0KPiANCg0K
+On Wed, Aug 03, 2022 at 01:51:05PM +0000, Arseniy Krasnov wrote:
+>This adds transport specific callback for SO_RCVLOWAT, because in some
+>transports it may be difficult to know current available number of bytes
+>ready to read. Thus, when SO_RCVLOWAT is set, transport may reject it.
+>
+>Signed-off-by: Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+>---
+> include/net/af_vsock.h   |  1 +
+> net/vmw_vsock/af_vsock.c | 25 +++++++++++++++++++++++++
+> 2 files changed, 26 insertions(+)
+>
+>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>index f742e50207fb..eae5874bae35 100644
+>--- a/include/net/af_vsock.h
+>+++ b/include/net/af_vsock.h
+>@@ -134,6 +134,7 @@ struct vsock_transport {
+> 	u64 (*stream_rcvhiwat)(struct vsock_sock *);
+> 	bool (*stream_is_active)(struct vsock_sock *);
+> 	bool (*stream_allow)(u32 cid, u32 port);
+>+	int (*set_rcvlowat)(struct vsock_sock *, int);
+
+checkpatch suggests to add identifier names. For some we put them in, 
+for others we didn't, but I suggest putting them in for the new ones 
+because I think it's clearer too.
+
+WARNING: function definition argument 'struct vsock_sock *' should also 
+have an identifier name
+#25: FILE: include/net/af_vsock.h:137:
++	int (*set_rcvlowat)(struct vsock_sock *, int);
+
+WARNING: function definition argument 'int' should also have an identifier name
+#25: FILE: include/net/af_vsock.h:137:
++	int (*set_rcvlowat)(struct vsock_sock *, int);
+
+total: 0 errors, 2 warnings, 0 checks, 44 lines checked
+
+>
+> 	/* SEQ_PACKET. */
+> 	ssize_t (*seqpacket_dequeue)(struct vsock_sock *vsk, struct msghdr *msg,
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index f04abf662ec6..016ad5ff78b7 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -2129,6 +2129,30 @@ vsock_connectible_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
+> 	return err;
+> }
+>
+>+static int vsock_set_rcvlowat(struct sock *sk, int val)
+>+{
+>+	const struct vsock_transport *transport;
+>+	struct vsock_sock *vsk;
+>+	int err = 0;
+>+
+>+	vsk = vsock_sk(sk);
+>+
+>+	if (val > vsk->buffer_size)
+>+		return -EINVAL;
+>+
+>+	transport = vsk->transport;
+>+
+>+	if (!transport)
+>+		return -EOPNOTSUPP;
+
+I don't know whether it is better in this case to write it in 
+sk->sk_rcvlowat, maybe we can return EOPNOTSUPP only when the trasport 
+is assigned and set_rcvlowat is not defined. This is because usually the 
+options are set just after creation, when the transport is practically 
+unassigned.
+
+I mean something like this:
+
+         if (transport) {
+                 if (transport->set_rcvlowat)
+                         return transport->set_rcvlowat(vsk, val);
+                 else
+                         return -EOPNOTSUPP;
+         }
+
+         WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
+
+         return 0;
+
+>+
+>+	if (transport->set_rcvlowat)
+>+		err = transport->set_rcvlowat(vsk, val);
+>+	else
+>+		WRITE_ONCE(sk->sk_rcvlowat, val ? : 1);
+>+
+>+	return err;
+>+}
+>+
+> static const struct proto_ops vsock_stream_ops = {
+> 	.family = PF_VSOCK,
+> 	.owner = THIS_MODULE,
+>@@ -2148,6 +2172,7 @@ static const struct proto_ops vsock_stream_ops = {
+> 	.recvmsg = vsock_connectible_recvmsg,
+> 	.mmap = sock_no_mmap,
+> 	.sendpage = sock_no_sendpage,
+>+	.set_rcvlowat = vsock_set_rcvlowat,
+> };
+>
+> static const struct proto_ops vsock_seqpacket_ops = {
+>-- 
+>2.25.1
+
