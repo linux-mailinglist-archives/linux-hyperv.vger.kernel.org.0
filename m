@@ -2,39 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4091158DEF9
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Aug 2022 20:29:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C2758DFF6
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Aug 2022 21:14:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245467AbiHIS2z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 9 Aug 2022 14:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36566 "EHLO
+        id S1345530AbiHITOW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 Aug 2022 15:14:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346700AbiHIS0g (ORCPT
+        with ESMTP id S1345496AbiHITNw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 9 Aug 2022 14:26:36 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B2832ED8;
-        Tue,  9 Aug 2022 11:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=DWkpz8+ByW7L5elLg9cMcWybBCw50VP7bckI/LSep/o=;
-        t=1660068575; x=1661278175; b=Z/PpNygG5+d4mRAsefuVgd2vfzodFgFfYEZenommRdVVtjU
-        VdXWo2Nf2rewOLeKRGMpYiM2LQ7t6kFbCssOBQy/gH4UBPuyB1ia3YmSy06LWY4n7P8mhotr1bgmf
-        kYJeVxizJFVk9LBik1bbbzlO1XhmCftqXQhKcfoVPy2fdSJuoxMoATecjswM9FWJsfrWz62jkFu/s
-        ULc8dGrxR7IIcCKbJVhDmlIfaPHL8Olr6rXHObVXb9ozV/NyoVa34lISe1f39LnDiLOfkyHXo7wYf
-        swVgcoO03FDpPNCoZIoeWxy3q2TU+oijt8e0fb3xAfSp4C98Y4IOWnfuLheFkWTg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.96)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1oLTfR-003HXy-0m;
-        Tue, 09 Aug 2022 20:09:25 +0200
-Message-ID: <54cd8c11428db4c419edf2267db00ca10da7a178.camel@sipsolutions.net>
+        Tue, 9 Aug 2022 15:13:52 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88FD3396;
+        Tue,  9 Aug 2022 12:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=6RIQ0lsH7SzTIzVp99WDyc0D2gkpsha+DsfnlWOGmVM=; b=LbwWnCn7YGFZiUHtA5VIw6zpjm
+        AI4mTSD37n0b+CjaKxm9C1z3JcyfcJa1xhHSXDPMhZurSkjfeBvuXCIVD/SZflQ49goPyxACJsmk4
+        Dve4XzeAnEBNetq25XCzE1veKxNwbMWFW+GqNs2gPkQS+A2YDL8lqgY20qLY6DJMYqY5qt1iIye1L
+        w93yio6Gi+O8OzmpdNqTFBOanaijVaqR/f2QxYUcY5Ud7iO1du5dwk6YpZ/gEzvGMAAoybCw5fLlE
+        c8X+2yQ2cyaRreWixWoiOwgjg2500HTd/KjIo0JJ24feOWMpq3WKTu1dac5fHfXnhgAifAi6cJoKB
+        BZyKmvhw==;
+Received: from [187.56.70.103] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1oLUWY-003lox-0k; Tue, 09 Aug 2022 21:04:18 +0200
+Message-ID: <15188cf2-a510-2725-0c6e-3c4b264714c5@igalia.com>
+Date:   Tue, 9 Aug 2022 16:03:51 -0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
 Subject: Re: [PATCH v2 06/13] um: Improve panic notifiers consistency and
  ordering
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+Content-Language: en-US
+To:     Johannes Berg <johannes@sipsolutions.net>,
         kexec@lists.infradead.org, linux-um@lists.infradead.org
 Cc:     pmladek@suse.com, bhe@redhat.com, akpm@linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
@@ -52,60 +57,47 @@ Cc:     pmladek@suse.com, bhe@redhat.com, akpm@linux-foundation.org,
         tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
         will@kernel.org, Anton Ivanov <anton.ivanov@cambridgegreys.com>,
         Richard Weinberger <richard@nod.at>
-Date:   Tue, 09 Aug 2022 20:09:23 +0200
-In-Reply-To: <5bbc4296-4858-d01c-0c76-09d942377ddf@igalia.com>
 References: <20220719195325.402745-1-gpiccoli@igalia.com>
-         <20220719195325.402745-7-gpiccoli@igalia.com>
-         <5bbc4296-4858-d01c-0c76-09d942377ddf@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
-MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+ <20220719195325.402745-7-gpiccoli@igalia.com>
+ <5bbc4296-4858-d01c-0c76-09d942377ddf@igalia.com>
+ <54cd8c11428db4c419edf2267db00ca10da7a178.camel@sipsolutions.net>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <54cd8c11428db4c419edf2267db00ca10da7a178.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, 2022-08-07 at 12:40 -0300, Guilherme G. Piccoli wrote:
-> On 19/07/2022 16:53, Guilherme G. Piccoli wrote:
-> > Currently the panic notifiers from user mode linux don't follow
-> > the convention for most of the other notifiers present in the
-> > kernel (indentation, priority setting, numeric return).
-> > More important, the priorities could be improved, since it's a
-> > special case (userspace), hence we could run the notifiers earlier;
-> > user mode linux shouldn't care much with other panic notifiers but
-> > the ordering among the mconsole and arch notifier is important,
-> > given that the arch one effectively triggers a core dump.
-> >=20
-> > Fix that by running the mconsole notifier as the first panic
-> > notifier, followed by the architecture one (that coredumps).
-> >=20
-> > Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-> > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > Cc: Richard Weinberger <richard@nod.at>
-> > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> >=20
-> > ---
-> >=20
-> > V2:
-> > - Kept the notifier header to avoid implicit usage - thanks
-> > Johannes for the suggestion!
-> >=20
-> >  arch/um/drivers/mconsole_kern.c | 7 +++----
-> >  arch/um/kernel/um_arch.c        | 8 ++++----
-> >  2 files changed, 7 insertions(+), 8 deletions(-)
-> > [...]
->=20
-> Hi Johannes, do you feel this one is good now, after your last review?
-> Thanks in advance,
->=20
+On 09/08/2022 15:09, Johannes Berg wrote:
+> [...]
+>>> V2:
+>>> - Kept the notifier header to avoid implicit usage - thanks
+>>> Johannes for the suggestion!
+>>>
+>>>  arch/um/drivers/mconsole_kern.c | 7 +++----
+>>>  arch/um/kernel/um_arch.c        | 8 ++++----
+>>>  2 files changed, 7 insertions(+), 8 deletions(-)
+>>> [...]
+>>
+>> Hi Johannes, do you feel this one is good now, after your last review?
+>> Thanks in advance,
+>>
+> 
+> Yeah, no objections, my previous comment was just a minor almost style
+> issue anyway.
+> 
+> johannes
 
-Yeah, no objections, my previous comment was just a minor almost style
-issue anyway.
+Perfect, thank you! Let me take the opportunity to ask you something I'm
+asking all the maintainers involved here - do you prefer taking the
+patch through your tree, or to get it landed with the whole series, at
+once, from some maintainer?
 
-johannes
+Cheers!
