@@ -2,136 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 454C158CED1
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 Aug 2022 22:04:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0981B58D64A
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 Aug 2022 11:20:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234285AbiHHUED (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 Aug 2022 16:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
+        id S239083AbiHIJUQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 Aug 2022 05:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbiHHUEB (ORCPT
+        with ESMTP id S237988AbiHIJUM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 Aug 2022 16:04:01 -0400
-X-Greylist: delayed 177 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 08 Aug 2022 13:03:59 PDT
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBE7C61
-        for <linux-hyperv@vger.kernel.org>; Mon,  8 Aug 2022 13:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds202112; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=c7Zd4O0W+WvPJ2kFFhB/D//vEX5vQtcJh1hMBR2QZy4=; b=jq2HrWKIWNi9tUpohTPdrWD786
-        fOtUK4PsKHgnYx3UQRr2zPHRRNDw1rusFYbzEnWNjl3Nh793tU+5QZvTrpSbh9MGsyGpZreI5Bye4
-        xMjMlw3aP4qHr0hqFjg/VSu6htf3E31LbqEWUFN11QYLd3949gITYETlKm+Z4bBaSrFhFIMGqnoWS
-        5MDtw8qksvaOy6rB96K0rqWVpGQbwcLtUV6TFgeQWIIoglOg5MhSZ4FRmrirvZkgfACeIy1tq5g8f
-        Ex9nuiM9rwDmrpxyehB/Yv+NHUZLu8CAuDHbBVSpS0FP/KZwBj0co8HbJOCX8B5CsBtrTtdo/nvwa
-        E0q2+umw==;
-Received: from [2a01:799:961:d200:c193:6d77:c9c8:8] (port=62215)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1oL8vq-0002K0-NE; Mon, 08 Aug 2022 22:00:58 +0200
-Message-ID: <3ecad8dc-5fcf-c63a-ce3c-aa4c3ef22850@tronnes.org>
-Date:   Mon, 8 Aug 2022 22:00:52 +0200
+        Tue, 9 Aug 2022 05:20:12 -0400
+Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536101A804;
+        Tue,  9 Aug 2022 02:20:09 -0700 (PDT)
+Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
+        by mail.sberdevices.ru (Postfix) with ESMTP id 453EF5FD05;
+        Tue,  9 Aug 2022 12:20:06 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+        s=mail; t=1660036806;
+        bh=xMNfpVY1JM1L0r+ir29qY+88IYcz1TPQu1w7NMZ/cc0=;
+        h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
+        b=rRJpMVRIlCOs2vEgC6U9KMsq6VIRPTOzNs8efLV/EJD4RzEP4efVpmm3nnZ7s2D63
+         pLqfvK5TKeHnvs6nS4tCQ2QuP5tS5IFytxgiPgagN/FPeIr4pbdgCkHSTDzwJnwxdB
+         wA30MK78oXgLgeKKHW21j/SJI8JG5RE4d3X/zU2vKk3bS7sw1oALDyL2VolpPHyQ1X
+         EF6PKw2kHzk7TCNWRWO4+XSZT6xTRVfyTwKASLmq4iOWocGwPD7BJTtdCNhZNLWW+O
+         iA35HKM+kuq3OwIIxtvwy7QSfyJuKTNsjvtBGRDCDlB75FZ36G/vcjvzGPcQokhN0h
+         sIv022yaHv/0g==
+Received: from S-MS-EXCH02.sberdevices.ru (S-MS-EXCH02.sberdevices.ru [172.16.1.5])
+        by mail.sberdevices.ru (Postfix) with ESMTP;
+        Tue,  9 Aug 2022 12:20:01 +0300 (MSK)
+From:   Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "Dexuan Cui" <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        "VMware PV-Drivers Reviewers" <pv-drivers@vmware.com>,
+        Krasnov Arseniy <oxffffaa@gmail.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        kernel <kernel@sberdevices.ru>
+Subject: Re: [RFC PATCH v3 0/9] vsock: updates for SO_RCVLOWAT handling
+Thread-Topic: [RFC PATCH v3 0/9] vsock: updates for SO_RCVLOWAT handling
+Thread-Index: AQHYpz+pcvNrW+Wes06KlvYKyF5H+a2ksYuAgAFwEQA=
+Date:   Tue, 9 Aug 2022 09:19:56 +0000
+Message-ID: <4cf2db92-b51c-245e-63ee-db971e84e95e@sberdevices.ru>
+References: <2ac35e2c-26a8-6f6d-2236-c4692600db9e@sberdevices.ru>
+ <20220808112239.jwzrp7krsyk6za5s@sgarzare-redhat>
+In-Reply-To: <20220808112239.jwzrp7krsyk6za5s@sgarzare-redhat>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.1.12]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BDB751D0B6FF8A4A95D07F8C9A4E906D@sberdevices.ru>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 00/14] drm/format-helper: Move to struct iosys_map
-To:     Thomas Zimmermann <tzimmermann@suse.de>, sam@ravnborg.org,
-        jose.exposito89@gmail.com, javierm@redhat.com,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, drawat.floss@gmail.com,
-        lucas.demarchi@intel.com, david@lechnology.com, kraxel@redhat.com
-Cc:     dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-References: <20220808125406.20752-1-tzimmermann@suse.de>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-In-Reply-To: <20220808125406.20752-1-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-KSMG-Rule-ID: 4
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiPhishing: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/08/09 07:32:00 #20083496
+X-KSMG-AntiVirus-Status: Clean, skipped
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SCC_BODY_URI_ONLY,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-Den 08.08.2022 14.53, skrev Thomas Zimmermann:
-> Change format-conversion helpers to use struct iosys_map for source
-> and destination buffers. Update all users. Also prepare interface for
-> multi-plane color formats.
-> 
-> The format-conversion helpers mostly used to convert to I/O memory
-> or system memory. To actual memory type depended on the usecase. We
-> now have drivers upcomming that do the conversion entirely in system
-> memory. It's a good opportunity to stream-line the interface of the
-> conversion helpers to use struct iosys_map. Source and destination
-> buffers can now be either in system or in I/O memory. Note that the
-> implementation still only supports source buffers in system memory.
-> 
-> This patchset also changes the interface to support multi-plane
-> color formats, where the values for each component are stored in
-> distinct memory locations. Converting from RGBRGBRGB to RRRGGGBBB
-> would require a single source buffer with RGB values and 3 destination
-> buffers for the R, G and B values. Conversion-helper interfaces now
-> support this.
-> 
-> v2:
-> 	* add IOSYS_MAP_INIT_VADDR_IOMEM (Sam)
-> 	* use drm_format_info_bpp() (Sam)
-> 	* update documentation (Sam)
-> 	* rename 'vmap' to 'src' (Sam)
-> 	* many smaller cleanups and fixes (Sam, Jose)
-> 
-> Thomas Zimmermann (14):
->   iosys-map: Add IOSYS_MAP_INIT_VADDR_IOMEM()
->   drm/format-helper: Provide drm_fb_blit()
->   drm/format-helper: Merge drm_fb_memcpy() and drm_fb_memcpy_toio()
->   drm/format-helper: Convert drm_fb_swab() to struct iosys_map
->   drm/format-helper: Rework XRGB8888-to-RGBG332 conversion
->   drm/format-helper: Rework XRGB8888-to-RGBG565 conversion
->   drm/format-helper: Rework XRGB8888-to-RGB888 conversion
->   drm/format-helper: Rework RGB565-to-XRGB8888 conversion
->   drm/format-helper: Rework RGB888-to-XRGB8888 conversion
->   drm/format-helper: Rework XRGB8888-to-XRGB2101010 conversion
->   drm/format-helper: Rework XRGB8888-to-GRAY8 conversion
->   drm/format-helper: Rework XRGB8888-to-MONO conversion
->   drm/format-helper: Move destination-buffer handling into internal
->     helper
->   drm/format-helper: Rename parameter vmap to src
-> 
-
-Tested-by: Noralf Trønnes <noralf@tronnes.org>
-
-* gud: XRGB8888-to-{MONO,GRAY8,RGB332,RGB565}
-* mi0283qt (drm_mipi_dbi): XRGB8888-to-RGB565 with swap=true,
-drm_fb_memcpy, drm_fb_swab
-
->  drivers/gpu/drm/drm_format_helper.c           | 509 ++++++++++--------
->  drivers/gpu/drm/drm_mipi_dbi.c                |   9 +-
->  drivers/gpu/drm/gud/gud_pipe.c                |  20 +-
->  drivers/gpu/drm/hyperv/hyperv_drm_modeset.c   |   9 +-
->  drivers/gpu/drm/mgag200/mgag200_mode.c        |   9 +-
->  drivers/gpu/drm/solomon/ssd130x.c             |   7 +-
->  .../gpu/drm/tests/drm_format_helper_test.c    |  45 +-
->  drivers/gpu/drm/tiny/cirrus.c                 |  19 +-
->  drivers/gpu/drm/tiny/repaper.c                |   6 +-
->  drivers/gpu/drm/tiny/simpledrm.c              |   8 +-
->  drivers/gpu/drm/tiny/st7586.c                 |   5 +-
->  include/drm/drm_format_helper.h               |  56 +-
->  include/linux/iosys-map.h                     |  15 +-
->  13 files changed, 416 insertions(+), 301 deletions(-)
-> 
-> 
-> base-commit: 2bdae66c9988dd0f07633629c0a85383cfc05940
-> prerequisite-patch-id: c2b2f08f0eccc9f5df0c0da49fa1d36267deb11d
-> prerequisite-patch-id: c67e5d886a47b7d0266d81100837557fda34cb24
-> prerequisite-patch-id: 3f204510fcbf9530d6540bd8e6128cce598988b6
+T24gMDguMDguMjAyMiAxNDoyMiwgU3RlZmFubyBHYXJ6YXJlbGxhIHdyb3RlOg0KPiBIaSBBcnNl
+bml5LA0KPiANCj4gT24gV2VkLCBBdWcgMDMsIDIwMjIgYXQgMDE6NDg6MDZQTSArMDAwMCwgQXJz
+ZW5peSBLcmFzbm92IHdyb3RlOg0KPj4gSGVsbG8sDQo+Pg0KPj4gVGhpcyBwYXRjaHNldCBpbmNs
+dWRlcyBzb21lIHVwZGF0ZXMgZm9yIFNPX1JDVkxPV0FUOg0KPiANCj4gSSBoYXZlIHJldmlld2Vk
+IGFsbCB0aGUgcGF0Y2hlcywgcnVuIHRlc3RzIGFuZCBldmVyeXRoaW5nIHNlZW1zIG9rYXkgOi0p
+DQpUaGFuayBZb3UNCj4gDQo+IEkgbGVmdCBzb21lIG1pbm9yIGNvbW1lbnRzIGFuZCBhc2tlZCBC
+cnlhbiBhbmQgVmlzaG51IHRvIHRha2UgYSBiZXR0ZXIgbG9vayBhdCBWTUNJIHBhdGNoZXMuDQpP
+aywgbGV0J3Mgd2FpdCB0aGVpciByZXBseSBiZWZvcmUgdjQNCj4gDQo+IEluIGdlbmVyYWwgSSBh
+c2sgeW91IHRvIHJldmlzaXQgdGhlIHBhdGNoIGRlc2NyaXB0aW9ucyBhIGJpdCAoZm9yIGV4YW1w
+bGUgYWRkaW5nIGEgc3BhY2UgYWZ0ZXIgcHVuY3R1YXRpb24pLiBUaGUgbmV4dCB2ZXJzaW9uIEkg
+dGhpbmsgY2FuIGJlIHdpdGhvdXQgUkZDLg0KYWNrDQo+IA0KPiBSZW1lbWJlciB0byBzZW5kIGl0
+IHdpdGggdGhlIG5ldC1uZXh0IHRhZy4NCj4gTm90ZTogbmV0LW5leHQgaXMgY2xvc2VkIGZvciBu
+b3cgc2luY2Ugd2UgYXJlIGluIHRoZSBtZXJnZSB3aW5kb3cuDQo+IEl0IHNob3VsZCByZS1vcGVu
+IGluIGEgd2VlayAoeW91IGNhbiBjaGVjayBoZXJlOiBodHRwOi8vdmdlci5rZXJuZWwub3JnL35k
+YXZlbS9uZXQtbmV4dC5odG1sKS4NCj4gDQo+IEknbGwgYmUgb24gdmFjYXRpb24gdGhlIG5leHQg
+MiB3ZWVrcyAoQXVnIDE1IC0gMjgpLCBidXQgSSdsbCB0cnkgdG8gY2hlY2sgb3V0IHlvdXIgcGF0
+Y2hlcyENCk5vIHByb2JsZW0sIHRoYW5rcw0KPiANCj4gVGhhbmtzLA0KPiBTdGVmYW5vDQo+IA0K
+DQo=
