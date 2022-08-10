@@ -2,190 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2098B58E799
-	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Aug 2022 09:08:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C50C58EB1E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 10 Aug 2022 13:19:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231349AbiHJHH7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 10 Aug 2022 03:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60218 "EHLO
+        id S231991AbiHJLTW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 10 Aug 2022 07:19:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbiHJHH7 (ORCPT
+        with ESMTP id S231969AbiHJLTW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 10 Aug 2022 03:07:59 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6A474CFA
-        for <linux-hyperv@vger.kernel.org>; Wed, 10 Aug 2022 00:07:56 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id F12B737F3E;
-        Wed, 10 Aug 2022 07:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1660115275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nr2j4kW7MlEn77sn/YeyIX2H/Vy158GDI0gtRQrT614=;
-        b=uQD0YVSm7/5KigkugXvJLBsGeLebPNCwRd/6AQXg4BOFyx1VJygf1YMKtna9IWqMjfjt4H
-        V+8yQde7UuC6errCSeJC9w9qOo9DMh2dsoyDJF8wo1ZneOY2HH+3hG8Wi4kVOB3Drbx2S2
-        1eOS7kT6Yf0fhZZbZ4LnLe3w2x8b6A4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1660115275;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nr2j4kW7MlEn77sn/YeyIX2H/Vy158GDI0gtRQrT614=;
-        b=S6DJkou1dYKTnzi/GfEbAdUupc34S4zmRAmY2eNVfgCQ8bT8Yk2kBTNXStnZv7RJJvKdKI
-        aX77JcZH8AiUg4AA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A808413AB3;
-        Wed, 10 Aug 2022 07:07:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id NxUIKEpZ82ItWQAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Wed, 10 Aug 2022 07:07:54 +0000
-Message-ID: <4cf932bc-97a4-942b-c308-be02107c0806@suse.de>
-Date:   Wed, 10 Aug 2022 09:07:54 +0200
+        Wed, 10 Aug 2022 07:19:22 -0400
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0999B73306
+        for <linux-hyperv@vger.kernel.org>; Wed, 10 Aug 2022 04:19:21 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id a11so7631239wmq.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 10 Aug 2022 04:19:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=l1G6OVM+CO9FcP43w99k/7coezmapD7pMTBECFs71Aw=;
+        b=Ma/gTEu4PTqmF9SsJOvvYsE5sSitH4traN900v7r0JGuJIKlFAZrB3Uhpvt6YDX4id
+         FmxFDGt175fZL15O+aEe+ldKjVvw/KcLr6My9qRNOtqCS6rJTS4iiLkkPhzFQhOYjUrc
+         sufayT27Wnig6G+sWBVsgtyGMVnaKbXU7dZ8xzS2gdEQzH4VrY8lKjpJ4dIDk58B8leo
+         aVmRBJkYpHbX8XkSGUsydP18RIhEGklSB/O4bGVPHTEb5CulPhm9ljKTubTSKZQAuK9j
+         vav3NKkgCotRapygw4x7BuF/qtsMW9f8YMY3YSo5pWkLEnFQyCJmEjKXFAd3qEqVm7Lf
+         OoYg==
+X-Gm-Message-State: ACgBeo1ofTgHdPE5guJUIq+0cpfHcZBMUlrcPfQeQg0h7kz65dOX88JQ
+        6DSUh4yrFtc2k8HvcUtNYfQ=
+X-Google-Smtp-Source: AA6agR44UTV79QIwUwazuOEJCAaHxJSnrH43NW5Br3m3P8uzQtrGTJQUP3KOwzOZe7GnNEwEYH+6mQ==
+X-Received: by 2002:a1c:218b:0:b0:3a5:b5d4:9741 with SMTP id h133-20020a1c218b000000b003a5b5d49741mr1284651wmh.28.1660130359473;
+        Wed, 10 Aug 2022 04:19:19 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id t28-20020adfa2dc000000b0021f17542fe2sm16155128wra.84.2022.08.10.04.19.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Aug 2022 04:19:19 -0700 (PDT)
+Date:   Wed, 10 Aug 2022 11:19:17 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Anish Gupta <anish@exotanium.io>
+Cc:     linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
+Subject: Re: Booting Xen dom0 on Hyper-V
+Message-ID: <20220810111917.f4wunm24engy2sia@liuwe-devbox-debian-v2>
+References: <43091FDA-F0E9-42CE-8B15-A57F3B0C5B4A@exotanium.io>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: [PATCH v2 00/14] drm/format-helper: Move to struct iosys_map
-Content-Language: en-US
-To:     sam@ravnborg.org, jose.exposito89@gmail.com, javierm@redhat.com,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, noralf@tronnes.org,
-        drawat.floss@gmail.com, lucas.demarchi@intel.com,
-        david@lechnology.com, kraxel@redhat.com
-Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-References: <20220808125406.20752-1-tzimmermann@suse.de>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <20220808125406.20752-1-tzimmermann@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------GPVXmD7iNMJWP3LqkiQ11my6"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <43091FDA-F0E9-42CE-8B15-A57F3B0C5B4A@exotanium.io>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------GPVXmD7iNMJWP3LqkiQ11my6
-Content-Type: multipart/mixed; boundary="------------KxFKFAPZXOS0zvnyzbK0eN9w";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: sam@ravnborg.org, jose.exposito89@gmail.com, javierm@redhat.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@linux.ie,
- daniel@ffwll.ch, noralf@tronnes.org, drawat.floss@gmail.com,
- lucas.demarchi@intel.com, david@lechnology.com, kraxel@redhat.com
-Cc: linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
- virtualization@lists.linux-foundation.org
-Message-ID: <4cf932bc-97a4-942b-c308-be02107c0806@suse.de>
-Subject: Re: [PATCH v2 00/14] drm/format-helper: Move to struct iosys_map
-References: <20220808125406.20752-1-tzimmermann@suse.de>
-In-Reply-To: <20220808125406.20752-1-tzimmermann@suse.de>
+Hi Anish
 
---------------KxFKFAPZXOS0zvnyzbK0eN9w
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On Tue, Aug 09, 2022 at 10:10:03PM +0530, Anish Gupta wrote:
+> Hello all,
+> I am new to Azure/Hyper-V environment and trying to boot Xen PV.  Dom0 Linux on Xen doesn’t detect hv_vmbus and boot fails. I get the same result even with Xen HYPERV_GUEST config. Here is the console logs with latest Xen 4.15.3 and Linux 5.18:
+> 
+[...]
+> [    0.000000] SMBIOS 2.3 present.
+> [    0.000000] DMI: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090008  12/07/2018
+> [    0.000000] Hypervisor detected: Xen PV <<<
+> …
 
-VGhhbmtzIGV2ZXJ5b25lIGZvciByZXZpZXdpbmcgYW5kIHRlc3RpbmcuDQoNCkFtIDA4LjA4
-LjIyIHVtIDE0OjUzIHNjaHJpZWIgVGhvbWFzIFppbW1lcm1hbm46DQo+IENoYW5nZSBmb3Jt
-YXQtY29udmVyc2lvbiBoZWxwZXJzIHRvIHVzZSBzdHJ1Y3QgaW9zeXNfbWFwIGZvciBzb3Vy
-Y2UNCj4gYW5kIGRlc3RpbmF0aW9uIGJ1ZmZlcnMuIFVwZGF0ZSBhbGwgdXNlcnMuIEFsc28g
-cHJlcGFyZSBpbnRlcmZhY2UgZm9yDQo+IG11bHRpLXBsYW5lIGNvbG9yIGZvcm1hdHMuDQo+
-IA0KPiBUaGUgZm9ybWF0LWNvbnZlcnNpb24gaGVscGVycyBtb3N0bHkgdXNlZCB0byBjb252
-ZXJ0IHRvIEkvTyBtZW1vcnkNCj4gb3Igc3lzdGVtIG1lbW9yeS4gVG8gYWN0dWFsIG1lbW9y
-eSB0eXBlIGRlcGVuZGVkIG9uIHRoZSB1c2VjYXNlLiBXZQ0KPiBub3cgaGF2ZSBkcml2ZXJz
-IHVwY29tbWluZyB0aGF0IGRvIHRoZSBjb252ZXJzaW9uIGVudGlyZWx5IGluIHN5c3RlbQ0K
-PiBtZW1vcnkuIEl0J3MgYSBnb29kIG9wcG9ydHVuaXR5IHRvIHN0cmVhbS1saW5lIHRoZSBp
-bnRlcmZhY2Ugb2YgdGhlDQo+IGNvbnZlcnNpb24gaGVscGVycyB0byB1c2Ugc3RydWN0IGlv
-c3lzX21hcC4gU291cmNlIGFuZCBkZXN0aW5hdGlvbg0KPiBidWZmZXJzIGNhbiBub3cgYmUg
-ZWl0aGVyIGluIHN5c3RlbSBvciBpbiBJL08gbWVtb3J5LiBOb3RlIHRoYXQgdGhlDQo+IGlt
-cGxlbWVudGF0aW9uIHN0aWxsIG9ubHkgc3VwcG9ydHMgc291cmNlIGJ1ZmZlcnMgaW4gc3lz
-dGVtIG1lbW9yeS4NCj4gDQo+IFRoaXMgcGF0Y2hzZXQgYWxzbyBjaGFuZ2VzIHRoZSBpbnRl
-cmZhY2UgdG8gc3VwcG9ydCBtdWx0aS1wbGFuZQ0KPiBjb2xvciBmb3JtYXRzLCB3aGVyZSB0
-aGUgdmFsdWVzIGZvciBlYWNoIGNvbXBvbmVudCBhcmUgc3RvcmVkIGluDQo+IGRpc3RpbmN0
-IG1lbW9yeSBsb2NhdGlvbnMuIENvbnZlcnRpbmcgZnJvbSBSR0JSR0JSR0IgdG8gUlJSR0dH
-QkJCDQo+IHdvdWxkIHJlcXVpcmUgYSBzaW5nbGUgc291cmNlIGJ1ZmZlciB3aXRoIFJHQiB2
-YWx1ZXMgYW5kIDMgZGVzdGluYXRpb24NCj4gYnVmZmVycyBmb3IgdGhlIFIsIEcgYW5kIEIg
-dmFsdWVzLiBDb252ZXJzaW9uLWhlbHBlciBpbnRlcmZhY2VzIG5vdw0KPiBzdXBwb3J0IHRo
-aXMuDQo+IA0KPiB2MjoNCj4gCSogYWRkIElPU1lTX01BUF9JTklUX1ZBRERSX0lPTUVNIChT
-YW0pDQo+IAkqIHVzZSBkcm1fZm9ybWF0X2luZm9fYnBwKCkgKFNhbSkNCj4gCSogdXBkYXRl
-IGRvY3VtZW50YXRpb24gKFNhbSkNCj4gCSogcmVuYW1lICd2bWFwJyB0byAnc3JjJyAoU2Ft
-KQ0KPiAJKiBtYW55IHNtYWxsZXIgY2xlYW51cHMgYW5kIGZpeGVzIChTYW0sIEpvc2UpDQo+
-IA0KPiBUaG9tYXMgWmltbWVybWFubiAoMTQpOg0KPiAgICBpb3N5cy1tYXA6IEFkZCBJT1NZ
-U19NQVBfSU5JVF9WQUREUl9JT01FTSgpDQo+ICAgIGRybS9mb3JtYXQtaGVscGVyOiBQcm92
-aWRlIGRybV9mYl9ibGl0KCkNCj4gICAgZHJtL2Zvcm1hdC1oZWxwZXI6IE1lcmdlIGRybV9m
-Yl9tZW1jcHkoKSBhbmQgZHJtX2ZiX21lbWNweV90b2lvKCkNCj4gICAgZHJtL2Zvcm1hdC1o
-ZWxwZXI6IENvbnZlcnQgZHJtX2ZiX3N3YWIoKSB0byBzdHJ1Y3QgaW9zeXNfbWFwDQo+ICAg
-IGRybS9mb3JtYXQtaGVscGVyOiBSZXdvcmsgWFJHQjg4ODgtdG8tUkdCRzMzMiBjb252ZXJz
-aW9uDQo+ICAgIGRybS9mb3JtYXQtaGVscGVyOiBSZXdvcmsgWFJHQjg4ODgtdG8tUkdCRzU2
-NSBjb252ZXJzaW9uDQo+ICAgIGRybS9mb3JtYXQtaGVscGVyOiBSZXdvcmsgWFJHQjg4ODgt
-dG8tUkdCODg4IGNvbnZlcnNpb24NCj4gICAgZHJtL2Zvcm1hdC1oZWxwZXI6IFJld29yayBS
-R0I1NjUtdG8tWFJHQjg4ODggY29udmVyc2lvbg0KPiAgICBkcm0vZm9ybWF0LWhlbHBlcjog
-UmV3b3JrIFJHQjg4OC10by1YUkdCODg4OCBjb252ZXJzaW9uDQo+ICAgIGRybS9mb3JtYXQt
-aGVscGVyOiBSZXdvcmsgWFJHQjg4ODgtdG8tWFJHQjIxMDEwMTAgY29udmVyc2lvbg0KPiAg
-ICBkcm0vZm9ybWF0LWhlbHBlcjogUmV3b3JrIFhSR0I4ODg4LXRvLUdSQVk4IGNvbnZlcnNp
-b24NCj4gICAgZHJtL2Zvcm1hdC1oZWxwZXI6IFJld29yayBYUkdCODg4OC10by1NT05PIGNv
-bnZlcnNpb24NCj4gICAgZHJtL2Zvcm1hdC1oZWxwZXI6IE1vdmUgZGVzdGluYXRpb24tYnVm
-ZmVyIGhhbmRsaW5nIGludG8gaW50ZXJuYWwNCj4gICAgICBoZWxwZXINCj4gICAgZHJtL2Zv
-cm1hdC1oZWxwZXI6IFJlbmFtZSBwYXJhbWV0ZXIgdm1hcCB0byBzcmMNCj4gDQo+ICAgZHJp
-dmVycy9ncHUvZHJtL2RybV9mb3JtYXRfaGVscGVyLmMgICAgICAgICAgIHwgNTA5ICsrKysr
-KysrKystLS0tLS0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9kcm1fbWlwaV9kYmkuYyAgICAg
-ICAgICAgICAgICB8ICAgOSArLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9ndWQvZ3VkX3BpcGUu
-YyAgICAgICAgICAgICAgICB8ICAyMCArLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9oeXBlcnYv
-aHlwZXJ2X2RybV9tb2Rlc2V0LmMgICB8ICAgOSArLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9t
-Z2FnMjAwL21nYWcyMDBfbW9kZS5jICAgICAgICB8ICAgOSArLQ0KPiAgIGRyaXZlcnMvZ3B1
-L2RybS9zb2xvbW9uL3NzZDEzMHguYyAgICAgICAgICAgICB8ICAgNyArLQ0KPiAgIC4uLi9n
-cHUvZHJtL3Rlc3RzL2RybV9mb3JtYXRfaGVscGVyX3Rlc3QuYyAgICB8ICA0NSArLQ0KPiAg
-IGRyaXZlcnMvZ3B1L2RybS90aW55L2NpcnJ1cy5jICAgICAgICAgICAgICAgICB8ICAxOSAr
-LQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS90aW55L3JlcGFwZXIuYyAgICAgICAgICAgICAgICB8
-ICAgNiArLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS90aW55L3NpbXBsZWRybS5jICAgICAgICAg
-ICAgICB8ICAgOCArLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS90aW55L3N0NzU4Ni5jICAgICAg
-ICAgICAgICAgICB8ICAgNSArLQ0KPiAgIGluY2x1ZGUvZHJtL2RybV9mb3JtYXRfaGVscGVy
-LmggICAgICAgICAgICAgICB8ICA1NiArLQ0KPiAgIGluY2x1ZGUvbGludXgvaW9zeXMtbWFw
-LmggICAgICAgICAgICAgICAgICAgICB8ICAxNSArLQ0KPiAgIDEzIGZpbGVzIGNoYW5nZWQs
-IDQxNiBpbnNlcnRpb25zKCspLCAzMDEgZGVsZXRpb25zKC0pDQo+IA0KPiANCj4gYmFzZS1j
-b21taXQ6IDJiZGFlNjZjOTk4OGRkMGYwNzYzMzYyOWMwYTg1MzgzY2ZjMDU5NDANCj4gcHJl
-cmVxdWlzaXRlLXBhdGNoLWlkOiBjMmIyZjA4ZjBlY2NjOWY1ZGYwYzBkYTQ5ZmExZDM2MjY3
-ZGViMTFkDQo+IHByZXJlcXVpc2l0ZS1wYXRjaC1pZDogYzY3ZTVkODg2YTQ3YjdkMDI2NmQ4
-MTEwMDgzNzU1N2ZkYTM0Y2IyNA0KPiBwcmVyZXF1aXNpdGUtcGF0Y2gtaWQ6IDNmMjA0NTEw
-ZmNiZjk1MzBkNjU0MGJkOGU2MTI4Y2NlNTk4OTg4YjYNCg0KLS0gDQpUaG9tYXMgWmltbWVy
-bWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0d2FyZSBTb2x1dGlv
-bnMgR2VybWFueSBHbWJIDQpNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJlcmcsIEdlcm1h
-bnkNCihIUkIgMzY4MDksIEFHIE7DvHJuYmVyZykNCkdlc2Now6RmdHNmw7xocmVyOiBJdm8g
-VG90ZXYNCg==
+This is expected.
 
---------------KxFKFAPZXOS0zvnyzbK0eN9w--
+> [  197.060965] dracut-initqueue[311]: Warning: Could not boot.
+> [  197.067020] dracut-initqueue[311]: Warning: /dev/disk/by-uuid/c8396182-9335-4bf7-a963-f14e85f41f23 does not exist
+>          Starting Setup Virtual Console...
+> [  OK  ] Started Setup Virtual Console.
+>          Starting Dracut Emergency Shell...
+> Warning: /dev/disk/by-uuid/c8396182-9335-4bf7-a963-f14e85f41f23 does not exist
+> 
+> Generating "/run/initramfs/rdsosreport.txt"
+> 
+> 
+> Entering emergency mode. Exit the shell to continue.
+> Type "journalctl" to view system logs.
+> You might want to save "/run/initramfs/rdsosreport.txt" to a USB stick or /boot
+> after mounting them and attach it to a bug report.
+> 
+> 
+> dracut:/# 
+> 
+> 
+> As an experiment I did force load hv_vmbus but then hit a page fault. I will really appreciate guidance in getting it working. 
+> 
 
---------------GPVXmD7iNMJWP3LqkiQ11my6
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+What did the backtrace show?
 
------BEGIN PGP SIGNATURE-----
+> Was Xen PV ever supported in any version of Xen + Linux on Azure/Hyper-V?
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmLzWUoFAwAAAAAACgkQlh/E3EQov+DS
-9A/9FD1Pw34IL/LbMSAIN8BGK/pDIjXEp2Bws9ZGZZ+evPcBDH6tJBdWO5Mqh5aY0EAe4g1tSrqG
-Fr8eFrvosMxX3MpE2AOMaW9FpZ1M/c4vl2Wrpu7JYoYqBYZi5/OOC/Ga904U/llUiSczIU+nAuLz
-jZ6ANEF7SBPlcFcFJMDdWffDKEjw30HNyCJ3EI1awp8vYd0hsZc1AjQoDkDNyLtMsokzyWnCHMS3
-65twNIoxRFSvLy5RQSteI9SSTsajB5EdBw123OjU4B0zhIaSOIwYFjUZYYvlq57yWOXKVWong0iF
-22BdL7SpM1LbSIeiEDLfCaQ3qAyEwHvXaxCLfY7pOqREVtIf8dCbtrfG6IHytxTCHOryU1bSW9K8
-fIF6SgmJANeHJ1glRK3OQ9FgRSwCg3gbneZgykVGkYeKm7jksCa6Zb+zRxwoKzKz9wNSYwq2uMm2
-A+Z0GRCvNkA5sfp0dzrLNxf2nNlLQkMZgCy7bg2B/kDjm+QzTSeXkybmvAifRmtmH/ZAxzR1D146
-FF8uJKQY2ke8IYU0uKlmCT/PiMbM5Q+o+TdB7NnAzpHBhLkdna62sI9HpD76B027tv7sjo/upbyk
-5sYRzKxj9WXScIccYtoUVPViJxKByBKhTl/MVs3gI1Dmca7r5Jpj4QP0KSIJIK7G8d1bllWmF2MF
-ZH4=
-=cRX2
------END PGP SIGNATURE-----
+I never got the time to make it work with VMBus based devices.
 
---------------GPVXmD7iNMJWP3LqkiQ11my6--
+The initial development work was done on a Gen1 VM locally with emulated
+hard drive and network adapter. Azure Gen2 VMs don't have emulated
+devices.
+
+In hv_acpi_init, you can see that if the hypervisor personality is not
+Hyper-V then that function returns -ENODEV.
+
+I think you will need to find a way to initialize VMBus somehow.
+
+Fundamentally, you're trying to achieve mixed-personalities in a single
+system. I think it is going to require non-trivial investment to make it
+work properly.
+
+Thanks,
+Wei.
