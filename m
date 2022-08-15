@@ -2,57 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6B1F594BF0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 03:31:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4971594D20
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 03:33:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243636AbiHPAb5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 15 Aug 2022 20:31:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        id S243064AbiHPAmS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 15 Aug 2022 20:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353373AbiHPAbV (ORCPT
+        with ESMTP id S1349831AbiHPAlg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 15 Aug 2022 20:31:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D4B185995;
-        Mon, 15 Aug 2022 13:36:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 80BEFB80EA8;
-        Mon, 15 Aug 2022 20:35:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3557C433D6;
-        Mon, 15 Aug 2022 20:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660595747;
-        bh=qf1uXQYDzbCjJhqp5PrXmCPOXnbpAKK9chCCYP5tWtQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mo2MIfNF13xv6ntikuuQImFWHu1+thv5ivjIepIpCv0iYKXdmyrHjTCbOU+2XIS64
-         f6WCphkw7c+m0SbEE7D3r+DF+z9qjO0Z1nvGWl9PdvGqEm1i0N2oQK1ofz4DBye0c6
-         kj6LvC/Ml16VQRk1bWYc4eaz9vsohJtgqt+IC/MN5i82KcPba7lv5mwuk5dQ97Cz9j
-         pnUDHukh7zG3YKYptmuge4JNm6/ZCGUHaRe6eHL8pU4irn2Lv+zXOCALjx8MWlMbkY
-         rMzbII0WZ1fiQ8fNRhs1/1SFJF6mnieJxsQEaxZ75cCIu7tJvfsuhdhhelo2Dm5Thn
-         e7w/Qj1M67ScA==
-Date:   Mon, 15 Aug 2022 15:35:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     quic_jhugo@quicinc.com, wei.liu@kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
-        lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        robh@kernel.org, kw@linux.com, alex.williamson@redhat.com,
-        boqun.feng@gmail.com, Boqun.Feng@microsoft.com,
-        Carl Vanderlip <quic_carlv@quicinc.com>
-Subject: Re: [PATCH] PCI: hv: Fix the definiton of vector in
- hv_compose_msi_msg()
-Message-ID: <20220815203545.GA1971949@bhelgaas>
+        Mon, 15 Aug 2022 20:41:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E0A1218F582
+        for <linux-hyperv@vger.kernel.org>; Mon, 15 Aug 2022 13:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1660595958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1Ju82h2Seq9g+C5kY2YGtQXKyGbfylxp+FKU0h7Nrc0=;
+        b=GTQ0v/bxIl3Qa8mdS7qm4KmLETlmfv9vxUZrWUcwV8URlygNN0Pv0eawJ+8Hvpr7Xw24kt
+        Df1v5qM2LACBgv7xCeDZ557JPbZrFA/hHGtjh0mxuxGxy8tn+M5iWyAjY6IhGmIA4GMVSB
+        6iOz+y1wr88ImDgvFmhUeJn2eXHOtRY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-617-BeyKN6cgMSytUvvAdDmQ0A-1; Mon, 15 Aug 2022 16:39:17 -0400
+X-MC-Unique: BeyKN6cgMSytUvvAdDmQ0A-1
+Received: by mail-ej1-f71.google.com with SMTP id g18-20020a1709065d1200b0073082300e1fso1277765ejt.12
+        for <linux-hyperv@vger.kernel.org>; Mon, 15 Aug 2022 13:39:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=1Ju82h2Seq9g+C5kY2YGtQXKyGbfylxp+FKU0h7Nrc0=;
+        b=rdfPdGuCXRRaCx5S9XOrAd3zqRjmgJx7MaBJUVj85NkiJEPDEqK+17BVpm2id8dvuZ
+         TKBo5gpqtHdv5Ei/9+rhqKGX6wDn/NDSa3Zx1zJWQ97VVZhkQ3u4Y2Dl7v77CNPDbA8p
+         E+ywtl/mEnwvO+Z1lFqYNkbdJUIbiEj/6xs8wQrdq0DLn4YTWY93yw1OKgR0JfqtYS2n
+         kt+QiCvHuj7yZ4PjjjUtyPkMc7j4vxdj8oYQK8IOYmYbX4YXzhgH/TOhljt2GgYmdliq
+         N7dKvGmbrSRnxMvoDfEOIBAWBXccjs2y/WvGfyX/ry7kqyQ2lNnjzAnQlSUKTSHPoCy0
+         GPrw==
+X-Gm-Message-State: ACgBeo0Z5DTtChThmc+FiEQxrZVFmBLyJKDSuN3uppguVQbU6A7krBaF
+        yGRTmqRx8oQ5GpSUdu738iILOuIeXyNXOoarJ4g613qPoM3+I/aG5NibLfXReIOA8W9bNUBJEM0
+        BwxZlVl7CuumkmwPJMjTeYcSZ
+X-Received: by 2002:aa7:dc10:0:b0:440:b446:c0cc with SMTP id b16-20020aa7dc10000000b00440b446c0ccmr15993694edu.34.1660595956283;
+        Mon, 15 Aug 2022 13:39:16 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR45Fuir9EoNpEYCDZwTaOCu5+yshYNzN86x9kBq/JCQrW+g/Q8mhFtNHXDl7fhQaOWy+suhNw==
+X-Received: by 2002:aa7:dc10:0:b0:440:b446:c0cc with SMTP id b16-20020aa7dc10000000b00440b446c0ccmr15993678edu.34.1660595956040;
+        Mon, 15 Aug 2022 13:39:16 -0700 (PDT)
+Received: from redhat.com ([2.55.43.215])
+        by smtp.gmail.com with ESMTPSA id m17-20020a1709066d1100b007305b8aa36bsm4417030ejr.157.2022.08.15.13.39.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Aug 2022 13:39:15 -0700 (PDT)
+Date:   Mon, 15 Aug 2022 16:39:08 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Bobby Eshleman <bobby.eshleman@gmail.com>
+Cc:     Bobby Eshleman <bobbyeshleman@gmail.com>,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Jiang Wang <jiang.wang@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 0/6] virtio/vsock: introduce dgrams, sk_buff, and qdisc
+Message-ID: <20220815162524-mutt-send-email-mst@kernel.org>
+References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220815185505.7626-1-decui@microsoft.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <cover.1660362668.git.bobby.eshleman@bytedance.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,74 +92,89 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-s/definiton/definition/ in subject
-(only if you have other occasion to repost this)
+On Mon, Aug 15, 2022 at 10:56:03AM -0700, Bobby Eshleman wrote:
+> Hey everybody,
+> 
+> This series introduces datagrams, packet scheduling, and sk_buff usage
+> to virtio vsock.
+> 
+> The usage of struct sk_buff benefits users by a) preparing vsock to use
+> other related systems that require sk_buff, such as sockmap and qdisc,
+> b) supporting basic congestion control via sock_alloc_send_skb, and c)
+> reducing copying when delivering packets to TAP.
+> 
+> The socket layer no longer forces errors to be -ENOMEM, as typically
+> userspace expects -EAGAIN when the sk_sndbuf threshold is reached and
+> messages are being sent with option MSG_DONTWAIT.
+> 
+> The datagram work is based off previous patches by Jiang Wang[1].
+> 
+> The introduction of datagrams creates a transport layer fairness issue
+> where datagrams may freely starve streams of queue access. This happens
+> because, unlike streams, datagrams lack the transactions necessary for
+> calculating credits and throttling.
+> 
+> Previous proposals introduce changes to the spec to add an additional
+> virtqueue pair for datagrams[1]. Although this solution works, using
+> Linux's qdisc for packet scheduling leverages already existing systems,
+> avoids the need to change the virtio specification, and gives additional
+> capabilities. The usage of SFQ or fq_codel, for example, may solve the
+> transport layer starvation problem. It is easy to imagine other use
+> cases as well. For example, services of varying importance may be
+> assigned different priorities, and qdisc will apply appropriate
+> priority-based scheduling. By default, the system default pfifo qdisc is
+> used. The qdisc may be bypassed and legacy queuing is resumed by simply
+> setting the virtio-vsock%d network device to state DOWN. This technique
+> still allows vsock to work with zero-configuration.
+> 
+> In summary, this series introduces these major changes to vsock:
+> 
+> - virtio vsock supports datagrams
+> - virtio vsock uses struct sk_buff instead of virtio_vsock_pkt
+>   - Because virtio vsock uses sk_buff, it also uses sock_alloc_send_skb,
+>     which applies the throttling threshold sk_sndbuf.
+> - The vsock socket layer supports returning errors other than -ENOMEM.
+>   - This is used to return -EAGAIN when the sk_sndbuf threshold is
+>     reached.
+> - virtio vsock uses a net_device, through which qdisc may be used.
+>  - qdisc allows scheduling policies to be applied to vsock flows.
+>   - Some qdiscs, like SFQ, may allow vsock to avoid transport layer congestion. That is,
+>     it may avoid datagrams from flooding out stream flows. The benefit
+>     to this is that additional virtqueues are not needed for datagrams.
+>   - The net_device and qdisc is bypassed by simply setting the
+>     net_device state to DOWN.
+> 
+> [1]: https://lore.kernel.org/all/20210914055440.3121004-1-jiang.wang@bytedance.com/
 
-On Mon, Aug 15, 2022 at 11:55:05AM -0700, Dexuan Cui wrote:
-> The local variable 'vector' must be u32 rather than u8: see the
-> struct hv_msi_desc3.
-> 
-> 'vector_count' should be u16 rather than u8: see struct hv_msi_desc,
-> hv_msi_desc2 and hv_msi_desc3.
-> 
-> Fixes: a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
-> Cc: Carl Vanderlip <quic_carlv@quicinc.com>
+Given this affects the driver/device interface I'd like to
+ask you to please copy virtio-dev mailing list on these patches.
+Subscriber only I'm afraid you will need to subscribe :(
 
-Looks like Wei has been applying most changes to pci-hyperv.c, so I
-assume the same will happen here.
-
-> ---
+> Bobby Eshleman (5):
+>   vsock: replace virtio_vsock_pkt with sk_buff
+>   vsock: return errors other than -ENOMEM to socket
+>   vsock: add netdev to vhost/virtio vsock
+>   virtio/vsock: add VIRTIO_VSOCK_F_DGRAM feature bit
+>   virtio/vsock: add support for dgram
 > 
-> The patch should be appplied after the earlier patch:
->     [PATCH] PCI: hv: Only reuse existing IRTE allocation for Multi-MSI
->     https://lwn.net/ml/linux-kernel/20220804025104.15673-1-decui%40microsoft.com/
+> Jiang Wang (1):
+>   vsock_test: add tests for vsock dgram
 > 
->  drivers/pci/controller/pci-hyperv.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  drivers/vhost/vsock.c                   | 238 ++++----
+>  include/linux/virtio_vsock.h            |  73 ++-
+>  include/net/af_vsock.h                  |   2 +
+>  include/uapi/linux/virtio_vsock.h       |   2 +
+>  net/vmw_vsock/af_vsock.c                |  30 +-
+>  net/vmw_vsock/hyperv_transport.c        |   2 +-
+>  net/vmw_vsock/virtio_transport.c        | 237 +++++---
+>  net/vmw_vsock/virtio_transport_common.c | 771 ++++++++++++++++--------
+>  net/vmw_vsock/vmci_transport.c          |   9 +-
+>  net/vmw_vsock/vsock_loopback.c          |  51 +-
+>  tools/testing/vsock/util.c              | 105 ++++
+>  tools/testing/vsock/util.h              |   4 +
+>  tools/testing/vsock/vsock_test.c        | 195 ++++++
+>  13 files changed, 1176 insertions(+), 543 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 65d0dab25deb..53580899c859 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1614,7 +1614,7 @@ static void hv_pci_compose_compl(void *context, struct pci_response *resp,
->  
->  static u32 hv_compose_msi_req_v1(
->  	struct pci_create_interrupt *int_pkt, struct cpumask *affinity,
-> -	u32 slot, u8 vector, u8 vector_count)
-> +	u32 slot, u8 vector, u16 vector_count)
->  {
->  	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE;
->  	int_pkt->wslot.slot = slot;
-> @@ -1642,7 +1642,7 @@ static int hv_compose_msi_req_get_cpu(struct cpumask *affinity)
->  
->  static u32 hv_compose_msi_req_v2(
->  	struct pci_create_interrupt2 *int_pkt, struct cpumask *affinity,
-> -	u32 slot, u8 vector, u8 vector_count)
-> +	u32 slot, u8 vector, u16 vector_count)
->  {
->  	int cpu;
->  
-> @@ -1661,7 +1661,7 @@ static u32 hv_compose_msi_req_v2(
->  
->  static u32 hv_compose_msi_req_v3(
->  	struct pci_create_interrupt3 *int_pkt, struct cpumask *affinity,
-> -	u32 slot, u32 vector, u8 vector_count)
-> +	u32 slot, u32 vector, u16 vector_count)
->  {
->  	int cpu;
->  
-> @@ -1702,7 +1702,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  	struct tran_int_desc *int_desc;
->  	struct msi_desc *msi_desc;
->  	bool multi_msi;
-> -	u8 vector, vector_count;
-> +	u32 vector; /* Must be u32: see the struct hv_msi_desc3 */
-> +	u16 vector_count;
->  	struct {
->  		struct pci_packet pci_pkt;
->  		union {
 > -- 
-> 2.25.1
-> 
+> 2.35.1
+
