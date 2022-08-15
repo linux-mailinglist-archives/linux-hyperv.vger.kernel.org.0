@@ -1,34 +1,34 @@
 Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 984D7593513
-	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Aug 2022 20:27:52 +0200 (CEST)
+Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id 73814593C14
+	for <lists+linux-hyperv@lfdr.de>; Mon, 15 Aug 2022 22:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240192AbiHOSTM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 15 Aug 2022 14:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58714 "EHLO
+        id S1346009AbiHOUNV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 15 Aug 2022 16:13:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239980AbiHOSSg (ORCPT
+        with ESMTP id S1346648AbiHOULy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 15 Aug 2022 14:18:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8EB2A711;
-        Mon, 15 Aug 2022 11:16:07 -0700 (PDT)
+        Mon, 15 Aug 2022 16:11:54 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A275549B52;
+        Mon, 15 Aug 2022 11:58:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AF5B161299;
-        Mon, 15 Aug 2022 18:16:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8516BC433D6;
-        Mon, 15 Aug 2022 18:16:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3EB7DB810A1;
+        Mon, 15 Aug 2022 18:58:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68762C433C1;
+        Mon, 15 Aug 2022 18:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1660587366;
+        s=korg; t=1660589882;
         bh=VZdlmM1yI6DDiCaE7reYOZ8qKqKYhTpxSZQNW8mwYrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=th86to2NUpOUz0mjCLFyqIhLeUTqBo0K/3smbSigPhBpf2AdH7isOHykg5uPRUpiv
-         nOA7nH4hUZrG/nP1s/9VhFrg5w8tiEa6dkyuiYOjXPz5UD2SOP5XX8OhLvqwEJCMNr
-         je3RA71wGNpNzhujbb7wWPku311AJEv2I63H6LRo=
+        b=msGIP1HDYk5KxLDjeDYGm0Gcx986g/CmOgNmmDjEnqOqiWJ3xR9EYcAFsjmDXaqzS
+         T4ErQ9dHYoFbzdvfSLHK9wL5TsWG0HYl/UhYQhJPJ4aCPJbOH5OKxtePBVWhSCp0ax
+         2RM2v36czVcDkWPBBU6iomT6U/GxkPWDUJlKqVkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -40,12 +40,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Maxime Ripard <maxime@cerno.tech>,
         =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
         <ville.syrjala@linux.intel.com>
-Subject: [PATCH 5.15 063/779] drm/hyperv-drm: Include framebuffer and EDID headers
-Date:   Mon, 15 Aug 2022 19:55:07 +0200
-Message-Id: <20220815180339.955043910@linuxfoundation.org>
+Subject: [PATCH 5.18 0079/1095] drm/hyperv-drm: Include framebuffer and EDID headers
+Date:   Mon, 15 Aug 2022 19:51:18 +0200
+Message-Id: <20220815180432.787310852@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220815180337.130757997@linuxfoundation.org>
-References: <20220815180337.130757997@linuxfoundation.org>
+In-Reply-To: <20220815180429.240518113@linuxfoundation.org>
+References: <20220815180429.240518113@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
