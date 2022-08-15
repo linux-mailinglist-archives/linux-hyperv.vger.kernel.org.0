@@ -2,157 +2,132 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0E085947DC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 02:05:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6B1F594BF0
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 03:31:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242289AbiHOXRe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 15 Aug 2022 19:17:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44046 "EHLO
+        id S243636AbiHPAb5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 15 Aug 2022 20:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343585AbiHOXO2 (ORCPT
+        with ESMTP id S1353373AbiHPAbV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 15 Aug 2022 19:14:28 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C487AC3D;
-        Mon, 15 Aug 2022 13:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660593705; x=1692129705;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f9d9eqiD8o/ztmd1nw5JG1/VrtylCPBmHS3YYXPs1Dg=;
-  b=l1vd7czmxZtStYji/cOGqlpq0P/bIdQp6RlgL0dr5ZrkIlCvm5XLAPcH
-   Q0e6Styh/kqOGIlqcH+yyYN3Mg6qESP2tUE8qL8SIv47QdCipNOKKgnIr
-   ECG83/lSdgvBQH9iBU0aiBqDNe0NMDaAfbI6qsL3ZMqLqj8H1WFlYSys7
-   bdhoScklrK56to2/AAa/Dkhc8nYwvVXB0nTG78s9umjO1g9KTn0IQwd/0
-   Pcg8kXZi9LkdVpuKWZ2epYy4bH69W7w1kke3+RmYAWMY0hRBmVrAOLZoZ
-   sMGeP2SSGtcVcVrEeDa/UdJ5XE1mkGzfZZnVbFwu+B445cDvvToVuiOVc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="318036701"
-X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="318036701"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 13:01:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,239,1654585200"; 
-   d="scan'208";a="606768941"
-Received: from lkp-server02.sh.intel.com (HELO 3d2a4d02a2a9) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 15 Aug 2022 13:01:39 -0700
-Received: from kbuild by 3d2a4d02a2a9 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oNgHL-0001Cj-06;
-        Mon, 15 Aug 2022 20:01:39 +0000
-Date:   Tue, 16 Aug 2022 04:01:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bobby Eshleman <bobby.eshleman@gmail.com>
-Cc:     kbuild-all@lists.01.org, Bobby Eshleman <bobbyeshleman@gmail.com>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Jiang Wang <jiang.wang@bytedance.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 2/6] vsock: return errors other than -ENOMEM to socket
-Message-ID: <202208160300.HYFUSTbF-lkp@intel.com>
-References: <d81818b868216c774613dd03641fcfe63cc55a45.1660362668.git.bobby.eshleman@bytedance.com>
+        Mon, 15 Aug 2022 20:31:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D4B185995;
+        Mon, 15 Aug 2022 13:36:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 80BEFB80EA8;
+        Mon, 15 Aug 2022 20:35:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3557C433D6;
+        Mon, 15 Aug 2022 20:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660595747;
+        bh=qf1uXQYDzbCjJhqp5PrXmCPOXnbpAKK9chCCYP5tWtQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mo2MIfNF13xv6ntikuuQImFWHu1+thv5ivjIepIpCv0iYKXdmyrHjTCbOU+2XIS64
+         f6WCphkw7c+m0SbEE7D3r+DF+z9qjO0Z1nvGWl9PdvGqEm1i0N2oQK1ofz4DBye0c6
+         kj6LvC/Ml16VQRk1bWYc4eaz9vsohJtgqt+IC/MN5i82KcPba7lv5mwuk5dQ97Cz9j
+         pnUDHukh7zG3YKYptmuge4JNm6/ZCGUHaRe6eHL8pU4irn2Lv+zXOCALjx8MWlMbkY
+         rMzbII0WZ1fiQ8fNRhs1/1SFJF6mnieJxsQEaxZ75cCIu7tJvfsuhdhhelo2Dm5Thn
+         e7w/Qj1M67ScA==
+Date:   Mon, 15 Aug 2022 15:35:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     quic_jhugo@quicinc.com, wei.liu@kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        lpieralisi@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        robh@kernel.org, kw@linux.com, alex.williamson@redhat.com,
+        boqun.feng@gmail.com, Boqun.Feng@microsoft.com,
+        Carl Vanderlip <quic_carlv@quicinc.com>
+Subject: Re: [PATCH] PCI: hv: Fix the definiton of vector in
+ hv_compose_msi_msg()
+Message-ID: <20220815203545.GA1971949@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d81818b868216c774613dd03641fcfe63cc55a45.1660362668.git.bobby.eshleman@bytedance.com>
+In-Reply-To: <20220815185505.7626-1-decui@microsoft.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Bobby,
+s/definiton/definition/ in subject
+(only if you have other occasion to repost this)
 
-Thank you for the patch! Perhaps something to improve:
+On Mon, Aug 15, 2022 at 11:55:05AM -0700, Dexuan Cui wrote:
+> The local variable 'vector' must be u32 rather than u8: see the
+> struct hv_msi_desc3.
+> 
+> 'vector_count' should be u16 rather than u8: see struct hv_msi_desc,
+> hv_msi_desc2 and hv_msi_desc3.
+> 
+> Fixes: a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> Cc: Carl Vanderlip <quic_carlv@quicinc.com>
 
-[auto build test WARNING on mst-vhost/linux-next]
-[also build test WARNING on linus/master v6.0-rc1 next-20220815]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Looks like Wei has been applying most changes to pci-hyperv.c, so I
+assume the same will happen here.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bobby-Eshleman/virtio-vsock-introduce-dgrams-sk_buff-and-qdisc/20220816-015812
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git linux-next
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20220816/202208160300.HYFUSTbF-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/68c9c8216a573cdfe2170cad677854e2f4a34634
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Bobby-Eshleman/virtio-vsock-introduce-dgrams-sk_buff-and-qdisc/20220816-015812
-        git checkout 68c9c8216a573cdfe2170cad677854e2f4a34634
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash net/vmw_vsock/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> net/vmw_vsock/virtio_transport.c:178: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
-    * Merge the two most recent skbs together if possible.
-
-
-vim +178 net/vmw_vsock/virtio_transport.c
-
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  176  
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  177  /**
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15 @178   * Merge the two most recent skbs together if possible.
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  179   *
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  180   * Caller must hold the queue lock.
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  181   */
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  182  static void
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  183  virtio_transport_add_to_queue(struct sk_buff_head *queue, struct sk_buff *new)
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  184  {
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  185  	struct sk_buff *old;
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  186  
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  187  	spin_lock_bh(&queue->lock);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  188  	/* In order to reduce skb memory overhead, we merge new packets with
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  189  	 * older packets if they pass virtio_transport_skbs_can_merge().
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  190  	 */
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  191  	if (skb_queue_empty_lockless(queue)) {
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  192  		__skb_queue_tail(queue, new);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  193  		goto out;
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  194  	}
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  195  
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  196  	old = skb_peek_tail(queue);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  197  
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  198  	if (!virtio_transport_skbs_can_merge(old, new)) {
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  199  		__skb_queue_tail(queue, new);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  200  		goto out;
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  201  	}
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  202  
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  203  	memcpy(skb_put(old, new->len), new->data, new->len);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  204  	vsock_hdr(old)->len = cpu_to_le32(old->len);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  205  	vsock_hdr(old)->buf_alloc = vsock_hdr(new)->buf_alloc;
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  206  	vsock_hdr(old)->fwd_cnt = vsock_hdr(new)->fwd_cnt;
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  207  	dev_kfree_skb_any(new);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  208  
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  209  out:
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  210  	spin_unlock_bh(&queue->lock);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  211  }
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  212  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> ---
+> 
+> The patch should be appplied after the earlier patch:
+>     [PATCH] PCI: hv: Only reuse existing IRTE allocation for Multi-MSI
+>     https://lwn.net/ml/linux-kernel/20220804025104.15673-1-decui%40microsoft.com/
+> 
+>  drivers/pci/controller/pci-hyperv.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 65d0dab25deb..53580899c859 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1614,7 +1614,7 @@ static void hv_pci_compose_compl(void *context, struct pci_response *resp,
+>  
+>  static u32 hv_compose_msi_req_v1(
+>  	struct pci_create_interrupt *int_pkt, struct cpumask *affinity,
+> -	u32 slot, u8 vector, u8 vector_count)
+> +	u32 slot, u8 vector, u16 vector_count)
+>  {
+>  	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE;
+>  	int_pkt->wslot.slot = slot;
+> @@ -1642,7 +1642,7 @@ static int hv_compose_msi_req_get_cpu(struct cpumask *affinity)
+>  
+>  static u32 hv_compose_msi_req_v2(
+>  	struct pci_create_interrupt2 *int_pkt, struct cpumask *affinity,
+> -	u32 slot, u8 vector, u8 vector_count)
+> +	u32 slot, u8 vector, u16 vector_count)
+>  {
+>  	int cpu;
+>  
+> @@ -1661,7 +1661,7 @@ static u32 hv_compose_msi_req_v2(
+>  
+>  static u32 hv_compose_msi_req_v3(
+>  	struct pci_create_interrupt3 *int_pkt, struct cpumask *affinity,
+> -	u32 slot, u32 vector, u8 vector_count)
+> +	u32 slot, u32 vector, u16 vector_count)
+>  {
+>  	int cpu;
+>  
+> @@ -1702,7 +1702,8 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  	struct tran_int_desc *int_desc;
+>  	struct msi_desc *msi_desc;
+>  	bool multi_msi;
+> -	u8 vector, vector_count;
+> +	u32 vector; /* Must be u32: see the struct hv_msi_desc3 */
+> +	u16 vector_count;
+>  	struct {
+>  		struct pci_packet pci_pkt;
+>  		union {
+> -- 
+> 2.25.1
+> 
