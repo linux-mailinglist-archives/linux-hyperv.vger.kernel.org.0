@@ -2,75 +2,96 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 128F75951A9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 07:07:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 718445952F2
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 08:49:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232992AbiHPFHE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 16 Aug 2022 01:07:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42590 "EHLO
+        id S230359AbiHPGtU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 16 Aug 2022 02:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233068AbiHPFGp (ORCPT
+        with ESMTP id S230324AbiHPGtE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 16 Aug 2022 01:06:45 -0400
-Received: from smtp.smtpout.orange.fr (smtp09.smtpout.orange.fr [80.12.242.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D27100C
-        for <linux-hyperv@vger.kernel.org>; Mon, 15 Aug 2022 14:06:59 -0700 (PDT)
-Received: from [192.168.1.18] ([90.11.190.129])
-        by smtp.orange.fr with ESMTPA
-        id NhIPoUIJz4lbwNhIPoi6UR; Mon, 15 Aug 2022 23:06:56 +0200
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 15 Aug 2022 23:06:56 +0200
-X-ME-IP: 90.11.190.129
-Message-ID: <d9a4321c-efc3-e2b8-1bb7-9e2413940885@wanadoo.fr>
-Date:   Mon, 15 Aug 2022 23:06:49 +0200
+        Tue, 16 Aug 2022 02:49:04 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF2D02B634;
+        Mon, 15 Aug 2022 18:55:44 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id jm11so5701300plb.13;
+        Mon, 15 Aug 2022 18:55:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=sh0+kl/MIhEpaGSpuSWIBcImTuOVUHOzxRM5k/ATctk=;
+        b=Q8JW6K4cGjVEkYJQYxYvbagu805CQ2WZYbQp1cKmarFWTEtjA+EHABYTUjmser6KNq
+         iGSZbKiIKxcVpynW6wRwwzq3A6ix3J07oxs+OruptnXr9aBpwWzF/EQS0DpIjvkpYZpN
+         OVxGbOtl/sxdzKLM00lg0UTFp4SBnpRc7pa0GTz+Mhr8JkG/oq+/OVu+yfiViH6+QgCz
+         67AK56RkGaxh7/jg33y8xU53X8ukpOrpVIOpa0lUPpztyLXN5HOGN/5eEEj/GXzg5s+W
+         JBGJ76IjdNTUvROnkulTyhnK91/JDBAnG/2GaTyTgvO3amC6QVb4DeWJzVvXitlNs+xV
+         K5qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=sh0+kl/MIhEpaGSpuSWIBcImTuOVUHOzxRM5k/ATctk=;
+        b=vUIXxI7dveAlghkAgu4VFJthKLWPTvhe3UCz0r8W4XDCG3HtZSkveNBTvM3s6goa1v
+         SvDjAu7JSlASbD2fzliRnT8OHiPcNvLP5W75eaaw+3nsYosKkeJB8s0Ip/j7EFWwbjD5
+         XRN+XEgkFxarVfmQo08882yKCHa7wc5dd8urAjnms23Re2Yxw1b1F8pYNjfw1lrnE2jt
+         UULw/NPXEOMieByVgSAhugj1MDNSpnnPSCJKFDRCcdWOBLX47OPXDZq452Mxmc4GscUJ
+         8kifQU/nVu7IT68RUJHBIomZ0UGF4Cno0PMuLcWOjawcaMycOjRaGKk4FR2D4FpOk9uf
+         SXDQ==
+X-Gm-Message-State: ACgBeo263U/q1ve5njUpvvnacp6JzEzqvdJc4yaDe+l6wEZNN0qgjG7V
+        TEonRuMxMmk/lXMkyVY7Fws=
+X-Google-Smtp-Source: AA6agR7YnhoAqUCK6ue9bgTGofU+lxSI6q+yVJj2gPy7gAsFY1BxVCN4KDR1FJzoIiduxoFGwPbj4g==
+X-Received: by 2002:a17:902:8505:b0:171:3df7:dea1 with SMTP id bj5-20020a170902850500b001713df7dea1mr20033845plb.110.1660614944242;
+        Mon, 15 Aug 2022 18:55:44 -0700 (PDT)
+Received: from localhost (c-73-164-155-12.hsd1.wa.comcast.net. [73.164.155.12])
+        by smtp.gmail.com with ESMTPSA id s11-20020a170902ea0b00b0016be96e07d1sm7630902plg.121.2022.08.15.18.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Aug 2022 18:55:43 -0700 (PDT)
+Date:   Tue, 16 Aug 2022 01:55:42 +0000
+From:   Bobby Eshleman <bobbyeshleman@gmail.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Bobby Eshleman <bobby.eshleman@gmail.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Jiang Wang <jiang.wang@bytedance.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, linux-hyperv@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 0/6] virtio/vsock: introduce dgrams, sk_buff, and qdisc
+Message-ID: <Yvr4+t3IchkhFCfD@bullseye>
+References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
+ <20220815162524-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] drm/hyperv: Fix an error handling path in
- hyperv_vmbus_probe()
-Content-Language: fr
-To:     Wei Liu <wei.liu@kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Deepak Rawat <drawat.floss@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <7dfa372af3e35fbb1d6f157183dfef2e4512d3be.1659297696.git.christophe.jaillet@wanadoo.fr>
- <PH0PR21MB3025D61C85CD6E724919A9D8D79E9@PH0PR21MB3025.namprd21.prod.outlook.com>
- <20220815155608.uekossy5hejqflni@liuwe-devbox-debian-v2>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20220815155608.uekossy5hejqflni@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220815162524-mutt-send-email-mst@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Le 15/08/2022 à 17:56, Wei Liu a écrit :
->>
->> All that said, the fix looks good, so
->>
->> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On Mon, Aug 15, 2022 at 04:39:08PM -0400, Michael S. Tsirkin wrote:
 > 
-> I made the two changes listed above and applied this patch to
-> hyperv-fixes.
+> Given this affects the driver/device interface I'd like to
+> ask you to please copy virtio-dev mailing list on these patches.
+> Subscriber only I'm afraid you will need to subscribe :(
 > 
 
-Thanks a lot, that saves me a v2.
+Ah makes sense, will do!
 
-CJ
-
-> Thanks,
-> Wei.
-> 
-
+Best,
+Bobby
