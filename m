@@ -2,134 +2,116 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD841595321
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 08:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 889AB5958C5
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 12:46:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231185AbiHPG47 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 16 Aug 2022 02:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42458 "EHLO
+        id S234782AbiHPKqV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 16 Aug 2022 06:46:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbiHPG4j (ORCPT
+        with ESMTP id S235005AbiHPKpA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 16 Aug 2022 02:56:39 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E65D511520A;
-        Mon, 15 Aug 2022 19:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1660616270; x=1692152270;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ke6eAVC77C6+361d8UODTw/ZgPikvq+7bjNByHRqW9M=;
-  b=ZhAHe5IGqFndRg1UE/VEok9zs8N0gC0gkavkhq1ttSgjWPf1k0ecnQFR
-   x4BpB2gSKJSgcWhNVSru6bCGPe2iYPTyyOQJ+LA1+DSl1j3u1v7XBazmN
-   II8kzhQIl6tlNUqnXUCqo9r+vLrL8H999PP3fg6tVpn17g/O62Bc1Yyd2
-   C3J2yximMiQVbQ7w8MoeP/8HjUi6rqzrhdvxbQ2Gxtzv1ql1wXyHBmZ8X
-   yb/ZtLQpls7lYdF7x557GS1CupCKOWH/Vc8nCBsrSobrZ1M1EKd2vaqNi
-   qidHdFJu0g2tW+0qVU6dpUMMj0VKd+AefeJKr/YgZ5qz6z3RsOd+tgAsW
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10440"; a="292901203"
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="292901203"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2022 19:17:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,240,1654585200"; 
-   d="scan'208";a="696178385"
-Received: from lkp-server02.sh.intel.com (HELO 3d2a4d02a2a9) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Aug 2022 19:17:43 -0700
-Received: from kbuild by 3d2a4d02a2a9 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oNm9G-0001Mn-2I;
-        Tue, 16 Aug 2022 02:17:42 +0000
-Date:   Tue, 16 Aug 2022 10:16:59 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bobby Eshleman <bobby.eshleman@gmail.com>
-Cc:     kbuild-all@lists.01.org, Bobby Eshleman <bobbyeshleman@gmail.com>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Jiang Wang <jiang.wang@bytedance.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Tue, 16 Aug 2022 06:45:00 -0400
+Received: from relay.virtuozzo.com (relay.virtuozzo.com [130.117.225.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79051D076C
+        for <linux-hyperv@vger.kernel.org>; Tue, 16 Aug 2022 02:54:42 -0700 (PDT)
+Received: from dev011.ch-qa.sw.ru ([172.29.1.16])
+        by relay.virtuozzo.com with esmtp (Exim 4.95)
+        (envelope-from <alexander.atanasov@virtuozzo.com>)
+        id 1oNt3h-00FxfB-Cg;
+        Tue, 16 Aug 2022 11:41:36 +0200
+From:   Alexander Atanasov <alexander.atanasov@virtuozzo.com>
+Cc:     kernel@openvz.org,
+        Alexander Atanasov <alexander.atanasov@virtuozzo.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Wei Liu <wei.liu@kernel.org>, Nadav Amit <namit@vmware.com>,
+        pv-drivers@vmware.com, Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 2/6] vsock: return errors other than -ENOMEM to socket
-Message-ID: <202208161059.GPIlPpvd-lkp@intel.com>
-References: <d81818b868216c774613dd03641fcfe63cc55a45.1660362668.git.bobby.eshleman@bytedance.com>
+        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v2 0/4] Make balloon drivers memory changes known to the rest of the kernel
+Date:   Tue, 16 Aug 2022 12:41:13 +0300
+Message-Id: <20220816094117.3144881-1-alexander.atanasov@virtuozzo.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d81818b868216c774613dd03641fcfe63cc55a45.1660362668.git.bobby.eshleman@bytedance.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Bobby,
+Currently balloon drivers (Virtio,XEN, HyperV, VMWare, ...)
+inflate and deflate the guest memory size but there is no
+way to know how much the memory size is changed by them.
 
-Thank you for the patch! Perhaps something to improve:
+A common use of the ballooning is to emulate [1]
+hot plug and hot unplug - due to the complexity of the later.
+Hotplug has a notifier and one can also check the updated
+memory size.
 
-[auto build test WARNING on mst-vhost/linux-next]
-[also build test WARNING on linus/master v6.0-rc1 next-20220815]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+To improve this add InflatedTotal and InflatedFree
+to /proc/meminfo and implement a balloon notifier.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bobby-Eshleman/virtio-vsock-introduce-dgrams-sk_buff-and-qdisc/20220816-015812
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git linux-next
-config: i386-randconfig-s001-20220815 (https://download.01.org/0day-ci/archive/20220816/202208161059.GPIlPpvd-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-5) 11.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/68c9c8216a573cdfe2170cad677854e2f4a34634
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Bobby-Eshleman/virtio-vsock-introduce-dgrams-sk_buff-and-qdisc/20220816-015812
-        git checkout 68c9c8216a573cdfe2170cad677854e2f4a34634
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 SHELL=/bin/bash fs/nilfs2/ net/vmw_vsock/
+Amount of inflated memory can be used:
+ - si_meminfo(..) users can improve calculations
+ - adjust cache/buffer sizes 
+ - adjust object/connection limits
+ - as a hint for the oom a killer
+ - by user space software that monitors memory pressure
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+Patches for the other balloon drivers will be done next.
 
-sparse warnings: (new ones prefixed by >>)
->> net/vmw_vsock/virtio_transport.c:173:31: sparse: sparse: restricted __le16 degrades to integer
-   net/vmw_vsock/virtio_transport.c:174:31: sparse: sparse: restricted __le16 degrades to integer
+Alexander Atanasov (4):
+  Make place for common balloon code
+  Enable balloon drivers to report inflated memory
+  Display inflated memory to users
+  drivers: virtio: balloon - update inflated memory
 
-vim +173 net/vmw_vsock/virtio_transport.c
+ Documentation/filesystems/proc.rst            |  6 +++
+ MAINTAINERS                                   |  4 +-
+ arch/powerpc/platforms/pseries/cmm.c          |  2 +-
+ drivers/misc/vmw_balloon.c                    |  2 +-
+ drivers/virtio/virtio_balloon.c               |  7 +++-
+ fs/proc/meminfo.c                             | 10 +++++
+ ...{balloon_compaction.h => balloon_common.h} | 20 +++++++++-
+ mm/Makefile                                   |  2 +-
+ mm/{balloon_compaction.c => balloon_common.c} | 38 ++++++++++++++++++-
+ mm/migrate.c                                  |  2 +-
+ mm/vmscan.c                                   |  2 +-
+ 11 files changed, 84 insertions(+), 11 deletions(-)
+ rename include/linux/{balloon_compaction.h => balloon_common.h} (90%)
+ rename mm/{balloon_compaction.c => balloon_common.c} (89%)
 
-0ea9e1d3a9e3ef Asias He       2016-07-28  161  
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  162  static inline bool
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  163  virtio_transport_skbs_can_merge(struct sk_buff *old, struct sk_buff *new)
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  164  {
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  165  	return (new->len < GOOD_COPY_LEN &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  166  		skb_tailroom(old) >= new->len &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  167  		vsock_hdr(new)->src_cid == vsock_hdr(old)->src_cid &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  168  		vsock_hdr(new)->dst_cid == vsock_hdr(old)->dst_cid &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  169  		vsock_hdr(new)->src_port == vsock_hdr(old)->src_port &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  170  		vsock_hdr(new)->dst_port == vsock_hdr(old)->dst_port &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  171  		vsock_hdr(new)->type == vsock_hdr(old)->type &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  172  		vsock_hdr(new)->flags == vsock_hdr(old)->flags &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15 @173  		vsock_hdr(old)->op == VIRTIO_VSOCK_OP_RW &&
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  174  		vsock_hdr(new)->op == VIRTIO_VSOCK_OP_RW);
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  175  }
-93afaf2cdefaa9 Bobby Eshleman 2022-08-15  176  
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: pv-drivers@vmware.com
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: virtualization@lists.linux-foundation.org
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: xen-devel@lists.xenproject.org
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.31.1
+
