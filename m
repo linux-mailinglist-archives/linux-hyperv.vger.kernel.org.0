@@ -2,50 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0CC959629D
-	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 20:44:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0F059638C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 16 Aug 2022 22:13:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233790AbiHPSoh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 16 Aug 2022 14:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60102 "EHLO
+        id S237285AbiHPUNj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 16 Aug 2022 16:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232099AbiHPSoh (ORCPT
+        with ESMTP id S237217AbiHPUNi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 16 Aug 2022 14:44:37 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB9B67447;
-        Tue, 16 Aug 2022 11:44:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 4D46CCE19E5;
-        Tue, 16 Aug 2022 18:44:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CBBC433C1;
-        Tue, 16 Aug 2022 18:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660675472;
-        bh=f6wdS3YqMu7Nfy60sXIS+fqX0XpIfZfKiWOhkqio+7k=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=NH9dXdzBkblq/hjsx43QJvGalLoipTkKVChJltRWzTAMfuLIP8rsIoL03VSxcooPP
-         EJ9k7A3uy2M1Og9+kritwzPbCpvVjggMek7Qkc5CiBBzmIwtJw6Zjyvc0GLkCweKe2
-         CORjNQnbnysZgszI8567TVKB6QpHqHvvQMG2a0xG1IiagK0R6geOadt9tjbQnkuXS9
-         EYwmtGUptSH4s6hA1FIM2ssPhvQjNMgvM1VpuziZliG7AUPO7bmtww2UmrfKZhx+iJ
-         xijf/72fNXfWpi/pvPkn4rT7VPpIMxb2xv+gy1WIxzgg91ukIaw0BsLR/nJzIIyy2Z
-         oVRZ2CG3TSJXw==
-Message-ID: <9f114876-d402-6e74-c1db-4e4983c2d695@kernel.org>
-Date:   Tue, 16 Aug 2022 13:44:26 -0500
+        Tue, 16 Aug 2022 16:13:38 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9729551A20;
+        Tue, 16 Aug 2022 13:13:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cIS73AGgJyieKU1tG/xZQvCqq8exnfGqB4TcWuZRJMk=; b=FkEUF2DP0ATjqek0UTg5E6KGpT
+        SfZHe9fW2AONVfJAs/8IfzSTsTd9mdeX2lP+zLryIK+TSwQT+1+SxpL5mIvnqGUU7sIH02Ajg7mVy
+        cq1l1k1lYSy/25TQp7wwpcyxMc/YnIrMfrkKANHUcMLPcvZWHteIFmJXOTqw+Xz+452175GKpCp65
+        /o2iXSY0BqlMZDZ7rp14XcPmzP2uND+NNI5OzXGp5sTt1G5pHbYuWtYW1u5NTx0LKMb3euFHrYekU
+        8GMjSivYRkcl6vjcbMV/VqJ5/blLDgs51BUCiyMhb+/tIiagsNphS1KpAJiMWO+NA6QVVx5/mrtdN
+        nWdCvytQ==;
+Received: from [179.232.144.59] (helo=[192.168.0.5])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1oO2vr-00AHjX-Kj; Tue, 16 Aug 2022 22:12:59 +0200
+Message-ID: <7181a47b-001c-0588-4102-1cfd8bead0ac@igalia.com>
+Date:   Tue, 16 Aug 2022 17:12:33 -0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 10/13] EDAC/altera: Skip the panic notifier if kdump is
- loaded
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v2 08/13] tracing: Improve panic/die notifiers
 Content-Language: en-US
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        kexec@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
-        kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
+        halves@canonical.com, fabiomirmar@gmail.com,
         alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
         arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
         d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
@@ -53,51 +52,72 @@ Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
         jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
         luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        paulmck@kernel.org, peterz@infradead.org, senozhatsky@chromium.org,
         tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, linux-edac@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>
+        will@kernel.org, Sergei Shtylyov <sergei.shtylyov@gmail.com>
 References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-11-gpiccoli@igalia.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <20220719195325.402745-11-gpiccoli@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <20220719195325.402745-9-gpiccoli@igalia.com>
+ <20220816101445.184ebb7c@gandalf.local.home>
+ <YvuwUAGi6PvY5kmR@rowland.harvard.edu>
+ <20220816115249.66cf8f15@gandalf.local.home>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20220816115249.66cf8f15@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On 16/08/2022 12:52, Steven Rostedt wrote:
+> On Tue, 16 Aug 2022 10:57:20 -0400
+> Alan Stern <stern@rowland.harvard.edu> wrote:
+> 
+>>> static int trace_die_panic_handler(struct notifier_block *self,
+>>> 				unsigned long ev, void *unused)
+>>> {
+>>> 	if (!ftrace_dump_on_oops)
+>>> 		return NOTIFY_DONE;
+>>>
+>>> 	/* The die notifier requires DIE_OOPS to trigger */
+>>> 	if (self == &trace_die_notifier && ev != DIE_OOPS)
+>>> 		return NOTIFY_DONE;
+>>>
+>>> 	ftrace_dump(ftrace_dump_on_oops);
+>>>
+>>> 	return NOTIFY_DONE;
+>>> }  
+>>
+>> Or better yet:
+>>
+>> 	if (ftrace_dump_on_oops) {
+>>
+>> 		/* The die notifier requires DIE_OOPS to trigger */
+>> 		if (self != &trace_die_notifier || ev == DIE_OOPS)
+>> 			ftrace_dump(ftrace_dump_on_oops);
+>> 	}
+>> 	return NOTIFY_DONE;
+>>
+> 
+> That may be more consolidated but less easy to read and follow. This is far
+> from a fast path.
+> 
+> As I maintain this bike-shed, I prefer the one I suggested ;-)
+> 
+> -- Steve
+
+Perfect Steve and Alan, appreciate your suggestions!
+I'll submit V3 using your change Steve - honestly, I'm not sure why in
+the heck I put a goto there, yours is basically the same code, modulo
+the goto heheh
+
+A braino from me, for sure!
+Cheers,
 
 
-On 7/19/22 14:53, Guilherme G. Piccoli wrote:
-> The altera_edac panic notifier performs some data collection with
-> regards errors detected; such code relies in the regmap layer to
-> perform reads/writes, so the code is abstracted and there is some
-> risk level to execute that, since the panic path runs in atomic
-> context, with interrupts/preemption and secondary CPUs disabled.
-> 
-> Users want the information collected in this panic notifier though,
-> so in order to balance the risk/benefit, let's skip the altera panic
-> notifier if kdump is loaded. While at it, remove a useless header
-> and encompass a macro inside the sole ifdef block it is used.
-> 
-> Cc: Dinh Nguyen <dinguyen@kernel.org>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> 
-> ---
-> 
-> V2:
-> - new patch, based on the discussion in [0].
-> [0] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
-> 
-
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+Guilherme
