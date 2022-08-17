@@ -2,45 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3966159689D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Aug 2022 07:32:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 013C95969E5
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Aug 2022 08:56:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237348AbiHQF3C (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Aug 2022 01:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50394 "EHLO
+        id S238634AbiHQGyq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Aug 2022 02:54:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231709AbiHQF3A (ORCPT
+        with ESMTP id S230473AbiHQGyp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Aug 2022 01:29:00 -0400
-Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB54B4E62A;
-        Tue, 16 Aug 2022 22:28:58 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mail.sberdevices.ru (Postfix) with ESMTP id D1CD55FD08;
-        Wed, 17 Aug 2022 08:28:56 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1660714136;
-        bh=E45LUo5dnBIoo1JgEmeJ3I8mH7kcX+2NFKB8RJnjTmI=;
-        h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-        b=HIiMwRjTZJulm7QTAB2KCUgr/I+QW9JZH371Fv0r3aNy1ADNAa6gGcRH+Szp1SfRO
-         I1vspcK2HS40x9nbJDNFdWEQqqrgumGXGesgA8LGtzrKuEgUsYOhkXuMOMhtHflgLG
-         swMnBHgOQ+RAck2Hpvj55saliGuVXPJYipxlwyPwX0M3ugol3wqGG9sniPkDnKAfr3
-         1NmbVuI2xEvGIy2Ca2uNEdxHGd7J0IbfDdix1D9YnjuMxZfWoki4ARBWrMD8iQBSPT
-         PvwLo1ftjqLWtX/nVTGe3xNi79NUIekPLSWjIsOV2p8DUfbSiIVhhJVNeizlJbWgSr
-         PXucFNQwP3CRw==
-Received: from S-MS-EXCH02.sberdevices.ru (S-MS-EXCH02.sberdevices.ru [172.16.1.5])
-        by mail.sberdevices.ru (Postfix) with ESMTP;
-        Wed, 17 Aug 2022 08:28:54 +0300 (MSK)
-From:   Arseniy Krasnov <AVKrasnov@sberdevices.ru>
-To:     Bobby Eshleman <bobbyeshleman@gmail.com>,
-        Bobby Eshleman <bobby.eshleman@gmail.com>
-CC:     "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>,
-        "Bobby Eshleman" <bobby.eshleman@bytedance.com>,
+        Wed, 17 Aug 2022 02:54:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DFF5F9A5
+        for <linux-hyperv@vger.kernel.org>; Tue, 16 Aug 2022 23:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1660719282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zcPD4jBG73lQXOoH43Q6tPWaFdDfYRto/2dXXxDgwek=;
+        b=Zj2pAXsd4q69s+qQo6qi6ije2FgY75UDnmqKiMWMoFDh599/FBQeWmT/UAMK04B9pZnFxy
+        i1L0GSP25ua2Qtuua4vq6+hcurd146GFHJnq5NGsYuziLH5/uq32SEHy0kEYLG2hAclIBh
+        OaAXxEUqosw7AGgRjVQgSRllOBzaygo=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-61-S8xpjImmPdm4sNQGel8qVw-1; Wed, 17 Aug 2022 02:54:40 -0400
+X-MC-Unique: S8xpjImmPdm4sNQGel8qVw-1
+Received: by mail-wr1-f70.google.com with SMTP id o3-20020adfa103000000b0022514e8e99bso815684wro.19
+        for <linux-hyperv@vger.kernel.org>; Tue, 16 Aug 2022 23:54:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=zcPD4jBG73lQXOoH43Q6tPWaFdDfYRto/2dXXxDgwek=;
+        b=O5h6ngOlDe8Wl2XGKYota9NI4zb4Y5zSHRVuS09b0bgU59xWdnJNl7YIuR2pvwHCYS
+         p4plDC7iPRoKxEX0y6hLRaNZXSmOGX075YZN4FkccrQXFHrkzQ6TKnxccF2sLyVyjMof
+         J13iR5nkyZE/fh/q1wjxl6RpgtrwuS5OG8Z6bKBzyjVHEaVCmm/aTfGPEqO9T+7fVLQ4
+         DcQL/ZZuWjMMBFMhcgRQz37hWWPfmtM6G91vS3gD7NEfUdt/v+zg9Yia/KK8yeinZSFH
+         LQxn4lgbCCFZuktWbjpvKEs/phgSfDjmxGKk6wBaqeYhUUaaXq7XGX472SJuWmzykGL0
+         rfOQ==
+X-Gm-Message-State: ACgBeo2ITrJ865SRJrmr7ijlpsBGBpP/vTGPZ0J73ryvexXJvm/DC7FE
+        nEPanTHB8/eydO0jj6LaAur9KUELHSBLLqpFUnEYMZmLPMzSVvnXU/Ryhd9k9YXQlSePPltPbKA
+        GfDjx7suaD6qMLC6zvJp4HLWI
+X-Received: by 2002:adf:d1c9:0:b0:225:f98:d602 with SMTP id b9-20020adfd1c9000000b002250f98d602mr5595055wrd.419.1660719279678;
+        Tue, 16 Aug 2022 23:54:39 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR71mbO/1JAgp957U1l5Y2ejH9W2IMsrKo6NRUtwq9BrlZgJpVzkNJv+ewui/k38InlrBVqC/w==
+X-Received: by 2002:adf:d1c9:0:b0:225:f98:d602 with SMTP id b9-20020adfd1c9000000b002250f98d602mr5595029wrd.419.1660719279393;
+        Tue, 16 Aug 2022 23:54:39 -0700 (PDT)
+Received: from redhat.com ([2.55.43.215])
+        by smtp.gmail.com with ESMTPSA id f14-20020a05600c154e00b003a32251c3f9sm1288244wmg.5.2022.08.16.23.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Aug 2022 23:54:38 -0700 (PDT)
+Date:   Wed, 17 Aug 2022 02:54:33 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Bobby Eshleman <bobby.eshleman@gmail.com>
+Cc:     Bobby Eshleman <bobbyeshleman@gmail.com>,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
         Cong Wang <cong.wang@bytedance.com>,
         Jiang Wang <jiang.wang@bytedance.com>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
@@ -48,126 +70,111 @@ CC:     "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>,
         Paolo Abeni <pabeni@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [virtio-dev] Re: [PATCH 2/6] vsock: return errors other than
- -ENOMEM to socket
-Thread-Topic: [virtio-dev] Re: [PATCH 2/6] vsock: return errors other than
- -ENOMEM to socket
-Thread-Index: AQHYsY0HA9PuVtzJ6EGz2Q3NauAiZq2yXxWA
-Date:   Wed, 17 Aug 2022 05:28:43 +0000
-Message-ID: <fa74606c-36d9-a4eb-b62a-54631c7fa41c@sberdevices.ru>
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 0/6] virtio/vsock: introduce dgrams, sk_buff, and qdisc
+Message-ID: <20220817025250-mutt-send-email-mst@kernel.org>
 References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
- <d81818b868216c774613dd03641fcfe63cc55a45.1660362668.git.bobby.eshleman@bytedance.com>
- <YvsBYyPFnKRhvPfp@bullseye>
-In-Reply-To: <YvsBYyPFnKRhvPfp@bullseye>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.1.12]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6B57B3ABE02F19489494D8714B6D1A53@sberdevices.ru>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/08/17 01:22:00 #20132227
-X-KSMG-AntiVirus-Status: Clean, skipped
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1660362668.git.bobby.eshleman@bytedance.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-T24gMTYuMDguMjAyMiAwNTozMCwgQm9iYnkgRXNobGVtYW4gd3JvdGU6DQo+IENDJ2luZyB2aXJ0
-aW8tZGV2QGxpc3RzLm9hc2lzLW9wZW4ub3JnDQo+IA0KPiBPbiBNb24sIEF1ZyAxNSwgMjAyMiBh
-dCAxMDo1NjowNUFNIC0wNzAwLCBCb2JieSBFc2hsZW1hbiB3cm90ZToNCj4+IFRoaXMgY29tbWl0
-IGFsbG93cyB2c29jayBpbXBsZW1lbnRhdGlvbnMgdG8gcmV0dXJuIGVycm9ycw0KPj4gdG8gdGhl
-IHNvY2tldCBsYXllciBvdGhlciB0aGFuIC1FTk9NRU0uIE9uZSBpbW1lZGlhdGUgZWZmZWN0DQo+
-PiBvZiB0aGlzIGlzIHRoYXQgdXBvbiB0aGUgc2tfc25kYnVmIHRocmVzaG9sZCBiZWluZyByZWFj
-aGVkIC1FQUdBSU4NCj4+IHdpbGwgYmUgcmV0dXJuZWQgYW5kIHVzZXJzcGFjZSBtYXkgdGhyb3R0
-bGUgYXBwcm9wcmlhdGVseS4NCj4+DQo+PiBSZXN1bHRpbmdseSwgYSBrbm93biBpc3N1ZSB3aXRo
-IHVwZXJmIGlzIHJlc29sdmVkWzFdLg0KPj4NCj4+IEFkZGl0aW9uYWxseSwgdG8gcHJlc2VydmUg
-bGVnYWN5IGJlaGF2aW9yIGZvciBub24tdmlydGlvDQo+PiBpbXBsZW1lbnRhdGlvbnMsIGh5cGVy
-di92bWNpIGZvcmNlIGVycm9ycyB0byBiZSAtRU5PTUVNIHNvIHRoYXQgYmVoYXZpb3INCj4+IGlz
-IHVuY2hhbmdlZC4NCj4+DQo+PiBbMV06IGh0dHBzOi8vZ2l0bGFiLmNvbS92c29jay92c29jay8t
-L2lzc3Vlcy8xDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQm9iYnkgRXNobGVtYW4gPGJvYmJ5LmVz
-aGxlbWFuQGJ5dGVkYW5jZS5jb20+DQo+PiAtLS0NCj4+ICBpbmNsdWRlL2xpbnV4L3ZpcnRpb192
-c29jay5oICAgICAgICAgICAgfCAzICsrKw0KPj4gIG5ldC92bXdfdnNvY2svYWZfdnNvY2suYyAg
-ICAgICAgICAgICAgICB8IDMgKystDQo+PiAgbmV0L3Ztd192c29jay9oeXBlcnZfdHJhbnNwb3J0
-LmMgICAgICAgIHwgMiArLQ0KPj4gIG5ldC92bXdfdnNvY2svdmlydGlvX3RyYW5zcG9ydF9jb21t
-b24uYyB8IDMgLS0tDQo+PiAgbmV0L3Ztd192c29jay92bWNpX3RyYW5zcG9ydC5jICAgICAgICAg
-IHwgOSArKysrKysrKy0NCj4+ICA1IGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDYg
-ZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvdmlydGlvX3Zz
-b2NrLmggYi9pbmNsdWRlL2xpbnV4L3ZpcnRpb192c29jay5oDQo+PiBpbmRleCAxN2VkMDE0NjY4
-NzUuLjlhMzdlZGRiYjg3YSAxMDA2NDQNCj4+IC0tLSBhL2luY2x1ZGUvbGludXgvdmlydGlvX3Zz
-b2NrLmgNCj4+ICsrKyBiL2luY2x1ZGUvbGludXgvdmlydGlvX3Zzb2NrLmgNCj4+IEBAIC04LDYg
-KzgsOSBAQA0KPj4gICNpbmNsdWRlIDxuZXQvc29jay5oPg0KPj4gICNpbmNsdWRlIDxuZXQvYWZf
-dnNvY2suaD4NCj4+ICANCj4+ICsvKiBUaHJlc2hvbGQgZm9yIGRldGVjdGluZyBzbWFsbCBwYWNr
-ZXRzIHRvIGNvcHkgKi8NCj4+ICsjZGVmaW5lIEdPT0RfQ09QWV9MRU4gIDEyOA0KPj4gKw0KPj4g
-IGVudW0gdmlydGlvX3Zzb2NrX21ldGFkYXRhX2ZsYWdzIHsNCj4+ICAJVklSVElPX1ZTT0NLX01F
-VEFEQVRBX0ZMQUdTX1JFUExZCQk9IEJJVCgwKSwNCj4+ICAJVklSVElPX1ZTT0NLX01FVEFEQVRB
-X0ZMQUdTX1RBUF9ERUxJVkVSRUQJPSBCSVQoMSksDQo+PiBkaWZmIC0tZ2l0IGEvbmV0L3Ztd192
-c29jay9hZl92c29jay5jIGIvbmV0L3Ztd192c29jay9hZl92c29jay5jDQo+PiBpbmRleCBlMzQ4
-YjJkMDllYWMuLjE4OTNmOGFhZmE0OCAxMDA2NDQNCj4+IC0tLSBhL25ldC92bXdfdnNvY2svYWZf
-dnNvY2suYw0KPj4gKysrIGIvbmV0L3Ztd192c29jay9hZl92c29jay5jDQo+PiBAQCAtMTg0NCw4
-ICsxODQ0LDkgQEAgc3RhdGljIGludCB2c29ja19jb25uZWN0aWJsZV9zZW5kbXNnKHN0cnVjdCBz
-b2NrZXQgKnNvY2ssIHN0cnVjdCBtc2doZHIgKm1zZywNCj4+ICAJCQl3cml0dGVuID0gdHJhbnNw
-b3J0LT5zdHJlYW1fZW5xdWV1ZSh2c2ssDQo+PiAgCQkJCQltc2csIGxlbiAtIHRvdGFsX3dyaXR0
-ZW4pOw0KPj4gIAkJfQ0KPj4gKw0KPj4gIAkJaWYgKHdyaXR0ZW4gPCAwKSB7DQo+PiAtCQkJZXJy
-ID0gLUVOT01FTTsNCj4+ICsJCQllcnIgPSB3cml0dGVuOw0KPj4gIAkJCWdvdG8gb3V0X2VycjsN
-Cj4+ICAJCX0NCklJVUMsIGZvciBzdHJlYW0sIHRoaXMgdGhpbmcgd2lsbCBoYXZlIGVmZmVjdCwg
-b25seSBvbmUgZmlyc3QgdHJhbnNwb3J0IGFjY2VzcyBmYWlscy4gSW4gdGhpcw0KY2FzZSAndG90
-YWxfd3JpdHRlbicgd2lsbCBiZSAwLCBzbyAnZXJyJyA9PSAnd3JpdHRlbicgd2lsbCBiZSByZXR1
-cm5lZC4gQnV0IHdoZW4gJ3RvdGFsX3dyaXR0ZW4gPiAwJywNCidlcnInIHdpbGwgYmUgb3Zlcndy
-aXR0ZW4gYnkgJ3RvdGFsX3dyaXR0ZW4nIGJlbG93LCBwcmVzZXJ2aW5nIGN1cnJlbnQgYmVoYXZp
-b3VyLiBJcyBpdCB3aGF0IFlvdQ0Kc3VwcG9zZWQ/DQoNClRoYW5rcw0KPj4gIA0KPj4gZGlmZiAt
-LWdpdCBhL25ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jIGIvbmV0L3Ztd192c29jay9o
-eXBlcnZfdHJhbnNwb3J0LmMNCj4+IGluZGV4IGZkOTgyMjllM2RiMy4uZTk5YWVhNTcxZjZmIDEw
-MDY0NA0KPj4gLS0tIGEvbmV0L3Ztd192c29jay9oeXBlcnZfdHJhbnNwb3J0LmMNCj4+ICsrKyBi
-L25ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jDQo+PiBAQCAtNjg3LDcgKzY4Nyw3IEBA
-IHN0YXRpYyBzc2l6ZV90IGh2c19zdHJlYW1fZW5xdWV1ZShzdHJ1Y3QgdnNvY2tfc29jayAqdnNr
-LCBzdHJ1Y3QgbXNnaGRyICptc2csDQo+PiAgCWlmIChieXRlc193cml0dGVuKQ0KPj4gIAkJcmV0
-ID0gYnl0ZXNfd3JpdHRlbjsNCj4+ICAJa2ZyZWUoc2VuZF9idWYpOw0KPj4gLQlyZXR1cm4gcmV0
-Ow0KPj4gKwlyZXR1cm4gcmV0IDwgMCA/IC1FTk9NRU0gOiByZXQ7DQo+PiAgfQ0KPj4gIA0KPj4g
-IHN0YXRpYyBzNjQgaHZzX3N0cmVhbV9oYXNfZGF0YShzdHJ1Y3QgdnNvY2tfc29jayAqdnNrKQ0K
-Pj4gZGlmZiAtLWdpdCBhL25ldC92bXdfdnNvY2svdmlydGlvX3RyYW5zcG9ydF9jb21tb24uYyBi
-L25ldC92bXdfdnNvY2svdmlydGlvX3RyYW5zcG9ydF9jb21tb24uYw0KPj4gaW5kZXggOTIwNTc4
-NTk3YmI5Li5kNTc4MDU5OWZlOTMgMTAwNjQ0DQo+PiAtLS0gYS9uZXQvdm13X3Zzb2NrL3ZpcnRp
-b190cmFuc3BvcnRfY29tbW9uLmMNCj4+ICsrKyBiL25ldC92bXdfdnNvY2svdmlydGlvX3RyYW5z
-cG9ydF9jb21tb24uYw0KPj4gQEAgLTIzLDkgKzIzLDYgQEANCj4+ICAvKiBIb3cgbG9uZyB0byB3
-YWl0IGZvciBncmFjZWZ1bCBzaHV0ZG93biBvZiBhIGNvbm5lY3Rpb24gKi8NCj4+ICAjZGVmaW5l
-IFZTT0NLX0NMT1NFX1RJTUVPVVQgKDggKiBIWikNCj4+ICANCj4+IC0vKiBUaHJlc2hvbGQgZm9y
-IGRldGVjdGluZyBzbWFsbCBwYWNrZXRzIHRvIGNvcHkgKi8NCj4+IC0jZGVmaW5lIEdPT0RfQ09Q
-WV9MRU4gIDEyOA0KPj4gLQ0KPj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgdmlydGlvX3RyYW5zcG9y
-dCAqDQo+PiAgdmlydGlvX3RyYW5zcG9ydF9nZXRfb3BzKHN0cnVjdCB2c29ja19zb2NrICp2c2sp
-DQo+PiAgew0KPj4gZGlmZiAtLWdpdCBhL25ldC92bXdfdnNvY2svdm1jaV90cmFuc3BvcnQuYyBi
-L25ldC92bXdfdnNvY2svdm1jaV90cmFuc3BvcnQuYw0KPj4gaW5kZXggYjE0ZjBlZDc0MjdiLi5j
-OTI3YTkwZGM4NTkgMTAwNjQ0DQo+PiAtLS0gYS9uZXQvdm13X3Zzb2NrL3ZtY2lfdHJhbnNwb3J0
-LmMNCj4+ICsrKyBiL25ldC92bXdfdnNvY2svdm1jaV90cmFuc3BvcnQuYw0KPj4gQEAgLTE4Mzgs
-NyArMTgzOCwxNCBAQCBzdGF0aWMgc3NpemVfdCB2bWNpX3RyYW5zcG9ydF9zdHJlYW1fZW5xdWV1
-ZSgNCj4+ICAJc3RydWN0IG1zZ2hkciAqbXNnLA0KPj4gIAlzaXplX3QgbGVuKQ0KPj4gIHsNCj4+
-IC0JcmV0dXJuIHZtY2lfcXBhaXJfZW5xdWV2KHZtY2lfdHJhbnModnNrKS0+cXBhaXIsIG1zZywg
-bGVuLCAwKTsNCj4+ICsJaW50IGVycjsNCj4+ICsNCj4+ICsJZXJyID0gdm1jaV9xcGFpcl9lbnF1
-ZXYodm1jaV90cmFucyh2c2spLT5xcGFpciwgbXNnLCBsZW4sIDApOw0KPj4gKw0KPj4gKwlpZiAo
-ZXJyIDwgMCkNCj4+ICsJCWVyciA9IC1FTk9NRU07DQo+PiArDQo+PiArCXJldHVybiBlcnI7DQo+
-PiAgfQ0KPj4gIA0KPj4gIHN0YXRpYyBzNjQgdm1jaV90cmFuc3BvcnRfc3RyZWFtX2hhc19kYXRh
-KHN0cnVjdCB2c29ja19zb2NrICp2c2spDQo+PiAtLSANCj4+IDIuMzUuMQ0KPj4NCj4gDQo+IC0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KPiBUbyB1bnN1YnNjcmliZSwgZS1tYWlsOiB2aXJ0aW8tZGV2LXVuc3Vic2Ny
-aWJlQGxpc3RzLm9hc2lzLW9wZW4ub3JnDQo+IEZvciBhZGRpdGlvbmFsIGNvbW1hbmRzLCBlLW1h
-aWw6IHZpcnRpby1kZXYtaGVscEBsaXN0cy5vYXNpcy1vcGVuLm9yZw0KPiANCg0K
+On Mon, Aug 15, 2022 at 10:56:03AM -0700, Bobby Eshleman wrote:
+> Hey everybody,
+> 
+> This series introduces datagrams, packet scheduling, and sk_buff usage
+> to virtio vsock.
+> 
+> The usage of struct sk_buff benefits users by a) preparing vsock to use
+> other related systems that require sk_buff, such as sockmap and qdisc,
+> b) supporting basic congestion control via sock_alloc_send_skb, and c)
+> reducing copying when delivering packets to TAP.
+> 
+> The socket layer no longer forces errors to be -ENOMEM, as typically
+> userspace expects -EAGAIN when the sk_sndbuf threshold is reached and
+> messages are being sent with option MSG_DONTWAIT.
+> 
+> The datagram work is based off previous patches by Jiang Wang[1].
+> 
+> The introduction of datagrams creates a transport layer fairness issue
+> where datagrams may freely starve streams of queue access. This happens
+> because, unlike streams, datagrams lack the transactions necessary for
+> calculating credits and throttling.
+> 
+> Previous proposals introduce changes to the spec to add an additional
+> virtqueue pair for datagrams[1]. Although this solution works, using
+> Linux's qdisc for packet scheduling leverages already existing systems,
+> avoids the need to change the virtio specification, and gives additional
+> capabilities. The usage of SFQ or fq_codel, for example, may solve the
+> transport layer starvation problem. It is easy to imagine other use
+> cases as well. For example, services of varying importance may be
+> assigned different priorities, and qdisc will apply appropriate
+> priority-based scheduling. By default, the system default pfifo qdisc is
+> used. The qdisc may be bypassed and legacy queuing is resumed by simply
+> setting the virtio-vsock%d network device to state DOWN. This technique
+> still allows vsock to work with zero-configuration.
+
+The basic question to answer then is this: with a net device qdisc
+etc in the picture, how is this different from virtio net then?
+Why do you still want to use vsock?
+
+> In summary, this series introduces these major changes to vsock:
+> 
+> - virtio vsock supports datagrams
+> - virtio vsock uses struct sk_buff instead of virtio_vsock_pkt
+>   - Because virtio vsock uses sk_buff, it also uses sock_alloc_send_skb,
+>     which applies the throttling threshold sk_sndbuf.
+> - The vsock socket layer supports returning errors other than -ENOMEM.
+>   - This is used to return -EAGAIN when the sk_sndbuf threshold is
+>     reached.
+> - virtio vsock uses a net_device, through which qdisc may be used.
+>  - qdisc allows scheduling policies to be applied to vsock flows.
+>   - Some qdiscs, like SFQ, may allow vsock to avoid transport layer congestion. That is,
+>     it may avoid datagrams from flooding out stream flows. The benefit
+>     to this is that additional virtqueues are not needed for datagrams.
+>   - The net_device and qdisc is bypassed by simply setting the
+>     net_device state to DOWN.
+> 
+> [1]: https://lore.kernel.org/all/20210914055440.3121004-1-jiang.wang@bytedance.com/
+> 
+> Bobby Eshleman (5):
+>   vsock: replace virtio_vsock_pkt with sk_buff
+>   vsock: return errors other than -ENOMEM to socket
+>   vsock: add netdev to vhost/virtio vsock
+>   virtio/vsock: add VIRTIO_VSOCK_F_DGRAM feature bit
+>   virtio/vsock: add support for dgram
+> 
+> Jiang Wang (1):
+>   vsock_test: add tests for vsock dgram
+> 
+>  drivers/vhost/vsock.c                   | 238 ++++----
+>  include/linux/virtio_vsock.h            |  73 ++-
+>  include/net/af_vsock.h                  |   2 +
+>  include/uapi/linux/virtio_vsock.h       |   2 +
+>  net/vmw_vsock/af_vsock.c                |  30 +-
+>  net/vmw_vsock/hyperv_transport.c        |   2 +-
+>  net/vmw_vsock/virtio_transport.c        | 237 +++++---
+>  net/vmw_vsock/virtio_transport_common.c | 771 ++++++++++++++++--------
+>  net/vmw_vsock/vmci_transport.c          |   9 +-
+>  net/vmw_vsock/vsock_loopback.c          |  51 +-
+>  tools/testing/vsock/util.c              | 105 ++++
+>  tools/testing/vsock/util.h              |   4 +
+>  tools/testing/vsock/vsock_test.c        | 195 ++++++
+>  13 files changed, 1176 insertions(+), 543 deletions(-)
+> 
+> -- 
+> 2.35.1
+
