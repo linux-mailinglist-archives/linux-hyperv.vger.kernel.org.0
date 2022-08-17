@@ -2,36 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF773597967
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Aug 2022 00:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24264597983
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Aug 2022 00:15:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241654AbiHQWBF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Aug 2022 18:01:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36152 "EHLO
+        id S238589AbiHQWK5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Aug 2022 18:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiHQWBF (ORCPT
+        with ESMTP id S242202AbiHQWKn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Aug 2022 18:01:05 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9999F3B963;
-        Wed, 17 Aug 2022 15:01:04 -0700 (PDT)
-Received: from zn.tnic (p200300ea971b98b0329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971b:98b0:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F29291EC059D;
-        Thu, 18 Aug 2022 00:00:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1660773659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=nNsL/+Bz+9jQP2JY5PHReXF2fQeFbrG3QS9oS4053lY=;
-        b=EcytJ926HTqKY6iSYbZ9VBuyvlaElspGvROa+w6sC6qpg+gnuk202m0ev0QQX3VcwPLvhz
-        3Kh0yX5o0h3cnAPNrzvrJxUx85twc3K6ijGAFSHHorOfWLAGu5lBjGvRP5JOpjp547FvaI
-        WU+KSM6AbjGnX8o7CObtOrsWcTR5bi4=
-Date:   Thu, 18 Aug 2022 00:00:58 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+        Wed, 17 Aug 2022 18:10:43 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A5E9F777;
+        Wed, 17 Aug 2022 15:10:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=S/5eXt6qxPOjrifOXrTAqDLvDo7S1RMnGh1w0oxBNRY=; b=LuyJGMy9jrbLt9nYppeNddgYWU
+        D/BfJy4BBV8fYYFviGZU4XVL/QzXZPDbrkVGEDaAqgWdY+l4F6rDBMTYMIxabfCBvNerOk1eEaDUZ
+        moCxBNac2IOqmQnsvQoD3HPI4Vw8tWBZg3rB1tJmJqzoYQYtr9dDZ4usgITC9y9+OZgvUlzUwb7yy
+        8X3q/mtluoXia0VGjRR9uSR4jN0UYUHw4VGCgA+HCrJytPNQkdeyITxLZSVcXH0WuO39MGZ+LjC8O
+        BHwntmREeJLccSE+kvCKiOqQaFNx1V1uuOKqDiUBOKSAJ67vcQCsz0udizEBpAhokvUi5fP0/9AVG
+        G3ZOi+3w==;
+Received: from [179.232.144.59] (helo=[192.168.0.5])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1oOREw-00Aycc-0j; Thu, 18 Aug 2022 00:10:18 +0200
+Message-ID: <2f21b91c-4fb0-42f8-0820-a6036405cb29@igalia.com>
+Date:   Wed, 17 Aug 2022 19:09:26 -0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v2 10/13] EDAC/altera: Skip the panic notifier if kdump is
+ loaded
+Content-Language: en-US
+To:     Borislav Petkov <bp@alien8.de>
 Cc:     pmladek@suse.com, Dinh Nguyen <dinguyen@kernel.org>,
         Tony Luck <tony.luck@intel.com>, akpm@linux-foundation.org,
         bhe@redhat.com, kexec@lists.infradead.org,
@@ -49,43 +57,47 @@ Cc:     pmladek@suse.com, Dinh Nguyen <dinguyen@kernel.org>,
         senozhatsky@chromium.org, stern@rowland.harvard.edu,
         tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
         will@kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH v2 10/13] EDAC/altera: Skip the panic notifier if kdump
- is loaded
-Message-ID: <Yv1lGpisQVFpUOGP@zn.tnic>
 References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-11-gpiccoli@igalia.com>
- <Yv0mCY04heUXsGiC@zn.tnic>
- <46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com>
- <Yv1C0Y25u2IB7PCs@zn.tnic>
- <7f016d7f-a546-a45d-c65c-bc35269b4faa@igalia.com>
- <Yv1XVRmTXHLhOkER@zn.tnic>
- <c0250075-ec87-189f-52c5-e0520325a015@igalia.com>
- <Yv1hn2ayPoyKBAj8@zn.tnic>
- <1ee275b3-97e8-4c2b-be88-d50898d17e23@igalia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1ee275b3-97e8-4c2b-be88-d50898d17e23@igalia.com>
+ <20220719195325.402745-11-gpiccoli@igalia.com> <Yv0mCY04heUXsGiC@zn.tnic>
+ <46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com> <Yv1C0Y25u2IB7PCs@zn.tnic>
+ <7f016d7f-a546-a45d-c65c-bc35269b4faa@igalia.com> <Yv1XVRmTXHLhOkER@zn.tnic>
+ <c0250075-ec87-189f-52c5-e0520325a015@igalia.com> <Yv1hn2ayPoyKBAj8@zn.tnic>
+ <1ee275b3-97e8-4c2b-be88-d50898d17e23@igalia.com> <Yv1lGpisQVFpUOGP@zn.tnic>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <Yv1lGpisQVFpUOGP@zn.tnic>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 17, 2022 at 06:56:11PM -0300, Guilherme G. Piccoli wrote:
-> But do you agree that currently, in case of a kdump, that information
-> *is not collected*, with our without my patch?
+On 17/08/2022 19:00, Borislav Petkov wrote:
+> On Wed, Aug 17, 2022 at 06:56:11PM -0300, Guilherme G. Piccoli wrote:
+>> But do you agree that currently, in case of a kdump, that information
+>> *is not collected*, with our without my patch?
+> 
+> If for some reason that panic notifier does not get run before kdump,
+> then that's a bug and that driver should not use a panic notifier to log
+> hw errors in the first place.
+> 
 
-If for some reason that panic notifier does not get run before kdump,
-then that's a bug and that driver should not use a panic notifier to log
-hw errors in the first place.
+Indeed, the notifiers don't run before kdump by default, in a conscious
+decision of the kdump maintainers.
 
--- 
-Regards/Gruss,
-    Boris.
+You might be right, in the sense that maybe the edac error handler
+shouldn't run as a panic notifier. Let's see if Tony / Dinh can chime in
+on that discussion - we could move it to run in the kexec event as well,
+so it'd always run before a kdump, but maybe the risk it offers during
+panic time is not worth.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Again - a matter of a trade-off, a good compromise must be agreed by all
+parties (kdump maintainers are usually extremely afraid of taking risks
+to not break kdump).
+
+Cheers!
