@@ -2,93 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E793D597528
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Aug 2022 19:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C01A59755D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 Aug 2022 19:56:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238101AbiHQRcE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 Aug 2022 13:32:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53412 "EHLO
+        id S238249AbiHQRxp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 Aug 2022 13:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238004AbiHQRcE (ORCPT
+        with ESMTP id S237632AbiHQRxp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 Aug 2022 13:32:04 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A7749B61;
-        Wed, 17 Aug 2022 10:32:02 -0700 (PDT)
-Received: from zn.tnic (p200300ea971b98b0329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971b:98b0:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2A7411EC04E4;
-        Wed, 17 Aug 2022 19:31:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1660757517;
+        Wed, 17 Aug 2022 13:53:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D62530F6E
+        for <linux-hyperv@vger.kernel.org>; Wed, 17 Aug 2022 10:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1660758822;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dUKj+X8ljKS3x0J7PLstLS2kOGr7pWVjrGVNsA+POsw=;
-        b=OCrRjecizgJkhIrUuxZqNNRqYD/0fFaYs2TDejeDXW/mmrrYLWtuimSo/AnlefpOtU+AMj
-        bsL7N758/zQeINPpMpOiI/ASS6nWSKedONPjIH0T9YfOo5o9ytEmycBmsrGT973RrHO3j/
-        FA4Bt5FgbzcF1qKWUonHjI/9nn6LXBk=
-Date:   Wed, 17 Aug 2022 19:31:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, corbet@lwn.net, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org, linux-edac@vger.kernel.org,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v2 10/13] EDAC/altera: Skip the panic notifier if kdump
- is loaded
-Message-ID: <Yv0mCY04heUXsGiC@zn.tnic>
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-11-gpiccoli@igalia.com>
+         in-reply-to:in-reply-to:references:references;
+        bh=SQOVouI0K9iJWnYSVBtpjkA3WVldpQ/o4YTxV/vt74M=;
+        b=OjDxCM1eIEnL+4fTMGvGGB2oaS/l/orgtk9MpM/+In6BQ1QyhGwtFUBCtyFXc6tmrh/Sk6
+        dqoSJ9tArPjswYWHeU6edfzfqNp0TkFZyQYloTo3uUk3L2Z1/39fBi6p28yWB65qudvEqH
+        fQmm3kI5AVF6TrJjTW1uScVR/iJduF0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-313-Zq_Vm6iDM7K1__0pSDPZkA-1; Wed, 17 Aug 2022 13:53:41 -0400
+X-MC-Unique: Zq_Vm6iDM7K1__0pSDPZkA-1
+Received: by mail-wr1-f72.google.com with SMTP id s20-20020adfbc14000000b002252dae05f7so10250wrg.20
+        for <linux-hyperv@vger.kernel.org>; Wed, 17 Aug 2022 10:53:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=SQOVouI0K9iJWnYSVBtpjkA3WVldpQ/o4YTxV/vt74M=;
+        b=FdaqNOkW1KtiP5o6K8xVWvx79oF3QlqKnj2PaKfhFCfG76gIdaqoHwUwoywZdLDjZs
+         uvbdQzYgWzo2MbuViNn9bHUE+yczaO3rrGyo8rXzDjy9Pik6ZGpW9uWK1ElmeXHaZmD9
+         eWWLA5VCWbisMls92+YRR+KdPJaMk/rFqKqdUXWVqO3L/9Bi/wbDm2WLVsLt5Ee1PnDE
+         IqGKW3RSc9KUguWnvILHfj1oE9ymXGCd1UFgZ1wTmSL2Q+dXuyhj+Zi8uOQUG6TFR9xL
+         WW0/wZYQx3NOurgP6APGq6g7hoR9Yg0MVsXkJGQJpLk9VrTux5wtiT8sTBKQ9ttAXaLC
+         k1kw==
+X-Gm-Message-State: ACgBeo1irIbm8QDxS7SH8/mE99ruyoBZRZIRUhgZ9gjlBWi0hh0uT8Qm
+        ezS+jf55US7i1icnLU4GuzAvj9iSGBAMoOBzQolc3lQeg5dMw62lh8v8pAllIKMzs8Y72XAtw/l
+        lyhq66P63ZQVawYY0LpkUll0x
+X-Received: by 2002:a05:6000:4083:b0:21f:fb6:9293 with SMTP id da3-20020a056000408300b0021f0fb69293mr14792305wrb.303.1660758820166;
+        Wed, 17 Aug 2022 10:53:40 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR4ONxUsrUHKKEaZOO44Ixn5LdAH2Y94mokPuvnN34a8r6PY+eKWeMnaGAVNXB2YU7T+If8QUw==
+X-Received: by 2002:a05:6000:4083:b0:21f:fb6:9293 with SMTP id da3-20020a056000408300b0021f0fb69293mr14792286wrb.303.1660758819888;
+        Wed, 17 Aug 2022 10:53:39 -0700 (PDT)
+Received: from redhat.com ([2.55.43.215])
+        by smtp.gmail.com with ESMTPSA id y11-20020adfe6cb000000b00220592005edsm1060157wrm.85.2022.08.17.10.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Aug 2022 10:53:39 -0700 (PDT)
+Date:   Wed, 17 Aug 2022 13:53:32 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc:     Bobby Eshleman <bobby.eshleman@gmail.com>,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Jiang Wang <jiang.wang@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 0/6] virtio/vsock: introduce dgrams, sk_buff, and qdisc
+Message-ID: <20220817135311-mutt-send-email-mst@kernel.org>
+References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
+ <20220817025250-mutt-send-email-mst@kernel.org>
+ <YvtmYpMieMFb80qR@bullseye>
+ <20220817130044-mutt-send-email-mst@kernel.org>
+ <Yvt6nxUYMfDrLd/A@bullseye>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220719195325.402745-11-gpiccoli@igalia.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <Yvt6nxUYMfDrLd/A@bullseye>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jul 19, 2022 at 04:53:23PM -0300, Guilherme G. Piccoli wrote:
-> The altera_edac panic notifier performs some data collection with
-> regards errors detected; such code relies in the regmap layer to
-> perform reads/writes, so the code is abstracted and there is some
-> risk level to execute that, since the panic path runs in atomic
-> context, with interrupts/preemption and secondary CPUs disabled.
+On Tue, Aug 16, 2022 at 11:08:26AM +0000, Bobby Eshleman wrote:
+> On Wed, Aug 17, 2022 at 01:02:52PM -0400, Michael S. Tsirkin wrote:
+> > On Tue, Aug 16, 2022 at 09:42:51AM +0000, Bobby Eshleman wrote:
+> > > > The basic question to answer then is this: with a net device qdisc
+> > > > etc in the picture, how is this different from virtio net then?
+> > > > Why do you still want to use vsock?
+> > > > 
+> > > 
+> > > When using virtio-net, users looking for inter-VM communication are
+> > > required to setup bridges, TAPs, allocate IP addresses or setup DNS,
+> > > etc... and then finally when you have a network, you can open a socket
+> > > on an IP address and port. This is the configuration that vsock avoids.
+> > > For vsock, we just need a CID and a port, but no network configuration.
+> > 
+> > Surely when you mention DNS you are going overboard? vsock doesn't
+> > remove the need for DNS as much as it does not support it.
+> > 
 > 
-> Users want the information collected in this panic notifier though,
-> so in order to balance the risk/benefit, let's skip the altera panic
-> notifier if kdump is loaded. While at it, remove a useless header
-> and encompass a macro inside the sole ifdef block it is used.
+> Oops, s/DNS/dhcp.
 
-How does the fact that kdump is loaded, obviate the need to print
-information about the errors?
-
-Are you suggesting that people who have the whole vmcore would be able
-to piece together the error information?
+That too.
 
 -- 
-Regards/Gruss,
-    Boris.
+MST
 
-https://people.kernel.org/tglx/notes-about-netiquette
