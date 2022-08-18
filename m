@@ -2,41 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 836C15985B5
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Aug 2022 16:26:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2524E5985AB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Aug 2022 16:26:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245402AbiHROZR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Aug 2022 10:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49234 "EHLO
+        id S1343506AbiHROZY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Aug 2022 10:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244870AbiHROZR (ORCPT
+        with ESMTP id S245689AbiHROZT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Aug 2022 10:25:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 326E0AB199
-        for <linux-hyperv@vger.kernel.org>; Thu, 18 Aug 2022 07:25:15 -0700 (PDT)
+        Thu, 18 Aug 2022 10:25:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B342BB2DBF
+        for <linux-hyperv@vger.kernel.org>; Thu, 18 Aug 2022 07:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660832714;
+        s=mimecast20190719; t=1660832718;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=o2twgcO7kyyQ5GRIT1qf5wdXWWnxfVjo4QZ0qXqFFvc=;
-        b=VpwWZRw3lSXZ60OEqFwoUBckUFKSVto5sKHOct4b/K4eLasvUarTy9mKeOi5tJ852NGxTK
-        uHE433adcpHFf8G5+Rpaq5uymNNJfey3wWy0mqop6d5pqcH6Q5xyBb3BZAKV39HjlQCJw/
-        NCbTn8dRyIvuamG6ctQlKNkgn+IkHDM=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fC9YoAlYaRoz9rMPLE4asKIxjUKxEIVxQJ6T79z28gE=;
+        b=Fmvh4XTx3+lfSWK7SRq+gWTVkQysc3oCZ1tLQuCSY4ti9+r3fYoP+16aIVIe97aspj5p8P
+        FB8YVgqG5KC4kpOJhibtDEcdANddxTbSF09PwLkksuWhnGQwrOqPwkmJ91bgX3mW12Q/o0
+        wAIKW2n4fIGWMSj4GEZwHspNXARI87U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-101-592iOU5SO5eYB8KSxfAbbw-1; Thu, 18 Aug 2022 10:25:11 -0400
-X-MC-Unique: 592iOU5SO5eYB8KSxfAbbw-1
+ us-mta-314-OWqI_6zNN1yrtVMK_mhfMQ-1; Thu, 18 Aug 2022 10:25:13 -0400
+X-MC-Unique: OWqI_6zNN1yrtVMK_mhfMQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 144973817A64;
-        Thu, 18 Aug 2022 14:25:11 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 47E79811E80;
+        Thu, 18 Aug 2022 14:25:13 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.194.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 60A7CC15BB8;
-        Thu, 18 Aug 2022 14:25:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52F1DC15BBA;
+        Thu, 18 Aug 2022 14:25:11 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     linux-hyperv@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
@@ -47,16 +48,18 @@ Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Dexuan Cui <decui@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH v1 0/4] Drivers: hv: Avoid allocating MMIO from framebuffer region for other passed through PCI devices
-Date:   Thu, 18 Aug 2022 16:25:04 +0200
-Message-Id: <20220818142508.402273-1-vkuznets@redhat.com>
+Subject: [PATCH v1 1/4] Drivers: hv: Move legacy Hyper-V PCI video device's ids to linux/hyperv.h
+Date:   Thu, 18 Aug 2022 16:25:05 +0200
+Message-Id: <20220818142508.402273-2-vkuznets@redhat.com>
+In-Reply-To: <20220818142508.402273-1-vkuznets@redhat.com>
+References: <20220818142508.402273-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,61 +67,63 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Passed through PCI device sometimes misbehave on Gen1 VMs when Hyper-V
-DRM driver is also loaded. Looking at IOMEM assignment, we can see e.g.
+There are already two places in kernel with PCI_VENDOR_ID_MICROSOFT/
+PCI_DEVICE_ID_HYPERV_VIDEO and there's a need to use these from core
+Vmbus code. Move the defines to a common header.
 
-$ cat /proc/iomem
-...
-f8000000-fffbffff : PCI Bus 0000:00
-  f8000000-fbffffff : 0000:00:08.0
-    f8000000-f8001fff : bb8c4f33-2ba2-4808-9f7f-02f3b4da22fe
-...
-fe0000000-fffffffff : PCI Bus 0000:00
-  fe0000000-fe07fffff : bb8c4f33-2ba2-4808-9f7f-02f3b4da22fe
-    fe0000000-fe07fffff : 2ba2:00:02.0
-      fe0000000-fe07fffff : mlx4_core
+No functional change.
 
-the interesting part is the 'f8000000' region as it is actually the
-VM's framebuffer:
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 3 ---
+ drivers/video/fbdev/hyperv_fb.c         | 4 ----
+ include/linux/hyperv.h                  | 4 ++++
+ 3 files changed, 4 insertions(+), 7 deletions(-)
 
-$ lspci -v
-...
-0000:00:08.0 VGA compatible controller: Microsoft Corporation Hyper-V virtual VGA (prog-if 00 [VGA controller])
-	Flags: bus master, fast devsel, latency 0, IRQ 11
-	Memory at f8000000 (32-bit, non-prefetchable) [size=64M]
-...
-
- hv_vmbus: registering driver hyperv_drm
- hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] Synthvid Version major 3, minor 5
- hyperv_drm 0000:00:08.0: vgaarb: deactivate vga console
- hyperv_drm 0000:00:08.0: BAR 0: can't reserve [mem 0xf8000000-0xfbffffff]
- hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] Cannot request framebuffer, boot fb still active?
-
-Note: "Cannot request framebuffer" is not a fatal error in
-hyperv_setup_gen1() as the code assumes there's some other framebuffer
-device there but we actually have some other PCI device (mlx4 in this
-case) config space there!
-
-Resolve the issue by always reserving FB region on Gen1 VMs (PATCH3) and making
-sure we never allocate anything besides framebuffer from there (PATCH4). PATCH1
-is a preparatory change, PATCH2 fixes a loosely related issue in Hyper-V DRM
-driver.
-
-Vitaly Kuznetsov (4):
-  Drivers: hv: Move legacy Hyper-V PCI video device's ids to
-    linux/hyperv.h
-  drm/hyperv: Don't forget to put PCI device when removing conflicting
-    FB fails
-  Drivers: hv: Always reserve framebuffer region for Gen1 VMs
-  Drivers: hv: Never allocate anything besides framebuffer from
-    framebuffer memory region
-
- drivers/gpu/drm/hyperv/hyperv_drm_drv.c |  5 +--
- drivers/hv/vmbus_drv.c                  | 57 ++++++++++++++++++-------
- drivers/video/fbdev/hyperv_fb.c         |  4 --
- include/linux/hyperv.h                  |  4 ++
- 4 files changed, 47 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+index 4a8941fa0815..46f6c454b820 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+@@ -23,9 +23,6 @@
+ #define DRIVER_MAJOR 1
+ #define DRIVER_MINOR 0
+ 
+-#define PCI_VENDOR_ID_MICROSOFT 0x1414
+-#define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
+-
+ DEFINE_DRM_GEM_FOPS(hv_fops);
+ 
+ static struct drm_driver hyperv_driver = {
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index 886c564787f1..b58b445bb529 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -74,10 +74,6 @@
+ #define SYNTHVID_DEPTH_WIN8 32
+ #define SYNTHVID_FB_SIZE_WIN8 (8 * 1024 * 1024)
+ 
+-#define PCI_VENDOR_ID_MICROSOFT 0x1414
+-#define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
+-
+-
+ enum pipe_msg_type {
+ 	PIPE_MSG_INVALID,
+ 	PIPE_MSG_DATA,
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 3b42264333ef..4bb39a8f1af7 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1516,6 +1516,10 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size);
+ 	.guid = GUID_INIT(0xc376c1c3, 0xd276, 0x48d2, 0x90, 0xa9, \
+ 			  0xc0, 0x47, 0x48, 0x07, 0x2c, 0x60)
+ 
++/* Legacy Hyper-V PCI video device */
++#define PCI_VENDOR_ID_MICROSOFT 0x1414
++#define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
++
+ /*
+  * Common header for Hyper-V ICs
+  */
 -- 
 2.37.1
 
