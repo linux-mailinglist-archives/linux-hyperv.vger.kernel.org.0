@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36563598A1D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Aug 2022 19:20:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1474B598A57
+	for <lists+linux-hyperv@lfdr.de>; Thu, 18 Aug 2022 19:28:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343798AbiHRRSg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 18 Aug 2022 13:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44572 "EHLO
+        id S1344984AbiHRRV6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 18 Aug 2022 13:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344702AbiHRRSH (ORCPT
+        with ESMTP id S1344910AbiHRRVh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 18 Aug 2022 13:18:07 -0400
+        Thu, 18 Aug 2022 13:21:37 -0400
 Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E896CE4AC
-        for <linux-hyperv@vger.kernel.org>; Thu, 18 Aug 2022 10:15:20 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id x63-20020a17090a6c4500b001fabbf8debfso2464614pjj.4
-        for <linux-hyperv@vger.kernel.org>; Thu, 18 Aug 2022 10:15:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12CCC13D14
+        for <linux-hyperv@vger.kernel.org>; Thu, 18 Aug 2022 10:20:02 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id ch17-20020a17090af41100b001fa74771f61so5944932pjb.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 18 Aug 2022 10:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc;
-        bh=AlJnMdRWI5BfRSyUR23BkFHHxdszN/7rAb7ygL3qrCk=;
-        b=o+lqsJCfXfg+vynKuUuyjFpXEfqn9Y+A106ruxFvLRUwtBdTNH05yFa8A2ATCQcaye
-         z4ARc5TQYJAkXospOYm7nTvEKY3XJkh2IOoo65D2ppK6Xorik9nePYebCEK3e8k7WZSv
-         75qUgaovud2XubudtlzZaE2nf/Rnuj5si3HcXsgB+JjkZLyChqg4x/s2w4QNWp6SB31q
-         QAz5Jwo9k2YC6HdaKQgEyTKpH/kz86Pn4FRiLgbtP/7YsuXki2xvGzfhpBTbtAhdwYPq
-         fTHVMWyQrsaQTTy4vBzP6E2FW3QYTxMls+ixd3WvmMTVzfhCthYGC9XSiEI4ibaD+S+G
-         jw5w==
+        bh=oxkIL7t6QF/08WGCg7LwevIs7IPtvy2DWZ/yQUzyzpw=;
+        b=oT+xYcRJe+BsVSbihqkOFFsJHOzKLtYkEKpL4xy/l86phwOS/hn1nfDHoIBrWVL+w9
+         yb4lD5vXPHhmw9hoIden1DXoX4ZswlfgFRk4JpVJC+Lmrg80cADPMJFkmxPktCzR4+ox
+         5e/2+8r2fq0NiBtOgp6LWKEZPuRWXa3vwy+wCHnSgtkwXnl+F+c4aJpQ9412goyf2NXx
+         0h+uV3o02Lr+qzjOrh8H5JI/OthbOr+dH/vIaFpJptjvcJebu87c3bewsBZOqFcxHRqi
+         OUtEb2kgvtJ34aL4CLvE+S9TSacRrBrtc4zlGXufA0EikQNpSCCX7QapEQ05qZuBJQCf
+         L1Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=AlJnMdRWI5BfRSyUR23BkFHHxdszN/7rAb7ygL3qrCk=;
-        b=1X4elFvveN1/5Zr9udqEtgW+0tFYcSemeJ74dhWW1KzZA6xu51IGJkGRRIJxKi2VXQ
-         HLmkw9D2Asoziyi/FYNw5jeu0ScXz5ww6/srEqqDaiVqWCok7G3q0/lcE68ypbCw8Ami
-         Whhxdhs9yuaJglfLYNuqfazpaX2uA5s7d5iiUXChWfrqHYLX6w2AQYZfSLABnrSRQ8HP
-         gY6DyV/RKHREHsYqw41loIg+ISgfvUTNzzzi6IlJmXqfrbbIpCQ20QHK4vJ2kmkJ5dSJ
-         eE2XHfw9q6Dglkuyn14NIDWOLe4g//7z66iYcRIR3W7skBHa6K2otToSAWPbr2NhrGfV
-         93TA==
-X-Gm-Message-State: ACgBeo3azsoy7HzUPnsWKAcJBDBgOG/lLpDkvs67p8sKax5JjcL+D0Fy
-        iA9BqzyU+nIpLAl8oS2yUv5EFQ==
-X-Google-Smtp-Source: AA6agR6SWLeIMPfA+g5+b+GAooz6Q15ZOPcSVfSeG/41tKMIUHqFuOVplKXS1tcNL03im/i3eDbI0w==
-X-Received: by 2002:a17:90a:1b65:b0:1f7:4725:aa6e with SMTP id q92-20020a17090a1b6500b001f74725aa6emr3926169pjq.179.1660842919544;
-        Thu, 18 Aug 2022 10:15:19 -0700 (PDT)
+        bh=oxkIL7t6QF/08WGCg7LwevIs7IPtvy2DWZ/yQUzyzpw=;
+        b=4CxuFwgrQX+vuE8QmoFlNG1tKGVRscBHsmjpqt5U5jb5SoNHsrCtupQhzYpykr07CK
+         IBhne9OmYFLTiMzqIibNHY9LXvEQ2DelUmSp14RcEDuk3DCrtZQWn+DmIX0Eglle1hw/
+         6OoNSGkwm9uaDPxwvXOwq/9Ap+GjrbF+v1ujksTc5JkrQEBNU6W32IYD/dnBSIK0NdDu
+         /gTlSNMPh2ZtTEhk+rhxMSkx0oauRwyrs/DYGE2iQVjWP1Sx8iBbDtAavoIPsIcOelZx
+         d9SzZ+9UWKts02wtEK0GgAt/bg6IIfLJ5563Nzn9YWlsX/fmdNoaPLMj+yRHJFHyD8p/
+         o97Q==
+X-Gm-Message-State: ACgBeo1VmmcXSbCZA9V/iYofDfSX5Pvi82KpupeqB0z9Au20wjCrQwYj
+        7vnYVxlBKsBNeheT2XlffKHEEg==
+X-Google-Smtp-Source: AA6agR7Rl/cE0F+L87ZcmO12psnHHsz5CQgapTnbh6BHn8bRtzBKIoh2Dmn5hldKJ5+/F+R/OjqLjg==
+X-Received: by 2002:a17:902:efd2:b0:172:b0a5:fd79 with SMTP id ja18-20020a170902efd200b00172b0a5fd79mr3704461plb.87.1660843202321;
+        Thu, 18 Aug 2022 10:20:02 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id p18-20020a170902ead200b0016a6caacaefsm1632016pld.103.2022.08.18.10.15.16
+        by smtp.gmail.com with ESMTPSA id k1-20020a170902ce0100b0016f04c098ddsm1624592plg.226.2022.08.18.10.20.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Aug 2022 10:15:16 -0700 (PDT)
-Date:   Thu, 18 Aug 2022 17:15:11 +0000
+        Thu, 18 Aug 2022 10:20:01 -0700 (PDT)
+Date:   Thu, 18 Aug 2022 17:19:57 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -61,7 +61,7 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v5 09/26] KVM: VMX: nVMX: Support TSC scaling and
  PERF_GLOBAL_CTRL with enlightened VMCS
-Message-ID: <Yv5zn4qTl0aiaQvh@google.com>
+Message-ID: <Yv50vWGoLQ9n+6MO@google.com>
 References: <20220802160756.339464-1-vkuznets@redhat.com>
  <20220802160756.339464-10-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -80,191 +80,27 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
-> Enlightened VMCS v1 got updated and now includes the required fields
-> for TSC scaling and loading PERF_GLOBAL_CTRL upon VMENTER/VMEXIT
-> features. For Hyper-V on KVM enablement, KVM can just observe VMX control
-> MSRs and use the features (with or without eVMCS) when
-> possible. Hyper-V on KVM case is trickier because of live migration:
-> the new features require explicit enablement from VMM to not break
-> it. Luckily, the updated eVMCS revision comes with a feature bit in
-> CPUID.0x4000000A.EBX.
+> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+> index f886a8ff0342..4b809c79ae63 100644
+> --- a/arch/x86/kvm/vmx/evmcs.h
+> +++ b/arch/x86/kvm/vmx/evmcs.h
+> @@ -37,16 +37,9 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
+>   *	EPTP_LIST_ADDRESS               = 0x00002024,
+>   *	VMREAD_BITMAP                   = 0x00002026,
+>   *	VMWRITE_BITMAP                  = 0x00002028,
+> - *
+> - *	TSC_MULTIPLIER                  = 0x00002032,
+>   *	PLE_GAP                         = 0x00004020,
+>   *	PLE_WINDOW                      = 0x00004022,
+>   *	VMX_PREEMPTION_TIMER_VALUE      = 0x0000482E,
+> - *      GUEST_IA32_PERF_GLOBAL_CTRL     = 0x00002808,
+> - *      HOST_IA32_PERF_GLOBAL_CTRL      = 0x00002c04,
+> - *
+> - * Currently unsupported in KVM:
+> - *	GUEST_IA32_RTIT_CTL		= 0x00002814,
 
-The refactor to implement the 2-d array should go in a prep patch.  Unless you
-(or anyone else) objects to the feedback below, I'll do the split myself, post v6,
-and queue this up (without patch 1, and assuming there're no major issues in the
-back half of the series).
+Almost forgot: is deleting this chunk of the comment intentional?
 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/hyperv.c     |  2 +-
->  arch/x86/kvm/vmx/evmcs.c  | 88 +++++++++++++++++++++++++++++++--------
->  arch/x86/kvm/vmx/evmcs.h  | 17 ++------
->  arch/x86/kvm/vmx/nested.c |  2 +-
->  arch/x86/kvm/vmx/vmx.c    |  2 +-
->  5 files changed, 78 insertions(+), 33 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index 1098915360ae..8a2b24f9bbf6 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -2552,7 +2552,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  		case HYPERV_CPUID_NESTED_FEATURES:
->  			ent->eax = evmcs_ver;
->  			ent->eax |= HV_X64_NESTED_MSR_BITMAP;
-> -
-> +			ent->ebx |= HV_X64_NESTED_EVMCS1_2022_UPDATE;
->  			break;
->  
->  		case HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS:
-> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-> index 8bea5dea0341..e8497f9854a1 100644
-> --- a/arch/x86/kvm/vmx/evmcs.c
-> +++ b/arch/x86/kvm/vmx/evmcs.c
-> @@ -368,7 +368,60 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
->  	return 0;
->  }
->  
-> -void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata)
-> +enum evmcs_revision {
-> +	EVMCSv1_2016,
-> +	EVMCSv1_2022,
-> +	EVMCS_REVISION_MAX,
-
-"MAX" is technically wrong, the "max" entry is usually the last valid entry.  This
-should be NR_EVMCS_REVISIONS, and then NR_EVMCS_CTRLS below.
-
-> +};
-> +
-> +enum evmcs_unsupported_ctrl_type {
-
-I think drop the "unsupported" here, because the naming gets weird when trying to
-use it for something other than indexing evmcs_unsupported_ctls (see bottom).
-
-> +	EVMCS_EXIT_CTLS,
-> +	EVMCS_ENTRY_CTLS,
-
-s/CTLS/CTRLS for consistency.
-
-> +	EVMCS_2NDEXEC,
-> +	EVMCS_PINCTRL,
-> +	EVMCS_VMFUNC,
-> +	EVMCS_CTRL_MAX,
-> +};
-> +
-> +static u32 evmcs_unsupported_ctls[EVMCS_CTRL_MAX][EVMCS_REVISION_MAX] = {
-
-This can be "const".  And s/ctls/ctrls for consistency.
-
-> +	[EVMCS_EXIT_CTLS] = {
-> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_VMEXIT_CTRL | VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL,
-> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_VMEXIT_CTRL,
-> +	},
-> +	[EVMCS_ENTRY_CTLS] = {
-> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_VMENTRY_CTRL | VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL,
-> +		[EVMCSv1_2022] =  EVMCS1_UNSUPPORTED_VMENTRY_CTRL,
-> +	},
-> +	[EVMCS_2NDEXEC] = {
-> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_2NDEXEC | SECONDARY_EXEC_TSC_SCALING,
-> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_2NDEXEC,
-> +	},
-> +	[EVMCS_PINCTRL] = {
-> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_PINCTRL,
-> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_PINCTRL,
-> +	},
-> +	[EVMCS_VMFUNC] = {
-> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_VMFUNC,
-> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_VMFUNC,
-> +	},
-> +};
-> +
-> +static u32 evmcs_get_unsupported_ctls(struct kvm_vcpu *vcpu,
-> +				      enum evmcs_unsupported_ctrl_type ctrl_type)
-> +{
-> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-> +	enum evmcs_revision evmcs_rev = EVMCSv1_2016;
-> +
-> +	if (!hv_vcpu)
-
-This is a functiontal change, and I don't think it's correct either.  Previously,
-KVM would apply the EVMCSv1_2016 filter irrespective of whether or not
-vcpu->arch.hyperv is non-NULL.  nested_enable_evmcs() doesn't require a Hyper-V
-vCPU, and AFAICT nothing requires a Hyper-V vCPU to use eVMCS.
-
-So I believe this should be:
-
-	if (hv_vcpu &&
-	    hv_vcpu->cpuid_cache.nested_ebx & HV_X64_NESTED_EVMCS1_2022_UPDATE)
-		evmcs_rev = EVMCSv1_2022;
-
-> +		return 0;
-> +
-> +	if (hv_vcpu->cpuid_cache.nested_ebx & HV_X64_NESTED_EVMCS1_2022_UPDATE)
-> +		evmcs_rev = EVMCSv1_2022;
-> +
-> +	return evmcs_unsupported_ctls[ctrl_type][evmcs_rev];
-> +}
-> +
-
-...
-
-> -int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
-> +int nested_evmcs_check_controls(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
->  {
->  	int ret = 0;
->  	u32 unsupp_ctl;
->  
->  	unsupp_ctl = vmcs12->pin_based_vm_exec_control &
-> -		EVMCS1_UNSUPPORTED_PINCTRL;
-> +		evmcs_get_unsupported_ctls(vcpu, EVMCS_PINCTRL);
->  	if (unsupp_ctl) {
->  		trace_kvm_nested_vmenter_failed(
-> -			"eVMCS: unsupported pin-based VM-execution controls",
-> +			"eVMCS: unsupported pin-based VM-execution controls: ",
->  			unsupp_ctl);
-
-Egad!  This is all broken, at least in theory.  The second param to
-trace_kvm_nested_vmenter_failed() is the error code, not the bad value.  It mostly
-works because __print_symbolic() falls back to printing the hex value on error,
-but that relies on there being no collisions/matches between unsupp_ctl and the
-set of VMX_VMENTER_INSTRUCTION_ERRORS.  E.g. if there's a collision then the
-tracepoint will pretty print a string and cause confusion.
-
-And checking every control even after one fails seems unnecessary subtle.  It
-provides marginal benefit while increasing the probability that we screw up and
-squash "ret" to zero.  Yeah, it might save some onion peeling, but if that happens
-during production and now during initial development of a feature, then someone
-has much bigger problems to worry about.
-
-Unless there are objections, I'll fold in a patch to yield:
-
-#define CC KVM_NESTED_VMENTER_CONSISTENCY_CHECK
-
-static bool nested_evmcs_is_valid_controls(enum evmcs_ctrl_type type, u32 val)
-{
-	return val & evmcs_get_unsupported_ctls(type);
-}
-
-int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
-{
-	if (CC(!nested_evmcs_is_valid_controls(EVMCS_PINCTRL,
-					       vmcs12->pin_based_vm_exec_control)))
-		return -EINVAL;
-
-	if (CC(!nested_evmcs_is_valid_controls(EVMCS_2NDEXEC,
-					       vmcs12->secondary_vm_exec_control)))
-		return -EINVAL;
-
-	if (CC(!nested_evmcs_is_valid_controls(EVMCS_EXIT_CTRLS,
-					       vmcs12->vm_exit_controls)))
-		return -EINVAL;
-
-	if (CC(!nested_evmcs_is_valid_controls(EVMCS_ENTRY_CTRLS,
-					       vmcs12->vm_entry_controls)))
-		return -EINVAL;
-
-	if (CC(!nested_evmcs_is_valid_controls(EVMCS_VMFUNC,
-					       vmcs12->vm_function_control)))
-		return -EINVAL;
-
-	return 0;
-}
+>   */
+>  #define EVMCS1_UNSUPPORTED_PINCTRL (PIN_BASED_POSTED_INTR | \
+>  				    PIN_BASED_VMX_PREEMPTION_TIMER)
