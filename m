@@ -2,45 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 846235AE979
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Sep 2022 15:27:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C067E5AF9A9
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Sep 2022 04:02:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233285AbiIFN0o (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Sep 2022 09:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
+        id S229608AbiIGCCR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Sep 2022 22:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232951AbiIFN0n (ORCPT
+        with ESMTP id S229572AbiIGCCQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Sep 2022 09:26:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E27974B80
-        for <linux-hyperv@vger.kernel.org>; Tue,  6 Sep 2022 06:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662470801;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cG+EMJYQC9dpJwtmnpabIGTtF9jjQR1GUpVCWiATrrQ=;
-        b=UfzM0b77jXZLuuWQfcjkRELCCEy1+psLLv1G2btwuJ2QQe82zSOHU7FbiQsBL/yGWLURHf
-        jsyj4E3MOSJaF/nUrZOarK0KwnqZeCdIhMc2Y03RdQeod81IFnI6bJYPrDVYj0phgqfWKz
-        uHnOuTVU0v+/1zvEoBFdk0Xu2yukI5A=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-497-kAuUCntzO02DdqDuwRNM8A-1; Tue, 06 Sep 2022 09:26:37 -0400
-X-MC-Unique: kAuUCntzO02DdqDuwRNM8A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 907501C006AA;
-        Tue,  6 Sep 2022 13:26:35 +0000 (UTC)
-Received: from localhost (unknown [10.39.193.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EAEC2026D4C;
-        Tue,  6 Sep 2022 13:26:34 +0000 (UTC)
-Date:   Tue, 6 Sep 2022 09:26:33 -0400
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Bobby Eshleman <bobby.eshleman@gmail.com>
-Cc:     Bobby Eshleman <bobbyeshleman@gmail.com>,
+        Tue, 6 Sep 2022 22:02:16 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 945858E45C;
+        Tue,  6 Sep 2022 19:02:15 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id iw17so6421494plb.0;
+        Tue, 06 Sep 2022 19:02:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=Jwpb3CZaX0bMWLoqG62o2gobYjHtSytkFeKeRqFEhrY=;
+        b=QKiwhfzXFGTWU+koGlbakEy4hnfAjf2RRPKehip8lIbi1F+bGTjEW5yJnv3JElHfJZ
+         MZc5P6QJsQAb/vuQUbDR4Rv7Z9d50pIQIvmXAN28w4MpkfCu6Wbf7LHzcB5SGFTzjFoW
+         w4D5n14fxADlWX+ExPNuzu9pgf49j8ewU7Q3LpzVTugHDVpbNNT6BVl8C3vwvvZUnA9u
+         n6sKqNth8Cv7/WXx7LTPMlKFZR4vSssT0ZJOEZ3dwTPeYoINlRzsf2L0qBKkLOOnbGDl
+         QXcmkK6n8hOoab/BIziBpSIvpPjoeaNEbROWDYhTc/RwQasBqOdX8YkAMJrvDZFEYOBX
+         7LQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=Jwpb3CZaX0bMWLoqG62o2gobYjHtSytkFeKeRqFEhrY=;
+        b=DbhXrxVj4dW89WwOETI0Q7UeRBEdU8FX7L1QTe+Y7GPnZCf4Ij8rwoQyTd4yYancfH
+         0Tz8Rp6+rU1V/0NSDbByc8WSloYkChKlaxyGaSusxyqLFTCSPcSNxc2fkoTDrJKcVmrr
+         DB1soFYXwUGnM9VzysYhCj9aUXDpS6BhBq76nHrjuysPc7e/AeFySf9r7X7JdwdhhL6V
+         jsPMhHQISQ+uUZnwbUw5QUextnBuY3n1jYeBjLadRW276A3yZKpnJ9fW3ZPptrpbrmuy
+         S0vgqUbSwNtBUMw/tylwP5puetX59JlfTUMlJKFJxHBC5GoibrK1THEuw1anURg/x/6d
+         Nomw==
+X-Gm-Message-State: ACgBeo3dKyBZshojwDzDfnToBScZ4Odx7chcdKel7tPqP6sgBfVPU7x6
+        Wg97ZgSxIUWoYunaYF1MUv4=
+X-Google-Smtp-Source: AA6agR7H+bk1DuR8iBTTcyXMcZqKoOEh+Br0mw78q71U+dGZKIgxgvmo8IgUtWIxojqM4EEQDz7XjA==
+X-Received: by 2002:a17:903:1c4:b0:176:e348:c386 with SMTP id e4-20020a17090301c400b00176e348c386mr1404659plh.3.1662516134925;
+        Tue, 06 Sep 2022 19:02:14 -0700 (PDT)
+Received: from localhost (ec2-13-57-97-131.us-west-1.compute.amazonaws.com. [13.57.97.131])
+        by smtp.gmail.com with ESMTPSA id o7-20020a656a47000000b004308422060csm8975063pgu.69.2022.09.06.19.02.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Sep 2022 19:02:14 -0700 (PDT)
+Date:   Thu, 18 Aug 2022 14:39:32 +0000
+From:   Bobby Eshleman <bobbyeshleman@gmail.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Bobby Eshleman <bobby.eshleman@gmail.com>,
         Bobby Eshleman <bobby.eshleman@bytedance.com>,
         Cong Wang <cong.wang@bytedance.com>,
         Jiang Wang <jiang.wang@bytedance.com>,
@@ -59,57 +70,43 @@ Cc:     Bobby Eshleman <bobbyeshleman@gmail.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org
 Subject: Re: [PATCH 0/6] virtio/vsock: introduce dgrams, sk_buff, and qdisc
-Message-ID: <YxdKiUzlfpHs3h3q@fedora>
+Message-ID: <Yv5PFz1YrSk8jxzY@bullseye>
 References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
+ <YxdKiUzlfpHs3h3q@fedora>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ffA3zeJuYjNdcnmP"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1660362668.git.bobby.eshleman@bytedance.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <YxdKiUzlfpHs3h3q@fedora>
+X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Tue, Sep 06, 2022 at 09:26:33AM -0400, Stefan Hajnoczi wrote:
+> Hi Bobby,
+> If you are attending Linux Foundation conferences in Dublin, Ireland
+> next week (Linux Plumbers Conference, Open Source Summit Europe, KVM
+> Forum, ContainerCon Europe, CloudOpen Europe, etc) then you could meet
+> Stefano Garzarella and others to discuss this patch series.
+> 
+> Using netdev and sk_buff is a big change to vsock. Discussing your
+> requirements and the future direction of vsock in person could help.
+> 
+> If you won't be in Dublin, don't worry. You can schedule a video call if
+> you feel it would be helpful to discuss these topics.
+> 
+> Stefan
 
---ffA3zeJuYjNdcnmP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hey Stefan,
 
-Hi Bobby,
-If you are attending Linux Foundation conferences in Dublin, Ireland
-next week (Linux Plumbers Conference, Open Source Summit Europe, KVM
-Forum, ContainerCon Europe, CloudOpen Europe, etc) then you could meet
-Stefano Garzarella and others to discuss this patch series.
+That sounds like a great idea! I was unable to make the Dublin trip work
+so I think a video call would be best, of course if okay with everyone.
 
-Using netdev and sk_buff is a big change to vsock. Discussing your
-requirements and the future direction of vsock in person could help.
-
-If you won't be in Dublin, don't worry. You can schedule a video call if
-you feel it would be helpful to discuss these topics.
-
-Stefan
-
---ffA3zeJuYjNdcnmP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmMXSogACgkQnKSrs4Gr
-c8iC8wf/WGQyOwxcifRrsvIy43xkZiginzOzlIJEAkBPO1lbTUzCLMkjeiaOgOkO
-7VOexEKxi3S67NVq1vUyAzKPB6HFERheGtQOQtkhrmKDKfhVH14zU6t/bHSVeoAe
-UfM2UaaO4nF/XRVuO6g6sKsVAqVFWQxpdBjVrsg4B4v8k/1q7W/tiAy//WJHCZc9
-6dJCJ+qoPxICjfqc0bw56xbERbh0TG+xneBkGVjp7nLLq/NG/tV7LoIb7xs3EXxq
-wB/WYW+bZBtO378tl7SxMksYKv1DFPuYjU52vuUw2X0bz6jgoFn3/rB5ndoHg/o0
-D8YtdthVM/GJqXQtJAhIIqbPdUV7Dg==
-=DJmj
------END PGP SIGNATURE-----
-
---ffA3zeJuYjNdcnmP--
-
+Thanks,
+Bobby
