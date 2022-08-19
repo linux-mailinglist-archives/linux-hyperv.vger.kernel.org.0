@@ -2,35 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA05A59946E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 07:32:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 008F6599484
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 07:32:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245425AbiHSF2G (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Aug 2022 01:28:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43814 "EHLO
+        id S1345813AbiHSFaE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Aug 2022 01:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243197AbiHSF2F (ORCPT
+        with ESMTP id S1345200AbiHSFaD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Aug 2022 01:28:05 -0400
+        Fri, 19 Aug 2022 01:30:03 -0400
 Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 300AAE01FC;
-        Thu, 18 Aug 2022 22:28:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648CDD573F;
+        Thu, 18 Aug 2022 22:30:02 -0700 (PDT)
 Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mail.sberdevices.ru (Postfix) with ESMTP id 856AF5FD07;
-        Fri, 19 Aug 2022 08:28:02 +0300 (MSK)
+        by mail.sberdevices.ru (Postfix) with ESMTP id 98D675FD07;
+        Fri, 19 Aug 2022 08:30:00 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1660886882;
-        bh=xZcFr0g066QLn34YVo/DnULMO+Ugg56rtAsgSG8AMHo=;
+        s=mail; t=1660887000;
+        bh=HkUmGO8BR4mvsCDioUDHVxe6cFrtTj9VNblWxBkjvUY=;
         h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-        b=DB+pr+ENO0x1YGOBXcl32mEz9ySWuycsdn6ARa3p/0E/aMxJh8ffXDZpeNOy8Y2YB
-         ebMeLKGYxUcPKVDsz9P+34TY4E2cYpvKTZIDgoSPTH1LKq1Y/RSKVbYM5qdiTBhjWD
-         3bmJViJCa6JbzwQbdgj7sMil02xG3vb7m8V7xYGQoxBm4M8fWcdWsZ+6ayYFsNgTAK
-         ugVLrepfBhjzeGfOYzVo8lNzAJyAeq6fRUvmGtTaRtiZCVPSJ8fmlwAzASa+KijlJW
-         NADTgi8/c1+0QOpxM934CqLfebC7dZ7jhny1A4PLZzTaOct6t75PDHujWcYhDlOh/U
-         fV6/v7yNw/m3A==
+        b=ToD49HiAHMATFc3HmtcrWHGzvOO3K5HC/19fw+fGQxKWZDKEGEINyJtdSPh5Ca5OJ
+         8ncHFb8oWaMqKVWN/9Hs1X4sha4RtNOv33MpwhqZz7xGqIKldijd2FYUPlDxkNsJ3A
+         /Cl9EaQg+psPqazAuT/xpZNDZh2JhUFeLj8MmTXSyI2wY/OVmAF5ilCacuFVWxlO8a
+         yOov7nXCnUxg5zjqqOU9A2sKvWWOHUDKT5b4heSqR8ZU23CXzZGEKaNdCo9840ot1Q
+         HhMyt9BTvm+WBlnOhqw1LQQx9aLC9uoChP1JwcLPNtGb17lF/blynP79raqI34lT+m
+         s2Ep/1Fb3cdXA==
 Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
         by mail.sberdevices.ru (Postfix) with ESMTP;
-        Fri, 19 Aug 2022 08:28:00 +0300 (MSK)
+        Fri, 19 Aug 2022 08:29:59 +0300 (MSK)
 From:   Arseniy Krasnov <AVKrasnov@sberdevices.ru>
 To:     Stefano Garzarella <sgarzare@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -45,7 +45,8 @@ To:     Stefano Garzarella <sgarzare@redhat.com>,
         Stefan Hajnoczi <stefanha@redhat.com>,
         Bryan Tan <bryantan@vmware.com>,
         Vishnu Dasa <vdasa@vmware.com>,
-        Krasnov Arseniy <oxffffaa@gmail.com>
+        Krasnov Arseniy <oxffffaa@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
 CC:     "virtualization@lists.linux-foundation.org" 
         <virtualization@lists.linux-foundation.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
@@ -54,11 +55,13 @@ CC:     "virtualization@lists.linux-foundation.org"
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>,
         VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
-Subject: [PATCH net-next v4 2/9] hv_sock: disable SO_RCVLOWAT support
-Thread-Topic: [PATCH net-next v4 2/9] hv_sock: disable SO_RCVLOWAT support
-Thread-Index: AQHYs4xj57UzSxktpUO3tU97mRUOyg==
-Date:   Fri, 19 Aug 2022 05:27:34 +0000
-Message-ID: <1772ff39-a197-3f11-73b9-7deeb015e1ee@sberdevices.ru>
+Subject: [PATCH net-next v4 3/9] virtio/vsock: use 'target' in notify_poll_in
+ callback
+Thread-Topic: [PATCH net-next v4 3/9] virtio/vsock: use 'target' in
+ notify_poll_in callback
+Thread-Index: AQHYs4yqyCPs/xU05EWXDbxbWPV2ow==
+Date:   Fri, 19 Aug 2022 05:29:34 +0000
+Message-ID: <61ef8a18-24fe-d16c-b093-764d3b66804a@sberdevices.ru>
 In-Reply-To: <de41de4c-0345-34d7-7c36-4345258b7ba8@sberdevices.ru>
 Accept-Language: en-US, ru-RU
 Content-Language: en-US
@@ -66,7 +69,7 @@ X-MS-Has-Attach:
 X-MS-TNEF-Correlator: 
 x-originating-ip: [172.16.1.12]
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <0CA4519B157AC347835CA4E08DEE6B12@sberdevices.ru>
+Content-ID: <8ECC2C8816C4704D8DC273A24207C7C9@sberdevices.ru>
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-KSMG-Rule-ID: 4
@@ -85,24 +88,21 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Rm9yIEh5cGVyLVYgaXQgaXMgcXVpZXQgZGlmZmljdWx0IHRvIHN1cHBvcnQgdGhpcyBzb2NrZXQg
-b3B0aW9uLGR1ZSB0bw0KdHJhbnNwb3J0IGludGVybmFscywgc28gZGlzYWJsZSBpdC4NCg0KU2ln
-bmVkLW9mZi1ieTogQXJzZW5peSBLcmFzbm92IDxBVktyYXNub3ZAc2JlcmRldmljZXMucnU+DQpS
-ZXZpZXdlZC1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NClJldmlld2VkLWJ5
-OiBTdGVmYW5vIEdhcnphcmVsbGEgPHNnYXJ6YXJlQHJlZGhhdC5jb20+DQotLS0NCiBuZXQvdm13
-X3Zzb2NrL2h5cGVydl90cmFuc3BvcnQuYyB8IDcgKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA3
-IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL25ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5z
-cG9ydC5jIGIvbmV0L3Ztd192c29jay9oeXBlcnZfdHJhbnNwb3J0LmMNCmluZGV4IGZkOTgyMjll
-M2RiMy4uNTljM2UyNjk3MDY5IDEwMDY0NA0KLS0tIGEvbmV0L3Ztd192c29jay9oeXBlcnZfdHJh
-bnNwb3J0LmMNCisrKyBiL25ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jDQpAQCAtODE1
-LDYgKzgxNSwxMiBAQCBpbnQgaHZzX25vdGlmeV9zZW5kX3Bvc3RfZW5xdWV1ZShzdHJ1Y3QgdnNv
-Y2tfc29jayAqdnNrLCBzc2l6ZV90IHdyaXR0ZW4sDQogCXJldHVybiAwOw0KIH0NCiANCitzdGF0
-aWMNCitpbnQgaHZzX3NldF9yY3Zsb3dhdChzdHJ1Y3QgdnNvY2tfc29jayAqdnNrLCBpbnQgdmFs
-KQ0KK3sNCisJcmV0dXJuIC1FT1BOT1RTVVBQOw0KK30NCisNCiBzdGF0aWMgc3RydWN0IHZzb2Nr
-X3RyYW5zcG9ydCBodnNfdHJhbnNwb3J0ID0gew0KIAkubW9kdWxlICAgICAgICAgICAgICAgICAg
-ID0gVEhJU19NT0RVTEUsDQogDQpAQCAtODUwLDYgKzg1Niw3IEBAIHN0YXRpYyBzdHJ1Y3QgdnNv
-Y2tfdHJhbnNwb3J0IGh2c190cmFuc3BvcnQgPSB7DQogCS5ub3RpZnlfc2VuZF9wcmVfZW5xdWV1
-ZSAgPSBodnNfbm90aWZ5X3NlbmRfcHJlX2VucXVldWUsDQogCS5ub3RpZnlfc2VuZF9wb3N0X2Vu
-cXVldWUgPSBodnNfbm90aWZ5X3NlbmRfcG9zdF9lbnF1ZXVlLA0KIA0KKwkuc2V0X3Jjdmxvd2F0
-ICAgICAgICAgICAgID0gaHZzX3NldF9yY3Zsb3dhdA0KIH07DQogDQogc3RhdGljIGJvb2wgaHZz
-X2NoZWNrX3RyYW5zcG9ydChzdHJ1Y3QgdnNvY2tfc29jayAqdnNrKQ0KLS0gDQoyLjI1LjENCg==
+VGhpcyBjYWxsYmFjayBjb250cm9scyBzZXR0aW5nIG9mIFBPTExJTiwgUE9MTFJETk9STSBvdXRw
+dXQgYml0cyBvZiBwb2xsKCkNCnN5c2NhbGwsIGJ1dCBpbiBzb21lIGNhc2VzLCBpdCBpcyBpbmNv
+cnJlY3RseSB0byBzZXQgaXQsIHdoZW4gc29ja2V0IGhhcw0KYXQgbGVhc3QgMSBieXRlcyBvZiBh
+dmFpbGFibGUgZGF0YS4gVXNlICd0YXJnZXQnIHdoaWNoIGlzIGFscmVhZHkgZXhpc3RzLg0KDQpT
+aWduZWQtb2ZmLWJ5OiBBcnNlbml5IEtyYXNub3YgPEFWS3Jhc25vdkBzYmVyZGV2aWNlcy5ydT4N
+ClJldmlld2VkLWJ5OiBTdGVmYW5vIEdhcnphcmVsbGEgPHNnYXJ6YXJlQHJlZGhhdC5jb20+DQot
+LS0NCiBuZXQvdm13X3Zzb2NrL3ZpcnRpb190cmFuc3BvcnRfY29tbW9uLmMgfCA1ICstLS0tDQog
+MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCA0IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0t
+Z2l0IGEvbmV0L3Ztd192c29jay92aXJ0aW9fdHJhbnNwb3J0X2NvbW1vbi5jIGIvbmV0L3Ztd192
+c29jay92aXJ0aW9fdHJhbnNwb3J0X2NvbW1vbi5jDQppbmRleCBlYzJjMmFmYmYwZDAuLjhmNjM1
+NmViY2RkMSAxMDA2NDQNCi0tLSBhL25ldC92bXdfdnNvY2svdmlydGlvX3RyYW5zcG9ydF9jb21t
+b24uYw0KKysrIGIvbmV0L3Ztd192c29jay92aXJ0aW9fdHJhbnNwb3J0X2NvbW1vbi5jDQpAQCAt
+NjM0LDEwICs2MzQsNyBAQCB2aXJ0aW9fdHJhbnNwb3J0X25vdGlmeV9wb2xsX2luKHN0cnVjdCB2
+c29ja19zb2NrICp2c2ssDQogCQkJCXNpemVfdCB0YXJnZXQsDQogCQkJCWJvb2wgKmRhdGFfcmVh
+ZHlfbm93KQ0KIHsNCi0JaWYgKHZzb2NrX3N0cmVhbV9oYXNfZGF0YSh2c2spKQ0KLQkJKmRhdGFf
+cmVhZHlfbm93ID0gdHJ1ZTsNCi0JZWxzZQ0KLQkJKmRhdGFfcmVhZHlfbm93ID0gZmFsc2U7DQor
+CSpkYXRhX3JlYWR5X25vdyA9IHZzb2NrX3N0cmVhbV9oYXNfZGF0YSh2c2spID49IHRhcmdldDsN
+CiANCiAJcmV0dXJuIDA7DQogfQ0KLS0gDQoyLjI1LjENCg==
