@@ -2,150 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC6285994D7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 07:52:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33C9B59963A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 09:43:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244469AbiHSFoX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Aug 2022 01:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        id S1347149AbiHSHm3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Aug 2022 03:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239690AbiHSFoW (ORCPT
+        with ESMTP id S1347146AbiHSHm2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Aug 2022 01:44:22 -0400
-Received: from mail.sberdevices.ru (mail.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C5F8AF4AB;
-        Thu, 18 Aug 2022 22:44:19 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mail.sberdevices.ru (Postfix) with ESMTP id 0BFC15FD07;
-        Fri, 19 Aug 2022 08:44:17 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1660887857;
-        bh=h7+HUP4tb8Cb9jo6wtjfQEUxhO6Pc+MKHncReNdMGME=;
-        h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
-        b=hn2gNuz65CdxqlCUH3LsKVCMsiC7DIw25Ab3F+xYmtafaulSzB1IlazOogRHO7D1X
-         3L4GXm8B6Xz0aRx9ObkTkHiURFpnooEO1W8w0We35Q5zBtUHXqa8koSxF+nXAkqxUF
-         659Bi4Ms0Fsa/zqHEEtxXYZIhaqhEv0wCikhuOzs+rkG8W7VPo19JmK+8d/99b/v3X
-         8T9go9O77Q5BnkIgcPcvmishuxMYPYdizOlv29/QBfuhTniBhPrnOMwixboJMzgYk2
-         YtORgEGp7MP30s1vIMbrj7YFn3cB7LXA4h/DCdb/KJtC+2DaDyH28bp0R5/KKkD7NB
-         88lv4lknSJu+Q==
-Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
-        by mail.sberdevices.ru (Postfix) with ESMTP;
-        Fri, 19 Aug 2022 08:44:16 +0300 (MSK)
-From:   Arseniy Krasnov <AVKrasnov@sberdevices.ru>
-To:     Stefano Garzarella <sgarzare@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Krasnov Arseniy <oxffffaa@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        kernel <kernel@sberdevices.ru>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
-Subject: [PATCH net-next v4 9/9] vsock_test: POLLIN + SO_RCVLOWAT test
-Thread-Topic: [PATCH net-next v4 9/9] vsock_test: POLLIN + SO_RCVLOWAT test
-Thread-Index: AQHYs46oe5LFMy4RrEyUi4DF7J/0fw==
-Date:   Fri, 19 Aug 2022 05:43:50 +0000
-Message-ID: <5dac33eb-29d0-c4bc-a110-8519c8146d30@sberdevices.ru>
-In-Reply-To: <de41de4c-0345-34d7-7c36-4345258b7ba8@sberdevices.ru>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.16.1.12]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EF77E04B4C84C74881DD99B2AC186BC1@sberdevices.ru>
-Content-Transfer-Encoding: base64
+        Fri, 19 Aug 2022 03:42:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9973FCCE2A
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 00:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1660894946;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7BU0NBgcPwvMpt86ttJZWI4g3XAVpmUhw+WmsruDrgM=;
+        b=M4+AsEIXJ3g8YdG28lrIZdwjPoBUzD+WWxRvModwUOc+8ut1Wx64iCNAww9SSb15hQzrbo
+        eWNfw/D0oo4uxzd70FzEEVOldjsFH58DRIQ/vnuhkUqIOffDmkY1ALJONLIBNfqR/BEBl3
+        HhxapyeUAV0jL5efOq3IgIJ7iOFeB1E=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-209-tYeTjtokPe6sGB5oULUPFQ-1; Fri, 19 Aug 2022 03:42:23 -0400
+X-MC-Unique: tYeTjtokPe6sGB5oULUPFQ-1
+Received: by mail-ed1-f72.google.com with SMTP id w17-20020a056402269100b0043da2189b71so2355633edd.6
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 00:42:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc;
+        bh=7BU0NBgcPwvMpt86ttJZWI4g3XAVpmUhw+WmsruDrgM=;
+        b=Uq9sSZsmqNR7OZWZJ3VFKynzQoMRL92D2lNQKGJQktqv0H/81uoIzUuLwls4nS2KAC
+         cCWFjVSuCe8civ7TeXgEZHW9ju+LO24ullZGXPANC6GTwMsIqjVQNqcGZtROvlHWgSRE
+         F1laD/gBisC9NeITW2HYuuv1/30Vv7bI2uVSQLj0ejoosJcUrVDL69r1ZfjwlrJXdPg7
+         b9AXeT4C30IqV4d28e/2p2uLzO59mfbVJznFoB2m5JK2zf0wRzGe5/g8B9HOMr50an37
+         l8Q2e+PVLom+eNWZ8R7ocEK4JGW2m6Whye1IAezcPkqQ2O4Q3V/J3a3EOoeadiAUOCwj
+         1ooA==
+X-Gm-Message-State: ACgBeo0gCH6eXnhUEAgyofn3ro4kqR8VhbSrvKDFEx7SJ+9M+j6zua5J
+        aGYW61UVvtLJWY1FQqZfbgcAh6BZfGA7RFqtHGSQEaA3DYPYS6JY8J9MwnD4+UXlJxvQnwPNv1C
+        2vPclxdOfLAvjqBGA0tDrNWC5
+X-Received: by 2002:a05:6402:510a:b0:43d:ab25:7d68 with SMTP id m10-20020a056402510a00b0043dab257d68mr5038493edd.102.1660894942485;
+        Fri, 19 Aug 2022 00:42:22 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR67XQIhNJjNTGL7G9Zsj1eHRrSxDAKaWyqDLtY6JVbFAVDwTNGYQgZ5YsaDFAM5m6i3SREV8A==
+X-Received: by 2002:a05:6402:510a:b0:43d:ab25:7d68 with SMTP id m10-20020a056402510a00b0043dab257d68mr5038482edd.102.1660894942290;
+        Fri, 19 Aug 2022 00:42:22 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id w8-20020a50fa88000000b0043a7134b381sm2564438edr.11.2022.08.19.00.42.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Aug 2022 00:42:21 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 09/26] KVM: VMX: nVMX: Support TSC scaling and
+ PERF_GLOBAL_CTRL with enlightened VMCS
+In-Reply-To: <Yv50vWGoLQ9n+6MO@google.com>
+References: <20220802160756.339464-1-vkuznets@redhat.com>
+ <20220802160756.339464-10-vkuznets@redhat.com>
+ <Yv50vWGoLQ9n+6MO@google.com>
+Date:   Fri, 19 Aug 2022 09:42:20 +0200
+Message-ID: <87zgg0smqr.fsf@redhat.com>
 MIME-Version: 1.0
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/08/19 00:26:00 #20118704
-X-KSMG-AntiVirus-Status: Clean, skipped
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-VGhpcyBhZGRzIHRlc3QgdG8gY2hlY2ssIHRoYXQgd2hlbiBwb2xsKCkgcmV0dXJucyBQT0xMSU4s
-IFBPTExSRE5PUk0gYml0cywNCm5leHQgcmVhZCBjYWxsIHdvbid0IGJsb2NrLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBBcnNlbml5IEtyYXNub3YgPEFWS3Jhc25vdkBzYmVyZGV2aWNlcy5ydT4NClJldmll
-d2VkLWJ5OiBTdGVmYW5vIEdhcnphcmVsbGEgPHNnYXJ6YXJlQHJlZGhhdC5jb20+DQotLS0NCiB0
-b29scy90ZXN0aW5nL3Zzb2NrL3Zzb2NrX3Rlc3QuYyB8IDEwOCArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDEwOCBpbnNlcnRpb25zKCspDQoNCmRpZmYg
-LS1naXQgYS90b29scy90ZXN0aW5nL3Zzb2NrL3Zzb2NrX3Rlc3QuYyBiL3Rvb2xzL3Rlc3Rpbmcv
-dnNvY2svdnNvY2tfdGVzdC5jDQppbmRleCBkYzU3NzQ2MWFmYzIuLmJiNmQ2OTFjYjMwZCAxMDA2
-NDQNCi0tLSBhL3Rvb2xzL3Rlc3RpbmcvdnNvY2svdnNvY2tfdGVzdC5jDQorKysgYi90b29scy90
-ZXN0aW5nL3Zzb2NrL3Zzb2NrX3Rlc3QuYw0KQEAgLTE4LDYgKzE4LDcgQEANCiAjaW5jbHVkZSA8
-c3lzL3NvY2tldC5oPg0KICNpbmNsdWRlIDx0aW1lLmg+DQogI2luY2x1ZGUgPHN5cy9tbWFuLmg+
-DQorI2luY2x1ZGUgPHBvbGwuaD4NCiANCiAjaW5jbHVkZSAidGltZW91dC5oIg0KICNpbmNsdWRl
-ICJjb250cm9sLmgiDQpAQCAtNTk2LDYgKzU5NywxMDggQEAgc3RhdGljIHZvaWQgdGVzdF9zZXFw
-YWNrZXRfaW52YWxpZF9yZWNfYnVmZmVyX3NlcnZlcihjb25zdCBzdHJ1Y3QgdGVzdF9vcHRzICpv
-cHQNCiAJY2xvc2UoZmQpOw0KIH0NCiANCisjZGVmaW5lIFJDVkxPV0FUX0JVRl9TSVpFIDEyOA0K
-Kw0KK3N0YXRpYyB2b2lkIHRlc3Rfc3RyZWFtX3BvbGxfcmN2bG93YXRfc2VydmVyKGNvbnN0IHN0
-cnVjdCB0ZXN0X29wdHMgKm9wdHMpDQorew0KKwlpbnQgZmQ7DQorCWludCBpOw0KKw0KKwlmZCA9
-IHZzb2NrX3N0cmVhbV9hY2NlcHQoVk1BRERSX0NJRF9BTlksIDEyMzQsIE5VTEwpOw0KKwlpZiAo
-ZmQgPCAwKSB7DQorCQlwZXJyb3IoImFjY2VwdCIpOw0KKwkJZXhpdChFWElUX0ZBSUxVUkUpOw0K
-Kwl9DQorDQorCS8qIFNlbmQgMSBieXRlLiAqLw0KKwlzZW5kX2J5dGUoZmQsIDEsIDApOw0KKw0K
-Kwljb250cm9sX3dyaXRlbG4oIlNSVlNFTlQiKTsNCisNCisJLyogV2FpdCB1bnRpbCBjbGllbnQg
-aXMgcmVhZHkgdG8gcmVjZWl2ZSByZXN0IG9mIGRhdGEuICovDQorCWNvbnRyb2xfZXhwZWN0bG4o
-IkNMTlNFTlQiKTsNCisNCisJZm9yIChpID0gMDsgaSA8IFJDVkxPV0FUX0JVRl9TSVpFIC0gMTsg
-aSsrKQ0KKwkJc2VuZF9ieXRlKGZkLCAxLCAwKTsNCisNCisJLyogS2VlcCBzb2NrZXQgaW4gYWN0
-aXZlIHN0YXRlLiAqLw0KKwljb250cm9sX2V4cGVjdGxuKCJQT0xMRE9ORSIpOw0KKw0KKwljbG9z
-ZShmZCk7DQorfQ0KKw0KK3N0YXRpYyB2b2lkIHRlc3Rfc3RyZWFtX3BvbGxfcmN2bG93YXRfY2xp
-ZW50KGNvbnN0IHN0cnVjdCB0ZXN0X29wdHMgKm9wdHMpDQorew0KKwl1bnNpZ25lZCBsb25nIGxv
-d2F0X3ZhbCA9IFJDVkxPV0FUX0JVRl9TSVpFOw0KKwljaGFyIGJ1ZltSQ1ZMT1dBVF9CVUZfU0la
-RV07DQorCXN0cnVjdCBwb2xsZmQgZmRzOw0KKwlzc2l6ZV90IHJlYWRfcmVzOw0KKwlzaG9ydCBw
-b2xsX2ZsYWdzOw0KKwlpbnQgZmQ7DQorDQorCWZkID0gdnNvY2tfc3RyZWFtX2Nvbm5lY3Qob3B0
-cy0+cGVlcl9jaWQsIDEyMzQpOw0KKwlpZiAoZmQgPCAwKSB7DQorCQlwZXJyb3IoImNvbm5lY3Qi
-KTsNCisJCWV4aXQoRVhJVF9GQUlMVVJFKTsNCisJfQ0KKw0KKwlpZiAoc2V0c29ja29wdChmZCwg
-U09MX1NPQ0tFVCwgU09fUkNWTE9XQVQsDQorCQkgICAgICAgJmxvd2F0X3ZhbCwgc2l6ZW9mKGxv
-d2F0X3ZhbCkpKSB7DQorCQlwZXJyb3IoInNldHNvY2tvcHQiKTsNCisJCWV4aXQoRVhJVF9GQUlM
-VVJFKTsNCisJfQ0KKw0KKwljb250cm9sX2V4cGVjdGxuKCJTUlZTRU5UIik7DQorDQorCS8qIEF0
-IHRoaXMgcG9pbnQsIHNlcnZlciBzZW50IDEgYnl0ZS4gKi8NCisJZmRzLmZkID0gZmQ7DQorCXBv
-bGxfZmxhZ3MgPSBQT0xMSU4gfCBQT0xMUkROT1JNOw0KKwlmZHMuZXZlbnRzID0gcG9sbF9mbGFn
-czsNCisNCisJLyogVHJ5IHRvIHdhaXQgZm9yIDEgc2VjLiAqLw0KKwlpZiAocG9sbCgmZmRzLCAx
-LCAxMDAwKSA8IDApIHsNCisJCXBlcnJvcigicG9sbCIpOw0KKwkJZXhpdChFWElUX0ZBSUxVUkUp
-Ow0KKwl9DQorDQorCS8qIHBvbGwoKSBtdXN0IHJldHVybiBub3RoaW5nLiAqLw0KKwlpZiAoZmRz
-LnJldmVudHMpIHsNCisJCWZwcmludGYoc3RkZXJyLCAiVW5leHBlY3RlZCBwb2xsIHJlc3VsdCAl
-aHhcbiIsDQorCQkJZmRzLnJldmVudHMpOw0KKwkJZXhpdChFWElUX0ZBSUxVUkUpOw0KKwl9DQor
-DQorCS8qIFRlbGwgc2VydmVyIHRvIHNlbmQgcmVzdCBvZiBkYXRhLiAqLw0KKwljb250cm9sX3dy
-aXRlbG4oIkNMTlNFTlQiKTsNCisNCisJLyogUG9sbCBmb3IgZGF0YS4gKi8NCisJaWYgKHBvbGwo
-JmZkcywgMSwgMTAwMDApIDwgMCkgew0KKwkJcGVycm9yKCJwb2xsIik7DQorCQlleGl0KEVYSVRf
-RkFJTFVSRSk7DQorCX0NCisNCisJLyogT25seSB0aGVzZSB0d28gYml0cyBhcmUgZXhwZWN0ZWQu
-ICovDQorCWlmIChmZHMucmV2ZW50cyAhPSBwb2xsX2ZsYWdzKSB7DQorCQlmcHJpbnRmKHN0ZGVy
-ciwgIlVuZXhwZWN0ZWQgcG9sbCByZXN1bHQgJWh4XG4iLA0KKwkJCWZkcy5yZXZlbnRzKTsNCisJ
-CWV4aXQoRVhJVF9GQUlMVVJFKTsNCisJfQ0KKw0KKwkvKiBVc2UgTVNHX0RPTlRXQUlULCBpZiBj
-YWxsIGlzIGdvaW5nIHRvIHdhaXQsIEVBR0FJTg0KKwkgKiB3aWxsIGJlIHJldHVybmVkLg0KKwkg
-Ki8NCisJcmVhZF9yZXMgPSByZWN2KGZkLCBidWYsIHNpemVvZihidWYpLCBNU0dfRE9OVFdBSVQp
-Ow0KKwlpZiAocmVhZF9yZXMgIT0gUkNWTE9XQVRfQlVGX1NJWkUpIHsNCisJCWZwcmludGYoc3Rk
-ZXJyLCAiVW5leHBlY3RlZCByZWN2IHJlc3VsdCAlemlcbiIsDQorCQkJcmVhZF9yZXMpOw0KKwkJ
-ZXhpdChFWElUX0ZBSUxVUkUpOw0KKwl9DQorDQorCWNvbnRyb2xfd3JpdGVsbigiUE9MTERPTkUi
-KTsNCisNCisJY2xvc2UoZmQpOw0KK30NCisNCiBzdGF0aWMgc3RydWN0IHRlc3RfY2FzZSB0ZXN0
-X2Nhc2VzW10gPSB7DQogCXsNCiAJCS5uYW1lID0gIlNPQ0tfU1RSRUFNIGNvbm5lY3Rpb24gcmVz
-ZXQiLA0KQEAgLTY0Niw2ICs3NDksMTEgQEAgc3RhdGljIHN0cnVjdCB0ZXN0X2Nhc2UgdGVzdF9j
-YXNlc1tdID0gew0KIAkJLnJ1bl9jbGllbnQgPSB0ZXN0X3NlcXBhY2tldF9pbnZhbGlkX3JlY19i
-dWZmZXJfY2xpZW50LA0KIAkJLnJ1bl9zZXJ2ZXIgPSB0ZXN0X3NlcXBhY2tldF9pbnZhbGlkX3Jl
-Y19idWZmZXJfc2VydmVyLA0KIAl9LA0KKwl7DQorCQkubmFtZSA9ICJTT0NLX1NUUkVBTSBwb2xs
-KCkgKyBTT19SQ1ZMT1dBVCIsDQorCQkucnVuX2NsaWVudCA9IHRlc3Rfc3RyZWFtX3BvbGxfcmN2
-bG93YXRfY2xpZW50LA0KKwkJLnJ1bl9zZXJ2ZXIgPSB0ZXN0X3N0cmVhbV9wb2xsX3Jjdmxvd2F0
-X3NlcnZlciwNCisJfSwNCiAJe30sDQogfTsNCiANCi0tIA0KMi4yNS4xDQo=
+Sean Christopherson <seanjc@google.com> writes:
+
+> On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
+>> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+>> index f886a8ff0342..4b809c79ae63 100644
+>> --- a/arch/x86/kvm/vmx/evmcs.h
+>> +++ b/arch/x86/kvm/vmx/evmcs.h
+>> @@ -37,16 +37,9 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
+>>   *	EPTP_LIST_ADDRESS               = 0x00002024,
+>>   *	VMREAD_BITMAP                   = 0x00002026,
+>>   *	VMWRITE_BITMAP                  = 0x00002028,
+>> - *
+>> - *	TSC_MULTIPLIER                  = 0x00002032,
+>>   *	PLE_GAP                         = 0x00004020,
+>>   *	PLE_WINDOW                      = 0x00004022,
+>>   *	VMX_PREEMPTION_TIMER_VALUE      = 0x0000482E,
+>> - *      GUEST_IA32_PERF_GLOBAL_CTRL     = 0x00002808,
+>> - *      HOST_IA32_PERF_GLOBAL_CTRL      = 0x00002c04,
+>> - *
+>> - * Currently unsupported in KVM:
+>> - *	GUEST_IA32_RTIT_CTL		= 0x00002814,
+>
+> Almost forgot: is deleting this chunk of the comment intentional?
+>
+
+Intentional or not (I forgot :-), GUEST_IA32_RTIT_CTL is supported/used
+by KVM since
+
+commit f99e3daf94ff35dd4a878d32ff66e1fd35223ad6
+Author: Chao Peng <chao.p.peng@linux.intel.com>
+Date:   Wed Oct 24 16:05:10 2018 +0800
+
+    KVM: x86: Add Intel PT virtualization work mode
+
+...
+ 
+commit bf8c55d8dc094c85a3f98cd302a4dddb720dd63f
+Author: Chao Peng <chao.p.peng@linux.intel.com>
+Date:   Wed Oct 24 16:05:14 2018 +0800
+
+    KVM: x86: Implement Intel PT MSRs read/write emulation
+
+but there's no corresponding field in eVMCS. It would probably be better
+to remove "Currently unsupported in KVM:" line leaving
+
+"GUEST_IA32_RTIT_CTL             = 0x00002814" 
+
+in place. 
+
+-- 
+Vitaly
+
