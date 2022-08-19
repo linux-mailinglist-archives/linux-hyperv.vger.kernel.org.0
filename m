@@ -2,60 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83DD05996F7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 10:18:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A50599DD6
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 16:58:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346618AbiHSIHB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Aug 2022 04:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
+        id S1349506AbiHSOtm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Aug 2022 10:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347315AbiHSIG7 (ORCPT
+        with ESMTP id S1349501AbiHSOtl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Aug 2022 04:06:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA72BE42EC
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 01:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660896417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ViBdorV9HHdkaicf8ipSaMCTXuZ8iW7SXUz2nBhSHsk=;
-        b=FLsWw1NEzKDw9s/gbHWKAcFuIJ+1keMTOuEiTciOMlFO+QE0uWqC5PPnca+oG6bf/pwd8O
-        cLguEm1edHQr6g0POvPHJbsi9w5Shhisg4nalttIAzzIqbc5ghcRrf9X60zEOgximSkGHB
-        nHTkq2fBvGZf/MYpl4V0gax6lONnfFs=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-176-k-bAeCruPb6hXpS9_IprSg-1; Fri, 19 Aug 2022 04:06:55 -0400
-X-MC-Unique: k-bAeCruPb6hXpS9_IprSg-1
-Received: by mail-ed1-f69.google.com with SMTP id z3-20020a056402274300b0043d4da3b4b5so2413040edd.12
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 01:06:55 -0700 (PDT)
+        Fri, 19 Aug 2022 10:49:41 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E77D8E31
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 07:49:40 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id g18so4881260pju.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 07:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=uRT1dfCACycQqNXmcC8HP5/+bX38g4rLbOY9bQx0QKs=;
+        b=ish7ZOCTD7n29s4ja2n6fBm1QfHXkE6KMyKyZs+QOfQm6L8DM4YqFjCS8viMyjsnBc
+         5C69v5tlpeq8PhzwvJPyE9sb8Na2PrLboUSwEanyMCE6KOUfJ84ydT2evoNQWH9K0tyq
+         yw0rApG1TdNwk/NZeTAXFkhViMu/9mPt0XKnJDRQYWv2LhQfRG767bGCjxcW0P8uxpIQ
+         EFRNGyzsBI2P+z756RV1YpPzHCb8dsf3iVV8SuIf77mfBn5Gq7JY9BkLtbWMend+Qx5+
+         Q3svzgWq7R5mfkCpgGdT8xI/JSwO753FEbKO0Iov3H45k+GT9JVGquxSsRnJCzlf6tKS
+         pqtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc;
-        bh=ViBdorV9HHdkaicf8ipSaMCTXuZ8iW7SXUz2nBhSHsk=;
-        b=X7BwExyVXVKXRtFF36wKPL+RT7J9mOMq3q2ZLFhT9vquerai+BAVCFJ2a8ww8IiBY+
-         YualWzS3IF1o/anpAXPSechj3SZ6OKWbeRNZMCSCPoj2ZdlQJEL0ceNbbtSyGXLxqqkV
-         ST8cVtHtA1XYFQU1CBr0Kb98aEpkpa+qdsepj8xJRy3/0xwRhDKMa+WalWVVJ+NbOtTH
-         93Ukx00TONBO2Io1cuu9SbErsxYw6yz5IUPvSAkq8MEa0iUyCcln1/Pcc+CeyUk2Fvgv
-         xoi5BxNHV/N9Az14BcKP2CjwlYytb+Bf+5slYEXHFQCvlGjWto9TaaeQsnBqQrBRukWO
-         GH2g==
-X-Gm-Message-State: ACgBeo0+xSlWWoiP9/mDUXN6Ztxj4lepXJYHdCfG8+3fBlsSAyIgJtCM
-        t2iNty7oys784zH01gkMtWS0uZeQzmlJOmmrsQieG5pavakY5Clv/VSgV0+0yCtn2tRxAVK1qD0
-        /HuNbqf4+Fk+Zrwlln4Jud12b
-X-Received: by 2002:a05:6402:280f:b0:43d:f946:a895 with SMTP id h15-20020a056402280f00b0043df946a895mr5333946ede.229.1660896414692;
-        Fri, 19 Aug 2022 01:06:54 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR66HslBjqXKMQNjZGcLezcYfvoiIaBEzB14b1r1qYBlm4B5HmhbpmbIZA381cwsCHOjbk563A==
-X-Received: by 2002:a05:6402:280f:b0:43d:f946:a895 with SMTP id h15-20020a056402280f00b0043df946a895mr5333931ede.229.1660896414459;
-        Fri, 19 Aug 2022 01:06:54 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id d7-20020a170906304700b00715a02874acsm1966120ejd.35.2022.08.19.01.06.53
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=uRT1dfCACycQqNXmcC8HP5/+bX38g4rLbOY9bQx0QKs=;
+        b=HOHUU0ErlRu68A4IQvD6ZRfhRSiGgPpA6gDOcAZxBGECzyo+wnt/HFc7M8EzZ0b7JV
+         JM0sk+J2rfZHzES1OqVn1aERliDhLwduFauKCm3FmLZKbjdJJKbAGAy/x7RUh3t4/57L
+         //eSLp9WV50hjicFcVrcbj4NWXz9LHaxhRlTdDCy5D8NeE9DFmc7yN2ynUb2R7zL0bBN
+         bHU6gAIY46KUdZjyBlr/+uJ1a6QorcDD0dAL4Gh8uAB7ehFEad1MxRNFcw4MFY6lsr73
+         gxuBpvIi9aF+DPm3CsVdqJUu4AluPWOSbiNe8ixqWLhogm37AdENrmPXdNf1TStiousp
+         rQDw==
+X-Gm-Message-State: ACgBeo13Z1oaUNzBHQFJAJX8nmUgtKLHaMNM+To9NcZNt2EsV1qIohss
+        M1NeYn1+JzxmarfSsiEmR2eFVg==
+X-Google-Smtp-Source: AA6agR6Ni20ut6dVdgRtMYnrfm3+VwwBk3uL3D6coMcgFeqx4bqlmxKgg8G9I3PPvhuYPCPAwCO2VA==
+X-Received: by 2002:a17:90a:e7cc:b0:1f7:26c9:ee9f with SMTP id kb12-20020a17090ae7cc00b001f726c9ee9fmr8865506pjb.75.1660920579765;
+        Fri, 19 Aug 2022 07:49:39 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id h9-20020aa796c9000000b005360813cabasm1581787pfq.69.2022.08.19.07.49.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Aug 2022 01:06:53 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
+        Fri, 19 Aug 2022 07:49:39 -0700 (PDT)
+Date:   Fri, 19 Aug 2022 14:49:35 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
@@ -66,236 +61,76 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v5 09/26] KVM: VMX: nVMX: Support TSC scaling and
  PERF_GLOBAL_CTRL with enlightened VMCS
-In-Reply-To: <Yv5zn4qTl0aiaQvh@google.com>
+Message-ID: <Yv+i/wuObvLf7QZE@google.com>
 References: <20220802160756.339464-1-vkuznets@redhat.com>
  <20220802160756.339464-10-vkuznets@redhat.com>
- <Yv5zn4qTl0aiaQvh@google.com>
-Date:   Fri, 19 Aug 2022 10:06:53 +0200
-Message-ID: <87sflssllu.fsf@redhat.com>
+ <Yv50vWGoLQ9n+6MO@google.com>
+ <87zgg0smqr.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zgg0smqr.fsf@redhat.com>
+X-Spam-Status: No, score=-14.4 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
-
-> On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
->> Enlightened VMCS v1 got updated and now includes the required fields
->> for TSC scaling and loading PERF_GLOBAL_CTRL upon VMENTER/VMEXIT
->> features. For Hyper-V on KVM enablement, KVM can just observe VMX control
->> MSRs and use the features (with or without eVMCS) when
->> possible. Hyper-V on KVM case is trickier because of live migration:
->> the new features require explicit enablement from VMM to not break
->> it. Luckily, the updated eVMCS revision comes with a feature bit in
->> CPUID.0x4000000A.EBX.
->
-> The refactor to implement the 2-d array should go in a prep patch.  Unless you
-> (or anyone else) objects to the feedback below, I'll do the split myself, post v6,
-> and queue this up (without patch 1, and assuming there're no major issues in the
-> back half of the series).
-
-No objections from me, thanks!
-
->
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  arch/x86/kvm/hyperv.c     |  2 +-
->>  arch/x86/kvm/vmx/evmcs.c  | 88 +++++++++++++++++++++++++++++++--------
->>  arch/x86/kvm/vmx/evmcs.h  | 17 ++------
->>  arch/x86/kvm/vmx/nested.c |  2 +-
->>  arch/x86/kvm/vmx/vmx.c    |  2 +-
->>  5 files changed, 78 insertions(+), 33 deletions(-)
->> 
->> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
->> index 1098915360ae..8a2b24f9bbf6 100644
->> --- a/arch/x86/kvm/hyperv.c
->> +++ b/arch/x86/kvm/hyperv.c
->> @@ -2552,7 +2552,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->>  		case HYPERV_CPUID_NESTED_FEATURES:
->>  			ent->eax = evmcs_ver;
->>  			ent->eax |= HV_X64_NESTED_MSR_BITMAP;
->> -
->> +			ent->ebx |= HV_X64_NESTED_EVMCS1_2022_UPDATE;
->>  			break;
->>  
->>  		case HYPERV_CPUID_SYNDBG_VENDOR_AND_MAX_FUNCTIONS:
->> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
->> index 8bea5dea0341..e8497f9854a1 100644
->> --- a/arch/x86/kvm/vmx/evmcs.c
->> +++ b/arch/x86/kvm/vmx/evmcs.c
->> @@ -368,7 +368,60 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
->>  	return 0;
->>  }
->>  
->> -void nested_evmcs_filter_control_msr(u32 msr_index, u64 *pdata)
->> +enum evmcs_revision {
->> +	EVMCSv1_2016,
->> +	EVMCSv1_2022,
->> +	EVMCS_REVISION_MAX,
->
-> "MAX" is technically wrong, the "max" entry is usually the last valid entry.  This
-> should be NR_EVMCS_REVISIONS, and then NR_EVMCS_CTRLS below.
->
->> +};
->> +
->> +enum evmcs_unsupported_ctrl_type {
->
-> I think drop the "unsupported" here, because the naming gets weird when trying to
-> use it for something other than indexing evmcs_unsupported_ctls (see bottom).
->
->> +	EVMCS_EXIT_CTLS,
->> +	EVMCS_ENTRY_CTLS,
->
-> s/CTLS/CTRLS for consistency.
->
->> +	EVMCS_2NDEXEC,
->> +	EVMCS_PINCTRL,
->> +	EVMCS_VMFUNC,
->> +	EVMCS_CTRL_MAX,
->> +};
->> +
->> +static u32 evmcs_unsupported_ctls[EVMCS_CTRL_MAX][EVMCS_REVISION_MAX] = {
->
-> This can be "const".  And s/ctls/ctrls for consistency.
->
->> +	[EVMCS_EXIT_CTLS] = {
->> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_VMEXIT_CTRL | VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL,
->> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_VMEXIT_CTRL,
->> +	},
->> +	[EVMCS_ENTRY_CTLS] = {
->> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_VMENTRY_CTRL | VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL,
->> +		[EVMCSv1_2022] =  EVMCS1_UNSUPPORTED_VMENTRY_CTRL,
->> +	},
->> +	[EVMCS_2NDEXEC] = {
->> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_2NDEXEC | SECONDARY_EXEC_TSC_SCALING,
->> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_2NDEXEC,
->> +	},
->> +	[EVMCS_PINCTRL] = {
->> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_PINCTRL,
->> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_PINCTRL,
->> +	},
->> +	[EVMCS_VMFUNC] = {
->> +		[EVMCSv1_2016] = EVMCS1_UNSUPPORTED_VMFUNC,
->> +		[EVMCSv1_2022] = EVMCS1_UNSUPPORTED_VMFUNC,
->> +	},
->> +};
->> +
->> +static u32 evmcs_get_unsupported_ctls(struct kvm_vcpu *vcpu,
->> +				      enum evmcs_unsupported_ctrl_type ctrl_type)
->> +{
->> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
->> +	enum evmcs_revision evmcs_rev = EVMCSv1_2016;
->> +
->> +	if (!hv_vcpu)
->
-> This is a functiontal change, and I don't think it's correct either.  Previously,
-> KVM would apply the EVMCSv1_2016 filter irrespective of whether or not
-> vcpu->arch.hyperv is non-NULL.  nested_enable_evmcs() doesn't require a Hyper-V
-> vCPU, and AFAICT nothing requires a Hyper-V vCPU to use eVMCS.
-
-Indeed, this *is* correct after PATCH11 when we get rid of VMX feature
-MSR filtering for KVM-on-Hyper-V as the remaining use for
-evmcs_get_unsupported_ctls() is Hyper-V on KVM and hv_vcpu is not NULL
-there. As of this patch, this is incorrect as we're breaking e.g. Linux
-guests on KVM on Hyper-V.
-
->
-> So I believe this should be:
->
-> 	if (hv_vcpu &&
-> 	    hv_vcpu->cpuid_cache.nested_ebx & HV_X64_NESTED_EVMCS1_2022_UPDATE)
-> 		evmcs_rev = EVMCSv1_2022;
-
-This looks good to me, thanks!
-
->
->> +		return 0;
->> +
->> +	if (hv_vcpu->cpuid_cache.nested_ebx & HV_X64_NESTED_EVMCS1_2022_UPDATE)
->> +		evmcs_rev = EVMCSv1_2022;
->> +
->> +	return evmcs_unsupported_ctls[ctrl_type][evmcs_rev];
->> +}
->> +
->
+On Fri, Aug 19, 2022, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+> > On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
+> >> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+> >> index f886a8ff0342..4b809c79ae63 100644
+> >> --- a/arch/x86/kvm/vmx/evmcs.h
+> >> +++ b/arch/x86/kvm/vmx/evmcs.h
+> >> @@ -37,16 +37,9 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
+> >>   *	EPTP_LIST_ADDRESS               = 0x00002024,
+> >>   *	VMREAD_BITMAP                   = 0x00002026,
+> >>   *	VMWRITE_BITMAP                  = 0x00002028,
+> >> - *
+> >> - *	TSC_MULTIPLIER                  = 0x00002032,
+> >>   *	PLE_GAP                         = 0x00004020,
+> >>   *	PLE_WINDOW                      = 0x00004022,
+> >>   *	VMX_PREEMPTION_TIMER_VALUE      = 0x0000482E,
+> >> - *      GUEST_IA32_PERF_GLOBAL_CTRL     = 0x00002808,
+> >> - *      HOST_IA32_PERF_GLOBAL_CTRL      = 0x00002c04,
+> >> - *
+> >> - * Currently unsupported in KVM:
+> >> - *	GUEST_IA32_RTIT_CTL		= 0x00002814,
+> >
+> > Almost forgot: is deleting this chunk of the comment intentional?
+> >
+> 
+> Intentional or not (I forgot :-), GUEST_IA32_RTIT_CTL is supported/used
+> by KVM since
+> 
+> commit f99e3daf94ff35dd4a878d32ff66e1fd35223ad6
+> Author: Chao Peng <chao.p.peng@linux.intel.com>
+> Date:   Wed Oct 24 16:05:10 2018 +0800
+> 
+>     KVM: x86: Add Intel PT virtualization work mode
+> 
 > ...
->
->> -int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
->> +int nested_evmcs_check_controls(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12)
->>  {
->>  	int ret = 0;
->>  	u32 unsupp_ctl;
->>  
->>  	unsupp_ctl = vmcs12->pin_based_vm_exec_control &
->> -		EVMCS1_UNSUPPORTED_PINCTRL;
->> +		evmcs_get_unsupported_ctls(vcpu, EVMCS_PINCTRL);
->>  	if (unsupp_ctl) {
->>  		trace_kvm_nested_vmenter_failed(
->> -			"eVMCS: unsupported pin-based VM-execution controls",
->> +			"eVMCS: unsupported pin-based VM-execution controls: ",
->>  			unsupp_ctl);
->
-> Egad!  This is all broken, at least in theory.  The second param to
-> trace_kvm_nested_vmenter_failed() is the error code, not the bad value.  It mostly
-> works because __print_symbolic() falls back to printing the hex value on error,
-> but that relies on there being no collisions/matches between unsupp_ctl and the
-> set of VMX_VMENTER_INSTRUCTION_ERRORS.  E.g. if there's a collision then the
-> tracepoint will pretty print a string and cause confusion.
->
-> And checking every control even after one fails seems unnecessary subtle.  It
-> provides marginal benefit while increasing the probability that we screw up and
-> squash "ret" to zero.  Yeah, it might save some onion peeling, but if that happens
-> during production and now during initial development of a feature, then someone
-> has much bigger problems to worry about.
->
-> Unless there are objections, I'll fold in a patch to yield:
->
-> #define CC KVM_NESTED_VMENTER_CONSISTENCY_CHECK
->
-> static bool nested_evmcs_is_valid_controls(enum evmcs_ctrl_type type, u32 val)
-> {
-> 	return val & evmcs_get_unsupported_ctls(type);
-> }
->
-> int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
-> {
-> 	if (CC(!nested_evmcs_is_valid_controls(EVMCS_PINCTRL,
-> 					       vmcs12->pin_based_vm_exec_control)))
-> 		return -EINVAL;
->
-> 	if (CC(!nested_evmcs_is_valid_controls(EVMCS_2NDEXEC,
-> 					       vmcs12->secondary_vm_exec_control)))
-> 		return -EINVAL;
->
-> 	if (CC(!nested_evmcs_is_valid_controls(EVMCS_EXIT_CTRLS,
-> 					       vmcs12->vm_exit_controls)))
-> 		return -EINVAL;
->
-> 	if (CC(!nested_evmcs_is_valid_controls(EVMCS_ENTRY_CTRLS,
-> 					       vmcs12->vm_entry_controls)))
-> 		return -EINVAL;
->
-> 	if (CC(!nested_evmcs_is_valid_controls(EVMCS_VMFUNC,
-> 					       vmcs12->vm_function_control)))
-> 		return -EINVAL;
->
-> 	return 0;
-> }
+>  
+> commit bf8c55d8dc094c85a3f98cd302a4dddb720dd63f
+> Author: Chao Peng <chao.p.peng@linux.intel.com>
+> Date:   Wed Oct 24 16:05:14 2018 +0800
+> 
+>     KVM: x86: Implement Intel PT MSRs read/write emulation
+> 
+> but there's no corresponding field in eVMCS. It would probably be better
+> to remove "Currently unsupported in KVM:" line leaving
+> 
+> "GUEST_IA32_RTIT_CTL             = 0x00002814" 
+> 
+> in place. 
 
-
-Well, it's actually nice to see all the controls where KVM screwed up
-without the need to instrument kernel, this way when someone comes with
-an issue you can immediately see what's wrong in the trace
-log. Honestly, I don't remember these firing outside of my development
-environment, your patch to make things correct looks good to me.
-
--- 
-Vitaly
-
+GUEST_IA32_RTIT_CTL isn't supported for nested VMX though, which is how I
+interpreted the "Currently unsupported in KVM:".  Would it be accurate to extend
+that part of the comment to "Currently unsupported in KVM for nested VMX:"?
