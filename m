@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33C9B59963A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 09:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3822A599675
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 09:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347149AbiHSHm3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Aug 2022 03:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
+        id S1347225AbiHSHsy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Aug 2022 03:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347146AbiHSHm2 (ORCPT
+        with ESMTP id S1347250AbiHSHso (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Aug 2022 03:42:28 -0400
+        Fri, 19 Aug 2022 03:48:44 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9973FCCE2A
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 00:42:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FBF6B2878
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 00:48:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660894946;
+        s=mimecast20190719; t=1660895320;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=7BU0NBgcPwvMpt86ttJZWI4g3XAVpmUhw+WmsruDrgM=;
-        b=M4+AsEIXJ3g8YdG28lrIZdwjPoBUzD+WWxRvModwUOc+8ut1Wx64iCNAww9SSb15hQzrbo
-        eWNfw/D0oo4uxzd70FzEEVOldjsFH58DRIQ/vnuhkUqIOffDmkY1ALJONLIBNfqR/BEBl3
-        HhxapyeUAV0jL5efOq3IgIJ7iOFeB1E=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=09vMTP9vJHiw/P02q27iNIqPqja/VvpetizcVgPzsMo=;
+        b=Iyt2hBsDXCKhLVCZo56SEumIzucA5s74DvIR8pznr8aNuzuztxNi4eaZ3gkpsl6CyM5h0D
+        o8hWS7AJjT+NW59h9kINYxCvF1aK7VuhnWBLUzRJbWpz349escmppoQY+iDSm26DUvf80u
+        SFWXO1Pnj4xN68Jb7aQKYrUI8zEx6aQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-209-tYeTjtokPe6sGB5oULUPFQ-1; Fri, 19 Aug 2022 03:42:23 -0400
-X-MC-Unique: tYeTjtokPe6sGB5oULUPFQ-1
-Received: by mail-ed1-f72.google.com with SMTP id w17-20020a056402269100b0043da2189b71so2355633edd.6
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 00:42:23 -0700 (PDT)
+ us-mta-211-rv-sPKT0McG2KhS_NxtBZg-1; Fri, 19 Aug 2022 03:48:39 -0400
+X-MC-Unique: rv-sPKT0McG2KhS_NxtBZg-1
+Received: by mail-ed1-f71.google.com with SMTP id r12-20020a05640251cc00b00440647ec649so2432950edd.21
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 00:48:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc;
-        bh=7BU0NBgcPwvMpt86ttJZWI4g3XAVpmUhw+WmsruDrgM=;
-        b=Uq9sSZsmqNR7OZWZJ3VFKynzQoMRL92D2lNQKGJQktqv0H/81uoIzUuLwls4nS2KAC
-         cCWFjVSuCe8civ7TeXgEZHW9ju+LO24ullZGXPANC6GTwMsIqjVQNqcGZtROvlHWgSRE
-         F1laD/gBisC9NeITW2HYuuv1/30Vv7bI2uVSQLj0ejoosJcUrVDL69r1ZfjwlrJXdPg7
-         b9AXeT4C30IqV4d28e/2p2uLzO59mfbVJznFoB2m5JK2zf0wRzGe5/g8B9HOMr50an37
-         l8Q2e+PVLom+eNWZ8R7ocEK4JGW2m6Whye1IAezcPkqQ2O4Q3V/J3a3EOoeadiAUOCwj
-         1ooA==
-X-Gm-Message-State: ACgBeo0gCH6eXnhUEAgyofn3ro4kqR8VhbSrvKDFEx7SJ+9M+j6zua5J
-        aGYW61UVvtLJWY1FQqZfbgcAh6BZfGA7RFqtHGSQEaA3DYPYS6JY8J9MwnD4+UXlJxvQnwPNv1C
-        2vPclxdOfLAvjqBGA0tDrNWC5
-X-Received: by 2002:a05:6402:510a:b0:43d:ab25:7d68 with SMTP id m10-20020a056402510a00b0043dab257d68mr5038493edd.102.1660894942485;
-        Fri, 19 Aug 2022 00:42:22 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR67XQIhNJjNTGL7G9Zsj1eHRrSxDAKaWyqDLtY6JVbFAVDwTNGYQgZ5YsaDFAM5m6i3SREV8A==
-X-Received: by 2002:a05:6402:510a:b0:43d:ab25:7d68 with SMTP id m10-20020a056402510a00b0043dab257d68mr5038482edd.102.1660894942290;
-        Fri, 19 Aug 2022 00:42:22 -0700 (PDT)
+        bh=09vMTP9vJHiw/P02q27iNIqPqja/VvpetizcVgPzsMo=;
+        b=xYmUqVxMaMM1eyewM7Fc4motJQRZ5jyX16M4vuElcFVwMOBMhzNyaRqRn+TWbSnzdl
+         OSKtoUotGygQl/IMhfLplSWRJhBOi4fJ0AYjdczGRzluVP6mDo9kGyXpBPVh5aKvS97Z
+         DRX7lymFWjYA6JZzMylJsuPbBub9LFL0hFx5WFtt4bzFEUe5yJRDWiaVrfHbxnVzsbxM
+         WicaIAvXNrO8MN6TDhNJmGcd2e2k8ScTfHTCqkSlUgleuq3i+D4v5NY3dtwOWVgqSBmo
+         oMQfkiKk07pkyXnY846KqerMqeLB6dAjLa84ZSVUWBP36IGVBCApNJwLo8QAap76wmHk
+         2XEw==
+X-Gm-Message-State: ACgBeo28KvsENXVC2Let0iYQ2Sp91P17KBk0Fhvd5DlZIjmTjDw9dlXG
+        PuQXah+ULG2l3r86U1JX1o+1tKZmYxaAbJGTAGSrSpPEeEJ+DxmjxSYTtm63tqHj7J0xyzMlk5S
+        09YydFi0NLhfiJ8QRwNi2N92d
+X-Received: by 2002:a17:907:2e0b:b0:730:8aee:d674 with SMTP id ig11-20020a1709072e0b00b007308aeed674mr4197338ejc.104.1660895318301;
+        Fri, 19 Aug 2022 00:48:38 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6AiRRPeV4IlrR5u7EYBCj7ZdHNSnHfKfXiJC2KfWg2Lb5NypwN0HfG80UyVo8Ikdgj70Ah8Q==
+X-Received: by 2002:a17:907:2e0b:b0:730:8aee:d674 with SMTP id ig11-20020a1709072e0b00b007308aeed674mr4197316ejc.104.1660895318122;
+        Fri, 19 Aug 2022 00:48:38 -0700 (PDT)
 Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id w8-20020a50fa88000000b0043a7134b381sm2564438edr.11.2022.08.19.00.42.21
+        by smtp.gmail.com with ESMTPSA id ss28-20020a170907c01c00b00730a18a8b68sm1929373ejc.130.2022.08.19.00.48.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Aug 2022 00:42:21 -0700 (PDT)
+        Fri, 19 Aug 2022 00:48:37 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Sean Christopherson <seanjc@google.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -64,19 +64,19 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 09/26] KVM: VMX: nVMX: Support TSC scaling and
- PERF_GLOBAL_CTRL with enlightened VMCS
-In-Reply-To: <Yv50vWGoLQ9n+6MO@google.com>
+Subject: Re: [PATCH v5 22/26] KVM: VMX: Move LOAD_IA32_PERF_GLOBAL_CTRL
+ errata handling out of setup_vmcs_config()
+In-Reply-To: <Yv57tmu09nOQcFrf@google.com>
 References: <20220802160756.339464-1-vkuznets@redhat.com>
- <20220802160756.339464-10-vkuznets@redhat.com>
- <Yv50vWGoLQ9n+6MO@google.com>
-Date:   Fri, 19 Aug 2022 09:42:20 +0200
-Message-ID: <87zgg0smqr.fsf@redhat.com>
+ <20220802160756.339464-23-vkuznets@redhat.com>
+ <Yv57tmu09nOQcFrf@google.com>
+Date:   Fri, 19 Aug 2022 09:48:36 +0200
+Message-ID: <87wnb4smgb.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,51 +87,62 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 Sean Christopherson <seanjc@google.com> writes:
 
 > On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
->> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
->> index f886a8ff0342..4b809c79ae63 100644
->> --- a/arch/x86/kvm/vmx/evmcs.h
->> +++ b/arch/x86/kvm/vmx/evmcs.h
->> @@ -37,16 +37,9 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
->>   *	EPTP_LIST_ADDRESS               = 0x00002024,
->>   *	VMREAD_BITMAP                   = 0x00002026,
->>   *	VMWRITE_BITMAP                  = 0x00002028,
->> - *
->> - *	TSC_MULTIPLIER                  = 0x00002032,
->>   *	PLE_GAP                         = 0x00004020,
->>   *	PLE_WINDOW                      = 0x00004022,
->>   *	VMX_PREEMPTION_TIMER_VALUE      = 0x0000482E,
->> - *      GUEST_IA32_PERF_GLOBAL_CTRL     = 0x00002808,
->> - *      HOST_IA32_PERF_GLOBAL_CTRL      = 0x00002c04,
->> - *
->> - * Currently unsupported in KVM:
->> - *	GUEST_IA32_RTIT_CTL		= 0x00002814,
+>> While it seems reasonable to not expose LOAD_IA32_PERF_GLOBAL_CTRL controls
+>> to L1 hypervisor on buggy CPUs, such change would inevitably break live
+>> migration from older KVMs where the controls are exposed. Keep the status quo
+>> for now, L1 hypervisor itself is supposed to take care of the errata.
 >
-> Almost forgot: is deleting this chunk of the comment intentional?
+> As noted before, this statement is wrong as it requires guest FMS == host FMS,
+> but it's irrelevant because KVM can emulate the control unconditionally.  I'll
+> test and fold in my suggested patch[*] (assuming it works) and reword this part
+> of the changelog.  Ah, and I'll also need to fold in a patch to actually emulate
+> the controls without hardware support.
+>
+> [*] https://lore.kernel.org/all/YtnZmCutdd5tpUmz@google.com
+
+Oh, I missed the part that my changelog is actually wrong when Paolo
+said "Can you send this as a separate patch", no objections to re-wording!
+
+>
+>> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  arch/x86/kvm/vmx/vmx.c | 59 +++++++++++++++++++++++++-----------------
+>>  1 file changed, 35 insertions(+), 24 deletions(-)
+>> 
+>
+> ...
+>
+>> @@ -8192,6 +8199,10 @@ static __init int hardware_setup(void)
+>>  	if (setup_vmcs_config(&vmcs_config, &vmx_capability) < 0)
+>>  		return -EIO;
+>>  
+>> +	if (cpu_has_perf_global_ctrl_bug())
+>> +		pr_warn_once("kvm: VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL "
+>> +			     "does not work properly. Using workaround\n");
+>
+> Any objections to opportunistically tweaking this?
+>
+> 		pr_warn_once("kvm: CPU has VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL erratum,"
+> 			     "using MSR load/store lists for PERF_GLOBAL_CTRL\n");
 >
 
-Intentional or not (I forgot :-), GUEST_IA32_RTIT_CTL is supported/used
-by KVM since
+Personally I'd say just 
 
-commit f99e3daf94ff35dd4a878d32ff66e1fd35223ad6
-Author: Chao Peng <chao.p.peng@linux.intel.com>
-Date:   Wed Oct 24 16:05:10 2018 +0800
+ 		pr_warn_once("kvm: CPU has VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL erratum\n");
 
-    KVM: x86: Add Intel PT virtualization work mode
+leaving aside the workaround KVM uses. This is merely an implementation
+detail which KVM users most likely don't really need. I have no strong
+opinion though, feel free to adjust.
 
-...
- 
-commit bf8c55d8dc094c85a3f98cd302a4dddb720dd63f
-Author: Chao Peng <chao.p.peng@linux.intel.com>
-Date:   Wed Oct 24 16:05:14 2018 +0800
-
-    KVM: x86: Implement Intel PT MSRs read/write emulation
-
-but there's no corresponding field in eVMCS. It would probably be better
-to remove "Currently unsupported in KVM:" line leaving
-
-"GUEST_IA32_RTIT_CTL             = 0x00002814" 
-
-in place. 
+>> +
+>>  	if (boot_cpu_has(X86_FEATURE_NX))
+>>  		kvm_enable_efer_bits(EFER_NX);
+>>  
+>> -- 
+>> 2.35.3
+>> 
+>
 
 -- 
 Vitaly
