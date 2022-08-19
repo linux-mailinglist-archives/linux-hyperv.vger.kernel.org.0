@@ -2,128 +2,156 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24DB459A36C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 Aug 2022 20:03:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0461659A889
+	for <lists+linux-hyperv@lfdr.de>; Sat, 20 Aug 2022 00:30:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349871AbiHSRnd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 Aug 2022 13:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48302 "EHLO
+        id S240234AbiHSWTB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 Aug 2022 18:19:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351349AbiHSRnF (ORCPT
+        with ESMTP id S229802AbiHSWS7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 Aug 2022 13:43:05 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07EA4A18C
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 10:02:45 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id w138so2212703pfc.10
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 Aug 2022 10:02:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=RHK5G9JAHhgGCkTg4CkDfYb1xqntg9knbs5lZi1RIbo=;
-        b=eMWi9bQ3cPenIuHSE1JOvmJB1dVh9t7Cp2IJZLR8XpIFrkabsBA8LbFNcDtuMHKGYk
-         lO7RbJFzqoDBs8EjujmnOcJLHZooX1hawuVMA0ma5VUzEKGcpOXnOLS2CFUw/oVsO866
-         0U4urqsAvRT98P0gP48YbFe9EjKkLcaYDUAWnRX3saxFTQj2ISyRC9CepELsXY6jT3Hh
-         /m0YC3rHZ9ky4EwtbhCtLhtDgckjSwQPxdm3Jtsw1cZD3VWrOfQyewqtdSQZbGRZDNBH
-         MtELkwWWbG0wjmDUT2Z7RpO5lj/fJ9WfntfjsrQnMmBL0x9OGKnU7886JMJzb5PGqGyj
-         Nubw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=RHK5G9JAHhgGCkTg4CkDfYb1xqntg9knbs5lZi1RIbo=;
-        b=EoRPcA3subUA+/AFhWixFnntoNvFFDQHA8CHHS5Myvm7ObMErgqsnyEzvpEOcb9CHZ
-         ws7NuQqh5ic4YOTCiSdIpsFhfjndja4dEy99R3bTBm7/3x3uul2fI2VD5FvIXqoSMzbR
-         /MJPpJ54Nvg7g/OTMU8vThq8bSDRawiydT4ogWJiiSxkLe3xB990pgF5giPIEnKbx1gp
-         jp/6dxFr1YFHwfc79C5Yg7DGi3mHfW6yoyBLnB85YhVlhaDN2osREmk2/acXf3GPdcTo
-         itnOHi57IV50guV1UAYLME2su9HTXbO79Gjd58WB+fBELQObS5h9QQcFr5T5Z+Km1hv2
-         2Skg==
-X-Gm-Message-State: ACgBeo2csfOvg9/E+3Z0/lvf2IfwEanOQeXuoLf5zVLq8Wvk20ItSBQH
-        9Ds36aHS+Ecfdqsr+L3YbvfP8w==
-X-Google-Smtp-Source: AA6agR5G2Yn1si0Ny8aEgUM18mGUOU921TVyadVX4vrrgP4oahkPCcwlt/K0QNMZO1CXlnVbKd1jxQ==
-X-Received: by 2002:a05:6a00:13a2:b0:52e:128a:23dd with SMTP id t34-20020a056a0013a200b0052e128a23ddmr8879857pfg.54.1660928564333;
-        Fri, 19 Aug 2022 10:02:44 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id x1-20020aa79ac1000000b00535d3caa66fsm3469048pfp.197.2022.08.19.10.02.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Aug 2022 10:02:43 -0700 (PDT)
-Date:   Fri, 19 Aug 2022 17:02:40 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 09/26] KVM: VMX: nVMX: Support TSC scaling and
- PERF_GLOBAL_CTRL with enlightened VMCS
-Message-ID: <Yv/CME8B1ueOMY5M@google.com>
-References: <20220802160756.339464-1-vkuznets@redhat.com>
- <20220802160756.339464-10-vkuznets@redhat.com>
- <Yv5zn4qTl0aiaQvh@google.com>
- <87sflssllu.fsf@redhat.com>
+        Fri, 19 Aug 2022 18:18:59 -0400
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9984EB2851;
+        Fri, 19 Aug 2022 15:18:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+        Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=pfV3W5tIDS7uvHHlXIEyDkDagWNi+Z86KWqZSqCzOrI=; b=sY1n8Aq6cKn+8C+zsSeV/uxggm
+        nsj/09ZQvFYE+q97bRBlzjnW1zw5RbFDAnFolBKYT6KrCpDrsXE1skijRnZWS19ElGNWcV5X4mpAU
+        dPTTKVW8Ybf0lsZ+/2nZtUSKRL8Tsrvh7PeUAO5+1gcci5JuGcxPHddWjR8qmRG7owXlYfJB4r7z2
+        gygAEeJyjzZWEZLKLqNxZ2NITsVeZECMoYr2HilmMgOn6hF92BWV6bQedzTrYdl8A4e5mubOIC1f3
+        GjHAfCmlUSyzNEzj/212l9Gi3pAbATQtzxezcnnn2wIWy1pePhpNmlSJIReIg6cL3Lz4Qmauejy6k
+        jX0jtSbQ==;
+Received: from [179.232.144.59] (helo=localhost)
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+        id 1oPAJo-00Carb-O5; Sat, 20 Aug 2022 00:18:22 +0200
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+        kexec@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
+        kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
+        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
+        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, stern@rowland.harvard.edu,
+        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+        will@kernel.org, xuqiang36@huawei.com,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-um@lists.infradead.org
+Subject: [PATCH V3 00/11] The panic notifiers refactor - fixes/clean-ups (V3)
+Date:   Fri, 19 Aug 2022 19:17:20 -0300
+Message-Id: <20220819221731.480795-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sflssllu.fsf@redhat.com>
-X-Spam-Status: No, score=-14.4 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Aug 19, 2022, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
-> >> +static u32 evmcs_get_unsupported_ctls(struct kvm_vcpu *vcpu,
-> >> +				      enum evmcs_unsupported_ctrl_type ctrl_type)
-> >> +{
-> >> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-> >> +	enum evmcs_revision evmcs_rev = EVMCSv1_2016;
-> >> +
-> >> +	if (!hv_vcpu)
-> >
-> > This is a functiontal change, and I don't think it's correct either.  Previously,
-> > KVM would apply the EVMCSv1_2016 filter irrespective of whether or not
-> > vcpu->arch.hyperv is non-NULL.  nested_enable_evmcs() doesn't require a Hyper-V
-> > vCPU, and AFAICT nothing requires a Hyper-V vCPU to use eVMCS.
-> 
-> Indeed, this *is* correct after PATCH11 when we get rid of VMX feature
-> MSR filtering for KVM-on-Hyper-V as the remaining use for
-> evmcs_get_unsupported_ctls() is Hyper-V on KVM and hv_vcpu is not NULL
-> there.
+Hey everybody, this the third iteration of the panic notifiers
+fixes/clean-ups;
 
-Hmm, nested_vmx_handle_enlightened_vmptrld() will fail without a Hyper-V vCPU, so
-filtering eVMCS control iff there's a Hyper-V vCPU makes sense.  But that's a guest
-visible change and should be a separate patch.
+V2 available at:
+https://lore.kernel.org/lkml/20220719195325.402745-1-gpiccoli@igalia.com/
 
-But that also raises the question of whether or not KVM should honor hyperv_enabled
-when filtering MSRs.  Same question for nested VM-Enter.  nested_enlightened_vmentry()
-will "fail" without an assist page, and the guest can't set the assist page without
-hyperv_enabled==true, but nothing prevents the host from stuffing the assist page.
+V1 (including the refactor) available at:
+https://lore.kernel.org/lkml/20220427224924.592546-1-gpiccoli@igalia.com/
 
-And on a very related topic, the handling of kvm_hv_vcpu_init() in kvm_hv_set_cpuid()
-is buggy.  KVM will not report an error to userspace for KVM_SET_CPUID2 if allocation
-fails.  If a later operation successfully create a Hyper-V vCPU, KVM will chug along
-with Hyper-V enabled but without having cached the relevant Hyper-V CPUID info.
 
-Less important is that kvm_hv_set_cpuid() should also zero out the CPUID cache if
-Hyper-V is disabled.  I'm pretty sure sure all paths check hyperv_enabled before
-consuming cpuid_cache, but it's unnecessarily risky.
+There wasn't much change here compared to V2 (the specifics are in the
+patches), but a global change is that I've rebased against 6.0-rc1.
+One patch got merged in -next, another one was re-submit in a standalone
+format (requested by maintainer), so both of these are not here anymore.
 
-If we fix the kvm_hv_set_cpuid() allocation failure, then we can also guarantee
-that vcpu->arch.hyperv is non-NULL if vcpu->arch.hyperv_enabled==true.  And then
-we can add gate guest eVMCS flow on hyperv_enabled, and evmcs_get_unsupported_ctls()
-can then WARN if hv_vcpu is NULL.
 
-Assuming I'm not overlooking something, I'll fold in yet more patches.
+As usual, tested this series building for all affected architecture/drivers
+and also through some boot/runtime tests; below the test "matrix" used:
+
+Build tests (using cross-compilers): alpha, arm, arm64, parisc, um, x86_64.
+Boot/Runtime tests: x86_64 (QEMU guests and Steam Deck).
+
+Here is the link with the .config files used:
+https://people.igalia.com/gpiccoli/panic_notifiers_configs/6.0-rc1/
+
+
+About the merge strategy: I've noticed there is a difference in maintainers
+preferences (and my preference as well), so I see 3 strategies for merge:
+
+(a) Maintainers pick patches that are good from the series and merge in
+their trees;
+
+(b) Some maintainer would pick the whole series and merge, at once, given
+that everything is fine/ack/reviewed.
+
+(c) I must re-send patches individually once they are reviewed/acked, as
+standalone patches to the relevant maintainers, so they can merge it in
+their trees.
+
+I'm willing to do what's best for everybody - (a) is my choice when possible,
+(b) seems to stall things and potentially cause conflicts, (c) seems to be
+the compromise. I'll do that as per preference of the respective maintainers.
+
+
+As usual, reviews / comments are always welcome, thanks in advance for them!
+Cheers,
+
+Guilherme
+
+
+Guilherme G. Piccoli (11):
+  ARM: Disable FIQs (but not IRQs) on CPUs shutdown paths
+  notifier: Add panic notifiers info and purge trailing whitespaces
+  alpha: Clean-up the panic notifier code
+  um: Improve panic notifiers consistency and ordering
+  parisc: Replace regular spinlock with spin_trylock on panic path
+  tracing: Improve panic/die notifiers
+  notifiers: Add tracepoints to the notifiers infrastructure
+  EDAC/altera: Skip the panic notifier if kdump is loaded
+  video/hyperv_fb: Avoid taking busy spinlock on panic path
+  drivers/hv/vmbus, video/hyperv_fb: Untangle and refactor Hyper-V panic notifiers
+  panic: Fixes the panic_print NMI backtrace setting
+
+ arch/alpha/kernel/setup.c        |  36 +++++-----
+ arch/arm/kernel/machine_kexec.c  |   2 +
+ arch/arm/kernel/smp.c            |   5 +-
+ arch/parisc/include/asm/pdc.h    |   1 +
+ arch/parisc/kernel/firmware.c    |  27 ++++++--
+ arch/um/drivers/mconsole_kern.c  |   7 +-
+ arch/um/kernel/um_arch.c         |   8 +--
+ drivers/edac/altera_edac.c       |  16 +++--
+ drivers/hv/ring_buffer.c         |  13 ++++
+ drivers/hv/vmbus_drv.c           | 109 +++++++++++++++++++------------
+ drivers/parisc/power.c           |  17 +++--
+ drivers/video/fbdev/hyperv_fb.c  |  16 ++++-
+ include/linux/hyperv.h           |   2 +
+ include/linux/notifier.h         |   8 ++-
+ include/trace/events/notifiers.h |  69 +++++++++++++++++++
+ kernel/notifier.c                |   6 ++
+ kernel/panic.c                   |  47 +++++++------
+ kernel/trace/trace.c             |  55 ++++++++--------
+ 18 files changed, 302 insertions(+), 142 deletions(-)
+ create mode 100644 include/trace/events/notifiers.h
+
+-- 
+2.37.2
+
