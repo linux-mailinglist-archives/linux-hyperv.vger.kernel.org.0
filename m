@@ -2,156 +2,195 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D98CD59C671
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 20:35:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F18C59C7C6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 21:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237538AbiHVSdd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Aug 2022 14:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60142 "EHLO
+        id S238067AbiHVTC2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Aug 2022 15:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236290AbiHVScy (ORCPT
+        with ESMTP id S238075AbiHVTCL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Aug 2022 14:32:54 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71634BA54
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 11:32:28 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id s31-20020a17090a2f2200b001faaf9d92easo14812497pjd.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 11:32:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=3pKOuS9bPCfHx4b2cjVQc088kaA5gmugVVhXnoWl0R4=;
-        b=sU5v9o7Maz94cphiUk0iGtYwZ8KgUY4HSf9XbHNsFwxHC8SpRbMTv/X+qxPZGvDsDE
-         K6BFujPXC48leKW1lCzKWMK+si2TFy9/Cm/Lhx6r1OtvxzaT5ARQwxfsmb8hIMSHRW7b
-         lSpNszsvnbTDk+8nNGK3gV8uA1jALtymYVTInzRaSsPvbJTIHoEe9nmrC9RgnPGlFzj9
-         MialtQ15T2tbbFUtllvwY/gsgSHxGNjnOkCiAh8R3zeW4NdgxCcoWnTKH5OczqsWzre6
-         wM2h9jqXOzm3GSSsJDB0FpIIKqpd1SxhjC/+H5D3VCtROl1xDQI/8rDkC/BS2kkANKEz
-         cd7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=3pKOuS9bPCfHx4b2cjVQc088kaA5gmugVVhXnoWl0R4=;
-        b=a7TMK9Ew/c7Xquvu54cbY606ELH1nTDSwQ6NrXNvjn1yTLe19KALwm8ng6LdoXAFT3
-         O7Fs08WvTZKGtCWpSKjIj1T/m9mLeS/wcoBUspbJGP2MrlYq8dbG/S0g/+YfgWwVsRSM
-         H4jFG5XJ5AH0AJcljoxcEkrj/mLCN/60bJ83RbUZmF+pxRjhL2EHrRn6eVb+yBACLWp8
-         vRySV8fqF+BmNXSnHTyKYeVb0vnoNS7VbmfTJYBbGPiZyLTuUgbYZToTsSCElEtW5yZa
-         njIhqvTBHj85IdcvOnVi9fSWq/wU67CltNjTvvkSWu8ayqpQcm7W0Vd45IfdR5ftnKks
-         5/HA==
-X-Gm-Message-State: ACgBeo2VlXnegVobb1hEJ8AxeStouS2Zqja5zFz4pg10aCK27y2u6dnz
-        yOnZsJn53zx0oukCqCyAqvU71A==
-X-Google-Smtp-Source: AA6agR5t8vY6wHth/oFQzUUROc10MQ6sPeWK+Nlnqjg1jl3To2ype6CO7nYnon+0rfKqNYo16+sJHQ==
-X-Received: by 2002:a17:90b:3b85:b0:1fb:18f6:c65f with SMTP id pc5-20020a17090b3b8500b001fb18f6c65fmr9748839pjb.217.1661193147720;
-        Mon, 22 Aug 2022 11:32:27 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id x15-20020a170902ec8f00b0016be527753bsm787162plg.264.2022.08.22.11.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Aug 2022 11:32:27 -0700 (PDT)
-Date:   Mon, 22 Aug 2022 18:32:23 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 03/26] x86/hyperv: Update 'struct hv_enlightened_vmcs'
- definition
-Message-ID: <YwPLt2e7CuqMzjt1@google.com>
-References: <20220802160756.339464-1-vkuznets@redhat.com>
- <20220802160756.339464-4-vkuznets@redhat.com>
- <Yv5ZFgztDHzzIQJ+@google.com>
- <875yiptvsc.fsf@redhat.com>
- <Yv59dZwP6rNUtsrn@google.com>
- <87czcsskkj.fsf@redhat.com>
- <YwOm7Ph54vIYAllm@google.com>
- <87edx8xn8h.fsf@redhat.com>
- <YwO2fSCGXnE/9mc2@google.com>
- <878rngxjb7.fsf@redhat.com>
+        Mon, 22 Aug 2022 15:02:11 -0400
+Received: from na01-obe.outbound.protection.outlook.com (unknown [52.101.56.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF704E612;
+        Mon, 22 Aug 2022 12:00:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q5vqb2pLdGOp2YG3WV0mkhPPn7oLeV/ef6UFSrAOErEzS2WXpadR1uGZbrJksfm21TUNWPvwv7N7ou1+VJoRTNfZwSjhH01Ugr5ImCSTfdEsxDM0yBor7tnBAfOKXCDSkjEMQbj0uHt1pZ0ilomg2exlgd3v/5e5AKr9l7MfkJvZVAPywGKp2dGTwWWWtZtBbxok9Zy29GnYhmBI9W2aNMb5E4DIh/aC1NjwQnPAlMA2LPlU2ZxYR8eW2Q2v+iRdCTPPAhBLZvnTf/Xx0PEoXJEcAOxKYEIe+sISuKjUlI+PexWm33n0lJVMcfblqBbPmKcnS1+c5YGcW5pNxkaY3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ArfLVpMNm9lqgRey5P11Zuo45l64ixfqDVScOXCpEAM=;
+ b=W6dRYh1dbsxhdTKvnu8PNKe/ZlhGMPk8TIPRf2EA3Ob0ZFLmB+sWaVEpdCXadYCenL1c7SSafAQW3Wb5mlg6rzIvJa6MtHimAbnBps0DTGNq6ffdnYDSWSfeoPrJCuo5q4wdQrE7SjdaO/O5r/VlOJd2OarMVrhPcourPX5/q7hS0kBrFB0IZlcG4kiI9CRbVDvwGNjVm/mfDokCZZc65yZxKZxThWzYy7LcraVJbof++QS+7r3hvcUAdYl5gY0AgHtD1Ycq28OjGHZwDJJKfKL+c2ZMIxnKFSd8OAG4jnuiuAUZ3FOYanyOYLNMv9o/y1NWNV7pdcxbzAjkvcdnCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ArfLVpMNm9lqgRey5P11Zuo45l64ixfqDVScOXCpEAM=;
+ b=bvtce5AKD1/xVsdrmK10TFKYMD08xYTOWmK9AvBX2wOkg3bZRYUGZBoGZcbbnUcsqw/jpkC9RatjYkByeyj8ZDI3EAm8SgLBWutwI9hvSiyVldEEAOz9NQMOpaSYhGe8VhuLuZjwaZ+l/jRLPMXD0i6RU7ZACRqB7NAG2xcfL+g=
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
+ by DM4PR21MB3584.namprd21.prod.outlook.com (2603:10b6:8:a4::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.2; Mon, 22 Aug
+ 2022 19:00:06 +0000
+Received: from PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::e848:505e:d1e3:97a0]) by PH0PR21MB3025.namprd21.prod.outlook.com
+ ([fe80::e848:505e:d1e3:97a0%7]) with mapi id 15.20.5588.002; Mon, 22 Aug 2022
+ 19:00:06 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     vkuznets <vkuznets@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Wei Liu <wei.liu@kernel.org>,
+        Deepak Rawat <drawat.floss@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH v1 1/4] Drivers: hv: Move legacy Hyper-V PCI video
+ device's ids to linux/hyperv.h
+Thread-Topic: [PATCH v1 1/4] Drivers: hv: Move legacy Hyper-V PCI video
+ device's ids to linux/hyperv.h
+Thread-Index: AQHYsw5aBuPcAfExyEmwNR3ut6To9a27SdJw
+Date:   Mon, 22 Aug 2022 19:00:05 +0000
+Message-ID: <PH0PR21MB30259340B9E6BA09DED4CEC4D7719@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <20220818142508.402273-1-vkuznets@redhat.com>
+ <20220818142508.402273-2-vkuznets@redhat.com>
+In-Reply-To: <20220818142508.402273-2-vkuznets@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e3a54f7a-ba55-446e-a07e-0ea306424494;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-08-22T18:49:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ffe6a53b-4467-46b2-9fb2-08da847086c5
+x-ms-traffictypediagnostic: DM4PR21MB3584:EE_
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jMHEjpSQ8bADLD3255tlKyZ5kCK6c3udNTz5xxsPtfkAn0no/sgFXQtgtZlzuugz4JXISGxJtYarJPn1QqGeZ17LuFtZitKBIoE/eI7r26w6O7iJg6xbOqXVoqXE7CeRLJQH//LbxeiCUOEr8CNJH6bpeiAQ+uOrWMt28TG0XtG9fv2KfnCuyL5JVd8vgYEmBrECnwVb4a+UO2+W7teKuA47a2RPJe/hEVW9yXjlto4Ksn5wUb/aALtum+GH9XyXMtY21I+c9SmL7oykUVqp2s6yVsMAKMDN7E5ZC4A5OXXY7zThXacIUStMo25cy1tl+rH7sggNCgcimfyaHYMSqeqzkK/OzsKTQCmrv8mxGyhjfg9GmafqFz8Bs6e14lDO5721mQsGPN19hly5MQMOXKhuDaoyj2w4219be8xY5Ezu7cDuhHUVE+lv5UCvj203ZYJ/BWDvOo+y2XpEbKcOcl/Odym2no5hbUNRBK4T8jxJrJgSNV8GFwipefkM6Iq36vxdFWLDEtGU3dAJL0k2ViZfc7Y7DcEgB1/mR1dinm2JsPW3ExRUKm3cCQjW6hUGOerD3Qf4pCbbsQGxFgCNizNczCkpbsNOMXhzxugZeEXp4UymUEC6J2Pnjo7DrjTm9/bLt94oGg/u9WfeSOxd6a40iI9HGdOeP8KQxg+OKdYSaDwW8Tk63kYAtilJUeJ+Pc32F5EDRQr77eBe+bqskq4+ZFfM6yLH4EdQSWOOLbQJRAcH71+ZmMLsHiBquWSNxwcqGbfq3pKdjoAp95nKbnDP/W96Cb/fLn3qtjv53aaCJLYsD+7VKQOP/wK/Xlky
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(396003)(366004)(346002)(39860400002)(376002)(451199009)(52536014)(64756008)(38100700002)(55016003)(66556008)(33656002)(66446008)(8676002)(76116006)(66476007)(4326008)(66946007)(5660300002)(2906002)(7696005)(41300700001)(478600001)(6506007)(8936002)(86362001)(9686003)(26005)(83380400001)(38070700005)(82950400001)(82960400001)(107886003)(8990500004)(186003)(10290500003)(316002)(54906003)(110136005)(71200400001)(122000001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?iZbX12LzeVo/fX88YYa/lsxO2pHqTqHLTmRcfxcZ4YBVCQu2Q3M5CoHv/Pm3?=
+ =?us-ascii?Q?ak79NZJGclykkToFZyoJFNEjLyHpK5Hpg1vi94qsreOL6AKvY754NkxjYXdS?=
+ =?us-ascii?Q?8iH5V2Vz5qj0j8JywMO5WvkGZJNJSFeA8niZ4zQ8zJt5zXBXo0V5dxPX0aLX?=
+ =?us-ascii?Q?yFT39ATPIyojTBL4QrEIbxliIJUWKfVqbunPKJS4pvLNUpuZJRS8oPsrutX/?=
+ =?us-ascii?Q?SDl793v3XC62qS8LAPyHDPSNU3LizVj1w20kDiYGJ5BOeEpxbe4bnjY5Ycox?=
+ =?us-ascii?Q?loqJuQIGoF4+/0TavvwQY/HvUyWsVIrX54KmUcPe+C/Q0JEH9p69uX7kto2i?=
+ =?us-ascii?Q?UjxGGWaNWaKrwqnqV4H+6wzw1di4d6LhWLrHctIpYyl09s+wLbSD07WUXixk?=
+ =?us-ascii?Q?kKTFC7eN1zsiVtGloy2/1jpmg0zTr+v7B72Z3NKOQp9UbC9bKKoqZOJlofYI?=
+ =?us-ascii?Q?s2MSgqcPbRgMBE3TwE8DstcOda5PhJyXXJM/FVb6sapoAZzyD+3tdOgeeaty?=
+ =?us-ascii?Q?970l4WU+VVyPJ+yteopqxYNYO4DbnfXhuCW5u2WfkCqbTJTr7MwX3qMkzHTW?=
+ =?us-ascii?Q?7gP3DBFA30Y//Lp+INjAyT6yJ7qCQiCar2mjLiQRG14yK0fKujXMnePrpb0v?=
+ =?us-ascii?Q?b5F+aNoRtDDoiXe8k6lSrTd4ou6szfp1xS2ThE2MknmBk2/Mdg3pJ5E557UK?=
+ =?us-ascii?Q?5Z2KL6ulUGBNSf6QAyS/LUwuDOP7Z+QtAE0SVJwg2XZ0sIVYulAOuvZQK1o9?=
+ =?us-ascii?Q?f5hN15zqWjyVp656jboSBD9HjxZlDSCudgpAd54bz3y3CTeStOvYB0MMhr1m?=
+ =?us-ascii?Q?0dhLWzvtX6i6V0HtL3GqtBwpLM0jdq6RjboOZhK3C5AklzUrrYyvrGIre9Yl?=
+ =?us-ascii?Q?f92PQkZdAIv+iYbPoP7U8VFL0MbiRx6Nnj+RpRNkuLHIaBe4n8nRckwhqfVl?=
+ =?us-ascii?Q?TGIYJibTpUgTNjrwC+fRiqJYi2RnYK9krMYY2k16aNZlOfXiqdaSk52Rrd3p?=
+ =?us-ascii?Q?poPHUQ9ZmkkyAc/uidsJuKyZ3Y2x//cLC6MRQYdHWHR67eWzY0iu1q2fHtyS?=
+ =?us-ascii?Q?5wooN93/lXxgsPsHP0SZA6yUQsG9XaOUV2RV+fjI/lHw/MCamIvy8DON4Zcg?=
+ =?us-ascii?Q?28FhDtwlbW9vJSD2oktGU4YRz9EjJE2oOtk5qVrC39NcKLPqg6nC4AyyPTKc?=
+ =?us-ascii?Q?f+UaGVcqfexIu06QbRrCZIKgLsIMgBdblTDsPawef+8O4ra5tzcljCy2T8qH?=
+ =?us-ascii?Q?x1J+GRs8fjnk2zYeMSUJA+szEk0il9CbEZ8i3P4pHgK29WOE2NHpbqYPHvNg?=
+ =?us-ascii?Q?Y9rsJ9Zq7RXM6BNaaIU3knoVP06Ve5hmdU/L0wlm2012PNC5UnojZ6vQdx2F?=
+ =?us-ascii?Q?2PhOpfuxfjCk6zqOr/0uO06/W9bvFEEP24q/JNaYdM3rn8QsjQ0wcPhvLXBT?=
+ =?us-ascii?Q?5H3CmD1Wk88AjtV6D7fN+rWz6PaqO+3mBFlND3BTzwBOAdyLCMUMVfuFjNnZ?=
+ =?us-ascii?Q?2j51FebqFqgZYRyCUPTX3phnTspeBUd0Fy89g/wGHfLzgI+XQ0igwGyyACeM?=
+ =?us-ascii?Q?D72B6Teitw+skEYjBGO/5H7lkzSJ1hfmsg0R1wWLMLJIkjqY/0uQO+JQMDVL?=
+ =?us-ascii?Q?LA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878rngxjb7.fsf@redhat.com>
-X-Spam-Status: No, score=-14.5 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=no autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3584
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
-> >> My initial implementation was inventing 'eVMCS revision' concept:
-> >> https://lore.kernel.org/kvm/20220629150625.238286-7-vkuznets@redhat.com/
-> >> 
-> >> which is needed if we don't gate all these new fields on CPUID.0x4000000A.EBX BIT(0).
-> >> 
-> >> Going forward, we will still (likely) need something when new fields show up.
-> >
-> > My comments from that thread still apply.  Adding "revisions" or feature flags
-> > isn't maintanable, e.g. at best KVM will end up with a ridiculous number of flags.
-> >
-> > Looking at QEMU, which I strongly suspect is the only VMM that enables
-> > KVM_CAP_HYPERV_ENLIGHTENED_VMCS, it does the sane thing of enabling the capability
-> > before grabbing the VMX MSRs.
-> >
-> > So, why not simply apply filtering for host accesses as well?
-> 
-> (I understand that using QEMU to justify KVM's behavior is flawed but...)
-> 
-> QEMU's migration depends on the assumption that identical QEMU's command
-> lines create identical (from guest PoV) configurations. Assume we have
-> (simplified)
-> 
-> "-cpu CascadeLake-Sever,hv-evmcs"
-> 
-> on both source and destination but source host is newer, i.e. its KVM
-> knows about TSC Scaling in eVMCS and destination host has no idea about
-> it. If we just apply filtering upon vCPU creation, guest visible MSR
-> values are going to be different, right? Ok, assuming QEMU also migrates
-> VMX feature MSRs (TODO: check if that's true), we will be able to fail
-> mirgration late (which is already much worse than not being able to
-> create the desired configuration on destination, 'fail early') if we use
-> in-KVM filtering to throw an error to userspace. But if we blindly
-> filter control MSRs on the destination, 'TscScaling' will just disapper
-> undreneath the guest. This is unlikely to work.
+From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, August 18, 202=
+2 7:25 AM
+>=20
+> There are already two places in kernel with PCI_VENDOR_ID_MICROSOFT/
+> PCI_DEVICE_ID_HYPERV_VIDEO and there's a need to use these from core
+> Vmbus code. Move the defines to a common header.
+>=20
+> No functional change.
+>=20
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 3 ---
+>  drivers/video/fbdev/hyperv_fb.c         | 4 ----
+>  include/linux/hyperv.h                  | 4 ++++
+>  3 files changed, 4 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> index 4a8941fa0815..46f6c454b820 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+> @@ -23,9 +23,6 @@
+>  #define DRIVER_MAJOR 1
+>  #define DRIVER_MINOR 0
+>=20
+> -#define PCI_VENDOR_ID_MICROSOFT 0x1414
+> -#define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
+> -
+>  DEFINE_DRM_GEM_FOPS(hv_fops);
+>=20
+>  static struct drm_driver hyperv_driver =3D {
+> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv=
+_fb.c
+> index 886c564787f1..b58b445bb529 100644
+> --- a/drivers/video/fbdev/hyperv_fb.c
+> +++ b/drivers/video/fbdev/hyperv_fb.c
+> @@ -74,10 +74,6 @@
+>  #define SYNTHVID_DEPTH_WIN8 32
+>  #define SYNTHVID_FB_SIZE_WIN8 (8 * 1024 * 1024)
+>=20
+> -#define PCI_VENDOR_ID_MICROSOFT 0x1414
+> -#define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
+> -
+> -
+>  enum pipe_msg_type {
+>  	PIPE_MSG_INVALID,
+>  	PIPE_MSG_DATA,
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index 3b42264333ef..4bb39a8f1af7 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -1516,6 +1516,10 @@ void vmbus_free_mmio(resource_size_t start,
+> resource_size_t size);
+>  	.guid =3D GUID_INIT(0xc376c1c3, 0xd276, 0x48d2, 0x90, 0xa9, \
+>  			  0xc0, 0x47, 0x48, 0x07, 0x2c, 0x60)
+>=20
+> +/* Legacy Hyper-V PCI video device */
+> +#define PCI_VENDOR_ID_MICROSOFT 0x1414
+> +#define PCI_DEVICE_ID_HYPERV_VIDEO 0x5353
 
-But all of that holds true irrespetive of eVMCS.  If QEMU attempts to migrate a
-nested guest from a KVM that supports TSC_SCALING to a KVM that doesn't support
-TSC_SCALING, then TSC_SCALING is going to disappear and VM-Entry on the dest will
-fail.  I.e. QEMU _must_ be able to detect the incompatibility and not attempt
-the migration.  And with that code in place, QEMU doesn't need to do anything new
-for eVMCS, it Just Works.
+I've never looked at this before, but shouldn't these move to
+include/linux/pci_ids.h with all the others?  And we've got
+another #define of PCI_VENDOR_ID_MICROSOFT in
+drivers/net/ethernet/microsoft/mana/gdma_main.c that
+could be deleted.
 
-> In any case, what we need, is an option for VMM (read: QEMU) to create
-> the configuration with 'TscScaling' filtered out even KVM supports the
-> bit in eVMCS. This way the guest will be able to migrate backwards to an
-> older KVM which doesn't support it, i.e.
-> 
-> '-cpu CascadeLake-Sever,hv-evmcs'
->  creates the 'origin' eVMCS configuration, no TscScaling
-> 
-> '-cpu CascadeLake-Sever,hv-evmcs,hv-evmcs-2022' creates the updated one.
+Michael
 
-Again, this conundrum exists irrespective of eVMCS.  Properly solve the problem
-for regular nVMX and eVMCS should naturally work.
-
-> KVM_CAP_HYPERV_ENLIGHTENED_VMCS is bad as it only takes 'eVMCS' version
-> as a parameter (as we assumed it will always change when new fields are
-> added, but that turned out to be false). That's why I suggested
-> KVM_CAP_HYPERV_ENLIGHTENED_VMCS2.
-
-Enumerating features via versions is such a bad API though, e.g. if there's a
-bug with nested TSC_SCALING, userspace can't disable just nested TSC_SCALING
-without everything else under the inscrutable "hv-evmcs-2022" being collateral
-damage.
+> +
+>  /*
+>   * Common header for Hyper-V ICs
+>   */
+> --
+> 2.37.1
