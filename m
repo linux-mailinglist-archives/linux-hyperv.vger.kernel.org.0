@@ -2,126 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4484E59BEA1
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 13:38:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B93FA59BF84
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 14:32:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234434AbiHVLiv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Aug 2022 07:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
+        id S234057AbiHVMcq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Aug 2022 08:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232901AbiHVLiv (ORCPT
+        with ESMTP id S230503AbiHVMcp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Aug 2022 07:38:51 -0400
-Received: from relay.virtuozzo.com (relay.virtuozzo.com [130.117.225.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11D61ADB4
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 04:38:49 -0700 (PDT)
-Received: from dev011.ch-qa.sw.ru ([172.29.1.16])
-        by relay.virtuozzo.com with esmtp (Exim 4.95)
-        (envelope-from <alexander.atanasov@virtuozzo.com>)
-        id 1oQ5jK-00Gyo9-72;
-        Mon, 22 Aug 2022 13:37:53 +0200
-From:   Alexander Atanasov <alexander.atanasov@virtuozzo.com>
-Cc:     kernel@openvz.org,
-        Alexander Atanasov <alexander.atanasov@virtuozzo.com>,
-        kernel test robot <lkp@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Wei Liu <wei.liu@kernel.org>, Nadav Amit <namit@vmware.com>,
-        pv-drivers@vmware.com, Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH v3 0/4] Make balloon drivers memory changes known to the rest of the kernel
-Date:   Mon, 22 Aug 2022 14:37:43 +0300
-Message-Id: <20220822113747.3630776-1-alexander.atanasov@virtuozzo.com>
-X-Mailer: git-send-email 2.31.1
+        Mon, 22 Aug 2022 08:32:45 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DF396BF4A;
+        Mon, 22 Aug 2022 05:32:44 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B03D612FC;
+        Mon, 22 Aug 2022 05:32:47 -0700 (PDT)
+Received: from [10.57.15.77] (unknown [10.57.15.77])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEB0A3F718;
+        Mon, 22 Aug 2022 05:32:38 -0700 (PDT)
+Message-ID: <d5016c1e-55d9-4224-278a-50377d4c6454@arm.com>
+Date:   Mon, 22 Aug 2022 13:32:32 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v1 4/4] swiotlb: panic if nslabs is too small
+Content-Language: en-GB
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Yu Zhao <yuzhao@google.com>, dongli.zhang@oracle.com,
+        ak@linux.intel.com, akpm@linux-foundation.org,
+        alexander.sverdlin@nokia.com, andi.kleen@intel.com, bp@alien8.de,
+        bp@suse.de, cminyard@mvista.com, corbet@lwn.net,
+        damien.lemoal@opensource.wdc.com, dave.hansen@linux.intel.com,
+        iommu@lists.linux-foundation.org, joe.jin@oracle.com,
+        joe@perches.com, keescook@chromium.org, kirill.shutemov@intel.com,
+        kys@microsoft.com, linux-doc@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, ltykernel@gmail.com,
+        michael.h.kelley@microsoft.com, mingo@redhat.com,
+        m.szyprowski@samsung.com, parri.andrea@gmail.com,
+        paulmck@kernel.org, pmladek@suse.com, rdunlap@infradead.org,
+        tglx@linutronix.de, thomas.lendacky@amd.com,
+        Tianyu.Lan@microsoft.com, tsbogend@alpha.franken.de,
+        vkuznets@redhat.com, wei.liu@kernel.org, x86@kernel.org
+References: <20220611082514.37112-5-dongli.zhang@oracle.com>
+ <20220820012031.1285979-1-yuzhao@google.com>
+ <f8c743d8-fcbe-4ef7-5f86-d63086552ffd@arm.com>
+ <YwNn92WP3rP4ylZu@infradead.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <YwNn92WP3rP4ylZu@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Currently balloon drivers (Virtio,XEN, HyperV, VMWare, ...)
-inflate and deflate the guest memory size but there is no
-way to know how much the memory size is changed by them.
+On 2022-08-22 12:26, Christoph Hellwig wrote:
+> On Mon, Aug 22, 2022 at 10:49:09AM +0100, Robin Murphy wrote:
+>> Hmm, it's possible this might be quietly fixed by 20347fca71a3, but either
+>> way I'm not sure why we would need to panic *before* we've even tried to
+>> allocate anything, when we could simply return with no harm done? If we've
+>> ended up calculating (or being told) a buffer size which is too small to be
+>> usable, that should be no different to disabling SWIOTLB entirely.
+> 
+> Hmm.  I think this might be a philosophical question, but I think
+> failing the boot with a clear error report for a configuration that is
+> supposed to work but can't is way better than just panicing later on.
 
-A common use of the ballooning is to emulate [1]
-hot plug and hot unplug - due to the complexity of the later.
-Hotplug has a notifier and one can also check the updated
-memory size.
+Depends which context of "supposed to work" you mean there. The most 
+logical reason to end up with a tiny SWIOTLB size is because you don't 
+expect to need SWIOTLB, therefore if there's now a functional minimum 
+size limit, failing gracefully such that the system keeps working as 
+before is correct in that context. Even if we assume the expectation 
+goes the other way, then it should be on SWIOTLB to adjust the initial 
+allocation size to whatever minimum it now needs, which as I say it 
+looks like 20347fca71a3 might do anyway. Creating new breakage by 
+panicking instead of making a decision one way or the other was never 
+the right answer.
 
-To improve this add InflatedTotal and InflatedFree
-to /proc/meminfo and implement a balloon notifier.
+>> Historically, passing "swiotlb=1" on the command line has been used to save
+>> memory when the user knows SWIOTLB isn't needed. That should definitely not
+>> be allowed to start panicking.
+> 
+> I've never seen swiotlb=1 advertized as a way to disable swiotlb.
+> That's always been swiotlb=noforce, which cleanly disables it.
 
-Amount of inflated memory can be used:
- - si_meminfo(..) users can improve calculations
- - adjust cache/buffer sizes
- - adjust object/connection limits
- - as a hint for the oom a killer
- - by user space software that monitors memory pressure
+No, it's probably not been advertised as such, but it's what clearly 
+fell out of the available options before "noforce" was added (which was 
+considerably more recently than "always"), and the fact is that people 
+*are* still using it even today (presumably copy-pasted through Android 
+BSPs since before 4.10).
 
-Patches for the other balloon drivers will be done next.
-
-Alexander Atanasov (4):
-  Make place for common balloon code
-  Enable balloon drivers to report inflated memory
-  Display inflated memory to users
-  drivers: virtio: balloon - update inflated memory
-
- Documentation/filesystems/proc.rst            |  6 +++
- MAINTAINERS                                   |  4 +-
- arch/powerpc/platforms/pseries/cmm.c          |  2 +-
- drivers/misc/vmw_balloon.c                    |  2 +-
- drivers/virtio/virtio_balloon.c               |  7 +++-
- fs/proc/meminfo.c                             | 10 +++++
- .../linux/{balloon_compaction.h => balloon.h} | 30 ++++++++++----
- mm/Makefile                                   |  2 +-
- mm/{balloon_compaction.c => balloon.c}        | 40 +++++++++++++++++--
- mm/migrate.c                                  |  1 -
- mm/vmscan.c                                   |  1 -
- 11 files changed, 87 insertions(+), 18 deletions(-)
- rename include/linux/{balloon_compaction.h => balloon.h} (86%)
- rename mm/{balloon_compaction.c => balloon.c} (88%)
-
-v2:
- - reworked from simple /proc/meminfo addition
-v3:
- - added missed EXPORT_SYMBOLS
-Reported-by: kernel test robot <lkp@intel.com>
- - instead of balloon_common.h just use balloon.h (yes, naming is hard)
- - cleaned up balloon.h - remove from files that do not use it and
-   remove externs from function declarations
-
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Nadav Amit <namit@vmware.com>
-Cc: pv-drivers@vmware.com
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: virtualization@lists.linux-foundation.org
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Dexuan Cui <decui@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: xen-devel@lists.xenproject.org
-
-base-commit: 1c23f9e627a7b412978b4e852793c5e3c3efc555
--- 
-2.31.1
-
+Thanks,
+Robin.
