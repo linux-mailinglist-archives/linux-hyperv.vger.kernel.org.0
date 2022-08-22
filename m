@@ -2,101 +2,193 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B93FA59BF84
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 14:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C19F59C387
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 17:55:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234057AbiHVMcq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Aug 2022 08:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39954 "EHLO
+        id S236883AbiHVPzh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Aug 2022 11:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230503AbiHVMcp (ORCPT
+        with ESMTP id S236917AbiHVPza (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Aug 2022 08:32:45 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DF396BF4A;
-        Mon, 22 Aug 2022 05:32:44 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B03D612FC;
-        Mon, 22 Aug 2022 05:32:47 -0700 (PDT)
-Received: from [10.57.15.77] (unknown [10.57.15.77])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEB0A3F718;
-        Mon, 22 Aug 2022 05:32:38 -0700 (PDT)
-Message-ID: <d5016c1e-55d9-4224-278a-50377d4c6454@arm.com>
-Date:   Mon, 22 Aug 2022 13:32:32 +0100
+        Mon, 22 Aug 2022 11:55:30 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6961B2AC51
+        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 08:55:29 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id 2so10341779pll.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 08:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=uvOjvk5/JKpMUdid2qTKTpTlRDvjI4C3kJclOnnPOWU=;
+        b=hmBTH3GmURqPsBXekxu7uRrt/53hS3AqzTzmCxJTHg9b7NsYKsfRQb5xMje4t6WGS6
+         RZHX2OLkGnt3p+FCYS7RpRJmNQhjqa/7MIkXuwRDT+EMKnV6t1W9UGaPqNsOoPs30rFa
+         lUmBWpu+yNYxqta56jmDUGvSMKp1HoJgl90x3kCnJAdOohocNe8y7jui+eGLk2vY58hh
+         I9om++sLFjyZvdj9VpdkfqxUrVahO6jrlcNgWKHL6E992708UG08bIg3nlWQjQALi8uU
+         ZNeBE0BM2WnXcblW3YbiNaRmW9Gjqwt3XEr3IIYhKDUPQvTyJc5vzP/n5jrdogToXyez
+         Nosw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=uvOjvk5/JKpMUdid2qTKTpTlRDvjI4C3kJclOnnPOWU=;
+        b=qyy6NMJ4f5SmYaAJ/gQUiRE2ik8w8c2L+7SlFpkmYLeOeSHPpNCWNQaWZ90vow7vpc
+         awSUYvzNwiANL7FU4VbGoUhri9d6XNqBZFRZ/nwolAJsdBKCAA3ywpeRd+/kBCSHAH35
+         fQhPqC7CE0YOwx7kjPbD9u/B6pemBJAxzLmylyf9qWGHwKT/hVxw1Q4reWE/LkVlUn3B
+         XJjeIP0bNUemtVL7vlu+X1NQcgON1i1VZUTyLcevkrBO/TA4PLRMqdW93m5qJKTtpqjG
+         ANUbgHljmmxMK0JnaSN63mx5K8hoKC0o+6o26FxZjZw2khRggxHppmAsgw9XyQwQYNX6
+         QDZQ==
+X-Gm-Message-State: ACgBeo02JjT2tzaQvaSO6xvSxZVO/a8yk1n7NlRIAmeSehadayoLdJjd
+        bK3Wt1RNU7w+ityIMTGYtLUt+X/CCFAwQA==
+X-Google-Smtp-Source: AA6agR5CO1iiLQFd/Z4KgqSR8JMfAz667L9PjZAzFjAneq50mboqRPUGHRGSDH4zqWlhhM96X1J94Q==
+X-Received: by 2002:a17:902:9006:b0:172:927e:c19a with SMTP id a6-20020a170902900600b00172927ec19amr20904281plp.162.1661183728778;
+        Mon, 22 Aug 2022 08:55:28 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id f26-20020aa79d9a000000b0053602e1d6fcsm2168164pfq.105.2022.08.22.08.55.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Aug 2022 08:55:28 -0700 (PDT)
+Date:   Mon, 22 Aug 2022 15:55:24 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/26] x86/hyperv: Update 'struct hv_enlightened_vmcs'
+ definition
+Message-ID: <YwOm7Ph54vIYAllm@google.com>
+References: <20220802160756.339464-1-vkuznets@redhat.com>
+ <20220802160756.339464-4-vkuznets@redhat.com>
+ <Yv5ZFgztDHzzIQJ+@google.com>
+ <875yiptvsc.fsf@redhat.com>
+ <Yv59dZwP6rNUtsrn@google.com>
+ <87czcsskkj.fsf@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v1 4/4] swiotlb: panic if nslabs is too small
-Content-Language: en-GB
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Yu Zhao <yuzhao@google.com>, dongli.zhang@oracle.com,
-        ak@linux.intel.com, akpm@linux-foundation.org,
-        alexander.sverdlin@nokia.com, andi.kleen@intel.com, bp@alien8.de,
-        bp@suse.de, cminyard@mvista.com, corbet@lwn.net,
-        damien.lemoal@opensource.wdc.com, dave.hansen@linux.intel.com,
-        iommu@lists.linux-foundation.org, joe.jin@oracle.com,
-        joe@perches.com, keescook@chromium.org, kirill.shutemov@intel.com,
-        kys@microsoft.com, linux-doc@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, ltykernel@gmail.com,
-        michael.h.kelley@microsoft.com, mingo@redhat.com,
-        m.szyprowski@samsung.com, parri.andrea@gmail.com,
-        paulmck@kernel.org, pmladek@suse.com, rdunlap@infradead.org,
-        tglx@linutronix.de, thomas.lendacky@amd.com,
-        Tianyu.Lan@microsoft.com, tsbogend@alpha.franken.de,
-        vkuznets@redhat.com, wei.liu@kernel.org, x86@kernel.org
-References: <20220611082514.37112-5-dongli.zhang@oracle.com>
- <20220820012031.1285979-1-yuzhao@google.com>
- <f8c743d8-fcbe-4ef7-5f86-d63086552ffd@arm.com>
- <YwNn92WP3rP4ylZu@infradead.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <YwNn92WP3rP4ylZu@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87czcsskkj.fsf@redhat.com>
+X-Spam-Status: No, score=-14.5 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2022-08-22 12:26, Christoph Hellwig wrote:
-> On Mon, Aug 22, 2022 at 10:49:09AM +0100, Robin Murphy wrote:
->> Hmm, it's possible this might be quietly fixed by 20347fca71a3, but either
->> way I'm not sure why we would need to panic *before* we've even tried to
->> allocate anything, when we could simply return with no harm done? If we've
->> ended up calculating (or being told) a buffer size which is too small to be
->> usable, that should be no different to disabling SWIOTLB entirely.
+On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
 > 
-> Hmm.  I think this might be a philosophical question, but I think
-> failing the boot with a clear error report for a configuration that is
-> supposed to work but can't is way better than just panicing later on.
-
-Depends which context of "supposed to work" you mean there. The most 
-logical reason to end up with a tiny SWIOTLB size is because you don't 
-expect to need SWIOTLB, therefore if there's now a functional minimum 
-size limit, failing gracefully such that the system keeps working as 
-before is correct in that context. Even if we assume the expectation 
-goes the other way, then it should be on SWIOTLB to adjust the initial 
-allocation size to whatever minimum it now needs, which as I say it 
-looks like 20347fca71a3 might do anyway. Creating new breakage by 
-panicking instead of making a decision one way or the other was never 
-the right answer.
-
->> Historically, passing "swiotlb=1" on the command line has been used to save
->> memory when the user knows SWIOTLB isn't needed. That should definitely not
->> be allowed to start panicking.
+> > On Thu, Aug 18, 2022, Vitaly Kuznetsov wrote:
+> >> Sean Christopherson <seanjc@google.com> writes:
+> >> 
+> >> > On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
+> >> >> + * Note: HV_X64_NESTED_EVMCS1_2022_UPDATE is not currently documented in any
+> >> >> + * published TLFS version. When the bit is set, nested hypervisor can use
+> >> >> + * 'updated' eVMCSv1 specification (perf_global_ctrl, s_cet, ssp, lbr_ctl,
+> >> >> + * encls_exiting_bitmap, tsc_multiplier fields which were missing in 2016
+> >> >> + * specification).
+> >> >> + */
+> >> >> +#define HV_X64_NESTED_EVMCS1_2022_UPDATE		BIT(0)
+> >> >
+> >> > This bit is now defined[*], but the docs says it's only for perf_global_ctrl.  Are
+> >> > we expecting an update to the TLFS?
+> >> >
+> >> > 	Indicates support for the GuestPerfGlobalCtrl and HostPerfGlobalCtrl fields
+> >> > 	in the enlightened VMCS.
+> >> >
+> >> > [*] https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/feature-discovery#hypervisor-nested-virtualization-features---0x4000000a
+> >> >
+> >> 
+> >> Oh well, better this than nothing. I'll ping the people who told me
+> >> about this bit that their description is incomplete.
+> >
+> > Not that it changes anything, but I'd rather have no documentation.  I'd much rather
+> > KVM say "this is the undocumented behavior" than "the document behavior is wrong".
+> >
 > 
-> I've never seen swiotlb=1 advertized as a way to disable swiotlb.
-> That's always been swiotlb=noforce, which cleanly disables it.
+> So I reached out to Microsoft and their answer was that for all these new
+> eVMCS fields (including *PerfGlobalCtrl) observing architectural VMX
+> MSRs should be enough. *PerfGlobalCtrl case is special because of Win11
+> bug (if we expose the feature in VMX feature MSRs but don't set
+> CPUID.0x4000000A.EBX BIT(0) it just doesn't boot).
 
-No, it's probably not been advertised as such, but it's what clearly 
-fell out of the available options before "noforce" was added (which was 
-considerably more recently than "always"), and the fact is that people 
-*are* still using it even today (presumably copy-pasted through Android 
-BSPs since before 4.10).
+I.e. TSC_SCALING shouldn't be gated on the flag?  If so, then the 2-D array approach
+is overkill since (a) the CPUID flag only controls PERF_GLOBAL_CTRL and (b) we aren't
+expecting any more flags in the future.
 
-Thanks,
-Robin.
+What about this for an implementation?
+
+static bool evmcs_has_perf_global_ctrl(struct kvm_vcpu *vcpu)
+{
+	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+
+	/*
+	 * Filtering VMX controls for eVMCS compatibility should only be done
+	 * for guest accesses, and all such accesses should be gated on Hyper-V
+	 * being enabled and initialized.
+	 */
+	if (WARN_ON_ONCE(!hv_vcpu))
+		return false;
+
+	return hv_vcpu->cpuid_cache.nested_ebx & HV_X64_NESTED_EVMCS1_PERF_GLOBAL_CTRL;
+}
+
+static u32 evmcs_get_unsupported_ctls(struct kvm_vcpu *vcpu, u32 msr_index)
+{
+	u32 unsupported_ctrls;
+
+	switch (msr_index) {
+	case MSR_IA32_VMX_EXIT_CTLS:
+	case MSR_IA32_VMX_TRUE_EXIT_CTLS:
+		unsupported_ctrls = EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
+		if (!evmcs_has_perf_global_ctrl(vcpu))
+			unsupported_ctrls |= VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
+		return unsupported_ctrls;
+	case MSR_IA32_VMX_ENTRY_CTLS:
+	case MSR_IA32_VMX_TRUE_ENTRY_CTLS:
+		unsupported_ctrls = EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
+		if (!evmcs_has_perf_global_ctrl(vcpu))
+			unsupported_ctrls |= VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
+		return unsupported_ctrls;
+	case MSR_IA32_VMX_PROCBASED_CTLS2:
+		return EVMCS1_UNSUPPORTED_2NDEXEC;
+	case MSR_IA32_VMX_TRUE_PINBASED_CTLS:
+	case MSR_IA32_VMX_PINBASED_CTLS:
+		return EVMCS1_UNSUPPORTED_PINCTRL;
+	case MSR_IA32_VMX_VMFUNC:
+		return EVMCS1_UNSUPPORTED_VMFUNC;
+	default:
+		KVM_BUG_ON(1, vcpu->kvm);
+		return 0;
+	}
+}
+
+void nested_evmcs_filter_control_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 *pdata)
+{
+	u64 unsupported_ctrls = evmcs_get_unsupported_ctls(vcpu, msr_index);
+
+	if (msr_index == MSR_IA32_VMX_VMFUNC)
+		*pdata &= ~unsupported_ctrls;
+	else
+		*pdata &= ~(unsupported_ctrls << 32);
+}
+
+
+> What I'm still concerned about is future proofing KVM for new
+> features. When something is getting added to KVM for which no eVMCS
+> field is currently defined, both Hyper-V-on-KVM and KVM-on-Hyper-V cases
+> should be taken care of. It would probably be better to reverse our
+> filtering, explicitly listing features supported in eVMCS. The lists are
+> going to be fairly long but at least we won't have to take care of any
+> new architectural feature added to KVM.
+
+Having the filtering be opt-in crossed my mind as well.  Reversing the filtering
+can be done after this series though, correct?
