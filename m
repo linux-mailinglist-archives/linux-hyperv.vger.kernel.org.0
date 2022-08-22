@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C19F59C387
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 17:55:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C007659C3D2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 18:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236883AbiHVPzh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Aug 2022 11:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
+        id S235947AbiHVQNc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Aug 2022 12:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236917AbiHVPza (ORCPT
+        with ESMTP id S236698AbiHVQNX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Aug 2022 11:55:30 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6961B2AC51
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 08:55:29 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id 2so10341779pll.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 08:55:29 -0700 (PDT)
+        Mon, 22 Aug 2022 12:13:23 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB20ABC8E
+        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 09:13:20 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id s31-20020a17090a2f2200b001faaf9d92easo14443582pjd.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 09:13:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc;
-        bh=uvOjvk5/JKpMUdid2qTKTpTlRDvjI4C3kJclOnnPOWU=;
-        b=hmBTH3GmURqPsBXekxu7uRrt/53hS3AqzTzmCxJTHg9b7NsYKsfRQb5xMje4t6WGS6
-         RZHX2OLkGnt3p+FCYS7RpRJmNQhjqa/7MIkXuwRDT+EMKnV6t1W9UGaPqNsOoPs30rFa
-         lUmBWpu+yNYxqta56jmDUGvSMKp1HoJgl90x3kCnJAdOohocNe8y7jui+eGLk2vY58hh
-         I9om++sLFjyZvdj9VpdkfqxUrVahO6jrlcNgWKHL6E992708UG08bIg3nlWQjQALi8uU
-         ZNeBE0BM2WnXcblW3YbiNaRmW9Gjqwt3XEr3IIYhKDUPQvTyJc5vzP/n5jrdogToXyez
-         Nosw==
+        bh=UvJx9+FEYI5OIrLAKKjR26v13dLPxbliBeR/lXbsskg=;
+        b=DNpb3tFZCML7MqYbpRmaxEdD+a52S8g/qpeXjiKWkZLUrtrh4A6rseWJ0IIDGmbl2a
+         sFdNSXz4liV6aRpQP2daQXAoZG3fHTHJWJ86CcWSanH/lD28ibkbSJTJ/85BfeKVh9wa
+         /iWoYBBtT/X/Q6awAfhOldx8FwIsFEhJJroD0rjdScBX+C1SA+jubGHvoVY5F17KINRK
+         urXSFuDh6YKiFbAq4R7u0gPBVVtAFygkaM4ouIOyIjdBIHfntIbbEeZdVahUd2l/1oyK
+         D3L5DKjSpdhUbV5R8Qacb7bX4enX/2gMlyPM9N7CJx1MyDkpRJLBXryHCHc+kCDzPUqd
+         3jfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=uvOjvk5/JKpMUdid2qTKTpTlRDvjI4C3kJclOnnPOWU=;
-        b=qyy6NMJ4f5SmYaAJ/gQUiRE2ik8w8c2L+7SlFpkmYLeOeSHPpNCWNQaWZ90vow7vpc
-         awSUYvzNwiANL7FU4VbGoUhri9d6XNqBZFRZ/nwolAJsdBKCAA3ywpeRd+/kBCSHAH35
-         fQhPqC7CE0YOwx7kjPbD9u/B6pemBJAxzLmylyf9qWGHwKT/hVxw1Q4reWE/LkVlUn3B
-         XJjeIP0bNUemtVL7vlu+X1NQcgON1i1VZUTyLcevkrBO/TA4PLRMqdW93m5qJKTtpqjG
-         ANUbgHljmmxMK0JnaSN63mx5K8hoKC0o+6o26FxZjZw2khRggxHppmAsgw9XyQwQYNX6
-         QDZQ==
-X-Gm-Message-State: ACgBeo02JjT2tzaQvaSO6xvSxZVO/a8yk1n7NlRIAmeSehadayoLdJjd
-        bK3Wt1RNU7w+ityIMTGYtLUt+X/CCFAwQA==
-X-Google-Smtp-Source: AA6agR5CO1iiLQFd/Z4KgqSR8JMfAz667L9PjZAzFjAneq50mboqRPUGHRGSDH4zqWlhhM96X1J94Q==
-X-Received: by 2002:a17:902:9006:b0:172:927e:c19a with SMTP id a6-20020a170902900600b00172927ec19amr20904281plp.162.1661183728778;
-        Mon, 22 Aug 2022 08:55:28 -0700 (PDT)
+        bh=UvJx9+FEYI5OIrLAKKjR26v13dLPxbliBeR/lXbsskg=;
+        b=ewpTiCtidg2d2idQ5Dwg+69c7EM1Gx3IgyaFL6DK52Oonmrqru/klqxwYIm/k6FDab
+         679x47jiSZItWCtDU9h0FD1Xw40UmGf5iIKv6qAEcFDziSs5Hnar8B+qB3zK/TDfYA/p
+         C4MaaJyjwnepSl3RXVCKbkYbFEiyuTQuUF6YbM1qDqaQy/Alw7Zt920MYGQQtsX3pYi+
+         nIM9R71cs5IJUrwcvbYElx3StEADS7Y5Ziiio36WqcoGr3Yi3RBoAUThz1ygsipgJDR/
+         938kSO1kKwW7J+1cLbr2Xx2gY80hUrk1yza502PEDS4iEyqDmA2Ri6XLL3OMaQdRwMMG
+         aDnw==
+X-Gm-Message-State: ACgBeo1wdxH0J0NGoVzCfwz9ASFty6sR3ekSbXl9Q/QZV2SRPad35aLJ
+        UbHEWEQEf9o87KZ5atQRKdRvAw==
+X-Google-Smtp-Source: AA6agR5O3f2KBXdwaPcI9TqoK/2TMHHcLKZEqJUKozItOTNCtDb1pJs78mwUAlxyD8P7U4366S1lPw==
+X-Received: by 2002:a17:90a:ab14:b0:1fa:b97f:c28b with SMTP id m20-20020a17090aab1400b001fab97fc28bmr23897669pjq.71.1661184800329;
+        Mon, 22 Aug 2022 09:13:20 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id f26-20020aa79d9a000000b0053602e1d6fcsm2168164pfq.105.2022.08.22.08.55.28
+        by smtp.gmail.com with ESMTPSA id o12-20020a170902bccc00b0016db7f49cc2sm8540708pls.115.2022.08.22.09.13.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Aug 2022 08:55:28 -0700 (PDT)
-Date:   Mon, 22 Aug 2022 15:55:24 +0000
+        Mon, 22 Aug 2022 09:13:19 -0700 (PDT)
+Date:   Mon, 22 Aug 2022 16:13:15 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -61,7 +61,7 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v5 03/26] x86/hyperv: Update 'struct hv_enlightened_vmcs'
  definition
-Message-ID: <YwOm7Ph54vIYAllm@google.com>
+Message-ID: <YwOrG3W3zAZ7VNJu@google.com>
 References: <20220802160756.339464-1-vkuznets@redhat.com>
  <20220802160756.339464-4-vkuznets@redhat.com>
  <Yv5ZFgztDHzzIQJ+@google.com>
@@ -84,111 +84,11 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > On Thu, Aug 18, 2022, Vitaly Kuznetsov wrote:
-> >> Sean Christopherson <seanjc@google.com> writes:
-> >> 
-> >> > On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
-> >> >> + * Note: HV_X64_NESTED_EVMCS1_2022_UPDATE is not currently documented in any
-> >> >> + * published TLFS version. When the bit is set, nested hypervisor can use
-> >> >> + * 'updated' eVMCSv1 specification (perf_global_ctrl, s_cet, ssp, lbr_ctl,
-> >> >> + * encls_exiting_bitmap, tsc_multiplier fields which were missing in 2016
-> >> >> + * specification).
-> >> >> + */
-> >> >> +#define HV_X64_NESTED_EVMCS1_2022_UPDATE		BIT(0)
-> >> >
-> >> > This bit is now defined[*], but the docs says it's only for perf_global_ctrl.  Are
-> >> > we expecting an update to the TLFS?
-> >> >
-> >> > 	Indicates support for the GuestPerfGlobalCtrl and HostPerfGlobalCtrl fields
-> >> > 	in the enlightened VMCS.
-> >> >
-> >> > [*] https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/feature-discovery#hypervisor-nested-virtualization-features---0x4000000a
-> >> >
-> >> 
-> >> Oh well, better this than nothing. I'll ping the people who told me
-> >> about this bit that their description is incomplete.
-> >
-> > Not that it changes anything, but I'd rather have no documentation.  I'd much rather
-> > KVM say "this is the undocumented behavior" than "the document behavior is wrong".
-> >
-> 
 > So I reached out to Microsoft and their answer was that for all these new
 > eVMCS fields (including *PerfGlobalCtrl) observing architectural VMX
 > MSRs should be enough. *PerfGlobalCtrl case is special because of Win11
 > bug (if we expose the feature in VMX feature MSRs but don't set
 > CPUID.0x4000000A.EBX BIT(0) it just doesn't boot).
 
-I.e. TSC_SCALING shouldn't be gated on the flag?  If so, then the 2-D array approach
-is overkill since (a) the CPUID flag only controls PERF_GLOBAL_CTRL and (b) we aren't
-expecting any more flags in the future.
-
-What about this for an implementation?
-
-static bool evmcs_has_perf_global_ctrl(struct kvm_vcpu *vcpu)
-{
-	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-
-	/*
-	 * Filtering VMX controls for eVMCS compatibility should only be done
-	 * for guest accesses, and all such accesses should be gated on Hyper-V
-	 * being enabled and initialized.
-	 */
-	if (WARN_ON_ONCE(!hv_vcpu))
-		return false;
-
-	return hv_vcpu->cpuid_cache.nested_ebx & HV_X64_NESTED_EVMCS1_PERF_GLOBAL_CTRL;
-}
-
-static u32 evmcs_get_unsupported_ctls(struct kvm_vcpu *vcpu, u32 msr_index)
-{
-	u32 unsupported_ctrls;
-
-	switch (msr_index) {
-	case MSR_IA32_VMX_EXIT_CTLS:
-	case MSR_IA32_VMX_TRUE_EXIT_CTLS:
-		unsupported_ctrls = EVMCS1_UNSUPPORTED_VMEXIT_CTRL;
-		if (!evmcs_has_perf_global_ctrl(vcpu))
-			unsupported_ctrls |= VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
-		return unsupported_ctrls;
-	case MSR_IA32_VMX_ENTRY_CTLS:
-	case MSR_IA32_VMX_TRUE_ENTRY_CTLS:
-		unsupported_ctrls = EVMCS1_UNSUPPORTED_VMENTRY_CTRL;
-		if (!evmcs_has_perf_global_ctrl(vcpu))
-			unsupported_ctrls |= VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
-		return unsupported_ctrls;
-	case MSR_IA32_VMX_PROCBASED_CTLS2:
-		return EVMCS1_UNSUPPORTED_2NDEXEC;
-	case MSR_IA32_VMX_TRUE_PINBASED_CTLS:
-	case MSR_IA32_VMX_PINBASED_CTLS:
-		return EVMCS1_UNSUPPORTED_PINCTRL;
-	case MSR_IA32_VMX_VMFUNC:
-		return EVMCS1_UNSUPPORTED_VMFUNC;
-	default:
-		KVM_BUG_ON(1, vcpu->kvm);
-		return 0;
-	}
-}
-
-void nested_evmcs_filter_control_msr(struct kvm_vcpu *vcpu, u32 msr_index, u64 *pdata)
-{
-	u64 unsupported_ctrls = evmcs_get_unsupported_ctls(vcpu, msr_index);
-
-	if (msr_index == MSR_IA32_VMX_VMFUNC)
-		*pdata &= ~unsupported_ctrls;
-	else
-		*pdata &= ~(unsupported_ctrls << 32);
-}
-
-
-> What I'm still concerned about is future proofing KVM for new
-> features. When something is getting added to KVM for which no eVMCS
-> field is currently defined, both Hyper-V-on-KVM and KVM-on-Hyper-V cases
-> should be taken care of. It would probably be better to reverse our
-> filtering, explicitly listing features supported in eVMCS. The lists are
-> going to be fairly long but at least we won't have to take care of any
-> new architectural feature added to KVM.
-
-Having the filtering be opt-in crossed my mind as well.  Reversing the filtering
-can be done after this series though, correct?
+Does this mean that KVM-on-HyperV needs to avoid using the PERF_GLOBAL_CTRL fields
+when the bit is not set?
