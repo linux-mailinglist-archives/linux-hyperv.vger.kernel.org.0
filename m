@@ -2,60 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5E6259C557
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 19:49:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D98CD59C671
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 20:35:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236459AbiHVRt2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Aug 2022 13:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39946 "EHLO
+        id S237538AbiHVSdd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Aug 2022 14:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236541AbiHVRt0 (ORCPT
+        with ESMTP id S236290AbiHVScy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Aug 2022 13:49:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FA713D31
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 10:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661190563;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3xSDWxfBjyEfhtAEfTlhLAY/YWALs4HvvQAyUG8PC+M=;
-        b=TQqeuTduHhM9XH0nfkAVtMgMFh0+AhZhI+pgxIREQToY26ns/Xe28QjSDB9kmavD+mUMMZ
-        6Ny9fxhNpbZyZpKCAUgZsVqMbGijMQTtWZlvEFO3StyypJkakDbiekOWhJHWdZZ5Reo+CN
-        HlwXvo1ERVM9U4t08PdjwVxxPrZEdn0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-562-jv0D2zPePxiskbio9gERhQ-1; Mon, 22 Aug 2022 13:49:14 -0400
-X-MC-Unique: jv0D2zPePxiskbio9gERhQ-1
-Received: by mail-wm1-f70.google.com with SMTP id b4-20020a05600c4e0400b003a5a96f1756so9004110wmq.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 10:49:13 -0700 (PDT)
+        Mon, 22 Aug 2022 14:32:54 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71634BA54
+        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 11:32:28 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id s31-20020a17090a2f2200b001faaf9d92easo14812497pjd.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 11:32:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=3pKOuS9bPCfHx4b2cjVQc088kaA5gmugVVhXnoWl0R4=;
+        b=sU5v9o7Maz94cphiUk0iGtYwZ8KgUY4HSf9XbHNsFwxHC8SpRbMTv/X+qxPZGvDsDE
+         K6BFujPXC48leKW1lCzKWMK+si2TFy9/Cm/Lhx6r1OtvxzaT5ARQwxfsmb8hIMSHRW7b
+         lSpNszsvnbTDk+8nNGK3gV8uA1jALtymYVTInzRaSsPvbJTIHoEe9nmrC9RgnPGlFzj9
+         MialtQ15T2tbbFUtllvwY/gsgSHxGNjnOkCiAh8R3zeW4NdgxCcoWnTKH5OczqsWzre6
+         wM2h9jqXOzm3GSSsJDB0FpIIKqpd1SxhjC/+H5D3VCtROl1xDQI/8rDkC/BS2kkANKEz
+         cd7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc;
-        bh=3xSDWxfBjyEfhtAEfTlhLAY/YWALs4HvvQAyUG8PC+M=;
-        b=EOtZsBAEj2IQoyV9am+3h7PV6+n9OTXXp/eiLAgOdS9KZ+t7GCj/EJBWFp3RRN9Td0
-         mclxj3Zea8x0oJC2qXtxDy7sFTzFc9E7oiDvCF6zNhVB84vrg5I7mSpsgP9aU11Gh90y
-         H27Ul51hWxcSS2+VGrDvfAzG6f/K5pLTXWkF423mDIR+iJdV0BHpbTm4ILCDZAZE0sgr
-         JpH50soNst8y9HzBaz8vVU5OcJlBZ0CvA0qGUZ92r2HMeaMRQegBJMh+vTJJRwJeIJoM
-         nYC2obAVPxjOg+88W21pp8aEtCZiQcAHhtCVYkU03uFqenN6lENb2m8yWrfsblQ7afyc
-         6ghw==
-X-Gm-Message-State: ACgBeo1ABu8pnRiVIanwKErGOkUd1SihJ8mH8BPqflCn7Oat4sBRoGKn
-        bwp3JhiDMLILQG8rWvvu4g4kujZwV25bk1ubZ9TzUCJReWqfuk+iJIukMFI8Q45rZlhT2X91LhB
-        GxM5597JASoTletdDK3qUKvCl
-X-Received: by 2002:a05:6000:15c1:b0:225:332e:2741 with SMTP id y1-20020a05600015c100b00225332e2741mr10757792wry.652.1661190553099;
-        Mon, 22 Aug 2022 10:49:13 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4xFIAVXPnPKasrFFdR+B4EQ5mrWYLX3zcijcSe83qx+KB5dJcqbY6no5xqmrQ94aSSV0WKSA==
-X-Received: by 2002:a05:6000:15c1:b0:225:332e:2741 with SMTP id y1-20020a05600015c100b00225332e2741mr10757779wry.652.1661190552895;
-        Mon, 22 Aug 2022 10:49:12 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id y2-20020a5d6202000000b00224f67bfc95sm12022998wru.62.2022.08.22.10.49.11
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=3pKOuS9bPCfHx4b2cjVQc088kaA5gmugVVhXnoWl0R4=;
+        b=a7TMK9Ew/c7Xquvu54cbY606ELH1nTDSwQ6NrXNvjn1yTLe19KALwm8ng6LdoXAFT3
+         O7Fs08WvTZKGtCWpSKjIj1T/m9mLeS/wcoBUspbJGP2MrlYq8dbG/S0g/+YfgWwVsRSM
+         H4jFG5XJ5AH0AJcljoxcEkrj/mLCN/60bJ83RbUZmF+pxRjhL2EHrRn6eVb+yBACLWp8
+         vRySV8fqF+BmNXSnHTyKYeVb0vnoNS7VbmfTJYBbGPiZyLTuUgbYZToTsSCElEtW5yZa
+         njIhqvTBHj85IdcvOnVi9fSWq/wU67CltNjTvvkSWu8ayqpQcm7W0Vd45IfdR5ftnKks
+         5/HA==
+X-Gm-Message-State: ACgBeo2VlXnegVobb1hEJ8AxeStouS2Zqja5zFz4pg10aCK27y2u6dnz
+        yOnZsJn53zx0oukCqCyAqvU71A==
+X-Google-Smtp-Source: AA6agR5t8vY6wHth/oFQzUUROc10MQ6sPeWK+Nlnqjg1jl3To2ype6CO7nYnon+0rfKqNYo16+sJHQ==
+X-Received: by 2002:a17:90b:3b85:b0:1fb:18f6:c65f with SMTP id pc5-20020a17090b3b8500b001fb18f6c65fmr9748839pjb.217.1661193147720;
+        Mon, 22 Aug 2022 11:32:27 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id x15-20020a170902ec8f00b0016be527753bsm787162plg.264.2022.08.22.11.32.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Aug 2022 10:49:12 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
+        Mon, 22 Aug 2022 11:32:27 -0700 (PDT)
+Date:   Mon, 22 Aug 2022 18:32:23 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         Wanpeng Li <wanpengli@tencent.com>,
@@ -64,66 +59,99 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Michael Kelley <mikelley@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 09/26] KVM: VMX: nVMX: Support TSC scaling and
- PERF_GLOBAL_CTRL with enlightened VMCS
-In-Reply-To: <YwOzxYLMeFuN23W+@google.com>
+Subject: Re: [PATCH v5 03/26] x86/hyperv: Update 'struct hv_enlightened_vmcs'
+ definition
+Message-ID: <YwPLt2e7CuqMzjt1@google.com>
 References: <20220802160756.339464-1-vkuznets@redhat.com>
- <20220802160756.339464-10-vkuznets@redhat.com>
- <Yv5zn4qTl0aiaQvh@google.com> <87sflssllu.fsf@redhat.com>
- <Yv/CME8B1ueOMY5M@google.com> <87ilmkslzd.fsf@redhat.com>
- <YwOzxYLMeFuN23W+@google.com>
-Date:   Mon, 22 Aug 2022 19:49:11 +0200
-Message-ID: <875yikxj6w.fsf@redhat.com>
+ <20220802160756.339464-4-vkuznets@redhat.com>
+ <Yv5ZFgztDHzzIQJ+@google.com>
+ <875yiptvsc.fsf@redhat.com>
+ <Yv59dZwP6rNUtsrn@google.com>
+ <87czcsskkj.fsf@redhat.com>
+ <YwOm7Ph54vIYAllm@google.com>
+ <87edx8xn8h.fsf@redhat.com>
+ <YwO2fSCGXnE/9mc2@google.com>
+ <878rngxjb7.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878rngxjb7.fsf@redhat.com>
+X-Spam-Status: No, score=-14.5 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
+> 
+> > On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
+> >> My initial implementation was inventing 'eVMCS revision' concept:
+> >> https://lore.kernel.org/kvm/20220629150625.238286-7-vkuznets@redhat.com/
+> >> 
+> >> which is needed if we don't gate all these new fields on CPUID.0x4000000A.EBX BIT(0).
+> >> 
+> >> Going forward, we will still (likely) need something when new fields show up.
+> >
+> > My comments from that thread still apply.  Adding "revisions" or feature flags
+> > isn't maintanable, e.g. at best KVM will end up with a ridiculous number of flags.
+> >
+> > Looking at QEMU, which I strongly suspect is the only VMM that enables
+> > KVM_CAP_HYPERV_ENLIGHTENED_VMCS, it does the sane thing of enabling the capability
+> > before grabbing the VMX MSRs.
+> >
+> > So, why not simply apply filtering for host accesses as well?
+> 
+> (I understand that using QEMU to justify KVM's behavior is flawed but...)
+> 
+> QEMU's migration depends on the assumption that identical QEMU's command
+> lines create identical (from guest PoV) configurations. Assume we have
+> (simplified)
+> 
+> "-cpu CascadeLake-Sever,hv-evmcs"
+> 
+> on both source and destination but source host is newer, i.e. its KVM
+> knows about TSC Scaling in eVMCS and destination host has no idea about
+> it. If we just apply filtering upon vCPU creation, guest visible MSR
+> values are going to be different, right? Ok, assuming QEMU also migrates
+> VMX feature MSRs (TODO: check if that's true), we will be able to fail
+> mirgration late (which is already much worse than not being able to
+> create the desired configuration on destination, 'fail early') if we use
+> in-KVM filtering to throw an error to userspace. But if we blindly
+> filter control MSRs on the destination, 'TscScaling' will just disapper
+> undreneath the guest. This is unlikely to work.
 
-> On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
->> Sean Christopherson <seanjc@google.com> writes:
->> > But that also raises the question of whether or not KVM should honor hyperv_enabled
->> > when filtering MSRs.  Same question for nested VM-Enter.  nested_enlightened_vmentry()
->> > will "fail" without an assist page, and the guest can't set the assist page without
->> > hyperv_enabled==true, but nothing prevents the host from stuffing the assist page.
->> 
->> The case sounds more like a misbehaving VMM to me. It would probably be
->> better to fail nested_enlightened_vmentry() immediately on !hyperv_enabled.
->
-> Hmm, sort of.  If KVM fails explicitly fails nested VM-Enter, then allowing the
-> guest to read the VMX MSRs with the same buggy setup is odd, e.g. nested VMX is
-> effectively unsupported at that point since there is nothing the guest can do to
-> make nested VM-Enter succeed.  Extending the "fail VM-Enter" behavior would be to
-> inject #GP on RDMSR, and at that point KVM is well into "made up architecture"
-> behavior.
->
-> All in all, I don't think it's worth forcing the issue, even though I do agree that
-> the VMM is being weird if it's enabling KVM_CAP_HYPERV_ENLIGHTENED_VMCS but not
-> advertising Hyper-V.
+But all of that holds true irrespetive of eVMCS.  If QEMU attempts to migrate a
+nested guest from a KVM that supports TSC_SCALING to a KVM that doesn't support
+TSC_SCALING, then TSC_SCALING is going to disappear and VM-Entry on the dest will
+fail.  I.e. QEMU _must_ be able to detect the incompatibility and not attempt
+the migration.  And with that code in place, QEMU doesn't need to do anything new
+for eVMCS, it Just Works.
 
-I keep thinking about KVM-on-KVM using Hyper-V features like eVMCS, eMSR
-bitmap, 'l2' tlb flush,... when I can't sleep at night sometimes :-)
+> In any case, what we need, is an option for VMM (read: QEMU) to create
+> the configuration with 'TscScaling' filtered out even KVM supports the
+> bit in eVMCS. This way the guest will be able to migrate backwards to an
+> older KVM which doesn't support it, i.e.
+> 
+> '-cpu CascadeLake-Sever,hv-evmcs'
+>  creates the 'origin' eVMCS configuration, no TscScaling
+> 
+> '-cpu CascadeLake-Sever,hv-evmcs,hv-evmcs-2022' creates the updated one.
 
-...
+Again, this conundrum exists irrespective of eVMCS.  Properly solve the problem
+for regular nVMX and eVMCS should naturally work.
 
->> 
->> Thanks for the thorough review here and don't hesitate to speak up when
->> you think it's too much of a change to do upon queueing)
->
-> Heh, this definitely snowballed beyond "fixup on queue".  Let's sort out how to
-> address the filtering issue and then decide how to handle v6.
->
+> KVM_CAP_HYPERV_ENLIGHTENED_VMCS is bad as it only takes 'eVMCS' version
+> as a parameter (as we assumed it will always change when new fields are
+> added, but that turned out to be false). That's why I suggested
+> KVM_CAP_HYPERV_ENLIGHTENED_VMCS2.
 
-Yep, let's keep the snowball rolling! :-)
-
--- 
-Vitaly
-
+Enumerating features via versions is such a bad API though, e.g. if there's a
+bug with nested TSC_SCALING, userspace can't disable just nested TSC_SCALING
+without everything else under the inscrutable "hv-evmcs-2022" being collateral
+damage.
