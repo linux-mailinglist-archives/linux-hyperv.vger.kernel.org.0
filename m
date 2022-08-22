@@ -2,133 +2,152 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2037259BC9C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 11:19:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF99659BD1E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 22 Aug 2022 11:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233933AbiHVJSu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 22 Aug 2022 05:18:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42006 "EHLO
+        id S233308AbiHVJtY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 22 Aug 2022 05:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234382AbiHVJSc (ORCPT
+        with ESMTP id S229687AbiHVJtY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 22 Aug 2022 05:18:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52C4117C
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 02:18:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661159904;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LBJ8MqhFUZNYzQi5G0vn7l4X961C4s/0d1vabFTY8yE=;
-        b=FyfuVjhC2py8c7Ahql/axDbQxlDiBJcMt0lkkV9F6eUvVdmN/dYXC0zHhzadN9lBZrYOpV
-        iI97iTtvLMjEJ5BCalHdpJRJQOcJfgtAJLAdFAo+s1/IxLpUs15uTMrcmIpDyVoEUhzSna
-        j5uwV3BuEfPw77DhewG6nEo4tYGfTXE=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-653-PPWcK3h9O32BggF71lXNsA-1; Mon, 22 Aug 2022 05:18:23 -0400
-X-MC-Unique: PPWcK3h9O32BggF71lXNsA-1
-Received: by mail-ed1-f69.google.com with SMTP id g8-20020a056402424800b0043e81c582a4so6668732edb.17
-        for <linux-hyperv@vger.kernel.org>; Mon, 22 Aug 2022 02:18:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc;
-        bh=LBJ8MqhFUZNYzQi5G0vn7l4X961C4s/0d1vabFTY8yE=;
-        b=SAgpaqAhiBefI/CF7wO3TH81umhogG1sWPQAh7O1rhGKA4jnb4JL4rUOrtwOytP9vq
-         eg8hvW4yhCvBmVdgIjxSy8UuOCG4h23l4g3GOH1mKc6VasZzM9NGjdVj06HKRUzVdJKC
-         WWA8AljFKQYpeziaL0he6SraYLiR+Jy52swuAUR8ZuCEN/Qv+OtRuuL6ysy2vFoOGDiy
-         JfjMlx+gfIibrS1ddodY8BlcK1PwjpCwkmpreKfJB5fz137dcdG6hEy7CYPVT2ey9qFI
-         CtRVfTVwO9ni5sU+jWRWPshtHS1GnD01bOHM80pu4tGsALfqqy6yib5VioCcPRc639Hv
-         NIOA==
-X-Gm-Message-State: ACgBeo1eCdGolEtXiJCB+mAONLvFtHBA2XkWUUuDS6N8E4PrbJHFul2M
-        ypNQ3OEdaYLkDX3716MexZFw10X6dmsdyDTw0+XC1bEoi9sA7yPnNWmfn3kiZeD+6k90dqT+P0k
-        +gd2E8NpvkhIuxrIDsOPksiJM
-X-Received: by 2002:a17:907:270b:b0:73d:6063:cd94 with SMTP id w11-20020a170907270b00b0073d6063cd94mr7310393ejk.672.1661159902123;
-        Mon, 22 Aug 2022 02:18:22 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4FocjB1YZjZ7aq2dv7k0odYHf+Gi1UPhQRNP596sFTxTd2QzbtaiGvkL07tbphY0ompGhAJA==
-X-Received: by 2002:a17:907:270b:b0:73d:6063:cd94 with SMTP id w11-20020a170907270b00b0073d6063cd94mr7310378ejk.672.1661159901855;
-        Mon, 22 Aug 2022 02:18:21 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id r17-20020aa7cfd1000000b0043ba7df7a42sm7826809edy.26.2022.08.22.02.18.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Aug 2022 02:18:21 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 03/26] x86/hyperv: Update 'struct
- hv_enlightened_vmcs' definition
-In-Reply-To: <Yv59dZwP6rNUtsrn@google.com>
-References: <20220802160756.339464-1-vkuznets@redhat.com>
- <20220802160756.339464-4-vkuznets@redhat.com>
- <Yv5ZFgztDHzzIQJ+@google.com> <875yiptvsc.fsf@redhat.com>
- <Yv59dZwP6rNUtsrn@google.com>
-Date:   Mon, 22 Aug 2022 11:18:20 +0200
-Message-ID: <87czcsskkj.fsf@redhat.com>
+        Mon, 22 Aug 2022 05:49:24 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3B9D629821;
+        Mon, 22 Aug 2022 02:49:22 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA29213D5;
+        Mon, 22 Aug 2022 02:49:24 -0700 (PDT)
+Received: from [10.57.15.77] (unknown [10.57.15.77])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 536F13F718;
+        Mon, 22 Aug 2022 02:49:15 -0700 (PDT)
+Message-ID: <f8c743d8-fcbe-4ef7-5f86-d63086552ffd@arm.com>
+Date:   Mon, 22 Aug 2022 10:49:09 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v1 4/4] swiotlb: panic if nslabs is too small
+Content-Language: en-GB
+To:     Yu Zhao <yuzhao@google.com>, dongli.zhang@oracle.com
+Cc:     ak@linux.intel.com, akpm@linux-foundation.org,
+        alexander.sverdlin@nokia.com, andi.kleen@intel.com, bp@alien8.de,
+        bp@suse.de, cminyard@mvista.com, corbet@lwn.net,
+        damien.lemoal@opensource.wdc.com, dave.hansen@linux.intel.com,
+        hch@infradead.org, iommu@lists.linux-foundation.org,
+        joe.jin@oracle.com, joe@perches.com, keescook@chromium.org,
+        kirill.shutemov@intel.com, kys@microsoft.com,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        ltykernel@gmail.com, michael.h.kelley@microsoft.com,
+        mingo@redhat.com, m.szyprowski@samsung.com, parri.andrea@gmail.com,
+        paulmck@kernel.org, pmladek@suse.com, rdunlap@infradead.org,
+        tglx@linutronix.de, thomas.lendacky@amd.com,
+        Tianyu.Lan@microsoft.com, tsbogend@alpha.franken.de,
+        vkuznets@redhat.com, wei.liu@kernel.org, x86@kernel.org
+References: <20220611082514.37112-5-dongli.zhang@oracle.com>
+ <20220820012031.1285979-1-yuzhao@google.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20220820012031.1285979-1-yuzhao@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+On 2022-08-20 02:20, Yu Zhao wrote:
+>> Panic on purpose if nslabs is too small, in order to sync with the remap
+>> retry logic.
+>>
+>> In addition, print the number of bytes for tlb alloc failure.
+>>
+>> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+>> ---
+>>   kernel/dma/swiotlb.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+>> index fd21f4162f4b..1758b724c7a8 100644
+>> --- a/kernel/dma/swiotlb.c
+>> +++ b/kernel/dma/swiotlb.c
+>> @@ -242,6 +242,9 @@ void __init swiotlb_init_remap(bool addressing_limit, unsigned int flags,
+>>   	if (swiotlb_force_disable)
+>>   		return;
+>>   
+>> +	if (nslabs < IO_TLB_MIN_SLABS)
+>> +		panic("%s: nslabs = %lu too small\n", __func__, nslabs);
+> 
+> Hi,
+> 
+> This patch breaks MIPS. Please take a look. Thanks.
 
-> On Thu, Aug 18, 2022, Vitaly Kuznetsov wrote:
->> Sean Christopherson <seanjc@google.com> writes:
->> 
->> > On Tue, Aug 02, 2022, Vitaly Kuznetsov wrote:
->> >> + * Note: HV_X64_NESTED_EVMCS1_2022_UPDATE is not currently documented in any
->> >> + * published TLFS version. When the bit is set, nested hypervisor can use
->> >> + * 'updated' eVMCSv1 specification (perf_global_ctrl, s_cet, ssp, lbr_ctl,
->> >> + * encls_exiting_bitmap, tsc_multiplier fields which were missing in 2016
->> >> + * specification).
->> >> + */
->> >> +#define HV_X64_NESTED_EVMCS1_2022_UPDATE		BIT(0)
->> >
->> > This bit is now defined[*], but the docs says it's only for perf_global_ctrl.  Are
->> > we expecting an update to the TLFS?
->> >
->> > 	Indicates support for the GuestPerfGlobalCtrl and HostPerfGlobalCtrl fields
->> > 	in the enlightened VMCS.
->> >
->> > [*] https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/feature-discovery#hypervisor-nested-virtualization-features---0x4000000a
->> >
->> 
->> Oh well, better this than nothing. I'll ping the people who told me
->> about this bit that their description is incomplete.
->
-> Not that it changes anything, but I'd rather have no documentation.  I'd much rather
-> KVM say "this is the undocumented behavior" than "the document behavior is wrong".
->
+Hmm, it's possible this might be quietly fixed by 20347fca71a3, but 
+either way I'm not sure why we would need to panic *before* we've even 
+tried to allocate anything, when we could simply return with no harm 
+done? If we've ended up calculating (or being told) a buffer size which 
+is too small to be usable, that should be no different to disabling 
+SWIOTLB entirely.
 
-So I reached out to Microsoft and their answer was that for all these new
-eVMCS fields (including *PerfGlobalCtrl) observing architectural VMX
-MSRs should be enough. *PerfGlobalCtrl case is special because of Win11
-bug (if we expose the feature in VMX feature MSRs but don't set
-CPUID.0x4000000A.EBX BIT(0) it just doesn't boot).
+Historically, passing "swiotlb=1" on the command line has been used to 
+save memory when the user knows SWIOTLB isn't needed. That should 
+definitely not be allowed to start panicking.
 
-What I'm still concerned about is future proofing KVM for new
-features. When something is getting added to KVM for which no eVMCS
-field is currently defined, both Hyper-V-on-KVM and KVM-on-Hyper-V cases
-should be taken care of. It would probably be better to reverse our
-filtering, explicitly listing features supported in eVMCS. The lists are
-going to be fairly long but at least we won't have to take care of any
-new architectural feature added to KVM.
+(once again, another patch which was not CCed to the correct reviewers, 
+sigh...)
 
--- 
-Vitaly
+Thanks,
+Robin.
 
+> On v5.19.0:
+>    Linux version 5.19.0 (builder@buildhost) (mips64-openwrt-linux-musl-gcc (OpenWrt GCC 11.2.0 r19590-042d558536) 11.2.0, GNU ld (GNU Binutils) 2.37) #0 SMP Sun Jul 31 15:12:47 2022
+>    Skipping L2 locking due to reduced L2 cache size
+>    CVMSEG size: 0 cache lines (0 bytes)
+>    printk: bootconsole [early0] enabled
+>    CPU0 revision is: 000d9301 (Cavium Octeon II)
+>    Kernel sections are not in the memory maps
+>    Wasting 278528 bytes for tracking 4352 unused pages
+>    Initrd not found or empty - disabling initrd
+>    Using appended Device Tree.
+>    software IO TLB: SWIOTLB bounce buffer size adjusted to 0MB
+>    software IO TLB: mapped [mem 0x0000000004b0c000-0x0000000004b4c000] (0MB)
+> 
+> On v6.0-rc1, with
+>    commit 0bf28fc40d89 ("swiotlb: panic if nslabs is too small")
+>    commit 20347fca71a3 ("swiotlb: split up the global swiotlb lock")
+>    commit 534ea58b3ceb ("Revert "MIPS: octeon: Remove vestiges of CONFIG_CAVIUM_RESERVE32"")
+> 
+>    Linux version 6.0.0-rc1 (builder@buildhost) (mips64-openwrt-linux-musl-gcc (OpenWrt GCC 11.2.0 r19590-042d558536) 11.2.0, GNU ld (GNU Binutils) 2.37) #0 SMP Sun Jul 31 15:12:47 2022
+>    Failed to allocate CAVIUM_RESERVE32 memory area
+>    Skipping L2 locking due to reduced L2 cache size
+>    CVMSEG size: 0 cache lines (0 bytes)
+>    printk: bootconsole [early0] enabled
+>    CPU0 revision is: 000d9301 (Cavium Octeon II)
+>    Kernel sections are not in the memory maps
+>    Wasting 278528 bytes for tracking 4352 unused pages
+>    Initrd not found or empty - disabling initrd
+>    Using appended Device Tree.
+>    software IO TLB: SWIOTLB bounce buffer size adjusted to 0MB
+>    software IO TLB: area num 1.
+>    Kernel panic - not syncing: swiotlb_init_remap: nslabs = 128 too small
+> 
+> On v6.0-rc1, with
+>    commit 20347fca71a3 ("swiotlb: split up the global swiotlb lock")
+>    commit 534ea58b3ceb ("Revert "MIPS: octeon: Remove vestiges of CONFIG_CAVIUM_RESERVE32"")
+> 
+>    Linux version 6.0.0-rc1+ (builder@buildhost) (mips64-openwrt-linux-musl-gcc (OpenWrt GCC 11.2.0 r19590-042d558536) 11.2.0, GNU ld (GNU Binutils) 2.37) #0 SMP Sun Jul 31 15:12:47 2022
+>    Failed to allocate CAVIUM_RESERVE32 memory area
+>    Skipping L2 locking due to reduced L2 cache size
+>    CVMSEG size: 0 cache lines (0 bytes)
+>    printk: bootconsole [early0] enabled
+>    CPU0 revision is: 000d9301 (Cavium Octeon II)
+>    Kernel sections are not in the memory maps
+>    Wasting 278528 bytes for tracking 4352 unused pages
+>    Initrd not found or empty - disabling initrd
+>    Using appended Device Tree.
+>    software IO TLB: SWIOTLB bounce buffer size adjusted to 0MB
+>    software IO TLB: area num 1.
+>    software IO TLB: mapped [mem 0x0000000004c0c000-0x0000000004c4c000] (0MB)
