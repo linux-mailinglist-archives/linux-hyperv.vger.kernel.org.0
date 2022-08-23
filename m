@@ -2,85 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15C6E59D246
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Aug 2022 09:33:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02E9F59E09D
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Aug 2022 14:38:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240736AbiHWHdM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 Aug 2022 03:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
+        id S240792AbiHWLT0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Aug 2022 07:19:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240668AbiHWHdL (ORCPT
+        with ESMTP id S244332AbiHWLRM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 Aug 2022 03:33:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A8B63F2D
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 00:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661239989;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2ONerqKdocOJl27KKdUeRrTYuQ3xXPZVssG9HygGkPU=;
-        b=GM/S4tTvhoaYro50MtCG6DTtGTaIBR/5ANWpRaLr4mb8FK5dUfl21T1ZArKsOCkF315S37
-        M0OG4yaewpA3FQlHF2c/XFNiFpoxYswmI+CL4qtDM0nu07TFuU2QRRdEoEH+EPzxEMTYDc
-        HEvNdL1Ge4K1zzxmeZ//7+XLNI6vtOE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-37-x-vApUPqO5eTlb-6F7FfBw-1; Tue, 23 Aug 2022 03:33:07 -0400
-X-MC-Unique: x-vApUPqO5eTlb-6F7FfBw-1
-Received: by mail-wm1-f71.google.com with SMTP id p19-20020a05600c1d9300b003a5c3141365so9861415wms.9
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 00:33:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc;
-        bh=2ONerqKdocOJl27KKdUeRrTYuQ3xXPZVssG9HygGkPU=;
-        b=eG/rDe57gGrjR03bYQdGQkYBH0xtdbJZU1ltj9Bdfty0wOa8XNgvCfyxSss7jKa1i4
-         Iewc0RiBVgEu5t/iRpQw5CTWpVOaBXK+MalIMNvwmwjdu7F/DoCyBSo01ozpAp5k93no
-         RHPedGboFkqqFx42ycjhQofcAh8xYjzqxwufDMZqy92mLEobuRKqNEm/g7khxjLOrbSM
-         YbflO3iM6QVn8w0rY/scZp51yb3X+TniplAOWakD0/dNz5jFIXDDhao5Q0irO8zN4gox
-         UMJMoTtTZRIXYPZX8ibJQx2ELBuTrl/UcevvsWBfgxaQQIBIIJeiVNKA0rCdc4Wlewxw
-         WSRQ==
-X-Gm-Message-State: ACgBeo10xeprZxtPvRyW8ltZd0vknlUzqBWOP7cU68ZrhtqZZENHuvBd
-        yBZvoLG7x3jM/qTVB+uKRXtFbMTD+RQWTZBedUCjriERvFhsS3ITucNtNsOeqAT7xHIixw1+mpe
-        67BQr7p584cequbAta3ZNTnao
-X-Received: by 2002:adf:e18b:0:b0:225:644c:59c2 with SMTP id az11-20020adfe18b000000b00225644c59c2mr1763284wrb.673.1661239986472;
-        Tue, 23 Aug 2022 00:33:06 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6hwzHxlbGc8XuBX/h1Dx9/8oX54010sDfiLiygEgsGTbYt//zKkeH4Afdfph4nQolz745tNQ==
-X-Received: by 2002:adf:e18b:0:b0:225:644c:59c2 with SMTP id az11-20020adfe18b000000b00225644c59c2mr1763265wrb.673.1661239986213;
-        Tue, 23 Aug 2022 00:33:06 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id p15-20020adfcc8f000000b002252ec781f7sm13612694wrj.8.2022.08.23.00.33.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Aug 2022 00:33:05 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 03/26] x86/hyperv: Update 'struct
- hv_enlightened_vmcs' definition
-In-Reply-To: <YwPLt2e7CuqMzjt1@google.com>
-References: <20220802160756.339464-1-vkuznets@redhat.com>
- <20220802160756.339464-4-vkuznets@redhat.com>
- <Yv5ZFgztDHzzIQJ+@google.com> <875yiptvsc.fsf@redhat.com>
- <Yv59dZwP6rNUtsrn@google.com> <87czcsskkj.fsf@redhat.com>
- <YwOm7Ph54vIYAllm@google.com> <87edx8xn8h.fsf@redhat.com>
- <YwO2fSCGXnE/9mc2@google.com> <878rngxjb7.fsf@redhat.com>
- <YwPLt2e7CuqMzjt1@google.com>
-Date:   Tue, 23 Aug 2022 09:33:04 +0200
-Message-ID: <87wnazwh1r.fsf@redhat.com>
+        Tue, 23 Aug 2022 07:17:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9965BD760;
+        Tue, 23 Aug 2022 02:20:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 29CFA6122D;
+        Tue, 23 Aug 2022 09:20:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 88A0BC433D7;
+        Tue, 23 Aug 2022 09:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661246417;
+        bh=E5E6YqheunirZWVRILdnP1fmydkijA605aVw9h45w54=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=lNIMtUlYb2oThTM3KA8GuBXUuMf8SCxgSlhXoMHAHnuc/TXp679M6qx2q1wb8FDHJ
+         pjEmJK14tnqDdFKTRXzMI+h420ap1y/uLepZ9bbFYtBSBCRsKtn3+cl2jXtu8HiHvt
+         kLfdd4nYE4QxAoZca01QrifXWxL+W+hAmOvWsXC7qqdRa3mXvMEKVmG2Y57+xRYSXN
+         E40ySzqpbHlSohsmANHbJic/uEbt31aftBq96h/2McHYZCt72nuKw/qvbT9cCcmZbe
+         cjTtd/u4yrhCmshGLpJUO4uOakEw7ncW7Z4flpGvb9JyeLakMk+esGFcx6krlfcN89
+         fnu0wcI7jDrgQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 67C11E2A041;
+        Tue, 23 Aug 2022 09:20:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v4 0/9] vsock: updates for SO_RCVLOWAT handling
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <166124641741.3613.14462529402245081458.git-patchwork-notify@kernel.org>
+Date:   Tue, 23 Aug 2022 09:20:17 +0000
+References: <de41de4c-0345-34d7-7c36-4345258b7ba8@sberdevices.ru>
+In-Reply-To: <de41de4c-0345-34d7-7c36-4345258b7ba8@sberdevices.ru>
+To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+Cc:     sgarzare@redhat.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, stefanha@redhat.com, bryantan@vmware.com,
+        vdasa@vmware.com, oxffffaa@gmail.com, mst@redhat.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, kernel@sberdevices.ru, pv-drivers@vmware.com
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -88,109 +63,52 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+Hello:
 
-> On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
->> Sean Christopherson <seanjc@google.com> writes:
->> 
->> > On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
->> >> My initial implementation was inventing 'eVMCS revision' concept:
->> >> https://lore.kernel.org/kvm/20220629150625.238286-7-vkuznets@redhat.com/
->> >> 
->> >> which is needed if we don't gate all these new fields on CPUID.0x4000000A.EBX BIT(0).
->> >> 
->> >> Going forward, we will still (likely) need something when new fields show up.
->> >
->> > My comments from that thread still apply.  Adding "revisions" or feature flags
->> > isn't maintanable, e.g. at best KVM will end up with a ridiculous number of flags.
->> >
->> > Looking at QEMU, which I strongly suspect is the only VMM that enables
->> > KVM_CAP_HYPERV_ENLIGHTENED_VMCS, it does the sane thing of enabling the capability
->> > before grabbing the VMX MSRs.
->> >
->> > So, why not simply apply filtering for host accesses as well?
->> 
->> (I understand that using QEMU to justify KVM's behavior is flawed but...)
->> 
->> QEMU's migration depends on the assumption that identical QEMU's command
->> lines create identical (from guest PoV) configurations. Assume we have
->> (simplified)
->> 
->> "-cpu CascadeLake-Sever,hv-evmcs"
->> 
->> on both source and destination but source host is newer, i.e. its KVM
->> knows about TSC Scaling in eVMCS and destination host has no idea about
->> it. If we just apply filtering upon vCPU creation, guest visible MSR
->> values are going to be different, right? Ok, assuming QEMU also migrates
->> VMX feature MSRs (TODO: check if that's true), we will be able to fail
->> mirgration late (which is already much worse than not being able to
->> create the desired configuration on destination, 'fail early') if we use
->> in-KVM filtering to throw an error to userspace. But if we blindly
->> filter control MSRs on the destination, 'TscScaling' will just disapper
->> undreneath the guest. This is unlikely to work.
->
-> But all of that holds true irrespetive of eVMCS.  If QEMU attempts to migrate a
-> nested guest from a KVM that supports TSC_SCALING to a KVM that doesn't support
-> TSC_SCALING, then TSC_SCALING is going to disappear and VM-Entry on the dest will
-> fail.  I.e. QEMU _must_ be able to detect the incompatibility and not attempt
-> the migration.  And with that code in place, QEMU doesn't need to do anything new
-> for eVMCS, it Just Works.
+This series was applied to netdev/net-next.git (master)
+by Paolo Abeni <pabeni@redhat.com>:
 
-I'm obviously missing something. "-cpu CascadeLake-Sever" presumes
-cetain features, including VMX features (e.g. TSC_SCALING), an attempt
-to create such vCPU on a CPU which doesn't support it will lead to
-immediate failure. So two VMs created on different hosts with
+On Fri, 19 Aug 2022 05:21:58 +0000 you wrote:
+> Hello,
+> 
+> This patchset includes some updates for SO_RCVLOWAT:
+> 
+> 1) af_vsock:
+>    During my experiments with zerocopy receive, i found, that in some
+>    cases, poll() implementation violates POSIX: when socket has non-
+>    default SO_RCVLOWAT(e.g. not 1), poll() will always set POLLIN and
+>    POLLRDNORM bits in 'revents' even number of bytes available to read
+>    on socket is smaller than SO_RCVLOWAT value. In this case,user sees
+>    POLLIN flag and then tries to read data(for example using  'read()'
+>    call), but read call will be blocked, because  SO_RCVLOWAT logic is
+>    supported in dequeue loop in af_vsock.c. But the same time,  POSIX
+>    requires that:
+> 
+> [...]
 
--cpu CascadeLake-Sever
+Here is the summary with links:
+  - [net-next,v4,1/9] vsock: SO_RCVLOWAT transport set callback
+    https://git.kernel.org/netdev/net-next/c/e38f22c860ed
+  - [net-next,v4,2/9] hv_sock: disable SO_RCVLOWAT support
+    https://git.kernel.org/netdev/net-next/c/24764f8d3c31
+  - [net-next,v4,3/9] virtio/vsock: use 'target' in notify_poll_in callback
+    https://git.kernel.org/netdev/net-next/c/e7a3266c9167
+  - [net-next,v4,4/9] vmci/vsock: use 'target' in notify_poll_in callback
+    https://git.kernel.org/netdev/net-next/c/a274f6ff3c5c
+  - [net-next,v4,5/9] vsock: pass sock_rcvlowat to notify_poll_in as target
+    https://git.kernel.org/netdev/net-next/c/ee0b3843a269
+  - [net-next,v4,6/9] vsock: add API call for data ready
+    https://git.kernel.org/netdev/net-next/c/f2fdcf67aceb
+  - [net-next,v4,7/9] virtio/vsock: check SO_RCVLOWAT before wake up reader
+    https://git.kernel.org/netdev/net-next/c/39f1ed33a448
+  - [net-next,v4,8/9] vmci/vsock: check SO_RCVLOWAT before wake up reader
+    https://git.kernel.org/netdev/net-next/c/e061aed99855
+  - [net-next,v4,9/9] vsock_test: POLLIN + SO_RCVLOWAT test
+    https://git.kernel.org/netdev/net-next/c/b1346338fbae
 
-are guaranteed to look exactly the same from guest PoV. This is not true
-for '-cpu CascadeLake-Sever,hv-evmcs' (if we do it the way you suggest)
-as 'hv-evmcs' will be a *different* filter on each host (which is going
-to depend on KVM version, not even on the host's hardware).
-
->
->> In any case, what we need, is an option for VMM (read: QEMU) to create
->> the configuration with 'TscScaling' filtered out even KVM supports the
->> bit in eVMCS. This way the guest will be able to migrate backwards to an
->> older KVM which doesn't support it, i.e.
->> 
->> '-cpu CascadeLake-Sever,hv-evmcs'
->>  creates the 'origin' eVMCS configuration, no TscScaling
->> 
->> '-cpu CascadeLake-Sever,hv-evmcs,hv-evmcs-2022' creates the updated one.
->
-> Again, this conundrum exists irrespective of eVMCS.  Properly solve the problem
-> for regular nVMX and eVMCS should naturally work.
-
-I don't think we have this problem for VMX features as named CPU models
-in QEMU encode all of them explicitly, they *must* be present whenever
-such vCPU is created.
-
->
->> KVM_CAP_HYPERV_ENLIGHTENED_VMCS is bad as it only takes 'eVMCS' version
->> as a parameter (as we assumed it will always change when new fields are
->> added, but that turned out to be false). That's why I suggested
->> KVM_CAP_HYPERV_ENLIGHTENED_VMCS2.
->
-> Enumerating features via versions is such a bad API though, e.g. if there's a
-> bug with nested TSC_SCALING, userspace can't disable just nested TSC_SCALING
-> without everything else under the inscrutable "hv-evmcs-2022" being collateral
-> damage.
-
-Why? Something like 
-
-"-cpu CascadeLake-Sever,hv-evmcs,hv-evmcs-2022,-vmx-tsc-scaling" 
-
-should work well, no? 'hv-evmcs*' are just filters, if the VMX feature
-is not there -- it's not there.
-
-We can certainly make this fine-grained and introduce
-KVM_CAP_HYPERV_EVMCS_TSC_SCALING instead and make a 'hv-*' flag for it,
-however, with Hyper-V and Windows I really don't like 'frankenstein'
-Hyper-V configurations which look nothing like genuine Hyper-V as nobody
-at Microsoft tests new Windows builds with such configurations. And yes,
-bugs were discovered in the past (e.g. PerfGlobalCtrl and Win11).
-
+You are awesome, thank you!
 -- 
-Vitaly
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
