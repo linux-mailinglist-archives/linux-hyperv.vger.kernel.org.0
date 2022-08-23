@@ -2,82 +2,85 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CDB159D1DD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Aug 2022 09:20:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15C6E59D246
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Aug 2022 09:33:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240551AbiHWHUA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 Aug 2022 03:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53706 "EHLO
+        id S240736AbiHWHdM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Aug 2022 03:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240527AbiHWHT7 (ORCPT
+        with ESMTP id S240668AbiHWHdL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 Aug 2022 03:19:59 -0400
+        Tue, 23 Aug 2022 03:33:11 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2208561D8B
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 00:19:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A8B63F2D
+        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 00:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661239198;
+        s=mimecast20190719; t=1661239989;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Hs7LaJusbzewq19gjdvDDnrR8mb0KyO4+8e+b1s4GsY=;
-        b=ZmANCAZuCXh4PUajuX6pS5RnAR+nV7kcrzPX/tgxgPx/K+IJepU0BAEmTrduvL02Txb7dy
-        Mwb+Vpdj3rvgIS62J9CHRQ/xVz0mAGSCx4R4rjzOCB6NmYTYuET3VomyZpprAeYCigFSxL
-        5zVB6qYRDC2DXGJatLtwY+9zQAzTejg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=2ONerqKdocOJl27KKdUeRrTYuQ3xXPZVssG9HygGkPU=;
+        b=GM/S4tTvhoaYro50MtCG6DTtGTaIBR/5ANWpRaLr4mb8FK5dUfl21T1ZArKsOCkF315S37
+        M0OG4yaewpA3FQlHF2c/XFNiFpoxYswmI+CL4qtDM0nu07TFuU2QRRdEoEH+EPzxEMTYDc
+        HEvNdL1Ge4K1zzxmeZ//7+XLNI6vtOE=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-319-5WYtPQdPOCWercAGQuufsw-1; Tue, 23 Aug 2022 03:19:57 -0400
-X-MC-Unique: 5WYtPQdPOCWercAGQuufsw-1
-Received: by mail-wm1-f70.google.com with SMTP id r10-20020a1c440a000000b003a538a648a9so7551085wma.5
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 00:19:56 -0700 (PDT)
+ us-mta-37-x-vApUPqO5eTlb-6F7FfBw-1; Tue, 23 Aug 2022 03:33:07 -0400
+X-MC-Unique: x-vApUPqO5eTlb-6F7FfBw-1
+Received: by mail-wm1-f71.google.com with SMTP id p19-20020a05600c1d9300b003a5c3141365so9861415wms.9
+        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 00:33:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc;
-        bh=Hs7LaJusbzewq19gjdvDDnrR8mb0KyO4+8e+b1s4GsY=;
-        b=24MoaDVdXRQ1eaEJxBPiPhOy2p+bghhSUwGP+cfyG1QJDMQ9NftOeI+/3NZg5QrrnF
-         o2Cj7ii1ZZ0EXcJzGqw6bJTp/ycNowJeM57iocm4poHNPZEYqseKQyJfz5H46MeDBGq+
-         My/y2QyvYTzzqFs2TS6VsPObGl7ZQlK2SfNVFnKq+85TxFGM+vDRqAsTu5tFP1YtKWyN
-         CM5pBhFDw+B0ZpaC70i4OaHshG8xRNdc/Rzinym3sQSEFGYGNJexUxVg0tiBhQCQvKRw
-         cEvK+rcZrF7TdcC8kO/byOU2MkQBbYdTBb52O4iZc7uNzOmABKtZlOl5zZjbkzdTK4dK
-         vgGQ==
-X-Gm-Message-State: ACgBeo3Y+xsTWFqNpBl4waQOGmDT/dRaCe2IJ4wKtPG9rzmi+EsV5Fs+
-        4sxSd8wRt0NNdyp7171FO6Rbn3Irs972N9PZgnau3eChUfVv2t2clxnICtesVkx1BP7UHvXGvRD
-        XyCluGARGGeY4BQ13kfHYaiF0
-X-Received: by 2002:a05:600c:4e45:b0:3a5:f383:b917 with SMTP id e5-20020a05600c4e4500b003a5f383b917mr1191635wmq.61.1661239195896;
-        Tue, 23 Aug 2022 00:19:55 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7PodDLS/vNSvRNlNhwQt9d+MLAK2dUzwryvTeI3ossUG3lgTEZFazWxtHKJSxP9A6EWrzFAw==
-X-Received: by 2002:a05:600c:4e45:b0:3a5:f383:b917 with SMTP id e5-20020a05600c4e4500b003a5f383b917mr1191611wmq.61.1661239195612;
-        Tue, 23 Aug 2022 00:19:55 -0700 (PDT)
+        bh=2ONerqKdocOJl27KKdUeRrTYuQ3xXPZVssG9HygGkPU=;
+        b=eG/rDe57gGrjR03bYQdGQkYBH0xtdbJZU1ltj9Bdfty0wOa8XNgvCfyxSss7jKa1i4
+         Iewc0RiBVgEu5t/iRpQw5CTWpVOaBXK+MalIMNvwmwjdu7F/DoCyBSo01ozpAp5k93no
+         RHPedGboFkqqFx42ycjhQofcAh8xYjzqxwufDMZqy92mLEobuRKqNEm/g7khxjLOrbSM
+         YbflO3iM6QVn8w0rY/scZp51yb3X+TniplAOWakD0/dNz5jFIXDDhao5Q0irO8zN4gox
+         UMJMoTtTZRIXYPZX8ibJQx2ELBuTrl/UcevvsWBfgxaQQIBIIJeiVNKA0rCdc4Wlewxw
+         WSRQ==
+X-Gm-Message-State: ACgBeo10xeprZxtPvRyW8ltZd0vknlUzqBWOP7cU68ZrhtqZZENHuvBd
+        yBZvoLG7x3jM/qTVB+uKRXtFbMTD+RQWTZBedUCjriERvFhsS3ITucNtNsOeqAT7xHIixw1+mpe
+        67BQr7p584cequbAta3ZNTnao
+X-Received: by 2002:adf:e18b:0:b0:225:644c:59c2 with SMTP id az11-20020adfe18b000000b00225644c59c2mr1763284wrb.673.1661239986472;
+        Tue, 23 Aug 2022 00:33:06 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6hwzHxlbGc8XuBX/h1Dx9/8oX54010sDfiLiygEgsGTbYt//zKkeH4Afdfph4nQolz745tNQ==
+X-Received: by 2002:adf:e18b:0:b0:225:644c:59c2 with SMTP id az11-20020adfe18b000000b00225644c59c2mr1763265wrb.673.1661239986213;
+        Tue, 23 Aug 2022 00:33:06 -0700 (PDT)
 Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id bn26-20020a056000061a00b0021d7b41255esm13578498wrb.98.2022.08.23.00.19.54
+        by smtp.gmail.com with ESMTPSA id p15-20020adfcc8f000000b002252ec781f7sm13612694wrj.8.2022.08.23.00.33.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Aug 2022 00:19:55 -0700 (PDT)
+        Tue, 23 Aug 2022 00:33:05 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        Deepak Rawat <drawat.floss@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v1 2/4] drm/hyperv: Don't forget to put PCI device when
- removing conflicting FB fails
-In-Reply-To: <PH0PR21MB3025F3C8768EB3ADE16E8B9AD7719@PH0PR21MB3025.namprd21.prod.outlook.com>
-References: <20220818142508.402273-1-vkuznets@redhat.com>
- <20220818142508.402273-3-vkuznets@redhat.com>
- <PH0PR21MB3025F3C8768EB3ADE16E8B9AD7719@PH0PR21MB3025.namprd21.prod.outlook.com>
-Date:   Tue, 23 Aug 2022 09:19:54 +0200
-Message-ID: <87zgfvwhnp.fsf@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/26] x86/hyperv: Update 'struct
+ hv_enlightened_vmcs' definition
+In-Reply-To: <YwPLt2e7CuqMzjt1@google.com>
+References: <20220802160756.339464-1-vkuznets@redhat.com>
+ <20220802160756.339464-4-vkuznets@redhat.com>
+ <Yv5ZFgztDHzzIQJ+@google.com> <875yiptvsc.fsf@redhat.com>
+ <Yv59dZwP6rNUtsrn@google.com> <87czcsskkj.fsf@redhat.com>
+ <YwOm7Ph54vIYAllm@google.com> <87edx8xn8h.fsf@redhat.com>
+ <YwO2fSCGXnE/9mc2@google.com> <878rngxjb7.fsf@redhat.com>
+ <YwPLt2e7CuqMzjt1@google.com>
+Date:   Tue, 23 Aug 2022 09:33:04 +0200
+Message-ID: <87wnazwh1r.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,48 +88,108 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-"Michael Kelley (LINUX)" <mikelley@microsoft.com> writes:
+Sean Christopherson <seanjc@google.com> writes:
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, August 18, 2022 7:25 AM
+> On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
+>> Sean Christopherson <seanjc@google.com> writes:
 >> 
->> When drm_aperture_remove_conflicting_pci_framebuffers() fails, 'pdev'
->> needs to be released with pci_dev_put().
+>> > On Mon, Aug 22, 2022, Vitaly Kuznetsov wrote:
+>> >> My initial implementation was inventing 'eVMCS revision' concept:
+>> >> https://lore.kernel.org/kvm/20220629150625.238286-7-vkuznets@redhat.com/
+>> >> 
+>> >> which is needed if we don't gate all these new fields on CPUID.0x4000000A.EBX BIT(0).
+>> >> 
+>> >> Going forward, we will still (likely) need something when new fields show up.
+>> >
+>> > My comments from that thread still apply.  Adding "revisions" or feature flags
+>> > isn't maintanable, e.g. at best KVM will end up with a ridiculous number of flags.
+>> >
+>> > Looking at QEMU, which I strongly suspect is the only VMM that enables
+>> > KVM_CAP_HYPERV_ENLIGHTENED_VMCS, it does the sane thing of enabling the capability
+>> > before grabbing the VMX MSRs.
+>> >
+>> > So, why not simply apply filtering for host accesses as well?
 >> 
->> Fixes: 76c56a5affeb ("drm/hyperv: Add DRM driver for hyperv synthetic video device")
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  drivers/gpu/drm/hyperv/hyperv_drm_drv.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> (I understand that using QEMU to justify KVM's behavior is flawed but...)
 >> 
->> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->> b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->> index 46f6c454b820..ca4e517b95ca 100644
->> --- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
->> @@ -82,7 +82,7 @@ static int hyperv_setup_gen1(struct hyperv_drm_device *hv)
->>  	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev,
->> &hyperv_driver);
->>  	if (ret) {
->>  		drm_err(dev, "Not able to remove boot fb\n");
->> -		return ret;
->> +		goto error;
->>  	}
+>> QEMU's migration depends on the assumption that identical QEMU's command
+>> lines create identical (from guest PoV) configurations. Assume we have
+>> (simplified)
 >> 
->>  	if (pci_request_region(pdev, 0, DRIVER_NAME) != 0)
->> --
->> 2.37.1
+>> "-cpu CascadeLake-Sever,hv-evmcs"
+>> 
+>> on both source and destination but source host is newer, i.e. its KVM
+>> knows about TSC Scaling in eVMCS and destination host has no idea about
+>> it. If we just apply filtering upon vCPU creation, guest visible MSR
+>> values are going to be different, right? Ok, assuming QEMU also migrates
+>> VMX feature MSRs (TODO: check if that's true), we will be able to fail
+>> mirgration late (which is already much worse than not being able to
+>> create the desired configuration on destination, 'fail early') if we use
+>> in-KVM filtering to throw an error to userspace. But if we blindly
+>> filter control MSRs on the destination, 'TscScaling' will just disapper
+>> undreneath the guest. This is unlikely to work.
 >
-> This patch appears to be obsoleted by commit a0ab5abced55
-> that was merged into 6.0-rc1.  Of course, it does beg the question of
-> why the original function hyperv_setup_gen2(), which is now renamed
-> to hyperv_setup_vram(), doesn't check the return value from
-> drm_aperture_remove_conflicting_framebuffers().
+> But all of that holds true irrespetive of eVMCS.  If QEMU attempts to migrate a
+> nested guest from a KVM that supports TSC_SCALING to a KVM that doesn't support
+> TSC_SCALING, then TSC_SCALING is going to disappear and VM-Entry on the dest will
+> fail.  I.e. QEMU _must_ be able to detect the incompatibility and not attempt
+> the migration.  And with that code in place, QEMU doesn't need to do anything new
+> for eVMCS, it Just Works.
 
-AFAICT this commit (which I've obviously missed) also solves the worst
-issue I'm trying to address with this series: conflict between
-framebuffer and SR-IOV VF config space. It would probably still make
-sense to reserve the whole FB region on Gen1 first thing and use it
-as-is for DRM/FB later (Patches 3-4).
+I'm obviously missing something. "-cpu CascadeLake-Sever" presumes
+cetain features, including VMX features (e.g. TSC_SCALING), an attempt
+to create such vCPU on a CPU which doesn't support it will lead to
+immediate failure. So two VMs created on different hosts with
+
+-cpu CascadeLake-Sever
+
+are guaranteed to look exactly the same from guest PoV. This is not true
+for '-cpu CascadeLake-Sever,hv-evmcs' (if we do it the way you suggest)
+as 'hv-evmcs' will be a *different* filter on each host (which is going
+to depend on KVM version, not even on the host's hardware).
+
+>
+>> In any case, what we need, is an option for VMM (read: QEMU) to create
+>> the configuration with 'TscScaling' filtered out even KVM supports the
+>> bit in eVMCS. This way the guest will be able to migrate backwards to an
+>> older KVM which doesn't support it, i.e.
+>> 
+>> '-cpu CascadeLake-Sever,hv-evmcs'
+>>  creates the 'origin' eVMCS configuration, no TscScaling
+>> 
+>> '-cpu CascadeLake-Sever,hv-evmcs,hv-evmcs-2022' creates the updated one.
+>
+> Again, this conundrum exists irrespective of eVMCS.  Properly solve the problem
+> for regular nVMX and eVMCS should naturally work.
+
+I don't think we have this problem for VMX features as named CPU models
+in QEMU encode all of them explicitly, they *must* be present whenever
+such vCPU is created.
+
+>
+>> KVM_CAP_HYPERV_ENLIGHTENED_VMCS is bad as it only takes 'eVMCS' version
+>> as a parameter (as we assumed it will always change when new fields are
+>> added, but that turned out to be false). That's why I suggested
+>> KVM_CAP_HYPERV_ENLIGHTENED_VMCS2.
+>
+> Enumerating features via versions is such a bad API though, e.g. if there's a
+> bug with nested TSC_SCALING, userspace can't disable just nested TSC_SCALING
+> without everything else under the inscrutable "hv-evmcs-2022" being collateral
+> damage.
+
+Why? Something like 
+
+"-cpu CascadeLake-Sever,hv-evmcs,hv-evmcs-2022,-vmx-tsc-scaling" 
+
+should work well, no? 'hv-evmcs*' are just filters, if the VMX feature
+is not there -- it's not there.
+
+We can certainly make this fine-grained and introduce
+KVM_CAP_HYPERV_EVMCS_TSC_SCALING instead and make a 'hv-*' flag for it,
+however, with Hyper-V and Windows I really don't like 'frankenstein'
+Hyper-V configurations which look nothing like genuine Hyper-V as nobody
+at Microsoft tests new Windows builds with such configurations. And yes,
+bugs were discovered in the past (e.g. PerfGlobalCtrl and Win11).
 
 -- 
 Vitaly
