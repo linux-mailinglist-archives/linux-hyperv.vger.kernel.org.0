@@ -2,49 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74B4759ED84
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Aug 2022 22:41:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3829C59EDD4
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 Aug 2022 22:57:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbiHWUlF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 Aug 2022 16:41:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50522 "EHLO
+        id S229590AbiHWU5I (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 Aug 2022 16:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiHWUkv (ORCPT
+        with ESMTP id S229615AbiHWU5H (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 Aug 2022 16:40:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C08857E36
-        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 13:30:37 -0700 (PDT)
+        Tue, 23 Aug 2022 16:57:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 262D26F250
+        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 13:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661286636;
+        s=mimecast20190719; t=1661288226;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fsXMj/6hNU0e5tAGMLQtNIyftNI4ROUnRCyckBUdrAw=;
-        b=OYfPqOLsQIjBbPSOWjExKdkHm8/bLbmFzGRzI9oEBPmWKggilBn2Pk4b37d+hyCc55dnPb
-        pn94UJh4C19YK9M4Yg5Sx0APGIe9crmY/gH0rJ/aDVFOHIZ/VikxMgv+1byFseeRtccC76
-        qc55I8RRu2xdPd7f9jp2QpgrDTyP8VA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-447-KV7nwgpXNDq20QYFR3O9MQ-1; Tue, 23 Aug 2022 16:30:31 -0400
-X-MC-Unique: KV7nwgpXNDq20QYFR3O9MQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 26964296A603;
-        Tue, 23 Aug 2022 20:30:30 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 665021121315;
-        Tue, 23 Aug 2022 20:30:29 +0000 (UTC)
-Date:   Tue, 23 Aug 2022 16:30:27 -0400
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Jakub Kicinski <kuba@kernel.org>
+        bh=3Ye9Fi4oA+sgS1EZvFu2xD8Gq2Q7V2mGd9cMXbr5HfE=;
+        b=M5lkpdiJ6Gbd1EZg3Yc1yf+6u2VORasYLIt0WZSwVAlg6jenFZSYVqGYqYQap74dYj93vp
+        79LIYe+JcN6NAkqfcDTevziFZyXQ21KK4wn3Yd/JvoYtYn4PNvly0xR8NQbmA7cqrfZR6u
+        p7sHV1fPYYThQf174McRiADXHZ8PXUU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-262-7IfJvB2QPSWWhiiFtgz46Q-1; Tue, 23 Aug 2022 16:57:05 -0400
+X-MC-Unique: 7IfJvB2QPSWWhiiFtgz46Q-1
+Received: by mail-wm1-f69.google.com with SMTP id j36-20020a05600c1c2400b003a540d88677so8470750wms.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 23 Aug 2022 13:57:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc;
+        bh=3Ye9Fi4oA+sgS1EZvFu2xD8Gq2Q7V2mGd9cMXbr5HfE=;
+        b=2DCOlTBg7fLcHcybilCfnes2Sr0sRvaf/o0prCQIT4OC+sdpRbQ74q9reRO4wPMlm1
+         IXj52W6aogt6S7lfAhM3aJ24eKueEzIa5aBqip5vN9BOzM5C3nEpY1tozWjRk/EbMfRN
+         IMJxK2sBoSYYcFRb3hEZ3SgZvayf5k5a3EkFGcS2PGkDcMe+z5g5p0FbXFiF1j3oGTm0
+         H39yNUnDOqj62XK8qicCdaaUJWKGsVMnl7DrX3v/61ib2gVMYGDdXMSpo9FPua2/08yk
+         yjf46fpGnA41w+SU7HzKHU/lsryayUb53hVrLFBUuQJd1+viV5j1ECMAMtCLxwdjAErs
+         EJLQ==
+X-Gm-Message-State: ACgBeo1sTNU3jNo/4y06ib4g6zRIdx6VQ98/Jc1GX81iLovdB2TCJxh/
+        GKAVDkAGHSewXMtC4qnDbZK7u59Wy965TJNbHS6us6H4w9ITjnjv/sPGLL1ar9yr+fZpOJspCuN
+        tC1NkJ/iQQnWyxyzl3UhR/9VR
+X-Received: by 2002:a5d:6d8c:0:b0:225:57a2:9564 with SMTP id l12-20020a5d6d8c000000b0022557a29564mr7076791wrs.139.1661288223799;
+        Tue, 23 Aug 2022 13:57:03 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR54Q25oOQQy6ncWsx6VrUpN/F0yvxwJjNCy88FJ6OQgWy/SD0qe1rcQwPjDrsdsaDlIGDXXRg==
+X-Received: by 2002:a5d:6d8c:0:b0:225:57a2:9564 with SMTP id l12-20020a5d6d8c000000b0022557a29564mr7076778wrs.139.1661288223584;
+        Tue, 23 Aug 2022 13:57:03 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-97-176.dyn.eolo.it. [146.241.97.176])
+        by smtp.gmail.com with ESMTPSA id 25-20020a05600c029900b003a62bc1735asm280179wmk.9.2022.08.23.13.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Aug 2022 13:57:03 -0700 (PDT)
+Message-ID: <5174d4ef7fe3928472d5a575c87ee627bfb4c129.camel@redhat.com>
+Subject: Re: [PATCH net-next v4 0/9] vsock: updates for SO_RCVLOWAT handling
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>
 Cc:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
         Stefano Garzarella <sgarzare@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         "edumazet@google.com" <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
         "kys@microsoft.com" <kys@microsoft.com>,
         "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
         "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
@@ -62,19 +82,17 @@ Cc:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>,
         VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
-Subject: Re: [PATCH net-next v4 0/9] vsock: updates for SO_RCVLOWAT handling
-Message-ID: <YwU443jzc/N4fV3A@fedora>
+Date:   Tue, 23 Aug 2022 22:57:01 +0200
+In-Reply-To: <YwU443jzc/N4fV3A@fedora>
 References: <de41de4c-0345-34d7-7c36-4345258b7ba8@sberdevices.ru>
- <YwUnAhWauSFSJX+g@fedora>
- <20220823121852.1fde7917@kernel.org>
+         <YwUnAhWauSFSJX+g@fedora> <20220823121852.1fde7917@kernel.org>
+         <YwU443jzc/N4fV3A@fedora>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tW4PvRQqQXgDRL/h"
-Content-Disposition: inline
-In-Reply-To: <20220823121852.1fde7917@kernel.org>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -83,40 +101,26 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Tue, 2022-08-23 at 16:30 -0400, Stefan Hajnoczi wrote:
+> On Tue, Aug 23, 2022 at 12:18:52PM -0700, Jakub Kicinski wrote:
+> > On Tue, 23 Aug 2022 15:14:10 -0400 Stefan Hajnoczi wrote:
+> > > Stefano will be online again on Monday. I suggest we wait for him to
+> > > review this series. If it's urgent, please let me know and I'll take a
+> > > look.
+> > 
+> > It was already applied, sorry about that. But please continue with
+> > review as if it wasn't. We'll just revert based on Stefano's feedback
+> > as needed.
+> 
+> Okay, no problem.
 
---tW4PvRQqQXgDRL/h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For the records, I applied the series since it looked to me Arseniy
+addressed all the feedback from Stefano on the first patch (the only
+one still lacking an acked-by/reviewed-by tag) and I thought it would
+be better avoiding such delay.
 
-On Tue, Aug 23, 2022 at 12:18:52PM -0700, Jakub Kicinski wrote:
-> On Tue, 23 Aug 2022 15:14:10 -0400 Stefan Hajnoczi wrote:
-> > Stefano will be online again on Monday. I suggest we wait for him to
-> > review this series. If it's urgent, please let me know and I'll take a
-> > look.
->=20
-> It was already applied, sorry about that. But please continue with
-> review as if it wasn't. We'll just revert based on Stefano's feedback
-> as needed.
+We are still early in this net-next cycle, I think it can be improved
+incrementally as needed.
 
-Okay, no problem.
-
-Stefan
-
---tW4PvRQqQXgDRL/h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmMFOOMACgkQnKSrs4Gr
-c8hvlQgAo4gB0BkrZtfmmojZpiKE6Xq15IttUNkmuyZgxF8sLW3iBu9LtCiQDZU2
-6sXR4GxAoAhr3tzo1KsUrMoc/hx2+Io9fLHLVLFZfFgnY52O3ipxSoKB3gE/DTfk
-hCpzD4jW7BSIC1WImlqYOZ3kRdhxBxawrEF2hMRSnNS2ewSJJTNsJjrfmb/+te9e
-kVb8naCagmAeznr1rOTXC+6xJlCQo9c5swxpxPGOpcFHGv71hxGDvxbvTB6omKXA
-Z1sbgS37LGQ8J+gBXFZ8SMDKGC1bnRVVOFsioohZ43oFO0yzjjqqx/2s6+qZUcGH
-CPYyhqwKD/oFfY/saOMIHCNnQkNV5w==
-=Vfeh
------END PGP SIGNATURE-----
-
---tW4PvRQqQXgDRL/h--
+Paolo
 
