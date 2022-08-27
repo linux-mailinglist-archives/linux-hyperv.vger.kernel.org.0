@@ -2,157 +2,116 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEF765A37BA
-	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Aug 2022 15:04:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5756F5A37DF
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Aug 2022 15:19:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233171AbiH0NEF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 27 Aug 2022 09:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60302 "EHLO
+        id S232627AbiH0NTj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 27 Aug 2022 09:19:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232958AbiH0NED (ORCPT
+        with ESMTP id S229677AbiH0NTi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 27 Aug 2022 09:04:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2E73F5A5
-        for <linux-hyperv@vger.kernel.org>; Sat, 27 Aug 2022 06:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661605441;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eV+kdRpxYTUz3PfFvKpoINWKQ5Uenu3n1CiGeqxS4ok=;
-        b=PeRql9r4L+n33xDj6zEbBUVhtMOJyTTbLUaPdKJWO5+xTzOZ3K+XE+SWvoQNmi6BsANqLQ
-        BJqOGmbEHThMAeXRpoOU8OQ1212yoW4sAip4RMjxXbZh+j5eXyMUdbX2IZIUJ/LDxa7Mrs
-        NBiXNj8SwKIforXKLkC9Rwgd3UoyPXA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-640-3ZFmWPFVMgmoSyaA1dHEsw-1; Sat, 27 Aug 2022 09:03:58 -0400
-X-MC-Unique: 3ZFmWPFVMgmoSyaA1dHEsw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B84A101A56D;
-        Sat, 27 Aug 2022 13:03:58 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.40.192.40])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C75BDC15BB3;
-        Sat, 27 Aug 2022 13:03:55 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Deepak Rawat <drawat.floss@gmail.com>,
+        Sat, 27 Aug 2022 09:19:38 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B587198A;
+        Sat, 27 Aug 2022 06:19:37 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MFHJc4yxCzkWV9;
+        Sat, 27 Aug 2022 21:16:00 +0800 (CST)
+Received: from dggpemm500002.china.huawei.com (7.185.36.229) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 27 Aug 2022 21:19:35 +0800
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Sat, 27 Aug 2022 21:19:34 +0800
+Subject: Re: [PATCH v2 5/5] ACPI: Drop parent field from struct acpi_device
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH v3 3/3] Drivers: hv: Never allocate anything besides framebuffer from framebuffer memory region
-Date:   Sat, 27 Aug 2022 15:03:45 +0200
-Message-Id: <20220827130345.1320254-4-vkuznets@redhat.com>
-In-Reply-To: <20220827130345.1320254-1-vkuznets@redhat.com>
-References: <20220827130345.1320254-1-vkuznets@redhat.com>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Andreas Noever" <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        <linux-hyperv@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, "Will Deacon" <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "Konrad Dybcio" <konrad.dybcio@somainline.org>
+References: <12036348.O9o76ZdvQC@kreacher> <2196460.iZASKD2KPV@kreacher>
+ <5857822.lOV4Wx5bFT@kreacher>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <a0cab176-3c3a-707a-02c3-74ffc1b4926e@huawei.com>
+Date:   Sat, 27 Aug 2022 21:19:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <5857822.lOV4Wx5bFT@kreacher>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.247]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Passed through PCI device sometimes misbehave on Gen1 VMs when Hyper-V
-DRM driver is also loaded. Looking at IOMEM assignment, we can see e.g.
+Hi Rafael,
 
-$ cat /proc/iomem
-...
-f8000000-fffbffff : PCI Bus 0000:00
-  f8000000-fbffffff : 0000:00:08.0
-    f8000000-f8001fff : bb8c4f33-2ba2-4808-9f7f-02f3b4da22fe
-...
-fe0000000-fffffffff : PCI Bus 0000:00
-  fe0000000-fe07fffff : bb8c4f33-2ba2-4808-9f7f-02f3b4da22fe
-    fe0000000-fe07fffff : 2ba2:00:02.0
-      fe0000000-fe07fffff : mlx4_core
+On 2022/8/25 0:59, Rafael J. Wysocki wrote:
+> Index: linux-pm/include/acpi/acpi_bus.h
+> ===================================================================
+> --- linux-pm.orig/include/acpi/acpi_bus.h
+> +++ linux-pm/include/acpi/acpi_bus.h
+> @@ -365,7 +365,6 @@ struct acpi_device {
+>   	int device_type;
+>   	acpi_handle handle;		/* no handle for fixed hardware */
+>   	struct fwnode_handle fwnode;
+> -	struct acpi_device *parent;
+>   	struct list_head wakeup_list;
+>   	struct list_head del_list;
+>   	struct acpi_device_status status;
+> @@ -458,6 +457,14 @@ static inline void *acpi_driver_data(str
+>   #define to_acpi_device(d)	container_of(d, struct acpi_device, dev)
+>   #define to_acpi_driver(d)	container_of(d, struct acpi_driver, drv)
+>   
+> +static inline struct acpi_device *acpi_dev_parent(struct acpi_device *adev)
+> +{
+> +	if (adev->dev.parent)
+> +		return to_acpi_device(adev->dev.parent);
+> +
+> +	return NULL;
+> +}
+> +
+>   static inline void acpi_set_device_status(struct acpi_device *adev, u32 sta)
+>   {
+>   	*((u32 *)&adev->status) = sta;
+> @@ -478,6 +485,7 @@ void acpi_initialize_hp_context(struct a
+>   /* acpi_device.dev.bus == &acpi_bus_type */
+>   extern struct bus_type acpi_bus_type;
+>   
+> +struct acpi_device *acpi_dev_parent(struct acpi_device *adev);
 
-the interesting part is the 'f8000000' region as it is actually the
-VM's framebuffer:
+We have a static inline function above, is it duplicated here?
+Or did I miss some use cases?
 
-$ lspci -v
-...
-0000:00:08.0 VGA compatible controller: Microsoft Corporation Hyper-V virtual VGA (prog-if 00 [VGA controller])
-	Flags: bus master, fast devsel, latency 0, IRQ 11
-	Memory at f8000000 (32-bit, non-prefetchable) [size=64M]
-...
-
- hv_vmbus: registering driver hyperv_drm
- hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] Synthvid Version major 3, minor 5
- hyperv_drm 0000:00:08.0: vgaarb: deactivate vga console
- hyperv_drm 0000:00:08.0: BAR 0: can't reserve [mem 0xf8000000-0xfbffffff]
- hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] Cannot request framebuffer, boot fb still active?
-
-Note: "Cannot request framebuffer" is not a fatal error in
-hyperv_setup_gen1() as the code assumes there's some other framebuffer
-device there but we actually have some other PCI device (mlx4 in this
-case) config space there!
-
-The problem appears to be that vmbus_allocate_mmio() can use dedicated
-framebuffer region to serve any MMIO request from any device. The
-semantics one might assume of a parameter named "fb_overlap_ok"
-aren't implemented because !fb_overlap_ok essentially has no effect.
-The existing semantics are really "prefer_fb_overlap". This patch
-implements the expected and needed semantics, which is to not allocate
-from the frame buffer space when !fb_overlap_ok.
-
-Note, Gen2 VMs are usually unaffected by the issue because
-framebuffer region is already taken by EFI fb (in case kernel supports
-it) but Gen1 VMs may have this region unclaimed by the time Hyper-V PCI
-pass-through driver tries allocating MMIO space if Hyper-V DRM/FB drivers
-load after it. Devices can be brought up in any sequence so let's
-resolve the issue by always ignoring 'fb_mmio' region for non-FB
-requests, even if the region is unclaimed.
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- drivers/hv/vmbus_drv.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 536f68e563c6..3c833ea60db6 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2331,7 +2331,7 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
- 			bool fb_overlap_ok)
- {
- 	struct resource *iter, *shadow;
--	resource_size_t range_min, range_max, start;
-+	resource_size_t range_min, range_max, start, end;
- 	const char *dev_n = dev_name(&device_obj->device);
- 	int retval;
- 
-@@ -2366,6 +2366,14 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
- 		range_max = iter->end;
- 		start = (range_min + align - 1) & ~(align - 1);
- 		for (; start + size - 1 <= range_max; start += align) {
-+			end = start + size - 1;
-+
-+			/* Skip the whole fb_mmio region if not fb_overlap_ok */
-+			if (!fb_overlap_ok && fb_mmio &&
-+			    (((start >= fb_mmio->start) && (start <= fb_mmio->end)) ||
-+			     ((end >= fb_mmio->start) && (end <= fb_mmio->end))))
-+				continue;
-+
- 			shadow = __request_region(iter, start, size, NULL,
- 						  IORESOURCE_BUSY);
- 			if (!shadow)
--- 
-2.37.1
-
+Thanks
+Hanjun
