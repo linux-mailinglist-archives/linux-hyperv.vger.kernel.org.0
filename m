@@ -2,151 +2,203 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D11E5A17C4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 Aug 2022 19:15:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7A5C5A37A8
+	for <lists+linux-hyperv@lfdr.de>; Sat, 27 Aug 2022 14:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241271AbiHYRPC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 Aug 2022 13:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41770 "EHLO
+        id S233005AbiH0Mo5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 27 Aug 2022 08:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235510AbiHYRPB (ORCPT
+        with ESMTP id S233056AbiH0Moz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 Aug 2022 13:15:01 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11021018.outbound.protection.outlook.com [52.101.62.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A301015;
-        Thu, 25 Aug 2022 10:14:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EBxHnEv0NYrs/R7GL+pDaACIyrBItmSq8xHnqgMRFT7bjXKyinua6JFICqCsfWaVIYE862NIz2Z1Kivoksm9C0H9EUCpZaMKVH77dlReOQ0LBUobf4u8Kw0NhSXhap+veKizZMb3FUXJCP3ZMXWu6bOlXJEzs0YIdMdbnvbYskDWswJbeR4i7XmuSYr63FhbkFqW7nBsKKBc/EovMyIMU6QVdKsyJWWs2iTgADOFzCxcSfUAOOxkom+xB9LwJHokg3OFyIRPtsDV96Qi7i6U55K24HWPCW2mGFPKKmlFU3QWfrREhroRjOiO9DhoOrJXv0ZMWBHCUdQTmvsnfVb53Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yc85sE7akARX88MuR52ObEVtOOpO+tJcLtBIofROW5c=;
- b=IQoggMazxkPmzRt7ujDru0s1+2fuwnOGH7SH4gPl0OW/0QZSWkEuYyXk7a0d7XTx00sVYwbkSjAQwdBOYHOJcgv/CAon48CDHijDsIIx8KAdtFOtFTmKVFK17gBrRwgmaLdWSBSnMco2+pmxQ0ARqQ6f6QjrRTc8v88dRCEyo36D1z+hp1haC022WliFoosXrT3v60iSgJgQzgOI8611mH5cfK2FA2KBpzot42wHfrh8nkjeT29qSXIoX6UccsDq6m+Hm2Bh/QmXeyo6o50rTqWA6XsA85/3SAVSGFWy7P7aAfKzM7SAAsDzFHFfLx56wFVqwWqJhOVC04ijhtdLcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yc85sE7akARX88MuR52ObEVtOOpO+tJcLtBIofROW5c=;
- b=P5OMQB4SH05pWzd7+jKA6p722kPULgP1afm3JWjn1wMfxxi97HKsx+SvVfKck4C7/+UKeFH+X3K/v+A3CefKsTvM8YvUljfUcekz7WWjY22n4uYBLp0/hX940iYUNFQs76g+te46UQKHUqc98U/PvEYYVloC4EPZZCFjA86lKqY=
-Received: from SN6PR2101MB1693.namprd21.prod.outlook.com
- (2603:10b6:805:55::19) by MN2PR21MB1407.namprd21.prod.outlook.com
- (2603:10b6:208:204::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.3; Thu, 25 Aug
- 2022 17:14:56 +0000
-Received: from SN6PR2101MB1693.namprd21.prod.outlook.com
- ([fe80::6485:465a:309a:2205]) by SN6PR2101MB1693.namprd21.prod.outlook.com
- ([fe80::6485:465a:309a:2205%9]) with mapi id 15.20.5588.004; Thu, 25 Aug 2022
- 17:14:56 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Zhou jie <zhoujie@nfschina.com>, KY Srinivasan <kys@microsoft.com>,
+        Sat, 27 Aug 2022 08:44:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C13C74
+        for <linux-hyperv@vger.kernel.org>; Sat, 27 Aug 2022 05:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661604285;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zNyRZOkSzWJ9EYhoio6oWAIWSR6y4SVpHgKEpnVly0g=;
+        b=Io9FLXX7cgALxI/fE+yjasUTMQLx5sTxsa0y9auh/ieAT1atoWiNJs443GqHxgxQyCZJgi
+        NowlstuhlEeskymg6DGPqHSrMNyTBzkfo3D1CPcwET9C1BeDJcZPNo6xW/M/jp+DCNdZW3
+        JWNCBnyR2jM5wJbIbC7xX+uiF6a6EY8=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-282-fyBhUZ0oOoqk5GbYFaqqoQ-1; Sat, 27 Aug 2022 08:44:42 -0400
+X-MC-Unique: fyBhUZ0oOoqk5GbYFaqqoQ-1
+Received: by mail-ed1-f71.google.com with SMTP id i6-20020a05640242c600b00447c00a776aso2742410edc.20
+        for <linux-hyperv@vger.kernel.org>; Sat, 27 Aug 2022 05:44:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc;
+        bh=zNyRZOkSzWJ9EYhoio6oWAIWSR6y4SVpHgKEpnVly0g=;
+        b=jPqsIpUfKlSMKU8IJJNiKuPyu0bIRg2gBYe2wG1dJkSuNeGtWAPBFAMt3VFRqfJi3J
+         VGCS3onV2FEcDN08hKPuw40XMmzWLsPc/BMHwjVBTYKSgzIUp7+CZ2yW4nH8GQNRm2ct
+         jW1w2k1wsMAQSG6yVk9WqrvxW6czgACpf2d41fwFn0y074QjJ6njeiAGa/yXUbxef0bZ
+         r4peJnaekDHJcbGYpwc44DsWf/S1mgKjr2DRDG6e8KD5wTwIRyykuEdA8w2ZmAnYGdfj
+         60oxtOTrrWNByhKARNPdhAaU7JDGmKv4fzM1ysSi6NKAlSqkGJ0/zSye1nhT5w8wHOGR
+         +ikg==
+X-Gm-Message-State: ACgBeo0As0mQJAv/vSwc2kC6j5pRDefWQKfZO3Hp188zVUy21OQodjD3
+        mOfgNidf6aRUUo9X/LHBX96hp+APJLvwI7ONhAoQYV+sdePi5IFaICDJoGMyH8sETgCOgxXWrv3
+        B1Dfba4XIKDCXDfZyORWXCUmp
+X-Received: by 2002:a05:6402:1769:b0:447:911f:976b with SMTP id da9-20020a056402176900b00447911f976bmr10127039edb.300.1661604281215;
+        Sat, 27 Aug 2022 05:44:41 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6vj29lcPuFbHHTDDtHSn5P5zzs852lz2t1xrhic61Dz/N0SAO3ArNPy/BmYfioHP+NzD+7QA==
+X-Received: by 2002:a05:6402:1769:b0:447:911f:976b with SMTP id da9-20020a056402176900b00447911f976bmr10127018edb.300.1661604280989;
+        Sat, 27 Aug 2022 05:44:40 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id f23-20020a05640214d700b0043ba437fe04sm2758020edx.78.2022.08.27.05.44.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Aug 2022 05:44:40 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Deepak Rawat <drawat.floss@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Dexuan Cui <decui@microsoft.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] hv/hv_kvp_daemon: remove unnecessary (void*) conversions
-Thread-Topic: [PATCH] hv/hv_kvp_daemon: remove unnecessary (void*) conversions
-Thread-Index: AQHYtqL1LmM8wOEICUu5pPDyJKO6062/3fbA
-Date:   Thu, 25 Aug 2022 17:14:55 +0000
-Message-ID: <SN6PR2101MB16931A789DA8673E9607F761D7729@SN6PR2101MB1693.namprd21.prod.outlook.com>
-References: <20220823034552.8596-1-zhoujie@nfschina.com>
-In-Reply-To: <20220823034552.8596-1-zhoujie@nfschina.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=29b33f71-2072-4ba0-9e97-779f9d1350ae;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-08-25T17:10:47Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c7e0e38d-3962-4498-386c-08da86bd550f
-x-ms-traffictypediagnostic: MN2PR21MB1407:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fglM+r3c/iAIAdMUObMW6mtRW8UQ58gd0/wN0dK1uYhmS8fttOwsipAw07ONSOFZ0LbDwSSTkEkNCLKWC1KMxVSuNeM23hDxcLbGBmO9ghnbQhIUP2t/HmfoTQ/2BzjuBy+lC8m1VS++5WLw3bFG7NBnQqQmthWJY1ag5Wkdd7TwpIT389Wnk6rYHVnbkAZqcTBGfCxsNSzfza/RdxB6mu5pe+VE91HI1AbOVIJPFrcRQ5pNiR2Jo0Oj1ej2f+/PLM6ItCIMa7cB6+RrycOt//B5dR2B/oh3kXz4sPmPjWFhwqHF0AaPBfe/+RJfdTqx2c5LbBKLl6kaqFholaSHsPaeKIQCCNDNqynnMk+xmsO1Cl/XuAEoRbYFBIv1QHDjycTPDa+ZvEUjA8reVqKPPiIUbfSCcn+LF2HIA32fnxul97iDI8PmOAK0FwUSjdY/2KLtswhu6YNmJ8GLWqNv6qXhrcIstbDC1Qd0bt2aV6Pp12712BeIwRm/ykMuW2+LmGESI4xNvCU9HAhmT9aW5Anhy2ToRgLeSCSTOppqCp5mRe4VpYFBOpHBgozzOSv9WDKtGlw9w7g1UdaXa1/wa5cCDna8sJ1XbLkTN8fqT78YXhFhcWYdhdMuKU5tJ7bRBCm5sOKDT/LJ7WKArtGVvl+JXDq6xJostk+ROP1/e7vyGWRXRb+TCt78oTR9S8sLjfZHFRB84IiNZ9/c8gPJ8bICEyLoNSDKAGh/N6g7QIpkXjYuF4avtUKlG9o6IaShb9MJSlwkn+VWNZc7tB5fneuEzZ7fgewRdOa61IZEqjYJ/AHwnuCCWBEQshJjt+FB
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1693.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(451199009)(122000001)(5660300002)(186003)(26005)(7696005)(9686003)(52536014)(38100700002)(2906002)(8936002)(6506007)(71200400001)(66446008)(66946007)(316002)(76116006)(4326008)(66476007)(64756008)(110136005)(8676002)(41300700001)(6636002)(66556008)(10290500003)(54906003)(86362001)(38070700005)(8990500004)(33656002)(55016003)(478600001)(82960400001)(82950400001)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?czgr0sxSvSt6idQgYdldTiU6qHMC+/TIssPeM7uw7WMMF9OIMfX8dFscXvMW?=
- =?us-ascii?Q?rTwDaUCI0nj67ChgXO5tFxzz4Os2aJHKRQ7hqm8Vtn/bARbZVdccfZMOK/h9?=
- =?us-ascii?Q?wLF7IilvHHh6P5X6M1UwY8PWawPJePuhTMwzNJn17MTMNBjaz3jV6fxDHjM2?=
- =?us-ascii?Q?wL9clFLuM4ikk1ah7fW1i1nT0jzqF5Fa5hSipqlkhR2yST3pICoxcWaxUS1C?=
- =?us-ascii?Q?JlpVP3ak/H0tOdWhXe46h9kyGnCM9KR1MVK3yoxukaTfA2Ht/F+r9TcBpBiR?=
- =?us-ascii?Q?/1m553VwP+QbPKOwzOzrV/MQQRaEEC5NGM4treZkTjrZBZ9M2nB2b275NR3Q?=
- =?us-ascii?Q?FKrq89mbp7Www/x0GDU2ddpeFiBHk+U4tEYG2JzdiZi/Rqx7weCYHppCudga?=
- =?us-ascii?Q?B/HJvwghMf42zeE7ctULJF6XqnCuxisjVJLy8wcOynfpn8d/+fZhCQmqi1hn?=
- =?us-ascii?Q?zj1tKx2zxFYKoY0IHDlQke3usTvAC5G4cWY31b5AtujxkkKrjgCkq9iM4B+D?=
- =?us-ascii?Q?yphxw21LmBCY0bR6/wMHc32hL0lJiKgEsRIj7g2nzXigYl1ByzL6bGUbr8+S?=
- =?us-ascii?Q?AZfhhLvLg+ZYgX8f95gbp1zh22YRwJYChaubdi6pdHj4C/p+gTVNkfxyyVxh?=
- =?us-ascii?Q?VXshOeA2qD0B7an7I2D7eQnOb59PUUfOctu8kE1pd3tbR25c4T/Dg1Ci74IV?=
- =?us-ascii?Q?3dGXkamII4CF3+nM4o3kVxj1nHQZqJEvGx5ZfHK2bCbl4tO9pH+ANbowrnqR?=
- =?us-ascii?Q?trn9eILohOBA2A8pqKWApUpn8/2iebBhX0/ccZJnJQEzkAxvPAdQ4EfZB1cF?=
- =?us-ascii?Q?K+gWZFQS8QWJ6nwhXtGSjyPnSX8jBRS+d/ESTzMUvpb6DAWEg3ZHoxsi9rml?=
- =?us-ascii?Q?q+zrhIjxSr5mzz0dRSXYLEfBSmTFyFNwNIaG3qPkJp9DOIs0Kz8pHafEFdDe?=
- =?us-ascii?Q?GtKFl8nzGVSCrpOEBGRmJ14jy5vw5H6kBS55c6HEwY39/h0kT3Wy5mjKDzJQ?=
- =?us-ascii?Q?OsZBoaFk31ZJTVDfE+Q+2w8aYPbLqaAv1v9NFFUgsSN+P3tCe1lGbbqQnWsy?=
- =?us-ascii?Q?LDMu1b8QnXERBcm08ug8s18pXW1Pbr4mRhCsFRKc/sfFv6gK5EYDFZid+LPz?=
- =?us-ascii?Q?GNOogVILDx41cfqolq/BPRcoElABuGCoLavVeQMLqCQvl8U6b/cJn1ZH9ngo?=
- =?us-ascii?Q?hChYB4jO1QsYbIT1/vUOtbqg5RfFi+ufR/UO39UvptLB0cXJWl/M68/KbQDG?=
- =?us-ascii?Q?HeyPYFjLjYTqcnyeh5ZCAEGE5MxpqZlzccelWH1gXokHSAsOGkh3eJ4U79Ro?=
- =?us-ascii?Q?xwRWhkAlr6+y6WiQTZsg0wAtPbufSZ+gSTvyChnt9ldoUUchOHXOoWxoY2x6?=
- =?us-ascii?Q?nOSqeV0Csqpn0OeXTKLz33vpKG3F8G8gjP3MPZ5jic0eggNY1HZDPuITDH+0?=
- =?us-ascii?Q?wtS2FX6zH+qNM2+TgDFUK/XqCW/cPECksQmyz08UxQyYDrBJGZowsFDMgmJ8?=
- =?us-ascii?Q?y2FIw3nsfMlASzTda+Ms4/iYyIwVsGG42NN6vbv8ui+Uqkkze/ayag9lEPmo?=
- =?us-ascii?Q?8sFI58FnWKvm49Rkq/eNzYvDCTR266koCngrh/OZrXvE88lWhCQEisyWMdq7?=
- =?us-ascii?Q?PQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: RE: [PATCH v2 2/3] Drivers: hv: Always reserve framebuffer region
+ for Gen1 VMs
+In-Reply-To: <SN6PR2101MB1693BDB6EF855BCE594AE376D7729@SN6PR2101MB1693.namprd21.prod.outlook.com>
+References: <20220825090024.1007883-1-vkuznets@redhat.com>
+ <20220825090024.1007883-3-vkuznets@redhat.com>
+ <SN6PR2101MB1693BDB6EF855BCE594AE376D7729@SN6PR2101MB1693.namprd21.prod.outlook.com>
+Date:   Sat, 27 Aug 2022 14:44:39 +0200
+Message-ID: <87mtbpvoso.fsf@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1407
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Zhou jie <zhoujie@nfschina.com> Sent: Monday, August 22, 2022 8:46 PM
->=20
-> remove unnecessary void* type casting.
->=20
-> Signed-off-by: Zhou jie <zhoujie@nfschina.com>
-> ---
->  tools/hv/hv_kvp_daemon.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 1e6fd6ca513b..445abb53bf0d 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -772,11 +772,11 @@ static int kvp_process_ip_address(void *addrp,
->  	const char *str;
->=20
->  	if (family =3D=3D AF_INET) {
-> -		addr =3D (struct sockaddr_in *)addrp;
-> +		addr =3D addrp;
->  		str =3D inet_ntop(family, &addr->sin_addr, tmp, 50);
->  		addr_length =3D INET_ADDRSTRLEN;
->  	} else {
-> -		addr6 =3D (struct sockaddr_in6 *)addrp;
-> +		addr6 =3D addrp;
->  		str =3D inet_ntop(family, &addr6->sin6_addr.s6_addr, tmp, 50);
->  		addr_length =3D INET6_ADDRSTRLEN;
->  	}
-> --
-> 2.18.2
+"Michael Kelley (LINUX)" <mikelley@microsoft.com> writes:
 
-The patch subject prefix for changes to this module is usually "tools: hv:"
-or "tools: hv: kvp:" and this patch should be consistent.  Check the commit
-log for tools/hv/hv_kvp_daemon.c for historical examples.
+> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, August 25, 2022 2:00 AM
+>> 
+>> vmbus_reserve_fb() tries reserving framebuffer region iff
+>> 'screen_info.lfb_base' is set. Gen2 VMs seem to have it set by EFI fb
+>
+> Just so I'm clear, by "EFI fb" you mean the EFI layer code that sets
+> up the frame buffer before the Linux kernel ever boots, right?
+> You are not referring to the Linux kernel EFI framebuffer
+> driver, which may or may not be configured in the kernel.
 
-Modulo this tweak,
+My very shallow understanding is that initially, screen_info comes from
+boot_params and this depends on how Linux was booted. Kernel EFI
+framebuffer (when enabled), however, gets it first and can modify it
+(see efifb_setup()) before we get to analyze it in Vmbus.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>
+>> (or, in some edge cases like kexec, the address where the buffer was
+>> moved, see https://lore.kernel.org/all/20201014092429.1415040-1-kasong@redhat.com/
+>> but on Gen1 VM it depends on bootloader behavior. With grub, it depends
+>> on 'gfxpayload=' setting but in some cases it is observed to be zero.
+>> Relying on 'screen_info.lfb_base' to reserve framebuffer region is
+>> risky. Instead, it is possible to get the address from the dedicated
+>> PCI device which is always present.
+>> 
+>> Check for legacy PCI video device presence and reserve the whole
+>> region for framebuffer on Gen1 VMs.
+>> 
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  drivers/hv/vmbus_drv.c | 46 +++++++++++++++++++++++++++++-------------
+>>  1 file changed, 32 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index 23c680d1a0f5..536f68e563c6 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -35,6 +35,7 @@
+>>  #include <linux/kernel.h>
+>>  #include <linux/syscore_ops.h>
+>>  #include <linux/dma-map-ops.h>
+>> +#include <linux/pci.h>
+>>  #include <clocksource/hyperv_timer.h>
+>>  #include "hyperv_vmbus.h"
+>> 
+>> @@ -2262,26 +2263,43 @@ static int vmbus_acpi_remove(struct acpi_device *device)
+>> 
+>>  static void vmbus_reserve_fb(void)
+>>  {
+>> -	int size;
+>> +	resource_size_t start = 0, size;
+>> +	struct pci_dev *pdev;
+>> +
+>> +	if (efi_enabled(EFI_BOOT)) {
+>> +		/* Gen2 VM: get FB base from EFI framebuffer */
+>> +		start = screen_info.lfb_base;
+>> +		size = max_t(__u32, screen_info.lfb_size, 0x800000);
+>> +	} else {
+>> +		/* Gen1 VM: get FB base from PCI */
+>> +		pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
+>> +				      PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
+>> +		if (!pdev)
+>> +			return;
+>> +
+>> +		if (pdev->resource[0].flags & IORESOURCE_MEM) {
+>> +			start = pci_resource_start(pdev, 0);
+>> +			size = pci_resource_len(pdev, 0);
+>> +		}
+>> +
+>> +		/*
+>> +		 * Release the PCI device so hyperv_drm or hyperv_fb driver can
+>> +		 * grab it later.
+>> +		 */
+>> +		pci_dev_put(pdev);
+>> +	}
+>> +
+>> +	if (!start)
+>> +		return;
+>> +
+>>  	/*
+>>  	 * Make a claim for the frame buffer in the resource tree under the
+>>  	 * first node, which will be the one below 4GB.  The length seems to
+>>  	 * be underreported, particularly in a Generation 1 VM.  So start out
+>>  	 * reserving a larger area and make it smaller until it succeeds.
+>>  	 */
+>> -
+>> -	if (screen_info.lfb_base) {
+>> -		if (efi_enabled(EFI_BOOT))
+>> -			size = max_t(__u32, screen_info.lfb_size, 0x800000);
+>> -		else
+>> -			size = max_t(__u32, screen_info.lfb_size, 0x4000000);
+>> -
+>> -		for (; !fb_mmio && (size >= 0x100000); size >>= 1) {
+>> -			fb_mmio = __request_region(hyperv_mmio,
+>> -						   screen_info.lfb_base, size,
+>> -						   fb_mmio_name, 0);
+>> -		}
+>> -	}
+>> +	for (; !fb_mmio && (size >= 0x100000); size >>= 1)
+>> +		fb_mmio = __request_region(hyperv_mmio, start, size, fb_mmio_name, 0);
+>>  }
+>> 
+>>  /**
+>> --
+>> 2.37.1
+>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>
+
+Thanks!
+
+-- 
+Vitaly
+
