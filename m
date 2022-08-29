@@ -2,133 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC7CB5A4E97
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Aug 2022 15:52:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AFE85A50BB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Aug 2022 17:54:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230036AbiH2Nwq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 Aug 2022 09:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59384 "EHLO
+        id S230089AbiH2PyM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 Aug 2022 11:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbiH2Nwo (ORCPT
+        with ESMTP id S229566AbiH2PyL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 Aug 2022 09:52:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C904A86B65
-        for <linux-hyperv@vger.kernel.org>; Mon, 29 Aug 2022 06:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661781161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iyHeN9+d/43uz8k3pFTHk3cYxNwEdqT76Jr80vsE+YA=;
-        b=HzHHA6mAuksHYMJ58+0VW66C6d6SOrAAnqPhFOmEc6dSENlcNJ1vtslbYRWkE4dbeDuPGi
-        BnsolgERoNB6XvH22DBM8MS7hYsO2DobtLfjhqc/5YFYY7ZB/sEOmls0xtQf15QPI3vCVY
-        6nYEgQkeeiyT+w9EZoPuEwwple7YZPk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-462-912dBlZUNFC65hKop2s-Sg-1; Mon, 29 Aug 2022 09:52:40 -0400
-X-MC-Unique: 912dBlZUNFC65hKop2s-Sg-1
-Received: by mail-wm1-f71.google.com with SMTP id i132-20020a1c3b8a000000b003a537064611so5090497wma.4
-        for <linux-hyperv@vger.kernel.org>; Mon, 29 Aug 2022 06:52:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=iyHeN9+d/43uz8k3pFTHk3cYxNwEdqT76Jr80vsE+YA=;
-        b=h/nOp7NJtP3FWiw9HYSjWjDl2FmsMzF6+KKAdjF16gTGVB4xuC7hW1tHcvX+n6ONDv
-         c5fujW49W/3qab0pdalTpUpFN6njgtXpfEqYh36Ij7lDARlV2l1RbVCCY64H/xwkYD9+
-         qxbxZ1pO8fYQegq7b3Q0JJDnvNW6JOrA8pYCl/0UzLAVz5BLiWsSlRS1zitjZMs57jdp
-         AHQCbofZ6I/aWNK53z8ajxRiO1gua6kWRA0Ljq2ooYQXYB5WBAcgbwVBeCctkMtfvyLE
-         y2XAxAxM+ag4LlgQnpD1MDx6nAwLjibmNsS6OrnxGxIfPAHfq3pSt0uAhmiFoT9aVS2K
-         UkWQ==
-X-Gm-Message-State: ACgBeo0VWpDJJ+jhtkAEQamiqhLnc6bj7yqPG6eo7oMQ+TAy+Bl6wJEi
-        Cx8B5nUrHhZfenj9xUonqBVFe7JveCtwf15EZQ3RnbLIptTgOaE2ffy65a3IiwshgYcJZKo8n/L
-        my7KpQ5Dt5d+6rvPhIt7wJ2yG
-X-Received: by 2002:a05:600c:4fcd:b0:3a6:2694:e3ba with SMTP id o13-20020a05600c4fcd00b003a62694e3bamr7190914wmq.160.1661781158972;
-        Mon, 29 Aug 2022 06:52:38 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7xbddiyuXZsWvO+FPWILzn4jZoImEslyYwS/WpzMw1kUYVPH1Nn8dBrnVo9BLMC4eze3xuOw==
-X-Received: by 2002:a05:600c:4fcd:b0:3a6:2694:e3ba with SMTP id o13-20020a05600c4fcd00b003a62694e3bamr7190887wmq.160.1661781158752;
-        Mon, 29 Aug 2022 06:52:38 -0700 (PDT)
-Received: from sgarzare-redhat ([5.77.88.130])
-        by smtp.gmail.com with ESMTPSA id p18-20020a056000019200b00226d13a25c7sm6869906wrx.17.2022.08.29.06.52.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Aug 2022 06:52:37 -0700 (PDT)
-Date:   Mon, 29 Aug 2022 15:52:29 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
-        "David S. Miller" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Krasnov Arseniy <oxffffaa@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        kernel <kernel@sberdevices.ru>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
-Subject: Re: [PATCH net-next v4 0/9] vsock: updates for SO_RCVLOWAT handling
-Message-ID: <20220829135229.rcyefaabajt3btqt@sgarzare-redhat>
-References: <de41de4c-0345-34d7-7c36-4345258b7ba8@sberdevices.ru>
- <YwUnAhWauSFSJX+g@fedora>
- <20220823121852.1fde7917@kernel.org>
- <YwU443jzc/N4fV3A@fedora>
- <5174d4ef7fe3928472d5a575c87ee627bfb4c129.camel@redhat.com>
+        Mon, 29 Aug 2022 11:54:11 -0400
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0ECA96749;
+        Mon, 29 Aug 2022 08:54:09 -0700 (PDT)
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
+ id 936fe8cf992e9b5f; Mon, 29 Aug 2022 17:54:08 +0200
+Received: from kreacher.localnet (public-gprs523165.centertel.pl [31.61.162.222])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by v370.home.net.pl (Postfix) with ESMTPSA id 957EF66D25B;
+        Mon, 29 Aug 2022 17:54:06 +0200 (CEST)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        linux-hyperv@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>
+Subject: Re: [PATCH v2 5/5] ACPI: Drop parent field from struct acpi_device
+Date:   Mon, 29 Aug 2022 17:54:06 +0200
+Message-ID: <5617470.DvuYhMxLoT@kreacher>
+In-Reply-To: <a0cab176-3c3a-707a-02c3-74ffc1b4926e@huawei.com>
+References: <12036348.O9o76ZdvQC@kreacher> <5857822.lOV4Wx5bFT@kreacher> <a0cab176-3c3a-707a-02c3-74ffc1b4926e@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5174d4ef7fe3928472d5a575c87ee627bfb4c129.camel@redhat.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 31.61.162.222
+X-CLIENT-HOSTNAME: public-gprs523165.centertel.pl
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrvdekuddgleehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeefuddriedurdduiedvrddvvddvnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepfedurdeiuddrudeivddrvddvvddphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepvdehpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhuohhhrghnjhhunheshhhurgifvghirdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtgho
+ mhdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkhihssehmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohephhgrihihrghnghiisehmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohepshhthhgvmhhmihhnsehmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohepfigvihdrlhhiuheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvtghuihesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvrghsrdhnohgvvhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehmihgthhgrvghlrdhjrghmvghtsehinhhtvghlrdgtohhmpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegjvghhvgiikhgvlhfuhheusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqhhihphgvrhhvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhushgssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgv
+ ghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtoheprghgrhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsjhhorhhnrdgrnhguvghrshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehkohhnrhgrugdrugihsggtihhosehsohhmrghinhhlihhnvgdrohhrgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=25 Fuz1=25 Fuz2=25
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 23, 2022 at 10:57:01PM +0200, Paolo Abeni wrote:
->On Tue, 2022-08-23 at 16:30 -0400, Stefan Hajnoczi wrote:
->> On Tue, Aug 23, 2022 at 12:18:52PM -0700, Jakub Kicinski wrote:
->> > On Tue, 23 Aug 2022 15:14:10 -0400 Stefan Hajnoczi wrote:
->> > > Stefano will be online again on Monday. I suggest we wait for him to
->> > > review this series. If it's urgent, please let me know and I'll take a
->> > > look.
->> >
->> > It was already applied, sorry about that. But please continue with
->> > review as if it wasn't. We'll just revert based on Stefano's feedback
->> > as needed.
+On Saturday, August 27, 2022 3:19:33 PM CEST Hanjun Guo wrote:
+> Hi Rafael,
+> 
+> On 2022/8/25 0:59, Rafael J. Wysocki wrote:
+> > Index: linux-pm/include/acpi/acpi_bus.h
+> > ===================================================================
+> > --- linux-pm.orig/include/acpi/acpi_bus.h
+> > +++ linux-pm/include/acpi/acpi_bus.h
+> > @@ -365,7 +365,6 @@ struct acpi_device {
+> >   	int device_type;
+> >   	acpi_handle handle;		/* no handle for fixed hardware */
+> >   	struct fwnode_handle fwnode;
+> > -	struct acpi_device *parent;
+> >   	struct list_head wakeup_list;
+> >   	struct list_head del_list;
+> >   	struct acpi_device_status status;
+> > @@ -458,6 +457,14 @@ static inline void *acpi_driver_data(str
+> >   #define to_acpi_device(d)	container_of(d, struct acpi_device, dev)
+> >   #define to_acpi_driver(d)	container_of(d, struct acpi_driver, drv)
+> >   
+> > +static inline struct acpi_device *acpi_dev_parent(struct acpi_device *adev)
+> > +{
+> > +	if (adev->dev.parent)
+> > +		return to_acpi_device(adev->dev.parent);
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> >   static inline void acpi_set_device_status(struct acpi_device *adev, u32 sta)
+> >   {
+> >   	*((u32 *)&adev->status) = sta;
+> > @@ -478,6 +485,7 @@ void acpi_initialize_hp_context(struct a
+> >   /* acpi_device.dev.bus == &acpi_bus_type */
+> >   extern struct bus_type acpi_bus_type;
+> >   
+> > +struct acpi_device *acpi_dev_parent(struct acpi_device *adev);
+> 
+> We have a static inline function above, is it duplicated here?
+> Or did I miss some use cases?
 
-Just back, and I'm fine with this version, so thanks for merging!
-I also run tests with virtio-vsock and everything is fine.
+No, you didn't, it is redundant.
 
->>
->> Okay, no problem.
->
->For the records, I applied the series since it looked to me Arseniy
->addressed all the feedback from Stefano on the first patch (the only
->one still lacking an acked-by/reviewed-by tag) and I thought it would
->be better avoiding such delay.
+I've just sent a fix for this.
 
-Yep, from v3 I asked some changes on the first patch that Arseniy 
-addressed in this version, and we were waiting an ack for VMCI changes 
-(thanks Vishnu for giving it).
+Thanks!
 
-So, it should be fine.
 
-Thanks,
-Stefano
 
