@@ -2,119 +2,81 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AFE85A50BB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Aug 2022 17:54:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 078E05A52E7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 Aug 2022 19:15:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbiH2PyM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 Aug 2022 11:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
+        id S231205AbiH2RPQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 Aug 2022 13:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbiH2PyL (ORCPT
+        with ESMTP id S230373AbiH2RPP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 Aug 2022 11:54:11 -0400
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0ECA96749;
-        Mon, 29 Aug 2022 08:54:09 -0700 (PDT)
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.0.0)
- id 936fe8cf992e9b5f; Mon, 29 Aug 2022 17:54:08 +0200
-Received: from kreacher.localnet (public-gprs523165.centertel.pl [31.61.162.222])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        Mon, 29 Aug 2022 13:15:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8FEBE16;
+        Mon, 29 Aug 2022 10:15:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id 957EF66D25B;
-        Mon, 29 Aug 2022 17:54:06 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id EB865B80B8C;
+        Mon, 29 Aug 2022 17:15:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D368C433C1;
+        Mon, 29 Aug 2022 17:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661793310;
+        bh=T8yf6DaEI9h1ttbcLiN25zYNkViUziozFlJTNfTaQ84=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=F/1aeNLwEv4qAotml3dc5zTQUgO8luoYVvNXF1SqiIbnqwTjWmfcK916XL88wtzxV
+         CkA68pVWNi2J2NCnuMCpJDxJW1cSrbybFXqRmZRU6+OEb/WGNK3PNKsVqCasyHehRN
+         b8HRY5OM5p0m1G2IN5ye0ZBuqNJjLDAR9tvkKqQju9J8qhfoN46LJ8L1Th+9r+DSPD
+         7Z+vhX3gf+pytuNwomMGD0Hlkk5E+98MojqTSW0mxSQuqexAwidyvr3Nj/UUy3UpK/
+         36a6Pe6oT9OqI6gMEJWbdWurDGhU5OAcwdSKn901h4id6ZSKRB/CXhjqS5YNxPpOAg
+         yV8L9pSj3QQRw==
+Date:   Mon, 29 Aug 2022 12:15:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Deepak Rawat <drawat.floss@gmail.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        linux-hyperv@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>
-Subject: Re: [PATCH v2 5/5] ACPI: Drop parent field from struct acpi_device
-Date:   Mon, 29 Aug 2022 17:54:06 +0200
-Message-ID: <5617470.DvuYhMxLoT@kreacher>
-In-Reply-To: <a0cab176-3c3a-707a-02c3-74ffc1b4926e@huawei.com>
-References: <12036348.O9o76ZdvQC@kreacher> <5857822.lOV4Wx5bFT@kreacher> <a0cab176-3c3a-707a-02c3-74ffc1b4926e@huawei.com>
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v3 1/3] PCI: Move
+ PCI_VENDOR_ID_MICROSOFT/PCI_DEVICE_ID_HYPERV_VIDEO definitions to pci_ids.h
+Message-ID: <20220829171508.GA8481@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 31.61.162.222
-X-CLIENT-HOSTNAME: public-gprs523165.centertel.pl
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrvdekuddgleehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeefuddriedurdduiedvrddvvddvnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepfedurdeiuddrudeivddrvddvvddphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepvdehpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhuohhhrghnjhhunheshhhurgifvghirdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtgho
- mhdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkhihssehmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohephhgrihihrghnghiisehmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohepshhthhgvmhhmihhnsehmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtohepfigvihdrlhhiuheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvtghuihesmhhitghrohhsohhfthdrtghomhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvrghsrdhnohgvvhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehmihgthhgrvghlrdhjrghmvghtsehinhhtvghlrdgtohhmpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegjvghhvgiikhgvlhfuhheusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqhhihphgvrhhvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhushgssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgv
- ghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtoheprghgrhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsjhhorhhnrdgrnhguvghrshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehkohhnrhgrugdrugihsggtihhosehsohhmrghinhhlihhnvgdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=25 Fuz1=25 Fuz2=25
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220827130345.1320254-2-vkuznets@redhat.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Saturday, August 27, 2022 3:19:33 PM CEST Hanjun Guo wrote:
-> Hi Rafael,
-> 
-> On 2022/8/25 0:59, Rafael J. Wysocki wrote:
-> > Index: linux-pm/include/acpi/acpi_bus.h
-> > ===================================================================
-> > --- linux-pm.orig/include/acpi/acpi_bus.h
-> > +++ linux-pm/include/acpi/acpi_bus.h
-> > @@ -365,7 +365,6 @@ struct acpi_device {
-> >   	int device_type;
-> >   	acpi_handle handle;		/* no handle for fixed hardware */
-> >   	struct fwnode_handle fwnode;
-> > -	struct acpi_device *parent;
-> >   	struct list_head wakeup_list;
-> >   	struct list_head del_list;
-> >   	struct acpi_device_status status;
-> > @@ -458,6 +457,14 @@ static inline void *acpi_driver_data(str
-> >   #define to_acpi_device(d)	container_of(d, struct acpi_device, dev)
-> >   #define to_acpi_driver(d)	container_of(d, struct acpi_driver, drv)
-> >   
-> > +static inline struct acpi_device *acpi_dev_parent(struct acpi_device *adev)
-> > +{
-> > +	if (adev->dev.parent)
-> > +		return to_acpi_device(adev->dev.parent);
-> > +
-> > +	return NULL;
-> > +}
-> > +
-> >   static inline void acpi_set_device_status(struct acpi_device *adev, u32 sta)
-> >   {
-> >   	*((u32 *)&adev->status) = sta;
-> > @@ -478,6 +485,7 @@ void acpi_initialize_hp_context(struct a
-> >   /* acpi_device.dev.bus == &acpi_bus_type */
-> >   extern struct bus_type acpi_bus_type;
-> >   
-> > +struct acpi_device *acpi_dev_parent(struct acpi_device *adev);
-> 
-> We have a static inline function above, is it duplicated here?
-> Or did I miss some use cases?
+On Sat, Aug 27, 2022 at 03:03:43PM +0200, Vitaly Kuznetsov wrote:
+> There are already three places in kernel which define PCI_VENDOR_ID_MICROSOFT
+> and two for PCI_DEVICE_ID_HYPERV_VIDEO and there's a need to use these
+> from core Vmbus code. Move the defines where they belong.
 
-No, you didn't, it is redundant.
+It's a minor annoyance that the above is 81 characters long when "git
+log" adds its 4-character indent, so it wraps in a default terminal.
 
-I've just sent a fix for this.
+It'd be nice if we could settle on a conventional spelling of "Vmbus",
+too.  "Vmbus" looks to be in the minority:
 
-Thanks!
+  $ git grep Vmbus | wc -l; git grep VMbus | wc -l; git grep VMBus | wc -l
+  4
+  82
+  62
 
-
-
+FWIW, one published microsoft.com doc uses "VMBus":
+https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/hyper-v-architecture
