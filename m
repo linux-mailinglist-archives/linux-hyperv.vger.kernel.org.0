@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B1485A652C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Aug 2022 15:41:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBEBE5A6530
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Aug 2022 15:41:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230489AbiH3Nku (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Aug 2022 09:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42572 "EHLO
+        id S229917AbiH3NlA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 Aug 2022 09:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231130AbiH3NkL (ORCPT
+        with ESMTP id S231145AbiH3NkO (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Aug 2022 09:40:11 -0400
+        Tue, 30 Aug 2022 09:40:14 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC3114FCAB
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 Aug 2022 06:39:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED0BF122BE2
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Aug 2022 06:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661866718;
+        s=mimecast20190719; t=1661866721;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eIDGD8GCQ/FPC65YQ6Szcq+FOUME6vtJY3GqQdCftQc=;
-        b=b6IY9YA9DJTN9ilUrqTu1UugycVrsqccZGVGuOdv/8GCbsrC8mNP+lo+aGD0LouL6mZ/XF
-        s5T4xBsT4LCIWRURJ6LyvltruT9kjtmvwiXKUNb+hWifQKFMhmb3DFY0ccRrxbhhSERGUP
-        UGBkbZOWXXQAV2L3J03bOuaUieceiWk=
+        bh=CM5YiOQptbU9X800szyhSBz6fSk82jbxp+XK1QEeC+g=;
+        b=OteDmgwYIaTaxTuOt9XDY/a06nJ2AJ23ZoJhj5E16mG8Iq7zTrIthezxdx5TI+0Y87Z4Ha
+        79qpvEusjYtgVZMGkHkwXjPy1aFoT4WRFT4KZ/c0dsUOeOCZP5qS5/fWyLle1q3jpfrO+n
+        BqUltWKDOpbbZkkNm0jeu/hUatY+7DA=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-260-F_6G9Un-Mxi24sCQ8Z6jQw-1; Tue, 30 Aug 2022 09:38:35 -0400
-X-MC-Unique: F_6G9Un-Mxi24sCQ8Z6jQw-1
+ us-mta-516-7YVJEuoLPF6w-XluUHyi9w-1; Tue, 30 Aug 2022 09:38:37 -0400
+X-MC-Unique: 7YVJEuoLPF6w-XluUHyi9w-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6FD2F1C006AD;
-        Tue, 30 Aug 2022 13:38:34 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E1DC22999B44;
+        Tue, 30 Aug 2022 13:38:36 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.194.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FA0B2166B26;
-        Tue, 30 Aug 2022 13:38:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B94572166B26;
+        Tue, 30 Aug 2022 13:38:34 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <seanjc@google.com>,
@@ -47,9 +47,9 @@ Cc:     Sean Christopherson <seanjc@google.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 21/33] KVM: VMX: Tweak the special handling of SECONDARY_EXEC_ENCLS_EXITING in setup_vmcs_config()
-Date:   Tue, 30 Aug 2022 15:37:25 +0200
-Message-Id: <20220830133737.1539624-22-vkuznets@redhat.com>
+Subject: [PATCH v6 22/33] KVM: VMX: Don't toggle VM_ENTRY_IA32E_MODE for 32-bit kernels/KVM
+Date:   Tue, 30 Aug 2022 15:37:26 +0200
+Message-Id: <20220830133737.1539624-23-vkuznets@redhat.com>
 In-Reply-To: <20220830133737.1539624-1-vkuznets@redhat.com>
 References: <20220830133737.1539624-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -58,7 +58,7 @@ Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,50 +66,38 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-SECONDARY_EXEC_ENCLS_EXITING is the only control which is conditionally
-added to the 'optional' checklist in setup_vmcs_config() but the special
-case can be avoided by always checking for its presence first and filtering
-out the result later.
+From: Sean Christopherson <seanjc@google.com>
 
-Note: the situation when SECONDARY_EXEC_ENCLS_EXITING is present but
-cpu_has_sgx() is false is possible when SGX is "soft-disabled", e.g. if
-software writes MCE control MSRs or there's an uncorrectable #MC.
+Don't toggle VM_ENTRY_IA32E_MODE in 32-bit kernels/KVM and instead bug
+the VM if KVM attempts to run the guest with EFER.LMA=1. KVM doesn't
+support running 64-bit guests with 32-bit hosts.
 
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index cfe1a1157302..9a9cdd4ea34d 100644
+index 9a9cdd4ea34d..7b73fee34598 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2605,9 +2605,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 			SECONDARY_EXEC_PT_CONCEAL_VMX |
- 			SECONDARY_EXEC_ENABLE_VMFUNC |
- 			SECONDARY_EXEC_BUS_LOCK_DETECTION |
--			SECONDARY_EXEC_NOTIFY_VM_EXITING;
--		if (cpu_has_sgx())
--			opt2 |= SECONDARY_EXEC_ENCLS_EXITING;
-+			SECONDARY_EXEC_NOTIFY_VM_EXITING |
-+			SECONDARY_EXEC_ENCLS_EXITING;
-+
- 		if (adjust_vmx_controls(min2, opt2,
- 					MSR_IA32_VMX_PROCBASED_CTLS2,
- 					&_cpu_based_2nd_exec_control) < 0)
-@@ -2654,6 +2654,9 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 		vmx_cap->vpid = 0;
- 	}
+@@ -3039,10 +3039,15 @@ int vmx_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ 		return 0;
  
-+	if (!cpu_has_sgx())
-+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_ENCLS_EXITING;
-+
- 	if (_cpu_based_exec_control & CPU_BASED_ACTIVATE_TERTIARY_CONTROLS) {
- 		u64 opt3 = TERTIARY_EXEC_IPI_VIRT;
+ 	vcpu->arch.efer = efer;
++#ifdef CONFIG_X86_64
+ 	if (efer & EFER_LMA)
+ 		vm_entry_controls_setbit(vmx, VM_ENTRY_IA32E_MODE);
+ 	else
+ 		vm_entry_controls_clearbit(vmx, VM_ENTRY_IA32E_MODE);
++#else
++	if (KVM_BUG_ON(efer & EFER_LMA, vcpu->kvm))
++		return 1;
++#endif
  
+ 	vmx_setup_uret_msrs(vmx);
+ 	return 0;
 -- 
 2.37.2
 
