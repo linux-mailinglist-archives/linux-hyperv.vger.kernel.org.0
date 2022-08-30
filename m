@@ -2,79 +2,139 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B5465A6E39
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Aug 2022 22:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 769D45A6F1C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Aug 2022 23:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231485AbiH3UPO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Aug 2022 16:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37610 "EHLO
+        id S230092AbiH3V3N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 Aug 2022 17:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231407AbiH3UPL (ORCPT
+        with ESMTP id S229449AbiH3V3M (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Aug 2022 16:15:11 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486B12980C
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 Aug 2022 13:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=k1; bh=o5bbG2QOos7wbpnJ9f9b1soaRzy
-        Nj3QB+LXiYlOUDrk=; b=jl4cFYrW3QsnaisG+EQo4/w8W65Z99uyKtMIIlZZvJ7
-        HHToWX5iASwMZEqjUKHO02jLpbyEjIyTyx+L+LRY9Wr+4MCCb38sRCoqXJgfOssl
-        BaNH791fTjxEA7yzH6Ipd/Fk8gaYWTsFfrKNs+mt0h2TCijHzmLJSEh+PQfpuXgI
-        =
-Received: (qmail 422647 invoked from network); 30 Aug 2022 22:14:59 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 30 Aug 2022 22:14:59 +0200
-X-UD-Smtp-Session: l3s3148p1@TazhCHvnUu0gAwDtxxrgAFH1RcxMblwv
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Tue, 30 Aug 2022 17:29:12 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2137.outbound.protection.outlook.com [40.107.212.137])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0A2685FC5;
+        Tue, 30 Aug 2022 14:29:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mhYdSSyTN8veDDI0wMfCTiW3fv8jPdFyPyuo3ZqVzfFxPl/Os+O0Mq+3dfMjH8gPmNSYVfKJxheKx0LU6W0AtkmcuAfJk9HRHNqPkjxWoWziUfUXVHCjCeOONH8gPVEC67l/0cLUttgz+8S+YN9ouXk9kpBf9t2Es5vZ4ahbUZGI4tMzCUmu+dmofOikfCVN3Ug0L4tI41eD2MynVbyh8bv+K7nAU261whRJmXj7PxFEGW+vGRCBcFcdxZSljopVlWTT5NxycOUnwJu2ZdCNQCJH+OGdu54li1+k8u9Uj3OMgzOR3IJie3PJd1br15v/ZVX4tEHHEt3iWqwWrOy7Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3B4JCiaeFSjD8U/HEEaVytHvRYAMcO2zr6OF3yBcYrM=;
+ b=eE7ZLjBdj5kDu6QXqZnZFKl2ZGKsCf8J3XnKRmI1i0hMBgHI4o9J5RJ7gGoShBopJ+lpalrUI0UYO74x9uxBsgqIp0E2XTjIj/IPhS3EFw6gSQ81T0e90a7vkSsE3JQ2L+M1gbdjGgN39/YadpO38zBtgHJMzCCVRXI1b87dryC/HcwVzsxmXKFqi8cVj9pkD90nzjGzdPLqAUTUHd/W3LKQTg4HJfJ7G8OX1Ni7mPlLzkw1tTmMaCqV3FBXjs7/6pqRfjzsW/IIOmGmAjHPlsQt8HRfkMp8vOjpptKo/sPlQhqk84AvTNkyAyZ95D+LQZ18cefWBDH+wqoAWpv7eQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3B4JCiaeFSjD8U/HEEaVytHvRYAMcO2zr6OF3yBcYrM=;
+ b=EOSbf+aOrVNrZ2LcHE4mSizaShUgYm7Ly7hJi6SMj7RmRyNO3SXN4SPa/mZuS10HSRPicdykF6ybK6MlMuQqkZPEWhExsUcOWkCoDIP2dqL29Gim4iD617nTW8Wk68hwsoD28BLxE1lHrM/wMP/oUlg15gqje6URS6iADGee5rs=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by MN0PR21MB3777.namprd21.prod.outlook.com (2603:10b6:208:3d1::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.3; Tue, 30 Aug
+ 2022 21:29:02 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::3ef0:68d0:970e:24be]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::3ef0:68d0:970e:24be%5]) with mapi id 15.20.5612.002; Tue, 30 Aug 2022
+ 21:29:01 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Petko Manolov <petkan@nucleusys.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Ronak Doshi <doshir@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
-        linux-can@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        ntb@lists.linux.dev, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v2 1/3] net: move from strlcpy with unused retval to strscpy
-Date:   Tue, 30 Aug 2022 22:14:52 +0200
-Message-Id: <20220830201457.7984-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.35.1
+        Mark Brown <broonie@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        "Jamet, Michael" <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>
+Subject: RE: [PATCH v2 5/5] ACPI: Drop parent field from struct acpi_device
+Thread-Topic: [PATCH v2 5/5] ACPI: Drop parent field from struct acpi_device
+Thread-Index: AQHYt9r5ZuMaGsJ/TE24NR6GViGoSa3H/Ctg
+Date:   Tue, 30 Aug 2022 21:29:00 +0000
+Message-ID: <BYAPR21MB1688D855C1A2A59C2114CFB1D7799@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <12036348.O9o76ZdvQC@kreacher> <2196460.iZASKD2KPV@kreacher>
+ <5857822.lOV4Wx5bFT@kreacher>
+In-Reply-To: <5857822.lOV4Wx5bFT@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5fd760a1-1484-4ffb-b17e-d5b1ec13d73a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-08-30T21:17:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|MN0PR21MB3777:EE_
+x-ms-office365-filtering-correlation-id: 8213fa3f-b523-415c-87af-08da8acea7b8
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kFyoaXuZdzUnNE8LlGgbXAKtrQ7I4rVKSwDJR6eDVfhDFO39+SEF5mmU75Fr+AIEKexMhXigZnlE+Xha4qvhIKiwds8DZbW/i8iqZqfPPb0ya2GIGzvcjXFXyoYnFOiESEEOhDT2sVHWC4BkbI976yvqDgUVrhbplPjnAC3fshn7e1uwn7vF6bGM1daWMthihagr3n3jUYg0/H2QZaw4dU/js8QI8F5xPXOxl4tPonBLVx0oSYa5rPb8/HDThK767j92BTk+PDQbHfsq2orRIC56Ila0gruqpK7GXCKt5YGcrJCz2Nt55k31s3rG6ynOUqsLPHlvvfkGa59hOyI/aOVY0/7L+35B1y2cxltAoRYMbbyVnySS5VFF6ztA9u483mCpOH0AdN1nv+zQ180vD5P++PsGuvLODeP1/jVaybXyIF3321ps8bnN48BEDNFm/BE8G7kFybpuG4Q6Au1lD1fB4gT8NlI1g11r27gxZxF28tR1+O9yRK2iGDvSfAziguDmVCpy9wK/GD90jlQHGVXzManbMonr84EMNG8FywHAIwn5zYPqg1YlGnkuXP3LeMk36LwgU0if7AnY2eeMkuxeApAaVs49T6fkNaHV/3068SAmaPMPIVlOT1EfLaxN13OH+KKEZFmlRIZUHZoAWwkakoS3KLulIMmVZa2H0ex6vBYp0xoNo/tmSu0rbF03DbJI0DPq40da4fZiyVw+TYsEw9yNZomrQi4Rprbz9+JjdGtrKzFZ2Xd0rfaH5HA5RTl5FQiq3kUHvjGc0VRQ7RWNRCVbrPPwTEpaa/s9QAm/U8XXpFnn8hB4I6XnXe+tTrydjvHNLUfiuj45wRlGWdUUj++YtGaUg+ZWcDSAXdQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(451199009)(33656002)(83380400001)(82950400001)(82960400001)(478600001)(122000001)(52536014)(66476007)(8676002)(38070700005)(66556008)(4326008)(7416002)(8936002)(66946007)(76116006)(5660300002)(30864003)(64756008)(66446008)(316002)(84970400001)(2906002)(54906003)(38100700002)(86362001)(186003)(55016003)(41300700001)(9686003)(7696005)(71200400001)(26005)(110136005)(6506007)(8990500004)(10290500003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SFF6NExCK09DOTRFSnZxQ3N4cWZaakhjcnRxdStYZEkyNlJiSEZKaDl2RXZV?=
+ =?utf-8?B?Y1h0eE82MytQd2lNQ3Nja29WVFVvUUdCMzBFTmN3WndRUEowSnRmSTdRZnhQ?=
+ =?utf-8?B?QVJhVjJPWE5rZXpraWR3bXA1VTNuV2VFSUVyQW9KRGxWb1BWQWZSNlBJdmJD?=
+ =?utf-8?B?eG1ld3hVd1pWS3ZWeHZ4ZjVCSDhkQ2l4Q2dQZ3cvYzV0TExvazBEN1JDcnVk?=
+ =?utf-8?B?dlBPMUwzWWJyTDN3TWMwelNCZkFsWlpMTzUxVkMwOWx2TDBTVnFtNGt6OU82?=
+ =?utf-8?B?YmZla3NxZ2xOUC9MYWgydjVoM2hjd0R5RmdQSkR1em85aFk3ZXdodVQzMW1N?=
+ =?utf-8?B?R2trY2dZU0dYMjBtNnM1OUkzVkEyVkF6LzErcC93NmtMMU0rdGhNYzRtSTZP?=
+ =?utf-8?B?MjVxekdZd3JBbHorclE0Tkw5VVF0eGp4SUJwYzJKTFViZnlIMnZZMTJvbU5q?=
+ =?utf-8?B?WjJjQ0tmMHpPVmRES2hZRXZZNkpjN0lyTnZSempTWHRMYkcyQUxPaGxqU3JR?=
+ =?utf-8?B?dE1rMFd5VTI3UGo2Z0RBaExFQm5CQ0ROYVZ2bGtNK00vZERaTFNSRzJ4Nnlx?=
+ =?utf-8?B?UEtWZlcvbTI5VFdpTUpkL3dadHIrUFhzYXZGMVFETTJ3dTJCVGxtN29ZSENm?=
+ =?utf-8?B?eE4xS1gxNkJjTUlMK2JKL05Vc3RmZFRxUGRWSUxnQWpMVGJNTXpGSmVseUxR?=
+ =?utf-8?B?c1FYZGtTa2M5VHdtY1YwMVJKdHpxQjRFOElYL3V2c2dDM0hVMFZuZkwrVElt?=
+ =?utf-8?B?WThSN2QvT0x1Vi9RVnVWZ0Jlc2tnUXlleVQzZXBKMW9NcVZ3OENJdmFGM1lr?=
+ =?utf-8?B?c0RxNVhiQWtxRHdSZ1QvTWEzRWFYQng1V0Z6bzZPRUVVeDhOZkJKOEpIeGlT?=
+ =?utf-8?B?dUcwZ1FGV0FpbEtldjkzSTBtSmdOQ2RwMXczSGxwTDdHZ3ZRUUVsMmZsbGo0?=
+ =?utf-8?B?Z1hCVkxFVXJZb0F4UXJEUkd2YUxrY1VqUmsxWklDZUliS1BaZGdlMjJKMXlW?=
+ =?utf-8?B?V0pHMVhudmdRN2YraTBtY1ZJSmZjWXQ0L2JhVitGdTd3L1RRWTQ3Y2F3Ym1T?=
+ =?utf-8?B?TWFnR2dWMU5tek1laXVBYnFheUJQYWJHL1VLT2Y2OEpPd1pFZ2d2YTN2M2xi?=
+ =?utf-8?B?cUJQNHBTM3lkWTZxdnF0TFdyNysyR1d4MjN6RFFnTFNNb0dRT3pobzNWdGNi?=
+ =?utf-8?B?cU1aV0w4eXpuOVY5VlNnMXlZZWpQVzNWOWZFekJPK2ZFOFE0TUdQYWtLUU5t?=
+ =?utf-8?B?M1RMdEhERlRKenpmNkVHNHJ6K3VTSFh1Z3JDR1hEZXZLOTlKTjE0UzFTWE00?=
+ =?utf-8?B?c21VeGFzc1VaUkIzeGRrK094YWJpa1VlMkU0VHNpcWtBcG1hTUpBdWlHeVlF?=
+ =?utf-8?B?TTVzVDdkekZQLzFuYWc3cWtKTjJlbU52WG1iMXZuK3h2VU5ybGpVWGU3S0V6?=
+ =?utf-8?B?RFEyeXA3ME1lbFRYb2lRSXVUbTVRTDBKc1dJU3pxSzJ2c0ZuaGE4U3A5Q00r?=
+ =?utf-8?B?Q0hwZzh0UW9FNlozVkRRSnMzSm5uN2VYWHRONmsrV0JnWlhYeU9FV2xhZUd2?=
+ =?utf-8?B?bGxqdUlDWjZXaHdJM2trUjMwQnFXRDJFZFU0dnc3Zm0rQ1ljU3pndE0wTlor?=
+ =?utf-8?B?REdmRGFmaVBGTjJaVStGeld4NmliZDZyYTMvRmRrODdOb2VvalRnU0M0aDU2?=
+ =?utf-8?B?Vys5bnBOaGRuYlQvODAzTXhWem4zekVkMWJYZnZjRUEwb2ROVVpKRHV5SnZX?=
+ =?utf-8?B?enRGLy9KOWhIekhCMjZ5c3RHUWZ3ZjZPKzM5SkZGYUhQTFlFNmJLbFpmS1Fp?=
+ =?utf-8?B?WWlDTUM1cno2dmQwZHovcXd4ZkJ1OU4rOGxZUWIxR0JpZTFYejl5R1dzN1oz?=
+ =?utf-8?B?WGgzdzFXUCs4V3NkUklOUm9sRC9pb052U0lldFdtdGhBVUg0c2hyV0EwTld6?=
+ =?utf-8?B?U1owZ0IyM3pwc2NUb3g3QmxKTDB0WnhaeEJYL09JZ0ZBellwYzlISUlRNWww?=
+ =?utf-8?B?Y1RjS1JEc1Z0bUtXeFdRclVOTEsweVROcDdkWXE2ZVdUbDJyekZPamRuWnlM?=
+ =?utf-8?B?bE1kUGdwN29aa0FWODh6UDBBQzR5RnIwMnp6ak1nVWs5Q1FsUU1uZGgybmlm?=
+ =?utf-8?B?aE9oZmx0dGN3dkYwbzFpMmdGT2hxeTdKWWNJUFNidll5dlZsbVl0c1lRYnpj?=
+ =?utf-8?B?cGc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3777
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,691 +142,289 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Follow the advice of the below link and prefer 'strscpy' in this
-subsystem. Conversion is 1:1 because the return value is not used.
-Generated by a coccinelle script.
-
-Link: https://lore.kernel.org/r/CAHk-=wgfRnXz0W3D37d01q3JFkr_i_uTL=V6A6G1oUZcprmknw@mail.gmail.com/
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Marc Kleine-Budde <mkl@pengutronix.de> # for CAN
----
-
-Changes since v1:
-* split into smaller patches
-* added given tags
-
- drivers/net/Space.c                          |  2 +-
- drivers/net/bonding/bond_main.c              |  2 +-
- drivers/net/can/sja1000/peak_pcmcia.c        |  2 +-
- drivers/net/can/usb/peak_usb/pcan_usb_core.c |  2 +-
- drivers/net/dsa/b53/b53_common.c             |  2 +-
- drivers/net/dsa/bcm_sf2_cfp.c                |  2 +-
- drivers/net/dsa/hirschmann/hellcreek.c       |  2 +-
- drivers/net/dsa/mv88e6xxx/chip.c             |  2 +-
- drivers/net/dummy.c                          |  2 +-
- drivers/net/fjes/fjes_ethtool.c              |  6 +++---
- drivers/net/geneve.c                         |  4 ++--
- drivers/net/hamradio/hdlcdrv.c               |  2 +-
- drivers/net/hyperv/netvsc_drv.c              |  4 ++--
- drivers/net/ipvlan/ipvlan_main.c             |  4 ++--
- drivers/net/macvlan.c                        |  4 ++--
- drivers/net/net_failover.c                   |  4 ++--
- drivers/net/netconsole.c                     | 10 +++++-----
- drivers/net/ntb_netdev.c                     |  6 +++---
- drivers/net/phy/adin.c                       |  2 +-
- drivers/net/phy/bcm-phy-lib.c                |  2 +-
- drivers/net/phy/marvell.c                    |  2 +-
- drivers/net/phy/micrel.c                     |  2 +-
- drivers/net/phy/mscc/mscc_main.c             |  2 +-
- drivers/net/phy/phy_device.c                 |  2 +-
- drivers/net/rionet.c                         |  8 ++++----
- drivers/net/team/team.c                      |  4 ++--
- drivers/net/tun.c                            |  8 ++++----
- drivers/net/usb/aqc111.c                     |  2 +-
- drivers/net/usb/asix_common.c                |  4 ++--
- drivers/net/usb/catc.c                       |  4 ++--
- drivers/net/usb/pegasus.c                    |  2 +-
- drivers/net/usb/r8152.c                      |  6 +++---
- drivers/net/usb/rtl8150.c                    |  4 ++--
- drivers/net/usb/sierra_net.c                 |  4 ++--
- drivers/net/usb/usbnet.c                     |  6 +++---
- drivers/net/veth.c                           |  4 ++--
- drivers/net/virtio_net.c                     |  6 +++---
- drivers/net/vmxnet3/vmxnet3_ethtool.c        |  6 +++---
- drivers/net/vrf.c                            |  4 ++--
- drivers/net/vxlan/vxlan_core.c               |  4 ++--
- 40 files changed, 75 insertions(+), 75 deletions(-)
-
-diff --git a/drivers/net/Space.c b/drivers/net/Space.c
-index f475eef14390..83214e2e70ab 100644
---- a/drivers/net/Space.c
-+++ b/drivers/net/Space.c
-@@ -68,7 +68,7 @@ static int netdev_boot_setup_add(char *name, struct ifmap *map)
- 	for (i = 0; i < NETDEV_BOOT_SETUP_MAX; i++) {
- 		if (s[i].name[0] == '\0' || s[i].name[0] == ' ') {
- 			memset(s[i].name, 0, sizeof(s[i].name));
--			strlcpy(s[i].name, name, IFNAMSIZ);
-+			strscpy(s[i].name, name, IFNAMSIZ);
- 			memcpy(&s[i].map, map, sizeof(s[i].map));
- 			break;
- 		}
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 2f4da2c13c0a..dc618bf51c5e 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -5619,7 +5619,7 @@ static int bond_ethtool_get_link_ksettings(struct net_device *bond_dev,
- static void bond_ethtool_get_drvinfo(struct net_device *bond_dev,
- 				     struct ethtool_drvinfo *drvinfo)
- {
--	strlcpy(drvinfo->driver, DRV_NAME, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->driver, DRV_NAME, sizeof(drvinfo->driver));
- 	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version), "%d",
- 		 BOND_ABI_VERSION);
- }
-diff --git a/drivers/net/can/sja1000/peak_pcmcia.c b/drivers/net/can/sja1000/peak_pcmcia.c
-index 131a084c3535..ebd5941c3f53 100644
---- a/drivers/net/can/sja1000/peak_pcmcia.c
-+++ b/drivers/net/can/sja1000/peak_pcmcia.c
-@@ -478,7 +478,7 @@ static void pcan_free_channels(struct pcan_pccard *card)
- 		if (!netdev)
- 			continue;
- 
--		strlcpy(name, netdev->name, IFNAMSIZ);
-+		strscpy(name, netdev->name, IFNAMSIZ);
- 
- 		unregister_sja1000dev(netdev);
- 
-diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-index 8c9d53f6e24c..225697d70a9a 100644
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -962,7 +962,7 @@ static void peak_usb_disconnect(struct usb_interface *intf)
- 
- 		dev_prev_siblings = dev->prev_siblings;
- 		dev->state &= ~PCAN_USB_STATE_CONNECTED;
--		strlcpy(name, netdev->name, IFNAMSIZ);
-+		strscpy(name, netdev->name, IFNAMSIZ);
- 
- 		unregister_netdev(netdev);
- 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 48cf344750ff..59cdfc51ce06 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -972,7 +972,7 @@ void b53_get_strings(struct dsa_switch *ds, int port, u32 stringset,
- 
- 	if (stringset == ETH_SS_STATS) {
- 		for (i = 0; i < mib_size; i++)
--			strlcpy(data + i * ETH_GSTRING_LEN,
-+			strscpy(data + i * ETH_GSTRING_LEN,
- 				mibs[i].name, ETH_GSTRING_LEN);
- 	} else if (stringset == ETH_SS_PHY_STATS) {
- 		phydev = b53_get_phy_device(ds, port);
-diff --git a/drivers/net/dsa/bcm_sf2_cfp.c b/drivers/net/dsa/bcm_sf2_cfp.c
-index edbe5e7f1cb6..22bc295bebdb 100644
---- a/drivers/net/dsa/bcm_sf2_cfp.c
-+++ b/drivers/net/dsa/bcm_sf2_cfp.c
-@@ -1296,7 +1296,7 @@ void bcm_sf2_cfp_get_strings(struct dsa_switch *ds, int port,
- 				 "CFP%03d_%sCntr",
- 				 i, bcm_sf2_cfp_stats[j].name);
- 			iter = (i - 1) * s + j;
--			strlcpy(data + iter * ETH_GSTRING_LEN,
-+			strscpy(data + iter * ETH_GSTRING_LEN,
- 				buf, ETH_GSTRING_LEN);
- 		}
- 	}
-diff --git a/drivers/net/dsa/hirschmann/hellcreek.c b/drivers/net/dsa/hirschmann/hellcreek.c
-index 01f90994dedd..ea8bbfce0f1f 100644
---- a/drivers/net/dsa/hirschmann/hellcreek.c
-+++ b/drivers/net/dsa/hirschmann/hellcreek.c
-@@ -288,7 +288,7 @@ static void hellcreek_get_strings(struct dsa_switch *ds, int port,
- 	for (i = 0; i < ARRAY_SIZE(hellcreek_counter); ++i) {
- 		const struct hellcreek_counter *counter = &hellcreek_counter[i];
- 
--		strlcpy(data + i * ETH_GSTRING_LEN,
-+		strscpy(data + i * ETH_GSTRING_LEN,
- 			counter->name, ETH_GSTRING_LEN);
- 	}
- }
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 07e9a4da924c..22288d3e73a4 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -1128,7 +1128,7 @@ static void mv88e6xxx_atu_vtu_get_strings(uint8_t *data)
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(mv88e6xxx_atu_vtu_stats_strings); i++)
--		strlcpy(data + i * ETH_GSTRING_LEN,
-+		strscpy(data + i * ETH_GSTRING_LEN,
- 			mv88e6xxx_atu_vtu_stats_strings[i],
- 			ETH_GSTRING_LEN);
- }
-diff --git a/drivers/net/dummy.c b/drivers/net/dummy.c
-index f82ad7419508..aa0fc00faecb 100644
---- a/drivers/net/dummy.c
-+++ b/drivers/net/dummy.c
-@@ -102,7 +102,7 @@ static const struct net_device_ops dummy_netdev_ops = {
- static void dummy_get_drvinfo(struct net_device *dev,
- 			      struct ethtool_drvinfo *info)
- {
--	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
- }
- 
- static const struct ethtool_ops dummy_ethtool_ops = {
-diff --git a/drivers/net/fjes/fjes_ethtool.c b/drivers/net/fjes/fjes_ethtool.c
-index 746736c83873..19c99529566b 100644
---- a/drivers/net/fjes/fjes_ethtool.c
-+++ b/drivers/net/fjes/fjes_ethtool.c
-@@ -151,11 +151,11 @@ static void fjes_get_drvinfo(struct net_device *netdev,
- 
- 	plat_dev = adapter->plat_dev;
- 
--	strlcpy(drvinfo->driver, fjes_driver_name, sizeof(drvinfo->driver));
--	strlcpy(drvinfo->version, fjes_driver_version,
-+	strscpy(drvinfo->driver, fjes_driver_name, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->version, fjes_driver_version,
- 		sizeof(drvinfo->version));
- 
--	strlcpy(drvinfo->fw_version, "none", sizeof(drvinfo->fw_version));
-+	strscpy(drvinfo->fw_version, "none", sizeof(drvinfo->fw_version));
- 	snprintf(drvinfo->bus_info, sizeof(drvinfo->bus_info),
- 		 "platform:%s", plat_dev->name);
- }
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index 7962c37b3f14..ce3a710a9b4e 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1200,8 +1200,8 @@ static const struct net_device_ops geneve_netdev_ops = {
- static void geneve_get_drvinfo(struct net_device *dev,
- 			       struct ethtool_drvinfo *drvinfo)
- {
--	strlcpy(drvinfo->version, GENEVE_NETDEV_VER, sizeof(drvinfo->version));
--	strlcpy(drvinfo->driver, "geneve", sizeof(drvinfo->driver));
-+	strscpy(drvinfo->version, GENEVE_NETDEV_VER, sizeof(drvinfo->version));
-+	strscpy(drvinfo->driver, "geneve", sizeof(drvinfo->driver));
- }
- 
- static const struct ethtool_ops geneve_ethtool_ops = {
-diff --git a/drivers/net/hamradio/hdlcdrv.c b/drivers/net/hamradio/hdlcdrv.c
-index 8297411e87ea..a6184d6c7b15 100644
---- a/drivers/net/hamradio/hdlcdrv.c
-+++ b/drivers/net/hamradio/hdlcdrv.c
-@@ -600,7 +600,7 @@ static int hdlcdrv_siocdevprivate(struct net_device *dev, struct ifreq *ifr,
- 
- 	case HDLCDRVCTL_DRIVERNAME:
- 		if (s->ops && s->ops->drvname) {
--			strlcpy(bi.data.drivername, s->ops->drvname,
-+			strscpy(bi.data.drivername, s->ops->drvname,
- 				sizeof(bi.data.drivername));
- 			break;
- 		}
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 15ebd5426604..5f08482065ca 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -935,8 +935,8 @@ int netvsc_recv_callback(struct net_device *net,
- static void netvsc_get_drvinfo(struct net_device *net,
- 			       struct ethtool_drvinfo *info)
- {
--	strlcpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
--	strlcpy(info->fw_version, "N/A", sizeof(info->fw_version));
-+	strscpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
-+	strscpy(info->fw_version, "N/A", sizeof(info->fw_version));
- }
- 
- static void netvsc_get_channels(struct net_device *net,
-diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
-index 49ba8a50dfb1..54c94a69c2bb 100644
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -408,8 +408,8 @@ static int ipvlan_ethtool_get_link_ksettings(struct net_device *dev,
- static void ipvlan_ethtool_get_drvinfo(struct net_device *dev,
- 				       struct ethtool_drvinfo *drvinfo)
- {
--	strlcpy(drvinfo->driver, IPVLAN_DRV, sizeof(drvinfo->driver));
--	strlcpy(drvinfo->version, IPV_DRV_VER, sizeof(drvinfo->version));
-+	strscpy(drvinfo->driver, IPVLAN_DRV, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->version, IPV_DRV_VER, sizeof(drvinfo->version));
- }
- 
- static u32 ipvlan_ethtool_get_msglevel(struct net_device *dev)
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 1080d6ebff63..713e3354cb2e 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -1043,8 +1043,8 @@ static int macvlan_fdb_del(struct ndmsg *ndm, struct nlattr *tb[],
- static void macvlan_ethtool_get_drvinfo(struct net_device *dev,
- 					struct ethtool_drvinfo *drvinfo)
- {
--	strlcpy(drvinfo->driver, "macvlan", sizeof(drvinfo->driver));
--	strlcpy(drvinfo->version, "0.1", sizeof(drvinfo->version));
-+	strscpy(drvinfo->driver, "macvlan", sizeof(drvinfo->driver));
-+	strscpy(drvinfo->version, "0.1", sizeof(drvinfo->version));
- }
- 
- static int macvlan_ethtool_get_link_ksettings(struct net_device *dev,
-diff --git a/drivers/net/net_failover.c b/drivers/net/net_failover.c
-index 21a0435c02de..7a28e082436e 100644
---- a/drivers/net/net_failover.c
-+++ b/drivers/net/net_failover.c
-@@ -324,8 +324,8 @@ static const struct net_device_ops failover_dev_ops = {
- static void nfo_ethtool_get_drvinfo(struct net_device *dev,
- 				    struct ethtool_drvinfo *drvinfo)
- {
--	strlcpy(drvinfo->driver, FAILOVER_NAME, sizeof(drvinfo->driver));
--	strlcpy(drvinfo->version, FAILOVER_VERSION, sizeof(drvinfo->version));
-+	strscpy(drvinfo->driver, FAILOVER_NAME, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->version, FAILOVER_VERSION, sizeof(drvinfo->version));
- }
- 
- static int nfo_ethtool_get_link_ksettings(struct net_device *dev,
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index ddac61d79145..bdff9ac5056d 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -55,7 +55,7 @@ MODULE_PARM_DESC(oops_only, "Only log oops messages");
- #ifndef	MODULE
- static int __init option_setup(char *opt)
- {
--	strlcpy(config, opt, MAX_PARAM_LENGTH);
-+	strscpy(config, opt, MAX_PARAM_LENGTH);
- 	return 1;
- }
- __setup("netconsole=", option_setup);
-@@ -178,7 +178,7 @@ static struct netconsole_target *alloc_param_target(char *target_config)
- 		goto fail;
- 
- 	nt->np.name = "netconsole";
--	strlcpy(nt->np.dev_name, "eth0", IFNAMSIZ);
-+	strscpy(nt->np.dev_name, "eth0", IFNAMSIZ);
- 	nt->np.local_port = 6665;
- 	nt->np.remote_port = 6666;
- 	eth_broadcast_addr(nt->np.remote_mac);
-@@ -414,7 +414,7 @@ static ssize_t dev_name_store(struct config_item *item, const char *buf,
- 		return -EINVAL;
- 	}
- 
--	strlcpy(nt->np.dev_name, buf, IFNAMSIZ);
-+	strscpy(nt->np.dev_name, buf, IFNAMSIZ);
- 
- 	/* Get rid of possible trailing newline from echo(1) */
- 	len = strnlen(nt->np.dev_name, IFNAMSIZ);
-@@ -630,7 +630,7 @@ static struct config_item *make_netconsole_target(struct config_group *group,
- 		return ERR_PTR(-ENOMEM);
- 
- 	nt->np.name = "netconsole";
--	strlcpy(nt->np.dev_name, "eth0", IFNAMSIZ);
-+	strscpy(nt->np.dev_name, "eth0", IFNAMSIZ);
- 	nt->np.local_port = 6665;
- 	nt->np.remote_port = 6666;
- 	eth_broadcast_addr(nt->np.remote_mac);
-@@ -708,7 +708,7 @@ static int netconsole_netdev_event(struct notifier_block *this,
- 		if (nt->np.dev == dev) {
- 			switch (event) {
- 			case NETDEV_CHANGENAME:
--				strlcpy(nt->np.dev_name, dev->name, IFNAMSIZ);
-+				strscpy(nt->np.dev_name, dev->name, IFNAMSIZ);
- 				break;
- 			case NETDEV_RELEASE:
- 			case NETDEV_JOIN:
-diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
-index 80bdc07f2cd3..464d88ca8ab0 100644
---- a/drivers/net/ntb_netdev.c
-+++ b/drivers/net/ntb_netdev.c
-@@ -364,9 +364,9 @@ static void ntb_get_drvinfo(struct net_device *ndev,
- {
- 	struct ntb_netdev *dev = netdev_priv(ndev);
- 
--	strlcpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
--	strlcpy(info->version, NTB_NETDEV_VER, sizeof(info->version));
--	strlcpy(info->bus_info, pci_name(dev->pdev), sizeof(info->bus_info));
-+	strscpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
-+	strscpy(info->version, NTB_NETDEV_VER, sizeof(info->version));
-+	strscpy(info->bus_info, pci_name(dev->pdev), sizeof(info->bus_info));
- }
- 
- static int ntb_get_link_ksettings(struct net_device *dev,
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index ee374a85544a..134637584a83 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -749,7 +749,7 @@ static void adin_get_strings(struct phy_device *phydev, u8 *data)
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(adin_hw_stats); i++) {
--		strlcpy(&data[i * ETH_GSTRING_LEN],
-+		strscpy(&data[i * ETH_GSTRING_LEN],
- 			adin_hw_stats[i].string, ETH_GSTRING_LEN);
- 	}
- }
-diff --git a/drivers/net/phy/bcm-phy-lib.c b/drivers/net/phy/bcm-phy-lib.c
-index 287cccf8f7f4..b2c0baa51f39 100644
---- a/drivers/net/phy/bcm-phy-lib.c
-+++ b/drivers/net/phy/bcm-phy-lib.c
-@@ -519,7 +519,7 @@ void bcm_phy_get_strings(struct phy_device *phydev, u8 *data)
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(bcm_phy_hw_stats); i++)
--		strlcpy(data + i * ETH_GSTRING_LEN,
-+		strscpy(data + i * ETH_GSTRING_LEN,
- 			bcm_phy_hw_stats[i].string, ETH_GSTRING_LEN);
- }
- EXPORT_SYMBOL_GPL(bcm_phy_get_strings);
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index a714150f5e8c..a3e810705ce2 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -1952,7 +1952,7 @@ static void marvell_get_strings(struct phy_device *phydev, u8 *data)
- 	int i;
- 
- 	for (i = 0; i < count; i++) {
--		strlcpy(data + i * ETH_GSTRING_LEN,
-+		strscpy(data + i * ETH_GSTRING_LEN,
- 			marvell_hw_stats[i].string, ETH_GSTRING_LEN);
- 	}
- }
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index e78d0bf69bc3..16301634b44e 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -1650,7 +1650,7 @@ static void kszphy_get_strings(struct phy_device *phydev, u8 *data)
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(kszphy_hw_stats); i++) {
--		strlcpy(data + i * ETH_GSTRING_LEN,
-+		strscpy(data + i * ETH_GSTRING_LEN,
- 			kszphy_hw_stats[i].string, ETH_GSTRING_LEN);
- 	}
- }
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 7e3017e7a1c0..8a13b1ad9a33 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -136,7 +136,7 @@ static void vsc85xx_get_strings(struct phy_device *phydev, u8 *data)
- 		return;
- 
- 	for (i = 0; i < priv->nstats; i++)
--		strlcpy(data + i * ETH_GSTRING_LEN, priv->hw_stats[i].string,
-+		strscpy(data + i * ETH_GSTRING_LEN, priv->hw_stats[i].string,
- 			ETH_GSTRING_LEN);
- }
- 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 12ff276b80ae..2198f1302642 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -370,7 +370,7 @@ int phy_register_fixup(const char *bus_id, u32 phy_uid, u32 phy_uid_mask,
- 	if (!fixup)
- 		return -ENOMEM;
- 
--	strlcpy(fixup->bus_id, bus_id, sizeof(fixup->bus_id));
-+	strscpy(fixup->bus_id, bus_id, sizeof(fixup->bus_id));
- 	fixup->phy_uid = phy_uid;
- 	fixup->phy_uid_mask = phy_uid_mask;
- 	fixup->run = run;
-diff --git a/drivers/net/rionet.c b/drivers/net/rionet.c
-index 39e61e07e489..fbcb9d05da64 100644
---- a/drivers/net/rionet.c
-+++ b/drivers/net/rionet.c
-@@ -443,10 +443,10 @@ static void rionet_get_drvinfo(struct net_device *ndev,
- {
- 	struct rionet_private *rnet = netdev_priv(ndev);
- 
--	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
--	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
--	strlcpy(info->fw_version, "n/a", sizeof(info->fw_version));
--	strlcpy(info->bus_info, rnet->mport->name, sizeof(info->bus_info));
-+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strscpy(info->version, DRV_VERSION, sizeof(info->version));
-+	strscpy(info->fw_version, "n/a", sizeof(info->fw_version));
-+	strscpy(info->bus_info, rnet->mport->name, sizeof(info->bus_info));
- }
- 
- static u32 rionet_get_msglevel(struct net_device *ndev)
-diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
-index aac133a1e27a..6a391a60c2a5 100644
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -2070,8 +2070,8 @@ static const struct net_device_ops team_netdev_ops = {
- static void team_ethtool_get_drvinfo(struct net_device *dev,
- 				     struct ethtool_drvinfo *drvinfo)
- {
--	strlcpy(drvinfo->driver, DRV_NAME, sizeof(drvinfo->driver));
--	strlcpy(drvinfo->version, UTS_RELEASE, sizeof(drvinfo->version));
-+	strscpy(drvinfo->driver, DRV_NAME, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->version, UTS_RELEASE, sizeof(drvinfo->version));
- }
- 
- static int team_ethtool_get_link_ksettings(struct net_device *dev,
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 259b2b84b2b3..3732e51b5ad8 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -3540,15 +3540,15 @@ static void tun_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info
- {
- 	struct tun_struct *tun = netdev_priv(dev);
- 
--	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
--	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
-+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strscpy(info->version, DRV_VERSION, sizeof(info->version));
- 
- 	switch (tun->flags & TUN_TYPE_MASK) {
- 	case IFF_TUN:
--		strlcpy(info->bus_info, "tun", sizeof(info->bus_info));
-+		strscpy(info->bus_info, "tun", sizeof(info->bus_info));
- 		break;
- 	case IFF_TAP:
--		strlcpy(info->bus_info, "tap", sizeof(info->bus_info));
-+		strscpy(info->bus_info, "tap", sizeof(info->bus_info));
- 		break;
- 	}
- }
-diff --git a/drivers/net/usb/aqc111.c b/drivers/net/usb/aqc111.c
-index 3020e81159d0..a017e9de2119 100644
---- a/drivers/net/usb/aqc111.c
-+++ b/drivers/net/usb/aqc111.c
-@@ -201,7 +201,7 @@ static void aqc111_get_drvinfo(struct net_device *net,
- 
- 	/* Inherit standard device info */
- 	usbnet_get_drvinfo(net, info);
--	strlcpy(info->driver, DRIVER_NAME, sizeof(info->driver));
-+	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
- 	snprintf(info->fw_version, sizeof(info->fw_version), "%u.%u.%u",
- 		 aqc111_data->fw_ver.major,
- 		 aqc111_data->fw_ver.minor,
-diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
-index 9ea91c3ff045..72ffc89b477a 100644
---- a/drivers/net/usb/asix_common.c
-+++ b/drivers/net/usb/asix_common.c
-@@ -752,8 +752,8 @@ void asix_get_drvinfo(struct net_device *net, struct ethtool_drvinfo *info)
- {
- 	/* Inherit standard device info */
- 	usbnet_get_drvinfo(net, info);
--	strlcpy(info->driver, DRIVER_NAME, sizeof(info->driver));
--	strlcpy(info->version, DRIVER_VERSION, sizeof(info->version));
-+	strscpy(info->driver, DRIVER_NAME, sizeof(info->driver));
-+	strscpy(info->version, DRIVER_VERSION, sizeof(info->version));
- }
- 
- int asix_set_mac_address(struct net_device *net, void *p)
-diff --git a/drivers/net/usb/catc.c b/drivers/net/usb/catc.c
-index 843893482abd..ff439ef535ac 100644
---- a/drivers/net/usb/catc.c
-+++ b/drivers/net/usb/catc.c
-@@ -672,8 +672,8 @@ static void catc_get_drvinfo(struct net_device *dev,
- 			     struct ethtool_drvinfo *info)
- {
- 	struct catc *catc = netdev_priv(dev);
--	strlcpy(info->driver, driver_name, sizeof(info->driver));
--	strlcpy(info->version, DRIVER_VERSION, sizeof(info->version));
-+	strscpy(info->driver, driver_name, sizeof(info->driver));
-+	strscpy(info->version, DRIVER_VERSION, sizeof(info->version));
- 	usb_make_path(catc->usbdev, info->bus_info, sizeof(info->bus_info));
- }
- 
-diff --git a/drivers/net/usb/pegasus.c b/drivers/net/usb/pegasus.c
-index feb247e355f7..81ca64debc5b 100644
---- a/drivers/net/usb/pegasus.c
-+++ b/drivers/net/usb/pegasus.c
-@@ -894,7 +894,7 @@ static void pegasus_get_drvinfo(struct net_device *dev,
- {
- 	pegasus_t *pegasus = netdev_priv(dev);
- 
--	strlcpy(info->driver, driver_name, sizeof(info->driver));
-+	strscpy(info->driver, driver_name, sizeof(info->driver));
- 	usb_make_path(pegasus->usb, info->bus_info, sizeof(info->bus_info));
- }
- 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index d142ac8fcf6e..09f0c1677a22 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -8601,11 +8601,11 @@ static void rtl8152_get_drvinfo(struct net_device *netdev,
- {
- 	struct r8152 *tp = netdev_priv(netdev);
- 
--	strlcpy(info->driver, MODULENAME, sizeof(info->driver));
--	strlcpy(info->version, DRIVER_VERSION, sizeof(info->version));
-+	strscpy(info->driver, MODULENAME, sizeof(info->driver));
-+	strscpy(info->version, DRIVER_VERSION, sizeof(info->version));
- 	usb_make_path(tp->udev, info->bus_info, sizeof(info->bus_info));
- 	if (!IS_ERR_OR_NULL(tp->rtl_fw.fw))
--		strlcpy(info->fw_version, tp->rtl_fw.version,
-+		strscpy(info->fw_version, tp->rtl_fw.version,
- 			sizeof(info->fw_version));
- }
- 
-diff --git a/drivers/net/usb/rtl8150.c b/drivers/net/usb/rtl8150.c
-index 3d2bf2acca94..97afd7335d86 100644
---- a/drivers/net/usb/rtl8150.c
-+++ b/drivers/net/usb/rtl8150.c
-@@ -769,8 +769,8 @@ static void rtl8150_get_drvinfo(struct net_device *netdev, struct ethtool_drvinf
- {
- 	rtl8150_t *dev = netdev_priv(netdev);
- 
--	strlcpy(info->driver, driver_name, sizeof(info->driver));
--	strlcpy(info->version, DRIVER_VERSION, sizeof(info->version));
-+	strscpy(info->driver, driver_name, sizeof(info->driver));
-+	strscpy(info->version, DRIVER_VERSION, sizeof(info->version));
- 	usb_make_path(dev->udev, info->bus_info, sizeof(info->bus_info));
- }
- 
-diff --git a/drivers/net/usb/sierra_net.c b/drivers/net/usb/sierra_net.c
-index bb4cbe8fc846..b3ae949e6f1c 100644
---- a/drivers/net/usb/sierra_net.c
-+++ b/drivers/net/usb/sierra_net.c
-@@ -612,8 +612,8 @@ static void sierra_net_get_drvinfo(struct net_device *net,
- {
- 	/* Inherit standard device info */
- 	usbnet_get_drvinfo(net, info);
--	strlcpy(info->driver, driver_name, sizeof(info->driver));
--	strlcpy(info->version, DRIVER_VERSION, sizeof(info->version));
-+	strscpy(info->driver, driver_name, sizeof(info->driver));
-+	strscpy(info->version, DRIVER_VERSION, sizeof(info->version));
- }
- 
- static u32 sierra_net_get_link(struct net_device *net)
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index aaa89b4cfd50..fd399a8ed973 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -1050,9 +1050,9 @@ void usbnet_get_drvinfo (struct net_device *net, struct ethtool_drvinfo *info)
- {
- 	struct usbnet *dev = netdev_priv(net);
- 
--	strlcpy (info->driver, dev->driver_name, sizeof info->driver);
--	strlcpy (info->fw_version, dev->driver_info->description,
--		sizeof info->fw_version);
-+	strscpy(info->driver, dev->driver_name, sizeof(info->driver));
-+	strscpy(info->fw_version, dev->driver_info->description,
-+		sizeof(info->fw_version));
- 	usb_make_path (dev->udev, info->bus_info, sizeof info->bus_info);
- }
- EXPORT_SYMBOL_GPL(usbnet_get_drvinfo);
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index 466da01ba2e3..550c85a366a0 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -128,8 +128,8 @@ static int veth_get_link_ksettings(struct net_device *dev,
- 
- static void veth_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
- {
--	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
--	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
-+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strscpy(info->version, DRV_VERSION, sizeof(info->version));
- }
- 
- static void veth_get_strings(struct net_device *dev, u32 stringset, u8 *buf)
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 9cce7dec7366..e0e57083d442 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2594,9 +2594,9 @@ static void virtnet_get_drvinfo(struct net_device *dev,
- 	struct virtnet_info *vi = netdev_priv(dev);
- 	struct virtio_device *vdev = vi->vdev;
- 
--	strlcpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
--	strlcpy(info->version, VIRTNET_DRIVER_VERSION, sizeof(info->version));
--	strlcpy(info->bus_info, virtio_bus_name(vdev), sizeof(info->bus_info));
-+	strscpy(info->driver, KBUILD_MODNAME, sizeof(info->driver));
-+	strscpy(info->version, VIRTNET_DRIVER_VERSION, sizeof(info->version));
-+	strscpy(info->bus_info, virtio_bus_name(vdev), sizeof(info->bus_info));
- 
- }
- 
-diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-index e2034adc3a1a..18cf7c723201 100644
---- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-+++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-@@ -209,12 +209,12 @@ vmxnet3_get_drvinfo(struct net_device *netdev, struct ethtool_drvinfo *drvinfo)
- {
- 	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
- 
--	strlcpy(drvinfo->driver, vmxnet3_driver_name, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->driver, vmxnet3_driver_name, sizeof(drvinfo->driver));
- 
--	strlcpy(drvinfo->version, VMXNET3_DRIVER_VERSION_REPORT,
-+	strscpy(drvinfo->version, VMXNET3_DRIVER_VERSION_REPORT,
- 		sizeof(drvinfo->version));
- 
--	strlcpy(drvinfo->bus_info, pci_name(adapter->pdev),
-+	strscpy(drvinfo->bus_info, pci_name(adapter->pdev),
- 		sizeof(drvinfo->bus_info));
- }
- 
-diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
-index 5df7a0abc39d..badf6f09ae51 100644
---- a/drivers/net/vrf.c
-+++ b/drivers/net/vrf.c
-@@ -1541,8 +1541,8 @@ static const struct l3mdev_ops vrf_l3mdev_ops = {
- static void vrf_get_drvinfo(struct net_device *dev,
- 			    struct ethtool_drvinfo *info)
- {
--	strlcpy(info->driver, DRV_NAME, sizeof(info->driver));
--	strlcpy(info->version, DRV_VERSION, sizeof(info->version));
-+	strscpy(info->driver, DRV_NAME, sizeof(info->driver));
-+	strscpy(info->version, DRV_VERSION, sizeof(info->version));
- }
- 
- static const struct ethtool_ops vrf_ethtool_ops = {
-diff --git a/drivers/net/vxlan/vxlan_core.c b/drivers/net/vxlan/vxlan_core.c
-index c3285242f74f..939be2e148de 100644
---- a/drivers/net/vxlan/vxlan_core.c
-+++ b/drivers/net/vxlan/vxlan_core.c
-@@ -3313,8 +3313,8 @@ static int vxlan_validate(struct nlattr *tb[], struct nlattr *data[],
- static void vxlan_get_drvinfo(struct net_device *netdev,
- 			      struct ethtool_drvinfo *drvinfo)
- {
--	strlcpy(drvinfo->version, VXLAN_VERSION, sizeof(drvinfo->version));
--	strlcpy(drvinfo->driver, "vxlan", sizeof(drvinfo->driver));
-+	strscpy(drvinfo->version, VXLAN_VERSION, sizeof(drvinfo->version));
-+	strscpy(drvinfo->driver, "vxlan", sizeof(drvinfo->driver));
- }
- 
- static int vxlan_get_link_ksettings(struct net_device *dev,
--- 
-2.35.1
-
+RnJvbTogUmFmYWVsIEouIFd5c29ja2kgPHJqd0Byand5c29ja2kubmV0PiBTZW50OiBXZWRuZXNk
+YXksIEF1Z3VzdCAyNCwgMjAyMiAxMDowMCBBTQ0KPiANCj4gVGhlIHBhcmVudCBmaWVsZCBpbiBz
+dHJ1Y3QgYWNwaV9kZXZpY2UgaXMsIGluIGZhY3QsIHJlZHVuZGFudCwNCj4gYmVjYXVzZSB0aGUg
+ZGV2LnBhcmVudCBmaWVsZCBpbiBpdCBlZmZlY3RpdmVseSBwb2ludHMgdG8gdGhlIHNhbWUNCj4g
+b2JqZWN0IGFuZCBpdCBpcyB1c2VkIGJ5IHRoZSBkcml2ZXIgY29yZS4NCj4gDQo+IEFjY29yZGlu
+Z2x5LCB0aGUgcGFyZW50IGZpZWxkIGNhbiBiZSBkcm9wcGVkIGZyb20gc3RydWN0IGFjcGlfZGV2
+aWNlDQo+IGFuZCBmb3IgdGhpcyBwdXJwb3NlIGRlZmluZSBhY3BpX2Rldl9wYXJlbnQoKSB0byBy
+ZXRyaWV2ZSBhIHBhcmVudA0KPiBzdHJ1Y3QgYWNwaV9kZXZpY2UgcG9pbnRlciBmcm9tIHRoZSBk
+ZXYucGFyZW50IGZpZWxkIGluIHN0cnVjdA0KPiBhY3BpX2RldmljZS4gIE5leHQsIHVwZGF0ZSBh
+bGwgb2YgdGhlIHVzZXJzIG9mIHRoZSBwYXJlbnQgZmllbGQNCj4gaW4gc3RydWN0IGFjcGlfZGV2
+aWNlIHRvIHVzZSBhY3BpX2Rldl9wYXJlbnQoKSBpbnN0ZWFkIG9mIGl0IGFuZA0KPiBkcm9wIGl0
+Lg0KPiANCj4gV2hpbGUgYXQgaXQsIGRyb3AgdGhlIEFDUElfSVNfUk9PVF9ERVZJQ0UoKSBtYWNy
+byB0aGF0IGlzIG9ubHkgdXNlZA0KPiBpbiBvbmUgcGxhY2UgaW4gYSBjb25mdXNpbmcgd2F5Lg0K
+PiANCj4gTm8gaW50ZW50aW9uYWwgZnVuY3Rpb25hbCBpbXBhY3QuDQo+IA0KPiBTaWduZWQtb2Zm
+LWJ5OiBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+IEFj
+a2VkLWJ5OiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+DQo+IEFja2VkLWJ5OiBNaWth
+IFdlc3RlcmJlcmcgPG1pa2Eud2VzdGVyYmVyZ0BsaW51eC5pbnRlbC5jb20+DQo+IEFja2VkLWJ5
+OiBXZWkgTGl1IDx3ZWkubGl1QGtlcm5lbC5vcmc+DQo+IFJldmlld2VkLWJ5OiBQdW5pdCBBZ3Jh
+d2FsIDxwdW5pdC5hZ3Jhd2FsQGJ5dGVkYW5jZS5jb20+DQoNClRlc3RlZCB0aGUgZnVsbCBwYXRj
+aCBzZXJpZXMgaW4gQXp1cmUgVk1zIHJ1bm5pbmcgb24gSHlwZXItViAtLQ0Kb25lIHg4Ni94NjQg
+YW5kIG9uZSBBUk02NC4gIFRlc3RpbmcgaW5jbHVkZXMgc3RhbmRhcmQgVk1idXMNCmRldmljZXMg
+YXMgd2VsbCBhcyB2aXJ0dWFsIFBDSSBkZXZpY2VzIChNZWxsYW5veCBDWC01IFZpcnR1YWwNCkZ1
+bmN0aW9uKS4gICBWZXJpZmllZCB0aGF0IEFDUEkgZGV2aWNlIGNhY2hlIGNvaGVyZW5jZSBwcm9w
+ZXJ0eSBpcw0KcHJvcGFnYXRlZCB0aHJvdWdoIHRoZSBoaWVyYXJjaHkgb2YgZGV2aWNlcyB0aGF0
+IHRoZSBWTWJ1cyBhbmQNCkh5cGVyLVYgdmlydHVhbCBQQ0kgZHJpdmVycyBzZXQgdXAuDQoNClRl
+c3RlZC1ieTogTWljaGFlbCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQoNCj4gLS0t
+DQo+IA0KPiB2MSAtPiB2MjoNCj4gICAgKiBDb3ZlciAzIG1vcmUgdXNlcnMgb2YgdGhlIHBhcmVu
+dCBmaWVsZCBpbiBzdHJ1Y3QgYWNwaV9kZXZpY2UuDQo+ICAgICogQWRkIHRhZ3MgY29sbGVjdGVk
+IHNvIGZhci4NCj4gDQo+IC0tLQ0KPiAgZHJpdmVycy9hY3BpL2FjcGlfYW1iYS5jICAgICB8ICAg
+IDUgKysrLS0NCj4gIGRyaXZlcnMvYWNwaS9hY3BpX3BsYXRmb3JtLmMgfCAgICA2ICsrKy0tLQ0K
+PiAgZHJpdmVycy9hY3BpL2FjcGlfdmlkZW8uYyAgICB8ICAgIDIgKy0NCj4gIGRyaXZlcnMvYWNw
+aS9kZXZpY2VfcG0uYyAgICAgfCAgIDE5ICsrKysrKysrKystLS0tLS0tLS0NCj4gIGRyaXZlcnMv
+YWNwaS9wcm9wZXJ0eS5jICAgICAgfCAgICA2ICsrKystLQ0KPiAgZHJpdmVycy9hY3BpL3Nicy5j
+ICAgICAgICAgICB8ICAgIDIgKy0NCj4gIGRyaXZlcnMvYWNwaS9zYnNoYy5jICAgICAgICAgfCAg
+ICAyICstDQo+ICBkcml2ZXJzL2FjcGkvc2Nhbi5jICAgICAgICAgIHwgICAxNyArKysrKystLS0t
+LS0tLS0tLQ0KPiAgZHJpdmVycy9odi92bWJ1c19kcnYuYyAgICAgICB8ICAgIDMgKystDQo+ICBk
+cml2ZXJzL3BlcmYvYXJtX2RzdV9wbXUuYyAgIHwgICAgNCArKy0tDQo+ICBkcml2ZXJzL3BlcmYv
+cWNvbV9sM19wbXUuYyAgIHwgICAgMyArKy0NCj4gIGRyaXZlcnMvc3BpL3NwaS5jICAgICAgICAg
+ICAgfCAgICAyICstDQo+ICBkcml2ZXJzL3RodW5kZXJib2x0L2FjcGkuYyAgIHwgICAgMiArLQ0K
+PiAgaW5jbHVkZS9hY3BpL2FjcGlfYnVzLmggICAgICB8ICAgMTAgKysrKysrKysrLQ0KPiAgMTQg
+ZmlsZXMgY2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygrKSwgMzcgZGVsZXRpb25zKC0pDQo+IA0KPiBJ
+bmRleDogbGludXgtcG0vZHJpdmVycy9hY3BpL3NjYW4uYw0KPiA9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+IC0tLSBs
+aW51eC1wbS5vcmlnL2RyaXZlcnMvYWNwaS9zY2FuLmMNCj4gKysrIGxpbnV4LXBtL2RyaXZlcnMv
+YWNwaS9zY2FuLmMNCj4gQEAgLTI5LDggKzI5LDYgQEAgZXh0ZXJuIHN0cnVjdCBhY3BpX2Rldmlj
+ZSAqYWNwaV9yb290Ow0KPiAgI2RlZmluZSBBQ1BJX0JVU19ISUQJCQkiTE5YU1lCVVMiDQo+ICAj
+ZGVmaW5lIEFDUElfQlVTX0RFVklDRV9OQU1FCQkiU3lzdGVtIEJ1cyINCj4gDQo+IC0jZGVmaW5l
+IEFDUElfSVNfUk9PVF9ERVZJQ0UoZGV2aWNlKSAgICAoIShkZXZpY2UpLT5wYXJlbnQpDQo+IC0N
+Cj4gICNkZWZpbmUgSU5WQUxJRF9BQ1BJX0hBTkRMRQkoKGFjcGlfaGFuZGxlKWVtcHR5X3plcm9f
+cGFnZSkNCj4gDQo+ICBzdGF0aWMgY29uc3QgY2hhciAqZHVtbXlfaGlkID0gImRldmljZSI7DQo+
+IEBAIC0xMTEwLDcgKzExMDgsNyBAQCBzdGF0aWMgdm9pZCBhY3BpX2RldmljZV9nZXRfYnVzaWQo
+c3RydWN0DQo+ICAJICogVGhlIGRldmljZSdzIEJ1cyBJRCBpcyBzaW1wbHkgdGhlIG9iamVjdCBu
+YW1lLg0KPiAgCSAqIFRCRDogU2hvdWxkbid0IHRoaXMgdmFsdWUgYmUgdW5pcXVlICh3aXRoaW4g
+dGhlIEFDUEkgbmFtZXNwYWNlKT8NCj4gIAkgKi8NCj4gLQlpZiAoQUNQSV9JU19ST09UX0RFVklD
+RShkZXZpY2UpKSB7DQo+ICsJaWYgKCFhY3BpX2Rldl9wYXJlbnQoZGV2aWNlKSkgew0KPiAgCQlz
+dHJjcHkoZGV2aWNlLT5wbnAuYnVzX2lkLCAiQUNQSSIpOw0KPiAgCQlyZXR1cm47DQo+ICAJfQ0K
+PiBAQCAtMTY0Niw3ICsxNjQ0LDcgQEAgc3RhdGljIHZvaWQgYWNwaV9pbml0X2NvaGVyZW5jeShz
+dHJ1Y3QgYQ0KPiAgew0KPiAgCXVuc2lnbmVkIGxvbmcgbG9uZyBjY2EgPSAwOw0KPiAgCWFjcGlf
+c3RhdHVzIHN0YXR1czsNCj4gLQlzdHJ1Y3QgYWNwaV9kZXZpY2UgKnBhcmVudCA9IGFkZXYtPnBh
+cmVudDsNCj4gKwlzdHJ1Y3QgYWNwaV9kZXZpY2UgKnBhcmVudCA9IGFjcGlfZGV2X3BhcmVudChh
+ZGV2KTsNCj4gDQo+ICAJaWYgKHBhcmVudCAmJiBwYXJlbnQtPmZsYWdzLmNjYV9zZWVuKSB7DQo+
+ICAJCS8qDQo+IEBAIC0xNjkwLDcgKzE2ODgsNyBAQCBzdGF0aWMgaW50IGFjcGlfY2hlY2tfc2Vy
+aWFsX2J1c19zbGF2ZShzDQo+IA0KPiAgc3RhdGljIGJvb2wgYWNwaV9pc19pbmRpcmVjdF9pb19z
+bGF2ZShzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRldmljZSkNCj4gIHsNCj4gLQlzdHJ1Y3QgYWNwaV9k
+ZXZpY2UgKnBhcmVudCA9IGRldmljZS0+cGFyZW50Ow0KPiArCXN0cnVjdCBhY3BpX2RldmljZSAq
+cGFyZW50ID0gYWNwaV9kZXZfcGFyZW50KGRldmljZSk7DQo+ICAJc3RhdGljIGNvbnN0IHN0cnVj
+dCBhY3BpX2RldmljZV9pZCBpbmRpcmVjdF9pb19ob3N0c1tdID0gew0KPiAgCQl7IkhJU0kwMTkx
+IiwgMH0sDQo+ICAJCXt9DQo+IEBAIC0xNzY3LDEwICsxNzY1LDcgQEAgdm9pZCBhY3BpX2luaXRf
+ZGV2aWNlX29iamVjdChzdHJ1Y3QgYWNwaQ0KPiAgCUlOSVRfTElTVF9IRUFEKCZkZXZpY2UtPnBu
+cC5pZHMpOw0KPiAgCWRldmljZS0+ZGV2aWNlX3R5cGUgPSB0eXBlOw0KPiAgCWRldmljZS0+aGFu
+ZGxlID0gaGFuZGxlOw0KPiAtCWlmIChwYXJlbnQpIHsNCj4gLQkJZGV2aWNlLT5wYXJlbnQgPSBw
+YXJlbnQ7DQo+IC0JCWRldmljZS0+ZGV2LnBhcmVudCA9ICZwYXJlbnQtPmRldjsNCj4gLQl9DQo+
+ICsJZGV2aWNlLT5kZXYucGFyZW50ID0gcGFyZW50ID8gJnBhcmVudC0+ZGV2IDogTlVMTDsNCj4g
+IAlkZXZpY2UtPmRldi5yZWxlYXNlID0gcmVsZWFzZTsNCj4gIAlkZXZpY2UtPmRldi5idXMgPSAm
+YWNwaV9idXNfdHlwZTsNCj4gIAlmd25vZGVfaW5pdCgmZGV2aWNlLT5md25vZGUsICZhY3BpX2Rl
+dmljZV9md25vZGVfb3BzKTsNCj4gQEAgLTE4NjcsOCArMTg2Miw4IEBAIHN0YXRpYyBpbnQgYWNw
+aV9hZGRfc2luZ2xlX29iamVjdChzdHJ1Y3QNCj4gIAlhY3BpX2RldmljZV9hZGRfZmluYWxpemUo
+ZGV2aWNlKTsNCj4gDQo+ICAJYWNwaV9oYW5kbGVfZGVidWcoaGFuZGxlLCAiQWRkZWQgYXMgJXMs
+IHBhcmVudCAlc1xuIiwNCj4gLQkJCSAgZGV2X25hbWUoJmRldmljZS0+ZGV2KSwgZGV2aWNlLT5w
+YXJlbnQgPw0KPiAtCQkJCWRldl9uYW1lKCZkZXZpY2UtPnBhcmVudC0+ZGV2KSA6ICIobnVsbCki
+KTsNCj4gKwkJCSAgZGV2X25hbWUoJmRldmljZS0+ZGV2KSwgZGV2aWNlLT5kZXYucGFyZW50ID8N
+Cj4gKwkJCQlkZXZfbmFtZShkZXZpY2UtPmRldi5wYXJlbnQpIDogIihudWxsKSIpOw0KPiANCj4g
+IAkqY2hpbGQgPSBkZXZpY2U7DQo+ICAJcmV0dXJuIDA7DQo+IEluZGV4OiBsaW51eC1wbS9pbmNs
+dWRlL2FjcGkvYWNwaV9idXMuaA0KPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+IC0tLSBsaW51eC1wbS5vcmlnL2lu
+Y2x1ZGUvYWNwaS9hY3BpX2J1cy5oDQo+ICsrKyBsaW51eC1wbS9pbmNsdWRlL2FjcGkvYWNwaV9i
+dXMuaA0KPiBAQCAtMzY1LDcgKzM2NSw2IEBAIHN0cnVjdCBhY3BpX2RldmljZSB7DQo+ICAJaW50
+IGRldmljZV90eXBlOw0KPiAgCWFjcGlfaGFuZGxlIGhhbmRsZTsJCS8qIG5vIGhhbmRsZSBmb3Ig
+Zml4ZWQgaGFyZHdhcmUgKi8NCj4gIAlzdHJ1Y3QgZndub2RlX2hhbmRsZSBmd25vZGU7DQo+IC0J
+c3RydWN0IGFjcGlfZGV2aWNlICpwYXJlbnQ7DQo+ICAJc3RydWN0IGxpc3RfaGVhZCB3YWtldXBf
+bGlzdDsNCj4gIAlzdHJ1Y3QgbGlzdF9oZWFkIGRlbF9saXN0Ow0KPiAgCXN0cnVjdCBhY3BpX2Rl
+dmljZV9zdGF0dXMgc3RhdHVzOw0KPiBAQCAtNDU4LDYgKzQ1NywxNCBAQCBzdGF0aWMgaW5saW5l
+IHZvaWQgKmFjcGlfZHJpdmVyX2RhdGEoc3RyDQo+ICAjZGVmaW5lIHRvX2FjcGlfZGV2aWNlKGQp
+CWNvbnRhaW5lcl9vZihkLCBzdHJ1Y3QgYWNwaV9kZXZpY2UsIGRldikNCj4gICNkZWZpbmUgdG9f
+YWNwaV9kcml2ZXIoZCkJY29udGFpbmVyX29mKGQsIHN0cnVjdCBhY3BpX2RyaXZlciwgZHJ2KQ0K
+PiANCj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IGFjcGlfZGV2aWNlICphY3BpX2Rldl9wYXJlbnQo
+c3RydWN0IGFjcGlfZGV2aWNlICphZGV2KQ0KPiArew0KPiArCWlmIChhZGV2LT5kZXYucGFyZW50
+KQ0KPiArCQlyZXR1cm4gdG9fYWNwaV9kZXZpY2UoYWRldi0+ZGV2LnBhcmVudCk7DQo+ICsNCj4g
+KwlyZXR1cm4gTlVMTDsNCj4gK30NCj4gKw0KPiAgc3RhdGljIGlubGluZSB2b2lkIGFjcGlfc2V0
+X2RldmljZV9zdGF0dXMoc3RydWN0IGFjcGlfZGV2aWNlICphZGV2LCB1MzIgc3RhKQ0KPiAgew0K
+PiAgCSooKHUzMiAqKSZhZGV2LT5zdGF0dXMpID0gc3RhOw0KPiBAQCAtNDc4LDYgKzQ4NSw3IEBA
+IHZvaWQgYWNwaV9pbml0aWFsaXplX2hwX2NvbnRleHQoc3RydWN0IGENCj4gIC8qIGFjcGlfZGV2
+aWNlLmRldi5idXMgPT0gJmFjcGlfYnVzX3R5cGUgKi8NCj4gIGV4dGVybiBzdHJ1Y3QgYnVzX3R5
+cGUgYWNwaV9idXNfdHlwZTsNCj4gDQo+ICtzdHJ1Y3QgYWNwaV9kZXZpY2UgKmFjcGlfZGV2X3Bh
+cmVudChzdHJ1Y3QgYWNwaV9kZXZpY2UgKmFkZXYpOw0KPiAgaW50IGFjcGlfYnVzX2Zvcl9lYWNo
+X2RldihpbnQgKCpmbikoc3RydWN0IGRldmljZSAqLCB2b2lkICopLCB2b2lkICpkYXRhKTsNCj4g
+IGludCBhY3BpX2Rldl9mb3JfZWFjaF9jaGlsZChzdHJ1Y3QgYWNwaV9kZXZpY2UgKmFkZXYsDQo+
+ICAJCQkgICAgaW50ICgqZm4pKHN0cnVjdCBhY3BpX2RldmljZSAqLCB2b2lkICopLCB2b2lkICpk
+YXRhKTsNCj4gSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9wcm9wZXJ0eS5jDQo+ID09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT0NCj4gLS0tIGxpbnV4LXBtLm9yaWcvZHJpdmVycy9hY3BpL3Byb3BlcnR5LmMNCj4gKysr
+IGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9wcm9wZXJ0eS5jDQo+IEBAIC0zMDQsOCArMzA0LDEwIEBA
+IHN0YXRpYyB2b2lkIGFjcGlfaW5pdF9vZl9jb21wYXRpYmxlKHN0cnUNCj4gIAkJcmV0ID0gYWNw
+aV9kZXZfZ2V0X3Byb3BlcnR5KGFkZXYsICJjb21wYXRpYmxlIiwNCj4gIAkJCQkJICAgIEFDUElf
+VFlQRV9TVFJJTkcsICZvZl9jb21wYXRpYmxlKTsNCj4gIAkJaWYgKHJldCkgew0KPiAtCQkJaWYg
+KGFkZXYtPnBhcmVudA0KPiAtCQkJICAgICYmIGFkZXYtPnBhcmVudC0+ZmxhZ3Mub2ZfY29tcGF0
+aWJsZV9vaykNCj4gKwkJCXN0cnVjdCBhY3BpX2RldmljZSAqcGFyZW50Ow0KPiArDQo+ICsJCQlw
+YXJlbnQgPSBhY3BpX2Rldl9wYXJlbnQoYWRldik7DQo+ICsJCQlpZiAocGFyZW50ICYmIHBhcmVu
+dC0+ZmxhZ3Mub2ZfY29tcGF0aWJsZV9vaykNCj4gIAkJCQlnb3RvIG91dDsNCj4gDQo+ICAJCQly
+ZXR1cm47DQo+IEluZGV4OiBsaW51eC1wbS9kcml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMNCj4gPT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PQ0KPiAtLS0gbGludXgtcG0ub3JpZy9kcml2ZXJzL2FjcGkvZGV2aWNlX3BtLmMNCj4g
+KysrIGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9kZXZpY2VfcG0uYw0KPiBAQCAtNzQsNiArNzQsNyBA
+QCBzdGF0aWMgaW50IGFjcGlfZGV2X3BtX2V4cGxpY2l0X2dldChzdHJ1DQo+ICAgKi8NCj4gIGlu
+dCBhY3BpX2RldmljZV9nZXRfcG93ZXIoc3RydWN0IGFjcGlfZGV2aWNlICpkZXZpY2UsIGludCAq
+c3RhdGUpDQo+ICB7DQo+ICsJc3RydWN0IGFjcGlfZGV2aWNlICpwYXJlbnQgPSBhY3BpX2Rldl9w
+YXJlbnQoZGV2aWNlKTsNCj4gIAlpbnQgcmVzdWx0ID0gQUNQSV9TVEFURV9VTktOT1dOOw0KPiAg
+CWludCBlcnJvcjsNCj4gDQo+IEBAIC04Miw4ICs4Myw3IEBAIGludCBhY3BpX2RldmljZV9nZXRf
+cG93ZXIoc3RydWN0IGFjcGlfZGUNCj4gDQo+ICAJaWYgKCFkZXZpY2UtPmZsYWdzLnBvd2VyX21h
+bmFnZWFibGUpIHsNCj4gIAkJLyogVEJEOiBOb24tcmVjdXJzaXZlIGFsZ29yaXRobSBmb3Igd2Fs
+a2luZyB1cCBoaWVyYXJjaHkuICovDQo+IC0JCSpzdGF0ZSA9IGRldmljZS0+cGFyZW50ID8NCj4g
+LQkJCWRldmljZS0+cGFyZW50LT5wb3dlci5zdGF0ZSA6IEFDUElfU1RBVEVfRDA7DQo+ICsJCSpz
+dGF0ZSA9IHBhcmVudCA/IHBhcmVudC0+cG93ZXIuc3RhdGUgOiBBQ1BJX1NUQVRFX0QwOw0KPiAg
+CQlnb3RvIG91dDsNCj4gIAl9DQo+IA0KPiBAQCAtMTIyLDEwICsxMjIsMTAgQEAgaW50IGFjcGlf
+ZGV2aWNlX2dldF9wb3dlcihzdHJ1Y3QgYWNwaV9kZQ0KPiAgCSAqIHBvaW50LCB0aGUgZmFjdCB0
+aGF0IHRoZSBkZXZpY2UgaXMgaW4gRDAgaW1wbGllcyB0aGF0IHRoZSBwYXJlbnQgaGFzDQo+ICAJ
+ICogdG8gYmUgaW4gRDAgdG9vLCBleGNlcHQgaWYgaWdub3JlX3BhcmVudCBpcyBzZXQuDQo+ICAJ
+ICovDQo+IC0JaWYgKCFkZXZpY2UtPnBvd2VyLmZsYWdzLmlnbm9yZV9wYXJlbnQgJiYgZGV2aWNl
+LT5wYXJlbnQNCj4gLQkgICAgJiYgZGV2aWNlLT5wYXJlbnQtPnBvd2VyLnN0YXRlID09IEFDUElf
+U1RBVEVfVU5LTk9XTg0KPiAtCSAgICAmJiByZXN1bHQgPT0gQUNQSV9TVEFURV9EMCkNCj4gLQkJ
+ZGV2aWNlLT5wYXJlbnQtPnBvd2VyLnN0YXRlID0gQUNQSV9TVEFURV9EMDsNCj4gKwlpZiAoIWRl
+dmljZS0+cG93ZXIuZmxhZ3MuaWdub3JlX3BhcmVudCAmJiBwYXJlbnQgJiYNCj4gKwkgICAgcGFy
+ZW50LT5wb3dlci5zdGF0ZSA9PSBBQ1BJX1NUQVRFX1VOS05PV04gJiYNCj4gKwkgICAgcmVzdWx0
+ID09IEFDUElfU1RBVEVfRDApDQo+ICsJCXBhcmVudC0+cG93ZXIuc3RhdGUgPSBBQ1BJX1NUQVRF
+X0QwOw0KPiANCj4gIAkqc3RhdGUgPSByZXN1bHQ7DQo+IA0KPiBAQCAtMTU5LDYgKzE1OSw3IEBA
+IHN0YXRpYyBpbnQgYWNwaV9kZXZfcG1fZXhwbGljaXRfc2V0KHN0cnUNCj4gICAqLw0KPiAgaW50
+IGFjcGlfZGV2aWNlX3NldF9wb3dlcihzdHJ1Y3QgYWNwaV9kZXZpY2UgKmRldmljZSwgaW50IHN0
+YXRlKQ0KPiAgew0KPiArCXN0cnVjdCBhY3BpX2RldmljZSAqcGFyZW50ID0gYWNwaV9kZXZfcGFy
+ZW50KGRldmljZSk7DQo+ICAJaW50IHRhcmdldF9zdGF0ZSA9IHN0YXRlOw0KPiAgCWludCByZXN1
+bHQgPSAwOw0KPiANCj4gQEAgLTE5MSwxMiArMTkyLDEyIEBAIGludCBhY3BpX2RldmljZV9zZXRf
+cG93ZXIoc3RydWN0IGFjcGlfZGUNCj4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ICAJfQ0KPiANCj4g
+LQlpZiAoIWRldmljZS0+cG93ZXIuZmxhZ3MuaWdub3JlX3BhcmVudCAmJiBkZXZpY2UtPnBhcmVu
+dCAmJg0KPiAtCSAgICBzdGF0ZSA8IGRldmljZS0+cGFyZW50LT5wb3dlci5zdGF0ZSkgew0KPiAr
+CWlmICghZGV2aWNlLT5wb3dlci5mbGFncy5pZ25vcmVfcGFyZW50ICYmIHBhcmVudCAmJg0KPiAr
+CSAgICBzdGF0ZSA8IHBhcmVudC0+cG93ZXIuc3RhdGUpIHsNCj4gIAkJYWNwaV9oYW5kbGVfZGVi
+dWcoZGV2aWNlLT5oYW5kbGUsDQo+ICAJCQkJICAiQ2Fubm90IHRyYW5zaXRpb24gdG8gJXMgZm9y
+IHBhcmVudCBpbiAlc1xuIiwNCj4gIAkJCQkgIGFjcGlfcG93ZXJfc3RhdGVfc3RyaW5nKHN0YXRl
+KSwNCj4gLQkJCQkgIGFjcGlfcG93ZXJfc3RhdGVfc3RyaW5nKGRldmljZS0+cGFyZW50LQ0KPiA+
+cG93ZXIuc3RhdGUpKTsNCj4gKwkJCQkgIGFjcGlfcG93ZXJfc3RhdGVfc3RyaW5nKHBhcmVudC0+
+cG93ZXIuc3RhdGUpKTsNCj4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ICAJfQ0KPiANCj4gSW5kZXg6
+IGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9hY3BpX3BsYXRmb3JtLmMNCj4gPT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiAt
+LS0gbGludXgtcG0ub3JpZy9kcml2ZXJzL2FjcGkvYWNwaV9wbGF0Zm9ybS5jDQo+ICsrKyBsaW51
+eC1wbS9kcml2ZXJzL2FjcGkvYWNwaV9wbGF0Zm9ybS5jDQo+IEBAIC03OCw3ICs3OCw3IEBAIHN0
+YXRpYyB2b2lkIGFjcGlfcGxhdGZvcm1fZmlsbF9yZXNvdXJjZSgNCj4gIAkgKiBJZiB0aGUgZGV2
+aWNlIGhhcyBwYXJlbnQgd2UgbmVlZCB0byB0YWtlIGl0cyByZXNvdXJjZXMgaW50bw0KPiAgCSAq
+IGFjY291bnQgYXMgd2VsbCBiZWNhdXNlIHRoaXMgZGV2aWNlIG1pZ2h0IGNvbnN1bWUgcGFydCBv
+ZiB0aG9zZS4NCj4gIAkgKi8NCj4gLQlwYXJlbnQgPSBhY3BpX2dldF9maXJzdF9waHlzaWNhbF9u
+b2RlKGFkZXYtPnBhcmVudCk7DQo+ICsJcGFyZW50ID0gYWNwaV9nZXRfZmlyc3RfcGh5c2ljYWxf
+bm9kZShhY3BpX2Rldl9wYXJlbnQoYWRldikpOw0KPiAgCWlmIChwYXJlbnQgJiYgZGV2X2lzX3Bj
+aShwYXJlbnQpKQ0KPiAgCQlkZXN0LT5wYXJlbnQgPSBwY2lfZmluZF9yZXNvdXJjZSh0b19wY2lf
+ZGV2KHBhcmVudCksIGRlc3QpOw0KPiAgfQ0KPiBAQCAtOTcsNiArOTcsNyBAQCBzdGF0aWMgdm9p
+ZCBhY3BpX3BsYXRmb3JtX2ZpbGxfcmVzb3VyY2UoDQo+ICBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICphY3BpX2NyZWF0ZV9wbGF0Zm9ybV9kZXZpY2Uoc3RydWN0IGFjcGlfZGV2aWNlICphZGV2LA0K
+PiAgCQkJCQkJICAgIGNvbnN0IHN0cnVjdCBwcm9wZXJ0eV9lbnRyeQ0KPiAqcHJvcGVydGllcykN
+Cj4gIHsNCj4gKwlzdHJ1Y3QgYWNwaV9kZXZpY2UgKnBhcmVudCA9IGFjcGlfZGV2X3BhcmVudChh
+ZGV2KTsNCj4gIAlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gTlVMTDsNCj4gIAlzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlX2luZm8gcGRldmluZm87DQo+ICAJc3RydWN0IHJlc291cmNlX2Vu
+dHJ5ICpyZW50cnk7DQo+IEBAIC0xMzcsOCArMTM4LDcgQEAgc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZSAqYWNwaV9jcmVhdGVfcGxhdA0KPiAgCSAqIGF0dGFjaGVkIHRvIGl0LCB0aGF0IHBoeXNpY2Fs
+IGRldmljZSBzaG91bGQgYmUgdGhlIHBhcmVudCBvZiB0aGUNCj4gIAkgKiBwbGF0Zm9ybSBkZXZp
+Y2Ugd2UgYXJlIGFib3V0IHRvIGNyZWF0ZS4NCj4gIAkgKi8NCj4gLQlwZGV2aW5mby5wYXJlbnQg
+PSBhZGV2LT5wYXJlbnQgPw0KPiAtCQlhY3BpX2dldF9maXJzdF9waHlzaWNhbF9ub2RlKGFkZXYt
+PnBhcmVudCkgOiBOVUxMOw0KPiArCXBkZXZpbmZvLnBhcmVudCA9IHBhcmVudCA/IGFjcGlfZ2V0
+X2ZpcnN0X3BoeXNpY2FsX25vZGUocGFyZW50KSA6IE5VTEw7DQo+ICAJcGRldmluZm8ubmFtZSA9
+IGRldl9uYW1lKCZhZGV2LT5kZXYpOw0KPiAgCXBkZXZpbmZvLmlkID0gLTE7DQo+ICAJcGRldmlu
+Zm8ucmVzID0gcmVzb3VyY2VzOw0KPiBJbmRleDogbGludXgtcG0vZHJpdmVycy9hY3BpL2FjcGlf
+dmlkZW8uYw0KPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09DQo+IC0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvYWNwaS9h
+Y3BpX3ZpZGVvLmMNCj4gKysrIGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9hY3BpX3ZpZGVvLmMNCj4g
+QEAgLTIwMzAsNyArMjAzMCw3IEBAIHN0YXRpYyBpbnQgYWNwaV92aWRlb19idXNfYWRkKHN0cnVj
+dCBhY3ANCj4gIAlhY3BpX3N0YXR1cyBzdGF0dXM7DQo+IA0KPiAgCXN0YXR1cyA9IGFjcGlfd2Fs
+a19uYW1lc3BhY2UoQUNQSV9UWVBFX0RFVklDRSwNCj4gLQkJCQlkZXZpY2UtPnBhcmVudC0+aGFu
+ZGxlLCAxLA0KPiArCQkJCWFjcGlfZGV2X3BhcmVudChkZXZpY2UpLT5oYW5kbGUsIDEsDQo+ICAJ
+CQkJYWNwaV92aWRlb19idXNfbWF0Y2gsIE5VTEwsDQo+ICAJCQkJZGV2aWNlLCBOVUxMKTsNCj4g
+IAlpZiAoc3RhdHVzID09IEFFX0FMUkVBRFlfRVhJU1RTKSB7DQo+IEluZGV4OiBsaW51eC1wbS9k
+cml2ZXJzL2FjcGkvc2JzLmMNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiAtLS0gbGludXgtcG0ub3JpZy9kcml2
+ZXJzL2FjcGkvc2JzLmMNCj4gKysrIGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9zYnMuYw0KPiBAQCAt
+NjMyLDcgKzYzMiw3IEBAIHN0YXRpYyBpbnQgYWNwaV9zYnNfYWRkKHN0cnVjdCBhY3BpX2RldmkN
+Cj4gDQo+ICAJbXV0ZXhfaW5pdCgmc2JzLT5sb2NrKTsNCj4gDQo+IC0Jc2JzLT5oYyA9IGFjcGlf
+ZHJpdmVyX2RhdGEoZGV2aWNlLT5wYXJlbnQpOw0KPiArCXNicy0+aGMgPSBhY3BpX2RyaXZlcl9k
+YXRhKGFjcGlfZGV2X3BhcmVudChkZXZpY2UpKTsNCj4gIAlzYnMtPmRldmljZSA9IGRldmljZTsN
+Cj4gIAlzdHJjcHkoYWNwaV9kZXZpY2VfbmFtZShkZXZpY2UpLCBBQ1BJX1NCU19ERVZJQ0VfTkFN
+RSk7DQo+ICAJc3RyY3B5KGFjcGlfZGV2aWNlX2NsYXNzKGRldmljZSksIEFDUElfU0JTX0NMQVNT
+KTsNCj4gSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvYWNwaS9zYnNoYy5jDQo+ID09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0N
+Cj4gLS0tIGxpbnV4LXBtLm9yaWcvZHJpdmVycy9hY3BpL3Nic2hjLmMNCj4gKysrIGxpbnV4LXBt
+L2RyaXZlcnMvYWNwaS9zYnNoYy5jDQo+IEBAIC0yNjYsNyArMjY2LDcgQEAgc3RhdGljIGludCBh
+Y3BpX3NtYnVzX2hjX2FkZChzdHJ1Y3QgYWNwaQ0KPiAgCW11dGV4X2luaXQoJmhjLT5sb2NrKTsN
+Cj4gIAlpbml0X3dhaXRxdWV1ZV9oZWFkKCZoYy0+d2FpdCk7DQo+IA0KPiAtCWhjLT5lYyA9IGFj
+cGlfZHJpdmVyX2RhdGEoZGV2aWNlLT5wYXJlbnQpOw0KPiArCWhjLT5lYyA9IGFjcGlfZHJpdmVy
+X2RhdGEoYWNwaV9kZXZfcGFyZW50KGRldmljZSkpOw0KPiAgCWhjLT5vZmZzZXQgPSAodmFsID4+
+IDgpICYgMHhmZjsNCj4gIAloYy0+cXVlcnlfYml0ID0gdmFsICYgMHhmZjsNCj4gIAlkZXZpY2Ut
+PmRyaXZlcl9kYXRhID0gaGM7DQo+IEluZGV4OiBsaW51eC1wbS9kcml2ZXJzL3NwaS9zcGkuYw0K
+PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09DQo+IC0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvc3BpL3NwaS5jDQo+ICsr
+KyBsaW51eC1wbS9kcml2ZXJzL3NwaS9zcGkuYw0KPiBAQCAtNDM3NSw3ICs0Mzc1LDcgQEAgc3Rh
+dGljIGludCBhY3BpX3NwaV9ub3RpZnkoc3RydWN0IG5vdGlmaQ0KPiANCj4gIAlzd2l0Y2ggKHZh
+bHVlKSB7DQo+ICAJY2FzZSBBQ1BJX1JFQ09ORklHX0RFVklDRV9BREQ6DQo+IC0JCWN0bHIgPSBh
+Y3BpX3NwaV9maW5kX2NvbnRyb2xsZXJfYnlfYWRldihhZGV2LT5wYXJlbnQpOw0KPiArCQljdGxy
+ID0gYWNwaV9zcGlfZmluZF9jb250cm9sbGVyX2J5X2FkZXYoYWNwaV9kZXZfcGFyZW50KGFkZXYp
+KTsNCj4gIAkJaWYgKCFjdGxyKQ0KPiAgCQkJYnJlYWs7DQo+IA0KPiBJbmRleDogbGludXgtcG0v
+ZHJpdmVycy90aHVuZGVyYm9sdC9hY3BpLmMNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiAtLS0gbGludXgtcG0u
+b3JpZy9kcml2ZXJzL3RodW5kZXJib2x0L2FjcGkuYw0KPiArKysgbGludXgtcG0vZHJpdmVycy90
+aHVuZGVyYm9sdC9hY3BpLmMNCj4gQEAgLTQyLDcgKzQyLDcgQEAgc3RhdGljIGFjcGlfc3RhdHVz
+IHRiX2FjcGlfYWRkX2xpbmsoYWNwaQ0KPiAgCSAqLw0KPiAgCWRldiA9IGFjcGlfZ2V0X2ZpcnN0
+X3BoeXNpY2FsX25vZGUoYWRldik7DQo+ICAJd2hpbGUgKCFkZXYpIHsNCj4gLQkJYWRldiA9IGFk
+ZXYtPnBhcmVudDsNCj4gKwkJYWRldiA9IGFjcGlfZGV2X3BhcmVudChhZGV2KTsNCj4gIAkJaWYg
+KCFhZGV2KQ0KPiAgCQkJYnJlYWs7DQo+ICAJCWRldiA9IGFjcGlfZ2V0X2ZpcnN0X3BoeXNpY2Fs
+X25vZGUoYWRldik7DQo+IEluZGV4OiBsaW51eC1wbS9kcml2ZXJzL2h2L3ZtYnVzX2Rydi5jDQo+
+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0NCj4gLS0tIGxpbnV4LXBtLm9yaWcvZHJpdmVycy9odi92bWJ1c19kcnYuYw0K
+PiArKysgbGludXgtcG0vZHJpdmVycy9odi92bWJ1c19kcnYuYw0KPiBAQCAtMjQyNyw3ICsyNDI3
+LDggQEAgc3RhdGljIGludCB2bWJ1c19hY3BpX2FkZChzdHJ1Y3QgYWNwaV9kZQ0KPiAgCSAqIFNv
+bWUgYW5jZXN0b3Igb2YgdGhlIHZtYnVzIGFjcGkgZGV2aWNlIChHZW4xIG9yIEdlbjINCj4gIAkg
+KiBmaXJtd2FyZSkgaXMgdGhlIFZNT0QgdGhhdCBoYXMgdGhlIG1taW8gcmFuZ2VzLiBHZXQgdGhh
+dC4NCj4gIAkgKi8NCj4gLQlmb3IgKGFuY2VzdG9yID0gZGV2aWNlLT5wYXJlbnQ7IGFuY2VzdG9y
+OyBhbmNlc3RvciA9IGFuY2VzdG9yLT5wYXJlbnQpIHsNCj4gKwlmb3IgKGFuY2VzdG9yID0gYWNw
+aV9kZXZfcGFyZW50KGRldmljZSk7IGFuY2VzdG9yOw0KPiArCSAgICAgYW5jZXN0b3IgPSBhY3Bp
+X2Rldl9wYXJlbnQoYW5jZXN0b3IpKSB7DQo+ICAJCXJlc3VsdCA9IGFjcGlfd2Fsa19yZXNvdXJj
+ZXMoYW5jZXN0b3ItPmhhbmRsZSwgTUVUSE9EX05BTUVfX0NSUywNCj4gIAkJCQkJICAgICB2bWJ1
+c193YWxrX3Jlc291cmNlcywgTlVMTCk7DQo+IA0KPiBJbmRleDogbGludXgtcG0vZHJpdmVycy9h
+Y3BpL2FjcGlfYW1iYS5jDQo+ID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gLS0tIGxpbnV4LXBtLm9yaWcvZHJpdmVy
+cy9hY3BpL2FjcGlfYW1iYS5jDQo+ICsrKyBsaW51eC1wbS9kcml2ZXJzL2FjcGkvYWNwaV9hbWJh
+LmMNCj4gQEAgLTQ4LDYgKzQ4LDcgQEAgc3RhdGljIHZvaWQgYW1iYV9yZWdpc3Rlcl9kdW1teV9j
+bGsodm9pZA0KPiAgc3RhdGljIGludCBhbWJhX2hhbmRsZXJfYXR0YWNoKHN0cnVjdCBhY3BpX2Rl
+dmljZSAqYWRldiwNCj4gIAkJCQljb25zdCBzdHJ1Y3QgYWNwaV9kZXZpY2VfaWQgKmlkKQ0KPiAg
+ew0KPiArCXN0cnVjdCBhY3BpX2RldmljZSAqcGFyZW50ID0gYWNwaV9kZXZfcGFyZW50KGFkZXYp
+Ow0KPiAgCXN0cnVjdCBhbWJhX2RldmljZSAqZGV2Ow0KPiAgCXN0cnVjdCByZXNvdXJjZV9lbnRy
+eSAqcmVudHJ5Ow0KPiAgCXN0cnVjdCBsaXN0X2hlYWQgcmVzb3VyY2VfbGlzdDsNCj4gQEAgLTk3
+LDggKzk4LDggQEAgc3RhdGljIGludCBhbWJhX2hhbmRsZXJfYXR0YWNoKHN0cnVjdCBhYw0KPiAg
+CSAqIGF0dGFjaGVkIHRvIGl0LCB0aGF0IHBoeXNpY2FsIGRldmljZSBzaG91bGQgYmUgdGhlIHBh
+cmVudCBvZg0KPiAgCSAqIHRoZSBhbWJhIGRldmljZSB3ZSBhcmUgYWJvdXQgdG8gY3JlYXRlLg0K
+PiAgCSAqLw0KPiAtCWlmIChhZGV2LT5wYXJlbnQpDQo+IC0JCWRldi0+ZGV2LnBhcmVudCA9IGFj
+cGlfZ2V0X2ZpcnN0X3BoeXNpY2FsX25vZGUoYWRldi0+cGFyZW50KTsNCj4gKwlpZiAocGFyZW50
+KQ0KPiArCQlkZXYtPmRldi5wYXJlbnQgPSBhY3BpX2dldF9maXJzdF9waHlzaWNhbF9ub2RlKHBh
+cmVudCk7DQo+IA0KPiAgCUFDUElfQ09NUEFOSU9OX1NFVCgmZGV2LT5kZXYsIGFkZXYpOw0KPiAN
+Cj4gSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvcGVyZi9hcm1fZHN1X3BtdS5jDQo+ID09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0NCj4gLS0tIGxpbnV4LXBtLm9yaWcvZHJpdmVycy9wZXJmL2FybV9kc3VfcG11LmMNCj4gKysr
+IGxpbnV4LXBtL2RyaXZlcnMvcGVyZi9hcm1fZHN1X3BtdS5jDQo+IEBAIC02MzksNiArNjM5LDcg
+QEAgc3RhdGljIGludCBkc3VfcG11X2R0X2dldF9jcHVzKHN0cnVjdCBkZQ0KPiAgc3RhdGljIGlu
+dCBkc3VfcG11X2FjcGlfZ2V0X2NwdXMoc3RydWN0IGRldmljZSAqZGV2LCBjcHVtYXNrX3QgKm1h
+c2spDQo+ICB7DQo+ICAjaWZkZWYgQ09ORklHX0FDUEkNCj4gKwlzdHJ1Y3QgYWNwaV9kZXZpY2Ug
+KnBhcmVudF9hZGV2ID0gYWNwaV9kZXZfcGFyZW50KEFDUElfQ09NUEFOSU9OKGRldikpOw0KPiAg
+CWludCBjcHU7DQo+IA0KPiAgCS8qDQo+IEBAIC02NTMsOCArNjU0LDcgQEAgc3RhdGljIGludCBk
+c3VfcG11X2FjcGlfZ2V0X2NwdXMoc3RydWN0DQo+ICAJCQljb250aW51ZTsNCj4gDQo+ICAJCWFj
+cGlfZGV2ID0gQUNQSV9DT01QQU5JT04oY3B1X2Rldik7DQo+IC0JCWlmIChhY3BpX2RldiAmJg0K
+PiAtCQkJYWNwaV9kZXYtPnBhcmVudCA9PSBBQ1BJX0NPTVBBTklPTihkZXYpLT5wYXJlbnQpDQo+
+ICsJCWlmIChhY3BpX2RldiAmJiBhY3BpX2Rldl9wYXJlbnQoYWNwaV9kZXYpID09IHBhcmVudF9h
+ZGV2KQ0KPiAgCQkJY3B1bWFza19zZXRfY3B1KGNwdSwgbWFzayk7DQo+ICAJfQ0KPiAgI2VuZGlm
+DQo+IEluZGV4OiBsaW51eC1wbS9kcml2ZXJzL3BlcmYvcWNvbV9sM19wbXUuYw0KPiA9PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09DQo+IC0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvcGVyZi9xY29tX2wzX3BtdS5jDQo+ICsr
+KyBsaW51eC1wbS9kcml2ZXJzL3BlcmYvcWNvbV9sM19wbXUuYw0KPiBAQCAtNzQyLDcgKzc0Miw4
+IEBAIHN0YXRpYyBpbnQgcWNvbV9sM19jYWNoZV9wbXVfcHJvYmUoc3RydWMNCj4gDQo+ICAJbDNw
+bXUgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpsM3BtdSksIEdGUF9LRVJORUwp
+Ow0KPiAgCW5hbWUgPSBkZXZtX2thc3ByaW50ZigmcGRldi0+ZGV2LCBHRlBfS0VSTkVMLCAibDNj
+YWNoZV8lc18lcyIsDQo+IC0JCSAgICAgIGFjcGlfZGV2LT5wYXJlbnQtPnBucC51bmlxdWVfaWQs
+IGFjcGlfZGV2LT5wbnAudW5pcXVlX2lkKTsNCj4gKwkJICAgICAgYWNwaV9kZXZfcGFyZW50KGFj
+cGlfZGV2KS0+cG5wLnVuaXF1ZV9pZCwNCj4gKwkJICAgICAgYWNwaV9kZXYtPnBucC51bmlxdWVf
+aWQpOw0KPiAgCWlmICghbDNwbXUgfHwgIW5hbWUpDQo+ICAJCXJldHVybiAtRU5PTUVNOw0KPiAN
+Cj4gDQo+IA0KDQo=
