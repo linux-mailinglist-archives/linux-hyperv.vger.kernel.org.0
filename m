@@ -2,62 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A57595A6560
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Aug 2022 15:46:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85EB65A6866
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 Aug 2022 18:27:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231249AbiH3Nqr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 Aug 2022 09:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
+        id S230095AbiH3Q1S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 Aug 2022 12:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231248AbiH3Nqb (ORCPT
+        with ESMTP id S229549AbiH3Q1R (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 Aug 2022 09:46:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A209B4E
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 Aug 2022 06:44:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661867027;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xSYsGT+JuRUnE0x8Uu6rvpfH2JA8fm0UMDh7oy78WJU=;
-        b=MCdnOLAW3MVOXTiLVGGPVJsWO2E6VuQqwD/gk/ms7uzFeyJlWE3mkKFWyP2J+4LeUbdj09
-        iz02xe8gZyEljj14+hAraHMnLUVCo37W7uNY1GpSaAqJnKrGluXsW3A9tHlhnO+j05jTut
-        JKHvVNw30CpA3UWMUAFR/hFttYRQNmI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-46-vMlaDYgQP86aZDwPvroMag-1; Tue, 30 Aug 2022 09:43:46 -0400
-X-MC-Unique: vMlaDYgQP86aZDwPvroMag-1
-Received: by mail-wr1-f71.google.com with SMTP id i27-20020adfa51b000000b00226d0b29adfso1551123wrb.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 Aug 2022 06:43:46 -0700 (PDT)
+        Tue, 30 Aug 2022 12:27:17 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5581EA890
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Aug 2022 09:27:14 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id q9so11131765pgq.6
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 Aug 2022 09:27:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=MHoR6yIrGCrlxd9mVdCiPC/GPzHGRJ7W5b2peJNI/oY=;
+        b=hOviUGYdQ5DATRxPhlLL4hCmPmmixmpEsR/zwwy+kUTMzVSpSWurCTDUGDcjcsUw3S
+         EK1//woJjRLS5UUDJfOM6W1bdxqfXRFuKbLjwinNaqFI8g+uWjpik6dla0S6AV/o5fzO
+         fcU/P2GmMiPiMSxit102hDbwvATUXkc4S2G00R3p2MSXDfshAHCKkb642nZmz5IkabMU
+         Kp/m4IFI+1nsxvuhSf2fqsD9UkHsaSaReoAWEJh58VoaZMYPRX4t0xRB6HaFhX/fwLx9
+         CvMJ7nSgJAdPa2MIYlIUE0dGerbfGgkKHJBjEbsGSCSs1q5k171nQa8qLzEKZlalhLmc
+         uQxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc;
-        bh=xSYsGT+JuRUnE0x8Uu6rvpfH2JA8fm0UMDh7oy78WJU=;
-        b=t/GluqK4NNMp3pVyQfNwO6p0nqc6hHjxFzviRTo2VglXG7VvYdS84uOOARW46qVchn
-         hKnzYH8Catb/P01y/rWbe1sPvOy4vOvQpTi+W9e1YlTbHrNz2wc7G/vc/FR1lJMtzNgf
-         lPEKY96k9T8IZAbhBkMk6i9qQFI+qGpaR5z82g851aXXEVn8+kCVP/BrfhdiGDKeAcmO
-         2gz/YKBjOVU6Ytut2SH/AMOQGV4Xb2WoieQYMIIRW/eZnFMKgFUsXNPL0dpmk3VZa5oj
-         f3nIBU4sGbgMqzxCHxP8g6XVMYnWZXZ7Bq5lR0SFB4gO+N02AxL2tDlBr25G9w+BiNMR
-         HN4A==
-X-Gm-Message-State: ACgBeo1BTqDpRcBWQ3wjtkN2xdf+pT0WhkLLMAsfLnPPfU2CIjp+l5hm
-        0C6EUuuGQIrVT/r9H41MO4UBwyPhOXk0or62VcdBk7s6goDhWfYstdylTzJr6rqRdgHIqN7xCct
-        fj++Tg72jHfxZCH/VSsdr5Xhc
-X-Received: by 2002:a05:600c:418a:b0:3a5:168e:a918 with SMTP id p10-20020a05600c418a00b003a5168ea918mr9782004wmh.31.1661867023752;
-        Tue, 30 Aug 2022 06:43:43 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7J7amscRJ3WfZNYVzhrBCLo4tjoSRLTzgx5nbx4QzFf31AtfhlXNT2cljEHY97bXhWh+p3lQ==
-X-Received: by 2002:a05:600c:418a:b0:3a5:168e:a918 with SMTP id p10-20020a05600c418a00b003a5168ea918mr9781989wmh.31.1661867023521;
-        Tue, 30 Aug 2022 06:43:43 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id i20-20020a05600c2d9400b003a604a29a34sm11680851wmg.35.2022.08.30.06.43.42
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=MHoR6yIrGCrlxd9mVdCiPC/GPzHGRJ7W5b2peJNI/oY=;
+        b=JKCzjDOqW++VI0jqH7E1/j3AEsjl9ryDKMwGPWZkdyKVorjK3K+etN5Yh5mdEKL1RM
+         I3jOz8NdUGa6lUr/QsLbtf0tx+tI6CO+ae8zE70bIAmkefsYfbQ5rnyAj28jA/6NgXaf
+         iYsQ7F5VpET8CCbO4NQuZpMSuJRhtkfcua33VFUfxkkGlr8qr7orP8m7+buy7Zr1RDDz
+         ti1aMtC9321kSMlQiKeanzgbA5P1J5KWyWKN4L9/8H63YZevjCKu4DU/KmaTg3v/Qh8Z
+         aB5TIifZbNX/aIMjTV0GQ4o4W2pviKxn36iH2Prx3ySWIldWaYtlnUhX2aY9pvSzm+0v
+         h9Tw==
+X-Gm-Message-State: ACgBeo1b8D8HKcnCI1Qsak3oNYtI2D7NWxpyA42jZHji1Dz2no0Cxi2+
+        eF1ImGdg7jZJqc78+g4cCFC1hA==
+X-Google-Smtp-Source: AA6agR55aWGRWytPY81SSLflhZPqZlfHmk2iF5IHJO67qNPRP1M7RVU8TqYgGuFMMaAe4iCDuwo3uA==
+X-Received: by 2002:a63:8641:0:b0:42c:42ac:b6b1 with SMTP id x62-20020a638641000000b0042c42acb6b1mr6860753pgd.508.1661876833230;
+        Tue, 30 Aug 2022 09:27:13 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id x17-20020a170902ec9100b00174a69f69b8sm5985886plg.51.2022.08.30.09.27.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Aug 2022 06:43:42 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Tue, 30 Aug 2022 09:27:12 -0700 (PDT)
+Date:   Tue, 30 Aug 2022 16:27:08 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Siddharth Chandrasekaran <sidcha@amazon.de>,
@@ -67,37 +62,39 @@ Cc:     Wanpeng Li <wanpengli@tencent.com>,
         kvm@vger.kernel.org
 Subject: Re: [PATCH v9 00/40] KVM: x86: hyper-v: Fine-grained TLB flush + L2
  TLB flush features
-In-Reply-To: <20220803134110.397885-1-vkuznets@redhat.com>
+Message-ID: <Yw46XAP3aafdH/xZ@google.com>
 References: <20220803134110.397885-1-vkuznets@redhat.com>
-Date:   Tue, 30 Aug 2022 15:43:41 +0200
-Message-ID: <8735ddvoc2.fsf@redhat.com>
+ <8735ddvoc2.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8735ddvoc2.fsf@redhat.com>
+X-Spam-Status: No, score=-14.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,FSL_HELO_FAKE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+On Tue, Aug 30, 2022, Vitaly Kuznetsov wrote:
+> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+> 
+> > Changes since v8:
+> > - Rebase to the current kvm/queue (93472b797153)
+> > - selftests: move Hyper-V test pages to a dedicated struct untangling from 
+> >  vendor-specific (VMX/SVM) pages allocation [Sean].
+> 
+> Sean, Paolo,
+> 
+> I've jsut checked and this series applies cleanly on top of the latest
+> kvm/queue [372d07084593]. I also don't seem to have any feedback to
+> address.
+> 
+> Any chance this can be queued?
 
-> Changes since v8:
-> - Rebase to the current kvm/queue (93472b797153)
-> - selftests: move Hyper-V test pages to a dedicated struct untangling from 
->  vendor-specific (VMX/SVM) pages allocation [Sean].
-
-Sean, Paolo,
-
-I've jsut checked and this series applies cleanly on top of the latest
-kvm/queue [372d07084593]. I also don't seem to have any feedback to
-address.
-
-Any chance this can be queued?
-
--- 
-Vitaly
-
+It's the top "big" series on my todo list.  I fully plan on getting queued for 6.1,
+but I don't expect to get to it this week.
