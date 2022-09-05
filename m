@@ -2,62 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 719C85AD80A
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Sep 2022 19:05:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E0DE5AD80E
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Sep 2022 19:06:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiIERF2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Sep 2022 13:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53586 "EHLO
+        id S237123AbiIERGz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Sep 2022 13:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238021AbiIERDL (ORCPT
+        with ESMTP id S236472AbiIERGy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Sep 2022 13:03:11 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBD861DA1;
-        Mon,  5 Sep 2022 10:03:09 -0700 (PDT)
-Received: by mail-wr1-f46.google.com with SMTP id e20so12081436wri.13;
-        Mon, 05 Sep 2022 10:03:09 -0700 (PDT)
+        Mon, 5 Sep 2022 13:06:54 -0400
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC82A4BA6A;
+        Mon,  5 Sep 2022 10:06:53 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id d5so5549693wms.5;
+        Mon, 05 Sep 2022 10:06:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=PhLq7Jg7THme51MufQlUAx9Xm5cp54HX1BkW+U1Xyec=;
-        b=jnmHPK1DysJtmvm6Lu7ax829S+qGZZYTxmhmaXuVMcgZ1dihsioec6AlQRMIOE3UlN
-         loiqY4FYNZjbFTWTHFg45jBKamuPhpTFVn/P9ZbKE8jKUpox6P5KrOTv46VZUr/nCO6U
-         tbj5PNOfDC/lrpZNFJqlFqJY5Qmza1jAzy1pPvB0al1HQNdaL+tPzFmEigfMxAYdlCHM
-         7kbUGPKcJ5+//AjXco/WpHSZZK0kxQZmXHP3qf7M61UI2rbw64UFmxebEgHtQIUj4lsb
-         Rw4isMTf4EYkBBWmqdP5I+o1PCY+3OCsm9dmv+tEHJvRaTIAD6P5F87C993CGCwAARGr
-         htYg==
-X-Gm-Message-State: ACgBeo0saqmeY8mit1Pwbh+Jl2FtO6xNQn44XaKfRbzgA5kFowhiFRv4
-        m/oKeFSA8DM9j6p/oe16oCSUIaXMCac=
-X-Google-Smtp-Source: AA6agR5S0iuyaUjAWm0IOMULo3XnS5JeNxiF0q+loQpjcjwG2/ubYIc61Vw83rxLgBzCv00NLItm/A==
-X-Received: by 2002:a5d:424a:0:b0:228:811f:c1a2 with SMTP id s10-20020a5d424a000000b00228811fc1a2mr3526709wrr.262.1662397387859;
-        Mon, 05 Sep 2022 10:03:07 -0700 (PDT)
+        bh=d9TAneKl/IB22ze9RSEc+xm4pxhpst3mt3s1A5vkCeA=;
+        b=5bIMzqJEYi475D5LBMMSqSYZWu1Bs/zkU1jfD505MiGk4fqeB1VkGY9sdD86iLI79S
+         Wpnedj9yDrJ441+76qhlXHrFFSy5gGv0ry0u9VrZFZKEkuKrMhc3WnRRf/AZ45uX/YK9
+         C8h4nGFpkwemI+mP4TQ9D54VqtS1np4deg7aKNubr2chOeM8DFXeSiPpiMks9NWoMtWi
+         IQC/vZ16wUmFo8OAqgSNwzUe8Z5HH//Bhzb473vl47koR+3s+i8rCOt0jeLqhjDMH8fh
+         kUhVvjFFHv/pwI/b0MuG7Q24njc84kh6MSnwfZE6ZlX7HVSVBxshpItLKqg/jHrpVUkY
+         T4TQ==
+X-Gm-Message-State: ACgBeo3GtLCoicLLBw0VCnD7ry0sDZvGuCbNDLNme7+A6/e5Y76SNiqb
+        OsVfT8PNwUQBSBPnvqgXG8E=
+X-Google-Smtp-Source: AA6agR4mUT7QMGWlmzBNULt1v9DXiqnE7dEUFFbmulPE92yzI9zmusmbR48eyfmub91fdHoYvnOCqQ==
+X-Received: by 2002:a1c:3584:0:b0:3a5:fb0e:102e with SMTP id c126-20020a1c3584000000b003a5fb0e102emr11618897wma.105.1662397612187;
+        Mon, 05 Sep 2022 10:06:52 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id p28-20020a05600c1d9c00b003a5b788993csm11733635wms.42.2022.09.05.10.03.07
+        by smtp.gmail.com with ESMTPSA id h6-20020a05600c350600b003a541d893desm12386483wmq.38.2022.09.05.10.06.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Sep 2022 10:03:07 -0700 (PDT)
-Date:   Mon, 5 Sep 2022 17:03:03 +0000
+        Mon, 05 Sep 2022 10:06:51 -0700 (PDT)
+Date:   Mon, 5 Sep 2022 17:06:47 +0000
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Deepak Rawat <drawat.floss@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH v3 0/3] Drivers: hv: Avoid allocating MMIO from
- framebuffer region for other passed through PCI devices
-Message-ID: <20220905170303.bzjcovvcdg7ou3k4@liuwe-devbox-debian-v2>
-References: <20220827130345.1320254-1-vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v6 02/33] x86/hyperv: Update 'struct hv_enlightened_vmcs'
+ definition
+Message-ID: <20220905170647.ky7rf5ypmqwxb7wx@liuwe-devbox-debian-v2>
+References: <20220830133737.1539624-1-vkuznets@redhat.com>
+ <20220830133737.1539624-3-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220827130345.1320254-1-vkuznets@redhat.com>
+In-Reply-To: <20220830133737.1539624-3-vkuznets@redhat.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
@@ -68,16 +68,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Aug 27, 2022 at 03:03:42PM +0200, Vitaly Kuznetsov wrote:
-[...]
-> Changes since v2re (PATCH3).
+On Tue, Aug 30, 2022 at 03:37:06PM +0200, Vitaly Kuznetsov wrote:
+> Updated Hyper-V Enlightened VMCS specification lists several new
+> fields for the following features:
 > 
-> Vitaly Kuznetsov (3):
->   PCI: Move PCI_VENDOR_ID_MICROSOFT/PCI_DEVICE_ID_HYPERV_VIDEO
->     definitions to pci_ids.h
->   Drivers: hv: Always reserve framebuffer region for Gen1 VMs
->   Drivers: hv: Never allocate anything besides framebuffer from
->     framebuffer memory region
+> - PerfGlobalCtrl
+> - EnclsExitingBitmap
+> - Tsc Scaling
+> - GuestLbrCtl
+> - CET
+> - SSP
+> 
+> Update the definition.
+> 
+> Note, the updated spec also provides an additional CPUID feature flag,
+> CPUIDD.0x4000000A.EBX BIT(0), for PerfGlobalCtrl to workaround a Windows
+> 11 quirk.  Despite what the TLFS says:
+> 
+>   Indicates support for the GuestPerfGlobalCtrl and HostPerfGlobalCtrl
+>   fields in the enlightened VMCS.
+> 
+> guests can safely use the fields if they are enumerated in the
+> architectural VMX MSRs.  I.e. KVM-on-HyperV doesn't need to check the
+> CPUID bit, but KVM-as-HyperV must ensure the bit is set if PerfGlobalCtrl
+> fields are exposed to L1.
+> 
+> https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/tlfs
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> [sean: tweak CPUID name to make it PerfGlobalCtrl only]
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Series applied to hyperv-fixes. Thanks.
-> 
+Acked-by: Wei Liu <wei.liu@kernel.org>
