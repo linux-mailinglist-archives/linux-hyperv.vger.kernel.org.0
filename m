@@ -2,70 +2,51 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07B105AE3B3
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Sep 2022 11:01:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 846235AE979
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Sep 2022 15:27:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239369AbiIFJBS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Sep 2022 05:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
+        id S233285AbiIFN0o (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Sep 2022 09:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239273AbiIFJBQ (ORCPT
+        with ESMTP id S232951AbiIFN0n (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Sep 2022 05:01:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986343341D
-        for <linux-hyperv@vger.kernel.org>; Tue,  6 Sep 2022 02:01:10 -0700 (PDT)
+        Tue, 6 Sep 2022 09:26:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E27974B80
+        for <linux-hyperv@vger.kernel.org>; Tue,  6 Sep 2022 06:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662454869;
+        s=mimecast20190719; t=1662470801;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uEYw8dkEXgcUOX7V93X65x+uXJi/wlkI4CEWgXjX+U8=;
-        b=HCy7yX2g3zQ21ogmXk2HBdo3eDlohLM6I8mLQnIm+arDizqejXvUVGgvxyMxhC6/gTs3aT
-        T37L2H9cLSCzb+CzPtQAXRg+bsk/GFsCgZwa43kTPML6uO1AGRCToyPFbHrNJnbFJyN4Pe
-        4D53aQ93z+j9a0jG8O5TrlwfYaW/zrk=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-486-1wi3PfLNPmiha9q-9y6F_g-1; Tue, 06 Sep 2022 05:01:06 -0400
-X-MC-Unique: 1wi3PfLNPmiha9q-9y6F_g-1
-Received: by mail-qk1-f197.google.com with SMTP id h8-20020a05620a284800b006b5c98f09fbso8634581qkp.21
-        for <linux-hyperv@vger.kernel.org>; Tue, 06 Sep 2022 02:01:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=uEYw8dkEXgcUOX7V93X65x+uXJi/wlkI4CEWgXjX+U8=;
-        b=TfSZU7IDt72mhirf38jXRDfurfZPHLC2RJRDSK+l8lyv2b5YiT419lN4yfDhUq40Si
-         BpfDVSG9yEMkObNMZ25L3S2UOWoYOSL5FzNiAm8BGQTVGKGuy30ZpiIXZCQLGcq9Psi+
-         gG8TeGTG20dLXLBvdfRYCn4/wzcoZH1vqzKMLsywKFLKQO/ObKi3udShCIGk15kGpPxD
-         G2fYXP2AOjvormxk7AaKlvBK1HQxaAKGWeT9MMfL5lBfZ3xDZf9MY9kxSUB3zGU+aT/a
-         3Vu5imhJzlyICXT/ldK7aCWxWtS00qD1pKbe5f4BldZ3oohK7YmTecY6uROmFfskuHxG
-         0Q9w==
-X-Gm-Message-State: ACgBeo07vLlmHIHSr+SScz/gejdXDfbKDyHMhNlm94HvDVSOPh3N//Xt
-        prUMWuoSpqejfXgTEfkrBwC4ebZhru/ZqL1qHSHX1b5yMDWTWr4dsgvfBFSbLj+CsJXxcRppk7Y
-        e31mfAOVGXZocnqLAtAcsXVyF
-X-Received: by 2002:a05:620a:4711:b0:6bb:7e1b:5f0b with SMTP id bs17-20020a05620a471100b006bb7e1b5f0bmr33657202qkb.127.1662454866188;
-        Tue, 06 Sep 2022 02:01:06 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR54SeftazVhGuQR9Denza8esCRyPUSRNGJRsOYWXZ1aLyu1Zb25CEzZerEVP/BwXWQhYQ8KcQ==
-X-Received: by 2002:a05:620a:4711:b0:6bb:7e1b:5f0b with SMTP id bs17-20020a05620a471100b006bb7e1b5f0bmr33657178qkb.127.1662454865958;
-        Tue, 06 Sep 2022 02:01:05 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-69.retail.telecomitalia.it. [87.11.6.69])
-        by smtp.gmail.com with ESMTPSA id z20-20020ac87cb4000000b0031f36cd1958sm8888786qtv.81.2022.09.06.02.01.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 02:01:04 -0700 (PDT)
-Date:   Tue, 6 Sep 2022 11:00:48 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Bobby Eshleman <bobby.eshleman@gmail.com>,
-        Bobby Eshleman <bobbyeshleman@gmail.com>,
+        bh=cG+EMJYQC9dpJwtmnpabIGTtF9jjQR1GUpVCWiATrrQ=;
+        b=UfzM0b77jXZLuuWQfcjkRELCCEy1+psLLv1G2btwuJ2QQe82zSOHU7FbiQsBL/yGWLURHf
+        jsyj4E3MOSJaF/nUrZOarK0KwnqZeCdIhMc2Y03RdQeod81IFnI6bJYPrDVYj0phgqfWKz
+        uHnOuTVU0v+/1zvEoBFdk0Xu2yukI5A=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-497-kAuUCntzO02DdqDuwRNM8A-1; Tue, 06 Sep 2022 09:26:37 -0400
+X-MC-Unique: kAuUCntzO02DdqDuwRNM8A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 907501C006AA;
+        Tue,  6 Sep 2022 13:26:35 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EAEC2026D4C;
+        Tue,  6 Sep 2022 13:26:34 +0000 (UTC)
+Date:   Tue, 6 Sep 2022 09:26:33 -0400
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Bobby Eshleman <bobby.eshleman@gmail.com>
+Cc:     Bobby Eshleman <bobbyeshleman@gmail.com>,
         Bobby Eshleman <bobby.eshleman@bytedance.com>,
         Cong Wang <cong.wang@bytedance.com>,
         Jiang Wang <jiang.wang@bytedance.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -78,17 +59,16 @@ Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org
 Subject: Re: [PATCH 0/6] virtio/vsock: introduce dgrams, sk_buff, and qdisc
-Message-ID: <20220906090048.xdwdnxy3dvuos36x@sgarzare-redhat>
+Message-ID: <YxdKiUzlfpHs3h3q@fedora>
 References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
- <20220817025250-mutt-send-email-mst@kernel.org>
- <3abb1be9-b12c-e658-0391-8461e28f1b33@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ffA3zeJuYjNdcnmP"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3abb1be9-b12c-e658-0391-8461e28f1b33@redhat.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <cover.1660362668.git.bobby.eshleman@bytedance.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -97,62 +77,39 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 12:28:48PM +0800, Jason Wang wrote:
->
->在 2022/8/17 14:54, Michael S. Tsirkin 写道:
->>On Mon, Aug 15, 2022 at 10:56:03AM -0700, Bobby Eshleman wrote:
->>>Hey everybody,
->>>
->>>This series introduces datagrams, packet scheduling, and sk_buff usage
->>>to virtio vsock.
->>>
->>>The usage of struct sk_buff benefits users by a) preparing vsock to use
->>>other related systems that require sk_buff, such as sockmap and qdisc,
->>>b) supporting basic congestion control via sock_alloc_send_skb, and c)
->>>reducing copying when delivering packets to TAP.
->>>
->>>The socket layer no longer forces errors to be -ENOMEM, as typically
->>>userspace expects -EAGAIN when the sk_sndbuf threshold is reached and
->>>messages are being sent with option MSG_DONTWAIT.
->>>
->>>The datagram work is based off previous patches by Jiang Wang[1].
->>>
->>>The introduction of datagrams creates a transport layer fairness issue
->>>where datagrams may freely starve streams of queue access. This happens
->>>because, unlike streams, datagrams lack the transactions necessary for
->>>calculating credits and throttling.
->>>
->>>Previous proposals introduce changes to the spec to add an additional
->>>virtqueue pair for datagrams[1]. Although this solution works, using
->>>Linux's qdisc for packet scheduling leverages already existing systems,
->>>avoids the need to change the virtio specification, and gives additional
->>>capabilities. The usage of SFQ or fq_codel, for example, may solve the
->>>transport layer starvation problem. It is easy to imagine other use
->>>cases as well. For example, services of varying importance may be
->>>assigned different priorities, and qdisc will apply appropriate
->>>priority-based scheduling. By default, the system default pfifo qdisc is
->>>used. The qdisc may be bypassed and legacy queuing is resumed by simply
->>>setting the virtio-vsock%d network device to state DOWN. This technique
->>>still allows vsock to work with zero-configuration.
->>The basic question to answer then is this: with a net device qdisc
->>etc in the picture, how is this different from virtio net then?
->>Why do you still want to use vsock?
->
->
->Or maybe it's time to revisit an old idea[1] to unify at least the 
->driver part (e.g using virtio-net driver for vsock then we can all 
->features that vsock is lacking now)?
 
-Sorry for coming late to the discussion!
+--ffA3zeJuYjNdcnmP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This would be great, though, last time I had looked at it, I had found 
-it quite complicated. The main problem is trying to avoid all the 
-net-specific stuff (MTU, ethernet header, HW offloading, etc.).
+Hi Bobby,
+If you are attending Linux Foundation conferences in Dublin, Ireland
+next week (Linux Plumbers Conference, Open Source Summit Europe, KVM
+Forum, ContainerCon Europe, CloudOpen Europe, etc) then you could meet
+Stefano Garzarella and others to discuss this patch series.
 
-Maybe we could start thinking about this idea by adding a new transport 
-to vsock (e.g. virtio-net-vsock) completely separate from what we have 
-now.
+Using netdev and sk_buff is a big change to vsock. Discussing your
+requirements and the future direction of vsock in person could help.
 
-Thanks,
-Stefano
+If you won't be in Dublin, don't worry. You can schedule a video call if
+you feel it would be helpful to discuss these topics.
+
+Stefan
+
+--ffA3zeJuYjNdcnmP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmMXSogACgkQnKSrs4Gr
+c8iC8wf/WGQyOwxcifRrsvIy43xkZiginzOzlIJEAkBPO1lbTUzCLMkjeiaOgOkO
+7VOexEKxi3S67NVq1vUyAzKPB6HFERheGtQOQtkhrmKDKfhVH14zU6t/bHSVeoAe
+UfM2UaaO4nF/XRVuO6g6sKsVAqVFWQxpdBjVrsg4B4v8k/1q7W/tiAy//WJHCZc9
+6dJCJ+qoPxICjfqc0bw56xbERbh0TG+xneBkGVjp7nLLq/NG/tV7LoIb7xs3EXxq
+wB/WYW+bZBtO378tl7SxMksYKv1DFPuYjU52vuUw2X0bz6jgoFn3/rB5ndoHg/o0
+D8YtdthVM/GJqXQtJAhIIqbPdUV7Dg==
+=DJmj
+-----END PGP SIGNATURE-----
+
+--ffA3zeJuYjNdcnmP--
 
