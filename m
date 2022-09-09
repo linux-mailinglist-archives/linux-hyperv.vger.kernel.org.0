@@ -2,108 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 831CC5B3E9E
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Sep 2022 20:14:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 095B95B3F0C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Sep 2022 20:50:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbiIISNw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Sep 2022 14:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        id S229796AbiIISul (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Sep 2022 14:50:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231826AbiIISNo (ORCPT
+        with ESMTP id S229712AbiIISuk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Sep 2022 14:13:44 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E59DDFF4B;
-        Fri,  9 Sep 2022 11:13:43 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id v1so2518038plo.9;
-        Fri, 09 Sep 2022 11:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=2rBWOVv3s+/BgGo/HoYIVzLUNrlvQyzpwbNtQsvWT2I=;
-        b=U0OPC7Mybv9nOmzkVZ0q7GdbU6DFYu/oD8m83e0oJa97abKroHSB2iIGEEiSDIcR4H
-         6lteeo0bBVNtmM8aK90o2FGhEbxQgVcJQUnx9ADdfUmgYuDYpWupqxNRqDCTFZoigLuh
-         DYf3JqdYTwYiPvDN4ex+2XEJLfeKns1FWGLRuLCUB0yspf5KOQaTIUcf95BxaCdCoR94
-         o6q4D2n2tPNMYEM09cMyKGDUNRn3fXrhHXzsiDitg1XYIISGpRp2ZkrU5xIcBCv7v+lh
-         9vCG5/ArewR1H8ZpXUbMn9Pad4i7P8zqfF4Re2bZbEs++Y6I+oe3j4ITF2FU1R1u5Vol
-         eTJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=2rBWOVv3s+/BgGo/HoYIVzLUNrlvQyzpwbNtQsvWT2I=;
-        b=WDX0tDyCC7jD3JlXmZHAPnFAsqsxV4EZDscjbGJfhHWrQcf0zGOb6zxIJgpgBHgt7A
-         RkNcQSeLctjQp8WmU7pz7J+IFFbkWtO6YlAzxoJoV+Kb8Uy2Eutt8I0mYX1/N+nJUgmF
-         GnkAkPK/mqqZmldg9J4hwqqozIymh5pVqBxdP4SxCVPgidZuv5zuf34zJwT+A5EcB4a1
-         sWypo1bG49htW5fJw9uBGGSrwIZn4KTqTr6AdC99eOmV1Ep2WBjHvtkg0GkKURi+Pbxw
-         +1SJDK7xZfiB8k4nHnvaG//5DJa9vtmtQHlCr52YX6kKNzFFClPp35Clte1Br7ZUdiAu
-         Y9DQ==
-X-Gm-Message-State: ACgBeo2io/kkorCR3/cH+UkehAlGVC9XLDaUtPrLakNzZyR+0CGfU3Is
-        8D6/qcZtWVXh4lAg3dSAUYw=
-X-Google-Smtp-Source: AA6agR5nPtj/Vphsk/4jmNa1U1Db4c4Gob5akLfQ/k0i0pA3yyn7H9N4iy3dQpAVK4lGKrHgWUINyg==
-X-Received: by 2002:a17:903:2104:b0:176:a9ef:418b with SMTP id o4-20020a170903210400b00176a9ef418bmr14719928ple.134.1662747222905;
-        Fri, 09 Sep 2022 11:13:42 -0700 (PDT)
-Received: from localhost ([208.71.200.116])
-        by smtp.gmail.com with ESMTPSA id i10-20020a170902c94a00b001768517f99esm745300pla.244.2022.09.09.11.13.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 11:13:42 -0700 (PDT)
-Date:   Fri, 9 Sep 2022 18:13:41 +0000
-From:   Bobby Eshleman <bobbyeshleman@gmail.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Dexuan Cui <decui@microsoft.com>, Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Bobby Eshleman <bobby.eshleman@gmail.com>,
-        Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        Cong Wang <cong.wang@bytedance.com>,
-        Jiang Wang <jiang.wang@bytedance.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Fri, 9 Sep 2022 14:50:40 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7402D8D3F0;
+        Fri,  9 Sep 2022 11:50:39 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D7B4E20B929C;
+        Fri,  9 Sep 2022 11:50:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D7B4E20B929C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1662749438;
+        bh=hKvp7xsxus8CJFQ+InVqMrBcREIdThrCu+sov09IzSo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=htS28ax+dhxwlIl8INCWvyEL2p15a5i4WfPWKNQDZID9ZVjTnxL4x62qlau32G8P2
+         ITzmCbaXGgz1PmOfZQjjOkta3FyjLy2CDRiq+VzaPjmnkrlwe/ZPDELUTD3y3vJICP
+         utBRVzYelJO31bf6+WqD2B2M34Y30kLcOQquG4Cc=
+From:   Easwar Hariharan <eahariha@linux.microsoft.com>
+To:     vkuznets@redhat.com, "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: Call to discuss vsock netdev/sk_buff [was Re: [PATCH 0/6]
- virtio/vsock: introduce dgrams, sk_buff, and qdisc]
-Message-ID: <YxuCVfFcRdWHeeh8@bullseye>
-References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
- <YxdKiUzlfpHs3h3q@fedora>
- <Yv5PFz1YrSk8jxzY@bullseye>
- <20220908143652.tfyjjx2z6in6v66c@sgarzare-redhat>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220908143652.tfyjjx2z6in6v66c@sgarzare-redhat>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org (open list:Hyper-V/Azure CORE AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] hv: Use PCI_VENDOR_ID_MICROSOFT for better discoverability
+Date:   Fri,  9 Sep 2022 11:50:24 -0700
+Message-Id: <1662749425-3037-2-git-send-email-eahariha@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1662749425-3037-1-git-send-email-eahariha@linux.microsoft.com>
+References: <87leqsr6im.fsf@redhat.com>
+ <1662749425-3037-1-git-send-email-eahariha@linux.microsoft.com>
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hey Stefano, thanks for sending this out.
+From: Easwar Hariharan <easwar.hariharan@microsoft.com>
 
-On Thu, Sep 08, 2022 at 04:36:52PM +0200, Stefano Garzarella wrote:
-> 
-> Looking better at the KVM forum sched, I found 1h slot for Sep 15 at 16:30
-> UTC.
-> 
-> Could this work for you?
+Signed-off-by: Easwar Hariharan <easwar.hariharan@microsoft.com>
+---
+ drivers/hv/vmbus_drv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Unfortunately, I can't make this time slot.
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 3c833ea..6b77a53 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -39,6 +39,8 @@
+ #include <clocksource/hyperv_timer.h>
+ #include "hyperv_vmbus.h"
+ 
++#define PCI_VENDOR_ID_MICROSOFT 0x1414
++
+ struct vmbus_dynid {
+ 	struct list_head node;
+ 	struct hv_vmbus_device_id id;
+@@ -2052,7 +2054,7 @@ struct hv_device *vmbus_device_create(const guid_t *type,
+ 	child_device_obj->channel = channel;
+ 	guid_copy(&child_device_obj->dev_type, type);
+ 	guid_copy(&child_device_obj->dev_instance, instance);
+-	child_device_obj->vendor_id = 0x1414; /* MSFT vendor ID */
++	child_device_obj->vendor_id = PCI_VENDOR_ID_MICROSOFT;
+ 
+ 	return child_device_obj;
+ }
+-- 
+1.8.3.1
 
-My schedule also opens up a lot the week of the 26th, especially between
-16:00 and 19:00 UTC, as well as after 22:00 UTC.
-
-Best,
-Bobby
