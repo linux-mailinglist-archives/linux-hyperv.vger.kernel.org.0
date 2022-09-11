@@ -2,170 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 985A05B47DE
-	for <lists+linux-hyperv@lfdr.de>; Sat, 10 Sep 2022 20:11:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EFA65B4FE1
+	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Sep 2022 18:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbiIJSL2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 10 Sep 2022 14:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
+        id S229565AbiIKQLp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 11 Sep 2022 12:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiIJSL1 (ORCPT
+        with ESMTP id S229540AbiIKQLo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 10 Sep 2022 14:11:27 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9394F4AD58;
-        Sat, 10 Sep 2022 11:11:26 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 539F92282E;
-        Sat, 10 Sep 2022 18:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1662833485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UCnH+5b7J8QcaxQduLbCitDQV4To+pDJ7A+kcfIag4=;
-        b=N9qDJgkljr8gasfl+S4Ju1yVDMHRlWge1MRHhQsisvYEMSkOHAfNtruTbmNKnGDqm6BJh9
-        62xKP6XS3dsUDafzOwckgQmdIcu4kHcLD7qTUSjV20jO05nt1OnL2aozxhHYf7a1fzOwp5
-        Epi6uPQc/WbdXDbLubEIsmFGqGHuqXI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1662833485;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UCnH+5b7J8QcaxQduLbCitDQV4To+pDJ7A+kcfIag4=;
-        b=lFRwSMUgedQGMsJ0NuCBHpIV6bZ0A42eIAlRf8B4ZGDrzjbUS2kia2t1FT3v0sgOuaUwos
-        1oxA4Y3vPJmFQKCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 23696133B7;
-        Sat, 10 Sep 2022 18:11:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id fn/HB03THGNZBgAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Sat, 10 Sep 2022 18:11:25 +0000
-Message-ID: <14302178-c797-8635-4325-070f78b7f805@suse.de>
-Date:   Sat, 10 Sep 2022 20:11:24 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH] drm/hyperv: Don't rely on screen_info.lfb_base for Gen1
- VMs
-Content-Language: en-US
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>,
-        ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
+        Sun, 11 Sep 2022 12:11:44 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 699762AE3B;
+        Sun, 11 Sep 2022 09:11:43 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+        id D0162204C3EA; Sun, 11 Sep 2022 09:11:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D0162204C3EA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1662912702;
+        bh=tbufdYlVkrxrgw5goic8vel2LLNei+DjBORn6M2dN/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nAHaIi4vSezJ1hTgheHnhncmVbrJcaVj8tDKgAHysmin9y2CVNTWuyvsHTpShaA1P
+         CcCPmmTMaZ5rVYvuHhmAT8x4Lrh9gaiSi+vIvJiUDUtoAKu2Sp4Che2pVn3MiafCNy
+         xIKZYj3hhFA8YE9N9a1I48WpY2WusxME/rggy6B8=
+Date:   Sun, 11 Sep 2022 09:11:42 -0700
+From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
         daniel@ffwll.ch, linux-hyperv@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         mikelley@microsoft.com
-References: <1662734639-27164-1-git-send-email-ssengar@linux.microsoft.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <1662734639-27164-1-git-send-email-ssengar@linux.microsoft.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------n3RoxP0YamBvEOHUprK5slXD"
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] drm/hyperv: Add ratelimit on error message
+Message-ID: <20220911161142.GA7754@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1662736193-31379-1-git-send-email-ssengar@linux.microsoft.com>
+ <88fab56a-f6e5-bae0-5ed7-1e01c070d136@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88fab56a-f6e5-bae0-5ed7-1e01c070d136@suse.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------n3RoxP0YamBvEOHUprK5slXD
-Content-Type: multipart/mixed; boundary="------------yyhwzZbDnmmgJCE0ens3rj6y";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Saurabh Sengar <ssengar@linux.microsoft.com>, ssengar@microsoft.com,
- drawat.floss@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
- linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, mikelley@microsoft.com
-Message-ID: <14302178-c797-8635-4325-070f78b7f805@suse.de>
-Subject: Re: [PATCH] drm/hyperv: Don't rely on screen_info.lfb_base for Gen1
- VMs
-References: <1662734639-27164-1-git-send-email-ssengar@linux.microsoft.com>
-In-Reply-To: <1662734639-27164-1-git-send-email-ssengar@linux.microsoft.com>
+On Sat, Sep 10, 2022 at 08:06:05PM +0200, Thomas Zimmermann wrote:
+> Hi
+> 
+> Am 09.09.22 um 17:09 schrieb Saurabh Sengar:
+> >Due to a full ring buffer, the driver may be unable to send updates to
+> >the Hyper-V host.  But outputing the error message can make the problem
+> >worse because console output is also typically written to the frame
+> >buffer.
+> >Rate limiting the error message, also output the error code for additional
+> >diagnosability.
+> >
+> >Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> >---
+> >  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> >index 76a182a..013a782 100644
+> >--- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> >+++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
+> >@@ -208,7 +208,7 @@ static inline int hyperv_sendpacket(struct hv_device *hdev, struct synthvid_msg
+> >  			       VM_PKT_DATA_INBAND, 0);
+> >  	if (ret)
+> >-		drm_err(&hv->dev, "Unable to send packet via vmbus\n");
+> >+		drm_err_ratelimited(&hv->dev, "Unable to send packet via vmbus; error %d\n", ret);
+> 
+> I better option would probably be drm_err_once(). Then you'd get the
+> first error message and skip all others.
 
---------------yyhwzZbDnmmgJCE0ens3rj6y
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Thanks for your comment however the intention here is to limit the printk messages and break the chain
+rather then printing only once. There can be cases where at different point of time we again get a
+ring buffer full condition and we don't want to miss that. We should get the message for each of these
+errror which are widely-separated in time not just the first time.
 
-SGkNCg0KQW0gMDkuMDkuMjIgdW0gMTY6NDMgc2NocmllYiBTYXVyYWJoIFNlbmdhcjoNCj4g
-aHlwZXJ2X3NldHVwX3ZyYW0gdHJpZXMgdG8gcmVtb3ZlIGNvbmZsaWN0aW5nIGZyYW1lYnVm
-ZmVyIGJhc2VkIG9uDQo+ICdzY3JlZW5faW5mbycuIEFzIG9ic2VydmVkIGluIHBhc3QgZHVl
-IHRvIHNvbWUgYnVnIG9yIHdyb25nIHNldHRpbmcNCj4gaW4gZ3J1YiwgdGhlICdzY3JlZW5f
-aW5mbycgZmllbGRzIG1heSBub3QgYmUgc2V0IGZvciBHZW4xLCBhbmQgaW4gc3VjaA0KPiBj
-YXNlcyBkcm1fYXBlcnR1cmVfcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycyB3aWxs
-IG5vdCBkbyBhbnl0aGluZw0KPiB1c2VmdWwuDQo+IEZvciBHZW4xIFZNcywgaXQgc2hvdWxk
-IGFsd2F5cyBiZSBwb3NzaWJsZSB0byBnZXQgZnJhbWVidWZmZXINCj4gY29uZmxpY3QgcmVt
-b3ZlZCB1c2luZyBQQ0kgZGV2aWNlIGluc3RlYWQuDQo+IA0KPiBGaXhlczogYTBhYjVhYmNl
-ZDU1ICgiZHJtL2h5cGVydiA6IFJlbW92aW5nIHRoZSByZXN0cnVjdGlvbiBvZiBWUkFNIGFs
-bG9jYXRpb24gd2l0aCBQQ0kgYmFyIHNpemUiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBTYXVyYWJo
-IFNlbmdhciA8c3NlbmdhckBsaW51eC5taWNyb3NvZnQuY29tPg0KPiAtLS0NCj4gICBkcml2
-ZXJzL2dwdS9kcm0vaHlwZXJ2L2h5cGVydl9kcm1fZHJ2LmMgfCAyNCArKysrKysrKysrKysr
-KysrKysrKy0tLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgNCBk
-ZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaHlwZXJ2
-L2h5cGVydl9kcm1fZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vaHlwZXJ2L2h5cGVydl9kcm1f
-ZHJ2LmMNCj4gaW5kZXggNmQxMWU3OTM4YzgzLi5iMGNjOTc0ZWZhNDUgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9oeXBlcnYvaHlwZXJ2X2RybV9kcnYuYw0KPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vaHlwZXJ2L2h5cGVydl9kcm1fZHJ2LmMNCj4gQEAgLTczLDEyICs3
-MywyOCBAQCBzdGF0aWMgaW50IGh5cGVydl9zZXR1cF92cmFtKHN0cnVjdCBoeXBlcnZfZHJt
-X2RldmljZSAqaHYsDQo+ICAgCQkJICAgICBzdHJ1Y3QgaHZfZGV2aWNlICpoZGV2KQ0KPiAg
-IHsNCj4gICAJc3RydWN0IGRybV9kZXZpY2UgKmRldiA9ICZodi0+ZGV2Ow0KPiArCXN0cnVj
-dCBwY2lfZGV2ICpwZGV2Ow0KPiAgIAlpbnQgcmV0Ow0KPiAgIA0KPiAtCWRybV9hcGVydHVy
-ZV9yZW1vdmVfY29uZmxpY3RpbmdfZnJhbWVidWZmZXJzKHNjcmVlbl9pbmZvLmxmYl9iYXNl
-LA0KPiAtCQkJCQkJICAgICBzY3JlZW5faW5mby5sZmJfc2l6ZSwNCj4gLQkJCQkJCSAgICAg
-ZmFsc2UsDQo+IC0JCQkJCQkgICAgICZoeXBlcnZfZHJpdmVyKTsNCj4gKwlpZiAoZWZpX2Vu
-YWJsZWQoRUZJX0JPT1QpKSB7DQo+ICsJCWRybV9hcGVydHVyZV9yZW1vdmVfY29uZmxpY3Rp
-bmdfZnJhbWVidWZmZXJzKHNjcmVlbl9pbmZvLmxmYl9iYXNlLA0KPiArCQkJCQkJCSAgICAg
-c2NyZWVuX2luZm8ubGZiX3NpemUsDQoNClVzaW5nIHNjcmVlbl9pbmZvIGhlcmUgc2VlbXMg
-d3JvbmcgaW4gYW55IGNhc2UuIFlvdSB3YW50IHRvIHJlbW92ZSB0aGUgDQpmcmFtZWJ1ZmZl
-ciBkZXZpY2VzIHRoYXQgY29uZmxpY3Qgd2l0aCB5b3VyIGRyaXZlciwgd2hpY2ggbWlnaHQg
-YmUgDQp1bnJlbGF0ZWQgdG8gc2NyZWVuX2luZm8uIEFGQUlDVCB0aGUgY29ycmVjdCBzb2x1
-dGlvbiB3b3VsZCBhbHdheXMgDQpyZXRyaWV2ZSB0aGUgUENJIGRldmljZSBmb3IgcmVtb3Zh
-bCAoaS5lLiwgYWx3YXlzIGRvIHRoZSBlbHNlIGJyYW5jaCkuDQoNCkJlc3QgcmVnYXJkDQpU
-aG9tYXMNCg0KPiArCQkJCQkJCSAgICAgZmFsc2UsDQo+ICsJCQkJCQkJICAgICAmaHlwZXJ2
-X2RyaXZlcik7DQo+ICsJfSBlbHNlIHsNCj4gKwkJcGRldiA9IHBjaV9nZXRfZGV2aWNlKFBD
-SV9WRU5ET1JfSURfTUlDUk9TT0ZULCBQQ0lfREVWSUNFX0lEX0hZUEVSVl9WSURFTywgTlVM
-TCk7DQo+ICsJCWlmICghcGRldikgew0KPiArCQkJZHJtX2VycihkZXYsICJVbmFibGUgdG8g
-ZmluZCBQQ0kgSHlwZXItViB2aWRlb1xuIik7DQo+ICsJCQlyZXR1cm4gLUVOT0RFVjsNCj4g
-KwkJfQ0KPiArDQo+ICsJCXJldCA9IGRybV9hcGVydHVyZV9yZW1vdmVfY29uZmxpY3Rpbmdf
-cGNpX2ZyYW1lYnVmZmVycyhwZGV2LCAmaHlwZXJ2X2RyaXZlcik7DQo+ICsJCXBjaV9kZXZf
-cHV0KHBkZXYpOw0KPiArCQlpZiAocmV0KSB7DQo+ICsJCQlkcm1fZXJyKGRldiwgIk5vdCBh
-YmxlIHRvIHJlbW92ZSBib290IGZiXG4iKTsNCj4gKwkJCXJldHVybiByZXQ7DQo+ICsJCX0N
-Cj4gKwl9DQo+ICAgDQo+ICAgCWh2LT5mYl9zaXplID0gKHVuc2lnbmVkIGxvbmcpaHYtPm1t
-aW9fbWVnYWJ5dGVzICogMTAyNCAqIDEwMjQ7DQo+ICAgDQoNCi0tIA0KVGhvbWFzIFppbW1l
-cm1hbm4NCkdyYXBoaWNzIERyaXZlciBEZXZlbG9wZXINClNVU0UgU29mdHdhcmUgU29sdXRp
-b25zIEdlcm1hbnkgR21iSA0KTWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJt
-YW55DQooSFJCIDM2ODA5LCBBRyBOw7xybmJlcmcpDQpHZXNjaMOkZnRzZsO8aHJlcjogSXZv
-IFRvdGV2DQo=
+> 
+> Best regards
+> Thomas
+> 
+> >  	return ret;
+> >  }
+> 
+> -- 
+> Thomas Zimmermann
+> Graphics Driver Developer
+> SUSE Software Solutions Germany GmbH
+> Maxfeldstr. 5, 90409 Nürnberg, Germany
+> (HRB 36809, AG Nürnberg)
+> Geschäftsführer: Ivo Totev
 
---------------yyhwzZbDnmmgJCE0ens3rj6y--
 
---------------n3RoxP0YamBvEOHUprK5slXD
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
 
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmMc00wFAwAAAAAACgkQlh/E3EQov+C5
-1g//crmmOE4lqZdtNDgRfZACe1ffCyw4RK1uKp6Ag08jwd0Cp9KOUSokkNULTqYxGU1iM4zaxRgp
-5k9nlqAaaRTaNKsNdQc/8XXbtKzk+QSLySo0p3aVz/lPYlGYma5p4htjZrRj9yIT4DppZFLkSuTz
-wTnQOBwU7v77t5GeaNV3a/wdwnn4xJ49rpetKERtjtIZHdARMdhvK6z4seeFfMysOb2PcznlOhB2
-+/eW5+uU4f3uwe0YSoy5ihVOta/IYwO87zOgMEqaqYnHK1PozLEAndxGl5E69wc1JF0UxGffOdxB
-dhow7adOUuvbqih+E31WshS616sWzczEJNNODs5V4o4pYWlh3VLS2FKjA3wgpSN8Tb69sbyrv1OL
-5aIitRybyPPHMED9BtE8x9H3ILUoiBJ+RQJ3b1lH12U3pKZapOx/ZvtlRCZeYj6JyjoHZrt0TN6J
-u634IMQcH1Q/V5qtPya/ej/RCuFtYqKT2WuEen0OKvOI2NPN+soYpAusHk3X6KdGxLsvmFlYbVw2
-JOvofL4Igc8Oecr871p68Z2rf1zo8w2wgtaiVlxWJlkXiJnnaAuPKnP5BaCBMWeI+uXdh8wueZD9
-lL1G62wDY04XN2sHfUOrUaJQR+y7MIAr+kqWOnJmveBVtbd0xOmAZeIBFM8IfeBBWsaNOtHNTjxG
-3Gs=
-=el/k
------END PGP SIGNATURE-----
-
---------------n3RoxP0YamBvEOHUprK5slXD--
