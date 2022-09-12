@@ -2,170 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 347385B5C34
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Sep 2022 16:29:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0964E5B5CBA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Sep 2022 16:53:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbiILO3w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Sep 2022 10:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
+        id S230204AbiILOx5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Sep 2022 10:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbiILO3t (ORCPT
+        with ESMTP id S229715AbiILOx5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Sep 2022 10:29:49 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25E3615B
-        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 07:29:43 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id o23so6976709pji.4
-        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 07:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=GFheNGVqLERZhSYCSZk/aU+ENoKVQ3v9+pQbZTcslEY=;
-        b=exu7ea6b5fYdoPyhBfsq0X2/RyFa0nkTMBzKAhu/TECnWWoAiZHfnnwLAwMv3264+V
-         fXHM3vi4u+FYXFDPi8lgH79yRErt5ZSm0OjEyIk4DTUOGRATDN4ye/pFZ0hOBeGwQMm+
-         W/8jR6Hn+qX+5SqgaVqIG29xbM0agMOTL1bJnT6lT2WXBzCyq/aQvqNns0j1ZNrv5Aqk
-         cZNf41l4yXFpBVe8FuZpCTTUZr0uicnZK4kOofuiYwoL7b5OBsNOiuLq6l2cZ2VKMUKz
-         E3xq9TfZ8xigxuNDAJ6vqCOa67m63/y47yzeWjZcxhPF1Csy5kfCGmBsHaF1fKg4xohQ
-         OHiA==
+        Mon, 12 Sep 2022 10:53:57 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C67371A0;
+        Mon, 12 Sep 2022 07:53:54 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id e18so1117958wmq.3;
+        Mon, 12 Sep 2022 07:53:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=GFheNGVqLERZhSYCSZk/aU+ENoKVQ3v9+pQbZTcslEY=;
-        b=jlPFenXsQ8TcF2O9HMe1gx11lTnk49SF+Cur3dLjtu3mbQQ7hwWNT/0rApvmzr/1TG
-         TSlmDN1dnFKqUA5/xzAPIRMtrEt9NjzYWLa4obVuxzfoi2FhA3YqWUbYNAIgWcq7Q4o+
-         qm55gkw6UFYj2D4Zaz97Jywq+hBwBJm7MmSiGFD0iTvoghF+yQwnD4GW08jxup604IrL
-         I0HF9Hf9c1pd2aJknFisbKyEeRVgdTUXd3wDYE5dkG2DuVURGom0xR/FOASCBiVsRx2j
-         13zv1AlVpCHrSPqi7V1jGElAHKmeQ9aZdZePKiguAUjd7xJ9aGJk57jCSegaOBVMjvl5
-         +Pdg==
-X-Gm-Message-State: ACgBeo2maha5w/mrC5wxOeagluNJa5pqH5M4wui6vhIzx5cKXkLECgmY
-        aeYtE/g9tGAVfWhi+d9bQC9L+w==
-X-Google-Smtp-Source: AA6agR5eQXImfKaiccrP3GiMD3RTxMTyGKrsX6U7ojJdLRpLHqDclHPP5oVBbofCP8Qq/PcjRB6U6A==
-X-Received: by 2002:a17:902:7d83:b0:170:9353:f299 with SMTP id a3-20020a1709027d8300b001709353f299mr26584625plm.41.1662992982931;
-        Mon, 12 Sep 2022 07:29:42 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id t23-20020a635f17000000b0042b5095b7b4sm5758510pgb.5.2022.09.12.07.29.42
+        bh=j0Coki9DMkC7fbhU7zutmHnadILl+DbTuX5RVwbWOKI=;
+        b=F9ezCQ8PAtEX4ywXfSTa6F1NqyP0PucSoK0k/xyozu57zYLJllbbatUiWtajmLc4wz
+         Ylp5vFyAW7EqNsB3cHBOgfGDcqU91N6loubA5Mt74kbmPXKRy7W9d3zHPw1ajUSpZIhr
+         gZdd+SstuGprT63Vbe7VeVefsVVWzA0eySyDQVNl1AueqnfNi/zYNG5cyq7BPeEIFHkh
+         zynRwIHjoH9iPQBv6XIbTpT3KUkj09COp5okHyaDB+Z7XuebfJ48JAXNUhGNdJXJDtPV
+         4zzXbHMurVDc7ZkXPOpoy8nxU/TnhEiZuRtWgeMjDA6K8KTrm0upJLA4MxUE0X7DDEoU
+         BdTg==
+X-Gm-Message-State: ACgBeo2nMOOW/ZAuxu1BIru4qoljoSyEnVdIchWm5KouK1M4+zzLoqOq
+        O7vyyqLdyo8yrVSut1pawC3l+9nLoeA=
+X-Google-Smtp-Source: AA6agR6gxR/9t5/gelS0gxmdWQAVTjU58i5utB5d8uMkeTDaoaJZY6jg8kAsEbl56yj8DLbi5EeJ0A==
+X-Received: by 2002:a05:600c:4fc2:b0:3a5:c491:5ee1 with SMTP id o2-20020a05600c4fc200b003a5c4915ee1mr13832558wmq.62.1662994432771;
+        Mon, 12 Sep 2022 07:53:52 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id x14-20020a5d60ce000000b0022862fd933asm7567247wrt.96.2022.09.12.07.53.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Sep 2022 07:29:42 -0700 (PDT)
-Date:   Mon, 12 Sep 2022 14:29:39 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] KVM: selftests: Test Hyper-V invariant TSC control
-Message-ID: <Yx9CU++TkHZwVfEs@google.com>
-References: <20220831085009.1627523-1-vkuznets@redhat.com>
- <20220831085009.1627523-4-vkuznets@redhat.com>
+        Mon, 12 Sep 2022 07:53:52 -0700 (PDT)
+Date:   Mon, 12 Sep 2022 14:53:46 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc:     vkuznets@redhat.com, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "open list:Hyper-V/Azure CORE AND DRIVERS" 
+        <linux-hyperv@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] hv: Use PCI_VENDOR_ID_MICROSOFT for better
+ discoverability
+Message-ID: <Yx9H+semY705LUkB@liuwe-devbox-debian-v2>
+References: <87leqsr6im.fsf@redhat.com>
+ <1662749425-3037-1-git-send-email-eahariha@linux.microsoft.com>
+ <1662749425-3037-2-git-send-email-eahariha@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220831085009.1627523-4-vkuznets@redhat.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <1662749425-3037-2-git-send-email-eahariha@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 31, 2022, Vitaly Kuznetsov wrote:
-> Add a test for the newly introduced Hyper-V invariant TSC control feature:
-> - HV_X64_MSR_TSC_INVARIANT_CONTROL is not available without
->  HV_ACCESS_TSC_INVARIANT CPUID bit set and available with it.
-> - BIT(0) of HV_X64_MSR_TSC_INVARIANT_CONTROL controls the filtering of
-> architectural invariant TSC (CPUID.80000007H:EDX[8]) bit.
+On Fri, Sep 09, 2022 at 11:50:24AM -0700, Easwar Hariharan wrote:
+> From: Easwar Hariharan <easwar.hariharan@microsoft.com>
 > 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Easwar Hariharan <easwar.hariharan@microsoft.com>
+
 > ---
->  .../selftests/kvm/x86_64/hyperv_features.c    | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
+>  drivers/hv/vmbus_drv.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_features.c b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-> index 4ec4776662a4..26e8c5f7677e 100644
-> --- a/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-> @@ -15,6 +15,9 @@
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 3c833ea..6b77a53 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -39,6 +39,8 @@
+>  #include <clocksource/hyperv_timer.h>
+>  #include "hyperv_vmbus.h"
 >  
->  #define LINUX_OS_ID ((u64)0x8100 << 48)
+> +#define PCI_VENDOR_ID_MICROSOFT 0x1414
+> +
+
+There is a patch in hyperv-fixes that puts this definition to a proper
+header. You can wait for that to land and rebase this patch.
+
+In the future when you send out a series, please chain all the patches
+to a cover letter.
+
+Thanks,
+Wei.
+
+>  struct vmbus_dynid {
+>  	struct list_head node;
+>  	struct hv_vmbus_device_id id;
+> @@ -2052,7 +2054,7 @@ struct hv_device *vmbus_device_create(const guid_t *type,
+>  	child_device_obj->channel = channel;
+>  	guid_copy(&child_device_obj->dev_type, type);
+>  	guid_copy(&child_device_obj->dev_instance, instance);
+> -	child_device_obj->vendor_id = 0x1414; /* MSFT vendor ID */
+> +	child_device_obj->vendor_id = PCI_VENDOR_ID_MICROSOFT;
 >  
-> +/* CPUID.80000007H:EDX */
-> +#define X86_FEATURE_INVTSC (1 << 8)
-> +
->  static inline uint8_t hypercall(u64 control, vm_vaddr_t input_address,
->  				vm_vaddr_t output_address, uint64_t *hv_status)
->  {
-> @@ -60,6 +63,24 @@ static void guest_msr(struct msr_data *msr)
->  		GUEST_ASSERT_2(!vector, msr->idx, vector);
->  	else
->  		GUEST_ASSERT_2(vector == GP_VECTOR, msr->idx, vector);
-> +
-> +	/* Invariant TSC bit appears when TSC invariant control MSR is written to */
-> +	if (msr->idx == HV_X64_MSR_TSC_INVARIANT_CONTROL) {
-> +		u32 eax, ebx, ecx, edx;
-> +
-> +		cpuid(0x80000007, &eax, &ebx, &ecx, &edx);
-
-Add a proper kvm_x86_cpu_feature so that this is simply
-
-		this_cpu_has(X86_FEATURE_INVTSC)
-
-> +
-> +		/*
-> +		 * TSC invariant bit is present without the feature (legacy) or
-> +		 * when the feature is present and enabled.
-> +		 */
-> +		if ((!msr->should_not_gp && !msr->write) || (msr->write && msr->write_val == 1))
-
-Relying purely on the inputs is rather nasty as it creates a subtle dependency
-on the "write 1" testcase coming last.  This function already reads the guest
-MSR value, just use that to check if INVTSC should be enabled.  And if we want
-to verify KVM "wrote" the correct value, then that can be done in the common
-path.
-
-And I think that will make this code self-documenting, e.g.
-
-	if (msr->idx == HV_X64_MSR_TSC_INVARIANT_CONTROL)
-		GUEST_ASSERT(this_cpu_has(X86_FEATURE_INVTSC) ==
-			     !!(msr_val & ...));
-
-> +			GUEST_ASSERT(edx & X86_FEATURE_INVTSC);
-> +		else
-> +			GUEST_ASSERT(!(edx & X86_FEATURE_INVTSC));
-> +	}
-> +
-> +
->  	GUEST_DONE();
+>  	return child_device_obj;
 >  }
->  
-> @@ -104,6 +125,15 @@ static void vcpu_reset_hv_cpuid(struct kvm_vcpu *vcpu)
->  	vcpu_clear_cpuid_entry(vcpu, HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES);
->  }
->  
-> +static bool guest_has_invtsc(void)
-> +{
-> +	const struct kvm_cpuid_entry2 *cpuid;
-> +
-> +	cpuid = kvm_get_supported_cpuid_entry(0x80000007);
-> +
-> +	return cpuid->edx & X86_FEATURE_INVTSC;
-> +}
-> +
->  static void guest_test_msrs_access(void)
->  {
->  	struct kvm_cpuid2 *prev_cpuid = NULL;
-> @@ -115,6 +145,7 @@ static void guest_test_msrs_access(void)
->  	int stage = 0;
->  	vm_vaddr_t msr_gva;
->  	struct msr_data *msr;
-> +	bool has_invtsc = guest_has_invtsc();
-
-Huh, I never added vcpu_has_cpuid_feature()?  Can you add that instead of
-open-coding the check?
+> -- 
+> 1.8.3.1
+> 
