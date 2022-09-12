@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A0F5B5BBE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Sep 2022 16:00:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 347385B5C34
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Sep 2022 16:29:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbiILN77 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Sep 2022 09:59:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52020 "EHLO
+        id S229459AbiILO3w (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Sep 2022 10:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbiILN76 (ORCPT
+        with ESMTP id S230185AbiILO3t (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Sep 2022 09:59:58 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B686B485
-        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 06:59:57 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id s18so2735948plr.4
-        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 06:59:57 -0700 (PDT)
+        Mon, 12 Sep 2022 10:29:49 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25E3615B
+        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 07:29:43 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id o23so6976709pji.4
+        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 07:29:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=CBw2jRLKePbG0d1bevJk7MojLNgMrFNThWg3tV1196s=;
-        b=ONa5FFh+7XdNOXJqog7pCFfGV1y84lnz1Bkx6emd+txO8rpTILAI28016lHiyvT1ZZ
-         aZYXR7bV3a36XUkNV3C5SRic1rjL2m0pTdKZsutxFKpkBy2baFOqCSevxpsKiUezETXb
-         ODtXSzSOWNLi7Yp7hhqVV0Hm+r4rKY0U0ISj5TkQu9h3GENiQ4D+fNWKChD+t440KFij
-         ZvRHreX4JM89Yqt9MTMDR3y9df00KCTY7leDKkmoaVfFcnx3DzLlRNTDVLOJd1ub0Dnb
-         zXm0goI9PrWGlLPx+OeLhC3ARgsYafctfiV8/qSzMzTKyLxzqSecULcpnEHxxwUg82Sf
-         wqWg==
+        bh=GFheNGVqLERZhSYCSZk/aU+ENoKVQ3v9+pQbZTcslEY=;
+        b=exu7ea6b5fYdoPyhBfsq0X2/RyFa0nkTMBzKAhu/TECnWWoAiZHfnnwLAwMv3264+V
+         fXHM3vi4u+FYXFDPi8lgH79yRErt5ZSm0OjEyIk4DTUOGRATDN4ye/pFZ0hOBeGwQMm+
+         W/8jR6Hn+qX+5SqgaVqIG29xbM0agMOTL1bJnT6lT2WXBzCyq/aQvqNns0j1ZNrv5Aqk
+         cZNf41l4yXFpBVe8FuZpCTTUZr0uicnZK4kOofuiYwoL7b5OBsNOiuLq6l2cZ2VKMUKz
+         E3xq9TfZ8xigxuNDAJ6vqCOa67m63/y47yzeWjZcxhPF1Csy5kfCGmBsHaF1fKg4xohQ
+         OHiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=CBw2jRLKePbG0d1bevJk7MojLNgMrFNThWg3tV1196s=;
-        b=BEVQ64pCdl3ZrWBEbMLGTOG1eJp6Ena8PIwByNrSBxOeUhnlLzTyeoz//AeOzQlrWm
-         rTLPxlipRG5m5d0idIuMIIBttG510ZCuJptPfVAib8bQFWok2TjOU1rpbn66RbiSyY7L
-         mko2a1AaJg35lqp48pEq7gGg0unSZViG8BQ2Z3HiinqKvNBB+GgpGjc5kxQd1hcWEJTL
-         zDIQs4d8jVQwNbwEvLqu/lSMcen1G8QiOsLt85a/AGXJig4Q4kxBesr2aqjhAQZIIAby
-         b5Szyn4iHBSalvtc+tWXKO26sokNY+TtkoWHVBNg4I23/QylyZUxAfphTCHXEVRi63ZE
-         zy0g==
-X-Gm-Message-State: ACgBeo273qUeVQbAF8FNXqenIW2OnnhA6x3xXLD9GK9MYy1wvA3MJf4m
-        9W7pBkJtTwYBwePdK68Y457tyA==
-X-Google-Smtp-Source: AA6agR445HG3r3qBDDzaVsSrHcRQkMnu4zhhjpAsfoxku52mXAIvKOxgtmC0dcX8Fqi2BnRGVrb9Cg==
-X-Received: by 2002:a17:902:b20a:b0:172:7385:ea63 with SMTP id t10-20020a170902b20a00b001727385ea63mr27092536plr.54.1662991196920;
-        Mon, 12 Sep 2022 06:59:56 -0700 (PDT)
+        bh=GFheNGVqLERZhSYCSZk/aU+ENoKVQ3v9+pQbZTcslEY=;
+        b=jlPFenXsQ8TcF2O9HMe1gx11lTnk49SF+Cur3dLjtu3mbQQ7hwWNT/0rApvmzr/1TG
+         TSlmDN1dnFKqUA5/xzAPIRMtrEt9NjzYWLa4obVuxzfoi2FhA3YqWUbYNAIgWcq7Q4o+
+         qm55gkw6UFYj2D4Zaz97Jywq+hBwBJm7MmSiGFD0iTvoghF+yQwnD4GW08jxup604IrL
+         I0HF9Hf9c1pd2aJknFisbKyEeRVgdTUXd3wDYE5dkG2DuVURGom0xR/FOASCBiVsRx2j
+         13zv1AlVpCHrSPqi7V1jGElAHKmeQ9aZdZePKiguAUjd7xJ9aGJk57jCSegaOBVMjvl5
+         +Pdg==
+X-Gm-Message-State: ACgBeo2maha5w/mrC5wxOeagluNJa5pqH5M4wui6vhIzx5cKXkLECgmY
+        aeYtE/g9tGAVfWhi+d9bQC9L+w==
+X-Google-Smtp-Source: AA6agR5eQXImfKaiccrP3GiMD3RTxMTyGKrsX6U7ojJdLRpLHqDclHPP5oVBbofCP8Qq/PcjRB6U6A==
+X-Received: by 2002:a17:902:7d83:b0:170:9353:f299 with SMTP id a3-20020a1709027d8300b001709353f299mr26584625plm.41.1662992982931;
+        Mon, 12 Sep 2022 07:29:42 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id 72-20020a62174b000000b0053eec4bb1b1sm5513780pfx.64.2022.09.12.06.59.56
+        by smtp.gmail.com with ESMTPSA id t23-20020a635f17000000b0042b5095b7b4sm5758510pgb.5.2022.09.12.07.29.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Sep 2022 06:59:56 -0700 (PDT)
-Date:   Mon, 12 Sep 2022 13:59:53 +0000
+        Mon, 12 Sep 2022 07:29:42 -0700 (PDT)
+Date:   Mon, 12 Sep 2022 14:29:39 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -57,15 +57,14 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] KVM: selftests: Rename 'msr->availble' to
- 'msr->should_not_gp' in hyperv_features test
-Message-ID: <Yx87WXMXGzLxrT0f@google.com>
+Subject: Re: [PATCH v2 3/3] KVM: selftests: Test Hyper-V invariant TSC control
+Message-ID: <Yx9CU++TkHZwVfEs@google.com>
 References: <20220831085009.1627523-1-vkuznets@redhat.com>
- <20220831085009.1627523-3-vkuznets@redhat.com>
+ <20220831085009.1627523-4-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220831085009.1627523-3-vkuznets@redhat.com>
+In-Reply-To: <20220831085009.1627523-4-vkuznets@redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -78,35 +77,95 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Wed, Aug 31, 2022, Vitaly Kuznetsov wrote:
-> It may not be clear what 'msr->availble' means. The test actually
-> checks that accessing the particular MSR doesn't cause #GP, rename
-> the varialble accordingly.
+> Add a test for the newly introduced Hyper-V invariant TSC control feature:
+> - HV_X64_MSR_TSC_INVARIANT_CONTROL is not available without
+>  HV_ACCESS_TSC_INVARIANT CPUID bit set and available with it.
+> - BIT(0) of HV_X64_MSR_TSC_INVARIANT_CONTROL controls the filtering of
+> architectural invariant TSC (CPUID.80000007H:EDX[8]) bit.
 > 
-> Suggested-by: Maxim Levitsky <mlevitsk@redhat.com>
 > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  .../selftests/kvm/x86_64/hyperv_features.c    | 92 +++++++++----------
->  1 file changed, 46 insertions(+), 46 deletions(-)
+>  .../selftests/kvm/x86_64/hyperv_features.c    | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 > 
 > diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_features.c b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-> index 79ab0152d281..4ec4776662a4 100644
+> index 4ec4776662a4..26e8c5f7677e 100644
 > --- a/tools/testing/selftests/kvm/x86_64/hyperv_features.c
 > +++ b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-> @@ -33,7 +33,7 @@ static inline uint8_t hypercall(u64 control, vm_vaddr_t input_address,
+> @@ -15,6 +15,9 @@
 >  
->  struct msr_data {
->  	uint32_t idx;
-> -	bool available;
-> +	bool should_not_gp;
+>  #define LINUX_OS_ID ((u64)0x8100 << 48)
+>  
+> +/* CPUID.80000007H:EDX */
+> +#define X86_FEATURE_INVTSC (1 << 8)
+> +
+>  static inline uint8_t hypercall(u64 control, vm_vaddr_t input_address,
+>  				vm_vaddr_t output_address, uint64_t *hv_status)
+>  {
+> @@ -60,6 +63,24 @@ static void guest_msr(struct msr_data *msr)
+>  		GUEST_ASSERT_2(!vector, msr->idx, vector);
+>  	else
+>  		GUEST_ASSERT_2(vector == GP_VECTOR, msr->idx, vector);
+> +
+> +	/* Invariant TSC bit appears when TSC invariant control MSR is written to */
+> +	if (msr->idx == HV_X64_MSR_TSC_INVARIANT_CONTROL) {
+> +		u32 eax, ebx, ecx, edx;
+> +
+> +		cpuid(0x80000007, &eax, &ebx, &ecx, &edx);
 
-I agree that "available" is a bit inscrutable, but "should_not_gp" is also odd.
+Add a proper kvm_x86_cpu_feature so that this is simply
 
-What about inverting it to?
+		this_cpu_has(X86_FEATURE_INVTSC)
 
-	bool gp_expected;
+> +
+> +		/*
+> +		 * TSC invariant bit is present without the feature (legacy) or
+> +		 * when the feature is present and enabled.
+> +		 */
+> +		if ((!msr->should_not_gp && !msr->write) || (msr->write && msr->write_val == 1))
 
-or maybe even just
+Relying purely on the inputs is rather nasty as it creates a subtle dependency
+on the "write 1" testcase coming last.  This function already reads the guest
+MSR value, just use that to check if INVTSC should be enabled.  And if we want
+to verify KVM "wrote" the correct value, then that can be done in the common
+path.
 
-	bool fault_expected;
+And I think that will make this code self-documenting, e.g.
 
-and letting the assert define which vector is expected.
+	if (msr->idx == HV_X64_MSR_TSC_INVARIANT_CONTROL)
+		GUEST_ASSERT(this_cpu_has(X86_FEATURE_INVTSC) ==
+			     !!(msr_val & ...));
+
+> +			GUEST_ASSERT(edx & X86_FEATURE_INVTSC);
+> +		else
+> +			GUEST_ASSERT(!(edx & X86_FEATURE_INVTSC));
+> +	}
+> +
+> +
+>  	GUEST_DONE();
+>  }
+>  
+> @@ -104,6 +125,15 @@ static void vcpu_reset_hv_cpuid(struct kvm_vcpu *vcpu)
+>  	vcpu_clear_cpuid_entry(vcpu, HYPERV_CPUID_SYNDBG_PLATFORM_CAPABILITIES);
+>  }
+>  
+> +static bool guest_has_invtsc(void)
+> +{
+> +	const struct kvm_cpuid_entry2 *cpuid;
+> +
+> +	cpuid = kvm_get_supported_cpuid_entry(0x80000007);
+> +
+> +	return cpuid->edx & X86_FEATURE_INVTSC;
+> +}
+> +
+>  static void guest_test_msrs_access(void)
+>  {
+>  	struct kvm_cpuid2 *prev_cpuid = NULL;
+> @@ -115,6 +145,7 @@ static void guest_test_msrs_access(void)
+>  	int stage = 0;
+>  	vm_vaddr_t msr_gva;
+>  	struct msr_data *msr;
+> +	bool has_invtsc = guest_has_invtsc();
+
+Huh, I never added vcpu_has_cpuid_feature()?  Can you add that instead of
+open-coding the check?
