@@ -2,196 +2,280 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8ACB5B54F8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Sep 2022 09:03:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928BE5B5BA3
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Sep 2022 15:52:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiILHD5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Sep 2022 03:03:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38870 "EHLO
+        id S229821AbiILNwI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Sep 2022 09:52:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiILHD5 (ORCPT
+        with ESMTP id S229549AbiILNwH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Sep 2022 03:03:57 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FF924BFB;
-        Mon, 12 Sep 2022 00:03:56 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id D45BE2276B;
-        Mon, 12 Sep 2022 07:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1662966234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=o23KHUPjVFejyNtY98FmaJxfMASgEIXC+XgS4W+x+II=;
-        b=0/jErJy2G2N1m1QG82spTkVCHVn8e2cRL/Dg+0e//QIQwMMuxfA+Ayyl5dpY52eJ0/72uZ
-        /KhLBveWu2WB9Novcg3ApcUrfPrbMuHNBqldni/iqu9hs/4aujf/t07xBQsDMYSMJRyOFn
-        RwA9Zc7Yk7hAPLWnPBZboI3O6yeb398=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1662966234;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=o23KHUPjVFejyNtY98FmaJxfMASgEIXC+XgS4W+x+II=;
-        b=xi6xC+xGcnPTb4RE1MpmnuAiLb95T8PZ7llhT00/o13fdJL+E6D4E4aNR+LYDCeGihZMLT
-        2250Y60ICLAs+QAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A7D30139C8;
-        Mon, 12 Sep 2022 07:03:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id jrH6J9rZHmOYBAAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Mon, 12 Sep 2022 07:03:54 +0000
-Message-ID: <34e6ccfe-d6a0-e832-14a9-0445b61db106@suse.de>
-Date:   Mon, 12 Sep 2022 09:03:53 +0200
+        Mon, 12 Sep 2022 09:52:07 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FCE3136C
+        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 06:52:03 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id b21so8665486plz.7
+        for <linux-hyperv@vger.kernel.org>; Mon, 12 Sep 2022 06:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=/4RJpDcHTnyeNgFQ8a9TRZhL70VzQaaPYPhwoY3FyM0=;
+        b=TT/m6xXUYiAmG34jqjtSaXSDf2ErMTttL2bICiiudLeZULeuX9LZLKa7GvR7pU2eYJ
+         A1cV+HEYw8E5U25Kal7cWv7o99RJwGhJflS8tDsgsiUO1R1fpfV/9AxP5XM/9VmSIWHF
+         LndIKnjDB/TfV/2LGrMB8m5SesZ1gd2MrLsqRlUsHNNHSe9pqf1Gb5D6AVAPag024n66
+         uUqxwN3viPsLuJlP2jaGQRJuJgnS8GeGRCv+5Pw+yIzOxndmffTgkEPdrPL6kA5LGdH6
+         oDq7Yx5RSg03t+LYPloL5LJTKfz89eTCfFmEperKI1J9qvMU5wEdFQ096hBYWRMRNCWW
+         Bf9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=/4RJpDcHTnyeNgFQ8a9TRZhL70VzQaaPYPhwoY3FyM0=;
+        b=A56nG76pbjBCDRa1yaqbBVdNsfIGAkYuhI+USwJsDwXs/xWMUl1QyuV6FrI2khBZrW
+         VZ3pSC8AsyI76xKVP69urlsrhSuxxLtXPeafkajlDL50J16RrSXVwXLniYzspgmbG8Tm
+         z37VLdagx0em6mK66er93waIBLW3rI/od1DXMJ8fPxZRrrG3h8Tnvmf/scYldgumlHNK
+         Dgb64JeMY5w/bahxpfmqiCfhzovigR+kXg0+XlfWM3H3HG+wQ5Cez027qWlvHV675sXM
+         Gh19KdnqhDQXzS7KpZJF+ZSQrZQIxCk1fb7hYpx9pmX1zmxt98CcFCa7GVETMHIKlxXO
+         DMgg==
+X-Gm-Message-State: ACgBeo2x+zWvRR2dYZAO143WJ4pkVh+HrNpAw22+0+tulic91iSx0O6C
+        Aup2dNxhSAqYTtd2DcFmFcnVIA==
+X-Google-Smtp-Source: AA6agR63dJVcPhgDPjTWPAQKsStqogFvfX4ClfDkxrf/euFjFsDLwH2JRPfk73V5+0JZvA7bYqxSAQ==
+X-Received: by 2002:a17:903:2285:b0:177:ab99:9e5 with SMTP id b5-20020a170903228500b00177ab9909e5mr25087264plh.121.1662990722436;
+        Mon, 12 Sep 2022 06:52:02 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id n9-20020a170902e54900b00174be817124sm6041785plf.221.2022.09.12.06.52.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Sep 2022 06:52:02 -0700 (PDT)
+Date:   Mon, 12 Sep 2022 13:51:58 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] KVM: x86: Hyper-V invariant TSC control
+Message-ID: <Yx85fuFWR/X097SL@google.com>
+References: <20220831085009.1627523-1-vkuznets@redhat.com>
+ <20220831085009.1627523-2-vkuznets@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] drm/hyperv: Don't rely on screen_info.lfb_base for Gen1
- VMs
-To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, airlied@linux.ie,
-        ssengar@microsoft.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, mikelley@microsoft.com,
-        drawat.floss@gmail.com
-References: <1662734639-27164-1-git-send-email-ssengar@linux.microsoft.com>
- <14302178-c797-8635-4325-070f78b7f805@suse.de>
- <20220911162119.GB7754@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Language: en-US
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <20220911162119.GB7754@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------Z0yg9rMNaNgSK69xDmzJvR6y"
-X-Spam-Status: No, score=-8.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220831085009.1627523-2-vkuznets@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Z0yg9rMNaNgSK69xDmzJvR6y
-Content-Type: multipart/mixed; boundary="------------uTUVGSPzFQ1V00PJzhsjSO72";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, airlied@linux.ie, ssengar@microsoft.com,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- mikelley@microsoft.com, drawat.floss@gmail.com
-Message-ID: <34e6ccfe-d6a0-e832-14a9-0445b61db106@suse.de>
-Subject: Re: [PATCH] drm/hyperv: Don't rely on screen_info.lfb_base for Gen1
- VMs
-References: <1662734639-27164-1-git-send-email-ssengar@linux.microsoft.com>
- <14302178-c797-8635-4325-070f78b7f805@suse.de>
- <20220911162119.GB7754@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To: <20220911162119.GB7754@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+On Wed, Aug 31, 2022, Vitaly Kuznetsov wrote:
+> Normally, genuine Hyper-V doesn't expose architectural invariant TSC
+> (CPUID.80000007H:EDX[8]) to its guests by default. A special PV MSR
+> (HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x40000118) and corresponding CPUID
+> feature bit (CPUID.0x40000003.EAX[15]) were introduced. When bit 0 of the
+> PV MSR is set, invariant TSC bit starts to show up in CPUID. When the
+> feature is exposed to Hyper-V guests, reenlightenment becomes unneeded.
+> 
+> Add the feature to KVM. Keep CPUID output intact when the feature
+> wasn't exposed to L1 and implement the required logic for hiding
+> invariant TSC when the feature was exposed and invariant TSC control
+> MSR wasn't written to. Copy genuine Hyper-V behavior and forbid to
+> disable the feature once it was enabled.
+> 
+> For the reference, for linux guests, support for the feature was added
+> in commit dce7cd62754b ("x86/hyperv: Allow guests to enable InvariantTSC").
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/cpuid.c            |  7 +++++++
+>  arch/x86/kvm/hyperv.c           | 19 +++++++++++++++++++
+>  arch/x86/kvm/hyperv.h           | 15 +++++++++++++++
+>  arch/x86/kvm/x86.c              |  4 +++-
+>  5 files changed, 45 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 2c96c43c313a..9098187e13aa 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1021,6 +1021,7 @@ struct kvm_hv {
+>  	u64 hv_reenlightenment_control;
+>  	u64 hv_tsc_emulation_control;
+>  	u64 hv_tsc_emulation_status;
+> +	u64 hv_invtsc;
 
---------------uTUVGSPzFQ1V00PJzhsjSO72
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+For consistency with the other fields, should this be hv_tsc_invariant_control?
+>  
+>  	/* How many vCPUs have VP index != vCPU index */
+>  	atomic_t num_mismatched_vp_indexes;
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 75dcf7a72605..8ccd45fd66a9 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -1444,6 +1444,13 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>  			    (data & TSX_CTRL_CPUID_CLEAR))
+>  				*ebx &= ~(F(RTM) | F(HLE));
+>  		}
+> +		/*
+> +		 * Filter out invariant TSC (CPUID.80000007H:EDX[8]) for Hyper-V
+> +		 * guests if needed.
+> +		 */
+> +		if (function == 0x80000007 && kvm_hv_invtsc_filtered(vcpu))
 
-SGkNCg0KQW0gMTEuMDkuMjIgdW0gMTg6MjEgc2NocmllYiBTYXVyYWJoIFNpbmdoIFNlbmdh
-cjoNCj4gT24gU2F0LCBTZXAgMTAsIDIwMjIgYXQgMDg6MTE6MjRQTSArMDIwMCwgVGhvbWFz
-IFppbW1lcm1hbm4gd3JvdGU6DQo+PiBIaQ0KPj4NCj4+IEFtIDA5LjA5LjIyIHVtIDE2OjQz
-IHNjaHJpZWIgU2F1cmFiaCBTZW5nYXI6DQo+Pj4gaHlwZXJ2X3NldHVwX3ZyYW0gdHJpZXMg
-dG8gcmVtb3ZlIGNvbmZsaWN0aW5nIGZyYW1lYnVmZmVyIGJhc2VkIG9uDQo+Pj4gJ3NjcmVl
-bl9pbmZvJy4gQXMgb2JzZXJ2ZWQgaW4gcGFzdCBkdWUgdG8gc29tZSBidWcgb3Igd3Jvbmcg
-c2V0dGluZw0KPj4+IGluIGdydWIsIHRoZSAnc2NyZWVuX2luZm8nIGZpZWxkcyBtYXkgbm90
-IGJlIHNldCBmb3IgR2VuMSwgYW5kIGluIHN1Y2gNCj4+PiBjYXNlcyBkcm1fYXBlcnR1cmVf
-cmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycyB3aWxsIG5vdCBkbyBhbnl0aGluZw0K
-Pj4+IHVzZWZ1bC4NCj4+PiBGb3IgR2VuMSBWTXMsIGl0IHNob3VsZCBhbHdheXMgYmUgcG9z
-c2libGUgdG8gZ2V0IGZyYW1lYnVmZmVyDQo+Pj4gY29uZmxpY3QgcmVtb3ZlZCB1c2luZyBQ
-Q0kgZGV2aWNlIGluc3RlYWQuDQo+Pj4NCj4+PiBGaXhlczogYTBhYjVhYmNlZDU1ICgiZHJt
-L2h5cGVydiA6IFJlbW92aW5nIHRoZSByZXN0cnVjdGlvbiBvZiBWUkFNIGFsbG9jYXRpb24g
-d2l0aCBQQ0kgYmFyIHNpemUiKQ0KPj4+IFNpZ25lZC1vZmYtYnk6IFNhdXJhYmggU2VuZ2Fy
-IDxzc2VuZ2FyQGxpbnV4Lm1pY3Jvc29mdC5jb20+DQo+Pj4gLS0tDQo+Pj4gICBkcml2ZXJz
-L2dwdS9kcm0vaHlwZXJ2L2h5cGVydl9kcm1fZHJ2LmMgfCAyNCArKysrKysrKysrKysrKysr
-KysrKy0tLS0NCj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCA0IGRl
-bGV0aW9ucygtKQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oeXBl
-cnYvaHlwZXJ2X2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9oeXBlcnYvaHlwZXJ2X2Ry
-bV9kcnYuYw0KPj4+IGluZGV4IDZkMTFlNzkzOGM4My4uYjBjYzk3NGVmYTQ1IDEwMDY0NA0K
-Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9oeXBlcnYvaHlwZXJ2X2RybV9kcnYuYw0KPj4+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oeXBlcnYvaHlwZXJ2X2RybV9kcnYuYw0KPj4+IEBA
-IC03MywxMiArNzMsMjggQEAgc3RhdGljIGludCBoeXBlcnZfc2V0dXBfdnJhbShzdHJ1Y3Qg
-aHlwZXJ2X2RybV9kZXZpY2UgKmh2LA0KPj4+ICAgCQkJICAgICBzdHJ1Y3QgaHZfZGV2aWNl
-ICpoZGV2KQ0KPj4+ICAgew0KPj4+ICAgCXN0cnVjdCBkcm1fZGV2aWNlICpkZXYgPSAmaHYt
-PmRldjsNCj4+PiArCXN0cnVjdCBwY2lfZGV2ICpwZGV2Ow0KPj4+ICAgCWludCByZXQ7DQo+
-Pj4gLQlkcm1fYXBlcnR1cmVfcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycyhzY3Jl
-ZW5faW5mby5sZmJfYmFzZSwNCj4+PiAtCQkJCQkJICAgICBzY3JlZW5faW5mby5sZmJfc2l6
-ZSwNCj4+PiAtCQkJCQkJICAgICBmYWxzZSwNCj4+PiAtCQkJCQkJICAgICAmaHlwZXJ2X2Ry
-aXZlcik7DQo+Pj4gKwlpZiAoZWZpX2VuYWJsZWQoRUZJX0JPT1QpKSB7DQo+Pj4gKwkJZHJt
-X2FwZXJ0dXJlX3JlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMoc2NyZWVuX2luZm8u
-bGZiX2Jhc2UsDQo+Pj4gKwkJCQkJCQkgICAgIHNjcmVlbl9pbmZvLmxmYl9zaXplLA0KPj4N
-Cj4+IFVzaW5nIHNjcmVlbl9pbmZvIGhlcmUgc2VlbXMgd3JvbmcgaW4gYW55IGNhc2UuIFlv
-dSB3YW50IHRvIHJlbW92ZQ0KPj4gdGhlIGZyYW1lYnVmZmVyIGRldmljZXMgdGhhdCBjb25m
-bGljdCB3aXRoIHlvdXIgZHJpdmVyLCB3aGljaCBtaWdodA0KPj4gYmUgdW5yZWxhdGVkIHRv
-IHNjcmVlbl9pbmZvLiBBRkFJQ1QgdGhlIGNvcnJlY3Qgc29sdXRpb24gd291bGQNCj4+IGFs
-d2F5cyByZXRyaWV2ZSB0aGUgUENJIGRldmljZSBmb3IgcmVtb3ZhbCAoaS5lLiwgYWx3YXlz
-IGRvIHRoZSBlbHNlDQo+PiBicmFuY2gpLg0KPiANCj4gSW4gYSBHZW4yIFZNLCB0aGUgSHlw
-ZXItViBmcmFtZSBidWZmZXIgZGV2aWNlIGlzIHByZXNlbnRlZCBvbmx5IGFzIGEgVk1idXMg
-ZGV2aWNlLg0KPiBJdCdzIG5vdCBwcmVzZW50ZWQgYXMgYSBQQ0kgZGV2aWNlIGxpa2UgaXQg
-aXMgaW4gYSBHZW4xIFZNLiBUaGlzIHdvdWxkIGhhdmUgd29ya2VkDQo+IGlmIHdlIGhhZCB0
-aGUgZnJhbWUgYnVmZmVyIGRldmljZSBhdmFpbGFibGUgYXMgUENJIGRldmljZSBpbiBHZW4y
-IGJ1dCB1bmZvcnR1bmF0ZWx5DQo+IHRoYXRzIG5vdCB0aGUgY2FzZSBoZXJlLg0KDQpUaGFu
-a3MgZm9yIGV4cGxhaW5pbmcuIFRoZXJlIGlzIGFuIGluc3RhbmNlIG9mIHN0cnVjdCBodl9k
-ZXZpY2UgcGFzc2VkIA0KdG8gdGhlIHByb2JlIGZ1bmN0aW9uLiBJIHN1c3BlY3QgeW91IGNh
-bm5vdCBnZXQgdGhlIGZyYW1lYnVmZmVyIHJhbmdlIA0KZnJvbSB0aGlzIGluc3RhbmNlIChl
-LmcuLCB2aWEgdGhlIGRldmljZSdzIHBsYXRmb3JtX2RhdGEpPw0KDQpJZiB5b3UgYWJzb2x1
-dGVseSBjYW4ndCBnZXQgdGhlIGFjdHVhbCBtZW1vcnkgcmVnaW9uIGZyb20gdGhlIGRldmlj
-ZSwgDQppdCdzIGJldHRlciB0byByZW1vdmUgYWxsIGZyYW1lYnVmZmVycyB2aWEgDQpkcm1f
-YXBlcnR1cmVfcmVtb3ZlX2ZyYW1lYnVmZmVycygpIHRoYW4gdG8gdXNlIHNjcmVlbl9pbmZv
-Lg0KDQpCZXN0IHJlZ2FyZHMNClRob21hcw0KDQo+IA0KPiBSZWdhcmRzLA0KPiBTYXVyYWJo
-DQo+IA0KPj4NCj4+IEJlc3QgcmVnYXJkDQo+PiBUaG9tYXMNCj4+DQo+Pj4gKwkJCQkJCQkg
-ICAgIGZhbHNlLA0KPj4+ICsJCQkJCQkJICAgICAmaHlwZXJ2X2RyaXZlcik7DQo+Pj4gKwl9
-IGVsc2Ugew0KPj4+ICsJCXBkZXYgPSBwY2lfZ2V0X2RldmljZShQQ0lfVkVORE9SX0lEX01J
-Q1JPU09GVCwgUENJX0RFVklDRV9JRF9IWVBFUlZfVklERU8sIE5VTEwpOw0KPj4+ICsJCWlm
-ICghcGRldikgew0KPj4+ICsJCQlkcm1fZXJyKGRldiwgIlVuYWJsZSB0byBmaW5kIFBDSSBI
-eXBlci1WIHZpZGVvXG4iKTsNCj4+PiArCQkJcmV0dXJuIC1FTk9ERVY7DQo+Pj4gKwkJfQ0K
-Pj4+ICsNCj4+PiArCQlyZXQgPSBkcm1fYXBlcnR1cmVfcmVtb3ZlX2NvbmZsaWN0aW5nX3Bj
-aV9mcmFtZWJ1ZmZlcnMocGRldiwgJmh5cGVydl9kcml2ZXIpOw0KPj4+ICsJCXBjaV9kZXZf
-cHV0KHBkZXYpOw0KPj4+ICsJCWlmIChyZXQpIHsNCj4+PiArCQkJZHJtX2VycihkZXYsICJO
-b3QgYWJsZSB0byByZW1vdmUgYm9vdCBmYlxuIik7DQo+Pj4gKwkJCXJldHVybiByZXQ7DQo+
-Pj4gKwkJfQ0KPj4+ICsJfQ0KPj4+ICAgCWh2LT5mYl9zaXplID0gKHVuc2lnbmVkIGxvbmcp
-aHYtPm1taW9fbWVnYWJ5dGVzICogMTAyNCAqIDEwMjQ7DQo+Pg0KPj4gLS0gDQo+PiBUaG9t
-YXMgWmltbWVybWFubg0KPj4gR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KPj4gU1VTRSBT
-b2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQo+PiBNYXhmZWxkc3RyLiA1LCA5MDQw
-OSBOw7xybmJlcmcsIEdlcm1hbnkNCj4+IChIUkIgMzY4MDksIEFHIE7DvHJuYmVyZykNCj4+
-IEdlc2Now6RmdHNmw7xocmVyOiBJdm8gVG90ZXYNCj4gDQo+IA0KPiANCg0KLS0gDQpUaG9t
-YXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0d2Fy
-ZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJl
-cmcsIEdlcm1hbnkNCihIUkIgMzY4MDksIEFHIE7DvHJuYmVyZykNCkdlc2Now6RmdHNmw7xo
-cmVyOiBJdm8gVG90ZXYNCg==
+This can be an else-if.  Kinda weird, but it could be written as
 
---------------uTUVGSPzFQ1V00PJzhsjSO72--
+		else if (function = 0x80000007) {
+			if (kvm_hv_invtsc_filtered(vcpu))
+				*edx &= ~SF(CONSTANT_TSC)
+		}
 
---------------Z0yg9rMNaNgSK69xDmzJvR6y
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+to make it a pure function+index check.
 
------BEGIN PGP SIGNATURE-----
+> +			*edx &= ~(1 << 8);
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmMe2dkFAwAAAAAACgkQlh/E3EQov+Am
-3g//TUJJQQVz3rBqs9oq2z3xy/uqrVBlZFcM+hI9/F9fDIb8A+PtA9KJFJbPmLRaEJpQcv/uo5XV
-4X4xdj/gJ81cx9kGXlB2lcxdStyN4vvdsz8Nzl/Ga0Fm9HYKA4wNIyK2IA6URpPMBU45LD0Fxj2e
-HIlIPtKvxkeFD3jw5bPWzNS87iHhrwiDakpbf74YpaYYoZRVCh4Q3qHn6AHaepyGSX5clCS22dSP
-ZkbgEQ03YVhHjdvd7rDFHFbUg0YzFx85p2/kkx20qKx76NgUReA1WeuTEAKnUORHlb2qFgIwWAW9
-P6Cvvs/yQ+FKUNIZQ2i3CpmVYQuupy0rcbDDGRh+6QGx4AnFDCYHkQC0k6j9vSpc4fn94qYLtTBx
-yVVsvqEY+nHkqussWiTmhWy1MfCxzS0nfVg7vT3Dosgyri7GXRQeAsBi+IuODKVPGiXaYq7P6Ugw
-zNAmaHYH3zhzgg5sKm7QZny6f0v9kxKpW1xE4Fo51UtmJqGhBIq6cU+tEx+7Zkc3ky+TeDRxZdiN
-RufMLH5Fs8X8Viw0sp8bbg4aigXt0mS4tCXKDboa+iIl0YYnmlPLL1OkTDDDHYnU+q+2mf26Rcl/
-WJLVWqLC8j/bfFg10fORRVLbsPPgIUjgzag7u6EeWjFFJBPhWCw/+WBogvyXn/Ld16/owb2tsCAz
-evM=
-=7qMS
------END PGP SIGNATURE-----
+Ugh, scattered.  Can you add a kvm_only_cpuid_leafs entry so that the bit doesn't
+have to be open coded?
 
---------------Z0yg9rMNaNgSK69xDmzJvR6y--
+> +
+>  	} else {
+>  		*eax = *ebx = *ecx = *edx = 0;
+>  		/*
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index ed804447589c..df90cd7501b9 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -991,6 +991,7 @@ static bool kvm_hv_msr_partition_wide(u32 msr)
+>  	case HV_X64_MSR_REENLIGHTENMENT_CONTROL:
+>  	case HV_X64_MSR_TSC_EMULATION_CONTROL:
+>  	case HV_X64_MSR_TSC_EMULATION_STATUS:
+> +	case HV_X64_MSR_TSC_INVARIANT_CONTROL:
+>  	case HV_X64_MSR_SYNDBG_OPTIONS:
+>  	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
+>  		r = true;
+> @@ -1275,6 +1276,9 @@ static bool hv_check_msr_access(struct kvm_vcpu_hv *hv_vcpu, u32 msr)
+>  	case HV_X64_MSR_TSC_EMULATION_STATUS:
+>  		return hv_vcpu->cpuid_cache.features_eax &
+>  			HV_ACCESS_REENLIGHTENMENT;
+> +	case HV_X64_MSR_TSC_INVARIANT_CONTROL:
+> +		return hv_vcpu->cpuid_cache.features_eax &
+> +			HV_ACCESS_TSC_INVARIANT;
+>  	case HV_X64_MSR_CRASH_P0 ... HV_X64_MSR_CRASH_P4:
+>  	case HV_X64_MSR_CRASH_CTL:
+>  		return hv_vcpu->cpuid_cache.features_edx &
+> @@ -1402,6 +1406,17 @@ static int kvm_hv_set_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 data,
+>  		if (!host)
+>  			return 1;
+>  		break;
+> +	case HV_X64_MSR_TSC_INVARIANT_CONTROL:
+> +		/* Only bit 0 is supported */
+> +		if (data & ~BIT_ULL(0))
+
+Can a #define be added instead of open coding bit 0?
+
+> +			return 1;
+> +
+
+Doesn't the host CPUID need to be honored on writes from the guest?
+
+> +		/* The feature can't be disabled from the guest */
+> +		if (!host && hv->hv_invtsc && !data)
+> +			return 1;
+> +
+> +		hv->hv_invtsc = data;
+> +		break;
+>  	case HV_X64_MSR_SYNDBG_OPTIONS:
+>  	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
+>  		return syndbg_set_msr(vcpu, msr, data, host);
+> @@ -1577,6 +1592,9 @@ static int kvm_hv_get_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata,
+>  	case HV_X64_MSR_TSC_EMULATION_STATUS:
+>  		data = hv->hv_tsc_emulation_status;
+>  		break;
+> +	case HV_X64_MSR_TSC_INVARIANT_CONTROL:
+> +		data = hv->hv_invtsc;
+> +		break;
+>  	case HV_X64_MSR_SYNDBG_OPTIONS:
+>  	case HV_X64_MSR_SYNDBG_CONTROL ... HV_X64_MSR_SYNDBG_PENDING_BUFFER:
+>  		return syndbg_get_msr(vcpu, msr, pdata, host);
+> @@ -2497,6 +2515,7 @@ int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>  			ent->eax |= HV_MSR_REFERENCE_TSC_AVAILABLE;
+>  			ent->eax |= HV_ACCESS_FREQUENCY_MSRS;
+>  			ent->eax |= HV_ACCESS_REENLIGHTENMENT;
+> +			ent->eax |= HV_ACCESS_TSC_INVARIANT;
+>  
+>  			ent->ebx |= HV_POST_MESSAGES;
+>  			ent->ebx |= HV_SIGNAL_EVENTS;
+> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+> index da2737f2a956..1a6316ab55eb 100644
+> --- a/arch/x86/kvm/hyperv.h
+> +++ b/arch/x86/kvm/hyperv.h
+> @@ -133,6 +133,21 @@ static inline bool kvm_hv_has_stimer_pending(struct kvm_vcpu *vcpu)
+>  			     HV_SYNIC_STIMER_COUNT);
+>  }
+>  
+> +/*
+> + * With HV_ACCESS_TSC_INVARIANT feature, invariant TSC (CPUID.80000007H:EDX[8])
+> + * is only observed after HV_X64_MSR_TSC_INVARIANT_CONTROL was written to.
+> + */
+> +static inline bool kvm_hv_invtsc_filtered(struct kvm_vcpu *vcpu)
+
+Can this be more strongly worded, e.g. maybe kvm_hv_is_invtsc_disabled()?  "Filtered"
+doesn't strictly mean disabled and makes it sound like there's something else that
+needs to act on the "filtering"
+
+> +{
+> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+> +	struct kvm_hv *hv = to_kvm_hv(vcpu->kvm);
+> +
+> +	if (hv_vcpu && hv_vcpu->cpuid_cache.features_eax & HV_ACCESS_TSC_INVARIANT)
+
+Ah, I almost missed the inner check.  Can you write this as:
+
+	if (!hv_vcpu)
+		return false;
+
+so that the potentially postive/happy path is at the end?  I.e. follow the common
+pattern of:
+
+	if (!something)
+		return -ERRNO;
+
+	return 0;
+
+> +		return !hv->hv_invtsc;
+
+Kinda silly, but I think it's worth checking the exact bit here.  I don't see how
+the TSC can get more invariant, but if another bit is added, this could silently
+break.  And probably no need to grab to_kvm_v() locally.
+
+	return to_kvm_hv(vcpu->kvm)->hv_invtsc;
+
+
+> +
+> +	return false;
+
+Shouldn't this be "return true" if HyperV is enabled but doesn't have the CPUID
+bit set?  I assume the expectation is that host userspace won't set the common
+INVTSC flag without also setting HV_ACCESS_TSC_INVARIANT, but it's confusing logic
+as is.
+
+All in all, I think this?
+
+	if (!hv_vcpu)
+		return false;
+
+	return hv_vcpu->cpuid_cache.features_eax & HV_ACCESS_TSC_INVARIANT &&
+	       to_kvm_hv(vcpu->kvm)->hv_invtsc & BIT(0);
+
+> +}
+> +
+>  void kvm_hv_process_stimers(struct kvm_vcpu *vcpu);
+>  
+>  void kvm_hv_setup_tsc_page(struct kvm *kvm,
