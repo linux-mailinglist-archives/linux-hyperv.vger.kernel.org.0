@@ -2,69 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 931C65BC123
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Sep 2022 03:51:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D635BC2EE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Sep 2022 08:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbiISBvq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 18 Sep 2022 21:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
+        id S229735AbiISGij (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Sep 2022 02:38:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiISBvp (ORCPT
+        with ESMTP id S229610AbiISGii (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 18 Sep 2022 21:51:45 -0400
-Received: from mail.nfschina.com (unknown [124.16.136.209])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 665EE17E19;
-        Sun, 18 Sep 2022 18:51:44 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mail.nfschina.com (Postfix) with ESMTP id 3BA9B1E80D75;
-        Mon, 19 Sep 2022 09:48:46 +0800 (CST)
-X-Virus-Scanned: amavisd-new at test.com
-Received: from mail.nfschina.com ([127.0.0.1])
-        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RoFwQYVJJPbZ; Mon, 19 Sep 2022 09:48:43 +0800 (CST)
-Received: from localhost.localdomain (unknown [219.141.250.2])
-        (Authenticated sender: zeming@nfschina.com)
-        by mail.nfschina.com (Postfix) with ESMTPA id 702AA1E80CAB;
-        Mon, 19 Sep 2022 09:48:42 +0800 (CST)
-From:   Li zeming <zeming@nfschina.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li zeming <zeming@nfschina.com>
-Subject: [PATCH] =?UTF-8?q?asm-generic:=20Remove=20unnecessary=20=E2=80=98?= =?UTF-8?q?0=E2=80=99=20values=20from=20guest=5Fid?=
-Date:   Mon, 19 Sep 2022 09:51:36 +0800
-Message-Id: <20220919015136.3409-1-zeming@nfschina.com>
-X-Mailer: git-send-email 2.18.2
+        Mon, 19 Sep 2022 02:38:38 -0400
+Received: from out199-10.us.a.mail.aliyun.com (out199-10.us.a.mail.aliyun.com [47.90.199.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB1811471;
+        Sun, 18 Sep 2022 23:38:35 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VQ716uf_1663569499;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VQ716uf_1663569499)
+          by smtp.aliyun-inc.com;
+          Mon, 19 Sep 2022 14:38:31 +0800
+From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To:     kys@microsoft.com
+Cc:     haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] Drivers: hv: vmbus: Fix kernel-doc
+Date:   Mon, 19 Sep 2022 14:38:15 +0800
+Message-Id: <20220919063815.1881-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The file variable is assigned guest_id, it does not need to be initialized.
+drivers/hv/vmbus_drv.c:1587: warning: expecting prototype for __vmbus_child_driver_register(). Prototype was for __vmbus_driver_register() instead.
 
-Signed-off-by: Li zeming <zeming@nfschina.com>
+Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2210
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- include/asm-generic/mshyperv.h | 2 +-
+ drivers/hv/vmbus_drv.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index c05d2ce9b6cd..cd5ce86c218a 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -108,7 +108,7 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
- static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
- 				       __u64 d_info2)
- {
--	__u64 guest_id = 0;
-+	__u64 guest_id;
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 7b9f3fc3adf7..621702a1725f 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1573,7 +1573,7 @@ static int vmbus_bus_init(void)
+ }
  
- 	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
- 	guest_id |= (d_info1 << 48);
+ /**
+- * __vmbus_child_driver_register() - Register a vmbus's driver
++ * __vmbus_driver_register() - Register a vmbus's driver
+  * @hv_driver: Pointer to driver structure you want to register
+  * @owner: owner module of the drv
+  * @mod_name: module name string
 -- 
-2.18.2
+2.20.1.7.g153144c
 
