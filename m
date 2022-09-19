@@ -2,118 +2,150 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89C9D5BD119
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Sep 2022 17:33:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2C6D5BD413
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Sep 2022 19:51:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbiISPd1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Sep 2022 11:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
+        id S231343AbiISRvO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Sep 2022 13:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229941AbiISPdY (ORCPT
+        with ESMTP id S231382AbiISRvA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Sep 2022 11:33:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E147028704
-        for <linux-hyperv@vger.kernel.org>; Mon, 19 Sep 2022 08:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663601602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CWg8VC3Y2I+R8H0oWyV4jcW6qd/ETEFixpJMwEeGBEQ=;
-        b=fpywNlCRTeuQ95XpDjEaPjiEDVnE1+gxOCoTT15sYJz5R3KEtIASbRv8xJSjXN7nrCw58y
-        Zbf4xSpLzGCaKa12ce5RzY7vjUbdTAZoOrhO7jAccBAY9q7vVfaELVhg01POU266aCXAPa
-        Q67E1mbtoO6dbRVuebPdgbzXyrBJ0xg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-661-OT6ew6feNZyFNNgrsSOBvA-1; Mon, 19 Sep 2022 11:33:18 -0400
-X-MC-Unique: OT6ew6feNZyFNNgrsSOBvA-1
-Received: by mail-ej1-f72.google.com with SMTP id sa22-20020a1709076d1600b0077bab1f70a3so8800849ejc.12
-        for <linux-hyperv@vger.kernel.org>; Mon, 19 Sep 2022 08:33:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=CWg8VC3Y2I+R8H0oWyV4jcW6qd/ETEFixpJMwEeGBEQ=;
-        b=Wi/HxvgscsOg+47x5AwYlDBusDx7+YW1RpKefGyVr/U+oPw+fZmWf9zIiKD6JBs81D
-         8fSxTNlQzrVf2m+8YC5krll2lC1sNZrRteT+id4B/OM7/MhZ6mFgqGoeVYht+AXNY8DK
-         GE60oyPQmoi8ojx5FZ50VSfIvbG24mp63/b/ytYmiiD5cftBjQf+nqP81eqAMBHzvVaF
-         WjyiyHZSjtxPYEGb1rzhwUA5pS2HUK9I79H4H7c/FcRcIs2PMS9byqJCad5mFjYyr3+H
-         wV6W3RI0/akIb8vf9mEdYJ7utQ31xBEG5BaU4kjQ2BLdj9JjrAxvCcukhhTNaaoNKJI3
-         ni0Q==
-X-Gm-Message-State: ACrzQf0dK46eMASf/GLAeFRAH0DFCaoiO34ASVesxwycFehSDKnHDX1P
-        SB60+h7579jIaRaV5q1LYdlmUe0EZooanho5IOwP4Y78R8KJLOEopYuP0y1MpId9tFo4LciTaOi
-        HZrJ97GHlOwBxokessNAzNdCq
-X-Received: by 2002:a17:906:8a52:b0:781:7aa7:9dde with SMTP id gx18-20020a1709068a5200b007817aa79ddemr2059399ejc.70.1663601597740;
-        Mon, 19 Sep 2022 08:33:17 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6jpBl4EP1V68hm/6NhmgPAuWQStwEK91hLMOo30kSRGmXQzpiq1jOr3grUtqbEYYMJJjDx3Q==
-X-Received: by 2002:a17:906:8a52:b0:781:7aa7:9dde with SMTP id gx18-20020a1709068a5200b007817aa79ddemr2059386ejc.70.1663601597530;
-        Mon, 19 Sep 2022 08:33:17 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id e7-20020a170906314700b007708130c287sm15627839eje.40.2022.09.19.08.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Sep 2022 08:33:16 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Li zeming <zeming@nfschina.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li zeming <zeming@nfschina.com>,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org
-Subject: Re: [PATCH] asm-generic: Remove unnecessary =?utf-8?B?4oCYMA==?=
- =?utf-8?B?4oCZ?= values from guest_id
-In-Reply-To: <20220919015136.3409-1-zeming@nfschina.com>
-References: <20220919015136.3409-1-zeming@nfschina.com>
-Date:   Mon, 19 Sep 2022 17:33:15 +0200
-Message-ID: <878rmfpef8.fsf@redhat.com>
+        Mon, 19 Sep 2022 13:51:00 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11013000.outbound.protection.outlook.com [52.101.64.0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DCD43637;
+        Mon, 19 Sep 2022 10:50:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UjPPfDmzQaSYPFu+IPNjKLWpQ90JqiPUMGsd5+IxpdnBs7wpKEkdQ4uyKupoX2wAzXX5unAVna8TO+tY43CFam+OpQNVg8z9vP2SsWWz9pKwxE0NHSJ+FKfPLIC00BYTb8iUsDpQlPS2o54z4xoDflXEzxJFd7O84aBBXlM0w3YEHgqBV2IP3nPsg/qSWI/aaHS8iCuNINMpjlS/pvQ2Y92KFSGiuPSDLekCKtI+5vbdBF26XlwQXeR01Ng8i5ZauFZjuEskOzAqvcBmsFIoCKXcyPGtOocVxwiQ3idhXOOv2rjBSnuz932Q7O4EVN3/GNBgGLOStlvdqZltEn32AQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Guwn9BPYBi0DMRvQnNylyK0zbC14dgMeeKTOr2LYBDs=;
+ b=bD8iFAMw5UAmURqtgryQwF/TYtHcT7FEU1V3JxsWNySSz+xZBLVJpf2HKuGnqqdzC1h5eDdl4SVL8E6Jh0MxRMzuq15KiWzqS9Yc2gbiOCnpBcjHvsY/gXJYRWMxZoIqZYD9Rro2b0R8Q+lzDELdPGIe9h7r16pIZNLy9sl7GTAQz6Eofqb8+NbDBSFjDdVrD2DO5uTCTZzDqQTIDhuudN8ckl2SjiDgmBMlQPaHC9Au3rf0r/R9f26gvfB2kul6PBXS22ANRmZf1CEqLe/Bb1RlUcEOKJmtH6VDn0wdlwD6rmDpKqNAj8UtHwEFLN507gaUJzfoU5jzUdEBekabwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Guwn9BPYBi0DMRvQnNylyK0zbC14dgMeeKTOr2LYBDs=;
+ b=wE6LzQfHRa46ejG5urwDoFeezkyCO5YcDSiZzwgEteuh7wIxlOIulpeTabSkKnGLm/tg7yy79yVcLsInyrgJa1DksyCYSKF10wrPwRLpoiH3Q+KiusauvzaqMqqh733iVR1RYp9PFC3wI/KWX4fABUolv1N/eZ2Zyd86rmnahH4=
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
+ by BL0PR05MB4753.namprd05.prod.outlook.com (2603:10b6:208:2b::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.7; Mon, 19 Sep
+ 2022 17:50:52 +0000
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::ae59:5c22:5ddd:bec8]) by PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::ae59:5c22:5ddd:bec8%8]) with mapi id 15.20.5654.014; Mon, 19 Sep 2022
+ 17:50:52 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     "agraf@csgraf.de" <agraf@csgraf.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>,
+        Ashwin Dayanand Kamat <kashwindayan@vmware.com>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Nadav Amit <namit@vmware.com>, Alexander Graf <graf@amazon.com>
+Subject: Follow up questions on LPC 2022: MC: Instant Detection of Virtual
+ Devices
+Thread-Topic: Follow up questions on LPC 2022: MC: Instant Detection of
+ Virtual Devices
+Thread-Index: AQHYzFBcbSAAH/YmmEyYkV+Wg4d3pA==
+Date:   Mon, 19 Sep 2022 17:50:52 +0000
+Message-ID: <6AA2CAD2-C799-46A0-907C-03BB802C4FA1@vmware.com>
+Accept-Language: en-US
+Content-Language: en-GB
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/16.61.22050700
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR05MB8703:EE_|BL0PR05MB4753:EE_
+x-ms-office365-filtering-correlation-id: 2b62d97e-5e3b-412d-9b4d-08da9a677edb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VTOP+q8pzkkVq1iqtwD6QuKBXmWz0qXN9/lTyCmpcBMGGTgbATJNTMD7yhrXmE8LgU9xRTy0ps0MDc7p6ZLvad2Yh3YQ9K/P5XRe1jrjl5tqjIEfG1qHhW6L3UA/opYtBwBVl5xph0cnrbfYtqrPXCme1uLHQo7raeTKpl6uy/d4kS7GSZfPAprGZccH6Wdt3ZZRYOdqwg/mxkzlY4GMuGZesjeLjbBqzaNMDNnlqlRPBBdb3tYkUilqcKMlCWOsBF0pgXdxEaT2MHDqPkEo+ivxW9sEG6N237t/iqxvJLqq5+QIsPbHdKds2AfS4munujpvYTAMLUJHPYvbAURiVpotcqSF807BLrYEoewgg7wC1EKIDSlzP1dZczHayDBO/W6vUiSvi5PQqv/Nqib1wJxziDuVORVP24IQTP/NT94piCnunub1QhBiWSX25dmyhuD3NiMsfxlkZJroHvqOaTIn+u4vQjSVzZgjdwgBHyoGtcHgvGIXZ7xARMQSewBB/ToFVzunSsHgIig6lfpVaP70h1lR5Wnb2xRLQa8W1lCVxU+90WYW2ko1AqCklAxyK4Uoo+x+tCfISgsWEOS7WnXjWOyklkVOoIZVctMbRGGT7ijv57/tPuvxKspHB8ordH5eClhvhZ5asDVBrUjDTM6Hx+TUHxutpR8v4rb+wKkVfZnSPtjtEl6C+3o0ybACtJkeXPSgUWc2dEV+/bF+Yd+yAHvbSAk92YNmeyJoQgbJJMeB5YqmeU98aicToL6OVFeRzzadYJsELuFswEyKB79l/vAvktbMIDHXyqz3gRBcV7MwLzBRvrFNcbgTcQYyingP/UimyydxcrmWT/KGKKYqcHa31xWd5O5vpYIde3m5Ode9CFXs8SmZ+jqoc4GI
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(451199015)(110136005)(478600001)(6486002)(71200400001)(4326008)(316002)(76116006)(86362001)(33656002)(54906003)(5660300002)(91956017)(66446008)(41300700001)(8676002)(66556008)(64756008)(66946007)(66476007)(38100700002)(8936002)(186003)(83380400001)(6512007)(26005)(966005)(122000001)(6506007)(38070700005)(2616005)(36756003)(2906002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?S0xYd1UvU0c0NzZGWmpWUEZ5Qmg3RHdoQ0liemdmbU9OTGpwWGpoSDRmYmo5?=
+ =?utf-8?B?UUh2bWxSbll6bU0wL0QzSURoYmZvbWxrZ0RUMjhEWEJwejh1Q2RVcnRjOHlp?=
+ =?utf-8?B?ejg1SHhIVXd0REZHMnRDUndTQmJ4TXNIY20wQnZwZ1orZGRzdHgrZndmL05l?=
+ =?utf-8?B?Wm9vaWt0NHBWbURWNTFCeEtEL3BTNzFJWktjWEJJdEhGWlBoZ0h2RHZHWUg0?=
+ =?utf-8?B?Ykl5QUM0SERQZlgwL0VXSjVSdENNaGd3RmUzNis5Z3NwMDVtOGZuMVowNEhG?=
+ =?utf-8?B?YmpEam9sd1AzYjhlMDlwOGM4eXNNTnFRY0xsZThReGt6TjBUejRKMm96MGZB?=
+ =?utf-8?B?cklzclIyMG5FYUIzb3doazlpZVpKSGt1VzlpMHNPUzJreUl3SkUrMThZYWFx?=
+ =?utf-8?B?a1dLb1lqZVBWMGNBQzZacEdjTUNTY0ovT2Fia3dUeVFsaFQ2SFlOUWxFdGVx?=
+ =?utf-8?B?V3UxZktrcWwvMFZsbFlPU1Y5V0d5Y1Vyc0o1V2xscmQvQXY1ekFTN3FSWHQ5?=
+ =?utf-8?B?MmlwYWVOQTBwazE2dmVqMWdrNFk2a2J2TVE1ZzFqdVlEejhpSUhyTFJPbi9F?=
+ =?utf-8?B?SU93Tzc3K0lnUXljTFFndlhyaVlaZkFtVHVQbFpIaHlHdjlaVm90cERsTktE?=
+ =?utf-8?B?S1FpQlBXYWtJdktvdEVpbEg1eXBpQ2NVV3NDYXJ0TnhJY1R4L2pXUmN1Z2Qy?=
+ =?utf-8?B?dmxrdmJnUVFWYVBseGtVZ1lJOG84NXdtRlVCeVNMRnRpQ2NWN2hwWWJmWmNE?=
+ =?utf-8?B?SzU4dS8vNWlmaUtQZWxGVlNlQVpkZjJYbk01STZoczNKQVcrU3BXWG5CQkY3?=
+ =?utf-8?B?U2QyY0Fic2tXREx6OGd5MWVxbGNCTHpKQUtoLytYaTJqSU83K3VJT0Jsd0xJ?=
+ =?utf-8?B?cXpRcy9MeDhDNVMyT2lwYUdaMUt1NmtmMXBLSVpENXlaTzBCalA3K2NBd2dz?=
+ =?utf-8?B?amNOenoxK0pXQytsVnkzaGxJaG5FZ2xSQ1FqcHdwQS9LRGc0Vk5wbVZrTnQ0?=
+ =?utf-8?B?eFJCUjR1NU41UVBGS3U0Z1A4WnhGcnArRlFNT25tQlh1T3NyZExrUXdEQXZQ?=
+ =?utf-8?B?MGVnZG1KT255RHNMMlFLVWoybmU2M2NReE5LeHdGRExFVWFCY2N4OEJaQWo4?=
+ =?utf-8?B?U0dsQUxWejc1NVA2b0VVcDR6WVpBN2VTN0xsWC9EYUp2SENacEpjWEpEdU52?=
+ =?utf-8?B?amF2S2VreDdKc2dGRVN2YkZ3b2dWaVU5c3NrNGQ5Y1hlQUVVRXZZcjJhVFJu?=
+ =?utf-8?B?WFBXYW9xTkFzai95eEF3cTJTWnR2bTJJTEhOWmJsbTdiUzBYOGJZWGNoUy94?=
+ =?utf-8?B?QkxqY3VtbGJnSWhLOHI0N2kvNmwxby9TWDJVdXJ5M0NBcnFuL2Roc21JT09O?=
+ =?utf-8?B?OGQxaVdoZm5kSE1yVU8zaHlPQlU0UFIxTHZ1NThHVFlrSkNqU0s2NXpUVDQ0?=
+ =?utf-8?B?S0ZPTURHS0k0MTFSS21BaVhPd01lb2l3RXBHbmx2WXl3dndUVFRLUThNeWZz?=
+ =?utf-8?B?QUs1aDN0ZVhYYUkvRkJhYlFHYkorNjg5bm0xZEVBRVA3UnN5TUJvTjhIZjdy?=
+ =?utf-8?B?MkFKOEoxeXEzaW5MQk5XczNDaDQvNVdLVTFMV3h1SFVySFRDMldSOWtRZjhI?=
+ =?utf-8?B?dU1mTm9sZk8xc05sVkJvcDJMOXpJT2NGWjdoN1RjWHd2MVdEY2tkZS9GTXVD?=
+ =?utf-8?B?VGkweHRvQi9RM2dJSkp6MGJHMFJwRi9UT04rQk96RE5PYktQV2h2WkdIYXBZ?=
+ =?utf-8?B?S3huYTNrOVFRby9UaDNNTjE1MFJoZVd4ZHhRU0hPYWJWVW1mSTZIS0NSY0g2?=
+ =?utf-8?B?Y3IyMXVVbTY1OHhrNEwwbjVLSE0xWVB1NVVjT2gwNDh1WitZUHRWY2ZqUzVh?=
+ =?utf-8?B?SnU1OGhodE1abmROZGVCYmN4SklEVkVud0pkR1gyUnIzWVMxTC9SOW5xU3NL?=
+ =?utf-8?B?R3RBLzhiVUZGNFRpYjBsN3QzWU9sREExeWR6NVlONGVmekJtQU1PdWNtclNE?=
+ =?utf-8?B?d3RJYk51Q3I5Z0g2bko5SHdBYlA0d1h6M3JTa3VxMmNsQldKNzU3WjU5Zkha?=
+ =?utf-8?B?TXcwcVNQcjBNUzU4ejZzTUR4STAzekFOVVZLbkZ0b3FQeXo4RDVYZlpnSmt1?=
+ =?utf-8?Q?4XPSq2J5rG4LKrKyJbpLnWQ+m?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <607243E31E50DE4E9D314D11D7F1FDDE@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR05MB4753
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Li zeming <zeming@nfschina.com> writes:
-
-> The file variable is assigned guest_id, it does not need to be initialized.
->
-> Signed-off-by: Li zeming <zeming@nfschina.com>
-> ---
->  include/asm-generic/mshyperv.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> index c05d2ce9b6cd..cd5ce86c218a 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -108,7 +108,7 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
->  static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
->  				       __u64 d_info2)
->  {
-> -	__u64 guest_id = 0;
-> +	__u64 guest_id;
->  
->  	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
->  	guest_id |= (d_info1 << 48);
-
-The initializer is certainly not needed, however, if we are to do some
-changes, let's be bold. Suggestions:
-
-1) Stop using "__u64" type, "u64" is good enough.
-
-2) Drop all the parameters from the function, both call sites look like
-
- generate_guest_id(0, LINUX_VERSION_CODE, 0);
-
-3) Rename the function to make it clear it's Hyper-V related,
-e.g. "hv_generate_guest_id()".
-
-...
-
--- 
-Vitaly
-
+DQpIaSBCam9ybiwgQWxleGFuZGVyLA0KDQpUaGFua3MgZm9yIGF0dGVuZGluZyBhbmQgcmFpc2lu
+ZyBxdWVzdGlvbiBkdXJpbmcgb3VyIHRhbGsgb24gIkluc3RhbnQgRGV0ZWN0aW9uIG9mIFZpcnR1
+YWwgRGV2aWNlcyIuDQpSZWNvZGluZyBsaW5rIGZvciByZWZlcmVuY2U6IGh0dHBzOi8veW91dHUu
+YmUvMG1JTzU0b1Eyekk/dD03MTUxDQoNCg0KQmpvcm4sIEkgaG9wZSBJIHVuZGVyc3Rvb2QgeW91
+ciBxdWVzdGlvbnMgcHJvcGVybHkgYW5kIHJlcGxpZWQuIElmIHNvbWUgZG91YnRzIHBsZWFzZSBs
+ZXQgdXMga25vdy4NCg0KQWxleGFuZGVyLCB5b3Ugd2FudGVkIHRvIGtub3cgYWJvdXQgZm9sbG93
+aW5nIChwbGVhc2UgY29ycmVjdCBpZiB3ZSB1bmRlcnN0b29kIHNvbWV0aGluZyB3cm9uZyk6DQpX
+aHkgd2Ugc3RpbGwgaGF2ZSB+MzAwIHJlYWQvd3JpdGUsIGV2ZW4gYWZ0ZXIgaGF2aW5nIGZvbGxv
+d2luZyBwcm9ncmVzc2l2ZSBhcHByb2FjaGVzOg0KLSBNTUlPIERpcmVjdCBSZWFkDQotIFNraXAg
+d3JpdGUgdG8gUENJZSBjb25maWdzDQotIFByZS1jb25maWcgb2YgUENJZSBjb25maWdzDQoNClsx
+XSByZW1haW5pbmcgd3JpdGVzOg0KQXMgcGVyIFBDSSBzcGVjaWZpY2F0aW9uLCBuZWVkcyB0byBw
+ZXJmb3JtIGZvbGxvd2luZyBvcGVyYXRpb24gdG8gcmVhZCBCQVIgYWRkciBhbmQgc2l6ZToNCi0g
+UmVhZCBjdXJyZW50IHZhbHVlIGZyb20gQkFSDQotIFdyaXRlIGFsbC1vbmVzIHRvIEJBUg0KLSBS
+ZWFkIG5ldyB2YWx1ZSBmcm9tIEJBUg0KLSBXcml0ZSBvcmlnaW5hbCB2YWx1ZSBiYWNrIHRvIEJB
+Ug0KDQpTYW1lIGFwcGxpZXMgdG8gZm9sbG93aW5nIGNvbmZpZ3MgYXMgd2VsbDogDQotIEJBUnMN
+Ci0gSS9PIEJhc2UvTGltaXQNCi0gTWVtb3J5IEJhc2UvTGltaXQNCi0gUHJlZmV0Y2hhYmxlIE1l
+bW9yeSBCYXNlL0xpbWl0DQotIFByZWZldGNoYWJsZSBCYXNlIExpbWl0L1VwcGVyIDMyIGJpdHMN
+Ci0gSS9PIEJhc2UvTGltaXQgVXBwZXIgMTYgYml0cw0KDQpUaGVzZSB3cml0ZSBvcGVyYXRpb25z
+IGNvdWxkbid0IGJlIGVsaW1pbmF0ZWQgd2l0aCBvdXIgcHJvZ3Jlc3NpdmUgYXBwcm9hY2hlcyBh
+bmQgbWFqb3Igb2YgcmVtYWluaW5nIHdyaXRlcyBhcmUgYmVjYXVzZSBvZiB0aGVzZSBvcGVyYXRp
+b25zLg0KDQoNClsyXSByZW1haW5pbmcgcmVhZHM6DQpCZWZvcmUgaW5pdGlhbGl6ZSBNTUlPLCBn
+dWVzdCBwZXJmb3JtcyB2ZXJ5IGZldyBQQ0kgY29uZmlnIHJlYWRzIG92ZXIgUElPLiBJIGd1ZXNz
+IHRoZXNlIGNhbid0IGJlIGVsaW1pbmF0ZWQuIA0KDQoNCi0tQWpheQ0KDQo=
