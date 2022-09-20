@@ -2,129 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 198755BDAD6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Sep 2022 05:28:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54EE65BEB6C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Sep 2022 18:55:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbiITD2q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Sep 2022 23:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39420 "EHLO
+        id S230414AbiITQzR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Sep 2022 12:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229758AbiITD2p (ORCPT
+        with ESMTP id S231402AbiITQzI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Sep 2022 23:28:45 -0400
-Received: from mail.nfschina.com (mail.nfschina.com [124.16.136.209])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 632FD5722B;
-        Mon, 19 Sep 2022 20:28:43 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mail.nfschina.com (Postfix) with ESMTP id 8AD8F1E80D93;
-        Tue, 20 Sep 2022 11:25:36 +0800 (CST)
-X-Virus-Scanned: amavisd-new at test.com
-Received: from mail.nfschina.com ([127.0.0.1])
-        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8GV4jroQ6ZFG; Tue, 20 Sep 2022 11:25:33 +0800 (CST)
-Received: from localhost.localdomain (unknown [219.141.250.2])
-        (Authenticated sender: kunyu@nfschina.com)
-        by mail.nfschina.com (Postfix) with ESMTPA id 8FCB31E80D23;
-        Tue, 20 Sep 2022 11:25:33 +0800 (CST)
-From:   Li kunyu <kunyu@nfschina.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, catalin.marinas@arm.com,
-        will@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, arnd@arndb.de
-Cc:     linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        Li kunyu <kunyu@nfschina.com>
-Subject: [PATCH v2] asm-generic: Remove the parameters of the generate_guest_id function and modify the return type and modify the function name
-Date:   Tue, 20 Sep 2022 11:28:37 +0800
-Message-Id: <20220920032837.69469-1-kunyu@nfschina.com>
-X-Mailer: git-send-email 2.18.2
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        Tue, 20 Sep 2022 12:55:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877482CDF8;
+        Tue, 20 Sep 2022 09:54:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1CB8262B70;
+        Tue, 20 Sep 2022 16:54:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79C0C433D7;
+        Tue, 20 Sep 2022 16:54:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663692893;
+        bh=naQ9TGqjs/6Tv01+ZlpFJ6fRMOW6xD9axuS8tfmfwLw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aKCeMcz1wGH7PRG+qwP9yuMzTD/THIS5jhksGX9qNxedZ0j/ejP0B+bt9syhoXM6l
+         GlPXwpwI7bqnvOo4pTIEeIKcGELAAnFf4cZT/V2uu+KYEEdaS6RX1BMypmGGfzpUay
+         SEA1Gz93NNT1qqlLDHY7T0hP+3sL2wA7c615JQj6PD8gCX98k24clMoJlcUhZ73J8s
+         RY78PBCvQWGvai7wJSy2ta1KaaZNfe+l8wd5PRdJSr9rogdm9ryDE19dgJmOdxUW/k
+         y5Bk5HRf0tJ6DyWPNqFbSNW66h/kcz5sboO4FO1QE1u+3KSJTtv329fp2ltjBfADHd
+         GDlFKIHOqYL6A==
+Date:   Tue, 20 Sep 2022 19:54:49 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Long Li <longli@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "shiraz.saleem@intel.com" <shiraz.saleem@intel.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: [Patch v5 00/12] Introduce Microsoft Azure Network Adapter
+ (MANA) RDMA driver
+Message-ID: <YynwWTNv04r0xAvL@unreal>
+References: <1661906071-29508-1-git-send-email-longli@linuxonhyperv.com>
+ <PH7PR21MB3263E057A08312F679F8576ACE439@PH7PR21MB3263.namprd21.prod.outlook.com>
+ <YxvRkW+u1jgOLD5X@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YxvRkW+u1jgOLD5X@ziepe.ca>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The generate_guest_id function is more suitable for use after the
-following modifications.
-1. Modify the type of the guest_id variable to u64, which is compatible
-with the caller.
-2. Remove all parameters from the function, and write the parameter
-(LINUX_VERSION_CODE) passed in by the actual call into the function
-implementation.
-3. Rename the function to make it clearly a Hyper-V related function,
-and modify it to hv_generate_guest_id.
+On Fri, Sep 09, 2022 at 08:51:45PM -0300, Jason Gunthorpe wrote:
+> On Fri, Sep 09, 2022 at 09:41:25PM +0000, Long Li wrote:
+> 
+> > Can you take a look at this patch set. I have addressed all the
+> > comments from previous review.
+> 
+> The last time I looked I thought it was looking OK, I was thinking of
+> putting it in linux-next for a while to get the static checkers
+> happy. But the netdev patches gave me pause on that plan.
+> 
+> However, Leon and I will be at LPC all next week so I don't know if it
+> will happen.
+> 
+> I would also like to see that the netdev patches are acked, and ask how
+> you expect this cross-tree series to be merged?
 
-v2:
-  Fix generate_guest_id to hv_generate_guest_id.
+?????? 
 
-Signed-off-by: Li kunyu <kunyu@nfschina.com>
----
- arch/arm64/hyperv/mshyperv.c   |  2 +-
- arch/x86/hyperv/hv_init.c      |  2 +-
- include/asm-generic/mshyperv.h | 12 +++++-------
- 3 files changed, 7 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index bbbe351e9045..3863fd226e0e 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -38,7 +38,7 @@ static int __init hyperv_init(void)
- 		return 0;
- 
- 	/* Setup the guest ID */
--	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-+	guest_id = hv_generate_guest_id();
- 	hv_set_vpreg(HV_REGISTER_GUEST_OSID, guest_id);
- 
- 	/* Get the features and hints from Hyper-V */
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 3de6d8b53367..93770791b858 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -426,7 +426,7 @@ void __init hyperv_init(void)
- 	 * 1. Register the guest ID
- 	 * 2. Enable the hypercall and register the hypercall page
- 	 */
--	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-+	guest_id = hv_generate_guest_id();
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
- 
- 	/* Hyper-V requires to write guest os id via ghcb in SNP IVM. */
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index c05d2ce9b6cd..7f4a23cee56f 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -25,6 +25,7 @@
- #include <linux/nmi.h>
- #include <asm/ptrace.h>
- #include <asm/hyperv-tlfs.h>
-+#include <linux/version.h>
- 
- struct ms_hyperv_info {
- 	u32 features;
-@@ -105,15 +106,12 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
- }
- 
- /* Generate the guest OS identifier as described in the Hyper-V TLFS */
--static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
--				       __u64 d_info2)
-+static inline  u64 hv_generate_guest_id(void)
- {
--	__u64 guest_id = 0;
-+	u64 guest_id;
- 
--	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
--	guest_id |= (d_info1 << 48);
--	guest_id |= (kernel_version << 16);
--	guest_id |= d_info2;
-+	guest_id = (((u64)HV_LINUX_VENDOR_ID) << 48);
-+	guest_id |= (((u64)LINUX_VERSION_CODE) << 16);
- 
- 	return guest_id;
- }
--- 
-2.18.2
-
+> 
+> Jason
