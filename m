@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDC0B5E5624
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 00:13:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C6B45E565B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 00:52:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230477AbiIUWN0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Sep 2022 18:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55236 "EHLO
+        id S229828AbiIUWwp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Sep 2022 18:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230360AbiIUWNX (ORCPT
+        with ESMTP id S229785AbiIUWwn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Sep 2022 18:13:23 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B13A7A92
-        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 15:13:21 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id q15-20020a17090a304f00b002002ac83485so254925pjl.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 15:13:21 -0700 (PDT)
+        Wed, 21 Sep 2022 18:52:43 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBC8A2613
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 15:52:42 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id d64-20020a17090a6f4600b00202ce056566so303606pjk.4
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 15:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=jxDb2PQQp083SZ+8DQYQxmqpzie5/L1hGZiwQ6Jt/dw=;
-        b=c1kfxGqaWCT0XZcmdXWHM7cH44sL3VxgcFcQsPcQaTqVEnXRcLtryRyAxM5tlCqL1N
-         2yf7Wp9k39nCrPqRk4BhGdkYqlly5YLZTsVd5EkZFucGk+c5ddeqPxM4uveodQwH+hgP
-         mUb2zqahvOIdmQd25S3cp9YGYKPZtCy8x06MwX+oz6Q77kDTqkJFjJx/ooctMmbSUEgZ
-         00JOZa+pJpbxrW9313svl0nkYM8i62kg24CTFTpyrV1+H/h/mnI7KOPw+5zLYOgOmeAK
-         X75EW8paDoSwjGdHtnKrn6uWMiI2hwZZiZDMvT2efEMmxEZ2kAj18pzkC5B30o0/pby6
-         FjCw==
+        bh=S3hwfKvotVXsthfCnxkxJbZinClhF0B7HMknMNXolO0=;
+        b=LMt/PzB+ynhMDVTJGXdJP5bVpTZg4kePhiSSgzehGwKZs1xlYsxqcHH4nsbJG1FB4L
+         lJLuYpg6kWRiUTy/ovhiLC5ZIZYW7KRTdBszisRPeoXbH3lgrFzovwH6FicYauihSi7G
+         OJB5SjOyMhJEJiOXDnuFOQaThh0ffZRegaDMWvUuN72PluWjWsL9anHFNKm4boZ4W2x0
+         vh6EyAgrCGyWUGJ7f/n0RLLhwxtJ0sDfHwoAUMP9Qt5PjRN4B+5YGs+hLRp39BmUvZ8+
+         8JhNGft43mmZl1/5Ezw6zBL0B1xV4g5TTJqBonSqClmiDOXb29qMxmbW5JMkYD/krz4Y
+         XoZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=jxDb2PQQp083SZ+8DQYQxmqpzie5/L1hGZiwQ6Jt/dw=;
-        b=l92ZU1BENsApD7QeRKBOXjxEW/f8CKMqcfOLCOO/bW2T2pIGHJR9iRv5NyiCrhvrC1
-         5vbyXTHxGdZqEwIGc3pnQtUY619HOLQLlBBA+oRPgtZXOsA2B557Jt9QQ8geDAnf2fOs
-         sG1U3eR7NJ95sUM47aNdV+KjGHCxiQgxRCvuDSNH7zunOPT0fVMOoNZPZh70ps6cSchR
-         WZc8gv7pGdhQWumtfh59LLvawtCqsQhBnibsgembkC1kT+w9lgF9kPFcQSbL9AqQct21
-         +jzhHu2P37PMmrkfKaLRDe15iitrgE5cq1qkVK/fSaGxfXEvVONxVteoyi2VSPL/7WEl
-         MeOQ==
-X-Gm-Message-State: ACrzQf3n5nsi6CL2oIvqRCGrFf7eMw0ADPAzmzoYyDz4vXoBtZbBkaMo
-        sRmZ05OAzfNWWwMthSXUWveHLw==
-X-Google-Smtp-Source: AMsMyM5hwUhwrLmP/i2U0oQ94AXczjzNYmL0SX/E04t0Z8nwZiZhv2/WPpgVSkPmFLgBmbqoC1LRGw==
-X-Received: by 2002:a17:902:bd85:b0:178:8e76:c77e with SMTP id q5-20020a170902bd8500b001788e76c77emr363506pls.38.1663798400646;
-        Wed, 21 Sep 2022 15:13:20 -0700 (PDT)
+        bh=S3hwfKvotVXsthfCnxkxJbZinClhF0B7HMknMNXolO0=;
+        b=f5/IRVRfZZ26/kYT8qB3rHCOVa/9i9MJN8xo0neTIQYPrdFf7gre2vtkyW+n05jZ86
+         2poiLqA+5oG86RB8/3xIQEBH1yEfGo8QmBWRBvgStQvu+GDQjBeIQ7RrTBYpUW8euT6F
+         0/O4+DD+CXE0xIVuk+35eim3ALyWKIu9mMYt9RGKqkuxPTZdTAIWFXvZPHO1Uc5nGqJB
+         t9bDscY072/DeLOpx+7S+fj65hhL3QRQAxSI5qFa/S045NO6VPJivEUuki98hSnw4Cw7
+         xLUe1tGaM5s5mLMAk/EdBVBLvMy/N4LjPH7yqjXDxhLKgH8PipFKPqrcQLh511n9u0J4
+         UxiA==
+X-Gm-Message-State: ACrzQf3D3ly2Zd96TyTBTAN+JmfB7PeOsayjdrHEdYiXkvlcqER22uZP
+        F9honQmmR3SdiiLoqU1LiG3EaA==
+X-Google-Smtp-Source: AMsMyM4JQyt8CDl8rUdZX0cVMhZDqQTD6flVYpXf46pDsc+IfoHNzZ2Ketv34Q5sLeWOkVDC6fXRnw==
+X-Received: by 2002:a17:902:db0f:b0:176:e70f:6277 with SMTP id m15-20020a170902db0f00b00176e70f6277mr457269plx.13.1663800762099;
+        Wed, 21 Sep 2022 15:52:42 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id 4-20020a170902c10400b00168dadc7354sm2531001pli.78.2022.09.21.15.13.20
+        by smtp.gmail.com with ESMTPSA id r26-20020a63441a000000b0042b5095b7b4sm2501018pga.5.2022.09.21.15.52.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 15:13:20 -0700 (PDT)
-Date:   Wed, 21 Sep 2022 22:13:16 +0000
+        Wed, 21 Sep 2022 15:52:41 -0700 (PDT)
+Date:   Wed, 21 Sep 2022 22:52:38 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -59,19 +59,18 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 29/39] KVM: selftests: Export
- _vm_get_page_table_entry()
-Message-ID: <YyuMfG51iMMfa2mR@google.com>
+Subject: Re: [PATCH v10 30/39] KVM: selftests: Hyper-V PV TLB flush selftest
+Message-ID: <YyuVtrpQwZGHs4ez@google.com>
 References: <20220921152436.3673454-1-vkuznets@redhat.com>
- <20220921152436.3673454-30-vkuznets@redhat.com>
+ <20220921152436.3673454-31-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220921152436.3673454-30-vkuznets@redhat.com>
+In-Reply-To: <20220921152436.3673454-31-vkuznets@redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,162 +79,193 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
-> Make it possible for tests to mangle guest's page table entries in
-> addition to just getting them (available with vm_get_page_table_entry()).
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  tools/testing/selftests/kvm/include/x86_64/processor.h | 2 ++
->  tools/testing/selftests/kvm/lib/x86_64/processor.c     | 5 ++---
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> index 1c7805de8c27..500d711eb989 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> @@ -827,6 +827,8 @@ static inline uint8_t wrmsr_safe(uint32_t msr, uint64_t val)
->  	return kvm_asm_safe("wrmsr", "a"(val & -1u), "d"(val >> 32), "c"(msr));
->  }
->  
-> +uint64_t *_vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
-> +				   uint64_t vaddr);
->  uint64_t vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
->  				 uint64_t vaddr);
->  void vm_set_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> index 2e6e61bbe81b..5c135f896ada 100644
-> --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-> @@ -214,9 +214,8 @@ void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
->  	__virt_pg_map(vm, vaddr, paddr, PG_LEVEL_4K);
->  }
->  
-> -static uint64_t *_vm_get_page_table_entry(struct kvm_vm *vm,
-> -					  struct kvm_vcpu *vcpu,
-> -					  uint64_t vaddr)
-> +uint64_t *_vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
-> +				   uint64_t vaddr)
+> +/* 'Worker' vCPU code checking the contents of the test page */
+> +static void worker_guest_code(vm_vaddr_t test_data)
+> +{
+> +	struct test_data *data = (struct test_data *)test_data;
+> +	u32 vcpu_id = rdmsr(HV_X64_MSR_VP_INDEX);
+> +	unsigned char chr_exp1, chr_exp2, chr_cur;
 
-Ugh, obviously not your fault, but this is a terrible name.  Aside from using a
-single underscore, it's semantically very different than vm_get_page_table_entry(),
-i.e. violates the stand "double underscores is an inner helper".
+Any reason for "unsigned char" over uint8_t?
 
-The innards of vm_{g,s}et_page_table_entry() are quite hilarious too as they cast
-a "uint64_t *" to  "uint64_t*" now that KVM no longer uses structs to manage PTEs
-(commit f18b4aebe107 ("kvm: selftests: do not use bitfields larger than 32-bits
-for PTEs")).
+And the "chr_" prefix is rather weird, IMO it just makes the code harder to read.
 
-And looking at the sole usage in emulator_error_test.c, provide get+set helpers
-is silly.
+Actually, why a single char?  E.g. why not do a uint64_t?  Oooh, because the
+offset is only by vcpu_id, not by vcpu_id * PAGE_SIZE.  Maybe add a comment about
+that somewhere?
 
-Rather than expose this weirdness, what about slotting in the below to drop the
-wrappers and just let tests modify PTEs directly?
+> +
+> +	x2apic_enable();
+> +	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
+> +
+> +	for (;;) {
+> +		/* Read the expected char, then check what's in the test pages and then
+> +		 * check the expectation again to make sure it wasn't updated in the meantime.
 
----
-From: Sean Christopherson <seanjc@google.com>
-Date: Wed, 21 Sep 2022 15:08:49 -0700
-Subject: [PATCH] KVM: selftests: Drop helpers to read/write page table entries
+Please wrap at the soft limit.
 
-Drop vm_{g,s}et_page_table_entry() and instead expose the "inner"
-helper (was _vm_get_page_table_entry()) that returns a _pointer_ to the
-PTE, i.e. let tests directly modify PTEs instead of bouncing through
-helpers that just make life difficult.
+> +		 */
 
-Opportunsitically use BIT_ULL() in emulator_error_test, and use the
-MAXPHYADDR define to set the "rogue" GPA bit instead of open coding the
-same value.
+Except for apparently networking, kernel preferred style for block comments is:
 
-No functional change intended.
+		/*
+		 * This comment is for KVM.
+		 */
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- .../selftests/kvm/include/x86_64/processor.h  |  6 ++----
- .../selftests/kvm/lib/x86_64/processor.c      | 21 ++-----------------
- .../kvm/x86_64/emulator_error_test.c          |  6 ++++--
- 3 files changed, 8 insertions(+), 25 deletions(-)
+> +		chr_exp1 = READ_ONCE(*(unsigned char *)
+> +				     (data->test_pages + PAGE_SIZE * NTEST_PAGES + vcpu_id));
 
-diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-index 0cbc71b7af50..5999e974a150 100644
---- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-@@ -825,10 +825,8 @@ static inline uint8_t wrmsr_safe(uint32_t msr, uint64_t val)
- 	return kvm_asm_safe("wrmsr", "a"(val & -1u), "d"(val >> 32), "c"(msr));
- }
- 
--uint64_t vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
--				 uint64_t vaddr);
--void vm_set_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
--			     uint64_t vaddr, uint64_t pte);
-+uint64_t *vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
-+				  uint64_t vaddr);
- 
- uint64_t kvm_hypercall(uint64_t nr, uint64_t a0, uint64_t a1, uint64_t a2,
- 		       uint64_t a3);
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index 2e6e61bbe81b..5e4bbe71dbff 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -214,9 +214,8 @@ void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
- 	__virt_pg_map(vm, vaddr, paddr, PG_LEVEL_4K);
- }
- 
--static uint64_t *_vm_get_page_table_entry(struct kvm_vm *vm,
--					  struct kvm_vcpu *vcpu,
--					  uint64_t vaddr)
-+uint64_t *vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
-+				  uint64_t vaddr)
- {
- 	uint16_t index[4];
- 	uint64_t *pml4e, *pdpe, *pde;
-@@ -286,22 +285,6 @@ static uint64_t *_vm_get_page_table_entry(struct kvm_vm *vm,
- 	return &pte[index[0]];
- }
- 
--uint64_t vm_get_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
--				 uint64_t vaddr)
--{
--	uint64_t *pte = _vm_get_page_table_entry(vm, vcpu, vaddr);
--
--	return *(uint64_t *)pte;
--}
--
--void vm_set_page_table_entry(struct kvm_vm *vm, struct kvm_vcpu *vcpu,
--			     uint64_t vaddr, uint64_t pte)
--{
--	uint64_t *new_pte = _vm_get_page_table_entry(vm, vcpu, vaddr);
--
--	*(uint64_t *)new_pte = pte;
--}
--
- void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
- {
- 	uint64_t *pml4e, *pml4e_start;
-diff --git a/tools/testing/selftests/kvm/x86_64/emulator_error_test.c b/tools/testing/selftests/kvm/x86_64/emulator_error_test.c
-index 236e11755ba6..bde247f3c8a1 100644
---- a/tools/testing/selftests/kvm/x86_64/emulator_error_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/emulator_error_test.c
-@@ -152,8 +152,9 @@ int main(int argc, char *argv[])
- {
- 	struct kvm_vcpu *vcpu;
- 	struct kvm_vm *vm;
--	uint64_t gpa, pte;
-+	uint64_t *pte;
- 	uint64_t *hva;
-+	uint64_t gpa;
- 	int rc;
- 
- 	/* Tell stdout not to buffer its content */
-@@ -178,8 +179,9 @@ int main(int argc, char *argv[])
- 	virt_map(vm, MEM_REGION_GVA, MEM_REGION_GPA, 1);
- 	hva = addr_gpa2hva(vm, MEM_REGION_GPA);
- 	memset(hva, 0, PAGE_SIZE);
-+
- 	pte = vm_get_page_table_entry(vm, vcpu, MEM_REGION_GVA);
--	vm_set_page_table_entry(vm, vcpu, MEM_REGION_GVA, pte | (1ull << 36));
-+	*pte |= BIT_ULL(MAXPHYADDR);
- 
- 	vcpu_run(vcpu);
- 	process_exit_on_emulation_error(vcpu);
+Use a local variable for the pointer, then these line lengths are much more sane.
+Hmm, and if you give them descriptive names, I think it will make the code much
+easier to follow.  E.g. I've been staring at this test for ~10 minutes and am still
+not entirely sure what shenanigans are going on.
 
-base-commit: 3b69d246e2f1eef553508c79f5d3b2dfc4978bc1
--- 
+> +		asm volatile("lfence");
+
+The kernel versions of these are provided by tools/arch/x86/include/asm/barrier.h,
+which I think is available?  I forget if we can use those in the selftests mess.
+
+Regardless, this needs a comment explaining why LFENCE/rmb() is needed, and why
+the writer needs MFENCE/mb().
+
+> +		chr_cur = *(unsigned char *)data->test_pages;
+
+READ_ONCE()?
+
+> +		asm volatile("lfence");
+> +		chr_exp2 = READ_ONCE(*(unsigned char *)
+> +				     (data->test_pages + PAGE_SIZE * NTEST_PAGES + vcpu_id));
+> +		if (chr_exp1 && chr_exp1 == chr_exp2)
+
+IIUC, the "chr_exp1 != 0" check is the read side of "0 == disable".  Splitting
+that out and adding a comment would be helpful.
+
+And if a local variable is used to hold the pointer, there's no need for an "exp2"
+variable.
+
+> +			GUEST_ASSERT(chr_cur == chr_exp1);
+> +		asm volatile("nop");
+
+Use cpu_relax(), which KVM selftests provide.
+
+All in all, something like this?
+
+	for (;;) {
+		cpu_relax();
+
+		expected = READ_ONCE(*this_vcpu);
+		
+		/* ??? */
+		rmb();
+		val = READ_ONCE(*???);
+		/* ??? */
+		rmb();
+
+		/*
+		 * '0' indicates the sender is between iterations, wait until
+		 * the sender is ready for this vCPU to start checking again.
+		 */
+		if (!expected)
+			continue;
+
+		/*
+		 * Re-read the per-vCPU byte to ensure the sender didn't move
+		 * onto a new iteration.
+		 */	
+		if (expected != READ_ONCE(*this_vcpu))
+			continue;
+		
+		GUEST_ASSERT(val == expected);
+	}
+
+> +	}
+> +}
+> +
+> +/*
+> + * Write per-CPU info indicating what each 'worker' CPU is supposed to see in
+> + * test page. '0' means don't check.
+> + */
+> +static void set_expected_char(void *addr, unsigned char chr, int vcpu_id)
+> +{
+> +	asm volatile("mfence");
+
+Why MFENCE?
+
+> +	*(unsigned char *)(addr + NTEST_PAGES * PAGE_SIZE + vcpu_id) = chr;
+> +}
+> +
+> +/* Update PTEs swapping two test pages */
+> +static void swap_two_test_pages(vm_paddr_t pte_gva1, vm_paddr_t pte_gva2)
+> +{
+> +	uint64_t pte[2];
+> +
+> +	pte[0] = *(uint64_t *)pte_gva1;
+> +	pte[1] = *(uint64_t *)pte_gva2;
+> +
+> +	*(uint64_t *)pte_gva1 = pte[1];
+> +	*(uint64_t *)pte_gva2 = pte[0];
+
+xchg()?  swap()?
+
+> +}
+> +
+> +/* Delay */
+> +static inline void rep_nop(void)
+
+LOL, rep_nop() is a hilariously confusing function name.  "REP NOP" is "PAUSE",
+and for whatever reason the kernel proper use rep_nop() as the function name for
+the wrapper.  My reaction to the MFENCE+rep_nop() below was "how the hell does
+MFENCE+PAUSE guarantee a delay?!?".
+
+Anyways, why not do e.g. usleep(1)?  And if you really need a udelay() and not a
+usleep(), IMO it's worth adding exactly that instead of throwing NOPs at the CPU.
+E.g. aarch64 KVM selftests already implements udelay(), so adding an x86 variant
+would move us one step closer to being able to use it in common tests.
+
+
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < 1000000; i++)
+> +		asm volatile("nop");
+> +}
+> +	r = pthread_create(&threads[0], NULL, vcpu_thread, vcpu[1]);
+> +	TEST_ASSERT(r == 0,
+
+!r is preferred
+
+> +		    "pthread_create failed errno=%d", errno);
+
+TEST_ASSERT() already captures errno, e.g. these can be:
+
+	TEST_ASSERT(!r, "pthread_create() failed");
+
+> +
+> +	r = pthread_create(&threads[1], NULL, vcpu_thread, vcpu[2]);
+> +	TEST_ASSERT(r == 0,
+> +		    "pthread_create failed errno=%d", errno);
+> +
+> +	while (true) {
+> +		r = _vcpu_run(vcpu[0]);
+> +		exit_reason = vcpu[0]->run->exit_reason;
+> +
+> +		TEST_ASSERT(!r, "vcpu_run failed: %d\n", r);
+
+Pretty sure newlines in asserts aren't necessary, though I forget if they cause
+weirdness or just end up being ignored.
+
+> +		TEST_ASSERT(exit_reason == KVM_EXIT_IO,
+> +			    "unexpected exit reason: %u (%s)",
+> +			    exit_reason, exit_reason_str(exit_reason));
+> +
+> +		switch (get_ucall(vcpu[0], &uc)) {
+> +		case UCALL_SYNC:
+> +			TEST_ASSERT(uc.args[1] == stage,
+> +				    "Unexpected stage: %ld (%d expected)\n",
+> +				    uc.args[1], stage);
+> +			break;
+> +		case UCALL_ABORT:
+> +			TEST_FAIL("%s at %s:%ld", (const char *)uc.args[0],
+> +				  __FILE__, uc.args[1]);
+
+			REPORT_GUEST_ASSERT(uc);
