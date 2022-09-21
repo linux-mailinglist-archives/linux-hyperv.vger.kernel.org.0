@@ -2,53 +2,53 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 449A35E5516
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Sep 2022 23:19:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 015CE5E5523
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Sep 2022 23:24:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229678AbiIUVTN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Sep 2022 17:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47728 "EHLO
+        id S229472AbiIUVYo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Sep 2022 17:24:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbiIUVTL (ORCPT
+        with ESMTP id S229663AbiIUVYm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Sep 2022 17:19:11 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3F4A5C76
-        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 14:19:10 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d82so7229271pfd.10
-        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 14:19:10 -0700 (PDT)
+        Wed, 21 Sep 2022 17:24:42 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F7D14027
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 14:24:40 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id w10so6048509pll.11
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 14:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=qn2Tyr5BBZtLc4Q3iyya3S9UpHREHtk3JzWAYU0n/Xs=;
-        b=lrCrFnJwDqg8lDvVHSiB+LouuHDaJu2gqUZm46RhmQ6BqLAfOIqs39DLUFOH5A02O2
-         /Qx9DbpVmcOTFg5n05d9GFQNcSgsYRHmcTyARBaMzZBW/ykLtS0C4r4FDt+rET9IJuI6
-         /2/oNlWepPwjg/wX4KiSj6aqQpXn0bxMQ/OTpN2Cjx+/lRL7BWCMhgux3d4JdUYnHs7V
-         zbefxEvtHUlFl8/nmUyQ/AWKEKOAzCbjAcbijwUG23yLWyA50QKka/yTpNU8E6f0Z7Mv
-         5hHnB/QotfaoVRYtQ9mlTtabSiRs9NXGGU55wRi7wY+ltf9aoHqh9ARlfxX08c2jyo7O
-         +nog==
+        bh=XKEbM8caf/bjI9ySZ4wo5UYKS2yDp07XIi6tpk95wAs=;
+        b=qZpKzh4tBmHgcEFntdD+k7EyXqJkN05az0IQxFiaUb9lwoyUnXb/j+9VhuhkiNwtWS
+         DNFoGW5HQYU396dfaaqN38wsDElS1oL1qdvKFFbJwGQ0eLi5NGj3JhInXmhwjYvLomGt
+         GnOFv2bnkYkxUklYSCoq/9D32Ztnyb7u+piCIDJEJa5oCBJaLFQKzFSgxlAoXGPk2+Ka
+         UUxaUnYUiVe7VY9017NMMiiaXSafsCxXDkJbXR3q1KQp4lDmRmtyE8zCPzDIaatxzgx5
+         35246ZQv6EU5mC2XaCQAygq2gh6zZ3Ri3pwZCU1AUBtVmGCbgXkfzdj77gEDDzoomgFx
+         d+qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=qn2Tyr5BBZtLc4Q3iyya3S9UpHREHtk3JzWAYU0n/Xs=;
-        b=McDFVTQXRgvQkIvdQmOv2CLc0UAsPjpxvEKKPEAC3Gh5aUW6XlCEsR9srVblj1c7uy
-         8/zEdociPHZRTxxz48rwabHG4R2i1VPjCO9Pyj79pzFk3LuDOJdTDJUIeo+xF/tP9PBl
-         5oBuiXE/PLiN83vjL7OERNO8pdxqJNk/jVNim1koGqxckXx7fTNVwEcwP/XG37f3dXhP
-         +bia2oNeBYdo39nt3/q0TBnWk0LhOvOX83MVKXEGb2a1+YzzfyqD0g02S9MtZ0tgSpaC
-         hVG6gd85RKVK9DdOMxxH3tFb/dp3nKjc1NdV2KawGzzlmgvMI64l4Uq+gWWDXrNWGOOO
-         EDeQ==
-X-Gm-Message-State: ACrzQf3HTbgXE4ilgr87wvwSl2Ye5ULOrKaGoEpJHnsqFO7Et1r44Nnr
-        HWJc0OZdbEv9Lk092327aE55FA==
-X-Google-Smtp-Source: AMsMyM7NDWr1OHvf4/DOTuO46c9LjjzZYkWEszB0swaN+tiWynXVjEvc8rod3Lqug5SO6bxMqtcDMA==
-X-Received: by 2002:a63:8542:0:b0:43a:5ca7:c710 with SMTP id u63-20020a638542000000b0043a5ca7c710mr143996pgd.264.1663795150087;
-        Wed, 21 Sep 2022 14:19:10 -0700 (PDT)
+        bh=XKEbM8caf/bjI9ySZ4wo5UYKS2yDp07XIi6tpk95wAs=;
+        b=BQ0Krmzb1gIrXfWA2ja5vjKhNb07cRC96VqvAo2+WTy/Qas7uQLVdkoIQBZ6LbcOTz
+         KiLur/si2V+oFzmcS2JrPcFpzCWSWk9YzioBWlyDlBIW3OjqqkeZsARCxzUnts5yAymt
+         jPzCR2keQmASSZJ8V65cNZ46JuPXjyv/S0loZ2IdjRXepoqBvbI27o1XOixlUP2eCWXI
+         8DsO+W9mU+SPtD+YRuGDrzPJF6yluWYD8RtSCXWaDTbLMVfZ0lLcVIWQyu7x3HKjTG1n
+         QIDpskwFHqzvIyMCGOkX8Km7Z8dHrrENFHqTvZkqqZakEcOv18BZoi+/cOUGQog7AN2i
+         9IBQ==
+X-Gm-Message-State: ACrzQf2haBZ+JJyGnEtF431ApIkdQd4Evr0yk3Bik7deSdAWJCa+v1ds
+        2yr0ylsNFWXcTs/yEBbYthp/Og==
+X-Google-Smtp-Source: AMsMyM5cRLUgFsjz3qEkvgjAk8pPt48HujqufXWsU+8rONMpkTaFoa4XizhZndYHyHB82rVqLI/U/A==
+X-Received: by 2002:a17:902:ca05:b0:177:324a:784d with SMTP id w5-20020a170902ca0500b00177324a784dmr9604pld.11.1663795479507;
+        Wed, 21 Sep 2022 14:24:39 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id h5-20020a170902680500b00178b717a0a3sm2430996plk.69.2022.09.21.14.19.09
+        by smtp.gmail.com with ESMTPSA id o2-20020a17090a4e8200b001f559e00473sm2341948pjh.43.2022.09.21.14.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 14:19:09 -0700 (PDT)
-Date:   Wed, 21 Sep 2022 21:19:06 +0000
+        Wed, 21 Sep 2022 14:24:38 -0700 (PDT)
+Date:   Wed, 21 Sep 2022 21:24:35 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -59,15 +59,14 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 18/39] KVM: x86: hyper-v: Introduce fast
- guest_hv_cpuid_has_l2_tlb_flush() check
-Message-ID: <Yyt/ylgNjsgGTQMN@google.com>
+Subject: Re: [PATCH v10 20/39] KVM: nVMX: hyper-v: Enable L2 TLB flush
+Message-ID: <YyuBE4tphwbUSrtf@google.com>
 References: <20220921152436.3673454-1-vkuznets@redhat.com>
- <20220921152436.3673454-19-vkuznets@redhat.com>
+ <20220921152436.3673454-21-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220921152436.3673454-19-vkuznets@redhat.com>
+In-Reply-To: <20220921152436.3673454-21-vkuznets@redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -80,39 +79,23 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
-> Introduce a helper to quickly check if KVM needs to handle VMCALL/VMMCALL
-> from L2 in L0 to process L2 TLB flush requests.
-> 
-> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/kvm/hyperv.h | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
-> index 1b53dd4cff4d..3fff3a6f4bb9 100644
-> --- a/arch/x86/kvm/hyperv.h
-> +++ b/arch/x86/kvm/hyperv.h
-> @@ -174,6 +174,13 @@ static inline void kvm_hv_vcpu_empty_flush_tlb(struct kvm_vcpu *vcpu)
->  	kfifo_reset_out(&tlb_flush_fifo->entries);
->  }
+> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+> index 7ad56fbc4b4d..dd1589336e79 100644
+> --- a/arch/x86/kvm/vmx/evmcs.h
+> +++ b/arch/x86/kvm/vmx/evmcs.h
+> @@ -63,6 +63,15 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
+>  #define EVMCS1_UNSUPPORTED_VMENTRY_CTRL (0)
+>  #define EVMCS1_UNSUPPORTED_VMFUNC (VMX_VMFUNC_EPTP_SWITCHING)
 >  
-> +static inline bool guest_hv_cpuid_has_l2_tlb_flush(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-> +
-> +	return hv_vcpu && (hv_vcpu->cpuid_cache.nested_eax & HV_X64_NESTED_DIRECT_FLUSH);
+> +/*
+> + * Note, Hyper-V isn't actually stealing bit 28 from Intel, just abusing it by
+> + * pairing it with architecturally impossible exit reasons.  Bit 28 is set only
+> + * on SMI exits to a SMI transfer monitor (STM) and if and only if a MTF VM-Exit
+> + * is pending.  I.e. it will never be set by hardware for non-SMI exits (there
+> + * are only three), nor will it ever be set unless the VMM is an STM.
+> + */
+> +#define HV_VMX_SYNTHETIC_EXIT_REASON_TRAP_AFTER_FLUSH 0x10000031
 
-Nit, IMO this is long enough that it's worth wrapping to fit under the soft char limit.
+This definition should go into hyperv-tlfs.h since it's take verbatim from the TLFS.
 
-	return hv_vcpu &&
-	       (hv_vcpu->cpuid_cache.nested_eax & HV_X64_NESTED_DIRECT_FLUSH);
-
-> +}
-> +
->  static inline bool kvm_hv_is_tlb_flush_hcall(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-> -- 
-> 2.37.3
-> 
+https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/nested-virtualization#synthetic-vm-exit
