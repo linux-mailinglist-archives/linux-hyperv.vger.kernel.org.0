@@ -2,152 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 438525C0380
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Sep 2022 18:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89D1D5C0434
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Sep 2022 18:32:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232417AbiIUQGZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Sep 2022 12:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44972 "EHLO
+        id S230447AbiIUQcL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Sep 2022 12:32:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232343AbiIUQFg (ORCPT
+        with ESMTP id S231476AbiIUQbz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Sep 2022 12:05:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9656E2A439;
-        Wed, 21 Sep 2022 08:54:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 58E71B830EB;
-        Wed, 21 Sep 2022 15:54:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2213C43470;
-        Wed, 21 Sep 2022 15:54:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663775691;
-        bh=mZEjU9sKh4ZHqsW67cldg1I7i6KLgb+SX4bzxU6CYwQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SkhF4lr4feLhxqcH8ZCpum+XDsyrDBWZWWdT3eBtsjoqrvZZ8Jf69kwOOq6svklDi
-         wTYSQhQpigMj/xJOXU6GFXA38QbOnDoqk7AKbc23qNxVCQ0j76pXg88z/QAVHXZIqJ
-         CuYb2b7jalnP4J63yBEGdMAS0TYiFprEChFfShiGAq1NIscwaOOkoxx/2QaFj7O7/a
-         rkPUOSNux9bcBaj1BPH2dj7XyZr+crDoY05qfi2gr3qlWzX48gMwqfNsJMdG9WH2/d
-         wEzUNMa9lFr66XEA/V3ybUvLm06ZpchtpG0rqDc7P+GsF59D9mNQtW38O+wzzJs7w+
-         l7w7sS330moxQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9] Drivers: hv: Never allocate anything besides framebuffer from framebuffer memory region
-Date:   Wed, 21 Sep 2022 11:54:49 -0400
-Message-Id: <20220921155449.235520-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
+        Wed, 21 Sep 2022 12:31:55 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96602A6C66
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 09:12:49 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id s13so4808833qvq.10
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 09:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=aLY4X7jLe6jyDRz2GTUZzGVaQ/S9bUP0pVCXbM8UVnQ=;
+        b=TPua4QONi/9P40ftlbD8dp1zg3rSaSqwpFR9IQzhC+qUz1Fp3XC86DD38Rs/IlQteT
+         mhC8Q5Ip34T/drUuWDOAfP1w5Oi+o3MIAt6huHmVSGRHAfvDxMkYPwWMLUYsAoklf+TI
+         sxQOINPIDXAzIClL8JUhpvoygyw7Nis8ZOPbHv3tOG/kJziCrdKCGR+zD+16Q7jWBvTx
+         b3sq4muQd7s2scTDNZUMlsJKdu+5ZncIwc1pHEMCFOdb7DZbcEEju2zkpk9hHJf5f2Fx
+         SDo/2l8RLlcEYe8UX5BENtEoK6jqG3kQdYjEbcER6ehHkpYkrf6sEaflGItWS+Z81gTl
+         /TOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=aLY4X7jLe6jyDRz2GTUZzGVaQ/S9bUP0pVCXbM8UVnQ=;
+        b=OnchHk9Mqj06ob/MUdQyzyfgI5cjqz21gta2DF586KcZClywQRyGup1+3XPOFYeFWh
+         D0UocM9hn/8n5/tUyJFNeiJpslQH8yjQ4FXCPslY8KNchUtYjTyhWNERXMM50lhUB758
+         LyWUmZ+ziZBFeP7013AEnB/JGaP7AwhVZGtJK/lhTxdKxUuY/RxZK6tX18wHn2qFJq0m
+         56yd5eT7+KW5WK9IWSNUWKZGKmbuaHyL/k9nvmGh5n04fqS6kFQWXUVkx8fTGwvYJtmZ
+         HCpiCNvbgt4wSUbFqrKx7fPaW4mqUl9uq2x6MvwArccqmr0p5W0ULYUyEiJR6GCGEnI5
+         Z7hg==
+X-Gm-Message-State: ACrzQf2d/hhyJwmnoq7p04s/wsbLnixPEt+dhEpTDdOhiaDxZ/VIclRs
+        /4w9GyKrTD984X+gK/mep4LQKg==
+X-Google-Smtp-Source: AMsMyM456CtmBnPUaHOLnSGIaudSOSiBnahdUvNlkNTz0WVQ9WE8C2u4WZr6oZuKp7Qi+VeOkmaN3g==
+X-Received: by 2002:ad4:5f47:0:b0:4ac:b8de:1484 with SMTP id p7-20020ad45f47000000b004acb8de1484mr23810326qvg.77.1663776757853;
+        Wed, 21 Sep 2022 09:12:37 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id bs39-20020a05620a472700b006bad7a2964fsm2065622qkb.78.2022.09.21.09.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Sep 2022 09:12:37 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1ob2Ky-000qF4-Lc;
+        Wed, 21 Sep 2022 13:12:36 -0300
+Date:   Wed, 21 Sep 2022 13:12:36 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Long Li <longli@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "shiraz.saleem@intel.com" <shiraz.saleem@intel.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+Subject: Re: [Patch v5 12/12] RDMA/mana_ib: Add a driver for Microsoft Azure
+ Network Adapter
+Message-ID: <Yys39Dfw42XjNA7e@ziepe.ca>
+References: <1661906071-29508-1-git-send-email-longli@linuxonhyperv.com>
+ <1661906071-29508-13-git-send-email-longli@linuxonhyperv.com>
+ <SA1PR21MB133500C46963854E242EC976BF4C9@SA1PR21MB1335.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SA1PR21MB133500C46963854E242EC976BF4C9@SA1PR21MB1335.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+On Tue, Sep 20, 2022 at 05:54:19PM +0000, Dexuan Cui wrote:
 
-[ Upstream commit f0880e2cb7e1f8039a048fdd01ce45ab77247221 ]
+> > +int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct
+> > ib_umem *umem,
+> > +				 mana_handle_t *gdma_region, u64 page_sz)
+> > +{
+> > ...
+> > +
+> > +if (!err)
+> > +	return 0;
+> 
+> Please add a Tab character to the above 2 lines.
 
-Passed through PCI device sometimes misbehave on Gen1 VMs when Hyper-V
-DRM driver is also loaded. Looking at IOMEM assignment, we can see e.g.
+How are we still at the point where we have trivial style errors in
+this series at v6?? This is not OK, please handle reviews for this
+basic stuff internally.
 
-$ cat /proc/iomem
-...
-f8000000-fffbffff : PCI Bus 0000:00
-  f8000000-fbffffff : 0000:00:08.0
-    f8000000-f8001fff : bb8c4f33-2ba2-4808-9f7f-02f3b4da22fe
-...
-fe0000000-fffffffff : PCI Bus 0000:00
-  fe0000000-fe07fffff : bb8c4f33-2ba2-4808-9f7f-02f3b4da22fe
-    fe0000000-fe07fffff : 2ba2:00:02.0
-      fe0000000-fe07fffff : mlx4_core
-
-the interesting part is the 'f8000000' region as it is actually the
-VM's framebuffer:
-
-$ lspci -v
-...
-0000:00:08.0 VGA compatible controller: Microsoft Corporation Hyper-V virtual VGA (prog-if 00 [VGA controller])
-	Flags: bus master, fast devsel, latency 0, IRQ 11
-	Memory at f8000000 (32-bit, non-prefetchable) [size=64M]
-...
-
- hv_vmbus: registering driver hyperv_drm
- hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] Synthvid Version major 3, minor 5
- hyperv_drm 0000:00:08.0: vgaarb: deactivate vga console
- hyperv_drm 0000:00:08.0: BAR 0: can't reserve [mem 0xf8000000-0xfbffffff]
- hyperv_drm 5620e0c7-8062-4dce-aeb7-520c7ef76171: [drm] Cannot request framebuffer, boot fb still active?
-
-Note: "Cannot request framebuffer" is not a fatal error in
-hyperv_setup_gen1() as the code assumes there's some other framebuffer
-device there but we actually have some other PCI device (mlx4 in this
-case) config space there!
-
-The problem appears to be that vmbus_allocate_mmio() can use dedicated
-framebuffer region to serve any MMIO request from any device. The
-semantics one might assume of a parameter named "fb_overlap_ok"
-aren't implemented because !fb_overlap_ok essentially has no effect.
-The existing semantics are really "prefer_fb_overlap". This patch
-implements the expected and needed semantics, which is to not allocate
-from the frame buffer space when !fb_overlap_ok.
-
-Note, Gen2 VMs are usually unaffected by the issue because
-framebuffer region is already taken by EFI fb (in case kernel supports
-it) but Gen1 VMs may have this region unclaimed by the time Hyper-V PCI
-pass-through driver tries allocating MMIO space if Hyper-V DRM/FB drivers
-load after it. Devices can be brought up in any sequence so let's
-resolve the issue by always ignoring 'fb_mmio' region for non-FB
-requests, even if the region is unclaimed.
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Link: https://lore.kernel.org/r/20220827130345.1320254-4-vkuznets@redhat.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hv/vmbus_drv.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 3248aa7a35b3..cb3e22f10d68 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1186,7 +1186,7 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
- 			bool fb_overlap_ok)
- {
- 	struct resource *iter, *shadow;
--	resource_size_t range_min, range_max, start;
-+	resource_size_t range_min, range_max, start, end;
- 	const char *dev_n = dev_name(&device_obj->device);
- 	int retval;
- 
-@@ -1221,6 +1221,14 @@ int vmbus_allocate_mmio(struct resource **new, struct hv_device *device_obj,
- 		range_max = iter->end;
- 		start = (range_min + align - 1) & ~(align - 1);
- 		for (; start + size - 1 <= range_max; start += align) {
-+			end = start + size - 1;
-+
-+			/* Skip the whole fb_mmio region if not fb_overlap_ok */
-+			if (!fb_overlap_ok && fb_mmio &&
-+			    (((start >= fb_mmio->start) && (start <= fb_mmio->end)) ||
-+			     ((end >= fb_mmio->start) && (end <= fb_mmio->end))))
-+				continue;
-+
- 			shadow = __request_region(iter, start, size, NULL,
- 						  IORESOURCE_BUSY);
- 			if (!shadow)
--- 
-2.35.1
-
+Jason
