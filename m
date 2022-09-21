@@ -2,131 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FE815E54DA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Sep 2022 23:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDC815E550D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Sep 2022 23:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230096AbiIUVAt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Sep 2022 17:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
+        id S230101AbiIUVQp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Sep 2022 17:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbiIUVAs (ORCPT
+        with ESMTP id S229908AbiIUVQn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Sep 2022 17:00:48 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11021021.outbound.protection.outlook.com [52.101.62.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD603A0338;
-        Wed, 21 Sep 2022 14:00:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bKOGRrxSQBkztPuPrB9ghUSLKxxxGPAoqwWGqyOVc6RnJ74M6SpP3K8Zx7UZ1yfbldpdI864hvRg0aFjIr5tZC37kbXTSbPBpMTGafm+3Qjwuwnrflf/wfZsYB2SiTzeJtpbm+tYdWgPe6mo+4yMXGLImfMq/oETt76ZlF4mNsqy2ji6Gpfho6K1tcXcuJugAMCVj/I3FAiwhvehYKPLZsLMGpBY44COPCFY1quZuVjm83BqFwB0+uFS1boZcleiD9weW9C9jUwN+wqTQl2KUh6cA3j0tE+8K14P4MGqpM3rHpX9LmU2TWNfyvtEzc7Z/udHQ1DlnKAydQ98MUcNQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hradftqB3Hjfw0BaGcVcFlSY8Nz5eXrfZoYzSSsmGq8=;
- b=cWtANGbq59MLFJ+G8DOhLxgVjz7Y4MT/EUMxPUobW1gCX5fam/WdW2q+MZ9I/QMzylkb5Xy34oscVz0RXLusK0UzojNNmp+p+gB6PnutStbTRskW2Nj71O5QWWplJFqExp/YazU+pEJTdsDrbuCeiK3VmUdyAorKT5wE6HRFERp3So6oWR66OmB+abg9+Y/ilxAqir9cjVe5e0Iq/aWyEbz+oq4xP16h3XwVGha+qdpSUAn5UL7JgCz0FmHihBhg0t0cz/z2g90xv/5R7gHkm5IXhZypj4nbF/3M8nzrmnxs+mwrCIRQbSB9TxLLte6A0u6LuOU6nV5KkS/1igVd6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hradftqB3Hjfw0BaGcVcFlSY8Nz5eXrfZoYzSSsmGq8=;
- b=PHr4ATzGdjYLGUe2tQfx5IQG+93CQaqSA62a+k1BxElWbC9IqZMIRlpMx+NpZfqE6rRR3c3oHmbA+PLsS0TXxNmgX4h81DiWatI5HCrFNOlwPcEKoIVrtpIRAimIcWs4uIqVIHHIcYcNya/3XEYSHHfJtLsKF5xclr8tvKWlPjk=
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
- by PH7PR21MB3287.namprd21.prod.outlook.com (2603:10b6:510:1db::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.4; Wed, 21 Sep
- 2022 21:00:44 +0000
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::ce6d:5482:f64f:2ce6]) by PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::ce6d:5482:f64f:2ce6%7]) with mapi id 15.20.5676.004; Wed, 21 Sep 2022
- 21:00:44 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "shiraz.saleem@intel.com" <shiraz.saleem@intel.com>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: RE: [Patch v6 12/12] RDMA/mana_ib: Add a driver for Microsoft Azure
- Network Adapter
-Thread-Topic: [Patch v6 12/12] RDMA/mana_ib: Add a driver for Microsoft Azure
- Network Adapter
-Thread-Index: AQHYzVi1rl2GvOblR0qql1cMBRcleq3qEx0AgABMhkA=
-Date:   Wed, 21 Sep 2022 21:00:44 +0000
-Message-ID: <PH7PR21MB32638583BFCB941BFC22CE4FCE4F9@PH7PR21MB3263.namprd21.prod.outlook.com>
-References: <1663723352-598-1-git-send-email-longli@linuxonhyperv.com>
- <1663723352-598-13-git-send-email-longli@linuxonhyperv.com>
- <Yys7NoXN45IVD67O@ziepe.ca>
-In-Reply-To: <Yys7NoXN45IVD67O@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=02b50bed-eb51-446e-9cea-d6883a83bd69;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-09-21T21:00:22Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3263:EE_|PH7PR21MB3287:EE_
-x-ms-office365-filtering-correlation-id: 0d15bf49-4985-4f6c-5db9-08da9c14597d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Cf4QkG9N1XSwReiEzb1ejUsyAyEQCCP10S8jcnF7s0A4K/J8v04GPnEHU/QeXbrjP3KUXbI1uLZ4htTqdQPBluOH992AbNxzx78iEz+/3/L8QUzadROMkD8Oz+B64dgyGEfhWqWb7Uj1IhMIUcsD21DuFJjmhy4XAanxP6BuWARqSuxx6kd09T/yLsTfzfoN0zoE/0qV1Lc3UAFip3aSvISER57TM5Ut3R9395TO05glPdYnNASq/XvUReT2ZExuJ5eU0qqIizznMlW5v8PmyiYyCh5nrfvflTVzzkE3s+t4eGNobV/FE0LfqNxmZdM5GNpgt6jAS55chYty0iHUOAoHmbowFtPnBZT1cDl6Dlj/W/yglQJHpDGTJ5t+SdWNcpTZu7+oww8T4v9m33MQSRHemAeYOaU6119S3WTRWjdL/vS3WpC/EtAVomuKevhTDz2XjuSd8EC2rPd/qfWjSXeE9ozRqOTRGhn04L61YvEiERo2MWhaO8R/4FLADWramTaWypkzg2dJsxlN7/lK0NRpZSVWiB5P1K2Z1yfBXIwmQwcPfOqP2N6/2NCU0I23N3zwJTuksUsyOGsbAlcqTSENvcs9JUBBl/t0hggDGPA9WVEZjOAzhmaGGZb5BaWj/s9CVqH8j+JMlwT1VK9MLnvqVvO0AGE2WsxgArxlJ4F0XnjNL0DbVjWqvsNNBoq9FkQc4Ez9spgRGACW5aeVuNboddVDhiyLhE39rWW1Sx2/Geid010hOEAMNBAdxbARzBZtLJHG+56vG3vXgv4xeU2yS86Yb53R28+c2lrxolUatB+f6IzIOfDbt5RztRiy
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(47530400004)(451199015)(6916009)(10290500003)(316002)(478600001)(33656002)(55016003)(82950400001)(122000001)(83380400001)(186003)(52536014)(38100700002)(38070700005)(5660300002)(71200400001)(66476007)(82960400001)(8990500004)(7696005)(54906003)(86362001)(2906002)(6506007)(9686003)(26005)(66556008)(41300700001)(64756008)(8936002)(7416002)(66446008)(4326008)(66946007)(76116006)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ReRYvjtB7tNNK4VFoAfFskuSgjISXO2AaffT0wYohnQ6gFXYn2jqTZs1u/Hk?=
- =?us-ascii?Q?3dKBQPh0+9Nt7+c2HslVZFZb8ZM5PTqO6uxYhJXsn9+AzeCeX2iBIhlBsgKN?=
- =?us-ascii?Q?49h704fqaZxIx5lzzXxMW7pjvzNL8e1ovOW/lRoGIo3ZSJcSOfhwd3y2Zd1I?=
- =?us-ascii?Q?Qd2tfbK8i27l4b7z1g+Fe2hYzhKqjf6ihNsiP9JNBX3OIsZpPSUwE21/e8GR?=
- =?us-ascii?Q?hw+1r/28+K4i8pgtaigYlEFX3CmhsabwoSzcC9R2Q6bMZuAnVW/UdZ3XUvlv?=
- =?us-ascii?Q?G6kkF9YEu8e96wkILqcF82sHf7lCbe83z+Gqx61JCUTKbfGSz7TWAfsEJSjM?=
- =?us-ascii?Q?PW7XBVrH3dTRoueOzjuGWB2v3fiOfNUlMxb0KSliPv5vBQ7Y5i/PyErtsRcM?=
- =?us-ascii?Q?zXD7ZDplYRm/m344sEPPmdDgvxdhn1GjcMTsxOu5qvIMtRkodO6b3tYUPbJD?=
- =?us-ascii?Q?e+N3j9IVKT3hc7wtlKZViMXfItNCwF0HkjY6cnxPSoz5Sfzy+YdEz3nr7IUh?=
- =?us-ascii?Q?QO3K1VSuzvGk/pJSYYpscSNnozxn4NVJaUuWplVjaUSeSG42HCcZtQSa4iQH?=
- =?us-ascii?Q?PlZxAI+/Ffug0YGVodsBRFcFefCG8fnYNiI/PRx9L+GbOzefwnhi0BaWq2hm?=
- =?us-ascii?Q?PFrOLQA81tsUZodGzicVXAodWVRdH/OQIh//HGIuUxz0BS/AFkxpixRBL2xB?=
- =?us-ascii?Q?r7fqRM0mH4STJ/bFuxMiTaNBpeZoz+ZKpiK8dzXBx8F5iRWdz1VpS5e1ejOe?=
- =?us-ascii?Q?jjTYHb9KCgaQ2+4y4WMGBRwOSCXDgrrPtMeokHPQnK+T9qgHu7QXmBaCVcz9?=
- =?us-ascii?Q?YegYKEKO2L0u5KUIAX9gsBZZKm9x/q5Uvtdkn/1Bse/hbJG5QCfJ2/nZVwmT?=
- =?us-ascii?Q?LY6w91FgxaDZFHkHG0OGdh91+///mPBQHlMQNYftaeIuauYsjohNKde1QBWa?=
- =?us-ascii?Q?y9g0aRrqn3xOJjEONJxL3aesn13Zo41ZpXXyIwNnPBHO1szZFB7WyRn5zptp?=
- =?us-ascii?Q?lNZvthQ4lLjfOMWpJqYRyY0HobxSWhLw2o1fYmiWacWew7ZsGtmIPVSgfTYo?=
- =?us-ascii?Q?iysOTdJWNXIgX2Fw8FgBTVtZXcLWuU452G49t1t1tiduhQf5khS3VSqjdRal?=
- =?us-ascii?Q?nQFknu78huSCMsfDOpnx4K6xokyNTRHyCYGePheTE3Q0TEHPpQPGutba7b0K?=
- =?us-ascii?Q?WmT5mOd0taSU5g7G/fu9rAF2tPTx0md7Zt64Plh6oTvzcAc6JHbNxgtAikt7?=
- =?us-ascii?Q?9oclW/jW0C4x/KgKOUz12i1mrITKWQfr7bCLCNxkseB5Mhss6MMzb/T952Re?=
- =?us-ascii?Q?GPEMK7ho3TL3HKy6aOabrkY3MnC3UobSDIhccKFxkQm0TwlGTYtTqoolRuq3?=
- =?us-ascii?Q?nbibYs1aWR4zy0LhGYX1bAys/PtQpFkQrl1rtJCGK3UiZDIz20/a28T8yRaL?=
- =?us-ascii?Q?craq+/ZHpy/3NcD6k66pP5a+nfG6Jq5F5b5pbnS7oI19pHOjcOmdcC+y2aMH?=
- =?us-ascii?Q?9FV0oIKlZ4FjYXLy9YGSJHsdihLJ6QfQR4YFT/ocPFdA2GFn0XlKDKM9WBQW?=
- =?us-ascii?Q?Vy9xykjeK+men9NJfKP+7ZoLwjlxBS2GoYN3CGrb?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Sep 2022 17:16:43 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C552E9FAAB
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 14:16:42 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id e67so1053892pgc.12
+        for <linux-hyperv@vger.kernel.org>; Wed, 21 Sep 2022 14:16:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=sh4nf/tEmUd1miKJn6/kAcl9Wj3E8kd7WVZbt4jNU8o=;
+        b=ogBoxO3LrxwqQQ7SRIVuERoVZE6Gdagy1dx3mdn2ut0gBZE9tATELfzGad5xs2nkXy
+         iOis2gAR0XFaycsbSWI7J84SkuLJXjevcZwhGG+l06YQ215B0SJ4oHKY3LiMVPwdNE6e
+         8tnQgmJkM1gaEGfkkJfJiL1eOBW4HMp219Dh6GKkU0c3ltuwMqkhLiaxgRd7nHYkrLyG
+         SFeJUscRP74uqSPopi6C6W7kl8FHwpp2AHzCcRG758pCQLNNRYFYaPNO72HR9ntReZ2v
+         2GnHQX3jnhG2RMgsUI5S5rQD3k+GMsGiUGcpEp0wRWFIu78f9dNdgxsN1SnHTVVOu/Uf
+         DhAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=sh4nf/tEmUd1miKJn6/kAcl9Wj3E8kd7WVZbt4jNU8o=;
+        b=7UIBTsK4o/fAZWgpWEMCu1jLWKeJJelZQlVhqznGFAqSWLCHl5tippJqWmJ1HRwES2
+         isw4dNr6RElllWetghxLZlbkEZ06skr2evA762WhKlmW8oLj7xaXhOzfsEX9DM+Ym1bK
+         0+DeBCfpnk4dWUF0aLI8+ixfv4+uVZZLYQbvh4YFcxjgiu0Z2kvZXn64lNBlQr9yXPAG
+         wUO74D/1MiwaKnWvvGi8qS7ozjd+60+qFDMGGf/kKsUNo+U3yLpyH2rcvavW/i8+Nexq
+         Q2HCYtksZi7HgwwmC2+s4CQzw9b+KYwByMpq+5N2xnzcfMYcuqkhmBp6ENsIFrsZHXwz
+         3n2g==
+X-Gm-Message-State: ACrzQf2sOvcF2T00paAu/lAMxV4FJYF3ur9kvAOaK1+61s7larlnK5It
+        fWQ98LIYKB5uEs0ixcVqPhQHTw==
+X-Google-Smtp-Source: AMsMyM7gUWK7/YOwc4h5OK29M6VGYSvbsUATTBbOxYuD/sb6e6iIXhXseR+CdxxwL9TdRz+8Zk5pUA==
+X-Received: by 2002:a63:581d:0:b0:42b:399:f15a with SMTP id m29-20020a63581d000000b0042b0399f15amr106401pgb.337.1663795002163;
+        Wed, 21 Sep 2022 14:16:42 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id n2-20020a634d42000000b0042a55fb60bbsm2337315pgl.28.2022.09.21.14.16.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Sep 2022 14:16:41 -0700 (PDT)
+Date:   Wed, 21 Sep 2022 21:16:38 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 14/39] KVM: nSVM: Keep track of Hyper-V
+ hv_vm_id/hv_vp_id
+Message-ID: <Yyt/Nrh4aoLrNt11@google.com>
+References: <20220921152436.3673454-1-vkuznets@redhat.com>
+ <20220921152436.3673454-15-vkuznets@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d15bf49-4985-4f6c-5db9-08da9c14597d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2022 21:00:44.0701
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qKS4A6j+40i8wf0HzOGenusVlYWmv27JIkArzzch8kaRbX1Mlxs3d1l56Uk/PP2ZTFNOn/9yqezOce5eoaIb6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3287
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220921152436.3673454-15-vkuznets@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -134,50 +79,60 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> Subject: Re: [Patch v6 12/12] RDMA/mana_ib: Add a driver for Microsoft
-> Azure Network Adapter
->=20
-> On Tue, Sep 20, 2022 at 06:22:32PM -0700, longli@linuxonhyperv.com wrote:
-> > diff --git a/MAINTAINERS b/MAINTAINERS index
-> > 8b9a50756c7e..7bcc19e27f97 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -9426,6 +9426,7 @@ M:	Haiyang Zhang <haiyangz@microsoft.com>
-> >  M:	Stephen Hemminger <sthemmin@microsoft.com>
-> >  M:	Wei Liu <wei.liu@kernel.org>
-> >  M:	Dexuan Cui <decui@microsoft.com>
-> > +M:	Long Li <longli@microsoft.com>
-> >  L:	linux-hyperv@vger.kernel.org
-> >  S:	Supported
-> >  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
-> > @@ -9444,6 +9445,7 @@ F:	arch/x86/kernel/cpu/mshyperv.c
-> >  F:	drivers/clocksource/hyperv_timer.c
-> >  F:	drivers/hid/hid-hyperv.c
-> >  F:	drivers/hv/
-> > +F:	drivers/infiniband/hw/mana/
-> >  F:	drivers/input/serio/hyperv-keyboard.c
-> >  F:	drivers/iommu/hyperv-iommu.c
-> >  F:	drivers/net/ethernet/microsoft/
-> > @@ -9459,6 +9461,7 @@ F:	include/clocksource/hyperv_timer.h
-> >  F:	include/linux/hyperv.h
-> >  F:	include/net/mana
-> >  F:	include/uapi/linux/hyperv.h
-> > +F:	include/uapi/rdma/mana-abi.h
-> >  F:	net/vmw_vsock/hyperv_transport.c
-> >  F:	tools/hv/
->=20
-> This is not the proper way to write a maintainers entry, a driver should =
-be
-> stand-alone and have L: entries for the subsystem mailing list, not be
-> bundled like this. If you do this patches will not go to the correct list=
-s and will
-> not be applied.
->=20
-> Follow the example of every other rdma driver please.
->=20
-> Jason
+On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
+> Similar to nSVM, KVM needs to know L2's VM_ID/VP_ID and Partition
+> assist page address to handle L2 TLB flush requests.
+> 
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/kvm/svm/hyperv.h | 16 ++++++++++++++++
+>  arch/x86/kvm/svm/nested.c |  2 ++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/svm/hyperv.h b/arch/x86/kvm/svm/hyperv.h
+> index 7d6d97968fb9..8cf702fed7e5 100644
+> --- a/arch/x86/kvm/svm/hyperv.h
+> +++ b/arch/x86/kvm/svm/hyperv.h
+> @@ -9,6 +9,7 @@
+>  #include <asm/mshyperv.h>
+>  
+>  #include "../hyperv.h"
+> +#include "svm.h"
+>  
+>  /*
+>   * Hyper-V uses the software reserved 32 bytes in VMCB
+> @@ -32,4 +33,19 @@ struct hv_enlightenments {
+>   */
+>  #define VMCB_HV_NESTED_ENLIGHTENMENTS VMCB_SW
+>  
+> +static inline void nested_svm_hv_update_vm_vp_ids(struct kvm_vcpu *vcpu)
+> +{
+> +	struct vcpu_svm *svm = to_svm(vcpu);
+> +	struct hv_enlightenments *hve =
+> +		(struct hv_enlightenments *)svm->nested.ctl.reserved_sw;
 
-Will fix this.
+Eww :-)
 
-Thanks,
-Long
+I posted a small series to fix the casting[*], and as noted in the cover letter it's
+going to conflict mightily.  Ignoring merge order for the moment, looking at the
+series as a whole, if the Hyper-V definitions are moved to hyperv-tlfs.h, then I'm
+tempted to say there's no need for svm/hyperv.h.
+
+There should never be users of this stuff outside of svm/nested.c, and IMO there's
+not enough stuff to warrant a separate set of files.  nested_svm_hv_update_vp_assist()
+isn't SVM specific and fits better alongside kvm_hv_get_assist_page().
+
+That leaves three functions and ~40 lines of code, which can easily go directly
+into svm/nested.c.
+
+I'm definitely not dead set against having hyperv.{ch}, but unless there's a high
+probability of SVM+Hyper-V getting to eVMCS levels of enlightenment, my vote is
+to put these helpers in svm/nested.c and move then if/when we do end up accumulating
+more SVM+Hyper-V code.
+  
+As for merge order, I don't think there's a need for this series to take a
+dependency on the cleanup, especially if these helpers land in nested.c.  Fixing
+up the casting and s/hv_enlightenments/hv_vmcb_enlightenments is straightforward.
+
+[*] https://lore.kernel.org/all/20220921201607.3156750-1-seanjc@google.com
