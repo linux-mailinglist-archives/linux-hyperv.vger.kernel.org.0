@@ -2,60 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2732D5E6740
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 17:37:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3562E5E680C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 18:06:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231407AbiIVPhO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Sep 2022 11:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44628 "EHLO
+        id S231611AbiIVQF7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Sep 2022 12:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230213AbiIVPhN (ORCPT
+        with ESMTP id S231582AbiIVQF6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Sep 2022 11:37:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED535EB107
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 08:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663861031;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mpy+ZkaV8qU9h3mLap4FWRmJ5KwCWQIoj50k/FL3Cgo=;
-        b=Lv1LLcLydKz7NkweFgoflWnqBtQdi2c9acXvatThQ3CgcUWPRqyf4yNPI8g2xUmFhl+UBW
-        FKd00XYCLqCeWD6S0cR5FENg6/ONnZoyBEE74ngGrOs7yIvDNXBxOLysiFJ3VXV8FkHiJz
-        Kjox5N4+nMm9ISqSzvAx9t/9hhzd8Fg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-516-2yJzx0JvP5WPKKqni_XbzA-1; Thu, 22 Sep 2022 11:37:08 -0400
-X-MC-Unique: 2yJzx0JvP5WPKKqni_XbzA-1
-Received: by mail-wr1-f70.google.com with SMTP id g19-20020adfa493000000b0022a2ee64216so3405335wrb.14
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 08:37:08 -0700 (PDT)
+        Thu, 22 Sep 2022 12:05:58 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C49DCCF2
+        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 09:05:56 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id v4so9548407pgi.10
+        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 09:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=8UXm0Wuxlu4Bt4voSl7YZvWHdnCtxyCoMESERPosODU=;
+        b=QAhs05oYxHJqAl4FU2oaWzzWkKI0nIX60qInjCgo7UyfgIuvRzjFQJcqQMQNlL8YpY
+         XRyOM4KeRIM4ilOf7GzWbOqlYAoVldEx0pYU3747pH3jBmqJppokAoBOtYiGyKev1STt
+         XsYtxnL667lK2Uw2xI06UANITgMMQMtAxx+6FqmMR5dmARX9j19qkVZDzYcqp+n/885t
+         i2DE4/L5jlBc+mbvWMHNIfD8A51MHWoi1St7tb9uAgNMrt7c0T3AJp7IKVRcZjIMupUV
+         h6iW2kdZGfQTe/5+JaWALvxVUzAMdh6A2aQRiFWabPqW/3x+RPsYpSLbDjSb3sbKAENm
+         A/lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=Mpy+ZkaV8qU9h3mLap4FWRmJ5KwCWQIoj50k/FL3Cgo=;
-        b=JSnIT06QzCWz8gxxqoFmAMUiR1XitbFK4QuVfo64CAx4R6B33ikzFlUpfZzrf6O+Yb
-         6cwFvDHl5FP2dbOBk4ApyAJFDoKOK5Iow4f462qHbpRTGi4L3jMRY2QO0aeXZvjYRUEH
-         cv/EfpT905fEdGzNOgts/OLvEpMT3sTe5kAWVtOKuG3L3TYYbo989BmyysKUlz7xdzIk
-         WJ3PPap8Ddl7yR0KsRS01q8C7OfwfgqbItCIXEoCXPPvtwT8E2lsBa57aId0iPDK8u88
-         fIgSMgbTqWJh8yGJKMQA/fB/ccg+qLLIrc3ywtA+IPTFDS7cVAYi2yF3RRrsqw8M56n3
-         ErKg==
-X-Gm-Message-State: ACrzQf36P6H52p4HU7UYZ/i0A1iMG5FDzygdrgs6gUyMhUBTodlPdri6
-        VYj5oZ4PY5ikYB9E2CGCd/bhbyrqSlzMs8t/93zmbgBARGTFL8gL9j8saHggWMVb01IhUX2NCGe
-        DDEPo3cuMcbJyp/d6iTmv8uSY
-X-Received: by 2002:a05:600c:1f18:b0:3b4:c4ae:f666 with SMTP id bd24-20020a05600c1f1800b003b4c4aef666mr9900246wmb.88.1663861027488;
-        Thu, 22 Sep 2022 08:37:07 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7+bdE8DyU/yd2jYZNWXi0hgLkeGHOQ6+wdsC6U/KYXsesIAen2WzmugHaX3m5/Qn82o8z/QA==
-X-Received: by 2002:a05:600c:1f18:b0:3b4:c4ae:f666 with SMTP id bd24-20020a05600c1f1800b003b4c4aef666mr9900223wmb.88.1663861027244;
-        Thu, 22 Sep 2022 08:37:07 -0700 (PDT)
-Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id z5-20020a5d6405000000b0022af9555669sm6245246wru.99.2022.09.22.08.37.06
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=8UXm0Wuxlu4Bt4voSl7YZvWHdnCtxyCoMESERPosODU=;
+        b=SUlIsCoJ2OePmecyb/rYsRJtxzYSeE6vtjOqSd2j6fKc39dKk+lF6IPfqg8gbP0D+D
+         m2xd8L7gukvXZMptis9WplD7s2AnzO6bizNTNJIPzDDfgRicmyq2agonb3T4HQ4CoMSJ
+         UDOEaQVIDiGCrE3ws6HnWx4+u8MS0tAC+fGcf2dLEEypb0ANd7c9vuKZHCGqCuTj68bq
+         WinMAiG5l1dy1ndmuHWxWFcJzLe+gRVzthfAMFPilgD9//aJJfWKxrlUvcfWM0JYCuLH
+         IhvFAdzk6Nurz2fLoUcMC85KOvyr9Yq2Q7Eab7FjnXvK11+mDhiuB3wi3Js5Ee1yVvOC
+         fNpw==
+X-Gm-Message-State: ACrzQf3lRZB/Uci3AyAeAM0GKqSyhCXBIvu3vsAajQchg4hffb5cG++2
+        7Gg5xKMvECz2qJj/ceOHOduVaA==
+X-Google-Smtp-Source: AMsMyM48tM5Re114GNafkJryyjV/WpRtV9qDBsM3hMJPYpwdORr7THBc++vwCcW8GNNqnLaeakklBQ==
+X-Received: by 2002:a65:5b8d:0:b0:434:e318:80f with SMTP id i13-20020a655b8d000000b00434e318080fmr3706853pgr.97.1663862755052;
+        Thu, 22 Sep 2022 09:05:55 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id r9-20020aa79629000000b00537eb0084f9sm4485056pfg.83.2022.09.22.09.05.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 08:37:06 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
+        Thu, 22 Sep 2022 09:05:54 -0700 (PDT)
+Date:   Thu, 22 Sep 2022 16:05:50 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
@@ -64,127 +59,149 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 02/39] KVM: x86: hyper-v: Resurrect dedicated
- KVM_REQ_HV_TLB_FLUSH flag
-In-Reply-To: <Yyx+AJLacVzOdtBr@google.com>
+Subject: Re: [PATCH v10 20/39] KVM: nVMX: hyper-v: Enable L2 TLB flush
+Message-ID: <YyyH3jnBfC8AnxHL@google.com>
 References: <20220921152436.3673454-1-vkuznets@redhat.com>
- <20220921152436.3673454-3-vkuznets@redhat.com>
- <Yys6b1ZqYbw9Umyu@google.com> <877d1voiuz.fsf@redhat.com>
- <Yyx+AJLacVzOdtBr@google.com>
-Date:   Thu, 22 Sep 2022 17:37:05 +0200
-Message-ID: <87sfkjmndq.fsf@redhat.com>
+ <20220921152436.3673454-21-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220921152436.3673454-21-vkuznets@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
-
-> On Thu, Sep 22, 2022, Vitaly Kuznetsov wrote:
->> Now let's get to VMX and the point of my confusion (and thanks in
->> advance for educating me!):
->> AFAIU, when EPT is in use:
->>  KVM_REQ_TLB_FLUSH_CURRENT == invept
->>  KVM_REQ_TLB_FLUSH_GUEST = invvpid
->> 
->> For "normal" mappings (which are mapped on both stages) this is the same
->> thing as they're 'tagged' with both VPID and 'EPT root'. The question is
->> what's left. Given your comment, do I understand correctly that in case
->> of an invalid mapping in the guest (GVA doesn't resolve to a GPA), this
->> will only be tagged with VPID but not with 'EPT root' (as the CPU never
->> reached to the second translation stage)? We certainly can't ignore
->> these. Another (probably pure theoretical question) is what are the
->> mappings which are tagged with 'EPT root' but don't have a VPID tag?
->
-> Intel puts mappings into three categories, which for non-root mode equates to:
->
->   linear         == GVA => GPA
->   guest-physical == GPA => HPA
->   combined       == GVA => HPA
->
-> and essentially the categories that consume the GVA are tagged with the VPID
-> (linear and combined), and categories that consume the GPA are tagged with the
-> EPTP address (guest-physical and combined).
->
->> Are these the mapping which happen when e.g. vCPU has paging disabled?
->
-> No, these mappings can be created at all times.  Even with CR0.PG=1, the guest
-> can generate GPAs without going through a GVA=>GPA translation, e.g. the page tables
-> themselves, RTIT (Intel PT) addresses, etc...  And even for combined/full
-> translations, the CPU can insert TLB entries for just the GPA=>HPA part.
->
-> E.g. when a page is allocated by/for userspace, the kernel will zero the page using
-> the kernel's direct map, but userspace will access the page via a different GVA.
-> I.e. the guest effectively aliases GPA(x) with GVA(k) and GVA(u).  By inserting
-> the GPA(x) => HPA(y) into the TLB, when guest userspace access GVA(u), the CPU
-> encounters a TLB miss on GVA(u) => GPA(x), but gets a TLB hit on GPA(x) => HPA(y).
->
-> Separating EPT flushes from VPID (and PCID) flushes allows the CPU to retain
-> the partial TLB entries, e.g. a host change in the EPT tables will result in the
-> guest-physical and combined mappings being invalidated, but linear mappings can
-> be kept.
->
-
-Thanks a bunch! For some reason I though it's always the full thing (combined)
-which is tagged with both VPID/PCID and EPTP and linear/guest-physical
-are just 'corner' cases (but are still combined and tagged). Apparently,
-it's not like that.
-
-> I'm 99% certain AMD also caches partial entries, e.g. see the blurb on INVLPGA
-> not affecting NPT translations, AMD just doesn't provide a way for the host to
-> flush _only_ NPT translations.  Maybe the performance benefits weren't significant
-> enough to justify the extra complexity?
->
->> These are probably unrelated to Hyper-V TLB flushing.
->> 
->> To preserve the 'small' optimization, we can probably move 
->>  kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
->> 
->> to nested_svm_transition_tlb_flush() or, in case this sounds too
->> hackish
->
-> Move it to svm_flush_tlb_current(), because the justification is that on SVM,
-> flushing "current" TLB entries also flushes "guest" TLB entries due to the more
-> coarse-grained ASID-based TLB flush.  E.g.
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index dd599afc85f5..a86b41503723 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3737,6 +3737,13 @@ static void svm_flush_tlb_current(struct kvm_vcpu *vcpu)
+On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 0634518a6719..1451a7a2c488 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -1132,6 +1132,17 @@ static void nested_vmx_transition_tlb_flush(struct kvm_vcpu *vcpu,
 >  {
->         struct vcpu_svm *svm = to_svm(vcpu);
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
 >  
-> +       /*
-> +        * Unlike VMX, SVM doesn't provide a way to flush only NPT TLB entries.
-> +        * A TLB flush for the current ASID flushes both "host" and "guest" TLB
-> +        * entries, and thus is a superset of Hyper-V's fine grained flushing.
-> +        */
-> +       kvm_hv_vcpu_purge_flush_tlb(vcpu);
-> +
->         /*
->          * Flush only the current ASID even if the TLB flush was invoked via
->          * kvm_flush_remote_tlbs().  Although flushing remote TLBs requires all
->
->> we can drop it for now and add it to the (already overfull)
->> bucket of the "optimize nested_svm_transition_tlb_flush()".
->
-> I think even long term, purging Hyper-V's FIFO in svm_flush_tlb_current() is the
-> correct/desired behavior.  This doesn't really have anything to do with nSVM,
-> it's all about SVM not providing a way to flush only NPT entries.
+> +	/*
+> +	 * KVM_REQ_HV_TLB_FLUSH flushes entries from either L1's VP_ID or
+> +	 * L2's VP_ID upon request from the guest. Make sure we check for
+> +	 * pending entries for the case when the request got misplaced (e.g.
 
-True that, silly me forgot that even without any nesting, Hyper-V TLB
-flush after svm_flush_tlb_current() makes no sense.
+Kind of a nit, but I'd prefer to avoid "misplaced", as that implies KVM puts entries
+into the wrong FIFO.  The issue isn't that KVM puts entries in the wrong FIFO,
+it's that the FIFO is filled asynchronously be other vCPUs and so it's possible
+to switch to a FIFO that has valid entries without a pending request.
 
->
+And thinking about this, KVM_REQ_HV_TLB_FLUSH shouldn't be handled in
+kvm_service_local_tlb_flush_requests().  My initial reaction to this patch is that
+queueing the request here is too late because the switch has already happened,
+i.e. nVMX has already called kvm_service_local_tlb_flush_requests() and so the
+request 
 
--- 
-Vitaly
+But making the request for the _new_ context is correct _and_ necessary, e.g. given
 
+	vCPU0			vCPU1
+	FIFO[L1].insert
+	FIFO[L1].insert
+				L1 => L2 transition
+	FIFO[L1].insert
+	FIFO[L1].insert
+	KVM_REQ_HV_TLB_FLUSH
+
+if nVMX made the request for the old contex, then this would happen
+
+	vCPU0			vCPU1
+	FIFO[L1].insert
+	FIFO[L1].insert
+				KVM_REQ_HV_TLB_FLUSH
+				service FIFO[L1]
+				L1 => L2 transition
+	FIFO[L1].insert
+	FIFO[L1].insert
+	KVM_REQ_HV_TLB_FLUSH
+				service FIFO[L2]
+				...
+				KVM_REQ_HV_TLB_FLUSH
+				service FIFO[L2]
+				L2 => L1 transition
+				
+				Run L1 with FIFO[L1] entries!!!
+
+whereas what is being done in this patch is:
+
+
+	vCPU0			vCPU1
+	FIFO[L1].insert
+	FIFO[L1].insert
+				L1 => L2 transition
+				KVM_REQ_HV_TLB_FLUSH
+				service FIFO[2]
+	FIFO[L1].insert
+	FIFO[L1].insert
+	KVM_REQ_HV_TLB_FLUSH
+				service FIFO[L2]
+				...
+				L2 => L1 transition
+				KVM_REQ_HV_TLB_FLUSH
+				service FIFO[L1]
+
+which is correct and ensures that KVM will always consume FIFO entries prior to
+running the associated context.
+
+In other words, unlike KVM_REQ_TLB_FLUSH_CURRENT and KVM_REQ_TLB_FLUSH_GUEST,
+KVM_REQ_HV_TLB_FLUSH is not a "local" request.  It's much more like KVM_REQ_TLB_FLUSH
+in that it can come from other vCPUs, i.e. is effectively a "remote" request.
+
+So rather than handle KVM_REQ_TLB_FLUSH in the "local" path, it should be handled
+only in the request path.  Handling the request in kvm_service_local_tlb_flush_requests()
+won't break anything, but conceptually it's wrong and as a result it's misleading
+because it implies that nested transitions could also be handled by forcing
+kvm_service_local_tlb_flush_requests() to service flushes for the current, i.e.
+previous, context on nested transitions, but that wouldn't work (see example above).
+
+I.e. we should end up with something like this:
+
+		/*
+		 * Note, the order matters here, as flushing "all" TLB entries
+		 * also flushes the "current" TLB entries, and flushing "guest"
+		 * TLB entries is a superset of Hyper-V's fine-grained flushing.
+		 * I.e. servicing the flush "all" will clear any request to
+		 * flush "current", and flushing "guest" will clear any request
+		 * to service Hyper-V's fine-grained flush.
+		 */
+		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
+			kvm_vcpu_flush_tlb_all(vcpu);
+
+		kvm_service_local_tlb_flush_requests(vcpu);
+
+		/*
+		 * Fall back to a "full" guest flush if Hyper-V's precise
+		 * flushing fails.  Note, Hyper-V's flushing is per-vCPU, but
+		 * the flushes are considered "remote" and not "local" because
+		 * the requests can be initiated from other vCPUs.
+		 */
+		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu) &&
+		    kvm_hv_vcpu_flush_tlb(vcpu))
+			kvm_vcpu_flush_tlb_guest(vcpu);
+
+
+
+> +	 * a transition from L2->L1 happened while processing L2 TLB flush
+> +	 * request or vice versa). kvm_hv_vcpu_flush_tlb() will not flush
+> +	 * anything if there are no requests in the corresponding buffer.
+> +	 */
+> +	if (to_hv_vcpu(vcpu))
+
+This should be:
+
+	if (to_hv_vcpu(vcpu) && enable_ept)
+
+otherwise KVM will fall back to flushing the guest, which is the entire TLB, when
+EPT is disabled.  I'm guessing this applies to SVM+NPT as well.
+
+> +		kvm_make_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
