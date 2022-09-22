@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 276325E5EAC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 11:35:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED89D5E5EC7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 11:42:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbiIVJfQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Sep 2022 05:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
+        id S230019AbiIVJmq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Sep 2022 05:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiIVJfP (ORCPT
+        with ESMTP id S229744AbiIVJmp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Sep 2022 05:35:15 -0400
+        Thu, 22 Sep 2022 05:42:45 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA8671BF2
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 02:35:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBAAD12DA
+        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 02:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663839313;
+        s=mimecast20190719; t=1663839762;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=gUGcqCxSDMCIAUrOuyN8xRMwYFQcavVb0le1znZCWqA=;
-        b=DGLNpWtz4aK1iLaAm7tGit5M1KpRY+OoInVV5PagNRigttkE/N8QbWABvflsR8Ievt32ZC
-        AIhgklML5AW89N/+xl/o5qeqEtCs6emaSdtF0tfYlh4tp4GVLU/fPOmTSXrrRnwKviQCwh
-        7+/XhOQSsd9JWZoFREYQfYZXKSDbP8w=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=CqniHYpEdr1w/8IlQR97YuXzF1PQJXDdRDYRsJG7hRc=;
+        b=eLQ75SjVbYGsScSYiGvVnLMLwtZxxqI6O8c9KRIhewaoDgZ+zMmbCkyGoQ+C38PQ9KKoR7
+        7Z5v0+wtZNrfWdDacM4+LOeHMckujhBnlD0KkSG06GaZi+1affqLwRPA55cjQ/I9KiwhC4
+        p17SDzM5lvMPatMM76fe4JipSWLmtEU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-339-a6DHK8yOPy-78COlqS6CyA-1; Thu, 22 Sep 2022 05:35:12 -0400
-X-MC-Unique: a6DHK8yOPy-78COlqS6CyA-1
-Received: by mail-wm1-f71.google.com with SMTP id r7-20020a1c4407000000b003b3309435a9so414617wma.6
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 02:35:11 -0700 (PDT)
+ us-mta-495-BXjvweecPEub2aZPw_xAhQ-1; Thu, 22 Sep 2022 05:42:41 -0400
+X-MC-Unique: BXjvweecPEub2aZPw_xAhQ-1
+Received: by mail-wm1-f69.google.com with SMTP id n7-20020a1c2707000000b003a638356355so3838041wmn.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 02:42:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=gUGcqCxSDMCIAUrOuyN8xRMwYFQcavVb0le1znZCWqA=;
-        b=Svk/OGxIcJEzYdX3NWVhjkfztCLNxhrxCIR6DVXeDn4n8lIKGWeJzTVCAVfQT0UKVn
-         5ScAbnb9iBPjNszE1GkhiG5+jIjx6/ZTAnVG+/xjnZn5suPAVM2g2KJmKgNAcoxaPu1m
-         6PqtfnrakHhIdMPjmFUewQ3vnvZoXWSvrLLo2gh8ByRKvlWz3TjmZr6UQBlhcTo9MW6i
-         cIGHpF7D61SN8a6egQ/V01eLSsAwY2RG9GYmfx7S4L35EEXaHJoAegqHe2SIqn7VFNAW
-         fkz3VDZpP7gM3XPhPHPRMuplDqVqnMRuARkC0SzxurqbVZ8wqX9EQ+/ncRVBFJw8zCDh
-         ryEQ==
-X-Gm-Message-State: ACrzQf3PSEzXRh36oGp0QxzOrOUt5SuH4TtvHg8MWgh3LCGf+nyTcw6v
-        o9gvRQn8BpHEuxF9/J/FJNRbpyORZUirvXvjh1vqWv7HgcKrI+WAuqvCQIAWys3m8GxtAmtpmu8
-        agFSnCkQHrQPe4jsApUXJIejj
-X-Received: by 2002:a05:600c:221a:b0:3b4:75b8:3f7f with SMTP id z26-20020a05600c221a00b003b475b83f7fmr1622594wml.175.1663839310998;
-        Thu, 22 Sep 2022 02:35:10 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7VWzhc4WjoiR+pNf0jAsiBDn/PgLRNqXLh5/KQS3L2ehVURiYx0K1Ybl1BCLIgh2g79fnzlw==
-X-Received: by 2002:a05:600c:221a:b0:3b4:75b8:3f7f with SMTP id z26-20020a05600c221a00b003b475b83f7fmr1622579wml.175.1663839310728;
-        Thu, 22 Sep 2022 02:35:10 -0700 (PDT)
+        bh=CqniHYpEdr1w/8IlQR97YuXzF1PQJXDdRDYRsJG7hRc=;
+        b=qxohAPAHfuDxCJVMb8Rkgc/oGZI6viU8pVFuUskvkT+gWd/QOSfBzgQFipZjyY0ev7
+         2RG289vmTOEqkdU0J3rpVge4g+8G8SkjjaehzXbhC/Tfg0kp5yw17amXCn1/AuD+xABZ
+         1F8SV1MwUzPwr0EF/h3IHR+nX/bNObAirsWt4dieT3rgRSJp+V9sTRGFD0GTEdNeYBCI
+         CEnxfX6F5agYeoKTemzBveVCTBmNw+Qj8oJFhkDMNPXd4Umvx3Oh+p5GYP0ySwAZ+O4T
+         82xT/Z/yUx1vzqsRIossNsADfu7jwsWk9PWA/jttYOsAhJMqZ0Ml03T+2vudZDEPN3+R
+         tO0Q==
+X-Gm-Message-State: ACrzQf06DmxtN2U4UcDuwmQ/OKtdLEnUScPWNNZ/ag8raCNfrEoSBBMr
+        D/tUHIHxecTi5TKGsaNVSoyItzAvXDE0laTNuj7a4Rze+vaQ574siGrap22YGFPADFtj0Xkax1t
+        FlL5T6GkRzoKrHgIfMLwrtWsD
+X-Received: by 2002:adf:fb84:0:b0:21a:10f2:1661 with SMTP id a4-20020adffb84000000b0021a10f21661mr1417179wrr.2.1663839760259;
+        Thu, 22 Sep 2022 02:42:40 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM69JrDKfHLHJskgVcDVybedXF9MORZ0v+k/15GgMV4bxD2PDIMcpJftM7I2DLv537/o+S1BXA==
+X-Received: by 2002:adf:fb84:0:b0:21a:10f2:1661 with SMTP id a4-20020adffb84000000b0021a10f21661mr1417153wrr.2.1663839759939;
+        Thu, 22 Sep 2022 02:42:39 -0700 (PDT)
 Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id i7-20020a5d5587000000b0021badf3cb26sm5468427wrv.63.2022.09.22.02.35.09
+        by smtp.gmail.com with ESMTPSA id l8-20020a5d5268000000b0022a839d053csm4677940wrc.98.2022.09.22.02.42.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 02:35:09 -0700 (PDT)
+        Thu, 22 Sep 2022 02:42:38 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Sean Christopherson <seanjc@google.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -64,19 +64,19 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 02/39] KVM: x86: hyper-v: Resurrect dedicated
- KVM_REQ_HV_TLB_FLUSH flag
-In-Reply-To: <Yys/pv0d+8ywcbUy@google.com>
+Subject: Re: [PATCH v10 03/39] KVM: x86: hyper-v: Introduce TLB flush fifo
+In-Reply-To: <YytCKIMgiVY+kSf9@google.com>
 References: <20220921152436.3673454-1-vkuznets@redhat.com>
- <20220921152436.3673454-3-vkuznets@redhat.com>
- <Yys6b1ZqYbw9Umyu@google.com> <Yys/pv0d+8ywcbUy@google.com>
-Date:   Thu, 22 Sep 2022 11:35:08 +0200
-Message-ID: <874jwzoipf.fsf@redhat.com>
+ <20220921152436.3673454-4-vkuznets@redhat.com>
+ <YytCKIMgiVY+kSf9@google.com>
+Date:   Thu, 22 Sep 2022 11:42:36 +0200
+Message-ID: <871qs3oicz.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -85,123 +85,168 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Sean Christopherson <seanjc@google.com> writes:
 
-> On Wed, Sep 21, 2022, Sean Christopherson wrote:
->> On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
->> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> > index f62d5799fcd7..86504a8bfd9a 100644
->> > --- a/arch/x86/kvm/x86.c
->> > +++ b/arch/x86/kvm/x86.c
->> > @@ -3418,11 +3418,17 @@ static inline void kvm_vcpu_flush_tlb_current(struct kvm_vcpu *vcpu)
->> >   */
->> >  void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu)
->> >  {
->> > -	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
->> > +	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu)) {
->> >  		kvm_vcpu_flush_tlb_current(vcpu);
->> > +		kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
+> On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
+>> To allow flushing individual GVAs instead of always flushing the whole
+>> VPID a per-vCPU structure to pass the requests is needed. Use standard
+>> 'kfifo' to queue two types of entries: individual GVA (GFN + up to 4095
+>> following GFNs in the lower 12 bits) and 'flush all'.
 >> 
->> This isn't correct, flush_tlb_current() flushes "host" TLB entries, i.e. guest-physical
->> mappings in Intel terminology, where flush_tlb_guest() and (IIUC) Hyper-V's paravirt
->> TLB flush both flesh "guest" TLB entries, i.e. linear and combined mappings.
->> 
->> Amusing side topic, apparently I like arm's stage-2 terminology better than "TDP",
->> because I actually typed out "stage-2" first.
->> 
->> > +	}
->> >  
->> > -	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu))
->> > +	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu)) {
->> > +		kvm_vcpu_flush_tlb_guest(vcpu);
->> > +		kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
+>> The size of the fifo is arbitrary set to '16'.
 >
-> Looking at future patches where KVM needs to reset the FIFO when doing a "guest"
-> TLB flush, i.e. needs to do more than just clearing the request, what about putting
-> this in kvm_vcpu_flush_tlb_guest() right away?
+> s/arbitrary/arbitrarily
+>
+>> +static void hv_tlb_flush_enqueue(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
+>> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+>> +	u64 flush_all_entry = KVM_HV_TLB_FLUSHALL_ENTRY;
+>> +
+>> +	if (!hv_vcpu)
+>> +		return;
+>> +
+>> +	tlb_flush_fifo = &hv_vcpu->tlb_flush_fifo;
+>> +
+>> +	kfifo_in_spinlocked(&tlb_flush_fifo->entries, &flush_all_entry,
+>> +			    1, &tlb_flush_fifo->write_lock);
+>
+> Unless I'm missing something, there's no need to disable IRQs, i.e. this can be
+> kfifo_in_spinlocked_noirqsave() and the later patch can use spin_lock() instead
+> of spin_lock_irqsave().  The only calls to hv_tlb_flush_enqueue() are from
+> kvm_hv_hypercall(), i.e. it's always called from process context.
+>   
 
-Will do.
+Yes, no IRQ/... contexts are expected, the intention was to take the
+spinlock for the shortest amount of time, not to protect against a
+deadlock. This probably is not worthy and causes a confusion so I'll
+remove it.
 
+>> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+>> index 1030b1b50552..ac30091ab346 100644
+>> --- a/arch/x86/kvm/hyperv.h
+>> +++ b/arch/x86/kvm/hyperv.h
+>> @@ -151,4 +151,20 @@ int kvm_vm_ioctl_hv_eventfd(struct kvm *kvm, struct kvm_hyperv_eventfd *args);
+>>  int kvm_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>>  		     struct kvm_cpuid_entry2 __user *entries);
+>>  
+>> +
 >
-> Ah, and there's already a second caller to kvm_vcpu_flush_tlb_guest().  I doubt
-> KVM's paravirt TLB flush will ever collide with Hyper-V's paravirt TLB flush,
-> but logically a "guest" flush that is initiated through KVM's paravirt interface
-> should also clear Hyper-V's queue/request.
+> Unnecessary newline.
+>
+>> +static inline void kvm_hv_vcpu_empty_flush_tlb(struct kvm_vcpu *vcpu)
+>
+> What about "reset" or "purge" instead of "empty"?  "empty" is often used as query,
+> e.g. list_empty(), it took me a second to realize this is a command.
+>
 
-I ignored this as a case which is not worth optimizing for,
-i.e. over-flushing is always correct.
+'purge' sounds good to me!
 
+>> +{
+>> +	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
+>> +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+>> +
+>> +	if (!hv_vcpu || !kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu))
+>> +		return;
+>> +
+>> +	tlb_flush_fifo = &hv_vcpu->tlb_flush_fifo;
+>> +
+>> +	kfifo_reset_out(&tlb_flush_fifo->entries);
+>> +}
 >
-> And for consistency, slot this in before this patch:
+> Missing newline.
+>
+>> +void kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu);
+>> +
+>> +
+>
+> One too many newlines.
+>
+>>  #endif
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index 86504a8bfd9a..45c35c5467f8 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -3385,7 +3385,7 @@ static void kvm_vcpu_flush_tlb_all(struct kvm_vcpu *vcpu)
+>>  	static_call(kvm_x86_flush_tlb_all)(vcpu);
+>>  }
+>>  
+>> -static void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu)
+>> +void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu)
+>>  {
+>>  	++vcpu->stat.tlb_flush;
+>>  
+>> @@ -3420,14 +3420,14 @@ void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu)
+>>  {
+>>  	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu)) {
+>>  		kvm_vcpu_flush_tlb_current(vcpu);
+>> -		kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
+>> +		kvm_hv_vcpu_empty_flush_tlb(vcpu);
+>
+> It might be worth adding a comment to call out that emptying the FIFO _after_ the
+> TLB flush is ok, because it's impossible for the CPU to insert TLB entries for the
+> guest while running in the host.  At first glance, it looks like this (and the
+> existing similar pattern in vcpu_enter_guest()) has a race where it could miss a
+> TLB flush.
+>
+> Definitely not required, e.g. kvm_vcpu_flush_tlb_all() doesn't have a similar
+> comment.  I think it's just the existence of the FIFO that made me pause.
 >
 
-Will do, thanks!
+Np, will add something for future generation of readers)
 
-> From: Sean Christopherson <seanjc@google.com>
-> Date: Wed, 21 Sep 2022 09:35:34 -0700
-> Subject: [PATCH] KVM: x86: Move clearing of TLB_FLUSH_CURRENT to
->  kvm_vcpu_flush_tlb_all()
+>>  	}
+>>  
+>>  	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu)) {
+>>  		kvm_vcpu_flush_tlb_guest(vcpu);
+>> -		kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
+>> +		kvm_hv_vcpu_empty_flush_tlb(vcpu);
+>>  	} else if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu)) {
+>> -		kvm_vcpu_flush_tlb_guest(vcpu);
+>> +		kvm_hv_vcpu_flush_tlb(vcpu);
 >
-> Clear KVM_REQ_TLB_FLUSH_CURRENT in kvm_vcpu_flush_tlb_all() instead of in
-> its sole caller that processes KVM_REQ_TLB_FLUSH.  Regardless of why/when
-> kvm_vcpu_flush_tlb_all() is called, flushing "all" TLB entries also
-> flushes "current" TLB entries.
+> Rather than expose kvm_vcpu_flush_tlb_guest() to Hyper-V, what about implementing
+> this in a similar way to how way KVM-on-HyperV implements remote TLB flushes?  I.e.
+> fall back to kvm_vcpu_flush_tlb_guest() if the precise flush "fails".
 >
-> Ideally, there will never be another caller of kvm_vcpu_flush_tlb_all(),
-> and moving the handling "requires" extra work to document the ordering
-> requirement, but future Hyper-V paravirt TLB flushing support will add
-> similar logic for flush "guest" (Hyper-V can flush a subset of "guest"
-> entries).  And in the Hyper-V case, KVM needs to do more than just clear
-> the request, the queue of GPAs to flush also needs to purged, and doing
-> all only in the request path is undesirable as kvm_vcpu_flush_tlb_guest()
-> does have multiple callers (though it's unlikely KVM's paravirt TLB flush
-> will coincide with Hyper-V's paravirt TLB flush).
+> I don't mind exposing kvm_vcpu_flush_tlb_guest(), but burying the calls inside
+> Hyper-V code makes it difficult to see the relationship between KVM_REQ_HV_TLB_FLUSH
+> and KVM_REQ_TLB_FLUSH_GUEST.
 >
-> Move the logic even though it adds extra "work" so that KVM will be
-> consistent with how flush requests are processed when the Hyper-V support
-> lands.
+> And as a minor bonus, that also helps document that kvm_hv_vcpu_flush_tlb() doesn't
+> yet support precise flushing.
 >
-> No functional change intended.
+> E.g.
 >
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/x86.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+> 	if (kvm_check_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu)) {
+> 		kvm_vcpu_flush_tlb_guest(vcpu);
+> 	} else if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu)) {
+> 		/*
+> 		 * Fall back to a "full" guest flush if Hyper-V's precise
+> 		 * flushing fails.
+> 		 */
+> 		if (kvm_hv_vcpu_flush_tlb(vcpu))
+> 			kvm_vcpu_flush_tlb_guest(vcpu);
+> 	}
 >
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f62d5799fcd7..3ea2e51a8cb5 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3383,6 +3383,9 @@ static void kvm_vcpu_flush_tlb_all(struct kvm_vcpu *vcpu)
->  {
->  	++vcpu->stat.tlb_flush;
->  	static_call(kvm_x86_flush_tlb_all)(vcpu);
-> +
-> +	/* Flushing all ASIDs flushes the current ASID... */
-> +	kvm_clear_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
->  }
->  
->  static void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu)
-> @@ -10462,12 +10465,14 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  			kvm_mmu_sync_roots(vcpu);
->  		if (kvm_check_request(KVM_REQ_LOAD_MMU_PGD, vcpu))
->  			kvm_mmu_load_pgd(vcpu);
-> -		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu)) {
-> +
-> +		/*
-> +		 * Note, the order matters here, as flushing "all" TLB entries
-> +		 * also flushes the "current" TLB entries, i.e. servicing the
-> +		 * flush "all" will clear any request to flush "current".
-> +		 */
-> +		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
->  			kvm_vcpu_flush_tlb_all(vcpu);
-> -
-> -			/* Flushing all ASIDs flushes the current ASID... */
-> -			kvm_clear_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> -		}
->  		kvm_service_local_tlb_flush_requests(vcpu);
->  
->  		if (kvm_check_request(KVM_REQ_REPORT_TPR_ACCESS, vcpu)) {
 >
-> base-commit: ed102fe0b59586397b362a849bd7fb32582b77d8
+> int kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
+> {
+> 	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
+> 	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+>
+> 	if (!hv_vcpu)
+> 		return -EINVAL;
+>
+> 	tlb_flush_fifo = &hv_vcpu->tlb_flush_fifo;
+>
+> 	kfifo_reset_out(&tlb_flush_fifo->entries);
+>
+> 	/* Precise flushing isn't implemented yet. */
+> 	return -EOPNOTSUPP;
+> }
+>
+
+Oh, I see, certainly can be done this way, even if just to improve the
+readability. Will change.
 
 -- 
 Vitaly
