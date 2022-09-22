@@ -2,81 +2,154 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D02C5E6931
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 19:09:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BF165E697D
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Sep 2022 19:19:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbiIVRJW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Sep 2022 13:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
+        id S230141AbiIVRTr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Sep 2022 13:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231465AbiIVRJV (ORCPT
+        with ESMTP id S231391AbiIVRTq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Sep 2022 13:09:21 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339ADFFA4A
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 10:09:20 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id d64so10197800oia.9
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Sep 2022 10:09:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=SCH41PZHoDU628bdtYlErvnzmog8gkI9vkvu5Tjn52s=;
-        b=ncNtd1PSg4kUznwkkXE+qWSY1m9YVzp63INmh6bBgJQkic26IxE037zM8bQxTL6I8X
-         kD0ghv6o0UOt/bxoN+DaenaNoPAesHvwIyP3y2fPJ1tH1YX6fRYOc4THXcEfNMOlq7Kf
-         1VvyaXorhfKSTaPyaJMbv73J3ZFDOxyCszTGD/MqxdsaPajpAa1GXKgoEAsIelQPj6t4
-         xXWX4IlAXDOKOP37HtEZrOIwxzLmEwCzM5CUBjTidSUA1pBETqXur7wIKvFD+2wUYwUS
-         CcN/64DD8idi/BHFdC2czjdp5Q2Sr0HwkMIZn+XLyiNAEwjTAQS7Ij3pQrgRy2gokILg
-         nNlA==
+        Thu, 22 Sep 2022 13:19:46 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15181397;
+        Thu, 22 Sep 2022 10:19:45 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id y5so16662931wrh.3;
+        Thu, 22 Sep 2022 10:19:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=SCH41PZHoDU628bdtYlErvnzmog8gkI9vkvu5Tjn52s=;
-        b=dTpDhu7jTNRmzrNYAnYEHFC1VDX+XtuC5NS5h5mExFcGi0Cbv8ieEGGd4zToqtnTBe
-         +cpa+m3YEYgy2jU1If4+ZTSk9umUytV14z+Zhk9v7xQBQd4smvvlj0slM52LMwh7lOZK
-         cE6jdVml53/5XhUfigUMRn8LXe59TTmhs19eIJdSVXUiIXHPoeuhTvgWuhMuZ2li74wg
-         7kGs0zHFb7pYnj1qmkBP+aSHRL0+bmHZ6f1wfLntHzf3BSWZO+XKb3bt4ds83wFqByHu
-         5FC/otirCUjGCekJQ2VymhDCvurPzq5nGbb0tHnAsGlpJF2Qx5svvot5kj+wLazteiV+
-         XMzg==
-X-Gm-Message-State: ACrzQf2XQwAgRVwamI77BLfq4e96fe5xuer7cJqpR4AzmhZ+Grzm60tR
-        TFbo3r1Rq7qVJVfBty7uJzSdUDxb5AA1ltCzKGcJUg==
-X-Google-Smtp-Source: AMsMyM4cudPwjpo5sIQdFq8qIK/InHXSVSkRir2eTxuIg3sDXCu48Ri/NTXF5br4Ip4LRDZM71GXejwYXBh+g+ZSfQk=
-X-Received: by 2002:a05:6808:f8e:b0:351:a39:e7ca with SMTP id
- o14-20020a0568080f8e00b003510a39e7camr698564oiw.269.1663866559313; Thu, 22
- Sep 2022 10:09:19 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=5hiam4Rd+NTu+6XogJRYY70Z3eZ5FhQLv+wWdqT3ju0=;
+        b=inGa3thtRL4uP0gidHG0ExHCh5BVWfUhNEALcEQAysNgVibS98UB5zUFRLpRnyhtP0
+         vGyKKXeFruoCy6rR9sEhDVLZcE8j+E/GDCtiTP9e0B5r5HumBx29+VIOuN182KHiX2Vi
+         svsj5vlP6DJ99pRdwATUhg1XIkuTczj+VADTX89i/3J1PKM3TwK52y0eH40L4yvQ67GC
+         njoCLRG7v0RhEHYo7y6wNpeoICfhkJGP5xyK9oVbTOV7/rMPBmxxbnlyadHWidLDMMo+
+         QpWCBu/iXGwUvlRsIZMelwHIRlRpw42rH1FjBWg8P8ukDovCsCWv33KDl2nmOrVqOyM1
+         u3vg==
+X-Gm-Message-State: ACrzQf0C/6F7DWUbaUKQFyBLrlbVavcbRZdgAB7lntQCbAcI2LI8b992
+        AAxkhE2n/cRDivR00aQR/OAdkcWfp2M=
+X-Google-Smtp-Source: AMsMyM6b0M1oqtkiZsvCKUVcdJY7TvE/ogZBGWFCFyROmWpKqfp6rWwDcLfske10ndwy6aSb+JmqBw==
+X-Received: by 2002:a5d:4247:0:b0:22a:df99:ce06 with SMTP id s7-20020a5d4247000000b0022adf99ce06mr2863743wrr.513.1663867183258;
+        Thu, 22 Sep 2022 10:19:43 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id q16-20020a1cf310000000b003a5fa79007fsm150268wmq.7.2022.09.22.10.19.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 10:19:42 -0700 (PDT)
+Date:   Thu, 22 Sep 2022 17:19:40 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc:     skinsburskii@microsoft.com,
+        Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH] Drivers: hv: vmbus: Don't wait for the ACPI device upon
+ initialization
+Message-ID: <YyyZLMMiDfExQI2v@liuwe-devbox-debian-v2>
+References: <166378554568.581670.1124852716698789244.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 MIME-Version: 1.0
-References: <20220922143655.3721218-1-vkuznets@redhat.com> <20220922143655.3721218-3-vkuznets@redhat.com>
-In-Reply-To: <20220922143655.3721218-3-vkuznets@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 22 Sep 2022 10:09:08 -0700
-Message-ID: <CALMp9eSVQSMKbYKr0n-t3JP58hLGA8ZHJZAX34-E4YWUa+VYHA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] KVM: x86: Introduce CPUID_8000_0007_EDX
- 'scattered' leaf
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166378554568.581670.1124852716698789244.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Why do we need a new 'scattered' leaf? We are only using two bits in
-the first one, right? And now we're only going to use one bit in the
-second one?
+On Wed, Sep 21, 2022 at 06:39:05PM +0000, Stanislav Kinsburskii wrote:
+> From: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+> 
+> Waiting to 5 seconds in case of missing VMBUS ACPI device is redundant as the
+> device is either present already or won't be available at all.
+> This patch enforces synchronous probing to make sure the bus traversal,
+> happening upon driver registering will either find the device (if present) or
+> not spend any additional time if device is absent.
+> 
+> Signed-off-by: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+> CC: "K. Y. Srinivasan" <kys@microsoft.com>
+> CC: Haiyang Zhang <haiyangz@microsoft.com>
+> CC: Stephen Hemminger <sthemmin@microsoft.com>
+> CC: Wei Liu <wei.liu@kernel.org>
+> CC: Dexuan Cui <decui@microsoft.com>
+> CC: linux-hyperv@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
 
-I thought the point of the 'scattered' leaves was to collect a bunch
-of feature bits from different CPUID leaves in a single feature word.
+Looks good to me. I will wait for a few days for others to chime in.
 
-Allocating a new feature word for one or two bits seems extravagant.
+CC Michael.
+
+> ---
+>  drivers/hv/vmbus_drv.c |   13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 7b9f3fc3adf7..32d0009631a6 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -46,8 +46,6 @@ struct vmbus_dynid {
+>  
+>  static struct acpi_device  *hv_acpi_dev;
+>  
+> -static struct completion probe_event;
+> -
+>  static int hyperv_cpuhp_online;
+>  
+>  static void *hv_panic_page;
+> @@ -2468,7 +2466,6 @@ static int vmbus_acpi_add(struct acpi_device *device)
+>  	ret_val = 0;
+>  
+>  acpi_walk_err:
+> -	complete(&probe_event);
+>  	if (ret_val)
+>  		vmbus_acpi_remove(device);
+>  	return ret_val;
+> @@ -2647,6 +2644,7 @@ static struct acpi_driver vmbus_acpi_driver = {
+>  		.remove = vmbus_acpi_remove,
+>  	},
+>  	.drv.pm = &vmbus_bus_pm,
+> +	.drv.probe_type = PROBE_FORCE_SYNCHRONOUS,
+>  };
+>  
+>  static void hv_kexec_handler(void)
+> @@ -2719,7 +2717,7 @@ static struct syscore_ops hv_synic_syscore_ops = {
+>  
+>  static int __init hv_acpi_init(void)
+>  {
+> -	int ret, t;
+> +	int ret;
+>  
+>  	if (!hv_is_hyperv_initialized())
+>  		return -ENODEV;
+> @@ -2727,8 +2725,6 @@ static int __init hv_acpi_init(void)
+>  	if (hv_root_partition)
+>  		return 0;
+>  
+> -	init_completion(&probe_event);
+> -
+>  	/*
+>  	 * Get ACPI resources first.
+>  	 */
+> @@ -2737,9 +2733,8 @@ static int __init hv_acpi_init(void)
+>  	if (ret)
+>  		return ret;
+>  
+> -	t = wait_for_completion_timeout(&probe_event, 5*HZ);
+> -	if (t == 0) {
+> -		ret = -ETIMEDOUT;
+> +	if (!hv_acpi_dev) {
+> +		ret = -ENODEV;
+>  		goto cleanup;
+>  	}
+>  
+> 
+> 
