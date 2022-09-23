@@ -2,55 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D335E7806
-	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Sep 2022 12:15:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A299F5E7851
+	for <lists+linux-hyperv@lfdr.de>; Fri, 23 Sep 2022 12:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbiIWKPq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 23 Sep 2022 06:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60972 "EHLO
+        id S229787AbiIWK3N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 23 Sep 2022 06:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231162AbiIWKPm (ORCPT
+        with ESMTP id S231879AbiIWK2l (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 23 Sep 2022 06:15:42 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 450D92604;
-        Fri, 23 Sep 2022 03:15:40 -0700 (PDT)
-Received: by mail-wm1-f52.google.com with SMTP id fn7-20020a05600c688700b003b4fb113b86so2940037wmb.0;
-        Fri, 23 Sep 2022 03:15:40 -0700 (PDT)
+        Fri, 23 Sep 2022 06:28:41 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2317F12ED86;
+        Fri, 23 Sep 2022 03:28:40 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id t7so19672815wrm.10;
+        Fri, 23 Sep 2022 03:28:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=H3k8nwYg9LM+0smtYDMfCrY2rja+gudmrYIAx1+mEps=;
-        b=6/f8awuQNJ0pRmjE7SjNSRROM1eCeYPgvkSN0GPMjn/WBJh2zoeTL4X52y/aixVSss
-         Gh3Gu4AtDakwpyrL4N6e9RGJGxH282rc7fBov32flqvO8NsuIkHQh1lcm3Zvyk3oOWO2
-         Q1pMqEUqXKuWzb5hhckFN6qZ4NxYjSvARjA9E0ocpn2ZoaP9WQIHYSv/PGCy+PLpf8jM
-         Jc5q9TS997twPCVoLul0z861BwyEdlOlq06eWF8iUQFf6+dhVQXT/eRIpnypMRznRRCU
-         Ncx/K+dnJKt87AomFYiP6gK47WsCGUu+bQpk2GWflDxO8XE+N1AMZd445Z4qh7q0PUYa
-         Ov/w==
-X-Gm-Message-State: ACrzQf2sRJUDurHby/PhsWmfCgihioiQMGlDKDadTwyH1XdPq1hMyS7L
-        o2fA60EPUeXEW9DbuplPTucfuZHbh4A=
-X-Google-Smtp-Source: AMsMyM6uVc1utll1leFSA3Ob9+kmyV0+mvx+mZpkH4OV2fn7yg3XyYhCkjXBv8PD3H23g3832TOSOw==
-X-Received: by 2002:a05:600c:2b88:b0:3b4:8680:165b with SMTP id j8-20020a05600c2b8800b003b48680165bmr13130181wmc.113.1663928138757;
-        Fri, 23 Sep 2022 03:15:38 -0700 (PDT)
+        bh=OCZ/F0HrnTTtm97NDW9M9Tgyn70w4D8p3nQznpQwDv8=;
+        b=mDRFLfmWFzqbUrpb3WKlPhSxhZ1xOsM2YL/VPBETqEJX9MTOhZlcMpQLZkxOvDC5ZI
+         EEYjEhvhYSZQ9ihjkgQS1sgEXqntDiQiNv0kDdZOW/DoWg/pd/uj1cGvBqvbQ8E4C+tS
+         SG4QXpAflEei7eCl1FdUnWOBkjIc4GvpGRlD8k1X1PwARNCfm5k8VUHmJGhwPjQt0FY5
+         i7Z0ayY+fRgxXyB7cHJpKEKLzspw52SHnpHOhlBAqmWgGoEpwbcU+qEE12zLoNp4bkvi
+         4Vn6kwJSpRq6BLo2wfmY0qgfYSKLLD/bzGmQSItEEVodLegM8udaPhkC7+GUzCkf0n3G
+         /b9w==
+X-Gm-Message-State: ACrzQf2e/Bd9ST+1lA/dD0rmBYSlh+DzY81YKU2HHDHtLd+SvDoYIk1U
+        fOXWY1x8WeagY8IV6AwHHjg=
+X-Google-Smtp-Source: AMsMyM6ReHmiL0VAv9tsouVLQLi1H9NIY57WE7jvQxO0L+Gqhf49wPXtahs+x4ZQsAC7C8GqzibFfw==
+X-Received: by 2002:a5d:64e5:0:b0:22a:3cae:93bf with SMTP id g5-20020a5d64e5000000b0022a3cae93bfmr4833236wri.323.1663928918727;
+        Fri, 23 Sep 2022 03:28:38 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id h6-20020a05600c2ca600b003b4c40378casm2165673wmc.39.2022.09.23.03.15.37
+        by smtp.gmail.com with ESMTPSA id x12-20020adfffcc000000b0022ac672654dsm6976948wrs.58.2022.09.23.03.28.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Sep 2022 03:15:38 -0700 (PDT)
-Date:   Fri, 23 Sep 2022 10:15:36 +0000
+        Fri, 23 Sep 2022 03:28:38 -0700 (PDT)
+Date:   Fri, 23 Sep 2022 10:28:36 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc:     ssengar@microsoft.com, drawat.floss@gmail.com, airlied@linux.ie,
-        daniel@ffwll.ch, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH] drm/hyperv: Don't overwrite dirt_needed value set by host
-Message-ID: <Yy2HSKb4AtcF+em6@liuwe-devbox-debian-v2>
-References: <1662996766-19304-1-git-send-email-ssengar@linux.microsoft.com>
+To:     Li kunyu <kunyu@nfschina.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, catalin.marinas@arm.com,
+        will@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, arnd@arndb.de, linux-hyperv@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2] asm-generic: Remove the parameters of the
+ generate_guest_id function and modify the return type and modify the
+ function name
+Message-ID: <Yy2KVM08HMiv46d6@liuwe-devbox-debian-v2>
+References: <20220920032837.69469-1-kunyu@nfschina.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1662996766-19304-1-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <20220920032837.69469-1-kunyu@nfschina.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -61,18 +66,113 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Sep 12, 2022 at 08:32:46AM -0700, Saurabh Sengar wrote:
-> Existing code is causing a race condition where dirt_needed value is
-> already set by the host and gets overwritten with default value. Remove
-> this default setting of dirt_needed, to avoid overwriting the value
-> received in the channel callback set by vmbus_open. Removing this
-> setting also means the default value for dirt_needed is changed to false
-> as it's allocated by kzalloc which is similar to legacy hyperv_fb driver.
+Hi Kunyu
+
+The subject line is far too long.
+
+Please change it to
+
+hyperv: simplify and rename generate_guest_id
+
+On Tue, Sep 20, 2022 at 11:28:37AM +0800, Li kunyu wrote:
+> The generate_guest_id function is more suitable for use after the
+> following modifications.
+> 1. Modify the type of the guest_id variable to u64, which is compatible
+> with the caller.
+> 2. Remove all parameters from the function, and write the parameter
+> (LINUX_VERSION_CODE) passed in by the actual call into the function
+> implementation.
+> 3. Rename the function to make it clearly a Hyper-V related function,
+> and modify it to hv_generate_guest_id.
 > 
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> v2:
+>   Fix generate_guest_id to hv_generate_guest_id.
 
-Applied to hyperv-next. Thanks.
+The patch version information shouldn't be part of the commit message.
+You can use scissors to separate them
 
-I ended up reconstructing the patch myself since the said driver
-changed. It is only a one line change so that's fine. If the committed
-patch is wrong, please let me know.
+---8<---
+ v2: ...
+
+When the patch gets applied, text after the scissors will be stripped
+automatically.
+
+> 
+> Signed-off-by: Li kunyu <kunyu@nfschina.com>
+
+BTW, the previous patch was submitted by Li Zeming. Did you two agree on
+who to take this forward?
+
+> ---
+>  arch/arm64/hyperv/mshyperv.c   |  2 +-
+>  arch/x86/hyperv/hv_init.c      |  2 +-
+>  include/asm-generic/mshyperv.h | 12 +++++-------
+>  3 files changed, 7 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+> index bbbe351e9045..3863fd226e0e 100644
+> --- a/arch/arm64/hyperv/mshyperv.c
+> +++ b/arch/arm64/hyperv/mshyperv.c
+> @@ -38,7 +38,7 @@ static int __init hyperv_init(void)
+>  		return 0;
+>  
+>  	/* Setup the guest ID */
+> -	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
+> +	guest_id = hv_generate_guest_id();
+>  	hv_set_vpreg(HV_REGISTER_GUEST_OSID, guest_id);
+>  
+>  	/* Get the features and hints from Hyper-V */
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 3de6d8b53367..93770791b858 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -426,7 +426,7 @@ void __init hyperv_init(void)
+>  	 * 1. Register the guest ID
+>  	 * 2. Enable the hypercall and register the hypercall page
+>  	 */
+> -	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
+> +	guest_id = hv_generate_guest_id();
+>  	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
+>  
+>  	/* Hyper-V requires to write guest os id via ghcb in SNP IVM. */
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index c05d2ce9b6cd..7f4a23cee56f 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/nmi.h>
+>  #include <asm/ptrace.h>
+>  #include <asm/hyperv-tlfs.h>
+> +#include <linux/version.h>
+>  
+>  struct ms_hyperv_info {
+>  	u32 features;
+> @@ -105,15 +106,12 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
+>  }
+>  
+>  /* Generate the guest OS identifier as described in the Hyper-V TLFS */
+> -static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
+> -				       __u64 d_info2)
+> +static inline  u64 hv_generate_guest_id(void)
+                ^^
+		There are two spaces. We only need one.
+
+I know it is not introduced by you, but since you're modifying the code
+anyway, you may as well drop the extraneous space.
+
+>  {
+> -	__u64 guest_id = 0;
+> +	u64 guest_id;
+>  
+> -	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
+> -	guest_id |= (d_info1 << 48);
+> -	guest_id |= (kernel_version << 16);
+> -	guest_id |= d_info2;
+> +	guest_id = (((u64)HV_LINUX_VENDOR_ID) << 48);
+> +	guest_id |= (((u64)LINUX_VERSION_CODE) << 16);
+>  
+>  	return guest_id;
+>  }
+> -- 
+> 2.18.2
+> 
