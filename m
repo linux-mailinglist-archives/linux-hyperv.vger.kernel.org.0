@@ -2,100 +2,85 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E3AA5E8B7F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Sep 2022 12:34:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C8D5E90D9
+	for <lists+linux-hyperv@lfdr.de>; Sun, 25 Sep 2022 05:18:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbiIXKeX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 24 Sep 2022 06:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46712 "EHLO
+        id S229794AbiIYDSz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 24 Sep 2022 23:18:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbiIXKeW (ORCPT
+        with ESMTP id S229869AbiIYDSo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 24 Sep 2022 06:34:22 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E24128A31;
-        Sat, 24 Sep 2022 03:34:16 -0700 (PDT)
-Received: by mail-wr1-f42.google.com with SMTP id cc5so3439433wrb.6;
-        Sat, 24 Sep 2022 03:34:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=lWWSF5r7ARtTOClsK9sXEb7aJbRhNSyG93pnZwDgR5I=;
-        b=KSyEDPTrERDbPHgI3yKjQwFOuoePdyYavdVYJm/tY+ThFTOwq8HOCNLpP89t/EYIBK
-         tavLNvSlBhj9s5L4jrDB85fgqtLdE4Fstx/MZZIw4niSkjG7OKFraYC5KBarHHydAwcr
-         2apbgZDmNREUwKQ++sYU8ZyWG43oTIZ+D/z7NRvSdfu8rFV0wJrrlgsIXnS2UofV+DnK
-         +MbLVv5WMRkB/JOpRBhdwmnD4CVcq1cr7yBnxFTt9gvzkboFsCKTO8nG5L5CIssPLK49
-         69U/B0Ke03Fdu33v0nZ56wlueeMJBdW6K/7zDIF0sutm2scnrGqu7lXViebI+8omHlv8
-         GWkQ==
-X-Gm-Message-State: ACrzQf0vxyCPkvz0qVKMuduANVNNgK7qLH/9Tk+YpbVGfruvdMbD7WYk
-        xmQ2hFg0lF+oyGtl1/mcWhDEniv2rRI=
-X-Google-Smtp-Source: AMsMyM5wNBvhEnQyq1UtD7jkcm6hZPvgsbB9LvwMs+u55ik/lB3hZLEDCOipgXROVhNjvYZFhZT5zw==
-X-Received: by 2002:a05:6000:912:b0:229:9bc1:27ed with SMTP id bz18-20020a056000091200b002299bc127edmr7554875wrb.546.1664015655105;
-        Sat, 24 Sep 2022 03:34:15 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id o3-20020a05600c4fc300b003a5ca627333sm4961389wmq.8.2022.09.24.03.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Sep 2022 03:34:14 -0700 (PDT)
-Date:   Sat, 24 Sep 2022 10:34:12 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Split memcpy of flex-array
-Message-ID: <Yy7dJP4p0FMQfPl5@liuwe-devbox-debian-v2>
-References: <20220924030741.3345349-1-keescook@chromium.org>
- <Yy58rt9N0+dHrNtt@work>
- <202209232119.E32C14857@keescook>
+        Sat, 24 Sep 2022 23:18:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB35140BC6;
+        Sat, 24 Sep 2022 20:18:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57E2261207;
+        Sun, 25 Sep 2022 03:18:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F4CC433C1;
+        Sun, 25 Sep 2022 03:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664075912;
+        bh=uqFM7PfQgGUpSCX1f9hr1rQTeJyyd1xV/4US1em1+gI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Up9RV47JuuhVNWam0DaJXzNnRgeRbt0EHpedkC90uc8zovkIwVUx6gGlKtUAYTJhl
+         4HJsunjkbZUvhbEf3yordBhoZM22Hn/P1TKeF1aL68CytVdz93Buq5KdkrukKyDblw
+         FChKjJAk2ise5S0KrFDRqBZUtE11C0VLOILP/lg95U5msfv7TvZSUMFqoziY+a8bF8
+         PL0WsJeoGeYP5KaS83ALx0qyNWqsVB5BcqwE4QZfILCJSlVU6zEvZBD90I9Q/MckOA
+         ojeMMVolZmLUKTvdF9WOBz+xM8ZqRDztj9Xip6anULfCi5VzGl+Ik5lSsMopgR78qF
+         b96YcyXGp4/kw==
+Date:   Sat, 24 Sep 2022 23:18:31 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        decui@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.19 01/16] Drivers: hv: Never allocate anything
+ besides framebuffer from framebuffer memory region
+Message-ID: <Yy/IhxtFBvq0VoKN@sashalap>
+References: <20220921155332.234913-1-sashal@kernel.org>
+ <87illgog69.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <202209232119.E32C14857@keescook>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <87illgog69.fsf@redhat.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Kees
+On Wed, Sep 21, 2022 at 06:17:34PM +0200, Vitaly Kuznetsov wrote:
+>Sasha Levin <sashal@kernel.org> writes:
+>
+>> From: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>
+>> [ Upstream commit f0880e2cb7e1f8039a048fdd01ce45ab77247221 ]
+>>
+>
+>(this comment applies to all stable branches)
+>
+>While this change seems to be worthy on its own, the underlying issue
+>with Gen1 Hyper-V VMs won't be resolved without
+>
+>commit 2a8a8afba0c3053d0ea8686182f6b2104293037e
+>Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+>Date:   Sat Aug 27 15:03:44 2022 +0200
+>
+>    Drivers: hv: Always reserve framebuffer region for Gen1 VMs
+>
+>as 'fb_mmio' is still going to be unset in some cases without it.
 
-On Fri, Sep 23, 2022 at 09:22:55PM -0700, Kees Cook wrote:
-> On Fri, Sep 23, 2022 at 10:42:38PM -0500, Gustavo A. R. Silva wrote:
-> > On Fri, Sep 23, 2022 at 08:07:41PM -0700, Kees Cook wrote:
-> > > To work around a misbehavior of the compiler's ability to see into
-> > > composite flexible array structs (as detailed in the coming memcpy()
-> > > hardening series[1]), split the memcpy() of the header and the payload
-> > > so no false positive run-time overflow warning will be generated. As it
-> > > turns out, this appears to actually reduce the text size:
-> 
-> Er, actually, I can't read/math. ;) It _does_ grow the text size. (That's
-> 2_3_ not 22 at the start of the text size...) On examination, it appears
-> to unroll the already inlined memcpy further.
+Which seems to fail building. Backports welcome :)
 
-Can you provide an updated commit message? No need to resend.
-
+-- 
 Thanks,
-Wei.
-
-> 
-> > > 
-> > > $ size drivers/hv/vmbus_drv.o.before drivers/hv/vmbus_drv.o
-> > >    text    data     bss     dec     hex filename
-> > >   22968    5239     232   28439    6f17 drivers/hv/vmbus_drv.o.before
-> > >   23032    5239     232   28503    6f57 drivers/hv/vmbus_drv.o
->        ^
-> 
-> -Kees
-> 
-> -- 
-> Kees Cook
+Sasha
