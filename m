@@ -2,85 +2,149 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9C8D5E90D9
-	for <lists+linux-hyperv@lfdr.de>; Sun, 25 Sep 2022 05:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE0F5E97CA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Sep 2022 03:49:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbiIYDSz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 24 Sep 2022 23:18:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57504 "EHLO
+        id S233001AbiIZBtX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 25 Sep 2022 21:49:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229869AbiIYDSo (ORCPT
+        with ESMTP id S231521AbiIZBtW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 24 Sep 2022 23:18:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB35140BC6;
-        Sat, 24 Sep 2022 20:18:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 57E2261207;
-        Sun, 25 Sep 2022 03:18:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F4CC433C1;
-        Sun, 25 Sep 2022 03:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664075912;
-        bh=uqFM7PfQgGUpSCX1f9hr1rQTeJyyd1xV/4US1em1+gI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Up9RV47JuuhVNWam0DaJXzNnRgeRbt0EHpedkC90uc8zovkIwVUx6gGlKtUAYTJhl
-         4HJsunjkbZUvhbEf3yordBhoZM22Hn/P1TKeF1aL68CytVdz93Buq5KdkrukKyDblw
-         FChKjJAk2ise5S0KrFDRqBZUtE11C0VLOILP/lg95U5msfv7TvZSUMFqoziY+a8bF8
-         PL0WsJeoGeYP5KaS83ALx0qyNWqsVB5BcqwE4QZfILCJSlVU6zEvZBD90I9Q/MckOA
-         ojeMMVolZmLUKTvdF9WOBz+xM8ZqRDztj9Xip6anULfCi5VzGl+Ik5lSsMopgR78qF
-         b96YcyXGp4/kw==
-Date:   Sat, 24 Sep 2022 23:18:31 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
-        decui@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.19 01/16] Drivers: hv: Never allocate anything
- besides framebuffer from framebuffer memory region
-Message-ID: <Yy/IhxtFBvq0VoKN@sashalap>
-References: <20220921155332.234913-1-sashal@kernel.org>
- <87illgog69.fsf@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <87illgog69.fsf@redhat.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Sun, 25 Sep 2022 21:49:22 -0400
+Received: from mail.nfschina.com (unknown [124.16.136.209])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8B4472AE02;
+        Sun, 25 Sep 2022 18:49:20 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mail.nfschina.com (Postfix) with ESMTP id B9B7D1E80D3D;
+        Mon, 26 Sep 2022 09:45:14 +0800 (CST)
+X-Virus-Scanned: amavisd-new at test.com
+Received: from mail.nfschina.com ([127.0.0.1])
+        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vbs55Yj4xvMW; Mon, 26 Sep 2022 09:45:11 +0800 (CST)
+Received: from localhost.localdomain (unknown [219.141.250.2])
+        (Authenticated sender: kunyu@nfschina.com)
+        by mail.nfschina.com (Postfix) with ESMTPA id 6268F1E80D10;
+        Mon, 26 Sep 2022 09:45:11 +0800 (CST)
+From:   Li kunyu <kunyu@nfschina.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, catalin.marinas@arm.com,
+        will@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        arnd@arndb.de
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Li kunyu <kunyu@nfschina.com>
+Subject: [PATCH v4] hyperv: simplify and rename generate_guest_id
+Date:   Mon, 26 Sep 2022 09:48:50 +0800
+Message-Id: <20220926014850.3202-1-kunyu@nfschina.com>
+X-Mailer: git-send-email 2.18.2
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
+        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 06:17:34PM +0200, Vitaly Kuznetsov wrote:
->Sasha Levin <sashal@kernel.org> writes:
->
->> From: Vitaly Kuznetsov <vkuznets@redhat.com>
->>
->> [ Upstream commit f0880e2cb7e1f8039a048fdd01ce45ab77247221 ]
->>
->
->(this comment applies to all stable branches)
->
->While this change seems to be worthy on its own, the underlying issue
->with Gen1 Hyper-V VMs won't be resolved without
->
->commit 2a8a8afba0c3053d0ea8686182f6b2104293037e
->Author: Vitaly Kuznetsov <vkuznets@redhat.com>
->Date:   Sat Aug 27 15:03:44 2022 +0200
->
->    Drivers: hv: Always reserve framebuffer region for Gen1 VMs
->
->as 'fb_mmio' is still going to be unset in some cases without it.
+The generate_guest_id function is more suitable for use after the
+following modifications.
+1. Modify the type of the guest_id variable to u64, which is compatible
+with the caller.
+2. Remove all parameters from the function, and write the parameter
+(LINUX_VERSION_CODE) passed in by the actual call into the function
+implementation.
+3. Rename the function to make it clearly a Hyper-V related function,
+and modify it to hv_generate_guest_id.
 
-Which seems to fail building. Backports welcome :)
+Signed-off-by: Li kunyu <kunyu@nfschina.com>
 
+--------
+ v2: Fix generate_guest_id to hv_generate_guest_id.
+ v3: Fix [PATCH v2] asm-generic: Remove the ... to [PATCH v3] hyperv: simp
+     lify ... and remove extra spaces 
+ v4: Remove #include <linux/version.h> in the calling file, and add #inclu
+     de <linux/version.h> in the function implementation file
+---
+ arch/arm64/hyperv/mshyperv.c   |  3 +--
+ arch/x86/hyperv/hv_init.c      |  3 +--
+ include/asm-generic/mshyperv.h | 12 +++++-------
+ 3 files changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+index bbbe351e9045..637186f4df1f 100644
+--- a/arch/arm64/hyperv/mshyperv.c
++++ b/arch/arm64/hyperv/mshyperv.c
+@@ -13,7 +13,6 @@
+ #include <linux/acpi.h>
+ #include <linux/export.h>
+ #include <linux/errno.h>
+-#include <linux/version.h>
+ #include <linux/cpuhotplug.h>
+ #include <asm/mshyperv.h>
+ 
+@@ -38,7 +37,7 @@ static int __init hyperv_init(void)
+ 		return 0;
+ 
+ 	/* Setup the guest ID */
+-	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
++	guest_id = hv_generate_guest_id();
+ 	hv_set_vpreg(HV_REGISTER_GUEST_OSID, guest_id);
+ 
+ 	/* Get the features and hints from Hyper-V */
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3de6d8b53367..04d32cd3e838 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -19,7 +19,6 @@
+ #include <asm/mshyperv.h>
+ #include <asm/idtentry.h>
+ #include <linux/kexec.h>
+-#include <linux/version.h>
+ #include <linux/vmalloc.h>
+ #include <linux/mm.h>
+ #include <linux/hyperv.h>
+@@ -426,7 +425,7 @@ void __init hyperv_init(void)
+ 	 * 1. Register the guest ID
+ 	 * 2. Enable the hypercall and register the hypercall page
+ 	 */
+-	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
++	guest_id = hv_generate_guest_id();
+ 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
+ 
+ 	/* Hyper-V requires to write guest os id via ghcb in SNP IVM. */
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index c05d2ce9b6cd..9155575b7e34 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -25,6 +25,7 @@
+ #include <linux/nmi.h>
+ #include <asm/ptrace.h>
+ #include <asm/hyperv-tlfs.h>
++#include <linux/version.h>
+ 
+ struct ms_hyperv_info {
+ 	u32 features;
+@@ -105,15 +106,12 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
+ }
+ 
+ /* Generate the guest OS identifier as described in the Hyper-V TLFS */
+-static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
+-				       __u64 d_info2)
++static inline u64 hv_generate_guest_id(void)
+ {
+-	__u64 guest_id = 0;
++	u64 guest_id;
+ 
+-	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
+-	guest_id |= (d_info1 << 48);
+-	guest_id |= (kernel_version << 16);
+-	guest_id |= d_info2;
++	guest_id = (((u64)HV_LINUX_VENDOR_ID) << 48);
++	guest_id |= (((u64)LINUX_VERSION_CODE) << 16);
+ 
+ 	return guest_id;
+ }
 -- 
-Thanks,
-Sasha
+2.18.2
+
