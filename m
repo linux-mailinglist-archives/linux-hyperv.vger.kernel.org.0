@@ -2,129 +2,206 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C720B5E9B63
-	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Sep 2022 10:00:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1664E5EA933
+	for <lists+linux-hyperv@lfdr.de>; Mon, 26 Sep 2022 16:55:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234147AbiIZIAe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 26 Sep 2022 04:00:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40878 "EHLO
+        id S235411AbiIZOyy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 26 Sep 2022 10:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234149AbiIZH7n (ORCPT
+        with ESMTP id S235263AbiIZOyd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 26 Sep 2022 03:59:43 -0400
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F1114091;
-        Mon, 26 Sep 2022 00:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1664179022;
-    s=strato-dkim-0002; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=2aIymE8raxhclQFqdfiAunlbp0ivgK4VjNPOxvkHMk4=;
-    b=a+4Qk+xEsdXr8d9TH27PtKoKWFIXUwlw95X/NLGKUCOnj3uciZem1gugMB+0aEndC/
-    5TCXYFBVGumqpsXuKSEa3+ORa2+MNKaaQZU95+KogezrdpHWOR0EFF2pAg9BXgppMxk9
-    CKC+juyEWP0+s1CfYQvxeshL2IQSAmsdxboCdrxFaArNPgdB2MC0lkuiU6EJ7fDVv1De
-    bEvUD8CFrH/y2YxvoQT0si+bLIiEFJsHOgep05CFnixRXY6VTiM1p0IBNlPBeK1yvtqt
-    tqI+Bfz6xwSkgNuFybDuH57N+0mNmD6j4ARQr1u8bo/irtEbrzaJkFvYYGDub/xlZ/v2
-    0MEQ==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX2j/OiDv7LX1ITFkr8sRtLhQJY8wcRJ+GvY"
-X-RZG-CLASS-ID: mo00
-Received: from sender
-    by smtp.strato.de (RZmta 48.1.1 AUTH)
-    with ESMTPSA id 5c8007y8Q7v0Agb
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Mon, 26 Sep 2022 09:57:00 +0200 (CEST)
-Date:   Mon, 26 Sep 2022 09:56:49 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Li kunyu <kunyu@nfschina.com>, KY Srinivasan <kys@microsoft.com>,
+        Mon, 26 Sep 2022 10:54:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 956DE7391A
+        for <linux-hyperv@vger.kernel.org>; Mon, 26 Sep 2022 06:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1664198517;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i7qiiLpBZNt2KOcykqgJFQ/WQh3oxgQ6inHkaKhb85Y=;
+        b=Sib5IscLwkCJpCzcQaahJfuUkB+6APQqt7D9cK3QqMhKpRvl9R0sd2E7Vr32vnF54Y6Mqs
+        NRsh1h0qhngx7v85HvPJvlk78oWntcR9BUlf5JofTuS6g/6SPwhMztaV/z4rB94eNtXErY
+        w+xF1y9lcBIFY9wTR68yon9xlbaS+Yw=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-669-PS07LwexNuOdbq9RwjFhPQ-1; Mon, 26 Sep 2022 09:21:56 -0400
+X-MC-Unique: PS07LwexNuOdbq9RwjFhPQ-1
+Received: by mail-qt1-f199.google.com with SMTP id g21-20020ac87d15000000b0035bb6f08778so4703238qtb.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 26 Sep 2022 06:21:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=i7qiiLpBZNt2KOcykqgJFQ/WQh3oxgQ6inHkaKhb85Y=;
+        b=V3WeAp93rV2tzQUFNcJwat1QEzxdvo5nuVUH5jwawsz1gPDvWa2QhEH+1qt4y1aH9u
+         /y7p9n19gGwYeXdeBjdCuAx/ipSvwBRXRL4bAdEJ+NKjefBHgdwL0NnkG3CRRW/yPrBD
+         4MtZRGwq5gBgWqooc2Blzd1x/VJISX+2xXU1osiQtq8SpwdnA0SGcCuO7crctP5fg+UD
+         fupftpT2MV9jcCcL0S2yrgyhr6Zanz9hFWKBSKKGXJPvjeLSDJagCiUTejpCiXVEy0fr
+         zWl8j728LTpQP5PD6tfiaQByssk41og0UOEkoXTpz6EXR0wKUE+sQb9FTTgorkXNWDbw
+         zoKw==
+X-Gm-Message-State: ACrzQf3LDFP9PsI3NiBbyxbdLdp1dvfCBK568oUmbaJIokEjR1Vc/GU6
+        5xwfxaYnciYd5bww6T5kaU0wDKXpFeA9XrZEEvhJMrjNgafC3Y8U0hz+dR4VvljgyovPmJrzmgq
+        BGtMrFZdpGI5/lUpNy4KLSVPz
+X-Received: by 2002:a05:620a:424c:b0:6be:78d5:ec73 with SMTP id w12-20020a05620a424c00b006be78d5ec73mr13912683qko.579.1664198516070;
+        Mon, 26 Sep 2022 06:21:56 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7NrkIGne8y/GZLW9JHXe3yOUbh+JzzdSUUNw9PrzRz4UIl+C1M5V42BCPhQxA5Z5E+K1+G3w==
+X-Received: by 2002:a05:620a:424c:b0:6be:78d5:ec73 with SMTP id w12-20020a05620a424c00b006be78d5ec73mr13912666qko.579.1664198515834;
+        Mon, 26 Sep 2022 06:21:55 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-46-200-222.retail.telecomitalia.it. [79.46.200.222])
+        by smtp.gmail.com with ESMTPSA id t14-20020a05620a450e00b006cbcdc6efedsm11986040qkp.41.2022.09.26.06.21.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 06:21:55 -0700 (PDT)
+Date:   Mon, 26 Sep 2022 15:21:45 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Bobby Eshleman <bobby.eshleman@gmail.com>
+Cc:     Bobby Eshleman <bobbyeshleman@gmail.com>,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Jiang Wang <jiang.wang@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "arnd@arndb.de" <arnd@arndb.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v3] hyperv: simplify and rename generate_guest_id
-Message-ID: <20220926095649.1f963340.olaf@aepfle.de>
-In-Reply-To: <BYAPR21MB1688890F578A59F69DEB55C1D7509@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20220923114259.2945-1-kunyu@nfschina.com>
-        <20220923230917.1506b24c.olaf@aepfle.de>
-        <BYAPR21MB1688890F578A59F69DEB55C1D7509@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Mailer: Claws Mail 20220819T065813.516423bc hat ein Softwareproblem, kann man nichts machen.
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 2/6] vsock: return errors other than -ENOMEM to socket
+Message-ID: <20220926132145.utv2rzswhejhxrvb@sgarzare-redhat>
+References: <cover.1660362668.git.bobby.eshleman@bytedance.com>
+ <d81818b868216c774613dd03641fcfe63cc55a45.1660362668.git.bobby.eshleman@bytedance.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LnhPDSg==ZfryNf0WVxkG4t";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <d81818b868216c774613dd03641fcfe63cc55a45.1660362668.git.bobby.eshleman@bytedance.com>
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/LnhPDSg==ZfryNf0WVxkG4t
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 15, 2022 at 10:56:05AM -0700, Bobby Eshleman wrote:
+>This commit allows vsock implementations to return errors
+>to the socket layer other than -ENOMEM. One immediate effect
+>of this is that upon the sk_sndbuf threshold being reached -EAGAIN
+>will be returned and userspace may throttle appropriately.
+>
+>Resultingly, a known issue with uperf is resolved[1].
+>
+>Additionally, to preserve legacy behavior for non-virtio
+>implementations, hyperv/vmci force errors to be -ENOMEM so that behavior
+>is unchanged.
+>
+>[1]: https://gitlab.com/vsock/vsock/-/issues/1
+>
+>Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+>---
+> include/linux/virtio_vsock.h            | 3 +++
+> net/vmw_vsock/af_vsock.c                | 3 ++-
+> net/vmw_vsock/hyperv_transport.c        | 2 +-
+> net/vmw_vsock/virtio_transport_common.c | 3 ---
+> net/vmw_vsock/vmci_transport.c          | 9 ++++++++-
+> 5 files changed, 14 insertions(+), 6 deletions(-)
+>
+>diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+>index 17ed01466875..9a37eddbb87a 100644
+>--- a/include/linux/virtio_vsock.h
+>+++ b/include/linux/virtio_vsock.h
+>@@ -8,6 +8,9 @@
+> #include <net/sock.h>
+> #include <net/af_vsock.h>
+>
+>+/* Threshold for detecting small packets to copy */
+>+#define GOOD_COPY_LEN  128
+>+
 
-Sat, 24 Sep 2022 05:31:34 +0000 "Michael Kelley (LINUX)" <mikelley@microsof=
-t.com>:
+This change seems unrelated.
 
-> From: Olaf Hering <olaf@aepfle.de> Sent: Friday, September 23, 2022 2:09 =
-PM
+Please move it in the patch where you need this.
+Maybe it's better to add a prefix if we move it in an header file (e.g.  
+VIRTIO_VSOCK_...).
 
-> > A very long time ago I removed most usage of version.h AFAIR,
-> Could you elaborate?
+Thanks,
+Stefano
 
-It is the cost of 'make LOCALVERSION=3Dx' vs. 'make LOCALVERSION=3Dy'.
+> enum virtio_vsock_metadata_flags {
+> 	VIRTIO_VSOCK_METADATA_FLAGS_REPLY		= BIT(0),
+> 	VIRTIO_VSOCK_METADATA_FLAGS_TAP_DELIVERED	= BIT(1),
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index e348b2d09eac..1893f8aafa48 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -1844,8 +1844,9 @@ static int vsock_connectible_sendmsg(struct socket *sock, struct msghdr *msg,
+> 			written = transport->stream_enqueue(vsk,
+> 					msg, len - total_written);
+> 		}
+>+
+> 		if (written < 0) {
+>-			err = -ENOMEM;
+>+			err = written;
+> 			goto out_err;
+> 		}
+>
+>diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+>index fd98229e3db3..e99aea571f6f 100644
+>--- a/net/vmw_vsock/hyperv_transport.c
+>+++ b/net/vmw_vsock/hyperv_transport.c
+>@@ -687,7 +687,7 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vsk, struct msghdr *msg,
+> 	if (bytes_written)
+> 		ret = bytes_written;
+> 	kfree(send_buf);
+>-	return ret;
+>+	return ret < 0 ? -ENOMEM : ret;
+> }
+>
+> static s64 hvs_stream_has_data(struct vsock_sock *vsk)
+>diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+>index 920578597bb9..d5780599fe93 100644
+>--- a/net/vmw_vsock/virtio_transport_common.c
+>+++ b/net/vmw_vsock/virtio_transport_common.c
+>@@ -23,9 +23,6 @@
+> /* How long to wait for graceful shutdown of a connection */
+> #define VSOCK_CLOSE_TIMEOUT (8 * HZ)
+>
+>-/* Threshold for detecting small packets to copy */
+>-#define GOOD_COPY_LEN  128
+>-
+> static const struct virtio_transport *
+> virtio_transport_get_ops(struct vsock_sock *vsk)
+> {
+>diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
+>index b14f0ed7427b..c927a90dc859 100644
+>--- a/net/vmw_vsock/vmci_transport.c
+>+++ b/net/vmw_vsock/vmci_transport.c
+>@@ -1838,7 +1838,14 @@ static ssize_t vmci_transport_stream_enqueue(
+> 	struct msghdr *msg,
+> 	size_t len)
+> {
+>-	return vmci_qpair_enquev(vmci_trans(vsk)->qpair, msg, len, 0);
+>+	int err;
+>+
+>+	err = vmci_qpair_enquev(vmci_trans(vsk)->qpair, msg, len, 0);
+>+
+>+	if (err < 0)
+>+		err = -ENOMEM;
+>+
+>+	return err;
+> }
+>
+> static s64 vmci_transport_stream_has_data(struct vsock_sock *vsk)
+>-- 
+>2.35.1
+>
 
-Too many drivers will be recompiled for no good reason as of today.
-I claim no consumer below drivers/ and sound/ has a valid usecase for versi=
-on.h.
-But, someone else has to take the energy and argue them out of the tree.
-
-With the proposed change every consumer of asm-generic/mshyperv.h will be d=
-irty,
-see 'touch include/asm-generic/mshyperv.h' for the impact. Therefore I think
-only the two existing c files should include this header, in case the provi=
-ded
-information has a true value for the consumer.
-
-
-Olaf
-
---Sig_/LnhPDSg==ZfryNf0WVxkG4t
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmMxW0EACgkQ86SN7mm1
-DoDG+A/+NdczrJbTrLhHY24iKyo+iEXnHP0XFl+2Wz0JDdS9TYhOp4qk8vIf7Gop
-7V3TtYytLyl8v0jdoFjmLhDTijp4l8TbY5AvSZ9C19xGnFb4wDqnGlK9A+7lAfnG
-Db3SMwatykAgj6aTVP9Ckrrg5pp7DwuUYHVYsjyB4DqM89ApeXmZvE0RwNcX24sz
-VYmtrtRDNT/spTwAVRH15sHt6gQV+p6OgplLURbop8vbpJl2aZNpIIboJTLa5X8p
-KN3rYHJ6AUnrIJRki/ffhBH2dxIc4iAzt5zTXNJLQ6yVcIMJD2bNMxzN2FNZIC5v
-/V1Bb9jftZzram3UtJ1qvFpGhPRVcfHnm1HPV9bSHRECa7TwGiDZWEZ6Js7ab03G
-ZRIU+cqrmyiFY6LjkHfxRReupYUJMU5Ykfon/j7eeZalW88QgPAtzjDAaaErcfGQ
-3yG9O2kl0idCguwSHZ97DDnfpRt87oICsgjOhwvEkPhTLpg5HOAcFjbCL3bKkauh
-lb1Q4lk3qcTjlwAXdJEvGrePJYL3jjhfBeQAjvCYSqBIZAnn/I/5Vdk5R/MOJGRU
-sDCVZQGMV7KsHurnBkGV+jgpoF7Mlced2d7h/4tZ+B/fL6TQ7cGEmRWly2pLQ9q7
-JCFWuiKkyijJxhek0s7Duzor29fTuKavonHEVPAEUeSRiU66GYQ=
-=rHAw
------END PGP SIGNATURE-----
-
---Sig_/LnhPDSg==ZfryNf0WVxkG4t--
