@@ -2,101 +2,119 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EDCB5ECF3E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Sep 2022 23:24:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72D265ECF46
+	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Sep 2022 23:26:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbiI0VYG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 27 Sep 2022 17:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46072 "EHLO
+        id S231684AbiI0V0q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 27 Sep 2022 17:26:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232140AbiI0VYE (ORCPT
+        with ESMTP id S232142AbiI0V0n (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 27 Sep 2022 17:24:04 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52511EB1BC
-        for <linux-hyperv@vger.kernel.org>; Tue, 27 Sep 2022 14:24:01 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id v10-20020a17090a634a00b00205e48cf845so1521198pjs.4
-        for <linux-hyperv@vger.kernel.org>; Tue, 27 Sep 2022 14:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=AVs41GVux0bxpSDCyOTBQY/cRUdKNCstV7tk8chN4jY=;
-        b=DeFeq6EOWo5k00wksQVeaxeRFtcLC7+qeETTnDbgFMXpBtspyh5XRAjm9zTjLkmiCO
-         mZ6kvnWBwp1nHY3SeGufM8TDTZsLXraVYdP5gXdfEAXxIfG7AqqVbqZ0eMXbO5MQdXxS
-         o4cyGmO6Rqv+XsJfPOOG+JKr27L1F7V0N66BM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=AVs41GVux0bxpSDCyOTBQY/cRUdKNCstV7tk8chN4jY=;
-        b=Kgt3+3zY29qhrOgwL4a543twxNDcZ+y7HAzosZPHImg8usax61d/3AAP9VJjN5jH/d
-         VawW/uaP1DeoGaMkZGr5ujL7bj6VBhwItk2TXnl4hqd45rHfKsIkNCZa5P3yQfruaEUf
-         gRo8MY0g7QjA2rmTq6eOtCIJVwbhFHG4pIpAHcO0/d706pul1MBeR7UqgHqaq8LXx6qA
-         O3eTz0PWAbvUsmi+cxD3IsWdR0ha4KVBJrCFe+aWGk/hex65tFJpzJ4t64eXL/EJGboX
-         Pwcvs753tuKO144EAF1AOwMfpaf1x0RuIcpb6W+Tbj2CgnPSUuIm98IQMWiBI/KjQ9Tb
-         5gQw==
-X-Gm-Message-State: ACrzQf2KItGMiPX9VGhsk0ZVYWfYBjvDRm3OBSMflab6kTde3BlBUAV/
-        QbxhjOHTm6UU+qvxBMw1fUOwNA==
-X-Google-Smtp-Source: AMsMyM5vmo9268X1rr3fivj592ANmqiYo0xnHXYRVI8INujHbyz/5EMOQO4g/UhAmT+YLx2Nuw8skg==
-X-Received: by 2002:a17:90b:4c50:b0:202:c7b1:b1f9 with SMTP id np16-20020a17090b4c5000b00202c7b1b1f9mr6661977pjb.77.1664313840953;
-        Tue, 27 Sep 2022 14:24:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e3-20020a17090301c300b00172cb8b97a8sm2056148plh.5.2022.09.27.14.24.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 14:24:00 -0700 (PDT)
-Date:   Tue, 27 Sep 2022 14:23:59 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Wei Liu <wei.liu@kernel.org>
+        Tue, 27 Sep 2022 17:26:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D240F1E76B7;
+        Tue, 27 Sep 2022 14:26:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F7CF61B9D;
+        Tue, 27 Sep 2022 21:26:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A142C433C1;
+        Tue, 27 Sep 2022 21:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664313999;
+        bh=xsHcZmQ5k2fouDljXp77NUkSQtGkptLx+KZKrFyMkVk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sWPV6fPvwau/brQJo1jcJrYLI/PzgmGw3fPY7sWSFOfBq2TqCRVGiLBgKGtPrQqqW
+         dhDsWN4Eu842mdtbU1ipgIoZ9Xtq2z956kGZvTz0lviaKFTu0FvdJDPNngCBHDvZes
+         UZU/OKtXCayCe+J2QnePigu59JVJhk4KFwg5ZAhXWI12Q3g8Rky6FevPJUdBJyC7Fc
+         AMp6OlUMqjauaz1vT74piycJD6rEV/LhfI/Zs6M7yP9/kI0V7y3nB5SWF4RwTOxThI
+         xa7T0SqV+RSRYdxJDnoEpUkcHCNuwpwKEYW+45jqg+1wBEME4xmsxyKUXn5ey6gqaF
+         SCfBNv4K2h3fA==
+Date:   Tue, 27 Sep 2022 16:26:32 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Drivers: hv: vmbus: Split memcpy of flex-array
-Message-ID: <202209271423.EA345AD@keescook>
-References: <20220924030741.3345349-1-keescook@chromium.org>
- <Yy58rt9N0+dHrNtt@work>
- <202209232119.E32C14857@keescook>
- <Yy7dJP4p0FMQfPl5@liuwe-devbox-debian-v2>
+Subject: Re: [PATCH v2] Drivers: hv: vmbus: Split memcpy of flex-array
+Message-ID: <YzNqiLag6NyRMdh+@work>
+References: <20220927211736.3241175-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yy7dJP4p0FMQfPl5@liuwe-devbox-debian-v2>
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220927211736.3241175-1-keescook@chromium.org>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Sep 24, 2022 at 10:34:12AM +0000, Wei Liu wrote:
-> Hi Kees
+On Tue, Sep 27, 2022 at 02:17:36PM -0700, Kees Cook wrote:
+> To work around a misbehavior of the compiler's ability to see into
+> composite flexible array structs (as detailed in the coming memcpy()
+> hardening series[1]), split the memcpy() of the header and the payload
+> so no false positive run-time overflow warning will be generated. This
+> results in the already inlined memcpy getting unrolled a little more,
+> which very slightly increases text size:
 > 
-> On Fri, Sep 23, 2022 at 09:22:55PM -0700, Kees Cook wrote:
-> > On Fri, Sep 23, 2022 at 10:42:38PM -0500, Gustavo A. R. Silva wrote:
-> > > On Fri, Sep 23, 2022 at 08:07:41PM -0700, Kees Cook wrote:
-> > > > To work around a misbehavior of the compiler's ability to see into
-> > > > composite flexible array structs (as detailed in the coming memcpy()
-> > > > hardening series[1]), split the memcpy() of the header and the payload
-> > > > so no false positive run-time overflow warning will be generated. As it
-> > > > turns out, this appears to actually reduce the text size:
-> > 
-> > Er, actually, I can't read/math. ;) It _does_ grow the text size. (That's
-> > 2_3_ not 22 at the start of the text size...) On examination, it appears
-> > to unroll the already inlined memcpy further.
+> $ size drivers/hv/vmbus_drv.o.before drivers/hv/vmbus_drv.o
+>    text    data     bss     dec     hex filename
+>   22968    5239     232   28439    6f17 drivers/hv/vmbus_drv.o.before
+>   23032    5239     232   28503    6f57 drivers/hv/vmbus_drv.o
 > 
-> Can you provide an updated commit message? No need to resend.
+> Avoids the run-time false-positive warning:
+> 
+>   memcpy: detected field-spanning write (size 212) of single field "&ctx->msg" at drivers/hv/vmbus_drv.c:1133 (size 16)
+> 
+> [1] https://lore.kernel.org/linux-hardening/20220901065914.1417829-2-keescook@chromium.org/
+> 
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Tested-by: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Since I got more testing from Nathan (and the original warning message),
-I figured a full v2 respin would easier. Now sent. :) Thanks!
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
--Kees
+Thanks!
+--
+Gustavo
 
--- 
-Kees Cook
+> ---
+> v2: - fix commit log, add tags and exact warning test from Nathan
+> v1: https://lore.kernel.org/lkml/20220924030741.3345349-1-keescook@chromium.org
+> ---
+>  drivers/hv/vmbus_drv.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 23c680d1a0f5..9b111a8262e3 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1131,7 +1131,8 @@ void vmbus_on_msg_dpc(unsigned long data)
+>  			return;
+>  
+>  		INIT_WORK(&ctx->work, vmbus_onmessage_work);
+> -		memcpy(&ctx->msg, &msg_copy, sizeof(msg->header) + payload_size);
+> +		ctx->msg.header = msg_copy.header;
+> +		memcpy(&ctx->msg.payload, msg_copy.u.payload, payload_size);
+>  
+>  		/*
+>  		 * The host can generate a rescind message while we
+> -- 
+> 2.34.1
+> 
