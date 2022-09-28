@@ -2,44 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FF105ED50F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Sep 2022 08:42:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79A695ED975
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Sep 2022 11:51:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233233AbiI1Gm3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 28 Sep 2022 02:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57242 "EHLO
+        id S232565AbiI1Jv0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 28 Sep 2022 05:51:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233236AbiI1Glx (ORCPT
+        with ESMTP id S229885AbiI1JvZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 28 Sep 2022 02:41:53 -0400
-Received: from mail.nfschina.com (unknown [124.16.136.209])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C11610D672;
-        Tue, 27 Sep 2022 23:41:07 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mail.nfschina.com (Postfix) with ESMTP id BE5401E80D40;
-        Wed, 28 Sep 2022 14:36:47 +0800 (CST)
-X-Virus-Scanned: amavisd-new at test.com
-Received: from mail.nfschina.com ([127.0.0.1])
-        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JIKw-suG0KCg; Wed, 28 Sep 2022 14:36:45 +0800 (CST)
-Received: from localhost.localdomain (unknown [219.141.250.2])
-        (Authenticated sender: kunyu@nfschina.com)
-        by mail.nfschina.com (Postfix) with ESMTPA id E88A81E80D33;
-        Wed, 28 Sep 2022 14:36:39 +0800 (CST)
-From:   Li kunyu <kunyu@nfschina.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, catalin.marinas@arm.com,
-        will@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        arnd@arndb.de
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Li kunyu <kunyu@nfschina.com>
-Subject: [PATCH v6] hyperv: simplify and rename generate_guest_id
-Date:   Wed, 28 Sep 2022 14:40:46 +0800
-Message-Id: <20220928064046.3545-1-kunyu@nfschina.com>
-X-Mailer: git-send-email 2.18.2
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        Wed, 28 Sep 2022 05:51:25 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE065A6C06;
+        Wed, 28 Sep 2022 02:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664358684; x=1695894684;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Br2i/PQsVuorfzONFXOsgP+GRMRyazWmVkbxSLZDOVE=;
+  b=CL0wURgX/CMbJlPPBHWlyY5Z37NsJ44L9JqCsV2D3dNG1uh4Y8BptL1a
+   sY03SqAjEBPKMCALB8oXH5JGKnjyWEgSQzWdFu7bF1pOvkCD4OzkWlHNm
+   gRgH+Nr0U4K/1/mECtvZr/zigO/VXGoFmJi3+qKr4L0yY+EigGxFK0hFN
+   K1FFxZDaLwNJuJasFDR5weJBbg1T/i8WbOz+qtfEVOR92n7PVIRyv7kFX
+   0kT/nH51zbldYQnRT8w80YpPmrk+K199JhubcUM9Bfgwt+vkY5OnFa0Uj
+   kUduteBl2BL4mZb5WWuTiTYYFF8i0rrKGdqIFRzJFoJTjs93/wcudb6P2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="303041247"
+X-IronPort-AV: E=Sophos;i="5.93,351,1654585200"; 
+   d="scan'208";a="303041247"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 02:51:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="652617338"
+X-IronPort-AV: E=Sophos;i="5.93,351,1654585200"; 
+   d="scan'208";a="652617338"
+Received: from liuzhao-optiplex-7080.sh.intel.com ([10.239.160.132])
+  by orsmga008.jf.intel.com with ESMTP; 28 Sep 2022 02:51:19 -0700
+From:   Zhao Liu <zhao1.liu@linux.intel.com>
+To:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        "Fabio M . De Francesco" <fmdefrancesco@gmail.com>,
+        Zhenyu Wang <zhenyu.z.wang@intel.com>,
+        Zhao Liu <zhao1.liu@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH] x86/hyperv: Replace kmap() with kmap_local_page()
+Date:   Wed, 28 Sep 2022 17:56:40 +0800
+Message-Id: <20220928095640.626350-1-zhao1.liu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,81 +69,74 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The generate_guest_id function is more suitable for use after the
-following modifications.
-1. The return value of the function is modified to u64.
-2. Remove the d_info1 and d_info2 parameters from the function, keep the
-u64 type kernel_version parameter.
-3. Rename the function to make it clearly a Hyper-V related function,
-and modify it to hv_generate_guest_id.
+From: Zhao Liu <zhao1.liu@intel.com>
 
-Signed-off-by: Li kunyu <kunyu@nfschina.com>
+kmap() is being deprecated in favor of kmap_local_page()[1].
 
---------
- v2: Fix generate_guest_id to hv_generate_guest_id.
- v3: Fix [PATCH v2] asm-generic: Remove the ... to [PATCH v3] hyperv: simp
-     lify ... and remove extra spaces
- v4: Remove #include <linux/version.h> in the calling file, and add #inclu
-     de <linux/version.h> in the function implementation file
- v5: <linux/version.h> is changed to the definition position before v4, an
-     d the LINUX_VERSION_CODE macro is passed in the function call
- v6: Modify the patch description information to the changed information a
-     fter discussion
+There are two main problems with kmap(): (1) It comes with an overhead as
+mapping space is restricted and protected by a global lock for
+synchronization and (2) it also requires global TLB invalidation when the
+kmap's pool wraps and it might block when the mapping space is fully
+utilized until a slot becomes available.
+
+With kmap_local_page() the mappings are per thread, CPU local, can take
+page faults, and can be called from any context (including interrupts).
+It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
+the tasks can be preempted and, when they are scheduled to run again, the
+kernel virtual addresses are restored and are still valid.
+
+In the fuction hyperv_init() of hyperv/hv_init.c, the mapping is used in a
+single thread and is short live. So, in this case, it's safe to simply use
+kmap_local_page() to create mapping, and this avoids the wasted cost of
+kmap() for global synchronization.
+
+In addtion, the fuction hyperv_init() checks if kmap() fails by BUG_ON().
+From the original discussion[2], the BUG_ON() here is just used to
+explicitly panic NULL pointer. So still keep the BUG_ON() in place to check
+if kmap_local_page() fails. Based on this consideration, memcpy_to_page()
+is not selected here but only kmap_local_page() is used.
+
+Therefore, replace kmap() with kmap_local_page() in hyperv/hv_init.c.
+
+[1]: https://lore.kernel.org/all/20220813220034.806698-1-ira.weiny@intel.com
+[2]: https://lore.kernel.org/lkml/20200915103710.cqmdvzh5lys4wsqo@liuwe-devbox-debian-v2/
+
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Suggested-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
+Signed-off-by: Zhao Liu <zhao1.liu@intel.com>
+
 ---
- arch/arm64/hyperv/mshyperv.c   | 2 +-
- arch/x86/hyperv/hv_init.c      | 2 +-
- include/asm-generic/mshyperv.h | 9 +++------
- 3 files changed, 5 insertions(+), 8 deletions(-)
+Suggested by credits.
+	Dave: Referred to his comments about whether kmap() can fail and the
+	      suggestion to keep BUG_ON() in place.
+	Ira: Referred to his task documentation and review comments about
+	     keeping BUG_ON() for kmap_local_page().
+	Fabio: Stole some of his boiler plate commit message.
+---
+ arch/x86/hyperv/hv_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index bbbe351e9045..a406454578f0 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -38,7 +38,7 @@ static int __init hyperv_init(void)
- 		return 0;
- 
- 	/* Setup the guest ID */
--	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-+	guest_id = hv_generate_guest_id(LINUX_VERSION_CODE);
- 	hv_set_vpreg(HV_REGISTER_GUEST_OSID, guest_id);
- 
- 	/* Get the features and hints from Hyper-V */
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 3de6d8b53367..032d85ac33fa 100644
+index 3de6d8b53367..72fe46eb183f 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
-@@ -426,7 +426,7 @@ void __init hyperv_init(void)
- 	 * 1. Register the guest ID
- 	 * 2. Enable the hypercall and register the hypercall page
- 	 */
--	guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-+	guest_id = hv_generate_guest_id(LINUX_VERSION_CODE);
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
+@@ -459,13 +459,13 @@ void __init hyperv_init(void)
+ 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
  
- 	/* Hyper-V requires to write guest os id via ghcb in SNP IVM. */
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index c05d2ce9b6cd..bfb9eb9d7215 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -105,15 +105,12 @@ static inline u64 hv_do_rep_hypercall(u16 code, u16 rep_count, u16 varhead_size,
- }
- 
- /* Generate the guest OS identifier as described in the Hyper-V TLFS */
--static inline  __u64 generate_guest_id(__u64 d_info1, __u64 kernel_version,
--				       __u64 d_info2)
-+static inline u64 hv_generate_guest_id(u64 kernel_version)
- {
--	__u64 guest_id = 0;
-+	u64 guest_id;
- 
--	guest_id = (((__u64)HV_LINUX_VENDOR_ID) << 48);
--	guest_id |= (d_info1 << 48);
-+	guest_id = (((u64)HV_LINUX_VENDOR_ID) << 48);
- 	guest_id |= (kernel_version << 16);
--	guest_id |= d_info2;
- 
- 	return guest_id;
- }
+ 		pg = vmalloc_to_page(hv_hypercall_pg);
+-		dst = kmap(pg);
++		dst = kmap_local_page(pg);
+ 		src = memremap(hypercall_msr.guest_physical_address << PAGE_SHIFT, PAGE_SIZE,
+ 				MEMREMAP_WB);
+ 		BUG_ON(!(src && dst));
+ 		memcpy(dst, src, HV_HYP_PAGE_SIZE);
+ 		memunmap(src);
+-		kunmap(pg);
++		kunmap_local(dst);
+ 	} else {
+ 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
+ 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
 -- 
-2.18.2
+2.34.1
 
