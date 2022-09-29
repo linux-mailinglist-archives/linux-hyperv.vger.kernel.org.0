@@ -1,102 +1,126 @@
 Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 229205EFA7B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Sep 2022 18:30:56 +0200 (CEST)
+Received: from out1.vger.email (unknown [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id 413CB5EFCC6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Sep 2022 20:14:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234940AbiI2QaX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Sep 2022 12:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
+        id S235586AbiI2SOW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Sep 2022 14:14:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235139AbiI2Q3c (ORCPT
+        with ESMTP id S235469AbiI2SOT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Sep 2022 12:29:32 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CDD135057;
-        Thu, 29 Sep 2022 09:28:58 -0700 (PDT)
-Received: by mail-wm1-f50.google.com with SMTP id o5so1330628wms.1;
-        Thu, 29 Sep 2022 09:28:58 -0700 (PDT)
+        Thu, 29 Sep 2022 14:14:19 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCAB1F65ED
+        for <linux-hyperv@vger.kernel.org>; Thu, 29 Sep 2022 11:14:18 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3521c1a01b5so21033827b3.23
+        for <linux-hyperv@vger.kernel.org>; Thu, 29 Sep 2022 11:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date;
+        bh=jYPKWuT1u5m0MnKr4TovJZUrMbudnfje+CzX8rxj9dY=;
+        b=Ury0CFn0zT2Q+dgdtmwk3iQr3s9PWnviEmpKdjL2ckeEaSmqrBmREvZyOZsYx7mfNx
+         ECzbRm2XMKNf8IHIfQieAGeVmFDIKL4DvNsgEpkMewEU+OzV/roiRamuWScwv9Oc1wRN
+         ijQp0mOci65LBvTFCA0oCNoNC8WlfpZsz+Tq7aVC8M0pO+Hj+OnGwI5r7GGQ2npv/b+V
+         21bRDiDcuTW39u8v2MFAmqGu/gcyiUSyN20+vWsHPh1gtHAvk8ThOVjIFxdOBhx8XTyc
+         jfszHIqgdfl0jAOVUeHhK+UvFa1CyD4djovV+L8K84r1YaiZsjc9wGyt7ZHsGqI8mieF
+         JEVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=QYOc+OHLL6KTLMFJnSaBlHOJKuyxaHY1IrKcRU6FlxE=;
-        b=CWRRvBk7e6CRy+HWfhbVqQBhfq7vHbBhR3wLtt0iFVoC7McAoLtFTGBSXOlVSW24/2
-         TFMTMrsrFdEkibFX+Bp9vkxV6M9TOvxvMcpeePLx2dqqEtyh/6TSNGGCj+JCpQm2G+ia
-         mAvL38nkXYRIJXLMa4LcH8EujtvXA/lWt8aLzVhBeXzH9LkMiu2uAiruY8dmrCwq9VaU
-         AsOPRXto0XNPkt0V+bBvJw7VY1+Zlnm+OGEeRxKwZ7lWP/v4XajMg78ncbhnntmP31HQ
-         F3cxb5Kl8Y2VMp0apHWRHOk09VKXsuq0s71kkPagBvhvHQlgPDcptqxypU5NrtD34zkO
-         qD3Q==
-X-Gm-Message-State: ACrzQf0Rburto51+srZIVNcUZVBAzPAtauIJZZBSIVUep7TvQfnizvDn
-        urA/3oBxVS6lhBXJ0l5POLU=
-X-Google-Smtp-Source: AMsMyM5b/OYKlGx3DqtnOYo7cHOWYylUcTVvTbFZnkntH3B86vTEuk1JHoRmIuzJA2Zq7X3vY5YMPw==
-X-Received: by 2002:a05:600c:a14e:b0:3b4:7ff1:299b with SMTP id ib14-20020a05600ca14e00b003b47ff1299bmr11387647wmb.18.1664468935378;
-        Thu, 29 Sep 2022 09:28:55 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id q14-20020adfea0e000000b00228d7078c4esm7232054wrm.4.2022.09.29.09.28.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 09:28:54 -0700 (PDT)
-Date:   Thu, 29 Sep 2022 16:28:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>, ssengar@microsoft.com,
-        drawat.floss@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
-        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH] drm/hyperv: Add ratelimit on error message
-Message-ID: <YzXHxf/5WaiIrqMi@liuwe-devbox-debian-v2>
-References: <1662736193-31379-1-git-send-email-ssengar@linux.microsoft.com>
- <88fab56a-f6e5-bae0-5ed7-1e01c070d136@suse.de>
- <20220911161142.GA7754@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220911161142.GA7754@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date;
+        bh=jYPKWuT1u5m0MnKr4TovJZUrMbudnfje+CzX8rxj9dY=;
+        b=68dw0/vnXkaCrweOMBTdln3hD6W2T8mf/8SFWQ2IWgq6YKaAcYyI21n0q1bzP+Bw2X
+         lsDp9JmkvioIk7/c5Fsa8O0UCzpfq/j3zNnq1YWEoLoMsMqAvk19viF0dGQsHaOTmPCk
+         hW9/9/IncyZD62NfZm0iaCl237rgHkONd67uifABUhbgXFMA3Py9NUfC56C3b7Znq6+s
+         Uryt0tNEHNDRpGOTytrzgXfEuq3V1Eb5F9puusGSadyVpPUCgdD7XkMV1PMtiLgGKkD7
+         ckG0OWG69c7HQNTn0Du1evGuSHEP4PfLkfjQBJk3Xyzsvs7LxD57sXLcJ2CH1eqKzHiN
+         GHAw==
+X-Gm-Message-State: ACrzQf0fnbmKU6RD9uuatSy60rjyGvq8GJZEDCF88yxjSnomtW8zgDM6
+        LN5IiNBMP+5TetxN6J434k7e+GXYQg==
+X-Google-Smtp-Source: AMsMyM6Pf2IhccLpOcVpEi4t74u7CQmid4Z2TwcCudea8RUMSv/ibgUI3NSufaIAn+mbxQCtqU2gHTq9QA==
+X-Received: from nhuck.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:39cc])
+ (user=nhuck job=sendgmr) by 2002:a25:9104:0:b0:6bc:5ecf:30b7 with SMTP id
+ v4-20020a259104000000b006bc5ecf30b7mr4758739ybl.293.1664475257510; Thu, 29
+ Sep 2022 11:14:17 -0700 (PDT)
+Date:   Thu, 29 Sep 2022 11:14:11 -0700
+In-Reply-To: <20220919182832.158c0ea2@kernel.org>
+Mime-Version: 1.0
+References: <20220919182832.158c0ea2@kernel.org>
+X-Mailer: git-send-email 2.38.0.rc1.362.ged0d419d3c-goog
+Message-ID: <20220929181411.61331-1-nhuck@google.com>
+Subject: [PATCH v2] net: mana: Fix return type of mana_start_xmit
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     kuba@kernel.org
+Cc:     davem@davemloft.net, decui@microsoft.com, edumazet@google.com,
+        error27@gmail.com, haiyangz@microsoft.com, kys@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, nathan@kernel.org, ndesaulniers@google.com,
+        netdev@vger.kernel.org, nhuck@google.com, pabeni@redhat.com,
+        sthemmin@microsoft.com, trix@redhat.com, wei.liu@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Sep 11, 2022 at 09:11:42AM -0700, Saurabh Singh Sengar wrote:
-> On Sat, Sep 10, 2022 at 08:06:05PM +0200, Thomas Zimmermann wrote:
-> > Hi
-> > 
-> > Am 09.09.22 um 17:09 schrieb Saurabh Sengar:
-> > >Due to a full ring buffer, the driver may be unable to send updates to
-> > >the Hyper-V host.  But outputing the error message can make the problem
-> > >worse because console output is also typically written to the frame
-> > >buffer.
-> > >Rate limiting the error message, also output the error code for additional
-> > >diagnosability.
-> > >
-> > >Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > >---
-> > >  drivers/gpu/drm/hyperv/hyperv_drm_proto.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > >diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> > >index 76a182a..013a782 100644
-> > >--- a/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> > >+++ b/drivers/gpu/drm/hyperv/hyperv_drm_proto.c
-> > >@@ -208,7 +208,7 @@ static inline int hyperv_sendpacket(struct hv_device *hdev, struct synthvid_msg
-> > >  			       VM_PKT_DATA_INBAND, 0);
-> > >  	if (ret)
-> > >-		drm_err(&hv->dev, "Unable to send packet via vmbus\n");
-> > >+		drm_err_ratelimited(&hv->dev, "Unable to send packet via vmbus; error %d\n", ret);
-> > 
-> > I better option would probably be drm_err_once(). Then you'd get the
-> > first error message and skip all others.
-> 
-> Thanks for your comment however the intention here is to limit the printk messages and break the chain
-> rather then printing only once. There can be cases where at different point of time we again get a
-> ring buffer full condition and we don't want to miss that. We should get the message for each of these
-> errror which are widely-separated in time not just the first time.
+The ndo_start_xmit field in net_device_ops is expected to be of type
+netdev_tx_t (*ndo_start_xmit)(struct sk_buff *skb, struct net_device *dev).
 
-Applied to hyperv-next. Thanks.
+The mismatched return type breaks forward edge kCFI since the underlying
+function definition does not match the function hook definition.
+
+The return type of mana_start_xmit should be changed from int to
+netdev_tx_t.
+
+Reported-by: Dan Carpenter <error27@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1703
+Cc: llvm@lists.linux.dev
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
+---
+
+Changes v1 -> v2
+- Update header file
+
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 2 +-
+ include/net/mana/mana.h                       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 7ca313c7b7b3..a3df5678bb4f 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -141,7 +141,7 @@ static int mana_map_skb(struct sk_buff *skb, struct mana_port_context *apc,
+ 	return -ENOMEM;
+ }
+ 
+-int mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	enum mana_tx_pkt_format pkt_fmt = MANA_SHORT_PKT_FMT;
+ 	struct mana_port_context *apc = netdev_priv(ndev);
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 20212ffeefb9..3bb579962a14 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -390,7 +390,7 @@ struct mana_port_context {
+ 	struct mana_ethtool_stats eth_stats;
+ };
+ 
+-int mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
++netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev);
+ int mana_config_rss(struct mana_port_context *ac, enum TRI_STATE rx,
+ 		    bool update_hash, bool update_tab);
+ 
+-- 
+2.38.0.rc1.362.ged0d419d3c-goog
+
