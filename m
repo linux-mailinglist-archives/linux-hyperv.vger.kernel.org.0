@@ -2,77 +2,95 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BF4F5F309D
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Oct 2022 15:01:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 504D85F3242
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Oct 2022 17:03:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229773AbiJCNBZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 3 Oct 2022 09:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
+        id S230054AbiJCPDt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 3 Oct 2022 11:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229908AbiJCNBX (ORCPT
+        with ESMTP id S230044AbiJCPDs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 3 Oct 2022 09:01:23 -0400
+        Mon, 3 Oct 2022 11:03:48 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307134AD5A
-        for <linux-hyperv@vger.kernel.org>; Mon,  3 Oct 2022 06:01:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBE433377
+        for <linux-hyperv@vger.kernel.org>; Mon,  3 Oct 2022 08:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664802081;
+        s=mimecast20190719; t=1664809426;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cRj6bSlUC53GGB5VwGt/QTv7mNL3dMlu/4FM8+Jr3Ho=;
-        b=A8LgLxNfb8RzrORD3ANBZoYg/y4MhhiXQS6vKsO/nVWSz8ZN2ztjHQs1hDMdjG4hRNW8hy
-        +dX89UPZks2Hf24ZyDIyojESpNeZTrDuQB4rxmep3kDZdqu35nPC8v2KcGwRF0noKa5aZX
-        ICxK56Q/p+7O7wnKRXzw8q8oO4VfL5A=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=zlSyGCvWo5iRyh04tGy8TsPBqO2ZA147cE0Y4mnczLc=;
+        b=dVIH8V5MqBy8M6F1un+TGbifq6oiQm/6md5I0K1silD1LI9VmXAuvXZKnTbavLlhLDdhQ3
+        OWPfPI2/LfVQjjsg3fwLmgX+63rmXAStyIdB+uE4OBL8CoX6jcZvVae+zXso2iSsZTke3N
+        J2DJO0ilqC4OlhThIVICh9oEbX7qUg4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-653-8kZZtUtXOBWv9hS0sl0ibA-1; Mon, 03 Oct 2022 09:01:10 -0400
-X-MC-Unique: 8kZZtUtXOBWv9hS0sl0ibA-1
-Received: by mail-ej1-f71.google.com with SMTP id ga36-20020a1709070c2400b007837e12cd7bso3263837ejc.9
-        for <linux-hyperv@vger.kernel.org>; Mon, 03 Oct 2022 06:01:10 -0700 (PDT)
+ us-mta-611-sWsy5W2GMMGWOJ6N-Qgy1g-1; Mon, 03 Oct 2022 11:03:44 -0400
+X-MC-Unique: sWsy5W2GMMGWOJ6N-Qgy1g-1
+Received: by mail-wr1-f72.google.com with SMTP id s5-20020adf9785000000b0022e1af0e7e8so1548822wrb.11
+        for <linux-hyperv@vger.kernel.org>; Mon, 03 Oct 2022 08:03:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date;
-        bh=cRj6bSlUC53GGB5VwGt/QTv7mNL3dMlu/4FM8+Jr3Ho=;
-        b=PnaJhGTW4AIhu0MGHLWITYMme5lrvhx9OLjUsL1ditWFq83rhaIt2XOnCKFef5v+DC
-         ecQBn5//IQMDc+zWZM294wfDLwJqEKcGQsVAG6EysZuHjHL8gHOxvbxmq3veDRvTgNQC
-         8DnWQBgOKCQaA2g0O2AgkYQNPvH5XpcohLjLSxZlv+AsX6WeU1f8A95gxq++efOjsVA6
-         ewBS2VkxJ/958aYdvEk1sIti9vYm67D53xNDI1MkcYFRaM715rPhrfUp5gDWMdD4EOMN
-         pC5ORU4EunvHW4pCt28B6HNIY43N3xUZ/HRdjnQNL6YZdNfr1tpbhPxN1NP0YuVkbtL6
-         KQtg==
-X-Gm-Message-State: ACrzQf2IisS6aiOUMWU3P8UyVcwCJFwAWYBTV3JtHnRVuDjX7HDp+454
-        NqgZq7GXJzMlMTckR0PU+AlgsWB6r3XloYtVkJ8R7DcenmS7VOsJL/hqQkJ5IQNsvY8umIXpXOo
-        aFWmXe4iJEAZil4QIEZx0gdqY
-X-Received: by 2002:aa7:d306:0:b0:459:6e9:6284 with SMTP id p6-20020aa7d306000000b0045906e96284mr3362802edq.70.1664802069270;
-        Mon, 03 Oct 2022 06:01:09 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4LhOt7lq8KC+MtSWbuxFBRAsDpLqs6b02Vk7/jD6P80CM9LRWg42h4L75YMKjHN7LJ+v/WZg==
-X-Received: by 2002:aa7:d306:0:b0:459:6e9:6284 with SMTP id p6-20020aa7d306000000b0045906e96284mr3362761edq.70.1664802068878;
-        Mon, 03 Oct 2022 06:01:08 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=zlSyGCvWo5iRyh04tGy8TsPBqO2ZA147cE0Y4mnczLc=;
+        b=bo8zy6IGaFptnMk2jpCnt+Ujg1RAI3oNfqou/Uz358AgtlLD5ngzkTlODb9IozTLCa
+         9qVEqyXQVfT/POXkyaCjvOTW+WBLKoKfJSmKPn/qKF5JHsarTZ5Lmal+6M4XIvpo6OBi
+         oElD8aOeE1cwst5ebpVhcydJShyPz8f6Nf8HH3k7OCyP02n0f7+Wtn43mRqRIzcHI1lB
+         EIY1bERf/KyJUeHvO32uo+id83NPi58gSkMie4UEfUz7s9VHQWhZp/dkkgyjtfu83Ixd
+         rq8x7BM/WA1FcwdhKDpZtFMn8/nnbRg3MtxLCd1KNXTAfOlmwh43ULB0o9UzGkMtrv4R
+         xTaw==
+X-Gm-Message-State: ACrzQf3Gsh9/pn3bxMMyc/b5cy76OwPferSW23a8wZ29kTzaSx5wS7cX
+        qeYeUeG9CB4SgViArTu7CXkftiOh7Cmld3c6lG0PkTzRSGQakxGih4Dws5G1x7Wn5XjBaMo9UZx
+        439JVZKMgoYpam8huQwTbBZxC
+X-Received: by 2002:a05:600c:4e8b:b0:3b4:c8ce:be87 with SMTP id f11-20020a05600c4e8b00b003b4c8cebe87mr7593502wmq.157.1664809423567;
+        Mon, 03 Oct 2022 08:03:43 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4sxlC5XJOgl9QDu564seFf1Ssz0/+BFurAjD66iPYPfhV1hEDgomWrdFD2cOYxCQVBT8cYyA==
+X-Received: by 2002:a05:600c:4e8b:b0:3b4:c8ce:be87 with SMTP id f11-20020a05600c4e8b00b003b4c8cebe87mr7593479wmq.157.1664809423275;
+        Mon, 03 Oct 2022 08:03:43 -0700 (PDT)
 Received: from fedora (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id m21-20020a50ef15000000b00458bb36042asm4966689eds.1.2022.10.03.06.01.07
+        by smtp.gmail.com with ESMTPSA id r18-20020a05600c35d200b003a84375d0d1sm17657403wmq.44.2022.10.03.08.03.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 06:01:08 -0700 (PDT)
+        Mon, 03 Oct 2022 08:03:42 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        Yuan Yao <yuan.yao@linux.intel.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 30/39] KVM: selftests: Hyper-V PV TLB flush selftest
-In-Reply-To: <YyuVtrpQwZGHs4ez@google.com>
-References: <20220921152436.3673454-1-vkuznets@redhat.com>
- <20220921152436.3673454-31-vkuznets@redhat.com>
- <YyuVtrpQwZGHs4ez@google.com>
-Date:   Mon, 03 Oct 2022 15:01:07 +0200
-Message-ID: <87wn9h9i3w.fsf@redhat.com>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "jailhouse-dev@googlegroups.com" <jailhouse-dev@googlegroups.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "acrn-dev@lists.projectacrn.org" <acrn-dev@lists.projectacrn.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Alexander Graf <graf@amazon.com>
+Subject: Re: [PATCH v2] x86/PCI: Prefer MMIO over PIO on all hypervisor
+In-Reply-To: <B64FD502-E794-4E94-A267-D690476C57EE@vmware.com>
+References: <9FEC6622-780D-41E6-B7CA-8D39EDB2C093@vmware.com>
+ <87zgf3pfd1.fsf@redhat.com>
+ <B64FD502-E794-4E94-A267-D690476C57EE@vmware.com>
+Date:   Mon, 03 Oct 2022 17:03:41 +0200
+Message-ID: <87tu4l9cfm.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
@@ -83,52 +101,118 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Sean Christopherson <seanjc@google.com> writes:
+Ajay Kaher <akaher@vmware.com> writes:
 
-> On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
+>> =EF=BB=BFOn 13/09/22, 7:05 PM, "Vitaly Kuznetsov" <vkuznets@redhat.com> =
+wrote:
+>>>
+>>> Thanks Vitaly for your response.
+>>>
+>>> 1. we have multiple objects of struct pci_raw_ops, 2. adding 'priority'=
+ field to struct pci_raw_ops
+>>> doesn't seems to be appropriate as need to take decision which object o=
+f struct pci_raw_ops has
+>>> to be used, not something with-in struct pci_raw_ops.
+>>
+>> I'm not sure I follow, you have two instances of 'struct pci_raw_ops'
+>> which are called 'raw_pci_ops' and 'raw_pci_ext_ops'. What if you do
+>> something like (completely untested):
+>>
+>> diff --git a/arch/x86/include/asm/pci_x86.h b/arch/x86/include/asm/pci_x=
+86.h
+>> index 70533fdcbf02..fb8270fa6c78 100644
+>> --- a/arch/x86/include/asm/pci_x86.h
+>> +++ b/arch/x86/include/asm/pci_x86.h
+>> @@ -116,6 +116,7 @@ extern void (*pcibios_disable_irq)(struct pci_dev *d=
+ev);
+>> extern bool mp_should_keep_irq(struct device *dev);
+>>
+>> struct pci_raw_ops {
+>> +       int rating;
+>>          int (*read)(unsigned int domain, unsigned int bus, unsigned int=
+ devfn,
+>>                                                int reg, int len, u32 *va=
+l);
+>>          int (*write)(unsigned int domain, unsigned int bus, unsigned in=
+t devfn,
+>> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+>> index ddb798603201..e9965fd11576 100644
+>> --- a/arch/x86/pci/common.c
+>> +++ b/arch/x86/pci/common.c
+>> @@ -40,7 +40,8 @@ const struct pci_raw_ops *__read_mostly raw_pci_ext_op=
+s;
+>>  int raw_pci_read(unsigned int domain, unsigned int bus, unsigned int de=
+vfn,
+>>                                                 int reg, int len, u32 *v=
+al)
+>> {
+>> -       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
+>> +       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops &&
+>> +           (!raw_pci_ext_ops || raw_pci_ext_ops->rating <=3D raw_pci_op=
+s->rating))
+>>                 return raw_pci_ops->read(domain, bus, devfn, reg, len, v=
+al);
+>>         if (raw_pci_ext_ops)
+>>                 return raw_pci_ext_ops->read(domain, bus, devfn, reg, le=
+n, val);
+>> @@ -50,7 +51,8 @@ int raw_pci_read(unsigned int domain, unsigned int bus=
+, unsigned int devfn,
+>>  int raw_pci_write(unsigned int domain, unsigned int bus, unsigned int d=
+evfn,
+>>                                                 int reg, int len, u32 va=
+l)
+>> {
+>> -       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
+>> +       if (domain =3D=3D 0 && reg < 256 && raw_pci_ops &&
+>> +           (!raw_pci_ext_ops || raw_pci_ext_ops->rating <=3D raw_pci_op=
+s->rating))
+>>                 return raw_pci_ops->write(domain, bus, devfn, reg, len, =
+val);
+>>          if (raw_pci_ext_ops)
+>>                 return raw_pci_ext_ops->write(domain, bus, devfn, reg, l=
+en, val);
+>>
+>> and then somewhere in Vmware hypervisor initialization code
+>> (arch/x86/kernel/cpu/vmware.c) you do
+>>
+>>  raw_pci_ext_ops->rating =3D 100;
+>
+> Thanks Vitaly, for your review and helping us to improve the code.
+>
+> I was working to make changes as you suggested, but before sending v3 wou=
+ld like to
+> discuss on following:
+>
+> If we add rating with-in struct pci_raw_ops then we can't have pci_mmcfg =
+as const,
+> and following change is must in arch/x86/pci/mmconfig_64.c:
+>
+> -const struct pci_raw_ops pci_mmcfg =3D {
+> +struct pci_raw_ops pci_mmcfg =3D {
+>  	.read =3D		pci_mmcfg_read,
+>  	.write =3D	pci_mmcfg_write,
+> };
+>
+> So to avoid this change, is it fine to have global bool prefer_raw_pci_ex=
+t_ops?
+>
+> And raw_pci_read() will have following change:
+>
+> -	if (domain =3D=3D 0 && reg < 256 && raw_pci_ops)
+> +	if (domain =3D=3D 0 && reg < 256 && raw_pci_ops &&
+> +	     (!prefer_raw_pci_ext_ops ||  !raw_pci_ext_ops)
+>
+
+Not my but rather PCI maintainer's call but IMHO dropping 'const' is
+better, introducing a new global var is our 'last resort' and should be
+avoided whenever possible. Alternatively, you can add a
+raw_pci_ext_ops_preferred() function checking somethin within 'struct
+hypervisor_x86' but I'm unsure if it's better.
+
+Also, please check Alex' question/suggestion.
 
 ...
 
->> +}
->> +
->> +/* Delay */
->> +static inline void rep_nop(void)
->
-> LOL, rep_nop() is a hilariously confusing function name.  "REP NOP" is "PAUSE",
-> and for whatever reason the kernel proper use rep_nop() as the function name for
-> the wrapper.  My reaction to the MFENCE+rep_nop() below was "how the hell does
-> MFENCE+PAUSE guarantee a delay?!?".
-
-Well, at least you got the joke :-)
-
->
-> Anyways, why not do e.g. usleep(1)?  
-
-I was under the impression that all these 'sleep' functions result in a
-syscall (and I do see TRIPLE_FAULT when I swap my rep_nop() with usleep())
-and here we need to wait in the guest (sender) ...
-
-> And if you really need a udelay() and not a
-> usleep(), IMO it's worth adding exactly that instead of throwing NOPs at the CPU.
-> E.g. aarch64 KVM selftests already implements udelay(), so adding an x86 variant
-> would move us one step closer to being able to use it in common tests.
-
-... so yes, I think we need a delay. The problem with implementing
-udelay() is that TSC frequency is unknown. We can get it from kvmclock
-but setting up kvmclock pages for all selftests looks like an
-overkill. Hyper-V emulation gives us HV_X64_MSR_TSC_FREQUENCY but that's
-not generic enough. Alternatively, we can use KVM_GET_TSC_KHZ when
-creating a vCPU but we'll need to pass the value to guest code somehow.
-AFAIR, we can use CPUID.0x15 and/or MSR_PLATFORM_INFO (0xce) or even
-introduce a PV MSR for our purposes -- or am I missing an obvious "easy"
-solution?
-
-I'm thinking about being lazy here and implemnting a Hyper-V specific
-udelay through HV_X64_MSR_TSC_FREQUENCY (unless you object, of course)
-to avoid bloating this series beyond 46 patches it already has.
-
-...
-
--- 
+--=20
 Vitaly
 
