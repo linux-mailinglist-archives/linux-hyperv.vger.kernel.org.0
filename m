@@ -2,108 +2,133 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3830A5F2CAC
-	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Oct 2022 11:01:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BF4F5F309D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  3 Oct 2022 15:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbiJCJBz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 3 Oct 2022 05:01:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59740 "EHLO
+        id S229773AbiJCNBZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 3 Oct 2022 09:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbiJCJB0 (ORCPT
+        with ESMTP id S229908AbiJCNBX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 3 Oct 2022 05:01:26 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27E922A71C;
-        Mon,  3 Oct 2022 01:50:21 -0700 (PDT)
-Received: by mail-wr1-f44.google.com with SMTP id u10so15513300wrq.2;
-        Mon, 03 Oct 2022 01:50:20 -0700 (PDT)
+        Mon, 3 Oct 2022 09:01:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307134AD5A
+        for <linux-hyperv@vger.kernel.org>; Mon,  3 Oct 2022 06:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1664802081;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cRj6bSlUC53GGB5VwGt/QTv7mNL3dMlu/4FM8+Jr3Ho=;
+        b=A8LgLxNfb8RzrORD3ANBZoYg/y4MhhiXQS6vKsO/nVWSz8ZN2ztjHQs1hDMdjG4hRNW8hy
+        +dX89UPZks2Hf24ZyDIyojESpNeZTrDuQB4rxmep3kDZdqu35nPC8v2KcGwRF0noKa5aZX
+        ICxK56Q/p+7O7wnKRXzw8q8oO4VfL5A=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-653-8kZZtUtXOBWv9hS0sl0ibA-1; Mon, 03 Oct 2022 09:01:10 -0400
+X-MC-Unique: 8kZZtUtXOBWv9hS0sl0ibA-1
+Received: by mail-ej1-f71.google.com with SMTP id ga36-20020a1709070c2400b007837e12cd7bso3263837ejc.9
+        for <linux-hyperv@vger.kernel.org>; Mon, 03 Oct 2022 06:01:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=Rkrx+2X1uI8y8EaK0vm6/8CJhWKYR67UczJ86spt5X4=;
-        b=oeO9eRIU/XK6LicvsDZ3KxSt/vJTQwdDWt4qdZFZniPg5qyUs3oo759pavzf+d7g56
-         gSylW9zsxD2mjdawZCAqPwoXM89oh7zqwMSbl80L0Di9Q/sUtzuiToC+PdZ1PVWS5nw5
-         QygCB6ef/cye2ArvWJ8vJW9iZxZeDEC4069y5afAFMhsaxX+z36saBT4dEjN79CgXSsu
-         GMUQjf1aMADwxqnHrwQrXIkmusMEchs+fGoiWwHTb0Tafr9iiYLz0GoTLXMI7bOIlymv
-         Ql55g/7UNFN7FhQ+b+LZ+cdZ4r+TQr4lCjYEDYSsk0AXdhMjWD0S7vStoyN1ai4LXqOi
-         0QRA==
-X-Gm-Message-State: ACrzQf0hxYZU+T8ngWs7z+3e+gVjZEjFAQLtyvppwjjMoQzlXFCjzNp6
-        Y0LjeonRKbf6UD+9JhJNhaE=
-X-Google-Smtp-Source: AMsMyM6JjKb85YnUKmMyV8El+MM4WioFvW6pb6wGSK6gdjtKbvrAoBCnvdK9iK2FPM/NJ4hPwxTXDg==
-X-Received: by 2002:adf:dd0b:0:b0:22e:4fa:51a5 with SMTP id a11-20020adfdd0b000000b0022e04fa51a5mr7305154wrm.692.1664787018821;
-        Mon, 03 Oct 2022 01:50:18 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id e16-20020a05600c2dd000b003b47e8a5d22sm16017773wmh.23.2022.10.03.01.50.18
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date;
+        bh=cRj6bSlUC53GGB5VwGt/QTv7mNL3dMlu/4FM8+Jr3Ho=;
+        b=PnaJhGTW4AIhu0MGHLWITYMme5lrvhx9OLjUsL1ditWFq83rhaIt2XOnCKFef5v+DC
+         ecQBn5//IQMDc+zWZM294wfDLwJqEKcGQsVAG6EysZuHjHL8gHOxvbxmq3veDRvTgNQC
+         8DnWQBgOKCQaA2g0O2AgkYQNPvH5XpcohLjLSxZlv+AsX6WeU1f8A95gxq++efOjsVA6
+         ewBS2VkxJ/958aYdvEk1sIti9vYm67D53xNDI1MkcYFRaM715rPhrfUp5gDWMdD4EOMN
+         pC5ORU4EunvHW4pCt28B6HNIY43N3xUZ/HRdjnQNL6YZdNfr1tpbhPxN1NP0YuVkbtL6
+         KQtg==
+X-Gm-Message-State: ACrzQf2IisS6aiOUMWU3P8UyVcwCJFwAWYBTV3JtHnRVuDjX7HDp+454
+        NqgZq7GXJzMlMTckR0PU+AlgsWB6r3XloYtVkJ8R7DcenmS7VOsJL/hqQkJ5IQNsvY8umIXpXOo
+        aFWmXe4iJEAZil4QIEZx0gdqY
+X-Received: by 2002:aa7:d306:0:b0:459:6e9:6284 with SMTP id p6-20020aa7d306000000b0045906e96284mr3362802edq.70.1664802069270;
+        Mon, 03 Oct 2022 06:01:09 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4LhOt7lq8KC+MtSWbuxFBRAsDpLqs6b02Vk7/jD6P80CM9LRWg42h4L75YMKjHN7LJ+v/WZg==
+X-Received: by 2002:aa7:d306:0:b0:459:6e9:6284 with SMTP id p6-20020aa7d306000000b0045906e96284mr3362761edq.70.1664802068878;
+        Mon, 03 Oct 2022 06:01:08 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id m21-20020a50ef15000000b00458bb36042asm4966689eds.1.2022.10.03.06.01.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 01:50:18 -0700 (PDT)
-Date:   Mon, 3 Oct 2022 08:50:16 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Zhao Liu <zhao1.liu@linux.intel.com>
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        "Fabio M . De Francesco" <fmdefrancesco@gmail.com>,
-        Zhenyu Wang <zhenyu.z.wang@intel.com>,
-        Zhao Liu <zhao1.liu@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH] x86/hyperv: Replace kmap() with kmap_local_page()
-Message-ID: <YzqiSK/s/oExlSrb@liuwe-devbox-debian-v2>
-References: <20220928095640.626350-1-zhao1.liu@linux.intel.com>
- <YzRVaJA0EyfcVisW@liuwe-devbox-debian-v2>
+        Mon, 03 Oct 2022 06:01:08 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 30/39] KVM: selftests: Hyper-V PV TLB flush selftest
+In-Reply-To: <YyuVtrpQwZGHs4ez@google.com>
+References: <20220921152436.3673454-1-vkuznets@redhat.com>
+ <20220921152436.3673454-31-vkuznets@redhat.com>
+ <YyuVtrpQwZGHs4ez@google.com>
+Date:   Mon, 03 Oct 2022 15:01:07 +0200
+Message-ID: <87wn9h9i3w.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YzRVaJA0EyfcVisW@liuwe-devbox-debian-v2>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 02:08:40PM +0000, Wei Liu wrote:
-> On Wed, Sep 28, 2022 at 05:56:40PM +0800, Zhao Liu wrote:
-> > From: Zhao Liu <zhao1.liu@intel.com>
-> > 
-> > kmap() is being deprecated in favor of kmap_local_page()[1].
-> > 
-> > There are two main problems with kmap(): (1) It comes with an overhead as
-> > mapping space is restricted and protected by a global lock for
-> > synchronization and (2) it also requires global TLB invalidation when the
-> > kmap's pool wraps and it might block when the mapping space is fully
-> > utilized until a slot becomes available.
-> > 
-> > With kmap_local_page() the mappings are per thread, CPU local, can take
-> > page faults, and can be called from any context (including interrupts).
-> > It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
-> > the tasks can be preempted and, when they are scheduled to run again, the
-> > kernel virtual addresses are restored and are still valid.
-> > 
-> > In the fuction hyperv_init() of hyperv/hv_init.c, the mapping is used in a
-> > single thread and is short live. So, in this case, it's safe to simply use
-> > kmap_local_page() to create mapping, and this avoids the wasted cost of
-> > kmap() for global synchronization.
-> > 
-> 
-> The kmap call in that function is not performance critical in any way,
-> and at this point in the initialization process I don't expect there to
-> be any contention, so the downside of kmap is not really a concern here.
-> 
-> That being said, kmap getting deprecated is a good enough reason to
-> switch to kmap_local_page. And I appreciate this well-written,
-> well-reasoned commit message.
-> 
-> I will apply it to hyperv-next later -- I doubt people will object to
-> this change, but just in case.
+Sean Christopherson <seanjc@google.com> writes:
 
-Applied to hyperv-next. Thanks.
+> On Wed, Sep 21, 2022, Vitaly Kuznetsov wrote:
+
+...
+
+>> +}
+>> +
+>> +/* Delay */
+>> +static inline void rep_nop(void)
+>
+> LOL, rep_nop() is a hilariously confusing function name.  "REP NOP" is "PAUSE",
+> and for whatever reason the kernel proper use rep_nop() as the function name for
+> the wrapper.  My reaction to the MFENCE+rep_nop() below was "how the hell does
+> MFENCE+PAUSE guarantee a delay?!?".
+
+Well, at least you got the joke :-)
+
+>
+> Anyways, why not do e.g. usleep(1)?  
+
+I was under the impression that all these 'sleep' functions result in a
+syscall (and I do see TRIPLE_FAULT when I swap my rep_nop() with usleep())
+and here we need to wait in the guest (sender) ...
+
+> And if you really need a udelay() and not a
+> usleep(), IMO it's worth adding exactly that instead of throwing NOPs at the CPU.
+> E.g. aarch64 KVM selftests already implements udelay(), so adding an x86 variant
+> would move us one step closer to being able to use it in common tests.
+
+... so yes, I think we need a delay. The problem with implementing
+udelay() is that TSC frequency is unknown. We can get it from kvmclock
+but setting up kvmclock pages for all selftests looks like an
+overkill. Hyper-V emulation gives us HV_X64_MSR_TSC_FREQUENCY but that's
+not generic enough. Alternatively, we can use KVM_GET_TSC_KHZ when
+creating a vCPU but we'll need to pass the value to guest code somehow.
+AFAIR, we can use CPUID.0x15 and/or MSR_PLATFORM_INFO (0xce) or even
+introduce a PV MSR for our purposes -- or am I missing an obvious "easy"
+solution?
+
+I'm thinking about being lazy here and implemnting a Hyper-V specific
+udelay through HV_X64_MSR_TSC_FREQUENCY (unless you object, of course)
+to avoid bloating this series beyond 46 patches it already has.
+
+...
+
+-- 
+Vitaly
+
