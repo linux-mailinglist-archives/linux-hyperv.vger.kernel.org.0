@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D22FA5F4367
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Oct 2022 14:45:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23D3C5F4394
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Oct 2022 14:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbiJDMpL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 4 Oct 2022 08:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56820 "EHLO
+        id S230226AbiJDMwx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 4 Oct 2022 08:52:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230140AbiJDMop (ORCPT
+        with ESMTP id S229724AbiJDMwP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 4 Oct 2022 08:44:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE2D5D130
-        for <linux-hyperv@vger.kernel.org>; Tue,  4 Oct 2022 05:43:24 -0700 (PDT)
+        Tue, 4 Oct 2022 08:52:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE015FF6F
+        for <linux-hyperv@vger.kernel.org>; Tue,  4 Oct 2022 05:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664887313;
+        s=mimecast20190719; t=1664887741;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=q/mBUp5om8+lhF+564fXSbS6jTR1Ky4c+482nYxEp3g=;
-        b=REx9zaCLcHoAinn1cHREtAeH7alDumzLsjSeySH6tY1UK3sFlW2cLKaKDQA4piyq497WIA
-        N9b9RRI60sO3hf5slopfpbY++lm7BD/rwbejTuWQwEYFNhc/cAQImWYNcAj8oYHWo6Rzvz
-        Y8a3ScTszr9oIYrPoInU7es7kqHwI2s=
+        bh=CSHAxvWPIWn5dQFzZOzUI2rwRDY7z8WW3evSPUjauiA=;
+        b=Mi2rH1gsY42A05/OxDE/arFqgNaONmtN1gMoasi+N+w2zdyGSMPKGOYa+yWaKzw7jDZD7W
+        3bywfaMBFfkWu63lytqbIexuXdjjnx6UOIeDrD5p27/8DK1s2lPZ9VWW+lNCC+8aFu4Tu5
+        FrNRceQ05oVBF6u5GHg+l10a/orCedE=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-471-eeRVb9qOO_iAWlMIdd-BDA-1; Tue, 04 Oct 2022 08:41:48 -0400
-X-MC-Unique: eeRVb9qOO_iAWlMIdd-BDA-1
+ us-mta-125-yiMzG0jENCWq8yxesCXy0g-1; Tue, 04 Oct 2022 08:41:51 -0400
+X-MC-Unique: yiMzG0jENCWq8yxesCXy0g-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 08F76811E67;
-        Tue,  4 Oct 2022 12:41:48 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A28AA882826;
+        Tue,  4 Oct 2022 12:41:50 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.40.192.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A28BD7AE5;
-        Tue,  4 Oct 2022 12:41:45 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FD8B7AE5;
+        Tue,  4 Oct 2022 12:41:48 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>
@@ -48,17 +48,17 @@ Cc:     Wanpeng Li <wanpengli@tencent.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 43/46] KVM: selftests: Allocate Hyper-V partition assist page
-Date:   Tue,  4 Oct 2022 14:39:53 +0200
-Message-Id: <20221004123956.188909-44-vkuznets@redhat.com>
+Subject: [PATCH v11 44/46] KVM: selftests: evmcs_test: Introduce L2 TLB flush test
+Date:   Tue,  4 Oct 2022 14:39:54 +0200
+Message-Id: <20221004123956.188909-45-vkuznets@redhat.com>
 In-Reply-To: <20221004123956.188909-1-vkuznets@redhat.com>
 References: <20221004123956.188909-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,47 +67,145 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In preparation to testing Hyper-V L2 TLB flush hypercalls, allocate
-so-called Partition assist page.
+Enable Hyper-V L2 TLB flush and check that Hyper-V TLB flush hypercalls
+from L2 don't exit to L1 unless 'TlbLockCount' is set in the
+Partition assist page.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- tools/testing/selftests/kvm/include/x86_64/hyperv.h | 5 +++++
- tools/testing/selftests/kvm/lib/x86_64/hyperv.c     | 5 +++++
- 2 files changed, 10 insertions(+)
+ .../selftests/kvm/include/x86_64/evmcs.h      |  2 +
+ .../testing/selftests/kvm/x86_64/evmcs_test.c | 50 ++++++++++++++++++-
+ 2 files changed, 50 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/x86_64/hyperv.h b/tools/testing/selftests/kvm/include/x86_64/hyperv.h
-index 186f3aab888f..ffe28a78c8a3 100644
---- a/tools/testing/selftests/kvm/include/x86_64/hyperv.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/hyperv.h
-@@ -273,6 +273,11 @@ struct hyperv_test_pages {
- 	uint64_t vp_assist_gpa;
- 	void *vp_assist;
+diff --git a/tools/testing/selftests/kvm/include/x86_64/evmcs.h b/tools/testing/selftests/kvm/include/x86_64/evmcs.h
+index 94d6059e9a12..901caf0e0939 100644
+--- a/tools/testing/selftests/kvm/include/x86_64/evmcs.h
++++ b/tools/testing/selftests/kvm/include/x86_64/evmcs.h
+@@ -237,6 +237,8 @@ struct hv_enlightened_vmcs {
+ #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_ENLIGHTENMENTSCONTROL    BIT(15)
+ #define HV_VMX_ENLIGHTENED_CLEAN_FIELD_ALL                      0xFFFF
  
-+	/* Partition assist page */
-+	void *partition_assist_hva;
-+	uint64_t partition_assist_gpa;
-+	void *partition_assist;
++#define HV_VMX_SYNTHETIC_EXIT_REASON_TRAP_AFTER_FLUSH 0x10000031
 +
- 	/* Enlightened VMCS */
- 	void *enlightened_vmcs_hva;
- 	uint64_t enlightened_vmcs_gpa;
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/hyperv.c b/tools/testing/selftests/kvm/lib/x86_64/hyperv.c
-index a2fc083c65ef..efb7e7a1354d 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/hyperv.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/hyperv.c
-@@ -19,6 +19,11 @@ struct hyperv_test_pages *vcpu_alloc_hyperv_test_pages(struct kvm_vm *vm,
- 	hv->vp_assist_hva = addr_gva2hva(vm, (uintptr_t)hv->vp_assist);
- 	hv->vp_assist_gpa = addr_gva2gpa(vm, (uintptr_t)hv->vp_assist);
+ extern struct hv_enlightened_vmcs *current_evmcs;
  
-+	/* Setup of a region of guest memory for the partition assist page. */
-+	hv->partition_assist = (void *)vm_vaddr_alloc_page(vm);
-+	hv->partition_assist_hva = addr_gva2hva(vm, (uintptr_t)hv->partition_assist);
-+	hv->partition_assist_gpa = addr_gva2gpa(vm, (uintptr_t)hv->partition_assist);
+ int vcpu_enable_evmcs(struct kvm_vcpu *vcpu);
+diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+index 74f076ba574b..691dbe0a0881 100644
+--- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
++++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+@@ -16,6 +16,7 @@
+ 
+ #include "kvm_util.h"
+ 
++#include "hyperv.h"
+ #include "vmx.h"
+ 
+ static int ud_count;
+@@ -48,6 +49,8 @@ static inline void rdmsr_gs_base(void)
+ 
+ void l2_guest_code(void)
+ {
++	u64 unused;
 +
- 	/* Setup of a region of guest memory for the enlightened VMCS. */
- 	hv->enlightened_vmcs = (void *)vm_vaddr_alloc_page(vm);
- 	hv->enlightened_vmcs_hva = addr_gva2hva(vm, (uintptr_t)hv->enlightened_vmcs);
+ 	GUEST_SYNC(7);
+ 
+ 	GUEST_SYNC(8);
+@@ -64,15 +67,33 @@ void l2_guest_code(void)
+ 	vmcall();
+ 	rdmsr_gs_base(); /* intercepted */
+ 
++	/* L2 TLB flush tests */
++	hyperv_hypercall(HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE | HV_HYPERCALL_FAST_BIT, 0x0,
++			   HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES | HV_FLUSH_ALL_PROCESSORS);
++	rdmsr_fs_base();
++	/*
++	 * Note: hypercall status (RAX) is not preserved correctly by L1 after
++	 * synthetic vmexit, use unchecked version.
++	 */
++	__hyperv_hypercall(HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE | HV_HYPERCALL_FAST_BIT, 0x0,
++			   HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES | HV_FLUSH_ALL_PROCESSORS,
++			   &unused);
++	/* Make sure we're no issuing Hyper-V TLB flush call again */
++	__asm__ __volatile__ ("mov $0xdeadbeef, %rcx");
++
+ 	/* Done, exit to L1 and never come back.  */
+ 	vmcall();
+ }
+ 
+-void guest_code(struct vmx_pages *vmx_pages, struct hyperv_test_pages *hv_pages)
++void guest_code(struct vmx_pages *vmx_pages, struct hyperv_test_pages *hv_pages,
++		vm_vaddr_t hv_hcall_page_gpa)
+ {
+ #define L2_GUEST_STACK_SIZE 64
+ 	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
+ 
++	wrmsr(HV_X64_MSR_GUEST_OS_ID, HYPERV_LINUX_OS_ID);
++	wrmsr(HV_X64_MSR_HYPERCALL, hv_hcall_page_gpa);
++
+ 	x2apic_enable();
+ 
+ 	GUEST_SYNC(1);
+@@ -102,6 +123,14 @@ void guest_code(struct vmx_pages *vmx_pages, struct hyperv_test_pages *hv_pages)
+ 	vmwrite(PIN_BASED_VM_EXEC_CONTROL, vmreadz(PIN_BASED_VM_EXEC_CONTROL) |
+ 		PIN_BASED_NMI_EXITING);
+ 
++	/* L2 TLB flush setup */
++	current_evmcs->partition_assist_page = hv_pages->partition_assist_gpa;
++	current_evmcs->hv_enlightenments_control.nested_flush_hypercall = 1;
++	current_evmcs->hv_vm_id = 1;
++	current_evmcs->hv_vp_id = 1;
++	current_vp_assist->nested_control.features.directhypercall = 1;
++	*(u32 *)(hv_pages->partition_assist) = 0;
++
+ 	GUEST_ASSERT(!vmlaunch());
+ 	GUEST_ASSERT(vmptrstz() == hv_pages->enlightened_vmcs_gpa);
+ 
+@@ -146,6 +175,18 @@ void guest_code(struct vmx_pages *vmx_pages, struct hyperv_test_pages *hv_pages)
+ 	GUEST_ASSERT(vmreadz(VM_EXIT_REASON) == EXIT_REASON_MSR_READ);
+ 	current_evmcs->guest_rip += 2; /* rdmsr */
+ 
++	/*
++	 * L2 TLB flush test. First VMCALL should be handled directly by L0,
++	 * no VMCALL exit expected.
++	 */
++	GUEST_ASSERT(!vmresume());
++	GUEST_ASSERT(vmreadz(VM_EXIT_REASON) == EXIT_REASON_MSR_READ);
++	current_evmcs->guest_rip += 2; /* rdmsr */
++	/* Enable synthetic vmexit */
++	*(u32 *)(hv_pages->partition_assist) = 1;
++	GUEST_ASSERT(!vmresume());
++	GUEST_ASSERT(vmreadz(VM_EXIT_REASON) == HV_VMX_SYNTHETIC_EXIT_REASON_TRAP_AFTER_FLUSH);
++
+ 	GUEST_ASSERT(!vmresume());
+ 	GUEST_ASSERT(vmreadz(VM_EXIT_REASON) == EXIT_REASON_VMCALL);
+ 	GUEST_SYNC(11);
+@@ -199,6 +240,7 @@ static struct kvm_vcpu *save_restore_vm(struct kvm_vm *vm,
+ int main(int argc, char *argv[])
+ {
+ 	vm_vaddr_t vmx_pages_gva = 0, hv_pages_gva = 0;
++	vm_vaddr_t hcall_page;
+ 
+ 	struct kvm_vcpu *vcpu;
+ 	struct kvm_vm *vm;
+@@ -212,12 +254,16 @@ int main(int argc, char *argv[])
+ 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_NESTED_STATE));
+ 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_HYPERV_ENLIGHTENED_VMCS));
+ 
++	hcall_page = vm_vaddr_alloc_pages(vm, 1);
++	memset(addr_gva2hva(vm, hcall_page), 0x0,  getpagesize());
++
+ 	vcpu_set_hv_cpuid(vcpu);
+ 	vcpu_enable_evmcs(vcpu);
+ 
+ 	vcpu_alloc_vmx(vm, &vmx_pages_gva);
+ 	vcpu_alloc_hyperv_test_pages(vm, &hv_pages_gva);
+-	vcpu_args_set(vcpu, 2, vmx_pages_gva, hv_pages_gva);
++	vcpu_args_set(vcpu, 3, vmx_pages_gva, hv_pages_gva, addr_gva2gpa(vm, hcall_page));
++	vcpu_set_msr(vcpu, HV_X64_MSR_VP_INDEX, vcpu->id);
+ 
+ 	vm_init_descriptor_tables(vm);
+ 	vcpu_init_descriptor_tables(vcpu);
 -- 
 2.37.3
 
