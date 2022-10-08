@@ -2,89 +2,72 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D9225F74DC
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Oct 2022 09:50:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F1845F8444
+	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Oct 2022 10:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229927AbiJGHuX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 7 Oct 2022 03:50:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
+        id S229563AbiJHIcR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 8 Oct 2022 04:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbiJGHuW (ORCPT
+        with ESMTP id S229487AbiJHIcQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 7 Oct 2022 03:50:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7832F6DAF4;
-        Fri,  7 Oct 2022 00:50:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 157AAB82282;
-        Fri,  7 Oct 2022 07:50:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 41906C43145;
-        Fri,  7 Oct 2022 07:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665129016;
-        bh=xu2YnFZWaMD6TEbFxHesRTbEB2hPndjQVpSwkzYbh48=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=WOymxihCh30Vl4QnleLUXuzat7lkU+LReCOFEuk0TNEpmUIrLSHuuzmcCLMRARw4e
-         kcStMcp3uU7u/gGEbRTEHqQ9YvPdAL/wzVz0PwUs5ONWtix4+F0eVLtNcpikvCME8e
-         oTzhcrQZ6wVonsJyLjfS4U6zLZor460BVBcRDgxmgDc+NVs4tzbtwYM2mDU2cZnqhL
-         AQBSWDrvzrnBwHAsbwHH9MoRAUvtUgJiCs1KT9WUlnvoM8if+MDc+PAcGObyWvvjSF
-         8mk5V0eZAD6jyiceKw5x4GCghzp/sUs/eZuGuwJ0Ht1NoKTTzzSOVzXQfgeAMgoTDQ
-         oyk6Y0HF0wXSw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1D484E49BBD;
-        Fri,  7 Oct 2022 07:50:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 net] hv_netvsc: Fix race between VF offering and VF
- association message from host
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166512901611.847.9066991883848590032.git-patchwork-notify@kernel.org>
-Date:   Fri, 07 Oct 2022 07:50:16 +0000
-References: <1665035579-13755-2-git-send-email-gauravkohli@linux.microsoft.com>
-In-Reply-To: <1665035579-13755-2-git-send-email-gauravkohli@linux.microsoft.com>
-To:     Gaurav Kohli <gauravkohli@linux.microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        kuba@kernel.org, stable@vger.kernel.org
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Sat, 8 Oct 2022 04:32:16 -0400
+Received: from mail.nfschina.com (mail.nfschina.com [124.16.136.209])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5845B520B3;
+        Sat,  8 Oct 2022 01:32:15 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mail.nfschina.com (Postfix) with ESMTP id 2CFAB1E80D72;
+        Sat,  8 Oct 2022 16:26:28 +0800 (CST)
+X-Virus-Scanned: amavisd-new at test.com
+Received: from mail.nfschina.com ([127.0.0.1])
+        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Epqull-euYaK; Sat,  8 Oct 2022 16:26:25 +0800 (CST)
+Received: from localhost.localdomain (unknown [219.141.250.2])
+        (Authenticated sender: zeming@nfschina.com)
+        by mail.nfschina.com (Postfix) with ESMTPA id 5B1CB1E80D4D;
+        Sat,  8 Oct 2022 16:26:25 +0800 (CST)
+From:   Li zeming <zeming@nfschina.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Li zeming <zeming@nfschina.com>
+Subject: [PATCH] hv: Remove unnecessary (void*) conversions
+Date:   Sat,  8 Oct 2022 16:32:06 +0800
+Message-Id: <20221008083206.4486-1-zeming@nfschina.com>
+X-Mailer: git-send-email 2.18.2
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+addrp is a void pointer and does not require a cast type.
 
-This patch was applied to netdev/net.git (master)
-by David S. Miller <davem@davemloft.net>:
+Signed-off-by: Li zeming <zeming@nfschina.com>
+---
+ tools/hv/hv_kvp_daemon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Wed,  5 Oct 2022 22:52:59 -0700 you wrote:
-> During vm boot, there might be possibility that vf registration
-> call comes before the vf association from host to vm.
-> 
-> And this might break netvsc vf path, To prevent the same block
-> vf registration until vf bind message comes from host.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 00d7ddba11436 ("hv_netvsc: pair VF based on serial number")
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Signed-off-by: Gaurav Kohli <gauravkohli@linux.microsoft.com>
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2,net] hv_netvsc: Fix race between VF offering and VF association message from host
-    https://git.kernel.org/netdev/net/c/365e1ececb29
-
-You are awesome, thank you!
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 1e6fd6ca513b..445abb53bf0d 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -772,11 +772,11 @@ static int kvp_process_ip_address(void *addrp,
+ 	const char *str;
+ 
+ 	if (family == AF_INET) {
+-		addr = (struct sockaddr_in *)addrp;
++		addr = addrp;
+ 		str = inet_ntop(family, &addr->sin_addr, tmp, 50);
+ 		addr_length = INET_ADDRSTRLEN;
+ 	} else {
+-		addr6 = (struct sockaddr_in6 *)addrp;
++		addr6 = addrp;
+ 		str = inet_ntop(family, &addr6->sin6_addr.s6_addr, tmp, 50);
+ 		addr_length = INET6_ADDRSTRLEN;
+ 	}
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.18.2
 
