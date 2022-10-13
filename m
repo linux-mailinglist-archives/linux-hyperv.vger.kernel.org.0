@@ -2,177 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC335FD781
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Oct 2022 11:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E9D95FE153
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Oct 2022 20:34:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbiJMJ7V (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 13 Oct 2022 05:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
+        id S232031AbiJMSe1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 13 Oct 2022 14:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229788AbiJMJ7T (ORCPT
+        with ESMTP id S232033AbiJMSeL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 13 Oct 2022 05:59:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DF1F984B
-        for <linux-hyperv@vger.kernel.org>; Thu, 13 Oct 2022 02:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1665655154;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xMvP2/XkBADyXsK5rGQw9LKR5LblGeQtr9PcIXwvmao=;
-        b=KjvGfWOs1lOsd6UX9EM48PpVfWB+S14374GNAqLeDb+n5aOeDRvK+E1vHEcGkEdDwNdR9+
-        9nsOYOwqsOkna09hHAr2tVwPQWv3b6Az5n/J55V93rtgtv0PiB4VRJhkku0OSS7mjfBn9+
-        r4lpG2XN1psi5MoXxq50NIUrRoujrb8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-74-1GsG7_jnOdiPPjXK4a8jJQ-1; Thu, 13 Oct 2022 05:59:11 -0400
-X-MC-Unique: 1GsG7_jnOdiPPjXK4a8jJQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D492C85A5A6;
-        Thu, 13 Oct 2022 09:59:10 +0000 (UTC)
-Received: from ovpn-194-196.brq.redhat.com (ovpn-194-196.brq.redhat.com [10.40.194.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 931BE4B400F;
-        Thu, 13 Oct 2022 09:59:08 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 7/7] KVM: selftests: Test Hyper-V invariant TSC control
-Date:   Thu, 13 Oct 2022 11:58:49 +0200
-Message-Id: <20221013095849.705943-8-vkuznets@redhat.com>
-In-Reply-To: <20221013095849.705943-1-vkuznets@redhat.com>
-References: <20221013095849.705943-1-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        Thu, 13 Oct 2022 14:34:11 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 805A418D444;
+        Thu, 13 Oct 2022 11:30:39 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C70CC20F9E34;
+        Thu, 13 Oct 2022 11:29:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C70CC20F9E34
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1665685758;
+        bh=LEICLpqkAHA55SgqSRkWd7Q239A6x6Ah2FjEDgwjgI4=;
+        h=From:To:Subject:Date:From;
+        b=mTgLYdKdGykhbNSoo5PIyT6nrzCY02AjSwwWN1D+AJWEqOVyWGaSNkSIdS/O1q2QC
+         gcuBfWEL0sd93Q2+qKoJ7Zar+bWhnV1lLfQ7VQn8QvclUX/QrWEj2w6WbQCtVCD+9F
+         guGi4CgEcqPMHiJ17RHKT2JW415rIHwbiYmis5g4=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        longli@microsoft.com, gregkh@linuxfoundation.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com
+Subject: [PATCH] uio_hv_generic: Enable interrupt for low speed VMBus devices
+Date:   Thu, 13 Oct 2022 11:29:14 -0700
+Message-Id: <1665685754-13971-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add a test for the newly introduced Hyper-V invariant TSC control feature:
-- HV_X64_MSR_TSC_INVARIANT_CONTROL is not available without
- HV_ACCESS_TSC_INVARIANT CPUID bit set and available with it.
-- BIT(0) of HV_X64_MSR_TSC_INVARIANT_CONTROL controls the filtering of
-architectural invariant TSC (CPUID.80000007H:EDX[8]) bit.
+Hyper-V is adding some "specialty" synthetic devices. Instead of writing
+new kernel-level VMBus drivers for these devices, the devices will be
+presented to user space via this existing Hyper-V generic UIO driver, so
+that a user space driver can handle the device. Since these new synthetic
+devices are low speed devices, they don't support monitor bits and we must
+use vmbus_setevent() to enable interrupts from the host.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 ---
- .../selftests/kvm/include/x86_64/hyperv.h     |  3 ++
- .../selftests/kvm/include/x86_64/processor.h  |  1 +
- .../selftests/kvm/x86_64/hyperv_features.c    | 47 +++++++++++++++++++
- 3 files changed, 51 insertions(+)
+ drivers/uio/uio_hv_generic.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/x86_64/hyperv.h b/tools/testing/selftests/kvm/include/x86_64/hyperv.h
-index 843748dde1ff..8368d65afbe4 100644
---- a/tools/testing/selftests/kvm/include/x86_64/hyperv.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/hyperv.h
-@@ -232,4 +232,7 @@
- /* hypercall options */
- #define HV_HYPERCALL_FAST_BIT		BIT(16)
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index c08a6cfd119f..8e5aa4a1247f 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -84,6 +84,9 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
+ 	dev->channel->inbound.ring_buffer->interrupt_mask = !irq_state;
+ 	virt_mb();
  
-+/* HV_X64_MSR_TSC_INVARIANT_CONTROL bits */
-+#define HV_INVARIANT_TSC_EXPOSED               BIT_ULL(0)
++	if (!dev->channel->offermsg.monitor_allocated && irq_state)
++		vmbus_setevent(dev->channel);
 +
- #endif /* !SELFTEST_KVM_HYPERV_H */
-diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-index e8ca0d8a6a7e..39230e3add69 100644
---- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-@@ -128,6 +128,7 @@ struct kvm_x86_cpu_feature {
- #define	X86_FEATURE_GBPAGES		KVM_X86_CPU_FEATURE(0x80000001, 0, EDX, 26)
- #define	X86_FEATURE_RDTSCP		KVM_X86_CPU_FEATURE(0x80000001, 0, EDX, 27)
- #define	X86_FEATURE_LM			KVM_X86_CPU_FEATURE(0x80000001, 0, EDX, 29)
-+#define	X86_FEATURE_INVTSC		KVM_X86_CPU_FEATURE(0x80000007, 0, EDX, 8)
- #define	X86_FEATURE_RDPRU		KVM_X86_CPU_FEATURE(0x80000008, 0, EBX, 4)
- #define	X86_FEATURE_AMD_IBPB		KVM_X86_CPU_FEATURE(0x80000008, 0, EBX, 12)
- #define	X86_FEATURE_NPT			KVM_X86_CPU_FEATURE(0x8000000A, 0, EDX, 0)
-diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_features.c b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-index 0cfab315eb22..42fbd71c6489 100644
---- a/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-+++ b/tools/testing/selftests/kvm/x86_64/hyperv_features.c
-@@ -82,6 +82,16 @@ static void guest_msr(struct msr_data *msr)
- 	if (msr->write)
- 		GUEST_ASSERT_3(msr_val == msr->write_val, msr->idx,
- 			       msr_val, msr->write_val);
-+
-+	/* Invariant TSC bit appears when TSC invariant control MSR is written to */
-+	if (msr->idx == HV_X64_MSR_TSC_INVARIANT_CONTROL) {
-+		if (!this_cpu_has(HV_ACCESS_TSC_INVARIANT))
-+			GUEST_ASSERT(this_cpu_has(X86_FEATURE_INVTSC));
-+		else
-+			GUEST_ASSERT(this_cpu_has(X86_FEATURE_INVTSC) ==
-+				     !!(msr_val & HV_INVARIANT_TSC_EXPOSED));
-+	}
-+
- done:
- 	GUEST_DONE();
+ 	return 0;
  }
-@@ -137,6 +147,7 @@ static void guest_test_msrs_access(void)
- 	int stage = 0;
- 	vm_vaddr_t msr_gva;
- 	struct msr_data *msr;
-+	bool has_invtsc = kvm_cpu_has(X86_FEATURE_INVTSC);
  
- 	while (true) {
- 		vm = vm_create_with_one_vcpu(&vcpu, guest_msr);
-@@ -454,6 +465,42 @@ static void guest_test_msrs_access(void)
- 			break;
+@@ -239,12 +242,6 @@ hv_uio_probe(struct hv_device *dev,
+ 	void *ring_buffer;
+ 	int ret;
  
- 		case 44:
-+			/* MSR is not available when CPUID feature bit is unset */
-+			if (!has_invtsc)
-+				continue;
-+			msr->idx = HV_X64_MSR_TSC_INVARIANT_CONTROL;
-+			msr->write = false;
-+			msr->fault_expected = true;
-+			break;
-+		case 45:
-+			/* MSR is vailable when CPUID feature bit is set */
-+			if (!has_invtsc)
-+				continue;
-+			vcpu_set_cpuid_feature(vcpu, HV_ACCESS_TSC_INVARIANT);
-+			msr->idx = HV_X64_MSR_TSC_INVARIANT_CONTROL;
-+			msr->write = false;
-+			msr->fault_expected = false;
-+			break;
-+		case 46:
-+			/* Writing bits other than 0 is forbidden */
-+			if (!has_invtsc)
-+				continue;
-+			msr->idx = HV_X64_MSR_TSC_INVARIANT_CONTROL;
-+			msr->write = true;
-+			msr->write_val = 0xdeadbeef;
-+			msr->fault_expected = true;
-+			break;
-+		case 47:
-+			/* Setting bit 0 enables the feature */
-+			if (!has_invtsc)
-+				continue;
-+			msr->idx = HV_X64_MSR_TSC_INVARIANT_CONTROL;
-+			msr->write = true;
-+			msr->write_val = 1;
-+			msr->fault_expected = false;
-+			break;
-+
-+		default:
- 			kvm_vm_free(vm);
- 			return;
- 		}
+-	/* Communicating with host has to be via shared memory not hypercall */
+-	if (!channel->offermsg.monitor_allocated) {
+-		dev_err(&dev->device, "vmbus channel requires hypercall\n");
+-		return -ENOTSUPP;
+-	}
+-
+ 	pdata = devm_kzalloc(&dev->device, sizeof(*pdata), GFP_KERNEL);
+ 	if (!pdata)
+ 		return -ENOMEM;
 -- 
-2.37.3
+2.34.1
 
