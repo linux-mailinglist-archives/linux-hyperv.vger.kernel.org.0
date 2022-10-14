@@ -2,112 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4C485FE9A0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Oct 2022 09:34:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD1055FF447
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Oct 2022 22:04:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbiJNHeS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Oct 2022 03:34:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43198 "EHLO
+        id S229761AbiJNUEq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Oct 2022 16:04:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229957AbiJNHeS (ORCPT
+        with ESMTP id S229968AbiJNUEo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Oct 2022 03:34:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC601B8650;
-        Fri, 14 Oct 2022 00:34:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D3794B82213;
-        Fri, 14 Oct 2022 07:34:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F174C433C1;
-        Fri, 14 Oct 2022 07:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1665732854;
-        bh=hW/vy/6le5CL8VPvE21jCFO4r6/XDqR0GmB30kY5ijM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KV15aovS/GlF3Ex8GFpdy4ZFr6ryKjQu5j2aZKXGZHGf360jwe8XNWr3dhl+PJUkX
-         6oiwv3geIuVxv6nt5Pc3NhJ6zb1rkM+nb0gkJslKgJqMVuA2eePvcTe5/2QaxtBzku
-         0WTnFgSqSoDpAYyWxZGvmVN9xJUutUN3nf2g9DTA=
-Date:   Fri, 14 Oct 2022 09:34:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc:     ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        longli@microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com
-Subject: Re: [PATCH] uio_hv_generic: Enable interrupt for low speed VMBus
- devices
-Message-ID: <Y0kRIcXG+wNbcGx0@kroah.com>
-References: <1665685754-13971-1-git-send-email-ssengar@linux.microsoft.com>
+        Fri, 14 Oct 2022 16:04:44 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51663CCD
+        for <linux-hyperv@vger.kernel.org>; Fri, 14 Oct 2022 13:04:38 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id f193so5270009pgc.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 14 Oct 2022 13:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kbwkanpKDCzBUU6gmctb+QrCeHgMxWi09XjJZDjO5eQ=;
+        b=X/8GV42PFEbwb1G42LBdmwiFnIlQkobhhcbf2afrVFAK/kAzcsrOrlGPim+kJih52X
+         YEK9xn2aX6LsCZGwuadCycmbegoWPQD/TLpE4JOZDawCpM6yoovy4D+vbxkNNzK2bZ21
+         exkd6HtoXl7jie6ASLErpWPPxFqfelw3JeWKiuJjWIXClxMXVe0zl+f5Ob/DcEXoRqQG
+         5hrPH8uYnrRbMADhWTWiowZP49+fF6B4VtMJ5drYYBZEBIyiPdB2J+uoQnt/aDCDpxI6
+         bwIZmYKOLSn7ZXAHq8nLORAGhHIgfO7G8z0mfZzr9aVgi3FFCikocklfxoLkFTrgrXS7
+         vNcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kbwkanpKDCzBUU6gmctb+QrCeHgMxWi09XjJZDjO5eQ=;
+        b=GXa9EGxc4TZTAzfyaG7YX35Ml/u8/t6m2ox8zpSj+HpU+PiD/TG/lTUm+xpzppYcmM
+         RtZVS1tUHcc9K8c40mohs0xrepLw2s6IAQUhEWtAUlBTapy6YsmziqX0OT7FD7t/aPCB
+         AUCWxNv2emnP9fyOrNGenzQEh8M2MY+B3dwIBUAWAiey3/kLLrNsMv3XuewSOsDljTpT
+         unsP6XEev6nNUSySfZt8s7PSGhz/PuFdBxzfUSBYOiwkHwFVuK5hBd342quys1XWJ+tA
+         e5rQFD00z6h+k7V8PGffIM7p9COR2J/eahc51+7eHnM6g2x1xQyRiPL5J8Nc1tdeuWNe
+         FKUg==
+X-Gm-Message-State: ACrzQf13CyBvKb2FQo1M2mLL2JT2aW+KXPdJub2CVqatZTc3zCzko3dn
+        PIV5nHgQxNmHerbs1leNKDXV1g==
+X-Google-Smtp-Source: AMsMyM7EBrEJiEtubCYTKLnlZSzu9M+zSixvrqFOxZtlxIoJYG4IoVQpLoMoGVuCpNVtnXuZY+vYvg==
+X-Received: by 2002:a62:1482:0:b0:55f:eb9a:38b2 with SMTP id 124-20020a621482000000b0055feb9a38b2mr7003442pfu.29.1665777877646;
+        Fri, 14 Oct 2022 13:04:37 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id g18-20020aa79dd2000000b0056149203b60sm2136445pfq.46.2022.10.14.13.04.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Oct 2022 13:04:37 -0700 (PDT)
+Date:   Fri, 14 Oct 2022 20:04:32 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] KVM: x86: Hyper-V invariant TSC control feature
+Message-ID: <Y0nA0DCeh4IPmWMX@google.com>
+References: <20221013095849.705943-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1665685754-13971-1-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221013095849.705943-1-vkuznets@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 11:29:14AM -0700, Saurabh Sengar wrote:
-> Hyper-V is adding some "specialty" synthetic devices.
-
-What devices are those specifically?
-
-> Instead of writing new kernel-level VMBus drivers for these devices,
-> the devices will be presented to user space via this existing Hyper-V
-> generic UIO driver, so that a user space driver can handle the device.
-> Since these new synthetic devices are low speed devices, they don't
-> support monitor bits and we must use vmbus_setevent() to enable
-> interrupts from the host.
-
-That is not what the UIO interface is for.  Please write real drivers so
-that they tie into the specific user/kernel apis for those device types.
-
-Without a specific list of what these devices are, I can not recommend
-that anyone use the UIO api for them as that's probably not a good idea.
-
-Also, if you do do this, you need to list where the source for that
-userspace code is so that users can get it and have their distros
-package it up for them.  I do not see that here at all.
-
-
+On Thu, Oct 13, 2022, Vitaly Kuznetsov wrote:
+> Normally, genuine Hyper-V doesn't expose architectural invariant TSC
+> (CPUID.80000007H:EDX[8]) to its guests by default. A special PV MSR
+> (HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x40000118) and corresponding CPUID
+> feature bit (CPUID.0x40000003.EAX[15]) were introduced. When bit 0 of the
+> PV MSR is set, invariant TSC bit starts to show up in CPUID. When the 
+> feature is exposed to Hyper-V guests, reenlightenment becomes unneeded.
 > 
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> ---
->  drivers/uio/uio_hv_generic.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+> Note: strictly speaking, KVM doesn't have to have the feature as exposing
+> raw invariant TSC bit (CPUID.80000007H:EDX[8]) also seems to work for
+> modern Windows versions. The feature is, however, tiny and straitforward
+> and gives additional flexibility so why not.
 > 
-> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-> index c08a6cfd119f..8e5aa4a1247f 100644
-> --- a/drivers/uio/uio_hv_generic.c
-> +++ b/drivers/uio/uio_hv_generic.c
-> @@ -84,6 +84,9 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
->  	dev->channel->inbound.ring_buffer->interrupt_mask = !irq_state;
->  	virt_mb();
->  
-> +	if (!dev->channel->offermsg.monitor_allocated && irq_state)
-> +		vmbus_setevent(dev->channel);
-> +
->  	return 0;
->  }
->  
-> @@ -239,12 +242,6 @@ hv_uio_probe(struct hv_device *dev,
->  	void *ring_buffer;
->  	int ret;
->  
-> -	/* Communicating with host has to be via shared memory not hypercall */
-> -	if (!channel->offermsg.monitor_allocated) {
-> -		dev_err(&dev->device, "vmbus channel requires hypercall\n");
+> Vitaly Kuznetsov (7):
+>   x86/hyperv: Add HV_EXPOSE_INVARIANT_TSC define
+>   KVM: x86: Add a KVM-only leaf for CPUID_8000_0007_EDX
+>   KVM: x86: Hyper-V invariant TSC control
+>   KVM: selftests: Rename 'msr->available' to 'msr->fault_exepected' in
+>     hyperv_features test
+>   KVM: selftests: Convert hyperv_features test to using
+>     KVM_X86_CPU_FEATURE()
+>   KVM: selftests: Test that values written to Hyper-V MSRs are preserved
+>   KVM: selftests: Test Hyper-V invariant TSC control
 
-I do not understand, why is this check not made anymore here?  Why
-constantly make the call above in the irq handler instead?  Isn't that
-going to be massively slow?
+For the series, in case Paolo ends up grabbing this:
 
-thanks,
-
-greg k-h
+Reviewed-by: Sean Christopherson <seanjc@google.com>
