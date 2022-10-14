@@ -2,123 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 858685FE723
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Oct 2022 04:46:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4C485FE9A0
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Oct 2022 09:34:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbiJNCqu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 13 Oct 2022 22:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
+        id S229963AbiJNHeS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Oct 2022 03:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbiJNCqt (ORCPT
+        with ESMTP id S229957AbiJNHeS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 13 Oct 2022 22:46:49 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C683959246;
-        Thu, 13 Oct 2022 19:46:48 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id y5so5262299lfl.4;
-        Thu, 13 Oct 2022 19:46:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RfdSljC+ZlRlSIbb2xqe38Q0hGyQBSXvKtVP1N3+V3A=;
-        b=hX7My3Zq0LMDD7fpO48654Y0A1CUNRg/mUOXwVan06UG7TevWJGrzqrVrFWLjAjOH2
-         ng2MDwpz+lXPsj5mWm4uBiWPZrq91il/88MqcL9Uvr75bYXYyif7vEO0Uxbfcs99boRE
-         MdeauT0ONmcCkFYNc9gNZWMP9kAW0kK7ujPzu0S1tMlf0/2EbN4hvfRDAhq0B4UO9eJg
-         8WpKZ3jielXELGzVO+SqbsWH3gF9tEhdt9jpP5jyqxi6z+AcuGyHqsG8xFADkbn0NP/q
-         FxPdJ/G/ZbMcNiQ6i4A3cS09i97TZXEhltNo5y2Ji1QH2YsHcnEWtzth6eOOEJr9YxJu
-         zqfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RfdSljC+ZlRlSIbb2xqe38Q0hGyQBSXvKtVP1N3+V3A=;
-        b=SBlD5IfharDo2pJIu1kMUnrM/H7pEF1WWUU5W8oSmRwLmc1USJSB6aCKN/+/cQUyeq
-         U3R14WYauRoQ8+yVs4LtDT/5uFtG5Mvy8bl8wJag5rEKhZ8NA0BVc9EQzyujsdog8hUV
-         U3MnMHQMJWACrQ/uRcALuV5/ljyDAX9xAT1Md8NxvpB6qj0/mQukUNhF/AplkCWPsBU1
-         MNZnLsZ46QGtE+UV0WkddEaUUK+wgVp1HuyRN9PN4m7fQt8STIniKrb3Sx/OIn/D612T
-         vPABdLlLqTx49/ncx2ZP6BgmVfpc7GwMYGhdBt5tNkwuDG5BuGWLaxjD48/kNVQC0QOf
-         WvLw==
-X-Gm-Message-State: ACrzQf1L7IFnjqWyaLn1jDZjst/atx/+LuA82gaYAhmsgE8M3rMVZnVq
-        P+oa5SrMkeqPKJSrJXGznVkujo+JhsVWkItJHRoJEA2o84JfeQ==
-X-Google-Smtp-Source: AMsMyM6TnFIBjZTsH5c3zmqTsShEQXJpg0+ZWNpYtJTesJz4nMZonGD095ufd/c1oEwHkeaFqICLW6NZc104Sz5bqn4=
-X-Received: by 2002:a05:6512:1694:b0:48a:9d45:763f with SMTP id
- bu20-20020a056512169400b0048a9d45763fmr860438lfb.662.1665715607061; Thu, 13
- Oct 2022 19:46:47 -0700 (PDT)
+        Fri, 14 Oct 2022 03:34:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC601B8650;
+        Fri, 14 Oct 2022 00:34:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D3794B82213;
+        Fri, 14 Oct 2022 07:34:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F174C433C1;
+        Fri, 14 Oct 2022 07:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1665732854;
+        bh=hW/vy/6le5CL8VPvE21jCFO4r6/XDqR0GmB30kY5ijM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KV15aovS/GlF3Ex8GFpdy4ZFr6ryKjQu5j2aZKXGZHGf360jwe8XNWr3dhl+PJUkX
+         6oiwv3geIuVxv6nt5Pc3NhJ6zb1rkM+nb0gkJslKgJqMVuA2eePvcTe5/2QaxtBzku
+         0WTnFgSqSoDpAYyWxZGvmVN9xJUutUN3nf2g9DTA=
+Date:   Fri, 14 Oct 2022 09:34:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        longli@microsoft.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com
+Subject: Re: [PATCH] uio_hv_generic: Enable interrupt for low speed VMBus
+ devices
+Message-ID: <Y0kRIcXG+wNbcGx0@kroah.com>
+References: <1665685754-13971-1-git-send-email-ssengar@linux.microsoft.com>
 MIME-Version: 1.0
-References: <20221012013922.32374-1-cbulinaru@gmail.com> <e71426117517a62f4e940318b1c048f15d8fe5b7.camel@redhat.com>
-In-Reply-To: <e71426117517a62f4e940318b1c048f15d8fe5b7.camel@redhat.com>
-From:   Cezar Bulinaru <cbulinaru@gmail.com>
-Date:   Thu, 13 Oct 2022 22:46:34 -0400
-Message-ID: <CAG0ZtY6iJVS94ruMMuqxuORnV+eKE7SvPioE613UFT+FPScHXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] hv_netvsc: Fix a warning triggered by memcpy in rndis_filter
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1665685754-13971-1-git-send-email-ssengar@linux.microsoft.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks , I have  sent [PATCH v3] net: hv_netvsc: Fix a warning
-triggered by memcpy in rndis_filter
+On Thu, Oct 13, 2022 at 11:29:14AM -0700, Saurabh Sengar wrote:
+> Hyper-V is adding some "specialty" synthetic devices.
+
+What devices are those specifically?
+
+> Instead of writing new kernel-level VMBus drivers for these devices,
+> the devices will be presented to user space via this existing Hyper-V
+> generic UIO driver, so that a user space driver can handle the device.
+> Since these new synthetic devices are low speed devices, they don't
+> support monitor bits and we must use vmbus_setevent() to enable
+> interrupts from the host.
+
+That is not what the UIO interface is for.  Please write real drivers so
+that they tie into the specific user/kernel apis for those device types.
+
+Without a specific list of what these devices are, I can not recommend
+that anyone use the UIO api for them as that's probably not a good idea.
+
+Also, if you do do this, you need to list where the source for that
+userspace code is so that users can get it and have their distros
+package it up for them.  I do not see that here at all.
 
 
-On Thu, 13 Oct 2022 at 04:56, Paolo Abeni <pabeni@redhat.com> wrote:
->
-> Hello,
->
-> On Tue, 2022-10-11 at 21:39 -0400, Cezar Bulinaru wrote:
-> > A warning is triggered when the response message len exceeds
-> > the size of rndis_message. Inside the rndis_request structure
-> > these fields are however followed by a RNDIS_EXT_LEN padding
-> > so it is safe to use unsafe_memcpy.
-> >
-> > memcpy: detected field-spanning write (size 168) of single field "(void *)&request->response_msg + (sizeof(struct rndis_message) - sizeof(union rndis_message_container)) + sizeof(*req_id)" at drivers/net/hyperv/rndis_filter.c:338 (size 40)
-> > RSP: 0018:ffffc90000144de0 EFLAGS: 00010282
-> > RAX: 0000000000000000 RBX: ffff8881766b4000 RCX: 0000000000000000
-> > RDX: 0000000000000102 RSI: 0000000000009ffb RDI: 00000000ffffffff
-> > RBP: ffffc90000144e38 R08: 0000000000000000 R09: 00000000ffffdfff
-> > R10: ffffc90000144c48 R11: ffffffff82f56ac8 R12: ffff8881766b403c
-> > R13: 00000000000000a8 R14: ffff888100b75000 R15: ffff888179301d00
-> > FS:  0000000000000000(0000) GS:ffff8884d6280000(0000) knlGS:0000000000000000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 000055f8b024c418 CR3: 0000000176548001 CR4: 00000000003706e0
-> > Call Trace:
-> >  <IRQ>
-> >  ? _raw_spin_unlock_irqrestore+0x27/0x50
-> >  netvsc_poll+0x556/0x940 [hv_netvsc]
-> >  __napi_poll+0x2e/0x170
-> >  net_rx_action+0x299/0x2f0
-> >  __do_softirq+0xed/0x2ef
-> >  __irq_exit_rcu+0x9f/0x110
-> >  irq_exit_rcu+0xe/0x20
-> >  sysvec_hyperv_callback+0xb0/0xd0
-> >  </IRQ>
-> >  <TASK>
-> >  asm_sysvec_hyperv_callback+0x1b/0x20
-> > RIP: 0010:native_safe_halt+0xb/0x10
-> >
-> > Signed-off-by: Cezar Bulinaru <cbulinaru@gmail.com>
->
-> Could you please additionally provide a suitable 'Fixes' tag?
->
-> You need to repost a new version, including such tag just before your
-> SoB. While at that, please also include the target tree in the subj
-> prefix (net).
->
-> On this repost you can retain the ack/review tags collected so far.
->
-> Thanks,
->
-> Paolo
->
+> 
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  drivers/uio/uio_hv_generic.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+> index c08a6cfd119f..8e5aa4a1247f 100644
+> --- a/drivers/uio/uio_hv_generic.c
+> +++ b/drivers/uio/uio_hv_generic.c
+> @@ -84,6 +84,9 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
+>  	dev->channel->inbound.ring_buffer->interrupt_mask = !irq_state;
+>  	virt_mb();
+>  
+> +	if (!dev->channel->offermsg.monitor_allocated && irq_state)
+> +		vmbus_setevent(dev->channel);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -239,12 +242,6 @@ hv_uio_probe(struct hv_device *dev,
+>  	void *ring_buffer;
+>  	int ret;
+>  
+> -	/* Communicating with host has to be via shared memory not hypercall */
+> -	if (!channel->offermsg.monitor_allocated) {
+> -		dev_err(&dev->device, "vmbus channel requires hypercall\n");
+
+I do not understand, why is this check not made anymore here?  Why
+constantly make the call above in the irq handler instead?  Isn't that
+going to be massively slow?
+
+thanks,
+
+greg k-h
