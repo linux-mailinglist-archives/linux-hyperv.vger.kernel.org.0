@@ -2,104 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD1055FF447
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Oct 2022 22:04:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D3E45FF99D
+	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Oct 2022 12:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbiJNUEq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Oct 2022 16:04:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
+        id S229624AbiJOKUV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 15 Oct 2022 06:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229968AbiJNUEo (ORCPT
+        with ESMTP id S229583AbiJOKUU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Oct 2022 16:04:44 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51663CCD
-        for <linux-hyperv@vger.kernel.org>; Fri, 14 Oct 2022 13:04:38 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id f193so5270009pgc.0
-        for <linux-hyperv@vger.kernel.org>; Fri, 14 Oct 2022 13:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbwkanpKDCzBUU6gmctb+QrCeHgMxWi09XjJZDjO5eQ=;
-        b=X/8GV42PFEbwb1G42LBdmwiFnIlQkobhhcbf2afrVFAK/kAzcsrOrlGPim+kJih52X
-         YEK9xn2aX6LsCZGwuadCycmbegoWPQD/TLpE4JOZDawCpM6yoovy4D+vbxkNNzK2bZ21
-         exkd6HtoXl7jie6ASLErpWPPxFqfelw3JeWKiuJjWIXClxMXVe0zl+f5Ob/DcEXoRqQG
-         5hrPH8uYnrRbMADhWTWiowZP49+fF6B4VtMJ5drYYBZEBIyiPdB2J+uoQnt/aDCDpxI6
-         bwIZmYKOLSn7ZXAHq8nLORAGhHIgfO7G8z0mfZzr9aVgi3FFCikocklfxoLkFTrgrXS7
-         vNcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kbwkanpKDCzBUU6gmctb+QrCeHgMxWi09XjJZDjO5eQ=;
-        b=GXa9EGxc4TZTAzfyaG7YX35Ml/u8/t6m2ox8zpSj+HpU+PiD/TG/lTUm+xpzppYcmM
-         RtZVS1tUHcc9K8c40mohs0xrepLw2s6IAQUhEWtAUlBTapy6YsmziqX0OT7FD7t/aPCB
-         AUCWxNv2emnP9fyOrNGenzQEh8M2MY+B3dwIBUAWAiey3/kLLrNsMv3XuewSOsDljTpT
-         unsP6XEev6nNUSySfZt8s7PSGhz/PuFdBxzfUSBYOiwkHwFVuK5hBd342quys1XWJ+tA
-         e5rQFD00z6h+k7V8PGffIM7p9COR2J/eahc51+7eHnM6g2x1xQyRiPL5J8Nc1tdeuWNe
-         FKUg==
-X-Gm-Message-State: ACrzQf13CyBvKb2FQo1M2mLL2JT2aW+KXPdJub2CVqatZTc3zCzko3dn
-        PIV5nHgQxNmHerbs1leNKDXV1g==
-X-Google-Smtp-Source: AMsMyM7EBrEJiEtubCYTKLnlZSzu9M+zSixvrqFOxZtlxIoJYG4IoVQpLoMoGVuCpNVtnXuZY+vYvg==
-X-Received: by 2002:a62:1482:0:b0:55f:eb9a:38b2 with SMTP id 124-20020a621482000000b0055feb9a38b2mr7003442pfu.29.1665777877646;
-        Fri, 14 Oct 2022 13:04:37 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id g18-20020aa79dd2000000b0056149203b60sm2136445pfq.46.2022.10.14.13.04.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Oct 2022 13:04:37 -0700 (PDT)
-Date:   Fri, 14 Oct 2022 20:04:32 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] KVM: x86: Hyper-V invariant TSC control feature
-Message-ID: <Y0nA0DCeh4IPmWMX@google.com>
-References: <20221013095849.705943-1-vkuznets@redhat.com>
+        Sat, 15 Oct 2022 06:20:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B3862AC4A;
+        Sat, 15 Oct 2022 03:20:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CD29460C07;
+        Sat, 15 Oct 2022 10:20:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 26E86C43142;
+        Sat, 15 Oct 2022 10:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665829216;
+        bh=bsjIMKUlrzDaW7XKvCitE02vrcY7t/uH3nEyGad8D08=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=El3X02IiQduy87eLnqEBA45WqzpWWylNnvBJvch7Zq67hTtbhwbCb/Bq5Wnla87DY
+         0X66r7mu9Mt2UwjShESr7Jbikt/h62gdX7E3DcrFpzO+uY310Rxi5/I7L51uUwa6GY
+         JsqSA9ZIMw6QrpOF56GOxEa8pnsLVRYZ6CjDIoTUkORrWsZshaOK7lPUs5t8bqyfsB
+         v+67lngkv/e0gPMMXpu+/W4wH0BHKYGfMNdfGn9P7QGg9dAwcdeCG2hM/hcddElGXR
+         5U/BXEoNgybK9qbWdJOipM9dbRw00p8V5yMu0skb5ey6RhytcgOBRuMbKDYSVf5F1N
+         OCnf6Po47Vk9Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 08B32E52525;
+        Sat, 15 Oct 2022 10:20:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221013095849.705943-1-vkuznets@redhat.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] net: hv_netvsc: Fix a warning triggered by memcpy in
+ rndis_filter
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <166582921603.1299.10791611158258198610.git-patchwork-notify@kernel.org>
+Date:   Sat, 15 Oct 2022 10:20:16 +0000
+References: <20221014024503.4533-1-cbulinaru@gmail.com>
+In-Reply-To: <20221014024503.4533-1-cbulinaru@gmail.com>
+To:     Cezar Bulinaru <cbulinaru@gmail.com>
+Cc:     pabeni@redhat.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, mikelley@microsoft.com
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 13, 2022, Vitaly Kuznetsov wrote:
-> Normally, genuine Hyper-V doesn't expose architectural invariant TSC
-> (CPUID.80000007H:EDX[8]) to its guests by default. A special PV MSR
-> (HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x40000118) and corresponding CPUID
-> feature bit (CPUID.0x40000003.EAX[15]) were introduced. When bit 0 of the
-> PV MSR is set, invariant TSC bit starts to show up in CPUID. When the 
-> feature is exposed to Hyper-V guests, reenlightenment becomes unneeded.
-> 
-> Note: strictly speaking, KVM doesn't have to have the feature as exposing
-> raw invariant TSC bit (CPUID.80000007H:EDX[8]) also seems to work for
-> modern Windows versions. The feature is, however, tiny and straitforward
-> and gives additional flexibility so why not.
-> 
-> Vitaly Kuznetsov (7):
->   x86/hyperv: Add HV_EXPOSE_INVARIANT_TSC define
->   KVM: x86: Add a KVM-only leaf for CPUID_8000_0007_EDX
->   KVM: x86: Hyper-V invariant TSC control
->   KVM: selftests: Rename 'msr->available' to 'msr->fault_exepected' in
->     hyperv_features test
->   KVM: selftests: Convert hyperv_features test to using
->     KVM_X86_CPU_FEATURE()
->   KVM: selftests: Test that values written to Hyper-V MSRs are preserved
->   KVM: selftests: Test Hyper-V invariant TSC control
+Hello:
 
-For the series, in case Paolo ends up grabbing this:
+This patch was applied to netdev/net.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Reviewed-by: Sean Christopherson <seanjc@google.com>
+On Thu, 13 Oct 2022 22:45:03 -0400 you wrote:
+> memcpy: detected field-spanning write (size 168) of single field "(void *)&request->response_msg + (sizeof(struct rndis_message) - sizeof(union rndis_message_container)) + sizeof(*req_id)" at drivers/net/hyperv/rndis_filter.c:338 (size 40)
+> RSP: 0018:ffffc90000144de0 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: ffff8881766b4000 RCX: 0000000000000000
+> RDX: 0000000000000102 RSI: 0000000000009ffb RDI: 00000000ffffffff
+> RBP: ffffc90000144e38 R08: 0000000000000000 R09: 00000000ffffdfff
+> R10: ffffc90000144c48 R11: ffffffff82f56ac8 R12: ffff8881766b403c
+> R13: 00000000000000a8 R14: ffff888100b75000 R15: ffff888179301d00
+> FS:  0000000000000000(0000) GS:ffff8884d6280000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055f8b024c418 CR3: 0000000176548001 CR4: 00000000003706e0
+> Call Trace:
+>  <IRQ>
+>  ? _raw_spin_unlock_irqrestore+0x27/0x50
+>  netvsc_poll+0x556/0x940 [hv_netvsc]
+>  __napi_poll+0x2e/0x170
+>  net_rx_action+0x299/0x2f0
+>  __do_softirq+0xed/0x2ef
+>  __irq_exit_rcu+0x9f/0x110
+>  irq_exit_rcu+0xe/0x20
+>  sysvec_hyperv_callback+0xb0/0xd0
+>  </IRQ>
+>  <TASK>
+>  asm_sysvec_hyperv_callback+0x1b/0x20
+> RIP: 0010:native_safe_halt+0xb/0x10
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3] net: hv_netvsc: Fix a warning triggered by memcpy in rndis_filter
+    https://git.kernel.org/netdev/net/c/017e42540639
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
