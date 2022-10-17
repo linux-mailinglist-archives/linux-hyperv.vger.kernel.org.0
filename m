@@ -2,170 +2,122 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 756876012BC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Oct 2022 17:27:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9490B6012F0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Oct 2022 17:49:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231184AbiJQP07 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Oct 2022 11:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52780 "EHLO
+        id S229976AbiJQPtK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Oct 2022 11:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbiJQP05 (ORCPT
+        with ESMTP id S230020AbiJQPtJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Oct 2022 11:26:57 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-centralusazon11023020.outbound.protection.outlook.com [52.101.64.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2634461111;
-        Mon, 17 Oct 2022 08:26:54 -0700 (PDT)
+        Mon, 17 Oct 2022 11:49:09 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11020019.outbound.protection.outlook.com [52.101.51.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61D560532;
+        Mon, 17 Oct 2022 08:49:07 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=apMbr/HRc/D2gw2UTBlpH/gauR4Kt/MtiwXjZweBnr78cvPQYxcyoNqavkmFv0Lzs3LKKM3xPjuIV/cQzo+EaOR4N4B1kMmeGYyVjwrsXl4IsLDQelKAWs3rYteXpqfmo8sSOyxGiOaaXTyAdNo7Z+XwtPPydhV3BzC3QvSVAFWhSI+rQPEs9/csIpnP0WvbCVAZbaCpP6QBN5z0WVht4byPiVVyknehhHL4a4YGJTdTe4e+erc45RlGoiBm+8/oWYp4xjXueDVUo8rzsb0y0gvonFheaI6DqtizAWk16DTH5tfKc9PucQM/GaaHvjrj7EdoQSXaCT1PPe3C5AMrIg==
+ b=cruCGdSEgehFyO3xDhth3yAKKnVQW/lly/cQxGAT/iQ5Pi4TJ4f6cc2o0f8pwDGFZbizrxuA/oQrtgqhOhGUkH2fmxuzXI51/jS07JzCwOOescrOw8LVXhTwZsybu7AjGhQRaactxk4sSzuHbNYX89ttkRqT74iDsO/aK++qC+vpRCqPs1WloR45uqtviramfeOD2mMZeTF87tOpBPwdXTgG4NqjIvAOeeG4vhetR0QAYlFtosN+J9Shv4uxyFrw0P12YPa0qPRIBcLxSmSG1gpnmIcQ25+9/OJqG0XVqi5FG2ajsAb7qofnZ9sNaNOrgNi+P15G5CpgD9CWz0Zvug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YUw14eKzEA/cofZwcCifwXCEI/fELko2CAfniKYxjS4=;
- b=R+zY7mEEuF3RWiugtZz/RRP65dSsNW0Fd6GvPFCnuPuyBQDJXEznqaG1HF+yNafo3wybbZjbMUjrzSv4Lk6Kjq6H/ywF6MWVycDNDYI3bR0CHlaNqABE1TyoczEVPWRYByHoMPYxhABL/yx+T3Xjyw4dGSRsXAyQo5239VhphLjPTU2wvtsz8SD2S8oFXh8+KYn/P++SoaWo3d4P/d8KBodORJLNS/tkwtVeH7tTinLxo6EWvW2K41glWm998rxFZX0v5WuNkovcbZQ66y7iHk1RcjTNnOSDs/6MqGs4odPG0li+/pPd+U9bnFY0kXPiOgmOQgQ5l4pTUIWxSZQsJQ==
+ bh=gomnQbVfChK70GoAf8o9v7Wv12Xa5qGP/AoIft+1/x8=;
+ b=aqUCMBvrFpo/rHMLhG663pv3rfAkdQRczsfY3axM7hbJ88/+3nnIQMRntVYd2jQRmPL6PtCB0FEjaaaBc9lhBmOUn1+hGsNRMzeVvomAgRwmJbP7GjnsT/eub0VBsHfObL5tNg+5MP1vNDtbBPtW9qCiGJrvz+2LKNNs9iq5x9re7sMhIAJWvvUfLwVSOq/yXxqBINR3D1kZgRXiyoXUa/XfJoKd/Th6WoVbBtPluUymaCksNHnnwqdSW1BIKW7xGW1TFf7sg4ABQ7WcGP5uCkihe7KlR6K/XJ4B9+AHSnTriOOrj3WhqRSpzeX9YWYFl7CtQ9ALufAdYV/WKsGvGw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YUw14eKzEA/cofZwcCifwXCEI/fELko2CAfniKYxjS4=;
- b=T1XNIiVODYzdmwhraaDRyP0QUdvtDSE2qGuQZFno32XbDVy20tU4WPacHVBkKb6f8mpMNd1LWWXs/cr3go4+EGkM1yMpWMj3tVsa29hPizaFZQVE93C75Hzy7MbWTKxfPtVIN4K8CcGV9Jok7x5ylK508ti1+OOkC91AuYc7otY=
+ bh=gomnQbVfChK70GoAf8o9v7Wv12Xa5qGP/AoIft+1/x8=;
+ b=JBQWg8bsruZ01ScnomDpep/Yj5JL2uyZ8yb+lSsOMAF19XqiafjSmG1kk1OTEPFrmq+fhs0TDd/Wt05M0dfq8uxMtGOxszLQJfIxusC6JOhLV4EIBQ0moVlob4dmCPY0qNbg5T3epvv8Or9S5K3f5FlxloL4MHPEK6jlEIVEe5g=
 Received: from SN6PR2101MB1693.namprd21.prod.outlook.com
- (2603:10b6:805:55::19) by DM4PR21MB3512.namprd21.prod.outlook.com
- (2603:10b6:8:a4::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.1; Mon, 17 Oct
- 2022 15:26:52 +0000
+ (2603:10b6:805:55::19) by DS7PR21MB3221.namprd21.prod.outlook.com
+ (2603:10b6:8:79::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.6; Mon, 17 Oct
+ 2022 15:49:05 +0000
 Received: from SN6PR2101MB1693.namprd21.prod.outlook.com
  ([fe80::af9b:5444:77eb:448d]) by SN6PR2101MB1693.namprd21.prod.outlook.com
  ([fe80::af9b:5444:77eb:448d%7]) with mapi id 15.20.5746.009; Mon, 17 Oct 2022
- 15:26:51 +0000
+ 15:49:05 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "bhe@redhat.com" <bhe@redhat.com>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        Wei Liu <wei.liu@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
-        "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
-        "halves@canonical.com" <halves@canonical.com>,
-        "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
-        "alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "dyoung@redhat.com" <dyoung@redhat.com>,
-        "feng.tang@intel.com" <feng.tang@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hidehiro.kawai.ez@hitachi.com" <hidehiro.kawai.ez@hitachi.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "vgoyal@redhat.com" <vgoyal@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "xuqiang36@huawei.com" <xuqiang36@huawei.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Dexuan Cui <decui@microsoft.com>,
+To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: RE: [PATCH V3 10/11] drivers/hv/vmbus, video/hyperv_fb: Untangle and
- refactor Hyper-V panic notifiers
-Thread-Topic: [PATCH V3 10/11] drivers/hv/vmbus, video/hyperv_fb: Untangle and
- refactor Hyper-V panic notifiers
-Thread-Index: AQHYtBrLfXqegDojNkO+rF0jYYkCGq3+sWWQgAARgQCAFE3LMA==
-Date:   Mon, 17 Oct 2022 15:26:51 +0000
-Message-ID: <SN6PR2101MB1693BC627B22432BA42EEBC2D7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-11-gpiccoli@igalia.com>
- <BYAPR21MB16880251FC59B60542D2D996D75A9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <ae0a1017-7ec6-9615-7154-ea34c7bd2248@igalia.com>
-In-Reply-To: <ae0a1017-7ec6-9615-7154-ea34c7bd2248@igalia.com>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH v2 1/2] mm/page_reporting: Add checks for
+ page_reporting_order param
+Thread-Topic: [PATCH v2 1/2] mm/page_reporting: Add checks for
+ page_reporting_order param
+Thread-Index: AQHY1JIpvIe3FCfJ70OGWTCfBPqSfa4S1qDA
+Date:   Mon, 17 Oct 2022 15:49:05 +0000
+Message-ID: <SN6PR2101MB1693F49C9CE71B98781BAF6ED7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
+References: <1664447081-14744-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1664517699-1085-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1664517699-1085-2-git-send-email-shradhagupta@linux.microsoft.com>
+In-Reply-To: <1664517699-1085-2-git-send-email-shradhagupta@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e185b1e3-8c76-4d54-aa80-99a5ae5c01ee;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-10-17T15:23:47Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4c8f230e-6d2a-4583-bff3-6e432566b9f8;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-10-17T15:48:21Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR2101MB1693:EE_|DM4PR21MB3512:EE_
-x-ms-office365-filtering-correlation-id: 91ca88d6-a29a-475c-9dd6-08dab05403fd
+x-ms-traffictypediagnostic: SN6PR2101MB1693:EE_|DS7PR21MB3221:EE_
+x-ms-office365-filtering-correlation-id: 3d1a0c65-5ec4-4c6d-932d-08dab0571ec5
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4Zmo4qAcsIITUsjZBn/mOn5dYY5OIEvgGCCeFavBVvHBv1INIBtjgd+Lyz1K+/xvGUj5nx8GgHmGUNVdUWaMcxnBWMn5y/mY3ubBJegy/4IMyECoZ1/DBDTXTcfD3zvdWQ7gSBzJDPZ4GMcY3nPokdYZ63WakQCShVafKUT0MHQLaGLB2DAmF9oKDY/TBC/fgSQUwuAUlD3yOBvplKRmq0gwvZkGKLo9G7PMxADCbrjz4hfQdMk1Y+6BfPl5HRgI5E5178BQ/EX8NBFAY/cuCekci1y5uzO5BO68IsUEHEwHTPWsfZXS3cWpp4FAK2HkPj18mGTQd5TlyUgcsxQgEZKIYPNOVtqDFVf28pIoYsmmHd6+WZLuRpIbqd9X9QZn8A6Xcav7+5pH5LftTAu7GO1HFMjrlOAk9Gea14RI9/bTuHQrrKaGwxuRQyNoafsw8OI5cH9qYJQG2YhzDPkGE/0hIALEOfB0gf1pNfNyHL967oK9tq3wku4MqX9Y39DJxz+5gWqdpkBGaAzEkB9Y60H4xiuFLedoQe8jjvHS57+gdlK6TI6zfXbsTYuOpY1sd+rGGLVvlnvWe6hwc/zROCdDzvj9/EoD6SUiBQDMtqovz+i5geKCsRV9+fXzq/daErT4ltSA789W2a7SZPmOmQR4oFzOIjCfHNh76y4wK6V9XbM1B0fKc+Ts72HvWkDTk362u1dueoNG/UG6rst56osRgoMYJbKCJUoeWDoTqDdsM4HAlunHC7isjpgKfaNHamR8Yel6QhsIsXtDq41tsxYViilGX6V33QSVE0wKYYb2GN/5L9MCSIMtfFBSMXc0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1693.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(451199015)(6506007)(55016003)(71200400001)(26005)(82960400001)(107886003)(82950400001)(7696005)(38100700002)(33656002)(86362001)(53546011)(38070700005)(478600001)(186003)(83380400001)(4326008)(66476007)(66446008)(8936002)(9686003)(41300700001)(122000001)(54906003)(76116006)(316002)(66556008)(7406005)(7416002)(5660300002)(52536014)(8676002)(4744005)(2906002)(66946007)(64756008)(10290500003)(8990500004)(110136005);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: fKEzR/1yohXCIxA2KDMIpHfW+9nuZyzurA2MzawCqIf5M+HuLQSUFDcS52IpwCp/tTVPF7mJMGhLsK0GWR20WPPW2ESsmFw80ypSvh9JittoghcKxv8n0MI043DkV8T3NKWKDRDj3gRrdC1HO4Y2YZ42h16BYU0ywduY+PqlgERmE06XG5fIxEdsDYl/fEBzJXPn5kXQe5TaeKydXzpdc9iB7xovxhnaPEscb/z+3YcsobeggiApeu3JMqAheFFqGn9mefYBE5GGxX19MRtxSFnlyt1Zbv058uFVpFmuHnR6Uymm2o5j4R7ExsbL1ma+JEH7SjfumgpeJElBTanw4NhAEFuK9IauEQmeur8HcxUNkkDfTfOTJZr2f13Ew0e10zZFUg2JBed19qsUOc0QKnPNN2TkSxt1/hk61Gg8KZBEbP99FWBPVhl3mlit94M+yC2hOCe71pd0UL/+nPCYp4hX7pMDtATmMLBBNc3X2hBgAGuW/A0rpqJOjqAfDfi1LA9RvouuaAbydEIqGv3u/yOLG3QIajTuZgxC5fqCcinAnCIeeulPnlJGvdpAYJQH1p7J8tvZ48QrrEgr1v6N1LwImjF4PSZN8P+gQzp89Zgnk43T4cnQTEOucGLFuMhQNd2vevB9dhaiB8T5CVRAe5riMTfUvny49pdTJn8p7xNPbJqh1OcFpQpWZUny2DXWKti+o6P5Nq7Uo6VMLox8pDJdv5DVQ1iOxAOqsgWIaFUWovDYwIbKWwAOYsA8av+b05Apd2t8MD/Jju/uGr7pB9qF25fKzhDBL3XPLfJdB+p6Bzn+lCzVKE514Z0vPzod
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1693.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(451199015)(38070700005)(8936002)(86362001)(66476007)(9686003)(186003)(82950400001)(122000001)(5660300002)(82960400001)(55016003)(2906002)(66446008)(8990500004)(71200400001)(66946007)(64756008)(107886003)(316002)(478600001)(26005)(41300700001)(66556008)(76116006)(4326008)(52536014)(38100700002)(6506007)(10290500003)(33656002)(54906003)(7696005)(83380400001)(8676002)(110136005);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?a1IxaEphNjR5YnVXcDZqTkFXYmpTWUNxSVVKYXdyeEtrSlAwWi9kZUwzTUFG?=
- =?utf-8?B?M0IvU055U3B0eFNWSjVudDkyR0ZMQTJUTWV2dUJrZ1dRUHFqNnZWRlpoanpj?=
- =?utf-8?B?UWFBbHh5RTF3VGhjNjZPdmx1MjRaR2tkdWZLRXlGdTFnVmJ4RzM2S01wckpQ?=
- =?utf-8?B?N01md1VrWVlEWXBoRWZvQlNEbDNrZnNIRHFSVDlYUTR6bFJMTnFUbWhJOFcx?=
- =?utf-8?B?bnY4RWVncUloNUNKWWJkRis0bXl5QW5TallEc1hoeUE1T2dTVEFWWVptZVUx?=
- =?utf-8?B?SVNUSU8wS2l0Y2drdUFjcWpwMS9pRERxSXJwUzFqSDV3N1VJSUJ5NXd2L3BS?=
- =?utf-8?B?R21XQ2d2Y3ZnSG14Sk9JWGNGT0s0S1FveEdvQ2xvTHBiZHBCRzNrLy80ZVF3?=
- =?utf-8?B?MklxSnUwUlUwOS9YbHQraHdJT3VCRVV0MVdlUlQvU2ZmWWNJRytlckxIcVox?=
- =?utf-8?B?VDVHdHVVUzVyLzJDREwyNGFZUTdsbHp3OWRZUlluV29MbWc3eEEzRm9ta01T?=
- =?utf-8?B?djNZbVFLcS9rMmV2T1h4dU9NRlphZVEwWkhBelBrSkhuRmVHK0E2M1owSkw5?=
- =?utf-8?B?N1V1S3V3M2gvMXR4a0ZKMDJwY3NaRFlzeEVmSDZoVmwwSS9GaW1tb1BZOXpj?=
- =?utf-8?B?czBnU3I1M053S1hvS1lCTWdOSzBBUml1UlR0VDNUbUZvMHc1S0tBYkhiU0VW?=
- =?utf-8?B?Z2w4VGZ2aGJIRlNIT0pFazRhRjkxTVRWcm4vNDkwK1NFaDFYZzJicFZpZkt1?=
- =?utf-8?B?dVF0dHVyWUFnbmYvUGRUKzdyN3BWc3F0dW9QbjRZazF3QTJueUVTTjhSM2pS?=
- =?utf-8?B?bXc1cVhQV244V2VJVDg1UE9waG9VL3IvSlFmRU81eTNuWWg3MjVMWm80b2pj?=
- =?utf-8?B?ZDJoS0U3SktKa1BNWFlhNXJQVVNva3dQZnd2TkxYZWRWc3VlaGZqamZ0VFFK?=
- =?utf-8?B?L29VN3VLTFNFclNZa3V1ZDRMMkxHbC9yN3FVNFBnQXN4MGU4VlJVaURMZmZ6?=
- =?utf-8?B?MXdKUzd6K25SVTA1eGhMZWlrS3EzdUluVVhPUlZ4NkNtOHRTVkJJY3F0Zmta?=
- =?utf-8?B?U0dMb1p5Q05UeFBMcUtmNEJBb0ZIMC9ZTlhlMHBrNDU1SUZRL1U3cGZ6WnBr?=
- =?utf-8?B?MXNsaDA3MXpodmYxTUJJSHJ4U284bDZVYWd2NU5Uc3ZPQXE3K0hTYXhBQTM4?=
- =?utf-8?B?Q3F5cjNISnUvSmZjZnIvRU55c3dKMkUzUmpIM3JBNXlDMkpPVGI5THpIZFpL?=
- =?utf-8?B?UWQrSFhwbW9oTlNZeCtVUXlNdHAya2k2ZGpYMGdncDlWbTdIRk45TjNGOTh0?=
- =?utf-8?B?WllyVURZLzY1Tm1NWnRpeUIxQ1RkdUs4LzZpeXdiVEgyK1NuQkRETjJ5MnRT?=
- =?utf-8?B?RGltcTVucVQwdlpLdmdmMDdjWVJGdHdHaXB3QmNQci9Fc2U1TVpyNjdKMWg5?=
- =?utf-8?B?a2JrQ1ZhcWY0RXBhcUhiZEU2US9mWk5LM244TlJaZXBPN3FFZ3hvcEluTTZB?=
- =?utf-8?B?bTg1T2JvazhXL0R3RkdCVkV4TStSMnVUM0kxTTJHaUo5WHpsay9JdmFlNWh4?=
- =?utf-8?B?WFNEbHBYZ1NqekkwSEdyWVYrM3BPNU82bWFOSlNOTSs3QUhzd05GMDIvNTFa?=
- =?utf-8?B?Z0NHSWZyaFNiTXVYYVVJK3FlYTgrazJnSnRuN01LR0JWTU52SlZyVnd5RnFZ?=
- =?utf-8?B?KzFKWFdDUW5pTzFhTTNsaXp0Sk5ia0xMV0xQKzJFeFM0T3RGVkYrUEd2RE16?=
- =?utf-8?B?VzhlZVJpTFlpS05GT3BvMjdFV0NEakJDdmdhWVZzQnhpUXNyejRvVXRBelJk?=
- =?utf-8?B?SmpGZVFMc2Q3SUFueElFZHZ2MzhvWlNsb281cENoWnVVeGxVMlZMNVhzNFg3?=
- =?utf-8?B?ODZsc29pZXZLa3hWSmRHb005RkEvZFBYSlg5anlyam9ZQ245QWxKS3UvYVBr?=
- =?utf-8?B?RUtlRThJc21HRWNQTzNpczFneVIvQnZxckcxZTJJeHNaZTBZYnJCYStxUVZU?=
- =?utf-8?B?bHBWcjdQQUhBa0F6YnJZOUpPeFhHcW9hcm5TMURVMnJxNWk0SmNOc3hheUxr?=
- =?utf-8?B?bEY0dTU2R2JrdkN4T1ZkbVhuUjRXbTF4TXZYSHg2UjZrSS9ST3NIQzR6ZHdh?=
- =?utf-8?B?K2JGQzJPU2U2bWxQUjNhRnZnek9aZ3IxRnI0SGxlYUV4NlhETXFOWHE0UWZj?=
- =?utf-8?B?VkE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?rSGXa5aymYSIp8Bh/WOMMBSUuxy/jxVR+EahE7nfZSqxLXPH0aJggYeqgwoa?=
+ =?us-ascii?Q?3GUIl2VCgQYp6iOhdaVI9WcbxVTIRKDVBkLstmfKwgu3O0Qn7YJ0szQOy7Te?=
+ =?us-ascii?Q?EUKxu3S+Y34SuMp562rOfxhcVLQCrhJ+0x1P2JA6E8bkyIn2vlWkZiDh6cyg?=
+ =?us-ascii?Q?v78UPO5anJ2Mk5zinYZXP8yL7Xi5Ay7sFZEHCFtX9ZvGqMyKvh41gQYbMlSF?=
+ =?us-ascii?Q?5+n2auRk3DqkNbuOkdd9l+TDdO8CurJvi0Bu7b9hie7JM9L1zN9OyYZ/yfEe?=
+ =?us-ascii?Q?iyrWLIcV6rqBR4ZotrHdlcgrOaKnhTpBWJaqT1hDIesdgL+hqNvvusv+1bns?=
+ =?us-ascii?Q?ohCo0MaiXgYDBTdc8T/MZ7HUkVU+N3SqKlA1R/5Pte5mvYe79ncs1GXW3Ilv?=
+ =?us-ascii?Q?lIWL2xMCwz8TTBw19rKh1yOGSGDWoHn2sFoGRjIG20c3Bv9c26TXIFAulXQk?=
+ =?us-ascii?Q?rQwd5HwxswYTNd6JHjHlCQUPv2nKjO+ARHSnAUYUvE1+zU0CwCthbXDLEo0/?=
+ =?us-ascii?Q?1S+fG5ggOQnFpNC98NSY9Mi3GWX9JojJQeTjDubDJxwb+AZ6WhJvvMchksYx?=
+ =?us-ascii?Q?6Lr2xK4DgOlFfJPPuK5n+UcAt1srAYTwN8s2H6InsBx2Lr8g2n2sk9s58DaY?=
+ =?us-ascii?Q?F4+btE3Mxol4y8eDeNJy15CjnTXaOcPhqwgUkRl/er55hC/QBzn7vhrv6uCp?=
+ =?us-ascii?Q?iQt7S4Bei2Q3kInCLzF95I3XfFWTUvyW9u6iyxz+0abLwOwoCB+HCEN0L4BO?=
+ =?us-ascii?Q?x2BlbMhTyjoxgX6wKUz8ix2t93sf4ToV1n0O4DaoFRACLi8dpHDV1hnNHV/L?=
+ =?us-ascii?Q?s66+bVmL6IDFXI9a2eKaPKbvpLihNiy1QOCsoc63gNIO72FjzlcPD6Oh4cA4?=
+ =?us-ascii?Q?b82tz+NZk8Ng07KZQaL3C1Tug0wIti0jSjp/2Ph4FckY1gZuPv/F2COYrODG?=
+ =?us-ascii?Q?PZ6scR0IVDxRxQrtHrB2nL6gIHQSn218A7+/evXAGS5UQo+cyCJuiYwg04Bx?=
+ =?us-ascii?Q?i0z499fz9wSB+Wt/F5c8zyiFvoaU3eKa/HpC5y6Kv1Yy/O3AcRbtPiQMcKpw?=
+ =?us-ascii?Q?saOnkeiXcWYBavDACIkUOncwWDnUKubCbTY7RMaBpf3CkphnZyhMMwoomRL7?=
+ =?us-ascii?Q?7l0/F6/LLPi5YkuvVJMYaaBmIB8YDx8clZRaAa2uf+DCDpAdXDli/WV9Koan?=
+ =?us-ascii?Q?x+PZ3KMIFpbYdnEDG8REIYjwCjTq8ISA6UNLbpSQk4a2GheJwFWkJ/VMLw2w?=
+ =?us-ascii?Q?JUi5ZUnwRdYggCfLyqOt5DuLy44VDOrmZ4dhl8GLLBErvwyOpkRiwRDXPSxq?=
+ =?us-ascii?Q?66Fpbf4x9g6RYO9c+1xWpoHn+xT+ZPJJ0cHvnaS/IquVfO2WlwKzUqSxRql2?=
+ =?us-ascii?Q?B9q7ShKHNLyqNWUMU0NpP+CsrhElPXrI/YGTRmwIEhR18Ue9dRJQYAHyWC4B?=
+ =?us-ascii?Q?KCCNwFDm4eX2DGW3HNWrHNwliH6175cN6GcQ+fZLsda97fewiFZCrA75QsZ/?=
+ =?us-ascii?Q?dQVkr9XIMGkgXkCstCgG0dl/xFhxCAlcWlNUZC4BvwU04vaC2QnTTDup3tyd?=
+ =?us-ascii?Q?4vDvvJ8BOrbqizcq2AxOioIjWj9XQQp9tyC1d6rRmb2LzCTOUmV4uBbqYHuT?=
+ =?us-ascii?Q?wQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR2101MB1693.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91ca88d6-a29a-475c-9dd6-08dab05403fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2022 15:26:51.6571
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d1a0c65-5ec4-4c6d-932d-08dab0571ec5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2022 15:49:05.1098
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uA5bPirbgalH784f3GIasFM1zhHRCFOdQG/RJYf8LMIZarrTgih4FAfroJqHOIXtkJTR2wxo//7oQpqlO5fI8XSuE4BfMCjZzrWW6GDWQp4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3512
+X-MS-Exchange-CrossTenant-userprincipalname: p436Mg4hpK5a43YbHs7/NdjYRUVApP62RU6LLNz6g2ZXRZoj/5kTLTJF128KfVlSbPpU08l7tsYzCWEsP24sEFOw9UaOQQ57weDQuN/bBgU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3221
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
@@ -176,19 +128,106 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogR3VpbGhlcm1lIEcuIFBpY2NvbGkgPGdwaWNjb2xpQGlnYWxpYS5jb20+IFNlbnQ6IFR1
-ZXNkYXksIE9jdG9iZXIgNCwgMjAyMiAxMDoyMCBBTQ0KPiANCj4gT24gMDQvMTAvMjAyMiAxMzoy
-NCwgTWljaGFlbCBLZWxsZXkgKExJTlVYKSB3cm90ZToNCj4gPiBbLi4uXQ0KPiA+DQo+ID4gVGVz
-dGVkIHRoaXMgcGF0Y2ggaW4gY29tYmluYXRpb24gd2l0aCBQYXRjaCA5IGluIHRoaXMgc2VyaWVz
-LiAgVmVyaWZpZWQNCj4gPiB0aGF0IGJvdGggdGhlIHBhbmljIGFuZCBkaWUgcGF0aHMgd29yayBj
-b3JyZWN0bHkgd2l0aCBub3RpZmljYXRpb24gdG8NCj4gPiBIeXBlci1WIHZpYSBoeXBlcnZfcmVw
-b3J0X3BhbmljKCkgb3IgdmlhIGh2X2ttc2dfZHVtcCgpLiAgSHlwZXItVg0KPiA+IGZyYW1lYnVm
-ZmVyIGlzIHVwZGF0ZWQgYXMgZXhwZWN0ZWQsIHRob3VnaCBJIGRpZCBub3QgcmVwcm9kdWNlDQo+
-ID4gYSBjYXNlIHdoZXJlIHRoZSByaW5nIGJ1ZmZlciBsb2NrIGlzIGhlbGQuICB2bWJ1c19pbml0
-aWF0ZV91bmxvYWQoKSBydW5zDQo+ID4gYXMgZXhwZWN0ZWQuDQo+ID4NCj4gPiBUZXN0ZWQtYnk6
-IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0KPiA+DQo+IA0KPiBUaGFu
-a3MgYSBsb3QgZm9yIHRoZSB0ZXN0cy9yZXZpZXcgTWljaGFlbCENCj4gDQo+IERvIHlvdSB0aGlu
-ayBIeXBlci1WIGZvbGtzIGNvdWxkIGFkZCBib3RoIHBhdGNoZXMgaW4gaHYgdHJlZT8gSWYgeW91
-DQo+IHByZWZlciwgSSBjYW4gcmUtc2VuZCB0aGVtIGluZGl2aWR1YWxseS4NCj4gDQoNCldlaSBM
-aXU6ICBDb3VsZCB5b3UgcGljayB1cCBQYXRjaCA5IGFuZCBQYXRjaCAxMCBmcm9tIHRoaXMgc2Vy
-aWVzIGluIHRoZQ0KaHlwZXJ2LW5leHQgdHJlZT8NCg0KTWljaGFlbA0KDQo=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Thursday, Sept=
+ember 29, 2022 11:02 PM
+>=20
+> Current code allows the page_reporting_order parameter to be changed
+> via sysfs to any integer value.  The new value is used immediately
+> in page reporting code with no validation, which could cause incorrect
+> behavior.  Fix this by adding validation of the new value.
+> Export this parameter for use in the driver that is calling the
+> page_reporting_register().
+> This is needed by drivers like hv_balloon to know the order of the
+> pages reported. Traditionally the values provided in the kernel boot
+> line or subsequently changed via sysfs take priority therefore, if
+> page_reporting_order parameter's value is set, it takes precedence
+> over the value passed while registering with the driver.
+>=20
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> ---
+>  mm/page_reporting.c | 50 ++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 45 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+> index 382958eef8a9..29d67c824fd2 100644
+> --- a/mm/page_reporting.c
+> +++ b/mm/page_reporting.c
+> @@ -11,10 +11,42 @@
+>  #include "page_reporting.h"
+>  #include "internal.h"
+>=20
+> -unsigned int page_reporting_order =3D MAX_ORDER;
+> -module_param(page_reporting_order, uint, 0644);
+> +/* Initialize to an unsupported value */
+> +unsigned int page_reporting_order =3D -1;
+> +
+> +int page_order_update_notify(const char *val, const struct kernel_param =
+*kp)
+> +{
+> +	/*
+> +	 * If param is set beyond this limit, order is set to default
+> +	 * pageblock_order value
+> +	 */
+> +	return  param_set_uint_minmax(val, kp, 0, MAX_ORDER-1);
+> +}
+> +
+> +const struct kernel_param_ops page_reporting_param_ops =3D {
+> +	.set =3D &page_order_update_notify,
+> +	/*
+> +	 * For the get op, use param_get_int instead of param_get_uint.
+> +	 * This is to make sure that when unset the initialized value of
+> +	 * -1 is shown correctly
+> +	 */
+> +	.get =3D &param_get_int,
+> +};
+> +
+> +module_param_cb(page_reporting_order, &page_reporting_param_ops,
+> +			&page_reporting_order, 0644);
+>  MODULE_PARM_DESC(page_reporting_order, "Set page reporting order");
+>=20
+> +/*
+> + * This symbol is also a kernel parameter. Export the page_reporting_ord=
+er
+> + * symbol so that other drivers can access it to control order values wi=
+thout
+> + * having to introduce another configurable parameter. Only one driver c=
+an
+> + * register with the page_reporting driver for the service, so we have j=
+ust
+> + * one control parameter for the use case(which can be accessed in both
+> + * drivers)
+> + */
+> +EXPORT_SYMBOL_GPL(page_reporting_order);
+> +
+>  #define PAGE_REPORTING_DELAY	(2 * HZ)
+>  static struct page_reporting_dev_info __rcu *pr_dev_info __read_mostly;
+>=20
+> @@ -330,10 +362,18 @@ int page_reporting_register(struct page_reporting_d=
+ev_info
+> *prdev)
+>  	}
+>=20
+>  	/*
+> -	 * Update the page reporting order if it's specified by driver.
+> -	 * Otherwise, it falls back to @pageblock_order.
+> +	 * If the page_reporting_order value is not set, we check if
+> +	 * an order is provided from the driver that is performing the
+> +	 * registration. If that is not provided either, we default to
+> +	 * pageblock_order.
+>  	 */
+> -	page_reporting_order =3D prdev->order ? : pageblock_order;
+> +
+> +	if (page_reporting_order =3D=3D -1) {
+> +		if (prdev->order > 0 && prdev->order <=3D MAX_ORDER)
+> +			page_reporting_order =3D prdev->order;
+> +		else
+> +			page_reporting_order =3D pageblock_order;
+> +	}
+>=20
+>  	/* initialize state and work structures */
+>  	atomic_set(&prdev->state, PAGE_REPORTING_IDLE);
+> --
+> 2.37.2
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+
