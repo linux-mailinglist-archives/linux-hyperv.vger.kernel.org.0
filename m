@@ -2,103 +2,166 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D3E45FF99D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 15 Oct 2022 12:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A647B600815
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Oct 2022 09:51:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbiJOKUV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 15 Oct 2022 06:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46706 "EHLO
+        id S229977AbiJQHvf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Oct 2022 03:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiJOKUU (ORCPT
+        with ESMTP id S229663AbiJQHve (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 15 Oct 2022 06:20:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B3862AC4A;
-        Sat, 15 Oct 2022 03:20:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CD29460C07;
-        Sat, 15 Oct 2022 10:20:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 26E86C43142;
-        Sat, 15 Oct 2022 10:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665829216;
-        bh=bsjIMKUlrzDaW7XKvCitE02vrcY7t/uH3nEyGad8D08=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=El3X02IiQduy87eLnqEBA45WqzpWWylNnvBJvch7Zq67hTtbhwbCb/Bq5Wnla87DY
-         0X66r7mu9Mt2UwjShESr7Jbikt/h62gdX7E3DcrFpzO+uY310Rxi5/I7L51uUwa6GY
-         JsqSA9ZIMw6QrpOF56GOxEa8pnsLVRYZ6CjDIoTUkORrWsZshaOK7lPUs5t8bqyfsB
-         v+67lngkv/e0gPMMXpu+/W4wH0BHKYGfMNdfGn9P7QGg9dAwcdeCG2hM/hcddElGXR
-         5U/BXEoNgybK9qbWdJOipM9dbRw00p8V5yMu0skb5ey6RhytcgOBRuMbKDYSVf5F1N
-         OCnf6Po47Vk9Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 08B32E52525;
-        Sat, 15 Oct 2022 10:20:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 17 Oct 2022 03:51:34 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C6CAE43;
+        Mon, 17 Oct 2022 00:51:31 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id q9so9749636pgq.8;
+        Mon, 17 Oct 2022 00:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fSRrdzVHidQmdaT3eWjePmJqgOjvcCUYpgRIpnaOzjk=;
+        b=eBHLP+PHw8gAJVBUUXK+CVjZYlQQRyFkUO+0b5pdPcT57o4NFWkDAqgKyM8eBreZeF
+         dlwz60eL+1cmFVCeae7RQgPbhKMNA7UqWWd0JnfKp3kr2cFg5xsYyu3CwIRFkQjcPscV
+         yhv9cG57GYZP4OJHVQ8YAzWmssGkq6HscDYXvuzd9l8/NfMbBpnRzyh0WWnG9WshyFWH
+         t5wT4eAXIKGXNC7lM/l9V4AT/bQTVobyBJxd7gSijqoFBo75d/ylLtuQmyyRPfSIryoN
+         +SuU7iQfA6p8aCEXiaC4uyGS2VCyDtyVNC6AbYPbhwl/rIAJ6lwchZfFHOWVwnp6qr4Q
+         5gvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fSRrdzVHidQmdaT3eWjePmJqgOjvcCUYpgRIpnaOzjk=;
+        b=UOAE3lWAePD7DyfK8+AyX4+6+G0TGlvBM9oPuhVSddYfMI9vwf69O5JlX+RLVAxuEV
+         fwrAPOPdlmQ6u4FbSlI/ANB58JHg2DI/lGJ+1EGgWR2xil0iO1hj41Uyk46qAD3FlDjV
+         pw6TYqqD2zwSqMe+l594ChF/GdAGmRZyZEBM1y3dHKA6CQqCACrC7RCBFDEoVU/RzUwM
+         HEWqU4whCFea0o/LT1LLIumscny8FYqnZ0KJeQIrLlzZrSHlB8sYHNqZJG+i+kPWEpIv
+         +ZOqdSYeB04sNMRNQYyIwmEpKK/4EGuhOe36vo0AKp6CnfRco5oOjvyVOYn5Mmp2OP4v
+         GAyQ==
+X-Gm-Message-State: ACrzQf266LlQasMxZOAIXTe3Bg8crWV2pN6VenLSRAqKRCtJUmihHVUy
+        XuqDfKKmoBK3SDI+pxTkVihcQdqusorKTA==
+X-Google-Smtp-Source: AMsMyM6v6UgwrK4uhQfJu77rGrSV5hWVReBIwXht6R+lD4KEUKOMCjjye8N1ga0JqUJqHeLoxnUhJw==
+X-Received: by 2002:a05:6a00:134f:b0:563:7aa8:5cea with SMTP id k15-20020a056a00134f00b005637aa85ceamr11107925pfu.69.1665993091229;
+        Mon, 17 Oct 2022 00:51:31 -0700 (PDT)
+Received: from mail.google.com (122-58-209-93-fibre.sparkbb.co.nz. [122.58.209.93])
+        by smtp.gmail.com with ESMTPSA id x89-20020a17090a6c6200b0020d43c5c9a0sm5576400pjj.18.2022.10.17.00.51.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 00:51:30 -0700 (PDT)
+Date:   Mon, 17 Oct 2022 20:51:22 +1300
+From:   Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        paulo.miguel.almeida.rodenas@gmail.com
+Subject: [PATCH] [next] HID: hyperv: Replace one-element array with
+ flexible-array member
+Message-ID: <Y00JenqCzKRrcTiF@mail.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] net: hv_netvsc: Fix a warning triggered by memcpy in
- rndis_filter
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166582921603.1299.10791611158258198610.git-patchwork-notify@kernel.org>
-Date:   Sat, 15 Oct 2022 10:20:16 +0000
-References: <20221014024503.4533-1-cbulinaru@gmail.com>
-In-Reply-To: <20221014024503.4533-1-cbulinaru@gmail.com>
-To:     Cezar Bulinaru <cbulinaru@gmail.com>
-Cc:     pabeni@redhat.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, mikelley@microsoft.com
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+One-element arrays are deprecated, and we are replacing them with
+flexible array members instead. So, replace one-element array with
+flexible-array member in structs synthhid_msg, synthhid_input_report,
+pipe_prt_msg and refactor the rest of the code accordingly.
 
-This patch was applied to netdev/net.git (master)
-by David S. Miller <davem@davemloft.net>:
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-On Thu, 13 Oct 2022 22:45:03 -0400 you wrote:
-> memcpy: detected field-spanning write (size 168) of single field "(void *)&request->response_msg + (sizeof(struct rndis_message) - sizeof(union rndis_message_container)) + sizeof(*req_id)" at drivers/net/hyperv/rndis_filter.c:338 (size 40)
-> RSP: 0018:ffffc90000144de0 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: ffff8881766b4000 RCX: 0000000000000000
-> RDX: 0000000000000102 RSI: 0000000000009ffb RDI: 00000000ffffffff
-> RBP: ffffc90000144e38 R08: 0000000000000000 R09: 00000000ffffdfff
-> R10: ffffc90000144c48 R11: ffffffff82f56ac8 R12: ffff8881766b403c
-> R13: 00000000000000a8 R14: ffff888100b75000 R15: ffff888179301d00
-> FS:  0000000000000000(0000) GS:ffff8884d6280000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000055f8b024c418 CR3: 0000000176548001 CR4: 00000000003706e0
-> Call Trace:
->  <IRQ>
->  ? _raw_spin_unlock_irqrestore+0x27/0x50
->  netvsc_poll+0x556/0x940 [hv_netvsc]
->  __napi_poll+0x2e/0x170
->  net_rx_action+0x299/0x2f0
->  __do_softirq+0xed/0x2ef
->  __irq_exit_rcu+0x9f/0x110
->  irq_exit_rcu+0xe/0x20
->  sysvec_hyperv_callback+0xb0/0xd0
->  </IRQ>
->  <TASK>
->  asm_sysvec_hyperv_callback+0x1b/0x20
-> RIP: 0010:native_safe_halt+0xb/0x10
-> 
-> [...]
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/210
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
 
-Here is the summary with links:
-  - [v3] net: hv_netvsc: Fix a warning triggered by memcpy in rndis_filter
-    https://git.kernel.org/netdev/net/c/017e42540639
+Signed-off-by: Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>
+---
+ drivers/hid/hid-hyperv.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-You are awesome, thank you!
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index e0bc73124196..208cf8d981a5 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -61,7 +61,7 @@ struct synthhid_msg_hdr {
+ 
+ struct synthhid_msg {
+ 	struct synthhid_msg_hdr header;
+-	char data[1]; /* Enclosed message */
++	char data[]; /* Enclosed message */
+ };
+ 
+ union synthhid_version {
+@@ -99,7 +99,7 @@ struct synthhid_device_info_ack {
+ 
+ struct synthhid_input_report {
+ 	struct synthhid_msg_hdr header;
+-	char buffer[1];
++	char buffer[];
+ };
+ 
+ #pragma pack(pop)
+@@ -118,7 +118,7 @@ enum pipe_prot_msg_type {
+ struct pipe_prt_msg {
+ 	enum pipe_prot_msg_type type;
+ 	u32 size;
+-	char data[1];
++	char data[];
+ };
+ 
+ struct  mousevsc_prt_msg {
+@@ -232,7 +232,7 @@ static void mousevsc_on_receive_device_info(struct mousevsc_dev *input_device,
+ 
+ 	ret = vmbus_sendpacket(input_device->device->channel,
+ 			&ack,
+-			sizeof(struct pipe_prt_msg) - sizeof(unsigned char) +
++			sizeof(struct pipe_prt_msg) +
+ 			sizeof(struct synthhid_device_info_ack),
+ 			(unsigned long)&ack,
+ 			VM_PKT_DATA_INBAND,
+@@ -271,16 +271,14 @@ static void mousevsc_on_receive(struct hv_device *device,
+ 		 * malicious/buggy hypervisor/host, add a check here to
+ 		 * ensure we don't corrupt memory.
+ 		 */
+-		if ((pipe_msg->size + sizeof(struct pipe_prt_msg)
+-			- sizeof(unsigned char))
++		if (struct_size(pipe_msg, data, pipe_msg->size)
+ 			> sizeof(struct mousevsc_prt_msg)) {
+ 			WARN_ON(1);
+ 			break;
+ 		}
+ 
+ 		memcpy(&input_dev->protocol_resp, pipe_msg,
+-		       pipe_msg->size + sizeof(struct pipe_prt_msg) -
+-		       sizeof(unsigned char));
++				struct_size(pipe_msg, data, pipe_msg->size));
+ 		complete(&input_dev->wait_event);
+ 		break;
+ 
+@@ -359,8 +357,7 @@ static int mousevsc_connect_to_vsp(struct hv_device *device)
+ 	request->request.version_requested.version = SYNTHHID_INPUT_VERSION;
+ 
+ 	ret = vmbus_sendpacket(device->channel, request,
+-				sizeof(struct pipe_prt_msg) -
+-				sizeof(unsigned char) +
++				sizeof(struct pipe_prt_msg) +
+ 				sizeof(struct synthhid_protocol_request),
+ 				(unsigned long)request,
+ 				VM_PKT_DATA_INBAND,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.37.3
 
