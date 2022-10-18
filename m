@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDEFC601EE0
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Oct 2022 02:14:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16836601FAC
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Oct 2022 02:37:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231516AbiJRAOh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Oct 2022 20:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56916 "EHLO
+        id S232135AbiJRAh4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Oct 2022 20:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231709AbiJRAOJ (ORCPT
+        with ESMTP id S230471AbiJRAhm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Oct 2022 20:14:09 -0400
+        Mon, 17 Oct 2022 20:37:42 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBE417053;
-        Mon, 17 Oct 2022 17:10:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B061CB3E;
+        Mon, 17 Oct 2022 17:37:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D5C26B81BFB;
-        Tue, 18 Oct 2022 00:09:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3E2C43142;
-        Tue, 18 Oct 2022 00:09:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 04F82B81BFC;
+        Tue, 18 Oct 2022 00:10:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F29B6C43140;
+        Tue, 18 Oct 2022 00:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666051753;
-        bh=cHle/rKV0zuFV5/oUsPF+6blyk2FbZRXAyUsGqr80Ts=;
+        s=k20201202; t=1666051806;
+        bh=eF1HCerYSQLmfVk0O1HCpkdY+DEyEI5og/haJCONFg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iANEJQ8b/bTJ4wBezD9/5qa/IHE2F7Yf5yamTaXv71ZZRlmyOu4/A520BLAexLkWP
-         iyp1roIQBLqNWUy9WQetR6yt50RVkWsBWFAZvyJ607CdZ06TaysqyKE6zVDsBWzhIM
-         E44JiQHc7CHY7pVH2a6/KeB9Qn6vxnianMhSEdVKFZZuXiKXZeYDIhMz9ihdamG4L1
-         LXzwgLA4OPlMQ1F+BXwONmCrVu1BQxcd+RuYMDRFAQPqj1OQawYLIhkWE0bL7S9IZt
-         /T9YkNwydlhlY/cj+4cIY617DNCGtX3t7BHlhfZiXq/yQkhUxco6WMUpaKE3nJYysq
-         +YQoGAhlEuYCQ==
+        b=Nz1AlDtAiW0TQluU20rb3v+bMrmio3g+hC+8rovfmYh1K/ruH51MVTwKikVIfgzL0
+         68VHljFHpVnws+TxwHrRyOXZ2M+UhBDBsfnPS/6BHL5odA22NDsclsvD0lS93iDkv4
+         qCBAFqkRk9KEmYtTCzLW/EZ6dpOU5nfBxYapQkyhdINZNCjO9rwi3vM2Ww14znJiTu
+         O6GhVzTbCbrlOrK1uYfPxXgowuxLcAJwh43OfajWruuRstd6iyj4mcytoYw3DFYqTH
+         qfW5+6pfKvqes0CCtZ+X/NES+qDuXMFysD73gWuC5kwKJg14BCwTM0+IY8o+H+uC+d
+         vMJk6ZQB7emdw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Zhao Liu <zhao1.liu@intel.com>,
@@ -43,12 +43,12 @@ Cc:     Zhao Liu <zhao1.liu@intel.com>,
         decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
         linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 19/29] x86/hyperv: Replace kmap() with kmap_local_page()
-Date:   Mon, 17 Oct 2022 20:08:28 -0400
-Message-Id: <20221018000839.2730954-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 14/21] x86/hyperv: Replace kmap() with kmap_local_page()
+Date:   Mon, 17 Oct 2022 20:09:33 -0400
+Message-Id: <20221018000940.2731329-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221018000839.2730954-1-sashal@kernel.org>
-References: <20221018000839.2730954-1-sashal@kernel.org>
+In-Reply-To: <20221018000940.2731329-1-sashal@kernel.org>
+References: <20221018000940.2731329-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -108,10 +108,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 3de6d8b53367..72fe46eb183f 100644
+index b6d48ca5b0f1..7c9288143943 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
-@@ -459,13 +459,13 @@ void __init hyperv_init(void)
+@@ -407,13 +407,13 @@ void __init hyperv_init(void)
  		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
  
  		pg = vmalloc_to_page(hv_hypercall_pg);
