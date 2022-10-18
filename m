@@ -2,108 +2,131 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DCEC6017F0
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Oct 2022 21:44:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB1F601E57
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Oct 2022 02:09:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbiJQTov (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Oct 2022 15:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        id S230229AbiJRAJW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Oct 2022 20:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230452AbiJQTos (ORCPT
+        with ESMTP id S231437AbiJRAIt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Oct 2022 15:44:48 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F6820F47;
-        Mon, 17 Oct 2022 12:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=O7qw3tGrLhskWKqbDCfDfj+wLqZODYlP78Q0++P/SY4=; b=TwFc2lNnhsCPfze3XDnolPfw0x
-        Em7u7nbQ/xvyEJY9yBCSew8/yfgmkwT0AsD3QSPQ7fRLYYzDJjj72B4/Iv6Ysg3OHHAQvSeOiG8iF
-        taht/B1RHJCtMUs8X8Zk/p3EwGMIQEJuk0zQRaNF/79G/YFTxtzmaMfa+1woSaxoRzvKnSZTkrk/o
-        ZczRubAttKxxstE16oxU9S1cIxvz53zw8hLZi53Jla21zuFW+p14OQx2fvbSPk6LVqG0k7IhmwmzN
-        Aff99TVmWkm/N0YkxaWGntlzxziZH92hMXRsgdAFeP3ZW0VCKvrbR/WmFB20Pt0k3I0gbNGbk2txi
-        wEgIF6ug==;
-Received: from [179.113.159.85] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1okW26-000ZvB-0V; Mon, 17 Oct 2022 21:44:17 +0200
-Message-ID: <5d2c0413-b19b-eb0b-d1a2-0e0429cccd8e@igalia.com>
-Date:   Mon, 17 Oct 2022 16:43:53 -0300
+        Mon, 17 Oct 2022 20:08:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C0F287FB8;
+        Mon, 17 Oct 2022 17:08:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C79661302;
+        Tue, 18 Oct 2022 00:08:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE2F3C433D6;
+        Tue, 18 Oct 2022 00:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666051690;
+        bh=cHle/rKV0zuFV5/oUsPF+6blyk2FbZRXAyUsGqr80Ts=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=e2huqvdq2wO6sQBm/EZQmUpZIoz6lR/eyWwb0Yp+eOVqFFTQkCzoID/taeL3hXhDg
+         FJ4F8zm7o5HIfEmrCPaHxSxo9seywBkHd9IMywfqyNObeXjR7wOfW+hHlzO7jfI+Af
+         FyApJkfikCSZbU8XVG9caTsNMoNFPu/S8MCWYPZCh5X0pSyBPNgYol4SpN4c1tS8iC
+         tR0SDO/DVqai8ruOPCMGzqfJ6LGQguiv3BTWHx37Bh2MnggYItPO+LGxNEUEQq9VlO
+         YyJZzwk0rHn//5KRVCS8tUYQ+j/JyJfqgsdyzzv/LwsKvIeZi6236VaUbHNUAhWGpV
+         4K4mxWLN01Klw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zhao Liu <zhao1.liu@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Fabio M . De Francesco" <fmdefrancesco@gmail.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.0 21/32] x86/hyperv: Replace kmap() with kmap_local_page()
+Date:   Mon, 17 Oct 2022 20:07:18 -0400
+Message-Id: <20221018000729.2730519-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221018000729.2730519-1-sashal@kernel.org>
+References: <20221018000729.2730519-1-sashal@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH V3 01/11] ARM: Disable FIQs (but not IRQs) on CPUs
- shutdown paths
-Content-Language: en-US
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>, will@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, arnd@arndb.de,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        kexec@lists.infradead.org, pmladek@suse.com, bhe@redhat.com,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-        bp@alien8.de, corbet@lwn.net, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        xuqiang36@huawei.com
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-2-gpiccoli@igalia.com>
- <a25cb242-7c85-867c-8a61-f3119458dcdb@igalia.com>
- <8e30b99e-70ed-7d5a-ea1f-3b0fadb644bc@igalia.com>
- <Y01j/3qKUvj346AH@shell.armlinux.org.uk>
- <aea7dad7-987d-43ad-3abc-815ede97a127@igalia.com>
- <Y02VGh+eDLMyi/Aj@shell.armlinux.org.uk>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <Y02VGh+eDLMyi/Aj@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 17/10/2022 14:47, Russell King (Oracle) wrote:
-> On Mon, Oct 17, 2022 at 11:50:05AM -0300, Guilherme G. Piccoli wrote:
->> On 17/10/2022 11:17, Russell King (Oracle) wrote:
->>> [...]
->>>> Monthly ping - let me know if there's something I should improve in
->>>> order this fix is considered!
->>>
->>> Patches don't get applied unless they end up in the patch system.
->>> Thanks.
->>>
->>
->> Thanks Russell! Can you show me some documentation on how should I send
->> the patches to this patch system? My understanding based in the
->> MAINTAINERS file is that we should send the arm32 patches to you + arm ML.
-> 
-> Look below in my signature --.
->                              |
-> 			     v
+From: Zhao Liu <zhao1.liu@intel.com>
 
+[ Upstream commit 154fb14df7a3c81dea82eca7c0c46590f5ffc3d2 ]
 
-Thank you! It seems I was able to submit it properly now:
-https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=9257/1
+kmap() is being deprecated in favor of kmap_local_page()[1].
 
-Cheers,
+There are two main problems with kmap(): (1) It comes with an overhead as
+mapping space is restricted and protected by a global lock for
+synchronization and (2) it also requires global TLB invalidation when the
+kmap's pool wraps and it might block when the mapping space is fully
+utilized until a slot becomes available.
 
+With kmap_local_page() the mappings are per thread, CPU local, can take
+page faults, and can be called from any context (including interrupts).
+It is faster than kmap() in kernels with HIGHMEM enabled. Furthermore,
+the tasks can be preempted and, when they are scheduled to run again, the
+kernel virtual addresses are restored and are still valid.
 
-Guilherme
+In the fuction hyperv_init() of hyperv/hv_init.c, the mapping is used in a
+single thread and is short live. So, in this case, it's safe to simply use
+kmap_local_page() to create mapping, and this avoids the wasted cost of
+kmap() for global synchronization.
+
+In addtion, the fuction hyperv_init() checks if kmap() fails by BUG_ON().
+From the original discussion[2], the BUG_ON() here is just used to
+explicitly panic NULL pointer. So still keep the BUG_ON() in place to check
+if kmap_local_page() fails. Based on this consideration, memcpy_to_page()
+is not selected here but only kmap_local_page() is used.
+
+Therefore, replace kmap() with kmap_local_page() in hyperv/hv_init.c.
+
+[1]: https://lore.kernel.org/all/20220813220034.806698-1-ira.weiny@intel.com
+[2]: https://lore.kernel.org/lkml/20200915103710.cqmdvzh5lys4wsqo@liuwe-devbox-debian-v2/
+
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Suggested-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
+Signed-off-by: Zhao Liu <zhao1.liu@intel.com>
+Link: https://lore.kernel.org/r/20220928095640.626350-1-zhao1.liu@linux.intel.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/hyperv/hv_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3de6d8b53367..72fe46eb183f 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -459,13 +459,13 @@ void __init hyperv_init(void)
+ 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+ 
+ 		pg = vmalloc_to_page(hv_hypercall_pg);
+-		dst = kmap(pg);
++		dst = kmap_local_page(pg);
+ 		src = memremap(hypercall_msr.guest_physical_address << PAGE_SHIFT, PAGE_SIZE,
+ 				MEMREMAP_WB);
+ 		BUG_ON(!(src && dst));
+ 		memcpy(dst, src, HV_HYP_PAGE_SIZE);
+ 		memunmap(src);
+-		kunmap(pg);
++		kunmap_local(dst);
+ 	} else {
+ 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
+ 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+-- 
+2.35.1
+
