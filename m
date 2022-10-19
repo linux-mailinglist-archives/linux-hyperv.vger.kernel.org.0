@@ -2,54 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 975476050C8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 21:52:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DA4A6050E0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 21:56:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbiJSTw3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 19 Oct 2022 15:52:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42248 "EHLO
+        id S230469AbiJST4M (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 19 Oct 2022 15:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229800AbiJSTw0 (ORCPT
+        with ESMTP id S230115AbiJST4J (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 19 Oct 2022 15:52:26 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F53A1D638F
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 12:52:20 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d24so18275713pls.4
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 12:52:20 -0700 (PDT)
+        Wed, 19 Oct 2022 15:56:09 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D7871D6380
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 12:56:08 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id u71so17256483pgd.2
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 12:56:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hnwB06qHFVpiyjYkVj8hLBRnRlHSm7STOnmVqd/nWMs=;
-        b=NfGmDTqXy5LHjgivlWFDkeKrrRP0nhqXyYq+zER68SfYiZ/KZZx55AuFU2tETRwgAG
-         CvvYny8VR6n3ncCR/48eWF3EybY8bqIo35OsVMApVLgRUjVki1Mm6DmQ7Tq5flL0mMYO
-         mNF17c2CPXu6ixK/flyZnAE0D0cCSy9ooydINwO0X8LCNdRUR+h0UmMAazER/6XahBsA
-         5YmNMtMm/j+kwF3tLuwcG76h9h6PH++x/Vu/SIXEFiffvTOz5HSUq7QAnuy27sy9AfV7
-         lGNOZomSPfGgb0TR3KyQ425c8DWQ1f52ku7t8Xbl8Q5QdcZn6g9mForUsgYFK+tdNVDJ
-         497w==
+        bh=gHRehVb3nobhCxM9BGtj8DbvLG7cHiWYtLrCxEvN5bI=;
+        b=oS3SEVJHqywnlUKVup1k6w7IO+6IXNKdfrBVo6MibuWnzfbCfXM0W6CN71Q1qz/NAb
+         n4m9vglKu2RmZQMHn2HeOXpOP2yB92QQYrjK7eWN3xyQbY2ZgQfkECSo/shEw1VFwCed
+         C3gK+pKBxbwVAEjJpqVflPzC9wCOoWgD/0CJMbRcA8PDFMsIiMwhv1FZyDXJ/hzuqckJ
+         bocTnMYhA8lLepwCATRvQRv0mfUg0EZWmyS/S1V+6qQ3DEQ9O/Y/D/7c2J0DiHCuI+ns
+         hg6ymWJSHfMoRiRjkFvrCFOy+UjbG8KUySmWu5nLFG3xSJhbigmGtZBhpMpMxgsCh//i
+         aMpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hnwB06qHFVpiyjYkVj8hLBRnRlHSm7STOnmVqd/nWMs=;
-        b=GrDQuvHh+PzePi1MFe6ULbvHbIn54Jlw19wz7LtgoMZBhHCYPIb4NZmYnmX1wxo840
-         yTNH+SUVIm7WHCZyd9qtaky1D2N/c3Amu6d0qPY6JjK5PG8lxyWQ7IYS4zmMZ282HxUL
-         iub0npyuN/b8R3kZ2tIWF2DcLB39JeZ5BGoc6+Q8YNf9OsGKFLDH98jbDlyj91fboJhP
-         rNqb0C4AgzCYpiUFSJeQyhTtCp7xKNncP+BXV3BiDWzo52yqqB7R/6V4o3PXZwuT2YVr
-         9+l9sZpBWJAXRVeC37PBAdr179N6dglCoXb78Divkw1XqmQgOG6DRjGx8wdVE8c+gmS6
-         gjgQ==
-X-Gm-Message-State: ACrzQf2HbtW+3alzV9tfXL9F88ZFvGCr+je4/AdwA9G3ch/iF9jzZFbt
-        Ovtfn6U9h6MzlKPF8sI63ht6YRyom6QfHA==
-X-Google-Smtp-Source: AMsMyM75YJZ2jZ3WYMp87mMgAHA1mh0zI14iepyX5OdZ2yLFzi/fYu9BTOwEEIdtpyMqh4eAabTBDQ==
-X-Received: by 2002:a17:902:8c81:b0:178:a33f:8b8f with SMTP id t1-20020a1709028c8100b00178a33f8b8fmr10299902plo.50.1666209139843;
-        Wed, 19 Oct 2022 12:52:19 -0700 (PDT)
+        bh=gHRehVb3nobhCxM9BGtj8DbvLG7cHiWYtLrCxEvN5bI=;
+        b=THznBuEYv5L4LwPs0YOUy3QwD4hu4125VMawuMbS+qpmXwrOu8JhGZOawblvLpf2RI
+         aqUW9GhkCki3vTgpXRQhrqjFzdKym9nRFxlfP1iTkQ0sUEgRYSLApBciSe0bKBg369zC
+         EJAkNLdoi04s82kS1NRr70NKmVGyK+R6FeOIalb1hjctckS3S6V6bkiZvfh7lG9oirsL
+         r7uFvnGl8DfRtDSw0Ue38+Cr+3tHSVyvnk/YhPliLz+I5uzbXvpHEf2Hz1QwbQ1joGxc
+         QKw+Kq5Pi9Wn+Fn2H3AnsSyt+QoTQUZ2qC3nLcHcH6mFo+C56uIrn/NOD8Tfv/pmDWJ6
+         +UNg==
+X-Gm-Message-State: ACrzQf0lr/iWW2BmyDtGXitfQtE5R9cvkuVWY68EQz9/Pgj4mxzxXDI0
+        Opi2TE/dGKNWqqhYDi+DIZVFlQ==
+X-Google-Smtp-Source: AMsMyM7FZ0WZqd37NvhSyoPssgJRo7cV4ZpZBlERJ02E7d49EnVDQvFWVmcZiKFGJuok+Pnngqmk6Q==
+X-Received: by 2002:a05:6a00:1488:b0:563:9d96:660f with SMTP id v8-20020a056a00148800b005639d96660fmr10119527pfu.0.1666209367876;
+        Wed, 19 Oct 2022 12:56:07 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id u14-20020a63d34e000000b0046b1dabf9a8sm10365023pgi.70.2022.10.19.12.52.19
+        by smtp.gmail.com with ESMTPSA id k88-20020a17090a4ce100b00206023cbcc7sm342549pjh.15.2022.10.19.12.56.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 12:52:19 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 19:52:16 +0000
+        Wed, 19 Oct 2022 12:56:07 -0700 (PDT)
+Date:   Wed, 19 Oct 2022 19:56:03 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -60,18 +60,19 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 09/46] KVM: x86: hyper-v: Introduce TLB flush fifo
-Message-ID: <Y1BVcDFt851sfSkU@google.com>
+Subject: Re: [PATCH v11 11/46] KVM: x86: hyper-v: Handle
+ HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls gently
+Message-ID: <Y1BWU/95SXDu9yJL@google.com>
 References: <20221004123956.188909-1-vkuznets@redhat.com>
- <20221004123956.188909-10-vkuznets@redhat.com>
+ <20221004123956.188909-12-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221004123956.188909-10-vkuznets@redhat.com>
+In-Reply-To: <20221004123956.188909-12-vkuznets@redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,64 +81,48 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Tue, Oct 04, 2022, Vitaly Kuznetsov wrote:
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 0539d216f760..7fb8bd42b13e 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -3388,7 +3388,7 @@ static void kvm_vcpu_flush_tlb_all(struct kvm_vcpu *vcpu)
->  	kvm_clear_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
->  }
->  
-> -static void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu)
-> +void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu)
-
-kvm_vcpu_flush_tlb_guest() doesn't need to be exposed in this patch, i.e. can
-remain static.  I think it can be restricted to x86.c even in the final form
-(will follow-up in later patch).
-
+>  int kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
 >  {
->  	++vcpu->stat.tlb_flush;
+>  	struct kvm_vcpu_hv_tlb_flush_fifo *tlb_flush_fifo;
+>  	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+> +	u64 entries[KVM_HV_TLB_FLUSH_FIFO_SIZE];
+> +	int i, j, count;
+> +	gva_t gva;
 >  
-> @@ -3409,7 +3409,7 @@ static void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu)
->  	 * Flushing all "guest" TLB is always a superset of Hyper-V's fine
->  	 * grained flushing.
->  	 */
-> -	kvm_clear_request(KVM_REQ_HV_TLB_FLUSH, vcpu);
-> +	kvm_hv_vcpu_purge_flush_tlb(vcpu);
->  }
+> -	if (!hv_vcpu)
+> +	if (!tdp_enabled || !hv_vcpu)
+>  		return -EINVAL;
 >  
+>  	tlb_flush_fifo = &hv_vcpu->tlb_flush_fifo;
 >  
-> @@ -10484,7 +10484,14 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  
->  		kvm_service_local_tlb_flush_requests(vcpu);
->  
-> -		if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu))
+> +	count = kfifo_out(&tlb_flush_fifo->entries, entries, KVM_HV_TLB_FLUSH_FIFO_SIZE);
+> +
+> +	for (i = 0; i < count; i++) {
+> +		if (entries[i] == KVM_HV_TLB_FLUSHALL_ENTRY)
+> +			goto out_flush_all;
+> +
 > +		/*
-> +		 * Fall back to a "full" guest flush if Hyper-V's precise
-> +		 * flushing fails.  Note, Hyper-V's flushing is per-vCPU, but
-> +		 * the flushes are considered "remote" and not "local" because
-> +		 * the requests can be initiated from other vCPUs.
+> +		 * Lower 12 bits of 'address' encode the number of additional
+> +		 * pages to flush.
 > +		 */
-> +		if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu) &&
-> +		    kvm_hv_vcpu_flush_tlb(vcpu))
->  			kvm_vcpu_flush_tlb_guest(vcpu);
->  
->  		if (kvm_check_request(KVM_REQ_REPORT_TPR_ACCESS, vcpu)) {
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index a784ff90740b..1ea28a7bdf2f 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -79,6 +79,7 @@ static inline unsigned int __shrink_ple_window(unsigned int val,
->  
->  #define MSR_IA32_CR_PAT_DEFAULT  0x0007040600070406ULL
->  
-> +void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu);
+> +		gva = entries[i] & PAGE_MASK;
+> +		for (j = 0; j < (entries[i] & ~PAGE_MASK) + 1; j++)
+> +			static_call(kvm_x86_flush_tlb_gva)(vcpu, gva + j * PAGE_SIZE);
+> +
+> +		++vcpu->stat.tlb_flush;
+> +	}
+> +	return 0;
+> +
+> +out_flush_all:
+> +	kvm_vcpu_flush_tlb_guest(vcpu);
 
-As above, this is unnecessary.
+No need to do kvm_vcpu_flush_tlb_guest() here, the caller is responsible for
+flushing on "failure", as indicated by -ENOSPC below.
 
->  void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu);
->  int kvm_check_nested_events(struct kvm_vcpu *vcpu);
+>  	kfifo_reset_out(&tlb_flush_fifo->entries);
 >  
-> -- 
-> 2.37.3
-> 
+> -	/* Precise flushing isn't implemented yet. */
+> -	return -EOPNOTSUPP;
+> +	/* Fall back to full flush. */
+> +	return -ENOSPC;
+>  }
