@@ -2,54 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49C1B605247
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 23:53:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51BA36052C5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Oct 2022 00:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbiJSVxd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 19 Oct 2022 17:53:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
+        id S230110AbiJSWJC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 19 Oct 2022 18:09:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbiJSVxb (ORCPT
+        with ESMTP id S229819AbiJSWJB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 19 Oct 2022 17:53:31 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E1A196ECC
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 14:53:26 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id p6-20020a17090a748600b002103d1ef63aso1229653pjk.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 14:53:26 -0700 (PDT)
+        Wed, 19 Oct 2022 18:09:01 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D921C39C2
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 15:09:00 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id t12-20020a17090a3b4c00b0020b04251529so1245391pjf.5
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 15:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LmQWrSQW0LKNFVqDHiPaFtM2LkOlxWeMwLtjmwHy94w=;
-        b=IuypjP5jcyXG/slqTu8xmJdF3cD3A/OCZGFN3AAV8/MRYRuRNzz6CNtouHsa/s8EyR
-         oQq0Co6YvQmYtHIX5BzccsSjkcYLkQFPveA1WpPwU+qxIRvj4EhBo0wzRY8G/15ySc8J
-         w4ddB/qOMIr7MIAgr+zEtFfjDAnDJNppacPH4s9T2+I84xVjDwX/Z1lLK64+hfSp80fS
-         hmlqOUF/fryzRn+43DiI9dXHx8N5Ce+uB7PFei2koH8vpzvBa6Nv/u8V5ro5Xk8WeIVA
-         1B+FdtgGnDFNdrDCqtPVLkN1xkBAHP+yH9LeP0RA6RUIupBXxrTz0yXlANaaVorw9VSc
-         Q3XA==
+        bh=ElnUUXLD7t/51ihXU8IsUAN/zVEivTS6JYTitIEyOjk=;
+        b=Zwbbn1ALBaH8g0LFCDFEU+0Xb3r7aRtuvTSgJDCP1F5krs+qZRdOl1/DbmW9RjhbsE
+         C0X2Rsta0l3koyI/99a/yLhdRh5Oe5/T4wkk3UcZwTo95hB1grzCMp2vzxCwzZI8PrK/
+         Hm5tYF51pkZGpD7QeJwvAeWJDY2b2D0fAfWweSKrORIb5qNcaVwivTadhVUJG8F5Dyfu
+         cK5J75CBlf1g7xpNo5ivcdga6M+atmEda2YBx6IGQcdXMX9xncBVfuokrym1UOxdppUg
+         aB4o82i/Sx4k2uCL7m6IPvzuCCloJflRraOEFKQntlqtD+SblJ0l8Ggs4IuEv0P+mR9K
+         P3Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LmQWrSQW0LKNFVqDHiPaFtM2LkOlxWeMwLtjmwHy94w=;
-        b=bTPR5fanEBT4bawsfm/YX3CFmOVOCUt4rVKhQoduxCc4e4wNBdlRRp6mwfc1MR95dO
-         ZkX8J3WXX/6DxQDFe/YIVv2PeEP0m0vYKD8ax/EDmjp3DOfIfXCtrExeexLyr7Rn9R/M
-         m7HxuSlnbN1v8l4KuLHcB8eo5lzl2UgU3/QV+Szk68DCUYakspBlDdoqS18rKRbOO9iN
-         GT2yQlXIajJeB+hqHzEiqCUqlPk4jFftg3c4030iTOWFOFWPilxRghyvc1UjqRPmuLET
-         u9EZXvYMw256nkB+wIPLUCevzlZwR2dc4ydwKl8FcQQb6Ke4cbpg3FPreyk/qr2cJh7p
-         cYgg==
-X-Gm-Message-State: ACrzQf1EOkbhQ0cg1dxjp1K8YRm/kE1CtLmIwS5whFLbPAdH+bP4fmOA
-        Kp23CMh2zi3gnvt35YCXOHfgpg==
-X-Google-Smtp-Source: AMsMyM459mr2eY9FFIVjlDHVsoahUeZtu9o7sfweH5GReFMu6DRjAYJDPBY7Bf4gxCXmitfURxuxng==
-X-Received: by 2002:a17:90a:f190:b0:20a:a8b1:b199 with SMTP id bv16-20020a17090af19000b0020aa8b1b199mr48297286pjb.83.1666216404723;
-        Wed, 19 Oct 2022 14:53:24 -0700 (PDT)
+        bh=ElnUUXLD7t/51ihXU8IsUAN/zVEivTS6JYTitIEyOjk=;
+        b=vdoWrr2+pyMZJQ3H367frcOPwjM7Mew6zns8bPyBPHSnt1RBKKAwVon14tyAEkDs55
+         Pw5RbBwo94h/ZbmWkNVnA5S3G/5OJCHA38bRzaObXmw80cS4yPeFQSJqqmIutpVJM9w4
+         TgnHfiOJX9/BXotAZggdnNvLkyP/RTnOVvXmSWwLUxe2BcOu8B46vMA6NgTIRBLkYinp
+         Baa7m+ylsPoS+lTJhqqL8drrps67g2Tb8atrg4cRLw7ALGncph76Q5Cd2EcWRv/e12t9
+         Uto3xikbDRqqRfxvwO5TPk6ZLG/XgvRZwZjp/9QfGwidRwy/o7ZdQuprTrLjSWdV/y1k
+         YbSg==
+X-Gm-Message-State: ACrzQf1e7ZZimPJIlez0XGoGCj4IWLJYNEK+h6/XbE7CxktZ2bKZxohl
+        mutgZuXu5BVcU7PK7OLejcchnQ==
+X-Google-Smtp-Source: AMsMyM5IvBgcgrLUf0leSbCJbFKi5aXDuC2hatOqA2x7byARrqJhXe66mX0ymcPoWoH6zce92GxabQ==
+X-Received: by 2002:a17:902:8549:b0:178:6399:3e0f with SMTP id d9-20020a170902854900b0017863993e0fmr10754786plo.35.1666217340071;
+        Wed, 19 Oct 2022 15:09:00 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id n30-20020aa7985e000000b00562a36c0b32sm11832847pfq.119.2022.10.19.14.53.24
+        by smtp.gmail.com with ESMTPSA id u5-20020a170903124500b00174c0dd29f0sm11316735plh.144.2022.10.19.15.08.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 14:53:24 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 21:53:21 +0000
+        Wed, 19 Oct 2022 15:08:59 -0700 (PDT)
+Date:   Wed, 19 Oct 2022 22:08:56 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -60,18 +60,18 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 23/46] KVM: x86: hyper-v: L2 TLB flush
-Message-ID: <Y1Bx0SZY3IlWKY+T@google.com>
+Subject: Re: [PATCH v11 33/46] KVM: selftests: Hyper-V PV IPI selftest
+Message-ID: <Y1B1eBIL9WhB4dwc@google.com>
 References: <20221004123956.188909-1-vkuznets@redhat.com>
- <20221004123956.188909-24-vkuznets@redhat.com>
+ <20221004123956.188909-34-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221004123956.188909-24-vkuznets@redhat.com>
+In-Reply-To: <20221004123956.188909-34-vkuznets@redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,77 +80,81 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Tue, Oct 04, 2022, Vitaly Kuznetsov wrote:
-> @@ -2225,10 +2264,27 @@ static void kvm_hv_hypercall_set_result(struct kvm_vcpu *vcpu, u64 result)
->  
->  static int kvm_hv_hypercall_complete(struct kvm_vcpu *vcpu, u64 result)
->  {
-> +	int ret;
+> +static void *vcpu_thread(void *arg)
+> +{
+> +	struct kvm_vcpu *vcpu = (struct kvm_vcpu *)arg;
+> +	struct ucall uc;
+> +	int old;
+> +	int r;
+> +	unsigned int exit_reason;
 > +
->  	trace_kvm_hv_hypercall_done(result);
->  	kvm_hv_hypercall_set_result(vcpu, result);
->  	++vcpu->stat.hypercalls;
-> -	return kvm_skip_emulated_instruction(vcpu);
-> +	ret = kvm_skip_emulated_instruction(vcpu);
+> +	r = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &old);
+> +	TEST_ASSERT(r == 0,
+> +		    "pthread_setcanceltype failed on vcpu_id=%u with errno=%d",
+> +		    vcpu->id, r);
 > +
-> +	if (unlikely(hv_result_success(result) && is_guest_mode(vcpu)
-> +		     && kvm_hv_is_tlb_flush_hcall(vcpu))) {
-
-"&&" goes on the previous line.
-
-> +		struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
-> +		u32 tlb_lock_count;
+> +	vcpu_run(vcpu);
+> +	exit_reason = vcpu->run->exit_reason;
 > +
-> +		if (unlikely(kvm_read_guest(vcpu->kvm, hv_vcpu->nested.pa_page_gpa,
+> +	TEST_ASSERT(exit_reason == KVM_EXIT_IO,
+> +		    "vCPU %u exited with unexpected exit reason %u-%s, expected KVM_EXIT_IO",
+> +		    vcpu->id, exit_reason, exit_reason_str(exit_reason));
+> +
+> +	if (get_ucall(vcpu, &uc) == UCALL_ABORT) {
+> +		TEST_ASSERT(false,
+> +			    "vCPU %u exited with error: %s.\n",
+> +			    vcpu->id, (const char *)uc.args[0]);
 
-Nit, I'd say leave off the "unlikely", the hints almost never provide meaningful
-performance benefits, e.g. code generation is identical with and without the
-unlikely, and IMO the extra line length and parantheses depth makes the code
-harder to read.
+REPORT_GUEST_ASSERT_N()?
 
-> +					    &tlb_lock_count, sizeof(tlb_lock_count))))
-> +			kvm_inject_gp(vcpu, 0);
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static void cancel_join_vcpu_thread(pthread_t thread, struct kvm_vcpu *vcpu)
+> +{
+> +	void *retval;
+> +	int r;
+> +
+> +	r = pthread_cancel(thread);
+> +	TEST_ASSERT(r == 0,
 
-This will inject a #GP on the _next_ instruction.  That seems wrong.  And why #GP
-in the first place?  E.g. if userspace yanks out the memslot, injecting #GP into
-the guest is less-than-ideal behavior. 
+!r is generally preferred over "r == 0"
 
-What about reading tlb_lock_count before skipping the hypercall, e.g.
+> +		    "pthread_cancel on vcpu_id=%d failed with errno=%d",
+> +		    vcpu->id, r);
 
-static int kvm_hv_hypercall_complete(struct kvm_vcpu *vcpu, u64 result)
-{
-	u32 tlb_lock_count = 0;
-	int ret;
+Do you happen to know if errno is preserved?  I.e. if TEST_ASSERT()'s print of
+errno will capture the right errno?  If so, this and the pthread_join() assert
+can be:
 
-	if (hv_result_success(result) && is_guest_mode(vcpu) &&
-	    kvm_hv_is_tlb_flush_hcall(vcpu) &&
-	    kvm_read_guest(vcpu->kvm, to_hv_vcpu(vcpu)->nested.pa_page_gpa,
-			   &tlb_lock_count, sizeof(tlb_lock_count)))
-		result = HV_STATUS_INVALID_HYPERCALL_INPUT;
-
-	trace_kvm_hv_hypercall_done(result);
-	kvm_hv_hypercall_set_result(vcpu, result);
-	++vcpu->stat.hypercalls;
-
-	ret = kvm_skip_emulated_instruction(vcpu);
-
-	if (tlb_lock_count)
-		kvm_x86_ops.nested_ops->hv_inject_synthetic_vmexit_post_tlb_flush(vcpu);
-
-	return ret;
-}
+	TEST_ASSERT(!r, pthread_cancel() failed on vcpu_id=%d, vcpu->id);
 
 > +
-> +		if (tlb_lock_count)
+> +	r = pthread_join(thread, &retval);
+> +	TEST_ASSERT(r == 0,
+> +		    "pthread_join on vcpu_id=%d failed with errno=%d",
+> +		    vcpu->id, r);
 
-tlb_lock_count will be uninitialized if kvm_read_guest() fails.
+...
 
-> +			kvm_x86_ops.nested_ops->hv_inject_synthetic_vmexit_post_tlb_flush(vcpu);
+> +	r = pthread_create(&threads[0], NULL, vcpu_thread, vcpu[1]);
+> +	TEST_ASSERT(r == 0,
+> +		    "pthread_create halter failed errno=%d", errno);
+> +
+> +	r = pthread_create(&threads[1], NULL, vcpu_thread, vcpu[2]);
+> +	TEST_ASSERT(r == 0,
+> +		    "pthread_create halter failed errno=%d", errno);
 
-Ugh, kvm_skip_emulated_instruction() is flawed.  If skipping the emulated instruction
-fails, i.e. if EMULTYPE_SKIP emulation fails, then synthesizing a VM-Exit is
-technically wrong.  But kvm_skip_emulated_instruction() also returns '0' for a
-KVM_EXIT_DEBUG, which happens after skipping the instruction.
+Similar comments as above.
 
-Not worth handling here, e.g. nested_svm_vmrun() has the same "bug".  Failure is
-effectively limited to old AMD CPUs, and userspace is likely goiing to kill the
-VM anyways.
+> +
+> +	while (true) {
+> +		r = _vcpu_run(vcpu[0]);
+> +		exit_reason = vcpu[0]->run->exit_reason;
+> +
+> +		TEST_ASSERT(!r, "vcpu_run failed: %d\n", r);
+
+Why use _vcpu_run() with a manual assert?  Won't the vanilla vcpu_run() do what
+you want?
