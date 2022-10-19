@@ -2,114 +2,140 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C89E603098
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Oct 2022 18:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2471603721
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 02:32:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiJRQPv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Oct 2022 12:15:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36042 "EHLO
+        id S229687AbiJSAcb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Oct 2022 20:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbiJRQPu (ORCPT
+        with ESMTP id S229552AbiJSAc3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Oct 2022 12:15:50 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD3F522B28;
-        Tue, 18 Oct 2022 09:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666109749; x=1697645749;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oVwEkTvo388mdVRGCGIjhvZMJ0FRpThRSVZC/miQszI=;
-  b=AuDAbU4viKFqSvmi08HqDMh4LyP6hB6ONicoUlsX1ZWArzPl22qOrmy+
-   iTlstDMbQMLTjJoS3KULOevmBSQ9FxP7Gh5/+lJhjpLjR6DqHnjaD1Cto
-   fMK52B15BxMUdUKL4JHhRK8uMkrm/HrQhvjwhdwaPoepQlKonymSCzZD1
-   iWnAeIjmLanUu/34MqkclFuCqinRSH//HYEIS7+/aOpYqf96R6OrU3CGg
-   3U7T4zE3a3KLc9tiK0+dwi5RSQOw1TI4QA22VJEP9wNusKwv4jFgP7uyj
-   DWKWTv1AMBzu/h3LdpZcQtiBJoas4oUMKBtr/OTvfMlxqMOyvUZFmH+0N
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="293524770"
-X-IronPort-AV: E=Sophos;i="5.95,193,1661842800"; 
-   d="scan'208";a="293524770"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2022 09:15:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="606617636"
-X-IronPort-AV: E=Sophos;i="5.95,193,1661842800"; 
-   d="scan'208";a="606617636"
-Received: from liuzhao-optiplex-7080.sh.intel.com ([10.239.160.132])
-  by orsmga006.jf.intel.com with ESMTP; 18 Oct 2022 09:15:45 -0700
-From:   Zhao Liu <zhao1.liu@linux.intel.com>
-To:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        Tue, 18 Oct 2022 20:32:29 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75971D73F1;
+        Tue, 18 Oct 2022 17:32:28 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MsWnJ3B0FzpVcY;
+        Wed, 19 Oct 2022 08:29:08 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (7.185.36.74) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 19 Oct 2022 08:32:26 +0800
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 19 Oct
+ 2022 08:32:26 +0800
+Subject: Re: [Patch v7 10/12] net: mana: Define data structures for allocating
+ doorbell page from GDMA
+To:     <longli@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        "Fabio M . De Francesco" <fmdefrancesco@gmail.com>,
-        Zhenyu Wang <zhenyu.z.wang@intel.com>,
-        Zhao Liu <zhao1.liu@intel.com>
-Subject: [PATCH] x86/hyperv: Remove BUG_ON() for kmap_local_page()
-Date:   Wed, 19 Oct 2022 00:21:17 +0800
-Message-Id: <20221018162117.2332508-1-zhao1.liu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, <edumazet@google.com>,
+        <shiraz.saleem@intel.com>, "Ajay Sharma" <sharmaajay@microsoft.com>
+CC:     <linux-hyperv@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+References: <1666034441-15424-1-git-send-email-longli@linuxonhyperv.com>
+ <1666034441-15424-11-git-send-email-longli@linuxonhyperv.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <c60518c0-f486-db8e-230c-7d680b0c27e0@huawei.com>
+Date:   Wed, 19 Oct 2022 08:32:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1666034441-15424-11-git-send-email-longli@linuxonhyperv.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.30.204]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Zhao Liu <zhao1.liu@intel.com>
+On 2022/10/18 3:20, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
+> 
+> The RDMA device needs to allocate doorbell pages for each user context.
+> Define the GDMA data structures for use by the RDMA driver.
+> 
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> Acked-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+> Change log:
+> v4: use EXPORT_SYMBOL_NS
+> v7: move mana_gd_allocate_doorbell_page() and mana_gd_destroy_doorbell_page() to the RDMA driver
+> 
+>  include/net/mana/gdma.h | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+> index a9b7930dfbf8..bc060b6fa54c 100644
+> --- a/include/net/mana/gdma.h
+> +++ b/include/net/mana/gdma.h
+> @@ -24,11 +24,15 @@ enum gdma_request_type {
+>  	GDMA_GENERATE_TEST_EQE		= 10,
+>  	GDMA_CREATE_QUEUE		= 12,
+>  	GDMA_DISABLE_QUEUE		= 13,
+> +	GDMA_ALLOCATE_RESOURCE_RANGE	= 22,
+> +	GDMA_DESTROY_RESOURCE_RANGE	= 24,
+>  	GDMA_CREATE_DMA_REGION		= 25,
+>  	GDMA_DMA_REGION_ADD_PAGES	= 26,
+>  	GDMA_DESTROY_DMA_REGION		= 27,
+>  };
+>  
+> +#define GDMA_RESOURCE_DOORBELL_PAGE	27
+> +
+>  enum gdma_queue_type {
+>  	GDMA_INVALID_QUEUE,
+>  	GDMA_SQ,
+> @@ -587,6 +591,26 @@ struct gdma_register_device_resp {
+>  	u32 db_id;
+>  }; /* HW DATA */
+>  
+> +struct gdma_allocate_resource_range_req {
+> +	struct gdma_req_hdr hdr;
+> +	u32 resource_type;
+> +	u32 num_resources;
+> +	u32 alignment;
+> +	u32 allocated_resources;
+> +};
+> +
+> +struct gdma_allocate_resource_range_resp {
+> +	struct gdma_resp_hdr hdr;
+> +	u32 allocated_resources;
+> +};
+> +
+> +struct gdma_destroy_resource_range_req {
+> +	struct gdma_req_hdr hdr;
+> +	u32 resource_type;
+> +	u32 num_resources;
+> +	u32 allocated_resources;
+> +};
+> +
+>  /* GDMA_CREATE_QUEUE */
+>  struct gdma_create_queue_req {
+>  	struct gdma_req_hdr hdr;
+> @@ -695,4 +719,5 @@ void mana_gd_free_memory(struct gdma_mem_info *gmi);
+>  
+>  int mana_gd_send_request(struct gdma_context *gc, u32 req_len, const void *req,
+>  			 u32 resp_len, void *resp);
+> +
 
-The commit 154fb14df7a3c ("x86/hyperv: Replace kmap() with
-kmap_local_page()") keeps the BUG_ON() to check if kmap_local_page()
-fails.
+Unrelated change.
 
-But in fact, kmap_local_page() always returns a valid kernel address
-and won't return NULL here. It will BUG on its own if it fails. [1]
-
-So directly use memcpy_to_page() which creates local mapping to copy.
-
-[1]: https://lore.kernel.org/lkml/YztFEyUA48et0yTt@iweiny-mobl/
-
-Fixes: 154fb14df7a3 ("x86/hyperv: Replace kmap() with kmap_local_page()")
-Suggested-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
-Suggested-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Zhao Liu <zhao1.liu@intel.com>
----
- arch/x86/hyperv/hv_init.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 29774126e931..f66c5709324f 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -459,13 +459,11 @@ void __init hyperv_init(void)
- 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
- 
- 		pg = vmalloc_to_page(hv_hypercall_pg);
--		dst = kmap_local_page(pg);
- 		src = memremap(hypercall_msr.guest_physical_address << PAGE_SHIFT, PAGE_SIZE,
- 				MEMREMAP_WB);
--		BUG_ON(!(src && dst));
--		memcpy(dst, src, HV_HYP_PAGE_SIZE);
-+		BUG_ON(!src);
-+		memcpy_to_page(pg, 0, src, HV_HYP_PAGE_SIZE);
- 		memunmap(src);
--		kunmap_local(dst);
- 	} else {
- 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
- 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
--- 
-2.34.1
-
+>  #endif /* _GDMA_H */
+> 
