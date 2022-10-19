@@ -2,54 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0D0360511C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 22:14:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49C1B605247
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 23:53:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229674AbiJSUOO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 19 Oct 2022 16:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35386 "EHLO
+        id S229971AbiJSVxd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 19 Oct 2022 17:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230198AbiJSUOL (ORCPT
+        with ESMTP id S230195AbiJSVxb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 19 Oct 2022 16:14:11 -0400
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C021C73E9
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 13:14:11 -0700 (PDT)
-Received: by mail-oi1-x22f.google.com with SMTP id n83so20516215oif.11
-        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 13:14:11 -0700 (PDT)
+        Wed, 19 Oct 2022 17:53:31 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E1A196ECC
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 14:53:26 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id p6-20020a17090a748600b002103d1ef63aso1229653pjk.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 14:53:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kqJOFlfwNgCDzAUg+3GKgd5GjZJIWzZ3Ope902HuuIc=;
-        b=aamPcz5cH2f8vrWESZ8tn5FtLYZ0e2DUYmpGuRUSftaqxaK1qlNpUlih4yCfZesLbY
-         k0GC/vrRRBwmINiUlgmBYLEoi54Rw1e61DBNjVJ3m1zIZqV5DlC0sj43HJPpaprwDQFF
-         gtom64pXNAd5XfaKkKu8OfnRqwFcsGO59fopaEzxI+Ap7brT85i96IbVXUMNhS/1fYf3
-         HQlTdAojQumAEuhFodP9w5LLXb7y33T4FKd9OcDEjDPXwPXKJ44Jpz94UUXC3PwQVjMl
-         QA9RGuLFUuKtd1T2IrpyBNFCweBnL8MQXxLPcdSKwTw76yFEOuexU0IjNjvN+I5dIKJ0
-         Skcw==
+        bh=LmQWrSQW0LKNFVqDHiPaFtM2LkOlxWeMwLtjmwHy94w=;
+        b=IuypjP5jcyXG/slqTu8xmJdF3cD3A/OCZGFN3AAV8/MRYRuRNzz6CNtouHsa/s8EyR
+         oQq0Co6YvQmYtHIX5BzccsSjkcYLkQFPveA1WpPwU+qxIRvj4EhBo0wzRY8G/15ySc8J
+         w4ddB/qOMIr7MIAgr+zEtFfjDAnDJNppacPH4s9T2+I84xVjDwX/Z1lLK64+hfSp80fS
+         hmlqOUF/fryzRn+43DiI9dXHx8N5Ce+uB7PFei2koH8vpzvBa6Nv/u8V5ro5Xk8WeIVA
+         1B+FdtgGnDFNdrDCqtPVLkN1xkBAHP+yH9LeP0RA6RUIupBXxrTz0yXlANaaVorw9VSc
+         Q3XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kqJOFlfwNgCDzAUg+3GKgd5GjZJIWzZ3Ope902HuuIc=;
-        b=AxlqRKDyN8cScLHbdb4bokLYi29sO9Qpsutjg3dhvoioDc1pRY8XGYwPouowDPCJPU
-         bVpVbtj9emjyX4BSCBjsZf+JAf97wvZnV7nnUy0JeHUL5bf+PsrA09dgorsUvIiLdzbP
-         LlBUIecEYsMlch0l/1Bbhk9RQhvAAPht4e//KOojb7tJGi+q/LKS8Y+1epIlU5J+HavN
-         voEnfmC+AB5ux6z60NdJfYY044c3OyC8gt+eixnyjaJbsW9Fd2d05zKKDdSUWGTreMWe
-         EX+X3TUr362CGr7HyF7jS/EyNQbv+ovbkCeEGeDGYdiHiFm8SzHnQZoZmywZyBjuEoqb
-         isMA==
-X-Gm-Message-State: ACrzQf3UshsUIEaBVnMPFS/PvW75y1POBF/2YDp6BTwIHNoIBxr2Ww08
-        aI7AOWfqPqs+7gT/MHiWXWamleSNGFclxQ==
-X-Google-Smtp-Source: AMsMyM6ZjthZ89X/AzB9A91vqAp+Yy+SUd6tr8hw1WsJG+8UbSs3dNoWv5Uxjsb5wSL4CoQUU7urSw==
-X-Received: by 2002:a17:90b:278c:b0:20a:e1e6:5340 with SMTP id pw12-20020a17090b278c00b0020ae1e65340mr47245894pjb.239.1666210440194;
-        Wed, 19 Oct 2022 13:14:00 -0700 (PDT)
+        bh=LmQWrSQW0LKNFVqDHiPaFtM2LkOlxWeMwLtjmwHy94w=;
+        b=bTPR5fanEBT4bawsfm/YX3CFmOVOCUt4rVKhQoduxCc4e4wNBdlRRp6mwfc1MR95dO
+         ZkX8J3WXX/6DxQDFe/YIVv2PeEP0m0vYKD8ax/EDmjp3DOfIfXCtrExeexLyr7Rn9R/M
+         m7HxuSlnbN1v8l4KuLHcB8eo5lzl2UgU3/QV+Szk68DCUYakspBlDdoqS18rKRbOO9iN
+         GT2yQlXIajJeB+hqHzEiqCUqlPk4jFftg3c4030iTOWFOFWPilxRghyvc1UjqRPmuLET
+         u9EZXvYMw256nkB+wIPLUCevzlZwR2dc4ydwKl8FcQQb6Ke4cbpg3FPreyk/qr2cJh7p
+         cYgg==
+X-Gm-Message-State: ACrzQf1EOkbhQ0cg1dxjp1K8YRm/kE1CtLmIwS5whFLbPAdH+bP4fmOA
+        Kp23CMh2zi3gnvt35YCXOHfgpg==
+X-Google-Smtp-Source: AMsMyM459mr2eY9FFIVjlDHVsoahUeZtu9o7sfweH5GReFMu6DRjAYJDPBY7Bf4gxCXmitfURxuxng==
+X-Received: by 2002:a17:90a:f190:b0:20a:a8b1:b199 with SMTP id bv16-20020a17090af19000b0020aa8b1b199mr48297286pjb.83.1666216404723;
+        Wed, 19 Oct 2022 14:53:24 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id q6-20020a170902dac600b0018542a1b553sm10954895plx.127.2022.10.19.13.13.59
+        by smtp.gmail.com with ESMTPSA id n30-20020aa7985e000000b00562a36c0b32sm11832847pfq.119.2022.10.19.14.53.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 13:13:59 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 20:13:56 +0000
+        Wed, 19 Oct 2022 14:53:24 -0700 (PDT)
+Date:   Wed, 19 Oct 2022 21:53:21 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -60,19 +60,18 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 16/46] KVM: x86: hyper-v: Don't use
- sparse_set_to_vcpu_mask() in kvm_hv_send_ipi()
-Message-ID: <Y1BahCzO4jxFC9Ey@google.com>
+Subject: Re: [PATCH v11 23/46] KVM: x86: hyper-v: L2 TLB flush
+Message-ID: <Y1Bx0SZY3IlWKY+T@google.com>
 References: <20221004123956.188909-1-vkuznets@redhat.com>
- <20221004123956.188909-17-vkuznets@redhat.com>
+ <20221004123956.188909-24-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221004123956.188909-17-vkuznets@redhat.com>
+In-Reply-To: <20221004123956.188909-24-vkuznets@redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,65 +80,77 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On Tue, Oct 04, 2022, Vitaly Kuznetsov wrote:
-> @@ -2034,7 +2056,10 @@ static void kvm_send_ipi_to_many(struct kvm *kvm, u32 vector,
->  	unsigned long i;
+> @@ -2225,10 +2264,27 @@ static void kvm_hv_hypercall_set_result(struct kvm_vcpu *vcpu, u64 result)
 >  
->  	kvm_for_each_vcpu(i, vcpu, kvm) {
-> -		if (vcpu_bitmap && !test_bit(i, vcpu_bitmap))
-> +		if (sparse_banks &&
-> +		    !hv_is_vp_in_sparse_set(kvm_hv_get_vpindex(vcpu),
-> +					    valid_bank_mask,
-> +					    sparse_banks))
+>  static int kvm_hv_hypercall_complete(struct kvm_vcpu *vcpu, u64 result)
+>  {
+> +	int ret;
+> +
+>  	trace_kvm_hv_hypercall_done(result);
+>  	kvm_hv_hypercall_set_result(vcpu, result);
+>  	++vcpu->stat.hypercalls;
+> -	return kvm_skip_emulated_instruction(vcpu);
+> +	ret = kvm_skip_emulated_instruction(vcpu);
+> +
+> +	if (unlikely(hv_result_success(result) && is_guest_mode(vcpu)
+> +		     && kvm_hv_is_tlb_flush_hcall(vcpu))) {
 
-Nit, this fits on two lines and IMO is slightly easier on the eyes:
+"&&" goes on the previous line.
 
-		if (sparse_banks &&
-		    !hv_is_vp_in_sparse_set(kvm_hv_get_vpindex(vcpu),
-					    valid_bank_mask, sparse_banks))
-			continue;
+> +		struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+> +		u32 tlb_lock_count;
+> +
+> +		if (unlikely(kvm_read_guest(vcpu->kvm, hv_vcpu->nested.pa_page_gpa,
 
->  			continue;
->  
->  		/* We fail only when APIC is disabled */
-> @@ -2047,7 +2072,6 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  	struct kvm *kvm = vcpu->kvm;
->  	struct hv_send_ipi_ex send_ipi_ex;
->  	struct hv_send_ipi send_ipi;
-> -	DECLARE_BITMAP(vcpu_mask, KVM_MAX_VCPUS);
->  	u64 valid_bank_mask;
->  	u64 sparse_banks[KVM_HV_MAX_SPARSE_VCPU_SET_BITS];
->  	u32 vector;
-> @@ -2109,13 +2133,7 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
->  	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
->  		return HV_STATUS_INVALID_HYPERCALL_INPUT;
->  
-> -	if (all_cpus) {
-> -		kvm_send_ipi_to_many(kvm, vector, NULL);
-> -	} else {
-> -		sparse_set_to_vcpu_mask(kvm, sparse_banks, valid_bank_mask, vcpu_mask);
-> -
-> -		kvm_send_ipi_to_many(kvm, vector, vcpu_mask);
-> -	}
-> +	kvm_hv_send_ipi_to_many(kvm, vector, all_cpus ? NULL : sparse_banks, valid_bank_mask);
+Nit, I'd say leave off the "unlikely", the hints almost never provide meaningful
+performance benefits, e.g. code generation is identical with and without the
+unlikely, and IMO the extra line length and parantheses depth makes the code
+harder to read.
 
-Any objection to not using a ternary operator?
+> +					    &tlb_lock_count, sizeof(tlb_lock_count))))
+> +			kvm_inject_gp(vcpu, 0);
 
-	if (all_cpus)
-		kvm_hv_send_ipi_to_many(kvm, vector, NULL, 0);
-	else
-		kvm_hv_send_ipi_to_many(kvm, vector, sparse_banks, valid_bank_mask);
+This will inject a #GP on the _next_ instruction.  That seems wrong.  And why #GP
+in the first place?  E.g. if userspace yanks out the memslot, injecting #GP into
+the guest is less-than-ideal behavior. 
 
-Mostly because it's somewhat arbitrary that earlier code ensures valid_bank_mask
-is set in the all_cpus=true case, e.g. arguably KVM doesn't need to do the var_cnt
-sanity check in the all_cpus case:
+What about reading tlb_lock_count before skipping the hypercall, e.g.
 
-		all_cpus = send_ipi_ex.vp_set.format == HV_GENERIC_SET_ALL;
-		if (all_cpus)
-			goto check_and_send_ipi;
+static int kvm_hv_hypercall_complete(struct kvm_vcpu *vcpu, u64 result)
+{
+	u32 tlb_lock_count = 0;
+	int ret;
 
-		valid_bank_mask = send_ipi_ex.vp_set.valid_bank_mask;
-		if (hc->var_cnt != hweight64(valid_bank_mask))
-			return HV_STATUS_INVALID_HYPERCALL_INPUT;
+	if (hv_result_success(result) && is_guest_mode(vcpu) &&
+	    kvm_hv_is_tlb_flush_hcall(vcpu) &&
+	    kvm_read_guest(vcpu->kvm, to_hv_vcpu(vcpu)->nested.pa_page_gpa,
+			   &tlb_lock_count, sizeof(tlb_lock_count)))
+		result = HV_STATUS_INVALID_HYPERCALL_INPUT;
 
-		if (!hc->var_cnt)
-			goto ret_success;
+	trace_kvm_hv_hypercall_done(result);
+	kvm_hv_hypercall_set_result(vcpu, result);
+	++vcpu->stat.hypercalls;
+
+	ret = kvm_skip_emulated_instruction(vcpu);
+
+	if (tlb_lock_count)
+		kvm_x86_ops.nested_ops->hv_inject_synthetic_vmexit_post_tlb_flush(vcpu);
+
+	return ret;
+}
+
+> +
+> +		if (tlb_lock_count)
+
+tlb_lock_count will be uninitialized if kvm_read_guest() fails.
+
+> +			kvm_x86_ops.nested_ops->hv_inject_synthetic_vmexit_post_tlb_flush(vcpu);
+
+Ugh, kvm_skip_emulated_instruction() is flawed.  If skipping the emulated instruction
+fails, i.e. if EMULTYPE_SKIP emulation fails, then synthesizing a VM-Exit is
+technically wrong.  But kvm_skip_emulated_instruction() also returns '0' for a
+KVM_EXIT_DEBUG, which happens after skipping the instruction.
+
+Not worth handling here, e.g. nested_svm_vmrun() has the same "bug".  Failure is
+effectively limited to old AMD CPUs, and userspace is likely goiing to kill the
+VM anyways.
