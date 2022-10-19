@@ -2,92 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 009E060389D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 05:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D52604337
+	for <lists+linux-hyperv@lfdr.de>; Wed, 19 Oct 2022 13:31:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbiJSDaq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Oct 2022 23:30:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
+        id S231857AbiJSLbt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 19 Oct 2022 07:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbiJSDa3 (ORCPT
+        with ESMTP id S231899AbiJSLbc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Oct 2022 23:30:29 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A98A62AA6;
-        Tue, 18 Oct 2022 20:30:23 -0700 (PDT)
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MsbkZ5jWXznV0S;
-        Wed, 19 Oct 2022 11:27:02 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (7.185.36.74) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 19 Oct 2022 11:29:55 +0800
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 19 Oct
- 2022 11:29:55 +0800
-Subject: Re: [Patch v7 01/12] net: mana: Add support for auxiliary device
-To:     <longli@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        Wed, 19 Oct 2022 07:31:32 -0400
+Received: from relay.virtuozzo.com (relay.virtuozzo.com [130.117.225.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082FD1B866F
+        for <linux-hyperv@vger.kernel.org>; Wed, 19 Oct 2022 04:06:31 -0700 (PDT)
+Received: from dev011.ch-qa.sw.ru ([172.29.1.16])
+        by relay.virtuozzo.com with esmtp (Exim 4.95)
+        (envelope-from <alexander.atanasov@virtuozzo.com>)
+        id 1ol5lV-00B8K8-SR;
+        Wed, 19 Oct 2022 11:56:24 +0200
+From:   Alexander Atanasov <alexander.atanasov@virtuozzo.com>
+Cc:     kernel@openvz.org,
+        Alexander Atanasov <alexander.atanasov@virtuozzo.com>,
+        kernel test robot <lkp@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Wei Liu <wei.liu@kernel.org>, Nadav Amit <namit@vmware.com>,
+        pv-drivers@vmware.com, Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, <edumazet@google.com>,
-        <shiraz.saleem@intel.com>, "Ajay Sharma" <sharmaajay@microsoft.com>
-CC:     <linux-hyperv@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-References: <1666034441-15424-1-git-send-email-longli@linuxonhyperv.com>
- <1666034441-15424-2-git-send-email-longli@linuxonhyperv.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <8f23732f-8ee7-b120-1866-286503418d3e@huawei.com>
-Date:   Wed, 19 Oct 2022 11:29:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        xen-devel@lists.xenproject.org
+Subject: [RFC PATCH v5 0/8] Make balloon drivers' memory changes known to the rest of the kernel
+Date:   Wed, 19 Oct 2022 12:56:12 +0300
+Message-Id: <20221019095620.124909-1-alexander.atanasov@virtuozzo.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <1666034441-15424-2-git-send-email-longli@linuxonhyperv.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.69.30.204]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500005.china.huawei.com (7.185.36.74)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2022/10/18 3:20, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
-> 
-> In preparation for supporting MANA RDMA driver, add support for auxiliary
-> device in the Ethernet driver. The RDMA device is modeled as an auxiliary
-> device to the Ethernet device.
+Currently balloon drivers (Virtio,XEN, HyperV, VMWare, ...)
+inflate and deflate the guest memory size but there is no
+way to know how much the memory size is changed by them.
 
-If the RDMA device is a auxiliary device in the Ethernet driver, is there
-some type of hw reset that affect both net_device and ib_device?
-Is there some kind of handling like pcie hot plug/unplug which already
-handles this case, so the reset handling is not needed in the RDMA and
-Ethernet driver?
+Make it possible for the drivers to report the values to mm core.
 
+Display reported InflatedTotal and InflatedFree in /proc/meminfo
+and print these values on OOM and sysrq from show_mem().
 
-> 
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Long Li <longli@microsoft.com>
-> Acked-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
-> Change log:
-> v3: define mana_adev_idx_alloc and mana_adev_idx_free as static
-> v7: fix a bug that may assign a negative value to adev->id
-> 
->  drivers/net/ethernet/microsoft/Kconfig        |  1 +
->  drivers/net/ethernet/microsoft/mana/gdma.h    |  2 +
->  .../ethernet/microsoft/mana/mana_auxiliary.h  | 10 +++
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 83 ++++++++++++++++++-
+The two values are the result of the two modes the drivers work
+with using adjust_managed_page_count or without.
+
+In earlier versions, there was a notifier for these changes
+but after discussion - it is better to implement it in separate
+patch series. Since it came out as larger work than initially expected.
+
+Amount of inflated memory can be used:
+ - totalram_pages() users working with drivers not using
+    adjust_managed_page_count
+ - si_meminfo(..) users can improve calculations
+ - by userspace software that monitors memory pressure
+
+Alexander Atanasov (8):
+  mm: Make a place for a common balloon code
+  mm: Enable balloon drivers to report inflated memory
+  mm: Display inflated memory to users
+  mm: Display inflated memory in logs
+  drivers: virtio: balloon - report inflated memory
+  drivers: vmware: balloon - report inflated memory
+  drivers: hyperv: balloon - report inflated memory
+  documentation: create a document about how balloon drivers operate
+
+ Documentation/filesystems/proc.rst            |   6 +
+ Documentation/mm/balloon.rst                  | 138 ++++++++++++++++++
+ MAINTAINERS                                   |   4 +-
+ arch/powerpc/platforms/pseries/cmm.c          |   2 +-
+ drivers/hv/hv_balloon.c                       |  12 ++
+ drivers/misc/vmw_balloon.c                    |   3 +-
+ drivers/virtio/virtio_balloon.c               |   7 +-
+ fs/proc/meminfo.c                             |  10 ++
+ .../linux/{balloon_compaction.h => balloon.h} |  18 ++-
+ lib/show_mem.c                                |   8 +
+ mm/Makefile                                   |   2 +-
+ mm/{balloon_compaction.c => balloon.c}        |  19 ++-
+ mm/migrate.c                                  |   1 -
+ mm/vmscan.c                                   |   1 -
+ 14 files changed, 213 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/mm/balloon.rst
+ rename include/linux/{balloon_compaction.h => balloon.h} (91%)
+ rename mm/{balloon_compaction.c => balloon.c} (94%)
+
+v4->v5:
+ - removed notifier
+ - added documentation
+ - vmware update after op is done , outside of the mutex
+v3->v4:
+ - add support in hyperV and vmware balloon drivers
+ - display balloon memory in show_mem so it is logged on OOM and on sysrq
+v2->v3:
+ - added missed EXPORT_SYMBOLS
+Reported-by: kernel test robot <lkp@intel.com>
+ - instead of balloon_common.h just use balloon.h (yes, naming is hard)
+ - cleaned up balloon.h - remove from files that do not use it and
+   remove externs from function declarations
+v1->v2:
+ - reworked from simple /proc/meminfo addition
+
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: pv-drivers@vmware.com
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: virtualization@lists.linux-foundation.org
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: xen-devel@lists.xenproject.org
+
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+-- 
+2.31.1
+
