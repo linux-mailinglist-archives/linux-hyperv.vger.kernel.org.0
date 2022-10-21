@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC34360772D
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Oct 2022 14:45:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F75E60783B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Oct 2022 15:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbiJUMpI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 21 Oct 2022 08:45:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35356 "EHLO
+        id S230419AbiJUNU4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 21 Oct 2022 09:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbiJUMpG (ORCPT
+        with ESMTP id S230009AbiJUNUy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 21 Oct 2022 08:45:06 -0400
+        Fri, 21 Oct 2022 09:20:54 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B38F035
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 05:45:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33D924E394
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 06:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666356303;
+        s=mimecast20190719; t=1666358450;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=QHzZGIR/L3eWjmkvGxDRS//SKT5lTAiH8nYjXGv6sWo=;
-        b=OyE7wQE1et3OaWtGrBkgZkvU4OGt0UPZRqNAa9qKUAd9MKvGqDoRg5Gp4C4eg4k/wmhejM
-        56KaTn3JX5sUaDUW6KomWIjT+lt+Ht5HQvtPL12ZIfbrY5Exee5gpEo9Vflh8byOHB966s
-        TDzkFfIaEQjyLL2AjN9JDZRJKNHitC0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=ZsPij9BvW1d4VCHGwc7667RVR2VkSQ3/k+XB1C+z4tA=;
+        b=dRXKJMxmepjAj74b+76AQ3LVWS6kWKDakUfY4nG1ZSGGP5f7bK1TNV/0w89dnRKWlRCuH/
+        r+ZyXbH2ipxlfr02I+TWrEycZK7f+6A/YWXbyXgDY1bwTnU1+Hx4jwN4M5KEP5ZJGuLizs
+        1fnjJ8iADjlp2iCZsXMWh4fFruBHm7c=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-103-xUR_66uUPCmaX9OeepJmGA-1; Fri, 21 Oct 2022 08:41:23 -0400
-X-MC-Unique: xUR_66uUPCmaX9OeepJmGA-1
-Received: by mail-ed1-f69.google.com with SMTP id h9-20020a05640250c900b0045cfb639f56so2296699edb.13
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 05:41:22 -0700 (PDT)
+ us-mta-665-teczpxPZO-CwqnwxCjyCEg-1; Fri, 21 Oct 2022 09:20:49 -0400
+X-MC-Unique: teczpxPZO-CwqnwxCjyCEg-1
+Received: by mail-ed1-f70.google.com with SMTP id m7-20020a056402430700b0045daff6ee5dso2439364edc.10
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 06:20:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QHzZGIR/L3eWjmkvGxDRS//SKT5lTAiH8nYjXGv6sWo=;
-        b=CMTrjd8FFNJQtKHTIJuEJTCWbKef/W//GegT9RFweccgt3LVEm7q9JdlQBme1wDWXx
-         OK1IVjVtuA+fIiyuEn4QemZA/iNIyhp3nhcq+uO2TALZYBFku/gwXjrj1CMcHaQccj+d
-         gFKMOjA/lZ5+qITm1ZJpp7I8wrQjgUEecaZx+sFxSq+zD8NyK8N+ie5jkanAUfxX/P2b
-         3iXxiXDGX0dXs2B737HpzMAxG5XtSeL4EjDBs8I7iqzQSDktZM7vK7OtfpgHws/GMwTz
-         VSSsscS47HeDAO4hKejFko3U9ra74fNhTQhOfatWTnzLNzocrKuBTeHiA8gE1kHWTp5B
-         8G9w==
-X-Gm-Message-State: ACrzQf1jy+n5yxxN5aknE2VvG4tjAnLVigyz/HXKqWtR9FWWi1wxQgKQ
-        1YgwsZLUsesh+bSamVJv79BIowAfw3C6N/aDqWXEKnURr0cY1Xs4l4DJVpPM/q9ItDeP/CHNAEd
-        UxgyD3lNDZGs/Swl2u7+TozJ2
-X-Received: by 2002:a50:baec:0:b0:461:4c59:12bf with SMTP id x99-20020a50baec000000b004614c5912bfmr2386056ede.54.1666356081942;
-        Fri, 21 Oct 2022 05:41:21 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6RSW63B8AxPtX3+pwhw0aXbCOhejwCfMPNftvJiTc6+wgGrJqhZFR9SUaQf54iaKqPePBggQ==
-X-Received: by 2002:a50:baec:0:b0:461:4c59:12bf with SMTP id x99-20020a50baec000000b004614c5912bfmr2386039ede.54.1666356081696;
-        Fri, 21 Oct 2022 05:41:21 -0700 (PDT)
+        bh=ZsPij9BvW1d4VCHGwc7667RVR2VkSQ3/k+XB1C+z4tA=;
+        b=6N5yYX2pgUv1S/FwnzuVEej6tvLUiEDZdDN2Kn4tHUTd1EwiujOXbeWWIkTpvpwM/X
+         Oz4zSmsBbxJhlPNHglkZdjKtGTujFgHS/YgWEeRl/AsTUNPACXjCWM9hRA/imZsDH/N0
+         2iqs0ZYoD97K00r1Gb8Yi6xQc4Cz5qkQaTLNv5ceHodpi7rCeBHBAMCL5jhZOXRR6dZO
+         ChMeoiIWOIccZUWdwfrTHvzZi5QQuV0LRx3Q837Hd9eCuWP63ROC9uU0N1IrIWyRuKPb
+         vWrrYS8Tnz865f5PR9/C7lfQIb0tDoYVqZibDXt0jFEoFksYDX7F5FJa4DdhW5vHTv9e
+         DARA==
+X-Gm-Message-State: ACrzQf1cf780/z1AhCT91JBzNGkDTfCKmvydemnSa5IANTGmtTEimSfn
+        WqNq5kU94ex+nwiEwOSnZD8yJWgsSVLPy7bUELuau0C9DI/y5qkQAPqT/qkg6xg3J4j4itIq6YJ
+        ZQSYLexYrh44beAVgMFpX4E5U
+X-Received: by 2002:a17:906:d550:b0:78d:a6d4:c18f with SMTP id cr16-20020a170906d55000b0078da6d4c18fmr15768839ejc.113.1666358448398;
+        Fri, 21 Oct 2022 06:20:48 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM78Ox5DULLooxv+oNbpida2qPtNCXNw0skZAst4D7gv1coM+49eLIkJVlVXWJCrWr8ON2a8tQ==
+X-Received: by 2002:a17:906:d550:b0:78d:a6d4:c18f with SMTP id cr16-20020a170906d55000b0078da6d4c18fmr15768817ejc.113.1666358448188;
+        Fri, 21 Oct 2022 06:20:48 -0700 (PDT)
 Received: from ovpn-192-65.brq.redhat.com (nat-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id n26-20020aa7c69a000000b0046146c730easm910838edq.75.2022.10.21.05.41.20
+        by smtp.gmail.com with ESMTPSA id de13-20020a1709069bcd00b0078d957e65b6sm11587521ejc.23.2022.10.21.06.20.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 05:41:21 -0700 (PDT)
+        Fri, 21 Oct 2022 06:20:47 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Sean Christopherson <seanjc@google.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -64,14 +64,13 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 16/46] KVM: x86: hyper-v: Don't use
- sparse_set_to_vcpu_mask() in kvm_hv_send_ipi()
-In-Reply-To: <87czalczo6.fsf@redhat.com>
+Subject: Re: [PATCH v11 33/46] KVM: selftests: Hyper-V PV IPI selftest
+In-Reply-To: <Y1B1eBIL9WhB4dwc@google.com>
 References: <20221004123956.188909-1-vkuznets@redhat.com>
- <20221004123956.188909-17-vkuznets@redhat.com>
- <Y1BahCzO4jxFC9Ey@google.com> <87czalczo6.fsf@redhat.com>
-Date:   Fri, 21 Oct 2022 14:41:19 +0200
-Message-ID: <877d0tcpsg.fsf@ovpn-192-65.brq.redhat.com>
+ <20221004123956.188909-34-vkuznets@redhat.com>
+ <Y1B1eBIL9WhB4dwc@google.com>
+Date:   Fri, 21 Oct 2022 15:20:46 +0200
+Message-ID: <874jvxcnyp.fsf@ovpn-192-65.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -84,69 +83,47 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+Sean Christopherson <seanjc@google.com> writes:
 
-> Sean Christopherson <seanjc@google.com> writes:
->
->> On Tue, Oct 04, 2022, Vitaly Kuznetsov wrote:
->
-> ...
->
->>>  
->>> -	if (all_cpus) {
->>> -		kvm_send_ipi_to_many(kvm, vector, NULL);
->>> -	} else {
->>> -		sparse_set_to_vcpu_mask(kvm, sparse_banks, valid_bank_mask, vcpu_mask);
->>> -
->>> -		kvm_send_ipi_to_many(kvm, vector, vcpu_mask);
->>> -	}
->>> +	kvm_hv_send_ipi_to_many(kvm, vector, all_cpus ? NULL : sparse_banks, valid_bank_mask);
->>
->> Any objection to not using a ternary operator?
->>
->> 	if (all_cpus)
->> 		kvm_hv_send_ipi_to_many(kvm, vector, NULL, 0);
->> 	else
->> 		kvm_hv_send_ipi_to_many(kvm, vector, sparse_banks, valid_bank_mask);
->>
->
-> Not at all,
->
->> Mostly because it's somewhat arbitrary that earlier code ensures valid_bank_mask
->> is set in the all_cpus=true case, e.g. arguably KVM doesn't need to do the var_cnt
->> sanity check in the all_cpus case:
->>
->> 		all_cpus = send_ipi_ex.vp_set.format == HV_GENERIC_SET_ALL;
->> 		if (all_cpus)
->> 			goto check_and_send_ipi;
->>
->> 		valid_bank_mask = send_ipi_ex.vp_set.valid_bank_mask;
->> 		if (hc->var_cnt != hweight64(valid_bank_mask))
->> 			return HV_STATUS_INVALID_HYPERCALL_INPUT;
->>
->> 		if (!hc->var_cnt)
->> 			goto ret_success;
->>
->
-> I think 'var_cnt' (== hweight64(valid_bank_mask)) has to be checked in
-> 'all_cpus' case, especially in kvm_hv_flush_tlb(): the code which reads
-> TLB flush entries will read them from the wrong offset (data_offset/
-> consumed_xmm_halves) otherwise. The problem is less severe in
-> kvm_hv_send_ipi() as there's no data after CPU banks. 
->
-> At the bare minimum, "KVM: x86: hyper-v: Handle
-> HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls gently" patch from this
-> series will have to be adjusted. I *think* mandating var_cnt==0 in 'all_cpus'
-> is OK but I don't recall such requirement from TLFS, maybe it's safer to
-> just adjust 'data_offset'/'consumed_xmm_halves' even in 'all_cpus' case.
->
-> Let me do some tests... 
+> On Tue, Oct 04, 2022, Vitaly Kuznetsov wrote:
 
-"We can neither confirm nor deny the existence of the problem". Windows
-guests seem to be smart enough to avoid using *_EX hypercalls altogether
-for "all cpus" case (as non-ex versions are good enough). Let's keep
-allowing non-zero var_cnt for 'all cpus' case for now and think about
-hardening it later...
+...
+
+>> +
+>> +	r = pthread_cancel(thread);
+>> +	TEST_ASSERT(r == 0,
+>
+> !r is generally preferred over "r == 0"
+>
+>> +		    "pthread_cancel on vcpu_id=%d failed with errno=%d",
+>> +		    vcpu->id, r);
+>
+> Do you happen to know if errno is preserved?  I.e. if TEST_ASSERT()'s print of
+> errno will capture the right errno?  If so, this and the pthread_join() assert
+> can be:
+>
+> 	TEST_ASSERT(!r, pthread_cancel() failed on vcpu_id=%d, vcpu->id);
+>
+
+The example from 'man 3 pthread_cancel' makes me think errno is not
+set. 'man 3 errno' confirms that:
+
+"
+       Note  that the POSIX threads APIs do not set errno on error.
+Instead, on failure they return an error number as the function result.
+These error numbers have the same meanings as the error numbers returned
+in errno by other APIs.
+"
+
+but nothing stops us from doing something like
+
+#include <errno.h>
+...
+
+errno = pthread_cancel(thread);
+TEST_ASSERT(!errno, pthread_cancel() failed on vcpu_id=%d, vcpu->id);
+
+I believe.
 
 -- 
 Vitaly
