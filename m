@@ -2,54 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A950607BCA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Oct 2022 18:09:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6727D607BE4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Oct 2022 18:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbiJUQJj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 21 Oct 2022 12:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49988 "EHLO
+        id S229728AbiJUQOo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 21 Oct 2022 12:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbiJUQJi (ORCPT
+        with ESMTP id S229908AbiJUQOm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 21 Oct 2022 12:09:38 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3852A73B
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 09:09:36 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id g28so2974146pfk.8
-        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 09:09:36 -0700 (PDT)
+        Fri, 21 Oct 2022 12:14:42 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A403913F
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 09:14:41 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id q10-20020a17090a304a00b0020b1d5f6975so3397980pjl.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 09:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=atEq6XUnsLTgZQ8a4NCS/ZdYKRgZxn+iMuufQefZZ+0=;
-        b=eGudQkg8P8RMl4BgAU2RN15mrO604mY8d7L9SluZ5vfEphfK8FH7nibeyrpuqFY5sf
-         p7JoTrF3vkT3pQQ687p5uCVlz3hBZEZqDF7RvVriqwzkJn0l68SrwwL0sTpsyeSvwfgX
-         H6AQVmtqTCd9U/brN7SMkNnXhT6I6I6nc7s9UZcrXbiKy7HQt/ZuOevcfvLNcNy3mBQZ
-         X2gn4sOn/1WY7ZQQi9ZN2vhhgBY34o4uyF9JFme6c3IbpUFKVHB8gsMTJDQF9a0ktwth
-         Xh28UFr5CJOxRW05+fJb0BIrZRFmq7OO8QmW9LWD85TqgpJN4qPxYQ+sBDBsVLXhi8XH
-         H32w==
+        bh=p7w2w/MW5/bGGzHO7GkFEcxzqWCtxzoSheQKtFpB84Y=;
+        b=BmUYkTmUpsesYJyivwIPLevFmUf6sU0taECjMGBg33SFdAXRch3kIcYKTsgPdCj0eA
+         Dh5wnT1v1UeLobi8vP+wn4T13hvmvqofLTxVPv+6x0qqlsmcC2/AIuAB/JBtqV1/Aueq
+         7/7uj+rZsOlCkErDp3ANt4ikeTEO1DPxPXXrpb75nadH9g+vxn92tYzIN5bzWO3/UwTs
+         iFvLLkbBIyHU/dcTwlcyYD5hSYEHbh4NnvR220hmTfXqxxFrWmXZFicGXx3DpiXw0kly
+         GWDUh6Z9VFG1o/6zyntBJIkuEggSyRaIwR0pzMazLj5OZY6ONAu4Rm8x8qMr7SUxLjo2
+         qw4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=atEq6XUnsLTgZQ8a4NCS/ZdYKRgZxn+iMuufQefZZ+0=;
-        b=5elC4oYPjavJFuzetgHRF1iLaPFd0AWqqc0Bgyx4ok4m11QJsvSZVaqLXM/V+elGV6
-         ELV9PNNQqjT/P/f0a+Syn0UTCyLPb277jCDIQ+o+zZoEbQmXzeBwEBg7CHh4QS0iWfp8
-         ky33nUBeAJXl0XWTljQ6OSzL0mgWlnR7dWLeBK1IGBn0OuQfo1ZpWULSJJFrjkGVT6k0
-         FjhXg3ATVU0xlnbDlXw2LLkkK1z1t1bmUzJMZBT9HsFQsi98dlwgJISolo/b1oCdnYs4
-         u7jXzOH7FovttSjdK6PhUbL2+kU19iqT+WXlTSI/41EtWBDQ1q7II3z2VXkEhDXu8mtt
-         cYhw==
-X-Gm-Message-State: ACrzQf1sHTcmDl/hjWMB8eWdcoRsaj7M4vVTQvAIgM95GVgl5LPa95DH
-        CZt9YoUTr7jlEDomMYV1bD3dxw==
-X-Google-Smtp-Source: AMsMyM5VbR5/UAQSg+UhJJqI6jBw64vdS9WWCcLNP6Vn9WaGw+m23DD/2YTSRI+OcSJmG9D5iEXQMA==
-X-Received: by 2002:a63:1a46:0:b0:464:3966:54b9 with SMTP id a6-20020a631a46000000b00464396654b9mr17052629pgm.390.1666368575536;
-        Fri, 21 Oct 2022 09:09:35 -0700 (PDT)
+        bh=p7w2w/MW5/bGGzHO7GkFEcxzqWCtxzoSheQKtFpB84Y=;
+        b=bwqqO5dtDt68KgzI/aix0EPdnpIlMGnT/S4S+q/WSozutJ7Qh63wk/VcPg3XB8Hfmx
+         UcGXP9Nz9DXtXMtyVroc2fi98rwXlXKM6YOWM871fFOjS4wr9CJlRvOM+Sy09mhczr81
+         7gMRWFU9yRXaLhAJh7gqhqNecOskMo8OHbXAkd2eEOKGk6FPbsta1VTNiadJUfIimiMs
+         h9sOR3wdoo1IIyxbWzTg+cDDuVsNvL1VcTrH6FXnZZN6Ihfbv9X2FHMJCXU8G6gqkFNP
+         yZ71p1480sTyF0+fKRjlULLsemYCqFezvpYcpV8Hwy8gKixZ4J9IuLY4x6QmNCvKVFgD
+         54Zw==
+X-Gm-Message-State: ACrzQf0rdCBrqgeqe7gaYFUSowJlQYXl1Q947MVjfKJ2cS2Uj79WCDHB
+        UPM/i5XMLXw65TBnWgRukVckuMNEKJWmYw==
+X-Google-Smtp-Source: AMsMyM7AE5cybZSwUAcHvmbFDD0MxtcuNgDjw2xBVntg7RiOogbLwEi3+65vwuefObLaB9Bh4tmYSg==
+X-Received: by 2002:a17:902:ec83:b0:185:581a:1c with SMTP id x3-20020a170902ec8300b00185581a001cmr19470371plg.78.1666368870573;
+        Fri, 21 Oct 2022 09:14:30 -0700 (PDT)
 Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id g17-20020aa79dd1000000b0053e5daf1a25sm15379550pfq.45.2022.10.21.09.09.34
+        by smtp.gmail.com with ESMTPSA id d11-20020a17090ab30b00b00202618f0df4sm36832pjr.0.2022.10.21.09.14.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 09:09:35 -0700 (PDT)
-Date:   Fri, 21 Oct 2022 16:09:31 +0000
+        Fri, 21 Oct 2022 09:14:30 -0700 (PDT)
+Date:   Fri, 21 Oct 2022 16:14:26 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
@@ -60,22 +60,21 @@ Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 16/46] KVM: x86: hyper-v: Don't use
- sparse_set_to_vcpu_mask() in kvm_hv_send_ipi()
-Message-ID: <Y1LEO49pDvZ1yrNV@google.com>
+Subject: Re: [PATCH v11 33/46] KVM: selftests: Hyper-V PV IPI selftest
+Message-ID: <Y1LFYjyyHRiP8rNe@google.com>
 References: <20221004123956.188909-1-vkuznets@redhat.com>
- <20221004123956.188909-17-vkuznets@redhat.com>
- <Y1BahCzO4jxFC9Ey@google.com>
- <87czalczo6.fsf@redhat.com>
- <877d0tcpsg.fsf@ovpn-192-65.brq.redhat.com>
+ <20221004123956.188909-34-vkuznets@redhat.com>
+ <Y1B1eBIL9WhB4dwc@google.com>
+ <874jvxcnyp.fsf@ovpn-192-65.brq.redhat.com>
+ <87zgdpb8dc.fsf@ovpn-192-65.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <877d0tcpsg.fsf@ovpn-192-65.brq.redhat.com>
+In-Reply-To: <87zgdpb8dc.fsf@ovpn-192-65.brq.redhat.com>
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        URIBL_BLOCKED,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,44 +86,51 @@ On Fri, Oct 21, 2022, Vitaly Kuznetsov wrote:
 > Vitaly Kuznetsov <vkuznets@redhat.com> writes:
 > 
 > > Sean Christopherson <seanjc@google.com> writes:
-> >> Mostly because it's somewhat arbitrary that earlier code ensures valid_bank_mask
-> >> is set in the all_cpus=true case, e.g. arguably KVM doesn't need to do the var_cnt
-> >> sanity check in the all_cpus case:
+> >> Do you happen to know if errno is preserved?  I.e. if TEST_ASSERT()'s print of
+> >> errno will capture the right errno?  If so, this and the pthread_join() assert
+> >> can be:
 > >>
-> >> 		all_cpus = send_ipi_ex.vp_set.format == HV_GENERIC_SET_ALL;
-> >> 		if (all_cpus)
-> >> 			goto check_and_send_ipi;
-> >>
-> >> 		valid_bank_mask = send_ipi_ex.vp_set.valid_bank_mask;
-> >> 		if (hc->var_cnt != hweight64(valid_bank_mask))
-> >> 			return HV_STATUS_INVALID_HYPERCALL_INPUT;
-> >>
-> >> 		if (!hc->var_cnt)
-> >> 			goto ret_success;
+> >> 	TEST_ASSERT(!r, pthread_cancel() failed on vcpu_id=%d, vcpu->id);
 > >>
 > >
-> > I think 'var_cnt' (== hweight64(valid_bank_mask)) has to be checked in
-> > 'all_cpus' case, especially in kvm_hv_flush_tlb(): the code which reads
-> > TLB flush entries will read them from the wrong offset (data_offset/
-> > consumed_xmm_halves) otherwise. The problem is less severe in
-> > kvm_hv_send_ipi() as there's no data after CPU banks. 
+> > The example from 'man 3 pthread_cancel' makes me think errno is not
+> > set. 'man 3 errno' confirms that:
 > >
-> > At the bare minimum, "KVM: x86: hyper-v: Handle
-> > HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls gently" patch from this
-> > series will have to be adjusted. I *think* mandating var_cnt==0 in 'all_cpus'
-> > is OK but I don't recall such requirement from TLFS, maybe it's safer to
-> > just adjust 'data_offset'/'consumed_xmm_halves' even in 'all_cpus' case.
+> > "
+> >        Note  that the POSIX threads APIs do not set errno on error.
+
+Ah, that's annoying.
+
+> > Instead, on failure they return an error number as the function result.
+> > These error numbers have the same meanings as the error numbers returned
+> > in errno by other APIs.
+> > "
 > >
-> > Let me do some tests... 
+> > but nothing stops us from doing something like
+> >
+> > #include <errno.h>
+> > ...
+> >
+> > errno = pthread_cancel(thread);
+> > TEST_ASSERT(!errno, pthread_cancel() failed on vcpu_id=%d, vcpu->id);
+> >
+> > I believe.
 > 
-> "We can neither confirm nor deny the existence of the problem". Windows
-> guests seem to be smart enough to avoid using *_EX hypercalls altogether
-> for "all cpus" case (as non-ex versions are good enough). Let's keep
-> allowing non-zero var_cnt for 'all cpus' case for now
+> ... only the fact that this won't be thread safe :-( i.e. if we also try
+> setting 'errno' from vcpu_thread() (where the pattern for
+> pthread_setcanceltype() is exactly the same), we will likely be
+> reporting the wrong errno.
 
-Sounds good.
+errno is thread safe.  From https://man7.org/linux/man-pages/man3/errno.3.html:
 
-> and think about hardening it later...
+       errno is defined by the ISO C standard to be a modifiable lvalue
+       of type int, and must not be explicitly declared; errno may be a
+       macro.  errno is thread-local; setting it in one thread does not
+       affect its value in any other thread.
 
-Eh, no need to add more work for ourselves.  I wasn't thinking about hardening so
-much as slightly simplifying KVM code.
+
+> I think it's better to keep reporting 'r' for now (and maybe think about
+> pthread* wrappers later).
+
+Yeah, definitely a future problem.  pthread wrappers are a good idea, I doubt
+there's a single KVM selftest that wants to do anything but assert on failure.
