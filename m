@@ -2,96 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C94606B52
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Oct 2022 00:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1F8B60733F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Oct 2022 11:08:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229740AbiJTWiU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Oct 2022 18:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50230 "EHLO
+        id S230450AbiJUJIB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 21 Oct 2022 05:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiJTWiT (ORCPT
+        with ESMTP id S230116AbiJUJIA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Oct 2022 18:38:19 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909621C5A73;
-        Thu, 20 Oct 2022 15:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=d1uOCKlJdY/yPHuKmQEyZZ8R2iRmAZNykCdT1OMy84s=; b=hJjRN+9eKGnr+4+zGPmG0xStZx
-        DmKNQolz1r3Thm99kcT1Fcvq4mgQkSJybJHt8PGV+yx11j0adMDpX7hfA+sKiBWFu2OT7ZriVR1ok
-        75kxOAypPBWZMPpz6uhcBMSY5v1VVEDF8C4NtQDNIh4VHhT1oHNC1yOARuc616zpMcb3XprYd8rzu
-        nn5Qb5sU7mv5UN9uyWAiyT/xQN1hlt444TE2NmGkdoOEW2RCmqIc0fxs+l0cRPzvL7lTIK7qT7fZD
-        Eora7w2UPe0L4BShALsNWJwPbcaNYASxhknHkqEkkCQ9TksN+FzK2opjCm7aQ22UUu9w7e35d31f3
-        7O5hk7fA==;
-Received: from [179.113.159.85] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oleAu-002Whx-TJ; Fri, 21 Oct 2022 00:38:06 +0200
-Message-ID: <ec384313-e19b-379b-4dd5-23ec8cefc9b0@igalia.com>
-Date:   Thu, 20 Oct 2022 19:37:48 -0300
+        Fri, 21 Oct 2022 05:08:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F9E1D101D
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 02:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666343278;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MNw8AC5b+llDM1gmU2HXsAh1LFF65S14nk18Zclt7ao=;
+        b=Ph35VijTKqOWctbLqwtRCYDuTZhPx4qCwTPZxqPclQk6BlZ/r/swpDIaEZDEsUHV/N1JhS
+        JHysJ/imN4wh/+pEti7ODfiKsvQR/hVpxBxnuN7OpKDaSu9rEQpQxGTHCgg16sTG1PF7Z1
+        gJaH1I5EmPEaGuZMG78nI+Ka/bfEYNk=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-347-7vSiQPH-NE6fvAMkqV02MA-1; Fri, 21 Oct 2022 05:07:57 -0400
+X-MC-Unique: 7vSiQPH-NE6fvAMkqV02MA-1
+Received: by mail-ed1-f70.google.com with SMTP id z7-20020a05640235c700b0045d3841ccf2so1682909edc.9
+        for <linux-hyperv@vger.kernel.org>; Fri, 21 Oct 2022 02:07:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MNw8AC5b+llDM1gmU2HXsAh1LFF65S14nk18Zclt7ao=;
+        b=nMw6tvaiLdixUKkg7sBjp6YsRe/maCZ8Rj/0bBbp1iEag90WO24Ryu0nN7/ScoR5Oe
+         bSWZm9g1rozEiyO9GRc47BEtt3zQy14rR+CLNmPPg/aQsGWuzfTniynPK0+ByWVoR3Cs
+         tY0WE90uPIu5v2ILOacfcNdJgmsfatKRwZPDN0XoZ5/uBq9cl54i6lYmgRrBwrAuXRQJ
+         PZjOMLzX6lxCDu9feO/s275G4BSh1e2WKnspDir7IWM1RdSgqT6d9JWpX8qhi4x0Khek
+         H7PNYL3bgBX6DP+UUtQ9xGGeoUsyRX4m3sOrksLKpBQ+h0GWqTJ7q/0cefR8RMVGVWux
+         inJQ==
+X-Gm-Message-State: ACrzQf0g8goXWbygbVySYirFU1rVCOIFQZldu0iiFwpKPPmh3NGA/IQj
+        ORDmOYgc6cd3NPbWU66jRdou8vL/CYlrIxOE/Nf6TEH/dM3djj5CFZVbWxYhHGGqDo12f+2onMU
+        c9B2HTXQlDw6wsjIbjEhTWRED
+X-Received: by 2002:aa7:c04f:0:b0:457:1b08:d056 with SMTP id k15-20020aa7c04f000000b004571b08d056mr17007034edo.146.1666343276113;
+        Fri, 21 Oct 2022 02:07:56 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM69NlpmYvYv3ssSGswnUuzLIS1UqmQvOGi0GdebezUPqC7rmqfHYelpVj4T6cq0qaion/WYLw==
+X-Received: by 2002:aa7:c04f:0:b0:457:1b08:d056 with SMTP id k15-20020aa7c04f000000b004571b08d056mr17007008edo.146.1666343275745;
+        Fri, 21 Oct 2022 02:07:55 -0700 (PDT)
+Received: from fedora (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id g12-20020a1709061e0c00b0079d7ec3b211sm73622ejj.150.2022.10.21.02.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Oct 2022 02:07:55 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 16/46] KVM: x86: hyper-v: Don't use
+ sparse_set_to_vcpu_mask() in kvm_hv_send_ipi()
+In-Reply-To: <Y1BahCzO4jxFC9Ey@google.com>
+References: <20221004123956.188909-1-vkuznets@redhat.com>
+ <20221004123956.188909-17-vkuznets@redhat.com>
+ <Y1BahCzO4jxFC9Ey@google.com>
+Date:   Fri, 21 Oct 2022 11:07:53 +0200
+Message-ID: <87czalczo6.fsf@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH V3 06/11] tracing: Improve panic/die notifiers
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
-        d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
-        dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, senozhatsky@chromium.org,
-        stern@rowland.harvard.edu, tglx@linutronix.de, vgoyal@redhat.com,
-        vkuznets@redhat.com, will@kernel.org, xuqiang36@huawei.com,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-7-gpiccoli@igalia.com>
- <20221020172908.25c6e3a5@gandalf.local.home>
- <6e2396d1-d0b2-0d1e-d146-f3ad7f2b39f8@igalia.com>
- <20221020182249.691bb82a@gandalf.local.home>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20221020182249.691bb82a@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 20/10/2022 19:22, Steven Rostedt wrote:
-> On Thu, 20 Oct 2022 18:53:43 -0300
-> "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
-> 
->> Could you pick it in your tree? Or do you prefer that I re-send as a
->> solo patch, with your ACK?
-> 
-> I wasn't sure there were any dependencies on this. If not, I can take it.
-> 
-> -- Steve
+Sean Christopherson <seanjc@google.com> writes:
 
-Thank you! No dependency at all...I just piled a bunch of independent
-panic notifiers fixes, so they can be reviewed by the maintainers and
-picked individually.
+> On Tue, Oct 04, 2022, Vitaly Kuznetsov wrote:
 
-Some maintainers though prefer them to be sent individually, as solo
-patches...hence my question.
+...
 
-Cheers,
+>>  
+>> -	if (all_cpus) {
+>> -		kvm_send_ipi_to_many(kvm, vector, NULL);
+>> -	} else {
+>> -		sparse_set_to_vcpu_mask(kvm, sparse_banks, valid_bank_mask, vcpu_mask);
+>> -
+>> -		kvm_send_ipi_to_many(kvm, vector, vcpu_mask);
+>> -	}
+>> +	kvm_hv_send_ipi_to_many(kvm, vector, all_cpus ? NULL : sparse_banks, valid_bank_mask);
+>
+> Any objection to not using a ternary operator?
+>
+> 	if (all_cpus)
+> 		kvm_hv_send_ipi_to_many(kvm, vector, NULL, 0);
+> 	else
+> 		kvm_hv_send_ipi_to_many(kvm, vector, sparse_banks, valid_bank_mask);
+>
 
+Not at all,
 
-Guilherme
+> Mostly because it's somewhat arbitrary that earlier code ensures valid_bank_mask
+> is set in the all_cpus=true case, e.g. arguably KVM doesn't need to do the var_cnt
+> sanity check in the all_cpus case:
+>
+> 		all_cpus = send_ipi_ex.vp_set.format == HV_GENERIC_SET_ALL;
+> 		if (all_cpus)
+> 			goto check_and_send_ipi;
+>
+> 		valid_bank_mask = send_ipi_ex.vp_set.valid_bank_mask;
+> 		if (hc->var_cnt != hweight64(valid_bank_mask))
+> 			return HV_STATUS_INVALID_HYPERCALL_INPUT;
+>
+> 		if (!hc->var_cnt)
+> 			goto ret_success;
+>
+
+I think 'var_cnt' (== hweight64(valid_bank_mask)) has to be checked in
+'all_cpus' case, especially in kvm_hv_flush_tlb(): the code which reads
+TLB flush entries will read them from the wrong offset (data_offset/
+consumed_xmm_halves) otherwise. The problem is less severe in
+kvm_hv_send_ipi() as there's no data after CPU banks. 
+
+At the bare minimum, "KVM: x86: hyper-v: Handle
+HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST{,EX} calls gently" patch from this
+series will have to be adjusted. I *think* mandating var_cnt==0 in 'all_cpus'
+is OK but I don't recall such requirement from TLFS, maybe it's safer to
+just adjust 'data_offset'/'consumed_xmm_halves' even in 'all_cpus' case.
+
+Let me do some tests... 
+
+-- 
+Vitaly
+
