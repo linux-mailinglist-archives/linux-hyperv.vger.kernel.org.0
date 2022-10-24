@@ -2,52 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32E3160A0C4
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Oct 2022 13:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A007C60A0BB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Oct 2022 13:20:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230426AbiJXLUc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 24 Oct 2022 07:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54936 "EHLO
+        id S230232AbiJXLUb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 24 Oct 2022 07:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230245AbiJXLUN (ORCPT
+        with ESMTP id S230289AbiJXLUP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 24 Oct 2022 07:20:13 -0400
+        Mon, 24 Oct 2022 07:20:15 -0400
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CE22FFD8;
-        Mon, 24 Oct 2022 04:20:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4030831DC4;
+        Mon, 24 Oct 2022 04:20:05 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 98A751FD8B;
-        Mon, 24 Oct 2022 11:20:02 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 1AA231FD8C;
+        Mon, 24 Oct 2022 11:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1666610402; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1666610403; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1klq8dgTEHSChmOJust/LVatEDotA0sGZfglkNp+Pao=;
-        b=en9jvOW04jfUiC60HFppj7Oi/hyRFNL9iZm4h2C3wjx7GrcB8fmkGzHIIZPN++3MacVihM
-        IGlFIQ4o9dY1kpVocT2xeGqRCXI8TNg/S2hDF8a8A5QKlpz5M7wkwEvKQP+VlYHh+ofsVS
-        bql6rcit/v8GmmRhIhgdnUpdjivHfH4=
+        bh=TEgpl55AepC361EexBBEYuHLTFWdn6vIDOCsAIRAdbs=;
+        b=tTPj3Ajm/W7k4xAj/NjREnCuteNThvM5rK5/j9FGA2C7plkeoxu705D1SVfIq19i/Q8vDD
+        Hh3loR0GZWj+xZBF42TiFg+xablbQ5RsXgTm9VOzMNBL+zTUcHbC3i3JX1ZTLBaXTF7pMH
+        twjAUrF4GYnBD1Cb57pe2fKkGImYEhI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1666610402;
+        s=susede2_ed25519; t=1666610403;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1klq8dgTEHSChmOJust/LVatEDotA0sGZfglkNp+Pao=;
-        b=725Cm9O66lYpCGvlCvlIik0hnSVzTD9as22FkjDe/R15LqYy9dj9Io/GaSo1zUXwzKiFUK
-        4r4cklW8DGrv9VCw==
+        bh=TEgpl55AepC361EexBBEYuHLTFWdn6vIDOCsAIRAdbs=;
+        b=XkLdHuGn9oWWLTzK+dldjiKNlN1DDYMycvmmFEG53dbzQ/rRcXmxp45qbnZbGAegvjt7UQ
+        gXwxSlh/nr53HABQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2E66813357;
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A06FC13B34;
         Mon, 24 Oct 2022 11:20:02 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id oF+HCuJ0VmOYMgAAMHmgww
+        id YGlqJuJ0VmOYMgAAMHmgww
         (envelope-from <tzimmermann@suse.de>); Mon, 24 Oct 2022 11:20:02 +0000
 From:   Thomas Zimmermann <tzimmermann@suse.de>
 To:     daniel@ffwll.ch, airlied@gmail.com, sam@ravnborg.org,
@@ -69,9 +69,9 @@ Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
         xen-devel@lists.xenproject.org,
         Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v2 08/21] drm/rockchip: Don't set struct drm_driver.output_poll_changed
-Date:   Mon, 24 Oct 2022 13:19:40 +0200
-Message-Id: <20221024111953.24307-9-tzimmermann@suse.de>
+Subject: [PATCH v2 09/21] drm/panel-ili9341: Include <linux/backlight.h>
+Date:   Mon, 24 Oct 2022 13:19:41 +0200
+Message-Id: <20221024111953.24307-10-tzimmermann@suse.de>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <20221024111953.24307-1-tzimmermann@suse.de>
 References: <20221024111953.24307-1-tzimmermann@suse.de>
@@ -86,40 +86,25 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Don't set struct drm_driver.output_poll_changed. It's used to restore
-the fbdev console. But as rockchip uses generic fbdev emulation, the
-console is being restored by the DRM client helpers already. See the
-functions drm_kms_helper_hotplug_event() and
-drm_kms_helper_connector_hotplug_event() in drm_probe_helper.c.
-
-v2:
-	* fix commit description (Christian)
+Include <linux/backlight.h> for devm_of_find_backlight().
 
 Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index 092bf863110b7..7de64b0ad047f 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -9,7 +9,6 @@
- #include <drm/drm.h>
- #include <drm/drm_atomic.h>
- #include <drm/drm_damage_helper.h>
--#include <drm/drm_fb_helper.h>
- #include <drm/drm_fourcc.h>
- #include <drm/drm_framebuffer.h>
- #include <drm/drm_gem_framebuffer_helper.h>
-@@ -101,7 +100,6 @@ rockchip_fb_create(struct drm_device *dev, struct drm_file *file,
+diff --git a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+index 39dc40cf681f0..b59472c29a40d 100644
+--- a/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
++++ b/drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+@@ -18,6 +18,7 @@
+  * Copyright 2018 David Lechner <david@lechnology.com>
+  */
  
- static const struct drm_mode_config_funcs rockchip_drm_mode_config_funcs = {
- 	.fb_create = rockchip_fb_create,
--	.output_poll_changed = drm_fb_helper_output_poll_changed,
- 	.atomic_check = drm_atomic_helper_check,
- 	.atomic_commit = drm_atomic_helper_commit,
- };
++#include <linux/backlight.h>
+ #include <linux/bitops.h>
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
 -- 
 2.38.0
 
