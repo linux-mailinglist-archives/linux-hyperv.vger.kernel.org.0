@@ -2,178 +2,162 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D445260E28C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Oct 2022 15:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B012360E3E0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Oct 2022 16:58:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232733AbiJZNtG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Oct 2022 09:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
+        id S234392AbiJZO6S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Oct 2022 10:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233671AbiJZNsR (ORCPT
+        with ESMTP id S233790AbiJZO6I (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Oct 2022 09:48:17 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 260754DB44;
-        Wed, 26 Oct 2022 06:48:17 -0700 (PDT)
-Received: from anrayabh-desk.corp.microsoft.com (unknown [167.220.238.193])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5E5BC210AF1E;
-        Wed, 26 Oct 2022 06:48:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5E5BC210AF1E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1666792097;
-        bh=XpK1X4zhf3TiHKLaOrNIEobrLMtZr0H214Cll4f/OsA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BbMgTmVDjRypDBMGQCoY/WEcjAKoYiqGtbMw7VkVQCYwmx96GFslPqIgK9LXhWMkD
-         KoOtLQIBZT6ugsXoEcRBbketkQoxa5gk4b3zu7wasD7XT3GcqAUvbMkx6qnGYjp8k5
-         EigtvY+winLAwR0gxpSi4HqGK/bXuoqTj6d5aUCc=
-From:   Anirudh Rayabharam <anrayabh@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, daniel.lezcano@linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Cc:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        kumarpraveen@linux.microsoft.com, mail@anirudhrb.com
-Subject: [PATCH 2/2] clocksource/drivers/hyperv: add data structure for reference TSC MSR
-Date:   Wed, 26 Oct 2022 19:17:15 +0530
-Message-Id: <20221026134715.1438789-3-anrayabh@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221026134715.1438789-1-anrayabh@linux.microsoft.com>
+        Wed, 26 Oct 2022 10:58:08 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11021018.outbound.protection.outlook.com [52.101.52.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993A81213D8;
+        Wed, 26 Oct 2022 07:58:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lO0rMXzqth99pdO+CNcGAPxixjQZs/0Yt7jDXx835Sh7ReWxpS/EfKkDBA1Ln25HKMIdoZchfZDQcds7NKwI9WDZw3abulGID8mzqVea5stdPGXVjTeEhn6jmR6xFtobpjaOAl1Oc3jJRKyzP8JyLYxJFxICjtghpyj9yet9pw0qs4IuGOBA8zIBoT40fDCCw+5SZHweWnZmyPJrGXHjXEiW21j1sgsIRoUFnNLfH7yxXRqFGyrxl8iBaeMOtjwlF5BN3+IXlaClr/+EuDrzhx/CHV2+j7aQDIXihA4wbZ+bDDOxZjdNRvFB3oU2nCI+NnzsheeRFZ2Hc1Pk1mAnnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5SAxyFnDrMP9zDR++7dI2iZ3B6ZWI/+AlEdRfa9sktY=;
+ b=WUnXE75pHqUDk2kciF2k8jQM2pELEV3zcxTUTTrnlBYXKt+TUTeVoq+z2j514sEn3RFz++aPlundx9Hgb+6W4aOul9toV0nbfmOfXY3AnKntFh+mhqJ/92SRrvSQuBJanDnZ/yc+u3QuhYXrSnih555OQNlE/AE/Skaw4LY0RZOw+Sb9u3fb/b5HFgoTs89Y3PVT1WA9W5WuApEygUoAjk1x7mC6F6H3Oui9haHIa0PU1VDPVAaFpbC/m5BwZJxD0HUrIb8JojidtKlBsqazJjWn+5ABPqR1U7HazUiZyyhG8sCJQpVfFRlF2gIMjtKcTBl+rz4vnrY/SRKFtuXyxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5SAxyFnDrMP9zDR++7dI2iZ3B6ZWI/+AlEdRfa9sktY=;
+ b=aLWXY7Tjv1Mg4kxaNUL648eRmfZSmG+dLZ/37O8ZosgmRK0qqJIoAPV+tLKxUvS2GhNNYtB3/lVVUqG8UUc8GPC9xkgRcP+TY2lQO/7a5OYeqfICdzSukYOfMQlEn8+T09YoTnb0LnThy+sEFdOThsuJdWtytp7nOy1kx+2UnZs=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by SJ0PR21MB1870.namprd21.prod.outlook.com (2603:10b6:a03:291::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.17; Wed, 26 Oct
+ 2022 14:57:58 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::f565:80ed:8070:474b]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::f565:80ed:8070:474b%8]) with mapi id 15.20.5791.008; Wed, 26 Oct 2022
+ 14:57:58 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+CC:     "kumarpraveen@linux.microsoft.com" <kumarpraveen@linux.microsoft.com>,
+        "mail@anirudhrb.com" <mail@anirudhrb.com>
+Subject: RE: [PATCH 0/2] Fix MSR access errors during kexec in root partition
+Thread-Topic: [PATCH 0/2] Fix MSR access errors during kexec in root partition
+Thread-Index: AQHY6UGlSxecIa3tCUqtnwUn6w6xFa4gwWeA
+Date:   Wed, 26 Oct 2022 14:57:58 +0000
+Message-ID: <BYAPR21MB1688DBC9CA80E03BDC7643E2D7309@BYAPR21MB1688.namprd21.prod.outlook.com>
 References: <20221026134715.1438789-1-anrayabh@linux.microsoft.com>
+In-Reply-To: <20221026134715.1438789-1-anrayabh@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=edc789b0-4bdb-4268-bcf6-837b60eb2193;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-10-26T14:48:06Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|SJ0PR21MB1870:EE_
+x-ms-office365-filtering-correlation-id: c2b7b51c-f28a-44cb-6ee3-08dab762789f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LiO+8KgY8kA9gmq+5QlVsEieRGvsAZRvtGlQMEFE65djiPrp+ZT/kCz8BwUIkFmRUWc2Svs7tbjxg1zJE2zleuY1OVt99Z0Y+kqYVkr7s6MFK4eYRJEqRI7KupEyTsdb51DaYqJfGtPwXsJTwawDclQdAIPGw0iOjuXCcXz2a/vnwqwgfBe33AvwlhkGn7vReHrOYmkqFsSC7ZEFUvdPY9O+QVLmm5z5dVuQxeeFYumhMUna4BTj6QYE5Q53TW3iVG7TELLmxlQCkZRTFEYHV+5EpACbYGslnrZ9Yg1RAKAvHWG0/8+/BlcRUa/t5/YZF1GKyT38oKq0ZsWhWQw3X4yYQ/Wa345hFD6/xAphj4a9H3ufhrMiMBtHmy3kPsa9uX/mOwyubm8aPgaXYV56B3E1kJ04oFxBOWD/q7/A5UTQ5+HTO05jHsdw6WPLSOwNZfOB8uGt0JPMXsDRfqPeEuktNFPyM/sGyy6dIttV0vTQE6/gu2aTlmHi60gUS8MCCpI7xyaH2HgD9y9s2+0eLEl8dX8tolXi4JiZNdTz94+k2RMZuM+AqhFJedPybSTYbDO6Pr8SfmRhUvHWhp2YbAk99Zm2isPkS+sQTjAy0oCIFG2+mdf7f84P3K0uG9LtTwInhLOsUa3pmAFmkETh7KNPAODUlIxWURZa9cg40/6+FKFCi3rOD97qduBJvR9EqaWHjssCJUMhL6INU4Jhi/x2zZLsD9IM+AXZiZEwIbzjgIKyTT0f0eLqRp0X4A5Q9FUFzLb9HM2HcmOL+4JmSKfwmxoVnw0a+SYWJzDxGv1UpxHaHubbyTw56grOYppdQWbuLw1ewAHIFbBndF5IvA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(451199015)(2906002)(6506007)(38070700005)(186003)(66476007)(66446008)(5660300002)(38100700002)(41300700001)(52536014)(66556008)(921005)(7416002)(122000001)(4326008)(33656002)(86362001)(8676002)(26005)(7696005)(110136005)(8936002)(64756008)(66946007)(8990500004)(82950400001)(82960400001)(55016003)(54906003)(478600001)(71200400001)(76116006)(10290500003)(316002)(9686003)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?hcDXCjmxA8NSnyf1af2LW2gORTq6g30BiEia6VVwhzzDG+YUqgAFH3y8rq32?=
+ =?us-ascii?Q?FT/kuKbzL3UUrG+ko7z0hpvHKYz9ZvkOQcNG4IAKyUdxqdREsXTOmoY24R8V?=
+ =?us-ascii?Q?HZSLD30HvB1+67UuLm/dOy4dG6nKW+p6YCQu1S9S0CPvTfqWNCzG6jlEENJB?=
+ =?us-ascii?Q?mlwKxQ5FqaEtYHY+Rf5Lzvoh6MjjocFAF+h/d8uAwe4TUQ2V3n+ou+7959tJ?=
+ =?us-ascii?Q?4d/FG7RzRw8oaW68nsfTeNm5hVNiH9od1E476E6MiRzaShROmRWIXSAOE8tJ?=
+ =?us-ascii?Q?CDdvMX7czEB8ss5I0Fv3SdKbKAJ6+fBrzUlAqiuYP4bvB8KEEVlVLkVQkGuI?=
+ =?us-ascii?Q?9NubeQkPauS2T6RG9ccJunXXk80/HWb30+5uHfnP/9L4Kmi/OR8/H3J3ICPb?=
+ =?us-ascii?Q?jfAbhYaqWlLLPQby9VLRyn6O8fPZnrj3w5kPnE/4Fbg4OpZdrTyGV3JJBQhu?=
+ =?us-ascii?Q?UhQnvvE5s6xX/AbXbb+xk4IAx7+3UkZjh6ng64darMvOnrzqDlUsubPiAOuw?=
+ =?us-ascii?Q?ZKkO2y8kWe3n9T+l1bvrraloTR8fCICgKTfmGmNVw8AWC484651Phpoo7LJ5?=
+ =?us-ascii?Q?kEly8eyVmnYu2XG30tPawAHfdu29KoIhElGehdyYc5AVQT+bfMyj4JlIDFg9?=
+ =?us-ascii?Q?h+AIfvGf03ZOUe/TeH7yCrlUuyci9Qw99q4Ohwy+7WrpYlYvl7lw8vxUqmgd?=
+ =?us-ascii?Q?yS8eFx78WU2NkC3ZzNdTsdJHmXm0NY5mnDDUGB0Zu6X79cA/xHK50w4/B139?=
+ =?us-ascii?Q?QYy8AdR9ntR59arc6bH6J1jdh0cCFqwbOUoXQQ939y4UZ7OIwT1mc5bMKT0X?=
+ =?us-ascii?Q?fvluIVgrQCPpbJhTz0SbZfMr6l6jHjsCe4ttauI0+8CP6pN8SVNHS4MJ7cna?=
+ =?us-ascii?Q?0g/t+dURVK0hf2boMvwdyiSISdewpH0oxnO20lfWTPr5cGf1rCJDt2ivpz+V?=
+ =?us-ascii?Q?jfEZGcmPvxdsz0g4K0Q5rbrJaxKjao+LyqO3WFoiZowRXdLJaBpBBfCVij+c?=
+ =?us-ascii?Q?gkdRBIHEiL5HPa5nmxY0VzA8fmHnGWfsI3LGp8pcmQYOTgGhYYSvDtUfSH38?=
+ =?us-ascii?Q?tIPo59OPfePjLkTR5TZ0i8HUYzOzVA6Q3e/Lfg3wrM3p1TanF+GtRWzQjGp8?=
+ =?us-ascii?Q?gAafcGQT0v5W3fWc7Y8W2am/MwDqf2m7QpB0FdhSqh5MKtc7E4SjvkSwtIgy?=
+ =?us-ascii?Q?aWqA4Ljv/JB8vgarIdnVnRRVpw1tsz0gfAMZqNtkj5PQIH9SzcqiRcb85Sir?=
+ =?us-ascii?Q?tyo7wfa3/BqRIIkCRz1+y2yUa7AEWKIM3Nfh+cIbGizmDmmDNKDugiYwZJns?=
+ =?us-ascii?Q?pBWuYQydZtiADO/YqZyoVxEzPa4RW5aaOuonoURCg7MSRgsjQMmWCPxKyTii?=
+ =?us-ascii?Q?YJMQXIUDQHEcUAn6V6lksRc4dFbc3WrLmM7kEUvl0qbR9Tupj5PA+N25OAOH?=
+ =?us-ascii?Q?dNg/cWl2I40W4dQmo1m4aDOo5jTX32rNDrQfHZKG3x2suQKb4I/3ShPo5nf0?=
+ =?us-ascii?Q?WaWm/LW7ZUzg8d08OmUuk50RoXRawmBRkFcnu6Q7Mn6Yj+KrWhwN9hoUpU5o?=
+ =?us-ascii?Q?2RV+REs6OFeMtEHLDwV1mONo4qlBFESVRFs8RiJTLO8dz12zAMoUtW9/7suF?=
+ =?us-ascii?Q?Tg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2b7b51c-f28a-44cb-6ee3-08dab762789f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2022 14:57:58.4270
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TmAGfCHSUU/L4lx1QhMr8euiQI6Gbt7NQehrokIkTrE8UpQzqNhcREM5MCcU329XARGqypxxjoMYo9RvPmsjK5jd8d8psgk6fMiTgFlovV0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1870
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add a data structure to represent the reference TSC MSR similar to
-other MSRs. This simplifies the code for updating the MSR.
+From: Anirudh Rayabharam <anrayabh@linux.microsoft.com> Sent: Wednesday, Oc=
+tober 26, 2022 6:47 AM
+>=20
+> Fixes a couple of MSR access errors seen during kexec in root partition
+> and opportunistically introduces a data structure for the reference TSC
+> MSR in order to simplify the code that updates that MSR.
+>=20
+> Anirudh Rayabharam (2):
+>   x86/hyperv: fix invalid writes to MSRs during root partition kexec
+>   clocksource/drivers/hyperv: add data structure for reference TSC MSR
 
-Signed-off-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
----
- arch/x86/hyperv/hv_init.c          | 10 +++++-----
- drivers/clocksource/hyperv_timer.c | 28 ++++++++++++++--------------
- include/asm-generic/hyperv-tlfs.h  |  9 +++++++++
- 3 files changed, 28 insertions(+), 19 deletions(-)
+Could these two patches be sequenced in the opposite order, to avoid the
+need to change the TSC code in hyperv_cleanup() twice?  The new
+data structure for the Reference TSC MSR and clocksource driver changes
+would be in the first patch.  Then the second patch would update
+hyperv_cleanup() and could use the new data structure.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 76ff63d69461..78993148d14c 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -537,7 +537,7 @@ void __init hyperv_init(void)
- void hyperv_cleanup(void)
- {
- 	union hv_x64_msr_hypercall_contents hypercall_msr;
--	u64 tsc_msr;
-+	union hv_reference_tsc_msr tsc_msr;
- 
- 	unregister_syscore_ops(&hv_syscore_ops);
- 
-@@ -557,10 +557,10 @@ void hyperv_cleanup(void)
- 	hypercall_msr.enable = 0;
- 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
- 
--	/* Reset the TSC page */
--	rdmsrl(HV_X64_MSR_REFERENCE_TSC, tsc_msr);
--	tsc_msr &= ~BIT_ULL(0);
--	wrmsrl(HV_X64_MSR_REFERENCE_TSC, tsc_msr);
-+	/* Reset the TSC page. */
-+	rdmsrl(HV_X64_MSR_REFERENCE_TSC, tsc_msr.as_uint64);
-+	tsc_msr.enable = 0;
-+	wrmsrl(HV_X64_MSR_REFERENCE_TSC, tsc_msr.as_uint64);
- }
- 
- void hyperv_report_panic(struct pt_regs *regs, long err, bool in_die)
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index bb47610bbd1c..11332c82d1af 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -395,25 +395,25 @@ static u64 notrace read_hv_sched_clock_tsc(void)
- 
- static void suspend_hv_clock_tsc(struct clocksource *arg)
- {
--	u64 tsc_msr;
-+	union hv_reference_tsc_msr tsc_msr;
- 
- 	/* Disable the TSC page */
--	tsc_msr = hv_get_register(HV_REGISTER_REFERENCE_TSC);
--	tsc_msr &= ~BIT_ULL(0);
--	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
-+	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
-+	tsc_msr.enable = 0;
-+	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
- }
- 
- 
- static void resume_hv_clock_tsc(struct clocksource *arg)
- {
- 	phys_addr_t phys_addr = virt_to_phys(&tsc_pg);
--	u64 tsc_msr;
-+	union hv_reference_tsc_msr tsc_msr;
- 
- 	/* Re-enable the TSC page */
--	tsc_msr = hv_get_register(HV_REGISTER_REFERENCE_TSC);
--	tsc_msr &= GENMASK_ULL(11, 0);
--	tsc_msr |= BIT_ULL(0) | (u64)phys_addr;
--	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
-+	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
-+	tsc_msr.enable = 1;
-+	tsc_msr.pfn = __phys_to_pfn(phys_addr);
-+	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
- }
- 
- #ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
-@@ -495,7 +495,7 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
- 
- static bool __init hv_init_tsc_clocksource(void)
- {
--	u64		tsc_msr;
-+	union hv_reference_tsc_msr tsc_msr;
- 	phys_addr_t	phys_addr;
- 
- 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
-@@ -530,10 +530,10 @@ static bool __init hv_init_tsc_clocksource(void)
- 	 * (which already has at least the low 12 bits set to zero since
- 	 * it is page aligned). Also set the "enable" bit, which is bit 0.
- 	 */
--	tsc_msr = hv_get_register(HV_REGISTER_REFERENCE_TSC);
--	tsc_msr &= GENMASK_ULL(11, 0);
--	tsc_msr = tsc_msr | 0x1 | (u64)phys_addr;
--	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
-+	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
-+	tsc_msr.enable = 1;
-+	tsc_msr.pfn = __phys_to_pfn(phys_addr);
-+	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
- 
- 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
- 
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index fdce7a4cfc6f..b17c6eeb9afa 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -102,6 +102,15 @@ struct ms_hyperv_tsc_page {
- 	volatile s64 tsc_offset;
- } __packed;
- 
-+union hv_reference_tsc_msr {
-+	u64 as_uint64;
-+	struct {
-+		u64 enable:1;
-+		u64 reserved:11;
-+		u64 pfn:52;
-+	} __packed;
-+};
-+
- /*
-  * The guest OS needs to register the guest ID with the hypervisor.
-  * The guest ID is a 64 bit entity and the structure of this ID is
--- 
-2.34.1
+Michael
+
+>=20
+>  arch/x86/hyperv/hv_init.c          | 11 +++++++----
+>  drivers/clocksource/hyperv_timer.c | 28 ++++++++++++++--------------
+>  include/asm-generic/hyperv-tlfs.h  |  9 +++++++++
+>  3 files changed, 30 insertions(+), 18 deletions(-)
+>=20
+> --
+> 2.34.1
 
