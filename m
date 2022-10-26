@@ -2,64 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0759960E452
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Oct 2022 17:17:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4DB960E457
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Oct 2022 17:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234456AbiJZPRY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Oct 2022 11:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49876 "EHLO
+        id S234521AbiJZPSZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Oct 2022 11:18:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234500AbiJZPRX (ORCPT
+        with ESMTP id S234517AbiJZPSY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Oct 2022 11:17:23 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20DDED73DE;
-        Wed, 26 Oct 2022 08:17:22 -0700 (PDT)
-Received: by mail-wm1-f52.google.com with SMTP id t4so10411056wmj.5;
-        Wed, 26 Oct 2022 08:17:22 -0700 (PDT)
+        Wed, 26 Oct 2022 11:18:24 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A977E127BC9;
+        Wed, 26 Oct 2022 08:18:22 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id y16so16451776wrt.12;
+        Wed, 26 Oct 2022 08:18:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1Msz1Hi1rkqv/MvBfwUlMMaceK8tAszlcvr0acT4kho=;
-        b=gmEaH0UJJpT416EJu1+DjALxolSDRIp85kCN0bDM4tRhF5f/F1V17q/dSivqjpv7Z1
-         SA5ffcvVr786dPJpRt1UxQEFBFCOuRHC3zuhh3mRRCzuT/3L8kmmm150y021LaAUghYM
-         TtxXKyeaee5q03C8TlLPTJILaWRxE2u1HM0BhH1I+IU06vLXsc4+SmB5sNqQyqevVfdD
-         XP229ub8VUjmLoQhh3CIEb45ay91a/2CJtUbL6/Cogt7zdww2yod/3pQp9ra3SjUybFX
-         QyPxs+r5NWnv+DN3tE3cUTZfzU/QxJd+6yhVKO0zTw0+q08yKnPNw3PRdteHn01vu46n
-         6V3w==
-X-Gm-Message-State: ACrzQf0AS2JFFFZcU85ld8tZYeDDDNlZzfU4oci2o0ExmRxH2JYVTxhW
-        WaVSR2hsX6Ze4xvaE6Ln8n4=
-X-Google-Smtp-Source: AMsMyM5E4QofG55+k8sHt/sTfY3vGTyn0y7u2UAQ/U4Bxq84KgQJzPPLu9oKoQ7zPN117pwnv57/GA==
-X-Received: by 2002:a05:600c:35c8:b0:3c8:33dc:c262 with SMTP id r8-20020a05600c35c800b003c833dcc262mr2807585wmq.206.1666797440607;
-        Wed, 26 Oct 2022 08:17:20 -0700 (PDT)
+        bh=wqs9LODvusyxzeQy4mNtd1vsryLD8O0dAcHksfGNQrc=;
+        b=ofdMdXp1mlMwx5kGFP5Rqt5zhnzfLu5R5kfhduNdMPxfCmOPss22wMhitMyPARgY59
+         WkCudKflE8YTqDIbij8SBpmXTwB7MoiL9XXLu4PWq/EpBUix8lcOS7Azjje64HMdgz/v
+         8S5Het0KBGpEj6JGmVej6XecLIeUwkJl+aWps8K5qfCfmr7WDtDHbMXk9nSxBbzsoBQt
+         IU9rXNrsOOkHE+xf4WsR/OmF20U+PJhxMHxZq9ZLFCwrvg210O+uqcY0z18oYVUKY0vc
+         B6Ys5dt6RPg6W2wKoQbi2dYGI5D+v6yAx4C/Yt6tqXpbhOp/LYr3myThO3nnRhT6KK0Z
+         g5NA==
+X-Gm-Message-State: ACrzQf1KWLlm3em3VE2zjRLktqY1J5GWJhXVbvxmJ+/9pdht89uztcau
+        GwLsMs1uNAq6vUGXxUS6q5kNcvEfNpc=
+X-Google-Smtp-Source: AMsMyM566g2uBtQgqmY/UFF6VWok10/8roEU0X8jNJdr5NXsG+HOawNEuW0alUENGAJDgaxszqgFbg==
+X-Received: by 2002:a5d:4bcd:0:b0:236:6b67:a5be with SMTP id l13-20020a5d4bcd000000b002366b67a5bemr12456685wrt.81.1666797501147;
+        Wed, 26 Oct 2022 08:18:21 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n9-20020a05600c4f8900b003a5537bb2besm2164405wmq.25.2022.10.26.08.17.19
+        by smtp.gmail.com with ESMTPSA id o21-20020a05600c4fd500b003c43dc42b4dsm2382390wmq.16.2022.10.26.08.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 08:17:20 -0700 (PDT)
-Date:   Wed, 26 Oct 2022 15:17:18 +0000
+        Wed, 26 Oct 2022 08:18:20 -0700 (PDT)
+Date:   Wed, 26 Oct 2022 15:18:19 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Zhao Liu <zhao1.liu@linux.intel.com>
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Jilin Yuan <yuanjilin@cdjrlc.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        "Fabio M . De Francesco" <fmdefrancesco@gmail.com>,
-        Zhenyu Wang <zhenyu.z.wang@intel.com>,
-        Zhao Liu <zhao1.liu@intel.com>
-Subject: Re: [PATCH v2] x86/hyperv: Remove BUG_ON() for kmap_local_page()
-Message-ID: <Y1lPfphHVRn2e4I5@liuwe-devbox-debian-v2>
-References: <20221020083820.2341088-1-zhao1.liu@linux.intel.com>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Drivers: hv: fix repeated words in comments
+Message-ID: <Y1lPu06G/1e63WJ/@liuwe-devbox-debian-v2>
+References: <20221019125604.52999-1-yuanjilin@cdjrlc.com>
+ <BYAPR21MB168811F3B497B61177324F94D72E9@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221020083820.2341088-1-zhao1.liu@linux.intel.com>
+In-Reply-To: <BYAPR21MB168811F3B497B61177324F94D72E9@BYAPR21MB1688.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -70,23 +67,33 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 04:38:20PM +0800, Zhao Liu wrote:
-> From: Zhao Liu <zhao1.liu@intel.com>
+On Mon, Oct 24, 2022 at 05:10:31PM +0000, Michael Kelley (LINUX) wrote:
+> From: Jilin Yuan <yuanjilin@cdjrlc.com> Sent: Wednesday, October 19, 2022 5:56 AM
+> > 
+> > Delete the redundant word 'of'.
+> > 
+> > Signed-off-by: Jilin Yuan <yuanjilin@cdjrlc.com>
+> > ---
+> >  drivers/hv/hv_balloon.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> > index fdf6decacf06..6c127f061f06 100644
+> > --- a/drivers/hv/hv_balloon.c
+> > +++ b/drivers/hv/hv_balloon.c
+> > @@ -905,7 +905,7 @@ static unsigned long handle_pg_range(unsigned long pg_start,
+> >  			 * We have some residual hot add range
+> >  			 * that needs to be hot added; hot add
+> >  			 * it now. Hot add a multiple of
+> > -			 * of HA_CHUNK that fully covers the pages
+> > +			 * HA_CHUNK that fully covers the pages
+> >  			 * we have.
+> >  			 */
+> >  			size = (has->end_pfn - has->ha_end_pfn);
+> > --
+> > 2.36.1
 > 
-> The commit 154fb14df7a3c ("x86/hyperv: Replace kmap() with
-> kmap_local_page()") keeps the BUG_ON() to check if kmap_local_page()
-> fails.
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 > 
-> But in fact, kmap_local_page() always returns a valid kernel address
-> and won't return NULL here. It will BUG on its own if it fails. [1]
-> 
-> So directly use memcpy_to_page() which creates local mapping to copy.
-> 
-> [1]: https://lore.kernel.org/lkml/YztFEyUA48et0yTt@iweiny-mobl/
-> 
-> Suggested-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
-> Suggested-by: Ira Weiny <ira.weiny@intel.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Zhao Liu <zhao1.liu@intel.com>
 
 Applied to hyperv-fixes. Thanks.
