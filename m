@@ -2,110 +2,241 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3418860F60E
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Oct 2022 13:19:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E360E60F629
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Oct 2022 13:26:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234871AbiJ0LTL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 27 Oct 2022 07:19:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57188 "EHLO
+        id S235244AbiJ0L0X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 27 Oct 2022 07:26:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234893AbiJ0LTJ (ORCPT
+        with ESMTP id S233747AbiJ0L0W (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 27 Oct 2022 07:19:09 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4F5FAE7B;
-        Thu, 27 Oct 2022 04:19:07 -0700 (PDT)
-Received: by mail-wm1-f43.google.com with SMTP id l16-20020a05600c4f1000b003c6c0d2a445so909120wmq.4;
-        Thu, 27 Oct 2022 04:19:07 -0700 (PDT)
+        Thu, 27 Oct 2022 07:26:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 499B3B1B9C
+        for <linux-hyperv@vger.kernel.org>; Thu, 27 Oct 2022 04:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666869980;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gwD/VCqaaIgMoFgk+za7ctN3lKoPgxNu0PXew4sZKV0=;
+        b=Ilfc7aAdVcnO80HQ9y09S0lErH6X6XYnDuNT/qKjha8inoGTyyNLH6I0GuZ7hSGL25juuN
+        uSHe5/P3174oWTozwKz2QVibE2KE1mkY6SNxsHywmpad+JIgx9EBt+Ll/2pvXvfzD6Lfp7
+        xDCBMT6ibaSLlSwxccwfEjANfbAh5mQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-27-bq9ICfwfOrmaKuE0rbrTyQ-1; Thu, 27 Oct 2022 07:26:19 -0400
+X-MC-Unique: bq9ICfwfOrmaKuE0rbrTyQ-1
+Received: by mail-ej1-f70.google.com with SMTP id ho8-20020a1709070e8800b0078db5e53032so830911ejc.9
+        for <linux-hyperv@vger.kernel.org>; Thu, 27 Oct 2022 04:26:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FdbMuT3q07TnuTjnPHzXSgdwPpbsUbQP8N9i6MigE9M=;
-        b=w/6wNwcmiEp/qssK4vaV46YIqJRUgadXZa9m9o14Q1W6ob0AB5T/tRjf/4MK2YYcwE
-         03YQcKUi59jYXiQgykzPrwMAdXdvCbMpOcSluqnXyiudXrQLq/P6ZNsfKKyb53vHt+cc
-         hs34AWoxEWqgGItX3JltchVIOwDwSjM5fWdzEcvsKNh3COclFImWf0xXhR53t3iq36dn
-         oA+NQ6TlrqgruQd3fA0gRH1pA21eKU2DSJownR1hAd7dGnYPsrQJJyskF/WnlaLhA58K
-         uNcpNF0wcGBU5wb7gT9Uql1Co9mRIJ1IpYzUMxKgolG9nQVjQdRMLQ49U9aLAoM5PPhi
-         RsRQ==
-X-Gm-Message-State: ACrzQf2lgupf6uPl7aA/nbS3gFNvblDt4mU+8l0PvFBmqOjfN+xJ3n1T
-        y3EWGgmGUdLVObEeLBYhoTE=
-X-Google-Smtp-Source: AMsMyM4e6onb5FXA/XWAWabbp/IBV6y+QsqvnhW0CYaMslGRR6aUGU1yLaCxxwOOpKpYMHTcMjvPXA==
-X-Received: by 2002:a05:600c:502c:b0:3ce:794f:d664 with SMTP id n44-20020a05600c502c00b003ce794fd664mr5492164wmr.33.1666869546056;
-        Thu, 27 Oct 2022 04:19:06 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id l18-20020a05600c1d1200b003a342933727sm4917798wms.3.2022.10.27.04.19.05
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gwD/VCqaaIgMoFgk+za7ctN3lKoPgxNu0PXew4sZKV0=;
+        b=2I5cIUZJPqio+nbOyVY2vcaz++s/BWih0EuzDar7WStTf4ORdVANa6Kpi3DNc6FYCB
+         1yappJ7+BJ1C+h+yBN8YRnjb+biQ5KoliDi5dS/fBD4LaYJFyzTjcgoKIs4ydJiypbCV
+         6JC5ZjqU1agS8PygLNPERLCkmeBsQ21LJ5ztExw2247h0l0LhEBXJmMT+TD7WQ9PaFmZ
+         JLgOaLavrUFrcIfsGhD0NhaTiMm7O4pYIXV/p8M1y3vZ7vx3w1/HOmLoSsfbTkbSB3uH
+         1PZGdtGmEdWXBCD4gz3UqN0qLK6AprSREHwMb9iD4atVi/VJTAxFXC25baHsrN1Ftgj9
+         dGqQ==
+X-Gm-Message-State: ACrzQf2+I8oWaeg6c1D36njPHawc4p88rpfngAYZnl9eX9kuxRn2kruz
+        Pd4y6qKZABOJJbqGcIQi8XzJDTgJLgaA2mt5ymh/FvuRn0UO2LmiDgvQofIgYw1I8yEFL5xE405
+        kg+8TZPELATcP6JdM3k8HvTe9
+X-Received: by 2002:a17:907:5c2:b0:77e:def7:65d8 with SMTP id wg2-20020a17090705c200b0077edef765d8mr42343949ejb.487.1666869977866;
+        Thu, 27 Oct 2022 04:26:17 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7WJxuWZ43iZYYhZ8MfPXNu3T6tKw0hM2BQl4n9aGq5ITWxA4LN5wc6fGSQb5BUv0s9i2wi1A==
+X-Received: by 2002:a17:907:5c2:b0:77e:def7:65d8 with SMTP id wg2-20020a17090705c200b0077edef765d8mr42343917ejb.487.1666869977557;
+        Thu, 27 Oct 2022 04:26:17 -0700 (PDT)
+Received: from ovpn-194-52.brq.redhat.com (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 24-20020a170906319800b0073d84a321c8sm640878ejy.166.2022.10.27.04.26.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Oct 2022 04:19:05 -0700 (PDT)
-Date:   Thu, 27 Oct 2022 11:19:03 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Zhao Liu <zhao1.liu@linux.intel.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        =?iso-8859-1?Q?Dexuan=A0Cui?= <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Ira=A0Weiny=A0?= <ira.weiny@intel.com>,
-        "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
-        Zhenyu Wang <zhenyu.z.wang@intel.com>,
-        Zhao Liu <zhao1.liu@intel.com>
-Subject: Re: [PATCH v2] x86/hyperv: Remove BUG_ON() for kmap_local_page()
-Message-ID: <Y1ppJ/6VFhba1MEX@liuwe-devbox-debian-v2>
-References: <20221020083820.2341088-1-zhao1.liu@linux.intel.com>
- <Y1lPfphHVRn2e4I5@liuwe-devbox-debian-v2>
- <Y1pX/BGRgceJcEE9@liuzhao-OptiPlex-7080>
+        Thu, 27 Oct 2022 04:26:16 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] KVM: VMX: Resurrect vmcs_conf sanitization for
+ KVM-on-Hyper-V
+In-Reply-To: <Y1nD9QKqa1A1j7t+@google.com>
+References: <20221018101000.934413-1-vkuznets@redhat.com>
+ <20221018101000.934413-5-vkuznets@redhat.com>
+ <Y1nD9QKqa1A1j7t+@google.com>
+Date:   Thu, 27 Oct 2022 13:26:15 +0200
+Message-ID: <877d0ltsmg.fsf@ovpn-194-52.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y1pX/BGRgceJcEE9@liuzhao-OptiPlex-7080>
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 06:05:48PM +0800, Zhao Liu wrote:
-> On Wed, Oct 26, 2022 at 03:17:18PM +0000, Wei Liu wrote:
-> > Date: Wed, 26 Oct 2022 15:17:18 +0000
-> > From: Wei Liu <wei.liu@kernel.org>
-> > Subject: Re: [PATCH v2] x86/hyperv: Remove BUG_ON() for kmap_local_page()
-> > 
-> > On Thu, Oct 20, 2022 at 04:38:20PM +0800, Zhao Liu wrote:
-> > > From: Zhao Liu <zhao1.liu@intel.com>
-> > > 
-> > > The commit 154fb14df7a3c ("x86/hyperv: Replace kmap() with
-> > > kmap_local_page()") keeps the BUG_ON() to check if kmap_local_page()
-> > > fails.
-> > > 
-> > > But in fact, kmap_local_page() always returns a valid kernel address
-> > > and won't return NULL here. It will BUG on its own if it fails. [1]
-> > > 
-> > > So directly use memcpy_to_page() which creates local mapping to copy.
-> > > 
-> > > [1]: https://lore.kernel.org/lkml/YztFEyUA48et0yTt@iweiny-mobl/
-> > > 
-> > > Suggested-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
-> > > Suggested-by: Ira Weiny <ira.weiny@intel.com>
-> > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > > Signed-off-by: Zhao Liu <zhao1.liu@intel.com>
-> > 
-> > Applied to hyperv-fixes. Thanks.
-> 
-> Sorry Wei, I appology for not deleting unused variables, which caused
-> the next tree break. Do I need to send another v3 to make up for my
-> carelessness?
+Sean Christopherson <seanjc@google.com> writes:
 
-There is no need to send v3. I've dealt with it.
+> On Tue, Oct 18, 2022, Vitaly Kuznetsov wrote:
+>> @@ -362,6 +364,7 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
+>>  
+>>  enum evmcs_revision {
+>>  	EVMCSv1_LEGACY,
+>> +	EVMCSv1_STRICT,
+>
+> "strict" isn't really the right word, this is more like "raw" or "unfiltered",
+> because unless I'm misunderstanding the intent, this will always track KVM's
+> bleeding edge, i.e. everything that KVM can possibly enable.
+>
 
-Thanks,
-Wei.
+Yes, it's unclear from the patch but this is a pre-requisite to exposing
+'updated' eVMCSv1 controls (e.g. TSC scaling) for Hyper-V-on-KVM
+case. Previously (https://lore.kernel.org/kvm/20220824030138.3524159-10-seanjc@google.com/)
+we called it 'ENFORCED' but I misremembered and called it 'strict'.
+
+> And in that case, we can avoid bikeshedding the name becase bouncing through
+> evmcs_supported_ctrls is unnecessary, just use the #defines directly.  And then
+> you can just fold the one (or two) #defines from patch 3 into this path.
+>
+
+Defines can be used directly indeed and 'strict/enforcing/...'
+discussion can happen when we finally come to exposing 'updated'
+controls (hope we're almost there). 
+
+>> @@ -511,6 +525,52 @@ int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
+>>  	return 0;
+>>  }
+>>  
+>> +#if IS_ENABLED(CONFIG_HYPERV)
+>> +/*
+>> + * KVM on Hyper-V always uses the newest known eVMCSv1 revision, the assumption
+>> + * is: in case a feature has corresponding fields in eVMCS described and it was
+>> + * exposed in VMX feature MSRs, KVM is free to use it. Warn if KVM meets a
+>> + * feature which has no corresponding eVMCS field, this likely means that KVM
+>> + * needs to be updated.
+>> + */
+>> +#define evmcs_check_vmcs_conf32(field, ctrl)					\
+>> +	{									\
+>> +		u32 supported, unsupported32;					\
+>> +										\
+>> +		supported = evmcs_get_supported_ctls(ctrl, EVMCSv1_STRICT);	\
+>> +		unsupported32 = vmcs_conf->field & ~supported;			\
+>> +		if (unsupported32) {						\
+>> +			pr_warn_once(#field " unsupported with eVMCS: 0x%x\n",	\
+>> +				     unsupported32);				\
+>> +			vmcs_conf->field &= supported;				\
+>> +		}								\
+>> +	}
+>> +
+>> +#define evmcs_check_vmcs_conf64(field, ctrl)					\
+>> +	{									\
+>> +		u32 supported;							\
+>> +		u64 unsupported64;						\
+>
+> Channeling my inner Morpheus: Stop trying to use macros and use macros!  :-D
+>
+> ---
+>  arch/x86/kvm/vmx/evmcs.c | 34 ++++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/vmx/evmcs.h |  2 ++
+>  arch/x86/kvm/vmx/vmx.c   |  5 +++++
+>  3 files changed, 41 insertions(+)
+>
+> diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
+> index 337783675731..f7f8eafeecf7 100644
+> --- a/arch/x86/kvm/vmx/evmcs.c
+> +++ b/arch/x86/kvm/vmx/evmcs.c
+> @@ -1,5 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  
+> +#define pr_fmt(fmt) "kvm/hyper-v: " fmt
+> +
+>  #include <linux/errno.h>
+>  #include <linux/smp.h>
+>  
+> @@ -507,6 +509,38 @@ int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
+>  	return 0;
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_HYPERV)
+> +/*
+> + * KVM on Hyper-V always uses the newest known eVMCSv1 revision, the assumption
+> + * is: in case a feature has corresponding fields in eVMCS described and it was
+> + * exposed in VMX feature MSRs, KVM is free to use it. Warn if KVM meets a
+> + * feature which has no corresponding eVMCS field, this likely means that KVM
+> + * needs to be updated.
+> + */
+> +#define evmcs_check_vmcs_conf(field, ctrl)				\
+> +do {									\
+> +	typeof(vmcs_conf->field) unsupported;				\
+> +									\
+> +	unsupported = vmcs_conf->field & EVMCS1_UNSUPPORTED_ ## ctrl;	\
+> +	if (unsupported) {						\
+> +		pr_warn_once(#field " unsupported with eVMCS: 0x%llx\n",\
+> +			     (u64)unsupported);				\
+> +		vmcs_conf->field &= ~unsupported;			\
+> +	}								\
+> +}									\
+> +while (0)
+> +
+> +__init void evmcs_sanitize_exec_ctrls(struct vmcs_config *vmcs_conf)
+> +{
+> +	evmcs_check_vmcs_conf(cpu_based_exec_ctrl, EXEC_CTRL);
+> +	evmcs_check_vmcs_conf(pin_based_exec_ctrl, PINCTRL);
+> +	evmcs_check_vmcs_conf(cpu_based_2nd_exec_ctrl, 2NDEXEC);
+> +	evmcs_check_vmcs_conf(cpu_based_3rd_exec_ctrl, 3RDEXEC);
+> +	evmcs_check_vmcs_conf(vmentry_ctrl, VMENTRY_CTRL);
+> +	evmcs_check_vmcs_conf(vmexit_ctrl, VMEXIT_CTRL);
+> +}
+> +#endif
+> +
+>  int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+>  			uint16_t *vmcs_version)
+>  {
+> diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
+> index 6f746ef3c038..bc795c6e9059 100644
+> --- a/arch/x86/kvm/vmx/evmcs.h
+> +++ b/arch/x86/kvm/vmx/evmcs.h
+> @@ -58,6 +58,7 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
+>  	 SECONDARY_EXEC_SHADOW_VMCS |					\
+>  	 SECONDARY_EXEC_TSC_SCALING |					\
+>  	 SECONDARY_EXEC_PAUSE_LOOP_EXITING)
+> +#define EVMCS1_UNSUPPORTED_3RDEXEC (~0ULL)
+>  #define EVMCS1_UNSUPPORTED_VMEXIT_CTRL					\
+>  	(VM_EXIT_SAVE_VMX_PREEMPTION_TIMER)
+>  #define EVMCS1_UNSUPPORTED_VMENTRY_CTRL (0)
+> @@ -209,6 +210,7 @@ static inline void evmcs_load(u64 phys_addr)
+>  	vp_ap->enlighten_vmentry = 1;
+>  }
+>  
+> +__init void evmcs_sanitize_exec_ctrls(struct vmcs_config *vmcs_conf);
+>  #else /* !IS_ENABLED(CONFIG_HYPERV) */
+>  static __always_inline void evmcs_write64(unsigned long field, u64 value) {}
+>  static inline void evmcs_write32(unsigned long field, u32 value) {}
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 9dba04b6b019..7fd21b1fae1d 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2720,6 +2720,11 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+>  	vmcs_conf->vmentry_ctrl        = _vmentry_control;
+>  	vmcs_conf->misc	= misc_msr;
+>  
+> +#if IS_ENABLED(CONFIG_HYPERV)
+> +	if (enlightened_vmcs)
+> +		evmcs_sanitize_exec_ctrls(vmcs_conf);
+> +#endif
+> +
+>  	return 0;
+>  }
+>  
+>
+> base-commit: 5b6b6bcc0ef138b55fdd17dc8f9d43dfd26f8bd7
+
+-- 
+Vitaly
+
