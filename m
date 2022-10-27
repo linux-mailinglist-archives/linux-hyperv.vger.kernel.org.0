@@ -2,74 +2,81 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5662F60ECA9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Oct 2022 01:34:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E51E60F20E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Oct 2022 10:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234067AbiJZXeU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Oct 2022 19:34:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40302 "EHLO
+        id S233283AbiJ0ISV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 27 Oct 2022 04:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234046AbiJZXeT (ORCPT
+        with ESMTP id S233622AbiJ0ISU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Oct 2022 19:34:19 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679F982870
-        for <linux-hyperv@vger.kernel.org>; Wed, 26 Oct 2022 16:34:17 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so4429701pjc.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 26 Oct 2022 16:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHqryD6cMC+3zqeZeO7lYyd2QloacqtkfBr0fI6grmc=;
-        b=nQ41viT2g0De13xPdgk5ju/55UrOhJOrOAd09W0a1kjOrMdzj8A5pN+IICti6BBJ6l
-         068JN8gtfBWCAmxyeCM51MA01qbeun/Ztk93SsGFes0MiOKKqeOssnM1gVJ5eSVKWOuD
-         WoPRXyIiYcRXfoz7dOTG6oIhj6kkUVVHVeIDHtqD5aQ9PzVByz40aBo9JeGGVVlFEgXV
-         BoBJRkdNJbkkaWme/TyELBSk7uiH8ldd5zHn5R3ni+CLfnjp1JA5tnWyEXzUMwjRe362
-         0zPowfJGW1i5hDjdNFyO/VmGDpfrhZbd/HkqodM+ZCHg0SfC4EJ3Emkt2T0/sdtI9sNA
-         sNyA==
+        Thu, 27 Oct 2022 04:18:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEE9EEAB4
+        for <linux-hyperv@vger.kernel.org>; Thu, 27 Oct 2022 01:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666858699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=H+zjgwfHgHFBXNtS1dcXbFjT5C6bNkpnBbMlxremMWY=;
+        b=MUD+cnXr1io+bYdM9O2s0fJAlr36/AHyR4VkbQzkAMj8CRI77Dsllkjy95KbPbEkq4kA4Z
+        hB+Mscw/e5p/FCu/E+9aiF/KvpWAIODSR4641AIm18G4rMcayBloBQa3QcTaJFxnLms7KA
+        ckb0yr5e9Zi5otQ+HC2ocajC5P2b7XY=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-241-SDf7iMLAPMmoZ209koIJog-1; Thu, 27 Oct 2022 04:18:17 -0400
+X-MC-Unique: SDf7iMLAPMmoZ209koIJog-1
+Received: by mail-wm1-f70.google.com with SMTP id 3-20020a05600c020300b003c5eefe54adso260288wmi.9
+        for <linux-hyperv@vger.kernel.org>; Thu, 27 Oct 2022 01:18:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WHqryD6cMC+3zqeZeO7lYyd2QloacqtkfBr0fI6grmc=;
-        b=Vksr9biaZdZfj1frgoZTshoFpjmNb43j1TxrN4bs/cDiUQX3MUeHgSxAmeekmyqN+5
-         zG+Il++bjOmVpa5NddfDLBD3hlitfen9K+ZxTWffJQzCFhq2/IiEvudEtNqI4H1YUGqv
-         RRvg6OzDtSKFVCcdAPZU7rk878pCxOh7iYhLP6pOVsRb+zpbnBt/85YAPd+3+2igeEHw
-         0zLMUs8o1lnf1ck51FrdvQ44La4CS9/OsorBUtDoqxHWB3ZVWQT6hmahNYvPTy3u9bwy
-         Zmp1z63HaRRrU0+Tt60BQ5NUFCEHd8tdJCmkU2TprXepIy6neZG2eWYBTexCv2N9q4Tr
-         xizQ==
-X-Gm-Message-State: ACrzQf38PORoQAFpDiWy0TuM5YdHVTT2WV4lU5s5frc3jtZX2w/yVSzw
-        wyRhGIBjyQykBjDrsKt7WinpDw==
-X-Google-Smtp-Source: AMsMyM6A4viqn0P2RzahNA3q4fXm/zmHo+qmtwMHPSonDJgHT8CbzIAdvPy/G8rEklSHnDhCaAcJ3A==
-X-Received: by 2002:a17:902:f78b:b0:17f:9c94:b247 with SMTP id q11-20020a170902f78b00b0017f9c94b247mr44871459pln.137.1666827256789;
-        Wed, 26 Oct 2022 16:34:16 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id x15-20020a1709027c0f00b00186748fe6ccsm3405981pll.214.2022.10.26.16.34.16
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H+zjgwfHgHFBXNtS1dcXbFjT5C6bNkpnBbMlxremMWY=;
+        b=efKYlZvvMxfmfk5RwATzaoT0Xu8+elTqNAkksX3olwfwEQxTYIPRuKgoFf069Nnucg
+         9ojoSx4ZxqNOa/LY7QQX5i3kTPpzos5tWPSfHfCSxHvQhumWk8jvSTkHc802sUB25ymt
+         FJFJZaWKd04OChmCBHlS7dgm1JZ+iPrUx6wBXEUfE07oB7DYGmWn8LX7ou5xzLYUO9mL
+         AnVWKoFXsdksuh/swfMfddwEj68aiN9NUY+fMHlAMm7iclAjEYnsL9G1S2O256iUoqFl
+         dxPS99JOMOb64+4z2aRgxlu8v67mTCOL1uZrRYwxxDDVlx98O9jz2B9tA+0v0dG1+P3X
+         sFyg==
+X-Gm-Message-State: ACrzQf19rYtF7W1DzQOcM7bWST+F9TSh2S/OzNBObhL/eqWbbteIV4gB
+        Xy/mZO/eL6LjFO6BAkbiDZ+jUo4iXAMKWGzYWTp2Z0YmlsLnbJ1NPZRof4kw9Z+mH/N8kkiiYRM
+        pzfrr58U88GazU5JWcYwSv22y
+X-Received: by 2002:adf:ebcf:0:b0:22c:9eb4:d6f6 with SMTP id v15-20020adfebcf000000b0022c9eb4d6f6mr31409126wrn.251.1666858696587;
+        Thu, 27 Oct 2022 01:18:16 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4CgeyUAU3EZlndfaRTAGP3JWCxEXgwxeBo73X8Vdko0Rf33SSC2AqFidTXI1tyqPqoddOuig==
+X-Received: by 2002:adf:ebcf:0:b0:22c:9eb4:d6f6 with SMTP id v15-20020adfebcf000000b0022c9eb4d6f6mr31409114wrn.251.1666858696314;
+        Thu, 27 Oct 2022 01:18:16 -0700 (PDT)
+Received: from ovpn-194-52.brq.redhat.com (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id k1-20020a05600c1c8100b003b4fe03c881sm4208779wms.48.2022.10.27.01.18.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 16:34:16 -0700 (PDT)
-Date:   Wed, 26 Oct 2022 23:34:13 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+        Thu, 27 Oct 2022 01:18:15 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
 Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] KVM: VMX: Resurrect vmcs_conf sanitization for
- KVM-on-Hyper-V
-Message-ID: <Y1nD9QKqa1A1j7t+@google.com>
-References: <20221018101000.934413-1-vkuznets@redhat.com>
- <20221018101000.934413-5-vkuznets@redhat.com>
+Subject: Re: [PATCH v12 13/46] KVM: x86: Prepare kvm_hv_flush_tlb() to
+ handle L2's GPAs
+In-Reply-To: <Y1m0HCMgwJen/NnU@google.com>
+References: <20221021153521.1216911-1-vkuznets@redhat.com>
+ <20221021153521.1216911-14-vkuznets@redhat.com>
+ <Y1m0HCMgwJen/NnU@google.com>
+Date:   Thu, 27 Oct 2022 10:18:14 +0200
+Message-ID: <87ilk5u1bt.fsf@ovpn-194-52.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221018101000.934413-5-vkuznets@redhat.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,146 +84,68 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Oct 18, 2022, Vitaly Kuznetsov wrote:
-> @@ -362,6 +364,7 @@ uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
->  
->  enum evmcs_revision {
->  	EVMCSv1_LEGACY,
-> +	EVMCSv1_STRICT,
+Sean Christopherson <seanjc@google.com> writes:
 
-"strict" isn't really the right word, this is more like "raw" or "unfiltered",
-because unless I'm misunderstanding the intent, this will always track KVM's
-bleeding edge, i.e. everything that KVM can possibly enable.
+> On Fri, Oct 21, 2022, Vitaly Kuznetsov wrote:
+>> To handle L2 TLB flush requests, KVM needs to translate the specified
+>> L2 GPA to L1 GPA to read hypercall arguments from there.
+>> 
+>> No functional change as KVM doesn't handle VMCALL/VMMCALL from L2 yet.
+>> 
+>> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+>> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> ---
+>>  arch/x86/kvm/hyperv.c | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>> 
+>> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+>> index fca9c51891f5..df1efb821eb0 100644
+>> --- a/arch/x86/kvm/hyperv.c
+>> +++ b/arch/x86/kvm/hyperv.c
+>> @@ -23,6 +23,7 @@
+>>  #include "ioapic.h"
+>>  #include "cpuid.h"
+>>  #include "hyperv.h"
+>> +#include "mmu.h"
+>>  #include "xen.h"
+>>  
+>>  #include <linux/cpu.h>
+>> @@ -1908,6 +1909,12 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>>  	 */
+>>  	BUILD_BUG_ON(KVM_HV_MAX_SPARSE_VCPU_SET_BITS > 64);
+>>  
+>> +	if (!hc->fast && is_guest_mode(vcpu)) {
+>
+> Please add a comment explaining why only "slow" hypercalls need to translate the
+> GPA from L2=>L1.
+>
+> With a comment (and assuming this isn't a bug),
 
-And in that case, we can avoid bikeshedding the name becase bouncing through
-evmcs_supported_ctrls is unnecessary, just use the #defines directly.  And then
-you can just fold the one (or two) #defines from patch 3 into this path.
+This is intended,
 
-> @@ -511,6 +525,52 @@ int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
->  	return 0;
->  }
->  
-> +#if IS_ENABLED(CONFIG_HYPERV)
-> +/*
-> + * KVM on Hyper-V always uses the newest known eVMCSv1 revision, the assumption
-> + * is: in case a feature has corresponding fields in eVMCS described and it was
-> + * exposed in VMX feature MSRs, KVM is free to use it. Warn if KVM meets a
-> + * feature which has no corresponding eVMCS field, this likely means that KVM
-> + * needs to be updated.
-> + */
-> +#define evmcs_check_vmcs_conf32(field, ctrl)					\
-> +	{									\
-> +		u32 supported, unsupported32;					\
-> +										\
-> +		supported = evmcs_get_supported_ctls(ctrl, EVMCSv1_STRICT);	\
-> +		unsupported32 = vmcs_conf->field & ~supported;			\
-> +		if (unsupported32) {						\
-> +			pr_warn_once(#field " unsupported with eVMCS: 0x%x\n",	\
-> +				     unsupported32);				\
-> +			vmcs_conf->field &= supported;				\
-> +		}								\
-> +	}
-> +
-> +#define evmcs_check_vmcs_conf64(field, ctrl)					\
-> +	{									\
-> +		u32 supported;							\
-> +		u64 unsupported64;						\
+For "slow" hypercalls 'hc->ingpa' is the GPA (or an 'nGPA' -- thus the
+patch) in guest memory where hypercall parameters are placed, kvm reads
+them with kvm_read_guest() later. For "fast" hypercalls 'ingpa' is a
+misnomer as it is not an address but the first parameter (in the 'tlb
+flush' case it's 'address space id' which we currently don't
+analyze). We may want to add a union in 'struct kvm_hv_hcall' to make
+this explicit.
 
-Channeling my inner Morpheus: Stop trying to use macros and use macros!  :-D
+The comment I'm thinking of would be:
 
----
- arch/x86/kvm/vmx/evmcs.c | 34 ++++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/evmcs.h |  2 ++
- arch/x86/kvm/vmx/vmx.c   |  5 +++++
- 3 files changed, 41 insertions(+)
+"
+/*
+ * 'Slow' hypercall's first parameter is the address in guest's memory where
+ * hypercall parameters are placed. This is either a GPA or a nested GPA when
+ * KVM is handling the call from L2 ('direct' TLB flush), translate the address
+ * here so the memory can be uniformly read with kvm_read_guest().
+ */
+"
 
-diff --git a/arch/x86/kvm/vmx/evmcs.c b/arch/x86/kvm/vmx/evmcs.c
-index 337783675731..f7f8eafeecf7 100644
---- a/arch/x86/kvm/vmx/evmcs.c
-+++ b/arch/x86/kvm/vmx/evmcs.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#define pr_fmt(fmt) "kvm/hyper-v: " fmt
-+
- #include <linux/errno.h>
- #include <linux/smp.h>
- 
-@@ -507,6 +509,38 @@ int nested_evmcs_check_controls(struct vmcs12 *vmcs12)
- 	return 0;
- }
- 
-+#if IS_ENABLED(CONFIG_HYPERV)
-+/*
-+ * KVM on Hyper-V always uses the newest known eVMCSv1 revision, the assumption
-+ * is: in case a feature has corresponding fields in eVMCS described and it was
-+ * exposed in VMX feature MSRs, KVM is free to use it. Warn if KVM meets a
-+ * feature which has no corresponding eVMCS field, this likely means that KVM
-+ * needs to be updated.
-+ */
-+#define evmcs_check_vmcs_conf(field, ctrl)				\
-+do {									\
-+	typeof(vmcs_conf->field) unsupported;				\
-+									\
-+	unsupported = vmcs_conf->field & EVMCS1_UNSUPPORTED_ ## ctrl;	\
-+	if (unsupported) {						\
-+		pr_warn_once(#field " unsupported with eVMCS: 0x%llx\n",\
-+			     (u64)unsupported);				\
-+		vmcs_conf->field &= ~unsupported;			\
-+	}								\
-+}									\
-+while (0)
-+
-+__init void evmcs_sanitize_exec_ctrls(struct vmcs_config *vmcs_conf)
-+{
-+	evmcs_check_vmcs_conf(cpu_based_exec_ctrl, EXEC_CTRL);
-+	evmcs_check_vmcs_conf(pin_based_exec_ctrl, PINCTRL);
-+	evmcs_check_vmcs_conf(cpu_based_2nd_exec_ctrl, 2NDEXEC);
-+	evmcs_check_vmcs_conf(cpu_based_3rd_exec_ctrl, 3RDEXEC);
-+	evmcs_check_vmcs_conf(vmentry_ctrl, VMENTRY_CTRL);
-+	evmcs_check_vmcs_conf(vmexit_ctrl, VMEXIT_CTRL);
-+}
-+#endif
-+
- int nested_enable_evmcs(struct kvm_vcpu *vcpu,
- 			uint16_t *vmcs_version)
- {
-diff --git a/arch/x86/kvm/vmx/evmcs.h b/arch/x86/kvm/vmx/evmcs.h
-index 6f746ef3c038..bc795c6e9059 100644
---- a/arch/x86/kvm/vmx/evmcs.h
-+++ b/arch/x86/kvm/vmx/evmcs.h
-@@ -58,6 +58,7 @@ DECLARE_STATIC_KEY_FALSE(enable_evmcs);
- 	 SECONDARY_EXEC_SHADOW_VMCS |					\
- 	 SECONDARY_EXEC_TSC_SCALING |					\
- 	 SECONDARY_EXEC_PAUSE_LOOP_EXITING)
-+#define EVMCS1_UNSUPPORTED_3RDEXEC (~0ULL)
- #define EVMCS1_UNSUPPORTED_VMEXIT_CTRL					\
- 	(VM_EXIT_SAVE_VMX_PREEMPTION_TIMER)
- #define EVMCS1_UNSUPPORTED_VMENTRY_CTRL (0)
-@@ -209,6 +210,7 @@ static inline void evmcs_load(u64 phys_addr)
- 	vp_ap->enlighten_vmentry = 1;
- }
- 
-+__init void evmcs_sanitize_exec_ctrls(struct vmcs_config *vmcs_conf);
- #else /* !IS_ENABLED(CONFIG_HYPERV) */
- static __always_inline void evmcs_write64(unsigned long field, u64 value) {}
- static inline void evmcs_write32(unsigned long field, u32 value) {}
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9dba04b6b019..7fd21b1fae1d 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2720,6 +2720,11 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	vmcs_conf->vmentry_ctrl        = _vmentry_control;
- 	vmcs_conf->misc	= misc_msr;
- 
-+#if IS_ENABLED(CONFIG_HYPERV)
-+	if (enlightened_vmcs)
-+		evmcs_sanitize_exec_ctrls(vmcs_conf);
-+#endif
-+
- 	return 0;
- }
- 
+>
+> Reviewed-by: Sean Christopherson <seanjc@google.com>
+>
 
-base-commit: 5b6b6bcc0ef138b55fdd17dc8f9d43dfd26f8bd7
 -- 
+Vitaly
+
