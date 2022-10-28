@@ -2,76 +2,82 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FD7F610EE3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Oct 2022 12:43:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE416611189
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Oct 2022 14:34:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231138AbiJ1KnH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 28 Oct 2022 06:43:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57942 "EHLO
+        id S229520AbiJ1MeX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 28 Oct 2022 08:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230525AbiJ1Kmz (ORCPT
+        with ESMTP id S229441AbiJ1MeW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 28 Oct 2022 06:42:55 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70D73D5B0;
-        Fri, 28 Oct 2022 03:42:53 -0700 (PDT)
-Received: by mail-wm1-f53.google.com with SMTP id c7-20020a05600c0ac700b003c6cad86f38so6343063wmr.2;
-        Fri, 28 Oct 2022 03:42:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzy+UU3gjOa5g3ayQGLm9vYU6Ho6NVmbqvDVQZef+sU=;
-        b=EZTw1oFqpPOGucJh8pZoQOAYelVRPlve0taEJCuPc1iWF4u9BgSnITVqbS2TCBzzs0
-         nialgBmeQTXC1ALPFgyIgRgxCyu0uIb3KhrLRR/8ifbgfBmWJFscNwq9rschyOXPQG47
-         YamkzuT/bkhxjZX64AVFIe8IBPsKUEvsLOESoaNsHQvL2MNZ1zetQoIyftCiWrp0bMCU
-         ve4EKzaT0jyujG10yQ+OH8oNh1YAVCuu080dI+nvghGmTxdakszNXc0hD66I4+tzuWSz
-         Z+xdqW3+uL69ssAR5Y2ip/jLNyhJwVo8VTbn84lEy8UeKhOmqeemXi2kEiQ8J+0F8rCF
-         aOSw==
-X-Gm-Message-State: ACrzQf0O3XQG79aCFNIX8X93gKqZXUH/PwaM9AVC+c/aRQ2lFdPqW/MU
-        dURi7S81nKRkH2sJhLZ2fVM=
-X-Google-Smtp-Source: AMsMyM6Ylw6n0ZvtWJuew2c9Z0/W8+r4x3X4HOPsGQAfPZHO93f21qUr5AyBAkE7U+Cy6W2MBsdh/A==
-X-Received: by 2002:a05:600c:4f04:b0:3c6:fae5:b4d4 with SMTP id l4-20020a05600c4f0400b003c6fae5b4d4mr9150806wmq.103.1666953772302;
-        Fri, 28 Oct 2022 03:42:52 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id i15-20020a05600c354f00b003cdf141f363sm4336398wmq.11.2022.10.28.03.42.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Oct 2022 03:42:51 -0700 (PDT)
-Date:   Fri, 28 Oct 2022 10:42:49 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Fri, 28 Oct 2022 08:34:22 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CCAFD1CCCEB;
+        Fri, 28 Oct 2022 05:34:20 -0700 (PDT)
+Received: from anrayabh-desk (unknown [167.220.238.193])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 824D320FFC13;
+        Fri, 28 Oct 2022 05:34:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 824D320FFC13
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1666960460;
+        bh=uYtQX/93qPpjMaza7pg50g5p9DP9YkcPmRuJLi5ikKY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FOShQ1JpVKxAnKbVhnSrS93F8qmVh6zy4qtsOPJVMpnShta0BKrRYnsB1ZMYaU8gj
+         VjGY+D43tHJPKWWIOevQXphQQdaMhA45EaJYLuz9PH4Ow00oV4AWeYls7c/dFptzal
+         a2V3u1m2c5dp5AZunBYIfw5zIFuDLbdgmTso7eJo=
+Date:   Fri, 28 Oct 2022 18:04:10 +0530
+From:   Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH v2 0/2] Configurable order free page reporting in hyper-v
-Message-ID: <Y1uyKXva4M9PoGWY@liuwe-devbox-debian-v2>
-References: <1664447081-14744-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1664517699-1085-1-git-send-email-shradhagupta@linux.microsoft.com>
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+        "kumarpraveen@linux.microsoft.com" <kumarpraveen@linux.microsoft.com>,
+        "mail@anirudhrb.com" <mail@anirudhrb.com>
+Subject: Re: [PATCH v2 2/2] x86/hyperv: fix invalid writes to MSRs during
+ root partition kexec
+Message-ID: <Y1vMQo51EiaNbE1V@anrayabh-desk>
+References: <20221027095729.1676394-1-anrayabh@linux.microsoft.com>
+ <20221027095729.1676394-3-anrayabh@linux.microsoft.com>
+ <BYAPR21MB168872A298C1CDC140FBF454D7339@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y1rZIQnLATztxw2G@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1664517699-1085-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <Y1rZIQnLATztxw2G@liuwe-devbox-debian-v2>
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 11:01:37PM -0700, Shradha Gupta wrote:
-[...]
+On Thu, Oct 27, 2022 at 07:16:49PM +0000, Wei Liu wrote:
+> On Thu, Oct 27, 2022 at 01:44:40PM +0000, Michael Kelley (LINUX) wrote:
+> > From: Anirudh Rayabharam <anrayabh@linux.microsoft.com> Sent: Thursday, October 27, 2022 2:57 AM
+> > > 
+> > > hv_cleanup resets the hypercall page by setting the MSR to 0. However,
+> > 
+> > The function name is hyperv_cleanup(), not hv_cleanup().
 > 
-> Shradha Gupta (2):
->   mm/page_reporting: Add checks for page_reporting_order param
->   hv_balloon: Add support for configurable order free page reporting
-> 
+> I fixed this and applied both patches to hyperv-fixes. Thank you both.
 
-Applied to hyperv-next. Thanks.
+Thank you!
+
+Anirudh.
