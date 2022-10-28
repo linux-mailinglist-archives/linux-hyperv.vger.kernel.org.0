@@ -2,110 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE95610491
-	for <lists+linux-hyperv@lfdr.de>; Thu, 27 Oct 2022 23:39:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6019610EB5
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Oct 2022 12:39:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234868AbiJ0VjK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 27 Oct 2022 17:39:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41696 "EHLO
+        id S230361AbiJ1KjW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 28 Oct 2022 06:39:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237037AbiJ0VjH (ORCPT
+        with ESMTP id S230463AbiJ1Kio (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 27 Oct 2022 17:39:07 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFCC73921
-        for <linux-hyperv@vger.kernel.org>; Thu, 27 Oct 2022 14:39:07 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id b5so2923916pgb.6
-        for <linux-hyperv@vger.kernel.org>; Thu, 27 Oct 2022 14:39:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ba6LMfH9xvCq6MQ918tVELmUv4s1NaETeECQmHaDX6c=;
-        b=gV8i9Bjkt+WevnsPUuT609K51j6tjDjXe7aJ8RG8HMzc6xIByghTTrEgDVOtnApb+w
-         OsKIbbwvvEl7reyebSKb2hQY3rnkuZhrQBtU7Kx+P2Umnu/j+QarqFQseUd8Nnys8IHz
-         7csZuNPs7ZxKoqAPHePrLDpQVWyYY8LWbMAnA+m58JoV3W27R3wvwX0jLHKP5ZslqTCr
-         WUOBQ+sK0um7TQbkxow+WaupmhSPsOZwrEhuGI1VYr4GchAChXlcOSmFsKrA3BrmZKyY
-         ibFmtWo/xoDvAp3PG9GN5gqIgSLV2NKCc0kZ6gmcC1mwTxke40T1qU4hq8HqigX8wNfH
-         fh9A==
+        Fri, 28 Oct 2022 06:38:44 -0400
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 824FF1C8410;
+        Fri, 28 Oct 2022 03:38:43 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id v130-20020a1cac88000000b003bcde03bd44so6332426wme.5;
+        Fri, 28 Oct 2022 03:38:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ba6LMfH9xvCq6MQ918tVELmUv4s1NaETeECQmHaDX6c=;
-        b=WFjzus1vZTX3cq3LTZILQRezXjmHC+a5Efu7tIgwp+WodZJ4CcWffrZQAEFWwT/Sit
-         AhGEjNBq1OBZab+EEyd3Zla0rs1zTeJjEncgwjV7nSeLsb44NklMrjJiMx5HWmyMI9JO
-         Zg90r6Bt2DptzSWqXD5pzx5oleDmxeMMJHCOXaH8A6nIIeai/XjoVqr2z3+P7S6JzPBv
-         7Cqywjx1zg+q0T/N0Q0AIfN5OBj+L6YLHzU4Hr9o05lDMcUVdL6aZyupx9AhZtzRH5ay
-         Zyfh2S+Mo7eQAANiIVStkDAqZndpFv811c3P6FCM7Z9sbLawXyrqJMa5dyEwdkV2Fgs2
-         Ftrg==
-X-Gm-Message-State: ACrzQf2ktfCNQ9vnT3UaZ0vi2uDGdgnpQ1BoBrNimw+tQ6tkh5IGQ+im
-        oZR8saLCnTJtypFZ1loc4JNA6021rb6XAg==
-X-Google-Smtp-Source: AMsMyM5ZTTvdUEi8QASO3RlW7W/YsXAtueX1SZfhtjsxNmGVibJ1doihrRJRx4Vd/EBlgCxnChJU5A==
-X-Received: by 2002:a63:2d81:0:b0:446:8d24:c90f with SMTP id t123-20020a632d81000000b004468d24c90fmr43158488pgt.160.1666906746726;
-        Thu, 27 Oct 2022 14:39:06 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id v30-20020aa799de000000b0056bb191f176sm1658906pfi.14.2022.10.27.14.39.06
+        bh=kyduwU+qbCAifE/OEo9fpCfyJvonnxXGOOWJeQlafrk=;
+        b=vWEweUCxiARKFSPphqDRa0RxVSWbqdZP3hPQhWnL0nfIumsvwu3gFl2UQHnGCBoQKV
+         NM5jX5Koij0IBk42vVLF3HD93WMNPk/sCJDC/KNhWoIF4qFQ7AAq2GHNl54MFxkNR+IJ
+         MX56z/ymnce2jbCbZfCgRKzORJXxuT4M96XuaN6mRswG8QGfLyT73TAOIv3CY72LZn9G
+         pdweomurKj23eq6orSArj+WI1TYouOrphhybM05l1cA4b5/gwutSSO1Iep6nVu7M+D0s
+         OeHYHW7+o7wSVoe4BoxSpvsDNn9JdeKFTGCMW7VMJ+xapNumYJtwIY/HLPJ5UEeCCPyl
+         dPLg==
+X-Gm-Message-State: ACrzQf3qlcvdWisTpn9QoQQGmHrRKGjJwQbhPpmlUPi2RPUKDbuE4hrG
+        pGK6ezb9jyqLG0Ak3MIMQw4=
+X-Google-Smtp-Source: AMsMyM6+r0/UdXjkcGQZIm+YyMf8VdMFCya9QSxoMVd6/EmHzp/NQ//5ZfB0f7jWKFMWZcO/FdaC1A==
+X-Received: by 2002:a1c:a102:0:b0:3cf:4792:d3a2 with SMTP id k2-20020a1ca102000000b003cf4792d3a2mr8742630wme.55.1666953521904;
+        Fri, 28 Oct 2022 03:38:41 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id r9-20020a05600c458900b003b4ac05a8a4sm9171691wmo.27.2022.10.28.03.38.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Oct 2022 14:39:06 -0700 (PDT)
-Date:   Thu, 27 Oct 2022 21:39:02 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Siddharth Chandrasekaran <sidcha@amazon.de>,
-        Yuan Yao <yuan.yao@linux.intel.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 13/46] KVM: x86: Prepare kvm_hv_flush_tlb() to handle
- L2's GPAs
-Message-ID: <Y1r6do4AVmAVvxeI@google.com>
-References: <20221021153521.1216911-1-vkuznets@redhat.com>
- <20221021153521.1216911-14-vkuznets@redhat.com>
- <Y1m0HCMgwJen/NnU@google.com>
- <87ilk5u1bt.fsf@ovpn-194-52.brq.redhat.com>
+        Fri, 28 Oct 2022 03:38:41 -0700 (PDT)
+Date:   Fri, 28 Oct 2022 10:38:39 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v2 1/2] mm/page_reporting: Add checks for
+ page_reporting_order param
+Message-ID: <Y1uxLyaLlKp2sfkD@liuwe-devbox-debian-v2>
+References: <1664447081-14744-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1664517699-1085-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1664517699-1085-2-git-send-email-shradhagupta@linux.microsoft.com>
+ <Y1lTWxMnk3lnS+3V@liuwe-devbox-debian-v2>
+ <20221027132207.bb4e9408e1ca94b3dfaca405@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ilk5u1bt.fsf@ovpn-194-52.brq.redhat.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221027132207.bb4e9408e1ca94b3dfaca405@linux-foundation.org>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 27, 2022, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
+On Thu, Oct 27, 2022 at 01:22:07PM -0700, Andrew Morton wrote:
+> On Wed, 26 Oct 2022 15:33:47 +0000 Wei Liu <wei.liu@kernel.org> wrote:
 > 
-> > On Fri, Oct 21, 2022, Vitaly Kuznetsov wrote:
-> >> @@ -1908,6 +1909,12 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
-> >>  	 */
-> >>  	BUILD_BUG_ON(KVM_HV_MAX_SPARSE_VCPU_SET_BITS > 64);
-> >>  
-> >> +	if (!hc->fast && is_guest_mode(vcpu)) {
-> >
-> > Please add a comment explaining why only "slow" hypercalls need to translate the
-> > GPA from L2=>L1.
-> >
-> > With a comment (and assuming this isn't a bug),
+> > On Thu, Sep 29, 2022 at 11:01:38PM -0700, Shradha Gupta wrote:
+> > > Current code allows the page_reporting_order parameter to be changed
+> > > via sysfs to any integer value.  The new value is used immediately
+> > > in page reporting code with no validation, which could cause incorrect
+> > > behavior.  Fix this by adding validation of the new value.
+> > > Export this parameter for use in the driver that is calling the
+> > > page_reporting_register().
+> > > This is needed by drivers like hv_balloon to know the order of the
+> > > pages reported. Traditionally the values provided in the kernel boot
+> > > line or subsequently changed via sysfs take priority therefore, if
+> > > page_reporting_order parameter's value is set, it takes precedence
+> > > over the value passed while registering with the driver.
+> > > 
+> > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > 
+> > Andrew and other MM reviewers, can I get an ack / nack for this patch?
 > 
-> This is intended,
-> 
-> For "slow" hypercalls 'hc->ingpa' is the GPA (or an 'nGPA' -- thus the
-> patch) in guest memory where hypercall parameters are placed, kvm reads
-> them with kvm_read_guest() later. For "fast" hypercalls 'ingpa' is a
-> misnomer as it is not an address but the first parameter (in the 'tlb
-> flush' case it's 'address space id' which we currently don't
-> analyze). We may want to add a union in 'struct kvm_hv_hcall' to make
-> this explicit.
+> Looks OK to me.  Can this be merged via the hyperv tree?
 
-Ya, a union would be helpful.  I'm pretty sure at some point I knew the "fast"
-ingpa isn't actually a GPA, but obviously forgot that detail.
+Yes, I can take of merging it.
+
+I will add your acked-by to the patch.
+
+Thanks,
+Wei.
