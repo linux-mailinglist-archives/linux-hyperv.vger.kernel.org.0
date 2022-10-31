@@ -2,80 +2,80 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C51926131DA
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Oct 2022 09:44:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC45A61326B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Oct 2022 10:19:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbiJaIof (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 Oct 2022 04:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
+        id S230140AbiJaJT0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 31 Oct 2022 05:19:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiJaIod (ORCPT
+        with ESMTP id S230142AbiJaJTV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 Oct 2022 04:44:33 -0400
+        Mon, 31 Oct 2022 05:19:21 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BDEEB0
-        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 01:43:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C3DD2CD
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 02:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667205816;
+        s=mimecast20190719; t=1667207905;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=0cVx55tetrN0slfUGsIN9YfNlhQLUs9MTDiVMp3ty/0=;
-        b=SGI4VNil8RVAftZ+wgybY7Zdq4VvltZOXteAvdYXAsikaVVk/bollOMcbonjsEXJd9HgTq
-        hb7cJ0q+HmiB2oghEsIU7+YkOTGeWDS/mEbzam1kIuJIQKLmK1TPjMuj+LghkQ8GkicN04
-        ssbz35S2Q1nGWnQubDeVKIoLmpCqnwU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=wEf8cRb4TLYPYASggaPulamyqh6fRxomZhqUsJe70lA=;
+        b=JNju3m/nRBMX092vQ3W4go73D3qWawC3RkucJ7bVxDJJ0fgXOy7znZjTv86Mru2t/ITGSq
+        46hEJqsjXaoPT+iMnc8hb4gNSvnT2xpd4JDIfxABg30ON8D2kueF4h6ioWjlckOYiCa98l
+        sY7AhcjzC+fMKCC1iKMqmQtfq4Y81dE=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-589-xov5XBCBNMGYD_ZxGiiiEQ-1; Mon, 31 Oct 2022 04:43:33 -0400
-X-MC-Unique: xov5XBCBNMGYD_ZxGiiiEQ-1
-Received: by mail-ed1-f71.google.com with SMTP id x18-20020a05640226d200b00461e027f704so7235076edd.7
-        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 01:43:33 -0700 (PDT)
+ us-mta-263-x0pjJesPOiOQV3zUAn61Rg-1; Mon, 31 Oct 2022 05:18:24 -0400
+X-MC-Unique: x0pjJesPOiOQV3zUAn61Rg-1
+Received: by mail-qt1-f198.google.com with SMTP id fb5-20020a05622a480500b003a525d52abcso1389128qtb.10
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 02:18:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0cVx55tetrN0slfUGsIN9YfNlhQLUs9MTDiVMp3ty/0=;
-        b=rAlvL//j5BCUHK6nKf1sRWy2npy+n+uqlU85HNRLbwrgZexzRlyG8eCgtsdME/zLe1
-         lvedHa1MeAsep10wUXFUfCTlDJZXB4AJZSgf4uXA+McEZmzKwcxUFI4IW3f8LkvLu55i
-         LgZOT9W1s+0LVAlm7CGzD4JeQyC/Y5NGYIAzzXkLuxNkGcmpL4AhJjogLR2bCCxsYdgF
-         4w7zk0VwLfq4vWc2QOwrPQA1As0KIzggaTj4plCkk1HhnViKa2oqP6N4zMs8v1aRcrhq
-         W8A7c9J02O7tgnOADwgqpvi3oZgZhP+4deNgBNBbYk9Qv6x9GqFljueYrDVE750Yz1qm
-         EwZQ==
-X-Gm-Message-State: ACrzQf15iuJFDv5P/+UUeJFPFOGwSWD/fzoZsjw/eRc+wgqg2mf4xyBN
-        f2iJalS9ldi4YitFSiwNuIE/RWdMMsbqyk+V68K2IFve0A7HER+vwGzuiLkWbV9dEWcFpJgpzPl
-        m1FjllvB/jo2rIyGPkbYq/bn5
-X-Received: by 2002:a17:907:9609:b0:7ad:d7de:6090 with SMTP id gb9-20020a170907960900b007add7de6090mr2357881ejc.705.1667205812196;
-        Mon, 31 Oct 2022 01:43:32 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM78kesRA+qFkC4xT0N1dTMkPq+EZe+uIxAjrrmBRYnA8hqY50buMcYsM3zFLwBQ3G0S2t+fkg==
-X-Received: by 2002:a17:907:9609:b0:7ad:d7de:6090 with SMTP id gb9-20020a170907960900b007add7de6090mr2357859ejc.705.1667205811954;
-        Mon, 31 Oct 2022 01:43:31 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-234.retail.telecomitalia.it. [82.53.134.234])
-        by smtp.gmail.com with ESMTPSA id m24-20020aa7c2d8000000b0044dbecdcd29sm2914807edp.12.2022.10.31.01.43.30
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wEf8cRb4TLYPYASggaPulamyqh6fRxomZhqUsJe70lA=;
+        b=DNjzaKqBoQd6S3XBG86EsSsTMKzOhh2j+6D9L9L/olbm42WErL91zDT0ziiLMUfY9D
+         DL7qnquM2OwL5ECSdNczY0xb4OaaKxx5B1iGVjgT+XfPQ8X9AcA/7eum7mXOwdvScfg5
+         TYsxEaEdBp/qb7SkABzuUVYK24CI1a2ktBbFbvyV3Ps/BlaqhiNAbrRDcusyPiF5JXv9
+         tPQriQfkt+bbJhzdHjtCoHWCbJTbWwwnuzn6fot5HX+3cKmriaxe7D6cl05TQuR6xufh
+         9XFcjtMltwdmKvU5ge7fENA3/ku6N29bHgEo0oR4sqZ8YGEyPfSi3+5TgKK7vBSoh0aA
+         RtPA==
+X-Gm-Message-State: ACrzQf15GSJb3x7sGG0DmKevK8o3Xc8qC/zY1XixWLiIVJmgBv4YybHH
+        ouZCrR8dG/yQeCfb7jhZNoN1Vpk9a+DKf0Owmae8KkRvnAzzEUSWOxI+rMfUtCam8jd3jKbnSGj
+        d3IIckXmTlYuStKtTiyQYFEn0
+X-Received: by 2002:a05:620a:199f:b0:6ee:bbd2:4c50 with SMTP id bm31-20020a05620a199f00b006eebbd24c50mr8364042qkb.500.1667207903669;
+        Mon, 31 Oct 2022 02:18:23 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM4olZT6py2Dkvc62FgswOCrOLSA+9D1FbQFn4jFwUP7lTvfqZXuIVpxdtJRuQF/qYD1vFf9DA==
+X-Received: by 2002:a05:620a:199f:b0:6ee:bbd2:4c50 with SMTP id bm31-20020a05620a199f00b006eebbd24c50mr8364026qkb.500.1667207903435;
+        Mon, 31 Oct 2022 02:18:23 -0700 (PDT)
+Received: from ovpn-194-149.brq.redhat.com (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id g1-20020a05620a40c100b006cebda00630sm603594qko.60.2022.10.31.02.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 01:43:31 -0700 (PDT)
-Date:   Mon, 31 Oct 2022 09:43:27 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, arseny.krasnov@kaspersky.com,
-        netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, stephen@networkplumber.org,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 2/2] vsock: fix possible infinite sleep in
- vsock_connectible_wait_data()
-Message-ID: <20221031084327.63vikvodhs7aowhe@sgarzare-redhat>
-References: <20221028205646.28084-1-decui@microsoft.com>
- <20221028205646.28084-3-decui@microsoft.com>
+        Mon, 31 Oct 2022 02:18:22 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 00/46] KVM: x86: hyper-v: Fine-grained TLB flush +
+ L2 TLB flush features
+In-Reply-To: <Y1m1Jnpw5betG8CG@google.com>
+References: <20221021153521.1216911-1-vkuznets@redhat.com>
+ <Y1m0ef+LdcAW0Bzh@google.com> <Y1m1Jnpw5betG8CG@google.com>
+Date:   Mon, 31 Oct 2022 10:18:19 +0100
+Message-ID: <87zgdcs65g.fsf@ovpn-194-149.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20221028205646.28084-3-decui@microsoft.com>
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+Content-Type: text/plain
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,62 +83,28 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 01:56:46PM -0700, Dexuan Cui wrote:
->Currently vsock_connectible_has_data() may miss a wakeup operation
->between vsock_connectible_has_data() == 0 and the prepare_to_wait().
+Sean Christopherson <seanjc@google.com> writes:
+
+> On Wed, Oct 26, 2022, Sean Christopherson wrote:
+>> On Fri, Oct 21, 2022, Vitaly Kuznetsov wrote:
+>> >   KVM: selftests: evmcs_test: Introduce L2 TLB flush test
+>> >   KVM: selftests: hyperv_svm_test: Introduce L2 TLB flush test
+>> 
+>> Except for these two (patches 44 and 45),
+>> 
+>> Reviewed-by: Sean Christopherson <seanjc@google.com>
+
+Thanks! I'll take a look at 44/45 shortly.
+
 >
->Fix the race by adding the process to the wait qeuue before checking
+> Actually, easiest thing is probably for Paolo to queue everything through 43
+> (with a comment in patch 13 about the GPA translation), and then you can send a
+> new version containing only the stragglers.
 
-s/qeuue/queue
+Paolo,
 
->vsock_connectible_has_data().
->
->Fixes: b3f7fd54881b ("af_vsock: separate wait data loop")
->Signed-off-by: Dexuan Cui <decui@microsoft.com>
->---
-> net/vmw_vsock/af_vsock.c | 7 ++++++-
-> 1 file changed, 6 insertions(+), 1 deletion(-)
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index d258fd43092e..03a6b5bc6ba7 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -1905,8 +1905,11 @@ static int vsock_connectible_wait_data(struct sock *sk,
-> 	err = 0;
-> 	transport = vsk->transport;
->
->-	while ((data = vsock_connectible_has_data(vsk)) == 0) {
->+	while (1) {
-> 		prepare_to_wait(sk_sleep(sk), wait, TASK_INTERRUPTIBLE);
->+		data = vsock_connectible_has_data(vsk);
->+		if (data != 0)
->+			break;
->
-> 		if (sk->sk_err != 0 ||
-> 		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
->@@ -1937,6 +1940,8 @@ static int vsock_connectible_wait_data(struct sock *sk,
-> 			err = -EAGAIN;
-> 			break;
-> 		}
->+
->+		finish_wait(sk_sleep(sk), wait);
+do you want to follow this path or do you expect the full 'v13' from me? 
 
-Since we are going to call again prepare_to_wait() on top of the loop, 
-is finish_wait() call here really needed?
-
-What about following what we do in vsock_accept and vsock_connect?
-
-     prepare_to_wait()
-
-     while (condition) {
-         ...
-         prepare_to_wait();
-     }
-
-     finish_wait()
-
-I find it a little more readable, but your solution is fine too.
-
-Thanks,
-Stefano
+-- 
+Vitaly
 
