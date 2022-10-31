@@ -2,67 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B306613625
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Oct 2022 13:24:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C110F61363A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Oct 2022 13:26:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231184AbiJaMYu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 Oct 2022 08:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50728 "EHLO
+        id S229482AbiJaM0W (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 31 Oct 2022 08:26:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231360AbiJaMYs (ORCPT
+        with ESMTP id S231382AbiJaM0S (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 Oct 2022 08:24:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00731007E
-        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:23:24 -0700 (PDT)
+        Mon, 31 Oct 2022 08:26:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180EACE5
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:25:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667219003;
+        s=mimecast20190719; t=1667219130;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VQCx1YM0kmrgAAcvKhWafunY3KuhCAquKBUmZJVCfV8=;
-        b=OXxETfR4g8DTtsYOgeAYKp+EQgjNGaqLLCMi4dhrYZ+lPfcfdS5h5O8mwAFhR877yun0Zf
-        nn2XbQOGwj8SjrqEVIoXsAliYDbiWm27JjHNCKViA/plFCtoSisI7Dw8DPfoOt6SWLCrcj
-        xhNghWqsLn4MotOmVecD81rNWnwv9F8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=G3lFqSUva8cf7eu6ekgojQtwZeR44+C1N0qDI7SjLRc=;
+        b=Knm+gtmdUe5dsF2Lg/BIHwjznA367CS7BEuZgltzUb7+HjmBmzK2Sy8RO9Ovnl4fkiRo4z
+        C6cL3o/xqbWB/GUMB4IO7GspeLViMa722FXY5Fyurxfff2SWOR6KuXT1n58O4xnKEw659G
+        7wYcbzCegBgXSoNPMml2pcigXMkjMno=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-304-TQUp28VVOFip_uYG1GUg3Q-1; Mon, 31 Oct 2022 08:23:19 -0400
-X-MC-Unique: TQUp28VVOFip_uYG1GUg3Q-1
-Received: by mail-wm1-f71.google.com with SMTP id v188-20020a1cacc5000000b003cf76c4ae66so444594wme.7
-        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:23:19 -0700 (PDT)
+ us-mta-647-59RXQQ5VNfOjwnQmFg2-EA-1; Mon, 31 Oct 2022 08:25:28 -0400
+X-MC-Unique: 59RXQQ5VNfOjwnQmFg2-EA-1
+Received: by mail-wr1-f70.google.com with SMTP id n13-20020adf8b0d000000b0023658a75751so3019276wra.23
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:25:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VQCx1YM0kmrgAAcvKhWafunY3KuhCAquKBUmZJVCfV8=;
-        b=GSJhn/K0baKLDcudOx1g6yX4pOMe/NLY/sd3Qzg30HOBTFZ/OcBVSc8EKfgtPmct53
-         4NBzye2rdKmM1JjRHnjDzvcge4ArhB01t79hyolcpMLyeKkH4wk2fvOFPJ4l46DfKIl8
-         F7wZnzJJhkgCji7kaCy9oJjbo1f+ZA7m+myGlFxeAXyudZDRQ2ZcFbejI/IY4BZEAALw
-         xfI7+026Tx0SDj9i/PqRFL1k9z9HjWV/PrgRGi21nhLjaeBdxyC6mbtmd4wzhAK3pHEy
-         aA/wN+a5RyYIW1rtrGP5afiRCAqh1usojPsIxJt5tRM0g4znlAf2/E3GRV9AUu/Rjkss
-         sRjA==
-X-Gm-Message-State: ACrzQf3G+EI0buFapIaAO8ZpikSYs0D9R2Bj04ZqR4vOFAiBIx2y7PES
-        x9RuvWt2OoFNxtVno8DR5HcGSebzVQiMUO8N38ylkpL24OtjBNv0vaUAwNyUp0uYiZIgaXtwvpj
-        tJcCYOLWA8ycu2cih9Avpz6tt
-X-Received: by 2002:adf:aa8d:0:b0:236:588f:71f with SMTP id h13-20020adfaa8d000000b00236588f071fmr7582891wrc.205.1667218998717;
-        Mon, 31 Oct 2022 05:23:18 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7e34dAcxvP3Vi0CwbwP1YeMi235O6q6VyKCYvEf93eDT38FEWiyAv5s+MTc8QNv7Bgz3ny/w==
-X-Received: by 2002:adf:aa8d:0:b0:236:588f:71f with SMTP id h13-20020adfaa8d000000b00236588f071fmr7582855wrc.205.1667218998538;
-        Mon, 31 Oct 2022 05:23:18 -0700 (PDT)
+        bh=G3lFqSUva8cf7eu6ekgojQtwZeR44+C1N0qDI7SjLRc=;
+        b=dpJVTLS5w6EDKC8fu+QOTLp3H2nMAWIyQ8R9GvFuyk8smFMUZLCOly07wGn5BzKaFY
+         I09GLqSYkSAbF35p9HgALN3YRujs78nW0pzdkKr6QtNDecQqJpwWZTcLqVA2X7/viAx5
+         65C+a+KVMW7ITYbA6KPGTimZbtRNLAD5Q8tGdubx775XrQhOMg0oN7P9FAj/lqoSDE9i
+         4LNYNod8+Q6yobje6B4iM7kqXbX+EAFkpxraA7QHY9YuijTlWhtwHarUnJJXwMpUNtd5
+         MCmLYBtaCSmm4XIneqPCWHG/t1BZKf++b4Seg5saT9zQ2vKkevnV+0yiKeULdNOyDBE4
+         FxZw==
+X-Gm-Message-State: ACrzQf0D8t9HjiL8Mnn8/P1RSxPXETrIuPysfuN1sViFdfKZljG1vnzL
+        HEkIJeWCmrt4q240kppNKPK49M+3Mn41HRD72KMxNyze4Ltwb0Wu7+lvpPCS6bbpbsOcm7zMmKp
+        zMLEixhKqO3rFR6aaInoDAjo0
+X-Received: by 2002:a5d:498a:0:b0:236:58ef:6796 with SMTP id r10-20020a5d498a000000b0023658ef6796mr8133528wrq.399.1667219127468;
+        Mon, 31 Oct 2022 05:25:27 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5OaQ4lCdeJx0P85vXeCC9ohI1f8Am/sl3oDUbbTCyW5S09EQhBnmsKMGoGzObNL20EAzLquw==
+X-Received: by 2002:a5d:498a:0:b0:236:58ef:6796 with SMTP id r10-20020a5d498a000000b0023658ef6796mr8133518wrq.399.1667219127226;
+        Mon, 31 Oct 2022 05:25:27 -0700 (PDT)
 Received: from [192.168.1.130] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id ci8-20020a5d5d88000000b0023662245d3csm7011927wrb.95.2022.10.31.05.23.17
+        by smtp.gmail.com with ESMTPSA id m13-20020a05600c3b0d00b003bfaba19a8fsm7382582wms.35.2022.10.31.05.25.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Oct 2022 05:23:18 -0700 (PDT)
-Message-ID: <63a804b4-ab2c-f5b7-73b5-edefdeff038e@redhat.com>
-Date:   Mon, 31 Oct 2022 13:23:16 +0100
+        Mon, 31 Oct 2022 05:25:26 -0700 (PDT)
+Message-ID: <53f341ad-4b72-5546-f752-ca705d62d63c@redhat.com>
+Date:   Mon, 31 Oct 2022 13:25:25 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH v2 11/21] drm/fb-helper: Cleanup include statements in
- header file
+Subject: Re: [PATCH v2 12/21] drm/fb_helper: Rename field fbdev to info in
+ struct drm_fb_helper
 Content-Language: en-US
 To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
         airlied@gmail.com, sam@ravnborg.org, mripard@kernel.org,
@@ -83,9 +83,9 @@ Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
         xen-devel@lists.xenproject.org
 References: <20221024111953.24307-1-tzimmermann@suse.de>
- <20221024111953.24307-12-tzimmermann@suse.de>
+ <20221024111953.24307-13-tzimmermann@suse.de>
 From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <20221024111953.24307-12-tzimmermann@suse.de>
+In-Reply-To: <20221024111953.24307-13-tzimmermann@suse.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -99,11 +99,15 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On 10/24/22 13:19, Thomas Zimmermann wrote:
-> Only include what we have to.
+> Rename struct drm_fb_helper.fbdev to info. The current name is
+> misleading as it overlaps with generic fbdev naming conventions.
+> Adapt to the usual naming in fbdev drivers by calling the field
+> 'info'. No functional changes.
 > 
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 > ---
-Nice cleanup.
+
+Agreed. I got confused by this naming in the past.
 
 Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
