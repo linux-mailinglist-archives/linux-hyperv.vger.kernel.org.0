@@ -2,89 +2,121 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AA21613585
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Oct 2022 13:14:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8262F6135AE
+	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Oct 2022 13:17:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231185AbiJaMOt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 Oct 2022 08:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42856 "EHLO
+        id S231319AbiJaMRe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 31 Oct 2022 08:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231236AbiJaMOr (ORCPT
+        with ESMTP id S231320AbiJaMR3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 Oct 2022 08:14:47 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 532AFE0BF
-        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:14:46 -0700 (PDT)
-Received: by mail-wr1-f42.google.com with SMTP id z14so15668930wrn.7
-        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:14:46 -0700 (PDT)
+        Mon, 31 Oct 2022 08:17:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A44C7E0EE
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667218585;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WlC4H0gmckJZ8E/tDGtmzwjQN3hfnWY+OkvhUHpUiTc=;
+        b=OsQDL3RL61I/1SB74QO6sHEhmHbzzzz1XJdbp7Fg+iziA5omgoH4GBFcoKvX6HeN1tRvY/
+        P8XW/vd+Uy3Q0b+gX9Cvdj5epMz1SiaHKTG6aeWl9QeMH9IWHUSM3RUZ0/8xZ5mPyCnMnX
+        el8ZS/nuk3bLBuJHeLCXm1A2M5TNMNA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-515-0clATMW9N1G49UhObXDUMw-1; Mon, 31 Oct 2022 08:16:16 -0400
+X-MC-Unique: 0clATMW9N1G49UhObXDUMw-1
+Received: by mail-wr1-f69.google.com with SMTP id n16-20020adfc610000000b0023650935090so2977335wrg.5
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Oct 2022 05:16:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u4nq2XiirSye7qNSBzEqg5VhUlhgaWluVSbhFQl+nFU=;
-        b=24cGe+++pYP6p339bwx9qVJNVLIIcLy5emp8LrjSQ0F3Q8aShC0HHmewxoIojsVnwm
-         bpmOEIjLmTCyEEpZ6G6Nb6iSVZxjdjEcNN3mWCq0OZszj2h0xyt8cRRaeqSKu7QAf2Ae
-         2K57FwvCuz+IjjSpGZ4T3dOVEA06ahufLzKDKkCJSDkNwcAgoUhuj4V8A8ScAvXAe6SD
-         baIJaQsSx+GlOsdUj9i/wWLFG7Zt8X52rb3rQUVk9+Fghhau6vb2bKiT6JN9BwRHMjt3
-         aw5n9+K/xRTwRWBNCPz8EKlitNeWrVX5EJm+FryuyXDeQ3jtbXthbO3egyHsWkuXxhyw
-         WgPA==
-X-Gm-Message-State: ACrzQf3Hbf0spex7umyUtjrRKjjuIXTZestMHW70vaMPxXZUQWXM/856
-        ih/rXD4H52YL8QyH0R3aiUqe9j9E+Jo=
-X-Google-Smtp-Source: AMsMyM5sZGD56f3mFTVAoGPV3vlvXa+NUK7z0mjb2R6QOyA+XmCUzph8Ivl93gO+T54P6wqhoKpZCQ==
-X-Received: by 2002:adf:fd87:0:b0:236:7ad7:d3c4 with SMTP id d7-20020adffd87000000b002367ad7d3c4mr7810454wrr.687.1667218484182;
-        Mon, 31 Oct 2022 05:14:44 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id h11-20020adff18b000000b0023677e1157fsm7012992wro.56.2022.10.31.05.14.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 05:14:39 -0700 (PDT)
-Date:   Mon, 31 Oct 2022 12:14:33 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     kys@microsoft.com, wei.lui@kernel.org,
-        linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: remove sthemmin
-Message-ID: <Y1+8KTyoy5FVBqG7@liuwe-devbox-debian-v2>
-References: <20221028153741.25470-1-stephen@networkplumber.org>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WlC4H0gmckJZ8E/tDGtmzwjQN3hfnWY+OkvhUHpUiTc=;
+        b=Qpraxga0iQLGnOsaTjBINwEE1ZHPurO0LXJ6u6+SPzxKnRsITMSViX5xYRyCyzoj34
+         +YDfuu7ARPhdwV971vKiogKAxSAv5qNIMHdmP89W7tArQ7c0cxRJnTLXf0rik6N/eAzw
+         VSbN77QJoZfKCwU4thGuzCERFd4brjMnhQUNa9+MSJ/6BsMakfqW3tDbkw53fI/++ec6
+         8E6VZkSS6U6D6rjflbytDZ/rjxoqTPR+diSpuzPYOpLgxsnAucMWD/piUXzhdHWXaCbH
+         d0+poWHHnpcINlDQd4I4eogyoG2tHaVpwl93vzDp4zrGikM3SLibdTz2s5x3jA+y4kvk
+         /LPg==
+X-Gm-Message-State: ACrzQf2zC0ALOOF6vcFZkQzmMzmRa56HMXNWCvlQVHW/265d0nXYn8oo
+        uLU0Si7q3m20whJedoOex/vaGATvQiM/ynBPqGneI/4WcWn/nX3mMoXcXgvPiOJXPn551+qYRyO
+        psE2mvPEQnOunGs7pnQJET4/n
+X-Received: by 2002:a05:600c:1c0d:b0:3cf:5fd2:1fd1 with SMTP id j13-20020a05600c1c0d00b003cf5fd21fd1mr10268859wms.8.1667218575350;
+        Mon, 31 Oct 2022 05:16:15 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7vtgF5OcVzyyhJbAVQv0UtjhNq0IgAK2jPkGsnoYeZKQ/ZE7IsMKsB/emo+io4u+dLlmSgSQ==
+X-Received: by 2002:a05:600c:1c0d:b0:3cf:5fd2:1fd1 with SMTP id j13-20020a05600c1c0d00b003cf5fd21fd1mr10268814wms.8.1667218575124;
+        Mon, 31 Oct 2022 05:16:15 -0700 (PDT)
+Received: from [192.168.1.130] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id d2-20020a05600c34c200b003b3365b38f9sm7118010wmq.10.2022.10.31.05.16.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Oct 2022 05:16:14 -0700 (PDT)
+Message-ID: <8423bcd3-84f6-b6c9-914a-c70166e20482@redhat.com>
+Date:   Mon, 31 Oct 2022 13:16:13 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221028153741.25470-1-stephen@networkplumber.org>
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2 05/21] drm/imx/dcss: Don't set struct
+ drm_driver.output_poll_changed
+Content-Language: en-US
+To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
+        airlied@gmail.com, sam@ravnborg.org, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20221024111953.24307-1-tzimmermann@suse.de>
+ <20221024111953.24307-6-tzimmermann@suse.de>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+In-Reply-To: <20221024111953.24307-6-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 08:37:42AM -0700, Stephen Hemminger wrote:
-> Leaving Microsoft, the Hyper-V drivers have lots of other maintainers.
+On 10/24/22 13:19, Thomas Zimmermann wrote:
+> Don't set struct drm_driver.output_poll_changed. It's used to restore
+> the fbdev console. But as DCSS uses generic fbdev emulation, the
+> console is being restored by the DRM client helpers already. See the
+> functions drm_kms_helper_hotplug_event() and
+> drm_kms_helper_connector_hotplug_event() in drm_probe_helper.c.
 > 
-> Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
-
-Applied.
-
-Best of luck!
-
+> v2:
+> 	* fix commit description (Christian)
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 > ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3bb30c0d1cb4..aee66010bad6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9504,7 +9504,6 @@ F:	drivers/media/i2c/hi847.c
->  Hyper-V/Azure CORE AND DRIVERS
->  M:	"K. Y. Srinivasan" <kys@microsoft.com>
->  M:	Haiyang Zhang <haiyangz@microsoft.com>
-> -M:	Stephen Hemminger <sthemmin@microsoft.com>
->  M:	Wei Liu <wei.liu@kernel.org>
->  M:	Dexuan Cui <decui@microsoft.com>
->  L:	linux-hyperv@vger.kernel.org
-> -- 
-> 2.35.1
-> 
+
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
