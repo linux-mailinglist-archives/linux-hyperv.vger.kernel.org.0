@@ -2,18 +2,18 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CC39614D65
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 15:57:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D15EA614D64
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 15:57:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbiKAO53 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S231175AbiKAO53 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Tue, 1 Nov 2022 10:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41248 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbiKAO4m (ORCPT
+        with ESMTP id S231176AbiKAO4m (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 1 Nov 2022 10:56:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169129589
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166821C935
         for <linux-hyperv@vger.kernel.org>; Tue,  1 Nov 2022 07:55:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1667314541;
@@ -21,23 +21,23 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VPRegZuW8RFQJgWdrL1ZPVnD1aDzWB4g8LWboQSy57E=;
-        b=NMdfcj+xF8r2mqQcwrvqx0XOjPC0CY/ImI1Hv+Oia1VlWWzFRXZ/lS/X3qOk0GvnDrJ8PW
-        cDitUhPLxKdKmFLASpJ7Cbdw3gOZYgZzUrq6mEWSuEIQnYtOgFXT8dDyvoP7uz4OtCfrPV
-        VSXsfHbk+CdEecJw4X/bPGhi+WzeGEU=
+        bh=o7HJKd/tb8dCsA2/QRkG3g5/WdjkirIaLyQWbjGL3dk=;
+        b=A+tTrNxwQm5deKYcXkjRygT+kk4ro0mz8DNe+az1zi0ujVJ67Y6v742632lIGu2GXLe29c
+        kfhnFLVJ20hJqrk+eDo8GOWMchsSeNypA9gfoJojhXw6OSdOu9dm7pFTf45gGt1nYWMpEm
+        3yZ9c6uG7E+WBaApCHcXmFYptpYW0Ec=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-602-ErHdDIX5PKS-GmqP6Vf77g-1; Tue, 01 Nov 2022 10:55:38 -0400
-X-MC-Unique: ErHdDIX5PKS-GmqP6Vf77g-1
+ us-mta-663-szFVJqWoPG2C8uQJ54xDhQ-1; Tue, 01 Nov 2022 10:55:38 -0400
+X-MC-Unique: szFVJqWoPG2C8uQJ54xDhQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 43BFC1C05EC7;
-        Tue,  1 Nov 2022 14:55:28 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 684E029DD9AC;
+        Tue,  1 Nov 2022 14:55:37 +0000 (UTC)
 Received: from ovpn-194-149.brq.redhat.com (ovpn-194-149.brq.redhat.com [10.40.194.149])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DF236C2C8D8;
-        Tue,  1 Nov 2022 14:55:19 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCF2BC3E6BC;
+        Tue,  1 Nov 2022 14:55:26 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>
@@ -48,9 +48,9 @@ Cc:     Wanpeng Li <wanpengli@tencent.com>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v13 19/48] KVM: nVMX: Keep track of hv_vm_id/hv_vp_id when eVMCS is in use
-Date:   Tue,  1 Nov 2022 15:53:57 +0100
-Message-Id: <20221101145426.251680-20-vkuznets@redhat.com>
+Subject: [PATCH v13 20/48] KVM: nSVM: Keep track of Hyper-V hv_vm_id/hv_vp_id
+Date:   Tue,  1 Nov 2022 15:53:58 +0100
+Message-Id: <20221101145426.251680-21-vkuznets@redhat.com>
 In-Reply-To: <20221101145426.251680-1-vkuznets@redhat.com>
 References: <20221101145426.251680-1-vkuznets@redhat.com>
 MIME-Version: 1.0
@@ -67,80 +67,55 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-To handle L2 TLB flush requests, KVM needs to keep track of L2's VM_ID/
-VP_IDs which are set by L1 hypervisor. 'Partition assist page' address is
-also needed to handle post-flush exit to L1 upon request.
+Similar to nSVM, KVM needs to know L2's VM_ID/VP_ID and Partition
+assist page address to handle L2 TLB flush requests.
 
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 Reviewed-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h |  6 ++++++
- arch/x86/kvm/vmx/nested.c       | 15 +++++++++++++++
- 2 files changed, 21 insertions(+)
+ arch/x86/kvm/svm/hyperv.h | 15 +++++++++++++++
+ arch/x86/kvm/svm/nested.c |  2 ++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 5d590157266e..ede163b6f955 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -649,6 +649,12 @@ struct kvm_vcpu_hv {
+diff --git a/arch/x86/kvm/svm/hyperv.h b/arch/x86/kvm/svm/hyperv.h
+index c59544cdf03b..e97d80974e72 100644
+--- a/arch/x86/kvm/svm/hyperv.h
++++ b/arch/x86/kvm/svm/hyperv.h
+@@ -9,5 +9,20 @@
+ #include <asm/mshyperv.h>
  
- 	/* Preallocated buffer for handling hypercalls passing sparse vCPU set */
- 	u64 sparse_banks[HV_MAX_SPARSE_VCPU_BANKS];
+ #include "../hyperv.h"
++#include "svm.h"
 +
-+	struct {
-+		u64 pa_page_gpa;
-+		u64 vm_id;
-+		u32 vp_id;
-+	} nested;
- };
- 
- /* Xen HVM per vcpu emulation context */
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index feab88a13026..7a4260416d88 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -224,6 +224,7 @@ static void vmx_disable_shadow_vmcs(struct vcpu_vmx *vmx)
- 
- static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
- {
++static inline void nested_svm_hv_update_vm_vp_ids(struct kvm_vcpu *vcpu)
++{
++	struct vcpu_svm *svm = to_svm(vcpu);
++	struct hv_vmcb_enlightenments *hve = &svm->nested.ctl.hv_enlightenments;
 +	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 
- 	if (evmptr_is_valid(vmx->nested.hv_evmcs_vmptr)) {
-@@ -232,6 +233,12 @@ static inline void nested_release_evmcs(struct kvm_vcpu *vcpu)
- 	}
- 
- 	vmx->nested.hv_evmcs_vmptr = EVMPTR_INVALID;
 +
-+	if (hv_vcpu) {
-+		hv_vcpu->nested.pa_page_gpa = INVALID_GPA;
-+		hv_vcpu->nested.vm_id = 0;
-+		hv_vcpu->nested.vp_id = 0;
-+	}
++	if (!hv_vcpu)
++		return;
++
++	hv_vcpu->nested.pa_page_gpa = hve->partition_assist_page;
++	hv_vcpu->nested.vm_id = hve->hv_vm_id;
++	hv_vcpu->nested.vp_id = hve->hv_vp_id;
++}
+ 
+ #endif /* __ARCH_X86_KVM_SVM_HYPERV_H__ */
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index c2a49aa50a58..45bab740f3f0 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -799,6 +799,8 @@ int enter_svm_guest_mode(struct kvm_vcpu *vcpu, u64 vmcb12_gpa,
+ 	if (kvm_vcpu_apicv_active(vcpu))
+ 		kvm_make_request(KVM_REQ_APICV_UPDATE, vcpu);
+ 
++	nested_svm_hv_update_vm_vp_ids(vcpu);
++
+ 	return 0;
  }
  
- static void vmx_sync_vmcs_host_state(struct vcpu_vmx *vmx,
-@@ -1556,11 +1563,19 @@ static void copy_enlightened_to_vmcs12(struct vcpu_vmx *vmx, u32 hv_clean_fields
- {
- 	struct vmcs12 *vmcs12 = vmx->nested.cached_vmcs12;
- 	struct hv_enlightened_vmcs *evmcs = vmx->nested.hv_evmcs;
-+	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(&vmx->vcpu);
- 
- 	/* HV_VMX_ENLIGHTENED_CLEAN_FIELD_NONE */
- 	vmcs12->tpr_threshold = evmcs->tpr_threshold;
- 	vmcs12->guest_rip = evmcs->guest_rip;
- 
-+	if (unlikely(!(hv_clean_fields &
-+		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_ENLIGHTENMENTSCONTROL))) {
-+		hv_vcpu->nested.pa_page_gpa = evmcs->partition_assist_page;
-+		hv_vcpu->nested.vm_id = evmcs->hv_vm_id;
-+		hv_vcpu->nested.vp_id = evmcs->hv_vp_id;
-+	}
-+
- 	if (unlikely(!(hv_clean_fields &
- 		       HV_VMX_ENLIGHTENED_CLEAN_FIELD_GUEST_BASIC))) {
- 		vmcs12->guest_rsp = evmcs->guest_rsp;
 -- 
 2.37.3
 
