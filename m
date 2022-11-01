@@ -2,152 +2,70 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5130614479
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 07:06:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D12E26147DD
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 11:45:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbiKAGGL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Nov 2022 02:06:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39618 "EHLO
+        id S229628AbiKAKpT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Nov 2022 06:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiKAGGK (ORCPT
+        with ESMTP id S229452AbiKAKpS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Nov 2022 02:06:10 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E022F13F1C;
-        Mon, 31 Oct 2022 23:06:06 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 94FAB205D3AB;
-        Mon, 31 Oct 2022 23:06:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 94FAB205D3AB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1667282766;
-        bh=gtkRke9Of7UNDJRH6gO1HSSOTq81CvrSGszWmmhQGQs=;
-        h=From:To:Subject:Date:From;
-        b=Wbj56WLz2fbYuhtjtvkfXAT3L0O2p79+Gq3Nww84rlTuqU206bpsotb3z5IylJNUE
-         HcLDv1Unn4XhHG8+pn6EiMLVwojI+gfJv7BC6hmAbSOqvc1dfcvhr7acCx7z1hv3w3
-         r3lPO/Bd11+40weijXhjT2el+u5lOWkP+DAom/+k=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        ssengar@linux.microsoft.com, colin.i.king@googlemail.com,
-        vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com
-Subject: [PATCH] net: mana: Assign interrupts to CPUs based on NUMA nodes
-Date:   Mon, 31 Oct 2022 23:06:01 -0700
-Message-Id: <1667282761-11547-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        Tue, 1 Nov 2022 06:45:18 -0400
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03DE415733;
+        Tue,  1 Nov 2022 03:45:18 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id bg9-20020a05600c3c8900b003bf249616b0so9633954wmb.3;
+        Tue, 01 Nov 2022 03:45:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dwwjXDojYpfAe9pWWX8Ysi5XeTkAjvd2ATF6N/1wGPU=;
+        b=NahdesqsLHr7+wi56zRaWBqCEWzA2xPKCqRFZQVtFozC/59gAYk7HxBsT+hQMeJV+c
+         YTIsLURDCp7YHNq/J4egrl4OuKMLekR3kLJI+EV6Sujv7p6RpWHJZHcyH1aNYW1+98l/
+         zZRpoPNE7UQ7u2NkpAFum2q+20qgfXvhI0Qyw+lkuXl4iZuqNyceTLTR8pu0MI25ir4J
+         dHDktygSlUZoYvUxHuI04CmjCi6eQV5Msd7Q24T1XWrH0vRRB4O1Edi6QCaG+1/gR/HR
+         cDtMrHU6mAIo1xCxeLwOnUEyaZfGOtM9ig0xS/dqUZkiJ3VwmFguGkjSiy0zJ0gg5gWf
+         pytw==
+X-Gm-Message-State: ACrzQf29/bERmBqrkhV2FYpiCF2qTkpDMvv5xDuYXJ/gnUwGmShXrTcA
+        5bg5s9MoPUSAPetKXlTSzfYCkcH25dY=
+X-Google-Smtp-Source: AMsMyM4QVo1hkD6PZp/72zLlcjK1kd7Up4LxynAOQ+/xozzUVFv50W1pWtxajjYts2Ncd6DfOpuQGg==
+X-Received: by 2002:a05:600c:3506:b0:3cf:70ac:7039 with SMTP id h6-20020a05600c350600b003cf70ac7039mr6890113wmq.145.1667299516499;
+        Tue, 01 Nov 2022 03:45:16 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id w11-20020a5d404b000000b002258235bda3sm9609057wrp.61.2022.11.01.03.45.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 03:45:15 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 10:45:10 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, jkosina@suse.cz
+Subject: Re: [PATCH] HID: hyperv: fix possible memory leak in mousevsc_probe()
+Message-ID: <Y2D4ts1quAg3VZQU@liuwe-devbox-debian-v2>
+References: <20221028134043.1152629-1-yangyingliang@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221028134043.1152629-1-yangyingliang@huawei.com>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In large VMs with multiple NUMA nodes, network performance is usually
-best if network interrupts are all assigned to the same virtual NUMA
-node. This patch assigns online CPU according to a numa aware policy,
-local cpus are returned first, followed by non-local ones, then it wraps
-around.
+On Fri, Oct 28, 2022 at 09:40:43PM +0800, Yang Yingliang wrote:
+> If hid_add_device() returns error, it should call hid_destroy_device()
+> to free hid_dev which is allocated in hid_allocate_device().
+> 
+> Fixes: 74c4fb058083 ("HID: hv_mouse: Properly add the hid device")
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/gdma.h    |  1 +
- .../net/ethernet/microsoft/mana/gdma_main.c   | 30 +++++++++++++++++--
- 2 files changed, 28 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma.h b/drivers/net/ethernet/microsoft/mana/gdma.h
-index 4a6efe6ada08..db340f36ef29 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma.h
-+++ b/drivers/net/ethernet/microsoft/mana/gdma.h
-@@ -353,6 +353,7 @@ struct gdma_context {
- 	void __iomem		*shm_base;
- 	void __iomem		*db_page_base;
- 	u32 db_page_size;
-+	int                     numa_node;
- 
- 	/* Shared memory chanenl (used to bootstrap HWC) */
- 	struct shm_channel	shm_channel;
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index a6f99b4344d9..726ac94d96ae 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -1208,8 +1208,10 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 	struct gdma_context *gc = pci_get_drvdata(pdev);
- 	struct gdma_irq_context *gic;
- 	unsigned int max_irqs;
-+	u16 *cpus;
-+	cpumask_var_t req_mask;
- 	int nvec, irq;
--	int err, i, j;
-+	int err, i = 0, j;
- 
- 	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
- 		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-@@ -1228,7 +1230,21 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 		goto free_irq_vector;
- 	}
- 
-+	if (!zalloc_cpumask_var(&req_mask, GFP_KERNEL)) {
-+		err = -ENOMEM;
-+		goto free_irq;
-+	}
-+
-+	cpus = kcalloc(nvec, sizeof(*cpus), GFP_KERNEL);
-+	if (!cpus) {
-+		err = -ENOMEM;
-+		goto free_mask;
-+	}
-+	for (i = 0; i < nvec; i++)
-+		cpus[i] = cpumask_local_spread(i, gc->numa_node);
-+
- 	for (i = 0; i < nvec; i++) {
-+		cpumask_set_cpu(cpus[i], req_mask);
- 		gic = &gc->irq_contexts[i];
- 		gic->handler = NULL;
- 		gic->arg = NULL;
-@@ -1236,13 +1252,17 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 		irq = pci_irq_vector(pdev, i);
- 		if (irq < 0) {
- 			err = irq;
--			goto free_irq;
-+			goto free_mask;
- 		}
- 
- 		err = request_irq(irq, mana_gd_intr, 0, "mana_intr", gic);
- 		if (err)
--			goto free_irq;
-+			goto free_mask;
-+		irq_set_affinity_and_hint(irq, req_mask);
-+		cpumask_clear(req_mask);
- 	}
-+	free_cpumask_var(req_mask);
-+	kfree(cpus);
- 
- 	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
- 	if (err)
-@@ -1253,6 +1273,9 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
- 
- 	return 0;
- 
-+free_mask:
-+	free_cpumask_var(req_mask);
-+	kfree(cpus);
- free_irq:
- 	for (j = i - 1; j >= 0; j--) {
- 		irq = pci_irq_vector(pdev, j);
-@@ -1382,6 +1405,7 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (!bar0_va)
- 		goto free_gc;
- 
-+	gc->numa_node = dev_to_node(&pdev->dev);
- 	gc->is_pf = mana_is_pf(pdev->device);
- 	gc->bar0_va = bar0_va;
- 	gc->dev = &pdev->dev;
--- 
-2.34.1
-
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
