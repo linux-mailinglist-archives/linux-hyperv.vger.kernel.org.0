@@ -2,46 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D07306150AF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 18:31:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC7846150B1
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 18:31:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbiKARbC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Nov 2022 13:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60578 "EHLO
+        id S229923AbiKARbH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Nov 2022 13:31:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbiKARbA (ORCPT
+        with ESMTP id S229566AbiKARbF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Nov 2022 13:31:00 -0400
+        Tue, 1 Nov 2022 13:31:05 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DAE27B86A;
-        Tue,  1 Nov 2022 10:30:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F0C1B1C12E;
+        Tue,  1 Nov 2022 10:31:04 -0700 (PDT)
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [20.120.152.163])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8138B205D3B7;
-        Tue,  1 Nov 2022 10:30:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8138B205D3B7
+        by linux.microsoft.com (Postfix) with ESMTPSA id BA3F720B929F;
+        Tue,  1 Nov 2022 10:31:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BA3F720B929F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1667323859;
-        bh=bWL2DdT42G4iphUgFrlIZ2M6RpV81Aj/se5dxpx2cQw=;
-        h=Subject:From:Cc:Date:From;
-        b=VPx0jo0tRj1ouu7vyKrxFK8xenm3D8WH15JFEWvZsg2qZlYVW1JikTmgiOVOhe/Nj
-         kNXDPFgofEG0uMZbG0QAxEsCOQT1KsDN5hB8kxOChPay3apxRsyo7F4mNXg/jn68mj
-         A/0LCzpaPGzTplBa1uP5XSsn2DV9ZnfjY0LkFIfc=
-Subject: [PATCH 0/4] hyper-v: Introduce TSC page for root partition
+        s=default; t=1667323864;
+        bh=VzS0zv6W20Ej0nTKmhHcYF4peM529wVUYDvHRYTK7Zc=;
+        h=Subject:From:Cc:Date:In-Reply-To:References:From;
+        b=OyhwJotSpjmdF+Oolz000h3Z0kXNjN6e/hid2wcKbrphgqXY6so+O9uyRXTZvDsHk
+         bz4agA5yLzbTOoB5abTL+ykPmlkTgFOYZRIo+MNGwnatX9ygaMEXpsdltXiTK2IJO+
+         7VnnAPds0Vrvx7hWsYI/94joKNq4piiP0uOjusvQ=
+Subject: [PATCH 1/4] drivers/clocksource/hyper-v: Introduce a pointer to TSC
+ page
 From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+Cc:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Liu <wei.liu@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 01 Nov 2022 17:30:59 +0000
-Message-ID: <166732356767.9827.4925884794177179249.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 01 Nov 2022 17:31:04 +0000
+Message-ID: <166732386464.9827.16622091938453285710.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: <166732356767.9827.4925884794177179249.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+References: <166732356767.9827.4925884794177179249.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -57,27 +55,49 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This series does some cleanup and precursor changes to the hyper-v clock
-source and introduces support for TSC page based clock in root partition.
+From: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
 
-Hyper-V root partition requires kernel to map the page, specified by the
-hypervisor (instead of provide the PFN to the hypervisor like it's done in
-guest partition).
+Will be used later keep the address of the remapped page for the root
+partition.
 
-The following series implements...
-
+Signed-off-by: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+CC: "K. Y. Srinivasan" <kys@microsoft.com>
+CC: Haiyang Zhang <haiyangz@microsoft.com>
+CC: Wei Liu <wei.liu@kernel.org>
+CC: Dexuan Cui <decui@microsoft.com>
+CC: Daniel Lezcano <daniel.lezcano@linaro.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: linux-hyperv@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
 ---
+ drivers/clocksource/hyperv_timer.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Stanislav Kinsburskiy (4):
-      drivers/clocksource/hyper-v: Introduce a pointer to TSC page
-      drivers/clocksource/hyper-v: Introduce TSC MSR register structure
-      drivers/clocksource/hyper-v: Use TSC PFN getter to map vvar page
-      drivers/clocksource/hyper-v: Add TSC page support for root partition
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 11332c82d1af..c4dbf40a3d3e 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -366,9 +366,11 @@ static union {
+ 	u8 reserved[PAGE_SIZE];
+ } tsc_pg __aligned(PAGE_SIZE);
+ 
++static struct ms_hyperv_tsc_page *tsc_page = &tsc_pg.page;
++
+ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+ {
+-	return &tsc_pg.page;
++	return tsc_page;
+ }
+ EXPORT_SYMBOL_GPL(hv_get_tsc_page);
+ 
+@@ -406,7 +408,7 @@ static void suspend_hv_clock_tsc(struct clocksource *arg)
+ 
+ static void resume_hv_clock_tsc(struct clocksource *arg)
+ {
+-	phys_addr_t phys_addr = virt_to_phys(&tsc_pg);
++	phys_addr_t phys_addr = virt_to_phys(tsc_page);
+ 	union hv_reference_tsc_msr tsc_msr;
+ 
+ 	/* Re-enable the TSC page */
 
-
- arch/x86/entry/vdso/vma.c          |    7 ++---
- arch/x86/hyperv/hv_init.c          |    2 +
- drivers/clocksource/hyperv_timer.c |   51 ++++++++++++++++++++++++++----------
- include/clocksource/hyperv_timer.h |    7 +++++
- 4 files changed, 49 insertions(+), 18 deletions(-)
 
