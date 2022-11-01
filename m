@@ -2,64 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5A02614DC0
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 16:03:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE849614E38
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Nov 2022 16:21:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231504AbiKAPDf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Nov 2022 11:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52020 "EHLO
+        id S230124AbiKAPV2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Nov 2022 11:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231510AbiKAPDU (ORCPT
+        with ESMTP id S229717AbiKAPV1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Nov 2022 11:03:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC631F2EC
-        for <linux-hyperv@vger.kernel.org>; Tue,  1 Nov 2022 07:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667314631;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O4JQt2TyP8rv/jwuj8EGHOlJT6u9NgMM6O63X5jVr9Y=;
-        b=BYcmnuAwyOufRYeJ0Q09PsoP747v5ADu5gFMbEqbmkyDAZVfuj8p+yuvv1nbba7QqVRN0N
-        DNcfwgTQqD4qHH+RG4n5A+rwElKqT3YNoS8HVLgOdEOrjrXeO0tWBVAtLXT8iS7VbLPtiA
-        5RB3NhBUf+9oL/AjucoA07SG7vtmIPY=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-615-SB0Dvz_iN4GXUtxmUGOdCQ-1; Tue, 01 Nov 2022 10:57:09 -0400
-X-MC-Unique: SB0Dvz_iN4GXUtxmUGOdCQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A4E281C0BC61;
-        Tue,  1 Nov 2022 14:57:08 +0000 (UTC)
-Received: from ovpn-194-149.brq.redhat.com (ovpn-194-149.brq.redhat.com [10.40.194.149])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40292C15BB9;
-        Tue,  1 Nov 2022 14:57:06 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Tue, 1 Nov 2022 11:21:27 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84C41E3
+        for <linux-hyperv@vger.kernel.org>; Tue,  1 Nov 2022 08:21:26 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id b11so13507600pjp.2
+        for <linux-hyperv@vger.kernel.org>; Tue, 01 Nov 2022 08:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SWwI4HddTr5hZsOzf2RypoXH7oScXpad+VTxgJy3JSU=;
+        b=V2ni/OAKFDBPORA+0ZeSWUG89qhd2Dv2ryK/aTZFvP9bOCrQ7odY6kYDX/XzmFIehs
+         OMQhkM8rztuimR0+4jdPRLh6q1pSN59P38KLVKaLGiZ+c1NZmTu9+XSBDfunWtvglq1R
+         hkCGjhhgrbfUsCL4ZjYfvLxirq7NZsC/MdQVEcPLWFKoFLCO/NdS8Dg7No+mTFrQPY0/
+         Kv9tHzQ8ujjhE+syyDE9e9zYFMS/m84zwgy+eFwnzzsanvcYteB52kZJdYb7gTzQh4u8
+         hNvuCOD1aeNFWhT0Ja2k3RMurJ4BgDVHHmkUmlLPfh1HXd1+31sjSLWJLwI+rQKMzG9Q
+         2wug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SWwI4HddTr5hZsOzf2RypoXH7oScXpad+VTxgJy3JSU=;
+        b=0y/1ipaNfiafUunbNdOZkUGxU4Ebz0Dh7jHrd9ONlvfwnng/NrfNcqghoh+Eng8Ct1
+         Caa3bhRyleGX8kfcbz/qp/HAGMcfMxSPgxZET4ASHOq0NXUtQemIucilp+gBRqGEPBqk
+         CWV6DUAFu0LIDbuEWfm3n3lrcICP8j83BAA1zx/CScZQGaWp3rCwuc1KeefTmgkYPZS6
+         T77Yb9ZqhFkt+kjYhcwWKHbWymvaLXnU8f4qVIEIlHkUjLcpNqXBE8y0hU5XPZTgUsRc
+         Ccx/+cEghjezaeQrknp2UVdIN7n+7omUbnS60nOWWmEJVbSRdfHpbaQMAw0jsU4UjsLa
+         lfKw==
+X-Gm-Message-State: ACrzQf0fRD4Spa+Lb1VQRnnhFRBK/fKu3LNcX5Ai8ulsEge8eG1iZhXt
+        TWOWIXXXQEif0WlU6YGX+nbDyw==
+X-Google-Smtp-Source: AMsMyM73tDHw4PtLUZRmG04g7QlQfytvU9Eydf0ikb6gjSEIUo5oMBNMEeo82jEamOECjKrhS7hN0w==
+X-Received: by 2002:a17:902:aa46:b0:186:e220:11d4 with SMTP id c6-20020a170902aa4600b00186e22011d4mr20058322plr.163.1667316086196;
+        Tue, 01 Nov 2022 08:21:26 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id 6-20020a631446000000b0046f7e1ca434sm6105617pgu.0.2022.11.01.08.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 08:21:25 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 15:21:22 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Siddharth Chandrasekaran <sidcha@amazon.de>,
         Yuan Yao <yuan.yao@linux.intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v13 48/48] KVM: selftests: Rename 'evmcs_test' to 'hyperv_evmcs'
-Date:   Tue,  1 Nov 2022 15:54:26 +0100
-Message-Id: <20221101145426.251680-49-vkuznets@redhat.com>
-In-Reply-To: <20221101145426.251680-1-vkuznets@redhat.com>
+Subject: Re: [PATCH v13 00/48] KVM: x86: hyper-v: Fine-grained TLB flush + L2
+ TLB flush features
+Message-ID: <Y2E5chB/9pZcRWi6@google.com>
 References: <20221101145426.251680-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221101145426.251680-1-vkuznets@redhat.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,60 +79,22 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Conform to the rest of Hyper-V emulation selftests which have 'hyperv'
-prefix. Get rid of '_test' suffix as well as the purpose of this code
-is fairly obvious.
+On Tue, Nov 01, 2022, Vitaly Kuznetsov wrote:
+> Changes since v12 (Sean):
+> - Reviewed-by: tags added.
+> - PATCH13: added a comment explaining why 'hc->ingpa' doesn't need to be
+>   translated when the hypercall is 'fast'.
+> - PATCH34: s,wraping,wrapping, in the blurb.
+> - PATCH36: added missing Signed-off-by: tag.
+> - "KVM: selftests: Stuff RAX/RCX with 'safe' values in vmmcall()/vmcall()"
+>   patch added (and used later in the series).
+> - "KVM: selftests: Introduce rdmsr_from_l2() and use it for MSR-Bitmap
+>   tests" patch added (and used later in the series).
 
-Reviewed-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- tools/testing/selftests/kvm/.gitignore                          | 2 +-
- tools/testing/selftests/kvm/Makefile                            | 2 +-
- .../selftests/kvm/x86_64/{evmcs_test.c => hyperv_evmcs.c}       | 0
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename tools/testing/selftests/kvm/x86_64/{evmcs_test.c => hyperv_evmcs.c} (100%)
+Note, this doesn't apply cleanly to kvm/queue for me, looks like there are superficial
+conflicts that make git unhappy with the vmx/evmcs.{ch} => vmx/hyperv.{ch}, though I
+might be missing a git am flag to help it deal with renames.
 
-diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
-index 68d3d2080b59..edca2d3823d1 100644
---- a/tools/testing/selftests/kvm/.gitignore
-+++ b/tools/testing/selftests/kvm/.gitignore
-@@ -16,7 +16,6 @@
- /x86_64/cpuid_test
- /x86_64/cr4_cpuid_sync_test
- /x86_64/debug_regs
--/x86_64/evmcs_test
- /x86_64/emulator_error_test
- /x86_64/fix_hypercall_test
- /x86_64/get_msr_index_features
-@@ -24,6 +23,7 @@
- /x86_64/kvm_pv_test
- /x86_64/hyperv_clock
- /x86_64/hyperv_cpuid
-+/x86_64/hyperv_evmcs
- /x86_64/hyperv_features
- /x86_64/hyperv_ipi
- /x86_64/hyperv_svm_test
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index eee6421cf4a8..379a83ba4912 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -81,11 +81,11 @@ TEST_PROGS_x86_64 += x86_64/nx_huge_pages_test.sh
- TEST_GEN_PROGS_x86_64 = x86_64/cpuid_test
- TEST_GEN_PROGS_x86_64 += x86_64/cr4_cpuid_sync_test
- TEST_GEN_PROGS_x86_64 += x86_64/get_msr_index_features
--TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
- TEST_GEN_PROGS_x86_64 += x86_64/emulator_error_test
- TEST_GEN_PROGS_x86_64 += x86_64/fix_hypercall_test
- TEST_GEN_PROGS_x86_64 += x86_64/hyperv_clock
- TEST_GEN_PROGS_x86_64 += x86_64/hyperv_cpuid
-+TEST_GEN_PROGS_x86_64 += x86_64/hyperv_evmcs
- TEST_GEN_PROGS_x86_64 += x86_64/hyperv_features
- TEST_GEN_PROGS_x86_64 += x86_64/hyperv_ipi
- TEST_GEN_PROGS_x86_64 += x86_64/hyperv_svm_test
-diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
-similarity index 100%
-rename from tools/testing/selftests/kvm/x86_64/evmcs_test.c
-rename to tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
--- 
-2.37.3
-
+Applies cleanly to e18d6152ff0f ("Merge tag 'kvm-riscv-6.1-1' of
+https://github.com/kvm-riscv/linux into HEAD") and then rebases to kvm/queue without
+needing human assistance.
