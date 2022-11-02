@@ -2,117 +2,128 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCF7C615EF0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 10:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C63A615FCF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 10:32:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231304AbiKBJIV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Nov 2022 05:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
+        id S230046AbiKBJcw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Nov 2022 05:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231222AbiKBJHp (ORCPT
+        with ESMTP id S230075AbiKBJcv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Nov 2022 05:07:45 -0400
+        Wed, 2 Nov 2022 05:32:51 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39AD2873C
-        for <linux-hyperv@vger.kernel.org>; Wed,  2 Nov 2022 02:05:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6179513E2B
+        for <linux-hyperv@vger.kernel.org>; Wed,  2 Nov 2022 02:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667379907;
+        s=mimecast20190719; t=1667381505;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LpYqcUNkPgIA1fAPwB+EiO+Z9dq0ENSiM+RajxMrldI=;
-        b=gyuwcEyuDatDeHRSaakcsSF54xu9ubwrWfYGF4PMwX8uS0/8G4xXYXkDd6DIZLnYpVibi/
-        /QCWp2ofdI76vRLSQ5DrdnYwPEaxceEc23DN7Y7z1R9q9epQfKkLrQTBLiwdMpUUM4Iqun
-        cTW430qncx/KzWHGU/Tjz8jljhG57S8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=FiXyFbNQfgw1EbxRUL2H94emHZF9fnomkSKKEY8Wyhw=;
+        b=V7MrpPYaCoCQytswCrFkezV6dc19wkNirVYzr3S42jh/mvmaeyRWzgQBV/EKqodoivsRfC
+        M/0lurqfsxhssyWjYte7ZzMXGPOOxP+s7bAmNYF5GPOIf3V8MrcklsYPmETs+5kn0YuO9w
+        vX7mFc1Xqxb1NUp/taSkj35muy9a9FQ=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-359-_G5xfFc1M0iz24dAoGhA7A-1; Wed, 02 Nov 2022 05:05:05 -0400
-X-MC-Unique: _G5xfFc1M0iz24dAoGhA7A-1
-Received: by mail-wm1-f69.google.com with SMTP id s7-20020a1cf207000000b003cf56bad2e2so243930wmc.9
-        for <linux-hyperv@vger.kernel.org>; Wed, 02 Nov 2022 02:05:05 -0700 (PDT)
+ us-mta-235-S3RnhJZUPmifT32gKUL5Xg-1; Wed, 02 Nov 2022 05:31:44 -0400
+X-MC-Unique: S3RnhJZUPmifT32gKUL5Xg-1
+Received: by mail-qt1-f200.google.com with SMTP id fz10-20020a05622a5a8a00b003a4f466998cso11846815qtb.16
+        for <linux-hyperv@vger.kernel.org>; Wed, 02 Nov 2022 02:31:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LpYqcUNkPgIA1fAPwB+EiO+Z9dq0ENSiM+RajxMrldI=;
-        b=uptqizhPhr/ShhbGDdFtNvLlYq3Lhnnh2HYy4XptlCWHlahu6d5MpEjt5DEQhnclBE
-         CBvpFTJF84I/RGC/FmwHfyZZrGR/CEvsSJyvBMIgyFGPzfscJfP14TgFqrRVcC+JHQBg
-         Fy1/049dgo+0uHcsf/3hm29z68GR/qhsqTKSRGSK6sx0xmuC945Cpbmh1xLUN9URhQoD
-         Pke7kup9rNf8ybw4WnIY+uRCIBINcr9j+MK7hZMb8Q70adReUbvY5SWU3IRC0puY7xYE
-         yJOa2wgwCv5EU3wPzncSW+sfYlBJOCA+/CNJiu1s2Y0FSzxg3YpFqIOyAGhWb+FHS/GL
-         dH4w==
-X-Gm-Message-State: ACrzQf1WHiwqLKcSb0StJcwbMRlBgPEhBgASNIXFa/xOb3mgevJIKreq
-        yGNEIvBKfsBWEO22A7e37rS4kbGWmQ2iTPnhfyHoki0xOhiKwupjwkQwa+u/9Q//z7kUfa+4Xwt
-        11lHe25RQTS1OIgWga7/1Kga2
-X-Received: by 2002:a5d:6488:0:b0:22b:3b0b:5e72 with SMTP id o8-20020a5d6488000000b0022b3b0b5e72mr14464167wri.138.1667379904744;
-        Wed, 02 Nov 2022 02:05:04 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6Ug/7BR+PMLuqwC0wiYVRKEgerXkzKho5yFNKIDT0bC26SnYKpkqpAn1quqQ9FNF9E1JGkLg==
-X-Received: by 2002:a5d:6488:0:b0:22b:3b0b:5e72 with SMTP id o8-20020a5d6488000000b0022b3b0b5e72mr14464139wri.138.1667379904487;
-        Wed, 02 Nov 2022 02:05:04 -0700 (PDT)
-Received: from [192.168.1.130] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id p2-20020a5d4582000000b00228d52b935asm12402687wrq.71.2022.11.02.02.05.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Nov 2022 02:05:04 -0700 (PDT)
-Message-ID: <a96d57d8-486d-5a48-a00a-39df6275cbb5@redhat.com>
-Date:   Wed, 2 Nov 2022 10:05:02 +0100
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FiXyFbNQfgw1EbxRUL2H94emHZF9fnomkSKKEY8Wyhw=;
+        b=zSH+2Yred4aaxr4xRqrLSS8BGRaGqvDUfzEoMdvqF7xwNVIy6zM1Z3ANuNpSZ0xqJD
+         rCCtqY666p5sLRIcIwIFurjStfvXgTPbWsnGLPQZC6C4ciazz6JpUdQ2KVBjiXhrOMFo
+         TmhREvzs6lHJ6SgRgqAjxfnVJyXpnCJlPAcYWtJKERs+Sy8b4PwEdViBEr+HEp1VZe+Z
+         jW2/EeQ2xMBiTBm5AzhQU63fvHp0VauTeDAmQyWCC/HmV01RHMAKymEKmR9YPxK902qO
+         YngFDSurCQJ/DirLSDkwXiuXccekdiAQHq2SGux6yXct6t48GJi0LK1QeEDHBprltiGP
+         Vixg==
+X-Gm-Message-State: ACrzQf0dWYtGtgOArXlyrVc0bLLIJCNM2EBV0Pi0rAH4QET7CZ1nnu3u
+        Kr0dOD1kGbtFYZMtDpJaKON06rZgiX4BTGkFx69nwynNuNCaHzUME1Rw1Ha9PXVyu25fAWV4nEZ
+        U3uXIa5aecHA23XYpCNg4tvwN
+X-Received: by 2002:a0c:e2d4:0:b0:4bb:5902:922c with SMTP id t20-20020a0ce2d4000000b004bb5902922cmr20026048qvl.57.1667381504104;
+        Wed, 02 Nov 2022 02:31:44 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7fwcDDdofDJz+WZYfF1ydzjXTJWpUN8/UcIhN3q3TEjSy7NElKUQE03Ks6CSlPZF4dfR2Qnw==
+X-Received: by 2002:a0c:e2d4:0:b0:4bb:5902:922c with SMTP id t20-20020a0ce2d4000000b004bb5902922cmr20026034qvl.57.1667381503910;
+        Wed, 02 Nov 2022 02:31:43 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-234.retail.telecomitalia.it. [82.53.134.234])
+        by smtp.gmail.com with ESMTPSA id bs33-20020a05620a472100b006fa617ac616sm486080qkb.49.2022.11.02.02.31.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Nov 2022 02:31:43 -0700 (PDT)
+Date:   Wed, 2 Nov 2022 10:31:37 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, arseny.krasnov@kaspersky.com,
+        netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kys@microsoft.com,
+        haiyangz@microsoft.com, stephen@networkplumber.org,
+        wei.liu@kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] vsock: fix possible infinite sleep in
+ vsock_connectible_wait_data()
+Message-ID: <20221102093137.2il5u7opfyddheis@sgarzare-redhat>
+References: <20221101021706.26152-1-decui@microsoft.com>
+ <20221101021706.26152-3-decui@microsoft.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v2 16/21] drm/fb-helper: Call fb_sync in I/O functions
-Content-Language: en-US
-To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@gmail.com, sam@ravnborg.org, mripard@kernel.org,
-        maarten.lankhorst@linux.intel.com
-Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        etnaviv@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-References: <20221024111953.24307-1-tzimmermann@suse.de>
- <20221024111953.24307-17-tzimmermann@suse.de>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <20221024111953.24307-17-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20221101021706.26152-3-decui@microsoft.com>
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 10/24/22 13:19, Thomas Zimmermann wrote:
-> Call struct fb_ops.fb_sync in drm_fbdev_{read,write}() to mimic the
-> behavior of fbdev. Fbdev implementations of fb_read and fb_write in
-> struct fb_ops invoke fb_sync to synchronize with outstanding operations
-> before I/O. Doing the same in DRM implementations will allow us to use
-> them throughout DRM drivers.
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
+On Mon, Oct 31, 2022 at 07:17:06PM -0700, Dexuan Cui wrote:
+>Currently vsock_connectible_has_data() may miss a wakeup operation
+>between vsock_connectible_has_data() == 0 and the prepare_to_wait().
+>
+>Fix the race by adding the process to the wait queue before checking
+>vsock_connectible_has_data().
+>
+>Fixes: b3f7fd54881b ("af_vsock: separate wait data loop")
+>Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>---
+>
+>Changes in v2 (Thanks Stefano!):
+>  Fixed a typo in the commit message.
+>  Removed the unnecessary finish_wait() at the end of the loop.
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+LGTM:
 
--- 
-Best regards,
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+>
+> net/vmw_vsock/af_vsock.c | 5 ++++-
+> 1 file changed, 4 insertions(+), 1 deletion(-)
+>
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index d258fd43092e..884eca7f6743 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -1905,8 +1905,11 @@ static int vsock_connectible_wait_data(struct sock *sk,
+> 	err = 0;
+> 	transport = vsk->transport;
+>
+>-	while ((data = vsock_connectible_has_data(vsk)) == 0) {
+>+	while (1) {
+> 		prepare_to_wait(sk_sleep(sk), wait, TASK_INTERRUPTIBLE);
+>+		data = vsock_connectible_has_data(vsk);
+>+		if (data != 0)
+>+			break;
+>
+> 		if (sk->sk_err != 0 ||
+> 		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+>-- 
+>2.25.1
+>
 
