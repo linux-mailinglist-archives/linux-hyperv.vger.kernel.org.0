@@ -2,85 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57ADE616359
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 14:06:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F8E46163A6
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 14:17:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbiKBNGb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Nov 2022 09:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45884 "EHLO
+        id S231362AbiKBNRI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Nov 2022 09:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229962AbiKBNGa (ORCPT
+        with ESMTP id S231351AbiKBNQp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Nov 2022 09:06:30 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A8BBCAE;
-        Wed,  2 Nov 2022 06:06:30 -0700 (PDT)
-Received: by mail-wm1-f50.google.com with SMTP id t4so10624293wmj.5;
-        Wed, 02 Nov 2022 06:06:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cZOR+AsyvMFr6m+rsPfEb64MpZyMWXOK2GQIuhfnojY=;
-        b=kbzzTs97BRxBvcIpkj5jrSqQeRIqYGUQ67ee/UUt0F7PRs28QlTWJ60Wmw+FFxSFvg
-         cXlRV+lLhex0SnYm7Vb68Z2/QTTHMNXJLJ9CRIyx8QooiNVlowwlT/cnvTtSm6ZTQr8R
-         DRJuecOzuWsi5ntVOEUNOGXOrWqzbmyCDgkXV6sIZYVb9PbVqqNlDtQEbaffGXImcRRQ
-         WtEeYq8lpOfadq5R/M0oA0bl+Ny2j0id35vtRoddmzrjMKYkdpFtaGYN3RTU2Y1R84E1
-         5WkJgBG0u8g1c6TtnQqs9W3/rioSiVCofw+a8mGHOnA8ehG4bcoGFWdu68FMx7E2jg0c
-         HndA==
-X-Gm-Message-State: ACrzQf2gJJrdh6Unmu0+Z7MpIHzYJqE0HEnR3ixT7wulfG4107JPgLiT
-        Usp5wC7AVNTVmnVpEe2vCv4=
-X-Google-Smtp-Source: AMsMyM5fZ8uol08GARA634SedyOiScuLmBmhhesa8Bb43rYCLOmJKXIm/4DfWOp74+9DUuVtNkar5g==
-X-Received: by 2002:a05:600c:42c9:b0:3cf:69d4:72d9 with SMTP id j9-20020a05600c42c900b003cf69d472d9mr13375572wme.93.1667394388589;
-        Wed, 02 Nov 2022 06:06:28 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id o40-20020a05600c512800b003cf54b77bfesm2066989wms.28.2022.11.02.06.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Nov 2022 06:06:27 -0700 (PDT)
-Date:   Wed, 2 Nov 2022 13:06:21 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Jeffrey Hugo <quic_jhugo@quicinc.com>
-Cc:     decui@microsoft.com, quic_carlv@quicinc.com, wei.liu@kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        robh@kernel.org, kw@linux.com, helgaas@kernel.org,
-        alex.williamson@redhat.com, boqun.feng@gmail.com,
-        Boqun.Feng@microsoft.com
-Subject: Re: [PATCH v2] PCI: hv: Fix the definition of vector in
- hv_compose_msi_msg()
-Message-ID: <Y2JrTWk+bVuYF3Af@liuwe-devbox-debian-v2>
-References: <20221027205256.17678-1-decui@microsoft.com>
- <4dafab73-9957-f1df-69fe-3cfa59fb22fb@quicinc.com>
+        Wed, 2 Nov 2022 09:16:45 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 220772AC6D;
+        Wed,  2 Nov 2022 06:16:22 -0700 (PDT)
+Received: from anrayabh-desk (unknown [167.220.238.193])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0E404205DA23;
+        Wed,  2 Nov 2022 06:16:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0E404205DA23
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1667394981;
+        bh=NI5EroiAh9xA6O3pYot6k/iQ3uEpTCm+lukZT8/YEhg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FP/hFYEBvMRMvKB4mk/8o4dX5MgYKwHHh5CoHs91U092EmCXgEonYE56CtPPLadUR
+         HPMd/MikYbLm6kL2EwFOgaS3PEqpOVlADkfLn9FAKJGcxKb/BIWGLKno0GP/H4YXkb
+         c9cEb0ZT9/hp7DUb8mosJ/BcIuAawgYkGMijKHco=
+Date:   Wed, 2 Nov 2022 18:46:14 +0530
+From:   Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+To:     Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] drivers/clocksource/hyper-v: Introduce TSC MSR
+ register structure
+Message-ID: <Y2Jtnsh1Dcjwlrlz@anrayabh-desk>
+References: <166732356767.9827.4925884794177179249.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <166732386986.9827.12356845572628674464.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4dafab73-9957-f1df-69fe-3cfa59fb22fb@quicinc.com>
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <166732386986.9827.12356845572628674464.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 08:08:03AM -0600, Jeffrey Hugo wrote:
-> On 10/27/2022 2:52 PM, Dexuan Cui wrote:
-> > The local variable 'vector' must be u32 rather than u8: see the
-> > struct hv_msi_desc3.
-> > 
-> > 'vector_count' should be u16 rather than u8: see struct hv_msi_desc,
-> > hv_msi_desc2 and hv_msi_desc3.
-> > 
-> > Fixes: a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>
-> > Cc: Carl Vanderlip <quic_carlv@quicinc.com>
-> 
-> Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Please update the patch title since this doesn't introduce the TSC MSR
+register structure.
 
-Applied to hyperv-fixes. Thanks.
+Thanks,
+Anirudh.
+
+On Tue, Nov 01, 2022 at 05:31:09PM +0000, Stanislav Kinsburskii wrote:
+> From: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+> 
+> And rework the code to use it instead of the physical address.
+> This is a cleanup and precursor patch for upcoming support for TSC page
+> mapping into hyper-v root partition.
+> 
+> Signed-off-by: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+> CC: "K. Y. Srinivasan" <kys@microsoft.com>
+> CC: Haiyang Zhang <haiyangz@microsoft.com>
+> CC: Wei Liu <wei.liu@kernel.org>
+> CC: Dexuan Cui <decui@microsoft.com>
+> CC: Daniel Lezcano <daniel.lezcano@linaro.org>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: linux-hyperv@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  drivers/clocksource/hyperv_timer.c |   14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index c4dbf40a3d3e..d447bc99a399 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -367,6 +367,12 @@ static union {
+>  } tsc_pg __aligned(PAGE_SIZE);
+>  
+>  static struct ms_hyperv_tsc_page *tsc_page = &tsc_pg.page;
+> +static unsigned long tsc_pfn;
+> +
+> +static unsigned long hv_get_tsc_pfn(void)
+> +{
+> +	return tsc_pfn;
+> +}
+>  
+>  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+>  {
+> @@ -408,13 +414,12 @@ static void suspend_hv_clock_tsc(struct clocksource *arg)
+>  
+>  static void resume_hv_clock_tsc(struct clocksource *arg)
+>  {
+> -	phys_addr_t phys_addr = virt_to_phys(tsc_page);
+>  	union hv_reference_tsc_msr tsc_msr;
+>  
+>  	/* Re-enable the TSC page */
+>  	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+>  	tsc_msr.enable = 1;
+> -	tsc_msr.pfn = __phys_to_pfn(phys_addr);
+> +	tsc_msr.pfn = tsc_pfn;
+>  	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+>  }
+>  
+> @@ -498,7 +503,6 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
+>  static bool __init hv_init_tsc_clocksource(void)
+>  {
+>  	union hv_reference_tsc_msr tsc_msr;
+> -	phys_addr_t	phys_addr;
+>  
+>  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+>  		return false;
+> @@ -523,7 +527,7 @@ static bool __init hv_init_tsc_clocksource(void)
+>  	}
+>  
+>  	hv_read_reference_counter = read_hv_clock_tsc;
+> -	phys_addr = virt_to_phys(hv_get_tsc_page());
+> +	tsc_pfn = __phys_to_pfn(virt_to_phys(tsc_page));
+>  
+>  	/*
+>  	 * The Hyper-V TLFS specifies to preserve the value of reserved
+> @@ -534,7 +538,7 @@ static bool __init hv_init_tsc_clocksource(void)
+>  	 */
+>  	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+>  	tsc_msr.enable = 1;
+> -	tsc_msr.pfn = __phys_to_pfn(phys_addr);
+> +	tsc_msr.pfn = tsc_pfn;
+>  	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+>  
+>  	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+> 
