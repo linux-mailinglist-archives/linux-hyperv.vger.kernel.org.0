@@ -2,68 +2,52 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD746163D7
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 14:30:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09DD46163E5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 14:34:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbiKBNay (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Nov 2022 09:30:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37192 "EHLO
+        id S229650AbiKBNeN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Nov 2022 09:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230297AbiKBNax (ORCPT
+        with ESMTP id S229561AbiKBNeL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Nov 2022 09:30:53 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D8B027B2D
-        for <linux-hyperv@vger.kernel.org>; Wed,  2 Nov 2022 06:30:53 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id y6so12018126iof.9
-        for <linux-hyperv@vger.kernel.org>; Wed, 02 Nov 2022 06:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=docker.com; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jzaJHFBthKI+N9jxIZGxCYyCJNLPmN4e+ahut/KLlwU=;
-        b=Z1G3Uu9Lq7rVn008/R7qQNc36TD/itgKx7kUwlTZfUo5IN+FIIlbjt8ZQMasFfxQv/
-         7ZcXjtTGfguGBZMZeloCNGhQZobrVDESsgnp74DwVEsgMpre+qssJTKu7jorrORpLVug
-         vPsZJ3ucMyUTwOVQQIj5hVtyx8plTk1vOS82g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jzaJHFBthKI+N9jxIZGxCYyCJNLPmN4e+ahut/KLlwU=;
-        b=XfVUbASBamQMHm2mJ6l9TXwuKhib6Qtc+t9MPZyz1t1EyweLNO+1kaBe5rRR2eb+3o
-         KsOCLAFcQtG0kHJknWyPgTqjEQcHQCibTQiiG9c69FTP0yIwsB6pW19wbgv2Fpwzpfpw
-         bg6hrottW2tXubpQGljTrL+GY5+xPdkeDVdFYpWCgHjYcFdH2FrD0t7+p8U2gpWjBxQK
-         5fegM4Zy8dsNND8OD7Eb0nrbSP6rQr0L3Htlqf1H8PwsVss1mYa94v+mUr1LU/AFT0jt
-         7JV7pcXXxlBC3RMDmpH/solPgvqUxVscUvYBFGHXc38DCHOJU7mmyyiOAnZmPm7Jc95F
-         4F2g==
-X-Gm-Message-State: ACrzQf2Pyb759mF8csBiwiKc3W+xWl1KFyxpZxwVNBRtJrfBkHPc6tA6
-        x1hNz8+bIsWVDt1kXp+atV8pXOfVQ0MtaGx3+B4aLA==
-X-Google-Smtp-Source: AMsMyM4VY9g5n2ABc5ygSVSDsCFRasTDP+7DPN2cQU3wN0pNpeoFN4/+EvRJlj9i89lTtEQDqsiHOyx4b96d25H0VPQ=
-X-Received: by 2002:a6b:ba83:0:b0:6d3:e190:5abd with SMTP id
- k125-20020a6bba83000000b006d3e1905abdmr4589591iof.188.1667395852513; Wed, 02
- Nov 2022 06:30:52 -0700 (PDT)
+        Wed, 2 Nov 2022 09:34:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E3C29C8B;
+        Wed,  2 Nov 2022 06:34:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 461AE619A0;
+        Wed,  2 Nov 2022 13:34:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A33C433D7;
+        Wed,  2 Nov 2022 13:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667396049;
+        bh=UugxPTRum3GA6NT3cV3LetQcbxjAn1RP+8kL4YGxnKM=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=YXMF0zgqbQvF/pjj2HxQQQa9J9bzI3/R6OTwLzgKVRsHbi1W3SN9ZGEz2u9bHCRfJ
+         pL4ihMstlNP7fJnmBQ5joVf01nLu+6YQnkkp75zt6SfG1JmvoB0xr1/NkBN86G8lNk
+         3pv8/848z86RukEOGXNA1dN/6hAIBJqKrGqhnuK2zmCKLE5MQ9YUcqmR/Ebs8S3gnv
+         KFtQ1ORomZtA1l7eH6Xz8vDg/YuDraoBdJOqBlJAB6YOD2G6G8wk+hAYG8xErZ1mb0
+         sfXLwghCd63lyu9LpL73mP5z6e45eVZDQfIdpVj/m9VpjOf0Dav1tOj4+H8K09Z26O
+         ODZga04GvBR7Q==
+Date:   Wed, 2 Nov 2022 14:34:06 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+cc:     linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org
+Subject: Re: [PATCH] HID: hyperv: fix possible memory leak in
+ mousevsc_probe()
+In-Reply-To: <20221028134043.1152629-1-yangyingliang@huawei.com>
+Message-ID: <nycvar.YFH.7.76.2211021433580.29912@cbobk.fhfr.pm>
+References: <20221028134043.1152629-1-yangyingliang@huawei.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20221101021706.26152-1-decui@microsoft.com> <20221101021706.26152-3-decui@microsoft.com>
- <20221102093137.2il5u7opfyddheis@sgarzare-redhat> <20221102094224.2n2p6cakjtd4n2yf@sgarzare-redhat>
-In-Reply-To: <20221102094224.2n2p6cakjtd4n2yf@sgarzare-redhat>
-From:   Frederic Dalleau <frederic.dalleau@docker.com>
-Date:   Wed, 2 Nov 2022 14:30:41 +0100
-Message-ID: <CANWeT6gCfXbGVVySyiG9oQi9EXS2U5aEdN38z9qz1u91vCetyg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] vsock: fix possible infinite sleep in vsock_connectible_wait_data()
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Dexuan Cui <decui@microsoft.com>, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        arseny.krasnov@kaspersky.com, netdev@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kys@microsoft.com,
-        haiyangz@microsoft.com, stephen@networkplumber.org,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,49 +55,32 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Dexuan, Stefano,
+On Fri, 28 Oct 2022, Yang Yingliang wrote:
 
-Tested-by: Fr=C3=A9d=C3=A9ric Dalleau <frederic.dalleau@docker.com>
+> If hid_add_device() returns error, it should call hid_destroy_device()
+> to free hid_dev which is allocated in hid_allocate_device().
+> 
+> Fixes: 74c4fb058083 ("HID: hv_mouse: Properly add the hid device")
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+> ---
+>  drivers/hid/hid-hyperv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+> index e0bc73124196..ab57b49a44ed 100644
+> --- a/drivers/hid/hid-hyperv.c
+> +++ b/drivers/hid/hid-hyperv.c
+> @@ -499,7 +499,7 @@ static int mousevsc_probe(struct hv_device *device,
+>  
+>  	ret = hid_add_device(hid_dev);
+>  	if (ret)
+> -		goto probe_err1;
+> +		goto probe_err2;
+>  
 
-Regards,
-Fr=C3=A9d=C3=A9ric
+Good catch, applied, thank you.
 
+-- 
+Jiri Kosina
+SUSE Labs
 
-On Wed, Nov 2, 2022 at 10:42 AM Stefano Garzarella <sgarzare@redhat.com> wr=
-ote:
->
-> On Wed, Nov 02, 2022 at 10:31:37AM +0100, Stefano Garzarella wrote:
-> >On Mon, Oct 31, 2022 at 07:17:06PM -0700, Dexuan Cui wrote:
-> >>Currently vsock_connectible_has_data() may miss a wakeup operation
-> >>between vsock_connectible_has_data() =3D=3D 0 and the prepare_to_wait()=
-.
-> >>
-> >>Fix the race by adding the process to the wait queue before checking
-> >>vsock_connectible_has_data().
-> >>
-> >>Fixes: b3f7fd54881b ("af_vsock: separate wait data loop")
-> >>Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> >>---
-> >>
-> >>Changes in v2 (Thanks Stefano!):
-> >> Fixed a typo in the commit message.
-> >> Removed the unnecessary finish_wait() at the end of the loop.
-> >
-> >LGTM:
-> >
-> >Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-> >
->
-> And I would add
->
-> Reported-by: Fr=C3=A9d=C3=A9ric Dalleau <frederic.dalleau@docker.com>
->
-> Since Fr=C3=A9d=C3=A9ric posted a similar patch some months ago (I lost i=
-t because
-> netdev and I were not in cc):
-> https://lore.kernel.org/virtualization/20220824074251.2336997-2-frederic.=
-dalleau@docker.com/
->
-> Thanks,
-> Stefano
->
