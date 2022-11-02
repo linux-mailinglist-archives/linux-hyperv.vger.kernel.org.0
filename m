@@ -2,122 +2,132 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4054A616EC5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 21:30:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2CF8616ECB
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 21:33:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbiKBUah (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Nov 2022 16:30:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
+        id S229493AbiKBUdp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Nov 2022 16:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231217AbiKBUae (ORCPT
+        with ESMTP id S229459AbiKBUdo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Nov 2022 16:30:34 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11021024.outbound.protection.outlook.com [52.101.52.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C9A6352;
-        Wed,  2 Nov 2022 13:30:30 -0700 (PDT)
+        Wed, 2 Nov 2022 16:33:44 -0400
+Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11021023.outbound.protection.outlook.com [52.101.52.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A59F60C1;
+        Wed,  2 Nov 2022 13:33:42 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BYxSfXf506ibw89XotgnCgexicUkPbsVSfdCS0P99Y8pH1p2N8u2nh4qh82P4vrYNP/eIu2LxG6wi+Vba0x7cGGEZ9Pd5Mu9fORyRqj9knpcmIMsbHyie870mQR2Symn6IRnvagVx1tQMYD7VqE/U/zkxjIt1EyV1cDBI3Y1WPfuKKroONg1+5RMZ3dsYp5KHy00L7/1U727hqI4+vX90XIuSWPf2wMvAqd568jkKCqT7z8CVzUv5z/seQBBsSWiZI4rjszUzk+y5FSd58Q4uekKjvwekE8bIrTo637kbNcJe1+QaomnlNxemrC21LNb4iPz8s2qtbDeBt580F2kcg==
+ b=IzYQKKkgTglKSf5tNj4V35739bIz6x7PF+6rriulhxbn/4MmpEnn13S4W0tiUkNa2Ixadku7GzQUW1biK33xxp/nIkpgv6u5QqKu+ES4St7L3sLVl3I1UWYW+J13Ow0llUdpkw3x/NBpH4JJjHPWXJGj6+za6ucrlLxZyURmPkudjioDxcZnLh2lpOJVnSQcOoB0Zl8qEZj2amx8wg+V9UwUBxd5GQdTW50wHX8fhxUm+pJhjlPtayKlQyuN2pRnsiJ7SU/cqlRTbFRlnjYlAl5Bsl6TXVf+nxjhA+R+t1b26iAew4KjHkCIBsheqhfo7mWEB2DMflV3Tl45ocKbgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2HadpKihS6HN1hgXwk9/RyX14irQx1UKlWy4uaiTDtE=;
- b=Y8dg9XmoArWjau8ue/jOHTZ9NWi/ITdwgEmm9TetOcaoxm7v+2Bi2UzaTXmXcWSBrmsQ3wPX+wnupZ1RFQuMX2CEcanMubERTaHfAHYh3hr3vHiFQvzBAmg6jOprr2ke232JhT0TAS2y3em67978lkMCcvOMexTO7DkVU/ho16/N6kefle/6BPkeK4mk3zxdk9VBe98s8aSzii/3mLae9huhWf4b9/yW8boMToLMlmISjynuIDQFC1WStX68gbyOecfmoDWMrVokab5a/qB+WPutnFfY+n/50jIybTHJ8hNi6TeENEQ4BrSs5EGV7Ncw0qLI+YJsMrtunpq1J34+qQ==
+ bh=dpQPoChDA3RPDlPWGhLZqdOuuvqNyZZtg8PrKvciL5Q=;
+ b=kno0Z7GS1BNUuTX/XCRElbHKCDqXeTkob3GADUxAljIyQKfRsgJ+0U1ctcLchT4UJVAZu4THgTcmC3mnW5mFRq/0FtPpV+BfEXeOf+ZCWLB+cc4afM1h2Zf9OUbeKYb0ehfxfvVe6+C7q475Np5odBqIfxKURHCKu2swT6N76NkRyRh0xKtx0mK7E7fNtjyfrnkHe7GGW2TiUK2hJxipSuVLqQTKkWcPxS0ubWKSc2hODKvsLxAuvF/fPyGd6TLVcF2SUnb/61yK8QDD9H0Kr9ufj5biHWTYdJIl7EBLZ8XvY1bdk1Xr/GqepvJ6zfvAdb7+vn761n0ZrzwDmRrVNg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2HadpKihS6HN1hgXwk9/RyX14irQx1UKlWy4uaiTDtE=;
- b=fMSzsoyEkC3lDAPcE49IJjvYrsS53xxYuw514Rh+IQZWX1OQ+1MjGNsMu07CmUKKCsVlxGZ+h3DIwx55j7oBS0gVdkPaH862Klus/OtrTHvZhc/pReSrcZmc/UxzY1EnDGuIvljo3xxc533eH2l1rPe1S6Z7MKfAEA6Z/V2vbz8=
+ bh=dpQPoChDA3RPDlPWGhLZqdOuuvqNyZZtg8PrKvciL5Q=;
+ b=jtCJaFpTIW+Kk/Lv+RgBvuHv/Z2phbGXamMv4n39JXJjHgUhwVpUQW/Z792vRBAreo09x9kV0XQ6PCgGWC2N8Qe/x0+1Jni40jtgB0pGUFoVs4Ng528Ilz882luQCngihrAKSLYB0Rtd3+UG9vAyIxIm9gFWrU0yXjVOY28QESg=
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
  by SJ0PR21MB1919.namprd21.prod.outlook.com (2603:10b6:a03:2a2::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.5; Wed, 2 Nov
- 2022 20:30:27 +0000
+ 2022 20:33:31 +0000
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::f565:80ed:8070:474b]) by BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::f565:80ed:8070:474b%8]) with mapi id 15.20.5813.004; Wed, 2 Nov 2022
- 20:30:27 +0000
+ 20:33:31 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>
-CC:     Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/4] drivers/clocksource/hyper-v: Introduce TSC MSR
- register structure
-Thread-Topic: [PATCH 2/4] drivers/clocksource/hyper-v: Introduce TSC MSR
- register structure
-Thread-Index: AQHY7hfGdFg8W+TW4UePjgHc2LBts64r/kcQgAAHSwCAAA0egA==
-Date:   Wed, 2 Nov 2022 20:30:27 +0000
-Message-ID: <BYAPR21MB1688D5D33AC0D7D88AF6FD7BD7399@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <166732356767.9827.4925884794177179249.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <166732386986.9827.12356845572628674464.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <BYAPR21MB1688C426F44E40E1415DCD21D7399@BYAPR21MB1688.namprd21.prod.outlook.com>
- <CA+DrgLzYpFHUzYmvP_qhTMkaYhjRsgW3eaQfMYYpGiE2AHzjLw@mail.gmail.com>
-In-Reply-To: <CA+DrgLzYpFHUzYmvP_qhTMkaYhjRsgW3eaQfMYYpGiE2AHzjLw@mail.gmail.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+CC:     "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+        "kumarpraveen@linux.microsoft.com" <kumarpraveen@linux.microsoft.com>,
+        "mail@anirudhrb.com" <mail@anirudhrb.com>
+Subject: RE: [PATCH v2 1/2] clocksource/drivers/hyperv: add data structure for
+ reference TSC MSR
+Thread-Topic: [PATCH v2 1/2] clocksource/drivers/hyperv: add data structure
+ for reference TSC MSR
+Thread-Index: AQHY6erhWJkiLKLdokahKR7tbQL5tK4iP8/QgAngTwA=
+Date:   Wed, 2 Nov 2022 20:33:31 +0000
+Message-ID: <BYAPR21MB168844A39612131C920DA954D7399@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20221027095729.1676394-1-anrayabh@linux.microsoft.com>
+ <20221027095729.1676394-2-anrayabh@linux.microsoft.com>
+ <BYAPR21MB1688E0040710DF040BB7FCCDD7339@BYAPR21MB1688.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB1688E0040710DF040BB7FCCDD7339@BYAPR21MB1688.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=95265299-ccff-42b0-8e05-631f31879814;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-02T20:12:31Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7807c19b-bbc9-4867-b28c-415332ac85e7;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-10-27T13:41:31Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|SJ0PR21MB1919:EE_
-x-ms-office365-filtering-correlation-id: fc315271-3b76-4e53-1819-08dabd111423
+x-ms-office365-filtering-correlation-id: 6b9aca1a-53f2-4de7-864c-08dabd118188
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aBbiqZ4LPXJLmpZDI3ibl49J0bOxYyDaUp8pBmdpvuyh3ClBJ5EK+M3K0yin8gtwqK4CtVTqN7nItaUCMByLb9sVg8PkdoQupVDbry73h4mI4XbvHg6V0o+3CD83HbPuIDV4DNfQDVP/wWU4NyovySSX3PDO6a0t2G4Jnf2ZeuzuWHLJXmyzsAM36AIRdavuyC38XeldTw30exs41LdOsDRmkf1u+VKINxg1v3bvdvfO67AgwXLW6RL2fvwg44cHTg0CPE8wjaWDN8jRJ4z1PIqeyV5APofN6Nj8vjZIC6FlSzsQ/OmnHlXAlY1ekHWbxBxlgs5qErqaaGzVShd6Aycoh9kTTSbW8sVBqU2g/Q9PuQkcrqMmfUwOw1pVLXdmILCXV18FBaVUlvowbdjRk8nk0YUpdJ8YZ8XUGmoq7rsUC/tg9irpvX+lxNP1XRreK4O5z4fgOA/KTLz2lsE6Cvv23eKGxUAmLb3QuNWesnptDRhdVT+8zlYhABN7RTWxAeSexmYa00/1HoZVcP18KTVpAoX9qAOZq9uKLVnxky9VvFNDDsUHDyrZThcP5XqQbgYBrU/PceM+fixUrlQZu5K5KvjOHbdm30nZpSRcVvzgsD+GmK2VxWuxBIbjHLMAuKSlTwDBA0nbp+tGJfwzGwLdygxm2TjLHMSdtERGueKuFEZA28JPhS8QOjkwdsNSV7eDZt7H/nEB74EhU26I9qfC1TocGiYqo8teW/gM1OoYbynOwBA4P2qTw6a8zFC8/vsSTPVhMUgK+g/hrW4dJ6kTUNETGpZIDqMnHMzWGtIk/xma9+oUhdY9b/gclCrQ
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(136003)(376002)(396003)(346002)(451199015)(8990500004)(64756008)(66556008)(54906003)(316002)(66476007)(8676002)(110136005)(38100700002)(38070700005)(122000001)(2906002)(66446008)(41300700001)(8936002)(5660300002)(55016003)(52536014)(66946007)(4326008)(76116006)(10290500003)(71200400001)(33656002)(186003)(83380400001)(6506007)(82950400001)(9686003)(82960400001)(7696005)(86362001)(478600001)(26005);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: Jn3GZRIfyXQxgJX5ykTXQdYyxE4Fd2ar4Un1K0hP5ZWNRU802Q7N5NLIdv215XTYVvx2IX//M0HejtJgNIGuMxbz74TKHArthLviJH9BVQ7GvjFo0E1SRarYYr1s8z096/4UNRAIdySSCjhOgO2KPWb1ojw/p/JmkW92+8UosbasMKn2rlpUg17VTgYGyWf1maUyvMT6Aj+ptwvAZb4ZUIfuzhTDf+d2qOJD4esb053g7bBA4Z+bvuCuo89kXpE6AymOBwKCNfc4FEtrWnANpk84xBl2uWKCwA7tQowpfwWirxP+Fm7JBbeo1X82C6WjVCj4Qu7VML+fcMOHvo+oBuxJXnyTBgXRR5EZETfePvJCOIoi0LexdoWAsXWpTOAN9C6uYuXz9KedzNNkdLfT2PEX3mPVk+13chIIk+5u8wKZAprf2+4uinctlUibNFb46mFEHAt85G0wurTEgz+x1r3cKMcu+G0gDLlQOUCsJpY+72Tz+mlQmaOczHLr9k9VS7Ym45fdXC7POqeFmSyt+dIlLaaVEH+ObygTufKA/h4YZb795VH6P5E9/sNn0YdI06lEMiDX0suXMqsp4dIH4P2oA9OTU/2bbXQ+noF4NJ4TaArb9Ui4nJwogQ+p3DQoCgbsONPriK1On/woFWjBhbwP3ROmAw9j6v10b1S0dXjFVownLAgWt3K/U6ok5jNEuG+1oDs6P2plHLGj+b5u1Bl/XlgvPkozhSqqSZeDKkeYQrn5JXHlx82/HokSWVRWE7OYt6Ens8XiKYBQlvC1R8b9NHDD7oLahajEJVv+gM4Hh4a7T0JeOVXJ/ry4RPbEBLI36AlteCvU2vjGKi4ftQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(366004)(136003)(376002)(396003)(346002)(451199015)(8990500004)(64756008)(66556008)(54906003)(316002)(66476007)(8676002)(110136005)(38100700002)(38070700005)(921005)(122000001)(2906002)(66446008)(41300700001)(8936002)(5660300002)(7416002)(55016003)(52536014)(66946007)(4326008)(76116006)(10290500003)(71200400001)(33656002)(186003)(83380400001)(6506007)(82950400001)(9686003)(82960400001)(7696005)(86362001)(478600001)(26005);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?koi8-r?Q?vsk7vyWFkq4+aBpNiERCS6glLUoI2cjfBQvPsgQHNeG9Fu9Na7lDqHYmMSxS8J?=
- =?koi8-r?Q?JbkvJ4bkD4zsfo6dC+SEo2Yfu8FfLH5DL57Nx25RqXrvTAdYc6YRpksZafLP7E?=
- =?koi8-r?Q?ImHzX7xakN+zaSY0P3rQw9U+4doibN+jSPdkECQ+7pjE3pZw2r2gvkhuTkqFqO?=
- =?koi8-r?Q?NhHMn+5ywJT2lVXnLEh1pjCWYm6JSu4M5rwwTiCg/sHKeZpqoPXhs9JoyOX6gr?=
- =?koi8-r?Q?HRuh1H+HEe02VlEupkrY7ZxyMQ+3xUa0xYs+03aokUfKCL+/esv6AZmz7cltMz?=
- =?koi8-r?Q?LeQu8to5oD3bQoRFtoz/e3gwvcNfocs0WIFcgdnE+mwbkQzKJlDX1x4AF46KXG?=
- =?koi8-r?Q?hqzarGF80v9k0cctWF54l4yjfaJ72nlAHn7dJrkl3saixAse+XBht44qWdJ/Aa?=
- =?koi8-r?Q?29QMhXHnSmJKhxxtA89W0ycrnKhVQzKh5T91RCDYg3A8ousxR4AsnvmIlzzq/r?=
- =?koi8-r?Q?mc9WTZSw7L1QPSBj8OQpzP+e9/vx9fihxZv2hW3X52bjDBB4t5XAKAMuAf+Rv0?=
- =?koi8-r?Q?0ZDktEgKdvq2ixuHHn6l+WTHOIL0/wTX0jSTFsKBaKNuNTn5bWPxP8EzOaRcvd?=
- =?koi8-r?Q?RHggCJuKiUml/QoC+kVcSWrQ4rQIXE0dpV0eRRNVUx8zOtkUpXND07UQVfLna8?=
- =?koi8-r?Q?ZvgnF6Lq6SqXDiMcfs5sqmHkfzVu9QfeSCZkrft7Ale1N1PylctBWxh+kweXv1?=
- =?koi8-r?Q?9pCNT+mLqoKrnBqdCoEwGzU9zovbIbF9jsjyVrT1ochMc2mVnLh635I/lTMaqF?=
- =?koi8-r?Q?KoxPBX7d5k+DQMw5cHJgwCnf4xyRdF4/V4YuKRRy4EAjO3ST6a03zwd1Mq6s0A?=
- =?koi8-r?Q?KvSuyjiJ9lAY61DP6Zdl1fFokl5lZidd4rYBmqBUF30Ecdp58+dDKUax0VK/E5?=
- =?koi8-r?Q?RaYOsps/XgFlqp1tFPJvqv+DyfcMZ+o0VZ6Y30lcdwjIZ57IXB1jAnLJgHqxb9?=
- =?koi8-r?Q?53uyWOxCVKtrdYHklPAbWZ6A6MYx99U3sIx3b1Zywx84nf0Or3sjON+MnRuJ0m?=
- =?koi8-r?Q?K+7ycuOpNCRIRhj5TmgckfpJPsI1lnWj5jMbMmDb5CfowvoMD4StPFDODb356x?=
- =?koi8-r?Q?0wEX5rvNLrVMyBwdolWnk8wtereyA2zO7q7E/dfMkDJtq7yo8vv+h8QxjyOmce?=
- =?koi8-r?Q?njEYSXNmkgu0Uw3fN7PPWV0vRYymNV4PEwnQQPtw/RkfV9jjA4QW6ILXiTe8li?=
- =?koi8-r?Q?nPTLuMvpuBwJZbP7OW2780a073BAHDq0W6IEMFfltRiYse/YiYqtToRjJGhKre?=
- =?koi8-r?Q?bxHfTYrRi4eKYAD5vvGLVBDjWRNAycljStnOfT4d1Eu6EZihdPE1pztEUrvnJm?=
- =?koi8-r?Q?qwJn+4vXLwqKHTAjGbDpQtk9z45nmEoAM3yUNdYJ+cJS+dbfc4RGsYvQo7K52S?=
- =?koi8-r?Q?LbMM26yHEI+ekAwVYXURu7nVt0ZSlu4nkVcUajha/nT2DzoOGMSIlfmou5Xdw1?=
- =?koi8-r?Q?+yGdvOIaZ40R+CQRDj+wKeURf6wxxmnlqGqw26o/iuh+0RgcHEDwFAEQJVdveN?=
- =?koi8-r?Q?P8P3rM8uW+HI7N0ndFPazqi+TH04QPAhS5iPLo2L0GQFiCXE1a1jziq/f6KHAz?=
- =?koi8-r?Q?tQQ0OF9sFw=3D=3D?=
-Content-Type: text/plain; charset="koi8-r"
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?hE6PsVZw3VNNbRDc46O1bBpb1xGHtAo6yae4zgrjsGOoFfHJWCiYstHxxbyu?=
+ =?us-ascii?Q?lb3ZUFAFGALpltC+L4yMINo3mwjOzbmdR6nSswzqLRouajG/lLUbc0WJePr6?=
+ =?us-ascii?Q?bxrrDibC4xo6feAe/OWiwA3qc2cJ3tdlSTZoWLbuuoNi/qA2FXxAz3G5c5lI?=
+ =?us-ascii?Q?jQITjcAiHqJL5HkU6f9LZNrOT3GDZl+UDOFVua02KRbZ6RR2YX3Eb0Qp0dvp?=
+ =?us-ascii?Q?jOu5/WgdVZVtetal/QoRsgh0+vjkYSfHzEobvmrNW2QBM17La++HgGDk6X2e?=
+ =?us-ascii?Q?yAg1KlCOY06K25n8vq5MzGUh34VH1sNg/2Zu+1PsaiTQ5FxfAi7gabb04K2g?=
+ =?us-ascii?Q?P1aEkAnjDA20h2xS1xRlsAFFcIsWxbEg4SLCbrFLHBZJJfWBR2F+9J+phq7o?=
+ =?us-ascii?Q?vWkjX2Rfc+tcUwwJ4ya45ct3Qo1J0KRwys74aGUM4aXT8uWsrLBOKaEOnP+6?=
+ =?us-ascii?Q?9bHRJJ768gXzE49VPCptOLPi/TWjWA6R1hA/50d1tJdUWHYNdHNNEh48y4wL?=
+ =?us-ascii?Q?R2sQGsWK8VZpRd2h6tCaIJd4jks6uX0BkmFezeNPDdfUWe/M/hMSujdDQiXB?=
+ =?us-ascii?Q?DoN6ikpvDvxbq54eVxxxUpsClT4nWwANlPb4/71ezqZTRj11GM2Anr2jxbin?=
+ =?us-ascii?Q?UmNOQBlJk5txfuSr6BHf4vyQov/iayoyKBhZRXZSi0BIrreOD2549WDjzQDr?=
+ =?us-ascii?Q?yw/C41B/Jt02kHXHa3mzsZ07iQ9JrpgMwx5gj46uHSYm+b85DYKCTscAxHly?=
+ =?us-ascii?Q?qrw2Frm4DDZB9bi8b+jZjKBY45EpaaFElpyzUw+cURQduWzXJxy585SOmcFB?=
+ =?us-ascii?Q?ZCVwRYL6TdXjGfrBMev6zBGDs+NzMC94Cb+rzFoh21vMUbnqhLUVKVNulE22?=
+ =?us-ascii?Q?UPqswBkzmFqCP0Jvj8JlXX1XMyIBDrTm8YP4TfsN9gdF/zzEJaeBKwT1Mtel?=
+ =?us-ascii?Q?2vcCjJe86W1kPpQMDRsUt9xUgu0hFcgLSbd54ElnD8hToZ16hAicBME/ZwXi?=
+ =?us-ascii?Q?ImQogmR5wgml/0BAprkB74h84nR0YRtkiZoyxWNd+EZMo8gwxPEAgBcEnQJb?=
+ =?us-ascii?Q?xnMa3ZhNZWQFP3WshvFj0V+vc6aVr3b9YYiieuayyoY4as67yYiyRhpHnZNS?=
+ =?us-ascii?Q?gQJvxJHU4ZyvekNPEERjSD1iJmlNsK/pNXG1u+x8BgOpbWnZXDTiZqgybJZs?=
+ =?us-ascii?Q?7pwWbE0iplj4fvkT2d7j26rB0RL9iLZWWedFsW4vFGDVJ2vlIsgDB8Q2bqZ/?=
+ =?us-ascii?Q?XXNBiel5FwwVlKBKY4McDtZ/CFStO1Zme3YyDBDFT7XVnG7EkzcQmr4qS/ft?=
+ =?us-ascii?Q?3fyLVR1/2daHU9Nn8eKtiIkcYlNBJIgdw9PQEHy4/7XH+OCL2wXkKB12Ay6T?=
+ =?us-ascii?Q?TnNC653W3NBp+P8vyx8ITV+Tw6rrd7TH0U/LrWcv7gZyleQAuZpX/7vJ9j3u?=
+ =?us-ascii?Q?NPg+TEyX+uYA/fgQeZHq4LPg54Njit8Z9EG7Q2ZroQFMZ96WiWjym91jdqeB?=
+ =?us-ascii?Q?6pLI8OT+pQ+fpbU8nPcineg0B0ZlIrZ9NLRtW5kp9UZeHpXEXWIHputIlgu7?=
+ =?us-ascii?Q?WFowNKqmct3S2e0h6NvPbeIRFdCDbGGsAdvoW8BTrm1GVlIwOMTuBhO9ZB94?=
+ =?us-ascii?Q?yw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc315271-3b76-4e53-1819-08dabd111423
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2022 20:30:27.5971
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b9aca1a-53f2-4de7-864c-08dabd118188
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2022 20:33:31.1335
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H3HBMCn2Gh2Vt1LXMakHgl7cmJmuKWLSiD97S/Q0X+E0QUl6heVhXR9bBTQR/wZiGdaHLzQaiqUM2abyY8A8EDc1UJUcCePim6itFNn/L3U=
+X-MS-Exchange-CrossTenant-userprincipalname: d2rsNnLXo17Pj3YCDMtMQgwsNYiiInFtiNGtYDoGyewJcJX+TOk+jQ7B/U9t7XRp/B+J7bQMMSPaA6/+ogaIUyk8BEv+uFaiQY4pRtcQn48=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1919
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -129,83 +139,120 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>  Sent: Wednes=
-day, November 2, 2022 12:26 PM
-
-> =D3=D2, 2 =CE=CF=D1=C2. 2022 =C7. =D7 12:07, Michael Kelley (LINUX) <mail=
-to:mikelley@microsoft.com>:
-> From: Stanislav Kinsburskii <mailto:skinsburskii@linux.microsoft.com> Sen=
-t: Tuesday, November 1, 2022 10:31 AM
-> >=20
-> > And rework the code to use it instead of the physical address.
-> > This is a cleanup and precursor patch for upcoming support for TSC page
-> > mapping into hyper-v root partition.
-> >=20
-> >=9A drivers/clocksource/hyperv_timer.c |=9A =9A14 +++++++++-----
-> >=9A 1 file changed, 9 insertions(+), 5 deletions(-)
-> >=20
-> > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/h=
-yperv_timer.c
-> > index c4dbf40a3d3e..d447bc99a399 100644
+From: Michael Kelley (LINUX) <mikelley@microsoft.com> Sent: Thursday, Octob=
+er 27, 2022 6:43 AM
+> From: Anirudh Rayabharam <anrayabh@linux.microsoft.com> Sent: Thursday,
+> October 27, 2022 2:57 AM
+> >
+> > Add a data structure to represent the reference TSC MSR similar to
+> > other MSRs. This simplifies the code for updating the MSR.
+> >
+> > Signed-off-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+> > ---
+> >  drivers/clocksource/hyperv_timer.c | 28 ++++++++++++++--------------
+> >  include/asm-generic/hyperv-tlfs.h  |  9 +++++++++
+> >  2 files changed, 23 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/clocksource/hyperv_timer.c
+> b/drivers/clocksource/hyperv_timer.c
+> > index bb47610bbd1c..11332c82d1af 100644
 > > --- a/drivers/clocksource/hyperv_timer.c
 > > +++ b/drivers/clocksource/hyperv_timer.c
-> > @@ -367,6 +367,12 @@ static union {
-> >=9A } tsc_pg __aligned(PAGE_SIZE);
-> >=20
-> >=9A static struct ms_hyperv_tsc_page *tsc_page =3D &tsc_pg.page;
-> > +static unsigned long tsc_pfn;
-> > +
-> > +static unsigned long hv_get_tsc_pfn(void)
-> > +{
-> > +=9A =9A =9Areturn tsc_pfn;
-> > +}
->
-> > It makes sense to have the tsc_page global variable so that we can
-> > handle the root partition and guest partition cases with common code,
-> > even though the TSC page memory originates differently in the two cases=
-.
+> > @@ -395,25 +395,25 @@ static u64 notrace read_hv_sched_clock_tsc(void)
 > >
-> > But do we also need a tsc_pfn global variable and getter function?=9A W=
-hen
-> > the PFN is needed, conversion from the tsc_page virtual address to the =
-PFN
-> > isn't hard, and such a conversion is needed in only a couple of places.=
-=9A To me,
-> > it's simpler to keep a single global variable and getter function (i.e.=
-,
-> > hv_get_tsc_page), and do the conversions where needed.=9A =9AAdding tsc=
-_pfn
-> > and the getter function introduces a fair amount of code churn for not =
-much
-> > benefit.=9A It's a judgment call, but that's my $.02.
->
-> As I replied to Anirudh , AFAIK virt_to_phys doesn't work for remapped pa=
-ges.
-> Another option would be to read the MSR each time PFN has to be returned =
-to
-> the vvar mapping function (i.e. on every fork), which introduces unnecess=
-ary
-> performance regression..
-> Another modification would be to make pfn a static variable and initializ=
-e it
-> once in hv_get_tsc_pfn() on first access. But I like this implementation=
-=9Aless.
+> >  static void suspend_hv_clock_tsc(struct clocksource *arg)
+> >  {
+> > -	u64 tsc_msr;
+> > +	union hv_reference_tsc_msr tsc_msr;
+> >
+> >  	/* Disable the TSC page */
+> > -	tsc_msr =3D hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> > -	tsc_msr &=3D ~BIT_ULL(0);
+> > -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
+> > +	tsc_msr.as_uint64 =3D hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> > +	tsc_msr.enable =3D 0;
+> > +	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+> >  }
+> >
+> >
+> >  static void resume_hv_clock_tsc(struct clocksource *arg)
+> >  {
+> >  	phys_addr_t phys_addr =3D virt_to_phys(&tsc_pg);
+> > -	u64 tsc_msr;
+> > +	union hv_reference_tsc_msr tsc_msr;
+> >
+> >  	/* Re-enable the TSC page */
+> > -	tsc_msr =3D hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> > -	tsc_msr &=3D GENMASK_ULL(11, 0);
+> > -	tsc_msr |=3D BIT_ULL(0) | (u64)phys_addr;
+> > -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
+> > +	tsc_msr.as_uint64 =3D hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> > +	tsc_msr.enable =3D 1;
+> > +	tsc_msr.pfn =3D __phys_to_pfn(phys_addr);
 
-Valid point about virt_to_phys().  But virt_to_hvpfn() does the right thing=
-.  It
-distinguishes between kernel addresses in the main linear mapping and
-vmalloc() addresses, which is what you get from memremap().  But I haven't
-looked through all the places virt_to_hvpfn() would be needed to make sure
-it's safe to use.
-
-However, thinking about virt_to_hvpfn(), there's a problem with Anirudh's
-earlier patch set that started using __phys_to_pfn().  That won't work corr=
-ectly
-if the guest page size is not 4K because it will return a PFN based on the =
-guest
-page size, not based on Hyper-V's expectation that the PFN is based on a
-4K page size.  So that needs to be fixed either way.
+My previous review missed a problem here (and in the similar line below).
+__phys_to_pfn() will return a PFN based on the guest page size, which might
+be different from Hyper-V's page size that is always 4K.  This needs to be =
+a
+Hyper-V PFN, and we have virt_to_hvpfn() available to do just that, assumin=
+g
+that function is safe to use here and in the case below.=20
 
 Michael
 
-=9A
+> > +	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+> >  }
+> >
+> >  #ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
+> > @@ -495,7 +495,7 @@ static __always_inline void hv_setup_sched_clock(vo=
+id
+> > *sched_clock) {}
+> >
+> >  static bool __init hv_init_tsc_clocksource(void)
+> >  {
+> > -	u64		tsc_msr;
+> > +	union hv_reference_tsc_msr tsc_msr;
+> >  	phys_addr_t	phys_addr;
+> >
+> >  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+> > @@ -530,10 +530,10 @@ static bool __init hv_init_tsc_clocksource(void)
+> >  	 * (which already has at least the low 12 bits set to zero since
+> >  	 * it is page aligned). Also set the "enable" bit, which is bit 0.
+> >  	 */
+> > -	tsc_msr =3D hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> > -	tsc_msr &=3D GENMASK_ULL(11, 0);
+> > -	tsc_msr =3D tsc_msr | 0x1 | (u64)phys_addr;
+> > -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr);
+> > +	tsc_msr.as_uint64 =3D hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> > +	tsc_msr.enable =3D 1;
+> > +	tsc_msr.pfn =3D __phys_to_pfn(phys_addr);
+> > +	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+> >
+> >  	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+> >
+> > diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hy=
+perv-tlfs.h
+> > index fdce7a4cfc6f..b17c6eeb9afa 100644
+> > --- a/include/asm-generic/hyperv-tlfs.h
+> > +++ b/include/asm-generic/hyperv-tlfs.h
+> > @@ -102,6 +102,15 @@ struct ms_hyperv_tsc_page {
+> >  	volatile s64 tsc_offset;
+> >  } __packed;
+> >
+> > +union hv_reference_tsc_msr {
+> > +	u64 as_uint64;
+> > +	struct {
+> > +		u64 enable:1;
+> > +		u64 reserved:11;
+> > +		u64 pfn:52;
+> > +	} __packed;
+> > +};
+> > +
+> >  /*
+> >   * The guest OS needs to register the guest ID with the hypervisor.
+> >   * The guest ID is a 64 bit entity and the structure of this ID is
+> > --
+> > 2.34.1
+>=20
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+
