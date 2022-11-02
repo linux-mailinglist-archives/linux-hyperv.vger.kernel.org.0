@@ -2,107 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13B52616030
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 10:46:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD98D616059
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 11:02:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbiKBJqV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Nov 2022 05:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57314 "EHLO
+        id S229971AbiKBKCW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Nov 2022 06:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbiKBJqU (ORCPT
+        with ESMTP id S229968AbiKBKCV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Nov 2022 05:46:20 -0400
+        Wed, 2 Nov 2022 06:02:21 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA0223176
-        for <linux-hyperv@vger.kernel.org>; Wed,  2 Nov 2022 02:45:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F13E22BF1
+        for <linux-hyperv@vger.kernel.org>; Wed,  2 Nov 2022 03:01:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667382317;
+        s=mimecast20190719; t=1667383286;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DW2a/80J8hDerpO8ayxyonD3c6E1iUdSbhWZlEaOu5c=;
-        b=OP9ZBS21JauMiqj2jqv6a43yEvWdJ0McCa0JXokqbN5UX3iAAXyFAqtS09jmXco2Hi3qTw
-        i0wwS7s6wl5itmVZRwiaeKNygX+nVp7gCLZjy31xf1ZxBLCLAiLgFWYGcUT8UxHBE9gId8
-        L5a5cwgRe483yx43XIZQTw0nvjW+m/w=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=QoVTRIE06q1gLaA+FiGPh2NoY5TNtlfidxMdk3t+aTM=;
+        b=fuSs/eA4/7vZhV+X35FsnJlEhJ/20+W2k2LZenlQ7FIAvrb5mWjQpHZEEE3G7/vkuBezcY
+        ci/Smj7q/Z7hIgWVlQx1F2hNiJZQuFSvdEElWEudDf6CzncUGzYGNXoMcPmOQDpm4N2pDn
+        leC3TPAoQgZGNS5Qf5k3LtPYa4n+dVI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-400-sCsOR8AZMWO06rARmBa13g-1; Wed, 02 Nov 2022 05:45:16 -0400
-X-MC-Unique: sCsOR8AZMWO06rARmBa13g-1
-Received: by mail-qk1-f199.google.com with SMTP id f12-20020a05620a408c00b006ced53b80e5so14833203qko.17
-        for <linux-hyperv@vger.kernel.org>; Wed, 02 Nov 2022 02:45:16 -0700 (PDT)
+ us-mta-624--l4tJzo4OAq6clT0r9IIbQ-1; Wed, 02 Nov 2022 06:01:25 -0400
+X-MC-Unique: -l4tJzo4OAq6clT0r9IIbQ-1
+Received: by mail-wm1-f69.google.com with SMTP id ay19-20020a05600c1e1300b003cf758f1617so105260wmb.5
+        for <linux-hyperv@vger.kernel.org>; Wed, 02 Nov 2022 03:01:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DW2a/80J8hDerpO8ayxyonD3c6E1iUdSbhWZlEaOu5c=;
-        b=CcxZoJpRanrH6dxniyQcUT/DPz8+DLuS8NNZ2y9ABxjbpbnQ/lJVdWUPOnl8aodZ7k
-         ZBgA/XFcmMnf3MbE5CEsIGyj6dTzXhZNGfd7Sut7DAm0NP9VRs/E10NCDsEd6oLu7wHc
-         Yh3P0DjUgfxJYmVC66RAwEeneI/FcAFrwASjjPTCdWr7+H1LBlxN7WXiN8OkR++LdlbW
-         yXnDM93T+VfOsDUeCVi4YtpYjsQlZBk3M4+vEPtt/pCwO8w0tf1W0IrrX00UkxRsFVy6
-         U7S46/Adb+k2mWI4R7MsGbCVT9muK5u+1+1efrKs0IioOAv0djDeVA/twCwVQ3AVFkq7
-         Oy6g==
-X-Gm-Message-State: ACrzQf3Lo++E9ZRP2NJ62aRtFyYuOAn9i3QbKfviAjSv55FrDkYt6LNN
-        edwjymnzhXZALOrqIJ6pnsF8ZBoNWNeOulJM6OgPZ6ZZSyAZW7Vn7wruk7OpI6ISXhmmygyzOwn
-        sDPN+XhSXVX3Q05oZ76uBsRQy
-X-Received: by 2002:a0c:906e:0:b0:4bb:e024:53b5 with SMTP id o101-20020a0c906e000000b004bbe02453b5mr16117816qvo.39.1667382315414;
-        Wed, 02 Nov 2022 02:45:15 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6DBLvfnyHa64NTohsQ2JJkSO3mLcgL9P+qhtcouJauIw3nBBLEsYTgOuVHQoDiDy+GcHZILg==
-X-Received: by 2002:a0c:906e:0:b0:4bb:e024:53b5 with SMTP id o101-20020a0c906e000000b004bbe02453b5mr16117805qvo.39.1667382315054;
-        Wed, 02 Nov 2022 02:45:15 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-234.retail.telecomitalia.it. [82.53.134.234])
-        by smtp.gmail.com with ESMTPSA id h4-20020a05620a400400b006cdd0939ffbsm8126852qko.86.2022.11.02.02.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Nov 2022 02:45:14 -0700 (PDT)
-Date:   Wed, 2 Nov 2022 10:45:04 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Frederic Dalleau <frederic.dalleau@docker.com>
-Cc:     wei.liu@kernel.org, netdev@vger.kernel.org, haiyangz@microsoft.com,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        stephen@networkplumber.org, edumazet@google.com, kuba@kernel.org,
-        arseny.krasnov@kaspersky.com, decui@microsoft.com
-Subject: Re: [PATCH 2/2] vsock: fix possible infinite sleep in
- vsock_connectible_wait_data()
-Message-ID: <20221102094504.vhf6x2hgo6fqr7pi@sgarzare-redhat>
-References: <20221028205646.28084-1-decui@microsoft.com>
- <20221028205646.28084-3-decui@microsoft.com>
- <20221031084327.63vikvodhs7aowhe@sgarzare-redhat>
- <CANWeT6gyKNRraJWzO=02gkqDwa-=tw7NmP2WYRGUyodUBLotkQ@mail.gmail.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QoVTRIE06q1gLaA+FiGPh2NoY5TNtlfidxMdk3t+aTM=;
+        b=1+ctzDRvTacUDgJMcBibtYjDy760jghVjyeNpnB4pcNljhWqwrqOw3S5heRWrvFMrJ
+         OSSNqVH9/S1MejgW9AHbCgTabdpD1YTBA3r6TsvgGWVKNf+6+UuwYhjMaENV8KOpY7mF
+         w+z/W2YV8F4x9baAqkAh/GdqevrLuLWo56/v8EIK26U+Pz5hEWkUGqhbd6nbX4Cogjct
+         vQxHtFOd+NztyPCN3QlWaALBOoNqDODeeDysxn9E6vU1zZKzC6xReyyuS0YxDR/fMXZ5
+         p3qw0OaN74dzFQDeSSTQ26rVOa1wzz3Z4IPJjgjQD1w29KmuJVd6Fn0937wHPBpaZaHE
+         Mo4g==
+X-Gm-Message-State: ACrzQf2tfGRc6pjVyn3dfKnvnLpJWPVUsIxKw3IfCEdXXE8ncKL2I8Ml
+        a47FwHTYyM9Qj6AhgpvlwBOYDgj5Wkt1GWM4x4RhaX+Va2KyexoMEj2DZ5hdW+MM27m1cVLuUd1
+        Rq8RXFnMyyT7lHqKKl+4GKe+v
+X-Received: by 2002:a5d:5505:0:b0:236:582b:7eb0 with SMTP id b5-20020a5d5505000000b00236582b7eb0mr14405747wrv.68.1667383284402;
+        Wed, 02 Nov 2022 03:01:24 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5ieiweFPtXW5w3c0VZoUXMoQohTPuy1WtQBfT29g+UzlDhvHMzFOjUUUPFpm0LZwMa5DV8ag==
+X-Received: by 2002:a5d:5505:0:b0:236:582b:7eb0 with SMTP id b5-20020a5d5505000000b00236582b7eb0mr14405736wrv.68.1667383284200;
+        Wed, 02 Nov 2022 03:01:24 -0700 (PDT)
+Received: from [192.168.1.130] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id b13-20020a5d550d000000b002366b17ca8bsm14230263wrv.108.2022.11.02.03.01.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Nov 2022 03:01:23 -0700 (PDT)
+Message-ID: <1d2b9809-857f-48cc-1177-72e6fc67b8e5@redhat.com>
+Date:   Wed, 2 Nov 2022 11:01:22 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CANWeT6gyKNRraJWzO=02gkqDwa-=tw7NmP2WYRGUyodUBLotkQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2 20/21] drm/fb-helper: Move generic fbdev emulation into
+ separate source file
+Content-Language: en-US
+To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
+        airlied@gmail.com, sam@ravnborg.org, mripard@kernel.org,
+        maarten.lankhorst@linux.intel.com
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
+        etnaviv@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20221024111953.24307-1-tzimmermann@suse.de>
+ <20221024111953.24307-21-tzimmermann@suse.de>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+In-Reply-To: <20221024111953.24307-21-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Nov 01, 2022 at 09:21:06PM +0100, Frederic Dalleau via Virtualization wrote:
->Hi Dexan, Stephano,
->
->This solution has been proposed here,
->https://lists.linuxfoundation.org/pipermail/virtualization/2022-August/062656.html
+On 10/24/22 13:19, Thomas Zimmermann wrote:
+> Move the generic fbdev implementation into its own source and header
+> file. Adapt drivers. No functonal changes, but some of the internal
+> helpers have been renamed to fit into the drm_fbdev_ naming scheme.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
-Ops, I missed it!
+-- 
+Best regards,
 
-Did you use scripts/get_maintainer.pl?
-https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#select-the-recipients-for-your-patch
-
-Since your patch should be reposted (hasn't been sent to 
-netdev@vger.kernel.org, missing Fixes tag, etc.) and Dexuan's patch on 
-the other hand is ready (I just reviewed it), can you test it and 
-respond with your Tested-by?
-
-I would like to give credit to both, so I asked to add your Reported-by 
-to the Dexuan's patch.
-
-Thanks,
-Stefano
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
