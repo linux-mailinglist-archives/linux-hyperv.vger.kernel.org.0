@@ -2,32 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3319961704E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 23:07:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2590A617052
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Nov 2022 23:07:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbiKBWH3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Nov 2022 18:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52100 "EHLO
+        id S231239AbiKBWHu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Nov 2022 18:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230478AbiKBWHZ (ORCPT
+        with ESMTP id S231351AbiKBWHh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Nov 2022 18:07:25 -0400
+        Wed, 2 Nov 2022 18:07:37 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 86746A446;
-        Wed,  2 Nov 2022 15:07:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C904495BE;
+        Wed,  2 Nov 2022 15:07:29 -0700 (PDT)
 Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [20.120.152.163])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5583520C3338;
-        Wed,  2 Nov 2022 15:07:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5583520C3338
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9A4E520C3338;
+        Wed,  2 Nov 2022 15:07:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A4E520C3338
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1667426844;
-        bh=EWM7ms7b0WbT7d6yAY+HL9LM12Gu9G0ck67VyffGqTc=;
+        s=default; t=1667426849;
+        bh=kY+BUE9K0z7WzM/4fFPpfyIF7753x1wgzUWR7hXp/x0=;
         h=Subject:From:Cc:Date:In-Reply-To:References:From;
-        b=Fn/1D1PhnRyR0LaZcGzkhZteZTh0pQ6zv5ioCtRFHVIaPWFAsR0R0IT6iB7fHX0vR
-         fI1DLf9YDalZaQhuitm7svbHpHZ6yJfVGzTYbdJVL9xdDIuwLlJNyVGdZ4J3wizRf4
-         p/QyWcPJ57ZFfS4miEQx+ZeafovYZpk44aTm+Esw=
-Subject: [PATCH v2 1/4] drivers/clocksource/hyper-v: Introduce a pointer to
- TSC page
+        b=L4FuYqO/vqafsHv/73V3g0T0SCIp+a7+bQ8cFrMEbqI37gNSJWXzZFSbzEVb/5Bma
+         SG79tXdxgL2fPsvVMzAvsqTCtUPzjNQ8TCq7lY43flCGio3Tmzt8ae5BEf8dbYymvz
+         fYqtXCOibXzgziqh7Z4BvKaKws7yUvF4OiueZFyk=
+Subject: [PATCH v2 2/4] drivers/clocksource/hyper-v: Introduce TSC PFN getter
 From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 Cc:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -36,8 +35,8 @@ Cc:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 02 Nov 2022 22:07:24 +0000
-Message-ID: <166742684418.205987.14378848205726386650.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+Date:   Wed, 02 Nov 2022 22:07:29 +0000
+Message-ID: <166742684944.205987.13495997217797904022.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 In-Reply-To: <166742670556.205987.18227942188746093700.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 References: <166742670556.205987.18227942188746093700.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
 User-Agent: StGit/0.19
@@ -57,9 +56,12 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
 
-Will be used later keep the address of the remapped page for the root
-partition as it will be Microsoft Hypervisor defined (and thus won't be a
-static address).
+And rework the code to use it instead of the physical address, which isn't
+required by itself.
+
+This is a cleanup and precursor patch for upcoming support for TSC page
+mapping into Microsoft Hypervisor root partition, where TSC PFN will be
+defined by the hypervisor and not by the kernel.
 
 Signed-off-by: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
 CC: "K. Y. Srinivasan" <kys@microsoft.com>
@@ -71,34 +73,66 @@ CC: Thomas Gleixner <tglx@linutronix.de>
 CC: linux-hyperv@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- drivers/clocksource/hyperv_timer.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/clocksource/hyperv_timer.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 11332c82d1af..c4dbf40a3d3e 100644
+index c4dbf40a3d3e..d447bc99a399 100644
 --- a/drivers/clocksource/hyperv_timer.c
 +++ b/drivers/clocksource/hyperv_timer.c
-@@ -366,9 +366,11 @@ static union {
- 	u8 reserved[PAGE_SIZE];
+@@ -367,6 +367,12 @@ static union {
  } tsc_pg __aligned(PAGE_SIZE);
  
-+static struct ms_hyperv_tsc_page *tsc_page = &tsc_pg.page;
+ static struct ms_hyperv_tsc_page *tsc_page = &tsc_pg.page;
++static unsigned long tsc_pfn;
 +
++static unsigned long hv_get_tsc_pfn(void)
++{
++	return tsc_pfn;
++}
+ 
  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
  {
--	return &tsc_pg.page;
-+	return tsc_page;
- }
- EXPORT_SYMBOL_GPL(hv_get_tsc_page);
- 
-@@ -406,7 +408,7 @@ static void suspend_hv_clock_tsc(struct clocksource *arg)
+@@ -408,13 +414,12 @@ static void suspend_hv_clock_tsc(struct clocksource *arg)
  
  static void resume_hv_clock_tsc(struct clocksource *arg)
  {
--	phys_addr_t phys_addr = virt_to_phys(&tsc_pg);
-+	phys_addr_t phys_addr = virt_to_phys(tsc_page);
+-	phys_addr_t phys_addr = virt_to_phys(tsc_page);
  	union hv_reference_tsc_msr tsc_msr;
  
  	/* Re-enable the TSC page */
+ 	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+ 	tsc_msr.enable = 1;
+-	tsc_msr.pfn = __phys_to_pfn(phys_addr);
++	tsc_msr.pfn = tsc_pfn;
+ 	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+ }
+ 
+@@ -498,7 +503,6 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
+ static bool __init hv_init_tsc_clocksource(void)
+ {
+ 	union hv_reference_tsc_msr tsc_msr;
+-	phys_addr_t	phys_addr;
+ 
+ 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+ 		return false;
+@@ -523,7 +527,7 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	}
+ 
+ 	hv_read_reference_counter = read_hv_clock_tsc;
+-	phys_addr = virt_to_phys(hv_get_tsc_page());
++	tsc_pfn = __phys_to_pfn(virt_to_phys(tsc_page));
+ 
+ 	/*
+ 	 * The Hyper-V TLFS specifies to preserve the value of reserved
+@@ -534,7 +538,7 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	 */
+ 	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+ 	tsc_msr.enable = 1;
+-	tsc_msr.pfn = __phys_to_pfn(phys_addr);
++	tsc_msr.pfn = tsc_pfn;
+ 	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+ 
+ 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
 
 
