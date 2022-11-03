@@ -2,180 +2,174 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85BA46186C8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Nov 2022 18:59:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A4F9618830
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Nov 2022 20:07:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbiKCR7Y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Nov 2022 13:59:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36110 "EHLO
+        id S231309AbiKCTHK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Nov 2022 15:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231935AbiKCR7K (ORCPT
+        with ESMTP id S230456AbiKCTHJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Nov 2022 13:59:10 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E70D264F;
-        Thu,  3 Nov 2022 10:59:05 -0700 (PDT)
-Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [20.120.152.163])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CB3D120C3338;
-        Thu,  3 Nov 2022 10:59:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB3D120C3338
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1667498344;
-        bh=++SExWSpMkq0Dv7lblZI7lZBKKts6IU3NqmxJpdUgoo=;
-        h=Subject:From:Cc:Date:In-Reply-To:References:From;
-        b=bJcsAsXG7mKa0C51B997E5v1xmj3NZw0x86iDTf8jVX4gDFtfc8GZUBIDCyTJkjJx
-         eyvs8bOHYj0dcHpu4RpJS/EZ5ZR+2cPmWECzeSSxTd6ppWsIsyyqeb9O5Ju9sN6k2p
-         pOh8ETzkwWKr2nZfT9V4iI9vQZh2cErZ4T/njDpo=
-Subject: [PATCH v3 4/4] drivers/clocksource/hyper-v: Add TSC page support for
- root partition
-From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Thu, 3 Nov 2022 15:07:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F2CE1D674
+        for <linux-hyperv@vger.kernel.org>; Thu,  3 Nov 2022 12:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667502369;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1Ns3xU1SqKKJDYkuvUPPy7RWE9S2cnkow8czUZNPGj8=;
+        b=KXf+Uwz0BykKuMDRg8ddJ5mNHpZYzQiCRP2+N2EcglEKYj6KcoaQtQf4pxDL2S0sqVrmfx
+        B65Ej6ZsqVYE4yNsntrIaDhp2vUIL7dpNDklEBkCRQlLiVjNCDQYdomHhY1qUx2ohiQzgk
+        0b6hATYRKPpyDrOh2ZBMGC2lvv0pYfM=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-426-qrCib1lGMUGTf6kfahNkiA-1; Thu, 03 Nov 2022 15:06:04 -0400
+X-MC-Unique: qrCib1lGMUGTf6kfahNkiA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1A0F63C32C54;
+        Thu,  3 Nov 2022 19:06:04 +0000 (UTC)
+Received: from ovpn-194-252.brq.redhat.com (ovpn-194-252.brq.redhat.com [10.40.194.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 58AEF2166B26;
+        Thu,  3 Nov 2022 19:06:02 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com
-Date:   Thu, 03 Nov 2022 17:59:04 +0000
-Message-ID: <166749834466.218190.3482871684875422987.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To: <166749827889.218190.12775118554387271641.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-References: <166749827889.218190.12775118554387271641.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-User-Agent: StGit/0.19
+        Michael Kelley <mikelley@microsoft.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [PATCH] x86/hyperv: Restore VP assist page after cpu offlining/onlining
+Date:   Thu,  3 Nov 2022 20:06:01 +0100
+Message-Id: <20221103190601.399343-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-18.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,MISSING_HEADERS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+Commit e5d9b714fe40 ("x86/hyperv: fix root partition faults when writing
+to VP assist page MSR") moved 'wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE)' under
+'if (*hvp)' condition. This works for root partition as hv_cpu_die()
+does memunmap() and sets 'hv_vp_assist_page[cpu]' to NULL but breaks
+non-root partitions as hv_cpu_die() doesn't free 'hv_vp_assist_page[cpu]'
+for them. This causes VP assist page to remain unset after CPU
+offline/online cycle:
 
-Microsoft Hypervisor root partition has to map the TSC page specified
-by the hypervisor, instead of providing the page to the hypervisor like
-it's done in the guest partitions.
+$ rdmsr -p 24 0x40000073
+  10212f001
+$ echo 0 > /sys/devices/system/cpu/cpu24/online
+$ echo 1 > /sys/devices/system/cpu/cpu24/online
+$ rdmsr -p 24 0x40000073
+  0
 
-However, it's too early to map the page when the clock is initialized, so, the
-actual mapping is happening later.
+Fix the issue by always writing to HV_X64_MSR_VP_ASSIST_PAGE in
+hv_cpu_init(). Note, checking 'if (!*hvp)', for root partition is
+pointless as hv_cpu_die() always sets 'hv_vp_assist_page[cpu]' to
+NULL (and it's also NULL initially).
 
-Signed-off-by: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
-CC: "K. Y. Srinivasan" <kys@microsoft.com>
-CC: Haiyang Zhang <haiyangz@microsoft.com>
-CC: Wei Liu <wei.liu@kernel.org>
-CC: Dexuan Cui <decui@microsoft.com>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: x86@kernel.org
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Daniel Lezcano <daniel.lezcano@linaro.org>
-CC: linux-hyperv@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
+Note: the fact that 'hv_vp_assist_page[cpu]' is reset to NULL may
+present a (potential) issue for KVM. While Hyper-V uses
+CPUHP_AP_ONLINE_DYN stage in CPU hotplug, KVM uses CPUHP_AP_KVM_STARTING
+which comes earlier in CPU teardown sequence. It is theoretically
+possible that Enlightened VMCS is still in use. It is unclear if the
+issue is real and if using KVM with Hyper-V root partition is even
+possible.
+
+While on it, drop the unneeded smp_processor_id() call from hv_cpu_init().
+
+Fixes: e5d9b714fe40 ("x86/hyperv: fix root partition faults when writing to VP assist page MSR")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/x86/hyperv/hv_init.c          |    2 ++
- drivers/clocksource/hyperv_timer.c |   38 +++++++++++++++++++++++++++---------
- include/clocksource/hyperv_timer.h |    1 +
- 3 files changed, 32 insertions(+), 9 deletions(-)
+ arch/x86/hyperv/hv_init.c | 54 +++++++++++++++++++--------------------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index f49bc3ec76e6..89954490af93 100644
+index f49bc3ec76e6..a269049a43ce 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
-@@ -464,6 +464,8 @@ void __init hyperv_init(void)
- 		BUG_ON(!src);
- 		memcpy_to_page(pg, 0, src, HV_HYP_PAGE_SIZE);
- 		memunmap(src);
-+
-+		hv_remap_tsc_clocksource();
- 	} else {
- 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
- 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index 9445a1558fe9..dec7ad3b85ba 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -509,9 +509,6 @@ static bool __init hv_init_tsc_clocksource(void)
- 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
- 		return false;
+@@ -77,7 +77,7 @@ static int hyperv_init_ghcb(void)
+ static int hv_cpu_init(unsigned int cpu)
+ {
+ 	union hv_vp_assist_msr_contents msr = { 0 };
+-	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[smp_processor_id()];
++	struct hv_vp_assist_page **hvp = &hv_vp_assist_page[cpu];
+ 	int ret;
  
--	if (hv_root_partition)
--		return false;
--
- 	/*
- 	 * If Hyper-V offers TSC_INVARIANT, then the virtualized TSC correctly
- 	 * handles frequency and offset changes due to live migration,
-@@ -529,16 +526,22 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	ret = hv_common_cpu_init(cpu);
+@@ -87,34 +87,32 @@ static int hv_cpu_init(unsigned int cpu)
+ 	if (!hv_vp_assist_page)
+ 		return 0;
+ 
+-	if (!*hvp) {
+-		if (hv_root_partition) {
+-			/*
+-			 * For root partition we get the hypervisor provided VP assist
+-			 * page, instead of allocating a new page.
+-			 */
+-			rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+-			*hvp = memremap(msr.pfn <<
+-					HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
+-					PAGE_SIZE, MEMREMAP_WB);
+-		} else {
+-			/*
+-			 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
+-			 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
+-			 * out to make sure we always write the EOI MSR in
+-			 * hv_apic_eoi_write() *after* the EOI optimization is disabled
+-			 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
+-			 * case of CPU offlining and the VM will hang.
+-			 */
++	if (hv_root_partition) {
++		/*
++		 * For root partition we get the hypervisor provided VP assist
++		 * page, instead of allocating a new page.
++		 */
++		rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
++		*hvp = memremap(msr.pfn << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
++				PAGE_SIZE, MEMREMAP_WB);
++	} else {
++		/*
++		 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
++		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
++		 * out to make sure we always write the EOI MSR in
++		 * hv_apic_eoi_write() *after* the EOI optimization is disabled
++		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
++		 * case of CPU offlining and the VM will hang.
++		 */
++		if (!*hvp)
+ 			*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
+-			if (*hvp)
+-				msr.pfn = vmalloc_to_pfn(*hvp);
+-		}
+-		WARN_ON(!(*hvp));
+-		if (*hvp) {
+-			msr.enable = 1;
+-			wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+-		}
++		if (*hvp)
++			msr.pfn = vmalloc_to_pfn(*hvp);
++
++	}
++	if (!WARN_ON(!(*hvp))) {
++		msr.enable = 1;
++		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
  	}
  
- 	hv_read_reference_counter = read_hv_clock_tsc;
--	tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
- 
- 	/*
--	 * The Hyper-V TLFS specifies to preserve the value of reserved
--	 * bits in registers. So read the existing value, preserve the
--	 * low order 12 bits, and add in the guest physical address
--	 * (which already has at least the low 12 bits set to zero since
--	 * it is page aligned). Also set the "enable" bit, which is bit 0.
-+	 * TSC page mapping works differently in root compared to guest.
-+	 * - In guest partition the guest PFN has to be passed to the
-+	 *   hypervisor.
-+	 * - In root partition it's other way around: it has to map the PFN
-+	 *   provided by the hypervisor.
-+	 *   But it can't be mapped right here as it's too early and MMU isn't
-+	 *   ready yet. So, we only set the enable bit here and will remap the
-+	 *   page later in hv_remap_tsc_clocksource().
- 	 */
- 	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
-+	if (hv_root_partition)
-+		tsc_pfn = tsc_msr.pfn;
-+	else
-+		tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
- 	tsc_msr.enable = 1;
- 	tsc_msr.pfn = tsc_pfn;
- 	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
-@@ -573,3 +576,20 @@ void __init hv_init_clocksource(void)
- 	hv_sched_clock_offset = hv_read_reference_counter();
- 	hv_setup_sched_clock(read_hv_sched_clock_msr);
- }
-+
-+void __init hv_remap_tsc_clocksource(void)
-+{
-+	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
-+		return;
-+
-+	if (!hv_root_partition) {
-+		WARN(1, "%s: attempt to remap TSC page in guest partition\n",
-+		     __func__);
-+		return;
-+	}
-+
-+	tsc_page = memremap(tsc_pfn << HV_HYP_PAGE_SHIFT, sizeof(tsc_pg),
-+			    MEMREMAP_WB);
-+	if (!tsc_page)
-+		pr_err("Failed to remap Hyper-V TSC page.\n");
-+}
-diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
-index 3078d23faaea..783701a2102d 100644
---- a/include/clocksource/hyperv_timer.h
-+++ b/include/clocksource/hyperv_timer.h
-@@ -31,6 +31,7 @@ extern void hv_stimer_global_cleanup(void);
- extern void hv_stimer0_isr(void);
- 
- extern void hv_init_clocksource(void);
-+extern void hv_remap_tsc_clocksource(void);
- 
- extern unsigned long hv_get_tsc_pfn(void);
- extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
-
+ 	return hyperv_init_ghcb();
+-- 
+2.38.1
 
