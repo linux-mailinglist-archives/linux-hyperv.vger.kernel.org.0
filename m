@@ -2,87 +2,85 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A952F617B7C
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Nov 2022 12:30:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ACA8617D68
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Nov 2022 14:05:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbiKCLaX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Nov 2022 07:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44270 "EHLO
+        id S230435AbiKCNF1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Nov 2022 09:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbiKCLaW (ORCPT
+        with ESMTP id S231161AbiKCNFJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Nov 2022 07:30:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2BD11A19;
-        Thu,  3 Nov 2022 04:30:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 58C73B826F0;
-        Thu,  3 Nov 2022 11:30:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EF911C433C1;
-        Thu,  3 Nov 2022 11:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667475015;
-        bh=9u70mGjOAD1g0Chwx79K2kSsz8HLuYRGmzPc5JQrNbU=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=E1jwbxiS+YjMo+t4OE7fXIlKDVcJNYRYgb4UD3ha/VpS42iGmCEgYCuM59hQTyABu
-         0/cYQhlIQ4jFPjIwyn1PP4NB/eX5QkyyDZpnQCVC2HdOkc30bFQ3idrB+5UcMUV7Pn
-         gr0Ocd814KRrKpr+mg5PXve2C6W4Rx0fZmFYNQnWCFbnIUTThIeDTr72fKVTlkqu5a
-         ghKmXuTkvHteGRQUcl3CVha4vWhz9zc7FeflPCrqQvL6nrKIGYmoQbz0UaHHHijAkP
-         XO5WFlSiBFNMv/bW0gJrkoivyU7okEAX7ekUeI4zN6PX/uLcqoco026V/aQLLmgswI
-         UfcZLObahznag==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D2C3FE29F4C;
-        Thu,  3 Nov 2022 11:30:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 3 Nov 2022 09:05:09 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 915EB178BF;
+        Thu,  3 Nov 2022 06:04:13 -0700 (PDT)
+Received: from jinankjain-dranzer.zrrkmle5drku1h0apvxbr2u2ee.ix.internal.cloudapp.net (unknown [20.188.121.5])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1A66B20B9F81;
+        Thu,  3 Nov 2022 06:04:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1A66B20B9F81
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1667480653;
+        bh=AN7mmvGxBvUuf9Ip8jEZg4kDB3svnoriD2HrczLSwDg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S0dCEIZ/u+kEPxD2IdDHWcQrGjvD1xZJor3tAKzbqw+1lT6+otiotEiXBjfhy45jU
+         OCV+zq2NyTO24z2rOzZdp1FY/aYZMRwidSNsFU9vtacLg5u0S9SKLPaiZVYfoWDI+L
+         VYafYJ0kJDTG15QXMLlkMFHD6n/XJUFHnSSqZFOU=
+From:   Jinank Jain <jinankjain@linux.microsoft.com>
+To:     jinankjain@microsoft.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, arnd@arndb.de, peterz@infradead.org,
+        jpoimboe@kernel.org, jinankjain@linux.microsoft.com,
+        seanjc@google.com, kirill.shutemov@linux.intel.com,
+        ak@linux.intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, anrayabh@linux.microsoft.com,
+        mikelley@microsoft.com
+Subject: [PATCH v3 0/5]  Add support running nested Microsoft Hypervisor
+Date:   Thu,  3 Nov 2022 13:04:02 +0000
+Message-Id: <cover.1667480257.git.jinankjain@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <https://lore.kernel.org/linux-hyperv/cover.1667406350.git.jinankjain@linux.microsoft.com/T/#t>
+References: <https://lore.kernel.org/linux-hyperv/cover.1667406350.git.jinankjain@linux.microsoft.com/T/#t>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: mana: Assign interrupts to CPUs based on NUMA nodes
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166747501485.8781.10763947245396462930.git-patchwork-notify@kernel.org>
-Date:   Thu, 03 Nov 2022 11:30:14 +0000
-References: <1667282761-11547-1-git-send-email-ssengar@linux.microsoft.com>
-In-Reply-To: <1667282761-11547-1-git-send-email-ssengar@linux.microsoft.com>
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc:     ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        colin.i.king@googlemail.com, vkuznets@redhat.com,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com
-X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+This patch series plans to add support for running nested Microsoft
+Hypervisor. In case of nested Microsoft Hypervisor there are few
+privileged hypercalls which need to go L0 Hypervisor instead of L1
+Hypervisor. This patches series basically identifies such hypercalls and
+replace them with nested hypercalls.
 
-This patch was applied to netdev/net-next.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
+Jinank Jain (5):
+  x86/hyperv: Add support for detecting nested hypervisor
+  Drivers: hv: Setup synic registers in case of nested root partition
+  x86/hyperv: Add an interface to do nested hypercalls
+  Drivers: hv: Enable vmbus driver for nested root partition
+  x86/hyperv: Change interrupt vector for nested root partition
 
-On Mon, 31 Oct 2022 23:06:01 -0700 you wrote:
-> In large VMs with multiple NUMA nodes, network performance is usually
-> best if network interrupts are all assigned to the same virtual NUMA
-> node. This patch assigns online CPU according to a numa aware policy,
-> local cpus are returned first, followed by non-local ones, then it wraps
-> around.
-> 
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> 
-> [...]
+ arch/x86/include/asm/hyperv-tlfs.h | 17 +++++++-
+ arch/x86/include/asm/idtentry.h    |  2 +
+ arch/x86/include/asm/irq_vectors.h |  6 +++
+ arch/x86/include/asm/mshyperv.h    | 68 ++++++++++++++++++++++++++++--
+ arch/x86/kernel/cpu/mshyperv.c     | 22 ++++++++++
+ arch/x86/kernel/idt.c              |  9 ++++
+ drivers/hv/hv.c                    | 18 +++++---
+ drivers/hv/hv_common.c             |  7 ++-
+ drivers/hv/vmbus_drv.c             |  5 ++-
+ include/asm-generic/hyperv-tlfs.h  |  1 +
+ 10 files changed, 141 insertions(+), 14 deletions(-)
 
-Here is the summary with links:
-  - net: mana: Assign interrupts to CPUs based on NUMA nodes
-    https://git.kernel.org/netdev/net-next/c/71fa6887eeca
-
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
