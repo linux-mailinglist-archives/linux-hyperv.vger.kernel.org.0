@@ -2,205 +2,194 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FDA6618A11
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Nov 2022 21:59:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 424C7618CE0
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Nov 2022 00:37:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231298AbiKCU7p (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Nov 2022 16:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55236 "EHLO
+        id S229539AbiKCXh3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Nov 2022 19:37:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231315AbiKCU7o (ORCPT
+        with ESMTP id S229548AbiKCXh3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Nov 2022 16:59:44 -0400
-Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11021015.outbound.protection.outlook.com [52.101.52.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1EDD65C7;
-        Thu,  3 Nov 2022 13:59:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oPQQfkoj5yfG0RrwmbcMru2ZdlUal9RStBb86BzK4uefEK/530R2jxJQ/prmqCRhCNmy0+CrCRhhrP6B8D1ev4OE29o7G2tLZeutimN0oDX3ZJuX8pGLY+3ODiE4iLHeIZBBDZNjuswWhgPll8khsFSwdi8GG/gmAOJ2RPr6dhF5tFJHeu9d4bd5vsbeNztgVl6a4kvuUzFFjF6vi52C/X9vNjI1guManP5DRn4Ki6+KPVE5dJIaITGk/5qvc/Vx+ZdPoZzdDC9iLn0LRqpyfMiXmM+PyuEkrdsr6t1qrm4Q58I5N647wT6d96SQw+fsoElC6nTXodF8EJz0wjqnGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hMJ9uU8VmxxiysMEtGpVO5u0608pUw1h8cLcEbE9RaY=;
- b=nLVojLFZ10h3hdtkGwU0VPnhMPJGgAlJ7gzc8kF6D0HZwQWFFzQF7GAvSaKa1W6m6gVezvcYjAawy8UbQ/zE6PgVHTNUc8i+2WNj8DMs7mzVMbAT94BMvw7ws7ntgjQ1IhiIMbIpogAG3W2SMnVZ8S4e6YUUtq+j2cSV/nWjxkOk9UTeocvssas4Kq8+yL83ElgOLHePkJ35uQzH9ixxvqpnrRdpAKYhMcO3meb8YuXzCUC11HrCPhxqYH37VGiIKJK1IXJ+q3d1XbtofdTHqNNlttLL7zG1qdxog/YM9oxV7NnFyfa5SJ5WSKupy0IexnL26hFAWtKcASspUDsNpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hMJ9uU8VmxxiysMEtGpVO5u0608pUw1h8cLcEbE9RaY=;
- b=R2ObDSN+c3QXj9nRflJeq42C3QjzBkpak/YQLf3cVSUUeZW2wcrJl4KsOai6Ec/7iTxMDaQH/aIjivfZP9xWMCTSgYUDQTUTkUBywTNSI/ZqYqwY10QtCOmI9Gnh8i+aqqt4AHtGzCHyWO4dM7/YHYUUFsTD1h/6HIzx1vEcOH0=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by PH0PR21MB1879.namprd21.prod.outlook.com (2603:10b6:510:13::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.8; Thu, 3 Nov
- 2022 20:59:36 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::f565:80ed:8070:474b]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::f565:80ed:8070:474b%8]) with mapi id 15.20.5813.008; Thu, 3 Nov 2022
- 20:59:36 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-CC:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Thu, 3 Nov 2022 19:37:29 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A62B11834;
+        Thu,  3 Nov 2022 16:37:28 -0700 (PDT)
+Received: from skinsburskii.localdomain (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 885E020B929F;
+        Thu,  3 Nov 2022 16:37:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 885E020B929F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1667518647;
+        bh=/rfJILvAT4i/EgTl3AmpD42cdDe9dV7YPr+q0fK0ydw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BJWI+qmY2K/Heu5Kedkp/BV3G8zE1b50oHWeOmdUbcK6P0aykR6yvlvBBpFT4lqPI
+         3gvjdeTlk/CNMxPpzdil1FHaAxiLoD8Qm+A3ENc9RRwTz3aGGhtSt/Al2LF1uM4opX
+         kfI7KfkX/L8J6y7Mwn7pbSYpoCjuktRM+qeHq38Y=
+Date:   Wed, 2 Nov 2022 18:37:05 -0700
+From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "x86@kernel.org" <x86@kernel.org>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH v3 3/4] drivers/clocksource/hyper-v: Use TSC PFN getter to
- map vvar page
-Thread-Topic: [PATCH v3 3/4] drivers/clocksource/hyper-v: Use TSC PFN getter
- to map vvar page
-Thread-Index: AQHY76318bjI5hQQwUWSS+/G2x25qq4trtGg
-Date:   Thu, 3 Nov 2022 20:59:36 +0000
-Message-ID: <BYAPR21MB1688BFD31B3F71C7BA8F46CAD7389@BYAPR21MB1688.namprd21.prod.outlook.com>
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/4] drivers/clocksource/hyper-v: Add TSC page support
+ for root partition
+Message-ID: <20221103013705.GA1922@skinsburskii.localdomain>
 References: <166749827889.218190.12775118554387271641.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
- <166749833939.218190.14095015146003109462.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-In-Reply-To: <166749833939.218190.14095015146003109462.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9b34d33d-0e78-4584-bd0c-66e099291c2e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-03T20:58:56Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|PH0PR21MB1879:EE_
-x-ms-office365-filtering-correlation-id: 676e9c60-0dc6-4e17-bc60-08dabdde5111
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fBunF/TdMjl7Rz2UXBkX2r60wy3ZjyOfy0PYARDhfrCMNLFmgV4GOj2910hbMgwdGdQq4sBIvf9z0TjYoKHb2cpg2d25seimlf2VUIcsYaFpMhdohXFfMFaQct9on/khpmSKBlsqmtXVAeR5NmweIZAINqoPwdxATjvNJjnRP8hR9vmyDh3miYjXpQQYyagPUWSmLl52qxAT10GUduHZEbuvDARTUG19cg6A3SI7mhuZ4MvQJmtVy0kZc/PtRRv82IXJd8ETfHU3qMfZI6YR4T3RUiI/aW8feGTMmALPGI+Fp2VYBwmih61WDQKLGFDe4i3/Q2EvByH9lQw9KFJzuY7XMXAsq1MCVkAAISfaxeKRq2yHKSDVfeGXcCZoVo4PqOHQ0BNPaSqzVFNybhlmlovYrhby6/3lsKXr+iAWOHQkOSebBEjw4Hk8UoecrzaatMXEuqE57XqKUlzb5YiiwIPzLH+9exYVj8Hu3rg+f5tPGxnul+UjXodfebud8DDz+5ZS7QsQ/OEp4mrQv/ZIVgb7OyY02r/06og1ilKkzls1D11iIytAiOmGP3oR8MdQ+63UVOXW/FN8JwsD6PK98LcTyPaV/N9zeOJpEo3OfDnwQi07LyRKvpgm0WVqOgMMsCuLJ6TARmmdlJzxG3jCmUWSsywiqqy/HNJnrYLeTxUJsB4aTlU7bRxrsy17rSSLRfe2gDcUBiri1CJLvkvrIkzWifCc6FwHo6xlYjX3w5+NLnl4nFOG+7x1IiHytErPxUIxIXKFH+W/FGFH81uyS3Rr0hIZ/BjnrUX1vEFkGOIzgMyDrIeCxl+6SYd3eOln
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(451199015)(186003)(9686003)(83380400001)(6506007)(26005)(7696005)(2906002)(122000001)(55016003)(8990500004)(7416002)(71200400001)(54906003)(10290500003)(316002)(64756008)(478600001)(76116006)(5660300002)(41300700001)(8936002)(66946007)(4326008)(6862004)(8676002)(52536014)(66556008)(66446008)(33656002)(38100700002)(82960400001)(82950400001)(86362001)(38070700005)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SzFJUHNOVzJ0anRJdGhldTI2ckMxRjR3UWI5V0VhWGJRdFR0ODlTb3NnKzBI?=
- =?utf-8?B?bkc3VnFON3JaUW0zMFo5WFVTczFHS2NyZ3g4WmtiVGNaVEYxQ2JqZkRLenQx?=
- =?utf-8?B?UVlnVnhzS3BVOUNaQlk4NlFsMW9kcDJGYW9tSEE1QXEyRGJyR3o5K1JWdnR2?=
- =?utf-8?B?ZVVHQXZzbnhpZy9vUGNTdk5SSzNzT2o0RE1BQ3VDOXRNYWxNSlZHdm50UE5n?=
- =?utf-8?B?QlA5VnBkZ3RhOExSWDVpdDB2dkV6Tlp3TTIrcnlEMDFBWDNZRzZGQjB2TEd0?=
- =?utf-8?B?a0NDYk9WNFlUQ2FFUGVHVVh6eTVNZmh2aktTV1JIenBoMmxpU2tLTEtmaGxY?=
- =?utf-8?B?S2x5bmNiYk9lanJ4RUZmVVFVL3RQWHh5QWYybkp4YkZjV2lpeVVTTEZhckFr?=
- =?utf-8?B?bFRuL3ArVCtrTk43ckVMbUhtV2VEaDJHTXk0NTN2aHdXWVhkNHNtaU40NG9Z?=
- =?utf-8?B?a1pUVEVORTF2MkxCQ0lHRWxTbTlLYnhnbnplYkZPVmh4YWVna1JaQ09iZ1JI?=
- =?utf-8?B?cDJsdi9iNnNOdDAySTNuRjF3SG9BUnF5WnFOQ2l4RTZzZE5ZR0h4VDRCV0FS?=
- =?utf-8?B?N2FnbWI4RmFhQ1dJalBranMrNGlzWFJOOFZYd2RubVpKNXZHMjhqRzhKYzJq?=
- =?utf-8?B?dUhDK2xjV2VjMlV6Y1NDc0FCMENLaFRjVEJDYUxxMFo3SHB4ZEoreVVHY1VG?=
- =?utf-8?B?aGw1TUxoVW81aWk1M0dQWUtjRmI4dUQyMXo1OElNanBYM3JGMkU5eXNGL2ha?=
- =?utf-8?B?Z01TcGhlaTU4bE41aVJLdXA0Wk5kb25mV1podUlXbGNrS29URGJ1eGU2UlJu?=
- =?utf-8?B?VVA1cGNjcitva1NUTWF1UDFXbWlnSUdQU1lhanJoNHRZUDVXc08rMEZIbE5a?=
- =?utf-8?B?SFhPeGxpbmNmMGF1c3VtZi9QUVFSeHlXTHpic2g4T2tKYjJqdWlnTnFoQTM3?=
- =?utf-8?B?Z3pEMnNYM2ZsWE1UZXJaQUYzdHdpVS8rUUZ0eVhRWGJxbGd5amFyajdSWG55?=
- =?utf-8?B?dDAzS3pZSmJ1dCt4ZFNaWkNpZGp3RHdtUXoyTDFOQjI5QzRkTkk0ZGdaQmNB?=
- =?utf-8?B?SmlQWEZBd1BFbi8yU1paZ2hJNVpFOU5aUS9DTSsxa21uS3lVS3lyT3BMYURw?=
- =?utf-8?B?NnAwU2RtVXc1TFRQYmFOQWtoKzVkUUlvVVBxRnhzMTdTVDloZFdLYUN3OVg4?=
- =?utf-8?B?YmIrNkdwVlZNak83bGlTTktDQnBPMGxUQkx2bCs4MWFkb1ZwbUVHMmZZZEJC?=
- =?utf-8?B?TzZqeExINFpIeUR3eXBjVVZ1cllzclkvODZnNzU3akNqbnFMdnIybXhUZXcv?=
- =?utf-8?B?eFVwZE1idkVLSFhNNG1MS1gxc1IxaTIwSk04VWR6ZGU1WktvZFVSQkRnR21G?=
- =?utf-8?B?L0labTM1TkhxN0RlMnRZeW03MFBNZ0xtYk5jTlZZTW9yRnRTMkpiTE5DZCt5?=
- =?utf-8?B?bUMyMDdUdnA3bCtIbVRZOGRucnlCQTV3U0lTUlFsd2hZTkZlYmkzY01Wcmsz?=
- =?utf-8?B?K3BJZ2JHbUdvQVhBeDd4bUFKYXZwb3FCekgzSUdxOEVGVUQ4OThpdzd3RThk?=
- =?utf-8?B?M2lGUjZqNXhZR0c0NWFrM3Z5OFd6ZUJ4YnJ5WnZXN04wMm8xRERKdzJ1TVBx?=
- =?utf-8?B?L3BtK3V5ZExoUGZqbWpraEJ0bk5LWW1BMWVvVWxyZThoU01wZmw4dmtXTDFr?=
- =?utf-8?B?SVFraXNwZC93QmU5RTdjTk5tWHI1djJrNm13UVJPbWp1T2lUZzBna05XQ2Ra?=
- =?utf-8?B?UmZ2bis3MnlnSE41T2Z0ZGt1YTlyK1JTQTVtS21Rb3lZU1gvSzJ4YXJzbGRY?=
- =?utf-8?B?R0dhUXJUMXFLbVV3QnR0ejBidW54aE9RbElPOFhiMVlEZWhzSTdEN2dwRW1k?=
- =?utf-8?B?VFd3cG9ud0pRWUV0ZFRobStwbDczOWpnMERvZXdVY3E5bGxSTzMxK1R1Wjlu?=
- =?utf-8?B?ckVIZWtYcmdON0k4SzRGUHp1N2tYeGV5TklqeXYwV040eE0rRzh2d2pPb21T?=
- =?utf-8?B?Qm4vN0ZIc0E2L3JFekprQTdkREVNb2h3T3p0SjQyNy9FWFRSMFh2SFJIVzFL?=
- =?utf-8?B?bHRsbjBlUW9sTXR3SGRTWld4ZGxpYUw5MFpzYVptSmRmOUpQQ056MExDTjI5?=
- =?utf-8?B?dnkzd29mZmtrWWlpL1FLQjJjRFRCbTdyU0NiSVZpekhYajF3Y25IMDRNelpZ?=
- =?utf-8?B?K0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <166749834466.218190.3482871684875422987.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <BYAPR21MB1688F63C2410904F92B1F75FD7389@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 676e9c60-0dc6-4e17-bc60-08dabdde5111
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2022 20:59:36.6540
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xICMW0l6aXR2JimBlmyrF9HXId8Ch25unbzMrS6xh0qU7YHoDBoI1mLWIj+cdDBkqM48QAtRf5NZA3e059qg6J22ERfSg3fLmbbYR4p96bQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB1879
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB1688F63C2410904F92B1F75FD7389@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-18.8 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogU3RhbmlzbGF2IEtpbnNidXJza2lpIDxza2luc2J1cnNraWlAbGludXgubWljcm9zb2Z0
-LmNvbT4gU2VudDogVGh1cnNkYXksIE5vdmVtYmVyIDMsIDIwMjIgMTA6NTkgQU0NCj4gDQo+IElu
-c3RlYWQgb2YgY29udmVydGluZyB0aGUgdmlydHVhbCBhZGRyZXNzIHRvIHBoeXNpY2FsIGRpcmVj
-dGx5Lg0KPiANCj4gVGhpcyBpcyBhIHByZWN1cnNvciBwYXRjaCBmb3IgdGhlIHVwY29taW5nIHN1
-cHBvcnQgZm9yIFRTQyBwYWdlIG1hcHBpbmcgaW50bw0KPiBNaWNyb3NvZnQgSHlwZXJ2aXNvciBy
-b290IHBhcnRpdGlvbiwgd2hlcmUgVFNDIFBGTiB3aWxsIGJlIGRlZmluZWQgYnkgdGhlDQo+IGh5
-cGVydmlzb3IgYW5kIHRodXMgY2FuJ3QgYmUgb2J0YWluZWQgYnkgbGluZWFyIHRyYW5zbGF0aW9u
-IG9mIHRoZSBwaHlzaWNhbA0KPiBhZGRyZXNzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU3Rhbmlz
-bGF2IEtpbnNidXJza2l5IDxzdGFuaXNsYXYua2luc2J1cnNraXlAZ21haWwuY29tPg0KPiBDQzog
-QW5keSBMdXRvbWlyc2tpIDxsdXRvQGtlcm5lbC5vcmc+DQo+IENDOiBUaG9tYXMgR2xlaXhuZXIg
-PHRnbHhAbGludXRyb25peC5kZT4NCj4gQ0M6IEluZ28gTW9sbmFyIDxtaW5nb0ByZWRoYXQuY29t
-Pg0KPiBDQzogQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+DQo+IENDOiBEYXZlIEhhbnNl
-biA8ZGF2ZS5oYW5zZW5AbGludXguaW50ZWwuY29tPg0KPiBDQzogeDg2QGtlcm5lbC5vcmcNCj4g
-Q0M6ICJILiBQZXRlciBBbnZpbiIgPGhwYUB6eXRvci5jb20+DQo+IENDOiAiSy4gWS4gU3Jpbml2
-YXNhbiIgPGt5c0BtaWNyb3NvZnQuY29tPg0KPiBDQzogSGFpeWFuZyBaaGFuZyA8aGFpeWFuZ3pA
-bWljcm9zb2Z0LmNvbT4NCj4gQ0M6IFdlaSBMaXUgPHdlaS5saXVAa2VybmVsLm9yZz4NCj4gQ0M6
-IERleHVhbiBDdWkgPGRlY3VpQG1pY3Jvc29mdC5jb20+DQo+IENDOiBEYW5pZWwgTGV6Y2FubyA8
-ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4NCj4gQ0M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmcNCj4gQ0M6IGxpbnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5vcmcNCj4gLS0tDQo+ICBhcmNo
-L3g4Ni9lbnRyeS92ZHNvL3ZtYS5jICAgICAgICAgIHwgICAgNyArKystLS0tDQo+ICBkcml2ZXJz
-L2Nsb2Nrc291cmNlL2h5cGVydl90aW1lci5jIHwgICAgMyArKy0NCj4gIGluY2x1ZGUvY2xvY2tz
-b3VyY2UvaHlwZXJ2X3RpbWVyLmggfCAgICA2ICsrKysrKw0KPiAgMyBmaWxlcyBjaGFuZ2VkLCAx
-MSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gv
-eDg2L2VudHJ5L3Zkc28vdm1hLmMgYi9hcmNoL3g4Ni9lbnRyeS92ZHNvL3ZtYS5jDQo+IGluZGV4
-IDMxMWVhZTMwZTA4OS4uNjk3NjQxNmIyYzlmIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3g4Ni9lbnRy
-eS92ZHNvL3ZtYS5jDQo+ICsrKyBiL2FyY2gveDg2L2VudHJ5L3Zkc28vdm1hLmMNCj4gQEAgLTIx
-MCwxMSArMjEwLDEwIEBAIHN0YXRpYyB2bV9mYXVsdF90IHZ2YXJfZmF1bHQoY29uc3Qgc3RydWN0
-DQo+IHZtX3NwZWNpYWxfbWFwcGluZyAqc20sDQo+ICAJCQkJCXBncHJvdF9kZWNyeXB0ZWQodm1h
-LT52bV9wYWdlX3Byb3QpKTsNCj4gIAkJfQ0KPiAgCX0gZWxzZSBpZiAoc3ltX29mZnNldCA9PSBp
-bWFnZS0+c3ltX2h2Y2xvY2tfcGFnZSkgew0KPiAtCQlzdHJ1Y3QgbXNfaHlwZXJ2X3RzY19wYWdl
-ICp0c2NfcGcgPSBodl9nZXRfdHNjX3BhZ2UoKTsNCj4gKwkJcGZuID0gaHZfZ2V0X3RzY19wZm4o
-KTsNCj4gDQo+IC0JCWlmICh0c2NfcGcgJiYgdmNsb2NrX3dhc191c2VkKFZEU09fQ0xPQ0tNT0RF
-X0hWQ0xPQ0spKQ0KPiAtCQkJcmV0dXJuIHZtZl9pbnNlcnRfcGZuKHZtYSwgdm1mLT5hZGRyZXNz
-LA0KPiAtCQkJCQl2aXJ0X3RvX3BoeXModHNjX3BnKSA+PiBQQUdFX1NISUZUKTsNCj4gKwkJaWYg
-KHBmbiAmJiB2Y2xvY2tfd2FzX3VzZWQoVkRTT19DTE9DS01PREVfSFZDTE9DSykpDQo+ICsJCQly
-ZXR1cm4gdm1mX2luc2VydF9wZm4odm1hLCB2bWYtPmFkZHJlc3MsIHBmbik7DQo+ICAJfSBlbHNl
-IGlmIChzeW1fb2Zmc2V0ID09IGltYWdlLT5zeW1fdGltZW5zX3BhZ2UpIHsNCj4gIAkJc3RydWN0
-IHBhZ2UgKnRpbWVuc19wYWdlID0gZmluZF90aW1lbnNfdnZhcl9wYWdlKHZtYSk7DQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS9oeXBlcnZfdGltZXIuYyBiL2RyaXZlcnMv
-Y2xvY2tzb3VyY2UvaHlwZXJ2X3RpbWVyLmMNCj4gaW5kZXggYjdhZjE5ZDA2YjUxLi45NDQ1YTE1
-NThmZTkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvaHlwZXJ2X3RpbWVyLmMN
-Cj4gKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9oeXBlcnZfdGltZXIuYw0KPiBAQCAtMzcwLDEw
-ICszNzAsMTEgQEAgc3RhdGljIHVuaW9uIHsNCj4gIHN0YXRpYyBzdHJ1Y3QgbXNfaHlwZXJ2X3Rz
-Y19wYWdlICp0c2NfcGFnZSA9ICZ0c2NfcGcucGFnZTsNCj4gIHN0YXRpYyB1bnNpZ25lZCBsb25n
-IHRzY19wZm47DQo+IA0KPiAtc3RhdGljIHVuc2lnbmVkIGxvbmcgaHZfZ2V0X3RzY19wZm4odm9p
-ZCkNCj4gK3Vuc2lnbmVkIGxvbmcgaHZfZ2V0X3RzY19wZm4odm9pZCkNCj4gIHsNCj4gIAlyZXR1
-cm4gdHNjX3BmbjsNCj4gIH0NCj4gK0VYUE9SVF9TWU1CT0xfR1BMKGh2X2dldF90c2NfcGZuKTsN
-Cj4gDQo+ICBzdHJ1Y3QgbXNfaHlwZXJ2X3RzY19wYWdlICpodl9nZXRfdHNjX3BhZ2Uodm9pZCkN
-Cj4gIHsNCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvY2xvY2tzb3VyY2UvaHlwZXJ2X3RpbWVyLmgN
-Cj4gYi9pbmNsdWRlL2Nsb2Nrc291cmNlL2h5cGVydl90aW1lci5oDQo+IGluZGV4IGIzZjVkNzNh
-ZTFkNi4uMzA3OGQyM2ZhYWVhIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2Nsb2Nrc291cmNlL2h5
-cGVydl90aW1lci5oDQo+ICsrKyBiL2luY2x1ZGUvY2xvY2tzb3VyY2UvaHlwZXJ2X3RpbWVyLmgN
-Cj4gQEAgLTMyLDYgKzMyLDcgQEAgZXh0ZXJuIHZvaWQgaHZfc3RpbWVyMF9pc3Iodm9pZCk7DQo+
-IA0KPiAgZXh0ZXJuIHZvaWQgaHZfaW5pdF9jbG9ja3NvdXJjZSh2b2lkKTsNCj4gDQo+ICtleHRl
-cm4gdW5zaWduZWQgbG9uZyBodl9nZXRfdHNjX3Bmbih2b2lkKTsNCj4gIGV4dGVybiBzdHJ1Y3Qg
-bXNfaHlwZXJ2X3RzY19wYWdlICpodl9nZXRfdHNjX3BhZ2Uodm9pZCk7DQo+IA0KPiAgc3RhdGlj
-IGlubGluZSBub3RyYWNlIHU2NA0KPiBAQCAtOTAsNiArOTEsMTEgQEAgaHZfcmVhZF90c2NfcGFn
-ZShjb25zdCBzdHJ1Y3QgbXNfaHlwZXJ2X3RzY19wYWdlICp0c2NfcGcpDQo+ICB9DQo+IA0KPiAg
-I2Vsc2UgLyogQ09ORklHX0hZUEVSVl9USU1FUiAqLw0KPiArc3RhdGljIGlubGluZSB1bnNpZ25l
-ZCBsb25nIGh2X2dldF90c2NfcGZuKHZvaWQpDQo+ICt7DQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+
-ICsNCj4gIHN0YXRpYyBpbmxpbmUgc3RydWN0IG1zX2h5cGVydl90c2NfcGFnZSAqaHZfZ2V0X3Rz
-Y19wYWdlKHZvaWQpDQo+ICB7DQo+ICAJcmV0dXJuIE5VTEw7DQo+IA0KDQpSZXZpZXdlZC1ieTog
-TWljaGFlbCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQo=
+On Thu, Nov 03, 2022 at 08:33:40PM +0000, Michael Kelley (LINUX) wrote:
+> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com> Sent: Thursday, November 3, 2022 10:59 AM
+> > 
+> > Microsoft Hypervisor root partition has to map the TSC page specified
+> > by the hypervisor, instead of providing the page to the hypervisor like
+> > it's done in the guest partitions.
+> > 
+> > However, it's too early to map the page when the clock is initialized, so, the
+> > actual mapping is happening later.
+> > 
+> > Signed-off-by: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+> > CC: "K. Y. Srinivasan" <kys@microsoft.com>
+> > CC: Haiyang Zhang <haiyangz@microsoft.com>
+> > CC: Wei Liu <wei.liu@kernel.org>
+> > CC: Dexuan Cui <decui@microsoft.com>
+> > CC: Thomas Gleixner <tglx@linutronix.de>
+> > CC: Ingo Molnar <mingo@redhat.com>
+> > CC: Borislav Petkov <bp@alien8.de>
+> > CC: Dave Hansen <dave.hansen@linux.intel.com>
+> > CC: x86@kernel.org
+> > CC: "H. Peter Anvin" <hpa@zytor.com>
+> > CC: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > CC: linux-hyperv@vger.kernel.org
+> > CC: linux-kernel@vger.kernel.org
+> > ---
+> >  arch/x86/hyperv/hv_init.c          |    2 ++
+> >  drivers/clocksource/hyperv_timer.c |   38 +++++++++++++++++++++++++++---------
+> >  include/clocksource/hyperv_timer.h |    1 +
+> >  3 files changed, 32 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index f49bc3ec76e6..89954490af93 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -464,6 +464,8 @@ void __init hyperv_init(void)
+> >  		BUG_ON(!src);
+> >  		memcpy_to_page(pg, 0, src, HV_HYP_PAGE_SIZE);
+> >  		memunmap(src);
+> > +
+> > +		hv_remap_tsc_clocksource();
+> >  	} else {
+> >  		hypercall_msr.guest_physical_address =
+> > vmalloc_to_pfn(hv_hypercall_pg);
+> >  		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+> > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> > index 9445a1558fe9..dec7ad3b85ba 100644
+> > --- a/drivers/clocksource/hyperv_timer.c
+> > +++ b/drivers/clocksource/hyperv_timer.c
+> > @@ -509,9 +509,6 @@ static bool __init hv_init_tsc_clocksource(void)
+> >  	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+> >  		return false;
+> > 
+> > -	if (hv_root_partition)
+> > -		return false;
+> > -
+> >  	/*
+> >  	 * If Hyper-V offers TSC_INVARIANT, then the virtualized TSC correctly
+> >  	 * handles frequency and offset changes due to live migration,
+> > @@ -529,16 +526,22 @@ static bool __init hv_init_tsc_clocksource(void)
+> >  	}
+> > 
+> >  	hv_read_reference_counter = read_hv_clock_tsc;
+> > -	tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
+> > 
+> >  	/*
+> > -	 * The Hyper-V TLFS specifies to preserve the value of reserved
+> > -	 * bits in registers. So read the existing value, preserve the
+> > -	 * low order 12 bits, and add in the guest physical address
+> > -	 * (which already has at least the low 12 bits set to zero since
+> > -	 * it is page aligned). Also set the "enable" bit, which is bit 0.
+> > +	 * TSC page mapping works differently in root compared to guest.
+> > +	 * - In guest partition the guest PFN has to be passed to the
+> > +	 *   hypervisor.
+> > +	 * - In root partition it's other way around: it has to map the PFN
+> > +	 *   provided by the hypervisor.
+> > +	 *   But it can't be mapped right here as it's too early and MMU isn't
+> > +	 *   ready yet. So, we only set the enable bit here and will remap the
+> > +	 *   page later in hv_remap_tsc_clocksource().
+> >  	 */
+> >  	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> > +	if (hv_root_partition)
+> > +		tsc_pfn = tsc_msr.pfn;
+> > +	else
+> > +		tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
+> >  	tsc_msr.enable = 1;
+> >  	tsc_msr.pfn = tsc_pfn;
+> >  	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+> 
+> There's a subtlety here that was nagging me, and I think I see it now.
+> 
+> At this point, the code has enabled the Reference TSC, and if we're the root
+> partition, the Reference TSC Page is the page supplied by the hypervisor.
+> tsc_pfn has been updated to reflect that hypervisor supplied page.
+> 
+> But tsc_page has not been updated to be in sync with tsc_pfn because we
+> can't do the memremap() here.  tsc_page still points to tsc_pg, which is a
+> global variable in Linux.  tsc_page and tsc_pfn will be out-of- sync until
+> hv_remap_tsc_clocksource() is called later in the boot process.  During
+> this interval, calls to get the Hyper-V Reference TSC value will use tsc_pg,
+> not on the Reference TSC Page that the hypervisor is using.  Fortunately,
+> the function hv_read_tsc_page_tsc(), which actually reads the Reference
+> TSC Page, treats a zero value for tsc_sequence as a special case meaning
+> that the Reference TSC page isn't valid.  read_hv_clock_tsc() then falls
+> back to reading a hypervisor provided synthetic MSR to get the correct
+> Reference TSC value.  That fallback is fine -- it's just slower because it
+> traps to the hypervisor.  And the fallback will no longer be used once 
+> tsc_page is updated by hv_remap_tsc_clocksource().
+> 
+> So the code works. Presumably this subtlety was already understood, but
+> it really should be called out in a comment, as it is far from obvious.  I
+> know this code pretty well and I just figured it out. :-(
+> 
+
+You are absolutely right in everything above.
+Moreover, this imlementation will update the tsc_pfn early and will keep
+it the same regardless of the result of the memremap call in
+hv_remap_tsc_clocksource().
+
+This in turn can lead to an interesting (although quite unprobable)
+situation: kernel fails to remap TSC page (and thus use MSR registers as
+fallback), while user space process can successfully map the TSC page
+and use it instead.
+
+The code can be changed to be, I'd say, more evident (by assigning
+tsc_pfn to the hypervisor PFN only if remapping succeede), but the current
+implementation is the most efficient from the performance point of view,
+so I'd keep it as is (even so it's not very obvious).
+
+Stas
+
+> Michael
+> 
