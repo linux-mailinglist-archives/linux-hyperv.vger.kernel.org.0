@@ -2,94 +2,186 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3BF261A01F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Nov 2022 19:38:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF91C61A255
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Nov 2022 21:40:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231426AbiKDSiw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Nov 2022 14:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56846 "EHLO
+        id S229459AbiKDUk5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Nov 2022 16:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230045AbiKDSiv (ORCPT
+        with ESMTP id S229445AbiKDUk5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Nov 2022 14:38:51 -0400
+        Fri, 4 Nov 2022 16:40:57 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9CAAC10043;
-        Fri,  4 Nov 2022 11:38:50 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 83E46205DA32;
-        Fri,  4 Nov 2022 11:38:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 83E46205DA32
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E7FB43AEC;
+        Fri,  4 Nov 2022 13:40:56 -0700 (PDT)
+Received: from skinsburskii-cloud-desktop.internal.cloudapp.net (unknown [20.120.152.163])
+        by linux.microsoft.com (Postfix) with ESMTPSA id EBABF205DA32;
+        Fri,  4 Nov 2022 13:40:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EBABF205DA32
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1667587128;
-        bh=U9AOCmsv6YLLf4cMqDbSKLiOBujtTUIy6/UR/RPPRM8=;
-        h=From:To:Subject:Date:From;
-        b=eu8H7ythuTDN9Hn9PiACAdcWbJXCDTP7uD2h3n0sT+NAPtDr+NA2/YKiiHtTjRdTF
-         Ba8yAiQtRKQGDNXhNDJnkHG7qOXvEbT3qo9qdQxXpIBF8Gc/igI2BNGwFR6k2IC8XE
-         A8NAPrO2jmU2pmk3ZTfG4vDQUTIDopwXavjDnmr0=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com,
-        ssengar@linux.microsoft.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, anrayabh@linux.microsoft.com
-Subject: [PATCH v2] x86/Hyper-V: Expand definition of struct hv_vp_assist_page
-Date:   Fri,  4 Nov 2022 11:38:43 -0700
-Message-Id: <1667587123-31645-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        s=default; t=1667594456;
+        bh=Q00AD5FtgxbleMEtoQwflwLsA5FxSLcJ86w/eZbdQKc=;
+        h=Subject:From:Cc:Date:In-Reply-To:References:From;
+        b=oRK56l9WNOXPJRJCUb9+KqFiJcF3wOaA/j+4Id3mzf79pv61WZSM+YyMZv1f/BDYw
+         5Ifb3IlQw9iosBQ9sP7CmNxTC1QiFtG/adeaWeAUrR2PZTpW8KvJoqNEQHQoaUvKWG
+         EQrLAgoVKpTt53V8/Xv0PMNSkM0d2wxsUbNyYaTc=
+Subject: [PATCH v4] drivers/clocksource/hyper-v: Add TSC page support for root
+ partition
+From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc:     Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com
+Date:   Fri, 04 Nov 2022 20:40:55 +0000
+Message-ID: <166759443644.385891.15921594265843430260.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+In-Reply-To: <BYAPR21MB1688D81DEFA482E52653955FD73B9@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <BYAPR21MB1688D81DEFA482E52653955FD73B9@BYAPR21MB1688.namprd21.prod.outlook.com>
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-18.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,MISSING_HEADERS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The struct hv_vp_assist_page has 24 bytes which is defined as u64[3],
-expand that to expose vtl_entry_reason, vtl_ret_x64rax and vtl_ret_x64rcx
-field. vtl_entry_reason is updated by hypervisor for the entry reason as
-to why the VTL was entered on the virtual processor.
-Guest updates the vtl_ret_* fields to provide the register values to
-restore on VTL return. The specific register values that are restored
-which will be updated on vtl_ret_x64rax and vtl_ret_x64rcx.
-Also added the missing fields for synthetic_time_unhalted_timer_expired,
-virtualization_fault_information and intercept_message.
+From: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Microsoft Hypervisor root partition has to map the TSC page specified
+by the hypervisor, instead of providing the page to the hypervisor like
+it's done in the guest partitions.
+
+However, it's too early to map the page when the clock is initialized, so, the
+actual mapping is happening later.
+
+Signed-off-by: Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>
+CC: "K. Y. Srinivasan" <kys@microsoft.com>
+CC: Haiyang Zhang <haiyangz@microsoft.com>
+CC: Wei Liu <wei.liu@kernel.org>
+CC: Dexuan Cui <decui@microsoft.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: Dave Hansen <dave.hansen@linux.intel.com>
+CC: x86@kernel.org
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Daniel Lezcano <daniel.lezcano@linaro.org>
+CC: linux-hyperv@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
 ---
-[v2]: Corrected vtl_entry_reson size from u8 to u32
+ arch/x86/hyperv/hv_init.c          |    2 ++
+ drivers/clocksource/hyperv_timer.c |   44 +++++++++++++++++++++++++++++-------
+ include/clocksource/hyperv_timer.h |    1 +
+ 3 files changed, 38 insertions(+), 9 deletions(-)
 
- arch/x86/include/asm/hyperv-tlfs.h | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-index 3089ec3..6d9368e 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -374,11 +374,20 @@ struct hv_nested_enlightenments_control {
- struct hv_vp_assist_page {
- 	__u32 apic_assist;
- 	__u32 reserved1;
--	__u64 vtl_control[3];
-+	__u32 vtl_entry_reason;
-+	__u32 vtl_reserved;
-+	__u64 vtl_ret_x64rax;
-+	__u64 vtl_ret_x64rcx;
- 	struct hv_nested_enlightenments_control nested_control;
- 	__u8 enlighten_vmentry;
- 	__u8 reserved2[7];
- 	__u64 current_nested_vmcs;
-+	__u8 synthetic_time_unhalted_timer_expired;
-+	__u8 reserved3[7];
-+	__u8 virtualization_fault_information[40];
-+	__u8 reserved4[8];
-+	__u8 intercept_message[256];
-+	__u8 vtl_ret_actions[256];
- } __packed;
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index f49bc3ec76e6..89954490af93 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -464,6 +464,8 @@ void __init hyperv_init(void)
+ 		BUG_ON(!src);
+ 		memcpy_to_page(pg, 0, src, HV_HYP_PAGE_SIZE);
+ 		memunmap(src);
++
++		hv_remap_tsc_clocksource();
+ 	} else {
+ 		hypercall_msr.guest_physical_address = vmalloc_to_pfn(hv_hypercall_pg);
+ 		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index 9445a1558fe9..c0cef92b12b8 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -509,9 +509,6 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+ 		return false;
  
- struct hv_enlightened_vmcs {
--- 
-1.8.3.1
+-	if (hv_root_partition)
+-		return false;
+-
+ 	/*
+ 	 * If Hyper-V offers TSC_INVARIANT, then the virtualized TSC correctly
+ 	 * handles frequency and offset changes due to live migration,
+@@ -529,16 +526,28 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	}
+ 
+ 	hv_read_reference_counter = read_hv_clock_tsc;
+-	tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
+ 
+ 	/*
+-	 * The Hyper-V TLFS specifies to preserve the value of reserved
+-	 * bits in registers. So read the existing value, preserve the
+-	 * low order 12 bits, and add in the guest physical address
+-	 * (which already has at least the low 12 bits set to zero since
+-	 * it is page aligned). Also set the "enable" bit, which is bit 0.
++	 * TSC page mapping works differently in root compared to guest.
++	 * - In guest partition the guest PFN has to be passed to the
++	 *   hypervisor.
++	 * - In root partition it's other way around: it has to map the PFN
++	 *   provided by the hypervisor.
++	 *   But it can't be mapped right here as it's too early and MMU isn't
++	 *   ready yet. So, we only set the enable bit here and will remap the
++	 *   page later in hv_remap_tsc_clocksource().
++	 *
++	 * It worth mentioning, that TSC clocksource read function
++	 * (read_hv_clock_tsc) has a MSR-based fallback mechanism, used when
++	 * TSC page is zeroed (which is the case until the PFN is remapped) and
++	 * thus TSC clocksource will work even without the real TSC page
++	 * mapped.
+ 	 */
+ 	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
++	if (hv_root_partition)
++		tsc_pfn = tsc_msr.pfn;
++	else
++		tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
+ 	tsc_msr.enable = 1;
+ 	tsc_msr.pfn = tsc_pfn;
+ 	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+@@ -573,3 +582,20 @@ void __init hv_init_clocksource(void)
+ 	hv_sched_clock_offset = hv_read_reference_counter();
+ 	hv_setup_sched_clock(read_hv_sched_clock_msr);
+ }
++
++void __init hv_remap_tsc_clocksource(void)
++{
++	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
++		return;
++
++	if (!hv_root_partition) {
++		WARN(1, "%s: attempt to remap TSC page in guest partition\n",
++		     __func__);
++		return;
++	}
++
++	tsc_page = memremap(tsc_pfn << HV_HYP_PAGE_SHIFT, sizeof(tsc_pg),
++			    MEMREMAP_WB);
++	if (!tsc_page)
++		pr_err("Failed to remap Hyper-V TSC page.\n");
++}
+diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
+index 3078d23faaea..783701a2102d 100644
+--- a/include/clocksource/hyperv_timer.h
++++ b/include/clocksource/hyperv_timer.h
+@@ -31,6 +31,7 @@ extern void hv_stimer_global_cleanup(void);
+ extern void hv_stimer0_isr(void);
+ 
+ extern void hv_init_clocksource(void);
++extern void hv_remap_tsc_clocksource(void);
+ 
+ extern unsigned long hv_get_tsc_pfn(void);
+ extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
+
 
