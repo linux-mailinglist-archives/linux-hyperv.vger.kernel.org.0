@@ -2,174 +2,98 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 770056194C6
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Nov 2022 11:50:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EB8F619A78
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Nov 2022 15:48:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbiKDKuA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Nov 2022 06:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        id S231618AbiKDOsR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Nov 2022 10:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiKDKt7 (ORCPT
+        with ESMTP id S231565AbiKDOsQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Nov 2022 06:49:59 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6A9A62B24C;
-        Fri,  4 Nov 2022 03:49:58 -0700 (PDT)
-Received: from anrayabh-desk (unknown [167.220.238.193])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A4CC220B929B;
-        Fri,  4 Nov 2022 03:49:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A4CC220B929B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1667558998;
-        bh=2xtFBcRWDWUgb1O5tv1Wxinj7VDOrkrvZo9nr2w/dWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LcyRZOZT4uwhubWfNY1avDSNnScQlJOXFoRMziEB1j/gVVHrJdwPuKSLC35L6tIh4
-         C6LHoMDparOAnaHiW0zZ/ytXBSS1W1t7YcJPbWbN9sKJWEHNnn3Ic9jBrffLyTyAwL
-         pcXHcCq4h0h6nE8uRmOcD5U/zcbaQt1eQSyUZETk=
-Date:   Fri, 4 Nov 2022 16:19:48 +0530
-From:   Anirudh Rayabharam <anrayabh@linux.microsoft.com>
-To:     Jinank Jain <jinankjain@linux.microsoft.com>
-Cc:     jinankjain@microsoft.com, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        arnd@arndb.de, peterz@infradead.org, jpoimboe@kernel.org,
-        seanjc@google.com, kirill.shutemov@linux.intel.com,
-        ak@linux.intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, mikelley@microsoft.com
-Subject: Re: [PATCH v3 3/5] x86/hyperv: Add an interface to do nested
- hypercalls
-Message-ID: <Y2TuTOBfbot/fmEd@anrayabh-desk>
-References: <cover.1667480257.git.jinankjain@linux.microsoft.com>
- <10fdfe01578e691e4815e3427e09e64b45c4af58.1667480257.git.jinankjain@linux.microsoft.com>
+        Fri, 4 Nov 2022 10:48:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE87275F4
+        for <linux-hyperv@vger.kernel.org>; Fri,  4 Nov 2022 07:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667573235;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=dduFxNUnMZtaYg6bmwVG1UIu2rSweaRMsLL9I6qL7vU=;
+        b=DfNiS6t3zIaF79fHIuzpXcl3bY+yUZwYqR6u2tyhcbk4ssn1l2g6KL7wdCdJD//n5TMu2E
+        MqMk8mU9/94ruLebqGstjd8fXll/DNpogmBhdlrKuEj4pmqavdeEB2h8KuJZDrp4HzDxtr
+        xblB51MsnoCtwqihBgM56YoWOIRULSQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-326-nucE-hcZNgq_7KolCVahyg-1; Fri, 04 Nov 2022 10:47:11 -0400
+X-MC-Unique: nucE-hcZNgq_7KolCVahyg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C0E987B2A7;
+        Fri,  4 Nov 2022 14:47:11 +0000 (UTC)
+Received: from ovpn-192-136.brq.redhat.com (ovpn-192-136.brq.redhat.com [10.40.192.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D4A2C2C8D9;
+        Fri,  4 Nov 2022 14:47:09 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] KVM: VMX: nVMX: Make eVMCS enablement more robust
+Date:   Fri,  4 Nov 2022 15:47:04 +0100
+Message-Id: <20221104144708.435865-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10fdfe01578e691e4815e3427e09e64b45c4af58.1667480257.git.jinankjain@linux.microsoft.com>
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 01:04:05PM +0000, Jinank Jain wrote:
-> According to TLFS, in order to communicate to L0 hypervisor there needs
-> to be an additional bit set in the control register. This communication
-> is required to perform priviledged instructions which can only be
-> performed by L0 hypervisor. An example of that could be setting up the
-> VMBus infrastructure.
-> 
-> Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
-> ---
->  arch/x86/include/asm/hyperv-tlfs.h |  3 ++-
->  arch/x86/include/asm/mshyperv.h    | 42 +++++++++++++++++++++++++++---
->  include/asm-generic/hyperv-tlfs.h  |  1 +
->  3 files changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 0319091e2019..fd066226f12b 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -380,7 +380,8 @@ struct hv_nested_enlightenments_control {
->  		__u32 reserved:31;
->  	} features;
->  	struct {
-> -		__u32 reserved;
-> +		__u32 inter_partition_comm:1;
-> +		__u32 reserved:31;
->  	} hypercallControls;
->  } __packed;
->  
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index b0f16d06a0c5..32f6bed68e88 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -76,10 +76,16 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
->  	return hv_status;
->  }
->  
-> +/* Hypercall to the L0 hypervisor */
-> +static inline u64 hv_do_nested_hypercall(u64 control, void *input, void *output)
-> +{
-> +	return hv_do_hypercall(control | HV_HYPERCALL_NESTED, input, output);
-> +}
-> +
->  /* Fast hypercall with 8 bytes of input and no output */
-> -static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
-> +static inline u64 _hv_do_fast_hypercall8(u64 control, u16 code, u64 input1)
->  {
-> -	u64 hv_status, control = (u64)code | HV_HYPERCALL_FAST_BIT;
-> +	u64 hv_status;
->  
->  #ifdef CONFIG_X86_64
->  	{
-> @@ -107,10 +113,24 @@ static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
->  		return hv_status;
->  }
->  
-> +static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
-> +{
-> +	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT;
-> +
-> +	return _hv_do_fast_hypercall8(control, code, input1);
-> +}
-> +
-> +static inline u64 hv_do_fast_nested_hypercall8(u16 code, u64 input1)
-> +{
-> +	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED;
-> +
-> +	return _hv_do_fast_hypercall8(control, code, input1);
-> +}
-> +
->  /* Fast hypercall with 16 bytes of input */
-> -static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
-> +static inline u64 _hv_do_fast_hypercall16(u64 control, u16 code, u64 input1, u64 input2)
->  {
-> -	u64 hv_status, control = (u64)code | HV_HYPERCALL_FAST_BIT;
-> +	u64 hv_status;
->  
->  #ifdef CONFIG_X86_64
->  	{
-> @@ -141,6 +161,20 @@ static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
->  	return hv_status;
->  }
->  
-> +static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
-> +{
-> +	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT;
-> +
-> +	return _hv_do_fast_hypercall16(control, code, input1, input2);
-> +}
-> +
-> +static inline u64 hv_do_fast_nested_hypercall16(u16 code, u64 input1, u64 input2)
-> +{
-> +	u64 control = (u64)code | HV_HYPERCALL_FAST_BIT | HV_HYPERCALL_NESTED;
-> +
-> +	return _hv_do_fast_hypercall16(control, code, input1, input2);
-> +}
-> +
->  extern struct hv_vp_assist_page **hv_vp_assist_page;
->  
->  static inline struct hv_vp_assist_page *hv_get_vp_assist_page(unsigned int cpu)
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index fdce7a4cfc6f..3840958201cd 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -185,6 +185,7 @@ enum HV_GENERIC_SET_FORMAT {
->  #define HV_HYPERCALL_VARHEAD_OFFSET	17
->  #define HV_HYPERCALL_VARHEAD_MASK	GENMASK_ULL(26, 17)
->  #define HV_HYPERCALL_RSVD0_MASK		GENMASK_ULL(31, 27)
-> +#define HV_HYPERCALL_NESTED		BIT_ULL(31)
->  #define HV_HYPERCALL_REP_COMP_OFFSET	32
->  #define HV_HYPERCALL_REP_COMP_1		BIT_ULL(32)
->  #define HV_HYPERCALL_REP_COMP_MASK	GENMASK_ULL(43, 32)
-> -- 
-> 2.25.1
+Changes since v1:
+- Simplify PATCH4 by not using evmcs_get_supported_ctls() and doing more
+  macro magic to avoid having two evmcs_check_vmcs_conf{u32, u64} variants
+  [Sean]
 
-Reviewed-by: <anrayabh@linux.microsoft.com>
+This is a continuation of "KVM: VMX: Support updated eVMCSv1 revision + use
+vmcs_config for L1 VMX MSRs" work:
+https://lore.kernel.org/kvm/20220830133737.1539624-1-vkuznets@redhat.com/
+
+and a preparation to enabling new eVMCS features for Hyper-V on KVM, namely
+nested TSC scaling.
+
+Future proof KVM against two scenarios:
+- nVMX: A new feature which doesn't have a corresponding eVMCSv1 field gets
+ implemented in KVM but EVMCS1_UNSUPPORTED_* defines are left unchanged.
+- VMX: A new feature supported by KVM but currently missing in eVMCSv1 gets
+ implemented in a future Hyper-V version breaking KVM.
+
+Note: 'vmx/evmcs.{c,h}' are renamed to 'vmx/hyperv.{c,h}' in
+https://lore.kernel.org/kvm/20221004123956.188909-7-vkuznets@redhat.com/
+
+Vitaly Kuznetsov (4):
+  KVM: nVMX: Sanitize primary processor-based VM-execution controls with
+    eVMCS too
+  KVM: nVMX: Invert 'unsupported by eVMCSv1' check
+  KVM: nVMX: Prepare to sanitize tertiary execution controls with eVMCS
+  KVM: VMX: Resurrect vmcs_conf sanitization for KVM-on-Hyper-V
+
+ arch/x86/kvm/vmx/evmcs.c | 88 +++++++++++++++++++++++++++++--------
+ arch/x86/kvm/vmx/evmcs.h | 93 +++++++++++++++++++++++++++++++++-------
+ arch/x86/kvm/vmx/vmx.c   |  5 +++
+ 3 files changed, 152 insertions(+), 34 deletions(-)
+
+-- 
+2.38.1
 
