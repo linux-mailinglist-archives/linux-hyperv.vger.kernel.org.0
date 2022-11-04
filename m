@@ -2,118 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDB7C61A2CE
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Nov 2022 21:57:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D644261A419
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Nov 2022 23:31:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbiKDU5p (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Nov 2022 16:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
+        id S229471AbiKDWa7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Nov 2022 18:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiKDU5m (ORCPT
+        with ESMTP id S229579AbiKDWa6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Nov 2022 16:57:42 -0400
+        Fri, 4 Nov 2022 18:30:58 -0400
 Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11020014.outbound.protection.outlook.com [52.101.51.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA9E49B69;
-        Fri,  4 Nov 2022 13:57:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB2012772;
+        Fri,  4 Nov 2022 15:30:56 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dXD72PV321+srq2nXI4FnKC4GmjaWu22i9Albe3Kmi+wdmluiwsvhYNTgDtkGFrB3xbwXoWX0Qrrf3lzEtfZ4q11vzkKHti1AvHu4NVHKzii7itKpUH4qiMnRrLhBgEOzV3EEazwkiODxKyupbPffZpk1MqwFlvR6xROh87XblRO0QP8WcPZaBGTyGaLOKoIKxeAymJlui6+irzz4zO4sWvdQ8iwptvQfa3WYm6puqwFIK2Ys45bsH7n0NWCwMW1lB55hjFots/18rzRzC+qEFWp3t7tpRt/igRju2kBhYj5YrQV1BWPKFN9orYIvUnrkmJsaNubNALZhq7ZzRiMVg==
+ b=hFrLBshBEalAzMKJUiVKp+YBkUB42nw5qY4sjGpaDnvzpkem8IS1tXT5HMy8g7IyPOThywLnVh18qtSqMGdzOrTOx1TIUUlrWg8IP9xHrOf2yFH4VUBAqlhf82sx9W3/oBE237cPpLr9V6DDPlzLmM0dQNYJ0LR2NpTjTREfGxFBBt6IgMkDMjnlLlhfuQrR/JRkkpH+S2x6dvZZHt2fSADEReLlu/e89g1Vol2VG38gnkxf0/zjyCgf8Y36OP+F+hHKJVqCksUt6RjB5kkmr3p3xVT4dxdHlEKjr8kYlHymSoclR+JEYeOZ+OfKX/74Mej/Jsggy+o8qdgpmZoVPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=32D1lB/5meF/cgbhmQdnPPUZtSLGR36M7h/8UpYgi0E=;
- b=T6/KvrLtSHPgO02/rMz5zW8VYrjoulozENd8vWSak7fz1ncCKBZUyRwE60226Nn1AfedShkCh4ZfIjorEZUbSI9QZ1yJYIeo87qKSsopT+81W05SW4neaZJvU59UKkMHSHY619R2DY/8PvEsipYFfe+WgkC1ywmvS81N4kuNb5nwxSxc3pDdaWQV4Lgwg3jbBdvP9biBr0hvwpvrR+WpRn7MqDDz1q5kNo3+0qGv5rIhpbHQAltvuKwyy9STdfhyG1YfWdVH47Lr3Juc84Q9FBC/TFX6VQz0FAs4O3pYHKCgjk6CcSfLAAqZfkkoM5ZE0U31VqN0u0DVhoSOgW9Gzg==
+ bh=SIy97nKAhxl6T0cZPnzjuU3vHWT5tjhybn9x2Jdzc34=;
+ b=lrmS2whf1YtCemORcQtxp3ismG0fGn4uv2KYDhpElcfAployDh8lduRZLvS9hXCFINd7l0AL9y/GSVXMXScHF79Ir3It9qGuPn/z80KbRFjPp7Yjvt1iZf7iUd2x8hkP55xTPToJ3IWu406J5P3nfRsdMAtVZgEFy1GbPgwuC3vWpOas5c+Ya5Dm3WbCEaeiyHQlXxfJyKb1rlu6RZdv3bQRUYbRAXgRr9v63y6tuHX9NbOuGURswB3IRspH10v/y/iGjTGcnyVz7jkfKiZ3U5EpYaV8h9So0ZHnW1CiEdqeAElCnPQFr+os7CltC+rNB2Qm0AaoNGcTwGssFIwZEw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=32D1lB/5meF/cgbhmQdnPPUZtSLGR36M7h/8UpYgi0E=;
- b=YhkkRlyniVF2IH1SThP511gDr0FwlqLV30evEM6suvggjqUtOSTszDqkm65UaQWLVGrFwXdNGxTlXC4iiQ2/m2hmyTY0snvY3hHxuGx5M4W2M50Rz6zM1kXNtkskVDWNsqUiMBbg2afaRyN1SFI9NXP8gqG0Uvf9MvUewU54GVU=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DM4PR21MB3561.namprd21.prod.outlook.com (2603:10b6:8:a3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.5; Fri, 4 Nov
- 2022 20:57:32 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::f565:80ed:8070:474b]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::f565:80ed:8070:474b%8]) with mapi id 15.20.5813.008; Fri, 4 Nov 2022
- 20:57:32 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH] x86/hyperv: Restore VP assist page after cpu
- offlining/onlining
-Thread-Topic: [PATCH] x86/hyperv: Restore VP assist page after cpu
- offlining/onlining
-Thread-Index: AQHY77dXy9yFR2n9S0Oj8F1qxUZhgq4vQIuA
-Date:   Fri, 4 Nov 2022 20:57:32 +0000
-Message-ID: <BYAPR21MB1688DC6D768475A393A06A91D73B9@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20221103190601.399343-1-vkuznets@redhat.com>
-In-Reply-To: <20221103190601.399343-1-vkuznets@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f86ce496-a1a9-4697-80ab-55292af2e998;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-04T20:57:02Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
+ bh=SIy97nKAhxl6T0cZPnzjuU3vHWT5tjhybn9x2Jdzc34=;
+ b=gENZpFIPGTWQyMoQV8zc5DZo/wbxPizI9GODglL2coiuygredIey9I0/TOQaCW+lbhedzYS2kKHLSahN2O4aDZ+qRbUYE5ZS/h47zwM3PxGmSaG5SFp5Z/+4eLCAHhR9XSUYWcoFZ42U+EuOXcz2OI0X0uoFVlgAYdGhK/rQX18=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DM4PR21MB3561:EE_
-x-ms-office365-filtering-correlation-id: 6ef5f550-10fa-4368-9251-08dabea731a8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ckvxoTNUY2ubYhZwfvAHQkQR+wKLx4AWv5oliFT5OL7EmlLWQkY+hUq2v8IEMmqchLxPyVtuU07+vuXhnYLQlDRJqEFOGwMJOAsY0gUSJupiMIyLmCGvww4hsKe7udn36Ih1UPMB8YJqlxfAUVU79y6lJNkijD5ThmuSMBhNwJbkCvbFXoFqPR/c4Kpp8BOn7UgJ6k/1CQBSdqnIYIO2fHWLpMx5eoarQU3/3M7eXCI8H4xw1mYNYyqHKGI2WqrtnsIfZ6IsGXWi5WnDu9cY91hJbo6Mn7mnWth9uP3guOjXfguIki91/dGvRHupJE12hjL+G9MVPpYZjGhFKnrIs2DHcztuL7BYNopPsUG1Wrr/o5v2goHt37v6nfsEJWdhlkp+FaFxupgrgkwzcIK94YkYDz3Rui5v9Op23gEIO+uz1a3Yg1WMYf9bjqI6XT7IpIZb6p2l79pwKZq8MIWXY4DyV1P8vgmk3k/nj/A0zgdyFkdzxKLE+w9svI8/QSRFJYfRyGfIza/nQBKTJvNsInxF/1dXrkhbmOseVXSj+YALtqxDwxy+A6P2Ao9mNo1lB46d1xlhC7EU5WkhaGoafTBAH6bYNftCtqRDDOJ3hSibEIG6zM7jjgSwgTK8BEJI4N06gkcVHVzNtY15QbhJOLnXh6ZBvlrR65dtv13s/wZfW8Iuqjnn8mnQOXD5EImX6JWZKnvF6oyjyiqitw1k05Q7T6sJq3A6Jpq4K2cXC98q1kzKrMUzZIE5c+eSh1nli7P55913DHhy3L60rrEK1Hej2GNHA3dQcReT34BxG8BBvcHKHTnporaDj1Dn7co0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(451199015)(52536014)(8936002)(2906002)(7696005)(82950400001)(8990500004)(110136005)(9686003)(71200400001)(54906003)(66946007)(66556008)(122000001)(66446008)(55016003)(10290500003)(76116006)(38100700002)(66476007)(316002)(82960400001)(6506007)(4326008)(64756008)(8676002)(33656002)(478600001)(41300700001)(5660300002)(186003)(86362001)(26005)(83380400001)(38070700005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?63r5moKfOEsK+hun5qMPyzO6Lm/wksDYbPjNtahNVxEB10i0FrkOX6c9ds90?=
- =?us-ascii?Q?+MjzcMYU/NoLH6k0lb7tuxV2wSGtnsPslQGhbgjwu+eONt33TatylFvDwcS6?=
- =?us-ascii?Q?W05Un1kUjiHoSwjRtGAi2Tc7nhJ6qH+LwH7eySrHwU4gVQrlzOGzq3WFQ1XD?=
- =?us-ascii?Q?3/UU5KSeUDvHVxyAUt7cgYXrrtQ/L5tXTLUYw5wjolrVYWScHhQCeuORqPQJ?=
- =?us-ascii?Q?MaBDrXLR7+ItqsSDWxV3pGu8pBRPmTnt+r7Jerb51nhC3OpWRfoya9h7kJwz?=
- =?us-ascii?Q?XfGfq+BTUuuRlFd/LxvCM0J4NS0Zd6CVZQwDxpNjNnbEajUTtpFimR2VX269?=
- =?us-ascii?Q?qkeVxNN9OyOLWd/w4esoVF/bpSlFItJsSk/nEtgdGNlYiDyZ/zaO/d4V9qYW?=
- =?us-ascii?Q?s68n8nt48Ve/yUwB7fHrF7KomVlShuXJcWB41LQ00cqJx9kJbNyJjmIbRG9V?=
- =?us-ascii?Q?JfKmujKWHmluAPxGOoVi1KB8IRe3dl05nYeH2R+Zn/STg+yK+aW22HJ9F5FA?=
- =?us-ascii?Q?1K+Sr9jYUMxlut89TEwi4iS+3qDsFjwRmquLBN3oD1GYB3baEsxkpsZdXWB3?=
- =?us-ascii?Q?IgKagCRniX7jzT7SlCN72lx0773RMKecEYdw0mYXHMWtfXbGiIImD66hWDWj?=
- =?us-ascii?Q?2mZCwpfm1I9u9CPtdHA4pUd4EoftgOTm2oaaokpjPiKz2UrmKn61/sCAhXt8?=
- =?us-ascii?Q?uLYeM9l7kMOAdOfCbeJuy5+o2vmO93b3Pj4x1EhuFICX8W4Uz41ymZTY8aHL?=
- =?us-ascii?Q?xtb2Q3m1qbUCWkrtDRAQX0LvBRlWAztf3RF/dcj9zdrcg9xbUndiw3mtIuNd?=
- =?us-ascii?Q?Tv+n6VOE2r0O3pXHmlOs/5y5pd8urtzYwA9735EQvF0Q1CRPASx0WAHmGONm?=
- =?us-ascii?Q?2Q36nslpRjMNNWJCrFgOq/k4owlbiIGkmSfMYfMQ/ynFG/EbRNTgP7Uyj3+i?=
- =?us-ascii?Q?uYGUOo/DFcTrtWpw9aW277H2VDmSejAQPqG/ZvXXfoHBZrEIrpCRZeCE4MHt?=
- =?us-ascii?Q?Xk2uw5ZptzWwyu3WXr56UCSWMpafItcLbqeVBebEwzuaaONMKXzwD1yFcxiA?=
- =?us-ascii?Q?mcSLlWBIYBO14pExsifbnLFXqN8IPIZcrU5ZPmRuMuU64Fx4nHKB6NrMJ7MU?=
- =?us-ascii?Q?4snI8X4n71AfUQwjtv2z56zSaJbu9c5drU0ErCSlpYe+H3OQqOoR9VK38QNz?=
- =?us-ascii?Q?OD8tPFgXRY7vBaHa3H9ixOIEe8/eqraq3OfEN168SiGD9fPn927k0WR0kFAC?=
- =?us-ascii?Q?8vyPeOmQbB0t93fSYTHKXimTgdSJABdSHXmTxByzWsfUw51WoqXFc9wsUuCL?=
- =?us-ascii?Q?uawGdhPe4X3WEdK8CiTXXdol3EusWKojBIfqcc6ScVICmA4WhTufPe54ThJy?=
- =?us-ascii?Q?mJWsAvZKXjvBwCwzBuUGAaibOl4B+wRksX2/IGJPaS81nJsIrIWgQxlUCeeT?=
- =?us-ascii?Q?EO4u7v5RwURrzNBWevvJwesC8mqNB3jZAmoFQ+ibW1PZxW7ldaBB+pVp7maY?=
- =?us-ascii?Q?0D4Z9jmr3ut61754UxNXLY7mwBpTgw6VpdGWjEdCF2dGXoBsGNjvPUfUls5y?=
- =?us-ascii?Q?eMheuNN3PPxC19dIASvjggsI5sBOWRkEvpFhg1Cgt9nuXOigFCG0LopSYPst?=
- =?us-ascii?Q?0g=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:30::23) by DS7PR21MB3100.namprd21.prod.outlook.com
+ (2603:10b6:8:74::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.8; Fri, 4 Nov
+ 2022 22:30:53 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::a746:e3bf:9f88:152f]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::a746:e3bf:9f88:152f%7]) with mapi id 15.20.5813.008; Fri, 4 Nov 2022
+ 22:30:53 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     quic_jhugo@quicinc.com, quic_carlv@quicinc.com, wei.liu@kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        lpieralisi@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        robh@kernel.org, kw@linux.com, helgaas@kernel.org,
+        alex.williamson@redhat.com, boqun.feng@gmail.com,
+        Boqun.Feng@microsoft.com
+Cc:     Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v3] PCI: hv: Only reuse existing IRTE allocation for Multi-MSI
+Date:   Fri,  4 Nov 2022 15:29:53 -0700
+Message-Id: <20221104222953.11356-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR04CA0103.namprd04.prod.outlook.com
+ (2603:10b6:303:83::18) To BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:30::23)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR2101MB1092:EE_|DS7PR21MB3100:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5bc27d1d-65ca-4696-b8ed-08dabeb43b64
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 75xhUKcp7xCtFTLS/oWead2cJn9Fgqu0iLbytDYssLAs1JY3npJjKM1KSNFNCqr1o5Ycf3ovWBxcJTWwbfhV3dcxn/n/eZXIdLAzedCZGkiGOY50+mKEkO77SAZudRdta9YqPxPG44I5cOwLGCCYqq7zbodEWS3S33fV7ykfIK6ZFtbeo0YdVU9UbhsWcXcFq+fmAmqL/O9reC1RdBNbspSsKqHT+GayerStawPodZMLGWEWYDPLnVZoi5Pq15kks+TjKhXRHLtBQoffeU/RvT3IKUHOT2LSZnvhpRAjTA+PS968eaML7PVvnlV5z6L62A36DttIAQIDZsRAhgCtoU5q5+iJQ2ndeUN0l+AssZoK/HvTbV6AmoBOz0Yf3iVhHGrFipmIeAROwdSE8Evp2XKlCr28WI6QI8oJq0s9ss1YzUpx2sirp9OE+s7XBegDUJVtH6yi9Ci3ZfIDeQpxQhizlYyh9ZwwYKq61KQLUHMwOs79WKDqrjjxM/6WlKelP6a98Gv4MZ+2Tjs6iMq+0SSXAXyyzijEQllw7TuIPtH/k6nNpiL0KdiipaISFIQbiTVqIIjelIpSfAp688lxd2FiriTCb48XhvNoOZ7WsqZxwMXQZ8q+VL/BNCINB/2XMHaPMCmCvvYJdMT1mvOwWfEq4dqYgchCcjfs5Of50LqUSk+hg/pHoMCTcCgKSFFK3s/+5iSkbOjzB8Z1dFngFSUH7VkF+pKrXEjUvaJ8L2EFxZ/wLIckqsms9Eb9A2uS/KvV1ocICQQwXouUMHBY7FhskzIzVAGPOCU45QEdxCNFlYS8Il7IYwCZqXsDEF/tRcldqo869KmOUYw6kG2EQ65nL0gfKGZOjXGoyV1xacmWOSe6gILaAdjmf+lDeOAg
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(136003)(39860400002)(376002)(346002)(396003)(451199015)(10290500003)(36756003)(966005)(107886003)(478600001)(5660300002)(6486002)(66476007)(2906002)(7416002)(66946007)(66556008)(30864003)(4326008)(8936002)(82960400001)(82950400001)(86362001)(3450700001)(41300700001)(316002)(6636002)(8676002)(921005)(38100700002)(83380400001)(186003)(2616005)(1076003)(6512007)(6506007)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JpbsCBaByjok2gTUTqs1aryOein6DaJP/GvzcTPXAE9v6ENJm4qqIb6um283?=
+ =?us-ascii?Q?KlcPs2fGd1+ddQ4Hz6frwrPhRvyKo6S1StAUOG66lY7lrE+3BjC9z0aBf7Bj?=
+ =?us-ascii?Q?7YIx9Gikj+n1E2/fHi8hMDDSnSs8WIlPWVuWIN7VouskatiW9RzdLBz+1YWu?=
+ =?us-ascii?Q?wMCQcl9KkasAsK4JSfKtD4B94YFK9cKjnpoIwt8qZXrc9Vl21gEKGj3GweoN?=
+ =?us-ascii?Q?eXBzfQvXE9yOnzDoiR2tJNqDOYocQ+PqwqlX0yIrtWtpmy15K+XeCfaWdcJz?=
+ =?us-ascii?Q?mMo1hmENQNLSkjopmgl0CoR0AGzVGjYIzdXetLI7t6HpqM8ZUwcuQmmw0ejt?=
+ =?us-ascii?Q?MftTwmbwxX9wBnLRC629GpJZoe3yNznkJRDl1s1GB/00Ac/YIWIgmkTfZRQN?=
+ =?us-ascii?Q?BUeSjCI7B2eCzON7UbIrv9O7W3OZkWvH5odmkXQGOXH1usnEF4vA6bHBqFF+?=
+ =?us-ascii?Q?8+wrxAnHR2tmM0+wdiE1cj1IntuUHgtwSCXpxXwDj2qyNMdKGl1MABgLLb4+?=
+ =?us-ascii?Q?r3YHhVGQIM+GNmKVmqoolAiwIpnvbh9+pW+SMbm4t3W1JsYgdTcXbsBfh8hD?=
+ =?us-ascii?Q?Ui9NKofTKFSI02LdZLKfZxWqC0BQ7eOAve1+sv89OlxUCuRFNFMf9jrcc1Hi?=
+ =?us-ascii?Q?QRbJuVmZPzeh7yXem6jxAwhMipyCaGqWXW10sr7Dlj+TuGB/MfxpjebiSP5Z?=
+ =?us-ascii?Q?OLo4bPafgGDRKsAf/m6dPJQRGkPKhGh1uTiqsup9FHYJONYlpZVEP7VBdso9?=
+ =?us-ascii?Q?zeLRjagtwT4AnS0M+6viPZ/hXXeb6hr2i9NrbCoxbZS8JPXV6UKLLFlN7i65?=
+ =?us-ascii?Q?0feV5x372Y9LS/JRVvZtWPu0LyxLfnkBw9XBJ0xwipbMnTlcsmQYCfplznlZ?=
+ =?us-ascii?Q?kjQdfmvXmkJjbUWyxDEL2ejmZHq569nOYXYSzYd5FyResnveITmGS90msFpO?=
+ =?us-ascii?Q?/osQjbhFt6nSvw93eAmb/5ZjEJcyIz7Ze3d+cxz1muEJitpqPJT/oIEoYTcr?=
+ =?us-ascii?Q?Alezjh3FOj1EvTK7ovUfw4CQ53UrTlQ/f2E8TYsf8ibcKupq5IG0cgVYqBrI?=
+ =?us-ascii?Q?rZX+1Kemfk+eWcXCt1EVGyWn6fDVsBPdk/BnY6FbeOjorLF0OkoOB1srSsrw?=
+ =?us-ascii?Q?Q1gDqF7gWh/e28AGA9XXwsczPcW3pXJJg8h7eZ2+f7Mx8h4M+/LKMxAaXii5?=
+ =?us-ascii?Q?qm+JdgqadoxonmdOzYRm012c93cbeHrsgG7k5JXu0hZLgYVvETOdHBX720Os?=
+ =?us-ascii?Q?uz0fREUkJOjZX30NiTck43CZNVVvL940UM878q8EBw1LeLVodEagtcPvm7Hk?=
+ =?us-ascii?Q?Zc3IzCPEF3uzhHa8XoUAi8yq0EsV4wJ9hrbcptFidnHYQU2hUwaY7FLRLzTL?=
+ =?us-ascii?Q?gLdB26IRTsBw/2UbEx3S1JnUrvXTeYU20FsgMQuqnmhk/dJvBnC/aZBf4twT?=
+ =?us-ascii?Q?uY8XOQpUFfiS4xeeRvVExiZrhLgXFmEH18Nc/IxEkTnPS5KvIfaIsjUGMvA0?=
+ =?us-ascii?Q?dTP3nkZHZo0rDNEkf2ZSK3iiR9/qpGPKOlMJXlZ4/Gn5Elubm2bAzMIhp83/?=
+ =?us-ascii?Q?l9PBM2fSyQnyXj10SCenNRCeX1yAsNtcUujHx3/16vt6zmehWKi7mSbPM8N7?=
+ =?us-ascii?Q?rnqiJEgVcWO6gtQ0emOFlhL+JNUJiWkZLxGDpwtc7bgo?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bc27d1d-65ca-4696-b8ed-08dabeb43b64
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ef5f550-10fa-4368-9251-08dabea731a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2022 20:57:32.7668
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2022 22:30:53.3849
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NG6kR/HndKsCbfSUV6axP6pB9lNoM2VE/XukM90sP+T4nkKNy1UuTnXbj4ZGyQ/zMxhQF8gyQFI8lZE/z6KqxwHZtKZrQ92kfCXEjC6UZ8s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3561
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /uaqMbKieWtqqHmNxedU9raP9o7gZ71ogzZz+wN8oZA760OYnWO2Q79HvLeBBoPDUtYojc7ySOz8yES30C0SIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3100
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=ham
@@ -124,127 +120,278 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Thursday, November 3, 20=
-22 12:06 PM
->=20
-> Commit e5d9b714fe40 ("x86/hyperv: fix root partition faults when writing
-> to VP assist page MSR") moved 'wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE)' under
-> 'if (*hvp)' condition. This works for root partition as hv_cpu_die()
-> does memunmap() and sets 'hv_vp_assist_page[cpu]' to NULL but breaks
-> non-root partitions as hv_cpu_die() doesn't free 'hv_vp_assist_page[cpu]'
-> for them. This causes VP assist page to remain unset after CPU
-> offline/online cycle:
->=20
-> $ rdmsr -p 24 0x40000073
->   10212f001
-> $ echo 0 > /sys/devices/system/cpu/cpu24/online
-> $ echo 1 > /sys/devices/system/cpu/cpu24/online
-> $ rdmsr -p 24 0x40000073
->   0
->=20
-> Fix the issue by always writing to HV_X64_MSR_VP_ASSIST_PAGE in
-> hv_cpu_init(). Note, checking 'if (!*hvp)', for root partition is
-> pointless as hv_cpu_die() always sets 'hv_vp_assist_page[cpu]' to
-> NULL (and it's also NULL initially).
->=20
-> Note: the fact that 'hv_vp_assist_page[cpu]' is reset to NULL may
-> present a (potential) issue for KVM. While Hyper-V uses
-> CPUHP_AP_ONLINE_DYN stage in CPU hotplug, KVM uses
-> CPUHP_AP_KVM_STARTING
-> which comes earlier in CPU teardown sequence. It is theoretically
-> possible that Enlightened VMCS is still in use. It is unclear if the
-> issue is real and if using KVM with Hyper-V root partition is even
-> possible.
->=20
-> While on it, drop the unneeded smp_processor_id() call from hv_cpu_init()=
-.
->=20
-> Fixes: e5d9b714fe40 ("x86/hyperv: fix root partition faults when writing =
-to VP assist
-> page MSR")
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  arch/x86/hyperv/hv_init.c | 54 +++++++++++++++++++--------------------
->  1 file changed, 26 insertions(+), 28 deletions(-)
->=20
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index f49bc3ec76e6..a269049a43ce 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -77,7 +77,7 @@ static int hyperv_init_ghcb(void)
->  static int hv_cpu_init(unsigned int cpu)
->  {
->  	union hv_vp_assist_msr_contents msr =3D { 0 };
-> -	struct hv_vp_assist_page **hvp =3D &hv_vp_assist_page[smp_processor_id(=
-)];
-> +	struct hv_vp_assist_page **hvp =3D &hv_vp_assist_page[cpu];
->  	int ret;
->=20
->  	ret =3D hv_common_cpu_init(cpu);
-> @@ -87,34 +87,32 @@ static int hv_cpu_init(unsigned int cpu)
->  	if (!hv_vp_assist_page)
->  		return 0;
->=20
-> -	if (!*hvp) {
-> -		if (hv_root_partition) {
-> -			/*
-> -			 * For root partition we get the hypervisor provided VP assist
-> -			 * page, instead of allocating a new page.
-> -			 */
-> -			rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
-> -			*hvp =3D memremap(msr.pfn <<
-> -
-> 	HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
-> -					PAGE_SIZE, MEMREMAP_WB);
-> -		} else {
-> -			/*
-> -			 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
-> -			 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
-> -			 * out to make sure we always write the EOI MSR in
-> -			 * hv_apic_eoi_write() *after* the EOI optimization is disabled
-> -			 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
-> -			 * case of CPU offlining and the VM will hang.
-> -			 */
-> +	if (hv_root_partition) {
-> +		/*
-> +		 * For root partition we get the hypervisor provided VP assist
-> +		 * page, instead of allocating a new page.
-> +		 */
-> +		rdmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
-> +		*hvp =3D memremap(msr.pfn <<
-> HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT,
-> +				PAGE_SIZE, MEMREMAP_WB);
-> +	} else {
-> +		/*
-> +		 * The VP assist page is an "overlay" page (see Hyper-V TLFS's
-> +		 * Section 5.2.1 "GPA Overlay Pages"). Here it must be zeroed
-> +		 * out to make sure we always write the EOI MSR in
-> +		 * hv_apic_eoi_write() *after* the EOI optimization is disabled
-> +		 * in hv_cpu_die(), otherwise a CPU may not be stopped in the
-> +		 * case of CPU offlining and the VM will hang.
-> +		 */
-> +		if (!*hvp)
->  			*hvp =3D __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
-> -			if (*hvp)
-> -				msr.pfn =3D vmalloc_to_pfn(*hvp);
-> -		}
-> -		WARN_ON(!(*hvp));
-> -		if (*hvp) {
-> -			msr.enable =3D 1;
-> -			wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
-> -		}
-> +		if (*hvp)
-> +			msr.pfn =3D vmalloc_to_pfn(*hvp);
-> +
-> +	}
-> +	if (!WARN_ON(!(*hvp))) {
-> +		msr.enable =3D 1;
-> +		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
->  	}
->=20
->  	return hyperv_init_ghcb();
-> --
-> 2.38.1
+Jeffrey added Multi-MSI support to the pci-hyperv driver by the 4 patches:
+08e61e861a0e ("PCI: hv: Fix multi-MSI to allow more than one MSI vector")
+455880dfe292 ("PCI: hv: Fix hv_arch_irq_unmask() for multi-MSI")
+b4b77778ecc5 ("PCI: hv: Reuse existing IRTE allocation in compose_msi_msg()")
+a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+It turns out that the third patch (b4b77778ecc5) causes a performance
+regression because all the interrupts now happen on 1 physical CPU (or two
+pCPUs, if one pCPU doesn't have enough vectors). When a guest has many PCI
+devices, it may suffer from soft lockups if the workload is heavy, e.g.,
+see https://lwn.net/ml/linux-kernel/20220804025104.15673-1-decui@microsoft.com/
+
+Commit b4b77778ecc5 itself is good. The real issue is that the hypercall in
+hv_irq_unmask() -> hv_arch_irq_unmask() ->
+hv_do_hypercall(HVCALL_RETARGET_INTERRUPT...) only changes the target
+virtual CPU rather than physical CPU; with b4b77778ecc5, the pCPU is
+determined only once in hv_compose_msi_msg() where only vCPU0 is specified;
+consequently the hypervisor only uses 1 target pCPU for all the interrupts.
+
+Note: before b4b77778ecc5, the pCPU is determined twice, and when the pCPU
+is determinted the second time, the vCPU in the effective affinity mask is
+used (i.e., it isn't always vCPU0), so the hypervisor chooses different
+pCPU for each interrupt.
+
+The hypercall will be fixed in future to update the pCPU as well, but
+that will take quite a while, so let's restore the old behavior in
+hv_compose_msi_msg(), i.e., don't reuse the existing IRTE allocation for
+single-MSI and MSI-X; for multi-MSI, we choose the vCPU in a round-robin
+manner for each PCI device, so the interrupts of different devices can
+happen on different pCPUs, though the interrupts of each device happen on
+some single pCPU.
+
+The hypercall fix may not be backported to all old versions of Hyper-V, so
+we want to have this guest side change for ever (or at least till we're sure
+the old affected versions of Hyper-V are no longer supported).
+
+Fixes: b4b77778ecc5 ("PCI: hv: Reuse existing IRTE allocation in compose_msi_msg()")
+Co-developed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Signed-off-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Co-developed-by: Carl Vanderlip <quic_carlv@quicinc.com>
+Signed-off-by: Carl Vanderlip <quic_carlv@quicinc.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+
+---
+
+v1 is here:
+  https://lwn.net/ml/linux-kernel/20220804025104.15673-1-decui@microsoft.com/
+
+Changes in v2:
+  round-robin the vCPU for multi-MSI.
+  The commit message is re-worked.
+  Added Jeff and Carl's Co-developed-by and Signed-off-by.
+
+Changes in v3:
+  Michael Kelley kindly helped to make a great comment, and I added the
+  comment before hv_compose_msi_req_get_cpu(). Thank you, Michael!
+
+  Rebased to Hyper-V tree's "hyperv-fixes" branch:
+      https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-fixes
+
+  Bjorn, Lorenzo, it would be great to have your Ack. The patch needs to go
+  through the Hyper-V tree because it's rebased to another hv_pci patch (which
+  only exists in the Hyper-V tree for now):
+      e70af8d040d2 ("PCI: hv: Fix the definition of vector in hv_compose_msi_msg()") 
+
+  BTW, Michael has some other hv_pci patches, which would also need go through
+      the Hyper-V tree:
+      https://lwn.net/ml/linux-kernel/1666288635-72591-1-git-send-email-mikelley%40microsoft.com/
+
+
+ drivers/pci/controller/pci-hyperv.c | 90 ++++++++++++++++++++++++-----
+ 1 file changed, 75 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index ba64284eaf9f..fa5a1ba35a82 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1613,7 +1613,7 @@ static void hv_pci_compose_compl(void *context, struct pci_response *resp,
+ }
+ 
+ static u32 hv_compose_msi_req_v1(
+-	struct pci_create_interrupt *int_pkt, const struct cpumask *affinity,
++	struct pci_create_interrupt *int_pkt,
+ 	u32 slot, u8 vector, u16 vector_count)
+ {
+ 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE;
+@@ -1631,6 +1631,35 @@ static u32 hv_compose_msi_req_v1(
+ 	return sizeof(*int_pkt);
+ }
+ 
++/*
++ * The vCPU selected by hv_compose_multi_msi_req_get_cpu() and
++ * hv_compose_msi_req_get_cpu() is a "dummy" vCPU because the final vCPU to be
++ * interrupted is specified later in hv_irq_unmask() and communicated to Hyper-V
++ * via the HVCALL_RETARGET_INTERRUPT hypercall. But the choice of dummy vCPU is
++ * not irrelevant because Hyper-V chooses the physical CPU to handle the
++ * interrupts based on the vCPU specified in message sent to the vPCI VSP in
++ * hv_compose_msi_msg(). Hyper-V's choice of pCPU is not visible to the guest,
++ * but assigning too many vPCI device interrupts to the same pCPU can cause a
++ * performance bottleneck. So we spread out the dummy vCPUs to influence Hyper-V
++ * to spread out the pCPUs that it selects.
++ *
++ * For the single-MSI and MSI-X cases, it's OK for hv_compose_msi_req_get_cpu()
++ * to always return the same dummy vCPU, because a second call to
++ * hv_compose_msi_msg() contains the "real" vCPU, causing Hyper-V to choose a
++ * new pCPU for the interrupt. But for the multi-MSI case, the second call to
++ * hv_compose_msi_msg() exits without sending a message to the vPCI VSP, so the
++ * original dummy vCPU is used. This dummy vCPU must be round-robin'ed so that
++ * the pCPUs are spread out. All interrupts for a multi-MSI device end up using
++ * the same pCPU, even though the vCPUs will be spread out by later calls
++ * to hv_irq_unmask(), but that is the best we can do now.
++ *
++ * With current Hyper-V, the HVCALL_RETARGET_INTERRUPT hypercall does *not*
++ * cause Hyper-V to reselect the pCPU based on the specified vCPU. Such an
++ * enhancement is planned for a future version. With that enhancement, the
++ * dummy vCPU selection won't matter, and interrupts for the same multi-MSI
++ * device will be spread across multiple pCPUs.
++ */
++
+ /*
+  * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
+  * by subsequent retarget in hv_irq_unmask().
+@@ -1640,18 +1669,39 @@ static int hv_compose_msi_req_get_cpu(const struct cpumask *affinity)
+ 	return cpumask_first_and(affinity, cpu_online_mask);
+ }
+ 
+-static u32 hv_compose_msi_req_v2(
+-	struct pci_create_interrupt2 *int_pkt, const struct cpumask *affinity,
+-	u32 slot, u8 vector, u16 vector_count)
++/*
++ * Make sure the dummy vCPU values for multi-MSI don't all point to vCPU0.
++ */
++static int hv_compose_multi_msi_req_get_cpu(void)
+ {
++	static DEFINE_SPINLOCK(multi_msi_cpu_lock);
++
++	/* -1 means starting with CPU 0 */
++	static int cpu_next = -1;
++
++	unsigned long flags;
+ 	int cpu;
+ 
++	spin_lock_irqsave(&multi_msi_cpu_lock, flags);
++
++	cpu_next = cpumask_next_wrap(cpu_next, cpu_online_mask, nr_cpu_ids,
++				     false);
++	cpu = cpu_next;
++
++	spin_unlock_irqrestore(&multi_msi_cpu_lock, flags);
++
++	return cpu;
++}
++
++static u32 hv_compose_msi_req_v2(
++	struct pci_create_interrupt2 *int_pkt, int cpu,
++	u32 slot, u8 vector, u16 vector_count)
++{
+ 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE2;
+ 	int_pkt->wslot.slot = slot;
+ 	int_pkt->int_desc.vector = vector;
+ 	int_pkt->int_desc.vector_count = vector_count;
+ 	int_pkt->int_desc.delivery_mode = DELIVERY_MODE;
+-	cpu = hv_compose_msi_req_get_cpu(affinity);
+ 	int_pkt->int_desc.processor_array[0] =
+ 		hv_cpu_number_to_vp_number(cpu);
+ 	int_pkt->int_desc.processor_count = 1;
+@@ -1660,18 +1710,15 @@ static u32 hv_compose_msi_req_v2(
+ }
+ 
+ static u32 hv_compose_msi_req_v3(
+-	struct pci_create_interrupt3 *int_pkt, const struct cpumask *affinity,
++	struct pci_create_interrupt3 *int_pkt, int cpu,
+ 	u32 slot, u32 vector, u16 vector_count)
+ {
+-	int cpu;
+-
+ 	int_pkt->message_type.type = PCI_CREATE_INTERRUPT_MESSAGE3;
+ 	int_pkt->wslot.slot = slot;
+ 	int_pkt->int_desc.vector = vector;
+ 	int_pkt->int_desc.reserved = 0;
+ 	int_pkt->int_desc.vector_count = vector_count;
+ 	int_pkt->int_desc.delivery_mode = DELIVERY_MODE;
+-	cpu = hv_compose_msi_req_get_cpu(affinity);
+ 	int_pkt->int_desc.processor_array[0] =
+ 		hv_cpu_number_to_vp_number(cpu);
+ 	int_pkt->int_desc.processor_count = 1;
+@@ -1715,12 +1762,18 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 			struct pci_create_interrupt3 v3;
+ 		} int_pkts;
+ 	} __packed ctxt;
++	bool multi_msi;
+ 	u64 trans_id;
+ 	u32 size;
+ 	int ret;
++	int cpu;
++
++	msi_desc  = irq_data_get_msi_desc(data);
++	multi_msi = !msi_desc->pci.msi_attrib.is_msix &&
++		    msi_desc->nvec_used > 1;
+ 
+ 	/* Reuse the previous allocation */
+-	if (data->chip_data) {
++	if (data->chip_data && multi_msi) {
+ 		int_desc = data->chip_data;
+ 		msg->address_hi = int_desc->address >> 32;
+ 		msg->address_lo = int_desc->address & 0xffffffff;
+@@ -1728,7 +1781,6 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		return;
+ 	}
+ 
+-	msi_desc  = irq_data_get_msi_desc(data);
+ 	pdev = msi_desc_to_pci_dev(msi_desc);
+ 	dest = irq_data_get_effective_affinity_mask(data);
+ 	pbus = pdev->bus;
+@@ -1738,11 +1790,18 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	if (!hpdev)
+ 		goto return_null_message;
+ 
++	/* Free any previous message that might have already been composed. */
++	if (data->chip_data && !multi_msi) {
++		int_desc = data->chip_data;
++		data->chip_data = NULL;
++		hv_int_desc_free(hpdev, int_desc);
++	}
++
+ 	int_desc = kzalloc(sizeof(*int_desc), GFP_ATOMIC);
+ 	if (!int_desc)
+ 		goto drop_reference;
+ 
+-	if (!msi_desc->pci.msi_attrib.is_msix && msi_desc->nvec_used > 1) {
++	if (multi_msi) {
+ 		/*
+ 		 * If this is not the first MSI of Multi MSI, we already have
+ 		 * a mapping.  Can exit early.
+@@ -1767,9 +1826,11 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		 */
+ 		vector = 32;
+ 		vector_count = msi_desc->nvec_used;
++		cpu = hv_compose_multi_msi_req_get_cpu();
+ 	} else {
+ 		vector = hv_msi_get_int_vector(data);
+ 		vector_count = 1;
++		cpu = hv_compose_msi_req_get_cpu(dest);
+ 	}
+ 
+ 	/*
+@@ -1785,7 +1846,6 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	switch (hbus->protocol_version) {
+ 	case PCI_PROTOCOL_VERSION_1_1:
+ 		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
+-					dest,
+ 					hpdev->desc.win_slot.slot,
+ 					(u8)vector,
+ 					vector_count);
+@@ -1794,7 +1854,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	case PCI_PROTOCOL_VERSION_1_2:
+ 	case PCI_PROTOCOL_VERSION_1_3:
+ 		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
+-					dest,
++					cpu,
+ 					hpdev->desc.win_slot.slot,
+ 					(u8)vector,
+ 					vector_count);
+@@ -1802,7 +1862,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 
+ 	case PCI_PROTOCOL_VERSION_1_4:
+ 		size = hv_compose_msi_req_v3(&ctxt.int_pkts.v3,
+-					dest,
++					cpu,
+ 					hpdev->desc.win_slot.slot,
+ 					vector,
+ 					vector_count);
+-- 
+2.25.1
 
