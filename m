@@ -2,61 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A886861DA6C
-	for <lists+linux-hyperv@lfdr.de>; Sat,  5 Nov 2022 13:43:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FAEA61E03C
+	for <lists+linux-hyperv@lfdr.de>; Sun,  6 Nov 2022 05:12:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229708AbiKEMny (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 5 Nov 2022 08:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
+        id S229496AbiKFEM6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 6 Nov 2022 00:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbiKEMnx (ORCPT
+        with ESMTP id S229463AbiKFEM5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 5 Nov 2022 08:43:53 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2441F23BF1
-        for <linux-hyperv@vger.kernel.org>; Sat,  5 Nov 2022 05:43:52 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id s12so1562136edd.5
-        for <linux-hyperv@vger.kernel.org>; Sat, 05 Nov 2022 05:43:52 -0700 (PDT)
+        Sun, 6 Nov 2022 00:12:57 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329BFF008
+        for <linux-hyperv@vger.kernel.org>; Sat,  5 Nov 2022 21:12:56 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id k67so7830193vsk.2
+        for <linux-hyperv@vger.kernel.org>; Sat, 05 Nov 2022 21:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
-        b=mPMWJSv9+I/YyfOX/KhSq6QJxEVF9czxBjlZfOBHyBNprqZzbXMAaGfMuCUz15WUgd
-         P8+TrngI9Rc3ViQGUSuldljbiqwUWen18O0hqt/Ie0OeGmALridq11sGaHqFDDc4lalJ
-         acwKewZa0Z+JmHCFhOB1EPm3VoCXqyskBeWh+qI8WdUTyGDi2ZRZxfd09WAIYwZTAuE6
-         D6FM36pRhxYi0ioJBBk7CWNeJYL6Gz2n7XR51nKKfVaOUPERzSe8HFAiowZB91Qmwfcs
-         4SUmlVM/PGDPqE9RxpsHH7kHCVf7N827dpoIMP0fu4UEVHZDK4bGxZoR2Xec1mMJWH/r
-         0h6A==
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bE7RjcnICkKSIi/AY7a3fxEG1KellRXQCB68D3uOgOA=;
+        b=pM3Ypd6rfHwOORXDCPIxKkfqghMG9ViPeJXXXIUsPUmqvyFJBHcguwcqG/PEzo/Ylu
+         bkWl3Bu00k5HhwbcNDg4tZBNXhvLAvxgHWq3ksPStacyMYGSq9/DIeIQ3odLkQJ/iqyQ
+         hI0oS7q+qTIJArBmbvl3H4ifSjQ2AUDkJnlHWMZJpmEEvFJKFdMtX0xUmLvmw4sHCfBa
+         XhFBfXdt3AW+EKt6iZLGeTM3VBcoKTIefBopPyq/JjNy/Km1VOk8lcLRencIDrUWZnCs
+         uhKZlShj1tfejykC+TU2a5yEfg2E5OG00p6tjC4pQnWOnmV1m4D2/nIjzaI8hqgkzZF3
+         nb3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
-        b=1pyT9X9luFZ6Ru0enZXoZiJtCQYzAHvIPW3lRyCLyRNGaqaSdDJG/NIu0UVggxgfj7
-         n90QZbymsE7GrEP6Pk3XP+1hSWnKMd3/z96J3pEU/iQXgvrItWF4s0liT8MNA3rZOoLx
-         idso4l0V7cG5J7sZlH9XW66X8142/L5nWVicfK9baYt14U+BV6U6s7c0v/oYp46p7lZW
-         o0dPk2N3uvk3A1XGWHw4mQkz8JO+hPuWG6fwqIIwCzBYPxFvKxd8Pr+zWSsu+3iU2tk+
-         Ko2ySq+bZvt9tjQcSzlXXKHZgLKLmRuJHh8iY0A93EVZ6TyVBueX/NslKF4NZxEka2cX
-         8s0Q==
-X-Gm-Message-State: ACrzQf0U0roYY8/BZRfOL+cZtfOztPziwBscVkvtb31cEdhGhR4B3ex7
-        ke1njzRnvbQlFD8F+33xuGbOKoEu4c8AVr6krOM=
-X-Google-Smtp-Source: AMsMyM6+i/60GLAa/SmSMCVLMrWq6VlVwX7X2L0dN+kFhjV6izdhKjpdEAZB1JmiGGgnIYpSeGh29lOxg8cgnriAXMM=
-X-Received: by 2002:aa7:c504:0:b0:461:122b:882b with SMTP id
- o4-20020aa7c504000000b00461122b882bmr41194609edq.14.1667652230661; Sat, 05
- Nov 2022 05:43:50 -0700 (PDT)
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bE7RjcnICkKSIi/AY7a3fxEG1KellRXQCB68D3uOgOA=;
+        b=KKED14FmKyPa+adD2jDFfwiaRTiMgjuC5t9aZmGVIA0rOo3WgQJEMNK9T9LnXbrr3k
+         mnakyb7cuiGfHoR3aubfEWrdqackYGB6btEQ2LA40CF+eNuPPcE1SrijUctdKH0zeTot
+         C0mE4lv1jU6L0GKAKYtS0ptbk6wM7RK1Rch6xQRiiCjyGWvx+CLg/KCqk9Lwvd3wjypf
+         Y0bWwivs4QgEU/kpfzqiolqdp1skBeCMEU6BEApgBAztRt3aXPzB+pWVdRNa5WKND8ib
+         uIalBXBSU1RrBmsHE+a46/Evt321Z4BffIuI22IytmnfofQtcxPW6bGZLcktJ8eoDvK4
+         IKCg==
+X-Gm-Message-State: ACrzQf1D+7rmpCNUrb2uwuIRhSf+myXlwgjTk6BsJAEn3yowl0EQ/u97
+        2l9VDtGPM6hpLEzcQ2cMQAKIhAcAlwhl07cFMvk=
+X-Google-Smtp-Source: AMsMyM7JVdoCaqvUo5UFi57ldpAYnfRjFq9r4ZzLNA5xj/h4cDvHe4aolRmE+p8Z8y9Hr7TbkJvdYD7+KOQDbIn9i2c=
+X-Received: by 2002:a67:dc18:0:b0:3ad:9c70:4d58 with SMTP id
+ x24-20020a67dc18000000b003ad9c704d58mr4710015vsj.86.1667707974395; Sat, 05
+ Nov 2022 21:12:54 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:7208:33:b0:5c:ee07:e4f3 with HTTP; Sat, 5 Nov 2022
- 05:43:49 -0700 (PDT)
-Reply-To: stefanopessia755@hotmail.com
-From:   Stefano Pessina <francisnzioka80@gmail.com>
-Date:   Sat, 5 Nov 2022 15:43:49 +0300
-Message-ID: <CAL5scYq=1B=-RX8Eh9M9tf4CevQNnnh7JZ63=g4o=AHLN+9dbg@mail.gmail.com>
-Subject: Geldspende
+Received: by 2002:a67:ea0d:0:0:0:0:0 with HTTP; Sat, 5 Nov 2022 21:12:54 -0700 (PDT)
+Reply-To: drsmithdrava1@gmail.com
+From:   "DR. AVA SMITH" <herobestman0@gmail.com>
+Date:   Sun, 6 Nov 2022 04:12:54 +0000
+Message-ID: <CAOXFw9qF2+mZ4B0zNJ4RGnF9eKNQaZOQQpzykQg-hrMSF69zJg@mail.gmail.com>
+Subject: HI DEAR,
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
@@ -69,8 +66,16 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---=20
-Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
-t.
-Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
-stefanopessia755@hotmail.com
+-- 
+Hello Dear,
+
+My name is DR. AVA SMITH from United States. I am a French and
+American national (dual) living in the U.S and  sometimes in the U.K
+for the Purpose of Work.
+
+I hope you consider my friend request and consider me worthy to be
+your friend. I will share some of my pics and more details about my
+self when i get your response
+
+With love
+Ava
