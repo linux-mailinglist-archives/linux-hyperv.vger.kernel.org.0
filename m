@@ -2,129 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D88761F076
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Nov 2022 11:24:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78A9D61F0B3
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Nov 2022 11:33:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232011AbiKGKYb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Nov 2022 05:24:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35664 "EHLO
+        id S231237AbiKGKdR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Nov 2022 05:33:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231953AbiKGKYS (ORCPT
+        with ESMTP id S230395AbiKGKdQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Nov 2022 05:24:18 -0500
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B8D167CE
-        for <linux-hyperv@vger.kernel.org>; Mon,  7 Nov 2022 02:24:03 -0800 (PST)
-Received: by mail-vs1-xe42.google.com with SMTP id q127so10093856vsa.7
-        for <linux-hyperv@vger.kernel.org>; Mon, 07 Nov 2022 02:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
-        b=Zv++OJ/ncK2pWuUWAQT+z52+cIoHK/WVJU4bVze52hunD5wDL4D5XJdl5mW2VbRjhi
-         PKA0tQ/z42/ONfUnPJoBfdYRGEG2gwiyoDRW7hecaxcg+/0t0u3g44ISFlpe+B9l1fvu
-         TmkNgtKOyak6WThRMAIvY+g5IgPZxvnz63e21BpajeaX9653GP4qpHUHyfV7BL4cSNb4
-         pCU1fNGxZBn7NlKzWZCMHMxM9LSs8sKofgpQ0FSoeb/qTDQ+CPP+tvlBe/vGQ8T8hOyn
-         vdUZr48/zTuwVxtBDF6IrOR7pT19nf73qD9i1Q8QUWEzM8dVJjwmGS+xVbVCXqFaE09J
-         SKzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
-        b=k1SzPVtHosJ0nNKX+SLcktdFn6JXskQtJlmHAno/H1NIwQS3s3fXKunnTsasV1skCM
-         guZ6GU390w+I2dJa3oUhA/00eEZcQGdtY9EryWHmTTm0ZXDCoUADrONMnktwHFfP3AXP
-         ZtDILqpv5vtARPidcu0SkZy3KwrzSP2STRBQ/nHpcTV5IAF15/1wqds7BkRaoh60tfqP
-         /HV1ng/nlbeBTtV0g51CDk21GU2J6ulMi2ZjTBYlEIlJ4sWXU3YoLC1xnw4+MtC2rrj/
-         y2xsZtLcN5LZBmFKJC2hK5/8VelYr6MJvSaYYqAMcI+asNhhT04u5EZLbzAY/hB8QioF
-         zNNg==
-X-Gm-Message-State: ACrzQf0VpGwtpO4W6J8HA55pMovkO8Vmt9mmm55sYowg9BNFzAG19Og5
-        yx5C6Fd1EUkj7eOZ0cgAj4nTE9RR6ddam7IlazYTaGpxDN8=
-X-Google-Smtp-Source: AMsMyM7DPjaK7bSeUBIcMTkNZUaqK+NSwCEUfp88ZZDLY5TXShnQ2+B86xH3ryBKqTyGQWW3ozA/96x60VupsK8qo34=
-X-Received: by 2002:a17:902:8a90:b0:186:b145:f5ec with SMTP id
- p16-20020a1709028a9000b00186b145f5ecmr50774476plo.103.1667816632274; Mon, 07
- Nov 2022 02:23:52 -0800 (PST)
+        Mon, 7 Nov 2022 05:33:16 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D62E114D2E;
+        Mon,  7 Nov 2022 02:33:15 -0800 (PST)
+Received: from anrayabh-desk (unknown [167.220.238.193])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A27B320B9F80;
+        Mon,  7 Nov 2022 02:33:11 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A27B320B9F80
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1667817195;
+        bh=k/T4pj655McnOOHIQH8DpxpkliaejtrrKHgE9Dz2KOA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gcd4LD0jo97lKi22wAFh4K78fw8ft2d+gshAFBSxRRh0DnUHlHCyq2rsRId6HZc07
+         9loLIz0Y1FFoLsHYhib5/TM24W+62kZKUdFS8vi4dzZNIZkADHR5g0oSub149otgPr
+         FsuBsQ6/afS7xN15yF3E0GwPTLfBTLU69+f9L4ik=
+Date:   Mon, 7 Nov 2022 16:03:07 +0530
+From:   Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com
+Subject: Re: [PATCH v2] x86/Hyper-V: Expand definition of struct
+ hv_vp_assist_page
+Message-ID: <Y2je48OwQaRTkci+@anrayabh-desk>
+References: <1667587123-31645-1-git-send-email-ssengar@linux.microsoft.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6a06:925:b0:587:19e0:c567 with HTTP; Mon, 7 Nov 2022
- 02:23:51 -0800 (PST)
-Reply-To: contact@ammico.it
-From:   =?UTF-8?Q?Mrs=2E_Monika_Everenov=C3=A1?= <977638ib@gmail.com>
-Date:   Mon, 7 Nov 2022 11:23:51 +0100
-Message-ID: <CAHAXD+bPNCns8Ez=7iXmPLADMtJgZj3-mFTk3NMhWC-Ca1b9rw@mail.gmail.com>
-Subject: Re:
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_2_NEW_MONEY,
-        BAYES_40,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:e42 listed in]
-        [list.dnswl.org]
-        * -0.0 BAYES_40 BODY: Bayes spam probability is 20 to 40%
-        *      [score: 0.2262]
-        *  0.7 FROM_STARTS_WITH_NUMS From: starts with several numbers
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [977638ib[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  3.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  2.0 ADVANCE_FEE_2_NEW_MONEY Advance Fee fraud and lots of money
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1667587123-31645-1-git-send-email-ssengar@linux.microsoft.com>
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hei ja miten voit?
-Nimeni on rouva Evereen, l=C3=A4het=C3=A4n t=C3=A4m=C3=A4n viestin suurella=
- toivolla
-v=C3=A4lit=C3=B6n vastaus, koska minun on teht=C3=A4v=C3=A4 uusi syd=C3=A4n=
-leikkaus
-t=C3=A4ll=C3=A4 hetkell=C3=A4 huonokuntoinen ja v=C3=A4h=C3=A4iset mahdolli=
-suudet selviyty=C3=A4.
-Mutta ennen kuin min=C3=A4
-Tee toinen vaarallinen operaatio, annan sen sinulle
-Minulla on 6 550 000 dollaria yhdysvaltalaisella pankkitilill=C3=A4
-sijoittamista, hallinnointia ja k=C3=A4ytt=C3=B6=C3=A4 varten
-voittoa hyv=C3=A4ntekev=C3=A4isyysprojektin toteuttamiseen. Tarkoitan saira=
-iden auttamista
-ja k=C3=B6yh=C3=A4t ovat viimeinen haluni maan p=C3=A4=C3=A4ll=C3=A4, sill=
-=C3=A4 minulla ei ole niit=C3=A4
-kenelt=C3=A4 perii rahaa.
-Vastaa minulle nopeasti
-terveisi=C3=A4
-Rouva Monika Evereen
-Florida, Amerikan Yhdysvallat
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-Hi and how are you?
-My name is Mrs. Evereen, I am sending this message with great hope for
-an immediate response, as I have to undergo heart reoperation in my
-current poor health with little chance of survival. But before I
-undertake the second dangerous operation, I will give you the
-$6,550,000 I have in my US bank account to invest well, manage and use
-the profits to run a charity project for me. I count helping the sick
-and the poor as my last wish on earth, because I have no one to
-inherit money from.
-Please give me a quick reply
-regards
-Mrs. Monika Evereen
-Florida, United States of America
+On Fri, Nov 04, 2022 at 11:38:43AM -0700, Saurabh Sengar wrote:
+> The struct hv_vp_assist_page has 24 bytes which is defined as u64[3],
+> expand that to expose vtl_entry_reason, vtl_ret_x64rax and vtl_ret_x64rcx
+> field. vtl_entry_reason is updated by hypervisor for the entry reason as
+> to why the VTL was entered on the virtual processor.
+> Guest updates the vtl_ret_* fields to provide the register values to
+> restore on VTL return. The specific register values that are restored
+> which will be updated on vtl_ret_x64rax and vtl_ret_x64rcx.
+> Also added the missing fields for synthetic_time_unhalted_timer_expired,
+> virtualization_fault_information and intercept_message.
+> 
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+> [v2]: Corrected vtl_entry_reson size from u8 to u32
+> 
+>  arch/x86/include/asm/hyperv-tlfs.h | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 3089ec3..6d9368e 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -374,11 +374,20 @@ struct hv_nested_enlightenments_control {
+>  struct hv_vp_assist_page {
+>  	__u32 apic_assist;
+>  	__u32 reserved1;
+> -	__u64 vtl_control[3];
+> +	__u32 vtl_entry_reason;
+> +	__u32 vtl_reserved;
+> +	__u64 vtl_ret_x64rax;
+> +	__u64 vtl_ret_x64rcx;
+>  	struct hv_nested_enlightenments_control nested_control;
+>  	__u8 enlighten_vmentry;
+>  	__u8 reserved2[7];
+>  	__u64 current_nested_vmcs;
+> +	__u8 synthetic_time_unhalted_timer_expired;
+> +	__u8 reserved3[7];
+> +	__u8 virtualization_fault_information[40];
+> +	__u8 reserved4[8];
+> +	__u8 intercept_message[256];
+> +	__u8 vtl_ret_actions[256];
+>  } __packed;
+>  
+>  struct hv_enlightened_vmcs {
+> -- 
+> 1.8.3.1
+
+Reviewed-by: <anrayabh@linux.microsoft.com>
+
