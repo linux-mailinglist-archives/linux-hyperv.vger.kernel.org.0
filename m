@@ -2,90 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F248462015C
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Nov 2022 22:41:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA040620D78
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Nov 2022 11:37:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233574AbiKGVl6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Nov 2022 16:41:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34172 "EHLO
+        id S234015AbiKHKhd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Nov 2022 05:37:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233587AbiKGVl4 (ORCPT
+        with ESMTP id S234024AbiKHKhN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Nov 2022 16:41:56 -0500
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2362727DE1;
-        Mon,  7 Nov 2022 13:41:55 -0800 (PST)
-Received: by mail-qt1-x833.google.com with SMTP id w4so7741695qts.0;
-        Mon, 07 Nov 2022 13:41:55 -0800 (PST)
+        Tue, 8 Nov 2022 05:37:13 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67584298A;
+        Tue,  8 Nov 2022 02:36:54 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id b21so13790400plc.9;
+        Tue, 08 Nov 2022 02:36:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mhEhlO9BLGKEY6Yqi7hGqFOIYTu5QOOEtbbHam2qFJM=;
-        b=RnM1+DkcFQ6UXJxAOxtAuPhnVR9BbQiDX6ZgETnxOGAF0OlGJ5m5AazkqVx6AYI/SK
-         8fOthChr5nvVBcCL4vXEujC5S2Z3x/8pGARexjgdvsDoYjfN1ZgSZUoyjE7MH+Ta+Anx
-         2i3ZXjVLmPV0o2tzsd/X1LOMoDoknuAG+XENX/EAxkBBrs0m8HBrPA82Tf36ry5oTLch
-         OQP/s4QP6h//oA/78gJSRpjKTvuEl4OFx7Y7yW0ngkpFEKkvHia5mvlUsImWS7GU/u90
-         YK61GpWpDEAGp/9hLU2JR5aD/RWBIL5hUh56J9O7xmI9oFybriip0xZZ+fD6YXZnLXv8
-         B0eA==
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7FC4xTWKbEcJxVm+LBMuB4SUqqHDVOvyFDbcq+yh01A=;
+        b=oCWmwDp8Mq/94lPgWOpRNMqusVjIbpZKRV9JeuSrdvQOJhGpRXChOO08QAlKk8Wx73
+         s9dECqgOGqSg/8HsqRHiP/XKfZq37XO9aPQHjT6sIVfwd2T5rgHuMt0YXR0vcVnuqJPC
+         bYyXpc+YB5DY79XuJsgDgEnii3hXBb2hLVOouhQABdDKDpptyrIasT3qltTbts8XnJrU
+         VZTd4OMKS0clmozmVyOJgYGhRCfkJh6l8h11/FOcCQ+LBk3+XZqX0RE3+w4sLEria5R3
+         Qsi/EmUKkAqx8Cc/Ujp41/7pVyFg5TMnjalYEafM8z3HSH10qmw+8OMIN07CWneo6bGA
+         xdsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mhEhlO9BLGKEY6Yqi7hGqFOIYTu5QOOEtbbHam2qFJM=;
-        b=5cq/trRb+okTkR3FL2v7jT0KumerI7u72Kp5Zx6CfYhJzau9XSJoGrndTyFeurRHl+
-         qVTQG384x7Hn5n31kRb2w5IL4YSTTp/BuK14fd5R+Dhl1J3qCUEkZsBFBQdqmfcuk09O
-         fIzky6uCvgu0kGy0Bwcdskgw9O64dzb02FoUvopphEyI9wd+UJ1ZkD9RYwXiEM/ch3LB
-         zu27d0heFn4XmLTKNiqmcAsUQl131V7zRHcLIx2u0HtDFDPS7PvaxaR/MoiWbv3N1aNo
-         O0piGL0WZWTC4BhdK/mkD87Q6sCtrK2mw3e8imQ+WS+TOg24EcPsk7OunKON2ISP8+UR
-         GdTA==
-X-Gm-Message-State: ACrzQf3IWR5Sa5U+Vd7nsuKFhv89k0/6nMG61s7kEMuVenNqQjHA+IQM
-        zM43G71E937OxokwvmAkm4I=
-X-Google-Smtp-Source: AMsMyM6FdPpyofjZ5SSntkGBumh4HKwAeGeJKmMimsoW1bcBh45XGtgSOOLxRbjTq9vCjAE29AA6zA==
-X-Received: by 2002:ac8:44cc:0:b0:3a5:6d4e:5370 with SMTP id b12-20020ac844cc000000b003a56d4e5370mr13549586qto.536.1667857314129;
-        Mon, 07 Nov 2022 13:41:54 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id bm22-20020a05620a199600b006bb2cd2f6d1sm7659519qkb.127.2022.11.07.13.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 13:41:53 -0800 (PST)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailauth.nyi.internal (Postfix) with ESMTP id A2B3727C0054;
-        Mon,  7 Nov 2022 16:41:52 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 07 Nov 2022 16:41:52 -0500
-X-ME-Sender: <xms:nntpY-oqhvTD9lA8nYyeukDNV09Tqz5jOGdu-MoaOqN9lMMYTv71ww>
-    <xme:nntpY8qdXGtP5-tC7LLEFsWTk-s59BYt7vC7dJ79YjnA-G9Tg7f55xl0DX1WSw5vD
-    0ErUlqKEjnXQDy6sA>
-X-ME-Received: <xmr:nntpYzMDy4Xrjzfsw7JEnIvamP65HayLo8ic4JfdeT8bnvjuw-98MJrI-f3q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrvdekgdduhedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedvteehuddujedvkedtkeefgedv
-    vdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhh
-    phgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunh
-    drfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:nntpY96aN862kjNdJaCbBNslrA8nN5cwDSINSlmEp86JOLC3Ln_D9g>
-    <xmx:nntpY94ovEe1Ol98OTc3xfXp-u_MLdRji-ez9MRHXpljfTe0cau52w>
-    <xmx:nntpY9h2Y0lb8MZf4FDo_2Q7fW-RPIIrbZwCS4PAO2yyHiKGspu-cQ>
-    <xmx:oHtpY67iiuZm17eC1_sLbC5Mk4ZJQEl3bwUPOnxWMc6bG1OSmM5k0E8L09s>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 7 Nov 2022 16:41:49 -0500 (EST)
-Date:   Mon, 7 Nov 2022 13:41:48 -0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        luto@kernel.org, peterz@infradead.org, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, arnd@arndb.de, hch@infradead.org,
-        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7FC4xTWKbEcJxVm+LBMuB4SUqqHDVOvyFDbcq+yh01A=;
+        b=pJruh9JrSZeI3RPG9Djmph6xka+bXU3ieDTszK6HR9tUalxsckaWfe08+qq/ThY7rW
+         Dgewo09gIoPDObpiqAtXZhN2EgNx+1VonZrwd/pAerJyVAtoSHIrmRiuUm7cUxv4+3si
+         Xd0hmEPByQzYXjfY7w1Gtg5wjyPtNxjyYcZ8YFgVzxpFO0cBm1kfK89TBu1DuhSvJmZb
+         VtB6uWqwaH7crvvfBMxc/1nPnTKJevXXzkSqreEBafOcIPr4UOsyx0S5q0jdmG5/jtaN
+         ozoUjZw6xqpKbEr7shyIbsY6KvqXtGAQckvg+Ndxpz2vqfnaux544xZgacm9+4FCDE2d
+         JkXw==
+X-Gm-Message-State: ACrzQf1TXcmCs2LcDd1iFpoNzqc69NWs4kFVc/HKVMl8bS+vqP6KLIXm
+        /xXpd//U0QrwDdyNGJN01qQ=
+X-Google-Smtp-Source: AMsMyM4t0UZsTKGoBIe7o5gVWR0wgRXPrt+fajdjHMMuWw0RmjuTkgxkIK95E7qPspPcKE7d1giP0A==
+X-Received: by 2002:a17:90b:254c:b0:20a:8a92:ea5b with SMTP id nw12-20020a17090b254c00b0020a8a92ea5bmr56165515pjb.81.1667903814151;
+        Tue, 08 Nov 2022 02:36:54 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
+        by smtp.gmail.com with ESMTPSA id h5-20020a17090a648500b0020a11217682sm5700073pjj.27.2022.11.08.02.36.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Nov 2022 02:36:53 -0800 (PST)
+Message-ID: <9a4edf34-6e49-9fd0-fc23-2536c5f087ea@gmail.com>
+Date:   Tue, 8 Nov 2022 18:36:40 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH 09/12] hv_netvsc: Remove second mapping of send and recv
+ buffers
+Content-Language: en-US
+To:     Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
         thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
         Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
@@ -96,17 +75,14 @@ Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
         linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
         iommu@lists.linux.dev
-Subject: Re: [PATCH 12/12] PCI: hv: Enable PCI pass-thru devices in
- Confidential VMs
-Message-ID: <Y2l7nJ3l1jeOebGG@Boquns-Mac-mini.local>
 References: <1666288635-72591-1-git-send-email-mikelley@microsoft.com>
- <1666288635-72591-13-git-send-email-mikelley@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1666288635-72591-13-git-send-email-mikelley@microsoft.com>
+ <1666288635-72591-10-git-send-email-mikelley@microsoft.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <1666288635-72591-10-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -115,278 +91,19 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 10:57:15AM -0700, Michael Kelley wrote:
-> For PCI pass-thru devices in a Confidential VM, Hyper-V requires
-> that PCI config space be accessed via hypercalls.  In normal VMs,
-> config space accesses are trapped to the Hyper-V host and emulated.
-> But in a confidential VM, the host can't access guest memory to
-> decode the instruction for emulation, so an explicit hypercall must
-> be used.
+On 10/21/2022 1:57 AM, Michael Kelley wrote:
+> With changes to how Hyper-V guest VMs flip memory between private
+> (encrypted) and shared (decrypted), creating a second kernel virtual
+> mapping for shared memory is no longer necessary.  Everything needed
+> for the transition to shared is handled by set_memory_decrypted().
 > 
-> Update the PCI config space access functions to use the hypercalls
-> when such use is indicated by Hyper-V flags.  Also, set the flag to
-> allow the Hyper-V PCI driver to be loaded and used in a Confidential
-> VM (a.k.a., "Isolation VM").  The driver has previously been hardened
-> against a malicious Hyper-V host[1].
+> As such, remove the code to create and manage the second
+> mapping for the pre-allocated send and recv buffers.  This mapping
+> is the last user of hv_map_memory()/hv_unmap_memory(), so delete
+> these functions as well.  Finally, hv_map_memory() is the last
+> user of vmap_pfn() in Hyper-V guest code, so remove the Kconfig
+> selection of VMAP_PFN.
 > 
-> [1] https://lore.kernel.org/all/20220511223207.3386-2-parri.andrea@gmail.com/
-> 
-> Co-developed-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->  drivers/hv/channel_mgmt.c           |   2 +-
->  drivers/pci/controller/pci-hyperv.c | 153 +++++++++++++++++++++---------------
->  2 files changed, 92 insertions(+), 63 deletions(-)
-> 
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 5b12040..c0f9ac2 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -67,7 +67,7 @@
->  	{ .dev_type = HV_PCIE,
->  	  HV_PCIE_GUID,
->  	  .perf_device = false,
-> -	  .allowed_in_isolated = false,
-> +	  .allowed_in_isolated = true,
->  	},
->  
->  	/* Synthetic Frame Buffer */
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 02ebf3e..9873296 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -514,6 +514,7 @@ struct hv_pcibus_device {
->  
->  	/* Highest slot of child device with resources allocated */
->  	int wslot_res_allocated;
-> +	bool use_calls; /* Use hypercalls to access mmio cfg space */
->  
->  	/* hypercall arg, must not cross page boundary */
->  	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
-> @@ -1134,8 +1135,9 @@ static void hv_pci_write_mmio(phys_addr_t gpa, int size, u32 val)
->  static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
->  				     int size, u32 *val)
->  {
-> +	struct hv_pcibus_device *hbus = hpdev->hbus;
-> +	int offset = where + CFG_PAGE_OFFSET;
->  	unsigned long flags;
-> -	void __iomem *addr = hpdev->hbus->cfg_addr + CFG_PAGE_OFFSET + where;
->  
->  	/*
->  	 * If the attempt is to read the IDs or the ROM BAR, simulate that.
-> @@ -1163,56 +1165,74 @@ static void _hv_pcifront_read_config(struct hv_pci_dev *hpdev, int where,
->  		 */
->  		*val = 0;
->  	} else if (where + size <= CFG_PAGE_SIZE) {
-> -		spin_lock_irqsave(&hpdev->hbus->config_lock, flags);
-> -		/* Choose the function to be read. (See comment above) */
-> -		writel(hpdev->desc.win_slot.slot, hpdev->hbus->cfg_addr);
-> -		/* Make sure the function was chosen before we start reading. */
-> -		mb();
-> -		/* Read from that function's config space. */
-> -		switch (size) {
-> -		case 1:
-> -			*val = readb(addr);
-> -			break;
-> -		case 2:
-> -			*val = readw(addr);
-> -			break;
-> -		default:
-> -			*val = readl(addr);
-> -			break;
-> +
-> +		spin_lock_irqsave(&hbus->config_lock, flags);
-> +		if (hbus->use_calls) {
-> +			phys_addr_t addr = hbus->mem_config->start + offset;
-> +
-> +			hv_pci_write_mmio(hbus->mem_config->start, 4,
-> +						hpdev->desc.win_slot.slot);
-> +			hv_pci_read_mmio(addr, size, val);
-> +		} else {
-> +			void __iomem *addr = hbus->cfg_addr + offset;
-> +
-> +			/* Choose the function to be read. (See comment above) */
-> +			writel(hpdev->desc.win_slot.slot, hbus->cfg_addr);
-> +			/* Make sure the function was chosen before reading. */
-> +			mb();
-> +			/* Read from that function's config space. */
-> +			switch (size) {
-> +			case 1:
-> +				*val = readb(addr);
-> +				break;
-> +			case 2:
-> +				*val = readw(addr);
-> +				break;
-> +			default:
-> +				*val = readl(addr);
-> +				break;
-> +			}
+> Signed-off-by: Michael Kelley<mikelley@microsoft.com>
 
-An mb() is missing here?
-
->  		}
-> -		/*
-> -		 * Make sure the read was done before we release the spinlock
-> -		 * allowing consecutive reads/writes.
-> -		 */
-> -		mb();
-> -		spin_unlock_irqrestore(&hpdev->hbus->config_lock, flags);
-> +		spin_unlock_irqrestore(&hbus->config_lock, flags);
->  	} else {
-> -		dev_err(&hpdev->hbus->hdev->device,
-> +		dev_err(&hbus->hdev->device,
->  			"Attempt to read beyond a function's config space.\n");
->  	}
->  }
->  
->  static u16 hv_pcifront_get_vendor_id(struct hv_pci_dev *hpdev)
->  {
-> +	struct hv_pcibus_device *hbus = hpdev->hbus;
-> +	u32 val;
->  	u16 ret;
->  	unsigned long flags;
-> -	void __iomem *addr = hpdev->hbus->cfg_addr + CFG_PAGE_OFFSET +
-> -			     PCI_VENDOR_ID;
->  
-> -	spin_lock_irqsave(&hpdev->hbus->config_lock, flags);
-> +	spin_lock_irqsave(&hbus->config_lock, flags);
->  
-> -	/* Choose the function to be read. (See comment above) */
-> -	writel(hpdev->desc.win_slot.slot, hpdev->hbus->cfg_addr);
-> -	/* Make sure the function was chosen before we start reading. */
-> -	mb();
-> -	/* Read from that function's config space. */
-> -	ret = readw(addr);
-> -	/*
-> -	 * mb() is not required here, because the spin_unlock_irqrestore()
-> -	 * is a barrier.
-> -	 */
-> +	if (hbus->use_calls) {
-> +		phys_addr_t addr = hbus->mem_config->start +
-> +					 CFG_PAGE_OFFSET + PCI_VENDOR_ID;
-> +
-> +		hv_pci_write_mmio(hbus->mem_config->start, 4,
-> +					hpdev->desc.win_slot.slot);
-> +		hv_pci_read_mmio(addr, 2, &val);
-> +		ret = val;  /* Truncates to 16 bits */
-> +	} else {
-> +		void __iomem *addr = hbus->cfg_addr + CFG_PAGE_OFFSET +
-> +					     PCI_VENDOR_ID;
-> +		/* Choose the function to be read. (See comment above) */
-> +		writel(hpdev->desc.win_slot.slot, hbus->cfg_addr);
-> +		/* Make sure the function was chosen before we start reading. */
-> +		mb();
-> +		/* Read from that function's config space. */
-> +		ret = readw(addr);
-> +		/*
-> +		 * mb() is not required here, because the
-> +		 * spin_unlock_irqrestore() is a barrier.
-> +		 */
-> +	}
->  
-> -	spin_unlock_irqrestore(&hpdev->hbus->config_lock, flags);
-> +	spin_unlock_irqrestore(&hbus->config_lock, flags);
->  
->  	return ret;
->  }
-> @@ -1227,38 +1247,45 @@ static u16 hv_pcifront_get_vendor_id(struct hv_pci_dev *hpdev)
->  static void _hv_pcifront_write_config(struct hv_pci_dev *hpdev, int where,
->  				      int size, u32 val)
->  {
-> +	struct hv_pcibus_device *hbus = hpdev->hbus;
-> +	int offset = where + CFG_PAGE_OFFSET;
->  	unsigned long flags;
-> -	void __iomem *addr = hpdev->hbus->cfg_addr + CFG_PAGE_OFFSET + where;
->  
->  	if (where >= PCI_SUBSYSTEM_VENDOR_ID &&
->  	    where + size <= PCI_CAPABILITY_LIST) {
->  		/* SSIDs and ROM BARs are read-only */
->  	} else if (where >= PCI_COMMAND && where + size <= CFG_PAGE_SIZE) {
-> -		spin_lock_irqsave(&hpdev->hbus->config_lock, flags);
-> -		/* Choose the function to be written. (See comment above) */
-> -		writel(hpdev->desc.win_slot.slot, hpdev->hbus->cfg_addr);
-> -		/* Make sure the function was chosen before we start writing. */
-> -		wmb();
-> -		/* Write to that function's config space. */
-> -		switch (size) {
-> -		case 1:
-> -			writeb(val, addr);
-> -			break;
-> -		case 2:
-> -			writew(val, addr);
-> -			break;
-> -		default:
-> -			writel(val, addr);
-> -			break;
-> +		spin_lock_irqsave(&hbus->config_lock, flags);
-> +
-> +		if (hbus->use_calls) {
-> +			phys_addr_t addr = hbus->mem_config->start + offset;
-> +
-> +			hv_pci_write_mmio(hbus->mem_config->start, 4,
-> +						hpdev->desc.win_slot.slot);
-> +			hv_pci_write_mmio(addr, size, val);
-> +		} else {
-> +			void __iomem *addr = hbus->cfg_addr + offset;
-> +
-> +			/* Choose the function to write. (See comment above) */
-> +			writel(hpdev->desc.win_slot.slot, hbus->cfg_addr);
-> +			/* Make sure the function was chosen before writing. */
-> +			wmb();
-> +			/* Write to that function's config space. */
-> +			switch (size) {
-> +			case 1:
-> +				writeb(val, addr);
-> +				break;
-> +			case 2:
-> +				writew(val, addr);
-> +				break;
-> +			default:
-> +				writel(val, addr);
-> +				break;
-> +			}
-
-Ditto, an mb() is needed here to align with the old code.
-
-With these fixed, feel free to add
-
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-
-Regards,
-BOqun
-
->  		}
-> -		/*
-> -		 * Make sure the write was done before we release the spinlock
-> -		 * allowing consecutive reads/writes.
-> -		 */
-> -		mb();
-> -		spin_unlock_irqrestore(&hpdev->hbus->config_lock, flags);
-> +		spin_unlock_irqrestore(&hbus->config_lock, flags);
->  	} else {
-> -		dev_err(&hpdev->hbus->hdev->device,
-> +		dev_err(&hbus->hdev->device,
->  			"Attempt to write beyond a function's config space.\n");
->  	}
->  }
-> @@ -3568,6 +3595,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	hbus->bridge->domain_nr = dom;
->  #ifdef CONFIG_X86
->  	hbus->sysdata.domain = dom;
-> +	hbus->use_calls = !!(ms_hyperv.hints & HV_X64_USE_MMIO_HYPERCALLS);
->  #elif defined(CONFIG_ARM64)
->  	/*
->  	 * Set the PCI bus parent to be the corresponding VMbus
-> @@ -3577,6 +3605,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	 * information to devices created on the bus.
->  	 */
->  	hbus->sysdata.parent = hdev->device.parent;
-> +	hbus->use_calls = false;
->  #endif
->  
->  	hbus->hdev = hdev;
-> -- 
-> 1.8.3.1
-> 
-> 
+Reviewed-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
