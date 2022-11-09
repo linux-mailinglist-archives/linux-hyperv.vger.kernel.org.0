@@ -2,84 +2,163 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9561B623429
-	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Nov 2022 21:06:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0E216234EA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Nov 2022 21:53:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229959AbiKIUGQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 9 Nov 2022 15:06:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53982 "EHLO
+        id S229802AbiKIUxY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Nov 2022 15:53:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbiKIUGM (ORCPT
+        with ESMTP id S229635AbiKIUxX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 9 Nov 2022 15:06:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4132AE01;
-        Wed,  9 Nov 2022 12:06:11 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 65EA261CBC;
-        Wed,  9 Nov 2022 20:05:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D8D9C433C1;
-        Wed,  9 Nov 2022 20:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668024345;
-        bh=xZohr6o3BWdR/p5arbr7q/NlJj+eiGC11WAguEGvpjU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KD/L4bUdixF4cqnEotX8YK/3mqBbmD5jRdaZEtceniyAUVn7ZmZViRZMiYMTbAnKz
-         K3t//QKYqhwo05XQtjgGETluumPH8pPWpbMlhxJtvONFV34ahk9CfUeeJtG3BULLOp
-         TtJ/wr30vgQpTQ/Je0f7EgBj5bjizxg8H+TBL5OJYcTu6KtC5WkjBvi116ntvvh+6N
-         pqp0Zw7pZt5gi94a0+TaZnCLY6039LkGVKnkjtQgP6Wr5Z9y4TM878iDdNmTMyyVJw
-         DscRACKJLoIRv0NNw7gKLP9ecdVVifMFCHB4HvxGeI+KanfAnstzaMwVScVuXLf6O3
-         mq8sm0o7Jz2kA==
-Date:   Wed, 9 Nov 2022 12:05:44 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Paolo Abeni <pabeni@redhat.com>, edumazet@google.com,
-        longli@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, shiraz.saleem@intel.com,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [Patch v10 00/12] Introduce Microsoft Azure Network Adapter
- (MANA) RDMA driver
-Message-ID: <20221109120544.135f2ee2@kernel.org>
-In-Reply-To: <Y2v2CGEWC70g+Ot+@unreal>
-References: <1667502990-2559-1-git-send-email-longli@linuxonhyperv.com>
-        <Y2qqq9/N65tfYyP0@unreal>
-        <20221108150529.764b5ab8@kernel.org>
-        <Y2v2CGEWC70g+Ot+@unreal>
+        Wed, 9 Nov 2022 15:53:23 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE2F27B37;
+        Wed,  9 Nov 2022 12:53:20 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id io19so18216642plb.8;
+        Wed, 09 Nov 2022 12:53:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NQ9Dolrn30ZEqCTjBOSWfRyBoKcMQaygSY6Y+KT0Mec=;
+        b=NX5S/PpvIB7oLqcAwzdN/Ioz4UByjq90t5Su7sRUT3us5IJbhaw+Znt5IXbXVWh1Z0
+         fL5hjn8LoJQwT/Alod0MpVLNjLWtasCGoAZpGi58bNZEu/RJ8kK8nDa9kk5gNcOv1aFR
+         CIbP5TgV00ob1KELFcj+4uaHkA+9Ug2qc3ABDxXtYlzlg+Y95CuMLIUbN+hEBj99DeTd
+         NUL5D5mCbJ1C2cl6wZJI+5hurMdfzwjakCWlAs0RgRmsf49qUt1eIc3laBhDx1l8OlzK
+         litzszx7bMY8wB40GkcbCi/t9lF91XpX49Wx87RXhf8YkEmSf53Wkc/89+DWi6DzETXF
+         YA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NQ9Dolrn30ZEqCTjBOSWfRyBoKcMQaygSY6Y+KT0Mec=;
+        b=qYV6Tj6rcQbB9JkEUwNBfjsT0YNoI4IG6HFo8fVVz8kk9vvOvcPnclC/+RQGtxIC0W
+         zeLhZAcIiB1sCEhFf80Lnr8ci3TDk3UyGQ8P1owDEkd/Lpm8BUT9Sx9lhKrS2PET16BY
+         71HggB6shAk8Od4lwRq451zxzCmWXQo2A1yKv1LPJ3JeyXjnOqUOsB+JmdZEnG/0Lpjv
+         yfS7XynVfhCSEpVSOMoM3zsO9vVXRaVLSJSUHKZGdtramfoHGAIT+fUbXZaZXOWnBgTG
+         tKZnpWsnEBE4CxAF9bxWtRS4demJr/fvHrmnRJlTOewP90L7sPHnnhndjxWtH7Z+bIN8
+         +rfQ==
+X-Gm-Message-State: ACrzQf0dtqCS74WAMj1evhpZZapnWFe8GQJ0WGK3kWqHT7jyneYOkQam
+        K7X40TKh+zBq7dnT9jvA5DU/VPfWdih7lA==
+X-Google-Smtp-Source: AMsMyM4yPvUCtlV3AR1sV5khbTRv3EDOSYNzQcaXkYigDxudTUruWCdW/VPp4VujTZbbU1AvA5ro1w==
+X-Received: by 2002:a17:90a:24b:b0:213:9da2:5c98 with SMTP id t11-20020a17090a024b00b002139da25c98mr64206526pje.123.1668027200320;
+        Wed, 09 Nov 2022 12:53:20 -0800 (PST)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:1:c61f:2003:6c97:8057])
+        by smtp.gmail.com with ESMTPSA id y7-20020aa79427000000b0056baca45977sm8659378pfo.21.2022.11.09.12.53.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Nov 2022 12:53:19 -0800 (PST)
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        michael.roth@amd.com, thomas.lendacky@amd.com,
+        venu.busireddy@oracle.com, sterritt@google.com,
+        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [RFC PATCH 00/17] x86/hyperv/sev: Add AMD sev-snp enlightened guest support on hyperv
+Date:   Wed,  9 Nov 2022 15:52:58 -0500
+Message-Id: <20221109205316.984635-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 9 Nov 2022 20:48:40 +0200 Leon Romanovsky wrote:
-> Please pull, I collected everything from ML and created shared branch.
-> 
-> The following changes since commit f0c4d9fc9cc9462659728d168387191387e903cc:
-> 
->   Linux 6.1-rc4 (2022-11-06 15:07:11 -0800)
-> 
-> are available in the Git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/ mana-shared-6.2
-> 
-> for you to fetch changes up to 1e6e19c6e1c100be3d6511345842702a24c155b9:
-> 
->   net: mana: Define data structures for protection domain and memory registration (2022-11-09 20:41:17 +0200)
+From: Tianyu Lan <tiala@microsoft.com>
 
+This patchset is to add AMD sev-snp enlightened guest
+support on hyperv. Hyperv uses Linux direct boot mode
+to boot up Linux kernel and so it needs to pvalidate
+system memory by itself.
 
-It's not on a common base with net-next.
-Could you rebase on something that's at or below git merge-base ?
+In hyperv case, there is no boot loader and so cc blob
+is prepared by hypervisor. In this series, hypervisor
+set the cc blob address directly into boot parameter
+of Linux kernel. If the magic number on cc blob address
+is valid, kernel will read cc blob.
+
+Shared memory between guests and hypervisor should be
+decrypted and zero memory after decrypt memory. The data
+in the target address. It maybe smearedto avoid smearing
+data.
+
+Introduce #HV exception support in AMD sev snp code and
+#HV handler.
+
+Tianyu Lan (17):
+  x86/boot: Check boot param's cc_blob_address for direct boot mode
+  x86/sev: Pvalidate memory gab for decompressing kernel
+  x86/hyperv: Add sev-snp enlightened guest specific config
+  x86/hyperv: apic change for sev-snp enlightened guest
+  x86/hyperv: Decrypt hv vp assist page in sev-snp enlightened guest
+  x86/hyperv: Get Virtual Trust Level via hvcall
+  x86/hyperv: Use vmmcall to implement hvcall in sev-snp enlightened
+    guest
+  clocksource: hyper-v: decrypt hyperv tsc page in sev-snp enlightened
+    guest
+  x86/hyperv: decrypt vmbus pages for sev-snp enlightened guest
+  x86/hyperv: set target vtl in the vmbus init message
+  drivers: hv: Decrypt percpu hvcall input arg page in sev-snp
+    enlightened guest
+  Drivers: hv: vmbus: Decrypt vmbus ring buffer
+  x86/hyperv: Initialize cpu and memory for sev-snp enlightened guest
+  x86/hyperv: Add smp support for sev-snp guest
+  x86/hyperv: Add hyperv-specific hadling for VMMCALL under SEV-ES
+  x86/sev: Add a #HV exception handler
+  x86/sev: Initialize #HV doorbell and handle interrupt requests
+
+ arch/x86/boot/compressed/head_64.S    |   8 +
+ arch/x86/boot/compressed/sev.c        | 111 +++++++-
+ arch/x86/entry/entry_64.S             |  76 +++++
+ arch/x86/hyperv/hv_apic.c             |  79 ++++--
+ arch/x86/hyperv/hv_init.c             |  47 ++++
+ arch/x86/hyperv/ivm.c                 |  12 +-
+ arch/x86/include/asm/cpu_entry_area.h |   6 +
+ arch/x86/include/asm/idtentry.h       |  39 ++-
+ arch/x86/include/asm/irqflags.h       |  19 ++
+ arch/x86/include/asm/mem_encrypt.h    |   2 +
+ arch/x86/include/asm/mshyperv.h       |  68 +++--
+ arch/x86/include/asm/msr-index.h      |   6 +
+ arch/x86/include/asm/page_64_types.h  |   1 +
+ arch/x86/include/asm/sev.h            |  13 +
+ arch/x86/include/asm/svm.h            |  55 +++-
+ arch/x86/include/asm/trapnr.h         |   1 +
+ arch/x86/include/asm/traps.h          |   1 +
+ arch/x86/include/uapi/asm/svm.h       |   4 +
+ arch/x86/kernel/cpu/common.c          |   1 +
+ arch/x86/kernel/cpu/mshyperv.c        | 267 +++++++++++++++++-
+ arch/x86/kernel/dumpstack_64.c        |   9 +-
+ arch/x86/kernel/idt.c                 |   1 +
+ arch/x86/kernel/sev.c                 | 384 ++++++++++++++++++++++----
+ arch/x86/kernel/traps.c               |  50 ++++
+ arch/x86/mm/cpu_entry_area.c          |   2 +
+ drivers/clocksource/hyperv_timer.c    |   2 +-
+ drivers/hv/connection.c               |  14 +
+ drivers/hv/hv.c                       |  32 ++-
+ drivers/hv/hv_common.c                |  22 ++
+ drivers/hv/ring_buffer.c              |   7 +-
+ include/asm-generic/hyperv-tlfs.h     |  19 ++
+ include/asm-generic/mshyperv.h        |   2 +
+ include/linux/hyperv.h                |   4 +-
+ 33 files changed, 1250 insertions(+), 114 deletions(-)
+
+-- 
+2.25.1
+
