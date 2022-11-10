@@ -2,104 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23C6D624CC9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Nov 2022 22:20:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC1C9624D86
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Nov 2022 23:12:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230157AbiKJVUD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Nov 2022 16:20:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
+        id S230206AbiKJWMi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Nov 2022 17:12:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiKJVUC (ORCPT
+        with ESMTP id S229566AbiKJWMh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Nov 2022 16:20:02 -0500
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EB3BB4;
-        Thu, 10 Nov 2022 13:20:01 -0800 (PST)
-Received: by mail-wr1-f50.google.com with SMTP id w14so4030138wru.8;
-        Thu, 10 Nov 2022 13:20:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GGQnIXEIAxYBs4pZEA120RBnVil7XdWyPz26Nc7lr1s=;
-        b=kd0RWtcPJ5vn2eQMSWCosTG9lPurl5KbKT7wTlD1UUQTfjxIinV2wvBA6ZRY9JT7H/
-         kW56sx7Ej7tqECpZ/NXD8MvxHJ6LtLqS82b4aNQmDi1jH2jPfrBoGxktuK4nA/JDMahG
-         DKBNLiGWFm5/uZSy+dBYAOS1UMFxRJ39cVLhdbW3hph9Ws2GiVGL1fN75Y6VdzweSSum
-         3IB+nGOq0V5odkttaRAKqWrrZ/8spv4nGsG7bU5qscWLUSF74nHYA4UK8WK8XNGuo+9p
-         4asCs2fpMDnJ4M/LWct/FZkQdWu1VXBSUlaAdBZraRmZA/WgoGP4adgnVYKe0Gvc7HfA
-         rAag==
-X-Gm-Message-State: ACrzQf3/KOGazl9C57gvzbvvJDaivS7qswomnk+qDIseLNXgQCuOM5MG
-        Gsl1Twka+O8eh9cDqe5HZwB6uyiBSqs=
-X-Google-Smtp-Source: AMsMyM6kN4tNlAB9XgZVNBYkQvoSd0QdC3/mHTOGYurmfCOtCcaIv/AQpolDpAYXGaJWZilHVBv4cA==
-X-Received: by 2002:a5d:5710:0:b0:236:cdd4:4cf4 with SMTP id a16-20020a5d5710000000b00236cdd44cf4mr38255171wrv.376.1668115200006;
-        Thu, 10 Nov 2022 13:20:00 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id w12-20020a05600c474c00b003b435c41103sm8367301wmo.0.2022.11.10.13.19.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 13:19:59 -0800 (PST)
-Date:   Thu, 10 Nov 2022 21:19:57 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [GIT PULL] Hyper-V fixes for 6.1-rc5
-Message-ID: <Y21q/c7CywEAdiDo@liuwe-devbox-debian-v2>
+        Thu, 10 Nov 2022 17:12:37 -0500
+X-Greylist: delayed 2361 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 10 Nov 2022 14:12:33 PST
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31B502F01A;
+        Thu, 10 Nov 2022 14:12:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=mfrkgBO2aFdDwc60CdgvE9S9ISnTxlrxLXKGcZohYPI=; b=C7Ilm2+a2l4r1r95htrUrU37I8
+        lMIJfaotnuBNkxcfo4/L/pbfE1f4ut7sTpCE8twAbc6ox3p9lD5UCf6EbqODhn+RXuk0rOjq/CPD1
+        gcMYRMHiKRXaf1saqM/QWQ9BVE544pdXfFSX63kSa1R4SYF+2I0Zfm1eeXHATzRLw8samu/6/7mLA
+        jPSHUUIfOHyeN4n9ZnjnqbDFAbHkbgGkhIlll/Uf4ZbIvtL1dmYb/eCcTtoK3nFDp8YQPkTz68fRV
+        pUOXd0Ajaw6fsDOP8nAyPc1AMybspZ1ZsThb5k67Q5izC8rPwc2Z6S8O8dFA4iM+dNUe2WOkBIrKk
+        mgZOxJVg==;
+Received: from [177.102.6.147] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1otFAU-00FmBO-VZ; Thu, 10 Nov 2022 22:33:03 +0100
+Message-ID: <efdaf27e-753e-e84f-dd7d-965101563679@igalia.com>
+Date:   Thu, 10 Nov 2022 18:32:54 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH V3 10/11] drivers/hv/vmbus, video/hyperv_fb: Untangle and
+ refactor Hyper-V panic notifiers
+Content-Language: en-US
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Cc:     "bhe@redhat.com" <bhe@redhat.com>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "pmladek@suse.com" <pmladek@suse.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
+        "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+References: <20220819221731.480795-1-gpiccoli@igalia.com>
+ <20220819221731.480795-11-gpiccoli@igalia.com>
+ <BYAPR21MB16880251FC59B60542D2D996D75A9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <ae0a1017-7ec6-9615-7154-ea34c7bd2248@igalia.com>
+ <SN6PR2101MB1693BC627B22432BA42EEBC2D7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <SN6PR2101MB1693BC627B22432BA42EEBC2D7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Linus,
+[Trimming long CC list]
 
-The following changes since commit 247f34f7b80357943234f93f247a1ae6b6c3a740:
+Hi Wei / Michael, just out of curiosity, did this (and patch 9) ended-up
+being queued in hyperv-next?
 
-  Linux 6.1-rc2 (2022-10-23 15:27:33 -0700)
+Thanks in advance,
 
-are available in the Git repository at:
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20221110
+Guilherme
 
-for you to fetch changes up to e70af8d040d2b7904dca93d942ba23fb722e21b1:
-
-  PCI: hv: Fix the definition of vector in hv_compose_msi_msg() (2022-11-03 15:50:28 +0000)
-
-----------------------------------------------------------------
-hyperv-fixes for v6.1-rc5
- - Fix TSC MSR write for root partition (Anirudh Rayabharam)
- - Fix definition of vector in pci-hyperv driver (Dexuan Cui)
- - A few other misc patches
-----------------------------------------------------------------
-Anirudh Rayabharam (2):
-      clocksource/drivers/hyperv: add data structure for reference TSC MSR
-      x86/hyperv: fix invalid writes to MSRs during root partition kexec
-
-Dexuan Cui (1):
-      PCI: hv: Fix the definition of vector in hv_compose_msi_msg()
-
-Jilin Yuan (1):
-      Drivers: hv: fix repeated words in comments
-
-Stephen Hemminger (1):
-      MAINTAINERS: remove sthemmin
-
-Zhao Liu (1):
-      x86/hyperv: Remove BUG_ON() for kmap_local_page()
-
- MAINTAINERS                         |  1 -
- arch/x86/hyperv/hv_init.c           | 19 ++++++++++---------
- drivers/clocksource/hyperv_timer.c  | 29 +++++++++++++++--------------
- drivers/hv/hv_balloon.c             |  2 +-
- drivers/pci/controller/pci-hyperv.c | 22 ++++++++++++++++------
- include/asm-generic/hyperv-tlfs.h   |  9 +++++++++
- 6 files changed, 51 insertions(+), 31 deletions(-)
+On 17/10/2022 12:26, Michael Kelley (LINUX) wrote:
+> From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Tuesday, October 4, 2022 10:20 AM
+>>
+>> On 04/10/2022 13:24, Michael Kelley (LINUX) wrote:
+>>> [...]
+>>>
+>>> Tested this patch in combination with Patch 9 in this series.  Verified
+>>> that both the panic and die paths work correctly with notification to
+>>> Hyper-V via hyperv_report_panic() or via hv_kmsg_dump().  Hyper-V
+>>> framebuffer is updated as expected, though I did not reproduce
+>>> a case where the ring buffer lock is held.  vmbus_initiate_unload() runs
+>>> as expected.
+>>>
+>>> Tested-by: Michael Kelley <mikelley@microsoft.com>
+>>>
+>>
+>> Thanks a lot for the tests/review Michael!
+>>
+>> Do you think Hyper-V folks could add both patches in hv tree? If you
+>> prefer, I can re-send them individually.
+>>
+> 
+> Wei Liu:  Could you pick up Patch 9 and Patch 10 from this series in the
+> hyperv-next tree?
+> 
+> Michael
+> 
