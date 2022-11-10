@@ -2,90 +2,123 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E49FA6241A1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Nov 2022 12:40:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F36426244F7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Nov 2022 16:01:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbiKJLk3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Nov 2022 06:40:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46178 "EHLO
+        id S230522AbiKJPBd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Nov 2022 10:01:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230470AbiKJLkY (ORCPT
+        with ESMTP id S230320AbiKJPBb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Nov 2022 06:40:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6139071F2C;
-        Thu, 10 Nov 2022 03:40:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C2D0EB82173;
-        Thu, 10 Nov 2022 11:40:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5CBA2C433D7;
-        Thu, 10 Nov 2022 11:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668080415;
-        bh=y2vgPIMu86Bp5vTOCEE12crQig4E8T9TYe9fzBClcvk=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=UywrG+6lhWYi01frg6TS8PH8RwgaZVmEvwqf0rMckbrT2iVUKXfwhtaPZXKWVru6m
-         k/DmmzcDPtCKrRzhSAFbcGP8SOaXd9CC2TPAgpzgbZhWnNgnvTnEPwtiwDmV8yC2Vq
-         3IAB7GUmsGOtbNe4pSSObfu1bAmiHqsY/m+3qWsPM4fVe/3RGFxFBZW2Wi9krWz5E9
-         hng2dKVhxZqxjD83BhFKVznXzU0r7VC8XZ/KFn1jPhOKGk27Y/o179yOxlrdBootEc
-         jbRlk0CzV/gMpPIFMLBUlKUt368jFPVAPb2oQFYPVxnttoOQK+7F/HwmuVn9hltv+S
-         HO0XhUa5NUEdw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3838FC395FD;
-        Thu, 10 Nov 2022 11:40:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 10 Nov 2022 10:01:31 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8D81408E;
+        Thu, 10 Nov 2022 07:01:30 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id i3so2371862pfc.11;
+        Thu, 10 Nov 2022 07:01:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zz159+nxp6aQdQ7yNB3j3jGqMel9Ite57CMkzXKwRIU=;
+        b=gnJM86DEAlr0mbDlTkhLQtdEVC4gTqfTPQizoE5xRLcUQgBiBc78N7ZfYCv3xGaf6m
+         SoFCkmv83rJ0FF6m7mQJTalJYinJs59k9gAN/47Q+W3DDk696zHjDZ4iPHkUryTS9YFz
+         ujJ3i8+KAn0laRP23MVyjJ1dFAxdr9V1Xwm9CAVs10FiZaLF9o43W+Nz5K3n0NxI2r3T
+         Hn8XLAooeFglG3N0+Qg0Q/IHRMlZjk3/Wfp7oP4iJWi/6Lkij0k0YAesmxueQl9QLut+
+         20brb7946zLFcWdt7K4x5UojRHYGgt5w/lj3KsCfTwYxIkL/Q8gaixP5vyjsoRa7Cwhe
+         /IPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zz159+nxp6aQdQ7yNB3j3jGqMel9Ite57CMkzXKwRIU=;
+        b=WpstT+8k2XNrugMpc7rxWu3DvfbR06r0I9peI+kEZhCJNCjXfVI8hzvza8Nwpi80XD
+         kCxdnmwRLFcHYoDPp2eaZlYdHzetJzK7ojDnvIJ3j5PyuXWduQc5NX6V89Tm/sOG8t3w
+         /1UzNbcCVHOv70MV2f52Y3ZHfX7qs5O9YBadJsYbECRGPxaxzAgcc+Sy9dwvO6gzCRgD
+         W0m3KVEoaU/zKL5pk4riEk/CZeUVuK5gXQX1qsnOOmXZ8yhERl8svEq5lKov+cBWeZw2
+         Pf3cQPg7smoZVyLCK10Qb4ViMDwWKWO/ImMg8psY/Mw4cL1a4gEh+bDNJReeMiM24uYw
+         9o8A==
+X-Gm-Message-State: ACrzQf3JkEEBUTfip6Fy5d2gc+Y3eJJSg89jX9cxHrKRmYZfg8AOhhxo
+        k10JZiU+Y75khqCxswuPq68=
+X-Google-Smtp-Source: AMsMyM41vXNzICd0ORtm32x6FgWNlDIol38nrTOt3DYJwzlqSsYgmeh8S3o/NWl8S1B1BaY2ITv8YQ==
+X-Received: by 2002:a62:32c4:0:b0:56c:d54a:9201 with SMTP id y187-20020a6232c4000000b0056cd54a9201mr2822045pfy.55.1668092489721;
+        Thu, 10 Nov 2022 07:01:29 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
+        by smtp.gmail.com with ESMTPSA id 72-20020a62194b000000b00562677968aesm10244639pfz.72.2022.11.10.07.01.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Nov 2022 07:01:29 -0800 (PST)
+Message-ID: <42195460-8086-ce7b-fd8f-2017bad36d47@gmail.com>
+Date:   Thu, 10 Nov 2022 23:01:17 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] net: mana: Fix return type of mana_start_xmit()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <166808041522.12004.5463540474559850111.git-patchwork-notify@kernel.org>
-Date:   Thu, 10 Nov 2022 11:40:15 +0000
-References: <20221109002629.1446680-1-nathan@kernel.org>
-In-Reply-To: <20221109002629.1446680-1-nathan@kernel.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        ndesaulniers@google.com, trix@redhat.com, keescook@chromium.org,
-        samitolvanen@google.com, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        nhuck@google.com, error27@gmail.com
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [RFC PATCH 01/17] x86/boot: Check boot param's cc_blob_address
+ for direct boot mode
+Content-Language: en-US
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        thomas.lendacky@amd.com, venu.busireddy@oracle.com,
+        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
+        fenghua.yu@intel.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20221109205353.984745-1-ltykernel@gmail.com>
+ <20221109205353.984745-2-ltykernel@gmail.com>
+ <20221109233904.scct4fih3b3kvnyk@amd.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <20221109233904.scct4fih3b3kvnyk@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net-next.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Tue,  8 Nov 2022 17:26:30 -0700 you wrote:
-> From: Nathan Huckleberry <nhuck@google.com>
+On 11/10/2022 7:39 AM, Michael Roth wrote:
+>> -	 * bp->cc_blob_address should only be set by boot/compressed kernel.
+>> -	 * Initialize it to 0 to ensure that uninitialized values from
+>> -	 * buggy bootloaders aren't propagated.
+>> +	 * bp->cc_blob_address should only be set by boot/compressed
+>> +	 * kernel and hypervisor with direct boot mode. Initialize it
+>> +	 * to 0 after checking in order to ensure that uninitialized
+>> +	 * values from buggy bootloaders aren't propagated.
+>>   	 */
+>> -	if (bp)
+>> -		bp->cc_blob_address = 0;
+>> +	if (bp) {
+>> +		cc_info = (struct cc_blob_sev_info *)(unsigned long)
+>> +			bp->cc_blob_address;
+>> +
+>> +		if (cc_info->magic != CC_BLOB_SEV_HDR_MAGIC)
+>> +			bp->cc_blob_address = 0;
+> It doesn't seem great to rely on SEV_HDR_MAGIC to determine whether
+> bp->cc_blob_address is valid or not since it is only a 32-bit value.
 > 
-> The ndo_start_xmit field in net_device_ops is expected to be of type
-> netdev_tx_t (*ndo_start_xmit)(struct sk_buff *skb, struct net_device *dev).
-> 
-> The mismatched return type breaks forward edge kCFI since the underlying
-> function definition does not match the function hook definition. A new
-> warning in clang will catch this at compile time:
-> 
-> [...]
+> Would it be possible to use a setup_data entry of type SETUP_CC_BLOB
+> in bp->hdr.setup_data instead? There's already handling for that in
+> find_cc_blob_setup_data() so it should "just work".
 
-Here is the summary with links:
-  - [v3] net: mana: Fix return type of mana_start_xmit()
-    https://git.kernel.org/netdev/net-next/c/0c9ef08a4d0f
+Hi Michael:
+	Thanks for your review. I will have a try. Hypervisor may set 
+cc_blob_address directly and so propose this.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
