@@ -2,121 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0D58628650
-	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Nov 2022 17:59:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F361628827
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Nov 2022 19:18:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238144AbiKNQ7H (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 14 Nov 2022 11:59:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36412 "EHLO
+        id S236176AbiKNSSd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 14 Nov 2022 13:18:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238146AbiKNQ6n (ORCPT
+        with ESMTP id S238388AbiKNSSL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 14 Nov 2022 11:58:43 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C81C43E0AF;
-        Mon, 14 Nov 2022 08:57:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668445073; x=1699981073;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=1yAuHjiGqTYi1byh38jC/erNusV9XXEVsRIKu4bAuk0=;
-  b=efQ2Q9cn77vT/6XoiaWuk8H1Y8DLJaPrj2GACPyk6WDmjMO52Th4Fgqk
-   SfrM5vp0XHjvDZDlO8QQbUCQU/34f3+Cpmg5s7qLiasP9C7B02PKvPk8Z
-   rZ/JK+EdFyd5F2aKOO4KtM7oaIEcUjwrOQDQJXl0F5qK8vBZ2NmBmT07L
-   0i6xp21pFfXaJ3N0Zzki/6JJEAeDdqypQMShwxkHmkOaZWJTPQcw2tp8C
-   k1pQquehQ+pa4v+lvj3EODDW7zUUn0xh9WnCR8o/ChjmsLCaALJ0vZ/ZE
-   10P+jjVH5EL1AGqFyRSMNQTkwY0pPE8iF3MFevG5EOzACMSUalnnIQviM
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="338810175"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="338810175"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 08:57:52 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="669729848"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="669729848"
-Received: from satyanay-mobl1.amr.corp.intel.com (HELO [10.209.114.162]) ([10.209.114.162])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 08:57:50 -0800
-Message-ID: <10a4eb94-4764-717b-7c20-64a3d895b3d1@intel.com>
-Date:   Mon, 14 Nov 2022 08:57:49 -0800
+        Mon, 14 Nov 2022 13:18:11 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2D6362F019;
+        Mon, 14 Nov 2022 10:18:05 -0800 (PST)
+Received: from skinsburskii.localdomain (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9CA0720B717A;
+        Mon, 14 Nov 2022 10:18:04 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9CA0720B717A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1668449884;
+        bh=KRO/TqGp4x1anSCsu7IgV88Z9AUtXq8bdapPCe4k3bE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HwJcOTiX0CJurxpdLC+rWT0os26XIouCyWM9brJ0xd2i2lEpi8SgiOipAr2NaiFMC
+         ep3DpGLk9AEnqJSWkNMND+7mmlWRMJdouHEHzgML/FwjIZEXOyCJWloZlrmSK6Kbs8
+         C6drVwwC4ByD6bCaxIXGzRQrO6s7bPWmDZEQnULA=
+Date:   Thu, 10 Nov 2022 05:41:52 -0800
+From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux.dev, mikelley@microsoft.com,
+        sunilmut@microsoft.com, wei.liu@kernel.org, kys@microsoft.com,
+        Tianyu.Lan@microsoft.com, haiyangz@microsoft.com,
+        decui@microsoft.com, dwmw2@infradead.org, joro@8bytes.org,
+        will@kernel.org
+Subject: Re: [PATCH] iommu/hyper-v: Allow hyperv irq remapping without x2apic
+Message-ID: <20221110134152.GA27026@skinsburskii.localdomain>
+References: <1668020853-23950-1-git-send-email-nunodasneves@linux.microsoft.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v2 01/12] x86/ioremap: Fix page aligned size calculation
- in __ioremap_caller()
-Content-Language: en-US
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-References: <1668147701-4583-1-git-send-email-mikelley@microsoft.com>
- <1668147701-4583-2-git-send-email-mikelley@microsoft.com>
- <feca1a0a-b9b2-44d9-30e9-c6a6aa11f6cd@intel.com>
- <BYAPR21MB1688430B2111541FE68D3569D7059@BYAPR21MB1688.namprd21.prod.outlook.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <BYAPR21MB1688430B2111541FE68D3569D7059@BYAPR21MB1688.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1668020853-23950-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Spam-Status: No, score=-16.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 11/14/22 08:53, Michael Kelley (LINUX) wrote:
->> Because, first of all, that "Mappings have to be page-aligned" thing is
->> (now) doing more than page-aligning things.  Second, the moment you mask
->> out the metadata bits, the 'size' calculation gets harder.  Doing it in
->> two phases (page alignment followed by metadata bit masking) breaks up
->> the two logical operations.
->>
-> Work for me.  Will do this in v3.
+On Wed, Nov 09, 2022 at 11:07:33AM -0800, Nuno Das Neves wrote:
+> If x2apic is not available, hyperv-iommu skips remapping
+> irqs. This breaks root partition which always needs irqs
+> remapped.
+> 
+> Fix this by allowing irq remapping regardless of x2apic,
+> and change hyperv_enable_irq_remapping() to return
+> IRQ_REMAP_XAPIC_MODE in case x2apic is missing.
+> 
+> Tested with root and non-root hyperv partitions.
+> 
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  drivers/iommu/Kconfig        | 6 +++---
+>  drivers/iommu/hyperv-iommu.c | 7 ++++---
+>  2 files changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index dc5f7a156ff5..cf7433652db0 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -474,13 +474,13 @@ config QCOM_IOMMU
+>  	  Support for IOMMU on certain Qualcomm SoCs.
+>  
+>  config HYPERV_IOMMU
+> -	bool "Hyper-V x2APIC IRQ Handling"
+> +	bool "Hyper-V IRQ Handling"
+>  	depends on HYPERV && X86
+>  	select IOMMU_API
+>  	default HYPERV
+>  	help
+> -	  Stub IOMMU driver to handle IRQs as to allow Hyper-V Linux
+> -	  guests to run with x2APIC mode enabled.
+> +	  Stub IOMMU driver to handle IRQs to support Hyper-V Linux
+> +	  guest and root partitions.
+>  
+>  config VIRTIO_IOMMU
+>  	tristate "Virtio IOMMU driver"
+> diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
+> index e190bb8c225c..abd1826a9e63 100644
+> --- a/drivers/iommu/hyperv-iommu.c
+> +++ b/drivers/iommu/hyperv-iommu.c
+> @@ -123,8 +123,7 @@ static int __init hyperv_prepare_irq_remapping(void)
+>  	const struct irq_domain_ops *ops;
+>  
+>  	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV) ||
+> -	    x86_init.hyper.msi_ext_dest_id() ||
+> -	    !x2apic_supported())
+> +	    x86_init.hyper.msi_ext_dest_id())
+>  		return -ENODEV;
+>  
+>  	if (hv_root_partition) {
+> @@ -170,7 +169,9 @@ static int __init hyperv_prepare_irq_remapping(void)
+>  
+>  static int __init hyperv_enable_irq_remapping(void)
+>  {
+> -	return IRQ_REMAP_X2APIC_MODE;
+> +	if (x2apic_supported())
+> +		return IRQ_REMAP_X2APIC_MODE;
+> +	return IRQ_REMAP_XAPIC_MODE;
+>  }
+>  
+>  struct irq_remap_ops hyperv_irq_remap_ops = {
+> -- 
+> 2.25.1
 
-Kirill also made a good point about TDX: it isn't affected by this
-because it always passes *real* (no metadata bits set) physical
-addresses in here.  Could you double check that you don't want to do the
-same for your code?
-
-
+Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
