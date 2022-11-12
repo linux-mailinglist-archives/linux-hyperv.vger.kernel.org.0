@@ -2,128 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACCA862661C
-	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Nov 2022 01:58:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD9396266DC
+	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Nov 2022 05:26:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233511AbiKLA6j (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 11 Nov 2022 19:58:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55492 "EHLO
+        id S233804AbiKLE0y (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 11 Nov 2022 23:26:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230037AbiKLA6i (ORCPT
+        with ESMTP id S230344AbiKLE0w (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 11 Nov 2022 19:58:38 -0500
-Received: from DM6PR05CU003-vft-obe.outbound.protection.outlook.com (mail-centralusazon11023023.outbound.protection.outlook.com [52.101.64.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65AE6BE20;
-        Fri, 11 Nov 2022 16:58:36 -0800 (PST)
+        Fri, 11 Nov 2022 23:26:52 -0500
+Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11022025.outbound.protection.outlook.com [52.101.53.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9925BD4E;
+        Fri, 11 Nov 2022 20:26:50 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OMC7dVxXJ6bqDKkWQQPp0Xbs7roHi4GnAqFlb9Xp7LPcrrmxHUuBNlJyBgAYUpepyBgGPR74UwZJj2uHqUheOTG5tuWZI0Gob2eRivAOJurpuDe11HMij60AifREv9EJfrtP9/FA5jSD4lc2/IWafMgqkbDyRiNC3ZDXdUmCs1VL7aT72ScPLnPBcc05Av4ZgCkTODbYFe+6fyuYES7KmuVHIc+UbqqIDbsmOLBMIwQWs3UffrXQqCh/m+MoN9A+3oIC6F+XofgEMfoPlh4ObsNJTOGzv0mMM3uANBwDcA64OhrUlMWSzE9XAVdZB2y5VAfpbFWIMxdfdcOej4LXuQ==
+ b=ehQWvPUvdpj1bycVNeo6RagwpULfaL+XbVCt5zqB60Mlh71x8JZLcX3BVEGerM3Ow96JkQZNKfiIUKssADHJzEEAxtpw97lUVTccNjUf0MFyH7g2/iTguaAJAYeZ1+IhL9CDa1laSC6NgjxhEvGbqpjpjHFsDPfvCj03X13QCzmJ63Zi5rW0jQEfR45PjevyQogWvUlesQTfjp7ZMa65SSRj7uKhrng961VHK8ZUiPNP41DgiefuZVXiP7OHji4gzaB6KwJ62i+zpGUess8C8FdVDqRhiLEyGeKRniVSRhJ+G23l49qQ9MjiZhuqmiIBcLZYqS/HTGTGlUMKmXuW+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W2RgyTvonTVfZ9999jljbecfBz2kK2CMF1lhk7wxvAI=;
- b=P+jmVvkU5bvNEjI2TCiPXTg5ramAeEHj5RY0li9epB7MPprLf2iyTLTi+b56iOE5G1wgeZ0geaSae7Y2CGq9Eb4kRFkimLuKFW+aT8tAewAWJsTvNHMZW0B0/28+1NL1Fja5WxTwIckXwoHgrpgRo95ZcwPK3bx9edzGLD+ZslimNyTY+cyNS6gyKbzXsATn0t+CyT8GkUhB/w40F9y1l/N8gGYznoIHEhV37YEPbTtwb4ix5smj8ha62Lrcd42g2V+KmP+9rVNPOIjenrcVkGz3Ulx3hTMOJos2m6O59bP4FvSjZMjg15YkIiieCkzsrR4c9G3Zd+kdFMYTGwYcYQ==
+ bh=CwRpBseLXAHLDiB+JLZM7XlLZaTjB50yPGJmifgaBng=;
+ b=CV1S8BXe7env0unV/ejpKIgnVPkupPbgkERzWTctwU6TCOGFHRc0OrGD+gtBDh8z+k0ZMLCXffA6p7CSFRJOMq7Uxd+Ya3JAZOXwYXi6wQ6UrbvX0xtWbZIPVh0PzLy7iznWbAQsGTGoN15t56+Sa5uSzTiK+a7nxt26QG14pOHLZpXkH9cqq5rJqZPREGlgQc5/25L57WcCDrYXZDehpd3rlC+URN6ntZdgl/ePdR5eqdWJNhx4j/UguB6+CF6GqjuGZVRA9YSLiOu1YcCA11w5Y5xl3lgUu1gG0i7zdsPljiRbJ5zIc/bOxN29fodYcmvN1JPYNS26B8YRg2k06Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W2RgyTvonTVfZ9999jljbecfBz2kK2CMF1lhk7wxvAI=;
- b=BiADe/4ncJpj+EUxED2X2e1Od5YIap0uEneEmG2+L2Xz7aQJzgLlGJrVwbYOciGqYypQDLbLLjq6+MNHrpsyvs6NvMdACRHsB3FdRVOTOJeX3fq15vSEJAVow0FGv0LuJ+8d7xHysOnwiPXpWsTCAwpn0v2wVdSBPt9collFzqU=
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
- by IA1PR21MB3424.namprd21.prod.outlook.com (2603:10b6:208:3e3::11) with
+ bh=CwRpBseLXAHLDiB+JLZM7XlLZaTjB50yPGJmifgaBng=;
+ b=M6tpn6E95xj3sVGChka88aWpqbcfpevxBBvO9buo74c//qYVIiwx1nwMw8mZwY/61jxjRr/2iR3dHZdYYWuX6nIOFuSstWKHxxHyWnD6xGy8EzmMLXbzRThy05KIsX/XvOZc73wu+x0EUMoxOnAF6bbtMBQaCd406eYG8Sc97PM=
+Received: from BY5PR21MB1394.namprd21.prod.outlook.com (2603:10b6:a03:21c::20)
+ by DS7PR21MB3431.namprd21.prod.outlook.com (2603:10b6:8:90::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.2; Sat, 12 Nov
- 2022 00:58:33 +0000
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::ac9b:6fe1:dca5:b817]) by SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::ac9b:6fe1:dca5:b817%6]) with mapi id 15.20.5834.002; Sat, 12 Nov 2022
- 00:58:33 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>
-CC:     "quic_jhugo@quicinc.com" <quic_jhugo@quicinc.com>,
-        "quic_carlv@quicinc.com" <quic_carlv@quicinc.com>,
-        KY Srinivasan <kys@microsoft.com>,
+ 2022 04:26:48 +0000
+Received: from BY5PR21MB1394.namprd21.prod.outlook.com
+ ([fe80::908:1dc3:c68:7420]) by BY5PR21MB1394.namprd21.prod.outlook.com
+ ([fe80::908:1dc3:c68:7420%8]) with mapi id 15.20.5834.005; Sat, 12 Nov 2022
+ 04:26:48 +0000
+From:   Ajay Sharma <sharmaajay@microsoft.com>
+To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
+CC:     Leon Romanovsky <leonro@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Eric Dumazet <edumazet@google.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-        Boqun Feng <Boqun.Feng@microsoft.com>
-Subject: RE: [PATCH v3] PCI: hv: Only reuse existing IRTE allocation for
- Multi-MSI
-Thread-Topic: [PATCH v3] PCI: hv: Only reuse existing IRTE allocation for
- Multi-MSI
-Thread-Index: AQHY9bPelQKzFek9kkuOCBwYhpuQEq46Xy5g
-Date:   Sat, 12 Nov 2022 00:58:33 +0000
-Message-ID: <SA1PR21MB133572B296D53A64A1A6792FBF039@SA1PR21MB1335.namprd21.prod.outlook.com>
-References: <20221104222953.11356-1-decui@microsoft.com>
- <Y24cTE9+bqXtHics@lpieralisi>
-In-Reply-To: <Y24cTE9+bqXtHics@lpieralisi>
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Ajay Sharma <sharmaajay@microsoft.com>
+Subject: RE: [EXTERNAL] [PATCH rdma-next] RDMA/mana: Remove redefinition of
+ basic u64 type
+Thread-Topic: [EXTERNAL] [PATCH rdma-next] RDMA/mana: Remove redefinition of
+ basic u64 type
+Thread-Index: AQHY9bPD+aHWKX6dGEui+44ZF4If3646sltg
+Date:   Sat, 12 Nov 2022 04:26:48 +0000
+Message-ID: <BY5PR21MB139450F4AADA9953317E08FED6039@BY5PR21MB1394.namprd21.prod.outlook.com>
+References: <3c1e821279e6a165d058655d2343722d6650e776.1668160486.git.leonro@nvidia.com>
+In-Reply-To: <3c1e821279e6a165d058655d2343722d6650e776.1668160486.git.leonro@nvidia.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=50364555-a158-41e5-96bf-008e7e6b76bc;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-11T23:28:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8d857c23-e1e7-4492-a346-670d2023c5ae;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-12T04:26:05Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|IA1PR21MB3424:EE_
-x-ms-office365-filtering-correlation-id: 1520f777-5e55-4cff-f0ee-08dac44905ef
+x-ms-traffictypediagnostic: BY5PR21MB1394:EE_|DS7PR21MB3431:EE_
+x-ms-office365-filtering-correlation-id: f057980f-c109-4c40-4154-08dac4661d24
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7Z1EuU8IdEk/LZFkFhYSPd6qt6DXmQOnz024wv7eN9B5GkwS+wJ/tIuhRaIepcWnSrHbIZzjWi8hJ7by3Ce56iBcB7shEdrjHwB0s/b7BsCljrbL4Yol4Ey+DJKoWy5/6wx0phQ5VbaIWxRl8KgpV0z6WGtmpf0f35p8RLPzNYO7Mac7/hoYSxRcLEMSHVZeOorDmk+klxTvoVUVBXUAw0oe1Yd+CFNFnJkSf1ZUCP6YxMcqyG9m0FbEc2UUyTTTT2IAM+/kIg9Bo4H2JS2ORK3wHxEpuQy8uB4hESmLzN4XNrkZJ7gdC8QIYkXpsnVYDFPR3KWnVFvvpzmjs6PcikPabmW36aD7tAi1qZQaiNmWJd5/sh54Sz6nxhzULLI0v/wn1ur973DfdzfnToJPASjmseLR6CiYBmUVJiL7riFn+HecaztrrMhJ5WA8QVKLBcVcOqIAz28vtDoIRf6+htD1q3t3y0p4SJ55DfR5c3cdSbs0r36rTHKOQuE/EDLntnuJrfmzqIAzpGviv6iU4/F1waJHSJ5TTyT9BhXe+ST4laxKBK1YMeOzHgE+VViLBj9NmdbPwtHHfzvhUNrYDfY4CK54SZIiK7dP4DqQCUHbUzNm9L28xzB9m23tdw37rW+u+ugN81uTTcQ6c/rklqTN5EjxlRc74L64jRH0BRlnTkmJjZwahuz10euzWOQvu9CFD5/dHBLSd/d2eZ38S2dk/Jj7hKzH/H1+IMYm9s8QGhRxqz0sjEVRvRE6HPz5qLO4yoajG0ieSofRT51z16zgOEwZltX9jM+dT0do4jzUtSwzBKA+KCy1iK7xQtlw
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(451199015)(478600001)(5660300002)(2906002)(7416002)(8990500004)(38070700005)(107886003)(52536014)(54906003)(76116006)(41300700001)(83380400001)(71200400001)(8936002)(82960400001)(316002)(66946007)(8676002)(66446008)(4326008)(33656002)(55016003)(64756008)(66556008)(66476007)(186003)(86362001)(38100700002)(122000001)(110136005)(7696005)(6506007)(26005)(10290500003)(9686003)(82950400001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: a3TxgvTO7ZYZiSb9RkpgqhbBwglTQBLAhNG6tAsXqRZe2BAlH2QeqRjyy3qb2CBoNmDWfwI8SpZNyUqG7ZcKnQAsH8mjLQsjdJDxuKeXqhOstgrYUZaR5M5BL2j1NnQ2xNQxcTmQaX8T6glJWHBrDGWmZJ8XgU3HZQjuVBXVxWy0wOHHBZ0FKfWi2ijl3vA24kbaBnZ5ccR+6i8s/suT5Ph3C24L1E5nM7955ylHVzs6LS8NYpEysqejUzb4xbhdZz2LR42C6sDSqSQ3dxQ3W0Z+MRokOTxEm+pW9KgeClhu0UVS81I8IoC7alXMaBajEF5Jv7rPaeEYRRH2cUC6Ix1ppkDyMKuZ2OjyZSc7EQ8Fef3lQSgmL0NvPvZCwYlJBOf1orDx7m64h2ZHxGreiftuaeBWpnBh0Vc7li6oyzUVGsCZWzVZtx4Q7Nu/FHDSk1o99EcsiqYSEy8l2K87n1PydEHpCJwAjoX4rohRLZDdVr872QjOra+cfcH/JM0eMfIOu3RyWPX0nb/s9cbwwh8EiEbrXGsZ6Rp1ea0SaHxvsmHjgrUJWIuhM2hNfMMBVo0oOe5SOe1vxRCoQc1xPpqIZVVbuLsb/X59QZW7WBcD6tMWFIb2FbIQGw+zZeMh5ALPyrsHn3J37znEIALcZmL/iH4At/Y/IN/uCCIziz250Y5MWWCOPq9U+mUaLVAS3UAKdIlbtTFmKBAIKxGZ5+53bgRvKhLyJKLG9XhoPAkc9L9vKydDKoNoQPHPxzHHKN59oZcY9ZMHrNp9LyXxVozaHj2rnwv1zzFT2e6je9P+rQZH9DXBl1xTOjaN2LGY
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1394.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(451199015)(66946007)(41300700001)(82960400001)(82950400001)(33656002)(83380400001)(478600001)(38070700005)(38100700002)(8936002)(66446008)(86362001)(8990500004)(122000001)(76116006)(66476007)(64756008)(55016003)(4326008)(7696005)(6506007)(110136005)(7416002)(71200400001)(107886003)(54906003)(5660300002)(52536014)(9686003)(186003)(2906002)(66556008)(8676002)(10290500003)(316002)(53546011);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/dq7fEd52a+BkWKPQLza+G1Ph20+dXnBKsdE6itrdn3kHE8Di1pUQM9CO6mk?=
- =?us-ascii?Q?UXuctUty4ZJSt5nfxVMIrvljajTEG6kZfgSgV2seAXtDvXJ/X0M/yF/WmDt9?=
- =?us-ascii?Q?u3yUiuuzI5woNbgan05YBFXlSlYBFPpnZ8nVBq/p8whJaFjmmKSnR0yruy1V?=
- =?us-ascii?Q?SPjEYhK4keHLnLDEHAmFsZXN11n6dsuR0lD9Q/iJG5GJlbPIngguo5L1XLX3?=
- =?us-ascii?Q?OJvRRGMV/XhIhp8fTt+OQxNpyPQgXOhh8tQG/WnpYEhXtBn9We+oEz/qU6Qb?=
- =?us-ascii?Q?lPn0H2Z5e+PaoU4y3CekHDQJRDQmgHqCQ5JbD4X6yNA6mfa1CyjpRtGjfvLG?=
- =?us-ascii?Q?28FuLgzjg6s4A3RmbkiN9JLlAGddJbgo7WH0q3obqTk+tiLMaUOfIWnd57XM?=
- =?us-ascii?Q?5OLTpHEYUkwssEjIXfil710mWCCY/+LHY3znhE5ez3apDcnVoowdhpa7m5xu?=
- =?us-ascii?Q?iR/qCQepSqzkVnWNgbN/eGw3H+80c+ETRHaFvdAo/DCtwMouJ9eGCjxx8H+R?=
- =?us-ascii?Q?Lo65lAG62WCUkiIW4GHAkznDej5zDE6753djsyLn3cpCHyt8/fSRT7an4X6K?=
- =?us-ascii?Q?pnShqNhRoAc5YWGX6VS+rQWttHHYwQ73m6VtTLolmbbIOzD0weRAG/1CS4en?=
- =?us-ascii?Q?JHNnRJWWBUka7xqpsubDArMLu+AUpNBQHdSDE0izqWAAKF45cmtEF8xJ8y41?=
- =?us-ascii?Q?RUBBnOlkUSqMAjSwcwMy6kTokUYpiTnKqHpnuL20IIGp8ZmpWkJYdY+1zxc7?=
- =?us-ascii?Q?IJo1p9qXU8oMu6KBotN0W/uD6dpY6BQ6djmzceZSzNA94KfINa5NeBhHCfBJ?=
- =?us-ascii?Q?guPbpN6ARzdxF+ZFEgOP3/lmtHxcAh5mMHlCjf8EM6eH7jC26/U6HWMFh/HZ?=
- =?us-ascii?Q?gdJ5FFnlA/OWEMiBVSIjoNcrHDDA9ev7GnnI2Kc2VBkjQ81ESjeC6d1DN++y?=
- =?us-ascii?Q?NODY3aHlSH7fGZUvTa2fooUIVFEx2tlojF6h+1mVBz2Umg/rlE7kY6TuLeoj?=
- =?us-ascii?Q?MqzMq+mtPDFJNeOf9beNetmeypIK6TNLbypYQ/cQhNY8XNVMavi2hGSSXjhU?=
- =?us-ascii?Q?CqL7lK/dk5QndvJVSgOXvohb9TXm+WvEZ98p01IWgeuwADKF5ayvQdZFhYkk?=
- =?us-ascii?Q?78OBxJ/0keQw/OAA/z/a8mCs++VnJMZ27C7owUipxLbZni1mTdAwHt0eEsVh?=
- =?us-ascii?Q?iLacLKaRtmXlLaMQ/aUaeg6L5LLgefNsfYM7tDSy3ONP+tMYdxMHxjVp8vqB?=
- =?us-ascii?Q?iUzZ0bmebPDabcqa0h7VEPWxfeXvSS+CbtYITB6fwZEXRiBK/DaLvjK7ZyPX?=
- =?us-ascii?Q?fV1ps0R5+20VuzO+rBmrdY857qcGtbFxJmbc7yUM60GGMtsXsL87RODKmDse?=
- =?us-ascii?Q?sdXZhUt8YL2vZH+yjL0r222N9KWyE534pTe+TfkayERSwutHKDpq2DPEqjdC?=
- =?us-ascii?Q?cQ259TQBzZDUYftckXK1hIkkp9Lz3d+bN8jczC1+QY1RtFFvEuSPJlOiCCy8?=
- =?us-ascii?Q?yZCLELnD7N+yrZioPN45kL2/zfJoCjmVCsZQxgZMGE636ioSLfTtoiLX6Tbi?=
- =?us-ascii?Q?wmck4gmXzgYDggm+CzVNkFUiidJOJ73vp51IpppJ?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?nabDpiheffHbjc1Ek3JdTIW1/gWh5hEotkAA4H63ZNcqWQxk5cV6zWQqs+j8?=
+ =?us-ascii?Q?A0vyDRoWg00Z5UkVA35yvnHhILlawp35Kzn7T3v4Rya7hRgb2kzjfW6o8Qn2?=
+ =?us-ascii?Q?yCtKC1K2QbohGjsP3StN50eK+i8uMfFnsuNVwifQfZlTVzNzYRW6hfGtlkrK?=
+ =?us-ascii?Q?AmMz6Eovb1QFLzOotlZw9CmzPmYeaWi1sTQYW3pYq9VkfMFGOiHQuK+hQK4i?=
+ =?us-ascii?Q?GkmGVq0jkawch6FXYcmdxnm1i6cFXifADVPCpTyWcPiqLM0Hhv/Ki8AEVSQ5?=
+ =?us-ascii?Q?d0c/0JkqI/Tk3WLbRWC68YCY2UChwl5ZRU620O/Z5sH/fi1tQj58rxjTKdcJ?=
+ =?us-ascii?Q?aVoz5XbiSambll1sitMmapgjnwxXIjvob4VS4+547/FgiABpp/uHuTOEajkz?=
+ =?us-ascii?Q?AKKusCjSUyO4msU0jorOw5LE5vtlkHAjjscj3eOzxLmYd/S/yIhHyvmIcLr5?=
+ =?us-ascii?Q?boKhZJ+LuORgTyaQukYzW98ttxGB04parAaNGiq/umcWE6lS8Cp7zDrVDpE3?=
+ =?us-ascii?Q?8NiZA3nHC+MmcPjsJezQUpHGPZmWFi5itWyD9h3xsyC93Q+M29tiuFDp1JCe?=
+ =?us-ascii?Q?zRy4iWX+sxlB8uNRdZjTgkKwGNLO6GrQKZFuK1/tyoQoNWA01vCVBOSyT4zP?=
+ =?us-ascii?Q?xNP5wR9bjZ/F1oxTEgZ4OSjViDX7OJjD+dxT2zMMOoy2u9kaRZAVBdR3MTCU?=
+ =?us-ascii?Q?OzO8j+f83fvWex+lAxkjenrdMze+7YEJBKubyo90AguI8/6vOmxJnH6aYiXq?=
+ =?us-ascii?Q?uflWgGxgvQ3F9TqzG29kN0NaVkmK1jcimPlVbd25wxLmjVC63N3NWE1yCUK1?=
+ =?us-ascii?Q?mWJPe2B3erx3NQYC01Qf4m4CZ5HP5PnzuVSJjZAE28dkBLb+ia2S1cAeS9wQ?=
+ =?us-ascii?Q?044ToNOtLagRNJB0KtYEBGc3VKA0+VMG6kCSpAGI0qLtR6nG63uqynyqFQwr?=
+ =?us-ascii?Q?HF+IWwlcagKeRzM2uEf5OuS3/mSZ92RwlumQ7nL7nZkf1ojgMtvnJe9IdzS1?=
+ =?us-ascii?Q?7Yc5UtVcOG5RH6cIaxqL20JovOQ6ms+3MQXhwBFwVALDzvd1QklUVxUBD3tB?=
+ =?us-ascii?Q?dVNejKPoxBkFDq84gTkhwj/y/foR1IjQqEFRfQGgfPdJiSrUJtv6yhCfiFcQ?=
+ =?us-ascii?Q?S6x+OmvOXe6st2FhnKykSTQF2JFcE/hs4gY4T73+kpRZSJfwov5d8mVCyaRa?=
+ =?us-ascii?Q?+7esMP3nt6NBI9B1Twqa5wvIMrN+P5QHcTGvu2TXuj6iqobNs9Xs+9qV8QbN?=
+ =?us-ascii?Q?ylyRYBs8keRKQwMdO20lHSuR2jrN7zcu8MPmm5Y4/OCiq61AaV1PnZX69gfc?=
+ =?us-ascii?Q?pBjiVbg7IAbbiu3GYFFjjEKjRo2nFvGNu8oUc8uYPaL0XFRKtCNUtMCV4e8k?=
+ =?us-ascii?Q?TGfEfMpOqeJlzYKp0dS0oFunRfh9WXynjxEQ7SaWTqipJ/LFTCqxrX4A/hOP?=
+ =?us-ascii?Q?2tGN0Ygrul7EFY2VPknrSiWImsyPbNKZoCkAbHSGHedX64hwRz3c7m9yRbqP?=
+ =?us-ascii?Q?y8CK1s73lCoNwcpfRjo+Wm3JVLy0EcP01yH1AlnTlfwMj2agYFq4tsSoNRg6?=
+ =?us-ascii?Q?b9+c3SqmRwuqo5UB+5VFxgMDlY0yKRYXX8eYbmbk?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1520f777-5e55-4cff-f0ee-08dac44905ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2022 00:58:33.6990
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1394.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f057980f-c109-4c40-4154-08dac4661d24
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2022 04:26:48.0814
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +8j3A9SL/qmeQ/5nhYnPtFPj2b1GYv6g1TBgmBoHKzZrLnidC29BrCGegGqnm0scS9m4K8Ie6o53I4K1gR33rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3424
+X-MS-Exchange-CrossTenant-userprincipalname: fmxTAlP1YOeZwi8IZEIG66IKGR9THgkHp3CklPpEqv7jkofIkwcAHuK9D4+zM40YstgPYloAX44ozI6SI2of9zWmas7WiB4HK4BX1+13hkI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3431
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
@@ -134,234 +132,213 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Sent: Friday, November 11, 2022 1:56 AM
-> > ...
-> > + * For the single-MSI and MSI-X cases, it's OK for
-> > hv_compose_msi_req_get_cpu()
-> > + * to always return the same dummy vCPU, because a second call to
-> > + * hv_compose_msi_msg() contains the "real" vCPU, causing Hyper-V to
-> > choose a
-> > + * new pCPU for the interrupt. But for the multi-MSI case, the second =
-call to
-> > + * hv_compose_msi_msg() exits without sending a message to the vPCI VS=
-P,
-> > so the
+Agreed. This was just to keep in sync with the naming conventions on the fi=
+rmware side.=20
+
+> -----Original Message-----
+> From: Leon Romanovsky <leon@kernel.org>
+> Sent: Friday, November 11, 2022 3:55 AM
+> To: Jason Gunthorpe <jgg@nvidia.com>
+> Cc: Leon Romanovsky <leonro@nvidia.com>; Ajay Sharma
+> <sharmaajay@microsoft.com>; David S. Miller <davem@davemloft.net>;
+> Dexuan Cui <decui@microsoft.com>; Eric Dumazet <edumazet@google.com>;
+> Haiyang Zhang <haiyangz@microsoft.com>; Jakub Kicinski <kuba@kernel.org>;
+> KY Srinivasan <kys@microsoft.com>; linux-hyperv@vger.kernel.org; linux-
+> rdma@vger.kernel.org; Long Li <longli@microsoft.com>;
+> netdev@vger.kernel.org; Paolo Abeni <pabeni@redhat.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; Wei Liu <wei.liu@kernel.org>
+> Subject: [EXTERNAL] [PATCH rdma-next] RDMA/mana: Remove redefinition of
+> basic u64 type
 >=20
-> Why ? Can't you fix _that_ ? Why can't the initial call to
-> hv_compose_msi_msg() determine the _real_ target vCPU ?
-
-Unluckily I can't fix this because of the way it works in x86's irq managem=
-ent
-code. This is out of the control of the pci-hyperv driver.
-
-hv_compose_msi_msg() uses irq_data_get_effective_affinity_mask() to get
-the "effective"mask.
-
-On x86, when the irq is initialized, irq_data_update_effective_affinity() i=
-s
-called from apic_update_irq_cfg() -- please refer to the below debug code.
-
-When the initial call to hv_compose_msi_msg() is invoked, it's from
-pci_alloc_irq_vectors(), and the x86 irq code always passes CPU0 to pci-hyp=
-erv.
-Please see the below "cpumask_first(cpu_online_mask)" in
-vector_assign_managed_shutdown().
-
-When hv_compose_msi_msg() is invoked the second time, it's from
-request_irq(), and the x86 irq code passes the real effectivey CPU to pci-h=
-yperv.
-
-I added the below debug code and pasted the trimmed output below.
-
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -179,6 +179,7 @@ static void vector_assign_managed_shutdown(struct irq_d=
-ata *irqd)
-        unsigned int cpu =3D cpumask_first(cpu_online_mask);
-
-        apic_update_irq_cfg(irqd, MANAGED_IRQ_SHUTDOWN_VECTOR, cpu);
-+       WARN(irqd->irq >=3D 24, "cdx: vector_assign_managed_shutdown: irq=
-=3D%d, cpu=3D%d\n", irqd->irq, cpu);
- }
-
- static int reserve_managed_vector(struct irq_data *irqd)
-@@ -251,6 +252,7 @@ assign_vector_locked(struct irq_data *irqd, const struc=
-t cpumask *dest)
-                return vector;
-        apic_update_vector(irqd, vector, cpu);
-        apic_update_irq_cfg(irqd, vector, cpu);
-+       WARN(irqd->irq >=3D 24, "cdx: assign_vector_locked: irq=3D%d, cpu=
-=3D%d\n", irqd->irq, cpu);
-
-        return 0;
- }
-@@ -328,6 +330,7 @@ assign_managed_vector(struct irq_data *irqd, const stru=
-ct cpumask *dest)
-                return vector;
-        apic_update_vector(irqd, vector, cpu);
-        apic_update_irq_cfg(irqd, vector, cpu);
-+       WARN(irqd->irq >=3D 24, "cdx: assign_managed_vector: irq=3D%d, cpu=
-=3D%d\n", irqd->irq, cpu);
-        return 0;
- }
-
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1803,6 +1803,7 @@ static void hv_compose_msi_msg(struct irq_data *data,=
- struct msi_msg *msg)
-        u32 size;
-        int ret;
-
-+       WARN(1, "cdx: hv_compose_msi_msg: irq=3D%d\n", data->irq);
-        /* Reuse the previous allocation */
-        if (data->chip_data) {
-                int_desc =3D data->chip_data;
-
-  1 cdx: vector_assign_managed_shutdown: irq=3D24, cpu=3D0
-  2 WARNING: CPU: 3 PID: 87 at arch/x86/kernel/apic/vector.c:182 vector_ass=
-ign_managed_shutdown+0x53/0x60
-  3 RIP: 0010:vector_assign_managed_shutdown+0x53/0x60
-  4  reserve_irq_vector_locked+0x41/0xa0
-  5  x86_vector_alloc_irqs+0x298/0x460
-  6  irq_domain_alloc_irqs_hierarchy+0x1b/0x50
-  7  irq_domain_alloc_irqs_parent+0x17/0x30
-  8  msi_domain_alloc+0x83/0x150
-  9  irq_domain_alloc_irqs_hierarchy+0x1b/0x50
- 10  __irq_domain_alloc_irqs+0xdf/0x320
- 11  __msi_domain_alloc_irqs+0x103/0x3e0
- 12  msi_domain_alloc_irqs_descs_locked+0x3e/0x90
- 13  pci_msi_setup_msi_irqs+0x2d/0x40
- 14  __pci_enable_msix_range+0x2fd/0x420
- 15  pci_alloc_irq_vectors_affinity+0xb0/0x110
- 16  nvme_reset_work+0x1cf/0x1170
- 17  process_one_work+0x21f/0x3f0
- 18  worker_thread+0x4a/0x3c0
- 19  kthread+0xff/0x130
- 20  ret_from_fork+0x22/0x30
- 21
- 22 cdx: vector_assign_managed_shutdown: irq=3D24, cpu=3D0
- 23 WARNING: CPU: 3 PID: 87 at arch/x86/kernel/apic/vector.c:182 vector_ass=
-ign_managed_shutdown+0x53/0x60
- 24 RIP: 0010:vector_assign_managed_shutdown+0x53/0x60
- 25  x86_vector_activate+0x149/0x1e0
- 26  __irq_domain_activate_irq+0x58/0x90
- 27  __irq_domain_activate_irq+0x38/0x90
- 28  irq_domain_activate_irq+0x2d/0x50
- 29  __msi_domain_alloc_irqs+0x1bb/0x3e0
- 30  msi_domain_alloc_irqs_descs_locked+0x3e/0x90
- 31  pci_msi_setup_msi_irqs+0x2d/0x40
- 32  __pci_enable_msix_range+0x2fd/0x420
- 33  pci_alloc_irq_vectors_affinity+0xb0/0x110
- 34  nvme_reset_work+0x1cf/0x1170
- 35  process_one_work+0x21f/0x3f0
- 36  worker_thread+0x4a/0x3c0
- 37  kthread+0xff/0x130
- 38  ret_from_fork+0x22/0x30
- 39
- 40
- 41 cdx: hv_compose_msi_msg: irq=3D24
- 42 WARNING: CPU: 3 PID: 87 at drivers/pci/controller/pci-hyperv.c:1806 hv_=
-compose_msi_msg+0x3f/0x5d0 [pci_hyperv]
- 43 RIP: 0010:hv_compose_msi_msg+0x3f/0x5d0 [pci_hyperv]
- 44  irq_chip_compose_msi_msg+0x32/0x50
- 45  msi_domain_activate+0x45/0xa0
- 46  __irq_domain_activate_irq+0x58/0x90
- 47  irq_domain_activate_irq+0x2d/0x50
- 48  __msi_domain_alloc_irqs+0x1bb/0x3e0
- 49  msi_domain_alloc_irqs_descs_locked+0x3e/0x90
- 50  pci_msi_setup_msi_irqs+0x2d/0x40
- 51  __pci_enable_msix_range+0x2fd/0x420
- 52  pci_alloc_irq_vectors_affinity+0xb0/0x110
- 53  nvme_reset_work+0x1cf/0x1170
- 54  process_one_work+0x21f/0x3f0
- 55  worker_thread+0x4a/0x3c0
- 56  kthread+0xff/0x130
- 57  ret_from_fork+0x22/0x30
- 58
- 59
- 60
- 61 cdx: assign_vector_locked: irq=3D24, cpu=3D3
- 62 WARNING: CPU: 0 PID: 87 at arch/x86/kernel/apic/vector.c:255 assign_vec=
-tor_locked+0x160/0x170
- 63 RIP: 0010:assign_vector_locked+0x160/0x170
- 64  assign_irq_vector_any_locked+0x6a/0x150
- 65  x86_vector_activate+0x93/0x1e0
- 66  __irq_domain_activate_irq+0x58/0x90
- 67  __irq_domain_activate_irq+0x38/0x90
- 68  irq_domain_activate_irq+0x2d/0x50
- 69  irq_activate+0x29/0x30
- 70  __setup_irq+0x2e5/0x780
- 71  request_threaded_irq+0x112/0x180
- 72  pci_request_irq+0xa3/0xf0
- 73  queue_request_irq+0x74/0x80
- 74  nvme_reset_work+0x408/0x1170
- 75  process_one_work+0x21f/0x3f0
- 76  worker_thread+0x4a/0x3c0
- 77  kthread+0xff/0x130
- 78  ret_from_fork+0x22/0x30
- 79
- 80 cdx: hv_compose_msi_msg: irq=3D24
- 81 WARNING: CPU: 0 PID: 87 at drivers/pci/controller/pci-hyperv.c:1806 hv_=
-compose_msi_msg+0x3f/0x5d0 [pci_hyperv]
- 82 RIP: 0010:hv_compose_msi_msg+0x3f/0x5d0 [pci_hyperv]
- 83  irq_chip_compose_msi_msg+0x32/0x50
- 84  msi_domain_activate+0x45/0xa0
- 85  __irq_domain_activate_irq+0x58/0x90
- 86  irq_domain_activate_irq+0x2d/0x50
- 87  irq_activate+0x29/0x30
- 88  __setup_irq+0x2e5/0x780
- 89  request_threaded_irq+0x112/0x180
- 90  pci_request_irq+0xa3/0xf0
- 91  queue_request_irq+0x74/0x80
- 92  nvme_reset_work+0x408/0x1170
- 93  process_one_work+0x21f/0x3f0
- 94  worker_thread+0x4a/0x3c0
- 95  kthread+0xff/0x130
- 96  ret_from_fork+0x22/0x30
-
-> > + * original dummy vCPU is used. This dummy vCPU must be round-robin'ed
-> > so that
-> > + * the pCPUs are spread out. All interrupts for a multi-MSI device end=
- up
-> > using
-> > + * the same pCPU, even though the vCPUs will be spread out by later ca=
-lls
-> > + * to hv_irq_unmask(), but that is the best we can do now.
-> > + *
-> > + * With current Hyper-V, the HVCALL_RETARGET_INTERRUPT hypercall does
-> *not*
+> From: Leon Romanovsky <leonro@nvidia.com>
 >=20
-> "current" Hyper-V means nothing, remove it or provide versioning
-> information. Imagine yourself reading this comment some time
-> in the future.
-
-Good point. @Wei, can you please help fix this? I think we can change
-"With current Hyper-V"
-To
-"With Hyper-V in Nov 2022".
-
-BTW, it's hard to provide the exact versioning info, because technically
-there are many versions of Hyper-V...
-
-> I can't claim to understand how this MSI vCPU to pCPU mapping is made to
-> work in current code but I can't ack this patch sorry, if you feel like
-> it is good to merge it it is your and Hyper-V maintainers call, feel
-> free to go ahead - I can review PCI hyper-V changes that affect PCI
-> and IRQs core APIs, I don't know Hyper-V internals.
+> gdma_obj_handle_t is no more than redefinition of basic
+> u64 type. Remove such obfuscation.
 >=20
-> Lorenzo
-
-I understand. Thanks!=20
-
-I discussed the issue with Hyper-V team. I believe I understood it and
-this patch is the right thing to have.
-
-@Wei, Bjorn spotted two typos in the commit message, and Lorenzo
-suggested a change to the above "current". Can you please help
-fix these and merge the patch? Or, let me know if it'd be easier if
-I should send v4.
-
-Thanks,
-Dexuan
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  drivers/infiniband/hw/mana/mr.c               |  5 ++-
+>  .../net/ethernet/microsoft/mana/gdma_main.c   |  3 +-
+>  include/net/mana/gdma.h                       | 31 +++++++++----------
+>  3 files changed, 17 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/drivers/infiniband/hw/mana/mr.c
+> b/drivers/infiniband/hw/mana/mr.c index a56236cdd9ee..351207c60eb6
+> 100644
+> --- a/drivers/infiniband/hw/mana/mr.c
+> +++ b/drivers/infiniband/hw/mana/mr.c
+> @@ -73,8 +73,7 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev
+> *dev, struct mana_ib_mr *mr,
+>  	return 0;
+>  }
+>=20
+> -static int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev,
+> -				 gdma_obj_handle_t mr_handle)
+> +static int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev, u64
+> +mr_handle)
+>  {
+>  	struct gdma_destroy_mr_response resp =3D {};
+>  	struct gdma_destroy_mr_request req =3D {}; @@ -108,9 +107,9 @@
+> struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 leng=
+th,
+>  	struct mana_ib_pd *pd =3D container_of(ibpd, struct mana_ib_pd, ibpd);
+>  	struct gdma_create_mr_params mr_params =3D {};
+>  	struct ib_device *ibdev =3D ibpd->device;
+> -	gdma_obj_handle_t dma_region_handle;
+>  	struct mana_ib_dev *dev;
+>  	struct mana_ib_mr *mr;
+> +	u64 dma_region_handle;
+>  	int err;
+>=20
+>  	dev =3D container_of(ibdev, struct mana_ib_dev, ib_dev); diff --git
+> a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> index 46a7d1e6ece9..69224ff8efb6 100644
+> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> @@ -671,8 +671,7 @@ int mana_gd_create_hwc_queue(struct gdma_dev
+> *gd,
+>  	return err;
+>  }
+>=20
+> -int mana_gd_destroy_dma_region(struct gdma_context *gc,
+> -			       gdma_obj_handle_t dma_region_handle)
+> +int mana_gd_destroy_dma_region(struct gdma_context *gc, u64
+> +dma_region_handle)
+>  {
+>  	struct gdma_destroy_dma_region_req req =3D {};
+>  	struct gdma_general_resp resp =3D {};
+> diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h index
+> 221adc96340c..a9fdae14d24c 100644
+> --- a/include/net/mana/gdma.h
+> +++ b/include/net/mana/gdma.h
+> @@ -65,8 +65,6 @@ enum {
+>  	GDMA_DEVICE_MANA	=3D 2,
+>  };
+>=20
+> -typedef u64 gdma_obj_handle_t;
+> -
+>  struct gdma_resource {
+>  	/* Protect the bitmap */
+>  	spinlock_t lock;
+> @@ -200,7 +198,7 @@ struct gdma_mem_info {
+>  	u64 length;
+>=20
+>  	/* Allocated by the PF driver */
+> -	gdma_obj_handle_t dma_region_handle;
+> +	u64 dma_region_handle;
+>  };
+>=20
+>  #define REGISTER_ATB_MST_MKEY_LOWER_SIZE 8 @@ -624,7 +622,7 @@
+> struct gdma_create_queue_req {
+>  	u32 reserved1;
+>  	u32 pdid;
+>  	u32 doolbell_id;
+> -	gdma_obj_handle_t gdma_region;
+> +	u64 gdma_region;
+>  	u32 reserved2;
+>  	u32 queue_size;
+>  	u32 log2_throttle_limit;
+> @@ -699,14 +697,14 @@ struct gdma_create_dma_region_req {
+>=20
+>  struct gdma_create_dma_region_resp {
+>  	struct gdma_resp_hdr hdr;
+> -	gdma_obj_handle_t dma_region_handle;
+> +	u64 dma_region_handle;
+>  }; /* HW DATA */
+>=20
+>  /* GDMA_DMA_REGION_ADD_PAGES */
+>  struct gdma_dma_region_add_pages_req {
+>  	struct gdma_req_hdr hdr;
+>=20
+> -	gdma_obj_handle_t dma_region_handle;
+> +	u64 dma_region_handle;
+>=20
+>  	u32 page_addr_list_len;
+>  	u32 reserved3;
+> @@ -718,7 +716,7 @@ struct gdma_dma_region_add_pages_req {  struct
+> gdma_destroy_dma_region_req {
+>  	struct gdma_req_hdr hdr;
+>=20
+> -	gdma_obj_handle_t dma_region_handle;
+> +	u64 dma_region_handle;
+>  }; /* HW DATA */
+>=20
+>  enum gdma_pd_flags {
+> @@ -733,14 +731,14 @@ struct gdma_create_pd_req {
+>=20
+>  struct gdma_create_pd_resp {
+>  	struct gdma_resp_hdr hdr;
+> -	gdma_obj_handle_t pd_handle;
+> +	u64 pd_handle;
+>  	u32 pd_id;
+>  	u32 reserved;
+>  };/* HW DATA */
+>=20
+>  struct gdma_destroy_pd_req {
+>  	struct gdma_req_hdr hdr;
+> -	gdma_obj_handle_t pd_handle;
+> +	u64 pd_handle;
+>  };/* HW DATA */
+>=20
+>  struct gdma_destory_pd_resp {
+> @@ -756,11 +754,11 @@ enum gdma_mr_type {  };
+>=20
+>  struct gdma_create_mr_params {
+> -	gdma_obj_handle_t pd_handle;
+> +	u64 pd_handle;
+>  	enum gdma_mr_type mr_type;
+>  	union {
+>  		struct {
+> -			gdma_obj_handle_t dma_region_handle;
+> +			u64 dma_region_handle;
+>  			u64 virtual_address;
+>  			enum gdma_mr_access_flags access_flags;
+>  		} gva;
+> @@ -769,13 +767,13 @@ struct gdma_create_mr_params {
+>=20
+>  struct gdma_create_mr_request {
+>  	struct gdma_req_hdr hdr;
+> -	gdma_obj_handle_t pd_handle;
+> +	u64 pd_handle;
+>  	enum gdma_mr_type mr_type;
+>  	u32 reserved_1;
+>=20
+>  	union {
+>  		struct {
+> -			gdma_obj_handle_t dma_region_handle;
+> +			u64 dma_region_handle;
+>  			u64 virtual_address;
+>  			enum gdma_mr_access_flags access_flags;
+>  		} gva;
+> @@ -786,14 +784,14 @@ struct gdma_create_mr_request {
+>=20
+>  struct gdma_create_mr_response {
+>  	struct gdma_resp_hdr hdr;
+> -	gdma_obj_handle_t mr_handle;
+> +	u64 mr_handle;
+>  	u32 lkey;
+>  	u32 rkey;
+>  };/* HW DATA */
+>=20
+>  struct gdma_destroy_mr_request {
+>  	struct gdma_req_hdr hdr;
+> -	gdma_obj_handle_t mr_handle;
+> +	u64 mr_handle;
+>  };/* HW DATA */
+>=20
+>  struct gdma_destroy_mr_response {
+> @@ -827,7 +825,6 @@ void mana_gd_free_memory(struct gdma_mem_info
+> *gmi);  int mana_gd_send_request(struct gdma_context *gc, u32 req_len,
+> const void *req,
+>  			 u32 resp_len, void *resp);
+>=20
+> -int mana_gd_destroy_dma_region(struct gdma_context *gc,
+> -			       gdma_obj_handle_t dma_region_handle);
+> +int mana_gd_destroy_dma_region(struct gdma_context *gc, u64
+> +dma_region_handle);
+>=20
+>  #endif /* _GDMA_H */
+> --
+> 2.38.1
 
