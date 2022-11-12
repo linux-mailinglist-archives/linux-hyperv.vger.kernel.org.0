@@ -2,95 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BC956265B2
-	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Nov 2022 00:45:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EB9F6265D9
+	for <lists+linux-hyperv@lfdr.de>; Sat, 12 Nov 2022 01:11:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234690AbiKKXps (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 11 Nov 2022 18:45:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32962 "EHLO
+        id S234508AbiKLALl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 11 Nov 2022 19:11:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234686AbiKKXpr (ORCPT
+        with ESMTP id S234537AbiKLALh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 11 Nov 2022 18:45:47 -0500
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA726EB56;
-        Fri, 11 Nov 2022 15:45:46 -0800 (PST)
-Received: by mail-wr1-f51.google.com with SMTP id v1so8222502wrt.11;
-        Fri, 11 Nov 2022 15:45:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zdGrmUFUT5Rd8rZ+Zxl1YHcsVYosGqPDTEcSuiV5How=;
-        b=qj+YrvDnBW44gHFL3A79plbCMSDpyuXJCDYXj2VV8sxVG+HJ86uJZlgKv6LhNIO1T1
-         Ptwtn/vmKGiuYjodLXaUW0pGVY4bIFS+5SL0ILijMB1GlOZPvw6kFlE7TaSmAneYDB31
-         vcGSsq7F0ypcMK2p3naxeL8rQ1TvJlNsMKe0fI2BZ2G0W2xICtHhtwyR3nMyAme2AQ3H
-         TKBDgCrY3U7xxn65bMUtWSpjwnyv0ZG92JE0eiiqKAL/sVniZXESJGUDuUEVIEvC2g5d
-         3LQOpuYAiv5ez+S9GrQ+qaNkbUQ94kUGuEHKa75xQgpdx7bqD0+/q8VxT5QCWNI1a8AS
-         NWCw==
-X-Gm-Message-State: ANoB5pmZ5pj49rtyQX/+hdknHzoLIwNg4FQfe+XD+NcVk5um4BQqihLN
-        C4GceExVxDsAK3SQ8l6G2uA=
-X-Google-Smtp-Source: AA0mqf6lGQZ2lPyFsU2t2mEch5X8o1SlRhubcrsSs0D8K0tPgSNqMyKM1rm4AoWr/Js40PHc2BZprQ==
-X-Received: by 2002:adf:ba52:0:b0:236:55a7:cf2 with SMTP id t18-20020adfba52000000b0023655a70cf2mr2511721wrg.270.1668210344834;
-        Fri, 11 Nov 2022 15:45:44 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id n13-20020adff08d000000b002364c77bcacsm2909606wro.38.2022.11.11.15.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Nov 2022 15:45:44 -0800 (PST)
-Date:   Fri, 11 Nov 2022 23:45:42 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, martin.petersen@oracle.com,
-        longli@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        jejb@linux.ibm.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/1] scsi: storvsc: Fix handling of srb_status and
- capacity change events
-Message-ID: <Y27epsxr/NAw86QQ@liuwe-devbox-debian-v2>
-References: <1668019722-1983-1-git-send-email-mikelley@microsoft.com>
+        Fri, 11 Nov 2022 19:11:37 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052DA54B1A;
+        Fri, 11 Nov 2022 16:11:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668211896; x=1699747896;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=LiZwmYGwAznYW6wrpo4GEBOGDwQrkWj7tTELRkONMMw=;
+  b=Ny7JK8HlDrFRt5trB8P87UdEy36SRNwkKbkK5Q6HUb6MMK14SVOHUwh3
+   YwcA3jc/+4bWBtgh3ELR1LQQPAvwQPpboqLBIN5+4faSnMzEaIDsi7CTe
+   PBPo6CuEA6LRF0XCasaoKb8VbqnQCx72bVXujZA95PMZpfxDqor5pWOAR
+   QNbQFX8WCnVhcA6sqRPWokmzpDYKBpoXFP+rMJQUhONGwNck04YG8Sz62
+   2q+9vg9NIa27tBBAhpc5KETG7ui7BqMaJFac/+eskgR3slGU+1xoej/Zp
+   kNivApIiDEkX3/TwBg3GID0Bz7t/i7IadFNZge/bkB+2mz67W/VYVFyL6
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="313484745"
+X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
+   d="scan'208";a="313484745"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 16:11:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="615617910"
+X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
+   d="scan'208";a="615617910"
+Received: from nmpoonaw-mobl1.amr.corp.intel.com (HELO [10.252.134.46]) ([10.252.134.46])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 16:11:33 -0800
+Message-ID: <7d621ab2-6717-c6b6-5c3c-90af4c2f4afc@intel.com>
+Date:   Fri, 11 Nov 2022 16:11:32 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1668019722-1983-1-git-send-email-mikelley@microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 01/12] x86/ioremap: Fix page aligned size calculation
+ in __ioremap_caller()
+Content-Language: en-US
+To:     Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, luto@kernel.org, peterz@infradead.org,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+References: <1668147701-4583-1-git-send-email-mikelley@microsoft.com>
+ <1668147701-4583-2-git-send-email-mikelley@microsoft.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <1668147701-4583-2-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 10:48:42AM -0800, Michael Kelley wrote:
-> Current handling of the srb_status is incorrect. Commit 52e1b3b3daa9
-> ("scsi: storvsc: Correctly handle multiple flags in srb_status")
-> is based on srb_status being a set of flags, when in fact only the
-> 2 high order bits are flags and the remaining 6 bits are an integer
-> status. Because the integer values of interest mostly look like flags,
-> the code actually works when treated that way.
+On 11/10/22 22:21, Michael Kelley wrote:
+> If applying the PHYSICAL_PAGE_MASK to the phys_addr argument causes
+> upper bits to be masked out, the re-calculation of size to account for
+> page alignment is incorrect because the same bits are not masked out
+> in last_addr.
 > 
-> But in the interest of correctness going forward, fix this by treating
-> the low 6 bits of srb_status as an integer status code. Add handling
-> for SRB_STATUS_INVALID_REQUEST, which was the original intent of commit
-> 52e1b3b3daa9. Furthermore, treat the ERROR, ABORTED, and INVALID_REQUEST
-> srb status codes as essentially equivalent for the cases we care about.
-> There's no harm in doing so, and it isn't always clear which status code
-> current or older versions of Hyper-V report for particular conditions.
-> 
-> Treating the srb status codes as equivalent has the additional benefit
-> of ensuring that capacity change events result in an immediate rescan
-> so that the new size is known to Linux. Existing code checks SCSI
-> sense data for capacity change events when the srb status is ABORTED.
-> But capacity change events are also being observed when Hyper-V reports
-> the srb status as ERROR. Without the immediate rescan, the new size
-> isn't known until something else causes a rescan (such as running
-> fdisk to expand a partition), and in the meantime, tools such as "lsblk"
-> continue to report the old size.
-> 
-> Fixes: 52e1b3b3daa9 ("scsi: storvsc: Correctly handle multiple flags in srb_status")
-> Reported-by: Juan Tian <juantian@microsoft.com>
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> Fix this by masking the page aligned last_addr as well.
 
-Applied to hyperv-fixes. Thanks.
+This makes sense at first glance.
+
+How did you notice this?  What is the impact to users?  Did the bug
+actually cause you some trouble or was it by inspection?  Do you have a
+sense of how many folks might be impacted?  Any thoughts on how it
+lasted for 14+ years?
+
+For the functionality of the mapping, I guess 'size' doesn't really
+matter because even a 1-byte 'size' will map a page.  The other fallout
+would be from memtype_reserve() reserving too little.  But, that's
+unlikely to matter for small mappings because even though:
+
+	ioremap(0x1800, 0x800);
+
+would end up just reserving 0x1000->0x1800, it still wouldn't allow
+
+	ioremap(0x1000, 0x800);
+
+to succeed because *both* of them would end up trying to reserve the
+beginning of the page.  Basically, the first caller effectively reserves
+the whole page and any second user will fail.
+
+So the other place it would matter would be for mappings that span two
+pages, say:
+
+	ioremap(0x1fff, 0x2)
+
+But I guess those aren't very common.  Most large ioremap() callers seem
+to already have base and size page-aligned.
+
+Anyway, sorry to make so much of a big deal about a one-liner.  But,
+these decade-old bugs really make me wonder how they stuck around for so
+long.
+
+I'd be curious if you thought about this too while putting together this
+fox.
