@@ -2,155 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 134AD6272AE
-	for <lists+linux-hyperv@lfdr.de>; Sun, 13 Nov 2022 22:21:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CFAC627425
+	for <lists+linux-hyperv@lfdr.de>; Mon, 14 Nov 2022 02:28:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234264AbiKMVVT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 13 Nov 2022 16:21:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43272 "EHLO
+        id S233793AbiKNB2o (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 13 Nov 2022 20:28:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234152AbiKMVVS (ORCPT
+        with ESMTP id S230525AbiKNB2n (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 13 Nov 2022 16:21:18 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F17C6556;
-        Sun, 13 Nov 2022 13:21:17 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668374476;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WqA9eQpqg/Hiw5ww9rnS051/wTFYpXZ9ePTy08MS9E0=;
-        b=CnQ6NWad4KySG53EzK9w8HVjWcU9MBKDbHBXvpVhHzu03lruTcG4QS7bSTNuXvsxKXwXcz
-        549hdVOxTevATh1QHxvUfuqabEXCCXGMmQr0YM+xMFj0xyIGIjhPJbEVaON3rBCzetaRrX
-        lyxQuHzBkpK9tCtfxVaF1B/7G4n6Y7gNQP1w3vsdJUu8aLs3T5eF+23DrX9FCVuzVzf6Lc
-        Q+xzs2FhOWDJ2mPcLeBrCNU9GZ1JCyuEdtDjlhMw4EDhG5jQgUGo+SXRKbNr/qr5oonD4l
-        77fgr0iHm+m/YhdKseH859aZBzBexqRl3rUaPQpyVCjpgqRiLlIpC5pLWGgWiA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668374476;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WqA9eQpqg/Hiw5ww9rnS051/wTFYpXZ9ePTy08MS9E0=;
-        b=Xmk/TudIVbnwagakcUpIVMgdZRuT9ezMSJRfzWC57xPb8aGp0CO342lbi9TEHJcb1Ls/Ms
-        V+tUzDxO8IleM5DA==
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: RE: [PATCH] clocksource/drivers/hyper-v: Include asm/hyperv-tlfs.h
- not asm/mshyperv.h
-In-Reply-To: <87leoft9w1.ffs@tglx>
-References: <87zgcwt2qg.ffs@tglx>
- <BYAPR21MB1688C5BCDF3269BA070DB884D7039@BYAPR21MB1688.namprd21.prod.outlook.com>
- <87wn7ztc89.ffs@tglx> <87sfinta8q.ffs@tglx> <87leoft9w1.ffs@tglx>
-Date:   Sun, 13 Nov 2022 22:21:15 +0100
-Message-ID: <87fsemtut0.ffs@tglx>
+        Sun, 13 Nov 2022 20:28:43 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC29DB2A;
+        Sun, 13 Nov 2022 17:28:42 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id z26so9722810pff.1;
+        Sun, 13 Nov 2022 17:28:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9IyJ3xF8kcuSZ9pu7miMBG0rWqw2GU0G6gA219XlxRI=;
+        b=RtqxB0eAZIpp2BD2ltwjKgrNELLhn/BHiH11lxn5S+2b4KFFD9CsR5OJfXAtkv0Zch
+         dJ/1z2TZywQNkYyx1hDpANTfZMS/CsGXSynb0memuVvXLOVkoLiAQe4EBO91kAXO8SYs
+         CA3uGD2W18Ofk+fGV64MIMravk+RkxIDZTtbZOr9dwaxflzJbUi1nC0fqCRGGPiIv0AP
+         buA16O/t1oDKRtj6i3B74Mkk8APaX0h422OLKjevqxp+YxDIC232RH0xnJ7HDunnAGQ9
+         4DvqYVrZAlXbj88ukG5sEYnCgZvJV3vvsgBpvmcaHmgPstCLu1lVklhCyY7AgL1YSg7p
+         tTtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9IyJ3xF8kcuSZ9pu7miMBG0rWqw2GU0G6gA219XlxRI=;
+        b=PjPmf0VLC5hBcNQ45uJY2Tqe0aJ2QLhnXDzQU1mUCJYXcRTw+tf8ZyJtWi3oI8zggb
+         GaLPhaUgTvsvfxDvziz1/ypiombe4lBk/ThNMzy37lJ4pnD+VP9cFk0nX4tbFFIw5KIP
+         V6NodTCP/zKYi/JuFAaZDtR0Vt/iKi65ufddL9NmPqLY6PusKHI959tVnzufad4ShKp2
+         Q7VC+s+CsRZIpSNIUx0jNlpg43zNUlM0eti9O+Av11haD/eCz3JYPftv3n8N7mEpFHD1
+         9n1cigVke4Ng+VzMl88xw0ad9s5Tar3F7CM4RhULy/ksIJzQzHlMWFF2xr2NvsTl7C1e
+         iEdQ==
+X-Gm-Message-State: ANoB5plxXw37PwSZoq6QBRt+qxaZCYe1PGhAKjiZM4B2ci3DYjTIqKIV
+        Hvn6HJXCemn/FUjapr96D+o=
+X-Google-Smtp-Source: AA0mqf7Y4DAeFRFu4osfoLyHEA1cT+aXeFCWauYexb1W5TozDZ4hWWsuCQybUlcwT8um7BkMqzE5+A==
+X-Received: by 2002:a62:1c94:0:b0:56b:cc74:4bd5 with SMTP id c142-20020a621c94000000b0056bcc744bd5mr12013895pfc.79.1668389322416;
+        Sun, 13 Nov 2022 17:28:42 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
+        by smtp.gmail.com with ESMTPSA id q7-20020a170902edc700b0018693643504sm5879033plk.40.2022.11.13.17.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Nov 2022 17:28:41 -0800 (PST)
+Message-ID: <60adb804-8a3a-599a-64cd-3149cc82447d@gmail.com>
+Date:   Mon, 14 Nov 2022 09:28:31 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [RFC PATCH 16/17] x86/sev: Add a #HV exception handler
+Content-Language: en-US
+To:     "Kalra, Ashish" <ashish.kalra@amd.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        srutherford@google.com, akpm@linux-foundation.org,
+        anshuman.khandual@arm.com, pawan.kumar.gupta@linux.intel.com,
+        adrian.hunter@intel.com, daniel.sneddon@linux.intel.com,
+        alexander.shishkin@linux.intel.com, sandipan.das@amd.com,
+        ray.huang@amd.com, brijesh.singh@amd.com, michael.roth@amd.com,
+        thomas.lendacky@amd.com, venu.busireddy@oracle.com,
+        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
+        fenghua.yu@intel.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20221109205353.984745-1-ltykernel@gmail.com>
+ <20221109205353.984745-17-ltykernel@gmail.com>
+ <aed619fe-3e08-e99d-67c3-3a91da47eefb@amd.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <aed619fe-3e08-e99d-67c3-3a91da47eefb@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Nov 13 2022 at 11:40, Thomas Gleixner wrote:
-> Bah, that obviously wants to include the new header...
->
-> --- a/include/clocksource/hyperv_timer.h
-> +++ b/include/clocksource/hyperv_timer.h
-> @@ -15,7 +15,8 @@
->  
->  #include <linux/clocksource.h>
->  #include <linux/math64.h>
-> -#include <asm/mshyperv.h>
-> +#include <asm/hyperv_timer.h>
+Thanks for your review.
 
-and that breaks when CONFIG_HYPERV_TIMER=n and compiled for ARM64.
+On 11/11/2022 4:38 AM, Kalra, Ashish wrote:
+>> +    UNWIND_HINT_REGS
+>> +
+>> +    /* Update pt_regs */
+>> +    movq    ORIG_RAX(%rsp), %rsi    /* get error code into 2nd 
+>> argument*/
+>> +    movq    $-1, ORIG_RAX(%rsp)    /* no syscall to restart */
+>> +
+>> +    movq    %rsp, %rdi        /* pt_regs pointer */
+>> +    call    kernel_\cfunc
+>> +
+>> +    jmp    paranoid_exit
+>> +
+>> +.Lfrom_usermode_switch_stack_\@:
+>> +    idtentry_body user_\cfunc, has_error_code=1
+> 
+> #HV exception handler cannot/does not inject an error code, so shouldn't
+> has_error_code == 0?
 
-Sigh...
+Nice catch. Will update in the next version.
 
----
-Subject: clocksource/drivers/hyper-v: Include asm/hyperv-tlfs.h not asm/mshyperv.h
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Sat, 12 Nov 2022 19:08:15 +0100
+>> +    irqentry_state_t irq_state;
+>> +
+>> +    if (unlikely(on_hv_fallback_stack(regs))) {
+>> +            instrumentation_begin();
+>> +            panic("Can't handle #HV exception from unsupported 
+>> context\n");
+>> +            instrumentation_end();
+>> +    }
+> 
+> HV fallback stack exists and is used if we couldn't switch to HV stack. 
+> If we have to issue a panic() here, why don't we simply issue the 
+> panic() in hv_switch_off_ist(), when we couldn't switch to HV stack ?
+> 
 
-clocksource/hyperv_timer.h is included into the VDSO build. It includes
-asm/mshyperv.h which in turn includes the world and some more. This worked
-so far by chance, but any subtle change in the include chain results in a
-build breakage because VDSO builds are building user space libraries.
-
-Include asm/hyperv-tlfs.h instead which contains everything what the VDSO
-build needs and move the hv_get_raw_timer() define into the header file.
-
-Fixup drivers/hv/vmbus_drv.c which relies on the indirect include of
-asm/mshyperv.h.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/include/asm/hyperv_timer.h |    9 +++++++++
- arch/x86/include/asm/mshyperv.h     |    2 --
- drivers/hv/vmbus_drv.c              |    1 +
- include/clocksource/hyperv_timer.h  |    4 +++-
- 4 files changed, 13 insertions(+), 3 deletions(-)
-
---- /dev/null
-+++ b/arch/x86/include/asm/hyperv_timer.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_HYPERV_TIMER_H
-+#define _ASM_X86_HYPERV_TIMER_H
-+
-+#include <asm/msr.h>
-+
-+#define hv_get_raw_timer() rdtsc_ordered()
-+
-+#endif
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -19,8 +19,6 @@ typedef int (*hyperv_fill_flush_list_fun
- 		struct hv_guest_mapping_flush_list *flush,
- 		void *data);
- 
--#define hv_get_raw_timer() rdtsc_ordered()
--
- void hyperv_vector_handler(struct pt_regs *regs);
- 
- #if IS_ENABLED(CONFIG_HYPERV)
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -37,6 +37,7 @@
- #include <linux/dma-map-ops.h>
- #include <linux/pci.h>
- #include <clocksource/hyperv_timer.h>
-+#include <asm/mshyperv.h>
- #include "hyperv_vmbus.h"
- 
- struct vmbus_dynid {
---- a/include/clocksource/hyperv_timer.h
-+++ b/include/clocksource/hyperv_timer.h
-@@ -15,13 +15,15 @@
- 
- #include <linux/clocksource.h>
- #include <linux/math64.h>
--#include <asm/mshyperv.h>
-+#include <asm/hyperv-tlfs.h>
- 
- #define HV_MAX_MAX_DELTA_TICKS 0xffffffff
- #define HV_MIN_DELTA_TICKS 1
- 
- #ifdef CONFIG_HYPERV_TIMER
- 
-+#include <asm/hyperv_timer.h>
-+
- /* Routines called by the VMbus driver */
- extern int hv_stimer_alloc(bool have_percpu_irqs);
- extern int hv_stimer_cleanup(unsigned int cpu);
+Yes, this is a good idea. Will update. Thanks.
