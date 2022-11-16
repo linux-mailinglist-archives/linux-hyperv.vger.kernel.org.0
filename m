@@ -2,144 +2,201 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E217C62CB85
-	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Nov 2022 21:52:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8806A62CC5C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 16 Nov 2022 22:14:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234215AbiKPUwy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 16 Nov 2022 15:52:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34594 "EHLO
+        id S233637AbiKPVOZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 16 Nov 2022 16:14:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234275AbiKPUwa (ORCPT
+        with ESMTP id S231734AbiKPVOY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 16 Nov 2022 15:52:30 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD0963B9D;
-        Wed, 16 Nov 2022 12:52:29 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1668631947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=33J5BD3tpOzz0XsMXF5A2OumpToZnyzGEePA9xQwZn0=;
-        b=EpyHVR7gyrCyXJL9CcGKJOYB/RjC+W7AlH8xKC/vcZ5wVNqtlBANLmpDqMo0ZtjIGnmWLY
-        pTd9r9HxGoOT/EEwE5Ybgaeg8bJRfal78kY+2GhEJjtPzbdRLZTbiFOYuIz+nBczEUcvzs
-        vcvwqwSs7UK0SiG1oo2q4/f79jAa94nTQxXBVJMQR+hgrU9ouX5de4MIpPVMqKRuyrtfnk
-        /Jtf/dDxJW3HbGYwg/bw3P8/pcPa15unfLj0S2PbwpiSpn+s1o7HGWMu9bJqcb7HgO1pB0
-        ZJXwk9iB2jQbgHfWHcE0WbTz+GuNFSbyE5yW2287jMulsr1Ry1BD14f3A24+sw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1668631947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=33J5BD3tpOzz0XsMXF5A2OumpToZnyzGEePA9xQwZn0=;
-        b=bQ/iiX/xd+FgZdfYSqeEeN1dFeG+IhxZkOFIV4csii4NpB/tP5VT53rLO4YKXZO4pPwy0v
-        cLDBgbpcfIAJVuAA==
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: RE: [PATCH] clocksource/drivers/hyper-v: Include asm/hyperv-tlfs.h
- not asm/mshyperv.h
-In-Reply-To: <87fsemtut0.ffs@tglx>
-References: <87zgcwt2qg.ffs@tglx>
- <BYAPR21MB1688C5BCDF3269BA070DB884D7039@BYAPR21MB1688.namprd21.prod.outlook.com>
- <87wn7ztc89.ffs@tglx> <87sfinta8q.ffs@tglx> <87leoft9w1.ffs@tglx>
- <87fsemtut0.ffs@tglx>
-Date:   Wed, 16 Nov 2022 21:52:26 +0100
-Message-ID: <8735aipqph.ffs@tglx>
+        Wed, 16 Nov 2022 16:14:24 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E62F3F;
+        Wed, 16 Nov 2022 13:14:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KZDNLDrV3vIJhll8XjCIotmTR3HMnEZ5raROKkbfxVVVzaOc+I6VA/jRU/eqwhAxmGMfZ5gIg+iK0rK5lEaiWyJKlWZKBeY7CfOrMueyTU9TsrMLnwY70z/3scUTM8TEhwchL0gOpeknHx49aqvqFbSnNIEHTfsyayBjdZmCmGwzEJya1WUXWt6bomZP26Wa//wUokRSbspSkD5Q9ewL8j8Q7wapRVqf9WQhfpJv594txe2k0BSlCNLBgQTuC59CVaQnBDnm0JFhR7UQFdsD9UhHyHntMR64OHig7uOXVOuOMOrYfFjer+vP9wjHktKs6yPltZRh4u36+t/Nv4ZUbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uw7BmxV4dH8kfRSP6Gqsd8VEZ+xNkHW7CYxy+zyH3+Q=;
+ b=DbnKq/4rsAxPQJgBwhAWbroGmiVgtpW7jCTRphXeQvm6XUlElmt8B3SM5Y4Pq46zPyoYgWvuwJSFDhecrb8LivCXHGAVtPcjOXCDsOu45+7LI7WMNQkVroNQQRCCwchhd6U9WBgOMH3GPh2muNZRABlGIxgKIQTyUNDCzTgmuktVPOSR3Ewx/QTEHO5fV7YTRWFsEpZoaludT7hTS6ve/6IwSRZ08tovRBGzYzap9o14j+7qzJX42bjbzmCACZgqJ5VXvtUpqhtMiM5q+x7L7NI1Ey6PBBE+u0J25e8PM2oEgUxQrlj0mOTd2NNwFHPuw62BRNePEfmYcNqchOINKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uw7BmxV4dH8kfRSP6Gqsd8VEZ+xNkHW7CYxy+zyH3+Q=;
+ b=hwcyGO1b8OkmIe+OqSJYti8PS6ZkEjZJggr0ikG8yVDikk8qptrx4WDnbvUyeeOWyczWf4KWPZ5urXZzucssLxvKYmvi8+fPQ8b8B2KzKmyRItMDv+jQ6qxjBiQ0NsalUVLD/nytcqoeUQZg2lySNguAHAafyCrpd8ca+nQyj+c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
+ by DM6PR12MB4941.namprd12.prod.outlook.com (2603:10b6:5:1b8::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Wed, 16 Nov
+ 2022 21:14:21 +0000
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::4da8:e3eb:20eb:f00]) by DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::4da8:e3eb:20eb:f00%2]) with mapi id 15.20.5813.018; Wed, 16 Nov 2022
+ 21:14:21 +0000
+Message-ID: <b194eaa1-cc79-226f-b87b-3e58090ca08e@amd.com>
+Date:   Wed, 16 Nov 2022 15:14:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [Patch v3 06/14] init: Call mem_encrypt_init() after Hyper-V
+ hypercall init is done
+Content-Language: en-US
+To:     Michael Kelley <mikelley@microsoft.com>, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, luto@kernel.org, peterz@infradead.org,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@infradead.org, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        brijesh.singh@amd.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
+ <1668624097-14884-7-git-send-email-mikelley@microsoft.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <1668624097-14884-7-git-send-email-mikelley@microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0P221CA0031.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11d::13) To DM4PR12MB5229.namprd12.prod.outlook.com
+ (2603:10b6:5:398::12)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|DM6PR12MB4941:EE_
+X-MS-Office365-Filtering-Correlation-Id: a0e9be25-e07b-485c-e229-08dac8178768
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: C7MidTFs03QniomSFQsjpjHWoDT2PkiOEkxLDLcxaLLf0PVicpVhj3iGcLR2a+IqkG8I7WRmIUaek1tTvC5jqC8Zb3uS0G8OO5W7e4WkEDEaFo76+fpgF7KK1mQhyTIsTojlkgwZvtKAiMNSNpXVp96PxLWYVl+Nm0CBrHutfy0YGK5YPr/rLDkmEJ6xqYTbUj7eh+eCWzNKs57UuEzLkVRpnoN4St2C2YgoUXHEyqNZzPTGpV82KhW8b8V1U+puMUWsFADNWgKFg3410QiWaooi2Rzf+/m2HsFbuWUMjInK3+dra1wEZj4zC9kI8aFUhACnfNpjNWLOraYHWb4f5eeaAxeymBBadULxiwSrGvOwL1KEVaXlrtflMSIJB/c/FmcSo3NAthMhlQ6gvbxmxeUZ4UZjEz9kFh7MnzhY5r/LCWFohbjngfnplKn97DRrOynEQ9OH5smBh5Jb1W/mBlJYQgJyBvHQs8rrqEFPn0cpveem2zJvg6TPnB6uhysyEHMoyqjfmOXIlHHvl2/zYotGZ2H3ABfQA+EEtl6cHF4NtxXBpOF2jU3eymU0osZQ6xjLpcGqbzeTo7plniEPlhvQWcm8soi4u3HUtdBlKpbPLMheZfZueGA/2W3YcHQwp0vi7XagBQ38HUK4j2Vlg4WBDPa+Hf8I0srHD+GLk/xKW+FFLYnqJ01y+FBhsZ6QiaDnMQBvBWIUMnbb2SU3ddqoRGvD/c88gKwfm4NM/gNjlAJEA4lqq03Y02ZLfrZE9MbjZL3YAorTOYbLAbQYXjXKOHR/L5n+ftQQP0qks5WjF9/fbim35T9d75V5AyCs
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(376002)(39860400002)(366004)(136003)(451199015)(66556008)(6666004)(45080400002)(478600001)(31686004)(6486002)(31696002)(6506007)(8936002)(36756003)(7406005)(66476007)(7416002)(2616005)(41300700001)(2906002)(26005)(316002)(53546011)(66946007)(8676002)(6512007)(83380400001)(921005)(86362001)(186003)(5660300002)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Mldhelg2US84MmhOMW9POTVNNnA0R3RwRU1aSk5kNXpwU2NnVE1aL1lBSjdI?=
+ =?utf-8?B?ZXRGSTNWamdzWm1JQkxNVUxtTjkvWGJiME1tV0lPbG00QVJPV0dGU0xnNmhj?=
+ =?utf-8?B?bTBiS3BFeDVUbVMwMzhCUU1qUldnTTZzL2hML0gybWRaM1VPZmtXQ0FONk5H?=
+ =?utf-8?B?ZytFY3IrUFJsb25hUVlpRWpCa3cyRHU3eUlGU0lZT3VPUjV3RzVsSENCMTIw?=
+ =?utf-8?B?eTlDa0tUakxMSmN1U1dpT3dWaVJsemYvbTVpZ29SRlBYTXo5M0NWaHZWKzRm?=
+ =?utf-8?B?V2tLYUpMdE95ZkJGcmZoL1p2QkJ1aDlVbSsvTC9tdVZ2V1VINVhDMjl5cFVD?=
+ =?utf-8?B?a3pDMVBGTktDRUJTWTV4NURna2tSNENFTmw1cGUxd3NjdEl4cDZYUDBNVHJY?=
+ =?utf-8?B?MzRFYzd0ei9tRDB3MUJpcUFoWTdwUUIxaHJFQ0UwcllpNHl0Q25UMjFKbFZo?=
+ =?utf-8?B?RzMwc3FZYmtTYWxvZldCRHpYUEkvb3lzd05RY095Wk9pN3JNTzNSY2RHdE9Q?=
+ =?utf-8?B?RWVlVXgzMTlaQnVFbXhkOVp0cXVOQllINVFCVW9mSk5XMlgzUWtVY0xnSTBT?=
+ =?utf-8?B?VVliaUVBN1lUdDVUVlFKNjVtTXc0MHZPMzFLUGF4OTNxVldvNm1aYnZSTEpN?=
+ =?utf-8?B?WVhmbW1vT1c4aVlaaFhzeDB2QnFyQWNiTDJNOG03QkhESmhiTnRwQ3Zydi9R?=
+ =?utf-8?B?aExRQkl1Szk1UjhocWVWRFFPQ0piQ1pSNCtsK1d1aDVsbUhmTVBwY29OVWI1?=
+ =?utf-8?B?b29EVTZVcm5uRytRSm03RythQU41NWZmVFRmaUtpMVNER2R4b2xzWGF5TkpD?=
+ =?utf-8?B?bjBOUGIreEtscmtpYmNtYS93UWkweEM1Vi9OeDZNcGMrK01CWERvemdpemk1?=
+ =?utf-8?B?dnQwNGpzOGpoQXUvT3EvZlA2ekpVREpaZzNjRElqbHdhYU5BcE82Ykl4Q3Jj?=
+ =?utf-8?B?MGo5amRkR1BpVnl3RTZRY1Y4Q2k4czMrUzRvb3k1Wnl6WDNwTS9GYi9HR1Y5?=
+ =?utf-8?B?TlZSWUFFbUFiT0NIWkhNTnpneUZZUkVEM0VEeWVWZ3RmTWs1bnFrM0ZNR3Fi?=
+ =?utf-8?B?RmVXRXVrNGduOExjZnp3NUM2ZWY2QTF0VHMxL0lMTnEvLy8xOEF4b241T0kv?=
+ =?utf-8?B?T2VxMXEzRWFmM2l0alhmYW42QXJhTyt0M29hOVpBTVFhbGpaWVNPaUpBMStr?=
+ =?utf-8?B?QS95MksvQlJaNVlpY3pJMmo4aWEwazZ2ejNJRHdNOFI5SjVubU9uU2c3cjNX?=
+ =?utf-8?B?enNtM01TY0RhWDM0VWxLNEJTeDhYMWpVVUpMVjdHMzBiaGRvR2ljZ3ZZa3VG?=
+ =?utf-8?B?d0NMQ0cvc3p2dmtaaUZTbE1mdVFzamE0K2xJTWtOOXRtdTRuVGppaFUwNTJU?=
+ =?utf-8?B?cjBidGhaRC9iQ3dtZ040azVyWWlVYTRybnlRc3lvUTJKRjdBY2RyVVg0K1Fj?=
+ =?utf-8?B?enlyMzlnTTJzR04xY0loRmp1UER2aTRxUSswanBKTG1HQ296QWlDVjEwQXlU?=
+ =?utf-8?B?WW42SlBoeEJKcEQ0dzhvL1ZlSHQ5VnRrZmV1YUpIUFl2c3paL24zem5hSXRw?=
+ =?utf-8?B?czVtUUxWVDF4aUR5YmFrQkE2aHFwa0FodktXRmZ1MW9CdWwrVU1JRXpZbWx6?=
+ =?utf-8?B?ellDOUxsa21rMmpvZlZTSWgzY1k4K1pXNkxNbmpxTXBweXhETDI5WDhTK3I2?=
+ =?utf-8?B?VURDb3RsZjloeVIrckV5OXVTbXFWYmpsRko5L21mMlpxaXdrR0ZpditMK3NY?=
+ =?utf-8?B?YXFOcmFQSzdpK3M5Tkkyb2xXeDBqOGwzVDdQREc3eVIySHZKSlpzaE9KL00z?=
+ =?utf-8?B?MkZZeHdmNHlQa0t3Z2I0TEhlaGpCSllSdFFnRjdxVG91dGhxSjc5YmM2S2hr?=
+ =?utf-8?B?R1dTcmNRVGNOcllwcHl5WFVRSkdVVllPOWpRaVltelU0RXc5aWcwZEF5YVdy?=
+ =?utf-8?B?UU1rd1RsNlZkd2xZclRPeEVFTC84Tjg0L3RzYlA3MWVONFAyQk9yRW1VQTdH?=
+ =?utf-8?B?RUpRMmF6bm4ydzUrYWZ2a3ppTmF5VDlLbzhRWlUwRjVIZWpCQkNmUDc3M2dJ?=
+ =?utf-8?B?RGhnckFyazR2cUk2dFFWcDNia21KMTZSMWNVNkU5UGVCQkpQd2UvdTdlcElp?=
+ =?utf-8?Q?JBYRctXFqGZ6d+BAoYWSQDZCA?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0e9be25-e07b-485c-e229-08dac8178768
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2022 21:14:20.9821
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QrjI/nT8EmVK/6Wa1nFdh9Ra/YYjictTrpu1DvDc+6ACvNDfwLTrV4yxOGrZ2+4K9Hw/WCKu2SvgMu2z12WEEw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4941
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael!
+On 11/16/22 12:41, Michael Kelley wrote:
+> Full Hyper-V initialization, including support for hypercalls, is done
+> as an apic_post_init callback via late_time_init().  mem_encrypt_init()
+> needs to make hypercalls when it marks swiotlb memory as decrypted.
+> But mem_encrypt_init() is currently called a few lines before
+> late_time_init(), so the hypercalls don't work.
+> 
+> Fix this by moving mem_encrypt_init() after late_time_init() and
+> related clock initializations. The intervening initializations don't
+> do any I/O that requires the swiotlb, so moving mem_encrypt_init()
+> slightly later has no impact.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 
-On Sun, Nov 13 2022 at 22:21, Thomas Gleixner wrote:
-> Subject: clocksource/drivers/hyper-v: Include asm/hyperv-tlfs.h not asm/mshyperv.h
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Date: Sat, 12 Nov 2022 19:08:15 +0100
->
-> clocksource/hyperv_timer.h is included into the VDSO build. It includes
-> asm/mshyperv.h which in turn includes the world and some more. This worked
-> so far by chance, but any subtle change in the include chain results in a
-> build breakage because VDSO builds are building user space libraries.
->
-> Include asm/hyperv-tlfs.h instead which contains everything what the VDSO
-> build needs and move the hv_get_raw_timer() define into the header file.
->
-> Fixup drivers/hv/vmbus_drv.c which relies on the indirect include of
-> asm/mshyperv.h.
+Some quick testing with mem_encrypt_init() in the new location hasn't 
+shown any problems under SME/SEV.
 
-Any comments on this latest version?
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 > ---
->  arch/x86/include/asm/hyperv_timer.h |    9 +++++++++
->  arch/x86/include/asm/mshyperv.h     |    2 --
->  drivers/hv/vmbus_drv.c              |    1 +
->  include/clocksource/hyperv_timer.h  |    4 +++-
->  4 files changed, 13 insertions(+), 3 deletions(-)
->
-> --- /dev/null
-> +++ b/arch/x86/include/asm/hyperv_timer.h
-> @@ -0,0 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_X86_HYPERV_TIMER_H
-> +#define _ASM_X86_HYPERV_TIMER_H
-> +
-> +#include <asm/msr.h>
-> +
-> +#define hv_get_raw_timer() rdtsc_ordered()
-> +
-> +#endif
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -19,8 +19,6 @@ typedef int (*hyperv_fill_flush_list_fun
->  		struct hv_guest_mapping_flush_list *flush,
->  		void *data);
->  
-> -#define hv_get_raw_timer() rdtsc_ordered()
+>   init/main.c | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/init/main.c b/init/main.c
+> index e1c3911..5a7c466 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1088,14 +1088,6 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+>   	 */
+>   	locking_selftest();
+>   
+> -	/*
+> -	 * This needs to be called before any devices perform DMA
+> -	 * operations that might use the SWIOTLB bounce buffers. It will
+> -	 * mark the bounce buffers as decrypted so that their usage will
+> -	 * not cause "plain-text" data to be decrypted when accessed.
+> -	 */
+> -	mem_encrypt_init();
 > -
->  void hyperv_vector_handler(struct pt_regs *regs);
->  
->  #if IS_ENABLED(CONFIG_HYPERV)
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -37,6 +37,7 @@
->  #include <linux/dma-map-ops.h>
->  #include <linux/pci.h>
->  #include <clocksource/hyperv_timer.h>
-> +#include <asm/mshyperv.h>
->  #include "hyperv_vmbus.h"
->  
->  struct vmbus_dynid {
-> --- a/include/clocksource/hyperv_timer.h
-> +++ b/include/clocksource/hyperv_timer.h
-> @@ -15,13 +15,15 @@
->  
->  #include <linux/clocksource.h>
->  #include <linux/math64.h>
-> -#include <asm/mshyperv.h>
-> +#include <asm/hyperv-tlfs.h>
->  
->  #define HV_MAX_MAX_DELTA_TICKS 0xffffffff
->  #define HV_MIN_DELTA_TICKS 1
->  
->  #ifdef CONFIG_HYPERV_TIMER
->  
-> +#include <asm/hyperv_timer.h>
+>   #ifdef CONFIG_BLK_DEV_INITRD
+>   	if (initrd_start && !initrd_below_start_ok &&
+>   	    page_to_pfn(virt_to_page((void *)initrd_start)) < min_low_pfn) {
+> @@ -1112,6 +1104,17 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+>   		late_time_init();
+>   	sched_clock_init();
+>   	calibrate_delay();
 > +
->  /* Routines called by the VMbus driver */
->  extern int hv_stimer_alloc(bool have_percpu_irqs);
->  extern int hv_stimer_cleanup(unsigned int cpu);
+> +	/*
+> +	 * This needs to be called before any devices perform DMA
+> +	 * operations that might use the SWIOTLB bounce buffers. It will
+> +	 * mark the bounce buffers as decrypted so that their usage will
+> +	 * not cause "plain-text" data to be decrypted when accessed. It
+> +	 * must be called after late_time_init() so that Hyper-V x86/x64
+> +	 * hypercalls work when the SWIOTLB bounce buffers are decrypted.
+> +	 */
+> +	mem_encrypt_init();
+> +
+>   	pid_idr_init();
+>   	anon_vma_init();
+>   #ifdef CONFIG_X86
