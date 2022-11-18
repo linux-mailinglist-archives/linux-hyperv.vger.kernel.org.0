@@ -2,161 +2,103 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4C0162FBFB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Nov 2022 18:48:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE3F62FC49
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Nov 2022 19:17:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241506AbiKRRsr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 18 Nov 2022 12:48:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42902 "EHLO
+        id S242540AbiKRSRc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 18 Nov 2022 13:17:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235282AbiKRRsq (ORCPT
+        with ESMTP id S233810AbiKRSRb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 18 Nov 2022 12:48:46 -0500
-Received: from na01-obe.outbound.protection.outlook.com (mail-eastusazon11021025.outbound.protection.outlook.com [52.101.52.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324B113FA1
-        for <linux-hyperv@vger.kernel.org>; Fri, 18 Nov 2022 09:48:45 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BOIf7wYQsghyyaJfzu42SaCLV2TUUFu2Iq3WTfuB76OT31GiKcp1DsfevqgHdun8Qqfb8w7LJLDQYXg4Z8cryGDNx1geVrwHWtozqwSkRgi1X2GWQ950sUGM3s4YDjeGIIeFyG6LjlNlciGqd6WVERnanvzTXSiXa8NgFnmRkPakTIp/rzsnRUPQvtctviPSJxi2C2zPoFZTB3ed5SKehH7QqH+GOTgqtl/LxnfZvvyV6IMbyTKglO7a0n+fmL20Og+EdL9nrbGJdT5MR/H7FRAV46awv3DPP4YLbCJs1sSJI2k27sYWuPNCfCMEy6MlUsiKaeXchkJORDLJ53Cceg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3mylJd7aGr0ZkYy3qBW0kkMHk3WHM02paGz9b2yKuUI=;
- b=R4IYNREWltNSdSwcd8359PzK3Xzp/MbTFHTZbnIjZiWGa75nQUaNRvfsuExquwxL6tbwZ5kAeSdDTzUs0n2Q6+A+bXIOaFy16DuJyh+neMSXebddcv9iybyDwQpFSGZyHlfyfnSS1uIIQDkvqeCHdAAZi6aMNcwwOcOkHsE3s0FgC8f8gbUOxDVl0looe9CEIMVakNx6E8jDabKKRBI4Q1ox0V/IovbqJ61eOFKfrO5HyuoiGfCai00Bt2xnoJ/Pg+yREQhPMEclycQfBbVXdrr3g/qRPhYiYlGMRm88r2kw1MmxGHQMG2jOgLQ3GIKlutdEKgHXVtv2rCzI01UwBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mylJd7aGr0ZkYy3qBW0kkMHk3WHM02paGz9b2yKuUI=;
- b=W7XAaJius+lAFcFvv5sHxHdTmvAha6N8NzsjlIVXwJ1FjZvyq6YI46R5yXMI9GdEyYtUT/NPuUCiPxtSPOL3OdfzAFw9QqmbYYoGF4nqY+IrHAPekbyTA+7RFF95oewl5zXBUUTHw/DI0ig/W00gIg+BbYWzpgFOuIJiYyQkHWE=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by SN6PR2101MB1342.namprd21.prod.outlook.com (2603:10b6:805:107::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.8; Fri, 18 Nov
- 2022 17:48:43 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::1e50:78ec:6954:d6dd]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::1e50:78ec:6954:d6dd%4]) with mapi id 15.20.5857.008; Fri, 18 Nov 2022
- 17:48:43 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Yang Yingliang <yangyingliang@huawei.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v2 2/2] Drivers: hv: vmbus: fix possible memory leak in
- vmbus_device_register()
-Thread-Topic: [PATCH v2 2/2] Drivers: hv: vmbus: fix possible memory leak in
- vmbus_device_register()
-Thread-Index: AQHY9W/9wfQpwnHb/Ue/mjHXe3ge6K5FAO7Q
-Date:   Fri, 18 Nov 2022 17:48:42 +0000
-Message-ID: <BYAPR21MB1688B3BF9FD8D094A463178DD7099@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20221111014847.673576-1-yangyingliang@huawei.com>
- <20221111014847.673576-3-yangyingliang@huawei.com>
-In-Reply-To: <20221111014847.673576-3-yangyingliang@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1f0e3c5c-def1-4732-97c7-c9da8439e906;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-18T17:48:01Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|SN6PR2101MB1342:EE_
-x-ms-office365-filtering-correlation-id: b08994ed-0997-4e53-3cb2-08dac98d2257
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W5PCH3M272eyd3bBg5cbOFb4wijRfmkBmIdzTlPtL4CPAaTOq0+CEDjsaliBV/qYk18NUg7Z6oRQmQb2EmRZ5zMYrwZ+3tBr8bjjnOrRlezrnmj4lQBd2gim0kvWGptCcr/us3BHQ8sfIh7mXUbgoCCI7iLUCuAQIGA7mM4WjGkd49AH0skmgCIyTdhPOe/QpSwZBATeIB8QtjUaPd6NlkZvg+thlP7ylfuUjSJ35SFJllIdU9lXU2K+bBxrWpXu85P8+mD3ny2YdL4nWHGe/U86F//eBz6FfbD8q8PnSYUx56kZ2y9rDJ1+JohNIR25nyQQLv/7gvQE4VkJLP1xFetaOmzy6X+UHyCvOu3+aF9RmJSJe3fUxioJrygPOVnDOLcX0TpXO1s/GgbgCR5JAKHJYSKd7OYiZdHuyUxe/GHio1L73YXEZlVvev89JuVkdXVgCi1m/Hu0jRvFGvnMG/unSQ96nWMIS6NcZizBi7cqCNvQYXC+YWBsSEJ6rLThmrSaYVOdeur2WweszlaEA3T/aqgDQG0xYSRbvKmNs4JodYyJI9v/11pHsPjZ6lv/+xtH4SZKe7tP56Ny77iz1hjPdSV3o3/c0tSsjJ7YKJDBm96jTEHkoDH2EZw7woIzcS2ner5daxq8nPEvNw73VCuItGm+Zvs1pLfnFRw6XqLgSGFUbCf2PgIB1psYZkp/N66WRvszLNIgKWJaHJnO+N4AW4ADnHV50RdIrv/h4r32uncbJbZCtpF5VV39n9ys
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(136003)(376002)(346002)(39860400002)(451199015)(478600001)(71200400001)(38070700005)(110136005)(10290500003)(7696005)(54906003)(6506007)(107886003)(82950400001)(26005)(33656002)(86362001)(316002)(2906002)(66556008)(122000001)(64756008)(66946007)(66476007)(4326008)(76116006)(38100700002)(8676002)(66446008)(41300700001)(5660300002)(52536014)(82960400001)(55016003)(8990500004)(186003)(9686003)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?GAeaLqFA3XAYHhl5jqu4MvCdRWFOLBzovSJdL9j1R60XeE+Sb38ysZBevJVU?=
- =?us-ascii?Q?SprJdoLbSTaZpcOKiaVvADRhUIsk270gj/fEEYqDGKbXAegWQgzq7jCNxPOR?=
- =?us-ascii?Q?9H5Xw06ifms1itBebByy9T+l4N3NLJW+wHrEj9bjfq0H9Z1BY0k5Bmttw/Xv?=
- =?us-ascii?Q?bOHro3t1BcHS8UTt+Vc3Cc9W4P6A/u8Pw1wTNVnb8Dp/rIcYD+npgVDxpbuY?=
- =?us-ascii?Q?CF1ugThplmUbTZtTbJQ/v8pOOvWxi/044kHQc3GzNxYT4XhML1U9yn1vPmdL?=
- =?us-ascii?Q?emdF7snktUWRIjlJxIwhojCCnEO3RQJseJ4jyojYeX7ab4xV6MhCNx5m5oM+?=
- =?us-ascii?Q?BYfYQD3jsac5HUw4ZDKUlJGPaSCHgUm5yQMLTLOUcgxyspQU81BVcJ/kNhm9?=
- =?us-ascii?Q?X+pY3rM5Evqo5XatCgQk/ue1EMNk0RzmllnDdXMV/uO9/uKbQzoqJYS644Mi?=
- =?us-ascii?Q?z2jQVuegcKhL4RDCzCCzkWv5AM+SMTdsrNj9F+7rgd68xvf7jrpLanuUUVWm?=
- =?us-ascii?Q?RQh92yiRxUuUqit2mGzfl41YYEF+78xu3eLwjlsi/C5FxtB246d0XsHvwhJs?=
- =?us-ascii?Q?ytYdwIEi+BXFrGfz9jrl1EkX/pvuN/zbDlpLB2ZiX+qjw8W8tlgvtgm70UOI?=
- =?us-ascii?Q?kWZhO8aDKTuYPKSNbx7LH6ezUlPBQlfL6OiH1+DRgOn8IGIrpg5jECg7V8Wv?=
- =?us-ascii?Q?XzdSn10jjHsM1rOvGKitTOfmQF82peZHOpF7EmK88teB6C3QoiT6LTZbqAJQ?=
- =?us-ascii?Q?nKI5U7gdl0lVAVzIHM1vHT+c/CaazNpu28kp2ICj9is5w6frLIVxBEJxGWBJ?=
- =?us-ascii?Q?h9sOiZXkwSFhS3CXQIdjD4KWRUSdhfTv7gBXD5qra8K3xhzFseZ18xCrMbB1?=
- =?us-ascii?Q?g3ln3wVfcZiERzoe8vnURH3V/kHKdJUlG3DFc2CvpxDumxiQ+u/ZQqGXSLKi?=
- =?us-ascii?Q?og9PP9TKUk9uluZvD9WiuMrRr2beLtxERWJlCAaZlC0CbFq6FPOvuvaHej23?=
- =?us-ascii?Q?rL7tMLd5bP2/UCgNHbFlSqaN+SvYmTw9yWat+wpXbDVlzo31KCMtcVS3rMb8?=
- =?us-ascii?Q?7UfFEV01s50zabxBQ9or5kT9yC0VAwr4DHzxRT2CVgGv/GuAo7vuo4W9fK6J?=
- =?us-ascii?Q?7v/Q/aejcf5fEofE9zRH8e/Hm8hw1qcxGfiTyzFfT9M9JTI9mGMpKLXK4+J6?=
- =?us-ascii?Q?2Iq+p6TDxK04Z3NPDO1D+dHafxZU46GbQRi+PEkL9XG8hfaQdu/0+Cht4UF1?=
- =?us-ascii?Q?UwBcNvdjUyhdtsuI1pEcW48SxR91dYdnOemEvLA5xXT2eR+bglbdi/1B4cXm?=
- =?us-ascii?Q?UvNrWOP7HhHM686MFFfgqjix8e1svfeIa+OTEBjcXc6M5OkQvOaMmomX/07i?=
- =?us-ascii?Q?8dklACC1t8fjb5zys3ofuR4iaJ6SBCoysbHdm2PcOk/i/eZIVPkny9Vukdrl?=
- =?us-ascii?Q?H4YMHivUX7q1CgWnn0/bf1GDOK6fEYetgPcdiMawtvJWLubl7ZnL0C9e2ncm?=
- =?us-ascii?Q?FKddzi0YlZbRras2UPYUejvctBb10RmaiOVa+CoCp2AUJ6meRqmepAwHeflD?=
- =?us-ascii?Q?FRgF2BzIkZlgtDV0DasekkM4ws0lviNKsCOCDXm+hGJzdgCpzrz6hJog5m4Y?=
- =?us-ascii?Q?jg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 18 Nov 2022 13:17:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DCA898E1
+        for <linux-hyperv@vger.kernel.org>; Fri, 18 Nov 2022 10:16:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668795395;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=He7KaN/D9HK9g87/+Mt/xAsVhTgokNO4h0yf9aoy/GY=;
+        b=Y5CltPQk2w0EyDmerQqsDSjhPAKnPqErbn5ooqP7q/al0I6qU0Gh5B7EqKZPzJGqyMn/gC
+        In63KP0c3IK+E0qygsFhM0zpUQft6L3Jaa2oMIgz96lCP/YU3Nn8lnkB9s19DkchlPzVxe
+        00S2lty3U8/OHj7HBMZm14gMBElujlA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-623-IJbFhV6fNdOfjQF8GgQd-g-1; Fri, 18 Nov 2022 13:16:34 -0500
+X-MC-Unique: IJbFhV6fNdOfjQF8GgQd-g-1
+Received: by mail-wm1-f69.google.com with SMTP id c126-20020a1c3584000000b003cfffcf7c1aso2566425wma.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 18 Nov 2022 10:16:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=He7KaN/D9HK9g87/+Mt/xAsVhTgokNO4h0yf9aoy/GY=;
+        b=nTy+NOLue3r+vPInNlys9xl30QXOGt+jwN0PX1vJGk5WmaYMlBxf0+hY3GQAETUElP
+         ubJ/OeMdBaQJFAkNKiN6GHokToLdiz3Nj4Nb6fJIU6t1/qg/4ZW8T0ZO3krvJPb4iHHr
+         jIbiPLtBJI2WbNBnXF5ynlGXsTS0D9aZK+I61YhBAmEBd5awdxvmHzlpqyLmi+xtpp1W
+         jOAOtelDdQluSSQkDbjLxoFiJK3VRXwLOq83f+jOIkvDRSIJnByr1tYRlfnIHQM2RJme
+         VprbeosoXrjYqyOnbTJo+Rifz7t7G9c3hjZsXIdRt6sflrB3YI8TtNd2/AoJofnnaIqb
+         y8Ow==
+X-Gm-Message-State: ANoB5pnJ3kCVDRrz+wMbEW/M9milr0M6zc+N6xsFTZVScXrCG3/Lcrp9
+        6tU/vAuRzx2Q89mGFlYBHr6/mYHu64bg8VNoZI3i278zRDGdaifnnuMViM3ZHWtykCZsRgI/SOV
+        AqnYDFMBQIvADo1lzxRICsORt
+X-Received: by 2002:a5d:4f85:0:b0:22e:35f4:9182 with SMTP id d5-20020a5d4f85000000b0022e35f49182mr4868372wru.121.1668795392885;
+        Fri, 18 Nov 2022 10:16:32 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7OA1XS2f6Trqui/9ejpEZL5kbR8dXUyqmf/ItYLlQ7PW8vFgiBB9/csUaH3GBlOF/v81qpBQ==
+X-Received: by 2002:a5d:4f85:0:b0:22e:35f4:9182 with SMTP id d5-20020a5d4f85000000b0022e35f49182mr4868356wru.121.1668795392648;
+        Fri, 18 Nov 2022 10:16:32 -0800 (PST)
+Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
+        by smtp.googlemail.com with ESMTPSA id v1-20020a5d6101000000b002365cd93d05sm3984823wrt.102.2022.11.18.10.16.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Nov 2022 10:16:31 -0800 (PST)
+Message-ID: <01da30b6-4716-c346-70d2-9557bf4b09d5@redhat.com>
+Date:   Fri, 18 Nov 2022 19:16:30 +0100
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b08994ed-0997-4e53-3cb2-08dac98d2257
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2022 17:48:42.9904
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZHP52DtN8NvitgIBW5RqinZnjjEfB1qVhALgWeEg3JgbvUt6lS/gqBrxhaDhNSho1UuzFV/lnGJM/hi/04mFWDIJ5rUtNW1FRP3p+L/XqPs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1342
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH v13 00/48] KVM: x86: hyper-v: Fine-grained TLB flush + L2
+ TLB flush features
+Content-Language: en-US
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Siddharth Chandrasekaran <sidcha@amazon.de>,
+        Yuan Yao <yuan.yao@linux.intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221101145426.251680-1-vkuznets@redhat.com>
+ <Y2E5chB/9pZcRWi6@google.com> <878rkuskoj.fsf@ovpn-194-149.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <878rkuskoj.fsf@ovpn-194-149.brq.redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com> Sent: Thursday, November 10=
-, 2022 5:49 PM
->=20
-> If device_register() returns error in vmbus_device_register(),
-> the name allocated by dev_set_name() need be freed. As comment
+On 11/1/22 17:29, Vitaly Kuznetsov wrote:
+>> Applies cleanly to e18d6152ff0f ("Merge tag 'kvm-riscv-6.1-1' of
+>> https://github.com/kvm-riscv/linux  into HEAD") and then rebases to kvm/queue without
+>> needing human assistance.
+> The miracle of git 😄
 
-s/need be freed/must be freed/
+Some more work was needed to apply these, but that at least forced me to 
+go through them. :)
 
-> of device_register() says, it should use put_device() to give
-> up the reference in the error path. So fix this by calling
-> put_device(), then the name can be freed in kobject_cleanup().
->=20
-> Fixes: 09d50ff8a233 ("Staging: hv: make the Hyper-V virtual bus code buil=
-d")
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
->  drivers/hv/vmbus_drv.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 8b2e413bf19c..e592c481f7ae 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -2082,6 +2082,7 @@ int vmbus_device_register(struct hv_device
-> *child_device_obj)
->  	ret =3D device_register(&child_device_obj->device);
->  	if (ret) {
->  		pr_err("Unable to register child device\n");
-> +		put_device(&child_device_obj->device);
->  		return ret;
->  	}
->=20
-> --
-> 2.25.1
+I'll push them shortly to queue.
+
+Paolo
 
