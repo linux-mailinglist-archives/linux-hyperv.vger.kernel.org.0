@@ -2,124 +2,133 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA52B633E04
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Nov 2022 14:46:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D514633FD6
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Nov 2022 16:07:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233428AbiKVNq3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 22 Nov 2022 08:46:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44092 "EHLO
+        id S233191AbiKVPHQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Nov 2022 10:07:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233589AbiKVNq2 (ORCPT
+        with ESMTP id S233973AbiKVPGv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 22 Nov 2022 08:46:28 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9D85E3EA;
-        Tue, 22 Nov 2022 05:46:27 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id b11so13305251pjp.2;
-        Tue, 22 Nov 2022 05:46:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uVTM4A73qJGSSEloWNLoqvF5MY8jd3iZQoKxxU2Mn44=;
-        b=n1uPwGarX993N3niKUyWMplrgd30jCR09b8RxbKnmLZHi26Z6w5oRDEodA/jhkNWmu
-         kRtNWvzxuLPpp6UWErGjbIcwTVG5xegoqyCH5ArX0TV8XJzaYGlyfsY0XmNGfwfayT/L
-         h4NXCXOkV1kivV8DUtUCW2X0vIBH7yHaKnqr8K5AfEksDfHySFcTPz7A/NSQTSr5kJNW
-         JOBtKM4IHPRJxf8U7xdBjQw2013as9wB3JZfIuaIQMZoRroTVG2oD047GwYJrOBE69xp
-         e94ZCusqpC8lUDK2oYYancD1JRAFE8/HY1fJjVIi7P3YMfYl1lqF06zFUmcmAUI/H9CV
-         e53w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uVTM4A73qJGSSEloWNLoqvF5MY8jd3iZQoKxxU2Mn44=;
-        b=4J6fgmNrElsrRMlQ5kzQeTvb3CLUHejbk9oH58EFiaw48wKhewn3mDMXddrkm3x4ZK
-         eGN3Cexqd0x4H0ePWpsDy23AErz+mCeBi42SvFgUPtg1ComnuQspfKZeQXrR1J26spVZ
-         7R3OQnr0U7M9R3a0T3YABmhNrZQuAc+PhstXxrHSP0NQWaZceo2jy9WLwXaR2GkAJa8Q
-         4EFiH4r1wvmsQKwAA81Kljj/aColY5M6BqR47vzoyKQ3+3T4gAEnPA7cBwQlZIuL3i/e
-         fqIoLkcAw4T2l4SRM7ZoXoipE/UQScpXkrWHoNRMDdElTAVYDHI+ERHTdkqTZ1xM4QZC
-         7Ivg==
-X-Gm-Message-State: ANoB5pmo8s5chGeSvqYN3uPGcpKKxLq78gABFtZGtqnlgWzhXqNqLAuq
-        m+KlTaOee6hbZQdrTb23w6CSpJi1KjcOXib/
-X-Google-Smtp-Source: AA0mqf6mBuVBnHthUDZGJp4gDXN9r+8/41ANiXXoYROa2Ht1Ikc9yTyJpUdZx6kFEKWWVOZBOGVSaA==
-X-Received: by 2002:a17:902:b40b:b0:188:75bb:36d4 with SMTP id x11-20020a170902b40b00b0018875bb36d4mr4724061plr.55.1669124786804;
-        Tue, 22 Nov 2022 05:46:26 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
-        by smtp.gmail.com with ESMTPSA id t8-20020a1709027fc800b00186c37270f6sm11921165plb.24.2022.11.22.05.46.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Nov 2022 05:46:25 -0800 (PST)
-Message-ID: <2f3c100f-355d-e4f2-ff42-2cb076e8aa86@gmail.com>
-Date:   Tue, 22 Nov 2022 21:46:14 +0800
+        Tue, 22 Nov 2022 10:06:51 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BEA2E5;
+        Tue, 22 Nov 2022 07:06:49 -0800 (PST)
+Received: from zn.tnic (p200300ea9733e79b329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e79b:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 14C1C1EC04E2;
+        Tue, 22 Nov 2022 16:06:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1669129608;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=5yMV1ZCNV3SL3KeDjf/6/5dfqDL8Ilh1prBf3IRM6ZU=;
+        b=Wx1aIkqqyXz34T4ijeYsjo3X4fIguA60r9PaSI5S4+6cUmM14EhfTJMcwsE9KXP70C9FwM
+        BhiTrP9Sz7nraeCt/sT3Gowww7prx3tsfmZUcBL5oLO9iCscr/hsHZ+emgo9QKxcUukwZ1
+        6w0KNHT8mxHXL5v7BJ0K0Cm25jdAlpw=
+Date:   Tue, 22 Nov 2022 16:06:42 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Rabara Niravkumar L <niravkumar.l.rabara@intel.com>
+Cc:     Dinh Nguyen <dinguyen@kernel.org>, linux-edac@vger.kernel.org,
+        kexec@lists.infradead.org, pmladek@suse.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
+        kernel@gpiccoli.net
+Subject: Re: [PATCH V3 08/11] EDAC/altera: Skip the panic notifier if kdump
+ is loaded
+Message-ID: <Y3zlghMzlc1kzVJx@zn.tnic>
+References: <20220819221731.480795-1-gpiccoli@igalia.com>
+ <20220819221731.480795-9-gpiccoli@igalia.com>
+ <742d2a7e-efee-e212-178e-ba642ec94e2a@igalia.com>
+ <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [RFC PATCH V2 16/18] x86/sev: Initialize #HV doorbell and handle
- interrupt requests
-To:     "Kalra, Ashish" <ashish.kalra@amd.com>, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        srutherford@google.com, akpm@linux-foundation.org,
-        anshuman.khandual@arm.com, pawan.kumar.gupta@linux.intel.com,
-        adrian.hunter@intel.com, daniel.sneddon@linux.intel.com,
-        alexander.shishkin@linux.intel.com, sandipan.das@amd.com,
-        ray.huang@amd.com, brijesh.singh@amd.com, michael.roth@amd.com,
-        thomas.lendacky@amd.com, venu.busireddy@oracle.com,
-        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
-        fenghua.yu@intel.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20221119034633.1728632-1-ltykernel@gmail.com>
- <20221119034633.1728632-17-ltykernel@gmail.com>
- <116799e9-8b14-66d6-d494-66272faec9e9@amd.com>
-Content-Language: en-US
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <116799e9-8b14-66d6-d494-66272faec9e9@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 11/21/2022 11:05 PM, Kalra, Ashish wrote:
->> +static void do_exc_hv(struct pt_regs *regs)
->> +{
->> +    union hv_pending_events pending_events;
->> +    u8 vector;
->> +
->> +    while (sev_hv_pending()) {
->> +        asm volatile("cli" : : : "memory");
->> +
+On Tue, Nov 22, 2022 at 10:33:12AM -0300, Guilherme G. Piccoli wrote:
+
+Leaving in the whole thing for newly added people.
+
+> On 18/09/2022 11:10, Guilherme G. Piccoli wrote:
+> > On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
+> >> The altera_edac panic notifier performs some data collection with
+> >> regards errors detected; such code relies in the regmap layer to
+> >> perform reads/writes, so the code is abstracted and there is some
+> >> risk level to execute that, since the panic path runs in atomic
+> >> context, with interrupts/preemption and secondary CPUs disabled.
+> >>
+> >> Users want the information collected in this panic notifier though,
+> >> so in order to balance the risk/benefit, let's skip the altera panic
+> >> notifier if kdump is loaded. While at it, remove a useless header
+> >> and encompass a macro inside the sole ifdef block it is used.
+> >>
+> >> Cc: Borislav Petkov <bp@alien8.de>
+> >> Cc: Petr Mladek <pmladek@suse.com>
+> >> Cc: Tony Luck <tony.luck@intel.com>
+> >> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+> >> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> >>
+> >> ---
+> >>
+> >> V3:
+> >> - added the ack tag from Dinh - thanks!
+> >> - had a good discussion with Boris about that in V2 [0],
+> >> hopefully we can continue and reach a consensus in this V3.
+> >> [0] https://lore.kernel.org/lkml/46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com/
+> >>
+> >> V2:
+> >> - new patch, based on the discussion in [1].
+> >> [1] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
+> >>
+> >> [...]
+> > 
+> > Hi Dinh, Tony, Boris - sorry for the ping.
+> > 
+> > Appreciate reviews on this one - Dinh already ACKed the patch but Boris
+> > raised some points in the past version [0], so any opinions or
+> > discussions are welcome!
 > 
-> Do we really need to disable interrupts here, #HV exception will be 
-> dispatched via an interrupt gate in the IDT, so interrupts should be 
-> implicitly disabled, right ?
->>    panic("Unexpected vector %d\n", vector);
->> +                unreachable();
->> +            }
->> +        } else {
->> +            common_interrupt(regs, pending_events.vector);
->> +        }
->> +
->> +        asm volatile("sti" : : : "memory");
 > 
-> Again, why do we need to re-enable interrupts here (in this loop), 
-> interrupts will get re-enabled in the irqentry_exit() code path ?
+> Hi folks, monthly ping heheh
+> Apologies for the re-pings, please let me know if there is anything
+> required to move on this patch.
 
-Hi Ashish:
-	Thanks for your review.	check_hv_pending() is also called in the
-native_irq_enable() to handle some pending interrupt requests after re
--enabling interrupt. For such case, disables irq when handle exception
-or interrupt event.
+Looking at this again, I really don't like the sprinkling of
 
+	if (kexec_crash_loaded())
 
+in unrelated code. And I still think that the real fix here is to kill
+this
+
+	edac->panic_notifier
+
+thing. And replace it with simply logging the error from the double bit
+error interrupt handle. That DBERR IRQ thing altr_edac_a10_irq_handler().
+Because this is what this panic notifier does - dump double-bit errors.
+
+Now, if Dinh doesn't move, I guess we can ask Tony and/or Rabara (he has
+sent a patch for this driver recently and Altera belongs to Intel now)
+to find someone who can test such a change and we (you could give it a
+try first :)) can do that change.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
