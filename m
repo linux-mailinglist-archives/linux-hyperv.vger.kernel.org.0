@@ -2,114 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54D14633EF8
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Nov 2022 15:31:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA52B633E04
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Nov 2022 14:46:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234074AbiKVObN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 22 Nov 2022 09:31:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49676 "EHLO
+        id S233428AbiKVNq3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Nov 2022 08:46:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233953AbiKVObH (ORCPT
+        with ESMTP id S233589AbiKVNq2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 22 Nov 2022 09:31:07 -0500
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304CF6A6B7;
-        Tue, 22 Nov 2022 06:31:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rSYIGGtjZljFBal86Avbxge1dAX05jgxf9qrktsTsB8=; b=MX800+aYXTdyYof4USzixvuPvg
-        9FbkPgWEf4yn5YKSZ6YZvZYMUIrJ83siHY3JDQnjBib+dAZOvIjPcv4rwFWWZmC8nuU/CNyqTv37J
-        LI9uahtiyTlFT5sg3l2Jt6DAPlbV/eGuCYZHMx1mJgP8y9VUP0QV5AhKWiiwBT3/TtAdOZxoHUjGo
-        wBjoV4n84SXGRfQJ1FQgM2titKAX9RMXtyQrLP2E1UPM76R5ywtg8b8JzSylFz4KM6CKbhsW2RDhw
-        2Wuo/c750D1OMJECUK35f1MTpZl3Tuqe5CqaKSXYSU2Si3ILxqlcvyZFxEYL6RqkDNw1VeQ19rA9/
-        QwSDYHeg==;
-Received: from [177.102.6.147] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1oxTR5-006yBT-L8; Tue, 22 Nov 2022 14:35:39 +0100
-Message-ID: <831175d7-1b30-de61-d6c5-cbb91e4fdcfb@igalia.com>
-Date:   Tue, 22 Nov 2022 10:35:34 -0300
+        Tue, 22 Nov 2022 08:46:28 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9D85E3EA;
+        Tue, 22 Nov 2022 05:46:27 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id b11so13305251pjp.2;
+        Tue, 22 Nov 2022 05:46:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uVTM4A73qJGSSEloWNLoqvF5MY8jd3iZQoKxxU2Mn44=;
+        b=n1uPwGarX993N3niKUyWMplrgd30jCR09b8RxbKnmLZHi26Z6w5oRDEodA/jhkNWmu
+         kRtNWvzxuLPpp6UWErGjbIcwTVG5xegoqyCH5ArX0TV8XJzaYGlyfsY0XmNGfwfayT/L
+         h4NXCXOkV1kivV8DUtUCW2X0vIBH7yHaKnqr8K5AfEksDfHySFcTPz7A/NSQTSr5kJNW
+         JOBtKM4IHPRJxf8U7xdBjQw2013as9wB3JZfIuaIQMZoRroTVG2oD047GwYJrOBE69xp
+         e94ZCusqpC8lUDK2oYYancD1JRAFE8/HY1fJjVIi7P3YMfYl1lqF06zFUmcmAUI/H9CV
+         e53w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uVTM4A73qJGSSEloWNLoqvF5MY8jd3iZQoKxxU2Mn44=;
+        b=4J6fgmNrElsrRMlQ5kzQeTvb3CLUHejbk9oH58EFiaw48wKhewn3mDMXddrkm3x4ZK
+         eGN3Cexqd0x4H0ePWpsDy23AErz+mCeBi42SvFgUPtg1ComnuQspfKZeQXrR1J26spVZ
+         7R3OQnr0U7M9R3a0T3YABmhNrZQuAc+PhstXxrHSP0NQWaZceo2jy9WLwXaR2GkAJa8Q
+         4EFiH4r1wvmsQKwAA81Kljj/aColY5M6BqR47vzoyKQ3+3T4gAEnPA7cBwQlZIuL3i/e
+         fqIoLkcAw4T2l4SRM7ZoXoipE/UQScpXkrWHoNRMDdElTAVYDHI+ERHTdkqTZ1xM4QZC
+         7Ivg==
+X-Gm-Message-State: ANoB5pmo8s5chGeSvqYN3uPGcpKKxLq78gABFtZGtqnlgWzhXqNqLAuq
+        m+KlTaOee6hbZQdrTb23w6CSpJi1KjcOXib/
+X-Google-Smtp-Source: AA0mqf6mBuVBnHthUDZGJp4gDXN9r+8/41ANiXXoYROa2Ht1Ikc9yTyJpUdZx6kFEKWWVOZBOGVSaA==
+X-Received: by 2002:a17:902:b40b:b0:188:75bb:36d4 with SMTP id x11-20020a170902b40b00b0018875bb36d4mr4724061plr.55.1669124786804;
+        Tue, 22 Nov 2022 05:46:26 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
+        by smtp.gmail.com with ESMTPSA id t8-20020a1709027fc800b00186c37270f6sm11921165plb.24.2022.11.22.05.46.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Nov 2022 05:46:25 -0800 (PST)
+Message-ID: <2f3c100f-355d-e4f2-ff42-2cb076e8aa86@gmail.com>
+Date:   Tue, 22 Nov 2022 21:46:14 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH V3 11/11] panic: Fixes the panic_print NMI backtrace
- setting
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [RFC PATCH V2 16/18] x86/sev: Initialize #HV doorbell and handle
+ interrupt requests
+To:     "Kalra, Ashish" <ashish.kalra@amd.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        srutherford@google.com, akpm@linux-foundation.org,
+        anshuman.khandual@arm.com, pawan.kumar.gupta@linux.intel.com,
+        adrian.hunter@intel.com, daniel.sneddon@linux.intel.com,
+        alexander.shishkin@linux.intel.com, sandipan.das@amd.com,
+        ray.huang@amd.com, brijesh.singh@amd.com, michael.roth@amd.com,
+        thomas.lendacky@amd.com, venu.busireddy@oracle.com,
+        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
+        fenghua.yu@intel.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20221119034633.1728632-1-ltykernel@gmail.com>
+ <20221119034633.1728632-17-ltykernel@gmail.com>
+ <116799e9-8b14-66d6-d494-66272faec9e9@amd.com>
 Content-Language: en-US
-To:     akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-        feng.tang@intel.com
-Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-12-gpiccoli@igalia.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20220819221731.480795-12-gpiccoli@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <116799e9-8b14-66d6-d494-66272faec9e9@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
-> Commit 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
-> introduced a setting for the "panic_print" kernel parameter to allow
-> users to request a NMI backtrace on panic. Problem is that the panic_print
-> handling happens after the secondary CPUs are already disabled, hence
-> this option ended-up being kind of a no-op - kernel skips the NMI trace
-> in idling CPUs, which is the case of offline CPUs.
+On 11/21/2022 11:05 PM, Kalra, Ashish wrote:
+>> +static void do_exc_hv(struct pt_regs *regs)
+>> +{
+>> +    union hv_pending_events pending_events;
+>> +    u8 vector;
+>> +
+>> +    while (sev_hv_pending()) {
+>> +        asm volatile("cli" : : : "memory");
+>> +
 > 
-> Fix it by checking the NMI backtrace bit in the panic_print prior to
-> the CPU disabling function.
+> Do we really need to disable interrupts here, #HV exception will be 
+> dispatched via an interrupt gate in the IDT, so interrupts should be 
+> implicitly disabled, right ?
+>>    panic("Unexpected vector %d\n", vector);
+>> +                unreachable();
+>> +            }
+>> +        } else {
+>> +            common_interrupt(regs, pending_events.vector);
+>> +        }
+>> +
+>> +        asm volatile("sti" : : : "memory");
 > 
-> Fixes: 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
-> Cc: Feng Tang <feng.tang@intel.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> 
-> ---
-> 
-> V3:
-> - No changes.
-> 
-> V2:
-> - new patch, there was no V1 of this one.
-> 
-> Hi folks, thanks upfront for reviews. This is a new patch, fixing an issue
-> I found in my tests, so I shoved it into this fixes series.
-> 
-> Notice that while at it, I got rid of the "crash_kexec_post_notifiers"
-> local copy in panic(). This was introduced by commit b26e27ddfd2a
-> ("kexec: use core_param for crash_kexec_post_notifiers boot option"),
-> but it is not clear from comments or commit message why this local copy
-> is required.
-> 
-> My understanding is that it's a mechanism to prevent some concurrency,
-> in case some other CPU modify this variable while panic() is running.
-> I find it very unlikely, hence I removed it - but if people consider
-> this copy needed, I can respin this patch and keep it, even providing a
-> comment about that, in order to be explict about its need.
-> 
-> Let me know your thoughts! Cheers,
-> 
-> Guilherme
-> 
-> 
+> Again, why do we need to re-enable interrupts here (in this loop), 
+> interrupts will get re-enabled in the irqentry_exit() code path ?
 
-Hi folks, bi-monthly ping - apologies for the noise heh
-
-Is there anything suggested so we can get this fix merged in 6.2? Any
-suggestions / reviews are much appreciated.
-
-Tnx in advance,
+Hi Ashish:
+	Thanks for your review.	check_hv_pending() is also called in the
+native_irq_enable() to handle some pending interrupt requests after re
+-enabling interrupt. For such case, disables irq when handle exception
+or interrupt event.
 
 
-Guilherme
