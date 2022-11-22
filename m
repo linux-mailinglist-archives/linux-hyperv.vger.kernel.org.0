@@ -2,133 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D514633FD6
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Nov 2022 16:07:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29982634081
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Nov 2022 16:45:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233191AbiKVPHQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 22 Nov 2022 10:07:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
+        id S233990AbiKVPo7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 22 Nov 2022 10:44:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233973AbiKVPGv (ORCPT
+        with ESMTP id S232625AbiKVPo6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 22 Nov 2022 10:06:51 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BEA2E5;
-        Tue, 22 Nov 2022 07:06:49 -0800 (PST)
-Received: from zn.tnic (p200300ea9733e79b329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e79b:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 14C1C1EC04E2;
-        Tue, 22 Nov 2022 16:06:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1669129608;
+        Tue, 22 Nov 2022 10:44:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B736F1275D
+        for <linux-hyperv@vger.kernel.org>; Tue, 22 Nov 2022 07:44:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669131840;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=5yMV1ZCNV3SL3KeDjf/6/5dfqDL8Ilh1prBf3IRM6ZU=;
-        b=Wx1aIkqqyXz34T4ijeYsjo3X4fIguA60r9PaSI5S4+6cUmM14EhfTJMcwsE9KXP70C9FwM
-        BhiTrP9Sz7nraeCt/sT3Gowww7prx3tsfmZUcBL5oLO9iCscr/hsHZ+emgo9QKxcUukwZ1
-        6w0KNHT8mxHXL5v7BJ0K0Cm25jdAlpw=
-Date:   Tue, 22 Nov 2022 16:06:42 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Rabara Niravkumar L <niravkumar.l.rabara@intel.com>
-Cc:     Dinh Nguyen <dinguyen@kernel.org>, linux-edac@vger.kernel.org,
-        kexec@lists.infradead.org, pmladek@suse.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
-        kernel@gpiccoli.net
-Subject: Re: [PATCH V3 08/11] EDAC/altera: Skip the panic notifier if kdump
- is loaded
-Message-ID: <Y3zlghMzlc1kzVJx@zn.tnic>
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-9-gpiccoli@igalia.com>
- <742d2a7e-efee-e212-178e-ba642ec94e2a@igalia.com>
- <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
+         in-reply-to:in-reply-to:references:references;
+        bh=xWL302xeQNaUeD1XBBbHjOQmICjs58t7c74x1CuLrlw=;
+        b=UVvTU98oth9ZRvLUMmePRuiGGsHZXOQrnehKYJX6K4NentrwNJTUDvIjkqcYwRVOrDhyaD
+        M5hT9BxYhUHchBwBOgk3XBY6AaH0Cx1LPUHloT05TfIAKYx9twOvaomIEWpi8oAG8gCotF
+        GcZEA00dWF+uHhxbRGeRYv6rCtPUjtk=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-518-nTI9f7rcMmOnIccGcabhLg-1; Tue, 22 Nov 2022 10:43:59 -0500
+X-MC-Unique: nTI9f7rcMmOnIccGcabhLg-1
+Received: by mail-ej1-f72.google.com with SMTP id ga41-20020a1709070c2900b007aef14e8fd7so8557645ejc.21
+        for <linux-hyperv@vger.kernel.org>; Tue, 22 Nov 2022 07:43:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xWL302xeQNaUeD1XBBbHjOQmICjs58t7c74x1CuLrlw=;
+        b=CpqDdvQRHI5YeA/8QowSi95XzAoP1kGLz4tL0KZuvVtKK39I8IG2wG3CDdSsyrHkxA
+         in3iWrjt+fs/dJCZb6aX0shFPm7vXu5MFgPlf5rvpz3LWDAsweWvCz2XVpEj1wv0tZoX
+         yTQ6nhduO+ThTfNs/MI8hVqbymRhUL/nvIN1IYWxh4Exnoik+63XTyjRWK3607z0rjp5
+         bOS8/IzlcqB/+RZpyu56KkMpTdGLlOwctxTNIXmb9GbHG7RY1jRGSGi7FZavthG9zNWk
+         At8n9dS2Rp8LU9FAWjrB2w6cQRnEnLSpVTroJtJ8VCuiu0+X+Pyl4G9FL9CegaLYNbZf
+         vxBQ==
+X-Gm-Message-State: ANoB5pltzZMzBKB65IBJAY23qXVYB0iJ8gGNdcJyoU7x0wNh00dS3zjF
+        dPMkQSDyeZ6xOYaL4uamRJ7d34jOwevfMPv6+n/pMh+wpn/025K32f359DG5MYu2Jiv5EbmYiB+
+        1HEN/Eq6rN9AToNGnpIMnORSf
+X-Received: by 2002:a05:6402:2024:b0:468:f633:9484 with SMTP id ay4-20020a056402202400b00468f6339484mr20729280edb.200.1669131838108;
+        Tue, 22 Nov 2022 07:43:58 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6HyiTcH1qadnX+DoTbSf5WrVcbc+T6q+Jo/GX4nTI50Ag4+RR58bqywik7IbUTzuQOnoDUzg==
+X-Received: by 2002:a05:6402:2024:b0:468:f633:9484 with SMTP id ay4-20020a056402202400b00468f6339484mr20729262edb.200.1669131837911;
+        Tue, 22 Nov 2022 07:43:57 -0800 (PST)
+Received: from ovpn-194-185.brq.redhat.com (nat-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id fy21-20020a170906b7d500b0077d6f628e14sm6125586ejb.83.2022.11.22.07.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Nov 2022 07:43:57 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     kvm@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] KVM: x86: Hyper-V invariant TSC control feature
+In-Reply-To: <Y0nA0DCeh4IPmWMX@google.com>
+References: <20221013095849.705943-1-vkuznets@redhat.com>
+ <Y0nA0DCeh4IPmWMX@google.com>
+Date:   Tue, 22 Nov 2022 16:43:56 +0100
+Message-ID: <87o7szouyr.fsf@ovpn-194-185.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 10:33:12AM -0300, Guilherme G. Piccoli wrote:
+Sean Christopherson <seanjc@google.com> writes:
 
-Leaving in the whole thing for newly added people.
+> On Thu, Oct 13, 2022, Vitaly Kuznetsov wrote:
+>> Normally, genuine Hyper-V doesn't expose architectural invariant TSC
+>> (CPUID.80000007H:EDX[8]) to its guests by default. A special PV MSR
+>> (HV_X64_MSR_TSC_INVARIANT_CONTROL, 0x40000118) and corresponding CPUID
+>> feature bit (CPUID.0x40000003.EAX[15]) were introduced. When bit 0 of the
+>> PV MSR is set, invariant TSC bit starts to show up in CPUID. When the 
+>> feature is exposed to Hyper-V guests, reenlightenment becomes unneeded.
+>> 
+>> Note: strictly speaking, KVM doesn't have to have the feature as exposing
+>> raw invariant TSC bit (CPUID.80000007H:EDX[8]) also seems to work for
+>> modern Windows versions. The feature is, however, tiny and straitforward
+>> and gives additional flexibility so why not.
+>> 
+>> Vitaly Kuznetsov (7):
+>>   x86/hyperv: Add HV_EXPOSE_INVARIANT_TSC define
+>>   KVM: x86: Add a KVM-only leaf for CPUID_8000_0007_EDX
+>>   KVM: x86: Hyper-V invariant TSC control
+>>   KVM: selftests: Rename 'msr->available' to 'msr->fault_exepected' in
+>>     hyperv_features test
+>>   KVM: selftests: Convert hyperv_features test to using
+>>     KVM_X86_CPU_FEATURE()
+>>   KVM: selftests: Test that values written to Hyper-V MSRs are preserved
+>>   KVM: selftests: Test Hyper-V invariant TSC control
+>
+> For the series, in case Paolo ends up grabbing this:
+>
+> Reviewed-by: Sean Christopherson <seanjc@google.com>
+>
 
-> On 18/09/2022 11:10, Guilherme G. Piccoli wrote:
-> > On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
-> >> The altera_edac panic notifier performs some data collection with
-> >> regards errors detected; such code relies in the regmap layer to
-> >> perform reads/writes, so the code is abstracted and there is some
-> >> risk level to execute that, since the panic path runs in atomic
-> >> context, with interrupts/preemption and secondary CPUs disabled.
-> >>
-> >> Users want the information collected in this panic notifier though,
-> >> so in order to balance the risk/benefit, let's skip the altera panic
-> >> notifier if kdump is loaded. While at it, remove a useless header
-> >> and encompass a macro inside the sole ifdef block it is used.
-> >>
-> >> Cc: Borislav Petkov <bp@alien8.de>
-> >> Cc: Petr Mladek <pmladek@suse.com>
-> >> Cc: Tony Luck <tony.luck@intel.com>
-> >> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
-> >> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> >>
-> >> ---
-> >>
-> >> V3:
-> >> - added the ack tag from Dinh - thanks!
-> >> - had a good discussion with Boris about that in V2 [0],
-> >> hopefully we can continue and reach a consensus in this V3.
-> >> [0] https://lore.kernel.org/lkml/46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com/
-> >>
-> >> V2:
-> >> - new patch, based on the discussion in [1].
-> >> [1] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
-> >>
-> >> [...]
-> > 
-> > Hi Dinh, Tony, Boris - sorry for the ping.
-> > 
-> > Appreciate reviews on this one - Dinh already ACKed the patch but Boris
-> > raised some points in the past version [0], so any opinions or
-> > discussions are welcome!
-> 
-> 
-> Hi folks, monthly ping heheh
-> Apologies for the re-pings, please let me know if there is anything
-> required to move on this patch.
-
-Looking at this again, I really don't like the sprinkling of
-
-	if (kexec_crash_loaded())
-
-in unrelated code. And I still think that the real fix here is to kill
-this
-
-	edac->panic_notifier
-
-thing. And replace it with simply logging the error from the double bit
-error interrupt handle. That DBERR IRQ thing altr_edac_a10_irq_handler().
-Because this is what this panic notifier does - dump double-bit errors.
-
-Now, if Dinh doesn't move, I guess we can ask Tony and/or Rabara (he has
-sent a patch for this driver recently and Altera belongs to Intel now)
-to find someone who can test such a change and we (you could give it a
-try first :)) can do that change.
-
-Thx.
+I completely forgot about this one! Any chance it can still be queueed
+for 6.2? Thanks!
 
 -- 
-Regards/Gruss,
-    Boris.
+Vitaly
 
-https://people.kernel.org/tglx/notes-about-netiquette
