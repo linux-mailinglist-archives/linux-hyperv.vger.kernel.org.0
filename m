@@ -2,72 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E17A636238
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Nov 2022 15:47:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20BE4636538
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Nov 2022 17:03:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236016AbiKWOrT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 23 Nov 2022 09:47:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47104 "EHLO
+        id S238047AbiKWQDi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Nov 2022 11:03:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235979AbiKWOrS (ORCPT
+        with ESMTP id S237793AbiKWQDh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 23 Nov 2022 09:47:18 -0500
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DED5800F;
-        Wed, 23 Nov 2022 06:47:17 -0800 (PST)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id DE8845C017F;
-        Wed, 23 Nov 2022 09:47:16 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Wed, 23 Nov 2022 09:47:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-         h=cc:cc:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1669214836; x=1669301236; bh=dk
-        lom4LU7h4zmmCS6kdcNAX+zdQlMXjZUyObz2F6gPk=; b=Xawxb54qJvyp523rXJ
-        Q829SsykOAL96QKi8ei5UXKubHm6dQgTgH327/QPDT/4GgDk6r0WiLRo3v/nuoNt
-        IrLBR/Hx5rFkS5isaocs3X1DuAzftGsHmP6SmdCRGIVu3cuAub+GQCrkoOjeTEuj
-        y8noLcLchKZLakCks9XLdeJQZz2RIJ6P9R8piM2UfZfK1v6UWt0x0gfp1Qe9ivIG
-        +F/cl5gn8Aej9Z2TrvnQFK0i1B0aTKuE069mOGiNeTuzs8NzGUlnBD62zPy3d5xQ
-        j/GutrBz1zcxoMwQ0rQW4GdFDp0cfSluNooXlfCbxQc5qUVwfhmryJRZTThpkiz1
-        sCBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1669214836; x=1669301236; bh=dklom4LU7h4zmmCS6kdcNAX+zdQl
-        MXjZUyObz2F6gPk=; b=MYi1zg+v0DiAScLMO1+MGIGV9+huuKFzbTAq8cGDqxho
-        w1pmg1/mLs6lJsHSWVV/RxXtUsA67QsH1TBZcmzys2R+9MQ83LUInV33+VtEmLf9
-        g4ErUPlZAYuLWuI0aBj6dxC9AuPNo+mNRfPQneSVw+58dhaRL2D6yAgoAIHY/xkg
-        9OvOOy2oizlPskwYLg1/HsFEkpeFMq2GMd6SWEScvjGVFxlRFhQZxVb+sIqohOhH
-        XDGocQO6azo51c6AcgUodKfsE2wbLAWHimmj0MlCOUtlkFEOWU6QhVSTq9L9G7lb
-        WC+PU2VNNUF+EGO60DKkm5829pT6eTeXKP7bNkNz/g==
-X-ME-Sender: <xms:dDJ-Y86lWReASnhfdEHjmHd__J8gL7rzL55cy22cdIoSX2ClX8uQbg>
-    <xme:dDJ-Y97IAEKcIdQDSp_r3ICUU44YDDc4Thmgd3y-lHrehYMhNAVCoS9vz4Z0hzczs
-    sA2L1-IBTPnNjw2bW0>
-X-ME-Received: <xmr:dDJ-Y7dS1Xbi3Z2cmbKEvwW4KSLN4k3S6e2QhLU4ETOz79Y-yMHtr5V1eNHabstwSAo5iA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedriedugdeiiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvvefukfhfgggtuggjsehttddttddttddvnecuhfhrohhmpedfmfhirhhi
-    lhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrdhnrg
-    hmvgeqnecuggftrfgrthhtvghrnhephfeigefhtdefhedtfedthefghedutddvueehtedt
-    tdehjeeukeejgeeuiedvkedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgv
-X-ME-Proxy: <xmx:dDJ-YxIOvHhftdTDhPEo3ysgYrIHKVv9MyXG7Kmcjgn1K_Vbsoz-gw>
-    <xmx:dDJ-YwLukS21UfA3K8kvTXvVxYxeLc5vPwONpAZacz4lgEJx67fgkQ>
-    <xmx:dDJ-Yyy_timEfBU4CEcY2vzg4RUZ-z9ennuNv0tC5Ecp3-kmYm6FJg>
-    <xmx:dDJ-Y17cRs34nVmBf0PA-MLbhHKeob1ckmTRx8y3pLjnh6GtgoYddQ>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Nov 2022 09:47:16 -0500 (EST)
-Received: by box.shutemov.name (Postfix, from userid 1000)
-        id 9E9B9109687; Wed, 23 Nov 2022 17:47:14 +0300 (+03)
-Date:   Wed, 23 Nov 2022 17:47:14 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Wed, 23 Nov 2022 11:03:37 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFD258BE0;
+        Wed, 23 Nov 2022 08:03:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669219416; x=1700755416;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RC/dJSMFGCQR6lU8cmnAoaGtXjo/0QLdlyY2gZJCtVM=;
+  b=JVPL1BNMfZ/pEW8CYSrUD1Wfdx8/qldoxg2wxw+WCQhzqGU5IAEfie26
+   GpDgbvnKM6m9zuu5XAgiTpBkEHzkdz0R6wqargqaHYNw3h99oNoQl/hyZ
+   6HSrxt/TrwqhQHqhnryXpjS1eQC7fHDkMpdzzt8iKRQTD4UMeQg20tfcF
+   H12BSerBtrgenUFpoSTFF76olbynK4E/VGpWcCxFot7VKczhQ2OX0HzvB
+   fpu2U3lXFTTU8mUGnc00QCLSEUuprPxN53Ga174Vr0XBUn28Pb8OV46O8
+   v0KcVBIE2oLpQIfBB58drPZifSKmLCKlIDeoxWrgBoUBxTxiUcpF+d38u
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="311728002"
+X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
+   d="scan'208";a="311728002"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 08:03:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="619664771"
+X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
+   d="scan'208";a="619664771"
+Received: from vcbudden-mobl3.amr.corp.intel.com (HELO [10.212.129.67]) ([10.212.129.67])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 08:03:34 -0800
+Message-ID: <1249f7d6-1a95-4268-366b-7da5ecec7b92@intel.com>
+Date:   Wed, 23 Nov 2022 08:03:33 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 1/6] x86/tdx: Support hypercalls for TDX guests on Hyper-V
+Content-Language: en-US
+To:     Dexuan Cui <decui@microsoft.com>,
         "ak@linux.intel.com" <ak@linux.intel.com>,
         "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
         "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
@@ -90,56 +68,70 @@ Cc:     Dave Hansen <dave.hansen@intel.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "tony.luck@intel.com" <tony.luck@intel.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/6] x86/hyperv: Support hypercalls for TDX guests
-Message-ID: <20221123144714.vjp6alujwgzdjz5v@box.shutemov.name>
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <20221121195151.21812-1-decui@microsoft.com>
- <20221121195151.21812-6-decui@microsoft.com>
- <344c8b55-b5c3-85c4-72b3-4120e425201e@intel.com>
- <SA1PR21MB13359D878631F5C327DE8148BF0C9@SA1PR21MB1335.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SA1PR21MB13359D878631F5C327DE8148BF0C9@SA1PR21MB1335.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <20221121195151.21812-2-decui@microsoft.com>
+ <18323d11-146f-c418-e8f0-addb2b8adb19@intel.com>
+ <SA1PR21MB13353C24B5BF2E7D6E8BCFA5BF0C9@SA1PR21MB1335.namprd21.prod.outlook.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <SA1PR21MB13353C24B5BF2E7D6E8BCFA5BF0C9@SA1PR21MB1335.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 02:14:58AM +0000, Dexuan Cui wrote:
-> > From: Dave Hansen <dave.hansen@intel.com>
-> > Sent: Monday, November 21, 2022 12:05 PM
-> > [...]
-> > >  #ifdef CONFIG_X86_64
-> > > +#if CONFIG_INTEL_TDX_GUEST
-> > > +	if (hv_isolation_type_tdx()) {
-> > 
-> > >  #ifdef CONFIG_X86_64
-> > > +#if CONFIG_INTEL_TDX_GUEST
-> > > +	if (hv_isolation_type_tdx())
-> > 
-> > >  #ifdef CONFIG_X86_64
-> > > +#if CONFIG_INTEL_TDX_GUEST
-> > > +	if (hv_isolation_type_tdx())
-> > > +		return __tdx_ms_hv_hypercall(control, input2, input1);
-> > 
-> > See any common patterns there?
-> > 
-> > The "no #ifdef's in C files" rule would be good to apply here.  Please
-> > do one #ifdef in a header.
+On 11/22/22 17:37, Dexuan Cui wrote:
+>> From: Dave Hansen <dave.hansen@intel.com>
+>> Sent: Monday, November 21, 2022 12:39 PM
+>> [...]
+>> On 11/21/22 11:51, Dexuan Cui wrote:
+>>> __tdx_hypercall() doesn't work for a TDX guest running on Hyper-V,
+>>> because Hyper-V uses a different calling convention, so add the
+>>> new function __tdx_ms_hv_hypercall().
+>>
+>> Other than R10 being variable here and fixed for __tdx_hypercall(), this
+>> looks *EXACTLY* the same as __tdx_hypercall(), or at least a strict
+>> subset of what __tdx_hypercall() can do.
+>>
+>> Did I miss something?
 > 
-> Sorry, I should use #ifdef rather than #if. I'll fix it like the below.
+> The existing asm code for __tdx_hypercall() passes through R10~R15
+> (see TDVMCALL_EXPOSE_REGS_MASK) to the (KVM) hypervisor.
+> 
+> Unluckily, for Hyper-V, we need to pass through RDX, R8, R10 and R11
+> to Hyper-V, so I don't think I can use the existing __tdx_hypercall() ?
 
-No, can we hide preprocessor hell inside hv_isolation_type_tdx()?
+What's to prevent you from adding RDX and R8?  You could make
+TDVMCALL_EXPOSE_REGS_MASK a macro argument.
 
-Like make it return false for !CONFIG_INTEL_TDX_GUEST and avoid all
-#if/#ifdefs in C file.
+Look at 'has_erro_code', for instance in "idtentry_body"
+arch/x86/entry/entry_64.S.
 
+>> Another way of saying this:  It seems like you could do this with a new
+>> version of _tdx_hypercall() (and all in C) instead of a new
+>> __tdx_hypercall().
+> 
+> I don't think the current TDVMCALL_EXPOSE_REGS_MASK allows me
+> to pass through RDX and R8 to Hyper-V.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Right.  So pass it in.
+
+> PS, the comment before __tdx_hypercall() contains this line:
+> 
+> "* RBX, RBP, RDI, RSI  - Used to pass VMCALL sub function specific
+> arguments."
+> 
+> But it looks like currently RBX an RBP are not used at all in 
+> arch/x86/coco/tdx/tdcall.S ?
+
+Yeah, it looks like they are a part of the hypercall ABI but no existing
+hypercall is using them.  Patches to fix it accepted. :)
+
