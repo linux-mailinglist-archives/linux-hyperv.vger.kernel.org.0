@@ -2,57 +2,68 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FD41638D70
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Nov 2022 16:29:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F083638D90
+	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Nov 2022 16:39:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbiKYP3E (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 25 Nov 2022 10:29:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52578 "EHLO
+        id S229685AbiKYPj4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 25 Nov 2022 10:39:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiKYP3D (ORCPT
+        with ESMTP id S229493AbiKYPjz (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 25 Nov 2022 10:29:03 -0500
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DC420991
-        for <linux-hyperv@vger.kernel.org>; Fri, 25 Nov 2022 07:29:02 -0800 (PST)
-Received: by mail-wm1-f53.google.com with SMTP id t1so3717521wmi.4
-        for <linux-hyperv@vger.kernel.org>; Fri, 25 Nov 2022 07:29:02 -0800 (PST)
+        Fri, 25 Nov 2022 10:39:55 -0500
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDE92CCBE;
+        Fri, 25 Nov 2022 07:39:54 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id 83-20020a1c0256000000b003d03017c6efso5791852wmc.4;
+        Fri, 25 Nov 2022 07:39:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0d7tuWHsJyJxa6+wq5CIoWIyNI37HdwH/FzbNT12MrQ=;
-        b=ZCLC7ZDQJujmSa0jMEmLOmxXGBT18anu8HRD3wWmEMqQebwesEnWIMwB0N3+1KDxJG
-         WqXQGSwDtqmixJxeXSIsqj3yleDNkDT3tjQHtrfuhBg6nzKwT3v6z/hnrjOm357htA0k
-         fwjPu386KO2CCm1QFGxikAYbF/6xRcukHw7MCSouEynVi40BkuwOaL73U6hasHvOxXnf
-         ZjtTet+3rsC9gl4ybciY4+PkObOBLcGHP0mN7bAe5m05tCd+pZDDe+MGAUDHs/da1weq
-         Vkmq8mNdc07y1JhHV9FX2Q76wieBqGhjk5fF9xy2ATS9uRcJdVOYrArgcGoaqA98YZuH
-         i9eA==
-X-Gm-Message-State: ANoB5pnC4POaRrj7LUmR31XyQIUX9KdaL+SR4R4FUTotsNYRcdVsYPGJ
-        tYNx350Zaccardsv2mAjpic=
-X-Google-Smtp-Source: AA0mqf6OJbVdhG1YC+eDAlVcpTzUvQNCDf/rDzeA9gaOfWdGYf6svbRKtdlEmq1kipJA12MZdERKTA==
-X-Received: by 2002:a05:600c:4a09:b0:3cf:b545:596 with SMTP id c9-20020a05600c4a0900b003cfb5450596mr14307191wmp.49.1669390141028;
-        Fri, 25 Nov 2022 07:29:01 -0800 (PST)
+        bh=+CLfEu0Ol4ZgCIM6GMFZLdKNFioBS7Wn2cy33xc4Fgk=;
+        b=fsTeudvekWBQDelGPR/HS2hagYcUfErYSLu65qns5/86uV9bvZlliWdS7fGlw+z43A
+         Dq1KrIv0S4jnoObW3KtIUxR9kvXXGsD0vsLadTZ1BZgcrTdFKfiDbA61h0663UJ9lJ/d
+         UXz05ESPGm8/KJySC7nxCPkK3ahpv1oRf9+YEp5RE5wE8ijiZ8EoJOONCNQqmEN975aQ
+         KJFnP1slpB63GwwhFTjuQjT1HXwvdG0s3/Yh0IIjFFvKguAPqQEZg86WR4XSObz3c4X/
+         AoX/Mq7MsM+gOv5bG24MsBwxX6cDsj+CeBLRPiVhj5vrGSEpN7NhtnWwSh3l7AZdz2Dq
+         lTXg==
+X-Gm-Message-State: ANoB5plNvvP4pzPfE9Y8wN5lQnY6h4sqQ9BeTiuAjy8TXoPrEUsTn2S+
+        1OYb+Q/PKY5ydmAu7CWxXuI=
+X-Google-Smtp-Source: AA0mqf5oTQD1Pkojn2mvb3FHJcD28lPaL2FsNVHWj3NUYllPAXUBdSn0nZJxW8R6VwYBEvIBNvH93A==
+X-Received: by 2002:a05:600c:5552:b0:3cf:9a16:456d with SMTP id iz18-20020a05600c555200b003cf9a16456dmr30671380wmb.100.1669390793238;
+        Fri, 25 Nov 2022 07:39:53 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id j23-20020a05600c1c1700b003cf57329221sm10333973wms.14.2022.11.25.07.29.00
+        by smtp.gmail.com with ESMTPSA id a12-20020adfe5cc000000b0022cc3e67fc5sm3868947wrn.65.2022.11.25.07.39.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Nov 2022 07:29:00 -0800 (PST)
-Date:   Fri, 25 Nov 2022 15:28:58 +0000
+        Fri, 25 Nov 2022 07:39:52 -0800 (PST)
+Date:   Fri, 25 Nov 2022 15:39:50 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Gaurav Kohli <gauravkohli@linux.microsoft.com>
-Cc:     kys@microsoft.com, decui@microsoft.com, haiyangz@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-        x86@kernel.org, linux-hyperv@vger.kernel.org, wei.liu@kernel.org,
-        bp@alien8.de
-Subject: Re: [PATCH] x86/hyperv: Remove unregister syscore call from hyperv
- cleanup
-Message-ID: <Y4DfOq94C4sPWM5+@liuwe-devbox-debian-v2>
-References: <1669267391-9809-1-git-send-email-gauravkohli@linux.microsoft.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 6.0 13/44] clocksource/drivers/hyperv: add data
+ structure for reference TSC MSR
+Message-ID: <Y4DhxthMYGtYByX4@liuwe-devbox-debian-v2>
+References: <20221119021124.1773699-1-sashal@kernel.org>
+ <20221119021124.1773699-13-sashal@kernel.org>
+ <SN6PR2101MB1693A83DF44A95B439532F9DD7089@SN6PR2101MB1693.namprd21.prod.outlook.com>
+ <Y3+S6j4GW0RrHgB2@sashalap>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1669267391-9809-1-git-send-email-gauravkohli@linux.microsoft.com>
+In-Reply-To: <Y3+S6j4GW0RrHgB2@sashalap>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -63,47 +74,36 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 09:23:11PM -0800, Gaurav Kohli wrote:
-> Hyperv cleanup codes comes under panic path where preemption and irq
-
-Please use "Hyper-V" throughout.
-
-> is already disabled. So calling of unregister_syscore_ops which has mutex
-> from hyperv cleanup might schedule out the thread and never comes back.
+On Thu, Nov 24, 2022 at 10:51:06AM -0500, Sasha Levin wrote:
+> On Sat, Nov 19, 2022 at 05:37:16AM +0000, Michael Kelley (LINUX) wrote:
+> > From: Sasha Levin <sashal@kernel.org> Sent: Friday, November 18, 2022 6:11 PM
+> > > 
+> > > From: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+> > > 
+> > > [ Upstream commit 4ad1aa571214e8d6468a1806794d987b374b5a08 ]
+> > > 
+> > > Add a data structure to represent the reference TSC MSR similar to
+> > > other MSRs. This simplifies the code for updating the MSR.
+> > > 
+> > > Signed-off-by: Anirudh Rayabharam <anrayabh@linux.microsoft.com>
+> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > > Link: https://lore.kernel.org/all/20221027095729.1676394-2-anrayabh@linux.microsoft.com/
+> > > Signed-off-by: Wei Liu <wei.liu@kernel.org>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > 
+> > Sasha -- I don't think this patch needs to be backported to any stable versions.  Anirudh
+> > or Wei Liu, can you confirm?  The patch is more about enabling a new scenario than fixing a bug.
 > 
+> Ack, I'll drop both of the patches you've pointed out. Thanks!
 
-While on paper this looks problematic -- have you seen this issue
-triggered in real life?
+Sorry for the late reply -- I think you should keep this patch and the
+other one. The other patch fixes a real issue while kexec'ing in the
+Linux root partition. This patch is a prerequisite for that.
 
-This looks to be only triggered when there is another thread already
-holding the mutex, which seems rather rare in the life cycle of the
-machine?
+Thanks,
+Wei.
 
-> To prevent the same remove unwanted unregister_syscore_ops function call.
 > 
-> Signed-off-by: Gaurav Kohli <gauravkohli@linux.microsoft.com>
-> 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index f49bc3ec76e6..c050de69dfde 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -537,7 +537,12 @@ void hyperv_cleanup(void)
->  	union hv_x64_msr_hypercall_contents hypercall_msr;
->  	union hv_reference_tsc_msr tsc_msr;
->  
-> -	unregister_syscore_ops(&hv_syscore_ops);
-> +	/*
-> +	 * Avoid unregister_syscore_ops(&hv_syscore_ops) from cleanup code,
-> +	 * as this is only called in crash path where irq and preemption disabled.
-> +	 * If we add this, there is a chance that this get scheduled out due to mutex
-> +	 * in unregister_syscore_ops and never comes back.
-> +	 */
-
-There is no need to document things we don't do, right?
-
->  
->  	/* Reset our OS id */
->  	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
 > -- 
-> 2.17.1
-> 
+> Thanks,
+> Sasha
