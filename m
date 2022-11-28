@@ -2,100 +2,115 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F7EB63A0D6
-	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Nov 2022 06:47:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EB2363A65D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Nov 2022 11:50:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbiK1FrP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 28 Nov 2022 00:47:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48380 "EHLO
+        id S230143AbiK1Kuw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 28 Nov 2022 05:50:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiK1FrP (ORCPT
+        with ESMTP id S229805AbiK1Kuv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 28 Nov 2022 00:47:15 -0500
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5693F65BA;
-        Sun, 27 Nov 2022 21:47:14 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id 130so9424975pfu.8;
-        Sun, 27 Nov 2022 21:47:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=clF2yN6A6iGTuwA3DES6a8mecm0VV0tg9cwaWgrqg4Y=;
-        b=dE6HmyOP0M5nVfXXS24HyNDQ+y26F7nAFaBGZ9e2Mtvr2qwotgdHiYWpLAOzAEri+t
-         NLpORagnXvw930gYpb2fTmkAV+f51DEpPPHD7QPk/sZxY5Tk/ClQj637DKK08qggIDLW
-         dIuyVv0zLoXbGsumsr1CfdmiprN8sKSTxmFO/c1oRZXhN2pSYzZx5cmC+0402OtV48Em
-         bR4roYRvsKc6hruGl9LCAKfRCAC609uamf+eCybtl5HkC1wTUIA2fIx9kMEsNEc8trIr
-         cGbcP5d8OjWMIlIsv+npch1XkGGkycuUVrDefYHhauh84MwJ77lbbIIy7+DgyV4hmXPb
-         QXNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=clF2yN6A6iGTuwA3DES6a8mecm0VV0tg9cwaWgrqg4Y=;
-        b=e+fDNT39uGGX8ouhelbcnjY0dxKAQXqt2dZGgAbeLNYIRrvdUZJIJH6KLQSgjEZD1b
-         vexxYHqSpnT2/7hq8YpynNGiLsvLDmZf2vw21WexPm+RNDGnx80iG4nY776uQWtGohvj
-         VbDHHQYxepDdYaKS2o4DRcfXE6i/UWFbb2NYk36L1qWeOES3Cpv5MzJyeUGLOPitvt3z
-         LE7p642JKnsCTkqOk5Vzih0MV/s+t71wvWrG2IdC8TA1YN6FaQzjnXbAw8M4Dj8rCvN+
-         O5DJEYgJHVSy8Kpp8kVE8N6qZkvD3r8aL5tAjfq0I2NQF2QQNQvlr47gEf+/xdjdhtKu
-         4Fgw==
-X-Gm-Message-State: ANoB5pl9k1PeV6hrwiB/8+5YQBKpQ5/+xh6spahfj+jb9gFcTCowzC6M
-        ZyXydRDm6gZulnAWpszJ2Hc=
-X-Google-Smtp-Source: AA0mqf67ZMWERK2VwdcyNZwgNvK2LUVZ/GRAWUyruH0SAA/dcYbftyaPvpTc8uYdy1HcWJymWUh5/w==
-X-Received: by 2002:a63:d04f:0:b0:46e:c41c:e4bf with SMTP id s15-20020a63d04f000000b0046ec41ce4bfmr26257003pgi.123.1669614433613;
-        Sun, 27 Nov 2022 21:47:13 -0800 (PST)
-Received: from ?IPV6:2404:f801:10:463:955f:7dcb:f571:942c? ([2404:f801:9000:1a:9b8:7dcb:f571:942c])
-        by smtp.gmail.com with ESMTPSA id y16-20020a17090322d000b00186e34524e3sm7806256plg.136.2022.11.27.21.47.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Nov 2022 21:47:12 -0800 (PST)
-Message-ID: <0d928bdf-769f-8eca-2e3e-5d6e438ef048@gmail.com>
-Date:   Mon, 28 Nov 2022 13:47:02 +0800
+        Mon, 28 Nov 2022 05:50:51 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BF0BF9;
+        Mon, 28 Nov 2022 02:50:50 -0800 (PST)
+Received: from zn.tnic (p200300ea9733e719329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e719:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4BBF71EC059E;
+        Mon, 28 Nov 2022 11:50:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1669632649;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ZCCj7bcQc75acbwO7FOWk4dJlCrWMoBIyYNAusQQi2U=;
+        b=oAEzJbYg5od8O3kDuXXte3PxpqRhYKSbKUONg0mq2ROUkTDdzrKVonBJnEQ5T41YGSsGOe
+        rIo1R8sUPfBlavzVlofbxLwQPbc7E4cGRNEl8iN2+/Tl/4mcYIfR+6Nj2qS2ynm1/KS7Hm
+        w4HnHBDdjRCvLu/emxxA1vwYAVRcccA=
+Date:   Mon, 28 Nov 2022 11:50:45 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [Patch v3 05/14] x86/mm: Handle decryption/re-encryption of
+ bss_decrypted consistently
+Message-ID: <Y4SShb6nMz3gqkwh@zn.tnic>
+References: <1668624097-14884-1-git-send-email-mikelley@microsoft.com>
+ <1668624097-14884-6-git-send-email-mikelley@microsoft.com>
+ <01d7c7cc-bd4e-ee9b-f5b2-73ea367e602f@linux.intel.com>
+ <BYAPR21MB1688A31ED795ED1B5ACB6D26D7099@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y3uNj0z26EjkHeCn@zn.tnic>
+ <6b5129cf-6986-bbb1-7e60-37849fc383fc@linux.intel.com>
+ <BYAPR21MB168873879B0EEF71DED3D460D70D9@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [RFC PATCH V2 16/18] x86/sev: Initialize #HV doorbell and handle
- interrupt requests
-Content-Language: en-US
-To:     Christophe de Dinechin <dinechin@redhat.com>
-Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        ashish.kalra@amd.com, srutherford@google.com,
-        akpm@linux-foundation.org, anshuman.khandual@arm.com,
-        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
-        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
-        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20221119034633.1728632-1-ltykernel@gmail.com>
- <20221119034633.1728632-17-ltykernel@gmail.com> <m2ilj3kr19.fsf@redhat.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <m2ilj3kr19.fsf@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB168873879B0EEF71DED3D460D70D9@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 11/25/2022 7:49 PM, Christophe de Dinechin wrote:
->> +void check_hv_pending(struct pt_regs *regs)
-> This looks like two functions, one with regs == NULL and one with regs,
-> different internal logic, different call sites. Would you consider splitting
-> into two?
->
+On Tue, Nov 22, 2022 at 05:59:04PM +0000, Michael Kelley (LINUX) wrote:
+> Right.  But here's my point:  With current code and an image built with
+> CONFIG_AMD_MEM_ENCRYPT=y and running as a TDX guest,
+> sme_postprocess_startup() will not decrypt the bss_decrypted section.
+> Then later mem_encrypt_free_decrypted_mem() will run, see that
+> CC_ATTR_MEM_ENCRYPT is true, and try to re-encrypt the memory.
+> In other words, a TDX guest would break in the same way as a Hyper-V
+> vTOM guest would break.  This patch fixes the problem for both cases.
 
-Good suggestion. Will update in the next version.
+I guess making the check more concrete by checking sme_me_mask directly
+along with a comment makes sense.
 
+We need to be very careful here not to fragment the code too much for
+all the different guest types.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
