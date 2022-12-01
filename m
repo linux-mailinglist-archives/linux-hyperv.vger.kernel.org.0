@@ -2,62 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CFFB63EC31
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Dec 2022 10:19:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09F9B63EC62
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Dec 2022 10:25:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbiLAJTR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Dec 2022 04:19:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
+        id S229551AbiLAJZ3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 1 Dec 2022 04:25:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbiLAJTQ (ORCPT
+        with ESMTP id S229477AbiLAJZ1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Dec 2022 04:19:16 -0500
+        Thu, 1 Dec 2022 04:25:27 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83D54B9A6
-        for <linux-hyperv@vger.kernel.org>; Thu,  1 Dec 2022 01:18:19 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A785810D2
+        for <linux-hyperv@vger.kernel.org>; Thu,  1 Dec 2022 01:24:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669886298;
+        s=mimecast20190719; t=1669886650;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=vIuTEZiHlEaLkOOiRuwwN1u46N3S1zvX6DQsFHhXfNs=;
-        b=apmj8t6mZssPErjBUa68EdwPlf9OZ62ORQDhjg1F8XDHjIlKGpjyLiA2iPYQcMAhn05IFi
-        KUvjFRPV3EknCwadtqn2crOu/cxnCx9PeKHwDZddQotQNv27iSOciCHW9FXaMAnImE7EIv
-        nXZRkyPkgk52DEXR/OHBjX3l5RX5MSw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=UgJ+HDh8KhhTBQLgmfONT+YSYAYl+JCf9dmOxyoPJKY=;
+        b=DqZ1kd9rcTt1sPq/80bsPKJX0QdpQJWqydTqg4pazPE6bn8EjkPA0AymyZ8asZuCZjWB4S
+        H8DNlkf3HuRoaFL0JqvVK7ETZW6M1FTtP9OUYJtLnZsvd8zdVkLGhMGFUm/6Ls9P3DS9Xt
+        2K9cbYppBweSj7XKK+d4/31eO5iMGYo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-651-6r4JDUjEP1-oWdj9Y7UZ-Q-1; Thu, 01 Dec 2022 04:18:17 -0500
-X-MC-Unique: 6r4JDUjEP1-oWdj9Y7UZ-Q-1
-Received: by mail-wm1-f72.google.com with SMTP id ay19-20020a05600c1e1300b003cf758f1617so2272904wmb.5
-        for <linux-hyperv@vger.kernel.org>; Thu, 01 Dec 2022 01:18:17 -0800 (PST)
+ us-mta-659-PV_Rd7-lPNC6P7RkZg65aw-1; Thu, 01 Dec 2022 04:24:06 -0500
+X-MC-Unique: PV_Rd7-lPNC6P7RkZg65aw-1
+Received: by mail-wm1-f69.google.com with SMTP id v125-20020a1cac83000000b003cfa148576dso598517wme.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 01 Dec 2022 01:24:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vIuTEZiHlEaLkOOiRuwwN1u46N3S1zvX6DQsFHhXfNs=;
-        b=2gN+ukNJpVL7ADYiPQL1r39euB/fqs3h9vd0QoBI8StjG1Kd7hag1hjFgamH00ay3s
-         QMzaPGqkIPYSXHmjoAhGAXbUdhx/M1vmez/24ltyPOtHjOBath1vLQpf90xdEnJOUI+z
-         H1jywB589IFb7eiZQF5AMQzeGmFrBlZU0/6mf4zweeW/5MM91IC3tct/DpDv+9w8mL0k
-         ftc5uf7vQ5rdyA8BCB6s+yFXp585AtBRP35EcsR5YQxPltJGeOTPR8fB4XXi6H/zRmw+
-         frS+zzmA6BJjqFCWYgTypwKYZ5MScb1E/pCgwSSFy3XcVJOGuuiPvIbDuTYmKbcT4VB1
-         lfTg==
-X-Gm-Message-State: ANoB5pn/ni8Hh43TN0s8BlT0OAzDJgOizVfURGYVg3IUIXrRhyZybbO/
-        MZHyzb0jwqdBN7WAu7udfBfU13P8Gg8DNPOeWCcCv/Bp0BwlIk+qCCKNBflAQ1jvI4Fgx8al84l
-        SsSH/yu9IZKHOt3QZq1NhNxcY
-X-Received: by 2002:a5d:5948:0:b0:241:e929:fc44 with SMTP id e8-20020a5d5948000000b00241e929fc44mr25586486wri.27.1669886296309;
-        Thu, 01 Dec 2022 01:18:16 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf56QBIAqebrTf81srtx8Wms1KunBwXJwbQrplf/Bwb4UBr5M9FHfw01rhXcxCuBcF+looDkuA==
-X-Received: by 2002:a5d:5948:0:b0:241:e929:fc44 with SMTP id e8-20020a5d5948000000b00241e929fc44mr25586457wri.27.1669886296097;
-        Thu, 01 Dec 2022 01:18:16 -0800 (PST)
+        bh=UgJ+HDh8KhhTBQLgmfONT+YSYAYl+JCf9dmOxyoPJKY=;
+        b=x0bZnXpMeHV58VSXf3+CF3pLn5PvNkWcOqJZk68CmQxIL04TNf0cEpeckRz1EjypVm
+         HpgCzCUme9H4LGTVNPemM41uBMeXxEQWNixoS2SNDEbINt9ahhrOqb1aWInjKHh9Ky0D
+         fP9IzbpFd6Hqm/SdWjJUzmpTWrFn/HbQFWDLyuzl2AAtQp9Va6cPIHTD0EC2AI9OpooJ
+         rj0RfjC/X20DzgtQTLRKH6Oz5hDWvQhytgSDMnUv0TpLnW7LjFo08deTU+gICslLhe9r
+         XzhxrJtitQ0vRHTs8YhVlKoCEDA5X7VjxJXZudYZnNeDmxe+d1GHRx3xvV949XtvN8Kw
+         cLLw==
+X-Gm-Message-State: ANoB5pmruRyW/rB5/zoZ+tevgz+cuiceOIxeaooBriXcW7jFkrr6LM+W
+        ICKO3k9pasUEjHltZeZliorj4Y/jdbyF3G+Mlgcu2bsb6MiRjR5ZeE7R1aek/nJnRoSovLsA3E3
+        g8bXT6zp6e9TmtrMshPBp5GKF
+X-Received: by 2002:a5d:4ccb:0:b0:236:d611:4fcf with SMTP id c11-20020a5d4ccb000000b00236d6114fcfmr29574583wrt.192.1669886645078;
+        Thu, 01 Dec 2022 01:24:05 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf51AfiJW8ivh3gMCG70OBpMd9MsL8P1xJEHEG5W9Kg8EmdeOizi/C3u9PaCATJ6V1Bz8hc4Hw==
+X-Received: by 2002:a5d:4ccb:0:b0:236:d611:4fcf with SMTP id c11-20020a5d4ccb000000b00236d6114fcfmr29574568wrt.192.1669886644807;
+        Thu, 01 Dec 2022 01:24:04 -0800 (PST)
 Received: from sgarzare-redhat (host-82-53-134-234.retail.telecomitalia.it. [82.53.134.234])
-        by smtp.gmail.com with ESMTPSA id n22-20020a7bc5d6000000b003c6c5a5a651sm4692542wmk.28.2022.12.01.01.17.48
+        by smtp.gmail.com with ESMTPSA id l5-20020a5d5605000000b002367ad808a9sm3868673wrv.30.2022.12.01.01.24.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 01:18:15 -0800 (PST)
-Date:   Thu, 1 Dec 2022 10:17:22 +0100
+        Thu, 01 Dec 2022 01:24:04 -0800 (PST)
+Date:   Thu, 1 Dec 2022 10:23:30 +0100
 From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+        Dexuan Cui <decui@microsoft.com>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         "edumazet@google.com" <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -65,7 +66,6 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         "kys@microsoft.com" <kys@microsoft.com>,
         "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
         Bryan Tan <bryantan@vmware.com>,
         Vishnu Dasa <vdasa@vmware.com>,
         Krasnov Arseniy <oxffffaa@gmail.com>,
@@ -77,18 +77,17 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>
-Subject: Re: [RFC PATCH v2 1/6] vsock: return errors other than -ENOMEM to
- socket
-Message-ID: <20221201091722.p7fth4vkbbpq2zx4@sgarzare-redhat>
+Subject: Re: [RFC PATCH v2 2/6] hv_sock: always return ENOMEM in case of error
+Message-ID: <20221201092330.ia5addl4sgw7fhk2@sgarzare-redhat>
 References: <9d96f6c6-1d4f-8197-b3bc-8957124c8933@sberdevices.ru>
- <84f44358-dd8b-de8f-b782-7b6f03e0a759@sberdevices.ru>
+ <a10ffbed-848d-df8c-ec4e-ba25c4c8e3e8@sberdevices.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <84f44358-dd8b-de8f-b782-7b6f03e0a759@sberdevices.ru>
+In-Reply-To: <a10ffbed-848d-df8c-ec4e-ba25c4c8e3e8@sberdevices.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -96,43 +95,34 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Nov 25, 2022 at 05:03:06PM +0000, Arseniy Krasnov wrote:
+On Fri, Nov 25, 2022 at 05:05:53PM +0000, Arseniy Krasnov wrote:
 >From: Bobby Eshleman <bobby.eshleman@bytedance.com>
 >
->This removes behaviour, where error code returned from any
->transport was always switched to ENOMEM.
+>This saves original behaviour from af_vsock.c - switch any error
+>code returned from transport layer to ENOMEM.
 >
 >Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
 >Signed-off-by: Arseniy Krasnov <AVKrasnov@sberdevices.ru>
 >---
-> net/vmw_vsock/af_vsock.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
+> net/vmw_vsock/hyperv_transport.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+>index 59c3e2697069..fbbe55133da2 100644
+>--- a/net/vmw_vsock/hyperv_transport.c
+>+++ b/net/vmw_vsock/hyperv_transport.c
+>@@ -687,7 +687,7 @@ static ssize_t hvs_stream_enqueue(struct vsock_sock *vsk, struct msghdr *msg,
+> 	if (bytes_written)
+> 		ret = bytes_written;
+> 	kfree(send_buf);
+>-	return ret;
+>+	return ret < 0 ? -ENOMEM : ret;
 
-This patch LGTM, but I would move after the 2 patches that change vmci 
-and hyperv transports.
+I'm not sure for hyperv we want to preserve -ENOMEM. This transport was 
+added after virtio-vsock, so I think we can return the error directly.
 
-First we should fix the transports by returning the error we think is 
-right, and then expose it to the user.
+@Dexuan what do you think?
 
 Thanks,
 Stefano
-
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 884eca7f6743..61ddab664c33 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -1862,8 +1862,9 @@ static int vsock_connectible_sendmsg(struct socket *sock, struct msghdr *msg,
-> 			written = transport->stream_enqueue(vsk,
-> 					msg, len - total_written);
-> 		}
->+
-> 		if (written < 0) {
->-			err = -ENOMEM;
->+			err = written;
-> 			goto out_err;
-> 		}
->
->-- 
->2.25.1
 
