@@ -2,144 +2,93 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A68A63E08C
-	for <lists+linux-hyperv@lfdr.de>; Wed, 30 Nov 2022 20:15:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CFFB63EC31
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Dec 2022 10:19:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbiK3TO6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 30 Nov 2022 14:14:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
+        id S229621AbiLAJTR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 1 Dec 2022 04:19:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbiK3TO5 (ORCPT
+        with ESMTP id S229497AbiLAJTQ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 30 Nov 2022 14:14:57 -0500
-Received: from na01-obe.outbound.protection.outlook.com (mail-westus2azon11021014.outbound.protection.outlook.com [52.101.47.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC1F63D51;
-        Wed, 30 Nov 2022 11:14:55 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ba0gyn6FK9m3Z9nqTwQlySe2GVD4rDTgQVpc1PlkVuzCEZZDwC/n3+u2/FamCMcMlPHMrb2BSIkDK7KzaugDxwoMhfg325e7YAVUu9s2v4jFmASm2Gxj4YD3TXyGKDgUsBnlwSdvM6fQDYvSO+kX2mzIDVG3MZ0wxYof6SQgPoLBVEhnm5ARfhstKk1oCY11uW11YoV1GPCGm1Qp6hrAE0odunYeK25vjQQoRA0g4YO3TfFZZEoO1elza/wNwE55mds2+TALgue3JOhUdGQjLLUm8Dq59exqbuaiL8PQPiHNQAHuzSpLSHgCSiGIn3wHL1j4m6VdwtB+o3s1PdRgew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V1saUKoLD+lkOeH6BblnTssOdomK+uPEMFgtoFpMt1s=;
- b=ZjW9MWMu+w/NlYqc2Qb1EXt/8i1OJDgbEYqumTzulKs9rIm3iZaGvPoUfp+63UVR8Y0vzYj/RlSGpCYT/PHEaxDzlrpvn7xj2GM8gXeAJffq8p9ga3iSnK+dw806FXvUgptENLH0V/SGmdMZNMItefgaeTXN5Ys90v0BOYUW6fiH5Lapf0V1OFqvopl93gRVrTv8HeXH8SAbd5xto7IezP8bAbwNThycrtyW/4AGMVLKv0BFt8jbfOdDN4eTZWRKUNEy2M1ErDZkrIvO2EoDbQgz/W3fJ+4sJ6wpVZVcX8Cch1szmlH71r+IOucGvQ44Ltnn8f13cYNQO7r3Ljk9xQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V1saUKoLD+lkOeH6BblnTssOdomK+uPEMFgtoFpMt1s=;
- b=RDhcAYkPSBdhmediXHaWd1cp5N5rb88uG4/Isxcgu+nb8ZAf4KA/izP3vo/4iPOkuxQsdYu+N6bIjf2dFkkJbhSbZ5eyDlg77HUNwDW/064jBqK3rb2YkvFkKWyn1PqYLJVvTm7rUyj4enOWBFsipgspUboKQwEbqGtQ6GEwpv0=
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
- by CO1PR21MB1282.namprd21.prod.outlook.com (2603:10b6:303:161::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5901.4; Wed, 30 Nov
- 2022 19:14:49 +0000
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::ac9b:6fe1:dca5:b817]) by SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::ac9b:6fe1:dca5:b817%5]) with mapi id 15.20.5901.004; Wed, 30 Nov 2022
- 19:14:49 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "'Kirill A. Shutemov'" <kirill@shutemov.name>
-CC:     'Dave Hansen' <dave.hansen@intel.com>,
-        "'ak@linux.intel.com'" <ak@linux.intel.com>,
-        "'arnd@arndb.de'" <arnd@arndb.de>, "'bp@alien8.de'" <bp@alien8.de>,
-        "'brijesh.singh@amd.com'" <brijesh.singh@amd.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "'dave.hansen@linux.intel.com'" <dave.hansen@linux.intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "'hpa@zytor.com'" <hpa@zytor.com>,
-        "'jane.chu@oracle.com'" <jane.chu@oracle.com>,
-        "'kirill.shutemov@linux.intel.com'" <kirill.shutemov@linux.intel.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "'linux-arch@vger.kernel.org'" <linux-arch@vger.kernel.org>,
-        "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>,
-        "'luto@kernel.org'" <luto@kernel.org>,
-        "'mingo@redhat.com'" <mingo@redhat.com>,
-        "'peterz@infradead.org'" <peterz@infradead.org>,
-        "'rostedt@goodmis.org'" <rostedt@goodmis.org>,
-        "'sathyanarayanan.kuppuswamy@linux.intel.com'" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "'seanjc@google.com'" <seanjc@google.com>,
-        "'tglx@linutronix.de'" <tglx@linutronix.de>,
-        "'tony.luck@intel.com'" <tony.luck@intel.com>,
-        "'wei.liu@kernel.org'" <wei.liu@kernel.org>,
-        "'x86@kernel.org'" <x86@kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/6] x86/tdx: Support hypercalls for TDX guests on Hyper-V
-Thread-Topic: [PATCH 1/6] x86/tdx: Support hypercalls for TDX guests on
- Hyper-V
-Thread-Index: AQHY/elAG0JYcbbfGkmNBxJJMMwuJ65LuIUwgADeyYCAAEbnMIALBXLA
-Date:   Wed, 30 Nov 2022 19:14:49 +0000
-Message-ID: <SA1PR21MB133594060B7EB17CF1FDBD95BF159@SA1PR21MB1335.namprd21.prod.outlook.com>
-References: <20221121195151.21812-1-decui@microsoft.com>
- <20221121195151.21812-2-decui@microsoft.com>
- <18323d11-146f-c418-e8f0-addb2b8adb19@intel.com>
- <SA1PR21MB13353C24B5BF2E7D6E8BCFA5BF0C9@SA1PR21MB1335.namprd21.prod.outlook.com>
- <20221123144043.ne34k5xw7dahzscq@box.shutemov.name>
- <SA1PR21MB1335EEEC1DE4CB42F6477A5EBF0C9@SA1PR21MB1335.namprd21.prod.outlook.com>
-In-Reply-To: <SA1PR21MB1335EEEC1DE4CB42F6477A5EBF0C9@SA1PR21MB1335.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9781b948-f20b-4377-b29d-f930da102b44;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-11-23T18:54:29Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|CO1PR21MB1282:EE_
-x-ms-office365-filtering-correlation-id: eaa26e5c-1796-470d-acc0-08dad30726a3
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ufNZyUHsrOm7HKWnbJRDiQ4WmierTqkAuyWK2xfMiqajipYnxshxiwz13yEMSyQfyG1HRPSbD+7oVmO+4UNLfwioLXAj31YX+HCXOVaI/gyJ8yLSvC8E9snC4JUMz32m/5+vrNNymNdYr/9sOVT60GljK/zwLvV5o5ge/M1Y44OctStjDRhwu501vf8Z8eyZtJfpHjCO0R0oaOP+CBjvKGmSShPEeW3Fka7qPlwBxK1H4ibb1wD8EQA3v2fjd68NT9eXJtG2KgrYY3fiDWyYlhBh5g1OPZf0XExqCFjHXLzFQxfa9B64REK5DO1BEHpP7g4M59TyAVS4qMtdepqwEm9USLMeBEvavMRWP2JvRhSyf0dK+Z9AD5J19dv7QdbQjX1DYJt+svJgPVV3dIDd72DYACnTVCxPXVEvyjADCGAfJSxSWfNSZYbMarRi1Whg3ljDhmdMNhD3wDYEXXk4LLiwYyBymyYr24R+FkeRW3jkQlLxzxTWH697SCOHkZjnlF9jj1RrOHppki1UyDJNygO9i7hJqWSxVX3WNzsjktpofx2yXIvYQRb6KSgGbXyqxtwjYI4x2PCggUaJhgtKosqLe8GtmH36bqrWj/LQDP1i2wXmetVroT836Vyt2jyHoP6gyPCVJKJE/x7EuJptF6YX+HJxZMKPCBhqjUcxq23wUSv5flXUwLfCKjpHIxayDDTS8qGT3paRKwmgPPImNvCd+O/qH6NRU+ByNUW4M9oHu51+GAG09O+HYN9D1eZk
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(396003)(346002)(136003)(366004)(451199015)(2906002)(8990500004)(82960400001)(82950400001)(4326008)(4744005)(86362001)(52536014)(66446008)(64756008)(66556008)(66946007)(66476007)(76116006)(33656002)(8936002)(53546011)(41300700001)(7416002)(5660300002)(8676002)(55016003)(38070700005)(316002)(6916009)(54906003)(478600001)(38100700002)(7696005)(26005)(71200400001)(10290500003)(122000001)(6506007)(9686003)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0zOPQ2M/Hd96T9M5O+p2UlOOWaBrjVULgpb/DuuZtCHzE3xvtUkQxzQtNTqL?=
- =?us-ascii?Q?78r0bGgKaBfGxYjktOW+8kxZeU55t32VW5tbqhgsNZKqbxtqLYlUbzxPsQhc?=
- =?us-ascii?Q?edYDbbjy9Au/+TZCLwJtk8eS06dV/jK0QAC0F271BruER06+yyv8Pk7s+VOR?=
- =?us-ascii?Q?9fRPJpCy8VpkDLDTAE3hgxI2okhA1EP0v+NX+YlBZ0XAFLoyZRM/jCYBij1H?=
- =?us-ascii?Q?Rgw+ZCWebHeH4/mFvDQQILnr4m5KEzPlaqNX+vr9r69aVQiW5NgaXKDamLIC?=
- =?us-ascii?Q?ZuBS7O0u/W7sDqWKJe7BpP2SKw4mH+OUeprp79JQdymetE0eZP1MV+EqugRu?=
- =?us-ascii?Q?wh7pv+VBPlF0aCAJkKx/P6ukn4gp1fTpROusbNzUKJ34Ap/LtSIfzrELZ5Al?=
- =?us-ascii?Q?aLSadrY+Y0CW1YwFdkz+GiLCUfctZEd4Nz1bK6IOpDg1kgwa4YDHoLsAgT32?=
- =?us-ascii?Q?qQ/AQQEOUigbh19Ak+cH0OF6/o02z3VT9KySZxgmahJUyKWYDgutrJpwND+C?=
- =?us-ascii?Q?nEbGcIkdmB3Xbrt4i+D2QbIU46X+5c37rVvWC/HNCZcDBOffQJdg/wFdSHeP?=
- =?us-ascii?Q?Wlne2gPXxmDHv/B47OZToA8oITRg4udO/TLlfhkGyNokjHrMA6/aUJSq4cU5?=
- =?us-ascii?Q?ZogxHogz7cid9ZcUa3MjB6vjzS1/sWiCQRHtSwZHEjph84n9P2ybE4kN5IGX?=
- =?us-ascii?Q?uEHHm8VkbwYFbVr111hLw2R5uYbLsmzEC4jH15RvNumKMzAn5dABk723BNwS?=
- =?us-ascii?Q?UrvKw2AM2wohpGSF/RfLutKoC2AMemUZ00tXqVHsRcohUsrTGvki2Wo2zKom?=
- =?us-ascii?Q?lUTKiux/UFoBsaTk77GaiDKu51fTXfA/FVL4CoiywHhQLDvAoSIXqI51K59J?=
- =?us-ascii?Q?phEby6VM0j2i+4ioHlynw+K26+ghg2ekSFF1UHa4XfN1m2kj1zXg6m4HRXbw?=
- =?us-ascii?Q?uV+SoeG39c0UMmYnqU1d/YbacwFP1E7bgxRXD5vDCssNxCJY/9imiHCr630b?=
- =?us-ascii?Q?/VLiYagJd0LI10HMOiK+bDHOuJk+PRzHIagAeRRmyDvf27fOZVs0UmIFWT14?=
- =?us-ascii?Q?Efed6ZGPxf91QtpIAd6N0ynDCVdHJ5ZrkoEy2X4cnoVs5r+mbeMB9+G/mlFf?=
- =?us-ascii?Q?j+HLEpwTCsqcO4YSG41T6+vTmUw06w8NVz8XgsVRWiHvB+ffRKKvGK/r30oR?=
- =?us-ascii?Q?Xm5CMmEtDzoS5Hyd5G3MJKITG28VQcMe/nTv7mmOLSv5POpBjGsFu0CfufAg?=
- =?us-ascii?Q?rTJSUWY2b3GiRAjWJkcTCpCq/DvU6cRMs6lL/N45JDnBxFiO46rFcsadpGGv?=
- =?us-ascii?Q?JYyM+azUqLTgWS2OJqyRxwaIFS3EGsiX5TFVok2eD4WYPLVg/td+0MqCjlsc?=
- =?us-ascii?Q?Ljdurcw0/Owlga4E6fRpahjoDeAe1m5DIQ7y+mn6MC5lLT4/jCgYPAaPh4/Z?=
- =?us-ascii?Q?eGhXPKQKb4iw//JCxZj42tVRhogWjL7iS8zWaM/ubZoKN7rTHM8guHGwuWku?=
- =?us-ascii?Q?j1ZUW6P1PuTr5WBSCY6++Z5qTATalnZAa+QR+RMGyZwIIa1kviOXDGSZDKBA?=
- =?us-ascii?Q?fxez3y7t0F9XSyhrutLK/5le8Z2Q4h6yHKAxFhBq?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 1 Dec 2022 04:19:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B83D54B9A6
+        for <linux-hyperv@vger.kernel.org>; Thu,  1 Dec 2022 01:18:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669886298;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vIuTEZiHlEaLkOOiRuwwN1u46N3S1zvX6DQsFHhXfNs=;
+        b=apmj8t6mZssPErjBUa68EdwPlf9OZ62ORQDhjg1F8XDHjIlKGpjyLiA2iPYQcMAhn05IFi
+        KUvjFRPV3EknCwadtqn2crOu/cxnCx9PeKHwDZddQotQNv27iSOciCHW9FXaMAnImE7EIv
+        nXZRkyPkgk52DEXR/OHBjX3l5RX5MSw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-651-6r4JDUjEP1-oWdj9Y7UZ-Q-1; Thu, 01 Dec 2022 04:18:17 -0500
+X-MC-Unique: 6r4JDUjEP1-oWdj9Y7UZ-Q-1
+Received: by mail-wm1-f72.google.com with SMTP id ay19-20020a05600c1e1300b003cf758f1617so2272904wmb.5
+        for <linux-hyperv@vger.kernel.org>; Thu, 01 Dec 2022 01:18:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vIuTEZiHlEaLkOOiRuwwN1u46N3S1zvX6DQsFHhXfNs=;
+        b=2gN+ukNJpVL7ADYiPQL1r39euB/fqs3h9vd0QoBI8StjG1Kd7hag1hjFgamH00ay3s
+         QMzaPGqkIPYSXHmjoAhGAXbUdhx/M1vmez/24ltyPOtHjOBath1vLQpf90xdEnJOUI+z
+         H1jywB589IFb7eiZQF5AMQzeGmFrBlZU0/6mf4zweeW/5MM91IC3tct/DpDv+9w8mL0k
+         ftc5uf7vQ5rdyA8BCB6s+yFXp585AtBRP35EcsR5YQxPltJGeOTPR8fB4XXi6H/zRmw+
+         frS+zzmA6BJjqFCWYgTypwKYZ5MScb1E/pCgwSSFy3XcVJOGuuiPvIbDuTYmKbcT4VB1
+         lfTg==
+X-Gm-Message-State: ANoB5pn/ni8Hh43TN0s8BlT0OAzDJgOizVfURGYVg3IUIXrRhyZybbO/
+        MZHyzb0jwqdBN7WAu7udfBfU13P8Gg8DNPOeWCcCv/Bp0BwlIk+qCCKNBflAQ1jvI4Fgx8al84l
+        SsSH/yu9IZKHOt3QZq1NhNxcY
+X-Received: by 2002:a5d:5948:0:b0:241:e929:fc44 with SMTP id e8-20020a5d5948000000b00241e929fc44mr25586486wri.27.1669886296309;
+        Thu, 01 Dec 2022 01:18:16 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf56QBIAqebrTf81srtx8Wms1KunBwXJwbQrplf/Bwb4UBr5M9FHfw01rhXcxCuBcF+looDkuA==
+X-Received: by 2002:a5d:5948:0:b0:241:e929:fc44 with SMTP id e8-20020a5d5948000000b00241e929fc44mr25586457wri.27.1669886296097;
+        Thu, 01 Dec 2022 01:18:16 -0800 (PST)
+Received: from sgarzare-redhat (host-82-53-134-234.retail.telecomitalia.it. [82.53.134.234])
+        by smtp.gmail.com with ESMTPSA id n22-20020a7bc5d6000000b003c6c5a5a651sm4692542wmk.28.2022.12.01.01.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Dec 2022 01:18:15 -0800 (PST)
+Date:   Thu, 1 Dec 2022 10:17:22 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        Krasnov Arseniy <oxffffaa@gmail.com>,
+        Bobby Eshleman <bobby.eshleman@gmail.com>,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        kernel <kernel@sberdevices.ru>
+Subject: Re: [RFC PATCH v2 1/6] vsock: return errors other than -ENOMEM to
+ socket
+Message-ID: <20221201091722.p7fth4vkbbpq2zx4@sgarzare-redhat>
+References: <9d96f6c6-1d4f-8197-b3bc-8957124c8933@sberdevices.ru>
+ <84f44358-dd8b-de8f-b782-7b6f03e0a759@sberdevices.ru>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaa26e5c-1796-470d-acc0-08dad30726a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2022 19:14:49.2682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Gt09ZewaU3tddH6AQImxlmbprx1NmTQvWHwx6mW3GgT1Bk91ltqVZt57HIENhQuwrGbb2IsenLOqt7hBWeWY2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR21MB1282
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <84f44358-dd8b-de8f-b782-7b6f03e0a759@sberdevices.ru>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -147,20 +96,43 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Dexuan Cui
-> Sent: Wednesday, November 23, 2022 10:55 AM
-> To: Kirill A. Shutemov <kirill@shutemov.name>
->=20
-> > From: Kirill A. Shutemov <kirill@shutemov.name>
-> > Sent: Wednesday, November 23, 2022 6:41 AM
-> > [...]
-> > I have plan to expand __tdx_hypercall() to cover more registers.
-> > See the patch below.
->=20
-> Great! Thank you!
->=20
-> > Is it enough for you?
-> Yes.
+On Fri, Nov 25, 2022 at 05:03:06PM +0000, Arseniy Krasnov wrote:
+>From: Bobby Eshleman <bobby.eshleman@bytedance.com>
+>
+>This removes behaviour, where error code returned from any
+>transport was always switched to ENOMEM.
+>
+>Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+>Signed-off-by: Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+>---
+> net/vmw_vsock/af_vsock.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Hi Kirill, it would be great if you could post a formal patch so that
-I can rebase my patchset accordingly.
+This patch LGTM, but I would move after the 2 patches that change vmci 
+and hyperv transports.
+
+First we should fix the transports by returning the error we think is 
+right, and then expose it to the user.
+
+Thanks,
+Stefano
+
+>
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index 884eca7f6743..61ddab664c33 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -1862,8 +1862,9 @@ static int vsock_connectible_sendmsg(struct socket *sock, struct msghdr *msg,
+> 			written = transport->stream_enqueue(vsk,
+> 					msg, len - total_written);
+> 		}
+>+
+> 		if (written < 0) {
+>-			err = -ENOMEM;
+>+			err = written;
+> 			goto out_err;
+> 		}
+>
+>-- 
+>2.25.1
+
