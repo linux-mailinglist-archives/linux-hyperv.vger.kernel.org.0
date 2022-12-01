@@ -2,193 +2,127 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 689CA63EF27
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Dec 2022 12:16:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 807F363EF8E
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Dec 2022 12:36:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbiLALQC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Dec 2022 06:16:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
+        id S229734AbiLALgK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 1 Dec 2022 06:36:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231284AbiLALO5 (ORCPT
+        with ESMTP id S229777AbiLALgJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Dec 2022 06:14:57 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7DEBB7DB
-        for <linux-hyperv@vger.kernel.org>; Thu,  1 Dec 2022 03:08:54 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id bj12so3284268ejb.13
-        for <linux-hyperv@vger.kernel.org>; Thu, 01 Dec 2022 03:08:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SFyJfR2WUZBDHeWemxJgoKouNxxtAGHlmHCCEO9QQfg=;
-        b=ihhHeh07lyLQ9+bLJAT02xtbEUUwBhwmY6NbvI/an2JMfUbxhGOKl7udb7lLh5mId9
-         jw5dKTuvmRP+w2K8ZYng51eJLaluDUotqflfy43/10yqWgw/yG+fgTeB0ukeRPMWa9sh
-         dgPYzjd9Y05h6Utm7j5Kxf9v/xCIYLObtVbqg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SFyJfR2WUZBDHeWemxJgoKouNxxtAGHlmHCCEO9QQfg=;
-        b=iG79EqNClQyK+tm82VUjRP9030EAwjW41KkNSEwts3L+IUkzHGse9fL0RkedT9Z4n8
-         5cHCtzckV7Nbzs5na3CxLQ+sFIQsBP9rUxLfEZvEvp9pZ976PPiT5Yu8dhVB1uGt2u/9
-         nBMFZHqMRBotRB0GbJ2AsH7oY3EOO3moWqKZqj1icdr09zYd7B4Z+r8j2KpNxMfe0bos
-         qKnFryN5LcHDTFNQ9X6txmSa9SZtmAFQ3yG4pMr2KgaBG9c5Nxyz+K15qyHWFEE+E6vO
-         jPWN+/kBeeNUeDW40yQRpGx8IfCn/Gs0DeJwCdoNGaqtiiUaKWrbAOXWkB9Z0lg15vl/
-         ywkA==
-X-Gm-Message-State: ANoB5plSzbuLPrPbw18dRpyR3akVzrsF//D6s38NZhLO4k8YGCf/dVZw
-        8i72iAVu9WemW700yMMQESihww==
-X-Google-Smtp-Source: AA0mqf5n8q8ZMG+bv3DehJEYX5ANkxpTsyIzmCnCUsZmiYp8gdzbFTHhMnsW4dhR0VzoX//sUAQsMg==
-X-Received: by 2002:a17:906:7f09:b0:7c0:b3a8:a5f9 with SMTP id d9-20020a1709067f0900b007c0b3a8a5f9mr1338546ejr.154.1669892932820;
-        Thu, 01 Dec 2022 03:08:52 -0800 (PST)
-Received: from alco.roam.corp.google.com ([2620:0:1059:10:f554:724a:f89a:73db])
-        by smtp.gmail.com with ESMTPSA id v17-20020a170906293100b0078e0973d1f5sm1663824ejd.0.2022.12.01.03.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 03:08:52 -0800 (PST)
-From:   Ricardo Ribalda <ribalda@chromium.org>
-Date:   Thu, 01 Dec 2022 12:08:23 +0100
-Subject: [PATCH v8 3/3] ASoC: SOF: Fix deadlock when shutdown a frozen userspace
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20221127-snd-freeze-v8-3-3bc02d09f2ce@chromium.org>
-References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org>
-In-Reply-To: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org>
-To:     Juergen Gross <jgross@suse.com>, Mark Brown <broonie@kernel.org>,
-        Chromeos Kdump <chromeos-kdump@google.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Len Brown <len.brown@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Thu, 1 Dec 2022 06:36:09 -0500
+Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793998C46E;
+        Thu,  1 Dec 2022 03:36:06 -0800 (PST)
+Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
+        by mx.sberdevices.ru (Postfix) with ESMTP id EAFDD5FD07;
+        Thu,  1 Dec 2022 14:36:03 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+        s=mail; t=1669894564;
+        bh=diW2bt1nmVltkaw9FbBARpnyQZELnALJTnHl6DJ6SBI=;
+        h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version;
+        b=rwOL/AATBNzSjXZn8ZugQtXSV/95r4hNHPwmeCatujJ+9VQQd7WSryGLz3VYrDW08
+         oGtN0/o2ZTTcGJatqlzi3bskkGFnWq4pU+GW6/iVyGdp+zFnZSvQ+2h7CHGZSGBnfx
+         QTYhH5rkYFLUZrih756Vva33LfJ1Omrjb+xI7frJ91864NI47C7r+BAZ1vP0jKUX+b
+         /124k4orhxHm871BORyWpRWbwrLtaqPPeFVYmVj+cuFusIFExt5EK5peqjGi26vj/Q
+         fH0f5BI5dTjsTzH4KN0bstDdQ/Dg5yzHhtaFet8spi6s1ghxyfYVmLISKwli/k2dv1
+         vvk8FPWngtK4A==
+Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
+        by mx.sberdevices.ru (Postfix) with ESMTP;
+        Thu,  1 Dec 2022 14:36:01 +0300 (MSK)
+From:   Arseniy Krasnov <AVKrasnov@sberdevices.ru>
+To:     Stefano Garzarella <sgarzare@redhat.com>,
+        Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Dexuan Cui <decui@microsoft.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org
-Cc:     kexec@lists.infradead.org, alsa-devel@alsa-project.org,
-        Ricardo Ribalda <ribalda@chromium.org>, stable@vger.kernel.org,
-        sound-open-firmware@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-X-Mailer: b4 0.11.0-dev-696ae
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2398; i=ribalda@chromium.org;
- h=from:subject:message-id; bh=GWM+B74HgZm8hg965LkIrG7utJXhrwWC6OA28kyyUjA=;
- b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBjiIs5X8qunJcdzh4yNadWVeViZgDn3gq/06nr8kdj
- kdUAnBmJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCY4iLOQAKCRDRN9E+zzrEiBePD/
- 4n9U/k8s8PcSMHwaDWquOwoHUGMa1OTSXQAeS+zkfPMUpMhgcoTNo49nWa43GN+Y810XaYiML51562
- eLirizXRSalXPpYVLlUge+rUD8YTV54zGi5OoX528K7lwHG8z+THm4BSy0/gmpmwdgB3GttlQH5Xh0
- P4IRFzzQUndzF5+V+rD7ZDsOIqsqHLEl2xVrPlelt3OtQTf7xzm+FTwEgxz8fg42kpdkTUjKNidLBa
- PVVihXzxaPSrNmIcrlXDWrTscOrbX2UGlosoMD4NyfKwacu0juZk+QLlYCoIBu78E/d04Top6bsU/I
- uqQOeIB3UrGvmdWb9fO9H/WX4GIFLG+w7VCfaLbEd22SI+WITCvp/dDA/ZO8fzX1wgQBHvFZRLIuM4
- 0mqtOEszlCVB4pMNrAVJcSULhKWOxrKI7MkUyf/otZRJ67hrWlDDaOmlBsOkJTF1T5obHSRoblMSSE
- UwMVB1vp64JD4LAxJGmFWSPjZ3BMJJK0mblOTi/qOiMm2QR7iraSkhMsUcpx9HI4IeSwbTJszKQ1Hb
- BgqjW0c2l0BpHzIlEvkoUHxIGQdKJLMfmy8GbTMKne5zBzPRx9+b+cGgNvRa/zWp72+v9Fm0r2l8rk
- 2c1+78340GIwSb9Ffj750Evz1ISy6b5FAAiC5q+SWoZEFW2mWMAN+3crcCZw==
-X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
- fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Krasnov Arseniy <oxffffaa@gmail.com>,
+        Bobby Eshleman <bobby.eshleman@gmail.com>,
+        "Bobby Eshleman" <bobby.eshleman@bytedance.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        kernel <kernel@sberdevices.ru>
+Subject: Re: [RFC PATCH v2 3/6] vsock/vmci: always return ENOMEM in case of
+ error
+Thread-Topic: [RFC PATCH v2 3/6] vsock/vmci: always return ENOMEM in case of
+ error
+Thread-Index: AQHZAPB8vpTNk9Cz/UiwVhA3FAXi7a5YmwUAgAAipwA=
+Date:   Thu, 1 Dec 2022 11:36:01 +0000
+Message-ID: <1d01f9ea-0212-ffe9-1168-47b98e2ede46@sberdevices.ru>
+References: <9d96f6c6-1d4f-8197-b3bc-8957124c8933@sberdevices.ru>
+ <675b1f93-dc07-0a70-0622-c3fc6236c8bb@sberdevices.ru>
+ <20221201093048.q2pradrgn5limcfb@sgarzare-redhat>
+In-Reply-To: <20221201093048.q2pradrgn5limcfb@sgarzare-redhat>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.1.12]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D5DB5093729C0541A2F948FB05E0AA6D@sberdevices.ru>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-KSMG-Rule-ID: 4
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiPhishing: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2022/12/01 00:48:00 #20630840
+X-KSMG-AntiVirus-Status: Clean, skipped
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-If we are shutting down due to kexec and the userspace is frozen, the
-system will stall forever waiting for userspace to complete.
-
-Do not wait for the clients to complete in that case.
-
-This fixes:
-
-[   84.943749] Freezing user space processes ... (elapsed 0.111 seconds) done.
-[  246.784446] INFO: task kexec-lite:5123 blocked for more than 122 seconds.
-[  246.819035] Call Trace:
-[  246.821782]  <TASK>
-[  246.824186]  __schedule+0x5f9/0x1263
-[  246.828231]  schedule+0x87/0xc5
-[  246.831779]  snd_card_disconnect_sync+0xb5/0x127
-...
-[  246.889249]  snd_sof_device_shutdown+0xb4/0x150
-[  246.899317]  pci_device_shutdown+0x37/0x61
-[  246.903990]  device_shutdown+0x14c/0x1d6
-[  246.908391]  kernel_kexec+0x45/0xb9
-
-And:
-
-[  246.893222] INFO: task kexec-lite:4891 blocked for more than 122 seconds.
-[  246.927709] Call Trace:
-[  246.930461]  <TASK>
-[  246.932819]  __schedule+0x5f9/0x1263
-[  246.936855]  ? fsnotify_grab_connector+0x5c/0x70
-[  246.942045]  schedule+0x87/0xc5
-[  246.945567]  schedule_timeout+0x49/0xf3
-[  246.949877]  wait_for_completion+0x86/0xe8
-[  246.954463]  snd_card_free+0x68/0x89
-...
-[  247.001080]  platform_device_unregister+0x12/0x35
-
-Cc: stable@vger.kernel.org
-Fixes: 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers in .shutdown")
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- sound/soc/sof/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
-index 3e6141d03770..9587b6a85103 100644
---- a/sound/soc/sof/core.c
-+++ b/sound/soc/sof/core.c
-@@ -9,6 +9,8 @@
- //
- 
- #include <linux/firmware.h>
-+#include <linux/kexec.h>
-+#include <linux/freezer.h>
- #include <linux/module.h>
- #include <sound/soc.h>
- #include <sound/sof.h>
-@@ -484,9 +486,10 @@ int snd_sof_device_shutdown(struct device *dev)
- 	 * make sure clients and machine driver(s) are unregistered to force
- 	 * all userspace devices to be closed prior to the DSP shutdown sequence
- 	 */
--	sof_unregister_clients(sdev);
--
--	snd_sof_machine_unregister(sdev, pdata);
-+	if (!(kexec_in_progress() && pm_freezing())) {
-+		sof_unregister_clients(sdev);
-+		snd_sof_machine_unregister(sdev, pdata);
-+	}
- 
- 	if (sdev->fw_state == SOF_FW_BOOT_COMPLETE)
- 		return snd_sof_shutdown(sdev);
-
--- 
-2.39.0.rc0.267.gcb52ba06e7-goog-b4-0.11.0-dev-696ae
+T24gMDEuMTIuMjAyMiAxMjozMCwgU3RlZmFubyBHYXJ6YXJlbGxhIHdyb3RlOg0KPiBPbiBGcmks
+IE5vdiAyNSwgMjAyMiBhdCAwNTowODowNlBNICswMDAwLCBBcnNlbml5IEtyYXNub3Ygd3JvdGU6
+DQo+PiBGcm9tOiBCb2JieSBFc2hsZW1hbiA8Ym9iYnkuZXNobGVtYW5AYnl0ZWRhbmNlLmNvbT4N
+Cj4+DQo+PiBUaGlzIHNhdmVzIG9yaWdpbmFsIGJlaGF2aW91ciBmcm9tIGFmX3Zzb2NrLmMgLSBz
+d2l0Y2ggYW55IGVycm9yDQo+PiBjb2RlIHJldHVybmVkIGZyb20gdHJhbnNwb3J0IGxheWVyIHRv
+IEVOT01FTS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCb2JieSBFc2hsZW1hbiA8Ym9iYnkuZXNo
+bGVtYW5AYnl0ZWRhbmNlLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IEFyc2VuaXkgS3Jhc25vdiA8
+QVZLcmFzbm92QHNiZXJkZXZpY2VzLnJ1Pg0KPj4gLS0tDQo+PiBuZXQvdm13X3Zzb2NrL3ZtY2lf
+dHJhbnNwb3J0LmMgfCA5ICsrKysrKysrLQ0KPj4gMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gQEJyeWFuIEBWaXNobnUgd2hhdCBkbyB5b3UgdGhp
+bmsgYWJvdXQgdGhpcyBwYXRjaD8NCj4gDQo+IEEgYml0IG9mIGNvbnRleHQ6DQo+IA0KPiBCZWZv
+cmUgdGhpcyBzZXJpZXMsIHRoZSBhZl92c29jayBjb3JlIGFsd2F5cyByZXR1cm5lZCBFTk9NRU0g
+dG8gdGhlIHVzZXIgaWYgdGhlIHRyYW5zcG9ydCBmYWlsZWQgdG8gcXVldWUgdGhlIHBhY2tldC4N
+Cj4gDQo+IE5vdyB3ZSBhcmUgY2hhbmdpbmcgaXQgYnkgcmV0dXJuaW5nIHRoZSB0cmFuc3BvcnQg
+ZXJyb3IuIFNvIEkgdGhpbmsgaGVyZSB3ZSB3YW50IHRvIHByZXNlcnZlIHRoZSBwcmV2aW91cyBi
+ZWhhdmlvciBmb3Igdm1jaSwgYnV0IEkgZG9uJ3Qga25vdyBpZiB0aGF0J3MgdGhlIHJpZ2h0IHRo
+aW5nLg0KPiANCj4gDQo+IA0KPiBAQXJzZW5peSBwbGVhc2UgaW4gdGhlIG5leHQgdmVyc2lvbnMg
+ZGVzY3JpYmUgYmV0dGVyIGluIHRoZSBjb21taXQgbWVzc2FnZXMgdGhlIHJlYXNvbnMgZm9yIHRo
+ZXNlIGNoYW5nZXMsIHNvIGl0IGlzIGVhc2llciByZXZpZXcgZm9yIG90aGVycyBhbmQgYWxzbyBp
+biB0aGUgZnV0dXJlIGJ5IHJlYWRpbmcgdGhlIGNvbW1pdCBtZXNzYWdlIHdlIGNhbiB1bmRlcnN0
+YW5kIHRoZSByZWFzb24gZm9yIHRoZSBjaGFuZ2UuDQpIZWxsbywNCg0KU3VyZSEgU29ycnkgZm9y
+IHRoYXQhIEFsc28sIEkgY2FuIHNlbmQgYm90aCB2bWNpIGFuZCBoeXBlcnYgcGF0Y2hlcyBpbiB0
+aGUgbmV4dCB2ZXJzaW9uKGUuZy4gbm90IHdhaXRpbmcgZm9yDQpyZXZpZXdlcnMgcmVwbHkgYW5k
+IHJlb3JkZXIgdGhlbSB3aXRoIDEvNiBhcyBZb3UgYXNrZWQpLCBhcyByZXN1bHQgb2YgcmV2aWV3
+IGNvdWxkIGJlIGRyb3BwZWQgcGF0Y2ggb25seS4NCg0KVGhhbmtzLCBBcnNlbml5DQo+IA0KPiBU
+aGFua3MsDQo+IFN0ZWZhbm8NCj4gDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL25ldC92bXdfdnNvY2sv
+dm1jaV90cmFuc3BvcnQuYyBiL25ldC92bXdfdnNvY2svdm1jaV90cmFuc3BvcnQuYw0KPj4gaW5k
+ZXggODQyYzk0Mjg2ZDMxLi4yODlhMzZhMjAzYTIgMTAwNjQ0DQo+PiAtLS0gYS9uZXQvdm13X3Zz
+b2NrL3ZtY2lfdHJhbnNwb3J0LmMNCj4+ICsrKyBiL25ldC92bXdfdnNvY2svdm1jaV90cmFuc3Bv
+cnQuYw0KPj4gQEAgLTE4MzgsNyArMTgzOCwxNCBAQCBzdGF0aWMgc3NpemVfdCB2bWNpX3RyYW5z
+cG9ydF9zdHJlYW1fZW5xdWV1ZSgNCj4+IMKgwqDCoMKgc3RydWN0IG1zZ2hkciAqbXNnLA0KPj4g
+wqDCoMKgwqBzaXplX3QgbGVuKQ0KPj4gew0KPj4gLcKgwqDCoCByZXR1cm4gdm1jaV9xcGFpcl9l
+bnF1ZXYodm1jaV90cmFucyh2c2spLT5xcGFpciwgbXNnLCBsZW4sIDApOw0KPj4gK8KgwqDCoCBp
+bnQgZXJyOw0KPj4gKw0KPj4gK8KgwqDCoCBlcnIgPSB2bWNpX3FwYWlyX2VucXVldih2bWNpX3Ry
+YW5zKHZzayktPnFwYWlyLCBtc2csIGxlbiwgMCk7DQo+PiArDQo+PiArwqDCoMKgIGlmIChlcnIg
+PCAwKQ0KPj4gK8KgwqDCoMKgwqDCoMKgIGVyciA9IC1FTk9NRU07DQo+PiArDQo+PiArwqDCoMKg
+IHJldHVybiBlcnI7DQo+PiB9DQo+Pg0KPj4gc3RhdGljIHM2NCB2bWNpX3RyYW5zcG9ydF9zdHJl
+YW1faGFzX2RhdGEoc3RydWN0IHZzb2NrX3NvY2sgKnZzaykNCj4+IC0twqANCj4+IDIuMjUuMQ0K
+PiANCg0K
