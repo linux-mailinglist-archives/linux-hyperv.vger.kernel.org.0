@@ -2,60 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C56B63ECB2
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Dec 2022 10:42:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8577463ECD4
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Dec 2022 10:47:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229760AbiLAJm6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Dec 2022 04:42:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46552 "EHLO
+        id S229810AbiLAJrP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 1 Dec 2022 04:47:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbiLAJmj (ORCPT
+        with ESMTP id S229820AbiLAJqv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Dec 2022 04:42:39 -0500
+        Thu, 1 Dec 2022 04:46:51 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93F44E439
-        for <linux-hyperv@vger.kernel.org>; Thu,  1 Dec 2022 01:41:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CBF1900E6
+        for <linux-hyperv@vger.kernel.org>; Thu,  1 Dec 2022 01:45:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669887704;
+        s=mimecast20190719; t=1669887956;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=d/lP/MUpumH1puWMFQWuZ/iuRBdPRSaGxJGkZdBzweg=;
-        b=GLEfBzRvRE6gr32rxNEqKFxnbPS0eXOQvVW5kNkJNJCmH4AZlZmGU4ho00x9nxdfE5xdh+
-        EnQBo0H0QPuRIvmZwND87MFkOcIvucikECKN4Hko8vfdo0Qy0Bc8encdLWpeuoCVJQeTYv
-        f+IfUfDlXrf3vvQjyGVyo25gKx/CvrU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=0jFiCUY0VXNcy859wsO8NBTioywcuSZZtPBsENMWnSA=;
+        b=Ef+3veNnnylOe0CXr1djbs6ZINvFCuH4CxtbVhiLjc6xNOPemiOh+/AyMghx30kZGJ8X6n
+        R1qTe69f+eYbuFQQtdHiv7yPnT29NiF6/HjJMCOPiCBVwT3XTJl9nZByJoY3RWLQVcH7Mu
+        a8ytjrHLRWWQo2Agf+e8bm3u2XTI/Sg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-518-8dJhz3i-N9qqVXNWFJ_NRA-1; Thu, 01 Dec 2022 04:41:42 -0500
-X-MC-Unique: 8dJhz3i-N9qqVXNWFJ_NRA-1
-Received: by mail-wr1-f70.google.com with SMTP id m24-20020adfa3d8000000b00242168ce9d1so236993wrb.15
-        for <linux-hyperv@vger.kernel.org>; Thu, 01 Dec 2022 01:41:42 -0800 (PST)
+ us-mta-642-QF8U07BmMvqpBzKNSIUn0A-1; Thu, 01 Dec 2022 04:45:55 -0500
+X-MC-Unique: QF8U07BmMvqpBzKNSIUn0A-1
+Received: by mail-wr1-f72.google.com with SMTP id v14-20020adf8b4e000000b0024174021277so241733wra.13
+        for <linux-hyperv@vger.kernel.org>; Thu, 01 Dec 2022 01:45:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d/lP/MUpumH1puWMFQWuZ/iuRBdPRSaGxJGkZdBzweg=;
-        b=1pWlwKzStp2ECyfHejSa77q2U9ukPpkLW6+1EX6KEezsDSLn4K4YTXwyY0VEKx/eL1
-         6e4nB59LS4T6PU5KaYFraXAu/S9yHvWUPYWDqgjrcvpEsxzzePoQaoIC5iAd2eD+MxUx
-         +BXi3FI1OaxkTEe9c+mgh6n3tiHY98WKJGlazOk3BfSxryYTL4EvyOMH9QibZ3snrTzx
-         Vf1YZEx68QHPXZ04ok3g65kMl8gEWidZPykCKqpDymvXNVtB1t7v4SvU8yOnBEyCSTdR
-         6IVh0f6M+UA35CtMNJjfAWGcjRLCvXPd/LTb3m53p3tlbUvh1p1gdNHfZLE8vSjgGOuc
-         m2AQ==
-X-Gm-Message-State: ANoB5pk+ITdbtYqYLUJq2HWGG35OqqO9hqT1CrKMbTvH7lo58DtepeYj
-        626nY8Jt1ZvU5Q6yNrO2gyT7mmWB2O6Khd39ul0K4fkxfsQS6qPKpApKoseahgE2H+wPu9WDvl3
-        ZW75+jTQT6s47oImJD5L83ND5
-X-Received: by 2002:a1c:f617:0:b0:3cf:e0ef:1f69 with SMTP id w23-20020a1cf617000000b003cfe0ef1f69mr34437821wmc.163.1669887701733;
-        Thu, 01 Dec 2022 01:41:41 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf6kI3TJlPqj596F8g6taBAnv03vejDjuPchx/hnOpqbtf/e5VhTFtctzxfc29O9sqpjJLLbvw==
-X-Received: by 2002:a1c:f617:0:b0:3cf:e0ef:1f69 with SMTP id w23-20020a1cf617000000b003cfe0ef1f69mr34437799wmc.163.1669887701525;
-        Thu, 01 Dec 2022 01:41:41 -0800 (PST)
+        bh=0jFiCUY0VXNcy859wsO8NBTioywcuSZZtPBsENMWnSA=;
+        b=Dg1YmKzlq/JfpPUztgLe2XtHywx8IYZeyvCaMji4WjFSmQabWJC1EN1syybpApGR0O
+         KXn7d5OSNrzv9VbxENCTMBkb+lp1CoDQBFOe12/sQp8h3abTVrHneMMux6uT2WdMuccW
+         utvIl8JTccCJwz6ln/qlCcv6mHGjl08EJXeuDhZMgDrQ56hbqQk7ZJSTMXMuGZdEAKkP
+         kuqCLWplH2teEnLoDST/I22GMmp0bsrSSIMVyCbcvqv9f3fdEWHKyWXf/FnaO2ZCzp8B
+         bF+0fnXlP5Ihtq7cdrttiN5CkKRHisOrN9j8+jX8PLp8i+DocCqTTH8FnsWmNGn1r25D
+         R91A==
+X-Gm-Message-State: ANoB5pkK3NYzlS/2ILryX6uN0UfZYs931b8ImJ8Jrjt04hA32d5LUx/q
+        wnq8SiXNoK14Ly0LRSHGkW/vg/w62fG1vqq2IjNVtDuznJYu2X/kk1zqNKnCRVUpdelcVSyVWxs
+        5KB/K4WDrPHSLqTZ0RH5BxPce
+X-Received: by 2002:a5d:5709:0:b0:241:d71c:5dde with SMTP id a9-20020a5d5709000000b00241d71c5ddemr32282792wrv.678.1669887954216;
+        Thu, 01 Dec 2022 01:45:54 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5nW23nrN+fFkGvbidJKQkIpQeOg7U4YOPGmwbwBTJo0vjWdvoPfPZAVrz0Zpx4X0wkQ8bdVg==
+X-Received: by 2002:a5d:5709:0:b0:241:d71c:5dde with SMTP id a9-20020a5d5709000000b00241d71c5ddemr32282770wrv.678.1669887953965;
+        Thu, 01 Dec 2022 01:45:53 -0800 (PST)
 Received: from sgarzare-redhat (host-82-53-134-234.retail.telecomitalia.it. [82.53.134.234])
-        by smtp.gmail.com with ESMTPSA id l12-20020a5d668c000000b00235da296623sm4266712wru.31.2022.12.01.01.41.39
+        by smtp.gmail.com with ESMTPSA id jb17-20020a05600c54f100b003d070272f25sm4660834wmb.8.2022.12.01.01.45.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Dec 2022 01:41:40 -0800 (PST)
-Date:   Thu, 1 Dec 2022 10:41:22 +0100
+        Thu, 01 Dec 2022 01:45:53 -0800 (PST)
+Date:   Thu, 1 Dec 2022 10:45:41 +0100
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     Arseniy Krasnov <AVKrasnov@sberdevices.ru>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -77,17 +77,17 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         <virtualization@lists.linux-foundation.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         kernel <kernel@sberdevices.ru>
-Subject: Re: [RFC PATCH v2 4/6] test/vsock: rework message bounds test
-Message-ID: <20221201094122.7gcyjfsf7kng4f7q@sgarzare-redhat>
+Subject: Re: [RFC PATCH v2 5/6] test/vsock: add big message test
+Message-ID: <20221201094541.gj7zthelbeqhsp63@sgarzare-redhat>
 References: <9d96f6c6-1d4f-8197-b3bc-8957124c8933@sberdevices.ru>
- <eb898b5f-72d7-47d3-82e7-75e3c7879744@sberdevices.ru>
+ <2634ad7f-b462-5c69-8aa1-2f200a6beb20@sberdevices.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <eb898b5f-72d7-47d3-82e7-75e3c7879744@sberdevices.ru>
+In-Reply-To: <2634ad7f-b462-5c69-8aa1-2f200a6beb20@sberdevices.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -95,298 +95,111 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Nov 25, 2022 at 05:10:35PM +0000, Arseniy Krasnov wrote:
->This updates message bound test making it more complex. Instead of
->sending 1 bytes messages with one MSG_EOR bit, it sends messages of
->random length(one half of messages are smaller than page size, second
->half are bigger) with random number of MSG_EOR bits set. Receiver
->also don't know total number of messages.
+On Fri, Nov 25, 2022 at 05:13:06PM +0000, Arseniy Krasnov wrote:
+>This adds test for sending message, bigger than peer's buffer size.
+>For SOCK_SEQPACKET socket it must fail, as this type of socket has
+>message size limit.
 >
 >Signed-off-by: Arseniy Krasnov <AVKrasnov@sberdevices.ru>
 >---
-> tools/testing/vsock/control.c    |  28 +++++++
-> tools/testing/vsock/control.h    |   2 +
-> tools/testing/vsock/util.c       |  13 ++++
-> tools/testing/vsock/util.h       |   1 +
-> tools/testing/vsock/vsock_test.c | 124 +++++++++++++++++++++++++++----
-> 5 files changed, 155 insertions(+), 13 deletions(-)
+> tools/testing/vsock/vsock_test.c | 69 ++++++++++++++++++++++++++++++++
+> 1 file changed, 69 insertions(+)
 >
->diff --git a/tools/testing/vsock/control.c b/tools/testing/vsock/control.c
->index 4874872fc5a3..d2deb4b15b94 100644
->--- a/tools/testing/vsock/control.c
->+++ b/tools/testing/vsock/control.c
->@@ -141,6 +141,34 @@ void control_writeln(const char *str)
-> 	timeout_end();
-> }
->
->+void control_writeulong(unsigned long value)
->+{
->+	char str[32];
->+
->+	if (snprintf(str, sizeof(str), "%lu", value) >= sizeof(str)) {
->+		perror("snprintf");
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	control_writeln(str);
->+}
->+
->+unsigned long control_readulong(void)
->+{
->+	unsigned long value;
->+	char *str;
->+
->+	str = control_readln();
->+
->+	if (!str)
->+		exit(EXIT_FAILURE);
->+
->+	value = strtoul(str, NULL, 10);
->+	free(str);
->+
->+	return value;
->+}
->+
-> /* Return the next line from the control socket (without the trailing newline).
->  *
->  * The program terminates if a timeout occurs.
->diff --git a/tools/testing/vsock/control.h b/tools/testing/vsock/control.h
->index 51814b4f9ac1..c1f77fdb2c7a 100644
->--- a/tools/testing/vsock/control.h
->+++ b/tools/testing/vsock/control.h
->@@ -9,7 +9,9 @@ void control_init(const char *control_host, const char *control_port,
-> void control_cleanup(void);
-> void control_writeln(const char *str);
-> char *control_readln(void);
->+unsigned long control_readulong(void);
-> void control_expectln(const char *str);
-> bool control_cmpln(char *line, const char *str, bool fail);
->+void control_writeulong(unsigned long value);
->
-> #endif /* CONTROL_H */
->diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
->index 2acbb7703c6a..01b636d3039a 100644
->--- a/tools/testing/vsock/util.c
->+++ b/tools/testing/vsock/util.c
->@@ -395,3 +395,16 @@ void skip_test(struct test_case *test_cases, size_t test_cases_len,
->
-> 	test_cases[test_id].skip = true;
-> }
->+
->+unsigned long hash_djb2(const void *data, size_t len)
->+{
->+	unsigned long hash = 5381;
->+	int i = 0;
->+
->+	while (i < len) {
->+		hash = ((hash << 5) + hash) + ((unsigned char *)data)[i];
->+		i++;
->+	}
->+
->+	return hash;
->+}
->diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
->index a3375ad2fb7f..fb99208a95ea 100644
->--- a/tools/testing/vsock/util.h
->+++ b/tools/testing/vsock/util.h
->@@ -49,4 +49,5 @@ void run_tests(const struct test_case *test_cases,
-> void list_tests(const struct test_case *test_cases);
-> void skip_test(struct test_case *test_cases, size_t test_cases_len,
-> 	       const char *test_id_str);
->+unsigned long hash_djb2(const void *data, size_t len);
-> #endif /* UTIL_H */
 >diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
->index bb6d691cb30d..12ef0cca6f93 100644
+>index 12ef0cca6f93..a8e43424fb32 100644
 >--- a/tools/testing/vsock/vsock_test.c
 >+++ b/tools/testing/vsock/vsock_test.c
->@@ -284,10 +284,14 @@ static void test_stream_msg_peek_server(const struct test_opts *opts)
+>@@ -569,6 +569,70 @@ static void test_seqpacket_timeout_server(const struct test_opts *opts)
 > 	close(fd);
 > }
 >
->-#define MESSAGES_CNT 7
->-#define MSG_EOR_IDX (MESSAGES_CNT / 2)
->+#define SOCK_BUF_SIZE (2 * 1024 * 1024)
->+#define MAX_MSG_SIZE (32 * 1024)
->+
-> static void test_seqpacket_msg_bounds_client(const struct test_opts *opts)
-> {
->+	unsigned long curr_hash;
->+	int page_size;
->+	int msg_count;
-> 	int fd;
->
-> 	fd = vsock_seqpacket_connect(opts->peer_cid, 1234);
->@@ -296,18 +300,78 @@ static void test_seqpacket_msg_bounds_client(const struct test_opts *opts)
-> 		exit(EXIT_FAILURE);
-> 	}
->
->-	/* Send several messages, one with MSG_EOR flag */
->-	for (int i = 0; i < MESSAGES_CNT; i++)
->-		send_byte(fd, 1, (i == MSG_EOR_IDX) ? MSG_EOR : 0);
->+	/* Wait, until receiver sets buffer size. */
->+	control_expectln("SRVREADY");
->+
->+	curr_hash = 0;
->+	page_size = getpagesize();
->+	msg_count = SOCK_BUF_SIZE / MAX_MSG_SIZE;
->+
->+	for (int i = 0; i < msg_count; i++) {
->+		ssize_t send_size;
->+		size_t buf_size;
->+		int flags;
->+		void *buf;
->+
->+		/* Use "small" buffers and "big" buffers. */
->+		if (i & 1)
->+			buf_size = page_size +
->+					(rand() % (MAX_MSG_SIZE - page_size));
->+		else
->+			buf_size = 1 + (rand() % page_size);
->+
->+		buf = malloc(buf_size);
->+
->+		if (!buf) {
->+			perror("malloc");
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		/* Set at least one MSG_EOR + some random. */
->+		if (i == (msg_count / 2) || (rand() & 1)) {
->+			flags = MSG_EOR;
->+			curr_hash++;
->+		} else {
->+			flags = 0;
->+		}
->+
->+		send_size = send(fd, buf, buf_size, flags);
->+
->+		if (send_size < 0) {
->+			perror("send");
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		if (send_size != buf_size) {
->+			fprintf(stderr, "Invalid send size\n");
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		/*
->+		 * Hash sum is computed at both client and server in
->+		 * the same way: H = hash(H + 'message length'). Idea
->+		 * is simple: such hash "accumulates" length and order
->+		 * of every sent/received message. After data exchange,
->+		 * both sums are compared using control socket, and if
->+		 * message bounds wasn't broken - two values must be
->+		 * equal.
->+		 */
->+		curr_hash += send_size;
-
-Sorry, I thought about it now, but instead of hashing the size, couldn't 
-we just fill the buffer with a pattern (maybe random?) and hash the 
-content?
-
-That way we see both that the bounds were met and that the content was 
-transferred correctly.
-
-What do you think?
-
-The rest LGTM!
-
-Stefano
-
->+		curr_hash = hash_djb2(&curr_hash, sizeof(curr_hash));
->+	}
->
-> 	control_writeln("SENDDONE");
->+	control_writeulong(curr_hash);
-> 	close(fd);
-> }
->
-> static void test_seqpacket_msg_bounds_server(const struct test_opts *opts)
-> {
+>+static void test_seqpacket_bigmsg_client(const struct test_opts *opts)
+>+{
 >+	unsigned long sock_buf_size;
->+	unsigned long remote_hash;
->+	unsigned long curr_hash;
-> 	int fd;
->-	char buf[16];
->+	char buf[MAX_MSG_SIZE];
-> 	struct msghdr msg = {0};
-> 	struct iovec iov = {0};
->
->@@ -317,25 +381,58 @@ static void test_seqpacket_msg_bounds_server(const struct test_opts *opts)
-> 		exit(EXIT_FAILURE);
-> 	}
->
->+	sock_buf_size = SOCK_BUF_SIZE;
+>+	ssize_t send_size;
+>+	socklen_t len;
+>+	void *data;
+>+	int fd;
 >+
->+	if (setsockopt(fd, AF_VSOCK, SO_VM_SOCKETS_BUFFER_MAX_SIZE,
->+		       &sock_buf_size, sizeof(sock_buf_size))) {
+>+	len = sizeof(sock_buf_size);
+>+
+>+	fd = vsock_seqpacket_connect(opts->peer_cid, 1234);
+>+	if (fd < 0) {
+>+		perror("connect");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	if (getsockopt(fd, AF_VSOCK, SO_VM_SOCKETS_BUFFER_SIZE,
+>+		       &sock_buf_size, &len)) {
 >+		perror("getsockopt");
 >+		exit(EXIT_FAILURE);
 >+	}
 >+
->+	if (setsockopt(fd, AF_VSOCK, SO_VM_SOCKETS_BUFFER_SIZE,
->+		       &sock_buf_size, sizeof(sock_buf_size))) {
->+		perror("getsockopt");
+>+	sock_buf_size++;
+>+
+>+	data = malloc(sock_buf_size);
+>+	if (!data) {
+>+		perror("malloc");
 >+		exit(EXIT_FAILURE);
 >+	}
 >+
->+	/* Ready to receive data. */
->+	control_writeln("SRVREADY");
->+	/* Wait, until peer sends whole data. */
-> 	control_expectln("SENDDONE");
-> 	iov.iov_base = buf;
-> 	iov.iov_len = sizeof(buf);
-> 	msg.msg_iov = &iov;
-> 	msg.msg_iovlen = 1;
->
->-	for (int i = 0; i < MESSAGES_CNT; i++) {
->-		if (recvmsg(fd, &msg, 0) != 1) {
->-			perror("message bound violated");
->-			exit(EXIT_FAILURE);
->-		}
->+	curr_hash = 0;
->
->-		if ((i == MSG_EOR_IDX) ^ !!(msg.msg_flags & MSG_EOR)) {
->-			perror("MSG_EOR");
->+	while (1) {
->+		ssize_t recv_size;
->+
->+		recv_size = recvmsg(fd, &msg, 0);
->+
->+		if (!recv_size)
->+			break;
->+
->+		if (recv_size < 0) {
->+			perror("recvmsg");
-> 			exit(EXIT_FAILURE);
-> 		}
->+
->+		if (msg.msg_flags & MSG_EOR)
->+			curr_hash++;
->+
->+		curr_hash += recv_size;
->+		curr_hash = hash_djb2(&curr_hash, sizeof(curr_hash));
-> 	}
->
-> 	close(fd);
->+	remote_hash = control_readulong();
->+
->+	if (curr_hash != remote_hash) {
->+		fprintf(stderr, "Message bounds broken\n");
+>+	send_size = send(fd, data, sock_buf_size, 0);
+>+	if (send_size != -1) {
+>+		fprintf(stderr, "expected 'send(2)' failure, got %zi\n",
+>+			send_size);
 >+		exit(EXIT_FAILURE);
 >+	}
-> }
+>+
+>+	if (errno != EMSGSIZE) {
+>+		fprintf(stderr, "expected EMSGSIZE in 'errno', got %i\n",
+>+			errno);
+>+		exit(EXIT_FAILURE);
+>+	}
+
+We should make sure that this is true for all transports, but since now 
+only virtio-vsock supports it, we should be okay.
+
+>+
+>+	control_writeln("CLISENT");
+>+
+>+	free(data);
+>+	close(fd);
+>+}
+>+
+>+static void test_seqpacket_bigmsg_server(const struct test_opts *opts)
+>+{
+>+	int fd;
+>+
+>+	fd = vsock_seqpacket_accept(VMADDR_CID_ANY, 1234, NULL);
+>+	if (fd < 0) {
+>+		perror("accept");
+>+		exit(EXIT_FAILURE);
+>+	}
+>+
+>+	control_expectln("CLISENT");
+>+
+>+	close(fd);
+>+}
+>+
+> #define BUF_PATTERN_1 'a'
+> #define BUF_PATTERN_2 'b'
 >
-> #define MESSAGE_TRUNC_SZ 32
->@@ -837,6 +934,7 @@ int main(int argc, char **argv)
-> 		.peer_cid = VMADDR_CID_ANY,
-> 	};
+>@@ -851,6 +915,11 @@ static struct test_case test_cases[] = {
+> 		.run_client = test_stream_poll_rcvlowat_client,
+> 		.run_server = test_stream_poll_rcvlowat_server,
+> 	},
+>+	{
+>+		.name = "SOCK_SEQPACKET big message",
+>+		.run_client = test_seqpacket_bigmsg_client,
+>+		.run_server = test_seqpacket_bigmsg_server,
+>+	},
+> 	{},
+> };
 >
->+	srand(time(NULL));
-> 	init_signals();
->
-> 	for (;;) {
 >-- 
 >2.25.1
+
+LGTM!
+
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
