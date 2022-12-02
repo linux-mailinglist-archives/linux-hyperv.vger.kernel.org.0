@@ -2,67 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B18BC640CDF
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Dec 2022 19:14:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBBF2640CE3
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Dec 2022 19:15:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233945AbiLBSOz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 2 Dec 2022 13:14:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
+        id S234295AbiLBSPq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Dec 2022 13:15:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233736AbiLBSOy (ORCPT
+        with ESMTP id S234265AbiLBSPn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 2 Dec 2022 13:14:54 -0500
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E05E8035;
-        Fri,  2 Dec 2022 10:14:53 -0800 (PST)
-Received: by mail-wm1-f54.google.com with SMTP id ay27-20020a05600c1e1b00b003d070f4060bso4945095wmb.2;
-        Fri, 02 Dec 2022 10:14:53 -0800 (PST)
+        Fri, 2 Dec 2022 13:15:43 -0500
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD4AAE8E0A;
+        Fri,  2 Dec 2022 10:15:42 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id ja4-20020a05600c556400b003cf6e77f89cso5278153wmb.0;
+        Fri, 02 Dec 2022 10:15:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+t5abKsTpKqgREaQhXCGjROpUVw3tlvXQ+X6G/BuMsw=;
-        b=OkCFw94tfw104Feoiiwjib2moOr5F2SQFUizEIUE+uExNEA41T/4wdbD1c8++0Csdt
-         4fhQHp5us8Fh+KuM1ii/9vgMOaW9gnAHEfmuuwo7N6FnYrP0A+ei/LnJGOyrFAI9E5CJ
-         6+HGyfzxhvicqgEQXV5tfTost2lrCtSKJE9fAZ8R6YbcjIpxra+Bqkd5H2lCYQJWwRRj
-         5w5SGjnexg+qqy2VjwW5zxvdw7vGwv7Oc1/mFY8r7fTKvvN7Tg/DaU9p0KuFxU8k6q12
-         STkP5t8Sz7r3ZS0MIlSfov9/DIzGOthvPkYV0nf/VsJM/zAPKsuWB1YzFr4hiboL9kVe
-         gBSw==
-X-Gm-Message-State: ANoB5plaBJlpvUPDCRg7p4+tmrSUFc1IABQWJAwjl85mb6rGrGvVShV1
-        HOJhh9BFR5avQQxXsNVpVlg=
-X-Google-Smtp-Source: AA0mqf5Un+XibMAB03hU0daYbZ1uI1ijYaDjvNf8tXvR0wxo5R2Y6uMG0rkC1MRApKdKoeZ5TMwYsw==
-X-Received: by 2002:a05:600c:358c:b0:3c6:c089:9810 with SMTP id p12-20020a05600c358c00b003c6c0899810mr54908739wmq.60.1670004891715;
-        Fri, 02 Dec 2022 10:14:51 -0800 (PST)
+        bh=msJewYeboYMFgXI2NUEobXZkko02PEBqK9n1fYacMPA=;
+        b=jpgG/D1ul+ElyJYd7z4x2KYUXKhck5YmLi7ebyHe5aWs1OV28BDUuzqmmnGddsZaaE
+         KnMTG9CDxhyiewHlbYy+q/+70U/IAsuV0aKsqlJDfanme0NMizSe+ZXu8zZHY1EUUiiq
+         Mt0j8jNfj/RV5gbm328QP/VIQU9ajgYssUTWeoTsk11Ws+7OFLc33miX0jwXkBmEEbu5
+         wRwzOWPZ5BJTJr0uF9NlhCgsKwn1lTdHHAYuLHDwlU5xWUWGIQAPvdkY5Whsn+Zh+MB/
+         qqIdDpgoldmOGQ7OUVlQzAeVPavtzScBXIJvus69aqOV/oQ3R/8YAiRpz9sZFGEFumDL
+         sSAg==
+X-Gm-Message-State: ANoB5pn0OAkHmqhPCqXaL+6q9YBelWPD8gPzMMQn1V7phsfHUuNntBCV
+        SfPQxLKe7flnH0S3HMoRW80=
+X-Google-Smtp-Source: AA0mqf60+SpmVm5NfdP20KIOIpCF1VNVqb0ig3ph/ERtU6Ww7TwZWVB+R9Wgbsk9E3I2pj91jfnK4Q==
+X-Received: by 2002:a05:600c:1f17:b0:3c6:c796:1071 with SMTP id bd23-20020a05600c1f1700b003c6c7961071mr8922185wmb.138.1670004941397;
+        Fri, 02 Dec 2022 10:15:41 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id x11-20020adfec0b000000b00241f029e672sm7432081wrn.107.2022.12.02.10.14.50
+        by smtp.gmail.com with ESMTPSA id bs4-20020a056000070400b0023677081f3asm7634604wrb.42.2022.12.02.10.15.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 10:14:50 -0800 (PST)
-Date:   Fri, 2 Dec 2022 18:14:49 +0000
+        Fri, 02 Dec 2022 10:15:40 -0800 (PST)
+Date:   Fri, 2 Dec 2022 18:15:39 +0000
 From:   Wei Liu <wei.liu@kernel.org>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Wei Liu <wei.liu@kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+        linux-hyperv@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
         Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "mail@anirudhrb.com" <mail@anirudhrb.com>,
-        "kumarpraveen@linux.microsoft.com" <kumarpraveen@linux.microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] clocksource/drivers/hyperv: use Hyper-V's page size to
- calculate PFN
-Message-ID: <Y4pAmUQZuSP9MMiu@liuwe-devbox-debian-v2>
-References: <20221103152338.2926983-1-anrayabh@linux.microsoft.com>
- <BYAPR21MB1688743DD4507008D33499B0D7389@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y2PiyAEJZitd3LS8@liuwe-devbox-debian-v2>
- <ab0e318d-0840-a76f-bf34-73db659eef63@linaro.org>
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Stanislav Kinsburskiy <stanislav.kinsburskiy@gmail.com>,
+        x86@kernel.org, mikelley@microsoft.com
+Subject: Re: [PATCH v3 0/4] hyper-v: Introduce TSC page for root partition
+Message-ID: <Y4pAy5j1iEv1GnwU@liuwe-devbox-debian-v2>
+References: <166749827889.218190.12775118554387271641.stgit@skinsburskii-cloud-desktop.internal.cloudapp.net>
+ <Y3JIk6sW9lZ6UvC7@liuwe-devbox-debian-v2>
+ <5f6dac1e-5d17-122c-5e52-1b15bff7630f@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ab0e318d-0840-a76f-bf34-73db659eef63@linaro.org>
+In-Reply-To: <5f6dac1e-5d17-122c-5e52-1b15bff7630f@linaro.org>
 X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -73,24 +73,31 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Dec 02, 2022 at 01:33:17PM +0100, Daniel Lezcano wrote:
-> 
-> Hi,
-> 
-> On 03/11/2022 16:48, Wei Liu wrote:
-> 
-> [ ... ]
-> 
-> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On Fri, Dec 02, 2022 at 01:55:35PM +0100, Daniel Lezcano wrote:
+> On 14/11/2022 14:54, Wei Liu wrote:
+> > On Thu, Nov 03, 2022 at 05:58:43PM +0000, Stanislav Kinsburskii wrote:
+> > > 
+> > > Stanislav Kinsburskiy (4):
+> > >        drivers/clocksource/hyper-v: Introduce a pointer to TSC page
+> > >        drivers/clocksource/hyper-v: Introduce TSC PFN getter
+> > >        drivers/clocksource/hyper-v: Use TSC PFN getter to map vvar page
+> > >        drivers/clocksource/hyper-v: Add TSC page support for root partition
 > > 
-> > Thank you both for the quick turnaround. I will just squash this patch
-> > into the previous one.
+> > Applied to hyeprv-next. Thanks.
 > 
-> Can you point to the mailing list the squashed version ?
+> The series should have go through the clocksource/timer tree or at least
+> should have specified the targeted tree for an Acked-by from the clocksource
+> maintainers.
+> 
+> In the future, please follow the process
 
-The squashed patch is this one:
+Sure thing.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4ad1aa571214e8d6468a1806794d987b374b5a08
+> 
+> That said,
+> 
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Thanks,
+Thank you very much!
+
 Wei.
