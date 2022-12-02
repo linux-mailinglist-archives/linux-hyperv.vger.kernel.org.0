@@ -2,217 +2,95 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77ED8640C82
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Dec 2022 18:48:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B18BC640CDF
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Dec 2022 19:14:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234174AbiLBRsN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 2 Dec 2022 12:48:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
+        id S233945AbiLBSOz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Dec 2022 13:14:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234262AbiLBRsB (ORCPT
+        with ESMTP id S233736AbiLBSOy (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 2 Dec 2022 12:48:01 -0500
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740B27DA74;
-        Fri,  2 Dec 2022 09:47:59 -0800 (PST)
-Received: by mail-qt1-f180.google.com with SMTP id fp23so5913137qtb.0;
-        Fri, 02 Dec 2022 09:47:59 -0800 (PST)
+        Fri, 2 Dec 2022 13:14:54 -0500
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E05E8035;
+        Fri,  2 Dec 2022 10:14:53 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id ay27-20020a05600c1e1b00b003d070f4060bso4945095wmb.2;
+        Fri, 02 Dec 2022 10:14:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cZkrcSltncE8/ZuZoYv4b2d7hscDOxyl0JUDZPI6liw=;
-        b=RaGlrd0ba8dYvndE1TLtFoQdEVC7LSet9MIgIcBBC4QOcWYtZn5YZZMX4oVb3ThRUK
-         P7pOUy+ubpMKYXE4xbVbUP3qMGQU63s2QguP8LiQRFvoUIZc3yx5iEEgigxGJ7tvZ6DO
-         /WkvDhcRd2BLd+HQdYgX00yWGKScXs/YEtC1FMFqRymib9P72pBI4NkdCZ26D/RbNdiR
-         kew8s4YydKL7s0NcK3x01xRf5oVT9q4GW5ZToewO5ihFa/BkmTHLcsf2QNeENkhqzHs0
-         Zo1SC5L1St0x0P2F9xBCFl25c+voRlg754QTZylfcFiNot18FmzWtYESxZxH/VkdtRoG
-         gf3A==
-X-Gm-Message-State: ANoB5pmRqeAPQ7my/7gaqlI+AoY1ZzQLgpPjb0m9rURuk11vM3iAs53B
-        X7b43MyNBs6UtZvLGCyWqHb5AijwJondlfQff20=
-X-Google-Smtp-Source: AA0mqf51uIOWkjKSwhAqxTpfKMjsu42I0eiMVKrm0VEx7HQYTsVmieNicP3p40lc7YCyIthr+ry0hUYCl4VWsxspqf0=
-X-Received: by 2002:ac8:7dcb:0:b0:3a6:8dd0:4712 with SMTP id
- c11-20020ac87dcb000000b003a68dd04712mr11196833qte.411.1670003278849; Fri, 02
- Dec 2022 09:47:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org> <20221127-snd-freeze-v8-2-3bc02d09f2ce@chromium.org>
-In-Reply-To: <20221127-snd-freeze-v8-2-3bc02d09f2ce@chromium.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 2 Dec 2022 18:47:47 +0100
-Message-ID: <CAJZ5v0jbKSTQopEoXW9FpqDmAqp6Pn=-Om5QP2-7ocuGdq8R9w@mail.gmail.com>
-Subject: Re: [PATCH v8 2/3] freezer: refactor pm_freezing into a function.
-To:     Ricardo Ribalda <ribalda@chromium.org>
-Cc:     Juergen Gross <jgross@suse.com>, Mark Brown <broonie@kernel.org>,
-        Chromeos Kdump <chromeos-kdump@google.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Len Brown <len.brown@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+t5abKsTpKqgREaQhXCGjROpUVw3tlvXQ+X6G/BuMsw=;
+        b=OkCFw94tfw104Feoiiwjib2moOr5F2SQFUizEIUE+uExNEA41T/4wdbD1c8++0Csdt
+         4fhQHp5us8Fh+KuM1ii/9vgMOaW9gnAHEfmuuwo7N6FnYrP0A+ei/LnJGOyrFAI9E5CJ
+         6+HGyfzxhvicqgEQXV5tfTost2lrCtSKJE9fAZ8R6YbcjIpxra+Bqkd5H2lCYQJWwRRj
+         5w5SGjnexg+qqy2VjwW5zxvdw7vGwv7Oc1/mFY8r7fTKvvN7Tg/DaU9p0KuFxU8k6q12
+         STkP5t8Sz7r3ZS0MIlSfov9/DIzGOthvPkYV0nf/VsJM/zAPKsuWB1YzFr4hiboL9kVe
+         gBSw==
+X-Gm-Message-State: ANoB5plaBJlpvUPDCRg7p4+tmrSUFc1IABQWJAwjl85mb6rGrGvVShV1
+        HOJhh9BFR5avQQxXsNVpVlg=
+X-Google-Smtp-Source: AA0mqf5Un+XibMAB03hU0daYbZ1uI1ijYaDjvNf8tXvR0wxo5R2Y6uMG0rkC1MRApKdKoeZ5TMwYsw==
+X-Received: by 2002:a05:600c:358c:b0:3c6:c089:9810 with SMTP id p12-20020a05600c358c00b003c6c0899810mr54908739wmq.60.1670004891715;
+        Fri, 02 Dec 2022 10:14:51 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id x11-20020adfec0b000000b00241f029e672sm7432081wrn.107.2022.12.02.10.14.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Dec 2022 10:14:50 -0800 (PST)
+Date:   Fri, 2 Dec 2022 18:14:49 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        kexec@lists.infradead.org, alsa-devel@alsa-project.org,
-        stable@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="UTF-8"
+        "mail@anirudhrb.com" <mail@anirudhrb.com>,
+        "kumarpraveen@linux.microsoft.com" <kumarpraveen@linux.microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] clocksource/drivers/hyperv: use Hyper-V's page size to
+ calculate PFN
+Message-ID: <Y4pAmUQZuSP9MMiu@liuwe-devbox-debian-v2>
+References: <20221103152338.2926983-1-anrayabh@linux.microsoft.com>
+ <BYAPR21MB1688743DD4507008D33499B0D7389@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y2PiyAEJZitd3LS8@liuwe-devbox-debian-v2>
+ <ab0e318d-0840-a76f-bf34-73db659eef63@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab0e318d-0840-a76f-bf34-73db659eef63@linaro.org>
 X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Dec 1, 2022 at 12:08 PM Ricardo Ribalda <ribalda@chromium.org> wrote:
->
-> Add a way to let the drivers know if the processes are frozen.
->
-> This is needed by drivers that are waiting for processes to end on their
-> shutdown path.
->
-> Convert pm_freezing into a function and export it, so it can be used by
-> drivers that are either built-in or modules.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers in .shutdown")
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+On Fri, Dec 02, 2022 at 01:33:17PM +0100, Daniel Lezcano wrote:
+> 
+> Hi,
+> 
+> On 03/11/2022 16:48, Wei Liu wrote:
+> 
+> [ ... ]
+> 
+> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > 
+> > Thank you both for the quick turnaround. I will just squash this patch
+> > into the previous one.
+> 
+> Can you point to the mailing list the squashed version ?
 
-Why can't you export the original pm_freezing variable and why is this
-fixing anything?
+The squashed patch is this one:
 
-> ---
->  include/linux/freezer.h |  3 ++-
->  kernel/freezer.c        |  3 +--
->  kernel/power/process.c  | 24 ++++++++++++++++++++----
->  3 files changed, 23 insertions(+), 7 deletions(-)
->
-> diff --git a/include/linux/freezer.h b/include/linux/freezer.h
-> index b303472255be..3413c869d68b 100644
-> --- a/include/linux/freezer.h
-> +++ b/include/linux/freezer.h
-> @@ -13,7 +13,7 @@
->  #ifdef CONFIG_FREEZER
->  DECLARE_STATIC_KEY_FALSE(freezer_active);
->
-> -extern bool pm_freezing;               /* PM freezing in effect */
-> +bool pm_freezing(void);
->  extern bool pm_nosig_freezing;         /* PM nosig freezing in effect */
->
->  /*
-> @@ -80,6 +80,7 @@ static inline int freeze_processes(void) { return -ENOSYS; }
->  static inline int freeze_kernel_threads(void) { return -ENOSYS; }
->  static inline void thaw_processes(void) {}
->  static inline void thaw_kernel_threads(void) {}
-> +static inline bool pm_freezing(void) { return false; }
->
->  static inline bool try_to_freeze(void) { return false; }
->
-> diff --git a/kernel/freezer.c b/kernel/freezer.c
-> index 4fad0e6fca64..2d3530ebdb7e 100644
-> --- a/kernel/freezer.c
-> +++ b/kernel/freezer.c
-> @@ -20,7 +20,6 @@ EXPORT_SYMBOL(freezer_active);
->   * indicate whether PM freezing is in effect, protected by
->   * system_transition_mutex
->   */
-> -bool pm_freezing;
->  bool pm_nosig_freezing;
->
->  /* protects freezing and frozen transitions */
-> @@ -46,7 +45,7 @@ bool freezing_slow_path(struct task_struct *p)
->         if (pm_nosig_freezing || cgroup_freezing(p))
->                 return true;
->
-> -       if (pm_freezing && !(p->flags & PF_KTHREAD))
-> +       if (pm_freezing() && !(p->flags & PF_KTHREAD))
->                 return true;
->
->         return false;
-> diff --git a/kernel/power/process.c b/kernel/power/process.c
-> index ddd9988327fe..8a4d0e2c8c20 100644
-> --- a/kernel/power/process.c
-> +++ b/kernel/power/process.c
-> @@ -108,6 +108,22 @@ static int try_to_freeze_tasks(bool user_only)
->         return todo ? -EBUSY : 0;
->  }
->
-> +/*
-> + * Indicate whether PM freezing is in effect, protected by
-> + * system_transition_mutex.
-> + */
-> +static bool pm_freezing_internal;
-> +
-> +/**
-> + * pm_freezing - indicate whether PM freezing is in effect.
-> + *
-> + */
-> +bool pm_freezing(void)
-> +{
-> +       return pm_freezing_internal;
-> +}
-> +EXPORT_SYMBOL(pm_freezing);
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4ad1aa571214e8d6468a1806794d987b374b5a08
 
-Use EXPORT_SYMBOL_GPL() instead, please.
-
-> +
->  /**
->   * freeze_processes - Signal user space processes to enter the refrigerator.
->   * The current thread will not be frozen.  The same process that calls
-> @@ -126,12 +142,12 @@ int freeze_processes(void)
->         /* Make sure this task doesn't get frozen */
->         current->flags |= PF_SUSPEND_TASK;
->
-> -       if (!pm_freezing)
-> +       if (!pm_freezing())
->                 static_branch_inc(&freezer_active);
->
->         pm_wakeup_clear(0);
->         pr_info("Freezing user space processes ... ");
-> -       pm_freezing = true;
-> +       pm_freezing_internal = true;
->         error = try_to_freeze_tasks(true);
->         if (!error) {
->                 __usermodehelper_set_disable_depth(UMH_DISABLED);
-> @@ -187,9 +203,9 @@ void thaw_processes(void)
->         struct task_struct *curr = current;
->
->         trace_suspend_resume(TPS("thaw_processes"), 0, true);
-> -       if (pm_freezing)
-> +       if (pm_freezing())
->                 static_branch_dec(&freezer_active);
-> -       pm_freezing = false;
-> +       pm_freezing_internal = false;
->         pm_nosig_freezing = false;
->
->         oom_killer_enable();
->
-> --
+Thanks,
+Wei.
