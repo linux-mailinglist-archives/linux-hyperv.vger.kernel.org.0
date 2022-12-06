@@ -2,124 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DCED64423D
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Dec 2022 12:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B906442E3
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Dec 2022 13:05:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233178AbiLFLhn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Dec 2022 06:37:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38836 "EHLO
+        id S235323AbiLFMFs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Dec 2022 07:05:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235045AbiLFLhc (ORCPT
+        with ESMTP id S235333AbiLFMFe (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Dec 2022 06:37:32 -0500
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522F3BF73;
-        Tue,  6 Dec 2022 03:37:30 -0800 (PST)
-Received: by mail-wr1-f49.google.com with SMTP id bs21so23059203wrb.4;
-        Tue, 06 Dec 2022 03:37:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2dEEPgYHWLWGN87zsbE4biUqCxTkyL0Hp4s+LmxL1OA=;
-        b=BX7ppSth1PbgamtzbcN0AJc3/Ug4pt3Jfdn6v+/AzPJi05fItfOGDcKO8MlStm73A4
-         dHfjwu39fJM2rLI2x2iADEVz4ACrnoX9Ms9420we9MIcuqFQ+sgK0ETW0ngJ9DvGiUwr
-         KKGuh0POI+u8n+iSlZHkB4tLIvr+c3uckYRHG+wA3buHKdM2dj8H5ZN/iqLRsZE268jg
-         /zZZiOgEI/xhtmZfSXd40FZlouhXbek+u55DRIdq3E+aJ0DC4JLESLAqPuNmkUyHiI6v
-         kZoR2fBsrhA//h9738zsw6XEIfcvR9OngY2N+wnbNo89buAoaw54Bnz3kM+6y+yQhiOA
-         Wxhg==
-X-Gm-Message-State: ANoB5pl5JSXlMXuuclHSwg7295J72FEPJxQPZxpF15C4F30o9cZ3CEV8
-        5biF6XcAXmnirHfz6j24NB8=
-X-Google-Smtp-Source: AA0mqf5IQao7pI3S55ozIZ3UILwG0zwLXEWSh3JhE8Rsg0wuM8pdCGyXY1E8JKqEYaIaMJ9EdjlENQ==
-X-Received: by 2002:a5d:5385:0:b0:242:f8d:fcee with SMTP id d5-20020a5d5385000000b002420f8dfceemr27418643wrv.86.1670326648777;
-        Tue, 06 Dec 2022 03:37:28 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id q17-20020a05600000d100b0024207ed4ce0sm16635553wrx.58.2022.12.06.03.37.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 03:37:27 -0800 (PST)
-Date:   Tue, 6 Dec 2022 11:37:26 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dawei Li <set_pte_at@outlook.com>
-Cc:     gregkh@linuxfoundation.org, johannes@sipsolutions.net,
-        robert.jarzmik@free.fr, jgross@suse.com, sstabellini@kernel.org,
-        oleksandr_tyshchenko@epam.com, roger.pau@citrix.com,
-        srinivas.kandagatla@linaro.org, bgoswami@quicinc.com,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] hyperv: Make remove callback of hyperv driver void
- returned
-Message-ID: <Y48pdr9DEmXShhFR@liuwe-devbox-debian-v2>
-References: <20221205153644.60909-1-set_pte_at@outlook.com>
- <TYCP286MB232373567792ED1AC5E0849FCA189@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYCP286MB232373567792ED1AC5E0849FCA189@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        Tue, 6 Dec 2022 07:05:34 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 823412934B;
+        Tue,  6 Dec 2022 04:04:30 -0800 (PST)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id DECE320B83CB; Tue,  6 Dec 2022 04:04:29 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DECE320B83CB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1670328269;
+        bh=nAGw0Ppx8rmPRSOLSZL4sBGnXf6tR5BK+rncL/6h2kY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L43SkFGlwHkLmxBiEFa7TTHJtKqxmFN0lgcNCUpISqPUvu/xsPOgbxyUua/sbAo76
+         u1RdzgUteB7uk1fJ/D9V/ZYXQOv+VuVqs4aZ4ewhdilBYwPw0B7sjKvVERq+kvnlf4
+         XWb5Yn83BAVgCZPm/zqNAe3OsyB6/Ca52PJ/EomQ=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH v2] hv_balloon: Fix committed value in post_status() if dynamic memory is disabled
+Date:   Tue,  6 Dec 2022 04:03:33 -0800
+Message-Id: <1670328213-9471-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Dec 05, 2022 at 11:36:39PM +0800, Dawei Li wrote:
-> Since commit fc7a6209d571 ("bus: Make remove callback return
-> void") forces bus_type::remove be void-returned, it doesn't
-> make much sense for any bus based driver implementing remove
-> callbalk to return non-void to its caller.
-> 
-> This change is for hyperv bus based drivers.
-> 
-> Signed-off-by: Dawei Li <set_pte_at@outlook.com>
-[...]
-> -static int netvsc_remove(struct hv_device *dev)
-> +static void netvsc_remove(struct hv_device *dev)
->  {
->  	struct net_device_context *ndev_ctx;
->  	struct net_device *vf_netdev, *net;
-> @@ -2603,7 +2603,6 @@ static int netvsc_remove(struct hv_device *dev)
->  	net = hv_get_drvdata(dev);
->  	if (net == NULL) {
->  		dev_err(&dev->device, "No net device to remove\n");
-> -		return 0;
+If Dynamic memory is disabled for VM, the committed value reported by the
+post_status() call by hv_balloon driver includes compute_balloon_floor().
+This is not needed if balloon_up operations or hot_add operations were
+never requested on the VM(or if Dynamic memory was disabled for the VM)
 
-This is wrong. You are introducing a NULL pointer dereference.
+Fixes: 1c7db96f6feac ("Prevent the host from ballooning the guest too low")
 
->  	}
->  
->  	ndev_ctx = netdev_priv(net);
-> @@ -2637,7 +2636,6 @@ static int netvsc_remove(struct hv_device *dev)
->  
->  	free_percpu(ndev_ctx->vf_stats);
->  	free_netdev(net);
-> -	return 0;
->  }
->  
->  static int netvsc_suspend(struct hv_device *dev)
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index ba64284eaf9f..3a09de70d6ea 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -3756,7 +3756,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
->   *
->   * Return: 0 on success, -errno on failure
->   */
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
 
-This comment is no longer needed in the new world.
+Changes in v2:
+  * Add Fixes: tag in the patch
 
-But, are you sure you're modifying the correct piece of code?
+---
+ drivers/hv/hv_balloon.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-hv_pci_remove is not a hook in the base bus type. It is used in struct
-hv_driver.
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index fdf6decacf06..a6f5321d4a2e 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1129,11 +1129,23 @@ static unsigned long compute_balloon_floor(void)
+ 
+ static unsigned long get_pages_committed(struct hv_dynmem_device *dm)
+ {
+-	return vm_memory_committed() +
+-		dm->num_pages_ballooned +
+-		(dm->num_pages_added > dm->num_pages_onlined ?
+-		 dm->num_pages_added - dm->num_pages_onlined : 0) +
+-		compute_balloon_floor();
++	unsigned long pages_committed;
++
++	pages_committed = vm_memory_committed();
++
++	/*
++	 * If no balloon_up or hot_add operation was performed do not add
++	 * num_pages_ballooned, number of pages offline or
++	 * compute_balloon_floor() to the pages_committed value
++	 */
++	if (dm->num_pages_ballooned || dm->num_pages_added) {
++		pages_committed += dm->num_pages_ballooned +
++			(dm->num_pages_added > dm->num_pages_onlined ?
++			 dm->num_pages_added - dm->num_pages_onlined : 0) +
++			 compute_balloon_floor();
++	}
++
++	return pages_committed;
+ }
+ 
+ /*
+-- 
+2.37.2
 
-The same comment applies to all other modifications.
-
-Thanks,
-Wei.
