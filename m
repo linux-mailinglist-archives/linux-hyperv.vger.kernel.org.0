@@ -2,88 +2,124 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36948644145
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Dec 2022 11:30:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DCED64423D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Dec 2022 12:37:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234000AbiLFKaT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Dec 2022 05:30:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
+        id S233178AbiLFLhn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Dec 2022 06:37:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233991AbiLFKaR (ORCPT
+        with ESMTP id S235045AbiLFLhc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Dec 2022 05:30:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE78617439;
-        Tue,  6 Dec 2022 02:30:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B70E61620;
-        Tue,  6 Dec 2022 10:30:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B4D53C433C1;
-        Tue,  6 Dec 2022 10:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670322615;
-        bh=gfQX7CEt4GGovjygsGA5Kh6bJN8dVhhWeBVW+GE7oDA=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=REo4ngwvT9aDY5YVWbamiUF7rNyqP7ib4Kz1b9U9spRxmng+JJo3N1p/R2OL3tV9V
-         i/IV3lhPwuGdH7HoOtAA7NL2qkTgp3iFKmWhtC8JETwSXGEitKm5yGRyPLtBKQo2FW
-         dB0MsMJX2nvo/P7vObNmI0OMzLX5ATpCK/DnZSsP+Zna3+yqSSn86FSlu/tofxGDP0
-         FDnxQHMTAayP73OsM5fpOhV11cyqOdTb/ZOk0Aoc2T19SnT8eTicOfBY19789W83n6
-         0VZ9W5lBp7RgpEsHM2YCzwxZWDC6HgNcyAs7UOgrfgZOJ71Ey3JnBf66/rdIhgqiXK
-         oAnklvItNRLqQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 93FDEE270CF;
-        Tue,  6 Dec 2022 10:30:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 6 Dec 2022 06:37:32 -0500
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522F3BF73;
+        Tue,  6 Dec 2022 03:37:30 -0800 (PST)
+Received: by mail-wr1-f49.google.com with SMTP id bs21so23059203wrb.4;
+        Tue, 06 Dec 2022 03:37:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2dEEPgYHWLWGN87zsbE4biUqCxTkyL0Hp4s+LmxL1OA=;
+        b=BX7ppSth1PbgamtzbcN0AJc3/Ug4pt3Jfdn6v+/AzPJi05fItfOGDcKO8MlStm73A4
+         dHfjwu39fJM2rLI2x2iADEVz4ACrnoX9Ms9420we9MIcuqFQ+sgK0ETW0ngJ9DvGiUwr
+         KKGuh0POI+u8n+iSlZHkB4tLIvr+c3uckYRHG+wA3buHKdM2dj8H5ZN/iqLRsZE268jg
+         /zZZiOgEI/xhtmZfSXd40FZlouhXbek+u55DRIdq3E+aJ0DC4JLESLAqPuNmkUyHiI6v
+         kZoR2fBsrhA//h9738zsw6XEIfcvR9OngY2N+wnbNo89buAoaw54Bnz3kM+6y+yQhiOA
+         Wxhg==
+X-Gm-Message-State: ANoB5pl5JSXlMXuuclHSwg7295J72FEPJxQPZxpF15C4F30o9cZ3CEV8
+        5biF6XcAXmnirHfz6j24NB8=
+X-Google-Smtp-Source: AA0mqf5IQao7pI3S55ozIZ3UILwG0zwLXEWSh3JhE8Rsg0wuM8pdCGyXY1E8JKqEYaIaMJ9EdjlENQ==
+X-Received: by 2002:a5d:5385:0:b0:242:f8d:fcee with SMTP id d5-20020a5d5385000000b002420f8dfceemr27418643wrv.86.1670326648777;
+        Tue, 06 Dec 2022 03:37:28 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id q17-20020a05600000d100b0024207ed4ce0sm16635553wrx.58.2022.12.06.03.37.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Dec 2022 03:37:27 -0800 (PST)
+Date:   Tue, 6 Dec 2022 11:37:26 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dawei Li <set_pte_at@outlook.com>
+Cc:     gregkh@linuxfoundation.org, johannes@sipsolutions.net,
+        robert.jarzmik@free.fr, jgross@suse.com, sstabellini@kernel.org,
+        oleksandr_tyshchenko@epam.com, roger.pau@citrix.com,
+        srinivas.kandagatla@linaro.org, bgoswami@quicinc.com,
+        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, xen-devel@lists.xenproject.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] hyperv: Make remove callback of hyperv driver void
+ returned
+Message-ID: <Y48pdr9DEmXShhFR@liuwe-devbox-debian-v2>
+References: <20221205153644.60909-1-set_pte_at@outlook.com>
+ <TYCP286MB232373567792ED1AC5E0849FCA189@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: mana: Fix race on per-CQ variable napi work_done
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167032261559.29141.6212046728615098270.git-patchwork-notify@kernel.org>
-Date:   Tue, 06 Dec 2022 10:30:15 +0000
-References: <1670010190-28595-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1670010190-28595-1-git-send-email-haiyangz@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        decui@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYCP286MB232373567792ED1AC5E0849FCA189@TYCP286MB2323.JPNP286.PROD.OUTLOOK.COM>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Fri,  2 Dec 2022 11:43:10 -0800 you wrote:
-> After calling napi_complete_done(), the NAPIF_STATE_SCHED bit may be
-> cleared, and another CPU can start napi thread and access per-CQ variable,
-> cq->work_done. If the other thread (for example, from busy_poll) sets
-> it to a value >= budget, this thread will continue to run when it should
-> stop, and cause memory corruption and panic.
+On Mon, Dec 05, 2022 at 11:36:39PM +0800, Dawei Li wrote:
+> Since commit fc7a6209d571 ("bus: Make remove callback return
+> void") forces bus_type::remove be void-returned, it doesn't
+> make much sense for any bus based driver implementing remove
+> callbalk to return non-void to its caller.
 > 
-> To fix this issue, save the per-CQ work_done variable in a local variable
-> before napi_complete_done(), so it won't be corrupted by a possible
-> concurrent thread after napi_complete_done().
+> This change is for hyperv bus based drivers.
 > 
-> [...]
+> Signed-off-by: Dawei Li <set_pte_at@outlook.com>
+[...]
+> -static int netvsc_remove(struct hv_device *dev)
+> +static void netvsc_remove(struct hv_device *dev)
+>  {
+>  	struct net_device_context *ndev_ctx;
+>  	struct net_device *vf_netdev, *net;
+> @@ -2603,7 +2603,6 @@ static int netvsc_remove(struct hv_device *dev)
+>  	net = hv_get_drvdata(dev);
+>  	if (net == NULL) {
+>  		dev_err(&dev->device, "No net device to remove\n");
+> -		return 0;
 
-Here is the summary with links:
-  - [net] net: mana: Fix race on per-CQ variable napi work_done
-    https://git.kernel.org/netdev/net/c/18010ff776fa
+This is wrong. You are introducing a NULL pointer dereference.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+>  	}
+>  
+>  	ndev_ctx = netdev_priv(net);
+> @@ -2637,7 +2636,6 @@ static int netvsc_remove(struct hv_device *dev)
+>  
+>  	free_percpu(ndev_ctx->vf_stats);
+>  	free_netdev(net);
+> -	return 0;
+>  }
+>  
+>  static int netvsc_suspend(struct hv_device *dev)
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index ba64284eaf9f..3a09de70d6ea 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -3756,7 +3756,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+>   *
+>   * Return: 0 on success, -errno on failure
+>   */
 
+This comment is no longer needed in the new world.
 
+But, are you sure you're modifying the correct piece of code?
+
+hv_pci_remove is not a hook in the base bus type. It is used in struct
+hv_driver.
+
+The same comment applies to all other modifications.
+
+Thanks,
+Wei.
