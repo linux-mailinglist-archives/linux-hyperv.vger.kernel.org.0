@@ -2,53 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8765D647D4F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Dec 2022 06:33:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C90026481F8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Dec 2022 12:54:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbiLIFd4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Dec 2022 00:33:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53796 "EHLO
+        id S229777AbiLILyD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Dec 2022 06:54:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229818AbiLIFda (ORCPT
+        with ESMTP id S229470AbiLILyC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Dec 2022 00:33:30 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC3E3944FB;
-        Thu,  8 Dec 2022 21:33:06 -0800 (PST)
-Received: from jinankjain-dranzer.zrrkmle5drku1h0apvxbr2u2ee.ix.internal.cloudapp.net (unknown [20.188.121.5])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0E6E020B83C2;
-        Thu,  8 Dec 2022 21:33:00 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0E6E020B83C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1670563986;
-        bh=mvHPH26sfvX6dqItdLgyjEMsIkSbtmXqfahX8ng64PY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p147wbFw3DrZEzHTVIxYg3oYL6Z8IcWlnTbCq3q8QMp8YZzfsG8fY9EYRkLRF1s8a
-         848H5mnw+B00eXqn4m5V13bGnPGuEbiOE+Hd5xoHEi3i8ObSbY5VFQYEN87P0EkG7U
-         c4Gz1byuW7/LQT5AhnwGLm/OMQf4kGP6I9sNlhfA=
-From:   Jinank Jain <jinankjain@linux.microsoft.com>
-To:     jinankjain@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, arnd@arndb.de, peterz@infradead.org,
-        jpoimboe@kernel.org, jinankjain@linux.microsoft.com,
-        seanjc@google.com, kirill.shutemov@linux.intel.com,
-        ak@linux.intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, anrayabh@linux.microsoft.com,
-        mikelley@microsoft.com
-Subject: [PATCH v8 5/5] x86/hyperv: Change interrupt vector for nested root partition
-Date:   Fri,  9 Dec 2022 05:32:31 +0000
-Message-Id: <6e9988271f389360b1e14096e8529a8189fcb65d.1670561320.git.jinankjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1670561320.git.jinankjain@linux.microsoft.com>
-References: <cover.1670561320.git.jinankjain@linux.microsoft.com>
+        Fri, 9 Dec 2022 06:54:02 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4510A2F644;
+        Fri,  9 Dec 2022 03:54:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670586840; x=1702122840;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=i6l99AsOk7Ek/fC/JJlzKRTZl8kQmivMJCaJu9pD6WY=;
+  b=g70OOyfpq57JmzL5fNoWYyVwu5sApRbF+H0X/Ja0tg51Gqeitl7PkDK+
+   dPsM1QjjjEuUlOzBjtpONK4QD4hcPZ+7kjVu3X84kpkXbQJNXSpEXPzGg
+   9Q+KrqrDZjZRR0gxgaUhVa+zcyJ4RLhNLD/m1K+9RzxoZvhzgBtw7zZDV
+   f58WPBIFy1KzO0bnf7YrZqlfpRSbezkRCAKcSHtGizkYo7j7i8rZuuhfM
+   CteNhoMvf5Is2mjhWkT6NXmoA0Cmk5+lsUyLwmAX88bTkNQ42B6NEBkCQ
+   oP6Mbg34Q4Vbn+jocPCpol7WK+fKDW4Y9Xuek6DIPJjddXOPYYyjPOLUT
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="305085941"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="305085941"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 03:53:59 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="736191278"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="736191278"
+Received: from eliteleevi.tm.intel.com ([10.237.54.20])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 03:53:50 -0800
+Date:   Fri, 9 Dec 2022 13:53:31 +0200 (EET)
+From:   Kai Vehmanen <kai.vehmanen@linux.intel.com>
+X-X-Sender: kvehmane@eliteleevi.tm.intel.com
+To:     Ricardo Ribalda <ribalda@chromium.org>
+cc:     Oliver Neukum <oneukum@suse.com>, Juergen Gross <jgross@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Chromeos Kdump <chromeos-kdump@google.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Len Brown <len.brown@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        kexec@lists.infradead.org,
+        Alsa-devel <alsa-devel@alsa-project.org>, stable@vger.kernel.org,
+        sound-open-firmware@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v8 3/3] ASoC: SOF: Fix deadlock when shutdown a frozen
+ userspace
+In-Reply-To: <CANiDSCtm7dCst_atiWk=ZcK_D3=VzvD0+kWXVQr4gEn--JjGkw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2212091349310.3532114@eliteleevi.tm.intel.com>
+References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org> <20221127-snd-freeze-v8-3-3bc02d09f2ce@chromium.org> <716e5175-7a44-7ae8-b6bb-10d9807552e6@suse.com> <CANiDSCtwSb50sjn5tM7jJ6W2UpeKzpuzng+RdJuywiC3-j2zdg@mail.gmail.com>
+ <d3730d1d-6f92-700a-06c4-0e0a35e270b0@suse.com> <CANiDSCtm7dCst_atiWk=ZcK_D3=VzvD0+kWXVQr4gEn--JjGkw@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,112 +102,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Traditionally we have been using the HYPERVISOR_CALLBACK_VECTOR to relay
-the VMBus interrupt. But this does not work in case of nested
-hypervisor. Microsoft Hypervisor reserves 0x31 to 0x34 as the interrupt
-vector range for VMBus and thus we have to use one of the vectors from
-that range and setup the IDT accordingly.
+Hi,
 
-Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
----
- arch/x86/include/asm/idtentry.h    |  2 ++
- arch/x86/include/asm/irq_vectors.h |  6 ++++++
- arch/x86/kernel/cpu/mshyperv.c     | 15 +++++++++++++++
- arch/x86/kernel/idt.c              | 10 ++++++++++
- drivers/hv/vmbus_drv.c             |  3 ++-
- 5 files changed, 35 insertions(+), 1 deletion(-)
+On Thu, 1 Dec 2022, Ricardo Ribalda wrote:
 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 72184b0b2219..c0648e3e4d4a 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -686,6 +686,8 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested
- DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_hyperv_callback);
- DECLARE_IDTENTRY_SYSVEC(HYPERV_REENLIGHTENMENT_VECTOR,	sysvec_hyperv_reenlightenment);
- DECLARE_IDTENTRY_SYSVEC(HYPERV_STIMER0_VECTOR,	sysvec_hyperv_stimer0);
-+DECLARE_IDTENTRY_SYSVEC(HYPERV_INTR_NESTED_VMBUS_VECTOR,
-+			sysvec_hyperv_nested_vmbus_intr);
- #endif
- 
- #if IS_ENABLED(CONFIG_ACRN_GUEST)
-diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-index 43dcb9284208..729d19eab7f5 100644
---- a/arch/x86/include/asm/irq_vectors.h
-+++ b/arch/x86/include/asm/irq_vectors.h
-@@ -102,6 +102,12 @@
- #if IS_ENABLED(CONFIG_HYPERV)
- #define HYPERV_REENLIGHTENMENT_VECTOR	0xee
- #define HYPERV_STIMER0_VECTOR		0xed
-+/*
-+ * FIXME: Change this, once Microsoft Hypervisor changes its assumption
-+ * around VMBus interrupt vector allocation for nested root partition.
-+ * Or provides a better interface to detect this instead of hardcoding.
-+ */
-+#define HYPERV_INTR_NESTED_VMBUS_VECTOR	0x31
- #endif
- 
- #define LOCAL_TIMER_VECTOR		0xec
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 47ffec5de9b8..dc2be733cadc 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -122,6 +122,21 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
- 	set_irq_regs(old_regs);
- }
- 
-+DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_nested_vmbus_intr)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
-+
-+	inc_irq_stat(irq_hv_callback_count);
-+
-+	if (vmbus_handler)
-+		vmbus_handler();
-+
-+	if (ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED)
-+		ack_APIC_irq();
-+
-+	set_irq_regs(old_regs);
-+}
-+
- void hv_setup_vmbus_handler(void (*handler)(void))
- {
- 	vmbus_handler = handler;
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index a58c6bc1cd68..3536935cea39 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -160,6 +160,16 @@ static const __initconst struct idt_data apic_idts[] = {
- # endif
- 	INTG(SPURIOUS_APIC_VECTOR,		asm_sysvec_spurious_apic_interrupt),
- 	INTG(ERROR_APIC_VECTOR,			asm_sysvec_error_interrupt),
-+#ifdef CONFIG_HYPERV
-+	/*
-+	 * This is a hack because we cannot install this interrupt handler
-+	 * via alloc_intr_gate as it does not allow interrupt vector less
-+	 * than FIRST_SYSTEM_VECTORS. And hyperv does not want anything other
-+	 * than 0x31-0x34 as the interrupt vector for vmbus interrupt in case
-+	 * of nested setup.
-+	 */
-+	INTG(HYPERV_INTR_NESTED_VMBUS_VECTOR, asm_sysvec_hyperv_nested_vmbus_intr),
-+#endif
- #endif
- };
- 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 6324e01d5eec..740878367426 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2768,7 +2768,8 @@ static int __init hv_acpi_init(void)
- 	 * normal Linux IRQ mechanism is not used in this case.
- 	 */
- #ifdef HYPERVISOR_CALLBACK_VECTOR
--	vmbus_interrupt = HYPERVISOR_CALLBACK_VECTOR;
-+	vmbus_interrupt = hv_nested ? HYPERV_INTR_NESTED_VMBUS_VECTOR :
-+				      HYPERVISOR_CALLBACK_VECTOR;
- 	vmbus_irq = -1;
- #endif
- 
--- 
-2.25.1
+> On Thu, 1 Dec 2022 at 14:22, 'Oliver Neukum' via Chromeos Kdump <chromeos-kdump@google.com> wrote:
+> >
+> > On 01.12.22 14:03, Ricardo Ribalda wrote:
+> > > This patchset does not modify this behaviour. It simply fixes the
+> > > stall for kexec().
+> > >
+> > > The  patch that introduced the stall:
+> > > 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers
+> > > in .shutdown")
+> >
+> > That patch is problematic. I would go as far as saying that
+> > it needs to be reverted.
+> 
+> It fixes a real issue. We have not had any complaints until we tried
+> to kexec in the platform.
+> I wont recommend reverting it until we have an alternative implementation.
+> 
+> kexec is far less common than suspend/reboot.
 
+I've posted an alternative to ALSA list that reverts the problematic
+patch and fixes the problem (the patch was originally addressing)
+in a different way:
+
+https://mailman.alsa-project.org/pipermail/alsa-devel/2022-December/209776.html
+
+No changes outside sound/soc/ are needed with this approach.
+
+Br, Kai
