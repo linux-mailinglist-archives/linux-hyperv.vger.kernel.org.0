@@ -2,43 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A683564BAFE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Dec 2022 18:30:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 409D764BB98
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Dec 2022 19:08:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235954AbiLMRaQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Dec 2022 12:30:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49266 "EHLO
+        id S236366AbiLMSIO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Dec 2022 13:08:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235962AbiLMRaK (ORCPT
+        with ESMTP id S236440AbiLMSIL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Dec 2022 12:30:10 -0500
-Received: from CO1PR02CU002-vft-obe.outbound.protection.outlook.com (mail-westus2azon11020014.outbound.protection.outlook.com [52.101.46.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A425D22BED;
-        Tue, 13 Dec 2022 09:30:09 -0800 (PST)
+        Tue, 13 Dec 2022 13:08:11 -0500
+Received: from CO1PR02CU002-vft-obe.outbound.protection.outlook.com (mail-westus2azon11020019.outbound.protection.outlook.com [52.101.46.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CF772409E;
+        Tue, 13 Dec 2022 10:08:10 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZjoRiF9P0XhMHo/ju5OWtgh1Q3gRvnoX6qIIxnmc8K6htdPQDmNCi41C5WIXK4j5s76L+24B0A/nZ1VLbjqRzneAN/r5SOe5WCv0zNrv1ggmsna3iMe8nxzggXdCFSpZrZvTG4+c0MG3j5BxGglVgeiNRh+DGAREcaBumt/4G479p84LxPkC4TZgMnro8QjpEEO+f7TwOnI3u35LnbDRX8AWLdUZ0TwZFGIrjrusjtHgtsMfeK2yJo42FEc8AP3wg/SqO+BZusUktSOhlCBpJafAA0PxDd+DPRYQhvJ3lzxCBSgNW4+eOT7Zivqe1Lj5+VvgEGQvZKp1MRZFlJzU0g==
+ b=CBzTdunr1wB6FGLVZpSG+eyQVijZb/xGK0QTamtS7Oj5KiB+K9NQOerxkQRdMN9x4VdOhARtXDTQYenhyvigAiKB9NaAmR2iWIuJi6757myjyqlWPUP+n1Us3i/JjPZ2omwWXegpe1whICKfoPpR4pisl1ylogNs9t39fSM11KdseHAbR+KS4jxw0N7CsBNdPWJjUFbvw68VVpDeYGI5k2P6jZsurLCoDI1Hly2LWJJuspU97HGBlaDiCO0f2dXhnvJBjJOWEpaqkwNvyTa7r1X/uhe6OTvgrkvn2/lKQRuogmL60OJoxcRFvL1gj2Hvk0MTHfFROSY7nDLLfI8/nA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EfNzmAgtS2G7InUCiqCMUVR7OQcAZQhtkwb35IGbUpo=;
- b=SD+xL/2UovUThGDE+zQ03o0sR/x3lDQpfApEcsBVVa6s7aldWdjywAyI5Lea8A9L/P1e++HW66AaxoB/ZeBw2bBJcDDDIFvzEJzRzph+ev9JFBGk88CNCfE5JAjVDgyqtC4YuEcWd+vyGWI5ujKnixLT2034dl9jL/+oLS/3Obm1/ddxBoGfL0UUojesEamwrFcUwUXugKl7Ao0Cx77pP5Q/YItCN1FyZ+G8Wwd3t+Zsaf/GXeiZCNiRGSiEVMxssrSBj1LnK7iASrTh2CdCw1FkYEVHE8PNW22ufpAMbj6p1wFqmmmm1vWpIljYMfpAHX5rJkdVR3X4+0yAqCQyrA==
+ bh=/k0sk+jUane8TxdKIK93dStS0sVP7dcfYb43PsOI6PE=;
+ b=AMlgDC/Ixm0IuGwwM/COdd1pqlDe92j64b5kuIQKLy8p0WVka/N75JSdB2pY2Fd5bq85txQcteC4n3fY4IOCZ3wVYIxWhM/csHwE2NMenJXdyn+MZj9b5xW4owI4kQeGV4c41FzQ/WaOAhxFAT7R9QlDAiFYBKLo91dnJNpYLtW2uAeSZWv9gqzYTZOlcYDRWWZJsibhN7c7YUCbKENuZaX4oyr9CWHdncQ9dw6AycbmfT8G4xjGr2Brw2Sb5Z7kUz4/6UKALWMDa57ujHECw8U9LZzC80XN/8RDETNI+UpvPChMGKTGmisXCLRO5t5PSZ1sl1Vm60xxLgZh8jwd+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EfNzmAgtS2G7InUCiqCMUVR7OQcAZQhtkwb35IGbUpo=;
- b=GuOuhBK2wS9kF7ozyEgLhRKGtXIGQbblcQj7pk56TztzptSK+uVBCXV/6YuUg01rloMvNwyxeUUUI54U+IPf7FvsX7YsgWsxnllddfJh3dLEMeO2eNrz8YIO6kgzx+ydDgwnKcC6O+Yh8+/C0qZs6eaGnnlq5ZnR0b2Vmpvjqwc=
+ bh=/k0sk+jUane8TxdKIK93dStS0sVP7dcfYb43PsOI6PE=;
+ b=MvKce/ptT6g90G6cz0x4HVdib8yR+GXdFz17nCz6kbjGvXSNb9ukliaZBVHZshat34GHr2eTJAYUaFBufHAqPWnRiso80Wld1/t2Ey4lmCguFT7bBoUUHQC/8Wxw6RPmP83ZZ9SPtQmbKPsoA/L13QsoI7YP0SemJAsyfFhwugg=
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DS7PR21MB3479.namprd21.prod.outlook.com (2603:10b6:8:90::11) with
+ by DM4PR21MB3153.namprd21.prod.outlook.com (2603:10b6:8:65::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.2; Tue, 13 Dec
- 2022 17:30:07 +0000
+ 2022 18:08:07 +0000
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::1e50:78ec:6954:d6dd]) by BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::1e50:78ec:6954:d6dd%8]) with mapi id 15.20.5944.002; Tue, 13 Dec 2022
- 17:30:06 +0000
+ 18:08:07 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 To:     Tianyu Lan <ltykernel@gmail.com>,
         "luto@kernel.org" <luto@kernel.org>,
@@ -78,78 +78,78 @@ CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [RFC PATCH V2 07/18] clocksource: hyper-v: decrypt hyperv tsc
- page in sev-snp enlightened guest
-Thread-Topic: [RFC PATCH V2 07/18] clocksource: hyper-v: decrypt hyperv tsc
- page in sev-snp enlightened guest
-Thread-Index: AQHY+8ngUVhmmnBNCk6VoJ0gSzEd765sOGFQ
-Date:   Tue, 13 Dec 2022 17:30:06 +0000
-Message-ID: <BYAPR21MB16887BAC34B73C9D9BA9FC33D7E39@BYAPR21MB1688.namprd21.prod.outlook.com>
+Subject: RE: [RFC PATCH V2 08/18] x86/hyperv: decrypt vmbus pages for sev-snp
+ enlightened guest
+Thread-Topic: [RFC PATCH V2 08/18] x86/hyperv: decrypt vmbus pages for sev-snp
+ enlightened guest
+Thread-Index: AQHY+8nnT0vZkQ8ItEWjPAL2ci+60K5sPHLw
+Date:   Tue, 13 Dec 2022 18:08:07 +0000
+Message-ID: <BYAPR21MB168838758CAA630B55E73DB2D7E39@BYAPR21MB1688.namprd21.prod.outlook.com>
 References: <20221119034633.1728632-1-ltykernel@gmail.com>
- <20221119034633.1728632-8-ltykernel@gmail.com>
-In-Reply-To: <20221119034633.1728632-8-ltykernel@gmail.com>
+ <20221119034633.1728632-9-ltykernel@gmail.com>
+In-Reply-To: <20221119034633.1728632-9-ltykernel@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=62760ebd-8162-43c1-b90a-c9684783e3ed;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-12-13T17:26:04Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e16f318b-cc8b-4799-af70-c1d7cc3288cc;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-12-13T17:40:37Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DS7PR21MB3479:EE_
-x-ms-office365-filtering-correlation-id: f682d1f2-47d3-47e9-074a-08dadd2fad3b
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DM4PR21MB3153:EE_
+x-ms-office365-filtering-correlation-id: b44efb54-80f7-4fce-b6ce-08dadd34fcb0
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6NLqHZwlaHwyhXavYL+pePxsQgyLWQdVirOdrLaKKNwbSnmlHQvPd7d8NxFesvTE4tP5++M0WMZ9uoShRwQ0HozxHxv5ZSXgZTPDw/fkro7UUXm+AjYA6VIMrtcUtGCRW82xD53UlDU2k3vzExyv/GlxeD66rvuIiNZzevyBHICtqgwtQEMSHXFjw6l1ZtKA+wdc2/w4/7zFhg6JUt9lAyYeoWtbrJLpurtK3JiX74MNfuup/rWztxG8GfbFGyWFD1GFaissZhh6CUJB44zAf1TRCxmFZocLcChZDvLicMjGtyr9PtFqovPJKpy2DdmRl+X+ANstRhLjRsoJhVuS5xHNv7NdJDDplyKDR+N+5uRJwsDV1xqr5fzZn9xeNgqBrCq7a7f6JDFqzW5wp21yAR2PePThV2h3LEK38OyfJbHlCmJXLglU2AvzQKMZ8x/iRIGw6vI332PeRMTIz0vJKo4ng4lNyyHuL9daAim7Wbh6onw9KmtEu615O3uMnOQL3xmnuNFI9B/l8VxPy1+dt8ftmfs6NAr6bU6K8Bhg7kRKWRKzSnHpUpKl86NGjkPZbJFCQtIHOROSGoS7oOX+Mzc3/s/RdQMKTcBWLHAzpqlbuhrsUFs/MYifjJ7e2Jbkpvfz8wsWESDX+kWxgoaz+6FgRGQulZ/q8VoQdUnmsKemOMEQFQrgniR463dQXYNRD4WqHkoRfx9xG3agnJphONxTARu8Y1mNUUZ8OR2jzCL05L4kftYuHl+/tPBh0WABqQgDtqxSQEAXSnVH6OMfeA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(136003)(366004)(39860400002)(396003)(451199015)(110136005)(316002)(8990500004)(54906003)(2906002)(7416002)(33656002)(7406005)(86362001)(8936002)(52536014)(5660300002)(41300700001)(66476007)(38070700005)(921005)(64756008)(8676002)(66446008)(4326008)(66946007)(38100700002)(76116006)(66556008)(82960400001)(82950400001)(122000001)(55016003)(10290500003)(71200400001)(6506007)(478600001)(186003)(7696005)(26005)(83380400001)(9686003);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: UJ+F8Mielwv5w6vT0HFYXuMsNZOYfj3ewJy6h2UA32xmrX/Beo/0tYS1vuo+Uz6vxRqfJ8z3uLlMQJ3XKPTE3DAvUnxBakSdqD8X6V8bvgUamzjYMqkHl5L2KlhS4EWMdXei8rO2hOYkBtNEPHLsfxFy1tomUUz/RUSTF/KZ8PlmB4+VmC0m9ssVDgHwO5XBo5dk09lmg3wJz1VzsGN3U4CQxhVO5nkOLAhlGfGPeehcSuVgOKdkGxpu+UyuqyEvWLjJt7FcqsYYCv1/SjSW/+6LFOD68x8/FcbG2sOS66sBjMgXzH0D28+z6Uebw28ZRGpHDv/AnJ7wyr3xZjmxK9ia/SrQoKvq2V7BrG9Ag/m/0Unt5LCM0LsRMUlR1VtMZGnDEwWfwW9ltMmtpx6mm/fyh1ymd1W0M/mha3+lOCNirMCWpl8/90dPbEBjWV1sxx4Y0fy7PKKyk3AIuQz/Rn4E6vSeHEKJ8q1E10nta2HDKl/7fv6G3OeIebCNx86mspung/MaPhmuM6P7slAs+0glR0eGp7yhnKNeTwazshUhSI97sDptoWxhtgYYMXMjjN/x5sYkqRTY8CDEivP+/6G24h1DP7bhQyyXvICOa8yjqBoxl3tir9HKyURusWjXnvYrrr+QHhbHoXQqwJbO+NFpzhRs0Yof3BMIMXOvokfHvK+DQOBw99noS1eSTjsGqgPiLbjBFMwv0nq7YYa/1qyOaelSaO/wI4UXRfKRs7Xnze8WRhkV0sFf4DBzmVBGEDMgUzrci9fAeQR5wzH6EQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(136003)(366004)(346002)(396003)(451199015)(186003)(33656002)(86362001)(478600001)(110136005)(10290500003)(54906003)(316002)(921005)(38070700005)(55016003)(82960400001)(82950400001)(83380400001)(122000001)(38100700002)(9686003)(26005)(7696005)(6506007)(7406005)(7416002)(8990500004)(2906002)(71200400001)(52536014)(8676002)(41300700001)(66446008)(8936002)(4326008)(64756008)(5660300002)(76116006)(66946007)(66476007)(66556008);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?LiPv8GNCU+y167vVBslqGcZdVIJQfDkke8aFZ6fPNR9gag44OGHc+rLo6y1e?=
- =?us-ascii?Q?h7OAHjlIoKHOMO8WWI7TutUXPd5P8tMIRAKN5BgMF0DVlU3NY+c74fl9a7Yi?=
- =?us-ascii?Q?Ov/h9+Zyt2kYX9tl6h1V7cI1xXiEMfXBjF6Ra0sTOiucEyN0T4A+0GRWHJ/B?=
- =?us-ascii?Q?6qskPP2j4KeHYulrMbXKK5QRqhmBnV/sX7XQMWMB0YMFs3Tc0GAF22N2k5Oz?=
- =?us-ascii?Q?gIQgAtSO+7HkbYRqnl3P+r7zkuGsoTFzc18ftSL09xFBZ4WoVfTu5E06iawx?=
- =?us-ascii?Q?G6wNipOlHJAq6ju5jkfgYSjmcBAs8PteqBi0YTlY0h8iWVrZsBBDvnQU8fvy?=
- =?us-ascii?Q?tJiTf+Z2yoEkeupv0u5N/o6WdhEmlPFOhAmUkMXaFbajX7pfQwtM7dGpWaVc?=
- =?us-ascii?Q?UlTvUUfXN1eGledhMwewryLVz4U3zPAfh6vgZP5cMftz3VO8VsR0BincvO/D?=
- =?us-ascii?Q?jHaAR5mQuKu11PO/oAoEWea6CawF6NbRTqF7jrJsQSVI1TsPRyHWgyK1Y1bZ?=
- =?us-ascii?Q?+22TLTH9Ex7VCOOdTf4HoehLJCzNS7L8aW63M9zmNjfkJwBoXo3hfIko8Ufs?=
- =?us-ascii?Q?AF9GdFZK36TMnK8WRu6qRsbZj6OwvNWuU99n92gR8GbIY/CSipDmSW0tlKku?=
- =?us-ascii?Q?aIJO/fl8zYl83aF/FdbqokydWZOkSkTGsWgpam7csfQ2S4P31TlrE1St011B?=
- =?us-ascii?Q?DZNZ7yLLqpwCtYo2NuhI2MaYYHHKITNpq7T5TbEjVT/LDvWmcO3IWDDKFxOF?=
- =?us-ascii?Q?Vk6yxcjb+9hIjO+PunTeTOTktmNlouxslGrq/5ICyeLvsFIfhAbf4hO2qIzK?=
- =?us-ascii?Q?Rd2IU0EZL4k/GHUCwvpA7Jh8VP7tx2JbngS/zCmLt6ytlF8PySI6qtyIzfWA?=
- =?us-ascii?Q?MF+sH2EHRq/jqpsYCSt4H/zqNpv7DKvZSL1/fhzwQ+EK7j/yAAnkBxO9XXmy?=
- =?us-ascii?Q?79B5VFwC33eYIiWrqJYoPZSOvZd3rLoMjJTmA5DoOlg0yt67mACgsQHWNUd0?=
- =?us-ascii?Q?5D2idsAeeO4mfZ12Yy9kOxkX3Bqj+Svo3S/P/C7SckhFss+gTFrWO5oSDnxb?=
- =?us-ascii?Q?x4kYw3jEZBgWVD7ow2boJpmky69rBwre0IE0DHumCIHgUSA7TOJBu7kLi7wm?=
- =?us-ascii?Q?BkCxp1JFkYjQqZ6ZbSn7tKJiSPP1rzv8S0k87xiKAP9nMgpjhtJFyJEhuyCK?=
- =?us-ascii?Q?t4wYROAC1l7Y8h4K3WJoqGpQi79GdKpyVBofu28VdjIEY4pSLwAi5SaJw41n?=
- =?us-ascii?Q?GFjS4KaCxreM9AQI16dpmqWgbk/pjUNcgL0B36IUbRuF/gDBvBejRpHgLARv?=
- =?us-ascii?Q?mydbDpAIZjMB6/dJKwqL5mU4TVmH9lycZGNnXC9/3W0ScVxkDp/Rf/YX2/CK?=
- =?us-ascii?Q?eZMTHP/ehjrrfjh4KCBvG9Tf7DrI70O4TWl8x2mYULlqneAmfV7yujH9V+95?=
- =?us-ascii?Q?XiOMmK6foK9CId862vU7ld61ex5eawii8IBkSl0gHUiaNv1s4k2cVy9LBmNt?=
- =?us-ascii?Q?2u90zpUgzTCSy8M4tFoU1vOp/AXfnwRM7Fd3KnAeM5l8sjYtciHtbzfOC60N?=
- =?us-ascii?Q?PRN0npQHKTDkl/13i/PiC/haVF05hvinDGlSI6+rT9jKQVtVNkDwjBEM8dZV?=
- =?us-ascii?Q?Dw=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Q0xrslXeLuXQEcreNllCyVTP0AjOmIZ9D9ohyjoXGBcOOmzrtTB+yc9oAWeZ?=
+ =?us-ascii?Q?FCq31TlAaWtgU2QyHYke49n+xyvBekowZnOis0m5I6CmZCMvjtGhLA3M+YMh?=
+ =?us-ascii?Q?YfMhMuyIIatPhC+M38KjObhGxdyYin4J5W8FMAeOQiBraGToMhdoe1awxmf1?=
+ =?us-ascii?Q?z1Rd5VlrmAs85gJsEEeVucsAP9NpUmJMSiIonxBhL5iuLE9LneaOQLH4q7Ge?=
+ =?us-ascii?Q?JtHbbAnLLFA8QWq9Kdr91tGkOjgqSC1h15z21qAKLKYttHYeLKzXhUx0sr8y?=
+ =?us-ascii?Q?DAi5VnUj4PIy18L/YdsxR1viEYg7gDdT2Q58lbKGZtu4lH3RElKpPHG0nD4z?=
+ =?us-ascii?Q?td1C2IqxSzQrMTGMSnuZqe9Q9YTDXln45YRM7Ot25hC1WgpWkiIN3RZj3FEW?=
+ =?us-ascii?Q?k1CCcOFfvoXLu0Ke7DGpw3MMGjmH2auy+7W9qWBm2Udf8JqeDQWjHEyLrz0Y?=
+ =?us-ascii?Q?RYb0IHulPrimWxCKzHt1mB8G8qFpBNR+VMyFETKkqwRIOusPI3c/Ls11A5pU?=
+ =?us-ascii?Q?NiDI/oDkh36g8WWqCJADiBQk9P+M5z6ZTf6Bn5EDuHtSqf+GcK3yV7UNgTBg?=
+ =?us-ascii?Q?f6/Ibh07vJJzH0FqMxa5ajyheqbNnb3d12m8RqSYeZ3WDCBi0L78KHbTrPDB?=
+ =?us-ascii?Q?CJRX9Qe1TeRyu02CRursVKtdiYCnw1PxC8R43Vud3QNeDUMRQSvmhbtgyL46?=
+ =?us-ascii?Q?vz9YdzAK5msYCNE83lrOD5QEk4rtXAzGn0QSPZYK4MQRnPuDbMe/Vm123Llo?=
+ =?us-ascii?Q?TBFf53RbCQTS8KpGuF/+Mv1i2HIaL7gjQ+Gkz69uIQYB7hYkP8QSQIpUBuxl?=
+ =?us-ascii?Q?bkshlENmIL8UzFRP2L4NKPylnjHYfRxUYrIOVjnPfsH6/etRFuWUJ3nrCsgk?=
+ =?us-ascii?Q?UO+FUjqdK4llTxZTZkeQTz3a9I4PFJ8Otoe3OkC/o07EpgSHvuwZwGKGhR0W?=
+ =?us-ascii?Q?FHTZB+L1z4HY1SXsXYqskRzJYes7Qs9bc/7vwvZOdlB+creBNZvbfFFfTUJ/?=
+ =?us-ascii?Q?yvKBqmJkQcwMSLGns6ByorUgDkHg/xdWZTqQLuj/xTl+M3BqtJmoJUw/sDcW?=
+ =?us-ascii?Q?qi77UYADjg5Di08Y18r2/sBlUJqRtFeu0EHRBMokme6IahH/8E9UQOK2VVMg?=
+ =?us-ascii?Q?zXvvlvPKYDsyFh5NsSKzqa2UWDZa6Kyg5nRrrhD9WgkYHt9hfvnhOdbSUsLD?=
+ =?us-ascii?Q?UA7iOptdC4A1Xor+9nCvAOhvXJ5yKfTzXkfn0iuZHxQ0QHreDaDN6LIzCytR?=
+ =?us-ascii?Q?jEKaHbGf0wMv5xWMkn+apmPvmgK0E8O9I2rhJ94E8zaaznE0GP+Y8aRx+nz1?=
+ =?us-ascii?Q?iqieeqlX1UZrHDqrY6xKKmKQR+wOtYMwxfuFibDz9xZxUow1REGvhyEr8Rgt?=
+ =?us-ascii?Q?O23CFZZIbRfVfVjIKAEWK+xdnSej8c3Oh1Aq5t217V48re2RvkE/STM3uHv8?=
+ =?us-ascii?Q?By423RDIU7YT+b3W4ZF/wcerUMhFho9qQRug8GHNxoI9E+AWMnveQWhMOPZU?=
+ =?us-ascii?Q?5m+GmEGx13c/qOpmbkoT/2ozjBLBBS/g7uyecIwg33hZyZ+TQMfFh9sfYwSF?=
+ =?us-ascii?Q?Syjdin07oxv0fLpXLxjz5h3XFFP3jen/5ENeD1YiH8CHwxNOyRRSUApVD4KQ?=
+ =?us-ascii?Q?tA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f682d1f2-47d3-47e9-074a-08dadd2fad3b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2022 17:30:06.5562
+X-MS-Exchange-CrossTenant-Network-Message-Id: b44efb54-80f7-4fce-b6ce-08dadd34fcb0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2022 18:08:07.3355
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BeN2rht3ASDr1sUTRp/Bj9LSR/ec5TGGoGeyFqZVxVfqE749L40YVN4MjaAnPwZJeuIqDT/hEGfS034S14EShUmuqR2P37EDbTJbE68sVXo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3479
+X-MS-Exchange-CrossTenant-userprincipalname: qjH0r0qVkFJT5/hoBDR6D2VnSBLgmLjhMB7CeZq9jev+05uLakfyP0oJKULYeKf7ZY43Qs9NuxJaYW/j6dsL3TPdGKYSdZl61C/mqmzbymE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3153
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -158,34 +158,142 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Tianyu Lan <ltykernel@gmail.com> Sent: Friday, November 18, 2022 7:46=
  PM
->
+>=20
 
-Previous patches to the Hyper-V clocksource driver have not been very
-consistent in the Subject line prefix, but let's use
-"clocksource/drivers/hyper-v:" since it has been used the most.
+The Subject prefix for this patch should be "Drivers: hv: vmbus:"
 
-> Hyper-V tsc page is shared with hypervisor and it should be decrypted
-> in sev-snp enlightened guest when it's used.
+> Vmbus int, synic and post message pages are shared with hypervisor
+> and so decrypt these pages in the sev-snp guest.
 >=20
 > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
 > ---
->  drivers/clocksource/hyperv_timer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/hv/connection.c | 13 +++++++++++++
+>  drivers/hv/hv.c         | 32 +++++++++++++++++++++++++++++++-
+>  2 files changed, 44 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
-erv_timer.c
-> index bb47610bbd1c..aa68eebed5ee 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -364,7 +364,7 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
->  static union {
->  	struct ms_hyperv_tsc_page page;
->  	u8 reserved[PAGE_SIZE];
-> -} tsc_pg __aligned(PAGE_SIZE);
-> +} tsc_pg __bss_decrypted __aligned(PAGE_SIZE);
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index 9dc27e5d367a..43141225ea15 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -215,6 +215,15 @@ int vmbus_connect(void)
+>  		(void *)((unsigned long)vmbus_connection.int_page +
+>  			(HV_HYP_PAGE_SIZE >> 1));
 >=20
->  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+> +	if (hv_isolation_type_snp() || hv_isolation_type_en_snp()) {
+
+This decryption should be done only for a fully enlightened SEV-SNP
+guest, not for a vTOM guest.
+
+> +		ret =3D set_memory_decrypted((unsigned long)
+> +				vmbus_connection.int_page, 1);
+> +		if (ret)
+> +			goto cleanup;
+
+This cleanup path doesn't work correctly.  It calls
+vmbus_disconnect(), which will try to re-encrypt the memory.
+But if the original decryption failed, re-encrypting is the wrong
+thing to do.
+
+It looks like this same bug exists in current code if the decryption
+of the monitor pages fails or if just one of the original memory
+allocations fails.  vmbus_disconnect() doesn't know whether it
+should re-encrypt the pages.
+
+> +
+> +		memset(vmbus_connection.int_page, 0, PAGE_SIZE);
+> +	}
+> +
+>  	/*
+>  	 * Setup the monitor notification facility. The 1st page for
+>  	 * parent->child and the 2nd page for child->parent
+> @@ -372,6 +381,10 @@ void vmbus_disconnect(void)
+>  		destroy_workqueue(vmbus_connection.work_queue);
+>=20
+>  	if (vmbus_connection.int_page) {
+> +		if (hv_isolation_type_en_snp())
+> +			set_memory_encrypted((unsigned long)
+> +				vmbus_connection.int_page, 1);
+> +
+>  		hv_free_hyperv_page((unsigned long)vmbus_connection.int_page);
+>  		vmbus_connection.int_page =3D NULL;
+>  	}
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index 4d6480d57546..f9111eb32739 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/interrupt.h>
+>  #include <clocksource/hyperv_timer.h>
+>  #include <asm/mshyperv.h>
+> +#include <linux/set_memory.h>
+>  #include "hyperv_vmbus.h"
+>=20
+>  /* The one and only */
+> @@ -117,7 +118,7 @@ int hv_post_message(union hv_connection_id connection=
+_id,
+>=20
+>  int hv_synic_alloc(void)
 >  {
+> -	int cpu;
+> +	int cpu, ret;
+>  	struct hv_per_cpu_context *hv_cpu;
+>=20
+>  	/*
+> @@ -168,6 +169,29 @@ int hv_synic_alloc(void)
+>  			pr_err("Unable to allocate post msg page\n");
+>  			goto err;
+>  		}
+> +
+> +		if (hv_isolation_type_en_snp()) {
+> +			ret =3D set_memory_decrypted((unsigned long)
+> +				hv_cpu->synic_message_page, 1);
+> +			ret |=3D set_memory_decrypted((unsigned long)
+> +				hv_cpu->synic_event_page, 1);
+> +			ret |=3D set_memory_decrypted((unsigned long)
+> +				hv_cpu->post_msg_page, 1);
+> +
+> +			if (ret) {
+> +				set_memory_encrypted((unsigned long)
+> +					hv_cpu->synic_message_page, 1);
+> +				set_memory_encrypted((unsigned long)
+> +					hv_cpu->synic_event_page, 1);
+> +				set_memory_encrypted((unsigned long)
+> +					hv_cpu->post_msg_page, 1);
+> +				goto err;
+
+Same kind of cleanup problem here.  Some of the memory may have
+been decrypted, but some may not have.  Re-encrypting all three pages
+risks re-encrypting a page that failed to be decrypted, and that might
+cause problems.
+
+> +			}
+> +
+> +			memset(hv_cpu->synic_message_page, 0, PAGE_SIZE);
+> +			memset(hv_cpu->synic_event_page, 0, PAGE_SIZE);
+> +			memset(hv_cpu->post_msg_page, 0, PAGE_SIZE);
+> +		}
+>  	}
+>=20
+>  	return 0;
+> @@ -188,6 +212,12 @@ void hv_synic_free(void)
+>  		struct hv_per_cpu_context *hv_cpu
+>  			=3D per_cpu_ptr(hv_context.cpu_context, cpu);
+>=20
+> +		if (hv_isolation_type_en_snp()) {
+> +			set_memory_encrypted((unsigned long)hv_cpu->synic_message_page, 1);
+> +			set_memory_encrypted((unsigned long)hv_cpu->synic_event_page, 1);
+> +			set_memory_encrypted((unsigned long)hv_cpu->post_msg_page, 1);
+
+This cleanup doesn't always work correctly.  There are multiple memory
+allocations in hv_synic_alloc().  If some succeeded, but some failed, then
+might get here with some memory that was allocated but not decrypted.
+Trying to re-encrypt that memory before freeing it could cause problems.
+
+> +		}
+> +
+>  		free_page((unsigned long)hv_cpu->synic_event_page);
+>  		free_page((unsigned long)hv_cpu->synic_message_page);
+>  		free_page((unsigned long)hv_cpu->post_msg_page);
 > --
 > 2.25.1
 
