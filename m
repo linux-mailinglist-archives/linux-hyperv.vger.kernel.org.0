@@ -2,135 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D5DE64B077
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Dec 2022 08:37:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 653C464B2D7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Dec 2022 10:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233694AbiLMHh5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Dec 2022 02:37:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54128 "EHLO
+        id S234581AbiLMJ6z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Dec 2022 04:58:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234488AbiLMHh4 (ORCPT
+        with ESMTP id S229689AbiLMJ6y (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Dec 2022 02:37:56 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2060.outbound.protection.outlook.com [40.107.93.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD251B9D8;
-        Mon, 12 Dec 2022 23:37:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fF9D6Ns1KxC3Dxeu5muFhgfkR6BqQg5FC7tpvx3zb0L2SOYgj004aN9b/piJ/04C6bllhw/+KmTQ5f3KF2ce6ZyICTM0KUh8MzF8BjdtDcxGdt+rnxAvAJaho4zvoTF+YslZPd0U49dXOpyA8EIm+4r9OtloeLYCU3l1jh4rtI1W2067RC8rsanaJni9iHFk7M6vbg31Cv0KnYy38J4b8+54iZSaQNIIyU1tMItYtEL0HHaily7k7v+4jlpC0fnhxNYfdEwzNwjkjNNaA7zUXNIro6zHNnZFIttr/ySnPN+GNnCRTOhrWorElKGys1YY8Zi2fEGmDaMBopsZA6eLBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+0viQ2dPRq3x2BkZRAtkKB6ohN3ihipvwMl5DxLb5zg=;
- b=F0xNkf6/pmjVViY4lxr9SgZW+Dyp6hHbhftfBXVXIg2ETHFMQ+bcWB5l4afIHHyohUx3nKDGLhOwBr7TXWG/0F9VFafuHYYXwstgxDAJUjnT1olpa6U8bKzPiQcoNfuuRUGJvVx4fVAVP3rVajl2PS4Zhwbg/ftAHYPEyNhrfvPXxsWSDZV0aeECnuM/xAm8JGtelSc+SSVRBameSdoTDEndFtb0x7Nr44Ri9VNsW+sCTo7A9kzYwsu+g4JO8gppAUI3N1rrz5GHHYO/lJrZZJ7zHeWKw8PP6TcEb2veXxvUsv6GYpLwEIhL5d6uSiPgrXzZ1tnJsl9b4R3kRfLNcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+0viQ2dPRq3x2BkZRAtkKB6ohN3ihipvwMl5DxLb5zg=;
- b=r+aIpLOMXuYjQzuqoRZ5L739G7mfx+B6DXrdrtmUdoOxgPUUrTAvJ/aCJqR1LYOeYiV+/nZipD6B2oDjwDAQZQiwewl9Gjducqb5DnMxdNgAKJZY1TC4JiGeB3HSGTsm1BNN+e89ht4WfhLAsAyYe/rgLN2jNGtyea7E/8AHcUk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com (2603:10b6:5:41::21) by
- PH0PR12MB7078.namprd12.prod.outlook.com (2603:10b6:510:21d::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5880.19; Tue, 13 Dec 2022 07:37:52 +0000
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::8f76:f869:2e1f:331e]) by DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::8f76:f869:2e1f:331e%6]) with mapi id 15.20.5880.019; Tue, 13 Dec 2022
- 07:37:51 +0000
-Message-ID: <29c7aac6-3995-0a9f-929d-a2865aededb5@amd.com>
-Date:   Tue, 13 Dec 2022 08:37:26 +0100
+        Tue, 13 Dec 2022 04:58:54 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CD21AD86;
+        Tue, 13 Dec 2022 01:58:52 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id k88-20020a17090a4ce100b00219d0b857bcso2994732pjh.1;
+        Tue, 13 Dec 2022 01:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xuLMR9FIWZzyNJCC4WcSP5T3oRsb0xgx1FZCoYoEIrQ=;
+        b=GHpw6ebMA/OUpqW3652Na6DtmERK3samo3gp7t2kal7/zRTHe5YRGf5oooYRAh3ehg
+         Fl4a9R+Kj3fk/SimXQFcFziKIu+30fKGcxTNs4Y37O7/r6DusM6MLSvUqMIekbXZWwa9
+         eIN3r9hUoLxle9h7IV2h/3lGKAShgQNA37YNdvzb/zuxrvV3k3Bn3C+NKDeZumMy2o5y
+         6HrDdMiPZDHoDUIsMeY8NEjymA1RjQyXcBnsNBCnuDSr0iiuoN2kCgTvGhcuNNF5joIR
+         dGORbqkoCenah5l4+Ccm/H1QIGi8DYnc7vz4utZAhh1oEX4ewMRXEEMJf2nSo4Jk+z8k
+         9jUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xuLMR9FIWZzyNJCC4WcSP5T3oRsb0xgx1FZCoYoEIrQ=;
+        b=rFJyCc+7Nn1AjDmHVQQRssQ9ls8+7AoyBV7NEWSZd9yLv6/jCj9IRwQkHPdATUxW5L
+         s58/BXPcnv0ymlGmd6X5iYFbueG0h/c6yvPn3LzLwAIQEIhFZFA/g2RCa7czNzBfY27m
+         JmgSdYTmBanVtWkeX1q2knZcIjtOdjBZU5yC7NxX8dNXtSSaieiEHcp8oMf8r7g2kVY4
+         RBhpd8uzriYxMhU6wVhg0Yu4nVYJ5m9nM5xUt4FKHmnsM/3lradbfAIB7kTii77boHHq
+         EYu0nLoJrfu86m8TawK/wHMy51dxsbsvZzp6bJ/4jkmF6omfZTGhdU/eniOlr7ecZuqf
+         5PVQ==
+X-Gm-Message-State: ANoB5pkxj0w130kfSSFAgPXlb51taB64Sqna2yRUTsZmP+aQ5X9qCEgF
+        VWzt/w2RNuOff47Z/Njzy70=
+X-Google-Smtp-Source: AA0mqf5L9x1U0OhBNQAH6PAzJrj0nxvVgtR/eNVzhvRT4fu3tfYRytJlFHGGNHa88QlXcUoz5PzflQ==
+X-Received: by 2002:a05:6a20:ce4d:b0:9d:efd3:66ca with SMTP id id13-20020a056a20ce4d00b0009defd366camr22779411pzb.17.1670925532287;
+        Tue, 13 Dec 2022 01:58:52 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
+        by smtp.gmail.com with ESMTPSA id k28-20020a63561c000000b0046fe244ed6esm6516569pgb.23.2022.12.13.01.58.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Dec 2022 01:58:51 -0800 (PST)
+Message-ID: <52125d44-e488-6c31-e624-4094619dfcc6@gmail.com>
+Date:   Tue, 13 Dec 2022 17:58:40 +0800
+MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [RFC PATCH V2 18/18] x86/sev: Fix interrupt exit code paths from
- #HV exception
-Content-Language: en-US
-To:     Tianyu Lan <ltykernel@gmail.com>, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        ashish.kalra@amd.com, srutherford@google.com,
-        akpm@linux-foundation.org, anshuman.khandual@arm.com,
-        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
-        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
-        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH V2 02/18] x86/hyperv: Add sev-snp enlightened guest
+ specific config
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "jiangshan.ljs@antgroup.com" <jiangshan.ljs@antgroup.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+        "srutherford@google.com" <srutherford@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "sandipan.das@amd.com" <sandipan.das@amd.com>,
+        "ray.huang@amd.com" <ray.huang@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "michael.roth@amd.com" <michael.roth@amd.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "venu.busireddy@oracle.com" <venu.busireddy@oracle.com>,
+        "sterritt@google.com" <sterritt@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "samitolvanen@google.com" <samitolvanen@google.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
 References: <20221119034633.1728632-1-ltykernel@gmail.com>
- <20221119034633.1728632-19-ltykernel@gmail.com>
-From:   "Gupta, Pankaj" <pankaj.gupta@amd.com>
-In-Reply-To: <20221119034633.1728632-19-ltykernel@gmail.com>
+ <20221119034633.1728632-3-ltykernel@gmail.com>
+ <BYAPR21MB168814EC5FA61976B69158B7D7E29@BYAPR21MB1688.namprd21.prod.outlook.com>
+Content-Language: en-US
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <BYAPR21MB168814EC5FA61976B69158B7D7E29@BYAPR21MB1688.namprd21.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0142.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::27) To DM6PR12MB2810.namprd12.prod.outlook.com
- (2603:10b6:5:41::21)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2810:EE_|PH0PR12MB7078:EE_
-X-MS-Office365-Filtering-Correlation-Id: a29cf212-718b-4e72-b2ee-08dadcdcf08c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CcO4+cFWOt1n+NWBEyPidxW7wCkszCKOgV8b6crgvGNPbA2+M4n1j3RImkoDxQYHNvWo/Y75oLE4ochmzQdeH2SEpd1QnnVfT4ICnMpiXJo8Zi8mUB0MY+aOKQ1GuHWpGTw/TGmzcI+rR16/TJQ7NZVfTAWCnoVEgpoNjMGi+Zm4CeTtqXnyr6Bu1hv3Uey8OBGiq8oExc9tDtSZS62By9TPXxrFpxTPmSMzbvl5diPyLEM0mpxjMX4sUqyWV+4Xkv/k915uxFPJb0yGnjLHTcKry55gPMuigj7eJ8iIQF63URRyadRS+f+6uzC+qeg+aGNXAITBBxVFRx/vQOsu/+EK3aJ1Guiw38BJqirB/TiJqakULILrRcSejt0SVzi2YyZrM+HH/rw76NdbDky1OPlhPhweY3VJWvc1mAZMWWn2480NoRqewHkh4ig2CbankGRK3QjEYCUB2KLEKs2ahUORJwIb/fDAsKR9O2gL6mxhu0e9t3rEZ3l7UOjbxgqQwlrzTg6j00I+4QMdfMG3Rm3KyJVSeQqgExV3i6ak3ncmTdVr5Wi8tr06E54Km1N9ykBz045mplnmgc74sKh5norcVvbq/YfURyepBKXLF3fIUV7/iSrn0PdwTqMJGuaYbJYCUgltkeVffwyCm0O+H9RlQ9+Z1RaZFczGZSznOJC+SUE6VfRBC0HjUsRhIDwcMT5Qg8rW0JiatU/JF6AWjTT7HjYE/MJL+GrE6g4J/op6vtlIqded4ABVgO8vB8h7
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2810.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(39860400002)(346002)(396003)(366004)(451199015)(31696002)(86362001)(4326008)(41300700001)(7406005)(66556008)(8676002)(66476007)(8936002)(2616005)(36756003)(7416002)(316002)(66946007)(921005)(6666004)(38100700002)(26005)(186003)(5660300002)(6486002)(478600001)(6506007)(6512007)(2906002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SVd3QlRiUGNrRjE2a3U4NVcwc0c5ZXVzZlhrMGtZN3FUZHZKbEo1M1VOSGVN?=
- =?utf-8?B?d0RMSzVKZXBpcHRYMHU1a0l3YlRvRFQyaVlEMXZJOURmclBEOStLSlp3WDk5?=
- =?utf-8?B?QmgrVDBtZ2hVU0xvUUN0aDFsbmQ3LzJRb1V0ekZxdGQ1QWVhTWJ1a3l6TWNp?=
- =?utf-8?B?SDY1cDlmQnlhdzBKMXh0MGFQN0I2MmFiemxkRHRqdjVBdzNySFZEcDNIY1pJ?=
- =?utf-8?B?aVhTZFVzQW12NjJaYXVSNUx2UU54dFVHTjZtMnFlMXRuTGNHM3I3MGZ6RGFQ?=
- =?utf-8?B?OHlTZHpoSU1oMDRNOTBoNjhoeWFnMU8wLzZZeDB1TDJPaWhnbnEwWkFCM29E?=
- =?utf-8?B?eE4yRFczckdjKzZlVUlidnJFTy84ajNuUjBjOThkNFFycjdUbnl1cXFyRmNI?=
- =?utf-8?B?TFlla3RoYThHVElwOHVBbS9ldFQ0YUswZXRJUGZYaVBORVpuSXFZV2h3d0xp?=
- =?utf-8?B?Mk9JR2w3THIxU3M1NnlpZEJveHByaCt1RlA0Tnh5RUZTeDNnM1JmY3BIUFR1?=
- =?utf-8?B?dHAzODBxaVVSc21NR200eUQrSi93VEtrY0liWjNoaHZ2VFY1d2tLOU51NEdK?=
- =?utf-8?B?YS85Y1lvK1ppR09OUzhLOVdGd2laWWZvZER2REJZQlc2bVpPV2JqYUorWEtX?=
- =?utf-8?B?Zlo1K1F3dEYvcWUxUVlDNFNzMjZvODlRUFdmdmh1YnJWR3k0QVgzTjhVRmIy?=
- =?utf-8?B?d2FRa2xJT2s5YzNRYm96anNXMGNLZjFrdlZ2bzZMTzhzQkxqWjFSRTBLeFVr?=
- =?utf-8?B?ZldYZ3h0VkszbzNzVEpjTTlhS2laR0xoV1FKcm5tcGxQaWJBRE1ISVNhV1ln?=
- =?utf-8?B?Ky9YQWd4YmQ3bmNhZVI0ekRBeExwYmtjRUxSVGhoMG1TSld5VTMzcXhiQzRG?=
- =?utf-8?B?UlJKM0xsUjEvcUtJM2lMK0lKOC9ERWZSczhLMGF1YzZHekI4N01NNkQyK1ZD?=
- =?utf-8?B?Q0FxOFlrVmJ6MlNnZmRDMzVGemsxaHFka3RwYXlrSnRZSGgwWndVQVFDSjho?=
- =?utf-8?B?MHRTZ1V6RklQUWt0d0h5VXZrMTl6OUk3amk5UEl6NVF5enpWbHZsWGVKTGlM?=
- =?utf-8?B?Y0EwSyt0emxjUnhmWUlJZld1YjFpTDRIMTQxVThXTFJDaVpRT3FKQWh1VjlZ?=
- =?utf-8?B?KzlzanZZNUtEcHVzeWhzd2xxWTY4Uy9Zb21Gems0YkdsZFJScFFpeEZWbzdF?=
- =?utf-8?B?K2NFZmtvcGpmNUNwaE4vTTdHUDdpSDYycTc0T0NEdDNxc0pyak5tVDlyeWky?=
- =?utf-8?B?ZFZrRERoWXRJRzJ6UFFtZGRCVDUyZGpzejlnNGZzN3Y1MGZrT3cvNGdqTkdU?=
- =?utf-8?B?cURyQ3FmTE95MzVoY1FmNXJydmM2MWQ5Q2d0S29PR3k3MTUwVEZqenM0Q2hs?=
- =?utf-8?B?OC9vcTZGYnpGVS9BWXo0Z0dJKzF6YTdhV1hMbVlyVUc2MGNzNFRSd0Q1Y0dZ?=
- =?utf-8?B?bVd3UEM2ZmdkQS9FSnNXcFV2TFA1UnlCZnlHcE1QQTBCUFNHVllnL3dPck56?=
- =?utf-8?B?d2pNK3pDSkIzbnQ1VGtkRGNxY09rai9RbC9aelZwQlZqOXFsc1ErODAwZWVC?=
- =?utf-8?B?T2w4TkdBblVJS0hXcWFidWN1VXIrSnU2QVNudWtJV1l3V3lTeDhrQTBGSW92?=
- =?utf-8?B?UklBcVRxSjZ6ZmM1UFA4ck9xeHJMcjFuZjk4RmVXcFBiNVB1Q1FGcGtMTGVj?=
- =?utf-8?B?enRYZDNXVzZFWm1oa3hHSzRkbERBOTlKNnZmb2VNbDMyNTNRNHJvbDBzSzFh?=
- =?utf-8?B?N0pFQk1OWjFCTEc4L0twZWltc1JsY25XVERVbU9pdnN6bU85VUFHbmFiRGoy?=
- =?utf-8?B?MWJ5Y1R0Rk1CbG1TclA2V0F4eWttenQxOUkwWlV4YzV4RUREb281eDJTbDgv?=
- =?utf-8?B?Vnl6MU4zMzkreWd3bmFJcmQzZldZMEFPVmJtRU9ZZkNTUG5DVEx4VjVOWTMw?=
- =?utf-8?B?T3FVWXk4ZzlwNVJuQThTUWlYaWVaajJGaHlDTmhJS3BBR09PSEVseUw5dVIv?=
- =?utf-8?B?S0g0YzJCU09obENDa24wejVXS3ZCam9nNC9uNEF3TXdKV200Sk5tY3pabDB3?=
- =?utf-8?B?ZXA3Yk1LWUw0MkxqMStMaTlmUXBueTlMYzltbEY4SWwzUXJHTkZUWFlkY3ZT?=
- =?utf-8?Q?IjoXRqr0Ww8Ew5HcjQeBMQZae?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a29cf212-718b-4e72-b2ee-08dadcdcf08c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2810.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2022 07:37:51.8014
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: meeFIjfNuvFLoW92QXhfi8J46UPnn7ahCMp76WkLvXmD3Hw0ZPkm/iATfGRQYb49dr7WfHy0dgVIdUOckf1jOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7078
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -138,201 +113,77 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On 12/13/2022 1:56 AM, Michael Kelley (LINUX) wrote:
+>> @@ -32,6 +33,7 @@ extern u64 hv_current_partition_id;
+>>
+>>   extern union hv_ghcb * __percpu *hv_ghcb_pg;
+>>
+>> +extern bool hv_isolation_type_en_snp(void);
+> This file also has a declaration for hv_isolation_type_snp().  I
+> think this new declaration is near the beginning of this file so
+> that it can be referenced by hv_do_hypercall() and related
+> functions in Patch 6 of this series.  So maybe move the
+> declaration of hv_isolation_type_snp() up so it is adjacent
+> to this one?  It would make sense for the two to be together.
 
-> Add checks in interrupt exit code paths in case of returns
-> to user mode to check if currently executing the #HV handler
-> then don't follow the irqentry_exit_to_user_mode path as
-> that can potentially cause the #HV handler to be
-> preempted and rescheduled on another CPU. Rescheduled #HV
-> handler on another cpu will cause interrupts to be handled
-> on a different cpu than the injected one, causing
-> invalid EOIs and missed/lost guest interrupts and
-> corresponding hangs and/or per-cpu IRQs handled on
-> non-intended cpu.
+Agree. Will update in the next version.
+
 > 
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->   arch/x86/include/asm/idtentry.h | 66 +++++++++++++++++++++++++++++++++
->   arch/x86/kernel/sev.c           | 30 +++++++++++++++
->   2 files changed, 96 insertions(+)
+>> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+>> index 831613959a92..2ea4f21c6172 100644
+>> --- a/arch/x86/kernel/cpu/mshyperv.c
+>> +++ b/arch/x86/kernel/cpu/mshyperv.c
+>> @@ -273,6 +273,21 @@ static void __init ms_hyperv_init_platform(void)
+>>   	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+>>   	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+>>
+>> +	/*
+>> +	 * Add custom configuration for SEV-SNP Enlightened guest
+>> +	 */
+>> +	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
+>> +		ms_hyperv.features |= HV_ACCESS_FREQUENCY_MSRS;
+>> +		ms_hyperv.misc_features |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
+>> +		ms_hyperv.misc_features &= ~HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+>> +		ms_hyperv.hints |= HV_DEPRECATING_AEOI_RECOMMENDED;
+>> +		ms_hyperv.hints |= HV_X64_APIC_ACCESS_RECOMMENDED;
+>> +		ms_hyperv.hints |= HV_X64_CLUSTER_IPI_RECOMMENDED;
+>> +	}
+>> +
+>> +	pr_info("Hyper-V: enlightment features 0x%x, hints 0x%x, misc 0x%x\n",
+>> +		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+>> +
+> What's the reason for this additional call to pr_info()?  There's a call to pr_info()
+> a couple of lines below that displays the same information, and a little bit more.
+> It seems like the above call should be deleted, as I think we should try to be as
+> consistent as possible in the output.
+
+Sorry for noise. This one should be redundant. Will remove in the next 
+version.
+
 > 
-> diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-> index 652fea10d377..45b47132be7c 100644
-> --- a/arch/x86/include/asm/idtentry.h
-> +++ b/arch/x86/include/asm/idtentry.h
-> @@ -13,6 +13,10 @@
->   
->   #include <asm/irq_stack.h>
->   
-> +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> +noinstr void irqentry_exit_hv_cond(struct pt_regs *regs, irqentry_state_t state);
+>> @@ -328,18 +343,22 @@ static void __init ms_hyperv_init_platform(void)
+>>   		ms_hyperv.shared_gpa_boundary =
+>>   			BIT_ULL(ms_hyperv.shared_gpa_boundary_bits);
+>>
+>> -		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
+>> -			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+>> -
+>> -		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
+>> +		if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
+>> +			static_branch_enable(&isolation_type_en_snp);
+>> +		} else if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
+>>   			static_branch_enable(&isolation_type_snp);
+>>   #ifdef CONFIG_SWIOTLB
+>>   			swiotlb_unencrypted_base = ms_hyperv.shared_gpa_boundary;
+>>   #endif
+>>   		}
+>> +
+>> +		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
+>> +			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+>> +
+> Is there a reason for moving this pr_info() down a few lines?  I can't see that the
+> intervening code changes any of the settings that are displayed, so it should be
+> good in the original location.  Just trying to minimize changes that don't add value ...
+> 
 
-For linux host, CONFIG_AMD_MEM_ENCRYPT also gets enabled at host side 
-(for SME) and 'irqentry_exit_hv_cond' gets called. So, we need to handle 
-the below cases even when host CONFIG_AMD_MEM_ENCRYPT is enabled?
-
-Thanks,
-Pankaj
-
-> +#endif
-> +
->   /**
->    * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
->    *		      No error code pushed by hardware
-> @@ -176,6 +180,7 @@ __visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
->   #define DECLARE_IDTENTRY_IRQ(vector, func)				\
->   	DECLARE_IDTENTRY_ERRORCODE(vector, func)
->   
-> +#ifndef CONFIG_AMD_MEM_ENCRYPT
->   /**
->    * DEFINE_IDTENTRY_IRQ - Emit code for device interrupt IDT entry points
->    * @func:	Function name of the entry point
-> @@ -205,6 +210,26 @@ __visible noinstr void func(struct pt_regs *regs,			\
->   }									\
->   									\
->   static noinline void __##func(struct pt_regs *regs, u32 vector)
-> +#else
-> +
-> +#define DEFINE_IDTENTRY_IRQ(func)					\
-> +static void __##func(struct pt_regs *regs, u32 vector);		\
-> +									\
-> +__visible noinstr void func(struct pt_regs *regs,			\
-> +			    unsigned long error_code)			\
-> +{									\
-> +	irqentry_state_t state = irqentry_enter(regs);			\
-> +	u32 vector = (u32)(u8)error_code;				\
-> +									\
-> +	instrumentation_begin();					\
-> +	kvm_set_cpu_l1tf_flush_l1d();					\
-> +	run_irq_on_irqstack_cond(__##func, regs, vector);		\
-> +	instrumentation_end();						\
-> +	irqentry_exit_hv_cond(regs, state);				\
-> +}									\
-> +									\
-> +static noinline void __##func(struct pt_regs *regs, u32 vector)
-> +#endif
->   
->   /**
->    * DECLARE_IDTENTRY_SYSVEC - Declare functions for system vector entry points
-> @@ -221,6 +246,7 @@ static noinline void __##func(struct pt_regs *regs, u32 vector)
->   #define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
->   	DECLARE_IDTENTRY(vector, func)
->   
-> +#ifndef CONFIG_AMD_MEM_ENCRYPT
->   /**
->    * DEFINE_IDTENTRY_SYSVEC - Emit code for system vector IDT entry points
->    * @func:	Function name of the entry point
-> @@ -245,6 +271,26 @@ __visible noinstr void func(struct pt_regs *regs)			\
->   }									\
->   									\
->   static noinline void __##func(struct pt_regs *regs)
-> +#else
-> +
-> +#define DEFINE_IDTENTRY_SYSVEC(func)					\
-> +static void __##func(struct pt_regs *regs);				\
-> +									\
-> +__visible noinstr void func(struct pt_regs *regs)			\
-> +{									\
-> +	irqentry_state_t state = irqentry_enter(regs);			\
-> +									\
-> +	instrumentation_begin();					\
-> +	kvm_set_cpu_l1tf_flush_l1d();					\
-> +	run_sysvec_on_irqstack_cond(__##func, regs);			\
-> +	instrumentation_end();						\
-> +	irqentry_exit_hv_cond(regs, state);				\
-> +}									\
-> +									\
-> +static noinline void __##func(struct pt_regs *regs)
-> +#endif
-> +
-> +#ifndef CONFIG_AMD_MEM_ENCRYPT
->   
->   /**
->    * DEFINE_IDTENTRY_SYSVEC_SIMPLE - Emit code for simple system vector IDT
-> @@ -274,6 +320,26 @@ __visible noinstr void func(struct pt_regs *regs)			\
->   }									\
->   									\
->   static __always_inline void __##func(struct pt_regs *regs)
-> +#else
-> +
-> +#define DEFINE_IDTENTRY_SYSVEC_SIMPLE(func)				\
-> +static __always_inline void __##func(struct pt_regs *regs);		\
-> +									\
-> +__visible noinstr void func(struct pt_regs *regs)			\
-> +{									\
-> +	irqentry_state_t state = irqentry_enter(regs);			\
-> +									\
-> +	instrumentation_begin();					\
-> +	__irq_enter_raw();						\
-> +	kvm_set_cpu_l1tf_flush_l1d();					\
-> +	__##func(regs);						\
-> +	__irq_exit_raw();						\
-> +	instrumentation_end();						\
-> +	irqentry_exit_hv_cond(regs, state);				\
-> +}									\
-> +									\
-> +static __always_inline void __##func(struct pt_regs *regs)
-> +#endif
->   
->   /**
->    * DECLARE_IDTENTRY_XENCB - Declare functions for XEN HV callback entry point
-> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-> index 5a2f59022c98..ef6a123c50fe 100644
-> --- a/arch/x86/kernel/sev.c
-> +++ b/arch/x86/kernel/sev.c
-> @@ -153,6 +153,10 @@ struct sev_hv_doorbell_page {
->   
->   struct sev_snp_runtime_data {
->   	struct sev_hv_doorbell_page hv_doorbell_page;
-> +	/*
-> +	 * Indication that we are currently handling #HV events.
-> +	 */
-> +	bool hv_handling_events;
->   };
->   
->   static DEFINE_PER_CPU(struct sev_snp_runtime_data*, snp_runtime_data);
-> @@ -206,6 +210,8 @@ static void do_exc_hv(struct pt_regs *regs)
->   	union hv_pending_events pending_events;
->   	u8 vector;
->   
-> +	this_cpu_read(snp_runtime_data)->hv_handling_events = true;
-> +
->   	while (sev_hv_pending()) {
->   		asm volatile("cli" : : : "memory");
->   
-> @@ -244,6 +250,8 @@ static void do_exc_hv(struct pt_regs *regs)
->   
->   		asm volatile("sti" : : : "memory");
->   	}
-> +
-> +	this_cpu_read(snp_runtime_data)->hv_handling_events = false;
->   }
->   
->   void check_hv_pending(struct pt_regs *regs)
-> @@ -2541,3 +2549,25 @@ static int __init snp_init_platform_device(void)
->   	return 0;
->   }
->   device_initcall(snp_init_platform_device);
-> +
-> +noinstr void irqentry_exit_hv_cond(struct pt_regs *regs, irqentry_state_t state)
-> +{
-> +	/*
-> +	 * Check whether this returns to user mode, if so and if
-> +	 * we are currently executing the #HV handler then we don't
-> +	 * want to follow the irqentry_exit_to_user_mode path as
-> +	 * that can potentially cause the #HV handler to be
-> +	 * preempted and rescheduled on another CPU. Rescheduled #HV
-> +	 * handler on another cpu will cause interrupts to be handled
-> +	 * on a different cpu than the injected one, causing
-> +	 * invalid EOIs and missed/lost guest interrupts and
-> +	 * corresponding hangs and/or per-cpu IRQs handled on
-> +	 * non-intended cpu.
-> +	 */
-> +	if (user_mode(regs) &&
-> +	    this_cpu_read(snp_runtime_data)->hv_handling_events)
-> +		return;
-> +
-> +	/* follow normal interrupt return/exit path */
-> +	irqentry_exit(regs, state);
-> +}
-
+Agree. Will keep previous order. Thanks.
