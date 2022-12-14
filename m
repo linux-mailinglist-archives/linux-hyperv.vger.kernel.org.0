@@ -2,166 +2,231 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C27664C3DF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Dec 2022 07:34:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 872D264CDA1
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Dec 2022 17:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237370AbiLNGeK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 14 Dec 2022 01:34:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
+        id S238566AbiLNQDY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 14 Dec 2022 11:03:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237368AbiLNGd5 (ORCPT
+        with ESMTP id S238598AbiLNQDB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 14 Dec 2022 01:33:57 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC1E427DF2;
-        Tue, 13 Dec 2022 22:33:33 -0800 (PST)
-Received: from jinankjain-dranzer.zrrkmle5drku1h0apvxbr2u2ee.ix.internal.cloudapp.net (unknown [20.188.121.5])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8284F20B876B;
-        Tue, 13 Dec 2022 22:33:29 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8284F20B876B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1670999613;
-        bh=fKLjtuuPGAtchKDyFtDylHNiErV4QIBu79FyXGkX27g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1lTsIbwSpTr7tu5h2zYbYA9Mp4qZJigVcNGQ0i3c9eADlN3nzXXBXliignQ46V4p
-         /RvmbPvN3K6h8RYo+8cGRAnx2TmoiwYiscNaG/0yYq4ZnU1f7XwcycJIe+GSyFNjED
-         MEyLp3jEi2sfe8nE9dYEJAusc/bkRbfZpL78cvn0=
-From:   Jinank Jain <jinankjain@linux.microsoft.com>
-To:     jinankjain@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, arnd@arndb.de, peterz@infradead.org,
-        jpoimboe@kernel.org, jinankjain@linux.microsoft.com,
-        seanjc@google.com, kirill.shutemov@linux.intel.com,
-        ak@linux.intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, anrayabh@linux.microsoft.com,
-        mikelley@microsoft.com
-Subject: [PATCH v9 5/5] x86/hyperv: Change interrupt vector for nested root partition
-Date:   Wed, 14 Dec 2022 06:33:04 +0000
-Message-Id: <1b5faf6180efdbb99a403d3e8083dc41025420ca.1670749201.git.jinankjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1670749201.git.jinankjain@linux.microsoft.com>
-References: <cover.1670749201.git.jinankjain@linux.microsoft.com>
+        Wed, 14 Dec 2022 11:03:01 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF39321E30;
+        Wed, 14 Dec 2022 08:02:55 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so7622698pjs.4;
+        Wed, 14 Dec 2022 08:02:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Pgi0dlvSQzyvmNPYDcBWPemtVuLvSRqlLXQqHLtPYrs=;
+        b=gbOsj6txcB+1SjQWX1orynLQpHzuvDNm5O70wSyH12Aqh9/qs2jFxWH21CNLHxmyNW
+         haHNJjwTnOZwWPcnOFz48k+aMUAQrYumYzZqda2XIM1bCt47/MF8hgIn+OjNLP0TRHms
+         HDCC6mfBEz/QKW1xIs5YJ+NfpdVw7dIx+zL2yYcLyjbxpO50qQjYAhCgZqVlkZNq+Exf
+         aiJVw0lCpSm66OGurDABwzc/jzTXL3/yhx496XImzSurh5zWHiuBxiZrpbzvDiKQzmW+
+         yRZ/eYCsxU1hLx5xIBnT0FT1NTB9OOH0myWg4iaaCDu1MeM063LNUgCt8L86MjOh7ezu
+         sb7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pgi0dlvSQzyvmNPYDcBWPemtVuLvSRqlLXQqHLtPYrs=;
+        b=WY3ip58kV43zHNrJzDSobJ0sp1A20pW+z4RaAwiBn7/jz0nvawOnEDIPLazgFbW+GG
+         MD5VKhEXmSRMaI6j6PHocjwo+cQ12L45JAjya8uQ4piNHeQN2HtoCPrfF+fRMBtsLa/Y
+         lV3QSZgxehDp1DiCI98+PIYMgIUDelzuoOEVlNi4Xv8ZWzToJANlWhsHafQd0QHVeFgA
+         UTpdQ0gf6nKIoSUGJzCIJ4KcKpmo6Sc9QFG+msORkRmTs+iNY+aq6Bh9qsFJwDBO9zCq
+         lN61xsJHJA27A9pc8+6DLwrZLbwqr82zdVpzRfkB6060bLktzKHCvm4L/f5QIXGoICME
+         XDgg==
+X-Gm-Message-State: ANoB5pn6BxAVpeS51/85ArURdDFVep/+RwtJjbTEEiN89y4o9Uwaqz2Q
+        2dbbBnoCUgsnuYZ62GFy11s=
+X-Google-Smtp-Source: AA0mqf7+v1MReG+8HjWyjL+Nj0IxaZAhG0cM1E+ggHrUtVrYtzWr0e56YvYZVl40ZVQIoJotLAZJbg==
+X-Received: by 2002:a17:902:7c0e:b0:18f:9cfb:42aa with SMTP id x14-20020a1709027c0e00b0018f9cfb42aamr13002085pll.10.1671033775182;
+        Wed, 14 Dec 2022 08:02:55 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
+        by smtp.gmail.com with ESMTPSA id o9-20020a170902d4c900b001896522a23bsm2101678plg.39.2022.12.14.08.02.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Dec 2022 08:02:54 -0800 (PST)
+Message-ID: <76952ed2-9fee-eae9-c9f3-5a7dd0fc1153@gmail.com>
+Date:   Thu, 15 Dec 2022 00:02:44 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [RFC PATCH V2 06/18] x86/hyperv: Use vmmcall to implement hvcall
+ in sev-snp enlightened guest
+Content-Language: en-US
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "jiangshan.ljs@antgroup.com" <jiangshan.ljs@antgroup.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+        "srutherford@google.com" <srutherford@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "sandipan.das@amd.com" <sandipan.das@amd.com>,
+        "ray.huang@amd.com" <ray.huang@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "michael.roth@amd.com" <michael.roth@amd.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "venu.busireddy@oracle.com" <venu.busireddy@oracle.com>,
+        "sterritt@google.com" <sterritt@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "samitolvanen@google.com" <samitolvanen@google.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+References: <20221119034633.1728632-1-ltykernel@gmail.com>
+ <20221119034633.1728632-7-ltykernel@gmail.com>
+ <BYAPR21MB1688016185991B6298EBF308D7E39@BYAPR21MB1688.namprd21.prod.outlook.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <BYAPR21MB1688016185991B6298EBF308D7E39@BYAPR21MB1688.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Traditionally we have been using the HYPERVISOR_CALLBACK_VECTOR to relay
-the VMBus interrupt. But this does not work in case of nested
-hypervisor. Microsoft Hypervisor reserves 0x31 to 0x34 as the interrupt
-vector range for VMBus and thus we have to use one of the vectors from
-that range and setup the IDT accordingly.
+On 12/14/2022 1:19 AM, Michael Kelley (LINUX) wrote:
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Friday, November 18, 2022 7:46 PM
+>>
+>> In sev-snp enlightened guest, hvcall needs to use vmmcall to trigger
+> 
+> What does "hvcall" refer to here?  Is this a Hyper-V hypercall, or just
+> a generic hypervisor call?
 
-Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
----
- arch/x86/include/asm/idtentry.h    |  2 ++
- arch/x86/include/asm/irq_vectors.h |  6 ++++++
- arch/x86/kernel/cpu/mshyperv.c     | 15 +++++++++++++++
- arch/x86/kernel/idt.c              | 10 ++++++++++
- drivers/hv/vmbus_drv.c             |  3 ++-
- 5 files changed, 35 insertions(+), 1 deletion(-)
+It's should be Hyper-V hypercall. Will make it accurate in the next
+version. Thanks for reminder.
 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 72184b0b2219..c0648e3e4d4a 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -686,6 +686,8 @@ DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested
- DECLARE_IDTENTRY_SYSVEC(HYPERVISOR_CALLBACK_VECTOR,	sysvec_hyperv_callback);
- DECLARE_IDTENTRY_SYSVEC(HYPERV_REENLIGHTENMENT_VECTOR,	sysvec_hyperv_reenlightenment);
- DECLARE_IDTENTRY_SYSVEC(HYPERV_STIMER0_VECTOR,	sysvec_hyperv_stimer0);
-+DECLARE_IDTENTRY_SYSVEC(HYPERV_INTR_NESTED_VMBUS_VECTOR,
-+			sysvec_hyperv_nested_vmbus_intr);
- #endif
- 
- #if IS_ENABLED(CONFIG_ACRN_GUEST)
-diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-index 43dcb9284208..729d19eab7f5 100644
---- a/arch/x86/include/asm/irq_vectors.h
-+++ b/arch/x86/include/asm/irq_vectors.h
-@@ -102,6 +102,12 @@
- #if IS_ENABLED(CONFIG_HYPERV)
- #define HYPERV_REENLIGHTENMENT_VECTOR	0xee
- #define HYPERV_STIMER0_VECTOR		0xed
-+/*
-+ * FIXME: Change this, once Microsoft Hypervisor changes its assumption
-+ * around VMBus interrupt vector allocation for nested root partition.
-+ * Or provides a better interface to detect this instead of hardcoding.
-+ */
-+#define HYPERV_INTR_NESTED_VMBUS_VECTOR	0x31
- #endif
- 
- #define LOCAL_TIMER_VECTOR		0xec
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 938fc82edf05..4dfe0f9d7be3 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -126,6 +126,21 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
- 	set_irq_regs(old_regs);
- }
- 
-+DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_nested_vmbus_intr)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
-+
-+	inc_irq_stat(irq_hv_callback_count);
-+
-+	if (vmbus_handler)
-+		vmbus_handler();
-+
-+	if (ms_hyperv.hints & HV_DEPRECATING_AEOI_RECOMMENDED)
-+		ack_APIC_irq();
-+
-+	set_irq_regs(old_regs);
-+}
-+
- void hv_setup_vmbus_handler(void (*handler)(void))
- {
- 	vmbus_handler = handler;
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index a58c6bc1cd68..3536935cea39 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -160,6 +160,16 @@ static const __initconst struct idt_data apic_idts[] = {
- # endif
- 	INTG(SPURIOUS_APIC_VECTOR,		asm_sysvec_spurious_apic_interrupt),
- 	INTG(ERROR_APIC_VECTOR,			asm_sysvec_error_interrupt),
-+#ifdef CONFIG_HYPERV
-+	/*
-+	 * This is a hack because we cannot install this interrupt handler
-+	 * via alloc_intr_gate as it does not allow interrupt vector less
-+	 * than FIRST_SYSTEM_VECTORS. And hyperv does not want anything other
-+	 * than 0x31-0x34 as the interrupt vector for vmbus interrupt in case
-+	 * of nested setup.
-+	 */
-+	INTG(HYPERV_INTR_NESTED_VMBUS_VECTOR, asm_sysvec_hyperv_nested_vmbus_intr),
-+#endif
- #endif
- };
- 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 6324e01d5eec..740878367426 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -2768,7 +2768,8 @@ static int __init hv_acpi_init(void)
- 	 * normal Linux IRQ mechanism is not used in this case.
- 	 */
- #ifdef HYPERVISOR_CALLBACK_VECTOR
--	vmbus_interrupt = HYPERVISOR_CALLBACK_VECTOR;
-+	vmbus_interrupt = hv_nested ? HYPERV_INTR_NESTED_VMBUS_VECTOR :
-+				      HYPERVISOR_CALLBACK_VECTOR;
- 	vmbus_irq = -1;
- #endif
- 
--- 
-2.25.1
+> 
+>> vmexit and notify hypervisor to handle hypercall request.
+>>
+>> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+>> ---
+>>   arch/x86/include/asm/mshyperv.h | 66 ++++++++++++++++++++++-----------
+>>   1 file changed, 45 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+>> index 9b8c3f638845..28d5429e33c9 100644
+>> --- a/arch/x86/include/asm/mshyperv.h
+>> +++ b/arch/x86/include/asm/mshyperv.h
+>> @@ -45,16 +45,25 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
+>>   	u64 hv_status;
+>>
+>>   #ifdef CONFIG_X86_64
+>> -	if (!hv_hypercall_pg)
+>> -		return U64_MAX;
+>> +	if (hv_isolation_type_en_snp()) {
+>> +		__asm__ __volatile__("mov %4, %%r8\n"
+>> +				"vmmcall"
+>> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> +				"+c" (control), "+d" (input_address)
+>> +				:  "r" (output_address)
+>> +				: "cc", "memory", "r8", "r9", "r10", "r11");
+>> +	} else {
+>> +		if (!hv_hypercall_pg)
+>> +			return U64_MAX;
+>>
+>> -	__asm__ __volatile__("mov %4, %%r8\n"
+>> -			     CALL_NOSPEC
+>> -			     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> -			       "+c" (control), "+d" (input_address)
+>> -			     :  "r" (output_address),
+>> -				THUNK_TARGET(hv_hypercall_pg)
+>> -			     : "cc", "memory", "r8", "r9", "r10", "r11");
+>> +		__asm__ __volatile__("mov %4, %%r8\n"
+>> +				CALL_NOSPEC
+>> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> +				"+c" (control), "+d" (input_address)
+>> +				:  "r" (output_address),
+>> +					THUNK_TARGET(hv_hypercall_pg)
+>> +				: "cc", "memory", "r8", "r9", "r10", "r11");
+>> +	}
+>>   #else
+>>   	u32 input_address_hi = upper_32_bits(input_address);
+>>   	u32 input_address_lo = lower_32_bits(input_address);
+>> @@ -82,12 +91,18 @@ static inline u64 hv_do_fast_hypercall8(u16 code, u64 input1)
+>>   	u64 hv_status, control = (u64)code | HV_HYPERCALL_FAST_BIT;
+>>
+>>   #ifdef CONFIG_X86_64
+>> -	{
+>> +	if (hv_isolation_type_en_snp()) {
+>> +		__asm__ __volatile__(
+>> +				"vmmcall"
+>> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> +				"+c" (control), "+d" (input1)
+>> +				:: "cc", "r8", "r9", "r10", "r11");
+>> +	} else {
+>>   		__asm__ __volatile__(CALL_NOSPEC
+>> -				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> -				       "+c" (control), "+d" (input1)
+>> -				     : THUNK_TARGET(hv_hypercall_pg)
+>> -				     : "cc", "r8", "r9", "r10", "r11");
+>> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> +				"+c" (control), "+d" (input1)
+>> +				: THUNK_TARGET(hv_hypercall_pg)
+>> +				: "cc", "r8", "r9", "r10", "r11");
+> 
+> The above 4 lines appear to just have changes in indentation.  Maybe
+> there's value in having the same indentation as the new code you've
+> added, so I won't object if you want to keep the changes.
 
+OK. Will update in the next version.
+
+> 
+>>   	}
+>>   #else
+>>   	{
+>> @@ -113,14 +128,21 @@ static inline u64 hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2)
+>>   	u64 hv_status, control = (u64)code | HV_HYPERCALL_FAST_BIT;
+>>
+>>   #ifdef CONFIG_X86_64
+>> -	{
+>> +	if (hv_isolation_type_en_snp()) {
+>>   		__asm__ __volatile__("mov %4, %%r8\n"
+>> -				     CALL_NOSPEC
+>> -				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> -				       "+c" (control), "+d" (input1)
+>> -				     : "r" (input2),
+>> -				       THUNK_TARGET(hv_hypercall_pg)
+>> -				     : "cc", "r8", "r9", "r10", "r11");
+>> +				"vmmcall"
+>> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> +				"+c" (control), "+d" (input1)
+>> +				: "r" (input2)
+>> +				: "cc", "r8", "r9", "r10", "r11");
+>> +	} else {
+>> +		__asm__ __volatile__("mov %4, %%r8\n"
+>> +				CALL_NOSPEC
+>> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>> +				"+c" (control), "+d" (input1)
+>> +				: "r" (input2),
+>> +				THUNK_TARGET(hv_hypercall_pg)
+>> +				: "cc", "r8", "r9", "r10", "r11");
+> 
