@@ -2,66 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69631651D1B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Dec 2022 10:20:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 013E4651D26
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Dec 2022 10:20:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232716AbiLTJUZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Dec 2022 04:20:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33794 "EHLO
+        id S232394AbiLTJU4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Dec 2022 04:20:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbiLTJUY (ORCPT
+        with ESMTP id S233355AbiLTJUq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Dec 2022 04:20:24 -0500
+        Tue, 20 Dec 2022 04:20:46 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CB7EDE94
-        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:19:38 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86192D2E8
+        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:20:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671527977;
+        s=mimecast20190719; t=1671528003;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ABmxoLEyhLmWYUbBrwSAozB1mTvmA41c/n7InFI0eTk=;
-        b=O2K0Ua3EupgTR5aTIvAUmgq1TB3dT7T/zVTwVrQJ1u8LUbh30xQptwVtt6Qs6AKLfvY5IT
-        mY04EeRwBKBroD26WFbDLR/gKMhIPbHxEvg8iIZWRnCC0T7wyicfzNrqKDbTbkonPTFqLs
-        UErXd8UwOoz9w507mflFT5t2+jIYfL4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=1OcEOi6wfApoNJ5QX9xUUF80M6DZAUCfFxv9pSqRsVA=;
+        b=WnPihU+vfoHV2bn1BbhoanVL1Ohe6aVQ+nQoht4oRG1UB5JFTKWn5YRgn2w4mI1Bprt+EG
+        fikBvyf23yllhuoU96+8Irj/POOpM4UMqPZV6VbYixO21TcFCBplFwEubl9wujgq+1Mm3R
+        TCiFigS6kcLYld5hTCqBrvgk8r7mZ2M=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-440-iam_3tPlM6KN82WvHuDQCA-1; Tue, 20 Dec 2022 04:19:35 -0500
-X-MC-Unique: iam_3tPlM6KN82WvHuDQCA-1
-Received: by mail-wr1-f72.google.com with SMTP id a7-20020adfbc47000000b002421f817287so2067565wrh.4
-        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:19:35 -0800 (PST)
+ us-mta-446-dIHx2GawOE-Gej1Gxz4Vug-1; Tue, 20 Dec 2022 04:20:02 -0500
+X-MC-Unique: dIHx2GawOE-Gej1Gxz4Vug-1
+Received: by mail-wm1-f71.google.com with SMTP id i7-20020a05600c354700b003d62131fe46so177474wmq.5
+        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:20:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ABmxoLEyhLmWYUbBrwSAozB1mTvmA41c/n7InFI0eTk=;
-        b=rn09QWqIIEhmFgLePnOUjcJ9/uAXQCKSld8pVRjgoC/FlNsuy0WNokQKgipKVc1Z/Q
-         n87r5hK/2XQ1UQYtHB20GwY5SYfJX9zCCfhoUp95N+6NRZKqQVGyP7S+L+rfVjlYJeJb
-         nDLwgPQc6TlV+yUWacnEQNZjusrVFxUeN/xJfSGkTZihVIzAbAF+wccQ8PK0dYA42Ykn
-         FnmKQReiHFzS8Mte/+siqwP9RMFaUh8FLm/jsYPST7yE3DoGLzxNdH6/zebSZEi49rGY
-         rWCxwou7DttcqP8/w0/lOxkFFf2OXJEUP2GhL4qk2FpfE7K9CLVyvPWxlCRrTrgClHid
-         OcFA==
-X-Gm-Message-State: AFqh2kpHT8yFtgWihsKZ8MlHiWYACNQvlHee4vGmCWkf2P4m/cx/1BMl
-        Eaiq2qGS5LWHPmCZRR3KvL/WJDv39lggjde54aqNUIQSCkSl9gEDCb+Wzeg+L/ovN30G/T1qCgw
-        LUZW+FmtKAh2DFzKSUt6VtUHC
-X-Received: by 2002:a5d:5752:0:b0:244:48b3:d13f with SMTP id q18-20020a5d5752000000b0024448b3d13fmr814494wrw.41.1671527974608;
-        Tue, 20 Dec 2022 01:19:34 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXtLG6B6o+Iq76Uq1s7q/P5T3qehN9lnU31N4pqMHcN5FUQ5i4K5iNalaLBn7T7/AoIpv82Xvg==
-X-Received: by 2002:a5d:5752:0:b0:244:48b3:d13f with SMTP id q18-20020a5d5752000000b0024448b3d13fmr814479wrw.41.1671527974427;
-        Tue, 20 Dec 2022 01:19:34 -0800 (PST)
+        bh=1OcEOi6wfApoNJ5QX9xUUF80M6DZAUCfFxv9pSqRsVA=;
+        b=yu6WTYPU9+hmv7zVLNfbIahRJKQctDzKwiHcvHRj9XoGmChDkBK/Rs3xCbGPn7n9cN
+         Nzz0d3QDHUU1z+0TUg2+pdoneY1+X/ap9bTOS0K8nuYuLlJmKY3bKHWx3JEmg6JVNbIn
+         YW7cB5cBW+aH57aeOZ0Ti6OGFuUZlacR8EWhbltV3tvI8BO5PNMYE8/aNgL+0XFur8NW
+         biRd2j5J3OB+40vvsrVeOYuOSTFsnsn+TqmFJwyDjmcVHeRVITypY/qzeEcgyzYOfcUq
+         q76RW1aFzZd2jYu4mrcvq8T2uQ/HOcmR4jJ/VdW98+qPZoiwi4UnkGQQYeHCUgfn/5OE
+         9/Pg==
+X-Gm-Message-State: ANoB5pmhdgSgMiwZtPqltGQfV96M9mpqSEEEVO0qZ63TWuQ+vnbNLVlV
+        dlX3P/t/sf/TL8/ulxI3YeePbK+9P4A2ysmbClnnl77rYAxLuBSX3F1ZPK5c7IrULWuexP7VTR0
+        oMNWdNhlxgGuIW0T9PMgDl9Rn
+X-Received: by 2002:a05:600c:4f85:b0:3cf:93de:14e8 with SMTP id n5-20020a05600c4f8500b003cf93de14e8mr33662650wmq.39.1671528001147;
+        Tue, 20 Dec 2022 01:20:01 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7YfyRC8GN1CmHHU+h6zQnG8fHr/grTiv22vuNVltDRj2C7JBfNLZj3eqwiClNyExLknW6NJw==
+X-Received: by 2002:a05:600c:4f85:b0:3cf:93de:14e8 with SMTP id n5-20020a05600c4f8500b003cf93de14e8mr33662634wmq.39.1671528000916;
+        Tue, 20 Dec 2022 01:20:00 -0800 (PST)
 Received: from [192.168.1.130] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id bj19-20020a0560001e1300b002238ea5750csm14570460wrb.72.2022.12.20.01.19.33
+        by smtp.gmail.com with ESMTPSA id p16-20020a1c5450000000b003d07de1698asm21890206wmi.46.2022.12.20.01.20.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Dec 2022 01:19:34 -0800 (PST)
-Message-ID: <d9fa03ac-4e71-dcd4-2d79-698410c9c444@redhat.com>
-Date:   Tue, 20 Dec 2022 10:19:33 +0100
+        Tue, 20 Dec 2022 01:20:00 -0800 (PST)
+Message-ID: <bf88b4bf-4c81-29d3-3518-ef149f93265d@redhat.com>
+Date:   Tue, 20 Dec 2022 10:19:59 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH 04/18] drm/i915: Do not set struct fb_info.apertures
+Subject: Re: [PATCH 05/18] drm/radeon: Do not set struct fb_info.apertures
 Content-Language: en-US
 To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
         airlied@gmail.com, deller@gmx.de
@@ -69,9 +69,9 @@ Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org
 References: <20221219160516.23436-1-tzimmermann@suse.de>
- <20221219160516.23436-5-tzimmermann@suse.de>
+ <20221219160516.23436-6-tzimmermann@suse.de>
 From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <20221219160516.23436-5-tzimmermann@suse.de>
+In-Reply-To: <20221219160516.23436-6-tzimmermann@suse.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -87,7 +87,7 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 On 12/19/22 17:05, Thomas Zimmermann wrote:
 > Generic fbdev drivers use the apertures field in struct fb_info to
 > control ownership of the framebuffer memory and graphics device. Do
-> not set the values in i915.
+> not set the values in radeon.
 > 
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 > ---
