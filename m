@@ -2,66 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D8F4651D7E
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Dec 2022 10:35:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E87F651D89
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Dec 2022 10:36:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbiLTJe7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Dec 2022 04:34:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
+        id S233320AbiLTJgf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Dec 2022 04:36:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiLTJe5 (ORCPT
+        with ESMTP id S233488AbiLTJg3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Dec 2022 04:34:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF75918699
-        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:33:57 -0800 (PST)
+        Tue, 20 Dec 2022 04:36:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC3BE7
+        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:35:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671528836;
+        s=mimecast20190719; t=1671528938;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fVZMgP3yXzrzjDhtvsp+tMbNXy6x5UaaSyaJJzd0B0g=;
-        b=e9TRzOd1GM9BZy7nwUeFTzI2fs+3M19xRDSziQ7diozTs1U+dG32FnVeAxrndE+2rscfhV
-        6sZIO//1MHH0nEQuphwpdWDT0gBLnOIcHFvZ+SFr87IT8IcNP5ab2G/BsS2RWSaCKvsWYp
-        tTh9xmVYGQ0Qy2zAiARa2HEbY71FJ/E=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=1J4eLv+5To8BjnLItTbs6pq8g5LjZHk9PMjLEQIi8Lo=;
+        b=DQf1sAgvUmpbBb6WOSRRbstBdpoNhZQhOIcRqeC6hgW5b5k9f/Jh3aJaO/xQ4YMy4l7sFU
+        YHGeKo2rKM5V2vI7UphsUha9T02uFy6utgjEoRaTjdLvdGLeggGvZL29EELsUHh1pWBhqQ
+        1jugf4K7spOmm+PAZvAfgI2hebCEm7E=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-247-eAPHhXftPZSqTj82o1pY1w-1; Tue, 20 Dec 2022 04:33:55 -0500
-X-MC-Unique: eAPHhXftPZSqTj82o1pY1w-1
-Received: by mail-wr1-f71.google.com with SMTP id g12-20020adfbc8c000000b0024cdcc92637so1272096wrh.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:33:55 -0800 (PST)
+ us-mta-542-EuuF0zO1MhG-8544Ve9B0A-1; Tue, 20 Dec 2022 04:35:34 -0500
+X-MC-Unique: EuuF0zO1MhG-8544Ve9B0A-1
+Received: by mail-wm1-f70.google.com with SMTP id c7-20020a1c3507000000b003d355c13ba8so2688332wma.6
+        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:35:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fVZMgP3yXzrzjDhtvsp+tMbNXy6x5UaaSyaJJzd0B0g=;
-        b=veXm7vaAGtcINHFSs/oElIyvufsIRSpMlJiCFAmonCWmRQhWNbQQEzcpQoGFQ5uiFd
-         A4XOqgyujPdUGzFw/Hqh70w0yazdWGjQlGsEWD/56UQDHMCSQm4OXF7o4LsZYlG9R3sI
-         R1v4vx448kr7vPgc4v3xdCikiLmKhauP9q0nq5sLOHICuZJeLPKHbblQ7ytUfrDTIcEh
-         PveUhasf+4HzmgqYRA0VOKuEIaUwr1cIBInozyUnmvtVxa3suBUBP1AC8Lv9E0kj6wJc
-         HHzVI2DWisOAsWy82K4rgJtsmfyU7pn7lDE3R4xD9Y/qXmlzHsCvnQn7NcoUXkuvxMGV
-         3CpA==
-X-Gm-Message-State: AFqh2kqQiga6v35rgzmr0vH+HnnrJddjeKC9UEQYtG9JQMkonDAeZi1I
-        w12WMdPdLolc1Q1C3sWpNKb2xb9h7VjjMrm2oZLXqLIMLBnPrrGVUBvcKBr3WBXGnoSsmy9hpzh
-        RWBChrr50TO8IHXC1cRpmoSKs
-X-Received: by 2002:a05:600c:b59:b0:3d6:4ba9:c111 with SMTP id k25-20020a05600c0b5900b003d64ba9c111mr241654wmr.40.1671528834238;
-        Tue, 20 Dec 2022 01:33:54 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXsPd0UOZgaV2usn9FHot5yPumcQTQ0WuQ30V9fRvNh8brfS+c9839HDYnoS7vxUK6doBa1czQ==
-X-Received: by 2002:a05:600c:b59:b0:3d6:4ba9:c111 with SMTP id k25-20020a05600c0b5900b003d64ba9c111mr241645wmr.40.1671528834044;
-        Tue, 20 Dec 2022 01:33:54 -0800 (PST)
+        bh=1J4eLv+5To8BjnLItTbs6pq8g5LjZHk9PMjLEQIi8Lo=;
+        b=AEPxDyc6qLfPxar0TYzT9Q+54oz9UJNiFZv+ocVtnOuK9w5kD015tFc3WPD3HpM1lh
+         hk7oy/B8FRZO2rc2xVRwjf4XOVQ22aAlv8XdkW1GzkZMU2n93iD6F5L8E8npJXq23Pgv
+         gC1gNVLK1boDCqNRCXjInCVv5GKH33WFVOFOM03b93SCNvR6Z2Wo2yBVz+kJGXA06PTN
+         VOAON0uwP4AGYL9cweBax9P80ce/HJmuTE56nFAoeKoJdNEr8e6eXB1TB1TYgCoa2mGA
+         MoMIYQeiKXT3ykALMA0f1PkbYPq3eUBDxpx2l/iq/W+cSUGimfZ8PcafNfB3wtUQAgVZ
+         UXIQ==
+X-Gm-Message-State: ANoB5pkFtxzMKtFX8nTzxgAX0IkPD60j0NPPNa8T/MYjNol5YsMn4pr5
+        fHHfP4A8bva/fHwnOFm5PRaluV6Xkub11LoPriMXPUe9b0aVVkDK3TTkNB71QuZC3YyuGT1AyzG
+        cogcHOQ3B/kbD6r1FqCT0nZ0j
+X-Received: by 2002:a5d:550c:0:b0:242:2713:1fb9 with SMTP id b12-20020a5d550c000000b0024227131fb9mr24605042wrv.16.1671528933090;
+        Tue, 20 Dec 2022 01:35:33 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5UgRh9FZeAQW/rgYS4tJcqcpMr2W2F1LauhongkzEysTbAsUBQfYpe3JzD17C7VFjb9x9qPQ==
+X-Received: by 2002:a5d:550c:0:b0:242:2713:1fb9 with SMTP id b12-20020a5d550c000000b0024227131fb9mr24605033wrv.16.1671528932912;
+        Tue, 20 Dec 2022 01:35:32 -0800 (PST)
 Received: from [192.168.1.130] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id bd26-20020a05600c1f1a00b003d070e45574sm15319946wmb.11.2022.12.20.01.33.53
+        by smtp.gmail.com with ESMTPSA id y18-20020a5d4ad2000000b002365cd93d05sm12313762wrs.102.2022.12.20.01.35.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Dec 2022 01:33:53 -0800 (PST)
-Message-ID: <8f63bb10-e1e4-0111-5032-dca1b4a2f437@redhat.com>
-Date:   Tue, 20 Dec 2022 10:33:52 +0100
+        Tue, 20 Dec 2022 01:35:32 -0800 (PST)
+Message-ID: <c8c3d52d-896b-b38b-00ac-b1686fc4ecaa@redhat.com>
+Date:   Tue, 20 Dec 2022 10:35:31 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH 10/18] fbdev/efifb: Add struct efifb_par for driver data
+Subject: Re: [PATCH 11/18] fbdev/efifb: Do not use struct fb_info.apertures
 Content-Language: en-US
 To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
         airlied@gmail.com, deller@gmx.de
@@ -69,9 +69,9 @@ Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org
 References: <20221219160516.23436-1-tzimmermann@suse.de>
- <20221219160516.23436-11-tzimmermann@suse.de>
+ <20221219160516.23436-12-tzimmermann@suse.de>
 From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <20221219160516.23436-11-tzimmermann@suse.de>
+In-Reply-To: <20221219160516.23436-12-tzimmermann@suse.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -85,8 +85,10 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On 12/19/22 17:05, Thomas Zimmermann wrote:
-> The efifb_par structure holds the palette for efifb. It will also
-> be useful for storing the device's aperture range.
+> Acquire ownership of the firmware scanout buffer by calling Linux'
+> aperture helpers. Remove the use of struct fb_info.apertures and do
+> not set FBINFO_MISC_FIRMWARE; both of which previously configured
+> buffer ownership.
 > 
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
 > ---
