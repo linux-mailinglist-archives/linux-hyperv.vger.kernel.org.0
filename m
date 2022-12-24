@@ -2,110 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F1CA651DED
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Dec 2022 10:47:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF1366559A7
+	for <lists+linux-hyperv@lfdr.de>; Sat, 24 Dec 2022 10:33:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233159AbiLTJrw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Dec 2022 04:47:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
+        id S230397AbiLXJdl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 24 Dec 2022 04:33:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233490AbiLTJrX (ORCPT
+        with ESMTP id S229890AbiLXJdk (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Dec 2022 04:47:23 -0500
+        Sat, 24 Dec 2022 04:33:40 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73111123
-        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:46:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355D0E083
+        for <linux-hyperv@vger.kernel.org>; Sat, 24 Dec 2022 01:32:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671529599;
+        s=mimecast20190719; t=1671874373;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ykdKuygOSTPkcM25esQW4i241lwYH2V5lSGsmvsr/ls=;
-        b=gCuf+TYmqs899gY3Z/Oreyd0KYIY0DmbgF84SxgL4fK8gHs6rM+m4KMKh3W8ZuretoEyfs
-        3mR18buTB6Pw7lrccI31YEKwjFJ2MW2Jbccl9uxljMrNmCuv7x0q20GuZSp95/cQS6epi5
-        hb1g0hL5vDbxBQS1TNFLmZcx5FN3l80=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-297-GpxP9x_GP7OCeucB4oyTpQ-1; Tue, 20 Dec 2022 04:46:37 -0500
-X-MC-Unique: GpxP9x_GP7OCeucB4oyTpQ-1
-Received: by mail-wr1-f69.google.com with SMTP id m24-20020adfa3d8000000b00242168ce9d1so2091694wrb.15
-        for <linux-hyperv@vger.kernel.org>; Tue, 20 Dec 2022 01:46:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ykdKuygOSTPkcM25esQW4i241lwYH2V5lSGsmvsr/ls=;
-        b=zgGr3mJDV2PsROCw5zDPJDBvsWClXATDBwwcBp8+RGIAMLNitmT4QXrFkYSvm3XjZy
-         ArPgmroufvbrJdNhjgHluWNtycV+fX7FudJpVRoglPFBqKtNuf+pPy07nU+CEZ3kHAQr
-         GU0fpBLYp/NnA2QAM9DojyP2/QW026qjcdCDG0VTeVXbmHGzDc9BB6zCTexuPqjf3DLY
-         7IrzEK5bZi5heXcphEexW6RNdeVvYwawcjdrmQpJcwyJe7PnFaCF78OsyfZ3hf4tJGoT
-         VUT40m2ZNliiiWAUEU7TARrVgavKn4kACA/KFs8XzrKBDWIJN4FqBK5KjY2qwcrJmYYg
-         K3JQ==
-X-Gm-Message-State: AFqh2kqySOx/T2VjZDK6eMp+yrW1ot9E2PM0GYwSucxX/M87Q9gPvtm3
-        TPXoxSy0dtojrulmksJ1z9HIFFAGbT2z4pkSu6WDbWwwwqPD3wny/9TzK591swzo2H6Vl9QYb4h
-        4+0hXKusvMSS8gkUjmDpIFo2e
-X-Received: by 2002:a05:6000:718:b0:256:ce1b:74ac with SMTP id bs24-20020a056000071800b00256ce1b74acmr19147677wrb.29.1671529596405;
-        Tue, 20 Dec 2022 01:46:36 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvJLK/eM71NU46wbs2aboKoDtpTCvPv8+GeJSh+yzufeE4NK5CbBNZkmGr9N2Pg6bIDfe3F3Q==
-X-Received: by 2002:a05:6000:718:b0:256:ce1b:74ac with SMTP id bs24-20020a056000071800b00256ce1b74acmr19147664wrb.29.1671529596230;
-        Tue, 20 Dec 2022 01:46:36 -0800 (PST)
-Received: from [192.168.1.130] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id c16-20020adffb50000000b002365254ea42sm12325758wrs.1.2022.12.20.01.46.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Dec 2022 01:46:35 -0800 (PST)
-Message-ID: <978cd907-65ce-2a89-e046-17a75c0ab832@redhat.com>
-Date:   Tue, 20 Dec 2022 10:46:35 +0100
+        bh=be7MDAtTG/b8darMvk+vw9vOPyC8kd2roGp6vrdGG4k=;
+        b=WwOCnrSccWlfk+wPOmBObD9rRJ+ovy6/vsPD3t158cZUXA7pWw4YW8nMdjJnYgpS+2h+C6
+        9CPXW1YWsaYc5v2khGlWYtwl4SgpmnQVOjPNOhYnbfns//J0z9fpBejiZR7vg5Kyk06a0l
+        8KktLRLOTnyN/d8T5NdFO8O4qMTuFYU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-279-EQlTGlZyPLyFQzn0VtfURA-1; Sat, 24 Dec 2022 04:32:48 -0500
+X-MC-Unique: EQlTGlZyPLyFQzn0VtfURA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63758299E752;
+        Sat, 24 Dec 2022 09:32:48 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DFF8A492C14;
+        Sat, 24 Dec 2022 09:32:47 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] KVM: VMX: nVMX: Make eVMCS enablement more robust
+Date:   Sat, 24 Dec 2022 04:32:39 -0500
+Message-Id: <20221224093238.1633330-1-pbonzini@redhat.com>
+In-Reply-To: <20221104144708.435865-1-vkuznets@redhat.com>
+References: 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH 18/18] drm/fbdev: Remove aperture handling and
- FBINFO_MISC_FIRMWARE
-Content-Language: en-US
-To:     Thomas Zimmermann <tzimmermann@suse.de>, daniel@ffwll.ch,
-        airlied@gmail.com, deller@gmx.de
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org
-References: <20221219160516.23436-1-tzimmermann@suse.de>
- <20221219160516.23436-19-tzimmermann@suse.de>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <20221219160516.23436-19-tzimmermann@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 12/19/22 17:05, Thomas Zimmermann wrote:
-> There are no users left of struct fb_info.apertures and the flag
-> FBINFO_MISC_FIRMWARE. Remove both and the aperture-ownership code
-> in the fbdev core. All code for aperture ownership is now located
-> in the fbdev drivers.
-> 
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> ---
->  drivers/video/fbdev/core/fbmem.c   | 33 ------------------------------
->  drivers/video/fbdev/core/fbsysfs.c |  1 -
->  include/linux/fb.h                 | 22 --------------------
->  3 files changed, 56 deletions(-)
+Queued (for 6.3), thanks.
 
-Nice patch!
+Paolo
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
 
