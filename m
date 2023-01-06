@@ -2,80 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D57465FF7A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Jan 2023 12:24:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE93266038B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Jan 2023 16:40:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232590AbjAFLYA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 6 Jan 2023 06:24:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58836 "EHLO
+        id S235636AbjAFPkE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 6 Jan 2023 10:40:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232291AbjAFLX7 (ORCPT
+        with ESMTP id S234263AbjAFPj6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 6 Jan 2023 06:23:59 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F09687AF;
-        Fri,  6 Jan 2023 03:23:57 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id bx6so1193332ljb.3;
-        Fri, 06 Jan 2023 03:23:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lc6AJeA6QH8mH/qpz0YFPtwqEUXIOgf8yzugvC3dW1M=;
-        b=TL/k8lUwg40VBfY5xPwGsh7yQUs9JhuonEOjFKQ7yUsZQwRzpIRSX2F8WW1ol4qFIF
-         c06M9xkEjFjd3JG9Yz3v7wFD6aPMFhe0szw1IcseCQlzCKKvdPr8hGa4OR4KJrAQoikx
-         aU+nIgwirHt2VF+1GTkELwZzhO/7wAehSRK+kPoFEDqpTu02GpSiMxuXvEOQxzJi9fZH
-         qH1jSmZwKFW9C2VrOnBdEM0CO9ZsKHIYMdasBS72MB6RpuQ+wS9sNn1C1WSmJUDKZOIY
-         WMFS3FGE2Kp9hWKr737blph/WrWRpl90aw/drA8wa0kkf2Zqnv21KiPlVwBHxkwVJLvC
-         5+oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lc6AJeA6QH8mH/qpz0YFPtwqEUXIOgf8yzugvC3dW1M=;
-        b=LWIbtYUh22UVEksVS/QE0n5w9BOcwjyW7r17uc407WwnT90CuUsW8WKyfKKikiBOFp
-         Xphxxw2qwXzJCqKucU0/CsuOW8q9nHLwxDtUc2bq+2AQdc/HCf36FiDzEbFTLrNrF6ry
-         JTEV72ojBFxLEPd0XSYYTPH7+6B4PXSUz1CMb/mHhrj8IvrzCq5KVZzp5Nzcsyyho9gA
-         V00UJWw/u2XobmzEAoM+gvIfDaL5rR8q0FZ4nPwWo4P+rmg4hxTWJwuYDRJeiz7P42cd
-         078fqVDgaYsobLcbQ3z2vuEAKuAv0OFeFKByhhQE8LQKyA9IWaIkIHIbS0TRefOL8HQv
-         jyIA==
-X-Gm-Message-State: AFqh2krJ/yucGWdIbLdFJAQijxJzZFsOAhcp+n3SwOvtOzzysznYMRZO
-        PuOS4B3pG9OmuMi6pQnq3Vo=
-X-Google-Smtp-Source: AMrXdXupMQrYymXm+dRDk5s3STVi7rk0UMKV2owVopFZee24BcTmuiHyE03l74DEwyLcde5ykSmoyg==
-X-Received: by 2002:a2e:3306:0:b0:27f:b476:c05 with SMTP id d6-20020a2e3306000000b0027fb4760c05mr2923474ljc.5.1673004235939;
-        Fri, 06 Jan 2023 03:23:55 -0800 (PST)
-Received: from localhost (88-115-161-74.elisa-laajakaista.fi. [88.115.161.74])
-        by smtp.gmail.com with ESMTPSA id t21-20020a2e8e75000000b0027b54ff90c0sm74690ljk.139.2023.01.06.03.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 03:23:55 -0800 (PST)
-Date:   Fri, 6 Jan 2023 13:23:54 +0200
-From:   Zhi Wang <zhi.wang.linux@gmail.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     ak@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        brijesh.singh@amd.com, dan.j.williams@intel.com,
-        dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
-        jane.chu@oracle.com, kirill.shutemov@linux.intel.com,
-        kys@microsoft.com, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, rostedt@goodmis.org,
-        sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-        tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
-        x86@kernel.org, mikelley@microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] x86/hyperv: Support hypercalls for TDX guests
-Message-ID: <20230106132354.00007af3@gmail.com>
-In-Reply-To: <20221207003325.21503-6-decui@microsoft.com>
+        Fri, 6 Jan 2023 10:39:58 -0500
+Received: from CO1PR02CU002-vft-obe.outbound.protection.outlook.com (mail-westus2azon11020014.outbound.protection.outlook.com [52.101.46.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B5877ACC;
+        Fri,  6 Jan 2023 07:39:57 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FiOnLz+VTL1dDBGcvpIfZDhjE0nL2pIPQOKo9LGtHhRe864BtOEumERsMzO1nPAH6E9MsvKaxsb+L4podPzYNn60+M7ASUW+dLiO7A32VioGg6i475K3ypG3isDaRMPHAqB6/83IgjEsYQuxhfyFPcvzO2oqLeDFJ1Pr0G72MEI1QBbEsmnjaAF+yLkE3jvE1ddEYsEvTbms0s9skJ6H+pAXs5Eaeke5eMWxecZp/GR4FNg/VA1FYbmKANIiTwVftJZQrGCDyGAniOJRV+JeL6Tk5/CCQn4brGNWVOe/A6LZtLFrT8QcqzQRP2H0slNDClliG1qZSirPrc4eOxW3fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IGVeFsyQQ8aIidZICZ8ftlB1EWPNeLBEBLUOfGMj0tg=;
+ b=IU55muww7CIo6F7NEHGKBu01EFaf9/7oG8JWwKWr97GxEML1s9ynbO04HJ7jCz70S4DoT9K15x3KxNfZD1ZMI26LJyB2LtsxCO3om5P0L3I681Q4iGYY6V7YfKs1CB2SbM70ZYlNxA3Ij+ZgqeCHs3AC0BaPZQwXtt30cPvrYTdAC70yGOGOckc/55WgUaOi38N0EpdaCHtZYmsbflbeuEo5eVr8LBcTfFsx/6Fy9gbTvoVRT2CTS/AOR8OTeCi5Tdh/UzFpdxxRuSPVBquMjt22Cf5UcYESJu2ztY9SGwSkpumtXYvjxm9bThnLAp7BY7NA4bai+XMkWZDqAKsQpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IGVeFsyQQ8aIidZICZ8ftlB1EWPNeLBEBLUOfGMj0tg=;
+ b=i9hRj0UU6LysgxrsNT4mUjC7yo+KtI8t/xt0uHcABWEcPRLthK97AcS6cRyoHj2lS7rRPNm9LcLKRfXYiLFPw4OjfMc+p4L3Rm6di65Y8GsbWD10Pk7U/AI0CZ0PFD7dxhtklyVd5p+UujgUKBXhpqV9mv2ZrLq896wTvG+TcYs=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by IA1PR21MB3568.namprd21.prod.outlook.com (2603:10b6:208:3e3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.9; Fri, 6 Jan
+ 2023 15:39:54 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::9244:f714:3c6d:ba37]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::9244:f714:3c6d:ba37%5]) with mapi id 15.20.6002.004; Fri, 6 Jan 2023
+ 15:39:53 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Zhi Wang <zhi.wang.linux@gmail.com>
+CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>
+Subject: RE: [PATCH v2 2/6] x86/tdx: Support vmalloc() for
+ tdx_enc_status_changed()
+Thread-Topic: [PATCH v2 2/6] x86/tdx: Support vmalloc() for
+ tdx_enc_status_changed()
+Thread-Index: AQHZIOpXAghmsq3xdEqAL1zty4oDaa6QFLQAgAALbQCAACLkQIAA6XCAgABbXZA=
+Date:   Fri, 6 Jan 2023 15:39:53 +0000
+Message-ID: <SA1PR21MB133593372417A79174325350BFFB9@SA1PR21MB1335.namprd21.prod.outlook.com>
 References: <20221207003325.21503-1-decui@microsoft.com>
-        <20221207003325.21503-6-decui@microsoft.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        <20221207003325.21503-3-decui@microsoft.com>
+        <20230105114435.000078e4@gmail.com>
+        <SA1PR21MB133560538DDD7006CCB36E30BFFA9@SA1PR21MB1335.namprd21.prod.outlook.com>
+        <20230105201024.00001ea0@gmail.com>
+        <SA1PR21MB133576523E55BBC7300DE2B1BFFA9@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <20230106121047.00003048@gmail.com>
+In-Reply-To: <20230106121047.00003048@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bf7fea4a-c69f-4eb4-aa04-bd2a15909209;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-01-06T15:37:47Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|IA1PR21MB3568:EE_
+x-ms-office365-filtering-correlation-id: e7963bc3-3bd7-4bf5-bd06-08daeffc41a6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FNi/qWZ6C6PQ2yKLjG8Q9C7qAlY4POqNA4EwZUWnjMEZhSjGyqZlQ2/62y8PrEI7iOK9eQGXxfKZgGv3k+mhfR3Y8n/R0Ir1OBSXgcRmvSwu7yMfH+34z6T3PlBewveKEXlTPVxZGMb4SiU1exxPEubqPgasBEJ3sHWZf0oYAcyIE+ARlSR3iZ5WgZDLwRFr40lrMqhQYWoZOsARKAKD9VsMTRlLPAl5yDv3LoYc24Lb4v6mahDkfHRSril2zqTIiEnan3rjfNAFjL5x3KlziK5Z6h6IQLO/MRUlPMSL/AW7sFFESKBqjveIAZ2VvwVoQbD9VKqJipHECqk7MgXF+9r9qMoVfXjsOpEODYF6ESyV26wnSpgkhxDRX0cfFOSAvgWKOb2IxWtZntoQlpmVIwUoj14S4ztU6YGAllVkRadU4EQkQuqCBBw1fRD1T1hz2s0mOP4PE6Y15AjAhX6/7nFpK/f/cY13CIdfpYkHxg2m47LwNptm95Ioag1+meP9J1dkc3B7Mk+gvrPfaKq2hgMbcXIFhEKrxsbjKai6OF0VJNEnrDaRYXz76vWbQylvcmqge+HIDW48W0MxIFNdkgGZDpzp+eVrQyjUeQ9k4W7KeZ3p7NYDacDbXSCW915A6xHjhLj4Nr5XDbBrhfd8wC+nC2Rre0BtXXNkOuL/Y6qDZCOivUEcvNfDm5lAcgNJ0qwh4f5d/95fHHRRaz64+3FuM2U8YUnbfQukHq4mRvZW86XnTf3x+si+l3/vj8ng
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(376002)(39860400002)(366004)(136003)(451199015)(38070700005)(86362001)(478600001)(316002)(6916009)(9686003)(33656002)(10290500003)(55016003)(54906003)(5660300002)(66476007)(122000001)(53546011)(66946007)(64756008)(7696005)(4744005)(71200400001)(76116006)(41300700001)(52536014)(2906002)(8676002)(7416002)(66446008)(4326008)(8936002)(66556008)(8990500004)(38100700002)(82950400001)(82960400001)(6506007)(26005)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?COxI3IkyrRoIv3WNP9evF3GSqH5zB8g066OdGVowF98KX+/FBnqg1asVXLyZ?=
+ =?us-ascii?Q?1SY0S3I3lw3Ni+nWGxMwQs8K+l1GzuDcLirmWkqGN/3bZ9n5PumPTdJjB0A6?=
+ =?us-ascii?Q?LhvXq+lBEXbGEdYcEl36WLGg6hgaIuWhAD1dq/aSoDiBeUWV3BgUdDxMWY+z?=
+ =?us-ascii?Q?28RN+Rj5to1aSL4B35sLmyOJDxbKdHTuWd7SQ2nHIGs+uekrYlwEBUUU38GP?=
+ =?us-ascii?Q?Bfab9ayz/OglFBSrUs0e54S1L5Q/WUYXOStN1LheiK2coczYN9VQW2arnIu4?=
+ =?us-ascii?Q?d225pF6HZqjewVaCVF7roAxuDV11mCV17Fh+ktsF0JBw6vgaiUKD0KupiRQA?=
+ =?us-ascii?Q?jXPTymRWhatscW2CfJ1A/rU7HIMhyrqwDvMAun+dyanrErayitoFUsv/5Hfg?=
+ =?us-ascii?Q?HLSVt1B5AX7qQzt4gCWkdHyxS4zEUjBkwdB+2kTpAWGGATjNyR7I8MIH/IJX?=
+ =?us-ascii?Q?jRmANpAqnh8Gd7XN1p4yvgRloq7g4Zu2uL0q1BBOstKgItrfZRwXOyJrkC4F?=
+ =?us-ascii?Q?hjVnlnCNoqd4Bew9K86V2Ok6Ymy9vOQ4F9q+S5ckBd48gQ227JyL7K9NFkEY?=
+ =?us-ascii?Q?pnI1rgsTVCxlCP7Y+kv8bLd3lfaPHLqhrZddLztJyMQMSQczTo84qveZ5nIC?=
+ =?us-ascii?Q?3fXd1RYkV5YuDnpyzQiboDblVV3bfnPoYHSm6RqeBLoE5ToMyqKFyZrwzWEV?=
+ =?us-ascii?Q?W6g7jHqn5AtiabwVc6LNa80VwomyhesH3RJpVWXyPgp17o1bBOp13WHpRBhx?=
+ =?us-ascii?Q?7ts5oSyjXn/BHQ/jFz9kfMOxNkDe1dBr4vswJFJ8vnWyOJ3XMKG/y4J4iNCg?=
+ =?us-ascii?Q?d38uLZHVkOcqdbNojWTeIYPuBkIpa/CpVN9iqmW+g6iOz4XmHyTF5dyGSulA?=
+ =?us-ascii?Q?mpUhk3RBOzLzxlW7B5vfIcK3ddmwUl4sOwpSQpYuq2M5DWt+Xw+txN1P1Ni8?=
+ =?us-ascii?Q?Whka1mPgIylV/sKV133fjreb/3nWoeaTIJmhBBkGciEcuvdmeJ6a3/ARjh0s?=
+ =?us-ascii?Q?o3DBFJVhvw2KfnpJvpt8ecLZxyyaQ7BaiRcsT39YWkBHvJi+71+7EnyCpKOI?=
+ =?us-ascii?Q?oXkiMPSd304+eFLnsreHRVem94AcAfOaRXAXJfQn3YUOobml4Ta35RHvKXxo?=
+ =?us-ascii?Q?ct/Y0/2eSXNgSLiU271r608NoJCxH/Fd3L9Bv8NjsxJUvXZu+wYECyqvh3ZN?=
+ =?us-ascii?Q?Ed4PVZYW0LxQWvkRj3XdxbOfKLBU7jSMztYoWPYFTyofmu6Fvi2V0+dRFuAb?=
+ =?us-ascii?Q?k/jjIYp2am6Qdpa65M51Zrw4/p3Lg4+o/ltC2VUvN3usjM2kFEBOIF5XLO1Y?=
+ =?us-ascii?Q?p7pMS8+92mA0nuEAzKMVYb+Q0DyEcHFHsZ+BrJEzE5GN9p5efGLuxpSXV8QA?=
+ =?us-ascii?Q?ScSwOJe9XchpOvXqECpSZA/6/76XLOItauLfnPdjDMXdZjJy50DkqrRh9CFf?=
+ =?us-ascii?Q?wT2Z1Wz5JvTTEw/06DyLo703DnUy8vtAkaANPRSQlW7yD/Swsi8xAyzjMoaJ?=
+ =?us-ascii?Q?BDkzH4QUc7ZLRlamE1yVepLN67NW9PMp/an/c0A3CjVOo/xDvmD8WnlxKVSe?=
+ =?us-ascii?Q?0VyYWt0nxa+rMq0LmnhQDu9TV0mMM6jp8rAcTVuM?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7963bc3-3bd7-4bf5-bd06-08daeffc41a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2023 15:39:53.8277
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CNgBmz8Mvf29VYWVsvfSPG+8c73XM3Rlm7uqcdr1ywSrz0UTUohSAVuRbsKikFDY9Rr+JQDOuZ86hvmT1DRQYg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3568
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,168 +149,26 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue,  6 Dec 2022 16:33:24 -0800
-Dexuan Cui <decui@microsoft.com> wrote:
+> From: Zhi Wang <zhi.wang.linux@gmail.com>
+> Sent: Friday, January 6, 2023 2:11 AM
+> To: Dexuan Cui <decui@microsoft.com>
+>  [...]
+> I guess we both agree that memory conversion in HV should be done through
+> coco so the hv_map_memory can be removed (even the extra does not hurt
+> currently)
 
-> A TDX guest uses the GHCI call rather than hv_hypercall_pg.
-> 
-> In hv_do_hypercall(), Hyper-V requires that the input/output addresses
-> must have the cc_mask.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> 
-> ---
-> 
-> Changes in v2:
->   Implemented hv_tdx_hypercall() in C rather than in assembly code.
->   Renamed the parameter names of hv_tdx_hypercall().
->   Used cc_mkdec() directly in hv_do_hypercall().
-> 
->  arch/x86/hyperv/hv_init.c       |  8 ++++++++
->  arch/x86/hyperv/ivm.c           | 14 ++++++++++++++
->  arch/x86/include/asm/mshyperv.h | 17 +++++++++++++++++
->  3 files changed, 39 insertions(+)
-> 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index a823fde1ad7f..c0ba53ad8b8e 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -430,6 +430,10 @@ void __init hyperv_init(void)
->  	/* Hyper-V requires to write guest os id via ghcb in SNP IVM. */
->  	hv_ghcb_msr_write(HV_X64_MSR_GUEST_OS_ID, guest_id);
->  
-> +	/* A TDX guest uses the GHCI call rather than hv_hypercall_pg.
-> */
-> +	if (hv_isolation_type_tdx())
-> +		goto skip_hypercall_pg_init;
-> +
->  	hv_hypercall_pg = __vmalloc_node_range(PAGE_SIZE, 1,
-> VMALLOC_START, VMALLOC_END, GFP_KERNEL, PAGE_KERNEL_ROX,
->  			VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
-> @@ -469,6 +473,7 @@ void __init hyperv_init(void)
->  		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
->  	}
->  
-> +skip_hypercall_pg_init:
->  	/*
->  	 * hyperv_init() is called before LAPIC is initialized: see
->  	 * apic_intr_mode_init() -> x86_platform.apic_post_init() and
-> @@ -604,6 +609,9 @@ bool hv_is_hyperv_initialized(void)
->  	if (x86_hyper_type != X86_HYPER_MS_HYPERV)
->  		return false;
->  
-> +	/* A TDX guest uses the GHCI call rather than hv_hypercall_pg.
-> */
-> +	if (hv_isolation_type_tdx())
-> +		return true;
->  	/*
->  	 * Verify that earlier initialization succeeded by checking
->  	 * that the hypercall page is setup
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> index 13ccb52eecd7..07e4253b5809 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -276,6 +276,20 @@ bool hv_isolation_type_tdx(void)
->  {
->  	return static_branch_unlikely(&isolation_type_tdx);
->  }
-> +
-> +u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2)
-> +{
-> +	struct tdx_hypercall_args args = { };
-> +
-> +	args.r10 = control;
-> +	args.rdx = param1;
-> +	args.r8  = param2;
-> +
-> +	(void)__tdx_hypercall(&args, TDX_HCALL_HAS_OUTPUT);
-> +
-> +	return args.r11;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_tdx_hypercall);
->  #endif
->  
->  /*
-> diff --git a/arch/x86/include/asm/mshyperv.h
-> b/arch/x86/include/asm/mshyperv.h index 8a2cafec4675..a4d665472d9e 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -10,6 +10,7 @@
->  #include <asm/nospec-branch.h>
->  #include <asm/paravirt.h>
->  #include <asm/mshyperv.h>
-> +#include <asm/coco.h>
->  
->  union hv_ghcb;
->  
-> @@ -39,6 +40,12 @@ int hv_call_deposit_pages(int node, u64 partition_id,
-> u32 num_pages); int hv_call_add_logical_proc(int node, u32 lp_index, u32
-> acpi_id); int hv_call_create_vp(int node, u64 partition_id, u32
-> vp_index, u32 flags); 
-> +u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2);
-> +
-> +/*
-> + * If the hypercall involves no input or output parameters, the
-> hypervisor
-> + * ignores the corresponding GPA pointer.
-> + */
->  static inline u64 hv_do_hypercall(u64 control, void *input, void
-> *output) {
->  	u64 input_address = input ? virt_to_phys(input) : 0;
-> @@ -46,6 +53,10 @@ static inline u64 hv_do_hypercall(u64 control, void
-> *input, void *output) u64 hv_status;
->  
->  #ifdef CONFIG_X86_64
-> +	if (hv_isolation_type_tdx())
-> +		return hv_tdx_hypercall(control,
-> +					cc_mkdec(input_address),
-> +					cc_mkdec(output_address));
->  	if (!hv_hypercall_pg)
->  		return U64_MAX;
->  
+Correct. As I mentioned, Michael's pachset is doing that and hopefully it w=
+ould
+be merged into the upstream soon.
 
-> @@ -83,6 +94,9 @@ static inline u64 hv_do_fast_hypercall8(u16 code, u64
-> input1) u64 hv_status, control = (u64)code | HV_HYPERCALL_FAST_BIT;
->  
->  #ifdef CONFIG_X86_64
-> +	if (hv_isolation_type_tdx())
-> +		return hv_tdx_hypercall(control, input1, 0);
-> +
->  	{
->  		__asm__ __volatile__(CALL_NOSPEC
->  				     : "=a" (hv_status),
-> ASM_CALL_CONSTRAINT, @@ -114,6 +128,9 @@ static inline u64
-> hv_do_fast_hypercall16(u16 code, u64 input1, u64 input2) u64 hv_status,
-> control = (u64)code | HV_HYPERCALL_FAST_BIT; 
->  #ifdef CONFIG_X86_64
-> +	if (hv_isolation_type_tdx())
-> +		return hv_tdx_hypercall(control, input1, input2);
-> +
-In some paths, for example vmbus_set_event(), choosing the SNP-based or
-generic hypercall happens in the caller, while now TDX-based hypercall is
-embraced in the generic hypercall path, e.g. hv_do_fast_hypercall8(). Which
-style will be chosen in the future? Seems the coding structure needs to be
-aligned.
+> The memory conversion in current HV code is done by different approaches.
+> Some are going through the coco, some are not, which ends up
+> with if(hv_isolation_type_snp()) in memory allocation path. It can be
+> confusing. I suppose a reasonable purpose of hv_isolation_type_snp()
+> should cover the AMD SEV-SNP specific parts which haven't been (or are
+> not going to be) covered by coco. For example the GHCB stuff.
+>=20
+> Thanks,
+> Zhi.
 
-void vmbus_set_event(struct vmbus_channel *channel)
-{
-        u32 child_relid = channel->offermsg.child_relid;
-
-        if (!channel->is_dedicated_interrupt)
-                vmbus_send_interrupt(child_relid);
-
-        ++channel->sig_events;
-
-        if (hv_isolation_type_snp())
-                hv_ghcb_hypercall(HVCALL_SIGNAL_EVENT, &channel->sig_event,
-                                NULL, sizeof(channel->sig_event));
-        else
-                hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT,
-        channel->sig_event);
-}
-
-
->  	{
->  		__asm__ __volatile__("mov %4, %%r8\n"
->  				     CALL_NOSPEC
-
+Exactly.
