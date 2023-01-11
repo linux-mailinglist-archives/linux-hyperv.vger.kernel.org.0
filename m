@@ -2,120 +2,92 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0A0A664239
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Jan 2023 14:48:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F634665A26
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Jan 2023 12:31:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238419AbjAJNsj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 10 Jan 2023 08:48:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
+        id S229766AbjAKLbD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 11 Jan 2023 06:31:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233949AbjAJNoJ (ORCPT
+        with ESMTP id S232316AbjAKLaj (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 10 Jan 2023 08:44:09 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642D21A23B;
-        Tue, 10 Jan 2023 05:44:08 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id d10so8223498pgm.13;
-        Tue, 10 Jan 2023 05:44:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TYbMENWuMKujKDBInRTArAHplJKtKim9Z+aptsEQC40=;
-        b=AkeZ3Qy4YVUYbXXqH9psYxTASuaGKkU3UsrfdowWdQpdz50lqffKb9gxKpPdEgMOdp
-         V+6C3kq2HEG6TDVO78YI3Mw6tIB5jHYjEk+FFlUhCl3PKKa/wbOhhCXxoCJ8lXc2kVt1
-         WMpf7qCKxALI4B4kJwMSiNm+reBpLl2FD1NUvfRGToCmSWFgPgnnkI2VE7cuHC/3dWT0
-         u/MibqMWQT/cE450Zdw62WIhkx9IDdHNGbAs++yy0/6JSDa8dTHH6xcOCly/e8YiF5xp
-         9ap82GzlxI5bXZ/lT3/G+QBnCDT5NnUWIAGIABoaEJvulVUVZye0nr0IUeWCeVn3R2Oa
-         FJKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TYbMENWuMKujKDBInRTArAHplJKtKim9Z+aptsEQC40=;
-        b=F0+j4Kn7w1vOmWYo/gvFkxSx5pZ772RC7Ez4V4/0ci3x36FBkfeII9BtCDTAx8wAGb
-         F0HpLfgqBPz6m+nuBvpMUftY/JbcOIhxu5h8AbeUj3J9031leLQYkMJObHqs6LFyaBrt
-         mBOgrxnb48c9YMQ+ontTU7iV5Sxy8MchX6ZLEnfs0AiN0blb7YtQJJBoMCXcmWpm5X1H
-         CVuXbazpRQ0d1vojfRgGo73x1R9t9Ncu56eNEB+jkXc4ngdh3bu8y66+AsOjf1YS12jE
-         Cy+UStnelKzbxp4ILD0lZ3pmNH7CQ5q526iEuYC1D2lr/V4UXxOUCIS9PadlQhGvxgk1
-         cI6g==
-X-Gm-Message-State: AFqh2kox5ThjCp9603XDbjlKj2GWO87M/ZVooqp5J9l9YLyVbofwfdkQ
-        UbL5/hYTEnL9ihoPmCo+yNo=
-X-Google-Smtp-Source: AMrXdXt5Xd0HE9YMMi22zeF4ikM53vMyWVSaqZ6V78DVHoIcrDisfSm3MgQKHiEerXxdJiF9iA3XoQ==
-X-Received: by 2002:a62:4e94:0:b0:56b:3758:a2d9 with SMTP id c142-20020a624e94000000b0056b3758a2d9mr66888190pfb.21.1673358247865;
-        Tue, 10 Jan 2023 05:44:07 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
-        by smtp.gmail.com with ESMTPSA id p62-20020a622941000000b0058130f1eca1sm8036747pfp.182.2023.01.10.05.43.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jan 2023 05:44:07 -0800 (PST)
-Message-ID: <4b9964ad-045c-4db1-0616-81635b6221cf@gmail.com>
-Date:   Tue, 10 Jan 2023 21:43:56 +0800
+        Wed, 11 Jan 2023 06:30:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D5B95B3;
+        Wed, 11 Jan 2023 03:30:37 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8E7E9B81B8D;
+        Wed, 11 Jan 2023 11:30:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D55ADC433EF;
+        Wed, 11 Jan 2023 11:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1673436635;
+        bh=n8OnoHXUKt8/vexOA9DOw2P/znFEmBc1dMUhPM/P1nE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2sy49pouXHeFMASqr063ewfQj/lTX3SXAOjasByVHYZhWJtGQf+RQpeHziZY54PeY
+         JXq+p19tkWKhMMWJx/E/kp6W25ZORCcL6ZjLRYaGln7pPm8n61zZDJYS4UjHnpI6PH
+         Zz4N6jXJRlr1PtNp9rX+/FZOhZkDRoyUJupRvbEM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH v2 10/16] drivers: hv: move device_to_hv_device to use container_of_const()
+Date:   Wed, 11 Jan 2023 12:30:12 +0100
+Message-Id: <20230111113018.459199-11-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20230111113018.459199-1-gregkh@linuxfoundation.org>
+References: <20230111113018.459199-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [RFC PATCH V2 15/18] x86/sev: Add a #HV exception handler
-To:     "Gupta, Pankaj" <pankaj.gupta@amd.com>, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        ashish.kalra@amd.com, srutherford@google.com,
-        akpm@linux-foundation.org, anshuman.khandual@arm.com,
-        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
-        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
-        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20221119034633.1728632-1-ltykernel@gmail.com>
- <20221119034633.1728632-16-ltykernel@gmail.com>
- <af54107e-a509-8f95-6044-b155539a590d@amd.com>
-Content-Language: en-US
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <af54107e-a509-8f95-6044-b155539a590d@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1177; i=gregkh@linuxfoundation.org; h=from:subject; bh=n8OnoHXUKt8/vexOA9DOw2P/znFEmBc1dMUhPM/P1nE=; b=owGbwMvMwCRo6H6F97bub03G02pJDMn75p68dtJ97m/PZ6YrTvN9j4tZYrzO51pEfViqqM8V7m6l c1nnO2JZGASZGGTFFFm+bOM5ur/ikKKXoe1pmDmsTCBDGLg4BWAiN+4zzHd07zprkHDlNOMpv//hrd tW83MGBTEs2BxmsuBRzpwd6/jnMYrpL0sXlnjlCAA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 1/10/2023 8:47 PM, Gupta, Pankaj wrote:
->> + *
->> + * To make this work the #HV entry code tries its best to pretend it 
->> doesn't use
->> + * an IST stack by switching to the task stack if coming from 
->> user-space (which
->> + * includes early SYSCALL entry path) or back to the stack in the 
->> IRET frame if
->> + * entered from kernel-mode.
->> + *
->> + * If entered from kernel-mode the return stack is validated first, 
->> and if it is
->> + * not safe to use (e.g. because it points to the entry stack) the 
->> #HV handler
->> + * will switch to a fall-back stack (HV2) and call a special handler 
->> function.
->> + *
->> + * The macro is only used for one vector, but it is planned to be 
->> extended in
->> + * the future for the #HV exception.
-> 
-> Noticed same comment line in the #VC exception handling section (macro 
-> idtentry_vc). Just wondering we need to remove this line as the patch 
-> being proposed for the #HV exception handling? unless this is planned to 
-> be extended in some other way.
+The driver core is changing to pass some pointers as const, so move
+device_to_hv_device() to use container_of_const() to handle this change.
 
-Nice catch! Will remove this in the next version.
+device_to_hv_device() now properly keeps the const-ness of the pointer
+passed into it, while as before it could be lost.
 
-Thanks.
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/linux/hyperv.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 85f7c5a63aa6..8430e27f3c3f 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1309,10 +1309,7 @@ struct hv_device {
+ };
+ 
+ 
+-static inline struct hv_device *device_to_hv_device(struct device *d)
+-{
+-	return container_of(d, struct hv_device, device);
+-}
++#define device_to_hv_device(d)	container_of_const(d, struct hv_device, device)
+ 
+ static inline struct hv_driver *drv_to_hv_drv(struct device_driver *d)
+ {
+-- 
+2.39.0
+
