@@ -2,38 +2,38 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E712366B169
-	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Jan 2023 15:13:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38FB366B3D7
+	for <lists+linux-hyperv@lfdr.de>; Sun, 15 Jan 2023 21:28:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230401AbjAOOND (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 15 Jan 2023 09:13:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
+        id S231444AbjAOU2C (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 15 Jan 2023 15:28:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbjAOONB (ORCPT
+        with ESMTP id S231428AbjAOU2B (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 15 Jan 2023 09:13:01 -0500
+        Sun, 15 Jan 2023 15:28:01 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08EFBF768;
-        Sun, 15 Jan 2023 06:13:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF89CC3F;
+        Sun, 15 Jan 2023 12:27:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
         In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OOTmTEZ5tSYiLE0Aufj+nlndsvBbI3BEiPky8VVv93w=; b=KwUOt/Nw5GaPANM4wZ26yailqU
-        2IrfIAai3ZAYJBbtzFDTwfW6uMtL+7SJRiVSfYRNVXhyBYD9bgE58ZgrMMXKIyrR1pIAvQ4U2irfg
-        ZnRaY1LJfeyTNtqBdr4IYkbgAyMEh1cTRwl9yr/GbPwTiLeucfOboLMJar99XxmqNVYE+zgDTWPt4
-        JwFk8ZzbJGj35RUjyWkeReh0Soo6DSzsPJEWNyggCoHKdOSm4/CIm4+PlVqkICTGb6AcunGoG15fr
-        OTejiZc++bXwB2vmAiO21saI28Eb/veLOiSLjRTqlpnGdXYKkXaeUumREQmjilHWm96BikBCcJXPM
-        HFG87D4Q==;
+        bh=hma09GUeOo7cUxAt1yb4jq2ttpTMOL2/HqikVNdDUyU=; b=ix779t5rx2ljo0GSoIwBMqI3Rp
+        OWtSaolAWth33HaIaWD3AnpEL8qegqJKX0izXE4LzOvJbpL2q30iMd6YS2QAB6Ei/NelMPWV15Cka
+        uLbXor+xf30XtMcF08VOmroAMeL4zq6BEll0+8XgCwbf7EYZdRZz1vkfUiA2gOZw3w/DNYCl8kH45
+        HxL4qdy7h6nim4STkmhMYD8iJWbBsfGtOkZQLGR5Z+D1aA6SbufljKwQAent9aoQUuEzJ7Ab7sdkR
+        rCi8FW30V+GbtGMcfTbZ9woeyz+sWAqtKVde/yuzu+o0TrbThbRYuOdu5VitP3E51U5OWa27g4+zr
+        HJaSIzWA==;
 Received: from [2001:8b0:10b:5::bb3] (helo=u3832b3a9db3152.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pH3ks-007tbH-UF; Sun, 15 Jan 2023 14:13:03 +0000
-Message-ID: <55f581345df465a73d6469f44d3512d9ccac7ffc.camel@infradead.org>
+        id 1pH9bj-0087DO-2j; Sun, 15 Jan 2023 20:27:59 +0000
+Message-ID: <b3e86a1c3c1b524bccdb71c837cb65fdf51495ff.camel@infradead.org>
 Subject: Re: [patch V2 30/46] x86/xen: Wrap XEN MSI management into irqdomain
 From:   David Woodhouse <dwmw2@infradead.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xensource.com>
+        xen-devel <xen-devel@lists.xen.org>
 Cc:     Dimitri Sivanich <sivanich@hpe.com>, linux-hyperv@vger.kernel.org,
         Steve Wahl <steve.wahl@hpe.com>, linux-pci@vger.kernel.org,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -57,12 +57,13 @@ Cc:     Dimitri Sivanich <sivanich@hpe.com>, linux-hyperv@vger.kernel.org,
         iommu@lists.linux-foundation.org,
         Jacob Pan <jacob.jun.pan@intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 15 Jan 2023 14:12:48 +0000
-In-Reply-To: <20200826112333.622352798@linutronix.de>
+Date:   Sun, 15 Jan 2023 20:27:44 +0000
+In-Reply-To: <55f581345df465a73d6469f44d3512d9ccac7ffc.camel@infradead.org>
 References: <20200826111628.794979401@linutronix.de>
          <20200826112333.622352798@linutronix.de>
+         <55f581345df465a73d6469f44d3512d9ccac7ffc.camel@infradead.org>
 Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-        boundary="=-DTVWzgYGVALze2v8okE9"
+        boundary="=-fjKh0loIuJRGzJfL12nv"
 User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -76,62 +77,85 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
---=-DTVWzgYGVALze2v8okE9
+--=-fjKh0loIuJRGzJfL12nv
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2020-08-26 at 13:16 +0200, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Sun, 2023-01-15 at 14:12 +0000, David Woodhouse wrote:
+> On Wed, 2020-08-26 at 13:16 +0200, Thomas Gleixner wrote:
+> > From: Thomas Gleixner <tglx@linutronix.de>
+> >=20
+> > To allow utilizing the irq domain pointer in struct device it is necess=
+ary
+> > to make XEN/MSI irq domain compatible.
+> >=20
+> > While the right solution would be to truly convert XEN to irq domains, =
+this
+> > is an exercise which is not possible for mere mortals with limited XENo=
+logy.
+> >=20
+> > Provide a plain irqdomain wrapper around XEN. While this is blatant
+> > violation of the irqdomain design, it's the only solution for a XEN igo=
+rant
+> > person to make progress on the issue which triggered this change.
+> >=20
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > Acked-by: Juergen Gross <jgross@suse.com>
 >=20
-> To allow utilizing the irq domain pointer in struct device it is necessar=
-y
-> to make XEN/MSI irq domain compatible.
+> I think it broke MSI-X support, because xen_pci_msi_domain_info is
+> lacking a .flags =3D MSI_FLAGS_PCI_MSIX?
+
+Hm, I think it only actually *broke* with commit 99f3d27976 ("PCI/MSI:
+Reject MSI-X early") from November last year. So 6.1 was OK and we have
+time to fix it in 6.2.
+
+Confirmed on real Xen at least that a Fedora 37 install with a 6.0.7
+kernel works fine, then on upgrading to Rawhide's 6.2-rc3 it dies with=20
+
+[   41.498694] ena 0000:00:03.0 (unnamed net_device) (uninitialized): Faile=
+d to enable MSI-X. irq_cnt -524
+[   41.498705] ena 0000:00:03.0: Can not reserve msix vectors
+[   41.498712] ena 0000:00:03.0: Failed to enable and set the admin interru=
+pts
+
+> > ---
+> > Note: This is completely untested, but it compiles so it must be perfec=
+t.
 >=20
-> While the right solution would be to truly convert XEN to irq domains, th=
-is
-> is an exercise which is not possible for mere mortals with limited XENolo=
-gy.
 >=20
-> Provide a plain irqdomain wrapper around XEN. While this is blatant
-> violation of the irqdomain design, it's the only solution for a XEN igora=
-nt
-> person to make progress on the issue which triggered this change.
+> I'm working on making it simple for you to test that, by hosting Xen
+> HVM guests natively in qemu (under KVM=C2=B9).=C2=A0
 >=20
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Acked-by: Juergen Gross <jgross@suse.com>
+> But I'm absolutely not going to try hacking on both guest and host side
+> at the same time when I'm trying to ensure compatibility =E2=80=94 that w=
+ay
+> lies madness.
+>=20
+> So for now I'm going to test qemu with older kernels, and maybe someone
+> (J=C3=BCrgen}? can test MSI-X to PIRQ support under real Xen?) FWIW if I =
+add
+> the missing MSI_FLAGS_PCI_MSIX flag then under my qemu I get:
+>=20
+> =C2=A038:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3180=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0 xen-pirq=C2=A0=C2=A0=C2=A0 -msi-x=
+=C2=A0=C2=A0=C2=A0=C2=A0 ens4-rx-0
+> =C2=A039:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3610=C2=A0 xen-pirq=C2=A0=C2=A0=C2=A0 -msi-x=
+=C2=A0=C2=A0=C2=A0=C2=A0 ens4-tx-0
+> =C2=A040:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0 xen-pirq=C2=A0=C2=
+=A0=C2=A0 -msi-x=C2=A0=C2=A0=C2=A0=C2=A0 ens4
+>=20
+> But without the flags I get:
+>=20
+> [=C2=A0=C2=A0=C2=A0 8.464212] e1000e 0000:00:04.0 ens4: Failed to initial=
+ize MSI interrupts.=C2=A0 Falling back to legacy interrupts.
+>=20
+> =C2=B9 https://lore.kernel.org/qemu-devel/20230110122042.1562155-1-dwmw2@=
+infradead.org/
 
-I think it broke MSI-X support, because xen_pci_msi_domain_info is
-lacking a .flags =3D MSI_FLAGS_PCI_MSIX?
 
-> ---
-> Note: This is completely untested, but it compiles so it must be perfect.
-
-
-I'm working on making it simple for you to test that, by hosting Xen
-HVM guests natively in qemu (under KVM=C2=B9).=C2=A0
-
-But I'm absolutely not going to try hacking on both guest and host side
-at the same time when I'm trying to ensure compatibility =E2=80=94 that way
-lies madness.
-
-So for now I'm going to test qemu with older kernels, and maybe someone
-(J=C3=BCrgen}? can test MSI-X to PIRQ support under real Xen?) FWIW if I ad=
-d
-the missing MSI_FLAGS_PCI_MSIX flag then under my qemu I get:
-
- 38:       3180          0  xen-pirq    -msi-x     ens4-rx-0
- 39:          0       3610  xen-pirq    -msi-x     ens4-tx-0
- 40:          1          0  xen-pirq    -msi-x     ens4
-
-But without the flags I get:
-
-[    8.464212] e1000e 0000:00:04.0 ens4: Failed to initialize MSI interrupt=
-s.  Falling back to legacy interrupts.
-
-=C2=B9 https://lore.kernel.org/qemu-devel/20230110122042.1562155-1-dwmw2@in=
-fradead.org/
-
---=-DTVWzgYGVALze2v8okE9
+--=-fjKh0loIuJRGzJfL12nv
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -223,24 +247,24 @@ IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
 dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
 NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
 xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMwMTE1MTQxMjQ4WjAvBgkqhkiG9w0BCQQxIgQguO82t4IS
-f+uoEXQbT4rRlZ6ifrAfYnPW74lNGbcKO8Awgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMwMTE1MjAyNzQ0WjAvBgkqhkiG9w0BCQQxIgQgEVuRC5TT
+XSVIGCNaaCP2mTBadklcRarafOUHkixEk+Qwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
 BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
 A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
 dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
 DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
 MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
 Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAeL6Dy2c7VdfjtqZJMCg0pa64/NdfSW9w5
-Cg7C83Bd5vV5tP2diRd4FM/rDByCqYeyDvsV1wg4h+dRSMs1ogl2nr6uys1d+2faKJwPlVtLrhuL
-owjq0407WyZECN2t7Nq+O5sBOh2qjBS/uw8FeJXmerOSnhP3A9RgYaSd4EEkfdwhAaZdwLpnGQp5
-rd0RS2WkBnyGZx2XSr2eN4C8nmG3rDU3VGqFLtkQW7jZykAD9KC/oSrJeuXbOGcyq3MfAw2QgNh5
-oolfMRczPOz7QBcctdKO10gr/6Oe4Ig+ojEP74Jh5r7R+tbJZEM4IBlp5OSyU1hNMj9tuuguJ2vg
-bRUbM4+N0Pk1mzJnceGKLn709Lxod3V++sMaQpA4b6TGIvLc8hsG4iiAQkJTMznW0BQklhJ3ELT6
-+P5Bt//RkuMpA2SUPXlmnq6Xx4kbDqRr0ZsvWZBFx+rPswkGmIXWn04+yZ5GjFspkedMO3pvn/u5
-Vcp8ulIZ6vywMda6cBXmM21Lt/H8q5+B1QJufHdPS3lxnHMUrkbcaDtlmG0W0itxazAma8lDiYVv
-CTHb75A9v1l6y+JZIBjbQKdZ0sFYcMCQ3CukZSfLtium4lvGBpTCvKzDPmElohsBfRGn+BVoM0nV
-g1qcbcRN5UA0jR3EHujU7TfJNj1NIemxbK9LfmIsDgAAAAAAAA==
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCjarrOzTF2g2zpInRZck17E4WRCOpZU8OR
+2z67mhuuqPT3z6VGbDBGfQQNv3SnCMu1fIVcYvBddCr+euhUkv3YbwFL1x5QhmJXdfiePtdBY7vH
+9u1dAJ6FobJ5zdPpJpptDkIPB4Psp96T+4t5s3JWQarVWHoFKGItv6aQA5WeDa6+tbaXEPMgwSqR
+ycly36VCCUl+wPSOgBZrXA4o+npH5Rvhp2s9qS4itgsx0NKPMXDsPVB8uj9vzV/YPfQr8PIUnE5d
+Kauu4H4ttIITfPAMKxpQmiuXw3Y/GCFAx7rXJuwswbxUUAX7ycQMEb/GIUdPQDwe7uggGvuMtvDU
+P9XUjizUP2ECBSf7QymND9mtUsxQ0g81DaneF9PhDAFRfPBulihKNSIFrt2c582qqnDM0CFDBAPW
+33It4wOZxzoOtU5lysLZqXwcCfJ4nVNW+VfsE8k3xJbozPKmVCqbIMkK6EaLb7S8GYdzyShpH9vj
+y7E5z/KqHbA1bOjt1bWcvk4Ll/PMz68DRhT9ncoUguoMPpQZF8fBXjoFI1mOqaMSEXm8Zk6dH49x
+jw0e9EkG04dhpd1z1UlC1ecq0L2wSzVsQFpEvRA6KdLlZQL4l6hm0E2EBZWGPPFuoVQNTIktQNuT
+L5aNYXCJRWDAN65JTDm/4pjO9xPI/DIOn2JteLI5twAAAAAAAA==
 
 
---=-DTVWzgYGVALze2v8okE9--
+--=-fjKh0loIuJRGzJfL12nv--
