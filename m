@@ -2,88 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B6366DBA5
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jan 2023 11:56:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAD2466DBB1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jan 2023 12:00:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235874AbjAQK4a (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Jan 2023 05:56:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55340 "EHLO
+        id S234106AbjAQLAd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Jan 2023 06:00:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236466AbjAQK4Y (ORCPT
+        with ESMTP id S236152AbjAQLAb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Jan 2023 05:56:24 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 36646301AB
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 Jan 2023 02:56:17 -0800 (PST)
-Received: from [10.156.157.53] (unknown [167.220.238.149])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 1BF4D20DFE93;
-        Tue, 17 Jan 2023 02:56:15 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1BF4D20DFE93
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1673952977;
-        bh=zXst434NIIVP3ZezL4HM/AIXimSp49v/pllhSJV8o7c=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=fOsaBkE0TzIsvlu6BkPrcLcodUmHGPaLIDVFubpviM0EEq7ixKtgspBZf0kz6J/VP
-         MHq+xEkuV5301Q9ZPvpHLNqHEzmOfRgr7W7BiUNh+TRrvOamZzdsKHIQf1QUqTjoXg
-         PNbukBRAF1Zwj3Mg0N7BKT45Xxz2IE1BUtFz+pOo=
-Message-ID: <ac8ee542-1f60-fa66-99f5-d716cd2dff33@linux.microsoft.com>
-Date:   Tue, 17 Jan 2023 16:26:13 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
+        Tue, 17 Jan 2023 06:00:31 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECBC5253
+        for <linux-hyperv@vger.kernel.org>; Tue, 17 Jan 2023 03:00:30 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id o17-20020a05600c511100b003db021ef437so2739945wms.4
+        for <linux-hyperv@vger.kernel.org>; Tue, 17 Jan 2023 03:00:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YjTar9pIMg4YcdUiGOQTXlFrNDMXufku6yVkHtLD7Ok=;
+        b=Vkcb3tYUHj2/hrgvjzHtvofjpg1G5icS6gNHwP+2wuVGY37iQaA3Vc9FWWc9PXXr2+
+         TJcoddy17th4qExslT+wdYvBJutW+cs2msJ6gIZ57qxWro5AgkiXsVpgTicsGeaog5Oq
+         4vwO+2fM94+bOswpSiyWyckGQ3+44MxRRRAd6cI04IT+mdBVastXLplIoZd5xQ1gkV+z
+         rng17+StW12XvFu9Cgx4Pyvzjd22JONF41jWwstI5OADTFRX+M4kBIhPiMMpEklpwPMP
+         8fVGmYMc+E9R3H8mp08z+Gu84jh2RTeUlsCem9GSqxhoZ1FWmXykSDM/UZAe+8g/zbEc
+         bhQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YjTar9pIMg4YcdUiGOQTXlFrNDMXufku6yVkHtLD7Ok=;
+        b=ichjzqIEx/JeStV2MUJMqBCt278WdQFrNXyxu+Bxip/QIkV/YY1fKZigKlrhbt8G4d
+         sXrTkH8I7eiZFT7n0spT/BAOMctlN64L1Jc7sHKujtkz3IHsWSaSnBsnV6BOVSb12VFt
+         X5l+UjKP5vuMpCPAYXedBmkpE0hmNhZuNJmJRKv1vIupQu0tpmOr/dRh58/YULKFH9K8
+         VTrqePeYXMTNmJxnUPcHUXYjg32XtFAPemlhIiwD5FukF/+cpGtlsPG6phvdzOSwWdNp
+         tfnmfUWO5m3Q5sOMjMA2mPuietvRRi79HaTUqIzOtwLUk+431ZNZoI/bgKD+ZKKsukbz
+         4jPQ==
+X-Gm-Message-State: AFqh2krERH8/Zt9lYJsuhPBtOZvuap891Y/SYJEjOSBDM9TFDAlk/Uph
+        IJ5L3aPA6+pY51mIfGrUR0mcnZVFTU4=
+X-Google-Smtp-Source: AMrXdXse+HO9FvYJQASLuTVsaEMM3Jzhkd35LKLEB/xl5McrXduoVaI5LH3ZSryK/M7jBCuvjqj9cw==
+X-Received: by 2002:a05:600c:1c02:b0:3d2:3b8d:21e5 with SMTP id j2-20020a05600c1c0200b003d23b8d21e5mr2612105wms.14.1673953229380;
+        Tue, 17 Jan 2023 03:00:29 -0800 (PST)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id l14-20020a05600c1d0e00b003da105437besm20349619wms.29.2023.01.17.03.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jan 2023 03:00:28 -0800 (PST)
+Date:   Tue, 17 Jan 2023 14:00:25 +0300
+From:   Dan Carpenter <error27@gmail.com>
+To:     Jinank Jain <jinankjain@linux.microsoft.com>
+Cc:     Tianyu.Lan@microsoft.com, linux-hyperv@vger.kernel.org
 Subject: Re: [bug report] x86/hyperv: Add Write/Read MSR registers via ghcb
  page
-Content-Language: en-US
-To:     Dan Carpenter <error27@gmail.com>, Tianyu.Lan@microsoft.com
-Cc:     linux-hyperv@vger.kernel.org
+Message-ID: <Y8Z/ycimio0p1cQP@kadam>
 References: <Y8UM59rdoCD0D6V2@kili>
-From:   Jinank Jain <jinankjain@linux.microsoft.com>
-In-Reply-To: <Y8UM59rdoCD0D6V2@kili>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-19.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+ <ac8ee542-1f60-fa66-99f5-d716cd2dff33@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac8ee542-1f60-fa66-99f5-d716cd2dff33@linux.microsoft.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Does making 0 as the default value makes sense?
+On Tue, Jan 17, 2023 at 04:26:13PM +0530, Jinank Jain wrote:
+> Does making 0 as the default value makes sense?
+> 
 
-Regards,
+That would silence the warning, and most distros are going to enable
+the config to zero it out anyway so it has no impact on runtime.
 
-Jinank
+regards,
+dan carpenter
 
-On 1/16/2023 2:07 PM, Dan Carpenter wrote:
-> Hello Tianyu Lan,
->
-> The patch faff44069ff5: "x86/hyperv: Add Write/Read MSR registers via
-> ghcb page" from Oct 25, 2021, leads to the following Smatch static
-> checker warning:
->
-> 	arch/x86/kernel/cpu/mshyperv.c:73 hv_get_non_nested_register()
-> 	error: uninitialized symbol 'value'.
->
-> arch/x86/kernel/cpu/mshyperv.c
->      63
->      64 #if IS_ENABLED(CONFIG_HYPERV)
->      65 u64 hv_get_non_nested_register(unsigned int reg)
->      66 {
->      67         u64 value;
->      68
->      69         if (hv_is_synic_reg(reg) && hv_isolation_type_snp())
->      70                 hv_ghcb_msr_read(reg, &value);
->                                               ^^^^^^
-> There are three places in hv_ghcb_msr_read() which don't initialize
-> value.
->
->      71         else
->      72                 rdmsrl(reg, value);
-> --> 73         return value;
->      74 }
->
-> regards,
-> dan carpenter
