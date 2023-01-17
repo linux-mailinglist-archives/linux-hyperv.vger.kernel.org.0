@@ -2,87 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAB1366DBDE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jan 2023 12:07:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E29E566DE66
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Jan 2023 14:12:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236808AbjAQLHn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 17 Jan 2023 06:07:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58638 "EHLO
+        id S236995AbjAQNMV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 17 Jan 2023 08:12:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236766AbjAQLHL (ORCPT
+        with ESMTP id S236980AbjAQNMV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 17 Jan 2023 06:07:11 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C79332E46
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 Jan 2023 03:06:42 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id r30so5757492wrr.10
-        for <linux-hyperv@vger.kernel.org>; Tue, 17 Jan 2023 03:06:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7xXHf/h6w5QScTbFOUIi2cw8hRpsXupQGOfb76sO+Fs=;
-        b=UBj7M9iBR4KTkYR64iMwWjmlsvekhNm0hD+SDSJgV8p/Ug74DU8RCF8tPkYfPOID5F
-         w9cWWwm7TR5qiZMayMAz9j6k7E0AiorLsNVvFZksE3B2bfYyTu8BMa6ZWhwf6OW6/KdN
-         XRkF8jX1A5QXq47HdQombQHDRsvXqJnCaQW9hmXD5ie9IF7rIFmB4g7AfXlNSH7S6VIf
-         WCioP8Rdxr6IVlKnXPdaVk6GtWnGEUznVEAi2xbY3cKRK+idBGEwgMUpDlG605FbOLvB
-         NCIN99GK7noVALxHatk/FpqVLF/AAbdLhCTfe/FzFFgtrkzNE3ug2Xg4QHNwpSPOctqq
-         9f/Q==
+        Tue, 17 Jan 2023 08:12:21 -0500
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4257518B14;
+        Tue, 17 Jan 2023 05:12:20 -0800 (PST)
+Received: by mail-wm1-f51.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so20942685wma.1;
+        Tue, 17 Jan 2023 05:12:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7xXHf/h6w5QScTbFOUIi2cw8hRpsXupQGOfb76sO+Fs=;
-        b=j7e8phVtFfNYVgNWcMY0DtP2e9JjUEL97CBCkj3oMKg7+iAngCgAgFHdvUzqsZnjtk
-         8vu5quIwCgjAfOspm+x2U9Nhn4lCuPQhd+FQbux+ihUMimNGAt1gm2d1jNjX6W9cwYJR
-         BVr0skWrVW+LJpeLztHy71ijPfZ7dGEgmt7Lx3Ky5Es+fhYBd9+xSvODhSQ1vjuRuBbv
-         Zol3YRSGieKdWAUpYL82O579kMMVLVNMwzqO7dXZWt4eq7U3WMb5rDeplMJc3bZEFV7C
-         efsrvqTekgTtD8/ogS/gAsNn2yZjIpIfiPnU+OeQBHMHYsvSiDix0oYLpnoYNHeX3is2
-         foOw==
-X-Gm-Message-State: AFqh2kpAw/lV4YKDUbSkLpYGETOL8HAJ3vkllPweibQ6FBTAPiuiMKnD
-        vK0fHFwx38MzaPAXQdJ2PTE=
-X-Google-Smtp-Source: AMrXdXv07yzVj58K0EuKidtmYQhLyCyEJrsqEcYCMq+//WaBtQzQ2uwxn0cqI4TIg0xCZAnS+ptfjQ==
-X-Received: by 2002:a5d:6b8b:0:b0:2be:1d47:b0f2 with SMTP id n11-20020a5d6b8b000000b002be1d47b0f2mr2035816wrx.20.1673953600522;
-        Tue, 17 Jan 2023 03:06:40 -0800 (PST)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id f2-20020adff982000000b002bde537721dsm10576337wrr.20.2023.01.17.03.06.39
+        bh=lUZKyu7BaCXWonkETCdXped84B9t0FbMKyhIpYp4ti4=;
+        b=GrzusxOv0GGGjGUPdYJ3zSsBYu05rNLD0yMO9VmmKxNx6gAWZE88qL8JA7VsrkT5XQ
+         YMqwPIJEMHuQMEjQHuVb4mHLiSgbsMzQvrqRsGKogPsqvpikim4grur/GacBa6mVK1kx
+         Na1GvEHBZLaX06yws9iJdpj0frvz5MPQZSYK66sqcyfztbbb1lpeltyyvWPZeiA7ii+z
+         RdtMge0G9EE2sw+ypgy4F35molb3KQxX/FJvoYGCfG2U/3mWGT8rROhce0PYYAPtrMzG
+         TBYZdUMfH3c0d+/I01VKpcv18Hil8bWli57K+ucW80cyjqXV0PcW730L1wjuwNRer+Lu
+         edOg==
+X-Gm-Message-State: AFqh2krLEU3FteT/ZxgxA0rFluC+YduXIl6JPXKZACYZSfayvlLdnovK
+        YxiNVAFFWkibcFUWHt9a3B4=
+X-Google-Smtp-Source: AMrXdXu/S8R5o0gP1HNWCUvKuhMJSNQNpIfayLACO/eZ5s2SlcyUOARmRYtgDc13+7s7mnGFcaO4Ag==
+X-Received: by 2002:a05:600c:3d8b:b0:3da:2a0f:29a3 with SMTP id bi11-20020a05600c3d8b00b003da2a0f29a3mr3165131wmb.33.1673961138628;
+        Tue, 17 Jan 2023 05:12:18 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id t9-20020a05600c198900b003d9e74dd9b2sm35767700wmq.9.2023.01.17.05.12.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jan 2023 03:06:40 -0800 (PST)
-Date:   Tue, 17 Jan 2023 14:06:37 +0300
-From:   Dan Carpenter <error27@gmail.com>
+        Tue, 17 Jan 2023 05:12:17 -0800 (PST)
+Date:   Tue, 17 Jan 2023 13:12:16 +0000
+From:   Wei Liu <wei.liu@kernel.org>
 To:     Jinank Jain <jinankjain@linux.microsoft.com>
-Cc:     Tianyu.Lan@microsoft.com, linux-hyperv@vger.kernel.org
-Subject: Re: [bug report] x86/hyperv: Add Write/Read MSR registers via ghcb
- page
-Message-ID: <Y8aBPTJN9WvLjM1M@kadam>
-References: <Y8UM59rdoCD0D6V2@kili>
- <ac8ee542-1f60-fa66-99f5-d716cd2dff33@linux.microsoft.com>
- <Y8Z/ycimio0p1cQP@kadam>
+Cc:     Tom Rix <trix@redhat.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, mikelley@microsoft.com,
+        nunodasneves@linux.microsoft.com, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/hyperv: conditionally build hv_get_nested_reg()
+Message-ID: <Y8aesLLS3sBPwLQY@liuwe-devbox-debian-v2>
+References: <20230114015643.3950640-1-trix@redhat.com>
+ <401ef436-5f78-6dd7-0157-5b580c6b7f87@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y8Z/ycimio0p1cQP@kadam>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <401ef436-5f78-6dd7-0157-5b580c6b7f87@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 02:00:25PM +0300, Dan Carpenter wrote:
-> On Tue, Jan 17, 2023 at 04:26:13PM +0530, Jinank Jain wrote:
-> > Does making 0 as the default value makes sense?
-> > 
+On Tue, Jan 17, 2023 at 03:41:18PM +0530, Jinank Jain wrote:
+> Reviewed-by: Jinank Jain <jinankjain@linux.microsoft.com>
 > 
-> That would silence the warning, and most distros are going to enable
-> the config to zero it out anyway so it has no impact on runtime.
 
-The config to zero out stack variables. CONFIG_INIT_STACK_ALL_ZERO.
+I will just fold this into the buggy patch since that has not been sent
+to Linus.
 
-regards,
-dan carpenter
+Thanks Tom and Jinank.
 
+> On 1/14/2023 7:26 AM, Tom Rix wrote:
+> > cppcheck reports
+> > [arch/x86/kernel/cpu/mshyperv.c:44]: (style) The function 'hv_get_nested_reg' is never used.
+> > 
+> > hv_get_nested_reg() is built unconditially but is only used conditionally in
+> > hv_get_register() and hv_set_register() by CONFIG_HYPERV.
+> > 
+> > Move the conditional #if to also include hv_get_nested_reg()
+> > 
+> > Fixes: 89acd9b2ff8e ("Drivers: hv: Setup synic registers in case of nested root partition")
+> > Signed-off-by: Tom Rix <trix@redhat.com>
+> > ---
+> >   arch/x86/kernel/cpu/mshyperv.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> > index b8bb13daacf7..9ca202970569 100644
+> > --- a/arch/x86/kernel/cpu/mshyperv.c
+> > +++ b/arch/x86/kernel/cpu/mshyperv.c
+> > @@ -41,6 +41,7 @@ bool hv_root_partition;
+> >   bool hv_nested;
+> >   struct ms_hyperv_info ms_hyperv;
+> > +#if IS_ENABLED(CONFIG_HYPERV)
+> >   static inline unsigned int hv_get_nested_reg(unsigned int reg)
+> >   {
+> >   	switch (reg) {
+> > @@ -61,7 +62,6 @@ static inline unsigned int hv_get_nested_reg(unsigned int reg)
+> >   	}
+> >   }
+> > -#if IS_ENABLED(CONFIG_HYPERV)
+> >   u64 hv_get_non_nested_register(unsigned int reg)
+> >   {
+> >   	u64 value;
