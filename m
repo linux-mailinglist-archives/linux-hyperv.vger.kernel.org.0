@@ -2,55 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA89675500
-	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jan 2023 13:51:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC6C675EC7
+	for <lists+linux-hyperv@lfdr.de>; Fri, 20 Jan 2023 21:15:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbjATMvp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 20 Jan 2023 07:51:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47538 "EHLO
+        id S229923AbjATUPT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 20 Jan 2023 15:15:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjATMvo (ORCPT
+        with ESMTP id S230021AbjATUPS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 20 Jan 2023 07:51:44 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A3BEF423C;
-        Fri, 20 Jan 2023 04:51:43 -0800 (PST)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id 353FB20E1A40; Fri, 20 Jan 2023 04:51:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 353FB20E1A40
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1674219103;
-        bh=URyTRIuqDCY2NGOe+vSA2YTEI+XPx3DrrID//4KSy68=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ROn7BuxEpZm5tJAGHIAm2uKzT1fbzxuMHKTlXSS36RayXzcgdaGyiH6tAwYZ68PnW
-         05SssYkGJaBb9WS+lGmIOiOCQusTvwFCm7dbP7t/0/V1w9Gba6+qbEki1u9dP7PEHe
-         zEke1Q3A3HeQS/fIj2WESibMX2sVqQYyXI/bgzQs=
-Date:   Fri, 20 Jan 2023 04:51:43 -0800
-From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        ssengar@microsoft.com
-Subject: Re: [PATCH 4/4] dt-bindings: hv: Add dt-bindings for VMBus
-Message-ID: <20230120125143.GA20797@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1673887688-19151-1-git-send-email-ssengar@linux.microsoft.com>
- <1673887688-19151-5-git-send-email-ssengar@linux.microsoft.com>
- <31d78b4c-1416-d8cb-a187-bf924168ee1e@linaro.org>
- <20230117151325.GA9806@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <23a7ae1d-cd49-8c78-5284-4134755ea19a@linaro.org>
- <20230117155258.GA14857@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <f6b80686-d8bc-9c7b-205c-635d4e681f50@linaro.org>
+        Fri, 20 Jan 2023 15:15:18 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7167CAED83;
+        Fri, 20 Jan 2023 12:15:17 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E66031EC068B;
+        Fri, 20 Jan 2023 21:15:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1674245716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=URGCdxWMZB194yM7DqWI/LMbwc4I1xa66tqKx+JFPCM=;
+        b=miS51UW/cZawfDQzsiX5CMN7crQiXDw1rMl2UJLaGR2uSVeW8sv9hplnApztEqWEwfO7Jh
+        PtnaNoT5kqitY/1kkbgEHXWHMNKdN3tDeYyS7c9LYJ+wUXg1qeeL0xx0KfbOxWcG52mFQq
+        4cXVDL/7CFzDHD6zREWhJAQhmU/gqZk=
+Date:   Fri, 20 Jan 2023 21:15:10 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <Y8r2TjW/R3jymmqT@zn.tnic>
+References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
+ <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f6b80686-d8bc-9c7b-205c-635d4e681f50@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+In-Reply-To: <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,50 +66,40 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 12:43:40PM +0100, Krzysztof Kozlowski wrote:
-> On 17/01/2023 16:52, Saurabh Singh Sengar wrote:
-> > On Tue, Jan 17, 2023 at 04:41:22PM +0100, Krzysztof Kozlowski wrote:
-> >> On 17/01/2023 16:13, Saurabh Singh Sengar wrote:
-> >>> On Mon, Jan 16, 2023 at 07:55:13PM +0100, Krzysztof Kozlowski wrote:
-> >>>> On 16/01/2023 17:48, Saurabh Sengar wrote:
-> >>>>> Add dt-bindings for Hyper-V VMBus
-> >>>>>
-> >>>>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> >>>>> ---
-> >>>>>  .../devicetree/bindings/hv/msft,vmbus.yaml         | 34 ++++++++++++++++++++++
-> >>>>
-> >>>> Also, there is no "hv" hardware, so that's not correct location. If your
-> >>>> bindings describe firmware, this should go to firmware. Otherwise, this
-> >>>> does not look like suitable for DT. We do not describe software stuff in DT.
-> >>>
-> >>> VMBus is a virtual device this is simmilar to virtio. I can rename this folder to vmbus.
-> >>>
-> >>
-> >> Then virtio directory. The directories are per subsystems (hardware
-> >> classes).
-> > 
-> > Apologies if I was not clear, I meant to say this is a device conceptually
-> > similar to virtio. But this driver has nothing to do with virtio, we should
+On Thu, Jan 12, 2023 at 01:42:25PM -0800, Michael Kelley wrote:
+> In a AMD SEV-SNP VM using vTOM, devices in MMIO space may be provided by
+> the paravisor and need to be mapped as encrypted.  Provide a function
+> for the hypervisor to specify the address range for such devices.
+> In __ioremap_caller(), map addresses in this range as encrypted.
 > 
-> Bindings are for hardware, not drivers, so if the device serves the same
-> purpose, it's driver differences do not matter.
-> 
-> > be creating a new folder for it OR I am fine moving it under bus if that's
-> > okay.
-> 
-> Since you do not have children here, it's not really a bus to fit under
-> bus directory...
-> 
-> Probably this should go together with virtio bindings to dedicated
-> hypervisor interfaces directory. We do not create directories for
-> specific solutions (implementations) with only one or few bindings.
-> Directories are for entire classes.
+> Only a single range is supported. If multiple devices need to be
+> mapped encrypted, the paravisor must place them within the single
+> contiguous range.
 
-I am OK to keep it anywhere, but I believe virtio is not its correct place. I am also
-concern how will the virtio maintainers will perceive it. Ideally we should be renaming
-virtio to virtualization OR hypervisor OR something more generic where both virtio and
-VMBus can co-exist. Please let me know if renaming virtio is acceptable.
+This already is starting to sound insufficient and hacky. And it also makes
+CC_ATTR_ACCESS_IOAPIC_ENCRYPTED insufficient either.
 
-> 
-> Best regards,
-> Krzysztof
+So, the situation we have is, we're a SEV-SNP VM using vTOM. Which means,
+MSR_AMD64_SEV[3] = 1. Or SEV_FEATURES[1], alternatively - same thing.
+
+That MSR cannot be intercepted by the HV and we use it extensively in Linux when
+it runs as a SEV-* guest. And I had asked this before, during review, but why
+aren't you checking this bit above when you wanna do vTOM-specific work?
+
+Because then you can do that check and
+
+1. map the IO-APIC encrypted
+2. map MMIO space of devices from the driver encrypted too
+3. ...
+
+and so on.
+
+And you won't need those other, not as nice things...
+
+Hmmm.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
