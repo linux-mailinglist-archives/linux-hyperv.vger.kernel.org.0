@@ -2,48 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D4867823D
-	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Jan 2023 17:52:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41186678240
+	for <lists+linux-hyperv@lfdr.de>; Mon, 23 Jan 2023 17:52:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232453AbjAWQwC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 23 Jan 2023 11:52:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58094 "EHLO
+        id S233394AbjAWQwM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 23 Jan 2023 11:52:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233427AbjAWQwB (ORCPT
+        with ESMTP id S232515AbjAWQwJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 23 Jan 2023 11:52:01 -0500
+        Mon, 23 Jan 2023 11:52:09 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C9A372C66B;
-        Mon, 23 Jan 2023 08:51:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 95B462DE42;
+        Mon, 23 Jan 2023 08:52:02 -0800 (PST)
 Received: from vm02.corp.microsoft.com (unknown [167.220.196.155])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D00BF20E1ABE;
-        Mon, 23 Jan 2023 08:51:55 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D00BF20E1ABE
+        by linux.microsoft.com (Postfix) with ESMTPSA id B136320E1ABC;
+        Mon, 23 Jan 2023 08:51:59 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B136320E1ABC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1674492718;
-        bh=1q0vUA/+bYaUkIbGuVZC66EHLWsufbPUd970kd1iRGY=;
+        s=default; t=1674492722;
+        bh=i0eNBC8geNLV8JqFCv2fcWa+3Po0NQl3CMraZjyG/Mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TNcToS0zofw2NUVWyE80xtxIOj8gXwl2ndk42rbTQnKwVuvk18CJO2Xmi4gYMm7iS
-         Ojue38bjS4dB2x6Y7jyVXeJqvE3fgs5EWQot99JevbHbWQqkR5fjInL3U1nTeZLjo3
-         LWpe7t7Xfyk0ueoI5mxTQhkG98Fclix4IVqHfO/4=
+        b=dO2HSdBdZIJS/Y+jT+0mTPO/b066+d6d8bahWzMpmk+tj1pybEaX3acD7STrMRqYs
+         CSrpN0FGXUsyxKKfPJEd4MAPNa/JoTd4A0zxzsaOAHx56uxZkU8QvzKBR3TeA4EsxY
+         +Eo+MAtUvYWGlE274l3mnSlEBX873JB4mL7mfDSA=
 From:   Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jeremi Piotrowski <jpiotrowski@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         Tianyu Lan <Tianyu.Lan@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
         linux-hyperv@vger.kernel.org,
         Brijesh Singh <brijesh.singh@amd.com>,
         Michael Roth <michael.roth@amd.com>,
         Ashish Kalra <ashish.kalra@amd.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        iommu@lists.linux.dev,
         Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-Subject: [RFC PATCH v1 4/6] x86/amd: Configure necessary MSRs for SNP during CPU init when running as a guest
-Date:   Mon, 23 Jan 2023 16:51:26 +0000
-Message-Id: <20230123165128.28185-5-jpiotrowski@linux.microsoft.com>
+Subject: [RFC PATCH v1 5/6] iommu/amd: Don't fail snp_enable when running virtualized
+Date:   Mon, 23 Jan 2023 16:51:27 +0000
+Message-Id: <20230123165128.28185-6-jpiotrowski@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230123165128.28185-1-jpiotrowski@linux.microsoft.com>
 References: <20230123165128.28185-1-jpiotrowski@linux.microsoft.com>
@@ -61,46 +61,32 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Jeremi Piotrowski <jpiotrowski@microsoft.com>
 
-Hyper-V may expose the SEV/SEV-SNP CPU features to the guest, but it is
-up to the guest to use them. early_detect_mem_encrypt() checks
-SYSCFG[MEM_ENCRYPT] and HWCR[SMMLOCK] and if these are not set the
-SEV-SNP features are cleared.  Check if we are running under a
-hypervisor and if so - update SYSCFG and skip the HWCR check.
-
-It would be great to make this check more specific (checking for
-Hyper-V) but this code runs before hypervisor detection on the boot cpu.
+Hyper-V VMs do not have access to an IOMMU but can support hosting SNP
+VMs. amd_iommu_snp_enable() is on the SNP init path and should not fail
+in that case.
 
 Signed-off-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 ---
- arch/x86/kernel/cpu/amd.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/iommu/amd/init.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index c7884198ad5b..17d91ac62937 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -565,6 +565,12 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 	 *   don't advertise the feature under CONFIG_X86_32.
- 	 */
- 	if (cpu_has(c, X86_FEATURE_SME) || cpu_has(c, X86_FEATURE_SEV)) {
-+		if (cpu_has(c, X86_FEATURE_HYPERVISOR)) {
-+			rdmsrl(MSR_AMD64_SYSCFG, msr);
-+			msr |= MSR_AMD64_SYSCFG_MEM_ENCRYPT;
-+			wrmsrl(MSR_AMD64_SYSCFG, msr);
-+		}
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index d1270e3c5baf..8049dbe78a27 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -3619,6 +3619,12 @@ int amd_iommu_pc_set_reg(struct amd_iommu *iommu, u8 bank, u8 cntr, u8 fxn, u64
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ int amd_iommu_snp_enable(void)
+ {
++	/*
++	 * If we're running virtualized there doesn't have to be an IOMMU for SNP to work.
++	 */
++	if (init_state == IOMMU_NOT_FOUND && boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return 0;
 +
- 		/* Check if memory encryption is enabled */
- 		rdmsrl(MSR_AMD64_SYSCFG, msr);
- 		if (!(msr & MSR_AMD64_SYSCFG_MEM_ENCRYPT))
-@@ -584,7 +590,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 			setup_clear_cpu_cap(X86_FEATURE_SME);
- 
- 		rdmsrl(MSR_K7_HWCR, msr);
--		if (!(msr & MSR_K7_HWCR_SMMLOCK))
-+		if (!(msr & MSR_K7_HWCR_SMMLOCK) && !cpu_has(c, X86_FEATURE_HYPERVISOR))
- 			goto clear_sev;
- 
- 		return;
+ 	/*
+ 	 * The SNP support requires that IOMMU must be enabled, and is
+ 	 * not configured in the passthrough mode.
 -- 
 2.25.1
 
