@@ -2,185 +2,151 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5233B67B532
-	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Jan 2023 15:56:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08C8067B818
+	for <lists+linux-hyperv@lfdr.de>; Wed, 25 Jan 2023 18:11:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235950AbjAYOz4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 25 Jan 2023 09:55:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        id S235195AbjAYRLv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 25 Jan 2023 12:11:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235922AbjAYOzs (ORCPT
+        with ESMTP id S235263AbjAYRLi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 25 Jan 2023 09:55:48 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9C630FE;
-        Wed, 25 Jan 2023 06:55:46 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C565B1EC0493;
-        Wed, 25 Jan 2023 15:55:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1674658543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Y5InzrMMR7tYD7K8IQxbCKmCrcbndsF98jURDpiEvtA=;
-        b=QhsVXgG9+mQg62pSTSotZNXiTHgj4Kr6DjoD6RzyyIrLoNuw0inT+OEDkhvYR4sZ9y9twf
-        dkUtWiZR9A2rC/a29R9t7FALlEu268HgkolBGU6CkU1ELWPMp15xxUqQFFuhLce3GKLUNv
-        ZZy1MIaPxdrIzvmknDNQqsceFa0jwx4=
-Date:   Wed, 25 Jan 2023 15:55:40 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Message-ID: <Y9FC7Dpzr5Uge/Mi@zn.tnic>
-References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
- <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
- <Y8r2TjW/R3jymmqT@zn.tnic>
- <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Wed, 25 Jan 2023 12:11:38 -0500
+X-Greylist: delayed 395 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 25 Jan 2023 09:11:01 PST
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A105AB6A
+        for <linux-hyperv@vger.kernel.org>; Wed, 25 Jan 2023 09:11:01 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1674666260; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Ozy43R5N4iHgaTJJCtnErFSh+5tKBrEwdju/s0SA8W0qTJs4T8304kFHfma3qVPrga
+    g3lsB4I5P2+46UfoqGK2STnMqzyntqWZVe8QBJtq9OAxWQ1GhwC4+2uhnB7zB+Lci6Q2
+    s50JRpxwkpevidOk6TcC4unNazaTbxef2GAyD0CCiaFXcNCIPc6ZiQqx5fKS7VEaaj0F
+    mjoUk7T25WfHKUISG/FjJOCO9t5PT5j5kfvesCnHjn9SBgHyQzXyvqc8wzOsXVicnREV
+    0z3ZKYAiTsgDFKdURcWQRZKRnL/QI392jemRf5s3OiG+acLvCLueYlFJXptq4Tz1ZZuU
+    MDEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1674666260;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=W+SqnGs9QjmIZ9DXCX93i+A0oA65I5Caxl3ahi9O3u0=;
+    b=QgrjCUsvB48gJOEOgHy5fLQ5MJeswizTOM1zZVMPgPBDwQF0K0a1k/VcObHFUgeaor
+    77NNneYvQcNDMBBMaQr9XuAVvPI7pwMJTTYnu4Dn3wJo4M2YpcYZjP4YQ3GC+pRdQN4P
+    dMG4XXtNw0nOKZ1P+2MbtFyWGfj6iohwmQVmpQjJrcIF4e0viWATfa70XSQ9anfBMcEw
+    4HZ7/W6GJcQ0StRcGdvYNfqwYJCOw6qChdA5Xbn140/+W8B3x6xZ8VJuaICKi604g54+
+    4d3rSTeImqqd01pBuXtd9HbRzt/paSqKPZ5h8Zm+LaozqcSGsVSfVq6Gh2HUmoj4TyFJ
+    Ur+A==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1674666260;
+    s=strato-dkim-0002; d=aepfle.de;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=W+SqnGs9QjmIZ9DXCX93i+A0oA65I5Caxl3ahi9O3u0=;
+    b=ninPPoKNj6kZcUCr5uN64VDF9fHhUH6tTGVw2LlH9z2FJ0T+KbFShEr+DiL8TLL1bA
+    idLLvhOQDA+8afXr+KQmQ9hIpip0hGvpQggo8gmGNFyMOOgskiL/EliL5GtOEWfNs3qo
+    RqH91Lk7wJcGo6vjJolk2RVPMeR57fI9MuyeMccjO5/jt33zSejzRnbhQDWfPxjHN7cB
+    F5MLFEPAj2AGM4Tt0dFuYHnks7wcfq2rZgUiAS8SlmwWU50F6cYAltVi5taOxkNUseGN
+    rbGIs5G/HFPD8yN7kA3eR8Qpmytk6DSD4f6e8xc7KSDseDTnjGquhlSCC499qmEYRNoP
+    Bsvg==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OuD5rXVisR4U0KIPE/saK9bfzyVdurcrIu9Z6SKY+a6gtBCfg=="
+Received: from sender
+    by smtp.strato.de (RZmta 49.2.2 AUTH)
+    with ESMTPSA id m23e47z0PH4K8E3
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Wed, 25 Jan 2023 18:04:20 +0100 (CET)
+Date:   Wed, 25 Jan 2023 18:04:11 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     linux-pci@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: unlocked access to struct irq_data->chip_data in pci_hyperv
+Message-ID: <20230125180411.4742f159.olaf@aepfle.de>
+X-Mailer: Claws Mail 20220819T065813.516423bc hat ein Softwareproblem, kann man nichts machen.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+Content-Type: multipart/signed; boundary="Sig_/OC_Wmt2rWUMlPreEezo4f_B";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Jan 21, 2023 at 04:10:23AM +0000, Michael Kelley (LINUX) wrote:
-> Per the commit message for 009767dbf42a, it's not safe to read MSR_AMD64_SEV
-> on all implementations of AMD processors.
+--Sig_/OC_Wmt2rWUMlPreEezo4f_B
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-1. Why does that matter to you? This is Hygon.
+Hello,
 
-2. The MSR access is behind CPUID check.
+there are several crash reports due to struct irq_data->chip_data being NUL=
+L.
 
-> CC_ATTR_ACCESS_IOAPIC_ENCRYPTED is used in io_apic_set_fixmap(), which is
-> called on all Intel/AMD systems without any qualifications.   Even if
-> rdmsrl_safe() works at this point in boot, I'm a little leery of reading a new
-> MSR in a path that essentially every x86 bare-metal system or VM takes during
-> boot.
+I was under the impression all the "recent changes" to pci-hyperv.c
+would fix them. But apparently this specific issue is still there.
 
-You read the MSR once and cache it. sme_enable() already does that. I don't see
-what the problem is.
+What does serialize read and write access to struct irq_data->chip_data?
+It seems hv_msi_free can run while other code paths still access at least
+->chip_data.
 
-> Or am I being overly paranoid about old processor models or hypervisor
-> versions potentially doing something weird?
+The change below may reduce the window, but I'm not confident this would
+actually resolve the concurrency issues.
 
-Yes, you are. :)
 
-If they're doing something weird which is out of spec, then we'll deal with them
-later.
+Olaf
 
-> But in any case, the whole point of cc_platform_has() is to provide a level of
-> abstraction from the hardware registers, and it's fully safe to use on every x86
-> bare-metal system or VM.  And while I don't anticipate it now, maybe there's
-> some future scheme where a paravisor-like entity could be used with Intel
-> TDX.  It seems like using a cc_platform_has() abstraction is better than directly
-> accessing the MSR.
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1760,8 +1760,9 @@ static void hv_compose_msi_msg(struct irq_data *data,=
+ struct msi_msg *msg)
+ 		    msi_desc->nvec_used > 1;
+=20
+ 	/* Reuse the previous allocation */
+-	if (data->chip_data && multi_msi) {
+-		int_desc =3D data->chip_data;
++	virt_rmb();
++	int_desc =3D READ_ONCE(data->chip_data);
++	if (int_desc && multi_msi) {
+ 		msg->address_hi =3D int_desc->address >> 32;
+ 		msg->address_lo =3D int_desc->address & 0xffffffff;
+ 		msg->data =3D int_desc->data;
+@@ -1778,8 +1779,9 @@ static void hv_compose_msi_msg(struct irq_data *data,=
+ struct msi_msg *msg)
+ 		goto return_null_message;
+=20
+ 	/* Free any previous message that might have already been composed. */
+-	if (data->chip_data && !multi_msi) {
+-		int_desc =3D data->chip_data;
++	virt_rmb();
++	int_desc =3D READ_ONCE(data->chip_data);
++	if (int_desc && !multi_msi) {
+ 		data->chip_data =3D NULL;
+ 		hv_int_desc_free(hpdev, int_desc);
+ 	}
 
-That's fine but we're talking about this particular implementation and that is
-vTOM-like with the address space split. If TDX does address space split later,
-we can accomodate it too. (Although I think they are not interested in this).
+--Sig_/OC_Wmt2rWUMlPreEezo4f_B
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
 
-And if you really want to use cc_platform_has(), we could do
+-----BEGIN PGP SIGNATURE-----
 
-	cc_platform_has(CC_ADDRESS_SPACE_SPLIT_ON_A_PARAVISOR)
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmPRYQsACgkQ86SN7mm1
+DoBJCQ/+NlH8vXC/YpxQ3IrQF9M1MNNdceL7s+qTwSfGu99p486VXeJ8deCehKY/
+QfvUaw3WaJ9a4JEIvxiNQ4rRiQ5QHH6Prv8LgK6ebBrV2WI5ZnOz40jrJL4Wt026
+sQZGQtsMfn7ZK4XCx/lM7eTfXmAjBhoPcSewDY+DATfIzPxsxiG3iI3GGGVy1S0/
+IVOnEZpM0a2bdhx4L3V47AaqQIQBerC4w7tu6Zij7tYsRree4KM4OthbDijwpDCp
+rdkKFO/aj9FB1AUdYrVg2nH5G9xoeDH1oOipgb9JX/33TFxkOgo9WMvfKpq/Rwg2
+gr1tuzVXnRBSYhnkuGUv012ZJBWqRot00xjBjURMkZyoAW4tAN8uCyz2b3s6Rb6Z
+4oNIETzyIoBPZFPD9h5HSvD8CClArqzxL+2gcYD5mQWRRhGwhb8ZXRdY20Um2EIi
+xRoSBP06J5AdpGa0mNs7nB22rM1fFWGjIndcD/zIRWQe1Uw32DYFpYPgA1m+CC6Y
+tzEmJtKPGfz10MWG8InE2rNENVEslQiNi9Or8v0+WVeK+9c27GHnvQ8xYLrY6RVR
+7Gs9j+xJGuXirw4PphIpAO2zz5lGS04PdMUOD5mKtqCKlB9t4f6bhqehfMvRdnUF
+YDMBcTC+e2V1qpTJRpqYV9cRTeSkW11WOjjaEwSl6/PYrtpSsjg=
+=zgqN
+-----END PGP SIGNATURE-----
 
-or something with a better name.
-
-The point is, you want to do things which are specific for this particular
-implementation. If so, then check for it. Do not do hacky things which get the
-work done for your case but can very easily be misused by others.
-
-> My resolution of the TPM driver issue is admittedly a work-around.   I think
-> of it as temporary in anticipation of future implementations of PCIe TDISP
-> hardware, which allows PCI devices to DMA directly into guest encrypted
-> memory.
-
-Yap, that sounds real nice.
-
-> TDISP also places the device's BAR values in an encrypted portion
-> of the GPA space. Assuming TDISP hardware comes along in the next couple
-> of years, Linux will need a robust way to deal with a mix of PCI devices
-> being in unencrypted and encrypted GPA space.  I don't know how a
-> specific device will be mapped correctly, but I hope it can happen in the
-> generic PCI code, and not by modifying each device driver.
-
-I guess those devices would advertize that capability somehow so that code can
-query it and act accordingly.
-
-> It's probably premature to build that robust mechanism now, but when it comes,
-> my work-around would be replaced.
-
-It would be replaced if it doesn't have any users. By the looks of it, it'll
-soon grow others and then good luck removing it.
-
-> With all that in mind, I don't want to modify the TPM driver to special-case
-> its MMIO space being encrypted.  FWIW, the TPM driver today uses
-> devm_ioremap_resource() to do the mapping, which defaults to mapping
-> decrypted except for the exceptions implemented in __ioremap_caller().
-> There's no devm_* option for specifying encrypted.
-
-You mean, it is hard to add a DEVM_IOREMAP_ENCRYPTED type which will have
-__devm_ioremap() call ioremap_encrypted()?
-
-Or define a IORESOURCE_ENCRYPTED and pass it through the ioresource flags?
-
-Why is that TPM driver so precious that it can be touched and the arch code
-would have to accept hacks?
-
-> Handling decrypted vs. encrypted in the driver would require extending the
-> driver API to provide an "encrypted" option, and that seems like going in the
-> wrong long-term direction.
-
-Sorry, I can't follow here.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--Sig_/OC_Wmt2rWUMlPreEezo4f_B--
