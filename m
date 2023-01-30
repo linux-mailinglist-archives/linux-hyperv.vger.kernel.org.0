@@ -2,33 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC78C6804AE
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E11E6804A0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235695AbjA3EAo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 29 Jan 2023 23:00:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51058 "EHLO
+        id S235589AbjA3EAk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 29 Jan 2023 23:00:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232201AbjA3EA1 (ORCPT
+        with ESMTP id S235585AbjA3EAZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 29 Jan 2023 23:00:27 -0500
+        Sun, 29 Jan 2023 23:00:25 -0500
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6017F30E0;
-        Sun, 29 Jan 2023 20:00:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED5E02D7E;
+        Sun, 29 Jan 2023 20:00:03 -0800 (PST)
 From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
         s=mail; t=1675051189;
-        bh=BpfSdgQmWN7q99yWHa1NYztfRxaFIEEu1ai2aAeAuso=;
+        bh=CeE4LFDYquttLQyjdPuIA0yJAhL1uKGNNm1YrWRTAXo=;
         h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=QOokcRGe0+cEYV30EE7K9Tnus237x+2wRUdExZ68BeHv4mLeOm3rRO/IKzDmTGzkM
-         N5+cQhRULWGurL58OImk52Z/ioe1QyjTB1ObN8ZL0jiNAOXpPZ35+0hrPD7olM4umo
-         zAPhldvlVvB06EQ+hjis8ev0A3BokINldBcPeM4g=
-Date:   Mon, 30 Jan 2023 03:59:44 +0000
-Subject: [PATCH 8/9] platform/x86: asus-tf103c-dock: Constify toprow keymap
+        b=jaobbKlMg6u5gdaxw5uGqJWbiCgvqun6lx1rEZYJufIvUp4ZXEzHQqAgvpGGP4pwn
+         46ZVIbbDyqQA3y8hpqFOef7CA3jKP5XPh37d7rJIeRAwBGQkBQdrgSPvUe8ORs9dwG
+         NkHNbSWmwq3hcZDtaM0+4RBZ6uO7IsMoYtIkskKI=
+Date:   Mon, 30 Jan 2023 03:59:45 +0000
+Subject: [PATCH 9/9] staging: greybus: hid: Constify lowlevel HID driver
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20230130-hid-const-ll-driver-v1-8-3fc282b3b1d0@weissschuh.net>
+Message-Id: <20230130-hid-const-ll-driver-v1-9-3fc282b3b1d0@weissschuh.net>
 References: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
 In-Reply-To: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
 To:     Basavaraj Natikar <basavaraj.natikar@amd.com>,
@@ -52,11 +52,11 @@ Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-staging@lists.linux.dev,
         =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051185; l=815;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051185; l=861;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=BpfSdgQmWN7q99yWHa1NYztfRxaFIEEu1ai2aAeAuso=;
- b=S7ImS9NhnHkKy6L+nBosZuDJHdCEwxhmiAtNrw4E79jpSJgNI9SvNJVzb/JDpH6vuWcg5dnPXhMY
- sGhjwhWsBdgV22P2TJw9zNgSknRBpwnGxVZetNJivjYgVfn1yHod
+ bh=CeE4LFDYquttLQyjdPuIA0yJAhL1uKGNNm1YrWRTAXo=;
+ b=SQUZOk9LKgSTETWY2YqlC8x+hEL9fvydNvVkE6petc6xt8Y5mvKz320j0CJb8DILZGDzcF9A74aC
+ /T98d7JHADiph9vBYy0ilCKP+bmJauMaefm3e9xlClK6LSByfdHS
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -68,26 +68,29 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This structure is never modified, make it const.
+Since commit 52d225346904 ("HID: Make lowlevel driver structs const")
+the lowlevel HID drivers are only exposed as const.
+
+Take advantage of this to constify the underlying structure, too.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/platform/x86/asus-tf103c-dock.c | 2 +-
+ drivers/staging/greybus/hid.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/asus-tf103c-dock.c b/drivers/platform/x86/asus-tf103c-dock.c
-index 84c45e8f51ad..aeb1138464df 100644
---- a/drivers/platform/x86/asus-tf103c-dock.c
-+++ b/drivers/platform/x86/asus-tf103c-dock.c
-@@ -259,7 +259,7 @@ static const struct hid_ll_driver tf103c_dock_hid_ll_driver = {
- 	.raw_request = tf103c_dock_hid_raw_request,
- };
+diff --git a/drivers/staging/greybus/hid.c b/drivers/staging/greybus/hid.c
+index adb91286803a..15335c38cb26 100644
+--- a/drivers/staging/greybus/hid.c
++++ b/drivers/staging/greybus/hid.c
+@@ -381,7 +381,7 @@ static int gb_hid_power(struct hid_device *hid, int lvl)
+ }
  
--static int tf103c_dock_toprow_codes[13][2] = {
-+static const int tf103c_dock_toprow_codes[13][2] = {
- 	/* Normal,            AltGr pressed */
- 	{ KEY_POWER,          KEY_F1 },
- 	{ KEY_RFKILL,         KEY_F2 },
+ /* HID structure to pass callbacks */
+-static struct hid_ll_driver gb_hid_ll_driver = {
++static const struct hid_ll_driver gb_hid_ll_driver = {
+ 	.parse = gb_hid_parse,
+ 	.start = gb_hid_start,
+ 	.stop = gb_hid_stop,
 
 -- 
 2.39.1
