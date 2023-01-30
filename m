@@ -2,33 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 114556804A5
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 649616804A3
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235670AbjA3EAl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S235660AbjA3EAl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Sun, 29 Jan 2023 23:00:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50764 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235591AbjA3EA0 (ORCPT
+        with ESMTP id S235588AbjA3EA0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Sun, 29 Jan 2023 23:00:26 -0500
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F17EC59;
-        Sun, 29 Jan 2023 20:00:04 -0800 (PST)
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A2146A6;
+        Sun, 29 Jan 2023 20:00:03 -0800 (PST)
 From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
         s=mail; t=1675051189;
-        bh=4TcYuhkYiPYcTl4XN2YXmrkhFGdkS66np9T9wEi7jbM=;
+        bh=ZVx6naOMYxZrL7gFQy2uPLdj4XvZCzz8L2TujyTgXkg=;
         h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=lZIbZghB+YeUrvikUYWNmjWCNYHReEFlwlNV024bQS1k3rDsHe/YCtREPKZYMXt9V
-         /lxqSkvox4HWH515xlrgamoVICeb9gnZPK/0ImUeyai14FB9i75OX+RD4faumH84oY
-         57MD9QZ02LRaXRKuzv1sEbkDzA4AI1T79vIlRuZg=
-Date:   Mon, 30 Jan 2023 03:59:41 +0000
-Subject: [PATCH 5/9] HID: intel-ish-hid: Constify lowlevel HID driver
+        b=m08eIYfzdGMLssh27zrA7VH/mZuLABQJCPXeSLk3osH6tSmCYF08BOqlJel7sTCON
+         0bY91rvZJvghShk+ZI6yzofv8Wl1lCfN3z6A8zIGOZVteerzuvkMS0ZGHkFyFKjPZm
+         N3VbEh3ObCW58opk56OV5d9HTGQbwamNIpCazDcA=
+Date:   Mon, 30 Jan 2023 03:59:42 +0000
+Subject: [PATCH 6/9] HID: surface-hid: Constify lowlevel HID driver
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20230130-hid-const-ll-driver-v1-5-3fc282b3b1d0@weissschuh.net>
+Message-Id: <20230130-hid-const-ll-driver-v1-6-3fc282b3b1d0@weissschuh.net>
 References: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
 In-Reply-To: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
 To:     Basavaraj Natikar <basavaraj.natikar@amd.com>,
@@ -52,11 +52,11 @@ Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-staging@lists.linux.dev,
         =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051185; l=912;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051185; l=969;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=4TcYuhkYiPYcTl4XN2YXmrkhFGdkS66np9T9wEi7jbM=;
- b=kV0xKBRaReqa5AbnRSCMJjFEIhMpKmVOUhWuR8VVc+LC8/4CZN6drRSAoPe1l003SrEEMa0Ksi6Y
- cHa9HrDpAbQQ7N5PreBO8Wq0K2G+/IuzT5hTdbvXEBto7dhZpoEh
+ bh=ZVx6naOMYxZrL7gFQy2uPLdj4XvZCzz8L2TujyTgXkg=;
+ b=2WGCbXrUuOpHu5oaa0XrA0GX6gD4aiJxvNflnQnh3nfJF6hdlI9e4yzKod5PWOeZilyzVwTmBxyz
+ g3AEpPIkCEkndkzI00I3FXQDZe0uwGzpBrv+RNeqQDSjeaDDhqxO
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,22 +75,22 @@ Take advantage of this to constify the underlying structure, too.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/hid/intel-ish-hid/ishtp-hid.c | 2 +-
+ drivers/hid/surface-hid/surface_hid_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp-hid.c b/drivers/hid/intel-ish-hid/ishtp-hid.c
-index 14c271d7d8a9..00c6f0ebf356 100644
---- a/drivers/hid/intel-ish-hid/ishtp-hid.c
-+++ b/drivers/hid/intel-ish-hid/ishtp-hid.c
-@@ -183,7 +183,7 @@ void ishtp_hid_wakeup(struct hid_device *hid)
- 	wake_up_interruptible(&hid_data->hid_wait);
+diff --git a/drivers/hid/surface-hid/surface_hid_core.c b/drivers/hid/surface-hid/surface_hid_core.c
+index 87637f813de2..a3e9cceddfac 100644
+--- a/drivers/hid/surface-hid/surface_hid_core.c
++++ b/drivers/hid/surface-hid/surface_hid_core.c
+@@ -174,7 +174,7 @@ static int surface_hid_raw_request(struct hid_device *hid, unsigned char reportn
+ 	return -EIO;
  }
  
--static struct hid_ll_driver ishtp_hid_ll_driver = {
-+static const struct hid_ll_driver ishtp_hid_ll_driver = {
- 	.parse = ishtp_hid_parse,
- 	.start = ishtp_hid_start,
- 	.stop = ishtp_hid_stop,
+-static struct hid_ll_driver surface_hid_ll_driver = {
++static const struct hid_ll_driver surface_hid_ll_driver = {
+ 	.start       = surface_hid_start,
+ 	.stop        = surface_hid_stop,
+ 	.open        = surface_hid_open,
 
 -- 
 2.39.1
