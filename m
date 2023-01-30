@@ -2,36 +2,35 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9349168048F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61CEF680497
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235349AbjA3EAE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 29 Jan 2023 23:00:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50490 "EHLO
+        id S235464AbjA3EAI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 29 Jan 2023 23:00:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234930AbjA3EAD (ORCPT
+        with ESMTP id S235384AbjA3EAE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 29 Jan 2023 23:00:03 -0500
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49991448D;
-        Sun, 29 Jan 2023 19:59:49 -0800 (PST)
+        Sun, 29 Jan 2023 23:00:04 -0500
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A351555A;
+        Sun, 29 Jan 2023 19:59:50 -0800 (PST)
 From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
         s=mail; t=1675051187;
-        bh=iX47upW85gfJMHXCNpRtaH9985qjJ/jS5RtXWPSoIgg=;
-        h=From:Subject:Date:To:Cc:From;
-        b=URXQEDOMQ30evZignf53zq4fcP+gjLYiP8q4WOrWjvftKlFLN5pDksPfGwtSfKYfj
-         7GWr6NC6zgSyblLQuOIz5ROb9kgxN5qjcg/vtbb8/nGH4iqPDPmGC6k7CazHH/9ZSm
-         P7AyjEgkp8JEVtwfP3uF4ruicpBanmnISCxFI87I=
-Subject: [PATCH 0/9] HID: Constify lowlevel HID drivers
-Date:   Mon, 30 Jan 2023 03:59:36 +0000
-Message-Id: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
+        bh=ISqKcgoa9toyUt73TyvoOukrl8TtLDEKeZ9Jya+pGEs=;
+        h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+        b=JYcwn7v2TZRHZZxncXwLC7kB9NOOT+MIRfVX/Ndd+dDv+HUHBGsJ0OIqBpgCynIU0
+         PotCVcIQpwLfbbZPnhcO0XY4Nb6ql5ShFP9rx42R+DpaKGMngegH95phLOg/qY7dMM
+         fqIJZLd17YhoInNjcG1ZjSBEEVq/PiJYgG8u4nXI=
+Date:   Mon, 30 Jan 2023 03:59:37 +0000
+Subject: [PATCH 1/9] HID: amd_sfh: Constify lowlevel HID driver
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAKhA12MC/x2NQQoCMQwAv7LkbKDdXsSviIe2SW2gZCXRRVj27
- xaPMzDMAc4m7HBbDjDexWXTCfGyQO1Zn4xCk2ENawoxBexCWDf1N46BZLKzYauNKOUWY7nCLEt
- 2xmJZa5+tfsaY8mXc5Ptf3R/n+QNb+Cy3egAAAA==
+Message-Id: <20230130-hid-const-ll-driver-v1-1-3fc282b3b1d0@weissschuh.net>
+References: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
+In-Reply-To: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
 To:     Basavaraj Natikar <basavaraj.natikar@amd.com>,
         Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
@@ -53,11 +52,11 @@ Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-staging@lists.linux.dev,
         =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051184; l=1428;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051184; l=870;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=iX47upW85gfJMHXCNpRtaH9985qjJ/jS5RtXWPSoIgg=;
- b=wUViSb0tGQR60ua/5uXJ4ubJuesnlmDI25uiARSVmgdEPgnthqmmTYYrXBbv5el7sWYGYDodKxYP
- cdNZVeuGB1p0HWiMJ6mcEVfNyvmNoYYYAXwfHnGmb5Jg7ff6SGQI
+ bh=ISqKcgoa9toyUt73TyvoOukrl8TtLDEKeZ9Jya+pGEs=;
+ b=OUNlZGUMG9mYh6APzUnty4uy80xFEn/ZmE3vZyBzFoD3eTm7DGVinOtF2smH/XvOyEdhxNuUeNWv
+ tvsmtRA9C08txM5IMIwGlAkCmdwLUEhASMKjT0/arF5923GkUFhx
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,38 +68,30 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Since 52d225346904 ("HID: Make lowlevel driver structs const") the
-lowlevel HID drivers are only exposed as const.
+Since commit 52d225346904 ("HID: Make lowlevel driver structs const")
+the lowlevel HID drivers are only exposed as const.
 
-Take advantage of this to constify the underlying structures, too.
+Take advantage of this to constify the underlying structure, too.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-Thomas Weißschuh (9):
-      HID: amd_sfh: Constify lowlevel HID driver
-      HID: hyperv: Constify lowlevel HID driver
-      HID: logitech-dj: Constify lowlevel HID driver
-      HID: steam: Constify lowlevel HID driver
-      HID: intel-ish-hid: Constify lowlevel HID driver
-      HID: surface-hid: Constify lowlevel HID driver
-      platform/x86: asus-tf103c-dock: Constify lowlevel HID driver
-      platform/x86: asus-tf103c-dock: Constify toprow keymap
-      staging: greybus: hid: Constify lowlevel HID driver
+ drivers/hid/amd-sfh-hid/amd_sfh_hid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/hid/amd-sfh-hid/amd_sfh_hid.c      | 2 +-
- drivers/hid/hid-hyperv.c                   | 2 +-
- drivers/hid/hid-logitech-dj.c              | 4 ++--
- drivers/hid/hid-steam.c                    | 2 +-
- drivers/hid/intel-ish-hid/ishtp-hid.c      | 2 +-
- drivers/hid/surface-hid/surface_hid_core.c | 2 +-
- drivers/platform/x86/asus-tf103c-dock.c    | 4 ++--
- drivers/staging/greybus/hid.c              | 2 +-
- 8 files changed, 10 insertions(+), 10 deletions(-)
----
-base-commit: e04955db6a7c3fc4a1e6978649b61a6f5f8028e3
-change-id: 20230130-hid-const-ll-driver-fcfdd3af11b8
+diff --git a/drivers/hid/amd-sfh-hid/amd_sfh_hid.c b/drivers/hid/amd-sfh-hid/amd_sfh_hid.c
+index 1b18291fc5af..705b52337068 100644
+--- a/drivers/hid/amd-sfh-hid/amd_sfh_hid.c
++++ b/drivers/hid/amd-sfh-hid/amd_sfh_hid.c
+@@ -112,7 +112,7 @@ void amdtp_hid_wakeup(struct hid_device *hid)
+ 	}
+ }
+ 
+-static struct hid_ll_driver amdtp_hid_ll_driver = {
++static const struct hid_ll_driver amdtp_hid_ll_driver = {
+ 	.parse	=	amdtp_hid_parse,
+ 	.start	=	amdtp_hid_start,
+ 	.stop	=	amdtp_hid_stop,
 
-Best regards,
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.39.1
 
