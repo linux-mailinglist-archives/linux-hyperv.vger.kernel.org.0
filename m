@@ -2,33 +2,33 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72824680491
-	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C989168048B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 30 Jan 2023 05:00:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235339AbjA3EAF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 29 Jan 2023 23:00:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50484 "EHLO
+        id S233090AbjA3EAD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 29 Jan 2023 23:00:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235344AbjA3EAE (ORCPT
+        with ESMTP id S230517AbjA3EAC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 29 Jan 2023 23:00:04 -0500
+        Sun, 29 Jan 2023 23:00:02 -0500
 Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12FC41449E;
-        Sun, 29 Jan 2023 19:59:50 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C06A912F22;
+        Sun, 29 Jan 2023 19:59:49 -0800 (PST)
 From:   =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
         s=mail; t=1675051187;
-        bh=wWKFYgFhVzpvhYIRwOMjSib0YpKzgvkigV7Zrc6HeW8=;
+        bh=ZbgbgVtlPFtq55TH0opkbq5iHNhesuWMDM9ZEPXeOsk=;
         h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=hoz3HgsJzR0HTU0L5O2nJpYL3V+6uM21jhOK1b4Z6Q5YB0tD/2S75VKCMvXkhX+Jz
-         F7KhGTndvpYZ8k68Nvi8nzXpe/NiEb1bG68yl+M75HlybfPqgkl9Hs6OS+3AzzrAZ5
-         LEaOJDGgmawvwrcGShwZqTKndDA8MV/CL/Lo9cy8=
-Date:   Mon, 30 Jan 2023 03:59:39 +0000
-Subject: [PATCH 3/9] HID: logitech-dj: Constify lowlevel HID driver
+        b=IHtr2UuaboBduqdOMpA0Y3egWz4OZpz39J8oRqVw5iP94dUmf4mF7esWnJ84+m7BG
+         v9ZSNw7aALe7JMKpXu5UfKKC/CkAqZP0uuoIX5UMFMDfWoQXbsKtOPWkW6mwCBix+/
+         IYpZ5J2dlAz3+VJR98xDZi+ZP27wPkdLw/yy/V+k=
+Date:   Mon, 30 Jan 2023 03:59:40 +0000
+Subject: [PATCH 4/9] HID: steam: Constify lowlevel HID driver
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20230130-hid-const-ll-driver-v1-3-3fc282b3b1d0@weissschuh.net>
+Message-Id: <20230130-hid-const-ll-driver-v1-4-3fc282b3b1d0@weissschuh.net>
 References: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
 In-Reply-To: <20230130-hid-const-ll-driver-v1-0-3fc282b3b1d0@weissschuh.net>
 To:     Basavaraj Natikar <basavaraj.natikar@amd.com>,
@@ -52,11 +52,11 @@ Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-staging@lists.linux.dev,
         =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051185; l=1277;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1675051185; l=865;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=wWKFYgFhVzpvhYIRwOMjSib0YpKzgvkigV7Zrc6HeW8=;
- b=gHbhnd+URi4q5m2WIF53+0lFoz9hkcicfRZ9MlD4AWMcgO2mt1jPTSl50kDCl6ERuZDRGRfFwG8U
- SqNvJZPhDzF9MWbKxyaUPTAkJdQC/v0+f3n1IAj0D489WHHxZ6bg
+ bh=ZbgbgVtlPFtq55TH0opkbq5iHNhesuWMDM9ZEPXeOsk=;
+ b=K+qvlSsOYKsG6L1e28n33S7oEbVaEzdLgqVh5PfopUoHLueDoSD6fx7F81Fsg5y17jqMq6D+mxFI
+ Dt3Tz0fCAsJAvZfHiHimUa8Deeuk9XNdvf/Yy+8GUczAZ45Nd/ii
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,31 +75,22 @@ Take advantage of this to constify the underlying structure, too.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- drivers/hid/hid-logitech-dj.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-steam.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index c358778e070b..62180414efcc 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -554,7 +554,7 @@ static const u8 hid_reportid_size_map[NUMBER_OF_HID_REPORTS] = {
- 
- #define LOGITECH_DJ_INTERFACE_NUMBER 0x02
- 
--static struct hid_ll_driver logi_dj_ll_driver;
-+static const struct hid_ll_driver logi_dj_ll_driver;
- 
- static int logi_dj_recv_query_paired_devices(struct dj_receiver_dev *djrcv_dev);
- static void delayedwork_callback(struct work_struct *work);
-@@ -1506,7 +1506,7 @@ static bool logi_dj_ll_may_wakeup(struct hid_device *hid)
- 	return hid_hw_may_wakeup(djrcv_dev->hidpp);
+diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
+index 8ee43cb225fc..29ec8b34741a 100644
+--- a/drivers/hid/hid-steam.c
++++ b/drivers/hid/hid-steam.c
+@@ -674,7 +674,7 @@ static int steam_client_ll_raw_request(struct hid_device *hdev,
+ 			report_type, reqtype);
  }
  
--static struct hid_ll_driver logi_dj_ll_driver = {
-+static const struct hid_ll_driver logi_dj_ll_driver = {
- 	.parse = logi_dj_ll_parse,
- 	.start = logi_dj_ll_start,
- 	.stop = logi_dj_ll_stop,
+-static struct hid_ll_driver steam_client_ll_driver = {
++static const struct hid_ll_driver steam_client_ll_driver = {
+ 	.parse = steam_client_ll_parse,
+ 	.start = steam_client_ll_start,
+ 	.stop = steam_client_ll_stop,
 
 -- 
 2.39.1
