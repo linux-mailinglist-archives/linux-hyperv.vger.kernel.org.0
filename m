@@ -2,121 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A27F26835BC
-	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Jan 2023 19:55:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F423B6836E7
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Jan 2023 20:57:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231856AbjAaSzJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 31 Jan 2023 13:55:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44566 "EHLO
+        id S229854AbjAaT5k (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 31 Jan 2023 14:57:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231802AbjAaSzF (ORCPT
+        with ESMTP id S229468AbjAaT5j (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 31 Jan 2023 13:55:05 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADDE2577F2
-        for <linux-hyperv@vger.kernel.org>; Tue, 31 Jan 2023 10:55:00 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id t18so15185003wro.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 31 Jan 2023 10:55:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QuexQnSJj1/dEzqqzwt9cJfQTWna5k6Z7+DQSeslwSo=;
-        b=UiFzOWFB4a/3xgSp1yUwchiAQ8AKbNngi8yAmudhhCWJPkH/vxdFxKnmN52dgge+99
-         qV3JOlCLHqFjy9hcRlUHUKdwen91bD+PkvYzAYTR2ty2z7aKbQKdw1C8d4VPFkiKKTpl
-         m/VAUSTxqu8ueLRRQUL9BBaylQ7omcTh92y39KQGo3LWPTIaYWhsaG23o15L+JPz/CYO
-         KkmmixGlhfeo+NMFMvn+tXpyvnXBO2YKnH3OoRDt8BMVJWCKbQTRjKQp1zLrsVWtTC3V
-         e6mdZXE6kookzzCJ/wh3wMXHTP/qJy9S92/66UvKZkeI1tYpylvfi1+eioXQCTQRcGYS
-         yqHQ==
+        Tue, 31 Jan 2023 14:57:39 -0500
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2F045884;
+        Tue, 31 Jan 2023 11:57:38 -0800 (PST)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-142b72a728fso20806179fac.9;
+        Tue, 31 Jan 2023 11:57:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QuexQnSJj1/dEzqqzwt9cJfQTWna5k6Z7+DQSeslwSo=;
-        b=YVVIx1kVVjutUB7X1Fl4AE4m/8X61Qi+nes1RItr26ncjcNks0QowBW6xk9eYY/4au
-         6zhjKb6yrNt8TPMbbxaeJMBXr2MHrnWtUw59TCSj8yi/hGlb/DqyHyAUjazy9NpKv8XS
-         tsuhnWAwIEd5aCw/carHKnpywTVb+vghOiJu2VTEPeqMi3qseT++yc9o27AVdvjNBk2+
-         F+///rJBAGAAAWsWVcmZmDpmnguoFoI7iMBkb2SmZXY9K2MTrc7Ol2O83p3PO4myuDQZ
-         S1GJOCgD7mb/8oAPbGYL/AyhzyIeAbWH/UDbmoqQMzxNEJRp6Nb4qgmlVx6JUNaQOydQ
-         jdhg==
-X-Gm-Message-State: AO0yUKXf1GNhGm0YT5oDTSqOIwrV/E5/8A3WuyxGhvpRjCR+RbzLQtiI
-        Jfo+assuLxXwJzA2eHdm94oHlg==
-X-Google-Smtp-Source: AK7set/71U7zFmoH6k8sW32CesgMw/oX9q60A5z4fWakNgzXRDUUedjJa/xOqvp4MjzwwWbSNWAoaQ==
-X-Received: by 2002:adf:fe86:0:b0:2bf:b36e:f6ac with SMTP id l6-20020adffe86000000b002bfb36ef6acmr30914wrr.39.1675191299268;
-        Tue, 31 Jan 2023 10:54:59 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id v9-20020a056000144900b002c3b2afae00sm112304wrx.41.2023.01.31.10.54.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Jan 2023 10:54:58 -0800 (PST)
-Message-ID: <9a3bbaf0-eb1d-613a-a8ba-272896ef2da8@linaro.org>
-Date:   Tue, 31 Jan 2023 19:54:56 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 5/6] dt-bindings: hypervisor: Add dt-bindings for VMBus
-Content-Language: en-US
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        virtualization@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        ssengar@microsoft.com
-References: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
- <1675188609-20913-6-git-send-email-ssengar@linux.microsoft.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1675188609-20913-6-git-send-email-ssengar@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=m82eJrTLsCVv6+8d1tBF70ypw6dfuc3iNnRL2mCyZ7Q=;
+        b=t6yPnyCtoNhSg26TgMDaiLvakC7WdESszfa3LRwM4d68CSVTFvXSkVKZhdAVvIfyrl
+         RC5OtwBKC78Z5kdAaKWpVCqT9+ap2wDlnfLhp8gNqF5AlHhKmgVxMRc/RvS+2b/rxY/z
+         86rrk5I+IYZgPFT4CCVmGAN5wCA5gaMavAI52iAkGBszWssRSGKPd6yDS+ySB1wUC7wK
+         XtSJKVc1QdI/19Zu23ns3Hdp2gs2CNoaFHt0OYpY/rpBv+AZ19M2E6FtUlE5kzi00oO9
+         jiUvqeUtz244UmtkMUO0U4CaZ8zMolYelh+yXOBnc5+3j+YkRcN3ARbPWWS3RZP9FMUQ
+         Eq3Q==
+X-Gm-Message-State: AO0yUKUasGQGsvfah+IusIzxxl+rMLjMTaAEZm9/Kn80fY4qiw3mNSlO
+        wB38GL8vHhbff9wj6yVRQA==
+X-Google-Smtp-Source: AK7set9mqa5Na5vbUcPoMSNwU8zMyBTBeTBDFDOv7+2/nvgRcTdmrhpji7/Gn0VRdn0ekPOq4E9Swg==
+X-Received: by 2002:a05:6871:10e:b0:15e:db7e:b4dc with SMTP id y14-20020a056871010e00b0015edb7eb4dcmr8075396oab.35.1675195057458;
+        Tue, 31 Jan 2023 11:57:37 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id r12-20020a05687080cc00b00163af122666sm3197311oab.3.2023.01.31.11.57.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Jan 2023 11:57:37 -0800 (PST)
+Received: (nullmailer pid 1853627 invoked by uid 1000);
+        Tue, 31 Jan 2023 19:57:36 -0000
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+MIME-Version: 1.0
+From:   Rob Herring <robh@kernel.org>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     tglx@linutronix.de, kys@microsoft.com,
+        linux-hyperv@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        wei.liu@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        virtualization@lists.linux-foundation.org, haiyangz@microsoft.com,
+        decui@microsoft.com, daniel.lezcano@linaro.org,
+        ssengar@microsoft.com
+In-Reply-To: <1675188609-20913-5-git-send-email-ssengar@linux.microsoft.com>
+References: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
+ <1675188609-20913-5-git-send-email-ssengar@linux.microsoft.com>
+Message-Id: <167519443459.1836211.1945655170442861713.robh@kernel.org>
+Subject: Re: [PATCH v2 4/6] dt-bindings: hypervisor: Rename virtio to
+ hypervisor
+Date:   Tue, 31 Jan 2023 13:57:36 -0600
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 31/01/2023 19:10, Saurabh Sengar wrote:
+
+On Tue, 31 Jan 2023 10:10:07 -0800, Saurabh Sengar wrote:
+> Rename virtio folder to more generic hypervisor, so that this can
+> accommodate more devices of similar type.
 > 
 > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  .../devicetree/bindings/{virtio => hypervisor}/mmio.yaml        | 2 +-
+>  .../devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml   | 2 +-
+>  .../bindings/{virtio => hypervisor}/virtio-device.yaml          | 2 +-
+>  MAINTAINERS                                                     | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+>  rename Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml (95%)
+>  rename Documentation/devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml (98%)
+>  rename Documentation/devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml (93%)
+> 
 
-> +  - |
-> +    / {
-> +        compatible = "foo";
-> +        model = "foo";
-> +        #address-cells = <0x02>;
-> +        #size-cells = <0x02>;
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Except previous comments (all of them were ignored), also:
-Drop entire part. Not related, not correct, not helping and you cannot
-have top level nodes in example.
+yamllint warnings/errors:
 
-> +
-> +        vmbus@ff0000000 {
-> +            #address-cells = <0x02>;
-> +            #size-cells = <0x01>;
-> +            compatible = "msft,vmbus";
-> +            ranges = <0x00 0x00 0x0f 0xf0000000 0x10000000>;
-> +        };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 1f7a519a936f..ab74ea97535f 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -876,6 +876,8 @@ patternProperties:
->      deprecated: true
->    "^mscc,.*":
->      description: Microsemi Corporation
-> +  "^msft,.*":
-> +    description: Microsoft Corporation
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/i2c/i2c-virtio.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/virtio/virtio-device.yaml
+./Documentation/devicetree/bindings/gpio/gpio-virtio.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/virtio/virtio-device.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/i2c-virtio.example.dtb: i2c: False schema does not allow {'compatible': ['virtio,device22'], '#address-cells': [[1]], '#size-cells': [[0]], 'light-sensor@20': {'compatible': ['dynaimage,al3320a'], 'reg': [[32]]}, '$nodename': ['i2c']}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-virtio.example.dtb: gpio: False schema does not allow {'compatible': ['virtio,device29'], 'gpio-controller': True, '#gpio-cells': [[2]], 'interrupt-controller': True, '#interrupt-cells': [[2]], '$nodename': ['gpio']}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hypervisor/virtio-device.example.dtb: i2c: False schema does not allow {'compatible': ['virtio,device22'], '$nodename': ['i2c']}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
 
-Don't duplicate vendor prefixes. Drop and use correct prefix.
+doc reference errors (make refcheckdocs):
+MAINTAINERS: Documentation/devicetree/bindings/virtio/
 
-Best regards,
-Krzysztof
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1675188609-20913-5-git-send-email-ssengar@linux.microsoft.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
