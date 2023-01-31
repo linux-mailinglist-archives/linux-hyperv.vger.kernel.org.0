@@ -2,30 +2,30 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F5F56834D2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Jan 2023 19:10:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9512A6834CF
+	for <lists+linux-hyperv@lfdr.de>; Tue, 31 Jan 2023 19:10:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231362AbjAaSKW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 31 Jan 2023 13:10:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37896 "EHLO
+        id S230444AbjAaSKV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 31 Jan 2023 13:10:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231644AbjAaSKT (ORCPT
+        with ESMTP id S231650AbjAaSKT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 31 Jan 2023 13:10:19 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 47BBF2884D;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4BFFF28865;
         Tue, 31 Jan 2023 10:10:18 -0800 (PST)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9A96520DFDBF;
+        by linux.microsoft.com (Postfix) with ESMTPSA id B2F6B20DFE14;
         Tue, 31 Jan 2023 10:10:17 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9A96520DFDBF
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B2F6B20DFE14
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1675188617;
-        bh=aolDgf0ZKmA1dIvXP/OLbXrz+i5/r4RkpCnFJWskn6w=;
+        bh=2Oq3rLHSInRpCaH6L9jH9KNuBdNY6d/bl/THZjFDmv0=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=XhFYOZ5zsW06gmNDjCX8xlCrymk2F9BhPsEXvR9/xI2wHtfEIBQr1s3Bs3F3GJg6e
-         vohocTceW2F4c2LX+iYT0AOi9q7dEutF/VcR4tV3wLpkAFX4noleRLV+9F0+goj98u
-         QPBIkVVVrqWCpKTp7PovS5nSvRe43RO4V2jJl7o4=
+        b=N9NFWF+FtHhqTmI33iFD7aDObg0jR3F88cvzGrZRh0vJsPIB+Dp3fERD0gCMq8gRy
+         axOPqo2AgV4txx3gSALFHG/JeE3fC1yq+V4C2mZJR/LW1x+RzdlcjBXjBrx1szlEPp
+         sIyOdGBEaFLYJTfYfC66wgS27ZEqqPeNMR7bAzPY=
 From:   Saurabh Sengar <ssengar@linux.microsoft.com>
 To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -34,9 +34,9 @@ To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
         ssengar@microsoft.com
-Subject: [PATCH v2 5/6] dt-bindings: hypervisor: Add dt-bindings for VMBus
-Date:   Tue, 31 Jan 2023 10:10:08 -0800
-Message-Id: <1675188609-20913-6-git-send-email-ssengar@linux.microsoft.com>
+Subject: [PATCH v2 6/6] Driver: VMBus: Add device tree support
+Date:   Tue, 31 Jan 2023 10:10:09 -0800
+Message-Id: <1675188609-20913-7-git-send-email-ssengar@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
 References: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
@@ -50,97 +50,148 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add dt-bindings for Hyper-V VMBus
+Update the driver to support device tree boot as well along with ACPI.
+At present the device tree parsing only provides the mmio region info
+and is not the exact copy of ACPI parsing. This is sufficient to cater
+all the current device tree usecases for VMBus.
 
 Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 ---
- .../bindings/hypervisor/msft,vmbus.yaml       | 50 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- MAINTAINERS                                   |  1 +
- 3 files changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hypervisor/msft,vmbus.yaml
+ drivers/hv/vmbus_drv.c | 75 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 73 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/hypervisor/msft,vmbus.yaml b/Documentation/devicetree/bindings/hypervisor/msft,vmbus.yaml
-new file mode 100644
-index 000000000000..8f50d6097c48
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hypervisor/msft,vmbus.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hypervisor/msft,vmbus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 49030e756b9f..1741f1348f9f 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2152,7 +2152,7 @@ void vmbus_device_unregister(struct hv_device *device_obj)
+ 	device_unregister(&device_obj->device);
+ }
+ 
+-
++#ifdef CONFIG_ACPI
+ /*
+  * VMBUS is an acpi enumerated device. Get the information we
+  * need from DSDT.
+@@ -2262,6 +2262,7 @@ static acpi_status vmbus_walk_resources(struct acpi_resource *res, void *ctx)
+ 
+ 	return AE_OK;
+ }
++#endif
+ 
+ static void vmbus_mmio_remove(void)
+ {
+@@ -2282,7 +2283,7 @@ static void vmbus_mmio_remove(void)
+ 	}
+ }
+ 
+-static void vmbus_reserve_fb(void)
++static void __maybe_unused vmbus_reserve_fb(void)
+ {
+ 	resource_size_t start = 0, size;
+ 	struct pci_dev *pdev;
+@@ -2442,6 +2443,7 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size)
+ }
+ EXPORT_SYMBOL_GPL(vmbus_free_mmio);
+ 
++#ifdef CONFIG_ACPI
+ static int vmbus_acpi_add(struct platform_device *pdev)
+ {
+ 	acpi_status result;
+@@ -2496,10 +2498,68 @@ static int vmbus_acpi_add(struct platform_device *pdev)
+ 		vmbus_mmio_remove();
+ 	return ret_val;
+ }
++#else
 +
-+title: Microsoft Hyper-V VMBus device tree bindings
++static int vmbus_device_add(struct platform_device *pdev)
++{
++	struct resource **cur_res = &hyperv_mmio;
++	struct device_node *np;
++	u32 *ranges, len;
++	u64 start;
++	int nr_ranges, child_cells = 2, cur_cell = 0, ret = 0;
 +
-+maintainers:
-+  - Saurabh Sengar <ssengar@linux.microsoft.com>
++	hv_dev = pdev;
++	np = pdev->dev.of_node;
 +
-+description:
-+  VMBus is a software bus that implement the protocols for communication
-+  between the root or host OS and guest OSs (virtual machines).
++	nr_ranges = device_property_count_u32(&pdev->dev, "ranges");
++	if (nr_ranges < 0)
++		return nr_ranges;
++	ranges = kcalloc(nr_ranges, sizeof(u32), GFP_KERNEL);
++	if (!ranges)
++		return -ENOMEM;
 +
-+properties:
-+  compatible:
-+    const: msft,vmbus
++	if (device_property_read_u32_array(&pdev->dev, "ranges", ranges, nr_ranges)) {
++		ret =  -EINVAL;
++		goto free_ranges;
++	}
 +
-+  ranges: true
++	while (cur_cell < nr_ranges) {
++		struct resource *res;
 +
-+  '#address-cells':
-+    const: 2
++		/* The first u64 in the ranges description isn't used currently. */
++		cur_cell = cur_cell + child_cells;
++		start = ranges[cur_cell++];
++		start = (start << 32) | ranges[cur_cell++];
++		len = ranges[cur_cell++];
 +
-+  '#size-cells':
-+    const: 1
++		res = kzalloc(sizeof(*res), GFP_ATOMIC);
++		if (!res) {
++			ret = -ENOMEM;
++			goto free_ranges;
++		}
 +
-+required:
-+  - compatible
-+  - ranges
-+  - '#address-cells'
-+  - '#size-cells'
++		res->name = "hyperv mmio";
++		res->flags = IORESOURCE_MEM | IORESOURCE_MEM_64;
++		res->start = start;
++		res->end = start + len;
 +
-+additionalProperties: false
++		*cur_res = res;
++		cur_res = &res->sibling;
++	}
 +
-+examples:
-+  - |
-+    / {
-+        compatible = "foo";
-+        model = "foo";
-+        #address-cells = <0x02>;
-+        #size-cells = <0x02>;
++free_ranges:
++	kfree(ranges);
++	return ret;
++}
++#endif
+ 
+ static int vmbus_platform_driver_probe(struct platform_device *pdev)
+ {
++#ifdef CONFIG_ACPI
+ 	return vmbus_acpi_add(pdev);
++#else
++	return vmbus_device_add(pdev);
++#endif
+ }
+ 
+ static int vmbus_platform_driver_remove(struct platform_device *pdev)
+@@ -2645,6 +2705,16 @@ static int vmbus_bus_resume(struct device *dev)
+ #define vmbus_bus_resume NULL
+ #endif /* CONFIG_PM_SLEEP */
+ 
++static const struct of_device_id vmbus_of_match[] = {
++	{
++		.compatible = "msft,vmbus",
++	},
++	{
++		/* sentinel */
++	},
++};
++MODULE_DEVICE_TABLE(of, vmbus_of_match);
 +
-+        vmbus@ff0000000 {
-+            #address-cells = <0x02>;
-+            #size-cells = <0x01>;
-+            compatible = "msft,vmbus";
-+            ranges = <0x00 0x00 0x0f 0xf0000000 0x10000000>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 1f7a519a936f..ab74ea97535f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -876,6 +876,8 @@ patternProperties:
-     deprecated: true
-   "^mscc,.*":
-     description: Microsemi Corporation
-+  "^msft,.*":
-+    description: Microsoft Corporation
-   "^msi,.*":
-     description: Micro-Star International Co. Ltd.
-   "^mstar,.*":
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9bc5b88b723a..c749782b0cff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9496,6 +9496,7 @@ S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
- F:	Documentation/ABI/stable/sysfs-bus-vmbus
- F:	Documentation/ABI/testing/debugfs-hyperv
-+F:	Documentation/devicetree/bindings/hypervisor/msft,vmbus.yaml
- F:	Documentation/virt/hyperv
- F:	Documentation/networking/device_drivers/ethernet/microsoft/netvsc.rst
- F:	arch/arm64/hyperv
+ static const struct acpi_device_id vmbus_acpi_device_ids[] = {
+ 	{"VMBUS", 0},
+ 	{"VMBus", 0},
+@@ -2679,6 +2749,7 @@ static struct platform_driver vmbus_platform_driver = {
+ 	.driver = {
+ 		.name = "vmbus",
+ 		.acpi_match_table = ACPI_PTR(vmbus_acpi_device_ids),
++		.of_match_table = of_match_ptr(vmbus_of_match),
+ 		.pm = &vmbus_bus_pm,
+ 		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+ 	}
 -- 
 2.25.1
 
