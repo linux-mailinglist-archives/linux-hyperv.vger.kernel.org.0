@@ -2,47 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 274D6685D05
-	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Feb 2023 03:04:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98371685F06
+	for <lists+linux-hyperv@lfdr.de>; Wed,  1 Feb 2023 06:36:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231296AbjBACEv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 31 Jan 2023 21:04:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39288 "EHLO
+        id S230366AbjBAFgq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 1 Feb 2023 00:36:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjBACEu (ORCPT
+        with ESMTP id S229488AbjBAFgp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 31 Jan 2023 21:04:50 -0500
+        Wed, 1 Feb 2023 00:36:45 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B719D3346B;
-        Tue, 31 Jan 2023 18:04:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1BC3B53E4E;
+        Tue, 31 Jan 2023 21:36:44 -0800 (PST)
 Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id 8063120E0A00; Tue, 31 Jan 2023 18:04:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8063120E0A00
+        id D018020B7102; Tue, 31 Jan 2023 21:36:43 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D018020B7102
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1675217089;
-        bh=K0VUINE+FWJ0wLAktupeyy5kYTYECcoyHauXnAKtKLU=;
+        s=default; t=1675229803;
+        bh=a+n6LU8y9WW4464PUW7kstwyrtfB8Fsw1PFizOcqRRw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LN4xzlFQpaLfmfR8ZrP/srz7jDyd5psmMwLD274w7cC11T2+eoOEv4sp48ySNhJZe
-         fyKlpJ1YngQMf6MZWpxGzAdrj72mnLBDPoJ8DSP6tCc6k7pdTzTICUe+eDAJCn99qp
-         L+jgLFYVQogXfrFU+cj8BqgX7nhzyZISJ9nVbeXc=
-Date:   Tue, 31 Jan 2023 18:04:49 -0800
+        b=Y/6RMiOaTDNj3OQ1aTHk1FbVvURNNJqZPCIB0Lx/33doooI6f5MYGA48YvR0eWXUL
+         KNUQ512M78xE8Jsg07VVLcCfYnClH3QCa4UonAfixtb3j+COBhJlW25VERq3EzwXCD
+         HEgemei3lgcq2MuAy3QWwLaJQrsORJz7O687RfQo=
+Date:   Tue, 31 Jan 2023 21:36:43 -0800
 From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     krzysztof.kozlowski+dt@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        virtualization@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+To:     Rob Herring <robh@kernel.org>
+Cc:     tglx@linutronix.de, kys@microsoft.com,
+        linux-hyperv@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        wei.liu@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        virtualization@lists.linux-foundation.org, haiyangz@microsoft.com,
+        decui@microsoft.com, daniel.lezcano@linaro.org,
         ssengar@microsoft.com
-Subject: Re: [PATCH v2 0/6] Device tree support for Hyper-V VMBus driver
-Message-ID: <20230201020449.GC20379@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Subject: Re: [PATCH v2 4/6] dt-bindings: hypervisor: Rename virtio to
+ hypervisor
+Message-ID: <20230201053643.GA31571@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
- <CAL_JsqKL3JA6nAkEHuuyxbs8-Mm=Q-nNkCmpnDApNUDVbLsvKw@mail.gmail.com>
+ <1675188609-20913-5-git-send-email-ssengar@linux.microsoft.com>
+ <167519443459.1836211.1945655170442861713.robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKL3JA6nAkEHuuyxbs8-Mm=Q-nNkCmpnDApNUDVbLsvKw@mail.gmail.com>
+In-Reply-To: <167519443459.1836211.1945655170442861713.robh@kernel.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
@@ -54,47 +56,92 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 02:27:51PM -0600, Rob Herring wrote:
-> On Tue, Jan 31, 2023 at 12:10 PM Saurabh Sengar
-> <ssengar@linux.microsoft.com> wrote:
-> >
-> > This set of patches expands the VMBus driver to include device tree
-> > support.
-> >
-> > The first two patches enable compilation of Hyper-V APIs in a non-ACPI
-> > build.
-> >
-> > The third patch converts the VMBus driver from acpi to more generic
-> > platform driver.
-> >
-> > Further to add device tree documentation for VMBus, it needs to club with
-> > other virtualization driver's documentation. For this rename the virtio
-> > folder to more generic hypervisor, so that all the hypervisor based
-> > devices can co-exist in a single place in device tree documentation. The
-> > fourth patch does this renaming.
-> >
-> > The fifth patch introduces the device tree documentation for VMBus.
-> >
-> > The sixth patch adds device tree support to the VMBus driver. Currently
-> > this is tested only for x86 and it may not work for other archs.
+On Tue, Jan 31, 2023 at 01:57:36PM -0600, Rob Herring wrote:
 > 
-> I can read all the patches and see *what* they do. You don't really
-> need to list that here. I'm still wondering *why*. That is what the
-> cover letter and commit messages should answer. Why do you need DT
-> support? How does this even work on x86? FDT is only enabled for
-> CE4100 platform.
+> On Tue, 31 Jan 2023 10:10:07 -0800, Saurabh Sengar wrote:
+> > Rename virtio folder to more generic hypervisor, so that this can
+> > accommodate more devices of similar type.
+> > 
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> >  .../devicetree/bindings/{virtio => hypervisor}/mmio.yaml        | 2 +-
+> >  .../devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml   | 2 +-
+> >  .../bindings/{virtio => hypervisor}/virtio-device.yaml          | 2 +-
+> >  MAINTAINERS                                                     | 2 +-
+> >  4 files changed, 4 insertions(+), 4 deletions(-)
+> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml (95%)
+> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml (98%)
+> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml (93%)
+> > 
+> 
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> ./Documentation/devicetree/bindings/i2c/i2c-virtio.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/virtio/virtio-device.yaml
+> ./Documentation/devicetree/bindings/gpio/gpio-virtio.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/virtio/virtio-device.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/i2c-virtio.example.dtb: i2c: False schema does not allow {'compatible': ['virtio,device22'], '#address-cells': [[1]], '#size-cells': [[0]], 'light-sensor@20': {'compatible': ['dynaimage,al3320a'], 'reg': [[32]]}, '$nodename': ['i2c']}
+> 	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-virtio.example.dtb: gpio: False schema does not allow {'compatible': ['virtio,device29'], 'gpio-controller': True, '#gpio-cells': [[2]], 'interrupt-controller': True, '#interrupt-cells': [[2]], '$nodename': ['gpio']}
+> 	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-virtio.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hypervisor/virtio-device.example.dtb: i2c: False schema does not allow {'compatible': ['virtio,device22'], '$nodename': ['i2c']}
+> 	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
+> 
+> doc reference errors (make refcheckdocs):
+> MAINTAINERS: Documentation/devicetree/bindings/virtio/
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1675188609-20913-5-git-send-email-ssengar@linux.microsoft.com
+> 
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
 
-HI Rob,
+Hi Rob,
 
-Thanks for your comments.
-We are working on a solution where kernel is booted without ACPI tables to keep
-the overall system's memory footprints slim and possibly faster boot time.
-We have tested this by enabling CONFIG_OF for x86.
+I set DT_SCHEMA_FILES as below and ran "make -j32 DT_CHECKER_FLAGS=-m dt_binding_check".
+export DT_SCHEMA_FILES=Documentation/devicetree/bindings/hypervisor
 
-I can add this info in cover letter in next version.
+But I can see only below error:
+/work/upstream/linux-next/Documentation/devicetree/bindings/hypervisor/virtio-device.example.dtb: i2c: False schema does not allow {'compatible': ['virtio,device22'], '$nodename': ['i2c']}
+        From schema: /work/upstream/linux-next/Documentation/devicetree/bindings/i2c/i2c-virtio.yaml
+
+If I unset DT_SCHEMA_FILES, I see lot many errors which are not related to my changes.
+May I know what can I do to simulate the exact behaviour of your bot.
+
+Version of all the packages look latest:
+
+$ pip3 show dtschema
+Name: dtschema
+Version: 2023.1
+Summary: DeviceTree validation schema and tools
+Home-page: https://github.com/devicetree-org/dt-schema
+Author: Rob Herring
+Author-email: robh@kernel.org
+License: BSD
+Location: /home/azureuser/.local/lib/python3.8/site-packages
+Requires: rfc3987, jsonschema, pylibfdt, ruamel.yaml
+Required-by:
+
+
+$ dt-doc-validate --version
+2023.1
+
+
+$ yamllint --version
+yamllint 1.20.0
+
 
 Regards,
 Saurabh
 
-> 
-> Rob
