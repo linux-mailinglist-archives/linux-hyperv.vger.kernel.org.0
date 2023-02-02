@@ -2,148 +2,243 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3031A6887D0
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Feb 2023 20:54:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60328688935
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Feb 2023 22:48:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232452AbjBBTyd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 2 Feb 2023 14:54:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43120 "EHLO
+        id S233166AbjBBVsN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 2 Feb 2023 16:48:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232602AbjBBTyc (ORCPT
+        with ESMTP id S233136AbjBBVr7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 2 Feb 2023 14:54:32 -0500
-Received: from BN3PR00CU001-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11020020.outbound.protection.outlook.com [52.101.56.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D46A4DBE5;
-        Thu,  2 Feb 2023 11:54:31 -0800 (PST)
+        Thu, 2 Feb 2023 16:47:59 -0500
+Received: from BN3PR00CU001-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11020027.outbound.protection.outlook.com [52.101.56.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2370487146;
+        Thu,  2 Feb 2023 13:47:49 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BUnLT5WLmCRFQAFRESH0XizyYYsgdGmg1ujcHbPGvo811HvwsBZX8PUP8hCbzph+MAGWiLj2JqY62ujBORqEoh6bt587P2BYMIW5UweS476b0iL3kbFq43Og3y3nfUZq4Yx+tovDe0Z4MbSeG29OK48kFoTh4YhlgAKCuy6JfMauEoZ3XlyuC38zCggrfoBHfb8DhosgUuHyUJVrs8ecdclUo0e6RkDQ4Dvj9jG5V/0g2dznLs2lEKpEuY0dFGGn/oPbVMg58W5DirxPoCGqzeWHiSfQYKzj/M24IqHt2UbH5op1Ko77WZvPGM89gdiBYRfdo5Hw0zQs0Fwrmqq/qw==
+ b=T/yRlYG+sXETndMFBYx7SgEePM+PmqbMPFH3oHgmyCZEy64XXMpBiEMagXxm0EhZ3my0HQGpqcFjpaE78+Tps6z7jSskqIS+9YDKvR4t67NJxDZkpf8TnK7PN6F466qRVvsAk4YEHSJzRfy4v9P2dMYqPMn/OUf6/tldyulhBG3G1H15KKlztHjNyq7GSvM34q2W3GptMOmUkhvZcDN3eDF8RqmpDPxmX5liUUlX1gu1GsKfu/dWZksS3JguWYTRNdfLEE/y5p4N0BOKalk+rcWYBBgFlVJ/EKo/mXSjfuwtsTfCrXNyZ3BytvXif84dYJNDdfZ0byfU9/vvYSXd7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KVN1WlPFUu9If4QlzdfHOE8TSRylAvVvN8jB1ZJz53s=;
- b=eviRjGIO3oPijfQnf8t/N4T1CmzVZzbZywd5f5rbZP4s8Tl5pd1sIIdfpA2d3cQh/eDEbzxP787CPX/uyFYIpHmoDuUbFa2nq2oN85KT5Ad1iUCvSVAmAMtzpMLoJRXPTz1IkBYW3kbh8CQNa5opw4lHbCZRnGNcL1IMSUPG7nIzpdkgtNNCE8LAix5SHfCAk10m2EOcv4GNTkitKZLGIQTCVW4kgbJs+qyU/4jTM9y6RHmfTdy3Atap/4yilLkhkXNuca+MVj/NrPXlR3ShDJpgwOUOMZJxFf+jgamK/46Mpr86rUDWEA+d5dcohTd4QxRbBNtu81TZBCEe2/IGfQ==
+ bh=+C7X/dha1iEPs2r4ThFcoPADFBU9Obtny5jywgqX9j4=;
+ b=N3808jultzv8INz3Xx0H7xskXMCPHyCpxd53lrAGmUe5MjvXu6wKrQXltqzalQYJbKlVuBgJfmpGGyh7Vp6TlqIvnKax6dpg8ASxX02KgswLBYZxvMn+33qLO8tFakoKxQePDeW5mB3xuLJ7Tsu83p2CV2At2h0LootrWlyzwzl43RfwVKCrPbORe1lMfExqk+fDs6mPfLQfaCfDx88v670rEjd4iMr1mqjfTou8Rq/uJdBDAIRkkTjFpO3J2yS3rpDBa8CjWPI/Cs+q1oZer83umAfvSGWbk76Vn+crWUbWxWSt+aM19/nz1sCoBq6xloslNeiQ8q+sUtDy6s1D6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KVN1WlPFUu9If4QlzdfHOE8TSRylAvVvN8jB1ZJz53s=;
- b=P/Fx5+FnHXCQgRJesXlJZSXE2VGOQu4DiBu58j5h26vcMiQVIsSUY+Igz3MqU1IYwv0wIruiLUEh8w0XQrsc333JoXFfZVEhfremHxuPS4LG5GyWacmN409Ufu9vd2sl3W7WB1DAMPxvIGZquhWhd77dfFg58R0r/Y62JYvu9SQ=
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com (2603:10b6:510:1d0::10)
- by DM4PR21MB3107.namprd21.prod.outlook.com (2603:10b6:8:63::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6086.5; Thu, 2 Feb 2023 19:54:29 +0000
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::713f:be9e:c0cc:44ce]) by PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::713f:be9e:c0cc:44ce%3]) with mapi id 15.20.6086.004; Thu, 2 Feb 2023
- 19:54:28 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH net,v2] net: mana: Fix accessing freed irq affinity_hint
-Thread-Topic: [PATCH net,v2] net: mana: Fix accessing freed irq affinity_hint
-Thread-Index: AQHZNobEMZyFqcNhx06LWWmexoAl6a68DsoAgAAEbaA=
-Date:   Thu, 2 Feb 2023 19:54:28 +0000
-Message-ID: <PH7PR21MB311685D9BE6CC5F99E9CC2D0CAD69@PH7PR21MB3116.namprd21.prod.outlook.com>
-References: <1675288013-2481-1-git-send-email-haiyangz@microsoft.com>
- <20230202113828.7f2a800c@kernel.org>
-In-Reply-To: <20230202113828.7f2a800c@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5725e106-0fbf-4c51-ba2e-89c2155b597c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-02-02T19:54:17Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
+ bh=+C7X/dha1iEPs2r4ThFcoPADFBU9Obtny5jywgqX9j4=;
+ b=fesYZd/i1l9U1aBePQunFObirND2f1j2ratFRTTZ+W5f0ZpCUVQkRjSRakIR6/6gHj9ZoFcgLbxmVYkBpAefOMtdRPEhkJj5eTAWs1ERdmVmikbAJWFwd3Cmu1+DCm22SnjzBjWDjJxxfSFIFtuFyseWuy0ZeSeeiIsOJ45FDxc=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3116:EE_|DM4PR21MB3107:EE_
-x-ms-office365-filtering-correlation-id: 9b165fd5-4226-4d42-3ba0-08db05574b6f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wtRtZszQWipObQHbfS2nfpcijHfpGc1HjKLL5G05wqXwqCxLhSiybXVN9KoJSzfkTYPCZTfiYq417ZkaR+1sa7KlBlgMnfQnwb0zzyX1XPp1zgErc3ihuOjgFEvfCJh5upH9E37+xWAJyQXFQqhZTiGx8SXMVCVmCB890NgnrEhehKCZ/j08hphZmepSLnlSWNdRkQFYjq+gxZao41I7rthbwbiW8nw9wSUaBr87qQCgoLvIcHXjbGIb/5hwOwdxXPQiclRUs1k4jIcC351qWb49vnbZFdGkLhdlqQS2QmPbFXeP4fn/CmI7cSdTCqsoyGlcydE1SYKFMpZNWLnkw1by544URmwrRbIdsX7B9C9IJBAwyAoPGLCj000JzV37PHqlSk+xbh9sHjzi0TYYmwuLKPCMnoWQ9GvU7mM+wBmGCerVaVLhopaKXuYbHiJMW+k+P+iurhymk8SYs2LZ/mT7lzliLmJ6m5KWf8iPWA+BXrh5Ucp4nEnAY9iwyhMoiosChSYG266KcDnhWpWcLvoq5sY+dBkk1CVbpF8suXXcMmC6PEXyGEILIp/yzG4w6pzm9vZHC9nHppwTtpnplUpxFotgiPztXhonUKioWdTC322KcE/OhqgY9VfVAoQwkAC2ojpwvXgDEnQD1Cuf9ucRbrc68fQtqnPzfmTixmU1ndmrCtXGet+2Vty0nbNbr8Wr+/GUiCuiD/yVsu8jRvwobm3ELETFsYV/yokZYg41BnxcD5X3m6Phny59XiwU
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3116.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(376002)(39860400002)(366004)(396003)(346002)(451199018)(122000001)(66946007)(64756008)(66446008)(66476007)(66556008)(6916009)(4326008)(9686003)(8676002)(83380400001)(41300700001)(26005)(8936002)(5660300002)(52536014)(6506007)(186003)(4744005)(54906003)(76116006)(316002)(2906002)(8990500004)(10290500003)(38100700002)(82950400001)(7696005)(82960400001)(53546011)(55016003)(38070700005)(71200400001)(33656002)(86362001)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?4BfF6Qtpru2Ry7yarZlqkMPsQyBthdaCx4lsmCG+00v9+f+aURpVGb5xijwZ?=
- =?us-ascii?Q?vceVq3Wb8aQSCVEsBOA47H+GDs0rviVzDRqn92B7QlgV+pjM3FfR3njWrTty?=
- =?us-ascii?Q?OKD1AHzx5nPHxdapjfGt2ZKG7c7kl50qf5hIyCJ0dhjympW8BleRP2nW+2/Q?=
- =?us-ascii?Q?zE6VPF2WSGr81QOnV2BlXo8RceM39LEdtQU3Ux6J3uTas/E6CD5K1gNhHExr?=
- =?us-ascii?Q?IvRRZrLUvAxjT8g9rxJSpas/pj8Smw4blkKadUwFJgv37Bt3+XHEqtwRi8Mo?=
- =?us-ascii?Q?Q9L7jfrVDkA5nmouaCiT2X/dp/RZlJpXXSIusAQ84fvhPjU8fVJebPb5CJA4?=
- =?us-ascii?Q?2UpxEDWvNkqh8QyXgx0mAAQpqJNRWFIPWAbzMi21tLKiXzbKCEtDII8XtMal?=
- =?us-ascii?Q?dRPjwF6L5ThL9ExB+u3dfwnl8Ca9En/tp/WLxUgcvwZUohhsdrSTA/Q1BnBG?=
- =?us-ascii?Q?8dEYm4K0hgeYk79qq99H6blJBnhY/rWvNomoAz2nW6Kf7O707OIU7DPzCiR6?=
- =?us-ascii?Q?/cc9dzWXHewHdN7qg8j6s6j9QL8y4m/Oy39pbIJshtuuNOHYAjsEMWuoQL50?=
- =?us-ascii?Q?vTsWVSZWhzL8mdjKq8AuOfUnHJ+IkmMZwIlWQmTcR0D95n3dvzL3kPaDVPUb?=
- =?us-ascii?Q?OEPqXv3dBGk3tCHHymgfCKses17jwGMgoB/8A6MOa7UgX4sGSjuRyBV9NJS2?=
- =?us-ascii?Q?ipDdV/rbxOOfyAvazRgZwmrO281MFNmPd0PfZPUDDAfJNvmD0UY4FcD8dM/1?=
- =?us-ascii?Q?UhT4qd++CirdIkMBZMGR3Uult1GbN0k54IAQMYMKyiHyf4sVu2QZLexZnkbH?=
- =?us-ascii?Q?xZbrPmVbW/A2zGwdy9HjkBC4wbKBfV2xHPOg/nSZunYNRnS+Mz9B9WAlpYqT?=
- =?us-ascii?Q?zihHfP12t/POX6iNXEh6tllzJXan1fkZd4k/49/iJ+8e7AoUCCALQ0LGUJWc?=
- =?us-ascii?Q?BzX8r3bmdb6aPFmpu8NHJBrO2a8+T8l8eYkO9pK16fhTqXU7Lf4OMx8uw8bb?=
- =?us-ascii?Q?ybs9nmMMuNEpbFwPvz5cDuCEgqbzCAxdBo4HJXSqI82njHH0z10Tqo9ndkhc?=
- =?us-ascii?Q?w8GDAGed/2XI5332pjhz7CKJgjgDJOVH8JxIQ1idqYeRPW1Zc3pCUO7u1qHk?=
- =?us-ascii?Q?Qn03pKjc/Mt+sOXDuG2gjTtnD2JUjDYzIIJxnbh63ajRxGLdGw54ffO/c7a3?=
- =?us-ascii?Q?vFmyzymIpRV28qHS6qa+NQ2iPRlV2rhu3hZvx1X02x48V8yveKWfIC+FCgk9?=
- =?us-ascii?Q?/N3FHt6NCg6b7FsIlkaQvSA2Hp0HYlhVM0xjdMgDfmxf5DIjHrYTggbGkdWO?=
- =?us-ascii?Q?mc2nXdYjU5wQ1B4B16isUyPsX+wD8iOH/znV2zYvgMiVNtKxcbIid2fknYbQ?=
- =?us-ascii?Q?6WJXE8Pll2X8hoDi4p5hR0iJL3Vk+pQE2HBFSngPuZx95KwANXt6yUw25e5Y?=
- =?us-ascii?Q?LJs/NYSkKF0dVfB6wJQRtmSPqXkphg6q6QNcCx56mpIO9TpNQEOPnmIIumrs?=
- =?us-ascii?Q?gETM1UqPDU6TDRXQeMWmY+B1FbGlYx6n4vZB0Q/OH0kZcp1lgT2Ef9c9FJok?=
- =?us-ascii?Q?QY/8HMQVlLOdw6U275JuWjXnyilNCsJ1Ky9oGLt6?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
+ by MN0PR21MB3534.namprd21.prod.outlook.com (2603:10b6:208:3d1::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.8; Thu, 2 Feb
+ 2023 21:47:44 +0000
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::baef:f69f:53c2:befc]) by BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::baef:f69f:53c2:befc%8]) with mapi id 15.20.6086.007; Thu, 2 Feb 2023
+ 21:47:44 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, decui@microsoft.com, kys@microsoft.com,
+        paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH net,v3] net: mana: Fix accessing freed irq affinity_hint
+Date:   Thu,  2 Feb 2023 13:47:17 -0800
+Message-Id: <1675374437-4917-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR03CA0018.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::31) To BY5PR21MB1443.namprd21.prod.outlook.com
+ (2603:10b6:a03:21f::18)
 MIME-Version: 1.0
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|MN0PR21MB3534:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c268981-8c65-4242-098f-08db05671d5c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /4PgxgL05SXc26hYeszyRM1ZfZ/YXgp43ZBjHmAI1asnsdVz8LcrfwFbcsNq7B0+tsV877SWuIK5++5d/aiTTPNGloMOnrsGmfL+TB57wMw1uDM9AM4J7y+0y51lTHjO2X+5SACvOg3B5h96plcCNGsbTJrJitIc9sZenFflFd93zekssE39HFGLsBG/2PE/Wvy/I708B3COUMN54IfpTcwJzpHY9d+egTrCHDb4ZyxZNEio4AXl79lW87eh7+X01POeVFfnF93yR2MQpbVBVD4wh8enGiw2CUM7xH5MHzClLIwOJ1TYgcTAFj50kxYpePlpJCj2q20F+bbmPeyrB9z6DzoSOkGnx03PpwtlaR0v8fHtP5zZ8BD9MolhYOJei+2OEmIYZuLDGKPyEhNaF+EPM2qVkt6RmJ9AdUSeV5po5lEdT6KjAnaA9TQHT0bYDHbM8ljBBuXPOfPwvxNz8Lo2a+x+TpHAOVdpK/5sM5X/lfTl4ia3nuSiRgkAtM8XDzxWSzpCpT4W5m1rd/5kf0AeHQNWoHHN4F8R/0PWKgROwBDcJ4f0rlgLl6TtqJJDwrMGKmyYNqWktHNNUOCbPmDZe9t5K2/twDkXYYKs+K5tqfYeQS9BX5zXGnGyw6G0G1S1ndwv0UkmhM7PPhGKl3/hQ5UouwxQ0ZN6T3MjPVIQrcK2VkLpMn1aROvEVpMRosL/CRxkshP+My8hspmSB21ksPL89O6mBC0DIEmRV2jGQMHqjZzg0Qs/cjYRVFSB
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(39860400002)(396003)(346002)(366004)(451199018)(2906002)(36756003)(2616005)(316002)(83380400001)(52116002)(6666004)(7846003)(186003)(6512007)(6486002)(26005)(41300700001)(10290500003)(6506007)(478600001)(66556008)(66476007)(66946007)(8676002)(4326008)(5660300002)(8936002)(82950400001)(82960400001)(38350700002)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7dytsCQqZGmkzvZy8h77+TW9WZFZgbZxlaEI7JTY6eL5Eho243bGey7MXaAV?=
+ =?us-ascii?Q?4M5hq/RFcrb0D3vJaVtpMi8O8qHsl597aJq5tdA/BdN4JhLoPt0qxPUFy3Nc?=
+ =?us-ascii?Q?W82jQWaPeZb7f3FKKXYhFgzQHkr+/Ie4iiRccXf+XaHpfThCOZC0b6g0bdQS?=
+ =?us-ascii?Q?Sk//iq2XUnC/BU08AmPsxZVYH1G87WJ1wpuYV75voemeMtMw7azL/t9x2/CZ?=
+ =?us-ascii?Q?a43VoRFwrUAN1/jVuY1gQ27Qq6Aurmr85UvZXgguH5GriZW9eqb6e4mrJa3C?=
+ =?us-ascii?Q?luwnhdiv25jOCF1AMMy9Cw59t/fjyeFcTd+a7XOJCUFIpfrSWwY+hiesrjm7?=
+ =?us-ascii?Q?fSFGvDrC1BaDW8SStOiGLqqn42w6CuAgGkLs54xge69GCv2SQLI2YnJKoxb8?=
+ =?us-ascii?Q?C1I1Vf6OG6LAeDrAYDvyvRSMWVAcaCOcZX2//08t3MIdudxRxKZNK3FfUvuz?=
+ =?us-ascii?Q?w96CoJ5Ew9IToJJZlo6tbMjJ3o5KVVwnVvXVqmEx2S4suU33N8BBQaofGWpK?=
+ =?us-ascii?Q?Ci9SOwzM7EmGv49gVJh6M4K1iTf0P5wvYqJMr+I8ItMtNqVECWY145REpHuG?=
+ =?us-ascii?Q?1jtgo2CE9XZyZ5+4LdXkk4iYD/O6k3sX63CA9cxAsiNBo/De1OcAqe5KbXZV?=
+ =?us-ascii?Q?VuU89YSd7ObIktWTa2Q2oEIj1oKaAOfDLwLuO3nqiIjkArkCeJAg+jQ7ert5?=
+ =?us-ascii?Q?fEgtUsJEi3H+d+Nvjw5JPt2m4HllIJKYlucbCriJEV6VDapQNIJ7UQ/nrbYK?=
+ =?us-ascii?Q?4GK8MHoQdenqTMnXgqfMS9h3pTvQov/LRvaCwtbpaihH8TYouMFVNWTQylVl?=
+ =?us-ascii?Q?sKf2gPIlnfVEGVLKuhKq/7JC+Hd2mryfxofFN3+/LF/JYWRWPaAqieRnURKJ?=
+ =?us-ascii?Q?Ff/6JHqZoxXVToM0rUUJ5pieFPOaQa0F2j7Hj+mYZLEcjClc/0dnEzAjznxB?=
+ =?us-ascii?Q?X9bqrQGZw/iGP8eZK2JVDeeRUzWc2OlZOcQL5UxMy/u7HF3N8GrucYwc0PVO?=
+ =?us-ascii?Q?L3LlbP0QnlSc011+lYY1rQ12qP/QEhBDcrhq8TmqqGv8AlxyQspoyg+G5jYI?=
+ =?us-ascii?Q?Jo6DLV0Dm4N0jdhCJKyE/+i6lvGiX6+fnDYDxPjwgRtd/P2xVk9JvIxrEMF5?=
+ =?us-ascii?Q?QNizsbtKb/QFUsAd6rZLrsQ0wqL66KhcNqBEoKU9+9Xyf4V9e81LnptMmN4M?=
+ =?us-ascii?Q?0m8kgvU8ZMvifGgY2O3hxDEWQHPLSc8cbtwkww1vVIqCb6xeAAlgT3xYrvNg?=
+ =?us-ascii?Q?Cz2MIJPDYZH8mDa3RzwSWD8ayvJoSf70ZISSgl3PR6fdEg051oOqbCf31llu?=
+ =?us-ascii?Q?Bxf7gn1DtEflApcq53LCmqTKp1iLNdTO9ghzAENZBdmtY8FoxjqIGy63JFZt?=
+ =?us-ascii?Q?nC7Qt691SKvCPkj5MVSL22SrOdj8ropaORGBkJl3oE8VwxNPmARb+k5mXHXu?=
+ =?us-ascii?Q?SAgGbNJSPOdRtnX9CWYu/okm6IqJ+D8TpMC3N5gUE7vtZGfxFuFfIchcu0QI?=
+ =?us-ascii?Q?5wX/XoYAfaOc1mOPqwBhkZNj9xaKoTEhX3kVh+0hjB+Ls49wFnUxMmJ0AZUG?=
+ =?us-ascii?Q?V1/SfqG+mdYOMHucMJ8Ngl5K9d6nig6SEpjh1rpKAcPI65GvTU7PczoKPHEu?=
+ =?us-ascii?Q?hQ=3D=3D?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c268981-8c65-4242-098f-08db05671d5c
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3116.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b165fd5-4226-4d42-3ba0-08db05574b6f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2023 19:54:28.8294
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2023 21:47:43.9617
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dF7iIDnss05mVgWqyUGF4ymHAF03CrPMOjmuI8+ktwRI5C1yxRNW6CQrreTa8viDY5hdOspO0C2bpnxObybQwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3107
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2H23dkE0QzTckRegY8c00SQ754eHKYsDYelgffFakkY/CzIF4AxKodDceqvXUfRllyRu9do8rpFaI1YxxmrzBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3534
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+After calling irq_set_affinity_and_hint(), the cpumask pointer is
+saved in desc->affinity_hint, and will be used later when reading
+/proc/irq/<num>/affinity_hint. So the cpumask variable needs to be
+persistent. Otherwise, we are accessing freed memory when reading
+the affinity_hint file.
 
+Also, need to clear affinity_hint before free_irq(), otherwise there
+is a one-time warning and stack trace during module unloading:
 
-> -----Original Message-----
-> From: Jakub Kicinski <kuba@kernel.org>
-> Sent: Thursday, February 2, 2023 2:38 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Dexuan Cui
-> <decui@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Paul Rosswurm
-> <paulros@microsoft.com>; olaf@aepfle.de; vkuznets@redhat.com;
-> davem@davemloft.net; linux-kernel@vger.kernel.org; stable@vger.kernel.org
-> Subject: Re: [PATCH net,v2] net: mana: Fix accessing freed irq affinity_h=
-int
->=20
-> On Wed,  1 Feb 2023 13:46:53 -0800 Haiyang Zhang wrote:
-> > +		irq_set_affinity_and_hint(irq,
-> cpumask_of(cpumask_local_spread
-> > +					  (i, gc->numa_node)));
->=20
-> The line break here looks ugly.
-> Please use a local variable for the mask or the cpu.
+ [  243.948687] WARNING: CPU: 10 PID: 1589 at kernel/irq/manage.c:1913 free_irq+0x318/0x360
+ ...
+ [  243.948753] Call Trace:
+ [  243.948754]  <TASK>
+ [  243.948760]  mana_gd_remove_irqs+0x78/0xc0 [mana]
+ [  243.948767]  mana_gd_remove+0x3e/0x80 [mana]
+ [  243.948773]  pci_device_remove+0x3d/0xb0
+ [  243.948778]  device_remove+0x46/0x70
+ [  243.948782]  device_release_driver_internal+0x1fe/0x280
+ [  243.948785]  driver_detach+0x4e/0xa0
+ [  243.948787]  bus_remove_driver+0x70/0xf0
+ [  243.948789]  driver_unregister+0x35/0x60
+ [  243.948792]  pci_unregister_driver+0x44/0x90
+ [  243.948794]  mana_driver_exit+0x14/0x3fe [mana]
+ [  243.948800]  __do_sys_delete_module.constprop.0+0x185/0x2f0
 
-Will do.
+To fix the bug, use the persistent mask, cpumask_of(cpu#), and set
+affinity_hint to NULL before freeing the IRQ, as required by free_irq().
+
+Cc: stable@vger.kernel.org
+Fixes: 71fa6887eeca ("net: mana: Assign interrupts to CPUs based on NUMA nodes")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 37 ++++++-------------
+ 1 file changed, 11 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index b144f2237748..f9b8f372ec8a 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1217,9 +1217,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 	unsigned int max_queues_per_port = num_online_cpus();
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 	struct gdma_irq_context *gic;
+-	unsigned int max_irqs;
+-	u16 *cpus;
+-	cpumask_var_t req_mask;
++	unsigned int max_irqs, cpu;
+ 	int nvec, irq;
+ 	int err, i = 0, j;
+ 
+@@ -1240,21 +1238,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 		goto free_irq_vector;
+ 	}
+ 
+-	if (!zalloc_cpumask_var(&req_mask, GFP_KERNEL)) {
+-		err = -ENOMEM;
+-		goto free_irq;
+-	}
+-
+-	cpus = kcalloc(nvec, sizeof(*cpus), GFP_KERNEL);
+-	if (!cpus) {
+-		err = -ENOMEM;
+-		goto free_mask;
+-	}
+-	for (i = 0; i < nvec; i++)
+-		cpus[i] = cpumask_local_spread(i, gc->numa_node);
+-
+ 	for (i = 0; i < nvec; i++) {
+-		cpumask_set_cpu(cpus[i], req_mask);
+ 		gic = &gc->irq_contexts[i];
+ 		gic->handler = NULL;
+ 		gic->arg = NULL;
+@@ -1269,17 +1253,16 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 		irq = pci_irq_vector(pdev, i);
+ 		if (irq < 0) {
+ 			err = irq;
+-			goto free_mask;
++			goto free_irq;
+ 		}
+ 
+ 		err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+ 		if (err)
+-			goto free_mask;
+-		irq_set_affinity_and_hint(irq, req_mask);
+-		cpumask_clear(req_mask);
++			goto free_irq;
++
++		cpu = cpumask_local_spread(i, gc->numa_node);
++		irq_set_affinity_and_hint(irq, cpumask_of(cpu));
+ 	}
+-	free_cpumask_var(req_mask);
+-	kfree(cpus);
+ 
+ 	err = mana_gd_alloc_res_map(nvec, &gc->msix_resource);
+ 	if (err)
+@@ -1290,13 +1273,12 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 
+ 	return 0;
+ 
+-free_mask:
+-	free_cpumask_var(req_mask);
+-	kfree(cpus);
+ free_irq:
+ 	for (j = i - 1; j >= 0; j--) {
+ 		irq = pci_irq_vector(pdev, j);
+ 		gic = &gc->irq_contexts[j];
++
++		irq_update_affinity_hint(irq, NULL);
+ 		free_irq(irq, gic);
+ 	}
+ 
+@@ -1324,6 +1306,9 @@ static void mana_gd_remove_irqs(struct pci_dev *pdev)
+ 			continue;
+ 
+ 		gic = &gc->irq_contexts[i];
++
++		/* Need to clear the hint before free_irq */
++		irq_update_affinity_hint(irq, NULL);
+ 		free_irq(irq, gic);
+ 	}
+ 
+-- 
+2.25.1
+
