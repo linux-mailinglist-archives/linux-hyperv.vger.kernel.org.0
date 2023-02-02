@@ -2,30 +2,30 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A5A8688079
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Feb 2023 15:50:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 272A0688224
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Feb 2023 16:28:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232533AbjBBOuH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 2 Feb 2023 09:50:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55840 "EHLO
+        id S233089AbjBBP2c (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 2 Feb 2023 10:28:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231712AbjBBOtu (ORCPT
+        with ESMTP id S233033AbjBBP15 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 2 Feb 2023 09:49:50 -0500
+        Thu, 2 Feb 2023 10:27:57 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E2E3918A6;
-        Thu,  2 Feb 2023 06:48:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 98E517FA37;
+        Thu,  2 Feb 2023 07:27:23 -0800 (PST)
 Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id B0F6620B7102; Thu,  2 Feb 2023 06:48:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B0F6620B7102
+        id D52F420B7102; Thu,  2 Feb 2023 07:27:01 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D52F420B7102
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1675349323;
-        bh=gjpf4tmCpJspm7R09KDz9PoxVO973A9P+dcFaqNYhig=;
+        s=default; t=1675351621;
+        bh=oCwKtfQntEI6E9lEvO40m8KDUFMSMXqD/uTbANH2dzU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eWqOL1KUEIVforAPnG/YSYfnmeUMryD+fqy9Q57F9tkXrRfSx+Su5JWbomxYbdmcy
-         CKlZgQMTBWuYSM6yg4YfewcXLiImUqk3mpjdV3RVFN3XM8db2cWP4TA0JudUTRBReR
-         vxr9HDphRSm4fwZx3TBOPdSrQ7wJibPkxCfXfXao=
-Date:   Thu, 2 Feb 2023 06:48:43 -0800
+        b=qRvE7LWlGGNdj/SQkpG2Yo0y8cJRt1wWH157qayYKOEXXPaePwwnWLyQEcROl0mwB
+         9rGjGqY+839ySWldZcbX1fWUNx+ZNiNT+sEJwssKtFn3CW75aQt+xlrzHa9EUy5Wwv
+         C+wWyisbRy0Diif1KKhMDAfwabPEz+pi7MoideHY=
+Date:   Thu, 2 Feb 2023 07:27:01 -0800
 From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
 To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -43,16 +43,17 @@ Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         Saurabh Singh Sengar <ssengar@microsoft.com>
-Subject: Re: [PATCH v2 2/6] Drivers: hv: allow non ACPI compilation for
- hv_is_hibernation_supported
-Message-ID: <20230202144843.GA11173@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Subject: Re: [PATCH v2 3/6] Drivers: hv: vmbus: Convert acpi_device to
+ platform_device
+Message-ID: <20230202152701.GA15156@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
- <1675188609-20913-3-git-send-email-ssengar@linux.microsoft.com>
- <BYAPR21MB1688813B65EEDB79554E30D4D7D19@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <1675188609-20913-4-git-send-email-ssengar@linux.microsoft.com>
+ <BYAPR21MB1688C6978F68D904ABC00911D7D19@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1688813B65EEDB79554E30D4D7D19@BYAPR21MB1688.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BYAPR21MB1688C6978F68D904ABC00911D7D19@BYAPR21MB1688.namprd21.prod.outlook.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
@@ -64,67 +65,270 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Feb 01, 2023 at 05:47:44PM +0000, Michael Kelley (LINUX) wrote:
+On Wed, Feb 01, 2023 at 06:32:29PM +0000, Michael Kelley (LINUX) wrote:
 > From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Tuesday, January 31, 2023 10:10 AM
 > > 
-> > acpi_sleep_state_supported API is only define for CONFIG_ACPI flag and
-> > thus it can't be used for non-ACPI builds. Initaly there won't be
-> 
-> s/Initaly/Initially/
-
-OK
-
-> 
-> > hibernate support for non ACPI builds.
-> 
-> s/hibernate/hibernation/
-
-OK
-
-> 
-> > 
-> > This change will help adding device tree support in subsequent commits.
+> > Use more generic platform device instead of acpi device. Also rename the
+> > function vmbus_acpi_remove to more generic name vmbus_mmio_remove.
 > > 
 > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 > > ---
-> >  drivers/hv/hv_common.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> >  drivers/hv/vmbus_drv.c | 78 +++++++++++++++++++++++++-----------------
+> >  1 file changed, 46 insertions(+), 32 deletions(-)
 > > 
-> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> > index 52a6f89ccdbd..370ec20d1993 100644
-> > --- a/drivers/hv/hv_common.c
-> > +++ b/drivers/hv/hv_common.c
-> > @@ -234,7 +234,11 @@ EXPORT_SYMBOL_GPL(hv_setup_dma_ops);
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index d24dd65b33d4..49030e756b9f 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/init.h>
+> >  #include <linux/module.h>
+> >  #include <linux/device.h>
+> > +#include <linux/platform_device.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/sysctl.h>
+> >  #include <linux/slab.h>
+> > @@ -44,7 +45,7 @@ struct vmbus_dynid {
+> >  	struct hv_vmbus_device_id id;
+> >  };
 > > 
-> >  bool hv_is_hibernation_supported(void)
+> > -static struct acpi_device  *hv_acpi_dev;
+> > +static struct platform_device  *hv_dev;
+> > 
+> >  static int hyperv_cpuhp_online;
+> > 
+> > @@ -143,7 +144,7 @@ static DEFINE_MUTEX(hyperv_mmio_lock);
+> > 
+> >  static int vmbus_exists(void)
 > >  {
-> > +#ifdef CONFIG_ACPI
-> >  	return !hv_root_partition && acpi_sleep_state_supported(ACPI_STATE_S4);
-> > +#else
-> > +	return false;
-> > +#endif
+> > -	if (hv_acpi_dev == NULL)
+> > +	if (hv_dev == NULL)
+> >  		return -ENODEV;
+> > 
+> >  	return 0;
+> > @@ -932,7 +933,7 @@ static int vmbus_dma_configure(struct device *child_device)
+> >  	 * On x86/x64 coherence is assumed and these calls have no effect.
+> >  	 */
+> >  	hv_setup_dma_ops(child_device,
+> > -		device_get_dma_attr(&hv_acpi_dev->dev) == DEV_DMA_COHERENT);
+> > +		device_get_dma_attr(&hv_dev->dev) == DEV_DMA_COHERENT);
+> >  	return 0;
+> >  }
+> > 
+> > @@ -2090,7 +2091,7 @@ int vmbus_device_register(struct hv_device
+> > *child_device_obj)
+> >  		     &child_device_obj->channel->offermsg.offer.if_instance);
+> > 
+> >  	child_device_obj->device.bus = &hv_bus;
+> > -	child_device_obj->device.parent = &hv_acpi_dev->dev;
+> > +	child_device_obj->device.parent = &hv_dev->dev;
+> >  	child_device_obj->device.release = vmbus_device_release;
+> > 
+> >  	child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
+> > @@ -2262,7 +2263,7 @@ static acpi_status vmbus_walk_resources(struct
+> > acpi_resource *res, void *ctx)
+> >  	return AE_OK;
+> >  }
+> > 
+> > -static void vmbus_acpi_remove(struct acpi_device *device)
+> > +static void vmbus_mmio_remove(void)
+> >  {
+> >  	struct resource *cur_res;
+> >  	struct resource *next_res;
+> > @@ -2441,13 +2442,15 @@ void vmbus_free_mmio(resource_size_t start,
+> > resource_size_t size)
+> >  }
+> >  EXPORT_SYMBOL_GPL(vmbus_free_mmio);
+> > 
+> > -static int vmbus_acpi_add(struct acpi_device *device)
+> > +static int vmbus_acpi_add(struct platform_device *pdev)
+> >  {
+> >  	acpi_status result;
+> >  	int ret_val = -ENODEV;
+> > -	struct acpi_device *ancestor;
+> > +	struct platform_device *ancestor;
+> > +	struct acpi_device *adev = to_acpi_device(&pdev->dev);
 > 
-> Is this patch needed?  If CONFIG_ACPI is not set, then per
-> arch/x86/Kconfig, CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT
-> is not selected.  In that case, the #ifdef in include/acpi/acpi_bus.h
-> provides a stub for acpi_sleep_state_supported() that returns "false".
-> So it seems like the existing code should compile and correctly return
-> "false" when CONFIG_ACPI is not set.
+> This doesn't work.  The argument to vmbus_acpi_add() is a struct
+> platform_device, which has a struct device embedded in it (not a
+> pointer).   to_acpi_device() takes a struct device as an argument,
+> assuming that the struct device is embedded in a struct
+> acpi_device, which is not the case here.  The resulting local
+> variable adev is actually pointing to some (perhaps negative)
+> offset within the struct platform_device, and uses of adev are
+> getting unknown random data from within (or before) the
+> struct platform_device.
 
-You are right, if CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT is not set
-acpi_sleep_state_supported will return false, but this is applicable only
-when CONFIG_ACPI is enable. If CONFIG_ACPI is not enable both these
-functions are not defined.
+Thanks for review.
+If I understand correctly you are saying to change the argument of
+to_acpi_device from pointer to 'struct device'. I tried changing this
+statement to:
+"struct acpi_device *adev = to_acpi_device(pdev->dev);"
+
+However on compiling this code I see this error:
+./include/linux/container_of.h:19:28: error: invalid type argument of unary ‘*’ (have ‘struct device’)
+
+Please let me know if I missunderstood your suggestion.
+
+I would like to mention that this code has been tested and verified. 
+The purpose of this change was to assign the device node to the acpi
+firmware node, as seen in the line 
+
+"adev->fwnode.dev = &pdev->dev;".
+
+This was necessary because without it, the mlx driver would crash as
+it searches for the device in the acpi firmware node, which would
+otherwise be NULL. I am confident that the addresses are correctly
+assigned, as any issues with the assignments would have caused a panic.
 
 Regards,
 Saurabh
 
-
 > 
-> Michael
+> > 
+> > -	hv_acpi_dev = device;
+> > +	hv_dev = pdev;
+> > +	adev->fwnode.dev = &pdev->dev;
+> > 
+> >  	/*
+> >  	 * Older versions of Hyper-V for ARM64 fail to include the _CCA
+> > @@ -2456,15 +2459,16 @@ static int vmbus_acpi_add(struct acpi_device *device)
+> >  	 * up the ACPI device to behave as if _CCA is present and indicates
+> >  	 * hardware coherence.
+> >  	 */
+> > -	ACPI_COMPANION_SET(&device->dev, device);
+> > +	ACPI_COMPANION_SET(&pdev->dev, ACPI_COMPANION(&pdev->dev));
 > 
+> This statement seems tautological.  If ACPI_COMPANION(&pdev->dev)
+> returns a valid result,  why would the ACPI companion for &pdev->dev
+> need to be set?  The original code was setting the ACPI companion for the
+> embedded struct device to be the struct acpi_device.   I forget why this
+> wasn't already done for the VMBus device when it was originally parsed
+> from the ACPI DSDT ... 
+> 
+> >  	if (IS_ENABLED(CONFIG_ACPI_CCA_REQUIRED) &&
+> > -	    device_get_dma_attr(&device->dev) == DEV_DMA_NOT_SUPPORTED) {
+> > +	    device_get_dma_attr(&pdev->dev) == DEV_DMA_NOT_SUPPORTED) {
+> > +		struct acpi_device *adev_node = ACPI_COMPANION(&pdev->dev);
+> 
+> If earlier code in this function can get a correct pointer to the struct acpi_device,
+> then this statement shouldn't be necessary.  You already have it.
+> 
+> >  		pr_info("No ACPI _CCA found; assuming coherent device I/O\n");
+> > -		device->flags.cca_seen = true;
+> > -		device->flags.coherent_dma = true;
+> > +		adev_node->flags.cca_seen = true;
+> > +		adev_node->flags.coherent_dma = true;
+> >  	}
+> > 
+> > -	result = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+> > +	result = acpi_walk_resources(ACPI_HANDLE(&pdev->dev), METHOD_NAME__CRS,
+> 
+> Again, if you have a correct pointer to the struct acpi_device, then adev->handle
+> (like the original code) should be simpler than looking it up again with ACPI_HANDLE().  
+> 
+> >  					vmbus_walk_resources, NULL);
+> > 
+> >  	if (ACPI_FAILURE(result))
+> > @@ -2473,9 +2477,9 @@ static int vmbus_acpi_add(struct acpi_device *device)
+> >  	 * Some ancestor of the vmbus acpi device (Gen1 or Gen2
+> >  	 * firmware) is the VMOD that has the mmio ranges. Get that.
+> >  	 */
+> > -	for (ancestor = acpi_dev_parent(device); ancestor;
+> > -	     ancestor = acpi_dev_parent(ancestor)) {
+> > -		result = acpi_walk_resources(ancestor->handle, METHOD_NAME__CRS,
+> > +	for (ancestor = to_platform_device(pdev->dev.parent); ancestor;
+> > +	     ancestor = to_platform_device(ancestor->dev.parent)) {
+> > +		result = acpi_walk_resources(ACPI_HANDLE(&ancestor->dev), METHOD_NAME__CRS,
+> 
+> Similarly, if you get a correct pointer to the struct acpi_device, does the above
+> code need any changes?  I'm hoping not.
+> 
+> >  					     vmbus_walk_resources, NULL);
+> > 
+> >  		if (ACPI_FAILURE(result))
+> > @@ -2489,10 +2493,21 @@ static int vmbus_acpi_add(struct acpi_device *device)
+> > 
+> >  acpi_walk_err:
+> >  	if (ret_val)
+> > -		vmbus_acpi_remove(device);
+> > +		vmbus_mmio_remove();
+> >  	return ret_val;
 > >  }
-> >  EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
+> > 
+> > +static int vmbus_platform_driver_probe(struct platform_device *pdev)
+> > +{
+> > +	return vmbus_acpi_add(pdev);
+> > +}
+> > +
+> > +static int vmbus_platform_driver_remove(struct platform_device *pdev)
+> > +{
+> > +	vmbus_mmio_remove();
+> > +	return 0;
+> > +}
+> > +
+> >  #ifdef CONFIG_PM_SLEEP
+> >  static int vmbus_bus_suspend(struct device *dev)
+> >  {
+> > @@ -2658,15 +2673,15 @@ static const struct dev_pm_ops vmbus_bus_pm = {
+> >  	.restore_noirq	= vmbus_bus_resume
+> >  };
+> > 
+> > -static struct acpi_driver vmbus_acpi_driver = {
+> > -	.name = "vmbus",
+> > -	.ids = vmbus_acpi_device_ids,
+> > -	.ops = {
+> > -		.add = vmbus_acpi_add,
+> > -		.remove = vmbus_acpi_remove,
+> > -	},
+> > -	.drv.pm = &vmbus_bus_pm,
+> > -	.drv.probe_type = PROBE_FORCE_SYNCHRONOUS,
+> > +static struct platform_driver vmbus_platform_driver = {
+> > +	.probe = vmbus_platform_driver_probe,
+> > +	.remove = vmbus_platform_driver_remove,
+> > +	.driver = {
+> > +		.name = "vmbus",
+> > +		.acpi_match_table = ACPI_PTR(vmbus_acpi_device_ids),
+> > +		.pm = &vmbus_bus_pm,
+> > +		.probe_type = PROBE_FORCE_SYNCHRONOUS,
+> > +	}
+> >  };
+> > 
+> >  static void hv_kexec_handler(void)
+> > @@ -2750,12 +2765,11 @@ static int __init hv_acpi_init(void)
+> >  	/*
+> >  	 * Get ACPI resources first.
+> >  	 */
+> > -	ret = acpi_bus_register_driver(&vmbus_acpi_driver);
+> > -
+> > +	ret = platform_driver_register(&vmbus_platform_driver);
+> >  	if (ret)
+> >  		return ret;
+> > 
+> > -	if (!hv_acpi_dev) {
+> > +	if (!hv_dev) {
+> >  		ret = -ENODEV;
+> >  		goto cleanup;
+> >  	}
+> > @@ -2785,8 +2799,8 @@ static int __init hv_acpi_init(void)
+> >  	return 0;
+> > 
+> >  cleanup:
+> > -	acpi_bus_unregister_driver(&vmbus_acpi_driver);
+> > -	hv_acpi_dev = NULL;
+> > +	platform_driver_unregister(&vmbus_platform_driver);
+> > +	hv_dev = NULL;
+> >  	return ret;
+> >  }
+> > 
+> > @@ -2839,7 +2853,7 @@ static void __exit vmbus_exit(void)
+> > 
+> >  	cpuhp_remove_state(hyperv_cpuhp_online);
+> >  	hv_synic_free();
+> > -	acpi_bus_unregister_driver(&vmbus_acpi_driver);
+> > +	platform_driver_unregister(&vmbus_platform_driver);
+> >  }
+> > 
 > > 
 > > --
 > > 2.25.1
