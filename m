@@ -2,57 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A19E6877B1
-	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Feb 2023 09:40:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF09B687F87
+	for <lists+linux-hyperv@lfdr.de>; Thu,  2 Feb 2023 15:09:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231149AbjBBIkV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 2 Feb 2023 03:40:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
+        id S229666AbjBBOJ1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 2 Feb 2023 09:09:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231624AbjBBIkT (ORCPT
+        with ESMTP id S229609AbjBBOJ0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 2 Feb 2023 03:40:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5B2761D0;
-        Thu,  2 Feb 2023 00:40:18 -0800 (PST)
+        Thu, 2 Feb 2023 09:09:26 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BD087161;
+        Thu,  2 Feb 2023 06:09:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4AFB861A28;
-        Thu,  2 Feb 2023 08:40:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A740AC4339B;
-        Thu,  2 Feb 2023 08:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675327217;
-        bh=ULsV67zQUJfvmJQRTAc+jmxPY77ctm/HpmxnTdpyPhA=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ZxzyeduWsSQVTVNv1dXXe8cizpB6icn4jaJjsNQRYs3TOKhufSP7cWqi0TspCOdCC
-         qNUJOlG+SpaM5ogAKbtVOzQXV86Gq9MVfMMJLGZCjl2TlFIHVNtyRWrl7hglIDhXy4
-         +LoJuSShwwb/gGspLJkOuGPr7Ymg7UDdi7QlzGUZGZkgx8SCxyuJfZ3tgj1DcKKSCw
-         GcQtHvRrFip4dVjkNX2EA0q3vzKRSMcYWFZHjjV+up4yxXz98G5JgjzFy6p/TNmf8V
-         t+caQ937XGgKyWYY0are0FnqDQnC85gJggbZUTUF1OLKlMFyfeFPjHOFS/VC6MlxKC
-         954XcqVTNIsmw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8BC2AE270CC;
-        Thu,  2 Feb 2023 08:40:17 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 467DD61B66;
+        Thu,  2 Feb 2023 14:09:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10DCC4339B;
+        Thu,  2 Feb 2023 14:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1675346962;
+        bh=fcXByrYMeAYU0QEawUizJluIVGp45lsSXGtpusnK5H4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qkCf7n/jq3U7En6Zb8foWGxOWszxPIiv35R1TFMs5MQfNxsXsR8aGMXrHMEW3sTIg
+         e2DlqdnjIcGct5PnHihqUIUrI5quCDkkE5KkIxWOCxiezGsKZqmABHg/zOY8vfEMhU
+         RJpXWxYqKYD77OH9VGce4I3KSri2GhRh65I7N3e4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-hyperv@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] HV: hv_balloon: fix memory leak with using debugfs_lookup()
+Date:   Thu,  2 Feb 2023 15:09:18 +0100
+Message-Id: <20230202140918.2289522-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1073; i=gregkh@linuxfoundation.org; h=from:subject; bh=fcXByrYMeAYU0QEawUizJluIVGp45lsSXGtpusnK5H4=; b=owGbwMvMwCRo6H6F97bub03G02pJDMm3j/AwXnp9/q2R/p2bsi98QiwnsJbMM3LXV2q6Os2K48yE Lhe9jlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZiI/DWG+c6+Ni+rf1i6Lt3SfUxbdn NtwrGCKQzzs6MYGWq1bO/NY7mpek/urOjVZW3CAA==
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 1/1] hv_netvsc: Fix missed pagebuf entries in
- netvsc_dma_map/unmap()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167532721756.2893.14755906003032321617.git-patchwork-notify@kernel.org>
-Date:   Thu, 02 Feb 2023 08:40:17 +0000
-References: <1675135986-254490-1-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1675135986-254490-1-git-send-email-mikelley@microsoft.com>
-To:     Michael Kelley (LINUX) <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,32 +53,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello:
+When calling debugfs_lookup() the result must have dput() called on it,
+otherwise the memory will leak over time.  To make things simpler, just
+call debugfs_lookup_and_remove() instead which handles all of the logic
+at once.
 
-This patch was applied to netdev/net.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/hv/hv_balloon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, 30 Jan 2023 19:33:06 -0800 you wrote:
-> netvsc_dma_map() and netvsc_dma_unmap() currently check the cp_partial
-> flag and adjust the page_count so that pagebuf entries for the RNDIS
-> portion of the message are skipped when it has already been copied into
-> a send buffer. But this adjustment has already been made by code in
-> netvsc_send(). The duplicate adjustment causes some pagebuf entries to
-> not be mapped. In a normal VM, this doesn't break anything because the
-> mapping doesn’t change the PFN. But in a Confidential VM,
-> dma_map_single() does bounce buffering and provides a different PFN.
-> Failing to do the mapping causes the wrong PFN to be passed to Hyper-V,
-> and various errors ensue.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net,1/1] hv_netvsc: Fix missed pagebuf entries in netvsc_dma_map/unmap()
-    https://git.kernel.org/netdev/net/c/99f1c46011cc
-
-You are awesome, thank you!
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index cbe43e2567a7..64ac5bdee3a6 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1963,7 +1963,7 @@ static void  hv_balloon_debugfs_init(struct hv_dynmem_device *b)
+ 
+ static void  hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
+ {
+-	debugfs_remove(debugfs_lookup("hv-balloon", NULL));
++	debugfs_lookup_and_remove("hv-balloon", NULL);
+ }
+ 
+ #else
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.1
 
