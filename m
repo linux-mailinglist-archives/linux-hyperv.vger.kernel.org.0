@@ -2,144 +2,167 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55FB6688E07
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Feb 2023 04:33:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC59688E46
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Feb 2023 04:56:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230003AbjBCDdJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 2 Feb 2023 22:33:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        id S229662AbjBCD4N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 2 Feb 2023 22:56:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232476AbjBCDdD (ORCPT
+        with ESMTP id S231751AbjBCD4M (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 2 Feb 2023 22:33:03 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E02F88CFE;
-        Thu,  2 Feb 2023 19:32:45 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id r8so4026085pls.2;
-        Thu, 02 Feb 2023 19:32:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0sO/I/hapLPdlFrgOgCj3YUdlJCdmaojJPiwxcYZTHw=;
-        b=om+qrGa0QJU9y5GLrQUi3293WCGq/RV7RWKkzs79vM+mF7LstskZi0DFKWjKCBORxr
-         aBJEW9FuMIiDdHr5ZnqHmLf6NkF7r1HtPVK0R864e+0IHHuRwIoLk6B+JAT6xmxQyJhv
-         Co4Lg4l+n0M0OUjfzvq7trn9tBaObHoumwibEediLWIVQ1s/VFxl8/0B3DQWSFBVNBr9
-         ciaQetM0eZiV5sl7iG+GIhQf+tVNztTKo4MmHF2t9vHT1lfnOcgfvKduymsal7Rkja0E
-         yFOLUIUutIa+nZJl9ZgenNa6qZhVYxXPFiWRk1FEnowU3Cxt+Uj/RSSao/fSDjX4UqYD
-         cZng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0sO/I/hapLPdlFrgOgCj3YUdlJCdmaojJPiwxcYZTHw=;
-        b=c7X+PRxfx7kkvpAGHfCDKzA9HZOef0lZo+1x9swsmjHjZXKTjegAukUKKlhTDfIj2/
-         toagZblU2IPAa9t0yCZuFrYUEmgmt/FCUO6zkV1SJn/LU1IGLUED+A7VeL9lP8s52olI
-         AOJbxuN92Azl48us/MZLWwzoWpzmpN5GUmVeyEoedIozXpalzRz2GElrDlKlQrGEOhLk
-         qsND25eMH/+wgcZ/ENQ98J04SYY9p2WsYuIImtBznBvt/6cs1qAwNqys0YppUFIMp7FP
-         T6U1/vjhUItKN3/Scjo75FZfKoZYaMFIR5cGSHe0HxTT9Oh3+iPjDSBq3cydap+6D3GM
-         jmQQ==
-X-Gm-Message-State: AO0yUKX9/mZeiqhJ6ur7LC0evE42hiyQua7/50r/9wdx9IgjkW7UV+AF
-        swydrH0e6UBeB+kSetEe8O8=
-X-Google-Smtp-Source: AK7set86YHchxl3IgwYooZpALzvQegpf3ZJ4iw88C5pZynpIjltH+qCY/RkEFP1v+LvdhM9Z0GhMrw==
-X-Received: by 2002:a17:902:f105:b0:196:2cc1:5082 with SMTP id e5-20020a170902f10500b001962cc15082mr2469626plb.67.1675395165002;
-        Thu, 02 Feb 2023 19:32:45 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
-        by smtp.gmail.com with ESMTPSA id p7-20020a1709026b8700b001948107490csm433838plk.19.2023.02.02.19.32.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 19:32:44 -0800 (PST)
-Message-ID: <afb70dc4-8f7a-32d0-35b5-92b35902a7dc@gmail.com>
-Date:   Fri, 3 Feb 2023 11:32:33 +0800
+        Thu, 2 Feb 2023 22:56:12 -0500
+Received: from BN6PR00CU002-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11021023.outbound.protection.outlook.com [52.101.57.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB6C52D15F;
+        Thu,  2 Feb 2023 19:56:09 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P/4h7W+Yp1HP1VHgxDq/4l4rUWYHd8Q+JzmYiuP1fSRWxBIFmMAZEqwcccQ/s6q6bkUSfvyjtkQISa1qPrBhmW8t6drViErBUns/laoP39WfAvd+7MNsjttD2TV+fVkQgFQ2m565sC0ZHJ3o2ndY/cPizLtzsai04kOqAwIBteRlsnMFB3ej1uPw0OdG5GXeizCoSDHZ5FIq9adqnVKDw9p4RoV8v286KN3rFbc6ka40PCkf0yEMkQ4sV3DWjepXmiot6zBS8ThsdvNmH6YunEk8VEI/dlsAkheN4bVoJyoXJdqwnwX0mNi+lwyjPkBWlnJGm6M0vcQ0Gjj5xxeeTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bto/D0odlwW0ihNJBV4oXEmQg3xpUlLLdZuoE9mghhk=;
+ b=UFZRyNmS87o6XUddncQNuGHcFJhsDLKoOSg7QyF6OL197bSrFO2SHEE8WjtgMnQ03WMOUPnFYOiAQS01p6JRMyx7WKJMDQ5GUft3mL/xstQSPI1tuO6eMh84gXq6iCchzq+fyfDFAnXycTiUbTraFXiXDhlxbAGgPquudydqt9FnfLvD6+yG43JxPjh9eiYZHvCmF4OmWg3PX3LeMsEXBW9eLzxM9Ze+DYv4i2WOuXm9eOju3yjmlZP/9A3pM1Ou3HcFSitdIedctVw8bJ3qNcosVx1/J5E9EBXLJz4sRubzmnsJHIRQkQWYbgZspu5FTZp6cFFI2cRBZUtrRIt5NA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bto/D0odlwW0ihNJBV4oXEmQg3xpUlLLdZuoE9mghhk=;
+ b=c5JdPP6C04YLD1bj3yjgRpjyFEFLGm56Wj7PhRay1KU9B/dys4uo3Dtx3lBXxWrzMxbSK1xvI/lpp2EIFcb5dy4WRROD7w4Rs0KI4Qjg0YKw4jcCtfCmChGN92ts27qsFg8JdN46lnlS1iyh6DZjAfV/07KfdiT+bPnkeLTt+lk=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by CH2PR21MB1526.namprd21.prod.outlook.com (2603:10b6:610:84::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.7; Fri, 3 Feb
+ 2023 03:56:07 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::9a9e:c614:a89f:396e]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::9a9e:c614:a89f:396e%7]) with mapi id 15.20.6086.009; Fri, 3 Feb 2023
+ 03:56:06 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] HV: hv_balloon: fix memory leak with using
+ debugfs_lookup()
+Thread-Topic: [PATCH] HV: hv_balloon: fix memory leak with using
+ debugfs_lookup()
+Thread-Index: AQHZNw/41mM1aBQkTUSPo77XIJemYq68luYg
+Date:   Fri, 3 Feb 2023 03:56:06 +0000
+Message-ID: <BYAPR21MB168826E0AF83D40DE0C704F9D7D79@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20230202140918.2289522-1-gregkh@linuxfoundation.org>
+In-Reply-To: <20230202140918.2289522-1-gregkh@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0470cfcf-ef8a-4b5b-b921-e4ba42e4d0b4;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-02-03T03:49:26Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|CH2PR21MB1526:EE_
+x-ms-office365-filtering-correlation-id: a8ec8129-61f4-4a22-58f1-08db059a93a4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8mDBJGPzXNc4EOpoVgxA/lheTT9THYFtjTE3NA6F+xNC6wd/AcnG+Wubk768LsjOzeQtlnYl8HEe13UI2PA3wvDXhHDo5Wh6o2OHg89D6tt6Ez4c3m+MXPR9+mtUmjowvTQg+MU/R6xf3vlBAA50+BsQ9YgwoCadH//rfVooGrcFrygsC8X58XfaNQCxgrzhGH4/pyhe011jicyhxEX5qyWV+/e+9Y2gqqO+YixGSxWRTzekoO40dTMgsQXYA0iVq+usQ1Aek4GM36Ouo1Loe3DYrI2Nh2ecVT2RK6ICiqU12C3sMFaQywnoLXcHI7ToTY/69yeZfpDctv2hy+ItL/+U1rZaZ06sTNssGSr9CtmPDwVyjVDGSitxS2GxoMlh6u/rETWwNry31jIMmWyjT96Njzom/j2HtzDAI+/3X0wEKkK/YysWypTwwiP3B04GHHr+9a2m3ToWPqXejZGLV6Q89Ka1HL9UHiP2id+CVcawaCXmjhiFNwPHonJB1mANNo29u9rhrOacv2KTl5XiVUjGwz2xaxrhdsr5sx2XOu6/ZgBTe+Xz5pb5oaQqhDo1/32HJT1GklO3LYEzfUC4EUhfitxcmLDkQCacmGiy/HrTxbV1H5HJj2w0NYbMOotQd3Y4UVBfq9h4zPTzc4+Q6kqoCbeSMfroYNtDqYPyh4FZi4AbqGCR8lYBT8ggvPT5iLTvNyTy7y3yoWHKkyxF7HuMTElZiVss7YvwjUFGCNLpKd0iGmbMaps9pfe6mWMH
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(39860400002)(376002)(136003)(366004)(451199018)(2906002)(33656002)(8990500004)(316002)(110136005)(54906003)(83380400001)(9686003)(186003)(26005)(71200400001)(76116006)(8676002)(66946007)(66446008)(66556008)(478600001)(66476007)(64756008)(4326008)(5660300002)(38070700005)(86362001)(8936002)(52536014)(41300700001)(10290500003)(82960400001)(38100700002)(82950400001)(122000001)(55016003)(6506007)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?OX7EnY0CBDLJx2fUSh/k9+8ZyB6x03e6IcSGoDe2FBovjiSEYbAUD4nQgZFC?=
+ =?us-ascii?Q?illbFla/LxOkZWu38rOKrZdQ7snwAxymkUUqJtRORKZrdpqsUOGD4hA2Yy1A?=
+ =?us-ascii?Q?0Ivqc5z5hZW//M6KxxsXcia2joy2C39/Z5dCFv1Nbl+qgeZC/Gs3/DD1znzB?=
+ =?us-ascii?Q?N1Wbr4sdd5wRh4d7gPVUNnZG5VjPe4anAxpwsok2h7+ZoEen3CgRCAiDDNYx?=
+ =?us-ascii?Q?bPGAeKE1KryAgAOAOK77lXnFBbNeOGTQlWVxxSCpYTmS2TedKCP5/xUuobcr?=
+ =?us-ascii?Q?eeUPqgXyLtXYkXTrd8Q4BH6ho+LP0aSd2i2av6GOdc+KxaMTdbgJmH9alWSE?=
+ =?us-ascii?Q?9w6mjoe40zjVW0RjFGexkEMY1pO80m735h3BD4QuI0QVupyQRXhi4iffDycg?=
+ =?us-ascii?Q?GAxAgQv5cRT0ti3x7yyKqZ/cHeQre9h/rsvtbHy0y5q0UHJY7CMEQ1dm+AxE?=
+ =?us-ascii?Q?ZmiQHAHR8NFViva7lSLvom/wJjKbV2ZX+N7KZ/r5IybEc86Ynohfxx+MOA4/?=
+ =?us-ascii?Q?N3Yu2OLQjfLkSBmWO19UYvL6r6t9GtU2LYPRHdlHACJ2f0y68zT0FjpIwMEN?=
+ =?us-ascii?Q?tcmcWYl2QbmE6wJKtJW0LruXZq/ElWTzsfdhvhhEoAWBpjPwB7tnXgOXwUI8?=
+ =?us-ascii?Q?X1CWPc0v2A0nL2kTcBRVZ2F5zFVoRYk3lH8pHzGhJzQI2DrVzFT1klF0RyQ4?=
+ =?us-ascii?Q?oo799FvzMPIm5Cfk/S/SurlrSoAGH8twsHTXQoWELYQJEzfo0gmsVR40BPeK?=
+ =?us-ascii?Q?1h+EzwOF9BbCvG5upyHaO8/9MLKIMl89KrCL9Hjzf0KPPQcarc5S1UhMqQMP?=
+ =?us-ascii?Q?yV2hncpSFXSNgmVHI3/+jVGOX35wwK0zHwVP8Ss8pbVxuiddYBcgIarIbL2T?=
+ =?us-ascii?Q?aw9K+fqkyPmw9M1NPhiEi1Sc1N9Gekjnl+9ojvB6t+LEvpfc9kPGn8j+1aK6?=
+ =?us-ascii?Q?mjXFnFiWM3Qu4dsobZD3nq2yWmRUIOuLiDFp3NPZgZacyeKoWSolWzyPdjR/?=
+ =?us-ascii?Q?veqIk0ty4AGupe5ZtnV2p00D/HZtPAj04MPHp+RZRnRT2jgN8ZfKVCDkJGDr?=
+ =?us-ascii?Q?yaxGfvpkVB5vpN6x5U6pq3Qratd6mBLPAkwH6LSmVHDf+sdNtTk6K/jRMbwM?=
+ =?us-ascii?Q?nKNQ83/MB9Yamzia+Gxk97D1JjQCxAQwxrZHSGkZeWvlPgK4qfU4scGyuvHH?=
+ =?us-ascii?Q?EKYRNVYyZpkzmYMQzyxNBGdEBwbeoN7SdJ0RhEFEy0smDyXd4VyfvIwqbAdk?=
+ =?us-ascii?Q?XiUXFmSeoumWXLmjyM7vsbKrRrr18s9X8FX/MuTDyw5qLO8hrRjzCSqkbqGi?=
+ =?us-ascii?Q?eR0l585ahL+9vb4cX1ED0W6oCt+zV5nw0uPnoNbdacAk1NK7Pg7okiFG3nWY?=
+ =?us-ascii?Q?+jffWe+7+mGLVo8PF1x68MLkdacsso3as7gKXffelKchZXf5Go/6BRq5Vcdn?=
+ =?us-ascii?Q?wMnX2S1lmPeR6Kk7JD7AIeM6fPdzT1H2E/ghkW76cW7rgQulY8Lh2abmM7tg?=
+ =?us-ascii?Q?QwWs3O/cQ16khHo80l6gmIFOw/YvFUhrv30qEH1SyipVl++TQ/Dq8BUpx/rA?=
+ =?us-ascii?Q?Tz6TtG8koNoTDG9WzpyjOKPneO1aiGV5oarkVUiGXAutqpf7PfKTb5tIuJVK?=
+ =?us-ascii?Q?tQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [RFC PATCH V3 03/16] x86/hyperv: Set Virtual Trust Level in vmbus
- init message
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "jiangshan.ljs@antgroup.com" <jiangshan.ljs@antgroup.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-        "srutherford@google.com" <srutherford@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "pawan.kumar.gupta@linux.intel.com" 
-        <pawan.kumar.gupta@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "sandipan.das@amd.com" <sandipan.das@amd.com>,
-        "ray.huang@amd.com" <ray.huang@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "michael.roth@amd.com" <michael.roth@amd.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "venu.busireddy@oracle.com" <venu.busireddy@oracle.com>,
-        "sterritt@google.com" <sterritt@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "samitolvanen@google.com" <samitolvanen@google.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-References: <20230122024607.788454-1-ltykernel@gmail.com>
- <20230122024607.788454-4-ltykernel@gmail.com>
- <BYAPR21MB16885D6652BEEA882D96C97CD7D09@BYAPR21MB1688.namprd21.prod.outlook.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <BYAPR21MB16885D6652BEEA882D96C97CD7D09@BYAPR21MB1688.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8ec8129-61f4-4a22-58f1-08db059a93a4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2023 03:56:06.2712
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7/XPT6ny4XGHxQ2CldQp1/4voSsfgIo8Ie1KncN+kd5iKzfZ76BO7J8hlY3FfuRElp9E1Fz+ttgpN/mr8FPYoaYXoCCRJNxwu4AexOGzqiI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR21MB1526
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2/1/2023 1:55 AM, Michael Kelley (LINUX) wrote:
->> index db2202d985bd..6dcbb21aac2b 100644
->> --- a/arch/x86/include/asm/hyperv-tlfs.h
->> +++ b/arch/x86/include/asm/hyperv-tlfs.h
->> @@ -36,6 +36,10 @@
->>   #define HYPERV_CPUID_MIN			0x40000005
->>   #define HYPERV_CPUID_MAX			0x4000ffff
->>
->> +/* Support for HVCALL_GET_VP_REGISTERS hvcall */
-> The above comment isn't really right, in that these definitions
-> aren't for the hypercall.  They are for the specific synthetic register.
-> 
->> +#define	HV_X64_REGISTER_VSM_VP_STATUS	0x000D0003
->> +#define HV_X64_VTL_MASK			GENMASK(3, 0)
-> Hyper-V synthetic registers have two different numbering schemes.
-> For registers that have synthetic MSR equivalents, there's a full list
-> starting with HV_X64_MSR_GUEST_OS_ID, which defines the MSR
-> address.  But these registers also have register numbers that are
-> not the same as the MSR address.  These register numbers
-> aren't defined anywhere in x86 Linux code because we don't access
-> them using the register number.   (The register numbers*are*
-> defined in ARM64 code since ARM64 doesn't have MSRs.)  But this
-> register is an exception on x86.  There's no MSR equivalent so we
-> must use a hypercall to fetch the value.
-> 
-> I'd suggest starting a separate list after the definition of
-> HV_X64_MSR_REFERENCE_TSC and make clear in a comment
-> about the list that this is a list of register numbers, not MSR addresses.
-> 
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org> Sent: Thursday, Febru=
+ary 2, 2023 6:09 AM
 
-Agree. Will update in the next version.
+>=20
+> When calling debugfs_lookup() the result must have dput() called on it,
+> otherwise the memory will leak over time.  To make things simpler, just
+> call debugfs_lookup_and_remove() instead which handles all of the logic
+> at once.
+>=20
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Dexuan Cui <decui@microsoft.com>
+> Cc: linux-hyperv@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Add a Fixes: tag?  This hv_balloon debugfs code was added in v6.0,
+And I see that debugfs_lookup_and_remove() was also added in v6.0.
+
+Fixes: d180e0a1be6c ("Drivers: hv: Create debugfs file with hyper-v balloon=
+ usage information")
+
+> ---
+>  drivers/hv/hv_balloon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index cbe43e2567a7..64ac5bdee3a6 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1963,7 +1963,7 @@ static void  hv_balloon_debugfs_init(struct hv_dynm=
+em_device *b)
+>=20
+>  static void  hv_balloon_debugfs_exit(struct hv_dynmem_device *b)
+>  {
+> -	debugfs_remove(debugfs_lookup("hv-balloon", NULL));
+> +	debugfs_lookup_and_remove("hv-balloon", NULL);
+>  }
+>=20
+>  #else
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
