@@ -2,107 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C508F6890DA
-	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Feb 2023 08:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 247E368A075
+	for <lists+linux-hyperv@lfdr.de>; Fri,  3 Feb 2023 18:37:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjBCH1Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 3 Feb 2023 02:27:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47794 "EHLO
+        id S232448AbjBCRhG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 3 Feb 2023 12:37:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbjBCH1Y (ORCPT
+        with ESMTP id S233362AbjBCRg6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 3 Feb 2023 02:27:24 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76428B7E8;
-        Thu,  2 Feb 2023 23:27:23 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id v23so4445188plo.1;
-        Thu, 02 Feb 2023 23:27:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=edbX+4MC5b+srO3yHczbdBgc/tPpYqJoWHt3T7lC7SQ=;
-        b=HODstuc15O4Z0/BygJiX8SkZj/gjCfhMLuhWURz3K3rxDS9NSpxIsbeMFDmDRlkO4M
-         hCA1vFikS/q/wG85vjfTDuu0ORRobX3/dUT9YNV3W6y1fLjq+AhjnSj98CFbh1ukLrO9
-         WmxO9SqjL60RJpawsuQ/S143ohX8EHmjtf8MyerGuf661DLLntV8/okXyYQGYATmbqek
-         lejYMupeIh03gTm+fAmVhTvrlIrJp+CUylRVbBqE2dnZXDpB38yOzlWIaRgQaXXNXxEB
-         7YanMNO0NHfMFNV6+KN+rsynWieyj//2RjeLFh9HQZxrqlWIZ6Hpr0cVBG3u8wsZEBkn
-         0Z/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=edbX+4MC5b+srO3yHczbdBgc/tPpYqJoWHt3T7lC7SQ=;
-        b=EZnE+PSEZLKTADq/bnPKxckyehjgUczt/zHIjKjoEy5EwfQXpPkR8zI4qhybor5p5b
-         0upMB8ksaPm41XW2ENuvGzVT1Ov9S5+jlNxg1xgRuWxcACCmj2WdH+FWGN9oC/htf8O/
-         F2j/Yb9VHcSRECg4XakBZf2XZgK/l9RMSJ2FjwxmQnLObG2/KuGVO4VUrlwDrOwQpkgS
-         Cn9V4EhiAxGV8AI+0jDj3uWKE5fSrwrdQN8Uu+wDrgvkwUCFs62E9QNOzAW+FUKw5256
-         Y3GUvYzfIFisAdEJh8h3o8M5lq/2r7SzqJQj+GRbgKw2alyMl2tloZpYrowJ3Lc1+4Gs
-         fHQQ==
-X-Gm-Message-State: AO0yUKVBPbtoqqyH1Nk4MSkK953AUhDyKxJxmVXBXpV53JLmqRy2XPet
-        G1xcVPr/KzacshB/ZnbNRek=
-X-Google-Smtp-Source: AK7set+JpyrjPDWAG8FnISsyg+KVKKeXx4q66CNamTLJ/nmBURaNsWGgQaBsYZmyUs6gfsmYobxPjw==
-X-Received: by 2002:a17:902:d0d3:b0:194:a1f6:65ae with SMTP id n19-20020a170902d0d300b00194a1f665aemr7156793pln.12.1675409243410;
-        Thu, 02 Feb 2023 23:27:23 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
-        by smtp.gmail.com with ESMTPSA id v24-20020a17090331d800b00198e40d95d1sm360350ple.47.2023.02.02.23.27.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Feb 2023 23:27:22 -0800 (PST)
-Message-ID: <7dbc845a-0ada-f97a-ba50-a6b2c31ee9c0@gmail.com>
-Date:   Fri, 3 Feb 2023 15:27:11 +0800
+        Fri, 3 Feb 2023 12:36:58 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED276A7791;
+        Fri,  3 Feb 2023 09:36:37 -0800 (PST)
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+        id D159620B9D4D; Fri,  3 Feb 2023 09:36:16 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D159620B9D4D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1675445776;
+        bh=I186YXZBNTwbb+x2CGlrvHeiFrnugfFalBVK34vPTtY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l46ORs0hXJZU0c9gbLIiFwdzFA4vrKUzsSETy135ijchV7lAtH/ahcokRR7l7FzYb
+         GV4eZLt8uT33rPwJWA5qIJAvfhKQAyCvoPONYr1gnO/8dXIp5bhXUccgpgm2KWf97v
+         uP2mohocfcDTg5Voy6vhxVRmaDqn92gAI8QYWN64=
+Date:   Fri, 3 Feb 2023 09:36:16 -0800
+From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     krzysztof.kozlowski+dt@linaro.org, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        virtualization@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        ssengar@microsoft.com
+Subject: Re: [PATCH v2 6/6] Driver: VMBus: Add device tree support
+Message-ID: <20230203173616.GA8582@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
+ <1675188609-20913-7-git-send-email-ssengar@linux.microsoft.com>
+ <CAL_JsqK_7eTTrSd6EKDGy9A8kC5w6cjVEtSi3CB1M7Awj+zg6g@mail.gmail.com>
+ <20230201165133.GA24116@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20230201174638.GA3872117-robh@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [RFC PATCH V3 12/16] x86/sev: Add a #HV exception handler
-To:     "Gupta, Pankaj" <pankaj.gupta@amd.com>, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        ashish.kalra@amd.com, srutherford@google.com,
-        akpm@linux-foundation.org, anshuman.khandual@arm.com,
-        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
-        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
-        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20230122024607.788454-1-ltykernel@gmail.com>
- <20230122024607.788454-13-ltykernel@gmail.com>
- <0098b974-7ceb-664a-aa53-afac8cc26d47@amd.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <0098b974-7ceb-664a-aa53-afac8cc26d47@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230201174638.GA3872117-robh@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 1/23/2023 3:33 PM, Gupta, Pankaj wrote:
+On Wed, Feb 01, 2023 at 11:46:38AM -0600, Rob Herring wrote:
+> On Wed, Feb 01, 2023 at 08:51:33AM -0800, Saurabh Singh Sengar wrote:
+> > On Tue, Jan 31, 2023 at 02:12:53PM -0600, Rob Herring wrote:
+> > > On Tue, Jan 31, 2023 at 12:10 PM Saurabh Sengar
+> > > <ssengar@linux.microsoft.com> wrote:
+> > > >
+> > > > Update the driver to support device tree boot as well along with ACPI.
+> > > > At present the device tree parsing only provides the mmio region info
+> > > > and is not the exact copy of ACPI parsing. This is sufficient to cater
+> > > > all the current device tree usecases for VMBus.
+> > > >
+> > > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > > > ---
+> > > >  drivers/hv/vmbus_drv.c | 75 ++++++++++++++++++++++++++++++++++++++++--
+> > > >  1 file changed, 73 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > > > index 49030e756b9f..1741f1348f9f 100644
+> > > > --- a/drivers/hv/vmbus_drv.c
+> > > > +++ b/drivers/hv/vmbus_drv.c
+> > > > @@ -2152,7 +2152,7 @@ void vmbus_device_unregister(struct hv_device *device_obj)
+> > > >         device_unregister(&device_obj->device);
+> > > >  }
+(...)
+> > > >         struct pci_dev *pdev;
+> > > > @@ -2442,6 +2443,7 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(vmbus_free_mmio);
+> > > >
+> > > > +#ifdef CONFIG_ACPI
+> > > 
+> > > It's better to put C 'if (!IS_ENABLED(CONFIG_ACPI)' code in the
+> > 
+> > I wanted to have separate function for ACPI and device tree flow, which
+> > can be easily maintained with #ifdef. Please let me know if its fine.
 > 
->> + */
->> +.macro idtentry_hv vector asmsym cfunc
->> +SYM_CODE_START(\asmsym)
->> +    UNWIND_HINT_IRET_REGS
->> +    ASM_CLAC
+> Yes, you can have separate functions:
 > 
-> Did you get a chance to review the new instructions
-> added at the start similar to idtentry_vc and comments
-> added assuggested here?
+> static int vmbus_acpi_add(struct platform_device *pdev)
+> {
+> 	if (!IS_ENABLED(CONFIG_ACPI))
+> 		return -ENODEV;
 > 
-> https://lore.kernel.org/lkml/16e50239-39b2-4fb4-5110-18f13ba197fe@amd.com/
+> 	...
+> }
+> 
+> The compiler will throw away the function in the end if CONFIG_ACPI is 
+> not enabled.
+> 
+> That is easier for us to maintain because it reduces the combinations to 
+> build.
+>
 
-Hi Pankaj:
-	Thanks for your reminder. Yes, CLD should be add after ASM_CLAC. Will 
-fix it.
+I tried removing #ifdef CONFIG_ACPI and use C's if(!IS_ENABLED(CONFIG_ACPI)) but looks
+compiler is not optimizing out the rest of function, it still throwing errors
+for acpi functions. This doesn't look 1:1 replacement to me.
+Please let me know if I have missunderstood any of your suggestion.
+
+drivers/hv/vmbus_drv.c:2175:8: error: implicit declaration of function ‘acpi_dev_resource_interrupt’ [-Werror=implicit-function-
+> > 
+> > > 
+> > > >  static int vmbus_acpi_add(struct platform_device *pdev)
+> > > >  {
+> > > >         acpi_status result;
+> > > > @@ -2496,10 +2498,68 @@ static int vmbus_acpi_add(struct platform_device *pdev)
+> 
+> [1] https://lwn.net/Articles/443531/
