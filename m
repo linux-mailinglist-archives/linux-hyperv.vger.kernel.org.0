@@ -2,52 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CD4C68C4FF
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Feb 2023 18:40:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73F2268C532
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Feb 2023 18:54:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjBFRkZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Feb 2023 12:40:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
+        id S230177AbjBFRya (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 Feb 2023 12:54:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjBFRkY (ORCPT
+        with ESMTP id S229744AbjBFRy3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Feb 2023 12:40:24 -0500
+        Mon, 6 Feb 2023 12:54:29 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 60476274AE;
-        Mon,  6 Feb 2023 09:40:23 -0800 (PST)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id E003620C7E02; Mon,  6 Feb 2023 09:40:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E003620C7E02
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C19C91F5C8;
+        Mon,  6 Feb 2023 09:54:28 -0800 (PST)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 409E220C7E04;
+        Mon,  6 Feb 2023 09:54:28 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 409E220C7E04
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1675705222;
-        bh=BoelZ+0FjsOArgfePZ5sk4mt/DxwxPaj/WH7ulec040=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ndq0JhU2Xpso8cn8II69fFhcl+OJnV5wb17bxvNGEK9qdJnfGbhrz3Wz3UOICN5D4
-         ihphZ1l8xXJBz5X1OHos0HB/Vsh7u6aw/4G/CJyEUjCMYA8uYzQ7+o37yLWIJIjwHY
-         qaozQpDjEvCtU8PAIt6szMhVcTmPaoLnQugh1P4M=
-Date:   Mon, 6 Feb 2023 09:40:22 -0800
-From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, krzysztof.kozlowski+dt@linaro.org,
+        s=default; t=1675706068;
+        bh=tuiBN5piFLqNuXyA6aMmxCe72G+tP7oxbCem204BxU4=;
+        h=From:To:Subject:Date:From;
+        b=nxL9N3y0kuvaEKHLAvJtET7+r9F5q7P62gnkjiP04uUrOjGICyl4/+VaytUXsc/M9
+         Ho0/wpKLl40lpKuuf4YM83+az64tuELSuQDgQ3Kh/jn4gOQGnVDIGzYR20Daw0u1wG
+         AS4X+mKhhItjsa/m7T4xryIdtsQDKusrK9zM1RV0=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
         decui@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
         virtualization@lists.linux-foundation.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        ssengar@microsoft.com
-Subject: Re: [PATCH v2 0/6] Device tree support for Hyper-V VMBus driver
-Message-ID: <20230206174022.GA18911@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1675188609-20913-1-git-send-email-ssengar@linux.microsoft.com>
- <CAL_JsqKL3JA6nAkEHuuyxbs8-Mm=Q-nNkCmpnDApNUDVbLsvKw@mail.gmail.com>
- <20230201020449.GC20379@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20230201145146.GA3352796-robh@kernel.org>
- <20230201163455.GA21409@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <d60e9b7c-fdd5-2b5e-a449-d796718fb95f@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d60e9b7c-fdd5-2b5e-a449-d796718fb95f@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        ssengar@microsoft.com, dphadke@linux.microsoft.com
+Subject: [PATCH v3 0/6] Device tree support for Hyper-V VMBus driver
+Date:   Mon,  6 Feb 2023 09:54:14 -0800
+Message-Id: <1675706060-22361-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
         SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
@@ -58,74 +48,79 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Feb 01, 2023 at 06:15:23PM +0100, Krzysztof Kozlowski wrote:
-> On 01/02/2023 17:34, Saurabh Singh Sengar wrote:
-> >> Also see my comment on v1 about running DT validation on your dtb. I'm 
-> >> sure running it would point out other issues. Such as the root level 
-> >> comaptible string(s) need to be documented. You need cpu nodes, 
-> >> interrupt controller, timers, etc. Those all have to be documented.
-> > 
-> > I will be changing the parent node to soc node as suggested by Krzysztof
-> > in other thread.
-> > 
-> > soc {
-> >         #address-cells = <2>;
-> >         #size-cells = <2>;
-> > 
-> > 	vmbus@ff0000000 {
-> >             #address-cells = <2>;
-> >             #size-cells = <1>;
-> >             compatible = "Microsoft,vmbus";
-> >             ranges = <0x00 0x00 0x0f 0xf0000000 0x10000000>;
-> >         };
-> > };
-> > 
-> > This will be sufficient.
-> 
-> It will be ok for the example, but will not be ok for supporting your
-> use case. Please solve all the points from Rob's comment above. Where is
-> their documentation?
-> 
-> Best regards,
-> Krzysztof
+This set of patches expands the VMBus driver to include device tree
+support. This feature allows for a kernel boot without the use of ACPI
+tables, resulting in a smaller memory footprint and potentially faster
+boot times. This is tested by enabling CONFIG_FLAT and OF_EARLY_FLATTREE
+for x86.
 
-Hi Rob/ Krzysztof,
+The first two patches enable compilation of Hyper-V APIs in a non-ACPI
+build.
 
-I am happy to update the documentation as requested. Please note
-that, apart from CPUs, there is no other device node in the tree.
+The third patch converts the VMBus driver from acpi to more generic
+platform driver.
 
-Here are some of the info related to our system:
+Further to add device tree documentation for VMBus, it needs to club with
+other virtualization driver's documentation. For this rename the virtio
+folder to more generic hypervisor, so that all the hypervisor based
+devices can co-exist in a single place in device tree documentation. The
+fourth patch does this renaming.
 
-Timers:
-VMBus code uses a Hyper-V Synthetic timer and there is no device tree
-node or ACPI method required for this. This is implemented as
-drivers/clocksource/hyperv_timer.c
+The fifth patch introduces the device tree documentation for VMBus.
 
-Interrupt controller:
-The hypervisor virtualizes interrupt delivery to virtual processors.
-This is done through the use of a synthetic interrupt controller
-(SynIC) which is an extension of a virtualized local APIC. In the cpu
-DT nodes we have APIC ids.
+The sixth patch adds device tree support to the VMBus driver. Currently
+this is tested only for x86 and it may not work for other archs.
 
-Below are the cpu nodes we use, please suggest if I need to update any
-document for it.
-	cpus {
-		#address-cells = <1>;
-		#size-cells = <0>;
+[V3]
+- Changed the logic to use generic api (for_each_of_range) for parsing "ranges".
+- Remove dependency of ACPI for HYPERV in case of x86.
+- Removed "device tree bindings" from title and patch subject.
+- Removed duplicate vendor prefix, used microsoft instead of msft.
+- Use 'soc' in example of device tree documantation for parent node.
+- Fixed compatible schemas error generated in other modules referring to
+  virtio.
+- Drop hex notation and leading zeros from device tree cell properties.
+- Added missing full stop at the end of commit message.
+- Typos fix: s/Initaly/Initially/ and s/hibernate/hibernation/.
+- Replace to_acpi_device with ACPI_COMPANION which simplify the logic.
+- Added more info in cover letter aboutsystem under test.
 
-		cpu@0 {
-			device_type = "cpu";
-			reg = <0>;
-			status = "okay";
-		};
+[v2]
+- Convert VMBus acpi device to platform device, and added device tree support
+  in separate patch. This enables using same driver structure for both the flows.
+- In Device tree documentation, changed virtio folder to hypervisor and moved
+  VMBus documentation there.
+- Moved bindings before Device tree patch.
+- Removed stale ".data" and ".name" field from of_device match table.
+- Removed debug print.
 
-		cpu@1 {
-			device_type = "cpu";
-			reg = <1>;
-			status = "okay";
-		};
-	};
+Saurabh Sengar (6):
+  drivers/clocksource/hyper-v: non ACPI support in hyperv clock
+  Drivers: hv: allow non ACPI compilation for
+    hv_is_hibernation_supported
+  Drivers: hv: vmbus: Convert acpi_device to more generic
+    platform_device
+  dt-bindings: hypervisor: Rename virtio to hypervisor
+  dt-bindings: hypervisor: VMBus
+  Driver: VMBus: Add device tree support
 
-Regards,
-Saurabh
+ .../devicetree/bindings/gpio/gpio-virtio.yaml |   4 +-
+ .../bindings/hypervisor/microsoft,vmbus.yaml  |  48 +++++++
+ .../bindings/{virtio => hypervisor}/mmio.yaml |   2 +-
+ .../{virtio => hypervisor}/pci-iommu.yaml     |   2 +-
+ .../{virtio => hypervisor}/virtio-device.yaml |   2 +-
+ .../devicetree/bindings/i2c/i2c-virtio.yaml   |   4 +-
+ MAINTAINERS                                   |   3 +-
+ drivers/clocksource/hyperv_timer.c            |  15 ++-
+ drivers/hv/Kconfig                            |   4 +-
+ drivers/hv/hv_common.c                        |   4 +
+ drivers/hv/vmbus_drv.c                        | 118 ++++++++++++++----
+ 11 files changed, 169 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hypervisor/microsoft,vmbus.yaml
+ rename Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml (95%)
+ rename Documentation/devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml (98%)
+ rename Documentation/devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml (93%)
+
+-- 
+2.25.1
 
