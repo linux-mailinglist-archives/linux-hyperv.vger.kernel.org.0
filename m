@@ -2,47 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E13768D0E0
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Feb 2023 08:50:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B3968D6FC
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Feb 2023 13:41:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230482AbjBGHuI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Feb 2023 02:50:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34216 "EHLO
+        id S231157AbjBGMlf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Feb 2023 07:41:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230447AbjBGHuF (ORCPT
+        with ESMTP id S229447AbjBGMle (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Feb 2023 02:50:05 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 783D020D34;
-        Mon,  6 Feb 2023 23:50:04 -0800 (PST)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5864E20C7E31;
-        Mon,  6 Feb 2023 23:50:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5864E20C7E31
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1675756203;
-        bh=qvXsJpgHQiFB3Phr4UYarQ/CGWW+zSQX/ORJm9VS1wA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=P7Xjp7FG3ZLu+Mh05imc4yqgtipn8j70PU99vGNOPPPWX2dkplJ2cvXNHG3vYeFJh
-         VBUpwiSfz+pyyg8M8pJJy6aApkOh5wjtABUCcNhqxUiQQP/hZTubKAolJoscXsa2VN
-         5bwAatCBGTyu9ECfunxtwY1wDDBrTkyWxqCg56i8=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        virtualization@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        ssengar@microsoft.com, dphadke@linux.microsoft.com
-Subject: [PATCH v4 6/6] Driver: VMBus: Add device tree support
-Date:   Mon,  6 Feb 2023 23:49:59 -0800
-Message-Id: <1675756199-5917-7-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
-References: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        Tue, 7 Feb 2023 07:41:34 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C85EFB2;
+        Tue,  7 Feb 2023 04:41:33 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 014511EC0589;
+        Tue,  7 Feb 2023 13:41:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1675773692;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=+krXHkOwaQ2CA6MBr//FoiRxxZ4nkc4bLu0Pn6fd5JQ=;
+        b=VzbT+beWx6gdcXo8RwgQy7OJCkExOCPf3pCJZ44jIA0nMadh93X6k2+oKL32X6ZrtoBNsJ
+        QwT3xSdG6H4wfEqL4g6Ft6qDG5GfZst4KuuFau2C8/I5O4xGjnpj5xFGzGevrr0Rt8PlPH
+        wRbcGTMmXZuj/u24y0qZCB/3MkezfZk=
+Date:   Tue, 7 Feb 2023 13:41:27 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <Y+JG9+zdSwZlz6FU@zn.tnic>
+References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
+ <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
+ <Y8r2TjW/R3jymmqT@zn.tnic>
+ <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y9FC7Dpzr5Uge/Mi@zn.tnic>
+ <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,170 +92,41 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Update the driver to support device tree boot as well along with ACPI.
-At present the device tree parsing only provides the mmio region info
-and is not the exact copy of ACPI parsing. This is sufficient to cater
-all the current device tree usecases for VMBus.
+On Thu, Feb 02, 2023 at 05:49:44AM +0000, Michael Kelley (LINUX) wrote:
+> I could do:
+> 1.  CC_ATTR_PARAVISOR_SPLIT_ADDRESS_SPACE, which is similar to
+>     what I had for v1 & v2.   At the time, somebody commented that
+>     this might be a bit too general.
+> 2.  Keep CC_ATTR_ACCESS_IOAPIC_ENCRYPTED and add
+>     CC_ATTR_ACCESS_TPM_ENCRYPTED, which would decouple them
+> 3.  CC_ATTR_ACCESS_IOAPIC_AND_TPM_ENCRYPTED, which is very
+>     narrow and specific.
+> 
+> I have weak preference for #1 above, but I could go with any of them.
+> What's your preference?
 
-Currently device tree is supported only for x86 systems.
+Either 1. but a shorter name or something which works with the TDX side
+too.
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
-[V4]
-- used __maybe_unused for 'vmbus_of_match' and safeguard vmbus_acpi_device_ids
-  under #ifdef
+Or are there no similar TDX solutions planned where the guest runs
+unmodified and under a paravisor?
 
- drivers/hv/Kconfig     |  4 ++--
- drivers/hv/vmbus_drv.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 62 insertions(+), 4 deletions(-)
+> For v6 of the patch series, I've coded devm_ioremap_resource_enc() to call
+> __devm_ioremap(), which then calls ioremap_encrypted().  I've updated the
+> TPM driver to use cc_platform_has() with whatever attribute name we agree
+> on to decide between devm_ioremap_resource_enc() and
+> devm_ioremap_resource().
+> 
+> If this approach is OK with the TPM driver maintainers, I'm good with it.
+> More robust handling of a mix of encrypted and decrypted devices can get
+> sorted out later.
 
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 0747a8f..7e44d42 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -4,8 +4,8 @@ menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
- 	tristate "Microsoft Hyper-V client drivers"
--	depends on ACPI && ((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
--		|| (ARM64 && !CPU_BIG_ENDIAN))
-+	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
-+		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR if X86
- 	select VMAP_PFN
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 7349715..1774cae 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -20,6 +20,7 @@
- #include <linux/completion.h>
- #include <linux/hyperv.h>
- #include <linux/kernel_stat.h>
-+#include <linux/of_address.h>
- #include <linux/clockchips.h>
- #include <linux/cpu.h>
- #include <linux/sched/isolation.h>
-@@ -2152,7 +2153,7 @@ void vmbus_device_unregister(struct hv_device *device_obj)
- 	device_unregister(&device_obj->device);
- }
- 
--
-+#ifdef CONFIG_ACPI
- /*
-  * VMBUS is an acpi enumerated device. Get the information we
-  * need from DSDT.
-@@ -2262,6 +2263,7 @@ static acpi_status vmbus_walk_resources(struct acpi_resource *res, void *ctx)
- 
- 	return AE_OK;
- }
-+#endif
- 
- static void vmbus_mmio_remove(void)
- {
-@@ -2282,7 +2284,7 @@ static void vmbus_mmio_remove(void)
- 	}
- }
- 
--static void vmbus_reserve_fb(void)
-+static void __maybe_unused vmbus_reserve_fb(void)
- {
- 	resource_size_t start = 0, size;
- 	struct pci_dev *pdev;
-@@ -2442,6 +2444,7 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size)
- }
- EXPORT_SYMBOL_GPL(vmbus_free_mmio);
- 
-+#ifdef CONFIG_ACPI
- static int vmbus_acpi_add(struct platform_device *pdev)
- {
- 	acpi_status result;
-@@ -2494,10 +2497,52 @@ static int vmbus_acpi_add(struct platform_device *pdev)
- 		vmbus_mmio_remove();
- 	return ret_val;
- }
-+#else
-+
-+static int vmbus_device_add(struct platform_device *pdev)
-+{
-+	struct resource **cur_res = &hyperv_mmio;
-+	struct of_range range;
-+	struct of_range_parser parser;
-+	struct device_node *np;
-+	int ret = 0;
-+
-+	hv_dev = &pdev->dev;
-+	np = pdev->dev.of_node;
-+
-+	ret = of_range_parser_init(&parser, np);
-+	if (ret) {
-+		dev_err(hv_dev, "Failed to parse resources.\n");
-+		return ret;
-+	}
-+
-+	for_each_of_range(&parser, &range) {
-+		struct resource *res;
-+
-+		res = kzalloc(sizeof(*res), GFP_ATOMIC);
-+		if (!res)
-+			return -ENOMEM;
-+
-+		res->name = "hyperv mmio";
-+		res->flags = IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		res->start = range.pci_addr;
-+		res->end = range.pci_addr + range.size;
-+
-+		*cur_res = res;
-+		cur_res = &res->sibling;
-+	}
-+
-+	return ret;
-+}
-+#endif
- 
- static int vmbus_platform_driver_probe(struct platform_device *pdev)
- {
-+#ifdef CONFIG_ACPI
- 	return vmbus_acpi_add(pdev);
-+#else
-+	return vmbus_device_add(pdev);
-+#endif
- }
- 
- static int vmbus_platform_driver_remove(struct platform_device *pdev)
-@@ -2643,12 +2688,24 @@ static int vmbus_bus_resume(struct device *dev)
- #define vmbus_bus_resume NULL
- #endif /* CONFIG_PM_SLEEP */
- 
-+static const struct __maybe_unused of_device_id vmbus_of_match[] = {
-+	{
-+		.compatible = "microsoft,vmbus",
-+	},
-+	{
-+		/* sentinel */
-+	},
-+};
-+MODULE_DEVICE_TABLE(of, vmbus_of_match);
-+
-+#ifdef CONFIG_ACPI
- static const struct acpi_device_id vmbus_acpi_device_ids[] = {
- 	{"VMBUS", 0},
- 	{"VMBus", 0},
- 	{"", 0},
- };
- MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
-+#endif
- 
- /*
-  * Note: we must use the "no_irq" ops, otherwise hibernation can not work with
-@@ -2677,6 +2734,7 @@ static int vmbus_bus_resume(struct device *dev)
- 	.driver = {
- 		.name = "vmbus",
- 		.acpi_match_table = ACPI_PTR(vmbus_acpi_device_ids),
-+		.of_match_table = of_match_ptr(vmbus_of_match),
- 		.pm = &vmbus_bus_pm,
- 		.probe_type = PROBE_FORCE_SYNCHRONOUS,
- 	}
+Makes sense to me...
+
+Thx.
+
 -- 
-1.8.3.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
