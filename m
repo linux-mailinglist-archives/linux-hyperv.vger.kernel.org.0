@@ -2,30 +2,30 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8A1B68D0D3
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Feb 2023 08:50:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0267F68D0D6
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Feb 2023 08:50:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230422AbjBGHuF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        id S230437AbjBGHuF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
         Tue, 7 Feb 2023 02:50:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbjBGHuE (ORCPT
+        with ESMTP id S229585AbjBGHuE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Tue, 7 Feb 2023 02:50:04 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 54E3B12847;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 565F61816A;
         Mon,  6 Feb 2023 23:50:03 -0800 (PST)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id B822420C7E28;
+        by linux.microsoft.com (Postfix) with ESMTPSA id D250820C7E2C;
         Mon,  6 Feb 2023 23:50:02 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B822420C7E28
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D250820C7E2C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1675756202;
-        bh=mf6bBpSzSp5FvIZlbgZNiPFVdnfQ6pILfRC3PQopagc=;
-        h=From:To:Subject:Date:From;
-        b=MQWnrOafvpvN/YE8jA0A4/NMv0Ma8eqAj/Gv6A5D4Il2aBi9HAX2/wtRVlJ3inGes
-         QWwt2icKXn8zhkmdfZjs+dSTr/zL+K8QTeWyXImorKt3jnqt0nRbw+Bf4VCd5dqTzk
-         K8cCKOpP+k9kFX0fSKEgxICK1CNHuWJFiAXZsbfs=
+        bh=Z3Fz4ic+ruuxQNGx6fEsHOlcMxP7j3bu18u8mylit5o=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=ni4Q0W2iTPiF3wS11jRxJyBitdCXRHvZCWHncfNA85jR20rMtGmgzINMywR3hD7LA
+         3sEfXrrS3qFMPUjYFXmyATl0VJy/Ssv7eEJgoDb5y/ju4FZY2VHzHDZu9KzcCXuKX4
+         UC7QiJnWd2CauD+3rGBy8pzK+UikkjAdtWn+2cgM=
 From:   Saurabh Sengar <ssengar@linux.microsoft.com>
 To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -34,10 +34,12 @@ To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
         ssengar@microsoft.com, dphadke@linux.microsoft.com
-Subject: [PATCH v4 0/6] Device tree support for Hyper-V VMBus driver
-Date:   Mon,  6 Feb 2023 23:49:53 -0800
-Message-Id: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
+Subject: [PATCH v4 1/6] drivers/clocksource/hyper-v: non ACPI support in hyperv clock
+Date:   Mon,  6 Feb 2023 23:49:54 -0800
+Message-Id: <1675756199-5917-2-git-send-email-ssengar@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
+References: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
         SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
@@ -48,84 +50,67 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This set of patches expands the VMBus driver to include device tree
-support. This feature allows for a kernel boot without the use of ACPI
-tables, resulting in a smaller memory footprint and potentially faster
-boot times. This is tested by enabling CONFIG_FLAT and OF_EARLY_FLATTREE
-for x86.
+Add a placeholder function for the hv_setup_stimer0_irq API to accommodate
+systems without ACPI support. Since this function is not utilized on
+x86/x64 systems and non-ACPI support is only intended for x86/x64 systems,
+a placeholder function is sufficient for now and can be improved upon if
+necessary in the future.
 
-The first two patches enable compilation of Hyper-V APIs in a non-ACPI
-build.
+This change will make it easier to add device tree support for VMBus in
+subsequent commits.
 
-The third patch converts the VMBus driver from acpi to more generic
-platform driver.
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+ drivers/clocksource/hyperv_timer.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Further to add device tree documentation for VMBus, it needs to club with
-other virtualization driver's documentation. For this rename the virtio
-folder to more generic hypervisor, so that all the hypervisor based
-devices can co-exist in a single place in device tree documentation. The
-fourth patch does this renaming.
-
-The fifth patch introduces the device tree documentation for VMBus.
-
-The sixth patch adds device tree support to the VMBus driver. Currently
-this is tested only for x86 and it may not work for other archs.
-
-[V4]
-- rebased which fixed return type of 'vmbus_mmio_remove' from int to void
-- used __maybe_unused for 'vmbus_of_match' and safeguard vmbus_acpi_device_ids
-  under #ifdef
-
-[V3]
-- Changed the logic to use generic api (for_each_of_range) for parsing "ranges".
-- Remove dependency of ACPI for HYPERV in case of x86.
-- Removed "device tree bindings" from title and patch subject.
-- Removed duplicate vendor prefix, used microsoft instead of msft.
-- Use 'soc' in example of device tree documantation for parent node.
-- Fixed compatible schemas error generated in other modules referring to
-  virtio.
-- Drop hex notation and leading zeros from device tree cell properties.
-- Added missing full stop at the end of commit message.
-- Typos fix: s/Initaly/Initially/ and s/hibernate/hibernation/.
-- Replace to_acpi_device with ACPI_COMPANION which simplify the logic.
-- Added more info in cover letter aboutsystem under test.
-
-[v2]
-- Convert VMBus acpi device to platform device, and added device tree support
-  in separate patch. This enables using same driver structure for both the flows.
-- In Device tree documentation, changed virtio folder to hypervisor and moved
-  VMBus documentation there.
-- Moved bindings before Device tree patch.
-- Removed stale ".data" and ".name" field from of_device match table.
-- Removed debug print.
-
-Saurabh Sengar (6):
-  drivers/clocksource/hyper-v: non ACPI support in hyperv clock
-  Drivers: hv: allow non ACPI compilation for
-    hv_is_hibernation_supported
-  Drivers: hv: vmbus: Convert acpi_device to more generic
-    platform_device
-  dt-bindings: hypervisor: Rename virtio to hypervisor
-  dt-bindings: hypervisor: VMBus
-  Driver: VMBus: Add device tree support
-
- .../devicetree/bindings/gpio/gpio-virtio.yaml      |   4 +-
- .../bindings/hypervisor/microsoft,vmbus.yaml       |  48 +++++++++
- .../bindings/{virtio => hypervisor}/mmio.yaml      |   2 +-
- .../bindings/{virtio => hypervisor}/pci-iommu.yaml |   2 +-
- .../{virtio => hypervisor}/virtio-device.yaml      |   2 +-
- .../devicetree/bindings/i2c/i2c-virtio.yaml        |   4 +-
- MAINTAINERS                                        |   3 +-
- drivers/clocksource/hyperv_timer.c                 |  15 ++-
- drivers/hv/Kconfig                                 |   4 +-
- drivers/hv/hv_common.c                             |   4 +
- drivers/hv/vmbus_drv.c                             | 120 ++++++++++++++++-----
- 11 files changed, 171 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hypervisor/microsoft,vmbus.yaml
- rename Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml (95%)
- rename Documentation/devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml (98%)
- rename Documentation/devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml (93%)
-
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index c0cef92..f32948c 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -49,7 +49,7 @@
+ 
+ static int stimer0_irq = -1;
+ static int stimer0_message_sint;
+-static DEFINE_PER_CPU(long, stimer0_evt);
++static __maybe_unused DEFINE_PER_CPU(long, stimer0_evt);
+ 
+ /*
+  * Common code for stimer0 interrupts coming via Direct Mode or
+@@ -68,7 +68,7 @@ void hv_stimer0_isr(void)
+  * stimer0 interrupt handler for architectures that support
+  * per-cpu interrupts, which also implies Direct Mode.
+  */
+-static irqreturn_t hv_stimer0_percpu_isr(int irq, void *dev_id)
++static irqreturn_t __maybe_unused hv_stimer0_percpu_isr(int irq, void *dev_id)
+ {
+ 	hv_stimer0_isr();
+ 	return IRQ_HANDLED;
+@@ -196,6 +196,7 @@ void __weak hv_remove_stimer0_handler(void)
+ {
+ };
+ 
++#ifdef CONFIG_ACPI
+ /* Called only on architectures with per-cpu IRQs (i.e., not x86/x64) */
+ static int hv_setup_stimer0_irq(void)
+ {
+@@ -230,6 +231,16 @@ static void hv_remove_stimer0_irq(void)
+ 		stimer0_irq = -1;
+ 	}
+ }
++#else
++static int hv_setup_stimer0_irq(void)
++{
++	return 0;
++}
++
++static void hv_remove_stimer0_irq(void)
++{
++}
++#endif
+ 
+ /* hv_stimer_alloc - Global initialization of the clockevent and stimer0 */
+ int hv_stimer_alloc(bool have_percpu_irqs)
 -- 
 1.8.3.1
 
