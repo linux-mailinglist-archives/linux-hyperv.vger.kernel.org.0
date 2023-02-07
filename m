@@ -2,131 +2,112 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B3968D6FC
-	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Feb 2023 13:41:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB46C68D788
+	for <lists+linux-hyperv@lfdr.de>; Tue,  7 Feb 2023 14:01:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231157AbjBGMlf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Feb 2023 07:41:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33978 "EHLO
+        id S231828AbjBGNBF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Feb 2023 08:01:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjBGMle (ORCPT
+        with ESMTP id S231804AbjBGNBE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Feb 2023 07:41:34 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C85EFB2;
-        Tue,  7 Feb 2023 04:41:33 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 014511EC0589;
-        Tue,  7 Feb 2023 13:41:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1675773692;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+krXHkOwaQ2CA6MBr//FoiRxxZ4nkc4bLu0Pn6fd5JQ=;
-        b=VzbT+beWx6gdcXo8RwgQy7OJCkExOCPf3pCJZ44jIA0nMadh93X6k2+oKL32X6ZrtoBNsJ
-        QwT3xSdG6H4wfEqL4g6Ft6qDG5GfZst4KuuFau2C8/I5O4xGjnpj5xFGzGevrr0Rt8PlPH
-        wRbcGTMmXZuj/u24y0qZCB/3MkezfZk=
-Date:   Tue, 7 Feb 2023 13:41:27 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Message-ID: <Y+JG9+zdSwZlz6FU@zn.tnic>
-References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
- <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
- <Y8r2TjW/R3jymmqT@zn.tnic>
- <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y9FC7Dpzr5Uge/Mi@zn.tnic>
- <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Tue, 7 Feb 2023 08:01:04 -0500
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AFE139B9F;
+        Tue,  7 Feb 2023 05:00:27 -0800 (PST)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-15f97c478a8so18824891fac.13;
+        Tue, 07 Feb 2023 05:00:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kWODlwdvZsu0oLYsDwnCYHspujHUtXG5z9FcEcxyHyQ=;
+        b=60nbZ18E8F1ewwmcvvYRiOvPupBogXMu/SJZsBTzoIvyFN9zmbWomn9vba6jTGh9ho
+         ToHJuI3pumGXayqmOk7rHlbxpVyrPnq0FisMTs9gqEjMQ8g79++sDrgfRBJxdUQHUMrD
+         MdJYCWUd+0RzN680kxdUBr6YmWH+lcVYkopHmO2oZvO30QkJxH3ZRpaHT42yvN0Bp66S
+         SjICZDurvNtbT+ELiymD0sK++aL79g+ZetdH8/oXuYXt1nyExlY8FofRAbVW/DUF5ipk
+         uYrpmswcrCL7KO07LkhmETnJXzhXYQzEphCoxEE+F6APX8qN2+GhdBinXt+ozdazhVlq
+         u0Kg==
+X-Gm-Message-State: AO0yUKWfSCEcJA8CvBEDc5wG0OEmlGLPAVnP3TuNi03tLzbhB76ShfVg
+        bNC1HkwNFFVTJd6uFK+PPQ==
+X-Google-Smtp-Source: AK7set/AuiNu1wfO7TO0Yq1H8Nc2wRr3B6t1v/K4dh5V8fdcoownRf93LSBXHcp95e0D4fG4jyF4QQ==
+X-Received: by 2002:a05:6870:c093:b0:163:b347:22fc with SMTP id c19-20020a056870c09300b00163b34722fcmr1511834oad.12.1675774826402;
+        Tue, 07 Feb 2023 05:00:26 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i4-20020a056870044400b0016a694e7e2dsm1401439oak.39.2023.02.07.05.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Feb 2023 05:00:25 -0800 (PST)
+Received: (nullmailer pid 3216438 invoked by uid 1000);
+        Tue, 07 Feb 2023 13:00:23 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     mikelley@microsoft.com, wei.liu@kernel.org,
+        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
+        ssengar@microsoft.com, virtualization@lists.linux-foundation.org,
+        decui@microsoft.com, haiyangz@microsoft.com,
+        linux-hyperv@vger.kernel.org, robh+dt@kernel.org,
+        dphadke@linux.microsoft.com, kys@microsoft.com,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        krzysztof.kozlowski+dt@linaro.org
+In-Reply-To: <1675756199-5917-6-git-send-email-ssengar@linux.microsoft.com>
+References: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
+ <1675756199-5917-6-git-send-email-ssengar@linux.microsoft.com>
+Message-Id: <167577470818.3213850.12635304061765127789.robh@kernel.org>
+Subject: Re: [PATCH v4 5/6] dt-bindings: hypervisor: VMBus
+Date:   Tue, 07 Feb 2023 07:00:23 -0600
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Feb 02, 2023 at 05:49:44AM +0000, Michael Kelley (LINUX) wrote:
-> I could do:
-> 1.  CC_ATTR_PARAVISOR_SPLIT_ADDRESS_SPACE, which is similar to
->     what I had for v1 & v2.   At the time, somebody commented that
->     this might be a bit too general.
-> 2.  Keep CC_ATTR_ACCESS_IOAPIC_ENCRYPTED and add
->     CC_ATTR_ACCESS_TPM_ENCRYPTED, which would decouple them
-> 3.  CC_ATTR_ACCESS_IOAPIC_AND_TPM_ENCRYPTED, which is very
->     narrow and specific.
+
+On Mon, 06 Feb 2023 23:49:58 -0800, Saurabh Sengar wrote:
+> Add dt-bindings for Hyper-V VMBus.
 > 
-> I have weak preference for #1 above, but I could go with any of them.
-> What's your preference?
-
-Either 1. but a shorter name or something which works with the TDX side
-too.
-
-Or are there no similar TDX solutions planned where the guest runs
-unmodified and under a paravisor?
-
-> For v6 of the patch series, I've coded devm_ioremap_resource_enc() to call
-> __devm_ioremap(), which then calls ioremap_encrypted().  I've updated the
-> TPM driver to use cc_platform_has() with whatever attribute name we agree
-> on to decide between devm_ioremap_resource_enc() and
-> devm_ioremap_resource().
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  .../bindings/hypervisor/microsoft,vmbus.yaml       | 48 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hypervisor/microsoft,vmbus.yaml
 > 
-> If this approach is OK with the TPM driver maintainers, I'm good with it.
-> More robust handling of a mix of encrypted and decrypted devices can get
-> sorted out later.
 
-Makes sense to me...
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Thx.
+yamllint warnings/errors:
 
--- 
-Regards/Gruss,
-    Boris.
+dtschema/dtc warnings/errors:
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.example.dtb'
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1508: dt_binding_check] Error 2
 
-https://people.kernel.org/tglx/notes-about-netiquette
+doc reference errors (make refcheckdocs):
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/virtio/
+MAINTAINERS: Documentation/devicetree/bindings/virtio/
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1675756199-5917-6-git-send-email-ssengar@linux.microsoft.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
