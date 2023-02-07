@@ -2,132 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 501CB68E9C9
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 09:23:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A56F68ECB3
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 11:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbjBHIXD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Feb 2023 03:23:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
+        id S229895AbjBHKVk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 Feb 2023 05:21:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbjBHIXD (ORCPT
+        with ESMTP id S231321AbjBHKVY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Feb 2023 03:23:03 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AFEB746;
-        Wed,  8 Feb 2023 00:23:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675844582; x=1707380582;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eT7LyT1k1N1zT8h2h1TIVWuk3jB5eyl3BSlItLElxuw=;
-  b=gceGxfvgj/pRYd+OvN3pm45rr22v25Jc612QAJSOtzw5i9rKCdDhuhrN
-   P07YijBybzQ9MBFZrOa+zeNmwhQw8WdC4wE8Hj69qKtA2ICyD67iVuEyT
-   Bx08Q/Pc5haGm8znw1UskSiRT9By62+SbShEYwJHQDpvWZOKB9JOu34yb
-   5fFYYmBsfFIHKsshyxea7MNP9Nc3WyVZevIHiZ/Rojakitf9zviLJJpEG
-   8AB8fl6DyfImLTM8F8EbUm7bjbh8oFzVqvT4rXEV/+vJT9FAM7WNk2wyK
-   oU3y/FBmcV7oDjFAWPpSyNJ3RNvUOR00ZM5SF5AMj3q5SxPJ1nt+h+ysH
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="331874274"
-X-IronPort-AV: E=Sophos;i="5.97,280,1669104000"; 
-   d="scan'208";a="331874274"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 00:23:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="996049097"
-X-IronPort-AV: E=Sophos;i="5.97,280,1669104000"; 
-   d="scan'208";a="996049097"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Feb 2023 00:22:57 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pPfjE-0004JC-1f;
-        Wed, 08 Feb 2023 08:22:56 +0000
-Date:   Wed, 8 Feb 2023 16:22:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        virtualization@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        ssengar@microsoft.com, dphadke@linux.microsoft.com
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v4 6/6] Driver: VMBus: Add device tree support
-Message-ID: <202302081621.odizDzHG-lkp@intel.com>
-References: <1675756199-5917-7-git-send-email-ssengar@linux.microsoft.com>
+        Wed, 8 Feb 2023 05:21:24 -0500
+X-Greylist: delayed 88798 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 08 Feb 2023 02:21:00 PST
+Received: from mail.crawnon.pl (mail.crawnon.pl [51.68.198.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02EF46149
+        for <linux-hyperv@vger.kernel.org>; Wed,  8 Feb 2023 02:21:00 -0800 (PST)
+Received: by mail.crawnon.pl (Postfix, from userid 1002)
+        id 00218A455E; Tue,  7 Feb 2023 09:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=crawnon.pl; s=mail;
+        t=1675761425; bh=C5hX24svv/9/TME4wPCHfYjl17BCtmuxEd1i9B4zdYs=;
+        h=Date:From:To:Subject:From;
+        b=A03uW1YDpubc1tn7xJ7NkG29BdcMJ8hqoo2dUN50vJLh3o5/QfGXTp0/kTxjYMVfQ
+         LeDfS+nC+t3PG5+0pIJqvRtbmOHdgmbB2SqcT5DM6AE7P2Hhtl4Kcln3KuKh+di8Rj
+         oGtfOFzODKt5WUCjWUTyA5+QSlvR/BmiBuqgd/XpJxis70DIrNtU2CBg2w4Rp7DskC
+         rYCizAhXebRKWssyp+ETdfIKg8y5nWhNMow1djJsm4ji15s0TgBE1Nbr47JlGECbMb
+         gWKdcx5o/T4iIi5efi7TbUFYp/dTOZ9wkfkujGis1y0oLvnhJ9JF2ApFakIn/SmMyL
+         gmg+gV5eQ1RiQ==
+Received: by mail.crawnon.pl for <linux-hyperv@vger.kernel.org>; Tue,  7 Feb 2023 09:15:23 GMT
+Message-ID: <20230207074500-0.1.90.hwji.0.amimb40g56@crawnon.pl>
+Date:   Tue,  7 Feb 2023 09:15:23 GMT
+From:   =?UTF-8?Q? "Miko=C5=82aj_Fiodorczyk" ?= 
+        <mikolaj.fiodorczyk@crawnon.pl>
+To:     <linux-hyperv@vger.kernel.org>
+Subject: Fotowoltaika - nowe warunki
+X-Mailer: mail.crawnon.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1675756199-5917-7-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
+        SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: crawnon.pl]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [51.68.198.42 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: crawnon.pl]
+        * -0.5 BAYES_05 BODY: Bayes spam probability is 1 to 5%
+        *      [score: 0.0278]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Saurabh,
+Dzie=C5=84 dobry,
 
-Thank you for the patch! Perhaps something to improve:
+chcia=C5=82bym poinformowa=C4=87, i=C5=BC mog=C4=85 Pa=C5=84stwo uzyska=C4=
+=87 dofinansowanie na systemy fotowoltaiczne w ramach nowej edycji progra=
+mu M=C3=B3j Pr=C4=85d.
 
-[auto build test WARNING on next-20230207]
-[cannot apply to robh/for-next tip/timers/core brgl/gpio/for-next wsa/i2c/for-next linus/master v6.2-rc7 v6.2-rc6 v6.2-rc5 v6.2-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Program zapewnia 6000 z=C5=82 dofinansowania na instalacj=C4=99 paneli i =
+16 000 z=C5=82 na magazyn energii, ni=C5=BCsze cen pr=C4=85du i mo=C5=BCl=
+iwo=C5=9B=C4=87 odliczenia koszt=C3=B3w zwi=C4=85zanych z instalacj=C4=85=
+ fotowoltaiki w ramach rozliczenia PIT (tzw. ulga termomodernizacyjna).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Saurabh-Sengar/drivers-clocksource-hyper-v-non-ACPI-support-in-hyperv-clock/20230207-155113
-patch link:    https://lore.kernel.org/r/1675756199-5917-7-git-send-email-ssengar%40linux.microsoft.com
-patch subject: [PATCH v4 6/6] Driver: VMBus: Add device tree support
-config: i386-randconfig-a015 (https://download.01.org/0day-ci/archive/20230208/202302081621.odizDzHG-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/b3cd029f78e9c1f5cd1633e1ffc7c5a09deae98f
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Saurabh-Sengar/drivers-clocksource-hyper-v-non-ACPI-support-in-hyperv-clock/20230207-155113
-        git checkout b3cd029f78e9c1f5cd1633e1ffc7c5a09deae98f
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/hv/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/hv/vmbus_drv.c:2691:21: warning: attribute declaration must precede definition [-Wignored-attributes]
-   static const struct __maybe_unused of_device_id vmbus_of_match[] = {
-                       ^
-   include/linux/compiler_attributes.h:355:56: note: expanded from macro '__maybe_unused'
-   #define __maybe_unused                  __attribute__((__unused__))
-                                                          ^
-   include/linux/mod_devicetable.h:268:8: note: previous definition is here
-   struct of_device_id {
-          ^
-   1 warning generated.
+Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
+temacie?
 
 
-vim +2691 drivers/hv/vmbus_drv.c
-
-  2690	
-> 2691	static const struct __maybe_unused of_device_id vmbus_of_match[] = {
-  2692		{
-  2693			.compatible = "microsoft,vmbus",
-  2694		},
-  2695		{
-  2696			/* sentinel */
-  2697		},
-  2698	};
-  2699	MODULE_DEVICE_TABLE(of, vmbus_of_match);
-  2700	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Pozdrawiam,
+Miko=C5=82aj Fiodorczyk
