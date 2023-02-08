@@ -2,49 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75DEC68E648
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 03:50:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA3D68E64F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 03:51:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230231AbjBHCuj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Feb 2023 21:50:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
+        id S229894AbjBHCvw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Feb 2023 21:51:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230061AbjBHCuj (ORCPT
+        with ESMTP id S230190AbjBHCvv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Feb 2023 21:50:39 -0500
+        Tue, 7 Feb 2023 21:51:51 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 407AE10A91;
-        Tue,  7 Feb 2023 18:50:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 25B18E3B0;
+        Tue,  7 Feb 2023 18:51:50 -0800 (PST)
 Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id C27A020C7E3E; Tue,  7 Feb 2023 18:50:36 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C27A020C7E3E
+        id 7A8C420C7E3E; Tue,  7 Feb 2023 18:51:49 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A8C420C7E3E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1675824636;
-        bh=zH8jTNGZgnkW9RivS+15tp6q+pdN9GIpfKHsobyIFXs=;
+        s=default; t=1675824709;
+        bh=/8sypdsBFJ9BayyXPQW3tsqVwQ5HKWArPlSI9nkM8R4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Iv4linVSsVgkBZBZO5nDS4kC8c8zfRuhkC0eIaOSSGeCNsiTaAtywxuap0DqitiOz
-         VbbEAtd5TySmdvZyQ/FWuJDtXrUSHZQj6ncS3nmrVUj4eiPiaZiGSIauD4bOSLZ7rV
-         eFIzGx0K1dQzjDcnMQiWRJ9pU+kMttkJlPEkXVJk=
-Date:   Tue, 7 Feb 2023 18:50:36 -0800
+        b=F+vpjfvj+umQjEGJfek92nTkeB45CtCxc+Z3ILKuBI7JjSXK9DWTc67imS/3UTG8y
+         WLGgMSURm2yLoqYte2jWNPq11PDNG5fCoEeEGZ6wsKeO8shYivV6MXx6NDgSa/YjeL
+         hYYMw2eF4mykznZGLZlCtoHhJtDlRDxZ4X3QAMAw=
+Date:   Tue, 7 Feb 2023 18:51:49 -0800
 From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
 To:     Rob Herring <robh@kernel.org>
-Cc:     mikelley@microsoft.com, wei.liu@kernel.org,
-        daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
-        ssengar@microsoft.com, virtualization@lists.linux-foundation.org,
-        decui@microsoft.com, haiyangz@microsoft.com,
-        linux-hyperv@vger.kernel.org, dphadke@linux.microsoft.com,
-        kys@microsoft.com, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, krzysztof.kozlowski+dt@linaro.org
-Subject: Re: [PATCH v4 5/6] dt-bindings: hypervisor: VMBus
-Message-ID: <20230208025036.GB838@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Cc:     krzysztof.kozlowski+dt@linaro.org, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        virtualization@lists.linux-foundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        ssengar@microsoft.com, dphadke@linux.microsoft.com
+Subject: Re: [PATCH v4 4/6] dt-bindings: hypervisor: Rename virtio to
+ hypervisor
+Message-ID: <20230208025149.GC838@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
- <1675756199-5917-6-git-send-email-ssengar@linux.microsoft.com>
- <167577470818.3213850.12635304061765127789.robh@kernel.org>
- <20230207183458.GA3753062-robh@kernel.org>
+ <1675756199-5917-5-git-send-email-ssengar@linux.microsoft.com>
+ <20230207183931.GB3753062-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230207183458.GA3753062-robh@kernel.org>
+In-Reply-To: <20230207183931.GB3753062-robh@kernel.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
@@ -56,49 +56,28 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 12:34:58PM -0600, Rob Herring wrote:
-> On Tue, Feb 07, 2023 at 07:00:23AM -0600, Rob Herring wrote:
+On Tue, Feb 07, 2023 at 12:39:31PM -0600, Rob Herring wrote:
+> On Mon, Feb 06, 2023 at 11:49:57PM -0800, Saurabh Sengar wrote:
+> > Rename virtio folder to more generic hypervisor, so that this can
+> > accommodate more devices of similar type.
 > > 
-> > On Mon, 06 Feb 2023 23:49:58 -0800, Saurabh Sengar wrote:
-> > > Add dt-bindings for Hyper-V VMBus.
-> > > 
-> > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > > ---
-> > >  .../bindings/hypervisor/microsoft,vmbus.yaml       | 48 ++++++++++++++++++++++
-> > >  MAINTAINERS                                        |  1 +
-> > >  2 files changed, 49 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/hypervisor/microsoft,vmbus.yaml
-> > > 
-> > 
-> > My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
-> > 
-> > yamllint warnings/errors:
-> > 
-> > dtschema/dtc warnings/errors:
-> > make[1]: *** Deleting file 'Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.example.dtb'
-> > make[1]: *** Waiting for unfinished jobs....
-> > make: *** [Makefile:1508: dt_binding_check] Error 2
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/gpio-virtio.yaml               | 4 ++--
+> >  Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml    | 2 +-
+> >  .../devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml         | 2 +-
+> >  .../devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml     | 2 +-
+> >  Documentation/devicetree/bindings/i2c/i2c-virtio.yaml                 | 4 ++--
+> >  MAINTAINERS                                                           | 2 +-
+> >  6 files changed, 8 insertions(+), 8 deletions(-)
+> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml (95%)
+> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml (98%)
+> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml (93%)
 > 
-> You can ignore this, it's a problem with the CI job.
-> 
-> > 
-> > doc reference errors (make refcheckdocs):
-> > Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/virtio/
-> > MAINTAINERS: Documentation/devicetree/bindings/virtio/
-> 
-> But this probably needs to be fixed.
+> virtio is used for more than just an interface to hypervisors. I think 
+> this should remain. Instead, I'd put vmbus under bindings/bus/.
 
-I have updated MAINTAINERS as part of 4/6 patch, and there is no mention of
-Documentation/devicetree/bindings/virtio/ in MAINTAINERS post 4/6 patch.
-I have ran the tool locally as well on top of 4/6 and then 5/6 but it
-never reported this error.
-
-Anyway as per your latest comment I should be moving VMBus to bus folder
-instead, so no need to worry about this.
-
-Regards,
-Saurabh
+Agree, will move to bus in v5
 
 > 
 > Rob
