@@ -2,124 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4282468E535
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 02:04:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A866768E55B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 02:22:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230010AbjBHBE1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Feb 2023 20:04:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
+        id S229692AbjBHBWX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 7 Feb 2023 20:22:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjBHBE0 (ORCPT
+        with ESMTP id S229515AbjBHBWX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Feb 2023 20:04:26 -0500
-Received: from BN3PR00CU001-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11020019.outbound.protection.outlook.com [52.101.56.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 123F6975F;
-        Tue,  7 Feb 2023 17:04:24 -0800 (PST)
+        Tue, 7 Feb 2023 20:22:23 -0500
+Received: from BN6PR00CU002-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11021022.outbound.protection.outlook.com [52.101.57.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB8921A34;
+        Tue,  7 Feb 2023 17:22:21 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fvnbopikcMrT5e1Qr5SW68CxZMfQO/3cXcM6HRFXtXjwhanVPj9XKdyTJxDjioMCM4zIc+7dPyXnNLwX5KLYaImjncKl0YsBw6WHklJZWnNL3z+YQDNwKPZW5GVhD13RnsVoap/tN008XH3p7dtNWiUnr6MDrRsBgPiudbBPLpDYv0i7/eUNA36PwtMnzUsRQWbUohrW6wBVrWyTWJ9AMCSNLh/ByZPrSYBSSv+E04bwcqAESWStHPX/MbftZbHS71qWr9hgDMeNvSyT92wwG8nHut/7uhZou6kkt7aBz+e9FXCqUsVEMgb+Bb/NTAfKa+bTvX/67j1rtQ+U8eusRA==
+ b=j2fAMSqBJe9po94jozZRE+F7QeTGMUYoCvAJ/JKJCdfIDPHXLn+XWvfM9E/oF2gbM8ytzESpg7V4EXLFs1DdbNYsP+MGo2TAk5JHhZxTTZR8hDS5c6w7dLwOWZtavU8Arz7tiYby/yL77PW3QKyBfomz/cSvr5wvO8Sgm7dCZCSFkq3Z70xUzRKGU+NY/iG7/kSEJRvNhFipOCXkhnawK+WmYXZDQyI1Ze38xAz40mrXNuCVr6dOWmV89dYpf95ftDXHHmKYae026T9mRVYgpsvg7+7QLJYVyZtwBq5+buCHRMduCYH8uDufdEJnFv0UWs1NaJGsDGqx8S8bAzX8xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NIg4Pu4Mtf0ljvFgY0Bsi80+0IT07AWnYeSlB91akHQ=;
- b=ekUzF9zzAYn3PXr2MpzkNp68jT5+gh7Wou8v7eeHwGhExEFsvAhZaChV0ON1Bn1nu7RDlsgJvRjMvYvyau52yuL3ib9cVONpSaVhUcaRRgm9HjZUijluBb8AXm3qWpMB0IcmDvMdKQYL/xd/qzcQSlOV1wQppxKyWR1AxsqX9/0keWk1W4aVZuWB+PquRVEkqqzMNb3kEK4xz4pGQzxvZDFSbz3YThcIRpSb18HkKw1at3oqjKwFOJy0NETopprw3zHahrqiri9MXLPIzdg/AxkALX/cqTRGxOc6wohfdfoZ+2TamXd/cmupHf6qnvjMMAKLPPfobhLJZRpTIUTtpA==
+ bh=IPaOquUYseS+tTCkFh073Bx9UCONj7NeGfdXN2UZNqg=;
+ b=FzsHwyDoBHIfwtBPwYIc7eaFGzT5mo9wYseql5ROUayGZX7dpl4LIu7kiRWioloXG4zOxIRTlqvB7xjnjGmV9Si+tjPtHgzx7bjuK9vnb/xYuq6yeNe4J/EodT0V6k/+y3tUGZsiqf3JcISnU39awu4lFEoxse29Qh/zPwUJXo2FHe5vidIFLpEO3knOQ9gFiK7TlMTri+/nNlieNSwXp9BDcqgi7DkzPNQgpFGyKUWYUlvvinxfMDu+7KY5regvhVZTd5gnI9Aflo7SqWXEC3NaPirGl8AOAjnmRqfaf6HV5Wt8iTRPVN0VWjOSzcU/DhecQSA+u7aX7k9mWxYkWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NIg4Pu4Mtf0ljvFgY0Bsi80+0IT07AWnYeSlB91akHQ=;
- b=g282+gl2kKsGxoSwIqFI5W3Ps+9NPrv+OLK4EMShcsQVwYcrooHjri7fWaHjcLZLIqbdyHuHaZYq7w2Bups4SFLASgMPRO2sixjFpwBQz5nAf6uUQ4dUY0PEUcVDZO0ZSebc2jnAqPGRIX25c5kk+KtSeBver/+WfcpiUDRwUHM=
+ bh=IPaOquUYseS+tTCkFh073Bx9UCONj7NeGfdXN2UZNqg=;
+ b=DHN61JtYxtpkCgyJUXztWi0ho4d+AhIypt7Vjib5PkfczH2VHyp/0yvmNLFN1Yn0I2pcBvrxra3j/PreyYeXQCZDwNfYC9DZOeD7qhNdza2gsWLi6dqr5jjjFh7psR6Wzaz1Ag87sr6Z4HL9RqHYg0uUGLxUuwZvwpYPainKLVM=
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DM4PR21MB3441.namprd21.prod.outlook.com (2603:10b6:8:ac::18) with
+ by CY5PR21MB3422.namprd21.prod.outlook.com (2603:10b6:930:e::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.0; Wed, 8 Feb
- 2023 01:04:20 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.6; Wed, 8 Feb
+ 2023 01:22:18 +0000
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::55a1:c339:a0fb:6bbf]) by BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::55a1:c339:a0fb:6bbf%8]) with mapi id 15.20.6111.002; Wed, 8 Feb 2023
- 01:04:19 +0000
+ 01:22:18 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     "lirongqing@baidu.com" <lirongqing@baidu.com>,
-        "seanjc@google.com" <seanjc@google.com>,
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Dexuan Cui <decui@microsoft.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
- shutdown
-Thread-Topic: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
- shutdown
-Thread-Index: AQHZOpLxbV+L28WTRU2RxqUIZ1Q90K7EObyw
-Date:   Wed, 8 Feb 2023 01:04:19 +0000
-Message-ID: <BYAPR21MB168840B3814336ED510845C0D7D89@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
-In-Reply-To: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "dphadke@linux.microsoft.com" <dphadke@linux.microsoft.com>
+Subject: RE: [PATCH v4 1/6] drivers/clocksource/hyper-v: non ACPI support in
+ hyperv clock
+Thread-Topic: [PATCH v4 1/6] drivers/clocksource/hyper-v: non ACPI support in
+ hyperv clock
+Thread-Index: AQHZOsjMvY/hUKz0ckKIRFPtEp88lK7EQdQw
+Date:   Wed, 8 Feb 2023 01:22:18 +0000
+Message-ID: <BYAPR21MB1688524B64F4FF7FBE7BBC81D7D89@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
+ <1675756199-5917-2-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1675756199-5917-2-git-send-email-ssengar@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2964e3f6-ea43-4ab9-892a-9a1b29336c2d;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-02-08T00:51:13Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1b26ae5d-9efa-441f-85f0-851cc4922855;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-02-08T01:21:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DM4PR21MB3441:EE_
-x-ms-office365-filtering-correlation-id: 60684c1e-175e-4cef-7e2a-08db0970682c
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|CY5PR21MB3422:EE_
+x-ms-office365-filtering-correlation-id: 3287eb8a-4dbb-4660-4288-08db0972eb51
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pVzXCUPjV2YcOiEc2jrGaKlygixxqnfwlPmyTA25ynIy1SoQnczVJwShHYngxKsmEAXsmZmQ9KWfETor441mgsPwUwgdXj9plasHEhbaeRDtUkZF8sUJESyILaK4LJKeAhWtOJEyWd1ItXL92YeUF3TvmD6JIxcJCl+FmT9B4Gt1Bvykh5D1zZiQV8EY2A/KPEx18CPoi9A0PbRVeVq64AetNZhOWKMx/LFZk5vMscnJJKgGH8qfrRr07o8Z2WPQaUC/ln+j59tqYJ45FcSoCf/9rvKobHnxX5RHViLk+uGX8JiZwh8nHm0BVVQTp/1sRX2+a7jJBDVXds0zzFKZxG9vQxLQoxWyPD/LWnmBIdwlQaxI3BNHa9dD5USFIt34pbXhunhM2AgnaVGGobQandZmyzVDgKDhMSbKqhtPcPx4f4lk/G86epib7lBIZhLgtLEyUkZpag8sTVyjhP/Usst6cimLl+NREUJrIN/M0jGX64o5JO2y7DQqzRabbrcn9I1X0H2sB0uTXTVTu+7VzJQg2nFgW2GGakpYRCqEyxPQcXadZvAgYlCCeMOS6ZKztmZ9Vy1glAvUTQffaVq5fnR96/iyOLVaMBkio/6X4Rh1l1NbS4Xn09n8OHjngA1kqEvYDtFgoZyBUpflH1pyIuitUzLpMoRuvhtKocYq7pF43OpuMWr+WJjvaYduvWShi+qZGN3rrgDG6+bKZhYsJncXFgqUXNUHplMqqR61zDRi2RxhjuyDJoDsdqgTZi63G/sLtYq3hcLopvvC9DgM0w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(376002)(39860400002)(136003)(366004)(396003)(451199018)(110136005)(316002)(10290500003)(83380400001)(52536014)(55016003)(2906002)(66446008)(7416002)(5660300002)(921005)(38070700005)(8936002)(33656002)(66476007)(8990500004)(38100700002)(76116006)(64756008)(122000001)(8676002)(82950400001)(66556008)(82960400001)(66946007)(41300700001)(9686003)(26005)(7696005)(478600001)(6506007)(186003)(86362001)(71200400001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: 2kgAjB0iEtlYiTm12njjLlW4npnL4JNvvwLC9AtMhhILcdarrd3MnrC5cV7fuXNDmH3FwCvxjYC3VSNA4WCivEvFqDk4vAXi04/5nPNeC5MoiSSIbwDA6VKCdDBW/oua1vICEeMiPqs2ktyZiWS2tJ3o+zStfMwWQuRkDlZmEiJ6xp1NNd/w9g8qwmykNMrlaQddjpWUcInLqX3DYvbfhVB85hn46im3JTj/b2eq/3paAuwX488hyJXJ13LXtSaOs32+nnf9YCAihjM0H5mss+7e+RsUzFXyhnoaP492xacEAVfrgsIy+jtMQLxhVJ8tLIZJ9HEbbKlmWj9qrMTtndMadSfPijxLpMIxLeUYvjdhJz4SeencaoXPH3gsvOlpdFMdkWqFGF0byOkZTmrO7aCQzo2MfDaxst1SKh+J+Cg9yTexRLeHItl4h2QgwXGMQAOiOkE/sgdLlms1+Q4l3grSQu29U0AhE0tY2p2lp0hmylpT8t70u18PNfcD3bNV2YOMqI2ZaQWBv/FXqyZQ4hd7D/JWVmHGUxrV6MyEqUbBuGAX2QiZ4eIkvv7dcCS/hVJ8sDh57Ae4+gP6Hjz+PGis51QszKBNCAL1L/xo6RiL/ch2RC2lw727bw6iYFslw46QlOOrczSoRYLDcvbjtVaKD01Y41+FeXvgC6lr2iWHFLt/D/QrHSGEbP5FbFbrrKUOfSLKqKkdVNtKDPQ1xmwbrcNUSv0PZDz7DXbTneVaEAn0A++6A4UAD/1aqpRhwSWCegyCK67UCcDEo4vz1Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(376002)(346002)(136003)(396003)(39860400002)(451199018)(8936002)(41300700001)(5660300002)(71200400001)(110136005)(7696005)(52536014)(316002)(2906002)(8676002)(66556008)(64756008)(6506007)(186003)(478600001)(26005)(66446008)(9686003)(66476007)(83380400001)(8990500004)(66946007)(38070700005)(122000001)(38100700002)(33656002)(921005)(10290500003)(76116006)(82960400001)(86362001)(55016003)(82950400001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?SBLTPy2LJirEd8YbMZverFyaXRQugurwhqs0ak1VDCJ93qiSRJVF4LUB4eRu?=
- =?us-ascii?Q?BPKYocInnTUdJaH1/hFLki+BcmZFXXz4axs1VheAetmgWOxoZ5I3MouS4crU?=
- =?us-ascii?Q?EkP/1VzSdSGuI5zMfncRen9EI2jBYCptxj7IskUFUgYDcbieKE0+t1DlvdyS?=
- =?us-ascii?Q?IT46G1mA3N7PD/iazeJOpxqe6hLKfRsbEqJEEICR/eq7h+WMFS/BQE+B0rrI?=
- =?us-ascii?Q?WqsGVEeaOYOTVrfx6EMn040rXtFv2zl10uqAyjDsEtx2OznmFqTQy9VvqK97?=
- =?us-ascii?Q?/6eRYqzlMGcojwlPHackMA4bVasbJ2zZF1CHGcyN+2N4s0uzok/z9DqH04vh?=
- =?us-ascii?Q?mMyyTWreWG7Z0Oy7i9aiVVZUu17bKXLLkPAo2npIcIICc1tM13ww/ci5KCBA?=
- =?us-ascii?Q?PUai93AHh+mERT4qcCJtGrjiVnE4db6oWW3EzFntUMwpfodX4F09OLYIAtOl?=
- =?us-ascii?Q?gDTQ08GXQPRas4IYoGBXseif/GyM1X3UTsM176E7wPRWLSNXDki10Ujicaf8?=
- =?us-ascii?Q?6w9YJ4ASaXfk9ErCKbqC4ZpecZbhdr/6U9IbdWUxJPHfer55r46FCGTBOiaz?=
- =?us-ascii?Q?N+VevLRTLKnnkmBnYGuSIOnM5x9gmEHSbn/Ho5HUtjo5wSkGCNg3J+a138bD?=
- =?us-ascii?Q?lBVBIUOOs4l1VTja1EODp5XLuZWGB5O9FsUyjJGVzTMtwqhOgu0cGEjeY0Of?=
- =?us-ascii?Q?UDAwFETAXc1uwbPDRFfnzN0i2P3LonmE58gXQei4iFRfICG6e9u7nuTGk7vg?=
- =?us-ascii?Q?3EaPNMkbUr4K8t9/KhSZdNyKP1Y4W+xYga+wlQ+fA2Vxf1/l/Umq+GBLzjDN?=
- =?us-ascii?Q?Q5Yc8lS7IHl4Y3hU8pHn62UWYL7RsHlx4FB4XIeeG7fBNssKF8QWHoPLRnxv?=
- =?us-ascii?Q?YwVJDOPBUl8LOqIRJGp+4WuMBA0/H43yZbbLNG+DQrXdbi/qmoReC6pa4Xwq?=
- =?us-ascii?Q?0sevxvWnKHZGYSZ5YFmUQthuTVpP3UuSIuQIgDpzJqxdUHj8k5LnykxTHLHh?=
- =?us-ascii?Q?nQP2jzfbhhgAqiaQczeGEBAsYf5LHRN1ocwqEp4kGBxL6VkboBfHe4fi0PGQ?=
- =?us-ascii?Q?/xJ/Nvmj708t6OguqOPVPiBeYyCGht8mqRBv6QrHydy1pOfB52ymD1hx+Prw?=
- =?us-ascii?Q?ushYmL7C7TmVFPgBCU8BW4JZBkQeFNm9k2TAWab6TqDC4Vk5+Yg6mBlKdflW?=
- =?us-ascii?Q?Oluu9o2g5brbsnbE2VUxeXMwTudYlg3va9wuotLtSVr5MtgabWdvSGdDg9wC?=
- =?us-ascii?Q?D0B+CSTOxwMFot6DbHXGCS+nh44maOdeZiDqc/24HDTNzNtX71NGwFiHNY7a?=
- =?us-ascii?Q?wwuWm+QKSiJa+tuIR1rUY72sS/8dFUgYsKFK3X9qhWFIv1kBAtJPoKrB4dtK?=
- =?us-ascii?Q?Wx/D5PNrE3VQ8IGxQbWIlWmhFBvUwnh9VHT1FdX7NTSFbsy6KhK1M5mvN1GY?=
- =?us-ascii?Q?9RkgR+6w8P+nssvD7ni7dAOMflGGNkjYtYRnNPYRA9hHow2IPIDR8J2t6nLS?=
- =?us-ascii?Q?OFTerTmgPagvJWKzn8qIvaM8HC3taezMhriVoXUU/jFuxWsg1dIzJ7JH3VKd?=
- =?us-ascii?Q?VSYr23C/PUYevBPAxdSiXYD0nLXhdR+LOQpY47LZLsCJeX/f0rmMY/nygOne?=
- =?us-ascii?Q?Gg=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/5ysBR1j5EzCUjO92nfxGpnxkg+xxDy3+o8P8NdAeHxefHIGcQCzLgOHhOhC?=
+ =?us-ascii?Q?nceyFCO7qI953xu7nDjAbhIx9+BD9/99NnoShbrLOXkBBSQps7+1SJOeaHrw?=
+ =?us-ascii?Q?igJNB5n9DgbW+SCkI9z0AGESXqxdHiGPqL5Koqt8w3Esiz9vdoqo+gAF4LSh?=
+ =?us-ascii?Q?V+sHSizFa4JJ1bwc/HqmjR0WElCATnWYyIgWFyRWQxm5jcRoFA63nqPsbfOw?=
+ =?us-ascii?Q?1VgK+zPWptUe1Rmo67+4Aiex/oQp6gaP4gW908R3BtjESn8Hq2FRG9NwSDKd?=
+ =?us-ascii?Q?pYfnGCzdKWdJlZ09p1QW9pjFRun2VxxSYqrF0Zkdx/kM30yqeH8vbjxxZs5E?=
+ =?us-ascii?Q?bEO0494vXHcKSMZT255CEdHYtS9kcIRflD2neLV40TNkAGLFkkCsYwpYeFaZ?=
+ =?us-ascii?Q?ljKWvjzU2+pmudb8RUd/nXjzoxbqrj+mjzfP45yIMy5pL2s1tsVwycLz+37q?=
+ =?us-ascii?Q?jAFwgDvGBkhuA4n1HKYH+jmcDE7RZ/wOg0JZWhA+4z2ldvbQ3ffrjvibBggK?=
+ =?us-ascii?Q?7nJv2QfXONSKRSa+TfdypYU4Cphpezwh0dDh1FB3pxHEla8rqsboTLTz8jHk?=
+ =?us-ascii?Q?GN26N4Sv04KKrHMkUlB5Vetd5hq3my9LgW/TqwOddrJPC2sjEls7hTRtxahO?=
+ =?us-ascii?Q?YThuxlbXukcB5es8DX/tmBSgfRA5BkluWo0tpV38Kxr8cnN89QdJ7SAtvfAH?=
+ =?us-ascii?Q?nZo4UD+zW6roaVamLTBSBGgE87sWJwoL511vUVTA8hXpYVbxfxaqiJxQivRy?=
+ =?us-ascii?Q?wibT8yKIh7YcJllfGGe5TeDBM1dp8Y1Qf3IM6LNC/14tHflggqxfpxwvnwPg?=
+ =?us-ascii?Q?Y0M5PnHdQCihOLqKEp6t9XY8aEL5OPXTuzoyvIEtwe3SCoGFQ+LdZWPgX5no?=
+ =?us-ascii?Q?IWjjiKTCXe07Z/lEK0TQ2O4/fhRnu7UeKHw2HGLtZ73wG/shWBnB1uhxQDWD?=
+ =?us-ascii?Q?2ox9jcNV9JAc+Hz625/AQZAHcsFV0xLYBEQCUwyd5FCcc+H+MGG73RsuHse7?=
+ =?us-ascii?Q?mhxNYnk9rEtWnrcZJczQfs+pbWIAMj1ogN6/HrH+aHGSbCcIL92jllYXlf4K?=
+ =?us-ascii?Q?BrrRHih3rd9cMfx9WEvP1Zz6gVdN2hv2KYa3zifEAX+gds0KtXKS9Q3SJTPT?=
+ =?us-ascii?Q?lGekwQp4SA8Okb+boD6KlT+pCPYSrOGpV4xgmHWj3KekYW3/MGDctyYAKLQO?=
+ =?us-ascii?Q?4CV01luN8YXw3TvtsoufX5wg9Qu+BJvAty7h6M2Bzseuqf5DCkM84xvkjy2y?=
+ =?us-ascii?Q?mfx7xjhDvHboNFRxTQyU9S0GbB2VJxRdX4lfW5EcjiEQWdSqkZO7beUh1j+y?=
+ =?us-ascii?Q?tBRavtN1CSJm8Li+YmTi5VfppQ5DsClNmXX+FRFjnyabDA+dDU4G8bInRQR4?=
+ =?us-ascii?Q?226aVgTcShcZXyf8xCO0JebEg183+suhwMY+TeiNzPYTZKXYoWee9nduR1fS?=
+ =?us-ascii?Q?x9oYdPgUEHsWJKRNf4xYMygIudD1NVVfC92dE73+0s50uqrq2/BYz8qevpdM?=
+ =?us-ascii?Q?+s9PhUYacFiHo6y/fHs18sn6N4HG63f6emCFRbpgK504AaTseQY1YEGemOhk?=
+ =?us-ascii?Q?JTzf7tQE1ma6SylQgA4K/gC+REur/xtiM2eFkDma/0ABR8eod3eLIVRNAHyx?=
+ =?us-ascii?Q?aQ=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60684c1e-175e-4cef-7e2a-08db0970682c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2023 01:04:19.1478
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3287eb8a-4dbb-4660-4288-08db0972eb51
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2023 01:22:18.0856
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YH2qtu+W9QXPUJL/qJSL5NT0ZP5Lw2FYxZ1gk/QF40emL/bZs34Sp5JmcSQaKdTBjRpGzpi8H366mTtTTEmKLDpS1F0iDvFmjkfKvreEc1Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3441
+X-MS-Exchange-CrossTenant-userprincipalname: kSZgpuq+PzwWptwzhvu3AelTlw3ISTDwTfCn0kzoQq6OmW682SLO+yC/28hwoebVFcMDQUkaWsw2zcGMy24If0ycH4M8YOto32G44k4xtbQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR21MB3422
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
@@ -130,126 +135,77 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: lirongqing@baidu.com <lirongqing@baidu.com> Sent: Monday, February 6,=
- 2023 5:15 PM
+From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Monday, February 6=
+, 2023 11:50 PM
 >=20
-> Zeroing the counter register in pit_shutdown() isn't actually supposed to
-> stop it from counting,  will causes the PIT to start running again,
-> From the spec:
+> Add a placeholder function for the hv_setup_stimer0_irq API to accommodat=
+e
+> systems without ACPI support. Since this function is not utilized on
+> x86/x64 systems and non-ACPI support is only intended for x86/x64 systems=
+,
+> a placeholder function is sufficient for now and can be improved upon if
+> necessary in the future.
 >=20
->   The largest possible initial count is 0; this is equivalent to 216 for
->   binary counting and 104 for BCD counting.
+> This change will make it easier to add device tree support for VMBus in
+> subsequent commits.
 >=20
->   The Counter does not stop when it reaches zero. In Modes 0, 1, 4, and 5=
- the
->   Counter "wraps around" to the highest count, either FFFF hex for binary
->   count- ing or 9999 for BCD counting, and continues counting.
->=20
->   Mode 0 is typically used for event counting. After the Control Word is
->   written, OUT is initially low, and will remain low until the Counter
->   reaches zero. OUT then goes high and remains high until a new count or =
-a
->   new Mode 0 Control Word is written into the Counter.
->=20
-> Hyper-V and KVM follow the spec, the issue that 35b69a42 "(clockevents/dr=
-ivers/
-> i8253: Add support for PIT shutdown quirk") fixed is in i8253 drivers, no=
-t Hyper-v,
-> so delete the zero timer counter register in shutdown, and delete PIT shu=
-tdown
-> quirk for Hyper-v
-
-From the standpoint of Hyper-V, I'm good with this change.  But there's a
-risk that old hardware might not be compliant with the spec, and needs the
-zero'ing for some reason. The experts in the x86 space will be in the best
-position to assess the risk.  At the time, the quirk approach was taken so
-the change applied only to Hyper-V, and any such risk was avoided.
-
-For Hyper-V,
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-
->=20
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 > ---
->  arch/x86/kernel/cpu/mshyperv.c | 11 -----------
->  drivers/clocksource/i8253.c    | 12 ------------
->  include/linux/i8253.h          |  1 -
->  3 files changed, 24 deletions(-)
+>  drivers/clocksource/hyperv_timer.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
-v.c
-> index 46668e2..f788889 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -16,7 +16,6 @@
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kexec.h>
-> -#include <linux/i8253.h>
->  #include <linux/random.h>
->  #include <linux/swiotlb.h>
->  #include <asm/processor.h>
-> @@ -399,16 +398,6 @@ static void __init ms_hyperv_init_platform(void)
->  	if (efi_enabled(EFI_BOOT))
->  		x86_platform.get_nmi_reason =3D hv_get_nmi_reason;
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyp=
+erv_timer.c
+> index c0cef92..f32948c 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -49,7 +49,7 @@
 >=20
-> -	/*
-> -	 * Hyper-V VMs have a PIT emulation quirk such that zeroing the
-> -	 * counter register during PIT shutdown restarts the PIT. So it
-> -	 * continues to interrupt @18.2 HZ. Setting i8253_clear_counter
-> -	 * to false tells pit_shutdown() not to zero the counter so that
-> -	 * the PIT really is shutdown. Generation 2 VMs don't have a PIT,
-> -	 * and setting this value has no effect.
-> -	 */
-> -	i8253_clear_counter_on_shutdown =3D false;
-> -
->  #if IS_ENABLED(CONFIG_HYPERV)
->  	/*
->  	 * Setup the hook to get control post apic initialization.
-> diff --git a/drivers/clocksource/i8253.c b/drivers/clocksource/i8253.c
-> index d4350bb..169474d 100644
-> --- a/drivers/clocksource/i8253.c
-> +++ b/drivers/clocksource/i8253.c
-> @@ -20,13 +20,6 @@
->  DEFINE_RAW_SPINLOCK(i8253_lock);
->  EXPORT_SYMBOL(i8253_lock);
+>  static int stimer0_irq =3D -1;
+>  static int stimer0_message_sint;
+> -static DEFINE_PER_CPU(long, stimer0_evt);
+> +static __maybe_unused DEFINE_PER_CPU(long, stimer0_evt);
 >=20
-> -/*
-> - * Handle PIT quirk in pit_shutdown() where zeroing the counter register
-> - * restarts the PIT, negating the shutdown. On platforms with the quirk,
-> - * platform specific code can set this to false.
-> - */
-> -bool i8253_clear_counter_on_shutdown __ro_after_init =3D true;
-> -
->  #ifdef CONFIG_CLKSRC_I8253
 >  /*
->   * Since the PIT overflows every tick, its not very useful
-> @@ -117,11 +110,6 @@ static int pit_shutdown(struct clock_event_device *e=
-vt)
+>   * Common code for stimer0 interrupts coming via Direct Mode or
+> @@ -68,7 +68,7 @@ void hv_stimer0_isr(void)
+>   * stimer0 interrupt handler for architectures that support
+>   * per-cpu interrupts, which also implies Direct Mode.
+>   */
+> -static irqreturn_t hv_stimer0_percpu_isr(int irq, void *dev_id)
+> +static irqreturn_t __maybe_unused hv_stimer0_percpu_isr(int irq, void *d=
+ev_id)
+>  {
+>  	hv_stimer0_isr();
+>  	return IRQ_HANDLED;
+> @@ -196,6 +196,7 @@ void __weak hv_remove_stimer0_handler(void)
+>  {
+>  };
 >=20
->  	outb_p(0x30, PIT_MODE);
->=20
-> -	if (i8253_clear_counter_on_shutdown) {
-> -		outb_p(0, PIT_CH0);
-> -		outb_p(0, PIT_CH0);
-> -	}
-> -
->  	raw_spin_unlock(&i8253_lock);
->  	return 0;
+> +#ifdef CONFIG_ACPI
+>  /* Called only on architectures with per-cpu IRQs (i.e., not x86/x64) */
+>  static int hv_setup_stimer0_irq(void)
+>  {
+> @@ -230,6 +231,16 @@ static void hv_remove_stimer0_irq(void)
+>  		stimer0_irq =3D -1;
+>  	}
 >  }
-> diff --git a/include/linux/i8253.h b/include/linux/i8253.h
-> index 8336b2f..e6bb36a 100644
-> --- a/include/linux/i8253.h
-> +++ b/include/linux/i8253.h
-> @@ -21,7 +21,6 @@
->  #define PIT_LATCH	((PIT_TICK_RATE + HZ/2) / HZ)
+> +#else
+> +static int hv_setup_stimer0_irq(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void hv_remove_stimer0_irq(void)
+> +{
+> +}
+> +#endif
 >=20
->  extern raw_spinlock_t i8253_lock;
-> -extern bool i8253_clear_counter_on_shutdown;
->  extern struct clock_event_device i8253_clockevent;
->  extern void clockevent_i8253_init(bool oneshot);
->=20
+>  /* hv_stimer_alloc - Global initialization of the clockevent and stimer0=
+ */
+>  int hv_stimer_alloc(bool have_percpu_irqs)
 > --
-> 2.9.4
+> 1.8.3.1
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
