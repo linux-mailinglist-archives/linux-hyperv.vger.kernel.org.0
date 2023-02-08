@@ -2,115 +2,189 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9D2668F190
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 16:04:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C7E68F1B3
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 16:13:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231637AbjBHPEO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 8 Feb 2023 10:04:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37958 "EHLO
+        id S231201AbjBHPNr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 Feb 2023 10:13:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231622AbjBHPEN (ORCPT
+        with ESMTP id S230307AbjBHPNr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 8 Feb 2023 10:04:13 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA89C3431D
-        for <linux-hyperv@vger.kernel.org>; Wed,  8 Feb 2023 07:04:12 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id f15-20020a17090ac28f00b00230a32f0c9eso2575893pjt.4
-        for <linux-hyperv@vger.kernel.org>; Wed, 08 Feb 2023 07:04:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=URD/oshFPOwr0qbJ4yDAwjjjTXrKyLyD0kda/kmQ/qY=;
-        b=K8MgyWD3MIU6ok+xTR3BhW+QKeqoZ8MtVD3Afe65IQwKxzaYbGmA9HwSx1GPX+/WAb
-         9HRtbUfGav2tnPu+YueWkutowxOvgB5W5lZvJsyX2SIcHcWRiOsjgge3zh1WGkkDr5AP
-         iIeVnLH4lBUWzAKVa3H2Sw4Oo2goPu4IH95yLcL4APzYQrKmmrD/zgQgl3HZwSSvyrBR
-         tXsz4AYUCSrCmT6OZY4UoTGKZmWsSNbsrlcizwdIrO+lAWVMF5CiVQnwdJlmWjNc9lcu
-         cq9flmAffLtOdE2fZks9k00losBRxTXI1HvvF7IaZGBz2hsip12REeNNh3rev8AKPAxp
-         RDFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=URD/oshFPOwr0qbJ4yDAwjjjTXrKyLyD0kda/kmQ/qY=;
-        b=S5ovJIpjiMTBm1W45mT4/1PS+z2mz3132N01b5/J4IIWZQT/tyDGSfPZ7rIE82v7iO
-         MunXVVz7T6IU/gKGCKcMNPeRD2Lol4KpNm5RFcv/TFe3CI0k7bkPehvGSx4kJlRK1GJA
-         BA7+CSMvVxX0bvWW1N8Khy31AOeZ8ldCD7b4R9SghypSnnf09O4pQFsuErb3A1IeZDmO
-         deGslKiygconOjpyMC9Y+xR0fcsEu36LjBgEshChBtrBz+ILy3W+nZrYgI+0kZpEk60F
-         SJA08o3JcarvDlMsHqd8rRTv51iw2tFTvC1BiyMwcxQC9ScMS/KOoSD7Q0+utWATnQqR
-         8Caw==
-X-Gm-Message-State: AO0yUKWs1Pet75Q71PVrCclPxYXfujj6Y0E2iSuqLZsW/ZSvlKgoQHj/
-        GHoQmDeMVQutin8iWAAfwQW+wg==
-X-Google-Smtp-Source: AK7set/cSc9giVDzrOn6jlQqCZW1Ic+uotyR57MWGDOOUieEi8LrPpYHOIq4+38jKE77ziWeDxqYtg==
-X-Received: by 2002:a17:902:d4c9:b0:198:af50:e4ec with SMTP id o9-20020a170902d4c900b00198af50e4ecmr246944plg.18.1675868652255;
-        Wed, 08 Feb 2023 07:04:12 -0800 (PST)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id d3-20020a170902c18300b00196896d6d04sm11117262pld.258.2023.02.08.07.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 07:04:11 -0800 (PST)
-Date:   Wed, 8 Feb 2023 15:04:08 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "lirongqing@baidu.com" <lirongqing@baidu.com>,
-        KY Srinivasan <kys@microsoft.com>,
+        Wed, 8 Feb 2023 10:13:47 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9B72107;
+        Wed,  8 Feb 2023 07:13:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675869226; x=1707405226;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=S9tdno62LdkcJlHA3/wN/huJrL89J4P/0p6DKCZ9KvM=;
+  b=KNqBTPHlHU0plH/C62s64AG24RmUUtPscS7Innm7wGe8xaXMJ0RTx/mj
+   dDLYMWb/IDmnTBp+ezAGTAgY2txj29nFf4zBBck54W9wAr0MSgwV+Yf++
+   0pMovTtURuckqpKJ+NM6tYu9A5JAYDf3xvMmo2xB0ghltsr7iJ5v/0js+
+   iku8rUH/AiXncNVFhs2YCojNrVdsf+mjwcrlaz65WsCcXVTNqhFBJW9BH
+   3VqrgGLbF0i0XjcSbuppQfQBXax67mzvwLTqEzr54BszkHyp6nH0k7BXs
+   6UmEZtSAbqMNJqazCg8htpqBAYTlYOCxKlnStAZtJsR2SVfvJL+S0SUYh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="317824114"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="317824114"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 07:09:41 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="735971467"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="735971467"
+Received: from tbacklun-mobl.amr.corp.intel.com (HELO [10.209.14.225]) ([10.209.14.225])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 07:09:38 -0800
+Message-ID: <76566fc4-d6be-8ebf-7e9d-d0b7918cb880@intel.com>
+Date:   Wed, 8 Feb 2023 07:09:36 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Content-Language: en-US
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
         "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
- shutdown
-Message-ID: <Y+O56OXIuARBhsg2@google.com>
-References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
- <BYAPR21MB168840B3814336ED510845C0D7D89@BYAPR21MB1688.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB168840B3814336ED510845C0D7D89@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
+ <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
+ <Y8r2TjW/R3jymmqT@zn.tnic>
+ <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y9FC7Dpzr5Uge/Mi@zn.tnic>
+ <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+JG9+zdSwZlz6FU@zn.tnic>
+ <BYAPR21MB1688A80B91CC4957D938191ED7DB9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+KndbrS1/1i0IFd@zn.tnic>
+ <BYAPR21MB1688608129815E4F90B9CAA3D7DB9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+KseRfWlnf/bvnF@zn.tnic>
+ <BYAPR21MB16880F67072368255CBD815AD7D89@BYAPR21MB1688.namprd21.prod.outlook.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <BYAPR21MB16880F67072368255CBD815AD7D89@BYAPR21MB1688.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Feb 08, 2023, Michael Kelley (LINUX) wrote:
-> From: lirongqing@baidu.com <lirongqing@baidu.com> Sent: Monday, February 6, 2023 5:15 PM
-> > 
-> > Zeroing the counter register in pit_shutdown() isn't actually supposed to
-> > stop it from counting,  will causes the PIT to start running again,
-> > From the spec:
-> > 
-> >   The largest possible initial count is 0; this is equivalent to 216 for
-> >   binary counting and 104 for BCD counting.
-> > 
-> >   The Counter does not stop when it reaches zero. In Modes 0, 1, 4, and 5 the
-> >   Counter "wraps around" to the highest count, either FFFF hex for binary
-> >   count- ing or 9999 for BCD counting, and continues counting.
-> > 
-> >   Mode 0 is typically used for event counting. After the Control Word is
-> >   written, OUT is initially low, and will remain low until the Counter
-> >   reaches zero. OUT then goes high and remains high until a new count or a
-> >   new Mode 0 Control Word is written into the Counter.
-> > 
-> > Hyper-V and KVM follow the spec, the issue that 35b69a42 "(clockevents/drivers/
-> > i8253: Add support for PIT shutdown quirk") fixed is in i8253 drivers, not Hyper-v,
-> > so delete the zero timer counter register in shutdown, and delete PIT shutdown
-> > quirk for Hyper-v
-> 
-> From the standpoint of Hyper-V, I'm good with this change.  But there's a
-> risk that old hardware might not be compliant with the spec, and needs the
-> zero'ing for some reason. The experts in the x86 space will be in the best
-> position to assess the risk.
+On 2/7/23 16:18, Michael Kelley (LINUX) wrote:
+> In v2 of this patch series, you had concerns about CC_ATTR_PARAVISOR being too
+> generic. [1]   After some back-and-forth discussion in this thread, Boris is back to
+> preferring it.   Can you live with CC_ATTR_PARAVISOR?  Just trying to reach
+> consensus ... 
 
-Yep, my feeling exactly.  My input is purely from reading those crusty old specs.
+I still think it's too generic.  Even the comment was trying to be too
+generic:
+
+> +	/**
+> +	 * @CC_ATTR_HAS_PARAVISOR: Guest VM is running with a paravisor
+> +	 *
+> +	 * The platform/OS is running as a guest/virtual machine with
+> +	 * a paravisor in VMPL0. Having a paravisor affects things
+> +	 * like whether the I/O APIC is emulated and operates in the
+> +	 * encrypted or decrypted portion of the guest physical address
+> +	 * space.
+> +	 *
+> +	 * Examples include Hyper-V SEV-SNP guests using vTOM.
+> +	 */
+> +	CC_ATTR_HAS_PARAVISOR,
+
+This doesn't help me figure out when I should use CC_ATTR_HAS_PARAVISOR
+really at all.  It "operates in the encrypted or decrypted portion..."
+Which one is it?  Should I be adding or removing encryption on the
+mappings for paravisors?
+
+That's opposed to:
+
+> +	/**
+> +	 * @CC_ATTR_ACCESS_IOAPIC_ENCRYPTED: Guest VM IO-APIC is encrypted
+> +	 *
+> +	 * The platform/OS is running as a guest/virtual machine with
+> +	 * an IO-APIC that is emulated by a paravisor running in the
+> +	 * guest VM context. As such, the IO-APIC is accessed in the
+> +	 * encrypted portion of the guest physical address space.
+> +	 *
+> +	 * Examples include Hyper-V SEV-SNP guests using vTOM.
+> +	 */
+> +	CC_ATTR_ACCESS_IOAPIC_ENCRYPTED,
+
+Which makes this code almost stupidly obvious:
+
+> -	flags = pgprot_decrypted(flags);
+> +	if (!cc_platform_has(CC_ATTR_ACCESS_IOAPIC_ENCRYPTED))
+> +		flags = pgprot_decrypted(flags);
+
+"Oh, if it's access is not encrypted, then get the decrypted version of
+the flags."
+
+Compare that to:
+
+	if (!cc_platform_has(CC_ATTR_PARAVISOR))
+		flags = pgprot_decrypted(flags);
+
+Which is a big fat WTF.  Because a paravisor "operates in the encrypted
+or decrypted portion..."  So is this if() condition correct or inverted?
+It's utterly impossible to tell because of how generic the option is.
+
+The only way to make sense of the generic thing is to do:
+
+	/* Paravisors have a decrypted IO-APIC mapping: */
+	if (!cc_platform_has(CC_ATTR_PARAVISOR))
+		flags = pgprot_decrypted(flags);
+
+at every site to state the assumption and make the connection between
+paravisors and the behavior.  If you want to go do _that_, then fine by
+me.  But, at that point, the naming is pretty worthless because you
+could also have said "goldfish" instead of "paravisor" and it makes an
+equal amount of sense:
+
+	/* Goldfish have a decrypted IO-APIC mapping: */
+	if (!cc_platform_has(CC_ATTR_GOLDFISH))
+		flags = pgprot_decrypted(flags);
+
+I get it, naming is hard.
