@@ -2,82 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DA3D68E64F
-	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 03:51:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 985AA68E781
+	for <lists+linux-hyperv@lfdr.de>; Wed,  8 Feb 2023 06:30:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjBHCvw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 7 Feb 2023 21:51:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58970 "EHLO
+        id S229807AbjBHFaU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 8 Feb 2023 00:30:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbjBHCvv (ORCPT
+        with ESMTP id S229712AbjBHFaT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 7 Feb 2023 21:51:51 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 25B18E3B0;
-        Tue,  7 Feb 2023 18:51:50 -0800 (PST)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id 7A8C420C7E3E; Tue,  7 Feb 2023 18:51:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A8C420C7E3E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1675824709;
-        bh=/8sypdsBFJ9BayyXPQW3tsqVwQ5HKWArPlSI9nkM8R4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F+vpjfvj+umQjEGJfek92nTkeB45CtCxc+Z3ILKuBI7JjSXK9DWTc67imS/3UTG8y
-         WLGgMSURm2yLoqYte2jWNPq11PDNG5fCoEeEGZ6wsKeO8shYivV6MXx6NDgSa/YjeL
-         hYYMw2eF4mykznZGLZlCtoHhJtDlRDxZ4X3QAMAw=
-Date:   Tue, 7 Feb 2023 18:51:49 -0800
-From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     krzysztof.kozlowski+dt@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        virtualization@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        ssengar@microsoft.com, dphadke@linux.microsoft.com
-Subject: Re: [PATCH v4 4/6] dt-bindings: hypervisor: Rename virtio to
- hypervisor
-Message-ID: <20230208025149.GC838@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1675756199-5917-1-git-send-email-ssengar@linux.microsoft.com>
- <1675756199-5917-5-git-send-email-ssengar@linux.microsoft.com>
- <20230207183931.GB3753062-robh@kernel.org>
+        Wed, 8 Feb 2023 00:30:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE89819F31;
+        Tue,  7 Feb 2023 21:30:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 86590614B4;
+        Wed,  8 Feb 2023 05:30:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CD9D8C4339B;
+        Wed,  8 Feb 2023 05:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675834217;
+        bh=X869hs5QRmL6Keo1c4rmIMNoGGataqLDrebSA37ZfzE=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=RWQQeklVXIvgsc2dqb8x/LrEXLz6Dih1DxeV4zzflkQaLhGnODvmcfD6IpHlqY7sc
+         EJWLCwIZUKU4Ll25ECaBSy8Qx7cfY4SKAWRlpIEgujTWMM3RcmVlaqg7VQ5W+AcZF8
+         SkN2KDciS67irgKBjQPTk3dO7vQZedyFoWXP31suLFL6xTAktCUXVyL1Kib9X5BKgy
+         zWnaWGx/x3k2+RfMjr/6sLl+Ex/ojSY/Cp5s/WOxKc033M/lqRabyubYNDDiVNDq46
+         U9bU/VC6tjl8yl8nt6IWtFlUNORHgGMlA93igm3KtfJvByD9fglhqCShJJ7ZH7cCrG
+         jE7P/U0X7vmmg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AD83EE50D62;
+        Wed,  8 Feb 2023 05:30:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230207183931.GB3753062-robh@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 1/1] hv_netvsc: Allocate memory in netvsc_dma_map() with
+ GFP_ATOMIC
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167583421770.16532.4468711541508652547.git-patchwork-notify@kernel.org>
+Date:   Wed, 08 Feb 2023 05:30:17 +0000
+References: <1675714317-48577-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1675714317-48577-1-git-send-email-mikelley@microsoft.com>
+To:     Michael Kelley (LINUX) <mikelley@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 12:39:31PM -0600, Rob Herring wrote:
-> On Mon, Feb 06, 2023 at 11:49:57PM -0800, Saurabh Sengar wrote:
-> > Rename virtio folder to more generic hypervisor, so that this can
-> > accommodate more devices of similar type.
-> > 
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> >  Documentation/devicetree/bindings/gpio/gpio-virtio.yaml               | 4 ++--
-> >  Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml    | 2 +-
-> >  .../devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml         | 2 +-
-> >  .../devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml     | 2 +-
-> >  Documentation/devicetree/bindings/i2c/i2c-virtio.yaml                 | 4 ++--
-> >  MAINTAINERS                                                           | 2 +-
-> >  6 files changed, 8 insertions(+), 8 deletions(-)
-> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/mmio.yaml (95%)
-> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/pci-iommu.yaml (98%)
-> >  rename Documentation/devicetree/bindings/{virtio => hypervisor}/virtio-device.yaml (93%)
-> 
-> virtio is used for more than just an interface to hypervisors. I think 
-> this should remain. Instead, I'd put vmbus under bindings/bus/.
+Hello:
 
-Agree, will move to bus in v5
+This patch was applied to netdev/net.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
+On Mon,  6 Feb 2023 12:11:57 -0800 you wrote:
+> Memory allocations in the network transmit path must use GFP_ATOMIC
+> so they won't sleep.
 > 
-> Rob
+> Reported-by: Paolo Abeni <pabeni@redhat.com>
+> Link: https://lore.kernel.org/lkml/8a4d08f94d3e6fe8b6da68440eaa89a088ad84f9.camel@redhat.com/
+> Fixes: 846da38de0e8 ("net: netvsc: Add Isolation VM support for netvsc driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/1] hv_netvsc: Allocate memory in netvsc_dma_map() with GFP_ATOMIC
+    https://git.kernel.org/netdev/net/c/c6aa9d3b43cd
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
