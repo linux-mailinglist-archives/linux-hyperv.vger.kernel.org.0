@@ -2,171 +2,169 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA7E69041A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Feb 2023 10:48:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB8406907B8
+	for <lists+linux-hyperv@lfdr.de>; Thu,  9 Feb 2023 12:50:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbjBIJsx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 9 Feb 2023 04:48:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50824 "EHLO
+        id S229985AbjBILuv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 9 Feb 2023 06:50:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjBIJsx (ORCPT
+        with ESMTP id S229939AbjBILuY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 9 Feb 2023 04:48:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E0B241D8
-        for <linux-hyperv@vger.kernel.org>; Thu,  9 Feb 2023 01:48:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675936086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=M/aR+B7oolKvJ6j1W4OUTMhGXXCQnfWS4jHDUmtjyXw=;
-        b=X/0paZBQghRbUTYVTGCQ6FaGmDMkAwj+aQKIwrpugrrPSOuy2uJ84C8mfrshakJkKwEtay
-        KoxpNOtF2wCa8QhVffKMGEPaVWRLWv90uXNZ4Rm8Qns5Fc2wdDNC13dz2v7ixnYlzEZ8Gc
-        NHNZZ2Eiouk92YZWBK+nzBqUf/BECMM=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-179-MImGAMRiPgS7hpSTS9psWg-1; Thu, 09 Feb 2023 04:48:05 -0500
-X-MC-Unique: MImGAMRiPgS7hpSTS9psWg-1
-Received: by mail-ot1-f70.google.com with SMTP id w9-20020a9d5a89000000b0068bc6c8621eso642080oth.9
-        for <linux-hyperv@vger.kernel.org>; Thu, 09 Feb 2023 01:48:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M/aR+B7oolKvJ6j1W4OUTMhGXXCQnfWS4jHDUmtjyXw=;
-        b=bP6zAWVKuIEoTLcVWwVpxMzqWIC7FRIY1CSbUHAzwHfQ0FGrhgQGAlsLFeIynhZRNL
-         1q1asDThuZqacVyc1GagapBAppcYyigZNGrVyKc4TGlP9+p3WhZ16jgzfGt2IKgjxkKs
-         gG4sSMC+2RhPn9IssKEk8ubdYkDlQJ2VD7tduJtWOSxKG2sjEAdJ9zNsoc1sJnwiltTO
-         5PoF8OY7oMXO1+BMDjSAU8O/QwE4SZxwdQD1bgAmxSELqW/CalQRGBxpTGYG29OgkFZN
-         uTGg3Ans/X2IrS2Xv8dSijNqHqgRgqhFtkEd4Am4T0psrHLSdH+9s6xtDd6ejWJNISQ/
-         bDXg==
-X-Gm-Message-State: AO0yUKVme36UWUgG7WzWYtIaHOEQud/07v2QEhLkvTYGbqxkdrK5JtQB
-        gjjKkYL95Sq33gPitzM+wsHIedWvnfoj9sJZr4Lf5hEvB7m0p3ZIgrTN4t2H2f/CZD15EVR5uHl
-        g3I2QznUGQrklTUGxk18/LbobH72VYiw2JFMSjR0D
-X-Received: by 2002:a05:6808:2193:b0:364:5ff7:4e9f with SMTP id be19-20020a056808219300b003645ff74e9fmr546285oib.160.1675936084046;
-        Thu, 09 Feb 2023 01:48:04 -0800 (PST)
-X-Google-Smtp-Source: AK7set/NIGUjXEVX5ul6c7TTaeDxPC8/LZ4NHPhjLdDQs6Me664eATOE3viFfC6osIez0Ue4ZWvzxYEZgSoDpG7jisw=
-X-Received: by 2002:a05:6808:2193:b0:364:5ff7:4e9f with SMTP id
- be19-20020a056808219300b003645ff74e9fmr546281oib.160.1675936083657; Thu, 09
- Feb 2023 01:48:03 -0800 (PST)
+        Thu, 9 Feb 2023 06:50:24 -0500
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on20600.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8a::600])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E77658CF;
+        Thu,  9 Feb 2023 03:37:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q0WiLs5TkThusR3sMzqBZdp2o4B7BTSdKVHv4EeP0nQLsz11WNvVqQJi5dj4L0J4B2bHu1UxwKABfnCt9bRgx4DyL6aXP07xWTtQYPJjWKNPZhk5EPijX9/uMQMfJTkcNC7JRpnRxSVrSF2Mw8IYspjiKxUqNBgtyki5XTcnGwjCkHJrNOISeO8QSF/7zqAhm2AZQsTUiwR++Ro6yf0q8loFvA9YtRRSRv0zf8w5msHRtds53WeS57L+n2S/Ht1MHeUEfVZGFy8+i5PBHs5zIBJIzZ1dNVdujmMsgNaRLEBKXHTGYgVAJWF+uwulbijdqk5PCbxwgLmOgxGvDTrZ4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pZqWNtrvh3ZfRNsSqJzOZklRaVHRL2v2vA7qQw/eu5Y=;
+ b=drnRZDnjimBpbxBMIbuJ5H7lOcaGcFwO5KdYEE1HqSOovbTKEPQOAfOGNfMSFeLQyVzTzVM6MARbMQa5dyM5U0vvPiK/X0XdGRiR9kyqP8YbsVtIVVq4M1FMI4qI1bicKJSQsh1Ct39a/EB7XiNEFPZFHxdT0w0tK2zVpWEemV+kUEPLxaOKMnw2XVxyQySYA2u6wuwfme9iEVUo2DZa3KCv+vEDYGjaDsSE5IsJuDKBi71Hf8F7oXbjb7q0yfAJolR7v3XJVZahjyo7g88HANRmofg7rYUWRv9JUFsvoroVWzuiMBH+Og5Du83OaK3zixsaxEdhADNGO7skavtLuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pZqWNtrvh3ZfRNsSqJzOZklRaVHRL2v2vA7qQw/eu5Y=;
+ b=fa5dzHNUm1OtkMtYyN4mkgDnOxOoR1vtpRiJJzyJ85H/VEOVRmUT90jUGSf2i4tYRmkYpbdGApkflc8ca5JKXuutsnOGZmBdgKC1zVpafBXk5H9Xz82aw81XLbV8AOtFlQMFM44VoPjN/CKFu7D80O0DzgIZHBuy582JJQh1kCc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB2810.namprd12.prod.outlook.com (2603:10b6:5:41::21) by
+ SJ0PR12MB6781.namprd12.prod.outlook.com (2603:10b6:a03:44b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.36; Thu, 9 Feb
+ 2023 11:37:04 +0000
+Received: from DM6PR12MB2810.namprd12.prod.outlook.com
+ ([fe80::b84e:f638:fa40:27ef]) by DM6PR12MB2810.namprd12.prod.outlook.com
+ ([fe80::b84e:f638:fa40:27ef%6]) with mapi id 15.20.6086.017; Thu, 9 Feb 2023
+ 11:37:04 +0000
+Message-ID: <fac62414-06f9-0454-8393-f039aa30571a@amd.com>
+Date:   Thu, 9 Feb 2023 12:36:51 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From:   "Gupta, Pankaj" <pankaj.gupta@amd.com>
+Subject: Re: [RFC PATCH V3 00/16] x86/hyperv/sev: Add AMD sev-snp enlightened
+ guest support on hyperv
+To:     Tianyu Lan <ltykernel@gmail.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        michael.roth@amd.com, thomas.lendacky@amd.com,
+        venu.busireddy@oracle.com, sterritt@google.com,
+        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20230122024607.788454-1-ltykernel@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20230122024607.788454-1-ltykernel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR3P281CA0128.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:94::10) To DM6PR12MB2810.namprd12.prod.outlook.com
+ (2603:10b6:5:41::21)
 MIME-Version: 1.0
-References: <20230208113424.864881-1-mgamal@redhat.com> <SA1PR21MB1335F1074908B3E00DFA21BDBFD89@SA1PR21MB1335.namprd21.prod.outlook.com>
- <CAG-HVq8GYwCYBgiBnjO8ca5M27j6-MPK3e9H_c+EPmyotmOHxw@mail.gmail.com>
-In-Reply-To: <CAG-HVq8GYwCYBgiBnjO8ca5M27j6-MPK3e9H_c+EPmyotmOHxw@mail.gmail.com>
-From:   Mohammed Gamal <mgamal@redhat.com>
-Date:   Thu, 9 Feb 2023 11:47:52 +0200
-Message-ID: <CAG-HVq9KWPRhy3X1E8vs_0y7xeJFBA-hZ5u6Vxh7H9Tu=gV9WA@mail.gmail.com>
-Subject: Re: [PATCH] Drivers: vmbus: Check for channel allocation before
- looking up relids
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2810:EE_|SJ0PR12MB6781:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8096887b-dc4d-44e1-808c-08db0a91f73a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4vaj/20azQ7PddtBBE0B1TEQ38NLLKREogabRJ7IkP5juh+njW1FOSQGxNEdiMxlveQDTwXwSg30vIoZRM+piYWF2YF7mUhnwPsVasc7809DXSuHFX4kukmXSiaFtJvVT9/S2ugh2jBsgnC2jI8m3G1BhboWuODo0R5nnw65JbDKw3zdVkJl6bPeTKf7u3CSp7mjsGIM2ZO7aGYEt9XrKvRbmPEbB1XDQ3pXfVpu+X/7JWe3nBi79Z6XPTrCzPV0fBXix8Y3zphlbYGW6Jz3qYpSfopBYqG4KrMzCNjCDcQ+KGXpxsDtJPsGd0GrZ6FbxnY54s5HIKMNtTuGQws9MO5qsmsRLT4eseMT+f4C666lEkELwOkHsGIMbktfZRBU/LgKczY8XWr6FT7MDc5SnHUHIJsrjwt4dbg6sxfdV+W1eYheDMih/09H54D5d1+1MfFPhq0QnbVFEomLldA/97pPgkevfgA1CChJfEXNoz3p+kFMFWrQV1TVZXMdJxnon/1dJn/Ft9OSaPfk0jaIv8xTmjOjFOXsSudXU7ZdoTMptCi1AW2hNn94mPsphZWfc40nJK9JGN4LQUZ709j7n0/vUYCawjAPAwCuRoPh24M3fEmU3FZfKK9SiAK+V/HdmVDePD3Jp17gE1c+Tmi9BchxHGeaS4z4+tinW54Hv5jLWZHFjsV0EA5eW30bOR1D5O20PWVQwfHnZQgzOptgfD0hUDkFdprx968YfwQNIvxOMtnX95+vM1TYPwQrHCb/
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2810.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(39860400002)(376002)(366004)(136003)(451199018)(41300700001)(36756003)(2906002)(38100700002)(921005)(478600001)(186003)(6512007)(316002)(2616005)(4326008)(6506007)(86362001)(66476007)(6666004)(66556008)(66946007)(31696002)(8676002)(6486002)(83380400001)(7416002)(4744005)(5660300002)(7406005)(31686004)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dDNTaXFKUW1nalcySm1GTDF2cVQrMGhLQVkwOUJTbk9jQUpQRU4xWXZESW9M?=
+ =?utf-8?B?ckZTZjhsWmE4UUMwZ0xYcVVEWFdjeC9aYURrRnJlQmlCVmtEeXNmaXhqTTJH?=
+ =?utf-8?B?LzhmSEsxVkpJN0ZNNjlVNFV0b1FORzBqejViL3p3THRkaWxtOEVaSVVCWTdm?=
+ =?utf-8?B?MUMrODF0cUFEZCtPZEtQSFlLM0ZmRTQzaDVhYUEvb09VNkdhOStyZVpROTdY?=
+ =?utf-8?B?UDc2QUJIRDRWUS83NWRhNXZCakg2b2RtVHRHUCsrbVRpN29ka3VHVDNBMHZk?=
+ =?utf-8?B?aEorWmNnVlRWQis0ZU9PTEFKMTdBZXBGVzVoemY2VXpjUW1JM2dsZy9hT3dT?=
+ =?utf-8?B?WHdWbjAvOTdvRitpbUJjWlYwTmVya0xVdlhYKzFrdjRQcHgvK0lSeVBPVDJ0?=
+ =?utf-8?B?Z011d2JkVVhQcmw5KzRjR1FYeUdJeFVXNDE0QjdtaFVqSTNwd1o0eEZDZFpS?=
+ =?utf-8?B?cks5dzgwUCsvY0l0WVRFRmdGTmpOSmoxZTQrUzRkMnRLYm5YUzBaY2VKU3A4?=
+ =?utf-8?B?ajl3UEFXZTE2QnRJdnBoS1dRN0pEamhCUHNpZVlhbnhBWGh5bUtHRHh6MUxk?=
+ =?utf-8?B?ZTNRMEJzN01KbnJpNkJpcU9wSExzaGFOOTN2NGhWSDUwY1R2b2dwVldtZWQv?=
+ =?utf-8?B?Q3BjUVFaeUJsOUh0ZGlFOUNObFdBbzc4bE5mZUhEclg4YUFmdzJFUXVIQm9x?=
+ =?utf-8?B?aHBibUJxZTZsRjZsTDdtYmtja2xtVDlkSWRISFh3MTlCNGxKSGd3VlZDZnA1?=
+ =?utf-8?B?YkZnSERRSHBoV1M3RTRrenpnQ2t4YTFZZjFWNWN2ZlFYUTlVd09wR3E3NWx2?=
+ =?utf-8?B?d1h1V2lXaGNZODArblNhRDhDM1UyeEVGZ24waDlTSGUxNm5ZZUNiVVlSVW9K?=
+ =?utf-8?B?RDkxSGFpVWk4bStwczJwOGFFYUpvMERIOUVFU3Q3aVlJVGozbDNJUm5kQ09j?=
+ =?utf-8?B?TUdwUFc2TUNBdk9YOFc4RjBPVG9lUWwzOVBxNTNQWldld05jdVdGd1hQbExu?=
+ =?utf-8?B?ekRndmFGQUpaelVwTVVIZVdFRWYvcXRWUiticWtBMTRFWDc5R3lTajlGUWVY?=
+ =?utf-8?B?NVEvNHV5cmdaYXBJMks2N2U4TW96R1l1MDhvb0UxRFdvOGgvanR2M1A0b3RH?=
+ =?utf-8?B?cEdjMm4xT283MVJUM1htSHBLWXhOOFBWLzJqL3hMZmwrS0hDT1ZCak0wYTQx?=
+ =?utf-8?B?VFVUbDlzS0N4YUxyUDFKQ2hzM0NTZUxVekNORU1GNTZDQ01kSC9DQmtzWXZw?=
+ =?utf-8?B?UmpCRmpUbmJkR2NTQnVFa0FhVm5TcjdCVktSTGp3TEV6b1lYU1JkVmhYdzdl?=
+ =?utf-8?B?TXRraFpoUkRIbjgyYkwvNlFjTHFVQUtqbkhvSzNxanVMQWJVdnVENndtVmFr?=
+ =?utf-8?B?RVllbFFOWHRsUVVoa3loR0k0RlUyaWhZNHN5elc5bzdyUEZGU003bGU4ajl0?=
+ =?utf-8?B?MXB3N1lUdExyTys1K09kaFR6dmIwWnJ1aHhoaWg1YmhnOSt1QU5YZjRIWHYr?=
+ =?utf-8?B?V0RmLzNXcG94WFFjVFFSRWlsc0x0ZlV4MUs2UGdnZTJyMW9YQTRjQTlZd2do?=
+ =?utf-8?B?U3lhL0F2c0JHUytjWkNFZXZXaVNmaTRFMlFsR054UGxNU1k4c0N3Y0x1Z0hW?=
+ =?utf-8?B?Z1pqM0FTeE15MVowMk10dldmQTRMWldQazE0SnM1Z0RZbzV6YWNPSG9YMlk3?=
+ =?utf-8?B?dm01LzdoRnQ1QkZaeXBmblNkL2w0dkVzQXdQVU5MaGlsUWdxcCtoVVozSzhH?=
+ =?utf-8?B?eWhTenM4cS9wVVROcldjTE43cWRQcmFoeXNjQTBmV09tTUtOYng1Z2pPN1V5?=
+ =?utf-8?B?K053MjB0TXdtb1FGQVJiMmtoWG5qb3VPdmh4T0NLQ1NOeEFLU29DS2FKTld3?=
+ =?utf-8?B?M0JOR1RpM2RSWjlHd2wwbVp1UDBSM2FqMHNOQUgyU0pzeFJPWlpFVml0a0Ux?=
+ =?utf-8?B?bTc3a3dtak9mUnpSZ2c4QXRoZHoyT1FWVXRNVTIrT2laMnFqQk9jK2lIWFp1?=
+ =?utf-8?B?OHZhcjhERUV1VnpFK0NZWFRGdENiTURCdmdGK0FOK0ErN2hVN25Vc3ByRmVo?=
+ =?utf-8?B?ZkxwMU5zbm0xQUYzeWZWWWJCa2p5SlM0VXhTOE1jdFNQRU9STFJkTVExRHd4?=
+ =?utf-8?B?NUVNUEwvb3p4bkV3d1A2VUgzelM0MkRVWi9Id2w4WXZ2Z0pYakJ6SUQ2UU9O?=
+ =?utf-8?Q?/OheBW5+DVb+JwsMD5T0mtM8c8+rZAq1NTJLi7WruabI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8096887b-dc4d-44e1-808c-08db0a91f73a
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2810.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2023 11:37:04.0055
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZzttXlfaQYt0OKZiNiZk/guk3E5gNu0Zrkug/zpMEcp+UKtKyEjFh0TbYpwAxNClJB/I5Ho6tEYjyvNsk525gA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6781
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Feb 9, 2023 at 11:25 AM Mohammed Gamal <mgamal@redhat.com> wrote:
->
->
-> On Wed, Feb 8, 2023 at 9:03 PM Dexuan Cui <decui@microsoft.com> wrote:
-> >
-> > > From: Mohammed Gamal <mgamal@redhat.com>
-> > > Sent: Wednesday, February 8, 2023 3:34 AM
-> > >
-> > > relid2channel() assumes vmbus channel array to be allocated when called.
-> > > However, if the guest receives a vmbus interrupt during driver initialization
-> > > before vmbus_connect() is called or if vmbus_connect() fails, the vmbus
-> > > interrupt service routine is called which in turn calls relid2channel()
-> > > and can cause a null pointer dereference.
-> >
-> > Before vmbus_connect() is called or if vmbus_connect() fails, there should
-> > be no VMBus channel related interrupts at all, so relid2channel() can't be
-> > called.
-> >
-> > Can you please share the log or at least the crash call-stack?
-> > I'm curious how the crash can happen.
-> >
->
-> Hi Dexuan,
-> We saw this when triggering a crash with kdump enabled with
-> echo 'c' > /proc/sysrq-trigger
->
-> When the new kernel boots, we see this stack trace:
->
-> [   21.790653] BUG: kernel NULL pointer dereference, address: 0000000000000070
-> [   21.816550] #PF: supervisor read access in kernel mode
-> [   21.835697] #PF: error_code(0x0000) - not-present page
-> [   21.855499] PGD 0 P4D 0
-> [   21.865471] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [   21.881150] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.14.0-247.el9.x86_64 #       1
-> [   21.906679] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS 090007  05/18/2018
-> [   21.939413] RIP: 0010:relid2channel+0x1a/0x30 [hv_vmbus]
-> [   21.958240] Code: 00 00 00 e8 a8 01 db c0 e9 78 ff ff ff 0f 1f 00 0f 1f 44 00        00 81 ff ff 07 00 00 77 15 48 8b 05 ac 31 01 00 89 ff 48 8d 04 f8 <48> 8b 00 e9        de ef b2 c1 0f 0b 31 c0 e9 d5 ef b2 c1 0f 1f 44 00 00
-> [   22.022266] RSP: 0018:ffffc90000003f90 EFLAGS: 00010097
-> [   22.040588] RAX: 0000000000000070 RBX: ffff88807a4ef200 RCX: 0000000000000000
-> [   22.065670] RDX: ffffffff82a1a940 RSI: 0000000000000000 RDI: 000000000000000e
-> [   22.090778] RBP: 000000000000000e R08: 0000000000000000 R09: 0000000000000000
-> [   22.115947] R10: 000000000000000e R11: ffffc90000003ff8 R12: 0000000000000001
-> [   22.140901] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [   22.165344] FS:  0000000000000000(0000) GS:ffff88807e600000(0000) knlGS:00000       00000000000
-> [   22.192958] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   22.213376] CR2: 0000000000000070 CR3: 000000007ae40000 CR4: 00000000003506b0
-> [   22.238792] Call Trace:
-> [   22.248268]  <IRQ>
-> [   22.256236]  vmbus_chan_sched.isra.0+0x67/0x190 [hv_vmbus]
-> [   22.275822]  vmbus_isr+0x21/0xd0 [hv_vmbus]
-> [   22.290906]  __sysvec_hyperv_callback+0x2e/0x60
-> [   22.307021]  sysvec_hyperv_callback+0x6d/0x90
-> [   22.322530]  </IRQ>
-> [   22.330559]  <TASK>
-> [   22.338573]  asm_sysvec_hyperv_callback+0x16/0x20
-> [   22.355090] RIP: 0010:default_idle+0x10/0x20
-> [   22.370572] Code: 00 0f ae f0 0f ae 38 0f ae f0 eb b5 66 66 2e 0f 1f 84 00 00        00 00 00 0f 1f 00 0f 1f 44 00 00 eb 07 0f 00 2d 7e 6e 4d 00 fb f4 <e9> 4b dc 2c        00 cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 65
-> [   22.435289] RSP: 0018:ffffffff82a03ea8 EFLAGS: 00000202
-> [   22.453695] RAX: ffffffff81b33ea0 RBX: ffffffff82a1a940 RCX: 0000000000000000
-> [   22.478759] RDX: 00000000000000cd RSI: 0000000000000087 RDI: 00000000000000ce
-> [   22.503863] RBP: 0000000000000000 R08: 0138a8c77d17acc3 R09: 0000000000000001
-> [   22.528774] R10: 0000000000000400 R11: 00000000005d0eea R12: 0000000000000000
-> [   22.553857] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [   22.578981]  ? mwait_idle+0x80/0x80
-> [   22.591660]  ? mwait_idle+0x80/0x80
-> [   22.604332]  default_idle_call+0x33/0xe0
-> [   22.618343]  cpuidle_idle_call+0x15d/0x1c0
-> [   22.632969]  ? read_hv_sched_clock_tsc+0x5/0x20
-> [   22.649218]  do_idle+0x7b/0xe0
-> [   22.660741]  cpu_startup_entry+0x19/0x20
-> [   22.674964]  rest_init+0xca/0xd0
-> [   22.686907]  arch_call_rest_init+0xa/0x14
-> [   22.701272]  start_kernel+0x49e/0x4c0
-> [   22.714418]  secondary_startup_64_no_verify+0xe5/0xeb
-> [   22.732484]  </TASK>
-> [   22.740973] Modules linked in: hv_vmbus(+) serio_raw dm_mirror dm_region_hash        dm_log dm_mod fuse overlay squashfs loop
-> [   22.779694] CR2: 0000000000000070
-> [   22.792006] ---[ end trace 56dd24038e89124f ]---
-> [   22.808686] RIP: 0010:relid2channel+0x1a/0x30 [hv_vmbus]
-> [   22.827388] Code: 00 00 00 e8 a8 01 db c0 e9 78 ff ff ff 0f 1f 00 0f 1f 44 00        00 81 ff ff 07 00 00 77 15 48 8b 05 ac 31 01 00 89 ff 48 8d 04 f8 <48> 8b 00 e9        de ef b2 c1 0f 0b 31 c0 e9 d5 ef b2 c1 0f 1f 44 00 00
-> [   22.891669] RSP: 0018:ffffc90000003f90 EFLAGS: 00010097
-> [   22.910168] RAX: 0000000000000070 RBX: ffff88807a4ef200 RCX: 0000000000000000
-> [   22.935445] RDX: ffffffff82a1a940 RSI: 0000000000000000 RDI: 000000000000000e
-> [   22.958556] RBP: 000000000000000e R08: 0000000000000000 R09: 0000000000000000
-> [   22.979539] R10: 000000000000000e R11: ffffc90000003ff8 R12: 0000000000000001
-> [   23.004127] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [   23.027088] FS:  0000000000000000(0000) GS:ffff88807e600000(0000) knlGS:00000       00000000000
-> [   23.053341] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   23.074013] CR2: 0000000000000070 CR3: 000000007ae40000 CR4: 00000000003506b0
-> [   23.099322] Kernel panic - not syncing: Fatal exception in interrupt
-> [   23.121729] Kernel Offset: disabled
+Hi Tianyu,
 
-Ugh, my mail client messed up the reply and it was marked as spam.
-Resending to the lists in plain text. See the reply above.
+> This patchset is to add AMD sev-snp enlightened guest
+> support on hyperv. Hyperv uses Linux direct boot mode
+> to boot up Linux kernel and so it needs to pvalidate
+> system memory by itself.
+> 
+> In hyperv case, there is no boot loader and so cc blob
+> is prepared by hypervisor. In this series, hypervisor
+> set the cc blob address directly into boot parameter
+> of Linux kernel. If the magic number on cc blob address
+> is valid, kernel will read cc blob.
+> 
+> Shared memory between guests and hypervisor should be
+> decrypted and zero memory after decrypt memory. The data
+> in the target address. It maybe smearedto avoid smearing
+> data.
+> 
+> Introduce #HV exception support in AMD sev snp code and
+> #HV handler.
 
+I am interested to test the Linux guest #HV exception handling (patches 
+12-16 in this series) for the restricted interrupt injection with the 
+Linux/KVM host.
+
+Do you have a git tree which or any base commit on which
+I can use to apply these patches?
+
+Thank You,
+Pankaj
