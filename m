@@ -2,30 +2,30 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A9856942E8
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Feb 2023 11:34:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81CB86942EB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Feb 2023 11:34:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230083AbjBMKee (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Feb 2023 05:34:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40808 "EHLO
+        id S230271AbjBMKeg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Feb 2023 05:34:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbjBMKed (ORCPT
+        with ESMTP id S229567AbjBMKef (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Feb 2023 05:34:33 -0500
+        Mon, 13 Feb 2023 05:34:35 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 58E35126D8;
-        Mon, 13 Feb 2023 02:34:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C802DBF6;
+        Mon, 13 Feb 2023 02:34:33 -0800 (PST)
 Received: from vm02.corp.microsoft.com (unknown [167.220.196.155])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5255E20C8B75;
-        Mon, 13 Feb 2023 02:34:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5255E20C8B75
+        by linux.microsoft.com (Postfix) with ESMTPSA id 49EE420C8B73;
+        Mon, 13 Feb 2023 02:34:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 49EE420C8B73
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1676284469;
-        bh=JDn8a8015dAIvKwIsQKiqtgMDWEL4ycrKsqNeNuYORg=;
+        s=default; t=1676284472;
+        bh=0f3V5nPDxmg11RJ8oq9LMHRMj/eCJ6zpTgfupRm3u00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSfJD3ml/i9FfUkGd5YkJtKx1KgxuMKagB9LFqPLcln9xsKkdri2GvW53ddeUvHpZ
-         vyFZWftQrXhNf9XV2tZUgKPTwD0XUg8L1zFS2DoP2HgFFatYo2Too0ZAjXeoM5CaN0
-         lTy/8gDo8DV5QiXBGYOar9zRLQl2HL4/EQSsdIWQ=
+        b=bsaUHTv6b+3sbEl+Ft5POXdghpjuPy5HJ3bT8pxUZgFfpsngZ5ECQ2Vfe6M6isvFm
+         0r5KHxawxvb4R+ShERIl789T3wRdtpdvxGLCg4GPyRbs+tuKpMZLR6TlcH4nXVYc0g
+         7NqDxwucntQp4sLJHs8txoMsKPVJLZ3yKBRp+/Tc=
 From:   Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
@@ -40,9 +40,9 @@ Cc:     Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>,
         Michael Roth <michael.roth@amd.com>,
         Ashish Kalra <ashish.kalra@amd.com>,
         Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [RFC PATCH v2 2/7] x86/sev: Add support for NestedVirtSnpMsr
-Date:   Mon, 13 Feb 2023 10:33:57 +0000
-Message-Id: <20230213103402.1189285-3-jpiotrowski@linux.microsoft.com>
+Subject: [RFC PATCH v2 3/7] x86/sev: Maintain shadow rmptable on Hyper-V
+Date:   Mon, 13 Feb 2023 10:33:58 +0000
+Message-Id: <20230213103402.1189285-4-jpiotrowski@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230213103402.1189285-1-jpiotrowski@linux.microsoft.com>
 References: <20230213103402.1189285-1-jpiotrowski@linux.microsoft.com>
@@ -59,160 +59,170 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-The rmpupdate and psmash instructions, which are used in AMD's SEV-SNP
-to update the RMP (Reverse Map) table, can't be trapped. For nested
-scenarios, AMD defined MSR versions of these instructions which can
-be trapped and must be emulated by the L0 hypervisor. One instance where
-these MSRs are used are Hyper-V VMs which expose SNP hardware isolation
-capabilities to the L1 guest.
 
-The MSRs are defined in "AMD64 Architecture Programmer’s Manual, Volume 2:
-System Programming", section 15.36.19.
+Hyper-V can expose the SEV-SNP feature to guests, and manages the
+system-wide RMP (Reverse Map) table. The SNP implementation in the
+kernel needs access to the rmptable for tracking pages and deciding
+when/how to issue rmpupdate/psmash.  When running as a Hyper-V guest
+with SNP support, an rmptable is allocated by the kernel during boot for
+this purpose. Keep the table in sync with issued rmpupdate/psmash
+instructions.
+
+The logic for how to update the rmptable comes from "AMD64 Architecture
+Programmer’s Manual, Volume 3" which describes the psmash and rmpupdate
+instructions. To ensure correctness of the SNP host code, the most
+important fields are "assigned" and "page size".
 
 Signed-off-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
 ---
- arch/x86/include/asm/cpufeatures.h |  1 +
- arch/x86/include/asm/msr-index.h   |  2 +
- arch/x86/kernel/sev.c              | 80 ++++++++++++++++++++++++++----
- 3 files changed, 73 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/sev.h     |  4 ++
+ arch/x86/kernel/cpu/mshyperv.c |  2 +
+ arch/x86/kernel/sev.c          | 69 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 75 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 480b4eaef310..e6e2e824f67b 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -423,6 +423,7 @@
- #define X86_FEATURE_SEV_SNP		(19*32+ 4) /* AMD Secure Encrypted Virtualization - Secure Nested Paging */
- #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
- #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
-+#define X86_FEATURE_NESTED_VIRT_SNP_MSR	(19*32+29) /* Virtualizable RMPUPDATE and PSMASH MSR available */
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index db5438663229..4d3591ebff5d 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -218,6 +218,8 @@ int psmash(u64 pfn);
+ int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, int asid, bool immutable);
+ int rmp_make_shared(u64 pfn, enum pg_level level);
+ void sev_dump_rmpentry(u64 pfn);
++bool snp_soft_rmptable(void);
++void __init snp_set_soft_rmptable(void);
+ #else
+ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+@@ -251,6 +253,8 @@ static inline int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, int as
+ }
+ static inline int rmp_make_shared(u64 pfn, enum pg_level level) { return -ENODEV; }
+ static inline void sev_dump_rmpentry(u64 pfn) {}
++static inline bool snp_soft_rmptable(void) { return false; }
++static inline void __init snp_set_soft_rmptable(void) {}
+ #endif
  
- /*
-  * BUG word(s)
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 35100c630617..d6103e607896 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -567,6 +567,8 @@
- #define MSR_AMD64_SEV_SNP_ENABLED	BIT_ULL(MSR_AMD64_SEV_SNP_ENABLED_BIT)
- #define MSR_AMD64_RMP_BASE		0xc0010132
- #define MSR_AMD64_RMP_END		0xc0010133
-+#define MSR_AMD64_VIRT_RMPUPDATE	0xc001f001
-+#define MSR_AMD64_VIRT_PSMASH		0xc001f002
+ #endif
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 777c9d812dfa..101c38e9cae7 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -530,6 +530,8 @@ static void __init ms_hyperv_init_mem_mapping(void)
+ 	wrmsrl(MSR_AMD64_RMP_BASE, rmp_res.start);
+ 	wrmsrl(MSR_AMD64_RMP_END, rmp_res.end);
+ 	insert_resource(&iomem_resource, &rmp_res);
++
++	snp_set_soft_rmptable();
+ }
  
- #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
- 
+ const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
 diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index 7fa39dc17edd..ad09dd3747a1 100644
+index ad09dd3747a1..712f1a9623ce 100644
 --- a/arch/x86/kernel/sev.c
 +++ b/arch/x86/kernel/sev.c
-@@ -2566,6 +2566,32 @@ int snp_lookup_rmpentry(u64 pfn, int *level)
+@@ -2566,6 +2566,22 @@ int snp_lookup_rmpentry(u64 pfn, int *level)
  }
  EXPORT_SYMBOL_GPL(snp_lookup_rmpentry);
  
-+static bool virt_snp_msr(void)
-+{
-+	return boot_cpu_has(X86_FEATURE_NESTED_VIRT_SNP_MSR);
-+}
++static bool soft_rmptable __ro_after_init;
 +
 +/*
-+ * This version of psmash is not implemented in hardware but always
-+ * traps to L0 hypervisor. It doesn't follow usual wrmsr conventions.
-+ * Inputs:
-+ *   rax: 2MB aligned GPA
-+ * Outputs:
-+ *   rax: psmash return code
++ * Test if the rmptable needs to be managed by software and is not maintained by
++ * (virtualized) hardware.
 + */
-+static u64 virt_psmash(u64 paddr)
++bool snp_soft_rmptable(void)
 +{
-+	int ret;
++	return soft_rmptable;
++}
 +
-+	asm volatile(
-+		"wrmsr\n\t"
-+		: "=a"(ret)
-+		: "a"(paddr), "c"(MSR_AMD64_VIRT_PSMASH)
-+		: "memory", "cc"
-+	);
-+	return ret;
++void __init snp_set_soft_rmptable(void)
++{
++	soft_rmptable = true;
++}
++
+ static bool virt_snp_msr(void)
+ {
+ 	return boot_cpu_has(X86_FEATURE_NESTED_VIRT_SNP_MSR);
+@@ -2592,6 +2608,26 @@ static u64 virt_psmash(u64 paddr)
+ 	return ret;
+ }
+ 
++static void snp_update_rmptable_psmash(u64 pfn)
++{
++	int level;
++	struct rmpentry *entry = __snp_lookup_rmpentry(pfn, &level);
++
++	if (WARN_ON(IS_ERR_OR_NULL(entry)))
++		return;
++
++	if (level == PG_LEVEL_2M) {
++		int i;
++
++		entry->info.pagesize = RMP_PG_SIZE_4K;
++		for (i = 1; i < PTRS_PER_PMD; i++) {
++			struct rmpentry *it = &entry[i];
++			*it = *entry;
++			it->info.gpa = entry->info.gpa + i * PAGE_SIZE;
++		}
++	}
 +}
 +
  /*
   * psmash is used to smash a 2MB aligned page into 4K
   * pages while preserving the Validated bit in the RMP.
-@@ -2581,11 +2607,15 @@ int psmash(u64 pfn)
- 	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
- 		return -ENXIO;
+@@ -2609,6 +2645,8 @@ int psmash(u64 pfn)
  
--	/* Binutils version 2.36 supports the PSMASH mnemonic. */
--	asm volatile(".byte 0xF3, 0x0F, 0x01, 0xFF"
--		      : "=a"(ret)
--		      : "a"(paddr)
--		      : "memory", "cc");
-+	if (virt_snp_msr()) {
-+		ret = virt_psmash(paddr);
-+	} else {
-+		/* Binutils version 2.36 supports the PSMASH mnemonic. */
-+		asm volatile(".byte 0xF3, 0x0F, 0x01, 0xFF"
-+			      : "=a"(ret)
-+			      : "a"(paddr)
-+			      : "memory", "cc");
-+	}
- 
+ 	if (virt_snp_msr()) {
+ 		ret = virt_psmash(paddr);
++		if (!ret && snp_soft_rmptable())
++			snp_update_rmptable_psmash(pfn);
+ 	} else {
+ 		/* Binutils version 2.36 supports the PSMASH mnemonic. */
+ 		asm volatile(".byte 0xF3, 0x0F, 0x01, 0xFF"
+@@ -2656,6 +2694,35 @@ static u64 virt_rmpupdate(unsigned long paddr, struct rmp_state *val)
  	return ret;
  }
-@@ -2601,6 +2631,31 @@ static int invalidate_direct_map(unsigned long pfn, int npages)
- 	return set_memory_np((unsigned long)pfn_to_kaddr(pfn), npages);
- }
  
-+/*
-+ * This version of rmpupdate is not implemented in hardware but always
-+ * traps to L0 hypervisor. It doesn't follow usual wrmsr conventions.
-+ * Inputs:
-+ *   rax: 4KB aligned GPA
-+ *   rdx: bytes 7:0 of new rmp entry
-+ *   r8:  bytes 15:8 of new rmp entry
-+ * Outputs:
-+ *   rax: rmpupdate return code
-+ */
-+static u64 virt_rmpupdate(unsigned long paddr, struct rmp_state *val)
++static void snp_update_rmptable_rmpupdate(u64 pfn, int level, struct rmp_state *val)
 +{
-+	int ret;
-+	register u64 hi asm("r8") = ((u64 *)val)[1];
-+	register u64 lo asm("rdx") = ((u64 *)val)[0];
++	int prev_level;
++	struct rmpentry *entry = __snp_lookup_rmpentry(pfn, &prev_level);
 +
-+	asm volatile(
-+		"wrmsr\n\t"
-+		: "=a"(ret)
-+		: "a"(paddr), "c"(MSR_AMD64_VIRT_RMPUPDATE), "r"(lo), "r"(hi)
-+		: "memory", "cc"
-+	);
-+	return ret;
++	if (WARN_ON(IS_ERR_OR_NULL(entry)))
++		return;
++
++	if (level > PG_LEVEL_4K) {
++		int i;
++		struct rmpentry tmp_rmp = {
++			.info = {
++				.assigned = val->assigned,
++			},
++		};
++		for (i = 1; i < PTRS_PER_PMD; i++)
++			entry[i] = tmp_rmp;
++	}
++	if (!val->assigned) {
++		memset(entry, 0, sizeof(*entry));
++	} else {
++		entry->info.assigned = val->assigned;
++		entry->info.pagesize = val->pagesize;
++		entry->info.immutable = val->immutable;
++		entry->info.gpa = val->gpa;
++		entry->info.asid = val->asid;
++	}
 +}
 +
  static int rmpupdate(u64 pfn, struct rmp_state *val)
  {
  	unsigned long paddr = pfn << PAGE_SHIFT;
-@@ -2626,11 +2681,16 @@ static int rmpupdate(u64 pfn, struct rmp_state *val)
- 	}
+@@ -2684,6 +2751,8 @@ static int rmpupdate(u64 pfn, struct rmp_state *val)
  
- retry:
--	/* Binutils version 2.36 supports the RMPUPDATE mnemonic. */
--	asm volatile(".byte 0xF2, 0x0F, 0x01, 0xFE"
--		     : "=a"(ret)
--		     : "a"(paddr), "c"((unsigned long)val)
--		     : "memory", "cc");
-+
-+	if (virt_snp_msr()) {
-+		ret = virt_rmpupdate(paddr, val);
-+	} else {
-+		/* Binutils version 2.36 supports the RMPUPDATE mnemonic. */
-+		asm volatile(".byte 0xF2, 0x0F, 0x01, 0xFE"
-+			     : "=a"(ret)
-+			     : "a"(paddr), "c"((unsigned long)val)
-+			     : "memory", "cc");
-+	}
- 
- 	if (ret) {
- 		if (!retries) {
+ 	if (virt_snp_msr()) {
+ 		ret = virt_rmpupdate(paddr, val);
++		if (!ret && snp_soft_rmptable())
++			snp_update_rmptable_rmpupdate(pfn, level, val);
+ 	} else {
+ 		/* Binutils version 2.36 supports the RMPUPDATE mnemonic. */
+ 		asm volatile(".byte 0xF2, 0x0F, 0x01, 0xFE"
 -- 
 2.25.1
 
