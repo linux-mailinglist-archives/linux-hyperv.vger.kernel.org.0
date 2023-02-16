@@ -2,158 +2,184 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F4C699ABF
-	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Feb 2023 18:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97CFE699BB3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 16 Feb 2023 18:58:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbjBPRGj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 16 Feb 2023 12:06:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57110 "EHLO
+        id S230144AbjBPR65 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 16 Feb 2023 12:58:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjBPRGi (ORCPT
+        with ESMTP id S229584AbjBPR64 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 16 Feb 2023 12:06:38 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9514BEA2;
-        Thu, 16 Feb 2023 09:06:37 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E3141EC086F;
-        Thu, 16 Feb 2023 18:06:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1676567195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e+I15oMGZyPJMc2Ii9Bnc8ieIaE4xdHS1ezVdaO9Rsk=;
-        b=N6Ry6di65M1mZcQoHgLTI/qcdlU0VYOslr7klqY5J4cZ+ZcG+UcMc+8BzrirdsSLKBui0I
-        T5h+r2ibNhD+jI2f4KES2a5p4u1kpp3ezsxK9qQGA1iWE2jnA85A12/Yl+0mF2UF0gFmaa
-        VxmxWtfdcbm7lmA/DyPRwQTkcK6PlE8=
-Date:   Thu, 16 Feb 2023 18:06:34 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Sean Christopherson <seanjc@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        Thu, 16 Feb 2023 12:58:56 -0500
+Received: from BN3PR00CU001-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11020025.outbound.protection.outlook.com [52.101.56.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B0F137737;
+        Thu, 16 Feb 2023 09:58:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c3/hk3XzwwZX/rScqpBbxBEYzdnr5kBzsIeYWCUy8wHTi4xUHC6TaV9tbYbCzlS/S9+QPocmXsBVZHqjoL2iSGpOJbTxdex/f6jwJbUJx7uN5rCPyuaqPZVs7vVcKrC+qJbshJCz8ra1FlGwBilInGppRMZHdba7dtunVr37BEJhNTnieeuNwsPCmfvgRCbv7MxDC6bthrvTaU8MGT40JKq9SJiPn/ZBVDRXCBT0s7WJhopNXO5xbbB8ToqoMbQDz9XprE78E+CGqwSKnmsi+e7fz9SXFVkAbo+qrxp36WC4CeI5ChpK7b3AC8P85vmdGrbpPDLX3FKjnNOQynI18g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wDnZ5l3P6wXoPC6SmlLhxgrt79Qw1ypNWkpGJei8ID0=;
+ b=kyp2ZJBQfr6Q3xYRBiaYq6u8fr/O5QGE1xWQvz+zKqb1nDnk5pZ0DuXp20e1YVQANcYSKRgOKAsV1cJKcXXHuE5LELee8FSXHby4OaGx7n0jERujUCiSsJjZUfMe+Y6dMcxoHuM4DKtGEHyEOjQFOp9jo0e4DzNYcZp4bDzzXVucfzVfLxcsI46lMM5G8Dg1BzLplaanZWkPlZ+JxE2+btI1854lbp1ZrKhMG1jFJBNdDf0TIoUg/FbdsdL3dhihm1071WXEMz5riPV6F/JCKMpSiptXecm7ABlADuqDdTt+jk2qxFdoI8BmF7t8gt+Dav+en7+3wdWARsk17XMAMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wDnZ5l3P6wXoPC6SmlLhxgrt79Qw1ypNWkpGJei8ID0=;
+ b=UJz3qG7C2ocMznBXdse9W8/C+/+hwSg62hJOZIpnqoD4N0t6XrPkiyWhYRghU/OqpGr3YGDG4rFIgoVfTuqaXWZHZkk90+fqMohW2iPW3eEEhv3pqC6XbiyvAw8CI+oUNl98ZkLJpa6ggRDnxfv5LrB4jQzr59FvUsqIJzcrlWM=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by MN0PR21MB3169.namprd21.prod.outlook.com (2603:10b6:208:379::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.6; Thu, 16 Feb
+ 2023 17:58:49 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::3747:daf4:7cc9:5ba2]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::3747:daf4:7cc9:5ba2%3]) with mapi id 15.20.6134.006; Thu, 16 Feb 2023
+ 17:58:49 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+CC:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "sandipan.das@amd.com" <sandipan.das@amd.com>,
+        "Gupta, Pankaj" <pankaj.gupta@amd.com>,
+        "ray.huang@amd.com" <ray.huang@amd.com>,
         "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "michael.roth@amd.com" <michael.roth@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Message-ID: <Y+5immKTXCsjSysx@zn.tnic>
-References: <Y+aVFxrE6a6b37XN@zn.tnic>
- <BYAPR21MB16882083E84F20B906E2C847D7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+aczIbbQm/ZNunZ@zn.tnic>
- <cb80e102-4b78-1a03-9c32-6450311c0f55@intel.com>
- <Y+auMQ88In7NEc30@google.com>
- <Y+av0SVUHBLCVdWE@google.com>
- <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+bXjxUtSf71E5SS@google.com>
- <Y+4wiyepKU8IEr48@zn.tnic>
- <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Does earlyprintk=ttyS0 work for an AMD SNP guest on KVM?
+Thread-Topic: Does earlyprintk=ttyS0 work for an AMD SNP guest on KVM?
+Thread-Index: AdlBv/2siHbGoHczQeyMVKtAUkBIZwAJxYmAABIBUjA=
+Date:   Thu, 16 Feb 2023 17:58:49 +0000
+Message-ID: <SA1PR21MB13358707043E2901958819AEBFA09@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <SA1PR21MB13359DBABC5625368E369A42BFA09@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <20230216091431.GA10166@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To: <20230216091431.GA10166@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f4dc50d8-f9c6-41a9-b1fe-a45b22c95b9b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-02-16T17:50:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|MN0PR21MB3169:EE_
+x-ms-office365-filtering-correlation-id: fd62c95c-50ca-47db-c69b-08db104774ec
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UlM7Plbqgwhm69Vo5YA2jnyQoQs3nxQmM/V4CphfzsmJrvRPxBkRHAkQGiGkOVYzM2inOSsgJV+lK6OF5tIuOWUyGxHOyaRQ3A6cCjEi3QbF5zl79JFd05Qi9tLFEcNmw5lPAmCbb1KF2x1nd0yojPFAdFrVGYFg9DrmujxCfd5g4PZesCfpy4G3bigUCx50w89LWbo0Vwe9OiHj2pMCB90xAbcA0fF588+C+RwS3EVSiNx6avqoIZS5svsgVnfwjeQXhN6X4aYL/Cr73XLLq0TQ/8Mne/YOY57t5nWIyhjcJBjTL+4H6gl8ZcV2aNwx8Qj1YgxyZwlfkD8LqmcTWNtIMwjR7Dyea9cBhr9pAAzYu5njxgOfHcN0KswJ/GIp/nCrTZOjnM9pnO7rNCm3e4IVq2/6xsE4d/bOHPGUOrOd7Wkq0SVqyealh/StS8trOdKCELPcXqp2t/wy/DZ4JxatfzOSb2ObgIM62YcOkSFf0+VMc8uU8xuKkSI4jlbWMPFhl6VK+L+PJ7HDvD6AnG1VIpBMvVh1SnY3z3x+vKXjgxJUkp6P4ppoUYW212wo5LFeD+HDeky8PeflzNYoeu9emGtD1/9Jcg0HrDtE4MPlAuvYi9TSuRSpUMUL8J9VXgfmhlJZlHXPOGd6heOEMaw5bTttNAs/mYwhb8HUSY+a47UcIq7J+Lvr8Nxk4Op88C7HkKWbMUGwUGZTA9L9TP4bKR5hwVohniHKctiH9+1ZIcO7n0Rrl1et2f8UXmcp
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(451199018)(4326008)(64756008)(7416002)(316002)(41300700001)(66476007)(66556008)(66446008)(66946007)(76116006)(8936002)(6862004)(5660300002)(52536014)(122000001)(38100700002)(82950400001)(82960400001)(86362001)(33656002)(38070700005)(26005)(9686003)(71200400001)(54906003)(6506007)(10290500003)(478600001)(186003)(8990500004)(55016003)(8676002)(2906002)(7696005)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?d6/HaBuX71nyqzk8QbU2Klu4fKZb/30cTDIS1XsYW+sit8GwnwIJgmcFGMax?=
+ =?us-ascii?Q?smSIuyPoFyCLvR7JgmhfvUHbhmYLnhkZDFwbua72GndXwfLtFmdQWrBVod22?=
+ =?us-ascii?Q?WuqRUgs3eDo3I7V5VwmbQiiJux2N+5trHh4iFzBr7Z2FKb7e43X6fX3m8bEv?=
+ =?us-ascii?Q?ga6VaVSzIIxHFuHpTHpIklU5FnZBpqEw+5aN0qS2JayipL09JSIPbeZ+ufGt?=
+ =?us-ascii?Q?Pa+lMnZ5VyX9rn7h9HbPh0vKc32Cp3faiBSD/MOPVzC9ORlxdgzHupFKMZgh?=
+ =?us-ascii?Q?NDSsQ7CbjAe6oTGo6XMLWxpNFZOIS8E1kQhj+Sk8JwVTbK/wk+Up9nEICDpZ?=
+ =?us-ascii?Q?sJCHuwUnmsDIulgOEp+1A7q0gjboFp1iW4wXeeX3DOGk051wLSx5fv2AnU+T?=
+ =?us-ascii?Q?ysWZOfsTfvCBW5Q0ORySisNTySp/+hApUmoZnmq1cZelZZcvrqXkIudwIdtp?=
+ =?us-ascii?Q?5xWc5BnJ3xu7iXOkbS/hZiR1AqnkvzNoQIYLQpfriccXGfaFka5YTLZY0hRx?=
+ =?us-ascii?Q?qFEQZjfEpQ7GHd7UMl9mFoNjbrt+ti5tiyIjYvurv7Dyuyfdf4nqBcehojSv?=
+ =?us-ascii?Q?HRLVe3FcG5BfEBFyWMW9von6Z9DXrsHDuq+P24u5BTFg7QFEILEpmTxvuqxo?=
+ =?us-ascii?Q?CBFFaaHVbvVeBucQm6KCobA03Y62oYw1/GTWW+NxPeAOUL+TqvIDzsZTWIwG?=
+ =?us-ascii?Q?LzDYzrPnZViAS8Az0JcYXbMbEjxuL44OxO8EFCbtfwpChOWWr16nAkq+sLqI?=
+ =?us-ascii?Q?ZWZ74QygkvLyIq++fZ/CKaV4VQ/G4vvitg2dQExKF+/ov9geo6xdGDwIS5Iw?=
+ =?us-ascii?Q?bfSh+Qd24NtaQ9vVVXzjjhOE+FJ866LxRGB1GdXTfMbt63CSmCjHigyZiSCv?=
+ =?us-ascii?Q?Qf6ff2YXEqHvXPyC+KHtLA+GMkOTDrczCSJYSe6w4fGHB6UzeVnHGDQBAfkt?=
+ =?us-ascii?Q?ebLUlisNI0HzzlPFu4a6ifNks6Tm8R5mj1ou/R2PubemKMOXd9NQvkMvGTSS?=
+ =?us-ascii?Q?bMHzwQ4B76RfDxQBzpu9sbX88oK1wDQrMHSvwjHjOL/fM2ZvVG2pQ/quKsQh?=
+ =?us-ascii?Q?YqgzCOZR4ix4rTGvyAvNPv7D3KD5v49YPhonfnS+IkqCl/yCYXexYDmtI14W?=
+ =?us-ascii?Q?oILpY/Ivz0FjgxBjYgmZPPeGMj8bXcPDRth4e5iWhMc1ZmBjkPcKFQdnq4QA?=
+ =?us-ascii?Q?D8BuJp9ijlAZtBK0xrX8ip4yq7ncgIRgpFCzUSuifp45G17w7UcP76BsVsSz?=
+ =?us-ascii?Q?YHuOmhdar1Z95/Cys1/qLrkF4+WVGhfmt+DjxAHdvqUKsG9BItvs7ATl0fYY?=
+ =?us-ascii?Q?oLA614oCzornBS0WqexBJZOiRcckjtBL7IR5gDX7VlUvQs//PvZ6EbTxxVp+?=
+ =?us-ascii?Q?7jfJWdgejOXOrpB6/Rre5sfdv6Z1RN0spg97kxsNY30snIT7aElpGsjUHMjJ?=
+ =?us-ascii?Q?eHi54WWa8rJ6B3A3dTxFLPOa2QaQr3BQKM8d6iOdHoeJKyQDyk4gEdlo/ZWN?=
+ =?us-ascii?Q?K3DNpKlDwquaJWisqgYjUXRsmlNXSbZpytpGmNpAw/uSMZYscGJ9riyfZRu7?=
+ =?us-ascii?Q?4+YtJcy1X+SodP65h/XhqjYhZ1s1dwCQmySl3QWh?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd62c95c-50ca-47db-c69b-08db104774ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Feb 2023 17:58:49.2956
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jDTKYkKH0p8eB406bUUCKn1e+MgWqInAHFeZT7ajDZ7pf5CsMmSGhtLcIhUkHP/Z7AoC7IWObokkc20U1Cr87g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3169
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Feb 16, 2023 at 04:16:16PM +0000, Michael Kelley (LINUX) wrote:
-> Historically, callbacks like Sean proposed default to NULL and do nothing
-> unless they are explicitly set.  The Hyper-V vTOM code would set the callback.
-> Is that not sufficient?  Or in the two places where the callback would
-> be made, do you want to bracket with a test for being in a Hyper-V vTOM
-> VM?  If so, then we're back to needing something like CC_ATTR_PARAVISOR
-> on which to gate the callbacks.
-> 
-> Or do you mean something else entirely?
+> From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+> Sent: Thursday, February 16, 2023 1:15 AM
+> > ...
+> > alloc_pgt_page() fails to allocate memory because both
+> > pages->pgt_buf_offset and pages->pgt_buf_size are zero.
+> >
+> >
+> > pgt_data.pgt_buf_size is zero because of this line in
+> > initialize_identity_maps()
+> >      pgt_data.pgt_buf_size =3D BOOT_PGT_SIZE - BOOT_INIT_PGT_SIZE;
+> >
+> > void initialize_identity_maps(void *rmode)
+> > {
+> > ...
+> >         top_level_pgt =3D read_cr3_pa();
+> >         if (p4d_offset((pgd_t *)top_level_pgt, 0) =3D=3D (p4d_t *)_pgta=
+ble) {
+> >                 pgt_data.pgt_buf =3D _pgtable + BOOT_INIT_PGT_SIZE;
+> >                 pgt_data.pgt_buf_size =3D BOOT_PGT_SIZE -
+> > BOOT_INIT_PGT_SIZE;
+> >                 memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+> >         } else {
+> >                 pgt_data.pgt_buf =3D _pgtable;
+> >                 pgt_data.pgt_buf_size =3D BOOT_PGT_SIZE;
+> >                 memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+> >                 top_level_pgt =3D (unsigned
+> > long)alloc_pgt_page(&pgt_data);
+>=20
+> I just tested an SNP guest on KVM with and without
+> CONFIG_RANDOMIZE_BASE.
+> In both cases we end up in the else() branch.
+> With CONFIG_RANDOMIZE_BASE BOOT_PGT_SIZE=3D0x13000
+> Without CONFIG_RANDOMMIZE_BASE BOOT_PGT_SIZE=3D0x6000.
+>=20
+> So in both cases pgt_data.pgt_buf_size !=3D 0.
+>=20
+> Getting into that first branch would require having 5-level paging suppor=
+ted
+> (CONFIG_X86_5LEVEL=3Dy) and enabled inside the guest, I don't have that o=
+n
+> any
+> hardware I have access to.
+>=20
+> Jeremi
 
-See the second part of my reply.
+CONFIG_X86_5LEVEL is not set for my kernel.
 
-This thing...
+The comment before the first branch says:
+  On 4-level paging, p4d_offset(top_level_pgt, 0) is equal to 'top_level_pg=
+t'.
 
-> > because there's the next crapola with
-> > 
-> > https://lore.kernel.org/all/20230209072220.6836-4-jgross@suse.com/
-> > 
-> > because apparently hyperv does PAT but disables MTRRs for such vTOM
-> > SEV-SNP guests and ... madness.
-> > 
-> > But that's not the only example - Xen has been doing this thing too.
-> > 
-> > And Jürgen has been trying to address this in a clean way but it is
-> > a pain.
-> > 
-> > What I don't want to have is a gazillion ways to check what needs to
-> > happen for which guest type. Because people who change the kernel to run
-> > on baremetal, will break them. And I can't blame them. We try to support
-> > all kinds of guests in the x86 code but this support should be plain and
-> > simple.
+IIUC this means 'top_level_pgt' is equal to '_pgtable'? i.e. without=20
+CONFIG_RANDOMIZE_BASE, pgt_data.pgt_buf_size should be 0.
 
-... here.
-
-We need a single way to test for this guest type and stick with it.
-
-I'd like for all guest types we support to be queried in a plain and
-simple way.
-
-Not:
-
-* CC_ATTR_GUEST_MEM_ENCRYPT
-
-* x86_platform.hyper.is_private_mmio(addr)
-
-* CC_ATTR_PARAVISOR
-
-to mean three different aspects of SEV-SNP guests using vTOM on Hyper-V.
-
-This is going to be a major mess which we won't support.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Not sure why it's not getting into the first branch for you.
