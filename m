@@ -2,55 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F65C69AC5F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Feb 2023 14:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3F8D69AE7E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Feb 2023 15:55:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbjBQN1M (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Feb 2023 08:27:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48466 "EHLO
+        id S229865AbjBQOz2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Feb 2023 09:55:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjBQN1L (ORCPT
+        with ESMTP id S229768AbjBQOz0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Feb 2023 08:27:11 -0500
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F032564B1A;
-        Fri, 17 Feb 2023 05:27:10 -0800 (PST)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id 5D15F20B9C3D; Fri, 17 Feb 2023 05:27:10 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5D15F20B9C3D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1676640430;
-        bh=1XQPwIYtARC3Ha2D1JM0GDKjkekBcLSmNRRm5xcWlKU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JIwNfwO0iE/wqX1tA1UBaC0L4E3QSIMrN8FjQEPY+U50gsyd/uT8bM90j+D1R/e8J
-         nZnLqGcTFL5E4zXZ+PW16Uc/RH9DUVmO+1V0Kjt4Ve+7V4zcThGQIEKLMXUreSkXVu
-         Cc1w2yYXuuk5lG7K4ye/nC552zkzuuFv7Mu6n1gk=
-Date:   Fri, 17 Feb 2023 05:27:10 -0800
-From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     krzysztof.kozlowski+dt@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        virtualization@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        dphadke@linux.microsoft.com
-Subject: Re: [PATCH v5 5/5] Driver: VMBus: Add device tree support
-Message-ID: <20230217132710.GA4165@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1675944939-22631-1-git-send-email-ssengar@linux.microsoft.com>
- <1675944939-22631-6-git-send-email-ssengar@linux.microsoft.com>
- <CAL_JsqK0WgWm-mG=fYyDVAi4uhL+fM0OD7KEF+xYYOOGNX8-oQ@mail.gmail.com>
- <20230209174641.GB1346@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <CAL_JsqK+4ecEmGyo0jVs3B-E6Rjj4Lo8vB0En6pEUR1P4cRXpA@mail.gmail.com>
- <20230213112439.GA15305@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+        Fri, 17 Feb 2023 09:55:26 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13EB96EB9D;
+        Fri, 17 Feb 2023 06:55:11 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9E1411EC0752;
+        Fri, 17 Feb 2023 15:55:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1676645709;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JrwIMUT5Q2EPqy66puuhgnw/kQvrwJKXmMCph/xJRv8=;
+        b=F8KVnbnRylxJ3Q02ws1l0VvHI+pqIFwZ1eG+bUBhyQcBH77nB5uGm3NXUfLfTM+jAZ9qWV
+        EjmR+A9IDxQ7tJs6n0Uk0eIcVbmm4y3scun/CE/aGmm2u+MyGtco3V4SevPzjW5pt/YqGr
+        d4KXmWnegvfpTMUjXFbEa7c7+k7ZAq0=
+Date:   Fri, 17 Feb 2023 15:55:05 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <Y++VSZNAX9Cstbqo@zn.tnic>
+References: <Y+aczIbbQm/ZNunZ@zn.tnic>
+ <cb80e102-4b78-1a03-9c32-6450311c0f55@intel.com>
+ <Y+auMQ88In7NEc30@google.com>
+ <Y+av0SVUHBLCVdWE@google.com>
+ <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+bXjxUtSf71E5SS@google.com>
+ <Y+4wiyepKU8IEr48@zn.tnic>
+ <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+5immKTXCsjSysx@zn.tnic>
+ <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230213112439.GA15305@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+In-Reply-To: <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,89 +97,37 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Feb 13, 2023 at 03:24:39AM -0800, Saurabh Singh Sengar wrote:
-> On Fri, Feb 10, 2023 at 04:37:28PM -0600, Rob Herring wrote:
-> > On Thu, Feb 9, 2023 at 11:46 AM Saurabh Singh Sengar
-> > <ssengar@linux.microsoft.com> wrote:
-> > >
-> > > On Thu, Feb 09, 2023 at 09:50:31AM -0600, Rob Herring wrote:
-> > > > On Thu, Feb 9, 2023 at 6:15 AM Saurabh Sengar
-> > > > <ssengar@linux.microsoft.com> wrote:
-> > > > >
-> > > > > Update the driver to support device tree boot as well along with ACPI.
-> > > >
-> > > > Devicetree
-> > 
-> > [...]
-> > 
-> > > > > +       for_each_of_range(&parser, &range) {
-> > > > > +               struct resource *res;
-> > > > > +
-> > > > > +               res = kzalloc(sizeof(*res), GFP_ATOMIC);
-> > > > > +               if (!res)
-> > > > > +                       return -ENOMEM;
-> > > > > +
-> > > > > +               res->name = "hyperv mmio";
-> > > > > +               res->flags = IORESOURCE_MEM | IORESOURCE_MEM_64;
-> > > > > +               res->start = range.pci_addr;
-> > > >
-> > > > This is not PCI. It's a union, so use 'bus_addr' instead.
-> > > >
-> > > > But wait, resources and IORESOURCE_MEM are *CPU* addresses. You need
-> > > > cpu_addr here. Your DT happens to do 1:1 addresses so it happens to
-> > > > work either way.
-> > >
-> > > bus_addr works for us, will send V6
-> > 
-> > Sigh. bus_addr may work, but is wrong as I explained.
-> > 
-> > And you've already sent v6... Please slow down your pace with sending
-> > new versions. 4 versions in a week is too much. Give others time to
-> > comment and me to respond to discussions. Like a week...
-> 
-> I apologize if my actions may have come across as overly hasty. I will make
-> sure to allow for more time between submissions in the future, to ensure that
-> everyone has an adequate opportunity to review and provide feedback.
-> 
-> Regarding the use of bus_addr instead of cpu_addr, I found that cpu_addr was
-> populating as OF_BAD_ADDR while bus_addr was populating correctly.  I think
-> this is because I should be defining a empty ranges property in parent node
-> for indicating 1:1 mapping between parent and child.
-> 
-> But once I add empty ranges in property I get other warnings by dt_binding_check
-> tool. After fixing all I am able to come up with below device tree example, please
-> let me know if there is anything to be corrected. If this is good I will send
-> the next version (offcource after a week :)) using cpu_addr.
-> 
->     soc {
->         #address-cells = <2>;
->         #size-cells = <1>;
->         bus {
->             compatible = "simple-bus";
->             #address-cells = <2>;
->             #size-cells = <1>;
->             ranges;
-> 
->             vmbus@ff0000000 {
->                 compatible = "microsoft,vmbus";
->                 #address-cells = <2>;
->                 #size-cells = <1>;
->                 ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
->             };
->         };
->     };
-> 
-> > 
+On Fri, Feb 17, 2023 at 06:16:56AM +0000, Michael Kelley (LINUX) wrote:
+> Is that consistent with your thinking, or is the whole
+> cc_platform_has() approach problematic, including for the existing SEV
+> flavors and for TDX?
 
-Rob,
+The confidential computing attributes are, yes, features. I've been
+preaching since the very beginning that vTOM *is* *also* one such
+feature. It is a feature bit in sev_features, for chrissakes. So by that
+logic, those SEV-SNP HyperV guests should return true when
 
-If you find the above changes satisfactory, please do let me know so that
-I can send the updated version.
+	cc_platform_has(CC_ATTR_GUEST_SEV_SNP_VTOM);
 
-As far as I am aware, all the pending comments and issues have been addressed
-in this series. However, if there are any remaining concerns or feedback that
-require attention, please let me know.
+is tested.
 
-- Saurabh
+But Sean doesn't like that.
 
-> > Rob
+If the access method to the IO-APIC and vTPM are specific to the
+HyperV's vTOM implementation, then I don't mind if this were called
+
+	cc_platform_has(CC_ATTR_GUEST_HYPERV_VTOM);
+
+Frankly, I don't see any other enlightened guest using vTOM except
+HyperV's but virt folks have managed to surprise me in the past too.
+
+In any case, a single flag which is specific to that guest type is fine
+too.
+
+It feels like we're running in circles by now... ;-\
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
