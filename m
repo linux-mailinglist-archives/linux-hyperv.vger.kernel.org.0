@@ -2,63 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1A1269C9FF
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Feb 2023 12:40:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4F6569CF46
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Feb 2023 15:23:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230384AbjBTLkJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Feb 2023 06:40:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33286 "EHLO
+        id S231567AbjBTOXj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Feb 2023 09:23:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231575AbjBTLkI (ORCPT
+        with ESMTP id S231661AbjBTOXi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Feb 2023 06:40:08 -0500
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9AE1043A;
-        Mon, 20 Feb 2023 03:40:07 -0800 (PST)
-Received: by mail-wr1-f51.google.com with SMTP id c12so830594wrw.1;
-        Mon, 20 Feb 2023 03:40:07 -0800 (PST)
+        Mon, 20 Feb 2023 09:23:38 -0500
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B99E3C3F;
+        Mon, 20 Feb 2023 06:23:37 -0800 (PST)
+Received: by mail-wr1-f54.google.com with SMTP id r7so1230614wrz.6;
+        Mon, 20 Feb 2023 06:23:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GrBZ8X1qHCN3IJfjc601rKRdpfSeCcwUgnMk+FSfQcA=;
-        b=pou5E6XDkUt7jq6xkg4iFXYoOuTfN6yuX6K/0snId1At7OHIhU4Q/nkNjQPb+BPXH/
-         sdxRZkd9UXwjzcSzkvlMEb9ADye6GVT1XN0b13D+W+59dlJ1v+JHBVCQhWnIRqOMZLAw
-         HR9M78ozptlBUcL9qcGeFH7yCdQPOYD7swc62ofHMmiUm3m6b6r9NkShbDdW5Uy/utQD
-         66DDSf/VV5OD34mE/wh5WWwnWLunzaGztDBDmcl9PSUksx4sihIIshBP/JLzjCu8au8b
-         MjTZJP/011qxoxV6LUEWtsg7/XzUu1R1EmOXTYO50FaUSR5mLnBPaMaheJzH39J4D2N4
-         Gaog==
-X-Gm-Message-State: AO0yUKU5ZkV/985etrzv9UZFqFPl24BnWrwrepjxcbTKD6a2rNoGH4Gk
-        jL1nVHKvOggZaK9VR+8fjNA=
-X-Google-Smtp-Source: AK7set+vrrz5nkdsFBDOfOqdfB8PGO/yX0qrSKUvKk/+/8CYO+bV/+XsA3C/oPYfz/KYIVpLu9q8Zw==
-X-Received: by 2002:adf:f309:0:b0:2c6:a953:850f with SMTP id i9-20020adff309000000b002c6a953850fmr2023294wro.19.1676893205693;
-        Mon, 20 Feb 2023 03:40:05 -0800 (PST)
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/UWNMxDMeHE0TebZowkoBIFZYFHiATXlwqsb06ZfgVg=;
+        b=Fg0DoVWXKoHq/AmT7R0ojXUhmSPe3mfNYBH9x8bcjaAYNXi10JzxcgRApqbbCQs/4S
+         398bYwig6zUoeZklbUR1VP1C7xT9Q53FtqYFXFBVd9fXq1UGEDhOy49B2IzSoGMBrqR5
+         ri/Zrb6VtSgREEhPAVmH4i7eewyOozPeSTHEbFRQKHK64uGdpZyTYGk1H9XuT9ZCAC8G
+         CC0O5J5w6Z5jGV9PbNcYDC2BNOA6QNmvLiDYAwaBpDC5PHWirFbvHeHV3kd1ILn6Ro87
+         TIpHLEpLV0WHqLaYn6VY/bxmJzAwCitmKqee1aCxJUyteH+hGIqtADFEIDrF0F7huUsX
+         YmsA==
+X-Gm-Message-State: AO0yUKUl7v+90wRs1Ssjp7+i3vcw4mXKRuy+zIvk1QeS9Y5tKgyiVjZD
+        s0lMOrhdcd4wKCzWe1DsX78=
+X-Google-Smtp-Source: AK7set/LDFMwxzZl+i5MOxauBVR4yzGzF/L5bcerLNWlMqVHhHX7Ar4VyXZn0MNfInakmDD6hPK85w==
+X-Received: by 2002:adf:f5c9:0:b0:2c5:5886:850d with SMTP id k9-20020adff5c9000000b002c55886850dmr758189wrp.5.1676903015738;
+        Mon, 20 Feb 2023 06:23:35 -0800 (PST)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id e16-20020adfe390000000b002c54c8e70b1sm1418661wrm.9.2023.02.20.03.40.04
+        by smtp.gmail.com with ESMTPSA id a9-20020a5d5709000000b002be099f78c0sm2145989wrv.69.2023.02.20.06.23.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Feb 2023 03:40:04 -0800 (PST)
-Date:   Mon, 20 Feb 2023 11:39:40 +0000
+        Mon, 20 Feb 2023 06:23:35 -0800 (PST)
+Date:   Mon, 20 Feb 2023 14:23:11 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Mohammed Gamal <mgamal@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "xxiong@redhat.com" <xxiong@redhat.com>
-Subject: Re: [PATCH v3] Drivers: vmbus: Check for channel allocation before
- looking up relids
-Message-ID: <Y/Nb/Ba36+2CnYKf@liuwe-devbox-debian-v2>
-References: <20230217204411.212709-1-mgamal@redhat.com>
- <SA1PR21MB1335BBA8DF84AFDDF2E1ABE6BFA19@SA1PR21MB1335.namprd21.prod.outlook.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [GIT PULL] Hyper-V commits for 6.3
+Message-ID: <Y/OCT7A/7GHNxgX4@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SA1PR21MB1335BBA8DF84AFDDF2E1ABE6BFA19@SA1PR21MB1335.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -69,32 +60,57 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Feb 17, 2023 at 11:17:04PM +0000, Dexuan Cui wrote:
-> > From: Mohammed Gamal <mgamal@redhat.com>
-> > Sent: Friday, February 17, 2023 12:44 PM
-> > ...
-> > --- a/drivers/hv/connection.c
-> > +++ b/drivers/hv/connection.c
-> > @@ -409,6 +409,10 @@ void vmbus_disconnect(void)
-> >   */
-> >  struct vmbus_channel *relid2channel(u32 relid)
-> >  {
-> > +	if (vmbus_connection.channels == NULL) {
-> > +		pr_warn_once("relid2channel: relid=%d: No channels mapped!\n",
-> > relid);
-> 
-> Looks good to me except that the line exceeds 80 characters.
-> Please run "scripts/checkpatch.pl" to detect that.
+Hi Linus,
 
-FWIW the max line length has been bumped to 100 in checkpatch.pl.
+The following changes since commit b7bfaa761d760e72a969d116517eaa12e404c262:
 
-> For this patch, I guess Wei may be willing to help fix it.
-> 
-> > +		return NULL;
-> > +	}
-> >  	if (WARN_ON(relid >= MAX_CHANNEL_RELIDS))
-> >  		return NULL;
-> >  	return READ_ONCE(vmbus_connection.channels[relid]);
-> > --
-> 
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+  Linux 6.2-rc3 (2023-01-08 11:49:43 -0600)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed-20230220
+
+for you to fetch changes up to b14033a3e6ba73a5c68974a80b05cba55553ed5b:
+
+  x86/hyperv: Fix hv_get/set_register for nested bringup (2023-02-16 14:32:37 +0000)
+
+----------------------------------------------------------------
+hyperv-next for v6.3.
+ - Patches that allow Linux to run as the nested root partition for
+   Microsoft Hypervisor (Jinank Jain and Nuno Das Neves).
+ - One patch to clean up the return type of callback functions (Dawei
+   Li).
+----------------------------------------------------------------
+Dawei Li (1):
+      Drivers: hv: Make remove callback of hyperv driver void returned
+
+Jinank Jain (4):
+      x86/hyperv: Add support for detecting nested hypervisor
+      Drivers: hv: Setup synic registers in case of nested root partition
+      x86/hyperv: Add an interface to do nested hypercalls
+      Drivers: hv: Enable vmbus driver for nested root partition
+
+Nuno Das Neves (1):
+      x86/hyperv: Fix hv_get/set_register for nested bringup
+
+ arch/x86/include/asm/hyperv-tlfs.h      | 17 ++++++-
+ arch/x86/include/asm/mshyperv.h         | 78 +++++++++++++++++++++------------
+ arch/x86/kernel/cpu/mshyperv.c          | 72 ++++++++++++++++++++++++++++++
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c |  4 +-
+ drivers/hid/hid-hyperv.c                |  4 +-
+ drivers/hv/hv.c                         | 18 +++++---
+ drivers/hv/hv_balloon.c                 |  4 +-
+ drivers/hv/hv_common.c                  |  9 ++--
+ drivers/hv/hv_util.c                    |  4 +-
+ drivers/hv/vmbus_drv.c                  |  2 +-
+ drivers/input/serio/hyperv-keyboard.c   |  4 +-
+ drivers/net/hyperv/netvsc_drv.c         |  5 +--
+ drivers/pci/controller/pci-hyperv.c     |  8 +---
+ drivers/scsi/storvsc_drv.c              |  4 +-
+ drivers/uio/uio_hv_generic.c            |  5 +--
+ drivers/video/fbdev/hyperv_fb.c         |  5 +--
+ include/asm-generic/hyperv-tlfs.h       |  1 +
+ include/asm-generic/mshyperv.h          |  1 +
+ include/linux/hyperv.h                  |  2 +-
+ net/vmw_vsock/hyperv_transport.c        |  4 +-
+ 20 files changed, 172 insertions(+), 79 deletions(-)
