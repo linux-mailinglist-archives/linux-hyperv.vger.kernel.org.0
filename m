@@ -2,128 +2,99 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08C4069B875
-	for <lists+linux-hyperv@lfdr.de>; Sat, 18 Feb 2023 08:16:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1A1269C9FF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Feb 2023 12:40:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbjBRHQQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 18 Feb 2023 02:16:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58608 "EHLO
+        id S230384AbjBTLkJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Feb 2023 06:40:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjBRHQO (ORCPT
+        with ESMTP id S231575AbjBTLkI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 18 Feb 2023 02:16:14 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31CE3D93E;
-        Fri, 17 Feb 2023 23:16:11 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id w9-20020a17090a028900b00236679bc70cso984214pja.4;
-        Fri, 17 Feb 2023 23:16:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+zeAyStGOAFnstrUajjYueyIYBwjl00KpR/f53YMTfg=;
-        b=XvX6Qh9VLDn0hoAkDRv9heT0qhQaWB3AGZIizkKYTCVUSnBIR8d6YaC0FZGYNXsCwT
-         9v8X0gMWKywWprau/Oo3skJxuOSHSEgG/QyK/Rhuu0913/a5yP0i6allU9vhxwS/Wtqq
-         lfDu2umQzzmc0EvxysC3hmS/We55bTx/TjubE4eeL9xlwu2mZr4yJt/EYtvd84j7iZUA
-         mwUmIb9fKzdrlKefeMExdXM3Nuiw81GfVlUyg8VJpG3JqrVcw5nvvwe3GQM9fZY+RdvN
-         wGP6N/olAoTEx0T1t6CXthG7wtqJ1u/g22pduHAVX/gtuYHjWWK32cX7GhHOlltZ7aQW
-         W+Qw==
+        Mon, 20 Feb 2023 06:40:08 -0500
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9AE1043A;
+        Mon, 20 Feb 2023 03:40:07 -0800 (PST)
+Received: by mail-wr1-f51.google.com with SMTP id c12so830594wrw.1;
+        Mon, 20 Feb 2023 03:40:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+zeAyStGOAFnstrUajjYueyIYBwjl00KpR/f53YMTfg=;
-        b=rf3cGYiAZ3B6WigxluvJjC+0C5cqIqwao/osF4okFnF2sAbOTELBHuoZ+ntNYOcaHm
-         VFNRz47SCMCnEhhtui/so3Cxp5S8eVOtdSjUiNuxcM/kUOnkxfsH5cW2JZQQGRLYA1ud
-         qe0h3ViAk0yIfpMZMy1IJH/6XejFHEWce2XGZU6JuPKev/7JXgj9M1T1aAWAk60zbcKu
-         U6bOR/ouNokrOdNE01/hEZhHDZS3MS05oeREeuTKRL16pE0SeSQM7bD4JXhGXb/mmsWE
-         YSWVykI5hQ6aY3XE0pJoI2r8Bfq6YJLzyESHzhKwSUDHjW/CnMurEfWH9RFndP8AbS0W
-         tnfA==
-X-Gm-Message-State: AO0yUKWCvfqeGFZ9b0/L3H0bo7pq2sla5Xe5+JiWWHyHPz7GuG5FFzcx
-        VlknH4fygwFrp3+kZRj4TT8=
-X-Google-Smtp-Source: AK7set/UOWJ97CrDvzvUthnHbSBIgUOhimOsG8Qwgc/q/lUkAoTaohMx0gVAv3CVVGfVhrqmHW0ZWQ==
-X-Received: by 2002:a17:903:1206:b0:19c:355c:6eb5 with SMTP id l6-20020a170903120600b0019c355c6eb5mr2073660plh.30.1676704571284;
-        Fri, 17 Feb 2023 23:16:11 -0800 (PST)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
-        by smtp.gmail.com with ESMTPSA id c19-20020a170902849300b0019460ac7c6asm4091827plo.283.2023.02.17.23.16.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Feb 2023 23:16:10 -0800 (PST)
-Message-ID: <17278603-4328-3753-cae9-eb10ce69db7a@gmail.com>
-Date:   Sat, 18 Feb 2023 15:15:58 +0800
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GrBZ8X1qHCN3IJfjc601rKRdpfSeCcwUgnMk+FSfQcA=;
+        b=pou5E6XDkUt7jq6xkg4iFXYoOuTfN6yuX6K/0snId1At7OHIhU4Q/nkNjQPb+BPXH/
+         sdxRZkd9UXwjzcSzkvlMEb9ADye6GVT1XN0b13D+W+59dlJ1v+JHBVCQhWnIRqOMZLAw
+         HR9M78ozptlBUcL9qcGeFH7yCdQPOYD7swc62ofHMmiUm3m6b6r9NkShbDdW5Uy/utQD
+         66DDSf/VV5OD34mE/wh5WWwnWLunzaGztDBDmcl9PSUksx4sihIIshBP/JLzjCu8au8b
+         MjTZJP/011qxoxV6LUEWtsg7/XzUu1R1EmOXTYO50FaUSR5mLnBPaMaheJzH39J4D2N4
+         Gaog==
+X-Gm-Message-State: AO0yUKU5ZkV/985etrzv9UZFqFPl24BnWrwrepjxcbTKD6a2rNoGH4Gk
+        jL1nVHKvOggZaK9VR+8fjNA=
+X-Google-Smtp-Source: AK7set+vrrz5nkdsFBDOfOqdfB8PGO/yX0qrSKUvKk/+/8CYO+bV/+XsA3C/oPYfz/KYIVpLu9q8Zw==
+X-Received: by 2002:adf:f309:0:b0:2c6:a953:850f with SMTP id i9-20020adff309000000b002c6a953850fmr2023294wro.19.1676893205693;
+        Mon, 20 Feb 2023 03:40:05 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id e16-20020adfe390000000b002c54c8e70b1sm1418661wrm.9.2023.02.20.03.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Feb 2023 03:40:04 -0800 (PST)
+Date:   Mon, 20 Feb 2023 11:39:40 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Mohammed Gamal <mgamal@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "xxiong@redhat.com" <xxiong@redhat.com>
+Subject: Re: [PATCH v3] Drivers: vmbus: Check for channel allocation before
+ looking up relids
+Message-ID: <Y/Nb/Ba36+2CnYKf@liuwe-devbox-debian-v2>
+References: <20230217204411.212709-1-mgamal@redhat.com>
+ <SA1PR21MB1335BBA8DF84AFDDF2E1ABE6BFA19@SA1PR21MB1335.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [RFC PATCH V3 00/16] x86/hyperv/sev: Add AMD sev-snp enlightened
- guest support on hyperv
-To:     "Gupta, Pankaj" <pankaj.gupta@amd.com>, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        ashish.kalra@amd.com, srutherford@google.com,
-        akpm@linux-foundation.org, anshuman.khandual@arm.com,
-        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
-        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
-        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20230122024607.788454-1-ltykernel@gmail.com>
- <fac62414-06f9-0454-8393-f039aa30571a@amd.com>
- <fe100597-26be-23e4-bfa9-f45aa27b7966@amd.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <fe100597-26be-23e4-bfa9-f45aa27b7966@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SA1PR21MB1335BBA8DF84AFDDF2E1ABE6BFA19@SA1PR21MB1335.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2/17/2023 8:47 PM, Gupta, Pankaj wrote:
-> On 2/9/2023 12:36 PM, Gupta, Pankaj wrote:
->> Hi Tianyu,
->>
->>> This patchset is to add AMD sev-snp enlightened guest
->>> support on hyperv. Hyperv uses Linux direct boot mode
->>> to boot up Linux kernel and so it needs to pvalidate
->>> system memory by itself.
->>>
->>> In hyperv case, there is no boot loader and so cc blob
->>> is prepared by hypervisor. In this series, hypervisor
->>> set the cc blob address directly into boot parameter
->>> of Linux kernel. If the magic number on cc blob address
->>> is valid, kernel will read cc blob.
->>>
->>> Shared memory between guests and hypervisor should be
->>> decrypted and zero memory after decrypt memory. The data
->>> in the target address. It maybe smearedto avoid smearing
->>> data.
->>>
->>> Introduce #HV exception support in AMD sev snp code and
->>> #HV handler.
->>
->> I am interested to test the Linux guest #HV exception handling 
->> (patches 12-16 in this series) for the restricted interrupt injection 
->> with the Linux/KVM host.
->>
->> Do you have a git tree which or any base commit on which
->> I can use to apply these patches?
+On Fri, Feb 17, 2023 at 11:17:04PM +0000, Dexuan Cui wrote:
+> > From: Mohammed Gamal <mgamal@redhat.com>
+> > Sent: Friday, February 17, 2023 12:44 PM
+> > ...
+> > --- a/drivers/hv/connection.c
+> > +++ b/drivers/hv/connection.c
+> > @@ -409,6 +409,10 @@ void vmbus_disconnect(void)
+> >   */
+> >  struct vmbus_channel *relid2channel(u32 relid)
+> >  {
+> > +	if (vmbus_connection.channels == NULL) {
+> > +		pr_warn_once("relid2channel: relid=%d: No channels mapped!\n",
+> > relid);
 > 
-> Never mind. I could apply the patches 12-16 on master (except minor 
-> tweak in patch 14). Now, will try to test.
-> 
+> Looks good to me except that the line exceeds 80 characters.
+> Please run "scripts/checkpatch.pl" to detect that.
 
-Hi Pankaj:
-	Sorry. I missed your first mail. Please let me know any issue son KVM 
-side if available。Thanks in advance.
+FWIW the max line length has been bumped to 100 in checkpatch.pl.
+
+> For this patch, I guess Wei may be willing to help fix it.
+> 
+> > +		return NULL;
+> > +	}
+> >  	if (WARN_ON(relid >= MAX_CHANNEL_RELIDS))
+> >  		return NULL;
+> >  	return READ_ONCE(vmbus_connection.channels[relid]);
+> > --
+> 
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
