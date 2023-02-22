@@ -2,62 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D0F169FEC6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 22 Feb 2023 23:54:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0D9469FF93
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Feb 2023 00:35:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233011AbjBVWyz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Feb 2023 17:54:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
+        id S232678AbjBVXe7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 22 Feb 2023 18:34:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233082AbjBVWyv (ORCPT
+        with ESMTP id S229854AbjBVXe6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Feb 2023 17:54:51 -0500
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A92CFC6
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Feb 2023 14:54:50 -0800 (PST)
-Received: by mail-pg1-x54a.google.com with SMTP id 6-20020a631046000000b00502afcf62easo3256964pgq.8
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Feb 2023 14:54:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1rUxcsEzgzkuc81EHAiSJThwOfOiPUl0WEkc2IML/M=;
-        b=p4sXIDbjE4Nc/nRU1X8iV1XYE4jomrb+UJhtC7J+xEm7INBfiDn27gs/eoHnGlzmRT
-         92NbvCgseDZ0JsQv3XF/gwcMtKevWDZckWffhhm1iVJQBk+R5lUHI6CKSOloHvmr5SXD
-         BvdY7F8b50dcNqhHzIYk3cub1ZEBEA8+kXj+nWZ5dvUznAb22X/ufd/HOqJW5U4x5C4B
-         JQ1TG20xtnMqed4yXHC4Ock+whPxUyHQMHZjkt/JIt8uxh8Qe/UOObrTwEnXqaCLC3js
-         c4oFz5cV9DaUM/VtN6S58luTPLE4WRjwkm5QlSNnfO16B01aCPeJv7rypyvXDzgyxkMp
-         sLnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1rUxcsEzgzkuc81EHAiSJThwOfOiPUl0WEkc2IML/M=;
-        b=uCtNoF5TAYgT6p3sKh/FaaNShV+h/1cLp65oEdqKQvDa3VMlAQbo/X/DpVwp9wtQQu
-         E6CeeYVVjWCmouCskRuAFS9fOyZeRhyqxV5xxHUIOocREXm7At1DqzpF0hCifLTSzEQq
-         6tNCBXsIIIeTtzxaGYmyTYlEwvv48nKQl1gmX5XXwDGvcZjerFOncj5kO3wROoarQHEk
-         CWHv6pnvCDosxtIJwF6sKUh/sr3i5h2up7g0j8WZQ84C3b7kkge8p+ahlHDzu/RQ1avZ
-         Ez0xCrtDXu7CQx3VD63+j8aFzBZ6dno2eBRD7cUFHPDVtC9bE0JydUTZdGsx3RmkpTmM
-         Byag==
-X-Gm-Message-State: AO0yUKW8kJS2qrzgG4OLz2QRE9Yf6oliEmRWPMNkyKZaxilqTy9OUkN0
-        rFMxu8qvvD4jIS1rpl8tpdT095rmDss=
-X-Google-Smtp-Source: AK7set/sQOffs0k3s7KounKG129lsIZ65HRvR+ia/A/0i253S1K0NbH2/JiaGq46cARK3kvQ+iKylGsp5hE=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a62:864e:0:b0:5d6:4f73:9ad with SMTP id
- x75-20020a62864e000000b005d64f7309admr454083pfd.2.1677106489373; Wed, 22 Feb
- 2023 14:54:49 -0800 (PST)
-Date:   Wed, 22 Feb 2023 14:54:47 -0800
-In-Reply-To: <Y/aYQlQzRSEH5II/@zn.tnic>
-Mime-Version: 1.0
-References: <Y+av0SVUHBLCVdWE@google.com> <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+bXjxUtSf71E5SS@google.com> <Y+4wiyepKU8IEr48@zn.tnic> <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+5immKTXCsjSysx@zn.tnic> <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y++VSZNAX9Cstbqo@zn.tnic> <Y/aTmL5Y8DtOJu9w@google.com> <Y/aYQlQzRSEH5II/@zn.tnic>
-Message-ID: <Y/adN3GQJTdDPmS8@google.com>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-From:   Sean Christopherson <seanjc@google.com>
-To:     Borislav Petkov <bp@alien8.de>
+        Wed, 22 Feb 2023 18:34:58 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6F042BFA;
+        Wed, 22 Feb 2023 15:34:57 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D1D4E1EC02FE;
+        Thu, 23 Feb 2023 00:34:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1677108895;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JkWKLHzrUYxU/M0Lk622Xv44tWYxwVb9VGdOPcv19s4=;
+        b=Go/Y5E6h0sonXAPGG3ZKuT1djHI3/mJOAHKjf4U4mErIy2bQG2IhF0ELC7OnmwwQlsDYr0
+        2e7Pe1fYJcdsGUHUIcRjKVoaZ3ae0YeT/1fepF3ZM6RbNQ83z9AbcyukIqHHn1f3Qdnk8Q
+        gUj1si6mGl4xfFjfyDdcjB8i38o3/d8=
+Date:   Thu, 23 Feb 2023 00:34:50 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <seanjc@google.com>
 Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
         Dave Hansen <dave.hansen@intel.com>,
         "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
@@ -97,29 +71,70 @@ Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
         "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <Y/ammgkyo3QVon+A@zn.tnic>
+References: <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+bXjxUtSf71E5SS@google.com>
+ <Y+4wiyepKU8IEr48@zn.tnic>
+ <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+5immKTXCsjSysx@zn.tnic>
+ <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y++VSZNAX9Cstbqo@zn.tnic>
+ <Y/aTmL5Y8DtOJu9w@google.com>
+ <Y/aYQlQzRSEH5II/@zn.tnic>
+ <Y/adN3GQJTdDPmS8@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Y/adN3GQJTdDPmS8@google.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Feb 22, 2023, Borislav Petkov wrote:
-> On Wed, Feb 22, 2023 at 02:13:44PM -0800, Sean Christopherson wrote:
-> > Because vTOM is a hardware feature, whereas the IO-APIC and vTPM being accessible
-> > via private memory are software features.  It's very possible to emulate the
-> > IO-APIC in trusted code without vTOM.
-> 
-> I know, but their use case is dictated by the fact that they're using
-> a SNP guest *with* vTOM as a SEV feature. And so their guest does
-> IO-APIC and vTPM *with* the vTOM SEV feature. That's what I'm trying to
-> model.
+On Wed, Feb 22, 2023 at 02:54:47PM -0800, Sean Christopherson wrote:
+> Why?  I genuinely don't understand the motivation for bundling all of this stuff
+> under a single "feature".
 
-Why?  I genuinely don't understand the motivation for bundling all of this stuff
-under a single "feature".  To me, that's like saying Haswell or Zen2 is a "feature",
-but outside of a very few cases where the exact uarch truly matters, nothing pivots
-on FMS because the CPU type is not a single feature.
+It is called "sanity".
+
+See here:
+
+https://lore.kernel.org/r/Y%2B5immKTXCsjSysx@zn.tnic
+
+We support SEV, SEV-ES, SEV-SNP, TDX, HyperV... guests and whatever's
+coming down the pipe. And all that goes into arch/x86/ kernel proper
+code.
+
+The CC_ATTR stuff is clean-ish in the sense that we have separation by
+confidential computing platform - AMD's and Intel's. Hyper-V comes along
+and wants to define a different subset of that. And that's only the
+SEV-SNP side - there's a TDX patchset too.
+
+And then some other hypervisor will come along and say, but but, I wanna
+have X and Y and a pink pony too.
+
+Oh, and there's this other fun with MTRRs where each HV decides to do
+whatever it wants.
+
+So, we have a zoo brewing on the horizon already!
+
+If there's no clean definition of what each guest is and requires and
+that stuff isn't documented properly and if depending on which "feature"
+I need to check, I need to call a different function or query
+a different variable, then it won't go anywhere as far as guest support
+goes.
+
+The cc_platform_has() thing gives us a relatively clean way to abstract
+all those differences away and keep the code sane-ish.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
