@@ -2,94 +2,44 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93C6A6A0683
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Feb 2023 11:45:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64BC56A075C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Feb 2023 12:29:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233480AbjBWKpZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Feb 2023 05:45:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50688 "EHLO
+        id S234035AbjBWL3N (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Feb 2023 06:29:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233253AbjBWKpY (ORCPT
+        with ESMTP id S233932AbjBWL3L (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Feb 2023 05:45:24 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB9628D0B;
-        Thu, 23 Feb 2023 02:45:23 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2A7101EC06D8;
-        Thu, 23 Feb 2023 11:45:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1677149121;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8eflZCArBNS2iTHAutvusXrIThQ3jEI6ZgIoi6B+se4=;
-        b=phohTQQkWdVgEHvajC+jqND3J6RrHkQAfEY26jsta89saiUXDjpax72/t8uzsykiPJTRAp
-        wELV5m3c0rpFSuB9kPVe4/xWfwZUbq0+qD7UZZAn5zsd6GJrzIJJ4KLaNv+bRBAxyk8yY4
-        05KPHD5NTscdl5DEOeJB5BZsKM8fqEU=
-Date:   Thu, 23 Feb 2023 11:45:17 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Message-ID: <Y/dDvTMrCm4GFsvv@zn.tnic>
-References: <Y+4wiyepKU8IEr48@zn.tnic>
- <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+5immKTXCsjSysx@zn.tnic>
- <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y++VSZNAX9Cstbqo@zn.tnic>
- <Y/aTmL5Y8DtOJu9w@google.com>
- <Y/aYQlQzRSEH5II/@zn.tnic>
- <Y/adN3GQJTdDPmS8@google.com>
- <Y/ammgkyo3QVon+A@zn.tnic>
- <Y/a/lzOwqMjOUaYZ@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Y/a/lzOwqMjOUaYZ@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        Thu, 23 Feb 2023 06:29:11 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 480AA1A4B4;
+        Thu, 23 Feb 2023 03:29:10 -0800 (PST)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8572620B9C3D;
+        Thu, 23 Feb 2023 03:29:09 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8572620B9C3D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1677151749;
+        bh=9LzfJ2wDDgDGa4AhSo7ZfFDPw3dQwLl7YS8zCxwU1VI=;
+        h=From:To:Subject:Date:From;
+        b=sQabikqTf96urJJwh8zc9/NnNs6bMQ9A9IoOdQkLRb5tztGfwdlxaZAA2ODrdOxL0
+         OdMoWOb9LJAj8dh5pBf4cKfB74OkBf+uW9d3fZacxPnwVqBx4m25EhRnGCiyRXgKQw
+         DYznzRJfhrcMXQU6BcpAoGQWTdsuMC4HAsbfoby8=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        lenb@kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org
+Subject: [PATCH v7 0/5] Device tree support for Hyper-V VMBus driver
+Date:   Thu, 23 Feb 2023 03:29:00 -0800
+Message-Id: <1677151745-16521-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -97,39 +47,95 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Feb 22, 2023 at 05:21:27PM -0800, Sean Christopherson wrote:
-> The MTRR mess isn't unique to coco guests, e.g. KVM explicitly "supports" VMMs
-> hiding MTTRs from the guest by defaulting to WB if MTTRs aren't exposed to the
-> guest.  Why on earth Hyper-V suddenly needs to enlighten the guest is beyond me,
-> but whatever the reason, it's not unique to coco VMs.
+This set of patches expands the VMBus driver to include device tree
+support. This feature allows for a kernel boot without the use of ACPI
+tables, resulting in a smaller memory footprint and potentially faster
+boot times. This is tested by enabling CONFIG_FLAT and OF_EARLY_FLATTREE
+for x86.
 
-Well, TDX can't stomach MTRRs either, reportedly, and I hear we should
-try to avoid #VEs for them too.
+The first two patches enable compilation of Hyper-V APIs in a non-ACPI
+build.
 
-And this is the problem: all those guest "enlightening" efforts come up
-with the weirdest stuff they need to sprinkle around arch/x86/. And if
-we let that without paying attention to the big picture, that will
-become an unmaintanable mess.
+The third patch converts the VMBus driver from acpi to more generic
+platform driver.
 
-And I'm not proud of some of the stuff we did in arch/x86/ already and
-some day they'll get on my nerves just enough...
+The fourth patch introduces the device tree documentation for VMBus.
 
-> All I'm advocating is that for determining whether or not a device should be mapped
-> private vs. shared, provide an API so that the hypervisor-specific enlightened code
-> can manage that insanity without polluting common code.  If we are ever fortunate
-> enough to have common enumeration, e.g. through ACPI or something, the enlightened
-> code can simply reroute to the common code.  This is a well established pattern for
-> many paravirt features, I don't see why it wouldn't work here.
+The fifth patch adds device tree support to the VMBus driver. Currently
+this is tested only for x86 and it may not work for other archs.
 
-Yah, that would be good. If the device can know upfront how it needs to
-ioremap its address range, then that is fine - we already have
-ioremap_encrypted() for example.
+[V7]
+- Use cpu_addr instead of bus_addr.
+- Updated Documentation accordingly.
 
-What I don't like is hooking conditionals into the common code to figure
-out what to do depending on what we're running on.
+[V6]
+- define acpi_sleep_state_supported in acpi header for !ACPI,
+  dropped the changes done in hv_common.c under #ifdef CONFIG_ACPI
+- "Devicetree" instead of "device tree"
+- Remove initialize of ret
+- set "np = pdev->dev.of_node;" on declarartion
+- remove one error print
+- use bus_addr instead of pci_addr
+
+
+[V5]
+- Removed #else for device tree parsing code. This should help better
+  test coverage.
+- Fix macro '__maybe_unused' warning
+- Added below options in Kconfig to enable device tree options for HYPERV
+	select OF if !ACPI
+	select OF_EARLY_FLATTREE if !ACPI
+- moved dt documantation to bus folder
+- update the dt node to have 'bus' as parent node instead of 'soc'. Also
+  added compatible and ranges property for parent node.
+- Made sure dt_binding_check have no error/varnings for microsoft,vmbus.yaml file
+- Fix commit messages and add Reviwed-by from Michael for first 3 patches
+
+[V4]
+- rebased which fixed return type of 'vmbus_mmio_remove' from int to void
+- used __maybe_unused for 'vmbus_of_match' and safeguard vmbus_acpi_device_ids
+  under #ifdef
+
+[V3]
+- Changed the logic to use generic api (for_each_of_range) for parsing "ranges".
+- Remove dependency of ACPI for HYPERV in case of x86.
+- Removed "device tree bindings" from title and patch subject.
+- Removed duplicate vendor prefix, used microsoft instead of msft.
+- Use 'soc' in example of device tree documantation for parent node.
+- Fixed compatible schemas error generated in other modules referring to
+  virtio.
+- Drop hex notation and leading zeros from device tree cell properties.
+- Added missing full stop at the end of commit message.
+- Typos fix: s/Initaly/Initially/ and s/hibernate/hibernation/.
+- Replace to_acpi_device with ACPI_COMPANION which simplify the logic.
+- Added more info in cover letter aboutsystem under test.
+
+[v2]
+- Convert VMBus acpi device to platform device, and added device tree support
+  in separate patch. This enables using same driver structure for both the flows.
+- In Device tree documentation, changed virtio folder to hypervisor and moved
+  VMBus documentation there.
+- Moved bindings before Device tree patch.
+- Removed stale ".data" and ".name" field from of_device match table.
+- Removed debug print.
+
+Saurabh Sengar (5):
+  drivers/clocksource/hyper-v: non ACPI support in hyperv clock
+  ACPI: bus: Add stub acpi_sleep_state_supported() in non-ACPI cases
+  Drivers: hv: vmbus: Convert acpi_device to more generic
+    platform_device
+  dt-bindings: bus: VMBus
+  Driver: VMBus: Add Devicetree support
+
+ .../bindings/bus/microsoft,vmbus.yaml         |  54 ++++++++
+ MAINTAINERS                                   |   1 +
+ drivers/clocksource/hyperv_timer.c            |  15 ++-
+ drivers/hv/Kconfig                            |   6 +-
+ drivers/hv/vmbus_drv.c                        | 115 ++++++++++++++----
+ include/linux/acpi.h                          |   5 +
+ 6 files changed, 167 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
 
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
