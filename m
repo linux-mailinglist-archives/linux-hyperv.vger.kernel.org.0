@@ -2,30 +2,30 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8E636A0757
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Feb 2023 12:29:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EEA66A0764
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Feb 2023 12:29:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233539AbjBWL3L (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Feb 2023 06:29:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60776 "EHLO
+        id S234052AbjBWL3P (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Feb 2023 06:29:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233509AbjBWL3L (ORCPT
+        with ESMTP id S233986AbjBWL3M (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Feb 2023 06:29:11 -0500
+        Thu, 23 Feb 2023 06:29:12 -0500
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4529C16AD2;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 482532D14B;
         Thu, 23 Feb 2023 03:29:10 -0800 (PST)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A001320B9C3E;
+        by linux.microsoft.com (Postfix) with ESMTPSA id B938C20B9C3F;
         Thu, 23 Feb 2023 03:29:09 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A001320B9C3E
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B938C20B9C3F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1677151749;
-        bh=9hqMgwt+9rfgzKvMywqn/H23HiHnKG9S9L6A/+1pzh0=;
+        bh=4PRW0VI+oZvbTmFAcVbsrAFK92yD8Gwq6n0ZpwB9zPo=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=i29yH4QlMPKS4SW/ENT64Kq927tWbvAyF40myhCMlmODmtS0isu0yeES40Bk7yQln
-         9LxjzA3AdY/HaT+O3RgUj41vJ6xOtsSIEM27c6bcB7L6PlsB3afNdTOcdj9p9aLOWQ
-         8BrLEF6ElLVt6kJSJnJZL9WhCMwY6HoOCjAM91yg=
+        b=s8OnudsOJgjLLHQc7+9s9rS+iUgsnf+HIUQupHJvC3pn4OqMwLHWxqxyHjOZWqvwf
+         eWQp59Lx2IcfCgek0C2Giy0zhsWRoRsjxF8m0XUXERiRC4AgdWBmkOWEwFQSZ9XRar
+         vVhF7stowDsjS3JW0Ug0bN/N1aFS2KUQriNVzwiY=
 From:   Saurabh Sengar <ssengar@linux.microsoft.com>
 To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
@@ -33,9 +33,9 @@ To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
         lenb@kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH v7 1/5] drivers/clocksource/hyper-v: non ACPI support in hyperv clock
-Date:   Thu, 23 Feb 2023 03:29:01 -0800
-Message-Id: <1677151745-16521-2-git-send-email-ssengar@linux.microsoft.com>
+Subject: [PATCH v7 2/5] ACPI: bus: Add stub acpi_sleep_state_supported() in non-ACPI cases
+Date:   Thu, 23 Feb 2023 03:29:02 -0800
+Message-Id: <1677151745-16521-3-git-send-email-ssengar@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1677151745-16521-1-git-send-email-ssengar@linux.microsoft.com>
 References: <1677151745-16521-1-git-send-email-ssengar@linux.microsoft.com>
@@ -49,65 +49,33 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add a placeholder function for the hv_setup_stimer0_irq API to accommodate
-systems without ACPI support. Since this function is not utilized on
-x86/x64 systems and non-ACPI support is only intended for x86/x64 systems,
-a placeholder function is sufficient for now and can be improved upon if
-necessary in the future.
+acpi_sleep_state_supported() is defined only when CONFIG_ACPI=y. The
+function is in acpi_bus.h, and acpi_bus.h can only be used in
+CONFIG_ACPI=y cases. Add the stub function to linux/acpi.h to make
+compilation successful for !CONFIG_ACPI cases.
 
 Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/clocksource/hyperv_timer.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ include/linux/acpi.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index c0cef92b12b8..f32948c8a96f 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -49,7 +49,7 @@ static bool direct_mode_enabled;
- 
- static int stimer0_irq = -1;
- static int stimer0_message_sint;
--static DEFINE_PER_CPU(long, stimer0_evt);
-+static __maybe_unused DEFINE_PER_CPU(long, stimer0_evt);
- 
- /*
-  * Common code for stimer0 interrupts coming via Direct Mode or
-@@ -68,7 +68,7 @@ EXPORT_SYMBOL_GPL(hv_stimer0_isr);
-  * stimer0 interrupt handler for architectures that support
-  * per-cpu interrupts, which also implies Direct Mode.
-  */
--static irqreturn_t hv_stimer0_percpu_isr(int irq, void *dev_id)
-+static irqreturn_t __maybe_unused hv_stimer0_percpu_isr(int irq, void *dev_id)
- {
- 	hv_stimer0_isr();
- 	return IRQ_HANDLED;
-@@ -196,6 +196,7 @@ void __weak hv_remove_stimer0_handler(void)
- {
- };
- 
-+#ifdef CONFIG_ACPI
- /* Called only on architectures with per-cpu IRQs (i.e., not x86/x64) */
- static int hv_setup_stimer0_irq(void)
- {
-@@ -230,6 +231,16 @@ static void hv_remove_stimer0_irq(void)
- 		stimer0_irq = -1;
- 	}
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index efff750f326d..d331f76b0c19 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -1075,6 +1075,11 @@ static inline u32 acpi_osc_ctx_get_cxl_control(struct acpi_osc_context *context)
+ 	return 0;
  }
-+#else
-+static int hv_setup_stimer0_irq(void)
+ 
++static inline bool acpi_sleep_state_supported(u8 sleep_state)
 +{
-+	return 0;
++	return false;
 +}
 +
-+static void hv_remove_stimer0_irq(void)
-+{
-+}
-+#endif
+ #endif	/* !CONFIG_ACPI */
  
- /* hv_stimer_alloc - Global initialization of the clockevent and stimer0 */
- int hv_stimer_alloc(bool have_percpu_irqs)
+ #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
 -- 
 2.34.1
 
