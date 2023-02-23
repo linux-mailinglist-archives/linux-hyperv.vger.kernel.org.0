@@ -2,164 +2,466 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F5ED6A0088
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Feb 2023 02:21:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F3EE6A02BF
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Feb 2023 07:22:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232867AbjBWBVd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 22 Feb 2023 20:21:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
+        id S233011AbjBWGWj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Feb 2023 01:22:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232382AbjBWBVc (ORCPT
+        with ESMTP id S230356AbjBWGWi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 22 Feb 2023 20:21:32 -0500
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2653C199CC
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Feb 2023 17:21:29 -0800 (PST)
-Received: by mail-pl1-x64a.google.com with SMTP id u15-20020a17090341cf00b0019af23e69dcso4527203ple.19
-        for <linux-hyperv@vger.kernel.org>; Wed, 22 Feb 2023 17:21:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Utax3e55p3N2FiK+44m4EPF0IspqZNOsObveiGZKnps=;
-        b=qEb0sRMMQP+D3NIM0EavDhPqQ4MvMH/BkwStlAQZrjsNxsvp5AK1UfYEygcyPWPwJL
-         aw+JkiEqI0Wk8zGQmrouiI1z4upjRMubH9ZbMcD4DfUtX9Kh6wziQif1uoq55HTC3OnT
-         FkqnuFlPOv90b4F9aF2KaT24ghCOlh+8WCOGn6hLcFk+lS1tpcpAs56CWVfDHEhq5Ah+
-         M5mzL9C5YTPTLkTiGKHI6Qe115kFoyX58YgaW0qYBkv6o9AziLvKdimHbPOGepgb44h4
-         mzvdFkwJ0UuukAL7MBFDuYqBQ7qmF7FQJtSZrsAyl+BiB9B4nmX4rvZmwl8TcRhOvWlG
-         zxDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Utax3e55p3N2FiK+44m4EPF0IspqZNOsObveiGZKnps=;
-        b=yKRLcx/5Nithnw0w+8CHKmAHkYs6DUIOOgLg5ApeBDwUV4lyEmQ7FUXDKd+BYCQRbO
-         SWoIcExM1FE+WGI/a66bVQGKTzSCkLxBgwFVa6Bs+VKWXtRFCNekmgzghiOUKe/1+m9T
-         bxv11BymuJ8Oc6NzOBULSQehWh2SC/y+R7UBbpNf+9rI0+uhpK5F+J/qN7mQTlCPIwgE
-         M2eDcdQdygYVjXOeAPCeQoabKTZUG2kjMDXNtj5nSPZYewt4S4fBbmhyiReghRTagaQW
-         9oKKdtilzf/TXIFEOjM2i2si8Fd9boVoJwTXfpqanOeWEodr236McYyBvUDGlmWlrjbZ
-         hvYA==
-X-Gm-Message-State: AO0yUKWDXhqc95Nb+gy5yvO2X7cOi6RwFRKKT+pnI9I8VXZb4R4AVrnh
-        sq3yLPL54F7rWrHrMnhMm7wjPiS1+JA=
-X-Google-Smtp-Source: AK7set8uqJFTeifQRndK5OY7LsjNYEZihFhZGcRxMmqtrSL2SRl7UXNO3Bil4Wyqwogd1sRe6etbqkK7/G4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a65:66c6:0:b0:4fc:1da2:5f95 with SMTP id
- c6-20020a6566c6000000b004fc1da25f95mr1307512pgw.7.1677115288904; Wed, 22 Feb
- 2023 17:21:28 -0800 (PST)
-Date:   Wed, 22 Feb 2023 17:21:27 -0800
-In-Reply-To: <Y/ammgkyo3QVon+A@zn.tnic>
-Mime-Version: 1.0
-References: <Y+bXjxUtSf71E5SS@google.com> <Y+4wiyepKU8IEr48@zn.tnic>
- <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+5immKTXCsjSysx@zn.tnic> <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y++VSZNAX9Cstbqo@zn.tnic> <Y/aTmL5Y8DtOJu9w@google.com> <Y/aYQlQzRSEH5II/@zn.tnic>
- <Y/adN3GQJTdDPmS8@google.com> <Y/ammgkyo3QVon+A@zn.tnic>
-Message-ID: <Y/a/lzOwqMjOUaYZ@google.com>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-From:   Sean Christopherson <seanjc@google.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Thu, 23 Feb 2023 01:22:38 -0500
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C717137716;
+        Wed, 22 Feb 2023 22:22:36 -0800 (PST)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 19FA9209A988; Wed, 22 Feb 2023 22:22:36 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 19FA9209A988
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1677133356;
+        bh=DzFT8z1+2TBhE/a2zJv86DJc3r0SSMFjrSA+AYUOKOg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fwB0J9GB3y6+DLA8oYruaS6tzK1zxcNIsCGTOCwXSd0fXM8vlHj6GW8bZ/+ZJh1Cj
+         Xd6xZB3LmkmaxRG7K8uDjzKCiNHJCNJURejTt6jV6Vgvk3rSOW8MeuMfSOwj7D/oeB
+         OZjoRBpEGAZpUaMdkZHU9FA1YlnXjUJlBUQh11J4=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH] hv/hv_kvp_daemon: Add support for keyfile config based  connection profile in NM
+Date:   Wed, 22 Feb 2023 22:22:14 -0800
+Message-Id: <1677133334-6958-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Feb 23, 2023, Borislav Petkov wrote:
-> On Wed, Feb 22, 2023 at 02:54:47PM -0800, Sean Christopherson wrote:
-> > Why?  I genuinely don't understand the motivation for bundling all of this stuff
-> > under a single "feature".
-> 
-> It is called "sanity".
-> 
-> See here:
-> 
-> https://lore.kernel.org/r/Y%2B5immKTXCsjSysx@zn.tnic
-> 
-> We support SEV, SEV-ES, SEV-SNP, TDX, HyperV... guests and whatever's
-> coming down the pipe. And all that goes into arch/x86/ kernel proper
-> code.
-> 
-> The CC_ATTR stuff is clean-ish in the sense that we have separation by
-> confidential computing platform - AMD's and Intel's. Hyper-V comes along
-> and wants to define a different subset of that. And that's only the
-> SEV-SNP side - there's a TDX patchset too.
-> 
-> And then some other hypervisor will come along and say, but but, I wanna
-> have X and Y and a pink pony too.
-> 
-> Oh, and there's this other fun with MTRRs where each HV decides to do
-> whatever it wants.
+As communicated in BZ <2122115>, ifcfg config file support in
+NetworkManger is deprecated. This patch provides support for the
+new keyfile config format for connection profiles in NetworkManager.
+The patch modifies the hv_kvp_daemon code to generate the new network
+configuration in keyfile format(.ini-style format) instead of ifcfg
+format.
+This configuration is stored in a temp file which is further translated
+using the hv_set_ifconfig.sh script. This script is implemented by
+individual distros based on the network management commands supported.
+For example, RHEL's implementation could be found here:
+https://gitlab.com/redhat/centos-stream/src/hyperv-daemons/-/blob/c9s/hv_set_ifconfig.sh
+Debian's implementation could be found here:
+https://github.com/endlessm/linux/blob/master/debian/cloud-tools/hv_set_ifconfig
 
-The MTRR mess isn't unique to coco guests, e.g. KVM explicitly "supports" VMMs
-hiding MTTRs from the guest by defaulting to WB if MTTRs aren't exposed to the
-guest.  Why on earth Hyper-V suddenly needs to enlighten the guest is beyond me,
-but whatever the reason, it's not unique to coco VMs.
+The next part of this support is to inform the Distro vendors to
+modify these implementations to consume the new configuration format.
 
-> So, we have a zoo brewing on the horizon already!
-> 
-> If there's no clean definition of what each guest is and requires and
-> that stuff isn't documented properly and if depending on which "feature"
-> I need to check, I need to call a different function or query
-> a different variable, then it won't go anywhere as far as guest support
-> goes.
-> 
-> The cc_platform_has() thing gives us a relatively clean way to abstract
-> all those differences away and keep the code sane-ish.
+Tested-on: Rhel9, Rhel 8.6 (Hyper-V, Azure)
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
+ tools/hv/hv_kvp_daemon.c    | 252 ++++++++++++++++--------------------
+ tools/hv/hv_set_ifconfig.sh |  42 +++---
+ 2 files changed, 136 insertions(+), 158 deletions(-)
 
-For features that are inherent to the platform, I agree, or at least I don't hate
-the interface.  But defining a platform to have specific devices runs counter to
-pretty much the entire x86 ecosystem.  At some point, there _will_ be more devices
-in private memory than just IO-APIC and TPM, and conversely there will be "platforms"
-that support a trusted TPM but not a trusted IO-APIC, and probably even vice versa.
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 27f5e7dfc2f7..7f68f9f69fda 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -1004,46 +1004,6 @@ static int kvp_mac_to_ip(struct hv_kvp_ipaddr_value *kvp_ip_val)
+ 	return error;
+ }
+ 
+-static int expand_ipv6(char *addr, int type)
+-{
+-	int ret;
+-	struct in6_addr v6_addr;
+-
+-	ret = inet_pton(AF_INET6, addr, &v6_addr);
+-
+-	if (ret != 1) {
+-		if (type == NETMASK)
+-			return 1;
+-		return 0;
+-	}
+-
+-	sprintf(addr, "%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:"
+-		"%02x%02x:%02x%02x:%02x%02x",
+-		(int)v6_addr.s6_addr[0], (int)v6_addr.s6_addr[1],
+-		(int)v6_addr.s6_addr[2], (int)v6_addr.s6_addr[3],
+-		(int)v6_addr.s6_addr[4], (int)v6_addr.s6_addr[5],
+-		(int)v6_addr.s6_addr[6], (int)v6_addr.s6_addr[7],
+-		(int)v6_addr.s6_addr[8], (int)v6_addr.s6_addr[9],
+-		(int)v6_addr.s6_addr[10], (int)v6_addr.s6_addr[11],
+-		(int)v6_addr.s6_addr[12], (int)v6_addr.s6_addr[13],
+-		(int)v6_addr.s6_addr[14], (int)v6_addr.s6_addr[15]);
+-
+-	return 1;
+-
+-}
+-
+-static int is_ipv4(char *addr)
+-{
+-	int ret;
+-	struct in_addr ipv4_addr;
+-
+-	ret = inet_pton(AF_INET, addr, &ipv4_addr);
+-
+-	if (ret == 1)
+-		return 1;
+-	return 0;
+-}
+-
+ static int parse_ip_val_buffer(char *in_buf, int *offset,
+ 				char *out_buf, int out_len)
+ {
+@@ -1092,80 +1052,80 @@ static int kvp_write_file(FILE *f, char *s1, char *s2, char *s3)
+ 	return 0;
+ }
+ 
+-
+-static int process_ip_string(FILE *f, char *ip_string, int type)
++static int kvp_subnet_to_plen(char *subnet_addr_str)
+ {
+-	int error = 0;
+-	char addr[INET6_ADDRSTRLEN];
+-	int i = 0;
+-	int j = 0;
+-	char str[256];
+-	char sub_str[13];
+-	int offset = 0;
++	int plen = 0;
++	struct in_addr subnet_addr4;
++	struct in6_addr subnet_addr6;
+ 
+-	memset(addr, 0, sizeof(addr));
++	/*
++	 * Convert subnet address to binary representation
++	 */
++	if (inet_pton(AF_INET, subnet_addr_str, &subnet_addr4) == 1) {
+ 
+-	while (parse_ip_val_buffer(ip_string, &offset, addr,
+-					(MAX_IP_ADDR_SIZE * 2))) {
++		uint32_t subnet_mask = ntohl(subnet_addr4.s_addr);
+ 
+-		sub_str[0] = 0;
+-		if (is_ipv4(addr)) {
+-			switch (type) {
+-			case IPADDR:
+-				snprintf(str, sizeof(str), "%s", "IPADDR");
+-				break;
+-			case NETMASK:
+-				snprintf(str, sizeof(str), "%s", "NETMASK");
+-				break;
+-			case GATEWAY:
+-				snprintf(str, sizeof(str), "%s", "GATEWAY");
+-				break;
+-			case DNS:
+-				snprintf(str, sizeof(str), "%s", "DNS");
+-				break;
+-			}
++		while (subnet_mask & 0x80000000) {
+ 
+-			if (type == DNS) {
+-				snprintf(sub_str, sizeof(sub_str), "%d", ++i);
+-			} else if (type == GATEWAY && i == 0) {
+-				++i;
+-			} else {
+-				snprintf(sub_str, sizeof(sub_str), "%d", i++);
+-			}
++			plen++;
++			subnet_mask <<= 1;
++		}
++	} else if (inet_pton(AF_INET6, subnet_addr_str, &subnet_addr6) == 1) {
+ 
++		const uint8_t *subnet_mask = subnet_addr6.s6_addr;
++		int i = 0;
+ 
+-		} else if (expand_ipv6(addr, type)) {
+-			switch (type) {
+-			case IPADDR:
+-				snprintf(str, sizeof(str), "%s", "IPV6ADDR");
+-				break;
+-			case NETMASK:
+-				snprintf(str, sizeof(str), "%s", "IPV6NETMASK");
+-				break;
+-			case GATEWAY:
+-				snprintf(str, sizeof(str), "%s",
+-					"IPV6_DEFAULTGW");
+-				break;
+-			case DNS:
+-				snprintf(str, sizeof(str), "%s",  "DNS");
+-				break;
+-			}
++		while (i < 16 && subnet_mask[i] == 0xff) {
+ 
+-			if (type == DNS) {
+-				snprintf(sub_str, sizeof(sub_str), "%d", ++i);
+-			} else if (j == 0) {
+-				++j;
+-			} else {
+-				snprintf(sub_str, sizeof(sub_str), "_%d", j++);
++			plen += 8;
++			i++;
++		}
++		if (i < 16) {
++
++			uint8_t mask_byte = subnet_mask[i];
++
++			while (mask_byte & 0x80) {
++
++				plen++;
++				mask_byte <<= 1;
+ 			}
+-		} else {
+-			return  HV_INVALIDARG;
+ 		}
++	} else {
++		return -1;
++	}
+ 
+-		error = kvp_write_file(f, str, sub_str, addr);
+-		if (error)
++	return plen;
++}
++
++static int process_ip_string(FILE *f, char *ip_string, char *subnet)
++{
++	int error = 0;
++	char addr[INET6_ADDRSTRLEN];
++	char subnet_addr[INET6_ADDRSTRLEN];
++	int i = 0;
++	int ip_offset = 0, subnet_offset = 0;
++	int plen;
++
++	memset(addr, 0, sizeof(addr));
++	memset(subnet_addr, 0, sizeof(subnet_addr));
++
++	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
++					(MAX_IP_ADDR_SIZE * 2)) &&
++					parse_ip_val_buffer(subnet,
++					&subnet_offset, subnet_addr,
++					(MAX_IP_ADDR_SIZE * 2))) {
++
++		plen = kvp_subnet_to_plen((char *)subnet_addr);
++		if (plen < 0)
++			return plen;
++
++		error = fprintf(f, "address%d=%s/%d\n", ++i, (char *)addr,
++							plen);
++		if (error < 0)
+ 			return error;
++
+ 		memset(addr, 0, sizeof(addr));
++		memset(subnet_addr, 0, sizeof(subnet_addr));
+ 	}
+ 
+ 	return 0;
+@@ -1199,26 +1159,29 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 	 *
+ 	 * Here is the format of the ip configuration file:
+ 	 *
+-	 * HWADDR=macaddr
+-	 * DEVICE=interface name
+-	 * BOOTPROTO=<protocol> (where <protocol> is "dhcp" if DHCP is configured
+-	 *                       or "none" if no boot-time protocol should be used)
++	 * [ethernet]
++	 * mac-address=macaddr
++	 * [connection]
++	 * interface-name=interface name
++	 *
++	 * [ipv4]
++	 * method=<protocol> (where <protocol> is "auto" if DHCP is configured
++	 *                       or "manual" if no boot-time protocol should be used)
+ 	 *
+-	 * IPADDR0=ipaddr1
+-	 * IPADDR1=ipaddr2
+-	 * IPADDRx=ipaddry (where y = x + 1)
++	 * address1=ipaddr1/plen
++	 * address2=ipaddr2/plen
+ 	 *
+-	 * NETMASK0=netmask1
+-	 * NETMASKx=netmasky (where y = x + 1)
++	 * gateway=gateway1;gateway2
+ 	 *
+-	 * GATEWAY=ipaddr1
+-	 * GATEWAYx=ipaddry (where y = x + 1)
++	 * dns=dns1;dns2
+ 	 *
+-	 * DNSx=ipaddrx (where first DNS address is tagged as DNS1 etc)
++	 * [ipv6]
++	 * address1=ipaddr1/plen
++	 * address2=ipaddr2/plen
+ 	 *
+-	 * IPV6 addresses will be tagged as IPV6ADDR, IPV6 gateway will be
+-	 * tagged as IPV6_DEFAULTGW and IPV6 NETMASK will be tagged as
+-	 * IPV6NETMASK.
++	 * gateway=gateway1;gateway2
++	 *
++	 * dns=dns1;dns2
+ 	 *
+ 	 * The host can specify multiple ipv4 and ipv6 addresses to be
+ 	 * configured for the interface. Furthermore, the configuration
+@@ -1248,12 +1211,20 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 		goto setval_error;
+ 	}
+ 
+-	error = kvp_write_file(file, "HWADDR", "", mac_addr);
+-	free(mac_addr);
++	error = fprintf(file, "\n[connection]\n");
++	if (error < 0)
++		goto setval_error;
++
++	error = kvp_write_file(file, "interface-name", "", if_name);
+ 	if (error)
+ 		goto setval_error;
+ 
+-	error = kvp_write_file(file, "DEVICE", "", if_name);
++	error = fprintf(file, "\n[ethernet]\n");
++	if (error < 0)
++		goto setval_error;
++
++	error = kvp_write_file(file, "mac-address", "", mac_addr);
++	free(mac_addr);
+ 	if (error)
+ 		goto setval_error;
+ 
+@@ -1263,36 +1234,43 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
+ 	 * proceed to parse and pass the IPv6 information to the
+ 	 * disto-specific script hv_set_ifconfig.
+ 	 */
+-	if (new_val->dhcp_enabled) {
+-		error = kvp_write_file(file, "BOOTPROTO", "", "dhcp");
+-		if (error)
+-			goto setval_error;
++	if (new_val->addr_family == ADDR_FAMILY_IPV6) {
+ 
++		error = fprintf(file, "\n[ipv6]\n");
++		if (error < 0)
++			goto setval_error;
+ 	} else {
+-		error = kvp_write_file(file, "BOOTPROTO", "", "none");
+-		if (error)
++
++		error = fprintf(file, "\n[ipv4]\n");
++		if (error < 0)
+ 			goto setval_error;
++
++		if (new_val->dhcp_enabled) {
++			error = kvp_write_file(file, "method", "", "auto");
++			if (error < 0)
++				goto setval_error;
++		} else {
++			error = kvp_write_file(file, "method", "", "manual");
++			if (error < 0)
++				goto setval_error;
++		}
+ 	}
+ 
+ 	/*
+ 	 * Write the configuration for ipaddress, netmask, gateway and
+-	 * name servers.
++	 * name services
+ 	 */
+-
+-	error = process_ip_string(file, (char *)new_val->ip_addr, IPADDR);
+-	if (error)
++	error = process_ip_string(file, (char *)new_val->ip_addr,
++					(char *)new_val->sub_net);
++	if (error < 0)
+ 		goto setval_error;
+ 
+-	error = process_ip_string(file, (char *)new_val->sub_net, NETMASK);
+-	if (error)
++	error = fprintf(file, "gateway=%s\n", (char *)new_val->gate_way);
++	if (error < 0)
+ 		goto setval_error;
+ 
+-	error = process_ip_string(file, (char *)new_val->gate_way, GATEWAY);
+-	if (error)
+-		goto setval_error;
+-
+-	error = process_ip_string(file, (char *)new_val->dns_addr, DNS);
+-	if (error)
++	error = fprintf(file, "dns=%s\n", (char *)new_val->dns_addr);
++	if (error < 0)
+ 		goto setval_error;
+ 
+ 	fclose(file);
+diff --git a/tools/hv/hv_set_ifconfig.sh b/tools/hv/hv_set_ifconfig.sh
+index d10fe35b7f25..22238767ef7e 100755
+--- a/tools/hv/hv_set_ifconfig.sh
++++ b/tools/hv/hv_set_ifconfig.sh
+@@ -20,26 +20,29 @@
+ #
+ # Here is the format of the ip configuration file:
+ #
+-# HWADDR=macaddr
+-# DEVICE=interface name
+-# BOOTPROTO=<protocol> (where <protocol> is "dhcp" if DHCP is configured
+-#                       or "none" if no boot-time protocol should be used)
++# [ethernet]
++# mac-address=macaddr
++# [connection]
++# interface-name=interface name
+ #
+-# IPADDR0=ipaddr1
+-# IPADDR1=ipaddr2
+-# IPADDRx=ipaddry (where y = x + 1)
++# [ipv4]
++# method=<protocol> (where <protocol> is "auto" if DHCP is configured
++#                       or "manual" if no boot-time protocol should be used)
+ #
+-# NETMASK0=netmask1
+-# NETMASKx=netmasky (where y = x + 1)
++# address1=ipaddr1/plen
++# address=ipaddr2/plen
+ #
+-# GATEWAY=ipaddr1
+-# GATEWAYx=ipaddry (where y = x + 1)
++# gateway=gateway1;gateway2
+ #
+-# DNSx=ipaddrx (where first DNS address is tagged as DNS1 etc)
++# dns=dns1;
+ #
+-# IPV6 addresses will be tagged as IPV6ADDR, IPV6 gateway will be
+-# tagged as IPV6_DEFAULTGW and IPV6 NETMASK will be tagged as
+-# IPV6NETMASK.
++# [ipv6]
++# address1=ipaddr1/plen
++# address2=ipaddr1/plen
++#
++# gateway=gateway1;gateway2
++#
++# dns=dns1;dns2
+ #
+ # The host can specify multiple ipv4 and ipv6 addresses to be
+ # configured for the interface. Furthermore, the configuration
+@@ -50,13 +53,10 @@
+ 
+ 
+ 
+-echo "IPV6INIT=yes" >> $1
+-echo "NM_CONTROLLED=no" >> $1
+-echo "PEERDNS=yes" >> $1
+-echo "ONBOOT=yes" >> $1
+-
++sed '/\[connection]\/a autoconnect=true' $1
+ 
+-cp $1 /etc/sysconfig/network-scripts/
++chmod 600 $1
++cp $1 /etc/NetworkManager/system-connections/
+ 
+ 
+ interface=$(echo $1 | awk -F - '{ print $2 }')
+-- 
+2.37.2
 
-All I'm advocating is that for determining whether or not a device should be mapped
-private vs. shared, provide an API so that the hypervisor-specific enlightened code
-can manage that insanity without polluting common code.  If we are ever fortunate
-enough to have common enumeration, e.g. through ACPI or something, the enlightened
-code can simply reroute to the common code.  This is a well established pattern for
-many paravirt features, I don't see why it wouldn't work here.
