@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03B4C6A30D7
-	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Feb 2023 15:54:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F25C16A310C
+	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Feb 2023 15:56:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230414AbjBZOyF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 26 Feb 2023 09:54:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55316 "EHLO
+        id S231316AbjBZO4F (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 26 Feb 2023 09:56:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230097AbjBZOxV (ORCPT
+        with ESMTP id S231139AbjBZOyx (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 26 Feb 2023 09:53:21 -0500
+        Sun, 26 Feb 2023 09:54:53 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E6571A959;
-        Sun, 26 Feb 2023 06:49:57 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D194A1B336;
+        Sun, 26 Feb 2023 06:50:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E759960C7F;
-        Sun, 26 Feb 2023 14:48:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0550C433EF;
-        Sun, 26 Feb 2023 14:48:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2054760C19;
+        Sun, 26 Feb 2023 14:50:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 286FBC433A0;
+        Sun, 26 Feb 2023 14:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677422909;
-        bh=rfPx/rZIzHLNj3p2KtOMPVy1khbRbqvymM0pSmhRwi0=;
+        s=k20201202; t=1677423006;
+        bh=vFw+NrHPookW98X6GbA95VLxJzY6awTkFvIBF2LclnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9GZ2XytY3esbGF4gK7w83j4ioAcU3L6vYaUXjgDxYXi2ZmlHPhQpMDcbpbuKGVs+
-         2c3bJMrMkwfkP5fZZV+GtEhDYYY43/R85PA8BxPB0I63Ylxrx6PtphDs7WIjwQf1l0
-         cixGEY9cT7bsOPSZm+7Gimo1I5YoNAad4IIJqa3k6sLPqSelQGeUWS88aZKgRySsar
-         tVcuP9TaLn3bOHogYv5Ne/A2cednRQGx8wfaRyFEmOunC9ZXH6rNK18W1rGFb89yu/
-         4eK5yoCWjwaiYIWzP/8ELH8jx7adk1799VrB7RoCf5B28bxuBv9W6dTWw3OrMV8ASk
-         bOS+U1sn7I4UQ==
+        b=lkOGmTkNwXLV2WJpdtEq/rWJsOGRGwhOqvcRuVhZpZoi4JAMDDBlOoh2HvTzDvSl5
+         Q9X5mEbnewVIyiTASS36wSfA2PoqWBvEE0GEUw5oYSRfLee/3ha/zi8G+20ax2dauy
+         4eDgCmLC0tHGm+rDjfducy265Cr61JLqjkKrPHL3r/aHiZWUm5h1T00ltJnL7JNMDa
+         BtjjPnXCCaIQfTv+7NEyVkMGaRarAeYwck+b1LIVFIzkDnal91sS0HRv1vC/hAjHrs
+         gE+wZeChk/AEpxibBZLLv8aDb+olKK20u8dF64iuzeyzwTuCqcOfmLONWWW+5eYSMU
+         iBwZcS3FfYRxg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Kelley <mikelley@microsoft.com>,
@@ -41,18 +41,18 @@ Cc:     Michael Kelley <mikelley@microsoft.com>,
         wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
         edumazet@google.com, kuba@kernel.org, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 45/49] hv_netvsc: Check status in SEND_RNDIS_PKT completion message
-Date:   Sun, 26 Feb 2023 09:46:45 -0500
-Message-Id: <20230226144650.826470-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 34/36] hv_netvsc: Check status in SEND_RNDIS_PKT completion message
+Date:   Sun, 26 Feb 2023 09:48:42 -0500
+Message-Id: <20230226144845.827893-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230226144650.826470-1-sashal@kernel.org>
-References: <20230226144650.826470-1-sashal@kernel.org>
+In-Reply-To: <20230226144845.827893-1-sashal@kernel.org>
+References: <20230226144845.827893-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,10 +81,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 18 insertions(+)
 
 diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 79f4e13620a46..da737d959e81c 100644
+index fb2448f9a8b17..4156299e039d8 100644
 --- a/drivers/net/hyperv/netvsc.c
 +++ b/drivers/net/hyperv/netvsc.c
-@@ -851,6 +851,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+@@ -814,6 +814,7 @@ static void netvsc_send_completion(struct net_device *ndev,
  	u32 msglen = hv_pkt_datalen(desc);
  	struct nvsp_message *pkt_rqst;
  	u64 cmd_rqst;
@@ -92,7 +92,7 @@ index 79f4e13620a46..da737d959e81c 100644
  
  	/* First check if this is a VMBUS completion without data payload */
  	if (!msglen) {
-@@ -922,6 +923,23 @@ static void netvsc_send_completion(struct net_device *ndev,
+@@ -885,6 +886,23 @@ static void netvsc_send_completion(struct net_device *ndev,
  		break;
  
  	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
