@@ -2,83 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1233B6A1A92
-	for <lists+linux-hyperv@lfdr.de>; Fri, 24 Feb 2023 11:50:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A6CB6A30A9
+	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Feb 2023 15:52:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjBXKua convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-hyperv@lfdr.de>); Fri, 24 Feb 2023 05:50:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50842 "EHLO
+        id S230199AbjBZOwF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 26 Feb 2023 09:52:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjBXKu3 (ORCPT
+        with ESMTP id S230241AbjBZOvS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 24 Feb 2023 05:50:29 -0500
-X-Greylist: delayed 1934 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Feb 2023 02:50:27 PST
-Received: from baidu.com (mx20.baidu.com [111.202.115.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D761D15885;
-        Fri, 24 Feb 2023 02:50:27 -0800 (PST)
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     Sean Christopherson <seanjc@google.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     KY Srinivasan <kys@microsoft.com>,
+        Sun, 26 Feb 2023 09:51:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCCA18B2E;
+        Sun, 26 Feb 2023 06:48:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 34F0860C4E;
+        Sun, 26 Feb 2023 14:46:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41DB7C433A4;
+        Sun, 26 Feb 2023 14:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677422797;
+        bh=rfPx/rZIzHLNj3p2KtOMPVy1khbRbqvymM0pSmhRwi0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q2N/aqowUCJckmlZiv7JskN0aPk+JKNkXB1hTZZFqH4Nsp3Yhh6mtAQGpb1KkTpMk
+         NPV6WOO59xCulaIX3KEgk/MSOMOhFDfJ6ptwYD9nJesjGix46cf47Y61r/MRuVS3FL
+         DCveBLs65bexdHC1QTfh0seXDxulY6tMstHsa3giJcwUuuJiuJJP1EYm/GwjUf5pnQ
+         C8DjnY6iQBz3hSZsrkbGzUR085mXhlMbkxnXRRljzhMIKl9L/fEGBTy7DSNy8ifBui
+         ERWOaH6J1iCwUdQ2mCgPh6y5kEZX2fM6F09+LhZXjPtw2j1pUm2Hdzzjo1Ulol+gjO
+         eHbnTXqZPjZsw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
- shutdown
-Thread-Topic: [PATCH] clockevents/drivers/i8253: Do not zero timer counter in
- shutdown
-Thread-Index: AQHZOpLxLW8Whz5HbUGqx7zeXRG6Ia7EObywgABoMQCAGU3w8A==
-Date:   Fri, 24 Feb 2023 09:45:39 +0000
-Message-ID: <12889cfa141f4a06958ead0ab7f0a375@baidu.com>
-References: <1675732476-14401-1-git-send-email-lirongqing@baidu.com>
- <BYAPR21MB168840B3814336ED510845C0D7D89@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+O56OXIuARBhsg2@google.com>
-In-Reply-To: <Y+O56OXIuARBhsg2@google.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.206.13]
-x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex14_2023-02-24 17:45:40:275
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Paolo Abeni <pabeni@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.2 49/53] hv_netvsc: Check status in SEND_RNDIS_PKT completion message
+Date:   Sun, 26 Feb 2023 09:44:41 -0500
+Message-Id: <20230226144446.824580-49-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20230226144446.824580-1-sashal@kernel.org>
+References: <20230226144446.824580-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 10.127.64.37
-X-FE-Last-Public-Client-IP: 100.100.100.38
-X-FE-Policy-ID: 15:10:21:SYSTEM
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> > > Hyper-V and KVM follow the spec, the issue that 35b69a42
-> > > "(clockevents/drivers/
-> > > i8253: Add support for PIT shutdown quirk") fixed is in i8253
-> > > drivers, not Hyper-v, so delete the zero timer counter register in
-> > > shutdown, and delete PIT shutdown quirk for Hyper-v
-> >
-> > From the standpoint of Hyper-V, I'm good with this change.  But
-> > there's a risk that old hardware might not be compliant with the spec,
-> > and needs the zero'ing for some reason. The experts in the x86 space
-> > will be in the best position to assess the risk.
-> 
-> Yep, my feeling exactly.  My input is purely from reading those crusty old specs.
+From: Michael Kelley <mikelley@microsoft.com>
 
-Hi Thomas:
+[ Upstream commit dca5161f9bd052e9e73be90716ffd57e8762c697 ]
 
-Could you give some suggestion about this patch?
+Completion responses to SEND_RNDIS_PKT messages are currently processed
+regardless of the status in the response, so that resources associated
+with the request are freed.  While this is appropriate, code bugs that
+cause sending a malformed message, or errors on the Hyper-V host, go
+undetected. Fix this by checking the status and outputting a rate-limited
+message if there is an error.
 
-Thanks
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Link: https://lore.kernel.org/r/1676264881-48928-1-git-send-email-mikelley@microsoft.com
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/hyperv/netvsc.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
--Li
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 79f4e13620a46..da737d959e81c 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -851,6 +851,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 	u32 msglen = hv_pkt_datalen(desc);
+ 	struct nvsp_message *pkt_rqst;
+ 	u64 cmd_rqst;
++	u32 status;
+ 
+ 	/* First check if this is a VMBUS completion without data payload */
+ 	if (!msglen) {
+@@ -922,6 +923,23 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 		break;
+ 
+ 	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
++		if (msglen < sizeof(struct nvsp_message_header) +
++		    sizeof(struct nvsp_1_message_send_rndis_packet_complete)) {
++			if (net_ratelimit())
++				netdev_err(ndev, "nvsp_rndis_pkt_complete length too small: %u\n",
++					   msglen);
++			return;
++		}
++
++		/* If status indicates an error, output a message so we know
++		 * there's a problem. But process the completion anyway so the
++		 * resources are released.
++		 */
++		status = nvsp_packet->msg.v1_msg.send_rndis_pkt_complete.status;
++		if (status != NVSP_STAT_SUCCESS && net_ratelimit())
++			netdev_err(ndev, "nvsp_rndis_pkt_complete error status: %x\n",
++				   status);
++
+ 		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
+ 					desc, budget);
+ 		break;
+-- 
+2.39.0
+
