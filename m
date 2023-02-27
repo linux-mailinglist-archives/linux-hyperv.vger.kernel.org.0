@@ -2,120 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F25C16A310C
-	for <lists+linux-hyperv@lfdr.de>; Sun, 26 Feb 2023 15:56:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9E886A361B
+	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Feb 2023 02:09:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231316AbjBZO4F (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 26 Feb 2023 09:56:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55268 "EHLO
+        id S229529AbjB0BJZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 26 Feb 2023 20:09:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231139AbjBZOyx (ORCPT
+        with ESMTP id S229470AbjB0BJZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 26 Feb 2023 09:54:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D194A1B336;
-        Sun, 26 Feb 2023 06:50:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2054760C19;
-        Sun, 26 Feb 2023 14:50:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 286FBC433A0;
-        Sun, 26 Feb 2023 14:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677423006;
-        bh=vFw+NrHPookW98X6GbA95VLxJzY6awTkFvIBF2LclnM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkOGmTkNwXLV2WJpdtEq/rWJsOGRGwhOqvcRuVhZpZoi4JAMDDBlOoh2HvTzDvSl5
-         Q9X5mEbnewVIyiTASS36wSfA2PoqWBvEE0GEUw5oYSRfLee/3ha/zi8G+20ax2dauy
-         4eDgCmLC0tHGm+rDjfducy265Cr61JLqjkKrPHL3r/aHiZWUm5h1T00ltJnL7JNMDa
-         BtjjPnXCCaIQfTv+7NEyVkMGaRarAeYwck+b1LIVFIzkDnal91sS0HRv1vC/hAjHrs
-         gE+wZeChk/AEpxibBZLLv8aDb+olKK20u8dF64iuzeyzwTuCqcOfmLONWWW+5eYSMU
-         iBwZcS3FfYRxg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 34/36] hv_netvsc: Check status in SEND_RNDIS_PKT completion message
-Date:   Sun, 26 Feb 2023 09:48:42 -0500
-Message-Id: <20230226144845.827893-34-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230226144845.827893-1-sashal@kernel.org>
-References: <20230226144845.827893-1-sashal@kernel.org>
+        Sun, 26 Feb 2023 20:09:25 -0500
+Received: from mail-yw1-x1144.google.com (mail-yw1-x1144.google.com [IPv6:2607:f8b0:4864:20::1144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A3F86B6
+        for <linux-hyperv@vger.kernel.org>; Sun, 26 Feb 2023 17:09:23 -0800 (PST)
+Received: by mail-yw1-x1144.google.com with SMTP id 00721157ae682-536cd8f6034so134290477b3.10
+        for <linux-hyperv@vger.kernel.org>; Sun, 26 Feb 2023 17:09:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=weYNpobTz7e34lKnlfhxYchHcnpoQgNkJdKwW1l0gho=;
+        b=UeltKK0V8kryiLYyqydoCs0H1Pxb5jaLkb6kVokY/e9fl6ur08qocH1Ell4KGDCriO
+         VSffl2Tw0fsa1W03NwMgVJBs6rltLi4f5DRnHzMQ+9Cgem5fVHUfyQ/dZkH6cqi2U8Z0
+         JsfARYiS/G6kOPExrU1Q1je72R1fkCR+VjYhKoJloCWjVyNKr+5N2fJSmB3DZ4ZfZ0oX
+         ih3FjGqO54yhMnnqcpIzZxnR7tAJG/DaU4HbabUSNloWQlcWg9X55am79XZt2SYMvnp/
+         3mb53l6Et0RWIlMU5gXEVJ3pZpL9eU9gkYZGPaCSmvbPG+sLb6ixi2YmacBdO3Ea8DrJ
+         ScHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=weYNpobTz7e34lKnlfhxYchHcnpoQgNkJdKwW1l0gho=;
+        b=G39G5yajZ2a12jfPfmcdX9QE1WEiLOvrRS21sOXSof0bdKhIs0BwCfk3gTAUMhJnHb
+         fEtHdiWWBEWvvMuFk0MnTLFih6YMQmOvbQKKPPBtB4Z51dwWdD46kagX+KsK7ZzUM/aZ
+         J2xSZECy4/dGvrUSXrMYZCNKXr0oWtgpchxnJrndjG2xcZKBLwT2s8Gf5xubAdSsojQv
+         TDuKhYLIHL6KqW5hOo+Ogf83mYOGhlik5jTySBjEVurE1cUW6ay42aJx3/JDZKEqgIi+
+         vgfQYNVviQhqH9gYzrhpvZjxReOJaeIHA43iI0TylP+Lmg+029IgVYCp+BE4918E6CP5
+         Im8Q==
+X-Gm-Message-State: AO0yUKWE0OyoBI8HNp5l/e6nGSR1Bpid9RSj4MD2cMjCku5vwcA5b2sW
+        MgI0GrhcKLD9qnMtsjFkSxQZNHVtCX8TlBn6Z40=
+X-Google-Smtp-Source: AK7set9GDvrRqHgB70ryD0yl0PQeJtllXz/vCUabAVeTbSl6FckvbsO5f6LahjTb/GgPxwOJke3cuPOg635nRblbmnY=
+X-Received: by 2002:a25:8a83:0:b0:a4a:a708:2411 with SMTP id
+ h3-20020a258a83000000b00a4aa7082411mr5272215ybl.10.1677460162286; Sun, 26 Feb
+ 2023 17:09:22 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7010:7646:b0:33a:7fd9:3f28 with HTTP; Sun, 26 Feb 2023
+ 17:09:21 -0800 (PST)
+From:   Adel Aldoseri <aadelaldoseri@gmail.com>
+Date:   Sun, 26 Feb 2023 17:09:21 -0800
+Message-ID: <CAH9pHsvS5Ji+5KP848hRxwW7O0hSTb0FhTMHPjtepVniVFcc8Q@mail.gmail.com>
+Subject: We finance viable projects only
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=1.8 required=5.0 tests=BAYES_80,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+Attention: Sir
 
-[ Upstream commit dca5161f9bd052e9e73be90716ffd57e8762c697 ]
+Our Company is willing, ready to help you grow your network and offer
+you Loan funds to complete and fund your existing Projects. We can
+send you our Company Terms and Condition after review of your project
+plan and executive summary of your project, if you are serious and
+Interested contact us for further Information:
 
-Completion responses to SEND_RNDIS_PKT messages are currently processed
-regardless of the status in the response, so that resources associated
-with the request are freed.  While this is appropriate, code bugs that
-cause sending a malformed message, or errors on the Hyper-V host, go
-undetected. Fix this by checking the status and outputting a rate-limited
-message if there is an error.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Link: https://lore.kernel.org/r/1676264881-48928-1-git-send-email-mikelley@microsoft.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/hyperv/netvsc.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Best regards,
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index fb2448f9a8b17..4156299e039d8 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -814,6 +814,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 	u32 msglen = hv_pkt_datalen(desc);
- 	struct nvsp_message *pkt_rqst;
- 	u64 cmd_rqst;
-+	u32 status;
- 
- 	/* First check if this is a VMBUS completion without data payload */
- 	if (!msglen) {
-@@ -885,6 +886,23 @@ static void netvsc_send_completion(struct net_device *ndev,
- 		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
-+		if (msglen < sizeof(struct nvsp_message_header) +
-+		    sizeof(struct nvsp_1_message_send_rndis_packet_complete)) {
-+			if (net_ratelimit())
-+				netdev_err(ndev, "nvsp_rndis_pkt_complete length too small: %u\n",
-+					   msglen);
-+			return;
-+		}
-+
-+		/* If status indicates an error, output a message so we know
-+		 * there's a problem. But process the completion anyway so the
-+		 * resources are released.
-+		 */
-+		status = nvsp_packet->msg.v1_msg.send_rndis_pkt_complete.status;
-+		if (status != NVSP_STAT_SUCCESS && net_ratelimit())
-+			netdev_err(ndev, "nvsp_rndis_pkt_complete error status: %x\n",
-+				   status);
-+
- 		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
- 					desc, budget);
- 		break;
--- 
-2.39.0
-
+Adel Aldoseri
