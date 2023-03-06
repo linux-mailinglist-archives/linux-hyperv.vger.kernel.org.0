@@ -2,109 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C8816AC827
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Mar 2023 17:36:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D11176AD0D1
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Mar 2023 22:51:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbjCFQgZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Mar 2023 11:36:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
+        id S229628AbjCFVvI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 Mar 2023 16:51:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230287AbjCFQgL (ORCPT
+        with ESMTP id S229545AbjCFVvH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Mar 2023 11:36:11 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B2F4390C;
-        Mon,  6 Mar 2023 08:35:37 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        Mon, 6 Mar 2023 16:51:07 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D20862D8B;
+        Mon,  6 Mar 2023 13:51:06 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 7789921E5D;
-        Mon,  6 Mar 2023 16:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1678120490; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EEyy0YGNrjiScFEJSCN9XqA2TAW4Ejl4yGBfINYDlUs=;
-        b=hykKurK9/WXS6qISoyLDcDHoUPTa6DT2LVEsW+HX1QsXJ0G5yeT0pc2YbmUapmb9VennA3
-        yx5uPl6pHjSN+PR7U5sxC+wj8Z/kbztWb3NkzdcLlXeUJXYTivVOxlBOrfZl+IdV536VzX
-        e3PDiwTRa+CSvX3UOk/PJo5Y3opyfRA=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2756B13A66;
-        Mon,  6 Mar 2023 16:34:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id yD1zCCoWBmREUwAAMHmgww
-        (envelope-from <jgross@suse.com>); Mon, 06 Mar 2023 16:34:50 +0000
-From:   Juergen Gross <jgross@suse.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-hyperv@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 645651EC0373;
+        Mon,  6 Mar 2023 22:51:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1678139464;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ZcMCliQs5T2pgPApnAR1x0YFEL96itD44N0jLsGaXgQ=;
+        b=BE+qJc2rT1BVVGQjQtVN1VU23K9ps6I+5GT/nqUHZmIagIglFZLKot+VP4zRkBAPauEzGy
+        yxINZtrTb7YccV3vtMI3Hqj4U+AKE7uNYf4iwdrP4wHjlUA2enUjve3en1uiov2yU4qPGa
+        cYI94G79L+ABKsKYlLPF8CjD+oagt3s=
+Date:   Mon, 6 Mar 2023 22:51:04 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v4 04/12] x86/hyperv: set MTRR state when running as SEV-SNP Hyper-V guest
-Date:   Mon,  6 Mar 2023 17:34:17 +0100
-Message-Id: <20230306163425.8324-5-jgross@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230306163425.8324-1-jgross@suse.com>
-References: <20230306163425.8324-1-jgross@suse.com>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <20230306215104.GEZAZgSPa4qBBu9lRd@fat_crate.local>
+References: <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y++VSZNAX9Cstbqo@zn.tnic>
+ <Y/aTmL5Y8DtOJu9w@google.com>
+ <Y/aYQlQzRSEH5II/@zn.tnic>
+ <Y/adN3GQJTdDPmS8@google.com>
+ <Y/ammgkyo3QVon+A@zn.tnic>
+ <Y/a/lzOwqMjOUaYZ@google.com>
+ <Y/dDvTMrCm4GFsvv@zn.tnic>
+ <BYAPR21MB1688F68888213E5395396DD9D7AB9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <255249f2-47af-07b7-d9d9-9edfdd108348@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <255249f2-47af-07b7-d9d9-9edfdd108348@intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In order to avoid mappings using the UC- cache attribute, set the
-MTRR state to use WB caching as the default.
+On Thu, Feb 23, 2023 at 12:27:50PM -0800, Dave Hansen wrote:
+> On 2/23/23 12:01, Michael Kelley (LINUX) wrote:
+> > Dave Hansen:  Are you also OK with Sean's proposal?  Looking for consensus
+> > here ....
+> 
+> Yeah, I'm generally OK with it as long as Borislav is.
 
-This is needed in order to cope with the fact that PAT is enabled,
-while MTRRs are not supported by the hypervisor.
+Right, I think we're ok with the following basic rules:
 
-Fixes: 90b926e68f50 ("x86/pat: Fix pat_x_mtrr_type() for MTRR disabled case")
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
-V2:
-- new patch
----
- arch/x86/kernel/cpu/mshyperv.c | 4 ++++
- 1 file changed, 4 insertions(+)
+- pure arch/x86/ code should use the x86_platform function pointers to
+  query hypervisor capabilities/peculiarities
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index f36dc2f796c5..0a6cc3cf8919 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -34,6 +34,7 @@
- #include <clocksource/hyperv_timer.h>
- #include <asm/numa.h>
- #include <asm/coco.h>
-+#include <asm/mtrr.h>
- 
- /* Is Linux running as the root partition? */
- bool hv_root_partition;
-@@ -408,6 +409,9 @@ static void __init ms_hyperv_init_platform(void)
- #ifdef CONFIG_SWIOTLB
- 			swiotlb_unencrypted_base = ms_hyperv.shared_gpa_boundary;
- #endif
-+
-+			/* Set WB as the default cache mode. */
-+			mtrr_overwrite_state(NULL, 0, MTRR_TYPE_WRBACK);
- 		}
- 		/* Isolation VMs are unenlightened SEV-based VMs, thus this check: */
- 		if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT)) {
+- cc_platform_has() should be used in generic/driver code as it
+  abstracts away the underlying platform better. IOW, querying
+  x86_platform.... in generic, platform-agnostic driver code looks weird to
+  say the least
+
+The hope is that those two should be enough to support most guest types
+and not let the zoo get too much out of hand...
+
+Thx.
+
 -- 
-2.35.3
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
