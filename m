@@ -2,76 +2,83 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E12E86ABC73
-	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Mar 2023 11:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8791C6AC4CA
+	for <lists+linux-hyperv@lfdr.de>; Mon,  6 Mar 2023 16:27:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbjCFK1J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 6 Mar 2023 05:27:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58648 "EHLO
+        id S229964AbjCFP1M (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 6 Mar 2023 10:27:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbjCFK0p (ORCPT
+        with ESMTP id S229869AbjCFP1L (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 6 Mar 2023 05:26:45 -0500
-Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A11CE1EBEF
-        for <linux-hyperv@vger.kernel.org>; Mon,  6 Mar 2023 02:26:14 -0800 (PST)
-Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-17671fb717cso9303277fac.8
-        for <linux-hyperv@vger.kernel.org>; Mon, 06 Mar 2023 02:26:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678098351;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
-        b=EDbhPO1WKzSJy97Cp1KR4Ue1wIcLFSscoH9L1E67CyPoJvstONJwP7RxKCqsDiuar/
-         4XZc6UhnyOFrEHlIQ3KmGU6oX8xWOyZpiVA4bD6F27cjopM5KQeiwoXnQq1r2hu/0hkW
-         LgiQ9FGonNq8AsMsEKBqZEvtwgOfW2lv3iUKapY2ocqE+LRWfsVifUNA3eNbIcULbvPT
-         nBBU0ns0xWwmvS7ETCAh5Z5lhdCiLVSRis+m63aq8CObwyUrMLAjGQpDeSf4OVAOQav5
-         5TuEH4NOUnTGCqcHGRIE0/tBavRRplzW4HaWY1DRs+pas+nyfL/37adPjYmqfexbl/Di
-         PS3w==
+        Mon, 6 Mar 2023 10:27:11 -0500
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F090340CB;
+        Mon,  6 Mar 2023 07:27:10 -0800 (PST)
+Received: by mail-wr1-f52.google.com with SMTP id j2so9210391wrh.9;
+        Mon, 06 Mar 2023 07:27:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678098351;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
-        b=SvuzQBd9MMaqT20CQCqnTHWjWlZcoyaYnZMIew3iAdqrwae0Z8L1NmN2pS5zPhYHO6
-         d1ydveqaxtp5KR623nCOQ2EcA7FnLln08VhbmpHwYTQ+yqH48pungrCw3aZblOAr/Hnp
-         fx52ubiYF+mLsc5wXi4M9L3cL+vkB+nW/bDgUXsjauhWJctJC9LePjLAs5HCPwY0Va1t
-         PemF1pkFkh1a6Sn2zedh/4dLtNL6uZCenlmtVDmkpNkkLWDuvJbBoXnwcnZt9sC/JxUL
-         o0rQhddVzKgzvaLutcGsXudKNdUeV459zY+WZ9z1puhSWKo3Yq3VzzhKQBEJ4MTOPf2a
-         br2A==
-X-Gm-Message-State: AO0yUKU8clj7FPdOF4cWmESXJrMOMIZK8NR7ZejQ5GhNTNGbOfqQmZhn
-        ROHmY/Lkb6R6CYaZll6mmKhwVTQ5WOYGh6fmcik1bqSroeI=
-X-Google-Smtp-Source: AK7set9YqazPiOkBuGm+YrFZOLe51O90+qKBrIr6WBjXtnVrmZ9RIOYyWRLBWcHI+/rsVoNhMQhwnCpcR6G8n2Z6mzE=
-X-Received: by 2002:a05:6102:e44:b0:402:999f:44d3 with SMTP id
- p4-20020a0561020e4400b00402999f44d3mr6975472vst.1.1678098330725; Mon, 06 Mar
- 2023 02:25:30 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678116429;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WjzbTdN7CLD76LwUYgSQFGlrkv+uCLMJlqFIMmRORpA=;
+        b=2EUxB7rhuYb6ii74TXs9YxpCJfySTXuBhpC00xi2g2Tl/LKcr0u9Gh6OjOA8oldIWm
+         Lw703w6B1qzrGyPBhPf8iBBgv1HVPnMh9jfcg3j0t3OUzrKpwzLv1dqjaisbRwHAYGSW
+         wYNLJ4gQQcUb4/vmh7WEEIcloNRTZsKn+wBCQOnSApgMEs2UHBk0eWUKqtz8OXuZGKuA
+         BzvEFRHctI0x1VBvTC81BQkLNFM+tdLdQiJ6zp2kSI/3aGe8368MDS740BPhLgQ12qXj
+         0FpHtsTrpwiDjoTE3C6nL7fusulh7SN/6ulOjc7FvCvckC1B9086DLwqq7hFqptf6eOQ
+         WrcA==
+X-Gm-Message-State: AO0yUKWGBHuyX1P1LV1bgoz7eY99SoIykUcj0mjyVRYY4DrF42RVupL4
+        0loLf8b2rTaDprlKZq3BqsQ=
+X-Google-Smtp-Source: AK7set8sLVDUwT8GQGScn0gVSp+FOGcmG6WKTOjmYMNL/6orgxuEwPFL/9jsyQwuVKKF6cXajJRglg==
+X-Received: by 2002:adf:eb4b:0:b0:2c6:e744:cf71 with SMTP id u11-20020adfeb4b000000b002c6e744cf71mr6185222wrn.52.1678116429360;
+        Mon, 06 Mar 2023 07:27:09 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id r1-20020a056000014100b002c5534db60bsm10414947wrx.71.2023.03.06.07.27.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Mar 2023 07:27:08 -0800 (PST)
+Date:   Mon, 6 Mar 2023 15:27:03 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     ebiederm@xmission.com, keescook@chromium.org, yzaikin@google.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com, minyard@acm.org,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, song@kernel.org, robinmholt@gmail.com,
+        steve.wahl@hpe.com, mike.travis@hpe.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org, jgross@suse.com,
+        sstabellini@kernel.org, oleksandr_tyshchenko@epam.com,
+        xen-devel@lists.xenproject.org, j.granados@samsung.com,
+        zhangpeng362@huawei.com, tangmeng@uniontech.com,
+        willy@infradead.org, nixiaoming@huawei.com, sujiaxun@uniontech.com,
+        patches@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] hv: simplify sysctl registration
+Message-ID: <ZAYGR4DFQrjZVpC5@liuwe-devbox-debian-v2>
+References: <20230302204612.782387-1-mcgrof@kernel.org>
+ <20230302204612.782387-4-mcgrof@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a59:ce6f:0:b0:3ae:930b:3e70 with HTTP; Mon, 6 Mar 2023
- 02:25:30 -0800 (PST)
-Reply-To: madis.scarl@terlera.it
-From:   "Ms Eve from U.N" <denisagotou@gmail.com>
-Date:   Mon, 6 Mar 2023 11:25:30 +0100
-Message-ID: <CAD6bNBi6bPCYboaF4-xBgmeUTFn6JMXqU6TNepQig=NRMqhdUg@mail.gmail.com>
-Subject: Re: Claim of Fund:
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_SCAM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230302204612.782387-4-mcgrof@kernel.org>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Good Morning,
-This is to bring to your notice that all our efforts to contact you
-through this your email ID failed Please Kindly contact Barrister.
-Steven Mike { mbarrsteven@gmail.com } on his private email for the
-claim of your compensation entitlement
+On Thu, Mar 02, 2023 at 12:46:08PM -0800, Luis Chamberlain wrote:
+> register_sysctl_table() is a deprecated compatibility wrapper.
+> register_sysctl() can do the directory creation for you so just use
+> that.
+> 
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Note: You have to pay for the delivery fee.
-Yours Sincerely
-Mrs EVE LEWIS
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
