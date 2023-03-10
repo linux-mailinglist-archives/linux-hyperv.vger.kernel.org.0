@@ -2,131 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EC626B4BAA
-	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Mar 2023 16:52:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 728EF6B4BBE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 10 Mar 2023 16:56:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbjCJPws (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 10 Mar 2023 10:52:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58434 "EHLO
+        id S231251AbjCJP4Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 10 Mar 2023 10:56:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231398AbjCJPwU (ORCPT
+        with ESMTP id S231269AbjCJP4F (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 10 Mar 2023 10:52:20 -0500
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2EC47A95;
-        Fri, 10 Mar 2023 07:45:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=EmUdI2uVUfuPNoWMJdKhp3ipY0dPgGVWuc1bZMi1Tuk=; b=G1uAn/ZLjmzB1bt6JNKoeD9mNf
-        JxY69NNC+u5wnQIE9sg6u/lMlgPV3KcpSeN5rJQxVC0XNmjPhwBlm9aGblSAG/VY3OoXUfZW8kcho
-        NRI7LT78KFkGsSYFmhjCOvpoONjnslM7vSpa0J08u15oWKPaYunKRsdv5TZTmy7NeYPXEZh7Rxedi
-        EW1+Znfcrqb+DHXOdkFqiRV8UT5Vo+1sUo4hENIptH9A8Rfbks+l2xpMxEMgge+Z3aQ0/r4q/gwxp
-        tCR6IbvO8RSb+ODkgiIHuQZ62geHJOA5vuxwdYhL/G96ISkrlnVfpns82dB3Y46rs/BZTLzDSkqud
-        sRWScJag==;
-Received: from 201-68-164-191.dsl.telesp.net.br ([201.68.164.191] helo=localhost)
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-        id 1paevT-002v8a-DI; Fri, 10 Mar 2023 16:45:00 +0100
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To:     linux-hyperv@vger.kernel.org, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, decui@microsoft.com,
-        haiyangz@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com,
-        thomas.lendacky@amd.com, jpoimboe@kernel.org, peterz@infradead.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2] x86/hyperv: Mark hv_ghcb_terminate() as noreturn
-Date:   Fri, 10 Mar 2023 12:44:52 -0300
-Message-Id: <20230310154452.1169204-1-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230310152442.cbrjise6uex4ak4x@treble>
-References: <20230310152442.cbrjise6uex4ak4x@treble>
+        Fri, 10 Mar 2023 10:56:05 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F34AFCF83;
+        Fri, 10 Mar 2023 07:49:03 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id i5so6036068pla.2;
+        Fri, 10 Mar 2023 07:49:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678463343;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JEtKc8sZos+Dc0t1cvJCnmLbpSWQyhy/XbEqe/9t3YE=;
+        b=V4oF8hwnLguFv3mXEyDsumx2wAfSQ1BkJ75sLRfmlA7fZWCvpbjHwIh9ZIjfp3oj/k
+         lPFFaFlxb/C5/SG5YjaRXbn1aZMaKvwvatu6ccjB8ROCqjbmB5V5FG1qD72zTgaUyzYh
+         hEGrF5IElLdTb2Uwtfk69sg4RWdqFhEObgabdiACr9+hLAN7pHJowez/DbJ4cStFTjkL
+         uPxzlsZkj4eb5mx6f0Jd6ynpGaZVH5WweWt7g/qEBAE8CoLdwc9OUrr85BiFvWwMsfnV
+         eycvFmLlyaG+/OOjsY7iTNNU0knrsfINF1o5T96I/1miKojfIrhL9poGV4AIAd3YUvbV
+         11qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678463343;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JEtKc8sZos+Dc0t1cvJCnmLbpSWQyhy/XbEqe/9t3YE=;
+        b=tbgMlrB730acj7vRO20d2kWtQaVQtdK4asb+lUlDgO9Wyk4Zc093zTzs7miWmQxvny
+         cxN5gEmr7cROhw13cMd7OQuHJrzEirfZgJymm6uiKWZt6p7DeVDLlsbZ4Sv3WU/lRI1q
+         oVssBbGvLYRgppP0GybNEQFpnEsGhitODwZrHp/iwtCGw8/1mtGj5Q/hXhkx9vyOaYoi
+         KoU3IJrc6LcoGp3LWVnxmmdgQMUI7oZ2I5sFw0wGBJBXifskFeB0b4LZwlvlBTC2VrCE
+         AwOnF2n8GnpIxIf3E7Y5xV5A8V+tyRGH7ClP6Efs29JFFPR/GsAujXwTWp1eow32JJjc
+         kg3A==
+X-Gm-Message-State: AO0yUKVEeYTk5hEK8/UjYUzLYvwzrdPZ/JD3NJy+eSKFO4gHSbEIQCAJ
+        Yz2RQrg8qTJJ/HpQVU6bpsg=
+X-Google-Smtp-Source: AK7set897PHks1qrrgkHdgqr+up48NII37yYJ85g+JFJ5MG99gJiqPK08lELsucoAFezQa6HAYKEAQ==
+X-Received: by 2002:a17:902:e551:b0:19d:121a:6795 with SMTP id n17-20020a170902e55100b0019d121a6795mr30623064plf.55.1678463342766;
+        Fri, 10 Mar 2023 07:49:02 -0800 (PST)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
+        by smtp.gmail.com with ESMTPSA id q6-20020a170902788600b0019c2cf1554csm230472pll.13.2023.03.10.07.48.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Mar 2023 07:49:02 -0800 (PST)
+Message-ID: <ea387ecf-ac5a-4a22-e99c-bc283b39c1e1@gmail.com>
+Date:   Fri, 10 Mar 2023 23:48:48 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [RFC PATCH V3 12/16] x86/sev: Add a #HV exception handler
+To:     "Gupta, Pankaj" <pankaj.gupta@amd.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        michael.roth@amd.com, thomas.lendacky@amd.com,
+        venu.busireddy@oracle.com, sterritt@google.com,
+        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+References: <20230122024607.788454-1-ltykernel@gmail.com>
+ <20230122024607.788454-13-ltykernel@gmail.com>
+ <a25a21f9-0059-3e39-4284-7c4164d170ed@amd.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <a25a21f9-0059-3e39-4284-7c4164d170ed@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Annotate the function prototype as noreturn to prevent objtool
-warnings like:
 
-vmlinux.o: warning: objtool: hyperv_init+0x55c: unreachable instruction
+On 3/9/2023 7:48 PM, Gupta, Pankaj wrote:
+> On 1/22/2023 3:46 AM, Tianyu Lan wrote:
+>> From: Tianyu Lan <tiala@microsoft.com>
+>> +    UNWIND_HINT_IRET_REGS
+>> +    ASM_CLAC
+>> +    pushq    $-1            /* ORIG_RAX: no syscall to restart */
+>> +
+>> +    testb    $3, CS-ORIG_RAX(%rsp)
+>> +    jnz    .Lfrom_usermode_switch_stack_\@
+>> +
+>> +    call    paranoid_entry
+>> +
+>> +    UNWIND_HINT_REGS
+>> +
+>> +    /*
+>> +     * Switch off the IST stack to make it free for nested exceptions.
+>> +     */
+>> +    movq    %rsp, %rdi        /* pt_regs pointer */
+>> +    call    hv_switch_off_ist
+>> +    movq    %rax, %rsp        /* Switch to new stack */
+>> +
+> 
+> We need "ENCODE_FRAME_POINTER" similar to "vc_switch_off_ist" here as we 
+> are switching stack?
+> 
 
-Also, as per Josh's suggestion, add it to the global_noreturns list.
-As a comparison, an objdump output without the annotation:
-
-[...]
-1b63:  mov    $0x1,%esi
-1b68:  xor    %edi,%edi
-1b6a:  callq  ffffffff8102f680 <hv_ghcb_terminate>
-1b6f:  jmpq   ffffffff82f217ec <hyperv_init+0x9c> # unreachable
-1b74:  cmpq   $0xffffffffffffffff,-0x702a24(%rip)
-[...]
-
-Now, after adding the __noreturn to the function prototype:
-
-[...]
-17df:  callq  ffffffff8102f6d0 <hv_ghcb_negotiate_protocol>
-17e4:  test   %al,%al
-17e6:  je     ffffffff82f21bb9 <hyperv_init+0x469>
-[...]  <many insns>
-1bb9:  mov    $0x1,%esi
-1bbe:  xor    %edi,%edi
-1bc0:  callq  ffffffff8102f680 <hv_ghcb_terminate>
-1bc5:  nopw   %cs:0x0(%rax,%rax,1) # end of function
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/9698eff1-9680-4f0a-94de-590eaa923e94@app.fastmail.com/
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
----
-
-
-V2:
-- Per Josh's suggestion (thanks!), added the function to the objtool global
-table as well.
-
-
- arch/x86/include/asm/mshyperv.h | 2 +-
- tools/objtool/check.c           | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 4c4c0ec3b62e..09c26e658bcc 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -212,7 +212,7 @@ int hv_set_mem_host_visibility(unsigned long addr, int numpages, bool visible);
- void hv_ghcb_msr_write(u64 msr, u64 value);
- void hv_ghcb_msr_read(u64 msr, u64 *value);
- bool hv_ghcb_negotiate_protocol(void);
--void hv_ghcb_terminate(unsigned int set, unsigned int reason);
-+void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
- #else
- static inline void hv_ghcb_msr_write(u64 msr, u64 value) {}
- static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index f937be1afe65..4b5e03f61f1f 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -209,6 +209,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"do_task_dead",
- 		"ex_handler_msr_mce",
- 		"fortify_panic",
-+		"hv_ghcb_terminate",
- 		"kthread_complete_and_exit",
- 		"kthread_exit",
- 		"kunit_try_catch_throw",
--- 
-2.39.2
-
+Agree. Will add it into the next version. Thanks.
