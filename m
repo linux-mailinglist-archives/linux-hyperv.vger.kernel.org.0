@@ -2,182 +2,267 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F7CF6B68D5
-	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Mar 2023 18:39:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26E3C6B6BDF
+	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Mar 2023 22:50:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbjCLRjh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 12 Mar 2023 13:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39922 "EHLO
+        id S230445AbjCLVuB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 12 Mar 2023 17:50:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbjCLRjh (ORCPT
+        with ESMTP id S230179AbjCLVt7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 12 Mar 2023 13:39:37 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D565D3A98;
-        Sun, 12 Mar 2023 10:39:35 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id EB31D20C56BB; Sun, 12 Mar 2023 10:39:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EB31D20C56BB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1678642774;
-        bh=Tgiw+sidUqBaEVObKi6x2FEJj/MiSGaWlJc+aPcKHhY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C2t6SkW9varvhF8aHA0IDcgMe9SNSJsGevu+rssAyDtVxTvBbQlLVSSqb7ZuuVlI8
-         9E7BbvnvZXsC3E21ngMkovLUaSVqjrow12S7DvrcVF0BdJ+rNxKipqMGMSOnLrhtNI
-         FC7fswKNpPfWa29Osx5fbk7uMVOGIxtgxX2xPkc8=
-Date:   Sun, 12 Mar 2023 10:39:34 -0700
-From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v7 5/5] Driver: VMBus: Add Devicetree support
-Message-ID: <20230312173934.GA32212@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1677151745-16521-1-git-send-email-ssengar@linux.microsoft.com>
- <1677151745-16521-6-git-send-email-ssengar@linux.microsoft.com>
- <ZApMqWPWgWXIju/g@liuwe-devbox-debian-v2>
- <20230310053451.GA9705@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <BYAPR21MB1688FD8EA30E876F22560645D7B89@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Sun, 12 Mar 2023 17:49:59 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC6D1043F;
+        Sun, 12 Mar 2023 14:49:57 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id o38-20020a05600c512600b003e8320d1c11so6556604wms.1;
+        Sun, 12 Mar 2023 14:49:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678657796;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ciUH2K2b185BvScrtOTL0Sqk4RrdEzj1aaThj5pGCpQ=;
+        b=ulLXKlBhqwve9szSCeiUgHJNCrAcMTNAt0S8sVXsnn7kGqHI74oBO0+ugM3q24fCE3
+         E434EtN9KlcyIR8oqwFomkv/k7wOC2VH4Cg5e9MpxqqCNFSiSULQJfWyi0zSHcK71KLA
+         sjEFIO+YUm8b9WnOdZ6QXPYLPKMdXUdbdPfvBpZkU5FS6stmLBl2HLyIZl+uHgvdZccW
+         W18h+TOrr0IGv/25Z+G9LxS+PTizBBCJ8L7MFFkG9/ESQsXHQGruEmYPj8MLgqUrtSSb
+         1bgs/8SMyALyoDULiOjPUbuo8xBB4e4ERAM8aQ/P8LG8T6heCkRNnHDBFfPpeQWW5py4
+         ktdg==
+X-Gm-Message-State: AO0yUKWXGt3MbhIvDHw6Nt18NJ3PBI5ZYb5O1ZO/Sffb9vDXPa5jgk0p
+        9cm+S2QHLO5JuZeXw7e4/h0=
+X-Google-Smtp-Source: AK7set+60VDwNsXcwRYqGYHJQF5rqWFoUT8oalPGUGVfkEG556YHGFMNiSzZXPcsX2pOSUZLol9boQ==
+X-Received: by 2002:a05:600c:310e:b0:3e9:f15b:935b with SMTP id g14-20020a05600c310e00b003e9f15b935bmr9388863wmo.32.1678657796014;
+        Sun, 12 Mar 2023 14:49:56 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id l5-20020a7bc445000000b003eae73f0fc1sm6903106wmi.18.2023.03.12.14.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Mar 2023 14:49:55 -0700 (PDT)
+Date:   Sun, 12 Mar 2023 21:49:53 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
+        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] x86/hyperv: VTL support for Hyper-V
+Message-ID: <ZA5JAVlSVhgv1CBS@liuwe-devbox-debian-v2>
+References: <1678386957-18016-1-git-send-email-ssengar@linux.microsoft.com>
+ <1678386957-18016-3-git-send-email-ssengar@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1688FD8EA30E876F22560645D7B89@BYAPR21MB1688.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1678386957-18016-3-git-send-email-ssengar@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Mar 12, 2023 at 01:08:02PM +0000, Michael Kelley (LINUX) wrote:
-> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Thursday, March 9, 2023 9:35 PM
-> > 
-> > On Thu, Mar 09, 2023 at 09:16:25PM +0000, Wei Liu wrote:
-> > > On Thu, Feb 23, 2023 at 03:29:05AM -0800, Saurabh Sengar wrote:
+On Thu, Mar 09, 2023 at 10:35:57AM -0800, Saurabh Sengar wrote:
+> Virtual Trust Levels (VTL) helps enable Hyper-V Virtual Secure Mode (VSM)
+> feature. VSM is a set of hypervisor capabilities and enlightenments
+> offered to host and guest partitions which enable the creation and
+> management of new security boundaries within operating system software.
+> VSM achieves and maintains isolation through VTLs.
 > 
-> [snip]
+> Add early initialization for Virtual Trust Levels (VTL). This includes
+> initializing the x86 platform for VTL and enabling boot support for
+> secondary CPUs to start in targeted VTL context. For now, only enable
+> the code for targeted VTL level as 2.
 > 
-> > > >
-> > > >  static int vmbus_platform_driver_probe(struct platform_device *pdev)
-> > > >  {
-> > > > +#ifdef CONFIG_ACPI
-> > > >  	return vmbus_acpi_add(pdev);
-> > > > +#endif
-> > >
-> > > Please use #else here.
-> > >
-> > > > +	return vmbus_device_add(pdev);
-> > >
-> > > Is there going to be a configuration that ACPI and OF are available at
-> > > the same time? I don't see they are marked as mutually exclusive in the
-> > > proposed KConfig.
-> > 
-> > Initially, the device tree functions was included in "#else" section after
-> > the "#ifdef CONFIG_ACPI" section. However, it was subsequently removed to
-> > increase the coverage for CI builds.
-> > 
-> > Ref: https://lkml.org/lkml/2023/2/7/910
-> > 
+> When starting an AP at a VTL other than VTL 0, the AP must start directly
+> in 64-bit mode, bypassing the usual 16-bit -> 32-bit -> 64-bit mode
+> transition sequence that occurs after waking up an AP with SIPI whose
+> vector points to the 16-bit AP startup trampoline code.
 > 
-> I think the point here is that it is possible (and even likely on ARM64?) to
-> build a kernel where CONFIG_ACPI and CONFIG_OF are both "Y".   So the
-> code for ACPI and OF is compiled and present in the kernel image.  However,
-> for a particular Linux boot on a particular hardware or virtual platform,
-> only one of the two will be enabled.   I specifically mention a particular Linux
-> kernel boot because there's a kernel boot line option that can force disabling
-> ACPI.  Ideally, the VMBus code should work if both CONFIG_ACPI and
-> CONFIG_OF are enabled in the kernel image, and it would determine at
-> runtime which to use. This approach meets the goals Rob spells out.
+> This commit also moves hv_get_nmi_reason function to header file, so
+> that it can be reused by VTL.
 > 
-> There's an exported global variable "acpi_disabled" that is set correctly
-> depending on CONFIG_ACPI and the kernel boot line option (and perhaps if
-> ACPI is not detected at runtime during boot -- I didn't check all the details).
-> So the above could be written as:
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
+>  arch/x86/Kconfig                   |  24 +++
+>  arch/x86/hyperv/Makefile           |   1 +
+>  arch/x86/hyperv/hv_vtl.c           | 227 +++++++++++++++++++++++++++++
+>  arch/x86/include/asm/hyperv-tlfs.h |  75 ++++++++++
+>  arch/x86/include/asm/mshyperv.h    |  14 ++
+>  arch/x86/kernel/cpu/mshyperv.c     |   6 +-
+>  include/asm-generic/hyperv-tlfs.h  |   4 +
+>  7 files changed, 346 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/x86/hyperv/hv_vtl.c
 > 
-> 	if (!acpi_disabled)
-> 		return vmbus_acpi_add(pdev); 
-> 	else
-> 		return vmbus_device_add(pdev);
-> 
-> This avoids the weird "two return statements in a row" while preferring
-> ACPI over OF if ACPI is enabled for a particular boot of Linux.
-> 
-> I'm not sure if you'll need a stub for vmbus_acpi_add() when CONFIG_ACPI=n.
-> In that case, acpi_disabled is #defined to be 1, so the compiler should just
-> drop the call to vmbus_acpi_add() entirely and no stub will be needed.  But
-> you'll need to confirm.
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 453f462f6c9c..b9e52ac9c9f9 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -782,6 +782,30 @@ menuconfig HYPERVISOR_GUEST
+>  
+>  if HYPERVISOR_GUEST
+>  
+> +config HYPERV_VTL
+> +	bool "Enable VTL"
 
-Thanks for suggesting acpi_disabled, definitely this looks better. However,
-we need a dummy stub for vmbus_acpi_add in case of CONFIG_ACPI=n, as compiler
-doesn't take out vmbus_acpi_add reference completely for CONFIG_ACPI=n.
+This is not to "Enable VTL". VTL is always there with or without this
+option. This option is to enable Linux to run in VTL2.
 
-> 
-> Also just confirming, it looks like vmbus_device_add() compiles correctly if
-> CONFIG_OF=n.  There are enough stubs in places so that you don't need an
-> #ifdef CONFIG_OF around vmbus_device_add() like is needed for
-> vmbus_acpi_add().
+I would suggest it to be changed to HYPERV_VTL2_MODE or something more
+explicit.
 
-Yes, I tested this scenario.
+HYPERV_VTL is better reserved to guard code which makes use of VTL
+related functionality -- if there is such a need in the future.
 
-> 
-> > > >
-> > > > +static const __maybe_unused struct of_device_id vmbus_of_match[] = {
-> > > > +	{
-> > > > +		.compatible = "microsoft,vmbus",
-> > > > +	},
-> > > > +	{
-> > > > +		/* sentinel */
-> > > > +	},
-> > > > +};
-> > > > +MODULE_DEVICE_TABLE(of, vmbus_of_match);
-> > > > +
-> > > > +#ifdef CONFIG_ACPI
-> > > >  static const struct acpi_device_id vmbus_acpi_device_ids[] = {
-> > > >  	{"VMBUS", 0},
-> > > >  	{"VMBus", 0},
-> > > >  	{"", 0},
-> > > >  };
-> > > >  MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
-> > > > +#endif
-> 
-> Couldn't the bracketing #ifdef be dropped and add __maybe_unused, just
-> as you've done with vmbus_of_match?   ACPI_PTR() is defined to return NULL
-> if CONFIG_ACPI=n, just like with of_match_ptr() and CONFIG_OF.
+> +	depends on X86_64 && HYPERV
+> +	default n
+> +	help
+> +	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
+> +	  enlightenments offered to host and guest partitions which enables
+> +	  the creation and management of new security boundaries within
+> +	  operating system software.
+> +
+> +	  VSM achieves and maintains isolation through Virtual Trust Levels
+> +	  (VTLs). Virtual Trust Levels are hierarchical, with higher levels
+> +	  being more privileged than lower levels. VTL0 is the least privileged
+> +	  level, and currently only other level supported is VTL2.
 
-I kept #ifdef so that all the acpi code is treated equally. However, I am
-fine to use __maybe_unused, will fix this in next version.
+Please be consistent as to VTL 0 vs VTL0. You use one form here and the
+other form in the next paragraph.
 
-Regards,
-Saurabh
+> +
+> +	  Select this option to build a Linux kernel to run at a VTL other than
+> +	  the normal VTL 0, which currently is only VTL 2.  This option
+> +	  initializes the x86 platform for VTL 2, and adds the ability to boot
+> +	  secondary CPUs directly into 64-bit context as required for VTLs other
+> +	  than 0.  A kernel built with this option must run at VTL 2, and will
+> +	  not run as a normal guest.
+> +
+> +	  If unsure, say N
+> +
+>  config PARAVIRT
+>  	bool "Enable paravirtualization code"
+>  	depends on HAVE_STATIC_CALL
+> diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
+> index 5d2de10809ae..a538df01181a 100644
+> --- a/arch/x86/hyperv/Makefile
+> +++ b/arch/x86/hyperv/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-y			:= hv_init.o mmu.o nested.o irqdomain.o ivm.o
+>  obj-$(CONFIG_X86_64)	+= hv_apic.o hv_proc.o
+> +obj-$(CONFIG_HYPERV_VTL)	+= hv_vtl.o
+>  
+>  ifdef CONFIG_X86_64
+>  obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> new file mode 100644
+> index 000000000000..0da8b242eb8b
+> --- /dev/null
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -0,0 +1,227 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2023, Microsoft Corporation.
+> + *
+> + * Author:
+> + *   Saurabh Sengar <ssengar@microsoft.com>
+> + */
+> +
+> +#include <asm/apic.h>
+> +#include <asm/boot.h>
+> +#include <asm/desc.h>
+> +#include <asm/i8259.h>
+> +#include <asm/mshyperv.h>
+> +#include <asm/realmode.h>
+> +
+> +extern struct boot_params boot_params;
+> +static struct real_mode_header hv_vtl_real_mode_header;
+> +
+> +void __init hv_vtl_init_platform(void)
+> +{
+> +	pr_info("Initializing Hyper-V VTL\n");
+> +
 
-> 
-> > > >
-> > > >  /*
-> > > >   * Note: we must use the "no_irq" ops, otherwise hibernation can not work with
-> > > > @@ -2677,6 +2729,7 @@ static struct platform_driver vmbus_platform_driver = {
-> > > >  	.driver = {
-> > > >  		.name = "vmbus",
-> > > >  		.acpi_match_table = ACPI_PTR(vmbus_acpi_device_ids),
-> > > > +		.of_match_table = of_match_ptr(vmbus_of_match),
-> > > >  		.pm = &vmbus_bus_pm,
-> > > >  		.probe_type = PROBE_FORCE_SYNCHRONOUS,
-> > > >  	}
-> > > > --
-> > > > 2.34.1
-> > > >
+We can be more explicit here, "Linux runs in Hyper-V Virtual Trust Level 2".
+
+If we go with this, this and other function names should be renamed to
+something more explicit too.
+
+> +	x86_init.irqs.pre_vector_init = x86_init_noop;
+> +	x86_init.timers.timer_init = x86_init_noop;
+> +
+> +	x86_platform.get_wallclock = get_rtc_noop;
+> +	x86_platform.set_wallclock = set_rtc_noop;
+> +	x86_platform.get_nmi_reason = hv_get_nmi_reason;
+> +
+> +	x86_platform.legacy.i8042 = X86_LEGACY_I8042_PLATFORM_ABSENT;
+> +	x86_platform.legacy.rtc = 0;
+> +	x86_platform.legacy.warm_reset = 0;
+> +	x86_platform.legacy.reserve_bios_regions = 0;
+> +	x86_platform.legacy.devices.pnpbios = 0;
+> +}
+> +
+[...]
+> +static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
+> +{
+> +	u64 status;
+> +	int ret = 0;
+> +	struct hv_enable_vp_vtl *input;
+> +	unsigned long irq_flags;
+> +
+> +	struct desc_ptr gdt_ptr;
+> +	struct desc_ptr idt_ptr;
+> +
+> +	struct ldttss_desc *tss;
+> +	struct ldttss_desc *ldt;
+> +	struct desc_struct *gdt;
+> +
+> +	u64 rsp = initial_stack;
+> +	u64 rip = (u64)&hv_vtl_ap_entry;
+> +
+> +	native_store_gdt(&gdt_ptr);
+> +	store_idt(&idt_ptr);
+> +
+> +	gdt = (struct desc_struct *)((void *)(gdt_ptr.address));
+> +	tss = (struct ldttss_desc *)(gdt + GDT_ENTRY_TSS);
+> +	ldt = (struct ldttss_desc *)(gdt + GDT_ENTRY_LDT);
+> +
+> +	local_irq_save(irq_flags);
+> +
+> +	input = (struct hv_enable_vp_vtl *)(*this_cpu_ptr(hyperv_pcpu_input_arg));
+
+Not a big deal, but you don't actually need to cast here.
+
+[...]
+> +
+> +static int hv_vtl_apicid_to_vp_id(u32 apic_id)
+> +{
+> +	u64 control;
+> +	u64 status;
+> +	unsigned long irq_flags;
+> +	struct hv_get_vp_from_apic_id_in *input;
+> +	u32 *output, ret;
+> +
+> +	local_irq_save(irq_flags);
+> +
+> +	input = (struct hv_get_vp_from_apic_id_in *)(*this_cpu_ptr(hyperv_pcpu_input_arg));
+
+No need to cast here.
+
+[...]
+> +struct hv_x64_table_register {
+> +	__u16 pad[3];
+> +	__u16 limit;
+> +	__u64 base;
+> +} __packed;
+> +
+> +struct hv_init_vp_context_t {
+
+Drop the _t suffix please.
+
+Thanks,
+Wei.
