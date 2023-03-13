@@ -2,47 +2,56 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5719F6B6E9A
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Mar 2023 05:57:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61DAC6B6F6E
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Mar 2023 07:16:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbjCME5d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Mar 2023 00:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
+        id S229791AbjCMGQO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Mar 2023 02:16:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbjCME5b (ORCPT
+        with ESMTP id S229776AbjCMGQM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Mar 2023 00:57:31 -0400
+        Mon, 13 Mar 2023 02:16:12 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A78073B877;
-        Sun, 12 Mar 2023 21:57:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E4D1348E36;
+        Sun, 12 Mar 2023 23:16:03 -0700 (PDT)
 Received: by linux.microsoft.com (Postfix, from userid 1127)
-        id 19C0E204778C; Sun, 12 Mar 2023 21:57:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 19C0E204778C
+        id 580FF204B51E; Sun, 12 Mar 2023 23:16:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 580FF204B51E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1678683450;
-        bh=9aLl/BvNmqEEf3Eln7g8qpek3FbNIeMRD0Ya6P8HIrc=;
+        s=default; t=1678688163;
+        bh=bBzVq6Vu2i/wsIWWu3PzRRzKof7G7yA2dj2lTYoClD0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VwpvAFouSf69voKUGyg9brlqv6dO49K9bBxDilrgJFfPsHxpBnrpGctyR9HKwd8Ya
-         vd7gZbsTLj67WSxbL8WMEcAI3tQ9mUEFxWZBnBuu1ImcPNFvqj67PQimxhpOTS4h4u
-         jI912CeX5cv3iI/ujtzAy5D6/9WQczgoprTIlsOk=
-Date:   Sun, 12 Mar 2023 21:57:30 -0700
+        b=bfpi3IoaJCC0q7dHUpJvJauZ6PK5P3bQ0z+z8iYgXKwbfIdQ4BVTvBQddd8jFW/JJ
+         cMZgyG0kTQYTeDsrTuXdDd7YalwkJOn33wyBQHK5C2hRr9GAOE8RKrcDpSnt8R2Ocv
+         BvHP+kmDmcWcw7JRfg+fOTQgiLgt7nU/kFUstV9k=
+Date:   Sun, 12 Mar 2023 23:16:03 -0700
 From:   Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-        arnd@arndb.de, tiala@microsoft.com, mikelley@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] x86/hyperv: VTL support for Hyper-V
-Message-ID: <20230313045730.GA31503@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1678386957-18016-1-git-send-email-ssengar@linux.microsoft.com>
- <1678386957-18016-3-git-send-email-ssengar@linux.microsoft.com>
- <ZA5JAVlSVhgv1CBS@liuwe-devbox-debian-v2>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v7 5/5] Driver: VMBus: Add Devicetree support
+Message-ID: <20230313061603.GA8934@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1677151745-16521-1-git-send-email-ssengar@linux.microsoft.com>
+ <1677151745-16521-6-git-send-email-ssengar@linux.microsoft.com>
+ <BYAPR21MB1688B84E25DD2173B6023737D7B99@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZA5JAVlSVhgv1CBS@liuwe-devbox-debian-v2>
+In-Reply-To: <BYAPR21MB1688B84E25DD2173B6023737D7B99@BYAPR21MB1688.namprd21.prod.outlook.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
@@ -54,237 +63,81 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thanks for your review, please find my comments inline.
-
-On Sun, Mar 12, 2023 at 09:49:53PM +0000, Wei Liu wrote:
-> On Thu, Mar 09, 2023 at 10:35:57AM -0800, Saurabh Sengar wrote:
-> > Virtual Trust Levels (VTL) helps enable Hyper-V Virtual Secure Mode (VSM)
-> > feature. VSM is a set of hypervisor capabilities and enlightenments
-> > offered to host and guest partitions which enable the creation and
-> > management of new security boundaries within operating system software.
-> > VSM achieves and maintains isolation through VTLs.
+On Mon, Mar 13, 2023 at 02:33:53AM +0000, Michael Kelley (LINUX) wrote:
+> From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Thursday, February 23, 2023 3:29 AM
 > > 
-> > Add early initialization for Virtual Trust Levels (VTL). This includes
-> > initializing the x86 platform for VTL and enabling boot support for
-> > secondary CPUs to start in targeted VTL context. For now, only enable
-> > the code for targeted VTL level as 2.
+> > Update the driver to support Devicetree boot as well along with ACPI.
+> > At present the Devicetree parsing only provides the mmio region info
+> > and is not the exact copy of ACPI parsing. This is sufficient to cater
+> > all the current Devicetree usecases for VMBus.
 > > 
-> > When starting an AP at a VTL other than VTL 0, the AP must start directly
-> > in 64-bit mode, bypassing the usual 16-bit -> 32-bit -> 64-bit mode
-> > transition sequence that occurs after waking up an AP with SIPI whose
-> > vector points to the 16-bit AP startup trampoline code.
-> > 
-> > This commit also moves hv_get_nmi_reason function to header file, so
-> > that it can be reused by VTL.
+> > Currently Devicetree is supported only for x86 systems.
 > > 
 > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 > > ---
-> >  arch/x86/Kconfig                   |  24 +++
-> >  arch/x86/hyperv/Makefile           |   1 +
-> >  arch/x86/hyperv/hv_vtl.c           | 227 +++++++++++++++++++++++++++++
-> >  arch/x86/include/asm/hyperv-tlfs.h |  75 ++++++++++
-> >  arch/x86/include/asm/mshyperv.h    |  14 ++
-> >  arch/x86/kernel/cpu/mshyperv.c     |   6 +-
-> >  include/asm-generic/hyperv-tlfs.h  |   4 +
-> >  7 files changed, 346 insertions(+), 5 deletions(-)
-> >  create mode 100644 arch/x86/hyperv/hv_vtl.c
+> > [V7]
+> > - Use cpu_addr instead of bus_addr
 > > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 453f462f6c9c..b9e52ac9c9f9 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -782,6 +782,30 @@ menuconfig HYPERVISOR_GUEST
-> >  
-> >  if HYPERVISOR_GUEST
-> >  
-> > +config HYPERV_VTL
-> > +	bool "Enable VTL"
+> >  drivers/hv/Kconfig     |  6 +++--
+> >  drivers/hv/vmbus_drv.c | 57 ++++++++++++++++++++++++++++++++++++++++--
+> >  2 files changed, 59 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> > index 0747a8f1fcee..1a55bf32d195 100644
+> > --- a/drivers/hv/Kconfig
+> > +++ b/drivers/hv/Kconfig
+> > @@ -4,11 +4,13 @@ menu "Microsoft Hyper-V guest support"
+> > 
+> >  config HYPERV
+> >  	tristate "Microsoft Hyper-V client drivers"
+> > -	depends on ACPI && ((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
+> > -		|| (ARM64 && !CPU_BIG_ENDIAN))
+> > +	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
+> > +		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
+> >  	select PARAVIRT
+> >  	select X86_HV_CALLBACK_VECTOR if X86
+> >  	select VMAP_PFN
+> > +	select OF if !ACPI
+> > +	select OF_EARLY_FLATTREE if !ACPI
+> >  	help
+> >  	  Select this option to run Linux as a Hyper-V client operating
+> >  	  system.
 > 
-> This is not to "Enable VTL". VTL is always there with or without this
-> option. This option is to enable Linux to run in VTL2.
+> One further thing occurred to me.  OF_EARLY_FLATTREE really depends
+> on OF instead of ACPI.   The ACPI dependency is indirect through OF.  So
+> I'd suggest doing
 > 
-> I would suggest it to be changed to HYPERV_VTL2_MODE or something more
-> explicit.
+> 	select OF_EARLY_FLATTRE if OF
 > 
-> HYPERV_VTL is better reserved to guard code which makes use of VTL
-> related functionality -- if there is such a need in the future.
+> to express the direct dependency.
 
-Thanks, I am fine to change the description. However I named it as HYPERV_VTL
-so as this is generic and in future it can be extended to other VTLs. I see it
-as generic VTL code with current support only for VTL2, others will be added
-when need arises.
-
-As per my understanding apart from setting the target VTL, rest of the code
-can be reused for any VTL. Once we have the other VTLs support we might think
-of tweaking the target vtl whereas the flag name and other code remains same.
-Please let me know your opinion on this.
-
-> 
-> > +	depends on X86_64 && HYPERV
-> > +	default n
-> > +	help
-> > +	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
-> > +	  enlightenments offered to host and guest partitions which enables
-> > +	  the creation and management of new security boundaries within
-> > +	  operating system software.
-> > +
-> > +	  VSM achieves and maintains isolation through Virtual Trust Levels
-> > +	  (VTLs). Virtual Trust Levels are hierarchical, with higher levels
-> > +	  being more privileged than lower levels. VTL0 is the least privileged
-> > +	  level, and currently only other level supported is VTL2.
-> 
-> Please be consistent as to VTL 0 vs VTL0. You use one form here and the
-> other form in the next paragraph.
-
-Sure will fix this in next version.
+As you pointed out OF_EARLY_FLATTRE is anyway dependent on OF, and thus I
+feel this check is redundant. I see all the Kconfig options which enables
+both of these flags don't explicitly mention this dependency.
 
 > 
-> > +
-> > +	  Select this option to build a Linux kernel to run at a VTL other than
-> > +	  the normal VTL 0, which currently is only VTL 2.  This option
-> > +	  initializes the x86 platform for VTL 2, and adds the ability to boot
-> > +	  secondary CPUs directly into 64-bit context as required for VTLs other
-> > +	  than 0.  A kernel built with this option must run at VTL 2, and will
-> > +	  not run as a normal guest.
-> > +
-> > +	  If unsure, say N
-> > +
-> >  config PARAVIRT
-> >  	bool "Enable paravirtualization code"
-> >  	depends on HAVE_STATIC_CALL
-> > diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
-> > index 5d2de10809ae..a538df01181a 100644
-> > --- a/arch/x86/hyperv/Makefile
-> > +++ b/arch/x86/hyperv/Makefile
-> > @@ -1,6 +1,7 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >  obj-y			:= hv_init.o mmu.o nested.o irqdomain.o ivm.o
-> >  obj-$(CONFIG_X86_64)	+= hv_apic.o hv_proc.o
-> > +obj-$(CONFIG_HYPERV_VTL)	+= hv_vtl.o
-> >  
-> >  ifdef CONFIG_X86_64
-> >  obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
-> > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> > new file mode 100644
-> > index 000000000000..0da8b242eb8b
-> > --- /dev/null
-> > +++ b/arch/x86/hyperv/hv_vtl.c
-> > @@ -0,0 +1,227 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2023, Microsoft Corporation.
-> > + *
-> > + * Author:
-> > + *   Saurabh Sengar <ssengar@microsoft.com>
-> > + */
-> > +
-> > +#include <asm/apic.h>
-> > +#include <asm/boot.h>
-> > +#include <asm/desc.h>
-> > +#include <asm/i8259.h>
-> > +#include <asm/mshyperv.h>
-> > +#include <asm/realmode.h>
-> > +
-> > +extern struct boot_params boot_params;
-> > +static struct real_mode_header hv_vtl_real_mode_header;
-> > +
-> > +void __init hv_vtl_init_platform(void)
-> > +{
-> > +	pr_info("Initializing Hyper-V VTL\n");
-> > +
-> 
-> We can be more explicit here, "Linux runs in Hyper-V Virtual Trust Level 2".
-> 
-> If we go with this, this and other function names should be renamed to
-> something more explicit too.
+> Separately, I wonder if the "select OF if !ACPI" is even needed.  It doesn't
+> hurt anything to leave it, but it seems like any config that doesn't
+> independently select either ACPI or OF is broken for reasons unrelated
+> to Hyper-V.  I'm OK with leaving the select of OF if you want, so I'm
+> more just wondering than asserting it should be removed.   I didn't
+> see "select OF if !ACPI" anywhere else in the Kconfig files, and it
+> seems like Hyper-V would not be the only environment where this
+> is the expectation.
 
-Sure I can do this. However I will like to put it as generic VTL not specific
-to VTL 2 only. Please let me know your opinion.
+Ok I can remove the !ACPI dependency. Hope kernel size increase due to both
+the code compiled in shouldn't be problem for ACPI systems.
+And here if config doesn't select ACPI or OF it will assume OF, which is
+better then selecting none of them.
 
-> 
-> > +	x86_init.irqs.pre_vector_init = x86_init_noop;
-> > +	x86_init.timers.timer_init = x86_init_noop;
-> > +
-> > +	x86_platform.get_wallclock = get_rtc_noop;
-> > +	x86_platform.set_wallclock = set_rtc_noop;
-> > +	x86_platform.get_nmi_reason = hv_get_nmi_reason;
-> > +
-> > +	x86_platform.legacy.i8042 = X86_LEGACY_I8042_PLATFORM_ABSENT;
-> > +	x86_platform.legacy.rtc = 0;
-> > +	x86_platform.legacy.warm_reset = 0;
-> > +	x86_platform.legacy.reserve_bios_regions = 0;
-> > +	x86_platform.legacy.devices.pnpbios = 0;
-> > +}
-> > +
-> [...]
-> > +static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
-> > +{
-> > +	u64 status;
-> > +	int ret = 0;
-> > +	struct hv_enable_vp_vtl *input;
-> > +	unsigned long irq_flags;
-> > +
-> > +	struct desc_ptr gdt_ptr;
-> > +	struct desc_ptr idt_ptr;
-> > +
-> > +	struct ldttss_desc *tss;
-> > +	struct ldttss_desc *ldt;
-> > +	struct desc_struct *gdt;
-> > +
-> > +	u64 rsp = initial_stack;
-> > +	u64 rip = (u64)&hv_vtl_ap_entry;
-> > +
-> > +	native_store_gdt(&gdt_ptr);
-> > +	store_idt(&idt_ptr);
-> > +
-> > +	gdt = (struct desc_struct *)((void *)(gdt_ptr.address));
-> > +	tss = (struct ldttss_desc *)(gdt + GDT_ENTRY_TSS);
-> > +	ldt = (struct ldttss_desc *)(gdt + GDT_ENTRY_LDT);
-> > +
-> > +	local_irq_save(irq_flags);
-> > +
-> > +	input = (struct hv_enable_vp_vtl *)(*this_cpu_ptr(hyperv_pcpu_input_arg));
-> 
-> Not a big deal, but you don't actually need to cast here.
 
-Ok, will fix.
+To address both of your comments I feel below will be sufficient:
+select OF
+select OF_EARLY_FLATTRE
 
-> 
-> [...]
-> > +
-> > +static int hv_vtl_apicid_to_vp_id(u32 apic_id)
-> > +{
-> > +	u64 control;
-> > +	u64 status;
-> > +	unsigned long irq_flags;
-> > +	struct hv_get_vp_from_apic_id_in *input;
-> > +	u32 *output, ret;
-> > +
-> > +	local_irq_save(irq_flags);
-> > +
-> > +	input = (struct hv_get_vp_from_apic_id_in *)(*this_cpu_ptr(hyperv_pcpu_input_arg));
-> 
-> No need to cast here.
-
-Sure.
-
-> 
-> [...]
-> > +struct hv_x64_table_register {
-> > +	__u16 pad[3];
-> > +	__u16 limit;
-> > +	__u64 base;
-> > +} __packed;
-> > +
-> > +struct hv_init_vp_context_t {
-> 
-> Drop the _t suffix please.
-
-OK
 
 Regards,
 Saurabh
 
 > 
-> Thanks,
-> Wei.
+> Michael
