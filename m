@@ -2,248 +2,720 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 809196B802F
-	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Mar 2023 19:16:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 657186B83C5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Mar 2023 22:11:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbjCMSQe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 13 Mar 2023 14:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
+        id S229496AbjCMVLr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 13 Mar 2023 17:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229797AbjCMSQd (ORCPT
+        with ESMTP id S229493AbjCMVLq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 13 Mar 2023 14:16:33 -0400
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-cusazon11020024.outbound.protection.outlook.com [52.101.61.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B31D87C942;
-        Mon, 13 Mar 2023 11:16:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nPUxD2yzT8RScZWW+2YUCOfYg4QX4zE/6drUHOJEFN7ZqUAF1UOkh+8BlG+1KiRiDpZ1C3hrxXnTAvVQpwsnBoXbjtj0M+N9IXLr93Pj3IL/2mNvKXBTMMZptdU4uBt+6jDWao3zMwN8DyLTJ2MiIXxyGjk4Af5hPU6xVwstsnNPo+it2aPYDpc0WoRYcZKbJHdmmSq2MsKvyg7JcZHxuOBpW/REcvONUAexrD7++GFpb4UoRsHReVWxJtRr+wi4ehEv3wJgEYtkiVmIYfX3Db0U6QF2BAz3qf3dSM4sKcTGMW9FZdfRDvs2zSobSlUUYvBPASeyXtefKwWF8Fowtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bFJXpsbghxIDZOFFlu2qLyojhmqis6FAyUYPhwAeTBE=;
- b=RlCs3jVgsyAQhigmqyCVaFKPK0xGYZTuv/pK4AnPYUIrTSQFcA4iO1AnrPKj5WCcyMcb8u9cb39q8mmn6yHXc7UkKZ3xeRVnqeirTfBr8m3EwFsetB4l88aHi10Ps0xgfrT49Zx3BnEsvtaofMRPn4KiR0dH0COjc3Wx3XhIQEMl9pN3KgjNpzmprdFBE2XIJzvgd9cUHeA6AWP6L6e00IEDTshbqUGnxHLPENQhjabRhg7Bjo3seIYjg2lYtyWtxk6G/UR5jmCFeAPuVfFn3cngLu9cyYQ9tOuuz2cu5WZXHFtvxSpr0v8TuzYjF+p4UxIPkXtmbpmxFy7tkiAopw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bFJXpsbghxIDZOFFlu2qLyojhmqis6FAyUYPhwAeTBE=;
- b=WKEGTtzCTfL64Dwc+kchH5JEEKlIf7M4tyU4VVTWMNDBpB4dKC25yDengvpF+pfR3Y19h0XU/v+mh0UwwDG/Nk0ENc44tcmfDALdDEgQEI3BpL/VFTgnw68wT3ynsDY30uyz8SabyW7uqDNRMfmDTu/3L3pM4TUpKWQpKckJ/rc=
-Received: from DS7PR21MB3127.namprd21.prod.outlook.com (2603:10b6:8:77::16) by
- BY5PR21MB1426.namprd21.prod.outlook.com (2603:10b6:a03:232::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.3; Mon, 13 Mar
- 2023 18:16:27 +0000
-Received: from DS7PR21MB3127.namprd21.prod.outlook.com
- ([fe80::5a51:71d1:aa62:a7b2]) by DS7PR21MB3127.namprd21.prod.outlook.com
- ([fe80::5a51:71d1:aa62:a7b2%7]) with mapi id 15.20.6222.003; Mon, 13 Mar 2023
- 18:16:27 +0000
-From:   KY Srinivasan <kys@microsoft.com>
-To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [PATCH v2 2/2] x86/hyperv: VTL support for Hyper-V
-Thread-Topic: [PATCH v2 2/2] x86/hyperv: VTL support for Hyper-V
-Thread-Index: AQHZVc2QXZ33ZRlfGU2JPNSvGGsDh675Al3w
-Date:   Mon, 13 Mar 2023 18:16:27 +0000
-Message-ID: <DS7PR21MB3127E3FBE1ABB368C6CBC097A0B99@DS7PR21MB3127.namprd21.prod.outlook.com>
-References: <1678386957-18016-1-git-send-email-ssengar@linux.microsoft.com>
- <1678386957-18016-3-git-send-email-ssengar@linux.microsoft.com>
- <87a60gww0h.fsf@redhat.com>
- <20230313170210.GA4354@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-In-Reply-To: <20230313170210.GA4354@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b4b11f8f-4732-42e8-b64f-6bb50e83a57b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-13T18:09:42Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS7PR21MB3127:EE_|BY5PR21MB1426:EE_
-x-ms-office365-filtering-correlation-id: a4add02c-1651-4275-321d-08db23ef1026
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5ee0h+nEpht3eDWENxBhlELX4/h8SUl6ydPJGPJ1Ow6s59pttsQtA3JqEMq7Kt7QTuzCYOza9t+jBL8SJ9ilpdJ0lTlEHd2U+ga7jk4Z1m4UJpHfl++2NXVbQNg31abtq8EipNtWRTgSzUOmYUM9ZAzmJEuLnKFHbcdPfkVc2hmfXNMT5mbnyn3SE71livcIvhSsB900eWjydAm+zB6Pr3wmAD4tc15k3GzATk5NNlG4oOeHXzQ7JltDLTL6vqx3vG+H8tTcJE+VkvYcoOPdr2U5wrDTWnRyYa6nGuQeR4QhLyM3xV78eupy0lNI/oiBG5azNX5pTWwu4sLWdN5kzSq7hDOwpq/u3mhdJpVIYhMFUQVE66NbInqkG7owfLtt3Zvnw+vkvG/GVkGQU2GKlwmXO3EGJKH+N1hRK+7NCMT3JBffxyTEaOEYQbaEi1rvZ5dTXyUyBKOPDIjgubB3tsXAUiF8uXGirPlOyvZ3Xfzf/oN0VAQN3rjKksKy4tUxPbcYd1rv2jpQibFGZKbMl7mfzljY5kvhtw+uw4aFf5+qYO2wZTbqtWEgbf+8gfuvPDdWGuh3TPpqw5iYMu+i3OSGX3DSHpw7+kbWj7gNcPEO/8m3aMCTZImbgamUoc8y922qI/VStr/qj2icyEqw6iwOb/xohrGLvgWHhJpaDKctWEDlYBqnJoYoGPgeSN33zHKVWmCqFtiUU6CtROSQjjKeffw4x8lBZMaZJmjUMEVT3xBtJ8QJfgayOKlM352i
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR21MB3127.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(376002)(346002)(39860400002)(396003)(366004)(451199018)(33656002)(478600001)(10290500003)(316002)(110136005)(7696005)(71200400001)(8936002)(54906003)(86362001)(5660300002)(7416002)(52536014)(76116006)(8990500004)(2906002)(66476007)(64756008)(4326008)(66556008)(66446008)(8676002)(66946007)(41300700001)(122000001)(82960400001)(82950400001)(55016003)(38070700005)(38100700002)(53546011)(186003)(83380400001)(6506007)(9686003)(66899018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?hZ2sP6PN+tr/+lMSrSlXOqsMySVfQnlNAkXYBufGjOqDcV4I+b7Q1OnMlO/F?=
- =?us-ascii?Q?URwMVGHYjxdxqWt4vmvyn/d3GCKp3MU2RDBk8nFyNmFyRnDpIdNieiXNpNBn?=
- =?us-ascii?Q?6Tp3EOP5nP+QqAQFaW1TpeFbVJ47dHrNGI+zqapRBiDz9lnQdxlJKGzs1Pz8?=
- =?us-ascii?Q?ukPr5Cn2aP5xh7OJAl3IO7f/XYjnu1vuuUz628ttWkHrrK3UJFChx2YLVDYJ?=
- =?us-ascii?Q?9TLZY2YFtBYAM9qh+bYmhGzdewFKPVpZax3ygExm0JCQlL0Z8ezh/JEmdmJK?=
- =?us-ascii?Q?mHSZKed60TV/mtMm/PBkuSumDeM6saw4GjORllz4Y2878V3g7FskUGXDRZZr?=
- =?us-ascii?Q?+IvStjP9xr1/5LlPTxYBltJNySqUWssBXh7UXeh5gq1xzKTGVbHS5Ow8qBGN?=
- =?us-ascii?Q?+AFC/rxqpUXKhjYdZzeBzjHiRKu4xMRwqn4QAgTaAfowbf2C4sVNyG+n13iF?=
- =?us-ascii?Q?NMo8zz0scHf4P16ymB+n5AVAkJWuzNwVGgLsFmyDhGM5Tbb3TnANlfg3OW8Y?=
- =?us-ascii?Q?hBJ3pEV8v5PVKwKvTfv4tT1EXYf/9d+NFFwC4AWW7hXnTC99a5HBGRv6RJ0T?=
- =?us-ascii?Q?Aom+hiS3HLTJ+kyRvl0AzVkxeRaXmpXJHvXvebmeleu383VL5GT11THF40N9?=
- =?us-ascii?Q?SIGbOKeTbYxe4I4RS665dbFpmI4JGi3MddqqsoMe8VPJb7MAepnBlEsEIwRh?=
- =?us-ascii?Q?JwCys8Edf7F90eRx1ARF04ppppTx3CMITdCkkMIKxvfWfPCsGeAfLA6g4XC8?=
- =?us-ascii?Q?G7YW6HvjEiT66lQ7dT4WpkjUFBSh5P5ThOu63iHWP/5MbTqAYasE59oUpO6s?=
- =?us-ascii?Q?LhpJsDGGoODeYx39IZUNw/bhym3DToGE5Q14iUYhr9BbYgWzNYoVkXI+/ELJ?=
- =?us-ascii?Q?J7EXa0X/a9ezJpYO9SYoQhhhNfAP+dtm9qaOxKOjYftMKSAhOEFVncOp0LZS?=
- =?us-ascii?Q?Tti7BAGPwXttJVcpoEpFSaKxEDMbmiVduzckbx7oV0GJb61XTRC+tIlbqpCY?=
- =?us-ascii?Q?jGNwd1U+w8t2+k3OJLNenAjigZKx9nOWe7rJGg5/A6SB4QH/ukWE+X+dbjId?=
- =?us-ascii?Q?CdPan2gtySfeqSe3VJmWVc216HkIVfEg6MDxz5swDJP1SmhYiud3stgdMQjm?=
- =?us-ascii?Q?HcCTY2pS7LbETRN6vy/MabZ2JlU1CSledenfph/2LpHaAZaa4MFRVMnKTbOk?=
- =?us-ascii?Q?W44RHNNSdoBuJoPnJgu8QalGK6guLLT7DeAPjcsD84JK5AVYsfpPXBJaIuJV?=
- =?us-ascii?Q?tDmWeHxyzitqo39MzgVH0CPY4aSmUmZeAVTadPIRIDjaID5I3h+3N119IeOS?=
- =?us-ascii?Q?4Qo7jsAPFWm9k4d/h2o76S+GuOH0SdS/W+U8I6bLP4e8u8SnwvDU/Kbx+6Gt?=
- =?us-ascii?Q?QseAz7vMvLQJwdAQH951xvOgHS9IRvdg02tyu/+SavjvZgVIAe7TVSO6//T/?=
- =?us-ascii?Q?QdCOOnxGXmu0FDgDjiOCdU2+lEcrRGqTYvguFUodrhBA3cS9rZEiOszdfPqn?=
- =?us-ascii?Q?mnSuwqIpjB06PMgoJpcabuIVordauFdDJJulXP5NGYfhWRYmhZU1raSQH4uW?=
- =?us-ascii?Q?AX0MLnCvcn8iarKwZwq8VftbInp/l63OD2KSGhEj5zvzGc8C0G0vDDT4ybfn?=
- =?us-ascii?Q?AMtLxEbGj2sAh5l3ATLSP7QhN7S4FFfAarOesz5tj9Vy?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Mar 2023 17:11:46 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BDDC886DF8;
+        Mon, 13 Mar 2023 14:11:14 -0700 (PDT)
+Received: from [192.168.0.5] (unknown [71.212.161.12])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0174C2045E4A;
+        Mon, 13 Mar 2023 14:11:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0174C2045E4A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1678741871;
+        bh=jDI63RO8/Qe9KM27TKj95SQWyy4ztEvlrXPrUwPsifM=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=kN02oTvFAsqJSmCKWK1RTKDKuK64x3l10bcQ3O6GyQ2nUW72XxwnOE/MDKZJ9tZDN
+         ahd7DPhGbiJXizwPr+hy72F5j1gzraS8ztOFhF4oZT5zfUXg9L+o4NLGQst5hNabz2
+         JDyJrpfa++BouZP7fbNKM1YuUYM3bI6Fzv4cA/Ek=
+Message-ID: <e777ad2e-0bad-3a04-b831-ebd07edb7fc3@linux.microsoft.com>
+Date:   Mon, 13 Mar 2023 14:11:19 -0700
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR21MB3127.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4add02c-1651-4275-321d-08db23ef1026
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2023 18:16:27.7817
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3zYjy3gUiYiYV19eIZ4FyTQ5WZcFltP8EDwB0o9DAfgkFT1c8VpcA1EKZwgZuKgvgMmjrVKbV2BIw/BC4FXtFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1426
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [RFC PATCH] hyperv-tlfs: Change shared HV_REGISTER_* defines to
+ HV_SYNTHETIC_REG_*
+Content-Language: en-US
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>
+References: <1678223570-25242-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <BYAPR21MB16889A9D76888A485D7BB19FD7BA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <BYAPR21MB16889A9D76888A485D7BB19FD7BA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On 3/10/2023 11:30 AM, Michael Kelley (LINUX) wrote:
+> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, March 7, 2023 1:13 PM
+>>
+>> In x86 hyperv-tlfs, HV_REGISTER_ prefix is used to indicate MSRs
+>> accessed via rdmsrl/wrmsrl. But in ARM64, HV_REGISTER_ instead indicates
+>> VP registers accessed via get/set vp registers hypercall.
+>>
+>> This is due to HV_REGISTER_* names being used by hv_set/get_register,
+>> with the arch-specific version delegating to the appropriate mechanism.
+>>
+>> The problem is, using prefix HV_REGISTER_ for MSRs will conflict with
+>> VP registers when they are introduced for x86 in future.
+>>
+>> This patch solves the issue by:
+>>
+>> 1. Defining all the x86 MSRs with a consistent prefix: HV_X64_MSR_.
+>>    This is so HV_REGISTER_ can be reserved for VP registers.
+>>
+>> 2. Change the non-arch-specific alias used by hv_set/get_register to
+>>    HV_SYNTHETIC_REG.
+> 
+> I definitely messed this up when I first did the ARM64 support a
+> few years back.  :-(    This is a necessary fix.
+> 
+> What about keeping HV_REGISTER_ as the prefix for the architecture
+> independent alias, and creating a new prefix for the Hyper-V register
+> definition?  This would allow the existing hv_get/set_register()
+> invocations to remain unchanged, and eliminates the code churn
+> in the arch independent code.
+>> The HV_X64_MSR_ prefix is definitely good for the MSR addresses,
+> especially since a lot of definitions that are x86/x64 only are still in use.
+> Then perhaps use HV_HYP_REG_ or something similar for the Hyper-V
+> register definition.
 
+This could work.
 
+Ideally, we would use HV_REGISTER_ for the vp registers as it's a direct match
+to the name in HyperV e.g. HvRegisterVpIndex-> HV_REGISTER_VP_INDEX
 
-> -----Original Message-----
-> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-> Sent: Monday, March 13, 2023 10:02 AM
-> To: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: tglx@linutronix.de; mingo@redhat.com; bp@alien8.de;
-> dave.hansen@linux.intel.com; x86@kernel.org; hpa@zytor.com; KY Srinivasan
-> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
-> wei.liu@kernel.org; Dexuan Cui <decui@microsoft.com>; arnd@arndb.de;
-> Tianyu Lan <Tianyu.Lan@microsoft.com>; Michael Kelley (LINUX)
-> <mikelley@microsoft.com>; linux-kernel@vger.kernel.org; linux-
-> hyperv@vger.kernel.org; linux-arch@vger.kernel.org
-> Subject: Re: [PATCH v2 2/2] x86/hyperv: VTL support for Hyper-V
->=20
-> On Mon, Mar 13, 2023 at 03:45:02PM +0100, Vitaly Kuznetsov wrote:
-> > Saurabh Sengar <ssengar@linux.microsoft.com> writes:
-> >
-> > > Virtual Trust Levels (VTL) helps enable Hyper-V Virtual Secure Mode
-> > > (VSM) feature. VSM is a set of hypervisor capabilities and
-> > > enlightenments offered to host and guest partitions which enable the
-> > > creation and management of new security boundaries within operating
-> system software.
-> > > VSM achieves and maintains isolation through VTLs.
-> > >
-> > > Add early initialization for Virtual Trust Levels (VTL). This
-> > > includes initializing the x86 platform for VTL and enabling boot
-> > > support for secondary CPUs to start in targeted VTL context. For
-> > > now, only enable the code for targeted VTL level as 2.
-> > >
-> > > When starting an AP at a VTL other than VTL 0, the AP must start
-> > > directly in 64-bit mode, bypassing the usual 16-bit -> 32-bit ->
-> > > 64-bit mode transition sequence that occurs after waking up an AP
-> > > with SIPI whose vector points to the 16-bit AP startup trampoline cod=
-e.
-> > >
-> > > This commit also moves hv_get_nmi_reason function to header file, so
-> > > that it can be reused by VTL.
-> > >
-> > > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > > ---
-> > >  arch/x86/Kconfig                   |  24 +++
-> > >  arch/x86/hyperv/Makefile           |   1 +
-> > >  arch/x86/hyperv/hv_vtl.c           | 227 +++++++++++++++++++++++++++=
-++
-> > >  arch/x86/include/asm/hyperv-tlfs.h |  75 ++++++++++
-> > >  arch/x86/include/asm/mshyperv.h    |  14 ++
-> > >  arch/x86/kernel/cpu/mshyperv.c     |   6 +-
-> > >  include/asm-generic/hyperv-tlfs.h  |   4 +
-> >
-> > This patch is quite big, I'd suggest you split it up. E.g. TLFS
-> > definitions can easily be a separate patch. Moving hv_get_nmi_reason()
-> > can be a separate patch. Secondary CPU bringup can be a separate
-> > patch. The new config option to enable the feature (assuming it is
-> > really needed) can be the last separate patch.
->=20
-> Ok will do in next version.
->=20
-> >
-> > >  7 files changed, 346 insertions(+), 5 deletions(-)  create mode
-> > > 100644 arch/x86/hyperv/hv_vtl.c
-> > >
-> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig index
-> > > 453f462f6c9c..b9e52ac9c9f9 100644
-> > > --- a/arch/x86/Kconfig
-> > > +++ b/arch/x86/Kconfig
-> > > @@ -782,6 +782,30 @@ menuconfig HYPERVISOR_GUEST
-> > >
-> > >  if HYPERVISOR_GUEST
-> > >
-> > > +config HYPERV_VTL
-> > > +	bool "Enable VTL"
-> > > +	depends on X86_64 && HYPERV
-> > > +	default n
-> > > +	help
-> > > +	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
-> > > +	  enlightenments offered to host and guest partitions which enables
-> > > +	  the creation and management of new security boundaries within
-> > > +	  operating system software.
-> > > +
-> > > +	  VSM achieves and maintains isolation through Virtual Trust Levels
-> > > +	  (VTLs). Virtual Trust Levels are hierarchical, with higher levels
-> > > +	  being more privileged than lower levels. VTL0 is the least privil=
-eged
-> > > +	  level, and currently only other level supported is VTL2.
-> > > +
-> > > +	  Select this option to build a Linux kernel to run at a VTL other =
-than
-> > > +	  the normal VTL 0, which currently is only VTL 2.  This option
-> > > +	  initializes the x86 platform for VTL 2, and adds the ability to b=
-oot
-> > > +	  secondary CPUs directly into 64-bit context as required for VTLs =
-other
-> > > +	  than 0.  A kernel built with this option must run at VTL 2, and w=
-ill
-> > > +	  not run as a normal guest.
-> >
-> > This is quite unfortunate, is there a way to detect which VTL the
-> > guest is running at and change the behavior dynamically?
->=20
-> Only way to detect VTL is via hypercall. However hypercalls are not avail=
-able
-> this early in boot sequence.
+However if you think it's better to reduce churn and go with a different
+name then that's fine by me.
 
-Vitaly, we looked at all the options and we felt this detection did not hav=
-e to be dynamic and could
-well be a compile time option. Think of this kernel as a Linux based Truste=
-d Execution Environment that
-only runs in the Virtual Trust Level surfaced by Hyper-V with limited hardw=
-are exposed to this environment.
+HV_HYP_REG_ is ok, though maybe HV_VP_REG_ is a bit more informative?
+"VP_REG" indicating it's relevant to HVCALL_GET/SET_VP_REGISTERS.
 
-K. Y
+> 
+> If you don't like that suggestion, I wonder if the HV_SYNTHETIC_REG_
+> prefix could be shortened to help avoid line length problems.  Maybe
+> HV_SYNREG_ or HV_SYN_REG_ ?
+>>>
+>> Signed-off-by: Nuno Das Neves <nudasnev@microsoft.com>
+>> ---
+>>  arch/arm64/include/asm/hyperv-tlfs.h |  25 +++++
+>>  arch/x86/include/asm/hyperv-tlfs.h   | 137 +++++++++++++--------------
+>>  arch/x86/include/asm/mshyperv.h      |   8 +-
+>>  arch/x86/kernel/cpu/mshyperv.c       |  22 ++---
+>>  drivers/clocksource/hyperv_timer.c   |  24 ++---
+>>  drivers/hv/hv.c                      |  32 +++----
+>>  drivers/hv/hv_common.c               |   4 +-
+>>  drivers/hv/vmbus_drv.c               |  14 +--
+>>  include/asm-generic/mshyperv.h       |   2 +-
+>>  9 files changed, 146 insertions(+), 122 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-
+>> tlfs.h
+>> index bc6c7ac934a1..474025eb3d7e 100644
+>> --- a/arch/arm64/include/asm/hyperv-tlfs.h
+>> +++ b/arch/arm64/include/asm/hyperv-tlfs.h
+>> @@ -64,6 +64,31 @@
+>>  #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
+>>  #define HV_REGISTER_STIMER0_COUNT	0x000B0001
+>>
+>> +/*
+>> + * To support non-arch-specific code calling hv_set/get_register:
+>> + * - On x86, HV_SYNTHETIC_REG_ indicates an MSR accessed via rdmsrl/wrmsrl
+>> + * - On ARM, HV_SYNTHETIC_REG_ indicates a VP register accessed via hypercall
+> 
+> Nit:  Let's use the full "ARM64" instead of just "ARM" here so that there's no
+> confusion about whether 32-bit ARM is supported.
+> 
+
+Good point
+
+>> + */
+>> +#define HV_SYNTHETIC_REG_VP_INDEX		(HV_REGISTER_VP_INDEX)
+>> +#define HV_SYNTHETIC_REG_TIME_REF_COUNT
+>> 	(HV_REGISTER_TIME_REF_COUNT)
+>> +#define HV_SYNTHETIC_REG_REFERENCE_TSC
+>> 	(HV_REGISTER_REFERENCE_TSC)
+>> +
+>> +#define HV_SYNTHETIC_REG_STIMER0_CONFIG
+>> 	(HV_REGISTER_STIMER0_CONFIG)
+>> +#define HV_SYNTHETIC_REG_STIMER0_COUNT
+>> 	(HV_REGISTER_STIMER0_COUNT)
+>> +
+>> +#define HV_SYNTHETIC_REG_SCONTROL		(HV_REGISTER_SCONTROL)
+>> +#define HV_SYNTHETIC_REG_SIEFP			(HV_REGISTER_SIEFP)
+>> +#define HV_SYNTHETIC_REG_SIMP			(HV_REGISTER_SIMP)
+>> +#define HV_SYNTHETIC_REG_EOM			(HV_REGISTER_EOM)
+>> +#define HV_SYNTHETIC_REG_SINT0			(HV_REGISTER_SINT0)
+>> +
+>> +#define HV_SYNTHETIC_REG_CRASH_P0		(HV_REGISTER_CRASH_P0)
+>> +#define HV_SYNTHETIC_REG_CRASH_P1		(HV_REGISTER_CRASH_P1)
+>> +#define HV_SYNTHETIC_REG_CRASH_P2		(HV_REGISTER_CRASH_P2)
+>> +#define HV_SYNTHETIC_REG_CRASH_P3		(HV_REGISTER_CRASH_P3)
+>> +#define HV_SYNTHETIC_REG_CRASH_P4		(HV_REGISTER_CRASH_P4)
+>> +#define HV_SYNTHETIC_REG_CRASH_CTL		(HV_REGISTER_CRASH_CTL)
+>> +
+>>  union hv_msi_entry {
+>>  	u64 as_uint64[2];
+>>  	struct {
+>> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+>> index 566ac26239ba..0dbb0218d0fa 100644
+>> --- a/arch/x86/include/asm/hyperv-tlfs.h
+>> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+>> @@ -178,7 +178,7 @@ enum hv_isolation_type {
+>>  #define HV_X64_MSR_HYPERCALL			0x40000001
+>>
+>>  /* MSR used to provide vcpu index */
+>> -#define HV_REGISTER_VP_INDEX			0x40000002
+>> +#define HV_X64_MSR_VP_INDEX			0x40000002
+>>
+>>  /* MSR used to reset the guest OS. */
+>>  #define HV_X64_MSR_RESET			0x40000003
+>> @@ -187,10 +187,10 @@ enum hv_isolation_type {
+>>  #define HV_X64_MSR_VP_RUNTIME			0x40000010
+>>
+>>  /* MSR used to read the per-partition time reference counter */
+>> -#define HV_REGISTER_TIME_REF_COUNT		0x40000020
+>> +#define HV_X64_MSR_TIME_REF_COUNT		0x40000020
+>>
+>>  /* A partition's reference time stamp counter (TSC) page */
+>> -#define HV_REGISTER_REFERENCE_TSC		0x40000021
+>> +#define HV_X64_MSR_REFERENCE_TSC		0x40000021
+>>
+>>  /* MSR used to retrieve the TSC frequency */
+>>  #define HV_X64_MSR_TSC_FREQUENCY		0x40000022
+>> @@ -205,61 +205,61 @@ enum hv_isolation_type {
+>>  #define HV_X64_MSR_VP_ASSIST_PAGE		0x40000073
+>>
+>>  /* Define synthetic interrupt controller model specific registers. */
+>> -#define HV_REGISTER_SCONTROL			0x40000080
+>> -#define HV_REGISTER_SVERSION			0x40000081
+>> -#define HV_REGISTER_SIEFP			0x40000082
+>> -#define HV_REGISTER_SIMP			0x40000083
+>> -#define HV_REGISTER_EOM				0x40000084
+>> -#define HV_REGISTER_SINT0			0x40000090
+>> -#define HV_REGISTER_SINT1			0x40000091
+>> -#define HV_REGISTER_SINT2			0x40000092
+>> -#define HV_REGISTER_SINT3			0x40000093
+>> -#define HV_REGISTER_SINT4			0x40000094
+>> -#define HV_REGISTER_SINT5			0x40000095
+>> -#define HV_REGISTER_SINT6			0x40000096
+>> -#define HV_REGISTER_SINT7			0x40000097
+>> -#define HV_REGISTER_SINT8			0x40000098
+>> -#define HV_REGISTER_SINT9			0x40000099
+>> -#define HV_REGISTER_SINT10			0x4000009A
+>> -#define HV_REGISTER_SINT11			0x4000009B
+>> -#define HV_REGISTER_SINT12			0x4000009C
+>> -#define HV_REGISTER_SINT13			0x4000009D
+>> -#define HV_REGISTER_SINT14			0x4000009E
+>> -#define HV_REGISTER_SINT15			0x4000009F
+>> +#define HV_X64_MSR_SCONTROL			0x40000080
+>> +#define HV_X64_MSR_SVERSION			0x40000081
+>> +#define HV_X64_MSR_SIEFP			0x40000082
+>> +#define HV_X64_MSR_SIMP				0x40000083
+>> +#define HV_X64_MSR_EOM				0x40000084
+>> +#define HV_X64_MSR_SINT0			0x40000090
+>> +#define HV_X64_MSR_SINT1			0x40000091
+>> +#define HV_X64_MSR_SINT2			0x40000092
+>> +#define HV_X64_MSR_SINT3			0x40000093
+>> +#define HV_X64_MSR_SINT4			0x40000094
+>> +#define HV_X64_MSR_SINT5			0x40000095
+>> +#define HV_X64_MSR_SINT6			0x40000096
+>> +#define HV_X64_MSR_SINT7			0x40000097
+>> +#define HV_X64_MSR_SINT8			0x40000098
+>> +#define HV_X64_MSR_SINT9			0x40000099
+>> +#define HV_X64_MSR_SINT10			0x4000009A
+>> +#define HV_X64_MSR_SINT11			0x4000009B
+>> +#define HV_X64_MSR_SINT12			0x4000009C
+>> +#define HV_X64_MSR_SINT13			0x4000009D
+>> +#define HV_X64_MSR_SINT14			0x4000009E
+>> +#define HV_X64_MSR_SINT15			0x4000009F
+>>
+>>  /*
+>>   * Define synthetic interrupt controller model specific registers for
+>>   * nested hypervisor.
+>>   */
+>> -#define HV_REGISTER_NESTED_SCONTROL            0x40001080
+>> -#define HV_REGISTER_NESTED_SVERSION            0x40001081
+>> -#define HV_REGISTER_NESTED_SIEFP               0x40001082
+>> -#define HV_REGISTER_NESTED_SIMP                0x40001083
+>> -#define HV_REGISTER_NESTED_EOM                 0x40001084
+>> -#define HV_REGISTER_NESTED_SINT0               0x40001090
+>> +#define HV_X64_MSR_NESTED_SCONTROL		0x40001080
+>> +#define HV_X64_MSR_NESTED_SVERSION		0x40001081
+>> +#define HV_X64_MSR_NESTED_SIEFP			0x40001082
+>> +#define HV_X64_MSR_NESTED_SIMP			0x40001083
+>> +#define HV_X64_MSR_NESTED_EOM			0x40001084
+>> +#define HV_X64_MSR_NESTED_SINT0			0x40001090
+>>
+>>  /*
+>>   * Synthetic Timer MSRs. Four timers per vcpu.
+>>   */
+>> -#define HV_REGISTER_STIMER0_CONFIG		0x400000B0
+>> -#define HV_REGISTER_STIMER0_COUNT		0x400000B1
+>> -#define HV_REGISTER_STIMER1_CONFIG		0x400000B2
+>> -#define HV_REGISTER_STIMER1_COUNT		0x400000B3
+>> -#define HV_REGISTER_STIMER2_CONFIG		0x400000B4
+>> -#define HV_REGISTER_STIMER2_COUNT		0x400000B5
+>> -#define HV_REGISTER_STIMER3_CONFIG		0x400000B6
+>> -#define HV_REGISTER_STIMER3_COUNT		0x400000B7
+>> +#define HV_X64_MSR_STIMER0_CONFIG		0x400000B0
+>> +#define HV_X64_MSR_STIMER0_COUNT		0x400000B1
+>> +#define HV_X64_MSR_STIMER1_CONFIG		0x400000B2
+>> +#define HV_X64_MSR_STIMER1_COUNT		0x400000B3
+>> +#define HV_X64_MSR_STIMER2_CONFIG		0x400000B4
+>> +#define HV_X64_MSR_STIMER2_COUNT		0x400000B5
+>> +#define HV_X64_MSR_STIMER3_CONFIG		0x400000B6
+>> +#define HV_X64_MSR_STIMER3_COUNT		0x400000B7
+>>
+>>  /* Hyper-V guest idle MSR */
+>>  #define HV_X64_MSR_GUEST_IDLE			0x400000F0
+>>
+>>  /* Hyper-V guest crash notification MSR's */
+>> -#define HV_REGISTER_CRASH_P0			0x40000100
+>> -#define HV_REGISTER_CRASH_P1			0x40000101
+>> -#define HV_REGISTER_CRASH_P2			0x40000102
+>> -#define HV_REGISTER_CRASH_P3			0x40000103
+>> -#define HV_REGISTER_CRASH_P4			0x40000104
+>> -#define HV_REGISTER_CRASH_CTL			0x40000105
+>> +#define HV_X64_MSR_CRASH_P0			0x40000100
+>> +#define HV_X64_MSR_CRASH_P1			0x40000101
+>> +#define HV_X64_MSR_CRASH_P2			0x40000102
+>> +#define HV_X64_MSR_CRASH_P3			0x40000103
+>> +#define HV_X64_MSR_CRASH_P4			0x40000104
+>> +#define HV_X64_MSR_CRASH_CTL			0x40000105
+>>
+>>  /* TSC emulation after migration */
+>>  #define HV_X64_MSR_REENLIGHTENMENT_CONTROL	0x40000106
+>> @@ -269,31 +269,30 @@ enum hv_isolation_type {
+>>  /* TSC invariant control */
+>>  #define HV_X64_MSR_TSC_INVARIANT_CONTROL	0x40000118
+>>
+>> -/* Register name aliases for temporary compatibility */
+>> -#define HV_X64_MSR_STIMER0_COUNT	HV_REGISTER_STIMER0_COUNT
+>> -#define HV_X64_MSR_STIMER0_CONFIG	HV_REGISTER_STIMER0_CONFIG
+>> -#define HV_X64_MSR_STIMER1_COUNT	HV_REGISTER_STIMER1_COUNT
+>> -#define HV_X64_MSR_STIMER1_CONFIG	HV_REGISTER_STIMER1_CONFIG
+>> -#define HV_X64_MSR_STIMER2_COUNT	HV_REGISTER_STIMER2_COUNT
+>> -#define HV_X64_MSR_STIMER2_CONFIG	HV_REGISTER_STIMER2_CONFIG
+>> -#define HV_X64_MSR_STIMER3_COUNT	HV_REGISTER_STIMER3_COUNT
+>> -#define HV_X64_MSR_STIMER3_CONFIG	HV_REGISTER_STIMER3_CONFIG
+>> -#define HV_X64_MSR_SCONTROL		HV_REGISTER_SCONTROL
+>> -#define HV_X64_MSR_SVERSION		HV_REGISTER_SVERSION
+>> -#define HV_X64_MSR_SIMP			HV_REGISTER_SIMP
+>> -#define HV_X64_MSR_SIEFP		HV_REGISTER_SIEFP
+>> -#define HV_X64_MSR_VP_INDEX		HV_REGISTER_VP_INDEX
+>> -#define HV_X64_MSR_EOM			HV_REGISTER_EOM
+>> -#define HV_X64_MSR_SINT0		HV_REGISTER_SINT0
+>> -#define HV_X64_MSR_SINT15		HV_REGISTER_SINT15
+>> -#define HV_X64_MSR_CRASH_P0		HV_REGISTER_CRASH_P0
+>> -#define HV_X64_MSR_CRASH_P1		HV_REGISTER_CRASH_P1
+>> -#define HV_X64_MSR_CRASH_P2		HV_REGISTER_CRASH_P2
+>> -#define HV_X64_MSR_CRASH_P3		HV_REGISTER_CRASH_P3
+>> -#define HV_X64_MSR_CRASH_P4		HV_REGISTER_CRASH_P4
+>> -#define HV_X64_MSR_CRASH_CTL		HV_REGISTER_CRASH_CTL
+>> -#define HV_X64_MSR_TIME_REF_COUNT	HV_REGISTER_TIME_REF_COUNT
+>> -#define HV_X64_MSR_REFERENCE_TSC	HV_REGISTER_REFERENCE_TSC
+>> +/*
+>> + * To support non-arch-specific code calling hv_set/get_register:
+>> + * - On x86, HV_SYNTHETIC_REG_ indicates an MSR accessed via rdmsrl/wrmsrl
+>> + * - On ARM, HV_SYNTHETIC_REG_ indicates a VP register accessed via hypercall
+> 
+> Same here:  "ARM64" instead of "ARM".
+> 
+
+Will do
+
+>> + */
+>> +#define HV_SYNTHETIC_REG_VP_INDEX		(HV_X64_MSR_VP_INDEX)
+>> +#define HV_SYNTHETIC_REG_TIME_REF_COUNT
+>> 	(HV_X64_MSR_TIME_REF_COUNT)
+>> +#define HV_SYNTHETIC_REG_REFERENCE_TSC
+>> 	(HV_X64_MSR_REFERENCE_TSC)
+>> +
+>> +#define HV_SYNTHETIC_REG_STIMER0_CONFIG
+>> 	(HV_X64_MSR_STIMER0_CONFIG)
+>> +#define HV_SYNTHETIC_REG_STIMER0_COUNT
+>> 	(HV_X64_MSR_STIMER0_COUNT)
+>> +
+>> +#define HV_SYNTHETIC_REG_SCONTROL		(HV_X64_MSR_SCONTROL)
+>> +#define HV_SYNTHETIC_REG_SIEFP			(HV_X64_MSR_SIEFP)
+>> +#define HV_SYNTHETIC_REG_SIMP			(HV_X64_MSR_SIMP)
+>> +#define HV_SYNTHETIC_REG_EOM			(HV_X64_MSR_EOM)
+>> +#define HV_SYNTHETIC_REG_SINT0			(HV_X64_MSR_SINT0)
+>> +
+>> +#define HV_SYNTHETIC_REG_CRASH_P0		(HV_X64_MSR_CRASH_P0)
+>> +#define HV_SYNTHETIC_REG_CRASH_P1		(HV_X64_MSR_CRASH_P1)
+>> +#define HV_SYNTHETIC_REG_CRASH_P2		(HV_X64_MSR_CRASH_P2)
+>> +#define HV_SYNTHETIC_REG_CRASH_P3		(HV_X64_MSR_CRASH_P3)
+>> +#define HV_SYNTHETIC_REG_CRASH_P4		(HV_X64_MSR_CRASH_P4)
+>> +#define HV_SYNTHETIC_REG_CRASH_CTL		(HV_X64_MSR_CRASH_CTL)
+>>
+>>  /* Hyper-V memory host visibility */
+>>  enum hv_mem_host_visibility {
+>> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+>> index 4c4c0ec3b62e..1afa77ab9a04 100644
+>> --- a/arch/x86/include/asm/mshyperv.h
+>> +++ b/arch/x86/include/asm/mshyperv.h
+>> @@ -224,14 +224,14 @@ extern bool hv_isolation_type_snp(void);
+>>
+>>  static inline bool hv_is_synic_reg(unsigned int reg)
+> 
+> Should this function name be changed to hv_is_synic_msr() since
+> it is based on MSR values and not register values?  Argument
+> name should probably also be "msr", not "reg" to avoid
+> any confusion.
+> 
+
+If we keep the generic prefix as HV_REGISTER, then I suppose it should remain
+hv_is_synic_reg.
+
+>>  {
+>> -	return (reg >= HV_REGISTER_SCONTROL) &&
+>> -	       (reg <= HV_REGISTER_SINT15);
+>> +	return (reg >= HV_X64_MSR_SCONTROL) &&
+>> +	       (reg <= HV_X64_MSR_SINT15);
+>>  }
+>>
+>>  static inline bool hv_is_sint_reg(unsigned int reg)
+> 
+> Same here.
+> 
+>>  {
+>> -	return (reg >= HV_REGISTER_SINT0) &&
+>> -	       (reg <= HV_REGISTER_SINT15);
+>> +	return (reg >= HV_X64_MSR_SINT0) &&
+>> +	       (reg <= HV_X64_MSR_SINT15);
+>>  }
+>>
+>>  u64 hv_get_register(unsigned int reg);
+>> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+>> index f924a76c6923..7140ee32d7be 100644
+>> --- a/arch/x86/kernel/cpu/mshyperv.c
+>> +++ b/arch/x86/kernel/cpu/mshyperv.c
+>> @@ -45,19 +45,19 @@ struct ms_hyperv_info ms_hyperv;
+>>  static inline unsigned int hv_get_nested_reg(unsigned int reg)
+> 
+> Same here.
+> 
+
+If we keep the generic prefix as HV_REGISTER, then I suppose it should remain
+hv_get_nested_reg.
+
+>>  {
+>>  	if (hv_is_sint_reg(reg))
+>> -		return reg - HV_REGISTER_SINT0 + HV_REGISTER_NESTED_SINT0;
+>> +		return reg - HV_X64_MSR_SINT0 + HV_X64_MSR_NESTED_SINT0;
+>>
+>>  	switch (reg) {
+>> -	case HV_REGISTER_SIMP:
+>> -		return HV_REGISTER_NESTED_SIMP;
+>> -	case HV_REGISTER_SIEFP:
+>> -		return HV_REGISTER_NESTED_SIEFP;
+>> -	case HV_REGISTER_SVERSION:
+>> -		return HV_REGISTER_NESTED_SVERSION;
+>> -	case HV_REGISTER_SCONTROL:
+>> -		return HV_REGISTER_NESTED_SCONTROL;
+>> -	case HV_REGISTER_EOM:
+>> -		return HV_REGISTER_NESTED_EOM;
+>> +	case HV_X64_MSR_SIMP:
+>> +		return HV_X64_MSR_NESTED_SIMP;
+>> +	case HV_X64_MSR_SIEFP:
+>> +		return HV_X64_MSR_NESTED_SIEFP;
+>> +	case HV_X64_MSR_SVERSION:
+>> +		return HV_X64_MSR_NESTED_SVERSION;
+>> +	case HV_X64_MSR_SCONTROL:
+>> +		return HV_X64_MSR_NESTED_SCONTROL;
+>> +	case HV_X64_MSR_EOM:
+>> +		return HV_X64_MSR_NESTED_EOM;
+>>  	default:
+>>  		return reg;
+>>  	}
+>> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+>> index c0cef92b12b8..0ab3fbca34c7 100644
+>> --- a/drivers/clocksource/hyperv_timer.c
+>> +++ b/drivers/clocksource/hyperv_timer.c
+>> @@ -81,14 +81,14 @@ static int hv_ce_set_next_event(unsigned long delta,
+>>
+>>  	current_tick = hv_read_reference_counter();
+>>  	current_tick += delta;
+>> -	hv_set_register(HV_REGISTER_STIMER0_COUNT, current_tick);
+>> +	hv_set_register(HV_SYNTHETIC_REG_STIMER0_COUNT, current_tick);
+>>  	return 0;
+>>  }
+>>
+>>  static int hv_ce_shutdown(struct clock_event_device *evt)
+>>  {
+>> -	hv_set_register(HV_REGISTER_STIMER0_COUNT, 0);
+>> -	hv_set_register(HV_REGISTER_STIMER0_CONFIG, 0);
+>> +	hv_set_register(HV_SYNTHETIC_REG_STIMER0_COUNT, 0);
+>> +	hv_set_register(HV_SYNTHETIC_REG_STIMER0_CONFIG, 0);
+>>  	if (direct_mode_enabled && stimer0_irq >= 0)
+>>  		disable_percpu_irq(stimer0_irq);
+>>
+>> @@ -119,7 +119,7 @@ static int hv_ce_set_oneshot(struct clock_event_device *evt)
+>>  		timer_cfg.direct_mode = 0;
+>>  		timer_cfg.sintx = stimer0_message_sint;
+>>  	}
+>> -	hv_set_register(HV_REGISTER_STIMER0_CONFIG, timer_cfg.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_STIMER0_CONFIG, timer_cfg.as_uint64);
+>>  	return 0;
+>>  }
+>>
+>> @@ -387,7 +387,7 @@ static u64 notrace read_hv_clock_tsc(void)
+>>  	u64 current_tick = hv_read_tsc_page(hv_get_tsc_page());
+>>
+>>  	if (current_tick == U64_MAX)
+>> -		current_tick = hv_get_register(HV_REGISTER_TIME_REF_COUNT);
+>> +		current_tick = hv_get_register(HV_SYNTHETIC_REG_TIME_REF_COUNT);
+>>
+>>  	return current_tick;
+>>  }
+>> @@ -408,9 +408,9 @@ static void suspend_hv_clock_tsc(struct clocksource *arg)
+>>  	union hv_reference_tsc_msr tsc_msr;
+>>
+>>  	/* Disable the TSC page */
+>> -	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+>> +	tsc_msr.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_REFERENCE_TSC);
+>>  	tsc_msr.enable = 0;
+>> -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_REFERENCE_TSC, tsc_msr.as_uint64);
+>>  }
+>>
+>>
+>> @@ -419,10 +419,10 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
+>>  	union hv_reference_tsc_msr tsc_msr;
+>>
+>>  	/* Re-enable the TSC page */
+>> -	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+>> +	tsc_msr.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_REFERENCE_TSC);
+>>  	tsc_msr.enable = 1;
+>>  	tsc_msr.pfn = tsc_pfn;
+>> -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_REFERENCE_TSC, tsc_msr.as_uint64);
+>>  }
+>>
+>>  #ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
+>> @@ -456,7 +456,7 @@ static u64 notrace read_hv_clock_msr(void)
+>>  	 * is set to 0 when the partition is created and is incremented in
+>>  	 * 100 nanosecond units.
+>>  	 */
+>> -	return hv_get_register(HV_REGISTER_TIME_REF_COUNT);
+>> +	return hv_get_register(HV_SYNTHETIC_REG_TIME_REF_COUNT);
+>>  }
+>>
+>>  static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+>> @@ -543,14 +543,14 @@ static bool __init hv_init_tsc_clocksource(void)
+>>  	 * thus TSC clocksource will work even without the real TSC page
+>>  	 * mapped.
+>>  	 */
+>> -	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+>> +	tsc_msr.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_REFERENCE_TSC);
+>>  	if (hv_root_partition)
+>>  		tsc_pfn = tsc_msr.pfn;
+>>  	else
+>>  		tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
+>>  	tsc_msr.enable = 1;
+>>  	tsc_msr.pfn = tsc_pfn;
+>> -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_REFERENCE_TSC, tsc_msr.as_uint64);
+>>
+>>  	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+>>
+>> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+>> index 8b0dd8e5244d..319f21205a9c 100644
+>> --- a/drivers/hv/hv.c
+>> +++ b/drivers/hv/hv.c
+>> @@ -213,7 +213,7 @@ void hv_synic_enable_regs(unsigned int cpu)
+>>  	union hv_synic_scontrol sctrl;
+>>
+>>  	/* Setup the Synic's message page */
+>> -	simp.as_uint64 = hv_get_register(HV_REGISTER_SIMP);
+>> +	simp.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SIMP);
+>>  	simp.simp_enabled = 1;
+>>
+>>  	if (hv_isolation_type_snp() || hv_root_partition) {
+>> @@ -227,10 +227,10 @@ void hv_synic_enable_regs(unsigned int cpu)
+>>  			>> HV_HYP_PAGE_SHIFT;
+>>  	}
+>>
+>> -	hv_set_register(HV_REGISTER_SIMP, simp.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_SIMP, simp.as_uint64);
+>>
+>>  	/* Setup the Synic's event page */
+>> -	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
+>> +	siefp.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SIEFP);
+>>  	siefp.siefp_enabled = 1;
+>>
+>>  	if (hv_isolation_type_snp() || hv_root_partition) {
+>> @@ -245,12 +245,12 @@ void hv_synic_enable_regs(unsigned int cpu)
+>>  			>> HV_HYP_PAGE_SHIFT;
+>>  	}
+>>
+>> -	hv_set_register(HV_REGISTER_SIEFP, siefp.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_SIEFP, siefp.as_uint64);
+>>
+>>  	/* Setup the shared SINT. */
+>>  	if (vmbus_irq != -1)
+>>  		enable_percpu_irq(vmbus_irq, 0);
+>> -	shared_sint.as_uint64 = hv_get_register(HV_REGISTER_SINT0 +
+>> +	shared_sint.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SINT0 +
+>>  					VMBUS_MESSAGE_SINT);
+>>
+>>  	shared_sint.vector = vmbus_interrupt;
+>> @@ -266,14 +266,14 @@ void hv_synic_enable_regs(unsigned int cpu)
+>>  #else
+>>  	shared_sint.auto_eoi = 0;
+>>  #endif
+>> -	hv_set_register(HV_REGISTER_SINT0 + VMBUS_MESSAGE_SINT,
+>> +	hv_set_register(HV_SYNTHETIC_REG_SINT0 + VMBUS_MESSAGE_SINT,
+>>  				shared_sint.as_uint64);
+>>
+>>  	/* Enable the global synic bit */
+>> -	sctrl.as_uint64 = hv_get_register(HV_REGISTER_SCONTROL);
+>> +	sctrl.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SCONTROL);
+>>  	sctrl.enable = 1;
+>>
+>> -	hv_set_register(HV_REGISTER_SCONTROL, sctrl.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_SCONTROL, sctrl.as_uint64);
+>>  }
+>>
+>>  int hv_synic_init(unsigned int cpu)
+>> @@ -297,17 +297,17 @@ void hv_synic_disable_regs(unsigned int cpu)
+>>  	union hv_synic_siefp siefp;
+>>  	union hv_synic_scontrol sctrl;
+>>
+>> -	shared_sint.as_uint64 = hv_get_register(HV_REGISTER_SINT0 +
+>> +	shared_sint.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SINT0 +
+>>  					VMBUS_MESSAGE_SINT);
+>>
+>>  	shared_sint.masked = 1;
+>>
+>>  	/* Need to correctly cleanup in the case of SMP!!! */
+>>  	/* Disable the interrupt */
+>> -	hv_set_register(HV_REGISTER_SINT0 + VMBUS_MESSAGE_SINT,
+>> +	hv_set_register(HV_SYNTHETIC_REG_SINT0 + VMBUS_MESSAGE_SINT,
+>>  				shared_sint.as_uint64);
+>>
+>> -	simp.as_uint64 = hv_get_register(HV_REGISTER_SIMP);
+>> +	simp.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SIMP);
+>>  	/*
+>>  	 * In Isolation VM, sim and sief pages are allocated by
+>>  	 * paravisor. These pages also will be used by kdump
+>> @@ -322,9 +322,9 @@ void hv_synic_disable_regs(unsigned int cpu)
+>>  		simp.base_simp_gpa = 0;
+>>  	}
+>>
+>> -	hv_set_register(HV_REGISTER_SIMP, simp.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_SIMP, simp.as_uint64);
+>>
+>> -	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
+>> +	siefp.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SIEFP);
+>>  	siefp.siefp_enabled = 0;
+>>
+>>  	if (hv_isolation_type_snp() || hv_root_partition) {
+>> @@ -334,12 +334,12 @@ void hv_synic_disable_regs(unsigned int cpu)
+>>  		siefp.base_siefp_gpa = 0;
+>>  	}
+>>
+>> -	hv_set_register(HV_REGISTER_SIEFP, siefp.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_SIEFP, siefp.as_uint64);
+>>
+>>  	/* Disable the global synic bit */
+>> -	sctrl.as_uint64 = hv_get_register(HV_REGISTER_SCONTROL);
+>> +	sctrl.as_uint64 = hv_get_register(HV_SYNTHETIC_REG_SCONTROL);
+>>  	sctrl.enable = 0;
+>> -	hv_set_register(HV_REGISTER_SCONTROL, sctrl.as_uint64);
+>> +	hv_set_register(HV_SYNTHETIC_REG_SCONTROL, sctrl.as_uint64);
+>>
+>>  	if (vmbus_irq != -1)
+>>  		disable_percpu_irq(vmbus_irq);
+>> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+>> index 52a6f89ccdbd..77a68f16bc6e 100644
+>> --- a/drivers/hv/hv_common.c
+>> +++ b/drivers/hv/hv_common.c
+>> @@ -142,7 +142,7 @@ int hv_common_cpu_init(unsigned int cpu)
+>>  		*outputarg = (char *)(*inputarg) + HV_HYP_PAGE_SIZE;
+>>  	}
+>>
+>> -	msr_vp_index = hv_get_register(HV_REGISTER_VP_INDEX);
+>> +	msr_vp_index = hv_get_register(HV_SYNTHETIC_REG_VP_INDEX);
+>>
+>>  	hv_vp_index[cpu] = msr_vp_index;
+>>
+>> @@ -246,7 +246,7 @@ EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
+>>   */
+>>  static u64 __hv_read_ref_counter(void)
+>>  {
+>> -	return hv_get_register(HV_REGISTER_TIME_REF_COUNT);
+>> +	return hv_get_register(HV_SYNTHETIC_REG_TIME_REF_COUNT);
+>>  }
+>>
+>>  u64 (*hv_read_reference_counter)(void) = __hv_read_ref_counter;
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index 1901556efe79..9ca8a7b73b81 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -1405,17 +1405,17 @@ static void hv_kmsg_dump(struct kmsg_dumper
+>> *dumper,
+>>  	 * contain the size of the panic data in that page. Rest of the
+>>  	 * registers are no-op when the NOTIFY_MSG flag is set.
+>>  	 */
+>> -	hv_set_register(HV_REGISTER_CRASH_P0, 0);
+>> -	hv_set_register(HV_REGISTER_CRASH_P1, 0);
+>> -	hv_set_register(HV_REGISTER_CRASH_P2, 0);
+>> -	hv_set_register(HV_REGISTER_CRASH_P3, virt_to_phys(hv_panic_page));
+>> -	hv_set_register(HV_REGISTER_CRASH_P4, bytes_written);
+>> +	hv_set_register(HV_SYNTHETIC_REG_CRASH_P0, 0);
+>> +	hv_set_register(HV_SYNTHETIC_REG_CRASH_P1, 0);
+>> +	hv_set_register(HV_SYNTHETIC_REG_CRASH_P2, 0);
+>> +	hv_set_register(HV_SYNTHETIC_REG_CRASH_P3,
+>> virt_to_phys(hv_panic_page));
+>> +	hv_set_register(HV_SYNTHETIC_REG_CRASH_P4, bytes_written);
+>>
+>>  	/*
+>>  	 * Let Hyper-V know there is crash data available along with
+>>  	 * the panic message.
+>>  	 */
+>> -	hv_set_register(HV_REGISTER_CRASH_CTL,
+>> +	hv_set_register(HV_SYNTHETIC_REG_CRASH_CTL,
+>>  	       (HV_CRASH_CTL_CRASH_NOTIFY | HV_CRASH_CTL_CRASH_NOTIFY_MSG));
+>>  }
+>>
+>> @@ -1555,7 +1555,7 @@ static int vmbus_bus_init(void)
+>>  		 * Register for panic kmsg callback only if the right
+>>  		 * capability is supported by the hypervisor.
+>>  		 */
+>> -		hyperv_crash_ctl = hv_get_register(HV_REGISTER_CRASH_CTL);
+>> +		hyperv_crash_ctl = hv_get_register(HV_SYNTHETIC_REG_CRASH_CTL);
+>>  		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG)
+>>  			hv_kmsg_dump_register();
+>>
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>> index 8845a2eca339..76bf968d77a8 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -147,7 +147,7 @@ static inline void vmbus_signal_eom(struct hv_message *msg,
+>> u32 old_msg_type)
+>>  		 * possibly deliver another msg from the
+>>  		 * hypervisor
+>>  		 */
+>> -		hv_set_register(HV_REGISTER_EOM, 0);
+>> +		hv_set_register(HV_SYNTHETIC_REG_EOM, 0);
+>>  	}
+>>  }
+>>
+>> --
+>> 2.25.1
+
