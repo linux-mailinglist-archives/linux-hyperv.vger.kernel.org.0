@@ -2,267 +2,294 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26E3C6B6BDF
-	for <lists+linux-hyperv@lfdr.de>; Sun, 12 Mar 2023 22:50:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8639A6B6D72
+	for <lists+linux-hyperv@lfdr.de>; Mon, 13 Mar 2023 03:27:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbjCLVuB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 12 Mar 2023 17:50:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        id S229835AbjCMC1S (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 12 Mar 2023 22:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbjCLVt7 (ORCPT
+        with ESMTP id S229437AbjCMC1R (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 12 Mar 2023 17:49:59 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC6D1043F;
-        Sun, 12 Mar 2023 14:49:57 -0700 (PDT)
-Received: by mail-wm1-f50.google.com with SMTP id o38-20020a05600c512600b003e8320d1c11so6556604wms.1;
-        Sun, 12 Mar 2023 14:49:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678657796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ciUH2K2b185BvScrtOTL0Sqk4RrdEzj1aaThj5pGCpQ=;
-        b=ulLXKlBhqwve9szSCeiUgHJNCrAcMTNAt0S8sVXsnn7kGqHI74oBO0+ugM3q24fCE3
-         E434EtN9KlcyIR8oqwFomkv/k7wOC2VH4Cg5e9MpxqqCNFSiSULQJfWyi0zSHcK71KLA
-         sjEFIO+YUm8b9WnOdZ6QXPYLPKMdXUdbdPfvBpZkU5FS6stmLBl2HLyIZl+uHgvdZccW
-         W18h+TOrr0IGv/25Z+G9LxS+PTizBBCJ8L7MFFkG9/ESQsXHQGruEmYPj8MLgqUrtSSb
-         1bgs/8SMyALyoDULiOjPUbuo8xBB4e4ERAM8aQ/P8LG8T6heCkRNnHDBFfPpeQWW5py4
-         ktdg==
-X-Gm-Message-State: AO0yUKWXGt3MbhIvDHw6Nt18NJ3PBI5ZYb5O1ZO/Sffb9vDXPa5jgk0p
-        9cm+S2QHLO5JuZeXw7e4/h0=
-X-Google-Smtp-Source: AK7set+60VDwNsXcwRYqGYHJQF5rqWFoUT8oalPGUGVfkEG556YHGFMNiSzZXPcsX2pOSUZLol9boQ==
-X-Received: by 2002:a05:600c:310e:b0:3e9:f15b:935b with SMTP id g14-20020a05600c310e00b003e9f15b935bmr9388863wmo.32.1678657796014;
-        Sun, 12 Mar 2023 14:49:56 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id l5-20020a7bc445000000b003eae73f0fc1sm6903106wmi.18.2023.03.12.14.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Mar 2023 14:49:55 -0700 (PDT)
-Date:   Sun, 12 Mar 2023 21:49:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
-        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] x86/hyperv: VTL support for Hyper-V
-Message-ID: <ZA5JAVlSVhgv1CBS@liuwe-devbox-debian-v2>
-References: <1678386957-18016-1-git-send-email-ssengar@linux.microsoft.com>
- <1678386957-18016-3-git-send-email-ssengar@linux.microsoft.com>
+        Sun, 12 Mar 2023 22:27:17 -0400
+Received: from DM5PR00CU002-vft-obe.outbound.protection.outlook.com (mail-centralusazon11021026.outbound.protection.outlook.com [52.101.62.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCAD32E7F;
+        Sun, 12 Mar 2023 19:27:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=odficeVcCk3hsRrjAfATAg0T5xi3Cp3iboaaU57A4H3HcRn8SwQJnQLVAEOCgqWZi0CFSQfUO4xuO5Sb81W5DpOhbiVYn1RMBZPX9aaJZRIfjeIKQeFi7YLyfaQQs/oy16YSz89VL56oxgzbOd4pd8wuEIthgFPeGCtliQ6boIwXigTDq6AuKw4Qi4u4wSMBA6JYMJgGeayWRx2sdO6q9oZSjnlSxGFh6HGXBzpgVk5waKJ+2w7dzyjKFxLedLlD/BzPbgsZW24No4si32XUIkl6dYGnhFa8YSpwdvj/XGUEwhYTPOsJ/ggoAO851QJVAzBRe7OURwPlhfL0z8dUZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VQ9ge41e0Oq8qDFrPHjAxTUhm8p15N1eUxEgstuT0l0=;
+ b=B2CKZ7DJ8xUPQdQVjMXDmQhtrue8a5lMrziCOyaphqC1cOgZvNl4oIBxHtXZ+Lb2Iey193OfLC+NqmoBQQ69KiTeV4fZhWi7UsxL2gKbDYbGMxly/VAEnlyReXgaLWbT2ya/qrl2WrFn282eQrYqh2WVH0lele3glLgkOZWA/MuU23ESJ8cYi6OR3NiKZPBztmgNKItx7wzA+Vu3Wz5BeNoHqf3xpjaIfSI4nC54ZG7jaOvImpMDKuK11K1sBZjO4MNtFYo+6f6YGowOXJbsjEkkQkoS/Pl1cCaIiTp6vabcSvdQtuksIIErHWfqW+LGFOh92k3g+C2j4f/4+kWAjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQ9ge41e0Oq8qDFrPHjAxTUhm8p15N1eUxEgstuT0l0=;
+ b=AGEb6wZlKR1Tie89fZEYRVCV9DxIeEobLSiZDKLF7ojSoaWYThIYDOYHr99E2fdaUN02O3rq1ArGRFzpHWn36luSoiA0polMIgBvbuKEHPpXlpYjoD1h9ft+vIk7w6C5vFFg+TGQvuSVyZ8Ow9en8r+lcGyBrIge77bSZR8/nAA=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by BL1PR21MB3139.namprd21.prod.outlook.com (2603:10b6:208:397::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.22; Mon, 13 Mar
+ 2023 02:27:09 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::629a:b75a:482e:2d4a]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::629a:b75a:482e:2d4a%4]) with mapi id 15.20.6178.024; Mon, 13 Mar 2023
+ 02:27:09 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+CC:     Wei Liu <wei.liu@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH v7 5/5] Driver: VMBus: Add Devicetree support
+Thread-Topic: [PATCH v7 5/5] Driver: VMBus: Add Devicetree support
+Thread-Index: AQHZR3oO8XCRAJVOTEyd9eleCYLxd67zCduAgACLQoCAA5rBkIAAVGUAgACR8BA=
+Date:   Mon, 13 Mar 2023 02:27:09 +0000
+Message-ID: <BYAPR21MB16880CC7D849D59FF33611DCD7B99@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <1677151745-16521-1-git-send-email-ssengar@linux.microsoft.com>
+ <1677151745-16521-6-git-send-email-ssengar@linux.microsoft.com>
+ <ZApMqWPWgWXIju/g@liuwe-devbox-debian-v2>
+ <20230310053451.GA9705@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <BYAPR21MB1688FD8EA30E876F22560645D7B89@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <20230312173934.GA32212@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+In-Reply-To: <20230312173934.GA32212@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=02bc9be9-d3b5-4d87-9b5e-02f85c58bb93;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-13T02:21:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|BL1PR21MB3139:EE_
+x-ms-office365-filtering-correlation-id: d9aa0e5a-7820-4e5f-0f56-08db236a7244
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aWwJGoeHBFh9k5CDJKBtKQR0aP3yZzFjUPqCUHzn98yeZWSucG2LS595eQBLrsZwuwLpd15MUiRFkmKQ3nnDB8HZ3Dt72yzPPBir52hYnCmfne7LeWNfefhxTplLjp4Tyx+iVgS9ndqSrBU3Vppy7HiMkdtr85PIpiRt4ijyLgZjcFbXsBVjcWpgHoV0geUG5V5UbWWDXOXs2vrDOpq6uhdmhJQ+9uCGb/rBxksUDOoAQiMVL2ejzS4inr3hkQ8YWiRFh2UKfykB4Ty/2HlIpR0T9vtl6xUaM1UlVdjUqRJ1bnOE3B655JF+AN9JJ1dhlogXxVwW1KJt9ybNYLX9vmsLlc9Ec+2y0O9bjqDFCFvXuNbpQAd4qI+7vZrcMmgYKX+n6cx9VZIIXck9TdspNaSmVd3ccIaxLmFeqxh0ECcImsyROqaZ4Z0H/uUTLa/TF7Ai7fMkS8tva2AoJtaPdRGEdrd0vaMHk8brvz4X9Ne8+tS6D646eXpnl5tCWHUMaERXtVJXvapcYHCKCMjY1HDsdkc6ArWp0Yn7xyyhOVzJf2IdH0HTuQWKCZPZRUxk4BXRKC8SP6HRLF9XpVd/uQxYp+9oKqLbG2kp9G3QntcFQOGnMECaPtrr0CSdFgDVJQn616r7wadgWd83LUJTtLmBPoZ6j74oIAZuIJflDVO1lnI0W7Kgzi1lA6PkQZrC/buDO38Nfh1Ibq814V34T0TA6dYQvn0Zw1tuc1bQO98=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(39860400002)(136003)(396003)(376002)(346002)(451199018)(8936002)(6862004)(7416002)(5660300002)(41300700001)(4326008)(52536014)(55016003)(33656002)(86362001)(38070700005)(122000001)(38100700002)(82960400001)(82950400001)(2906002)(8990500004)(966005)(83380400001)(10290500003)(478600001)(71200400001)(186003)(7696005)(9686003)(26005)(6506007)(54906003)(76116006)(66899018)(316002)(66946007)(66556008)(8676002)(66446008)(66476007)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?7JumcUSoK24fPD+gsg1QpF3KGQzvDRBcRQKH6HIffNB+7xcpHugpM37tcTKf?=
+ =?us-ascii?Q?meas0wf5aBEleYW/vSuEPfo97suU8CLdcHAduaW6dL0Q5Vk+KnLnVpgK8+TL?=
+ =?us-ascii?Q?X1ASQr6aqM/eedzcTr5SAcyHffAorz8JR7rkblK74z9f6TH086HnTUYglGhe?=
+ =?us-ascii?Q?o/d7nabepDqrWZIV/RL8lv2PvD2SQVyKFtxteHEfz4nvnVVpNk71GvnR0kh9?=
+ =?us-ascii?Q?ycHiluHYSG+SIz9AYmvF63CY6Lbj+OxIyAp/85Dbrnn8FfVYcqCkt+ulfyQE?=
+ =?us-ascii?Q?LFqyjtzhKuh0wXiXtCFR1/wYvPpJZ3xCR+cODTt0JgOZ0sUFinpdIwnth+oJ?=
+ =?us-ascii?Q?iBf7hbpxmpfrmJjyNeiBpuEbg3whbx7DrWVptuSf/MONGR/oWfpI7+H+ufqO?=
+ =?us-ascii?Q?xROvnIhj/+3wQlgSm6yN7W2xcLXmQNJ3v26VMnuka384/Db1SHF4IXrXYeJj?=
+ =?us-ascii?Q?IqV0b+o+W+kWbG4MjG82akNqWf1Cean2r63o2QoT/L9Hbmckj4PYV6g/Y66V?=
+ =?us-ascii?Q?yhkRbJYioH+FVSj4rnma6A4pwLCg1gCZPIKFynNcDrOcoJpESd0LFmN7AycH?=
+ =?us-ascii?Q?BzFnkRpehPSFFBXyJWmtF4169a0qV83OSIG9Ow0UTtU6FKwwunwTjLroFJ3P?=
+ =?us-ascii?Q?S6n31util0wnsOt4uWy6gu820uJUr/HUlHj9bzcHaGWS9eG8auQZ5qtRReuE?=
+ =?us-ascii?Q?x478ZgzP3bzbh7XyesXLQ9DkFl2VsCqsPii6152Up/er/a4XMxWfM5IWGWdB?=
+ =?us-ascii?Q?iXdPUBIDeeyfuTuLJg/ij1xQJ0zSthPdUMwyDgaCOy9gDVo4Bq7EREyQ8T93?=
+ =?us-ascii?Q?F+aDOvd1JJDtPxunAKcqdhhuPswjspnn9EiZLm+twIJ5/kOr+8eCjUoY55Ha?=
+ =?us-ascii?Q?9qp0nJWXM4/papteh0pLTEfVHS6ajCOTE2pLY9v/htygmW9zHf3718jurWPv?=
+ =?us-ascii?Q?Bl+KJ01vqAUuOxKk/y3SRl+M133XH8mLRhPfDJvDEUqaZqwdsZS0i6keAvso?=
+ =?us-ascii?Q?U1zwHd3tsayiB2NpvG5Y2id6JDBdoILVa1jCTRZ8TszARAVRp6SlatysTMh7?=
+ =?us-ascii?Q?yn9cmZo96dg96PToGphbVNuKLvppHYpmlqFTBdUQ0TYx5VypyZMyHcmSTh0x?=
+ =?us-ascii?Q?ZaSeTjUsOeGUYvryf73WEa7UCPqjAOeMTVYQ9GDrSytS2a4J6rA90djxp8mT?=
+ =?us-ascii?Q?gDjcMx9w/CNSIXbNyvq0OL8NJARmorRg+LbAb058dft1xapmrsH9piMbLVOp?=
+ =?us-ascii?Q?gihn3/XZTEM/1w80bR6jMIV28vkO8QfDnhMRdZG6qguch5T4miwCgbS9Hmcr?=
+ =?us-ascii?Q?oC0iSjtblKuMJEsGSNq2MLWC21PxcX6cXur7rHzWvHGHxupgBRzlnz6p92wE?=
+ =?us-ascii?Q?cvr0wkqECKODetlH16iKYX3GSAhoRspEKJFINmFtia1UC2OixSI1CedMopR1?=
+ =?us-ascii?Q?BYv0b5Tx1lYPStq0eG/PojYI2Tuqw0Bkt5Za4Yw59WH4QbpqahPAZafvQ8lV?=
+ =?us-ascii?Q?v7Nl/N5mQ+njVoB0+u19+vVyeZ+VKQIvoH5uLynvVR2F4yrwX1Hqdw4KvHgV?=
+ =?us-ascii?Q?tvbzjGrh39be7f2RmpMmUPuoE4SKeMNs6boeRDFJP35wOyZL+EUi8KEyZe1B?=
+ =?us-ascii?Q?4g=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1678386957-18016-3-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9aa0e5a-7820-4e5f-0f56-08db236a7244
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2023 02:27:09.3466
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 67x2aOxfSy47X2M7BljbNcQoOKwNwyWi3gPM8qDv/5UhHz0Tm/WxIWg7cAm5VKz22HE3aCUpxtXuxGjbD+a+i4gn57L0DTHwaLAwOhn388w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3139
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 10:35:57AM -0800, Saurabh Sengar wrote:
-> Virtual Trust Levels (VTL) helps enable Hyper-V Virtual Secure Mode (VSM)
-> feature. VSM is a set of hypervisor capabilities and enlightenments
-> offered to host and guest partitions which enable the creation and
-> management of new security boundaries within operating system software.
-> VSM achieves and maintains isolation through VTLs.
-> 
-> Add early initialization for Virtual Trust Levels (VTL). This includes
-> initializing the x86 platform for VTL and enabling boot support for
-> secondary CPUs to start in targeted VTL context. For now, only enable
-> the code for targeted VTL level as 2.
-> 
-> When starting an AP at a VTL other than VTL 0, the AP must start directly
-> in 64-bit mode, bypassing the usual 16-bit -> 32-bit -> 64-bit mode
-> transition sequence that occurs after waking up an AP with SIPI whose
-> vector points to the 16-bit AP startup trampoline code.
-> 
-> This commit also moves hv_get_nmi_reason function to header file, so
-> that it can be reused by VTL.
-> 
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> ---
->  arch/x86/Kconfig                   |  24 +++
->  arch/x86/hyperv/Makefile           |   1 +
->  arch/x86/hyperv/hv_vtl.c           | 227 +++++++++++++++++++++++++++++
->  arch/x86/include/asm/hyperv-tlfs.h |  75 ++++++++++
->  arch/x86/include/asm/mshyperv.h    |  14 ++
->  arch/x86/kernel/cpu/mshyperv.c     |   6 +-
->  include/asm-generic/hyperv-tlfs.h  |   4 +
->  7 files changed, 346 insertions(+), 5 deletions(-)
->  create mode 100644 arch/x86/hyperv/hv_vtl.c
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 453f462f6c9c..b9e52ac9c9f9 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -782,6 +782,30 @@ menuconfig HYPERVISOR_GUEST
->  
->  if HYPERVISOR_GUEST
->  
-> +config HYPERV_VTL
-> +	bool "Enable VTL"
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Sunday, Marc=
+h 12, 2023 10:40 AM
+>=20
+> On Sun, Mar 12, 2023 at 01:08:02PM +0000, Michael Kelley (LINUX) wrote:
+> > From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Thursday=
+, March 9,
+> 2023 9:35 PM
+> > >
+> > > On Thu, Mar 09, 2023 at 09:16:25PM +0000, Wei Liu wrote:
+> > > > On Thu, Feb 23, 2023 at 03:29:05AM -0800, Saurabh Sengar wrote:
+> >
+> > [snip]
+> >
+> > > > >
+> > > > >  static int vmbus_platform_driver_probe(struct platform_device *p=
+dev)
+> > > > >  {
+> > > > > +#ifdef CONFIG_ACPI
+> > > > >  	return vmbus_acpi_add(pdev);
+> > > > > +#endif
+> > > >
+> > > > Please use #else here.
+> > > >
+> > > > > +	return vmbus_device_add(pdev);
+> > > >
+> > > > Is there going to be a configuration that ACPI and OF are available=
+ at
+> > > > the same time? I don't see they are marked as mutually exclusive in=
+ the
+> > > > proposed KConfig.
+> > >
+> > > Initially, the device tree functions was included in "#else" section =
+after
+> > > the "#ifdef CONFIG_ACPI" section. However, it was subsequently remove=
+d to
+> > > increase the coverage for CI builds.
+> > >
+> > > Ref: https://lkml.org/lkml/2023/2/7/910
+> > >
+> >
+> > I think the point here is that it is possible (and even likely on ARM64=
+?) to
+> > build a kernel where CONFIG_ACPI and CONFIG_OF are both "Y".   So the
+> > code for ACPI and OF is compiled and present in the kernel image.  Howe=
+ver,
+> > for a particular Linux boot on a particular hardware or virtual platfor=
+m,
+> > only one of the two will be enabled.   I specifically mention a particu=
+lar Linux
+> > kernel boot because there's a kernel boot line option that can force di=
+sabling
+> > ACPI.  Ideally, the VMBus code should work if both CONFIG_ACPI and
+> > CONFIG_OF are enabled in the kernel image, and it would determine at
+> > runtime which to use. This approach meets the goals Rob spells out.
+> >
+> > There's an exported global variable "acpi_disabled" that is set correct=
+ly
+> > depending on CONFIG_ACPI and the kernel boot line option (and perhaps i=
+f
+> > ACPI is not detected at runtime during boot -- I didn't check all the d=
+etails).
+> > So the above could be written as:
+> >
+> > 	if (!acpi_disabled)
+> > 		return vmbus_acpi_add(pdev);
+> > 	else
+> > 		return vmbus_device_add(pdev);
+> >
+> > This avoids the weird "two return statements in a row" while preferring
+> > ACPI over OF if ACPI is enabled for a particular boot of Linux.
+> >
+> > I'm not sure if you'll need a stub for vmbus_acpi_add() when CONFIG_ACP=
+I=3Dn.
+> > In that case, acpi_disabled is #defined to be 1, so the compiler should=
+ just
+> > drop the call to vmbus_acpi_add() entirely and no stub will be needed. =
+ But
+> > you'll need to confirm.
+>=20
+> Thanks for suggesting acpi_disabled, definitely this looks better. Howeve=
+r,
+> we need a dummy stub for vmbus_acpi_add in case of CONFIG_ACPI=3Dn, as co=
+mpiler
+> doesn't take out vmbus_acpi_add reference completely for CONFIG_ACPI=3Dn.
 
-This is not to "Enable VTL". VTL is always there with or without this
-option. This option is to enable Linux to run in VTL2.
+Fair enough.  I wasn't sure ....
 
-I would suggest it to be changed to HYPERV_VTL2_MODE or something more
-explicit.
+>=20
+> >
+> > Also just confirming, it looks like vmbus_device_add() compiles correct=
+ly if
+> > CONFIG_OF=3Dn.  There are enough stubs in places so that you don't need=
+ an
+> > #ifdef CONFIG_OF around vmbus_device_add() like is needed for
+> > vmbus_acpi_add().
+>=20
+> Yes, I tested this scenario.
+>=20
+> >
+> > > > >
+> > > > > +static const __maybe_unused struct of_device_id vmbus_of_match[]=
+ =3D {
+> > > > > +	{
+> > > > > +		.compatible =3D "microsoft,vmbus",
+> > > > > +	},
+> > > > > +	{
+> > > > > +		/* sentinel */
+> > > > > +	},
+> > > > > +};
+> > > > > +MODULE_DEVICE_TABLE(of, vmbus_of_match);
+> > > > > +
+> > > > > +#ifdef CONFIG_ACPI
+> > > > >  static const struct acpi_device_id vmbus_acpi_device_ids[] =3D {
+> > > > >  	{"VMBUS", 0},
+> > > > >  	{"VMBus", 0},
+> > > > >  	{"", 0},
+> > > > >  };
+> > > > >  MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
+> > > > > +#endif
+> >
+> > Couldn't the bracketing #ifdef be dropped and add __maybe_unused, just
+> > as you've done with vmbus_of_match?   ACPI_PTR() is defined to return N=
+ULL
+> > if CONFIG_ACPI=3Dn, just like with of_match_ptr() and CONFIG_OF.
+>=20
+> I kept #ifdef so that all the acpi code is treated equally. However, I am
+> fine to use __maybe_unused, will fix this in next version.
 
-HYPERV_VTL is better reserved to guard code which makes use of VTL
-related functionality -- if there is such a need in the future.
+OK, I see your point about a different consistency, so this could go either=
+ way. :-)
+I tend to prefer getting rid of #ifdef's whenever possible.  Since there's =
+a valid
+argument either way, let's prefer the approach that eliminates the #ifdef.
 
-> +	depends on X86_64 && HYPERV
-> +	default n
-> +	help
-> +	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
-> +	  enlightenments offered to host and guest partitions which enables
-> +	  the creation and management of new security boundaries within
-> +	  operating system software.
-> +
-> +	  VSM achieves and maintains isolation through Virtual Trust Levels
-> +	  (VTLs). Virtual Trust Levels are hierarchical, with higher levels
-> +	  being more privileged than lower levels. VTL0 is the least privileged
-> +	  level, and currently only other level supported is VTL2.
+Michael=20
 
-Please be consistent as to VTL 0 vs VTL0. You use one form here and the
-other form in the next paragraph.
-
-> +
-> +	  Select this option to build a Linux kernel to run at a VTL other than
-> +	  the normal VTL 0, which currently is only VTL 2.  This option
-> +	  initializes the x86 platform for VTL 2, and adds the ability to boot
-> +	  secondary CPUs directly into 64-bit context as required for VTLs other
-> +	  than 0.  A kernel built with this option must run at VTL 2, and will
-> +	  not run as a normal guest.
-> +
-> +	  If unsure, say N
-> +
->  config PARAVIRT
->  	bool "Enable paravirtualization code"
->  	depends on HAVE_STATIC_CALL
-> diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
-> index 5d2de10809ae..a538df01181a 100644
-> --- a/arch/x86/hyperv/Makefile
-> +++ b/arch/x86/hyperv/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-y			:= hv_init.o mmu.o nested.o irqdomain.o ivm.o
->  obj-$(CONFIG_X86_64)	+= hv_apic.o hv_proc.o
-> +obj-$(CONFIG_HYPERV_VTL)	+= hv_vtl.o
->  
->  ifdef CONFIG_X86_64
->  obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
-> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> new file mode 100644
-> index 000000000000..0da8b242eb8b
-> --- /dev/null
-> +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -0,0 +1,227 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2023, Microsoft Corporation.
-> + *
-> + * Author:
-> + *   Saurabh Sengar <ssengar@microsoft.com>
-> + */
-> +
-> +#include <asm/apic.h>
-> +#include <asm/boot.h>
-> +#include <asm/desc.h>
-> +#include <asm/i8259.h>
-> +#include <asm/mshyperv.h>
-> +#include <asm/realmode.h>
-> +
-> +extern struct boot_params boot_params;
-> +static struct real_mode_header hv_vtl_real_mode_header;
-> +
-> +void __init hv_vtl_init_platform(void)
-> +{
-> +	pr_info("Initializing Hyper-V VTL\n");
-> +
-
-We can be more explicit here, "Linux runs in Hyper-V Virtual Trust Level 2".
-
-If we go with this, this and other function names should be renamed to
-something more explicit too.
-
-> +	x86_init.irqs.pre_vector_init = x86_init_noop;
-> +	x86_init.timers.timer_init = x86_init_noop;
-> +
-> +	x86_platform.get_wallclock = get_rtc_noop;
-> +	x86_platform.set_wallclock = set_rtc_noop;
-> +	x86_platform.get_nmi_reason = hv_get_nmi_reason;
-> +
-> +	x86_platform.legacy.i8042 = X86_LEGACY_I8042_PLATFORM_ABSENT;
-> +	x86_platform.legacy.rtc = 0;
-> +	x86_platform.legacy.warm_reset = 0;
-> +	x86_platform.legacy.reserve_bios_regions = 0;
-> +	x86_platform.legacy.devices.pnpbios = 0;
-> +}
-> +
-[...]
-> +static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
-> +{
-> +	u64 status;
-> +	int ret = 0;
-> +	struct hv_enable_vp_vtl *input;
-> +	unsigned long irq_flags;
-> +
-> +	struct desc_ptr gdt_ptr;
-> +	struct desc_ptr idt_ptr;
-> +
-> +	struct ldttss_desc *tss;
-> +	struct ldttss_desc *ldt;
-> +	struct desc_struct *gdt;
-> +
-> +	u64 rsp = initial_stack;
-> +	u64 rip = (u64)&hv_vtl_ap_entry;
-> +
-> +	native_store_gdt(&gdt_ptr);
-> +	store_idt(&idt_ptr);
-> +
-> +	gdt = (struct desc_struct *)((void *)(gdt_ptr.address));
-> +	tss = (struct ldttss_desc *)(gdt + GDT_ENTRY_TSS);
-> +	ldt = (struct ldttss_desc *)(gdt + GDT_ENTRY_LDT);
-> +
-> +	local_irq_save(irq_flags);
-> +
-> +	input = (struct hv_enable_vp_vtl *)(*this_cpu_ptr(hyperv_pcpu_input_arg));
-
-Not a big deal, but you don't actually need to cast here.
-
-[...]
-> +
-> +static int hv_vtl_apicid_to_vp_id(u32 apic_id)
-> +{
-> +	u64 control;
-> +	u64 status;
-> +	unsigned long irq_flags;
-> +	struct hv_get_vp_from_apic_id_in *input;
-> +	u32 *output, ret;
-> +
-> +	local_irq_save(irq_flags);
-> +
-> +	input = (struct hv_get_vp_from_apic_id_in *)(*this_cpu_ptr(hyperv_pcpu_input_arg));
-
-No need to cast here.
-
-[...]
-> +struct hv_x64_table_register {
-> +	__u16 pad[3];
-> +	__u16 limit;
-> +	__u64 base;
-> +} __packed;
-> +
-> +struct hv_init_vp_context_t {
-
-Drop the _t suffix please.
-
-Thanks,
-Wei.
+>=20
+> Regards,
+> Saurabh
+>=20
+> >
+> > > > >
+> > > > >  /*
+> > > > >   * Note: we must use the "no_irq" ops, otherwise hibernation can=
+ not work with
+> > > > > @@ -2677,6 +2729,7 @@ static struct platform_driver vmbus_platfor=
+m_driver =3D {
+> > > > >  	.driver =3D {
+> > > > >  		.name =3D "vmbus",
+> > > > >  		.acpi_match_table =3D ACPI_PTR(vmbus_acpi_device_ids),
+> > > > > +		.of_match_table =3D of_match_ptr(vmbus_of_match),
+> > > > >  		.pm =3D &vmbus_bus_pm,
+> > > > >  		.probe_type =3D PROBE_FORCE_SYNCHRONOUS,
+> > > > >  	}
+> > > > > --
+> > > > > 2.34.1
+> > > > >
