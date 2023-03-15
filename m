@@ -2,397 +2,155 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 674056BAFB7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Mar 2023 12:55:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 685546BB7F0
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Mar 2023 16:35:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231166AbjCOLzj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 15 Mar 2023 07:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
+        id S232233AbjCOPez (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 15 Mar 2023 11:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbjCOLzi (ORCPT
+        with ESMTP id S232760AbjCOPeu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 15 Mar 2023 07:55:38 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F0B879B2D;
-        Wed, 15 Mar 2023 04:55:33 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-        id 036352057015; Wed, 15 Mar 2023 04:55:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 036352057015
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1678881333;
-        bh=DI49uRvbB5da/uJ7V+8Surl8hQV8kIq2ta6EEmC3qT0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=idYipUzV+UJoJZNenfFmkuVCm4m4d3csNeSZ/SQtBLwwtFQxaJVlHL8IpNoZ+lJML
-         8MhY7rKwpAvVHjZZK2uX2PsiKSkBt1MhT/LiJJ4A/Lhs9c4RypKepCLloDzQausdco
-         jlV+9x2FTn96oHup5ngmXBfYmJRW44GQFSy3lgj0=
-From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH v2] net: mana: Add new MANA VF performance counters for easier troubleshooting
-Date:   Wed, 15 Mar 2023 04:55:13 -0700
-Message-Id: <1678881313-20468-1-git-send-email-shradhagupta@linux.microsoft.com>
+        Wed, 15 Mar 2023 11:34:50 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021015.outbound.protection.outlook.com [52.101.57.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F8646085;
+        Wed, 15 Mar 2023 08:34:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C38wHomTncQxRepBq5+u1Kps7seX7KK7xlIMHRXhC9aaYxK1+0VOM4hAgeadQQYnnPuFe7sBblQmaiLgKSM5YvmmtSP6oNexvr/DxWnHVaIlRN580b1JqjV2l47eyTDNQWpZUx++9wuBVIV15y7di1ZQbujEA56TAsoeU45uyqHj7p0ipVgjT2h2NAndDUfe6FV2aLLzEzlD3VCSJjkcJZ0mPY/4S8+gC1m52tsteVLSuwfFvJ91srAni2hbSwtg0Hyg8bKF5e475IUBpjOF0tFDTrM9QUS/QC2ATN5nOyunQ4wUJlIpmDhgEgDPj3JbNF/29vyyTTG7pJgVuyHSRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TEvTwbSm+SYNjj3V6awTABgkLvLLqCZ5NqjuTGIdrs8=;
+ b=HlGcGUtuL8RWgPqlSoC1AsRL107FuiLKJWNPjFMidgIae/4tUPOjETxwIfzdrES1ppnaVgHR7eZMSpkTzj7u1B/VaLXlG6i5A4k5te9s+fxFG+zBTkJB2Q1x193vgN4g0v/OL4BykmFFDNKa+Z/as7TyEavCWGlYPZXutN3JdurWVF0cIr6YHub32LTz3sncT6lZCyIpZElYhAY5QhDY8d9MLBfzub052VGld1gjf4TRo/CUWwsj0ONkI7O3F+STqlbBVsHfJgoyJkpdLtAvOE4Dbs8qHph2uU8EhRiCLXgH+pp0/mvw5dpCaHlPWigNGwYVDn98OzGd26bm2Zn9Hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TEvTwbSm+SYNjj3V6awTABgkLvLLqCZ5NqjuTGIdrs8=;
+ b=FmpjfXlbf2H3RG6pXqSq7W0+yHDxL9mGxEFPkns8mUJjt0CJ5lbDkoUCdUB7bktyNeJSW5g9Dm/kUTBBbfyLNJLWxU2wMJMqDDrskM/+OubQSGaD7hRfve0pJV0tRgrEo0l9epeJ3zCiZkTL/OvkXnMb0n6roOalp+su8pThGFs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by CO1PR21MB1316.namprd21.prod.outlook.com (2603:10b6:303:153::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.3; Wed, 15 Mar
+ 2023 15:34:38 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::caf1:81fb:4297:bf17]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::caf1:81fb:4297:bf17%5]) with mapi id 15.20.6222.007; Wed, 15 Mar 2023
+ 15:34:35 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     kys@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH 1/1] x86/hyperv: Block root partition functionality in a Confidential VM
+Date:   Wed, 15 Mar 2023 08:34:13 -0700
+Message-Id: <1678894453-95392-1-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR04CA0322.namprd04.prod.outlook.com
+ (2603:10b6:303:82::27) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|CO1PR21MB1316:EE_
+X-MS-Office365-Filtering-Correlation-Id: 98d98690-7a9f-46bd-a482-08db256ac800
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GWTXH9isjdgMrXDEnR2t5tVyswFDJQELpCsFpCyjImI98V3/QCn/rFj62fJIMbJ8LDd2woVtlf0LTrA7ZQxOFHXd8hTpb/saHvdT+212DkWPOvUXxdW7NMlv5rlaWrEYb4WksmRxrKgn8sgD9dwTbYqvEXtFpPon0ggDWf4ZxsSJvfpPlOjyp2v4qmpG05y45cb1u/kNITt5dNTnpVID4TiWJbspFbc0jXV1McujfhJyEiArfLnhw/zB2rv9XXbDN/lhdO2cF/m8+Nq7MhZFCeObjSXuoaqjeRxa93CFcynhy4gobXjRJ6tM6uvghfZ+LLRpYMTsL1OTK4c0y2NjldfenzTXjQGOa5BTfaxCUKb+iu2PAkjdOt5YjFp5dqt9w8ol/ff6TsdOfq91Ctpr0CsrRYD9cUq6qROp2qNFz6okr3yP4iFPgfy5m3uBIbwlhuGp0Vcx/XMaTtiYimLCpoHj2MkwtveWCCMB/A8bPNbRdIFQGhn1PhSmKZB4zkSWN9qSxS1X01ftl6wtbU3fCLl/qkxQUPF+ap0+cbtvurGsywXYEchvAqxpE8O8ZGVi4j5s7/lO9EDLw91IuoA1onTGeDF01cLn78vBXw2mlLsGTuDVtmGpiguPDpobxlcKkc10IJqTrf4GLLUcPmA80twu4x7GeqP7I01ks7eg+FWPEVmuDOhsr/9tNCf0Hq3C3kKXOsbICUAU2dJY54fRByt0lviExiPC/4f7R1NNDX2MWZZZ9/Vry14V7tu3j7qhdoSGsIXczVJ9oehTHTLZdQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(39860400002)(396003)(376002)(346002)(366004)(451199018)(36756003)(5660300002)(83380400001)(8676002)(66476007)(6512007)(478600001)(2616005)(26005)(10290500003)(107886003)(6666004)(52116002)(6506007)(6486002)(66946007)(66556008)(316002)(4326008)(41300700001)(38100700002)(921005)(86362001)(38350700002)(82960400001)(82950400001)(186003)(2906002)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HpBp7+PYZShHAnemmfcJGr9MpOSCI5eGSuR8rAWiTTsddZ8jxo5iFnIQ3oB1?=
+ =?us-ascii?Q?20q3cZEbXDPtAHdhOjIbQ1wrjPec7oHwUEiVGyIN92x/QqAq0R+a8QJVtSQW?=
+ =?us-ascii?Q?VriuH9STb5TUPgvGbSmAQ9ZTZaCfod8l7Zmh88sRuA71kq7TXgoNK+y2VE0s?=
+ =?us-ascii?Q?nXgb7YOFrY27K9RrhusoigDwF7KkCyS7sIJaDgzTCU8nluNbEbvfVD7OQGAR?=
+ =?us-ascii?Q?ZAets9FA+u7XKslYVjf0Q5ZBJRQ8S0knnbANEFthl/VlXYGr7LZbDBfDeaDJ?=
+ =?us-ascii?Q?+xUQqRMm/uoLfdsUWZQte3qWhAdeR4N8U6amD1doqFmbzLzbHOuDHqT7Bur2?=
+ =?us-ascii?Q?cMRfmzHuanEXC5CwWfGs85j8LvzfMVeTqrEGOQtSgnENFYL1u+GuWRPFeboz?=
+ =?us-ascii?Q?Xhrf1Q1m92oD6ZyfvllKChR3AjMBgKYN2MMufvK74ssWPdNqqwttLoM1PxM5?=
+ =?us-ascii?Q?6ZtzkWi7IAmQa46NzrbAfzhtuaCr1jl+yMNJXzyHMxFuEtHJ9sASQrFuLC9W?=
+ =?us-ascii?Q?siuI0VFBfsVwnJm3n+IoSlEbqe1fgSeMdjITUuWA96CpfLXy9xfT5vdHN/oi?=
+ =?us-ascii?Q?TPL8USTNfCH0sZao6U+7smm7srvsDp+RtYyaXYnqw2BG5MHs7lhW8x2nluie?=
+ =?us-ascii?Q?Rc42FnZrEh2iFdH7eLL6bxdG6OT/1x2hczQJDO2WGyvStXCbTsfXNas695XK?=
+ =?us-ascii?Q?Gq13Bnsyj30HBMahO+icFRPjRrqNvsGoowQSNe3NeXeM1pllIgHkSTiLW536?=
+ =?us-ascii?Q?FI35FtIwJ54lrRjievg9L1igQilwDxsgMARyU1oODUpBVApNJZYkoUvSS/oD?=
+ =?us-ascii?Q?q2xCDUxfMsXVHCVRAb3kPMgiiwxXYpMZzLMsqOyc/ncfvnJ7W2fOPF8ds14z?=
+ =?us-ascii?Q?GlatAifg+m9GOF4BLIOzFOf7eZ66Fak940JuCW2KnIpSjTMFd5nkhIeRorPR?=
+ =?us-ascii?Q?eFm24Y6Mvdl7xL4c6BRtDUdCa1w50PCI9/xF+VEHtH0fOIJV+ONVVg+JvkJY?=
+ =?us-ascii?Q?SjoYs2oDnnNlSqfwx3Jl90c+NozebUKneEvM8Kvl49272OzUs1bcYMgocBPs?=
+ =?us-ascii?Q?+Idg7wN/8qHD/I9v23tIWv2ufqgYdljhZlFbDhN61ZELHNi1vfw7iLHods9e?=
+ =?us-ascii?Q?0tO/jY1spHn6Bwaoe2hVE0+p/bD0/IRHHktYYFbIyKVQW5aHi1gHzgqqVq79?=
+ =?us-ascii?Q?M9/+RfOmnXhTnXw42oHqOGFmrRHpWC6uu4CYqqHSuCl/MtNHEzhoY3J8Gm/d?=
+ =?us-ascii?Q?Yv6T7wepwRQxLIC0SI2wpUvKTgs40eGi3TDU6Hd89R23khOjOFzvQ3rwrTQe?=
+ =?us-ascii?Q?7o80VfbKCxmL41coJui/A9b5jEZRrGi+WD2droNMYr/ap2CSRdP0kk3nZK0n?=
+ =?us-ascii?Q?fChJkOD0m+EVPiAL4/5oSdxivBRW/6ap1rfCc5WM1I/r+Cc+7KzYkjpH0Zn7?=
+ =?us-ascii?Q?aj1eOMYhecG0TSSYmCnowSICAeCOteNTOQxlpJ1VwVA3K9Am/1m1+h3Konuf?=
+ =?us-ascii?Q?6K684kYwlsC/g1jCOmjx859Cye7BSTrWJ1mvUdkwHTYJG0S65xEFuXeWYJ6O?=
+ =?us-ascii?Q?F0x/is9DZSZ4v0BfhfouaXkJwOP8UQI1mIiIhF4kmvahqgxEBnH6ZAxbcVaZ?=
+ =?us-ascii?Q?Yg=3D=3D?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98d98690-7a9f-46bd-a482-08db256ac800
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2023 15:34:35.6854
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z6jFNnBtsG8GM8BmaV4VG9t04MvC26ZtdiDa7Ij4naOrgbnbYYgxRFpsP4ZZJcFM7Ujxur5KjiNa7jTqhegesQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR21MB1316
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Extended performance counter stats in 'ethtool -S <interface>' output
-for MANA VF to facilitate troubleshooting.
+Hyper-V should never specify a VM that is a Confidential VM and also
+running in the root partition.  Nonetheless, explicitly block such a
+combination to guard against a compromised Hyper-V maliciously trying to
+exploit root partition functionality in a Confidential VM to expose
+Confidential VM secrets. No known bug is being fixed, but the attack
+surface for Confidential VMs on Hyper-V is reduced.
 
-Tested-on: Ubuntu22
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 ---
+ arch/x86/kernel/cpu/mshyperv.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Changes in v2:
-* fixed the tso_bytes stat calculation
-* fixed RCT in variable declarations
-
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 62 ++++++++++++++++++-
- .../ethernet/microsoft/mana/mana_ethtool.c    | 52 +++++++++++++++-
- include/net/mana/mana.h                       | 18 ++++++
- 3 files changed, 128 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 6120f2b6684f..492474b4d8aa 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -156,6 +156,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	struct mana_txq *txq;
- 	struct mana_cq *cq;
- 	int err, len;
-+	u16 ihs;
- 
- 	if (unlikely(!apc->port_is_up))
- 		goto tx_drop;
-@@ -166,6 +167,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	txq = &apc->tx_qp[txq_idx].txq;
- 	gdma_sq = txq->gdma_sq;
- 	cq = &apc->tx_qp[txq_idx].tx_cq;
-+	tx_stats = &txq->stats;
- 
- 	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
- 	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
-@@ -179,10 +181,17 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 
- 	pkg.tx_oob.s_oob.pkt_fmt = pkt_fmt;
- 
--	if (pkt_fmt == MANA_SHORT_PKT_FMT)
-+	if (pkt_fmt == MANA_SHORT_PKT_FMT) {
- 		pkg.wqe_req.inline_oob_size = sizeof(struct mana_tx_short_oob);
--	else
-+		u64_stats_update_begin(&tx_stats->syncp);
-+		tx_stats->short_pkt_fmt++;
-+		u64_stats_update_end(&tx_stats->syncp);
-+	} else {
- 		pkg.wqe_req.inline_oob_size = sizeof(struct mana_tx_oob);
-+		u64_stats_update_begin(&tx_stats->syncp);
-+		tx_stats->long_pkt_fmt++;
-+		u64_stats_update_end(&tx_stats->syncp);
-+	}
- 
- 	pkg.wqe_req.inline_oob_data = &pkg.tx_oob;
- 	pkg.wqe_req.flags = 0;
-@@ -232,9 +241,35 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 						 &ipv6_hdr(skb)->daddr, 0,
- 						 IPPROTO_TCP, 0);
- 		}
-+
-+		if (skb->encapsulation) {
-+			ihs = skb_inner_tcp_all_headers(skb);
-+			u64_stats_update_begin(&tx_stats->syncp);
-+			tx_stats->tso_inner_packets++;
-+			tx_stats->tso_inner_bytes += skb->len - ihs;
-+			u64_stats_update_end(&tx_stats->syncp);
-+		} else {
-+			if (skb_shinfo(skb)->gso_type & SKB_GSO_UDP_L4) {
-+				ihs = skb_transport_offset(skb) + sizeof(struct udphdr);
-+			} else {
-+				ihs = skb_tcp_all_headers(skb);
-+				if (ipv6_has_hopopt_jumbo(skb))
-+					ihs -= sizeof(struct hop_jumbo_hdr);
-+			}
-+
-+			u64_stats_update_begin(&tx_stats->syncp);
-+			tx_stats->tso_packets++;
-+			tx_stats->tso_bytes += skb->len - ihs;
-+			u64_stats_update_end(&tx_stats->syncp);
-+		}
-+
- 	} else if (skb->ip_summed == CHECKSUM_PARTIAL) {
- 		csum_type = mana_checksum_info(skb);
- 
-+		u64_stats_update_begin(&tx_stats->syncp);
-+		tx_stats->csum_partial++;
-+		u64_stats_update_end(&tx_stats->syncp);
-+
- 		if (csum_type == IPPROTO_TCP) {
- 			pkg.tx_oob.s_oob.is_outer_ipv4 = ipv4;
- 			pkg.tx_oob.s_oob.is_outer_ipv6 = ipv6;
-@@ -254,8 +289,12 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		}
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index ff348eb..ac630ec 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -356,12 +356,16 @@ static void __init ms_hyperv_init_platform(void)
+ 	 * To mirror what Windows does we should extract CPU management
+ 	 * features and use the ReservedIdentityBit to detect if Linux is the
+ 	 * root partition. But that requires negotiating CPU management
+-	 * interface (a process to be finalized).
++	 * interface (a process to be finalized). For now, use the privilege
++	 * flag as the indicator for running as root.
+ 	 *
+-	 * For now, use the privilege flag as the indicator for running as
+-	 * root.
++	 * Hyper-V should never specify running as root and as a Confidential
++	 * VM. But to protect against a compromised/malicious Hyper-V trying
++	 * to exploit root behavior to expose Confidential VM memory, ignore
++	 * the root partition setting if also a Confidential VM.
+ 	 */
+-	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_CPU_MANAGEMENT) {
++	if ((ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
++	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+ 		hv_root_partition = true;
+ 		pr_info("Hyper-V: running as root partition\n");
  	}
- 
--	if (mana_map_skb(skb, apc, &pkg))
-+	if (mana_map_skb(skb, apc, &pkg)) {
-+		u64_stats_update_begin(&tx_stats->syncp);
-+		tx_stats->mana_map_err++;
-+		u64_stats_update_end(&tx_stats->syncp);
- 		goto free_sgl_ptr;
-+	}
- 
- 	skb_queue_tail(&txq->pending_skbs, skb);
- 
-@@ -1038,6 +1077,8 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
- 	if (comp_read < 1)
- 		return;
- 
-+	apc->eth_stats.tx_cqes = comp_read;
-+
- 	for (i = 0; i < comp_read; i++) {
- 		struct mana_tx_comp_oob *cqe_oob;
- 
-@@ -1064,6 +1105,7 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
- 		case CQE_TX_VLAN_TAGGING_VIOLATION:
- 			WARN_ONCE(1, "TX: CQE error %d: ignored.\n",
- 				  cqe_oob->cqe_hdr.cqe_type);
-+			apc->eth_stats.tx_cqe_err++;
- 			break;
- 
- 		default:
-@@ -1072,6 +1114,7 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
- 			 */
- 			WARN_ONCE(1, "TX: Unexpected CQE type %d: HW BUG?\n",
- 				  cqe_oob->cqe_hdr.cqe_type);
-+			apc->eth_stats.tx_cqe_unknown_type++;
- 			return;
- 		}
- 
-@@ -1118,6 +1161,8 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
- 		WARN_ON_ONCE(1);
- 
- 	cq->work_done = pkt_transmitted;
-+
-+	apc->eth_stats.tx_cqes -= pkt_transmitted;
- }
- 
- static void mana_post_pkt_rxq(struct mana_rxq *rxq)
-@@ -1252,12 +1297,15 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 	struct gdma_context *gc = rxq->gdma_rq->gdma_dev->gdma_context;
- 	struct net_device *ndev = rxq->ndev;
- 	struct mana_recv_buf_oob *rxbuf_oob;
-+	struct mana_port_context *apc;
- 	struct device *dev = gc->dev;
- 	void *new_buf, *old_buf;
- 	struct page *new_page;
- 	u32 curr, pktlen;
- 	dma_addr_t da;
- 
-+	apc = netdev_priv(ndev);
-+
- 	switch (oob->cqe_hdr.cqe_type) {
- 	case CQE_RX_OKAY:
- 		break;
-@@ -1270,6 +1318,7 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 
- 	case CQE_RX_COALESCED_4:
- 		netdev_err(ndev, "RX coalescing is unsupported\n");
-+		apc->eth_stats.rx_coalesced_err++;
- 		return;
- 
- 	case CQE_RX_OBJECT_FENCE:
-@@ -1279,6 +1328,7 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
- 	default:
- 		netdev_err(ndev, "Unknown RX CQE type = %d\n",
- 			   oob->cqe_hdr.cqe_type);
-+		apc->eth_stats.rx_cqe_unknown_type++;
- 		return;
- 	}
- 
-@@ -1341,11 +1391,15 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
- {
- 	struct gdma_comp *comp = cq->gdma_comp_buf;
- 	struct mana_rxq *rxq = cq->rxq;
-+	struct mana_port_context *apc;
- 	int comp_read, i;
- 
-+	apc = netdev_priv(rxq->ndev);
-+
- 	comp_read = mana_gd_poll_cq(cq->gdma_cq, comp, CQE_POLLING_BUFFER);
- 	WARN_ON_ONCE(comp_read > CQE_POLLING_BUFFER);
- 
-+	apc->eth_stats.rx_cqes = comp_read;
- 	rxq->xdp_flush = false;
- 
- 	for (i = 0; i < comp_read; i++) {
-@@ -1357,6 +1411,8 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
- 			return;
- 
- 		mana_process_rx_cqe(rxq, cq, &comp[i]);
-+
-+		apc->eth_stats.rx_cqes--;
- 	}
- 
- 	if (rxq->xdp_flush)
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 5b776a33a817..a64c81410dc1 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -13,6 +13,15 @@ static const struct {
- } mana_eth_stats[] = {
- 	{"stop_queue", offsetof(struct mana_ethtool_stats, stop_queue)},
- 	{"wake_queue", offsetof(struct mana_ethtool_stats, wake_queue)},
-+	{"tx_cqes", offsetof(struct mana_ethtool_stats, tx_cqes)},
-+	{"tx_cq_err", offsetof(struct mana_ethtool_stats, tx_cqe_err)},
-+	{"tx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
-+					tx_cqe_unknown_type)},
-+	{"rx_cqes", offsetof(struct mana_ethtool_stats, rx_cqes)},
-+	{"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
-+					rx_coalesced_err)},
-+	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
-+					rx_cqe_unknown_type)},
- };
- 
- static int mana_get_sset_count(struct net_device *ndev, int stringset)
-@@ -23,7 +32,8 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
- 	if (stringset != ETH_SS_STATS)
- 		return -EINVAL;
- 
--	return ARRAY_SIZE(mana_eth_stats) + num_queues * 8;
-+	return ARRAY_SIZE(mana_eth_stats) + num_queues *
-+				(MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
- }
- 
- static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
-@@ -61,6 +71,22 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
- 		p += ETH_GSTRING_LEN;
- 		sprintf(p, "tx_%d_xdp_xmit", i);
- 		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_tso_packets", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_tso_bytes", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_tso_inner_packets", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_tso_inner_bytes", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_long_pkt_fmt", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_short_pkt_fmt", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_csum_partial", i);
-+		p += ETH_GSTRING_LEN;
-+		sprintf(p, "tx_%d_mana_map_err", i);
-+		p += ETH_GSTRING_LEN;
- 	}
- }
- 
-@@ -78,6 +104,14 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 	u64 xdp_xmit;
- 	u64 xdp_drop;
- 	u64 xdp_tx;
-+	u64 tso_packets;
-+	u64 tso_bytes;
-+	u64 tso_inner_packets;
-+	u64 tso_inner_bytes;
-+	u64 long_pkt_fmt;
-+	u64 short_pkt_fmt;
-+	u64 csum_partial;
-+	u64 mana_map_err;
- 	int q, i = 0;
- 
- 	if (!apc->port_is_up)
-@@ -113,11 +147,27 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 			packets = tx_stats->packets;
- 			bytes = tx_stats->bytes;
- 			xdp_xmit = tx_stats->xdp_xmit;
-+			tso_packets = tx_stats->tso_packets;
-+			tso_bytes = tx_stats->tso_bytes;
-+			tso_inner_packets = tx_stats->tso_inner_packets;
-+			tso_inner_bytes = tx_stats->tso_inner_bytes;
-+			long_pkt_fmt = tx_stats->long_pkt_fmt;
-+			short_pkt_fmt = tx_stats->short_pkt_fmt;
-+			csum_partial = tx_stats->csum_partial;
-+			mana_map_err = tx_stats->mana_map_err;
- 		} while (u64_stats_fetch_retry(&tx_stats->syncp, start));
- 
- 		data[i++] = packets;
- 		data[i++] = bytes;
- 		data[i++] = xdp_xmit;
-+		data[i++] = tso_packets;
-+		data[i++] = tso_bytes;
-+		data[i++] = tso_inner_packets;
-+		data[i++] = tso_inner_bytes;
-+		data[i++] = long_pkt_fmt;
-+		data[i++] = short_pkt_fmt;
-+		data[i++] = csum_partial;
-+		data[i++] = mana_map_err;
- 	}
- }
- 
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 3bb579962a14..bb11a6535d80 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -48,6 +48,10 @@ enum TRI_STATE {
- 
- #define MAX_PORTS_IN_MANA_DEV 256
- 
-+/* Update this count whenever the respective structures are changed */
-+#define MANA_STATS_RX_COUNT 5
-+#define MANA_STATS_TX_COUNT 11
-+
- struct mana_stats_rx {
- 	u64 packets;
- 	u64 bytes;
-@@ -61,6 +65,14 @@ struct mana_stats_tx {
- 	u64 packets;
- 	u64 bytes;
- 	u64 xdp_xmit;
-+	u64 tso_packets;
-+	u64 tso_bytes;
-+	u64 tso_inner_packets;
-+	u64 tso_inner_bytes;
-+	u64 short_pkt_fmt;
-+	u64 long_pkt_fmt;
-+	u64 csum_partial;
-+	u64 mana_map_err;
- 	struct u64_stats_sync syncp;
- };
- 
-@@ -331,6 +343,12 @@ struct mana_tx_qp {
- struct mana_ethtool_stats {
- 	u64 stop_queue;
- 	u64 wake_queue;
-+	u64 tx_cqes;
-+	u64 tx_cqe_err;
-+	u64 tx_cqe_unknown_type;
-+	u64 rx_cqes;
-+	u64 rx_coalesced_err;
-+	u64 rx_cqe_unknown_type;
- };
- 
- struct mana_context {
 -- 
-2.37.2
+1.8.3.1
 
