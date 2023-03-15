@@ -2,213 +2,397 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6C606BA7EF
-	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Mar 2023 07:40:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 674056BAFB7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 15 Mar 2023 12:55:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231194AbjCOGkh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 15 Mar 2023 02:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
+        id S231166AbjCOLzj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 15 Mar 2023 07:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjCOGkg (ORCPT
+        with ESMTP id S229597AbjCOLzi (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 15 Mar 2023 02:40:36 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DB72056A;
-        Tue, 14 Mar 2023 23:40:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GroiGYtTNuCiaR+3waX9oDL1pTC8ocxgcRpQwauOdd8+QjfhuUnQnbLvFXqTmUOWzs+Ad38GKvDyWkIIRlTxWnHswfezTU+K/BWmoRx3NpKQLwFUFayMPEbXMpnG/xIoCj3r92BRnP/EmgGWyFXz/Eg0SyNYMiY6tdekrDzrz5eQJDlLuvdcIs6tU4lE8DRFq0zJC2jSRZ+W1YN/0cBLA2m8CIfF0/k/8TUIBr3ET7d4VmDAARzpTCZ7+EmWDjtIBy5XdgvdHy3p3mnUUUpjPUutmhPgUdYZn9hjC50nL9Op2gLqJhgVFa7x/qrkqoCfHgPCZuJAG0s6rcSU9tVCjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eERHCNWTXNPiEe/LcK0D2h9ylR6me9upbTS6sPDkatg=;
- b=EFTJxL6RmBnxovnOaJk966GntCj/eer/MDjFkEttiEx1hCj/dDPH7okhBNRtdjlpFRdtGYSsYxybTx9QgzzEzPo6u1Q1x77Saf/4KgTz1VkwMujFPEzRvCo6IvjcSoCVf+AKd2s1V0sXCyFnAanR2OZtpDT7vuHQOqCEGV7jfJDI5BSmCaBtO9vnjhuwjd+s2elaSNrZFn/qqqUW1TaP1LqX1v9Q8QZ1VxiRjmz13BZaxTGIP3xoE1GgTjF2o+g0X3Z9n3fGgcZptegyc0y0103/vIT+twWffAe2aCdds9tthAT71I/+Sy9cs2aJDsN8BzLES0m2kaN5FQ9wQyYBmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eERHCNWTXNPiEe/LcK0D2h9ylR6me9upbTS6sPDkatg=;
- b=2dVdsTi8PDKBo8Ww0JGG3torG7s1NiQVCIHj+o9FEW9tPJ9pTHtq8dZRHgow3PfG+CXEf3otRTJ7pmfxv2EyUvJAJyyuMCOtcMcV2+eKcd/NJN/uE21A3wqR5h7YOFaPRFxsmOTKkl3HWVwKW5iWcfjmN/AspaMv+O4Rp+MgI+Y=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com (2603:10b6:5:41::21) by
- CH3PR12MB7596.namprd12.prod.outlook.com (2603:10b6:610:14b::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.26; Wed, 15 Mar 2023 06:40:30 +0000
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::bad5:8f56:fc07:15cf]) by DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::bad5:8f56:fc07:15cf%3]) with mapi id 15.20.6178.024; Wed, 15 Mar 2023
- 06:40:30 +0000
-Message-ID: <6788c295-0280-d567-dcfb-a6a852d5f9e1@amd.com>
-Date:   Wed, 15 Mar 2023 07:40:16 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [RFC PATCH V3 00/16] x86/hyperv/sev: Add AMD sev-snp enlightened
- guest support on hyperv
-Content-Language: en-US
-To:     Tianyu Lan <ltykernel@gmail.com>, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        ashish.kalra@amd.com, srutherford@google.com,
-        akpm@linux-foundation.org, anshuman.khandual@arm.com,
-        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
-        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
-        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20230122024607.788454-1-ltykernel@gmail.com>
- <fac62414-06f9-0454-8393-f039aa30571a@amd.com>
- <fe100597-26be-23e4-bfa9-f45aa27b7966@amd.com>
- <0a968926-670a-c383-492d-52c45b09bb18@amd.com>
- <8d385bb6-fc30-a44d-a057-f23d89a0152e@gmail.com>
-From:   "Gupta, Pankaj" <pankaj.gupta@amd.com>
-In-Reply-To: <8d385bb6-fc30-a44d-a057-f23d89a0152e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0154.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a2::7) To DM6PR12MB2810.namprd12.prod.outlook.com
- (2603:10b6:5:41::21)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2810:EE_|CH3PR12MB7596:EE_
-X-MS-Office365-Filtering-Correlation-Id: e39e9c7e-bc7a-4bcc-be5b-08db25202b3a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6kxM2DcZpuFJ2FH3OrYGHJ5c+Tmid2RGm6G6vC2OoAZBNQBffyva830eEAcWd3wGPRejacc2D6bxxMCrlKgEQkwYas3NYCHjQAdeQIMUOp+wxQMtJJDQ0/L8efuQkmrwc8NIEo0k0LkjH/uKXQGiu65Qn0gnW5yKPsmdpE/dXaEEjbF7vqTlA0MjfmhE8xq9hKqKXhCWZwNXrAFdfrK0oky6DlRrU57DkwhL71Algk/lZBV60Zq8zOAb3WQPsbGVczUTn5ME6SVInVAlDrHlRFf0sF8HPaco5YsPSN9Nym3W2+BhjiTVvIyf9hIFRlTgwS57WIyY2vom1j0kpxRvhRRLvZC0DDRt6aJ5vHtIJHL+NmQjomhZdlPWjOZ4wvWOLwAlnPkK7Tk3bqSOmTgru/ViTA1q+ufinzSiQ8P18+jNkCaZp6w98AAeQBQJCvVU7EChKSBTKyOqA58S2qMDhB5Yo3qaPG2w2oWAnQfVsM9xsBF0GlzBlDLQjeodZ7sgL/JhGhDN5ZcPVcVMDiYTacT1EwED4pevCku9oR6YDb9R3fbnyITazWlnFSpyzrUG1LqkAQxBp7/N+PaSxiGug/4rHaaWv5E4jD4+VawFjwvyW97qWD54jfHDlWDHQAYd1rM0+EBHiIkFyGGX+CCIwStq3qU5odyw7MY1V6jFShgJTO5oi1aP8+R3XTCPX/6JxnCnulMDnhgW3PVS1zNFvMTh4x/1WnLI4IHLCYMRFCJCXuTvWNmGs5xDxDw5UaCr
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2810.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(451199018)(6486002)(2906002)(83380400001)(86362001)(38100700002)(31696002)(921005)(6666004)(2616005)(36756003)(6506007)(26005)(6512007)(186003)(41300700001)(316002)(31686004)(478600001)(7406005)(7416002)(5660300002)(8676002)(66476007)(8936002)(4326008)(66946007)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QVRoSGNuODA0eUMrM1pscEVmd3Bua2FiY0haRWN1bnBPeXFncW51UXZlUmxt?=
- =?utf-8?B?U3hWbm5Ma0o4dFlDaWRKdU9SL1hTdnNHY3ZRZ0x3SHo3d053Y1JlM0dCNHAr?=
- =?utf-8?B?V1JSK0I5YTJ2aWhhTWkydHBUZkUwUWx3ZTJ4ZDdrY1NCT2FmcW9oOXpQSzdk?=
- =?utf-8?B?clJmbWtvbkhkMmFkUW5qTjdqdzBFWUxYZXJmWm1rcFNEVTJXakM4SEUvVG9i?=
- =?utf-8?B?aGFzRWpBck9XOUlwNVRiaTJvQ3RnbXd2ZjNuSDVEWWFYc0JFdFZYdDB0aXho?=
- =?utf-8?B?UnMvMFBDMU1qalA2Z1BWdXBNTC9Na0tKeUdPY0Z2b0VlNHY3T3hIeHJ6KzlQ?=
- =?utf-8?B?MlBHUzBUNm02My9nOHNzc1ZMcTJSdis2TnZpWnZPdVRiT0pPa2RjLzNCMmd1?=
- =?utf-8?B?aDBwNTJlVEt3N2NVR0xIME1BT3hwNDdwY0hBYWlvNmhoQlN4U01Cb2t6Zk1z?=
- =?utf-8?B?RG5uS3ZWcnZhSWlMR0Z1cVljNjc4Q29aN2FDOEc4eEJJdmVtTExWd1JNZE0w?=
- =?utf-8?B?QTVmS25qaWpGMDFrWnJNQjhwMGw1RnQyTDM4UVRFWCtLQ1ZEZHRKYzRxZDhE?=
- =?utf-8?B?NVBQWTZ4SFZsYUZBZDk2ZnpGK081TkkvSlErN1h5MkhxQlRtckRsNW1JcW5X?=
- =?utf-8?B?TjlpUHRvMFlHWHRUaFBZZHZncXdrcWRwM2Z6YjFHYnE1S1ZTRjVHQlNmbEhX?=
- =?utf-8?B?U1FISndzczZmY0c3T3VXTER4MnE1aU9UYmZ4djlhWmI3MXd4TG5Zc3NVY00w?=
- =?utf-8?B?WS9xM0RIUFlMdzByemloTVRzWFlTU2lwUnBpUWZ2VXNVUG9kcWJLekNrQVAx?=
- =?utf-8?B?aFFISEszQ0RZb3FVNmVNWHI1WWxiazFaanZLaG1IdS83M2d4dzBYZTdSaXM4?=
- =?utf-8?B?ZnVNVnQweUhGTjdRd3l1bWhHaDlhT21BMFVUTGF1REptVmk0YzhVbFJzRm40?=
- =?utf-8?B?UjVERytWV2VIR1BSNDgzVFQ5UUIyb0JMUDNxdldLUGNzckRkQVJZeXZhYVNn?=
- =?utf-8?B?Rmh1aEtGbjNDU3loaFBFVjNMRnhHRzFod2FEczNvT3NiT1RZMTdlc0pyR1Zr?=
- =?utf-8?B?MjlIS28zNllaQWRiV2xyMVNGbGJwSmlVTG05Um1RUllJS1M5dlA0eUt4eWJN?=
- =?utf-8?B?UHo3ZENWVDJaMGxTOEZtSnZBSGZvTnczSTN6dXNqVGZBUzV3R1pTNlRsK1BK?=
- =?utf-8?B?WVMzbHdSSXEvczJRTW1NY0ZiU1prdVpIQm1mZ3RDZy9uNVFVdTA3bEoxb2ZE?=
- =?utf-8?B?Sy9ueGg0ZHRGMHNjVmtBNFlNU3QzT0ZiZW5GTHhvdG5ibUExdUlLVzJsbFho?=
- =?utf-8?B?QWdNOHBleCt0TkNxMnQ3aE9YN1I3dEoxUkJrS1lYMWxxR0MzMnRGckJ6bHh2?=
- =?utf-8?B?QzZLM1lTSk5KQmdGZ0lvRm4zcHg0TUlweTNQQTFxTmZPR2hORGtoK1d4V0Fy?=
- =?utf-8?B?ZXJaS3k1bGpUUGEwaElsaW52dnVuSnZRRkRubGVhUHR0SjZCbVFhZFJVN0xm?=
- =?utf-8?B?TWNEL0kxSnpMbHV3VkNlYnFYSVMzd1R1MWdoZ285RmdjamI1Z2IvS0dIc052?=
- =?utf-8?B?ZitJSm44eXI5OFBxU3d5cjkvRTIxUU9MWDFWWm05ZzRQSGZTR1F4Vmp2ZGp5?=
- =?utf-8?B?MThtMElBZGFZaUV2RUltRzNVZFJTRm1VU0ZXaERkbTlmd2NobUJ3RkRVWFl5?=
- =?utf-8?B?RXRpT1piQms0VWRza2s1ZVdkcDNqTm9pTHlYaHpGK0Y5Sk82U3pNWG5KMjhw?=
- =?utf-8?B?T096ZURnVy9EYkRRZm5kOTNTTFN4V2o1Rm5yZEt0TXordmw3TlJhQTkycEZj?=
- =?utf-8?B?QVlKSUxMbG9QNmNTL1BMSHNpd2FITTZQYWRqQjJqajhpSGJqUUNQSXZEbEYv?=
- =?utf-8?B?dytLdTYvb0xOLzVPTHJ1eGVBcnJieDJncVdaRGpCbnJrZzdrUWFNdTNtSG1B?=
- =?utf-8?B?ZFlVNlV6UUYzVjZNOFZUYW01NXVCd296TGxWZnRGOFBnaGpNanJGay9vOXFG?=
- =?utf-8?B?NDlQTjdwUXVoNWVMZ3BDYTJ5SDBGdytMU051NW1YUldvdUd4NlV3Y0pRcThx?=
- =?utf-8?B?Z0o0TEd1anRyS3JZVnFrck9oY2xjR1dvK0F1MFVaV2VCSVp2SVZ1RitRaW45?=
- =?utf-8?Q?IiPJ1vzQ3DPmqY5PgXRJgNncR?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e39e9c7e-bc7a-4bcc-be5b-08db25202b3a
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2810.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2023 06:40:30.1101
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ncELP9b11IwZqzIFlvNrHwBJaaMeyyzNOUA1ZeL8xnsjqnxuHUqe8Bhnw+k+xO98YSWgOk2xlxbrKg0eex6gpQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7596
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        Wed, 15 Mar 2023 07:55:38 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F0B879B2D;
+        Wed, 15 Mar 2023 04:55:33 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 036352057015; Wed, 15 Mar 2023 04:55:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 036352057015
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1678881333;
+        bh=DI49uRvbB5da/uJ7V+8Surl8hQV8kIq2ta6EEmC3qT0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=idYipUzV+UJoJZNenfFmkuVCm4m4d3csNeSZ/SQtBLwwtFQxaJVlHL8IpNoZ+lJML
+         8MhY7rKwpAvVHjZZK2uX2PsiKSkBt1MhT/LiJJ4A/Lhs9c4RypKepCLloDzQausdco
+         jlV+9x2FTn96oHup5ngmXBfYmJRW44GQFSy3lgj0=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH v2] net: mana: Add new MANA VF performance counters for easier troubleshooting
+Date:   Wed, 15 Mar 2023 04:55:13 -0700
+Message-Id: <1678881313-20468-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Tianyu,
+Extended performance counter stats in 'ethtool -S <interface>' output
+for MANA VF to facilitate troubleshooting.
 
->> Hi Tianyu,
->>
->> While testing the guest patches on KVM host, My guest kernel is stuck
->> at early bootup. As it did not seem a hang but sort of loop where 
->> interrupts are getting processed from "pv_native_irq_enable" path 
->> repeatedly and prevent boot process to make progress IIUC. Did you 
->> face any such scenario in your testing?
->>
->> It seems to me "native_irq_enable" enable interrupts and 
->> "check_hv_pending_irq_enable" starts handling the interrupts (after 
->> disabling irqs). But "check_hv_pending_irq_enable=>do_exc_hv" can 
->> again call "pv_native_irq_enable" in interrupt handling path and 
->> execute the same loop?
-> 
-> 
-> I don't meet the issue. Thanks for report. I will double check and 
-> report back.
+Tested-on: Ubuntu22
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
 
-Thank you!
+Changes in v2:
+* fixed the tso_bytes stat calculation
+* fixed RCT in variable declarations
 
-More testing with the patches: After I commented out "do_exc_hv" from
-pv_native_irq_enable()->check_hv_pending_irq_enable() code path. Now, I 
-am getting below [2] stack trace repeatedly when I dump stack.
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 62 ++++++++++++++++++-
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 52 +++++++++++++++-
+ include/net/mana/mana.h                       | 18 ++++++
+ 3 files changed, 128 insertions(+), 4 deletions(-)
 
-This seems to me after IST stack return from #VC handling
-for "native_cpuid", paranoid_exit =>"do_exc_hv" is handling interrupts. 
-As we don't disable interrupts in check_hv_pending()=>do_exc_hv(), so 
-interrupts are handled continuously here. This also prevents the boot 
-processor to make progress and stuck here.
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 6120f2b6684f..492474b4d8aa 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -156,6 +156,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	struct mana_txq *txq;
+ 	struct mana_cq *cq;
+ 	int err, len;
++	u16 ihs;
+ 
+ 	if (unlikely(!apc->port_is_up))
+ 		goto tx_drop;
+@@ -166,6 +167,7 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	txq = &apc->tx_qp[txq_idx].txq;
+ 	gdma_sq = txq->gdma_sq;
+ 	cq = &apc->tx_qp[txq_idx].tx_cq;
++	tx_stats = &txq->stats;
+ 
+ 	pkg.tx_oob.s_oob.vcq_num = cq->gdma_id;
+ 	pkg.tx_oob.s_oob.vsq_frame = txq->vsq_frame;
+@@ -179,10 +181,17 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 
+ 	pkg.tx_oob.s_oob.pkt_fmt = pkt_fmt;
+ 
+-	if (pkt_fmt == MANA_SHORT_PKT_FMT)
++	if (pkt_fmt == MANA_SHORT_PKT_FMT) {
+ 		pkg.wqe_req.inline_oob_size = sizeof(struct mana_tx_short_oob);
+-	else
++		u64_stats_update_begin(&tx_stats->syncp);
++		tx_stats->short_pkt_fmt++;
++		u64_stats_update_end(&tx_stats->syncp);
++	} else {
+ 		pkg.wqe_req.inline_oob_size = sizeof(struct mana_tx_oob);
++		u64_stats_update_begin(&tx_stats->syncp);
++		tx_stats->long_pkt_fmt++;
++		u64_stats_update_end(&tx_stats->syncp);
++	}
+ 
+ 	pkg.wqe_req.inline_oob_data = &pkg.tx_oob;
+ 	pkg.wqe_req.flags = 0;
+@@ -232,9 +241,35 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 						 &ipv6_hdr(skb)->daddr, 0,
+ 						 IPPROTO_TCP, 0);
+ 		}
++
++		if (skb->encapsulation) {
++			ihs = skb_inner_tcp_all_headers(skb);
++			u64_stats_update_begin(&tx_stats->syncp);
++			tx_stats->tso_inner_packets++;
++			tx_stats->tso_inner_bytes += skb->len - ihs;
++			u64_stats_update_end(&tx_stats->syncp);
++		} else {
++			if (skb_shinfo(skb)->gso_type & SKB_GSO_UDP_L4) {
++				ihs = skb_transport_offset(skb) + sizeof(struct udphdr);
++			} else {
++				ihs = skb_tcp_all_headers(skb);
++				if (ipv6_has_hopopt_jumbo(skb))
++					ihs -= sizeof(struct hop_jumbo_hdr);
++			}
++
++			u64_stats_update_begin(&tx_stats->syncp);
++			tx_stats->tso_packets++;
++			tx_stats->tso_bytes += skb->len - ihs;
++			u64_stats_update_end(&tx_stats->syncp);
++		}
++
+ 	} else if (skb->ip_summed == CHECKSUM_PARTIAL) {
+ 		csum_type = mana_checksum_info(skb);
+ 
++		u64_stats_update_begin(&tx_stats->syncp);
++		tx_stats->csum_partial++;
++		u64_stats_update_end(&tx_stats->syncp);
++
+ 		if (csum_type == IPPROTO_TCP) {
+ 			pkg.tx_oob.s_oob.is_outer_ipv4 = ipv4;
+ 			pkg.tx_oob.s_oob.is_outer_ipv6 = ipv6;
+@@ -254,8 +289,12 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		}
+ 	}
+ 
+-	if (mana_map_skb(skb, apc, &pkg))
++	if (mana_map_skb(skb, apc, &pkg)) {
++		u64_stats_update_begin(&tx_stats->syncp);
++		tx_stats->mana_map_err++;
++		u64_stats_update_end(&tx_stats->syncp);
+ 		goto free_sgl_ptr;
++	}
+ 
+ 	skb_queue_tail(&txq->pending_skbs, skb);
+ 
+@@ -1038,6 +1077,8 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 	if (comp_read < 1)
+ 		return;
+ 
++	apc->eth_stats.tx_cqes = comp_read;
++
+ 	for (i = 0; i < comp_read; i++) {
+ 		struct mana_tx_comp_oob *cqe_oob;
+ 
+@@ -1064,6 +1105,7 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 		case CQE_TX_VLAN_TAGGING_VIOLATION:
+ 			WARN_ONCE(1, "TX: CQE error %d: ignored.\n",
+ 				  cqe_oob->cqe_hdr.cqe_type);
++			apc->eth_stats.tx_cqe_err++;
+ 			break;
+ 
+ 		default:
+@@ -1072,6 +1114,7 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 			 */
+ 			WARN_ONCE(1, "TX: Unexpected CQE type %d: HW BUG?\n",
+ 				  cqe_oob->cqe_hdr.cqe_type);
++			apc->eth_stats.tx_cqe_unknown_type++;
+ 			return;
+ 		}
+ 
+@@ -1118,6 +1161,8 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 		WARN_ON_ONCE(1);
+ 
+ 	cq->work_done = pkt_transmitted;
++
++	apc->eth_stats.tx_cqes -= pkt_transmitted;
+ }
+ 
+ static void mana_post_pkt_rxq(struct mana_rxq *rxq)
+@@ -1252,12 +1297,15 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	struct gdma_context *gc = rxq->gdma_rq->gdma_dev->gdma_context;
+ 	struct net_device *ndev = rxq->ndev;
+ 	struct mana_recv_buf_oob *rxbuf_oob;
++	struct mana_port_context *apc;
+ 	struct device *dev = gc->dev;
+ 	void *new_buf, *old_buf;
+ 	struct page *new_page;
+ 	u32 curr, pktlen;
+ 	dma_addr_t da;
+ 
++	apc = netdev_priv(ndev);
++
+ 	switch (oob->cqe_hdr.cqe_type) {
+ 	case CQE_RX_OKAY:
+ 		break;
+@@ -1270,6 +1318,7 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 
+ 	case CQE_RX_COALESCED_4:
+ 		netdev_err(ndev, "RX coalescing is unsupported\n");
++		apc->eth_stats.rx_coalesced_err++;
+ 		return;
+ 
+ 	case CQE_RX_OBJECT_FENCE:
+@@ -1279,6 +1328,7 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	default:
+ 		netdev_err(ndev, "Unknown RX CQE type = %d\n",
+ 			   oob->cqe_hdr.cqe_type);
++		apc->eth_stats.rx_cqe_unknown_type++;
+ 		return;
+ 	}
+ 
+@@ -1341,11 +1391,15 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+ {
+ 	struct gdma_comp *comp = cq->gdma_comp_buf;
+ 	struct mana_rxq *rxq = cq->rxq;
++	struct mana_port_context *apc;
+ 	int comp_read, i;
+ 
++	apc = netdev_priv(rxq->ndev);
++
+ 	comp_read = mana_gd_poll_cq(cq->gdma_cq, comp, CQE_POLLING_BUFFER);
+ 	WARN_ON_ONCE(comp_read > CQE_POLLING_BUFFER);
+ 
++	apc->eth_stats.rx_cqes = comp_read;
+ 	rxq->xdp_flush = false;
+ 
+ 	for (i = 0; i < comp_read; i++) {
+@@ -1357,6 +1411,8 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+ 			return;
+ 
+ 		mana_process_rx_cqe(rxq, cq, &comp[i]);
++
++		apc->eth_stats.rx_cqes--;
+ 	}
+ 
+ 	if (rxq->xdp_flush)
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 5b776a33a817..a64c81410dc1 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -13,6 +13,15 @@ static const struct {
+ } mana_eth_stats[] = {
+ 	{"stop_queue", offsetof(struct mana_ethtool_stats, stop_queue)},
+ 	{"wake_queue", offsetof(struct mana_ethtool_stats, wake_queue)},
++	{"tx_cqes", offsetof(struct mana_ethtool_stats, tx_cqes)},
++	{"tx_cq_err", offsetof(struct mana_ethtool_stats, tx_cqe_err)},
++	{"tx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
++					tx_cqe_unknown_type)},
++	{"rx_cqes", offsetof(struct mana_ethtool_stats, rx_cqes)},
++	{"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
++					rx_coalesced_err)},
++	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
++					rx_cqe_unknown_type)},
+ };
+ 
+ static int mana_get_sset_count(struct net_device *ndev, int stringset)
+@@ -23,7 +32,8 @@ static int mana_get_sset_count(struct net_device *ndev, int stringset)
+ 	if (stringset != ETH_SS_STATS)
+ 		return -EINVAL;
+ 
+-	return ARRAY_SIZE(mana_eth_stats) + num_queues * 8;
++	return ARRAY_SIZE(mana_eth_stats) + num_queues *
++				(MANA_STATS_RX_COUNT + MANA_STATS_TX_COUNT);
+ }
+ 
+ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+@@ -61,6 +71,22 @@ static void mana_get_strings(struct net_device *ndev, u32 stringset, u8 *data)
+ 		p += ETH_GSTRING_LEN;
+ 		sprintf(p, "tx_%d_xdp_xmit", i);
+ 		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_tso_packets", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_tso_bytes", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_tso_inner_packets", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_tso_inner_bytes", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_long_pkt_fmt", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_short_pkt_fmt", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_csum_partial", i);
++		p += ETH_GSTRING_LEN;
++		sprintf(p, "tx_%d_mana_map_err", i);
++		p += ETH_GSTRING_LEN;
+ 	}
+ }
+ 
+@@ -78,6 +104,14 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 	u64 xdp_xmit;
+ 	u64 xdp_drop;
+ 	u64 xdp_tx;
++	u64 tso_packets;
++	u64 tso_bytes;
++	u64 tso_inner_packets;
++	u64 tso_inner_bytes;
++	u64 long_pkt_fmt;
++	u64 short_pkt_fmt;
++	u64 csum_partial;
++	u64 mana_map_err;
+ 	int q, i = 0;
+ 
+ 	if (!apc->port_is_up)
+@@ -113,11 +147,27 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 			packets = tx_stats->packets;
+ 			bytes = tx_stats->bytes;
+ 			xdp_xmit = tx_stats->xdp_xmit;
++			tso_packets = tx_stats->tso_packets;
++			tso_bytes = tx_stats->tso_bytes;
++			tso_inner_packets = tx_stats->tso_inner_packets;
++			tso_inner_bytes = tx_stats->tso_inner_bytes;
++			long_pkt_fmt = tx_stats->long_pkt_fmt;
++			short_pkt_fmt = tx_stats->short_pkt_fmt;
++			csum_partial = tx_stats->csum_partial;
++			mana_map_err = tx_stats->mana_map_err;
+ 		} while (u64_stats_fetch_retry(&tx_stats->syncp, start));
+ 
+ 		data[i++] = packets;
+ 		data[i++] = bytes;
+ 		data[i++] = xdp_xmit;
++		data[i++] = tso_packets;
++		data[i++] = tso_bytes;
++		data[i++] = tso_inner_packets;
++		data[i++] = tso_inner_bytes;
++		data[i++] = long_pkt_fmt;
++		data[i++] = short_pkt_fmt;
++		data[i++] = csum_partial;
++		data[i++] = mana_map_err;
+ 	}
+ }
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 3bb579962a14..bb11a6535d80 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -48,6 +48,10 @@ enum TRI_STATE {
+ 
+ #define MAX_PORTS_IN_MANA_DEV 256
+ 
++/* Update this count whenever the respective structures are changed */
++#define MANA_STATS_RX_COUNT 5
++#define MANA_STATS_TX_COUNT 11
++
+ struct mana_stats_rx {
+ 	u64 packets;
+ 	u64 bytes;
+@@ -61,6 +65,14 @@ struct mana_stats_tx {
+ 	u64 packets;
+ 	u64 bytes;
+ 	u64 xdp_xmit;
++	u64 tso_packets;
++	u64 tso_bytes;
++	u64 tso_inner_packets;
++	u64 tso_inner_bytes;
++	u64 short_pkt_fmt;
++	u64 long_pkt_fmt;
++	u64 csum_partial;
++	u64 mana_map_err;
+ 	struct u64_stats_sync syncp;
+ };
+ 
+@@ -331,6 +343,12 @@ struct mana_tx_qp {
+ struct mana_ethtool_stats {
+ 	u64 stop_queue;
+ 	u64 wake_queue;
++	u64 tx_cqes;
++	u64 tx_cqe_err;
++	u64 tx_cqe_unknown_type;
++	u64 rx_cqes;
++	u64 rx_coalesced_err;
++	u64 rx_cqe_unknown_type;
+ };
+ 
+ struct mana_context {
+-- 
+2.37.2
 
-Thoughts please? as I might be missing some important details here.
-
-Thanks,
-Pankaj
-
-[2]
-
-[   59.845396] Call Trace:^M
-[   59.845703]  <TASK>^M
-[   59.845980]  dump_stack_lvl+0x4d/0x67^M
-[   59.846432]  dump_stack+0x14/0x1a^M
-[   59.846842]  do_exc_hv.cold+0x22/0xfd^M
-[   59.847301]  check_hv_pending+0x38/0x50^M
-[   59.847773]  paranoid_exit+0x8/0x70^M
-[   59.848205] RIP: 0010:native_cpuid+0x19/0x30^M
-[   59.848729] Code: 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 
-f3 0f 1e fa 55 49 89 f8 49 89 c9 48 89 d7 41 8b 00 48 89 e5 53 8b 0a 0f 
-a2 <41> 89 00 89 1e 48 8b 5d f8 89 0f 41 89 11 c9 e9 f7 bc df 00 0f 1f^M
-[   59.850995] RSP: 0000:ffffffffbd403e48 EFLAGS: 00010202^M
-[   59.851636] RAX: 000000000100007b RBX: 0000000000000000 RCX: 
-0000000000000000^M
-[   59.852498] RDX: 0000000000000000 RSI: ffffffffbd403e64 RDI: 
-ffffffffbd403e68^M
-[   59.853361] RBP: ffffffffbd403e50 R08: ffffffffbd403e60 R09: 
-ffffffffbd403e6c^M
-[   59.854240] R10: ffffffffbd403d10 R11: ffff9af5bff3cfe8 R12: 
-0000000000000056^M
-[   59.855111] R13: ffff9af5bffc8e40 R14: 0000000000000000 R15: 
-ffffffffbd41a120^M
-[   59.855976]  kvm_arch_para_features+0x4e/0x80^M
-[   59.856511]  pv_ipi_supported+0xe/0x34^M
-[   59.856973]  kvm_apic_init+0x12/0x3f^M
-[   59.857414]  apic_intr_mode_init+0x8d/0x10d^M
-[   59.857939]  x86_late_time_init+0x28/0x3d^M
-[   59.858435]  start_kernel+0x8af/0x970^M
-[   59.858894]  x86_64_start_reservations+0x28/0x2e^M
-[   59.859461]  x86_64_start_kernel+0x96/0xa0^M
-[   59.859965]  secondary_startup_64_no_verify+0xe5/0xeb^M
-[   59.860583]  </TASK>^M
