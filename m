@@ -2,98 +2,157 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E0F36BEDAE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Mar 2023 17:05:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA2566BEDB3
+	for <lists+linux-hyperv@lfdr.de>; Fri, 17 Mar 2023 17:06:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbjCQQFi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 17 Mar 2023 12:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34350 "EHLO
+        id S231334AbjCQQGy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 17 Mar 2023 12:06:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231533AbjCQQFd (ORCPT
+        with ESMTP id S231612AbjCQQGu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 17 Mar 2023 12:05:33 -0400
+        Fri, 17 Mar 2023 12:06:50 -0400
 Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86328A46;
-        Fri, 17 Mar 2023 09:05:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DF45FEAD;
+        Fri, 17 Mar 2023 09:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fpeUbGcjjy+4WfkcXpJ+w4mJC4TfpIrgZQL8Efq/lgw=; b=VGxV1NMAY7KXNAqJyMaNjinpsw
-        oHqLWeRMgw0Jevo1MImj3JaFVOnXM1HOl/5ReLa382My+evaqFMq7H4xhjlzf5Yr636RNkjdLo0Mj
-        aWnWozkUOkiiogoir12UhSZrFAAe2l1xgR+AWwTR+9G3/KFSNFK49OTnQQT7gOIwiL645GiSb4dI6
-        8MImcAKXy5Fso4qUmw3RFeCot6MstIYCRYOeyjjQ+NpQRGBnsdCzX1LPVG9Lh90dtJv4HwUD1DgVp
-        zlqCSYN9lUTgO4M8KbvbaHT/lid48kUomIAWWz6iwpZ297ip3LAE8Tyebgv2QTmSFqRqsGvkkQslc
-        logipHPA==;
-Received: from [152.254.169.34] (helo=[192.168.1.60])
+        s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=bFCq2RSEAg+Y5fRTPik+kLtPCBISXTx/n8QU8KXWe6s=; b=dwAVOmc0zjj3yMuhkUmfQBj4pv
+        ihKPwMBJ5zZGdtfkbalG+mlkZWO1mgulTp+x7fHf5eM9Fk5w7K0jD5iVAQEOhn+0J9Eq3I3vEmNQ7
+        pAXRc1H9v7iCwRePWoK5tkJ01gUUjVxncoxcDf0bw63B/aMLoO+yKNyrD035dxBzQnKwTnytv/2Sj
+        kkjk5xmmRuTOsazWVVkbLOBtf5eRS9Msf85WvIlQSdAzE/r6sGuTW7pH9oWKxtUShNwyV2dtGSd6K
+        UBSVJph6dwo/aR+51exbocMN0VYNoc1xR7MmugWdeAcfSEVftpgeDatUopFTRvxRYYMdMxA7TBNEo
+        FNNjbu1w==;
+Received: from [152.254.169.34] (helo=localhost)
         by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1pdCZV-00G3gn-80; Fri, 17 Mar 2023 17:04:49 +0100
-Message-ID: <ef2b7503-1023-67c1-3b06-87d611472d22@igalia.com>
-Date:   Fri, 17 Mar 2023 13:04:39 -0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2] x86/hyperv: Mark hv_ghcb_terminate() as noreturn
-Content-Language: en-US
-To:     Josh Poimboeuf <jpoimboe@kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
-        "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20230310152442.cbrjise6uex4ak4x@treble>
- <20230310154452.1169204-1-gpiccoli@igalia.com>
- <BYAPR21MB16888EBB51D1597F9B9C212FD7BA9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <a1f40654-b3cf-5c77-561e-056f47cbff61@igalia.com>
- <BYAPR21MB1688673F3E49C9944E892894D7BD9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <20230317145327.sl7kzgxtlqgrte7j@treble>
+        (Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+        id 1pdCaZ-00G3jr-Fb; Fri, 17 Mar 2023 17:05:56 +0100
 From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20230317145327.sl7kzgxtlqgrte7j@treble>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     linux-hyperv@vger.kernel.org, x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, decui@microsoft.com,
+        haiyangz@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com,
+        thomas.lendacky@amd.com, peterz@infradead.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH v3] x86/hyperv: Mark hv_ghcb_terminate() as noreturn
+Date:   Fri, 17 Mar 2023 13:05:46 -0300
+Message-Id: <20230317160546.1497477-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230310154452.1169204-1-gpiccoli@igalia.com>
+References: <20230310154452.1169204-1-gpiccoli@igalia.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 17/03/2023 11:53, Josh Poimboeuf wrote:
-> [...]
->>> Hi Michael / Josh (and all), lemme know if you want me to submit a V3
->>> doing that. The function is not called inside this own definition file
->>> nor exported, so I'm not sure that'd be necessary, but glad to do so if
->>> you prefer.
->>>
->>
->> I don't have a preference.  I was just trying to make sure the details
->> are all correct.  I'll defer to those with more knowledge of the
->> __noreturn attribute than I have.
-> 
-> It's not required, but probably good practice to put __noreturn in both
-> places to make it more self-documenting.
-> 
+Annotate the function prototype and definition as noreturn to prevent
+objtool warnings like:
 
-Thanks Josh and Michael, will submit a V3 shortly with this improvement!
+vmlinux.o: warning: objtool: hyperv_init+0x55c: unreachable instruction
+
+Also, as per Josh's suggestion, add it to the global_noreturns list.
+As a comparison, an objdump output without the annotation:
+
+[...]
+1b63:  mov    $0x1,%esi
+1b68:  xor    %edi,%edi
+1b6a:  callq  ffffffff8102f680 <hv_ghcb_terminate>
+1b6f:  jmpq   ffffffff82f217ec <hyperv_init+0x9c> # unreachable
+1b74:  cmpq   $0xffffffffffffffff,-0x702a24(%rip)
+[...]
+
+Now, after adding the __noreturn to the function prototype:
+
+[...]
+17df:  callq  ffffffff8102f6d0 <hv_ghcb_negotiate_protocol>
+17e4:  test   %al,%al
+17e6:  je     ffffffff82f21bb9 <hyperv_init+0x469>
+[...]  <many insns>
+1bb9:  mov    $0x1,%esi
+1bbe:  xor    %edi,%edi
+1bc0:  callq  ffffffff8102f680 <hv_ghcb_terminate>
+1bc5:  nopw   %cs:0x0(%rax,%rax,1) # end of function
+
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/9698eff1-9680-4f0a-94de-590eaa923e94@app.fastmail.com/
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
+
+
+V3:
+- As per Michael / Josh advice (thanks!), added __noreturn to the
+function definition as well.
+
+V2:
+- Per Josh's suggestion (thanks!), added the function name to the
+objtool global table.
+
+Thanks in advance for reviews/comments!
 Cheers,
 
-
 Guilherme
+
+
+ arch/x86/hyperv/ivm.c           | 2 +-
+ arch/x86/include/asm/mshyperv.h | 2 +-
+ tools/objtool/check.c           | 1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 1dbcbd9da74d..4f79dc76042d 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -127,7 +127,7 @@ static enum es_result hv_ghcb_hv_call(struct ghcb *ghcb, u64 exit_code,
+ 		return ES_OK;
+ }
+ 
+-void hv_ghcb_terminate(unsigned int set, unsigned int reason)
++void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason)
+ {
+ 	u64 val = GHCB_MSR_TERM_REQ;
+ 
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 4c4c0ec3b62e..09c26e658bcc 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -212,7 +212,7 @@ int hv_set_mem_host_visibility(unsigned long addr, int numpages, bool visible);
+ void hv_ghcb_msr_write(u64 msr, u64 value);
+ void hv_ghcb_msr_read(u64 msr, u64 *value);
+ bool hv_ghcb_negotiate_protocol(void);
+-void hv_ghcb_terminate(unsigned int set, unsigned int reason);
++void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
+ #else
+ static inline void hv_ghcb_msr_write(u64 msr, u64 value) {}
+ static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index f937be1afe65..4b5e03f61f1f 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -209,6 +209,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"do_task_dead",
+ 		"ex_handler_msr_mce",
+ 		"fortify_panic",
++		"hv_ghcb_terminate",
+ 		"kthread_complete_and_exit",
+ 		"kthread_exit",
+ 		"kunit_try_catch_throw",
+-- 
+2.39.2
+
