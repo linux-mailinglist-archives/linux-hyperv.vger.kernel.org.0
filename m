@@ -2,272 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8B8F6C0D8C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 10:42:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B39436C0E16
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 11:04:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbjCTJmV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Mar 2023 05:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
+        id S229889AbjCTKEb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Mar 2023 06:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230045AbjCTJmU (ORCPT
+        with ESMTP id S229837AbjCTKE3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Mar 2023 05:42:20 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45EC149AA;
-        Mon, 20 Mar 2023 02:42:18 -0700 (PDT)
-Received: from dggpemm500005.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Pg8s050zjz9tVH;
-        Mon, 20 Mar 2023 17:41:56 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 20 Mar
- 2023 17:42:16 +0800
-Subject: Re: [PATCH net-next] net: mana: Add support for jumbo frame
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        <linux-hyperv@vger.kernel.org>, <netdev@vger.kernel.org>
-CC:     <decui@microsoft.com>, <kys@microsoft.com>,
-        <paulros@microsoft.com>, <olaf@aepfle.de>, <vkuznets@redhat.com>,
-        <davem@davemloft.net>, <wei.liu@kernel.org>, <edumazet@google.com>,
-        <kuba@kernel.org>, <pabeni@redhat.com>, <leon@kernel.org>,
-        <longli@microsoft.com>, <ssengar@linux.microsoft.com>,
-        <linux-kernel@vger.kernel.org>
-References: <1679261264-26375-1-git-send-email-haiyangz@microsoft.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <fb5abef7-8f52-007b-f058-85f580aefc88@huawei.com>
-Date:   Mon, 20 Mar 2023 17:42:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <1679261264-26375-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.69.30.204]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Mon, 20 Mar 2023 06:04:29 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 26981F742;
+        Mon, 20 Mar 2023 03:03:54 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id BA19820FAACE;
+        Mon, 20 Mar 2023 03:03:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BA19820FAACE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1679306622;
+        bh=FtXfq6t14W8wRg84Ahg76WKseeVUXWFLWJc0iPV2wLA=;
+        h=From:To:Subject:Date:From;
+        b=eXTfTuo+P9FkVD43Ja9RyMHLIz/xN7jrFeKaO5VYBEVXYQwPsv65XW5bwLTdeunrD
+         RLKdwK/k/Roawysa1ZUEEDO0gG8mRc54Q6/64sMXveZcq/K1WY//9GItZQ7ZJ52yNZ
+         VpZGll6djnxfpv1416Co7IH5q23/scL2DMJQs7Os=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
+        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [PATCH v3 0/5] Hyper-V VTL support
+Date:   Mon, 20 Mar 2023 03:03:33 -0700
+Message-Id: <1679306618-31484-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-18.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,URI_TRY_3LD,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 2023/3/20 5:27, Haiyang Zhang wrote:
-> During probe, get the hardware allowed max MTU by querying the device
-> configuration. Users can select MTU up to the device limit. Also,
-> when XDP is in use, we currently limit the buffer size to one page.
-> 
-> Updated RX data path to allocate and use RX queue DMA buffers with
-> proper size based on the MTU setting.
+This patch series introduces support for Virtual Trust Level (VTL)
+in Hyper-V systems. It provide a foundation for the implementation
+of Hyper-V VSM support in the Linux kernel, providing a secure
+platform for the development and deployment of applications.
 
-The change in this patch seems better to splitted into more reviewable
-patchset. Perhaps refactor the RX queue DMA buffers allocation to handle
-different size first, then add support for the jumbo frame.
+Virtual Secure Mode (VSM) is a critical aspect of the security
+infrastructure in Hyper-V systems. It provides a set of hypervisor
+capabilities and enlightenments that enable the creation and
+management of new security boundaries within operating system
+software. The VSM achieves and maintains isolation through Virtual
+Trust Levels, which are hierarchical, with higher levels being more
+privileged than lower levels. Please refer to this link for further
+information: https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm
 
-> 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  .../net/ethernet/microsoft/mana/mana_bpf.c    |  22 +-
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 229 ++++++++++++------
->  include/net/mana/gdma.h                       |   4 +
->  include/net/mana/mana.h                       |  18 +-
->  4 files changed, 183 insertions(+), 90 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> index 3caea631229c..23b1521c0df9 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-> @@ -133,12 +133,6 @@ u32 mana_run_xdp(struct net_device *ndev, struct mana_rxq *rxq,
->  	return act;
->  }
->  
-> -static unsigned int mana_xdp_fraglen(unsigned int len)
-> -{
-> -	return SKB_DATA_ALIGN(len) +
-> -	       SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
-> -}
-> -
->  struct bpf_prog *mana_xdp_get(struct mana_port_context *apc)
->  {
->  	ASSERT_RTNL();
-> @@ -179,17 +173,18 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
->  {
->  	struct mana_port_context *apc = netdev_priv(ndev);
->  	struct bpf_prog *old_prog;
-> -	int buf_max;
-> +	struct gdma_context *gc;
-> +
-> +	gc = apc->ac->gdma_dev->gdma_context;
->  
->  	old_prog = mana_xdp_get(apc);
->  
->  	if (!old_prog && !prog)
->  		return 0;
->  
-> -	buf_max = XDP_PACKET_HEADROOM + mana_xdp_fraglen(ndev->mtu + ETH_HLEN);
-> -	if (prog && buf_max > PAGE_SIZE) {
-> -		netdev_err(ndev, "XDP: mtu:%u too large, buf_max:%u\n",
-> -			   ndev->mtu, buf_max);
-> +	if (prog && ndev->mtu > MANA_XDP_MTU_MAX) {
-> +		netdev_err(ndev, "XDP: mtu:%u too large, mtu_max:%lu\n",
-> +			   ndev->mtu, MANA_XDP_MTU_MAX);
->  		NL_SET_ERR_MSG_MOD(extack, "XDP: mtu too large");
->  
->  		return -EOPNOTSUPP;
-> @@ -206,6 +201,11 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
->  	if (apc->port_is_up)
->  		mana_chn_setxdp(apc, prog);
->  
-> +	if (prog)
-> +		ndev->max_mtu = MANA_XDP_MTU_MAX;
-> +	else
-> +		ndev->max_mtu = gc->adapter_mtu - ETH_HLEN;
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 492474b4d8aa..07738b7e85f2 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -427,6 +427,34 @@ static u16 mana_select_queue(struct net_device *ndev, struct sk_buff *skb,
->  	return txq;
->  }
->  
-> +static int mana_change_mtu(struct net_device *ndev, int new_mtu)
-> +{
-> +	unsigned int old_mtu = ndev->mtu;
-> +	int err, err2;
-> +
-> +	err = mana_detach(ndev, false);
-> +	if (err) {
-> +		netdev_err(ndev, "mana_detach failed: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	ndev->mtu = new_mtu;
-> +
-> +	err = mana_attach(ndev);
-> +	if (!err)
-> +		return 0;
-> +
-> +	netdev_err(ndev, "mana_attach failed: %d\n", err);
-> +
-> +	/* Try to roll it back to the old configuration. */
-> +	ndev->mtu = old_mtu;
-> +	err2 = mana_attach(ndev);
-> +	if (err2)
-> +		netdev_err(ndev, "mana re-attach failed: %d\n", err2);
-> +
-> +	return err;
-> +}
-> +
->  static const struct net_device_ops mana_devops = {
->  	.ndo_open		= mana_open,
->  	.ndo_stop		= mana_close,
-> @@ -436,6 +464,7 @@ static const struct net_device_ops mana_devops = {
->  	.ndo_get_stats64	= mana_get_stats64,
->  	.ndo_bpf		= mana_bpf,
->  	.ndo_xdp_xmit		= mana_xdp_xmit,
-> +	.ndo_change_mtu		= mana_change_mtu,
->  };
->  
->  static void mana_cleanup_port_context(struct mana_port_context *apc)
-> @@ -625,6 +654,9 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
->  
->  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
->  			     sizeof(req), sizeof(resp));
-> +
-> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
+This patch series adds the initialization of the x86 platform for VTL
+systems. This also adds the VTL early bootup code for initializing
+and bringing up secondary cpus to targeted VTL context. In VTL, AP
+has to start directly in the 64-bit mode, bypassing the usual
+16-bit -> 32-bit -> 64-bit mode transition sequence that occurs after
+waking up an AP with SIPI whose vector points to the 16-bit AP
+startup trampoline code.
 
-hdr->req.msg_version and hdr->resp.msg_version are both set to
-GDMA_MESSAGE_V1 in mana_gd_init_req_hdr(), is there any reason
-why hdr->req.msg_version is not set to GDMA_MESSAGE_V2?
-Does initializing req.hdr.resp.msg_version to GDMA_MESSAGE_V2
-in mana_gd_init_req_hdr() without reset it to GDMA_MESSAGE_V2
-in mana_query_device_cfg() affect other user?
+Currently only VTL level supprted is '2'. This patch series is tested
+extensively on VTL2 systems.
 
+[V3]
+ - Break in to 5 patches
+ - hv_init_vp_context_t -> hv_init_vp_context
+ - HYPERV_VTL -> HYPERV_VTL_MODE
+ - Modify description of HYPERV_VTL_MODE
+ - VTL 0 and VTL 2 -> VTL0 and VTL2
+ - Remove casting for this_cpu_ptr pointer
 
-> +
->  	req.proto_major_ver = proto_major_ver;
->  	req.proto_minor_ver = proto_minor_ver;
->  	req.proto_micro_ver = proto_micro_ver;
-> @@ -647,6 +679,11 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
->  
->  	*max_num_vports = resp.max_num_vports;
->  
-> +	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
+[V2]
+ - Remove the code for reserve 1 IRQ.
+ - boot_cpu_has -> cpu_feature_enabled.
+ - Improved commit message for 0002 patch.
+ - Improved Kconfig flag description for HYPERV_VTL.
+ - Removed hv_result as a wrapper around hv_do_hypercall().
+ - The value of output[0] copied to a local variable before returning.
 
-It seems the driver is setting resp.hdr.response.msg_version to
-GDMA_MESSAGE_V2 above, and do the checking here. Does older
-firmware reset the resp.hdr.response.msg_version to GDMA_MESSAGE_V1
-in order to enable compatibility between firmware and driver?
+Saurabh Sengar (5):
+  x86/init: Make get/set_rtc_noop() public
+  x86/hyperv: Add VTL specific structs and hypercalls
+  x86/hyperv: Make hv_get_nmi_reason public
+  x86/hyperv: VTL support for Hyper-V
+  x86/Kconfig: Add HYPERV_VTL_MODE
 
-> +		gc->adapter_mtu = resp.adapter_mtu;
-> +	else
-> +		gc->adapter_mtu = ETH_FRAME_LEN;
-> +
->  	return 0;
->  }
->  
-> @@ -1185,10 +1222,10 @@ static void mana_post_pkt_rxq(struct mana_rxq *rxq)
->  	WARN_ON_ONCE(recv_buf_oob->wqe_inf.wqe_size_in_bu != 1);
->  }
->  
-> -static struct sk_buff *mana_build_skb(void *buf_va, uint pkt_len,
-> -				      struct xdp_buff *xdp)
-> +static struct sk_buff *mana_build_skb(struct mana_rxq *rxq, void *buf_va,
-> +				      uint pkt_len, struct xdp_buff *xdp)
->  {
-> -	struct sk_buff *skb = build_skb(buf_va, PAGE_SIZE);
-> +	struct sk_buff *skb = napi_build_skb(buf_va, rxq->alloc_size);
+ arch/x86/Kconfig                   |  24 +++
+ arch/x86/hyperv/Makefile           |   1 +
+ arch/x86/hyperv/hv_vtl.c           | 227 +++++++++++++++++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h |  75 ++++++++++
+ arch/x86/include/asm/mshyperv.h    |  15 ++
+ arch/x86/include/asm/x86_init.h    |   2 +
+ arch/x86/kernel/cpu/mshyperv.c     |   6 +-
+ arch/x86/kernel/x86_init.c         |   4 +-
+ include/asm-generic/hyperv-tlfs.h  |   4 +
+ 9 files changed, 351 insertions(+), 7 deletions(-)
+ create mode 100644 arch/x86/hyperv/hv_vtl.c
 
-Changing build_skb() to napi_build_skb() seems like an optimization
-unrelated to jumbo frame support, seems like another patch to do that?
+-- 
+2.34.1
 
->  
->  	if (!skb)
->  		return NULL;
-> @@ -1196,11 +1233,12 @@ static struct sk_buff *mana_build_skb(void *buf_va, uint pkt_len,
->  	if (xdp->data_hard_start) {
->  		skb_reserve(skb, xdp->data - xdp->data_hard_start);
->  		skb_put(skb, xdp->data_end - xdp->data);
-> -	} else {
-> -		skb_reserve(skb, XDP_PACKET_HEADROOM);
-> -		skb_put(skb, pkt_len);
-> +		return skb;
->  	}
->  
-> +	skb_reserve(skb, rxq->headroom);
-> +	skb_put(skb, pkt_len);
-> +
->  	return skb;
->  }
->  
-> @@ -1233,7 +1271,7 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
->  	if (act != XDP_PASS && act != XDP_TX)
->  		goto drop_xdp;
->  
-> -	skb = mana_build_skb(buf_va, pkt_len, &xdp);
-> +	skb = mana_build_skb(rxq, buf_va, pkt_len, &xdp);
->  
->  	if (!skb)
->  		goto drop;
-> @@ -1282,14 +1320,72 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
->  	u64_stats_update_end(&rx_stats->syncp);
->  
->  drop:
-> -	WARN_ON_ONCE(rxq->xdp_save_page);
-> -	rxq->xdp_save_page = virt_to_page(buf_va);
-> +	WARN_ON_ONCE(rxq->xdp_save_va);
-> +	/* Save for reuse */
-> +	rxq->xdp_save_va = buf_va;
->  
->  	++ndev->stats.rx_dropped;
->  
->  	return;
->  }
->  
