@@ -2,109 +2,150 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DDA56C0B88
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 08:42:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DB4D6C0B92
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 08:47:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbjCTHmu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Mar 2023 03:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52696 "EHLO
+        id S230200AbjCTHrt (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Mar 2023 03:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230193AbjCTHmr (ORCPT
+        with ESMTP id S230005AbjCTHrs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Mar 2023 03:42:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727142367C;
-        Mon, 20 Mar 2023 00:42:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 578F6611D9;
-        Mon, 20 Mar 2023 07:42:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC221C433EF;
-        Mon, 20 Mar 2023 07:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679298127;
-        bh=WjYiW3bdBC26DMUYGurbBPSF3Li7THUYtv1H3tndCY4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RSSytet/200iwrE/lIMidXGrJh+pzH43ULVTOKfB6cKLziSBSCB/id5jVbuVDjMpH
-         eGtjeNUzYIVQ96U7U1cMrNlsE8jaxfOLrLbj20Ra5+FL9KaB4AulMJkyCGKXxmjYqF
-         v8FB6Uz50mVCuGTuXBMT744SK5kx/KkNrkvucvW1CylcSlbz2CdOUmeVJWU9xglr+E
-         ysiGXzVMqt+0OdYClaTxrnmMr6CH4lVEjBGbdWWFumpx0NeWO4PklXINtXdoOPjUYl
-         T3214e1BkukTMmxuOJ21WwUto7l77j5NNfC7FWTvKJFusZxGlWshgfyp9rYhZhczly
-         nFs1i7xEOeX6A==
-Date:   Mon, 20 Mar 2023 09:42:02 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        decui@microsoft.com, kys@microsoft.com, paulros@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        wei.liu@kernel.org, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, longli@microsoft.com,
-        ssengar@linux.microsoft.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: mana: Add support for jumbo frame
-Message-ID: <20230320074202.GH36557@unreal>
-References: <1679261264-26375-1-git-send-email-haiyangz@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1679261264-26375-1-git-send-email-haiyangz@microsoft.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Mon, 20 Mar 2023 03:47:48 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 085E3125A4;
+        Mon, 20 Mar 2023 00:47:44 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D9D1820FAAB1;
+        Mon, 20 Mar 2023 00:47:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D9D1820FAAB1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1679298463;
+        bh=R4FGQ4lqxzQ6i3XyEaB9tLoLHAKACDanZWNyaclL3hc=;
+        h=From:To:Subject:Date:From;
+        b=RbKLxl4qHVxRyI2pw7kqaG0xTQtDR77cZni4USqxvMLSN1THeRzfMXLWRx1D2Omoj
+         tw0/IETt6qvJtMxJ3ublJDH2wKYO/0eVGriU6TI7U+SKvvNA9HqmOSZynryxORapgr
+         Zyf9kzUnjl5z1lao0MbSJyecCHBMK9CUt++HTuAk=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com
+Subject: [PATCH v9 0/5] Device tree support for Hyper-V VMBus driver
+Date:   Mon, 20 Mar 2023 00:47:35 -0700
+Message-Id: <1679298460-11855-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 02:27:44PM -0700, Haiyang Zhang wrote:
-> During probe, get the hardware allowed max MTU by querying the device
-> configuration. Users can select MTU up to the device limit. Also,
-> when XDP is in use, we currently limit the buffer size to one page.
-> 
-> Updated RX data path to allocate and use RX queue DMA buffers with
-> proper size based on the MTU setting.
-> 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  .../net/ethernet/microsoft/mana/mana_bpf.c    |  22 +-
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 229 ++++++++++++------
->  include/net/mana/gdma.h                       |   4 +
->  include/net/mana/mana.h                       |  18 +-
->  4 files changed, 183 insertions(+), 90 deletions(-)
+This set of patches expands the VMBus driver to include device tree
+support. This feature allows for a kernel boot without the use of ACPI
+tables, resulting in a smaller memory footprint and potentially faster
+boot times. This is tested by enabling CONFIG_OF and OF_EARLY_FLATTREE
+for x86.
 
-<...>
+The first two patches enable compilation of Hyper-V APIs in a non-ACPI
+build.
 
-> +static int mana_change_mtu(struct net_device *ndev, int new_mtu)
-> +{
-> +	unsigned int old_mtu = ndev->mtu;
-> +	int err, err2;
-> +
-> +	err = mana_detach(ndev, false);
-> +	if (err) {
-> +		netdev_err(ndev, "mana_detach failed: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	ndev->mtu = new_mtu;
-> +
-> +	err = mana_attach(ndev);
-> +	if (!err)
-> +		return 0;
-> +
-> +	netdev_err(ndev, "mana_attach failed: %d\n", err);
-> +
-> +	/* Try to roll it back to the old configuration. */
-> +	ndev->mtu = old_mtu;
-> +	err2 = mana_attach(ndev);
+The third patch converts the VMBus driver from acpi to more generic
+platform driver.
 
-I second to Francois and agree with him that it is very questionable.
-If mana_attach() failed for first try, you should bail out and not
-retry with some hope that it will pass.
+The fourth patch introduces the device tree documentation for VMBus.
 
-Thanks
+The fifth patch adds device tree support to the VMBus driver. Currently
+this is tested only for x86 and it may not work for other archs.
 
-> +	if (err2)
-> +		netdev_err(ndev, "mana re-attach failed: %d\n", err2);
-> +
-> +	return err;
+[V9]
+- Add vmbus_mmio_remove for error handling
+- Remove logic from !acpi_disabled to acpi_disabled 
+
+[V8]
+- Remove the auto select of CONFIG_OF
+- Remove the dependency on !ACPI for OF_EARLY_FLATTREE
+- Used acpi_disabled instead of #ifdef and hence added a dummy function
+  for vmbus_acpi_add
+- GFP_ATOMIC -> GFP_KERNEL
+- used range.flags instead of hard coding flags
+- used __maybe_unused for acpi device id, removed #ifdef
+
+[V7]
+- Use cpu_addr instead of bus_addr.
+- Updated Documentation accordingly.
+
+[V6]
+- define acpi_sleep_state_supported in acpi header for !ACPI,
+  dropped the changes done in hv_common.c under #ifdef CONFIG_ACPI
+- "Devicetree" instead of "device tree"
+- Remove initialize of ret
+- set "np = pdev->dev.of_node;" on declarartion
+- remove one error print
+- use bus_addr instead of pci_addr
+
+
+[V5]
+- Removed #else for device tree parsing code. This should help better
+  test coverage.
+- Fix macro '__maybe_unused' warning
+- Added below options in Kconfig to enable device tree options for HYPERV
+	select OF if !ACPI
+	select OF_EARLY_FLATTREE if !ACPI
+- moved dt documantation to bus folder
+- update the dt node to have 'bus' as parent node instead of 'soc'. Also
+  added compatible and ranges property for parent node.
+- Made sure dt_binding_check have no error/varnings for microsoft,vmbus.yaml file
+- Fix commit messages and add Reviwed-by from Michael for first 3 patches
+
+[V4]
+- rebased which fixed return type of 'vmbus_mmio_remove' from int to void
+- used __maybe_unused for 'vmbus_of_match' and safeguard vmbus_acpi_device_ids
+  under #ifdef
+
+[V3]
+- Changed the logic to use generic api (for_each_of_range) for parsing "ranges".
+- Remove dependency of ACPI for HYPERV in case of x86.
+- Removed "device tree bindings" from title and patch subject.
+- Removed duplicate vendor prefix, used microsoft instead of msft.
+- Use 'soc' in example of device tree documantation for parent node.
+- Fixed compatible schemas error generated in other modules referring to
+  virtio.
+- Drop hex notation and leading zeros from device tree cell properties.
+- Added missing full stop at the end of commit message.
+- Typos fix: s/Initaly/Initially/ and s/hibernate/hibernation/.
+- Replace to_acpi_device with ACPI_COMPANION which simplify the logic.
+- Added more info in cover letter aboutsystem under test.
+
+[v2]
+- Convert VMBus acpi device to platform device, and added device tree support
+  in separate patch. This enables using same driver structure for both the flows.
+- In Device tree documentation, changed virtio folder to hypervisor and moved
+  VMBus documentation there.
+- Moved bindings before Device tree patch.
+- Removed stale ".data" and ".name" field from of_device match table.
+- Removed debug print.
+
+Saurabh Sengar (5):
+  drivers/clocksource/hyper-v: non ACPI support in hyperv clock
+  ACPI: bus: Add stub acpi_sleep_state_supported() in non-ACPI cases
+  Drivers: hv: vmbus: Convert acpi_device to more generic
+    platform_device
+  dt-bindings: bus: VMBus
+  Driver: VMBus: Add Devicetree support
+
+ .../bindings/bus/microsoft,vmbus.yaml         |  54 ++++++++
+ MAINTAINERS                                   |   1 +
+ drivers/clocksource/hyperv_timer.c            |  15 ++-
+ drivers/hv/Kconfig                            |   5 +-
+ drivers/hv/vmbus_drv.c                        | 122 ++++++++++++++----
+ include/linux/acpi.h                          |   5 +
+ 6 files changed, 172 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
+
+-- 
+2.34.1
+
