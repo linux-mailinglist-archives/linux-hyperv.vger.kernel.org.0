@@ -2,215 +2,272 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FCE6C0B93
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 08:47:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B8F6C0D8C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 10:42:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbjCTHru (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Mar 2023 03:47:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57570 "EHLO
+        id S230123AbjCTJmV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Mar 2023 05:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230122AbjCTHrs (ORCPT
+        with ESMTP id S230045AbjCTJmU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Mar 2023 03:47:48 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4FFF4125B1;
-        Mon, 20 Mar 2023 00:47:47 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 5991120FAED2;
-        Mon, 20 Mar 2023 00:47:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5991120FAED2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1679298464;
-        bh=GM5+GaMg13JEPlmbB8fyrcDYf5aGInVhNK1lqkzJoEE=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=CP3IsgcRGHuzf3gla+JV6awMwByLeqXxrm6kj3YOPrhQAcwsXbEnVWtkFlAiF+QLo
-         q2R8k0aRJ1F6bXOVh98Fxu0kVm+vKnd0K+OrbjE2Whcywwi+gvKDqhXIzJU02nbUYm
-         LAm8dRRJUOV0K52Sirn+mDkcjBU2VgzxE/HoquKw=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com
-Subject: [PATCH v9 5/5] Driver: VMBus: Add Devicetree support
-Date:   Mon, 20 Mar 2023 00:47:40 -0700
-Message-Id: <1679298460-11855-6-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1679298460-11855-1-git-send-email-ssengar@linux.microsoft.com>
-References: <1679298460-11855-1-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        Mon, 20 Mar 2023 05:42:20 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45EC149AA;
+        Mon, 20 Mar 2023 02:42:18 -0700 (PDT)
+Received: from dggpemm500005.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Pg8s050zjz9tVH;
+        Mon, 20 Mar 2023 17:41:56 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 20 Mar
+ 2023 17:42:16 +0800
+Subject: Re: [PATCH net-next] net: mana: Add support for jumbo frame
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        <linux-hyperv@vger.kernel.org>, <netdev@vger.kernel.org>
+CC:     <decui@microsoft.com>, <kys@microsoft.com>,
+        <paulros@microsoft.com>, <olaf@aepfle.de>, <vkuznets@redhat.com>,
+        <davem@davemloft.net>, <wei.liu@kernel.org>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <leon@kernel.org>,
+        <longli@microsoft.com>, <ssengar@linux.microsoft.com>,
+        <linux-kernel@vger.kernel.org>
+References: <1679261264-26375-1-git-send-email-haiyangz@microsoft.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <fb5abef7-8f52-007b-f058-85f580aefc88@huawei.com>
+Date:   Mon, 20 Mar 2023 17:42:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
+MIME-Version: 1.0
+In-Reply-To: <1679261264-26375-1-git-send-email-haiyangz@microsoft.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.30.204]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Update the driver to support Devicetree boot as well along with ACPI.
-At present the Devicetree parsing only provides the mmio region info
-and is not the exact copy of ACPI parsing. This is sufficient to cater
-all the current Devicetree usecases for VMBus.
+On 2023/3/20 5:27, Haiyang Zhang wrote:
+> During probe, get the hardware allowed max MTU by querying the device
+> configuration. Users can select MTU up to the device limit. Also,
+> when XDP is in use, we currently limit the buffer size to one page.
+> 
+> Updated RX data path to allocate and use RX queue DMA buffers with
+> proper size based on the MTU setting.
 
-Currently Devicetree is supported only for x86 systems.
+The change in this patch seems better to splitted into more reviewable
+patchset. Perhaps refactor the RX queue DMA buffers allocation to handle
+different size first, then add support for the jumbo frame.
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
-[V9]
-- Add vmbus_mmio_remove for error handling
-- Remove logic from !acpi_disabled to acpi_disabled 
+> 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  .../net/ethernet/microsoft/mana/mana_bpf.c    |  22 +-
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 229 ++++++++++++------
+>  include/net/mana/gdma.h                       |   4 +
+>  include/net/mana/mana.h                       |  18 +-
+>  4 files changed, 183 insertions(+), 90 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+> index 3caea631229c..23b1521c0df9 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
+> @@ -133,12 +133,6 @@ u32 mana_run_xdp(struct net_device *ndev, struct mana_rxq *rxq,
+>  	return act;
+>  }
+>  
+> -static unsigned int mana_xdp_fraglen(unsigned int len)
+> -{
+> -	return SKB_DATA_ALIGN(len) +
+> -	       SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+> -}
+> -
+>  struct bpf_prog *mana_xdp_get(struct mana_port_context *apc)
+>  {
+>  	ASSERT_RTNL();
+> @@ -179,17 +173,18 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
+>  {
+>  	struct mana_port_context *apc = netdev_priv(ndev);
+>  	struct bpf_prog *old_prog;
+> -	int buf_max;
+> +	struct gdma_context *gc;
+> +
+> +	gc = apc->ac->gdma_dev->gdma_context;
+>  
+>  	old_prog = mana_xdp_get(apc);
+>  
+>  	if (!old_prog && !prog)
+>  		return 0;
+>  
+> -	buf_max = XDP_PACKET_HEADROOM + mana_xdp_fraglen(ndev->mtu + ETH_HLEN);
+> -	if (prog && buf_max > PAGE_SIZE) {
+> -		netdev_err(ndev, "XDP: mtu:%u too large, buf_max:%u\n",
+> -			   ndev->mtu, buf_max);
+> +	if (prog && ndev->mtu > MANA_XDP_MTU_MAX) {
+> +		netdev_err(ndev, "XDP: mtu:%u too large, mtu_max:%lu\n",
+> +			   ndev->mtu, MANA_XDP_MTU_MAX);
+>  		NL_SET_ERR_MSG_MOD(extack, "XDP: mtu too large");
+>  
+>  		return -EOPNOTSUPP;
+> @@ -206,6 +201,11 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
+>  	if (apc->port_is_up)
+>  		mana_chn_setxdp(apc, prog);
+>  
+> +	if (prog)
+> +		ndev->max_mtu = MANA_XDP_MTU_MAX;
+> +	else
+> +		ndev->max_mtu = gc->adapter_mtu - ETH_HLEN;
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index 492474b4d8aa..07738b7e85f2 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -427,6 +427,34 @@ static u16 mana_select_queue(struct net_device *ndev, struct sk_buff *skb,
+>  	return txq;
+>  }
+>  
+> +static int mana_change_mtu(struct net_device *ndev, int new_mtu)
+> +{
+> +	unsigned int old_mtu = ndev->mtu;
+> +	int err, err2;
+> +
+> +	err = mana_detach(ndev, false);
+> +	if (err) {
+> +		netdev_err(ndev, "mana_detach failed: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	ndev->mtu = new_mtu;
+> +
+> +	err = mana_attach(ndev);
+> +	if (!err)
+> +		return 0;
+> +
+> +	netdev_err(ndev, "mana_attach failed: %d\n", err);
+> +
+> +	/* Try to roll it back to the old configuration. */
+> +	ndev->mtu = old_mtu;
+> +	err2 = mana_attach(ndev);
+> +	if (err2)
+> +		netdev_err(ndev, "mana re-attach failed: %d\n", err2);
+> +
+> +	return err;
+> +}
+> +
+>  static const struct net_device_ops mana_devops = {
+>  	.ndo_open		= mana_open,
+>  	.ndo_stop		= mana_close,
+> @@ -436,6 +464,7 @@ static const struct net_device_ops mana_devops = {
+>  	.ndo_get_stats64	= mana_get_stats64,
+>  	.ndo_bpf		= mana_bpf,
+>  	.ndo_xdp_xmit		= mana_xdp_xmit,
+> +	.ndo_change_mtu		= mana_change_mtu,
+>  };
+>  
+>  static void mana_cleanup_port_context(struct mana_port_context *apc)
+> @@ -625,6 +654,9 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
+>  
+>  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
+>  			     sizeof(req), sizeof(resp));
+> +
+> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
 
- drivers/hv/Kconfig     |  5 ++--
- drivers/hv/vmbus_drv.c | 66 +++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 65 insertions(+), 6 deletions(-)
+hdr->req.msg_version and hdr->resp.msg_version are both set to
+GDMA_MESSAGE_V1 in mana_gd_init_req_hdr(), is there any reason
+why hdr->req.msg_version is not set to GDMA_MESSAGE_V2?
+Does initializing req.hdr.resp.msg_version to GDMA_MESSAGE_V2
+in mana_gd_init_req_hdr() without reset it to GDMA_MESSAGE_V2
+in mana_query_device_cfg() affect other user?
 
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 0747a8f1fcee..47132b30b7ee 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -4,11 +4,12 @@ menu "Microsoft Hyper-V guest support"
- 
- config HYPERV
- 	tristate "Microsoft Hyper-V client drivers"
--	depends on ACPI && ((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
--		|| (ARM64 && !CPU_BIG_ENDIAN))
-+	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
-+		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR if X86
- 	select VMAP_PFN
-+	select OF_EARLY_FLATTREE if OF
- 	help
- 	  Select this option to run Linux as a Hyper-V client operating
- 	  system.
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 3ad2fa2b92e7..5de2d3bb8289 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -20,6 +20,7 @@
- #include <linux/completion.h>
- #include <linux/hyperv.h>
- #include <linux/kernel_stat.h>
-+#include <linux/of_address.h>
- #include <linux/clockchips.h>
- #include <linux/cpu.h>
- #include <linux/sched/isolation.h>
-@@ -2143,7 +2144,7 @@ void vmbus_device_unregister(struct hv_device *device_obj)
- 	device_unregister(&device_obj->device);
- }
- 
--
-+#ifdef CONFIG_ACPI
- /*
-  * VMBUS is an acpi enumerated device. Get the information we
-  * need from DSDT.
-@@ -2253,6 +2254,7 @@ static acpi_status vmbus_walk_resources(struct acpi_resource *res, void *ctx)
- 
- 	return AE_OK;
- }
-+#endif
- 
- static void vmbus_mmio_remove(void)
- {
-@@ -2273,7 +2275,7 @@ static void vmbus_mmio_remove(void)
- 	}
- }
- 
--static void vmbus_reserve_fb(void)
-+static void __maybe_unused vmbus_reserve_fb(void)
- {
- 	resource_size_t start = 0, size;
- 	struct pci_dev *pdev;
-@@ -2433,6 +2435,7 @@ void vmbus_free_mmio(resource_size_t start, resource_size_t size)
- }
- EXPORT_SYMBOL_GPL(vmbus_free_mmio);
- 
-+#ifdef CONFIG_ACPI
- static int vmbus_acpi_add(struct platform_device *pdev)
- {
- 	acpi_status result;
-@@ -2485,10 +2488,54 @@ static int vmbus_acpi_add(struct platform_device *pdev)
- 		vmbus_mmio_remove();
- 	return ret_val;
- }
-+#else
-+static int vmbus_acpi_add(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+#endif
-+
-+static int vmbus_device_add(struct platform_device *pdev)
-+{
-+	struct resource **cur_res = &hyperv_mmio;
-+	struct of_range range;
-+	struct of_range_parser parser;
-+	struct device_node *np = pdev->dev.of_node;
-+	int ret;
-+
-+	hv_dev = &pdev->dev;
-+
-+	ret = of_range_parser_init(&parser, np);
-+	if (ret)
-+		return ret;
-+
-+	for_each_of_range(&parser, &range) {
-+		struct resource *res;
-+
-+		res = kzalloc(sizeof(*res), GFP_KERNEL);
-+		if (!res) {
-+			vmbus_mmio_remove();
-+			return -ENOMEM;
-+		}
-+
-+		res->name = "hyperv mmio";
-+		res->flags = range.flags;
-+		res->start = range.cpu_addr;
-+		res->end = range.cpu_addr + range.size;
-+
-+		*cur_res = res;
-+		cur_res = &res->sibling;
-+	}
-+
-+	return ret;
-+}
- 
- static int vmbus_platform_driver_probe(struct platform_device *pdev)
- {
--	return vmbus_acpi_add(pdev);
-+	if (acpi_disabled)
-+		return vmbus_device_add(pdev);
-+	else
-+		return vmbus_acpi_add(pdev);
- }
- 
- static int vmbus_platform_driver_remove(struct platform_device *pdev)
-@@ -2634,7 +2681,17 @@ static int vmbus_bus_resume(struct device *dev)
- #define vmbus_bus_resume NULL
- #endif /* CONFIG_PM_SLEEP */
- 
--static const struct acpi_device_id vmbus_acpi_device_ids[] = {
-+static const __maybe_unused struct of_device_id vmbus_of_match[] = {
-+	{
-+		.compatible = "microsoft,vmbus",
-+	},
-+	{
-+		/* sentinel */
-+	},
-+};
-+MODULE_DEVICE_TABLE(of, vmbus_of_match);
-+
-+static const __maybe_unused struct acpi_device_id vmbus_acpi_device_ids[] = {
- 	{"VMBUS", 0},
- 	{"VMBus", 0},
- 	{"", 0},
-@@ -2668,6 +2725,7 @@ static struct platform_driver vmbus_platform_driver = {
- 	.driver = {
- 		.name = "vmbus",
- 		.acpi_match_table = ACPI_PTR(vmbus_acpi_device_ids),
-+		.of_match_table = of_match_ptr(vmbus_of_match),
- 		.pm = &vmbus_bus_pm,
- 		.probe_type = PROBE_FORCE_SYNCHRONOUS,
- 	}
--- 
-2.34.1
 
+> +
+>  	req.proto_major_ver = proto_major_ver;
+>  	req.proto_minor_ver = proto_minor_ver;
+>  	req.proto_micro_ver = proto_micro_ver;
+> @@ -647,6 +679,11 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
+>  
+>  	*max_num_vports = resp.max_num_vports;
+>  
+> +	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
+
+It seems the driver is setting resp.hdr.response.msg_version to
+GDMA_MESSAGE_V2 above, and do the checking here. Does older
+firmware reset the resp.hdr.response.msg_version to GDMA_MESSAGE_V1
+in order to enable compatibility between firmware and driver?
+
+> +		gc->adapter_mtu = resp.adapter_mtu;
+> +	else
+> +		gc->adapter_mtu = ETH_FRAME_LEN;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1185,10 +1222,10 @@ static void mana_post_pkt_rxq(struct mana_rxq *rxq)
+>  	WARN_ON_ONCE(recv_buf_oob->wqe_inf.wqe_size_in_bu != 1);
+>  }
+>  
+> -static struct sk_buff *mana_build_skb(void *buf_va, uint pkt_len,
+> -				      struct xdp_buff *xdp)
+> +static struct sk_buff *mana_build_skb(struct mana_rxq *rxq, void *buf_va,
+> +				      uint pkt_len, struct xdp_buff *xdp)
+>  {
+> -	struct sk_buff *skb = build_skb(buf_va, PAGE_SIZE);
+> +	struct sk_buff *skb = napi_build_skb(buf_va, rxq->alloc_size);
+
+Changing build_skb() to napi_build_skb() seems like an optimization
+unrelated to jumbo frame support, seems like another patch to do that?
+
+>  
+>  	if (!skb)
+>  		return NULL;
+> @@ -1196,11 +1233,12 @@ static struct sk_buff *mana_build_skb(void *buf_va, uint pkt_len,
+>  	if (xdp->data_hard_start) {
+>  		skb_reserve(skb, xdp->data - xdp->data_hard_start);
+>  		skb_put(skb, xdp->data_end - xdp->data);
+> -	} else {
+> -		skb_reserve(skb, XDP_PACKET_HEADROOM);
+> -		skb_put(skb, pkt_len);
+> +		return skb;
+>  	}
+>  
+> +	skb_reserve(skb, rxq->headroom);
+> +	skb_put(skb, pkt_len);
+> +
+>  	return skb;
+>  }
+>  
+> @@ -1233,7 +1271,7 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
+>  	if (act != XDP_PASS && act != XDP_TX)
+>  		goto drop_xdp;
+>  
+> -	skb = mana_build_skb(buf_va, pkt_len, &xdp);
+> +	skb = mana_build_skb(rxq, buf_va, pkt_len, &xdp);
+>  
+>  	if (!skb)
+>  		goto drop;
+> @@ -1282,14 +1320,72 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
+>  	u64_stats_update_end(&rx_stats->syncp);
+>  
+>  drop:
+> -	WARN_ON_ONCE(rxq->xdp_save_page);
+> -	rxq->xdp_save_page = virt_to_page(buf_va);
+> +	WARN_ON_ONCE(rxq->xdp_save_va);
+> +	/* Save for reuse */
+> +	rxq->xdp_save_va = buf_va;
+>  
+>  	++ndev->stats.rx_dropped;
+>  
+>  	return;
+>  }
+>  
