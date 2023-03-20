@@ -2,46 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97D696C0E2E
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 11:05:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD27F6C10B7
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 12:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjCTKF5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 20 Mar 2023 06:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
+        id S230388AbjCTLX0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 20 Mar 2023 07:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbjCTKFd (ORCPT
+        with ESMTP id S230234AbjCTLXX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 20 Mar 2023 06:05:33 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 79601244B3;
-        Mon, 20 Mar 2023 03:04:49 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 400B920FAEE0;
-        Mon, 20 Mar 2023 03:03:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 400B920FAEE0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1679306623;
-        bh=m8jjVQgvGPJQeoOJeABcx5K8xClDg9B7AC1Hcldbrs8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=MUoybISV2S+ERAmGjzyKq7Wdl8ucOSzVHudOtGJVcZepbSFWVn1W9upTtGRLgyA+k
-         lUdlObmhHMu870qd0yXxcBF6RwRxdfcy8Mef1FPL7upOnzKmm9y2Kr/Udy9DhA7gHo
-         uIeYdlneVs5pRJyWI9RXcS9yVCYrwt5oxiHyd3O4=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
-        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH v3 5/5] x86/Kconfig: Add HYPERV_VTL_MODE
-Date:   Mon, 20 Mar 2023 03:03:38 -0700
-Message-Id: <1679306618-31484-6-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1679306618-31484-1-git-send-email-ssengar@linux.microsoft.com>
-References: <1679306618-31484-1-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        Mon, 20 Mar 2023 07:23:23 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4E8C67D;
+        Mon, 20 Mar 2023 04:23:05 -0700 (PDT)
+Received: from zn.tnic (p5de8e687.dip0.t-ipconnect.de [93.232.230.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D531F1EC0531;
+        Mon, 20 Mar 2023 12:23:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1679311383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JHX6LI9jJmsbEsBfZqSHSOd2XPlLSGzi7teSPbRUpc8=;
+        b=d4AGbS54cHbrOmAlC2TeA8RAdxFydCPUxwHuWE7LG94VZK/I81tDgXPPZMWVpf4DNq8Y7P
+        2Q52sQOzeJnEVE+hMv3/j20c4Y2TKQi8M0j1bP07zCuNMpJ6+F7LmQvyK1uwJWvQtLv0p8
+        g3UvKNX3SFkQ0BWBa8xO/48ku3u2ygY=
+Date:   Mon, 20 Mar 2023 12:22:58 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [PATCH v6 06/13] x86/hyperv: Change vTOM handling to use
+ standard coco mechanisms
+Message-ID: <20230320112258.GCZBhCEpNAIk0rUDnx@fat_crate.local>
+References: <1678329614-3482-1-git-send-email-mikelley@microsoft.com>
+ <1678329614-3482-7-git-send-email-mikelley@microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1678329614-3482-7-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,61 +66,95 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add HYPERV_VTL_MODE Kconfig flag for VTL mode.
+On Wed, Mar 08, 2023 at 06:40:07PM -0800, Michael Kelley wrote:
+> diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
+> index 49b44f8..d1c3306 100644
+> --- a/arch/x86/coco/core.c
+> +++ b/arch/x86/coco/core.c
+> @@ -88,8 +106,6 @@ bool cc_platform_has(enum cc_attr attr)
+>  		return amd_cc_platform_has(attr);
+>  	case CC_VENDOR_INTEL:
+>  		return intel_cc_platform_has(attr);
+> -	case CC_VENDOR_HYPERV:
+> -		return hyperv_cc_platform_has(attr);
+>  	default:
+>  		return false;
+>  	}
+> @@ -103,11 +119,14 @@ u64 cc_mkenc(u64 val)
+>  	 * encryption status of the page.
+>  	 *
+>  	 * - for AMD, bit *set* means the page is encrypted
+> -	 * - for Intel *clear* means encrypted.
+> +	 * - for AMD with vTOM and for Intel, *clear* means encrypted
+>  	 */
+>  	switch (vendor) {
+>  	case CC_VENDOR_AMD:
+> -		return val | cc_mask;
+> +		if (sev_status & MSR_AMD64_SNP_VTOM)
+> +			return val & ~cc_mask;
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
- arch/x86/Kconfig         | 24 ++++++++++++++++++++++++
- arch/x86/hyperv/Makefile |  1 +
- 2 files changed, 25 insertions(+)
+This is silly. It should simply be:
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 453f462f6c9c..c3faaaea1e31 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -782,6 +782,30 @@ menuconfig HYPERVISOR_GUEST
- 
- if HYPERVISOR_GUEST
- 
-+config HYPERV_VTL_MODE
-+	bool "Enable Linux to boot in VTL context"
-+	depends on X86_64 && HYPERV
-+	default n
-+	help
-+	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
-+	  enlightenments offered to host and guest partitions which enables
-+	  the creation and management of new security boundaries within
-+	  operating system software.
-+
-+	  VSM achieves and maintains isolation through Virtual Trust Levels
-+	  (VTLs). Virtual Trust Levels are hierarchical, with higher levels
-+	  being more privileged than lower levels. VTL0 is the least privileged
-+	  level, and currently only other level supported is VTL2.
-+
-+	  Select this option to build a Linux kernel to run at a VTL other than
-+	  the normal VTL0, which currently is only VTL2.  This option
-+	  initializes the x86 platform for VTL2, and adds the ability to boot
-+	  secondary CPUs directly into 64-bit context as required for VTLs other
-+	  than 0.  A kernel built with this option must run at VTL2, and will
-+	  not run as a normal guest.
-+
-+	  If unsure, say N
-+
- config PARAVIRT
- 	bool "Enable paravirtualization code"
- 	depends on HAVE_STATIC_CALL
-diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
-index 5d2de10809ae..3a1548054b48 100644
---- a/arch/x86/hyperv/Makefile
-+++ b/arch/x86/hyperv/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y			:= hv_init.o mmu.o nested.o irqdomain.o ivm.o
- obj-$(CONFIG_X86_64)	+= hv_apic.o hv_proc.o
-+obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
- 
- ifdef CONFIG_X86_64
- obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
+		if (sev_status & MSR_AMD64_SNP_VTOM)
+			return val;
+
+
+> +		else
+> +			return val | cc_mask;
+>  	case CC_VENDOR_INTEL:
+>  		return val & ~cc_mask;
+>  	default:
+> @@ -120,7 +139,10 @@ u64 cc_mkdec(u64 val)
+>  	/* See comment in cc_mkenc() */
+>  	switch (vendor) {
+>  	case CC_VENDOR_AMD:
+> -		return val & ~cc_mask;
+> +		if (sev_status & MSR_AMD64_SNP_VTOM)
+> +			return val | cc_mask;
+
+So if you set the C-bit, that doesn't make it decrypted on AMD. cc_mask
+on VTOM is 0 so why even bother?
+
+Same as the above.
+
+> +		else
+> +			return val & ~cc_mask;
+>  	case CC_VENDOR_INTEL:
+>  		return val | cc_mask;
+>  	default:
+
+...
+
+> +void __init hv_vtom_init(void)
+> +{
+> +	/*
+> +	 * By design, a VM using vTOM doesn't see the SEV setting,
+> +	 * so SEV initialization is bypassed and sev_status isn't set.
+> +	 * Set it here to indicate a vTOM VM.
+> +	 */
+
+This looks like a hack. The SEV status MSR cannot be intercepted so the
+guest should see vTOM. How are you running vTOM without setting it even up?!
+
+> +	sev_status = MSR_AMD64_SNP_VTOM;
+> +	cc_set_vendor(CC_VENDOR_AMD);
+> +	cc_set_mask(ms_hyperv.shared_gpa_boundary);
+> +	physical_mask &= ms_hyperv.shared_gpa_boundary - 1;
+> +
+> +	x86_platform.hyper.is_private_mmio = hv_is_private_mmio;
+> +	x86_platform.guest.enc_cache_flush_required = hv_vtom_cache_flush_required;
+> +	x86_platform.guest.enc_tlb_flush_required = hv_vtom_tlb_flush_required;
+> +	x86_platform.guest.enc_status_change_finish = hv_vtom_set_host_visibility;
+> +}
+> +
+> +#endif /* CONFIG_AMD_MEM_ENCRYPT */
+> +
+>  /*
+>   * hv_map_memory - map memory to extra space in the AMD SEV-SNP Isolation VM.
+>   */
+
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
