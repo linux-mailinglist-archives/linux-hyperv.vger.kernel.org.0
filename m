@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDA56C0863
-	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 02:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B6CB6C07F1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 20 Mar 2023 02:03:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbjCTBSX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 19 Mar 2023 21:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
+        id S231289AbjCTBD3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 19 Mar 2023 21:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231511AbjCTBSA (ORCPT
+        with ESMTP id S231313AbjCTBCs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 19 Mar 2023 21:18:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CB18A4C;
-        Sun, 19 Mar 2023 18:08:47 -0700 (PDT)
+        Sun, 19 Mar 2023 21:02:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53601CF75;
+        Sun, 19 Mar 2023 17:57:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F9EF611FB;
-        Mon, 20 Mar 2023 00:54:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6EC2C433EF;
-        Mon, 20 Mar 2023 00:54:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BAB2AB80D3F;
+        Mon, 20 Mar 2023 00:55:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 319D8C4339E;
+        Mon, 20 Mar 2023 00:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679273698;
-        bh=1W4foeCLv85aF3fzENpo2hQiyMp8Ghi1jk81hvMbQHI=;
+        s=k20201202; t=1679273750;
+        bh=/rOIPUIJVVqX8BCQsHKfvDVez8rQz4LkR4WUutn+/4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ksuH4WC+O6SjhA3RD4WzV+9OH13oDsAJUPWu6/XGKp7ZOtb02oFt+bGUa9hruTjED
-         n+1P3w6BI5OrCNl2ADb7ivx1VIcyJ1lDTW9jkTwsBkYgZ/2JERv7KCEuO1LOxgIn7B
-         wZGm+h1sOyKR0pGzMnj0GVUpj0/9MpTgbq5b2ddV7AtDmE5NxC7G+1ulRB1h+44AG1
-         45S9lMRCL9Wupxy0Cup3teyj6DhrB2fqIXT+6SKKnDp4X7+LCJ/nuLkLW4ZTpOzSHv
-         sLtiDrVyuQ0fq8N51dBVBDZ6sAem/r2hzWQPtfduRObRyx5c++EjeHHWNTDE+ahb7b
-         HpJsV21CptEJQ==
+        b=gMeUhykayFqsmEelimlASJ4GcAv3Tv4IpIcS6nlXEvqMOoWuhjgVin6bHE6algtDy
+         hJBpcjDU8X8fVhDw09MR+iRiO98J8R4A7/uMi2qCNnO73NEGpTUZjmA4itEv40FgpB
+         vQLMQ3kcJM5A+54LSSO7PtO2ro/Bs9jU7ChTXTEt1ktyrbAZecNkUT7sEyrvlsARcA
+         ZZpGruHmDDzNUQEBXA0VRytU21szDUrQhXuWvvJugGwB3G+OD/UmAAaDojP7j8ltOC
+         X83RoWKrmSfGQnmo8/b8fX8dn5eapPBjlxQBTDwL5t7Hx9RM3QDX212X07iMHiCtXt
+         RQyhcgOvsB2oA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Kelley <mikelley@microsoft.com>,
@@ -40,12 +40,12 @@ Cc:     Michael Kelley <mikelley@microsoft.com>,
         haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
         jejb@linux.ibm.com, linux-hyperv@vger.kernel.org,
         linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 21/29] scsi: storvsc: Handle BlockSize change in Hyper-V VHD/VHDX file
-Date:   Sun, 19 Mar 2023 20:54:03 -0400
-Message-Id: <20230320005413.1428452-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 13/17] scsi: storvsc: Handle BlockSize change in Hyper-V VHD/VHDX file
+Date:   Sun, 19 Mar 2023 20:55:15 -0400
+Message-Id: <20230320005521.1428820-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230320005413.1428452-1-sashal@kernel.org>
-References: <20230320005413.1428452-1-sashal@kernel.org>
+In-Reply-To: <20230320005521.1428820-1-sashal@kernel.org>
+References: <20230320005521.1428820-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -114,10 +114,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 16 insertions(+)
 
 diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 55d6fb4526804..a0665bca54b99 100644
+index 6110dfd903f74..83a3d9f085d84 100644
 --- a/drivers/scsi/storvsc_drv.c
 +++ b/drivers/scsi/storvsc_drv.c
-@@ -987,6 +987,22 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
+@@ -1050,6 +1050,22 @@ static void storvsc_handle_error(struct vmscsi_request *vm_srb,
  				goto do_work;
  			}
  
