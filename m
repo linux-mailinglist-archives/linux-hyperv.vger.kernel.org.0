@@ -2,30 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 770076C62E1
-	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Mar 2023 10:09:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B12266C62A8
+	for <lists+linux-hyperv@lfdr.de>; Thu, 23 Mar 2023 10:05:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbjCWJJ5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 23 Mar 2023 05:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54476 "EHLO
+        id S231622AbjCWJFB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 23 Mar 2023 05:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjCWJJc (ORCPT
+        with ESMTP id S231591AbjCWJEh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 23 Mar 2023 05:09:32 -0400
-Received: from out-55.mta1.migadu.com (out-55.mta1.migadu.com [95.215.58.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C2F1B324
-        for <linux-hyperv@vger.kernel.org>; Thu, 23 Mar 2023 02:09:31 -0700 (PDT)
+        Thu, 23 Mar 2023 05:04:37 -0400
+X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Mar 2023 02:04:30 PDT
+Received: from out-34.mta0.migadu.com (out-34.mta0.migadu.com [IPv6:2001:41d0:1004:224b::22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907CE1ABF6
+        for <linux-hyperv@vger.kernel.org>; Thu, 23 Mar 2023 02:04:29 -0700 (PDT)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1679562257;
+        t=1679562268;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NyEg017C1ywIX1wAn/q5NdZuOMZ8BdSt+EwBakRj+C0=;
-        b=rL5is+VMlk/R/98gOQvo9hI/r3EWFTkJzCppl65GYIBeu3seWtEy3bFQ9T0ybZpf+HAloY
-        ySfUBZFZ1dYGWavwB3uOqjfUAT6cVbIpUJR6bF90M7f6aT6tD8DECh3ltE0fPxI8wki0AH
-        hQgilZvJ6OCwmyHPHogcL4Nqv+5b90g=
+        bh=WkdvHrdmTL100mQnwE6Lnhv0ImSnOgCjctLH9bKwcXE=;
+        b=Ql7dbPkwPtVVv40kbYJwCExR/7AdHzcbhdBNTehLR3XeqZu/Jmv/PmcxjnWsYUAjuxdZh0
+        YVpI/JPA/YWsSxKClzdFA+R8LA3IgJXs9Ndmn9o8WKA+M3Cb8tqdRkAnfBjpwjaIjVUpfu
+        a3RhpJyDXW5ay6bF9gTQ/ek5kUR7/5s=
 From:   Cai Huoqing <cai.huoqing@linux.dev>
 To:     cai.huoqing@linux.dev
 Cc:     Derek Chickles <dchickles@marvell.com>,
@@ -55,9 +56,9 @@ Cc:     Derek Chickles <dchickles@marvell.com>,
         Long Li <longli@microsoft.com>, Jiri Pirko <jiri@resnulli.us>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org
-Subject: [PATCH 5/8] net/mlx5: Remove redundant pci_clear_master
-Date:   Thu, 23 Mar 2023 17:03:04 +0800
-Message-Id: <20230323090314.22431-5-cai.huoqing@linux.dev>
+Subject: [PATCH 6/8] net: mana: Remove redundant pci_clear_master
+Date:   Thu, 23 Mar 2023 17:03:05 +0800
+Message-Id: <20230323090314.22431-6-cai.huoqing@linux.dev>
 In-Reply-To: <20230323090314.22431-1-cai.huoqing@linux.dev>
 References: <20230323090314.22431-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
@@ -92,29 +93,29 @@ And dev->is_busmaster is set to 0 in pci_disable_device.
 
 Signed-off-by: Cai Huoqing <cai.huoqing@linux.dev>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c | 2 --
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index d39c3476b6d1..597174ceadc9 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -918,7 +918,6 @@ static int mlx5_pci_init(struct mlx5_core_dev *dev, struct pci_dev *pdev,
- 	return 0;
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index f9b8f372ec8a..8f3f78b68592 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1439,7 +1439,6 @@ static int mana_gd_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ release_region:
+ 	pci_release_regions(pdev);
+ disable_dev:
+-	pci_clear_master(pdev);
+ 	pci_disable_device(pdev);
+ 	dev_err(&pdev->dev, "gdma probe failed: err = %d\n", err);
+ 	return err;
+@@ -1458,7 +1457,6 @@ static void mana_gd_remove(struct pci_dev *pdev)
+ 	vfree(gc);
  
- err_clr_master:
--	pci_clear_master(dev->pdev);
- 	release_bar(dev->pdev);
- err_disable:
- 	mlx5_pci_disable_device(dev);
-@@ -933,7 +932,6 @@ static void mlx5_pci_close(struct mlx5_core_dev *dev)
- 	 */
- 	mlx5_drain_health_wq(dev);
- 	iounmap(dev->iseg);
--	pci_clear_master(dev->pdev);
- 	release_bar(dev->pdev);
- 	mlx5_pci_disable_device(dev);
+ 	pci_release_regions(pdev);
+-	pci_clear_master(pdev);
+ 	pci_disable_device(pdev);
  }
+ 
 -- 
 2.34.1
 
