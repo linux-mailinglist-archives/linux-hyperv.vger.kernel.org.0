@@ -2,111 +2,113 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA0386CA568
-	for <lists+linux-hyperv@lfdr.de>; Mon, 27 Mar 2023 15:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6DFD6CB58B
+	for <lists+linux-hyperv@lfdr.de>; Tue, 28 Mar 2023 06:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232461AbjC0NR1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 27 Mar 2023 09:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
+        id S229631AbjC1ExE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 28 Mar 2023 00:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232435AbjC0NRW (ORCPT
+        with ESMTP id S229501AbjC1ExD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 27 Mar 2023 09:17:22 -0400
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021022.outbound.protection.outlook.com [52.101.62.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954C61723;
-        Mon, 27 Mar 2023 06:17:21 -0700 (PDT)
+        Tue, 28 Mar 2023 00:53:03 -0400
+Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-cusazon11020016.outbound.protection.outlook.com [52.101.61.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B4E2114;
+        Mon, 27 Mar 2023 21:53:01 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JbM1D/zetlQ6RNFDMqa/LrvX6DmkEpOAMlVA86TaRlRFwjFH6Vd7TZvZx0jSa4IX9UZ7RRuTAyNGU4nKBZr3jgfrxgrjuVyEcq4w4POpwlwTG05dg6woRj8YKuvoz4IdGK6CrS7N7Z7jj+kO/r1egiH1uZMqh4tk7KjHA1aQB93sdb0NRWCP0hieW55JVIenkJjUFBSgyeNiHImjRAgc2QrRDoKo9yVkibKITlgew+yXlL8WyOkBNTd7223B9Hbr124pnSsvPtjQ3+hGjZOkVjdfwITY0reD7zBD7GH/+Wdl0S+G+tRqJ2RPAMFwHcekj72dd51oQHaeOSGFapqyTQ==
+ b=hGz5tU5FJjjFuWGZUlP9zm5EjV6Dlz7RZpGAAdMyOB7x3dWNeKb3SCfUxihuvo7ZihIfLo978Q//p8dw5X00sN6f7vv205PzsjXIHoVHbd0Wx8YZUWzoFbsPaAdEk+v5TpMJjGoYnPg/zO/WHdesQeJfkUxv6f3myZ5Yu5DHHB7AfxpZ2uququzrCDHGDY8c39eai/BwvgXcRAWqGjkORTO35VZLb93yQQrEalnIxxtYUt/+G7boOQwPvzdylxwQGOa/aybFO1UAWwLXY4+i4HNQZoD8HOQf5RqCzENin4I3KiLzlpxltk5ho6rgDFXBjdAfK2I58Qcn6zctF3pySQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1wivdlfXRZHaFecrxciooBcchDqO+eaAuuDzZW4Ha+w=;
- b=XHJqwkGEWHmNnoGIomgbKX9KUR/bQoUWm0F0MBCBoQsRstEXXsQ6cJSP5MI/r0H/zugDlrk3lLHwf9zQk3Yt/BBO35QcOsjovxJWfZu4iJlpZMJjjJ/a5i9yPk7nDbNXLfdBRRMXCGV3Af4+809gSdj//VmGZdofoS8PajXZIguTplMG2K9JjBSS/MBmdoM31TvIl6HVus1nwdeaFBBd0w2laVGEyHHAkPvr0wTsc6vt8eIC618UIjeFz47P35XgoJD3k4diFK2gDAEPgwOYJAlwsNP9jTjJ32+SrMOeOV6vUXjgbSughsbm9vrYyDAF+/5USvQDJ+qxJxBhYf/PUg==
+ bh=wZy+tK8J9eDpzJ7Yshh9xR3a76dFwyAkawq9MNO5N1c=;
+ b=UMFLfX9Qm5mwge0QztcQ18lXfrcObUKGX4Rq0Z0dvWUooH1eAuEICDQtIV5IMfqxkWQyl3XnKcks/Mhr7fy/dv+SQVZhCM0ZmoRn5h+2gl9HUHr6JWdEH6Rr0M9WcOIDd/sth8jIa2riNfWAKnSah7DTUSnij/79M2w0XUViiII3tN+tQbgp5hQffYD9A5WrHnFqqhMBZjsDY6xqcFrfFJe5KhAvrrsRcV5GP76P6jNFgm/OACQN0r7t+zohMSrpiEJixKsHJ/pR0fAOpEPp+kAas3WPYahASWZKdTCiONqf4f5bLkxc2stkJ+rVhO7w0sGTUQC8UK7nQUDX54wYZA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1wivdlfXRZHaFecrxciooBcchDqO+eaAuuDzZW4Ha+w=;
- b=ESmlUFjbxjsQhHnOrPPphPK17SYI7i7EOAL2hPILRT44TqJ6r7N9KZLGvJKnMxm6nGrwBSUoPiIhhkBsz7492boSNPSEaZepse116CR/EUsjwSduoNzXjfiQsj0AXs+C1regiwIVTK3X0cho+9EsGHhj+kkBA+xiMPXQZiiie3k=
+ bh=wZy+tK8J9eDpzJ7Yshh9xR3a76dFwyAkawq9MNO5N1c=;
+ b=ibpaRq+yHqFqilFQfsxuV/Wr/r0wl5MRfti3fgHlSkiiu8vkD1A80cGfr85wzpO87pA7cRQf/0hS7NIw3PNqav4yBurNDC8z9Whw2TctguVIVOWK2hB/ESyIaAJIHlhPM0SswhEIi5sW9kLT3uB/JZTbuIhNBQW4x6PQolCCS0g=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
- by SA3PR21MB3960.namprd21.prod.outlook.com (2603:10b6:806:2fd::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.11; Mon, 27 Mar
- 2023 13:17:18 +0000
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::b7e9:4da1:3c23:35f]) by DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::b7e9:4da1:3c23:35f%3]) with mapi id 15.20.6254.016; Mon, 27 Mar 2023
- 13:17:18 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        arnd@arndb.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-Cc:     mikelley@microsoft.com
-Subject: [PATCH 2/2] x86/hyperv: Exclude lazy TLB mode CPUs from enlightened TLB flushes
-Date:   Mon, 27 Mar 2023 06:16:07 -0700
-Message-Id: <1679922967-26582-3-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1679922967-26582-1-git-send-email-mikelley@microsoft.com>
-References: <1679922967-26582-1-git-send-email-mikelley@microsoft.com>
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:30::23) by IA1PR21MB3402.namprd21.prod.outlook.com
+ (2603:10b6:208:3e1::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.6; Tue, 28 Mar
+ 2023 04:52:58 +0000
+Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::97b2:25ca:c44:9b7]) by BL0PR2101MB1092.namprd21.prod.outlook.com
+ ([fe80::97b2:25ca:c44:9b7%6]) with mapi id 15.20.6277.005; Tue, 28 Mar 2023
+ 04:52:58 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     bhelgaas@google.com, davem@davemloft.net, decui@microsoft.com,
+        edumazet@google.com, haiyangz@microsoft.com, jakeo@microsoft.com,
+        kuba@kernel.org, kw@linux.com, kys@microsoft.com, leon@kernel.org,
+        linux-pci@vger.kernel.org, lpieralisi@kernel.org,
+        mikelley@microsoft.com, pabeni@redhat.com, robh@kernel.org,
+        saeedm@nvidia.com, wei.liu@kernel.org, longli@microsoft.com,
+        boqun.feng@gmail.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 0/6] pci-hyper: fix race condition bugs for fast device hotplug
+Date:   Mon, 27 Mar 2023 21:51:16 -0700
+Message-Id: <20230328045122.25850-1-decui@microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Content-Type: text/plain
-X-ClientProxiedBy: MW3PR06CA0026.namprd06.prod.outlook.com
- (2603:10b6:303:2a::31) To DM6PR21MB1370.namprd21.prod.outlook.com
- (2603:10b6:5:16b::28)
+X-ClientProxiedBy: MW4PR03CA0013.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::18) To BL0PR2101MB1092.namprd21.prod.outlook.com
+ (2603:10b6:207:30::23)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|SA3PR21MB3960:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2cec5f0-a4d9-44d8-7991-08db2ec595b9
+X-MS-TrafficTypeDiagnostic: BL0PR2101MB1092:EE_|IA1PR21MB3402:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7399584d-aa1c-4959-56de-08db2f484c77
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ch/bgHkZ1Ldh+zQrGBC+7iSfguH/lTpTupfkUuFYIhEdhbg84oVqqi23NftCs35ODo5X8kSeoAeuw38nUvUQ9VhMyu/Uc8UqUGUFFLrqNoARoKLYS/RSuL063ZRa/IP/UwesLltT11r4SX9g8+39sc03uc/1Ok3Bm21eRJg800WJPEHAljLK71vznkfErgap46IO7IiuoXNEK99Dsg/8a8gA7e+DvhkvLVUS3Ct450UxsJANeKTnZiVGaIAABZSUYdiRGXCqfexl73u30/+E3Qo48v1QfseIqgA+mKnp7I8kIfk9lyae1VMkBdvveJB2TG1ghQj23BeniiPl7Ap+oUBczwqcC02pN2JW2vBA+WRUB8bVwdruqCdxfi82BOh3oRb8Gf5Ltv6mdLli7LZfoAOY1ohNBq/heEUY47t4mKlDxt9DmyRc0cLI8CniGlHZwPaEatIp8188QVYrHXNFvGEl5KQv4uG9a5a/rEcoyHIvFyrXThbdEy3k5sNrMvypUrNOQ7qtvG2Ln61083/s7t2NdTfqJTUqX18ZmgtCyqevmC3mcLJe8ZVEKlzSbUURJ/njYGmt0Sfb08nlkQAaqXc6V93WOX6ad34BZu4ytf4YFsFFu/qfZUzeB25z0oJlE6JOEeNbln/LlEouVJNuy9GWaAaYNi2PYFc9V0AB97RazsKpNT4rWj7wQWICy+L5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(39860400002)(136003)(366004)(396003)(451199021)(41300700001)(4326008)(82950400001)(26005)(2616005)(921005)(6506007)(6486002)(82960400001)(8936002)(86362001)(66946007)(66556008)(5660300002)(66476007)(8676002)(6512007)(10290500003)(83380400001)(2906002)(38100700002)(38350700002)(107886003)(7416002)(36756003)(6666004)(316002)(52116002)(186003)(478600001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: X3TawLQbXM539tbAUkvbmecmJ3kBdI+0kHQ4omMQfkdrjlbx5jzUy96eK99Mo5t26pS315CFdx4b3nobTPP/5V6SyyVAJks7anT8YbZ4N83bnW6zhR7feKFe2qoxVqXf+owOo+RNOgvtkX+nDB4uxc0m9ntSB+tqx+ntgKQB7mMO1dsAvvt2W0q0nTZWZxfocBoAnDrmp8rRMlqjy1hNFdIpLphPmqHQ3E+9/2J5wCFw+qg1ky+AU09hKDsq/dKbZT03Go68ed8vb9J+VLg5nJn/Fu9knZ8B90iFa09PqmEik/aBWp0ClsFEO6IABeOGyKOTw1Yq4gEFCyWragDB37EjmHbymZiYm5ZdtUBNQx949II8FFNWiNqxyA8mRgrNEHP+t4JV/zyAkUiCUSfTedK6G0f3rnsw9e3rwd1rHA1TgtyLQayuWX6mMzN56kCndHoSPQUq5OQYksA3ud6yh8RCof/NRLrk8m4N9q9KC1kvdV/4LohMhxhcxZnONd8cYke7ZUjCiRxQxY3RWVgVMvAzdu/rSH7b31oOZjDWDB1InNH5sUajOuXhfx/+SQf/th9dS++OVIWyPEZj25dXnt1XXQ/LHDUtksBe4RJSF86ZklXFFXEuF1zZAdM7J315mTCj5aF1yB5t8d685Frbcg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(451199021)(478600001)(83380400001)(10290500003)(2906002)(1076003)(38100700002)(52116002)(7416002)(966005)(6486002)(6506007)(6512007)(921005)(2616005)(5660300002)(8936002)(6666004)(316002)(86362001)(82960400001)(82950400001)(186003)(41300700001)(66556008)(66476007)(4326008)(66946007)(8676002)(36756003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YP9169tbuVsR/+nA9t9DPTwJhb7Trm/bj29oeeH4tok7O9a4UIJY01ponSNY?=
- =?us-ascii?Q?J/8QfjTGi7pX8fwgpORhnGEtBFMZi+DeOSAiYuNlU3bXV629HKfmYCKk3agm?=
- =?us-ascii?Q?3eO8Ia2xF6mcLqjOH0q/PtcYbNTpduOdDQzj0cUzIOz0XBwtfEaHWiiqe8cZ?=
- =?us-ascii?Q?qqaFtYO2uoX60G/+gziF19zDq95xdI4+9ZGFmy2cu7MUOerMJjf+3/gJVbNX?=
- =?us-ascii?Q?LT4PzVSpcCYieEJsohJa0IXyOhS7EwHjsOuFXqkj3PZJO1eTZdaAL7v/0V4s?=
- =?us-ascii?Q?J4m2BMJ8mpLRN2GgR04TqYzc68nmHuY2+xLthbPHjdULUO2sgTENi/cFebSA?=
- =?us-ascii?Q?M51vJFdZMnvG957h90VVWVKhmPXPHe6mNvziTuMvcgUJ81o98N9ulg1UMl1j?=
- =?us-ascii?Q?SqSdD3Ffx0wYGsmo6dYK5FEiMMmUBhME9jxt2loxgSlm33ijPgbHQu7Ot5Sm?=
- =?us-ascii?Q?ISrcOp3a1h7UW89XY57+KnExHn0lUnlun19/IY3YYOSuFiqhCTia0bEUVuCl?=
- =?us-ascii?Q?4ZdctoE9O/Lh8Ys/FIsesvWyhd3FsJkkL93H/xz3nhNevYo4iu4B4MfYaNz0?=
- =?us-ascii?Q?LhCzPSHexNw8UoYwlxFNnEgv3h/PoOaaf/CoWHK+IvPEYVi6t3TqfQFx21lH?=
- =?us-ascii?Q?wh+EsP77ThGNVE75O5hNp95yA4CbC3ebZcDMM38H6xxg7HC5wlZjs0BuZmqP?=
- =?us-ascii?Q?mqFPAKJZOpauSHGji4mWVDnaUBcmPMN2IkA1RnWZt5dy/iS6yNV8Vzev5bkQ?=
- =?us-ascii?Q?lm5hpHkoVKsosBtT3ABAcbH1Pomt2clsyRUnrSzR8ERuEBW7eN3y2EFd9CzN?=
- =?us-ascii?Q?fmHi0z1xp2buNMC9rDGl8fhYK9ekHI74uH42pVfe9wqPqSa/AGK30697GxAx?=
- =?us-ascii?Q?DfCmplm1nvnvCAV9MpWGwhP5uPVRCSYrM/vq8BD6qDEahA+2h2D9KhNalIKy?=
- =?us-ascii?Q?C2jtt/AALZvgwhpoheHuMZ7A6QTaVz0Hhv8CX7AlQXRBDskL+K/SCHc2dXRw?=
- =?us-ascii?Q?PBhx+RfNMlJLqm7qM05sRBsxPSjkGf+hMw8E/zlSbVAAk9fTtvWvb6cBDzw0?=
- =?us-ascii?Q?49Uu+DIj1O6i7D0f/iobURqb+BbbVE8Ipt55lQU1/g9ZVrxv7ZUDn3Wtj1Rd?=
- =?us-ascii?Q?JPMg8fmRfuvvJ+kQ6k8S1wUxoK22PaMWaWMFFbQyiq/fzGmXvOSdJy6WroBO?=
- =?us-ascii?Q?4rhnB96Ah7gxQ7QkNGoINRojilrTf/zA8SfEJ6KSqFipwr7DmVNgxhMsKnJE?=
- =?us-ascii?Q?m208pXF1JkuWJZUZOa0WI3LTMhsRPBsE7hfHkt0gbmXdx7uBjGFtYGprDW+b?=
- =?us-ascii?Q?GT+0zUggKHR/wiuQMJoyCyVfQr4OMiFlCbU/4tHyOQwIMgeIvY3PU4xkUAfY?=
- =?us-ascii?Q?M4RCi9Dse1bzTqseMyL/CfnCCm81Xy0z+DWnvvdd10BwIVVi4sTyLMhCIjSS?=
- =?us-ascii?Q?A4fzngC3vVvSAAHaNrIV8StoU6+ekF/850sbYsRPC3yPCndZdP4ufM29jst6?=
- =?us-ascii?Q?MOiYkmIqVaerg1xLBBKa5xBwWB2dBMEXVEJJKvYM+OMzvNwK+bxatADc3vgt?=
- =?us-ascii?Q?/0B9gpNmMMjc+uSre/B+VzK/A9yy3s/Vkqn8N+xH?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SN1v0tAzOzr77Ti2HvT1/GyqASBP57CPyaxWgK9GEWv7LhLD54v+AjjZ8xVt?=
+ =?us-ascii?Q?NIovg8kv1fvTVnYBDiJEfv5eiR5VsroSQkionudGdggJewBJrTOWRgzkRYd8?=
+ =?us-ascii?Q?UbOJbyP+y7mxenR3PdlxZ1fXHtOTksAtTUxDrpGdJNdROYSqthx9azmMXLal?=
+ =?us-ascii?Q?JEEtzaf4ZGqMHPTy2GelJde20NWY1qh1s4ncrLrcma6XlePdBK6KnUlwfjfc?=
+ =?us-ascii?Q?c3zOmAXixAmDMSQZ6AR3nbOKqCD4US5Wu7i+TV2gkicKeWh91tAxEX0WSPRq?=
+ =?us-ascii?Q?xdL3iIi0MNLjsp3Lo4gnE9dGecu3XClBpuBWFOE2E19lciVl5A5/3JkLYFeH?=
+ =?us-ascii?Q?v6nktGLRB0tlYly9/Euq8qLIydeE3VgtHfFFeExp3GYOThjHthkT/A2ot8Xk?=
+ =?us-ascii?Q?kuE3fydyOMY+7qH9MlVcGe50bFaZbmXfSr3vfd7RIiNbP6tILErdSZA41UXq?=
+ =?us-ascii?Q?lZKQoKJQ5PbCTSfShcaR2jA6EJdJr2CXySurhhwjRASeegEEuZ65w8+KWdJX?=
+ =?us-ascii?Q?0RvveUGX4fISfrYPzJ9jQm/7SIQiecFi7jy4ttCZg1wZIcI3bKb0sTOCZvOA?=
+ =?us-ascii?Q?6AI8OC40yt/mXoAP+c1EFBiyBWZHQIKyhFLrGDQQu6ywHXYOS0ip9dljLC/n?=
+ =?us-ascii?Q?YiNhtGQBLzyXy9fj3XK+nDJPPs1bS0QzxLpUr1ectj64ZmpBYH/Bn6pJaFFH?=
+ =?us-ascii?Q?WukibLVN/oCaaDOCY2Q+m14rrNG2/60LYQZFDO6CSJmGVbH/UqBj9+8DA+4G?=
+ =?us-ascii?Q?znHOtycy7v4gGOCJEZmOOvwL1s6zYFb0yc8/oc+TOQbmVTkvnaVzAs1tCjJM?=
+ =?us-ascii?Q?LLu4eovvHCp2uBC448iLMkYzwofsgp6AozBRuQ0NFYI4FKX4fOjlWsvAjLiU?=
+ =?us-ascii?Q?cgVvMHkDrAg+c+/5zWKsWiAs6Pz/G1WZg1g70RMt1ep+U2OdqJ6WzT6WkqpF?=
+ =?us-ascii?Q?Mb70lt+Px64Yi+SevRsbnRW0e77nbLJySdQeB8Pn7rNE3zRbPyx73mqGZXFO?=
+ =?us-ascii?Q?wuos0nqwRwg9PuXlvErOzeLJjb97MuDZrDoUhaGxopYTSSf/5FgA7lOa2jqq?=
+ =?us-ascii?Q?Zll2iQ0/2CVP1CU9FpLN2fdJ9aG7ySKbwSkmgfMeqnDQoGkQjQcneiaUPssD?=
+ =?us-ascii?Q?qs9xevyIFV5aQMENqCFvG21NgQiKTkiKwMOEv9H+r/17RqS9wu5bWvzqrtSw?=
+ =?us-ascii?Q?VhMRKMdHUPIbKIwfqkpgIySQkbjGhN1BLYYlN7zokd4WF4gEqsCNJUaLnhRY?=
+ =?us-ascii?Q?LF05mPthEYESGVeiHeabB3Sa7XX5EpqtoksUVGXeV4zY7KBIXuFmc2CgYN2x?=
+ =?us-ascii?Q?Jzat2N8pXjNpiK1fMfzjuLYIyP+4OLrY+/Pq27UKs/QBGRFYa0PK6U5/Jw9y?=
+ =?us-ascii?Q?Kc/ZhxOht6lq5OUtOZ+7aXqy4rQFlKELaMRHjldd3/7yJwT53MqlyPiknerf?=
+ =?us-ascii?Q?JaZl9Bl9rys9mpk1FM9EqGtCbofP+OP9lMxMgr8DQdg2tt21tTb9gV3qZ25y?=
+ =?us-ascii?Q?ifhCknkgjojsmiAXZF6kyQcxkGlOMuq6eCVb4XqIUcw6I/EJb1dBuIOB6TkA?=
+ =?us-ascii?Q?wuiZm6oFbdjBSMtRthm+2k5RDVtYwSopv0R2X0bpRIlUhBEKnxnGIAO/kVnL?=
+ =?us-ascii?Q?lRM5cMk0uCJt9N8ce3+pPecedyDy5AA/WB3hRt/5Tl9S?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2cec5f0-a4d9-44d8-7991-08db2ec595b9
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7399584d-aa1c-4959-56de-08db2f484c77
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2023 13:17:15.9715
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2023 04:52:57.6625
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7m6soiOALhqtLTR8otuiWmCLOlfQZHJ0UG6KBTG07trWupd66+LCuhW6AHMGPKmGrG4FXx/2vPieD9OLfXykQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB3960
+X-MS-Exchange-CrossTenant-UserPrincipalName: ix80xTd+eX7WjAEOHuh4hyufGUxW+knHOM2fneXoAl/8oJ1n8tuafZiCYOTmKL/f3B8ZGUAg+ePkpXVVR8rdDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3402
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
@@ -117,67 +119,35 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In the case where page tables are not freed, native_flush_tlb_multi()
-does not do a remote TLB flush on CPUs in lazy TLB mode because the
-CPU will flush itself at the next context switch. By comparison, the
-Hyper-V enlightened TLB flush does not exclude CPUs in lazy TLB mode
-and so performs unnecessary flushes.
+Before the guest finishes probing a device, the host may be already starting
+to remove the device. Currently there are multiple race condition bugs in the
+pci-hyperv driver, which can cause the guest to panic.  The patchset fixes
+the crashes.
 
-If we're not freeing page tables, add logic to test for lazy TLB
-mode when adding CPUs to the input argument to the Hyper-V TLB
-flush hypercall. Exclude lazy TLB mode CPUs so the behavior
-matches native_flush_tlb_multi() and the unnecessary flushes are
-avoided. Handle both the <=64 vCPU case and the _ex case for >64
-vCPUs.
+The patchset also does some cleanup work: patch 3 removes the useless
+hv_pcichild_state, and patch 4 reverts an old patch which is not really
+useful (without patch 4, it would be hard to make patch 5 clean).
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
- arch/x86/hyperv/mmu.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Patch 6 removes the use of a global mutex lock, and enables async-probing
+to allow concurrent device probing for faster boot.
 
-diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
-index 0ad2378..8460bd3 100644
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -52,6 +52,11 @@ static inline int fill_gva_list(u64 gva_list[], int offset,
- 	return gva_n - offset;
- }
- 
-+static bool cpu_is_lazy(int cpu)
-+{
-+	return per_cpu(cpu_tlbstate_shared.is_lazy, cpu);
-+}
-+
- static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
- 				   const struct flush_tlb_info *info)
- {
-@@ -60,6 +65,7 @@ static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
- 	struct hv_tlb_flush *flush;
- 	u64 status;
- 	unsigned long flags;
-+	bool do_lazy = !info->freed_tables;
- 
- 	trace_hyperv_mmu_flush_tlb_multi(cpus, info);
- 
-@@ -112,6 +118,8 @@ static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
- 			goto do_ex_hypercall;
- 
- 		for_each_cpu(cpu, cpus) {
-+			if (do_lazy && cpu_is_lazy(cpu))
-+				continue;
- 			vcpu = hv_cpu_number_to_vp_number(cpu);
- 			if (vcpu == VP_INVAL) {
- 				local_irq_restore(flags);
-@@ -198,7 +206,8 @@ static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
- 	flush->hv_vp_set.valid_bank_mask = 0;
- 
- 	flush->hv_vp_set.format = HV_GENERIC_SET_SPARSE_4K;
--	nr_bank = cpumask_to_vpset(&(flush->hv_vp_set), cpus);
-+	nr_bank = cpumask_to_vpset_skip(&flush->hv_vp_set, cpus,
-+			info->freed_tables ? NULL : cpu_is_lazy);
- 	if (nr_bank < 0)
- 		return HV_STATUS_INVALID_PARAMETER;
- 
+The patchset is also availsble in my github branch:
+https://github.com/dcui/tdx/commits/decui/vpci/v6.3-rc3-v1
+
+Please review. Thanks!
+
+Dexuan Cui (6):
+  PCI: hv: fix a race condition bug in hv_pci_query_relations()
+  PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
+  PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
+  Revert "PCI: hv: Fix a timing issue which causes kdump to fail
+    occasionally"
+  PCI: hv: Add a per-bus mutex state_lock
+  PCI: hv: Use async probing to reduce boot time
+
+ drivers/pci/controller/pci-hyperv.c | 143 +++++++++++++++++-----------
+ 1 file changed, 85 insertions(+), 58 deletions(-)
+
 -- 
-1.8.3.1
+2.25.1
 
