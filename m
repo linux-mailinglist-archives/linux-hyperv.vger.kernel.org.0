@@ -2,45 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD8716CD479
-	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Mar 2023 10:22:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE2236CD4CD
+	for <lists+linux-hyperv@lfdr.de>; Wed, 29 Mar 2023 10:37:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231202AbjC2IWc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 29 Mar 2023 04:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56754 "EHLO
+        id S231142AbjC2Ihn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 29 Mar 2023 04:37:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231152AbjC2IWS (ORCPT
+        with ESMTP id S229563AbjC2Ihl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 29 Mar 2023 04:22:18 -0400
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021026.outbound.protection.outlook.com [52.101.62.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E13B5B82;
-        Wed, 29 Mar 2023 01:21:17 -0700 (PDT)
+        Wed, 29 Mar 2023 04:37:41 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021026.outbound.protection.outlook.com [52.101.57.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F7A10E4;
+        Wed, 29 Mar 2023 01:37:29 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nxzlDAXKT8Jyv1QYdXvE2WKnvmvVHBTjaJ8L7u+VSLXQalfE+jX8qHtv2k5jRccK+mQOPjqMBFgzAEtpmRyUiAdMF7Ppm+9ocRXP1wab9c6PawNmp/SJF/bu7l28j0xkGvvw1lWAzblzsc5wrwtd1Rb2BgMWMfcQYlafkU0Wz31c6fckVqgx5RXMtjPQPGCL4qabiqobcGbgxDuCUZ19zIpUVVJvK/tzSVIBCSpaEtuQYiXoN+PVzwlANuAybz6A2ghw9Haa5MUx6FlpWyvuklGlupAfD87cq+L9fDWLq75JiXLKG7BpbwmxiLtanc2h5+jxLhx0KrqnDkKTegGciQ==
+ b=DMloopnpbrlzx6tIvgTXa4poj0079PPObfmYSRZrccMLKkC+ED3pYLaaUE5Vt9HJswzCieMkjF6GwGtz4QNyN6q2Yy59MHbcyx6hhbAO6VmRpC5Fm1Fs89QZmw14EXyTb7C/qwn+W6yTFU0WYPv9DAPLfh2bC7W4/ab7FUQe5iwqA1LM4Nli5zGHenbrm7kE+mlsIJPWGe5Xf8dQoY1fZ8oE/TiF6WbYUZZmTEf2g2F8olzJt0jyUJXtPZfnixHRtTEtgwIiXsBvxKyKEFUIhyGg+bpV9TE8rwcvRHKC0ot3Glk2XUNYAUk6AWZVBAgUslWWl8qbCuekPZ8rBI8+Dw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+i4kCWKvgSVf0AOw9WBGGh7yOWARMa275NXQbjbxoMU=;
- b=afrbOixHY/Wn37tSepYAaWK8x94Xo8yBx1hZQtDguFnW8aHgw6U8HmQCV5cFxT8z2PSt5/mCWEsz+bEKJPFtC30sGu3aYoo6Gz3w9WtUO1qYklCUZZt+7iNOMkz1rwxXX9v/lSLbRz+fJaf0sBCoKeax6Yn9CcihRvxWCATGHITuqIW8tJkMSuJhkqq4IPzXsFCuofKkSJ+Wo5l2ENq7dhldTjzzpIyQierC74ap1InqFy+9F9k5DbqMU1pxJU0VIJV4y3gZ/DLw1Vy7t6B1ztCoHtqHrqHdQbDFCYF8LoFCN6hsJXOJfePymC+/DSIG1iJENXF0ua/LOYGp+GxTIg==
+ bh=ubL49LYY3CYuZenm4FRtFViIj3GpwcCkisWsjLwZ6+s=;
+ b=V7eOziy9JtJHG5SUtLUMjUfCEQRH5O+Z8N9qRRL78v9TQ5Awh/C7SKV5Uz5OLq39R8K4TmTl8i1ep+3Gc+5C0YPgx1tFxvQceBBKZn84PNgu0LgCE9AAXNNINXa69QDfx6LI9paHti8Ra7uhP9zNEGzZXsk0nSeq7qknSqVaZvuWyknxtWy1F1yUFyV4DjXoXd2b+drMtoMzWZS/LFNmzAlc0ExJRR4GJh5yLDHnh11BwQe71POWds7I0mJhNpeA1PTVb9dy3fYGSaHNAz/4r+oM2bDPqop7j7Zu0P2HeJcIIExGr9ERUBqcTpJyP78OnS0fbfd+Gl4GyrnStnNUXA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+i4kCWKvgSVf0AOw9WBGGh7yOWARMa275NXQbjbxoMU=;
- b=b0RlnQyx1nrVWDrspw3o/Fj9eM7S1y8CEU8DB12Mnxqj2aFXRKeAMMgIEiPJfsEasiMHJwy67Feuy4fwKPuGZrOaCdo58UIV4V1TH6lQ/ov/oo3qlXGuiJvgIpwpJkZvPp8h/Js/MpMwIt789FizwK5qZQnJEPNZ6OOwoiQiCd8=
+ bh=ubL49LYY3CYuZenm4FRtFViIj3GpwcCkisWsjLwZ6+s=;
+ b=ieQySeNtld6NYNEmPxD4XbIuxepA8uAXQN+dHLT8sVBGcMtTDPQNSmfIZO04dh2ddI/qPZVP3XXcW3qf5Wafn8K0uL4EZ1EmmeZYZ6SnEYIb7qlZOkivcU68T2Oj9AU513R6VbbgVs/CqjSMwOyioj1hoKxhDEvH2cFzK+TmlFQ=
 Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
- by SN6PR2101MB1358.namprd21.prod.outlook.com (2603:10b6:805:107::20) with
+ by PH8PR21MB3927.namprd21.prod.outlook.com (2603:10b6:510:251::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.5; Wed, 29 Mar
- 2023 08:21:15 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.9; Wed, 29 Mar
+ 2023 08:37:21 +0000
 Received: from SA1PR21MB1335.namprd21.prod.outlook.com
  ([fe80::2e52:d6aa:9a99:500a]) by SA1PR21MB1335.namprd21.prod.outlook.com
  ([fe80::2e52:d6aa:9a99:500a%5]) with mapi id 15.20.6277.010; Wed, 29 Mar 2023
- 08:21:15 +0000
+ 08:37:20 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Long Li <longli@microsoft.com>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Saurabh Singh Sengar <ssengar@microsoft.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "davem@davemloft.net" <davem@davemloft.net>,
         "edumazet@google.com" <edumazet@google.com>,
@@ -56,79 +57,79 @@ To:     Long Li <longli@microsoft.com>,
         "robh@kernel.org" <robh@kernel.org>,
         "saeedm@nvidia.com" <saeedm@nvidia.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH 1/6] PCI: hv: fix a race condition bug in
+Subject: RE: [EXTERNAL] [PATCH 1/6] PCI: hv: fix a race condition bug in
  hv_pci_query_relations()
-Thread-Topic: [PATCH 1/6] PCI: hv: fix a race condition bug in
+Thread-Topic: [EXTERNAL] [PATCH 1/6] PCI: hv: fix a race condition bug in
  hv_pci_query_relations()
-Thread-Index: AQHZYTEw5EIgYDC+IUOtVNpvTo0Kxa8QZ0BAgAD9eoA=
-Date:   Wed, 29 Mar 2023 08:21:14 +0000
-Message-ID: <SA1PR21MB13356B7C8DD4DA9CC20A880ABF899@SA1PR21MB1335.namprd21.prod.outlook.com>
-References: <20230328045122.25850-1-decui@microsoft.com>
- <20230328045122.25850-2-decui@microsoft.com>
- <PH7PR21MB32632E889A7F589C32FE51EDCE889@PH7PR21MB3263.namprd21.prod.outlook.com>
-In-Reply-To: <PH7PR21MB32632E889A7F589C32FE51EDCE889@PH7PR21MB3263.namprd21.prod.outlook.com>
+Thread-Index: AQHZYTE8ycJYvqlEuU6bxR9LLTVmZa8PqarwgAABRpCAAMcOgIAA++dw
+Date:   Wed, 29 Mar 2023 08:37:20 +0000
+Message-ID: <SA1PR21MB13359123DC327D00C2EF47E7BF899@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <SA1PR21MB133553326FBAD376DE9DB48ABF889@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <20230328172445.GA2951931@bhelgaas>
+In-Reply-To: <20230328172445.GA2951931@bhelgaas>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=90dfa640-62da-43df-b474-aa70d6393cab;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-28T16:46:18Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f08b4990-b6f9-4486-a469-f8ba0684ac06;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-29T08:26:20Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|SN6PR2101MB1358:EE_
-x-ms-office365-filtering-correlation-id: d2502342-feba-4e15-a150-08db302e9030
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|PH8PR21MB3927:EE_
+x-ms-office365-filtering-correlation-id: 7527cc86-4685-4fa5-8d0e-08db3030cfc2
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8De/SFVB5HPsZnbTZxRY7aedKoj3th48ijOWS6G2VdaKEreeRcV+ditDZXHGuRkCMeqr1n+SO0oAyKMfFhoPJU42NwTCX1Q/y8OHAJENR/YxcmMpmF6+zm4FuhGCEvGQSK7KiFKqPM4OoIZcfhMAcMYVDhvwO06eRaJnfLag/IR1dADfqVyymIdkIRzYFK8jwlqBIUUBncG3+yyVXN6c3uyPCCuDJfSNJSqM8gB+dWqt1fniQlpC0hwLcMjSIaEVKNb4vzFRrtgpqidewtxXErzF3FF3xW4QpUxqcNIxZQ/eNzk6b1nDISaZrkuW64vND55vRM8b45D4Fx90MOifKRaVLLGKY/zCrr4ILqsc/+SahyN5tkNhQHfpFtv8D5XLku0G7TEWjehQ9igsyHT/KkaXu0blD/71kLtHo/ODeLZv8QjWMI1625f7ywsxBczGirpo1ezVPwTemmP6b4KoC3BFKAbcjeRMYjgB8gKiy4Pc7/dpjky4C/8HB2CQc8rvEUlXMfe8B4pOR9RWmQ4/Wr+FuE5KzFSbF+tz7xHQWAcjxHAZ0GNEudYbP3VaLGT+kleu1bHvV9twUjaPykV8+2yc2Hq/9kZsIupfhUgpq9Dypd45BKPayVu2rRzhFJFadkLw6dCrCbUHH1rFl3ODMxouP/Bm6NP3VSijserSJRAha6wv5vmN3KnsV6ZdUySw
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(136003)(366004)(396003)(346002)(451199021)(478600001)(5660300002)(64756008)(66476007)(66446008)(66946007)(76116006)(66556008)(10290500003)(4326008)(316002)(921005)(52536014)(82950400001)(82960400001)(122000001)(7416002)(41300700001)(8936002)(186003)(54906003)(26005)(83380400001)(7696005)(8676002)(9686003)(71200400001)(110136005)(6506007)(55016003)(38070700005)(8990500004)(33656002)(38100700002)(86362001)(2906002);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: vWl04fSXDqts3oBo1j4ky5dVVffRwSWnIqNzJp+DdEEzbpSpcb5iWcfWqoRjgzENWyPLi46pTaQt6Q09S/DMPVQSFkpV52oyXlx2P4qDIdn6oG3p0MkNDGYDc/wuzCGlqAgXzEXLYBcszkmTsKO/C6bhw1iBFvhqQPVH++YBLvUA9WXMtbtJ7DyRHX/0B2hdlUgUbnr//fjUTmbje6ArrihJn0x6PgW1WILLDKDKgJTDG353rXPf6PmoTsehKbiKbB6Xm+lT6+dA4ediCqE+ntvQovOFwyxamhbxkw7ExPlJXX9PFvrCRi4uDgtKOq3Hej1tubJ4Ivtocn+iRgQTymF+Upgf1TkRWcdLZ689oppVlokxABYcBBLxLtdjpq1mrF8VI+NvUK8lHJud0jqxpyu7FPD5uqUan2YDHLgC5+u3bW4/Q80H8SVF0u82hR7pvnHuXj6DYw3JE+VowPsUHtDBbLGday1p/58XS9P91bGxG5eHEYb4hmPFQ/lqBZV5Ou+amjnBaVHjit3sNgMCuZUZ0qlO5hoZM+xmAPDDcR7yY9M33cZIwFB7gVSW+D+B13PdRtUwbqwuiAz55UVeYej5ALRkUtuMMRWHXD8NtymGzFO5eUkcisHzJu1hBfSBRlU7btO2M5KEqDoTDGTKrhdU7zGmbAcAiGFpjSGblAw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(396003)(376002)(39860400002)(346002)(451199021)(26005)(82960400001)(122000001)(82950400001)(53546011)(9686003)(38100700002)(186003)(33656002)(8936002)(2906002)(5660300002)(7416002)(6506007)(52536014)(8990500004)(54906003)(38070700005)(10290500003)(478600001)(7696005)(316002)(71200400001)(86362001)(55016003)(4326008)(41300700001)(6916009)(76116006)(64756008)(66556008)(66476007)(66946007)(66446008)(8676002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?6HvROvVUHOOq6SnpUtfYj3R/KrrG0E1LHj51QF4YbIzZD1VoN/0UIfH7UhQ4?=
- =?us-ascii?Q?HxaaHFhA/sIti6UfroQt5/iEp1ZFW732KcW77vD47Jl14RhOQocxmK3tfFVi?=
- =?us-ascii?Q?kOK8kpNU1W0an8U2bT5REQvo/vrAbRoc99GSO635YLbdY72wluBCvmA3j3M/?=
- =?us-ascii?Q?Q6GeARqvcKyOE6hv7MW2olOrxNtpJ+0gjD7LtRlePXlSvxuqOH/nnqOFA4TZ?=
- =?us-ascii?Q?XrBYxNENeSN/2bXqqWe9fvanEcnSmD2EslFLFN5WpKL7BwxsaTlJcdpOWPRL?=
- =?us-ascii?Q?TujwQ4FyU6o93PgDuYhcypvD0is/Hy8POi1GKQW+4OGQRiL5ghwjNAxGcKKB?=
- =?us-ascii?Q?rg7n4g4PnxHbFyWYKCPdHP3VQrLHuMVvCmRX3tHE1uUEacUM0wMiZ8J+Dh0W?=
- =?us-ascii?Q?m2SB+0Tp+rH9DGU1c8kjMdnkWyJ3DJzdWsPAEwoJM9ax3wh2rln/F2DTxRi1?=
- =?us-ascii?Q?SgNU4hd0eYjenhUjyh5qRpnajBGtiCS6dPBPa/7Igf+ozdJF8iYCeUEALQhi?=
- =?us-ascii?Q?A5NHFAVpAeHcZ3YtBZhzaq3xdl0ekD8G+EF04gjwHSaOXwpQ5n+3Yyx3GX21?=
- =?us-ascii?Q?//K5FNnPOZREOGBg6xmF9BAs0eCcf3JPl5R7r6fdrc6PYE2ruK2wvzLdPGPS?=
- =?us-ascii?Q?AjHsufQK9KwEFkxARxsJQVH/hVm48AJFZ2idzkImoHvdZEktcCFxQEYuRCsl?=
- =?us-ascii?Q?mKTGQ3XgcaNz2IWZWWYWSqCIzkZjHuCBcKErSdaD7YawNcarocI4A5OBJrZ+?=
- =?us-ascii?Q?MHaSjm9h6a1UuLwF4ZeG/qAHLQi4WF6vvnFoAnPuC74gjDAWVZmNpXlGyVpW?=
- =?us-ascii?Q?wZH3TdEINPOJW7OYRCceuZ4OZHSRGhng9yC49tf7Xrnku7mGE8QLBI1kfsQO?=
- =?us-ascii?Q?la44eD91Vn8MpFMaozl1oGklyFSv3Rcq+tCNTAFloonCBhWWlVQzNtHlK0/4?=
- =?us-ascii?Q?whVMG3SHE83m46HPrgA/P6FT8HUUWULLUarLVRLZ/Pzw/HV9313qjxv/eMxe?=
- =?us-ascii?Q?chnpV7CRAU77z472g6P47BbOn0E8GLqv1Ulyw1/i75Dz2XCBLzL473Qk4Iaj?=
- =?us-ascii?Q?f4K0QfKB+4BkIgssxjlsK6TJL8v51eRiia951yqV3CH5l4Eef+khaFCrJlMR?=
- =?us-ascii?Q?US1dwhv42BTPPzWhMrSDmv6sJZnbyVkiwDtiiQW8CUhwwaiAl8O7k6XVQV02?=
- =?us-ascii?Q?J/gfPsUvRA2BklSd1KXkWTro3EPcWxenb+0My0Yc0ASJwSDM3RZNUZbFLbHo?=
- =?us-ascii?Q?IgUEteJpWrnfJ4SQTC9Uii7ecHOsCHvHeDSaVfXyI0WRv58zLrNzScL85DdM?=
- =?us-ascii?Q?KEurhWHJZtwFtu0WsvxWXMw/rdGedLwcjg0YM3PJULmvm7cCJMt12qv+6QP4?=
- =?us-ascii?Q?JBoGUYA5kFHWd2raJW2SdCzHm3Y0W08znQDwuwV9FNc2DzDRLYE3hqzi1X6Z?=
- =?us-ascii?Q?iwvvFjNxFvFwECQXQaGZZaBrbzpTh/hwIEW/x9SFJr1+3E89RXk/NRbyoy9Q?=
- =?us-ascii?Q?W5AFmifYvMdp60jYQh/kBoRYKI/UKzXskj7cm5Cbbo5cts2XCPdiTMVXBdsm?=
- =?us-ascii?Q?LZgmWG1sBArQPHMb4UGC+zPbqiQt1rQIoGgKQOm3?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?2D+F5MGAWEDrBp1zTdV2gEhBhgYcTtAWzsc1lNWn0q+OCr8Tqgd9H/hJPKbH?=
+ =?us-ascii?Q?LWEG81GJEJDDYRF+7h+I8Du6mXeU4gVrbagl1Jz3y4GfzrOcZkEWpqAZUft6?=
+ =?us-ascii?Q?7NqqtDxcZRexgGPT/Su9Um1LEQn0HsZRiSgOYrtDuViGEDnrxIpmAdjNSbtQ?=
+ =?us-ascii?Q?Ew844UheZnYjpMlY8LwkodYTMh4DNX339ZZKye61epiuBQ6hXDlQ+CR5Mj90?=
+ =?us-ascii?Q?4GFkXUA1dwehcw7m55wcO69SkGkYTYS5xgWEkzpEn+/ejz+68tU8W9yvVM/6?=
+ =?us-ascii?Q?96TvSeRnfAyl0yt5cLqF/n9VF8jK3kpkZO5eJz0wo5C/uSfLcpi0gNlESTIK?=
+ =?us-ascii?Q?rGbrEA5ULPt/shJKD8kzL7BoXM8b0o/S7mkLtnJguWfeZ8GLh5Lc4T8eoVqo?=
+ =?us-ascii?Q?bZTsZYbugB2qWto8zzIh4y88Z8a+fLh4709zIPQA6d33EBU10YRuBTu6wJqR?=
+ =?us-ascii?Q?lpBNfPr4rb9RtTXvL5xeQEiel6J4qJaU+h1G66LeBt631SBfrPwu4hLL39Wl?=
+ =?us-ascii?Q?ODkXxEABWg6rAN1HVxS4gRw+3Jw1YRhPsOajzydGJME91SS/sc3OAZAsrqok?=
+ =?us-ascii?Q?fNT8DTstkdPga5fCEC9kvaqpOzxXcxSu6Lz+9FGMeAXLSnj+CKKGNkheR+t2?=
+ =?us-ascii?Q?/GaqekmNYVoNIYkzekgmLZq0R283Tdx8hESiZtpGovEUD6E8pNSg6bRVdNY0?=
+ =?us-ascii?Q?UU7nO0Vqef9JA5E+C2oWHZA3SdNeF+SQAkGexf5iwIfDGpYGFyIU0sIwyj69?=
+ =?us-ascii?Q?pgQbsjOq4TynBtnEQOReyjPLzeXXvQqTUA/ahT8ns1mnOl8IRCJ2OkKXCVW9?=
+ =?us-ascii?Q?HYPHURx8w1IERW8g3OjQsp4eUCHSyU9TkT70f2FwkyYiZxlieNZQhaCWyWbZ?=
+ =?us-ascii?Q?JZjZF9Bd8dvo6j91Jv9rB7BxNY86lkVWI+BYuogFRVZesMMzfamjGpdAaOBw?=
+ =?us-ascii?Q?uWJuB/4YEg6pxCyfnErJFMRMjiRFS6uxBH+pzP/+hJYhowZP13IPuBQFl9Dh?=
+ =?us-ascii?Q?r7sH/sgZhFXjQ57pALqu2XamGd9hGXqDXBw5X7kWhadcYC6qxXjt0cKF8OM8?=
+ =?us-ascii?Q?j/UpDI4pRKUxuZlqtAjpwWVrlobyhbiGGjAoVdnmrGCkZOJ8vVzMj5azgzNb?=
+ =?us-ascii?Q?vWv0cdmlUo7mYuPw6BLpU2MJSo/puVrtb/W+VsQeLDXkb7ZFarLm6bhEX3DT?=
+ =?us-ascii?Q?Qkpsk3ek/rFGKkdI/uwhGhZzpng9ywgiXIuVeteOuQYu3YSEOMGSWkIEFhbl?=
+ =?us-ascii?Q?SQlnLvYXbKaAwkLo3Gp6DMGQFVXq6yLxIOAPTJWoKQzFCGMfc5U8ihDeupTO?=
+ =?us-ascii?Q?QNeR9pUEzrdC0jib4L9K94KYUBif+19tdThkxVkzxvmAh7lod68fNHY5RmY2?=
+ =?us-ascii?Q?qNk3Ym11HrP6vU2S0WTklnGxUOn2ClWk2/AtNiYcvwu/6sSQKEfQIY2FbI6R?=
+ =?us-ascii?Q?oATZNHgODd64iZ1QCBxiLTmjlD3kh12a9HdDLGdpCNSkuXms22YjTnVwlR2r?=
+ =?us-ascii?Q?oER3HNGxvBIeRkSfjOPLcjOSkM4Y/gxau+p28NZkTRnQ6OHoGtIWIxpvcEnq?=
+ =?us-ascii?Q?+Npk9oBcpiiu+dMB+rrCVQEXzveDuZocDKmlBALf?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2502342-feba-4e15-a150-08db302e9030
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2023 08:21:14.8658
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7527cc86-4685-4fa5-8d0e-08db3030cfc2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2023 08:37:20.4891
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O7mrIwHVtmikXvbq4wgaxYZxpoMCeBRks6Livw8gJziIUKEIuxGliK09c1ZDiqMglxctD2vcusJUsuXEDv5ndg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1358
+X-MS-Exchange-CrossTenant-userprincipalname: HUTwfQD1NP9FjYvz2dYsEEbXTjN2b+k/WeKz5ANBttUR5HXB0BtAnjkmW21woffZRnsmiLCJdb0jzfGOqCO2pA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR21MB3927
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
@@ -139,48 +140,63 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Long Li <longli@microsoft.com>
-> Sent: Tuesday, March 28, 2023 9:49 AM
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -3308,6 +3308,19 @@ static int hv_pci_query_relations(struct
-> hv_device
-> > *hdev)
-> >  	if (!ret)
-> >  		ret =3D wait_for_response(hdev, &comp);
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, March 28, 2023 10:25 AM
+> To: Dexuan Cui <decui@microsoft.com>
+> ...
+> On Tue, Mar 28, 2023 at 05:38:59AM +0000, Dexuan Cui wrote:
+> > > From: Saurabh Singh Sengar <ssengar@microsoft.com>
+> > > Sent: Monday, March 27, 2023 10:29 PM
+> > > > ...
+> > > > ---
 > >
-> > +	/*
-> > +	 * In the case of fast device addition/removal, it's possible that
-> > +	 * vmbus_sendpacket() or wait_for_response() returns -ENODEV but
-> > we
-> > +	 * already got a PCI_BUS_RELATIONS* message from the host and the
-> > +	 * channel callback already scheduled a work to hbus->wq, which can
-> > be
-> > +	 * running survey_child_resources() -> complete(&hbus-
-> > >survey_event),
-> > +	 * even after hv_pci_query_relations() exits and the stack variable
-> > +	 * 'comp' is no longer valid. This can cause a strange hang issue
-> > +	 * or sometimes a page fault. Flush hbus->wq before we exit from
-> > +	 * hv_pci_query_relations() to avoid the issues.
-> > +	 */
-> > +	flush_workqueue(hbus->wq);
+> > Please note this special line "---".
+> > Anything after the special line and before the line "diff --git" is dis=
+carded
+> > automaticaly by 'git' and 'patch'.
+> >
+> > > >  drivers/pci/controller/pci-hyperv.c | 13 +++++++++++++
+> > > >  1 file changed, 13 insertions(+)
+> > > >
+> > > > @@ -3635,6 +3641,8 @@ static int hv_pci_probe(struct hv_device *hde=
+v,
+> > > >
+> > > >  retry:
+> > > >  	ret =3D hv_pci_query_relations(hdev);
+> > > > +	printk("hv_pci_query_relations() exited\n");
+> > >
+> > > Can we use pr_* or the appropriate KERN_<LEVEL> in all the printk(s).
+> >
+> > This is not part of the real patch :-)
+> > I just thought the debug code can help understand the issues
+> > resolved by the patches.
+> > I'll remove the debug code to avoid confusion if I need to post v2.
 >=20
-> Is it possible for PCI_BUS_RELATIONS to be scheduled arrive after calling
-> flush_workqueue(hbus->wq)?
+> I guess that means you *will* post a v2, right? =20
 
-It's possible, but that doesn't matter:
+I guess I didn't make myself clear, sorry. The "debug code" is not
+part of the real patch body -- if we run the "patch" program or "git am"
+to apply the patches, the "debug code" is automatically dropped because
+it's between the special "---" line and the real start of the patch body (i=
+.e.
+the "diff --git" line).=20
 
-hv_pci_query_relations() is called only once, and it sets hbus->survey_even=
-t
-to point to the stack variable 'comp'. The first survey_child_resources()
-calls complete() for the 'comp' and sets hbus->survey_event to NULL.
+So far, IMO I don't have to post v2 because the patch body and the patch
+description (except for the part that's automatically removed by 'patch'
+and 'git') don't need any change.
 
-When the second survey_child_resources() is called, hbus->survey_event
-is NULL, so survey_child_resources() returns immediately.
+> Or do you expect
+> somebody else to remove the debug code?  If you do keep any debug or
+> other logging, use pci_info() (or dev_info()) whenever possible.
 
-According to my test, after hv_pci_enter_d0() posts PCI_BUS_D0ENTRY,
-the guest receives a second PCI_BUS_RELATIONS2 message, which is
-the same as the first PCI_BUS_RELATIONS2 message, which is basically
-a no-op in pci_devices_present_work(), especially with the
-newly-introduced per-hbus state_lock mutex.
+As I explained above, 'patch' and 'git' automatically remove the part that
+don't have to be in the git history.
 
+>=20
+> Also capitalize the subject line to match the others in the series.
+>=20
+> Bjorn
+
+Thanks for catching this! If this is the only thing to be fixed, I hope the
+PCI folks can help fix this when accepting the patch. If you think I should
+post v2, please let me know.=20
