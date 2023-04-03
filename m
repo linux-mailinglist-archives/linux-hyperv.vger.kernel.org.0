@@ -2,37 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E83F6D552A
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 01:22:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12F036D5533
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 01:23:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233773AbjDCXWU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 3 Apr 2023 19:22:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
+        id S233879AbjDCXXL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 3 Apr 2023 19:23:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233284AbjDCXWT (ORCPT
+        with ESMTP id S232745AbjDCXXJ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 3 Apr 2023 19:22:19 -0400
+        Mon, 3 Apr 2023 19:23:09 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E5889211F;
-        Mon,  3 Apr 2023 16:22:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB6FA10C;
+        Mon,  3 Apr 2023 16:23:08 -0700 (PDT)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6A784210CBF2;
-        Mon,  3 Apr 2023 16:22:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6A784210CBF2
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3C148210CBF2;
+        Mon,  3 Apr 2023 16:23:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3C148210CBF2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1680564138;
-        bh=MC+jadVc7FZbGi+PwmB9b0t3If3HuxEogBotcxti98I=;
+        s=default; t=1680564188;
+        bh=y3i3ILhMmxV1ebXDwdyEOEKLgDclYCNwTf+8O1DdSIY=;
         h=From:To:Cc:Subject:Date:From;
-        b=X46iBUYGR8gEtSk2jXJFF/MeQphJna/uVGxpdfPl5XYIAR4pTYTc84kVOd+hdx3XR
-         nS2se5fOGKUeQuy4BHNYxTtIXjN4TIfXpA/jyd1U/u9dJQ665wqHZq33vv+0PfPoc0
-         jftKOfk+FSmfnZl7TZEafLjzQ91RTAy09UYjrisU=
+        b=JZ59pRikh4gCot8Snc/748VAOZv2Rto3GGHicLk4hnI+99Km6WH75zI2DsTvgj+am
+         IAbKMcgpIERqL8K45BbrcHwxJEya++Ol1B7eW2WaNIC3KeRUodmXwhnMnfY7zmJjhf
+         l17luQKroD6tGj4Phh6ruCOa1jaer2dQTBbWsYaI=
 From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     mikelley@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
         haiyangz@microsoft.com, decui@microsoft.com
-Subject: [PATCH] Drivers: hv: Do not free synic pages when they were not allocated
-Date:   Mon,  3 Apr 2023 16:22:02 -0700
-Message-Id: <1680564122-30819-1-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH] Drivers: hv: Use nested hypercall for post message and signal event
+Date:   Mon,  3 Apr 2023 16:22:58 -0700
+Message-Id: <1680564178-31023-1-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 X-Spam-Status: No, score=-17.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
@@ -44,31 +44,47 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In case of root partition or snp, the synic pages are allocated by the
-hypervisor instead of the kernel, so they should not be freed.
+When running nested, these hypercalls must be sent to the L0 hypervisor
+or vmbus will fail.
+Only relevant for x86; nested functionality is not available in ARM64.
 
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
- drivers/hv/hv.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hv/connection.c | 4 ++++
+ drivers/hv/hv.c         | 5 +++++
+ 2 files changed, 9 insertions(+)
 
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 9dc27e5d367a..04bf7f168976 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -539,6 +539,10 @@ void vmbus_set_event(struct vmbus_channel *channel)
+ 	if (hv_isolation_type_snp())
+ 		hv_ghcb_hypercall(HVCALL_SIGNAL_EVENT, &channel->sig_event,
+ 				NULL, sizeof(channel->sig_event));
++#if defined(CONFIG_X86_64)
++	else if (hv_nested)
++		hv_do_fast_nested_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
++#endif
+ 	else
+ 		hv_do_fast_hypercall8(HVCALL_SIGNAL_EVENT, channel->sig_event);
+ }
 diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index c7f7652932ca..a10cf642c9ad 100644
+index 8b0dd8e5244d..c7f7652932ca 100644
 --- a/drivers/hv/hv.c
 +++ b/drivers/hv/hv.c
-@@ -193,8 +193,10 @@ void hv_synic_free(void)
- 		struct hv_per_cpu_context *hv_cpu
- 			= per_cpu_ptr(hv_context.cpu_context, cpu);
- 
--		free_page((unsigned long)hv_cpu->synic_event_page);
--		free_page((unsigned long)hv_cpu->synic_message_page);
-+		if (!hv_isolation_type_snp() && !hv_root_partition) {
-+			free_page((unsigned long)hv_cpu->synic_event_page);
-+			free_page((unsigned long)hv_cpu->synic_message_page);
-+		}
- 		free_page((unsigned long)hv_cpu->post_msg_page);
- 	}
- 
+@@ -102,6 +102,11 @@ int hv_post_message(union hv_connection_id connection_id,
+ 		status = hv_ghcb_hypercall(HVCALL_POST_MESSAGE,
+ 				(void *)aligned_msg, NULL,
+ 				sizeof(*aligned_msg));
++#if defined(CONFIG_X86_64)
++	else if (hv_nested)
++		status = hv_do_nested_hypercall(HVCALL_POST_MESSAGE,
++				aligned_msg, NULL);
++#endif
+ 	else
+ 		status = hv_do_hypercall(HVCALL_POST_MESSAGE,
+ 				aligned_msg, NULL);
 -- 
 2.25.1
 
