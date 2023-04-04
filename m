@@ -2,86 +2,45 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A352E6D58EF
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 08:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B85DF6D5B65
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 11:01:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231643AbjDDGv7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 4 Apr 2023 02:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58472 "EHLO
+        id S232063AbjDDJBO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 4 Apr 2023 05:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233363AbjDDGv6 (ORCPT
+        with ESMTP id S233891AbjDDJBL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 4 Apr 2023 02:51:58 -0400
-X-Greylist: delayed 180 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 03 Apr 2023 23:51:55 PDT
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05772108;
-        Mon,  3 Apr 2023 23:51:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1680590739; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=F89UqXw7WQn5f+4lcR2kONlzODLlzIfwJy7Zz04RpohPSVehsbbMgZEJPSg3oqyylu
-    LlTMaa1hBjLS0Lgw9LAZnGz/jTCqdhzQ00WGJYdqdUAKi/6Gn1UZHs89ZvBjtgxKcXsv
-    vMF1xHK5gWANuy0nXxbmNKJ5GhaYhQKxmNh2fTnllCTxMP2w55/iK8UgrkbmBu4W7f/s
-    +K2LyH61OmtidXx2GGPbCwarLIsAzwLzaTsSJbzO/xUJlUCN4yxIrWNMj+jZCUQjp3oA
-    uQv8lYccEutrxumGl38oHzIfRJGzdtvNLKT1kQHFHND3EK6T4wZwN4glTJ8E6bL7buu1
-    aJjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1680590739;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=6ijxY7T4sM5SU91yAlbdXDryqtdhQfY77OxVU0pdxxg=;
-    b=eg57EhLvN99tk12f3bD6q6IFtqtKeEJVLZJStXhf/c0ek3tdTdqlwuLQc+VxhRsA1G
-    1a2j1FOM4Hgd8VKe1M8RDyJ8BDxVhcCMVj+OozlrhnHnAM2Zx8NDeUJNZKYavqJACo4b
-    OVzYp46HAWMHWv/TWgRZPZ1+4OGaEYo9KB8y29rh6IT3i+GIm71TcqRviFnOMnZnYwHY
-    bmv2hty8f0WBwxGRu8LFtVYMO1IvPTNKeBQT5biZh+8GG43vIXYj/mfxKOBfhH7Karn+
-    kbUCBjcOpe59mOtLj3BikDPz+qElEXk33OTxYevJU/Bw421sq2Z1LrWNkz00owAIIxWA
-    jGMw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1680590739;
-    s=strato-dkim-0002; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=6ijxY7T4sM5SU91yAlbdXDryqtdhQfY77OxVU0pdxxg=;
-    b=c3ngVn4/aX+uKOsb7OtrvlluqoyrtRuaGsCG0sZd5jhxIDm3FxPRN0GcrbadYIE/jm
-    IoNcAbjuk44fdRBMqc+1cAp58mb0zBTMrYuwqEcI558GEEsofxgaxaBvd37Zco8ACPbx
-    xzNJCa50aJ9EcdmyffFWRLK30uPSJV6cmKqubtF7bLYIuexmV5+hG8i0Yp9BegrYN2NN
-    hSGSNOy2U6lCm1eBeW7YQ76OP9UxLj7rdC5OaYU8xZrWi5rF+rKWVx5ZuF0LWiD7ZKe3
-    XjRyVO2lq5QvI/YkNPNjHLx6ljeu17K59eBMd/W/DXiTYMv4iYMPLQLjdpXF0Tb5yf9L
-    iSYA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1680590739;
-    s=strato-dkim-0003; d=aepfle.de;
-    h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=6ijxY7T4sM5SU91yAlbdXDryqtdhQfY77OxVU0pdxxg=;
-    b=P7q6CRlfbfuPOWxSSptAomak804v3w43nTbCKWtzxe99UK6fWWouIZ0cSelinU4Rd2
-    pgfFyc4N9h16VUFBc0Dw==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OuD5rXVisR5AEWIPBvsPI52f2TnxTwFPmhSWhc+9ByBCFU+BA=="
-Received: from sender
-    by smtp.strato.de (RZmta 49.4.0 AUTH)
-    with ESMTPSA id x6987cz346jd1uM
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Tue, 4 Apr 2023 08:45:39 +0200 (CEST)
-Date:   Tue, 4 Apr 2023 08:45:30 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
-        haiyangz@microsoft.com, decui@microsoft.com
-Subject: Re: [PATCH] Drivers: hv: Use nested hypercall for post message and
- signal event
-Message-ID: <20230404084530.2b9ca791.olaf@aepfle.de>
-In-Reply-To: <1680564178-31023-1-git-send-email-nunodasneves@linux.microsoft.com>
-References: <1680564178-31023-1-git-send-email-nunodasneves@linux.microsoft.com>
-X-Mailer: Claws Mail 20220819T065813.516423bc hat ein Softwareproblem, kann man nichts machen.
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MYRDLMDGnPR8M7CE41RN5it";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE
+        Tue, 4 Apr 2023 05:01:11 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B8A4B1FDE;
+        Tue,  4 Apr 2023 02:01:09 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E8EC5210DD83;
+        Tue,  4 Apr 2023 02:01:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E8EC5210DD83
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1680598869;
+        bh=dLfbqlPMal8+oV3kkCGkQ3uaW2UIpJDauSTLoOM/cLU=;
+        h=From:To:Subject:Date:From;
+        b=r8sXIGQloCBaDbqMcyJS8VSFfeuJhclCiRjayLdPdGalbHi1O0VljcG1FU6qXNwSZ
+         wDOOSGJfCeq5w39b2wcG5QLMCr/GRIfYvlldG6fb30fCSfAp18e1iHG3k6dylsWpVB
+         rPws80ojQmo0qxJEg8a4DDNc2MppohKQUNAwUoGI=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
+        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
+        jgross@suse.com, mat.jonczyk@o2.pl
+Subject: [PATCH v4 0/5] Hyper-V VTL support
+Date:   Tue,  4 Apr 2023 02:00:59 -0700
+Message-Id: <1680598864-16981-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-15.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS,URI_TRY_3LD,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,43 +48,71 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
---Sig_/MYRDLMDGnPR8M7CE41RN5it
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch series introduces support for Virtual Trust Level (VTL)
+in Hyper-V systems. It provide a foundation for the implementation
+of Hyper-V VSM support in the Linux kernel, providing a secure
+platform for the development and deployment of applications.
 
-Mon,  3 Apr 2023 16:22:58 -0700 Nuno Das Neves <nunodasneves@linux.microsof=
-t.com>:
+Virtual Secure Mode (VSM) is a critical aspect of the security
+infrastructure in Hyper-V systems. It provides a set of hypervisor
+capabilities and enlightenments that enable the creation and
+management of new security boundaries within operating system
+software. The VSM achieves and maintains isolation through Virtual
+Trust Levels, which are hierarchical, with higher levels being more
+privileged than lower levels. Please refer to this link for further
+information: https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm
 
-> Only relevant for x86; nested functionality is not available in ARM64.
+This patch series adds the initialization of the x86 platform for VTL
+systems. This also adds the VTL early bootup code for initializing
+and bringing up secondary cpus to targeted VTL context. In VTL, AP
+has to start directly in the 64-bit mode, bypassing the usual
+16-bit -> 32-bit -> 64-bit mode transition sequence that occurs after
+waking up an AP with SIPI whose vector points to the 16-bit AP
+startup trampoline code.
 
-> +#if defined(CONFIG_X86_64)
-> +	else if (hv_nested)
+Currently only VTL level supprted is '2'. This patch series is tested
+extensively on VTL2 systems.
 
-Should there be a hv_nested in the ARM64 code path?
-Looks like c4bdf94f97c86 provided such thing, so the Kconfig conditional co=
-uld be removed.
+[V4]
+- Move HYPERV_VTL_MODE definition from arch/x86/Kconfig to drivers/hv/Kconfig
+- Move Kconfig changes before its getting used
+- Replace initial_stack with current->thread.sp as per recent upstream changes
 
-Olaf
+[V3]
+ - Break in to 5 patches
+ - hv_init_vp_context_t -> hv_init_vp_context
+ - HYPERV_VTL -> HYPERV_VTL_MODE
+ - Modify description of HYPERV_VTL_MODE
+ - VTL 0 and VTL 2 -> VTL0 and VTL2
+ - Remove casting for this_cpu_ptr pointer
 
---Sig_/MYRDLMDGnPR8M7CE41RN5it
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
+[V2]
+ - Remove the code for reserve 1 IRQ.
+ - boot_cpu_has -> cpu_feature_enabled.
+ - Improved commit message for 0002 patch.
+ - Improved Kconfig flag description for HYPERV_VTL.
+ - Removed hv_result as a wrapper around hv_do_hypercall().
+ - The value of output[0] copied to a local variable before returning.
 
------BEGIN PGP SIGNATURE-----
+Saurabh Sengar (5):
+  x86/init: Make get/set_rtc_noop() public
+  x86/hyperv: Add VTL specific structs and hypercalls
+  x86/hyperv: Make hv_get_nmi_reason public
+  x86/Kconfig: Add HYPERV_VTL_MODE
+  x86/hyperv: VTL support for Hyper-V
 
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmQrx4oACgkQ86SN7mm1
-DoBRkQ/+JkI9dSELwuWH7eBkZ4o9RwqE9rtOvmbywx7LVL4MwyAgoTRV7XS2J7yE
-NFrqZTzpWZX02vnKujglHRizuIC7rJTx7CDFFzRIAcUc+YyRiaKHiEdUqv5321ws
-daH4d5MDSImwy8bsnzrNmupsxpfSPVwCmHBou7+rwJKQR/PPBzj6MS9MGzA6aKgj
-m0cX8MuMKnJCor0wHaCb3nUYwNdU9ezQE8TXGObars/2qB3xCtJQ9IJfbmBjFK70
-hilmET7LIsXOl3ma2aAcTKd3XR59tC6gxFYunqMS0TF0wAEBnjjsnD7xk8teyZJi
-4PMZOtAARTNBj5KG1ejmYIgq8Q8nOb478yFb+ibsRPeR2QqwM05CldQ8KKjSooOK
-0cphRYVl7JJAUCvDlb0sxD+YkokxQr+snIMrBS/MLFlBUU+SNRJFirX9QtRDagoH
-vJ0Nre0RYiPHPENRGquBieRZhJZf6xcN8hg1/uIpOUcpXSHP6bWnd8B1wXHDhx4y
-96558prfkYTMtC7OAUY1Td7tON4TrsEnOlpXhZM/i/nEiZfmqJk+M/BXqb/VgrlM
-3imyM/2UjOo2B7TwWf8OFe1VfIeH+aMVz/DMzl/OAon1vtnIRXvwxowY3aBQ2miG
-YyrQTYhdTa1WLxLK1vCTRF4Ma7b+ztop6ypVE3Geocbcnpdb980=
-=AoNI
------END PGP SIGNATURE-----
+ arch/x86/hyperv/Makefile           |   1 +
+ arch/x86/hyperv/hv_vtl.c           | 227 +++++++++++++++++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h |  75 ++++++++++
+ arch/x86/include/asm/mshyperv.h    |  15 ++
+ arch/x86/include/asm/x86_init.h    |   2 +
+ arch/x86/kernel/cpu/mshyperv.c     |   6 +-
+ arch/x86/kernel/x86_init.c         |   4 +-
+ drivers/hv/Kconfig                 |  24 +++
+ include/asm-generic/hyperv-tlfs.h  |   4 +
+ 9 files changed, 351 insertions(+), 7 deletions(-)
+ create mode 100644 arch/x86/hyperv/hv_vtl.c
 
---Sig_/MYRDLMDGnPR8M7CE41RN5it--
+-- 
+2.34.1
+
