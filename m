@@ -2,365 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 450726D62A9
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 15:21:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B487F6D62B2
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 15:23:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234989AbjDDNVN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 4 Apr 2023 09:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60872 "EHLO
+        id S234863AbjDDNXK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 4 Apr 2023 09:23:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235048AbjDDNVM (ORCPT
+        with ESMTP id S235049AbjDDNXI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 4 Apr 2023 09:21:12 -0400
-Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E373AAF
-        for <linux-hyperv@vger.kernel.org>; Tue,  4 Apr 2023 06:21:07 -0700 (PDT)
-Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-17aeb49429eso34490985fac.6
-        for <linux-hyperv@vger.kernel.org>; Tue, 04 Apr 2023 06:21:07 -0700 (PDT)
+        Tue, 4 Apr 2023 09:23:08 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEF7273D;
+        Tue,  4 Apr 2023 06:23:07 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id l9-20020a17090a3f0900b0023d32684e7fso1453131pjc.1;
+        Tue, 04 Apr 2023 06:23:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1680614466;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K+F4rCah4JtOzHbfyq5oZtwQO9PPoLtwo680gha6DKY=;
-        b=K5ZCHhFPCZQbNKupQk8gXaHuVssYD+It3NWFscmSBAVqW+6phRgPUwIbkEnCpaq+MJ
-         6xS9DMezNlm//cH5vuNVKQOwU7+wfV5SvlpepOaWHur18aFqo9MzqEY0bmuxb+Ek4qwn
-         pR963GQPGjTxxPxTnpe7ZT4suU7+8/iCF7FLE=
+        d=gmail.com; s=20210112; t=1680614587;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3RPu6VlUeSzQsBCDXOfMV1nLDEC2lpZYeS7SpzCxn7M=;
+        b=X+lpYf9kBFMDrYX3qQl+JFRPqkRUZz4ZkxQ+Q25Dj1AMebmfplDn1BOElWSkzT646U
+         DJxbPpk8y4va/y+NhRG7uWm6r/fPssypDJTiVtCN9Zy8NAs6twU19IHnAjBrvlXzWChN
+         0pTe9LSe55ogF+5HUnUX+MdmMxcAstAu++uWU1Hw2h02yQsrCl97AKWYvh4qFvT+unMq
+         VcY5G0XJdhZAzMNtCuAMuN/bWp+8/0rMiNIOxdecqgialjrE+uDzHynlonbFNdroPCxP
+         /MH96xB3ymGHatj3v6rp4Sz3PeTZDnlnwbofv3k6HqQp1q1/jwLFsAUju9/u1UgSZgzL
+         3MNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680614466;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K+F4rCah4JtOzHbfyq5oZtwQO9PPoLtwo680gha6DKY=;
-        b=ogsSzBnkPXyWuIYVYWLtPZeYYD2KQis3yboSYRfwFlyM32qIeg3cs6tYKrxPAFYH9y
-         I7qPV0nGqdyXCwVyAixp5XybrGmGT4BZCt9KDmkMkJFQE7m7i8Qe8wHRRr3UVwzLRdmS
-         qO9lcZGEBS737sdixDd/Z9FhrhRb5Q+aghau/WdnFkGpzs/lADvLqtrSwc8KmrBoZINw
-         0TEDKQh7EuGnH1f5LmFLKhk/Ff1ng841C94uyz57owfOTMRsI4WyhsAGmuA6qbrfOOdk
-         eadTiGw6Ge/Sj1bYQxNgSTZHWre98kHxUjFSXtCOiL2d8BmG+OYNMKS4P2PdiRu2LaEo
-         8qgQ==
-X-Gm-Message-State: AAQBX9dW4huAS8+nuwnFxroGFogDAIznqlxb/XrwtxNRq7ayNkULZvzl
-        rZGw0x/esuZ+j2uw0Fr+lOID/F25Z5G+z2Xwiayx6VLuoPxJCae7
-X-Google-Smtp-Source: AKy350YOJrJBY5nrKfTQ38UroSzkFg5MjS6c3ZLBSSNnpnbEzy1ys1tfMoCiEI8JtjGafmrooy4RB5NK7kx7Gp3UMks=
-X-Received: by 2002:a05:6870:6025:b0:17e:ac0e:9874 with SMTP id
- t37-20020a056870602500b0017eac0e9874mr1147821oaa.8.1680614466692; Tue, 04 Apr
- 2023 06:21:06 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680614587;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3RPu6VlUeSzQsBCDXOfMV1nLDEC2lpZYeS7SpzCxn7M=;
+        b=lEacYkUNUhabUmbFn12xKlrrAOU9Qwd+4unr3VmU39riK0MSDLgY1eGHpXmfC6lglp
+         A3Wfak/YhC4FuwAnuHHRehSWDP2Zo9y+eCJtpNL1+79kItVmdwRtwubXvIse69///l9A
+         oTlODdrq04GV9suUQkwMOYzY9MjmUEMZyLFvvLGsim9L4KkWTGpDlbIGWvQFzwO2pElM
+         0/2q+T4tb1Hxr8ZzB56Vm2fKaRS2Ia93MdNYVjS21fqpim/C3ACb+oHK0YWjdlGPvGu2
+         64dWUWst9bIsn29QGOdJrhDsasSOpYwsLUwvHAuoT9J1L64WfKGHSsRfqTSMVhwLmVtU
+         lbkA==
+X-Gm-Message-State: AAQBX9ddz6aGD53WRTaKL8IfqdW4xdMPj/lzBrQ89+Ci1+VciQeEwSXt
+        Ym3iVMnxtWWJ1J0iBP/DOy8=
+X-Google-Smtp-Source: AKy350anCelYHz08so8729YR0rRHw6Mupx2hEhWHQv8ym9I9UJCr21nrksRn8FlZ63WQrXoIWvhCKg==
+X-Received: by 2002:a17:90b:33c4:b0:23f:7843:93ed with SMTP id lk4-20020a17090b33c400b0023f784393edmr2842209pjb.8.1680614586865;
+        Tue, 04 Apr 2023 06:23:06 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
+        by smtp.gmail.com with ESMTPSA id t6-20020a170902bc4600b0019ab151eb90sm8298961plz.139.2023.04.04.06.22.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Apr 2023 06:23:06 -0700 (PDT)
+Message-ID: <e1579ebd-6436-4dc1-9983-20cefc100619@gmail.com>
+Date:   Tue, 4 Apr 2023 21:22:55 +0800
 MIME-Version: 1.0
-References: <20210102060336.832866-1-drawat.floss@gmail.com>
-In-Reply-To: <20210102060336.832866-1-drawat.floss@gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 4 Apr 2023 15:20:55 +0200
-Message-ID: <CAKMK7uHRTcdZxreD5ymc2TsV9LNePeR=JgvJbnO-q2_wN99kEA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic video device
-To:     Deepak Rawat <drawat.floss@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Hu <weh@microsoft.com>,
-        Tang Shaofeng <shaofeng.tang@intel.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [RFC PATCH V4 17/17] x86/sev: Remove restrict interrupt injection
+ from SNP_FEATURES_IMPL_REQ
+To:     "Gupta, Pankaj" <pankaj.gupta@amd.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        michael.roth@amd.com, thomas.lendacky@amd.com,
+        venu.busireddy@oracle.com, sterritt@google.com,
+        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
+Cc:     pangupta@amd.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20230403174406.4180472-1-ltykernel@gmail.com>
+ <20230403174406.4180472-18-ltykernel@gmail.com>
+ <f2dde9d6-dc04-4c33-7f9d-49454bb192da@amd.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <f2dde9d6-dc04-4c33-7f9d-49454bb192da@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Yeah way late reply, but I just stumbled over this and got a bit puzzled ...
 
-On Sat, 2 Jan 2021 at 07:03, Deepak Rawat <drawat.floss@gmail.com> wrote:
-> +/*
-> + * PCI/vmbus interface
-> + */
-> +
-> +static int hyperv_pci_probe(struct pci_dev *pdev,
-> +                           const struct pci_device_id *ent)
-> +{
-> +       return 0;
-> +}
+On 4/4/2023 8:25 PM, Gupta, Pankaj wrote:
+> 
+>> Enabled restrict interrupt injection function. Remove MSR_AMD64_
+>> SNP_RESTRICTED_INJ from SNP_FEATURES_IMPL_REQ to let kernel boot
+>> up with this function.
+>> ---
+>>   arch/x86/boot/compressed/sev.c | 1 -
+>>   1 file changed, 1 deletion(-)
+>>
+>> diff --git a/arch/x86/boot/compressed/sev.c 
+>> b/arch/x86/boot/compressed/sev.c
+>> index d63ad8f99f83..a5f41301a600 100644
+>> --- a/arch/x86/boot/compressed/sev.c
+>> +++ b/arch/x86/boot/compressed/sev.c
+>> @@ -299,7 +299,6 @@ static void enforce_vmpl0(void)
+>>    */
+>>   #define SNP_FEATURES_IMPL_REQ    (MSR_AMD64_SNP_VTOM |            \
+>>                    MSR_AMD64_SNP_REFLECT_VC |        \
+>> -                 MSR_AMD64_SNP_RESTRICTED_INJ |        \
+> 
+> Should we update the bit in "SNP_FEATURES_PRESENT" instead?
+> 
 
-Why do you have this dummy driver when it does nothing? Can it just be
-deleted? If it's just to have a driver, then we really don't need that
-on linux, there's no requirement to have a device driver for every
-device in a system.
+Nice cath! we should add the bit in the SNP_FEATURES_PRESENT.
 
-If you actually need to make sure that this pci device isn't passed to
-a guest vm or something like that, then the main driver must ensure
-that the pci driver is bound (ideally with component.c because
-otherwise you'll get the unbind/rebind dance wrong in one of the
-bazillion of subtle ways). Just having a driver doesn't stop anyone
-from unbinding it and then wreaking havoc.
--Daniel
-
-> +
-> +static void hyperv_pci_remove(struct pci_dev *pdev)
-> +{
-> +}
-> +
-> +static const struct pci_device_id hyperv_pci_tbl[] = {
-> +       {
-> +               .vendor = PCI_VENDOR_ID_MICROSOFT,
-> +               .device = PCI_DEVICE_ID_HYPERV_VIDEO,
-> +       },
-> +       { /* end of list */ }
-> +};
-> +
-> +static struct pci_driver hyperv_pci_driver = {
-> +       .name =         KBUILD_MODNAME,
-> +       .id_table =     hyperv_pci_tbl,
-> +       .probe =        hyperv_pci_probe,
-> +       .remove =       hyperv_pci_remove,
-> +};
-> +
-> +static int hyperv_get_vram_gen1(struct hyperv_device *hv)
-> +{
-> +       struct drm_device *dev = &hv->dev;
-> +       struct pci_dev *pdev;
-> +       int ret;
-> +
-> +       pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
-> +                             PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
-> +       if (!pdev) {
-> +               drm_err(dev, "Unable to find PCI Hyper-V video\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "hypervdrmfb");
-> +       if (ret) {
-> +               drm_err(dev, "Not able to remove boot fb\n");
-> +               return ret;
-> +       }
-> +
-> +       if (pci_request_region(pdev, 0, DRIVER_NAME) != 0)
-> +               drm_warn(dev, "Cannot request framebuffer, boot fb still active?\n");
-> +
-> +       if ((pdev->resource[0].flags & IORESOURCE_MEM) == 0) {
-> +               drm_err(dev, "Resource at bar 0 is not IORESOURCE_MEM\n");
-> +               ret = -ENODEV;
-> +               goto error;
-> +       }
-> +
-> +       hv->fb_base = pci_resource_start(pdev, 0);
-> +       hv->fb_size = pci_resource_len(pdev, 0);
-> +       if (hv->fb_base == 0) {
-> +               drm_err(dev, "Resource not available\n");
-> +               ret = -ENODEV;
-> +               goto error;
-> +       }
-> +
-> +       hv->fb_size = min(hv->fb_size,
-> +                         (unsigned long)(hv->mmio_megabytes * 1024 * 1024));
-> +       hv->vram = devm_ioremap(&pdev->dev, hv->fb_base, hv->fb_size);
-> +       if (!hv->vram) {
-> +               drm_err(dev, "Failed to map vram\n");
-> +               ret = -ENOMEM;
-> +       }
-> +
-> +error:
-> +       pci_dev_put(pdev);
-> +       return ret;
-> +}
-> +
-> +static int hyperv_get_vram_gen2(struct hyperv_device *hv,
-> +                               struct hv_device *hdev)
-> +{
-> +       struct drm_device *dev = &hv->dev;
-> +       struct apertures_struct *ap;
-> +       int ret;
-> +
-> +       hv->fb_size = (unsigned long)(hv->mmio_megabytes * 1024 * 1024);
-> +
-> +       ret = vmbus_allocate_mmio(&hv->mem, hdev, 0, -1, hv->fb_size, 0x100000,
-> +                                 true);
-> +       if (ret) {
-> +               drm_err(dev, "Failed to allocate mmio\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       hv->vram = ioremap(hv->mem->start, hv->fb_size);
-> +       if (!hv->vram) {
-> +               drm_err(dev, "Failed to map vram\n");
-> +               ret = -ENOMEM;
-> +               goto error;
-> +       }
-> +
-> +       hv->fb_base = hv->mem->start;
-> +
-> +       ap = alloc_apertures(1);
-> +       if (!ap) {
-> +               drm_err(dev, "Failed to get apertures\n");
-> +               ret = -ENOMEM;
-> +               goto error;
-> +       }
-> +
-> +       ap->ranges[0].base = screen_info.lfb_base;
-> +       ap->ranges[0].size = screen_info.lfb_size;
-> +       remove_conflicting_framebuffers(ap, KBUILD_MODNAME, false);
-> +       kfree(ap);
-> +
-> +       return 0;
-> +
-> +error:
-> +       vmbus_free_mmio(hv->mem->start, hv->fb_size);
-> +       return ret;
-> +}
-> +
-> +static int hyperv_vmbus_probe(struct hv_device *hdev,
-> +                             const struct hv_vmbus_device_id *dev_id)
-> +{
-> +       struct hyperv_device *hv;
-> +       struct drm_device *dev;
-> +       int ret;
-> +
-> +       hv = devm_drm_dev_alloc(&hdev->device, &hyperv_driver,
-> +                               struct hyperv_device, dev);
-> +       if (IS_ERR(hv))
-> +               return PTR_ERR(hv);
-> +
-> +       dev = &hv->dev;
-> +       init_completion(&hv->wait);
-> +       hv_set_drvdata(hdev, hv);
-> +       hv->hdev = hdev;
-> +
-> +       /* Get the actual VRAM size from the device */
-> +       ret = synthvid_connect_vsp(hdev);
-> +       if (ret) {
-> +               drm_err(dev, "Failed to connect to vmbus.\n");
-> +               goto err_hv_set_drv_data;
-> +       }
-> +
-> +       if (efi_enabled(EFI_BOOT))
-> +               ret = hyperv_get_vram_gen2(hv, hdev);
-> +       else
-> +               ret = hyperv_get_vram_gen1(hv);
-> +
-> +       if (ret)
-> +               goto err_vmbus_close;
-> +
-> +       /*
-> +        * Should be done only once during init and resume. Failing to update
-> +        * vram location is not fatal. Device will update dirty area till
-> +        * preferred resolution only.
-> +        */
-> +       ret = synthvid_update_vram_location(hdev, hv->fb_base);
-> +       if (ret)
-> +               drm_warn(dev, "Failed to update vram location.\n");
-> +
-> +       ret = hyperv_mode_config_init(hv);
-> +       if (ret)
-> +               goto err_vmbus_close;
-> +
-> +       ret = drm_dev_register(dev, 0);
-> +       if (ret) {
-> +               drm_err(dev, "Failed to register drm driver.\n");
-> +               goto err_vmbus_close;
-> +       }
-> +
-> +       drm_fbdev_generic_setup(dev, 0);
-> +
-> +       return 0;
-> +
-> +err_vmbus_close:
-> +       vmbus_close(hdev->channel);
-> +err_hv_set_drv_data:
-> +       hv_set_drvdata(hdev, NULL);
-> +       return ret;
-> +}
-> +
-> +static int hyperv_vmbus_remove(struct hv_device *hdev)
-> +{
-> +       struct drm_device *dev = hv_get_drvdata(hdev);
-> +       struct hyperv_device *hv = to_hv(dev);
-> +
-> +       drm_dev_unplug(dev);
-> +       drm_atomic_helper_shutdown(dev);
-> +       vmbus_close(hdev->channel);
-> +       hv_set_drvdata(hdev, NULL);
-> +       vmbus_free_mmio(hv->mem->start, hv->fb_size);
-> +
-> +       return 0;
-> +}
-> +
-> +static int hyperv_vmbus_suspend(struct hv_device *hdev)
-> +{
-> +       struct drm_device *dev = hv_get_drvdata(hdev);
-> +       int ret;
-> +
-> +       ret = drm_mode_config_helper_suspend(dev);
-> +
-> +       vmbus_close(hdev->channel);
-> +
-> +       return ret;
-> +}
-> +
-> +static int hyperv_vmbus_resume(struct hv_device *hdev)
-> +{
-> +       struct drm_device *dev = hv_get_drvdata(hdev);
-> +       int ret;
-> +
-> +       ret = synthvid_connect_vsp(hdev);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return drm_mode_config_helper_resume(dev);
-> +}
-> +
-> +static const struct hv_vmbus_device_id hyperv_vmbus_tbl[] = {
-> +       /* Synthetic Video Device GUID */
-> +       {HV_SYNTHVID_GUID},
-> +       {}
-> +};
-> +
-> +static struct hv_driver hyperv_hv_driver = {
-> +       .name = KBUILD_MODNAME,
-> +       .id_table = hyperv_vmbus_tbl,
-> +       .probe = hyperv_vmbus_probe,
-> +       .remove = hyperv_vmbus_remove,
-> +       .suspend = hyperv_vmbus_suspend,
-> +       .resume = hyperv_vmbus_resume,
-> +       .driver = {
-> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +       },
-> +};
-> +
-> +/* ---------------------------------------------------------------------- */
-> +/* module init/exit                                                       */
-> +
-> +static int __init hyperv_init(void)
-> +{
-> +       int ret;
-> +
-> +       ret = pci_register_driver(&hyperv_pci_driver);
-> +       if (ret != 0)
-> +               return ret;
-> +
-> +       return vmbus_driver_register(&hyperv_hv_driver);
-> +}
-> +
-> +static void __exit hyperv_exit(void)
-> +{
-> +       vmbus_driver_unregister(&hyperv_hv_driver);
-> +       pci_unregister_driver(&hyperv_pci_driver);
-> +}
-> +
-> +module_init(hyperv_init);
-> +module_exit(hyperv_exit);
-> +
-> +MODULE_DEVICE_TABLE(pci, hyperv_pci_tbl);
-> +MODULE_DEVICE_TABLE(vmbus, hyperv_vmbus_tbl);
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Deepak Rawat <drawat.floss@gmail.com>");
-> +MODULE_DESCRIPTION("DRM driver for hyperv synthetic video device");
-> --
-> 2.29.2
->
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
