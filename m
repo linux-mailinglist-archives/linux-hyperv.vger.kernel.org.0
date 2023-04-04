@@ -2,166 +2,365 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31D816D604E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 14:26:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 450726D62A9
+	for <lists+linux-hyperv@lfdr.de>; Tue,  4 Apr 2023 15:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234794AbjDDM0u (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 4 Apr 2023 08:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36594 "EHLO
+        id S234989AbjDDNVN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 4 Apr 2023 09:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234691AbjDDM0q (ORCPT
+        with ESMTP id S235048AbjDDNVM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 4 Apr 2023 08:26:46 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on20610.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::610])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F96E212A;
-        Tue,  4 Apr 2023 05:26:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nHMqE6YScsjy1TIExkONv7WHmwTbFItRHKptr/+AV1tdjWrsUQAX9ZfrtxLoS7q0waRe1G1fX2uxbIs+LufZ1jgdC/7uV4qFCOWV7oaagEVAQJeNJ7riHsVY9VviXwxhXGYLKxsq8qxN8cHAtBsvU9NPN8heFGxTl7Iza5qm7qp48KLs5vDOeISojTO9C9S2z7BqozkDfwYuhs+/+PbrPnrDTuIfWtMFQ463lZV/dHX415MIGmrX1utlM+wFOd3SUCrIgeEaDbUKsfN2TuX3mPQ4AmSWNr+ummVNC5a5l+HnIics/LQ44hYUh++T/TYXWgB8lLFPVlfi9ZMr1WhXEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v3rSf80nQXERL5Q2CTDFFM+dezlKvYNWSR2PnmWwy3M=;
- b=GtlG9ersmLtNfSnWliyL1Qm00+JSGfa0Zp5ACrtQixgeWtJnpwF/4QdxI2GEdSUGil+eqsKofQ5Yd8fASV5Y0+LnfHpX1St7ziwNKtiU1N8oCbfBJV2tB67OfVbFaWhbTqS0PGz08Px6oH+v6HBuz8lEBaKisBN0p2rzgX0cUa+vYuWR1AsMC0z+CVdYdwEncGzuPiY1FGZAX21ABJ3JZn72n3fIcYnZ3hwx6DBF8K6CPfIX+yZ4kNCVS5nN20R2KGfI2s1OrT9spiwRqLs9pPygXfm0jXQNjjhGFi90tmY/tTa3ENS77UGzpo/P1DL31b+lVlNypRfBOrBAkqylgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v3rSf80nQXERL5Q2CTDFFM+dezlKvYNWSR2PnmWwy3M=;
- b=Qv75FtbuD1ahTI3s/3RQJUtmUja1KSYixCoJS4qRnziFMjZBPeQ01UNc72ek8p5oNxiYpbtOrptJehzxxv8quOR+ayUVqHf73n/XqmFMbKLbI7kcQ8zvqvOBB7PYSCzL2iBfarU8jqRhnKFOxIPlZFBzQgNTu9Hxi8DfcGMVnqU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com (2603:10b6:5:41::21) by
- SA1PR12MB6970.namprd12.prod.outlook.com (2603:10b6:806:24d::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6254.33; Tue, 4 Apr 2023 12:26:22 +0000
-Received: from DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::b6b7:4b22:74f0:dfeb]) by DM6PR12MB2810.namprd12.prod.outlook.com
- ([fe80::b6b7:4b22:74f0:dfeb%2]) with mapi id 15.20.6254.034; Tue, 4 Apr 2023
- 12:26:21 +0000
-Message-ID: <f2dde9d6-dc04-4c33-7f9d-49454bb192da@amd.com>
-Date:   Tue, 4 Apr 2023 14:25:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [RFC PATCH V4 17/17] x86/sev: Remove restrict interrupt injection
- from SNP_FEATURES_IMPL_REQ
-To:     Tianyu Lan <ltykernel@gmail.com>, luto@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, peterz@infradead.org,
-        ashish.kalra@amd.com, srutherford@google.com,
-        akpm@linux-foundation.org, anshuman.khandual@arm.com,
-        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
-        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
-        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
-Cc:     pangupta@amd.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <20230403174406.4180472-1-ltykernel@gmail.com>
- <20230403174406.4180472-18-ltykernel@gmail.com>
-Content-Language: en-US
-From:   "Gupta, Pankaj" <pankaj.gupta@amd.com>
-In-Reply-To: <20230403174406.4180472-18-ltykernel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0120.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9d::13) To DM6PR12MB2810.namprd12.prod.outlook.com
- (2603:10b6:5:41::21)
+        Tue, 4 Apr 2023 09:21:12 -0400
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E373AAF
+        for <linux-hyperv@vger.kernel.org>; Tue,  4 Apr 2023 06:21:07 -0700 (PDT)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-17aeb49429eso34490985fac.6
+        for <linux-hyperv@vger.kernel.org>; Tue, 04 Apr 2023 06:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1680614466;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K+F4rCah4JtOzHbfyq5oZtwQO9PPoLtwo680gha6DKY=;
+        b=K5ZCHhFPCZQbNKupQk8gXaHuVssYD+It3NWFscmSBAVqW+6phRgPUwIbkEnCpaq+MJ
+         6xS9DMezNlm//cH5vuNVKQOwU7+wfV5SvlpepOaWHur18aFqo9MzqEY0bmuxb+Ek4qwn
+         pR963GQPGjTxxPxTnpe7ZT4suU7+8/iCF7FLE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680614466;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K+F4rCah4JtOzHbfyq5oZtwQO9PPoLtwo680gha6DKY=;
+        b=ogsSzBnkPXyWuIYVYWLtPZeYYD2KQis3yboSYRfwFlyM32qIeg3cs6tYKrxPAFYH9y
+         I7qPV0nGqdyXCwVyAixp5XybrGmGT4BZCt9KDmkMkJFQE7m7i8Qe8wHRRr3UVwzLRdmS
+         qO9lcZGEBS737sdixDd/Z9FhrhRb5Q+aghau/WdnFkGpzs/lADvLqtrSwc8KmrBoZINw
+         0TEDKQh7EuGnH1f5LmFLKhk/Ff1ng841C94uyz57owfOTMRsI4WyhsAGmuA6qbrfOOdk
+         eadTiGw6Ge/Sj1bYQxNgSTZHWre98kHxUjFSXtCOiL2d8BmG+OYNMKS4P2PdiRu2LaEo
+         8qgQ==
+X-Gm-Message-State: AAQBX9dW4huAS8+nuwnFxroGFogDAIznqlxb/XrwtxNRq7ayNkULZvzl
+        rZGw0x/esuZ+j2uw0Fr+lOID/F25Z5G+z2Xwiayx6VLuoPxJCae7
+X-Google-Smtp-Source: AKy350YOJrJBY5nrKfTQ38UroSzkFg5MjS6c3ZLBSSNnpnbEzy1ys1tfMoCiEI8JtjGafmrooy4RB5NK7kx7Gp3UMks=
+X-Received: by 2002:a05:6870:6025:b0:17e:ac0e:9874 with SMTP id
+ t37-20020a056870602500b0017eac0e9874mr1147821oaa.8.1680614466692; Tue, 04 Apr
+ 2023 06:21:06 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2810:EE_|SA1PR12MB6970:EE_
-X-MS-Office365-Filtering-Correlation-Id: b096c2cb-a8d3-4098-d14e-08db3507cc34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LUSFFvkbWvAlss/wnsJ2uU0z5EUjzwfpRJh67J5HfMim1re7FMgB0r15kdg1qIIkfYFZcqWB5zSsPClxUsH+XxUUQoEuXhceWSrb2cjp6cTR1+jZl1HCCWEKVHL7DwMfMMdVol+uxrgIDQk/DvoWJnvzP3zxXY55+CM/nmKv0aoovbt6/gqcwSbaHj4Qf9CK1khy7O6nx/KBiM/FxMAoz8aX/XKN/Xt1dr8lVIMyntfwT3r8tLIgqbe/TFF3DWcwgo2UC74d9XoKDXToJhWCrUJ9KUgc94VuwaGziI5EWytBX1elGiKfPZumLiaZtQjVmjcUWB7PNwQgn2zXfcMHIHAH1LDq4FsA9eWKsa5alClHhpZ9avgrryuv9OI51dlN744qwe4yQreP7zckrtKLo7xONo5pZ4ho4t4GmGRlXXHzWtGxUboZLFLyQXgMYIGb1PYdeqJFlzOkdsfaQzNOfu5+pYrhzTdXbb/x5RQHlu8etPdJf3KQEO72VXd/6XcKdE83hkvZkZBMy89/FdsdauqRY/SrUbXRbvePH9fvJtAXCjMZ6Qw7q4Smdqn4UGh90/LhRV1XXIFhriOKfeAXnMli13QtatvgoxzBBrhTkX6pE5jy2S6bZFMgvc1g3NlfOVnhIuzbyMdkB6ykl/nw893LWTzZ9wiqWGeC2eNhaLo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2810.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(396003)(346002)(39860400002)(376002)(451199021)(478600001)(2906002)(186003)(2616005)(6512007)(6506007)(36756003)(6666004)(83380400001)(6486002)(921005)(38100700002)(4744005)(86362001)(316002)(31696002)(5660300002)(7416002)(41300700001)(7406005)(8936002)(4326008)(31686004)(66476007)(66556008)(66946007)(8676002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZE1QTWlCNEt2YTFhenp0NWVXM1JJU1k3Qm10aEtPb004VGxiQTZvVVFXdHVQ?=
- =?utf-8?B?Zy9CU0dYYTRTaXh6a0NWRkl0RFdickcxSXBFQ2U0V0ExcHdYZHRXOGllZURl?=
- =?utf-8?B?NTVERGRRMkhNTWFyMzliRHloSExWZHhSR0ZQdmRYbGsvbUJHY2RibGI0QUYw?=
- =?utf-8?B?dk0xak5MMGlJSnlzRjJRSUYxUWxpQ2NMMXJ6WnFGbGdjanF0Y08vS3hSbERN?=
- =?utf-8?B?enh4K0l3Q25acU16YVZTemtHOXdJbGNQVVhoL1c2L1NGaGVCbU1VeStnbTdL?=
- =?utf-8?B?eGhNUVRhWW9BOVlMYmk5VEJlTUlyOXJaYldqdGlXc3lvTWU5dkdQcHJteHp0?=
- =?utf-8?B?d0VRaXEyNkgwakdTaU12ZGZjWHI0T1BpaVRyV3l1RTlHc0EwSGUvamJZL2JF?=
- =?utf-8?B?Y0VvSVVyb3dic2J4aFFpTmhOWjZYK0E2WnFkSVhBQVZvbEZwMkk1bExPVE1o?=
- =?utf-8?B?WGJiYUZucnpWRlRJZlBGa3RQQjdRdGkrclBtS1hkT2JWWllJcUtZdEh0b0hG?=
- =?utf-8?B?SU5TMjNpRzAxSnNEdEN4SytmVE1LV0oxVDBlZXQ4Ryt0KzNoVzMxb2pFeVA3?=
- =?utf-8?B?UzBIaGMxcDRZWEZhR3Zxelg4TS9kUHRuYnZuVWtqQytnc0N5MkFFcmhIRmEx?=
- =?utf-8?B?WFdEdm00cWZnVHJ3WkdTZFo2RXlXZGxjcEhpeDlUTlAvVmR1b1N5d1JhcTlU?=
- =?utf-8?B?NDE2RUpTOC8wcGhYY3JqRU8wYm85L2dtcmhoNmkzKzhJekhNVnVieXJOWnVR?=
- =?utf-8?B?TE1nV2k0TWNvcnYvVVhxeDlqb2w0cExhcUJlbUlTR09EemcrbjBUaDhWOGpX?=
- =?utf-8?B?MEMvNWR4N1NLczlFT1R1TzgxK3Rqd3VFc0RLVElkdGpLeGVMcWkvbjRCa0pB?=
- =?utf-8?B?bVpWdWtrUHFqa0ZObVYvSDNQYlM1dW96VzZEc2k2S2RRZWZUQmw4V2diWi9R?=
- =?utf-8?B?dmtIM2FCNG1MRndjS1FmWmJ2VENzUWt5cVNuRGVwSVFtVEhWSzJtbGNybnVj?=
- =?utf-8?B?WEUvenVVUjBqNSs1N0tSQVhDOU5rNWIvZlhZaUMyWTNma09WZGNYN3JvWndV?=
- =?utf-8?B?cDFlNDBtTUE5azVEZ0poVmFvSDI3T0NSZVRsN2l4M0FvT3BURFhjVXlLVEhZ?=
- =?utf-8?B?eDVRNXpqNnRHY01nYUsyaldVeFpwRmFvYUdjcEEzS2t0eUd1WWQ1MXlUci9j?=
- =?utf-8?B?cmJ5LzJEcGcrSlZRRHhtS2M5RHV1dFNTbGQrYWdIMW1UWHJ6cllNRVZsMDMx?=
- =?utf-8?B?ZWpIQXR6dURHcGF6eDRGSWNCSGZGV0I4MHMxOWsxYXhPREtueDBKRTRoYUhP?=
- =?utf-8?B?T2R2SWQ2Wmt0VXUvQ0ZKM1BFZTZRTENQbTdycWIzS1kxRHNkWEg5OUNXN0Fw?=
- =?utf-8?B?djFjcHQvYzJxbjJ2dFNLQW9BaHZWN2pSdkJ6MnMrenI3MVd3eHlYcWFMc3Rt?=
- =?utf-8?B?SEpxcU1PY2dRaGxFZHZQUWY0a1ZqU0RzRkZ3cXVoSnc5aFo2Z3I0a3lKZUJa?=
- =?utf-8?B?VE5wNGRiQnVWRDJ1dERlU3JDT0J3c3M5ZjFHRjM1TFUzSENUcFRXWklDTlUz?=
- =?utf-8?B?Mk9mWTE2V3ZIQTBIeWV5LzV3YWRtZnRBMFRYaXorcEkrMEtDMTZrdXhLNm8y?=
- =?utf-8?B?dmFBWDlzeUh3dGFoZmRsd2ViMm8yUlFBaE45b0lGQWhwNFVjRUd3VGd3eVZY?=
- =?utf-8?B?MWJSRzY3Y1FxaWRrLzMzQXBsOTdsUjVNNEhzdUdrK0kzSlhLRnU0aUVwNyty?=
- =?utf-8?B?MDVQY3NlYmJsUHlIdnBxQWx0aGcwS1l5UVl5aXlLU2wwSkR4Q3J5Y2tTMG5F?=
- =?utf-8?B?dHpBaGw2THlsWkdqUGdNUG1zSnFROTdqSzY3L1h5dFNyRjk2ZURCVDA3OXhV?=
- =?utf-8?B?OW9nMFNHYjZqVTlVb3NXOGQrQ3dZUnYxRXpjR1E4TEhZTktlLzBWbnpQZjV1?=
- =?utf-8?B?TlRyTnlJallER3hpTzFoU3ZqbGJQRHgwNTNHWFB6OEVwUU1oVTczZnE1c1JU?=
- =?utf-8?B?N2ZlNHZNaGFJMWFKM1EvZ3dBNVhOeUxZQlNpd3ZjZEJzRDJNMVRDQTd2Y3pO?=
- =?utf-8?B?TnZjd3FQWEFXeTJKZnZnOWZsZEZEUnhLYTBhM3NrRStGRDBxZFd1VzhvZEVP?=
- =?utf-8?B?dUFqbVNYejNrYXphZTFUWStBaHk4OHdDNFkrUlNjaDBPbkJWV1l1QUIydWNM?=
- =?utf-8?Q?JnUTle3WSa+G+jqFw/UnK0MSIm1vzyktQ7Bp1cTxDEuC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b096c2cb-a8d3-4098-d14e-08db3507cc34
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2810.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 12:26:21.3375
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /6LALqDz9PmyU1K83FyB5TD+ACp3xpQxqoA8rzR+eq9lMYi/ZM3Eteaz9mbJBTCpkWtPvuQgXox7SX5PWC71Ww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6970
-X-Spam-Status: No, score=-1.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20210102060336.832866-1-drawat.floss@gmail.com>
+In-Reply-To: <20210102060336.832866-1-drawat.floss@gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 4 Apr 2023 15:20:55 +0200
+Message-ID: <CAKMK7uHRTcdZxreD5ymc2TsV9LNePeR=JgvJbnO-q2_wN99kEA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/hyperv: Add DRM driver for hyperv synthetic video device
+To:     Deepak Rawat <drawat.floss@gmail.com>
+Cc:     linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Hu <weh@microsoft.com>,
+        Tang Shaofeng <shaofeng.tang@intel.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Yeah way late reply, but I just stumbled over this and got a bit puzzled ...
 
-> Enabled restrict interrupt injection function. Remove MSR_AMD64_
-> SNP_RESTRICTED_INJ from SNP_FEATURES_IMPL_REQ to let kernel boot
-> up with this function.
-> ---
->   arch/x86/boot/compressed/sev.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-> index d63ad8f99f83..a5f41301a600 100644
-> --- a/arch/x86/boot/compressed/sev.c
-> +++ b/arch/x86/boot/compressed/sev.c
-> @@ -299,7 +299,6 @@ static void enforce_vmpl0(void)
->    */
->   #define SNP_FEATURES_IMPL_REQ	(MSR_AMD64_SNP_VTOM |			\
->   				 MSR_AMD64_SNP_REFLECT_VC |		\
-> -				 MSR_AMD64_SNP_RESTRICTED_INJ |		\
+On Sat, 2 Jan 2021 at 07:03, Deepak Rawat <drawat.floss@gmail.com> wrote:
+> +/*
+> + * PCI/vmbus interface
+> + */
+> +
+> +static int hyperv_pci_probe(struct pci_dev *pdev,
+> +                           const struct pci_device_id *ent)
+> +{
+> +       return 0;
+> +}
 
-Should we update the bit in "SNP_FEATURES_PRESENT" instead?
+Why do you have this dummy driver when it does nothing? Can it just be
+deleted? If it's just to have a driver, then we really don't need that
+on linux, there's no requirement to have a device driver for every
+device in a system.
 
-Thanks,
-Pankaj	
->   				 MSR_AMD64_SNP_ALT_INJ |		\
->   				 MSR_AMD64_SNP_DEBUG_SWAP |		\
->   				 MSR_AMD64_SNP_VMPL_SSS |		\
+If you actually need to make sure that this pci device isn't passed to
+a guest vm or something like that, then the main driver must ensure
+that the pci driver is bound (ideally with component.c because
+otherwise you'll get the unbind/rebind dance wrong in one of the
+bazillion of subtle ways). Just having a driver doesn't stop anyone
+from unbinding it and then wreaking havoc.
+-Daniel
 
+> +
+> +static void hyperv_pci_remove(struct pci_dev *pdev)
+> +{
+> +}
+> +
+> +static const struct pci_device_id hyperv_pci_tbl[] = {
+> +       {
+> +               .vendor = PCI_VENDOR_ID_MICROSOFT,
+> +               .device = PCI_DEVICE_ID_HYPERV_VIDEO,
+> +       },
+> +       { /* end of list */ }
+> +};
+> +
+> +static struct pci_driver hyperv_pci_driver = {
+> +       .name =         KBUILD_MODNAME,
+> +       .id_table =     hyperv_pci_tbl,
+> +       .probe =        hyperv_pci_probe,
+> +       .remove =       hyperv_pci_remove,
+> +};
+> +
+> +static int hyperv_get_vram_gen1(struct hyperv_device *hv)
+> +{
+> +       struct drm_device *dev = &hv->dev;
+> +       struct pci_dev *pdev;
+> +       int ret;
+> +
+> +       pdev = pci_get_device(PCI_VENDOR_ID_MICROSOFT,
+> +                             PCI_DEVICE_ID_HYPERV_VIDEO, NULL);
+> +       if (!pdev) {
+> +               drm_err(dev, "Unable to find PCI Hyper-V video\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "hypervdrmfb");
+> +       if (ret) {
+> +               drm_err(dev, "Not able to remove boot fb\n");
+> +               return ret;
+> +       }
+> +
+> +       if (pci_request_region(pdev, 0, DRIVER_NAME) != 0)
+> +               drm_warn(dev, "Cannot request framebuffer, boot fb still active?\n");
+> +
+> +       if ((pdev->resource[0].flags & IORESOURCE_MEM) == 0) {
+> +               drm_err(dev, "Resource at bar 0 is not IORESOURCE_MEM\n");
+> +               ret = -ENODEV;
+> +               goto error;
+> +       }
+> +
+> +       hv->fb_base = pci_resource_start(pdev, 0);
+> +       hv->fb_size = pci_resource_len(pdev, 0);
+> +       if (hv->fb_base == 0) {
+> +               drm_err(dev, "Resource not available\n");
+> +               ret = -ENODEV;
+> +               goto error;
+> +       }
+> +
+> +       hv->fb_size = min(hv->fb_size,
+> +                         (unsigned long)(hv->mmio_megabytes * 1024 * 1024));
+> +       hv->vram = devm_ioremap(&pdev->dev, hv->fb_base, hv->fb_size);
+> +       if (!hv->vram) {
+> +               drm_err(dev, "Failed to map vram\n");
+> +               ret = -ENOMEM;
+> +       }
+> +
+> +error:
+> +       pci_dev_put(pdev);
+> +       return ret;
+> +}
+> +
+> +static int hyperv_get_vram_gen2(struct hyperv_device *hv,
+> +                               struct hv_device *hdev)
+> +{
+> +       struct drm_device *dev = &hv->dev;
+> +       struct apertures_struct *ap;
+> +       int ret;
+> +
+> +       hv->fb_size = (unsigned long)(hv->mmio_megabytes * 1024 * 1024);
+> +
+> +       ret = vmbus_allocate_mmio(&hv->mem, hdev, 0, -1, hv->fb_size, 0x100000,
+> +                                 true);
+> +       if (ret) {
+> +               drm_err(dev, "Failed to allocate mmio\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       hv->vram = ioremap(hv->mem->start, hv->fb_size);
+> +       if (!hv->vram) {
+> +               drm_err(dev, "Failed to map vram\n");
+> +               ret = -ENOMEM;
+> +               goto error;
+> +       }
+> +
+> +       hv->fb_base = hv->mem->start;
+> +
+> +       ap = alloc_apertures(1);
+> +       if (!ap) {
+> +               drm_err(dev, "Failed to get apertures\n");
+> +               ret = -ENOMEM;
+> +               goto error;
+> +       }
+> +
+> +       ap->ranges[0].base = screen_info.lfb_base;
+> +       ap->ranges[0].size = screen_info.lfb_size;
+> +       remove_conflicting_framebuffers(ap, KBUILD_MODNAME, false);
+> +       kfree(ap);
+> +
+> +       return 0;
+> +
+> +error:
+> +       vmbus_free_mmio(hv->mem->start, hv->fb_size);
+> +       return ret;
+> +}
+> +
+> +static int hyperv_vmbus_probe(struct hv_device *hdev,
+> +                             const struct hv_vmbus_device_id *dev_id)
+> +{
+> +       struct hyperv_device *hv;
+> +       struct drm_device *dev;
+> +       int ret;
+> +
+> +       hv = devm_drm_dev_alloc(&hdev->device, &hyperv_driver,
+> +                               struct hyperv_device, dev);
+> +       if (IS_ERR(hv))
+> +               return PTR_ERR(hv);
+> +
+> +       dev = &hv->dev;
+> +       init_completion(&hv->wait);
+> +       hv_set_drvdata(hdev, hv);
+> +       hv->hdev = hdev;
+> +
+> +       /* Get the actual VRAM size from the device */
+> +       ret = synthvid_connect_vsp(hdev);
+> +       if (ret) {
+> +               drm_err(dev, "Failed to connect to vmbus.\n");
+> +               goto err_hv_set_drv_data;
+> +       }
+> +
+> +       if (efi_enabled(EFI_BOOT))
+> +               ret = hyperv_get_vram_gen2(hv, hdev);
+> +       else
+> +               ret = hyperv_get_vram_gen1(hv);
+> +
+> +       if (ret)
+> +               goto err_vmbus_close;
+> +
+> +       /*
+> +        * Should be done only once during init and resume. Failing to update
+> +        * vram location is not fatal. Device will update dirty area till
+> +        * preferred resolution only.
+> +        */
+> +       ret = synthvid_update_vram_location(hdev, hv->fb_base);
+> +       if (ret)
+> +               drm_warn(dev, "Failed to update vram location.\n");
+> +
+> +       ret = hyperv_mode_config_init(hv);
+> +       if (ret)
+> +               goto err_vmbus_close;
+> +
+> +       ret = drm_dev_register(dev, 0);
+> +       if (ret) {
+> +               drm_err(dev, "Failed to register drm driver.\n");
+> +               goto err_vmbus_close;
+> +       }
+> +
+> +       drm_fbdev_generic_setup(dev, 0);
+> +
+> +       return 0;
+> +
+> +err_vmbus_close:
+> +       vmbus_close(hdev->channel);
+> +err_hv_set_drv_data:
+> +       hv_set_drvdata(hdev, NULL);
+> +       return ret;
+> +}
+> +
+> +static int hyperv_vmbus_remove(struct hv_device *hdev)
+> +{
+> +       struct drm_device *dev = hv_get_drvdata(hdev);
+> +       struct hyperv_device *hv = to_hv(dev);
+> +
+> +       drm_dev_unplug(dev);
+> +       drm_atomic_helper_shutdown(dev);
+> +       vmbus_close(hdev->channel);
+> +       hv_set_drvdata(hdev, NULL);
+> +       vmbus_free_mmio(hv->mem->start, hv->fb_size);
+> +
+> +       return 0;
+> +}
+> +
+> +static int hyperv_vmbus_suspend(struct hv_device *hdev)
+> +{
+> +       struct drm_device *dev = hv_get_drvdata(hdev);
+> +       int ret;
+> +
+> +       ret = drm_mode_config_helper_suspend(dev);
+> +
+> +       vmbus_close(hdev->channel);
+> +
+> +       return ret;
+> +}
+> +
+> +static int hyperv_vmbus_resume(struct hv_device *hdev)
+> +{
+> +       struct drm_device *dev = hv_get_drvdata(hdev);
+> +       int ret;
+> +
+> +       ret = synthvid_connect_vsp(hdev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return drm_mode_config_helper_resume(dev);
+> +}
+> +
+> +static const struct hv_vmbus_device_id hyperv_vmbus_tbl[] = {
+> +       /* Synthetic Video Device GUID */
+> +       {HV_SYNTHVID_GUID},
+> +       {}
+> +};
+> +
+> +static struct hv_driver hyperv_hv_driver = {
+> +       .name = KBUILD_MODNAME,
+> +       .id_table = hyperv_vmbus_tbl,
+> +       .probe = hyperv_vmbus_probe,
+> +       .remove = hyperv_vmbus_remove,
+> +       .suspend = hyperv_vmbus_suspend,
+> +       .resume = hyperv_vmbus_resume,
+> +       .driver = {
+> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +       },
+> +};
+> +
+> +/* ---------------------------------------------------------------------- */
+> +/* module init/exit                                                       */
+> +
+> +static int __init hyperv_init(void)
+> +{
+> +       int ret;
+> +
+> +       ret = pci_register_driver(&hyperv_pci_driver);
+> +       if (ret != 0)
+> +               return ret;
+> +
+> +       return vmbus_driver_register(&hyperv_hv_driver);
+> +}
+> +
+> +static void __exit hyperv_exit(void)
+> +{
+> +       vmbus_driver_unregister(&hyperv_hv_driver);
+> +       pci_unregister_driver(&hyperv_pci_driver);
+> +}
+> +
+> +module_init(hyperv_init);
+> +module_exit(hyperv_exit);
+> +
+> +MODULE_DEVICE_TABLE(pci, hyperv_pci_tbl);
+> +MODULE_DEVICE_TABLE(vmbus, hyperv_vmbus_tbl);
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Deepak Rawat <drawat.floss@gmail.com>");
+> +MODULE_DESCRIPTION("DRM driver for hyperv synthetic video device");
+> --
+> 2.29.2
+>
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
