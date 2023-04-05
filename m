@@ -2,102 +2,120 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03F376D78B9
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Apr 2023 11:46:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04A176D7B5E
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Apr 2023 13:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237598AbjDEJqW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Apr 2023 05:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56654 "EHLO
+        id S237413AbjDELb2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Apr 2023 07:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231455AbjDEJqS (ORCPT
+        with ESMTP id S236486AbjDELb1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Apr 2023 05:46:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3158F90;
-        Wed,  5 Apr 2023 02:46:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B287C6233B;
-        Wed,  5 Apr 2023 09:46:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626C2C433D2;
-        Wed,  5 Apr 2023 09:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1680687976;
-        bh=/0ksBmic0uIdSY+bTKk+HULhaFzhDv+LLl/j/T7P0aU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j038429zGXzPtWfTtm7SnW4ecBA73zZfVIwV4YSgecQe9JAUwpZm7jfjV5DjErkV2
-         0emF4rEvtXB7mwZArptQXYpzeaOINpK+8me/c9/BbGll3/YKz2D5XpEPhIl/jsLwd1
-         PG0Aco5lfMsOkfHwMLz3R21KAoUb/2BGBIbpvfWk=
-Date:   Wed, 5 Apr 2023 11:46:14 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Petr Tesarik <petr.tesarik.ext@huawei.com>
-Cc:     Kelsey Steele <kelseysteele@linux.microsoft.com>,
-        stable@vger.kernel.org, patches@lists.linux.dev,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-        jonathanh@nvidia.com, f.fainelli@gmail.com,
-        sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-        decui@microsoft.com, linux-hyperv@vger.kernel.org,
-        iommu@lists.linux.dev, robin.murphy@arm.com,
-        dexuan.linux@gmail.com, tyler.hicks@microsoft.com
-Subject: Re: [PATCH 6.1 000/179] 6.1.23-rc2 review
-Message-ID: <2023040528-ardently-bolster-249b@gregkh>
-References: <20230404183150.381314754@linuxfoundation.org>
- <20230405003549.GA21326@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <2023040503-perkiness-nutty-f8f4@gregkh>
- <539e9035-2673-a51b-c40c-5e5b5e79056c@huawei.com>
+        Wed, 5 Apr 2023 07:31:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B048F35BE
+        for <linux-hyperv@vger.kernel.org>; Wed,  5 Apr 2023 04:30:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680694239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RNLFmKiaJhCbpMv6NNLJ01MSUH3fUGQXMqewzc3mLvQ=;
+        b=XCO+Ppei3G0VGbswljyXoEJPt/LtB0Ti52/4nPLjBxkt9E1RUm2rNZYKrD/LKfbVYW/YAO
+        cNVthVWq8LCiLc7/3XXlv1QAJTN+iX1adqRPn2DGA7w3IH+fbgDcxzGHhAoz8mBv/sDUC4
+        QV8l2qKQpiCuR6hVJwJORm22IA8jc6I=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-447-Y_hnhOdzOji47s_qdxTbVQ-1; Wed, 05 Apr 2023 07:30:38 -0400
+X-MC-Unique: Y_hnhOdzOji47s_qdxTbVQ-1
+Received: by mail-wm1-f69.google.com with SMTP id k25-20020a05600c1c9900b003ef79f2c207so11487303wms.5
+        for <linux-hyperv@vger.kernel.org>; Wed, 05 Apr 2023 04:30:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680694237;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RNLFmKiaJhCbpMv6NNLJ01MSUH3fUGQXMqewzc3mLvQ=;
+        b=OnX3pvZjFrsrtnNQL8Hwm7QWhyoaEVwGHJvfd16E+yhV04MhOJ8nrgeMPulIjp8PBK
+         9na517NwxH6NjrEWhYd0g3xmE+VgOsfnKvU17jblnkbyOqzrOheaatzDqtppTevQkPl1
+         g3CDetfOh4E1USv3vXOFr19PmCbBdyfRTPS75WF4zVYVfIhIVzr1n03WDHtuueIpTB32
+         u1DsY72CdsdLWe2pjoeTuz5/A7uo3KO/63FZ96N1bEDYxIkhy2Wh5baZRBYbR1XrPPP1
+         7QmY1nDquDcW4NzqS9mIIo75HSy/sevxUwbTRxG6erdwy2v+0lu0dYRpsE/CUUNfZpHW
+         HEYQ==
+X-Gm-Message-State: AAQBX9ew3bCK6gRnzICanEyO9EtVwVhyH3kvlPi8iHJBm8+mK7RT95kF
+        Daynvl61vwn3EQwtrYXGavusQJ80IAJlKITvkRMgBGVbfWmm4kWnJY8RNjG4f6wq+m5sILF9eq6
+        ALXlsj7g2ezvCZqkIQlpZwSoeFAa5fGtcpgU=
+X-Received: by 2002:adf:e409:0:b0:2ce:a0c1:bcaa with SMTP id g9-20020adfe409000000b002cea0c1bcaamr1759107wrm.9.1680694237462;
+        Wed, 05 Apr 2023 04:30:37 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Z+rEnxummXTXBERQ/WiQlDGMhXDsQ6asLHd92imjUbjJ+WG229BKVrkkBNa50e3N/32xHrgg==
+X-Received: by 2002:adf:e409:0:b0:2ce:a0c1:bcaa with SMTP id g9-20020adfe409000000b002cea0c1bcaamr1759090wrm.9.1680694237126;
+        Wed, 05 Apr 2023 04:30:37 -0700 (PDT)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id w3-20020adfcd03000000b002d45575643esm14727267wrm.43.2023.04.05.04.30.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Apr 2023 04:30:36 -0700 (PDT)
+From:   Javier Martinez Canillas <javierm@redhat.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Deepak Rawat <drawat.floss@gmail.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Emma Anholt <emma@anholt.net>, Helge Deller <deller@gmx.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-hyperv@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH 3/8] drm/aperture: Remove primary argument
+In-Reply-To: <20230404201842.567344-3-daniel.vetter@ffwll.ch>
+References: <20230404201842.567344-1-daniel.vetter@ffwll.ch>
+ <20230404201842.567344-3-daniel.vetter@ffwll.ch>
+Date:   Wed, 05 Apr 2023 13:30:36 +0200
+Message-ID: <871qkyd0rn.fsf@minerva.mail-host-address-is-not-set>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <539e9035-2673-a51b-c40c-5e5b5e79056c@huawei.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 11:41:42AM +0200, Petr Tesarik wrote:
-> On 4/5/2023 11:30 AM, Greg Kroah-Hartman wrote:
-> > On Tue, Apr 04, 2023 at 05:35:49PM -0700, Kelsey Steele wrote:
-> >> On Tue, Apr 04, 2023 at 08:32:15PM +0200, Greg Kroah-Hartman wrote:
-> >>> This is the start of the stable review cycle for the 6.1.23 release.
-> >>> There are 179 patches in this series, all will be posted as a response
-> >>> to this one.  If anyone has any issues with these being applied, please
-> >>> let me know.
-> >>>
-> >>> Responses should be made by Thu, 06 Apr 2023 18:31:13 +0000.
-> >>> Anything received after that time might be too late.
-> >>>
-> >>
-> >> Hi Greg, 
-> >>
-> >> 6.1.23-rc2 is failing to boot on x86 WSL. A bisect leads to commit
-> >> c2f05366b687 ("swiotlb: fix slot alignment checks") being the problem
-> >> and reverting this patch puts everything back in a working state.
-> >>
-> >> There's a report from Dexuan who also encountered this error on a Linux
-> >> VM on Hyper-V:
-> >>
-> >> https://lore.kernel.org/all/CAA42JLa1y9jJ7BgQvXeUYQh-K2mDNHd2BYZ4iZUz33r5zY7oAQ@mail.gmail.com/
-> >>
-> >> Adding a chunk of my log below which shows errors occuring from the hv_strvsc driver.
-> > 
-> > Is this also a problem on 6.2-rc1, and Linus's tree?
-> 
-> Yes, unfortunately.
+Daniel Vetter <daniel.vetter@ffwll.ch> writes:
 
-Great, we are bug-compatible!  :)
+> Only really pci devices have a business setting this - it's for
+> figuring out whether the legacy vga stuff should be nuked too. And
+> with the preceeding two patches those are all using the pci version of
+> this.
+>
+> Which means for all other callers primary == false and we can remove
+> it now.
+>
+> v2:
+> - Reorder to avoid compile fail (Thomas)
+> - Include gma500, which retained it's called to the non-pci version.
+>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 
-I'll go revert this from the 6.1 and 6.2 queues and push out new -rc
-releases so that you can test.  But please work upstream to get this
-resolved there otherwise everyone is going to hit this when 6.3-final is
-released.
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
-thanks,
+-- 
+Best regards,
 
-greg k-h
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
