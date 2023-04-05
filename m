@@ -2,83 +2,57 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A77E76D7B79
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Apr 2023 13:37:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E54D6D7C63
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Apr 2023 14:25:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237096AbjDELhA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Apr 2023 07:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48000 "EHLO
+        id S237398AbjDEMZC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Apr 2023 08:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236967AbjDELg7 (ORCPT
+        with ESMTP id S237096AbjDEMZB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Apr 2023 07:36:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE18D5B9C
-        for <linux-hyperv@vger.kernel.org>; Wed,  5 Apr 2023 04:36:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680694564;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=w+DpvBDLH+Q2wPQSf5T5cg/6dNPP/wKGiFxJjQmEyog=;
-        b=IxiXzVH1pPYRcK+6rSSimcWB6C9QxFOiWK0gXNGhrVrYKmDuPodPvLymsab9lzhRJk6fHj
-        oercBs/cBIcx0x3jis+gVMqc4Up6VdJGkfl6EWU6VKVsVtzrdheTdaLmRfYyqayyrD3Hoy
-        2A7fxB77OVxc9LdckrOaEPmiAKsrrFM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-121-oN74Fq3XOleK_JwAj-Ny7A-1; Wed, 05 Apr 2023 07:36:02 -0400
-X-MC-Unique: oN74Fq3XOleK_JwAj-Ny7A-1
-Received: by mail-wm1-f71.google.com with SMTP id u14-20020a05600c19ce00b003f0331154b1so9071576wmq.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Apr 2023 04:36:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680694561;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w+DpvBDLH+Q2wPQSf5T5cg/6dNPP/wKGiFxJjQmEyog=;
-        b=GcUGMVlf18loaudlaal8k3no/fwTu56Xpg33lD0fc/q0PpPu7hDhajjBQYvs316zMX
-         NDxk5ngPDM55NDZ+7C6g9jU20AQD4HWTVfykuZ1/zq6ydVFpNY4jC+7LFoi15oS+l39i
-         ADYKS5VLtsysry+ZzWpFKglUtIeYQ7SSPeHu4NhJ+gnU1Op99phMM0Kkcohstil+uqU+
-         kQvCu9aL6aSLVjWcQDyqdVGlHKEp+oHM7hMsiw2Te6PrO5mrf2S0EWyWTTvdJQDYI/Ni
-         lIr9qLtwIXnX6K9BnFrJ9Aq1pDA5kUDNvCm+7r+TWIXzMoDx1dElpof4+oSxdWaFhftB
-         o+MA==
-X-Gm-Message-State: AAQBX9fntNACsPq2s5GEjhjhNnEBKw2kCNYyUKpLajl4GTeBNMjRXjhU
-        KxmTNXZiuqWFLd4XUHIxrJ7KjvpQiuQOrL4nZHSCl7jHxhU/Egp8PJjnbWVHfM7lyACiVxytgDu
-        oFMdStBMfMcauwnVdpqFF3ehE
-X-Received: by 2002:a05:600c:2312:b0:3ef:6396:d9c8 with SMTP id 18-20020a05600c231200b003ef6396d9c8mr4156044wmo.5.1680694561794;
-        Wed, 05 Apr 2023 04:36:01 -0700 (PDT)
-X-Google-Smtp-Source: AKy350bVORkVRtNCVnhi+nkM7YfPRljFYApx+IgQsLCU6O8KIvYjIzhapPCjaV21ZdY+Tdfz0i9VhA==
-X-Received: by 2002:a05:600c:2312:b0:3ef:6396:d9c8 with SMTP id 18-20020a05600c231200b003ef6396d9c8mr4156021wmo.5.1680694561477;
-        Wed, 05 Apr 2023 04:36:01 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id y22-20020a7bcd96000000b003ed4f6c6234sm1954392wmj.23.2023.04.05.04.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 04:36:01 -0700 (PDT)
-From:   Javier Martinez Canillas <javierm@redhat.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 6/8] video/aperture: Drop primary argument
-In-Reply-To: <20230404201842.567344-6-daniel.vetter@ffwll.ch>
-References: <20230404201842.567344-1-daniel.vetter@ffwll.ch>
- <20230404201842.567344-6-daniel.vetter@ffwll.ch>
-Date:   Wed, 05 Apr 2023 13:36:00 +0200
-Message-ID: <87sfdebly7.fsf@minerva.mail-host-address-is-not-set>
+        Wed, 5 Apr 2023 08:25:01 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A220540F9;
+        Wed,  5 Apr 2023 05:24:46 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pk2Bn-00016R-NG; Wed, 05 Apr 2023 14:24:35 +0200
+Message-ID: <b8843192-c5ae-17ea-dfa8-02f379112995@leemhuis.info>
+Date:   Wed, 5 Apr 2023 14:24:34 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v1 2/2] swiotlb: Fix slot alignment checks
+Content-Language: en-US, de-DE
+To:     Dexuan-Linux Cui <dexuan.linux@gmail.com>,
+        Petr Tesarik <petrtesarik@huaweicloud.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jianxiong Gao <jxgao@google.com>,
+        David Stevens <stevensd@chromium.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+        open list <linux-kernel@vger.kernel.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>, petr@tesarici.cz,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>, Tianyu.Lan@microsoft.com,
+        linux-hyperv@vger.kernel.org
+References: <cover.1679382779.git.petr.tesarik.ext@huawei.com>
+ <c90887e4d75344abe219cc5e12f7c6dab980cfce.1679382779.git.petr.tesarik.ext@huawei.com>
+ <CAA42JLa1y9jJ7BgQvXeUYQh-K2mDNHd2BYZ4iZUz33r5zY7oAQ@mail.gmail.com>
+From:   "Linux regression tracking #adding (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAA42JLa1y9jJ7BgQvXeUYQh-K2mDNHd2BYZ4iZUz33r5zY7oAQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680697486;1e83ec65;
+X-HE-SMSGID: 1pk2Bn-00016R-NG
+X-Spam-Status: No, score=-1.4 required=5.0 tests=NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,42 +60,80 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Daniel Vetter <daniel.vetter@ffwll.ch> writes:
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-> With the preceeding patches it's become defunct. Also I'm about to add
-> a different boolean argument, so it's better to keep the confusion
-> down to the absolute minimum.
->
-> v2: Since the hypervfb patch got droppped (it's only a pci device for
-> gen1 vm, not for gen2) there is one leftover user in an actual driver
-> left to touch.
->
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Javier Martinez Canillas <javierm@redhat.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org
-> ---
->  drivers/gpu/drm/drm_aperture.c  | 2 +-
->  drivers/video/aperture.c        | 7 +++----
->  drivers/video/fbdev/hyperv_fb.c | 2 +-
->  include/linux/aperture.h        | 9 ++++-----
->  4 files changed, 9 insertions(+), 11 deletions(-)
->
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+On 04.04.23 21:55, Dexuan-Linux Cui wrote:
+> On Tue, Mar 21, 2023 at 1:37 AM Petr Tesarik
+> <petrtesarik@huaweicloud.com> wrote:
+>>
+>> From: Petr Tesarik <petr.tesarik.ext@huawei.com>
+>>
+>> Explicit alignment and page alignment are used only to calculate
+>> the stride, not when checking actual slot physical address.
+>>
+>> Originally, only page alignment was implemented, and that worked,
+>> because the whole SWIOTLB is allocated on a page boundary, so
+>> aligning the start index was sufficient to ensure a page-aligned
+>> slot.
+>>
+>> When Christoph Hellwig added support for min_align_mask, the index
+>> could be incremented in the search loop, potentially finding an
+>> unaligned slot if minimum device alignment is between IO_TLB_SIZE
+>> and PAGE_SIZE. The bug could go unnoticed, because the slot size
+>> is 2 KiB, and the most common page size is 4 KiB, so there is no
+>> alignment value in between.
+>>
+>> IIUC the intention has been to find a slot that conforms to all
+>> alignment constraints: device minimum alignment, an explicit
+>> alignment (given as function parameter) and optionally page
+>> alignment (if allocation size is >= PAGE_SIZE). The most
+>> restrictive mask can be trivially computed with logical AND. The
+>> rest can stay.
+>>
+>> Fixes: 1f221a0d0dbf ("swiotlb: respect min_align_mask")
+>> Fixes: e81e99bacc9f ("swiotlb: Support aligned swiotlb buffers")
+>> Signed-off-by: Petr Tesarik <petr.tesarik.ext@huawei.com>
+>> ---
+> [...]
+> 
+> Hi Petr, this patch has gone into the mainline:
+> 0eee5ae10256 ("swiotlb: fix slot alignment checks")
+> 
+> Somehow it breaks Linux VMs on Hyper-V: a regular VM with
+> swiotlb=force or a confidential VM (which uses swiotlb) fails to boot.
+> If I revert this patch, everything works fine.
+> 
+> Cc'd Tianyu/Michael and the Hyper-V list.
 
--- 
-Best regards,
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+#regzbot ^introduced 0eee5ae10256
+#regzbot title swiotlb: Linux VMs on Hyper-V broken
+#regzbot monitor:
+https://lore.kernel.org/all/20230405003549.GA21326@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net/
+#regzbot ignore-activity
 
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
