@@ -2,31 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9136DB203
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Apr 2023 19:48:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB0D6DB26F
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Apr 2023 20:05:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230206AbjDGRsv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 7 Apr 2023 13:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
+        id S231682AbjDGSF2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 7 Apr 2023 14:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbjDGRsr (ORCPT
+        with ESMTP id S230112AbjDGSFX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 7 Apr 2023 13:48:47 -0400
+        Fri, 7 Apr 2023 14:05:23 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F355611D;
-        Fri,  7 Apr 2023 10:48:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 37B1DBDE1;
+        Fri,  7 Apr 2023 11:05:16 -0700 (PDT)
 Received: from skinsburskii.localdomain (unknown [131.107.1.229])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 48572210CBEC;
-        Fri,  7 Apr 2023 10:48:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48572210CBEC
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7C4442121EDA;
+        Fri,  7 Apr 2023 11:05:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7C4442121EDA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1680889725;
-        bh=ZHx9rbN3CaHGufs06rXZ7LY5QATY03RrJRAxGsR3Ztg=;
+        s=default; t=1680890715;
+        bh=jqPMEV+FDI7tcv/qHYZ6KXuGCsI+ghRVH9o/RSZM9BI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oH4FKtQW13Dt8V8h2dM3d2tnSpnpkrR4ALyAWOVziqPiHu+jxqm3dae0wbl410ZXz
-         Sdw9aCjN0D4UjNBIgYZe5EQM1s/oQNaKouE2RqcD7+JJouIEApKt1z+kPhNyr3n0yS
-         8ek1uSpGQyLzgj5kJgo86X8c8/4rpCOYjW9R8FA4=
-Date:   Thu, 6 Apr 2023 06:51:13 -0700
+        b=aZoqHveEWZNZW+ETuEQVxjoxpNXdYA5hW8P9qAfEUQC5Noc3iCqNXcoIJUdZtFp6k
+         ZuMTU1uVkizbCkZ2yCmAhdZD9rDP5Y9R9J5SY3mEErXHexEaEo25KhjyqR+t50T5VB
+         atRF0K1IpdYg/tQCAzPD3OFEmEhg7dIwIIkiGVuQ=
+Date:   Thu, 6 Apr 2023 07:07:43 -0700
 From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To:     Saurabh Sengar <ssengar@linux.microsoft.com>
 Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -36,15 +36,14 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         mikelley@microsoft.com, linux-kernel@vger.kernel.org,
         linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
         jgross@suse.com, mat.jonczyk@o2.pl
-Subject: Re: [PATCH v4 2/5] x86/hyperv: Add VTL specific structs and
- hypercalls
-Message-ID: <20230406135113.GB1317@skinsburskii.localdomain>
+Subject: Re: [PATCH v4 5/5] x86/hyperv: VTL support for Hyper-V
+Message-ID: <20230406140743.GA1443@skinsburskii.localdomain>
 References: <1680598864-16981-1-git-send-email-ssengar@linux.microsoft.com>
- <1680598864-16981-3-git-send-email-ssengar@linux.microsoft.com>
+ <1680598864-16981-6-git-send-email-ssengar@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1680598864-16981-3-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1680598864-16981-6-git-send-email-ssengar@linux.microsoft.com>
 X-Spam-Status: No, score=-17.4 required=5.0 tests=DATE_IN_PAST_24_48,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,
         RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,
@@ -56,137 +55,326 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 04, 2023 at 02:01:01AM -0700, Saurabh Sengar wrote:
-> Add structs and hypercalls required to enable VTL support on x86.
+On Tue, Apr 04, 2023 at 02:01:04AM -0700, Saurabh Sengar wrote:
+> Virtual Trust Levels (VTL) helps enable Hyper-V Virtual Secure Mode (VSM)
+> feature. VSM is a set of hypervisor capabilities and enlightenments
+> offered to host and guest partitions which enable the creation and
+> management of new security boundaries within operating system software.
+> VSM achieves and maintains isolation through VTLs.
+> 
+> Add early initialization for Virtual Trust Levels (VTL). This includes
+> initializing the x86 platform for VTL and enabling boot support for
+> secondary CPUs to start in targeted VTL context. For now, only enable
+> the code for targeted VTL level as 2.
+> 
+> When starting an AP at a VTL other than VTL0, the AP must start directly
+> in 64-bit mode, bypassing the usual 16-bit -> 32-bit -> 64-bit mode
+> transition sequence that occurs after waking up an AP with SIPI whose
+> vector points to the 16-bit AP startup trampoline code.
 > 
 > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 > ---
->  arch/x86/include/asm/hyperv-tlfs.h | 75 ++++++++++++++++++++++++++++++
->  include/asm-generic/hyperv-tlfs.h  |  4 ++
->  2 files changed, 79 insertions(+)
+> [V4]
+> - replace initial_stack with current->thread.sp as per recent upstream changes
 > 
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index 0b73a809e9e1..0b0b4e9a4318 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -713,6 +713,81 @@ union hv_msi_entry {
->  	} __packed;
->  };
+>  arch/x86/hyperv/Makefile        |   1 +
+>  arch/x86/hyperv/hv_vtl.c        | 227 ++++++++++++++++++++++++++++++++
+>  arch/x86/include/asm/mshyperv.h |  10 ++
+>  arch/x86/kernel/cpu/mshyperv.c  |   1 +
+>  4 files changed, 239 insertions(+)
+>  create mode 100644 arch/x86/hyperv/hv_vtl.c
+> 
+> diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
+> index 5d2de10809ae..3a1548054b48 100644
+> --- a/arch/x86/hyperv/Makefile
+> +++ b/arch/x86/hyperv/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-y			:= hv_init.o mmu.o nested.o irqdomain.o ivm.o
+>  obj-$(CONFIG_X86_64)	+= hv_apic.o hv_proc.o
+> +obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
 >  
-> +struct hv_x64_segment_register {
-> +	__u64 base;
+>  ifdef CONFIG_X86_64
+>  obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
+> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+> new file mode 100644
+> index 000000000000..1ba5d3b99b16
+> --- /dev/null
+> +++ b/arch/x86/hyperv/hv_vtl.c
+> @@ -0,0 +1,227 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2023, Microsoft Corporation.
+> + *
+> + * Author:
+> + *   Saurabh Sengar <ssengar@microsoft.com>
+> + */
+> +
+> +#include <asm/apic.h>
+> +#include <asm/boot.h>
+> +#include <asm/desc.h>
+> +#include <asm/i8259.h>
+> +#include <asm/mshyperv.h>
+> +#include <asm/realmode.h>
+> +
+> +extern struct boot_params boot_params;
+> +static struct real_mode_header hv_vtl_real_mode_header;
+> +
+> +void __init hv_vtl_init_platform(void)
+> +{
+> +	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
+> +
+> +	x86_init.irqs.pre_vector_init = x86_init_noop;
+> +	x86_init.timers.timer_init = x86_init_noop;
+> +
+> +	x86_platform.get_wallclock = get_rtc_noop;
+> +	x86_platform.set_wallclock = set_rtc_noop;
 
-Ideally they arch-size types naming should be consistent: either with underscores or
-without.
-The majority of cases in this file are without underscores.
+Nit: this code is VTL feature and hypevisor specific.
+Defining vtl_get_rtc_noop instead of exporting get_rtc_noop would allow to make
+this series less intrusive to the rest of x86 generic code.
 
 Reviewed-by: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
 
-> +	__u32 limit;
-> +	__u16 selector;
-> +	union {
-> +		struct {
-> +			__u16 segment_type : 4;
-> +			__u16 non_system_segment : 1;
-> +			__u16 descriptor_privilege_level : 2;
-> +			__u16 present : 1;
-> +			__u16 reserved : 4;
-> +			__u16 available : 1;
-> +			__u16 _long : 1;
-> +			__u16 _default : 1;
-> +			__u16 granularity : 1;
-> +		} __packed;
-> +		__u16 attributes;
-> +	};
-> +} __packed;
+> +	x86_platform.get_nmi_reason = hv_get_nmi_reason;
 > +
-> +struct hv_x64_table_register {
-> +	__u16 pad[3];
-> +	__u16 limit;
-> +	__u64 base;
-> +} __packed;
+> +	x86_platform.legacy.i8042 = X86_LEGACY_I8042_PLATFORM_ABSENT;
+> +	x86_platform.legacy.rtc = 0;
+> +	x86_platform.legacy.warm_reset = 0;
+> +	x86_platform.legacy.reserve_bios_regions = 0;
+> +	x86_platform.legacy.devices.pnpbios = 0;
+> +}
 > +
-> +struct hv_init_vp_context {
-> +	u64 rip;
-> +	u64 rsp;
-> +	u64 rflags;
+> +static inline u64 hv_vtl_system_desc_base(struct ldttss_desc *desc)
+> +{
+> +	return ((u64)desc->base3 << 32) | ((u64)desc->base2 << 24) |
+> +		(desc->base1 << 16) | desc->base0;
+> +}
 > +
-> +	struct hv_x64_segment_register cs;
-> +	struct hv_x64_segment_register ds;
-> +	struct hv_x64_segment_register es;
-> +	struct hv_x64_segment_register fs;
-> +	struct hv_x64_segment_register gs;
-> +	struct hv_x64_segment_register ss;
-> +	struct hv_x64_segment_register tr;
-> +	struct hv_x64_segment_register ldtr;
+> +static inline u32 hv_vtl_system_desc_limit(struct ldttss_desc *desc)
+> +{
+> +	return ((u32)desc->limit1 << 16) | (u32)desc->limit0;
+> +}
 > +
-> +	struct hv_x64_table_register idtr;
-> +	struct hv_x64_table_register gdtr;
+> +typedef void (*secondary_startup_64_fn)(void*, void*);
+> +static void hv_vtl_ap_entry(void)
+> +{
+> +	((secondary_startup_64_fn)secondary_startup_64)(&boot_params, &boot_params);
+> +}
 > +
-> +	u64 efer;
-> +	u64 cr0;
-> +	u64 cr3;
-> +	u64 cr4;
-> +	u64 msr_cr_pat;
-> +} __packed;
+> +static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
+> +{
+> +	u64 status;
+> +	int ret = 0;
+> +	struct hv_enable_vp_vtl *input;
+> +	unsigned long irq_flags;
 > +
-> +union hv_input_vtl {
-> +	u8 as_uint8;
-> +	struct {
-> +		u8 target_vtl: 4;
-> +		u8 use_target_vtl: 1;
-> +		u8 reserved_z: 3;
-> +	};
-> +} __packed;
+> +	struct desc_ptr gdt_ptr;
+> +	struct desc_ptr idt_ptr;
 > +
-> +struct hv_enable_vp_vtl {
-> +	u64				partition_id;
-> +	u32				vp_index;
-> +	union hv_input_vtl		target_vtl;
-> +	u8				mbz0;
-> +	u16				mbz1;
-> +	struct hv_init_vp_context	vp_context;
-> +} __packed;
+> +	struct ldttss_desc *tss;
+> +	struct ldttss_desc *ldt;
+> +	struct desc_struct *gdt;
 > +
-> +struct hv_get_vp_from_apic_id_in {
-> +	u64 partition_id;
-> +	union hv_input_vtl target_vtl;
-> +	u8 res[7];
-> +	u32 apic_ids[];
-> +} __packed;
+> +	u64 rsp = current->thread.sp;
+> +	u64 rip = (u64)&hv_vtl_ap_entry;
 > +
->  #include <asm-generic/hyperv-tlfs.h>
+> +	native_store_gdt(&gdt_ptr);
+> +	store_idt(&idt_ptr);
+> +
+> +	gdt = (struct desc_struct *)((void *)(gdt_ptr.address));
+> +	tss = (struct ldttss_desc *)(gdt + GDT_ENTRY_TSS);
+> +	ldt = (struct ldttss_desc *)(gdt + GDT_ENTRY_LDT);
+> +
+> +	local_irq_save(irq_flags);
+> +
+> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	memset(input, 0, sizeof(*input));
+> +
+> +	input->partition_id = HV_PARTITION_ID_SELF;
+> +	input->vp_index = target_vp_index;
+> +	input->target_vtl.target_vtl = HV_VTL_MGMT;
+> +
+> +	/*
+> +	 * The x86_64 Linux kernel follows the 16-bit -> 32-bit -> 64-bit
+> +	 * mode transition sequence after waking up an AP with SIPI whose
+> +	 * vector points to the 16-bit AP startup trampoline code. Here in
+> +	 * VTL2, we can't perform that sequence as the AP has to start in
+> +	 * the 64-bit mode.
+> +	 *
+> +	 * To make this happen, we tell the hypervisor to load a valid 64-bit
+> +	 * context (most of which is just magic numbers from the CPU manual)
+> +	 * so that AP jumps right to the 64-bit entry of the kernel, and the
+> +	 * control registers are loaded with values that let the AP fetch the
+> +	 * code and data and carry on with work it gets assigned.
+> +	 */
+> +
+> +	input->vp_context.rip = rip;
+> +	input->vp_context.rsp = rsp;
+> +	input->vp_context.rflags = 0x0000000000000002;
+> +	input->vp_context.efer = __rdmsr(MSR_EFER);
+> +	input->vp_context.cr0 = native_read_cr0();
+> +	input->vp_context.cr3 = __native_read_cr3();
+> +	input->vp_context.cr4 = native_read_cr4();
+> +	input->vp_context.msr_cr_pat = __rdmsr(MSR_IA32_CR_PAT);
+> +	input->vp_context.idtr.limit = idt_ptr.size;
+> +	input->vp_context.idtr.base = idt_ptr.address;
+> +	input->vp_context.gdtr.limit = gdt_ptr.size;
+> +	input->vp_context.gdtr.base = gdt_ptr.address;
+> +
+> +	/* Non-system desc (64bit), long, code, present */
+> +	input->vp_context.cs.selector = __KERNEL_CS;
+> +	input->vp_context.cs.base = 0;
+> +	input->vp_context.cs.limit = 0xffffffff;
+> +	input->vp_context.cs.attributes = 0xa09b;
+> +	/* Non-system desc (64bit), data, present, granularity, default */
+> +	input->vp_context.ss.selector = __KERNEL_DS;
+> +	input->vp_context.ss.base = 0;
+> +	input->vp_context.ss.limit = 0xffffffff;
+> +	input->vp_context.ss.attributes = 0xc093;
+> +
+> +	/* System desc (128bit), present, LDT */
+> +	input->vp_context.ldtr.selector = GDT_ENTRY_LDT * 8;
+> +	input->vp_context.ldtr.base = hv_vtl_system_desc_base(ldt);
+> +	input->vp_context.ldtr.limit = hv_vtl_system_desc_limit(ldt);
+> +	input->vp_context.ldtr.attributes = 0x82;
+> +
+> +	/* System desc (128bit), present, TSS, 0x8b - busy, 0x89 -- default */
+> +	input->vp_context.tr.selector = GDT_ENTRY_TSS * 8;
+> +	input->vp_context.tr.base = hv_vtl_system_desc_base(tss);
+> +	input->vp_context.tr.limit = hv_vtl_system_desc_limit(tss);
+> +	input->vp_context.tr.attributes = 0x8b;
+> +
+> +	status = hv_do_hypercall(HVCALL_ENABLE_VP_VTL, input, NULL);
+> +
+> +	if (!hv_result_success(status) &&
+> +	    hv_result(status) != HV_STATUS_VTL_ALREADY_ENABLED) {
+> +		pr_err("HVCALL_ENABLE_VP_VTL failed for VP : %d ! [Err: %#llx\n]",
+> +		       target_vp_index, status);
+> +		ret = -EINVAL;
+> +		goto free_lock;
+> +	}
+> +
+> +	status = hv_do_hypercall(HVCALL_START_VP, input, NULL);
+> +
+> +	if (!hv_result_success(status)) {
+> +		pr_err("HVCALL_START_VP failed for VP : %d ! [Err: %#llx]\n",
+> +		       target_vp_index, status);
+> +		ret = -EINVAL;
+> +	}
+> +
+> +free_lock:
+> +	local_irq_restore(irq_flags);
+> +
+> +	return ret;
+> +}
+> +
+> +static int hv_vtl_apicid_to_vp_id(u32 apic_id)
+> +{
+> +	u64 control;
+> +	u64 status;
+> +	unsigned long irq_flags;
+> +	struct hv_get_vp_from_apic_id_in *input;
+> +	u32 *output, ret;
+> +
+> +	local_irq_save(irq_flags);
+> +
+> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	memset(input, 0, sizeof(*input));
+> +	input->partition_id = HV_PARTITION_ID_SELF;
+> +	input->apic_ids[0] = apic_id;
+> +
+> +	output = (u32 *)input;
+> +
+> +	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
+> +	status = hv_do_hypercall(control, input, output);
+> +	ret = output[0];
+> +
+> +	local_irq_restore(irq_flags);
+> +
+> +	if (!hv_result_success(status)) {
+> +		pr_err("failed to get vp id from apic id %d, status %#llx\n",
+> +		       apic_id, status);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int hv_vtl_wakeup_secondary_cpu(int apicid, unsigned long start_eip)
+> +{
+> +	int vp_id;
+> +
+> +	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
+> +	vp_id = hv_vtl_apicid_to_vp_id(apicid);
+> +
+> +	if (vp_id < 0) {
+> +		pr_err("Couldn't find CPU with APIC ID %d\n", apicid);
+> +		return -EINVAL;
+> +	}
+> +	if (vp_id > ms_hyperv.max_vp_index) {
+> +		pr_err("Invalid CPU id %d for APIC ID %d\n", vp_id, apicid);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return hv_vtl_bringup_vcpu(vp_id, start_eip);
+> +}
+> +
+> +static int __init hv_vtl_early_init(void)
+> +{
+> +	/*
+> +	 * `boot_cpu_has` returns the runtime feature support,
+> +	 * and here is the earliest it can be used.
+> +	 */
+> +	if (cpu_feature_enabled(X86_FEATURE_XSAVE))
+> +		panic("XSAVE has to be disabled as it is not supported by this module.\n"
+> +			  "Please add 'noxsave' to the kernel command line.\n");
+> +
+> +	real_mode_header = &hv_vtl_real_mode_header;
+> +	apic->wakeup_secondary_cpu_64 = hv_vtl_wakeup_secondary_cpu;
+> +
+> +	return 0;
+> +}
+> +early_initcall(hv_vtl_early_init);
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 71ed240ef66d..de4ad38f7d74 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -19,6 +19,10 @@
+>   */
+>  #define HV_IOAPIC_BASE_ADDRESS 0xfec00000
+>  
+> +#define HV_VTL_NORMAL 0x0
+> +#define HV_VTL_SECURE 0x1
+> +#define HV_VTL_MGMT   0x2
+> +
+>  union hv_ghcb;
+>  
+>  DECLARE_STATIC_KEY_FALSE(isolation_type_snp);
+> @@ -276,6 +280,12 @@ static inline u64 hv_get_non_nested_register(unsigned int reg) { return 0; }
+>  #endif /* CONFIG_HYPERV */
+>  
+>  
+> +#ifdef CONFIG_HYPERV_VTL_MODE
+> +void __init hv_vtl_init_platform(void);
+> +#else
+> +static inline void __init hv_vtl_init_platform(void) {}
+> +#endif
+> +
+>  #include <asm-generic/mshyperv.h>
 >  
 >  #endif
-> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index b870983596b9..87258341fd7c 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -146,6 +146,7 @@ union hv_reference_tsc_msr {
->  /* Declare the various hypercall operations. */
->  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE	0x0002
->  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST	0x0003
-> +#define HVCALL_ENABLE_VP_VTL			0x000f
->  #define HVCALL_NOTIFY_LONG_SPIN_WAIT		0x0008
->  #define HVCALL_SEND_IPI				0x000b
->  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
-> @@ -165,6 +166,8 @@ union hv_reference_tsc_msr {
->  #define HVCALL_MAP_DEVICE_INTERRUPT		0x007c
->  #define HVCALL_UNMAP_DEVICE_INTERRUPT		0x007d
->  #define HVCALL_RETARGET_INTERRUPT		0x007e
-> +#define HVCALL_START_VP				0x0099
-> +#define HVCALL_GET_VP_ID_FROM_APIC_ID		0x009a
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
->  #define HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY 0x00db
-> @@ -218,6 +221,7 @@ enum HV_GENERIC_SET_FORMAT {
->  #define HV_STATUS_INVALID_PORT_ID		17
->  #define HV_STATUS_INVALID_CONNECTION_ID		18
->  #define HV_STATUS_INSUFFICIENT_BUFFERS		19
-> +#define HV_STATUS_VTL_ALREADY_ENABLED		134
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 5ee02af57dac..5180e3c50184 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -519,6 +519,7 @@ static void __init ms_hyperv_init_platform(void)
 >  
->  /*
->   * The Hyper-V TimeRefCount register and the TSC
+>  	/* Register Hyper-V specific clocksource */
+>  	hv_init_clocksource();
+> +	hv_vtl_init_platform();
+>  #endif
+>  	/*
+>  	 * TSC should be marked as unstable only after Hyper-V
 > -- 
 > 2.34.1
