@@ -2,49 +2,50 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84CB56DB58A
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Apr 2023 22:58:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28BFD6DB58C
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Apr 2023 22:58:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231152AbjDGU6T (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 7 Apr 2023 16:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
+        id S231129AbjDGU6W (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 7 Apr 2023 16:58:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbjDGU6R (ORCPT
+        with ESMTP id S230413AbjDGU6T (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 7 Apr 2023 16:58:17 -0400
+        Fri, 7 Apr 2023 16:58:19 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E6296A5A;
-        Fri,  7 Apr 2023 13:58:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 45E1AC17E;
+        Fri,  7 Apr 2023 13:58:17 -0700 (PDT)
 Received: from skinsburskii.localdomain (unknown [131.107.1.229])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8A33F213B62E;
-        Fri,  7 Apr 2023 13:58:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8A33F213B62E
+        by linux.microsoft.com (Postfix) with ESMTPSA id AE674213B634;
+        Fri,  7 Apr 2023 13:58:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE674213B634
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1680901085;
-        bh=xX8UglqAO9D7VIeqlVY4oCyfwKnXYYeF9E8GHXwADe8=;
+        s=default; t=1680901096;
+        bh=32mhPLCSnFqlWC0muL7q44icEI++yknNcaEQIU1ZLvE=;
         h=Subject:From:Cc:Date:In-Reply-To:References:From;
-        b=EBR4QqWwM+ZQqLtV4TvHcsYuZ2h/kW2CX9N2HwqasiNBonZKItJrQIHwbY/iIa9LU
-         Yq+b2qJfdGikoEN5HDAlQciAAHgaHFPnoiazLeYjdnRKQ/JYglTHz6j/gq+nqaaYyN
-         muYftxB+yz5U6DhigioqqwvacNI5xHPwAPJK6jN8=
-Subject: [PATCH 1/2] x86/hyperv: Expose an helper to map PCI interrupts
+        b=rLRQUe03PQBMKbXvSZ/VJWDxgdc9PySimsj3H5+d3DxKwZjzOd7WeHSUUetID2zxh
+         nayWNjg4p5Co3J52iHGyG4JgzQm14NIt/oJhXv8wMvDRwEzY6CKH3KWd94mThdmOxA
+         wVJYjO39KNVcye7uCLbs6BOrthe+MQi/hGzv8c+c=
+Subject: [PATCH 2/2] PCI: hv: Deal with nested MSHV setup
 From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 Cc:     Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 06 Apr 2023 09:33:13 -0700
-Message-ID: <168079870998.14175.16015623662679754647.stgit@skinsburskii.localdomain>
+Date:   Thu, 06 Apr 2023 09:33:24 -0700
+Message-ID: <168079879905.14175.16212926378045082102.stgit@skinsburskii.localdomain>
 In-Reply-To: <168079806973.14175.17999267023207421381.stgit@skinsburskii.localdomain>
 References: <168079806973.14175.17999267023207421381.stgit@skinsburskii.localdomain>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-16.2 required=5.0 tests=DATE_IN_PAST_24_48,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,
         MISSING_HEADERS,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,
@@ -59,123 +60,55 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
 
-This patch moves a part of currently internal logic into the new
-hv_map_msi_interrupt function and makes it globally available helper,
-which will be used to map PCI interrupts in case of root partition.
+Running Microsoft hypervisor as nested (i.e., on top of another Microsoft
+hypervisor) imposes a different requirement for the PCI-hyperv controller.
+
+In this setup, the interrupt will first come to the nested (L1) hypervisor
+from the hypervisor, running on bare metal (L0), and then the L1 hypervisor
+will deliver the interrupt to the appropriate CPU of the nested root
+partition.
+
+Thus, instead of issuing the RETARGET hypercall to the L0 hypervisor,
+MAP_DEVICE_INTERRUPT hypercall should be issued to the L1 hypervisor to
+complete the interrupt setup.
 
 Signed-off-by: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
 CC: "K. Y. Srinivasan" <kys@microsoft.com>
 CC: Haiyang Zhang <haiyangz@microsoft.com>
 CC: Wei Liu <wei.liu@kernel.org>
 CC: Dexuan Cui <decui@microsoft.com>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: x86@kernel.org
-CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: "Krzysztof Wilczyński" <kw@linux.com>
+CC: Rob Herring <robh@kernel.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>
 CC: linux-hyperv@vger.kernel.org
+CC: linux-pci@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- arch/x86/hyperv/irqdomain.c     |   40 +++++++++++++++++++++++++++------------
- arch/x86/include/asm/mshyperv.h |    2 ++
- 2 files changed, 30 insertions(+), 12 deletions(-)
+ drivers/pci/controller/pci-hyperv.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-index 42c70d28ef27..fd9c487726e3 100644
---- a/arch/x86/hyperv/irqdomain.c
-+++ b/arch/x86/hyperv/irqdomain.c
-@@ -169,13 +169,35 @@ static union hv_device_id hv_build_pci_dev_id(struct pci_dev *dev)
- 	return dev_id;
- }
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index f33370b75628..61bee8babad4 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1570,7 +1570,16 @@ static void hv_irq_mask(struct irq_data *data)
  
--static int hv_map_msi_interrupt(struct pci_dev *dev, int cpu, int vector,
--				struct hv_interrupt_entry *entry)
-+/**
-+ * hv_map_msi_interrupt() - "Map" the MSI IRQ in the hypervisor.
-+ * @data:      Describes the IRQ
-+ * @out_entry: Hypervisor (MSI) interrupt entry (can be NULL)
-+ *
-+ * Map the IRQ in the hypervisor by issuing a MAP_DEVICE_INTERRUPT hypercall.
-+ */
-+int hv_map_msi_interrupt(struct irq_data *data,
-+			 struct hv_interrupt_entry *out_entry)
+ static void hv_irq_unmask(struct irq_data *data)
  {
--	union hv_device_id device_id = hv_build_pci_dev_id(dev);
-+	struct msi_desc *msidesc;
-+	struct pci_dev *dev;
-+	union hv_device_id device_id;
-+	struct hv_interrupt_entry dummy, *entry;
-+	struct irq_cfg *cfg = irqd_cfg(data);
-+	const cpumask_t *affinity;
-+	int cpu, vector;
-+
-+	msidesc = irq_data_get_msi_desc(data);
-+	dev = msi_desc_to_pci_dev(msidesc);
-+	device_id = hv_build_pci_dev_id(dev);
-+	affinity = irq_data_get_effective_affinity_mask(data);
-+	cpu = cpumask_first_and(affinity, cpu_online_mask);
-+	entry = out_entry ? out_entry : &dummy;
-+	vector = cfg->vector;
+-	hv_arch_irq_unmask(data);
++	if (hv_nested && hv_root_partition)
++		/*
++		 * In case of the nested root partition, the nested hypervisor
++		 * is taking care of interrupt remapping and thus the
++		 * MAP_DEVICE_INTERRUPT hypercall is required instead of the
++		 * RETARGET_INTERRUPT one.
++		 */
++		(void)hv_map_msi_interrupt(data, NULL);
++	else
++		hv_arch_irq_unmask(data);
  
- 	return hv_map_interrupt(device_id, false, cpu, vector, entry);
- }
-+EXPORT_SYMBOL_GPL(hv_map_msi_interrupt);
- 
- static inline void entry_to_msi_msg(struct hv_interrupt_entry *entry, struct msi_msg *msg)
- {
-@@ -190,10 +212,8 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
- 	struct msi_desc *msidesc;
- 	struct pci_dev *dev;
--	struct hv_interrupt_entry out_entry, *stored_entry;
-+	struct hv_interrupt_entry *stored_entry;
- 	struct irq_cfg *cfg = irqd_cfg(data);
--	const cpumask_t *affinity;
--	int cpu;
- 	u64 status;
- 
- 	msidesc = irq_data_get_msi_desc(data);
-@@ -204,9 +224,6 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		return;
- 	}
- 
--	affinity = irq_data_get_effective_affinity_mask(data);
--	cpu = cpumask_first_and(affinity, cpu_online_mask);
--
- 	if (data->chip_data) {
- 		/*
- 		 * This interrupt is already mapped. Let's unmap first.
-@@ -235,15 +252,14 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		return;
- 	}
- 
--	status = hv_map_msi_interrupt(dev, cpu, cfg->vector, &out_entry);
-+	status = hv_map_msi_interrupt(data, stored_entry);
- 	if (status != HV_STATUS_SUCCESS) {
- 		kfree(stored_entry);
- 		return;
- 	}
- 
--	*stored_entry = out_entry;
- 	data->chip_data = stored_entry;
--	entry_to_msi_msg(&out_entry, msg);
-+	entry_to_msi_msg(data->chip_data, msg);
- 
- 	return;
- }
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 4c4c0ec3b62e..aa0e83acacbd 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -203,6 +203,8 @@ static inline void hv_apic_init(void) {}
- 
- struct irq_domain *hv_create_pci_msi_domain(void);
- 
-+int hv_map_msi_interrupt(struct irq_data *data,
-+			 struct hv_interrupt_entry *out_entry);
- int hv_map_ioapic_interrupt(int ioapic_id, bool level, int vcpu, int vector,
- 		struct hv_interrupt_entry *entry);
- int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
+ 	if (data->parent_data->chip->irq_unmask)
+ 		irq_chip_unmask_parent(data);
 
 
