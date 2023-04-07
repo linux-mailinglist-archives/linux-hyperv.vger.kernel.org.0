@@ -2,116 +2,130 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85D306DB5A5
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Apr 2023 23:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 090F16DB676
+	for <lists+linux-hyperv@lfdr.de>; Sat,  8 Apr 2023 00:28:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbjDGVCG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 7 Apr 2023 17:02:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53032 "EHLO
+        id S229917AbjDGW2t (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 7 Apr 2023 18:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231483AbjDGVCB (ORCPT
+        with ESMTP id S229614AbjDGW2r (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 7 Apr 2023 17:02:01 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021020.outbound.protection.outlook.com [52.101.57.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C505FFD;
-        Fri,  7 Apr 2023 14:01:50 -0700 (PDT)
+        Fri, 7 Apr 2023 18:28:47 -0400
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020019.outbound.protection.outlook.com [52.101.56.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F27D93C2;
+        Fri,  7 Apr 2023 15:28:46 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JUv35ncAne/oolPPGUZKs5c1OTMWrOCVc5Keko+rT4Cqu0d7h1j1/iv4m9f02qa/km0IWKCzHzJvt9WCDAUjAOfPKGh2QjfKntn+JMaHGPSye5P/WfwD1+sRko31ngS5oe4jLbrd5To5nv2Py2bWpq/5zaE5sKacjQOcHtVUz4IAa0P3LU/+kU/y9ss3X3CeaY7WIvdGYTNw26oREUDL4aMaCMsIhWSxo/efwdxok9MhYXMKtFt5jbL6txCrFAqZ2viDvCmgYwGONv9gvp0GUm91eRcLVB2rMzIV38bvsgMyqGfSo7jqbtM1XdyHIQVWnFRDJtgwbTuXErI4/DqZdg==
+ b=XNiChBE077tK69c/9Mg5Hfx56yb5CVo9tlHhv2n1OACfXsZHyPPhxp7NtQvqyJw/QfCPHIEKV/60uDcZ5pnhrQqZjfeve6lhGMfXruK6hKy6JnHtQ5bqaXsQASzrUygn5SUjIS+s79qV74GCu1i/S50pNSok8N/rREfSFmRyyHGz3Z1hhuBOHcua0ZSEwiYnLbd3HyWMXXQ0reDihgdU4kP1ZAySyIe0aUmAw/L4qVRDn+wwnKLFzSvcLEUBfYVxDKHkdmskLn9/LYSYptOlXPKttKtaEgDFe6JFdKwEWh4MER1il9F5NuIt7ZxEVwLd+7APdjnFMLGRc2dZ2sY0qQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o3m1pqC9rnOkg57acYq/j+VF+lS7p+a4oP88Kw6elqo=;
- b=PkRhfuJslBjkkglc8cWSfgmVKRxtdIxSXmH8W8UWJC9bEwoBiwICNnrm3AwrVVXoupZLl24HMR3XRs5KZHdByuFmammBAXTL3xthgcLFXIUQmTX5rRZdcD7tfZlajx+x0Rimnfo+XN/gaKDZyFJ/38epiM44BPTzSIxJOAJQMAQ2gnmY54m7faG6zarkScz3OSsdzG3zXgp+D7NsZxvkwxLzatW50gRB47FLxZRks0GJqQYpNykQ+3oBVcrzDjvI8fN8AoqVmheh8Y8wiRdm7IWWEL/EvHkNX2n2R1b2YRdIQYgJIydcB0r+Bsu5amKs547ZebLw2+oIlKxuBWnroA==
+ bh=GS0yUQzC2DmPXHFWCfBFDcvMH4y22ojxblAc9BBAtgw=;
+ b=nCPyEXRhwDc5+0VzK0AAsNWJRswrJntnM2spA9qrZcwtEfwvC9GchPRAvnAzxDsYpXeOeX2ZoG9NTuZ+yFEuCbQX3V+uWjyK/C8obd88zJdZ6BW1G+qDZ2y8a9fa56IBi2fQZn2RVguUB9GetMcZalZvyMpYmgJ5s5J/n4JuhYwNJj914RFGpjzeWFJF2JOJ0MPc76rQ+cjF7voDC1dc/3yi2eWlEs4NKzF1VMwGKSKBhHFjBNw9wghggjURd4tRK7E4/g06q4ym/w7t0YeQ/kg3dP/EzRzh9YBojDGFspZYsdXOSxIP1/GF86IJspAI1mEImcwhIN53PTWnY1SzRg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o3m1pqC9rnOkg57acYq/j+VF+lS7p+a4oP88Kw6elqo=;
- b=VkCl5EH05BxQRqvky1w/TDWY4dln/hk4dEV4XofjmZE5UiGbGKyYiPF17VFF2YOsF/oHEMx4quraCQmfmfkdoNLb8xFjMhmLKdTRISp4hrlxLScJrYK1jqRPStFV1Iw+UvAKPfyAcoo0dWfandMaNZ32QY09SvyJZTAsSVZ52qQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
- by PH0PR21MB1895.namprd21.prod.outlook.com (2603:10b6:510:1c::18) with
+ bh=GS0yUQzC2DmPXHFWCfBFDcvMH4y22ojxblAc9BBAtgw=;
+ b=DoJEzUELXdz2AMUTqbGmWLvcVtfL+NEJPtlo14P6/At5Oq6dhxJtEKUUy+ycFg+r/B/YsJpjulHTJIEBQ+XTZP+5fVffQe48fRB3bWaDH61867ftRUIzmtN5DBoCRJpM0y/yiHcmbDEmcWgOq6Vk9VVVvml9u7fh+Du+nDfpXw4=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by BL1PR21MB3112.namprd21.prod.outlook.com (2603:10b6:208:390::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.20; Fri, 7 Apr
- 2023 21:01:40 +0000
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::3e29:da85:120c:b968]) by BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::3e29:da85:120c:b968%6]) with mapi id 15.20.6298.018; Fri, 7 Apr 2023
- 21:01:40 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, decui@microsoft.com, kys@microsoft.com,
-        paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-        davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-        longli@microsoft.com, ssengar@linux.microsoft.com,
-        linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-        john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-        sharmaajay@microsoft.com, hawk@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2,net-next, 3/3] net: mana: Add support for jumbo frame
-Date:   Fri,  7 Apr 2023 13:59:56 -0700
-Message-Id: <1680901196-20643-4-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1680901196-20643-1-git-send-email-haiyangz@microsoft.com>
-References: <1680901196-20643-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0137.namprd03.prod.outlook.com
- (2603:10b6:303:8c::22) To BY5PR21MB1443.namprd21.prod.outlook.com
- (2603:10b6:a03:21f::18)
+ 2023 22:28:42 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::acd0:6aec:7be2:719c]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::acd0:6aec:7be2:719c%7]) with mapi id 15.20.6298.018; Fri, 7 Apr 2023
+ 22:28:42 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        Olaf Hering <olaf@aepfle.de>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH] Drivers: hv: Use nested hypercall for post message and
+ signal event
+Thread-Topic: [PATCH] Drivers: hv: Use nested hypercall for post message and
+ signal event
+Thread-Index: AQHZZoNBcj3NgoofJEmlKiJme92Gf68atREAgACq2YCABQ24cA==
+Date:   Fri, 7 Apr 2023 22:28:42 +0000
+Message-ID: <BYAPR21MB168809AA23D4CF7DA748CE55D7969@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <1680564178-31023-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <20230404084530.2b9ca791.olaf@aepfle.de>
+ <e2a7504a-738d-f271-0a23-6d831af75936@linux.microsoft.com>
+In-Reply-To: <e2a7504a-738d-f271-0a23-6d831af75936@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4ef4b7a9-9ef7-432e-b6bb-0f4edd0a0f27;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-04-07T22:07:22Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|BL1PR21MB3112:EE_
+x-ms-office365-filtering-correlation-id: 9b1d908c-9069-4c78-a7fb-08db37b7716b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Jkv+ZRf60dFq8qC7zt/U38xV2C5tYZZzsqcPIvfRsrgiXY/HFpRFlidY/YAzkvzc9nIiy4dfOz5LNa0MddLvZ7euRC3OhbZE9tqkEeBueClquBx5WpKf1rxXfLCrPnbj7AGv/EICvjqWbJtWY5+LPFaUVwj6QrGY/iMrKB5lK0fMDKwXxq2225W2qHqqNGwZX2dIn2O7gJo0A9xOc7kL8joHuvSq6nhzfZ7qLx0a9H+JD9HTO6Opy9hBe2MeLIpVZ1aUJIyNqBQBPBGmhR966YoYLxphirYSz2dMymU85TejZdxVDv2KB3KcXkciISyH/yjYRwFmtTIxcxVNBOZ/1J+Fw+wLseoT80fITYbcfcM2YXRZX+5nyrScfzBwolh6NRhy4pUhoMfOLcMzx7Vo4AAd3CXFTovZGNv18YlG/g0aGBPgb/kn9bL6zy8IVnOlTnrI7ogLcHqOiaUyuQF0YtgtbdFPL8qr1KyUQtN07HVRUvnhuSnBmvwC4H7zHxI+bRLmeDLBJlgWJbGJvabAyQNW1QWeTAaiBNQT3BHIUAxHzfcJDhkszwkPuyvbCWHZHtp9jf5bmZRgdcFEpiT4KcpdyLumCZAQZSbaxodnIfxiRbZJcDSoiwFud2OhZwijUQxO1GExVcx2kWu3RRVx8EZDNUJHCNtzVhiza5ZZTsw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(451199021)(110136005)(86362001)(316002)(53546011)(66476007)(8936002)(2906002)(8676002)(786003)(52536014)(8990500004)(41300700001)(7696005)(38070700005)(4326008)(71200400001)(64756008)(66446008)(66556008)(66946007)(55016003)(76116006)(33656002)(478600001)(5660300002)(10290500003)(54906003)(38100700002)(82960400001)(107886003)(122000001)(6506007)(9686003)(26005)(186003)(82950400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?a2ZISStHNVJkSHhFRnQxRW93anZHQXIrK0l1SmhTazZBOU9jV3k3eEl3U2o4?=
+ =?utf-8?B?ZG1QN3hnMHk0ZURwaTF1OHRodkJ5R3VOSlZMWlJScGpXZ0Zyb09UQXhrWWZr?=
+ =?utf-8?B?UUlGaU1NaFRzWFJCUUNQaGRXRHZFZkdrTVcrN241Y1lXNVlFbXZKVnB4RFhv?=
+ =?utf-8?B?Q3BSU1NZakttVnk1RGNMVVlhU0RFNG9PM01VQW9tUVVTOWVZTkc2YWRaSHp0?=
+ =?utf-8?B?QUdybFVmWVZVUktmVitIc3QrbEZHM21nWEcvbDI0R1cySVNuZUEvTVd0OXpp?=
+ =?utf-8?B?VEVJWFFoL3RHTlRyS0FIZVhZNmFnZTZsdzAvY3VKdHk4VklKTDcxLzZaV3Fy?=
+ =?utf-8?B?ZDdsZXdsYnNFSk5yUGNtVzc5OEdYTW9UNmN3WE9UMnZCcG9MaFBGRDVsUHdT?=
+ =?utf-8?B?OUpvZ3hILzFJRktTQXdRN1dXSS9QWks1ZjY1Z2FNNGo0MFhOQ3BieW5WcTN5?=
+ =?utf-8?B?MXU3MTlaUFlIQnBBMUlncitLRDhQSkxYb0o4MGlpSnFjUmdZcGFPbVZ4MEQ2?=
+ =?utf-8?B?Wm9RMkRUVm9JV09mdlp2c3RnUG1pMVNaRE9GQ1BNazFieDJlK2RvMjdrYnVI?=
+ =?utf-8?B?OEFjMks3aUlMcitGU0h5OFMzM0NvMkpMQldCeDViVU93Yk1MelpNMzZBVEZG?=
+ =?utf-8?B?UEZYQStrY3VJUGlxU2UxMHFNRng0cUh0T3Q4WnBxaDBHWkltSWMwQmg1djAz?=
+ =?utf-8?B?ZnhCR0M3eHI5WkY4enlTekRiUThmYzZEV1FYdTE3R2IxZHBHb01PMXFNMGpl?=
+ =?utf-8?B?eWhkejFCU24vNFc3bmZYMnAzZVUwSXk3ME13WGozOTNMMkhRWmNrbjUwRGI4?=
+ =?utf-8?B?czFGUUx3S1F6RzJnQlhjOHZlT2FDdlRub1FibkZJeDRoVkV2eThidGZ2NHIz?=
+ =?utf-8?B?VXV1NmRCbGxYczUyWGNhbkI5Y2lsN094dFpIbS9yZjdMSkUzQzRSeDdnUHlk?=
+ =?utf-8?B?YVF6VnROZE54L0UzMnhDVU9SZWNNc1BIb040U2FoM0FPQjFXNjlHVWVuR1ZC?=
+ =?utf-8?B?L0dseWk0S2FyZXo1UHlyV0ROREVaZHZhN1ZMem5mekV0cFJneFowMmlaVzRU?=
+ =?utf-8?B?WFJsYk54TWFVZ3pXZ0xCNzRGTnhZS1Byb0RzWFJubHFiRVZXc3lvcTVTV2NO?=
+ =?utf-8?B?QVhsR0xKbzl6L2ttbVFjNktCdXV2MVlZRnVoZmRVM3FKbnN0NWUxSnJNZy9o?=
+ =?utf-8?B?cXBTUlEvZWZmU2tGZlZZQUpza0Q5MS9jTUM4QmNMSURhUlVUcktiWDhzOTlN?=
+ =?utf-8?B?UFlwU3kyVUg2Q0tKVWZyUEFUanp5WWVvNmhBZWFxQXpBaEJNbFZHbFM1WFlo?=
+ =?utf-8?B?ODUvSGVOSytFWlllRm5jZjlFWHZIa2twVi9XK1o0UmJyNkxQTjUyL0xidElr?=
+ =?utf-8?B?NW9tVzA3cExsQk14Qm1FOUp1WW96R0ZIcTU3aTB2UGhUZDJSUlo0RGlXZUtO?=
+ =?utf-8?B?ZFdwUDB2eC9ZSWNqNVJyNFFpTmZGU1NvWWJHc3JsZ2c2eXo2RGVlY0dmTDdv?=
+ =?utf-8?B?ZS9xRE8rK21TTXdIK0tLd3BFYmRYT3ZoTzUyUUEvcUJqbDR4S2g5ek52MmVX?=
+ =?utf-8?B?Qk11b0llV3dTc3VtUkczdlgvdkxaL0FEUmlSN2tzelp2UVdyVXJGREdRczU3?=
+ =?utf-8?B?cW9WNTVEbHFqY2thTW54QnFaNGZqeSszVFFaejQ1d05FNWFLWWc3dWd2Mm5Y?=
+ =?utf-8?B?cW1Pc0plbVRCMUNMTGVIWlYxNVI4RE9aeG14aWUvVEo4UnVLdUxmclNiZ2lK?=
+ =?utf-8?B?cE1vNXJBWW14bUN0R05QYVgzZUVlMThqNE5Sc1AxTDk5SmtMVDd5dDFIVSth?=
+ =?utf-8?B?SXh3dUhmSXlaeElHOXpvYXorMHpHUklEUVZodnplV0NrR3c5NjlLeFBlSHFF?=
+ =?utf-8?B?bGtuRStJdHhzamFkOVdmKzNFRGRuT2ZqTmUwcTN4aGpadm4yVFp6UXFUZHR6?=
+ =?utf-8?B?cmcwTnZEUHJLc1NZMzU4RXlVWExRWTdCZDdRN1JkLzRPdjgvVEVwa2tyUlAw?=
+ =?utf-8?B?MzlDZE40YlhMUlB1aVloVkdzVStLL2UxYno5Sm5QYUpsVEwxOCs1cXRXUzdo?=
+ =?utf-8?B?aEF6Z293OFNvenBZM0Y0UXd3NGR6NnAyTE5sQ1pobGVtQXpHbVdUTU8venVG?=
+ =?utf-8?B?VU5HWDI0WVU1U3ByNVBGMmpjWng1UWRIV3Bvd0FnWlR2MVNCNUpWdWtoNFlJ?=
+ =?utf-8?B?S0E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|PH0PR21MB1895:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5987ddc-e2cd-4e65-f0fd-08db37ab48c9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jSIWE5VExjKQ73jj3E0QPSIKlX7kmRYJUwygv3yajjHmjypRSQW8PO2Nr+XwLEp3u3yBmuJqQGpd0KWcKFZt+Pg3JV6b7tZ3SRsQ1YTVLDos80HL0uHT5zq0Odp/oevD2w50H1xv+JPYWLTKHhfUXb0VKe2dl1j2eu9bxPNCYTTe2OeVbHha+oi41ymXu+2IB+gc6Xr02FiAaJ+tyvExm90mvVSN05s5In2UoDxqJ0YwS7F/Zeqd4oDhE3mS3MU1b5MCk19g5GFTbtDfD92LSRYdUgIBzp0bo7pPKANbcEYKHPiC7AAc0wrOb4+QlYA7Q9tZneu17ja5f6zlTjzIWYop+HkC/RFaZDftYPEPxBWzjt1vIrXeO2MJAK5vESxLL4jMCYdfQlRn5wYhHLgVYnpQHuwkgC+/R1RSG2n5RR40vYuYHWavTAQQISeq4HLK9wzhV7qzGd1cXr57y6es/NpWG24KVEl70SI7sL7Kzp9uNRMaKb0I5QQzgE99QT1K/Vmq5d+EgvqJodu2gJKAmAPv7A7w9bVwvtnLOz17nxjGeBGbaWaJXgFv+xDAtZs1lfP739MPPZ3a8jrNPw9z33chjZJ9DoFUu50zzTg5XmR+X6rezlj9xWmPxb0bn7v5FMvxf3pXNXDRx3+jzHTupCjoY+sWvaF6bwkCc8TjK5E=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(39860400002)(396003)(136003)(366004)(451199021)(66899021)(66946007)(6486002)(66476007)(478600001)(8676002)(4326008)(7846003)(66556008)(41300700001)(786003)(316002)(52116002)(36756003)(83380400001)(2616005)(6512007)(26005)(6506007)(6666004)(8936002)(5660300002)(2906002)(7416002)(10290500003)(30864003)(82960400001)(38350700002)(38100700002)(82950400001)(186003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?05bMkiQA+kWltp/E2HbgxxibnWw+zXVq0YQHB1HEhHSZPJgnhV73aHSybKDz?=
- =?us-ascii?Q?unPL3oUzbtG88gN7XaEx0eKKwxODyilUyUhDVEmisY6XnRZaCWdJ63MLXUBs?=
- =?us-ascii?Q?CYVCsMV/0otqE4Br/pHcDH2OBtDlSGrPWfFE+yEPamd11wS70T86UsFrxWkn?=
- =?us-ascii?Q?dq85Tn0MCUTYnIZqpM6unv0pVjI4rtUJ/BZFgST6Da287VcSxROTddNxN9JI?=
- =?us-ascii?Q?HMJ4dD7w1UPeKE0dRtLsVHEGHck8YAsL/lkQ106Q+PvvR7iUiHRft/Baei3s?=
- =?us-ascii?Q?36rQfu7J6PyKixr3G8RF/OEYN8fwVcWIlGLCM4SljrFoVwFW8D8/WYHjeDoj?=
- =?us-ascii?Q?zajRlc3agGRte/G5KdtC2uMBhFhfp9dyshZbJX4zec/yZeglIlyJZ9QYq+Kg?=
- =?us-ascii?Q?XvLn2KebDrIxTj1PsI8x9lL3Q2ArfSOoPujnSecUsvFsOxDplnw6eJ3od06J?=
- =?us-ascii?Q?7jhk+ldiYe2024xgrUEZnCa5pWd7VOXN0gORZo3tXsbNBRQFL8QZN3lbRjRZ?=
- =?us-ascii?Q?dhg4QMeLACqH82h0pJAFDLfDd4An4U7dbtl09ZRF+44v0dFwH9DivNB/F/Fl?=
- =?us-ascii?Q?BmVFFj3IO4p7xVVP6U6Ob1xRAYlObcbYghBGKWQPgODVupEWNfxnaU/KYu2v?=
- =?us-ascii?Q?zAm/GOtxf3WelrU398IKFa6ZodCrQ1XfPdLqQwMOVI1xK5hbeDWGci9LFRKL?=
- =?us-ascii?Q?ubw1JxysNBOKTz9jkMOP6S6ilvOJVbFrpLOghco447N8WpW028UzmCu/oB4T?=
- =?us-ascii?Q?I9+uULOlBCHklPLjad7sQXyQwH/uc8ehR48wqfdE71TiwBtJiv5aVmZ/+Df/?=
- =?us-ascii?Q?L1dn/aiuZWUagHHxW+AJregnAemFCr+SOIDRQJBBqPKAqwyg06MmG9ext7eD?=
- =?us-ascii?Q?m7779d5Rz9MdxIl2rsyQUJW/bGGT9wryzz+qjyGiX7L8P6Inbri4kKd37Upg?=
- =?us-ascii?Q?uu0ISqJJbabBzlPKWLUiG7BGPpdOqcWfqi6nvNPZy2W1JolZ64jw5ehJWwGN?=
- =?us-ascii?Q?coRRJlqylpxzVavGkXAga4IPtocnib+x1+L0mEHgR7qwuJxv4Xjgzulhv7tQ?=
- =?us-ascii?Q?xj2VZPgNaXZ6wuc5yQKS/mPIAoY8U0g3ghjSZLxSnNq9wX6X2rf1/mGOnJ1e?=
- =?us-ascii?Q?N9zXe4Glg3JM9aynBoSVri+eToqfewwUVAu7aBTexo7N5MgPG7Q+j9Ci3sMf?=
- =?us-ascii?Q?uFv/QlvsgpEjmxCDM2lYWMKOWJINhzVXqsTxpsidZ1AVnlZvzTDrJDBk3XO+?=
- =?us-ascii?Q?rLJUnKvFpIk5VOGeSfIsB+9qf81+VJEarZgOcOn/+UEOa7IPZZx/xUzqo9aL?=
- =?us-ascii?Q?F8+yZ77O6ay4rvjcS+URBoP851YjkLYoFe5jvAVlFyRTEx863omY4CprDKzs?=
- =?us-ascii?Q?skfuYGxU8vOwXv/SseFbAJFZWEOwLJW0OZl78Mnf8eIZgKdqXWQk/UwYcaRo?=
- =?us-ascii?Q?2LzSFeO4Qeq8oKuWguR9KypwpDg3frHwNEpkTkjCrzFE/2D+uRiaCbCXvS7L?=
- =?us-ascii?Q?cfclPRJgNp79Oaue/Vzn6AEd+fA5OSZKe8rgmrmhyVtCEw/DsFr6rqPxPS6U?=
- =?us-ascii?Q?QMXhg3A1TImr2SgesIGcBScWVgUZu3jtRk9m5ie6?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5987ddc-e2cd-4e65-f0fd-08db37ab48c9
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2023 21:01:40.4750
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b1d908c-9069-4c78-a7fb-08db37b7716b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2023 22:28:42.4396
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UupPuuMjazRkghye4wGemDvWEEtetMYxGD25jUtyj5NQyOZDilx536FZiuKxYzCZo9HZXR5ACEp4Oh1bkezO0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB1895
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tOj6rfcrdEMk/eHKS6ESIEcey/7QZoKiOjb5g1/b+kTmhxO5SDVuI5TfyGfv/sLZ2WdgtYxr28v27zUhH9VtHnBMK9vTftA6ETi68QQ+XLA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3112
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
@@ -122,421 +136,53 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-During probe, get the hardware-allowed max MTU by querying the device
-configuration. Users can select MTU up to the device limit.
-When XDP is in use, limit MTU settings so the buffer size is within
-one page.
-Also, to prevent changing MTU fails, and leaves the NIC in a bad state,
-pre-allocate all buffers before starting the change. So in low memory
-condition, it will return error, without affecting the NIC.
-
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
-V2:
-Refectored to multiple patches for readability. Suggested by Yunsheng Lin.
-Added pre-allocation of buffers to avoid changing MTU fails in a bad state.
- Suggested by Leon Romanovsky, Francois Romieu.
----
- .../net/ethernet/microsoft/mana/mana_bpf.c    |  22 +-
- drivers/net/ethernet/microsoft/mana/mana_en.c | 217 ++++++++++++++++--
- include/net/mana/gdma.h                       |   4 +
- include/net/mana/mana.h                       |  14 ++
- 4 files changed, 233 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_bpf.c b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-index 3caea631229c..23b1521c0df9 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_bpf.c
-@@ -133,12 +133,6 @@ u32 mana_run_xdp(struct net_device *ndev, struct mana_rxq *rxq,
- 	return act;
- }
- 
--static unsigned int mana_xdp_fraglen(unsigned int len)
--{
--	return SKB_DATA_ALIGN(len) +
--	       SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
--}
--
- struct bpf_prog *mana_xdp_get(struct mana_port_context *apc)
- {
- 	ASSERT_RTNL();
-@@ -179,17 +173,18 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	struct bpf_prog *old_prog;
--	int buf_max;
-+	struct gdma_context *gc;
-+
-+	gc = apc->ac->gdma_dev->gdma_context;
- 
- 	old_prog = mana_xdp_get(apc);
- 
- 	if (!old_prog && !prog)
- 		return 0;
- 
--	buf_max = XDP_PACKET_HEADROOM + mana_xdp_fraglen(ndev->mtu + ETH_HLEN);
--	if (prog && buf_max > PAGE_SIZE) {
--		netdev_err(ndev, "XDP: mtu:%u too large, buf_max:%u\n",
--			   ndev->mtu, buf_max);
-+	if (prog && ndev->mtu > MANA_XDP_MTU_MAX) {
-+		netdev_err(ndev, "XDP: mtu:%u too large, mtu_max:%lu\n",
-+			   ndev->mtu, MANA_XDP_MTU_MAX);
- 		NL_SET_ERR_MSG_MOD(extack, "XDP: mtu too large");
- 
- 		return -EOPNOTSUPP;
-@@ -206,6 +201,11 @@ static int mana_xdp_set(struct net_device *ndev, struct bpf_prog *prog,
- 	if (apc->port_is_up)
- 		mana_chn_setxdp(apc, prog);
- 
-+	if (prog)
-+		ndev->max_mtu = MANA_XDP_MTU_MAX;
-+	else
-+		ndev->max_mtu = gc->adapter_mtu - ETH_HLEN;
-+
- 	return 0;
- }
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index e5d5dea763f2..cabecbfa1102 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -427,6 +427,192 @@ static u16 mana_select_queue(struct net_device *ndev, struct sk_buff *skb,
- 	return txq;
- }
- 
-+/* Release pre-allocated RX buffers */
-+static void mana_pre_dealloc_rxbufs(struct mana_port_context *mpc)
-+{
-+	struct device *dev;
-+	int i;
-+
-+	dev = mpc->ac->gdma_dev->gdma_context->dev;
-+
-+	if (!mpc->rxbufs_pre)
-+		goto out1;
-+
-+	if (!mpc->das_pre)
-+		goto out2;
-+
-+	while (mpc->rxbpre_total) {
-+		i = --mpc->rxbpre_total;
-+		dma_unmap_single(dev, mpc->das_pre[i], mpc->rxbpre_datasize,
-+				 DMA_FROM_DEVICE);
-+		put_page(virt_to_head_page(mpc->rxbufs_pre[i]));
-+	}
-+
-+	kfree(mpc->das_pre);
-+	mpc->das_pre = NULL;
-+
-+out2:
-+	kfree(mpc->rxbufs_pre);
-+	mpc->rxbufs_pre = NULL;
-+
-+out1:
-+	mpc->rxbpre_datasize = 0;
-+	mpc->rxbpre_alloc_size = 0;
-+	mpc->rxbpre_headroom = 0;
-+}
-+
-+/* Get a buffer from the pre-allocated RX buffers */
-+static void *mana_get_rxbuf_pre(struct mana_rxq *rxq, dma_addr_t *da)
-+{
-+	struct net_device *ndev = rxq->ndev;
-+	struct mana_port_context *mpc;
-+	void *va;
-+
-+	mpc = netdev_priv(ndev);
-+
-+	if (!mpc->rxbufs_pre || !mpc->das_pre || !mpc->rxbpre_total) {
-+		netdev_err(ndev, "No RX pre-allocated bufs\n");
-+		return NULL;
-+	}
-+
-+	/* Check sizes to catch unexpected coding error */
-+	if (mpc->rxbpre_datasize != rxq->datasize) {
-+		netdev_err(ndev, "rxbpre_datasize mismatch: %u: %u\n",
-+			   mpc->rxbpre_datasize, rxq->datasize);
-+		return NULL;
-+	}
-+
-+	if (mpc->rxbpre_alloc_size != rxq->alloc_size) {
-+		netdev_err(ndev, "rxbpre_alloc_size mismatch: %u: %u\n",
-+			   mpc->rxbpre_alloc_size, rxq->alloc_size);
-+		return NULL;
-+	}
-+
-+	if (mpc->rxbpre_headroom != rxq->headroom) {
-+		netdev_err(ndev, "rxbpre_headroom mismatch: %u: %u\n",
-+			   mpc->rxbpre_headroom, rxq->headroom);
-+		return NULL;
-+	}
-+
-+	mpc->rxbpre_total--;
-+
-+	*da = mpc->das_pre[mpc->rxbpre_total];
-+	va = mpc->rxbufs_pre[mpc->rxbpre_total];
-+	mpc->rxbufs_pre[mpc->rxbpre_total] = NULL;
-+
-+	/* Deallocate the array after all buffers are gone */
-+	if (!mpc->rxbpre_total)
-+		mana_pre_dealloc_rxbufs(mpc);
-+
-+	return va;
-+}
-+
-+/* Get RX buffer's data size, alloc size, XDP headroom based on MTU */
-+static void mana_get_rxbuf_cfg(int mtu, u32 *datasize, u32 *alloc_size,
-+			       u32 *headroom)
-+{
-+	if (mtu > MANA_XDP_MTU_MAX)
-+		*headroom = 0; /* no support for XDP */
-+	else
-+		*headroom = XDP_PACKET_HEADROOM;
-+
-+	*alloc_size = mtu + MANA_RXBUF_PAD + *headroom;
-+
-+	*datasize = ALIGN(mtu + ETH_HLEN, MANA_RX_DATA_ALIGN);
-+}
-+
-+static int mana_pre_alloc_rxbufs(struct mana_port_context *mpc, int new_mtu)
-+{
-+	struct device *dev;
-+	struct page *page;
-+	dma_addr_t da;
-+	int num_rxb;
-+	void *va;
-+	int i;
-+
-+	mana_get_rxbuf_cfg(new_mtu, &mpc->rxbpre_datasize,
-+			   &mpc->rxbpre_alloc_size, &mpc->rxbpre_headroom);
-+
-+	dev = mpc->ac->gdma_dev->gdma_context->dev;
-+
-+	num_rxb = mpc->num_queues * RX_BUFFERS_PER_QUEUE;
-+
-+	WARN(mpc->rxbufs_pre, "mana rxbufs_pre exists\n");
-+	mpc->rxbufs_pre = kmalloc_array(num_rxb, sizeof(void *), GFP_KERNEL);
-+	if (!mpc->rxbufs_pre)
-+		goto error;
-+
-+	mpc->das_pre = kmalloc_array(num_rxb, sizeof(dma_addr_t), GFP_KERNEL);
-+	if (!mpc->das_pre)
-+		goto error;
-+
-+	mpc->rxbpre_total = 0;
-+
-+	for (i = 0; i < num_rxb; i++) {
-+		if (mpc->rxbpre_alloc_size > PAGE_SIZE) {
-+			va = netdev_alloc_frag(mpc->rxbpre_alloc_size);
-+			if (!va)
-+				goto error;
-+		} else {
-+			page = dev_alloc_page();
-+			if (!page)
-+				goto error;
-+
-+			va = page_to_virt(page);
-+		}
-+
-+		da = dma_map_single(dev, va + mpc->rxbpre_headroom,
-+				    mpc->rxbpre_datasize, DMA_FROM_DEVICE);
-+
-+		if (dma_mapping_error(dev, da)) {
-+			put_page(virt_to_head_page(va));
-+			goto error;
-+		}
-+
-+		mpc->rxbufs_pre[i] = va;
-+		mpc->das_pre[i] = da;
-+		mpc->rxbpre_total = i + 1;
-+	}
-+
-+	return 0;
-+
-+error:
-+	mana_pre_dealloc_rxbufs(mpc);
-+	return -ENOMEM;
-+}
-+
-+static int mana_change_mtu(struct net_device *ndev, int new_mtu)
-+{
-+	struct mana_port_context *mpc = netdev_priv(ndev);
-+	unsigned int old_mtu = ndev->mtu;
-+	int err;
-+
-+	/* Pre-allocate buffers to prevent failure in mana_attach later */
-+	err = mana_pre_alloc_rxbufs(mpc, new_mtu);
-+	if (err) {
-+		netdev_err(ndev, "Insufficient memory for new MTU\n");
-+		return err;
-+	}
-+
-+	err = mana_detach(ndev, false);
-+	if (err) {
-+		netdev_err(ndev, "mana_detach failed: %d\n", err);
-+		goto out;
-+	}
-+
-+	ndev->mtu = new_mtu;
-+
-+	err = mana_attach(ndev);
-+	if (err) {
-+		netdev_err(ndev, "mana_attach failed: %d\n", err);
-+		ndev->mtu = old_mtu;
-+	}
-+
-+out:
-+	mana_pre_dealloc_rxbufs(mpc);
-+	return err;
-+}
-+
- static const struct net_device_ops mana_devops = {
- 	.ndo_open		= mana_open,
- 	.ndo_stop		= mana_close,
-@@ -436,6 +622,7 @@ static const struct net_device_ops mana_devops = {
- 	.ndo_get_stats64	= mana_get_stats64,
- 	.ndo_bpf		= mana_bpf,
- 	.ndo_xdp_xmit		= mana_xdp_xmit,
-+	.ndo_change_mtu		= mana_change_mtu,
- };
- 
- static void mana_cleanup_port_context(struct mana_port_context *apc)
-@@ -625,6 +812,9 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 
- 	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
- 			     sizeof(req), sizeof(resp));
-+
-+	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
-+
- 	req.proto_major_ver = proto_major_ver;
- 	req.proto_minor_ver = proto_minor_ver;
- 	req.proto_micro_ver = proto_micro_ver;
-@@ -647,6 +837,11 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
- 
- 	*max_num_vports = resp.max_num_vports;
- 
-+	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
-+		gc->adapter_mtu = resp.adapter_mtu;
-+	else
-+		gc->adapter_mtu = ETH_FRAME_LEN;
-+
- 	return 0;
- }
- 
-@@ -1712,10 +1907,14 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
- static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
- 			    struct mana_rxq *rxq, struct device *dev)
- {
-+	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
- 	dma_addr_t da;
- 	void *va;
- 
--	va = mana_get_rxfrag(rxq, dev, &da, false);
-+	if (mpc->rxbufs_pre)
-+		va = mana_get_rxbuf_pre(rxq, &da);
-+	else
-+		va = mana_get_rxfrag(rxq, dev, &da, false);
- 
- 	if (!va)
- 		return -ENOMEM;
-@@ -1798,7 +1997,6 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 	struct mana_obj_spec wq_spec;
- 	struct mana_obj_spec cq_spec;
- 	struct gdma_queue_spec spec;
--	unsigned int mtu = ndev->mtu;
- 	struct mana_cq *cq = NULL;
- 	struct gdma_context *gc;
- 	u32 cq_size, rq_size;
-@@ -1817,15 +2015,8 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 	rxq->rxq_idx = rxq_idx;
- 	rxq->rxobj = INVALID_MANA_HANDLE;
- 
--	rxq->datasize = ALIGN(mtu + ETH_HLEN, 64);
--
--	if (mtu > MANA_XDP_MTU_MAX) {
--		rxq->alloc_size = mtu + MANA_RXBUF_PAD;
--		rxq->headroom = 0;
--	} else {
--		rxq->alloc_size = mtu + MANA_RXBUF_PAD + XDP_PACKET_HEADROOM;
--		rxq->headroom = XDP_PACKET_HEADROOM;
--	}
-+	mana_get_rxbuf_cfg(ndev->mtu, &rxq->datasize, &rxq->alloc_size,
-+			   &rxq->headroom);
- 
- 	err = mana_alloc_rx_wqe(apc, rxq, &rq_size, &cq_size);
- 	if (err)
-@@ -2238,8 +2429,8 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	ndev->netdev_ops = &mana_devops;
- 	ndev->ethtool_ops = &mana_ethtool_ops;
- 	ndev->mtu = ETH_DATA_LEN;
--	ndev->max_mtu = ndev->mtu;
--	ndev->min_mtu = ndev->mtu;
-+	ndev->max_mtu = gc->adapter_mtu - ETH_HLEN;
-+	ndev->min_mtu = ETH_MIN_MTU;
- 	ndev->needed_headroom = MANA_HEADROOM;
- 	ndev->dev_port = port_idx;
- 	SET_NETDEV_DEV(ndev, gc->dev);
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 56189e4252da..96c120160f15 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -145,6 +145,7 @@ struct gdma_general_req {
- }; /* HW DATA */
- 
- #define GDMA_MESSAGE_V1 1
-+#define GDMA_MESSAGE_V2 2
- 
- struct gdma_general_resp {
- 	struct gdma_resp_hdr hdr;
-@@ -354,6 +355,9 @@ struct gdma_context {
- 	struct gdma_resource	msix_resource;
- 	struct gdma_irq_context	*irq_contexts;
- 
-+	/* L2 MTU */
-+	u16 adapter_mtu;
-+
- 	/* This maps a CQ index to the queue structure. */
- 	unsigned int		max_num_cqs;
- 	struct gdma_queue	**cq_table;
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index fee99d704281..cd386aa7c7cc 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -37,6 +37,7 @@ enum TRI_STATE {
- #define COMP_ENTRY_SIZE 64
- 
- #define RX_BUFFERS_PER_QUEUE 512
-+#define MANA_RX_DATA_ALIGN 64
- 
- #define MAX_SEND_BUFFERS_PER_QUEUE 256
- 
-@@ -390,6 +391,14 @@ struct mana_port_context {
- 	/* This points to an array of num_queues of RQ pointers. */
- 	struct mana_rxq **rxqs;
- 
-+	/* pre-allocated rx buffer array */
-+	void **rxbufs_pre;
-+	dma_addr_t *das_pre;
-+	int rxbpre_total;
-+	u32 rxbpre_datasize;
-+	u32 rxbpre_alloc_size;
-+	u32 rxbpre_headroom;
-+
- 	struct bpf_prog *bpf_prog;
- 
- 	/* Create num_queues EQs, SQs, SQ-CQs, RQs and RQ-CQs, respectively. */
-@@ -489,6 +498,11 @@ struct mana_query_device_cfg_resp {
- 	u16 max_num_vports;
- 	u16 reserved;
- 	u32 max_num_eqs;
-+
-+	/* response v2: */
-+	u16 adapter_mtu;
-+	u16 reserved2;
-+	u32 reserved3;
- }; /* HW DATA */
- 
- /* Query vPort Configuration */
--- 
-2.25.1
-
+RnJvbTogTnVubyBEYXMgTmV2ZXMgPG51bm9kYXNuZXZlc0BsaW51eC5taWNyb3NvZnQuY29tPiBT
+ZW50OiBUdWVzZGF5LCBBcHJpbCA0LCAyMDIzIDk6NTcgQU0NCj4gDQo+IE9uIDQvMy8yMDIzIDEx
+OjQ1IFBNLCBPbGFmIEhlcmluZyB3cm90ZToNCj4gPiBNb24sICAzIEFwciAyMDIzIDE2OjIyOjU4
+IC0wNzAwIE51bm8gRGFzIE5ldmVzDQo+IDxudW5vZGFzbmV2ZXNAbGludXgubWljcm9zb2Z0LmNv
+bT46DQo+ID4NCj4gPj4gT25seSByZWxldmFudCBmb3IgeDg2OyBuZXN0ZWQgZnVuY3Rpb25hbGl0
+eSBpcyBub3QgYXZhaWxhYmxlIGluIEFSTTY0Lg0KPiA+DQo+ID4+ICsjaWYgZGVmaW5lZChDT05G
+SUdfWDg2XzY0KQ0KPiA+PiArCWVsc2UgaWYgKGh2X25lc3RlZCkNCj4gPg0KPiA+IFNob3VsZCB0
+aGVyZSBiZSBhIGh2X25lc3RlZCBpbiB0aGUgQVJNNjQgY29kZSBwYXRoPw0KPiA+IExvb2tzIGxp
+a2UgYzRiZGY5NGY5N2M4NiBwcm92aWRlZCBzdWNoIHRoaW5nLCBzbyB0aGUgS2NvbmZpZyBjb25k
+aXRpb25hbCBjb3VsZCBiZQ0KPiByZW1vdmVkLg0KPiA+DQo+ID4gT2xhZg0KPiANCj4gVGhpcyB3
+aWxsIG5vdCBjb21waWxlIG9uIEFSTTY0IHdpdGhvdXQgdGhlIGd1YXJkLCBiZWNhdXNlIGh2X2Rv
+X25lc3RlZF9oeXBlcmNhbGwNCj4gYW5kIGh2X2RvX2Zhc3RfbmVzdGVkX2h5cGVyY2FsbDggYXJl
+IG5vdCBkZWZpbmVkLg0KPiBUaGVzZSBhcmUgaW5saW5lIGZ1bmN0aW9ucyBvbmx5IGRlZmluZWQg
+aW4gdGhlIHg4NiBtc2h5cGVydi5oIGhlYWRlci4NCj4gDQo+IFRoZSBhbHRlcm5hdGl2ZSB0byB0
+aGVzZSBndWFyZHMgd291bGQgYmUgZGVmaW5pbmcgZHVtbXkgaW5saW5lIGZ1bmN0aW9ucyBmb3Ig
+dGhlDQo+IG5lc3RlZCB2ZXJzaW9ucyBvZiBodl9kb19oeXBlcmNhbGwgaW4gdGhlIEFSTTY0IG1z
+aHlwZXJ2LmguDQo+IEkgY291bGQgdGFrZSB0aGF0IGFwcHJvYWNoIGlmIGl0IGlzIHByZWZlcmFi
+bGUuDQoNCkhhdmluZyB0byBkbyAiaWYgKGh2X25lc3RlZCkiIGFuZCAiI2lmZGVmIENPTkZJR19Y
+ODZfNjQiIGF0IG11bHRpcGxlIGNhbGwNCnNpdGVzIGlzIGluZGVlZCByYXRoZXIgbWVzc3kuICBJ
+IHdvbmRlciBpZiBpdCBpcyBmZWFzaWJsZSB0byBmb2xkIGFsbCB0aGlzIGxvZ2ljIGludG8NCnRo
+ZSB4ODYgdmVyc2lvbiBvZiBodl9kb19oeXBlcmNhbGwoKSBhbmQgZnJpZW5kcywgc28gdGhhdCB0
+aGUgY2FsbCBzaXRlcyBhcmUgbm90DQphZmZlY3RlZD8gIFRoYXQncyB3aGF0IHdhcyBkb25lIHdp
+dGggaHZfZ2V0L3NldF9yZWdpc3RlcigpLiAgQW5kIGl0IHdvdWxkDQphbGxvdyB0aGUgQVJNNjQg
+c2lkZSB0byBiZSB1bmNoYW5nZWQuDQoNCkhlcmUncyBhbiBhcHByb2FjaDoNCjEpICBDcmVhdGUg
+YSBnbG9iYWwgYml0bWFwIHdpdGggb25lIGJpdCBmb3IgZWFjaCBoeXBlcmNhbGwgY29kZSB0aGF0
+IEh5cGVyLVYNCmFjY2VwdHMuICBUaGUgbWF4IGlzIHNvbWV0aGluZyBsZXNzIHRoYW4gNTEyLCAg
+c28gdGhpcyBiaXRtYXAgaXMgbGVzcyB0aGFuIDY0DQpieXRlcy4gIEluaXRpYWxpemUgdGhlIGJp
+dG1hcCB0byBhbGwgemVyb3MuDQoyKSAgRHVyaW5nIGVhcmx5IGluaXRpYWxpemF0aW9uLCBpZiBo
+dl9uZXN0ZWQgaXMgc2V0IHRvICJ0cnVlIiwgc2V0IHRoZSBiaXQgaW4NCnRoZSBiaXRtYXAgY29y
+cmVzcG9uZGluZyB0byBoeXBlcmNhbGxzIHRoYXQgbmVlZCB0aGUgSFZfSFlQRVJDQUxMX05FU1RF
+RA0KZmxhZyBhZGRlZC4NCjMpIEluIGh2X2RvX2h5cGVyY2FsbCgpLCB1c2UgdGhlIGh5cGVyY2Fs
+bCBjb2RlIHRvIGluZGV4IGludG8gdGhlIGJpdG1hcCBhbmQNCnJldHJpZXZlIHRoZSBiaXQuICBV
+c2UgdGhhdCBiaXQgdG8gZGVjaWRlIHdoZXRoZXIgdG8gc2V0IEhWX0hZUEVSQ0FMTF9ORVNURUQu
+DQpOb3RlIHRoYXQgaHZfbmVzdGVkIGRvZXNuJ3QgZXZlbiBuZWVkIHRvIGJlIHRlc3RlZCBiZWNh
+dXNlIHRoZSBiaXRtYXAgd2lsbA0KYmUgYWxsIHplcm9zIHdoZW4gaHZfbmVzdGVkIGlzICJmYWxz
+ZSIuDQoNClRoZSBvbmUgc25hZyBpcyBleHRlbmRlZCBoeXBlcmNhbGxzLCBmb3Igd2hpY2ggdGhl
+IGh5cGVyY2FsbCBjb2RlIGlzIGEgbXVjaA0KYmlnZ2VyIHZhbHVlLCBhbmQgd2UgbWlnaHQgbm90
+IHdhbnQgdG8gbWFrZSB0aGUgYml0bWFwIHRoYXQgYmlnLiAgTWF5YmUNCnRoZXkgaGF2ZSB0byBi
+ZSBzcGVjaWFsLWNhc2VkIHRvIGJlIG5vbi1uZXN0ZWQuDQoNClRoaXMgYXBwcm9hY2ggYXNzdW1l
+cyB0aGF0IGEgaHlwZXJjYWxsIGlzIGFsd2F5cyBlaXRoZXIgbmVzdGVkIG9yIG5vbi1uZXN0ZWQN
+CmZyb20gYWxsIGNhbGwgc2l0ZXMuDQoNCklmIHRoZSBiaXRtYXAgYXBwcm9hY2ggaXMgdG9vIG9i
+c2N1cmUsIHRlc3RpbmcgaHZfbmVzdGVkIGFuZCBkb2luZyBhIHN3aXRjaA0Kc3RhdGVtZW50IHRv
+IGhhbmRsZSB0aGUgY2FzZXMgdGhhdCBuZWVkIEhWX0hZUEVSQ0FMTF9ORVNURUQgd291bGQNCmFs
+c28gd29yay4gIFRoZSBwZXJmb3JtYW5jZSBwcm9iYWJseSB3b3VsZG4ndCBiZSBhcyBnb29kLCBi
+dXQgaXQgcHJvYmFibHkNCmRvZXNuJ3QgbWF0dGVyLiAgQWdhaW4sIHRoaXMgd291bGQgYmUgbGlr
+ZSBodl9nZXQvc2V0X3JlZ2lzdGVyKCkuDQoNCldpdGggdGhpcyBhcHByb2FjaCwgaHZfZG9fbmVz
+dGVkX2h5cGVyY2FsbCgpIGFuZCBmcmllbmRzIGFyZSBub3QgbmVlZGVkLA0KYnV0IEkgZG9uJ3Qg
+a25vdyB3aGF0IG90aGVyIHVzYWdlIHBhdHRlcm5zIGZvciBodl9kb19uZXN0ZWRfaHlwZXJjYWxs
+KCkNCm1pZ2h0IGJlIHBsYW5uZWQuICBUaGVzZSBvdGhlciB1c2FnZSBwYXR0ZXJucyBtaWdodCBt
+YWtlIHRoaXMgaWRlYSBub3Qgc28NCndvcmthYmxlLg0KDQpNaWNoYWVsDQo=
