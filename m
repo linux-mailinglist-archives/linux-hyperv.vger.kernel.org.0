@@ -2,366 +2,180 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C786DD230
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Apr 2023 07:55:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59BBF6DDEEC
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Apr 2023 17:07:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230080AbjDKFzo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 11 Apr 2023 01:55:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39956 "EHLO
+        id S230290AbjDKPHU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 11 Apr 2023 11:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjDKFzk (ORCPT
+        with ESMTP id S230250AbjDKPHG (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 11 Apr 2023 01:55:40 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A81B10DA;
-        Mon, 10 Apr 2023 22:55:39 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 77E952174E58;
-        Mon, 10 Apr 2023 22:55:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 77E952174E58
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1681192536;
-        bh=kOT3ibvD8lYQupJbVimNWJ394pTLR6UA9Inug5i1mHs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=AjaoVE+AQv84DM10aWK1r2yI6XwDtpYm3LcJZihcAatb6AocNgrCpOJT7pgQtqbos
-         SkqzcqiQ8QxfBiotpnybbQB/tRucTpRy5uQ3jCx6XHbw7/fMEEGHHCSjQuFd8PtLj6
-         YioybGOxUnZS2Mrg3zV9bvX0kqvLftErEEwcRSpw=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
-        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
-        jgross@suse.com, mat.jonczyk@o2.pl
-Subject: [PATCH v5 5/5] x86/hyperv: VTL support for Hyper-V
-Date:   Mon, 10 Apr 2023 22:55:32 -0700
-Message-Id: <1681192532-15460-6-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1681192532-15460-1-git-send-email-ssengar@linux.microsoft.com>
-References: <1681192532-15460-1-git-send-email-ssengar@linux.microsoft.com>
-X-Spam-Status: No, score=-17.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Tue, 11 Apr 2023 11:07:06 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636404C0E;
+        Tue, 11 Apr 2023 08:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681225616; x=1712761616;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=7b8mkBjjO/AozHNXu3XaeBBHTUtFntYdYFML2Xn+OaE=;
+  b=K3agB9Rjx3qUKnzdExut9Zhnm0Lx7eIYec0UNrj63kEUarzKQpq9hxmu
+   wKmsacgeO5XBfkr+ZILMOVD06fiIUoQkwb7rfBMxhe3kN1rJwwbyq5+yL
+   yzbJQDwf7XyBi/jzha251FyeCPtOcSB9UU2Qa9Jlt1L2lciIYMRY4PvO7
+   mszd3bolWy29YpRqdBgA7/hwtiJhXSpR59orfQ5hDL3yBcWMaL0ZQ7R76
+   8nr4VQRDbDiEEEkvKEhGwwn0ixc0UygXBveCgO3obHJsmnM/aMGiIIGxP
+   Q8+ya4ocW+an99OvQ61pHDIgYcLb9kdLdsPVsZJYasZImPNSo59W8nWi6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="343646995"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="343646995"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 08:06:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="777943266"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="777943266"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by FMSMGA003.fm.intel.com with ESMTP; 11 Apr 2023 08:06:33 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 11 Apr 2023 08:06:33 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 11 Apr 2023 08:06:32 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Tue, 11 Apr 2023 08:06:32 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.49) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Tue, 11 Apr 2023 08:06:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SRyDmiKhDN9KSAbgcdhfc8etvRhANmDqfS2quwdwNfk6sjdmHkvR5ORHp5NmYMW+898BYXvwCwEAaQI8x0ks6SmvAVefhNCr2tGSKO/MrZwHYrEPFnRSxeq/FBYIEWEB143FUnB3OIPnk9rBRVcZKY3baEDtpH5TvflBmvCubHKCAa4bIFWpzSKNl+pAawc7j847e9JcMbdgloRufnsaTyID9hlBwQIIJLA0tdWcQjiYIwRjf9NzzJ6WQTT3FnSbThUKq+XKI26C0xXKIrs5tcx3j4T5AKVd+5zrTtWKkDeRTQEeGOWVRH3W18bsFhevMQrIwQfc/tZti3Kq+v8CAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BShUwTYiGu7daQvHRjGDV1pGRJDlDWTwH21Um0I9t0s=;
+ b=irxwJ+rJeGqd12EwRQXQC24fH6fdP3BPcaGRP/GtZdlVPz7CQCbrbpYZhvHyKJRUNB1/ZSBTGVeZIWmMRvsVSyiyqX1Oln9WKgFmvW3HiRoXFJc76IRrtAgKmpuTHDaezqwvre221viURURH/BbBMvli+ErHESJpsfd+RDlTd3CYqlU+IJPlIOxXb2e8ibvq0FL8Gd6EL3awNYDggrTlIIHZk2ZJenu+qD3J8zoUN7tT56Kpjcu9aH3y67e4R5WrtAUOgkF8VwIKHo5gR9GQaNfSq61iQmT1GDOV7BH/J3Y6e5Js1g0tpLaJy3xe/PpfomPaxF1OU6NXZqvvhpmqFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB4914.namprd11.prod.outlook.com (2603:10b6:303:90::24)
+ by MW3PR11MB4601.namprd11.prod.outlook.com (2603:10b6:303:59::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.38; Tue, 11 Apr
+ 2023 15:06:28 +0000
+Received: from CO1PR11MB4914.namprd11.prod.outlook.com
+ ([fe80::c7d6:3545:6927:8493]) by CO1PR11MB4914.namprd11.prod.outlook.com
+ ([fe80::c7d6:3545:6927:8493%7]) with mapi id 15.20.6277.038; Tue, 11 Apr 2023
+ 15:06:26 +0000
+Message-ID: <4ccf5199-b8d8-c6d2-ae9f-e3591c688c65@intel.com>
+Date:   Tue, 11 Apr 2023 08:06:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.1
+Subject: Re: [PATCH V2,net-next, 1/3] net: mana: Use napi_build_skb in RX path
+Content-Language: en-US
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        <linux-hyperv@vger.kernel.org>, <netdev@vger.kernel.org>
+CC:     <decui@microsoft.com>, <kys@microsoft.com>,
+        <paulros@microsoft.com>, <olaf@aepfle.de>, <vkuznets@redhat.com>,
+        <davem@davemloft.net>, <wei.liu@kernel.org>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <leon@kernel.org>,
+        <longli@microsoft.com>, <ssengar@linux.microsoft.com>,
+        <linux-rdma@vger.kernel.org>, <daniel@iogearbox.net>,
+        <john.fastabend@gmail.com>, <bpf@vger.kernel.org>,
+        <ast@kernel.org>, <sharmaajay@microsoft.com>, <hawk@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1680901196-20643-1-git-send-email-haiyangz@microsoft.com>
+ <1680901196-20643-2-git-send-email-haiyangz@microsoft.com>
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+In-Reply-To: <1680901196-20643-2-git-send-email-haiyangz@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0182.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::7) To CO1PR11MB4914.namprd11.prod.outlook.com
+ (2603:10b6:303:90::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB4914:EE_|MW3PR11MB4601:EE_
+X-MS-Office365-Filtering-Correlation-Id: 59b7e6ec-a443-4ace-3955-08db3a9e5202
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jZo6Fkb+BGpJuv6vWLwzIcy1NYYcoN4rtRqJbMHh6n5Bpg4bOXIqNRcGGnZjv4pzpuCho4Qmj8QtLlixlFFbPcTMwLHArRTSzz8z2mnwLg4/bzk+EpG/sn+kDNZyimeCFQuVSsH+N+tnl5pehITunt+36EtI3O+V4KZ8G4P53vqeYCLlpKiKo5UHVp/lUCB4XhRkJRhjKMM22WszzogXqR5dIBccY8LoH8JXazF3OhuqkgK/cfxr0hYN8um0dq7t7SmGxwZDy3epkm8+tWRBva+WOl9GUvGfN8LA0pRWBDMjN4yLrYZphcKhdA72urAqvdn9eGdBJyHIjJldWQSED4Ln7AGaWjYn0McVm/yNvVfDVaIc8ZHRzipyhVL0FUiDKIdCNNvsely7iHWTCu517SVx89ZJ1Y+EPWPqz1pI7IqyCynxhGmopUx2s/q/4XpEU8w1ELbiIK9a2Md/T/2gEvNvrEw9QGXazqXUFTq8RSTOG4c3FHJDVQsoJ0jCGGBLzSSjviVPFrtI1zek3YLJ1zXbA/ZfmwLrrzQSyjL6BSqlKiz3QVjERiE0I4kXlqeDdop5ZuHTu1HtXQSY2GGTM1ZOXsFndNt02J44HMuT7NXQ1HzUNq7tGrJDIic5BHPjfjRKJNUpbjYiPkm2e614kg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB4914.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(136003)(346002)(376002)(396003)(366004)(451199021)(31686004)(478600001)(45080400002)(86362001)(31696002)(558084003)(82960400001)(36756003)(2616005)(38100700002)(6486002)(2906002)(53546011)(6512007)(316002)(26005)(6506007)(186003)(44832011)(66476007)(41300700001)(8676002)(6666004)(66556008)(8936002)(7416002)(4326008)(5660300002)(66946007)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SmtqOHZXbmNDRWR0OHVqaWxOSkt5dFFFcUMrTGdNSFdoaW45L1J6empwb09q?=
+ =?utf-8?B?M3JreFFsS2d1THhBZERudUViZGlZUVpoZE1ORndHSFBDSUdEYnpSbUxaZTh4?=
+ =?utf-8?B?Mkc4U2Q4K0RJcUxqUWtGZFJIU3ZQUEZ0S0I1WXZqdXhsSCtLcGpMbWpXbW9J?=
+ =?utf-8?B?VEJQalhGbGNJSnhyMzVoWkFGbWd4elN3WWVBd1ROSDdvQ3VnbFBzWTVFNkRj?=
+ =?utf-8?B?dHlGbDV6VkJGQ0swc25ESTJEUmxQeEJheGlZd3NnVlNCZ0FFa3h1SzNpdVVF?=
+ =?utf-8?B?ZUh4bFp2ZDYvNllnUXJ2TnFXMW5hRFhkbkY3N2pSTys1eUphMHVzTG9nUHNX?=
+ =?utf-8?B?QmN2VjV4QVJ3QnNXUUxwdXpDWHlHNERmSU9RM0FIQlhtK2czd2srT3BFMVJq?=
+ =?utf-8?B?WUc3U2Q2TUNId2NSQ0dnUDZ5aGRPWWVla1k1SytUWkFnUURUSGkxU3hwVEFk?=
+ =?utf-8?B?NXJjenE5MXQvMG1Tekt2Yzl1QjlPRG02TXRaU0wrdm1xUVdnQlNHWnFKcUNX?=
+ =?utf-8?B?TWx0Z3l6cWZHbFlVSWhES2g5bzZLdC9VYVpseGpyOGJmdVRGTXlrcmQ5cUZz?=
+ =?utf-8?B?ejFURzRLSGxwaTJhZ1QrTzdINi9YaFhwem50N1ZhM2JYU3hRQ0ZCMUZuV0tX?=
+ =?utf-8?B?bklpSEJZc1hTTVNYQ01qWGtpUGJqZXhybkhtYndkTzAwYk5SSWswejR4a2I3?=
+ =?utf-8?B?d2NwUnpjSXhLTGdPMmhZTXVlcTVyc3NlZFhxRjhORFZlekpvb0YvUEczUXJW?=
+ =?utf-8?B?K0xybHZUZ1hweXk4bDZGUmpsOEVGYXhOTWMyN3F2czJWYTlhY1cxQkZuZEo2?=
+ =?utf-8?B?RzhocjJXaTM3RnhGTjRaVSs1UENIQytjWW5MZERyOGsrakdMQVBTMThnYXZM?=
+ =?utf-8?B?T3dwaU83dmVmSjlaNXpiYUwxRGNmeFRaTENvaEpQRlhzdEdmN1NSM0RFVmpS?=
+ =?utf-8?B?RmVJSmdoUERqNjliTHFydlp5S0R6ZXVNaExGM1hodnFOTEw1eDE3U0FBWVl2?=
+ =?utf-8?B?RHEzcHFKSFdydGZvaGQ5eHRqOFluS2RMbktZc2tURTZNdXR6RitlMVBnTWVP?=
+ =?utf-8?B?QngxaEcyNVoyWnQ1WE14aDdpc3d2SFFwbzMxTHo1ZkpYT3VBNnUzZnVwMHIv?=
+ =?utf-8?B?aXFoMXJHdHFqS2Z2L1NKN3lOTU5XTTBMeU1FbnM5U3RFQXFsdVhVa3NPYkdh?=
+ =?utf-8?B?UDkvMktId3VISmhVVU01N2d0bHFVbndrNGI4Ny9rL3JOM3ArcWJNU1RHQUFi?=
+ =?utf-8?B?WHhidDZPYjA4dytKWXM2bDhxZ3VBRU1iVVJyaXJiSENSbW56djVLYTN1R3N0?=
+ =?utf-8?B?SWRoajByZmVqVENSQzl4OXlpMm9zckViOEVVL3B0c21wVGVicjFvZkVoSmRx?=
+ =?utf-8?B?Slpob2xXU0ZnSWpEOFNyV2FhNFBsQmJ0RWxPdklHMmtFNSs2VFRMSXZsTDBq?=
+ =?utf-8?B?TmwyOHNPek9iRW5mM1UyNUx3ZmZFdVB4N3lmeDZrSnluelVFQUxPYlVLZXp4?=
+ =?utf-8?B?RlRUZDdsMlBNa1VEQWN2RC9WNmpQUnRNVGJvRmMvT1NVWkRYTzhXNzRhMWFs?=
+ =?utf-8?B?MmRCc1NDNWxKQTNRY1kvcEhJMlRpVDBUS1BEZ3hJTkl2VjByUm9jTFQ5SnZq?=
+ =?utf-8?B?WU1rTmp1ZjhBOFEzVFkzMlVlMGo2SmlTbkJlT2hpSURSV3JUQ3p6d2J0NzNa?=
+ =?utf-8?B?bnVZR0ZkTEJSYjVUL0VkZU94d3lBNU51L1RTaTV2bGp3WTAvaGxtcFYxWWx2?=
+ =?utf-8?B?RnljeG9CaHRGUkFuc1Y1Nm4zUWdEYnVtMEZQQWpZZHpIK2hnWGZ5LzREZk1H?=
+ =?utf-8?B?bXpPU0xCYWJBVVh0alZLU1h2NWU4S0dNREJhWithVE83cW1MampMRUdXRXlM?=
+ =?utf-8?B?V1RmSGJudm9wNDZhV2tydDFISENhaG16V1MyNno1eTdxQ0oydmpaSC84dkZB?=
+ =?utf-8?B?NTdvRDQ2d3pWREM0VHB4TGlhSWF3bEJpb2pLdVRreElyMkFZVVF3SVpzUTBw?=
+ =?utf-8?B?K0c4S3k1REcwN2pINGxUY3RsWWZRa1p1N1FuUDdRNk5CalF0Y25ucDBINUFS?=
+ =?utf-8?B?dVNCNHUrNFdQNllmbkdaNEJPOHJGcXA5cmRXZ0JMb2lrU21XbHBGWkY3Ry9o?=
+ =?utf-8?B?R0g0NTNwWm5xRW5WMGw2YS9nb0xZUWJ5eFp3MGtnWE1oSTJNcDVJdHBlMlZn?=
+ =?utf-8?B?ZUE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59b7e6ec-a443-4ace-3955-08db3a9e5202
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB4914.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2023 15:06:26.1421
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bJADGOYvcZAnVUrB46hAkDAi5yxr3fbZGkYXqwpDiXEWhz+ANZzuR+kxe6llY9cDUzqqoRjlbbghjcqH0hmTGWv+6cBIh1PBTStprwiGGg4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4601
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-4.7 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Virtual Trust Levels (VTL) helps enable Hyper-V Virtual Secure Mode (VSM)
-feature. VSM is a set of hypervisor capabilities and enlightenments
-offered to host and guest partitions which enable the creation and
-management of new security boundaries within operating system software.
-VSM achieves and maintains isolation through VTLs.
+On 4/7/2023 1:59 PM, Haiyang Zhang wrote:
+> Use napi_build_skb() instead of build_skb() to take advantage of the
+> NAPI percpu caches to obtain skbuff_head.
+> 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-Add early initialization for Virtual Trust Levels (VTL). This includes
-initializing the x86 platform for VTL and enabling boot support for
-secondary CPUs to start in targeted VTL context. For now, only enable
-the code for targeted VTL level as 2.
-
-When starting an AP at a VTL other than VTL0, the AP must start directly
-in 64-bit mode, bypassing the usual 16-bit -> 32-bit -> 64-bit mode
-transition sequence that occurs after waking up an AP with SIPI whose
-vector points to the 16-bit AP startup trampoline code.
-
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
----
- arch/x86/hyperv/Makefile        |   1 +
- arch/x86/hyperv/hv_vtl.c        | 227 ++++++++++++++++++++++++++++++++
- arch/x86/include/asm/mshyperv.h |  10 ++
- arch/x86/kernel/cpu/mshyperv.c  |   1 +
- 4 files changed, 239 insertions(+)
- create mode 100644 arch/x86/hyperv/hv_vtl.c
-
-diff --git a/arch/x86/hyperv/Makefile b/arch/x86/hyperv/Makefile
-index 5d2de10809ae..3a1548054b48 100644
---- a/arch/x86/hyperv/Makefile
-+++ b/arch/x86/hyperv/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y			:= hv_init.o mmu.o nested.o irqdomain.o ivm.o
- obj-$(CONFIG_X86_64)	+= hv_apic.o hv_proc.o
-+obj-$(CONFIG_HYPERV_VTL_MODE)	+= hv_vtl.o
- 
- ifdef CONFIG_X86_64
- obj-$(CONFIG_PARAVIRT_SPINLOCKS)	+= hv_spinlock.o
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-new file mode 100644
-index 000000000000..1ba5d3b99b16
---- /dev/null
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023, Microsoft Corporation.
-+ *
-+ * Author:
-+ *   Saurabh Sengar <ssengar@microsoft.com>
-+ */
-+
-+#include <asm/apic.h>
-+#include <asm/boot.h>
-+#include <asm/desc.h>
-+#include <asm/i8259.h>
-+#include <asm/mshyperv.h>
-+#include <asm/realmode.h>
-+
-+extern struct boot_params boot_params;
-+static struct real_mode_header hv_vtl_real_mode_header;
-+
-+void __init hv_vtl_init_platform(void)
-+{
-+	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-+
-+	x86_init.irqs.pre_vector_init = x86_init_noop;
-+	x86_init.timers.timer_init = x86_init_noop;
-+
-+	x86_platform.get_wallclock = get_rtc_noop;
-+	x86_platform.set_wallclock = set_rtc_noop;
-+	x86_platform.get_nmi_reason = hv_get_nmi_reason;
-+
-+	x86_platform.legacy.i8042 = X86_LEGACY_I8042_PLATFORM_ABSENT;
-+	x86_platform.legacy.rtc = 0;
-+	x86_platform.legacy.warm_reset = 0;
-+	x86_platform.legacy.reserve_bios_regions = 0;
-+	x86_platform.legacy.devices.pnpbios = 0;
-+}
-+
-+static inline u64 hv_vtl_system_desc_base(struct ldttss_desc *desc)
-+{
-+	return ((u64)desc->base3 << 32) | ((u64)desc->base2 << 24) |
-+		(desc->base1 << 16) | desc->base0;
-+}
-+
-+static inline u32 hv_vtl_system_desc_limit(struct ldttss_desc *desc)
-+{
-+	return ((u32)desc->limit1 << 16) | (u32)desc->limit0;
-+}
-+
-+typedef void (*secondary_startup_64_fn)(void*, void*);
-+static void hv_vtl_ap_entry(void)
-+{
-+	((secondary_startup_64_fn)secondary_startup_64)(&boot_params, &boot_params);
-+}
-+
-+static int hv_vtl_bringup_vcpu(u32 target_vp_index, u64 eip_ignored)
-+{
-+	u64 status;
-+	int ret = 0;
-+	struct hv_enable_vp_vtl *input;
-+	unsigned long irq_flags;
-+
-+	struct desc_ptr gdt_ptr;
-+	struct desc_ptr idt_ptr;
-+
-+	struct ldttss_desc *tss;
-+	struct ldttss_desc *ldt;
-+	struct desc_struct *gdt;
-+
-+	u64 rsp = current->thread.sp;
-+	u64 rip = (u64)&hv_vtl_ap_entry;
-+
-+	native_store_gdt(&gdt_ptr);
-+	store_idt(&idt_ptr);
-+
-+	gdt = (struct desc_struct *)((void *)(gdt_ptr.address));
-+	tss = (struct ldttss_desc *)(gdt + GDT_ENTRY_TSS);
-+	ldt = (struct ldttss_desc *)(gdt + GDT_ENTRY_LDT);
-+
-+	local_irq_save(irq_flags);
-+
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	memset(input, 0, sizeof(*input));
-+
-+	input->partition_id = HV_PARTITION_ID_SELF;
-+	input->vp_index = target_vp_index;
-+	input->target_vtl.target_vtl = HV_VTL_MGMT;
-+
-+	/*
-+	 * The x86_64 Linux kernel follows the 16-bit -> 32-bit -> 64-bit
-+	 * mode transition sequence after waking up an AP with SIPI whose
-+	 * vector points to the 16-bit AP startup trampoline code. Here in
-+	 * VTL2, we can't perform that sequence as the AP has to start in
-+	 * the 64-bit mode.
-+	 *
-+	 * To make this happen, we tell the hypervisor to load a valid 64-bit
-+	 * context (most of which is just magic numbers from the CPU manual)
-+	 * so that AP jumps right to the 64-bit entry of the kernel, and the
-+	 * control registers are loaded with values that let the AP fetch the
-+	 * code and data and carry on with work it gets assigned.
-+	 */
-+
-+	input->vp_context.rip = rip;
-+	input->vp_context.rsp = rsp;
-+	input->vp_context.rflags = 0x0000000000000002;
-+	input->vp_context.efer = __rdmsr(MSR_EFER);
-+	input->vp_context.cr0 = native_read_cr0();
-+	input->vp_context.cr3 = __native_read_cr3();
-+	input->vp_context.cr4 = native_read_cr4();
-+	input->vp_context.msr_cr_pat = __rdmsr(MSR_IA32_CR_PAT);
-+	input->vp_context.idtr.limit = idt_ptr.size;
-+	input->vp_context.idtr.base = idt_ptr.address;
-+	input->vp_context.gdtr.limit = gdt_ptr.size;
-+	input->vp_context.gdtr.base = gdt_ptr.address;
-+
-+	/* Non-system desc (64bit), long, code, present */
-+	input->vp_context.cs.selector = __KERNEL_CS;
-+	input->vp_context.cs.base = 0;
-+	input->vp_context.cs.limit = 0xffffffff;
-+	input->vp_context.cs.attributes = 0xa09b;
-+	/* Non-system desc (64bit), data, present, granularity, default */
-+	input->vp_context.ss.selector = __KERNEL_DS;
-+	input->vp_context.ss.base = 0;
-+	input->vp_context.ss.limit = 0xffffffff;
-+	input->vp_context.ss.attributes = 0xc093;
-+
-+	/* System desc (128bit), present, LDT */
-+	input->vp_context.ldtr.selector = GDT_ENTRY_LDT * 8;
-+	input->vp_context.ldtr.base = hv_vtl_system_desc_base(ldt);
-+	input->vp_context.ldtr.limit = hv_vtl_system_desc_limit(ldt);
-+	input->vp_context.ldtr.attributes = 0x82;
-+
-+	/* System desc (128bit), present, TSS, 0x8b - busy, 0x89 -- default */
-+	input->vp_context.tr.selector = GDT_ENTRY_TSS * 8;
-+	input->vp_context.tr.base = hv_vtl_system_desc_base(tss);
-+	input->vp_context.tr.limit = hv_vtl_system_desc_limit(tss);
-+	input->vp_context.tr.attributes = 0x8b;
-+
-+	status = hv_do_hypercall(HVCALL_ENABLE_VP_VTL, input, NULL);
-+
-+	if (!hv_result_success(status) &&
-+	    hv_result(status) != HV_STATUS_VTL_ALREADY_ENABLED) {
-+		pr_err("HVCALL_ENABLE_VP_VTL failed for VP : %d ! [Err: %#llx\n]",
-+		       target_vp_index, status);
-+		ret = -EINVAL;
-+		goto free_lock;
-+	}
-+
-+	status = hv_do_hypercall(HVCALL_START_VP, input, NULL);
-+
-+	if (!hv_result_success(status)) {
-+		pr_err("HVCALL_START_VP failed for VP : %d ! [Err: %#llx]\n",
-+		       target_vp_index, status);
-+		ret = -EINVAL;
-+	}
-+
-+free_lock:
-+	local_irq_restore(irq_flags);
-+
-+	return ret;
-+}
-+
-+static int hv_vtl_apicid_to_vp_id(u32 apic_id)
-+{
-+	u64 control;
-+	u64 status;
-+	unsigned long irq_flags;
-+	struct hv_get_vp_from_apic_id_in *input;
-+	u32 *output, ret;
-+
-+	local_irq_save(irq_flags);
-+
-+	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-+	memset(input, 0, sizeof(*input));
-+	input->partition_id = HV_PARTITION_ID_SELF;
-+	input->apic_ids[0] = apic_id;
-+
-+	output = (u32 *)input;
-+
-+	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
-+	status = hv_do_hypercall(control, input, output);
-+	ret = output[0];
-+
-+	local_irq_restore(irq_flags);
-+
-+	if (!hv_result_success(status)) {
-+		pr_err("failed to get vp id from apic id %d, status %#llx\n",
-+		       apic_id, status);
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int hv_vtl_wakeup_secondary_cpu(int apicid, unsigned long start_eip)
-+{
-+	int vp_id;
-+
-+	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
-+	vp_id = hv_vtl_apicid_to_vp_id(apicid);
-+
-+	if (vp_id < 0) {
-+		pr_err("Couldn't find CPU with APIC ID %d\n", apicid);
-+		return -EINVAL;
-+	}
-+	if (vp_id > ms_hyperv.max_vp_index) {
-+		pr_err("Invalid CPU id %d for APIC ID %d\n", vp_id, apicid);
-+		return -EINVAL;
-+	}
-+
-+	return hv_vtl_bringup_vcpu(vp_id, start_eip);
-+}
-+
-+static int __init hv_vtl_early_init(void)
-+{
-+	/*
-+	 * `boot_cpu_has` returns the runtime feature support,
-+	 * and here is the earliest it can be used.
-+	 */
-+	if (cpu_feature_enabled(X86_FEATURE_XSAVE))
-+		panic("XSAVE has to be disabled as it is not supported by this module.\n"
-+			  "Please add 'noxsave' to the kernel command line.\n");
-+
-+	real_mode_header = &hv_vtl_real_mode_header;
-+	apic->wakeup_secondary_cpu_64 = hv_vtl_wakeup_secondary_cpu;
-+
-+	return 0;
-+}
-+early_initcall(hv_vtl_early_init);
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 71ed240ef66d..de4ad38f7d74 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -19,6 +19,10 @@
-  */
- #define HV_IOAPIC_BASE_ADDRESS 0xfec00000
- 
-+#define HV_VTL_NORMAL 0x0
-+#define HV_VTL_SECURE 0x1
-+#define HV_VTL_MGMT   0x2
-+
- union hv_ghcb;
- 
- DECLARE_STATIC_KEY_FALSE(isolation_type_snp);
-@@ -276,6 +280,12 @@ static inline u64 hv_get_non_nested_register(unsigned int reg) { return 0; }
- #endif /* CONFIG_HYPERV */
- 
- 
-+#ifdef CONFIG_HYPERV_VTL_MODE
-+void __init hv_vtl_init_platform(void);
-+#else
-+static inline void __init hv_vtl_init_platform(void) {}
-+#endif
-+
- #include <asm-generic/mshyperv.h>
- 
- #endif
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 5ee02af57dac..5180e3c50184 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -519,6 +519,7 @@ static void __init ms_hyperv_init_platform(void)
- 
- 	/* Register Hyper-V specific clocksource */
- 	hv_init_clocksource();
-+	hv_vtl_init_platform();
- #endif
- 	/*
- 	 * TSC should be marked as unstable only after Hyper-V
--- 
-2.34.1
+Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
 
