@@ -2,229 +2,228 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 488F16DE21F
-	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Apr 2023 19:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62AC66DE26E
+	for <lists+linux-hyperv@lfdr.de>; Tue, 11 Apr 2023 19:24:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbjDKRNz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 11 Apr 2023 13:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35318 "EHLO
+        id S230019AbjDKRYp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 11 Apr 2023 13:24:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229848AbjDKRNy (ORCPT
+        with ESMTP id S229998AbjDKRYo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 11 Apr 2023 13:13:54 -0400
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021021.outbound.protection.outlook.com [52.101.62.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C45449C;
-        Tue, 11 Apr 2023 10:13:52 -0700 (PDT)
+        Tue, 11 Apr 2023 13:24:44 -0400
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020018.outbound.protection.outlook.com [52.101.56.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A322185;
+        Tue, 11 Apr 2023 10:24:42 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PCMFZy2D4fvtRyhI4AvZjiC//8oV3Lnw7FadLmrtMhgRUjVUpn1ITk4c/ArmwS1ciVNp5mNqEUWUNOm5cewe37k6h/hRoWTUZ1z/RB/TkRM58KuBxEiv7GtbXDSFQHwLsyKVYv6rDxwQV0NUfEV78TGV/BoxLap4bj1Ejy9SD+6upUW+0ZpZDDBskXTDR4MAloPLg/h/2qiVnDohJS//w63KTva1Zhk0v62k3Gv4+dKOp+N+i7AZgBoNGKwEIitGMq2gbvHpnW5JqWEPJVHJIBgu7T1fY2g/huiPZ2bKNYDL8aqcxhvn7p74rAmMKLUk0pNhf1jpV0d92bNLZUs/rw==
+ b=XDxoYlT91PtFCj2CUAOi3OLaXnYw73pEEdLHuczHA1OHoYqAxTW1nhXhgrzlC5KeODCD4fwKAUCXd+3LiGPgqJR45FvEacgjmGZGY9y2R8U+tgcVFVXKr2+wdM8WEralL7sQF1pj6QcDobdjYxElJJf6bqO0CyUcNLrWi7yGBsFwKcuh8kNdvETpORR+Y4c+NiLmzfshtvOiAoWoxB4U+tRSJgAQNnhNDwunvoxoxkJ74+sZ6LFcsOpiu2jrvzq/eyurkzM9LMIa7nxkg0ZVTCK3IUSwZeVorX/smve7dWVLLPcmE2hX37qwtMZqelh7gRwv7lh8b5t1ry0V4YFpOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WPb+0Twv+5/5yMnWK6I3KrMIr43y1RzGHdx0aNGSNZA=;
- b=oSrhu4TvX1NUXB/8LXm0bK1VBiODeanEhDYTAxGi+M/t6kzxaCImlLYorT8lJiCUJEPY9FM+C6YOf5N9OjTE7OLLXfqqNL6+DvZUo2LvNOidEH1zTop2X5KK6XGLYxhwEXNGMvohfbYVr/mEiuUPKsDB3sZAZGhJ7Wxr8FmC/TN3jZ4A4v2/RP7RTXcxgea0fuMPazBU5ypB0ojlUN5r89fZtTFP7y2185szO5wHYMOzCnco4JBNsnGc9IQ+J4jC7UU/lkOtm9kU9CnAReYia4glcAgej3zhvdahwU8bbK8px895+HjFHSdo+Rb2MqRC0fdHIrRPECJ85pCEHgbBag==
+ bh=aGaGtrO+AJUkUivFjqH0cx9z2dbhyPwpjxpWQXhdhtQ=;
+ b=gzA9CwZ9IKknlJkmHxjM6oNDnPl3wa5ZyT7seboXGDzbZ8fuIlwengpNzPGLXYVrtW22RwH3eldOrOeg9w+Ol/BZ8feCkkw8f4plDSoybF6EyiJkWS82t076rkBMLXl1sh+4DCxsfu6b7329VLhDC8a2QRdnXDd25hMOrwCJngkcmIlxgRmiiXCqtFhMgxGb/rlyyxkpwLPkYryAv8CQFBHkriqf5w/49zibVngGPwur396KSKamOEVZm4tZ1CnzolgoEPfxGOLovkpv+H0BqK7zeYppCjl4hsccKi95avV1tDSraIs7gULEvBTgLtjG6WDwGsbtn74AqEL8PPiJkg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WPb+0Twv+5/5yMnWK6I3KrMIr43y1RzGHdx0aNGSNZA=;
- b=AkNS0A+opyIU/4qEm4d9sbr/hfpqEeIVRjaL/Ry05IqfF7LzCxEfJltCwe7I62eaosAs0mHvTSx8dDglIO1gL80Hl2qpW2SGiVQq7oz1F7agMhAQP7VW5Y4zw6irJY4sHDnQRlOVEuYq5L8tQ/lsMUheq+JR7FStV/NctBskerE=
+ bh=aGaGtrO+AJUkUivFjqH0cx9z2dbhyPwpjxpWQXhdhtQ=;
+ b=E0CHPlSCjAt75YgMlPG1DEKkyDTm88DCBVC3hHf3sD7z4YNBwDcw5MCfuUAGw/z9poVJei5x9YEp+6lxytZE7V5An9l14kl+mlRrUTyFQE2GyfibRN7gtWDLIdaBWU8BWa9I+LWDgkOJH5UqNSlbcyWSWUYFc18yyj5+VXd2Y8o=
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DM4PR21MB3585.namprd21.prod.outlook.com (2603:10b6:8:a3::21) with
+ by DS7PR21MB3774.namprd21.prod.outlook.com (2603:10b6:8:91::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.3; Tue, 11 Apr
- 2023 17:13:50 +0000
+ 2023 17:24:31 +0000
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::acd0:6aec:7be2:719c]) by BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::acd0:6aec:7be2:719c%7]) with mapi id 15.20.6319.003; Tue, 11 Apr 2023
- 17:13:50 +0000
+ 17:24:31 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 To:     Dexuan Cui <decui@microsoft.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
         KY Srinivasan <kys@microsoft.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: RE: [PATCH v4 6/6] x86/hyperv: Fix serial console interrupts for TDX
- guests
-Thread-Topic: [PATCH v4 6/6] x86/hyperv: Fix serial console interrupts for TDX
- guests
-Thread-Index: AQHZalujP8O9vIzAEkmR/lI5q4nag68mWtKA
-Date:   Tue, 11 Apr 2023 17:13:49 +0000
-Message-ID: <BYAPR21MB1688798EA7DD5ED309BAE0F6D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20230408204759.14902-1-decui@microsoft.com>
- <20230408204759.14902-7-decui@microsoft.com>
-In-Reply-To: <20230408204759.14902-7-decui@microsoft.com>
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Remove the per-CPU post_msg_page
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Remove the per-CPU post_msg_page
+Thread-Index: AQHZamH+OMIAzgPn90WevDN3vCzdfK8mXs1Q
+Date:   Tue, 11 Apr 2023 17:24:31 +0000
+Message-ID: <BYAPR21MB16888F6A2FAB4C47B4010DB4D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20230408213441.15472-1-decui@microsoft.com>
+In-Reply-To: <20230408213441.15472-1-decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=213958c4-6372-417c-8b38-15aee46f618c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-04-11T17:05:08Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=21396f20-b38e-4dac-8ae2-c074538afeb5;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-04-11T17:19:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DM4PR21MB3585:EE_
-x-ms-office365-filtering-correlation-id: 70b8810f-8fa7-4572-6803-08db3ab01e36
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DS7PR21MB3774:EE_
+x-ms-office365-filtering-correlation-id: 5cec026d-cc8c-4486-d004-08db3ab19c71
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aZLeD3bISF9IzxU2a1BIDFX6ELQhSAy0PXSGSg/HY8L/UXjSt4qgIZF34ROoxxP9hvy4Mw2o+1XHupXnbixNwF67N/+makIUUf8mxXRNJ9MQGUkS5hmzDFRgsqJncODDW5PFv9YMW64NFJ3vGVtKRjtgc+l1LbYNTfEqnhSzvdGIrJOmeXD2iiDc76b2JmrwSKZuklfS1re/vnTMS7r0/54enElXoYuOxUBqXUC1a66qvxZ58pFHCjXYIMlDAEYlfZSTMLshJBw9S+vbHZlm0epEO1MqShuZtPPBy1ClokpmSw5ZX7JktHjejhKMEti6hyPFkvGrvVPBql2NCacuSFwRH/V7GSU1cJJ3NfIfONFxCj8cN+/E8Yise7VbrShGilbFz/1j6129iyEIpI6JhZXwtbo0D+vRW9JyvLR71DdYq/cCBEONb9UpYyVZEyHu2sNJAQIl+MBPCKfutYTo7UXjhY7DcYzwtsDGQt1gQK7DjTHHH6pWncxRSTTtrHjY5xlL1lS2pg8tPCaLkiaOlpwiHPcgbJcTv6ZkpoCkUHxTCf+17mxeykq6EbgTDaw/aOW+fhXfkmWcUs9YobTGyaQbpaEnlpSS3lCqBEbm1Yw1kMbUw0KXr2kCNsS/uyRIOGcuya5ETT9XE5ZDpDO+dVuXPKQltiGeeoukJGV4CPlHalZ9j+m+IyOuSQIDOLA7
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(451199021)(10290500003)(54906003)(786003)(316002)(110136005)(478600001)(83380400001)(186003)(33656002)(55016003)(26005)(6506007)(107886003)(9686003)(122000001)(38100700002)(921005)(86362001)(38070700005)(82950400001)(82960400001)(71200400001)(7696005)(8990500004)(41300700001)(64756008)(66476007)(76116006)(66446008)(66556008)(4326008)(8676002)(66946007)(5660300002)(2906002)(7416002)(8936002)(52536014);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: 62yZeC74yy1W9O6ybizzDmPFpVmzfXL4Ro+HCyLizrpesHzt5WVjQ3gf/OeGoZuTE3F1ggtW/YIFwHrNDx8zMkaUASXi7rcotrDizPyxEiNucw6rR1ONFB1VSpc5tsihGFD5bbMc/1t6enzzdzEbrF3h7qedkgzfjn08f90qhmRet3hjqcAtqr82sLdDN3iuTFInInr9ITz9DD6q4OUX6UjP5H39mHWLnHneYs2BCq83YgxzMkxeDvQdQlaPfxfjYIhL/5N3xwT14fAlL8P+QCfqp0Y8Eg2ADryg/ZVVbCq98jmTZr3aRzTH7NJzhcCZnToKKnrvS4NBggejtW1kD/4MMSOJEAUuHAsr9MVcIhATyCw/DbLQQag5LEjU5mAvHNlhvIlYf6HKf2xPvAPRQlLccuqLW6wfl/Bhd009DA1VgKxtHzODqMVjldAlE+nmMVNwoud03tg7QWse0sH21vyonccDsoh/bVK4ctvnlb1M0nClupDRI4CMxdwkMfnxwMw0o5QFjYuDvVj+jPo9DNNy9Qvaux4r10kBROxbattV8xBMrjQWwmPv5hVNvJsyE8TlP7Uc+onuO/7IoTSQC6AwoWzrC1nL5Gc6hehEftr/Jtyhqq+nq/8YEB/oD9rgm9lHcJILkA4Cf9GlfBDv5hIlOfgKrBHtRnMgSTVAlcs=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(451199021)(110136005)(8990500004)(478600001)(10290500003)(33656002)(82950400001)(82960400001)(38070700005)(52536014)(5660300002)(8676002)(8936002)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(41300700001)(316002)(786003)(122000001)(2906002)(38100700002)(55016003)(7696005)(26005)(6506007)(9686003)(83380400001)(186003)(86362001)(71200400001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?FNbQ9jzsY0NZX0U4AFWAXgPUr0kJy4bfbWCNi593zGh6+3vBNvMXAx6ujzhH?=
- =?us-ascii?Q?V4ia8dVPl6WFvXSto/ryStleqstMVWk/krSn/yuasT2I7Jyo5bfAP42COPKY?=
- =?us-ascii?Q?nWWdnL34905yCVqpTq/IkkHIWyT5PeGkDuzvkxqp8q5AmaI+MOAOaV02kudG?=
- =?us-ascii?Q?3If948i244dN5ojW6szxumDwqcxteTE37BXhQgqbBuJLEz4D5qQEMBsfmnvL?=
- =?us-ascii?Q?i3wHkVJJb9ZHCrac3UoVWRg00Hu3gH9lo8u7eRw5BDl6/r/PRBu7FE/a3DeN?=
- =?us-ascii?Q?J+c4r5Dx8GrfoKYPrUA8XYfe75azxM1I5TPH50/bPrkyjBVGlNbluydQUawG?=
- =?us-ascii?Q?SrZI+OFyTPdsNZbVnrhc4bxdB8aAApvTj4ubAqhCnyMegVY0aOV4sUQlRT33?=
- =?us-ascii?Q?Wwa1XlNp7HTyVlG+e4mOcTMqygnCNnMkrmQJ/X3r1eDXiGrCj2MKQiRw++Dl?=
- =?us-ascii?Q?Txkd4unuaru6HaOI8cPDEWdluyUSkcR4Igx5p2Gi9GPGmAdnV7fvHfoGf46A?=
- =?us-ascii?Q?Une7PprR24HgQPHLVNHAZ0uMfuupyf9ixQJpBGuWYhGA4E6sgx7LT0xR3wo2?=
- =?us-ascii?Q?12u/V//14p+tfQHgjqXJNuf8mbAUGn+KL9QeA90wJrFNkEVk3mzQPP+jr7nY?=
- =?us-ascii?Q?DzR8YvHONRcOA4JvoU3CYfC01y5zROmBqSb9DIhr+HvOEbByaKv3lemtvxk5?=
- =?us-ascii?Q?IeKKVTRFr8eel/oT/fMbxivPwWVDx3osqOS07f9v5n0yTc1roXuR7d/YGkDA?=
- =?us-ascii?Q?28ob2WHf6PQKPGGyk/MCCv8DvPyEO0IpR50UqYNWnfUdLmGu4CgHUzA4aoOE?=
- =?us-ascii?Q?h8nh6Nvwm688YLZtKsOZn7jHU6cQ1G+ZEEdzIbaFFZNrOwJIqYwHg8M8yZ5+?=
- =?us-ascii?Q?QcTJbZxJaDSUjHqe+VrrpwT0WWY2sDMn9+Cy7Wb3BKxUHooB4vIGi0wIA5oR?=
- =?us-ascii?Q?xjbd3B0XuQfKSV++vZ/qaqTIxVP/FRCh85XGxLZlwh9ZJP4BNDIXTl+MSVFG?=
- =?us-ascii?Q?0HM9wlojbYORtV4BZwlxRXufk+dGQlLtHNNOciD36VAGAHL7NV09HWNmowmK?=
- =?us-ascii?Q?k5+rL5xIxF0o6BkA51Aj1aVc2JnUwscRUGvySXAcP8nBKNHEF/ttzrc/CFLX?=
- =?us-ascii?Q?y0X6uwV4UMAe+j/Ncte96xDYaeJEqQeyIAjqrbQMnbtSiguxinyXN5wE9X+t?=
- =?us-ascii?Q?FO8R2y4IxUWLth/Rnob2tzre+3DHO+HoMVY77tWmd6SBP2G9NRYBQcEuoxod?=
- =?us-ascii?Q?MWzm3nW4wk0PoTZYd1BA5/X5ffS2zY3WjpD/IwuVwOHE+4wTu7WbIUTtNt+S?=
- =?us-ascii?Q?k/fsmex3wTxNQluWLpLXSq0HKcg9aFcVl52P8B3Y4GGPWhi23brEbiiJcka2?=
- =?us-ascii?Q?KFcWYYfnbbKiV12gL41+zr5nsYEKXWfabizU5W/3E5UIp3tzLKJr1NRsEp6L?=
- =?us-ascii?Q?Htc1Q2wOOS9ji/s54BdnKUz0eWmF0HnFKQSQSoeP9nbEekptbEuBIkurfumo?=
- =?us-ascii?Q?t50PGkbrNnKWGbPRRkXYwCejBWJ9a44J3DUzJHuwZOzykm3cBKvTyvYyw87A?=
- =?us-ascii?Q?HhbA4goHAmKh5y+kdxxhFQMqdxDpjUx7jtwU0bEFOe5LyQOcGxNVGdaGCwTB?=
- =?us-ascii?Q?tg=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?459S9n3eCscCng3HJcwj82i+w/oR34mmvO08fb+NtkWtirMuJCRNRg7e1EA6?=
+ =?us-ascii?Q?dqdxkyo5te78xlU9Vm2NT+a3ek/N/Nov2bwBxmEqfo2ruX49iM5IOCl4pt58?=
+ =?us-ascii?Q?dA9rxHC7ldklQfMVNU1dhnQuSXPasWE8bgijE7a0nmAdCji8gNpWQv8zJWKg?=
+ =?us-ascii?Q?uSkNMCQfHITYITug1PhNiC+Nvtl83SHDsrPpaNdToEAlSZl6vNpxqEJFUyRD?=
+ =?us-ascii?Q?NnJAGtVlGp+SzyiZZA4Rcxuf6TnxbByDfm3KZ7xa7bYb01GaJngE6kq+9ozR?=
+ =?us-ascii?Q?xk5a3rhlgzgxMH0ay/5GphG1aIZFNxCIBbgeNH0wkViQe4MyCImHmzOeOLPM?=
+ =?us-ascii?Q?6RznpZaVwUvTNSfUa0DcjzJeqZYc8W2ebYTPeb0a8asqCGyLEmKFIRpxykTH?=
+ =?us-ascii?Q?BMp+/ILJ1WN+dqhpCvE/6/sja3hSp7JnFkmxjmDSMzUKOpSJVGgCcPFnWnKW?=
+ =?us-ascii?Q?wOGXBcx9vFzn34DU8f7JGSDVIkMMI+8w8ba9GeFOf6VRBoJOE7JelQSNLzZw?=
+ =?us-ascii?Q?nHePRV6dP/S9niz7KHdU5ghrofCK27ztMCTlVeGaYgFQVKU0weXsinU/vkml?=
+ =?us-ascii?Q?1dyAaQ0v+b6zmPv1lOnTzGPPIMSHdqO8oGLLLKjwWvGBcL6CplCjBGXg+tlf?=
+ =?us-ascii?Q?KOABfqKS4TZT44cPSJMU1kaANBFU+CnXuukZAA4ul5frcPZKzUs1EwBQp6QS?=
+ =?us-ascii?Q?bHh03l6Za8bvUaGd04ITe4IOnZJm1oFnz5WM/tvfZioWa8azXqgAhEyshmC7?=
+ =?us-ascii?Q?jQUPHQ2Sc81Uv/i6dJB9lK8sm6FfXW9jY8aQr+UArEig3yRWOfiw19zKG/0m?=
+ =?us-ascii?Q?lc7hxV6cU21PZzrWGV7OA6rQT7P0pABuEaQ6DmyvGk9BkP9xL7NQtO7RzbAQ?=
+ =?us-ascii?Q?XzT4SosMSuOLwjRHroUmyE9tBsYI8QXM5YU8Ycgb3t89wO1BsZiec0V9TYpz?=
+ =?us-ascii?Q?H846YQs0AFnm3IMnuA1QwtbBZGyv/t23x5fXmkoexwIteDUtW2DVeFgfb3uA?=
+ =?us-ascii?Q?9kHcT0ZBS1mICD68avEZMRICKaySX/NvbqY65cUe9Yxj5o53kt7FvnQFIqhc?=
+ =?us-ascii?Q?WNlDwlv9mvPC6bg0oUWS/plqdZEr01OzwOn9B3la5gB663JFmcm6SFGryJbY?=
+ =?us-ascii?Q?GZ4o+tX7AmSYQw9ZsRspeFbiM9TaK4dDssMLdtFFsox7pnSBDAIKCw5yREtA?=
+ =?us-ascii?Q?NkdC6+SxM8N/Y1DBsibCtVEjLLTrBu5dOllV2Rf9/o8+13cMTxOiCcMi54WE?=
+ =?us-ascii?Q?IYpQCMq94j+zaUudVbvMkOFeIMwWmnL9LX03MdmX1D2IylMkH9jNLd3y+M+I?=
+ =?us-ascii?Q?gfALyr+g053TlMrl/9lUpYyVDj2i4FO0S9DzKyzzfd4VCXzE70f/ehC8c+we?=
+ =?us-ascii?Q?1gq0cJS6+ErAMGKOOJHyDNXvwf1QGilJSXlZ1Mb/xzXySepJ3RTwhARTNYl/?=
+ =?us-ascii?Q?avTP5eBvzHf3gXXNxgLlEWVObaqNqcO0MbJtuGwj3pdzDrdVYnJb5lv5XyTj?=
+ =?us-ascii?Q?3pSl/VkP6I9iN6goM/htKfqLkG5wupKe4HEBpj1o8xFJ2qM0BusDH1wmqn+9?=
+ =?us-ascii?Q?IS3XPFNBDEkG8rgrlwsha2DO371aDNZgXPFQ6fmC05LwCB0r0Fe6uWiRPaBM?=
+ =?us-ascii?Q?mQ=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70b8810f-8fa7-4572-6803-08db3ab01e36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2023 17:13:49.8233
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cec026d-cc8c-4486-d004-08db3ab19c71
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2023 17:24:31.1329
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d9QprZSqoUgOU2Hk2RBFq2dZnM8LAbHksYwvmTP1q8sAOras4O4cuM5o0xsdqCEzkxVBQ4ZivxTZwlE02i5PKXItcTopnAULnkUAqJ0uS4c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3585
+X-MS-Exchange-CrossTenant-userprincipalname: rIX1O3tXP3z8l/I+ic3RGYNPwpjKMIJ06Xy/26izUVbdUDZKgVoH1aHY+vpzLM+AiPNggPxn/84K4nPtP3DZX++NnSuw2iGQLuyNIMr+yYI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3774
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, April 8, 2023 1:48 P=
+From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, April 8, 2023 2:35 P=
 M
 >=20
-> When a TDX guest runs on Hyper-V, the UEFI firmware sets the HW_REDUCED
-> flag, and consequently ttyS0 interrupts can't work. Fix the issue by
-> overriding x86_init.acpi.reduced_hw_early_init().
+> The post_msg_page was introduced in 2014 in
+> commit b29ef3546aec ("Drivers: hv: vmbus: Cleanup hv_post_message()")
+>=20
+> Commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments") introduced
+> the hyperv_pcpu_input_arg in 2018, which can be used in hv_post_message()=
+.
+>=20
+> Remove post_msg_page to simplify the code a little bit.
 >=20
 > Signed-off-by: Dexuan Cui <decui@microsoft.com>
 > ---
+>  drivers/hv/hv.c           | 20 +++++---------------
+>  drivers/hv/hyperv_vmbus.h |  4 ----
+>  2 files changed, 5 insertions(+), 19 deletions(-)
 >=20
-> Changes since v1:
->     None.
->=20
->  arch/x86/kernel/cpu/mshyperv.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->=20
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
-v.c
-> index e9106c9d92f81..deedced0f2bb0 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -318,6 +318,26 @@ static void __init hv_smp_prepare_cpus(unsigned int =
-max_cpus)
->  }
->  #endif
->=20
-> +/*
-> + * When a TDX guest runs on Hyper-V, the firmware sets the HW_REDUCED fl=
-ag: see
-> + * acpi_tb_create_local_fadt(). Consequently ttyS0 interrupts can't work=
- because
-> + * request_irq() -> ... -> irq_to_desc() returns NULL for ttyS0. This ha=
-ppens
-> + * because mp_config_acpi_legacy_irqs() sees a nr_legacy_irqs() of 0, so=
- it
-> + * doesn't initialize the array 'mp_irqs[]', and later setup_IO_APIC_irq=
-s() ->
-> + * find_irq_entry() fails to find the legacy irqs from the array, and he=
-nce
-> + * doesn't create the necessary irq description info.
-> + *
-> + * Copy arch/x86/kernel/acpi/boot.c: acpi_generic_reduced_hw_init() but =
-doesn't
-> + * change 'legacy_pic', so it keeps its default value 'default_legacy_pi=
-c' in
-> + * mp_config_acpi_legacy_irqs(), which sees a non-zero nr_legacy_irqs(),=
- and
-> + * eventually serial console interrupts can work properly.
-
-I had a little trouble parsing this comment.  Slightly better wording is:
-
-    * Clone arch/x86/kernel/acpi/boot.c: acpi_generic_reduced_hw_init() her=
-e,
-    * except don't change 'legacy_pic'.  It keeps its default value 'defaul=
-t_legacy_pic'.
-    * mp_config_acpi_legacy_irqs() sees a non-zero nr_legacy_irqs(), and
-    * eventually serial console interrupts can work properly.
-
-Otherwise,
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-
-> + */
-> +static void __init reduced_hw_init(void)
-> +{
-> +	x86_init.timers.timer_init	=3D x86_init_noop;
-> +	x86_init.irqs.pre_vector_init	=3D x86_init_noop;
-> +}
-> +
->  static void __init ms_hyperv_init_platform(void)
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index 8b0dd8e5244d7..30bf122a502ae 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -84,14 +84,15 @@ int hv_post_message(union hv_connection_id connection=
+_id,
+>  		  void *payload, size_t payload_size)
 >  {
->  	int hv_max_functions_eax;
-> @@ -425,6 +445,8 @@ static void __init ms_hyperv_init_platform(void)
+>  	struct hv_input_post_message *aligned_msg;
+> -	struct hv_per_cpu_context *hv_cpu;
+> +	unsigned long flags;
+>  	u64 status;
 >=20
->  			/* A TDX VM must use x2APIC and doesn't use lazy EOI */
->  			ms_hyperv.hints &=3D ~HV_X64_APIC_ACCESS_RECOMMENDED;
+>  	if (payload_size > HV_MESSAGE_PAYLOAD_BYTE_COUNT)
+>  		return -EMSGSIZE;
+>=20
+> -	hv_cpu =3D get_cpu_ptr(hv_context.cpu_context);
+> -	aligned_msg =3D hv_cpu->post_msg_page;
+> +	local_irq_save(flags);
 > +
-> +			x86_init.acpi.reduced_hw_early_init =3D reduced_hw_init;
+> +	aligned_msg =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
+>  	aligned_msg->connectionid =3D connection_id;
+>  	aligned_msg->reserved =3D 0;
+>  	aligned_msg->message_type =3D message_type;
+> @@ -106,11 +107,7 @@ int hv_post_message(union hv_connection_id connectio=
+n_id,
+>  		status =3D hv_do_hypercall(HVCALL_POST_MESSAGE,
+>  				aligned_msg, NULL);
+>=20
+> -	/* Preemption must remain disabled until after the hypercall
+> -	 * so some other thread can't get scheduled onto this cpu and
+> -	 * corrupt the per-cpu post_msg_page
+> -	 */
+> -	put_cpu_ptr(hv_cpu);
+> +	local_irq_restore(flags);
+>=20
+>  	return hv_result(status);
+>  }
+> @@ -162,12 +159,6 @@ int hv_synic_alloc(void)
+>  				goto err;
+>  			}
 >  		}
+> -
+> -		hv_cpu->post_msg_page =3D (void *)get_zeroed_page(GFP_ATOMIC);
+> -		if (hv_cpu->post_msg_page =3D=3D NULL) {
+> -			pr_err("Unable to allocate post msg page\n");
+> -			goto err;
+> -		}
 >  	}
 >=20
+>  	return 0;
+> @@ -190,7 +181,6 @@ void hv_synic_free(void)
+>=20
+>  		free_page((unsigned long)hv_cpu->synic_event_page);
+>  		free_page((unsigned long)hv_cpu->synic_message_page);
+> -		free_page((unsigned long)hv_cpu->post_msg_page);
+>  	}
+>=20
+>  	kfree(hv_context.hv_numa_map);
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index dc673edf053c3..d8322049ecd08 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -122,10 +122,6 @@ enum {
+>  struct hv_per_cpu_context {
+>  	void *synic_message_page;
+>  	void *synic_event_page;
+> -	/*
+> -	 * buffer to post messages to the host.
+> -	 */
+> -	void *post_msg_page;
+>=20
+>  	/*
+>  	 * Starting with win8, we can take channel interrupts on any CPU;
 > --
 > 2.25.1
 
+This looks good.  Glad to have this simplification done!
+
+FWIW, this patch will cause conflicts with your TDX patch series.  If this
+patch goes first, then you'll have merge errors with the TDX patches.
+If the TDX series goes first, then this patch will have merge errors.  And
+per my comments on Patch 5 of your TDX series, eliminating the
+post_msg_page will simplify the error cleanup code in hv_synic_alloc().
+It seems like making this patch part of the TDX series would be helpful
+all around.
+
+Reviewed-by: Michael Kelley
