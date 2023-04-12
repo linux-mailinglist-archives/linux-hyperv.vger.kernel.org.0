@@ -2,126 +2,138 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 099546E29CF
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Apr 2023 20:07:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD2B46E0097
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Apr 2023 23:17:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229947AbjDNSHq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Apr 2023 14:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47118 "EHLO
+        id S230054AbjDLVRL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Apr 2023 17:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjDNSHp (ORCPT
+        with ESMTP id S229762AbjDLVRK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Apr 2023 14:07:45 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 020DE83CB;
-        Fri, 14 Apr 2023 11:07:43 -0700 (PDT)
-Received: from skinsburskii.localdomain (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 202C42179263;
-        Fri, 14 Apr 2023 11:07:43 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 202C42179263
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1681495663;
-        bh=vrTl5Ep5devbVecjQ6jAI5gZaBXZaMXlbw5ZKByZUZ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OLR94xfw4mfXwonzEA8XTEXGARFL/FomL1UtMFLtChA6mRBwBbI7M2wqo5Hn35QmD
-         qgdYXzkWrT/+m9wWm/fA6EZoFvX6zxOuenxKDip0xvOzdZjW+D3T7KlQvRITLnZecY
-         NHBohp/XeamzyyXQ/vSteUenpSDBNAWyudrT5nL4=
-Date:   Wed, 12 Apr 2023 13:31:38 -0700
-From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-hyperv@vger.kernel.org,
+        Wed, 12 Apr 2023 17:17:10 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021027.outbound.protection.outlook.com [52.101.57.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 678C3769F;
+        Wed, 12 Apr 2023 14:17:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EprBzDM3u4NB0odZzbudJGaJb4Q5lx1h1P0cREuUNdZug71mWAZhZnqWensk1YgmHedM0Skm7u40qmnXEmrnYtzGGpJNus+rlqZFD91/ItvLfFt2sWYWq/CVFZmpwAqpAeUx/36LQPnl8wK5d1ijJn+siHstPJzLkTuBG+wDG7mLfM785cT/ZPc4ipWloxw9WW1/DALugAL83RCiSBZooH5ynQuv2j05Xkx1Ho3gRBoxeL0Oo+JYJkLwSJr7iSG8grdvG2rvseaJGeDCZwqBWkbxIIljYd+Rz0EhfO4pD2oUhqGbc0xx+Xc47aI7ZmG9+rEjP++YbOBUp0GZXAoijA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kimHZ+QVn8EUGXrew2ON/+slxYbjAUAYjKQBPn6+Uek=;
+ b=ZaO35SppPvTjjSdZEKHx0hG4FD2sSMpVO8Lg4aArU4X5lTCruEbleooeE6qQowAxPHeqwt3JIUQPxwi69iWuOCMexyzk4sHg4MgunattYNkaaIeVcM59Tn0fFLPkfIx2CtLMiCvpNzwyn196WkvhiZQtYPNFByxTbfh5oJixoXaFQmxapbewv6L4czblRdaB4fX4Fz9r1YI6jH0b6ByRn+OslgjHt/Iaahw6JFLGw/+IrtFUBjawHEg6sNG+dqrXtQeofakzrBshY+EGx7HQ/w3PUBD5JQ5v1FdDF+80JHxo2/Ju3ZB/7BOIjeOplQzZNN+k4UMag0ps8KY/S7NydA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kimHZ+QVn8EUGXrew2ON/+slxYbjAUAYjKQBPn6+Uek=;
+ b=b+pO7WFFYw31o5p+WTPLICm948OhFrSBgwcPaYaHOpYu3++8IDfMikVkfSgo/pqWTJ0DDo2+0TD1o+2Uiln5Efx95tSri/wpmbdbmzq56aDKGJHYnQHwSgteerxJTQN07qsYxbXD7eBuHHuL9c7c5G+nSua8wqrQ3h9wGPASKxA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
+ by SA0PR21MB1881.namprd21.prod.outlook.com (2603:10b6:806:e6::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.4; Wed, 12 Apr
+ 2023 21:16:49 +0000
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::3e29:da85:120c:b968]) by BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::3e29:da85:120c:b968%6]) with mapi id 15.20.6319.004; Wed, 12 Apr 2023
+ 21:16:48 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, decui@microsoft.com, kys@microsoft.com,
+        paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+        davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+        longli@microsoft.com, ssengar@linux.microsoft.com,
+        linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+        sharmaajay@microsoft.com, hawk@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/hyperv: Expose an helper to map PCI interrupts
-Message-ID: <20230412203138.GA1782@skinsburskii.localdomain>
-References: <168079806973.14175.17999267023207421381.stgit@skinsburskii.localdomain>
- <168079870998.14175.16015623662679754647.stgit@skinsburskii.localdomain>
- <87o7nrzy9e.ffs@tglx>
- <20230412161951.GA894@skinsburskii.localdomain>
- <20230412163616.GA1535@skinsburskii.localdomain>
- <878reuzzuz.ffs@tglx>
+Subject: [PATCH V3,net-next, 0/4] net: mana: Add support for jumbo frame
+Date:   Wed, 12 Apr 2023 14:15:59 -0700
+Message-Id: <1681334163-31084-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW2PR16CA0002.namprd16.prod.outlook.com (2603:10b6:907::15)
+ To BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878reuzzuz.ffs@tglx>
-X-Spam-Status: No, score=-18.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_24_48,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|SA0PR21MB1881:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd26d9b7-3c14-4480-972e-08db3b9b3a13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6czPxJDQOKSHAwFi1HuV9e+rMj0ed4TAVd7umaOYvRW9U3mqphdSOhJd6uhaDE3wPOL0txg3ie9xUg+roNGiLURPXr/ZcB/0eNsjzRSR6/7Fr2IdnN9ff6W5g8cRSqW5M1ynqgVQiYZ45xTKcJVXLa9DZowyduCWTu5BqVAJ7r2X81IctgvzlAHsR2oCbiHSwajskOnLLaStSftWIBJJSTZMGeKvHydHxyGJllUx/SkT7TtzLk5UN8X/qm4itbR31LjiULb7QmgC/pTG71Yq2IIURqgJjLGxuoC4fL59qw5Da7UyJoAe4T7u2fekU5cPcKnSWwAxFo8hG2/Nn9ka6sRH2+G/LAzTSGUkCVW7bbfeGZjOGKZLobDawLxWIEOs9hfI3B1wS7LKiQ9TdFa57gW3zmkMH1NAbIMgIPIIfoZDyPnG6lcH8caiFyqoH84AA4c5OjyhWUaoOsBPTU9/TY4cnQ+z5UQ7nFg1ayLehzbG0LrH5VCrHBdxcU+3CpqZOu6mlFqgKLHHsNb2fp7phKf/e4gS1mTUHH04LwuYnL/hMOXsEHwED8lwceFvcmZydH0VuMNtGAOHDFRmOdTqrl9MewDQS2btx+3HfWMxaOBitkAoM4hwl1v758hswNNr5Q41znOYEayYqdRBvIYu7bydHjC57QD7oeT8tnu8CEI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(451199021)(8676002)(38350700002)(38100700002)(2616005)(83380400001)(7846003)(186003)(478600001)(52116002)(10290500003)(6486002)(6666004)(316002)(26005)(6506007)(6512007)(2906002)(4744005)(5660300002)(7416002)(36756003)(4326008)(82950400001)(66476007)(66946007)(82960400001)(41300700001)(66556008)(786003)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mFNkkozCWyB8i+yA3EpX8K6M2pxq8OuY1v5dI8JJVGhLxLqb2+SUOmTERf5A?=
+ =?us-ascii?Q?1mvB92LH0QdsDArO5RT0rYuCaqbWlGcRLbyduTbGRyqZy0WbLyum5YCY+1uk?=
+ =?us-ascii?Q?vgVyuKB2Auq7VUl+Kmd7D4Qn4leNJFhyGl+miL/uQma1yw2v9TXK7sCxl9iP?=
+ =?us-ascii?Q?9V97G9Lq1wjhrZVpYUFBA7kbZw6BMgcUnD7X7lORRWXw7JQTV1Vr1d7FC88J?=
+ =?us-ascii?Q?2wAB6Z6B6jocUfIDEdgTqnUc1vvPjUr/3qM6e9pq2nj/TXaZh0B4hLz/HGJF?=
+ =?us-ascii?Q?e69/mnP526B121aIKTcgBi5k1IxXKN/evHsr666n2zBmpzvn4yBsWofJT5HW?=
+ =?us-ascii?Q?cf5qwbf8fGAt0bYbeo2PbhyuCFZwGdh/gRL0hQS6yZtfzUwusZzGcgWYURyB?=
+ =?us-ascii?Q?wXyx0X9AS39M4v/MtFgBY4Kx+h7Bjabsjf54OD+kFhSjgdJmu7zTbqv2y6UL?=
+ =?us-ascii?Q?ADbDhuoBWw+1Vx87Z3vw4ZYFwnYeKJLj0fgA2/RuVnFl3odayF8WpsyeH6p9?=
+ =?us-ascii?Q?rIyGxJNQYwDjTvWYuNUf+S6lR4TLrbBcDkTWYtODDVjkXD75OFH+qq9p7xMS?=
+ =?us-ascii?Q?HMnU7Rxsr9YeZJY9mjCObIS5dIEQSb+MD1bOK6kuhzx2dNbk5YvI1giOEWFU?=
+ =?us-ascii?Q?130OM2pX9/ZCQkt3w6+iKxhLc5NiGdRE4yJ6sR2K+L7il60NDTtVImG1LSld?=
+ =?us-ascii?Q?DwU3atniViGAS7HP1v1XPmhqUGTYmx4Ob0KvOsrUYoHu5PPmfmfMSjkCgSQW?=
+ =?us-ascii?Q?rN3xbssDrB3yGPoSzh/HPzZgVv7jM6r8e1TF/kteGF4Nbpx+ftssO9HvA0NH?=
+ =?us-ascii?Q?jIWFixuBTYIqp6jYY4A9vLL83ogd4pZz+ANk5/7NZK84FYi/DRjx0W1CeyBL?=
+ =?us-ascii?Q?1j8JilSL8WNOXqUSZAhaKmfxc5K+aB/31uhDv+bbHbtO9OAGAAIiugWkUgCF?=
+ =?us-ascii?Q?vwGv77UojCE6PJDJQv5iO+gTocCtmztrLFNVT9HN0hdaeZZ5ME/7ErpS5RHc?=
+ =?us-ascii?Q?ViPcnKapQNoU5eLzo6wO4vjNuDbk0xPwKS2RfMxHBr41LqhEqJROnFGGsni+?=
+ =?us-ascii?Q?VnB7JSYh6pjkg1qtvH1C1+Ka8VGRyaZH52cAA8Ko2ZgHraq3z0mnBMSMdptu?=
+ =?us-ascii?Q?iThsJz1eTLBaKP85yAO9eXkQZLbZWVge7uuU5vG51f/4iUnuF/FjCXYps8bI?=
+ =?us-ascii?Q?s/Ji9XJRH+Z9M7F1b8nD8mfNJfLox/CKbqlnRp9vpppstIiCcmpz4kIFsJJB?=
+ =?us-ascii?Q?KFxrnewy6IxWWoLegi4LSfiI1YmTIGZzHYhbawXpPXHFjzrEk8ikHnyzeGsv?=
+ =?us-ascii?Q?cDB0wAkszx8V6BEIyDXh5xIWagQL+6thAgh+2Yvapq3MP6Xp/uZaKIWQQbYV?=
+ =?us-ascii?Q?wZefw9Gv6rUZ+fc6Gq7917PYQwlF3I7qb4NEuDnz4vhYH/TA76wVbUB+wqRd?=
+ =?us-ascii?Q?ao+5LX3lhs8akMFaCyGBrKTQ2DI0r6q6Hmd8yniqPs0svctslhKE/Z0cD5BI?=
+ =?us-ascii?Q?IiyH4mKn51LpUvh4j5+shnzxDRQPx9X+mdoZGhplWHh1s/FyAQSlgslYRz34?=
+ =?us-ascii?Q?P1Soy3yZFNBF+d29iT44xjZcOMKj9EAb3NzJJeat?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd26d9b7-3c14-4480-972e-08db3b9b3a13
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 21:16:48.5984
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uosgb0rlmWJEJMSd8A8aX6qJM3yJsmw4nxHgb05VOWL0EWcqI0MIzcmY4SY5APvGSwvTNzbqm9GcML8eefhyaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1881
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 09:28:52AM +0200, Thomas Gleixner wrote:
-> Stanislav!
-> 
-> On Wed, Apr 12 2023 at 09:36, Stanislav Kinsburskii wrote:
-> > On Wed, Apr 12, 2023 at 09:19:51AM -0700, Stanislav Kinsburskii wrote:
-> >> > > +	affinity = irq_data_get_effective_affinity_mask(data);
-> >> > > +	cpu = cpumask_first_and(affinity, cpu_online_mask);
-> >> > 
-> >> > The effective affinity mask of MSI interrupts consists only of online
-> >> > CPUs, to be accurate: it has exactly one online CPU set.
-> >> > 
-> >> > But even if it would have only offline CPUs then the result would be:
-> >> > 
-> >> >     cpu = nr_cpu_ids
-> >> > 
-> >> > which is definitely invalid. While a disabled vector targeted to an
-> >> > offline CPU is not necessarily invalid.
-> >
-> > Although this patch only tosses the code and doens't make any functional
-> > changes, I guess if the fix for the used cpu id is required, it has to
-> > be in a separated patch.
-> 
-> Correct, but if the interrupt _is_ masked at the MSI level then the
-> hypervisor must not deliver an interrupt at all.
-> 
-> The point is that it is valid to target a masked MSI entry to an offline
-> CPU under the assumption that the hardware/emulation respects the
-> masking. Whether that's a good idea or not is a different question.
-> 
-> The kernel as of today does not do that. It targets unused but
-> configured MSI[-x] entries towards MANAGED_IRQ_SHUTDOWN_VECTOR on CPU0
-> for various reasons, one of them being paranoia.
-> 
-> But in principle there is nothing wrong with that and it should either
-> succeed or being rejected at the software level and not expose a
-> completely invalid CPU number to the hypercall in the first place.
-> 
-> So if you want to be defensive, then keep the _and(), but then check the
-> result for being valid and emit something useful like a pr_warn_once()
-> instead of blindly handing the invalid result to the hypercall and then
-> have that reject it with some undecipherable error code.
-> 
-> Actually it would not necessarily reach the hypercall because before
-> that it dereferences cpumask_of(nr_cpu_ids) here:
-> 
-> 	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set),	cpumask_of(cpu));
-> 
-> and explode with a kernel pagefault. If not it will read some random
-> adjacent data and try to create a vp_set from it. Neither of that is
-> anywhere close to correct.
-> 
+The set adds support for jumbo frame,
+with some optimization for the RX path.
 
-Thank you Thomas.
-I sent a patch to address the problmes you highlighted:
 
-"x86/hyperv: Fix IRQ effective cpu discovery for the interrupts unmasking"
+Haiyang Zhang (4):
+  net: mana: Use napi_build_skb in RX path
+  net: mana: Refactor RX buffer allocation code to prepare for various MTU
+  net: mana: Enable RX path to handle various MTU sizes
+  net: mana: Add support for jumbo frame
 
-I'll update this series after that patch is merged.
+ .../net/ethernet/microsoft/mana/mana_bpf.c    |  22 +-
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 383 ++++++++++++++----
+ include/net/mana/gdma.h                       |   4 +
+ include/net/mana/mana.h                       |  27 +-
+ 4 files changed, 346 insertions(+), 90 deletions(-)
 
-Thanks,
-Stanislav
+-- 
+2.25.1
 
-> Thanks,
-> 
->         tglx
