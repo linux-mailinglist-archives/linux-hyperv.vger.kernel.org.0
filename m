@@ -2,151 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EE316E29C9
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Apr 2023 20:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20AD36DFFDC
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Apr 2023 22:30:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbjDNSF1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Apr 2023 14:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
+        id S230242AbjDLUaK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Apr 2023 16:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjDNSF0 (ORCPT
+        with ESMTP id S230218AbjDLUaE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Apr 2023 14:05:26 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B42B735B0;
-        Fri, 14 Apr 2023 11:05:25 -0700 (PDT)
-Received: from skinsburskii.localdomain (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A7DD22179262;
-        Fri, 14 Apr 2023 11:05:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A7DD22179262
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1681495525;
-        bh=7TWgMCwTIchIJki1b6WkkqtvzdzihOoHkeu7FSM1cGI=;
-        h=Subject:From:Cc:Date:From;
-        b=kUZBbC0uf3JACWAKeVn2KDZBX2MgO5n+huVUR6gkRASjspJ7VNiMfNiXiHHYYs1Zy
-         EGSXjjOSSJZ0b4sO/4obctT6uobJVkW/KqXeIj6LaTtZT5wDsQh6cQUnTnDLVDcmc/
-         pDL7zSwAuj2iilCHVOMaFVk/2vxjX7aC7+nqYyuI=
-Subject: [PATCH] x86/hyperv: Fix IRQ effective cpu discovery for the
- interrupts unmasking
-From:   Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-Cc:     Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux.dev
-Date:   Wed, 12 Apr 2023 13:29:20 -0700
-Message-ID: <168133133232.4448.8053082360972165835.stgit@skinsburskii.localdomain>
-User-Agent: StGit/0.19
+        Wed, 12 Apr 2023 16:30:04 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8DB659B
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Apr 2023 13:29:55 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id i8so3725838plt.10
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Apr 2023 13:29:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681331395; x=1683923395;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MPIZuP0MZByRyC+/nU9qhHjtfr1zaG8eGgVe3FKVcpE=;
+        b=4i1ZGWC7T0vcawyANuqheZxC4oYpBwN5406UaN8TmvzhIkKY1UYMwB5AqBeg95Q6GM
+         S1UvZvmMB505K6ozQ2XtKaplTM/0klq52c430fSTqKBOONVXzpVOEIxiGPbl5DHCjzzp
+         Mg1TO0DaLWiULgIhhPHBLXpfTquxUtgxOjikd1FpVrUYwAmdTEt1xE+CEY/HqwDybLZV
+         kj01pGMvuC3zgWQ3FW9tjp1woTn24MteocGWzJkZb+4hp6ViZo1mSMOwhq3HD1Dict86
+         MzwjpBrVWBojdTL2ZHnpXY4RDOFRTYh2/IhZGgvyNDiljfX7psrugiJxafIzLMYucoeA
+         mgaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681331395; x=1683923395;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MPIZuP0MZByRyC+/nU9qhHjtfr1zaG8eGgVe3FKVcpE=;
+        b=EOeKdlZf/3vKo18pHSjRNy91UpVT+R0+h3Jwo0sjroaGg2DGIbGBhf+qj2YBJUKY6q
+         zK7/O0VeChbDTwcZoCMxhuJGuD5EiTfGzoRWD25esFDknZfTtO2M0R8S+16GfC7mjXCO
+         LJ2kg4VKFHWwSBy4xFNzM6igXBJZrwexMOZJlbRXRLujnCI2lkbssngsXd6uVMzWYsCS
+         JA6qhMZNFyNCBxVN7zserY/ZAvrgl1VKK1eNEwZ8E9SEv8Qctea85XeJE23a6j8YwHej
+         jkGSirwMk+EbYaObhkm4M1q6OsAn9yLi4gLSE5dooD2q7UHjRub1Wnq0OayOH6jG5uu0
+         JvYw==
+X-Gm-Message-State: AAQBX9c4OzqY+DPL1yaICE5uScxHf39V3IBAy4ii/W3Ond+OIy0VUDHI
+        vjnLzxf0Byi1tpSwh8EAHnqiwg==
+X-Google-Smtp-Source: AKy350YrZ02ScWTgT8jhEbD53S2CWz6oXdOXMzAXXLbV3fv9KVIYZsKPbbGjmkiIUKkubXaaP3P2VQ==
+X-Received: by 2002:a17:902:e749:b0:1a6:6b9c:48ae with SMTP id p9-20020a170902e74900b001a66b9c48aemr67912plf.52.1681331395062;
+        Wed, 12 Apr 2023 13:29:55 -0700 (PDT)
+Received: from google.com ([2620:15c:2d1:203:4a4a:51a1:19b:61ab])
+        by smtp.gmail.com with ESMTPSA id g24-20020a63e618000000b00502f20aa4desm4115pgh.70.2023.04.12.13.29.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 13:29:54 -0700 (PDT)
+Date:   Wed, 12 Apr 2023 13:29:49 -0700
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Josh Poimboeuf <jpoimboe@kernel.org>,
+        "Borislav Petkov (AMD)" <bp@alien8.de>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>, linux-btrfs@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 02/11] init: Mark start_kernel() __noreturn
+Message-ID: <ZDcUvWuqv2VevITe@google.com>
+References: <cover.1680912057.git.jpoimboe@kernel.org>
+ <cb5dab6038dfe5156f5d68424cf372f7eed1b934.1680912057.git.jpoimboe@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_24_48,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,
-        MISSING_HEADERS,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb5dab6038dfe5156f5d68424cf372f7eed1b934.1680912057.git.jpoimboe@kernel.org>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-As of today, the existent code uses conjunction of IRQ affinity mask and cpu
-online mask to find the cpu id to map an interrupt to.
-I looks like the intention was to make sure that and IRQ won't be mapped to an
-offline CPU.
+On Fri, Apr 07, 2023 at 05:09:55PM -0700, Josh Poimboeuf wrote:
+> Fixes the following warning:
+> 
+>   vmlinux.o: warning: objtool: x86_64_start_reservations+0x28: unreachable instruction
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/r/202302161142.K3ziREaj-lkp@intel.com/
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Although it works correctly today, there are two problems with it:
-1. IRQ affinity mask already consists only of online cpus, thus matching it
-to the mask on online cpus is redundant.
-2. cpumask_first_and() can return nr_cpu_ids in case of IRQ affinity
-containing offline cpus in future, and in this case current implementation
-will likely lead to kernel crash in hv_map_interrupt due to an attempt to use
-invalid cpu id for getting vp set.
+Ah, I just realized that my series will conflict with this.
+https://lore.kernel.org/llvm/20230412-no_stackp-v1-1-46a69b507a4b@google.com/
+Perhaps if my series gets positive feedback; I can rebase it on top of
+this and it can become part of your series?
 
-This patch fixes this logic by taking the first bit from the affinity
-mask as the cpu to map the IRQ to.
-It also adds a paranoia WARN_ON_ONCE for the case when the affinity mask
-contains offline cpus.
+For this patch,
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Signed-off-by: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
-CC: "K. Y. Srinivasan" <kys@microsoft.com>
-CC: Haiyang Zhang <haiyangz@microsoft.com>
-CC: Wei Liu <wei.liu@kernel.org>
-CC: Dexuan Cui <decui@microsoft.com>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: x86@kernel.org
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Joerg Roedel <joro@8bytes.org>
-CC: Will Deacon <will@kernel.org>
-CC: Robin Murphy <robin.murphy@arm.com>
-CC: linux-hyperv@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: iommu@lists.linux.dev
----
- arch/x86/hyperv/irqdomain.c  |    7 ++++---
- drivers/iommu/hyperv-iommu.c |    7 ++++---
- 2 files changed, 8 insertions(+), 6 deletions(-)
+Though I'm curious, it does look like it's necessary because of 01/11 in
+the series? Any idea how the 0day bot report happened before 1/11
+existed?
 
-diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-index 42c70d28ef27..759774b5ab2f 100644
---- a/arch/x86/hyperv/irqdomain.c
-+++ b/arch/x86/hyperv/irqdomain.c
-@@ -192,7 +192,6 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	struct pci_dev *dev;
- 	struct hv_interrupt_entry out_entry, *stored_entry;
- 	struct irq_cfg *cfg = irqd_cfg(data);
--	const cpumask_t *affinity;
- 	int cpu;
- 	u64 status;
- 
-@@ -204,8 +203,10 @@ static void hv_irq_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 		return;
- 	}
- 
--	affinity = irq_data_get_effective_affinity_mask(data);
--	cpu = cpumask_first_and(affinity, cpu_online_mask);
-+	cpu = cpumask_first(irq_data_get_effective_affinity_mask(data));
-+
-+	/* Paranoia check: the cpu must be online */
-+	WARN_ON_ONCE(!cpumask_test_cpu(cpu, cpu_online_mask));
- 
- 	if (data->chip_data) {
- 		/*
-diff --git a/drivers/iommu/hyperv-iommu.c b/drivers/iommu/hyperv-iommu.c
-index 8302db7f783e..632e9c123bbf 100644
---- a/drivers/iommu/hyperv-iommu.c
-+++ b/drivers/iommu/hyperv-iommu.c
-@@ -197,15 +197,16 @@ hyperv_root_ir_compose_msi_msg(struct irq_data *irq_data, struct msi_msg *msg)
- 	u32 vector;
- 	struct irq_cfg *cfg;
- 	int ioapic_id;
--	const struct cpumask *affinity;
- 	int cpu;
- 	struct hv_interrupt_entry entry;
- 	struct hyperv_root_ir_data *data = irq_data->chip_data;
- 	struct IO_APIC_route_entry e;
- 
- 	cfg = irqd_cfg(irq_data);
--	affinity = irq_data_get_effective_affinity_mask(irq_data);
--	cpu = cpumask_first_and(affinity, cpu_online_mask);
-+	cpu = cpumask_first(irq_data_get_effective_affinity_mask(irq_data));
-+
-+	/* Paranoia check: the cpu must be online */
-+	WARN_ON_ONCE(!cpumask_test_cpu(cpu, cpu_online_mask));
- 
- 	vector = cfg->vector;
- 	ioapic_id = data->ioapic_id;
+(Surely gcc isn't assuming a weak function is implicitly noreturn and
+make optimizations based on that (that's one hazard I'm worried about)?)
 
+It looks like perhaps the link to
+https://lore.kernel.org/all/202302161142.K3ziREaj-lkp@intel.com/
+on 2/11 was 0day testing the arch-cpu-idle-dead-noreturn branch of your
+kernel tree
+https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/log/?h=arch-cpu-idle-dead-noreturn
+, which had 1/11 in it, IIUC?  Perhaps this link should go on 1/11
+rather than 2/11?
 
+Looking back at 1/11, 3/11, 8/11 I noticed not all patches have links to 0day
+reports.  Are you able to flesh out more info how/what/when such objtool
+warnings are observed?  Are the warnings ever results of patches earlier
+in the series?
