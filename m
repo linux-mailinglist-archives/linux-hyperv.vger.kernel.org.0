@@ -2,145 +2,102 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87BD36E02CC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Apr 2023 01:50:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F9406E0374
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Apr 2023 03:05:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbjDLXuS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Apr 2023 19:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
+        id S229716AbjDMBFc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Apr 2023 21:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjDLXuG (ORCPT
+        with ESMTP id S229441AbjDMBFb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Apr 2023 19:50:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A543C7280;
-        Wed, 12 Apr 2023 16:50:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 82D026375F;
-        Wed, 12 Apr 2023 23:50:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 766C0C4339C;
-        Wed, 12 Apr 2023 23:50:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681343404;
-        bh=fv7dp6bnjJALXLewb9lTFvUBDPbaWCiPUy0hgG3NFLs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YGpI28UrR5Zv3CYWpQ0VUGjdfUzVFojUtUlbbKFI5Bwyx+iXrsuGIp8s4v1k8SoJI
-         nONptSfN0QUqyQ8t2DgvmD7tYUwACn4ZT+b7jSmj1NfXtuJ8T3FSAnKA98Hso7t2V9
-         ppJawnoz8YeoM/ykNlsVPlkBpo8jB/1URJXGVgpbc2KwjMzX5FAIFDvqcNM6aHI2z8
-         osGmvarU93OQGE9PYaYzIBCAyoH2DpmhKPNQfBlUT/XZlZPOx9y6OEpB6Y0xGjMqpG
-         CitYIh2s2Aag3+xNbvuJ51BhWD7tsF+vSHN/8bqdL1tgYkPGAAazNtDdNH6j4Dto4e
-         4f/PLPj1QPGag==
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>, linux-btrfs@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-scsi@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH v2 11/11] x86/hyperv: Mark hv_ghcb_terminate() as noreturn
-Date:   Wed, 12 Apr 2023 16:49:41 -0700
-Message-Id: <32453a703dfcf0d007b473c9acbf70718222b74b.1681342859.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1681342859.git.jpoimboe@kernel.org>
-References: <cover.1681342859.git.jpoimboe@kernel.org>
+        Wed, 12 Apr 2023 21:05:31 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3334C2E;
+        Wed, 12 Apr 2023 18:05:30 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id j16so143455wms.0;
+        Wed, 12 Apr 2023 18:05:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681347929; x=1683939929;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7UkmFhtjxWacnMCiO0oQv3pNqPctVfrO7QeMfZUAp/o=;
+        b=WXfUXfu106fH1coxexnbiajCnnD+MntT0bTDc9g/xygvsVK+fe2CfPs9wSradk9jgA
+         a5opeeGQL5MOGDvDVfi8pg7qZjrfo/nQZmlT8wXy0RDAVN+BiiZQhJY/T6Pxt4gCbvTT
+         85EVAtLdjCOlls9TsGTwUTt3KLdwzsbqkaQOGWAec2JTi+xZIkN33+Ldt+l+poSWu5gC
+         pJ+lTIWDnQGwnf0R1+vPOYigWHJy+A6RP5Q/nAauh5LhpmYAynkaNuRGIlozvtqyJu0o
+         RaxF7zhlf0PDVg86+m1sl1PQ1H4tqTooNUn3ZG0oLKvy1W1s/KqS5Am3sdQpHRG3SpBR
+         kSMQ==
+X-Gm-Message-State: AAQBX9deoecpwRnzQyXDvDovKudAbl1z8Dtx4nqC/IjR77o35CS0L81Q
+        etip6SCeShsmqsT0oOQIZ0Q=
+X-Google-Smtp-Source: AKy350bDDKhpd8MexEw/4tmaBStYzgn6bVDTaN7FSwiN/JqKxJOEBlxdeUeD/HykCmrarjBMVB1+fw==
+X-Received: by 2002:a1c:7701:0:b0:3f0:80cf:f2d5 with SMTP id t1-20020a1c7701000000b003f080cff2d5mr48283wmi.11.1681347929308;
+        Wed, 12 Apr 2023 18:05:29 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id p8-20020a05600c468800b003f09563445asm4128817wmo.0.2023.04.12.18.05.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 18:05:28 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 01:05:24 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [PATCH v7 00/12] Add PCI pass-thru support to Hyper-V
+ Confidential VMs
+Message-ID: <ZDdVVJ2P+sJaUgtV@liuwe-devbox-debian-v2>
+References: <1679838727-87310-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1679838727-87310-1-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-
-Annotate the function prototype and definition as noreturn to prevent
-objtool warnings like:
-
-vmlinux.o: warning: objtool: hyperv_init+0x55c: unreachable instruction
-
-Also, as per Josh's suggestion, add it to the global_noreturns list.
-As a comparison, an objdump output without the annotation:
-
+On Sun, Mar 26, 2023 at 06:51:55AM -0700, Michael Kelley wrote:
 [...]
-1b63:  mov    $0x1,%esi
-1b68:  xor    %edi,%edi
-1b6a:  callq  ffffffff8102f680 <hv_ghcb_terminate>
-1b6f:  jmpq   ffffffff82f217ec <hyperv_init+0x9c> # unreachable
-1b74:  cmpq   $0xffffffffffffffff,-0x702a24(%rip)
-[...]
+> 
+> Michael Kelley (12):
+>   x86/ioremap: Add hypervisor callback for private MMIO mapping in coco VM
+>   x86/hyperv: Reorder code to facilitate future work
+>   Drivers: hv: Explicitly request decrypted in vmap_pfn() calls
+>   x86/mm: Handle decryption/re-encryption of bss_decrypted consistently
+>   init: Call mem_encrypt_init() after Hyper-V hypercall init is done
+>   x86/hyperv: Change vTOM handling to use standard coco mechanisms
+>   swiotlb: Remove bounce buffer remapping for Hyper-V
+>   Drivers: hv: vmbus: Remove second mapping of VMBus monitor pages
+>   Drivers: hv: vmbus: Remove second way of mapping ring buffers
+>   hv_netvsc: Remove second mapping of send and recv buffers
+>   Drivers: hv: Don't remap addresses that are above shared_gpa_boundary
+>   PCI: hv: Enable PCI pass-thru devices in Confidential VMs
 
-Now, after adding the __noreturn to the function prototype:
+I merged the first 6 from tip/x86/sev and then the rest directly to
+hyperv-next.
 
-[...]
-17df:  callq  ffffffff8102f6d0 <hv_ghcb_negotiate_protocol>
-17e4:  test   %al,%al
-17e6:  je     ffffffff82f21bb9 <hyperv_init+0x469>
-[...]  <many insns>
-1bb9:  mov    $0x1,%esi
-1bbe:  xor    %edi,%edi
-1bc0:  callq  ffffffff8102f680 <hv_ghcb_terminate>
-1bc5:  nopw   %cs:0x0(%rax,%rax,1) # end of function
+The hv_netvsc patch did not apply cleanly, but that was easy to fix.
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/9698eff1-9680-4f0a-94de-590eaa923e94@app.fastmail.com/
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- arch/x86/hyperv/ivm.c           | 2 +-
- arch/x86/include/asm/mshyperv.h | 2 +-
- tools/objtool/check.c           | 1 +
- 3 files changed, 3 insertions(+), 2 deletions(-)
+Please check hyperv-next is what you expected.
 
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index 1dbcbd9da74d..4f79dc76042d 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -127,7 +127,7 @@ static enum es_result hv_ghcb_hv_call(struct ghcb *ghcb, u64 exit_code,
- 		return ES_OK;
- }
- 
--void hv_ghcb_terminate(unsigned int set, unsigned int reason)
-+void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason)
- {
- 	u64 val = GHCB_MSR_TERM_REQ;
- 
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 4c4c0ec3b62e..09c26e658bcc 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -212,7 +212,7 @@ int hv_set_mem_host_visibility(unsigned long addr, int numpages, bool visible);
- void hv_ghcb_msr_write(u64 msr, u64 value);
- void hv_ghcb_msr_read(u64 msr, u64 *value);
- bool hv_ghcb_negotiate_protocol(void);
--void hv_ghcb_terminate(unsigned int set, unsigned int reason);
-+void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
- #else
- static inline void hv_ghcb_msr_write(u64 msr, u64 value) {}
- static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 8586d4c36600..e23d12041be0 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -213,6 +213,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"ex_handler_msr_mce",
- 		"fortify_panic",
- 		"hlt_play_dead",
-+		"hv_ghcb_terminate",
- 		"kthread_complete_and_exit",
- 		"kthread_exit",
- 		"kunit_try_catch_throw",
--- 
-2.39.2
-
+Thanks,
+Wei.
