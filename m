@@ -2,69 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F9406E0374
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Apr 2023 03:05:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 708656E038A
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Apr 2023 03:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjDMBFc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Apr 2023 21:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52942 "EHLO
+        id S229696AbjDMBQT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Apr 2023 21:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjDMBFb (ORCPT
+        with ESMTP id S229536AbjDMBQS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Apr 2023 21:05:31 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3334C2E;
-        Wed, 12 Apr 2023 18:05:30 -0700 (PDT)
-Received: by mail-wm1-f48.google.com with SMTP id j16so143455wms.0;
-        Wed, 12 Apr 2023 18:05:30 -0700 (PDT)
+        Wed, 12 Apr 2023 21:16:18 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA57E2D58;
+        Wed, 12 Apr 2023 18:16:13 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id i3so3303411wrc.4;
+        Wed, 12 Apr 2023 18:16:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681347929; x=1683939929;
+        d=1e100.net; s=20221208; t=1681348572; x=1683940572;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7UkmFhtjxWacnMCiO0oQv3pNqPctVfrO7QeMfZUAp/o=;
-        b=WXfUXfu106fH1coxexnbiajCnnD+MntT0bTDc9g/xygvsVK+fe2CfPs9wSradk9jgA
-         a5opeeGQL5MOGDvDVfi8pg7qZjrfo/nQZmlT8wXy0RDAVN+BiiZQhJY/T6Pxt4gCbvTT
-         85EVAtLdjCOlls9TsGTwUTt3KLdwzsbqkaQOGWAec2JTi+xZIkN33+Ldt+l+poSWu5gC
-         pJ+lTIWDnQGwnf0R1+vPOYigWHJy+A6RP5Q/nAauh5LhpmYAynkaNuRGIlozvtqyJu0o
-         RaxF7zhlf0PDVg86+m1sl1PQ1H4tqTooNUn3ZG0oLKvy1W1s/KqS5Am3sdQpHRG3SpBR
-         kSMQ==
-X-Gm-Message-State: AAQBX9deoecpwRnzQyXDvDovKudAbl1z8Dtx4nqC/IjR77o35CS0L81Q
-        etip6SCeShsmqsT0oOQIZ0Q=
-X-Google-Smtp-Source: AKy350bDDKhpd8MexEw/4tmaBStYzgn6bVDTaN7FSwiN/JqKxJOEBlxdeUeD/HykCmrarjBMVB1+fw==
-X-Received: by 2002:a1c:7701:0:b0:3f0:80cf:f2d5 with SMTP id t1-20020a1c7701000000b003f080cff2d5mr48283wmi.11.1681347929308;
-        Wed, 12 Apr 2023 18:05:29 -0700 (PDT)
+        bh=EfIRGx4NmUH+6AwOlHWuuT1aV7ClftxmalQe00WqSS8=;
+        b=CyZHsL+IDly3ElcF5YkGbF+9QmFZJm0NGdS6C6Bj1ndEuCB3DdR6wu4Igu3cgEPZkM
+         X+I8qMITLsyko2IgYAryJSbXsizsWCXaVl3oAQUM6z974Q5i29iDS2NQzNnspx1WY8Cc
+         ErpdMb48FXMe7pTthwpJr8bLE1dVF59ozkVIa17ltiG0Ad8+bpvUVSam/URBSFKWq7er
+         nowOzadGNhBX61KXinI3Rh7l/iY/QYHGaGtSc5ArgXhCjJVTr6UlbwqNiVweGdbEBtFW
+         +zIwXXB5xRQWKJcndLsosb77NKgPsOkgq6ZkLJh3HHfz8LUUuSwX7e7N4qhfWoGEOcRZ
+         aq6g==
+X-Gm-Message-State: AAQBX9dOrrLDBBgLpVXFg9lRGZy8v7ThnOm88NRbY6d9PNFj83tJfqbE
+        hofMLvePOoB9MwmxFywQxVw=
+X-Google-Smtp-Source: AKy350YzdXdXMww1bxV4fYIJG4lRNJ+IggH071o/rb5LVmffYnDOwBFe7RHucNOzB6hlkJy0W8diow==
+X-Received: by 2002:adf:dd8c:0:b0:2cf:e868:f789 with SMTP id x12-20020adfdd8c000000b002cfe868f789mr123340wrl.48.1681348572055;
+        Wed, 12 Apr 2023 18:16:12 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id p8-20020a05600c468800b003f09563445asm4128817wmo.0.2023.04.12.18.05.28
+        by smtp.gmail.com with ESMTPSA id h8-20020adfe988000000b002efdf3e5be0sm115885wrm.44.2023.04.12.18.16.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 18:05:28 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 01:05:24 +0000
+        Wed, 12 Apr 2023 18:16:11 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 01:16:07 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
-        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
-        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
-        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
-        isaku.yamahata@intel.com, dan.j.williams@intel.com,
-        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-        iommu@lists.linux.dev
-Subject: Re: [PATCH v7 00/12] Add PCI pass-thru support to Hyper-V
- Confidential VMs
-Message-ID: <ZDdVVJ2P+sJaUgtV@liuwe-devbox-debian-v2>
-References: <1679838727-87310-1-git-send-email-mikelley@microsoft.com>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
+        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
+        jgross@suse.com, mat.jonczyk@o2.pl
+Subject: Re: [PATCH v5 1/5] x86/init: Make get/set_rtc_noop() public
+Message-ID: <ZDdX11GuiTu0uvpW@liuwe-devbox-debian-v2>
+References: <1681192532-15460-1-git-send-email-ssengar@linux.microsoft.com>
+ <1681192532-15460-2-git-send-email-ssengar@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1679838727-87310-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <1681192532-15460-2-git-send-email-ssengar@linux.microsoft.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -75,29 +66,56 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sun, Mar 26, 2023 at 06:51:55AM -0700, Michael Kelley wrote:
-[...]
+On Mon, Apr 10, 2023 at 10:55:28PM -0700, Saurabh Sengar wrote:
+> Make get/set_rtc_noop() to be public so that they can be used
+> in other modules as well.
 > 
-> Michael Kelley (12):
->   x86/ioremap: Add hypervisor callback for private MMIO mapping in coco VM
->   x86/hyperv: Reorder code to facilitate future work
->   Drivers: hv: Explicitly request decrypted in vmap_pfn() calls
->   x86/mm: Handle decryption/re-encryption of bss_decrypted consistently
->   init: Call mem_encrypt_init() after Hyper-V hypercall init is done
->   x86/hyperv: Change vTOM handling to use standard coco mechanisms
->   swiotlb: Remove bounce buffer remapping for Hyper-V
->   Drivers: hv: vmbus: Remove second mapping of VMBus monitor pages
->   Drivers: hv: vmbus: Remove second way of mapping ring buffers
->   hv_netvsc: Remove second mapping of send and recv buffers
->   Drivers: hv: Don't remap addresses that are above shared_gpa_boundary
->   PCI: hv: Enable PCI pass-thru devices in Confidential VMs
+> Co-developed-by: Tianyu Lan <tiala@microsoft.com>
+> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Reviewed-by: Wei Liu <wei.liu@kernel.org>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-I merged the first 6 from tip/x86/sev and then the rest directly to
-hyperv-next.
+x86 maintainers, can you please ack or nack this patch?
 
-The hv_netvsc patch did not apply cleanly, but that was easy to fix.
-
-Please check hyperv-next is what you expected.
+This looks trivially correct, but I don't want to apply this patch
+without an ack since this is under arch/x86.
 
 Thanks,
 Wei.
+
+> ---
+>  arch/x86/include/asm/x86_init.h | 2 ++
+>  arch/x86/kernel/x86_init.c      | 4 ++--
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+> index acc20ae4079d..88085f369ff6 100644
+> --- a/arch/x86/include/asm/x86_init.h
+> +++ b/arch/x86/include/asm/x86_init.h
+> @@ -330,5 +330,7 @@ extern void x86_init_uint_noop(unsigned int unused);
+>  extern bool bool_x86_init_noop(void);
+>  extern void x86_op_int_noop(int cpu);
+>  extern bool x86_pnpbios_disabled(void);
+> +extern int set_rtc_noop(const struct timespec64 *now);
+> +extern void get_rtc_noop(struct timespec64 *now);
+>  
+>  #endif
+> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+> index 95be3831df73..d82f4fa2f1bf 100644
+> --- a/arch/x86/kernel/x86_init.c
+> +++ b/arch/x86/kernel/x86_init.c
+> @@ -33,8 +33,8 @@ static int __init iommu_init_noop(void) { return 0; }
+>  static void iommu_shutdown_noop(void) { }
+>  bool __init bool_x86_init_noop(void) { return false; }
+>  void x86_op_int_noop(int cpu) { }
+> -static __init int set_rtc_noop(const struct timespec64 *now) { return -EINVAL; }
+> -static __init void get_rtc_noop(struct timespec64 *now) { }
+> +int set_rtc_noop(const struct timespec64 *now) { return -EINVAL; }
+> +void get_rtc_noop(struct timespec64 *now) { }
+>  
+>  static __initconst const struct of_device_id of_cmos_match[] = {
+>  	{ .compatible = "motorola,mc146818" },
+> -- 
+> 2.34.1
+> 
