@@ -2,103 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2AE66E03CC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Apr 2023 03:41:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53DF26E0424
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Apr 2023 04:36:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbjDMBln (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Apr 2023 21:41:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42578 "EHLO
+        id S229920AbjDMCgS (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Apr 2023 22:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjDMBln (ORCPT
+        with ESMTP id S229902AbjDMCgO (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Apr 2023 21:41:43 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EB830CB;
-        Wed, 12 Apr 2023 18:41:42 -0700 (PDT)
-Received: by mail-wr1-f50.google.com with SMTP id i3so3342395wrc.4;
-        Wed, 12 Apr 2023 18:41:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681350101; x=1683942101;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uRK6818Jy+em8aMAf7sWZ9ZpmPkX8RUSskuWqBtofAg=;
-        b=I2Gsytenfi8Ewh82L+aoluskYoukCnDEzVfM10pTaPVhn1VWzh7seaYPI6fZpbaTVn
-         SSgUsbGfAbajjkB1MN8MqjYBI4PfWnI+xsrJw/KsdVufxNt7u4GJ23HUiH0Vl/ux8yfH
-         L0VWTEhRqT/FGNb9aZ6MFv5RlpkplPJYgXOUvLi+WbQCzSgbnKsZCw7AWthjEZeDyncM
-         7S+RAciKkO0e3UPYp9Cpm7oVCPj6D5ZCNB8LO2woNfJdukju3hTVn6URM4b3krUXQwjb
-         /ShGDf6rcf9z1uWooh7IKr8pypLUGZe/xBUByntm2mLiHRdFJgPjLe8wHOmBYanid6IH
-         JkPg==
-X-Gm-Message-State: AAQBX9dC6PVd05ePrLuam4rNvU2zLk6YDkVvDNEm3D/U10RwPbXH2eim
-        ViRoUWOSuTwstUVC5En8UhU=
-X-Google-Smtp-Source: AKy350YTMS2yn1zkhX69SeODq3A3IbWZT/r5T6TvWQeybqwM1usJCfEdQD0mJ4ztPhv7laCbuYmJLA==
-X-Received: by 2002:adf:f98c:0:b0:2f0:9f9f:797 with SMTP id f12-20020adff98c000000b002f09f9f0797mr99509wrr.16.1681350100712;
-        Wed, 12 Apr 2023 18:41:40 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id w13-20020adfec4d000000b002efb6e0c495sm129227wrn.91.2023.04.12.18.41.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 18:41:40 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 01:41:36 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: hv: Replace retarget_msi_interrupt_params with
- hyperv_pcpu_input_arg
-Message-ID: <ZDdd0FZT9RHfg3cm@liuwe-devbox-debian-v2>
-References: <20230408211112.15235-1-decui@microsoft.com>
- <BYAPR21MB1688F1E184FD1A914637EFB0D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Wed, 12 Apr 2023 22:36:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709EF7D88;
+        Wed, 12 Apr 2023 19:36:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 016C563A8C;
+        Thu, 13 Apr 2023 02:36:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD4CC4339E;
+        Thu, 13 Apr 2023 02:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681353371;
+        bh=cYB8dYmQ3UNJkOvpgxP/yqPHG6N3B6FRg4wFSXEn2Lk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gX+splrixv79XGj727d62Td2CBBmBuS2EL8+r4zUvfkSvTSls7LAWORX2VT9Y41Pz
+         c6vR0WQhytYEE1Suv9NC39tEZ2aJiBl/2NMnZRvPve3f7CgDEkhc0Un6yH+d7k2tj8
+         tUj6R1c5sCkzx7YKZyntkkS5+qe/6iAkT4t5M7oJEvzclbE+lnsU9F0RNP7abXjQMD
+         yYmHDl8FvnGDVACyELfv1evAeq07dveTZVPO+3dgYF3mMxFicoWYBQuUXI2XZYhYSY
+         8pitv3rURC0UGX0hpy1igqeR/9sFS/hbiosAX5iWHFgi7R4ctjAICilab8AP3NK/Rm
+         sFma2gk66YW/A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.2 04/20] x86/hyperv: Block root partition functionality in a Confidential VM
+Date:   Wed, 12 Apr 2023 22:35:42 -0400
+Message-Id: <20230413023601.74410-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230413023601.74410-1-sashal@kernel.org>
+References: <20230413023601.74410-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1688F1E184FD1A914637EFB0D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 05:27:41PM +0000, Michael Kelley (LINUX) wrote:
-> From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, April 8, 2023 2:11 PM
-> > 
-> > 4 commits are involved here:
-> > A (2016): commit 0de8ce3ee8e3 ("PCI: hv: Allocate physically contiguous hypercall
-> > params buffer")
-> > B (2017): commit be66b6736591 ("PCI: hv: Use page allocation for hbus structure")
-> > C (2019): commit 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by
-> > the hbus buffer")
-> > D (2018): commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
-> > 
-> > Patch D introduced the per-CPU hypercall input page "hyperv_pcpu_input_arg"
-> > in 2018. With patch D, we no longer need the per-Hyper-V-PCI-bus hypercall
-> > input page "hbus->retarget_msi_interrupt_params" that was added in patch A,
-> > and the issue addressed by patch B is no longer an issue, and we can also
-> > get rid of patch C.
-> > 
-> > The change here is required for PCI device assignment to work for
-> > Confidential VMs (CVMs), because otherwise we would have to call
-> > set_memory_decrypted() for "hbus->retarget_msi_interrupt_params" before
-> > calling the hypercall HVCALL_RETARGET_INTERRUPT.
-> 
-> Well, not all CVMs.  It's not required for SEV-SNP vTOM VMs on Hyper-V because
-> of the paravisor.  Is it more accurate to say "for Confidential VMs (CVMs) running
-> without a paravisor"?
-> 
+From: Michael Kelley <mikelley@microsoft.com>
 
-Let me know how this text should be reworded.
+[ Upstream commit f8acb24aaf89fc46cd953229462ea8abe31b395f ]
 
-> Otherwise,
-> 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Hyper-V should never specify a VM that is a Confidential VM and also
+running in the root partition.  Nonetheless, explicitly block such a
+combination to guard against a compromised Hyper-V maliciously trying to
+exploit root partition functionality in a Confidential VM to expose
+Confidential VM secrets. No known bug is being fixed, but the attack
+surface for Confidential VMs on Hyper-V is reduced.
+
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Link: https://lore.kernel.org/r/1678894453-95392-1-git-send-email-mikelley@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/cpu/mshyperv.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 46668e2554210..1ce228dc267ae 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -291,12 +291,16 @@ static void __init ms_hyperv_init_platform(void)
+ 	 * To mirror what Windows does we should extract CPU management
+ 	 * features and use the ReservedIdentityBit to detect if Linux is the
+ 	 * root partition. But that requires negotiating CPU management
+-	 * interface (a process to be finalized).
++	 * interface (a process to be finalized). For now, use the privilege
++	 * flag as the indicator for running as root.
+ 	 *
+-	 * For now, use the privilege flag as the indicator for running as
+-	 * root.
++	 * Hyper-V should never specify running as root and as a Confidential
++	 * VM. But to protect against a compromised/malicious Hyper-V trying
++	 * to exploit root behavior to expose Confidential VM memory, ignore
++	 * the root partition setting if also a Confidential VM.
+ 	 */
+-	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_CPU_MANAGEMENT) {
++	if ((ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
++	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+ 		hv_root_partition = true;
+ 		pr_info("Hyper-V: running as root partition\n");
+ 	}
+-- 
+2.39.2
+
