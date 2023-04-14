@@ -2,110 +2,223 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F35D66E297A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Apr 2023 19:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92F686E219D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 14 Apr 2023 13:03:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230393AbjDNRal (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 14 Apr 2023 13:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52222 "EHLO
+        id S230321AbjDNLD0 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 14 Apr 2023 07:03:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbjDNRaa (ORCPT
+        with ESMTP id S230432AbjDNLDT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 14 Apr 2023 13:30:30 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D723B77D;
-        Fri, 14 Apr 2023 10:29:49 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id fw22-20020a17090b129600b00247255b2f40so5216433pjb.1;
-        Fri, 14 Apr 2023 10:29:49 -0700 (PDT)
+        Fri, 14 Apr 2023 07:03:19 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763B75BA2;
+        Fri, 14 Apr 2023 04:02:48 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id a13so18430716ybl.11;
+        Fri, 14 Apr 2023 04:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681493387; x=1684085387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oA7v86V6iYy/er+GdPOTuYZa860KsTLlZwCwQrf+4GM=;
-        b=kTsQI1JEp+BNjizJZdsaHTeLSPzTMh+8ZhdIBAOetu/YXFaPfSks9nrwtLzMucsXwY
-         OPVssxeXxKw9KUDK2tM54IF15q7H6BzvNX2QIhGeXqdaAO7Rbn8H9zNisL5IAk9WVakL
-         ornllfdf5snpZilws1YgiAdOIpIuxhUza3DYzxXcZwW1qFDQ9ACxuY0AnosV4H76mz8T
-         QO7NaENDQ68ytJfL0wmKxDb4mQJxcFbxuCHXydsAMubiCavrXBV9z00nzJhu4NCdN/SQ
-         vAulexmGQamd7ftwaO/9+GGJiNm6KAGiT/QGrmDiIOavzWBePL/FZaoX34xXL6PjP1wh
-         bNLA==
+        d=gmail.com; s=20221208; t=1681470145; x=1684062145;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kx60gPyz21zGny2wq1MLpxjTHVNPSvIGV/NnpA6RLxw=;
+        b=Zx4g1PuWGlVKxUqZ/0vxG2A31kxW86iABWWVampEw55ip6/zCi3nt3r0vOhp3zvmDD
+         T92Ey+Q4Tctt0+ieyGwSrjfVFz4HgxG+Tc7zEdatXS4w9aP4GJI/EsGAG6Mt9YzMDyVt
+         c1SsOZ2PgEVMdUgb0a2OduKxNWoPnFWA9fT6lZRixgEodT60Rgu3LpCv3XnlvqszGGtA
+         PNEB+7Ug8B1kUXhNoZosWNWimBBc8JIsMcqCUjin312vt8QqrTTnlkvqrOnki6DHhI/p
+         R1NA5KM35FYhKpvk/cehO++DS/xOa3/NgQeYSVSmtooErKEFPxy7kLTC1cyHwNChGbhF
+         fnNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681493387; x=1684085387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oA7v86V6iYy/er+GdPOTuYZa860KsTLlZwCwQrf+4GM=;
-        b=JcTWsZIhzQSU8qbsiDrw8mMEJFlH5BP1SONWZ6tUX04G9SnmZ3xlVpiySVt+0wDd8e
-         vD+I8NAttgs75D3iUKQbw+YTRvenjH7GVvbWUKJq/vCl1KjcDUSRM0NurDJEBNC/afDv
-         RocEASvajbCKuRyTP4m986a/9n6jsPE6OVsIYHYEHWQ6OqSQPDVKdr5bPNmMkFzX1NbY
-         1p2uYPSgx2OKdBoxBVkmc8s5/vfkn0zUXMCYkzI0U1FNpC448+kwxCU8eNTYHCikdJjj
-         ZPxxuN3pNp7IUmwmMy7M9rTIKUoN/P0XMWdcpoicnxaWdWAN07F+IlveIEF6IFZ9w/VJ
-         NrAQ==
-X-Gm-Message-State: AAQBX9c45ck+U2BQ9J+aBKPxsbScgym/An/0b4tcgK1wd588T5HtTA2T
-        JlHOrSeAfw0CZS3v8gv5NlolwuDXVzGeVoJP
-X-Google-Smtp-Source: AKy350ZM/lCKFNROMkR2BLN8j5h2sYyTe4cwE/DBiZZPljtct0wXCMbeFUr0FvTHbZ5DdocTi+b1dQ==
-X-Received: by 2002:a17:902:ecc5:b0:1a6:54cd:ccd9 with SMTP id a5-20020a170902ecc500b001a654cdccd9mr1583490plh.9.1681493386999;
-        Fri, 14 Apr 2023 10:29:46 -0700 (PDT)
-Received: from localhost (c-73-25-35-85.hsd1.wa.comcast.net. [73.25.35.85])
-        by smtp.gmail.com with ESMTPSA id iw5-20020a170903044500b001a64ce7b18dsm3326202plb.165.2023.04.14.10.29.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Apr 2023 10:29:46 -0700 (PDT)
-Date:   Fri, 14 Apr 2023 10:28:28 +0000
-From:   Bobby Eshleman <bobbyeshleman@gmail.com>
-To:     Alvaro Karsz <alvaro.karsz@solid-run.com>
-Cc:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Jiang Wang <jiang.wang@bytedance.com>
-Subject: Re: [PATCH RFC net-next v2 2/4] virtio/vsock: add
- VIRTIO_VSOCK_F_DGRAM feature bit
-Message-ID: <ZBajz9+ehv+Ixv+s@bullseye>
-References: <20230413-b4-vsock-dgram-v2-0-079cc7cee62e@bytedance.com>
- <20230413-b4-vsock-dgram-v2-2-079cc7cee62e@bytedance.com>
- <AM0PR04MB47238453B33915D18F247ABBD4999@AM0PR04MB4723.eurprd04.prod.outlook.com>
+        d=1e100.net; s=20221208; t=1681470145; x=1684062145;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kx60gPyz21zGny2wq1MLpxjTHVNPSvIGV/NnpA6RLxw=;
+        b=SsdJ29RTB/8L6UnnIS0HYbO4dwrpYftY6uk/Fwv+2uLKyd+rrX85H1oIx6ymRy8fQn
+         KYRT1TT/AoM+NuNjId1RU77h3pK9YSQH93baYsLowqK76QG6KY6Vx4HmlFa2oowb2OWD
+         ojhtZvnwbEQyoey11+mBX23RmlLPMMsjZoBf8fUDseoW6BWm7GYXYtBjRR77W5Iih9B/
+         fMURKDprcg1nQnAFXRD+QSxr53lbBu+fDJN+XE31yr+DeDo70fUag/Kn8EEQ7q+GPaFU
+         uEjUnL+lPsDXivU3U5t2XjRIKWCrUS1NLoXhvmqeRq+NCOpauHl0Sxah3+hs85sFL/sp
+         hc1g==
+X-Gm-Message-State: AAQBX9eiUWEE7DuhiePX1XVokX/VN5HqVu73YwYmlF0ppmpnaG/u6gDb
+        SdYUmEyvCMDd9pXVVvOQC4v4qAoREmp+waeZPWA=
+X-Google-Smtp-Source: AKy350Z9qTI+pWB/3eRBCRhTDkNrXv8r6Okj/HkBsJciO4o5yaCEZ/s2LvCH0gTXkrW6ehUA1rHY7STv94Z79tWto88=
+X-Received: by 2002:a25:df94:0:b0:b8b:f5fb:5986 with SMTP id
+ w142-20020a25df94000000b00b8bf5fb5986mr3475520ybg.10.1681470145431; Fri, 14
+ Apr 2023 04:02:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB47238453B33915D18F247ABBD4999@AM0PR04MB4723.eurprd04.prod.outlook.com>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+References: <20230403174406.4180472-1-ltykernel@gmail.com> <20230403174406.4180472-14-ltykernel@gmail.com>
+In-Reply-To: <20230403174406.4180472-14-ltykernel@gmail.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Fri, 14 Apr 2023 13:02:14 +0200
+Message-ID: <CAM9Jb+gsHLgkqFf=ydtv4_Tr1uE5qeMQu4PhnD-aJ10OvzBbhA@mail.gmail.com>
+Subject: Re: [RFC PATCH V4 13/17] x86/sev: Add Check of #HV event in path
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        michael.roth@amd.com, thomas.lendacky@amd.com,
+        venu.busireddy@oracle.com, sterritt@google.com,
+        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com,
+        pangupta@amd.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 08:47:52AM +0000, Alvaro Karsz wrote:
-> Hi Bobby,
-> 
-> >  /* The feature bitmap for virtio vsock */
-> >  #define VIRTIO_VSOCK_F_SEQPACKET       1       /* SOCK_SEQPACKET supported */
-> > +#define VIRTIO_VSOCK_F_DGRAM           2       /* Host support dgram vsock */
-> 
-> Seems that bit 2 is already taken by VIRTIO_VSOCK_F_NO_IMPLIED_STREAM.
-> 
-> https://github.com/oasis-tcs/virtio-spec/commit/26ed30ccb049fd51d6e20aad3de2807d678edb3a
+> Add check_hv_pending() and check_hv_pending_after_irq() to
+> check queued #HV event when irq is disabled.
+>
+> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> ---
+>  arch/x86/entry/entry_64.S       | 18 ++++++++++++++++
+>  arch/x86/include/asm/irqflags.h | 11 ++++++++++
+>  arch/x86/kernel/sev.c           | 38 +++++++++++++++++++++++++++++++++
+>  3 files changed, 67 insertions(+)
+>
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index d877774c3141..efa56dfde19e 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -1073,6 +1073,15 @@ SYM_CODE_END(paranoid_entry)
+>   * R15 - old SPEC_CTRL
+>   */
+>  SYM_CODE_START_LOCAL(paranoid_exit)
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +       /*
+> +        * If a #HV was delivered during execution and interrupts were
+> +        * disabled, then check if it can be handled before the iret
+> +        * (which may re-enable interrupts).
+> +        */
+> +       mov     %rsp, %rdi
+> +       call    check_hv_pending
+> +#endif
+>         UNWIND_HINT_REGS
+>
+>         /*
+> @@ -1197,6 +1206,15 @@ SYM_CODE_START(error_entry)
+>  SYM_CODE_END(error_entry)
+>
+>  SYM_CODE_START_LOCAL(error_return)
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +       /*
+> +        * If a #HV was delivered during execution and interrupts were
+> +        * disabled, then check if it can be handled before the iret
+> +        * (which may re-enable interrupts).
+> +        */
+> +       mov     %rsp, %rdi
+> +       call    check_hv_pending
+> +#endif
+>         UNWIND_HINT_REGS
+>         DEBUG_ENTRY_ASSERT_IRQS_OFF
+>         testb   $3, CS(%rsp)
+> diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
+> index 8c5ae649d2df..8368e3fe2d36 100644
+> --- a/arch/x86/include/asm/irqflags.h
+> +++ b/arch/x86/include/asm/irqflags.h
+> @@ -11,6 +11,10 @@
+>  /*
+>   * Interrupt control:
+>   */
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +void check_hv_pending(struct pt_regs *regs);
+> +void check_hv_pending_irq_enable(void);
+> +#endif
+>
+>  /* Declaration required for gcc < 4.9 to prevent -Werror=missing-prototypes */
+>  extern inline unsigned long native_save_fl(void);
+> @@ -40,12 +44,19 @@ static __always_inline void native_irq_disable(void)
+>  static __always_inline void native_irq_enable(void)
+>  {
+>         asm volatile("sti": : :"memory");
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +       check_hv_pending_irq_enable();
+> +#endif
+>  }
+>
+>  static __always_inline void native_safe_halt(void)
+>  {
+>         mds_idle_clear_cpu_buffers();
+>         asm volatile("sti; hlt": : :"memory");
+> +
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +       check_hv_pending_irq_enable();
+> +#endif
+>  }
+>
+>  static __always_inline void native_halt(void)
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index 2684a45b50a6..6445f5356c45 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -179,6 +179,44 @@ void noinstr __sev_es_ist_enter(struct pt_regs *regs)
+>         this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], new_ist);
+>  }
+>
+> +static void do_exc_hv(struct pt_regs *regs)
+> +{
+> +       /* Handle #HV exception. */
+> +}
+> +
+> +void check_hv_pending(struct pt_regs *regs)
+> +{
+> +       if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+> +               return;
+> +
+> +       if ((regs->flags & X86_EFLAGS_IF) == 0)
+> +               return;
+> +
+> +       do_exc_hv(regs);
+> +}
+> +
+> +void check_hv_pending_irq_enable(void)
+> +{
+> +       struct pt_regs regs;
+> +
+> +       if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+> +               return;
+> +
+> +       memset(&regs, 0, sizeof(struct pt_regs));
+> +       asm volatile("movl %%cs, %%eax;" : "=a" (regs.cs));
+> +       asm volatile("movl %%ss, %%eax;" : "=a" (regs.ss));
+> +       regs.orig_ax = 0xffffffff;
+> +       regs.flags = native_save_fl();
+> +
+> +       /*
+> +        * Disable irq when handle pending #HV events after
+> +        * re-enabling irq.
+> +        */
+> +       asm volatile("cli" : : : "memory");
 
-Right! I'll bump that in the next rev.
+Just curious, Does the hypervisor injects irqs via doorbell page when
+interrupts are disabled with "cli" ? Trying to understand the need to
+cli/sti covering on "do_exc_hv".
 
 Thanks,
-Bobby
+Pankaj
+
+> +       do_exc_hv(&regs);
+> +       asm volatile("sti" : : : "memory");
+> +}
+> +
+>  void noinstr __sev_es_ist_exit(void)
+>  {
+>         unsigned long ist;
+> --
+> 2.25.1
+>
