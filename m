@@ -2,104 +2,77 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAF4D6E4FA3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Apr 2023 19:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 960236E50D6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Apr 2023 21:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230092AbjDQRwd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Apr 2023 13:52:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46286 "EHLO
+        id S229824AbjDQT13 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Apr 2023 15:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjDQRwd (ORCPT
+        with ESMTP id S229930AbjDQT12 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Apr 2023 13:52:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CAE540FC;
-        Mon, 17 Apr 2023 10:52:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D6871628D8;
-        Mon, 17 Apr 2023 17:52:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 590E0C433EF;
-        Mon, 17 Apr 2023 17:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681753951;
-        bh=KUWjXDPTi3zx4/aPtq9cu6CjLL1a2cS0RTwS+jLqeXA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GyKhjju38oDxcu+ziCWD7KV7feK0ctul+XMO8fJzxDUPamU6KI/8qqWMTfJSKwthb
-         hr9iLhJjTljD4TtxRqdFcdx324GVZhFTMB7TaqJZw9337rFvLuH7vrYSw57/5n+Dak
-         mzKJMgLShjqSOLVv8A3Q6nkAdR2wwrtLyDXxR0p3Q/OATOQFyFV4Hish0JvuG5xo4d
-         KZed9yxKQqRJULKioPAfD33fkRaFbWcz3WM2gaG2q78xCvyMwQYIxbAgjOB+54UnQT
-         g+qXhT5jMrCB1PCnB+KYjEpEbjWUmdIY68h8XhNjyuIhNnlnZircAw0TBbF2cngkt9
-         p5BKB06tH6vIw==
-Date:   Mon, 17 Apr 2023 10:52:29 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V3,net-next, 3/4] net: mana: Enable RX path to handle
- various MTU sizes
-Message-ID: <20230417105229.7d1eb988@kernel.org>
-In-Reply-To: <PH7PR21MB3116023068CFA8D600FA5B18CA9E9@PH7PR21MB3116.namprd21.prod.outlook.com>
-References: <1681334163-31084-1-git-send-email-haiyangz@microsoft.com>
-        <1681334163-31084-4-git-send-email-haiyangz@microsoft.com>
-        <20230414190608.3c21f44f@kernel.org>
-        <PH7PR21MB3116023068CFA8D600FA5B18CA9E9@PH7PR21MB3116.namprd21.prod.outlook.com>
+        Mon, 17 Apr 2023 15:27:28 -0400
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6243376BD;
+        Mon, 17 Apr 2023 12:26:58 -0700 (PDT)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3f09b4a1584so12455935e9.2;
+        Mon, 17 Apr 2023 12:26:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681759617; x=1684351617;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+5RS4OCZjuf4jfezYrqMeVPvp3K61VGB0efnNQZ4z/4=;
+        b=Z6yweulJJ4gGcqydP1IMSqfEzCKvMktn5Z5/Jt4ReE9SsQ6f2/BdxqkEI7i0IOudVR
+         1VTljQeg/bbXUwRXCNeI0zq4lV32vGIhVNeGPgx0yLuD6aUZsA3RAXs0/3F5l/+Roynq
+         GotCIrvURYYsNWLRMFxdcrzKwvgK26Ak11nCVtUOanNoLcRFXi6Empj9/EXxdpCW96ug
+         6iGu+0+KyVkxmOHL19X/Ztkb1I086EQ30uYljNSfaPTs/5FRTfsYlvDasi3b+c520zpq
+         idZeNt1jDCxq9ZOHr0Crg+Hbweojqr7ZX8v2D9NFk2c2a3vrpqXgzUdS7r1h3Co+7OBM
+         pgFw==
+X-Gm-Message-State: AAQBX9fT6NXxVEhMdEPRAN0gtCVZzh9fqOKvum3FXC7n4/xp2WvdC52g
+        pKwwAEa/VHpzyiN0hzIIUWk=
+X-Google-Smtp-Source: AKy350ZFvg5yKuE1DjUbqiVfYlFE4k3Q6gUqHWytAcm0hYz+RbnUbsAqe4q8fpcFgoLQPNg5UJaN9g==
+X-Received: by 2002:a5d:6a11:0:b0:2fb:f6ff:e8d2 with SMTP id m17-20020a5d6a11000000b002fbf6ffe8d2mr25346wru.35.1681759616704;
+        Mon, 17 Apr 2023 12:26:56 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id v3-20020adfe4c3000000b002f459afc809sm11189828wrm.72.2023.04.17.12.26.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Apr 2023 12:26:56 -0700 (PDT)
+Date:   Mon, 17 Apr 2023 19:26:54 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, arnd@arndb.de, tiala@microsoft.com,
+        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org,
+        jgross@suse.com, mat.jonczyk@o2.pl
+Subject: Re: [PATCH v5 0/5] Hyper-V VTL support
+Message-ID: <ZD2dfuHFCJmOkGt9@liuwe-devbox-debian-v2>
+References: <1681192532-15460-1-git-send-email-ssengar@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1681192532-15460-1-git-send-email-ssengar@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, 15 Apr 2023 14:25:29 +0000 Haiyang Zhang wrote:
-> > Allocating frag larger than a page is not safe. =20
->=20
->  I saw other drivers doing this - use napi_alloc_frag for size bigger tha=
-n a page.
-> And it returns compound page. Why it's not safe? Should we use other allo=
-cator
-> when need compound pages?
+On Mon, Apr 10, 2023 at 10:55:27PM -0700, Saurabh Sengar wrote:
+[...]
+> Saurabh Sengar (5):
+>   x86/init: Make get/set_rtc_noop() public
+>   x86/hyperv: Add VTL specific structs and hypercalls
+>   x86/hyperv: Make hv_get_nmi_reason public
+>   Drivers: hv: Kconfig: Add HYPERV_VTL_MODE
+>   x86/hyperv: VTL support for Hyper-V
+> 
 
-I believe so. There was a thread about this within the last year.
-Someone was trying to fix the page frag allocator to not fall back
-to order 0 pages in case of failure if requested size is > PAGE_SIZE.
-But there was push back and folks were saying that it's simply not=20
-a case supported by the frag allocator. =F0=9F=A4=B7=EF=B8=8F
-
-> > Frag allocator falls back to allocating single pages, doesn't it? =20
->=20
-> Actually I checked it. Compound page is still returned for size smaller t=
-han PAGE_SIZE,
-> so I used single page allocation for that.
-
-https://elixir.bootlin.com/linux/v6.3-rc6/source/mm/page_alloc.c#L5723
-
-Jumbo frames should really be supported as scatter transfers,=20
-if possible.
+Applied to hyperv-next. Thanks.
