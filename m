@@ -2,94 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0237B6E536C
-	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Apr 2023 22:58:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B52E66E5864
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Apr 2023 07:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231352AbjDQU6h (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 17 Apr 2023 16:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40036 "EHLO
+        id S230002AbjDRFMs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Apr 2023 01:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbjDQU6Q (ORCPT
+        with ESMTP id S229632AbjDRFMr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 17 Apr 2023 16:58:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDC3118ED;
-        Mon, 17 Apr 2023 13:56:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A9A4762A71;
-        Mon, 17 Apr 2023 20:56:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21F80C433D2;
-        Mon, 17 Apr 2023 20:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681764960;
-        bh=q90+u87m3wUu+Fg6qEnvdX/mkRJR5IxIH+69ZC9pncI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Yx/ebFoesBk8zWG2ppjw3XKCaVeJ2vKIcePzvjJurU5ReyFJj9mRsOx0zsYUVaHWQ
-         w7afQvyS48RXdmqbfYVku8tUeGmiz3AS3Uam5F4bSUs6UExOsUi21UefIEvC3u3Bvt
-         Az7LjvfhTTme9D+vtyz/5Y8nuRSJA81Z8M1tznIU8wYvIMucm6v1bBrh2jG8urrQa1
-         uOyYgIzqSO9F4DAs5yRVc/sIJLJqWrxytpj2K69OWZXl6Hb4kcZdj/hSjmRVekWeif
-         XXxh/Rslpm8LD+mFjpDdzo2UUJl99CqyYvMaNbIIxFrNQ3Q7KiGTgoPFkBdiYXsf4F
-         ge8i8cNNnfmLQ==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Saurabh Sengar <ssengar@linux.microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: hyperv: select CONFIG_NLS for mac address setting
-Date:   Mon, 17 Apr 2023 22:55:48 +0200
-Message-Id: <20230417205553.1910749-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Tue, 18 Apr 2023 01:12:47 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5D0C40EF;
+        Mon, 17 Apr 2023 22:12:45 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 09D00217924B;
+        Mon, 17 Apr 2023 22:12:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 09D00217924B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1681794765;
+        bh=GIjj3qsXaZaCiMYQBRcfRNvvJ7xRppJubrlu61wysJk=;
+        h=From:To:Subject:Date:From;
+        b=q/cpnQcCa8RsprPmzeq81Q+2CWqtqQ9wULnSc0CL/377iDx1Y4gXCVzVkMJF9Ctyl
+         ZanSZwvZ7adaJquhoeCc7d/5y/FeSV73Hp1tVJ21gb+sPjvGeW/R87gY8I1sVAvHpp
+         gTq1o1v/n5DdaF6JdftGccb0V0oEbjwfKTZd5VCY=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tiala@microsoft.com, mikelley@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: [PATCH 0/2] Fix for applied series [PATCH v5 0/5] Hyper-V VTL support
+Date:   Mon, 17 Apr 2023 22:12:39 -0700
+Message-Id: <1681794761-13734-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+[PATCH v5 0/5] Hyper-V VTL support is already applied, however
+there are couple of kernel test bot warning reported. This patch
+series on top of [PATCH v5 0/5] Hyper-V VTL support fixes these.
+I expect them to be squash commit on respective patches.
 
-A rare randconfig build error happens when this driver is
-enabled, but nothing else enables NLS support:
+The first patch is to fix 1/5 of the series:
+https://lore.kernel.org/all/1681192532-15460-2-git-send-email-ssengar@linux.microsoft.com/
+The second patch is to fix 3/5 of the series:
+https://lore.kernel.org/all/1681192532-15460-4-git-send-email-ssengar@linux.microsoft.com/
 
-x86_64-linux-ld: drivers/net/hyperv/rndis_filter.o: in function `rndis_filter_set_device_mac':
-rndis_filter.c:(.text+0x1536): undefined reference to `utf8s_to_utf16s'
+Saurabh Sengar (2):
+  x86/init: Remove static for get/set_rtc_noop()
+  x86/hyperv: Allow hv_get_nmi_reason compilation irrespective of HYPERV
+    config
 
-This is normally selected by PCI, USB, ACPI, or common file systems.
-Since the dependency on ACPI is now gone, NLS has to be selected
-here directly.
+ arch/x86/include/asm/mshyperv.h | 10 +++++-----
+ arch/x86/kernel/x86_init.c      |  4 ++--
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-Fixes: 38299f300c12 ("Driver: VMBus: Add Devicetree support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/hyperv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/hyperv/Kconfig b/drivers/net/hyperv/Kconfig
-index ca7bf7f897d3..924dad26ad47 100644
---- a/drivers/net/hyperv/Kconfig
-+++ b/drivers/net/hyperv/Kconfig
-@@ -2,6 +2,7 @@
- config HYPERV_NET
- 	tristate "Microsoft Hyper-V virtual network driver"
- 	depends on HYPERV
-+	select NLS
- 	select UCS2_STRING
- 	help
- 	  Select this option to enable the Hyper-V virtual network driver.
 -- 
-2.39.2
+2.34.1
 
