@@ -2,131 +2,96 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE9296E66D7
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Apr 2023 16:13:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 523906E692F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Apr 2023 18:17:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232048AbjDRONb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Apr 2023 10:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52236 "EHLO
+        id S231293AbjDRQRm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Apr 2023 12:17:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231975AbjDRONa (ORCPT
+        with ESMTP id S232163AbjDRQRh (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Apr 2023 10:13:30 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA9D146CC;
-        Tue, 18 Apr 2023 07:13:09 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-63b4960b015so1837166b3a.3;
-        Tue, 18 Apr 2023 07:13:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681827188; x=1684419188;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=npDv5LC1r9JSGXUXIXePbFZi4sqFB2N2IstaArUVjL0=;
-        b=ClqLXF8d7sPJbUb/SveuP11ZXI3VmJKRH3782pI/eX1Wqz2twyCQ4cr7C+1fVmqMbD
-         8XXZ5iB/EiT7OfeMYaJoXw11opTx94xydwFVvzc0Yy+Ulv9I0PFNSNj6eSxW5rfIG2IM
-         uskwHEFuh5PWSP6lNfZtR2pzmQvGeV3Jc/qHfDAKHvyKxQlrl1QdzBfySVGvDpTO8EqG
-         QR/9X4ixqEuqmcYc9BSaWP8ngxI2bfuvqF5I8k8tw3UVlFqQgLfxx8JQqSyjDANC1qgo
-         hMDpxEH9vf20iKhBIpxROCbLJ29sgc93jhhRqHizdj3LzZmYTxEp1R7UFkO0NdKLDYa4
-         Acrw==
+        Tue, 18 Apr 2023 12:17:37 -0400
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8E5BB;
+        Tue, 18 Apr 2023 09:17:31 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id v20-20020a05600c471400b003ed8826253aso1206617wmo.0;
+        Tue, 18 Apr 2023 09:17:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681827188; x=1684419188;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=npDv5LC1r9JSGXUXIXePbFZi4sqFB2N2IstaArUVjL0=;
-        b=P7yE/9f1AGJqKiI06MJVBsCRMD/libiOvpyN1Khf2zQm+BfQ+0WC6/UOqkfj506Slo
-         0NlzbwJf0tcnNXSmf1ZdEisLYCXo3OSiZXeax089RP+MCllOxrz6yN4+uINB2HMyxjKf
-         cyn2f1Fgf6w2T5HOOIy7tzT9rKMMCmA1gmC4Cmbh++9QJo9wJhdliCYEGu0eqAP7rehN
-         COVHEgIXwM7FtEhX6yXEAAaBIGyVXDU+HbGzho+f2VlvBGmaf+8RmpIjkrnG3hkHczFV
-         Fhm1VwYrdOHg5PZLWRVqMn+JLVmOS40PZVSjlWuDyBBezrZBDPx3DaxC3dlFWTjIXinO
-         j01Q==
-X-Gm-Message-State: AAQBX9c51gS1tMDVIw8cLwFOBnL29SI/jUdvDljwb16uB/i3Ci6dKAW3
-        8oA+lF3puNukCgXwWF+YnKs=
-X-Google-Smtp-Source: AKy350bqPpqp9A4D2EFebGGadvDtS8IKwioKIwIeZEoavoHpccoyay1CkQnyBXsJDT1vc3qzuTZ6og==
-X-Received: by 2002:a17:902:9004:b0:1a5:2621:34cd with SMTP id a4-20020a170902900400b001a5262134cdmr1976607plp.39.1681827188580;
-        Tue, 18 Apr 2023 07:13:08 -0700 (PDT)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
-        by smtp.gmail.com with ESMTPSA id iy14-20020a170903130e00b001a63ba28052sm9666969plb.69.2023.04.18.07.12.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Apr 2023 07:13:08 -0700 (PDT)
-Message-ID: <2c3b4042-c9ef-5b69-34b5-9ee7f418d983@gmail.com>
-Date:   Tue, 18 Apr 2023 22:12:56 +0800
+        d=1e100.net; s=20221208; t=1681834650; x=1684426650;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u48ltrmLgSm3bX6CavVnW/eH0ziuSM7JReekh8fg9iU=;
+        b=JeqArQr5Bj0w7zqGqzc/QzAANa3FfIhGQPUw152gmcr8XWOWCsYDLneAnts6vygC+M
+         nI37WPtic3RWdsm0c8h2PBLR9Tb2KF5mp4xqAgWG6IfflldPI6vdoAZut9/ZUZkHD09E
+         6hKkwRxmCZd8o/d+vRErPG/hB1pUAhuqAlVAdRqJAP5h4MwBR0qdH99Xs69yIZaL5DvD
+         LWjlEW7sgULpYTohTJce2c2o/lydQg99pGG6RZzo9pJ1WW9JX+iR6q+usIk/SsK5SPfN
+         7pSQDaEl+sMqm9RsuPAb5LXjnnj3CGTCM+ioGRr2TD8Pq2fIAMssiYEnGR6XQKMLwlMR
+         MYiw==
+X-Gm-Message-State: AAQBX9fEfJ1mI74/EwnrbPItbbsuXsuR1enFTptLjPgT0ejCGYWwV9VT
+        kr648P4RgeZClDLuAjJirvYe33nR5oLS7w==
+X-Google-Smtp-Source: AKy350bF2tBaDvlhbbvSha05MV0fLLdpnMXeeKQkBRNyMBdgVVgSsr9Tj1nMPHK1KtQAuctPyXzJ9A==
+X-Received: by 2002:a05:600c:20c:b0:3f1:75d2:a689 with SMTP id 12-20020a05600c020c00b003f175d2a689mr4382739wmi.33.1681834650184;
+        Tue, 18 Apr 2023 09:17:30 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m7-20020a7bcb87000000b003f17131952fsm8223618wmi.29.2023.04.18.09.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 09:17:29 -0700 (PDT)
+Date:   Tue, 18 Apr 2023 16:17:26 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Saurabh Sengar <ssengar@linux.microsoft.com>, wei.liu@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com, tiala@microsoft.com,
+        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix for applied series [PATCH v5 0/5] Hyper-V VTL
+ support
+Message-ID: <ZD7CllwJv7aAB4vO@liuwe-devbox-debian-v2>
+References: <1681794761-13734-1-git-send-email-ssengar@linux.microsoft.com>
+ <20230418093321.GAZD5j4SZ7QWmUyAXW@fat_crate.local>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [RFC PATCH V4 08/17] x86/hyperv: Initialize cpu and memory for
- sev-snp enlightened guest
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "jiangshan.ljs@antgroup.com" <jiangshan.ljs@antgroup.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-        "srutherford@google.com" <srutherford@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "pawan.kumar.gupta@linux.intel.com" 
-        <pawan.kumar.gupta@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "sandipan.das@amd.com" <sandipan.das@amd.com>,
-        "ray.huang@amd.com" <ray.huang@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "michael.roth@amd.com" <michael.roth@amd.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "venu.busireddy@oracle.com" <venu.busireddy@oracle.com>,
-        "sterritt@google.com" <sterritt@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "samitolvanen@google.com" <samitolvanen@google.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>
-Cc:     "pangupta@amd.com" <pangupta@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-References: <20230403174406.4180472-1-ltykernel@gmail.com>
- <20230403174406.4180472-9-ltykernel@gmail.com>
- <BYAPR21MB1688DB1442B486A8DEBEF821D79B9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <b4c74d0e-5b54-5101-ec18-cc09449ed358@gmail.com>
- <BYAPR21MB16889228F8F5E91DFE43AF3CD79C9@BYAPR21MB1688.namprd21.prod.outlook.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <BYAPR21MB16889228F8F5E91DFE43AF3CD79C9@BYAPR21MB1688.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230418093321.GAZD5j4SZ7QWmUyAXW@fat_crate.local>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-On 4/17/2023 8:49 PM, Michael Kelley (LINUX) wrote:
->>> Why is the first map entry being skipped?
->> The first entry is populated with processor count by Hyper-V.
-> Perhaps add a comment to acknowledge that the behavior
-> is a bit unexpected:
+On Tue, Apr 18, 2023 at 11:33:21AM +0200, Borislav Petkov wrote:
+> On Mon, Apr 17, 2023 at 10:12:39PM -0700, Saurabh Sengar wrote:
+> > [PATCH v5 0/5] Hyper-V VTL support is already applied, however
+> > there are couple of kernel test bot warning reported. This patch
+> > series on top of [PATCH v5 0/5] Hyper-V VTL support fixes these.
+> > I expect them to be squash commit on respective patches.
 > 
-> The 0th entry in the memory layout array contains just a 32-bit
-> processor count.  Read that value and then skip over the reminder
-> of the 0th entry.  Start processing memory_map_entry's with array
-> element 1.
+> That was supposed to happen when applying those using -rc7 as a base.
 > 
+> Wei, what's up?
 
-Good suggestion! Will update in the next version.
+I did use -rc7 as the base. This is what is in hyperv-next right now.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/commit/?h=hyperv-next&id=25dcc7316ef7def25cdab3658ac665bf0ce0ddc5
+
+I think Saurabh was responding to a report that was generated on his v5
+series. I don't think the first patch is needed.
+
+The second one is probably still needed.
+
+Thanks,
+Wei.
+
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
