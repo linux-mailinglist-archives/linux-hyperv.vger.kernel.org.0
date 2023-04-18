@@ -2,64 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 978AC6E6C1B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Apr 2023 20:32:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 899BF6E6C25
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Apr 2023 20:34:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232258AbjDRScz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Apr 2023 14:32:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
+        id S232709AbjDRSe4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Apr 2023 14:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232149AbjDRScy (ORCPT
+        with ESMTP id S232708AbjDRSey (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Apr 2023 14:32:54 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54EA659FE;
-        Tue, 18 Apr 2023 11:32:53 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id he13so21000890wmb.2;
-        Tue, 18 Apr 2023 11:32:53 -0700 (PDT)
+        Tue, 18 Apr 2023 14:34:54 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECDE5FEB;
+        Tue, 18 Apr 2023 11:34:53 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id n43-20020a05600c502b00b003f17466a9c1so329276wmr.2;
+        Tue, 18 Apr 2023 11:34:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681842772; x=1684434772;
+        d=1e100.net; s=20221208; t=1681842892; x=1684434892;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=38LQJYPWUqk2wm2FrKkjM2roC+rzVyedYiQ0NaT9neg=;
-        b=bn80a51UNOU9X3oxGpV3gMt8BgvgDLRkVyZThki4n4q09veFIasQ9/gP5kS4cvvrBQ
-         djZ+T7K6n7x56lK84xSBW6otzO/pTHS5JDHwjRPM1XGhYJbkpRtcTWS37fZPCu/Uooh5
-         CghFm9coYIWT8SCI6/zrEUjEWgUjUe+r9wZ8atHNSRTIRviA5C8IC6V7frR5gB17HxnY
-         1an4c9hsJGIo5gbA6+eWQSfI3tFbr/k+kWPHYvtbx51Mfagm7isXOl/J/43xWBtPtDmK
-         1aqUwowq4wXZ9CRjX7G9OLdwspFDaoyoMg2XUj74MQZ76t0QQDCx1lzxKfustZGw2q6+
-         kBXQ==
-X-Gm-Message-State: AAQBX9dx/2hiZF9T0xW80dCL/oaTTTPMnOfz1BzGZCYmLty2MJy7rSyx
-        U9u+j+avVaPLLgGLPdB2CV5QQW3V0lMj4Q==
-X-Google-Smtp-Source: AKy350Z2klkrkHGSTZin2XZE1doQmXIcxeHcXQuTn8gy15VXTc5xFj/K/Z7yXUb3r6k/PiKKqNW4Rw==
-X-Received: by 2002:a05:600c:3797:b0:3f1:7a18:942e with SMTP id o23-20020a05600c379700b003f17a18942emr2198775wmr.6.1681842771727;
-        Tue, 18 Apr 2023 11:32:51 -0700 (PDT)
+        bh=Xm4ZY1i9Dh6gYkNxKtAHV+VT8qVk5zXV7kjjZ2dWbbc=;
+        b=inlV1UZNjGzLwdvkVYspz00/fgBNC/HgmECKW8DMTDz/pASPGFJ10vXWsNZJagcZbf
+         1unixmRXkNu21ME7DDP7bMqzdgtJfoILZbXz7mUWlsaOXPoi4qqyG5uoACXFhAw4P+oP
+         bNgNHynOt4WhOnsoxIPFsIukB2EAiixx0Sz/ku6/rhQp+9X58RzDPw6eFqxqW1eDe4CV
+         uhTbIle2OyEARsUKnYTtTcfbNuRVxmt/1BV7g+gg8xHykjIveq6ioyeCFGzSbKjaQQo2
+         LONibxMtPKxB/JGbNIwRM2yECyQNeX0wYk/XIilcXaRpj+vAmLz5GIs97Ux09UcfOyb+
+         8Jzg==
+X-Gm-Message-State: AAQBX9fXz+0u9eNKvRJZ95CQRMt2XcIwXbjSMjmImZIN0QgcBf0ud5Z0
+        gxxXqOSfqd06oSIJoXhoieU=
+X-Google-Smtp-Source: AKy350bHlssa6DuT3MY94kLm7rWccLcuvRtMBc56od1YbGIgIpSIvi7awTSaLifcA4m0MK5BSYngAw==
+X-Received: by 2002:a05:600c:c3:b0:3f1:76a2:33a8 with SMTP id u3-20020a05600c00c300b003f176a233a8mr4105861wmm.5.1681842891914;
+        Tue, 18 Apr 2023 11:34:51 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id f24-20020a7bcd18000000b003f09a9151c1sm15719667wmj.30.2023.04.18.11.32.50
+        by smtp.gmail.com with ESMTPSA id q9-20020a1ce909000000b003ee20b4b2dasm15588429wmc.46.2023.04.18.11.34.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 11:32:50 -0700 (PDT)
-Date:   Tue, 18 Apr 2023 18:32:47 +0000
+        Tue, 18 Apr 2023 11:34:51 -0700 (PDT)
+Date:   Tue, 18 Apr 2023 18:34:48 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+To:     broonie@kernel.org
+Cc:     Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Long Li <longli@microsoft.com>
-Subject: Re: [PATCH v2] Drivers: hv: move panic report code from vmbus to hv
- early init code
-Message-ID: <ZD7iT/+Uil3jTuNO@liuwe-devbox-debian-v2>
-References: <1681435612-19282-1-git-send-email-longli@linuxonhyperv.com>
- <BYAPR21MB1688377B56A9A844EAABEEDAD79E9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <ZD2dxHaq8NDzpfYw@liuwe-devbox-debian-v2>
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org
+Subject: Re: linux-next: build failure after merge of the hyperv tree
+Message-ID: <ZD7iyCf2WdnTMurW@liuwe-devbox-debian-v2>
+References: <20230418173157.92827-1-broonie@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZD2dxHaq8NDzpfYw@liuwe-devbox-debian-v2>
+In-Reply-To: <20230418173157.92827-1-broonie@kernel.org>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
@@ -70,42 +66,33 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Apr 17, 2023 at 07:28:04PM +0000, Wei Liu wrote:
-> On Sat, Apr 15, 2023 at 06:16:11PM +0000, Michael Kelley (LINUX) wrote:
-> > From: longli@linuxonhyperv.com <longli@linuxonhyperv.com> Sent: Thursday, April 13, 2023 6:27 PM
-> > > 
-> > > The panic reporting code was added in commit 81b18bce48af
-> > > ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
-> > > 
-> > > It was added to the vmbus driver. The panic reporting has no dependence
-> > > on vmbus, and can be enabled at an earlier boot time when Hyper-V is
-> > > initialized.
-> > > 
-> > > This patch moves the panic reporting code out of vmbus. There is no
-> > > functionality changes. During moving, also refactored some cleanup
-> > > functions into hv_kmsg_dump_unregister(), and removed unused function
-> > > hv_alloc_hyperv_page().
-> > > 
-> > > Signed-off-by: Long Li <longli@microsoft.com>
-> > > ---
-> > > 
-> > > Change log v2:
-> > > 1. Check on hv_is_isolation_supported() before reporting crash dump
-> > > 2. Remove hyperv_report_reg(), inline the check condition instead
-> > > 3. Remove the test NULL on hv_panic_page when freeing it
-> > > 
-> > >  drivers/hv/hv.c                |  36 ------
-> > >  drivers/hv/hv_common.c         | 229 +++++++++++++++++++++++++++++++++
-> > >  drivers/hv/vmbus_drv.c         | 199 ----------------------------
-> > >  include/asm-generic/mshyperv.h |   1 -
-> > >  4 files changed, 229 insertions(+), 236 deletions(-)
-> > 
-> > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+On Tue, Apr 18, 2023 at 06:31:57PM +0100, broonie@kernel.org wrote:
+> Hi all,
 > 
-> Applied to hyperv-next. Thanks.
+> After merging the hyperv tree, today's linux-next build (x86 allmodconfig)
+> failed like this:
+> 
+> /tmp/next/build/drivers/hv/connection.c: In function 'vmbus_connect':
+> /tmp/next/build/drivers/hv/connection.c:228:53: error: implicit
+> declaration of function 'hv_alloc_hyperv_page'; did you mean 'hv_free_hyperv_page'? [-Werror=implicit-function-declaration]
+>   228 |         vmbus_connection.monitor_pages[0] = (void *)hv_alloc_hyperv_page();
+>       |                                                     ^~~~~~~~~~~~~~~~~~~~
+>       |                                                     hv_free_hyperv_page
+> /tmp/next/build/drivers/hv/connection.c:228:45: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+>   228 |         vmbus_connection.monitor_pages[0] = (void *)hv_alloc_hyperv_page();
+>       |                                             ^
+> /tmp/next/build/drivers/hv/connection.c:229:45: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+>   229 |         vmbus_connection.monitor_pages[1] = (void *)hv_alloc_hyperv_page();
+>       |                                             ^
+> cc1: all warnings being treated as errors
+> 
+> Caused by commit
+> 
+>   4dbdcfe1c5db80edca ("Drivers: hv: move panic report code from vmbus to hv early init code")
+> 
+> I will use the hyperv tree from yesterday instead.
 
-This broke allmodconfig. I've removed it from the tree. Please fix and
-resend.
+This has been fixed by removing the problematic commit.
 
 Thanks,
 Wei.
