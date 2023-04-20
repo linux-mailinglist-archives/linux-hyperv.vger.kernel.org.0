@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF4316E917B
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Apr 2023 13:03:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 218006E91BD
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Apr 2023 13:06:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235222AbjDTLDv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Apr 2023 07:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54434 "EHLO
+        id S235263AbjDTLFa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Apr 2023 07:05:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235249AbjDTLDb (ORCPT
+        with ESMTP id S235421AbjDTLFB (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Apr 2023 07:03:31 -0400
+        Thu, 20 Apr 2023 07:05:01 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598C17AA1;
-        Thu, 20 Apr 2023 04:02:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FCC2D43;
+        Thu, 20 Apr 2023 04:03:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7DA5A647C9;
-        Thu, 20 Apr 2023 11:02:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B43C433D2;
-        Thu, 20 Apr 2023 11:01:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9627363BAD;
+        Thu, 20 Apr 2023 11:02:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40ADC433D2;
+        Thu, 20 Apr 2023 11:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681988519;
-        bh=cYB8dYmQ3UNJkOvpgxP/yqPHG6N3B6FRg4wFSXEn2Lk=;
+        s=k20201202; t=1681988562;
+        bh=H65d8sQvz6pQgFW8AVz+EIIZlzDYoiKDmQ8UkJSsJ4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m89ytpb9ETqDSJjaImx+3EcIWj2KupWKS1KBKCIExQDaEo3vI58EMCG9Qpb1mHNe3
-         NnO/ChWxGA3IqPry7U8FLqXEuU22NCAG1Bq7Tlq9CRHX299Tmyv+lqP/dnPedryfPU
-         jdazK0vZXOWyUMirAA0srU886XL1qZ4aRTHL1h99NH4RkWzGUkYiPa8xnSJikS6TA+
-         b3oqw1tZ6GT4rupuOWul2wN9fXEzGwVZMq74/TtDnan6RhwLL5LhICsgfsLDXvbxRG
-         Gy7PEkvFNuEr94cGCjaEq1y2KQQozxrJW3VJsmTsrJKQmLPwKJOVxkEQf4YP0vgV3h
-         +0JFOa5iR7JDA==
+        b=QbEVM1EFr03MUDHeWyf+308r9lhred5z/AfD/hrwbV8YzbdAp2HDpfdHq+Zr5kVkG
+         VTht5u1l2to+/+u4Z1gXV6VmBH7Va5pIYA3kYFA7ELv5ku2a8tRGz4auOrgnVptAYp
+         nndK08mVGZQUBRnRY0fdm7HSd2/AuP0fhuS1zPsDXzsSHizMdK9GBXU5ZfbBAIYeQZ
+         XVSsccaeEfGk28Ecl9pYLn2fTs3Vj+1GadxS+3h3fLbCcb/OlutZQbjWg5yjZZeosa
+         3ZNaUC6JMt00zAK9IhCUBIQJYPQwaVnoGfMhw7cybbe/rUYXXw0kuxlbD9C+Y0UoB7
+         ZdfONcHbKfR3g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Kelley <mikelley@microsoft.com>,
@@ -40,12 +40,12 @@ Cc:     Michael Kelley <mikelley@microsoft.com>,
         tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org,
         linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 04/17] x86/hyperv: Block root partition functionality in a Confidential VM
-Date:   Thu, 20 Apr 2023 07:01:33 -0400
-Message-Id: <20230420110148.505779-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 04/15] x86/hyperv: Block root partition functionality in a Confidential VM
+Date:   Thu, 20 Apr 2023 07:02:18 -0400
+Message-Id: <20230420110231.505992-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230420110148.505779-1-sashal@kernel.org>
-References: <20230420110148.505779-1-sashal@kernel.org>
+In-Reply-To: <20230420110231.505992-1-sashal@kernel.org>
+References: <20230420110231.505992-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -80,7 +80,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 46668e2554210..1ce228dc267ae 100644
+index 831613959a92a..34d9e899e471e 100644
 --- a/arch/x86/kernel/cpu/mshyperv.c
 +++ b/arch/x86/kernel/cpu/mshyperv.c
 @@ -291,12 +291,16 @@ static void __init ms_hyperv_init_platform(void)
