@@ -2,36 +2,36 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 218006E91BD
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Apr 2023 13:06:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DF496E91E6
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Apr 2023 13:08:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235263AbjDTLFa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Apr 2023 07:05:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
+        id S234865AbjDTLHU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Apr 2023 07:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235421AbjDTLFB (ORCPT
+        with ESMTP id S234711AbjDTLFS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Apr 2023 07:05:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FCC2D43;
-        Thu, 20 Apr 2023 04:03:40 -0700 (PDT)
+        Thu, 20 Apr 2023 07:05:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C3AE7C;
+        Thu, 20 Apr 2023 04:04:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9627363BAD;
-        Thu, 20 Apr 2023 11:02:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40ADC433D2;
-        Thu, 20 Apr 2023 11:02:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BA7DB647E4;
+        Thu, 20 Apr 2023 11:03:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B5FC4339E;
+        Thu, 20 Apr 2023 11:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681988562;
-        bh=H65d8sQvz6pQgFW8AVz+EIIZlzDYoiKDmQ8UkJSsJ4U=;
+        s=k20201202; t=1681988595;
+        bh=XuH6j3tz7tJ5sPV1lAEwMCZ7xX0rapL3aIgBjKsrpKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbEVM1EFr03MUDHeWyf+308r9lhred5z/AfD/hrwbV8YzbdAp2HDpfdHq+Zr5kVkG
-         VTht5u1l2to+/+u4Z1gXV6VmBH7Va5pIYA3kYFA7ELv5ku2a8tRGz4auOrgnVptAYp
-         nndK08mVGZQUBRnRY0fdm7HSd2/AuP0fhuS1zPsDXzsSHizMdK9GBXU5ZfbBAIYeQZ
-         XVSsccaeEfGk28Ecl9pYLn2fTs3Vj+1GadxS+3h3fLbCcb/OlutZQbjWg5yjZZeosa
-         3ZNaUC6JMt00zAK9IhCUBIQJYPQwaVnoGfMhw7cybbe/rUYXXw0kuxlbD9C+Y0UoB7
-         ZdfONcHbKfR3g==
+        b=GXKVhGIkrEgT6WmMRIq3DW5rRHhXDS/vy6GXqsZJ+v80JaRQnwG6EP30YRfioJHUR
+         G/domJg13ku1Rhaue+Ugt6QzdEpB0VC2zj8iCBC9y3OyRj8+LfckqcSSj/H5GTE9b8
+         kTdfVE0Qe+3ZUfRceHF3svykBVWJ9GNULWzj1a3mCo7j5QDfFtKdKerDrk+1FCKf36
+         2tIRINEFKW9Afy6KvYJE8CQv8bCEaiY9dvLAd8d/UEav88tocWio1meATlmhbybDDM
+         fB9FwbZg+TOVgsjWhCDHCc8n33ASXRLrscDq6/26WqqwXDSLZAfj51dKH2SfzyLfTX
+         IzsvNQFyVdirA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Kelley <mikelley@microsoft.com>,
@@ -40,18 +40,18 @@ Cc:     Michael Kelley <mikelley@microsoft.com>,
         tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org,
         linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 04/15] x86/hyperv: Block root partition functionality in a Confidential VM
-Date:   Thu, 20 Apr 2023 07:02:18 -0400
-Message-Id: <20230420110231.505992-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 3/7] x86/hyperv: Block root partition functionality in a Confidential VM
+Date:   Thu, 20 Apr 2023 07:03:03 -0400
+Message-Id: <20230420110308.506181-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230420110231.505992-1-sashal@kernel.org>
-References: <20230420110231.505992-1-sashal@kernel.org>
+In-Reply-To: <20230420110308.506181-1-sashal@kernel.org>
+References: <20230420110308.506181-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -80,10 +80,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 831613959a92a..34d9e899e471e 100644
+index ba0efc30fac52..8d3c649a1769b 100644
 --- a/arch/x86/kernel/cpu/mshyperv.c
 +++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -291,12 +291,16 @@ static void __init ms_hyperv_init_platform(void)
+@@ -289,12 +289,16 @@ static void __init ms_hyperv_init_platform(void)
  	 * To mirror what Windows does we should extract CPU management
  	 * features and use the ReservedIdentityBit to detect if Linux is the
  	 * root partition. But that requires negotiating CPU management
