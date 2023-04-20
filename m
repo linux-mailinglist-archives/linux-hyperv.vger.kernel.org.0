@@ -2,63 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78AEE6E8C21
-	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Apr 2023 10:06:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4316E917B
+	for <lists+linux-hyperv@lfdr.de>; Thu, 20 Apr 2023 13:03:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233927AbjDTIGU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Apr 2023 04:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40640 "EHLO
+        id S235222AbjDTLDv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Apr 2023 07:03:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234082AbjDTIGS (ORCPT
+        with ESMTP id S235249AbjDTLDb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Apr 2023 04:06:18 -0400
-Received: from mail.craftsplex.pl (mail.craftsplex.pl [162.19.155.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997432D7F
-        for <linux-hyperv@vger.kernel.org>; Thu, 20 Apr 2023 01:06:13 -0700 (PDT)
-Received: by mail.craftsplex.pl (Postfix, from userid 1002)
-        id 509B623F29; Thu, 20 Apr 2023 08:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=craftsplex.pl;
-        s=mail; t=1681977972;
-        bh=PcMncQpBfIZCnTOfZJY5G1G+gaLn4c9QPfFvoXrE4rA=;
-        h=Date:From:To:Subject:From;
-        b=cnMhBr7yjp+0RHjEPI6pcjwWPcgPXajLFFra/gGGiypNUiHESTz/OZ3waIIoy5bp7
-         nZua1UasrxRtCBhghXvTfw0VZbcqK8fBrM9fMfplDwKP7CdNH0o81OA0JHVsqgfDNk
-         N2ey/04HvKXfPzzmS391I0ldFlZSBSIv5Zhk7ng4f57hXlYlJueaZPhZ1OUe2yGESP
-         GN4KW7Yz1eoBXyBVXL/Etqoq9vFmaCtAlumDYGydKkGZXUzLVX4UIqClBMar4MrH3X
-         i+BUwzw1rd4legO5c1G94nI4J+uWFELbcSB7DA4zPjWK8XHekuUHvtwwck2QWpQQdF
-         czvprV8j7OYWA==
-Received: by mail.craftsplex.pl for <linux-hyperv@vger.kernel.org>; Thu, 20 Apr 2023 08:05:42 GMT
-Message-ID: <20230420064500-0.1.5o.q9dr.0.ajno813ea8@craftsplex.pl>
-Date:   Thu, 20 Apr 2023 08:05:42 GMT
-From:   "Kamil Tralewski" <kamil.tralewski@craftsplex.pl>
-To:     <linux-hyperv@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.craftsplex.pl
+        Thu, 20 Apr 2023 07:03:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598C17AA1;
+        Thu, 20 Apr 2023 04:02:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7DA5A647C9;
+        Thu, 20 Apr 2023 11:02:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B43C433D2;
+        Thu, 20 Apr 2023 11:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681988519;
+        bh=cYB8dYmQ3UNJkOvpgxP/yqPHG6N3B6FRg4wFSXEn2Lk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m89ytpb9ETqDSJjaImx+3EcIWj2KupWKS1KBKCIExQDaEo3vI58EMCG9Qpb1mHNe3
+         NnO/ChWxGA3IqPry7U8FLqXEuU22NCAG1Bq7Tlq9CRHX299Tmyv+lqP/dnPedryfPU
+         jdazK0vZXOWyUMirAA0srU886XL1qZ4aRTHL1h99NH4RkWzGUkYiPa8xnSJikS6TA+
+         b3oqw1tZ6GT4rupuOWul2wN9fXEzGwVZMq74/TtDnan6RhwLL5LhICsgfsLDXvbxRG
+         Gy7PEkvFNuEr94cGCjaEq1y2KQQozxrJW3VJsmTsrJKQmLPwKJOVxkEQf4YP0vgV3h
+         +0JFOa5iR7JDA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.2 04/17] x86/hyperv: Block root partition functionality in a Confidential VM
+Date:   Thu, 20 Apr 2023 07:01:33 -0400
+Message-Id: <20230420110148.505779-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230420110148.505779-1-sashal@kernel.org>
+References: <20230420110148.505779-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dzie=C5=84 dobry,
+From: Michael Kelley <mikelley@microsoft.com>
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+[ Upstream commit f8acb24aaf89fc46cd953229462ea8abe31b395f ]
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+Hyper-V should never specify a VM that is a Confidential VM and also
+running in the root partition.  Nonetheless, explicitly block such a
+combination to guard against a compromised Hyper-V maliciously trying to
+exploit root partition functionality in a Confidential VM to expose
+Confidential VM secrets. No known bug is being fixed, but the attack
+surface for Confidential VMs on Hyper-V is reduced.
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Link: https://lore.kernel.org/r/1678894453-95392-1-git-send-email-mikelley@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/cpu/mshyperv.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Pozdrawiam
-Kamil Tralewski
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 46668e2554210..1ce228dc267ae 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -291,12 +291,16 @@ static void __init ms_hyperv_init_platform(void)
+ 	 * To mirror what Windows does we should extract CPU management
+ 	 * features and use the ReservedIdentityBit to detect if Linux is the
+ 	 * root partition. But that requires negotiating CPU management
+-	 * interface (a process to be finalized).
++	 * interface (a process to be finalized). For now, use the privilege
++	 * flag as the indicator for running as root.
+ 	 *
+-	 * For now, use the privilege flag as the indicator for running as
+-	 * root.
++	 * Hyper-V should never specify running as root and as a Confidential
++	 * VM. But to protect against a compromised/malicious Hyper-V trying
++	 * to exploit root behavior to expose Confidential VM memory, ignore
++	 * the root partition setting if also a Confidential VM.
+ 	 */
+-	if (cpuid_ebx(HYPERV_CPUID_FEATURES) & HV_CPU_MANAGEMENT) {
++	if ((ms_hyperv.priv_high & HV_CPU_MANAGEMENT) &&
++	    !(ms_hyperv.priv_high & HV_ISOLATION)) {
+ 		hv_root_partition = true;
+ 		pr_info("Hyper-V: running as root partition\n");
+ 	}
+-- 
+2.39.2
+
