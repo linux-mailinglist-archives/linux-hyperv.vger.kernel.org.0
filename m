@@ -2,261 +2,146 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 093FF6EA100
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Apr 2023 03:31:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E5136EA10B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Apr 2023 03:36:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbjDUBa5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 20 Apr 2023 21:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
+        id S232252AbjDUBgv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 20 Apr 2023 21:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjDUBa4 (ORCPT
+        with ESMTP id S231936AbjDUBgu (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 20 Apr 2023 21:30:56 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8ED53AAE;
-        Thu, 20 Apr 2023 18:30:53 -0700 (PDT)
+        Thu, 20 Apr 2023 21:36:50 -0400
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020024.outbound.protection.outlook.com [52.101.56.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE4D93AAE;
+        Thu, 20 Apr 2023 18:36:48 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Itb2AUQzPDkRpnH6UM4S/Q+dSaPYLnM9eVvzrK9piVupdN7Nw1XVuOuMvcOZn5KqKx49o1is3lFiRNdjxwcBaeAxaRgTzatgbgzokipgiwGjQxblmIZjFUM3E+X8zY6QWuhp86AX7MEl69EBzneVfQ/ExC3o0E9NTxs3qWFu2MekjFRsI9aIBpu4qjTqFdBsFBXQoehUdWfKewEtN3VYSlV5Z5oo36g4TxN9gXShU6QaHvSsr3UJUHQLfzGkw+2p8n/umLlsQaZcXzqrHQdmDtFAfQV4FydzeUVU5rXsElZklpHW9k2Rdf4MG2rzRmnYm+2L6fm0MKLQi2g2QsUwcQ==
+ b=VAmuLL3weFqOVmIvfvbP2Oo1ycFZNqX70AtGLEngLI+Hj/9YzpWppTtdg99WjHZuHutNB3IQOGSZZK4d+N9yEGrcmpQOfY2QujQu1hYobDH2wR64WGZjx/xzlFDu5rJAulAXX8+hfIGTtIoJ3qvCwzdjPe2bbzd0v8opQpDjZEYywgpNIHsYuP+ebYEXC5IJuhMKXrs15fkYKU/Va31WdyXJtfuvJm0NWq2PxW3mpxVoN8oxrF6yshA1ldnbVM9BY+RNG52y/V6SFP4+AD1beDmOssObSiWFLuL3my5ZVq8pJLsxEGXom+xoLqj5lqL6HeMSbTM4RuauwrjCpax6/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d84u+2yLvgzAvHT2WVxjTNGu3hmoVRlL+sPiDwpVtFI=;
- b=B+iUQmHJeGxLx/gckIh39D9UOt+4sGJ9yo8zSQ69aZFGeEXrjDqWcN6n6Gb2WA4iDFCPOB/VlANe7R5bAb39m7rUzGYcq3P22LNll6ked03o4Fpbbv2+LRxUn8F/1ezAKxzgzdlKvH3A242aQVNN46zjRgN+/E1WHkEGw8fMddSUGC1gf8cwq1UFl1IvByTlt61EQlGvYyM818XYbhK2S+Z3MNrb0uon7qQ4MgZbHHKwDhRAxqxAdQO+RLMifGiw36GdV/oEITaoYzpoOJ1Gi0/lVTyzBxV70ss7JTwlH1RRniNtkDcC5fzrjS49LRVPSDlsAmil3B7LVmmAUwi90g==
+ bh=lFSQdUIghmarDDRFxa3gp8020PnyjEYUokKe4ok8I3o=;
+ b=YN5coG7cww2SZ49vLxF6UQBZ5c56nCQmpA2la9fyOa6oGp02/EudXdQT8uto3HZWap9O015b+KZxwqqZIeTYh8ODjX+Jqe0NqHGKZL7wTaAqDeWiZQ6N5zYTBaIo+Ksf2/ZM3gvHvqL2/ViH2nq780ZH5a+RkEcwlwRYh+mY76EsK547VBuJfrh1VFeTrrLHXv5S2Pn9cpXALc76U89s/+yylzs+vK5Sl2e62QDxnZAJrqSo0w1DZI8pEBXiRXPFZ+Gi9W2qLjzjidd7VfPpuoLn4z4Sq3sjbHwl2tQuqiczUINFYo9KWNOePFfE/cNc7vLoOHDsPa8+0zGjS2Lg+A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d84u+2yLvgzAvHT2WVxjTNGu3hmoVRlL+sPiDwpVtFI=;
- b=XE6ypfVnM9irrSxDQf6EYlBrTGVGNhbcGBkXI8RBdruhVrAy1+863adW8XDfu7XPHdWYLJ1JZMXmMaKw9flerXWm69KuhIhSlqnAIbqZzByLmQHnAacu1M5LEWrRt4jWWTfSXXES+Ng8TRGNP3z2Qnvz4lpfwMuTYreMpxDTmu0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from SN6PR2101MB1101.namprd21.prod.outlook.com (2603:10b6:805:6::26)
- by MW4PR21MB2042.namprd21.prod.outlook.com (2603:10b6:303:11d::18) with
+ bh=lFSQdUIghmarDDRFxa3gp8020PnyjEYUokKe4ok8I3o=;
+ b=SxLcM0Yp4JFaU61/NifFloD4nmyO+sK6cSYA4nNMuLpQBlx3pYoaEgC6wcIvUOOtpbQ1BxoXIkYWzb37lkH6fJ2Iye4ExwG7nHUdkUiO/05qbk9JUH5kmpYDUz09aK7T285oVnlU9nUfubisM4TqgtOBaW8mxAa1dIYBIHi8AV4=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by MN0PR21MB3776.namprd21.prod.outlook.com (2603:10b6:208:3c0::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.11; Fri, 21 Apr
- 2023 01:30:50 +0000
-Received: from SN6PR2101MB1101.namprd21.prod.outlook.com
- ([fe80::2a56:2f6e:5e85:3054]) by SN6PR2101MB1101.namprd21.prod.outlook.com
- ([fe80::2a56:2f6e:5e85:3054%5]) with mapi id 15.20.6340.001; Fri, 21 Apr 2023
- 01:30:50 +0000
+ 2023 01:36:46 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::eeec:fa96:3e20:d13]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::eeec:fa96:3e20:d13%6]) with mapi id 15.20.6340.009; Fri, 21 Apr 2023
+ 01:36:45 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, lpieralisi@kernel.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, mikelley@microsoft.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: hv: Replace retarget_msi_interrupt_params with hyperv_pcpu_input_arg
-Date:   Thu, 20 Apr 2023 18:30:25 -0700
-Message-Id: <20230421013025.17152-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: CY8PR19CA0047.namprd19.prod.outlook.com
- (2603:10b6:930:6::28) To SN6PR2101MB1101.namprd21.prod.outlook.com
- (2603:10b6:805:6::26)
+To:     Wei Liu <wei.liu@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] PCI: hv: Replace retarget_msi_interrupt_params with
+ hyperv_pcpu_input_arg
+Thread-Topic: [PATCH] PCI: hv: Replace retarget_msi_interrupt_params with
+ hyperv_pcpu_input_arg
+Thread-Index: AQHZal7BSHLzKGubX0KU07XgAcb7368mYESQgAIdKQCADJCQ8A==
+Date:   Fri, 21 Apr 2023 01:36:45 +0000
+Message-ID: <SA1PR21MB1335F2B44DBF989580A96DB7BF609@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20230408211112.15235-1-decui@microsoft.com>
+ <BYAPR21MB1688F1E184FD1A914637EFB0D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <ZDdd0FZT9RHfg3cm@liuwe-devbox-debian-v2>
+In-Reply-To: <ZDdd0FZT9RHfg3cm@liuwe-devbox-debian-v2>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=29dd8a41-ea24-4f96-9c0b-3326879a8fa1;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-04-21T01:34:07Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|MN0PR21MB3776:EE_
+x-ms-office365-filtering-correlation-id: 714dd96c-6d04-4725-62ec-08db4208de01
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0dav3ERMMcRDfDK9Y2r9qQif4g5R5X4pmQhwD24j9iuQoxXanwWuvF7X9AbCZiRzAiZbQo1yRw8mZjMFnEPBvgFf6eir8rka0X7nEUypiDlLc8FQBEnigVTrFcIFi/rilHas3W4dvuo+NCUPt+MudtNB8rGT+MBi3aoiv9czRPD0Qo1toH5ePj1/M0J+oSg4IDhHaF6j7XfJBfG2+QKWc4zZH3onjCz7poGlecn+GYwgvTCWv/A4Oy4u3rMQk6ihSrFbTDOVOg3L95AswG8X3D2iB2ynlf/d0jQ02QK1owif3adIb0OMctR73kEinQy3h9K0NIncFb4m4bgTNlx9HmAF1fayAJEeBHlcU28I0Yiz40zs3v8SKVJpAthlpZwx0GAQKLtzHBAJax5cJd4SRxffTcAEZyBeiBCdcM5XnQAnH89M82FxNG2zjLwg8gbKnlwosrbz9vG7n3sCwMfC0ksV74NOPPil5fC0TEnAIHnJMVAXjECLRpBNFIMv6/3/xvOBGTU4X5I3ambGukRj2kNd2y19UXrPkIJRmJCof/ZTl7ukIA15Pc8TtiiMVNlfSsJXjTrbsBoUU5LdgVyEA9QtiXGQyYSyrlm1KSDuNmp5MvqpZcAElfzEi4YPdkYoGvxXkFzjjNgUJwExv2sAIA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(451199021)(10290500003)(966005)(76116006)(786003)(64756008)(66946007)(66556008)(66476007)(66446008)(316002)(6636002)(4326008)(55016003)(110136005)(7696005)(86362001)(54906003)(71200400001)(478600001)(52536014)(5660300002)(8676002)(8936002)(122000001)(82960400001)(2906002)(4744005)(82950400001)(8990500004)(38100700002)(33656002)(41300700001)(38070700005)(26005)(186003)(6506007)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?57yohS2SxlXIRd0JbulR58NOe02UR3DAY6Mxby7SNXb9uftVI8ujvbY+6HGH?=
+ =?us-ascii?Q?t//IO0j91qpY+tnIEVlv6Uyf3iApNqVI0t3iw6FvhfONv6+TUjzb8nWWG03M?=
+ =?us-ascii?Q?cGBrO7PC/j9rmxkrBlaKLzQuOftL3ilaBIhovTdNOYrN48UveErFHmk8auqd?=
+ =?us-ascii?Q?iEVAAiCalO4O3mZ1F762fG3BdGl7ZQhvJZeW2Hz/ohB7dPA3OJxv3sUD4mGq?=
+ =?us-ascii?Q?kfV15U2tezzmzCFzk7TOtXD64HsriXFBk+c11+wiBNfF7GrMoS7mhZkqX1mI?=
+ =?us-ascii?Q?VQSZks4ca6bEGCriH+OS4qbitkYaQEibm6L+p33/0JjCQaW2LOq+E0C4/FyQ?=
+ =?us-ascii?Q?npul19Va4GV1cI1aqNMHMlD/DKu9J2gNACBtlMTRco3Goj+CYFr6gpDb13wN?=
+ =?us-ascii?Q?F6TbmI9gzPB5xHWtCR7LI/OVDmiSQXZ2Bq0Ztv6bNB0kVT4WgP5pTITfNkDi?=
+ =?us-ascii?Q?nEpULhufvZ45DzGuXwjk8GcwYLQZ+6cO1/beMvcxYIlxTN2mZuEZRI+Ea6KM?=
+ =?us-ascii?Q?oU7PXkiK5uBKaddPvUXgfddBJP8GUTRGpQRDbIuFRy0tN6IFz4JCw+OG9vMQ?=
+ =?us-ascii?Q?0xMA/fp95wqUYztf3B0gmmb6QtifeuDQ22hOhHLkTgOXwMxSSEyp1gJkmigV?=
+ =?us-ascii?Q?8v+y1MXUOSuEb2DNsUPDrWt024i0CraXirDtIN0LAMc11soCgpC5l2zmRyzr?=
+ =?us-ascii?Q?S2R3fzlEa6bmV6LyWYaOSvP1uN2BKwTPyBTiUxnBFMlxcLlqXfOqj1AuZ9vV?=
+ =?us-ascii?Q?2lAU/ATcjmAoNOEwb760ZV8ccsC3tAZ+CysdQsz2HmcKtAH5+VmcZGRc2RkQ?=
+ =?us-ascii?Q?qJcFWvxgS0nwjxwOyo1MhsVMsp1EUtSNrLwFKfc92fQA/MXYN5NygIqkZw5M?=
+ =?us-ascii?Q?HocKAdaEk8uL6L7I0IZcdOtRbmXDofNKRHuRM5XjgwB7i0KQt+nF+iNtoB/H?=
+ =?us-ascii?Q?Teb4rwbZKzz+Nv5Wg1SPL5SPW88kGs0NDAoJyMOS5sM930muv7H9wh2Er9Ui?=
+ =?us-ascii?Q?I2lMxgJ0CSRbY7Gfg1gX+GMkFvUTCFStY/4F6r50C05GvxVvhlg86nQVx2/p?=
+ =?us-ascii?Q?n4olepOEcvL2sRPjxmqzVDccuA31xaCPs+49dlsJXKNF02v9p9El5cfqAEy4?=
+ =?us-ascii?Q?zPpaN4jOEazwOffVpTPCB4NrSPePb9GJHlhruhDrYmcQPVBMn8/y8zwB6uak?=
+ =?us-ascii?Q?ekcJ4DRgQOy5V4Ac4mnjT8BwmP7VhQVLTiopfu6Oxwnd0XNm26IH5hipyN3m?=
+ =?us-ascii?Q?W2ehU77hp+6vn/Me+a8vvHVOVO72Of37LBdugALOCfuTkErAsHmKWwjAqySO?=
+ =?us-ascii?Q?efdYLmNF/xCqv5HCDO0fgzjvch4m32Wnb4gG7hHuNBMBthgzT4bNb0vcUPd1?=
+ =?us-ascii?Q?660uymdUd/9HEkuTc0mIUruU8ni3lX2r/oQjqA3Id41lfmH6DtVn5pZ9emdp?=
+ =?us-ascii?Q?sy444HOgBrKHD+0IpyeWuNSWidFLj4AvgwiHzvBIFWkrtwogV61IENpZtWGx?=
+ =?us-ascii?Q?HILMDroU2NrboGi6KbKZ4havT1+eu6sNJmrXfNVFjzQuRoDYeJ8mDO+1Vuh9?=
+ =?us-ascii?Q?In8Ubc2lx/WboERcLU9YkkrAmhYlEforWoei00CC?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR2101MB1101:EE_|MW4PR21MB2042:EE_
-X-MS-Office365-Filtering-Correlation-Id: 824edf9d-1e93-4571-8f3b-08db420809e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gLl0aLQzuisD5xbx7BEJi9Z93sFJFOiXuKZFw3CVvCxChcPK4i/qcuDYxFahLPfRLuYOcPAcf4zQjmbzpNjXZ5lsrxnHWHfGzQu1Va9ENFPEKcyaEDkh/n6jCK3Y4Mf2poQOfWMzUX/9A5BWFZF9Qvmli/k3QimXYsZIgej1Bhkqv1T1fLYiP1/ayXsxBBWGLH1ad0tEDEpX/Yd53RXvA/pOqW9BbfH+bGSY9m4nYeDAvA98gc+Nfz5nNnjdqqkETy6ohaQsTS83r4/Iswx1O//FY0AJs0qtqcUBTxRCw0G0FBjvhP+nIdPXsD8xHjXz+wwtum8/eKSu9kT6X47N+zUIWUBiDKKuSI3OD19184kfwhGVveXhbWdbSG0X3ByhR24AUJukFovDNnnWPcp3/n0Az/h7Vdc36Ev7roCDwKIDIGoHoQQzsJ+V3KkDNPAZEQUB0d7Ox4jJcO/8QEqbj3YQxWhOEUJ3/LBkUDKIgKLdv6ugSh8Kn2Rrm6hoOsWwKNX03xQZ6TFpVmp/TWviYDYh5nM/laTzoKVebA0Y8Z5J8/pMmae/yC13ruFpx+T8XdJmgKCYTd41mKwErE/RCVS0uigqThsClazJ9FlW/Ksc+Cl6Mx+IQqxy+5JoiTjLxG71BJghke5IR44fvPuKYw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1101.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(366004)(396003)(376002)(136003)(451199021)(36756003)(4326008)(6636002)(316002)(786003)(66946007)(66476007)(66556008)(52116002)(478600001)(10290500003)(6486002)(6666004)(5660300002)(8936002)(41300700001)(8676002)(2906002)(86362001)(921005)(82950400001)(6512007)(38100700002)(82960400001)(2616005)(6506007)(1076003)(83380400001)(186003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UYmEWmNdxg5HZpp+YFNU+ALa9puVERJ0qubsVwfgxy99BvTOOXjCt2c85j0I?=
- =?us-ascii?Q?LN0RbMh8YtuaYSjB2S5JX2PqJi6rVVS1LUl4EXoyD1skpVH9JIB2WB2iyQws?=
- =?us-ascii?Q?O//gNmtkBGLHrnbZbRois9TFHDiwAa3xL0gM9YmFWSJRH8BBA8OFQI1p6Ve+?=
- =?us-ascii?Q?SC98/A4fw26/PkuFFqGZXPz9k5vhz5m8WC5zdbg7vkyeQGNme/ntjtjUEZGL?=
- =?us-ascii?Q?seanbZ5zMhGLf2vwBHYgCEm3Gn77NoEL/WL/4F1YwSBokl2rTqPJuZvmU3yw?=
- =?us-ascii?Q?498++Jkbu9PO1cXkjiGUBMqKhY885VkrsQQVF4dcW7U+fvKy9QCGE06RNBDM?=
- =?us-ascii?Q?wAKJY7HBt52O70BDCkc1uV4hHRZ7tKJUxoNdZoZM16JTC3i/eHc868gpN6qT?=
- =?us-ascii?Q?LmHlkmNQC81/52wCVqbAiyp0c4Laf/+pF/si6M8KlOIR0hXo3bnisaAQTqms?=
- =?us-ascii?Q?zw1e1+Y4KxIE+0+VZ90rpLTk00aBMQxMAblqx1y5NrRtSaZ6jf43DfPs+sFC?=
- =?us-ascii?Q?DwU4/8lPd49nGSPaLYDlsMvxJ5ZOvKzv4U7ehh4qNu5KeLbr90CHjCqXFDdo?=
- =?us-ascii?Q?BK4jOaAKsbobe0QTISKt7G+dII2R323lr/qbAy6pW0/J2oSbqifwj28RFLay?=
- =?us-ascii?Q?W3lMi/dsMtXmQSu4yZG407N4BmElqrgCJ3NYoFL2s6t23/vNpEuWBrGMSGEp?=
- =?us-ascii?Q?B2Uexbez3pnApVoiEP11+ZWvSUrI5pLDNbtLQajeHAdxYRpypHq5E8F+dEQJ?=
- =?us-ascii?Q?1SOEES7uEOntYK/dcQu/mAy0f8V2Nr6PeqDdJY8m8sP1T5biOFBwo/4jmf3q?=
- =?us-ascii?Q?jGp+HJZN+9qRBtgu1Gml1Qf081FL5w1vMS/8mC34DAy3WmlbfRtvneZz9/8j?=
- =?us-ascii?Q?ZzCIHCjAhKST/UPlEUGUecNbVau3APhiEJXmf9/5sswSqdN76W2eAZrb9A2C?=
- =?us-ascii?Q?b5sRes4gmvGyiRhrVd430ILZmwUYTjUe2ryBUI+hnPLOI8n9cOHd2Pxxa90U?=
- =?us-ascii?Q?+GmACGJOng6PU0VJr5j7CqbUsVyc704ENAzVWULjZm4ExTu681718EL4EE6h?=
- =?us-ascii?Q?ZDv9E4Y9nLpr81cxiZPdLDKnQwWr7LSmwmaWz/A4xoCfVJOPWGTCx2/MKgZ+?=
- =?us-ascii?Q?GNgAKbW+U+RNR5SYZkYblKzGx9HFEXPBLcnVN10QJNnbcUJLEdNAEK0zrpcO?=
- =?us-ascii?Q?MHw+C/bQTxos1z5O45eplms8VpClETg21njz9myfKfs34tNJr5xsLHND0r08?=
- =?us-ascii?Q?GEdk6Y/pHsQCjSzsmfLGvdyghNSxttc4Db0SBwUeywSRxWvX5E7aNbH4iv1M?=
- =?us-ascii?Q?qWajua788xonp6PrlNwLVn3IQG5M/HH122TEuuqJldWgrrqqc1I63AM7EVD1?=
- =?us-ascii?Q?Dj3nWFDDcAwd4TV8z1E1lcaifCBCPLuhER9yh/kCCCOxYF1GW3Yuk5ZUFkrc?=
- =?us-ascii?Q?kr5XOlZ3spEbe67J8frMMQbKCfdj5JtGevUKnB+f+6gpnCQxC3jnjEVdavQI?=
- =?us-ascii?Q?7YQo1OCr/ySvXz/m/JDFTuHPAK8m0GOGsUOYhgxEGE/4SpEKDvesIYG2Wx7E?=
- =?us-ascii?Q?+T/chVY7g/5lMD5IMGgPhhn8DsWwvcbGoquzseZ9QdA6rLUnUYdn8H2cOy41?=
- =?us-ascii?Q?K77p816QhxAXDfvvMzxn9D7HkHLMIBKs0g83ihrN2UbO?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 824edf9d-1e93-4571-8f3b-08db420809e5
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR2101MB1101.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2023 01:30:50.1364
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 714dd96c-6d04-4725-62ec-08db4208de01
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2023 01:36:45.4842
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: feX62sOMazSvwc7J94qrvtqsCtx8PDPh+yuw8J53iGiqfX6Dh3BK8zw0O8D0SC82HOctaT8W6u0XsI67tvZ4HA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB2042
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nZeXOvs9XeloZc++0KzFfQBtE9jFdkqTMau61K7rgyb4Gh6kSZIoGInuvPstRGtOgBlmC8bHAZdIMkkP9MgzJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3776
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-4 commits are involved here:
-A (2016): commit 0de8ce3ee8e3 ("PCI: hv: Allocate physically contiguous hypercall params buffer")
-B (2017): commit be66b6736591 ("PCI: hv: Use page allocation for hbus structure")
-C (2019): commit 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
-D (2018): commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
+> From: Wei Liu <wei.liu@kernel.org>
+> Sent: Wednesday, April 12, 2023 6:42 PM
+> > > ...
+> > > The change here is required for PCI device assignment to work for
+> > > Confidential VMs (CVMs), because otherwise we would have to call
+> > > set_memory_decrypted() for "hbus->retarget_msi_interrupt_params"
+> > > before calling the hypercall HVCALL_RETARGET_INTERRUPT.
+> >
+> > Well, not all CVMs.  It's not required for SEV-SNP vTOM VMs on=20
+> > Hyper-V because of the paravisor. Is it more accurate to say=20
+> > "for Confidential VMs (CVMs) running without a paravisor"?
+>=20
+> Let me know how this text should be reworded.
 
-Patch D introduced the per-CPU hypercall input page "hyperv_pcpu_input_arg"
-in 2018. With patch D, we no longer need the per-Hyper-V-PCI-bus hypercall
-input page "hbus->retarget_msi_interrupt_params" that was added in patch A,
-and the issue addressed by patch B is no longer an issue, and we can also
-get rid of patch C.
-
-The change here is required for PCI device assignment to work for
-Confidential VMs (CVMs) running without a paravisor, because otherwise we
-would have to call set_memory_decrypted() for
-"hbus->retarget_msi_interrupt_params" before calling the hypercall
-HVCALL_RETARGET_INTERRUPT.
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
-
-Changes in v2:
-  Fixed the inaccuracy in the commit message (Thanks Michael):
-    "Confidential VMs (CVMs)" -> "Confidential VMs (CVMs) running without a paravisor".
-
-  Added Michael's Reviewed-by.
-
- drivers/pci/controller/pci-hyperv.c | 48 +++++------------------------
- 1 file changed, 7 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 337f3b4a04fc0..bc32662c6bb7f 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -508,20 +508,11 @@ struct hv_pcibus_device {
- 	struct msi_domain_info msi_info;
- 	struct irq_domain *irq_domain;
- 
--	spinlock_t retarget_msi_interrupt_lock;
--
- 	struct workqueue_struct *wq;
- 
- 	/* Highest slot of child device with resources allocated */
- 	int wslot_res_allocated;
- 	bool use_calls; /* Use hypercalls to access mmio cfg space */
--
--	/* hypercall arg, must not cross page boundary */
--	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
--
--	/*
--	 * Don't put anything here: retarget_msi_interrupt_params must be last
--	 */
- };
- 
- /*
-@@ -645,9 +636,9 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
- 	int_desc = data->chip_data;
- 
--	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
-+	local_irq_save(flags);
- 
--	params = &hbus->retarget_msi_interrupt_params;
-+	params = *this_cpu_ptr(hyperv_pcpu_input_arg);
- 	memset(params, 0, sizeof(*params));
- 	params->partition_id = HV_PARTITION_ID_SELF;
- 	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
-@@ -680,7 +671,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 
- 		if (!alloc_cpumask_var(&tmp, GFP_ATOMIC)) {
- 			res = 1;
--			goto exit_unlock;
-+			goto out;
- 		}
- 
- 		cpumask_and(tmp, dest, cpu_online_mask);
-@@ -689,7 +680,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 
- 		if (nr_bank <= 0) {
- 			res = 1;
--			goto exit_unlock;
-+			goto out;
- 		}
- 
- 		/*
-@@ -708,8 +699,8 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 	res = hv_do_hypercall(HVCALL_RETARGET_INTERRUPT | (var_size << 17),
- 			      params, NULL);
- 
--exit_unlock:
--	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
-+out:
-+	local_irq_restore(flags);
- 
- 	/*
- 	 * During hibernation, when a CPU is offlined, the kernel tries
-@@ -3598,35 +3589,11 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	bool enter_d0_retry = true;
- 	int ret;
- 
--	/*
--	 * hv_pcibus_device contains the hypercall arguments for retargeting in
--	 * hv_irq_unmask(). Those must not cross a page boundary.
--	 */
--	BUILD_BUG_ON(sizeof(*hbus) > HV_HYP_PAGE_SIZE);
--
- 	bridge = devm_pci_alloc_host_bridge(&hdev->device, 0);
- 	if (!bridge)
- 		return -ENOMEM;
- 
--	/*
--	 * With the recent 59bb47985c1d ("mm, sl[aou]b: guarantee natural
--	 * alignment for kmalloc(power-of-two)"), kzalloc() is able to allocate
--	 * a 4KB buffer that is guaranteed to be 4KB-aligned. Here the size and
--	 * alignment of hbus is important because hbus's field
--	 * retarget_msi_interrupt_params must not cross a 4KB page boundary.
--	 *
--	 * Here we prefer kzalloc to get_zeroed_page(), because a buffer
--	 * allocated by the latter is not tracked and scanned by kmemleak, and
--	 * hence kmemleak reports the pointer contained in the hbus buffer
--	 * (i.e. the hpdev struct, which is created in new_pcichild_device() and
--	 * is tracked by hbus->children) as memory leak (false positive).
--	 *
--	 * If the kernel doesn't have 59bb47985c1d, get_zeroed_page() *must* be
--	 * used to allocate the hbus buffer and we can avoid the kmemleak false
--	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
--	 * kmemleak to track and scan the hbus buffer.
--	 */
--	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-+	hbus = kzalloc(sizeof(*hbus), GFP_KERNEL);
- 	if (!hbus)
- 		return -ENOMEM;
- 
-@@ -3683,7 +3650,6 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	INIT_LIST_HEAD(&hbus->dr_list);
- 	spin_lock_init(&hbus->config_lock);
- 	spin_lock_init(&hbus->device_list_lock);
--	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
- 	hbus->wq = alloc_ordered_workqueue("hv_pci_%x", 0,
- 					   hbus->bridge->domain_nr);
- 	if (!hbus->wq) {
--- 
-2.25.1
-
+Thanks, I just posted v2:
+https://lwn.net/ml/linux-kernel/20230421013025.17152-1-decui%40microsoft.co=
+m/
