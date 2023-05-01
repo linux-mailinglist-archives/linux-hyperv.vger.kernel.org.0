@@ -2,312 +2,186 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E57A16F15F7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Apr 2023 12:44:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E61326F2F6D
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 May 2023 10:57:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345591AbjD1KoX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 28 Apr 2023 06:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
+        id S231229AbjEAI5c (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 May 2023 04:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233293AbjD1KoV (ORCPT
+        with ESMTP id S229482AbjEAI5b (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 28 Apr 2023 06:44:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 611D859EC
-        for <linux-hyperv@vger.kernel.org>; Fri, 28 Apr 2023 03:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682678611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IQVmdT90OhXDpcSpwDoh82Tvt4g5mLAfat632QKI2HE=;
-        b=SMAIpd9mTUpnkyJLHF3PRsdWWS1CRq/9mATgcL/JOwOL1WplboxLI4QNDOnPU1YYg41RTw
-        eLYcDINsOsaaP8OvmBu9qgAIuOBU5ny3R+hydWEXh+W8Bx6mNAI0XaN3/54yoP+5sOC0Jx
-        d6wmwQjSBZ9IeOF9lU7FGX+0b2Lwis0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-503-2ld9z7ghO7a9hu4WvMUdjQ-1; Fri, 28 Apr 2023 06:43:28 -0400
-X-MC-Unique: 2ld9z7ghO7a9hu4WvMUdjQ-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f17b8d24bbso62333815e9.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 28 Apr 2023 03:43:28 -0700 (PDT)
+        Mon, 1 May 2023 04:57:31 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322B9F9;
+        Mon,  1 May 2023 01:57:30 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1ab032d9266so300295ad.0;
+        Mon, 01 May 2023 01:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682931449; x=1685523449;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bX2mQ4P6ZogNunBq0Lc5T0DlAQR8t1tOegQb5CpOumI=;
+        b=Tbxb3dvNOtClsI+atlYHMXQwQZGRLQB4MDw6DardQr7aZHh8IYlpR7uW3Ctus/km/m
+         r/Ck9Zbrka10Bv1eXAu5WzssZTt5EVSfpP/L4CHETKejEKk0vZx22vkiuKqo1OZDMqaz
+         yQUBjnkzp0oDBpipUGSTJNuRMwvcB6lA7+4DjZUpLyMj5eDrTBLUtCDbK8T7f7OrYBMJ
+         TBunugaGdJHXvGtKdOtJBkWi5rsax6pMUldHFBokDngTRi6mY/sDcQ0eDBdnK/OQbZLh
+         nOUINUH8lo/sQdj0KpRzquAUkh9B0t+SjKiK38fTN4jc7p+DAuRDsh1QijLlJYFtbAFN
+         a85w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682678604; x=1685270604;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IQVmdT90OhXDpcSpwDoh82Tvt4g5mLAfat632QKI2HE=;
-        b=hU5Jiwd6nfBU8ht97e8V86hA9VyGjvcsl0E792fq0UkD2VIh8KaVVn059zupZo0d7W
-         OR43RznK/KhLsypt+ZL6O8KaOk4Nq+h2v6Q/p0R4DY7an7+qRJ48oJh7DehP5rpT7+PH
-         n0GMfwK4F7vD0wVBDntJwMM8HfUTNots43MTSb7ubwntRePoYZs6tfjsWNhH+Q2h8gPw
-         dxcbNi7lNRgjzWM8yyNZPKmq9JXfFVK4itP8r3FaA9pM2fqR3SHFJQtdzHGGS1OatsBH
-         auOWWVEnuqRUe6kY579RTpNnVeFPBDxpT3IpC6K8VTmJc646yN9fLoKWAk/clGAV9+ge
-         1CYw==
-X-Gm-Message-State: AC+VfDwo2+aWU1uhGkwW336FWhgfXxZ42Yw1EvzkAo0+mN+K2ZPumLfX
-        F8Gj5WXGiq3IhhNTobuBfpLZHCxL+0f6VbwTIczWBSCiXJROxlXRcSUzJ1qD6xhn+dx5TtoJUzg
-        8bX3OoMJ0mLMGTgBMTzYZQgpK1rRsOkuZ
-X-Received: by 2002:a5d:63cd:0:b0:2f4:e580:a72f with SMTP id c13-20020a5d63cd000000b002f4e580a72fmr3575484wrw.45.1682678604406;
-        Fri, 28 Apr 2023 03:43:24 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6sbbM9Zn4cTetz42fXKk9Z9F040Hk4rnRdGv4o6qnjbgUiSUoCwpa/D62xpuyoNmY1khznig==
-X-Received: by 2002:a5d:63cd:0:b0:2f4:e580:a72f with SMTP id c13-20020a5d63cd000000b002f4e580a72fmr3575451wrw.45.1682678604022;
-        Fri, 28 Apr 2023 03:43:24 -0700 (PDT)
-Received: from sgarzare-redhat ([217.171.71.231])
-        by smtp.gmail.com with ESMTPSA id s4-20020adfeb04000000b003047f7a7ad1sm11442270wrn.71.2023.04.28.03.43.14
+        d=1e100.net; s=20221208; t=1682931449; x=1685523449;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bX2mQ4P6ZogNunBq0Lc5T0DlAQR8t1tOegQb5CpOumI=;
+        b=XDIUSWI6yb0cc+vk00Mswo35UrC2yj+u4C4n1LbosAfcAYa8zCUfjPcsjVJRE+9WwX
+         aRYRRjB+6yVhxVXYGtXvZbjojt03ZCe9SMeq4+9qfApFShXLwB2kpFSFZHe3F7Ubx0bT
+         1ulGWeon84Hd1r9ksRAB1qhsSw01w3WOiVPz2ggQJaHG6mzwm4Xy0DOGj4IJyLY24aGq
+         KSACCX48jReUZZ+gzBQiAql0+fqnMVfYCsddR98Ysph1ge1o88cFG6nbrJ/KXPh10s+Y
+         PzUI1yGR0NRy1CJtKeDNuRL0eA2sStboy7l4Q4KK/rI/eSEKa8GUdKSjAU0g4KNQIQy/
+         CI7w==
+X-Gm-Message-State: AC+VfDxrj/hY6NQrys70Fl8IrE7SIYlBizBaC4x8Hf3JiRtvZ6IG3atp
+        TdTxvf64tqQhkaFco8+FAjo=
+X-Google-Smtp-Source: ACHHUZ4RnM8+RWya9iFFjs9T5MYFjV7RM9uGsDQBwtL4GIvkNn7jQ/Hc7lmgCFZCVugdzoBb8NSrFA==
+X-Received: by 2002:a17:902:ce8a:b0:1a9:87c1:bf61 with SMTP id f10-20020a170902ce8a00b001a987c1bf61mr15704221plg.2.1682931449645;
+        Mon, 01 May 2023 01:57:29 -0700 (PDT)
+Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:b:e11b:15ea:ad44:bde7])
+        by smtp.gmail.com with ESMTPSA id t13-20020a1709028c8d00b001a4fe00a8d4sm17407070plo.90.2023.05.01.01.57.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Apr 2023 03:43:23 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 12:43:09 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, Cong Wang <cong.wang@bytedance.com>,
-        Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        virtualization@lists.linux-foundation.org,
-        Eric Dumazet <edumazet@google.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Jiang Wang <jiang.wang@bytedance.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH RFC net-next v2 0/4] virtio/vsock: support datagrams
-Message-ID: <yeu57zqwzcx33sylp565xgw7yv72qyczohkmukyex27rcdh6mr@w4x6t4enx6iu>
-References: <20230413-b4-vsock-dgram-v2-0-079cc7cee62e@bytedance.com>
- <ZDk2kOVnUvyLMLKE@bullseye>
- <r6oxanmhwlonb7lcrrowpitlgobivzp7pcwk7snqvfnzudi6pb@4rnio5wef3qu>
- <ZDpOq0ACuMYIUbb1@bullseye>
+        Mon, 01 May 2023 01:57:29 -0700 (PDT)
+From:   Tianyu Lan <ltykernel@gmail.com>
+To:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        michael.roth@amd.com, thomas.lendacky@amd.com,
+        venu.busireddy@oracle.com, sterritt@google.com,
+        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com
+Cc:     pangupta@amd.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [RFC PATCH V5 00/15] x86/hyperv/sev: Add AMD sev-snp enlightened guest support on hyperv
+Date:   Mon,  1 May 2023 04:57:10 -0400
+Message-Id: <20230501085726.544209-1-ltykernel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ZDpOq0ACuMYIUbb1@bullseye>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Apr 15, 2023 at 07:13:47AM +0000, Bobby Eshleman wrote:
->CC'ing virtio-dev@lists.oasis-open.org because this thread is starting
->to touch the spec.
->
->On Wed, Apr 19, 2023 at 12:00:17PM +0200, Stefano Garzarella wrote:
->> Hi Bobby,
->>
->> On Fri, Apr 14, 2023 at 11:18:40AM +0000, Bobby Eshleman wrote:
->> > CC'ing Cong.
->> >
->> > On Fri, Apr 14, 2023 at 12:25:56AM +0000, Bobby Eshleman wrote:
->> > > Hey all!
->> > >
->> > > This series introduces support for datagrams to virtio/vsock.
->>
->> Great! Thanks for restarting this work!
->>
->
->No problem!
->
->> > >
->> > > It is a spin-off (and smaller version) of this series from the summer:
->> > >   https://lore.kernel.org/all/cover.1660362668.git.bobby.eshleman@bytedance.com/
->> > >
->> > > Please note that this is an RFC and should not be merged until
->> > > associated changes are made to the virtio specification, which will
->> > > follow after discussion from this series.
->> > >
->> > > This series first supports datagrams in a basic form for virtio, and
->> > > then optimizes the sendpath for all transports.
->> > >
->> > > The result is a very fast datagram communication protocol that
->> > > outperforms even UDP on multi-queue virtio-net w/ vhost on a variety
->> > > of multi-threaded workload samples.
->> > >
->> > > For those that are curious, some summary data comparing UDP and VSOCK
->> > > DGRAM (N=5):
->> > >
->> > > 	vCPUS: 16
->> > > 	virtio-net queues: 16
->> > > 	payload size: 4KB
->> > > 	Setup: bare metal + vm (non-nested)
->> > >
->> > > 	UDP: 287.59 MB/s
->> > > 	VSOCK DGRAM: 509.2 MB/s
->> > >
->> > > Some notes about the implementation...
->> > >
->> > > This datagram implementation forces datagrams to self-throttle according
->> > > to the threshold set by sk_sndbuf. It behaves similar to the credits
->> > > used by streams in its effect on throughput and memory consumption, but
->> > > it is not influenced by the receiving socket as credits are.
->>
->> So, sk_sndbuf influece the sender and sk_rcvbuf the receiver, right?
->>
->
->Correct.
->
->> We should check if VMCI behaves the same.
->>
->> > >
->> > > The device drops packets silently. There is room for improvement by
->> > > building into the device and driver some intelligence around how to
->> > > reduce frequency of kicking the virtqueue when packet loss is high. I
->> > > think there is a good discussion to be had on this.
->>
->> Can you elaborate a bit here?
->>
->> Do you mean some mechanism to report to the sender that a destination
->> (cid, port) is full so the packet will be dropped?
->>
->
->Correct. There is also the case of there being no receiver at all for
->this address since this case isn't rejected upon connect(). Ideally,
->such a socket (which will have 100% packet loss) will be throttled
->aggressively.
->
->Before we go down too far on this path, I also want to clarify that
->using UDP over vhost/virtio-net also has this property... this can be
->observed by using tcpdump to dump the UDP packets on the bridge network
->your VM is using. UDP packets sent to a garbage address can be seen on
->the host bridge (this is the nature of UDP, how is the host supposed to
->know the address eventually goes nowhere). I mention the above because I
->think it is possible for vsock to avoid this cost, given that it
->benefits from being point-to-point and g2h/h2g.
->
->If we're okay with vsock being on par, then the current series does
->that. I propose something below that can be added later and maybe
->negotiated as a feature bit too.
+From: Tianyu Lan <tiala@microsoft.com>
 
-I see and I agree on that, let's do it step by step.
-If we can do it in the first phase is great, but I think is fine to add
-this feature later.
+This patchset is to add AMD sev-snp enlightened guest
+support on hyperv. Hyperv uses Linux direct boot mode
+to boot up Linux kernel and so it needs to pvalidate
+system memory by itself.
 
->
->> Can we adapt the credit mechanism?
->>
->
->I've thought about this a lot because the attraction of the approach for
->me would be that we could get the wait/buffer-limiting logic for free
->and without big changes to the protocol, but the problem is that the
->unreliable nature of datagrams means that the source's free-running
->tx_cnt will become out-of-sync with the destination's fwd_cnt upon
->packet loss.
+In hyperv case, there is no boot loader and so cc blob
+is prepared by hypervisor. In this series, hypervisor
+set the cc blob address directly into boot parameter
+of Linux kernel.
 
-We need to understand where the packet can be lost.
-If the packet always reaches the destination (vsock driver or device),
-we can discard it, but also update the counters.
+Shared memory between guests and hypervisor should be
+decrypted and zero memory after decrypt memory. The data
+in the target address. It maybe smearedto avoid smearing
+data.
 
->
->Imagine a source that initializes and starts sending packets before a
->destination socket even is created, the source's self-throttling will be
->dysfunctional because its tx_cnt will always far exceed the
->destination's fwd_cnt.
+Introduce #HV exception support in AMD sev snp code and
+#HV handler.
 
-Right, the other problem I see is that the socket aren't connected, so
-we have 1-N relationship.
+Change since v4:
+       - Use pgcount to free intput arg page.
+       - Fix encrypt and free page order.
+       - struct_size to calculate array size
+       - Share asm code between #HV and #VC exception.
 
->
->We could play tricks with the meaning of the CREDIT_UPDATE message and
->fwd_cnt/buf_alloc fields, but I don't think we want to go down that
->path.
->
->I think that the best and simplest approach introduces a congestion
->notification (VIRTIO_VSOCK_OP_CN?). When a packet is dropped, the
->destination sends this notification. At a given repeated time period T,
->the source can check if it has received any notifications in the last T.
->If so, it halves its buffer allocation. If not, it doubles its buffer
->allocation unless it is already at its max or original value.
->
->An "invalid" socket which never has any receiver will converge towards a
->rate limit of one packet per time T * log2(average pkt size). That is, a
->socket with 100% packet loss will only be able to send 16 bytes every
->4T. A default send buffer of MAX_UINT32 and T=5ms would hit zero within
->160ms given at least one packet sent per 5ms. I have no idea if that is
->a reasonable default T for vsock, I just pulled it out of a hat for the
->sake of the example.
->
->"Normal" sockets will be responsive to high loss and rebalance during
->low loss. The source is trying to guess and converge on the actual
->buffer state of the destination.
->
->This would reuse the already-existing throttling mechanisms that
->throttle based upon buffer allocation. The usage of sk_sndbuf would have
->to be re-worked. The application using sendmsg() will see EAGAIN when
->throttled, or just sleep if !MSG_DONTWAIT.
+Change since v3:
+       - Replace struct sev_es_save_area with struct vmcb_save_area
+       - Move smp, cpu and memory enumerating code from mshyperv.c to ivm.c
+       - Handle nested entry case of do_exc_hv() case.
+       - Check NMI event when irq is disabled
 
-I see, it looks interesting, but I think we need to share that
-information between multiple sockets, since the same destination
-(cid, port), can be reached by multiple sockets.
+Change since v2:
+       - Remove validate kernel memory code at boot stage
+       - Split #HV page patch into two parts
+       - Remove HV-APIC change due to enable x2apic from
+       	 host side
+       - Rework vmbus code to handle error of decrypt page
+       - Spilt memory and cpu initialization patch. 
+Change since v1:
+       - Remove boot param changes for cc blob address and
+       use setup head to pass cc blob info
+       - Remove unnessary WARN and BUG check
+       - Add system vector table map in the #HV exception
+       - Fix interrupt exit issue when use #HV exception
 
-Another approach could be to have both congestion notification and
-decongestion, but maybe it produces double traffic.
+Ashish Kalra (2):
+  x86/sev: optimize system vector processing invoked from #HV exception
+  x86/sev: Fix interrupt exit code paths from #HV exception
 
->
->I looked at alternative schemes (like the Datagram Congestion Control
->Protocol), but I do not think the added complexity is necessary in the
->case of vsock (DCCP requires congestion windows, sequence numbers, batch
->acknowledgements, etc...). I also looked at UDP-based application
->protocols like TFTP, DHCP, and SIP over UDP which use a delay-based
->backoff mechanism, but seem to require acknowledgement for those packet
->types, which trigger the retries and backoffs. I think we can get away
->with the simpler approach and not have to potentially kill performance
->with per-packet acknowledgements.
+Tianyu Lan (13):
+  x86/hyperv: Add sev-snp enlightened guest static key
+  x86/hyperv: Decrypt hv vp assist page in sev-snp enlightened guest
+  x86/hyperv: Set Virtual Trust Level in VMBus init message
+  x86/hyperv: Use vmmcall to implement Hyper-V hypercall in sev-snp
+    enlightened guest
+  clocksource/drivers/hyper-v: decrypt hyperv tsc page in sev-snp
+    enlightened guest
+  hv: vmbus: decrypt VMBus pages for sev-snp enlightened guest
+  drivers: hv: Decrypt percpu hvcall input arg page in sev-snp
+    enlightened guest
+  x86/hyperv: Initialize cpu and memory for sev-snp enlightened guest
+  x86/hyperv: Add smp support for sev-snp guest
+  x86/hyperv: Add hyperv-specific handling for VMMCALL under SEV-ES
+  x86/sev: Add a #HV exception handler
+  x86/sev: Add Check of #HV event in path
+  x86/sev: Add AMD sev-snp enlightened guest support on hyperv
 
-Yep I agree. I think our advantage is that the channel (virtqueues),
-can't lose packets.
+ arch/x86/entry/entry_64.S             |  46 ++-
+ arch/x86/hyperv/hv_init.c             |  42 +++
+ arch/x86/hyperv/ivm.c                 | 186 ++++++++++++
+ arch/x86/include/asm/cpu_entry_area.h |   6 +
+ arch/x86/include/asm/hyperv-tlfs.h    |   7 +
+ arch/x86/include/asm/idtentry.h       | 106 ++++++-
+ arch/x86/include/asm/irqflags.h       |  14 +-
+ arch/x86/include/asm/mem_encrypt.h    |   2 +
+ arch/x86/include/asm/mshyperv.h       |  82 +++++-
+ arch/x86/include/asm/page_64_types.h  |   1 +
+ arch/x86/include/asm/sev.h            |  13 +
+ arch/x86/include/asm/svm.h            |  15 +-
+ arch/x86/include/asm/trapnr.h         |   1 +
+ arch/x86/include/asm/traps.h          |   1 +
+ arch/x86/include/uapi/asm/svm.h       |   4 +
+ arch/x86/kernel/cpu/common.c          |   1 +
+ arch/x86/kernel/cpu/mshyperv.c        |  42 ++-
+ arch/x86/kernel/dumpstack_64.c        |   9 +-
+ arch/x86/kernel/idt.c                 |   1 +
+ arch/x86/kernel/sev.c                 | 408 ++++++++++++++++++++++----
+ arch/x86/kernel/traps.c               |  42 +++
+ arch/x86/kernel/vmlinux.lds.S         |   7 +
+ arch/x86/mm/cpu_entry_area.c          |   2 +
+ drivers/clocksource/hyperv_timer.c    |   2 +-
+ drivers/hv/connection.c               |   1 +
+ drivers/hv/hv.c                       |  41 ++-
+ drivers/hv/hv_common.c                |  27 +-
+ include/asm-generic/hyperv-tlfs.h     |  19 ++
+ include/asm-generic/mshyperv.h        |   1 +
+ include/linux/hyperv.h                |   4 +-
+ 30 files changed, 1047 insertions(+), 86 deletions(-)
 
->
->> > >
->> > > In this series I am also proposing that fairness be reexamined as an
->> > > issue separate from datagrams, which differs from my previous series
->> > > that coupled these issues. After further testing and reflection on the
->> > > design, I do not believe that these need to be coupled and I do not
->> > > believe this implementation introduces additional unfairness or
->> > > exacerbates pre-existing unfairness.
->>
->> I see.
->>
->> > >
->> > > I attempted to characterize vsock fairness by using a pool of processes
->> > > to stress test the shared resources while measuring the performance of a
->> > > lone stream socket. Given unfair preference for datagrams, we would
->> > > assume that a lone stream socket would degrade much more when a pool of
->> > > datagram sockets was stressing the system than when a pool of stream
->> > > sockets are stressing the system. The result, however, showed no
->> > > significant difference between the degradation of throughput of the lone
->> > > stream socket when using a pool of datagrams to stress the queue over
->> > > using a pool of streams. The absolute difference in throughput actually
->> > > favored datagrams as interfering least as the mean difference was +16%
->> > > compared to using streams to stress test (N=7), but it was not
->> > > statistically significant. Workloads were matched for payload size and
->> > > buffer size (to approximate memory consumption) and process count, and
->> > > stress workloads were configured to start before and last long after the
->> > > lifetime of the "lone" stream socket flow to ensure that competing flows
->> > > were continuously hot.
->> > >
->> > > Given the above data, I propose that vsock fairness be addressed
->> > > independent of datagrams and to defer its implementation to a future
->> > > series.
->>
->> Makes sense to me.
->>
->> I left some preliminary comments, anyway now it seems reasonable to use
->> the same virtqueues, so we can go head with the spec proposal.
->>
->> Thanks,
->> Stefano
->>
->
->Thanks for the review!
-
-You're welcome!
-
-Stefano
+-- 
+2.25.1
 
