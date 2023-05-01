@@ -2,152 +2,137 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B93236F3037
-	for <lists+linux-hyperv@lfdr.de>; Mon,  1 May 2023 12:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D04C06F32A0
+	for <lists+linux-hyperv@lfdr.de>; Mon,  1 May 2023 17:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232394AbjEAKcq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 May 2023 06:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56598 "EHLO
+        id S232680AbjEAPLd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 1 May 2023 11:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232385AbjEAKck (ORCPT
+        with ESMTP id S232746AbjEAPL2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 May 2023 06:32:40 -0400
-Received: from HK2P15301CU002.outbound.protection.outlook.com (mail-eastasiaazon11020023.outbound.protection.outlook.com [52.101.128.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C60910DB;
-        Mon,  1 May 2023 03:32:32 -0700 (PDT)
+        Mon, 1 May 2023 11:11:28 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20606.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::606])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90AF61723;
+        Mon,  1 May 2023 08:10:57 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aFgvfnU9RBIO/uBzVLZ6NeHvtnaJgOkyrlOLPOy9S14lNwi+BrM/NIAlrfPSCXG5kfb3E/bfCvbzqPifcAXFXACsg1foK3VsTuEI18OmyzWTt0ODfT7riz+qgJRoPCca3HbDdjEOHtCk85IJmSMTWgyjYGt2TVmIpv7EZL8Hmjk9mv7Pz8JQJ9DjWY1stA+wBp5fPFKUXHA6OmtV6cYCtuzMc9RHSyP0fEG4WMpzp8Yabaua4I6+syhRI2Aww0TIF3llUZDetpiXjtFAiTVtbzeep2qSWS4I5wPo9TYFBrz4ez/xWv0gtPaZMCPmr7wSYGLBA/Vohx0qNDc56vcQsQ==
+ b=EBycHUAz00nD6MVMEX+a3Z16XKWvKmyU01FVzWbtDoclPo/4YFAwbbj6MEnCtFwrJPA0VQrMxHHRPbKA26bm/lkGZDnnvh4suoBhcvrU04rhxlwfUZPkx5D4cXVQF80RPK70ba/UEitVKaVjLL0jrQ0idAl2ytFlCzDOIXEacuHIiUbMFBq2TDdpuRo3cMObQ4I5x11wGamwGlCbhk9K54GR4NQjOeIwAYQ33EIrdiv8sRY1OEkUX1eJcxe4S3IrdGwDw9u13ZNdkyZ0jL/AElWTlh2LaWkjk3phnAuULqd0UeHp5Toomj9BqQSH5wQ/NuKxXzWJ/PAiBs1a28zUWA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eI/qKiulEsF4wZsAt8Jk3bpYjtahhxJ68XiL45gRZzI=;
- b=jHdXJiojpnxXCkKR5OCMcS0jMhumYMVIv/NBsEc4hLAbKJ+nPYSgNFqVR42DiWXPsSK4eQrEIbBzBhEUvs/A7klGytjaS0atqZc2MGcmNhu8Jk6wJkcEUv+KagUTOc6m7l15Iy5dLfFrg70YkDE4kdnGA4ZDucPAljGlaF5so+jg/VP0B6uLAmkzCoP8bd78X1TLo/oKuc3fRpdeNFiFfXwNeW9wR413esiBjN1ukQz48bgWIfcA240rBbs1qDVf5MQ3q2NCBtXMwrh688hOrhw2vFgAW6wkhe693EPhDpY3rPqJA7tDw0SfYM0Co0ExvOsKZjGLopRNNEBEsoiQ9g==
+ bh=/b2pfjxFUBwy0vmu+SaLGUsYPXh+D1VMxr2/Av9NfDk=;
+ b=AVhwFnTUHT1fX+ngWVeZYTCKEMqnHDdmduy9EWR3t1UfSn6IEof38Sqew/EG5bE/N4+agM0rNt3DoCgY/l5i/Mg/kygS0obmYqDaje8QFodvvZgp/UMigHWzwP+Bs/DJJGBQGMpcWPHK5TKJJNANlljS0OC/X4sVdlMgNp5/ya3A/1kFfgnfkCZrNPpZdvsWHJZzfK1UJJDbDhNX9fZgsjSIYdz/uReK3XCORi5uaDcUJwYeoKo5bLFWEybGKIi8BxvhU0Gzk3Q09RsdflhijjyP53AMx/v3vCuhmYVTleXYQGkx2R80Z89017c5aUf5ykUh+rb8wJycw3qelhgtPw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eI/qKiulEsF4wZsAt8Jk3bpYjtahhxJ68XiL45gRZzI=;
- b=NiBUe/LHtWvCVtcdfA1NS1QULRgtNDCUwxd5SsmsaIPuf0VEqlMrQamZunyS6C1QD690ePR4JrSitsB2YdRum58hX/SjO30NHleSg1dZOhJrNgbU0+KafeGG2QdkMHEvRnFeFJ0RECZg16Ka+h+/rshXgSKhskKJDAFkQMDhULc=
-Received: from PUZP153MB0749.APCP153.PROD.OUTLOOK.COM (2603:1096:301:e6::8) by
- SI2P153MB0672.APCP153.PROD.OUTLOOK.COM (2603:1096:4:1ff::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6387.5; Mon, 1 May 2023 10:32:26 +0000
-Received: from PUZP153MB0749.APCP153.PROD.OUTLOOK.COM
- ([fe80::1cc2:aa38:1d02:9a11]) by PUZP153MB0749.APCP153.PROD.OUTLOOK.COM
- ([fe80::1cc2:aa38:1d02:9a11%2]) with mapi id 15.20.6387.005; Mon, 1 May 2023
- 10:32:26 +0000
-From:   Saurabh Singh Sengar <ssengar@microsoft.com>
-To:     Tianyu Lan <ltykernel@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "jiangshan.ljs@antgroup.com" <jiangshan.ljs@antgroup.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-        "srutherford@google.com" <srutherford@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "pawan.kumar.gupta@linux.intel.com" 
-        <pawan.kumar.gupta@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "sandipan.das@amd.com" <sandipan.das@amd.com>,
-        "ray.huang@amd.com" <ray.huang@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "michael.roth@amd.com" <michael.roth@amd.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "venu.busireddy@oracle.com" <venu.busireddy@oracle.com>,
-        "sterritt@google.com" <sterritt@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "samitolvanen@google.com" <samitolvanen@google.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>
-CC:     "pangupta@amd.com" <pangupta@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: RE: [EXTERNAL] [RFC PATCH V5 09/15] x86/hyperv: Add smp support for
- sev-snp guest
-Thread-Topic: [EXTERNAL] [RFC PATCH V5 09/15] x86/hyperv: Add smp support for
- sev-snp guest
-Thread-Index: AQHZfAsx7OPEtGqXGkOTjZ7IFQQyZK9FN+7A
-Date:   Mon, 1 May 2023 10:32:26 +0000
-Message-ID: <PUZP153MB07496A03FF7B1FDEEEBE0520BE6E9@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
-References: <20230501085726.544209-1-ltykernel@gmail.com>
- <20230501085726.544209-10-ltykernel@gmail.com>
-In-Reply-To: <20230501085726.544209-10-ltykernel@gmail.com>
-Accept-Language: en-IN, en-US
+ bh=/b2pfjxFUBwy0vmu+SaLGUsYPXh+D1VMxr2/Av9NfDk=;
+ b=c9RLDKc9xj2CuMRHwcwgNdfXn+VEHdzQqr1H86U+qu0w9d9OantjJSGfPpz6Peiwrl+AvOOC+ADM29g+hw/ZAc/cu1p+QL9CaF5HYTHtXv5EP4d2nPoYMkTk6/E0MdsLsnWUsMuy1Uc9xLBAikqzS+Go4zpg2iKiIujUDDqNa/s=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
+ by CY8PR12MB7217.namprd12.prod.outlook.com (2603:10b6:930:5b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.30; Mon, 1 May
+ 2023 15:10:39 +0000
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::ea32:baf8:cc85:9648]) by DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::ea32:baf8:cc85:9648%7]) with mapi id 15.20.6340.030; Mon, 1 May 2023
+ 15:10:38 +0000
+Message-ID: <1a8d8464-94dc-b6b9-07f6-857dd3d6e35f@amd.com>
+Date:   Mon, 1 May 2023 10:10:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [RFC PATCH V5 02/15] x86/hyperv: Decrypt hv vp assist page in
+ sev-snp enlightened guest
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=dc827253-69ca-42f6-a0ff-e1e4081a7d57;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-01T10:30:54Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PUZP153MB0749:EE_|SI2P153MB0672:EE_
-x-ms-office365-filtering-correlation-id: 79cfc65a-87a1-4d29-1ec4-08db4a2f5b70
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rM+Y3LPMABvyWHB19OIgDWlzLI4oY/vLwnc9JVDf2VpfokhA7UWWfjJ59jOmw96MZCd+4IpuZ9XYVuMizRA53a4Tb1SWwx7QxXcCDapY9uY1Y7a32nfk/QAmQ3O832o6nCMttgL5+HTg35mLwDHKpoXJr79V7DDqGPdj4E11n2aVLnZ7WZ+LqRszgMi0ioG8YNFBqPg/pp2qBBc06omavgJ/Oc3DeS9gxSn+a/zpzovVtEg+DQoNvaLkWIEaNzUSyhltkvz5bSjNqnB+lQwaTc7u5OFE538Io38N9yReIwgBYn6e+n5xQxFAwJMVK5gTHOpXW8UHahztxa6AKBQeHeih2oku3HmHoBtDIK8zHB8tQYADF4PPaGjuafLD2Aj7cDHQ1j7nFWm3fhZEZArfrRrBB+LTMLDmRt24CtvhFn5b0xF51NVQNvNilPu24R5huBbGD9HWpgtcAmDBCCsNV/6EuODoAgwuMIlCiYQPKlBvkoud9Y8FL9exVvwVoKLcLfp2UWNQway+29rgGiJ20mNCS0lugs5ESUCHLFGiVtAZlfxnMzxscRvO/CVQkGGLHSBshz4QYFauqA9uGgOWVNEvxnhIqsXrlI7gjx+fHIhPehVNv53fpXeD4SG0Yb+GkH9VGqbq8qGQP9AssnzanqTAimTUF+1MYZvKpdV/9kf4gJKV2lQP0LFuyZEysveY
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZP153MB0749.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(451199021)(86362001)(33656002)(38100700002)(82960400001)(38070700005)(122000001)(82950400001)(921005)(7406005)(8676002)(52536014)(7416002)(5660300002)(66946007)(66476007)(66556008)(786003)(76116006)(4326008)(8936002)(66446008)(316002)(41300700001)(64756008)(55016003)(8990500004)(2906002)(83380400001)(71200400001)(110136005)(7696005)(54906003)(10290500003)(478600001)(6506007)(186003)(53546011)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?PbViEGN14CRFSqRAkiaENdBzToodDC2T5W1CSvVWASd98WExRr2+8ByI5C3b?=
- =?us-ascii?Q?lsoJV6y2D/zFDbIvKTX42IhggVg1chum5RSmNFvVB0xJ6F+6WK6/5DJ0Wjzc?=
- =?us-ascii?Q?q+AMxcQ/YATb1WPzzKPTbRkyOlTyvYi3HA2ELICOF0qybdsKPxJGcUpMIe38?=
- =?us-ascii?Q?uaINRDb/ioINqjd/NE2b4RZKIbl+8kaGfKjURLoVS2sZLN5pCRol3EObBwbi?=
- =?us-ascii?Q?xXS5fQl2A5cCoHsDdRndlaucK8VP9tjYPRiTL36C4JPP0S8bmim1eRmBQX2P?=
- =?us-ascii?Q?3iOgTl5rXxKA+2/2tp3ULEozUFncUBf+g6GX7xLBpcEew8oUNHM9krJ8FW4Z?=
- =?us-ascii?Q?W9Gsp9zHJmQu0jMbbZhfAswo8BqSng+l281xlmOsKj80ZkHije9GvqsluPkP?=
- =?us-ascii?Q?KRROfCBAuhE/zGfl5XJFk3mfBzvKbDBSXxa0wkIWKcr4rulSCJTIywnG8KgX?=
- =?us-ascii?Q?YPVhtXEjv97EFIQVMZiH3hRGpBtZfG2dHlEY5/6DLHFuyBSKV2O5QdCDRAHl?=
- =?us-ascii?Q?gOe6LvEFsqbdnF49TKh1taHIt9ivRf2NiTQVRuOPzr/tNhMLh1NkQMBY6VlO?=
- =?us-ascii?Q?1grydfVY3WRKnFo3itxqQyM8yeOACPHwNeg6gnOzq9vEiChTNR6+p6XnsT0O?=
- =?us-ascii?Q?5UDaDziUExPwsrrRmlbJ69IK1sjJw07Nb18jYylakibYMMVjApazF1tfjdwz?=
- =?us-ascii?Q?QhHVtOd3qhoYntRy0cnifmHnFOm1Zs6ZyZjxPhsge6p4yizL+r1od1dWJ60y?=
- =?us-ascii?Q?WSe29Tx8f2e5r0QH4WUc1JkGSRUPs8jILmTBEnKqr01MMhs+2aehsn4pEeVg?=
- =?us-ascii?Q?L62IZavXjt/V4TtqwO1CezNG2A/lVrWzJFL5vE57F1WCiRXinE7AmOApAsya?=
- =?us-ascii?Q?3tc7xyNdiAfQOjMS0bZAwDrT8wyBTsUhzwHeKu9QzKZC1BguGFTjWHsON7qL?=
- =?us-ascii?Q?OqmaEkE/Gm3utdKuM0QyPXp0MmLrjcPyqOfZCv3MW8gya1upJDPB6RZEazxe?=
- =?us-ascii?Q?rGvTTh4tgH6eMEwIJ/tV+c/zCxXyGeIhkEXMHadlierirKZxKPCUJKNu3Q43?=
- =?us-ascii?Q?lNXIAGiSuMMgHu9U9eZ3igjyRnD7SX0lXNmy6AgOjbuslXQdZY2W0E11uSJr?=
- =?us-ascii?Q?3e3F3dQ7TNwGG1Cvah/u5ZxlOM2syETZ3biVqaaYJXh+f3JezS6MjhNgoJ/C?=
- =?us-ascii?Q?QuRDBmoFJTkgCubP3PTd2nARg3ogroooYGruJ4QD59jV1AVeoTFFT2ejP0yW?=
- =?us-ascii?Q?RhegX8ecGz6tCuaBANxB4qck5SDYbhvKW6As76YImFbRG46omh1FODbR7x9R?=
- =?us-ascii?Q?rXJGI2g3Ac5OeYjABW15k2VpXn1dgdzTilCikMEK7HAJ9gI+R+ZGr0PJAUnb?=
- =?us-ascii?Q?pzn9/2VTevoVuDO8dR/SCIkjqQiLUZxN6k5Vi30i14tOVq3ZpSEt1DEiRE/k?=
- =?us-ascii?Q?NdHhDOHLYZU1Vj9EKoshhFWzi0Bxs1hE90EiPzDM2SBRmXL81zHBgKQaqT3x?=
- =?us-ascii?Q?ENZO+Y3M3zGt7CsbxrvEOZc4SsbR1ZwnQlNUeVc1VZ5qAvJedApj5wZkcULT?=
- =?us-ascii?Q?TLJpKJAwRWxie49Nu5iu3Nd6NqgzfUz6ql9ERbxY?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+To:     Tianyu Lan <ltykernel@gmail.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, peterz@infradead.org,
+        ashish.kalra@amd.com, srutherford@google.com,
+        akpm@linux-foundation.org, anshuman.khandual@arm.com,
+        pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
+        daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
+        sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
+        michael.roth@amd.com, venu.busireddy@oracle.com,
+        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
+        fenghua.yu@intel.com
+Cc:     pangupta@amd.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20230501085726.544209-1-ltykernel@gmail.com>
+ <20230501085726.544209-3-ltykernel@gmail.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <20230501085726.544209-3-ltykernel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1PR05CA0009.namprd05.prod.outlook.com
+ (2603:10b6:806:2d2::11) To DM4PR12MB5229.namprd12.prod.outlook.com
+ (2603:10b6:5:398::12)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|CY8PR12MB7217:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74f53c51-2c38-4ff4-180d-08db4a5638ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oN1n/ZbxcvnkBEcCwVZp1+twnT6NkLl02H4Co1CdzSOoJVsbWEID8edteOCQNAzH/5i1lUDzkYrdrpzDwL2iTnbdix58hCz3VUGTW9XgCKecArRvtvce4rkLLa2nJOipCqCMoNdZUKcktbu3qNtXbctkZOfy4jlCQsVU7cCwYCSQ3yB4EiTPpJi2tkphlwH2MUrsvpHj3zQp7SWRfmAAQ6jD5chuAwaMZFZs6NoQ+TG7bQkCX/INhKxjJYqBLVs0YlvxYCLASIXOnlugjzkpP9VFSHy12NsQosRZ6t7PB8BWygIMCA0OluAvgaP8Fktx0RCjQXIxHVQe5ZTaoIC5iNXJjFflmEk8kpI/UL4bCWTOrBtWD8tlII9RTWtOG032d1r4OdgiTMOvWBoSKIEWR8M9Mf1Fo3xT5XmXHcaimwUUqB8SjUgcdoLzGkQOy+MPB3DhcjVc5AZ5yn5MTqsFlh2U47DV3xYe367tBdcLigYRbvAJ0rtNNDtoas85eMUDeu6Sw1sWbKU4Zu3gOXBygsCUBVOjqyLwbe27VBzlyxdw72zrGbSPTO8w0J40caWcHHhZZ9PGzUjUiA5dyNmsV+/27TFkN6ctaaaeA0J5ngnrBHhpjXeP6VuvIK4v7t3TSVWJiUGORFuZTXwqGgi+PYYBakqXh3HNCDqzbGt2Ni4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(451199021)(7416002)(921005)(5660300002)(8936002)(8676002)(7406005)(41300700001)(316002)(36756003)(31696002)(86362001)(2906002)(38100700002)(31686004)(186003)(2616005)(478600001)(45080400002)(6666004)(53546011)(6486002)(26005)(6506007)(6512007)(4326008)(66946007)(66476007)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cXU4Si9paTFuTGFDY1doa1RXZEFhWWVZdHMzaDlRdHMyL211d0l0K04rbERu?=
+ =?utf-8?B?cWdNQVRVcFptdDhDVjBzUEY5WVVSdFFjdCtIRDVGc29XRTByNkdTeGZrNDNp?=
+ =?utf-8?B?WE5VZXdFYnNnbWhxbjhUd3JUa3ZEWnlXQ1AxS1JEOG1LaXo5dDJ0WDFPNC9k?=
+ =?utf-8?B?aE1hekw4MUFyUWtYMUQvOEVRR3ZPaWh4VEVqZGFHdHNaY3p6SlpqUm5iaGt1?=
+ =?utf-8?B?MHd3SkxlbEJ6QkFkeWRhU0lxR014Ym4yR1VJdGlnMVp0YlZRN0Jnd01JUE9q?=
+ =?utf-8?B?RmpJd3RneFVhOE0rQXRUbVh3ZzNhUEdUUEwrck5zRjQ0SFJYMEY2bUM0RTBE?=
+ =?utf-8?B?Vm5sZ3BoWmlMckYvZlFNQzlSaFRCSFNxRlpCK2k2Z25xcXlyTWVNTFlBVFFH?=
+ =?utf-8?B?TTZkcW9aWitueDYxQldWZnY3dkU0U0NSK3V3RmJGZTIwREl6YW54a0oxMGtQ?=
+ =?utf-8?B?OU04K3hFdE5SZ1IrZGZyTUZjWGpKOUI3WHF2L01QY1hqUTJTRHhKZTFFaXNF?=
+ =?utf-8?B?NzV1cGczY2pPY28rYkNlcWdPUExKVm0xaG5nSlc5aFJWdUo4TTR4cUlkdXNt?=
+ =?utf-8?B?SDRqajh3VjNnV29sc3hOTUxtQXVMUjVrcG1XY3lOSDZVNGVPc0gwU0FOR0tp?=
+ =?utf-8?B?emFHMlRkNzRsODRQZWt2Z2hTWmw4WDdzWXZZeExYS2xsc1V3QncyZEp1SmZk?=
+ =?utf-8?B?VUlKNDAraWFlZXg1ZnlOcDA1U1V6SUlkNHpKWmdIckR6RnNkeDg3Uy9FMHox?=
+ =?utf-8?B?SUpCWkdKYStmMkMzb0tGcFFYOWpSSTJpK3J6SjZQd2ZVN3Y0TEZnMS9vOVQ0?=
+ =?utf-8?B?K3ltREc2MmdGRm0weEhWS3hIQnhVd1p5V3dYWCtRUEp1UUZJdEdNTTBKQllM?=
+ =?utf-8?B?UjhHRC94NDBTbkU4SGltZDhoNS96T0ZmSFRXRXByb0R1eStrRlBLZUQ4bmxG?=
+ =?utf-8?B?cCtoTThxQTRRcXZVYmdmd0t4SW9FRzJIc05SaEtmaDZSb2wvS3BCa2htdjNh?=
+ =?utf-8?B?VlhJZmcvYWF2cmQwbHUvUzFPbmNBSE5NdWVBaUhRL3lxaG9GenhhckRlakVp?=
+ =?utf-8?B?c2tMWjhIeGN1YlNGMG82cFVuam1MZHdCM3ZkYi9MSDVMWlp6dUhZQTBoY2pW?=
+ =?utf-8?B?TnhCMjJCdWE3b1A2bjl3S3drUWxmc3hBZDlJWFdEWmRVUFlXQWJZaHgwdnN1?=
+ =?utf-8?B?WmxNc0VHMjMrYTgzVzJXbUJaYk5JZFhubVVzVVFBU0FER0hRRFhoVitNM2Qx?=
+ =?utf-8?B?dERoUit4Y2psK2UwWXBVK0ZDZmd5aUVqTFBVRWZwcWR3Qk9MWi9YK3k5Rkxp?=
+ =?utf-8?B?TVNhdVpCb0o0dVQ3ZzYwYmhXdVlGSE9ENitwWjEwUHB2TjNsZFREOUp2SmRJ?=
+ =?utf-8?B?ZHZ5YXVrVkJORUhoQXhZN1NUTDdJZlA5WWVUem5MZms5b3JQbkg5MDJCdFA0?=
+ =?utf-8?B?cStXZEh1THdtK01IaWZXeEMzKysxcFEvcUk5WU5sOXF5UmUxMmVlZzVnbDVL?=
+ =?utf-8?B?Y05TSmRIV2RiWVBRNDVoZmpiQjc1dlM1cW9qRVBMUlNSWUEzTFIvaWtPekp4?=
+ =?utf-8?B?MHN6U2RmY01WdHN4NEk1akxkUXpxbERSS3BuRENhdEU2VnZCeDk5KzZjUThP?=
+ =?utf-8?B?a3FMSFA5NUpnTTIrM0lLblB1M0NJZTc0YXZxNlpNMTFVSGx3VFB6ZXRPaVdu?=
+ =?utf-8?B?eFFyeXRxMTFQVE9UWE9VZGxSV2EzVUZMZ2RUWkJmdmZvcGQ3NVdtT2RyR1Uy?=
+ =?utf-8?B?YTlnL2djS2xLWStGZnNsUGMvdWhwZVNDd2s4SFNhMjljZ1BZZ2lNMVNNRi96?=
+ =?utf-8?B?LzZRNFlHR0NhVnkwaisxTlNSeGp2YzBZQW5heU1GNThtQktQSmNHT3FSZXZG?=
+ =?utf-8?B?NkFTU0tLdXRnMnk0cDd5NGhBRUl1Tm0yUkdWaFR4dnJqRTJBRVY1VlBmSmxK?=
+ =?utf-8?B?aVJVYSthcktyUlVnUWhGK01EMmUvanRIMjZtV2hXVk5weU1NOHViZUkrV1dK?=
+ =?utf-8?B?SUltcGQ3TkdYM3dhMXZyNUhxRzZNTTUvNWE5bHU5MTZnOWhteEhYQXk3K1g0?=
+ =?utf-8?B?Q1ROcnd3TFV5OHlDZDl4eUNlQ1ByTHlKRUEvRDVlTEUzVEVqRm5obmJ0WHJ6?=
+ =?utf-8?Q?YgMZEcs8igLm61IVWM2TrEjcv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74f53c51-2c38-4ff4-180d-08db4a5638ba
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PUZP153MB0749.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79cfc65a-87a1-4d29-1ec4-08db4a2f5b70
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2023 10:32:26.0704
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2023 15:10:38.5550
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: B5Yb/4QHGAvuvIOfjDvzaW4wdZoIszAAS++nIwg7uc2fEHQg1+qTBdXiznl7grkjXMZ9KpW1GhiLpayhgOOgkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2P153MB0672
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GTO2Yk6ncUKHnok+nUYLECO7zU7TXR9iLuhIfcltCwjhLqBwPtwK2apNlT1o+5gokAJup+UvxPzlGxHMPJ0/MQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7217
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -155,149 +140,48 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Tianyu Lan <ltykernel@gmail.com>
-> Sent: Monday, May 1, 2023 2:27 PM
-> To: luto@kernel.org; tglx@linutronix.de; mingo@redhat.com; bp@alien8.de;
-> dave.hansen@linux.intel.com; x86@kernel.org; hpa@zytor.com;
-> seanjc@google.com; pbonzini@redhat.com; jgross@suse.com; Tianyu Lan
-> <Tianyu.Lan@microsoft.com>; kirill@shutemov.name;
-> jiangshan.ljs@antgroup.com; peterz@infradead.org; ashish.kalra@amd.com;
-> srutherford@google.com; akpm@linux-foundation.org;
-> anshuman.khandual@arm.com; pawan.kumar.gupta@linux.intel.com;
-> adrian.hunter@intel.com; daniel.sneddon@linux.intel.com;
-> alexander.shishkin@linux.intel.com; sandipan.das@amd.com;
-> ray.huang@amd.com; brijesh.singh@amd.com; michael.roth@amd.com;
-> thomas.lendacky@amd.com; venu.busireddy@oracle.com;
-> sterritt@google.com; tony.luck@intel.com; samitolvanen@google.com;
-> fenghua.yu@intel.com
-> Cc: pangupta@amd.com; linux-kernel@vger.kernel.org; kvm@vger.kernel.org;
-> linux-hyperv@vger.kernel.org; linux-arch@vger.kernel.org
-> Subject: [EXTERNAL] [RFC PATCH V5 09/15] x86/hyperv: Add smp support for
-> sev-snp guest
->=20
+On 5/1/23 03:57, Tianyu Lan wrote:
 > From: Tianyu Lan <tiala@microsoft.com>
->=20
-> The wakeup_secondary_cpu callback was populated with wakeup_
-> cpu_via_vmgexit() which doesn't work for Hyper-V and Hyper-V requires to
-> call Hyper-V specific hvcall to start APs. So override it with Hyper-V sp=
-ecific
-> hook to start AP sev_es_save_area data structure.
->=20
+> 
+> hv vp assist page is shared between sev snp guest and hyperv. Decrypt
+> the page when use it.
+
+You aren't actually decrypting the page, you're changing the mapping from 
+private/encrypted to shared/unencrypted (hence the memset that follows to 
+clear the page to zeroes).
+
+And please capitalize where necessary, e.g., SEV-SNP, Hyper-V, etc.
+
+Thanks,
+Tom
+
+> 
 > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
 > ---
-> Change sicne RFC v3:
->        * Replace struct sev_es_save_area with struct
->          vmcb_save_area
->        * Move code from mshyperv.c to ivm.c
->=20
-> Change since RFC v2:
->        * Add helper function to initialize segment
->        * Fix some coding style
-> ---
->  arch/x86/hyperv/ivm.c             | 89 +++++++++++++++++++++++++++++++
->  arch/x86/include/asm/mshyperv.h   | 18 +++++++
->  arch/x86/include/asm/sev.h        | 13 +++++
->  arch/x86/include/asm/svm.h        | 15 +++++-
->  arch/x86/kernel/cpu/mshyperv.c    | 13 ++++-
->  arch/x86/kernel/sev.c             |  4 +-
->  include/asm-generic/hyperv-tlfs.h | 19 +++++++
->  7 files changed, 166 insertions(+), 5 deletions(-)
->=20
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c index
-> 522eab55c0dd..0ef46f1874e6 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -22,11 +22,15 @@
->  #include <asm/sev.h>
->  #include <asm/realmode.h>
->  #include <asm/e820/api.h>
-> +#include <asm/desc.h>
->=20
->  #ifdef CONFIG_AMD_MEM_ENCRYPT
->=20
->  #define GHCB_USAGE_HYPERV_CALL	1
->=20
-> +static u8 ap_start_input_arg[PAGE_SIZE] __bss_decrypted
-> +__aligned(PAGE_SIZE); static u8 ap_start_stack[PAGE_SIZE]
-> +__aligned(PAGE_SIZE);
+>   arch/x86/hyperv/hv_init.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index a5f9474f08e1..9f3e2d71d015 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -18,6 +18,7 @@
+>   #include <asm/hyperv-tlfs.h>
+>   #include <asm/mshyperv.h>
+>   #include <asm/idtentry.h>
+> +#include <asm/set_memory.h>
+>   #include <linux/kexec.h>
+>   #include <linux/version.h>
+>   #include <linux/vmalloc.h>
+> @@ -113,6 +114,11 @@ static int hv_cpu_init(unsigned int cpu)
+>   
+>   	}
+>   	if (!WARN_ON(!(*hvp))) {
+> +		if (hv_isolation_type_en_snp()) {
+> +			WARN_ON_ONCE(set_memory_decrypted((unsigned long)(*hvp), 1));
+> +			memset(*hvp, 0, PAGE_SIZE);
+> +		}
 > +
->  union hv_ghcb {
->  	struct ghcb ghcb;
->  	struct {
-> @@ -442,6 +446,91 @@ __init void hv_sev_init_mem_and_cpu(void)
->  	}
->  }
->=20
-> +#define hv_populate_vmcb_seg(seg, gdtr_base)			\
-> +do {								\
-> +	if (seg.selector) {					\
-> +		seg.base =3D 0;					\
-> +		seg.limit =3D HV_AP_SEGMENT_LIMIT;		\
-> +		seg.attrib =3D *(u16 *)(gdtr_base + seg.selector + 5);	\
-
-<snip>
-
-> generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-> index f4e4cc4f965f..959b075591b2 100644
-> --- a/include/asm-generic/hyperv-tlfs.h
-> +++ b/include/asm-generic/hyperv-tlfs.h
-> @@ -149,6 +149,7 @@ union hv_reference_tsc_msr {
->  #define HVCALL_ENABLE_VP_VTL			0x000f
->  #define HVCALL_NOTIFY_LONG_SPIN_WAIT		0x0008
->  #define HVCALL_SEND_IPI				0x000b
-> +#define HVCALL_ENABLE_VP_VTL			0x000f
-
-HVCALL_ENABLE_VP_VTL is already defined.
-
->  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_SPACE_EX	0x0013
->  #define HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX	0x0014
->  #define HVCALL_SEND_IPI_EX			0x0015
-> @@ -168,6 +169,7 @@ union hv_reference_tsc_msr {
->  #define HVCALL_RETARGET_INTERRUPT		0x007e
->  #define HVCALL_START_VP				0x0099
->  #define HVCALL_GET_VP_ID_FROM_APIC_ID		0x009a
-> +#define HVCALL_START_VIRTUAL_PROCESSOR		0x0099
-
-We already have HVCALL_START_VP no need of defining HVCALL_START_VIRTUAL_PR=
-OCESSOR.
-- Saurabh
-
->  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af  #define
-> HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0  #define
-> HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY 0x00db @@ -223,6
-> +225,7 @@ enum HV_GENERIC_SET_FORMAT {
->  #define HV_STATUS_INVALID_PORT_ID		17
->  #define HV_STATUS_INVALID_CONNECTION_ID		18
->  #define HV_STATUS_INSUFFICIENT_BUFFERS		19
-> +#define HV_STATUS_TIME_OUT                      120
->  #define HV_STATUS_VTL_ALREADY_ENABLED		134
->=20
->  /*
-> @@ -783,6 +786,22 @@ struct hv_input_unmap_device_interrupt {
->  	struct hv_interrupt_entry interrupt_entry;  } __packed;
->=20
-> +struct hv_enable_vp_vtl_input {
-> +	u64 partitionid;
-> +	u32 vpindex;
-> +	u8 targetvtl;
-> +	u8 padding[3];
-> +	u8 context[0xe0];
-> +} __packed;
-> +
-> +struct hv_start_virtual_processor_input {
-> +	u64 partitionid;
-> +	u32 vpindex;
-> +	u8 targetvtl;
-> +	u8 padding[3];
-> +	u8 context[0xe0];
-> +} __packed;
-> +
->  #define HV_SOURCE_SHADOW_NONE               0x0
->  #define HV_SOURCE_SHADOW_BRIDGE_BUS_RANGE   0x1
->=20
-> --
-> 2.25.1
-
+>   		msr.enable = 1;
+>   		wrmsrl(HV_X64_MSR_VP_ASSIST_PAGE, msr.as_uint64);
+>   	}
