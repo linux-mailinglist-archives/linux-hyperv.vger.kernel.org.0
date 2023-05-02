@@ -2,500 +2,163 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC7D46F3BD7
-	for <lists+linux-hyperv@lfdr.de>; Tue,  2 May 2023 03:34:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 648C16F4352
+	for <lists+linux-hyperv@lfdr.de>; Tue,  2 May 2023 14:09:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbjEBBeY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 1 May 2023 21:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34682 "EHLO
+        id S233824AbjEBMJw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 2 May 2023 08:09:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbjEBBeX (ORCPT
+        with ESMTP id S233784AbjEBMJv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 1 May 2023 21:34:23 -0400
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-cusazon11020015.outbound.protection.outlook.com [52.101.61.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23ADE6A;
-        Mon,  1 May 2023 18:34:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P+AdbNuu1sQLnBPirTOWGM7M6Vb5Mjed0hczmI6iX1My0Bre6YPIgVFPpN/876Fz1wbX3FIFZOfGvT9QBK4+cYLDzFMbRtk9baOu4SNIkmxAQe/uOIPapOMhpSJuY4jiR11JRAnPcidBWrAENbOm7+q03J8f0Lh5FhenZUOiLeljw1v67TniitBMGx4ln/tQyhU9+0d6oDSU+Gu+Z5dVKMReftOBItDuEVw354fE3IUXyy3l6AVpCL2r116TaTAA7p/5sKUaJSf8TDs90gaJc9AxQzYDHtH7t9IR7lM28AYrbwLzST+TIOj3c7IF7Jin9bDofl2+lbx50wEOdhTYIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8pYqdPJI0R9DSHqWkrtXQAwhs3ubeyMZJS1kE9nX+PY=;
- b=mtWXFtDZE0aXH5uEt6lWogK2voL3DRYM2YCd+FMPigf7Wv1iLZtm5ROs6iXtfDnOFXYzAIIBL6XkMaefd9kMUTLcBqBc45W//9ROM/8crfiPuFD2o2F9IcAjhNE6UgjeZlgFKrZcC2WqAT1DC2BUL+aNw/+c+lIjgg4SdMjI175Lsy4OSkb58z/aBEHpI2lycHK38T7AtDAPCsS6aQKgXd5ioACfUalgrMa/cx/kwVFRh2nLqj6QGHfH3i3KEWvw3i6Be/UCXzK2OMb0smfeIUXdMIHaAt3hLDQwkH6pCgMHwVm241SqxoR0+Jpk4cVxoN77audmdKfmtrmEqkFyvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8pYqdPJI0R9DSHqWkrtXQAwhs3ubeyMZJS1kE9nX+PY=;
- b=JXyefBYfF+kfmhjEyOMzWrT6C2/utlSD4Muvk9Xk2qgvSAavUBOabBp6fK0//HOlMb/5lMd/m21CUvnhPYBWT92PRgMkJNA00nUNXzbPmvIJoHVNKKc16JiQ4WWg9LO71AhEXA46WdfzlZdz3SWbdATbFUGz03EvsNY5sUmpMQY=
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
- by DM6PR21MB1531.namprd21.prod.outlook.com (2603:10b6:5:25f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.19; Tue, 2 May
- 2023 01:34:18 +0000
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::eeed:da40:85cb:503]) by SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::eeed:da40:85cb:503%7]) with mapi id 15.20.6363.018; Tue, 2 May 2023
- 01:34:18 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tue, 2 May 2023 08:09:51 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EBA4EC8;
+        Tue,  2 May 2023 05:09:43 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 23DE021A10;
+        Tue,  2 May 2023 12:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1683029382; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=5isj2N5NCBHlgNEX7kDR8L5F10upbDgKEvNgnzD7pjU=;
+        b=lCdfsFMOgUvQOOjznQ29dhIfCPfBATrhqs0ygxXq+WuLpchDR8rfeWRUqFg4gsVq1hAZso
+        M6yRbkcUUeSN+OZpt0kdpNk+01NuOD3H4axIM8mN+INEgVDTKNBob6uRoIMwSVTHqsAyiH
+        tXY30Kqoaqh0gDh5kUwQuvMJsIBgFwg=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9635D139C3;
+        Tue,  2 May 2023 12:09:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id bPRFI4X9UGRmLwAAMHmgww
+        (envelope-from <jgross@suse.com>); Tue, 02 May 2023 12:09:41 +0000
+From:   Juergen Gross <jgross@suse.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     mikelley@microsoft.com, Juergen Gross <jgross@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: RE: [PATCH v5 5/6] Drivers: hv: vmbus: Support TDX guests
-Thread-Topic: [PATCH v5 5/6] Drivers: hv: vmbus: Support TDX guests
-Thread-Index: AQHZdMDlgRiCry573UqDSIN3qcYRLa9FtKkggAB7cdA=
-Date:   Tue, 2 May 2023 01:34:18 +0000
-Message-ID: <SA1PR21MB1335046F4BA2B407C9026130BF6F9@SA1PR21MB1335.namprd21.prod.outlook.com>
-References: <20230422021735.27698-1-decui@microsoft.com>
- <20230422021735.27698-6-decui@microsoft.com>
- <BYAPR21MB16888DA20245DDBC572A2240D76E9@BYAPR21MB1688.namprd21.prod.outlook.com>
-In-Reply-To: <BYAPR21MB16888DA20245DDBC572A2240D76E9@BYAPR21MB1688.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=fe447994-baa8-4b2f-a2ae-c9a8aadd7e33;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-01T17:05:09Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|DM6PR21MB1531:EE_
-x-ms-office365-filtering-correlation-id: 62e759b0-171e-4484-abe4-08db4aad58b4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RrPIDqZ8QgzNGKm65OZnekpaBeyK2BVSWkYS5+O+k0r/2Xty3SSpzjCnGj0i47874jaqS37M0oaLzN66Zsfnxm1SFYmfpKFvSIbyBvPPPRsCGyCYCPx4LJFB6CFIjB0V8/R04FCbjPZx/y7p1zzFvlwu0syBQGCFWqeB/rp72uulbhWU9wIzLJucO8Q0a1I7rd8MCyio8EUroPJ+OyH3rYmYndFoiHwiSBIEWb0zphhJ7bDPuAVqXWMh+003KlmcjMMcLGmDuIerwvrO93y8NsmYcFXMCxewDpNWXvdMaYkFGRy4H6o6fIwQZm0DETUwCdZrcwCrAZ+SbZCByTaqHO8uudikGJJ/aae+MtLl4WqVLlLncas56O55g+loTQfmXqOvtZJq9Eurre9mB9vEiMLLdCEV5NKQrG11tRdy9vfdhonl+8WcAODsQd110h2Ua5c73LYNYFTnXIcUeQTBoRrfFVBVRGFSX1pDtaGSlOm88SPlT4Lls7Xu1ZdyykxRm220j0IZIKLHZm+mPn+HEZLYh7XvvTPLt9xdKppfGKmsy01csaEIum0uJghnPC+Rbq1Q8dsXSIEmAL7GxBQQwS+MNvDp81I0Q+33faW4x5Sj8GpBZFKdg46iebvMj+7hpMGkbStIFPPKwqsoiLw6qyjH6V+jBkSISWr7RLCwNBmkM6gfh4aEreaDPrAzZ61D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(376002)(396003)(366004)(136003)(451199021)(478600001)(107886003)(83380400001)(8990500004)(186003)(10290500003)(4326008)(64756008)(66556008)(110136005)(66476007)(76116006)(66446008)(54906003)(9686003)(71200400001)(7696005)(6506007)(786003)(316002)(66899021)(8676002)(52536014)(5660300002)(66946007)(921005)(41300700001)(82960400001)(82950400001)(7416002)(8936002)(2906002)(38100700002)(55016003)(122000001)(38070700005)(86362001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?aJF+h61VYjJjqsJRkbhCr7+j6Qlsg5/9+YvfTRBEOvlBNEh2ETa8SlPyx11j?=
- =?us-ascii?Q?nZB9Dh08SsOGAhzULr0hGuJ2/hIgYtmIf6JaMQTKjhhnCdqkccJeEWEqvNCj?=
- =?us-ascii?Q?2TuqV3ikbzUfrDaA+Z7dT5GHpKdcN8EtFzQ/3h71gDl4igWH1Sl++5y38ZZ7?=
- =?us-ascii?Q?yd5KG4YnbDPq+/gswpZKefqp3tOprobxmrRBo7PiI5+A4Ql8UGCgQ2ICkyPt?=
- =?us-ascii?Q?9pqAZT3X4LZ25O0rd7XT+axlToD3fv+4N0ynyIY+HMaabQCrJaLH7gOOsCKm?=
- =?us-ascii?Q?tFciO6pacuCkd9pb/eoJFJHhpQUyIjPZVBj/kJVoX2RRjBSARqn+ZceepcXs?=
- =?us-ascii?Q?pyV0fYDm4PwlpcXNsrWDhcszil47EjqxReUWVYKJ3MzTpp4uLmiUojno7eCK?=
- =?us-ascii?Q?aZzEZINfHhqc+B+IzWvGAqllTj+xZuTYmKCOAXePAi6r4FLW8X5rN/DQImak?=
- =?us-ascii?Q?lyJJzXFnqj9UScSara+C6SiZIwvbLjsv0mtov6w25WAWZlB03WXi9UFZKq/D?=
- =?us-ascii?Q?5BMv5FoA4TTcrt67h2beLCVkio6vUljG2+vo17BN9ZiBYXDoTvViKV3lbzOL?=
- =?us-ascii?Q?HdaaXpkMoQcJxu4I+USRgwC8D88YZ4cyR5gqPmkVS3Dr5r3mgTK0kU5e1x43?=
- =?us-ascii?Q?7ic/Lc+eEKHq63aOmpubKLtC0j/ET+5p9SixdE1oYHZqZvlR8jxKVfQAJP7G?=
- =?us-ascii?Q?Zy7V9on5sIRoeYXcerKPmUi+rEsd2TwwDursLjqGmDelx84UQfuVNdsKxcus?=
- =?us-ascii?Q?56eJAHxhX2tyJm1WEY5tKQcE88KJscmkk444giOIUHOTpUA6dKKh20yYJXaZ?=
- =?us-ascii?Q?mQWdGGdqu60NTn/DACcWuVhG0encze7UnixXgEazUd0f5BqHon13VJsQDAtH?=
- =?us-ascii?Q?5hpH2wJPIhuvGRKJxRRo0eAZ9Az/cL3nj0hKKQRWVbwBgQpDOPo9R0g6OGB/?=
- =?us-ascii?Q?wtpuUZMi63efUgkAX7vn5ZZQi34WxmxB2/ec6gFkSa9HZIhk/GLeEsbgc5+3?=
- =?us-ascii?Q?iSIeVZPQF1X1mqCu0oGhMJSSSqSCekNmmLUUIG04424HZEB2HDBFgiHa30co?=
- =?us-ascii?Q?POhFqmkpakzZxue5Tsr4NzCfKU3P8BBn0SF2cf5LdjU4hsLxElMjIjnE0EiE?=
- =?us-ascii?Q?qR7GgXQt/ldeAjHUgM+LIfjTKTJCCHIFNnnZYiZRPuqFqBWdEZ+ulRGl9waG?=
- =?us-ascii?Q?ou9cox89uWH2DMHddrBZvsCD5s2gfPusUZVw8m2GiGLhoYYVW822eNZPIVVd?=
- =?us-ascii?Q?aFH1mhQ6XKL5YYVhR6eL9ujZVM+gw9/DYfK4ameawVcZ2gPQwh5Wt/atl+Rq?=
- =?us-ascii?Q?vXXqV1VStm9d2FSrMWqWWj6rHsLT5sLBD4Z0N3Ou85Sw0G5RKDUxvlUIPrjF?=
- =?us-ascii?Q?ct3+mKJUXFsZ/GmPh1xwfgk8It5oIn7AdIJXdPDlnJnI2RC90EizviHOj99r?=
- =?us-ascii?Q?Dqjaw4RC+k0z3Tb8pOJ9HMMzYheCblD5u/l6A3eTLXhML8txR8d2ciN3xGbT?=
- =?us-ascii?Q?5BJw9/k20SqypMw8U7pHjilYfn6yJBvb1YFJEomsA/NfFZvGct+YBwGxJhSF?=
- =?us-ascii?Q?V1wktI1ImJ49vPMMtbxjJd5yCLMGF0zTZZIx1B4x9I69LXwiRz60COZxKlFn?=
- =?us-ascii?Q?bpGDZxdIY6Rvrbl2sHz8myE=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Jonathan Corbet <corbet@lwn.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v6 00/16] x86/mtrr: fix handling with PAT but without MTRR
+Date:   Tue,  2 May 2023 14:09:15 +0200
+Message-Id: <20230502120931.20719-1-jgross@suse.com>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62e759b0-171e-4484-abe4-08db4aad58b4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2023 01:34:18.0836
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rsbBEh9Snq9gAk2fd/JgNL6+u1+5eX/FfFPatcChcRAeFHwhes1FxBNwvLJtevI06zgtED6iiTlBZUoPhbMuVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1531
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-> From: Michael Kelley (LINUX) <mikelley@microsoft.com>
-> Sent: Monday, May 1, 2023 10:33 AM
-> ...
-> From: Dexuan Cui
-> >
-> > Add Hyper-V specific code so that a TDX guest can run on Hyper-V:
-> >   No need to use hv_vp_assist_page.
-> >   Don't use the unsafe Hyper-V TSC page.
-> >   Don't try to use HV_REGISTER_CRASH_CTL.
-> >   Don't trust Hyper-V's TLB-flushing hypercalls.
-> >   Don't use lazy EOI.
-> >   Share SynIC Event/Message pages and VMBus Monitor pages with the
-> >  host.
->=20
-> This patch no longer does anything with the VMBus monitor pages.
-Sorry, I forgot to update the commit log. Will drop this from the log.
+This series tries to fix the rather special case of PAT being available
+without having MTRRs (either due to CONFIG_MTRR being not set, or
+because the feature has been disabled e.g. by a hypervisor).
 
-> >   Use pgprot_decrypted(PAGE_KERNEL)in hv_ringbuffer_init().
->=20
-> The above line in the commit message is stale and can be dropped.
-Will drop this from the commit log.
+The main use cases are Xen PV guests and SEV-SNP guests running under
+Hyper-V.
 
-> > @@ -116,6 +117,7 @@ int hv_synic_alloc(void)
-> >  {
-> >  	int cpu;
-> >  	struct hv_per_cpu_context *hv_cpu;
-> > +	int ret =3D -ENOMEM;
-> >
-> >  	/*
-> >  	 * First, zero all per-cpu memory areas so hv_synic_free() can
-> > @@ -159,6 +161,28 @@ int hv_synic_alloc(void)
-> >  				goto err;
-> >  			}
-> >  		}
-> > +
-> > +		/* It's better to leak the page if the decryption fails. */
-> > +		if (hv_isolation_type_tdx()) {
-> > +			ret =3D set_memory_decrypted(
-> > +				(unsigned long)hv_cpu->synic_message_page, 1);
-> > +			if (ret) {
-> > +				pr_err("Failed to decrypt SYNIC msg page\n");
-> > +				hv_cpu->synic_message_page =3D NULL;
-> > +				goto err;
-> > +			}
-> > +
-> > +			ret =3D set_memory_decrypted(
-> > +				(unsigned long)hv_cpu->synic_event_page, 1);
-> > +			if (ret) {
-> > +				pr_err("Failed to decrypt SYNIC event page\n");
-> > +				hv_cpu->synic_event_page =3D NULL;
-> > +				goto err;
-> > +			}
->=20
-> The error handling still doesn't work quite correctly.   In the TDX case,=
- upon
-> exiting this function, the synic_message_page and the synic_event_page
-> must
-> each either be mapped decrypted or be NULL.  This requirement is so
-> that hv_synic_free() will do the right thing in changing the mapping back=
- to
-> encrypted.  hv_synic_free() can't handle a non-NULL page being encrypted.
->=20
-> In the above code, if we fail to decrypt the synic_message_page, then set=
-ting
-> it to NULL will leak the page (which we'll live with) and ensures that
-> hv_synic_free()
-> will handle it correctly.  But at that point we'll exit with synic_event_=
-page
-> non-NULL and in the encrypted state, which hv_synic_free() can't handle.
->=20
-> Michael
+Instead of trying to work around all the issues by adding if statements
+here and there, just try to use the complete available infrastructure
+by setting up a read-only MTRR state when needed.
 
-Thanks for spotting the issue!=20
-I think the below extra changes should do the job:
+In the Xen PV case the current MTRR MSR values can be read from the
+hypervisor, while for the SEV-SNP case all needed is to set the
+default caching mode to "WB".
 
-@@ -121,91 +121,102 @@ int hv_synic_alloc(void)
+I have added more cleanup which has been discussed when looking into
+the most recent failures.
 
-        /*
-         * First, zero all per-cpu memory areas so hv_synic_free() can
-         * detect what memory has been allocated and cleanup properly
-         * after any failures.
-         */
-        for_each_present_cpu(cpu) {
-                hv_cpu =3D per_cpu_ptr(hv_context.cpu_context, cpu);
-                memset(hv_cpu, 0, sizeof(*hv_cpu));
-        }
+Note that I couldn't test the Hyper-V related change (patch 3).
 
-        hv_context.hv_numa_map =3D kcalloc(nr_node_ids, sizeof(struct cpuma=
-sk),
-                                         GFP_KERNEL);
-        if (hv_context.hv_numa_map =3D=3D NULL) {
-                pr_err("Unable to allocate NUMA map\n");
-                goto err;
-        }
+Running on bare metal and with Xen didn't show any problems with the
+series applied.
 
-        for_each_present_cpu(cpu) {
-                hv_cpu =3D per_cpu_ptr(hv_context.cpu_context, cpu);
+It should be noted that patches 9+10 are replacing today's way to
+lookup the MTRR cache type for a memory region from looking at the
+MTRR register values to building a memory map with the cache types.
+This should make the lookup much faster and much easier to understand.
 
-                tasklet_init(&hv_cpu->msg_dpc,
-                             vmbus_on_msg_dpc, (unsigned long) hv_cpu);
+Changes in V2:
+- replaced former patches 1+2 with new patches 1-4, avoiding especially
+  the rather hacky approach of V1, while making all the MTRR type
+  conflict tests available for the Xen PV case
+- updated patch 6 (was patch 4 in V1)
 
-                /*
-                 * Synic message and event pages are allocated by paravisor=
-.
-                 * Skip these pages allocation here.
-                 */
-                if (!hv_isolation_type_snp() && !hv_root_partition) {
-                        hv_cpu->synic_message_page =3D
-                                (void *)get_zeroed_page(GFP_ATOMIC);
-                        if (hv_cpu->synic_message_page =3D=3D NULL) {
-                                pr_err("Unable to allocate SYNIC message pa=
-ge\n");
-                                goto err;
-                        }
+Changes in V3:
+- dropped patch 5 of V2, as already applied
+- split patch 1 of V2 into 2 patches
+- new patches 6-10
+- addressed comments
 
-                        hv_cpu->synic_event_page =3D
-                                (void *)get_zeroed_page(GFP_ATOMIC);
-                        if (hv_cpu->synic_event_page =3D=3D NULL) {
-                                pr_err("Unable to allocate SYNIC event page=
-\n");
-+
-+                               free_page((unsigned long)hv_cpu->synic_mess=
-age_page);
-+                               hv_cpu->synic_message_page =3D NULL;
-+
-                                goto err;
-                        }
-                }
+Changes in V4:
+- addressed comments
 
-                /* It's better to leak the page if the decryption fails. */
-                if (hv_isolation_type_tdx()) {
-                        ret =3D set_memory_decrypted(
-                                (unsigned long)hv_cpu->synic_message_page, =
-1);
-                        if (ret) {
-                                pr_err("Failed to decrypt SYNIC msg page\n"=
-);
-                                hv_cpu->synic_message_page =3D NULL;
-+
-+                               /*
-+                                * Free the event page so that a TDX VM won=
-'t
-+                                * try to encrypt the page in hv_synic_free=
-().
-+                                */
-+                               free_page((unsigned long)hv_cpu->synic_even=
-t_page);
-+                               hv_cpu->synic_event_page =3D NULL;
-                                goto err;
-                        }
+Changes in V5
+- addressed comments
+- some other small fixes
+- new patches 3, 8 and 15
 
-                        ret =3D set_memory_decrypted(
-                                (unsigned long)hv_cpu->synic_event_page, 1)=
-;
-                        if (ret) {
-                                pr_err("Failed to decrypt SYNIC event page\=
-n");
-                                hv_cpu->synic_event_page =3D NULL;
-                                goto err;
-                        }
+Changes in V6:
+- patch 1 replaces patches 1+2 of V5
+- new patches 8+12
+- addressed comments
 
-                        memset(hv_cpu->synic_message_page, 0, PAGE_SIZE);
-                        memset(hv_cpu->synic_event_page, 0, PAGE_SIZE);
-                }
-        }
+Juergen Gross (16):
+  x86/mtrr: remove physical address size calculation
+  x86/mtrr: replace some constants with defines
+  x86/mtrr: support setting MTRR state for software defined MTRRs
+  x86/hyperv: set MTRR state when running as SEV-SNP Hyper-V guest
+  x86/xen: set MTRR state when running as Xen PV initial domain
+  x86/mtrr: replace vendor tests in MTRR code
+  x86/mtrr: have only one set_mtrr() variant
+  x86/mtrr: move 32-bit code from mtrr.c to legacy.c
+  x86/mtrr: allocate mtrr_value array dynamically
+  x86/mtrr: add get_effective_type() service function
+  x86/mtrr: construct a memory map with cache modes
+  x86/mtrr: add mtrr=debug command line option
+  x86/mtrr: use new cache_map in mtrr_type_lookup()
+  x86/mtrr: don't let mtrr_type_lookup() return MTRR_TYPE_INVALID
+  x86/mm: only check uniform after calling mtrr_type_lookup()
+  x86/mtrr: remove unused code
 
-        return 0;
- err:
-        /*
-         * Any memory allocations that succeeded will be freed when
-         * the caller cleans up by calling hv_synic_free()
-         */
-        return ret;
- }
+ .../admin-guide/kernel-parameters.txt         |   4 +
+ arch/x86/hyperv/ivm.c                         |   4 +
+ arch/x86/include/asm/mtrr.h                   |  43 +-
+ arch/x86/include/uapi/asm/mtrr.h              |   6 +-
+ arch/x86/kernel/cpu/mtrr/Makefile             |   2 +-
+ arch/x86/kernel/cpu/mtrr/amd.c                |   2 +-
+ arch/x86/kernel/cpu/mtrr/centaur.c            |  11 +-
+ arch/x86/kernel/cpu/mtrr/cleanup.c            |  22 +-
+ arch/x86/kernel/cpu/mtrr/cyrix.c              |   2 +-
+ arch/x86/kernel/cpu/mtrr/generic.c            | 677 ++++++++++++------
+ arch/x86/kernel/cpu/mtrr/legacy.c             |  90 +++
+ arch/x86/kernel/cpu/mtrr/mtrr.c               | 195 ++---
+ arch/x86/kernel/cpu/mtrr/mtrr.h               |  18 +-
+ arch/x86/kernel/setup.c                       |   2 +
+ arch/x86/mm/pgtable.c                         |  24 +-
+ arch/x86/xen/enlighten_pv.c                   |  52 ++
+ 16 files changed, 721 insertions(+), 433 deletions(-)
+ create mode 100644 arch/x86/kernel/cpu/mtrr/legacy.c
 
-I'm going to use the below (i.e. v5 + the above extra changes) in v6.
-Please let me know if there is still any bug.
-
-@@ -116,6 +117,7 @@ int hv_synic_alloc(void)
- {
-        int cpu;
-        struct hv_per_cpu_context *hv_cpu;
-+       int ret =3D -ENOMEM;
-
-        /*
-         * First, zero all per-cpu memory areas so hv_synic_free() can
-@@ -156,9 +158,42 @@ int hv_synic_alloc(void)
-                                (void *)get_zeroed_page(GFP_ATOMIC);
-                        if (hv_cpu->synic_event_page =3D=3D NULL) {
-                                pr_err("Unable to allocate SYNIC event page=
-\n");
-+
-+                               free_page((unsigned long)hv_cpu->synic_mess=
-age_page);
-+                               hv_cpu->synic_message_page =3D NULL;
-+
-                                goto err;
-                        }
-                }
-+
-+               /* It's better to leak the page if the decryption fails. */
-+               if (hv_isolation_type_tdx()) {
-+                       ret =3D set_memory_decrypted(
-+                               (unsigned long)hv_cpu->synic_message_page, =
-1);
-+                       if (ret) {
-+                               pr_err("Failed to decrypt SYNIC msg page\n"=
-);
-+                               hv_cpu->synic_message_page =3D NULL;
-+
-+                               /*
-+                                * Free the event page so that a TDX VM won=
-'t
-+                                * try to encrypt the page in hv_synic_free=
-().
-+                                */
-+                               free_page((unsigned long)hv_cpu->synic_even=
-t_page);
-+                               hv_cpu->synic_event_page =3D NULL;
-+                               goto err;
-+                       }
-+
-+                       ret =3D set_memory_decrypted(
-+                               (unsigned long)hv_cpu->synic_event_page, 1)=
-;
-+                       if (ret) {
-+                               pr_err("Failed to decrypt SYNIC event page\=
-n");
-+                               hv_cpu->synic_event_page =3D NULL;
-+                               goto err;
-+                       }
-+
-+                       memset(hv_cpu->synic_message_page, 0, PAGE_SIZE);
-+                       memset(hv_cpu->synic_event_page, 0, PAGE_SIZE);
-+               }
-        }
-
-        return 0;
-@@ -167,18 +202,40 @@ int hv_synic_alloc(void)
-         * Any memory allocations that succeeded will be freed when
-         * the caller cleans up by calling hv_synic_free()
-         */
--       return -ENOMEM;
-+       return ret;
- }
-
-
- void hv_synic_free(void)
- {
-        int cpu;
-+       int ret;
-
-        for_each_present_cpu(cpu) {
-                struct hv_per_cpu_context *hv_cpu
-                        =3D per_cpu_ptr(hv_context.cpu_context, cpu);
-
-+               /* It's better to leak the page if the encryption fails. */
-+               if (hv_isolation_type_tdx()) {
-+                       if (hv_cpu->synic_message_page) {
-+                               ret =3D set_memory_encrypted((unsigned long=
-)
-+                                       hv_cpu->synic_message_page, 1);
-+                               if (ret) {
-+                                       pr_err("Failed to encrypt SYNIC msg=
- page\n");
-+                                       hv_cpu->synic_message_page =3D NULL=
-;
-+                               }
-+                       }
-+
-+                       if (hv_cpu->synic_event_page) {
-+                               ret =3D set_memory_encrypted((unsigned long=
-)
-+                                       hv_cpu->synic_event_page, 1);
-+                               if (ret) {
-+                                       pr_err("Failed to encrypt SYNIC eve=
-nt page\n");
-+                                       hv_cpu->synic_event_page =3D NULL;
-+                               }
-+                       }
-+               }
-+
-                free_page((unsigned long)hv_cpu->synic_event_page);
-                free_page((unsigned long)hv_cpu->synic_message_page);
-        }
-
-
-I'll post a separate patch (currently if hv_synic_alloc() --> get_zeroed_pa=
-ge() fails,
-hv_context.hv_numa_map is leaked):
-
-
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1515,27 +1515,27 @@ static int vmbus_bus_init(void)
-        }
-
-        ret =3D hv_synic_alloc();
-        if (ret)
-                goto err_alloc;
-
-        /*
-         * Initialize the per-cpu interrupt state and stimer state.
-         * Then connect to the host.
-         */
-        ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online=
-",
-                                hv_synic_init, hv_synic_cleanup);
-        if (ret < 0)
--               goto err_cpuhp;
-+               goto err_alloc;
-        hyperv_cpuhp_online =3D ret;
-
-        ret =3D vmbus_connect();
-        if (ret)
-                goto err_connect;
-
-        if (hv_is_isolation_supported())
-                sysctl_record_panic_msg =3D 0;
-
-        /*
-         * Only register if the crash MSRs are available
-         */
-        if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)=
- {
-@@ -1567,29 +1567,28 @@ static int vmbus_bus_init(void)
-        /*
-         * Always register the vmbus unload panic notifier because we
-         * need to shut the VMbus channel connection on panic.
-         */
-        atomic_notifier_chain_register(&panic_notifier_list,
-                               &hyperv_panic_vmbus_unload_block);
-
-        vmbus_request_offers();
-
-        return 0;
-
- err_connect:
-        cpuhp_remove_state(hyperv_cpuhp_online);
--err_cpuhp:
--       hv_synic_free();
- err_alloc:
-+       hv_synic_free();
-        if (vmbus_irq =3D=3D -1) {
-                hv_remove_vmbus_handler();
-        } else {
-                free_percpu_irq(vmbus_irq, vmbus_evt);
-                free_percpu(vmbus_evt);
-        }
- err_setup:
-        bus_unregister(&hv_bus);
-        unregister_sysctl_table(hv_ctl_table_hdr);
-        hv_ctl_table_hdr =3D NULL;
-        return ret;
- }
+-- 
+2.35.3
 
