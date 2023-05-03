@@ -2,281 +2,198 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 935E46F57B7
-	for <lists+linux-hyperv@lfdr.de>; Wed,  3 May 2023 14:14:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E05416F5DDD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  3 May 2023 20:26:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjECMOP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 3 May 2023 08:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35952 "EHLO
+        id S229636AbjECS0k (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 3 May 2023 14:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbjECMOL (ORCPT
+        with ESMTP id S229501AbjECS0j (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 3 May 2023 08:14:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7215597
-        for <linux-hyperv@vger.kernel.org>; Wed,  3 May 2023 05:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683116000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QoebIRsfYnkRE4a4+0vvaV8EtKm1li2acPw6aTCsw8w=;
-        b=NKTdYmlPox3uJZ2D/IubZxzTzmtgjBCbk5ju3tqZpS1ZmPTl1fwE2B9N//TBGzrgV5+PZF
-        6wyMBkj9oIVOmuVkX0HdCCejHmBWXcJgSJFBGHbBt+MgaoXPoQRKQpfP2oMBh2DlobasRQ
-        yaLowHZ1QtIbt7haoT0he+msGhmcDKA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-634-ZlGj_SEGPxu1s_PBY8-ajA-1; Wed, 03 May 2023 08:13:19 -0400
-X-MC-Unique: ZlGj_SEGPxu1s_PBY8-ajA-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-3f19517536eso17202015e9.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 03 May 2023 05:13:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683115995; x=1685707995;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QoebIRsfYnkRE4a4+0vvaV8EtKm1li2acPw6aTCsw8w=;
-        b=gvVqUVP81tfViYjk2lLyKPc//2nHN9H91f5CEayNTl+pKoES3WRFJVQuw6jDDeah+f
-         k38/yiJZMTI4vnpgsITrlz/1myUxRkzLL3Hb4ZFhw6qr+DGZwyAw321AzZbXYEh5bhX1
-         92SR7RA10IxFO+0KR4AHCHP1IH2rR4iv/ferMCx+WYesrCRtzooqq9zWmd9TTz4cgtlv
-         IeCJZ7+b0mqvDo5ABtN8XjseDIwYfkNNOnW3d4b8dPDOWFbgRqoHqd+9VhDECTNjtkoM
-         53pVoZjEHi1SdAeTOiDYrDkSWRJzcXIywCAnnhsXtPG8VSdtxyQV/O5vguGf3UtcFzk8
-         nvJw==
-X-Gm-Message-State: AC+VfDyZ3F5I5GnVSSkhfVf5zMUWFxZAnvcF4I+Ou8Jvwys05vKxOfmZ
-        o6qJU9FWLEmrDdUidrwCmLPatsVSUAL+ybsy+5IewolW8p2LnHwuwQU0A9p+ZR3+D+NoIRs2awQ
-        OPZsfpp16Bsx51/eXoxEsmIbG
-X-Received: by 2002:a7b:c408:0:b0:3f1:75b6:8c7 with SMTP id k8-20020a7bc408000000b003f175b608c7mr14043841wmi.37.1683115995247;
-        Wed, 03 May 2023 05:13:15 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ67lm3NwTO03hE2PmJip283wLLIfqmiPdSnznYPeWJRfBG58fEWJZMqmPER/CfifMqoJCwIlw==
-X-Received: by 2002:a7b:c408:0:b0:3f1:75b6:8c7 with SMTP id k8-20020a7bc408000000b003f175b608c7mr14043812wmi.37.1683115994929;
-        Wed, 03 May 2023 05:13:14 -0700 (PDT)
-Received: from sgarzare-redhat ([185.29.96.107])
-        by smtp.gmail.com with ESMTPSA id b12-20020a5d4d8c000000b003063408dd62sm5638329wru.65.2023.05.03.05.13.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 May 2023 05:13:14 -0700 (PDT)
-Date:   Wed, 3 May 2023 14:13:10 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc:     Vishnu Dasa <vdasa@vmware.com>, virtio-dev@lists.oasis-open.org,
-        linux-hyperv@vger.kernel.org, Cong Wang <cong.wang@bytedance.com>,
-        Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        netdev@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Bryan Tan <bryantan@vmware.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jiang Wang <jiang.wang@bytedance.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v2 0/4] virtio/vsock: support datagrams
-Message-ID: <4ikawh4kks22iqjdkhbvkak7spoja6zr3g22pke2r3jsqgpddp@bx6purfp4f6a>
-References: <20230413-b4-vsock-dgram-v2-0-079cc7cee62e@bytedance.com>
- <ZDk2kOVnUvyLMLKE@bullseye>
- <r6oxanmhwlonb7lcrrowpitlgobivzp7pcwk7snqvfnzudi6pb@4rnio5wef3qu>
- <ZDpOq0ACuMYIUbb1@bullseye>
- <yeu57zqwzcx33sylp565xgw7yv72qyczohkmukyex27rcdh6mr@w4x6t4enx6iu>
- <ZDrI2bBhiamYBKUB@bullseye>
+        Wed, 3 May 2023 14:26:39 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D5035B6;
+        Wed,  3 May 2023 11:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683138398; x=1714674398;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=YU1LpqW36QSHkB5/jJBCAPcOaEJjCOlcwEq4cJabuDE=;
+  b=d+CiJXswL++Yzxmr9sq2gPdw7LqjEMI9gfh95cQPi9amHqOPzBRxdiZm
+   wltr0X4EekFy0OWt+pak7IgND6rD6kFAl9CBep4qqWcR1wBurAnSzp+EZ
+   UHipCAYULg0wjhPOruRay5ZCNfLw9PWN10DzrZ8ltodWlz4yrV71spWyX
+   /IMAtduPNj7O+3xLMD0n1bO0jERokKFz0FfUMl2/0TC/p9D4E08KITChk
+   kD4VmoOV+5sZRQrA0f46BYAgLfwgRazW2SenF9sAMgEd/5sy/kx2T7L2w
+   Q4/2T+zsWYOqtmc4O+PIDsRy9nK/WzYMv0YtjKJyRnhYlg3EuTxQsWTb/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="347551842"
+X-IronPort-AV: E=Sophos;i="5.99,248,1677571200"; 
+   d="scan'208";a="347551842"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2023 11:14:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="761589777"
+X-IronPort-AV: E=Sophos;i="5.99,247,1677571200"; 
+   d="scan'208";a="761589777"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga008.fm.intel.com with ESMTP; 03 May 2023 11:14:31 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 3 May 2023 11:14:31 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 3 May 2023 11:14:31 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Wed, 3 May 2023 11:14:31 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Wed, 3 May 2023 11:14:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gTPuKaefgy/ZBI5yTNUOYt0GMYuuLIQiUjXpmenHdINhxGqLze9cIZ9zPCq5YA8j4dJuhi5a4VzI3cyl5cnoe2VP49Zt/wdakJHNTS5eLz8owErWD+nODsbZuUwFhGpZDo8UtYcarQUl+8ttLjNjDdb7M8HWDSKhmGLduc1SgVDdxsGh+/paOrZV7hZIXZmcKZ6oFf/iYDQsDtvQjY4nckax7+8tjdaaJPOQlOcyQP5okZuyJ/RzWlhIx62pnxiZoNo6djMY5jh5i1nw0tHovAGb/a+4162xKDz5c/jaZQScqOAses2uMSmCsRWHkhZ0LNBBGhs9RTS0wI8KsfgeEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=acApguog1hrw9FK2yIo2Pl8uvzK1Ho/Twm/E37M8al4=;
+ b=T+T7MBorv47xi1TIOwGHyMRcmEKDOQVcW0BNGrcJ4It2pq8/VSWC+803n/LbvLlYJ95N7InSprwc7yKA6Gv0w7fZltFvXwgtjxx6NaNeCEknq03Xf5LKhiNpp+BxtYV13P43SDxS6qEAyPiOhvgRv12oHKOU/kDYj4siTaprfcrWRdmdduKKa2HBW68qd8PdC029D+lKIEIDlS00C0uq9q6wBpxIzBP1gVsWJo+7ayOYy6fFIJhQTi5yHfZS1JMCpPtUwDW5Qx6bboKr4xWvbDHQyWiTHMliPYe9q7BCOuRdJdnf7BNXeqaBubM2eK7ifzCXvNHphDgYrEUUelynhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by BN9PR11MB5529.namprd11.prod.outlook.com (2603:10b6:408:102::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.22; Wed, 3 May
+ 2023 18:14:28 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::a0e0:efa7:eda3:b36b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::a0e0:efa7:eda3:b36b%6]) with mapi id 15.20.6340.031; Wed, 3 May 2023
+ 18:14:28 +0000
+Message-ID: <26e6947c-6c56-d8c0-1baf-1ff006258679@intel.com>
+Date:   Wed, 3 May 2023 11:14:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v6 00/16] x86/mtrr: fix handling with PAT but without MTRR
+To:     Juergen Gross <jgross@suse.com>
+CC:     <mikelley@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "Wei Liu" <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        <xen-devel@lists.xenproject.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        <linux-hyperv@vger.kernel.org>, <linux-doc@vger.kernel.org>
+References: <20230502120931.20719-1-jgross@suse.com>
+Content-Language: en-US
+From:   Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <20230502120931.20719-1-jgross@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0048.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::23) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ZDrI2bBhiamYBKUB@bullseye>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|BN9PR11MB5529:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd3be5c8-54b9-4457-ca96-08db4c023b98
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hNgUlvKNNJaYjJgnnPrK3FzXCampfuny5QwS+vmt6f2QTBm1OtW4v4FoxRAWr2v3oX/pQ6GNPD9tjH2DacjOJtF+fYMJ7ZKqrGVjxOyQ/iBJNcqUYKpWywvlW9WNfwOtGbf11KIr2L4Wjf0LdRQhFBjWqFU3ut6vFm9r+7t2DVSMijey2HtR8mfakAYSRtjGIMkZfpRQAK6Kr2zOvbIuGsK7DfwlxsYuRCousZF4c5+tXJETZMpVknUeCIlzq5dWExFaM7JTBKHGGayNYgkxLvzaocGhFKhvBYqUXP86/sy2HTNuUXjp3BqQ6WBvknnX7VbD1vv25aUS88bTQ/EgR0bx0RAZEGdR05YEiciZTAKQa4YiNDDIUrHDUZZHRlXeteBm09FZ/PI9OZ7kby99SrNYtZKj+8jYOLe1Nx0zsDKR27rXeUr9s7Zug0EZWYebbcqV0ISZToGiqAiT6VP/C/NDZhygAF4crUWL3vej2SWNT/Cp5JniHptxrxnpaTKYRF/QaGTAXFqDwcKN08px/o0mOdEC0ofUySi/iBX1Fl2SLeDAu16SvLroS7NVSy1r6EMe1g5wuliOexjTbkPHPkT0N8Co713V7/6v/iQ++Tvzp2cxuhYdH/7ZaMtXbj4fpcqHRfKvjm5hbe5AqKwEnw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(39860400002)(366004)(346002)(376002)(396003)(451199021)(478600001)(2906002)(316002)(66946007)(66556008)(66476007)(4326008)(6486002)(6666004)(6916009)(82960400001)(36756003)(186003)(41300700001)(6506007)(6512007)(26005)(2616005)(86362001)(38100700002)(54906003)(7416002)(31686004)(8676002)(8936002)(31696002)(44832011)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QkQrTE5vd2lFV2h0TDNacUxjbXhzS3ZYSHlmTzdCRG8wcHArd1ZLK29BNlh0?=
+ =?utf-8?B?eGg3RkNVVkp4eEU0TGxQZHkrYkRkMVJHTnJ3SXFwYmFCbTZqeTIvQnk5aWpK?=
+ =?utf-8?B?ZnF1ZlBsNVR6QnFNRXFGbnhwR2E5QWFBUmsrZzZieWJEbWFHV1lyTlRtQkhI?=
+ =?utf-8?B?S2N5cXNxaVhJUmtPREZwRVNkczRLTUZsMEtkT1F4QXBuWWw5NzUvclpMclZR?=
+ =?utf-8?B?M3luYUsyUUxIT1hwRWlaUm1tc0Y3Zmpjczl6b2Y2YmNsT3Y4Q0ZlTVJrMFp1?=
+ =?utf-8?B?WVltM0R3c2tRTlRUQWl6cW5SZC94bThnMXUySzlMc3lvZFptQkowUXdXZjc1?=
+ =?utf-8?B?SXRIK3hwMWhXUyt6ek1CcWFtdysxZDk0ekUzTDA0Ukt5aFk1RGV1ek1GUWI2?=
+ =?utf-8?B?d240NzRGUmlHMlQyUDk2NURDS2JKamp3cTl3NGZEOVR3S2g3RHlqRTNPcS9l?=
+ =?utf-8?B?MUE1cS8yRTJQeE1ZNW83OUsyQTN0Y2lUbmZoZGpJdFZpN1F0ejUvYSs4Nkxh?=
+ =?utf-8?B?UlQyU1RnQjB4aHVQWTVld2ZKQ1Jac3NBMm5jVzNHdlZUNmt6VEoybkt0Ni9j?=
+ =?utf-8?B?MFVxYjkya2ZpekY0c1A0dmZyOWlWNS9rNU1HNDBSeFQzSkRKdkFEYkovZjlw?=
+ =?utf-8?B?TDNpOXZ3RHNNUzVZZWljMnJuVC91TjFyK3IzNEwxdCtwUlJUbnFKbm5mVHEy?=
+ =?utf-8?B?NmpEc1BvNEphSmRCV0tOSFRLblBLbElYS08yeFc1UUFEVnUyQVh5M0ZrMmxq?=
+ =?utf-8?B?WFZ6dEN3ck1Hd1ZqYkxrSU10UTJqa3RhVmJPeTRRNHVnL3kyV045WEhMamN0?=
+ =?utf-8?B?dXNzYUFYd1hmTEdTbko3TFVtenJZeHJlSXhsNk10UlZ2WWZXTkJrUDJLN2pV?=
+ =?utf-8?B?anNUZ3NKN1NWcFN3QTZZdlRUbEpDVzVMNUJzZ1dXUWVyU2ZXQitxbFFZME4r?=
+ =?utf-8?B?WTVwUzdkSWhyVUd2Tm1KRlh6V3d3MjFadUZ2YUlYeGd5TGZWU1djM3J6U25v?=
+ =?utf-8?B?Mk0vWlBxeVhtYTViV01pbWFEaGxENnc4WDhwNDZaOTMxUENYVDNLanhLNDVP?=
+ =?utf-8?B?akpFemxiWGJ4ZmUxd1VwOVVXd05wSGVuMHBnbGREWFJwR3NBSDJ6Qnl3QXkx?=
+ =?utf-8?B?aGRGSWRhOUprODVrNVEvRzFmQjRPL1NlT2s5UmZ1WFR4SUFYZlJaL1ZCRWpl?=
+ =?utf-8?B?L1VRSWJjT25RN1hwb1hzZnliS0VjYUhhTEMvSVFIRllTSzBSS1F4QWN0bDYz?=
+ =?utf-8?B?ZVBqQTdlaXZ2eWRVcnZwdklJSWpxSUVCVlV6blFyTVk1UWcwNXRDcDNiR0Zv?=
+ =?utf-8?B?ZTZJTTFXZXNIMEpzREdTS0ZJcGI2RFRoYU9rbDg1emljeENoSDdaT0V5U2l3?=
+ =?utf-8?B?a01ZOEZ5U1ZHL1p5T3JzaTBEQlZMZWtUK3VPUG9TdG14eFNtanpxSzZtOFlD?=
+ =?utf-8?B?ZTlIU0kxT0FiNGlhTGNRY2lETnhTM0tGYWowQ1kyd29KT25yZ1FtNmUzVFhC?=
+ =?utf-8?B?b1FNMnpaV3J5ZkVIUVdmS1UwcXdORkNMVko2ZXlEUkJFbm9TYWl4citBTnJY?=
+ =?utf-8?B?c256YkNJUGFPaVdIODBxVkZSZGZaWVFOZnBtWHVST1B1R1Z4azI2RGZIeDJl?=
+ =?utf-8?B?aVViVyswTUZURmdrRGhmd0piYkdOMlhFV0NybFMyTWtIbmcwcjN4NGc2bm5J?=
+ =?utf-8?B?NlhhR0pQSlo0ZnIyV1p2V1Y2Um8zUnhrQkdEa2FJaS8rdDR2eUMrK3VDV0x3?=
+ =?utf-8?B?NENtdEVHUWxqLzJNNVJoZjRKUlhUYmoyTU9iemtSN0lNRVpNZG8xT2dXalJp?=
+ =?utf-8?B?M1pwWk1Nakc4KzdWMU9memdUeUJldkdaV1Z6S29RYzlYUkhFN1lXbHBBZ2xa?=
+ =?utf-8?B?L3NDMHlRb2dQQVoxR0xSWWJjeWNUMXgxN0J0MmtyNlFvME1DY05qTDEvcytm?=
+ =?utf-8?B?Sm82V1NKZUY3WE5ycEEzeXUvNjJzY2dIWEdVUHZSU1kvLytFOXhtSDhFZzZn?=
+ =?utf-8?B?bmFpT05rZk9YSEdqZXRUeDZaazlmdFRPTnZKQWtpRjBTYTBkQURZWUVGbjFM?=
+ =?utf-8?B?NUUvUDFBSjdRanV1T0pKZlV2bEx3cS93QjMvWFFURHhXbmVnQnQ4QzdCWk02?=
+ =?utf-8?Q?ps/1dgk7bcBs1d+wmhSmBhegD?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd3be5c8-54b9-4457-ca96-08db4c023b98
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2023 18:14:27.8377
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8ktFFMmqRMunU622QH2XA2R1m6wBuoC/irgg/3W26PGzyAN7jZ4Tz010x8zYpjva6OQxsQ2CxSOtMsk2EVa7oA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5529
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-8.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Apr 15, 2023 at 03:55:05PM +0000, Bobby Eshleman wrote:
->On Fri, Apr 28, 2023 at 12:43:09PM +0200, Stefano Garzarella wrote:
->> On Sat, Apr 15, 2023 at 07:13:47AM +0000, Bobby Eshleman wrote:
->> > CC'ing virtio-dev@lists.oasis-open.org because this thread is starting
->> > to touch the spec.
->> >
->> > On Wed, Apr 19, 2023 at 12:00:17PM +0200, Stefano Garzarella wrote:
->> > > Hi Bobby,
->> > >
->> > > On Fri, Apr 14, 2023 at 11:18:40AM +0000, Bobby Eshleman wrote:
->> > > > CC'ing Cong.
->> > > >
->> > > > On Fri, Apr 14, 2023 at 12:25:56AM +0000, Bobby Eshleman wrote:
->> > > > > Hey all!
->> > > > >
->> > > > > This series introduces support for datagrams to virtio/vsock.
->> > >
->> > > Great! Thanks for restarting this work!
->> > >
->> >
->> > No problem!
->> >
->> > > > >
->> > > > > It is a spin-off (and smaller version) of this series from the summer:
->> > > > >   https://lore.kernel.org/all/cover.1660362668.git.bobby.eshleman@bytedance.com/
->> > > > >
->> > > > > Please note that this is an RFC and should not be merged until
->> > > > > associated changes are made to the virtio specification, which will
->> > > > > follow after discussion from this series.
->> > > > >
->> > > > > This series first supports datagrams in a basic form for virtio, and
->> > > > > then optimizes the sendpath for all transports.
->> > > > >
->> > > > > The result is a very fast datagram communication protocol that
->> > > > > outperforms even UDP on multi-queue virtio-net w/ vhost on a variety
->> > > > > of multi-threaded workload samples.
->> > > > >
->> > > > > For those that are curious, some summary data comparing UDP and VSOCK
->> > > > > DGRAM (N=5):
->> > > > >
->> > > > > 	vCPUS: 16
->> > > > > 	virtio-net queues: 16
->> > > > > 	payload size: 4KB
->> > > > > 	Setup: bare metal + vm (non-nested)
->> > > > >
->> > > > > 	UDP: 287.59 MB/s
->> > > > > 	VSOCK DGRAM: 509.2 MB/s
->> > > > >
->> > > > > Some notes about the implementation...
->> > > > >
->> > > > > This datagram implementation forces datagrams to self-throttle according
->> > > > > to the threshold set by sk_sndbuf. It behaves similar to the credits
->> > > > > used by streams in its effect on throughput and memory consumption, but
->> > > > > it is not influenced by the receiving socket as credits are.
->> > >
->> > > So, sk_sndbuf influece the sender and sk_rcvbuf the receiver, right?
->> > >
->> >
->> > Correct.
->> >
->> > > We should check if VMCI behaves the same.
->> > >
->> > > > >
->> > > > > The device drops packets silently. There is room for improvement by
->> > > > > building into the device and driver some intelligence around how to
->> > > > > reduce frequency of kicking the virtqueue when packet loss is high. I
->> > > > > think there is a good discussion to be had on this.
->> > >
->> > > Can you elaborate a bit here?
->> > >
->> > > Do you mean some mechanism to report to the sender that a destination
->> > > (cid, port) is full so the packet will be dropped?
->> > >
->> >
->> > Correct. There is also the case of there being no receiver at all for
->> > this address since this case isn't rejected upon connect(). Ideally,
->> > such a socket (which will have 100% packet loss) will be throttled
->> > aggressively.
->> >
->> > Before we go down too far on this path, I also want to clarify that
->> > using UDP over vhost/virtio-net also has this property... this can be
->> > observed by using tcpdump to dump the UDP packets on the bridge network
->> > your VM is using. UDP packets sent to a garbage address can be seen on
->> > the host bridge (this is the nature of UDP, how is the host supposed to
->> > know the address eventually goes nowhere). I mention the above because I
->> > think it is possible for vsock to avoid this cost, given that it
->> > benefits from being point-to-point and g2h/h2g.
->> >
->> > If we're okay with vsock being on par, then the current series does
->> > that. I propose something below that can be added later and maybe
->> > negotiated as a feature bit too.
->>
->> I see and I agree on that, let's do it step by step.
->> If we can do it in the first phase is great, but I think is fine to add
->> this feature later.
->>
->> >
->> > > Can we adapt the credit mechanism?
->> > >
->> >
->> > I've thought about this a lot because the attraction of the approach for
->> > me would be that we could get the wait/buffer-limiting logic for free
->> > and without big changes to the protocol, but the problem is that the
->> > unreliable nature of datagrams means that the source's free-running
->> > tx_cnt will become out-of-sync with the destination's fwd_cnt upon
->> > packet loss.
->>
->> We need to understand where the packet can be lost.
->> If the packet always reaches the destination (vsock driver or device),
->> we can discard it, but also update the counters.
->>
->> >
->> > Imagine a source that initializes and starts sending packets before a
->> > destination socket even is created, the source's self-throttling will be
->> > dysfunctional because its tx_cnt will always far exceed the
->> > destination's fwd_cnt.
->>
->> Right, the other problem I see is that the socket aren't connected, so
->> we have 1-N relationship.
->>
->
->Oh yeah, good point.
->
->> >
->> > We could play tricks with the meaning of the CREDIT_UPDATE message and
->> > fwd_cnt/buf_alloc fields, but I don't think we want to go down that
->> > path.
->> >
->> > I think that the best and simplest approach introduces a congestion
->> > notification (VIRTIO_VSOCK_OP_CN?). When a packet is dropped, the
->> > destination sends this notification. At a given repeated time period T,
->> > the source can check if it has received any notifications in the last T.
->> > If so, it halves its buffer allocation. If not, it doubles its buffer
->> > allocation unless it is already at its max or original value.
->> >
->> > An "invalid" socket which never has any receiver will converge towards a
->> > rate limit of one packet per time T * log2(average pkt size). That is, a
->> > socket with 100% packet loss will only be able to send 16 bytes every
->> > 4T. A default send buffer of MAX_UINT32 and T=5ms would hit zero within
->> > 160ms given at least one packet sent per 5ms. I have no idea if that is
->> > a reasonable default T for vsock, I just pulled it out of a hat for the
->> > sake of the example.
->> >
->> > "Normal" sockets will be responsive to high loss and rebalance during
->> > low loss. The source is trying to guess and converge on the actual
->> > buffer state of the destination.
->> >
->> > This would reuse the already-existing throttling mechanisms that
->> > throttle based upon buffer allocation. The usage of sk_sndbuf would have
->> > to be re-worked. The application using sendmsg() will see EAGAIN when
->> > throttled, or just sleep if !MSG_DONTWAIT.
->>
->> I see, it looks interesting, but I think we need to share that
->> information between multiple sockets, since the same destination
->> (cid, port), can be reached by multiple sockets.
->>
->
->Good point, that is true.
->
->> Another approach could be to have both congestion notification and
->> decongestion, but maybe it produces double traffic.
->>
->
->I think this could simplify things and could reduce noise. It is also
->probably sufficient for the source to simply halt upon congestion
->notification and resume upon decongestion notification, instead of
->scaling up and down like I suggested above. It also avoids the
->burstiness that would occur with a "congestion notification"-only
->approach where the source guesses when to resume and guesses wrong.
->
->The congestion notification may want to have an expiration period after
->which the sender can resume without receiving a decongestion
->notification? If it receives congestion again, then it can halt again.
+> Juergen Gross (16):
+>   x86/mtrr: remove physical address size calculation
+>   x86/mtrr: replace some constants with defines
+>   x86/mtrr: support setting MTRR state for software defined MTRRs
+>   x86/hyperv: set MTRR state when running as SEV-SNP Hyper-V guest
+>   x86/xen: set MTRR state when running as Xen PV initial domain
+>   x86/mtrr: replace vendor tests in MTRR code
+>   x86/mtrr: have only one set_mtrr() variant
+>   x86/mtrr: move 32-bit code from mtrr.c to legacy.c
+>   x86/mtrr: allocate mtrr_value array dynamically
+>   x86/mtrr: add get_effective_type() service function
+>   x86/mtrr: construct a memory map with cache modes
+>   x86/mtrr: add mtrr=debug command line option
+>   x86/mtrr: use new cache_map in mtrr_type_lookup()
+>   x86/mtrr: don't let mtrr_type_lookup() return MTRR_TYPE_INVALID
+>   x86/mm: only check uniform after calling mtrr_type_lookup()
+>   x86/mtrr: remove unused code
+> 
 
-Yep, I agree.
+A Nit -> Documentation/process/maintainer-tip.rst suggests:
+"The condensed patch description in the subject line should start with a
+uppercase letter and ..."
 
-Anyway the congestion/decongestion messages should be just a hint, 
-because the other peer has to keep the state and a malicious host/guest 
-could use it for DoS, so the peer could discard these packets if it has 
-no more space to save the state.
-
-Thanks,
-Stefano
-
+-Sohil
