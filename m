@@ -2,85 +2,88 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C976F7043
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 May 2023 18:54:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 401556F793E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 May 2023 00:41:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjEDQyz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 4 May 2023 12:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35916 "EHLO
+        id S229751AbjEDWl2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 4 May 2023 18:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229996AbjEDQyw (ORCPT
+        with ESMTP id S229684AbjEDWl1 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 4 May 2023 12:54:52 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698472680;
-        Thu,  4 May 2023 09:54:49 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f145d1b85fso126994e87.0;
-        Thu, 04 May 2023 09:54:49 -0700 (PDT)
+        Thu, 4 May 2023 18:41:27 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B8086AD;
+        Thu,  4 May 2023 15:41:26 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-64115e652eeso15908253b3a.0;
+        Thu, 04 May 2023 15:41:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683219287; x=1685811287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zWuEZkogQrpROHMVf4Afmv59RhcW/mBv705XzrKNcwg=;
-        b=h1I5pt2pWUP0tbSvoq0HGWi7cXdL88LVYVgOA2PXd8xYgjLSlbQvcg9QCTSZAhYNFT
-         4bnY0fpW/OZZjtenYMNv+t5oxb2Iq6wBEUBwMrjGB4rXeFLMg9szxoupOANF94p5n8bj
-         FBv5gEKq2+Jmk/4uyuBySWmNZly1MR6IgZUgT6QAFaOw9ajC0OmWdL5c32u1qh46vVl+
-         zwaubiKXwu0Xqsl3f7f0oWmfje8ESf0x2TlppY0KKMj78gfn93skK/6445rl5jDCCsqO
-         LH06f7LFAT6E6NtYTbDymF2OWWTJTe3pJURWuQAsyp1uYcSg/QPtnBz5Ku4DAb/K2b2K
-         0cyQ==
+        d=gmail.com; s=20221208; t=1683240086; x=1685832086;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iuR5Nn17jNx3hsu5wtmqgX3ulS4giwJ61q7gFIqEyfQ=;
+        b=lKI3pfgrV+/x+0UIm+839VzQtOaWFfJDJQTUbgTy/Nl77X2aJAG7DgKZzZDFfgCyxe
+         Us3UptKxw6DfJihFm2/yAJ9A1DbMsSiOpHEkdEPRYV65wLK6GzCydjiOdPmlN4baWhMq
+         eVNP7kzRmZStDeh+neeplvdI19iFgKNomUdfE/p3VlHs7FfEVcJQU37oH4kvWnQcgh/U
+         1V0AmfOSdfA7iAT0c1ZIBjgNMWYmJ9gbEwaNDrcHhp7XRIAkL4ijvDfyP6dGwhKOS1Dw
+         b3l+hEHQ74QV39k+7DXeG4TQUi3R7x30YDJqsUbMfUVUCq2S57YMDJf/5fBGLSqwPmta
+         sf4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683219287; x=1685811287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zWuEZkogQrpROHMVf4Afmv59RhcW/mBv705XzrKNcwg=;
-        b=HMcrbk7lth7JPPzy/LlpDBg0H6YvM8XdFGkDa3d8vxuF+v6OnDYJJbr9Firrb/N2TM
-         dL0HGbcSyyQ9PbDZaJ2pcI1dJ6s85GhCWa9kiYzSIYZMy7Ib1GlZ8AwfYMuZFCUMZibz
-         X4CD/lBnAecBwUOfgSIatHP9IPsGjpmpWYIke15Uwpc8Fb2GNYkVcwYRt9XVwDfJt9fs
-         jnv6a/UtK3wxeoXpy4rtHVQ7WDqT7kUtizd4ma0vZgdqia80uJ71MCXtWcc3yxbz10a4
-         45gbsqAwQYqHBE1qDUfcy2AKvauMnLQnp2KmipcSoytTNThUyU42GeZQ0luZ4BHzCQCK
-         l8YA==
-X-Gm-Message-State: AC+VfDwD9iia89vKtXEQO/xTbQPaniDZQqeH0Wqdxv/XBbrTpv1t2LrL
-        R2TkxARdIK5agHquwTJFHuU=
-X-Google-Smtp-Source: ACHHUZ6DCMzKDQdWDNz5XYVj6UKhn7SpghglT8y5gsikn9UDjxEKWrx/AKn5edWATVXtU+lNPN+nLQ==
-X-Received: by 2002:ac2:44d5:0:b0:4ea:fafd:e66f with SMTP id d21-20020ac244d5000000b004eafafde66fmr5317924lfm.0.1683219287470;
-        Thu, 04 May 2023 09:54:47 -0700 (PDT)
-Received: from localhost (88-115-161-74.elisa-laajakaista.fi. [88.115.161.74])
-        by smtp.gmail.com with ESMTPSA id 10-20020ac2568a000000b004edc7f6ee44sm6495865lfr.234.2023.05.04.09.54.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 09:54:47 -0700 (PDT)
-Date:   Thu, 4 May 2023 19:54:28 +0300
-From:   Zhi Wang <zhi.wang.linux@gmail.com>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
+        d=1e100.net; s=20221208; t=1683240086; x=1685832086;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iuR5Nn17jNx3hsu5wtmqgX3ulS4giwJ61q7gFIqEyfQ=;
+        b=FcxmXs3/0W8UsoMxiij2FXP5DGyYT9s12HydTzS5PosiJwi4np1I84GafTDXIr/YpH
+         gB1YIVWOtMQ7T0zuzvNDYpauEN/TKRcvMhYaghqqTkIIGjSRybOqYoYs9dP+L+QMYLLM
+         LrxvpvyjhWbHm3z2BdAmL3AIZo0nKtHp3LQGEwMyOvW9+jHyt8WnJwXWRP9jVxWjqVKW
+         v+e71obwFF7T7KMl3l6nUb4E4jFjXdt9YD1FrLMZejf/IoxSbm6XWh0a53tWxh1pfES9
+         jrk0bZ9oUjhQspvuUERbo8yy9KDP5bKM+YOF2qNFP838uirvXyYeaSWMnjk2eyhZ6wYd
+         dE4w==
+X-Gm-Message-State: AC+VfDwEfsbsL0eDZYQQKwveyvIXmKsKdF4/+13BUhi4zjwUB7xlBlB4
+        fBPyZcAPa1g5VSH1RLk3TEc=
+X-Google-Smtp-Source: ACHHUZ5BKfeQ9wBTyrFRg5e6QEIj76WiIyPay+ndAQjIGQ0SMLB/6tqtD5yksIl8IIDJFWWKCqrvhQ==
+X-Received: by 2002:a17:902:f546:b0:1a3:dcc1:307d with SMTP id h6-20020a170902f54600b001a3dcc1307dmr6387044plf.23.1683240085993;
+        Thu, 04 May 2023 15:41:25 -0700 (PDT)
+Received: from ?IPV6:2404:f801:10:102::36? ([2404:f801:8050:3:80be::36])
+        by smtp.gmail.com with ESMTPSA id c22-20020a170902b69600b001a6f6638595sm48874pls.92.2023.05.04.15.41.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 May 2023 15:41:25 -0700 (PDT)
+Message-ID: <6e9b5b99-04eb-9b6a-5218-6cfa696a08ee@gmail.com>
+Date:   Thu, 4 May 2023 15:41:13 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [RFC PATCH V5 15/15] x86/sev: Fix interrupt exit code paths from
+ #HV exception
+Content-Language: en-US
+To:     Tom Lendacky <thomas.lendacky@amd.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
         jiangshan.ljs@antgroup.com, peterz@infradead.org,
         ashish.kalra@amd.com, srutherford@google.com,
         akpm@linux-foundation.org, anshuman.khandual@arm.com,
         pawan.kumar.gupta@linux.intel.com, adrian.hunter@intel.com,
         daniel.sneddon@linux.intel.com, alexander.shishkin@linux.intel.com,
         sandipan.das@amd.com, ray.huang@amd.com, brijesh.singh@amd.com,
-        michael.roth@amd.com, thomas.lendacky@amd.com,
-        venu.busireddy@oracle.com, sterritt@google.com,
-        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com,
-        pangupta@amd.com, linux-kernel@vger.kernel.org,
+        michael.roth@amd.com, venu.busireddy@oracle.com,
+        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
+        fenghua.yu@intel.com
+Cc:     pangupta@amd.com, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-arch@vger.kernel.org
-Subject: Re: [RFC PATCH V5 05/15] clocksource/drivers/hyper-v: decrypt
- hyperv tsc page in sev-snp enlightened guest
-Message-ID: <20230504195428.00007eda.zhi.wang.linux@gmail.com>
-In-Reply-To: <20230501085726.544209-6-ltykernel@gmail.com>
 References: <20230501085726.544209-1-ltykernel@gmail.com>
-        <20230501085726.544209-6-ltykernel@gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+ <20230501085726.544209-16-ltykernel@gmail.com>
+ <3c91e1ab-29f4-09cb-1268-52fd9c3e34f4@amd.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <3c91e1ab-29f4-09cb-1268-52fd9c3e34f4@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -89,38 +92,24 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon,  1 May 2023 04:57:15 -0400
-Tianyu Lan <ltykernel@gmail.com> wrote:
-
-> From: Tianyu Lan <tiala@microsoft.com>
+On 5/1/2023 9:02 AM, Tom Lendacky wrote:
+>> From: Ashish Kalra <ashish.kalra@amd.com>
+>>
+>> Add checks in interrupt exit code paths in case of returns
+>> to user mode to check if currently executing the #HV handler
+>> then don't follow the irqentry_exit_to_user_mode path as
+>> that can potentially cause the #HV handler to be
+>> preempted and rescheduled on another CPU. Rescheduled #HV
+>> handler on another cpu will cause interrupts to be handled
+>> on a different cpu than the injected one, causing
+>> invalid EOIs and missed/lost guest interrupts and
+>> corresponding hangs and/or per-cpu IRQs handled on
+>> non-intended cpu.
+>>
+>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 > 
-> Hyper-V tsc page is shared with hypervisor and it should
-> be decrypted in sev-snp enlightened guest when it's used.
-> 
-> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-> ---
-> Change since RFC V2:
->        * Change the Subject line prefix
-> ---
->  drivers/clocksource/hyperv_timer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> index bcd9042a0c9f..66e29a19770b 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -376,7 +376,7 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
->  static union {
->  	struct ms_hyperv_tsc_page page;
->  	u8 reserved[PAGE_SIZE];
-> -} tsc_pg __aligned(PAGE_SIZE);
-> +} tsc_pg __bss_decrypted __aligned(PAGE_SIZE);
->  
+> This should be merged into one of the appropriate #HV patches and just 
+> add Ashish with a Co-developed-by: tag where appropriate. This would be 
+> appropriate as a separate only if discovered after the series was merged.
 
-Out of curiosity, this is not a on/off for VM with paravisor and full-enlightened VM, how
-does change affect the case of VM with paravisor? I assume the VM with paravisor works fine
-without this previously.
-
->  static struct ms_hyperv_tsc_page *tsc_page = &tsc_pg.page;
->  static unsigned long tsc_pfn;
-
+Sure. Will update in the next version.
