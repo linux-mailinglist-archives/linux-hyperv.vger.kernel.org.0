@@ -2,55 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 953466F6F79
-	for <lists+linux-hyperv@lfdr.de>; Thu,  4 May 2023 17:58:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C976F7043
+	for <lists+linux-hyperv@lfdr.de>; Thu,  4 May 2023 18:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231314AbjEDP6l (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 4 May 2023 11:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
+        id S229823AbjEDQyz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 4 May 2023 12:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230039AbjEDP6k (ORCPT
+        with ESMTP id S229996AbjEDQyw (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 4 May 2023 11:58:40 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6ED468B;
-        Thu,  4 May 2023 08:58:39 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2a8dc09e884so1372171fa.1;
-        Thu, 04 May 2023 08:58:39 -0700 (PDT)
+        Thu, 4 May 2023 12:54:52 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698472680;
+        Thu,  4 May 2023 09:54:49 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f145d1b85fso126994e87.0;
+        Thu, 04 May 2023 09:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683215918; x=1685807918;
+        d=gmail.com; s=20221208; t=1683219287; x=1685811287;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wYBoD42fi0Qo48RQvnR/5/xNrxWUbWiP9dXKPNjnGZc=;
-        b=bXqQqAH97aZqNoW6tYHPqjwasg8isVEvVzYfRdDnYi4bHmmJhsUuyRBPiS2DzfvxXD
-         OkKoXvNDeUw28Ry1YuZw4XZPfa7wUHL/CgMgF3Kimqe5+qtPFYQmumgVSK98O899FiVH
-         v/P9iNpcNC/SOB9HpRDQ5orjOCJWxgCPr/JegUbpxIaZmi3qZxzFbCd+L1clGiNGUzWx
-         EGyp6pvCTGbrOx70ztLvOpmxkwCCVEt+Emo1fDgdZqjlkA4+L6/y9IZykRvAXchVlDQY
-         tc6RpHqPRrxJXZgK5zRcDV3FR7A0J5jqmFY1oFkkDKXqxImmafAVTg0lh1wzdKap+IVS
-         p6rA==
+        bh=zWuEZkogQrpROHMVf4Afmv59RhcW/mBv705XzrKNcwg=;
+        b=h1I5pt2pWUP0tbSvoq0HGWi7cXdL88LVYVgOA2PXd8xYgjLSlbQvcg9QCTSZAhYNFT
+         4bnY0fpW/OZZjtenYMNv+t5oxb2Iq6wBEUBwMrjGB4rXeFLMg9szxoupOANF94p5n8bj
+         FBv5gEKq2+Jmk/4uyuBySWmNZly1MR6IgZUgT6QAFaOw9ajC0OmWdL5c32u1qh46vVl+
+         zwaubiKXwu0Xqsl3f7f0oWmfje8ESf0x2TlppY0KKMj78gfn93skK/6445rl5jDCCsqO
+         LH06f7LFAT6E6NtYTbDymF2OWWTJTe3pJURWuQAsyp1uYcSg/QPtnBz5Ku4DAb/K2b2K
+         0cyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683215918; x=1685807918;
+        d=1e100.net; s=20221208; t=1683219287; x=1685811287;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wYBoD42fi0Qo48RQvnR/5/xNrxWUbWiP9dXKPNjnGZc=;
-        b=HsJe6qFg2u/O8pJZTWL0MxFlvrSogGxxkEDPeZkv6nKnyTLsZ3QwgIrs7UJ6LRNrML
-         bBDaRmtlhg8MQUD0sHERzhV1aF+aLWHGffH+G45BhawNXxFZgO7hKfTYg7y4I366q7gM
-         xb/aAeNVEqex8QQHX5aDSd/1BAQTxvX1qgZw21RgoSYpDPmNNZkit7HVrSzUJ+im32QI
-         uyvn0SNDABPOOQDXmtRsE4CYZq/pZC2nTk7mFKp+1SmiP5xrCZtfFiTrO/lZMK4xWwuM
-         dG7ahO+/u4efx55t0mWW3k/Z7mUahL36a5bK0A5cqNZGstEbmDMLWsfNqBrgVobNAHnb
-         8dIg==
-X-Gm-Message-State: AC+VfDz99NtXESOTB9SKAzRMOLecJAzPfjYDCThxo12BWS8WSEiqoy8W
-        2Fx7HCnw0IglO5jZ8mJ80p8=
-X-Google-Smtp-Source: ACHHUZ7lf9SJwpLxOd9zE09fOQJ6fYIObPElS6/ynR+3eECh6A5+PBp3kvB9rprdiMPydNUiRBzNvA==
-X-Received: by 2002:a2e:a261:0:b0:2ac:7237:d5bf with SMTP id k1-20020a2ea261000000b002ac7237d5bfmr1342238ljm.2.1683215917713;
-        Thu, 04 May 2023 08:58:37 -0700 (PDT)
+        bh=zWuEZkogQrpROHMVf4Afmv59RhcW/mBv705XzrKNcwg=;
+        b=HMcrbk7lth7JPPzy/LlpDBg0H6YvM8XdFGkDa3d8vxuF+v6OnDYJJbr9Firrb/N2TM
+         dL0HGbcSyyQ9PbDZaJ2pcI1dJ6s85GhCWa9kiYzSIYZMy7Ib1GlZ8AwfYMuZFCUMZibz
+         X4CD/lBnAecBwUOfgSIatHP9IPsGjpmpWYIke15Uwpc8Fb2GNYkVcwYRt9XVwDfJt9fs
+         jnv6a/UtK3wxeoXpy4rtHVQ7WDqT7kUtizd4ma0vZgdqia80uJ71MCXtWcc3yxbz10a4
+         45gbsqAwQYqHBE1qDUfcy2AKvauMnLQnp2KmipcSoytTNThUyU42GeZQ0luZ4BHzCQCK
+         l8YA==
+X-Gm-Message-State: AC+VfDwD9iia89vKtXEQO/xTbQPaniDZQqeH0Wqdxv/XBbrTpv1t2LrL
+        R2TkxARdIK5agHquwTJFHuU=
+X-Google-Smtp-Source: ACHHUZ6DCMzKDQdWDNz5XYVj6UKhn7SpghglT8y5gsikn9UDjxEKWrx/AKn5edWATVXtU+lNPN+nLQ==
+X-Received: by 2002:ac2:44d5:0:b0:4ea:fafd:e66f with SMTP id d21-20020ac244d5000000b004eafafde66fmr5317924lfm.0.1683219287470;
+        Thu, 04 May 2023 09:54:47 -0700 (PDT)
 Received: from localhost (88-115-161-74.elisa-laajakaista.fi. [88.115.161.74])
-        by smtp.gmail.com with ESMTPSA id v5-20020a2e9245000000b002a8ecae9567sm6629014ljg.84.2023.05.04.08.58.37
+        by smtp.gmail.com with ESMTPSA id 10-20020ac2568a000000b004edc7f6ee44sm6495865lfr.234.2023.05.04.09.54.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 08:58:37 -0700 (PDT)
-Date:   Thu, 4 May 2023 18:58:14 +0300
+        Thu, 04 May 2023 09:54:47 -0700 (PDT)
+Date:   Thu, 4 May 2023 19:54:28 +0300
 From:   Zhi Wang <zhi.wang.linux@gmail.com>
 To:     Tianyu Lan <ltykernel@gmail.com>
 Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
@@ -69,14 +69,12 @@ Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         pangupta@amd.com, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-arch@vger.kernel.org
-Subject: Re: [RFC PATCH V5 03/15] x86/hyperv: Set Virtual Trust Level in
- VMBus init message
-Message-ID: <20230504185814.00005792.zhi.wang.linux@gmail.com>
-In-Reply-To: <4db13429-ffb0-debc-cec4-e37d0e526934@gmail.com>
+Subject: Re: [RFC PATCH V5 05/15] clocksource/drivers/hyper-v: decrypt
+ hyperv tsc page in sev-snp enlightened guest
+Message-ID: <20230504195428.00007eda.zhi.wang.linux@gmail.com>
+In-Reply-To: <20230501085726.544209-6-ltykernel@gmail.com>
 References: <20230501085726.544209-1-ltykernel@gmail.com>
-        <20230501085726.544209-4-ltykernel@gmail.com>
-        <20230502223041.00000240.zhi.wang.linux@gmail.com>
-        <4db13429-ffb0-debc-cec4-e37d0e526934@gmail.com>
+        <20230501085726.544209-6-ltykernel@gmail.com>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -91,87 +89,38 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 4 May 2023 08:38:46 -0700
+On Mon,  1 May 2023 04:57:15 -0400
 Tianyu Lan <ltykernel@gmail.com> wrote:
 
-> On 5/2/2023 12:30 PM, Zhi Wang wrote:
-> > On Mon,  1 May 2023 04:57:13 -0400
-> > Tianyu Lan <ltykernel@gmail.com> wrote:
-> > 
-> >> From: Tianyu Lan <tiala@microsoft.com>
-> >>
-> >> sev-snp guest provides vtl(Virtual Trust Level) and
-> >> get it from hyperv hvcall via HVCALL_GET_VP_REGISTERS.
-> >> Set target vtl in the VMBus init message.
-> >>
-> >> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-> >> ---
-> >> Change since RFC v4:
-> >>         * Use struct_size to calculate array size.
-> >>         * Fix some coding style
-> >>
-> >> Change since RFC v3:
-> >>         * Use the standard helper functions to check hypercall result
-> >>         * Fix coding style
-> >>
-> >> Change since RFC v2:
-> >>         * Rename get_current_vtl() to get_vtl()
-> >>         * Fix some coding style issues
-> >> ---
-> >>   arch/x86/hyperv/hv_init.c          | 36 ++++++++++++++++++++++++++++++
-> >>   arch/x86/include/asm/hyperv-tlfs.h |  7 ++++++
-> >>   drivers/hv/connection.c            |  1 +
-> >>   include/asm-generic/mshyperv.h     |  1 +
-> >>   include/linux/hyperv.h             |  4 ++--
-> >>   5 files changed, 47 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> >> index 9f3e2d71d015..331b855314b7 100644
-> >> --- a/arch/x86/hyperv/hv_init.c
-> >> +++ b/arch/x86/hyperv/hv_init.c
-> >> @@ -384,6 +384,40 @@ static void __init hv_get_partition_id(void)
-> >>   	local_irq_restore(flags);
-> >>   }
-> >>   
-> >> +static u8 __init get_vtl(void)
-> >> +{
-> >> +	u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
-> >> +	struct hv_get_vp_registers_input *input;
-> >> +	struct hv_get_vp_registers_output *output;
-> >> +	u64 vtl = 0;
-> >> +	u64 ret;
-> >> +	unsigned long flags;
-> >> +
-> >> +	local_irq_save(flags);
-> >> +	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
-> >> +	output = (struct hv_get_vp_registers_output *)input;
-> > 
-> > ===
-> >> +	if (!input) {
-> >> +		local_irq_restore(flags);
-> >> +		goto done;
-> >> +	}
-> >> +
-> > ===
-> > Is this really necessary?
-> > 
-> > drivers/hv/hv_common.c:
-> > 
-> >          hyperv_pcpu_input_arg = alloc_percpu(void  *);
-> >          BUG_ON(!hyperv_pcpu_input_arg);
-> > 
-> > 
+> From: Tianyu Lan <tiala@microsoft.com>
 > 
-> Hi Zhi:
-> 	The hyperv_pcpu_input_arg is a point to address of input arg
-> pages and these pages are allocated in the hv_common_cpu_init(). If
-> it failed to allocate these pages, the value pointed by 
-> hyperv_pcpu_input_arg will be NULL.
-> 	
+> Hyper-V tsc page is shared with hypervisor and it should
+> be decrypted in sev-snp enlightened guest when it's used.
+> 
+> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> ---
+> Change since RFC V2:
+>        * Change the Subject line prefix
+> ---
+>  drivers/clocksource/hyperv_timer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index bcd9042a0c9f..66e29a19770b 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -376,7 +376,7 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
+>  static union {
+>  	struct ms_hyperv_tsc_page page;
+>  	u8 reserved[PAGE_SIZE];
+> -} tsc_pg __aligned(PAGE_SIZE);
+> +} tsc_pg __bss_decrypted __aligned(PAGE_SIZE);
+>  
 
-Sorry, it seems my email editor dropped some text. I was wondering that
-if the check above is necessary as there is a BUG_ON() when allocating
-hyperv_pcpu_input_arg.
+Out of curiosity, this is not a on/off for VM with paravisor and full-enlightened VM, how
+does change affect the case of VM with paravisor? I assume the VM with paravisor works fine
+without this previously.
 
-So when coming to get_vtl(), the hyperv_pcpu_input_arg should not be NULL.
-(Guarded by the BUG_ON() in the allocation)?
+>  static struct ms_hyperv_tsc_page *tsc_page = &tsc_pg.page;
+>  static unsigned long tsc_pfn;
+
