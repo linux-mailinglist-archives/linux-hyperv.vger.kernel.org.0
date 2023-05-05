@@ -2,147 +2,128 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73B7D6F8797
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 May 2023 19:31:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25D966F8907
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 May 2023 20:52:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232643AbjEERbU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 5 May 2023 13:31:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60124 "EHLO
+        id S233337AbjEESwM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 5 May 2023 14:52:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232585AbjEERbS (ORCPT
+        with ESMTP id S233062AbjEESwL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 5 May 2023 13:31:18 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20DA11A1FD
-        for <linux-hyperv@vger.kernel.org>; Fri,  5 May 2023 10:31:17 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-528ab7097afso1444089a12.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 05 May 2023 10:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683307876; x=1685899876;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qAOxuvlzoNXvPjKXSolx+GWj91lIdWlZPd2J+lepu+A=;
-        b=YajfbfW6/wtHmrsLEvn1JkH+xI6N003d6IHsKYEdYKyQ4XBOf/ltXYAA8TT//7kx7h
-         8wJuT8QRTxgAHxrmJYouhI/7YgQTZm4mO10KjPCgeJdJMeuE5+h/bLiahSr81Gm/ecKB
-         zDx4TcPrzUJvkSrnc51y29YU+lehMTLTirJ8zF6Y7AvgQTUcfYtQ37OJnKLDHV7h0smL
-         PJn351waqBTnvLrthFCgyYl4ojqlUIUMdMZ9mvD3/1gMVpPtasu86bb2kRnLpCKWJhO/
-         k73RbTIykvnJHtRsAnnJa8Km60QZxDXHqCZ+6V04mHM7fIYa6vKKdRMKt3CdepgXl1bi
-         CXtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683307876; x=1685899876;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qAOxuvlzoNXvPjKXSolx+GWj91lIdWlZPd2J+lepu+A=;
-        b=RzgU1JOcqikutZ5W//MXKrH6dQABsCeqEUrcOBj6AW8+1qz7+pCXt74jPegzF6RBt9
-         rNY89hFxT6kO04aG/nwuZ5HOlW2bSylRT4zmfJ8OAdJn4Y1VNYsZ0tyITan4ytY3TXrA
-         n2mwfQLl/0NAhgbHBG8RweeKopVNyT9WWNyMYAqzUdHvTcEfgBgFeOUT+YYkVupDMlES
-         qiy+1kwp/SEjEgcHqvCs/GRyeZSX4Iy0mnWjpV4nlhN//S59I2BibBjH7c3PPJ4gTRNd
-         Nmr105asr4oJmG5Wran225IPI/3adChcTggCnbu/IXTtNjyT8SuTIgB7vCM8dBmcYkzs
-         DnwA==
-X-Gm-Message-State: AC+VfDwNhsYkeSOKjsPeMNqahYsFGSkk3idKVCf+2bNxuQ3EUgPEan/9
-        74liF41O5G42UyXfpfUPjcNHTZN0DoU=
-X-Google-Smtp-Source: ACHHUZ5AKtrEhFxY1tyiq165vY9w3gn7Qqc7+wcBsvMx8OszEeBENNSnTQn/dNy8sL8BRZ1pG6YlJeRQjuk=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:152:0:b0:52c:407a:2279 with SMTP id
- 79-20020a630152000000b0052c407a2279mr529292pgb.0.1683307876644; Fri, 05 May
- 2023 10:31:16 -0700 (PDT)
-Date:   Fri, 5 May 2023 10:31:15 -0700
-In-Reply-To: <6412bf27-4d05-eab8-3db1-d4efa44af3aa@digikod.net>
-Mime-Version: 1.0
-References: <20230505152046.6575-1-mic@digikod.net> <20230505152046.6575-3-mic@digikod.net>
- <ZFUumGdZDNs1tkQA@google.com> <6412bf27-4d05-eab8-3db1-d4efa44af3aa@digikod.net>
-Message-ID: <ZFU9YzqG/T+Ty9gY@google.com>
-Subject: Re: [PATCH v1 2/9] KVM: x86/mmu: Add support for prewrite page tracking
-From:   Sean Christopherson <seanjc@google.com>
-To:     "=?iso-8859-1?Q?Micka=EBl_Sala=FCn?=" <mic@digikod.net>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        "Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>,
-        "=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        "=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Fri, 5 May 2023 14:52:11 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8D21112A;
+        Fri,  5 May 2023 11:51:59 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 0E5D220EA203; Fri,  5 May 2023 11:51:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0E5D220EA203
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1683312719;
+        bh=mb5lvwg5ohLnnbkdoeBM8lxdqhlZn5srSg8X66I10YQ=;
+        h=From:To:Cc:Subject:Date:Reply-To:From;
+        b=FGPYeoobBbC8zpKtp262vui8o6VTAI05CAw2wWRvQj7vOvJOgCkmGRsoxzUd4ognE
+         8hgvhBdXC4TabrBsmVt5QU2yZvs1DgNBfj09deVQkxZEKDpolp5jO8Q3y/plDgNGrU
+         JBDyMi63+Xf5VRF+oIQq0/gqUqe2cYzdjMvIM2MI=
+From:   longli@linuxonhyperv.com
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Long Li <longli@microsoft.com>
+Subject: [PATCH] RDMA/mana_ib: Use v2 version of cfg_rx_steer_req to enable RX coalescing
+Date:   Fri,  5 May 2023 11:51:48 -0700
+Message-Id: <1683312708-24872-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: longli@microsoft.com
+X-Spam-Status: No, score=-11.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, May 05, 2023, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
->=20
-> On 05/05/2023 18:28, Sean Christopherson wrote:
-> > I have no doubt that we'll need to solve performance and scaling issues=
- with the
-> > memory attributes implementation, e.g. to utilize xarray multi-range su=
-pport
-> > instead of storing information on a per-4KiB-page basis, but AFAICT, th=
-e core
-> > idea is sound.  And a very big positive from a maintenance perspective =
-is that
-> > any optimizations, fixes, etc. for one use case (CoCo vs. hardening) sh=
-ould also
-> > benefit the other use case.
-> >=20
-> > [1] https://lore.kernel.org/all/20230311002258.852397-22-seanjc@google.=
-com
-> > [2] https://lore.kernel.org/all/Y2WB48kD0J4VGynX@google.com
-> > [3] https://lore.kernel.org/all/Y1a1i9vbJ%2FpVmV9r@google.com
->=20
-> I agree, I used this mechanism because it was easier at first to rely on =
-a
-> previous work, but while I was working on the MBEC support, I realized th=
-at
-> it's not the optimal way to do it.
->=20
-> I was thinking about using a new special EPT bit similar to
-> EPT_SPTE_HOST_WRITABLE, but it may not be portable though. What do you
-> think?
+From: Long Li <longli@microsoft.com>
 
-On x86, SPTEs are even more ephemeral than memslots.  E.g. for historical r=
-easons,
-KVM zaps all SPTEs if _any_ memslot is deleted, which is problematic if the=
- guest
-is moving around BARs, using option ROMs, etc.
+With RX coalescing, one CQE entry can be used to indicate multiple packets
+on the receive queue. This saves processing time and PCI bandwidth over
+the CQ.
 
-ARM's pKVM tracks metadata in its stage-2 PTEs, i.e. doesn't need an xarray=
- to
-otrack attributes, but that works only because pKVM is more privileged than=
- the
-host kernel, and the shared vs. private memory attribute that pKVM cares ab=
-out
-is very, very restricted in how it can be used and changed.
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/infiniband/hw/mana/qp.c |  5 ++++-
+ include/net/mana/mana.h         | 17 +++++++++++++++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-I tried shoehorning private vs. shared metadata into x86's SPTEs in the pas=
-t, and
-it ended up being a constant battle with the kernel, e.g. page migration, a=
-nd with
-KVM itself, e.g. the above memslot mess.
+diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+index 54b61930a7fd..83c768f96506 100644
+--- a/drivers/infiniband/hw/mana/qp.c
++++ b/drivers/infiniband/hw/mana/qp.c
+@@ -13,7 +13,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 				      u8 *rx_hash_key)
+ {
+ 	struct mana_port_context *mpc = netdev_priv(ndev);
+-	struct mana_cfg_rx_steer_req *req = NULL;
++	struct mana_cfg_rx_steer_req_v2 *req = NULL;
+ 	struct mana_cfg_rx_steer_resp resp = {};
+ 	mana_handle_t *req_indir_tab;
+ 	struct gdma_context *gc;
+@@ -33,6 +33,8 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 	mana_gd_init_req_hdr(&req->hdr, MANA_CONFIG_VPORT_RX, req_buf_size,
+ 			     sizeof(resp));
+ 
++	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
++
+ 	req->vport = mpc->port_handle;
+ 	req->rx_enable = 1;
+ 	req->update_default_rxobj = 1;
+@@ -46,6 +48,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
+ 	req->indir_tab_offset = sizeof(*req);
+ 	req->update_indir_tab = true;
++	req->cqe_coalescing_enable = true;
+ 
+ 	req_indir_tab = (mana_handle_t *)(req + 1);
+ 	/* The ind table passed to the hardware must have
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index cd386aa7c7cc..f8314b7c386c 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -596,6 +596,23 @@ struct mana_cfg_rx_steer_req {
+ 	u8 hashkey[MANA_HASH_KEY_SIZE];
+ }; /* HW DATA */
+ 
++struct mana_cfg_rx_steer_req_v2 {
++	struct gdma_req_hdr hdr;
++	mana_handle_t vport;
++	u16 num_indir_entries;
++	u16 indir_tab_offset;
++	u32 rx_enable;
++	u32 rss_enable;
++	u8 update_default_rxobj;
++	u8 update_hashkey;
++	u8 update_indir_tab;
++	u8 reserved;
++	mana_handle_t default_rxobj;
++	u8 hashkey[MANA_HASH_KEY_SIZE];
++	u8 cqe_coalescing_enable;
++	u8 reserved2[7];
++}; /* HW DATA */
++
+ struct mana_cfg_rx_steer_resp {
+ 	struct gdma_resp_hdr hdr;
+ }; /* HW DATA */
+-- 
+2.17.1
+
