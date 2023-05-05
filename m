@@ -2,38 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E556F872D
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 May 2023 19:01:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E6F66F8761
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 May 2023 19:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231465AbjEERB3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 5 May 2023 13:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
+        id S230297AbjEERSE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 5 May 2023 13:18:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231343AbjEERB2 (ORCPT
+        with ESMTP id S231236AbjEERSD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 5 May 2023 13:01:28 -0400
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [IPv6:2001:1600:4:17::bc0a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883E330EE
-        for <linux-hyperv@vger.kernel.org>; Fri,  5 May 2023 10:01:27 -0700 (PDT)
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QCcQt2Hl7zMqBQp;
-        Fri,  5 May 2023 19:01:26 +0200 (CEST)
-Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QCcQl2DxJzMpxhN;
-        Fri,  5 May 2023 19:01:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1683306086;
-        bh=Gz496lWCqtEQGiFhDAnNdISGi/Ti3+4r45rZfW9pMhA=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=0n9dK6yocwQrPoCyZhLiYaFRP+Rrc+AesC8U5DRpIAduml7GS9dfUNu27anU/Nq9H
-         X7nX6pZrCIdpSbikNeBpaLS6XS4cxGwP59sL8dmULJe3HbrVsb+7OJzRnuN4Tp0SIU
-         jtv1NK7dS4Wb0Fq0T7+YdNL/W/Ml/YkRAsZVmseM=
-Message-ID: <39125b11-659f-35f4-ac7a-a3ba31365950@digikod.net>
-Date:   Fri, 5 May 2023 19:01:18 +0200
-MIME-Version: 1.0
-User-Agent: 
+        Fri, 5 May 2023 13:18:03 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C008124A4
+        for <linux-hyperv@vger.kernel.org>; Fri,  5 May 2023 10:18:01 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-521262a6680so1573347a12.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 05 May 2023 10:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683307081; x=1685899081;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SxwNvfp9yRlruqDpvJxkAnrRtCk6mE67Bd3BubjypxQ=;
+        b=cXXc3M6yYogaCUYe2c+SrQc2MIdAmLJbXRkHUS9zG7xhw6MiEu2sitOw7/Gs8N+qYL
+         oXgYeStpeUI6b4JASS0HSftlcCCRj/X7n1N9WbKprVd/yNpe36+Ro8ZtPUj3p6Ld50JH
+         pqxQnHXwImJi8vy3sHQBgx80mx2LtgRBbImqJGjt3ifJhQvYtGUkTdTjALM0pcmAV+1D
+         6vpr8yMdnFBHG32elxIu/SKRWE8X5JKVIrtIk1RplILzJzkSNycRYJAr+Iqs6tbgmR/S
+         ugGjoODz+nslHOA/c91Rz89LssATB8IAOjXVho0NUWdysNmyIv7F6uQ3Fm1u7pfzIzFf
+         Lo4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683307081; x=1685899081;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SxwNvfp9yRlruqDpvJxkAnrRtCk6mE67Bd3BubjypxQ=;
+        b=MDWHWnqtOL+3YBGta6EIH5G/dsJQr2NglYnkRWi2SEMVh+XpmGNqIzXblVmkj+Bj34
+         d4Vt7akBD5u5LshZOI7wBvIoSdkY9dG9aqYTzM4R4Ql3C1L66qG1rRCtQS84ubzjR4vr
+         RxFoNJjRof6EPRXb0ak8S6GPSy5P9G3JLnC3A5nti1gGN17r5D64ZoQZ61RL8YiCRuaj
+         Zp9f5LtT+Rku2BmA8O9B4rqnj1gLtP83sJ0hPgxNS+0n9nzeU0pHeoW8uJ7XvzRXw+xJ
+         1X+B+Ngb7+GyK+8FJ9W2UqkVS7iUUhwYWVfi1Wm/OD/J7NM8mgFocgoS13pD/3XTq4WJ
+         XSDA==
+X-Gm-Message-State: AC+VfDxKB30RObRuBa/W/ntiGBBRlyK6Gbv/bMdNLHKjOEFVoyaLwDhX
+        A3DWSVAM8xgV5tq4Hp20dbzhSb9qrCU=
+X-Google-Smtp-Source: ACHHUZ6uHVJCOE/ldx1w0hZ4Jds3kKbtJzThF7Cs+tG2xUZ0aBKcfdgS0+FUqexTD5OeTy31Ux2XqzCsKXc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:8ac1:0:b0:513:efd4:d76 with SMTP id
+ y184-20020a638ac1000000b00513efd40d76mr529931pgd.5.1683307080808; Fri, 05 May
+ 2023 10:18:00 -0700 (PDT)
+Date:   Fri, 5 May 2023 10:17:59 -0700
+In-Reply-To: <39125b11-659f-35f4-ac7a-a3ba31365950@digikod.net>
+Mime-Version: 1.0
+References: <20230505152046.6575-1-mic@digikod.net> <20230505152046.6575-5-mic@digikod.net>
+ <ZFUyhPuhtMbYdJ76@google.com> <39125b11-659f-35f4-ac7a-a3ba31365950@digikod.net>
+Message-ID: <ZFU6R2pZ0Vx5RpAj@google.com>
 Subject: Re: [PATCH v1 4/9] KVM: x86: Add new hypercall to set EPT permissions
-Content-Language: en-US
-To:     Sean Christopherson <seanjc@google.com>
+From:   Sean Christopherson <seanjc@google.com>
+To:     "=?iso-8859-1?Q?Micka=EBl_Sala=FCn?=" <mic@digikod.net>
 Cc:     Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
@@ -49,75 +72,101 @@ Cc:     Borislav Petkov <bp@alien8.de>,
         Liran Alon <liran.alon@oracle.com>,
         "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
         Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        "Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>,
+        "=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         Thara Gopinath <tgopinath@microsoft.com>,
         Will Deacon <will@kernel.org>,
         Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        "=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>,
         dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
         linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
         virtualization@lists.linux-foundation.org, x86@kernel.org,
         xen-devel@lists.xenproject.org
-References: <20230505152046.6575-1-mic@digikod.net>
- <20230505152046.6575-5-mic@digikod.net> <ZFUyhPuhtMbYdJ76@google.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <ZFUyhPuhtMbYdJ76@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+On Fri, May 05, 2023, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
+>=20
+> On 05/05/2023 18:44, Sean Christopherson wrote:
+> > On Fri, May 05, 2023, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
+> > > Add a new KVM_HC_LOCK_MEM_PAGE_RANGES hypercall that enables a guest =
+to
+> > > set EPT permissions on a set of page ranges.
+> >=20
+> > IMO, manipulation of protections, both for memory (this patch) and CPU =
+state
+> > (control registers in the next patch) should come from userspace.  I ha=
+ve no
+> > objection to KVM providing plumbing if necessary, but I think userspace=
+ needs to
+> > to have full control over the actual state.
+>=20
+> By user space, do you mean the host user space or the guest user space?
 
-On 05/05/2023 18:44, Sean Christopherson wrote:
-> On Fri, May 05, 2023, Mickaï¿½l Salaï¿½n wrote:
->> Add a new KVM_HC_LOCK_MEM_PAGE_RANGES hypercall that enables a guest to
->> set EPT permissions on a set of page ranges.
-> 
-> IMO, manipulation of protections, both for memory (this patch) and CPU state
-> (control registers in the next patch) should come from userspace.  I have no
-> objection to KVM providing plumbing if necessary, but I think userspace needs to
-> to have full control over the actual state.
+Host userspace, a.k.a. the VMM.  Definitely not guest userspace.
 
-By user space, do you mean the host user space or the guest user space?
+> About the guest user space, I see several issues to delegate this kind of
+> control:
+> - These are restrictions only relevant to the kernel.
+> - The threat model is to protect against user space as early as possible.
+> - It would be more complex for no obvious gain.
+>=20
+> This patch series is an extension of the kernel self-protections mechanis=
+ms,
+> and they are not configured by user space.
+>=20
+>=20
+> >=20
+> > One of the things that caused Intel's control register pinning series t=
+o stall
+> > out was how to handle edge cases like kexec() and reboot.  Deferring to=
+ userspace
+> > means the kernel doesn't need to define policy, e.g. when to unprotect =
+memory,
+> > and avoids questions like "should userspace be able to overwrite pinned=
+ control
+> > registers".
+>=20
+> The idea is to authenticate every changes. For kexec, the VMM (or somethi=
+ng
+> else) would have to authenticate the new kernel. Do you have something el=
+se
+> in mind that could legitimately require such memory or CR changes?
 
-About the guest user space, I see several issues to delegate this kind 
-of control:
-- These are restrictions only relevant to the kernel.
-- The threat model is to protect against user space as early as possible.
-- It would be more complex for no obvious gain.
+I think we're on the same page, the VMM (host userspace) would need to ack =
+any
+changes.
 
-This patch series is an extension of the kernel self-protections 
-mechanisms, and they are not configured by user space.
+FWIW, SMM is another wart as entry to SMM clobbers CRs.  Now that CONFIG_KV=
+M_SMM
+is a thing, the easiest solution would be to disallow coexistence with SMM,=
+ though
+that might not be an option for many use cases (IIUC, QEMU-based deployment=
+s use
+SMM to implement secure boot).
 
+> > And like the confidential VM use case, keeping userspace in the loop is=
+ a big
+> > beneifit, e.g. the guest can't circumvent protections by coercing users=
+pace into
+> > writing to protected memory .
+>=20
+> I don't understand this part. Are you talking about the host user space? =
+How
+> the guest could circumvent protections?
 
-> 
-> One of the things that caused Intel's control register pinning series to stall
-> out was how to handle edge cases like kexec() and reboot.  Deferring to userspace
-> means the kernel doesn't need to define policy, e.g. when to unprotect memory,
-> and avoids questions like "should userspace be able to overwrite pinned control
-> registers".
-
-The idea is to authenticate every changes. For kexec, the VMM (or 
-something else) would have to authenticate the new kernel. Do you have 
-something else in mind that could legitimately require such memory or CR 
-changes?
-
-
-> 
-> And like the confidential VM use case, keeping userspace in the loop is a big
-> beneifit, e.g. the guest can't circumvent protections by coercing userspace into
-> writing to protected memory .
-
-I don't understand this part. Are you talking about the host user space? 
-How the guest could circumvent protections?
+Host userspace.  Guest configures a device buffer in write-protected memory=
+, gets
+a host (synthetic) device to write into the memory.
