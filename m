@@ -2,371 +2,442 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 842BD6F85BC
-	for <lists+linux-hyperv@lfdr.de>; Fri,  5 May 2023 17:30:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7259B6F8696
+	for <lists+linux-hyperv@lfdr.de>; Fri,  5 May 2023 18:22:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232949AbjEEPaG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 5 May 2023 11:30:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
+        id S232645AbjEEQWs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 5 May 2023 12:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232898AbjEEP3l (ORCPT
+        with ESMTP id S230163AbjEEQWq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 5 May 2023 11:29:41 -0400
-X-Greylist: delayed 445 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 05 May 2023 08:29:34 PDT
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A4611B7E
-        for <linux-hyperv@vger.kernel.org>; Fri,  5 May 2023 08:29:33 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QCZDH0FZXzMqc7P;
-        Fri,  5 May 2023 17:22:07 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QCZDG2bp6zMpxBc;
-        Fri,  5 May 2023 17:22:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1683300126;
-        bh=6hEUXV1Yu+QqE06q6YV92ksgcTE4SSVMGFp/YRlUSqM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCom6GYQLGlk2nCbcclR8AZKUkW0AJpZFC6wR92gff0rbAnNjJlFfzBd5J+3y++84
-         WAx+LLa8CAjewu98goOyt+2vh84ogydmCURfKSQ02P+jr2VYlfAmiT9Knsjn08r/LT
-         Tng2aFdb73PL8bp/dTy6vPMFTznPlq63+NzYf8sI=
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?q?Mihai=20Don=C8=9Bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?q?Nicu=C8=99or=20C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?q?=C8=98tefan=20=C8=98icleru?= <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH v1 9/9] virt: Add Heki KUnit tests
-Date:   Fri,  5 May 2023 17:20:46 +0200
-Message-Id: <20230505152046.6575-10-mic@digikod.net>
-In-Reply-To: <20230505152046.6575-1-mic@digikod.net>
-References: <20230505152046.6575-1-mic@digikod.net>
+        Fri, 5 May 2023 12:22:46 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021026.outbound.protection.outlook.com [52.101.57.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCC418FF6;
+        Fri,  5 May 2023 09:22:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LrPLKdaTOUQr8TMOfR4pFq7tGdKFunAlgbS/kf2FZMKhqHmMdEdd5MO+8RWVOSNe0YK3prFSP5Ixmn/o9zQAF/GIqAkCKvt8sJaQnrS0k8wl3jnWXaTKL3ALEU4YT3KUMDbNEYNM02k/et4hbiyu/2EVk+gJr2LCKY4gGli5Hx8zVibFyuY1O3pSPtnhy8IWNS1/VjQ4XEtfqXhaUnzAs6Bm07HULaYNloiZwye3tErgB2qGuEM/Z4DvCJKg9HuYjOeNLehtbhv6mCBquh4TMZK954LHvafS6HzKPu/n5SUFKhbywWIae1mlYfyHrQ/xLAsqgYk2fWCPP4PhrArziA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gmQAM5R3EP4RF3cfH/IdS0AJZ0l8bvoMwfmfJPzIp6Q=;
+ b=jcCMGEM6IuS0WA2ZAGXM3f3IHupYKwUgemceWIyzUF51HIQEVud7vFxXVRV9jkPWg/Kx/ufOPnvKTjXwl9JbD3JJ3jMgslVXyXc8khSxjvXSBpRUp27ZBdTWiHzzgDYKDTMIUuEhOiv0t1VOABPX8t66Uu1JnsQdQ1/sdWpptrdwaNe9KSCCMY/ptbZd+p8e3z7tl2cwzUKm9gA9aA6II/d3kip5yRjLuwGDeVwECLhiZIN4eUilAAbc1fgYQSCL1fkrxbJvyQLSdbFKV51PlpDGFCqSW6hGvq5LerRnf2b/6DN5s/ZKuBIAwN8sbMeiDET/UnpP8qB9SPmDpoA65Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gmQAM5R3EP4RF3cfH/IdS0AJZ0l8bvoMwfmfJPzIp6Q=;
+ b=Q0nHrwFD4Ow8A8l9z5PxgQ3qmIqX+kpR+n/R9xuA6l/4m4ORgb/703ySFWwHWOkE9CRam7pxbu71Ip+cZGltn+pm2fIZCx50u1lOg2f94umlo7NdGd8DxoMjzDD+oeqxPbNCtvGYhqbiCJ5zulWnuQXh9/+BNTeARdmMYmpKdzs=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by BL1PR21MB3139.namprd21.prod.outlook.com (2603:10b6:208:397::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.7; Fri, 5 May
+ 2023 16:22:41 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::9a0f:a04d:69bd:e622]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::9a0f:a04d:69bd:e622%4]) with mapi id 15.20.6387.012; Fri, 5 May 2023
+ 16:22:40 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: RE: [PATCH v6 5/6] Drivers: hv: vmbus: Support TDX guests
+Thread-Topic: [PATCH v6 5/6] Drivers: hv: vmbus: Support TDX guests
+Thread-Index: AQHZfttz9He9zHooa0q8pB8usY0kq69L3DoA
+Date:   Fri, 5 May 2023 16:22:40 +0000
+Message-ID: <BYAPR21MB16888F04BF0761A44396FF90D7729@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20230504225351.10765-1-decui@microsoft.com>
+ <20230504225351.10765-6-decui@microsoft.com>
+In-Reply-To: <20230504225351.10765-6-decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ca619e06-5cc5-479d-93c2-cdb8176563ea;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-05T16:16:39Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|BL1PR21MB3139:EE_
+x-ms-office365-filtering-correlation-id: 3aa9a957-ca90-44f4-3024-08db4d84f2d9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HNCLl8/BJPxPz9hoZvTHstyV5T17UNmHGA3quHf3kDmwnlGED247dD3b4RGJgmt36P6yMmvVmWRD2QXkCt9CUPDQ+YSevkZV6WQWKQ/tsSYdpQ8XOJYzEbGHaWS3JOidUXb/14OZ4524378VLAc/MqgjnYS0djWYy2YLaeGVwia7UQN4AuyNVx8TQJ0sXCGT4HiQmTEgW7s6DdVdR5WEfMkG1o6KrFZKsM0iaM2/kykD/S6+AV53dYy2c9QGrP5Z+2AkjxgzgfsL6HWN/SWcNz9dc4yZaZXC7orCcC9qu961qh6bNGVBl/AvmTLHxuhLJO7mZecumkrFgKONzhFtCrWj9TWvCpmnZcNKzKBOSyAl+z60sXquwHALdPqHg+yOKKDS/oqljDskcQOmYfIMnueta2Los+BrsfEKqQCcob0FmXNHooG2I7dGpWsrNxiWNSMLd0fIGMMXbF4DdGcHPA7Oyn1GDGexNMyQVllRPJ2/X6AiHqW8/TUo+ac61+mKL5Eh6XGEfoSXQpNx6Y0VRa6bYA+Q24IjVr0yWWNe9HDgllg+d9qFBiRN2Y2u6daWjkQInV9cI3wgpduvTAnSmzptJQIZxfDu9NzTE0SuOTsJtg3fhccJACNHbUDwVMTRKDR7L83ZrMz+5pZa3syQTeuIoQkzoKSLoYqf5oWXNrkHwWT4oHZpXsCgl7upKdwy
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(451199021)(82960400001)(122000001)(2906002)(921005)(38100700002)(7416002)(55016003)(52536014)(5660300002)(8936002)(8676002)(33656002)(86362001)(82950400001)(8990500004)(38070700005)(71200400001)(7696005)(478600001)(110136005)(10290500003)(9686003)(6506007)(26005)(186003)(54906003)(83380400001)(107886003)(41300700001)(66446008)(64756008)(66476007)(66946007)(76116006)(66556008)(4326008)(786003)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?n1vrJdRh8w5lvEK07iRPi0fiUNgCae3X93/tBFCrqtk7blQbDDM77uU2UkJn?=
+ =?us-ascii?Q?4KoGJMZ6rdmHjybWLrcu+QF8ZRy3sJeHTkjFN+hAdwI6rIpR/OlyLp4ADHZr?=
+ =?us-ascii?Q?tyICHSF1m7/kgXdvW8yhJa5JPtqXYJ8kZHYsnPqiL71Nk47fJU0fVDQc7zeA?=
+ =?us-ascii?Q?crs1xXr+7nt/AXX9uObHFNsxWIGg+QhYobsksyUh7uj7Q+bOQ+1y9XaeOk0+?=
+ =?us-ascii?Q?ReXhJN6d2CRd0NMta4Q6Xcg0qOMKgs9JyylWJA0Y37FHYSdbGAFJTj0MZRNt?=
+ =?us-ascii?Q?HzZoznBoWhvzn8AFBdw9kUQ4Dw6r5EDS5LkUNVB8EwtcVR+1p32U/b2tv8RG?=
+ =?us-ascii?Q?TPFJ4nQ9J1AcUevcvpjOtekVnmcc8KO7nanjH/UQ9MtRjJxP0Sm+pqVrzdgN?=
+ =?us-ascii?Q?JiPjwy+IJwPZh4qcEHWZY0VDZan3KhWYVZNWkxqsmdg6s9FO8ZpFoFx0I2PF?=
+ =?us-ascii?Q?Q3Hcqy5C+a4sUUITXspM3WQEsdf5s7WBTkjT1Z6w30TvhVavrtG7qGLuXTli?=
+ =?us-ascii?Q?prSxJ21IESuXrn4iEOAVqgJhejtoHBStL7d0hCdZI7ot4l+HRlLivlsf4DFO?=
+ =?us-ascii?Q?g6P8fzmEWCEYDnM0UOSAhcZSpL9/+uTQo/W8demx99cZy2CiSRVlOnNQaLUq?=
+ =?us-ascii?Q?jnrg+kjK6es9fiaNjs+BlmOsd17tUW/iKdfSEnLOYSYoHvkLT1VIiSIveu3e?=
+ =?us-ascii?Q?DGhZqyV/jb/ZDtPCwd3oghhdTemMm8StzhX9T/BELy9WqtvKAJzXZf5tdjwe?=
+ =?us-ascii?Q?RE8+Pbl6inSY2AHlyco6B+nnqeY/wXvLnFZlypFo7jV/P9wxFA8vUTKm8QU6?=
+ =?us-ascii?Q?G84iet3+gnQt591qHwQhp/vqMrfC30T3kEibBj4l5Q4BkW0DGOGlKv1I5/as?=
+ =?us-ascii?Q?7TyqZeybPGujuZCJq/pg6zqbva1zgjXV2vJ6V463WWJzMF4sABQRbk1H+PJd?=
+ =?us-ascii?Q?csmzh1TwLaAU04f9xPqx5wGDEspA0GWCxP39XIzGQYCAaaMNO2UuFgKCako3?=
+ =?us-ascii?Q?a+PauDOLFZJ/Y+dhpLWWoU3Mov/HujJQIGieuX/EDoV0tLAZ7xntoicb3pBh?=
+ =?us-ascii?Q?PvsBDziJPbhY2XCv9Tjqv/IptfF1N8FPGQDevTGMajN+ScnT906vQE1vGrJB?=
+ =?us-ascii?Q?iF6BHEZ9hkoFQmP2bj08rGwnowKq8hS5lO5vWurmyB5uDDXJ9gpYl9OeQR8k?=
+ =?us-ascii?Q?+kK7EIX/3hpegN2W6Gpp112J27fhuQv16+fqqY9F9qr0uvIgHSczPjvvtTNz?=
+ =?us-ascii?Q?O4JQRzymv9aHFmokIctG7wDFx+m0WFEhJXgRwc336qGbjy1imTPgC89aQQma?=
+ =?us-ascii?Q?+z11b9Kps4SSwK0Zwvsc6J3OTLxDNXhJgzrgjo+T7AN4K+LK/nUa4z9IJPcv?=
+ =?us-ascii?Q?1246+66KTxdAjyFbGpRnqHQOpThw+24D8O5V1ajwOjNr9Ha4UoYzAbjlp7qp?=
+ =?us-ascii?Q?8oDqrpDB4IPKzPZkmgW8z47nCAV6dTuQ/A2kqwg2ssoWECcVRveQvxi5IXEH?=
+ =?us-ascii?Q?Jui7G/QyH0pJHlthzfs/pmkBUZg+z1hlKpTGy68cBehGmR6risyektM1STcq?=
+ =?us-ascii?Q?xJwCgWihFri5c2vTcBHx4ubUwYljhaGgZ8bMFByuyOYEr+dnzfYJL2Wj5pxf?=
+ =?us-ascii?Q?Aw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3aa9a957-ca90-44f4-3024-08db4d84f2d9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2023 16:22:40.8013
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YVvxprO2XXi1R01JAD9GFsrwDaAa83KdMJ2S6Tg9coxhmbvpBcbDx37BdevhQQNZpC2jvY0mou3u3INPO+nOCDeZk1DQynyKCc1EiZWjauQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3139
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This adds a new CONFIG_HEKI_TEST option to run tests at boot.  Indeed,
-because this patch series forbids the loading of kernel modules after
-the boot, we need to make built-in tests.  Furthermore, because we use
-some symbols not exported to modules (e.g., kernel_set_to_readonly) this
-could not work as modules.
+From: Dexuan Cui <decui@microsoft.com>
+>=20
+> Add Hyper-V specific code so that a TDX guest can run on Hyper-V:
+>   No need to use hv_vp_assist_page.
+>   Don't use the unsafe Hyper-V TSC page.
+>   Don't try to use HV_REGISTER_CRASH_CTL.
+>   Don't trust Hyper-V's TLB-flushing hypercalls.
+>   Don't use lazy EOI.
 
-To run these tests, we need to boot the kernel with the heki_test=N boot
-argument with N selecting a specific test:
-1. heki_test_cr_disable_smep: Check CR pinning and try to disable SMEP.
-2. heki_test_write_to_const: Check .rodata (const) protection.
-3. heki_test_write_to_ro_after_init: Check __ro_after_init protection.
-4. heki_test_exec: Check non-executable kernel memory.
+Nit:  Actually, you overdid the cleanup. :-(  The line in v5 about
+"Share SynIC Event/Message pages" was correct.  It was only the
+part about VMBus Monitor pages that no longer applied.
 
-This way to select tests should not be required when the kernel will
-properly handle the triggered synthetic page faults.  For now, these
-page faults make the kernel loop.
+>=20
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+>=20
+> Changes in v2:
+>   Used a new function hv_set_memory_enc_dec_needed() in
+>     __set_memory_enc_pgtable().
+>   Added the missing set_memory_encrypted() in hv_synic_free().
+>=20
+> Changes in v3:
+>   Use pgprot_decrypted(PAGE_KERNEL)in hv_ringbuffer_init().
+>   (Do not use PAGE_KERNEL_NOENC, which doesn't exist for ARM64).
+>=20
+>   Used cc_mkdec() in hv_synic_enable_regs().
+>=20
+>   ms_hyperv_init_platform():
+>     Explicitly do not use HV_X64_REMOTE_TLB_FLUSH_RECOMMENDED.
+>     Explicitly do not use HV_X64_APIC_ACCESS_RECOMMENDED.
+>=20
+>   Enabled __send_ipi_mask() and __send_ipi_one() for TDX guests.
+>=20
+> Changes in v4:
+>   A minor rebase to Michael's v7 DDA patchset. I'm very happy that
+>     I can drop my v3 change to arch/x86/mm/pat/set_memory.c due to
+>     Michael's work.
+>=20
+> Changes in v5:
+>   Added memset() to clear synic_message_page and synic_event_page()
+> after set_memory_decrypted().
+>   Rebased the patch since "post_msg_page" has been removed in
+> hyperv-next.
+>   Improved the error handling in hv_synic_alloc()/free() [Michael
+> Kelley]
+>=20
+> Changes in v6:
+>   Adressed Michael Kelley's comments on patch 5:
+>     Removed 2 unnecessary lines of messages from the commit log.
+>     Fixed the error handling path for hv_synic_alloc()/free().
+>     Printed the 'ret' in hv_synic_alloc()/free().
+>=20
+>  arch/x86/hyperv/hv_apic.c      |  6 ++--
+>  arch/x86/hyperv/hv_init.c      | 19 +++++++---
+>  arch/x86/kernel/cpu/mshyperv.c | 21 ++++++++++-
+>  drivers/hv/hv.c                | 65 ++++++++++++++++++++++++++++++++--
+>  4 files changed, 101 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index 1fbda2f94184..b28da8b41b45 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -177,7 +177,8 @@ static bool __send_ipi_mask(const struct cpumask *mas=
+k, int
+> vector,
+>  	    (exclude_self && weight =3D=3D 1 && cpumask_test_cpu(this_cpu, mask=
+)))
+>  		return true;
+>=20
+> -	if (!hv_hypercall_pg)
+> +	/* A TDX guest doesn't use hv_hypercall_pg. */
+> +	if (!hv_isolation_type_tdx() && !hv_hypercall_pg)
+>  		return false;
+>=20
+>  	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
+> @@ -231,7 +232,8 @@ static bool __send_ipi_one(int cpu, int vector)
+>=20
+>  	trace_hyperv_send_ipi_one(cpu, vector);
+>=20
+> -	if (!hv_hypercall_pg || (vp =3D=3D VP_INVAL))
+> +	/* A TDX guest doesn't use hv_hypercall_pg. */
+> +	if ((!hv_isolation_type_tdx() && !hv_hypercall_pg) || (vp =3D=3D VP_INV=
+AL))
+>  		return false;
+>=20
+>  	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index f175e0de821c..f28357ecad7d 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -79,7 +79,7 @@ static int hyperv_init_ghcb(void)
+>  static int hv_cpu_init(unsigned int cpu)
+>  {
+>  	union hv_vp_assist_msr_contents msr =3D { 0 };
+> -	struct hv_vp_assist_page **hvp =3D &hv_vp_assist_page[cpu];
+> +	struct hv_vp_assist_page **hvp;
+>  	int ret;
+>=20
+>  	ret =3D hv_common_cpu_init(cpu);
+> @@ -89,6 +89,7 @@ static int hv_cpu_init(unsigned int cpu)
+>  	if (!hv_vp_assist_page)
+>  		return 0;
+>=20
+> +	hvp =3D &hv_vp_assist_page[cpu];
+>  	if (hv_root_partition) {
+>  		/*
+>  		 * For root partition we get the hypervisor provided VP assist
+> @@ -398,11 +399,21 @@ void __init hyperv_init(void)
+>  	if (hv_common_init())
+>  		return;
+>=20
+> -	hv_vp_assist_page =3D kcalloc(num_possible_cpus(),
+> -				    sizeof(*hv_vp_assist_page), GFP_KERNEL);
+> +	/*
+> +	 * The VP assist page is useless to a TDX guest: the only use we
+> +	 * would have for it is lazy EOI, which can not be used with TDX.
+> +	 */
+> +	if (hv_isolation_type_tdx())
+> +		hv_vp_assist_page =3D NULL;
+> +	else
+> +		hv_vp_assist_page =3D kcalloc(num_possible_cpus(),
+> +					    sizeof(*hv_vp_assist_page),
+> +					    GFP_KERNEL);
+>  	if (!hv_vp_assist_page) {
+>  		ms_hyperv.hints &=3D ~HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
+> -		goto common_free;
+> +
+> +		if (!hv_isolation_type_tdx())
+> +			goto common_free;
+>  	}
+>=20
+>  	if (hv_isolation_type_snp()) {
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyper=
+v.c
+> index 2fd687a80033..b95b689efa07 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -404,8 +404,27 @@ static void __init ms_hyperv_init_platform(void)
+>=20
+>  		if (hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_SNP)
+>  			static_branch_enable(&isolation_type_snp);
+> -		else if (hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_TDX)
+> +		else if (hv_get_isolation_type() =3D=3D HV_ISOLATION_TYPE_TDX) {
+>  			static_branch_enable(&isolation_type_tdx);
+> +
+> +			/*
+> +			 * The GPAs of SynIC Event/Message pages and VMBus
+> +			 * Moniter pages need to be added by this offset.
+> +			 */
+> +			ms_hyperv.shared_gpa_boundary =3D cc_mkdec(0);
+> +
+> +			/* Don't use the unsafe Hyper-V TSC page */
+> +			ms_hyperv.features &=3D ~HV_MSR_REFERENCE_TSC_AVAILABLE;
+> +
+> +			/* HV_REGISTER_CRASH_CTL is unsupported */
+> +			ms_hyperv.misc_features &=3D ~HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+> +
+> +			/* Don't trust Hyper-V's TLB-flushing hypercalls */
+> +			ms_hyperv.hints &=3D ~HV_X64_REMOTE_TLB_FLUSH_RECOMMENDED;
+> +
+> +			/* A TDX VM must use x2APIC and doesn't use lazy EOI */
+> +			ms_hyperv.hints &=3D ~HV_X64_APIC_ACCESS_RECOMMENDED;
+> +		}
+>  	}
+>=20
+>  	if (hv_max_functions_eax >=3D HYPERV_CPUID_NESTED_FEATURES) {
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index de6708dbe0df..af959e87b6e7 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/clockchips.h>
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/set_memory.h>
+>  #include <clocksource/hyperv_timer.h>
+>  #include <asm/mshyperv.h>
+>  #include "hyperv_vmbus.h"
+> @@ -80,6 +81,7 @@ int hv_synic_alloc(void)
+>  {
+>  	int cpu;
+>  	struct hv_per_cpu_context *hv_cpu;
+> +	int ret =3D -ENOMEM;
+>=20
+>  	/*
+>  	 * First, zero all per-cpu memory areas so hv_synic_free() can
+> @@ -120,9 +122,42 @@ int hv_synic_alloc(void)
+>  				(void *)get_zeroed_page(GFP_ATOMIC);
+>  			if (hv_cpu->synic_event_page =3D=3D NULL) {
+>  				pr_err("Unable to allocate SYNIC event page\n");
+> +
+> +				free_page((unsigned long)hv_cpu->synic_message_page);
+> +				hv_cpu->synic_message_page =3D NULL;
+> +
+>  				goto err;
+>  			}
+>  		}
+> +
+> +		/* It's better to leak the page if the decryption fails. */
+> +		if (hv_isolation_type_tdx()) {
+> +			ret =3D set_memory_decrypted(
+> +				(unsigned long)hv_cpu->synic_message_page, 1);
+> +			if (ret) {
+> +				pr_err("Failed to decrypt SYNIC msg page: %d\n", ret);
+> +				hv_cpu->synic_message_page =3D NULL;
+> +
+> +				/*
+> +				 * Free the event page so that a TDX VM won't
+> +				 * try to encrypt the page in hv_synic_free().
+> +				 */
+> +				free_page((unsigned long)hv_cpu->synic_event_page);
+> +				hv_cpu->synic_event_page =3D NULL;
+> +				goto err;
+> +			}
+> +
+> +			ret =3D set_memory_decrypted(
+> +				(unsigned long)hv_cpu->synic_event_page, 1);
+> +			if (ret) {
+> +				pr_err("Failed to decrypt SYNIC event page: %d\n", ret);
+> +				hv_cpu->synic_event_page =3D NULL;
+> +				goto err;
+> +			}
+> +
+> +			memset(hv_cpu->synic_message_page, 0, PAGE_SIZE);
+> +			memset(hv_cpu->synic_event_page, 0, PAGE_SIZE);
+> +		}
+>  	}
+>=20
+>  	return 0;
+> @@ -131,18 +166,40 @@ int hv_synic_alloc(void)
+>  	 * Any memory allocations that succeeded will be freed when
+>  	 * the caller cleans up by calling hv_synic_free()
+>  	 */
+> -	return -ENOMEM;
+> +	return ret;
+>  }
+>=20
+>=20
+>  void hv_synic_free(void)
+>  {
+>  	int cpu;
+> +	int ret;
+>=20
+>  	for_each_present_cpu(cpu) {
+>  		struct hv_per_cpu_context *hv_cpu
+>  			=3D per_cpu_ptr(hv_context.cpu_context, cpu);
+>=20
+> +		/* It's better to leak the page if the encryption fails. */
+> +		if (hv_isolation_type_tdx()) {
+> +			if (hv_cpu->synic_message_page) {
+> +				ret =3D set_memory_encrypted((unsigned long)
+> +					hv_cpu->synic_message_page, 1);
+> +				if (ret) {
+> +					pr_err("Failed to encrypt SYNIC msg page: %d\n", ret);
+> +					hv_cpu->synic_message_page =3D NULL;
+> +				}
+> +			}
+> +
+> +			if (hv_cpu->synic_event_page) {
+> +				ret =3D set_memory_encrypted((unsigned long)
+> +					hv_cpu->synic_event_page, 1);
+> +				if (ret) {
+> +					pr_err("Failed to encrypt SYNIC event page: %d\n", ret);
+> +					hv_cpu->synic_event_page =3D NULL;
+> +				}
+> +			}
+> +		}
+> +
+>  		free_page((unsigned long)hv_cpu->synic_event_page);
+>  		free_page((unsigned long)hv_cpu->synic_message_page);
+>  	}
+> @@ -179,7 +236,8 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  		if (!hv_cpu->synic_message_page)
+>  			pr_err("Fail to map synic message page.\n");
+>  	} else {
+> -		simp.base_simp_gpa =3D virt_to_phys(hv_cpu->synic_message_page)
+> +		simp.base_simp_gpa =3D
+> +			cc_mkdec(virt_to_phys(hv_cpu->synic_message_page))
+>  			>> HV_HYP_PAGE_SHIFT;
+>  	}
+>=20
+> @@ -198,7 +256,8 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  		if (!hv_cpu->synic_event_page)
+>  			pr_err("Fail to map synic event page.\n");
+>  	} else {
+> -		siefp.base_siefp_gpa =3D virt_to_phys(hv_cpu->synic_event_page)
+> +		siefp.base_siefp_gpa =3D
+> +			cc_mkdec(virt_to_phys(hv_cpu->synic_event_page))
+>  			>> HV_HYP_PAGE_SHIFT;
+>  	}
+>=20
+> --
+> 2.25.1
 
-All these tests temporarily disable the related kernel self-protections
-and should then failed if Heki doesn't protect the kernel.  They are
-verbose to make it easier to understand what is going on.
+Commit message nit notwithstanding --
 
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20230505152046.6575-10-mic@digikod.net
----
- virt/heki/Kconfig |  12 +++
- virt/heki/heki.c  | 194 +++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 205 insertions(+), 1 deletion(-)
-
-diff --git a/virt/heki/Kconfig b/virt/heki/Kconfig
-index 96f18ce03013..806981f2b22d 100644
---- a/virt/heki/Kconfig
-+++ b/virt/heki/Kconfig
-@@ -27,3 +27,15 @@ config HYPERVISOR_SUPPORTS_HEKI
- 	  A hypervisor should select this when it can successfully build
- 	  and run with CONFIG_HEKI. That is, it should provide all of the
- 	  hypervisor support required for the Heki feature.
-+
-+config HEKI_TEST
-+	bool "Tests for Heki" if !KUNIT_ALL_TESTS
-+	depends on HEKI && KUNIT=y
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Run Heki tests at runtime according to the heki_test=N boot
-+	  parameter, with N identifying the test to run (between 1 and 4).
-+
-+	  Before launching the init process, the system might not respond
-+	  because of unhandled kernel page fault.  This will be fixed in a
-+	  next patch series.
-diff --git a/virt/heki/heki.c b/virt/heki/heki.c
-index 142b5dc98a2f..361e7734e950 100644
---- a/virt/heki/heki.c
-+++ b/virt/heki/heki.c
-@@ -5,11 +5,13 @@
-  * Copyright © 2023 Microsoft Corporation
-  */
- 
-+#include <kunit/test.h>
- #include <linux/cache.h>
- #include <linux/heki.h>
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/printk.h>
-+#include <linux/set_memory.h>
- #include <linux/types.h>
- #include <linux/vmalloc.h>
- 
-@@ -78,13 +80,201 @@ void __init heki_early_init(void)
- 	heki_arch_init();
- }
- 
-+#ifdef CONFIG_HEKI_TEST
-+
-+/* Heki test data */
-+
-+/* Takes two pages to not change permission of other read-only pages. */
-+const char heki_test_const_buf[PAGE_SIZE * 2] = {};
-+char heki_test_ro_after_init_buf[PAGE_SIZE * 2] __ro_after_init = {};
-+
-+long heki_test_exec_data(long);
-+void _test_exec_data_end(void);
-+
-+/* Used to test ROP execution against the .rodata section. */
-+/* clang-format off */
-+asm(
-+".pushsection .rodata;" // NOT .text section
-+".global heki_test_exec_data;"
-+".type heki_test_exec_data, @function;"
-+"heki_test_exec_data:"
-+ASM_ENDBR
-+"movq %rdi, %rax;"
-+"inc %rax;"
-+ASM_RET
-+".size heki_test_exec_data, .-heki_test_exec_data;"
-+"_test_exec_data_end:"
-+".popsection");
-+/* clang-format on */
-+
-+static void heki_test_cr_disable_smep(struct kunit *test)
-+{
-+	unsigned long cr4;
-+
-+	/* SMEP should be initially enabled. */
-+	KUNIT_ASSERT_TRUE(test, __read_cr4() & X86_CR4_SMEP);
-+
-+	kunit_warn(test,
-+		   "Starting control register pinning tests with SMEP check\n");
-+
-+	/*
-+	 * Trying to disable SMEP, bypassing kernel self-protection by not
-+	 * using cr4_clear_bits(X86_CR4_SMEP).
-+	 */
-+	cr4 = __read_cr4() & ~X86_CR4_SMEP;
-+	asm volatile("mov %0,%%cr4" : "+r"(cr4) : : "memory");
-+
-+	/* SMEP should still be enabled. */
-+	KUNIT_ASSERT_TRUE(test, __read_cr4() & X86_CR4_SMEP);
-+}
-+
-+static inline void print_addr(struct kunit *test, const char *const buf_name,
-+			      void *const buf)
-+{
-+	const pte_t pte = *virt_to_kpte((unsigned long)buf);
-+	const phys_addr_t paddr = slow_virt_to_phys(buf);
-+	bool present = pte_flags(pte) & (_PAGE_PRESENT);
-+	bool accessible = pte_accessible(&init_mm, pte);
-+
-+	kunit_warn(
-+		test,
-+		"%s vaddr:%llx paddr:%llx exec:%d write:%d present:%d accessible:%d\n",
-+		buf_name, (unsigned long long)buf, paddr, !!pte_exec(pte),
-+		!!pte_write(pte), present, accessible);
-+}
-+
-+extern int kernel_set_to_readonly;
-+
-+static void heki_test_write_to_rodata(struct kunit *test,
-+				      const char *const buf_name,
-+				      char *const ro_buf)
-+{
-+	print_addr(test, buf_name, (void *)ro_buf);
-+	KUNIT_EXPECT_EQ(test, 0, *ro_buf);
-+
-+	kunit_warn(
-+		test,
-+		"Bypassing kernel self-protection: mark memory as writable\n");
-+	kernel_set_to_readonly = 0;
-+	/*
-+	 * Removes execute permission that might be set by bugdoor-exec,
-+	 * because change_page_attr_clear() is not use by set_memory_rw().
-+	 * This is required since commit 652c5bf380ad ("x86/mm: Refuse W^X
-+	 * violations").
-+	 */
-+	KUNIT_ASSERT_FALSE(test, set_memory_nx((unsigned long)PTR_ALIGN_DOWN(
-+						       ro_buf, PAGE_SIZE),
-+					       1));
-+	KUNIT_ASSERT_FALSE(test, set_memory_rw((unsigned long)PTR_ALIGN_DOWN(
-+						       ro_buf, PAGE_SIZE),
-+					       1));
-+	kernel_set_to_readonly = 1;
-+
-+	kunit_warn(test, "Trying memory write\n");
-+	*ro_buf = 0x11;
-+	KUNIT_EXPECT_EQ(test, 0, *ro_buf);
-+	kunit_warn(test, "New content: 0x%02x\n", *ro_buf);
-+}
-+
-+static void heki_test_write_to_const(struct kunit *test)
-+{
-+	heki_test_write_to_rodata(test, "const_buf",
-+				  (void *)heki_test_const_buf);
-+}
-+
-+static void heki_test_write_to_ro_after_init(struct kunit *test)
-+{
-+	heki_test_write_to_rodata(test, "ro_after_init_buf",
-+				  (void *)heki_test_ro_after_init_buf);
-+}
-+
-+typedef long test_exec_t(long);
-+
-+static void heki_test_exec(struct kunit *test)
-+{
-+	const size_t exec_size = 7;
-+	unsigned long nx_page_start = (unsigned long)PTR_ALIGN_DOWN(
-+		(const void *const)heki_test_exec_data, PAGE_SIZE);
-+	unsigned long nx_page_end = (unsigned long)PTR_ALIGN(
-+		(const void *const)heki_test_exec_data + exec_size, PAGE_SIZE);
-+	test_exec_t *exec = (test_exec_t *)heki_test_exec_data;
-+	long ret;
-+
-+	/* Starting non-executable memory tests. */
-+	print_addr(test, "test_exec_data", heki_test_exec_data);
-+
-+	kunit_warn(
-+		test,
-+		"Bypassing kernel-self protection: mark memory as executable\n");
-+	kernel_set_to_readonly = 0;
-+	KUNIT_ASSERT_FALSE(test,
-+			   set_memory_rox(nx_page_start,
-+					  PFN_UP(nx_page_end - nx_page_start)));
-+	kernel_set_to_readonly = 1;
-+
-+	kunit_warn(
-+		test,
-+		"Trying to execute data (ROP) in (initially) non-executable memory\n");
-+	ret = exec(3);
-+
-+	/* This should not be reached because of the uncaught page fault. */
-+	KUNIT_EXPECT_EQ(test, 3, ret);
-+	kunit_warn(test, "Result of execution: 3 + 1 = %ld\n", ret);
-+}
-+
-+const struct kunit_case heki_test_cases[] = {
-+	KUNIT_CASE(heki_test_cr_disable_smep),
-+	KUNIT_CASE(heki_test_write_to_const),
-+	KUNIT_CASE(heki_test_write_to_ro_after_init),
-+	KUNIT_CASE(heki_test_exec),
-+	{}
-+};
-+
-+static unsigned long heki_test __ro_after_init;
-+
-+static int __init parse_heki_test_config(char *str)
-+{
-+	if (kstrtoul(str, 10, &heki_test) ||
-+	    heki_test > (ARRAY_SIZE(heki_test_cases) - 1))
-+		pr_warn("Invalid option string for heki_test: '%s'\n", str);
-+	return 1;
-+}
-+
-+__setup("heki_test=", parse_heki_test_config);
-+
-+static void heki_run_test(void)
-+{
-+	struct kunit_case heki_test_case[2] = {};
-+	struct kunit_suite heki_test_suite = {
-+		.name = "heki",
-+		.test_cases = heki_test_case,
-+	};
-+	struct kunit_suite *const test_suite = &heki_test_suite;
-+
-+	if (!kunit_enabled() || heki_test == 0 ||
-+	    heki_test >= ARRAY_SIZE(heki_test_cases))
-+		return;
-+
-+	pr_warn("Running test #%lu\n", heki_test);
-+	heki_test_case[0] = heki_test_cases[heki_test - 1];
-+	__kunit_test_suites_init(&test_suite, 1);
-+}
-+
-+#else /* CONFIG_HEKI_TEST */
-+
-+static inline void heki_run_test(void)
-+{
-+}
-+
-+#endif /* CONFIG_HEKI_TEST */
-+
- void heki_late_init(void)
- {
- 	struct heki_hypervisor *hypervisor = heki.hypervisor;
- 	int ret;
- 
- 	if (!heki_enabled)
--		return;
-+		return heki_run_test();
- 
- 	if (!heki.static_ranges) {
- 		pr_warn("Architecture did not initialize static ranges\n");
-@@ -113,6 +303,8 @@ void heki_late_init(void)
- 		goto out;
- 	pr_warn("Control registers locked\n");
- 
-+	heki_run_test();
-+
- out:
- 	heki_free_pa_ranges(heki.static_ranges, heki.num_static_ranges);
- 	heki.static_ranges = NULL;
--- 
-2.40.1
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
