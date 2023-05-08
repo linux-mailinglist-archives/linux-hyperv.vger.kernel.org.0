@@ -2,66 +2,62 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 844B36FB576
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 May 2023 18:47:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9FC96FB57B
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 May 2023 18:47:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbjEHQrL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 May 2023 12:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46310 "EHLO
+        id S233875AbjEHQr6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 May 2023 12:47:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233806AbjEHQrI (ORCPT
+        with ESMTP id S233491AbjEHQr5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 May 2023 12:47:08 -0400
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA6A5BBC;
-        Mon,  8 May 2023 09:47:05 -0700 (PDT)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-643a1656b79so2810722b3a.3;
-        Mon, 08 May 2023 09:47:05 -0700 (PDT)
+        Mon, 8 May 2023 12:47:57 -0400
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEAEC40D8;
+        Mon,  8 May 2023 09:47:56 -0700 (PDT)
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-64115e652eeso35990330b3a.0;
+        Mon, 08 May 2023 09:47:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683564425; x=1686156425;
+        d=1e100.net; s=20221208; t=1683564476; x=1686156476;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gtQaPtzPJxzfRzbTYHRDpsI/2RLhceoREjCh61ZXViQ=;
-        b=KbMBjUaLdORGVfQPpLvnOFwhKK0iNyhGYZgpm3S86J8neG4LAdE0kITo7/n3kS+mOq
-         FplGTSWjneZzJgRsN/C50W9DkEYTLZhEBT7elTpA1ui4elqDasv4h478SQXRB0IrdYuj
-         vpDAsVUh6nrfsrdgZxk/zpTuNi8DIl/GNdFaLZaFlyuk29NgupnX382ujmYAixh2J8S+
-         9hgh3N0GV5Cfe85Vv7AkgZ711w3crqS+a3JNzQQ2LQcnIkX/Ee/N1NMwUwndPeYY9ii1
-         5Mb7S82Di5yjuGbTUyXRCMlZBRAtPXg91tuYPyFJ7JabPTveNvmG1iXGdTv0wTayOQ1n
-         Pmyg==
-X-Gm-Message-State: AC+VfDy/WcFwuQfETrbZGzdJJxs19+riZymwBTRQtYLo2vBepIK+0Bag
-        JABHQqiinByPrS4Bl2BzDII=
-X-Google-Smtp-Source: ACHHUZ6iDk6e0wuQs2J3DGya+UkLJQk43UqvvLiv7luXIc/+jRrS052LjhSWHG593AcgPfRc98foMg==
-X-Received: by 2002:a05:6a00:1391:b0:643:ba77:f265 with SMTP id t17-20020a056a00139100b00643ba77f265mr10991685pfg.25.1683564425143;
-        Mon, 08 May 2023 09:47:05 -0700 (PDT)
+        bh=YOL1utdO5j1lMdZYNTIJCCOYDCyfOjACc9iJVaVjBMA=;
+        b=BD/h7pkVtLAb6SBqqaHzkPU3BCWNPV5ozWF/lNK8IcviFQ9ZNGaOg7UNuhFKvMjDWL
+         t2ECe4H8KhXumBeEM5yaD5saV8pvl1QMh52yStoB3xUYcrlqgQGU6bqk8qbzxBgQxyBc
+         iZwvXkNdqpBCEYYWqYCqwHcCiVxmrVuBDxFRfxJRLSrNvbkbCktewBPcvKzbqAwkNPSN
+         sYU4euwsC/4WxZ8ljJMEM37/EWc6XHe6JDDQMAxn6SsIbwnE9t1doKA1oxlz6CZixRLU
+         R5cqQ98/Wz7XJQO8Bp+AKqbMkrqzqcfVkZ+Oc8Yxzuet9MLpS+oxe4l3ceiaaf0GOQ1z
+         8/Vg==
+X-Gm-Message-State: AC+VfDxBrHeEtqKgjHvrVq2tm82N+vOnPLWQt6K0coQwlndXjwT9bA60
+        em+ggQGD9eYREIFoYNxRARuJrBroS3o=
+X-Google-Smtp-Source: ACHHUZ5OJ/W2NgyH9QvgVZ6xghgdfqXjas94AFKxf8T1v0CWQ8iCjwH9lBfYrBBPr1CXq+0cOQxQIA==
+X-Received: by 2002:a17:903:1c6:b0:1a9:581b:fbb1 with SMTP id e6-20020a17090301c600b001a9581bfbb1mr12090332plh.32.1683564476148;
+        Mon, 08 May 2023 09:47:56 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id c4-20020aa781c4000000b006413bf90e72sm206879pfn.62.2023.05.08.09.47.04
+        by smtp.gmail.com with ESMTPSA id m14-20020a170902db0e00b001ac5896e96esm4987570plx.207.2023.05.08.09.47.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 09:47:04 -0700 (PDT)
-Date:   Mon, 8 May 2023 16:47:02 +0000
+        Mon, 08 May 2023 09:47:55 -0700 (PDT)
+Date:   Mon, 8 May 2023 16:47:54 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Saurabh Sengar <ssengar@linux.microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
+To:     Olaf Hering <olaf@aepfle.de>
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Saurabh Singh Sengar <ssengar@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH] x86/hyperv/vtl: Add noop for realmode pointers
-Message-ID: <ZFknhiprxZUC5Bo7@liuwe-devbox-debian-v2>
-References: <1682331016-22561-1-git-send-email-ssengar@linux.microsoft.com>
- <BYAPR21MB168833D41D1214DE3892874CD76E9@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Add support for keyfile config
+ based connection profile in NM
+Message-ID: <ZFknuu+f74e1zHZe@liuwe-devbox-debian-v2>
+References: <1683265875-3706-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20230508095340.2ca1630f.olaf@aepfle.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR21MB168833D41D1214DE3892874CD76E9@BYAPR21MB1688.namprd21.prod.outlook.com>
+In-Reply-To: <20230508095340.2ca1630f.olaf@aepfle.de>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
@@ -73,33 +69,24 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 01, 2023 at 04:57:56PM +0000, Michael Kelley (LINUX) wrote:
-> From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Monday, April 24, 2023 3:10 AM
-> > 
-> > Assign the realmode pointers to noop, instead of NULL to fix kernel panic.
-> > 
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> >  arch/x86/hyperv/hv_vtl.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> > index 1ba5d3b99b16..85d38b9f3586 100644
-> > --- a/arch/x86/hyperv/hv_vtl.c
-> > +++ b/arch/x86/hyperv/hv_vtl.c
-> > @@ -20,6 +20,8 @@ void __init hv_vtl_init_platform(void)
-> >  {
-> >  	pr_info("Linux runs in Hyper-V Virtual Trust Level\n");
-> > 
-> > +	x86_platform.realmode_reserve = x86_init_noop;
-> > +	x86_platform.realmode_init = x86_init_noop;
-> >  	x86_init.irqs.pre_vector_init = x86_init_noop;
-> >  	x86_init.timers.timer_init = x86_init_noop;
-> > 
-> > --
-> > 2.34.1
+On Mon, May 08, 2023 at 09:53:40AM +0200, Olaf Hering wrote:
+> Thu,  4 May 2023 22:51:15 -0700 Shradha Gupta <shradhagupta@linux.microsoft.com>:
 > 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > Ifcfg config file support in NetworkManger is deprecated. This patch
+> > provides support for the new keyfile config format for connection
+> > profiles in NetworkManager. The patch modifies the hv_kvp_daemon code
+> > to generate the new network configuration in keyfile
+> > format(.ini-style format) along with a ifcfg format configuration.
 > 
+> Thanks, this approach is compatible with current expectations inside the VM.
 
-Applied to hyperv-fixes. Thanks.
+Olaf, is this a reviewed-by from you? :-)
+
+Thanks,
+Wei.
+
+> 
+> 
+> Olaf
+
+
