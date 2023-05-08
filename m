@@ -2,62 +2,79 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9FC96FB57B
-	for <lists+linux-hyperv@lfdr.de>; Mon,  8 May 2023 18:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E4BC6FB58A
+	for <lists+linux-hyperv@lfdr.de>; Mon,  8 May 2023 18:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233875AbjEHQr6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 8 May 2023 12:47:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
+        id S233552AbjEHQwV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 8 May 2023 12:52:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233491AbjEHQr5 (ORCPT
+        with ESMTP id S233974AbjEHQwU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 8 May 2023 12:47:57 -0400
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEAEC40D8;
-        Mon,  8 May 2023 09:47:56 -0700 (PDT)
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-64115e652eeso35990330b3a.0;
-        Mon, 08 May 2023 09:47:56 -0700 (PDT)
+        Mon, 8 May 2023 12:52:20 -0400
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412064C03;
+        Mon,  8 May 2023 09:52:15 -0700 (PDT)
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-24e4e23f378so3369841a91.3;
+        Mon, 08 May 2023 09:52:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683564476; x=1686156476;
+        d=1e100.net; s=20221208; t=1683564734; x=1686156734;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YOL1utdO5j1lMdZYNTIJCCOYDCyfOjACc9iJVaVjBMA=;
-        b=BD/h7pkVtLAb6SBqqaHzkPU3BCWNPV5ozWF/lNK8IcviFQ9ZNGaOg7UNuhFKvMjDWL
-         t2ECe4H8KhXumBeEM5yaD5saV8pvl1QMh52yStoB3xUYcrlqgQGU6bqk8qbzxBgQxyBc
-         iZwvXkNdqpBCEYYWqYCqwHcCiVxmrVuBDxFRfxJRLSrNvbkbCktewBPcvKzbqAwkNPSN
-         sYU4euwsC/4WxZ8ljJMEM37/EWc6XHe6JDDQMAxn6SsIbwnE9t1doKA1oxlz6CZixRLU
-         R5cqQ98/Wz7XJQO8Bp+AKqbMkrqzqcfVkZ+Oc8Yxzuet9MLpS+oxe4l3ceiaaf0GOQ1z
-         8/Vg==
-X-Gm-Message-State: AC+VfDxBrHeEtqKgjHvrVq2tm82N+vOnPLWQt6K0coQwlndXjwT9bA60
-        em+ggQGD9eYREIFoYNxRARuJrBroS3o=
-X-Google-Smtp-Source: ACHHUZ5OJ/W2NgyH9QvgVZ6xghgdfqXjas94AFKxf8T1v0CWQ8iCjwH9lBfYrBBPr1CXq+0cOQxQIA==
-X-Received: by 2002:a17:903:1c6:b0:1a9:581b:fbb1 with SMTP id e6-20020a17090301c600b001a9581bfbb1mr12090332plh.32.1683564476148;
-        Mon, 08 May 2023 09:47:56 -0700 (PDT)
+        bh=lKlpAB8AKIxo4dSlH4+cwNzwviO7i4BXcMDofbP4/Y4=;
+        b=VNYUsDpNxh8iUcl/Z+qy3L6GTWsvnbQrE8TZOflMUCT7Krg4Hp3tqfye6eVYkRjbI7
+         hRMowKsZ9FYtne5q5YwNUJTA11384VA7QtmKmata04a/st3S98DlCcQzyAdEf5fSYg98
+         fI/M6FAS+Vb3KIl51a/JILvEgnuWrMpoR2Rgg6IrnG0aZ36ORJ/pyngDT5WONDw9iHic
+         POCFWZiYdj7tJykZnguy4WpylegsVVgpAYgrR/nriNv88gFblHt3hpfHwRq6ginubBQp
+         ACXglcQfbUSoalNLyZpLcRmjXCiBDXcncXx8izrs1rPvX9b3qKEV9d0hK8SHrXycyAuK
+         NqFQ==
+X-Gm-Message-State: AC+VfDwG2UgEj44L6o6rnlaPflJ5gk6xAjEaQ9cRsLlg7zGOEpiBLlWJ
+        tXx/427sSakEaNX743ap0Tw=
+X-Google-Smtp-Source: ACHHUZ5YAZBJRuwObeE+RUnkQ/prDCWbYAQOh6GSzcmna/vKchpEna9OA/ygjsSnyZEa3ijepdKOrw==
+X-Received: by 2002:a17:90a:880b:b0:250:484e:355f with SMTP id s11-20020a17090a880b00b00250484e355fmr8509250pjn.49.1683564734648;
+        Mon, 08 May 2023 09:52:14 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id m14-20020a170902db0e00b001ac5896e96esm4987570plx.207.2023.05.08.09.47.55
+        by smtp.gmail.com with ESMTPSA id f5-20020a170902ce8500b001ab016e7916sm7536143plg.234.2023.05.08.09.52.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 09:47:55 -0700 (PDT)
-Date:   Mon, 8 May 2023 16:47:54 +0000
+        Mon, 08 May 2023 09:52:14 -0700 (PDT)
+Date:   Mon, 8 May 2023 16:52:12 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Olaf Hering <olaf@aepfle.de>
-Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "'bhelgaas@google.com'" <bhelgaas@google.com>,
+        "'davem@davemloft.net'" <davem@davemloft.net>,
+        "'edumazet@google.com'" <edumazet@google.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "'kuba@kernel.org'" <kuba@kernel.org>,
+        "'kw@linux.com'" <kw@linux.com>, KY Srinivasan <kys@microsoft.com>,
+        "'leon@kernel.org'" <leon@kernel.org>,
+        "'linux-pci@vger.kernel.org'" <linux-pci@vger.kernel.org>,
+        "'lpieralisi@kernel.org'" <lpieralisi@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "'pabeni@redhat.com'" <pabeni@redhat.com>,
+        "'robh@kernel.org'" <robh@kernel.org>,
+        "'saeedm@nvidia.com'" <saeedm@nvidia.com>,
+        "'wei.liu@kernel.org'" <wei.liu@kernel.org>,
         Long Li <longli@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Add support for keyfile config
- based connection profile in NM
-Message-ID: <ZFknuu+f74e1zHZe@liuwe-devbox-debian-v2>
-References: <1683265875-3706-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20230508095340.2ca1630f.olaf@aepfle.de>
+        "'boqun.feng@gmail.com'" <boqun.feng@gmail.com>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "'helgaas@kernel.org'" <helgaas@kernel.org>,
+        "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'linux-rdma@vger.kernel.org'" <linux-rdma@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        Jose Teuttli Carranco <josete@microsoft.com>
+Subject: Re: [PATCH v3 0/6] pci-hyper: Fix race condition bugs for fast
+ device hotplug
+Message-ID: <ZFkovIxZudoLISBv@liuwe-devbox-debian-v2>
+References: <20230420024037.5921-1-decui@microsoft.com>
+ <SA1PR21MB1335B7E8FFBE1C03E9B0FDE2BF609@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <SA1PR21MB13353B83E4DE3E6EEB62483ABF609@SA1PR21MB1335.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230508095340.2ca1630f.olaf@aepfle.de>
+In-Reply-To: <SA1PR21MB13353B83E4DE3E6EEB62483ABF609@SA1PR21MB1335.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
@@ -69,24 +86,53 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 08, 2023 at 09:53:40AM +0200, Olaf Hering wrote:
-> Thu,  4 May 2023 22:51:15 -0700 Shradha Gupta <shradhagupta@linux.microsoft.com>:
+On Fri, Apr 21, 2023 at 10:23:03PM +0000, Dexuan Cui wrote:
+> > From: Dexuan Cui
+> > Sent: Thursday, April 20, 2023 7:04 PM
+> > > ...
+> > >
+> > > Dexuan Cui (6):
+> > >   PCI: hv: Fix a race condition bug in hv_pci_query_relations()
+> > >   PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
+> > >   PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
+> > >   Revert "PCI: hv: Fix a timing issue which causes kdump to fail
+> > >     occasionally"
+> > >   PCI: hv: Add a per-bus mutex state_lock
+> > >   PCI: hv: Use async probing to reduce boot time
+> > >
+> > >  drivers/pci/controller/pci-hyperv.c | 145 +++++++++++++++++-----------
+> > >  1 file changed, 86 insertions(+), 59 deletions(-)
+> > 
+> > Hi Bjorn, Lorenzo, since basically this patchset is Hyper-V stuff, I would
+> > like it to go through the hyper-v tree if you have no objection.
+> > 
+> > The hyper-v tree already has one big PCI patch from Michael:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/commit/?h=
+> > hyperv-next&id=2c6ba4216844ca7918289b49ed5f3f7138ee2402
+> > 
+> > Thanks,
+> > Dexuan
 > 
-> > Ifcfg config file support in NetworkManger is deprecated. This patch
-> > provides support for the new keyfile config format for connection
-> > profiles in NetworkManager. The patch modifies the hv_kvp_daemon code
-> > to generate the new network configuration in keyfile
-> > format(.ini-style format) along with a ifcfg format configuration.
+> Hi Lorenzo, thanks for Ack'ing the patch:
+>   Re: [PATCH v2] PCI: hv: Replace retarget_msi_interrupt_params with hyperv_pcpu_input_arg
 > 
-> Thanks, this approach is compatible with current expectations inside the VM.
+> It would be great if you and/or Bjorn can Ack this patchset as well :-)
+> 
 
-Olaf, is this a reviewed-by from you? :-)
+Lorenzo and Bjorn, are you happy with these patches? I can collect them
+via the hyperv-fixes tree.
 
 Thanks,
 Wei.
 
+> v1 of this patchset was posted on 3/28:
+> https://lwn.net/ml/linux-kernel/20230328045122.25850-1-decui%40microsoft.com/
+> and v3 got Michael Kelley's and Long Li's Reviewed-by.
 > 
+> I have done a long-haul testing against the patchset and it worked
+> reliably without causing any issue: without the patchset, usually the VM
+> can crash within 1~2 days; with the patchset, the VM is still running fine 
+> after 2 weeks.
 > 
-> Olaf
-
-
+> Thanks,
+> Dexuan
