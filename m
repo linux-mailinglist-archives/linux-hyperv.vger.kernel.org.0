@@ -2,36 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B27D6FC984
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 May 2023 16:52:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1784C6FCB13
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 May 2023 18:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235906AbjEIOwC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 9 May 2023 10:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
+        id S229557AbjEIQSX convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-hyperv@lfdr.de>); Tue, 9 May 2023 12:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235257AbjEIOwC (ORCPT
+        with ESMTP id S229533AbjEIQSW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 9 May 2023 10:52:02 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6162B30FE;
-        Tue,  9 May 2023 07:52:00 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73AD3FEC;
-        Tue,  9 May 2023 07:52:44 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.34.150])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 026403F663;
-        Tue,  9 May 2023 07:51:53 -0700 (PDT)
-Date:   Tue, 9 May 2023 15:51:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
+        Tue, 9 May 2023 12:18:22 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87365A6;
+        Tue,  9 May 2023 09:18:21 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5068638856dso1446775a12.1;
+        Tue, 09 May 2023 09:18:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683649100; x=1686241100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0PaErfZ7CFuBtAl5PK49szGukMRl5+5+t7uieLVNF3k=;
+        b=IGkTG8emTqYAYdhprseHuxIt2LKFcHelzLoR7/LO1EJYhfxhQqegR9L1EUYmnhtNxX
+         rCjvq9FQL8usKAQa5RwNaSGsKPoqVkVHRtztv96/7vRfq9vqwLzdoa2lEbOhdm4gafgT
+         38DHIECD5PDHxGQvsDwaYZMCsCymhBNp5uPmJKZXW0GJG/5fc6Da8mShopWjKo5JP8Lr
+         5xzmzqfWgDjQLymI7PXnG8wRFnrHBhdKGBjIar6OX0aZlhnMHSZdmhOH41xe0xRHlyeW
+         zXCE/fSEybaSjr/dKTZddrWczWb19OPblCiWGZnQ09X40F8E4NVbFMThvfEsva8SHdSA
+         SeAw==
+X-Gm-Message-State: AC+VfDw7IWiMymUKuvFyzI9weGV+ZQNFjKnSL2s6x/mF2xXYq49n/rU6
+        xDHfPq5TmMR6Z/tvJbQXPvkDsyE7qx0k5shOva0=
+X-Google-Smtp-Source: ACHHUZ5VvVh2YXPbdCQ+/kDWfNv8AsaUnyBBjPvTmT7MkhPyC1xgWUZ4lEdD8jDiuaVk8g4ag7V/4WDc1wznS3fa+Lk=
+X-Received: by 2002:a05:6402:3482:b0:508:40a5:beb4 with SMTP id
+ v2-20020a056402348200b0050840a5beb4mr14832425edc.3.1683649099853; Tue, 09 May
+ 2023 09:18:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230508211951.901961964@infradead.org> <20230508213147.990013706@infradead.org>
+In-Reply-To: <20230508213147.990013706@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 9 May 2023 18:18:08 +0200
+Message-ID: <CAJZ5v0jc29fSGFzN2Yeb+xRQZ9Y0V2_Ge17YnsEG5Um9OV25uw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 9/9] cpuidle: Use local_clock_noinstr()
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     bigeasy@linutronix.de, maz@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, boris.ostrovsky@oracle.com,
+Cc:     bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+        kernel@xen0n.name, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, pbonzini@redhat.com, wanpengli@tencent.com,
+        vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, jgross@suse.com, boris.ostrovsky@oracle.com,
         daniel.lezcano@linaro.org, kys@microsoft.com,
         haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
         rafael@kernel.org, longman@redhat.com, boqun.feng@gmail.com,
@@ -43,104 +62,88 @@ Cc:     bigeasy@linutronix.de, maz@kernel.org, catalin.marinas@arm.com,
         linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
         linux-s390@vger.kernel.org, kvm@vger.kernel.org,
         linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [RFC][PATCH 3/9] arm64/io: Always inline all of
- __raw_{read,write}[bwlq]()
-Message-ID: <ZFpeBzFD4N5Cuwcb@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230508211951.901961964@infradead.org>
- <20230508213147.583344579@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230508213147.583344579@infradead.org>
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 08, 2023 at 11:19:54PM +0200, Peter Zijlstra wrote:
-> The next patch will want to use __raw_readl() from a noinstr section
-> and as such that needs to be marked __always_inline to avoid the
-> compiler being a silly bugger.
-> 
-> Turns out it already is, but its siblings are not.
-> 
+On Mon, May 8, 2023 at 11:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> With the introduction of local_clock_noinstr(), local_clock() itself
+> is no longer marked noinstr, use the correct function.
+>
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-FWIW, on arm64 we shouldn't ever end up with the MMIO counter being our
-{sched,local}_clock() -- several things blow up if we don't have the "CP15"
-version, and if we do have the CP15 version we'll use that as our preferred
-clocksource (and yes, the code is a mess).
-
-Regardless, for consistency I agree we should mark these all as __always_inline.
-
-It looks like we marked __raw_{readl,writel}() as noinstr in commit:
-
-  e43f1331e2ef913b ("arm64: Ask the compiler to __always_inline functions used by KVM at HYP")
-
-... and it'd be nice to mention that in the commit message.
-
-Thanks,
-Mark.
-
 > ---
->  arch/arm64/include/asm/io.h |   12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> --- a/arch/arm64/include/asm/io.h
-> +++ b/arch/arm64/include/asm/io.h
-> @@ -22,13 +22,13 @@
->   * Generic IO read/write.  These perform native-endian accesses.
->   */
->  #define __raw_writeb __raw_writeb
-> -static inline void __raw_writeb(u8 val, volatile void __iomem *addr)
-> +static __always_inline void __raw_writeb(u8 val, volatile void __iomem *addr)
+>  drivers/cpuidle/cpuidle.c    |    8 ++++----
+>  drivers/cpuidle/poll_state.c |    4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -145,7 +145,7 @@ static noinstr void enter_s2idle_proper(
+>
+>         instrumentation_begin();
+>
+> -       time_start = ns_to_ktime(local_clock());
+> +       time_start = ns_to_ktime(local_clock_noinstr());
+>
+>         tick_freeze();
+>         /*
+> @@ -169,7 +169,7 @@ static noinstr void enter_s2idle_proper(
+>         tick_unfreeze();
+>         start_critical_timings();
+>
+> -       time_end = ns_to_ktime(local_clock());
+> +       time_end = ns_to_ktime(local_clock_noinstr());
+>
+>         dev->states_usage[index].s2idle_time += ktime_us_delta(time_end, time_start);
+>         dev->states_usage[index].s2idle_usage++;
+> @@ -243,7 +243,7 @@ noinstr int cpuidle_enter_state(struct c
+>         sched_idle_set_state(target_state);
+>
+>         trace_cpu_idle(index, dev->cpu);
+> -       time_start = ns_to_ktime(local_clock());
+> +       time_start = ns_to_ktime(local_clock_noinstr());
+>
+>         stop_critical_timings();
+>         if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE)) {
+> @@ -276,7 +276,7 @@ noinstr int cpuidle_enter_state(struct c
+>         start_critical_timings();
+>
+>         sched_clock_idle_wakeup_event();
+> -       time_end = ns_to_ktime(local_clock());
+> +       time_end = ns_to_ktime(local_clock_noinstr());
+>         trace_cpu_idle(PWR_EVENT_EXIT, dev->cpu);
+>
+>         /* The cpu is no longer idle or about to enter idle. */
+> --- a/drivers/cpuidle/poll_state.c
+> +++ b/drivers/cpuidle/poll_state.c
+> @@ -15,7 +15,7 @@ static int __cpuidle poll_idle(struct cp
 >  {
->  	asm volatile("strb %w0, [%1]" : : "rZ" (val), "r" (addr));
->  }
->  
->  #define __raw_writew __raw_writew
-> -static inline void __raw_writew(u16 val, volatile void __iomem *addr)
-> +static __always_inline void __raw_writew(u16 val, volatile void __iomem *addr)
->  {
->  	asm volatile("strh %w0, [%1]" : : "rZ" (val), "r" (addr));
->  }
-> @@ -40,13 +40,13 @@ static __always_inline void __raw_writel
->  }
->  
->  #define __raw_writeq __raw_writeq
-> -static inline void __raw_writeq(u64 val, volatile void __iomem *addr)
-> +static __always_inline void __raw_writeq(u64 val, volatile void __iomem *addr)
->  {
->  	asm volatile("str %x0, [%1]" : : "rZ" (val), "r" (addr));
->  }
->  
->  #define __raw_readb __raw_readb
-> -static inline u8 __raw_readb(const volatile void __iomem *addr)
-> +static __always_inline u8 __raw_readb(const volatile void __iomem *addr)
->  {
->  	u8 val;
->  	asm volatile(ALTERNATIVE("ldrb %w0, [%1]",
-> @@ -57,7 +57,7 @@ static inline u8 __raw_readb(const volat
->  }
->  
->  #define __raw_readw __raw_readw
-> -static inline u16 __raw_readw(const volatile void __iomem *addr)
-> +static __always_inline u16 __raw_readw(const volatile void __iomem *addr)
->  {
->  	u16 val;
->  
-> @@ -80,7 +80,7 @@ static __always_inline u32 __raw_readl(c
->  }
->  
->  #define __raw_readq __raw_readq
-> -static inline u64 __raw_readq(const volatile void __iomem *addr)
-> +static __always_inline u64 __raw_readq(const volatile void __iomem *addr)
->  {
->  	u64 val;
->  	asm volatile(ALTERNATIVE("ldr %0, [%1]",
-> 
-> 
+>         u64 time_start;
+>
+> -       time_start = local_clock();
+> +       time_start = local_clock_noinstr();
+>
+>         dev->poll_time_limit = false;
+>
+> @@ -32,7 +32,7 @@ static int __cpuidle poll_idle(struct cp
+>                                 continue;
+>
+>                         loop_count = 0;
+> -                       if (local_clock() - time_start > limit) {
+> +                       if (local_clock_noinstr() - time_start > limit) {
+>                                 dev->poll_time_limit = true;
+>                                 break;
+>                         }
+>
+
+The above LGTM, but the teo governors uses local_clock() too.  Should
+it use the _noinstr() version?
