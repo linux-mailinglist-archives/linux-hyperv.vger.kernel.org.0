@@ -2,74 +2,67 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA146FBF70
-	for <lists+linux-hyperv@lfdr.de>; Tue,  9 May 2023 08:43:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42BEF6FC075
+	for <lists+linux-hyperv@lfdr.de>; Tue,  9 May 2023 09:30:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234946AbjEIGnU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 9 May 2023 02:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48112 "EHLO
+        id S233731AbjEIHam (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 9 May 2023 03:30:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234948AbjEIGnT (ORCPT
+        with ESMTP id S233108AbjEIHal (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 9 May 2023 02:43:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C54144BC;
-        Mon,  8 May 2023 23:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Wv7LrPlxWTrZ14rkME2VRRQZSVOQ7wE/+VS+80j6MWc=; b=XcKBtk/zB7EKluL3QCHMkIHg1L
-        FRyFBoIxzUPSmPGR49L0FShoMMEuUXInLYKLMDtkZe020PTEIsJ+xmhApEuZrrROlqBqx1+T/6VTL
-        eSH5dMiMSPBMO+6IX2KK4ybVnENgJi2emZ7dTiW5ir2Pk+1MKekBFJ0cmhipyVLRJrxhUMQzd64yd
-        RyGljbAyDofd+E8+SJkFDGv2QFdrmZYKgTbjis4G+rNumyanlw88RqgCXZg5OwYjSpRzpleiAIMvd
-        t0P7f/h/yj/cCbEXd7s7HSKwUrEYeL25K0kjvErZ4E8pM3vLhLoU0SlnmtH83/1Ztjba9/ohE/7yw
-        p/5KCCGQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pwH3L-00EybA-HS; Tue, 09 May 2023 06:42:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 54E3630026A;
-        Tue,  9 May 2023 08:42:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 313FC2B0DE80D; Tue,  9 May 2023 08:42:22 +0200 (CEST)
-Date:   Tue, 9 May 2023 08:42:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
-        kernel@xen0n.name, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, boris.ostrovsky@oracle.com,
-        daniel.lezcano@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        rafael@kernel.org, longman@redhat.com, boqun.feng@gmail.com,
-        pmladek@suse.com, senozhatsky@chromium.org, rostedt@goodmis.org,
-        john.ogness@linutronix.de, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, jstultz@google.com, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [RFC][PATCH 6/9] s390/time: Provide sched_clock_noinstr()
-Message-ID: <20230509064222.GA2065796@hirez.programming.kicks-ass.net>
-References: <20230508211951.901961964@infradead.org>
- <20230508213147.786238095@infradead.org>
- <ZFnkp6dlOuJqm2II@osiris>
+        Tue, 9 May 2023 03:30:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A339A7A9D;
+        Tue,  9 May 2023 00:30:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 39DE2643AB;
+        Tue,  9 May 2023 07:30:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB0DDC433D2;
+        Tue,  9 May 2023 07:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683617438;
+        bh=8muEFwwV/fMT6/BkEavYZNU3BkDJkYBlCsjz3eXYwpk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O0jAFc4AjkqBgTofQ2McerbR+WAzpALl8ybRyuubnlmPPpxizbGh1MIKqRmtNRqq7
+         9ceWpHWPT+BGtOfeP0uCDs/bJUzeLwoGZEC/rtta1Q/lRecyT9hyxOJOkVdd7vSKV/
+         qL7w/sZSD1pO2q951gMCjSfSK/mgNGW0t0CwgfU3ytKMJHdTDqGA2Tfav44OIzhI22
+         Nch1sC3hWOP7wnnmYcPo28MrMjgipYq5nyXocaHnzTWrHyuh5DmV9apWnPLxG2s38n
+         G/jftRhXkzunLll2ZowAs21Zd7ybw17SKst/TarQfbMnvBd3S0d+4GgiVo/6UbHl3d
+         EgfzlGd8XlbLA==
+Date:   Tue, 9 May 2023 10:30:34 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Long Li <longli@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RDMA/mana_ib: Use v2 version of cfg_rx_steer_req to
+ enable RX coalescing
+Message-ID: <20230509073034.GA38143@unreal>
+References: <1683312708-24872-1-git-send-email-longli@linuxonhyperv.com>
+ <20230507081053.GD525452@unreal>
+ <PH7PR21MB31168035C903BD666253BF70CA709@PH7PR21MB3116.namprd21.prod.outlook.com>
+ <20230508060938.GA6195@unreal>
+ <PH7PR21MB3116031E5E1B5B9B97AE71BCCA719@PH7PR21MB3116.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZFnkp6dlOuJqm2II@osiris>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+In-Reply-To: <PH7PR21MB3116031E5E1B5B9B97AE71BCCA719@PH7PR21MB3116.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,63 +70,92 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 09, 2023 at 08:13:59AM +0200, Heiko Carstens wrote:
+On Mon, May 08, 2023 at 02:45:44PM +0000, Haiyang Zhang wrote:
 > 
-> 1;115;0cOn Mon, May 08, 2023 at 11:19:57PM +0200, Peter Zijlstra wrote:
-> > With the intent to provide local_clock_noinstr(), a variant of
-> > local_clock() that's safe to be called from noinstr code (with the
-> > assumption that any such code will already be non-preemptible),
-> > prepare for things by providing a noinstr sched_clock_noinstr()
-> > function.
-> > 
-> > Specifically, preempt_enable_*() calls out to schedule(), which upsets
-> > noinstr validation efforts.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  arch/s390/include/asm/timex.h |   13 +++++++++----
-> >  arch/s390/kernel/time.c       |   11 ++++++++++-
-> >  2 files changed, 19 insertions(+), 5 deletions(-)
-> ...
-> > +static __always_inline unsigned long __get_tod_clock_monotonic(void)
-> > +{
-> > +	return get_tod_clock() - tod_clock_base.tod;
-> > +}
-> > +
-> >  /**
-> >   * get_clock_monotonic - returns current time in clock rate units
-> >   *
-> > @@ -216,7 +221,7 @@ static inline unsigned long get_tod_cloc
-> >  	unsigned long tod;
-> >  
-> >  	preempt_disable_notrace();
-> > -	tod = get_tod_clock() - tod_clock_base.tod;
-> > +	tod = __get_tod_clock_monotonic();
-> >  	preempt_enable_notrace();
-> >  	return tod;
-> >  }
-> ...
-> > +unsigned long long noinstr sched_clock_noinstr(void)
-> > +{
-> > +	return tod_to_ns(__get_tod_clock_monotonic());
-> > +}
-> > +
-> >  /*
-> >   * Scheduler clock - returns current time in nanosec units.
-> >   */
-> >  unsigned long long notrace sched_clock(void)
-> >  {
-> > -	return tod_to_ns(get_tod_clock_monotonic());
-> > +	unsigned long long ns;
-> > +	preempt_disable_notrace();
-> > +	ns = tod_to_ns(get_tod_clock_monotonic());
-> > +	preempt_enable_notrace();
-> > +	return ns;
-> >  }
-> >  NOKPROBE_SYMBOL(sched_clock);
 > 
-> This disables preemption twice within sched_clock(). So this should either
-> call __get_tod_clock_monotonic() instead, or the function could stay as it
-> is, which I would prefer.
+> > -----Original Message-----
+> > From: Leon Romanovsky <leon@kernel.org>
+> > Sent: Monday, May 8, 2023 2:10 AM
+> > To: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: Long Li <longli@microsoft.com>; Jason Gunthorpe <jgg@ziepe.ca>; Ajay
+> > Sharma <sharmaajay@microsoft.com>; Dexuan Cui <decui@microsoft.com>;
+> > KY Srinivasan <kys@microsoft.com>; Wei Liu <wei.liu@kernel.org>; David S.
+> > Miller <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>;
+> > Jakub Kicinski <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; linux-
+> > rdma@vger.kernel.org; linux-hyperv@vger.kernel.org;
+> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH] RDMA/mana_ib: Use v2 version of cfg_rx_steer_req to
+> > enable RX coalescing
+> > 
+> > On Sun, May 07, 2023 at 09:39:27PM +0000, Haiyang Zhang wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Leon Romanovsky <leon@kernel.org>
+> > > > Sent: Sunday, May 7, 2023 4:11 AM
+> > > > To: Long Li <longli@microsoft.com>
+> > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>; Ajay Sharma
+> > > > <sharmaajay@microsoft.com>; Dexuan Cui <decui@microsoft.com>; KY
+> > > > Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>;
+> > > > Wei Liu <wei.liu@kernel.org>; David S. Miller <davem@davemloft.net>; Eric
+> > > > Dumazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>;
+> > Paolo
+> > > > Abeni <pabeni@redhat.com>; linux-rdma@vger.kernel.org; linux-
+> > > > hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org
+> > > > Subject: Re: [PATCH] RDMA/mana_ib: Use v2 version of cfg_rx_steer_req
+> > to
+> > > > enable RX coalescing
+> > > >
+> > > > On Fri, May 05, 2023 at 11:51:48AM -0700, longli@linuxonhyperv.com
+> > > > wrote:
+> > > > > From: Long Li <longli@microsoft.com>
+> > > > >
+> > > > > With RX coalescing, one CQE entry can be used to indicate multiple
+> > packets
+> > > > > on the receive queue. This saves processing time and PCI bandwidth over
+> > > > > the CQ.
+> > > > >
+> > > > > Signed-off-by: Long Li <longli@microsoft.com>
+> > > > > ---
+> > > > >  drivers/infiniband/hw/mana/qp.c |  5 ++++-
+> > > > >  include/net/mana/mana.h         | 17 +++++++++++++++++
+> > > > >  2 files changed, 21 insertions(+), 1 deletion(-)
+> > > >
+> > > > Why didn't you change mana_cfg_vport_steering() too?
+> > >
+> > > The mana_cfg_vport_steering() is for mana_en (Enthernet) driver, not the
+> > > mana_ib driver.
+> > >
+> > > The changes for mana_en will be done in a separate patch together with
+> > > changes for mana_en RX code patch to support multiple packets / CQE.
+> > 
+> > I'm aware of the difference between mana_en and mana_ib.
+> > 
+> > The change you proposed doesn't depend on "support multiple packets /
+> > CQE."
+> > and works perfectly with one packet/CQE also, does it?
+> 
+> No.
+> If we add the following setting to the mana_en / mana_cfg_vport_steering(),
+> the NIC may put multiple packets in one CQE, so we need to have the changes
+> for mana_en RX code path to support multiple packets / CQE.
+> +	req->cqe_coalescing_enable = true;
 
-Duh. Will fix.
+You can leave "cqe_coalescing_enable = false" for ETH and still reuse
+your new v2 struct.
+
+H> 
+> So we plan to set this cqe_coalescing_enable, and the changes for mana_en 
+> RX code path to support multiple packets / CQE in another patch.
+
+And how does it work with IB without changing anything except this
+proposed patch?
+
+Thanks
+
+> 
+> Thanks,
+> - Haiyang
+> 
