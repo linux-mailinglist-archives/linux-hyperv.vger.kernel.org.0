@@ -2,135 +2,159 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78D30700013
-	for <lists+linux-hyperv@lfdr.de>; Fri, 12 May 2023 08:01:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA892701BE8
+	for <lists+linux-hyperv@lfdr.de>; Sun, 14 May 2023 08:18:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239800AbjELGBr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 12 May 2023 02:01:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39978 "EHLO
+        id S229462AbjENGSd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 14 May 2023 02:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230490AbjELGBp (ORCPT
+        with ESMTP id S229447AbjENGSc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 12 May 2023 02:01:45 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103B0449A;
-        Thu, 11 May 2023 23:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JgTBFDjjwSw1zqVfagUl7AKzd0vmwdZDo99pKCmQQP0=; b=eDdL5ePvbY/jB1rcT9W4xmiaH/
-        5m/v/TWCs08Qq8j4qKMc2vGMvLL5roJ3tIsKMaZQp2BX9VRHZfQWdfUwabjxBqW4Gn7SkBvwKP3ek
-        hUsEpADpLyHP4WYDo9ohbtNjzgyWj2N6lntMZ81jWY93R8LmicuYVMlBrzPNMnOQfvTzz18Vgc0t4
-        YqLaDv86aJFPGJaZXoaeUGbN4o5aQ25kK75TN2AVlkFlZ4fxuPUlMdnZeXqkbUvLVQ8HYrYY+YipA
-        jXwS+C4JUjbL4UND999W65sHHNBuZFwvPuCnGaugL8m/VLeHbPDw1MALFGqukWBIaNcHwHWrKFGbg
-        NW2Um0lA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pxLpq-000QcQ-7n; Fri, 12 May 2023 06:00:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 87025300338;
-        Fri, 12 May 2023 08:00:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6D0322C7DB768; Fri, 12 May 2023 08:00:54 +0200 (CEST)
-Date:   Fri, 12 May 2023 08:00:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-        "kernel@xen0n.name" <kernel@xen0n.name>,
-        "hca@linux.ibm.com" <hca@linux.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
-        "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
-        "svens@linux.ibm.com" <svens@linux.ibm.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sun, 14 May 2023 02:18:32 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0CB2C1FC0;
+        Sat, 13 May 2023 23:18:31 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 7B06E20EB22D; Sat, 13 May 2023 23:18:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7B06E20EB22D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1684045108;
+        bh=mkDSgMixtmxFXZXt8h2/2gvZqMCg8aIpGWf4AZFjQjw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=o3tQbgag6GQZOid6zYnnPELIjRY/dITiZBdzdIRYYIK+RMpGY7myQnUVzTUY1srOJ
+         T93Js7yLO7FYg4tJmMkz03daMN/OAJIKsxVoyE6e+rYNnIHu5CPhDSFER+uAWOtjl8
+         tbFBzDCYUH4kuO01D69S24hKIQxAZYHgbpD29o30=
+From:   longli@linuxonhyperv.com
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
         Dexuan Cui <decui@microsoft.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "bristot@redhat.com" <bristot@redhat.com>,
-        "vschneid@redhat.com" <vschneid@redhat.com>,
-        "jstultz@google.com" <jstultz@google.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
-Message-ID: <20230512060054.GA2313201@hirez.programming.kicks-ass.net>
-References: <20230508211951.901961964@infradead.org>
- <20230508213147.853677542@infradead.org>
- <20230508214419.GA2053935@hirez.programming.kicks-ass.net>
- <ZFmGI1EN24xroPHa@liuwe-devbox-debian-v2>
- <20230511202351.GE2296992@hirez.programming.kicks-ass.net>
- <BYAPR21MB16883A65BBCFA19A30BADA4CD7749@BYAPR21MB1688.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB16883A65BBCFA19A30BADA4CD7749@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Long Li <longli@microsoft.com>
+Subject: [PATCH v2] RDMA/mana_ib: Use v2 version of cfg_rx_steer_req to enable RX coalescing
+Date:   Sat, 13 May 2023 23:18:15 -0700
+Message-Id: <1684045095-31228-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-11.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, May 11, 2023 at 11:11:07PM +0000, Michael Kelley (LINUX) wrote:
-> From: Peter Zijlstra <peterz@infradead.org> Sent: Thursday, May 11, 2023 1:24 PM
+From: Long Li <longli@microsoft.com>
 
-> > > Tianyu and Michael, what's your thought on this?
-> > >
-> > > Is the MSR-based GHCB usable at this point?
-> > >
-> > > What other clock source can be used?
-> > 
-> > You do have TSC support -- which is what I fixed for you. It's just the
-> > whole MSR thing that is comically broken.
-> > 
-> > You could do a read_hv_clock_msr() implementation using
-> > __rdmsr() and add some sanity checking that anything GHCB using (SEV?)
-> > *will* use TSC.
-> > 
-> > Anyway, will you guys do that, or should I pull out the chainsaw and fix
-> > it for you?
-> 
-> Peter -- I'll work on a fix.  But it will be the first half of next week before
-> I can do it.
+With RX coalescing, one CQE entry can be used to indicate multiple packets
+on the receive queue. This saves processing time and PCI bandwidth over
+the CQ.
 
-OK, Thanks!
+The MANA Ethernet driver also uses the v2 version of the protocol. It
+doesn't use RX coalescing and its behavior is not changed.
+
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+
+Change log
+v2: remove the definition of v1 protocol
+
+ drivers/infiniband/hw/mana/qp.c               | 5 ++++-
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 5 ++++-
+ include/net/mana/mana.h                       | 4 +++-
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+index 54b61930a7fd..4b3b5b274e84 100644
+--- a/drivers/infiniband/hw/mana/qp.c
++++ b/drivers/infiniband/hw/mana/qp.c
+@@ -13,7 +13,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 				      u8 *rx_hash_key)
+ {
+ 	struct mana_port_context *mpc = netdev_priv(ndev);
+-	struct mana_cfg_rx_steer_req *req = NULL;
++	struct mana_cfg_rx_steer_req_v2 *req;
+ 	struct mana_cfg_rx_steer_resp resp = {};
+ 	mana_handle_t *req_indir_tab;
+ 	struct gdma_context *gc;
+@@ -33,6 +33,8 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 	mana_gd_init_req_hdr(&req->hdr, MANA_CONFIG_VPORT_RX, req_buf_size,
+ 			     sizeof(resp));
+ 
++	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
++
+ 	req->vport = mpc->port_handle;
+ 	req->rx_enable = 1;
+ 	req->update_default_rxobj = 1;
+@@ -46,6 +48,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
+ 	req->num_indir_entries = MANA_INDIRECT_TABLE_SIZE;
+ 	req->indir_tab_offset = sizeof(*req);
+ 	req->update_indir_tab = true;
++	req->cqe_coalescing_enable = 1;
+ 
+ 	req_indir_tab = (mana_handle_t *)(req + 1);
+ 	/* The ind table passed to the hardware must have
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 06d6292e09b3..b3fcb767b9ab 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -972,7 +972,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 				   bool update_tab)
+ {
+ 	u16 num_entries = MANA_INDIRECT_TABLE_SIZE;
+-	struct mana_cfg_rx_steer_req *req = NULL;
++	struct mana_cfg_rx_steer_req_v2 *req;
+ 	struct mana_cfg_rx_steer_resp resp = {};
+ 	struct net_device *ndev = apc->ndev;
+ 	mana_handle_t *req_indir_tab;
+@@ -987,6 +987,8 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	mana_gd_init_req_hdr(&req->hdr, MANA_CONFIG_VPORT_RX, req_buf_size,
+ 			     sizeof(resp));
+ 
++	req->hdr.req.msg_version = GDMA_MESSAGE_V2;
++
+ 	req->vport = apc->port_handle;
+ 	req->num_indir_entries = num_entries;
+ 	req->indir_tab_offset = sizeof(*req);
+@@ -996,6 +998,7 @@ static int mana_cfg_vport_steering(struct mana_port_context *apc,
+ 	req->update_hashkey = update_key;
+ 	req->update_indir_tab = update_tab;
+ 	req->default_rxobj = apc->default_rxobj;
++	req->cqe_coalescing_enable = 0;
+ 
+ 	if (update_key)
+ 		memcpy(&req->hashkey, apc->hashkey, MANA_HASH_KEY_SIZE);
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index cd386aa7c7cc..1512bd48df81 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -581,7 +581,7 @@ struct mana_fence_rq_resp {
+ }; /* HW DATA */
+ 
+ /* Configure vPort Rx Steering */
+-struct mana_cfg_rx_steer_req {
++struct mana_cfg_rx_steer_req_v2 {
+ 	struct gdma_req_hdr hdr;
+ 	mana_handle_t vport;
+ 	u16 num_indir_entries;
+@@ -594,6 +594,8 @@ struct mana_cfg_rx_steer_req {
+ 	u8 reserved;
+ 	mana_handle_t default_rxobj;
+ 	u8 hashkey[MANA_HASH_KEY_SIZE];
++	u8 cqe_coalescing_enable;
++	u8 reserved2[7];
+ }; /* HW DATA */
+ 
+ struct mana_cfg_rx_steer_resp {
+-- 
+2.34.1
+
