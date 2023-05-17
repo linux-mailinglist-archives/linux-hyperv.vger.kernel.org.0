@@ -2,131 +2,145 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DCD47064B4
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 May 2023 11:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9770706660
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 May 2023 13:15:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjEQJ4I (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 May 2023 05:56:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58898 "EHLO
+        id S231264AbjEQLPJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 May 2023 07:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230055AbjEQJ4G (ORCPT
+        with ESMTP id S231223AbjEQLPD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 May 2023 05:56:06 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968044209;
-        Wed, 17 May 2023 02:56:01 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-51b33c72686so365541a12.1;
-        Wed, 17 May 2023 02:56:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684317361; x=1686909361;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ayYNauh9YOj0YuMbIMh+fZvBeOH7YM6wlBBt72xWnhI=;
-        b=jMRIWYqEgbvXYuhnGgk45LlPtJB67tD2df9o2Ef8nY5Jr4Ct1wQHVwKLRD9CiiyPTp
-         vwZIarGqWvB31/jkH3HYZJrisEb5hiAYr0aRHxZaG2qKAKBvdpu96EQOUvOvoaZ/77jN
-         jSTX5FpZR4VrOTGZcixeEQl2R5mBefwz7Hc1RSC9dJmhnHO2UU/iTPzALJo9PQHrIv8N
-         FLpDWANJRIM/d/5A/JCoycDb0JWOKp33gZwPSmwst7YdCF7C6RCKq2G9YlhmRdCpTujM
-         nSEb1/B4OsOb6440+nWy930mTxBFZzdiFOJMRVtLbHSsZUbvV4a3+Na5veQHeO87/Qw9
-         Zbcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684317361; x=1686909361;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ayYNauh9YOj0YuMbIMh+fZvBeOH7YM6wlBBt72xWnhI=;
-        b=GQxwvZ0Kv9elNv3N1tUx89JaIN7eHXJ2U+Blk3iIxiFrVk5ig+exiolGBUynwCUZ8x
-         sMLm9Oz5eepY2pZoRlSwrTyMYQJ/CJAJy8meqB4qRRZdUMuT/2OHhP2CExy3kfuThtJR
-         2Pvp5HJaQvXtz9NgjqkgMNfe17+7peG5mTCBXGD8MTQImffDk5GacEmpqzU6M1kd77gT
-         QLT1C3foGUySUfLKc9PTkkre2WnwUzWsN+1teWB/BSAqexgssVZXEZD0GX51j02rVWtH
-         ApE06e2E+ErI7S/4S4SJyEJBmvUTgZoo4snX5jr+zT90C5TxZezmFihowsYwrbsCLUEB
-         UjHw==
-X-Gm-Message-State: AC+VfDyoiyFmccAy4OujUipJQu07m2dydwsuBKwssNTWosD0C303TfUF
-        uzT0c8kcgxOHghkGpvjkQrw=
-X-Google-Smtp-Source: ACHHUZ5hXvFTup24JPN1NmOVtxyJWdFuwnnZ/SrTyzOet8dUUnQEq+IxV3mh5Y9b2PKgrA8uzhrQWQ==
-X-Received: by 2002:a17:903:120d:b0:1a5:2993:8aa6 with SMTP id l13-20020a170903120d00b001a529938aa6mr47905055plh.63.1684317360866;
-        Wed, 17 May 2023 02:56:00 -0700 (PDT)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
-        by smtp.gmail.com with ESMTPSA id a11-20020a170902eccb00b001a6c15cad12sm667642plh.166.2023.05.17.02.55.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 02:56:00 -0700 (PDT)
-Message-ID: <851f6305-2145-d756-91e3-55ab89bfcd42@gmail.com>
-Date:   Wed, 17 May 2023 17:55:45 +0800
+        Wed, 17 May 2023 07:15:03 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543BB271B;
+        Wed, 17 May 2023 04:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=oA7UPGpTSZL9i4ew+XAireX7x3872RNVvWWFAISPjRE=; b=bIzarW9nY78beCdFYkOzB2QpCI
+        LwSpvqZ14pH65RAvNk4PL/ZhRxHLB2P/DnJVNRs0KHX+L6xIymUdyRrL9OqOIvei1ChQ8PwFKtqiA
+        hUKgqtynFlY1CY0oEj/N9baV/gKFVT+wD5RCkjcFPBjKMe3geCwvi/Q9TDN1a0mTUTL6fjzTSyLT8
+        skL8CmSo8gXsa4K9fko4iAguxtuT5obqtkoRqf5paYJtzr4Y9Vwi2hoPXE0AsM98aR9r8Xanq9Nee
+        bdWgp1kjCJ5BPBZGqArNBReMrA0wLO7eUgzgTa1XIiOqkaXd2vuov0EQ9TfV7vShVQNgmIU7+vRW4
+        U7x+E2Xg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pzF6Y-00DCdL-0C;
+        Wed, 17 May 2023 11:14:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 484E23003CF;
+        Wed, 17 May 2023 13:13:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1DEDB241D47E6; Wed, 17 May 2023 13:13:58 +0200 (CEST)
+Date:   Wed, 17 May 2023 13:13:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+        "kernel@xen0n.name" <kernel@xen0n.name>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
+        "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
+        "svens@linux.ibm.com" <svens@linux.ibm.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        "pmladek@suse.com" <pmladek@suse.com>,
+        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "bristot@redhat.com" <bristot@redhat.com>,
+        "vschneid@redhat.com" <vschneid@redhat.com>,
+        "jstultz@google.com" <jstultz@google.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
+Message-ID: <20230517111358.GC2665450@hirez.programming.kicks-ass.net>
+References: <20230508211951.901961964@infradead.org>
+ <20230508213147.853677542@infradead.org>
+ <20230508214419.GA2053935@hirez.programming.kicks-ass.net>
+ <BYAPR21MB1688853D01CABA74B51DA841D77E9@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [RFC PATCH V6 02/14] x86/sev: Add Check of #HV event in path
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, ashish.kalra@amd.com,
-        srutherford@google.com, akpm@linux-foundation.org,
-        anshuman.khandual@arm.com, pawan.kumar.gupta@linux.intel.com,
-        adrian.hunter@intel.com, daniel.sneddon@linux.intel.com,
-        alexander.shishkin@linux.intel.com, sandipan.das@amd.com,
-        ray.huang@amd.com, brijesh.singh@amd.com, michael.roth@amd.com,
-        thomas.lendacky@amd.com, venu.busireddy@oracle.com,
-        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
-        fenghua.yu@intel.com, pangupta@amd.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20230515165917.1306922-1-ltykernel@gmail.com>
- <20230515165917.1306922-3-ltykernel@gmail.com>
- <20230516093225.GD2587705@hirez.programming.kicks-ass.net>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <20230516093225.GD2587705@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB1688853D01CABA74B51DA841D77E9@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/16/2023 5:32 PM, Peter Zijlstra wrote:
->> --- a/arch/x86/entry/entry_64.S
->> +++ b/arch/x86/entry/entry_64.S
->> @@ -1019,6 +1019,15 @@ SYM_CODE_END(paranoid_entry)
->>    * R15 - old SPEC_CTRL
->>    */
->>   SYM_CODE_START_LOCAL(paranoid_exit)
->> +#ifdef CONFIG_AMD_MEM_ENCRYPT
->> +	/*
->> +	 * If a #HV was delivered during execution and interrupts were
->> +	 * disabled, then check if it can be handled before the iret
->> +	 * (which may re-enable interrupts).
->> +	 */
->> +	mov     %rsp, %rdi
->> +	call    check_hv_pending
->> +#endif
->>   	UNWIND_HINT_REGS
->>   
->>   	/*
->> @@ -1143,6 +1152,15 @@ SYM_CODE_START(error_entry)
->>   SYM_CODE_END(error_entry)
->>   
->>   SYM_CODE_START_LOCAL(error_return)
->> +#ifdef CONFIG_AMD_MEM_ENCRYPT
->> +	/*
->> +	 * If a #HV was delivered during execution and interrupts were
->> +	 * disabled, then check if it can be handled before the iret
->> +	 * (which may re-enable interrupts).
->> +	 */
->> +	mov     %rsp, %rdi
->> +	call    check_hv_pending
->> +#endif
->>   	UNWIND_HINT_REGS
->>   	DEBUG_ENTRY_ASSERT_IRQS_OFF
->>   	testb	$3, CS(%rsp)
-> Oh hell no... do now you're adding unconditional calls to every single
-> interrupt and nmi exit path, with the grand total of 0 justification.
-> 
+On Wed, May 17, 2023 at 02:26:35AM +0000, Michael Kelley (LINUX) wrote:
 
-Sorry to Add check inside of check_hv_pending(). Will move the check 
-before calling check_hv_pending() in the next version. Thanks.
+> Peter -- I've sent you an RFC patch to incorporate into your broader
+> patch set.  I think it probably makes sense for all the Hyper-V
+> stuff to be a separate patch.
+
+Perhaps, it's not that much.
+
+> I haven't previously worked with the details of notrace vs. noinstr,
+> but I followed the patterns elsewhere in patch set. Please review
+> to see if it seems correct.
+
+notrace inhibits the "call __fentry__" at the start of the symbol.
+
+The __fentry__ call is mostly for ftrace, there's a few sites where
+inhibiting tracing is critical -- stuff that happens before the ftrace
+recursion handling, but mostly it's about performance these days,
+constantly hitting the recusion code isn't very good.
+
+noinstr inhibits any and all compiler generated 'extra' -- it is for the
+C as a portable assembler usage. This very much includes notrace, but it
+also covers all the *SAN nonsense. Basically, if it does not directly
+reflect the code as written, it shouldn't be emitted.
+
+Additionally, and for validation purposes, it also ensures all these
+symbols end up in a special text section.
+
+But yeah, you seem to have gotten it right.
+
+> One thing:  In the cases where I added __always_inline, I dropped
+> any notrace or noinstr annotations.  I presume such code always
+> takes on the attributes of the caller.  If that's not correct, let me know.
+
+Correct; noinstr actually has an explicit noinline because compilers
+suck :/
