@@ -2,105 +2,81 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C85E70629D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 May 2023 10:19:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84AB170637E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 May 2023 11:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbjEQITT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 May 2023 04:19:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40924 "EHLO
+        id S230107AbjEQJCk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 May 2023 05:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229895AbjEQITS (ORCPT
+        with ESMTP id S229496AbjEQJCY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 May 2023 04:19:18 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FE410EF;
-        Wed, 17 May 2023 01:19:17 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-51f6461af24so277597a12.2;
-        Wed, 17 May 2023 01:19:17 -0700 (PDT)
+        Wed, 17 May 2023 05:02:24 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC1F30E0;
+        Wed, 17 May 2023 02:02:03 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-64ab2a37812so11523573b3a.1;
+        Wed, 17 May 2023 02:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684311557; x=1686903557;
+        d=gmail.com; s=20221208; t=1684314123; x=1686906123;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TEV6UskM3XbK5S9GbqWMhXe1iQQdPul0K2M1kn2nZ4I=;
-        b=Y1z8PDrYZDsAaoYM5lQ2pYjq2SlJP3HjVolaOCncqewUNxeGPpKOeBhbwWtmERGhSl
-         Rc4CwdzG/r7bznAzp6ztkdTSW2nWQsI538E2tS9GmCr+0GM1c3xDHgdXZghRBYUxbvzm
-         3c2bfG+Olm4kZynh2LdeXhrzYbnIcNHYhHOOJzSzX2SNKG9UgaNYBDeuycEoA0EWYcsf
-         kqC5gUbtFKGx/yzfKdV4VKjwb5hIX992Fb+ZsFn5v7FFdi2nD3eNh4f5Hi9Th1BdCP5Q
-         /K3wREKF1SYUfsxK4IeWOW3Y1c22ZNRT5q2yRMcqYBNmCtNV05d7FRzW/6Dq8lQQQaw8
-         rjBQ==
+        bh=Ph7FWotnDHyNH43Suo9o026I5GBhoRCi6trqJm+ae1c=;
+        b=cOn7sW93YxROwtygiZ4kd6HC6BbzEHtija5wSUXNqYIudX5SCymwnx4qX3kwMKrjWV
+         90e27La7ebSJzffNnJsKKHey7cKsPV/kors2tLfdFYziBd0nPtoHMafZBFsQiQyKpLhh
+         FlktAOsEqWN7I3T4kvxc51w9EjkSrpw5EWcZI/pk5PUJWkKwYj65dnxR+39jZ0kg0m38
+         AkBEe7+TelBuXq8v+ZNCnqZSpJAax9mH3MTWDpBe78F3DFEW3efPAKuR8GwnOQZNQvL4
+         Q8tS5ZooefJN3S5lCYtSZmvqD6TAzWE6OOftQuMwRuuWnZxEIo30Y/0WKIs3Xc/oEgf8
+         gr+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684311557; x=1686903557;
+        d=1e100.net; s=20221208; t=1684314123; x=1686906123;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=TEV6UskM3XbK5S9GbqWMhXe1iQQdPul0K2M1kn2nZ4I=;
-        b=Cr6vqXWux+18oDRmtio4NrV++KOBeGUdd1564bYr9GIdfWhuv5sIuNrxJvKKBaiJBk
-         RaxTKHE8QWORYYegN5aIIfjOeGRFnNBSgXZe78PvK7J2aPMsnD90cSdtlulJlz9mcBYN
-         vJcFnT9mY5Bop7mOLiMiVQJI773CdqH2cCTZux3lrVCkMG4F3YhmLbVdSJWsWe4F0WOe
-         IhvX4+ZYQPYyG7HI1ZvAO7K+XQAMzKU+9XdSIZ/ZnVA3izAUOhfYCfWfDMUaHZVopQ6A
-         1Bhqn3c2pl2R43zbWKXordlyf8gREG67tGbTzdi6EXg9RDs48GeVuV5cPK5kzSI2mSCt
-         6/5w==
-X-Gm-Message-State: AC+VfDzm2b1m2+JgBBFgnSi6jr1m3ufI5rnHcx3FcipteeRG/Rftg0tf
-        z0Wj+UoKbESjnRZGR1KFT10=
-X-Google-Smtp-Source: ACHHUZ4G4fk5rt0WdvD2RK98Kt1wKOayGB7abc1lBmKmpZ/TkZxJGEImsp44tUcaOm1qesS3ln/8rg==
-X-Received: by 2002:a05:6a20:8e0c:b0:106:dfc8:6f4e with SMTP id y12-20020a056a208e0c00b00106dfc86f4emr6857291pzj.32.1684311556717;
-        Wed, 17 May 2023 01:19:16 -0700 (PDT)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
-        by smtp.gmail.com with ESMTPSA id w25-20020aa78599000000b00649281e2f03sm11172261pfn.141.2023.05.17.01.19.06
+        bh=Ph7FWotnDHyNH43Suo9o026I5GBhoRCi6trqJm+ae1c=;
+        b=bp2ZC+lYCeShFRvM4cwkWcqT/ZkWXNC4Pj/Ucy7lYMBjg1j2HX6WsM1vt07b+kKq6R
+         MLycK9TrQVLEtEJbevjUvfOfJVn3R21iJP4+Hj+xJJZbzP3mMQKv0JiIVhmlL6bENa+h
+         gvDl9d3JU1lVnRQ202GPspGaRnIssDPonEpWcAlTYZCQjH41dimKOcbGHWE51nN22SSd
+         SjRMICLk0+K3WbSjfyqj7TmeDoZTEbc+4aaNRLmD9zgfhFXIBKa0oKoFCSl8UQfdqCom
+         ky23r00iESoDL/7mhX6K+gD+Yt1N/18kKoWU1wW+KEcIrcYz/5WUT4Gzkm9y5nF+pVHi
+         sUFA==
+X-Gm-Message-State: AC+VfDxv8bfDRqB/lq5Rz/jqBupuQj/AL+XR6HKaeM38me2JTtqGFuyq
+        +/zPyIn98xwpnxCu3sDvgbA=
+X-Google-Smtp-Source: ACHHUZ63hS1/S/jzGaGnpkvjna7RhS7G2JWLtso6RdQPEeBMDByM66294yz5+hFQTOQZz07Cn9oEkg==
+X-Received: by 2002:a17:90b:4b0e:b0:250:648b:781d with SMTP id lx14-20020a17090b4b0e00b00250648b781dmr1763729pjb.23.1684314122885;
+        Wed, 17 May 2023 02:02:02 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
+        by smtp.gmail.com with ESMTPSA id l14-20020a17090a384e00b00250d670306esm1076450pjf.35.2023.05.17.02.01.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 01:19:16 -0700 (PDT)
-Message-ID: <7d3371ce-de5a-11b2-964e-9be122da2cde@gmail.com>
-Date:   Wed, 17 May 2023 16:19:03 +0800
+        Wed, 17 May 2023 02:02:02 -0700 (PDT)
+Message-ID: <e255cc80-a232-d66c-5f9b-9db179d33951@gmail.com>
+Date:   Wed, 17 May 2023 17:01:51 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.1
-Subject: Re: [EXTERNAL] [RFC PATCH V6 13/14] x86/hyperv: Add smp support for
- sev-snp guest
-To:     Saurabh Singh Sengar <ssengar@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "jiangshan.ljs@antgroup.com" <jiangshan.ljs@antgroup.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-        "srutherford@google.com" <srutherford@google.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "pawan.kumar.gupta@linux.intel.com" 
-        <pawan.kumar.gupta@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "sandipan.das@amd.com" <sandipan.das@amd.com>,
-        "ray.huang@amd.com" <ray.huang@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "michael.roth@amd.com" <michael.roth@amd.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "venu.busireddy@oracle.com" <venu.busireddy@oracle.com>,
-        "sterritt@google.com" <sterritt@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "samitolvanen@google.com" <samitolvanen@google.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>
-Cc:     "pangupta@amd.com" <pangupta@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC PATCH V6 01/14] x86/sev: Add a #HV exception handler
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, ashish.kalra@amd.com,
+        srutherford@google.com, akpm@linux-foundation.org,
+        anshuman.khandual@arm.com, pawan.kumar.gupta@linux.intel.com,
+        adrian.hunter@intel.com, daniel.sneddon@linux.intel.com,
+        alexander.shishkin@linux.intel.com, sandipan.das@amd.com,
+        ray.huang@amd.com, brijesh.singh@amd.com, michael.roth@amd.com,
+        thomas.lendacky@amd.com, venu.busireddy@oracle.com,
+        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
+        fenghua.yu@intel.com, pangupta@amd.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
 References: <20230515165917.1306922-1-ltykernel@gmail.com>
- <20230515165917.1306922-14-ltykernel@gmail.com>
- <PUZP153MB074906CBC3E7B13AEFD17472BE799@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+ <20230515165917.1306922-2-ltykernel@gmail.com>
+ <20230516093010.GC2587705@hirez.programming.kicks-ass.net>
 From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <PUZP153MB074906CBC3E7B13AEFD17472BE799@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <20230516093010.GC2587705@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -113,26 +89,20 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/16/2023 1:16 PM, Saurabh Singh Sengar wrote:
->> +		(struct hv_enable_vp_vtl *)ap_start_input_arg;
->> +	memset(start_vp_input, 0, sizeof(*start_vp_input));
->> +	start_vp_input->partition_id = -1;
->> +	start_vp_input->vp_index = cpu;
->> +	start_vp_input->target_vtl.target_vtl = ms_hyperv.vtl;
->> +	*(u64 *)&start_vp_input->vp_context = __pa(vmsa) | 1;
->> +
->> +	do {
->> +		ret = hv_do_hypercall(HVCALL_START_VP,
->> +				      start_vp_input, NULL);
->> +	} while (hv_result(ret) == HV_STATUS_TIME_OUT && retry--);
-> can we restore local_irq here ?
+On 5/16/2023 5:30 PM, Peter Zijlstra wrote:
+> On Mon, May 15, 2023 at 12:59:03PM -0400, Tianyu Lan wrote:
+>> From: Tianyu Lan<tiala@microsoft.com>
+>>
+>> Add a #HV exception handler that uses IST stack.
+>>
+> Urgh.. that is entirely insufficient. Like it doesn't even begin to
+> start to cover things.
 > 
->> +
->> +	if (!hv_result_success(ret)) {
->> +		pr_err("HvCallStartVirtualProcessor failed: %llx\n", ret);
->> +		goto done;
-> No need of goto here.
+> The whole existing VC IST stack abuse is already a nightmare and you're
+> duplicating that.. without any explanation for why this would be needed
+> and how it is correct.
 > 
+> Please try again.
 
-Nice catch. The goto label should be removed here. Will update in the 
-next version.
+Hi Peter:
+	Thanks for your review. Will add more explanation in the next version.
