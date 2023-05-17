@@ -2,106 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9770706660
-	for <lists+linux-hyperv@lfdr.de>; Wed, 17 May 2023 13:15:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0BCA70688B
+	for <lists+linux-hyperv@lfdr.de>; Wed, 17 May 2023 14:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231264AbjEQLPJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 17 May 2023 07:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33066 "EHLO
+        id S231732AbjEQMr1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 17 May 2023 08:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231223AbjEQLPD (ORCPT
+        with ESMTP id S229654AbjEQMrZ (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 17 May 2023 07:15:03 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543BB271B;
-        Wed, 17 May 2023 04:14:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oA7UPGpTSZL9i4ew+XAireX7x3872RNVvWWFAISPjRE=; b=bIzarW9nY78beCdFYkOzB2QpCI
-        LwSpvqZ14pH65RAvNk4PL/ZhRxHLB2P/DnJVNRs0KHX+L6xIymUdyRrL9OqOIvei1ChQ8PwFKtqiA
-        hUKgqtynFlY1CY0oEj/N9baV/gKFVT+wD5RCkjcFPBjKMe3geCwvi/Q9TDN1a0mTUTL6fjzTSyLT8
-        skL8CmSo8gXsa4K9fko4iAguxtuT5obqtkoRqf5paYJtzr4Y9Vwi2hoPXE0AsM98aR9r8Xanq9Nee
-        bdWgp1kjCJ5BPBZGqArNBReMrA0wLO7eUgzgTa1XIiOqkaXd2vuov0EQ9TfV7vShVQNgmIU7+vRW4
-        U7x+E2Xg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pzF6Y-00DCdL-0C;
-        Wed, 17 May 2023 11:14:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 484E23003CF;
-        Wed, 17 May 2023 13:13:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1DEDB241D47E6; Wed, 17 May 2023 13:13:58 +0200 (CEST)
-Date:   Wed, 17 May 2023 13:13:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-        "kernel@xen0n.name" <kernel@xen0n.name>,
-        "hca@linux.ibm.com" <hca@linux.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "agordeev@linux.ibm.com" <agordeev@linux.ibm.com>,
-        "borntraeger@linux.ibm.com" <borntraeger@linux.ibm.com>,
-        "svens@linux.ibm.com" <svens@linux.ibm.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "bristot@redhat.com" <bristot@redhat.com>,
-        "vschneid@redhat.com" <vschneid@redhat.com>,
-        "jstultz@google.com" <jstultz@google.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: [RFC][PATCH 7/9] x86/tsc: Provide sched_clock_noinstr()
-Message-ID: <20230517111358.GC2665450@hirez.programming.kicks-ass.net>
-References: <20230508211951.901961964@infradead.org>
- <20230508213147.853677542@infradead.org>
- <20230508214419.GA2053935@hirez.programming.kicks-ass.net>
- <BYAPR21MB1688853D01CABA74B51DA841D77E9@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Wed, 17 May 2023 08:47:25 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A61512C;
+        Wed, 17 May 2023 05:47:24 -0700 (PDT)
+Received: from [192.168.254.32] (unknown [47.186.50.133])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D164820F069A;
+        Wed, 17 May 2023 05:47:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D164820F069A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1684327643;
+        bh=LhIkPpJhPvIClwJ39pJZmrIh6zoXx6jE68xfB8W+VWs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=mumhyWRm4PGisYlV+6k79BLPaamhkccyeiIlh7D48PRTzPjbzjxh2vVIF5IMgB/kg
+         ffvKm60yYk2+lOntvrropzUTEW8F4BOwI+8ppjyBg+mNGMVj/ubDGGKoWDypVfUwG4
+         iLdY81ZYifmsEzXVwEDBYtRVqeqDXr8NLjfUncbw=
+Message-ID: <e8fcc1b8-6c0f-9556-a110-bd994d3fe3c6@linux.microsoft.com>
+Date:   Wed, 17 May 2023 07:47:20 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1688853D01CABA74B51DA841D77E9@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v1 3/9] virt: Implement Heki common code
+To:     Wei Liu <wei.liu@kernel.org>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20230505152046.6575-1-mic@digikod.net>
+ <20230505152046.6575-4-mic@digikod.net>
+ <ZFkxhWhjyIzrPkt8@liuwe-devbox-debian-v2>
+Content-Language: en-US
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+In-Reply-To: <ZFkxhWhjyIzrPkt8@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-21.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -109,38 +81,115 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, May 17, 2023 at 02:26:35AM +0000, Michael Kelley (LINUX) wrote:
+Sorry for the delay. See inline...
 
-> Peter -- I've sent you an RFC patch to incorporate into your broader
-> patch set.  I think it probably makes sense for all the Hyper-V
-> stuff to be a separate patch.
+On 5/8/23 12:29, Wei Liu wrote:
+> On Fri, May 05, 2023 at 05:20:40PM +0200, Mickaël Salaün wrote:
+>> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+>>
+>> Hypervisor Enforced Kernel Integrity (Heki) is a feature that will use
+>> the hypervisor to enhance guest virtual machine security.
+>>
+>> Configuration
+>> =============
+>>
+>> Define the config variables for the feature. This feature depends on
+>> support from the architecture as well as the hypervisor.
+>>
+>> Enabling HEKI
+>> =============
+>>
+>> Define a kernel command line parameter "heki" to turn the feature on or
+>> off. By default, Heki is on.
+> 
+> For such a newfangled feature can we have it off by default? Especially
+> when there are unsolved issues around dynamically loaded code.
+> 
 
-Perhaps, it's not that much.
+Yes. We can certainly do that.
 
-> I haven't previously worked with the details of notrace vs. noinstr,
-> but I followed the patterns elsewhere in patch set. Please review
-> to see if it seems correct.
+>>
+> [...]
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 3604074a878b..5cf5a7a97811 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -297,6 +297,7 @@ config X86
+>>  	select FUNCTION_ALIGNMENT_4B
+>>  	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>>  	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>> +	select ARCH_SUPPORTS_HEKI		if X86_64
+> 
+> Why is there a restriction on X86_64?
+> 
 
-notrace inhibits the "call __fentry__" at the start of the symbol.
+We want to get the PoC working and reviewed on X64 first. We have tested this only on X64 so far.
 
-The __fentry__ call is mostly for ftrace, there's a few sites where
-inhibiting tracing is critical -- stuff that happens before the ftrace
-recursion handling, but mostly it's about performance these days,
-constantly hitting the recusion code isn't very good.
+>>  
+>>  config INSTRUCTION_DECODER
+>>  	def_bool y
+>> diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
+>> index a6e8373a5170..42ef1e33b8a5 100644
+>> --- a/arch/x86/include/asm/sections.h
+>> +++ b/arch/x86/include/asm/sections.h
+> [...]
+>>  
+>> +#ifdef CONFIG_HEKI
+>> +
+>> +/*
+>> + * Gather all of the statically defined sections so heki_late_init() can
+>> + * protect these sections in the host page table.
+>> + *
+>> + * The sections are defined under "SECTIONS" in vmlinux.lds.S
+>> + * Keep this array in sync with SECTIONS.
+>> + */
+> 
+> This seems a bit fragile, because it requires constant attention from
+> people who care about this functionality. Can this table be
+> automatically generated?
+> 
 
-noinstr inhibits any and all compiler generated 'extra' -- it is for the
-C as a portable assembler usage. This very much includes notrace, but it
-also covers all the *SAN nonsense. Basically, if it does not directly
-reflect the code as written, it shouldn't be emitted.
+We realize that. But I don't know of a way this can be automatically generated. Also, the permissions for
+each section is specific to the use of that section. The developer who introduces a new section is the
+one who will know what the permissions should be.
 
-Additionally, and for validation purposes, it also ensures all these
-symbols end up in a special text section.
+If any one has any ideas of how we can generate this table automatically or even just add a build time check
+of some sort, please let us know.
 
-But yeah, you seem to have gotten it right.
+Thanks.
 
-> One thing:  In the cases where I added __always_inline, I dropped
-> any notrace or noinstr annotations.  I presume such code always
-> takes on the attributes of the caller.  If that's not correct, let me know.
+Madhavan
 
-Correct; noinstr actually has an explicit noinline because compilers
-suck :/
+> Thanks,
+> Wei.
+> 
+>> +struct heki_va_range __initdata heki_va_ranges[] = {
+>> +	{
+>> +		.va_start = _stext,
+>> +		.va_end = _etext,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE | HEKI_ATTR_MEM_EXEC,
+>> +	},
+>> +	{
+>> +		.va_start = __start_rodata,
+>> +		.va_end = __end_rodata,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +#ifdef CONFIG_UNWINDER_ORC
+>> +	{
+>> +		.va_start = __start_orc_unwind_ip,
+>> +		.va_end = __stop_orc_unwind_ip,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +	{
+>> +		.va_start = __start_orc_unwind,
+>> +		.va_end = __stop_orc_unwind,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +	{
+>> +		.va_start = orc_lookup,
+>> +		.va_end = orc_lookup_end,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +#endif /* CONFIG_UNWINDER_ORC */
+>> +};
+>> +
