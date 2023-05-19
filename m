@@ -2,145 +2,75 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E80270951F
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 May 2023 12:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98D8F709637
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 May 2023 13:18:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232041AbjESKem (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 May 2023 06:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53796 "EHLO
+        id S230195AbjESLSN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 19 May 2023 07:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231491AbjESKeT (ORCPT
+        with ESMTP id S231909AbjESLSI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 May 2023 06:34:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D2B10DC;
-        Fri, 19 May 2023 03:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=vb5RHA5WAD/i+pcNIxyZaXw8sGymL5Wslp2oL9HHf5o=; b=EiPZwCG1U/KNRhYpgNKpzRQuLb
-        7xFTEZkWp7Gmon4O45hOp9YVGPqFVdoAzxEPJCs3eYe9DgCZVQiKr5YCcGJtGMP6GOTajZGKfVPvj
-        8FTv/2HjVMv8u4vaKGnC6QGsdqtqJNZkskhydvRzuSu7JbvBQES81l4E8TppOCmAtYImFCH8TnnFw
-        x1EycU83oVTk52DdnAKhfUez6y7RsoYGk8HLKW1FNPoA1wly3HbHfI3gWKazRnVrliBkafyoPPQcb
-        tyQQUWYv0N8EVcOQKgokb9+WCX4Ays6FmnKvNOQt3Pp86pE1oVXWwCr44x2Ud0UZYAqMHU3tkW4X+
-        d9I2vVZQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pzxPv-006UqJ-1G; Fri, 19 May 2023 10:32:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66122306158;
-        Fri, 19 May 2023 12:32:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 02484235EF0B4; Fri, 19 May 2023 12:32:56 +0200 (CEST)
-Message-ID: <20230519102716.045980863@infradead.org>
-User-Agent: quilt/0.66
-Date:   Fri, 19 May 2023 12:21:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     bigeasy@linutronix.de
-Cc:     mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, boris.ostrovsky@oracle.com,
-        daniel.lezcano@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        rafael@kernel.org, peterz@infradead.org, longman@redhat.com,
-        boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
-        rostedt@goodmis.org, john.ogness@linutronix.de,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, jstultz@google.com,
-        sboyd@kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v2 13/13] cpuidle: Use local_clock_noinstr()
-References: <20230519102058.581557770@infradead.org>
+        Fri, 19 May 2023 07:18:08 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 652FB172A
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 May 2023 04:18:04 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-3078d1c8828so2984593f8f.3
+        for <linux-hyperv@vger.kernel.org>; Fri, 19 May 2023 04:18:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684495083; x=1687087083;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
+        b=dp+mR0vkFQD+NRcVbVyj7ZlxJiY8tXKz6Dxjt02kU/9woIUxxNMg5SvP4xJ9eDYE2l
+         hEJnfKK8BrITZUJm9ghCyPg0Je/wA7ZgsYMJwVI4lH3jXGvqlwkDJtDwfhLanlOsT7wH
+         hQNPeCWF3wvvAZcvRLj33th7gYZ9PBshaM63xjIgYDJS4JRwCX0aFRvKXP3BWylWimpe
+         32aKHm6KkPEtxXep1GltN/NdkgyiCPA4l7PN1GNXnXbpDZBBR5hr4EY5Y5zYuEDAHe2L
+         02Hos4KJ6tjKqeoN5tOyzagtXmnXAX0KjFhaRoSVPjIKvYuO1hoBO+IbePE5pb7+tpSc
+         zBGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684495083; x=1687087083;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
+        b=lnE/YlWSZrqbHE9Kg/bkPMReP48t6PX/dA+tkmgiyoWXbvHFZprtctjdXwZm1GkDFW
+         XaJgVGf4z/9ntDGVXAff4x6gbJNe+PRt+L//WWPOYCbz0pmZb+FqoJufYGU5DLxU6iub
+         eWHcSZC7hjea88FSe+amj0wBuovyZtMJhbNoYLhNHjSxBLUKbXHOfCgP0mab+hlf+mN/
+         bKSUhaqRJ99RL/gG5YOAm9GmSxeAc0SdJr4UIjlsxkYqNgdiwP+rvQx/EMWM2Ev2hCBl
+         hF853Cmygqy/elK+7ewXpdgjIIBffiZVqxHa5kQbmSY8sw++Txh1736ffP1aqJa53otv
+         2cwQ==
+X-Gm-Message-State: AC+VfDxaK4/951soWfEu0S9uOF7fIZyeacFJw04qZ90djFBJ6gsSjwjb
+        eXoShZamwq+DgmwUoNupJ2tElmmA0iPkmuw1MvIDMrpd85Yyfw==
+X-Google-Smtp-Source: ACHHUZ4GcdKjctEWmkMJD/Q5ZDCusH7zrjV+w4c4EgP8GDbM+BMa7NNuPpP4cOMUW2oAUk/kOHHzW6hqw5zKR98kQX0=
+X-Received: by 2002:a17:907:1b12:b0:8b8:c06e:52d8 with SMTP id
+ mp18-20020a1709071b1200b008b8c06e52d8mr1298232ejc.36.1684495062361; Fri, 19
+ May 2023 04:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a17:907:7dab:b0:94f:7d03:8e8b with HTTP; Fri, 19 May 2023
+ 04:17:41 -0700 (PDT)
+Reply-To: ninacoulibaly03@myself.com
+From:   nina coulibaly <ninacoulibaly199@gmail.com>
+Date:   Fri, 19 May 2023 04:17:41 -0700
+Message-ID: <CAM7Z2JAd00KW6b=O8M27vwRnsJ1w3AmDO5tP+gSmzkaHvk6=CA@mail.gmail.com>
+Subject: from nina coulibaly
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-With the introduction of local_clock_noinstr(), local_clock() itself
-is no longer marked noinstr, use the correct function.
+Dear,
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- drivers/cpuidle/cpuidle.c    |    8 ++++----
- drivers/cpuidle/poll_state.c |    4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Please grant me permission to share a very crucial discussion with
+you. I am looking forward to hearing from you at your earliest
+convenience.
 
---- a/drivers/cpuidle/cpuidle.c
-+++ b/drivers/cpuidle/cpuidle.c
-@@ -145,7 +145,7 @@ static noinstr void enter_s2idle_proper(
- 
- 	instrumentation_begin();
- 
--	time_start = ns_to_ktime(local_clock());
-+	time_start = ns_to_ktime(local_clock_noinstr());
- 
- 	tick_freeze();
- 	/*
-@@ -169,7 +169,7 @@ static noinstr void enter_s2idle_proper(
- 	tick_unfreeze();
- 	start_critical_timings();
- 
--	time_end = ns_to_ktime(local_clock());
-+	time_end = ns_to_ktime(local_clock_noinstr());
- 
- 	dev->states_usage[index].s2idle_time += ktime_us_delta(time_end, time_start);
- 	dev->states_usage[index].s2idle_usage++;
-@@ -243,7 +243,7 @@ noinstr int cpuidle_enter_state(struct c
- 	sched_idle_set_state(target_state);
- 
- 	trace_cpu_idle(index, dev->cpu);
--	time_start = ns_to_ktime(local_clock());
-+	time_start = ns_to_ktime(local_clock_noinstr());
- 
- 	stop_critical_timings();
- 	if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE)) {
-@@ -276,7 +276,7 @@ noinstr int cpuidle_enter_state(struct c
- 	start_critical_timings();
- 
- 	sched_clock_idle_wakeup_event();
--	time_end = ns_to_ktime(local_clock());
-+	time_end = ns_to_ktime(local_clock_noinstr());
- 	trace_cpu_idle(PWR_EVENT_EXIT, dev->cpu);
- 
- 	/* The cpu is no longer idle or about to enter idle. */
---- a/drivers/cpuidle/poll_state.c
-+++ b/drivers/cpuidle/poll_state.c
-@@ -15,7 +15,7 @@ static int __cpuidle poll_idle(struct cp
- {
- 	u64 time_start;
- 
--	time_start = local_clock();
-+	time_start = local_clock_noinstr();
- 
- 	dev->poll_time_limit = false;
- 
-@@ -32,7 +32,7 @@ static int __cpuidle poll_idle(struct cp
- 				continue;
- 
- 			loop_count = 0;
--			if (local_clock() - time_start > limit) {
-+			if (local_clock_noinstr() - time_start > limit) {
- 				dev->poll_time_limit = true;
- 				break;
- 			}
-
-
+Mrs. Nina Coulibal
