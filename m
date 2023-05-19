@@ -2,75 +2,149 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98D8F709637
-	for <lists+linux-hyperv@lfdr.de>; Fri, 19 May 2023 13:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA9DB70993E
+	for <lists+linux-hyperv@lfdr.de>; Fri, 19 May 2023 16:15:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230195AbjESLSN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 19 May 2023 07:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54368 "EHLO
+        id S231148AbjESOPO convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-hyperv@lfdr.de>); Fri, 19 May 2023 10:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231909AbjESLSI (ORCPT
+        with ESMTP id S231653AbjESOPK (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 19 May 2023 07:18:08 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 652FB172A
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 May 2023 04:18:04 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-3078d1c8828so2984593f8f.3
-        for <linux-hyperv@vger.kernel.org>; Fri, 19 May 2023 04:18:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684495083; x=1687087083;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
-        b=dp+mR0vkFQD+NRcVbVyj7ZlxJiY8tXKz6Dxjt02kU/9woIUxxNMg5SvP4xJ9eDYE2l
-         hEJnfKK8BrITZUJm9ghCyPg0Je/wA7ZgsYMJwVI4lH3jXGvqlwkDJtDwfhLanlOsT7wH
-         hQNPeCWF3wvvAZcvRLj33th7gYZ9PBshaM63xjIgYDJS4JRwCX0aFRvKXP3BWylWimpe
-         32aKHm6KkPEtxXep1GltN/NdkgyiCPA4l7PN1GNXnXbpDZBBR5hr4EY5Y5zYuEDAHe2L
-         02Hos4KJ6tjKqeoN5tOyzagtXmnXAX0KjFhaRoSVPjIKvYuO1hoBO+IbePE5pb7+tpSc
-         zBGA==
+        Fri, 19 May 2023 10:15:10 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B719E73;
+        Fri, 19 May 2023 07:14:42 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-96f44435d92so41006066b.0;
+        Fri, 19 May 2023 07:14:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684495083; x=1687087083;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
-        b=lnE/YlWSZrqbHE9Kg/bkPMReP48t6PX/dA+tkmgiyoWXbvHFZprtctjdXwZm1GkDFW
-         XaJgVGf4z/9ntDGVXAff4x6gbJNe+PRt+L//WWPOYCbz0pmZb+FqoJufYGU5DLxU6iub
-         eWHcSZC7hjea88FSe+amj0wBuovyZtMJhbNoYLhNHjSxBLUKbXHOfCgP0mab+hlf+mN/
-         bKSUhaqRJ99RL/gG5YOAm9GmSxeAc0SdJr4UIjlsxkYqNgdiwP+rvQx/EMWM2Ev2hCBl
-         hF853Cmygqy/elK+7ewXpdgjIIBffiZVqxHa5kQbmSY8sw++Txh1736ffP1aqJa53otv
-         2cwQ==
-X-Gm-Message-State: AC+VfDxaK4/951soWfEu0S9uOF7fIZyeacFJw04qZ90djFBJ6gsSjwjb
-        eXoShZamwq+DgmwUoNupJ2tElmmA0iPkmuw1MvIDMrpd85Yyfw==
-X-Google-Smtp-Source: ACHHUZ4GcdKjctEWmkMJD/Q5ZDCusH7zrjV+w4c4EgP8GDbM+BMa7NNuPpP4cOMUW2oAUk/kOHHzW6hqw5zKR98kQX0=
-X-Received: by 2002:a17:907:1b12:b0:8b8:c06e:52d8 with SMTP id
- mp18-20020a1709071b1200b008b8c06e52d8mr1298232ejc.36.1684495062361; Fri, 19
- May 2023 04:17:42 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684505634; x=1687097634;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mtyjmo3U27wuRhuxdBoN4szAZEtqJIsshyVfilBgAD0=;
+        b=C4ucInKXKAyY39AY1irPEpCBVp43HjLOS7XZaLrlqvoU5igMwHa/lQmESfH/lbVzqL
+         hr4QX2dI5/a+KXZITwQj418BdH8tUWUH/F5JARAPxizo6a8P29Iig6d4ziEewjOFtyKx
+         D0YflxZafGjGbffr3X3XQqWUpg8Wflux3xKgYu60wDWx8qIYuoKgM/d8LL4cmFKA+O6s
+         k3NfqZMYdX8Zz8ivSfCCqxN5E7Fsm8X/Cs35SKGQyodk0xIlu3BdtULGdKPIrr/4QX48
+         quqTNDAhI2r8quPODmTsXCMFjxKrGB9oRfGglvGxUzBX0gq9g9AppPw+ZgICYBiSNXh3
+         iibQ==
+X-Gm-Message-State: AC+VfDyvjeRmnh6F+HU6ygfTpk5tvyL+mj4B8iGHatfMTwWbG8Ju4ikg
+        SDKe83tNbkAArusdWKn9dVCug5gW1BXZoaKDQBc=
+X-Google-Smtp-Source: ACHHUZ68+/i2ffEZTXg6tj3QMitnfwpUc6ZolPA0xIlso352d5CtlPMyVKVablcnpHf+LCxLGPtLwAjOXXkDYlCuYhQ=
+X-Received: by 2002:a17:906:729e:b0:96f:6590:cbdb with SMTP id
+ b30-20020a170906729e00b0096f6590cbdbmr1995862ejl.6.1684505634451; Fri, 19 May
+ 2023 07:13:54 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a17:907:7dab:b0:94f:7d03:8e8b with HTTP; Fri, 19 May 2023
- 04:17:41 -0700 (PDT)
-Reply-To: ninacoulibaly03@myself.com
-From:   nina coulibaly <ninacoulibaly199@gmail.com>
-Date:   Fri, 19 May 2023 04:17:41 -0700
-Message-ID: <CAM7Z2JAd00KW6b=O8M27vwRnsJ1w3AmDO5tP+gSmzkaHvk6=CA@mail.gmail.com>
-Subject: from nina coulibaly
-To:     undisclosed-recipients:;
+References: <20230519102058.581557770@infradead.org> <20230519102716.045980863@infradead.org>
+In-Reply-To: <20230519102716.045980863@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 19 May 2023 16:13:41 +0200
+Message-ID: <CAJZ5v0hAyF8WK+jbWh6FZvmjfr0nxLg-phYTqFAyaUA5GJU4hQ@mail.gmail.com>
+Subject: Re: [PATCH v2 13/13] cpuidle: Use local_clock_noinstr()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     bigeasy@linutronix.de, mark.rutland@arm.com, maz@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+        kernel@xen0n.name, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, pbonzini@redhat.com, wanpengli@tencent.com,
+        vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, jgross@suse.com, boris.ostrovsky@oracle.com,
+        daniel.lezcano@linaro.org, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        rafael@kernel.org, longman@redhat.com, boqun.feng@gmail.com,
+        pmladek@suse.com, senozhatsky@chromium.org, rostedt@goodmis.org,
+        john.ogness@linutronix.de, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, jstultz@google.com, sboyd@kernel.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Dear,
+On Fri, May 19, 2023 at 12:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> With the introduction of local_clock_noinstr(), local_clock() itself
+> is no longer marked noinstr, use the correct function.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Please grant me permission to share a very crucial discussion with
-you. I am looking forward to hearing from you at your earliest
-convenience.
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-Mrs. Nina Coulibal
+> ---
+>  drivers/cpuidle/cpuidle.c    |    8 ++++----
+>  drivers/cpuidle/poll_state.c |    4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -145,7 +145,7 @@ static noinstr void enter_s2idle_proper(
+>
+>         instrumentation_begin();
+>
+> -       time_start = ns_to_ktime(local_clock());
+> +       time_start = ns_to_ktime(local_clock_noinstr());
+>
+>         tick_freeze();
+>         /*
+> @@ -169,7 +169,7 @@ static noinstr void enter_s2idle_proper(
+>         tick_unfreeze();
+>         start_critical_timings();
+>
+> -       time_end = ns_to_ktime(local_clock());
+> +       time_end = ns_to_ktime(local_clock_noinstr());
+>
+>         dev->states_usage[index].s2idle_time += ktime_us_delta(time_end, time_start);
+>         dev->states_usage[index].s2idle_usage++;
+> @@ -243,7 +243,7 @@ noinstr int cpuidle_enter_state(struct c
+>         sched_idle_set_state(target_state);
+>
+>         trace_cpu_idle(index, dev->cpu);
+> -       time_start = ns_to_ktime(local_clock());
+> +       time_start = ns_to_ktime(local_clock_noinstr());
+>
+>         stop_critical_timings();
+>         if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE)) {
+> @@ -276,7 +276,7 @@ noinstr int cpuidle_enter_state(struct c
+>         start_critical_timings();
+>
+>         sched_clock_idle_wakeup_event();
+> -       time_end = ns_to_ktime(local_clock());
+> +       time_end = ns_to_ktime(local_clock_noinstr());
+>         trace_cpu_idle(PWR_EVENT_EXIT, dev->cpu);
+>
+>         /* The cpu is no longer idle or about to enter idle. */
+> --- a/drivers/cpuidle/poll_state.c
+> +++ b/drivers/cpuidle/poll_state.c
+> @@ -15,7 +15,7 @@ static int __cpuidle poll_idle(struct cp
+>  {
+>         u64 time_start;
+>
+> -       time_start = local_clock();
+> +       time_start = local_clock_noinstr();
+>
+>         dev->poll_time_limit = false;
+>
+> @@ -32,7 +32,7 @@ static int __cpuidle poll_idle(struct cp
+>                                 continue;
+>
+>                         loop_count = 0;
+> -                       if (local_clock() - time_start > limit) {
+> +                       if (local_clock_noinstr() - time_start > limit) {
+>                                 dev->poll_time_limit = true;
+>                                 break;
+>                         }
+>
+>
