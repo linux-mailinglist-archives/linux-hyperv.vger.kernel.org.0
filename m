@@ -2,140 +2,141 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0114270E551
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 May 2023 21:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5531670E564
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 May 2023 21:31:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236183AbjEWTYY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 May 2023 15:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33942 "EHLO
+        id S238334AbjEWTbI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 May 2023 15:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233260AbjEWTYU (ORCPT
+        with ESMTP id S238383AbjEWTa7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 May 2023 15:24:20 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2098.outbound.protection.outlook.com [40.107.93.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 382E2FA;
-        Tue, 23 May 2023 12:24:18 -0700 (PDT)
+        Tue, 23 May 2023 15:30:59 -0400
+Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021026.outbound.protection.outlook.com [52.101.62.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FA010C4;
+        Tue, 23 May 2023 12:30:40 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NWxBk1EkkrsV9/+x2fgsHFgXGFGXiVAM0j+2Q0ymEtaL+QQlbIkFL/83pl/znxl+qfAWgR5fJLaejyZ/x7pOtW/oPrdx1FBmjxzw55PMEjeHgjoXdApKd56NkJTqEjaPOZgQILr84Gp8lWOxX917UPO8SCf5yY3ZJIx5x5X9/p6EpOiGREIDiPubZkdUB9hL9CCAm2k8VK69z6t/VtW+Jx0jvedY25y1Xgehq2lfXmNM9n2eQv7VkMfas9E3uO3PYhKUchDcCNokEvhCvaSxgJfzUppDQ0c/N8WTLJrlVctbfJ9AbyoH+RdiJ9x6WpAV0n9kfP1H5N6mLdzc2m/rdQ==
+ b=lL5XwCbRaV+VE6R6jdF8NFvrP8/TtZP7t+xSv9pJ1kJHH6fEcadu7L92P6KCTxFFzUHqykvGMCUkgpioMg1mreNFX5COzOKu/a1HTeSn8yjGip02Ca2qzheY/9DYYPnmqw6jonwl8dYXzqMFHtVJiAYo6kha/EhYV3UZd2VGXPlXyval4DALdmy4ns5/4G/EmqhjJlfnwORfD0Opjmjvwogf0ctiOMH8kY182+ckJhU4BHZb7nL10KBVxyQT1a1KVOpT5689JsTBd58PNBc0X9eyWQ35ZBrgmOD4PR5QBK7IKE0Iqrdg8J6h9/1YbwSCR99Fvy6FYUOQ7OoEFG2QIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kBmoj+Hupi3hEorEkzDmKbYEsS/SWD1FIJ2U1/3oYag=;
- b=Of4BC/3o9Vba34Z+9jR+FGclA/GovPVidmwrw2/YU4JLkqD9RwSPlmykDCwFsZxqPUXyv6hd0lsiH8PBKU0oRNUTM6YYJwsdSzBrMQrieVf+boyxoxO8Byc7ZwCC7R4H8DPXrT3TLfgAciu+lr+dlA/t9oMhFSeZj5+IFItLpoHs1GT7bANUIfwoQo0iIexS3+yWXgVS35s9Vu9qfsidJM5foULtEtIGt3oK7+dwuGZapV86th5PMRM1J+2XVzqO6rfrz0QqX77cJZrzcNT0flZHUMkCin/euhvjFyWDS+JQH6aUH4Lcv09xAbSj6KHEU3prkp3k4d346QoBVsyHFA==
+ bh=dUOrsJYrsFkCBHMJuybvyu+NhE81VgyEwuBOhHmc2I8=;
+ b=h/oGks4kOeiQ2u09XZgROmaGOUc27TreEoAs1hSX5tdb8qxfX6vrceiDF/FKqLXlZCMMY667EfRTaHHC44PSf904q9OSvJe4gDcdgN3DVTQzT1nU0T7HRPiMdZWWlzCNs626SaDG3z6vliN+V63n8EAH4/m2+x1o8Y03C3wzdZA02/rMSHqOav9RWSSBb3aS8kIu0ppf4Uc3jE0le5PIjjVTkwHyUfIhKXQQS5myHNND3CizkB1qzTV94zpu5I6e6qQBsksHYkMtrU6ZVBUZcSuzvSoQZv84zNNZE8BQNeumSwNxWa3Nk5/piHze0Bi+bupZWlLkl28g3pwwVmYKLg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kBmoj+Hupi3hEorEkzDmKbYEsS/SWD1FIJ2U1/3oYag=;
- b=U88+iI/qxy0CLFSNcJDOqwGtd5I2hvj5vtcfSKLhNXNadcwJImWSAthSAqd1Y+YAK7jGgdXg/pzZpxPxuB7vMnufQtZlS0v2Br2674jyXxuNNrZTv9o3RLFSd2k71njLFrcm59LU+tXaaulRJzh4U840PJLPCc6QAU5zzlZ9au8=
+ bh=dUOrsJYrsFkCBHMJuybvyu+NhE81VgyEwuBOhHmc2I8=;
+ b=jF1LqbhNmJ0oOEIkZ0EGYS/9D4ggb+Z0dsm5BapJ0sMlJVt1a/5tuYLVGWkkgX3yj4/Z3WCSI3CMTE9IdHPG0m0ZRWUCTKydTQ9xwUXif81jvP5SplGnZIWiMqGHXflPI9jpQYOTsst5zYu+lJmPXCe22cYQRibVMRu8CFTQDc4=
 Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
- by MW4PR21MB1985.namprd21.prod.outlook.com (2603:10b6:303:7a::6) with
+ by BL1PR21MB3114.namprd21.prod.outlook.com (2603:10b6:208:392::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.7; Tue, 23 May
- 2023 19:24:15 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.13; Tue, 23 May
+ 2023 19:30:37 +0000
 Received: from SA1PR21MB1335.namprd21.prod.outlook.com
  ([fe80::c454:256a:ce51:e983]) by SA1PR21MB1335.namprd21.prod.outlook.com
  ([fe80::c454:256a:ce51:e983%4]) with mapi id 15.20.6455.004; Tue, 23 May 2023
- 19:24:15 +0000
+ 19:30:37 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+To:     Dexuan Cui <decui@microsoft.com>,
+        'Lorenzo Pieralisi' <lpieralisi@kernel.org>,
+        "'bhelgaas@google.com'" <bhelgaas@google.com>
+CC:     "'davem@davemloft.net'" <davem@davemloft.net>,
+        "'edumazet@google.com'" <edumazet@google.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: RE: [PATCH v6 0/6] Support TDX guests on Hyper-V
-Thread-Topic: [PATCH v6 0/6] Support TDX guests on Hyper-V
-Thread-Index: AQHZftts9zmkdpMLIUW3vDIrP9vrYK9oWG3Q
-Date:   Tue, 23 May 2023 19:24:14 +0000
-Message-ID: <SA1PR21MB133594566A3337BEF253F2F2BF40A@SA1PR21MB1335.namprd21.prod.outlook.com>
-References: <20230504225351.10765-1-decui@microsoft.com>
-In-Reply-To: <20230504225351.10765-1-decui@microsoft.com>
+        Jake Oshins <jakeo@microsoft.com>,
+        "'kuba@kernel.org'" <kuba@kernel.org>,
+        "'kw@linux.com'" <kw@linux.com>, KY Srinivasan <kys@microsoft.com>,
+        "'leon@kernel.org'" <leon@kernel.org>,
+        "'linux-pci@vger.kernel.org'" <linux-pci@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "'pabeni@redhat.com'" <pabeni@redhat.com>,
+        "'robh@kernel.org'" <robh@kernel.org>,
+        "'saeedm@nvidia.com'" <saeedm@nvidia.com>,
+        "'wei.liu@kernel.org'" <wei.liu@kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "'boqun.feng@gmail.com'" <boqun.feng@gmail.com>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "'helgaas@kernel.org'" <helgaas@kernel.org>,
+        "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'linux-rdma@vger.kernel.org'" <linux-rdma@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        Jose Teuttli Carranco <josete@microsoft.com>,
+        "'stable@vger.kernel.org'" <stable@vger.kernel.org>
+Subject: RE: [PATCH v3 6/6] PCI: hv: Use async probing to reduce boot time
+Thread-Topic: [PATCH v3 6/6] PCI: hv: Use async probing to reduce boot time
+Thread-Index: AQHZgxiydynY9JdEwE2LUDobn6ASSK9TueZQgAnkUiCACrRlcA==
+Date:   Tue, 23 May 2023 19:30:37 +0000
+Message-ID: <SA1PR21MB1335467F58B7BB5EBC9AD543BF40A@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20230420024037.5921-1-decui@microsoft.com>
+ <20230420024037.5921-7-decui@microsoft.com> <ZFtUgCVaneGVKBsW@lpieralisi>
+ <SA1PR21MB13355D8F2A7AC6CA91FE1D1BBF779@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <SA1PR21MB133549FB41041ED218E2C73BBF7E9@SA1PR21MB1335.namprd21.prod.outlook.com>
+In-Reply-To: <SA1PR21MB133549FB41041ED218E2C73BBF7E9@SA1PR21MB1335.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=39c20481-9604-44cd-8edf-696feb4a77f6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-23T19:16:26Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9404ba2f-9e11-476c-bee1-b05b22020f31;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-10T16:54:12Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|MW4PR21MB1985:EE_
-x-ms-office365-filtering-correlation-id: 47662532-a40c-41a4-972f-08db5bc34bb2
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|BL1PR21MB3114:EE_
+x-ms-office365-filtering-correlation-id: ddd1e713-de15-432c-800e-08db5bc42f77
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SAEKcaW3z7TYItDXFivCVnl0hLuOGPIApFD5ZafSWFzc6Hi91+/JzFmUIN5hVMnjGWpvpEe8Eglno5fKSNgeofx16p1VPsnysDL1tbApn3WvgRi1sjz1Ad3zXjk/kFZRebKlJLO3VywlVT6q1SIh3FU5ErLi2xSPWRmdp4gTQF2GPtMSm3DyYvy2qiTxaQHm6IXl0aScHkrJyZB6fOnBvRjK6HnefN6eUutONpB0LIDt4CYACQY7KMxK4EvqLscnvTJmATliRnIiCWvtMUe/ojbLYDjQGdEw2IgIva8SiJ59xx6AyOJzABtbrBkq+9ayt5AMbvWaIwlvqBasuGVpp4Ij2CjVcwDGcTAn9UUtypGHvRqPRHXLCOC3Cr6l9jxSjlLS8RRmPsb6B0ZVNaThNhF9mzpMNBdppNop59W5R+tkZ1JFymQ7/fvSoMiYlSKwTxzOwOPwrOSt876EWXXhsUhc/gXoPB+NIsJhnb7SD62PAHy70z83MPyPb3TA3H/+uybRudbe9MRRgowWdLtUJWioQPTcViuPloBrBJMXLJidTDgoRsLHMgkxlFv/mid83a1u0EfGJtLbMvbTEixY7Jxf8jOT0nOq9FBRhTvjNbFvP+tX468AgmYgjR8+RcRwk4M9naO8RXz0+etIMpOxs8zJ0JFc4y80+5RD3gcAhBU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(451199021)(316002)(786003)(10290500003)(38100700002)(110136005)(54906003)(76116006)(66476007)(66946007)(66556008)(4326008)(66446008)(6636002)(64756008)(71200400001)(921005)(122000001)(82960400001)(82950400001)(41300700001)(478600001)(38070700005)(7696005)(86362001)(52536014)(5660300002)(8936002)(8676002)(966005)(186003)(7416002)(33656002)(107886003)(55016003)(53546011)(26005)(6506007)(9686003)(2906002)(8990500004)(83380400001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: B41YGk0lc3PlqemGwFGS+l+Im2r/DRCGRF/dIbNPWc3/Ri/OT8F+4KJSztAh/J9fF1WmUXF52jMLG+0rtwq008DwOSwxbzOUrXDabtyv1f4xJuzuHjd0F69HsV3mmRq6tKNS1TdLXFR6NL9dUYR/tphMCIQdqsQRnenSeCqN4EKjqNXkN8zBn4IqrNotFEXGajv/bqPsMFsIWOnuDOZ6r3QiYReB72khflsvKEF4QU6fOqlVH0lMK6tmJO+zOyy7TffGXZ7WhsunJECsobafU4vLVoGNboRRae/5il3GhUHf1bRoYzTXM9aJFK2qrlv4KafUXWo8KGt6+ESYV8RmRYyDFNapToMATSDglYJYMEYMTfFfILd88W5s9dIhS5WxjRfzythUq4yXELM1mOz5buG7MHMvfbexiFScltGgH9nZv2B1Fab6dj6qw3QUcd/ph3h6uOEIZudEEfvM/0RJ23aKSRvnESS3mDFIP7pR64oZtX3xzP5juzGD73ZK4i2uQA6mSwIvaJyvr7UEFiVeyOAzpObG5lfZvV+ryLOI096Af5PpH0qA7RJ71aS7hqrQcKciV/tTMTnC5YP7SClKWBP43mNCg6sX+MIMnl7s0H2T7OkJa5Tn+9HZm0Ypg3s9ftF1k7WkATdfXNd7A7A7qN4YfQ9pGz545QFHx4KNnHs=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(451199021)(8990500004)(83380400001)(186003)(2906002)(7696005)(4326008)(66446008)(64756008)(66556008)(66946007)(76116006)(41300700001)(786003)(316002)(54906003)(66476007)(478600001)(71200400001)(110136005)(8676002)(53546011)(52536014)(7416002)(5660300002)(9686003)(6506007)(26005)(966005)(8936002)(10290500003)(55016003)(38070700005)(82950400001)(86362001)(122000001)(82960400001)(38100700002)(33656002)(491001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?omLF4H9klvhFtdOJt3oNJvwCZhw4Sdgk2mAhWdsuD+iLF0xEY/9brl+EACXa?=
- =?us-ascii?Q?FAIRkpI7XzkrBsHFG0EqZcXH1Kaeo8ALa7RTib2aeLtjwsNyfEZ/frRMw2EN?=
- =?us-ascii?Q?iM/z8alH75Mgj9r+ESa02rHBnS4LUdkdjyRIOCm/CDNFkbYO7bYIpFVkIhpo?=
- =?us-ascii?Q?4R3lCsAR1OGUTahUW0FrSm7icoY2kACXEpPEnpd2ie48mubZJkivEPm+WPUC?=
- =?us-ascii?Q?hsoWxb9tZXBzWYsNjU/BnNaqVQpn9UwpFOztJMo1EnsjLTF0xO/b2sXoMmqb?=
- =?us-ascii?Q?88DwMp4X5pkhcnLqZRghK0Rn5wkSycd03wyaSV/r41kpJSRDhK/xpTHiff6w?=
- =?us-ascii?Q?3p6TXZmg4+KJrjcju0ey9OhtMXgch4TZI2Ff0pv16YGBO+XYEPcjf/MFI3++?=
- =?us-ascii?Q?rxcgktyzEBu7XHN5YkryUuNCu731q4Zg5ovGPW5sjWvUb6fUCHGcYrBbDglD?=
- =?us-ascii?Q?lmQ60Y10OoPt6coWlVbexx3goPGEp73PZ+49ztoUn0E4+jZjEAp/dfkawXpf?=
- =?us-ascii?Q?2EsL9rBRpmpu0tTcCLVoufNJk4kNX/6u/j8jBkj75zJN/FwFGJnceSlu2ywJ?=
- =?us-ascii?Q?Ra92v52o28G8MqSC34+oTnRleDmi1MRyU4cx6USM35whrpk+L/Gz7WcSi7j9?=
- =?us-ascii?Q?cyfjWsdSCFidcCcjtovADpaeOxUmkk0UY6TB1H67n8MCnYLJ+jV3FdPamJaQ?=
- =?us-ascii?Q?IX+LEseDjdBPmwWPgie54ThBXngsy2ffx9UvRVesnsOnfMVPmxP6QonwMDyL?=
- =?us-ascii?Q?oNh0v37jioFxrNG1rQIDrTQi+kSEFs/cONBlTxgZ0y6urkMZyJNNxfyc96on?=
- =?us-ascii?Q?hMyZFWoztpGPbr+KT9fUL1ZeHLbUgCeKuoGwba30J07CFq/M3u3DLweOt0ZW?=
- =?us-ascii?Q?+W/V650/RaCFCg7yHfgWsXHVZpQs7oRpuJMZk6sZkKvaSHC53EefcEhjLFBB?=
- =?us-ascii?Q?4R5MT7gRelHTmmB79GsmlxkW8EKbfd3SALXCMsaBpd6KRUkeAgWDQJre3iYg?=
- =?us-ascii?Q?qUxTWYH1Xd17bzFEoF3aDW8VMEpIWDyO3+ZNvyk4aye4avldJC79QCBzn2sU?=
- =?us-ascii?Q?coIB4yNFehq0knYCepDMQrPlHMXZeA6YAEdc6EG0HtoAEClOIw1fEtp2+7y/?=
- =?us-ascii?Q?rlOrP7h5V9u93VNsELL+7JvQ67fU9PZLik9TyflqNPzFsWQ26VR9jYZblNJx?=
- =?us-ascii?Q?tdEjDAqPG+5TBrZ2DFgrkBPrwoiJNrDkRsBy16w8+gmLJ8ESL7VtzYhlqOkk?=
- =?us-ascii?Q?iZvsuFtJ3B7aeJmTTR7oqdO8WwDPeG3KQ4PbHMKrJbAPBbVkfPnH9swz77lt?=
- =?us-ascii?Q?n4PlAkwOOFZjF9q/keUHnUm38cpjq8NwCkfXn0EQnoMRv0zLVETxDtn75oGo?=
- =?us-ascii?Q?qCnhg/CHPs4ceha6Q6HjUdK0WPh3PICEVbMiqtiedUARMAdilzNJLXNH5iXG?=
- =?us-ascii?Q?QRT1LbHU392XltkcNsWbLYhrU5DzXNLQUqe5I3Te/VDBxEtww/UOYlxXJIwh?=
- =?us-ascii?Q?mg75RWFZqMSvcWCq+cdvImz9n3urmuF3urbDTyE/gc1LTNCN6Ipf2E650fPL?=
- =?us-ascii?Q?HwIfFqorIEtkfNfg8ck6hltHS/cjjrW+RYOjQZis?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?mchEVf1h9egY5lKW/SxxyamvQLzKyWARi6RuJXb5B+MOUiCT7HhARoSnWTcJ?=
+ =?us-ascii?Q?CJySe9M00cKHs+xJ1RRV5bwJYvcG/fi23VD0wSdFvQzaLDrswVbx2g7vfqB3?=
+ =?us-ascii?Q?TPjUuDuPJ2HGX11ibSbkCQxYYmOmls7jfcNjr86sSQUjtYs7BEr9QUQNaceM?=
+ =?us-ascii?Q?zgkZyobTpBRl5oFBj635njrvGOYUCeE3WrHnhW5ao4FKF22MztcMellCYnDP?=
+ =?us-ascii?Q?rGhbDIf+bOSm+Cp2mGpHLGYvHyf6heyp/snFo3gXSXMaCIAuB0wgNJanR155?=
+ =?us-ascii?Q?tV7BGglzjdU32SDiAOOigHLdmcBkExFdF7ss1NORt6nvr2sIk5P7FDY4Yt5N?=
+ =?us-ascii?Q?L3ysJuYG218KiNqKdX4W08O64sO3CXt+WG+90yxYgn3zIAk/BvjmUsT1yqaM?=
+ =?us-ascii?Q?SOw89S0MYcqcxM2uXv6BOfk856GhpZTPCUFYjzJxW4uTMVFirFLMOn97k/OG?=
+ =?us-ascii?Q?4qXWzFtTcL58iuHVfO9OdYSZOyx29dvUGCdAmIo23izYRvTUlgRibGYy1HAs?=
+ =?us-ascii?Q?556bwQ9rh7+dQbVxRuSqsyfgBC8+E8N+DBv3aEPjtTgbV2ayuZi9YTxTTEpE?=
+ =?us-ascii?Q?bIX4UUt+xbPKMEx8NHGcd6/ewAB4+n1YoIbFt9azuNV+Em/SOSuxvYsu3EzO?=
+ =?us-ascii?Q?Z0B1JLpXjgHm/iu5js6yprFps38a/LErqdQEiJEzEBpe5TOCZEQZQy4kCYCY?=
+ =?us-ascii?Q?/a6iZf7cRAVXyw2ul+5OrOKxFj5De8/0EE8C4UGlVn8RKXnOL6kx1UpvvA5V?=
+ =?us-ascii?Q?2nKa2V+y7SFkbE+lXkBbUFZ7xQF123BA+UCkamRGIBE4/nuuGQAt1aNFoVg9?=
+ =?us-ascii?Q?VyUfycYezPUqbTR30nY8bnQoEpI4BpqiXLtxkqteDUe/oiNcub1XmNQHpHZB?=
+ =?us-ascii?Q?2msd6+2JineMz3Xb1VLcSktlRH5N4GtaLgHOQHVR5SR21hPOcv49Lbqiw793?=
+ =?us-ascii?Q?NdJ4cuHeSiWLlOEwaK2K1zJL/IbIx4uVbO+RXlPUPDCW5cW4A6ZwgpF/1ZRg?=
+ =?us-ascii?Q?9KWfuIma8b7SKnmME5N7Xi8d1LFNYROphRYq4OQM3oXDQEpGGIBkUZuONCvU?=
+ =?us-ascii?Q?4umX49xJd0Ok2v37oRsdZrz8cWVep4hdQeB47BfBbhh5KEtL08UVQS5w2zxJ?=
+ =?us-ascii?Q?GQBVt1II1dRSiWuYFlkisZzS4+HI3IF6UhbO39iCRdtFl35KtXaFJF+EIWbO?=
+ =?us-ascii?Q?BcKF1lv+z/6fP9oLadePKBLF3jTSScHinUyia109YzpsR1gVIG4FnYnsn4YQ?=
+ =?us-ascii?Q?XI1bxxG+pwW+M4kCVJ9Csocb2Xxd08usUAikfERzONUoCkP3V/tpIh9ach2z?=
+ =?us-ascii?Q?mNhPY/j2bUsv+H30zfmKqQs04KLAsaZAZX/QNOUOXMsLYqgHFE3zyoL3jnBX?=
+ =?us-ascii?Q?dc48HzGmEOEy/RLK1ZEd/GxxAJ332Nv0jZTZGHUOts18Y2yUuMyH97JmigmA?=
+ =?us-ascii?Q?G6YrWQyOVY3q5+beEN3FFKykb+JGxi5wOfcRsvCqXW6+oU3qfAHTw/oJwpat?=
+ =?us-ascii?Q?esEKGTiWe3Q1KlzfXWYwjhIzZgarebWqHrUiE/4EoF+Ysk7Oyg40ed3e2HEu?=
+ =?us-ascii?Q?LagPtRx22ikdsZhQDJdsUlLgW9cvvAH6gbRpYdN2?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47662532-a40c-41a4-972f-08db5bc34bb2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2023 19:24:14.9195
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddd1e713-de15-432c-800e-08db5bc42f77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2023 19:30:37.0937
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GmmCgutl3hicwUAubo0sR+l/91nV8yiXVXKE5ed8cLVp3iu6EwpA3DQZC5d64OiQWloVbCO+TgjuL8PPBqf4MQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1985
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-userprincipalname: P3IOglv1Crv/ysxiRRViBEyGNjnprONM+s8q93IkiScQ95CiuyAa7fVPlrMnMdut4DbM0moj7qu/rcL6k5NZCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3114
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -143,78 +144,47 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 > From: Dexuan Cui <decui@microsoft.com>
-> Sent: Thursday, May 4, 2023 3:54 PM
-> To: ak@linux.intel.com; arnd@arndb.de; bp@alien8.de;
-> brijesh.singh@amd.com; dan.j.williams@intel.com;
-> dave.hansen@linux.intel.com; Haiyang Zhang <haiyangz@microsoft.com>;
-> hpa@zytor.com; jane.chu@oracle.com; kirill.shutemov@linux.intel.com; KY
-> Srinivasan <kys@microsoft.com>; linux-arch@vger.kernel.org;
-> linux-hyperv@vger.kernel.org; luto@kernel.org; mingo@redhat.com;
-> peterz@infradead.org; rostedt@goodmis.org;
-> sathyanarayanan.kuppuswamy@linux.intel.com; seanjc@google.com;
-> tglx@linutronix.de; tony.luck@intel.com; wei.liu@kernel.org; x86@kernel.o=
-rg;
-> Michael Kelley (LINUX) <mikelley@microsoft.com>
-> Cc: linux-kernel@vger.kernel.org; Tianyu Lan <Tianyu.Lan@microsoft.com>;
-> Dexuan Cui <decui@microsoft.com>
-> Subject: [PATCH v6 0/6] Support TDX guests on Hyper-V
->=20
-> The patchset adds the Hyper-V specific code so that a TDX guest can run
-> on Hyper-V. Please review.
->=20
-> The v6 patchset is based on today's mainline (a1fd058b07d5).
->=20
-> The v6 patchset addressed Michael's comments on patch 5:
->   Removed 2 unnecessary lines of messages from the commit log.
->   Fixed the error handling path for hv_synic_alloc()/free().
->   Printed the 'ret' in hv_synic_alloc()/free().
->=20
-> @Michael Kelley: Can you please review patch 5?
+> Sent: Tuesday, May 16, 2023 5:03 PM
+>  ...
+> > From: Dexuan Cui
+> > Sent: Wednesday, May 10, 2023 10:12 AM
+> > To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > ...
+> > > This patch should be split, first thing is to fix and document what
+> > > you are changing for pci_{lock,unlock}_rescan_remove() then add
+> > > asynchronous probing.
+> > >
+> > > Lorenzo
+> > Ok, I'll split this patch into two.
+> >
+> > Thanks for reviewing the patch.
+> > Can you please give an "Acked-by" or "Reviewed-by" to patch 1~5
+> > if they look good to you? The first 5 patches have been there for a
+> > while, and they already got Michael's Reviewed-by.
+>
+> Hi Lorenzo, Bjorn and all,
+> Ping -- it would be great to have your Acked-by or Reviewed-by for
+> patch 1 to 5.
 
-Thanks Michael for your Reviewed-by on patch 5.
-=20
-> @x86 maintainers:
->   If the patches look good to you, can you please take patch 1 and 2
-> into the tip tree?
+Gentle ping .
 
-Hi Dave and all, could you please take a look at the patchset?
+> > I hope the first 5 patches can go through the hyperv-fixes branch in
+> > the hyperv tree
+> >
+> https://git.ke/
+> rnel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fhyperv%2Flinux.git%2F
+> log%2F%3Fh%3Dhyp&data=3D05%7C01%7Cdecui%40microsoft.com%7C65c86f
+> fe8d8542dbae0708db566a1607%7C72f988bf86f141af91ab2d7cd011db47%
+> 7C1%7C0%7C638198785892993948%7CUnknown%7CTWFpbGZsb3d8eyJWIj
+> oiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3
+> 000%7C%7C%7C&sdata=3Dh9vxjnGo6oYzare%2FqqcXndg2NZZ0Ap%2BH33q0i
+> Mtf7D4%3D&reserved=3D0
+> > erv-fixes
+> > since they are specific to Hyper-V.
+> >
+> > After the first 5 patches are in, I can refer to the commit IDs, and I
+> > will split this patch (patch 6).
+> >
+> > Thanks,
+> > Dexuan
 
-The patchset can also be viewed here:
-https://lwn.net/ml/linux-kernel/20230504225351.10765-1-decui%40microsoft.co=
-m/
-
-> @Wei Liu: I think patch 3, 4, 5, 6 should go through the Hyper-V tree
-> since they change the Hyper-V code.
->=20
-> If you want to view the patches on github, it is here:
-> https://github.com/dcui/tdx/commits/decui/mainline/v6
->=20
-> FYI, v1-v5 are here:
->  <snipped> on 5/23/2023
-> =20
-> Thanks,
-> Dexuan
->=20
-> Dexuan Cui (6):
->   x86/tdx: Retry TDVMCALL_MAP_GPA() when needed
->   x86/tdx: Support vmalloc() for tdx_enc_status_changed()
->   x86/hyperv: Add hv_isolation_type_tdx() to detect TDX guests
->   x86/hyperv: Support hypercalls for TDX guests
->   Drivers: hv: vmbus: Support TDX guests
->   x86/hyperv: Fix serial console interrupts for TDX guests
->=20
->  arch/x86/coco/tdx/tdx.c            | 122
-> ++++++++++++++++++++++-------
->  arch/x86/hyperv/hv_apic.c          |   6 +-
->  arch/x86/hyperv/hv_init.c          |  27 ++++++-
->  arch/x86/hyperv/ivm.c              |  20 +++++
->  arch/x86/include/asm/hyperv-tlfs.h |   3 +-
->  arch/x86/include/asm/mshyperv.h    |  20 +++++
->  arch/x86/kernel/cpu/mshyperv.c     |  43 ++++++++++
->  drivers/hv/hv.c                    |  65 ++++++++++++++-
->  drivers/hv/hv_common.c             |  30 +++++++
->  include/asm-generic/mshyperv.h     |   1 +
->  10 files changed, 300 insertions(+), 37 deletions(-)
-
-Thanks,
--- Dexuan
