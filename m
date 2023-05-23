@@ -2,132 +2,110 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9984F70DF53
-	for <lists+linux-hyperv@lfdr.de>; Tue, 23 May 2023 16:34:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55A9370E3B3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 23 May 2023 19:47:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236937AbjEWOe3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 May 2023 10:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33678 "EHLO
+        id S237518AbjEWRbw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 23 May 2023 13:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231951AbjEWOe2 (ORCPT
+        with ESMTP id S237576AbjEWRbr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 May 2023 10:34:28 -0400
-Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020017.outbound.protection.outlook.com [52.101.56.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D60E0;
-        Tue, 23 May 2023 07:34:27 -0700 (PDT)
+        Tue, 23 May 2023 13:31:47 -0400
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020021.outbound.protection.outlook.com [52.101.56.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A5510D9;
+        Tue, 23 May 2023 10:31:24 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bsaz2P9s6ZlRLGTMDloEQKZ5DyaHkOoZuFDL+tmtio4EhuqCfRpnJLvRzXOtVWhpOzYlNILKziahsQuiwK41PjTWBMetfEc7kLO8Fi0SDhJqQObSf3Siocbi/3+luYT8ya8/FawvRXHGZ8D3pGR/pY8J9OR/hsn04VTB7MDV7CbiKQFtw27q7DyuFe1hf93nIxxszCsGWk/LWNUXXrIVl2lcyywkqj9weuUWv1djEdpxdorQ27JLgZ+tYxk+2KYFVjb+l4kWL01WnaeZCUDpnub+rsKL/vURfj/uPFGXtTmCRAPaxxhdfFIHRrjFVBs4arJKwJ1OO3GQV1V9FSkuGg==
+ b=gFTEK1ppAPF4g4F6qc7LbuuCDYnwhNExj1KzhG2/xzoXMpYM/RRm819Rre0yE9GbhZ+UanMwkENDanfQ0o8jSbZMprOfiJdTPRGkBEK/16jgYsheGLxLei2XVt7huZsynzv9CMdiEnFSaxzDzluzjVQJUZg+3ort8xLjDweKKoYgMEvlReEpgsOKDUsqIbLthmQBlZt/4f1r4ADyD/4BnP/Gg8GZM+v0q+HfaaqwAnGt2YXckcmAVbxsTDJ9aWWs3Iy2oBK5BuSG5TTVvspcdQUGEg2OezjP6W185VitgduNyub2wpCFYjH0pW37c34+tO6hXcbGbphoQyZAlaHddQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S+cctbfDky0Y8n2oto81YsPUnyxlY1kgjkAI6Jyy6iw=;
- b=esV6wYZj5bPS9DurAmim64KJz1YnAEwwOp/b+zTD2jV2WSxvx971Phi0Ug5JnvvyjC5ZdeysN4Ng5/QIEO2vvwceYmgsNn+nPi3ZZ17WI0I/xiBJ+Egv0SeCbGLNio0wDTVc8NLFPbE8/s3avmzE4FvZgjQJ0n6xhfC1cLQ//E3cAahSuTKsHijT5Hh6/hk8/XkcuKcdbu1hghf6S4+MQ7bgqMAj9zZh4GRWSclWwI7zVTmTtjsNRKDHnQIB3G5/oSvDyb1hOipd/1ia3g8ZPYeoYpAQ9sKyjsVEG/QHf0dH5HNKwxh3J2kReGkWHp9zNrJFaShQqH9RUTjy1CtPpQ==
+ bh=bWkCBjMumEVdnOiFUDuUb7Y96m9hR7cTb6hMrFPOr3E=;
+ b=aHBXwy+xDkDsWgXPPy1iWYOE3mmrddK0VQVfWlXlKI4P7SYhxx8rvH+Weh7Xe+cQdcQcawnzyRXwWbSuXDgK/AOXrRyP1J2m0lGK6OUlvC7wQjEme9faoeDtO2RmFrSmSjBQugQvBZ8MFS9CMYAcPWfeegAUCaxV3JnAlb2aHzGjgIxaQNhlQnc3PjTr4EeatScKjEg8DhU5AKJRBkKFr/I7hcufspuNNYZk63bhFBhazT9CzFWWm1DcNb3NH6NwidMYP3JIviIHpuHThk3AMcjnF1FQDgg/QprntqUWDXre7VE+zJ1mDq1+d06gMDNdPTMgNOQvB0dxSE56JOKkaA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S+cctbfDky0Y8n2oto81YsPUnyxlY1kgjkAI6Jyy6iw=;
- b=SfHj7QHcj1rI3tQZC5/eMT/1JNLxJiAMQetXSc/5wD411yL7+18rbZY8RD6JDf+6duTFyW/slYeUnoqVhi6hhwDrNkzYzJJL4rH8QThZ0SjNxVhNKPtci74PKKKdkH8EcopXPaOUk4c6grhQ05zjea988MWk5R+BsPCInl729yg=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by PH0PR21MB1910.namprd21.prod.outlook.com (2603:10b6:510:1b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.13; Tue, 23 May
- 2023 14:34:24 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::a4f7:2466:97b5:bd31]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::a4f7:2466:97b5:bd31%5]) with mapi id 15.20.6455.004; Tue, 23 May 2023
- 14:34:23 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH 1/2] x86/hyperv: Fix hyperv_pcpu_input_arg handling when
- CPUs go online/offline
-Thread-Topic: [PATCH 1/2] x86/hyperv: Fix hyperv_pcpu_input_arg handling when
- CPUs go online/offline
-Thread-Index: AQHZil8FRZ0qOnNN10G7K787DJGg/a9mAb2AgABWn6CAAS1hgIAAbJ2Q
-Date:   Tue, 23 May 2023 14:34:23 +0000
-Message-ID: <BYAPR21MB16884F0DFBCF2B419AF46EC1D740A@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1684506832-41392-1-git-send-email-mikelley@microsoft.com>
- <87o7mczqvu.fsf@redhat.com>
- <BYAPR21MB16889F38274F6F7691DB85F8D743A@BYAPR21MB1688.namprd21.prod.outlook.com>
- <87wn0zxylc.fsf@redhat.com>
-In-Reply-To: <87wn0zxylc.fsf@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=28520d20-9fa7-468b-af0e-f88769c50adf;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-23T14:33:31Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
+ bh=bWkCBjMumEVdnOiFUDuUb7Y96m9hR7cTb6hMrFPOr3E=;
+ b=iMkbuy1PVhs5sR2KE03fhDdBXXFGgKHXhgBYpnGWAUTUAhwM7hcnjNT+x5qYMu2D+YiFcggioemXAIVOyK8oDLgYZgDSxnrVq4+k3aNlXhiD0qrueJmT4AyG/Y2UiYuQVPNIOKqa8PbM116jc9zsNrUTk/hkb4uSgTVEwGOTo/Q=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|PH0PR21MB1910:EE_
-x-ms-office365-filtering-correlation-id: eac6c40f-76c1-4b73-d791-08db5b9acdac
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qisHd5gEk7ikcyC+NjqyrhDsDVtjhm5i/JLGKsFq1Sdbvahm9WquS4xD7R1DzdQ4itXAoEIpzalh3n/yMIoe7BtVEVYjpzPPIUIZDLjkZuay8noXOUjdqGGR+WuabW3OXSzmUBn67kL0dFikh+f9iPYVT6RnPWKv9CDStkYfk4Xm15d8F32HbZMB+WNyH4AQ4iILrbn6ZCzTKtV1qATSJIJnqADlWQABCTCKFgN0i58xJvcJOqsLgRzM8DC2AWKML97ZYo3nUr/qQc4fu8W8n4o6zir3U48CPWWquK2OJl2psiUBvHw7xGvGDiamlTLSPRhkOUOfbcZFsVeGcauua5tmj5jubv5TqnTYidmziaaOkMJjteY+o56msqGUiOYzrYZCFihudbIO4aGlEID68wPFJIXyMTbDongoI4wpEFQESOIPaFvhyjBC0hmQ5jOl6ZbOnumTskxYR4FxL9aRL4DRWLCEmDwnZ9zrzPjlKPAOfzJX+r3gRayo1H4RAewcrMpUcj3IUJBBlcO2QSTtVSIQuxLEu9x+ocL+ZhCGeo6Z9HW4r9DgfTGnxVFJNgIpd523zk/nKDiLstvnDqlOsAUvK34D9yhNyxdYvU/TGArzREZ044dcUUMbRrSyrPSu9mpCeOXkyJlR3astmERVX4a3n3cFilXo/ZpVwgRqpDE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(346002)(376002)(396003)(39860400002)(451199021)(316002)(10290500003)(478600001)(6506007)(26005)(9686003)(786003)(71200400001)(54906003)(66946007)(76116006)(66556008)(66476007)(66446008)(64756008)(4326008)(41300700001)(6916009)(7696005)(52536014)(8936002)(8676002)(5660300002)(7416002)(86362001)(55016003)(2906002)(83380400001)(33656002)(122000001)(82950400001)(38100700002)(38070700005)(8990500004)(186003)(82960400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?tredA7MX6ofHOaopL+ozPcbNegjgRrN1WJ74pW2fB9ZGBLo3Mbdu1d3jiPTm?=
- =?us-ascii?Q?64LL3dCABpr20x5uK48BVlrevubU8YJ1Egu5uX+c/0i7J/jHGDnp53twklmC?=
- =?us-ascii?Q?E4XZFjUEvCcZx1mN8dDObIiTZZ9DOJ0WDT5Ro2zL97S+nrshqzubmRK3cVrh?=
- =?us-ascii?Q?/Udf+GL7f7zUNP16h7XUVkZFu/MInEZ3DN50GrQh49u9a7j+h50RXYbZrLho?=
- =?us-ascii?Q?1Qm6GA6BaYHxy1UPAG8FVGbZMc92fQYLsb1Z78P2C0f9PzWcDtt4BYtNuAlR?=
- =?us-ascii?Q?QRkFJP1t6dt4HgHDjE86nJGtNWMEp6H7ANOEdLiQn5yLobmpSNxIcHG4xF2P?=
- =?us-ascii?Q?KOqnZcUEHGajL7zwkVQbdiMbW24Zee39pl6XXyb3kyg4qXkvB58N6RBXivhn?=
- =?us-ascii?Q?IwrhXAwcYSQkW0O+wh30vl66UTZYvSj4XBdBz8NuMWvcZsqMlrNjl8nGVkfu?=
- =?us-ascii?Q?ZROO5Cgoo2B3Nxsfw6OicoLcEoCAuZboAxLML2WuWIGbAMNuHNF7O5sRumrw?=
- =?us-ascii?Q?tY/1xqYcSmGOE5D55yxAT3R4QgyTOOPzXypkf7OI4WZAfB3aHaVIDw8o3giM?=
- =?us-ascii?Q?16bsEgJ0Dpti6Jm8fs4XgOy8Kz7FOqzuwe8i5UHUZFZEF1wixPg6kmIZILUx?=
- =?us-ascii?Q?ezG/qcyF5EcmJHcQUrTM5OPtINjo38NW+PCOQ/zINCnW0W5rImGxccyV5UWr?=
- =?us-ascii?Q?dEMihqmQ2kuq8/SQcFkNI8haWVAJ3AYM87Qq2Hy42uUo7RLO8vOe/lgtGCUf?=
- =?us-ascii?Q?3yQdpBFQnTs3cyA3jyviBrNnNA7hFg1FBqFqEprTRHfd2LsUZS9c4dB/aYlR?=
- =?us-ascii?Q?jh4vuKt2LQztDch5J/pmIU+jNZZZaCoSuQiWphhkDlT3sTUyu9dJeKDP+Efk?=
- =?us-ascii?Q?mS1toKMyVwsjqH3VwpL40YIuS4qwQpECUmCtk/t3RUwz6yTsx5S09dUs5E7O?=
- =?us-ascii?Q?uz3UMbVoUSO1FQ7RR/JMsdkZEL+h5+v1LWDpYDWfVDWEWhWHXeWNxLpRnyiI?=
- =?us-ascii?Q?rkymiRQzEnlWI2CWTL5UyLYc1jMhMn/xLBO6aFynp2yrOy4yoYWcKxZzdC3C?=
- =?us-ascii?Q?mxqp6PVuc68DGM6bc3ault8wkhl5Zh01gpQXxq44bmwHr8TZmR6h0r2w+gEd?=
- =?us-ascii?Q?Z7Mtd5FABkMgzUt1u6nU7L3TNqqf0vzU213OByG7uG5LPb55X20n9yF+m0m/?=
- =?us-ascii?Q?aIea7T5Q3Lgz+520iHhIOwJzonoiMwocs5NoUFiYhuFQSGuKjZnaYOKgl239?=
- =?us-ascii?Q?ol4IPvjSicoT90kYQQzmsfYvkFfXcEVrhhGJZB8IzL0HnBX7E8FJY7EbDeCE?=
- =?us-ascii?Q?9EI9HptpDV8eAlVE/7lzp0RS9bjpdGz50Mg51hPZ3dKGAoJkbKbm6sOw6XPk?=
- =?us-ascii?Q?RvFR5byYTi3ETRXRsql+NNrMEYB8hdRkLb1vgMJrhlhgvirtqcm/jyEkt59p?=
- =?us-ascii?Q?jFV3axm/UdX7j7MzocYod4bf1J2xwBiwgB9E6TvJSG0pxOhdgpwm/6YZlbx+?=
- =?us-ascii?Q?u17j1tUVEUThy7opr4eMk82M+al2AXjMHG5BdpFSmpIdrjKQ37FnOAltCjrx?=
- =?us-ascii?Q?P7Ma/lJf0th8Sd3GuuAWwxbpff2E8LH2Tr/evT9lhRYC70jVKKWywNwNFHPs?=
- =?us-ascii?Q?gQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by SA3PR21MB3866.namprd21.prod.outlook.com (2603:10b6:806:2fb::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.6; Tue, 23 May
+ 2023 17:14:59 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::b7e9:4da1:3c23:35f]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::b7e9:4da1:3c23:35f%6]) with mapi id 15.20.6433.013; Tue, 23 May 2023
+ 17:14:59 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH v2 1/2] x86/hyperv: Fix hyperv_pcpu_input_arg handling when CPUs go online/offline
+Date:   Tue, 23 May 2023 10:14:21 -0700
+Message-Id: <1684862062-51576-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: CYXPR03CA0065.namprd03.prod.outlook.com
+ (2603:10b6:930:d1::7) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|SA3PR21MB3866:EE_
+X-MS-Office365-Filtering-Correlation-Id: 822a898c-5334-4b58-85a3-08db5bb13d07
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BxX5MV5mWgOqWIf/0YUmcuUUrJ8dYI/3+ZkyOKOXcGUG/D1KruFGl94lwjNP7K0fH2rHVkXFeI91eOCimSP759ak9HoBetVqNHIpqDyRbSqeevDFmRvquW6e0WOM/X1/LzFQiTV76m69yrSxJsjFsALnBQy96zosTuIGXetaPNCQ+AdaUSvpdFNflJ8/jI1e+Rn0pj/5K3kc1G5yktKBRztkxMVmsu2L/EOGg91zfbImUkLoOKHGMaUez2dkokwdcWs7heaDoEBx+SdgNA4zhsRujV6bAFwoG8Ixj+YTSbhMKyK+tDxPBL2LcBqRXY0iv7fP9YL6dMj311Yjy0iwD1hNg5JdnoOE6YLcAnu1uKfaZt0ABHyjEFL+onADAfyHFMin1rpM0Mtp043yJUWygLPDmhicIvlKzzHgsJkib0kzhTxDyRGjO8jz2/1kj7SDwdV9IXLtD9YRyqxEsdoZ7qf4nvouUXPhWsIV7DC8dMI+EInIFm58rr4jNdyOeworDzjXpS0RSnTSCFHLEDh8bFMIYCQqP1u7lDiZI0jRBmcm2Cv0TW7DbSZOKGytJ0h6tDbyuvS8L1psS1LZsHKWN0Kr5XOKb2R+qkdF7DqxgpQgxZjKFWDr6DbQprFgGaCgO+47DC3t0JNdTvPKYTeQSUdjYu5lu3kIrnvUF6GBzSY9sbs/LkUGZqxcZ4NdKJKz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(451199021)(5660300002)(6486002)(6666004)(66946007)(8936002)(786003)(52116002)(316002)(41300700001)(8676002)(10290500003)(107886003)(478600001)(7416002)(4326008)(66556008)(66476007)(2906002)(186003)(6506007)(6512007)(26005)(82950400001)(2616005)(83380400001)(82960400001)(36756003)(86362001)(38350700002)(921005)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WAErviylwowS1miCbzfZdElFWB2GTy1nC1cUZviSSBkZaJEt3QH2eSrxxlT9?=
+ =?us-ascii?Q?UL0pSM+mHm/1ZpoIAc+HfjbBHLDMvgM/LXyHQyVK+f99WJ2IRTo6wNUJqnYn?=
+ =?us-ascii?Q?oNQHhAKGSTXnVr5jb5v/3zuLTZsIpyz2wXv5y3EctLUkMMnxcyYU2O5naZ7W?=
+ =?us-ascii?Q?N5f4xP4VtC0D/HPsVkPI1QT+kbS4z6ADPXysqYlLpA7CZlczTFpPJf748fH5?=
+ =?us-ascii?Q?EQjCyqoZvJjUIvnrDqdGZvEHio0S1LZa2ndPUPJ06vd9ajaBm317DikHp5He?=
+ =?us-ascii?Q?s7TOrm0mCyLiy/MrmhYYSbbtQ1Vts9MG+dmK6KxwHPfV1okJznWu4Tn7blR2?=
+ =?us-ascii?Q?9mAv3yzjOCKPFxSWN6+LaTcR/9YYLvRyowcmwiQzcfUSbKevn2kiDruaXgwl?=
+ =?us-ascii?Q?i4CvbED/iu2URdZ0urhz9J0gpfD6pfUZUCx2hZUm6eXoZA8Uy2yXcinTaP5N?=
+ =?us-ascii?Q?QkcVwOumKJjDd0Q4C7SkNkfoNBeUY4070BzaScfcRW16H1OqkJQq4ldv0jDH?=
+ =?us-ascii?Q?71LVRML+TuMp8pQlyHJVR+QSHYLJLTWLDZqFwHV2SZ19C9e5sljlqGkGlgZi?=
+ =?us-ascii?Q?UnGMwf945UBRd3xO1u3OQln2Orv60AZU3Y/xmduNYnDVi26sEl36Q2qmudBU?=
+ =?us-ascii?Q?Df3Yd+wNPkZcKVaudzrX0fyHzpz3AX0OAX2hyhlTQH1llfcIuRdVy3wxk29t?=
+ =?us-ascii?Q?pkVN/8D2AOdM7fOYwnvuPg1p2Kz7e6snqkWd4oIJgwjASU5DgvmlFLrUcHYE?=
+ =?us-ascii?Q?YObUfOVfwfiCwzWyL+H8xsGU41JOtOSOjzUH+kvR35ChieC51nzm7dZClV4f?=
+ =?us-ascii?Q?lMwYXa64PlhlK+xCVfmrg6xZxNsJvFS3b+IB+L0Pi6b5JxcPC+hvN4Wi/XNm?=
+ =?us-ascii?Q?IxlmkonLZ9KAzqi2THkkKGPt1SyF8TXO70/UEbB/4rMFsmiixCczBCljztW0?=
+ =?us-ascii?Q?/hBpdB+2nJFxkJ2HKHiGXzdwlnBO5OhOlpDcO/w4+2Q5fDilZOvpY0qeIoOR?=
+ =?us-ascii?Q?fPNNVboInQnxE+13+ErWbZd6g522bDrNt2w/TKHSGiojRu8AwsAp0+m9zj8m?=
+ =?us-ascii?Q?AHXf2pYxBj3d97cfqHWOOM7W6U2nbSZ8FmLVf/xVyPAVplDqDXuaBPqxNgV9?=
+ =?us-ascii?Q?TtuOB+mKFduF2PbY6WtQttvbiPlIDC1AZdgrQjF6KYR6iC0JjuaWj91gR75X?=
+ =?us-ascii?Q?6wZuYCEPU0xU9yKHIm4VkNmBisZKmZxEIXlRmi+d0WlTZreLaNyKMm5ayopY?=
+ =?us-ascii?Q?W0ndfoFpyY6naSRyVyEvvbnPgUe9mPp8VDDJHtgzGZBWKQCbLV8f8RD888j6?=
+ =?us-ascii?Q?xTQNP+3UivoL6xeg55BIzbXFEIvHTJvkpXwncJhk7evwM3cfbbbGgssCbFq7?=
+ =?us-ascii?Q?2VHyXepgrvLiweCPfRs2faad9XcDZMEArgH+MkwJHV/ubTxDZWLHD3prO5Gb?=
+ =?us-ascii?Q?ydff7NuIz0c/glTMEenI7PFrg5SIIPUTMt/fHSNDG2oauGvoPO2234g17vEx?=
+ =?us-ascii?Q?OQUVVfGSTHkDrt+ZA3L2q8NBF7x+/789OgcWROwrFg5ZXrO2Z6zfADRJWPPY?=
+ =?us-ascii?Q?Nnt8ENq7ZJbgAQm5g+Y3qC/SU3iMNmA3yl9zvMa2?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 822a898c-5334-4b58-85a3-08db5bb13d07
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eac6c40f-76c1-4b73-d791-08db5b9acdac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2023 14:34:23.6348
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2023 17:14:59.5735
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2g0ZM6MfS+O37ALeNoR7cPuXe2lXP7h7W8Yy0z2pKF1ycGaByBBTJW1A/Jsb1fOZn5KvEeII0BLyvv/VkJ5JK1BuGZZYHV8hkmBbmuZNrHk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB1910
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aW2PJaBegIgR9tAGkeTO6J4kbsOa8qB10biWnzNxnqv1OI0cQGloi1RtZclMxBRX9ooP+HXUYGkyDDbDUyRqcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB3866
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -138,99 +116,143 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Tuesday, May 23, 2023 1:=
-05 AM
->=20
-> "Michael Kelley (LINUX)" <mikelley@microsoft.com> writes:
->=20
-> > From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Monday, May 22, 2023=
- 1:56 AM
-> >>
-> >> Michael Kelley <mikelley@microsoft.com> writes:
-> >>
-> >
-> > [snip]
-> >
-> >> > diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> >> > index 0f1001d..696004a 100644
-> >> > --- a/include/linux/cpuhotplug.h
-> >> > +++ b/include/linux/cpuhotplug.h
-> >> > @@ -201,6 +201,7 @@ enum cpuhp_state {
-> >> >  	/* Online section invoked on the hotplugged CPU from the hotplug t=
-hread */
-> >> >  	CPUHP_AP_ONLINE_IDLE,
-> >> >  	CPUHP_AP_KVM_ONLINE,
-> >> > +	CPUHP_AP_HYPERV_ONLINE,
-> >>
-> >> (Cc: KVM)
-> >>
-> >> I would very much prefer we swap the order with KVM here: hv_cpu_init(=
-)
-> >> allocates and sets vCPU's VP assist page which is used by KVM on
-> >> CPUHP_AP_KVM_ONLINE:
-> >>
-> >> kvm_online_cpu() -> __hardware_enable_nolock() ->
-> >> kvm_arch_hardware_enable() -> vmx_hardware_enable():
-> >>
-> >>         /*
-> >>          * This can happen if we hot-added a CPU but failed to allocat=
-e
-> >>          * VP assist page for it.
-> >>          */
-> >> 	if (kvm_is_using_evmcs() && !hv_get_vp_assist_page(cpu))
-> >> 		return -EFAULT;
-> >>
-> >> With the change, this is likely broken.
-> >>
-> >> FWIF, KVM also needs current vCPU's VP index (also set by hv_cpu_init(=
-))
-> >> through __kvm_x86_vendor_init() -> set_hv_tscchange_cb() call chain bu=
-t
-> >> this happens upon KVM module load so CPU hotplug ordering should not
-> >> matter as this always happens on a CPU which is already online.
-> >>
-> >> Generally, as 'KVM on Hyper-V' is a supported scenario, doing Hyper-V
-> >> init before KVM's (and vice versa on teardown) makes sense.
-> >>
-> >> >  	CPUHP_AP_SCHED_WAIT_EMPTY,
-> >> >  	CPUHP_AP_SMPBOOT_THREADS,
-> >> >  	CPUHP_AP_X86_VDSO_VMA_ONLINE,
-> >
-> > I have no objection to putting CPUHP_AP_HYPERV_ONLINE first.  I did
-> > not give any consideration to a possible dependency between the two. :-=
-(
-> > But note that in current code, hv_cpu_init() is running on the
-> > CPUHP_AP_ONLINE_DYN state, which is also after KVM.  So this patch
-> > doesn't change the order w.r.t. KVM and the VP assist page.   Are thing=
-s
-> > already broken for KVM, or is something else happening that makes it
-> > work anyway?
->=20
-> This looks like a currently present bug indeed so I had to refresh my
-> memory.
->=20
-> KVM's CPUHP_AP_KVM_STARTIN is registered with
-> cpuhp_setup_state_nocalls() which means that kvm_starting_cpu() is not
-> called for all currently present CPUs. Moreover, kvm_init() is called
-> when KVM vendor module (e.g. kvm_intel) is loaded and as KVM is normally
-> built as module, this happens much later than Hyper-V's
-> hyperv_init(). vmx_hardware_enable() is actually called from
-> hardware_enable_all() which happens when the first KVM VM is created.
->=20
-> This all changes when a CPU is hotplugged. The order CPUHP_AP_* from
-> cpuhp_state is respected and KVM's kvm_starting_cpu() is called _before_
-> Hyper-V's hv_cpu_init() even before your patch. We don't see the bug
-> just because Hyper-V doesn't(?) support CPU hotplug. Just sending a CPU
-> offline with e.g. "echo 0 > /sys/devices/system/cpu/cpuX/online" is not
-> the same as once allocated, VP assist page persists for all non-root
-> Hyper-V partitions. I don't know if KVM is supported for Hyper-V root
-> partitions but in case it is, we may have a problem.
->=20
-> Let's put CPUHP_AP_HYPERV_ONLINE before KVM's CPUHP_AP_KVM_ONLINE
-> explicitly so CPU hotplug scenario is handled correctly, even if current
-> Hyper-V versions don't support it.
->=20
+These commits
 
-Will do.  I'll send a v2 with the change.
+a494aef23dfc ("PCI: hv: Replace retarget_msi_interrupt_params with hyperv_pcpu_input_arg")
+2c6ba4216844 ("PCI: hv: Enable PCI pass-thru devices in Confidential VMs")
 
-Michael
+update the Hyper-V virtual PCI driver to use the hyperv_pcpu_input_arg
+because that memory will be correctly marked as decrypted or encrypted
+for all VM types (CoCo or normal). But problems ensue when CPUs in the
+VM go online or offline after virtual PCI devices have been configured.
+
+When a CPU is brought online, the hyperv_pcpu_input_arg for that CPU is
+initialized by hv_cpu_init() running under state CPUHP_AP_ONLINE_DYN.
+But this state occurs after state CPUHP_AP_IRQ_AFFINITY_ONLINE, which
+may call the virtual PCI driver and fault trying to use the as yet
+uninitialized hyperv_pcpu_input_arg. A similar problem occurs in a CoCo
+VM if the MMIO read and write hypercalls are used from state
+CPUHP_AP_IRQ_AFFINITY_ONLINE.
+
+When a CPU is taken offline, IRQs may be reassigned in state
+CPUHP_TEARDOWN_CPU. Again, the virtual PCI driver may fault trying to
+use the hyperv_pcpu_input_arg that has already been freed by a
+higher state.
+
+Fix the onlining problem by adding state CPUHP_AP_HYPERV_ONLINE
+immediately after CPUHP_AP_ONLINE_IDLE (similar to CPUHP_AP_KVM_ONLINE)
+and before CPUHP_AP_IRQ_AFFINITY_ONLINE. Use this new state for
+Hyper-V initialization so that hyperv_pcpu_input_arg is allocated
+early enough.
+
+Fix the offlining problem by not freeing hyperv_pcpu_input_arg when
+a CPU goes offline. Retain the allocated memory, and reuse it if
+the CPU comes back online later.
+
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+---
+
+Changes in v2:
+* Put CPUHP_AP_HYPERV_ONLINE before CPUHP_AP_KVM_ONLINE [Vitaly
+  Kuznetsov]
+
+ arch/x86/hyperv/hv_init.c  |  2 +-
+ drivers/hv/hv_common.c     | 48 +++++++++++++++++++++++-----------------------
+ include/linux/cpuhotplug.h |  1 +
+ 3 files changed, 26 insertions(+), 25 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index a5f9474..6c04b52 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -416,7 +416,7 @@ void __init hyperv_init(void)
+ 			goto free_vp_assist_page;
+ 	}
+ 
+-	cpuhp = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/hyperv_init:online",
++	cpuhp = cpuhp_setup_state(CPUHP_AP_HYPERV_ONLINE, "x86/hyperv_init:online",
+ 				  hv_cpu_init, hv_cpu_die);
+ 	if (cpuhp < 0)
+ 		goto free_ghcb_page;
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 64f9cec..542a1d5 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -364,13 +364,20 @@ int hv_common_cpu_init(unsigned int cpu)
+ 	flags = irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL;
+ 
+ 	inputarg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+-	*inputarg = kmalloc(pgcount * HV_HYP_PAGE_SIZE, flags);
+-	if (!(*inputarg))
+-		return -ENOMEM;
+ 
+-	if (hv_root_partition) {
+-		outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
+-		*outputarg = (char *)(*inputarg) + HV_HYP_PAGE_SIZE;
++	/*
++	 * hyperv_pcpu_input_arg and hyperv_pcpu_output_arg memory is already
++	 * allocated if this CPU was previously online and then taken offline
++	 */
++	if (!*inputarg) {
++		*inputarg = kmalloc(pgcount * HV_HYP_PAGE_SIZE, flags);
++		if (!(*inputarg))
++			return -ENOMEM;
++
++		if (hv_root_partition) {
++			outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
++			*outputarg = (char *)(*inputarg) + HV_HYP_PAGE_SIZE;
++		}
+ 	}
+ 
+ 	msr_vp_index = hv_get_register(HV_REGISTER_VP_INDEX);
+@@ -385,24 +392,17 @@ int hv_common_cpu_init(unsigned int cpu)
+ 
+ int hv_common_cpu_die(unsigned int cpu)
+ {
+-	unsigned long flags;
+-	void **inputarg, **outputarg;
+-	void *mem;
+-
+-	local_irq_save(flags);
+-
+-	inputarg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
+-	mem = *inputarg;
+-	*inputarg = NULL;
+-
+-	if (hv_root_partition) {
+-		outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
+-		*outputarg = NULL;
+-	}
+-
+-	local_irq_restore(flags);
+-
+-	kfree(mem);
++	/*
++	 * The hyperv_pcpu_input_arg and hyperv_pcpu_output_arg memory
++	 * is not freed when the CPU goes offline as the hyperv_pcpu_input_arg
++	 * may be used by the Hyper-V vPCI driver in reassigning interrupts
++	 * as part of the offlining process.  The interrupt reassignment
++	 * happens *after* the CPUHP_AP_HYPERV_ONLINE state has run and
++	 * called this function.
++	 *
++	 * If a previously offlined CPU is brought back online again, the
++	 * originally allocated memory is reused in hv_common_cpu_init().
++	 */
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 0f1001d..3ceb9df 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -200,6 +200,7 @@ enum cpuhp_state {
+ 
+ 	/* Online section invoked on the hotplugged CPU from the hotplug thread */
+ 	CPUHP_AP_ONLINE_IDLE,
++	CPUHP_AP_HYPERV_ONLINE,
+ 	CPUHP_AP_KVM_ONLINE,
+ 	CPUHP_AP_SCHED_WAIT_EMPTY,
+ 	CPUHP_AP_SMPBOOT_THREADS,
+-- 
+1.8.3.1
+
