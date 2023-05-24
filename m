@@ -2,180 +2,104 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA79B70FBD7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 18:41:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D181A70FD64
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 20:02:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234737AbjEXQll (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 24 May 2023 12:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51708 "EHLO
+        id S232260AbjEXSCY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 24 May 2023 14:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234014AbjEXQli (ORCPT
+        with ESMTP id S235865AbjEXSCX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 24 May 2023 12:41:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4497612F
-        for <linux-hyperv@vger.kernel.org>; Wed, 24 May 2023 09:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684946452;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YU48hv50mXOheNgtwLXvm6BL0As/IRm4S4+H7EFvY6A=;
-        b=eAByMmhDT9ISbPNj1Qw5cbCnnFT/hY0TyC39VLVPFoNQscpr/SRwGzDFk24t6cWgxq4v2w
-        Mg3czBRwtRBBqGHfzqc5W49F8MK90Ua6u3pBYJF9EeeolcNORy0iOoPsa7Smj8vH4Ew3iM
-        JKNGR9OOeHdaIwYMDeeOM9wZsrhcPDU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-99-fmHohvWdPO-bEnBIjRJWyA-1; Wed, 24 May 2023 12:40:50 -0400
-X-MC-Unique: fmHohvWdPO-bEnBIjRJWyA-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-30aa5fb26b3so708302f8f.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 24 May 2023 09:40:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684946449; x=1687538449;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YU48hv50mXOheNgtwLXvm6BL0As/IRm4S4+H7EFvY6A=;
-        b=ENjL63Q2cpZjOaagD6A45I5jJUTK57NNnb43t/J/jrmcQM+oDNlMrX72AUJHT9AhXE
-         b2kVF9mY1p3uXZtmC09uigkqJMQY2e/uJhofHShJrzgEUGzJCQvJ+4iS9I97d2YhX7FA
-         aPWkijVisptMjlzsbryMmU9xInLpp0aG3f7H0xTmxjS/PGmRVF+h6mTO3dtcRziY/cAw
-         jmW2ppqnczCJO1P3rOlS5U99flLtVWfCI6Xvj6ejTI4/jJ7IXE2gUMOGUv9nqo3Y7T/2
-         vz5mMh248pQRUcAav2clAIbLeW30YJPkBhLGCyrCvwy4dbvis/xiZiSu3H8DcnVwfw5z
-         Zz6Q==
-X-Gm-Message-State: AC+VfDyG9Jye+uTUl39APX58St/T8Ce1uJkBCeM2QswCdDbjvKE7REF1
-        m/lhCbsWMnwlpIXI41V9CWU5QPf9ZQA6FexCjYsBrq7wxP0rbU5S83txIE/Pe7U/ELiLm7Kbfm7
-        VW+wJcYmtn9W6byHkZjwpsQqM
-X-Received: by 2002:a5d:4b8e:0:b0:306:3b78:fe33 with SMTP id b14-20020a5d4b8e000000b003063b78fe33mr295797wrt.32.1684946449592;
-        Wed, 24 May 2023 09:40:49 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4Eq4QeR9/BJ3B8RRkdoVpa79HYvap1nF06Mugaau72o6IHjT2PaOeIJyaUKVC9H0K24yEeVg==
-X-Received: by 2002:a5d:4b8e:0:b0:306:3b78:fe33 with SMTP id b14-20020a5d4b8e000000b003063b78fe33mr295772wrt.32.1684946449333;
-        Wed, 24 May 2023 09:40:49 -0700 (PDT)
-Received: from vschneid.remote.csb ([154.57.232.159])
-        by smtp.gmail.com with ESMTPSA id e9-20020adffc49000000b003078a3f3a24sm15120399wrs.114.2023.05.24.09.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 09:40:48 -0700 (PDT)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>, bigeasy@linutronix.de
-Cc:     mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        jgross@suse.com, boris.ostrovsky@oracle.com,
-        daniel.lezcano@linaro.org, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        rafael@kernel.org, peterz@infradead.org, longman@redhat.com,
-        boqun.feng@gmail.com, pmladek@suse.com, senozhatsky@chromium.org,
-        rostedt@goodmis.org, john.ogness@linutronix.de,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, jstultz@google.com, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 04/13] arm64/arch_timer: Provide noinstr
- sched_clock_read() functions
-In-Reply-To: <20230519102715.435618812@infradead.org>
-References: <20230519102058.581557770@infradead.org>
- <20230519102715.435618812@infradead.org>
-Date:   Wed, 24 May 2023 17:40:47 +0100
-Message-ID: <xhsmho7m9ptrk.mognet@vschneid.remote.csb>
+        Wed, 24 May 2023 14:02:23 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B51712E;
+        Wed, 24 May 2023 11:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684951342; x=1716487342;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=0Qgjez3azYWXKRDMwPKOvjl8Rsxp+siO8MztZ6+bs+8=;
+  b=h0Wx38qxd+MzDl8NBP8JGw167yG6420HqOQFM2SHWy3RWbYLQGOA5qwA
+   HJtThYI+kKgEQV/uacFKz6Xyu9Mrvo1SPiNE8LKhqNhmgmVASBuzLjQK5
+   Iky63oQfGZ21Lq30ltC/2MVb7gB1djSjMAI+BqYOIglys0KSRpvW8008Q
+   3QwS022M2WjNwOf6rUcN8ukfKcnfHIClRxudmObioM3tzKFWPo0Gqrbv8
+   nK7snQf72rZLmI93qK1bgGceYwJhsf1AIIMl4UWa9G6+ud+hjw00cZteW
+   4kwnci/tA4/80m+29FD8duBgJ7PtF1mBONn+geOGimFQqj5Z0+PvySUO7
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="440006148"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="440006148"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 11:02:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="737407519"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="737407519"
+Received: from kknopp-mobl1.amr.corp.intel.com (HELO [10.212.186.147]) ([10.212.186.147])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 11:02:11 -0700
+Message-ID: <33d7800b-7870-6755-b057-f734fa7accd6@intel.com>
+Date:   Wed, 24 May 2023 11:02:42 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [EXTERNAL] Re: [PATCH 1/2] x86/Kconfig: Allow CONFIG_X86_MPPARSE
+ disable for OF platforms
+Content-Language: en-US
+To:     Saurabh Singh Sengar <ssengar@microsoft.com>,
+        Saurabh Sengar <ssengar@linux.microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <1683816877-10747-1-git-send-email-ssengar@linux.microsoft.com>
+ <9b88ddaf-c5c5-0244-5be7-12400ee54e11@intel.com>
+ <PUZP153MB074959D2F85EAD559ED7B544BE41A@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <PUZP153MB074959D2F85EAD559ED7B544BE41A@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 19/05/23 12:21, Peter Zijlstra wrote:
-> With the intent to provide local_clock_noinstr(), a variant of
-> local_clock() that's safe to be called from noinstr code (with the
-> assumption that any such code will already be non-preemptible),
-> prepare for things by providing a noinstr sched_clock_read() function.
->
-> Specifically, preempt_enable_*() calls out to schedule(), which upsets
-> noinstr validation efforts.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/arm64/include/asm/arch_timer.h  |    8 ----
->  drivers/clocksource/arm_arch_timer.c |   60 ++++++++++++++++++++++++++---------
->  2 files changed, 47 insertions(+), 21 deletions(-)
->
-> --- a/arch/arm64/include/asm/arch_timer.h
-> +++ b/arch/arm64/include/asm/arch_timer.h
-> @@ -88,13 +88,7 @@ static inline notrace u64 arch_timer_rea
->
->  #define arch_timer_reg_read_stable(reg)					\
->       ({								\
-> -		u64 _val;						\
-> -									\
-> -		preempt_disable_notrace();				\
-> -		_val = erratum_handler(read_ ## reg)();			\
-> -		preempt_enable_notrace();				\
-> -									\
-> -		_val;							\
-> +		erratum_handler(read_ ## reg)();			\
->       })
->
->  /*
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -191,22 +191,40 @@ u32 arch_timer_reg_read(int access, enum
->       return val;
->  }
->
-> -static notrace u64 arch_counter_get_cntpct_stable(void)
-> +static noinstr u64 _arch_counter_get_cntpct_stable(void)
->  {
->       return __arch_counter_get_cntpct_stable();
->  }
->
+On 5/24/23 09:23, Saurabh Singh Sengar wrote:
+>> Could you please rephrase this to be less confusing?
+> 
+> Thanks for your review. Currently, in the absence of ACPI, it is impossible to
+> disable X86_MPPARSE. In the case of ACPI being enabled, one has the
+> option to either enable or disable X86_MPARSE. My intention is to permit
+> X86_MPPARSE=n for OF platforms where ACPI=n. To describe the capability
+> of choosing any desired value for MPPARSE, I used the term 'selectable.'
+> Perhaps 'configurable' would be a more appropriate word in this context?
+> I can fix this and include it in V2.
 
-I tripped over the underscores when reviewing this :( This must be
-getting close to the symbol length limit, but could we give this a helpful
-prefix or suffix? raw_* or *_noinstr?
+OK, so this particular Hyper-V setup doesn't run normal normal distro
+kernels?  It requires a very specialized kernel?  Or it's just _better_
+that the kernel is configured this way?
 
-> @@ -1074,6 +1092,13 @@ struct arch_timer_kvm_info *arch_timer_g
->
->  static void __init arch_counter_register(unsigned type)
->  {
-> +	/*
-> +	 * Default to cp15 based access because arm64 uses this function for
-> +	 * sched_clock() before DT is probed and the cp15 method is guaranteed
-> +	 * to exist on arm64. arm doesn't use this before DT is probed so even
-> +	 * if we don't have the cp15 accessors we won't have a problem.
-> +	 */
-> +	u64 (*scr)(void) = arch_counter_get_cntvct;
+>> This is also one of those patches where I wonder: Why do _you_ care about
+>> this?  Are you just trying to be nice?  Is this intended as some kind of cleanup?
+> 
+> It solves an issue for Hyper-V VBS setup, please refer to the 2/2 of this patch
+> series.
 
-So this bit sent me on a little spelunking session :-)
+Heh, that changelog is even more confusing than _this_ one.  It doesn't
+say that there's a problem, only that it removes "not required" code.
 
-From a control flow perspective the initialization isn't required, but then
-I looked into the comment and found it comes from the
-arch_timer_read_counter() definition... Which itself doesn't get used by
-sched_clock() until the sched_clock_register() below!
-
-So AFAICT that comment was true as of
-
-  220069945b29 ("clocksource: arch_timer: Add support for memory mapped timers")
-
-but not after a commit that came 2 months later:
-
-  65cd4f6c99c1 ("arch_timer: Move to generic sched_clock framework")
-
-which IIUC made arm/arm64 follow the default approach of using the
-jiffy-based sched_clock() before probing DT/ACPI and registering a "proper"
-sched_clock.
-
-All of that to say: the comment about arch_timer_read_counter() vs early
-sched_clock() doesn't apply anymore, but I think we need to keep its
-initalization around for stuff like get_cycles(). This initialization here
-should be OK to put to the bin, though.
-
+I'm still confused by this whole thing.
