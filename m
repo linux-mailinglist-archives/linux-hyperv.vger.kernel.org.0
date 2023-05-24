@@ -2,105 +2,198 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4617C70E9A3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 01:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B0D870ED70
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 07:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238853AbjEWXbk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 23 May 2023 19:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50180 "EHLO
+        id S239535AbjEXF53 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 24 May 2023 01:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238740AbjEWXbj (ORCPT
+        with ESMTP id S239539AbjEXF52 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 23 May 2023 19:31:39 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5CACE9;
-        Tue, 23 May 2023 16:30:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684884658; x=1716420658;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5bY1QeWoEiGOfD0DEekVBjP+Ckt/t4qkOWsJzVvLLS4=;
-  b=EpBn0F7oUvyZhk7L4biGRJdHtVxjSsPphg9XwFPLsk+IAnTQWxWM29F6
-   uziVe60e/tVARzOhfXM0EInOzC7BKlRNZbKteH2nx51BMyypHJYRp4xgv
-   J8o27e0vF9zMracG3lDejb9sowMeOFytnj69DYAkJ7PrDIVgR0dm52BsO
-   If6+vnfLoFb0ttmo0TOOfHLziJRVzQQktwn5KyuIT4NZg7nqTU+kAKoPp
-   NHnv0TzM4pQBIHbU10gbViGdt8Uur3v8U5NE/rBwIlLevA88GY2L7ZDUT
-   fH9CxPhcicxllHXj1iXuyltoYWwyDYJavgLxfJULhHUFD8WJa+w8L4nmZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="419103482"
-X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
-   d="scan'208";a="419103482"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 16:29:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="793904074"
-X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
-   d="scan'208";a="793904074"
-Received: from mcgrathm-mobl.amr.corp.intel.com (HELO box.shutemov.name) ([10.249.40.146])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 16:28:53 -0700
-Received: by box.shutemov.name (Postfix, from userid 1000)
-        id 1BEC5109F9C; Wed, 24 May 2023 02:28:51 +0300 (+03)
-Date:   Wed, 24 May 2023 02:28:51 +0300
-From:   kirill.shutemov@linux.intel.com
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, brijesh.singh@amd.com,
-        dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-        haiyangz@microsoft.com, hpa@zytor.com, jane.chu@oracle.com,
-        kys@microsoft.com, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, rostedt@goodmis.org,
-        sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-        tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
-        x86@kernel.org, mikelley@microsoft.com,
-        linux-kernel@vger.kernel.org, Tianyu.Lan@microsoft.com
-Subject: Re: [PATCH v6 2/6] x86/tdx: Support vmalloc() for
- tdx_enc_status_changed()
-Message-ID: <20230523232851.a3djqxmpjyfghbvc@box.shutemov.name>
-References: <20230504225351.10765-1-decui@microsoft.com>
- <20230504225351.10765-3-decui@microsoft.com>
- <9e466079-ff27-f928-b470-eb5ef157f048@intel.com>
- <20230523223750.botogigv6ht7p2zg@box.shutemov.name>
- <2d96a23f-a16a-50e1-7960-a2d4998ce52f@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d96a23f-a16a-50e1-7960-a2d4998ce52f@intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        Wed, 24 May 2023 01:57:28 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2622518E;
+        Tue, 23 May 2023 22:57:27 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 2D51020FB9F2; Tue, 23 May 2023 22:57:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2D51020FB9F2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1684907846;
+        bh=t5dzhOilp7QpFsI2q/pIEVeDMxfw0/HEc1rMQtlFgqk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MYTppQc3MP2tIIarrRFPMqgstCxp/wch2FlbAWuwnIfTNrG+L7HqZZS48JWKV7pVr
+         5IUxNkGn94JIQevJFCrjxfUGEO00YhFIlnPBWpNWtxiRr1JklsbNpkZKdX7TilMspQ
+         JwMPO9ChXPz/GKkjwaiYIh73SsnHCKFOzXFvKjrE=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH] hv_netvsc: Allocate rx indirection table size dynamically
+Date:   Tue, 23 May 2023 22:57:24 -0700
+Message-Id: <1684907844-23224-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 23, 2023 at 03:43:15PM -0700, Dave Hansen wrote:
-> On 5/23/23 15:37, kirill.shutemov@linux.intel.com wrote:
-> >> How does this work with load_unaligned_zeropad()?  Couldn't it be
-> >> running around poking at one of these vmalloc()'d pages via the direct
-> >> map during a shared->private conversion before the page has been accepted?
-> > Alias processing in __change_page_attr_set_clr() will change direct
-> > mapping if you call it on vmalloc()ed memory. I think we are safe wrt
-> > load_unaligned_zeropad() here.
-> 
-> We're *eventually* OK:
-> 
-> >         /* Notify hypervisor that we are about to set/clr encryption attribute. */
-> >         x86_platform.guest.enc_status_change_prepare(addr, numpages, enc);
-> > 
-> >         ret = __change_page_attr_set_clr(&cpa, 1);
-> 
-> But what about in the middle between enc_status_change_prepare() and
-> __change_page_attr_set_clr()?  Don't the direct map and the
-> shared/private status of the page diverge in there?
+Allocate the size of rx indirection table dynamically in netvsc
+from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
+query instead of using a constant value of ITAB_NUM.
 
-Hmm. Maybe we would need to go through making the range in direct mapping
-non-present before notifying VMM about the change.
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
+ drivers/net/hyperv/hyperv_net.h   |  5 ++++-
+ drivers/net/hyperv/netvsc_drv.c   | 11 +++++++----
+ drivers/net/hyperv/rndis_filter.c | 23 +++++++++++++++++++----
+ 3 files changed, 30 insertions(+), 9 deletions(-)
 
-I need to look at this again in the morning.
-
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index dd5919ec408b..1dbdb65ca8f0 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
+ #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
+ 
+ #define ITAB_NUM 128
++#define ITAB_NUM_MAX 256
+ 
+ struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
+ 	struct ndis_obj_header hdr;
+@@ -1034,7 +1035,9 @@ struct net_device_context {
+ 
+ 	u32 tx_table[VRSS_SEND_TAB_SIZE];
+ 
+-	u16 rx_table[ITAB_NUM];
++	u16 *rx_table;
++
++	int rx_table_sz;
+ 
+ 	/* Ethtool settings */
+ 	u8 duplex;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 0103ff914024..5b8a7d5f9a15 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1747,7 +1747,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
+ 
+ static u32 netvsc_rss_indir_size(struct net_device *dev)
+ {
+-	return ITAB_NUM;
++	struct net_device_context *ndc = netdev_priv(dev);
++
++	return ndc->rx_table_sz;
+ }
+ 
+ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+@@ -1766,7 +1768,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			indir[i] = ndc->rx_table[i];
+ 	}
+ 
+@@ -1792,11 +1794,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			if (indir[i] >= ndev->num_chn)
+ 				return -EINVAL;
+ 
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = indir[i];
+ 	}
+ 
+@@ -2638,6 +2640,7 @@ static void netvsc_remove(struct hv_device *dev)
+ 
+ 	hv_set_drvdata(dev, NULL);
+ 
++	kfree(ndev_ctx->rx_table);
+ 	free_percpu(ndev_ctx->vf_stats);
+ 	free_netdev(net);
+ }
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index eea777ec2541..af031e711cb2 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -927,7 +927,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	struct rndis_set_request *set;
+ 	struct rndis_set_complete *set_complete;
+ 	u32 extlen = sizeof(struct ndis_recv_scale_param) +
+-		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
++		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
+ 	struct ndis_recv_scale_param *rssp;
+ 	u32 *itab;
+ 	u8 *keyp;
+@@ -953,7 +953,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
+ 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
+ 			 NDIS_HASH_TCP_IPV6;
+-	rssp->indirect_tabsize = 4*ITAB_NUM;
++	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
+ 	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
+ 	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
+ 	rssp->hashkey_offset = rssp->indirect_taboffset +
+@@ -961,7 +961,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 
+ 	/* Set indirection table entries */
+ 	itab = (u32 *)(rssp + 1);
+-	for (i = 0; i < ITAB_NUM; i++)
++	for (i = 0; i < ndc->rx_table_sz; i++)
+ 		itab[i] = ndc->rx_table[i];
+ 
+ 	/* Set hask key values */
+@@ -1548,6 +1548,21 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	if (ret || rsscap.num_recv_que < 2)
+ 		goto out;
+ 
++	if (rsscap.num_indirect_tabent &&
++		rsscap.num_indirect_tabent <= ITAB_NUM_MAX) {
++		ndc->rx_table_sz = rsscap.num_indirect_tabent;
++	} else {
++		ndc->rx_table_sz = ITAB_NUM;
++	}
++
++	ndc->rx_table = kzalloc(sizeof(u16) * ndc->rx_table_sz,
++				GFP_KERNEL);
++	if (ndc->rx_table) {
++		netdev_err(net, "Error in allocating rx indirection table of size %d\n",
++				ndc->rx_table_sz);
++		goto out;
++	}
++
+ 	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
+ 	num_possible_rss_qs = min_t(u32, num_online_cpus(),
+ 				    rsscap.num_recv_que);
+@@ -1558,7 +1573,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 
+ 	if (!netif_is_rxfh_configured(net)) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+ 						i, net_device->num_chn);
+ 	}
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.34.1
+
