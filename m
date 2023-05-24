@@ -2,104 +2,130 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D181A70FD64
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 20:02:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC31670FF78
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 22:53:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232260AbjEXSCY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 24 May 2023 14:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39318 "EHLO
+        id S229650AbjEXUxY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 24 May 2023 16:53:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235865AbjEXSCX (ORCPT
+        with ESMTP id S229451AbjEXUxY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 24 May 2023 14:02:23 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B51712E;
-        Wed, 24 May 2023 11:02:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684951342; x=1716487342;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=0Qgjez3azYWXKRDMwPKOvjl8Rsxp+siO8MztZ6+bs+8=;
-  b=h0Wx38qxd+MzDl8NBP8JGw167yG6420HqOQFM2SHWy3RWbYLQGOA5qwA
-   HJtThYI+kKgEQV/uacFKz6Xyu9Mrvo1SPiNE8LKhqNhmgmVASBuzLjQK5
-   Iky63oQfGZ21Lq30ltC/2MVb7gB1djSjMAI+BqYOIglys0KSRpvW8008Q
-   3QwS022M2WjNwOf6rUcN8ukfKcnfHIClRxudmObioM3tzKFWPo0Gqrbv8
-   nK7snQf72rZLmI93qK1bgGceYwJhsf1AIIMl4UWa9G6+ud+hjw00cZteW
-   4kwnci/tA4/80m+29FD8duBgJ7PtF1mBONn+geOGimFQqj5Z0+PvySUO7
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="440006148"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="440006148"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 11:02:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="737407519"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="737407519"
-Received: from kknopp-mobl1.amr.corp.intel.com (HELO [10.212.186.147]) ([10.212.186.147])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 11:02:11 -0700
-Message-ID: <33d7800b-7870-6755-b057-f734fa7accd6@intel.com>
-Date:   Wed, 24 May 2023 11:02:42 -0700
+        Wed, 24 May 2023 16:53:24 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F141C12E;
+        Wed, 24 May 2023 13:53:22 -0700 (PDT)
+Received: from [192.168.4.26] (unknown [47.186.50.133])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E7B6E20FBA6D;
+        Wed, 24 May 2023 13:53:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E7B6E20FBA6D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1684961602;
+        bh=jaoGaATWl6qH0LBuT7PMpFhq3wR8UB0SRjcinmr2MGw=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=gdGCklkn+W2FG8nWXMknVmZRf7MOqfBXFQSg1XVTieJjYv2pZpbSK13nBh6SaoEhT
+         jcL639wc1nVXAHEnmQmaX6AIuaD25yFRRA9zSSEUAf6N/FK7V8PguD80UGHHcNbtZY
+         /rfQmT61JJHHOojvC0XgtjYl2COQYPXjTiszLZkM=
+Message-ID: <b1ffbf50-7728-64a1-5d46-10331a17530d@linux.microsoft.com>
+Date:   Wed, 24 May 2023 15:53:18 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [EXTERNAL] Re: [PATCH 1/2] x86/Kconfig: Allow CONFIG_X86_MPPARSE
- disable for OF platforms
+Subject: Re: [PATCH v1 2/9] KVM: x86/mmu: Add support for prewrite page
+ tracking
+To:     Sean Christopherson <seanjc@google.com>,
+        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8?= =?UTF-8?Q?n?= <mic@digikod.net>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20230505152046.6575-1-mic@digikod.net>
+ <20230505152046.6575-3-mic@digikod.net> <ZFUumGdZDNs1tkQA@google.com>
+ <6412bf27-4d05-eab8-3db1-d4efa44af3aa@digikod.net>
+ <ZFU9YzqG/T+Ty9gY@google.com>
 Content-Language: en-US
-To:     Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Saurabh Sengar <ssengar@linux.microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <1683816877-10747-1-git-send-email-ssengar@linux.microsoft.com>
- <9b88ddaf-c5c5-0244-5be7-12400ee54e11@intel.com>
- <PUZP153MB074959D2F85EAD559ED7B544BE41A@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <PUZP153MB074959D2F85EAD559ED7B544BE41A@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+In-Reply-To: <ZFU9YzqG/T+Ty9gY@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-19.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/24/23 09:23, Saurabh Singh Sengar wrote:
->> Could you please rephrase this to be less confusing?
+
+
+On 5/5/23 12:31, Sean Christopherson wrote:
+> On Fri, May 05, 2023, Mickaï¿½l Salaï¿½n wrote:
+>>
+>> On 05/05/2023 18:28, Sean Christopherson wrote:
+>>> I have no doubt that we'll need to solve performance and scaling issues with the
+>>> memory attributes implementation, e.g. to utilize xarray multi-range support
+>>> instead of storing information on a per-4KiB-page basis, but AFAICT, the core
+>>> idea is sound.  And a very big positive from a maintenance perspective is that
+>>> any optimizations, fixes, etc. for one use case (CoCo vs. hardening) should also
+>>> benefit the other use case.
+>>>
+>>> [1] https://lore.kernel.org/all/20230311002258.852397-22-seanjc@google.com
+>>> [2] https://lore.kernel.org/all/Y2WB48kD0J4VGynX@google.com
+>>> [3] https://lore.kernel.org/all/Y1a1i9vbJ%2FpVmV9r@google.com
+>>
+>> I agree, I used this mechanism because it was easier at first to rely on a
+>> previous work, but while I was working on the MBEC support, I realized that
+>> it's not the optimal way to do it.
+>>
+>> I was thinking about using a new special EPT bit similar to
+>> EPT_SPTE_HOST_WRITABLE, but it may not be portable though. What do you
+>> think?
 > 
-> Thanks for your review. Currently, in the absence of ACPI, it is impossible to
-> disable X86_MPPARSE. In the case of ACPI being enabled, one has the
-> option to either enable or disable X86_MPARSE. My intention is to permit
-> X86_MPPARSE=n for OF platforms where ACPI=n. To describe the capability
-> of choosing any desired value for MPPARSE, I used the term 'selectable.'
-> Perhaps 'configurable' would be a more appropriate word in this context?
-> I can fix this and include it in V2.
-
-OK, so this particular Hyper-V setup doesn't run normal normal distro
-kernels?  It requires a very specialized kernel?  Or it's just _better_
-that the kernel is configured this way?
-
->> This is also one of those patches where I wonder: Why do _you_ care about
->> this?  Are you just trying to be nice?  Is this intended as some kind of cleanup?
+> On x86, SPTEs are even more ephemeral than memslots.  E.g. for historical reasons,
+> KVM zaps all SPTEs if _any_ memslot is deleted, which is problematic if the guest
+> is moving around BARs, using option ROMs, etc.
 > 
-> It solves an issue for Hyper-V VBS setup, please refer to the 2/2 of this patch
-> series.
+> ARM's pKVM tracks metadata in its stage-2 PTEs, i.e. doesn't need an xarray to
+> otrack attributes, but that works only because pKVM is more privileged than the
+> host kernel, and the shared vs. private memory attribute that pKVM cares about
+> is very, very restricted in how it can be used and changed.
+> 
+> I tried shoehorning private vs. shared metadata into x86's SPTEs in the past, and
+> it ended up being a constant battle with the kernel, e.g. page migration, and with
+> KVM itself, e.g. the above memslot mess.
 
-Heh, that changelog is even more confusing than _this_ one.  It doesn't
-say that there's a problem, only that it removes "not required" code.
+Sorry for the delay in responding to this. I wanted to study the KVM code and fully
+understand your comment before responding.
 
-I'm still confused by this whole thing.
+Yes, I quite agree with you. I will make an attempt to address this in the next version.
+I am working on it right now.
+
+Thanks.
+
+Madhavan
