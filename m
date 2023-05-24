@@ -2,210 +2,218 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F188370F0A2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 10:28:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B8870F397
+	for <lists+linux-hyperv@lfdr.de>; Wed, 24 May 2023 11:57:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240069AbjEXI2C (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 24 May 2023 04:28:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39884 "EHLO
+        id S230208AbjEXJ5T (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 24 May 2023 05:57:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240118AbjEXI2C (ORCPT
+        with ESMTP id S229614AbjEXJ5O (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 24 May 2023 04:28:02 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A32112B;
-        Wed, 24 May 2023 01:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1684916880; x=1716452880;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=htB6cCnFK3gzZGTZ8M7qNcCQ2Wriy8hXkM0cfyK59YM=;
-  b=uuQnprOu+vmP2AGwFbfEWAR5oWBk8BP6GIRiY1vVbPxKHrWHfKrnI6s7
-   1ZyjNyoocVARIkBYhwVqtCQv3mBwJFvpnzElhaDU4PFORExJOpgltepn0
-   jCKhN+DFXGSKAEtqflkQ1/75GDjvxmOXy6Nmo81ScaGNmim3oqPSDiz8Q
-   zQzlLWRxabqiStER1EOyLqAIqJw5SJ4A47X3H/NvT+aeGnOgI4ZE9nfjM
-   h1iqsmwhEfazOD9clOYeD6LeHjbDpASQkhyuRigkPzKSDz6r6B/EjHNyt
-   kO63ymmh5pxPvEXW+Va6GK1/DG8v1DCrGus78jSZlXSkMvXf9Llx3eIn6
-   g==;
-X-IronPort-AV: E=Sophos;i="6.00,188,1681196400"; 
-   d="scan'208";a="212802497"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 May 2023 01:27:59 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 24 May 2023 01:27:58 -0700
-Received: from den-dk-m31857.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.21 via Frontend Transport; Wed, 24 May 2023 01:27:55 -0700
-Message-ID: <7758d9f3ed40d154c27519b19248127e9d5b7575.camel@microchip.com>
-Subject: Re: [PATCH] hv_netvsc: Allocate rx indirection table size
- dynamically
-From:   Steen Hegelund <steen.hegelund@microchip.com>
-To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        <linux-kernel@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-CC:     Eric Dumazet <edumazet@google.com>,
+        Wed, 24 May 2023 05:57:14 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D954E93;
+        Wed, 24 May 2023 02:57:12 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 46D4020FB9FB; Wed, 24 May 2023 02:57:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 46D4020FB9FB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1684922232;
+        bh=VHd2+HBr/ZdV/++44Xu4iEewGcOk/dRPyk8bgSx8juI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VzoWUx2YB7ZlOJMsU1/h7rUaRCgihwp+j2cnk/px5bHj5WIHjkjLKkJDXjqjLwvoQ
+         h1J0eGr75Nb7mV4sScZzUOPiIwVTI4td3KgqbP9QhL/AqSIuyncbAr6NTYKZBG74Bk
+         TC2tyGlvnAIUd1XQ1SVcKaiVK9r695jL6y+3l970=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         Long Li <longli@microsoft.com>,
-        "Michael Kelley" <mikelley@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Wed, 24 May 2023 10:27:55 +0200
-In-Reply-To: <1684907844-23224-1-git-send-email-shradhagupta@linux.microsoft.com>
-References: <1684907844-23224-1-git-send-email-shradhagupta@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.1 
-MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Michael Kelley <mikelley@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Simon Horman <simon.horman@corigine.com>
+Subject: [PATCH v2] hv_netvsc: Allocate rx indirection table size dynamically
+Date:   Wed, 24 May 2023 02:57:10 -0700
+Message-Id: <1684922230-24073-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-SGkgU2hyYWRoYSwKCk9uIFR1ZSwgMjAyMy0wNS0yMyBhdCAyMjo1NyAtMDcwMCwgU2hyYWRoYSBH
-dXB0YSB3cm90ZToKPiBbWW91IGRvbid0IG9mdGVuIGdldCBlbWFpbCBmcm9tIHNocmFkaGFndXB0
-YUBsaW51eC5taWNyb3NvZnQuY29tLiBMZWFybiB3aHkKPiB0aGlzIGlzIGltcG9ydGFudCBhdCBo
-dHRwczovL2FrYS5tcy9MZWFybkFib3V0U2VuZGVySWRlbnRpZmljYXRpb27CoF0KPiAKPiBFWFRF
-Uk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNz
-IHlvdSBrbm93IHRoZQo+IGNvbnRlbnQgaXMgc2FmZQo+IAo+IEFsbG9jYXRlIHRoZSBzaXplIG9m
-IHJ4IGluZGlyZWN0aW9uIHRhYmxlIGR5bmFtaWNhbGx5IGluIG5ldHZzYwo+IGZyb20gdGhlIHZh
-bHVlIG9mIHNpemUgcHJvdmlkZWQgYnkgT0lEX0dFTl9SRUNFSVZFX1NDQUxFX0NBUEFCSUxJVElF
-Uwo+IHF1ZXJ5IGluc3RlYWQgb2YgdXNpbmcgYSBjb25zdGFudCB2YWx1ZSBvZiBJVEFCX05VTS4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBTaHJhZGhhIEd1cHRhIDxzaHJhZGhhZ3VwdGFAbGludXgubWlj
-cm9zb2Z0LmNvbT4KPiAtLS0KPiDCoGRyaXZlcnMvbmV0L2h5cGVydi9oeXBlcnZfbmV0LmjCoMKg
-IHzCoCA1ICsrKystCj4gwqBkcml2ZXJzL25ldC9oeXBlcnYvbmV0dnNjX2Rydi5jwqDCoCB8IDEx
-ICsrKysrKystLS0tCj4gwqBkcml2ZXJzL25ldC9oeXBlcnYvcm5kaXNfZmlsdGVyLmMgfCAyMyAr
-KysrKysrKysrKysrKysrKysrLS0tLQo+IMKgMyBmaWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRpb25z
-KCspLCA5IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9oeXBlcnYv
-aHlwZXJ2X25ldC5oIGIvZHJpdmVycy9uZXQvaHlwZXJ2L2h5cGVydl9uZXQuaAo+IGluZGV4IGRk
-NTkxOWVjNDA4Yi4uMWRiZGI2NWNhOGYwIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbmV0L2h5cGVy
-di9oeXBlcnZfbmV0LmgKPiArKysgYi9kcml2ZXJzL25ldC9oeXBlcnYvaHlwZXJ2X25ldC5oCj4g
-QEAgLTc0LDYgKzc0LDcgQEAgc3RydWN0IG5kaXNfcmVjdl9zY2FsZV9jYXAgeyAvKgo+IE5ESVNf
-UkVDRUlWRV9TQ0FMRV9DQVBBQklMSVRJRVMgKi8KPiDCoCNkZWZpbmUgTkRJU19SU1NfSEFTSF9T
-RUNSRVRfS0VZX01BWF9TSVpFX1JFVklTSU9OXzLCoMKgIDQwCj4gCj4gwqAjZGVmaW5lIElUQUJf
-TlVNIDEyOAo+ICsjZGVmaW5lIElUQUJfTlVNX01BWCAyNTYKPiAKPiDCoHN0cnVjdCBuZGlzX3Jl
-Y3Zfc2NhbGVfcGFyYW0geyAvKiBORElTX1JFQ0VJVkVfU0NBTEVfUEFSQU1FVEVSUyAqLwo+IMKg
-wqDCoMKgwqDCoMKgIHN0cnVjdCBuZGlzX29ial9oZWFkZXIgaGRyOwo+IEBAIC0xMDM0LDcgKzEw
-MzUsOSBAQCBzdHJ1Y3QgbmV0X2RldmljZV9jb250ZXh0IHsKPiAKPiDCoMKgwqDCoMKgwqDCoCB1
-MzIgdHhfdGFibGVbVlJTU19TRU5EX1RBQl9TSVpFXTsKPiAKPiAtwqDCoMKgwqDCoMKgIHUxNiBy
-eF90YWJsZVtJVEFCX05VTV07Cj4gK8KgwqDCoMKgwqDCoCB1MTYgKnJ4X3RhYmxlOwo+ICsKPiAr
-wqDCoMKgwqDCoMKgIGludCByeF90YWJsZV9zejsKPiAKPiDCoMKgwqDCoMKgwqDCoCAvKiBFdGh0
-b29sIHNldHRpbmdzICovCj4gwqDCoMKgwqDCoMKgwqAgdTggZHVwbGV4Owo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL25ldC9oeXBlcnYvbmV0dnNjX2Rydi5jIGIvZHJpdmVycy9uZXQvaHlwZXJ2L25l
-dHZzY19kcnYuYwo+IGluZGV4IDAxMDNmZjkxNDAyNC4uNWI4YTdkNWY5YTE1IDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvbmV0L2h5cGVydi9uZXR2c2NfZHJ2LmMKPiArKysgYi9kcml2ZXJzL25ldC9o
-eXBlcnYvbmV0dnNjX2Rydi5jCj4gQEAgLTE3NDcsNyArMTc0Nyw5IEBAIHN0YXRpYyB1MzIgbmV0
-dnNjX2dldF9yeGZoX2tleV9zaXplKHN0cnVjdCBuZXRfZGV2aWNlCj4gKmRldikKPiAKPiDCoHN0
-YXRpYyB1MzIgbmV0dnNjX3Jzc19pbmRpcl9zaXplKHN0cnVjdCBuZXRfZGV2aWNlICpkZXYpCj4g
-wqB7Cj4gLcKgwqDCoMKgwqDCoCByZXR1cm4gSVRBQl9OVU07Cj4gK8KgwqDCoMKgwqDCoCBzdHJ1
-Y3QgbmV0X2RldmljZV9jb250ZXh0ICpuZGMgPSBuZXRkZXZfcHJpdihkZXYpOwo+ICsKPiArwqDC
-oMKgwqDCoMKgIHJldHVybiBuZGMtPnJ4X3RhYmxlX3N6Owo+IMKgfQo+IAo+IMKgc3RhdGljIGlu
-dCBuZXR2c2NfZ2V0X3J4Zmgoc3RydWN0IG5ldF9kZXZpY2UgKmRldiwgdTMyICppbmRpciwgdTgg
-KmtleSwKPiBAQCAtMTc2Niw3ICsxNzY4LDcgQEAgc3RhdGljIGludCBuZXR2c2NfZ2V0X3J4Zmgo
-c3RydWN0IG5ldF9kZXZpY2UgKmRldiwgdTMyCj4gKmluZGlyLCB1OCAqa2V5LAo+IAo+IMKgwqDC
-oMKgwqDCoMKgIHJuZGlzX2RldiA9IG5kZXYtPmV4dGVuc2lvbjsKPiDCoMKgwqDCoMKgwqDCoCBp
-ZiAoaW5kaXIpIHsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmb3IgKGkgPSAwOyBp
-IDwgSVRBQl9OVU07IGkrKykKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBmb3IgKGkg
-PSAwOyBpIDwgbmRjLT5yeF90YWJsZV9zejsgaSsrKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaW5kaXJbaV0gPSBuZGMtPnJ4X3RhYmxlW2ldOwo+IMKg
-wqDCoMKgwqDCoMKgIH0KPiAKPiBAQCAtMTc5MiwxMSArMTc5NCwxMSBAQCBzdGF0aWMgaW50IG5l
-dHZzY19zZXRfcnhmaChzdHJ1Y3QgbmV0X2RldmljZSAqZGV2LAo+IGNvbnN0IHUzMiAqaW5kaXIs
-Cj4gCj4gwqDCoMKgwqDCoMKgwqAgcm5kaXNfZGV2ID0gbmRldi0+ZXh0ZW5zaW9uOwo+IMKgwqDC
-oMKgwqDCoMKgIGlmIChpbmRpcikgewo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZv
-ciAoaSA9IDA7IGkgPCBJVEFCX05VTTsgaSsrKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGZvciAoaSA9IDA7IGkgPCBuZGMtPnJ4X3RhYmxlX3N6OyBpKyspCj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoaW5kaXJbaV0gPj0gbmRldi0+
-bnVtX2NobikKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVJTlZBTDsKPiAKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBmb3IgKGkgPSAwOyBpIDwgSVRBQl9OVU07IGkrKykKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBmb3IgKGkgPSAwOyBpIDwgbmRjLT5yeF90YWJsZV9zejsgaSsrKQo+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbmRjLT5yeF90
-YWJsZVtpXSA9IGluZGlyW2ldOwo+IMKgwqDCoMKgwqDCoMKgIH0KPiAKPiBAQCAtMjYzOCw2ICsy
-NjQwLDcgQEAgc3RhdGljIHZvaWQgbmV0dnNjX3JlbW92ZShzdHJ1Y3QgaHZfZGV2aWNlICpkZXYp
-Cj4gCj4gwqDCoMKgwqDCoMKgwqAgaHZfc2V0X2RydmRhdGEoZGV2LCBOVUxMKTsKPiAKPiArwqDC
-oMKgwqDCoMKgIGtmcmVlKG5kZXZfY3R4LT5yeF90YWJsZSk7Cj4gwqDCoMKgwqDCoMKgwqAgZnJl
-ZV9wZXJjcHUobmRldl9jdHgtPnZmX3N0YXRzKTsKPiDCoMKgwqDCoMKgwqDCoCBmcmVlX25ldGRl
-dihuZXQpOwo+IMKgfQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9oeXBlcnYvcm5kaXNfZmls
-dGVyLmMKPiBiL2RyaXZlcnMvbmV0L2h5cGVydi9ybmRpc19maWx0ZXIuYwo+IGluZGV4IGVlYTc3
-N2VjMjU0MS4uYWYwMzFlNzExY2IyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbmV0L2h5cGVydi9y
-bmRpc19maWx0ZXIuYwo+ICsrKyBiL2RyaXZlcnMvbmV0L2h5cGVydi9ybmRpc19maWx0ZXIuYwo+
-IEBAIC05MjcsNyArOTI3LDcgQEAgc3RhdGljIGludCBybmRpc19zZXRfcnNzX3BhcmFtX21zZyhz
-dHJ1Y3Qgcm5kaXNfZGV2aWNlCj4gKnJkZXYsCj4gwqDCoMKgwqDCoMKgwqAgc3RydWN0IHJuZGlz
-X3NldF9yZXF1ZXN0ICpzZXQ7Cj4gwqDCoMKgwqDCoMKgwqAgc3RydWN0IHJuZGlzX3NldF9jb21w
-bGV0ZSAqc2V0X2NvbXBsZXRlOwo+IMKgwqDCoMKgwqDCoMKgIHUzMiBleHRsZW4gPSBzaXplb2Yo
-c3RydWN0IG5kaXNfcmVjdl9zY2FsZV9wYXJhbSkgKwo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCA0ICogSVRBQl9OVU0gKyBORVRWU0NfSEFTSF9LRVlMRU47Cj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDQgKiBuZGMtPnJ4X3RhYmxlX3N6
-ICsgTkVUVlNDX0hBU0hfS0VZTEVOOwo+IMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBuZGlzX3JlY3Zf
-c2NhbGVfcGFyYW0gKnJzc3A7Cj4gwqDCoMKgwqDCoMKgwqAgdTMyICppdGFiOwo+IMKgwqDCoMKg
-wqDCoMKgIHU4ICprZXlwOwo+IEBAIC05NTMsNyArOTUzLDcgQEAgc3RhdGljIGludCBybmRpc19z
-ZXRfcnNzX3BhcmFtX21zZyhzdHJ1Y3Qgcm5kaXNfZGV2aWNlCj4gKnJkZXYsCj4gwqDCoMKgwqDC
-oMKgwqAgcnNzcC0+aGFzaGluZm8gPSBORElTX0hBU0hfRlVOQ19UT0VQTElUWiB8IE5ESVNfSEFT
-SF9JUFY0IHwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgTkRJU19IQVNIX1RDUF9JUFY0IHwgTkRJU19IQVNIX0lQVjYgfAo+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBORElTX0hBU0hfVENQX0lQVjY7Cj4g
-LcKgwqDCoMKgwqDCoCByc3NwLT5pbmRpcmVjdF90YWJzaXplID0gNCpJVEFCX05VTTsKPiArwqDC
-oMKgwqDCoMKgIHJzc3AtPmluZGlyZWN0X3RhYnNpemUgPSA0ICogbmRjLT5yeF90YWJsZV9zejsK
-PiDCoMKgwqDCoMKgwqDCoCByc3NwLT5pbmRpcmVjdF90YWJvZmZzZXQgPSBzaXplb2Yoc3RydWN0
-IG5kaXNfcmVjdl9zY2FsZV9wYXJhbSk7Cj4gwqDCoMKgwqDCoMKgwqAgcnNzcC0+aGFzaGtleV9z
-aXplID0gTkVUVlNDX0hBU0hfS0VZTEVOOwo+IMKgwqDCoMKgwqDCoMKgIHJzc3AtPmhhc2hrZXlf
-b2Zmc2V0ID0gcnNzcC0+aW5kaXJlY3RfdGFib2Zmc2V0ICsKPiBAQCAtOTYxLDcgKzk2MSw3IEBA
-IHN0YXRpYyBpbnQgcm5kaXNfc2V0X3Jzc19wYXJhbV9tc2coc3RydWN0IHJuZGlzX2RldmljZQo+
-ICpyZGV2LAo+IAo+IMKgwqDCoMKgwqDCoMKgIC8qIFNldCBpbmRpcmVjdGlvbiB0YWJsZSBlbnRy
-aWVzICovCj4gwqDCoMKgwqDCoMKgwqAgaXRhYiA9ICh1MzIgKikocnNzcCArIDEpOwo+IC3CoMKg
-wqDCoMKgwqAgZm9yIChpID0gMDsgaSA8IElUQUJfTlVNOyBpKyspCj4gK8KgwqDCoMKgwqDCoCBm
-b3IgKGkgPSAwOyBpIDwgbmRjLT5yeF90YWJsZV9zejsgaSsrKQo+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBpdGFiW2ldID0gbmRjLT5yeF90YWJsZVtpXTsKPiAKPiDCoMKgwqDCoMKg
-wqDCoCAvKiBTZXQgaGFzayBrZXkgdmFsdWVzICovCj4gQEAgLTE1NDgsNiArMTU0OCwyMSBAQCBz
-dHJ1Y3QgbmV0dnNjX2RldmljZSAqcm5kaXNfZmlsdGVyX2RldmljZV9hZGQoc3RydWN0Cj4gaHZf
-ZGV2aWNlICpkZXYsCj4gwqDCoMKgwqDCoMKgwqAgaWYgKHJldCB8fCByc3NjYXAubnVtX3JlY3Zf
-cXVlIDwgMikKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290byBvdXQ7Cj4gCj4g
-K8KgwqDCoMKgwqDCoCBpZiAocnNzY2FwLm51bV9pbmRpcmVjdF90YWJlbnQgJiYKPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByc3NjYXAubnVtX2luZGlyZWN0X3RhYmVudCA8PSBJVEFC
-X05VTV9NQVgpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuZGMtPnJ4X3RhYmxl
-X3N6ID0gcnNzY2FwLm51bV9pbmRpcmVjdF90YWJlbnQ7Cj4gK8KgwqDCoMKgwqDCoCB9IGVsc2Ug
-ewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG5kYy0+cnhfdGFibGVfc3ogPSBJVEFC
-X05VTTsKPiArwqDCoMKgwqDCoMKgIH0KPiArCj4gK8KgwqDCoMKgwqDCoCBuZGMtPnJ4X3RhYmxl
-ID0ga3phbGxvYyhzaXplb2YodTE2KSAqIG5kYy0+cnhfdGFibGVfc3osCj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBHRlBfS0VS
-TkVMKTsKPiArwqDCoMKgwqDCoMKgIGlmIChuZGMtPnJ4X3RhYmxlKSB7Cj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgbmV0ZGV2X2VycihuZXQsICJFcnJvciBpbiBhbGxvY2F0aW5nIHJ4
-IGluZGlyZWN0aW9uIHRhYmxlIG9mCj4gc2l6ZSAlZFxuIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG5kYy0+cnhfdGFibGVf
-c3opOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gb3V0Owo+ICvCoMKgwqDC
-oMKgwqAgfQo+ICsKCllvdSBhcmUgbm93IGFsd2F5cyBhbGxvY2F0aW5nIHRoZSByeF90YWJsZSBp
-biB0aGUgcm5kaXNfZmlsdGVyX2RldmljZV9hZGQoKQpmdW5jdGlvbiwgYnV0IHRoaXMgZnVuY3Rp
-b24gaXMgY2FsbGVkIGJvdGggZnJvbSB0aGUgbmV0dnNjX3Byb2JlIGZ1bmN0aW9uCmFuZCB0aGUg
-bmV0dnNjX2F0dGFjaCBmdW5jdGlvbiwgYnV0IGFzIGZhciBhcyBJIGNhbiBzZWUgdGhlIHJ4X3Rh
-YmxlIG9ubHkKZ2V0cyBmcmVlZCBpbiB0aGUgcmVtb3ZlIGZ1bmN0aW9uIG5vdCBpbiB0aGUgbmV0
-dnNjX2RldGFjaC4KClNvIGlmIHRoZXJlIGlzIGEgY2hhbmNlIHRoYXQgdGhlIGF0dGFjaC9kZXRh
-Y2ggd2lsbCBiZSBjYWxsZWQgbW9yZSB0aW1lcwpvbiBhIGV4aXN0aW5nIGRldmljZSB5b3Ugd2ls
-bCBoYXZlIGEgbGVhay4KCj4gwqDCoMKgwqDCoMKgwqAgLyogVGhpcyBndWFyYW50ZWVzIHRoYXQg
-bnVtX3Bvc3NpYmxlX3Jzc19xcyA8PSBudW1fb25saW5lX2NwdXMgKi8KPiDCoMKgwqDCoMKgwqDC
-oCBudW1fcG9zc2libGVfcnNzX3FzID0gbWluX3QodTMyLCBudW1fb25saW5lX2NwdXMoKSwKPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHJzc2NhcC5udW1fcmVjdl9xdWUpOwo+IEBAIC0xNTU4LDcgKzE1NzMsNyBA
-QCBzdHJ1Y3QgbmV0dnNjX2RldmljZSAqcm5kaXNfZmlsdGVyX2RldmljZV9hZGQoc3RydWN0Cj4g
-aHZfZGV2aWNlICpkZXYsCj4gwqDCoMKgwqDCoMKgwqAgbmV0X2RldmljZS0+bnVtX2NobiA9IG1p
-bihuZXRfZGV2aWNlLT5tYXhfY2huLCBkZXZpY2VfaW5mby0+bnVtX2Nobik7Cj4gCj4gwqDCoMKg
-wqDCoMKgwqAgaWYgKCFuZXRpZl9pc19yeGZoX2NvbmZpZ3VyZWQobmV0KSkgewo+IC3CoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZvciAoaSA9IDA7IGkgPCBJVEFCX05VTTsgaSsrKQo+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZvciAoaSA9IDA7IGkgPCBuZGMtPnJ4X3RhYmxl
-X3N6OyBpKyspCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBuZGMtPnJ4X3RhYmxlW2ldID0gZXRodG9vbF9yeGZoX2luZGlyX2RlZmF1bHQoCj4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpLCBuZXRfZGV2aWNlLT5udW1fY2huKTsK
-PiDCoMKgwqDCoMKgwqDCoCB9Cj4gLS0KPiAyLjM0LjEKPiAKPiAKCkJlc3QgUmVnYXJkcwpTdGVl
-bgo=
+Allocate the size of rx indirection table dynamically in netvsc
+from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
+query instead of using a constant value of ITAB_NUM.
+
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+---
+Changes in v2:
+ * Added a missing free for rx_table to fix a leak
+ * Corrected alignment around rx table size query
+ * Fixed incorrect error handling for rx_table pointer.
+---
+ drivers/net/hyperv/hyperv_net.h   |  5 ++++-
+ drivers/net/hyperv/netvsc_drv.c   | 18 ++++++++++++++----
+ drivers/net/hyperv/rndis_filter.c | 22 ++++++++++++++++++----
+ 3 files changed, 36 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index dd5919ec408b..1dbdb65ca8f0 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
+ #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
+ 
+ #define ITAB_NUM 128
++#define ITAB_NUM_MAX 256
+ 
+ struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
+ 	struct ndis_obj_header hdr;
+@@ -1034,7 +1035,9 @@ struct net_device_context {
+ 
+ 	u32 tx_table[VRSS_SEND_TAB_SIZE];
+ 
+-	u16 rx_table[ITAB_NUM];
++	u16 *rx_table;
++
++	int rx_table_sz;
+ 
+ 	/* Ethtool settings */
+ 	u8 duplex;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 0103ff914024..ab791e4ca63c 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1040,6 +1040,13 @@ static int netvsc_detach(struct net_device *ndev,
+ 
+ 	rndis_filter_device_remove(hdev, nvdev);
+ 
++	/* 
++	 * Free the rx indirection table and reset the table size to 0.
++	 * With the netvsc_attach call it will get allocated again.
++	 */
++	ndev_ctx->rx_table_sz = 0;
++	kfree(ndev_ctx->rx_table);
++
+ 	return 0;
+ }
+ 
+@@ -1747,7 +1754,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
+ 
+ static u32 netvsc_rss_indir_size(struct net_device *dev)
+ {
+-	return ITAB_NUM;
++	struct net_device_context *ndc = netdev_priv(dev);
++
++	return ndc->rx_table_sz;
+ }
+ 
+ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+@@ -1766,7 +1775,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			indir[i] = ndc->rx_table[i];
+ 	}
+ 
+@@ -1792,11 +1801,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			if (indir[i] >= ndev->num_chn)
+ 				return -EINVAL;
+ 
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = indir[i];
+ 	}
+ 
+@@ -2638,6 +2647,7 @@ static void netvsc_remove(struct hv_device *dev)
+ 
+ 	hv_set_drvdata(dev, NULL);
+ 
++	kfree(ndev_ctx->rx_table);
+ 	free_percpu(ndev_ctx->vf_stats);
+ 	free_netdev(net);
+ }
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index eea777ec2541..3695c7d3da3a 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -927,7 +927,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	struct rndis_set_request *set;
+ 	struct rndis_set_complete *set_complete;
+ 	u32 extlen = sizeof(struct ndis_recv_scale_param) +
+-		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
++		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
+ 	struct ndis_recv_scale_param *rssp;
+ 	u32 *itab;
+ 	u8 *keyp;
+@@ -953,7 +953,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
+ 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
+ 			 NDIS_HASH_TCP_IPV6;
+-	rssp->indirect_tabsize = 4*ITAB_NUM;
++	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
+ 	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
+ 	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
+ 	rssp->hashkey_offset = rssp->indirect_taboffset +
+@@ -961,7 +961,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 
+ 	/* Set indirection table entries */
+ 	itab = (u32 *)(rssp + 1);
+-	for (i = 0; i < ITAB_NUM; i++)
++	for (i = 0; i < ndc->rx_table_sz; i++)
+ 		itab[i] = ndc->rx_table[i];
+ 
+ 	/* Set hask key values */
+@@ -1548,6 +1548,20 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	if (ret || rsscap.num_recv_que < 2)
+ 		goto out;
+ 
++	if (rsscap.num_indirect_tabent &&
++	    rsscap.num_indirect_tabent <= ITAB_NUM_MAX)
++		ndc->rx_table_sz = rsscap.num_indirect_tabent;
++	else
++		ndc->rx_table_sz = ITAB_NUM;
++
++	ndc->rx_table = kzalloc(sizeof(u16) * ndc->rx_table_sz,
++				GFP_KERNEL);
++	if (!ndc->rx_table) {
++		netdev_err(net, "Error in allocating rx indirection table of size %d\n",
++				ndc->rx_table_sz);
++		goto out;
++	}
++
+ 	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
+ 	num_possible_rss_qs = min_t(u32, num_online_cpus(),
+ 				    rsscap.num_recv_que);
+@@ -1558,7 +1572,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 
+ 	if (!netif_is_rxfh_configured(net)) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+ 						i, net_device->num_chn);
+ 	}
+-- 
+2.34.1
 
