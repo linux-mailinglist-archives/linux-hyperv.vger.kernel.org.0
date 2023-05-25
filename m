@@ -2,37 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 354A671074D
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 May 2023 10:27:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1EDC7109AB
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 May 2023 12:16:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239726AbjEYI1s (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 May 2023 04:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
+        id S240840AbjEYKQI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 25 May 2023 06:16:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235794AbjEYI1r (ORCPT
+        with ESMTP id S240793AbjEYKQH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 May 2023 04:27:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6EAC186;
-        Thu, 25 May 2023 01:27:45 -0700 (PDT)
+        Thu, 25 May 2023 06:16:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22284139;
+        Thu, 25 May 2023 03:16:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3805A63C3E;
-        Thu, 25 May 2023 08:27:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF57C433EF;
-        Thu, 25 May 2023 08:27:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A3D8861006;
+        Thu, 25 May 2023 10:16:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F94C433EF;
+        Thu, 25 May 2023 10:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685003264;
-        bh=TXzkAJJtr+rb8+qhlaMHIqTqmmEXt7KMrw8HfElDAJE=;
+        s=k20201202; t=1685009763;
+        bh=7bXHnIYWtYF8xI7DWrHnG3fKIHxxxog4xxhaz5xiH1w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J35245Wq98yYPRUnLLCiT44fAp7tz9SYlr6TWHMK2i4IvPOJAmr2x/gsAVhHmh0BW
-         M5pefjyGo5aDKkPtKyHYK6omGZDyqWCWRhEI/G7GsEJE2IKx6+NuSI+uX3Bm1Calrc
-         tc5MpwpSqLCg4Gp69lLvO+fxKwk2QqI+lQ5OItzhqQYasd4Pm+U0mvMPOsNJAsQs+6
-         ybY/dfxk49hudYozaRGRRWD8OtxgaJme91Q+zWxenywCQNcu9qNo79Q7UHAeD9h5iF
-         4NJejm1VsfleZXpbjxCKYfiusxtEcKiTJj67zeKAp2l5b35mW4qAsxfZjWLuGbWXs/
-         unNc/oob7IUBA==
-Date:   Thu, 25 May 2023 10:27:35 +0200
+        b=QALVqdn7P/EEvs1ccrAeWVErDIOt1p3IKbax3xk3ikHcjvnMA3VMa2rOwPIW2tdaH
+         Zh2Ii9xY3JaT+YmZGkM5DKs6WG2dBRri4XTd7C6CVmyHrKHJ6E+C0m8h5qiifmnSQV
+         SdGmhqkU9lPYxQGXKFa7OpN3e0ySccLt2YSOGO8SnnsguhHjWD5NxjyBlq4PYmD6Fl
+         pztMKQGT4oN27tybKp8xiculeV2/LQWSxX7Rh4Vf1J2WVOLv5521Vib55zTsZ5AyLY
+         XpBOgVkJ88lXDCXRreNFeoQYNZLcbVZiuy0g1LOT5dpPS3b58+NsM9nXoayF4o9QW6
+         yGiiBPPZ7ZP7Q==
+Date:   Thu, 25 May 2023 12:15:54 +0200
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
 To:     Dexuan Cui <decui@microsoft.com>
 Cc:     bhelgaas@google.com, davem@davemloft.net, edumazet@google.com,
@@ -45,16 +45,17 @@ Cc:     bhelgaas@google.com, davem@davemloft.net, edumazet@google.com,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
         josete@microsoft.com, stable@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] PCI: hv: Add a per-bus mutex state_lock
-Message-ID: <ZG8b933WBtpssRz0@lpieralisi>
+Subject: Re: [PATCH v3 2/6] PCI: hv: Fix a race condition in hv_irq_unmask()
+ that can cause panic
+Message-ID: <ZG81WpJBBegbLSbT@lpieralisi>
 References: <20230420024037.5921-1-decui@microsoft.com>
- <20230420024037.5921-6-decui@microsoft.com>
+ <20230420024037.5921-3-decui@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230420024037.5921-6-decui@microsoft.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20230420024037.5921-3-decui@microsoft.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -63,35 +64,34 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Apr 19, 2023 at 07:40:36PM -0700, Dexuan Cui wrote:
-> In the case of fast device addition/removal, it's possible that
-> hv_eject_device_work() can start to run before create_root_hv_pci_bus()
-> starts to run; as a result, the pci_get_domain_bus_and_slot() in
-> hv_eject_device_work() can return a 'pdev' of NULL, and
-> hv_eject_device_work() can remove the 'hpdev', and immediately send a
-> message PCI_EJECTION_COMPLETE to the host, and the host immediately
-> unassigns the PCI device from the guest; meanwhile,
-> create_root_hv_pci_bus() and the PCI device driver can be probing the
-> dead PCI device and reporting timeout errors.
+On Wed, Apr 19, 2023 at 07:40:33PM -0700, Dexuan Cui wrote:
+> When the host tries to remove a PCI device, the host first sends a
+> PCI_EJECT message to the guest, and the guest is supposed to gracefully
+> remove the PCI device and send a PCI_EJECTION_COMPLETE message to the host;
+> the host then sends a VMBus message CHANNELMSG_RESCIND_CHANNELOFFER to
+> the guest (when the guest receives this message, the device is already
+> unassigned from the guest) and the guest can do some final cleanup work;
+> if the guest fails to respond to the PCI_EJECT message within one minute,
+> the host sends the VMBus message CHANNELMSG_RESCIND_CHANNELOFFER and
+> removes the PCI device forcibly.
 > 
-> Fix the issue by adding a per-bus mutex 'state_lock' and grabbing the
-> mutex before powering on the PCI bus in hv_pci_enter_d0(): when
-> hv_eject_device_work() starts to run, it's able to find the 'pdev' and call
-> pci_stop_and_remove_bus_device(pdev): if the PCI device driver has
-> loaded, the PCI device driver's probe() function is already called in
-> create_root_hv_pci_bus() -> pci_bus_add_devices(), and now
-> hv_eject_device_work() -> pci_stop_and_remove_bus_device() is able
-> to call the PCI device driver's remove() function and remove the device
-> reliably; if the PCI device driver hasn't loaded yet, the function call
-> hv_eject_device_work() -> pci_stop_and_remove_bus_device() is able to
-> remove the PCI device reliably and the PCI device driver's probe()
-> function won't be called; if the PCI device driver's probe() is already
-> running (e.g., systemd-udev is loading the PCI device driver), it must
-> be holding the per-device lock, and after the probe() finishes and releases
-> the lock, hv_eject_device_work() -> pci_stop_and_remove_bus_device() is
-> able to proceed to remove the device reliably.
+> In the case of fast device addition/removal, it's possible that the PCI
+> device driver is still configuring MSI-X interrupts when the guest receives
+> the PCI_EJECT message; the channel callback calls hv_pci_eject_device(),
+> which sets hpdev->state to hv_pcichild_ejecting, and schedules a work
+> hv_eject_device_work(); if the PCI device driver is calling
+> pci_alloc_irq_vectors() -> ... -> hv_compose_msi_msg(), we can break the
+> while loop in hv_compose_msi_msg() due to the updated hpdev->state, and
+> leave data->chip_data with its default value of NULL; later, when the PCI
+> device driver calls request_irq() -> ... -> hv_irq_unmask(), the guest
+> crashes in hv_arch_irq_unmask() due to data->chip_data being NULL.
 > 
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+> Fix the issue by not testing hpdev->state in the while loop: when the
+> guest receives PCI_EJECT, the device is still assigned to the guest, and
+> the guest has one minute to finish the device removal gracefully. We don't
+> really need to (and we should not) test hpdev->state in the loop.
+> 
+> Fixes: de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in hv_compose_msi_msg()")
 > Signed-off-by: Dexuan Cui <decui@microsoft.com>
 > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 > Cc: stable@vger.kernel.org
@@ -99,134 +99,51 @@ On Wed, Apr 19, 2023 at 07:40:36PM -0700, Dexuan Cui wrote:
 > 
 > v2:
 >   Removed the "debug code".
->   Fixed the "goto out" in hv_pci_resume() [Michael Kelley]
+>   No change to the patch body.
 >   Added Cc:stable
 > 
 > v3:
 >   Added Michael's Reviewed-by.
 > 
->  drivers/pci/controller/pci-hyperv.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
-
-Acked-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-
+>  drivers/pci/controller/pci-hyperv.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
 > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 48feab095a144..3ae2f99dea8c2 100644
+> index b82c7cde19e66..1b11cf7391933 100644
 > --- a/drivers/pci/controller/pci-hyperv.c
 > +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -489,7 +489,10 @@ struct hv_pcibus_device {
->  	struct fwnode_handle *fwnode;
->  	/* Protocol version negotiated with the host */
->  	enum pci_protocol_version_t protocol_version;
-> +
-> +	struct mutex state_lock;
->  	enum hv_pcibus_state state;
-> +
->  	struct hv_device *hdev;
->  	resource_size_t low_mmio_space;
->  	resource_size_t high_mmio_space;
-> @@ -2512,6 +2515,8 @@ static void pci_devices_present_work(struct work_struct *work)
->  	if (!dr)
->  		return;
+> @@ -643,6 +643,11 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+>  	pbus = pdev->bus;
+>  	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
+>  	int_desc = data->chip_data;
+> +	if (!int_desc) {
+> +		dev_warn(&hbus->hdev->device, "%s() can not unmask irq %u\n",
+> +			 __func__, data->irq);
+> +		return;
+> +	}
+
+That's a check that should be there regardless ?
+
+>  	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
 >  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	/* First, mark all existing children as reported missing. */
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> @@ -2593,6 +2598,8 @@ static void pci_devices_present_work(struct work_struct *work)
->  		break;
+> @@ -1911,12 +1916,6 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		hv_pci_onchannelcallback(hbus);
+>  		spin_unlock_irqrestore(&channel->sched_lock, flags);
+>  
+> -		if (hpdev->state == hv_pcichild_ejecting) {
+> -			dev_err_once(&hbus->hdev->device,
+> -				     "the device is being ejected\n");
+> -			goto enable_tasklet;
+> -		}
+> -
+>  		udelay(100);
 >  	}
->  
-> +	mutex_unlock(&hbus->state_lock);
-> +
->  	kfree(dr);
->  }
->  
-> @@ -2741,6 +2748,8 @@ static void hv_eject_device_work(struct work_struct *work)
->  	hpdev = container_of(work, struct hv_pci_dev, wrk);
->  	hbus = hpdev->hbus;
->  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	/*
->  	 * Ejection can come before or after the PCI bus has been set up, so
->  	 * attempt to find it and tear down the bus state, if it exists.  This
-> @@ -2777,6 +2786,8 @@ static void hv_eject_device_work(struct work_struct *work)
->  	put_pcichild(hpdev);
->  	put_pcichild(hpdev);
->  	/* hpdev has been freed. Do not use it any more. */
-> +
-> +	mutex_unlock(&hbus->state_lock);
->  }
->  
->  /**
-> @@ -3562,6 +3573,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  		return -ENOMEM;
->  
->  	hbus->bridge = bridge;
-> +	mutex_init(&hbus->state_lock);
->  	hbus->state = hv_pcibus_init;
->  	hbus->wslot_res_allocated = -1;
->  
-> @@ -3670,9 +3682,11 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	if (ret)
->  		goto free_irq_domain;
->  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	ret = hv_pci_enter_d0(hdev);
->  	if (ret)
-> -		goto free_irq_domain;
-> +		goto release_state_lock;
->  
->  	ret = hv_pci_allocate_bridge_windows(hbus);
->  	if (ret)
-> @@ -3690,12 +3704,15 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	if (ret)
->  		goto free_windows;
->  
-> +	mutex_unlock(&hbus->state_lock);
->  	return 0;
->  
->  free_windows:
->  	hv_pci_free_bridge_windows(hbus);
->  exit_d0:
->  	(void) hv_pci_bus_exit(hdev, true);
-> +release_state_lock:
-> +	mutex_unlock(&hbus->state_lock);
->  free_irq_domain:
->  	irq_domain_remove(hbus->irq_domain);
->  free_fwnode:
-> @@ -3945,20 +3962,26 @@ static int hv_pci_resume(struct hv_device *hdev)
->  	if (ret)
->  		goto out;
->  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	ret = hv_pci_enter_d0(hdev);
->  	if (ret)
-> -		goto out;
-> +		goto release_state_lock;
->  
->  	ret = hv_send_resources_allocated(hdev);
->  	if (ret)
-> -		goto out;
-> +		goto release_state_lock;
->  
->  	prepopulate_bars(hbus);
->  
->  	hv_pci_restore_msi_state(hbus);
->  
->  	hbus->state = hv_pcibus_installed;
-> +	mutex_unlock(&hbus->state_lock);
->  	return 0;
-> +
-> +release_state_lock:
-> +	mutex_unlock(&hbus->state_lock);
->  out:
->  	vmbus_close(hdev->channel);
->  	return ret;
-> -- 
-> 2.25.1
-> 
+
+I don't understand why this code is in hv_compose_msi_msg() in the first
+place (and why only in that function ?) to me this looks like you are
+adding plasters in the code that can turn out to be problematic while
+ejecting a device, this does not seem robust at all - that's my opinion.
+
+Feel free to merge this code, I can't ACK it, sorry.
+
+Lorenzo
