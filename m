@@ -2,252 +2,272 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1457D7114D9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 May 2023 20:42:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92B277117A5
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 May 2023 21:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242124AbjEYSjQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 May 2023 14:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
+        id S241497AbjEYTvA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 25 May 2023 15:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241815AbjEYSik (ORCPT
+        with ESMTP id S241295AbjEYTux (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 May 2023 14:38:40 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69AB2E45;
-        Thu, 25 May 2023 11:36:51 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34PFGFcD001882;
-        Thu, 25 May 2023 18:34:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=YlvFsbEPrwbVAdxwxMbKnxn1gExf5XgZ9Xo7rbW6dUQ=;
- b=Lzyf9aLPcAqinix9YfLlsRAGGN+gR2pGIMlP8b/TpYgMTdhl/3rPyJ97zvP/hy/rFL48
- cqe4Pi8D360VWoL8sYMXdrz3fQmuqTWxk7EjcGsPO8A4qjig2fE0oOs8zCtvb5BhmMB9
- sAdHk7SIWExI5l2C0Z5IPdzh1SSC8+UsT4WL8RiZ4aJdj3SoEqluyXexy6vivclVNQRp
- xfywfC0GZvFljCxVu48w6+0GrjH6HI80FeJdCtLJPgWUaVFWinxGnDMoTThNWZaZkTrb
- fqWNgaubCjXAnculU0WyTmLSQbSFozQhX9Eign2tg15P5DGaZoNtC7o225DL42lxfvDi MA== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qt27n1j61-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 May 2023 18:34:31 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34PIYDC6001496
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 May 2023 18:34:13 GMT
-Received: from [10.110.51.179] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 25 May
- 2023 11:34:12 -0700
-Message-ID: <e17da8f4-4d5d-adb7-02c9-631ffdfc9037@quicinc.com>
-Date:   Thu, 25 May 2023 11:34:11 -0700
+        Thu, 25 May 2023 15:50:53 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1CBB90;
+        Thu, 25 May 2023 12:50:51 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 71A985C00F5;
+        Thu, 25 May 2023 15:08:17 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 25 May 2023 15:08:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+         h=cc:cc:content-type:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1685041697; x=
+        1685128097; bh=zaKPFfQtRUHYG9M1a5mHVEammKUzjYCsA0rv+VmXpGk=; b=C
+        JVb1brA/wH0ZrEFKYQjInT06081NJopyKvHikdpM+3nBxZilNC9hBEce4bfXC+HQ
+        okuNy6dplEpvBoxRo2J/kat0BxSCvdzIR7cW8Rh8f2m3L8N7kiCFrVwi/YQaEXC7
+        yVMzih57OM0Dvg9Xi26BUz+jwaac4w8uAwhZgjcd/PZkagkEOJ49XrTCjeNqBNEm
+        RSuqlERrvMUu6+0s7DSKr4S8ugACl0duyvHe8n7X3iRgBweJxsq17B1gZKcEYcaN
+        HNWWq1rhd2pXvZ1FfFiXS6U/NbRrgMuHNbhu5fNCDW5I1w+hccyVxQYA0zUgUoPX
+        q3WIbkf+vu4SG5CqIWL5w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1685041697; x=1685128097; bh=zaKPFfQtRUHYG
+        9M1a5mHVEammKUzjYCsA0rv+VmXpGk=; b=JwW6psopPWKdWoWBP7Cz++IxIsEj6
+        km2WZpqPPn6NHjG+bgOXTv8LFM23DuxzvtCaYF8VgFfG4zhFo/lfMEcUWLcs3VkT
+        3lMCMRsbDRnEKEJCRJZxJRuQixfglrTyStnRwHhJ7xZT6tKNm5CvQEavEGGKUeJ5
+        I9fqlHVjt4VcEMDc1j8VcEB4ezO0z9MEk3Mt9P8eoBhEgOYC7Bb+nbhjdbFtZRM6
+        Ru0t25B1jM10JKaOiMha5DIi8VGwSOjnPN4gBbG0zN9pX3UJ4A/lvVDeIUk9XeFq
+        +iAX19EE2SbAMFH3LAW1CH52Anc7AfiWmCtCHjfaig1eTp1se+3g2vD/w==
+X-ME-Sender: <xms:ILJvZCCWBw1zarw5SCR_V4ph9BeA1fQGW5MZxcK9iEGHH0T0x6Fy5A>
+    <xme:ILJvZMjHkcovdG9h2hq4K0VP7MuQcmymdRBEEvJQy0U2YO6JOZQqHY0WetrT9z89A
+    00Lj78p3abHhye64Bc>
+X-ME-Received: <xmr:ILJvZFkYUM2IRTnIowHBmppJyuCAxBSJ20XBhsAFuxbshakM4yFvsXCNU1XGHYbKepGZzw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejjedgudefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpedfmfhi
+    rhhilhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrd
+    hnrghmvgeqnecuggftrfgrthhtvghrnhepkedvvdejffehteegtddvgfeijeeivdegjeei
+    teejheeiheevffeukeefheffvdevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgv
+X-ME-Proxy: <xmx:ILJvZAzA6UVzSz9ngTN8n7Odc1kxdH3R4ii-_trvX37gwleRoj6uDA>
+    <xmx:ILJvZHRRZXbWZnmXHgS28-uFZh7f043iIK7vZOZRkz9yvl7luRtHWw>
+    <xmx:ILJvZLaCKKBBnBXepEXhlBuYPQMjl7hNQPxxBLUgHuGuPN5izL_50g>
+    <xmx:IbJvZCl_PhXBvencnsBltNfTb-meNrFSjZ07cBH5sazR8ENF15ByBQ>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 25 May 2023 15:08:15 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+        id 5098710C61D; Thu, 25 May 2023 22:08:12 +0300 (+03)
+Date:   Thu, 25 May 2023 22:08:12 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     kirill.shutemov@linux.intel.com, Dexuan Cui <decui@microsoft.com>,
+        ak@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+        brijesh.singh@amd.com, dan.j.williams@intel.com,
+        dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
+        jane.chu@oracle.com, kys@microsoft.com, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, rostedt@goodmis.org,
+        sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
+        tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
+        x86@kernel.org, mikelley@microsoft.com,
+        linux-kernel@vger.kernel.org, Tianyu.Lan@microsoft.com
+Subject: Re: [PATCH v6 2/6] x86/tdx: Support vmalloc() for
+ tdx_enc_status_changed()
+Message-ID: <20230525190812.bz5hg5k3uaibtcys@box>
+References: <20230504225351.10765-1-decui@microsoft.com>
+ <20230504225351.10765-3-decui@microsoft.com>
+ <9e466079-ff27-f928-b470-eb5ef157f048@intel.com>
+ <20230523223750.botogigv6ht7p2zg@box.shutemov.name>
+ <2d96a23f-a16a-50e1-7960-a2d4998ce52f@intel.com>
+ <20230523232851.a3djqxmpjyfghbvc@box.shutemov.name>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
-Content-Language: en-US
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-CC:     Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
-        <dev@lists.cloudhypervisor.org>, <kvm@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>, <qemu-devel@nongnu.org>,
-        <virtualization@lists.linux-foundation.org>, <x86@kernel.org>,
-        <xen-devel@lists.xenproject.org>
-References: <20230505152046.6575-1-mic@digikod.net>
- <1e10da25-5704-18ee-b0ce-6de704e6f0e1@quicinc.com>
- <0b069bc3-0362-d8ec-fc2a-05dd65218c39@digikod.net>
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <0b069bc3-0362-d8ec-fc2a-05dd65218c39@digikod.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: uBbHTCakZngacL0OpkU9CBmNWESa7i53
-X-Proofpoint-GUID: uBbHTCakZngacL0OpkU9CBmNWESa7i53
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-25_10,2023-05-25_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- mlxlogscore=999 adultscore=0 priorityscore=1501 suspectscore=0
- clxscore=1015 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305250156
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230523232851.a3djqxmpjyfghbvc@box.shutemov.name>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/25/2023 6:25 AM, Mickaël Salaün wrote:
+On Wed, May 24, 2023 at 02:28:51AM +0300, kirill.shutemov@linux.intel.com wrote:
+> On Tue, May 23, 2023 at 03:43:15PM -0700, Dave Hansen wrote:
+> > On 5/23/23 15:37, kirill.shutemov@linux.intel.com wrote:
+> > >> How does this work with load_unaligned_zeropad()?  Couldn't it be
+> > >> running around poking at one of these vmalloc()'d pages via the direct
+> > >> map during a shared->private conversion before the page has been accepted?
+> > > Alias processing in __change_page_attr_set_clr() will change direct
+> > > mapping if you call it on vmalloc()ed memory. I think we are safe wrt
+> > > load_unaligned_zeropad() here.
+> > 
+> > We're *eventually* OK:
+> > 
+> > >         /* Notify hypervisor that we are about to set/clr encryption attribute. */
+> > >         x86_platform.guest.enc_status_change_prepare(addr, numpages, enc);
+> > > 
+> > >         ret = __change_page_attr_set_clr(&cpa, 1);
+> > 
+> > But what about in the middle between enc_status_change_prepare() and
+> > __change_page_attr_set_clr()?  Don't the direct map and the
+> > shared/private status of the page diverge in there?
 > 
-> On 24/05/2023 23:04, Trilok Soni wrote:
->> On 5/5/2023 8:20 AM, Mickaël Salaün wrote:
->>> Hi,
->>>
->>> This patch series is a proof-of-concept that implements new KVM features
->>> (extended page tracking, MBEC support, CR pinning) and defines a new 
->>> API to
->>> protect guest VMs. No VMM (e.g., Qemu) modification is required.
->>>
->>> The main idea being that kernel self-protection mechanisms should be 
->>> delegated
->>> to a more privileged part of the system, hence the hypervisor. It is 
->>> still the
->>> role of the guest kernel to request such restrictions according to its
->>
->> Only for the guest kernel images here? Why not for the host OS kernel?
+> Hmm. Maybe we would need to go through making the range in direct mapping
+> non-present before notifying VMM about the change.
 > 
-> As explained in the Future work section, protecting the host would be 
-> useful, but that doesn't really fit with the KVM model. The Protected 
-> KVM project is a first step to help in this direction [11].
-> 
-> In a nutshell, KVM is close to a type-2 hypervisor, and the host kernel 
-> is also part of the hypervisor.
-> 
-> 
->> Embedded devices w/ Android you have mentioned below supports the host
->> OS as well it seems, right?
-> 
-> What do you mean?
+> I need to look at this again in the morning.
 
-I think you have answered this above w/ pKVM and I was referring the 
-host protection as well w/ Heki. The link/references below refers to the 
-Android OS it seems and not guest VM.
+Okay, I've got around to it finally.
 
-> 
-> 
->>
->> Do we suggest that all the functionalities should be implemented in the
->> Hypervisor (NS-EL2 for ARM) or even at Secure EL like Secure-EL1 (ARM).
-> 
-> KVM runs in EL2. TrustZone is mainly used to enforce DRM, which means 
-> that we may not control the related code.
-> 
-> This patch series is dedicated to hypervisor-enforced kernel integrity, 
-> then KVM.
-> 
->>
->> I am hoping that whatever we suggest the interface here from the Guest
->> to the Hypervisor becomes the ABI right?
-> 
-> Yes, hypercalls are part of the KVM ABI.
+Private->Shared conversion is safe: we first set shared bit in the direct
+mapping and all aliases and then call MapGPA enc_status_change_finish().
+So we don't have privately mapped pages that we converted to shared with
+MapGPA.
 
-Sure. I just hope that they are extensible enough to support for other 
-Hypervisors too. I am not sure if they are on this list like ACRN / Xen 
-and see if it fits their need too.
+Shared->Private is not safe. As with Private->Shared, we adjust direct
+mapping before notifying VMM and accepting the memory, so there's short
+window when privately mapped memory that is neither mapped into SEPT nor
+accepted. It is a problem as it can race with load_unaligned_zeropad().
 
-Is there any other Hypervisor you plan to test this feature as well?
+Shared->Private conversion is rare. I only see one call total during the
+boot in my setup. Worth fixing anyway.
 
-> 
->>
->>
->>>
->>> # Current limitations
->>>
->>> The main limitation of this patch series is the statically enforced
->>> permissions. This is not an issue for kernels without module but this 
->>> needs to
->>> be addressed.  Mechanisms that dynamically impact kernel executable 
->>> memory are
->>> not handled for now (e.g., kernel modules, tracepoints, eBPF JIT), 
->>> and such
->>> code will need to be authenticated.  Because the hypervisor is highly
->>> privileged and critical to the security of all the VMs, we don't want to
->>> implement a code authentication mechanism in the hypervisor itself 
->>> but delegate
->>> this verification to something much less privileged. We are thinking 
->>> of two
->>> ways to solve this: implement this verification in the VMM or spawn a 
->>> dedicated
->>> special VM (similar to Windows's VBS). There are pros on cons to each 
->>> approach:
->>> complexity, verification code ownership (guest's or VMM's), access to 
->>> guest
->>> memory (i.e., confidential computing).
->>
->> Do you foresee the performance regressions due to lot of tracking here?
-> 
-> The performance impact of execution prevention should be negligible 
-> because once configured the hypervisor do nothing except catch 
-> illegitimate access attempts.
 
-Yes, if you are using the static kernel only and not considering the 
-other dynamic patching features like explained. They need to be thought 
-upon differently to reduce the likely impact.
+The patch below fixes the issue by hooking up enc_status_change_prepare()
+and doing conversion from Shared to Private there.
 
-> 
-> 
->> Production kernels do have lot of tracepoints and we use it as feature
->> in the GKI kernel for the vendor hooks implementation and in those cases
->> every vendor driver is a module.
-> 
-> As explained in this section, dynamic kernel modifications such as 
-> tracepoints or modules are not currently supported by this patch series. 
-> Handling tracepoints is possible but requires more work to define and 
-> check legitimate changes. This proposal is still useful for static 
-> kernels though.
-> 
-> 
->> Separate VM further fragments this
->> design and delegates more of it to proprietary solutions?
-> 
-> What do you mean? KVM is not a proprietary solution.
+enc_status_change_finish() only covers Private to Shared conversion.
 
-Ah, I was referring the VBS Windows VM mentioned in the above text. Is 
-it open-source? The reference of VM (or dedicated VM) didn't mention 
-that VM itself will be open-source running Linux kernel.
+The patch is on top of unaccepted memory patchset. It is more convenient
+base. I will rebase to Linus' tree if the approach looks sane to you.
 
-> 
-> For dynamic checks, this would require code not run by KVM itself, but 
-> either the VMM or a dedicated VM. In this case, the dynamic 
-> authentication code could come from the guest VM or from the VMM itself. 
-> In the former case, it is more challenging from a security point of view 
-> but doesn't rely on external (proprietary) solution. In the latter case, 
-> open-source VMMs should implement the specification to provide the 
-> required service (e.g. check kernel module signature).
-> 
-> The goal of the common API layer provided by this RFC is to share code 
-> as much as possible between different hypervisor backends.
-> 
-> 
->>
->> Do you have any performance numbers w/ current RFC?
-> 
-> No, but the only hypervisor performance impact is at boot time and 
-> should be negligible. I'll try to get some numbers for the 
-> hardware-enforcement impact, but it should be negligible too.
+Any comments?
 
-Thanks. Please share the data once you have it ready.
-
----Trilok Soni
-
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 32501277ef84..b73ec2449c64 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -713,16 +713,32 @@ static bool tdx_cache_flush_required(void)
+ 	return true;
+ }
+ 
++static bool tdx_enc_status_change_prepare(unsigned long vaddr, int numpages,
++					  bool enc)
++{
++	phys_addr_t start = __pa(vaddr);
++	phys_addr_t end = __pa(vaddr + numpages * PAGE_SIZE);
++
++	if (!enc)
++		return true;
++
++	return tdx_enc_status_changed_phys(start, end, enc);
++}
++
+ /*
+  * Inform the VMM of the guest's intent for this physical page: shared with
+  * the VMM or private to the guest.  The VMM is expected to change its mapping
+  * of the page in response.
+  */
+-static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
++static bool tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
++					 bool enc)
+ {
+ 	phys_addr_t start = __pa(vaddr);
+ 	phys_addr_t end = __pa(vaddr + numpages * PAGE_SIZE);
+ 
++	if (enc)
++		return true;
++
+ 	return tdx_enc_status_changed_phys(start, end, enc);
+ }
+ 
+@@ -753,9 +769,10 @@ void __init tdx_early_init(void)
+ 	 */
+ 	physical_mask &= cc_mask - 1;
+ 
+-	x86_platform.guest.enc_cache_flush_required = tdx_cache_flush_required;
+-	x86_platform.guest.enc_tlb_flush_required   = tdx_tlb_flush_required;
+-	x86_platform.guest.enc_status_change_finish = tdx_enc_status_changed;
++	x86_platform.guest.enc_cache_flush_required  = tdx_cache_flush_required;
++	x86_platform.guest.enc_tlb_flush_required    = tdx_tlb_flush_required;
++	x86_platform.guest.enc_status_change_prepare = tdx_enc_status_change_prepare;
++	x86_platform.guest.enc_status_change_finish  = tdx_enc_status_change_finish;
+ 
+ 	pr_info("Guest detected\n");
+ }
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index 88085f369ff6..1ca9701917c5 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -150,7 +150,7 @@ struct x86_init_acpi {
+  * @enc_cache_flush_required	Returns true if a cache flush is needed before changing page encryption status
+  */
+ struct x86_guest {
+-	void (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
++	bool (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
+ 	bool (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
+ 	bool (*enc_tlb_flush_required)(bool enc);
+ 	bool (*enc_cache_flush_required)(void);
+diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+index d82f4fa2f1bf..64664311ac2b 100644
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -130,8 +130,8 @@ struct x86_cpuinit_ops x86_cpuinit = {
+ 
+ static void default_nmi_init(void) { };
+ 
+-static void enc_status_change_prepare_noop(unsigned long vaddr, int npages, bool enc) { }
+-static bool enc_status_change_finish_noop(unsigned long vaddr, int npages, bool enc) { return false; }
++static bool enc_status_change_prepare_noop(unsigned long vaddr, int npages, bool enc) { return true; }
++static bool enc_status_change_finish_noop(unsigned long vaddr, int npages, bool enc) { return true; }
+ static bool enc_tlb_flush_required_noop(bool enc) { return false; }
+ static bool enc_cache_flush_required_noop(void) { return false; }
+ static bool is_private_mmio_noop(u64 addr) {return false; }
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+index e0b51c09109f..4f95c449a406 100644
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -319,7 +319,7 @@ static void enc_dec_hypercall(unsigned long vaddr, int npages, bool enc)
+ #endif
+ }
+ 
+-static void amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
++static bool amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
+ {
+ 	/*
+ 	 * To maintain the security guarantees of SEV-SNP guests, make sure
+@@ -327,6 +327,8 @@ static void amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool
+ 	 */
+ 	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && !enc)
+ 		snp_set_memory_shared(vaddr, npages);
++
++	return true;
+ }
+ 
+ /* Return true unconditionally: return value doesn't matter for the SEV side */
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 7159cf787613..b8f48ebe753c 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -2151,7 +2151,8 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
+ 		cpa_flush(&cpa, x86_platform.guest.enc_cache_flush_required());
+ 
+ 	/* Notify hypervisor that we are about to set/clr encryption attribute. */
+-	x86_platform.guest.enc_status_change_prepare(addr, numpages, enc);
++	if (!x86_platform.guest.enc_status_change_prepare(addr, numpages, enc))
++		return -EIO;
+ 
+ 	ret = __change_page_attr_set_clr(&cpa, 1);
+ 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
