@@ -2,136 +2,114 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B50F8710E62
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 May 2023 16:34:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F55D710E80
+	for <lists+linux-hyperv@lfdr.de>; Thu, 25 May 2023 16:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241512AbjEYOeK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 May 2023 10:34:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58786 "EHLO
+        id S241306AbjEYOqq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 25 May 2023 10:46:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbjEYOeJ (ORCPT
+        with ESMTP id S230502AbjEYOqp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 May 2023 10:34:09 -0400
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020020.outbound.protection.outlook.com [52.101.61.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC70CC;
-        Thu, 25 May 2023 07:34:08 -0700 (PDT)
+        Thu, 25 May 2023 10:46:45 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021016.outbound.protection.outlook.com [52.101.57.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13D0D101;
+        Thu, 25 May 2023 07:46:44 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZB/iswJLjSX16mOEKwgOTv8yl2DMn7KmZ6JxFS8fn0f9kuCxUo+Fa/Lbdy2RRuzJlhuWbVsIlmeWHhRz/bO1Md7Q/PMY7h6MR9MoC5vYhtTRGjlMKVNd6oQnqcdWS4nb1j00fqyZzbfiMepl1dd8hABrquBH6Mg7DzWFmPWsQUjkCvNj9jZ2RLtG5CcyabNp1ao52DWlC3yGxp6kPHNNZdGQLiEA6kMYMKCfO3WF7NJYnJX2KQNoi9DdMZ9BBM57F1FcMvHltvbYll6XYKENQcp+Ag4zKIrZdAm5rBpa8E+wphSYO7sHitL9QTbs/Rv8DU9KE2m8suzeEjG2SKzL9g==
+ b=I/1Jjt9871b9/TMJEcK1Lmb3h/vGNkfzpPTEGyaZcdNqYeavUsSyFlpADJmxrepZlwJPWxueKSS6zipK1q8CCbsL21m4+P1diJFFSH+NY48BZoy6c8SwZ1eLoz3KqQxTEsh8V5BdEbN0uB+e1S0UPD0QnEhW+bCZIQGvTqQnF5pBWJCkrSRe77g2lSvl+hf5R0V7qa+b8XqYP0Nr6Ax1UfrscGjFOBi/ITvLQpRoI2/f5olvpforY1Y7+YTZiL3SV2hTEvtXpsE1I0BJkHEjxOnSw1rrIcw5m+9w7Bu3gd8W0TQKdUZLEsILxoO0CeZcF8nJgKTW2H8qOkcRrc+T2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rn7aXzNk1537IH1OBP2NR6a9GMEDxVr+yJabDSZR/ZI=;
- b=mW+yTfWxHXPu7WIfyt/NVP/I0ltWcIAq11LyRaNdu52/UAlYrdTBjwJKgoLsDtK8ALRrIasl91m7UHZ5NSHFO7C0KE8ZhhRBiCHieo5LFKDsRTnIEpwQR2f9XQeazRMz1GNVHAX+allXAItOYAt4SsjjZxrvrjKur59ZZr89SToj74immYhaH+0L7wHQ/uVHF/ROxAh1G3NsYuPVxqcqYD3072Ke024dU5e4YVbnh+2t+3mKYQSBDHSQvg/CZRh6TpWrwv81FWbcDxXvOJuOv5jcyonmNxcULAp6QuDZ0OcLFmd4d98MYuU7tcTnTKNxLgKQHBW1q7nRsAVR7r6dsA==
+ bh=ZRUCZpjnFnOnApuDqeJNhSX2Uh6NsYv1b0NApdnnaxs=;
+ b=Yo8W2sG74FIFIYZuyGTrMKVnu7CDKGDq/B8+tFp6R847MbUNK2JF0vRo2YkXPxr4gNXG7K+qjAsQkcbnyEsY9QQT4YZdnPN11Dxcadg1Oxyp6kFBis6ZUvkdjH/tUGrN2oA4CsFufjWwQq4GJ9Yqs2IeRONbmNlW1O1Zy9InIG9A1/UlfmzCv8FQyKEv3oSfHmnqxyIuW4gIw3wcQmVulDPUBwYgb42NCNUtG1CHRsVkmT1wwDSe1c86FApxlDX8UuKTkOQEmrWFofiR1xNDh3dVYTZjIxuSFE2OxbCtuqc6U9JIe2WFulnmHwYe6Bxjyww/ldC+MXUGG/PmYQ0vtg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rn7aXzNk1537IH1OBP2NR6a9GMEDxVr+yJabDSZR/ZI=;
- b=VuBVVIeQUW6MfPlraHl4gt5EjQe9tTJrWylb57P71KKGzohCLU3768SOkohEhT9fIQ+y/rb2byJvGoGA3d875GCZ83btUg2BiSZECDECBJV55LsxVPzWg6Sc2TT99wxytgt2zHyAox2AoS7P1yEExGmksJ7A+vJ4LPL9V28yi4w=
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com (2603:10b6:510:1d0::10)
- by PH0PR21MB1975.namprd21.prod.outlook.com (2603:10b6:510:1c::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.7; Thu, 25 May
- 2023 14:34:04 +0000
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::5600:ea5a:6768:1900]) by PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::5600:ea5a:6768:1900%5]) with mapi id 15.20.6433.013; Thu, 25 May 2023
- 14:34:04 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH net] net: mana: Fix perf regression: remove rx_cqes,
- tx_cqes counters
-Thread-Topic: [PATCH net] net: mana: Fix perf regression: remove rx_cqes,
- tx_cqes counters
-Thread-Index: AQHZjoX1WTJfOkpxnkOGdXtSJcYZ8a9qjN+AgACAu1A=
-Date:   Thu, 25 May 2023 14:34:04 +0000
-Message-ID: <PH7PR21MB31161F3291FF951877355DA9CA46A@PH7PR21MB3116.namprd21.prod.outlook.com>
-References: <1684963320-25282-1-git-send-email-haiyangz@microsoft.com>
- <20230525064849.ca5p6npej7p2luw2@soft-dev3-1>
-In-Reply-To: <20230525064849.ca5p6npej7p2luw2@soft-dev3-1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e63b229e-0b77-4b7c-9d17-baa93e325182;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-25T14:29:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
+ bh=ZRUCZpjnFnOnApuDqeJNhSX2Uh6NsYv1b0NApdnnaxs=;
+ b=eC9/wlDiI1bxQgyoAcG2BU67YLHvP2/n5QlKh+K/JNNgImZCBAV9SHMM/3AqvfS+b6Rxb128Xm2QlR5V5dfPeVjnaQQFqlpxfslm5mhs6f5LyAyYBEh/PrIJu6BDARs8t/fRThkG7XLHKurtnc5EDfqjyR18KWalMTkcVY1WMwE=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3116:EE_|PH0PR21MB1975:EE_
-x-ms-office365-filtering-correlation-id: b94e7dc3-33bd-4a0e-3dbb-08db5d2d173d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SADQW2WteTWVXC1UI/s+PZEcnJ9p18OfkKltnBfdCRHKZBLd+2ALvCfQCu4cnHqiGhHpR+vbgkyq7TT0e+v1pcF01ML5k3Xe7xxfJrVlW94Cz1LcvXa+Nzw05ovrhJms3RhPOpr+itcHu/uJSMYPHvsCR4AntA0zhLVcFHPtSGLCSSfju3yr82Y5jNfqfcfmoy+rdTZiHOzk3w+rNl+fgtRi+R9CSLL1dXfqlps9FYoX3qt9n20pOAtvq69/+4+yY2ksWxjKGtVCA/sJkzif7wUDnKpvPLRDl1pIv3nawOx4Sl8xaEPV5jYhrAo25xB8dICQpUjTIumx8Ufbg5S4iTA11xWKAClpyeaKqEQCIK4eFhk1Saidgkjm524Xh0joE+NnZbhcZR34Kl+rKkYnllIH5ffZiPGC1Wm7tvXAZ32nW571a70k7jnPKqF7gWGMKNgJU6tfyLWUJdDezXo185+9tNcfaLHRllayPik5Io3ifrtVIJqtZ3N9XXMKln1Dw8lmcuXxIuxP7ykfKr3QOpWIEBi+HOOmpBJoHpw2cMsfeR0dO5z+0dXef6GyBr3oHEWIS2z8QZhpLDIvkmYfGKQ6zMU2oWG3wVVbORO6XUhU9ZiFhZDwLGHD23VRhrdEpjjN7RhsZxJHzjOj9+weqQzBL8+bSHHwWt3Otssv6FM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3116.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(376002)(346002)(366004)(39860400002)(451199021)(33656002)(82960400001)(38100700002)(82950400001)(122000001)(86362001)(38070700005)(55016003)(8676002)(8936002)(5660300002)(52536014)(10290500003)(7416002)(966005)(9686003)(6506007)(26005)(2906002)(186003)(83380400001)(66556008)(76116006)(71200400001)(786003)(7696005)(66946007)(41300700001)(316002)(4326008)(478600001)(54906003)(6916009)(8990500004)(66446008)(64756008)(66476007)(53546011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Ei0052iCAa2LWnj4DdknuKikjA2boVslNCDnsd+2YVxT1yvMPaerYyY//G5X?=
- =?us-ascii?Q?9Qzj9ZqIaOZvq5GuIjuUdsH2rnFFNBGktWn9rjM7Sd2N6yoAPLKxiNS92T0H?=
- =?us-ascii?Q?U//oFhuy7vdy+Te3VIGdcfW2m3mSjAJNyRon9dr/AQ77rU/3cvGZffv0V+D4?=
- =?us-ascii?Q?RqKT57TMw2Gf47576JPCiaBzp0c09VjjtDi7rJxZzJ4tvG++RA/nreIE+WZq?=
- =?us-ascii?Q?AaNGvy3jSTgPNlh6osmp7WuYLa9n/M4zi+bZtMv0kJNU5jpqP0jdBXVEFQRA?=
- =?us-ascii?Q?dZyLi52tfW773Skxvx0pdTDLjr2Onp96u44jIHT42LEBsjFyAV6x8RiJ001x?=
- =?us-ascii?Q?XRP83BtNGYcg2uofFhwAnQV1YQ/S3DB3kQqrGebze/rR0vCjgzkU1KzaY7IS?=
- =?us-ascii?Q?DNEbA+g7OtCfourUdPI2ph3JY1R25UYB6B0FRzXacJwaE3KOSLX2LTCtYKvr?=
- =?us-ascii?Q?0XsR2BzLMilrbgpSrGbMqgYsWcqrPjYM7pTDjz3o4BxBAuHaQ1KILbFpOWTs?=
- =?us-ascii?Q?4b0PZ+sUO28dESsmIWPn6AbDjc1vE3b2noK1pxFITJh74tAdCB5iOcJ8mCZo?=
- =?us-ascii?Q?TftkXIX/5TpSXDjT/ao4co1UEZ9uKUDw5J/43/zk96o5xIVOC8pYr7CBMdIl?=
- =?us-ascii?Q?essEdWpXSczyURMzDVEtUXWYQL3RA++3pWBeSYxii97Jkh7oUEs1WLt041md?=
- =?us-ascii?Q?AyOkZlweUfLhzpsomADc0PB/VkRWTys5zc8ziT7h6cmUvF6+Nu8fLuKKZRem?=
- =?us-ascii?Q?ak5Yp3LDd52HILfi7dJuBLCIwriPxdhIoodc2y3rz/ZbCRDnx6eK/g67ZR3O?=
- =?us-ascii?Q?YdGiF8ZP9QogFZBkEhSWABuabNuEBCOFOKo/9dUgotbk0XwTwAoANMFzhpcT?=
- =?us-ascii?Q?ZAhZLwOg0kigbyCux2N8+94WwCL1T3j8J8eTQUSuqpZQr4J6u3Tho4VfOqkK?=
- =?us-ascii?Q?shJyo/iJJChSXLit9GmDLt9HNTXf27ZpfjhEp8QHSNffufBC5vTjlShb2fwL?=
- =?us-ascii?Q?l4Eqw2y4uTqyN9VrFljalUINvG2bZ13b2i84nQZcgUUUdlJLx3QwXd6LG2sm?=
- =?us-ascii?Q?74RmD6tJ2a6uHBQi0lV7e8CtkTHF57u2p7HE0cMmOPRjE7tUFVlmwXJT1ntt?=
- =?us-ascii?Q?LjmsXgJ0lmqwMMYIITlZIbHnayW/KXIhowUtLkAaYFVhTxf9yCWLEe8vUI+f?=
- =?us-ascii?Q?h4a9ngdkIs1XBpay8uPw7fjqbn6Q4B3/UAoCnOkJjmsPO2neZoYS31jLJU7I?=
- =?us-ascii?Q?zzbop0BkHUXGDt8YbrUm7HFLWh6urRt1PPPqy5ju6fgS+Ngk8DtnZ3nHdLKZ?=
- =?us-ascii?Q?6ZAvLZv9pTameX2IkE7oD8n2U9RWtjKEQqKNpOOK0chjTeoTklEzKs9DerWU?=
- =?us-ascii?Q?o5MltTJ03XU7fztyvIoORJfNDTyAl5ulc+C98KjkjxlGZmBkdqDstCZLC2oE?=
- =?us-ascii?Q?fpjCdAWk3/ays3azAE7sTlioIjjxJ4mLjxGslwL4tmbmJSOAFTM1cj85yAzu?=
- =?us-ascii?Q?U687k0howEv9QnqtlioEubdCwfAEdf5KVLvm6IqfNHjKvla4MgraeSWM4mto?=
- =?us-ascii?Q?s6ogLujvyEvja3bZRFboBd0gU+CQAncZNG2RQLLz?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
+ by DM4PR21MB3371.namprd21.prod.outlook.com (2603:10b6:8:6f::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6455.6; Thu, 25 May 2023 14:46:40 +0000
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::9d99:e955:81ed:40e0]) by BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::9d99:e955:81ed:40e0%3]) with mapi id 15.20.6455.004; Thu, 25 May 2023
+ 14:46:40 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, decui@microsoft.com, kys@microsoft.com,
+        paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+        davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+        longli@microsoft.com, ssengar@linux.microsoft.com,
+        linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+        sharmaajay@microsoft.com, hawk@kernel.org, tglx@linutronix.de,
+        shradhagupta@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH V2,net] net: mana: Fix perf regression: remove rx_cqes, tx_cqes counters
+Date:   Thu, 25 May 2023 07:46:30 -0700
+Message-Id: <1685025990-14598-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4P220CA0014.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::19) To BY5PR21MB1443.namprd21.prod.outlook.com
+ (2603:10b6:a03:21f::18)
 MIME-Version: 1.0
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|DM4PR21MB3371:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6ab3d83-c2f9-4c9f-62de-08db5d2ed911
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iV+jarIYV9zCc81joaAMY6N/DrJTVqJ7YZG+Ce/s1qOL8AnAUfGPRyhWo5uZVI6oZgxRa4oUjxyeKTXy1B63HGUJVz0GhNfFLbK2FLunR0+Nn8nSludb0u97TirlNzPuJe+jHp4MX7fVmksorNf9iDZ2u1eeHpJAq7gbTjbLk/pVP8bLWzpG7ekRdNvOwMIqneD1aKbIiP2hfc8MvAwZuBiNBMO4xu0T6cw7n2U+2WyzKVfLJTPS2nWD9cRdgLiMPv5AsAbwF7+sJGm+qfK0EmS6GoCveBa7Q40tz/z5JO/cuDiLgR7Rj/GpHFnYT68xS/v+UNorjDPTKhpeBJWDOoNYso4a9Xd42jOxJsgYi35mXE4+fnaq9h+Ft8sShTHRoMGBcXd8zqkVyy5DWX70hHpCyw1zflMETHogF1cSOu6rK5zAxOGB/Vbk6Yp6mmNMiZx8rBR1psqaHFUG+Hr/KL9wcyZdKX52L7pWPw6FgSiwc2gCk+ptiXyyzFKr5T+i8sA6OGnxe4XKZcOCNAtp9+mRpd0B+1cQrqKUxW+tYgbuqeSmoUqNiCz+p+4ZQ2JXSIPjBgQKUj75Ln1XJoDKlvlcg6VmwhnDgi5BWq02k09oZYRV17BHomGf+qkb0k95lIPJlRrgHRJNmyOctyZw3x85tWLB0F8BK2aOC3PpBg0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(136003)(346002)(396003)(366004)(451199021)(38350700002)(38100700002)(478600001)(82960400001)(82950400001)(10290500003)(66946007)(66476007)(4326008)(6666004)(66556008)(83380400001)(6486002)(52116002)(786003)(316002)(41300700001)(2616005)(7846003)(5660300002)(8676002)(7416002)(186003)(8936002)(36756003)(6512007)(2906002)(26005)(6506007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zKerivsJdcN+2vCFJ6JwUvomkZ6sPCPAjmlg/Sf0M0M+vCvCBDlfQYT1xgsv?=
+ =?us-ascii?Q?5ubp6YqdHj/a0ZbpR6aYlqgJZmeVbb8808msKF2r1dvjHBmgue77C2RVIKRY?=
+ =?us-ascii?Q?u13dZWfFCMGtMAbKgjB8VqbXroSMP8vTwbmrT6oSQHFd2ZcBVrmhm0M8Xk85?=
+ =?us-ascii?Q?CP7UAzRYpV4/ftNKOtI0BmSHYbZFKzWthI5oX2szJBJT6OUT33Gf4cJAR2bt?=
+ =?us-ascii?Q?0ykwYQbYX8fFSTvBEw/mJHJbmVLSZlObd3Plf2JQkY0cBLjXMyDq4G94bwHU?=
+ =?us-ascii?Q?pYpdtcJm2lDrzrFtyHNOARD83Y8Lq18W6XXiVt2hBzlbwSv9py0c+hwEjI3k?=
+ =?us-ascii?Q?tXqvte/6nOnXjsfbLQKV0uRpmjYhRAOpJqOKMl3yO2SwfrNUEkzjCy+FJbEK?=
+ =?us-ascii?Q?om634q8XiU1xdownqSbB2SXEPViU7ULGqOKLYiqEi4Fqvc+dgfP5enQPA2zh?=
+ =?us-ascii?Q?2GAae5aufGSaOnT/0pNv2kTxc57BSer5+DxbO+aU+8fiemryLCaao5OTMNoy?=
+ =?us-ascii?Q?ORbXLCJKtY6uihnzRSjDc/f90WWwZ+XJFbyNaTzqkyCcyrksD4BPyCV9X6DG?=
+ =?us-ascii?Q?yZPzoKlWvcusocubNqLr3se9mxVa4soOlObEQ3csnfj1QXywUphy7ZH8TJLv?=
+ =?us-ascii?Q?J5R3idWNMorUCgpoOVCTqUD+0bJt4qWX4U43okpzQrGxwBY9sbj3JEEPUa18?=
+ =?us-ascii?Q?sepUhKY6lTYEZJhRz7Nos2z/oQ+2gzTQBvjnK+YPRJoLG2R/WNWcm/CMtN1A?=
+ =?us-ascii?Q?BTNUtQ6cDj6cX6x+ll+SJXl4jhDMbDeyKPstPgq+NK6KRFrijlB2jW2rX0qt?=
+ =?us-ascii?Q?Z/l9KsZFt8DHNCxxztkety67h/NSzC/J/Ruw6Izr9/yTiMq3cssMdgzJhc1P?=
+ =?us-ascii?Q?dNQqyu2mLCUDdcXzaBOA/K+LNQVS47Co+VOZ7m4oEjRKvHBVqKS6wqwt5mXZ?=
+ =?us-ascii?Q?eeMZiJ0tIGRVX3gXs8cey3uyI7B/xbBEMJmZAzPzOSnv9vFnFT92/CFwXxH3?=
+ =?us-ascii?Q?+qwClBf8WIWVzgVz1BIFcjnF0wryUFYlXTCaA9FfBqOdSpQ7+PE0z0TU/4ZV?=
+ =?us-ascii?Q?eOKaix57VQf3QIIjdsGBqYt2lJsMHmIFXSK8ObuvlnI09EHVPC+GkUEXVNCz?=
+ =?us-ascii?Q?fN5YKrMLzFbviCcLjqpgW3N1kEQnoREXyejatyGMveIcBUBYbLYItieqnwaA?=
+ =?us-ascii?Q?XmVxeLSIHlBysie/0sDIIUISELvm03lnrFi5uMCPWVgLIoP5k98QcZSDb+VC?=
+ =?us-ascii?Q?QHM25Ff7lVv9cJDfNaAOd8zgrZ824UNqSYeiSAWekFish2693B6aFDPAQDBH?=
+ =?us-ascii?Q?qSCkLX9JWaCZrl/gWxamFVqahgTECKWWRQQjqlszxNHCVDz54y8ATaBqDHCH?=
+ =?us-ascii?Q?1jyPFv9iCWR1mGLfSV4xjVCL4MM+htv1bQd4VP/eM4zn1QPXe4OO7CIHBAPi?=
+ =?us-ascii?Q?b9vWCf9m1AwadUOWQ2TZEpEpmbptrChM+M2rAN+5Hiwr6A2GBE5VfQQxB22U?=
+ =?us-ascii?Q?ue4ZpkNe9TcIv4pIlk2zheYY6HJcKRBmWptPN3FVBpyXIY3si/XntAKWhmlw?=
+ =?us-ascii?Q?SjjjYjvE7P5WAeHETWTLPYXrYzBuu5+mifS3IwJ8?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6ab3d83-c2f9-4c9f-62de-08db5d2ed911
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3116.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b94e7dc3-33bd-4a0e-3dbb-08db5d2d173d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2023 14:34:04.7580
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2023 14:46:39.7988
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6cow0s78QPjCze0+Amm9Ur8Yc7D9Vr3tjtfD+7XJ0lH5nC0OsNuVT3w1vF/bXnTtSyHueuzYyd9N5bIK754Skg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB1975
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1mnzUaq569KaF2z9efan2imAYE+hhbNDW0wy9+9OG8OMsknQwoWyWz+HAWG4RBFzeqtNqlpcHymw9MCLwHJ8Lw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3371
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -142,63 +120,111 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+The apc->eth_stats.rx_cqes is one per NIC (vport), and it's on the
+frequent and parallel code path of all queues. So, r/w into this
+single shared variable by many threads on different CPUs creates a
+lot caching and memory overhead, hence perf regression. And, it's
+not accurate due to the high volume concurrent r/w.
 
+Since the error path of mana_poll_rx_cq() already has warnings, so
+keeping the counter and convert it to a per-queue variable is not
+necessary. So, just remove this counter from this high frequency
+code path.
 
-> -----Original Message-----
-> From: Horatiu Vultur <horatiu.vultur@microchip.com>
-> Sent: Thursday, May 25, 2023 2:49 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Dexuan Cui
-> <decui@microsoft.com>; KY Srinivasan <kys@microsoft.com>; Paul Rosswurm
-> <paulros@microsoft.com>; olaf@aepfle.de; vkuznets@redhat.com;
-> davem@davemloft.net; wei.liu@kernel.org; edumazet@google.com;
-> kuba@kernel.org; pabeni@redhat.com; leon@kernel.org; Long Li
-> <longli@microsoft.com>; ssengar@linux.microsoft.com; linux-
-> rdma@vger.kernel.org; daniel@iogearbox.net; john.fastabend@gmail.com;
-> bpf@vger.kernel.org; ast@kernel.org; Ajay Sharma
-> <sharmaajay@microsoft.com>; hawk@kernel.org; linux-
-> kernel@vger.kernel.org; stable@vger.kernel.org
-> Subject: Re: [PATCH net] net: mana: Fix perf regression: remove rx_cqes,
-> tx_cqes counters
->=20
-> [Some people who received this message don't often get email from
-> horatiu.vultur@microchip.com. Learn why this is important at
-> https://aka.ms/LearnAboutSenderIdentification ]
->=20
-> The 05/24/2023 14:22, Haiyang Zhang wrote:
->=20
-> Hi Haiyang,
->=20
-> >
-> > The apc->eth_stats.rx_cqes is one per NIC (vport), and it's on the
-> > frequent and parallel code path of all queues. So, r/w into this
-> > single shared variable by many threads on different CPUs creates a
-> > lot caching and memory overhead, hence perf regression. And, it's
-> > not accurate due to the high volume concurrent r/w.
->=20
-> Do you have any numbers to show the improvement of this change?
+Also, remove the tx_cqes counter for the same reason. We have
+warnings & other counters for errors on that path, and don't need
+to count every normal cqe processing.
 
-The numbers are not published. The perf regression of the previous=20
-patch is very significant, and this patch eliminates the regression.
+Cc: stable@vger.kernel.org
+Fixes: bd7fc6e1957c ("net: mana: Add new MANA VF performance counters for easier troubleshooting")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+V2:
+	Same as V1, except adding more Cc's.
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c      | 10 ----------
+ drivers/net/ethernet/microsoft/mana/mana_ethtool.c |  2 --
+ include/net/mana/mana.h                            |  2 --
+ 3 files changed, 14 deletions(-)
 
->=20
-> >
-> > Since the error path of mana_poll_rx_cq() already has warnings, so
-> > keeping the counter and convert it to a per-queue variable is not
-> > necessary. So, just remove this counter from this high frequency
-> > code path.
-> >
-> > Also, remove the tx_cqes counter for the same reason. We have
-> > warnings & other counters for errors on that path, and don't need
-> > to count every normal cqe processing.
->=20
-> Will you not have problems with the counter 'apc->eth_stats.tx_cqe_err'?
-> It is not in the hot path but you will have concurrent access to it.
-
-Yes, but that error happens rarely, so a shared variable is good enough. So=
-, I=20
-don't change it in this patch.
-
-Thanks,
-- Haiyang
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index 06d6292e09b3..d907727c7b7a 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1279,8 +1279,6 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 	if (comp_read < 1)
+ 		return;
+ 
+-	apc->eth_stats.tx_cqes = comp_read;
+-
+ 	for (i = 0; i < comp_read; i++) {
+ 		struct mana_tx_comp_oob *cqe_oob;
+ 
+@@ -1363,8 +1361,6 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
+ 		WARN_ON_ONCE(1);
+ 
+ 	cq->work_done = pkt_transmitted;
+-
+-	apc->eth_stats.tx_cqes -= pkt_transmitted;
+ }
+ 
+ static void mana_post_pkt_rxq(struct mana_rxq *rxq)
+@@ -1626,15 +1622,11 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+ {
+ 	struct gdma_comp *comp = cq->gdma_comp_buf;
+ 	struct mana_rxq *rxq = cq->rxq;
+-	struct mana_port_context *apc;
+ 	int comp_read, i;
+ 
+-	apc = netdev_priv(rxq->ndev);
+-
+ 	comp_read = mana_gd_poll_cq(cq->gdma_cq, comp, CQE_POLLING_BUFFER);
+ 	WARN_ON_ONCE(comp_read > CQE_POLLING_BUFFER);
+ 
+-	apc->eth_stats.rx_cqes = comp_read;
+ 	rxq->xdp_flush = false;
+ 
+ 	for (i = 0; i < comp_read; i++) {
+@@ -1646,8 +1638,6 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+ 			return;
+ 
+ 		mana_process_rx_cqe(rxq, cq, &comp[i]);
+-
+-		apc->eth_stats.rx_cqes--;
+ 	}
+ 
+ 	if (rxq->xdp_flush)
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index a64c81410dc1..0dc78679f620 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -13,11 +13,9 @@ static const struct {
+ } mana_eth_stats[] = {
+ 	{"stop_queue", offsetof(struct mana_ethtool_stats, stop_queue)},
+ 	{"wake_queue", offsetof(struct mana_ethtool_stats, wake_queue)},
+-	{"tx_cqes", offsetof(struct mana_ethtool_stats, tx_cqes)},
+ 	{"tx_cq_err", offsetof(struct mana_ethtool_stats, tx_cqe_err)},
+ 	{"tx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
+ 					tx_cqe_unknown_type)},
+-	{"rx_cqes", offsetof(struct mana_ethtool_stats, rx_cqes)},
+ 	{"rx_coalesced_err", offsetof(struct mana_ethtool_stats,
+ 					rx_coalesced_err)},
+ 	{"rx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index cd386aa7c7cc..9eef19972845 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -347,10 +347,8 @@ struct mana_tx_qp {
+ struct mana_ethtool_stats {
+ 	u64 stop_queue;
+ 	u64 wake_queue;
+-	u64 tx_cqes;
+ 	u64 tx_cqe_err;
+ 	u64 tx_cqe_unknown_type;
+-	u64 rx_cqes;
+ 	u64 rx_coalesced_err;
+ 	u64 rx_cqe_unknown_type;
+ };
+-- 
+2.25.1
 
