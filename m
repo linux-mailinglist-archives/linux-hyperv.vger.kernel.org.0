@@ -2,96 +2,89 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2646471174C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 25 May 2023 21:22:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7652711E07
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 May 2023 04:36:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243666AbjEYTWe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 May 2023 15:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39708 "EHLO
+        id S233538AbjEZCgX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 25 May 2023 22:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243688AbjEYTWP (ORCPT
+        with ESMTP id S233071AbjEZCgU (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 May 2023 15:22:15 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A59E1992;
-        Thu, 25 May 2023 12:18:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685042322; x=1716578322;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KuUKj4ttsJlL4wLcdbKLyn7tabEwUjXKipzD5i05Y4s=;
-  b=lSK2/2k5bTLauJYJFdjo/h5/32Aq64DEwMlaZk5y8WtRZHN4LK+GYOQU
-   VlXnGW+S8VUITO0yMQDxVys4r4C3th3olPteqQh7D011MZxOApJn+IGfH
-   a1lCtmYOkaQDCC4zfFYGdnseJGw+3s3JLaBVkPtQBPW5IbtsVwC3mulG9
-   CXsQhDV5VEiJSCVT1fnskdHc9CqPzzvabittgc90aYpzdKClg3gGUAam5
-   OD9gvlkcCMBPDrCjTk/mXk5sr7iHUygc93NyUMlU0zexWzETrvkT/+6ej
-   rhOjbLWjNDY9V77WBBrSY+Tu5r1d9W7d1t7S73y94w7Awrbw7NOY5N/pM
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="356378002"
-X-IronPort-AV: E=Sophos;i="6.00,192,1681196400"; 
-   d="scan'208";a="356378002"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 12:18:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="794777026"
-X-IronPort-AV: E=Sophos;i="6.00,192,1681196400"; 
-   d="scan'208";a="794777026"
-Received: from shuklaas-mobl1.amr.corp.intel.com (HELO [10.212.186.148]) ([10.212.186.148])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 12:18:35 -0700
-Message-ID: <05bbef94-686e-e3cc-40d3-95acfbf45a5d@intel.com>
-Date:   Thu, 25 May 2023 12:18:34 -0700
+        Thu, 25 May 2023 22:36:20 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD380BC;
+        Thu, 25 May 2023 19:36:18 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1001)
+        id 1932320FBE98; Thu, 25 May 2023 19:36:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1932320FBE98
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685068578;
+        bh=QsI2Tqrh7Dq8rATEw0dJAIe6Y8MEWIZaKj+0i4m1b94=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=rc/phama1ktXAiy+vs2NVCSXABwbcfYCYzvoNhWo6b4QznrBTZJyht2XFXGcOWpXT
+         eN3vRQ77IyNVtRNsEt3dUwkwOKfWmDDqOGFtsKRkzHP0DTyYh3PuCH9zyVE+5kTU93
+         rssQ3lVi3y4biGwhIuiBnmIaxdqEKLD8WYOLFyno=
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id 1639D30013A9;
+        Thu, 25 May 2023 19:36:18 -0700 (PDT)
+Date:   Thu, 25 May 2023 19:36:18 -0700 (PDT)
+From:   James Morris <jamorris@linux.microsoft.com>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?Q?Nicu=C8=99or_C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
+In-Reply-To: <20230505152046.6575-1-mic@digikod.net>
+Message-ID: <17f62cb1-a5de-2020-2041-359b8e96b8c0@linux.microsoft.com>
+References: <20230505152046.6575-1-mic@digikod.net>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v6 2/6] x86/tdx: Support vmalloc() for
- tdx_enc_status_changed()
-Content-Language: en-US
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     kirill.shutemov@linux.intel.com, Dexuan Cui <decui@microsoft.com>,
-        ak@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        brijesh.singh@amd.com, dan.j.williams@intel.com,
-        dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
-        jane.chu@oracle.com, kys@microsoft.com, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, rostedt@goodmis.org,
-        sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-        tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
-        x86@kernel.org, mikelley@microsoft.com,
-        linux-kernel@vger.kernel.org, Tianyu.Lan@microsoft.com
-References: <20230504225351.10765-1-decui@microsoft.com>
- <20230504225351.10765-3-decui@microsoft.com>
- <9e466079-ff27-f928-b470-eb5ef157f048@intel.com>
- <20230523223750.botogigv6ht7p2zg@box.shutemov.name>
- <2d96a23f-a16a-50e1-7960-a2d4998ce52f@intel.com>
- <20230523232851.a3djqxmpjyfghbvc@box.shutemov.name>
- <20230525190812.bz5hg5k3uaibtcys@box>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230525190812.bz5hg5k3uaibtcys@box>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/25/23 12:08, Kirill A. Shutemov wrote:
-> Shared->Private conversion is rare. I only see one call total during the
-> boot in my setup. Worth fixing anyway.
-...
-> Any comments?
+[Side topic]
 
-So the rules are:
+Would folks be interested in a Linux Plumbers Conference MC on this 
+topic generally, across different hypervisors, VMMs, and architectures?
 
- * Shared mapping of a private page: BAD
- * Private mapping of a shared page: OK
+If so, please let me know who the key folk would be and we can try writing 
+up an MC proposal.
 
-?
 
-The patch seems OK, other than having zero comments in it.
+
+-- 
+James Morris
+<jamorris@linux.microsoft.com>
