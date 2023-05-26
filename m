@@ -2,89 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7652711E07
-	for <lists+linux-hyperv@lfdr.de>; Fri, 26 May 2023 04:36:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2E2F711E6B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 26 May 2023 05:26:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233538AbjEZCgX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 25 May 2023 22:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
+        id S229625AbjEZD0C (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 25 May 2023 23:26:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233071AbjEZCgU (ORCPT
+        with ESMTP id S229568AbjEZD0A (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 25 May 2023 22:36:20 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD380BC;
-        Thu, 25 May 2023 19:36:18 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1001)
-        id 1932320FBE98; Thu, 25 May 2023 19:36:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1932320FBE98
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685068578;
-        bh=QsI2Tqrh7Dq8rATEw0dJAIe6Y8MEWIZaKj+0i4m1b94=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=rc/phama1ktXAiy+vs2NVCSXABwbcfYCYzvoNhWo6b4QznrBTZJyht2XFXGcOWpXT
-         eN3vRQ77IyNVtRNsEt3dUwkwOKfWmDDqOGFtsKRkzHP0DTyYh3PuCH9zyVE+5kTU93
-         rssQ3lVi3y4biGwhIuiBnmIaxdqEKLD8WYOLFyno=
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id 1639D30013A9;
-        Thu, 25 May 2023 19:36:18 -0700 (PDT)
-Date:   Thu, 25 May 2023 19:36:18 -0700 (PDT)
-From:   James Morris <jamorris@linux.microsoft.com>
-To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-cc:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?Q?Nicu=C8=99or_C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
-In-Reply-To: <20230505152046.6575-1-mic@digikod.net>
-Message-ID: <17f62cb1-a5de-2020-2041-359b8e96b8c0@linux.microsoft.com>
-References: <20230505152046.6575-1-mic@digikod.net>
+        Thu, 25 May 2023 23:26:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498EDE6;
+        Thu, 25 May 2023 20:26:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D846B6471F;
+        Fri, 26 May 2023 03:25:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F170C433EF;
+        Fri, 26 May 2023 03:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685071559;
+        bh=BTIaAcxw6JMw/kBG+7/ytX8/qt2HopHJ9Nqlbp6SrPU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eIztQ0pfSz7V7fBvUzeog84FT45VkAZ2Lae27wsJjMo2fG1neQr92ibbIFgGHsQ2d
+         r4JJTPcmgjMJnT+uzL6zfSlfkfBY8dFo++z67mnF7wrr/9P/KiWD0ShmXwko8V+SIE
+         zoqSY3IREiAbPn2Znwq2kn2tRNNV2Ly7FViIEibdDkP7RxB1FMhHu22yVTGyQYbsN2
+         OX4koaThdA9hIKe7/x64Ho3jdyINstDb+ujciIDpcmybpuL5c2X9JGIqtJNRCxc5Ni
+         jKHY5EnBMTUPsHPsGt8BBA+PoBgarYho9GcKQlrbQUIpEZqkQSQWDIuFJen+j5HryZ
+         CMMU/YZeGrRJQ==
+Date:   Thu, 25 May 2023 20:25:57 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        decui@microsoft.com, kys@microsoft.com, paulros@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        wei.liu@kernel.org, edumazet@google.com, pabeni@redhat.com,
+        leon@kernel.org, longli@microsoft.com, ssengar@linux.microsoft.com,
+        linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+        sharmaajay@microsoft.com, hawk@kernel.org, tglx@linutronix.de,
+        shradhagupta@linux.microsoft.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH V2,net] net: mana: Fix perf regression: remove rx_cqes,
+ tx_cqes counters
+Message-ID: <20230525202557.5a5f020b@kernel.org>
+In-Reply-To: <1685025990-14598-1-git-send-email-haiyangz@microsoft.com>
+References: <1685025990-14598-1-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-[Side topic]
+On Thu, 25 May 2023 07:46:30 -0700 Haiyang Zhang wrote:
+> lot caching and memory overhead, hence perf regression.
 
-Would folks be interested in a Linux Plumbers Conference MC on this 
-topic generally, across different hypervisors, VMMs, and architectures?
+Horatiu's ask for more details was perfectly reasonable.
+Provide more details to give the distros and users an
+idea of the order of magnitude of the problem. Example
+workload and relative perf hit, anything.
 
-If so, please let me know who the key folk would be and we can try writing 
-up an MC proposal.
-
-
-
+Please do not repost within 24 hours:
+https://www.kernel.org/doc/html/next/process/maintainer-netdev.html
 -- 
-James Morris
-<jamorris@linux.microsoft.com>
+pw-bot: cr
