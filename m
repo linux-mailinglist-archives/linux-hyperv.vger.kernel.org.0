@@ -2,120 +2,200 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55E37714BF7
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 May 2023 16:25:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F905714DC4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 May 2023 18:03:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230101AbjE2OZV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 May 2023 10:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32976 "EHLO
+        id S229539AbjE2QDp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 May 2023 12:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbjE2OZU (ORCPT
+        with ESMTP id S229502AbjE2QDo (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 May 2023 10:25:20 -0400
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F10A7
-        for <linux-hyperv@vger.kernel.org>; Mon, 29 May 2023 07:25:18 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id 3do5q6Lcz8SAU3do5q9HQ0; Mon, 29 May 2023 16:25:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1685370311;
-        bh=5yfUn5aZ5gZKP/nhY40FYtwu0ci8KYjAyPkzFYglPAY=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=ocKRv9z8VmqirNHXYT3ft22j4i53Wl5OzK9+JBimzQrGz8StOZ2seQUQVb3Mjx55+
-         eEwidnlTa7CZNj0HArLAkMHP5WrFyawvkyimebViWx4dAtGI3u/BC3O49K0uHWNNXz
-         XVTskrcoItUxVyT6N/6/o9kxuIGMsKpb/2IHwc0nX2L7VcvhdifWlykD8/Xk32y1zy
-         vNhHx/M9vlzkDDDrsryHxEfTvzKlf0Lg0KIzuFCOZMdRl/4p4nVKo7canxVijNs4AL
-         NJ1VRX8R6igaagjwS38Kpwalq0Ygq83+iFXXk76sLWkFOuuLpC3OPC6UhKQH74+4Dm
-         V/Mub43l7Fq9A==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 29 May 2023 16:25:11 +0200
-X-ME-IP: 86.243.2.178
-Message-ID: <fdf6ab76-cd2c-6596-41c1-369c176decad@wanadoo.fr>
-Date:   Mon, 29 May 2023 16:25:09 +0200
+        Mon, 29 May 2023 12:03:44 -0400
+Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc0d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A48BF7
+        for <linux-hyperv@vger.kernel.org>; Mon, 29 May 2023 09:03:37 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QVL131MNPzMqYfG;
+        Mon, 29 May 2023 18:03:35 +0200 (CEST)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4QVL0w4znNz3vb2;
+        Mon, 29 May 2023 18:03:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1685376215;
+        bh=n6vDyeLcnXuJ2e1Kx1oy6dfLDQBfFmEzNL/ERVZDqQU=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=kQUNssi6VBi8KE2R5ANm9fpqaLV9V+BO/pl/pZOb+r07FAQvClXzKkx8C9t2Hytji
+         /4n7ba89FjY/Zfl8t2rhFg1o9pE4iawj/J1DIhc82vGXeZvlW/Z9zID2JwoJwYww3/
+         p8LCe3PI5P3tfO/+Mau3UxTlSDY6CLpnXs/pesiA=
+Message-ID: <90ca1173-4ec1-099f-5744-3d6dc29d919d@digikod.net>
+Date:   Mon, 29 May 2023 18:03:28 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3] hv_netvsc: Allocate rx indirection table size
- dynamically
-Content-Language: fr, en-US
-To:     Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steen Hegelund <steen.hegelund@microchip.com>,
-        Simon Horman <simon.horman@corigine.com>
-References: <1685080949-18316-1-git-send-email-shradhagupta@linux.microsoft.com>
- <92bc6f3e-4463-e0fe-5cab-54c6c5eecd3f@wanadoo.fr>
- <20230529133019.GB21447@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20230529133019.GB21447@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: 
+Subject: Re: [PATCH v1 3/9] virt: Implement Heki common code
+Content-Language: en-US
+To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20230505152046.6575-1-mic@digikod.net>
+ <20230505152046.6575-4-mic@digikod.net>
+ <ZFkxhWhjyIzrPkt8@liuwe-devbox-debian-v2>
+ <e8fcc1b8-6c0f-9556-a110-bd994d3fe3c6@linux.microsoft.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+In-Reply-To: <e8fcc1b8-6c0f-9556-a110-bd994d3fe3c6@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Infomaniak-Routing: alpha
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Le 29/05/2023 à 15:30, Shradha Gupta a écrit :
-> Thanks for the comment Christophe.
-> On Mon, May 29, 2023 at 02:49:15PM +0200, Christophe JAILLET wrote:
->> Le 26/05/2023 ?? 08:02, Shradha Gupta a ??crit??:
->>> Allocate the size of rx indirection table dynamically in netvsc
->> >from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
->>> query instead of using a constant value of ITAB_NUM.
->>>
->>> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
->>> Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
->>> Testcases:
->>> 1. ethtool -x eth0 output
->>> 2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
->>> 3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
->>>
->>> ---
->>
->> [...]
->>
->>> @@ -1596,11 +1608,18 @@ void rndis_filter_device_remove(struct hv_device *dev,
->>>   				struct netvsc_device *net_dev)
->>>   {
->>>   	struct rndis_device *rndis_dev = net_dev->extension;
->>> +	struct net_device *net = hv_get_drvdata(dev);
->>> +	struct net_device_context *ndc = netdev_priv(net);
->>>   	/* Halt and release the rndis device */
->>>   	rndis_filter_halt_device(net_dev, rndis_dev);
->>>   	netvsc_device_remove(dev);
->>> +
->>> +	ndc->rx_table_sz = 0;
->>> +	kfree(ndc->rx_table);
->>> +	ndc->rx_table = NULL;
->>> +
->>
->> Nit: useless empty NL
-> This is to prevent any potential double free, or accessing freed memory, etc.
-> As requested by Haiyang in v2 patch
 
-Setting ndc->rx_table to NULL is fine, but there is a useless *newline* 
-(NL) just after.
-If you have to send a v4, you can save a line of code.
-
-CJ
-
->>
->>>   }
->>>   int rndis_filter_open(struct netvsc_device *nvdev)
+On 17/05/2023 14:47, Madhavan T. Venkataraman wrote:
+> Sorry for the delay. See inline...
 > 
+> On 5/8/23 12:29, Wei Liu wrote:
+>> On Fri, May 05, 2023 at 05:20:40PM +0200, Mickaël Salaün wrote:
+>>> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+>>>
+>>> Hypervisor Enforced Kernel Integrity (Heki) is a feature that will use
+>>> the hypervisor to enhance guest virtual machine security.
+>>>
+>>> Configuration
+>>> =============
+>>>
+>>> Define the config variables for the feature. This feature depends on
+>>> support from the architecture as well as the hypervisor.
+>>>
+>>> Enabling HEKI
+>>> =============
+>>>
+>>> Define a kernel command line parameter "heki" to turn the feature on or
+>>> off. By default, Heki is on.
+>>
+>> For such a newfangled feature can we have it off by default? Especially
+>> when there are unsolved issues around dynamically loaded code.
+>>
+> 
+> Yes. We can certainly do that.
 
+By default the Kconfig option should definitely be off. We also need to 
+change the Kconfig option to only be set if kernel module, JIT, kprobes 
+and other dynamic text change feature are disabled at build time  (see 
+discussion with Sean).
+
+With this new Kconfig option for the static case, I think the boot 
+option should be on by default because otherwise it would not really be 
+possible to switch back to on later without taking the risk to silently 
+breaking users' machines. However, we should rename this option to 
+something like "heki_static" to be in line with the new Kconfig option.
+
+The goal of Heki is to improve and complement kernel self-protection 
+mechanisms (which don't have boot time options), and to make it 
+available to everyone, see 
+https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
+In practice, it would then be kind of useless to be required to set a 
+boot option to enable Heki (rather than to disable it).
+
+
+> 
+>>>
+>> [...]
+>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>>> index 3604074a878b..5cf5a7a97811 100644
+>>> --- a/arch/x86/Kconfig
+>>> +++ b/arch/x86/Kconfig
+>>> @@ -297,6 +297,7 @@ config X86
+>>>   	select FUNCTION_ALIGNMENT_4B
+>>>   	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>>>   	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>>> +	select ARCH_SUPPORTS_HEKI		if X86_64
+>>
+>> Why is there a restriction on X86_64?
+>>
+> 
+> We want to get the PoC working and reviewed on X64 first. We have tested this only on X64 so far.
+
+X86_64 includes Intel CPUs, which can support EPT and MBEC, which are a 
+requirement for Heki. ARM might have similar features but we're focused 
+on x86 for now.
+
+As a side note, I only have access to an Intel machine, which means that 
+I cannot work on AMD support. However, I'll be pleased to implement such 
+support if I get access to a machine with a recent AMD CPU.
+
+
+> 
+>>>   
+>>>   config INSTRUCTION_DECODER
+>>>   	def_bool y
+>>> diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
+>>> index a6e8373a5170..42ef1e33b8a5 100644
+>>> --- a/arch/x86/include/asm/sections.h
+>>> +++ b/arch/x86/include/asm/sections.h
+>> [...]
+>>>   
+>>> +#ifdef CONFIG_HEKI
+>>> +
+>>> +/*
+>>> + * Gather all of the statically defined sections so heki_late_init() can
+>>> + * protect these sections in the host page table.
+>>> + *
+>>> + * The sections are defined under "SECTIONS" in vmlinux.lds.S
+>>> + * Keep this array in sync with SECTIONS.
+>>> + */
+>>
+>> This seems a bit fragile, because it requires constant attention from
+>> people who care about this functionality. Can this table be
+>> automatically generated?
+>>
+> 
+> We realize that. But I don't know of a way this can be automatically generated. Also, the permissions for
+> each section is specific to the use of that section. The developer who introduces a new section is the
+> one who will know what the permissions should be.
+> 
+> If any one has any ideas of how we can generate this table automatically or even just add a build time check
+> of some sort, please let us know.
+
+One clean solution might be to parse the vmlinux.lds.S file, extract 
+section and their permission, and fill that into an automatically 
+generated header file.
+
+Another way to do it would be to extract sections and associated 
+permissions with objdump, but that could be an issue because of longer 
+build time.
+
+A better solution would be to extract such sections and associated 
+permissions at boot time. I guess the kernel already has such helpers 
+used in early boot.
