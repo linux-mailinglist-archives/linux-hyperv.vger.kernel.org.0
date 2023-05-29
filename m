@@ -2,77 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AD57145FB
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 May 2023 10:06:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34C35714730
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 May 2023 11:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231651AbjE2IGO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 May 2023 04:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33524 "EHLO
+        id S231680AbjE2Jj7 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 May 2023 05:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231654AbjE2IGK (ORCPT
+        with ESMTP id S229453AbjE2Jj6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 May 2023 04:06:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EBA11C
-        for <linux-hyperv@vger.kernel.org>; Mon, 29 May 2023 01:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685347523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CpXGXTkTxrhIRYrLt2lLMkztlxS7BwAzRZ0iAN75Je0=;
-        b=gA1vJynILb/mEHdttbkRse7gXd0OPZf5CS/govUNC8V2l7JzwpGj/qB2HkwZ3Se/7wKw+3
-        crnNxt1dO0dhCfgUOVv5RQeXoj/IswAPc5Zm/hyP6Dp4i0HI03tDTkNRKh13jJPo2TmBbb
-        m+tzQoRT58wJyueJht7z5UA7rmCGQ+4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-363-PS06uvB-PgyVBUZvf7qtKA-1; Mon, 29 May 2023 04:05:14 -0400
-X-MC-Unique: PS06uvB-PgyVBUZvf7qtKA-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f6069f764bso50379075e9.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 29 May 2023 01:05:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685347513; x=1687939513;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CpXGXTkTxrhIRYrLt2lLMkztlxS7BwAzRZ0iAN75Je0=;
-        b=bf8DON2IYVn6ZsukNVTltQLzrzorsFCLI+5nkxiE1b+RizrcorT08iuQZTXfj8kS/A
-         xnmtNhc1KCqkFHXCrydMEWZfuIWliqplGggCao7d18mm6dUniWUGmJd7ax23EiiX7fr7
-         vaVTczROWbvIWKv7OPszv+/BNfSr9I/Adrf5XXG3PjqdCsqfSH8BgJtLVR95wIUHXhHr
-         2JddtSYvy2/qnayAE+fp6BZ6w17vgQFhKDAVU5WT5IANbdF5Yr7VO9nlZXgbZ6KVdV9R
-         1tcTkVCkPPTOP/WLFVrXFnroddKgTQ7eHNlysqDBukkRAeoaANs99VnRnUsLKUtfyAhO
-         MU/g==
-X-Gm-Message-State: AC+VfDxeIKwuXnYpQei+PxqDnWbKzwdAyaWld7FZZPNn+WWMokpncApB
-        agdAVTYSogCoH7MrDvMGccClPBI2aLZY7UplXS6i898KRmqsgaBd+8t9DZrn6ejuJfMLaMJV8+L
-        KnKvU4UmAyAd5Mz27gRf5X9S3E9XegEWS
-X-Received: by 2002:a1c:4c04:0:b0:3f6:962d:405c with SMTP id z4-20020a1c4c04000000b003f6962d405cmr7618066wmf.41.1685347513220;
-        Mon, 29 May 2023 01:05:13 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5JCcb0ErnkhpRDN5dBN9m2v2k+nLtLxMn7tzxa4LWxwKWYL5WQNXAhC3VyIx6jZm+M/J6r4w==
-X-Received: by 2002:a1c:4c04:0:b0:3f6:962d:405c with SMTP id z4-20020a1c4c04000000b003f6962d405cmr7618045wmf.41.1685347512897;
-        Mon, 29 May 2023 01:05:12 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id c7-20020a05600c0ac700b003f4fb5532a1sm13240464wmr.43.2023.05.29.01.05.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 May 2023 01:05:12 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v2 1/2] x86/hyperv: Fix hyperv_pcpu_input_arg handling
- when CPUs go online/offline
-In-Reply-To: <1684862062-51576-1-git-send-email-mikelley@microsoft.com>
-References: <1684862062-51576-1-git-send-email-mikelley@microsoft.com>
-Date:   Mon, 29 May 2023 10:05:11 +0200
-Message-ID: <87cz2j5zrc.fsf@redhat.com>
+        Mon, 29 May 2023 05:39:58 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3C20D90;
+        Mon, 29 May 2023 02:39:57 -0700 (PDT)
+Received: from [10.156.157.27] (unknown [167.220.238.91])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 93A0020FC3C1;
+        Mon, 29 May 2023 02:39:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 93A0020FC3C1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685353196;
+        bh=yiZxolf6CNnqCDZ6kanHPZ3rKzn2RzjeTJMF4sEG44k=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=HPNuAmlB7I1ONM02O7nUeoZNT/iv1ooCPx0y/OgzRrJs3hDofW/UHAbWf8Wt72uuW
+         iGDJuViL468Ii8e8tsSuS4JBpRxA1DsgNjZeaM5HyN7l9tgQroctf9e0MTuGKsVWmX
+         CdDegD8UI7RRxfcxr+DUGbM8h5PlC1DN3NDJ2/38=
+Message-ID: <5fc413e5-77d2-814d-250a-7ddf8eb6d6ad@linux.microsoft.com>
+Date:   Mon, 29 May 2023 15:09:49 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v3] hv_netvsc: Allocate rx indirection table size
+ dynamically
+To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Simon Horman <simon.horman@corigine.com>
+References: <1685080949-18316-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Language: en-US
+From:   Praveen Kumar <kumarpraveen@linux.microsoft.com>
+In-Reply-To: <1685080949-18316-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-19.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,160 +64,177 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
-
-> These commits
->
-> a494aef23dfc ("PCI: hv: Replace retarget_msi_interrupt_params with hyperv_pcpu_input_arg")
-> 2c6ba4216844 ("PCI: hv: Enable PCI pass-thru devices in Confidential VMs")
->
-> update the Hyper-V virtual PCI driver to use the hyperv_pcpu_input_arg
-> because that memory will be correctly marked as decrypted or encrypted
-> for all VM types (CoCo or normal). But problems ensue when CPUs in the
-> VM go online or offline after virtual PCI devices have been configured.
->
-> When a CPU is brought online, the hyperv_pcpu_input_arg for that CPU is
-> initialized by hv_cpu_init() running under state CPUHP_AP_ONLINE_DYN.
-> But this state occurs after state CPUHP_AP_IRQ_AFFINITY_ONLINE, which
-> may call the virtual PCI driver and fault trying to use the as yet
-> uninitialized hyperv_pcpu_input_arg. A similar problem occurs in a CoCo
-> VM if the MMIO read and write hypercalls are used from state
-> CPUHP_AP_IRQ_AFFINITY_ONLINE.
->
-> When a CPU is taken offline, IRQs may be reassigned in state
-> CPUHP_TEARDOWN_CPU. Again, the virtual PCI driver may fault trying to
-> use the hyperv_pcpu_input_arg that has already been freed by a
-> higher state.
->
-> Fix the onlining problem by adding state CPUHP_AP_HYPERV_ONLINE
-> immediately after CPUHP_AP_ONLINE_IDLE (similar to CPUHP_AP_KVM_ONLINE)
-> and before CPUHP_AP_IRQ_AFFINITY_ONLINE. Use this new state for
-> Hyper-V initialization so that hyperv_pcpu_input_arg is allocated
-> early enough.
->
-> Fix the offlining problem by not freeing hyperv_pcpu_input_arg when
-> a CPU goes offline. Retain the allocated memory, and reuse it if
-> the CPU comes back online later.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-
-Very minor nitpick: I would've changed the Subject of the patch to
-something a bit more meaningful, e.g.
-
-"x86/hyperv: Avoid freeing per-CPU hyperv_pcpu_{input,output}_arg upon CPU offlining"
-
-or something like that. 
-
+On 5/26/2023 11:32 AM, Shradha Gupta wrote:
+> Allocate the size of rx indirection table dynamically in netvsc
+> from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
+> query instead of using a constant value of ITAB_NUM.
+> 
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
+> Testcases:
+> 1. ethtool -x eth0 output
+> 2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
+> 3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
+> 
 > ---
->
-> Changes in v2:
-> * Put CPUHP_AP_HYPERV_ONLINE before CPUHP_AP_KVM_ONLINE [Vitaly
->   Kuznetsov]
->
->  arch/x86/hyperv/hv_init.c  |  2 +-
->  drivers/hv/hv_common.c     | 48 +++++++++++++++++++++++-----------------------
->  include/linux/cpuhotplug.h |  1 +
->  3 files changed, 26 insertions(+), 25 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index a5f9474..6c04b52 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -416,7 +416,7 @@ void __init hyperv_init(void)
->  			goto free_vp_assist_page;
->  	}
+> Changes in v3:
+>  * Changed the data type of rx_table_sz to u32
+>  * Moved the rx indirection table free to rndis_filter_device_remove()
+>  * Device add will fail with error if not enough memory is available
+>  * Changed kzmalloc to kcalloc as suggested in checkpatch script
+>  * Removed redundant log if memory allocation failed.
+> ---
+>  drivers/net/hyperv/hyperv_net.h   |  5 ++++-
+>  drivers/net/hyperv/netvsc_drv.c   | 10 ++++++----
+>  drivers/net/hyperv/rndis_filter.c | 27 +++++++++++++++++++++++----
+>  3 files changed, 33 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+> index dd5919ec408b..c40868f287a9 100644
+> --- a/drivers/net/hyperv/hyperv_net.h
+> +++ b/drivers/net/hyperv/hyperv_net.h
+> @@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
+>  #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
 >  
-> -	cpuhp = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/hyperv_init:online",
-> +	cpuhp = cpuhp_setup_state(CPUHP_AP_HYPERV_ONLINE, "x86/hyperv_init:online",
->  				  hv_cpu_init, hv_cpu_die);
->  	if (cpuhp < 0)
->  		goto free_ghcb_page;
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 64f9cec..542a1d5 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -364,13 +364,20 @@ int hv_common_cpu_init(unsigned int cpu)
->  	flags = irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL;
+>  #define ITAB_NUM 128
+> +#define ITAB_NUM_MAX 256
 >  
->  	inputarg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	*inputarg = kmalloc(pgcount * HV_HYP_PAGE_SIZE, flags);
-> -	if (!(*inputarg))
-> -		return -ENOMEM;
+>  struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
+>  	struct ndis_obj_header hdr;
+> @@ -1034,7 +1035,9 @@ struct net_device_context {
 >  
-> -	if (hv_root_partition) {
-> -		outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
-> -		*outputarg = (char *)(*inputarg) + HV_HYP_PAGE_SIZE;
-> +	/*
-> +	 * hyperv_pcpu_input_arg and hyperv_pcpu_output_arg memory is already
-> +	 * allocated if this CPU was previously online and then taken offline
-> +	 */
-> +	if (!*inputarg) {
-> +		*inputarg = kmalloc(pgcount * HV_HYP_PAGE_SIZE, flags);
-
-Nitpick: I see this was in the original code but we could probably
-switch to kcalloc() here.
-
-> +		if (!(*inputarg))
-> +			return -ENOMEM;
+>  	u32 tx_table[VRSS_SEND_TAB_SIZE];
+>  
+> -	u16 rx_table[ITAB_NUM];
+> +	u16 *rx_table;
 > +
-> +		if (hv_root_partition) {
-> +			outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
-> +			*outputarg = (char *)(*inputarg) + HV_HYP_PAGE_SIZE;
-> +		}
+> +	u32 rx_table_sz;
+>  
+>  	/* Ethtool settings */
+>  	u8 duplex;
+> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+> index 0103ff914024..3ba3c8fb28a5 100644
+> --- a/drivers/net/hyperv/netvsc_drv.c
+> +++ b/drivers/net/hyperv/netvsc_drv.c
+> @@ -1747,7 +1747,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
+>  
+>  static u32 netvsc_rss_indir_size(struct net_device *dev)
+>  {
+> -	return ITAB_NUM;
+> +	struct net_device_context *ndc = netdev_priv(dev);
+> +
+> +	return ndc->rx_table_sz;
+>  }
+>  
+>  static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+> @@ -1766,7 +1768,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+>  
+>  	rndis_dev = ndev->extension;
+>  	if (indir) {
+> -		for (i = 0; i < ITAB_NUM; i++)
+> +		for (i = 0; i < ndc->rx_table_sz; i++)
+>  			indir[i] = ndc->rx_table[i];
 >  	}
 >  
->  	msr_vp_index = hv_get_register(HV_REGISTER_VP_INDEX);
-> @@ -385,24 +392,17 @@ int hv_common_cpu_init(unsigned int cpu)
+> @@ -1792,11 +1794,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
 >  
->  int hv_common_cpu_die(unsigned int cpu)
+>  	rndis_dev = ndev->extension;
+>  	if (indir) {
+> -		for (i = 0; i < ITAB_NUM; i++)
+> +		for (i = 0; i < ndc->rx_table_sz; i++)
+>  			if (indir[i] >= ndev->num_chn)
+>  				return -EINVAL;
+>  
+> -		for (i = 0; i < ITAB_NUM; i++)
+> +		for (i = 0; i < ndc->rx_table_sz; i++)
+>  			ndc->rx_table[i] = indir[i];
+>  	}
+>  
+> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+> index eea777ec2541..dc7b9b326690 100644
+> --- a/drivers/net/hyperv/rndis_filter.c
+> +++ b/drivers/net/hyperv/rndis_filter.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/rtnetlink.h>
+>  #include <linux/ucs2_string.h>
+>  #include <linux/string.h>
+> +#include <linux/slab.h>
+>  
+>  #include "hyperv_net.h"
+>  #include "netvsc_trace.h"
+> @@ -927,7 +928,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+>  	struct rndis_set_request *set;
+>  	struct rndis_set_complete *set_complete;
+>  	u32 extlen = sizeof(struct ndis_recv_scale_param) +
+> -		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
+> +		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
+>  	struct ndis_recv_scale_param *rssp;
+>  	u32 *itab;
+>  	u8 *keyp;
+> @@ -953,7 +954,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+>  	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
+>  			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
+>  			 NDIS_HASH_TCP_IPV6;
+> -	rssp->indirect_tabsize = 4*ITAB_NUM;
+> +	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
+>  	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
+>  	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
+>  	rssp->hashkey_offset = rssp->indirect_taboffset +
+> @@ -961,7 +962,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+>  
+>  	/* Set indirection table entries */
+>  	itab = (u32 *)(rssp + 1);
+> -	for (i = 0; i < ITAB_NUM; i++)
+> +	for (i = 0; i < ndc->rx_table_sz; i++)
+>  		itab[i] = ndc->rx_table[i];
+>  
+>  	/* Set hask key values */
+> @@ -1548,6 +1549,17 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+>  	if (ret || rsscap.num_recv_que < 2)
+>  		goto out;
+>  
+> +	if (rsscap.num_indirect_tabent &&
+> +	    rsscap.num_indirect_tabent <= ITAB_NUM_MAX)
+> +		ndc->rx_table_sz = rsscap.num_indirect_tabent;
+> +	else
+> +		ndc->rx_table_sz = ITAB_NUM;
+> +
+> +	ndc->rx_table = kcalloc(ndc->rx_table_sz, sizeof(u16),
+> +				GFP_KERNEL);
+> +	if (!ndc->rx_table)
+> +		goto err_dev_remv;
+> +
+>  	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
+>  	num_possible_rss_qs = min_t(u32, num_online_cpus(),
+>  				    rsscap.num_recv_que);
+> @@ -1558,7 +1570,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+>  	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+>  
+>  	if (!netif_is_rxfh_configured(net)) {
+> -		for (i = 0; i < ITAB_NUM; i++)
+> +		for (i = 0; i < ndc->rx_table_sz; i++)
+>  			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+>  						i, net_device->num_chn);
+>  	}
+> @@ -1596,11 +1608,18 @@ void rndis_filter_device_remove(struct hv_device *dev,
+>  				struct netvsc_device *net_dev)
 >  {
-> -	unsigned long flags;
-> -	void **inputarg, **outputarg;
-> -	void *mem;
-> -
-> -	local_irq_save(flags);
-> -
-> -	inputarg = (void **)this_cpu_ptr(hyperv_pcpu_input_arg);
-> -	mem = *inputarg;
-> -	*inputarg = NULL;
-> -
-> -	if (hv_root_partition) {
-> -		outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
-> -		*outputarg = NULL;
-> -	}
-> -
-> -	local_irq_restore(flags);
-> -
-> -	kfree(mem);
-> +	/*
-> +	 * The hyperv_pcpu_input_arg and hyperv_pcpu_output_arg memory
-> +	 * is not freed when the CPU goes offline as the hyperv_pcpu_input_arg
-> +	 * may be used by the Hyper-V vPCI driver in reassigning interrupts
-> +	 * as part of the offlining process.  The interrupt reassignment
-> +	 * happens *after* the CPUHP_AP_HYPERV_ONLINE state has run and
-> +	 * called this function.
-> +	 *
-> +	 * If a previously offlined CPU is brought back online again, the
-> +	 * originally allocated memory is reused in hv_common_cpu_init().
-> +	 */
+>  	struct rndis_device *rndis_dev = net_dev->extension;
+> +	struct net_device *net = hv_get_drvdata(dev);
+> +	struct net_device_context *ndc = netdev_priv(net);
 >  
->  	return 0;
+>  	/* Halt and release the rndis device */
+>  	rndis_filter_halt_device(net_dev, rndis_dev);
+>  
+>  	netvsc_device_remove(dev);
+
+Shouldn't the netvsc_device_remove be called post table cleanup ? or better, the cleanup should happen as part of netvsc_device_remove operation ? This looks a bug to me as with remove operation, we already cleaned up the device and the association between context and device is removed.
+> +
+> +	ndc->rx_table_sz = 0;
+> +	kfree(ndc->rx_table);
+> +	ndc->rx_table = NULL;
+> +
 >  }
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index 0f1001d..3ceb9df 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -200,6 +200,7 @@ enum cpuhp_state {
 >  
->  	/* Online section invoked on the hotplugged CPU from the hotplug thread */
->  	CPUHP_AP_ONLINE_IDLE,
-> +	CPUHP_AP_HYPERV_ONLINE,
->  	CPUHP_AP_KVM_ONLINE,
->  	CPUHP_AP_SCHED_WAIT_EMPTY,
->  	CPUHP_AP_SMPBOOT_THREADS,
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
+>  int rndis_filter_open(struct netvsc_device *nvdev)
 
