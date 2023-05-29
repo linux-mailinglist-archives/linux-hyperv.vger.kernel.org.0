@@ -2,34 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3899371486B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 29 May 2023 13:17:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 534A47149C2
+	for <lists+linux-hyperv@lfdr.de>; Mon, 29 May 2023 14:57:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbjE2LRg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 29 May 2023 07:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51472 "EHLO
+        id S229486AbjE2M5X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 29 May 2023 08:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjE2LRf (ORCPT
+        with ESMTP id S229472AbjE2M5W (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 29 May 2023 07:17:35 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A384CD;
-        Mon, 29 May 2023 04:17:34 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-        id BE6F720FC3C2; Mon, 29 May 2023 04:17:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BE6F720FC3C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685359053;
-        bh=zbJHCfpQge+fU0YA6gOtWPse9WhEuNPrb8yZEQ3BNWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D+m7uZFFOpMY0pky9R7YBEh9SDk71aDBLorxNrk/l9L+0gQTYlCPo7bI5tE+RHS0h
-         wJOGPGMcYP4GC7B5EH+s2lgI7ekJSdFYGBy0o1qS9B3/bJk9F7T51pdQ5ETdjNbFe8
-         4dnvg4sfyz7t0WQbi/hokNIfVlws5eWkt4EJ+UVg=
-Date:   Mon, 29 May 2023 04:17:33 -0700
-From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
-To:     Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Mon, 29 May 2023 08:57:22 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 29 May 2023 05:57:21 PDT
+Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9655091
+        for <linux-hyperv@vger.kernel.org>; Mon, 29 May 2023 05:57:21 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id 3cJHqJjQi7PLm3cJHqd6v7; Mon, 29 May 2023 14:49:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1685364558;
+        bh=XoQbgvxypteKRvYSbooN/t9qEyY5FoztBSboiKjXBiQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=ZUl3C+/pW2OBrpSbLR2US9qae0y7TDuebI1UT8hnIJpqqhgkWIZKKMxycl1S8Kwj1
+         u7CwGXoGvGndNcXntCrEbHCNbtICeSMWiAhl94fqu0xIQmU4vzzZbz5B3tZp9B1odC
+         N33eNi0RIl1bELXMryoxSxUOQWWrD4JF5Pyw0doiwOue5cFwgSIYdV9SWqALvx37cS
+         uTHWr0rPggRCPpel2Cn17l4eW10bcw0bG9Sr4FWMukmUgn0bTwDhxyRXygCVMGqud4
+         oieR2iQn3PtBjCz5Ol2vAen+9MKF9bNhbj/eKcGyk7vOdrYoUT7m5nc/IYIidZIij+
+         bvnClHqeKsq4g==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 29 May 2023 14:49:18 +0200
+X-ME-IP: 86.243.2.178
+Message-ID: <92bc6f3e-4463-e0fe-5cab-54c6c5eecd3f@wanadoo.fr>
+Date:   Mon, 29 May 2023 14:49:15 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v3] hv_netvsc: Allocate rx indirection table size
+ dynamically
+Content-Language: fr
+To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
@@ -40,200 +55,57 @@ Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
         Steen Hegelund <steen.hegelund@microchip.com>,
         Simon Horman <simon.horman@corigine.com>
-Subject: Re: [PATCH v3] hv_netvsc: Allocate rx indirection table size
- dynamically
-Message-ID: <20230529111733.GA21447@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 References: <1685080949-18316-1-git-send-email-shradhagupta@linux.microsoft.com>
- <5fc413e5-77d2-814d-250a-7ddf8eb6d6ad@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5fc413e5-77d2-814d-250a-7ddf8eb6d6ad@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <1685080949-18316-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 29, 2023 at 03:09:49PM +0530, Praveen Kumar wrote:
-> On 5/26/2023 11:32 AM, Shradha Gupta wrote:
-> > Allocate the size of rx indirection table dynamically in netvsc
-> > from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
-> > query instead of using a constant value of ITAB_NUM.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
-> > Testcases:
-> > 1. ethtool -x eth0 output
-> > 2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
-> > 3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
-> > 
-> > ---
-> > Changes in v3:
-> >  * Changed the data type of rx_table_sz to u32
-> >  * Moved the rx indirection table free to rndis_filter_device_remove()
-> >  * Device add will fail with error if not enough memory is available
-> >  * Changed kzmalloc to kcalloc as suggested in checkpatch script
-> >  * Removed redundant log if memory allocation failed.
-> > ---
-> >  drivers/net/hyperv/hyperv_net.h   |  5 ++++-
-> >  drivers/net/hyperv/netvsc_drv.c   | 10 ++++++----
-> >  drivers/net/hyperv/rndis_filter.c | 27 +++++++++++++++++++++++----
-> >  3 files changed, 33 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-> > index dd5919ec408b..c40868f287a9 100644
-> > --- a/drivers/net/hyperv/hyperv_net.h
-> > +++ b/drivers/net/hyperv/hyperv_net.h
-> > @@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
-> >  #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
-> >  
-> >  #define ITAB_NUM 128
-> > +#define ITAB_NUM_MAX 256
-> >  
-> >  struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
-> >  	struct ndis_obj_header hdr;
-> > @@ -1034,7 +1035,9 @@ struct net_device_context {
-> >  
-> >  	u32 tx_table[VRSS_SEND_TAB_SIZE];
-> >  
-> > -	u16 rx_table[ITAB_NUM];
-> > +	u16 *rx_table;
-> > +
-> > +	u32 rx_table_sz;
-> >  
-> >  	/* Ethtool settings */
-> >  	u8 duplex;
-> > diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-> > index 0103ff914024..3ba3c8fb28a5 100644
-> > --- a/drivers/net/hyperv/netvsc_drv.c
-> > +++ b/drivers/net/hyperv/netvsc_drv.c
-> > @@ -1747,7 +1747,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
-> >  
-> >  static u32 netvsc_rss_indir_size(struct net_device *dev)
-> >  {
-> > -	return ITAB_NUM;
-> > +	struct net_device_context *ndc = netdev_priv(dev);
-> > +
-> > +	return ndc->rx_table_sz;
-> >  }
-> >  
-> >  static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
-> > @@ -1766,7 +1768,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
-> >  
-> >  	rndis_dev = ndev->extension;
-> >  	if (indir) {
-> > -		for (i = 0; i < ITAB_NUM; i++)
-> > +		for (i = 0; i < ndc->rx_table_sz; i++)
-> >  			indir[i] = ndc->rx_table[i];
-> >  	}
-> >  
-> > @@ -1792,11 +1794,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
-> >  
-> >  	rndis_dev = ndev->extension;
-> >  	if (indir) {
-> > -		for (i = 0; i < ITAB_NUM; i++)
-> > +		for (i = 0; i < ndc->rx_table_sz; i++)
-> >  			if (indir[i] >= ndev->num_chn)
-> >  				return -EINVAL;
-> >  
-> > -		for (i = 0; i < ITAB_NUM; i++)
-> > +		for (i = 0; i < ndc->rx_table_sz; i++)
-> >  			ndc->rx_table[i] = indir[i];
-> >  	}
-> >  
-> > diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-> > index eea777ec2541..dc7b9b326690 100644
-> > --- a/drivers/net/hyperv/rndis_filter.c
-> > +++ b/drivers/net/hyperv/rndis_filter.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/rtnetlink.h>
-> >  #include <linux/ucs2_string.h>
-> >  #include <linux/string.h>
-> > +#include <linux/slab.h>
-> >  
-> >  #include "hyperv_net.h"
-> >  #include "netvsc_trace.h"
-> > @@ -927,7 +928,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
-> >  	struct rndis_set_request *set;
-> >  	struct rndis_set_complete *set_complete;
-> >  	u32 extlen = sizeof(struct ndis_recv_scale_param) +
-> > -		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
-> > +		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
-> >  	struct ndis_recv_scale_param *rssp;
-> >  	u32 *itab;
-> >  	u8 *keyp;
-> > @@ -953,7 +954,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
-> >  	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
-> >  			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
-> >  			 NDIS_HASH_TCP_IPV6;
-> > -	rssp->indirect_tabsize = 4*ITAB_NUM;
-> > +	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
-> >  	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
-> >  	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
-> >  	rssp->hashkey_offset = rssp->indirect_taboffset +
-> > @@ -961,7 +962,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
-> >  
-> >  	/* Set indirection table entries */
-> >  	itab = (u32 *)(rssp + 1);
-> > -	for (i = 0; i < ITAB_NUM; i++)
-> > +	for (i = 0; i < ndc->rx_table_sz; i++)
-> >  		itab[i] = ndc->rx_table[i];
-> >  
-> >  	/* Set hask key values */
-> > @@ -1548,6 +1549,17 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
-> >  	if (ret || rsscap.num_recv_que < 2)
-> >  		goto out;
-> >  
-> > +	if (rsscap.num_indirect_tabent &&
-> > +	    rsscap.num_indirect_tabent <= ITAB_NUM_MAX)
-> > +		ndc->rx_table_sz = rsscap.num_indirect_tabent;
-> > +	else
-> > +		ndc->rx_table_sz = ITAB_NUM;
-> > +
-> > +	ndc->rx_table = kcalloc(ndc->rx_table_sz, sizeof(u16),
-> > +				GFP_KERNEL);
-> > +	if (!ndc->rx_table)
-> > +		goto err_dev_remv;
-> > +
-> >  	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
-> >  	num_possible_rss_qs = min_t(u32, num_online_cpus(),
-> >  				    rsscap.num_recv_que);
-> > @@ -1558,7 +1570,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
-> >  	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
-> >  
-> >  	if (!netif_is_rxfh_configured(net)) {
-> > -		for (i = 0; i < ITAB_NUM; i++)
-> > +		for (i = 0; i < ndc->rx_table_sz; i++)
-> >  			ndc->rx_table[i] = ethtool_rxfh_indir_default(
-> >  						i, net_device->num_chn);
-> >  	}
-> > @@ -1596,11 +1608,18 @@ void rndis_filter_device_remove(struct hv_device *dev,
-> >  				struct netvsc_device *net_dev)
-> >  {
-> >  	struct rndis_device *rndis_dev = net_dev->extension;
-> > +	struct net_device *net = hv_get_drvdata(dev);
-> > +	struct net_device_context *ndc = netdev_priv(net);
-> >  
-> >  	/* Halt and release the rndis device */
-> >  	rndis_filter_halt_device(net_dev, rndis_dev);
-> >  
-> >  	netvsc_device_remove(dev);
+Le 26/05/2023 à 08:02, Shradha Gupta a écrit :
+> Allocate the size of rx indirection table dynamically in netvsc
+> from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
+> query instead of using a constant value of ITAB_NUM.
 > 
-> Shouldn't the netvsc_device_remove be called post table cleanup ? or better, the cleanup should happen as part of netvsc_device_remove operation ? This looks a bug to me as with remove operation, we already cleaned up the device and the association between context and device is removed.
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
+> Testcases:
+> 1. ethtool -x eth0 output
+> 2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
+> 3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
+> 
+> ---
 
-The netvsc_device_remove() function is responsible for cleaning up/removing the netvsc_device structures upon events like remove/suspend. The net_device and net_device_context structures(where the rx indirection table exists) remain untouched in netvsc_device_remove(). They(net_device, net_device_context) only get cleaned up in netvsc_remove(). So, the netvsc_device_remove() should not affect the cleanup for the rx indirection table, that we did.
+[...]
 
-> > +
-> > +	ndc->rx_table_sz = 0;
-> > +	kfree(ndc->rx_table);
-> > +	ndc->rx_table = NULL;
-> > +
-> >  }
-> >  
-> >  int rndis_filter_open(struct netvsc_device *nvdev)
+> @@ -1596,11 +1608,18 @@ void rndis_filter_device_remove(struct hv_device *dev,
+>   				struct netvsc_device *net_dev)
+>   {
+>   	struct rndis_device *rndis_dev = net_dev->extension;
+> +	struct net_device *net = hv_get_drvdata(dev);
+> +	struct net_device_context *ndc = netdev_priv(net);
+>   
+>   	/* Halt and release the rndis device */
+>   	rndis_filter_halt_device(net_dev, rndis_dev);
+>   
+>   	netvsc_device_remove(dev);
+> +
+> +	ndc->rx_table_sz = 0;
+> +	kfree(ndc->rx_table);
+> +	ndc->rx_table = NULL;
+> +
+
+Nit: useless empty NL
+
+>   }
+>   
+>   int rndis_filter_open(struct netvsc_device *nvdev)
+
