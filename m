@@ -2,101 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8DCB7166DE
-	for <lists+linux-hyperv@lfdr.de>; Tue, 30 May 2023 17:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 309297166FC
+	for <lists+linux-hyperv@lfdr.de>; Tue, 30 May 2023 17:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230471AbjE3PUw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 May 2023 11:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
+        id S230479AbjE3P2i (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 May 2023 11:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbjE3PUw (ORCPT
+        with ESMTP id S230063AbjE3P2h (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 May 2023 11:20:52 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB88B0;
-        Tue, 30 May 2023 08:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685460050; x=1716996050;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TnWTFu+jLGRbnuZ0/49P9Urrda2KeInMOwSZ8u74prA=;
-  b=VBynsX/Zp/NqBZ/oXAy1eXx92hSyynjvoorubtJ5nRnt6JNPRXBm0k+B
-   MAXNeyW7CBFYJR4d1iHa4pngeQS+0Pv3P7q4hBz6FwCKkcCFevbeHpLBI
-   PG2EkmRDN/WfVv/sUQw32IKNHYyKQO6LMgR9K5knDZ3BOQaLpaM26ZGCv
-   RIKDWqTWQTGDc0etsnPhO0duP01HiDKJ0h8/BZNjF+TXH24E5u1iRYqTY
-   gu9GpHfUARPhWNYC+vvoC9vBl67xYbsr8L/sf1ezKvWePP0mnmtIgl/nS
-   4vOzkX1xcU9acl0tokPbQQiT0V7CY2zRAil1tkDUG1UmciHsmlKKeJh6g
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="441306296"
-X-IronPort-AV: E=Sophos;i="6.00,204,1681196400"; 
-   d="scan'208";a="441306296"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 08:18:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="818863043"
-X-IronPort-AV: E=Sophos;i="6.00,204,1681196400"; 
-   d="scan'208";a="818863043"
-Received: from jswalken-mobl.amr.corp.intel.com (HELO [10.212.134.46]) ([10.212.134.46])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 08:18:11 -0700
-Message-ID: <82591d71-4176-db31-3ec1-fd070b29373c@intel.com>
-Date:   Tue, 30 May 2023 08:18:11 -0700
+        Tue, 30 May 2023 11:28:37 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50FBDC5;
+        Tue, 30 May 2023 08:28:32 -0700 (PDT)
+Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 17E8F1EC0411;
+        Tue, 30 May 2023 17:28:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1685460510;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=7wMkihUDACMyxG5NoWweKMDlr/7la1a8uhQ7N10j4Jg=;
+        b=mRke7Bdnd6HC68Ll3Z22g/XU5cqrYW9/4I7rc9xVly+dj2IbILa2Ojd4dlSH6Zmjq1e4U2
+        rGgnl547wL6ZH1lBB62dbox0EFY8N1L6Wos2avbZxDKD28UgfJetes2/b3kFH8PkvJev6U
+        D8v8dNzkW0mu3Ye1MfrTXEUa4/CHPgE=
+Date:   Tue, 30 May 2023 17:28:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Juergen Gross <jgross@suse.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org,
+        mikelley@microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Jonathan Corbet <corbet@lwn.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v6 00/16] x86/mtrr: fix handling with PAT but without MTRR
+Message-ID: <20230530152825.GAZHYWGXAp8PHgN/w0@fat_crate.local>
+References: <20230502120931.20719-1-jgross@suse.com>
+ <20230509201437.GFZFqprc6otRejDPUt@fat_crate.local>
+ <20230509233641.GGZFrZCTDH7VwUMp5R@fat_crate.local>
+ <20230510133024.GBZFuccC1FxIZNKL+8@fat_crate.local>
+ <4c47a11c-0565-678d-3467-e01c5ec16600@suse.com>
+ <20230511163208.GDZF0YiOfxQhSo4RDm@fat_crate.local>
+ <0cd3899b-cf3b-61c1-14ae-60b6b49d14ab@suse.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RFC PATCH V6 01/14] x86/sev: Add a #HV exception handler
-Content-Language: en-US
-To:     "Gupta, Pankaj" <pankaj.gupta@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tianyu Lan <ltykernel@gmail.com>
-Cc:     luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, tiala@microsoft.com, kirill@shutemov.name,
-        jiangshan.ljs@antgroup.com, ashish.kalra@amd.com,
-        srutherford@google.com, akpm@linux-foundation.org,
-        anshuman.khandual@arm.com, pawan.kumar.gupta@linux.intel.com,
-        adrian.hunter@intel.com, daniel.sneddon@linux.intel.com,
-        alexander.shishkin@linux.intel.com, sandipan.das@amd.com,
-        ray.huang@amd.com, brijesh.singh@amd.com, michael.roth@amd.com,
-        thomas.lendacky@amd.com, venu.busireddy@oracle.com,
-        sterritt@google.com, tony.luck@intel.com, samitolvanen@google.com,
-        fenghua.yu@intel.com, pangupta@amd.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arch@vger.kernel.org
-References: <20230515165917.1306922-1-ltykernel@gmail.com>
- <20230515165917.1306922-2-ltykernel@gmail.com>
- <20230516093010.GC2587705@hirez.programming.kicks-ass.net>
- <d43c14d9-a149-860c-71d6-e5c62b7c356f@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <d43c14d9-a149-860c-71d6-e5c62b7c356f@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0cd3899b-cf3b-61c1-14ae-60b6b49d14ab@suse.com>
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 5/30/23 05:16, Gupta, Pankaj wrote:
-> #HV handler handles both #NMI & #MCE in the guest and nested #HV is
-> never raised by the hypervisor. Next #HV exception is only raised by the
-> hypervisor when Guest acknowledges the pending #HV exception by clearing
-> "NoFurtherSignal” bit in the doorbell page.
+On Mon, May 22, 2023 at 04:17:50PM +0200, Juergen Gross wrote:
+> The attached diff is for patch 13.
 
-There's a big difference between "is never raised by" and "cannot be
-raised by".
+Merged and pushed out into same branch.
 
-Either way, this series (and this patch in particular) needs some much
-better changelogs so that this behavior is clear.  It would also be nice
-to reference the relevant parts of the hardware specs if the "hardware"*
-is helping to provide these guarantees.
+Next issue. Diffing /proc/mtrr shows:
 
-* I say "hardware" in quotes because on TDX a big chunk of this behavior
-  is implemented in software in the TDX module.  SEV probably does it in
-  microcode (or maybe in the secure processor), but I kinda doubt it's
-  purely silicon.
+--- proc-mtrr.6.3	2023-05-30 17:00:13.215999483 +0200
++++ proc-mtrr.after	2023-05-30 16:01:38.281997816 +0200
+@@ -1,8 +1,8 @@
+ reg00: base=0x000000000 (    0MB), size= 2048MB, count=1: write-back
+-reg01: base=0x080000000 ( 2048MB), size=  512MB, count=1: write-back
++reg01: base=0x080000000 ( 2048MB), size= 1024MB, count=1: write-back
+ reg02: base=0x0a0000000 ( 2560MB), size=  256MB, count=1: write-back
+ reg03: base=0x0ae000000 ( 2784MB), size=   32MB, count=1: uncachable
+-reg04: base=0x100000000 ( 4096MB), size= 4096MB, count=1: write-back
++reg04: base=0x100000000 ( 4096MB), size=  256MB, count=1: write-back
+ reg05: base=0x200000000 ( 8192MB), size= 8192MB, count=1: write-back
+ reg06: base=0x400000000 (16384MB), size= 1024MB, count=1: write-back
+ reg07: base=0x440000000 (17408MB), size=  256MB, count=1: write-back
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
