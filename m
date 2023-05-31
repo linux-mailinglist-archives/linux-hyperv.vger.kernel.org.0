@@ -2,151 +2,166 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4802718B19
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 22:24:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97B1E724ACC
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Jun 2023 20:07:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbjEaUYM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 31 May 2023 16:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
+        id S238879AbjFFSHp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Jun 2023 14:07:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230254AbjEaUYK (ORCPT
+        with ESMTP id S238876AbjFFSHp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 31 May 2023 16:24:10 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A1818B
-        for <linux-hyperv@vger.kernel.org>; Wed, 31 May 2023 13:24:04 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-564fb1018bcso387877b3.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 31 May 2023 13:24:04 -0700 (PDT)
+        Tue, 6 Jun 2023 14:07:45 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574E0170C;
+        Tue,  6 Jun 2023 11:07:43 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b00ecabdf2so59814615ad.2;
+        Tue, 06 Jun 2023 11:07:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685564643; x=1688156643;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=APftvx9keMYUt1Xk5prtdAgJw5++/nh9oJ2TjaQ+44Q=;
-        b=PX/4QCBDJ9PLCDibCE4LoOf2U0DE4t/KWyS05NGIZcGzqK/qwcSjxPluWcaqwv1Stk
-         rMyraQASzxyWuHCUByRiPyI4r+TKzg18DQi23LqLbo8WEM0cjd44YF28bRWYO1A5spCy
-         C8uoUDWMPuMiaxHglFY6t+vlO8uFRPkrpIUD9WU6y/eI2MWpQZdCjDnBrvtPK2foPDM8
-         2b0pUD4qsLCE5pd4FfnukjL1T9+czSe/1aJuv1AeB5D9vgahqEpjGWaUrfGv4vRCGUgK
-         7d8Ob7qWLSyhaFm1bWvZd46hX/2rCmhkQhiUf9f78KTYzvmJ6/SxSLGkVtXf5wgn2kFJ
-         IIHQ==
+        d=gmail.com; s=20221208; t=1686074863; x=1688666863;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=r0hwtS5mthE8ORedBA1IkEsymrNnIIr+qtD7JhNdJ7w=;
+        b=fP1GIQiYsHnBQrUBQV50NFEYS+Zq6mc5rTj7EuUMmqjRx4VOlQYOasfdfo8PRdmm8A
+         6+d3PjamJge99/hYGpPAL6zjl15x4hVfptCaHjUeLTkloLl5IkF4ovKJTOh9+PW3sBOs
+         3mexo1kETdbnIVh+wbuATXPzuVz1bxRo3JDzg0Tg7CUK2CcFF0BmiPEt6oEDKdZtNX/y
+         Uz5pMbKPM2wUk/yC4jK5OIabtK70fUdjuAKIXw6XhDK5dstKqrAbdXlYHraIkBIRgn0C
+         4xN28kvKzlbENCk9nUS7OhimhaMhTu5JpHYZfhnPimt32qHEeoy3Q77etXePz9xKV1ey
+         pbeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685564643; x=1688156643;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=APftvx9keMYUt1Xk5prtdAgJw5++/nh9oJ2TjaQ+44Q=;
-        b=aBCZgqDW1AfDd6kENpsChR0zU1e3MQlFH7snHwJPNN4M/GZ48wbTgXOHAr+8C+RTPs
-         6/NEPEisnvHX+DQfb/X+Vq+w8AYoNVK6z3NvfkfllyEXB5eOJJ9V3uWtfclqsLNHlubJ
-         v+7QF+mPMuV6IniaNg4wtA6EIKJ1dXNYFFsI1WUh7kpab3PgRTE4RuV8fiyzrkzI51Fy
-         nMa1xZX+ez2Ru+6xKxmQuyNVEzt9VWrCd5JNmkP/N/fYaFlsvbSv67GfKzgCUZvfKdp5
-         Y458Vw/v85SJx4cNdwY59OsgtEL9DX4nhwDg5AM2TJBT07n1P8JYyXtYasg3PvSCDCmt
-         qQpw==
-X-Gm-Message-State: AC+VfDyJftOQa69V6x5/jnjHOhUZRQKG+t35yFNLuELyfK1Ba2iZqsA9
-        ilHiQ8fYxRHNnloN6k6bzctQHKII/is=
-X-Google-Smtp-Source: ACHHUZ4Rs9okzQlJSZpcwd3Z5dIegCtWutSFaW8eVk3gk4ZcP95GwA04TMkwmyC49mplI5lk+ocRWvQTqeQ=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:e305:0:b0:55d:ea61:d8e9 with SMTP id
- q5-20020a81e305000000b0055dea61d8e9mr4086306ywl.7.1685564643426; Wed, 31 May
- 2023 13:24:03 -0700 (PDT)
-Date:   Wed, 31 May 2023 13:24:01 -0700
-In-Reply-To: <fd1dd8bcc172093ad20243ac1e7bb8fce45b38ef.camel@intel.com>
-Mime-Version: 1.0
-References: <20230505152046.6575-1-mic@digikod.net> <93726a7b9498ec66db21c5792079996d5fed5453.camel@intel.com>
- <facfd178-3157-80b4-243b-a5c8dabadbfb@digikod.net> <58a803f6-c3de-3362-673f-767767a43f9c@digikod.net>
- <fd1dd8bcc172093ad20243ac1e7bb8fce45b38ef.camel@intel.com>
-Message-ID: <ZHes4a73Zg+6JuFB@google.com>
-Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
-From:   Sean Christopherson <seanjc@google.com>
-To:     Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc:     "mic@digikod.net" <mic@digikod.net>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "liran.alon@oracle.com" <liran.alon@oracle.com>,
-        "marian.c.rotariu@gmail.com" <marian.c.rotariu@gmail.com>,
-        Alexander Graf <graf@amazon.com>,
-        John S Andersen <john.s.andersen@intel.com>,
-        "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
-        "ssicleru@bitdefender.com" <ssicleru@bitdefender.com>,
-        "yuanyu@google.com" <yuanyu@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tgopinath@microsoft.com" <tgopinath@microsoft.com>,
-        "jamorris@linux.microsoft.com" <jamorris@linux.microsoft.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "dev@lists.cloudhypervisor.org" <dev@lists.cloudhypervisor.org>,
-        "mdontu@bitdefender.com" <mdontu@bitdefender.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "nicu.citu@icloud.com" <nicu.citu@icloud.com>,
-        "ztarkhani@microsoft.com" <ztarkhani@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        d=1e100.net; s=20221208; t=1686074863; x=1688666863;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r0hwtS5mthE8ORedBA1IkEsymrNnIIr+qtD7JhNdJ7w=;
+        b=UhIQVdzkN8MRp8ZE3zx0kcJ/pMsX8pulwHsQ4mxKqtG+8veyb8uW2UzrZEOJUg2/N0
+         /0D5eoijDM5NyUueeFIyvh4RSrXeGHGJk07ggzPb2+Wsl4vw2m/ICO8XOqW0PgEB2OS/
+         dP5QCwoPEmW9hqJQ51lzeXwFfwEpRrfXcDz4t8IRYo4KnQoN5yZdHzUBV1F/9lm864UW
+         D3JExR5qQDST7tl2GNLB5s+H6h2V+RherwrCQKP8Gfr4o50Ko4RdII3bjX4QXVU1clC3
+         aqLpQZ0HqeHGNSQ/Us36BwL2zCBSS6jR1ajt67SglATpbM+yVAx+Mb84EHTna1mIkMak
+         PeSw==
+X-Gm-Message-State: AC+VfDyLk4xL/6qfrsQV+WNUG/sCHnQEUzTIXQzfK13kijVcJNrNH7Eg
+        daeMr5y/G+brjpxmM2kJvK4=
+X-Google-Smtp-Source: ACHHUZ4KwpeZHnZv9+45bTIb7AnMOtp7aX/KdzGdJpRkMYWVQYklkc+60/cQY9TUFMMcMYvH1ufXPA==
+X-Received: by 2002:a17:902:e742:b0:1b2:194b:9ce9 with SMTP id p2-20020a170902e74200b001b2194b9ce9mr3271917plf.44.1686074862578;
+        Tue, 06 Jun 2023 11:07:42 -0700 (PDT)
+Received: from localhost (ec2-52-8-182-0.us-west-1.compute.amazonaws.com. [52.8.182.0])
+        by smtp.gmail.com with ESMTPSA id w7-20020a170902a70700b001ae5cc15655sm8850788plq.5.2023.06.06.11.07.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jun 2023 11:07:42 -0700 (PDT)
+Date:   Wed, 31 May 2023 21:10:23 +0000
+From:   Bobby Eshleman <bobbyeshleman@gmail.com>
+To:     Arseniy Krasnov <avkrasnov@sberdevices.ru>
+Cc:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Jiang Wang <jiang.wang@bytedance.com>
+Subject: Re: [PATCH RFC net-next v3 0/8] virtio/vsock: support datagrams
+Message-ID: <ZHe3v8PHcIdFk+R5@bullseye>
+References: <20230413-b4-vsock-dgram-v3-0-c2414413ef6a@bytedance.com>
+ <2830ac58-fd77-7e5f-5565-eb47dd027d81@sberdevices.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2830ac58-fd77-7e5f-5565-eb47dd027d81@sberdevices.ru>
+X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, May 30, 2023, Rick P Edgecombe wrote:
-> On Fri, 2023-05-26 at 17:22 +0200, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
-> > > > Can the guest kernel ask the host VMM's emulated devices to DMA int=
-o
-> > > > the protected data? It should go through the host userspace mapping=
-s I
-> > > > think, which don't care about EPT permissions. Or did I miss where =
-you
-> > > > are protecting that another way? There are a lot of easy ways to as=
-k
-> > > > the host to write to guest memory that don't involve the EPT. You
-> > > > probably need to protect the host userspace mappings, and also the
-> > > > places in KVM that kmap a GPA provided by the guest.
-> > >=20
-> > > Good point, I'll check this confused deputy attack. Extended KVM
-> > > protections should indeed handle all ways to map guests' memory.  I'm
-> > > wondering if current VMMs would gracefully handle such new restrictio=
-ns
-> > > though.
-> >=20
-> > I guess the host could map arbitrary data to the guest, so that need to=
- be
-> > handled, but how could the VMM (not the host kernel) bypass/update EPT
-> > initially used for the guest (and potentially later mapped to the host)=
-?
->=20
-> Well traditionally both QEMU and KVM accessed guest memory via host
-> mappings instead of the EPT.=EF=BF=BDSo I'm wondering what is stopping th=
-e
-> guest from passing a protected gfn when setting up the DMA, and QEMU
-> being enticed to write to it? The emulator as well would use these host
-> userspace mappings and not consult the EPT IIRC.
->=20
-> I think Sean was suggesting host userspace should be more involved in
-> this process, so perhaps it could protect its own alias of the
-> protected memory, for example mprotect() it as read-only.
+On Mon, Jun 05, 2023 at 11:42:06PM +0300, Arseniy Krasnov wrote:
+> Hello Bobby!
+> 
+> Thanks for this patchset, really interesting!
+> 
+> I applied it on head:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=d20dd0ea14072e8a90ff864b2c1603bd68920b4b
+> 
+> And tried to run ./vsock_test (client in the guest, server in the host), I had the following crash:
+> 
+> Control socket connected to 192.168.1.1:12345.                          
+> 0 - SOCK_STREAM connection reset...                                     
+> [    8.050215] BUG: kernel NULL pointer derefer                         
+> [    8.050960] #PF: supervisor read access in kernel mode               
+> [    8.050960] #PF: error_code(0x0000) - not-present page               
+> [    8.050960] PGD 0 P4D 0                                              
+> [    8.050960] Oops: 0000 [#1] PREEMPT SMP PTI                          
+> [    8.050960] CPU: 0 PID: 109 Comm: vsock_test Not tainted 6.4.0-rc3-gd707c220a700
+> [    8.050960] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14
+> [    8.050960] RIP: 0010:static_key_count+0x0/0x20                      
+> [    8.050960] Code: 04 4c 8b 46 08 49 29 c0 4c 01 c8 4c 89 47 08 89 0e 89 56 04 4f
+> [    8.050960] RSP: 0018:ffffa9a1c021bdc0 EFLAGS: 00010202              
+> [    8.050960] RAX: ffffffffac309880 RBX: ffffffffc02fc140 RCX: 0000000000000000
+> [    8.050960] RDX: ffff9a5eff944600 RSI: 0000000000000000 RDI: 0000000000000000
+> [    8.050960] RBP: ffff9a5ec2371900 R08: ffffa9a1c021bd30 R09: ffff9a5eff98e0c0
+> [    8.050960] R10: 0000000000001000 R11: 0000000000000000 R12: ffffa9a1c021be80
+> [    8.050960] R13: 0000000000000000 R14: 0000000000000002 R15: ffff9a5ec1cfca80
+> [    8.050960] FS:  00007fa9bf88c5c0(0000) GS:ffff9a5efe400000(0000) knlGS:00000000
+> [    8.050960] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033        
+> [    8.050960] CR2: 0000000000000000 CR3: 00000000023e0000 CR4: 00000000000006f0
+> [    8.050960] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    8.050960] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    8.050960] Call Trace:                                              
+> [    8.050960]  <TASK>                                                  
+> [    8.050960]  once_deferred+0xd/0x30                                  
+> [    8.050960]  vsock_assign_transport+0xa2/0x1b0 [vsock]               
+> [    8.050960]  vsock_connect+0xb4/0x3a0 [vsock]                        
+> [    8.050960]  ? var_wake_function+0x60/0x60                           
+> [    8.050960]  __sys_connect+0x9e/0xd0                                 
+> [    8.050960]  ? _raw_spin_unlock_irq+0xe/0x30                         
+> [    8.050960]  ? do_setitimer+0x128/0x1f0                              
+> [    8.050960]  ? alarm_setitimer+0x4c/0x90                             
+> [    8.050960]  ? fpregs_assert_state_consistent+0x1d/0x50              
+> [    8.050960]  ? exit_to_user_mode_prepare+0x36/0x130                  
+> [    8.050960]  __x64_sys_connect+0x11/0x20                             
+> [    8.050960]  do_syscall_64+0x3b/0xc0                                 
+> [    8.050960]  entry_SYSCALL_64_after_hwframe+0x4b/0xb5                
+> [    8.050960] RIP: 0033:0x7fa9bf7c4d13                                 
+> [    8.050960] Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 48
+> [    8.050960] RSP: 002b:00007ffdf2d96cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000a
+> [    8.050960] RAX: ffffffffffffffda RBX: 0000560c305d0020 RCX: 00007fa9bf7c4d13
+> [    8.050960] RDX: 0000000000000010 RSI: 00007ffdf2d96ce0 RDI: 0000000000000004
+> [    8.050960] RBP: 0000000000000004 R08: 0000560c317dc018 R09: 0000000000000000
+> [    8.050960] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> [    8.050960] R13: 0000560c305ccc2d R14: 00007ffdf2d96ce0 R15: 00007ffdf2d96d70
+> [    8.050960]  </TASK>  
+> 
+> 
+> I guess crash is somewhere near:
+> 
+> old_info->transport->release(vsk); in vsock_assign_transport(). May be my config is wrong...
+> 
+> Thanks, Arseniy
 
-Ya, though "suggesting" is really "demanding, unless someone provides super=
- strong
-justification for handling this directly in KVM".  It's basically the same =
-argument
-that led to Linux Security Modules: I'm all for KVM providing the framework=
- and
-plumbing, but I don't want KVM to get involved in defining policy, thread m=
-odels, etc.
+Thanks Arseniy!
+
+I now see I broke the tests, but did't break the stream/dgram socket
+utility I was using in development.
+
+I'll track this down and include a fix in the next rev.
+
+I should have warned this v3 is pretty under-tested. Being unsure if
+some of the design choices would be accepted at all, I didn't want to
+waste too much time until things were accepted at a high level.
+
+Best,
+Bobby
