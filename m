@@ -2,95 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72944717172
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 01:16:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC6071728D
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 02:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233800AbjE3XQQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 May 2023 19:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45268 "EHLO
+        id S233575AbjEaAgN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 May 2023 20:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233793AbjE3XQN (ORCPT
+        with ESMTP id S233580AbjEaAgL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 May 2023 19:16:13 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 692B8F9
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 May 2023 16:16:11 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-64d2c865e4eso3853807b3a.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 May 2023 16:16:11 -0700 (PDT)
+        Tue, 30 May 2023 20:36:11 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80892E54
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 May 2023 17:35:20 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-64d426e63baso5765802b3a.0
+        for <linux-hyperv@vger.kernel.org>; Tue, 30 May 2023 17:35:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685488571; x=1688080571;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q6wOdCsvPcfL1AGuKhq7si1i+l1tB9VGHRhgBuI4hFQ=;
-        b=A6P9MRUqWxltKJ9Zgwok7DSDRoOxoww2FWlF6WQO1tYgoM5+Hi0Ez2oEaQQjsD1m8R
-         d4fRiNfemEoHsLbKtPfU643qi1eTaIaRbZTrXG8PIKxDT7zOE/fxQqSHWBsVd7zxgsD9
-         9LmT/yPeVeEdIlXyQ0jganlgblNgnS7PESvrk=
+        d=bytedance.com; s=google; t=1685493308; x=1688085308;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xyPVmcVtXqwbPWrU4CXncdNHyJXf/QZjqVsNgbEPnro=;
+        b=M/Ht7dI5kR7S3Pp3LWf8jzAkFhfNDqeCqkoON2LR0mY0zoEnUOpxlPGclMHY+tIK6r
+         4rEvtdl/EVqdTwzEhhakEXmpdKpY0MNeWy20XfvXiVYey9c7KY+gdRqF1tE2VM3BqcDp
+         wxKnTvZpQueVv6yzT1BT3Aq71eK4sURh//HAR4aGbU2uMrHm1anjx9o4t9eDYJRbYqRX
+         EeAxKbe2diiLhXCQDd8zbMMOk3BiWnTJ4KfK4FipReZMzakVgdbTXp/k1reL4ruAquw/
+         nwdrUBUhomZSb6kgdQ9rQ3cFY7SJa3/xFEN9nCfYfaySK3RtPLXeD6pNrtLQrio8toqT
+         xF/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685488571; x=1688080571;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q6wOdCsvPcfL1AGuKhq7si1i+l1tB9VGHRhgBuI4hFQ=;
-        b=CntGXDGcFk7k+CAwJ8twNpRolfcuDjyTy9zYrxvrGagJm59NHBKCMFGuCfcRtfzyFw
-         wOnM1+2KQJcWL/0o5NHTYqPfbsTRs9Tqobu4Y1W1YnHonSKfrue3HDhOXv01GxG49K3a
-         jPFHlxb6sPfopTiwPoYlJZ0W08YROWZ7okthz579yt8ZQZwcwAl9N8bTZ+uQhndjLfO2
-         omTcYTjbAFGwFCZw3SC/wXI4vPZmg6euon7b3BxCoFsgiPOrokGG+0XA2JI7s+BvTZZz
-         PUlOsqo20ZroP6QKlw3Em0nYI+2yMYOMgCzT24aZu2f/zsyztkrX0llySmcz1fi9fq7G
-         AO0w==
-X-Gm-Message-State: AC+VfDzMvvjmOAuXyA2zcu/impSPd0F/fUmB/VZOp7Wud0zB20mBiHKN
-        k3Kty3BxhXMfIIAuUi2UA34AUw==
-X-Google-Smtp-Source: ACHHUZ5vUXK2I/pfuTav0TBfWy3DDrvFJsd+7uESTSUanu+Vl50RByVZpLds9PiU8F5GGbjiErQYOQ==
-X-Received: by 2002:a05:6a00:10c4:b0:646:663a:9d60 with SMTP id d4-20020a056a0010c400b00646663a9d60mr4308038pfu.10.1685488570875;
-        Tue, 30 May 2023 16:16:10 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v22-20020aa78516000000b0063d3d776910sm2123773pfn.138.2023.05.30.16.16.10
+        d=1e100.net; s=20221208; t=1685493308; x=1688085308;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xyPVmcVtXqwbPWrU4CXncdNHyJXf/QZjqVsNgbEPnro=;
+        b=OlpIFL3agKlV4i6B/6VNjOMF3pyceIx2Zt9rsu0GQrMAfIM5IgHtwtNRSV57lCKFHT
+         fbsAwd9+A2825SXVx3cOhyV4ptJEmse2QL3aBlpFiB8xx2QR+8sw6QIMnU0Grk/xXNne
+         cUJmucdrA/J+7s69Nr7HoPryuJgubZ4lc6EFA7GSX08AjMJzaoGeTRCpZXfyU05WPQge
+         cCFRifJ2W3iQbHXMoOaXqgIvXSkKFlmT7yWSbWKGvmRgJHAxk6q3XvJ6hMXJhwVFFKJ/
+         y7k1tKuQAt1dk0d5Jd+j2z7wfLNzh3pc3LGZbX8MbTla5QbwZ8f3Yo8WAlmt5/T+TWFb
+         lTYw==
+X-Gm-Message-State: AC+VfDxThbHJtYLOkXFacqp6SjzLui2eJ/FJJ4qHYoZ96wYs/sTFsZjR
+        akADN/vNrKN60iQvfzeRwPGgPw==
+X-Google-Smtp-Source: ACHHUZ7F9nwTmBBAljcZs+/hqk8QS+6xsOVMmtuise4Li18N+hL7dowP5Ri0jqFjV8J1ovTm+x2g5Q==
+X-Received: by 2002:a05:6a00:b50:b0:64c:a554:f577 with SMTP id p16-20020a056a000b5000b0064ca554f577mr4877926pfo.11.1685493308503;
+        Tue, 30 May 2023 17:35:08 -0700 (PDT)
+Received: from [172.17.0.2] (c-67-170-131-147.hsd1.wa.comcast.net. [67.170.131.147])
+        by smtp.gmail.com with ESMTPSA id j12-20020a62b60c000000b0064cb0845c77sm2151340pff.122.2023.05.30.17.35.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 16:16:10 -0700 (PDT)
-Date:   Tue, 30 May 2023 16:16:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     Wei Liu <wei.liu@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
-        =?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v1 5/9] KVM: x86: Add new hypercall to lock control
- registers
-Message-ID: <202305301614.BF8D80D3D5@keescook>
-References: <20230505152046.6575-1-mic@digikod.net>
- <20230505152046.6575-6-mic@digikod.net>
- <ZFlllHjntehpthma@liuwe-devbox-debian-v2>
- <901ff104-215c-8e81-fbae-5ecd8fa94449@digikod.net>
+        Tue, 30 May 2023 17:35:08 -0700 (PDT)
+From:   Bobby Eshleman <bobby.eshleman@bytedance.com>
+Subject: [PATCH RFC net-next v3 0/8] virtio/vsock: support datagrams
+Date:   Wed, 31 May 2023 00:35:04 +0000
+Message-Id: <20230413-b4-vsock-dgram-v3-0-c2414413ef6a@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <901ff104-215c-8e81-fbae-5ecd8fa94449@digikod.net>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADiWdmQC/3WOQQrCMBBFryKzdiQmNUVXguAB3EoXSTq2QZpIE
+ kJL6d1Nu3Dn8s3/nzczRAqWIlx2MwTKNlrvCoj9DkyvXEdo28LAGResOgrUFebozRvbLqgBhZa
+ klVSyohOUkVaRUAflTL/OHCV0NKY1+gR62XFzPeFxv623X94U6G1MPkzbL5lvtX/azJEhq8/G1
+ IZIcrrqKVFbtHQwfoBmWZYvsS2PotwAAAA=
+To:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Jiang Wang <jiang.wang@bytedance.com>
+X-Mailer: b4 0.12.2
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -99,56 +90,97 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, May 29, 2023 at 06:48:03PM +0200, Mickaël Salaün wrote:
-> 
-> On 08/05/2023 23:11, Wei Liu wrote:
-> > On Fri, May 05, 2023 at 05:20:42PM +0200, Mickaël Salaün wrote:
-> > > This enables guests to lock their CR0 and CR4 registers with a subset of
-> > > X86_CR0_WP, X86_CR4_SMEP, X86_CR4_SMAP, X86_CR4_UMIP, X86_CR4_FSGSBASE
-> > > and X86_CR4_CET flags.
-> > > 
-> > > The new KVM_HC_LOCK_CR_UPDATE hypercall takes two arguments.  The first
-> > > is to identify the control register, and the second is a bit mask to
-> > > pin (i.e. mark as read-only).
-> > > 
-> > > These register flags should already be pinned by Linux guests, but once
-> > > compromised, this self-protection mechanism could be disabled, which is
-> > > not the case with this dedicated hypercall.
-> > > 
-> > > Cc: Borislav Petkov <bp@alien8.de>
-> > > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > > Cc: H. Peter Anvin <hpa@zytor.com>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> > > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > Cc: Sean Christopherson <seanjc@google.com>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > > Cc: Wanpeng Li <wanpengli@tencent.com>
-> > > Signed-off-by: Mickaël Salaün <mic@digikod.net>
-> > > Link: https://lore.kernel.org/r/20230505152046.6575-6-mic@digikod.net
-> > [...]
-> > >   	hw_cr4 = (cr4_read_shadow() & X86_CR4_MCE) | (cr4 & ~X86_CR4_MCE);
-> > >   	if (is_unrestricted_guest(vcpu))
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > index ffab64d08de3..a529455359ac 100644
-> > > --- a/arch/x86/kvm/x86.c
-> > > +++ b/arch/x86/kvm/x86.c
-> > > @@ -7927,11 +7927,77 @@ static unsigned long emulator_get_cr(struct x86_emulate_ctxt *ctxt, int cr)
-> > >   	return value;
-> > >   }
-> > > +#ifdef CONFIG_HEKI
-> > > +
-> > > +extern unsigned long cr4_pinned_mask;
-> > > +
-> > 
-> > Can this be moved to a header file?
-> 
-> Yep, but I'm not sure which one. Any preference Kees?
+Hey all!
 
-Uh, er, I was never expecting that mask to be non-static. ;) To that
-end, how about putting it in arch/x86/kvm/x86.h ?
+This series introduces support for datagrams to virtio/vsock.
 
+It is a spin-off (and smaller version) of this series from the summer: 
+  https://lore.kernel.org/all/cover.1660362668.git.bobby.eshleman@bytedance.com/
+
+Please note that this is an RFC and should not be merged until
+associated changes are made to the virtio specification, which will
+follow after discussion from this series.
+
+This series first supports datagrams in a basic form for virtio, and
+then optimizes the sendpath for all transports.
+
+The result is a very fast datagram communication protocol that
+outperforms even UDP on multi-queue virtio-net w/ vhost on a variety
+of multi-threaded workload samples.
+
+For those that are curious, some summary data comparing UDP and VSOCK
+DGRAM (N=5):
+
+	vCPUS: 16
+	virtio-net queues: 16
+	payload size: 4KB
+	Setup: bare metal + vm (non-nested)
+
+	UDP: 287.59 MB/s
+	VSOCK DGRAM: 509.2 MB/s
+
+Some notes about the implementation...
+
+This datagram implementation forces datagrams to self-throttle according
+to the threshold set by sk_sndbuf. It behaves similar to the credits
+used by streams in its effect on throughput and memory consumption, but
+it is not influenced by the receiving socket as credits are.
+
+The device drops packets silently.
+
+As discussed previously, this series introduces datagrams and defers
+fairness to future work. See discussion in v2 for more context around
+datagrams, fairness, and this implementation.
+
+Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+---
+Changes in v3:
+- Support multi-transport dgram, changing logic in connect/bind
+  to support VMCI case
+- Support per-pkt transport lookup for sendto() case
+- Fix dgram_allow() implementation
+- Fix dgram feature bit number (now it is 3)
+- Fix binding so dgram and connectible (cid,port) spaces are
+  non-overlapping
+- RCU protect transport ptr so connect() calls never leave
+  a lockless read of the transport and remote_addr are always
+  in sync
+- Link to v2: https://lore.kernel.org/r/20230413-b4-vsock-dgram-v2-0-079cc7cee62e@bytedance.com
+
+---
+Bobby Eshleman (7):
+      vsock/dgram: generalize recvmsg and drop transport->dgram_dequeue
+      vsock: refactor transport lookup code
+      vsock: support multi-transport datagrams
+      vsock: make vsock bind reusable
+      virtio/vsock: add VIRTIO_VSOCK_F_DGRAM feature bit
+      virtio/vsock: support dgrams
+      vsock: Add lockless sendmsg() support
+
+Jiang Wang (1):
+      tests: add vsock dgram tests
+
+ drivers/vhost/vsock.c                   |  44 ++-
+ include/linux/virtio_vsock.h            |  13 +-
+ include/net/af_vsock.h                  |  53 ++-
+ include/uapi/linux/virtio_vsock.h       |   2 +
+ net/vmw_vsock/af_vsock.c                | 615 ++++++++++++++++++++++++++------
+ net/vmw_vsock/diag.c                    |  10 +-
+ net/vmw_vsock/hyperv_transport.c        |  42 ++-
+ net/vmw_vsock/virtio_transport.c        |  28 +-
+ net/vmw_vsock/virtio_transport_common.c | 227 +++++++++---
+ net/vmw_vsock/vmci_transport.c          | 152 ++++----
+ net/vmw_vsock/vsock_bpf.c               |  10 +-
+ net/vmw_vsock/vsock_loopback.c          |  13 +-
+ tools/testing/vsock/util.c              | 105 ++++++
+ tools/testing/vsock/util.h              |   4 +
+ tools/testing/vsock/vsock_test.c        | 193 ++++++++++
+ 15 files changed, 1259 insertions(+), 252 deletions(-)
+---
+base-commit: ed72bd5a6790a0c3747cb32b0427f921bd03bb71
+change-id: 20230413-b4-vsock-dgram-3b6eba6a64e5
+
+Best regards,
 -- 
-Kees Cook
+Bobby Eshleman <bobby.eshleman@bytedance.com>
+
