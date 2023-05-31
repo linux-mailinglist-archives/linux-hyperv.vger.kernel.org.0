@@ -2,227 +2,223 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14088717438
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 05:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0619C717837
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 09:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234099AbjEaDPe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 May 2023 23:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
+        id S234446AbjEaH3E (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 31 May 2023 03:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234110AbjEaDP0 (ORCPT
+        with ESMTP id S232250AbjEaH3B (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 May 2023 23:15:26 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9660A13D;
-        Tue, 30 May 2023 20:15:01 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-        id 0C7BE20FC46E; Tue, 30 May 2023 20:15:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0C7BE20FC46E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685502901;
-        bh=oyJ2pTdOAakrYlWAIq8Y+ssATRIqasj98hZvzvFAP8A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WUe3dlCLzOdeNzWjWelYiJleB5YHHsIXVvLJnf6k/a+zIAy30GTvIHZNR0hdwOgII
-         x6UTdQFwXSXQKl0V6fXsqnRZaVsPABwzPpB1Ft0F5143cwoH7crhQXKdcYW2JDYPsL
-         99Cd/MjihYZoEioiLI4kz/TF49JU+i5eTpHdLo6U=
-From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Wed, 31 May 2023 03:29:01 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E537C0;
+        Wed, 31 May 2023 00:29:00 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id C92851FD5E;
+        Wed, 31 May 2023 07:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1685518138; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=idW4QU2kWkEZ0Jrv3EzvM9qxTCF40PCEp7KIJ87jyNY=;
+        b=OueEr3zKYEVkgIw1z8tt2xV5yzk85Kurm4nhTWPWFSbhsXTY+fkRxt+z2I+xzWM0N01ClB
+        LdySQNHYL+PZBnIrlcXYz0xcaz27B6tgFgh7tj0rWvWM+8CwoA6NUuWH0px7YxEssdyGpQ
+        o+KxruUCtu8q3TtnfHuSpuOT8/7d+dM=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 43E7F138E8;
+        Wed, 31 May 2023 07:28:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id k3shDzr3dmSNPAAAMHmgww
+        (envelope-from <jgross@suse.com>); Wed, 31 May 2023 07:28:58 +0000
+Message-ID: <888f860d-4307-54eb-01da-11f9adf65559@suse.com>
+Date:   Wed, 31 May 2023 09:28:57 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v6 00/16] x86/mtrr: fix handling with PAT but without MTRR
+Content-Language: en-US
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org,
+        mikelley@microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steen Hegelund <steen.hegelund@microchip.com>,
-        Simon Horman <simon.horman@corigine.com>
-Subject: [PATCH v4] hv_netvsc: Allocate rx indirection table size dynamically
-Date:   Tue, 30 May 2023 20:14:53 -0700
-Message-Id: <1685502893-29311-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org, Jonathan Corbet <corbet@lwn.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20230502120931.20719-1-jgross@suse.com>
+ <20230509201437.GFZFqprc6otRejDPUt@fat_crate.local>
+ <20230509233641.GGZFrZCTDH7VwUMp5R@fat_crate.local>
+ <20230510133024.GBZFuccC1FxIZNKL+8@fat_crate.local>
+ <4c47a11c-0565-678d-3467-e01c5ec16600@suse.com>
+ <20230511163208.GDZF0YiOfxQhSo4RDm@fat_crate.local>
+ <0cd3899b-cf3b-61c1-14ae-60b6b49d14ab@suse.com>
+ <20230530152825.GAZHYWGXAp8PHgN/w0@fat_crate.local>
+From:   Juergen Gross <jgross@suse.com>
+In-Reply-To: <20230530152825.GAZHYWGXAp8PHgN/w0@fat_crate.local>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------zhKw5yvbvWkpWa8p6pNVDnxp"
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Allocate the size of rx indirection table dynamically in netvsc
-from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
-query instead of using a constant value of ITAB_NUM.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------zhKw5yvbvWkpWa8p6pNVDnxp
+Content-Type: multipart/mixed; boundary="------------l2MouIcQ3q3ayPok03ThE0wp";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org,
+ mikelley@microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ xen-devel@lists.xenproject.org, Jonathan Corbet <corbet@lwn.net>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Message-ID: <888f860d-4307-54eb-01da-11f9adf65559@suse.com>
+Subject: Re: [PATCH v6 00/16] x86/mtrr: fix handling with PAT but without MTRR
+References: <20230502120931.20719-1-jgross@suse.com>
+ <20230509201437.GFZFqprc6otRejDPUt@fat_crate.local>
+ <20230509233641.GGZFrZCTDH7VwUMp5R@fat_crate.local>
+ <20230510133024.GBZFuccC1FxIZNKL+8@fat_crate.local>
+ <4c47a11c-0565-678d-3467-e01c5ec16600@suse.com>
+ <20230511163208.GDZF0YiOfxQhSo4RDm@fat_crate.local>
+ <0cd3899b-cf3b-61c1-14ae-60b6b49d14ab@suse.com>
+ <20230530152825.GAZHYWGXAp8PHgN/w0@fat_crate.local>
+In-Reply-To: <20230530152825.GAZHYWGXAp8PHgN/w0@fat_crate.local>
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
-Testcases:
-1. ethtool -x eth0 output
-2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
-3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
+--------------l2MouIcQ3q3ayPok03ThE0wp
+Content-Type: multipart/mixed; boundary="------------2fH4jB2fLfQ4dxU1rma4JPUh"
 
----
-Changes in v4:
- * set the right error code if rx table allocation fails
- * fixed unnecessary line break
- * removed extra newline
----
- drivers/net/hyperv/hyperv_net.h   |  5 ++++-
- drivers/net/hyperv/netvsc_drv.c   | 10 ++++++----
- drivers/net/hyperv/rndis_filter.c | 27 +++++++++++++++++++++++----
- 3 files changed, 33 insertions(+), 9 deletions(-)
+--------------2fH4jB2fLfQ4dxU1rma4JPUh
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index dd5919ec408b..c40868f287a9 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
- #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
- 
- #define ITAB_NUM 128
-+#define ITAB_NUM_MAX 256
- 
- struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
- 	struct ndis_obj_header hdr;
-@@ -1034,7 +1035,9 @@ struct net_device_context {
- 
- 	u32 tx_table[VRSS_SEND_TAB_SIZE];
- 
--	u16 rx_table[ITAB_NUM];
-+	u16 *rx_table;
-+
-+	u32 rx_table_sz;
- 
- 	/* Ethtool settings */
- 	u8 duplex;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 0103ff914024..3ba3c8fb28a5 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1747,7 +1747,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
- 
- static u32 netvsc_rss_indir_size(struct net_device *dev)
- {
--	return ITAB_NUM;
-+	struct net_device_context *ndc = netdev_priv(dev);
-+
-+	return ndc->rx_table_sz;
- }
- 
- static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
-@@ -1766,7 +1768,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
- 
- 	rndis_dev = ndev->extension;
- 	if (indir) {
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			indir[i] = ndc->rx_table[i];
- 	}
- 
-@@ -1792,11 +1794,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
- 
- 	rndis_dev = ndev->extension;
- 	if (indir) {
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			if (indir[i] >= ndev->num_chn)
- 				return -EINVAL;
- 
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			ndc->rx_table[i] = indir[i];
- 	}
- 
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index eea777ec2541..95869a3c3d6e 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -21,6 +21,7 @@
- #include <linux/rtnetlink.h>
- #include <linux/ucs2_string.h>
- #include <linux/string.h>
-+#include <linux/slab.h>
- 
- #include "hyperv_net.h"
- #include "netvsc_trace.h"
-@@ -927,7 +928,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 	struct rndis_set_request *set;
- 	struct rndis_set_complete *set_complete;
- 	u32 extlen = sizeof(struct ndis_recv_scale_param) +
--		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
-+		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
- 	struct ndis_recv_scale_param *rssp;
- 	u32 *itab;
- 	u8 *keyp;
-@@ -953,7 +954,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
- 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
- 			 NDIS_HASH_TCP_IPV6;
--	rssp->indirect_tabsize = 4*ITAB_NUM;
-+	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
- 	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
- 	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
- 	rssp->hashkey_offset = rssp->indirect_taboffset +
-@@ -961,7 +962,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 
- 	/* Set indirection table entries */
- 	itab = (u32 *)(rssp + 1);
--	for (i = 0; i < ITAB_NUM; i++)
-+	for (i = 0; i < ndc->rx_table_sz; i++)
- 		itab[i] = ndc->rx_table[i];
- 
- 	/* Set hask key values */
-@@ -1548,6 +1549,18 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
- 	if (ret || rsscap.num_recv_que < 2)
- 		goto out;
- 
-+	if (rsscap.num_indirect_tabent &&
-+	    rsscap.num_indirect_tabent <= ITAB_NUM_MAX)
-+		ndc->rx_table_sz = rsscap.num_indirect_tabent;
-+	else
-+		ndc->rx_table_sz = ITAB_NUM;
-+
-+	ndc->rx_table = kcalloc(ndc->rx_table_sz, sizeof(u16), GFP_KERNEL);
-+	if (!ndc->rx_table) {
-+		ret = -ENOMEM;
-+		goto err_dev_remv;
-+	}
-+
- 	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
- 	num_possible_rss_qs = min_t(u32, num_online_cpus(),
- 				    rsscap.num_recv_que);
-@@ -1558,7 +1571,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
- 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
- 
- 	if (!netif_is_rxfh_configured(net)) {
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			ndc->rx_table[i] = ethtool_rxfh_indir_default(
- 						i, net_device->num_chn);
- 	}
-@@ -1596,11 +1609,17 @@ void rndis_filter_device_remove(struct hv_device *dev,
- 				struct netvsc_device *net_dev)
- {
- 	struct rndis_device *rndis_dev = net_dev->extension;
-+	struct net_device *net = hv_get_drvdata(dev);
-+	struct net_device_context *ndc = netdev_priv(net);
- 
- 	/* Halt and release the rndis device */
- 	rndis_filter_halt_device(net_dev, rndis_dev);
- 
- 	netvsc_device_remove(dev);
-+
-+	ndc->rx_table_sz = 0;
-+	kfree(ndc->rx_table);
-+	ndc->rx_table = NULL;
- }
- 
- int rndis_filter_open(struct netvsc_device *nvdev)
--- 
-2.34.1
+T24gMzAuMDUuMjMgMTc6MjgsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gT24gTW9uLCBN
+YXkgMjIsIDIwMjMgYXQgMDQ6MTc6NTBQTSArMDIwMCwgSnVlcmdlbiBHcm9zcyB3cm90ZToN
+Cj4+IFRoZSBhdHRhY2hlZCBkaWZmIGlzIGZvciBwYXRjaCAxMy4NCj4gDQo+IE1lcmdlZCBh
+bmQgcHVzaGVkIG91dCBpbnRvIHNhbWUgYnJhbmNoLg0KPiANCj4gTmV4dCBpc3N1ZS4gRGlm
+ZmluZyAvcHJvYy9tdHJyIHNob3dzOg0KPiANCj4gLS0tIHByb2MtbXRyci42LjMJMjAyMy0w
+NS0zMCAxNzowMDoxMy4yMTU5OTk0ODMgKzAyMDANCj4gKysrIHByb2MtbXRyci5hZnRlcgky
+MDIzLTA1LTMwIDE2OjAxOjM4LjI4MTk5NzgxNiArMDIwMA0KPiBAQCAtMSw4ICsxLDggQEAN
+Cj4gICByZWcwMDogYmFzZT0weDAwMDAwMDAwMCAoICAgIDBNQiksIHNpemU9IDIwNDhNQiwg
+Y291bnQ9MTogd3JpdGUtYmFjaw0KPiAtcmVnMDE6IGJhc2U9MHgwODAwMDAwMDAgKCAyMDQ4
+TUIpLCBzaXplPSAgNTEyTUIsIGNvdW50PTE6IHdyaXRlLWJhY2sNCj4gK3JlZzAxOiBiYXNl
+PTB4MDgwMDAwMDAwICggMjA0OE1CKSwgc2l6ZT0gMTAyNE1CLCBjb3VudD0xOiB3cml0ZS1i
+YWNrDQo+ICAgcmVnMDI6IGJhc2U9MHgwYTAwMDAwMDAgKCAyNTYwTUIpLCBzaXplPSAgMjU2
+TUIsIGNvdW50PTE6IHdyaXRlLWJhY2sNCj4gICByZWcwMzogYmFzZT0weDBhZTAwMDAwMCAo
+IDI3ODRNQiksIHNpemU9ICAgMzJNQiwgY291bnQ9MTogdW5jYWNoYWJsZQ0KPiAtcmVnMDQ6
+IGJhc2U9MHgxMDAwMDAwMDAgKCA0MDk2TUIpLCBzaXplPSA0MDk2TUIsIGNvdW50PTE6IHdy
+aXRlLWJhY2sNCj4gK3JlZzA0OiBiYXNlPTB4MTAwMDAwMDAwICggNDA5Nk1CKSwgc2l6ZT0g
+IDI1Nk1CLCBjb3VudD0xOiB3cml0ZS1iYWNrDQo+ICAgcmVnMDU6IGJhc2U9MHgyMDAwMDAw
+MDAgKCA4MTkyTUIpLCBzaXplPSA4MTkyTUIsIGNvdW50PTE6IHdyaXRlLWJhY2sNCj4gICBy
+ZWcwNjogYmFzZT0weDQwMDAwMDAwMCAoMTYzODRNQiksIHNpemU9IDEwMjRNQiwgY291bnQ9
+MTogd3JpdGUtYmFjaw0KPiAgIHJlZzA3OiBiYXNlPTB4NDQwMDAwMDAwICgxNzQwOE1CKSwg
+c2l6ZT0gIDI1Nk1CLCBjb3VudD0xOiB3cml0ZS1iYWNrDQo+IA0KDQpXZWlyZC4NCg0KQ2Fu
+IHlvdSBwbGVhc2UgYm9vdCB0aGUgc3lzdGVtIHdpdGggdGhlIE1UUlIgcGF0Y2hlcyBhbmQg
+c3BlY2lmeSAibXRycj1kZWJ1ZyINCm9uIHRoZSBjb21tYW5kIGxpbmU/IEknZCBiZSBpbnRl
+cmVzdGVkIGluIHRoZSByYXcgcmVnaXN0ZXIgdmFsdWVzIGJlaW5nIHJlYWQNCmFuZCB0aGUg
+cmVzdWx0aW5nIG1lbW9yeSB0eXBlIG1hcC4NCg0KDQpKdWVyZ2VuDQo=
+--------------2fH4jB2fLfQ4dxU1rma4JPUh
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+jR/i1DG86lem3iBDXzXsZDn8R38=3D
+=3D2wuH
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------2fH4jB2fLfQ4dxU1rma4JPUh--
+
+--------------l2MouIcQ3q3ayPok03ThE0wp--
+
+--------------zhKw5yvbvWkpWa8p6pNVDnxp
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmR29zkFAwAAAAAACgkQsN6d1ii/Ey/D
+eQf/ThGqCy4WXGZTN+DrkW1qO3DxndwaGDgqfB97PAWRZa2Fdm/bQPCxbQfAtDJskHbz0dgSaoOq
+qi8fxA0Meqsuzin5B04UFXPDZY48P32IyDUF48pN15XFLgZF01uDKavtE5gFLQ2jBNx0ZkjK6sPw
+d9z9e3Lf3HBUYspPa1JRXM3qmzB0/rIE0dqr7b8QOLVE/Hv1M9GpSxwGnxY30sCPB0om5TqxMgmw
+g6r8jw99xzLTP7hxrhzwsUHNtZjbsRjciaV/EEGFuO0Q3RyevQR/T++Om99+gk2OPqx1sJRB22+d
+WLipU6se2j1skJrZujRoPBswW4DwMY06CPv31wcvOA==
+=bLto
+-----END PGP SIGNATURE-----
+
+--------------zhKw5yvbvWkpWa8p6pNVDnxp--
