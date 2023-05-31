@@ -2,463 +2,227 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42CB47172A1
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 02:36:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14088717438
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 05:15:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233829AbjEaAgu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 30 May 2023 20:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
+        id S234099AbjEaDPe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 30 May 2023 23:15:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233802AbjEaAgd (ORCPT
+        with ESMTP id S234110AbjEaDP0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 30 May 2023 20:36:33 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE269134
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 May 2023 17:35:40 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-64d41d8bc63so4076990b3a.0
-        for <linux-hyperv@vger.kernel.org>; Tue, 30 May 2023 17:35:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1685493318; x=1688085318;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tfBI8GoEpVlIoOUgpQuqqFCS5QSMelByqywlut0pb20=;
-        b=VzucnSGsJ49XLS4N1NOKMtpCRHPq6CS/W1H7K1TOLZJvPtSpigWylFkJ0WU7yGHIUn
-         R03JHuoSZvgCZaDI8mn8IIv3crINMeKre4VcZJmNNc4djYZG4ZmhWYhbY5PgptmobjLB
-         IRugczYR2QcPNNpap6U55Sp2YHwPlC4w2cDCXFQRBCDJ3doerRTo1HZ/OZ2qnn+/ou15
-         1vh2+H7jQgmdHhVcn4KHfxT0suhIiSig5+iO+6qT8sBjAulYXY5PIsKoLx1f9R0gIXex
-         NU1eAel7ANGKFDCR35Fp1khuboK0HBqmthp+6CVsZuNLP7WMevvedgxXwyL43kZNDZnp
-         KkEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685493318; x=1688085318;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tfBI8GoEpVlIoOUgpQuqqFCS5QSMelByqywlut0pb20=;
-        b=A2AC7kv7bmau7o68apxbPXF/C2yfbUSKNqgjAUxXz6+vBegem1zJUgpVRDijalc8+N
-         kzNIPhYaCt3ngwBg/sJ3M3YbyyVw0eys77XW3B9pV8Noe12cfxL2W4nouccP26o3avDG
-         1ttxDDqxm1dYNyeklpPJCaBMgMG+xh8M6pqQZ1jSOb+3bCj8oRzXZqamy3X2m5JKO0CS
-         AjicnQApwmQFyw00Z/vc/jN/wO1nNIBkMbI9lktbmC6OZZmCqhiU9E2tAm7OjecRhMTu
-         6P2+bm2Q8o58qXie3pXBcruxslD38WnjKfsESjJrIFY26vuYXsRXgDfLrIwcCjEO+3UY
-         yNHA==
-X-Gm-Message-State: AC+VfDyShYUBq4/2iSc4mlCyCvFxplEPG5xjN9c8WqYWeJgO5E2PZ+UG
-        6FXts/tSdJBPW2OY5NxV5l5/Ow==
-X-Google-Smtp-Source: ACHHUZ6NA47klTzwNw6SjuHQBc5vekDbSGZcUnMalNmVHVKblFxKyslaT2n+PHFjJTUq0u6LElzAIw==
-X-Received: by 2002:a05:6a00:b95:b0:64f:4d1d:32ba with SMTP id g21-20020a056a000b9500b0064f4d1d32bamr4796833pfj.5.1685493318115;
-        Tue, 30 May 2023 17:35:18 -0700 (PDT)
-Received: from [172.17.0.2] (c-67-170-131-147.hsd1.wa.comcast.net. [67.170.131.147])
-        by smtp.gmail.com with ESMTPSA id j12-20020a62b60c000000b0064cb0845c77sm2151340pff.122.2023.05.30.17.35.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 17:35:17 -0700 (PDT)
-From:   Bobby Eshleman <bobby.eshleman@bytedance.com>
-Date:   Wed, 31 May 2023 00:35:12 +0000
-Subject: [PATCH RFC net-next v3 8/8] tests: add vsock dgram tests
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230413-b4-vsock-dgram-v3-8-c2414413ef6a@bytedance.com>
-References: <20230413-b4-vsock-dgram-v3-0-c2414413ef6a@bytedance.com>
-In-Reply-To: <20230413-b4-vsock-dgram-v3-0-c2414413ef6a@bytedance.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Tue, 30 May 2023 23:15:26 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9660A13D;
+        Tue, 30 May 2023 20:15:01 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 0C7BE20FC46E; Tue, 30 May 2023 20:15:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0C7BE20FC46E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685502901;
+        bh=oyJ2pTdOAakrYlWAIq8Y+ssATRIqasj98hZvzvFAP8A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WUe3dlCLzOdeNzWjWelYiJleB5YHHsIXVvLJnf6k/a+zIAy30GTvIHZNR0hdwOgII
+         x6UTdQFwXSXQKl0V6fXsqnRZaVsPABwzPpB1Ft0F5143cwoH7crhQXKdcYW2JDYPsL
+         99Cd/MjihYZoEioiLI4kz/TF49JU+i5eTpHdLo6U=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        Jiang Wang <jiang.wang@bytedance.com>
-X-Mailer: b4 0.12.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Simon Horman <simon.horman@corigine.com>
+Subject: [PATCH v4] hv_netvsc: Allocate rx indirection table size dynamically
+Date:   Tue, 30 May 2023 20:14:53 -0700
+Message-Id: <1685502893-29311-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Jiang Wang <jiang.wang@bytedance.com>
+Allocate the size of rx indirection table dynamically in netvsc
+from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
+query instead of using a constant value of ITAB_NUM.
 
-This patch adds tests for vsock datagram.
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
+Testcases:
+1. ethtool -x eth0 output
+2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
+3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
 
-Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
-Signed-off-by: Jiang Wang <jiang.wang@bytedance.com>
 ---
- tools/testing/vsock/util.c       | 105 +++++++++++++++++++++
- tools/testing/vsock/util.h       |   4 +
- tools/testing/vsock/vsock_test.c | 193 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 302 insertions(+)
+Changes in v4:
+ * set the right error code if rx table allocation fails
+ * fixed unnecessary line break
+ * removed extra newline
+---
+ drivers/net/hyperv/hyperv_net.h   |  5 ++++-
+ drivers/net/hyperv/netvsc_drv.c   | 10 ++++++----
+ drivers/net/hyperv/rndis_filter.c | 27 +++++++++++++++++++++++----
+ 3 files changed, 33 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-index 01b636d3039a..45e35da48b40 100644
---- a/tools/testing/vsock/util.c
-+++ b/tools/testing/vsock/util.c
-@@ -260,6 +260,57 @@ void send_byte(int fd, int expected_ret, int flags)
- 	}
- }
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index dd5919ec408b..c40868f287a9 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
+ #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
  
-+/* Transmit one byte and check the return value.
-+ *
-+ * expected_ret:
-+ *  <0 Negative errno (for testing errors)
-+ *   0 End-of-file
-+ *   1 Success
-+ */
-+void sendto_byte(int fd, const struct sockaddr *dest_addr, int len, int expected_ret,
-+		 int flags)
-+{
-+	const uint8_t byte = 'A';
-+	ssize_t nwritten;
-+
-+	timeout_begin(TIMEOUT);
-+	do {
-+		nwritten = sendto(fd, &byte, sizeof(byte), flags, dest_addr,
-+				  len);
-+		timeout_check("write");
-+	} while (nwritten < 0 && errno == EINTR);
-+	timeout_end();
-+
-+	if (expected_ret < 0) {
-+		if (nwritten != -1) {
-+			fprintf(stderr, "bogus sendto(2) return value %zd\n",
-+				nwritten);
-+			exit(EXIT_FAILURE);
-+		}
-+		if (errno != -expected_ret) {
-+			perror("write");
-+			exit(EXIT_FAILURE);
-+		}
-+		return;
-+	}
-+
-+	if (nwritten < 0) {
-+		perror("write");
-+		exit(EXIT_FAILURE);
-+	}
-+	if (nwritten == 0) {
-+		if (expected_ret == 0)
-+			return;
-+
-+		fprintf(stderr, "unexpected EOF while sending byte\n");
-+		exit(EXIT_FAILURE);
-+	}
-+	if (nwritten != sizeof(byte)) {
-+		fprintf(stderr, "bogus sendto(2) return value %zd\n", nwritten);
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
- /* Receive one byte and check the return value.
-  *
-  * expected_ret:
-@@ -313,6 +364,60 @@ void recv_byte(int fd, int expected_ret, int flags)
- 	}
- }
+ #define ITAB_NUM 128
++#define ITAB_NUM_MAX 256
  
-+/* Receive one byte and check the return value.
-+ *
-+ * expected_ret:
-+ *  <0 Negative errno (for testing errors)
-+ *   0 End-of-file
-+ *   1 Success
-+ */
-+void recvfrom_byte(int fd, struct sockaddr *src_addr, socklen_t *addrlen,
-+		   int expected_ret, int flags)
-+{
-+	uint8_t byte;
-+	ssize_t nread;
-+
-+	timeout_begin(TIMEOUT);
-+	do {
-+		nread = recvfrom(fd, &byte, sizeof(byte), flags, src_addr, addrlen);
-+		timeout_check("read");
-+	} while (nread < 0 && errno == EINTR);
-+	timeout_end();
-+
-+	if (expected_ret < 0) {
-+		if (nread != -1) {
-+			fprintf(stderr, "bogus recvfrom(2) return value %zd\n",
-+				nread);
-+			exit(EXIT_FAILURE);
-+		}
-+		if (errno != -expected_ret) {
-+			perror("read");
-+			exit(EXIT_FAILURE);
-+		}
-+		return;
-+	}
-+
-+	if (nread < 0) {
-+		perror("read");
-+		exit(EXIT_FAILURE);
-+	}
-+	if (nread == 0) {
-+		if (expected_ret == 0)
-+			return;
-+
-+		fprintf(stderr, "unexpected EOF while receiving byte\n");
-+		exit(EXIT_FAILURE);
-+	}
-+	if (nread != sizeof(byte)) {
-+		fprintf(stderr, "bogus recvfrom(2) return value %zd\n", nread);
-+		exit(EXIT_FAILURE);
-+	}
-+	if (byte != 'A') {
-+		fprintf(stderr, "unexpected byte read %c\n", byte);
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
- /* Run test cases.  The program terminates if a failure occurs. */
- void run_tests(const struct test_case *test_cases,
- 	       const struct test_opts *opts)
-diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-index fb99208a95ea..6e5cd610bf05 100644
---- a/tools/testing/vsock/util.h
-+++ b/tools/testing/vsock/util.h
-@@ -43,7 +43,11 @@ int vsock_seqpacket_accept(unsigned int cid, unsigned int port,
- 			   struct sockaddr_vm *clientaddrp);
- void vsock_wait_remote_close(int fd);
- void send_byte(int fd, int expected_ret, int flags);
-+void sendto_byte(int fd, const struct sockaddr *dest_addr, int len, int expected_ret,
-+		 int flags);
- void recv_byte(int fd, int expected_ret, int flags);
-+void recvfrom_byte(int fd, struct sockaddr *src_addr, socklen_t *addrlen,
-+		   int expected_ret, int flags);
- void run_tests(const struct test_case *test_cases,
- 	       const struct test_opts *opts);
- void list_tests(const struct test_case *test_cases);
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index ac1bd3ac1533..851c3d65178d 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -202,6 +202,113 @@ static void test_stream_server_close_server(const struct test_opts *opts)
- 	close(fd);
- }
+ struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
+ 	struct ndis_obj_header hdr;
+@@ -1034,7 +1035,9 @@ struct net_device_context {
  
-+static void test_dgram_sendto_client(const struct test_opts *opts)
-+{
-+	union {
-+		struct sockaddr sa;
-+		struct sockaddr_vm svm;
-+	} addr = {
-+		.svm = {
-+			.svm_family = AF_VSOCK,
-+			.svm_port = 1234,
-+			.svm_cid = opts->peer_cid,
-+		},
-+	};
-+	int fd;
-+
-+	/* Wait for the server to be ready */
-+	control_expectln("BIND");
-+
-+	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-+	if (fd < 0) {
-+		perror("socket");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	sendto_byte(fd, &addr.sa, sizeof(addr.svm), 1, 0);
-+
-+	/* Notify the server that the client has finished */
-+	control_writeln("DONE");
-+
-+	close(fd);
-+}
-+
-+static void test_dgram_sendto_server(const struct test_opts *opts)
-+{
-+	union {
-+		struct sockaddr sa;
-+		struct sockaddr_vm svm;
-+	} addr = {
-+		.svm = {
-+			.svm_family = AF_VSOCK,
-+			.svm_port = 1234,
-+			.svm_cid = VMADDR_CID_ANY,
-+		},
-+	};
-+	int fd;
-+	int len = sizeof(addr.sa);
-+
-+	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-+
-+	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
-+		perror("bind");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	/* Notify the client that the server is ready */
-+	control_writeln("BIND");
-+
-+	recvfrom_byte(fd, &addr.sa, &len, 1, 0);
-+
-+	/* Wait for the client to finish */
-+	control_expectln("DONE");
-+
-+	close(fd);
-+}
-+
-+static void test_dgram_connect_client(const struct test_opts *opts)
-+{
-+	union {
-+		struct sockaddr sa;
-+		struct sockaddr_vm svm;
-+	} addr = {
-+		.svm = {
-+			.svm_family = AF_VSOCK,
-+			.svm_port = 1234,
-+			.svm_cid = opts->peer_cid,
-+		},
-+	};
-+	int fd;
-+	int ret;
-+
-+	/* Wait for the server to be ready */
-+	control_expectln("BIND");
-+
-+	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-+	if (fd < 0) {
-+		perror("bind");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	ret = connect(fd, &addr.sa, sizeof(addr.svm));
-+	if (ret < 0) {
-+		perror("connect");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	send_byte(fd, 1, 0);
-+
-+	/* Notify the server that the client has finished */
-+	control_writeln("DONE");
-+
-+	close(fd);
-+}
-+
-+static void test_dgram_connect_server(const struct test_opts *opts)
-+{
-+	test_dgram_sendto_server(opts);
-+}
-+
- /* With the standard socket sizes, VMCI is able to support about 100
-  * concurrent stream connections.
-  */
-@@ -255,6 +362,77 @@ static void test_stream_multiconn_server(const struct test_opts *opts)
- 		close(fds[i]);
- }
+ 	u32 tx_table[VRSS_SEND_TAB_SIZE];
  
-+static void test_dgram_multiconn_client(const struct test_opts *opts)
-+{
-+	int fds[MULTICONN_NFDS];
-+	int i;
-+	union {
-+		struct sockaddr sa;
-+		struct sockaddr_vm svm;
-+	} addr = {
-+		.svm = {
-+			.svm_family = AF_VSOCK,
-+			.svm_port = 1234,
-+			.svm_cid = opts->peer_cid,
-+		},
-+	};
+-	u16 rx_table[ITAB_NUM];
++	u16 *rx_table;
 +
-+	/* Wait for the server to be ready */
-+	control_expectln("BIND");
-+
-+	for (i = 0; i < MULTICONN_NFDS; i++) {
-+		fds[i] = socket(AF_VSOCK, SOCK_DGRAM, 0);
-+		if (fds[i] < 0) {
-+			perror("socket");
-+			exit(EXIT_FAILURE);
-+		}
-+	}
-+
-+	for (i = 0; i < MULTICONN_NFDS; i++)
-+		sendto_byte(fds[i], &addr.sa, sizeof(addr.svm), 1, 0);
-+
-+	/* Notify the server that the client has finished */
-+	control_writeln("DONE");
-+
-+	for (i = 0; i < MULTICONN_NFDS; i++)
-+		close(fds[i]);
-+}
-+
-+static void test_dgram_multiconn_server(const struct test_opts *opts)
-+{
-+	union {
-+		struct sockaddr sa;
-+		struct sockaddr_vm svm;
-+	} addr = {
-+		.svm = {
-+			.svm_family = AF_VSOCK,
-+			.svm_port = 1234,
-+			.svm_cid = VMADDR_CID_ANY,
-+		},
-+	};
-+	int fd;
-+	int len = sizeof(addr.sa);
-+	int i;
-+
-+	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-+
-+	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
-+		perror("bind");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	/* Notify the client that the server is ready */
-+	control_writeln("BIND");
-+
-+	for (i = 0; i < MULTICONN_NFDS; i++)
-+		recvfrom_byte(fd, &addr.sa, &len, 1, 0);
-+
-+	/* Wait for the client to finish */
-+	control_expectln("DONE");
-+
-+	close(fd);
-+}
-+
- static void test_stream_msg_peek_client(const struct test_opts *opts)
++	u32 rx_table_sz;
+ 
+ 	/* Ethtool settings */
+ 	u8 duplex;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 0103ff914024..3ba3c8fb28a5 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1747,7 +1747,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
+ 
+ static u32 netvsc_rss_indir_size(struct net_device *dev)
  {
- 	int fd;
-@@ -1128,6 +1306,21 @@ static struct test_case test_cases[] = {
- 		.run_client = test_stream_virtio_skb_merge_client,
- 		.run_server = test_stream_virtio_skb_merge_server,
- 	},
-+	{
-+		.name = "SOCK_DGRAM client close",
-+		.run_client = test_dgram_sendto_client,
-+		.run_server = test_dgram_sendto_server,
-+	},
-+	{
-+		.name = "SOCK_DGRAM client connect",
-+		.run_client = test_dgram_connect_client,
-+		.run_server = test_dgram_connect_server,
-+	},
-+	{
-+		.name = "SOCK_DGRAM multiple connections",
-+		.run_client = test_dgram_multiconn_client,
-+		.run_server = test_dgram_multiconn_server,
-+	},
- 	{},
- };
+-	return ITAB_NUM;
++	struct net_device_context *ndc = netdev_priv(dev);
++
++	return ndc->rx_table_sz;
+ }
  
-
+ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+@@ -1766,7 +1768,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			indir[i] = ndc->rx_table[i];
+ 	}
+ 
+@@ -1792,11 +1794,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			if (indir[i] >= ndev->num_chn)
+ 				return -EINVAL;
+ 
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = indir[i];
+ 	}
+ 
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index eea777ec2541..95869a3c3d6e 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -21,6 +21,7 @@
+ #include <linux/rtnetlink.h>
+ #include <linux/ucs2_string.h>
+ #include <linux/string.h>
++#include <linux/slab.h>
+ 
+ #include "hyperv_net.h"
+ #include "netvsc_trace.h"
+@@ -927,7 +928,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	struct rndis_set_request *set;
+ 	struct rndis_set_complete *set_complete;
+ 	u32 extlen = sizeof(struct ndis_recv_scale_param) +
+-		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
++		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
+ 	struct ndis_recv_scale_param *rssp;
+ 	u32 *itab;
+ 	u8 *keyp;
+@@ -953,7 +954,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
+ 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
+ 			 NDIS_HASH_TCP_IPV6;
+-	rssp->indirect_tabsize = 4*ITAB_NUM;
++	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
+ 	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
+ 	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
+ 	rssp->hashkey_offset = rssp->indirect_taboffset +
+@@ -961,7 +962,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 
+ 	/* Set indirection table entries */
+ 	itab = (u32 *)(rssp + 1);
+-	for (i = 0; i < ITAB_NUM; i++)
++	for (i = 0; i < ndc->rx_table_sz; i++)
+ 		itab[i] = ndc->rx_table[i];
+ 
+ 	/* Set hask key values */
+@@ -1548,6 +1549,18 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	if (ret || rsscap.num_recv_que < 2)
+ 		goto out;
+ 
++	if (rsscap.num_indirect_tabent &&
++	    rsscap.num_indirect_tabent <= ITAB_NUM_MAX)
++		ndc->rx_table_sz = rsscap.num_indirect_tabent;
++	else
++		ndc->rx_table_sz = ITAB_NUM;
++
++	ndc->rx_table = kcalloc(ndc->rx_table_sz, sizeof(u16), GFP_KERNEL);
++	if (!ndc->rx_table) {
++		ret = -ENOMEM;
++		goto err_dev_remv;
++	}
++
+ 	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
+ 	num_possible_rss_qs = min_t(u32, num_online_cpus(),
+ 				    rsscap.num_recv_que);
+@@ -1558,7 +1571,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 
+ 	if (!netif_is_rxfh_configured(net)) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+ 						i, net_device->num_chn);
+ 	}
+@@ -1596,11 +1609,17 @@ void rndis_filter_device_remove(struct hv_device *dev,
+ 				struct netvsc_device *net_dev)
+ {
+ 	struct rndis_device *rndis_dev = net_dev->extension;
++	struct net_device *net = hv_get_drvdata(dev);
++	struct net_device_context *ndc = netdev_priv(net);
+ 
+ 	/* Halt and release the rndis device */
+ 	rndis_filter_halt_device(net_dev, rndis_dev);
+ 
+ 	netvsc_device_remove(dev);
++
++	ndc->rx_table_sz = 0;
++	kfree(ndc->rx_table);
++	ndc->rx_table = NULL;
+ }
+ 
+ int rndis_filter_open(struct netvsc_device *nvdev)
 -- 
-2.30.2
+2.34.1
 
