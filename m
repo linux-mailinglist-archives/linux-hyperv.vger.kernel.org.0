@@ -2,70 +2,97 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5B0A71864F
-	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 17:28:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82FD57186AF
+	for <lists+linux-hyperv@lfdr.de>; Wed, 31 May 2023 17:49:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234528AbjEaP2J (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 31 May 2023 11:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
+        id S232268AbjEaPtP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 31 May 2023 11:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234542AbjEaP2F (ORCPT
+        with ESMTP id S230501AbjEaPtP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 31 May 2023 11:28:05 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCE8107;
-        Wed, 31 May 2023 08:27:53 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1685546872;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=J/AAE9ZGPs36fIX5clcov8ewvgNxaRXgiAw5owj43/k=;
-        b=dgIZbWn0Ffwl39MVqBYxhPk2zpqPDivTmcf41Fwe6BiycAhlt0CQ23s3y9g+opc388aIX1
-        KMxYZ759atp4cXI4qOTYG11J1QP7M4cOEdXucffb0LttwWfoAe0n4Wa7Zd20QcC8oOfxgj
-        96/yB9GLCeaI3pr7pfguXpIhv/df5PM/paQIV4bgjljfkr3mhLev75vrgdvAzRBUk1NLEZ
-        ywkKRdkJ9R7LTx37n2x1qjKWFtrMbxL4AWvlDsLppwCiClDZTRU3KXx1jbWVf908rNmO4K
-        ljHAUO2sUBOI0cgVUtSNDz+PiJ6CkZvm8VEAwx773h+T43k7b9R5cW2Sg+KGmw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1685546872;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=J/AAE9ZGPs36fIX5clcov8ewvgNxaRXgiAw5owj43/k=;
-        b=siix7a116hO8Xmv/CgUCeR0LA9Ni9RJTtUSvmYgfIbz3coXXR2G04VhnPcGIBu6HbqOjaw
-        b571t2+jaB3FtuDg==
-To:     Peter Zijlstra <peterz@infradead.org>, bigeasy@linutronix.de
-Cc:     mark.rutland@arm.com, maz@kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        pbonzini@redhat.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, jgross@suse.com,
-        boris.ostrovsky@oracle.com, daniel.lezcano@linaro.org,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, rafael@kernel.org, peterz@infradead.org,
-        longman@redhat.com, boqun.feng@gmail.com, pmladek@suse.com,
-        senozhatsky@chromium.org, rostedt@goodmis.org,
-        john.ogness@linutronix.de, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, jstultz@google.com, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 08/13] x86/vdso: Fix gettimeofday masking
-In-Reply-To: <20230519102715.704767397@infradead.org>
-References: <20230519102058.581557770@infradead.org>
- <20230519102715.704767397@infradead.org>
-Date:   Wed, 31 May 2023 17:27:51 +0200
-Message-ID: <87r0qwfrm0.ffs@tglx>
+        Wed, 31 May 2023 11:49:15 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E63E8E;
+        Wed, 31 May 2023 08:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8oJ7XQjQQvPTBsFSzE7OAaziM4q+gdTbG0V6lcVctM8=; b=NwCLHsXKkQrP2W6vUDYbEtg+Ot
+        rxSrurOqvx3cYriiqxS1kFmmdVm6FYxAOdzb5v+XlxVXtmHHdRaZQwUGRaZhBDCQ1YRwRQfakQsJI
+        yfPuMM3MvdrLuQ4VRtVfRAmnloeQWodAC7XYLTnvtYDU8zPGJjn0wy4rCpv9KRWiWpBhK7tlHj8Wk
+        y5Leq2hXV136MifEnzPFEARHtWM+eN4pn5EEyrQj4FiB0SwSStKMstI5T6xEzXr3XEKia4SmwByKg
+        fpMVZ8B+9OtwtxRoOzwa06XBUKUsc1J8lRks2BEBrENxP0ZLOF3avAAvw04fj775SW0/Oc5jKQEf3
+        Fc3yfDsg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q4O3x-00FVGr-2s;
+        Wed, 31 May 2023 15:48:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7D8E33002A9;
+        Wed, 31 May 2023 17:48:32 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4D069243D244B; Wed, 31 May 2023 17:48:32 +0200 (CEST)
+Date:   Wed, 31 May 2023 17:48:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Tianyu Lan <ltykernel@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "jiangshan.ljs@antgroup.com" <jiangshan.ljs@antgroup.com>,
+        "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+        "srutherford@google.com" <srutherford@google.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "sandipan.das@amd.com" <sandipan.das@amd.com>,
+        "ray.huang@amd.com" <ray.huang@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "michael.roth@amd.com" <michael.roth@amd.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "venu.busireddy@oracle.com" <venu.busireddy@oracle.com>,
+        "sterritt@google.com" <sterritt@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "samitolvanen@google.com" <samitolvanen@google.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "pangupta@amd.com" <pangupta@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC PATCH V6 02/14] x86/sev: Add Check of #HV event in path
+Message-ID: <20230531154832.GA428966@hirez.programming.kicks-ass.net>
+References: <20230515165917.1306922-1-ltykernel@gmail.com>
+ <20230515165917.1306922-3-ltykernel@gmail.com>
+ <20230516093225.GD2587705@hirez.programming.kicks-ass.net>
+ <851f6305-2145-d756-91e3-55ab89bfcd42@gmail.com>
+ <20230517130943.GE2665450@hirez.programming.kicks-ass.net>
+ <BYAPR21MB16887196D3DFFCB52EAC546AD748A@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB16887196D3DFFCB52EAC546AD748A@BYAPR21MB1688.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,39 +100,42 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, May 19 2023 at 12:21, Peter Zijlstra wrote:
-> Because of how the virtual clocks use U64_MAX as an exception value
-> instead of a valid time, the clocks can no longer be assumed to wrap
-> cleanly. This is then compounded by arch_vdso_cycles_ok() rejecting
-> everything with the MSB/Sign-bit set.
->
-> Therefore, the effective mask becomes S64_MAX, and the comment with
-> vdso_calc_delta() that states the mask is U64_MAX and isn't optimized
-> out is just plain silly.
->
-> Now, the code has a negative filter -- to deal with TSC wobbles:
->
-> 	if (cycles > last)
->
-> which is just plain wrong, because it should've been written as:
->
-> 	if ((s64)(cycles - last) > 0)
->
-> to take wrapping into account, but per all the above, we don't
-> actually wrap on u64 anymore.
+On Wed, May 31, 2023 at 02:50:50PM +0000, Michael Kelley (LINUX) wrote:
 
-Indeed. The rationale was that you need ~146 years uptime with a 4GHz
-TSC or ~584 years with 1GHz to actually reach the wrap around point.
+> I'm jumping in to answer some of the basic questions here.  Yesterday,
+> there was a discussion about nested #HV exceptions, so maybe some of
+> this is already understood, but let me recap at a higher level, provide some
+> references, and suggest the path forward.
 
-Though I can see your point to make sure that silly BIOSes or VMMs
-cannot cause havoc by accident or malice.
+> 2) For the Restricted Interrupt Injection code, Tianyu will look at
+> how to absolutely minimize the impact in the hot code paths,
+> particularly when SEV-SNP is not active.  Hopefully the impact can
+> be a couple of instructions at most, or even less with the use of
+> other existing kernel techniques.  He'll look at the other things you've
+> commented on and get the code into a better state.  I'll work with
+> him on writing commit messages and comments that explain what's
+> going on.
 
-Did anyone ever validate that wrap around on TSC including TSC deadline
-timer works correctly?
+So from what I understand of all this SEV-SNP/#HV muck is that it is
+near impossible to get right without ucode/hw changes. Hence my request
+to Tom to look into that.
 
-I have faint memories of TSC_ADJUST, which I prefer not to bring back to
-main memory :)
+The feature as specified in the AMD documentation seems fundamentally
+buggered.
 
-Thanks,
+Specifically #HV needs to be IST because hypervisor can inject at any
+moment, irrespective of IF or anything else -- even #HV itself. This
+means also in the syscall gap.
 
-        tglx
+Since it is IST, a nested #HV is instant stack corruption -- #HV can
+attempt to play stack games as per the copied #VC crap (which I'm not at
+all convinced about being correct itself), but this doesn't actually fix
+anything, all you need is a single instruction window to wreck things.
+
+Because as stated, the whole premise is that the hypervisor is out to
+get you, you must not leave it room to wiggle. As is, this is security
+through prayer, and we don't do that.
+
+In short; I really want a solid proof that what you propose to implement
+is correct and not wishful thinking.
+
