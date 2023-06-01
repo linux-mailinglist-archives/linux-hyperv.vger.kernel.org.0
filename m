@@ -2,366 +2,508 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E19F71935D
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Jun 2023 08:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2091072666F
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Jun 2023 18:51:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231191AbjFAGjY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Jun 2023 02:39:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51168 "EHLO
+        id S230298AbjFGQvq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 7 Jun 2023 12:51:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231268AbjFAGjX (ORCPT
+        with ESMTP id S229529AbjFGQvp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Jun 2023 02:39:23 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCAA98;
-        Wed, 31 May 2023 23:39:20 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 49F4C21982;
-        Thu,  1 Jun 2023 06:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1685601559; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=B0TfaTOnUIHwJOCACoipyr3dFpHPPJ5drbrANbf42Ng=;
-        b=mc6OB39sMk0viPihk+M0vArqNqZRRutEybT+NvBLSBGXhtKfLYKOjBQLqFDcLpmvwDmQHB
-        0WusposnhyL6Tu6+ZDXHuRLwCQbTH70yqbFxEQVQSIP+U5N1a5oYrlp818jyRKYEAeJdm3
-        47WrUykFm5BYx6haOiqUGOKtrP5t5mU=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9A39D13441;
-        Thu,  1 Jun 2023 06:39:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id s7uvIxY9eGS1SwAAMHmgww
-        (envelope-from <jgross@suse.com>); Thu, 01 Jun 2023 06:39:18 +0000
-Message-ID: <6700dc14-98fa-232d-5f8c-68a418849671@suse.com>
-Date:   Thu, 1 Jun 2023 08:39:17 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org,
-        mikelley@microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Wed, 7 Jun 2023 12:51:45 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1589A1FE5;
+        Wed,  7 Jun 2023 09:51:43 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b0314f057cso39855215ad.1;
+        Wed, 07 Jun 2023 09:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686156702; x=1688748702;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9HvkrROz2drFh8xFYBPmF+VNzTPGb5WOTqzBg4sKnoM=;
+        b=reo+WQMeLQPt/SsvO9XQxnkV8qphwYlW+o8PILevVu572jDamMEzful0KxjzC6t1P9
+         TafBxuTLkOHxqjuT8uwFiGEXPEMSMpBlRsknucMi0k8Eu2MlRQFeyVcZinKBV97/KYkq
+         iPGaMAHaPrOfSZYmCaL9PCYpL5kMtOXvDdhV3MMDoCjlffG1ERobuCr6XQWv1knU+QtU
+         YS+EHNw0wjLrc0ENoOt0Nl2cjveLvKA9v9pZd+UYk3095YLy+801kfbBMc0qqMlWBleL
+         An5qcmdIoQvO8CpEi9H2PhMnZmuZhNK1TKj90CBx4ep4P3nN2hwEzLSwkfgjEcbYI9zZ
+         NCJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686156702; x=1688748702;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9HvkrROz2drFh8xFYBPmF+VNzTPGb5WOTqzBg4sKnoM=;
+        b=OomGwYWB9gcUR6kQFHEiykMrGBCLkvQI4ariMZ6GWASpdnhahPeV7nGOZ0d/YPd22w
+         A4Ps5LjjtkHrcDtyJnrA8OaKoURjHnsjBOBoQ40/jw3mB5daq5fI12rVvSmwwdkpdbcd
+         wdWNUUwaquhyts3eYIBSXYbkNKD0aBpBqO8NPU5HxtQY+jyP43bmQy5kUCEMbZegkjCQ
+         N3Q0ykLQi+aZrywCRrcX9RvnNy7YVm/52W04+2uMN90punlreinvAWCBgwXQkhs1hNOE
+         R/Up3KVogqMIs5vS3J4sCjODHepBJt4IgbX9fY0IyOo4InznX+RvswAm4HO8grdQ5frn
+         JoIg==
+X-Gm-Message-State: AC+VfDwjsm94wqWJcsl2wSUPmyS/i5nWCLNS/M9HQ6kKQU+UjIllpe3C
+        np6NkefFam46/RxXHcIQkgk=
+X-Google-Smtp-Source: ACHHUZ7tMqgn7UppBe0n1R+zcXc1AuD7MgVV1Rl7wsvMiJteNcAL4yyoJEciphxyfserOSjWbFSPRA==
+X-Received: by 2002:a17:902:c40a:b0:1af:babd:7b6d with SMTP id k10-20020a170902c40a00b001afbabd7b6dmr3776435plk.52.1686156702253;
+        Wed, 07 Jun 2023 09:51:42 -0700 (PDT)
+Received: from localhost (c-67-166-91-86.hsd1.wa.comcast.net. [67.166.91.86])
+        by smtp.gmail.com with ESMTPSA id e12-20020a170902ed8c00b001ac7f583f72sm10664727plj.209.2023.06.07.09.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jun 2023 09:51:41 -0700 (PDT)
+Date:   Thu, 1 Jun 2023 07:51:34 +0000
+From:   Bobby Eshleman <bobbyeshleman@gmail.com>
+To:     Arseniy Krasnov <avkrasnov@sberdevices.ru>
+Cc:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Jiang Wang <jiang.wang@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org, Jonathan Corbet <corbet@lwn.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20230509201437.GFZFqprc6otRejDPUt@fat_crate.local>
- <20230509233641.GGZFrZCTDH7VwUMp5R@fat_crate.local>
- <20230510133024.GBZFuccC1FxIZNKL+8@fat_crate.local>
- <4c47a11c-0565-678d-3467-e01c5ec16600@suse.com>
- <20230511163208.GDZF0YiOfxQhSo4RDm@fat_crate.local>
- <0cd3899b-cf3b-61c1-14ae-60b6b49d14ab@suse.com>
- <20230530152825.GAZHYWGXAp8PHgN/w0@fat_crate.local>
- <888f860d-4307-54eb-01da-11f9adf65559@suse.com>
- <20230531083508.GAZHcGvB68PUAH7f+a@fat_crate.local>
- <efe79c9e-1e31-adb9-8f93-962249bf01bb@suse.com>
- <20230531174857.GDZHeIib57h5lT5Vh1@fat_crate.local>
-Content-Language: en-US
-From:   Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH v6 00/16] x86/mtrr: fix handling with PAT but without MTRR
-In-Reply-To: <20230531174857.GDZHeIib57h5lT5Vh1@fat_crate.local>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------IcFDbzCEbOZUoIIQjljHnzjw"
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Krasnov Arseniy <oxffffaa@gmail.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH RFC net-next v3 8/8] tests: add vsock dgram tests
+Message-ID: <ZHhOBrmU7tzSX3zE@bullseye>
+References: <7dbec78e-ea44-4684-6d02-5d6d5051187e@sberdevices.ru>
+ <0bd40fd8-e666-e2a3-04da-501a0e7b97a9@sberdevices.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0bd40fd8-e666-e2a3-04da-501a0e7b97a9@sberdevices.ru>
+X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------IcFDbzCEbOZUoIIQjljHnzjw
-Content-Type: multipart/mixed; boundary="------------QIQ4dzXU0FOJ0NlrWslFqVZw";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-hyperv@vger.kernel.org, linux-doc@vger.kernel.org,
- mikelley@microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- xen-devel@lists.xenproject.org, Jonathan Corbet <corbet@lwn.net>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Message-ID: <6700dc14-98fa-232d-5f8c-68a418849671@suse.com>
-Subject: Re: [PATCH v6 00/16] x86/mtrr: fix handling with PAT but without MTRR
-References: <20230509201437.GFZFqprc6otRejDPUt@fat_crate.local>
- <20230509233641.GGZFrZCTDH7VwUMp5R@fat_crate.local>
- <20230510133024.GBZFuccC1FxIZNKL+8@fat_crate.local>
- <4c47a11c-0565-678d-3467-e01c5ec16600@suse.com>
- <20230511163208.GDZF0YiOfxQhSo4RDm@fat_crate.local>
- <0cd3899b-cf3b-61c1-14ae-60b6b49d14ab@suse.com>
- <20230530152825.GAZHYWGXAp8PHgN/w0@fat_crate.local>
- <888f860d-4307-54eb-01da-11f9adf65559@suse.com>
- <20230531083508.GAZHcGvB68PUAH7f+a@fat_crate.local>
- <efe79c9e-1e31-adb9-8f93-962249bf01bb@suse.com>
- <20230531174857.GDZHeIib57h5lT5Vh1@fat_crate.local>
-In-Reply-To: <20230531174857.GDZHeIib57h5lT5Vh1@fat_crate.local>
+On Tue, Jun 06, 2023 at 12:34:22PM +0300, Arseniy Krasnov wrote:
+> Sorry, CC mailing lists
+> 
+> On 06.06.2023 12:29, Arseniy Krasnov wrote:
+> > Hello Bobby and Jiang! Small remarks(sorry for this letter layout, I add multiple newline over comments):
+> > 
 
---------------QIQ4dzXU0FOJ0NlrWslFqVZw
-Content-Type: multipart/mixed; boundary="------------wnGgi9qHUTjxOCMCiGguEV5I"
+Hey Arseniy!
 
---------------wnGgi9qHUTjxOCMCiGguEV5I
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> > diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
+> > index 01b636d3039a..45e35da48b40 100644
+> > --- a/tools/testing/vsock/util.c
+> > +++ b/tools/testing/vsock/util.c
+> > @@ -260,6 +260,57 @@ void send_byte(int fd, int expected_ret, int flags)
+> >  	}
+> >  }
+> >  
+> > +/* Transmit one byte and check the return value.
+> > + *
+> > + * expected_ret:
+> > + *  <0 Negative errno (for testing errors)
+> > + *   0 End-of-file
+> > + *   1 Success
+> > + */
+> > +void sendto_byte(int fd, const struct sockaddr *dest_addr, int len, int expected_ret,
+> > +		 int flags)
+> > +{
+> > +	const uint8_t byte = 'A';
+> > +	ssize_t nwritten;
+> > +
+> > +	timeout_begin(TIMEOUT);
+> > +	do {
+> > +		nwritten = sendto(fd, &byte, sizeof(byte), flags, dest_addr,
+> > +				  len);
+> > +		timeout_check("write");
+> > +	} while (nwritten < 0 && errno == EINTR);
+> > +	timeout_end();
+> > +
+> > +	if (expected_ret < 0) {
+> > +		if (nwritten != -1) {
+> > +			fprintf(stderr, "bogus sendto(2) return value %zd\n",
+> > +				nwritten);
+> > +			exit(EXIT_FAILURE);
+> > +		}
+> > +		if (errno != -expected_ret) {
+> > +			perror("write");
+> > +			exit(EXIT_FAILURE);
+> > +		}
+> > +		return;
+> > +	}
+> > +
+> > +	if (nwritten < 0) {
+> > +		perror("write");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +	if (nwritten == 0) {
+> > +		if (expected_ret == 0)
+> > +			return;
+> > +
+> > +		fprintf(stderr, "unexpected EOF while sending byte\n");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +	if (nwritten != sizeof(byte)) {
+> > +		fprintf(stderr, "bogus sendto(2) return value %zd\n", nwritten);
+> > +		exit(EXIT_FAILURE);
+> > +
+> > 	}
+> > 
+> > 
+> > 
+> > ^^^
+> > May be short check that 'nwritten' != 'expected_ret' will be enough? Then print expected and
+> > real value. Here and in 'recvfrom_byte()' below.
+> > 
 
-T24gMzEuMDUuMjMgMTk6NDgsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gT24gV2VkLCBN
-YXkgMzEsIDIwMjMgYXQgMDQ6MjA6MDhQTSArMDIwMCwgSnVlcmdlbiBHcm9zcyB3cm90ZToN
-Cj4+IE9uZSBvdGhlciBub3RlOiB3aHkgZG9lcyBtdHJyX2NsZWFudXAoKSB0aGluayB0aGF0
-IHVzaW5nIDggaW5zdGVhZCBvZiA2DQo+PiB2YXJpYWJsZSBNVFJScyB3b3VsZCBiZSBhbiAi
-b3B0aW1hbCBzZXR0aW5nIj8NCj4gDQo+IE1heWJlIHRoZSBtb3JlIGV4dGVuc2l2ZSBkZWJ1
-ZyBvdXRwdXQgYmVsb3cgd291bGQgaGVscCBhbnN3ZXIgdGhhdC4uLg0KDQpBYm92ZSBxdWVz
-dGlvbiBpc24ndCBhbnN3ZXJlZCwgYnV0IGl0IGF0IGxlYXN0IHRlbGxzIG1lIHRoYXQgdGhl
-IHBsYW4gd2FzDQp0byB3cml0ZSBNVFJSIHZhbHVlcyBhcyBzZWVuIG9uIHRoZSBvcmlnaW5h
-bCBrZXJuZWwuDQoNCkxvb2tpbmcgaW50byB0aGUgaXNzdWUgd2l0aCB0aGF0IGluZm9ybWF0
-aW9uIGluIG1pbmQuDQoNCj4gDQo+PiBJTU8gaXQgc2hvdWxkIHJlcGxhY2UgdGhlIG9yaWdp
-bmFsIHNldHVwIG9ubHkgaW4gY2FzZSBpdCBpcyB1c2luZyBfbGVzc18NCj4+IE1UUlJzIHRo
-YW4gYmVmb3JlLg0KPiANCj4gUmlnaHQuDQoNCkknbGwgbG9vayBpbnRvIHRoYXQgbGF0ZXIs
-IHVubGVzcyBteSBxdWVzdGlvbiBiZWxvdyB3aWxsIGJlIGFuc3dlcmVkIHdpdGgNCiJ5ZXMi
-Lg0KDQo+IA0KPj4gQWRkaXRpb25hbGx5IEkgYmVsaWV2ZSBtdHJyX2NsZWFudXAoKSB3b3Vs
-ZCBtYWtlIG11Y2ggbW9yZSBzZW5zZSBpZiBpdA0KPj4gd291bGRuJ3QgYmUgX19pbml0LCBi
-dXQgYmVpbmcgdXNhYmxlIHdoZW4gdHJ5aW5nIHRvIGFkZCBhZGRpdGlvbmFsIE1UUlJzDQo+
-PiBpbiB0aGUgcnVubmluZyBzeXN0ZW0gaW4gY2FzZSB3ZSBydW4gb3V0IG9mIE1UUlJzLg0K
-Pj4NCj4+IEl0IHNob3VsZCBwcm9iYWJseSBiZSBiYXNlZCBvbiB0aGUgbmV3IE1UUlIgbWFw
-IGFueXdheS4uLg0KPiANCj4gU28gSSdtIG5vdCByZWFsbHkgc3VyZSB3ZSByZWFsbHkgY2Fy
-ZSBhYm91dCBhZGRpbmcgYWRkaXRpb25hbCBNVFJScy4NCg0KRG9lcyB0aGlzIHRyYW5zbGF0
-ZSB0bzogIndlIHNob3VsZCByZW1vdmUgdGhhdCBjbGVhbnVwIGNyYXAiPyBJJ2QgYmUNCnBv
-c2l0aXZlIHRvIHRoYXQuIDotKQ0KDQo+IFRoZXJlIHByb2JhYmx5IGlzIGEgdXNlIGNhc2Ug
-d2hpY2ggZG9lcyB0aGF0IGJ1dCBJIGhhdmVuJ3Qgc2VlbiBvbmUgeWV0DQo+IC0gTVRSUnMg
-YXJlIGFsbCBsZWdhY3kgY3JhcCB0byBtZS4NCg0KSSB0aGluayB0aGVyZSBhcmUgc3RpbGwg
-YSBmZXcgZHJpdmVycyB1c2luZyB0aGVtLiBObyBpZGVhIGhvdyBvZnRlbg0KdGhvc2UgZHJp
-dmVycyBhcmUgaW4gdXNlLCB0aG91Z2guDQoNCj4gDQo+IEJ0dywgb25lIG1vcmUgcGF0Y2gg
-b250b3A6DQo+IA0KPiAtLS0NCj4gRnJvbTogIkJvcmlzbGF2IFBldGtvdiAoQU1EKSIgPGJw
-QGFsaWVuOC5kZT4NCj4gRGF0ZTogV2VkLCAzMSBNYXkgMjAyMyAxOToyMzozNCArMDIwMA0K
-PiBTdWJqZWN0OiBbUEFUQ0hdIHg4Ni9tdHJyOiBVbmlmeSBkZWJ1Z2dpbmcgcHJpbnRpbmcN
-Cj4gDQo+IFB1dCBhbGwgdGhlIGRlYnVnZ2luZyBvdXRwdXQgYmVoaW5kICJtdHJyPWRlYnVn
-IiBhbmQgZ2V0IHJpZCBvZg0KPiAibXRycl9jbGVhbnVwX2RlYnVnIiB3aGljaCB3YXNuJ3Qg
-ZXZlbiBkb2N1bWVudGVkIGFueXdoZXJlLg0KPiANCj4gTm8gZnVuY3Rpb25hbCBjaGFuZ2Vz
-Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQm9yaXNsYXYgUGV0a292IChBTUQpIDxicEBhbGll
-bjguZGU+DQoNClJldmlld2VkLWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+
-DQoNCg0KSnVlcmdlbg0KDQo+IC0tLQ0KPiAgIGFyY2gveDg2L2tlcm5lbC9jcHUvbXRyci9j
-bGVhbnVwLmMgfCA1OSArKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0NCj4gICBhcmNo
-L3g4Ni9rZXJuZWwvY3B1L210cnIvZ2VuZXJpYy5jIHwgIDIgKy0NCj4gICBhcmNoL3g4Ni9r
-ZXJuZWwvY3B1L210cnIvbXRyci5jICAgIHwgIDUgKy0tDQo+ICAgYXJjaC94ODYva2VybmVs
-L2NwdS9tdHJyL210cnIuaCAgICB8ICAzICsrDQo+ICAgNCBmaWxlcyBjaGFuZ2VkLCAyOSBp
-bnNlcnRpb25zKCspLCA0MCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNo
-L3g4Ni9rZXJuZWwvY3B1L210cnIvY2xlYW51cC5jIGIvYXJjaC94ODYva2VybmVsL2NwdS9t
-dHJyL2NsZWFudXAuYw0KPiBpbmRleCBlZDVmODRjMjBhYzIuLjE4Y2Y3OWQ2ZTJjNSAxMDA2
-NDQNCj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2NwdS9tdHJyL2NsZWFudXAuYw0KPiArKysg
-Yi9hcmNoL3g4Ni9rZXJuZWwvY3B1L210cnIvY2xlYW51cC5jDQo+IEBAIC01NSw5ICs1NSw2
-IEBAIHN0YXRpYyBpbnQgX19pbml0ZGF0YQkJCQlucl9yYW5nZTsNCj4gICANCj4gICBzdGF0
-aWMgc3RydWN0IHZhcl9tdHJyX3JhbmdlX3N0YXRlIF9faW5pdGRhdGEJcmFuZ2Vfc3RhdGVb
-UkFOR0VfTlVNXTsNCj4gICANCj4gLXN0YXRpYyBpbnQgX19pbml0ZGF0YSBkZWJ1Z19wcmlu
-dDsNCj4gLSNkZWZpbmUgRHByaW50ayh4Li4uKSBkbyB7IGlmIChkZWJ1Z19wcmludCkgcHJf
-ZGVidWcoeCk7IH0gd2hpbGUgKDApDQo+IC0NCj4gICAjZGVmaW5lIEJJT1NfQlVHX01TRyBc
-DQo+ICAgCSJXQVJOSU5HOiBCSU9TIGJ1ZzogVkFSIE1UUlIgJWQgY29udGFpbnMgc3RyYW5n
-ZSBVQyBlbnRyeSB1bmRlciAxTSwgY2hlY2sgd2l0aCB5b3VyIHN5c3RlbSB2ZW5kb3IhXG4i
-DQo+ICAgDQo+IEBAIC03OSwxMiArNzYsMTEgQEAgeDg2X2dldF9tdHJyX21lbV9yYW5nZShz
-dHJ1Y3QgcmFuZ2UgKnJhbmdlLCBpbnQgbnJfcmFuZ2UsDQo+ICAgCQlucl9yYW5nZSA9IGFk
-ZF9yYW5nZV93aXRoX21lcmdlKHJhbmdlLCBSQU5HRV9OVU0sIG5yX3JhbmdlLA0KPiAgIAkJ
-CQkJCWJhc2UsIGJhc2UgKyBzaXplKTsNCj4gICAJfQ0KPiAtCWlmIChkZWJ1Z19wcmludCkg
-ew0KPiAtCQlwcl9kZWJ1ZygiQWZ0ZXIgV0IgY2hlY2tpbmdcbiIpOw0KPiAtCQlmb3IgKGkg
-PSAwOyBpIDwgbnJfcmFuZ2U7IGkrKykNCj4gLQkJCXByX2RlYnVnKCJNVFJSIE1BUCBQRk46
-ICUwMTZsbHggLSAlMDE2bGx4XG4iLA0KPiAtCQkJCSByYW5nZVtpXS5zdGFydCwgcmFuZ2Vb
-aV0uZW5kKTsNCj4gLQl9DQo+ICsNCj4gKwlEcHJpbnRrKCJBZnRlciBXQiBjaGVja2luZ1xu
-Iik7DQo+ICsJZm9yIChpID0gMDsgaSA8IG5yX3JhbmdlOyBpKyspDQo+ICsJCURwcmludGso
-Ik1UUlIgTUFQIFBGTjogJTAxNmxseCAtICUwMTZsbHhcbiIsDQo+ICsJCQkgcmFuZ2VbaV0u
-c3RhcnQsIHJhbmdlW2ldLmVuZCk7DQo+ICAgDQo+ICAgCS8qIFRha2Ugb3V0IFVDIHJhbmdl
-czogKi8NCj4gICAJZm9yIChpID0gMDsgaSA8IG51bV92YXJfcmFuZ2VzOyBpKyspIHsNCj4g
-QEAgLTExMiwyNCArMTA4LDIyIEBAIHg4Nl9nZXRfbXRycl9tZW1fcmFuZ2Uoc3RydWN0IHJh
-bmdlICpyYW5nZSwgaW50IG5yX3JhbmdlLA0KPiAgIAkJc3VidHJhY3RfcmFuZ2UocmFuZ2Us
-IFJBTkdFX05VTSwgZXh0cmFfcmVtb3ZlX2Jhc2UsDQo+ICAgCQkJCSBleHRyYV9yZW1vdmVf
-YmFzZSArIGV4dHJhX3JlbW92ZV9zaXplKTsNCj4gICANCj4gLQlpZiAgKGRlYnVnX3ByaW50
-KSB7DQo+IC0JCXByX2RlYnVnKCJBZnRlciBVQyBjaGVja2luZ1xuIik7DQo+IC0JCWZvciAo
-aSA9IDA7IGkgPCBSQU5HRV9OVU07IGkrKykgew0KPiAtCQkJaWYgKCFyYW5nZVtpXS5lbmQp
-DQo+IC0JCQkJY29udGludWU7DQo+IC0JCQlwcl9kZWJ1ZygiTVRSUiBNQVAgUEZOOiAlMDE2
-bGx4IC0gJTAxNmxseFxuIiwNCj4gLQkJCQkgcmFuZ2VbaV0uc3RhcnQsIHJhbmdlW2ldLmVu
-ZCk7DQo+IC0JCX0NCj4gKwlEcHJpbnRrKCJBZnRlciBVQyBjaGVja2luZ1xuIik7DQo+ICsJ
-Zm9yIChpID0gMDsgaSA8IFJBTkdFX05VTTsgaSsrKSB7DQo+ICsJCWlmICghcmFuZ2VbaV0u
-ZW5kKQ0KPiArCQkJY29udGludWU7DQo+ICsNCj4gKwkJRHByaW50aygiTVRSUiBNQVAgUEZO
-OiAlMDE2bGx4IC0gJTAxNmxseFxuIiwNCj4gKwkJCSByYW5nZVtpXS5zdGFydCwgcmFuZ2Vb
-aV0uZW5kKTsNCj4gICAJfQ0KPiAgIA0KPiAgIAkvKiBzb3J0IHRoZSByYW5nZXMgKi8NCj4g
-ICAJbnJfcmFuZ2UgPSBjbGVhbl9zb3J0X3JhbmdlKHJhbmdlLCBSQU5HRV9OVU0pOw0KPiAt
-CWlmICAoZGVidWdfcHJpbnQpIHsNCj4gLQkJcHJfZGVidWcoIkFmdGVyIHNvcnRpbmdcbiIp
-Ow0KPiAtCQlmb3IgKGkgPSAwOyBpIDwgbnJfcmFuZ2U7IGkrKykNCj4gLQkJCXByX2RlYnVn
-KCJNVFJSIE1BUCBQRk46ICUwMTZsbHggLSAlMDE2bGx4XG4iLA0KPiAtCQkJCSByYW5nZVtp
-XS5zdGFydCwgcmFuZ2VbaV0uZW5kKTsNCj4gLQl9DQo+ICsNCj4gKwlEcHJpbnRrKCJBZnRl
-ciBzb3J0aW5nXG4iKTsNCj4gKwlmb3IgKGkgPSAwOyBpIDwgbnJfcmFuZ2U7IGkrKykNCj4g
-KwkJRHByaW50aygiTVRSUiBNQVAgUEZOOiAlMDE2bGx4IC0gJTAxNmxseFxuIiwNCj4gKwkJ
-CXJhbmdlW2ldLnN0YXJ0LCByYW5nZVtpXS5lbmQpOw0KPiAgIA0KPiAgIAlyZXR1cm4gbnJf
-cmFuZ2U7DQo+ICAgfQ0KPiBAQCAtMTY0LDEzICsxNTgsNiBAQCBzdGF0aWMgaW50IF9faW5p
-dCBlbmFibGVfbXRycl9jbGVhbnVwX3NldHVwKGNoYXIgKnN0cikNCj4gICB9DQo+ICAgZWFy
-bHlfcGFyYW0oImVuYWJsZV9tdHJyX2NsZWFudXAiLCBlbmFibGVfbXRycl9jbGVhbnVwX3Nl
-dHVwKTsNCj4gICANCj4gLXN0YXRpYyBpbnQgX19pbml0IG10cnJfY2xlYW51cF9kZWJ1Z19z
-ZXR1cChjaGFyICpzdHIpDQo+IC17DQo+IC0JZGVidWdfcHJpbnQgPSAxOw0KPiAtCXJldHVy
-biAwOw0KPiAtfQ0KPiAtZWFybHlfcGFyYW0oIm10cnJfY2xlYW51cF9kZWJ1ZyIsIG10cnJf
-Y2xlYW51cF9kZWJ1Z19zZXR1cCk7DQo+IC0NCj4gICBzdGF0aWMgdm9pZCBfX2luaXQNCj4g
-ICBzZXRfdmFyX210cnIodW5zaWduZWQgaW50IHJlZywgdW5zaWduZWQgbG9uZyBiYXNlaywg
-dW5zaWduZWQgbG9uZyBzaXplaywNCj4gICAJICAgICB1bnNpZ25lZCBjaGFyIHR5cGUpDQo+
-IEBAIC0yNjcsNyArMjU0LDcgQEAgcmFuZ2VfdG9fbXRycih1bnNpZ25lZCBpbnQgcmVnLCB1
-bnNpZ25lZCBsb25nIHJhbmdlX3N0YXJ0aywNCj4gICAJCQlhbGlnbiA9IG1heF9hbGlnbjsN
-Cj4gICANCj4gICAJCXNpemVrID0gMVVMIDw8IGFsaWduOw0KPiAtCQlpZiAoZGVidWdfcHJp
-bnQpIHsNCj4gKwkJaWYgKG10cnJfZGVidWcpIHsNCj4gICAJCQljaGFyIHN0YXJ0X2ZhY3Rv
-ciA9ICdLJywgc2l6ZV9mYWN0b3IgPSAnSyc7DQo+ICAgCQkJdW5zaWduZWQgbG9uZyBzdGFy
-dF9iYXNlLCBzaXplX2Jhc2U7DQo+ICAgDQo+IEBAIC01NDIsNyArNTI5LDcgQEAgc3RhdGlj
-IHZvaWQgX19pbml0IHByaW50X291dF9tdHJyX3JhbmdlX3N0YXRlKHZvaWQpDQo+ICAgCQlz
-dGFydF9iYXNlID0gdG9fc2l6ZV9mYWN0b3Ioc3RhcnRfYmFzZSwgJnN0YXJ0X2ZhY3Rvcik7
-DQo+ICAgCQl0eXBlID0gcmFuZ2Vfc3RhdGVbaV0udHlwZTsNCj4gICANCj4gLQkJcHJfZGVi
-dWcoInJlZyAlZCwgYmFzZTogJWxkJWNCLCByYW5nZTogJWxkJWNCLCB0eXBlICVzXG4iLA0K
-PiArCQlEcHJpbnRrKCJyZWcgJWQsIGJhc2U6ICVsZCVjQiwgcmFuZ2U6ICVsZCVjQiwgdHlw
-ZSAlc1xuIiwNCj4gICAJCQlpLCBzdGFydF9iYXNlLCBzdGFydF9mYWN0b3IsDQo+ICAgCQkJ
-c2l6ZV9iYXNlLCBzaXplX2ZhY3RvciwNCj4gICAJCQkodHlwZSA9PSBNVFJSX1RZUEVfVU5D
-QUNIQUJMRSkgPyAiVUMiIDoNCj4gQEAgLTcxNCw3ICs3MDEsNyBAQCBpbnQgX19pbml0IG10
-cnJfY2xlYW51cCh2b2lkKQ0KPiAgIAkJcmV0dXJuIDA7DQo+ICAgDQo+ICAgCS8qIFByaW50
-IG9yaWdpbmFsIHZhciBNVFJScyBhdCBmaXJzdCwgZm9yIGRlYnVnZ2luZzogKi8NCj4gLQlw
-cl9kZWJ1Zygib3JpZ2luYWwgdmFyaWFibGUgTVRSUnNcbiIpOw0KPiArCURwcmludGsoIm9y
-aWdpbmFsIHZhcmlhYmxlIE1UUlJzXG4iKTsNCj4gICAJcHJpbnRfb3V0X210cnJfcmFuZ2Vf
-c3RhdGUoKTsNCj4gICANCj4gICAJbWVtc2V0KHJhbmdlLCAwLCBzaXplb2YocmFuZ2UpKTsN
-Cj4gQEAgLTc0Niw3ICs3MzMsNyBAQCBpbnQgX19pbml0IG10cnJfY2xlYW51cCh2b2lkKQ0K
-PiAgIA0KPiAgIAkJaWYgKCFyZXN1bHRbaV0uYmFkKSB7DQo+ICAgCQkJc2V0X3Zhcl9tdHJy
-X2FsbCgpOw0KPiAtCQkJcHJfZGVidWcoIk5ldyB2YXJpYWJsZSBNVFJSc1xuIik7DQo+ICsJ
-CQlEcHJpbnRrKCJOZXcgdmFyaWFibGUgTVRSUnNcbiIpOw0KPiAgIAkJCXByaW50X291dF9t
-dHJyX3JhbmdlX3N0YXRlKCk7DQo+ICAgCQkJcmV0dXJuIDE7DQo+ICAgCQl9DQo+IEBAIC03
-NjYsNyArNzUzLDcgQEAgaW50IF9faW5pdCBtdHJyX2NsZWFudXAodm9pZCkNCj4gICANCj4g
-ICAJCQltdHJyX2NhbGNfcmFuZ2Vfc3RhdGUoY2h1bmtfc2l6ZSwgZ3Jhbl9zaXplLA0KPiAg
-IAkJCQkgICAgICB4X3JlbW92ZV9iYXNlLCB4X3JlbW92ZV9zaXplLCBpKTsNCj4gLQkJCWlm
-IChkZWJ1Z19wcmludCkgew0KPiArCQkJaWYgKG10cnJfZGVidWcpIHsNCj4gICAJCQkJbXRy
-cl9wcmludF9vdXRfb25lX3Jlc3VsdChpKTsNCj4gICAJCQkJcHJfaW5mbygiXG4iKTsNCj4g
-ICAJCQl9DQo+IEBAIC03OTAsNyArNzc3LDcgQEAgaW50IF9faW5pdCBtdHJyX2NsZWFudXAo
-dm9pZCkNCj4gICAJCWdyYW5fc2l6ZSA8PD0gMTA7DQo+ICAgCQl4ODZfc2V0dXBfdmFyX210
-cnJzKHJhbmdlLCBucl9yYW5nZSwgY2h1bmtfc2l6ZSwgZ3Jhbl9zaXplKTsNCj4gICAJCXNl
-dF92YXJfbXRycl9hbGwoKTsNCj4gLQkJcHJfZGVidWcoIk5ldyB2YXJpYWJsZSBNVFJSc1xu
-Iik7DQo+ICsJCURwcmludGsoIk5ldyB2YXJpYWJsZSBNVFJSc1xuIik7DQo+ICAgCQlwcmlu
-dF9vdXRfbXRycl9yYW5nZV9zdGF0ZSgpOw0KPiAgIAkJcmV0dXJuIDE7DQo+ICAgCX0gZWxz
-ZSB7DQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvY3B1L210cnIvZ2VuZXJpYy5j
-IGIvYXJjaC94ODYva2VybmVsL2NwdS9tdHJyL2dlbmVyaWMuYw0KPiBpbmRleCBlNWM1MTky
-ZDhhMjguLjU4YTM4NDg0MzVjNCAxMDA2NDQNCj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2Nw
-dS9tdHJyL2dlbmVyaWMuYw0KPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L210cnIvZ2Vu
-ZXJpYy5jDQo+IEBAIC00MSw3ICs0MSw3IEBAIHN0cnVjdCBjYWNoZV9tYXAgew0KPiAgIAl1
-NjQgZml4ZWQ6MTsNCj4gICB9Ow0KPiAgIA0KPiAtc3RhdGljIGJvb2wgbXRycl9kZWJ1ZzsN
-Cj4gK2Jvb2wgbXRycl9kZWJ1ZzsNCj4gICANCj4gICBzdGF0aWMgaW50IF9faW5pdCBtdHJy
-X3BhcmFtX3NldHVwKGNoYXIgKnN0cikNCj4gICB7DQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4
-Ni9rZXJuZWwvY3B1L210cnIvbXRyci5jIGIvYXJjaC94ODYva2VybmVsL2NwdS9tdHJyL210
-cnIuYw0KPiBpbmRleCBlYzg2NzBiYjVkODguLjc2N2JmMWM3MWFhZCAxMDA2NDQNCj4gLS0t
-IGEvYXJjaC94ODYva2VybmVsL2NwdS9tdHJyL210cnIuYw0KPiArKysgYi9hcmNoL3g4Ni9r
-ZXJuZWwvY3B1L210cnIvbXRyci5jDQo+IEBAIC0zMzIsNyArMzMyLDcgQEAgc3RhdGljIGlu
-dCBtdHJyX2NoZWNrKHVuc2lnbmVkIGxvbmcgYmFzZSwgdW5zaWduZWQgbG9uZyBzaXplKQ0K
-PiAgIHsNCj4gICAJaWYgKChiYXNlICYgKFBBR0VfU0laRSAtIDEpKSB8fCAoc2l6ZSAmIChQ
-QUdFX1NJWkUgLSAxKSkpIHsNCj4gICAJCXByX3dhcm4oInNpemUgYW5kIGJhc2UgbXVzdCBi
-ZSBtdWx0aXBsZXMgb2YgNCBraUJcbiIpOw0KPiAtCQlwcl9kZWJ1Zygic2l6ZTogMHglbHgg
-IGJhc2U6IDB4JWx4XG4iLCBzaXplLCBiYXNlKTsNCj4gKwkJRHByaW50aygic2l6ZTogMHgl
-bHggIGJhc2U6IDB4JWx4XG4iLCBzaXplLCBiYXNlKTsNCj4gICAJCWR1bXBfc3RhY2soKTsN
-Cj4gICAJCXJldHVybiAtMTsNCj4gICAJfQ0KPiBAQCAtNDIzLDggKzQyMyw3IEBAIGludCBt
-dHJyX2RlbF9wYWdlKGludCByZWcsIHVuc2lnbmVkIGxvbmcgYmFzZSwgdW5zaWduZWQgbG9u
-ZyBzaXplKQ0KPiAgIAkJCX0NCj4gICAJCX0NCj4gICAJCWlmIChyZWcgPCAwKSB7DQo+IC0J
-CQlwcl9kZWJ1Zygibm8gTVRSUiBmb3IgJWx4MDAwLCVseDAwMCBmb3VuZFxuIiwNCj4gLQkJ
-CQkgYmFzZSwgc2l6ZSk7DQo+ICsJCQlEcHJpbnRrKCJubyBNVFJSIGZvciAlbHgwMDAsJWx4
-MDAwIGZvdW5kXG4iLCBiYXNlLCBzaXplKTsNCj4gICAJCQlnb3RvIG91dDsNCj4gICAJCX0N
-Cj4gICAJfQ0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NwdS9tdHJyL210cnIu
-aCBiL2FyY2gveDg2L2tlcm5lbC9jcHUvbXRyci9tdHJyLmgNCj4gaW5kZXggODM4NWQ3ZDNh
-ODY1Li41NjU1ZjI1M2Q5MjkgMTAwNjQ0DQo+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcHUv
-bXRyci9tdHJyLmgNCj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NwdS9tdHJyL210cnIuaA0K
-PiBAQCAtMTAsNiArMTAsOSBAQA0KPiAgICNkZWZpbmUgTVRSUl9DSEFOR0VfTUFTS19WQVJJ
-QUJMRSAgMHgwMg0KPiAgICNkZWZpbmUgTVRSUl9DSEFOR0VfTUFTS19ERUZUWVBFICAgMHgw
-NA0KPiAgIA0KPiArZXh0ZXJuIGJvb2wgbXRycl9kZWJ1ZzsNCj4gKyNkZWZpbmUgRHByaW50
-ayh4Li4uKSBkbyB7IGlmIChtdHJyX2RlYnVnKSBwcl9pbmZvKHgpOyB9IHdoaWxlICgwKQ0K
-PiArDQo+ICAgZXh0ZXJuIHVuc2lnbmVkIGludCBtdHJyX3VzYWdlX3RhYmxlW01UUlJfTUFY
-X1ZBUl9SQU5HRVNdOw0KPiAgIA0KPiAgIHN0cnVjdCBtdHJyX29wcyB7DQoNCg==
---------------wnGgi9qHUTjxOCMCiGguEV5I
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Right now this is really just a copy/paste of the send_byte() that
+stream uses, so that would probably make the two report errors slightly
+different. If desired for some specific reason, I'm open to it.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+> > 
+> > 
+> > 
+> > +}
+> > +
+> >  /* Receive one byte and check the return value.
+> >   *
+> >   * expected_ret:
+> > @@ -313,6 +364,60 @@ void recv_byte(int fd, int expected_ret, int flags)
+> >  	}
+> >  }
+> >  
+> > +/* Receive one byte and check the return value.
+> > + *
+> > + * expected_ret:
+> > + *  <0 Negative errno (for testing errors)
+> > + *   0 End-of-file
+> > + *   1 Success
+> > + */
+> > +void recvfrom_byte(int fd, struct sockaddr *src_addr, socklen_t *addrlen,
+> > +		   int expected_ret, int flags)
+> > +{
+> > +	uint8_t byte;
+> > +	ssize_t nread;
+> > +
+> > +	timeout_begin(TIMEOUT);
+> > +	do {
+> > +		nread = recvfrom(fd, &byte, sizeof(byte), flags, src_addr, addrlen);
+> > +		timeout_check("read");
+> > +	} while (nread < 0 && errno == EINTR);
+> > +	timeout_end();
+> > +
+> > +	if (expected_ret < 0) {
+> > +		if (nread != -1) {
+> > +			fprintf(stderr, "bogus recvfrom(2) return value %zd\n",
+> > +				nread);
+> > +			exit(EXIT_FAILURE);
+> > +		}
+> > +		if (errno != -expected_ret) {
+> > +			perror("read");
+> > +			exit(EXIT_FAILURE);
+> > +		}
+> > +		return;
+> > +	}
+> > +
+> > +	if (nread < 0) {
+> > +		perror("read");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +	if (nread == 0) {
+> > +		if (expected_ret == 0)
+> > +			return;
+> > +
+> > +		fprintf(stderr, "unexpected EOF while receiving byte\n");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +	if (nread != sizeof(byte)) {
+> > +		fprintf(stderr, "bogus recvfrom(2) return value %zd\n", nread);
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +	if (byte != 'A') {
+> > +		fprintf(stderr, "unexpected byte read %c\n", byte);
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +}
+> > +
+> >  /* Run test cases.  The program terminates if a failure occurs. */
+> >  void run_tests(const struct test_case *test_cases,
+> >  	       const struct test_opts *opts)
+> > diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
+> > index fb99208a95ea..6e5cd610bf05 100644
+> > --- a/tools/testing/vsock/util.h
+> > +++ b/tools/testing/vsock/util.h
+> > @@ -43,7 +43,11 @@ int vsock_seqpacket_accept(unsigned int cid, unsigned int port,
+> >  			   struct sockaddr_vm *clientaddrp);
+> >  void vsock_wait_remote_close(int fd);
+> >  void send_byte(int fd, int expected_ret, int flags);
+> > +void sendto_byte(int fd, const struct sockaddr *dest_addr, int len, int expected_ret,
+> > +		 int flags);
+> >  void recv_byte(int fd, int expected_ret, int flags);
+> > +void recvfrom_byte(int fd, struct sockaddr *src_addr, socklen_t *addrlen,
+> > +		   int expected_ret, int flags);
+> >  void run_tests(const struct test_case *test_cases,
+> >  	       const struct test_opts *opts);
+> >  void list_tests(const struct test_case *test_cases);
+> > diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+> > index ac1bd3ac1533..851c3d65178d 100644
+> > --- a/tools/testing/vsock/vsock_test.c
+> > +++ b/tools/testing/vsock/vsock_test.c
+> > @@ -202,6 +202,113 @@ static void test_stream_server_close_server(const struct test_opts *opts)
+> >  	close(fd);
+> >  }
+> >  
+> > +static void test_dgram_sendto_client(const struct test_opts *opts)
+> > +{
+> > +	union {
+> > +		struct sockaddr sa;
+> > +		struct sockaddr_vm svm;
+> > +	} addr = {
+> > +		.svm = {
+> > +			.svm_family = AF_VSOCK,
+> > +			.svm_port = 1234,
+> > +			.svm_cid = opts->peer_cid,
+> > +		},
+> > +	};
+> > +	int fd;
+> > +
+> > +	/* Wait for the server to be ready */
+> > +	control_expectln("BIND");
+> > +
+> > +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
+> > +	if (fd < 0) {
+> > +		perror("socket");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	sendto_byte(fd, &addr.sa, sizeof(addr.svm), 1, 0);
+> > +
+> > +	/* Notify the server that the client has finished */
+> > +	control_writeln("DONE");
+> > +
+> > +	close(fd);
+> > +}
+> > +
+> > +static void test_dgram_sendto_server(const struct test_opts *opts)
+> > +{
+> > +	union {
+> > +		struct sockaddr sa;
+> > +		struct sockaddr_vm svm;
+> > +	} addr = {
+> > +		.svm = {
+> > +			.svm_family = AF_VSOCK,
+> > +			.svm_port = 1234,
+> > +			.svm_cid = VMADDR_CID_ANY,
+> > +		},
+> > +	};
+> > +	int fd;
+> > +	int len = sizeof(addr.sa);
+> > +
+> > +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
+> > 
+> > 
+> > 
+> > ^^^
+> > I think we can check 'socket()' return value;
+> > 
 
-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
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
+Gotcha, I'll add in next rev.
 
---------------wnGgi9qHUTjxOCMCiGguEV5I--
+> > 
+> > 
+> > 
+> > +
+> > +	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
+> > +		perror("bind");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	/* Notify the client that the server is ready */
+> > +	control_writeln("BIND");
+> > +
+> > +	recvfrom_byte(fd, &addr.sa, &len, 1, 0);
+> > +
+> > +	/* Wait for the client to finish */
+> > +	control_expectln("DONE");
+> > +
+> > +	close(fd);
+> > +}
+> > +
+> > +static void test_dgram_connect_client(const struct test_opts *opts)
+> > +{
+> > +	union {
+> > +		struct sockaddr sa;
+> > +		struct sockaddr_vm svm;
+> > +	} addr = {
+> > +		.svm = {
+> > +			.svm_family = AF_VSOCK,
+> > +			.svm_port = 1234,
+> > +			.svm_cid = opts->peer_cid,
+> > +		},
+> > +	};
+> > +	int fd;
+> > +	int ret;
+> > +
+> > +	/* Wait for the server to be ready */
+> > +	control_expectln("BIND");
+> > +
+> > +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
+> > +	if (fd < 0) {
+> > +		perror("bind");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	ret = connect(fd, &addr.sa, sizeof(addr.svm));
+> > +	if (ret < 0) {
+> > +		perror("connect");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	send_byte(fd, 1, 0);
+> > +
+> > +	/* Notify the server that the client has finished */
+> > +	control_writeln("DONE");
+> > +
+> > +	close(fd);
+> > +}
+> > +
+> > +static void test_dgram_connect_server(const struct test_opts *opts)
+> > +{
+> > +	test_dgram_sendto_server(opts);
+> > +}
+> > +
+> >  /* With the standard socket sizes, VMCI is able to support about 100
+> >   * concurrent stream connections.
+> >   */
+> > @@ -255,6 +362,77 @@ static void test_stream_multiconn_server(const struct test_opts *opts)
+> >  		close(fds[i]);
+> >  }
+> >  
+> > +static void test_dgram_multiconn_client(const struct test_opts *opts)
+> > +{
+> > +	int fds[MULTICONN_NFDS];
+> > +	int i;
+> > +	union {
+> > +		struct sockaddr sa;
+> > +		struct sockaddr_vm svm;
+> > +	} addr = {
+> > +		.svm = {
+> > +			.svm_family = AF_VSOCK,
+> > +			.svm_port = 1234,
+> > +			.svm_cid = opts->peer_cid,
+> > +		},
+> > +	};
+> > +
+> > +	/* Wait for the server to be ready */
+> > +	control_expectln("BIND");
+> > +
+> > +	for (i = 0; i < MULTICONN_NFDS; i++) {
+> > +		fds[i] = socket(AF_VSOCK, SOCK_DGRAM, 0);
+> > +		if (fds[i] < 0) {
+> > +			perror("socket");
+> > +			exit(EXIT_FAILURE);
+> > +		}
+> > +	}
+> > +
+> > +	for (i = 0; i < MULTICONN_NFDS; i++)
+> > +		sendto_byte(fds[i], &addr.sa, sizeof(addr.svm), 1, 0);
+> > +
+> > +	/* Notify the server that the client has finished */
+> > +	control_writeln("DONE");
+> > +
+> > +	for (i = 0; i < MULTICONN_NFDS; i++)
+> > +		close(fds[i]);
+> > +}
+> > +
+> > +static void test_dgram_multiconn_server(const struct test_opts *opts)
+> > +{
+> > +	union {
+> > +		struct sockaddr sa;
+> > +		struct sockaddr_vm svm;
+> > +	} addr = {
+> > +		.svm = {
+> > +			.svm_family = AF_VSOCK,
+> > +			.svm_port = 1234,
+> > +			.svm_cid = VMADDR_CID_ANY,
+> > +		},
+> > +	};
+> > +	int fd;
+> > +	int len = sizeof(addr.sa);
+> > +	int i;
+> > +
+> > +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
+> > 
+> > 
+> > 
+> > ^^^
+> > I think we can check 'socket()' return value;
+> > 
+> > 
+> > 
+> > +
+> > +	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
+> > +		perror("bind");
+> > +		exit(EXIT_FAILURE);
+> > +	}
+> > +
+> > +	/* Notify the client that the server is ready */
+> > +	control_writeln("BIND");
+> > +
+> > +	for (i = 0; i < MULTICONN_NFDS; i++)
+> > +		recvfrom_byte(fd, &addr.sa, &len, 1, 0);
+> > +
+> > +	/* Wait for the client to finish */
+> > +	control_expectln("DONE");
+> > +
+> > +	close(fd);
+> > +}
+> > +
+> >  static void test_stream_msg_peek_client(const struct test_opts *opts)
+> >  {
+> >  	int fd;
+> > @@ -1128,6 +1306,21 @@ static struct test_case test_cases[] = {
+> >  		.run_client = test_stream_virtio_skb_merge_client,
+> >  		.run_server = test_stream_virtio_skb_merge_server,
+> >  	},
+> > +	{
+> > +		.name = "SOCK_DGRAM client close",
+> > +		.run_client = test_dgram_sendto_client,
+> > +		.run_server = test_dgram_sendto_server,
+> > +	},
+> > +	{
+> > +		.name = "SOCK_DGRAM client connect",
+> > +		.run_client = test_dgram_connect_client,
+> > +		.run_server = test_dgram_connect_server,
+> > +	},
+> > +	{
+> > +		.name = "SOCK_DGRAM multiple connections",
+> > +		.run_client = test_dgram_multiconn_client,
+> > +		.run_server = test_dgram_multiconn_server,
+> > +	},
+> > 
+> > 
+> > 
+> > 
+> > SOCK_DGRAM guarantees message bounds, I think it will be good to add such test like in SOCK_SEQPACKET tests.
 
---------------QIQ4dzXU0FOJ0NlrWslFqVZw--
+Agreed, I'll write one for the next rev.
 
---------------IcFDbzCEbOZUoIIQjljHnzjw
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+> > 
+> > Thanks, Arseniy
 
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmR4PRUFAwAAAAAACgkQsN6d1ii/Ey+P
-qQf9Etox5UudS5NPRePdMAzbk2QcQbyRXuvIYLtEAlbIol2Se/0sWNnqzYxbgGAEVz6TGd5iuB8I
-lC6w+GeGVOLqWB/i+8EFvHBwVeWzrcDX4RSV+BmDsDwaX3zcVTA4iy6pYxYih1+h6cR1yypciKbk
-COcI54R0pxfb3ruKg32nhJ1kdkc8PukXiGDPqCbwniA+/VWobpAjyCeXU3iftc53aMNnmY9Gd6Nr
-iqg9PkyPwrfEUPo28ti8O1yLB4QpNhEXNNU8XcvooAHLXkBNFGmGv7cx23tukyNWwbhybEDhpKna
-OYidLyQD/eLVs56hl+kJ/5/TMzmzFB9Do5MoNEBe3w==
-=ZtIN
------END PGP SIGNATURE-----
-
---------------IcFDbzCEbOZUoIIQjljHnzjw--
+Thanks for the review!
+> > 
+> > 
+> >  	{},
+> >  };
+> >  
+> > 
