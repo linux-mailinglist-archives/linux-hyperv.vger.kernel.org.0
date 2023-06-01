@@ -2,151 +2,193 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6283971A60C
-	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Jun 2023 18:09:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D15671F512
+	for <lists+linux-hyperv@lfdr.de>; Thu,  1 Jun 2023 23:52:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234488AbjFAQJn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Jun 2023 12:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
+        id S231546AbjFAVwa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 1 Jun 2023 17:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232311AbjFAQJl (ORCPT
+        with ESMTP id S229800AbjFAVw3 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Jun 2023 12:09:41 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B029EE4;
-        Thu,  1 Jun 2023 09:09:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hFjHvW2oxtl46RCSEC4hybbQ8rRfLOKkclVqD8W25g6+ZWXlCnceREd2IPRSRVEwJiwo9Lr6QPDzWIms3tM/HKDZZDKjnmX/YJ5dF7RO4hcFUe5/ukJxX1XEa5oqRTNI5gwMTc/ycpjWQODYmKXgB1UgLrk03M8VhBDJbzyTVYQ8wLYImr/LX7o4Ihg00vLwc6vV0UUDttbn80dKrelNiDpdaGyqG+YQOddN4zEn8n8ZkNK5p3aHLfjMMJ6jFVBcwK+2emripBbyWt+Jc8um2NartH/sP5IO9wsLV/3RPuGECxpr+acUR5gH/HyiQUBGoFW7ffnuQO/yfWaR+u/nAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bFT2US2fUZWpWS0YzSw48jA08RZ608+MOvzBvb5Hmbk=;
- b=T6lUaWQu27aR2KCnmlGZI/5OTh1PSpDtq2meGZ6R12+RHHVTPoc0O5PHku5lydUQG0vkMdzhI6vRY0pGQp0ShE0NIBz/4JwnELHwlxL9vfv/pg11xO3OBzZFZ8RnZJtjDSYLbpFhNUQAWGIdF7i25kDyFt9GewPIAfM3d1rZhhLRJHK7b1T+TTvkgLTYgWKzxmec1qN8CE51fmSdZVEtPgljz4UYPCLoXRGXDZA2ASrnbr3yh+RXyisKyY5XeWZ5EPXNOeXEcxh7ObEmc5uqqX1P26ZIwqgIHQbE/InQm+ZW4xcjNtz3r496NrsbluUEYkmmghOICOuxFcsG2joJcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bFT2US2fUZWpWS0YzSw48jA08RZ608+MOvzBvb5Hmbk=;
- b=T2+ycsdtdZ0AiK2LG937GfpR5kgb+p2pwbzi6Wd4h4/bTntrnYfu4G7ER3yUHRCFXjNPDVI7eJqFTR2e3XwZJOV4HDGdbI9jT4ektct/M2DrCjz0oSwp38VVSaUAm+n8W+knnHnS+U8sX9zugSqewlThTwriHEV0ksLmLK9SD3vLLcEgtaEO8h2JsZqV28KN81wy8moZn8xoHg+8/71lhchm1WjJZLRQ1P2ETWv0LHym6BFI76ygi4iLFLv5RAR8toOB+zundYFeUbjDP69u0QCd86i6gs+efyKuoqccJtqJMUcEI3zwNA7XZ48CBMlDYZZ2npwwj1v5csUi2RWb6w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by PH0PR12MB8176.namprd12.prod.outlook.com (2603:10b6:510:290::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Thu, 1 Jun
- 2023 16:09:37 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6433.024; Thu, 1 Jun 2023
- 16:09:37 +0000
-Date:   Thu, 1 Jun 2023 13:09:34 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     longli@linuxonhyperv.com
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
-Subject: Re: [PATCH v2] RDMA/mana_ib: Use v2 version of cfg_rx_steer_req to
- enable RX coalescing
-Message-ID: <ZHjCvuetIMDZgPgQ@nvidia.com>
-References: <1684045095-31228-1-git-send-email-longli@linuxonhyperv.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1684045095-31228-1-git-send-email-longli@linuxonhyperv.com>
-X-ClientProxiedBy: BYAPR05CA0053.namprd05.prod.outlook.com
- (2603:10b6:a03:74::30) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        Thu, 1 Jun 2023 17:52:29 -0400
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc0f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46309195;
+        Thu,  1 Jun 2023 14:52:26 -0700 (PDT)
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QXKc77569zMqSL0;
+        Thu,  1 Jun 2023 23:52:23 +0200 (CEST)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QXKc326PxzMpyf6;
+        Thu,  1 Jun 2023 23:52:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1685656343;
+        bh=Y4IDHny7hGy+XnSKBvFZqlpnWAHCn1rWumxGCLA50bQ=;
+        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+        b=H6zZL510qVdfzZeh/i5GoA9yME1fspu+DZZ0Oi5ZVA8yOwTq7CQKGpshOTn5FYk2m
+         fNE71TN9vpCm+pbkovBsqfYJ/zEMqsdW5HgzDcg4v5qxa6E4ngCPALSTCeNgrwWESi
+         5/j+zhczJVB0aePMSXY+seCsa5XOfmyxFayW64i8=
+Message-ID: <9a4edc66-a0a3-73e4-09c5-db68d4cfbb68@digikod.net>
+Date:   Thu, 1 Jun 2023 23:52:18 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH0PR12MB8176:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c40e9cb-6822-4ddd-37c4-08db62ba98cb
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: letFdpxI8bdAqE/zpBupEwrxamm0BLgrXVn2vtreRvXdChVhFdcQ8PZXu3ZHgDWxkRlujHHCjiCxklLBn5FnC/3ry+uj1MmNFsaE1epoBbZnfUZA8agmA+Am3p5dAdBXZGdzfDE3OCt3n0jiNkfz38adR8ZCAa+4nBl9mtVrTnZS48nF9xFJ/z5qz7xhL8ZRX4L5T8gu5mURYRBGzhvNo5TY7FkvRfrAEAArDo5pz2ALxEGAdrz713o8OFzZ2rDD3lE74J1EkFofx8/EEf+ySkpT6CorRf7v4iX+vCTkKksNOrXrDE7oHJdV/mbry4LUfjYkNyc9vwSSVlIUa8TSDfaWCwWgeFq+tvFUMk+XGCa/rLwmSAxapq849chsQ+mftmA416pjAbedD/V7mhTwnnT3q9zEuTtCBXi90HVWeDdRY1hZeumAcJFO7G/g08SGcz1g7dAQqSQQcIjnNgrSFM1axmh/TIYOHUfD6HX8t4XEVUw+f/o4aWoMEkPtaYTFJadvIAzBz8yAaou7z9xY0TbR3sNn4KnT4GRm7hhxgd1mRoYiBugKaAWftkdk6E2E
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(39860400002)(136003)(346002)(396003)(451199021)(186003)(41300700001)(26005)(2616005)(83380400001)(6506007)(6666004)(6512007)(6486002)(38100700002)(478600001)(66946007)(45080400002)(54906003)(36756003)(66556008)(4326008)(6916009)(66476007)(86362001)(316002)(7416002)(5660300002)(4744005)(8936002)(2906002)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?S863O/QcevnQEqUuCG7mFDduy1hBeydw0fVw0SAh02fZIBMNYWeLn1zvtvcI?=
- =?us-ascii?Q?GcvUs7B5cKxpgBId9xBPcLpDwuFyjffyWUzxiS9uUxBNmUP2kS/QhvY4E79/?=
- =?us-ascii?Q?oE39dZO8Ql27SGpVJIr+XxWDw5tIqpbLSIxxkFo+8sDpka2WmEQLDO1d42ti?=
- =?us-ascii?Q?eoOvCneylobqJ6HGu9bJ5yrUAOic1l4w5IMRRrKBa9czFDVC5i7gNmV+zCKu?=
- =?us-ascii?Q?5FIpon8LeqDt/j5oro8TN0Xc7/R1DRTtaRVxg6lTnv2ZGICVkPpoAQPmTi1I?=
- =?us-ascii?Q?nZTel9e2lLNEmzBaZ7GtI61EOzQtkvnbr3SCdmmMWtTl9wJ0yM99oVyDnRc/?=
- =?us-ascii?Q?4wMt3S1PsqiaRtYCpRdToUPFDg/lPl6DjTwo738fsp8GO+MtmBI0FvUXFqJL?=
- =?us-ascii?Q?LzfsGWtpUjqsy+X2a4kEc4BsQk5qMZr3TY+hyzfDTK1kAZapM25eHRptJuRL?=
- =?us-ascii?Q?CXD5nv/5B9C6wcv9SEiM2t+diO+A6ZTGbowWP1GzpfTngz4Qu2/LxFi3lN7H?=
- =?us-ascii?Q?EqUFf++NBjnCvCQ27kF/ToeFjYnc1sXKNuA7B7dM9Y7KytOX0i6TqmFaeThh?=
- =?us-ascii?Q?HSUy+Kb0RWX6e7u13RelmwMiNHaI0vC3c8NMyF2t0n4yJbba8+d0jA3p9Tlb?=
- =?us-ascii?Q?TH0K2sa/IRKqX4VyzGm5S7lcEDFUk1rXg5PdD8l2wzaXnaS9fLwu1wiBm043?=
- =?us-ascii?Q?GvTXLz41I/LvAEXn/Iwve4myQo12S/yEAmxDAfsoU2qKBMcw4zIpnYcr0dES?=
- =?us-ascii?Q?CLeyAcdG2ehbL33CeBcjJFToVeUU7TXSdRshOiirDwe3VaZX3YUWzbnjocvV?=
- =?us-ascii?Q?OsmvGxCiL1YxRSdSFKV6+JZ/AzZVrQ2XwS6H17j2CiV2SgbWhNFpMUkR80/g?=
- =?us-ascii?Q?2Oxknfs+M2A/5A8617sNrXA9Ell66k9rJSZx7sPsvYkZ0DBTErQOkEtH0A75?=
- =?us-ascii?Q?Zatn9JYigPjtEsws3CdprttPsEPKyBlyMBOiN/Mx90A09OnriY2y1sg7Tadw?=
- =?us-ascii?Q?ukWRTNE1IEdEs3NX7W2GHR+Vl0d2b87+hDJ9zjD91WD+ycN12S+l0hjeAuQx?=
- =?us-ascii?Q?8e8aP+X9R9xdMiatSNFmkcamqRyEp3roFat6hr1V02b5AjAhd7GwjcuJG0po?=
- =?us-ascii?Q?FyAvdY3k28uWpFN0tl30cN6q0Hf1LlDAJ2vrpLGnJkVJBlFnSbOUAme4Q1Nz?=
- =?us-ascii?Q?8HiP+nshuSM+7qjfRfY9JesokVrSL4C3TJtsQfNIxl2GGvTnQgs5Te7nsXH/?=
- =?us-ascii?Q?i5E6YwhWgw1x7ys38rqqnGNylRV2kPmrEyh7Botn6wO5O5Gh3AVUg2nvPJDz?=
- =?us-ascii?Q?uY9ZSh+ytlQdA4VwKpb7rOGgo5eb1cfQAUOOR3K0b8JYxMmZrgP/T+nv0BX3?=
- =?us-ascii?Q?P+pozWuayQAIfl93Nq8FyAwQCQTh5N/OS4jzcAv3akKKxfWHZGbeEWe+YTt4?=
- =?us-ascii?Q?vakjRNAlAr8tPBR7jZUQ+slSRbf1HxLH2Om3UBvRYJxqq8SrSoe+gz4klswU?=
- =?us-ascii?Q?zIAyx8Mc05cC/oMqzYCrYsNbRBeDuwPlX/Fx++f5jpNK8pagzA9/Xy1pGsFX?=
- =?us-ascii?Q?20I6rb+iNN8ICPb9x8a/2BPvxxwYjov5mfpL6APM?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c40e9cb-6822-4ddd-37c4-08db62ba98cb
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2023 16:09:37.1987
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6auVrX/HbvJLeClGsFfM8HwdjwrYqgOIAg551OfrVQtds19MNTSTNU7Gpmr9B9UK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8176
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: 
+Subject: Re: [ANNOUNCE] KVM Microconference at LPC 2023
+Content-Language: en-US
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        Marc Zyngier <maz@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <2f19f26e-20e5-8198-294e-27ea665b706f@redhat.com>
+ <4142c8dc-5385-fb1d-4f8b-2a98bb3f99af@digikod.net>
+In-Reply-To: <4142c8dc-5385-fb1d-4f8b-2a98bb3f99af@digikod.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, May 13, 2023 at 11:18:15PM -0700, longli@linuxonhyperv.com wrote:
-> From: Long Li <longli@microsoft.com>
-> 
-> With RX coalescing, one CQE entry can be used to indicate multiple packets
-> on the receive queue. This saves processing time and PCI bandwidth over
-> the CQ.
-> 
-> The MANA Ethernet driver also uses the v2 version of the protocol. It
-> doesn't use RX coalescing and its behavior is not changed.
-> 
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
-> 
-> Change log
-> v2: remove the definition of v1 protocol
-> 
->  drivers/infiniband/hw/mana/qp.c               | 5 ++++-
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 5 ++++-
->  include/net/mana/mana.h                       | 4 +++-
->  3 files changed, 11 insertions(+), 3 deletions(-)
+Hi,
 
-Applied to for-next
+What is the status of this microconference proposal? We'd be happy to 
+talk about Heki [1] and potentially other hypervisor supports.
 
-Thanks,
-Jason
+Regards,
+  Mickaël
+
+
+[1] https://lore.kernel.org/all/20230505152046.6575-1-mic@digikod.net/
+
+
+On 26/05/2023 18:09, Mickaël Salaün wrote:
+> See James Morris's proposal here:
+> https://lore.kernel.org/all/17f62cb1-a5de-2020-2041-359b8e96b8c0@linux.microsoft.com/
+> 
+> On 26/05/2023 04:36, James Morris wrote:
+>   > [Side topic]
+>   >
+>   > Would folks be interested in a Linux Plumbers Conference MC on this
+>   > topic generally, across different hypervisors, VMMs, and architectures?
+>   >
+>   > If so, please let me know who the key folk would be and we can try
+> writing
+>   > up an MC proposal.
+> 
+> The fine-grain memory management proposal from James Gowans looks
+> interesting, especially the "side-car" virtual machines:
+> https://lore.kernel.org/all/88db2d9cb42e471692ff1feb0b9ca855906a9d95.camel@amazon.com/
+> 
+> 
+> On 09/05/2023 11:55, Paolo Bonzini wrote:
+>> Hi all!
+>>
+>> We are planning on submitting a CFP to host a KVM Microconference at
+>> Linux Plumbers Conference 2023. To help justify the proposal, we would
+>> like to gather a list of folks that would likely attend, and crowdsource
+>> a list of topics to include in the proposal.
+>>
+>> For both this year and future years, the intent is that a KVM
+>> Microconference will complement KVM Forum, *NOT* supplant it. As you
+>> probably noticed, KVM Forum is going through a somewhat radical change in
+>> how it's organized; the conference is now free and (with some help from
+>> Red Hat) organized directly by the KVM and QEMU communities. Despite the
+>> unexpected changes and some teething pains, community response to KVM
+>> Forum continues to be overwhelmingly positive! KVM Forum will remain
+>> the venue of choice for KVM/userspace collaboration, for educational
+>> content covering both KVM and userspace, and to discuss new features in
+>> QEMU and other userspace projects.
+>>
+>> At least on the x86 side, however, the success of KVM Forum led us
+>> virtualization folks to operate in relative isolation. KVM depends on
+>> and impacts multiple subsystems (MM, scheduler, perf) in profound ways,
+>> and recently we’ve seen more and more ideas/features that require
+>> non-trivial changes outside KVM and buy-in from stakeholders that
+>> (typically) do not attend KVM Forum. Linux Plumbers Conference is a
+>> natural place to establish such collaboration within the kernel.
+>>
+>> Therefore, the aim of the KVM Microconference will be:
+>> * to provide a setting in which to discuss KVM and kernel internals
+>> * to increase collaboration and reduce friction with other subsystems
+>> * to discuss system virtualization issues that require coordination with
+>> other subsystems (such as VFIO, or guest support in arch/)
+>>
+>> Below is a rough draft of the planned CFP submission.
+>>
+>> Thanks!
+>>
+>> Paolo Bonzini (KVM Maintainer)
+>> Sean Christopherson (KVM x86 Co-Maintainer)
+>> Marc Zyngier (KVM ARM Co-Maintainer)
+>>
+>>
+>> ===================
+>> KVM Microconference
+>> ===================
+>>
+>> KVM (Kernel-based Virtual Machine) enables the use of hardware features
+>> to improve the efficiency, performance, and security of virtual machines
+>> created and managed by userspace.  KVM was originally developed to host
+>> and accelerate "full" virtual machines running a traditional kernel and
+>> operating system, but has long since expanded to cover a wide array of use
+>> cases, e.g. hosting real time workloads, sandboxing untrusted workloads,
+>> deprivileging third party code, reducing the trusted computed base of
+>> security sensitive workloads, etc.  As KVM's use cases have grown, so too
+>> have the requirements placed on KVM and the interactions between it and
+>> other kernel subsystems.
+>>
+>> The KVM Microconference will focus on how to evolve KVM and adjacent
+>> subsystems in order to satisfy new and upcoming requirements: serving
+>> guest memory that cannot be accessed by host userspace[1], providing
+>> accurate, feature-rich PMU/perf virtualization in cloud VMs[2], etc.
+>>
+>>
+>> Potential Topics:
+>>      - Serving inaccessible/unmappable memory for KVM guests (protected VMs)
+>>      - Optimizing mmu_notifiers, e.g. reducing TLB flushes and spurious zapping
+>>      - Supporting multiple KVM modules (for non-disruptive upgrades)
+>>      - Improving and hardening KVM+perf interactions
+>>      - Implementing arch-agnostic abstractions in KVM (e.g. MMU)
+>>      - Defining KVM requirements for hardware vendors
+>>      - Utilizing "fault" injection to increase test coverage of edge cases
+>>      - KVM vs VFIO (e.g. memory types, a rather hot topic on the ARM side)
+>>
+>>
+>> Key Attendees:
+>>      - Paolo Bonzini <pbonzini@redhat.com> (KVM Maintainer)
+>>      - Sean Christopherson <seanjc@google.com>  (KVM x86 Co-Maintainer)
+>>      - Your name could be here!
+>>
+>> [1] https://lore.kernel.org/all/20221202061347.1070246-1-chao.p.peng@linux.intel.com
+>> [2] https://lore.kernel.org/all/CALMp9eRBOmwz=mspp0m5Q093K3rMUeAsF3vEL39MGV5Br9wEQQ@mail.gmail.com
+>>
+>>
