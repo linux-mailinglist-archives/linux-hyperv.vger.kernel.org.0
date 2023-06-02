@@ -2,108 +2,101 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C169F71F714
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jun 2023 02:23:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AB6771FB6B
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jun 2023 09:57:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232042AbjFBAX6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 1 Jun 2023 20:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54152 "EHLO
+        id S233391AbjFBH5P (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Jun 2023 03:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229545AbjFBAX5 (ORCPT
+        with ESMTP id S229511AbjFBH5P (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 1 Jun 2023 20:23:57 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936C618C
-        for <linux-hyperv@vger.kernel.org>; Thu,  1 Jun 2023 17:23:55 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-53f6e194e7bso1351741a12.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 01 Jun 2023 17:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685665435; x=1688257435;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kfVTz/MFdf1BdTl2DJtaA5MVU5d+x7qUPBQRynuzbEs=;
-        b=lsng6iSxrqz9R88Q59ewsOGcDaYkTH4vRqDXC5iFszzkH/L48SReX+ccLn2qqVohKu
-         SqRTT3wIMGLiTNYWwIKvQpUQy1rlArmCydKGFHXCUSm4HDybF/yCCEi4ngNdiHPHHIAO
-         IvE9MObzfShr0WlQx7CjRaOodhTuihevv7Kvb25V0NnX+aCj6e89Z3iKFeAL+lLhSweK
-         djWxmTAZR53Gd6ZwAEJJraDzBmWjEDJjAVLEUoTCsaFeXmgf0aQGIJKaiMkaQzmwqMTm
-         MDcuVqxl1ntCRLEQ+YYvdB2O6IC0xaDBz4EXjfHWwXcBoneakB4xjWXpWdEkTnS2DRwX
-         Al0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685665435; x=1688257435;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kfVTz/MFdf1BdTl2DJtaA5MVU5d+x7qUPBQRynuzbEs=;
-        b=QP0w+t93YN9raSIxMSR0S4M0hrOrtgQNNBbmnZLQJFsboCk9Tfo7Z0CdIZ6UD8HK2A
-         AaxzjvJIQ6M4il6p5VUXdD4LZGYwMLiskWvUSLa1zTrfyXRkVwtADps3XhiuWXClUnor
-         U7cYhoDcv5zhTxQYSB2xhKi9Itr1/mmWZfFA5Wjjgkccu9s7WrkbfyAL2GLCWpniA7ic
-         k7wVoXpawzhh42Zg3Z/0ar/wlUziflSHzHs01rdEFVbHktfn11siCMhUm2b1SGH92/f/
-         JvM8dT5i8NntaxDA8UHMf9jM5G+hMCoZcgIycWTpSYLRcHbMhTnVkKjXWv9HGlQldLUs
-         ASZQ==
-X-Gm-Message-State: AC+VfDw5qr9bddrlmGDIpblxz5q7SP7FWrfRPYRtM0kyiQHmOVUGvjqL
-        4hGVn97gqGzJAXEvrpttCsTb0c/habs=
-X-Google-Smtp-Source: ACHHUZ4sKaezOgXXrB+dL2dh8BcQkqJaicrwtBGNqgWl2x1iGIzS7OMmnpETOlVJ/dFfp6qtQmgVV4r4kJ8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:fd47:0:b0:53f:5067:64ec with SMTP id
- m7-20020a63fd47000000b0053f506764ecmr2104111pgj.0.1685665434956; Thu, 01 Jun
- 2023 17:23:54 -0700 (PDT)
-Date:   Thu, 1 Jun 2023 17:23:53 -0700
-In-Reply-To: <9a4edc66-a0a3-73e4-09c5-db68d4cfbb68@digikod.net>
-Mime-Version: 1.0
-References: <2f19f26e-20e5-8198-294e-27ea665b706f@redhat.com>
- <4142c8dc-5385-fb1d-4f8b-2a98bb3f99af@digikod.net> <9a4edc66-a0a3-73e4-09c5-db68d4cfbb68@digikod.net>
-Message-ID: <ZHk2mVcBycjKCfGw@google.com>
-Subject: Re: [ANNOUNCE] KVM Microconference at LPC 2023
-From:   Sean Christopherson <seanjc@google.com>
-To:     "=?iso-8859-1?Q?Micka=EBl_Sala=FCn?=" <mic@digikod.net>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Marc Zyngier <maz@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        "Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>,
-        "=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        "=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        Fri, 2 Jun 2023 03:57:15 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2D34213E;
+        Fri,  2 Jun 2023 00:57:14 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 88A6A20FCD48;
+        Fri,  2 Jun 2023 00:57:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 88A6A20FCD48
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685692633;
+        bh=W+LOT8gPMhxml3jc0+5Plcr5ZY+64kjX6KqFWd1KA/o=;
+        h=From:To:Subject:Date:From;
+        b=dGYPXJYXRCLPeaClCMke4MpVc/Ku7njqFM5+4wXolqxotGsQwcDH3DnQutQtAVwOk
+         WGy9ncfLt+LLimwabtUUf9p2D5Yu+P6tLtj4JRxsTsqup+aJZ9cJ4lXrnMNCapXZkb
+         2TPdkS3SRP+NkivRjheS1mHbi5ta5WQW+BuqPfkk=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: [PATCH 0/5] UIO driver for low speed Hyper-V devices
+Date:   Fri,  2 Jun 2023 00:57:04 -0700
+Message-Id: <1685692629-31351-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jun 01, 2023, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
-> Hi,
->=20
-> What is the status of this microconference proposal? We'd be happy to tal=
-k
-> about Heki [1] and potentially other hypervisor supports.
+Hyper-V is adding some low speed "specialty" synthetic devices.
+This patch series propose the solution to support these devices.
+Instead of writing new kernel-level VMBus drivers for all of
+these devices, we propose a solution wherein these devices are
+made accessible to user space through a dedicated UIO-based
+hv_vmbus_client driver, allowing for efficient device handling
+via user space drivers. This solution aims to optimize the
+development process by eliminating the need to create
+individual kernel-level VMBus drivers for each device and
+provide flexibility to user space applications to control the
+ring buffer independently.
 
-Proposal submitted (deadline is/was today), now we wait :-)  IIUC, we shoul=
-d find
-out rather quickly whether or not the KVM MC is a go.
+Since all these new synthetic devices are low speed devices,
+they don't support monitor bits and we must use vmbus_setevent()
+to enable interrupts from the host. The new uio driver supports
+all these requirements effectively. Additionally, this new driver
+also provide the support for having smaller/cutom ringbuffer
+size.
+
+Furthermore, this patch series includes a revision of the fcopy
+application to leverage the new interface seamlessly along with
+removal of old driver and application. However, please note that
+the development of other similar drivers is still a work in
+progress, and will be shared as they become available.
+
+Saurabh Sengar (5):
+  uio: Add hv_vmbus_client driver
+  tools: hv: Add vmbus_bufring
+  tools: hv: Add new fcopy application based on uio driver
+  tools: hv: Remove hv_fcopy_daemon
+  Drivers: hv: Remove fcopy driver
+
+ drivers/hv/Makefile               |   2 +-
+ drivers/hv/hv_fcopy.c             | 427 --------------------------
+ drivers/hv/hv_util.c              |  12 -
+ drivers/uio/Kconfig               |  12 +
+ drivers/uio/Makefile              |   1 +
+ drivers/uio/uio_hv_vmbus_client.c | 232 ++++++++++++++
+ tools/hv/Build                    |   3 +-
+ tools/hv/Makefile                 |  10 +-
+ tools/hv/hv_fcopy_daemon.c        | 266 ----------------
+ tools/hv/hv_fcopy_uio_daemon.c    | 491 ++++++++++++++++++++++++++++++
+ tools/hv/vmbus_bufring.c          | 324 ++++++++++++++++++++
+ tools/hv/vmbus_bufring.h          | 158 ++++++++++
+ 12 files changed, 1226 insertions(+), 712 deletions(-)
+ delete mode 100644 drivers/hv/hv_fcopy.c
+ create mode 100644 drivers/uio/uio_hv_vmbus_client.c
+ delete mode 100644 tools/hv/hv_fcopy_daemon.c
+ create mode 100644 tools/hv/hv_fcopy_uio_daemon.c
+ create mode 100644 tools/hv/vmbus_bufring.c
+ create mode 100644 tools/hv/vmbus_bufring.h
+
+-- 
+2.34.1
+
