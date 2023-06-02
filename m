@@ -2,76 +2,97 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09A6972024B
-	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jun 2023 14:42:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95EEE720444
+	for <lists+linux-hyperv@lfdr.de>; Fri,  2 Jun 2023 16:23:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232201AbjFBMl6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 2 Jun 2023 08:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43942 "EHLO
+        id S235427AbjFBOXk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 2 Jun 2023 10:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234114AbjFBMl5 (ORCPT
+        with ESMTP id S234704AbjFBOXg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 2 Jun 2023 08:41:57 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 022DB13D;
-        Fri,  2 Jun 2023 05:41:57 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 73F1220FCD4F;
-        Fri,  2 Jun 2023 05:41:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 73F1220FCD4F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685709716;
-        bh=CYFJLeDTCw3IfeJbOMeEsgxwh59MLlV9KXPjuDvd634=;
-        h=From:To:Subject:Date:From;
-        b=QNWh05LZTGEW/x9oPwlqDErkIN87ieDHA0LavFn/+ysV5pa9mqnXGeiY9QcALniin
-         thoDpCsIDq4pYx0+uHtHYoCxpyFTSS2icS6cpyTFCW601u+SpVA3C2Sbx/Xa1A6gAJ
-         fzztPhIbkib/hQggouVdJSaT64T1HCwGtFE/2/HE=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, hpa@zytor.com
-Subject: [PATCH] x86/hyperv: add noop functions to x86_init mpparse functions
-Date:   Fri,  2 Jun 2023 05:41:52 -0700
-Message-Id: <1685709712-13752-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        Fri, 2 Jun 2023 10:23:36 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DFD19A;
+        Fri,  2 Jun 2023 07:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685715815; x=1717251815;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=NZvUiV0qFTexqljv69dCAZ3QmVO7Qx/hzIV8xDB/T78=;
+  b=RkeCAqzRdstkjIty56lEVGYw/E/jlAQH3e0j87SpZ7wI/ZqrM2tDkUm1
+   tT2OAe/jm0hGucpxe2uXpdw1MR5ZDpzGSyaDTNBnSiHZkh0H/wZcc/A5w
+   xwUPCbb3TSQ9I9m4pBZJ75qHHetUe6uxs8yH2zd5cQMBV3+DGTFM5h6Y7
+   euwl5mPTwZfcDdCrf0r9K1gfDKVCA89Szs2/2X9LvERIJKRhP3qhAEZ3R
+   9oHNfZ1oBbrk/Mgi0FjuHK/iC9/Xeu7hYbdglChFuP+EFIDvCjCes7TIT
+   8pgInQ9ZyJiOzp68TKOuhwRItUG6fpeJ0p4xAeDI4Pb038uv38dAGC52j
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="335492132"
+X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
+   d="scan'208";a="335492132"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 07:23:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="882091120"
+X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
+   d="scan'208";a="882091120"
+Received: from pingshi-mobl.amr.corp.intel.com (HELO [10.251.23.169]) ([10.251.23.169])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 07:23:31 -0700
+Message-ID: <e5ca0f92-0909-68af-16e0-582f47d8e424@intel.com>
+Date:   Fri, 2 Jun 2023 07:23:31 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 1/2] x86/Kconfig: Allow CONFIG_X86_MPPARSE disable for OF
+ platforms
+Content-Language: en-US
+To:     Saurabh Singh Sengar <ssengar@microsoft.com>,
+        Saurabh Sengar <ssengar@linux.microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <1683816877-10747-1-git-send-email-ssengar@linux.microsoft.com>
+ <9b88ddaf-c5c5-0244-5be7-12400ee54e11@intel.com>
+ <PUZP153MB074959D2F85EAD559ED7B544BE41A@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+ <33d7800b-7870-6755-b057-f734fa7accd6@intel.com>
+ <PUZP153MB074988C9F8F891533871173BBE46A@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+ <13922610-b9bc-ab4b-8482-9aae238396c7@intel.com>
+ <PUZP153MB07490EDED3B0194F5518B26EBE4EA@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <PUZP153MB07490EDED3B0194F5518B26EBE4EA@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-In !ACPI system, there is no way to disable CONFIG_X86_MPPARSE.
-When CONFIG_X86_MPPARSE is enabled for VTL2, the kernel will
-scan low memory looking for MP tables. Don't allow this, because
-low memory is controlled by VTL0 and may contain actual valid
-tables for VTL0, which can confuse the VTL2 kernel.
+On 6/2/23 05:22, Saurabh Singh Sengar wrote:
+> Furthermore, I would like to learn about the rationale behind disallowing the
+> disablement of CONFIG_X86_MPPARSE when MP tables are not in use. Considering
+> that we compile out the features we don't support, wouldn't it be acceptable to
+> allow users to customize their configurations in this manner? Allowing the
+> disablement of CONFIG_X86_MPPARSE would provide greater flexibility and
+> efficiency for those who do not utilize MP tables.
 
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
- arch/x86/hyperv/hv_vtl.c | 4 ++++
- 1 file changed, 4 insertions(+)
+If someone sent a patch, I'd certainly look and figure out what
+"flexibility" and "efficiency" it would provide.  But, honestly, it
+would just just be noise if it doesn't solve an _actual_ problem.
 
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 1ba5d3b99b16..ea21d897b5da 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -23,6 +23,10 @@ void __init hv_vtl_init_platform(void)
- 	x86_init.irqs.pre_vector_init = x86_init_noop;
- 	x86_init.timers.timer_init = x86_init_noop;
- 
-+	/* Avoid searching for BIOS MP tables */
-+	x86_init.mpparse.find_smp_config = x86_init_noop;
-+	x86_init.mpparse.get_smp_config = x86_init_uint_noop;
-+
- 	x86_platform.get_wallclock = get_rtc_noop;
- 	x86_platform.set_wallclock = set_rtc_noop;
- 	x86_platform.get_nmi_reason = hv_get_nmi_reason;
--- 
-2.34.1
-
+Would anyone care or notice the "flexibility" and "efficiency" it would
+provide?
