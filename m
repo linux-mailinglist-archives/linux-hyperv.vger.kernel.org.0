@@ -2,149 +2,143 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE95722841
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 16:08:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3880D7231B2
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 22:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233362AbjFEOIm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jun 2023 10:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35436 "EHLO
+        id S233417AbjFEUrL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jun 2023 16:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233171AbjFEOIU (ORCPT
+        with ESMTP id S231877AbjFEUrI (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jun 2023 10:08:20 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021024.outbound.protection.outlook.com [52.101.57.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7132E41;
-        Mon,  5 Jun 2023 07:08:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aJI0BUW6vXxXxonYFw2nkZO2oPbXIUtaSmv91TSuujfhOjBiLsmT7nNUPlYH1TAL19LaAjMmwC9hIxBDXtTzKHooWk3N5SgSOLmxNyH+edr8D6hLZlEyeMNWtIg8WJe6UV40thXsxxKVYRrszPkPvqXciAlkP1b1na/OaSCgU1m8yuQcYicdqBc7jofl/wEug7LMfWOLmJVXUFi1gPjzkVRPim2k57Au6BV7BhsM9+MCdsA96GoctQQB4KGU/P7cZiy7Ne9UFJLfz6iqF8y+A6COWvxMWT4juRKuQH9oYtfX4B0ViWbDzs9SNR0S6NZsHsf4tINqb0knsFSrMPRjKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FUQWGSonvXODnAHx7KGUSRRFmL1aNGXFGJDU4Gm9k88=;
- b=bTBYogXQiRxygmjqbLO04dho5RGDXyptqrqbvbqTXdGwfjpW4SF0E1IklxCEF6crtn7GSKXPny+eWgWc92L/MDC8jUMojcxNEx8VXM1JZAssW0Ib7Iqj9ZQ1mgI4eaIFvpSP1RwBfpoMBPhRQv3ihoTIeSbw7cd1gOm3pcTKoQuWmiElv5wYkTvs6sVXy+DoWwyazcHGemQR1+y7s8/SKxG5p0r1qCaM9T9iJNuEbBiO27+JeZ4TN9Y0EOMezUx/MB3Gkva+4EEgvyaxjD2RlmpOQbc18s4M4d0f4Nv4OENf/IxsGiPWuGQTsZHSKW2QMnwMT+jEAvP8LHVI2OnJpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FUQWGSonvXODnAHx7KGUSRRFmL1aNGXFGJDU4Gm9k88=;
- b=VdnHfoTYfyEWpOGHOAaJGwyLw1WcoYI0YAk7obxT9jXLPNA8pC0Qu39oqtVkQW5/dr/QOJRUcUJ0ukj3Y8lMm+Tzbnr3j4gFxXOqg5XfdMqLROWoHWKp0VmQZWDYfkEQjDsT+bouJtr768SmkwG1j5g0DXh2BJrZ5Ui6QgXC6Js=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DM4PR21MB3659.namprd21.prod.outlook.com (2603:10b6:8:ab::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.6; Mon, 5 Jun
- 2023 14:08:06 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b%3]) with mapi id 15.20.6500.004; Mon, 5 Jun 2023
- 14:08:06 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Linux regressions mailing list <regressions@lists.linux.dev>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux BPF <bpf@vger.kernel.org>,
-        Linux on Hyper-V <linux-hyperv@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: RE: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
- callbacks suppressed messages on 6.4.0rc4
-Thread-Topic: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
- callbacks suppressed messages on 6.4.0rc4
-Thread-Index: AQHZkvHeNWWbfmtPQ0KY8Y8df7j5gK98CvoAgAA9AMA=
-Date:   Mon, 5 Jun 2023 14:08:06 +0000
-Message-ID: <BYAPR21MB16887C59D2B2C3ADDB61874BD74DA@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
- <ebdd877d-f143-487c-04cd-606996eb6176@leemhuis.info>
-In-Reply-To: <ebdd877d-f143-487c-04cd-606996eb6176@leemhuis.info>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6bed9edf-c80b-44c8-b440-fbba4b01d160;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-05T14:06:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DM4PR21MB3659:EE_
-x-ms-office365-filtering-correlation-id: 8be8b2eb-9ba3-4fa7-8a4c-08db65ce48c4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: C8DFimjaosCje++kC/gpav/hT+h5w5J8t7ssiU5puv0xdOhEXsFHCQU+9myiGpRCtTlzumccmM82sCwKjgxncQ7/gel7+EtxR+yC5AK0HVWNsIoInalqidGjonLa5yEeV//X6KFWZsONcyypQHa4FyL/L7CqRO9vWmbvgfdRkxAOZ4V9eyr5LdgWBb5Rv1UaxWjx3viR+GnYErzv8i/GMWyTkz6CliXS3E8brtdU91kxeTC0qfFvy+iq8Pwjn3x7fyhbFRsvtOiQNh6Se4wX16C4XRRpjmodPxCrP3+FrDtR2RLTNG1lssV81N+ayjwvcOuUHIo3NnxB5aeRywBpF0v0HFEYUINbaGKmAQEXeT5kf9GIeVMVZHN/xPQGVzTxyL2SM78d6ASm/0urMDhK0/TrxlhmVSBWQJreUw0taCGKh9yexd+e+BJOoGOfH8ist2JISz4SsK7gFTSa/0X+Xl8xEP2b12QnX9n++i0I/yV8ebAV/uZglQNQy0MaDUAH/hViBXKdBdKt4Tj48zJ7DXotymhbJvBbkAV6AL8jmzYS05Wtc6MT/LFUptlKU06y2KwZ8SIHH6akBPJ570HkLL39A8lcCsp492aHGM/KtNkxjBBhMKjosrgFyGAEqSsBYHcBAIpYGrRZ8johd5rhXdBFjcW/L4OOZc4BS3YU02w=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(136003)(39860400002)(366004)(346002)(451199021)(52536014)(8676002)(8936002)(5660300002)(4744005)(2906002)(316002)(66446008)(76116006)(66476007)(66556008)(64756008)(66946007)(6916009)(4326008)(41300700001)(8990500004)(10290500003)(15650500001)(54906003)(7696005)(71200400001)(53546011)(6506007)(9686003)(26005)(186003)(83380400001)(122000001)(478600001)(82950400001)(82960400001)(38100700002)(55016003)(33656002)(38070700005)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?yS5UVX9Y56qACGAav8GYny0kiftZbklgXnzW46m28Hx4SFz9G050Ea6dr3zx?=
- =?us-ascii?Q?7fOZqpOSjP47HyKTu+SheU2gK3aUjX4/JduNvAXFTYmQJRQommU/SksC1GHg?=
- =?us-ascii?Q?YXc4XP3FuK0y0qBzHQcsiBmTkXOBKwgx47U2taJ6yRhsDrM6iq/AhGYDthJ2?=
- =?us-ascii?Q?VEZuETLdJ2g10yx52jZkY0SDwv0KDgtvLbZkOHrGnN+HIvhmpZgF4f2Dk656?=
- =?us-ascii?Q?yqm01bwRY6WT+XMyOAKY1mbCN+gcHccbqRLce3d6rXZF+kQCj48YQyzBuwda?=
- =?us-ascii?Q?toXn3DiOx6pr16vypOT3O8bWHn3zxNAPc43nrt2WiCce9JP85sQg/AKHTLCO?=
- =?us-ascii?Q?CSdPuWaIcmAf6aa5kMGyfYD+m4sU9bEMH7wQFJ7BXNAxt3nnEinVzffbckfS?=
- =?us-ascii?Q?vu39awiJ8J96N7xC4AayJc5xhzHW88DhG9MxrAw3qK9Vb1k7kdH9wcniDiFz?=
- =?us-ascii?Q?5MnIqOhMG9LURind5uXYdCWnCgU8K953ldqFvFYcm1vzY6OIAvg18RdxL4sz?=
- =?us-ascii?Q?ZYQKEEXaI+B5D9LpanNUhOJngEmqb5cICMs+KKIjbmE4hIq8xUkZ8s+ZeaGJ?=
- =?us-ascii?Q?mxrkxkPMwmb41hiGZ2QfRf7RC6IxqyzX+gUqMpn5miLCcGNZq2xQnQZEJHmM?=
- =?us-ascii?Q?qKeBNel6YHvS9KIuDO4nExiVw3jvKktANBedDlGuDw3PpCujGDqJxlJEyxJu?=
- =?us-ascii?Q?7M4HRa7XTsKQKSc/+PjTMZjcq3jrhy9WiDLZVppvyeF5VFTLSBXpGopPAfzp?=
- =?us-ascii?Q?TfM/ubcsb2urbPdAZQQ2FWI1zL9IFRvzdGcg5ZoQaHZ0tFq1xpshT51uQtU/?=
- =?us-ascii?Q?wcAXxGmTDFoeR2gZmDnhV6iyE+dkpIma90i5Q/WMNZDfh9Xf78ZXe6aPSlEQ?=
- =?us-ascii?Q?MsRuGKkEmuszNVhihAN+MgOejKFOwH3RI1gOwwO79Tq9o2gx4XnRM/QfTDFb?=
- =?us-ascii?Q?F16s8qLaGOwVUClA/k3uXXaLyWmsQp9aUTWnwnZrsdb3g52SaXjaNQ8FxRTe?=
- =?us-ascii?Q?mfVCiiFgowo5N0uSwfmUUgA0cUxhax1LN6wd/fF8QHs2uU0tuLgIlOITujPH?=
- =?us-ascii?Q?P+mGCyufW1CdRnr+wtPoV/saCBji3saLpLdnYpiBP24NiNBrPYBJOGI+BOCr?=
- =?us-ascii?Q?Kt/XbdQwf35HL6pti2X5DIe79AbSpRjDg55A7ijblUXERLpPk5u86utwSiHp?=
- =?us-ascii?Q?B+AlGa1YenNAzKKldyDvnxbtCrasfwkwq5L5yl9mk5u2mX9RJLWvGgAdA89f?=
- =?us-ascii?Q?nHvkz/3lXCgeKydWhXjxmAdT+BSgvgRLR1R4YjuIx8a3Bpz3XWMarjb2r/FY?=
- =?us-ascii?Q?xKBu+RE5gbzWZmHwB5MEkhgZtUDMp8nmP0oFXt/rkDi85rvSq6pX7DoOjyby?=
- =?us-ascii?Q?qNnWwns+PI5dPUoSZx4OsULza0sU/71hgIKIX6qAsCMfIfZgbNV33Xlkz87N?=
- =?us-ascii?Q?VJYbRDiIQ/m33UckqWm8o871VEbnPS9BGMu3KZGv44fwM6WDPj/XIVH9GYao?=
- =?us-ascii?Q?kBMTezYF1lVQChSu6zEvCCMHB2SgBabwD7bXGcdS0edJOFejtCXgxt0U+Eyf?=
- =?us-ascii?Q?svpz6hhZhdQPfLoeczaPowjJ0qk/Hmvg6pB5wq/vaIsf2rqxgmBirPPRoWM4?=
- =?us-ascii?Q?Eg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 5 Jun 2023 16:47:08 -0400
+Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569FDFD;
+        Mon,  5 Jun 2023 13:47:05 -0700 (PDT)
+Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
+        by mx.sberdevices.ru (Postfix) with ESMTP id 335C65FD21;
+        Mon,  5 Jun 2023 23:47:02 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+        s=mail; t=1685998022;
+        bh=9ATC+GxW8KMEIiHiF6ecJMk0sOenmSubs/SZ/yQ2/y0=;
+        h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type;
+        b=K9EnAk+J1wH+cYPUXAMNufinG+iVezeNRNWTqHdXbSzRlA6+zhToK67+XSsWRyesN
+         K6nuQFG2JC6hnCSryQInquMb02IFsXO41w/tLq7Gv6QmBEBBOYpic4xPL+nOl6HfLV
+         0ljgDI6MBVPlBQCTgHCz18HWMhVBdz8eUbwA9OZiWa9GZJsQ/pr2tVknUq7VdAq2bZ
+         3jGtUwiQKnBogUUuAFQMbk2H4GM6D0vH2c21u5/50TmWB0QitQHkm61Zn1cl7cuugC
+         PQzUMc1A0HIZDRmMQg/1AW8SOB/y0VBBFCYOpBUWFeyS1xFViBcl9cn/wxXNxM5+QG
+         KzNrDwusABegQ==
+Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
+        by mx.sberdevices.ru (Postfix) with ESMTP;
+        Mon,  5 Jun 2023 23:46:58 +0300 (MSK)
+Message-ID: <2830ac58-fd77-7e5f-5565-eb47dd027d81@sberdevices.ru>
+Date:   Mon, 5 Jun 2023 23:42:06 +0300
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8be8b2eb-9ba3-4fa7-8a4c-08db65ce48c4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2023 14:08:06.1446
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZxXKK4EQ65wC0gSpI5lkQG0u/MQBUQ7HdS+M3LQMxkQy08polvnaH4ZcKtc7YDny2WLDBiIPgoxv2zf8l6Sq3of7oaqV38RL1JZl+io1/oo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3659
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Content-Language: en-US
+In-Reply-To: <20230413-b4-vsock-dgram-v3-0-c2414413ef6a@bytedance.com>
+To:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>
+CC:     <kvm@vger.kernel.org>, <virtualization@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Jiang Wang <jiang.wang@bytedance.com>
+From:   Arseniy Krasnov <avkrasnov@sberdevices.ru>
+Subject: Re: [PATCH RFC net-next v3 0/8] virtio/vsock: support datagrams
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.16.1.6]
+X-ClientProxiedBy: S-MS-EXCH01.sberdevices.ru (172.16.1.4) To
+ S-MS-EXCH01.sberdevices.ru (172.16.1.4)
+X-KSMG-Rule-ID: 4
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiPhishing: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2023/06/05 17:23:00 #21436105
+X-KSMG-AntiVirus-Status: Clean, skipped
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.i=
-nfo> Sent: Monday, June 5, 2023 3:28 AM
->=20
-> Hi, Thorsten here, the Linux kernel's regression tracker.
->=20
-> On 30.05.23 14:25, Bagas Sanjaya wrote:
-> >
-> > I notice a regression report on Bugzilla [1]. Quoting from it:
->=20
-> Hmmm, nobody replied to this yet (or am I missing something?). Doesn't
-> seems like it's something urgent, but nevertheless:
->=20
-> Michael, Bagas didn't make it obvious at all, hence please allow me to
-> ask: did you notice that this is a regression that is apparently caused
-> by a commit of yours?
->=20
+Hello Bobby!
 
-Thanks for flagging this directly to me.  I'll check on it.
+Thanks for this patchset, really interesting!
 
-Michael
+I applied it on head:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=d20dd0ea14072e8a90ff864b2c1603bd68920b4b
+
+And tried to run ./vsock_test (client in the guest, server in the host), I had the following crash:
+
+Control socket connected to 192.168.1.1:12345.                          
+0 - SOCK_STREAM connection reset...                                     
+[    8.050215] BUG: kernel NULL pointer derefer                         
+[    8.050960] #PF: supervisor read access in kernel mode               
+[    8.050960] #PF: error_code(0x0000) - not-present page               
+[    8.050960] PGD 0 P4D 0                                              
+[    8.050960] Oops: 0000 [#1] PREEMPT SMP PTI                          
+[    8.050960] CPU: 0 PID: 109 Comm: vsock_test Not tainted 6.4.0-rc3-gd707c220a700
+[    8.050960] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14
+[    8.050960] RIP: 0010:static_key_count+0x0/0x20                      
+[    8.050960] Code: 04 4c 8b 46 08 49 29 c0 4c 01 c8 4c 89 47 08 89 0e 89 56 04 4f
+[    8.050960] RSP: 0018:ffffa9a1c021bdc0 EFLAGS: 00010202              
+[    8.050960] RAX: ffffffffac309880 RBX: ffffffffc02fc140 RCX: 0000000000000000
+[    8.050960] RDX: ffff9a5eff944600 RSI: 0000000000000000 RDI: 0000000000000000
+[    8.050960] RBP: ffff9a5ec2371900 R08: ffffa9a1c021bd30 R09: ffff9a5eff98e0c0
+[    8.050960] R10: 0000000000001000 R11: 0000000000000000 R12: ffffa9a1c021be80
+[    8.050960] R13: 0000000000000000 R14: 0000000000000002 R15: ffff9a5ec1cfca80
+[    8.050960] FS:  00007fa9bf88c5c0(0000) GS:ffff9a5efe400000(0000) knlGS:00000000
+[    8.050960] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033        
+[    8.050960] CR2: 0000000000000000 CR3: 00000000023e0000 CR4: 00000000000006f0
+[    8.050960] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    8.050960] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    8.050960] Call Trace:                                              
+[    8.050960]  <TASK>                                                  
+[    8.050960]  once_deferred+0xd/0x30                                  
+[    8.050960]  vsock_assign_transport+0xa2/0x1b0 [vsock]               
+[    8.050960]  vsock_connect+0xb4/0x3a0 [vsock]                        
+[    8.050960]  ? var_wake_function+0x60/0x60                           
+[    8.050960]  __sys_connect+0x9e/0xd0                                 
+[    8.050960]  ? _raw_spin_unlock_irq+0xe/0x30                         
+[    8.050960]  ? do_setitimer+0x128/0x1f0                              
+[    8.050960]  ? alarm_setitimer+0x4c/0x90                             
+[    8.050960]  ? fpregs_assert_state_consistent+0x1d/0x50              
+[    8.050960]  ? exit_to_user_mode_prepare+0x36/0x130                  
+[    8.050960]  __x64_sys_connect+0x11/0x20                             
+[    8.050960]  do_syscall_64+0x3b/0xc0                                 
+[    8.050960]  entry_SYSCALL_64_after_hwframe+0x4b/0xb5                
+[    8.050960] RIP: 0033:0x7fa9bf7c4d13                                 
+[    8.050960] Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 48
+[    8.050960] RSP: 002b:00007ffdf2d96cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000a
+[    8.050960] RAX: ffffffffffffffda RBX: 0000560c305d0020 RCX: 00007fa9bf7c4d13
+[    8.050960] RDX: 0000000000000010 RSI: 00007ffdf2d96ce0 RDI: 0000000000000004
+[    8.050960] RBP: 0000000000000004 R08: 0000560c317dc018 R09: 0000000000000000
+[    8.050960] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+[    8.050960] R13: 0000560c305ccc2d R14: 00007ffdf2d96ce0 R15: 00007ffdf2d96d70
+[    8.050960]  </TASK>  
+
+
+I guess crash is somewhere near:
+
+old_info->transport->release(vsk); in vsock_assign_transport(). May be my config is wrong...
+
+Thanks, Arseniy
