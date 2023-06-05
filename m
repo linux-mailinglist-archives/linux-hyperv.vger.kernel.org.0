@@ -2,144 +2,128 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE68572227C
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 11:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2834C722369
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 12:28:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231454AbjFEJrF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jun 2023 05:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59826 "EHLO
+        id S231861AbjFEK2f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jun 2023 06:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231397AbjFEJrE (ORCPT
+        with ESMTP id S229655AbjFEK2e (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jun 2023 05:47:04 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A169BE9;
-        Mon,  5 Jun 2023 02:47:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685958422; x=1717494422;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v/+LgTrwo+Lelaz5gHvZDSoOIGxhoEQ87vO5F8p1ayo=;
-  b=IkMQFrhYiUcaNnVZmAAmFRjUmcrkyUbm0bWkpOxMxLe18s5Se/PnWFEM
-   FJA4flUq0tkKdX0XtFLPjwnI+4PJdGWD54Ywk0xc/SnT04S+psWBN5UaU
-   WNTRO6hSrT1iuxVqPzF1RLP2mQWVxJHKFwHAQKybO5mkpxFNvtzGz0hF9
-   PpinZnWF/ODhsSmDvOeg20Y+e1gWPAHlkyNH1/QCz20BKWmunQyUFEXfq
-   L+BAflbx8LS8owHwVciV8V4+VIVnQxuDe7ltwJz6Rkv7PTf9MxaIhXGzq
-   y3bE85uMdZaz+Aa36olwNfcCTrcw7JVv7fnKiKLbXz2ysr3UqsSS3XEqJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="358775287"
-X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="358775287"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 02:47:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="882842499"
-X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="882842499"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 05 Jun 2023 02:46:57 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q66ng-00044l-3A;
-        Mon, 05 Jun 2023 09:46:56 +0000
-Date:   Mon, 5 Jun 2023 17:46:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Steen Hegelund <steen.hegelund@microchip.com>,
-        Simon Horman <simon.horman@corigine.com>
-Subject: Re: [PATCH v5] hv_netvsc: Allocate rx indirection table size
- dynamically
-Message-ID: <202306051725.FOGcInnl-lkp@intel.com>
-References: <1685949196-16175-1-git-send-email-shradhagupta@linux.microsoft.com>
+        Mon, 5 Jun 2023 06:28:34 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA4EA6;
+        Mon,  5 Jun 2023 03:28:20 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1q67Rf-00050B-2m; Mon, 05 Jun 2023 12:28:15 +0200
+Message-ID: <ebdd877d-f143-487c-04cd-606996eb6176@leemhuis.info>
+Date:   Mon, 5 Jun 2023 12:28:14 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1685949196-16175-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
+ callbacks suppressed messages on 6.4.0rc4
+Content-Language: en-US, de-DE
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux BPF <bpf@vger.kernel.org>,
+        Linux on Hyper-V <linux-hyperv@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        Bagas Sanjaya <bagasdotme@gmail.com>
+References: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
+From:   "Linux regression tracking (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685960901;a18d3986;
+X-HE-SMSGID: 1q67Rf-00050B-2m
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Shradha,
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-kernel test robot noticed the following build errors:
+On 30.05.23 14:25, Bagas Sanjaya wrote:
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on horms-ipvs/master v6.4-rc5 next-20230605]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hmmm, nobody replied to this yet (or am I missing something?). Doesn't
+seems like it's something urgent, but nevertheless:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Shradha-Gupta/hv_netvsc-Allocate-rx-indirection-table-size-dynamically/20230605-151438
-base:   linus/master
-patch link:    https://lore.kernel.org/r/1685949196-16175-1-git-send-email-shradhagupta%40linux.microsoft.com
-patch subject: [PATCH v5] hv_netvsc: Allocate rx indirection table size dynamically
-config: i386-randconfig-r002-20230605 (https://download.01.org/0day-ci/archive/20230605/202306051725.FOGcInnl-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/cd4dda15951edad50a4ffd51e084863ef2f50bd3
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Shradha-Gupta/hv_netvsc-Allocate-rx-indirection-table-size-dynamically/20230605-151438
-        git checkout cd4dda15951edad50a4ffd51e084863ef2f50bd3
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/net/hyperv/
+Michael, Bagas didn't make it obvious at all, hence please allow me to
+ask: did you notice that this is a regression that is apparently caused
+by a commit of yours?
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306051725.FOGcInnl-lkp@intel.com/
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-All errors (new ones prefixed by >>):
+#regzbot poke
 
->> drivers/net/hyperv/rndis_filter.c:1612:47: error: use of undeclared identifier 'net'
-           struct net_device_context *ndc = netdev_priv(net);
-                                                        ^
-   1 error generated.
-
-
-vim +/net +1612 drivers/net/hyperv/rndis_filter.c
-
-  1607	
-  1608	void rndis_filter_device_remove(struct hv_device *dev,
-  1609					struct netvsc_device *net_dev)
-  1610	{
-  1611		struct rndis_device *rndis_dev = net_dev->extension;
-> 1612		struct net_device_context *ndc = netdev_priv(net);
-  1613		struct net_device *net = hv_get_drvdata(dev);
-  1614	
-  1615		/* Halt and release the rndis device */
-  1616		rndis_filter_halt_device(net_dev, rndis_dev);
-  1617	
-  1618		netvsc_device_remove(dev);
-  1619	
-  1620		ndc->rx_table_sz = 0;
-  1621		kfree(ndc->rx_table);
-  1622		ndc->rx_table = NULL;
-  1623	}
-  1624	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>> After building 6.4.0rc4 for my VM running on a Windows 10 Hyper-V host, I see the following 
+>>
+>> [  756.697753] net_ratelimit: 34 callbacks suppressed
+>> [  756.697806] hv_netvsc cd9dd876-2fa9-4764-baa7-b44482f85f9f eth0: nvsp_rndis_pkt_complete error status: 2
+>> (snipped repeated messages)
+>>
+>> *but*, I'm only able to reliably reproduce this if I am generating garbage on another terminal, e.g. sudo strings /dev/sda
+>>
+>>
+>> This doesn't appear to affect latency or bandwidth a huge amount, I ran an iperf3 test between the guest and the host while trying to cause these messages.
+>> Although you if you take 17-18 gigabit as the "base" speed, you can see it drop a bit to 16 gigabit while the errors happen and "catch up" when I stop spamming the console.
+>>
+>> [  5]  99.00-100.00 sec  1.89 GBytes  16.2 Gbits/sec
+>> [  5] 100.00-101.00 sec  1.91 GBytes  16.4 Gbits/sec
+>> [  5] 101.00-102.00 sec  1.91 GBytes  16.4 Gbits/sec
+>> [  5] 102.00-103.00 sec  1.91 GBytes  16.4 Gbits/sec
+>> [  5] 103.00-104.00 sec  1.92 GBytes  16.5 Gbits/sec
+>> [  5] 104.00-105.00 sec  1.94 GBytes  16.6 Gbits/sec
+>> [  5] 105.00-106.00 sec  1.89 GBytes  16.2 Gbits/sec
+>> [  5] 106.00-107.00 sec  1.90 GBytes  16.3 Gbits/sec
+>> [  5] 107.00-108.00 sec  2.23 GBytes  19.2 Gbits/sec
+>> [  5] 108.00-109.00 sec  2.57 GBytes  22.0 Gbits/sec
+>> [  5] 109.00-110.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 110.00-111.00 sec  2.64 GBytes  22.7 Gbits/sec
+>> [  5] 111.00-112.00 sec  2.65 GBytes  22.7 Gbits/sec
+>> [  5] 112.00-113.00 sec  2.65 GBytes  22.8 Gbits/sec
+>> [  5] 113.00-114.00 sec  2.65 GBytes  22.8 Gbits/sec
+>> [  5] 114.00-115.00 sec  2.65 GBytes  22.8 Gbits/sec
+>> [  5] 115.00-116.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 116.00-117.00 sec  2.63 GBytes  22.6 Gbits/sec
+>> [  5] 117.00-118.00 sec  2.69 GBytes  23.1 Gbits/sec
+>> [  5] 118.00-119.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 119.00-120.00 sec  2.67 GBytes  22.9 Gbits/sec
+>> [  5] 120.00-121.00 sec  2.66 GBytes  22.9 Gbits/sec
+>> [  5] 121.00-122.00 sec  2.49 GBytes  21.4 Gbits/sec
+>> [  5] 122.00-123.00 sec  2.15 GBytes  18.5 Gbits/sec
+>> [  5] 123.00-124.00 sec  2.16 GBytes  18.6 Gbits/sec
+>> [  5] 124.00-125.00 sec  2.16 GBytes  18.6 Gbits/sec
+>>
+> 
+> See bugzilla for the full thread.
+> 
+> Anyway, I'm adding it to regzbot:
+> 
+> #regzbot introduced: dca5161f9bd052 https://bugzilla.kernel.org/show_bug.cgi?id=217503
+> #regzbot title: net_ratelimit and nvsp_rndis_pkt_complete error due to SEND_RNDIS_PKT status check
+> 
+> Thanks.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217503
+> 
