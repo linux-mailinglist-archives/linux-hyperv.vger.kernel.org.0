@@ -2,128 +2,227 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2834C722369
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 12:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 286F572249A
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 13:30:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231861AbjFEK2f (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jun 2023 06:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
+        id S232241AbjFELao (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jun 2023 07:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229655AbjFEK2e (ORCPT
+        with ESMTP id S232281AbjFELac (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jun 2023 06:28:34 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA4EA6;
-        Mon,  5 Jun 2023 03:28:20 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1q67Rf-00050B-2m; Mon, 05 Jun 2023 12:28:15 +0200
-Message-ID: <ebdd877d-f143-487c-04cd-606996eb6176@leemhuis.info>
-Date:   Mon, 5 Jun 2023 12:28:14 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Fwd: nvsp_rndis_pkt_complete error status and net_ratelimit:
- callbacks suppressed messages on 6.4.0rc4
-Content-Language: en-US, de-DE
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Mon, 5 Jun 2023 07:30:32 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 45779E69;
+        Mon,  5 Jun 2023 04:30:07 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 3162720BC61D; Mon,  5 Jun 2023 04:30:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3162720BC61D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685964607;
+        bh=Fq3+G6cWYfmQRBDH5cXMqLHYgpNoSa+m6zLyzEoNsPc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=e6ySYRVvFzxntF9AbSLgVJGpEVdqYS/9bVr974wIwObYCD6mehFiVg4Sw+5Qyn5xD
+         0Iq6molOCFZmEEB4dIwCAV5XIy59FTxGQqFAfiemueq7SAyaMAypToBWb7qhQGd0uL
+         nMcQpynImeidc0j1yTqV/uFdQ6RoY4sZuObZZLrI=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux BPF <bpf@vger.kernel.org>,
-        Linux on Hyper-V <linux-hyperv@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Bagas Sanjaya <bagasdotme@gmail.com>
-References: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <15dd93af-fcd5-5b9a-a6ba-9781768dbae7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685960901;a18d3986;
-X-HE-SMSGID: 1q67Rf-00050B-2m
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Steen Hegelund <steen.hegelund@microchip.com>,
+        Simon Horman <simon.horman@corigine.com>
+Subject: [PATCH v6] hv_netvsc: Allocate rx indirection table size dynamically
+Date:   Mon,  5 Jun 2023 04:30:06 -0700
+Message-Id: <1685964606-24690-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+Allocate the size of rx indirection table dynamically in netvsc
+from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
+query instead of using a constant value of ITAB_NUM.
 
-On 30.05.23 14:25, Bagas Sanjaya wrote:
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
+Testcases:
+1. ethtool -x eth0 output
+2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
+3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
 
-Hmmm, nobody replied to this yet (or am I missing something?). Doesn't
-seems like it's something urgent, but nevertheless:
+---
+Changes in v6:
+ * fixed net_device_context declaration in rndis_filter_device_remove
+---
+ drivers/net/hyperv/hyperv_net.h   |  5 ++++-
+ drivers/net/hyperv/netvsc_drv.c   | 10 ++++++----
+ drivers/net/hyperv/rndis_filter.c | 29 +++++++++++++++++++++++++----
+ 3 files changed, 35 insertions(+), 9 deletions(-)
 
-Michael, Bagas didn't make it obvious at all, hence please allow me to
-ask: did you notice that this is a regression that is apparently caused
-by a commit of yours?
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index dd5919ec408b..c40868f287a9 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
+ #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
+ 
+ #define ITAB_NUM 128
++#define ITAB_NUM_MAX 256
+ 
+ struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
+ 	struct ndis_obj_header hdr;
+@@ -1034,7 +1035,9 @@ struct net_device_context {
+ 
+ 	u32 tx_table[VRSS_SEND_TAB_SIZE];
+ 
+-	u16 rx_table[ITAB_NUM];
++	u16 *rx_table;
++
++	u32 rx_table_sz;
+ 
+ 	/* Ethtool settings */
+ 	u8 duplex;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 0103ff914024..3ba3c8fb28a5 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1747,7 +1747,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
+ 
+ static u32 netvsc_rss_indir_size(struct net_device *dev)
+ {
+-	return ITAB_NUM;
++	struct net_device_context *ndc = netdev_priv(dev);
++
++	return ndc->rx_table_sz;
+ }
+ 
+ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+@@ -1766,7 +1768,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			indir[i] = ndc->rx_table[i];
+ 	}
+ 
+@@ -1792,11 +1794,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
+ 
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			if (indir[i] >= ndev->num_chn)
+ 				return -EINVAL;
+ 
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = indir[i];
+ 	}
+ 
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index eea777ec2541..af95947a87c5 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -21,6 +21,7 @@
+ #include <linux/rtnetlink.h>
+ #include <linux/ucs2_string.h>
+ #include <linux/string.h>
++#include <linux/slab.h>
+ 
+ #include "hyperv_net.h"
+ #include "netvsc_trace.h"
+@@ -927,7 +928,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	struct rndis_set_request *set;
+ 	struct rndis_set_complete *set_complete;
+ 	u32 extlen = sizeof(struct ndis_recv_scale_param) +
+-		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
++		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
+ 	struct ndis_recv_scale_param *rssp;
+ 	u32 *itab;
+ 	u8 *keyp;
+@@ -953,7 +954,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
+ 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
+ 			 NDIS_HASH_TCP_IPV6;
+-	rssp->indirect_tabsize = 4*ITAB_NUM;
++	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
+ 	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
+ 	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
+ 	rssp->hashkey_offset = rssp->indirect_taboffset +
+@@ -961,7 +962,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 
+ 	/* Set indirection table entries */
+ 	itab = (u32 *)(rssp + 1);
+-	for (i = 0; i < ITAB_NUM; i++)
++	for (i = 0; i < ndc->rx_table_sz; i++)
+ 		itab[i] = ndc->rx_table[i];
+ 
+ 	/* Set hask key values */
+@@ -1548,6 +1549,18 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	if (ret || rsscap.num_recv_que < 2)
+ 		goto out;
+ 
++	if (rsscap.num_indirect_tabent &&
++	    rsscap.num_indirect_tabent <= ITAB_NUM_MAX)
++		ndc->rx_table_sz = rsscap.num_indirect_tabent;
++	else
++		ndc->rx_table_sz = ITAB_NUM;
++
++	ndc->rx_table = kcalloc(ndc->rx_table_sz, sizeof(u16), GFP_KERNEL);
++	if (!ndc->rx_table) {
++		ret = -ENOMEM;
++		goto err_dev_remv;
++	}
++
+ 	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
+ 	num_possible_rss_qs = min_t(u32, num_online_cpus(),
+ 				    rsscap.num_recv_que);
+@@ -1558,7 +1571,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 
+ 	if (!netif_is_rxfh_configured(net)) {
+-		for (i = 0; i < ITAB_NUM; i++)
++		for (i = 0; i < ndc->rx_table_sz; i++)
+ 			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+ 						i, net_device->num_chn);
+ 	}
+@@ -1596,11 +1609,19 @@ void rndis_filter_device_remove(struct hv_device *dev,
+ 				struct netvsc_device *net_dev)
+ {
+ 	struct rndis_device *rndis_dev = net_dev->extension;
++	struct net_device *net = hv_get_drvdata(dev);
++	struct net_device_context *ndc;
++
++	ndc = netdev_priv(net);
+ 
+ 	/* Halt and release the rndis device */
+ 	rndis_filter_halt_device(net_dev, rndis_dev);
+ 
+ 	netvsc_device_remove(dev);
++
++	ndc->rx_table_sz = 0;
++	kfree(ndc->rx_table);
++	ndc->rx_table = NULL;
+ }
+ 
+ int rndis_filter_open(struct netvsc_device *nvdev)
+-- 
+2.34.1
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
->> After building 6.4.0rc4 for my VM running on a Windows 10 Hyper-V host, I see the following 
->>
->> [  756.697753] net_ratelimit: 34 callbacks suppressed
->> [  756.697806] hv_netvsc cd9dd876-2fa9-4764-baa7-b44482f85f9f eth0: nvsp_rndis_pkt_complete error status: 2
->> (snipped repeated messages)
->>
->> *but*, I'm only able to reliably reproduce this if I am generating garbage on another terminal, e.g. sudo strings /dev/sda
->>
->>
->> This doesn't appear to affect latency or bandwidth a huge amount, I ran an iperf3 test between the guest and the host while trying to cause these messages.
->> Although you if you take 17-18 gigabit as the "base" speed, you can see it drop a bit to 16 gigabit while the errors happen and "catch up" when I stop spamming the console.
->>
->> [  5]  99.00-100.00 sec  1.89 GBytes  16.2 Gbits/sec
->> [  5] 100.00-101.00 sec  1.91 GBytes  16.4 Gbits/sec
->> [  5] 101.00-102.00 sec  1.91 GBytes  16.4 Gbits/sec
->> [  5] 102.00-103.00 sec  1.91 GBytes  16.4 Gbits/sec
->> [  5] 103.00-104.00 sec  1.92 GBytes  16.5 Gbits/sec
->> [  5] 104.00-105.00 sec  1.94 GBytes  16.6 Gbits/sec
->> [  5] 105.00-106.00 sec  1.89 GBytes  16.2 Gbits/sec
->> [  5] 106.00-107.00 sec  1.90 GBytes  16.3 Gbits/sec
->> [  5] 107.00-108.00 sec  2.23 GBytes  19.2 Gbits/sec
->> [  5] 108.00-109.00 sec  2.57 GBytes  22.0 Gbits/sec
->> [  5] 109.00-110.00 sec  2.66 GBytes  22.9 Gbits/sec
->> [  5] 110.00-111.00 sec  2.64 GBytes  22.7 Gbits/sec
->> [  5] 111.00-112.00 sec  2.65 GBytes  22.7 Gbits/sec
->> [  5] 112.00-113.00 sec  2.65 GBytes  22.8 Gbits/sec
->> [  5] 113.00-114.00 sec  2.65 GBytes  22.8 Gbits/sec
->> [  5] 114.00-115.00 sec  2.65 GBytes  22.8 Gbits/sec
->> [  5] 115.00-116.00 sec  2.66 GBytes  22.9 Gbits/sec
->> [  5] 116.00-117.00 sec  2.63 GBytes  22.6 Gbits/sec
->> [  5] 117.00-118.00 sec  2.69 GBytes  23.1 Gbits/sec
->> [  5] 118.00-119.00 sec  2.66 GBytes  22.9 Gbits/sec
->> [  5] 119.00-120.00 sec  2.67 GBytes  22.9 Gbits/sec
->> [  5] 120.00-121.00 sec  2.66 GBytes  22.9 Gbits/sec
->> [  5] 121.00-122.00 sec  2.49 GBytes  21.4 Gbits/sec
->> [  5] 122.00-123.00 sec  2.15 GBytes  18.5 Gbits/sec
->> [  5] 123.00-124.00 sec  2.16 GBytes  18.6 Gbits/sec
->> [  5] 124.00-125.00 sec  2.16 GBytes  18.6 Gbits/sec
->>
-> 
-> See bugzilla for the full thread.
-> 
-> Anyway, I'm adding it to regzbot:
-> 
-> #regzbot introduced: dca5161f9bd052 https://bugzilla.kernel.org/show_bug.cgi?id=217503
-> #regzbot title: net_ratelimit and nvsp_rndis_pkt_complete error due to SEND_RNDIS_PKT status check
-> 
-> Thanks.
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=217503
-> 
