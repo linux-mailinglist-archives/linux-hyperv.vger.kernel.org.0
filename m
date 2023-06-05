@@ -2,79 +2,117 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7D8B7226BE
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 15:01:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 249AE722722
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 15:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233224AbjFENB2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jun 2023 09:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50924 "EHLO
+        id S233892AbjFENPV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jun 2023 09:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233054AbjFENBV (ORCPT
+        with ESMTP id S230223AbjFENPS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jun 2023 09:01:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED21A1
-        for <linux-hyperv@vger.kernel.org>; Mon,  5 Jun 2023 06:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685970038;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6aGjYzdJUv3mCKaWHOXQQVhBXGYUPAjudrmb3GbAYcs=;
-        b=h9eUdP+sRAY7iqIILqaydT51jdfQxxpnu4GoJxVZfFWNJTXGdExssZYF+ez8bB2fXGKBmz
-        auSRvnMydrBs4xLfe4RJ0CM7gJSXJyeRs+mbbGSInlY8tZibIazJwHvQ5rK/a2P1xlH734
-        ufBLW+FJ7V8sgK7ffRepkBppT+rHLPQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-131-wDKG2c3OMnqEL8cGf3Tbrw-1; Mon, 05 Jun 2023 09:00:36 -0400
-X-MC-Unique: wDKG2c3OMnqEL8cGf3Tbrw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f772115352so5113085e9.0
-        for <linux-hyperv@vger.kernel.org>; Mon, 05 Jun 2023 06:00:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685970035; x=1688562035;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6aGjYzdJUv3mCKaWHOXQQVhBXGYUPAjudrmb3GbAYcs=;
-        b=iBbpZfWyv59kPnp5+oMU/e5SRy0UGrbUG6Cbfs6fHA1hdmKRo7Qy+/XaNwzMIh+4Jt
-         guSTou78gcWau6nLq/8YnJo59iWu9wiQOqG5VBIA9zhb/Rv1EDxK6X9XhcQ+IFG6A75Z
-         3pfXsWq4CR/jYEh+nGf1aJD/AnB7iMehwDInyKDRvG01hGdUue413hpofS9K8s6VmkDv
-         vIR/D1NkkbM9h21O2RlFf2qq5KzeQzFRYWSYjllPlUJ27mTs/dKZ8CEZA1i9j9UOTQgH
-         VYo/nVNRm0Jna+hz2inPRlBFZ26R3PnUEQgyXrCTSJlmd8fd/zs3WbLEb6dhW0hwnbZH
-         mr+Q==
-X-Gm-Message-State: AC+VfDy3BQ8cW82sW78Tqxwb2OlOZW/XInO6zeTiS/PVsbRLOlMry7Tq
-        wS8WJAQ5COGclrEE79Wjib+tjWZLtZ2bTYTEc/5wVnoScA/yPROPguetjhjvko0Asz2KqNqLR7N
-        FqXkdylReCH/DSGlSX7RCzGg4W3ZzuYmC
-X-Received: by 2002:a05:600c:1d98:b0:3f7:367a:38cb with SMTP id p24-20020a05600c1d9800b003f7367a38cbmr3872774wms.2.1685970035402;
-        Mon, 05 Jun 2023 06:00:35 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7BYasbXF+HwlwoTO7ru5Jn/GlxOkdZNhWdPXcR60/ODZuYlz9paQmxJ0VSP+eJVhTa5e/f5Q==
-X-Received: by 2002:a05:600c:1d98:b0:3f7:367a:38cb with SMTP id p24-20020a05600c1d9800b003f7367a38cbmr3872737wms.2.1685970035044;
-        Mon, 05 Jun 2023 06:00:35 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id w11-20020a1cf60b000000b003f423f5b659sm10737802wmc.10.2023.06.05.06.00.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 06:00:34 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] x86/hyperv: Use vmmcall to implement Hyper-V
- hypercall in sev-snp enlightened guest
-In-Reply-To: <20230601151624.1757616-6-ltykernel@gmail.com>
-References: <20230601151624.1757616-1-ltykernel@gmail.com>
- <20230601151624.1757616-6-ltykernel@gmail.com>
-Date:   Mon, 05 Jun 2023 15:00:33 +0200
-Message-ID: <87wn0ijc7i.fsf@redhat.com>
+        Mon, 5 Jun 2023 09:15:18 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on20700.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eae::700])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11534CD;
+        Mon,  5 Jun 2023 06:15:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c08zle5QJ4BJ16Gik+vffI7BF91stnlZ3n8RMdW92rZ0AbmgkpZKxPfG0/JtCsxRx4d2yeGBp5J5+/6mVpmLc4daMzEleI7DzDMlgqeiFDtv6KHVAlltg6oN1TZNiYsJNOtImBFath6pm1TD9V0laUeMKKgxg1twGfKZRAZSStRAAnsYMmkzmVOZ1sgDHZnOOaPx3mFlICUceFrPMoL+qqO9y2BLATVlJv34fYn6pnV/pJWvjxMCT5u1IxfW4657+PvE0Ccc/9wV9Ly/9SWuuXLK6xGbCJZCAVGX4/R/cwc6Vz4i8IhUZwPQXhPCILN+85G8wkB7+suo9gTeAs/xXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eaEQo3SH1vefAm1NJlWDlk9Ws+zHEcaZOrLoi6M0Hvw=;
+ b=RkpYldL8ApxkADDyEHVthzDWladGcCnNfMO94l6csWjqVpsJ2N8H3Dy2N7Lm+8dsmpd/MtcVQdl4ogOAZbLDfjiMcgAftymxecKQoSit1Y3snkGzfpkrHHcJsHL3JEFa1qMQ1LCDdV2mnMvcHGkR862aK/SZQvfKCll+7mqAU9JXQPtS8L/6jIs8L95akdSKMmYIKSMLjiJ2bvinsyIavoLkt5VCmSfaP03dfxGGeqjHEIt2Qdx0n2TNiPYx0V+CPOrBp6BYsuQGOxmvCXHZ/d6FBOc1vzM71fCIibrPHu1+seU+G5w2k7uZFMrYZs25EblhP9Qc5MhDyU9jXieenQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eaEQo3SH1vefAm1NJlWDlk9Ws+zHEcaZOrLoi6M0Hvw=;
+ b=mFG+3lN8lxoE/BqEPcZblUlQbI39IWvwB1/0xY32GjFJVIG6lpUKlko13upRyAaXd3zlPZtS/LtEmzdFjLlDcEd9224yMgSbD2IeyRNUxYvaF6owek8vp54IkxbqCxzr4L2lbgQc/V4LQwTcJsqn2vEgUQiHHoSFqD/CvpWlw3o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by SA1PR13MB4927.namprd13.prod.outlook.com (2603:10b6:806:187::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Mon, 5 Jun
+ 2023 13:15:14 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::5e55:9a39:751f:55f6]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::5e55:9a39:751f:55f6%3]) with mapi id 15.20.6455.030; Mon, 5 Jun 2023
+ 13:15:14 +0000
+Date:   Mon, 5 Jun 2023 15:15:05 +0200
+From:   Simon Horman <simon.horman@corigine.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-rdma@vger.kernel.org, longli@microsoft.com,
+        sharmaajay@microsoft.com, jgg@ziepe.ca, leon@kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, vkuznets@redhat.com,
+        ssengar@linux.microsoft.com, shradhagupta@linux.microsoft.com
+Subject: Re: [PATCH 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Message-ID: <ZH3f2abyRU1l/dq6@corigine.com>
+References: <20230605114313.1640883-1-weh@microsoft.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230605114313.1640883-1-weh@microsoft.com>
+X-ClientProxiedBy: AM0P190CA0008.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:208:190::18) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|SA1PR13MB4927:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04c740ac-8d6e-4270-c733-08db65c6e60a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r6oLAQNy30CZyc6DN8UBcyyAzmFPRZTB6xi9vTXsFngPfoLD5UHpFjobjwS704jILkutpSiQi8KyZcPxeub1BAFbE571Q/09eyx0/l7YacIwsrgnEJCsFw7ITDRCHR68u+ZAjjn5fB8oIUmVITjMSLJzzlkfTdNLlSxSEnS+az5QLhMctTTI0WPPHBTVJMv0zV0LT72oAwll8wTIJpyBhTYzOQlrnsKJqXkLGx22Y+b4JXE5Z7JKS4vQ2HfRDZCsNPZ17JS4luxD5SojS267xJMHHXkhu7gJUMcA36cc+T0VEHzSxwgLBRy7sXOOxZq4rCEp65VTwhYrjOkOO+TQsGUaTXz7cD4T+8m4mGZ+o5eKjeMhI4QsISJrvSgkzN6xuyhLTWv1Hl72PD5Mw6E3nsCCLiNptwfIKL8eN/ZpafF3Popi1zMc1LskuhADBSs8inqniXnt1e0Ypd0K7WdeKsk2shuJadoYWRE431uxn8bhKbYch7t8aGjs3bg8xCzheQfGar5bncBQZ0hk8WNwC2+ok8M8WH7cFIPvKWtGEuxfHGmNyqc1zOxSvUMPl7cxL9BDWhwDx1ZD2Lkt9VGGuhNZXBi3S0GaQD+NyIZHb74=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(366004)(376002)(39840400004)(346002)(451199021)(6486002)(6666004)(6506007)(6512007)(186003)(36756003)(2616005)(86362001)(38100700002)(44832011)(7416002)(5660300002)(316002)(41300700001)(8936002)(8676002)(6916009)(4326008)(66946007)(66556008)(66476007)(478600001)(45080400002)(66899021)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KBqCXVxb2T2Sfyekxtcdfz+N0hmIa34A7PJiAonN49Nbs60JQPTRdfCrYAz6?=
+ =?us-ascii?Q?DmbDSsShJ8R3Onjz56Be6bCOpQk/e9/p/koFSUPp9Yw43P5Q5Fy+VwBtcCBu?=
+ =?us-ascii?Q?6ZmlUEJjnaZA3qNf6r26/yMptVOKt0uVolanky1oP8ZdiOOh7LW9Sri260ss?=
+ =?us-ascii?Q?e86PWl2rOg9O9635UMlz59es/hVcQf4REIDchmU05Vzb1WFo1mXEgoCNwJu5?=
+ =?us-ascii?Q?bBbmrNQfNgrwCnTMaA5vAwDvkAh3EiqWzT96yqGvwgqE2IQh6c5fsslebtRh?=
+ =?us-ascii?Q?7hDwQR2i4SSSLavyzVuClQbXHfOiCKvw+irtzKcH4khbOeSYTAIF1XRINiFR?=
+ =?us-ascii?Q?e3BT55VgWd2zCln4LKrAzSGovTl95PwLMRQwGy2qCKjfUVHM7uvRGtgVHO3T?=
+ =?us-ascii?Q?pHhiK3LHxX7+1hLpj47QQsK2ykZru0XK0st2Dbbfytss684V5UTJqlUag2y9?=
+ =?us-ascii?Q?i8fJ7ZTJVBqd4vafrJMuoM4+fK/yVUIoEAXenWvSa7Gb84xCUfUpeOop1Ayb?=
+ =?us-ascii?Q?6jHZzO5ZTDeNUEVbChUtAfU36bMCyzmBvjBDkkHAD+AE1ACL/i5AxEc/PEeo?=
+ =?us-ascii?Q?2Kty2X36XCwRdVBnoePgc/NXXIVYDoOMrtdVqIMblNLDNAO9PcaMgewa/LiS?=
+ =?us-ascii?Q?2KSsQKDw0vA8dMIybIoXHx6ZCRnKqb/kKRzyzNFi9pIahr1e1HNyPyD4Lch2?=
+ =?us-ascii?Q?E0gEVhuIBUgDCLhtqMmI9QIAzFHmIgZyoFx1Kd+C6nVjaqlxpwBaDK2zmxx7?=
+ =?us-ascii?Q?PFcB/Nbo/b7o+IlnnshchUnyjRIV/X+kHdc97NheI4OykHYFBrdxZziRS6OG?=
+ =?us-ascii?Q?BbVGj4mJa4zNn9LX5IEYW/kwHd2XlaDwm9b+dcCiHVZ0u2wLxmC0QW6RJHeU?=
+ =?us-ascii?Q?BnHPHI1fYwbH9nIny9idl+HjZgNi8DaTDYBdBke5rRy28Tf8g0odjCexB/f9?=
+ =?us-ascii?Q?Iq3s0jIwUeQRbkD4R6vcPTaeevGNkfUP0PgHQno5wd454hgv4sp2JVNqBHyx?=
+ =?us-ascii?Q?eks/F95UuDGG2G1Yrv3jH+Ns7pv/TTbDYigpYI1GZrot3VxNvIMlCzGrPyGE?=
+ =?us-ascii?Q?UF13mFs/s8ETJg0VFGSVrs5wJnQK+tcSV4qtz6Hw8xozvy47MSt0geE4FykM?=
+ =?us-ascii?Q?X3Q6FN2e5OGN/BuT/1ZQwzuBrlUvN1BAZc+x51Ivn/qkNBf3dtjTKs2mb2iU?=
+ =?us-ascii?Q?nFUA61Nq8WadW86ci8/yh7waVcLipXXiq55MbKVKVaBy7YHR15bRdgZyCS6C?=
+ =?us-ascii?Q?zF3bdiH8HurUBb584JZRjywI43jU/TSuxHMiZQJg0PmN4Bei9dJLBsMiKqWB?=
+ =?us-ascii?Q?r9YSGCyIthJHJiTjtNf3EUmuTlPFVxzOUO+q4cHV3XrXe59VVL0jljxFD+UQ?=
+ =?us-ascii?Q?ixNdntrPOVDdTk0yK+sqUHtHZ8+Ja0ks9W+79SAh5rRSbIvhTZVrg1ObVmrJ?=
+ =?us-ascii?Q?HaP+J7MZurz+om1RrH3bkOvVTNbu+ZjzWJT2afUCEZvfEDdGPxGevwQrM82H?=
+ =?us-ascii?Q?iQAzga2hY3lqNWliXR6CKmUtkbAB/SdF2YEtAO5kwRoh+n1+HhpcWdkm/WQH?=
+ =?us-ascii?Q?m3YTcpJl5Yv4uKspIcUdd9SuDWjPH98E0iaFKFDbFTcTIzhQzmm4u2FvtvOH?=
+ =?us-ascii?Q?HknQ5hpnrgCNHxIE/gqf/udXy2LjtxI0M++UoQrLonvSxQxSsau+c1PkSedS?=
+ =?us-ascii?Q?xDrswQ=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04c740ac-8d6e-4270-c733-08db65c6e60a
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2023 13:15:14.1936
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vx40IFO9D65o3tKFVlcOwB4MIDlAk9cd6MUXgfudgSHRENDFsy7P5RYqjYJemYSuJRSJeqUhvIIcSFln7y6UEvhGbAPyQqtHWW/Zkpx1Yt4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR13MB4927
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,101 +120,48 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Tianyu Lan <ltykernel@gmail.com> writes:
+On Mon, Jun 05, 2023 at 11:43:13AM +0000, Wei Hu wrote:
+> Add EQ interrupt support for mana ib driver. Allocate EQs per ucontext
+> to receive interrupt. Attach EQ when CQ is created. Call CQ interrupt
+> handler when completion interrupt happens. EQs are destroyed when
+> ucontext is deallocated.
+> 
+> The change calls some public APIs in mana ethernet driver to
+> allocate EQs and other resources. Ehe EQ process routine is also shared
+> by mana ethernet and mana ib drivers.
+> 
+> Co-developed-by: Ajay Sharma <sharmaajay@microsoft.com>
+> Signed-off-by: Ajay Sharma <sharmaajay@microsoft.com>
+> Signed-off-by: Wei Hu <weh@microsoft.com>
 
-> From: Tianyu Lan <tiala@microsoft.com>
->
-> In sev-snp enlightened guest, Hyper-V hypercall needs
-> to use vmmcall to trigger vmexit and notify hypervisor
-> to handle hypercall request.
->
-> There is no x86 SEV SNP feature flag support so far and
-> hardware provides MSR_AMD64_SEV register to check SEV-SNP
-> capability with MSR_AMD64_SEV_ENABLED bit. ALTERNATIVE can't
-> work without SEV-SNP x86 feature flag. May add later when
-> the associated flag is introduced. 
->
-> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-> ---
->  arch/x86/include/asm/mshyperv.h | 44 ++++++++++++++++++++++++---------
->  1 file changed, 33 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index 31c476f4e656..d859d7c5f5e8 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -61,16 +61,25 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
->  	u64 hv_status;
+...
+
+> @@ -368,6 +420,24 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
+>  	qp->sq_id = wq_spec.queue_index;
+>  	send_cq->id = cq_spec.queue_index;
 >  
->  #ifdef CONFIG_X86_64
-> -	if (!hv_hypercall_pg)
-> -		return U64_MAX;
-> +	if (hv_isolation_type_en_snp()) {
+> +	if (gd->gdma_context->cq_table[send_cq->id] == NULL) {
+> +
+> +		gdma_cq = kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
+> +		if (!gdma_cq) {
+> +			pr_err("failed to allocate gdma_cq\n");
 
-Would it be possible to redo 'hv_isolation_type_en_snp()' into a static
-inline doing static_branch_unlikely() so we avoid function call penalty
-here?
+Hi wei Hu,
 
-> +		__asm__ __volatile__("mov %4, %%r8\n"
-> +				     "vmmcall"
-> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> +				       "+c" (control), "+d" (input_address)
-> +				     :  "r" (output_address)
-> +				     : "cc", "memory", "r8", "r9", "r10", "r11");
+I think 'err = -ENOMEM' is needed here.
+
+> +			goto err_destroy_wqobj_and_cq;
+> +		}
+> +
+> +		pr_debug("gdma cq allocated %p\n", gdma_cq);
+> +		gdma_cq->cq.context = send_cq;
+> +		gdma_cq->type = GDMA_CQ;
+> +		gdma_cq->cq.callback = mana_ib_cq_handler;
+> +		gdma_cq->id = send_cq->id;
+> +		gd->gdma_context->cq_table[send_cq->id] = gdma_cq;
 > +	} else {
-> +		if (!hv_hypercall_pg)
-> +			return U64_MAX;
->  
-> -	__asm__ __volatile__("mov %4, %%r8\n"
-> -			     CALL_NOSPEC
-> -			     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> -			       "+c" (control), "+d" (input_address)
-> -			     :  "r" (output_address),
-> -				THUNK_TARGET(hv_hypercall_pg)
-> -			     : "cc", "memory", "r8", "r9", "r10", "r11");
-> +		__asm__ __volatile__("mov %4, %%r8\n"
-> +				     CALL_NOSPEC
-> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> +				       "+c" (control), "+d" (input_address)
-> +				     :  "r" (output_address),
-> +					THUNK_TARGET(hv_hypercall_pg)
-> +				     : "cc", "memory", "r8", "r9", "r10", "r11");
+> +		gdma_cq = gd->gdma_context->cq_table[send_cq->id];
 > +	}
->  #else
->  	u32 input_address_hi = upper_32_bits(input_address);
->  	u32 input_address_lo = lower_32_bits(input_address);
-> @@ -104,7 +113,13 @@ static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
->  	u64 hv_status;
->  
->  #ifdef CONFIG_X86_64
-> -	{
-> +	if (hv_isolation_type_en_snp()) {
-> +		__asm__ __volatile__(
-> +				"vmmcall"
-> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> +				"+c" (control), "+d" (input1)
-> +				:: "cc", "r8", "r9", "r10", "r11");
-> +	} else {
->  		__asm__ __volatile__(CALL_NOSPEC
->  				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
->  				       "+c" (control), "+d" (input1)
-> @@ -149,7 +164,14 @@ static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
->  	u64 hv_status;
->  
->  #ifdef CONFIG_X86_64
-> -	{
-> +	if (hv_isolation_type_en_snp()) {
-> +		__asm__ __volatile__("mov %4, %%r8\n"
-> +				     "vmmcall"
-> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-> +				       "+c" (control), "+d" (input1)
-> +				     : "r" (input2)
-> +				     : "cc", "r8", "r9", "r10", "r11");
-> +	} else {
->  		__asm__ __volatile__("mov %4, %%r8\n"
->  				     CALL_NOSPEC
->  				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
-
--- 
-Vitaly
-
+> +
+>  	ibdev_dbg(&mdev->ib_dev,
+>  		  "ret %d qp->tx_object 0x%llx sq id %llu cq id %llu\n", err,
