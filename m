@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 264E0722681
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 14:55:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7D8B7226BE
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 15:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233810AbjFEMzc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jun 2023 08:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46076 "EHLO
+        id S233224AbjFENB2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jun 2023 09:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233811AbjFEMz0 (ORCPT
+        with ESMTP id S233054AbjFENBV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jun 2023 08:55:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEACEC
-        for <linux-hyperv@vger.kernel.org>; Mon,  5 Jun 2023 05:54:33 -0700 (PDT)
+        Mon, 5 Jun 2023 09:01:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED21A1
+        for <linux-hyperv@vger.kernel.org>; Mon,  5 Jun 2023 06:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685969673;
+        s=mimecast20190719; t=1685970038;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=DHxUennmoRcWdeQEiDSCkjFBqLhpEtT5XDwGS+LOflw=;
-        b=H9hfBxiS08hl8BXWNUFF7kf+kItYzQ4XJpOMMn2pXRToVbz3n+wNdPmV6jtnVu2NWt2g9H
-        ymhu+Z+hcgXBInVU/Rdo7VjaSbIw2XJ0Imn9ga8NWHO49PfgGwIJI1KmAztSYBZZcgvP+A
-        7y+4PWsNNT1pHKLUXhPnJiTAt1K7Dyc=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=6aGjYzdJUv3mCKaWHOXQQVhBXGYUPAjudrmb3GbAYcs=;
+        b=h9eUdP+sRAY7iqIILqaydT51jdfQxxpnu4GoJxVZfFWNJTXGdExssZYF+ez8bB2fXGKBmz
+        auSRvnMydrBs4xLfe4RJ0CM7gJSXJyeRs+mbbGSInlY8tZibIazJwHvQ5rK/a2P1xlH734
+        ufBLW+FJ7V8sgK7ffRepkBppT+rHLPQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-190-F0K4VeNAOJy3VMjkIg039g-1; Mon, 05 Jun 2023 08:54:32 -0400
-X-MC-Unique: F0K4VeNAOJy3VMjkIg039g-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-75dfef90315so149781385a.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 05 Jun 2023 05:54:32 -0700 (PDT)
+ us-mta-131-wDKG2c3OMnqEL8cGf3Tbrw-1; Mon, 05 Jun 2023 09:00:36 -0400
+X-MC-Unique: wDKG2c3OMnqEL8cGf3Tbrw-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f772115352so5113085e9.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 05 Jun 2023 06:00:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685969671; x=1688561671;
+        d=1e100.net; s=20221208; t=1685970035; x=1688562035;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DHxUennmoRcWdeQEiDSCkjFBqLhpEtT5XDwGS+LOflw=;
-        b=J31xtuEfTWoCY+U/3PzthJ8r0MQzhobiATQwgMPmMOBSbjI2VjXRQmkVCp223F/Dpj
-         bBiroS7DB/Yx21fjkdG4r2LuPUctTQd5zGTPsUXsaztb13O8K0e3PchN3/yOu0N3RC0r
-         zE2XYu0uH2KXP3zefGNlXpJJG7Ckb+oAnAhOjfBtMLuowSVQSTb9SQSeVZ333xe3CLWI
-         xcAk0DMYiwhqb5VhLJhXG7TCtP8OhyHNvVSWrSNApurvKpY4jqFD1l6GGdb3eHPqhZtd
-         Q/FrlmN2R3bB9PiCTLBQY3K6QpTl/jsZBm8j8A8BisKsOpjaNhI0t5K1W9rLGkMNUunH
-         q7Ag==
-X-Gm-Message-State: AC+VfDwRfKVU/w+1nbbaSKt4gixDXR4C75k1vmGhjwvVkmFAMNWkINW7
-        84R3qZ8Cat/I7wH9ZVn1SUCBbK+NqkWSXNED4bgYZc1J6em6TFi+EtBhUSrRKEZ3+DAON99sYS8
-        k9Ae7MFPGVa0Vd9hoRVaGB4Nt
-X-Received: by 2002:a05:620a:4382:b0:75e:ac60:620d with SMTP id a2-20020a05620a438200b0075eac60620dmr2852353qkp.9.1685969671697;
-        Mon, 05 Jun 2023 05:54:31 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6RaoDQmdKCPPrluZRGbo5LN4qXWw/NY69RzD/tKyXIn6rr/+pMbUtVBbme2QzahttCsnRfiA==
-X-Received: by 2002:a05:620a:4382:b0:75e:ac60:620d with SMTP id a2-20020a05620a438200b0075eac60620dmr2852335qkp.9.1685969671439;
-        Mon, 05 Jun 2023 05:54:31 -0700 (PDT)
+        bh=6aGjYzdJUv3mCKaWHOXQQVhBXGYUPAjudrmb3GbAYcs=;
+        b=iBbpZfWyv59kPnp5+oMU/e5SRy0UGrbUG6Cbfs6fHA1hdmKRo7Qy+/XaNwzMIh+4Jt
+         guSTou78gcWau6nLq/8YnJo59iWu9wiQOqG5VBIA9zhb/Rv1EDxK6X9XhcQ+IFG6A75Z
+         3pfXsWq4CR/jYEh+nGf1aJD/AnB7iMehwDInyKDRvG01hGdUue413hpofS9K8s6VmkDv
+         vIR/D1NkkbM9h21O2RlFf2qq5KzeQzFRYWSYjllPlUJ27mTs/dKZ8CEZA1i9j9UOTQgH
+         VYo/nVNRm0Jna+hz2inPRlBFZ26R3PnUEQgyXrCTSJlmd8fd/zs3WbLEb6dhW0hwnbZH
+         mr+Q==
+X-Gm-Message-State: AC+VfDy3BQ8cW82sW78Tqxwb2OlOZW/XInO6zeTiS/PVsbRLOlMry7Tq
+        wS8WJAQ5COGclrEE79Wjib+tjWZLtZ2bTYTEc/5wVnoScA/yPROPguetjhjvko0Asz2KqNqLR7N
+        FqXkdylReCH/DSGlSX7RCzGg4W3ZzuYmC
+X-Received: by 2002:a05:600c:1d98:b0:3f7:367a:38cb with SMTP id p24-20020a05600c1d9800b003f7367a38cbmr3872774wms.2.1685970035402;
+        Mon, 05 Jun 2023 06:00:35 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7BYasbXF+HwlwoTO7ru5Jn/GlxOkdZNhWdPXcR60/ODZuYlz9paQmxJ0VSP+eJVhTa5e/f5Q==
+X-Received: by 2002:a05:600c:1d98:b0:3f7:367a:38cb with SMTP id p24-20020a05600c1d9800b003f7367a38cbmr3872737wms.2.1685970035044;
+        Mon, 05 Jun 2023 06:00:35 -0700 (PDT)
 Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id h17-20020a05620a10b100b0075cec860842sm4192880qkk.27.2023.06.05.05.54.28
+        by smtp.gmail.com with ESMTPSA id w11-20020a1cf60b000000b003f423f5b659sm10737802wmc.10.2023.06.05.06.00.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 05:54:30 -0700 (PDT)
+        Mon, 05 Jun 2023 06:00:34 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
         haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
@@ -63,13 +63,13 @@ To:     Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
         michael.h.kelley@microsoft.com
 Cc:     Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/9] drivers: hv: Mark shared pages unencrypted in
- SEV-SNP enlightened guest
-In-Reply-To: <20230601151624.1757616-5-ltykernel@gmail.com>
+Subject: Re: [PATCH 5/9] x86/hyperv: Use vmmcall to implement Hyper-V
+ hypercall in sev-snp enlightened guest
+In-Reply-To: <20230601151624.1757616-6-ltykernel@gmail.com>
 References: <20230601151624.1757616-1-ltykernel@gmail.com>
- <20230601151624.1757616-5-ltykernel@gmail.com>
-Date:   Mon, 05 Jun 2023 14:54:26 +0200
-Message-ID: <87zg5ejchp.fsf@redhat.com>
+ <20230601151624.1757616-6-ltykernel@gmail.com>
+Date:   Mon, 05 Jun 2023 15:00:33 +0200
+Message-ID: <87wn0ijc7i.fsf@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -86,186 +86,96 @@ Tianyu Lan <ltykernel@gmail.com> writes:
 
 > From: Tianyu Lan <tiala@microsoft.com>
 >
-> Hypervisor needs to access iput arg, VMBus synic event and
-> message pages. Mask these pages unencrypted in the sev-snp
-> guest and free them only if they have been marked encrypted
-> successfully.
+> In sev-snp enlightened guest, Hyper-V hypercall needs
+> to use vmmcall to trigger vmexit and notify hypervisor
+> to handle hypercall request.
+>
+> There is no x86 SEV SNP feature flag support so far and
+> hardware provides MSR_AMD64_SEV register to check SEV-SNP
+> capability with MSR_AMD64_SEV_ENABLED bit. ALTERNATIVE can't
+> work without SEV-SNP x86 feature flag. May add later when
+> the associated flag is introduced. 
 >
 > Signed-off-by: Tianyu Lan <tiala@microsoft.com>
 > ---
->  drivers/hv/hv.c        | 57 +++++++++++++++++++++++++++++++++++++++---
->  drivers/hv/hv_common.c | 24 +++++++++++++++++-
->  2 files changed, 77 insertions(+), 4 deletions(-)
+>  arch/x86/include/asm/mshyperv.h | 44 ++++++++++++++++++++++++---------
+>  1 file changed, 33 insertions(+), 11 deletions(-)
 >
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index de6708dbe0df..94406dbe0df0 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -20,6 +20,7 @@
->  #include <linux/interrupt.h>
->  #include <clocksource/hyperv_timer.h>
->  #include <asm/mshyperv.h>
-> +#include <linux/set_memory.h>
->  #include "hyperv_vmbus.h"
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 31c476f4e656..d859d7c5f5e8 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -61,16 +61,25 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
+>  	u64 hv_status;
 >  
->  /* The one and only */
-> @@ -78,7 +79,7 @@ int hv_post_message(union hv_connection_id connection_id,
->  
->  int hv_synic_alloc(void)
->  {
-> -	int cpu;
-> +	int cpu, ret = -ENOMEM;
->  	struct hv_per_cpu_context *hv_cpu;
->  
->  	/*
-> @@ -123,26 +124,76 @@ int hv_synic_alloc(void)
->  				goto err;
->  			}
->  		}
-> +
-> +		if (hv_isolation_type_en_snp()) {
-> +			ret = set_memory_decrypted((unsigned long)
-> +				hv_cpu->synic_message_page, 1);
-> +			if (ret) {
-> +				pr_err("Failed to decrypt SYNIC msg page: %d\n", ret);
-> +				hv_cpu->synic_message_page = NULL;
-> +
-> +				/*
-> +				 * Free the event page here and not encrypt
-> +				 * the page in hv_synic_free().
-> +				 */
-> +				free_page((unsigned long)hv_cpu->synic_event_page);
-> +				hv_cpu->synic_event_page = NULL;
-> +				goto err;
-> +			}
-> +
-> +			ret = set_memory_decrypted((unsigned long)
-> +				hv_cpu->synic_event_page, 1);
-> +			if (ret) {
-> +				pr_err("Failed to decrypt SYNIC event page: %d\n", ret);
-> +				hv_cpu->synic_event_page = NULL;
-> +				goto err;
-> +			}
-> +
-> +			memset(hv_cpu->synic_message_page, 0, PAGE_SIZE);
-> +			memset(hv_cpu->synic_event_page, 0, PAGE_SIZE);
-> +		}
->  	}
->  
->  	return 0;
-> +
->  err:
->  	/*
->  	 * Any memory allocations that succeeded will be freed when
->  	 * the caller cleans up by calling hv_synic_free()
->  	 */
-> -	return -ENOMEM;
-> +	return ret;
->  }
->  
->  
->  void hv_synic_free(void)
->  {
-> -	int cpu;
-> +	int cpu, ret;
->  
->  	for_each_present_cpu(cpu) {
->  		struct hv_per_cpu_context *hv_cpu
->  			= per_cpu_ptr(hv_context.cpu_context, cpu);
->  
-> +		/* It's better to leak the page if the encryption fails. */
-> +		if (hv_isolation_type_en_snp()) {
-> +			if (hv_cpu->synic_message_page) {
-> +				ret = set_memory_encrypted((unsigned long)
-> +					hv_cpu->synic_message_page, 1);
-> +				if (ret) {
-> +					pr_err("Failed to encrypt SYNIC msg page: %d\n", ret);
-> +					hv_cpu->synic_message_page = NULL;
-> +				}
-> +			}
-> +
-> +			if (hv_cpu->synic_event_page) {
-> +				ret = set_memory_encrypted((unsigned long)
-> +					hv_cpu->synic_event_page, 1);
-> +				if (ret) {
-> +					pr_err("Failed to encrypt SYNIC event page: %d\n", ret);
-> +					hv_cpu->synic_event_page = NULL;
-> +				}
-> +			}
-> +		}
-> +
->  		free_page((unsigned long)hv_cpu->synic_event_page);
->  		free_page((unsigned long)hv_cpu->synic_message_page);
->  	}
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 179bc5f5bf52..bed9aa6ac19a 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -24,6 +24,7 @@
->  #include <linux/kmsg_dump.h>
->  #include <linux/slab.h>
->  #include <linux/dma-map-ops.h>
-> +#include <linux/set_memory.h>
->  #include <asm/hyperv-tlfs.h>
->  #include <asm/mshyperv.h>
->  
-> @@ -359,6 +360,7 @@ int hv_common_cpu_init(unsigned int cpu)
->  	u64 msr_vp_index;
->  	gfp_t flags;
->  	int pgcount = hv_root_partition ? 2 : 1;
-> +	int ret;
->  
->  	/* hv_cpu_init() can be called with IRQs disabled from hv_resume() */
->  	flags = irqs_disabled() ? GFP_ATOMIC : GFP_KERNEL;
-> @@ -368,6 +370,17 @@ int hv_common_cpu_init(unsigned int cpu)
->  	if (!(*inputarg))
->  		return -ENOMEM;
->  
+>  #ifdef CONFIG_X86_64
+> -	if (!hv_hypercall_pg)
+> -		return U64_MAX;
 > +	if (hv_isolation_type_en_snp()) {
-> +		ret = set_memory_decrypted((unsigned long)*inputarg, pgcount);
-> +		if (ret) {
-> +			kfree(*inputarg);
-> +			*inputarg = NULL;
-> +			return ret;
-> +		}
-> +
-> +		memset(*inputarg, 0x00, pgcount * PAGE_SIZE);
+
+Would it be possible to redo 'hv_isolation_type_en_snp()' into a static
+inline doing static_branch_unlikely() so we avoid function call penalty
+here?
+
+> +		__asm__ __volatile__("mov %4, %%r8\n"
+> +				     "vmmcall"
+> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> +				       "+c" (control), "+d" (input_address)
+> +				     :  "r" (output_address)
+> +				     : "cc", "memory", "r8", "r9", "r10", "r11");
+> +	} else {
+> +		if (!hv_hypercall_pg)
+> +			return U64_MAX;
+>  
+> -	__asm__ __volatile__("mov %4, %%r8\n"
+> -			     CALL_NOSPEC
+> -			     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> -			       "+c" (control), "+d" (input_address)
+> -			     :  "r" (output_address),
+> -				THUNK_TARGET(hv_hypercall_pg)
+> -			     : "cc", "memory", "r8", "r9", "r10", "r11");
+> +		__asm__ __volatile__("mov %4, %%r8\n"
+> +				     CALL_NOSPEC
+> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> +				       "+c" (control), "+d" (input_address)
+> +				     :  "r" (output_address),
+> +					THUNK_TARGET(hv_hypercall_pg)
+> +				     : "cc", "memory", "r8", "r9", "r10", "r11");
 > +	}
-> +
->  	if (hv_root_partition) {
->  		outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
->  		*outputarg = (char *)(*inputarg) + HV_HYP_PAGE_SIZE;
-> @@ -387,7 +400,9 @@ int hv_common_cpu_die(unsigned int cpu)
->  {
->  	unsigned long flags;
->  	void **inputarg, **outputarg;
-> +	int pgcount = hv_root_partition ? 2 : 1;
->  	void *mem;
-> +	int ret;
+>  #else
+>  	u32 input_address_hi = upper_32_bits(input_address);
+>  	u32 input_address_lo = lower_32_bits(input_address);
+> @@ -104,7 +113,13 @@ static inline u64 _hv_do_fast_hypercall8(u64 control, u64 input1)
+>  	u64 hv_status;
 >  
->  	local_irq_save(flags);
->  
-> @@ -402,7 +417,14 @@ int hv_common_cpu_die(unsigned int cpu)
->  
->  	local_irq_restore(flags);
->  
-> -	kfree(mem);
+>  #ifdef CONFIG_X86_64
+> -	{
 > +	if (hv_isolation_type_en_snp()) {
-> +		ret = set_memory_encrypted((unsigned long)mem, pgcount);
-> +		if (ret)
-> +			pr_warn("Hyper-V: Failed to encrypt input arg on cpu%d: %d\n",
-> +				cpu, ret);
-> +		/* It's unsafe to free 'mem'. */
-> +		return 0;
-
-Why is it unsafe to free 'mem' if ret == 0? Also, why don't we want to
-proparate non-zero 'ret' from here to fail CPU offlining?
-
-
-> +	}
+> +		__asm__ __volatile__(
+> +				"vmmcall"
+> +				: "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> +				"+c" (control), "+d" (input1)
+> +				:: "cc", "r8", "r9", "r10", "r11");
+> +	} else {
+>  		__asm__ __volatile__(CALL_NOSPEC
+>  				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+>  				       "+c" (control), "+d" (input1)
+> @@ -149,7 +164,14 @@ static inline u64 _hv_do_fast_hypercall16(u64 control, u64 input1, u64 input2)
+>  	u64 hv_status;
 >  
->  	return 0;
->  }
+>  #ifdef CONFIG_X86_64
+> -	{
+> +	if (hv_isolation_type_en_snp()) {
+> +		__asm__ __volatile__("mov %4, %%r8\n"
+> +				     "vmmcall"
+> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
+> +				       "+c" (control), "+d" (input1)
+> +				     : "r" (input2)
+> +				     : "cc", "r8", "r9", "r10", "r11");
+> +	} else {
+>  		__asm__ __volatile__("mov %4, %%r8\n"
+>  				     CALL_NOSPEC
+>  				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
 
 -- 
 Vitaly
