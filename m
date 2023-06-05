@@ -2,33 +2,54 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1793721F4A
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 09:14:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 764577221DA
+	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 11:17:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbjFEHO2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jun 2023 03:14:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46472 "EHLO
+        id S230091AbjFEJRF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 5 Jun 2023 05:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231392AbjFEHOE (ORCPT
+        with ESMTP id S229952AbjFEJRD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jun 2023 03:14:04 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA23EE47;
-        Mon,  5 Jun 2023 00:13:42 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-        id A149020BC618; Mon,  5 Jun 2023 00:13:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A149020BC618
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685949197;
-        bh=VnwuA4SKT0DIE2uS0aw8iGgaRmOgZDkkNsh8tdxtnxU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TvNjA9LZdCpCDGKLvEMtUgdRObcMH8/bmQL3Y/ErhDDgAHB8VApQDMQ3aPS8SyIuV
-         H3gv7mVtmLXYuMlA3bwoWs1OcE6ixwfJD23+DIqUWcg3DBlVyloS5B2/etA1QXPC5M
-         JIZ0rVY3HZ9eop5/znW1JLTf4Qf8bjT2P0j/TfyQ=
-From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Mon, 5 Jun 2023 05:17:03 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EAB9FA;
+        Mon,  5 Jun 2023 02:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685956615; x=1717492615;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cgrTKus95w+HymJbLJprRL1OTrYUDbn4V9Ftlx5lOjU=;
+  b=HyIiFsMiD4vCVQUNItKh4fb1cgVIkU/WxdQOabpw0sWVbdTEP9PVRooF
+   4UbEXVPvE2AYsgvHhgXvzLG677TbRO/IvpfoRSVwb1yiCH/3wimJ50Pj0
+   pwq8bakVD7srpJJmxCZDOxFzlrYRWCpjmySweeWB48o7fPOMsgaUQ3zB+
+   OR0IeG57TBy5XwuwSGcdcCFri5ePyb7itiV4CiWu8vaHpRakkK8qpwRaK
+   HHtYSAPZlBrUdsZL8tte2yNLYAA+inw/qz68EPnvVHEPx1E2S6JEdMUft
+   GrgLjSnyr2hHkFP0XQO7k0Micng25gYJbZqMBLRNmpcwo6PCAdkppsyOU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="335938664"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="335938664"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 02:15:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="778475633"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="778475633"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Jun 2023 02:14:57 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q66Ii-00043z-0l;
+        Mon, 05 Jun 2023 09:14:56 +0000
+Date:   Mon, 5 Jun 2023 17:14:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org
-Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Shradha Gupta <shradhagupta@linux.microsoft.com>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
@@ -37,190 +58,89 @@ Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
         Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         Long Li <longli@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
         Steen Hegelund <steen.hegelund@microchip.com>,
         Simon Horman <simon.horman@corigine.com>
-Subject: [PATCH v5] hv_netvsc: Allocate rx indirection table size dynamically
-Date:   Mon,  5 Jun 2023 00:13:16 -0700
-Message-Id: <1685949196-16175-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v5] hv_netvsc: Allocate rx indirection table size
+ dynamically
+Message-ID: <202306051754.7zMgBFMX-lkp@intel.com>
+References: <1685949196-16175-1-git-send-email-shradhagupta@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1685949196-16175-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Allocate the size of rx indirection table dynamically in netvsc
-from the value of size provided by OID_GEN_RECEIVE_SCALE_CAPABILITIES
-query instead of using a constant value of ITAB_NUM.
+Hi Shradha,
 
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Tested-on: Ubuntu22 (azure VM, SKU size: Standard_F72s_v2)
-Testcases:
-1. ethtool -x eth0 output
-2. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
-3. LISA testcase:PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
+kernel test robot noticed the following build warnings:
 
----
-Changes in v5:
- * Follwoed the RCT format for varible declarations in rndix_filter.c
----
- drivers/net/hyperv/hyperv_net.h   |  5 ++++-
- drivers/net/hyperv/netvsc_drv.c   | 10 ++++++----
- drivers/net/hyperv/rndis_filter.c | 27 +++++++++++++++++++++++----
- 3 files changed, 33 insertions(+), 9 deletions(-)
+[auto build test WARNING on linus/master]
+[also build test WARNING on horms-ipvs/master v6.4-rc5 next-20230605]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index dd5919ec408b..c40868f287a9 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -74,6 +74,7 @@ struct ndis_recv_scale_cap { /* NDIS_RECEIVE_SCALE_CAPABILITIES */
- #define NDIS_RSS_HASH_SECRET_KEY_MAX_SIZE_REVISION_2   40
- 
- #define ITAB_NUM 128
-+#define ITAB_NUM_MAX 256
- 
- struct ndis_recv_scale_param { /* NDIS_RECEIVE_SCALE_PARAMETERS */
- 	struct ndis_obj_header hdr;
-@@ -1034,7 +1035,9 @@ struct net_device_context {
- 
- 	u32 tx_table[VRSS_SEND_TAB_SIZE];
- 
--	u16 rx_table[ITAB_NUM];
-+	u16 *rx_table;
-+
-+	u32 rx_table_sz;
- 
- 	/* Ethtool settings */
- 	u8 duplex;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 0103ff914024..3ba3c8fb28a5 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1747,7 +1747,9 @@ static u32 netvsc_get_rxfh_key_size(struct net_device *dev)
- 
- static u32 netvsc_rss_indir_size(struct net_device *dev)
- {
--	return ITAB_NUM;
-+	struct net_device_context *ndc = netdev_priv(dev);
-+
-+	return ndc->rx_table_sz;
- }
- 
- static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
-@@ -1766,7 +1768,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
- 
- 	rndis_dev = ndev->extension;
- 	if (indir) {
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			indir[i] = ndc->rx_table[i];
- 	}
- 
-@@ -1792,11 +1794,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
- 
- 	rndis_dev = ndev->extension;
- 	if (indir) {
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			if (indir[i] >= ndev->num_chn)
- 				return -EINVAL;
- 
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			ndc->rx_table[i] = indir[i];
- 	}
- 
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index eea777ec2541..5a5dd5007590 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -21,6 +21,7 @@
- #include <linux/rtnetlink.h>
- #include <linux/ucs2_string.h>
- #include <linux/string.h>
-+#include <linux/slab.h>
- 
- #include "hyperv_net.h"
- #include "netvsc_trace.h"
-@@ -927,7 +928,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 	struct rndis_set_request *set;
- 	struct rndis_set_complete *set_complete;
- 	u32 extlen = sizeof(struct ndis_recv_scale_param) +
--		     4 * ITAB_NUM + NETVSC_HASH_KEYLEN;
-+		     4 * ndc->rx_table_sz + NETVSC_HASH_KEYLEN;
- 	struct ndis_recv_scale_param *rssp;
- 	u32 *itab;
- 	u8 *keyp;
-@@ -953,7 +954,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 	rssp->hashinfo = NDIS_HASH_FUNC_TOEPLITZ | NDIS_HASH_IPV4 |
- 			 NDIS_HASH_TCP_IPV4 | NDIS_HASH_IPV6 |
- 			 NDIS_HASH_TCP_IPV6;
--	rssp->indirect_tabsize = 4*ITAB_NUM;
-+	rssp->indirect_tabsize = 4 * ndc->rx_table_sz;
- 	rssp->indirect_taboffset = sizeof(struct ndis_recv_scale_param);
- 	rssp->hashkey_size = NETVSC_HASH_KEYLEN;
- 	rssp->hashkey_offset = rssp->indirect_taboffset +
-@@ -961,7 +962,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 
- 	/* Set indirection table entries */
- 	itab = (u32 *)(rssp + 1);
--	for (i = 0; i < ITAB_NUM; i++)
-+	for (i = 0; i < ndc->rx_table_sz; i++)
- 		itab[i] = ndc->rx_table[i];
- 
- 	/* Set hask key values */
-@@ -1548,6 +1549,18 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
- 	if (ret || rsscap.num_recv_que < 2)
- 		goto out;
- 
-+	if (rsscap.num_indirect_tabent &&
-+	    rsscap.num_indirect_tabent <= ITAB_NUM_MAX)
-+		ndc->rx_table_sz = rsscap.num_indirect_tabent;
-+	else
-+		ndc->rx_table_sz = ITAB_NUM;
-+
-+	ndc->rx_table = kcalloc(ndc->rx_table_sz, sizeof(u16), GFP_KERNEL);
-+	if (!ndc->rx_table) {
-+		ret = -ENOMEM;
-+		goto err_dev_remv;
-+	}
-+
- 	/* This guarantees that num_possible_rss_qs <= num_online_cpus */
- 	num_possible_rss_qs = min_t(u32, num_online_cpus(),
- 				    rsscap.num_recv_que);
-@@ -1558,7 +1571,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
- 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
- 
- 	if (!netif_is_rxfh_configured(net)) {
--		for (i = 0; i < ITAB_NUM; i++)
-+		for (i = 0; i < ndc->rx_table_sz; i++)
- 			ndc->rx_table[i] = ethtool_rxfh_indir_default(
- 						i, net_device->num_chn);
- 	}
-@@ -1596,11 +1609,17 @@ void rndis_filter_device_remove(struct hv_device *dev,
- 				struct netvsc_device *net_dev)
- {
- 	struct rndis_device *rndis_dev = net_dev->extension;
-+	struct net_device_context *ndc = netdev_priv(net);
-+	struct net_device *net = hv_get_drvdata(dev);
- 
- 	/* Halt and release the rndis device */
- 	rndis_filter_halt_device(net_dev, rndis_dev);
- 
- 	netvsc_device_remove(dev);
-+
-+	ndc->rx_table_sz = 0;
-+	kfree(ndc->rx_table);
-+	ndc->rx_table = NULL;
- }
- 
- int rndis_filter_open(struct netvsc_device *nvdev)
+url:    https://github.com/intel-lab-lkp/linux/commits/Shradha-Gupta/hv_netvsc-Allocate-rx-indirection-table-size-dynamically/20230605-151438
+base:   linus/master
+patch link:    https://lore.kernel.org/r/1685949196-16175-1-git-send-email-shradhagupta%40linux.microsoft.com
+patch subject: [PATCH v5] hv_netvsc: Allocate rx indirection table size dynamically
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20230605/202306051754.7zMgBFMX-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/cd4dda15951edad50a4ffd51e084863ef2f50bd3
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Shradha-Gupta/hv_netvsc-Allocate-rx-indirection-table-size-dynamically/20230605-151438
+        git checkout cd4dda15951edad50a4ffd51e084863ef2f50bd3
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/net/hyperv/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306051754.7zMgBFMX-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/net/hyperv/rndis_filter.c: In function 'rndis_filter_device_remove':
+   drivers/net/hyperv/rndis_filter.c:1612:54: error: 'net' undeclared (first use in this function)
+    1612 |         struct net_device_context *ndc = netdev_priv(net);
+         |                                                      ^~~
+   drivers/net/hyperv/rndis_filter.c:1612:54: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/net/hyperv/rndis_filter.c:1613:28: warning: unused variable 'net' [-Wunused-variable]
+    1613 |         struct net_device *net = hv_get_drvdata(dev);
+         |                            ^~~
+
+
+vim +/net +1613 drivers/net/hyperv/rndis_filter.c
+
+  1607	
+  1608	void rndis_filter_device_remove(struct hv_device *dev,
+  1609					struct netvsc_device *net_dev)
+  1610	{
+  1611		struct rndis_device *rndis_dev = net_dev->extension;
+  1612		struct net_device_context *ndc = netdev_priv(net);
+> 1613		struct net_device *net = hv_get_drvdata(dev);
+  1614	
+  1615		/* Halt and release the rndis device */
+  1616		rndis_filter_halt_device(net_dev, rndis_dev);
+  1617	
+  1618		netvsc_device_remove(dev);
+  1619	
+  1620		ndc->rx_table_sz = 0;
+  1621		kfree(ndc->rx_table);
+  1622		ndc->rx_table = NULL;
+  1623	}
+  1624	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
