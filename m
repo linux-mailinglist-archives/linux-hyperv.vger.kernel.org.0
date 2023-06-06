@@ -2,143 +2,180 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3880D7231B2
-	for <lists+linux-hyperv@lfdr.de>; Mon,  5 Jun 2023 22:47:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2F4072370F
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Jun 2023 08:00:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233417AbjFEUrL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 5 Jun 2023 16:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60476 "EHLO
+        id S232228AbjFFGA4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Jun 2023 02:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231877AbjFEUrI (ORCPT
+        with ESMTP id S229693AbjFFGA4 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 5 Jun 2023 16:47:08 -0400
-Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569FDFD;
-        Mon,  5 Jun 2023 13:47:05 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mx.sberdevices.ru (Postfix) with ESMTP id 335C65FD21;
-        Mon,  5 Jun 2023 23:47:02 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1685998022;
-        bh=9ATC+GxW8KMEIiHiF6ecJMk0sOenmSubs/SZ/yQ2/y0=;
-        h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type;
-        b=K9EnAk+J1wH+cYPUXAMNufinG+iVezeNRNWTqHdXbSzRlA6+zhToK67+XSsWRyesN
-         K6nuQFG2JC6hnCSryQInquMb02IFsXO41w/tLq7Gv6QmBEBBOYpic4xPL+nOl6HfLV
-         0ljgDI6MBVPlBQCTgHCz18HWMhVBdz8eUbwA9OZiWa9GZJsQ/pr2tVknUq7VdAq2bZ
-         3jGtUwiQKnBogUUuAFQMbk2H4GM6D0vH2c21u5/50TmWB0QitQHkm61Zn1cl7cuugC
-         PQzUMc1A0HIZDRmMQg/1AW8SOB/y0VBBFCYOpBUWFeyS1xFViBcl9cn/wxXNxM5+QG
-         KzNrDwusABegQ==
-Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
-        by mx.sberdevices.ru (Postfix) with ESMTP;
-        Mon,  5 Jun 2023 23:46:58 +0300 (MSK)
-Message-ID: <2830ac58-fd77-7e5f-5565-eb47dd027d81@sberdevices.ru>
-Date:   Mon, 5 Jun 2023 23:42:06 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
+        Tue, 6 Jun 2023 02:00:56 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061.outbound.protection.outlook.com [40.107.93.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BC811B;
+        Mon,  5 Jun 2023 23:00:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N6S+AAhkP4AFOfQrWm72UHGt/ZbrKVtXR/2Z8ZspencfJKMK6a+V1CHAW++dFnoasQm1H833qO1uKLFQcJH364TtAZCwPF+7ewwZnghOnYWU19HGyJHP+LlErd7HKwSEG+3R456fp37bEd2vPWuyjX2m++lLJ7B+JVGH70iT7IiFBy6HNDAq7beN76A1EA+T6dSPFKBHseV25ZaV2h0km9MRH7kf3Sdaove90wVyCfe80wpr26hzpCHufNZbxxg7qx3sAAk+CSuijpkMlGSIsaX0EzdDby6FW3vefDMfApRyJzaaoaYzrD0WkEG0ASPw/XFNMedx9kZLny8Ir63S4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eaQIe6F6uD7CL4fyYjzh+i3viPVKI/oRSGoWzMHr/Vs=;
+ b=lBSMC7TY6RiL85WwTxRs0Xh+hLM0G+hJ5+gxxf11ZpelGPHwGGwkUjCSauByPDxHnHBTB27N6kI4d54Aw+DB1HTa3saPhxA1MQf5EwCl+ZRkm8/C+uX48XO7id6ccimdgx+Aoyg/zxkuV2s+uS/VFZgh2MMM03ooD8HGgNVR0O+a36+ui2GhQbTKR4R7osOu91KCjhqkHE/hjwyZRvLhVwlj2iIMDnFFpPJ9j7kR0qhpsrD1yFPYI/PT1lZw2zjZpN6TcBWgX3V1fw32P2GQIlD5HuX5W4nJUBnmoW/4uxezN2FF06+DjFtHymw7PQ4bOw6/D1ZEmZp3Sfb4R4k83g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eaQIe6F6uD7CL4fyYjzh+i3viPVKI/oRSGoWzMHr/Vs=;
+ b=VRyIPeaeypZ7hFYo5J/qwYbFQjUNUN8+jH40jghT8f3bXsmfP4vYOXis5Z3PG5db/uZKPCC8d/FatE0tPPNywm4xVjoxaTYh+hP/jmhE24XG0SuRGqt7O4jai1nCJErt3hKopRDXKj5AFIsYTNqYLl122eDY3lr3rLDprYJYbsA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB2810.namprd12.prod.outlook.com (2603:10b6:5:41::21) by
+ SA1PR12MB6970.namprd12.prod.outlook.com (2603:10b6:806:24d::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6455.32; Tue, 6 Jun 2023 06:00:51 +0000
+Received: from DM6PR12MB2810.namprd12.prod.outlook.com
+ ([fe80::2a9c:fc67:a9fd:bea5]) by DM6PR12MB2810.namprd12.prod.outlook.com
+ ([fe80::2a9c:fc67:a9fd:bea5%6]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
+ 06:00:51 +0000
+Message-ID: <54fa0a4f-9b3e-50d7-57cb-e0d2d39b7761@amd.com>
+Date:   Tue, 6 Jun 2023 08:00:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From:   "Gupta, Pankaj" <pankaj.gupta@amd.com>
+Subject: Re: [RFC PATCH V6 01/14] x86/sev: Add a #HV exception handler
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Tianyu Lan <ltykernel@gmail.com>, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        tiala@microsoft.com, kirill@shutemov.name,
+        jiangshan.ljs@antgroup.com, ashish.kalra@amd.com,
+        srutherford@google.com, akpm@linux-foundation.org,
+        anshuman.khandual@arm.com, pawan.kumar.gupta@linux.intel.com,
+        adrian.hunter@intel.com, daniel.sneddon@linux.intel.com,
+        alexander.shishkin@linux.intel.com, sandipan.das@amd.com,
+        ray.huang@amd.com, brijesh.singh@amd.com, michael.roth@amd.com,
+        venu.busireddy@oracle.com, sterritt@google.com,
+        tony.luck@intel.com, samitolvanen@google.com, fenghua.yu@intel.com,
+        pangupta@amd.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20230515165917.1306922-1-ltykernel@gmail.com>
+ <20230515165917.1306922-2-ltykernel@gmail.com>
+ <20230516093010.GC2587705@hirez.programming.kicks-ass.net>
+ <d43c14d9-a149-860c-71d6-e5c62b7c356f@amd.com>
+ <20230530143504.GA200197@hirez.programming.kicks-ass.net>
+ <0f0ab135-cdd0-0691-e0c1-42645671fe15@amd.com>
+ <20230530185232.GA211927@hirez.programming.kicks-ass.net>
 Content-Language: en-US
-In-Reply-To: <20230413-b4-vsock-dgram-v3-0-c2414413ef6a@bytedance.com>
-To:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>
-CC:     <kvm@vger.kernel.org>, <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>,
-        Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        Jiang Wang <jiang.wang@bytedance.com>
-From:   Arseniy Krasnov <avkrasnov@sberdevices.ru>
-Subject: Re: [PATCH RFC net-next v3 0/8] virtio/vsock: support datagrams
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20230530185232.GA211927@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.16.1.6]
-X-ClientProxiedBy: S-MS-EXCH01.sberdevices.ru (172.16.1.4) To
- S-MS-EXCH01.sberdevices.ru (172.16.1.4)
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2023/06/05 17:23:00 #21436105
-X-KSMG-AntiVirus-Status: Clean, skipped
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-ClientProxiedBy: FR2P281CA0147.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:98::12) To DM6PR12MB2810.namprd12.prod.outlook.com
+ (2603:10b6:5:41::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2810:EE_|SA1PR12MB6970:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07e64908-2c13-4cdd-2955-08db66536194
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: b/O/9ULZuEB+3/s4KKiRU0fEbEuC/hqjWusGuS9MK8aq4F4OnzQ3m21+H03m4qazPD70SVNkdStHilaufCxvA8AMw6x6CV9DREp4Iyxa35XeQZWknK+K0SF/i2EBIxP6qDOIKkDT5ip1tra3pUEU1zK+hdozGz8BR3yva3Nrb3t2aQY6JMkgBqXc1LHS3cVliucaV6YeOoD5DzmBQ9AazR6gDPP50Dx2U+uyLjMYRLU9h/zXKC4jgA0JBNi6/8544TjFlrUpbPSXHOk2RS/BKUd92hzUuD8FZ5T7Mz9UP5l7mPTpyB/knF6Q19O+z7YuKklF0PhDRXXkeAJ1fCcu4xdPVrWdM6uLQ1SZFsEFMhQLjydohaZg3cjD64v8VO8i3iRq7pdNk/0cwQsddCPnIyxYd2UNr3+J5lAHQxgJMZnxIeskmlEbqsCkxz1t8iftgp1OLQglx3qAPMaaHUYOzKfl+izRD4guCOfeDyw1ZCnlmCOor5Du54Thbp6vwXndz9uR7cmznH9PqB9+a13ovZNSMB15iMGmjq74bWMehC8cMKgvdJ8bOkkXUEN2GnTaBrT6JssOb5ONDNloER6PGJt1sm6eaSx1sbfjGbgzO+g3oJp1dJe6N1ZGdsjCD6xg3AfT7x7EBYhrH00ibttANw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2810.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(451199021)(478600001)(2906002)(6486002)(36756003)(6666004)(2616005)(83380400001)(6506007)(6512007)(86362001)(31696002)(38100700002)(26005)(186003)(5660300002)(316002)(31686004)(7416002)(7406005)(8676002)(8936002)(66946007)(4326008)(66556008)(6636002)(66476007)(110136005)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TzJvTHdMdjBBMytRUVBpSlBldHdSeWZBTVVJdzYwekw0Rnl4a0NObGlSZXdQ?=
+ =?utf-8?B?a0U3YVROb245bU5hM3pDbHE4WGVBZ3JqYWd1YjRVQTR3Tjh6MFJDOGs2S0ZP?=
+ =?utf-8?B?NmJCR1RYcmp4a1lWRzFKOFhLSWNJTGNTeW05YU5sMGljQXNWUnhFWE5RWUdJ?=
+ =?utf-8?B?bEI3TWJrVjV2d3BGYzcxQ1hKaS92dzZHZ2RSd1g5aEIzMFVYb1BGc0ZWL0Nx?=
+ =?utf-8?B?blFqVjFCWjdmZm1UQVhUSFhOWVZBNUphRTJmeDBvRXNhNDFheG9BUElkSGpq?=
+ =?utf-8?B?QzlaQ044ZUoyekduLzVQSHZVS0k5YkEzSFdXZkVlTG1iVm12Uko0ZE5kTjRj?=
+ =?utf-8?B?MHhZZkRLWG51WTY5TDlZdUpsdmtUayt0MXl0dUxLQi8xUzdzVUxvaGhtVE9O?=
+ =?utf-8?B?WjNLVjF2MkVSaEh6Z3NIRThHdENsODNjbkJjczQ4NW13ZjZGTU9DclFUZEg1?=
+ =?utf-8?B?VEVrcS8rU09EUy9UN3R3QUc1SnNiUGl0UTFkZDdOUy9mWnYwY3RIanVzaFc2?=
+ =?utf-8?B?R3QvMkhMQmdxOEE2R2hkTGlsZGRJQzdLckljM3Naa2NmU21PNk5obm9KWDI2?=
+ =?utf-8?B?dDdBM2JMZTh0bVR6WG1USjdNZktRY2lZckdIemdTVzhSU2M4U2tna0c5Mld2?=
+ =?utf-8?B?VTBBOXZVVWg1Tk0xWGp2NHRUd2ZwSHNUZkt1T1pOZ0p0K1Z4RGpzbVlNc3Vi?=
+ =?utf-8?B?a2hHSEJpQnNicEZHNGV4bDY4dzRKamdQRUpRVEpZMWxmcFpPYmcrVmJCT1Bn?=
+ =?utf-8?B?NWlCSFFtR3VVU1V1cnZmTnRlUVdyemJoZXZDcitGb2ZtNnVENW5NU0k4OG53?=
+ =?utf-8?B?MTZva1loUHM1aC9SQWdNc1dSeTFjMjVWY3diWUNhQUNseVQ1MC9JT0xveG52?=
+ =?utf-8?B?cThmTll2YS85WEJJQkZpRldTSG90WGh5Z3VLWUZnYXhJenkrMldDalEralh2?=
+ =?utf-8?B?UUlUNVNwUkZueWluVTBCblI4cUNvMkhjWENsOWlITU1KaFNkRk5YcXB0Tm1q?=
+ =?utf-8?B?ZmFNR0pwUE1xcDBQTjY2VzNTM0h2RmdFNHh0WDBwdmFkNkUyVldCRUNibDMr?=
+ =?utf-8?B?T0dHaTBla2Q5Z1dkMmVFRSs1OU9WaWdEa0dGYytIOUpXM3pVR1V1WjYyaG5Z?=
+ =?utf-8?B?OVVndmdxUVRvYWVDMCsxdEwyUUpQeWF2S1NMUmNPZWhPcWlMMklSVjdDZmNx?=
+ =?utf-8?B?TmY0cFcrUTlnWk9iNWpCWm1ITVMzUngrdXRjakN3d0xSZU5BVkUwdlFXbXBh?=
+ =?utf-8?B?bEJyZHZ0TVhMMmdLcUtWV2tiZlg1Qjc0MjdGYTZ0aFNCSkUxSkxwa1VHeDNT?=
+ =?utf-8?B?R0hmOHl0SzN6V1doOFJ6T3dSL25QRWNmYVpWZ2FTN0dMNTh1MWE5dFZUcUZn?=
+ =?utf-8?B?NlpMMDJ6MFIyQ1J6VnlZanFiY2VVampCWVUyTVE4dm5KN1lOZldqZ2ErSUx2?=
+ =?utf-8?B?L055aG5sT1cyRkZwMmllRm5DRWJ5VlVMVEtOZmJjUE1YVTh6eTlKcTFHNXZ6?=
+ =?utf-8?B?WHFBNDZKUEdkeGMrdTdlbDdmekxMUWFvb2Qrdk56eWw3cmJCeUh3L2s3ZmQ5?=
+ =?utf-8?B?cGNTdXY5NWxoL2p6dGlMUUVWUU9xYTJGS0JSQndSQWxPUnlvSmFzOFRBK01n?=
+ =?utf-8?B?eXM5V1dISmMvaVRHa0V4OFh3SFNRSklzcFRUdlByblVqTURJSzR6SzJETEhm?=
+ =?utf-8?B?SnJ4QjN1bjV5Rzg1NEl6bll6R1MwbWcvazJPVlhtcC8wUFNMeVZVRFBpd2Ex?=
+ =?utf-8?B?d0RuU09meGVRZzV3T1BXME9zYlN2cGtmb3daNWVmWUFsSnhPYUlVcVF4UGd2?=
+ =?utf-8?B?Kyt5OGVuQUtRSWhlYVdocU8xNkFWazVhL1RhN3F2azZSaXdML01EUnFEY2FJ?=
+ =?utf-8?B?QUkyOXJ5VUVaYXB5UWpVL1pWMVZGWEFySDBFRmo2VFRPMFpQeDdtcFZIVVNt?=
+ =?utf-8?B?NEYwNkZGdlFRTXF0a2xkY1IyNHdwSVh0cEUzeWV3cGU4VWtCSUhvNUhLNWtl?=
+ =?utf-8?B?cUp5OTA3bG1EdGN5QXdOK0RMaWc5cm5xbFJCQkNHNWJyei8wQjNCSW13NFNM?=
+ =?utf-8?B?R01KaXpiRGkvU3VRZVQ4cGpsRUg5ejBuY29tMlRiZFdFRkJqdlF1V25RckpD?=
+ =?utf-8?Q?82HzRgbAibPsOAMsIwwPEE1Mj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07e64908-2c13-4cdd-2955-08db66536194
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2810.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 06:00:51.0983
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0LAgusRfzToqpamc/H1DSZYae6jjyjpzmHzw+vaXZ2C0/4DGe/w2nMk+Jwm/rnilMOwjG/R0ayLUtNIHal9JFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6970
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Bobby!
 
-Thanks for this patchset, really interesting!
+>> That should really say that a nested #HV should never be raised by the
+>> hypervisor, but if it is, then the guest should detect that and
+>> self-terminate knowing that the hypervisor is possibly being malicious.
+> 
+> I've yet to see code that can do that reliably.
 
-I applied it on head:
+- Currently, we are detecting the direct nested #HV with below check and
+   guest self terminate.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=d20dd0ea14072e8a90ff864b2c1603bd68920b4b
+   <snip>
+	if (get_stack_info_noinstr(stack, current, &info) &&
+	    (info.type == (STACK_TYPE_EXCEPTION + ESTACK_HV) ||
+	     info.type == (STACK_TYPE_EXCEPTION + ESTACK_HV2)))
+		panic("Nested #HV exception, HV IST corrupted, stack
+                 type = %d\n", info.type);
+   </snip>
 
-And tried to run ./vsock_test (client in the guest, server in the host), I had the following crash:
+- Thinking about below solution to detect the nested
+   #HV reliably:
 
-Control socket connected to 192.168.1.1:12345.                          
-0 - SOCK_STREAM connection reset...                                     
-[    8.050215] BUG: kernel NULL pointer derefer                         
-[    8.050960] #PF: supervisor read access in kernel mode               
-[    8.050960] #PF: error_code(0x0000) - not-present page               
-[    8.050960] PGD 0 P4D 0                                              
-[    8.050960] Oops: 0000 [#1] PREEMPT SMP PTI                          
-[    8.050960] CPU: 0 PID: 109 Comm: vsock_test Not tainted 6.4.0-rc3-gd707c220a700
-[    8.050960] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14
-[    8.050960] RIP: 0010:static_key_count+0x0/0x20                      
-[    8.050960] Code: 04 4c 8b 46 08 49 29 c0 4c 01 c8 4c 89 47 08 89 0e 89 56 04 4f
-[    8.050960] RSP: 0018:ffffa9a1c021bdc0 EFLAGS: 00010202              
-[    8.050960] RAX: ffffffffac309880 RBX: ffffffffc02fc140 RCX: 0000000000000000
-[    8.050960] RDX: ffff9a5eff944600 RSI: 0000000000000000 RDI: 0000000000000000
-[    8.050960] RBP: ffff9a5ec2371900 R08: ffffa9a1c021bd30 R09: ffff9a5eff98e0c0
-[    8.050960] R10: 0000000000001000 R11: 0000000000000000 R12: ffffa9a1c021be80
-[    8.050960] R13: 0000000000000000 R14: 0000000000000002 R15: ffff9a5ec1cfca80
-[    8.050960] FS:  00007fa9bf88c5c0(0000) GS:ffff9a5efe400000(0000) knlGS:00000000
-[    8.050960] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033        
-[    8.050960] CR2: 0000000000000000 CR3: 00000000023e0000 CR4: 00000000000006f0
-[    8.050960] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    8.050960] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    8.050960] Call Trace:                                              
-[    8.050960]  <TASK>                                                  
-[    8.050960]  once_deferred+0xd/0x30                                  
-[    8.050960]  vsock_assign_transport+0xa2/0x1b0 [vsock]               
-[    8.050960]  vsock_connect+0xb4/0x3a0 [vsock]                        
-[    8.050960]  ? var_wake_function+0x60/0x60                           
-[    8.050960]  __sys_connect+0x9e/0xd0                                 
-[    8.050960]  ? _raw_spin_unlock_irq+0xe/0x30                         
-[    8.050960]  ? do_setitimer+0x128/0x1f0                              
-[    8.050960]  ? alarm_setitimer+0x4c/0x90                             
-[    8.050960]  ? fpregs_assert_state_consistent+0x1d/0x50              
-[    8.050960]  ? exit_to_user_mode_prepare+0x36/0x130                  
-[    8.050960]  __x64_sys_connect+0x11/0x20                             
-[    8.050960]  do_syscall_64+0x3b/0xc0                                 
-[    8.050960]  entry_SYSCALL_64_after_hwframe+0x4b/0xb5                
-[    8.050960] RIP: 0033:0x7fa9bf7c4d13                                 
-[    8.050960] Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 48
-[    8.050960] RSP: 002b:00007ffdf2d96cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000a
-[    8.050960] RAX: ffffffffffffffda RBX: 0000560c305d0020 RCX: 00007fa9bf7c4d13
-[    8.050960] RDX: 0000000000000010 RSI: 00007ffdf2d96ce0 RDI: 0000000000000004
-[    8.050960] RBP: 0000000000000004 R08: 0000560c317dc018 R09: 0000000000000000
-[    8.050960] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[    8.050960] R13: 0000560c305ccc2d R14: 00007ffdf2d96ce0 R15: 00007ffdf2d96d70
-[    8.050960]  </TASK>  
+   -- Make reliable IST stack switching for #VC -> #HV -> #VC case
+      (similar to done in __sev_es_ist_enter/__sev_es_ist_exit for NMI
+      IST stack).
 
+   -- In addition to this, we can make nested #HV detection (with another
+      exception type) more reliable with refcounting (percpu?).
 
-I guess crash is somewhere near:
+Need your inputs before I implement this solution. Or any other idea in 
+software you have in mind?
 
-old_info->transport->release(vsk); in vsock_assign_transport(). May be my config is wrong...
+Thanks,
+Pankaj
 
-Thanks, Arseniy
