@@ -2,133 +2,78 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B0D5724441
-	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Jun 2023 15:22:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFB337244B4
+	for <lists+linux-hyperv@lfdr.de>; Tue,  6 Jun 2023 15:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237892AbjFFNWk (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Jun 2023 09:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49438 "EHLO
+        id S237735AbjFFNnm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Jun 2023 09:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238203AbjFFNWg (ORCPT
+        with ESMTP id S231259AbjFFNnl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Jun 2023 09:22:36 -0400
-Received: from HK2P15301CU002.outbound.protection.outlook.com (mail-eastasiaazon11020023.outbound.protection.outlook.com [52.101.128.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8371F10F4;
-        Tue,  6 Jun 2023 06:22:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l+RnA4kYSOIKdzt7o9R+cj7O5NtVBulMVZUJApvteXxREsvlBvD5kK9UcEXR4luD4kHwD2+qjztVsZANJoDfRw6F/THwyecn2MCeYNWl4NKd1XP7pZ9rK6OYhqXc9K8uv5LVSJss1AuYfeG3UvQa/Tc9AYYzgJCzxWDTp81MbQyvJXLOjGRUXBpBXrP9SygY0vz82CarWQ9dAwON5JqDZHtBqxm6qebB+pRIZod3CIRj/5GXgzUyxPIxwRATSRHG60STskDUBFJV/JxneyUOWsZRVv+5JUzhqEB/k4IEITcWh75s/JThwwbZSXaaFBIeeM9drqe0rgCHI/5bmLjoKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=askEd4tPnhNKwYzIxKC584lutm6JjYMztNJopJpCYjg=;
- b=DLosKR29Hwdmoo/jAF4UQeAvntcjcBb+MOwn2gYxWKOTMHBn8XB4edSOy1bu+nX95Nls0l38vSBS2SE+kkSYzuWuZvxqvmJ+VreU0t1E/Afqv0hPLiC9/xns4RiYyep1Ba55IgNSUiMobNfQWoqloIPIsPP/uV9ErLlYGLKVD5zG36fJ34BW7i3MTY0AZnxZ5FMzjfGpQlx7jNyF+j1U2ThiIFDFhV3TQQzbZmaz7UvAz4E47yjDe8Lwmp4lVb1eiWFrYO02hHJwCaUYQbIfDeBeYA7AGQ3i/qMIWSdTd32zIQR/d1ozRWrVaDWgRB0FBvErYFhWF5kIcbATHcLgWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=askEd4tPnhNKwYzIxKC584lutm6JjYMztNJopJpCYjg=;
- b=bi2iKAfD/Nly0YiGh43ZU/Cf0yLss2LnUbPm3+Y/IRCx9H4kxxsCDmew+MIyjiehn+ws/r12OYl1pVcbpkluFGHtMx5EVvQ4offNUAbs0mSjK+4mIZiy83tfAxqhyD3A4MYmuD5+jKWaH5O7pgzW4S+ue3G8uJIt7cFhLE1/zTE=
-Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM (2603:1096:4:fc::7) by
- PSAP153MB0407.APCP153.PROD.OUTLOOK.COM (2603:1096:301:3f::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6500.6; Tue, 6 Jun 2023 13:22:05 +0000
-Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
- ([fe80::643:ed9:497b:3cac]) by SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
- ([fe80::643:ed9:497b:3cac%4]) with mapi id 15.20.6500.004; Tue, 6 Jun 2023
- 13:22:05 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Simon Horman <simon.horman@corigine.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Long Li <longli@microsoft.com>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>
-Subject: RE: [PATCH 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
- driver.
-Thread-Topic: [PATCH 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
- driver.
-Thread-Index: AQHZl6MEYQOQI2AZg0S5+bBNRMAAY698MDaAgAAFm4CAAY3uYA==
-Date:   Tue, 6 Jun 2023 13:22:04 +0000
-Message-ID: <SI2P153MB0441A313EDAF9B7A70A11ADDBB52A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
-References: <20230605114313.1640883-1-weh@microsoft.com>
- <ZH3f2abyRU1l/dq6@corigine.com> <ZH3kjU7a2L7EkEQ2@ziepe.ca>
-In-Reply-To: <ZH3kjU7a2L7EkEQ2@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2587b6bb-83dd-492a-98a5-b87b392e7161;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-06T13:19:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2P153MB0441:EE_|PSAP153MB0407:EE_
-x-ms-office365-filtering-correlation-id: e0bed9a9-89a7-4daa-97ae-08db6691050b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gvE6RvMEY/jsRkUmMJXlTXLxgrtANS+Yl8Pit7FGucvBtbGNPhaKsLV82j+EwmXtFMYXjtbv8m8/yFog3eq8eK1Ma3c9+CqQ8f9tirnsS5dEE/zWDe2VLAV/jdPfuOwYcD7LMyc7hSqJnjshOi8oXnqYhSoILaoG+Yvdh6L6/z3++II1U7LSIXxRqKxsd+RT2cdd13LGWSJxwmkw1c7JogYwAwFnJrDzI/vtFUJJzEF8v8QBHbAAxqDbwk8Z6BfAMXHl05dAK3hOWhZ7swC3l2IBKu2RIbRkmbknmcO/CL4nWzxpJDnB69NuAclaoHO1X2qfSwLIP+QXeUY4oYZgOcJhoXW8vGruvxo4F2RHqhIwUJ2ie0Gq/RZ0f2ObhRuhkUmzve+UOHWWCfNLVHXwAA51HHbVcMc2ENVAyFCl/tlQpfrRoeQEr/d5hdP6N0vbzOoRntUqIeQ/M3ZMClN8Pg0MDsWuqhbu1aY2j+ZIupFRPqd9uGZJN8W9vr6mXIzGv1XTPGYNLI/PcPnDHIP5c/W6VDLK/mj34CmE2iBia4xD1zM/7KaszyYVdB5na9CAA+J0FoWAQFPcWT39qJbLr3iL68KpJjlXTrny7GREk6dE+xv8QpkSdCj5/wUd2INZ1oDQ0oAVdTy834o0Nyme3J+HrAAzlMJfOJR6iQBytEo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2P153MB0441.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(451199021)(10290500003)(478600001)(2906002)(7696005)(33656002)(71200400001)(107886003)(8990500004)(82960400001)(38070700005)(83380400001)(6506007)(26005)(86362001)(53546011)(122000001)(82950400001)(9686003)(38100700002)(186003)(5660300002)(316002)(7416002)(8676002)(8936002)(66946007)(76116006)(66556008)(4326008)(66476007)(66446008)(64756008)(52536014)(55016003)(110136005)(66899021)(54906003)(41300700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0RForaTjys/Ny3FxRgaTmm/zF/X9+yElFfEM/0T0MDJoAMxn9nZLsRYq9iIO?=
- =?us-ascii?Q?NvNXYsC3QzfSKHfXy9U8RqkFIVJwLM5MjWJ/yHb9VatffE98p+S7CljiwAGJ?=
- =?us-ascii?Q?kkCMrU7zKwT6elnEIw5yc7UujIrfLxGE4vqvyZZN0Nacp+LfRjVJMGHgVLc6?=
- =?us-ascii?Q?Dg43VYlKvOvKb2WUXnWwqiaCFyOynW9zQ3wFn0h7DX9JL0Fad/+d2ZwsN6Zw?=
- =?us-ascii?Q?pVUBJNqtZzK3pFDIsNf6HNxs/B6/mqx5sbMlkwclfygfxQSbT82FaA7YH9cp?=
- =?us-ascii?Q?m1SbfUszdlw1TenI5fPRn/uktIVMTqzvLL6iWL5/RTzt3JHsBr7Nr+/iK5EZ?=
- =?us-ascii?Q?Yza0IWgn6hE+YDoMwG/f3VCoQAPY2WQ658jiexAkQdlJ/dwryyMH9wN0HGkM?=
- =?us-ascii?Q?GG2bGX7bwRt8Yk/i7769sjWuyOzZNSw5NMSVX4/3ndsaY+AuXnI06JlIL3EK?=
- =?us-ascii?Q?NfVPFV+S2sCIxHBMlxXR+BZ+Ea8AFN4hDSepr+gPaMmgDWOjV4VXMrSxLhSc?=
- =?us-ascii?Q?bbKrsyBgLzZKxFV1A1eIPBWYnbw7AgdZdKbYf0Aon3f6gGl/aFQfY9JLn8Tj?=
- =?us-ascii?Q?wDM3WNGhjEyQtnFyYidf14xp0vnJx76qMLLFjyb7xW+Qpy1dpOw9Neg50xkx?=
- =?us-ascii?Q?2e7s9GQokT6ntL6m2N3iWMPeMxjg1PT9GXsas1kXrcYTKE4yN68jq9+cYEGj?=
- =?us-ascii?Q?+Fqk+YGU5IhDmfsKftafM5qtugYhN+cu7ecN0Cp9nD1zS7/qynWNsgdI4eUz?=
- =?us-ascii?Q?yLwpvfiigaPS96odIOn/nqlRPk4w6GYCp59jtfdXWnq7Z0TVGUvp9AdhJSYh?=
- =?us-ascii?Q?xBV0e9LrPwIiqivhncsm/J5Xiki7A/uxDFDEA0THQ7eQ4ekPbYMfixEdxvlG?=
- =?us-ascii?Q?P36LuwRXViM9Ur4KlnY18juifLElvQuHCLNr4esCucy426pSlrIkin4NwDb8?=
- =?us-ascii?Q?86kExcDZe7ekMNjzJmXc1CI3OWSzJPFqpPQZGWm2AwtofSexGLtNY8EdRiFS?=
- =?us-ascii?Q?HZ/EoHigdmKeGt3IctOZTVJE3CNvJznqYSuRvSSmJiT0Ab3zQxAlDjzfc7gT?=
- =?us-ascii?Q?kmcODZ3gAhgdmnFvpC5Uz9WAXH74jlmyE8xhrtc8e6Fbp610kVu5B+LZ7AAa?=
- =?us-ascii?Q?VOoHG2GOoGb6llvK4fD3TpgoXFG6jHPeCoirEnTxpzpDC3atd0/imKxx1SJP?=
- =?us-ascii?Q?MR08Xvb0fuUPaMORArUqcCFb5QCDM7FyPI/ekAdoh/qBjtS6qiETeZzwg8C3?=
- =?us-ascii?Q?x2acYEHfzaW1CwWiVm66LyIgAyDi2FUViNGXIfm5JI/1aYnQRRJ+rIcut6iy?=
- =?us-ascii?Q?OsQbTN8Nxj26hnntpr+FKJlJ/YJWwDv4ZAydxBniqQLDHag7nk0w0323W4mP?=
- =?us-ascii?Q?XvF+tYOus7fuiR6RT+Z+5t4/CATStmzscU7NpJaQKunxJBibs3+CFqzpbHTY?=
- =?us-ascii?Q?LE20343TbVhezc1RvzGwwQiCXoLNGs2DhuDGMdx0yPIrj/l+qfGzVi+4YkM7?=
- =?us-ascii?Q?eWyLWsKdDpVwGfzAXLRU5oq5ESSr7iCu5u410kFlI90neFdUq82y2HKQ/fxs?=
- =?us-ascii?Q?w4oJuorwrnAtZB6bqaM=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 6 Jun 2023 09:43:41 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDEE610C0;
+        Tue,  6 Jun 2023 06:43:40 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 3f1490d57ef6-bad102ce9eeso6869495276.0;
+        Tue, 06 Jun 2023 06:43:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686059020; x=1688651020;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O9EwgLTm3uk2N6CWlYnbzgRJMZwF8wSB6ctMqYZN5fM=;
+        b=ScyjYBSHXfb6/G7Id3dmt1S5h6e8i8rKdofIgjnD2Qa5IMUdF5Od5tAfZkT0BDw/ES
+         Ig2zpA1UMe2J8Ps674PaT6EtdQWv9Z9HI7UMu02v3qkHff1PKtcowCwR958P6f3U1a+D
+         AwlEykPiUgTAYa5ybNJ8sjozYvEhC1+UCIghB85LLNto4j9NZ3/1iBwF1I+89tyLItw8
+         L6mA1C39XxDzE1+vns4IHMmJ7H83uT2sHhmisGmIZx/OWT7c2wBv5C3BqSmgt5G2hlDe
+         2C1bD3LE0XlJ+qdwuTIbJyBs+U4CvTieUMeqh4BfyPDH4UI4cczC8wQVlTRdJB3vTVbS
+         p8Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686059020; x=1688651020;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=O9EwgLTm3uk2N6CWlYnbzgRJMZwF8wSB6ctMqYZN5fM=;
+        b=I6xhb0lxLufSdsUOKo9r/H79yM0DS/BrwhuZK3ujw0/Bb50MkOesHh5wBsLEABRM1o
+         K3RS5/DAJShzzYMAxLg3R3WdWmSeYQuRU6KBFC00wNRJvXgslFf87B3ykQ/jrPmTKh1I
+         fTVc3zUBJJ4L1gQdadvbWWnDnTW40zbJAWEoJQKkoB8YtYtIgR9ErP112PWWaY5fsSZX
+         /CQoAxCMGIjlWPaSItR+j2T4/qa/U37+ay3bkLr3HnR6OtdItTllzXDadiA2rrzf1EoP
+         girdRtSZjJ3QNql7HVKQjRruJOp7WiBKlZMu9hl3RBPPTl8dyzWb4M2JrbRcqTvwdjpd
+         eD2Q==
+X-Gm-Message-State: AC+VfDzOjCjK12HvZDzo3fWykwWHQT2HxlOmYFwXMdjF+n+895blOgjf
+        8txRYW04Utwn67bXc68JaaU=
+X-Google-Smtp-Source: ACHHUZ5RT6ZZel6x4+GVU8gSGVs0pY79fFr4EWUV/L6R7oWo3J99yAHMnBn7Py5vtQQfbLHfMsMGGQ==
+X-Received: by 2002:a25:b003:0:b0:bac:b8bd:65e2 with SMTP id q3-20020a25b003000000b00bacb8bd65e2mr1872806ybf.37.1686059019825;
+        Tue, 06 Jun 2023 06:43:39 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
+        by smtp.gmail.com with ESMTPSA id v11-20020a17090a778b00b0025954958e06sm3671187pjk.18.2023.06.06.06.43.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 06:43:39 -0700 (PDT)
+Message-ID: <693ff56a-9870-9eb0-c4c8-84b4451667cd@gmail.com>
+Date:   Tue, 6 Jun 2023 21:43:29 +0800
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0bed9a9-89a7-4daa-97ae-08db6691050b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2023 13:22:04.3937
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I53zW1vRmBNL9QhVvwU1YEdaarmrPZ7SnvnkugoXeZVyC0twKU52kZH6yhMi0kU43E31gzEmB7z4TvYu/ornZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAP153MB0407
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH 1/9] x86/hyperv: Add sev-snp enlightened guest static key
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, daniel.lezcano@linaro.org, arnd@arndb.de,
+        michael.h.kelley@microsoft.com
+References: <20230601151624.1757616-1-ltykernel@gmail.com>
+ <20230601151624.1757616-2-ltykernel@gmail.com> <874jnmkt4p.fsf@redhat.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <874jnmkt4p.fsf@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -137,57 +82,62 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Jason Gunthorpe <jgg@ziepe.ca>
-> Sent: Monday, June 5, 2023 9:35 PM
-> To: Simon Horman <simon.horman@corigine.com>
-> Cc: Wei Hu <weh@microsoft.com>; netdev@vger.kernel.org; linux-
-> hyperv@vger.kernel.org; linux-rdma@vger.kernel.org; Long Li
-> <longli@microsoft.com>; Ajay Sharma <sharmaajay@microsoft.com>;
-> leon@kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
-> <decui@microsoft.com>; davem@davemloft.net; edumazet@google.com;
-> kuba@kernel.org; pabeni@redhat.com; vkuznets@redhat.com;
-> ssengar@linux.microsoft.com; shradhagupta@linux.microsoft.com
-> Subject: Re: [PATCH 1/1] RDMA/mana_ib: Add EQ interrupt support to mana
-> ib driver.
->=20
-> On Mon, Jun 05, 2023 at 03:15:05PM +0200, Simon Horman wrote:
-> > On Mon, Jun 05, 2023 at 11:43:13AM +0000, Wei Hu wrote:
-> > > Add EQ interrupt support for mana ib driver. Allocate EQs per
-> > > ucontext to receive interrupt. Attach EQ when CQ is created. Call CQ
-> > > interrupt handler when completion interrupt happens. EQs are
-> > > destroyed when ucontext is deallocated.
-> > >
-> > > The change calls some public APIs in mana ethernet driver to
-> > > allocate EQs and other resources. Ehe EQ process routine is also
-> > > shared by mana ethernet and mana ib drivers.
-> > >
-> > > Co-developed-by: Ajay Sharma <sharmaajay@microsoft.com>
-> > > Signed-off-by: Ajay Sharma <sharmaajay@microsoft.com>
-> > > Signed-off-by: Wei Hu <weh@microsoft.com>
-> >
-> > ...
-> >
-> > > @@ -368,6 +420,24 @@ static int mana_ib_create_qp_raw(struct ib_qp
-> *ibqp, struct ib_pd *ibpd,
-> > >  	qp->sq_id =3D wq_spec.queue_index;
-> > >  	send_cq->id =3D cq_spec.queue_index;
-> > >
-> > > +	if (gd->gdma_context->cq_table[send_cq->id] =3D=3D NULL) {
-> > > +
-> > > +		gdma_cq =3D kzalloc(sizeof(*gdma_cq), GFP_KERNEL);
-> > > +		if (!gdma_cq) {
-> > > +			pr_err("failed to allocate gdma_cq\n");
-> >
-> > Hi wei Hu,
-> >
-> > I think 'err =3D -ENOMEM' is needed here.
->=20
-> And no prints like that in drivers.
->=20
-Thanks for your review, Simon and Jason. You are right.=20
-I have overlooked these. I will fix it and send a v2 shortly.
+On 6/5/2023 8:09 PM, Vitaly Kuznetsov wrote:
+>> --- a/arch/x86/kernel/cpu/mshyperv.c
+>> +++ b/arch/x86/kernel/cpu/mshyperv.c
+>> @@ -402,8 +402,12 @@ static void __init ms_hyperv_init_platform(void)
+>>   		pr_info("Hyper-V: Isolation Config: Group A 0x%x, Group B 0x%x\n",
+>>   			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
+>>   
+>> -		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP)
+>> +
+>> +		if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
+>> +			static_branch_enable(&isolation_type_en_snp);
+>> +		} else if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
+>>   			static_branch_enable(&isolation_type_snp);
+> Nitpick: In case 'isolation_type_snp' and 'isolation_type_en_snp' are
+> mutually exclusive, I'd suggest we rename the former: it is quite
+> un-intuitive that for an enlightened SNP guest '&isolation_type_snp' is
+> NOT enabled. E.g. we can use
+> 
+> 'isol_type_snp_paravisor'
+> and
+> 'isol_type_snp_enlightened'
+> 
+> (I also don't like 'isolation_type_en_snp' name as 'en' normally stands
+> for 'enabled')
 
-Wei
+Hi Vitaly:
+	Thanks for your review. Agree. Will rename them.
 
+> 
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -36,15 +36,21 @@ struct ms_hyperv_info {
+>>   	u32 nested_features;
+>>   	u32 max_vp_index;
+>>   	u32 max_lp_index;
+>> -	u32 isolation_config_a;
+>> +	union {
+>> +		u32 isolation_config_a;
+>> +		struct {
+>> +			u32 paravisor_present : 1;
+>> +			u32 reserved1 : 31;
+>> +		};
+>> +	};
+>>   	union {
+>>   		u32 isolation_config_b;
+>>   		struct {
+>>   			u32 cvm_type : 4;
+>> -			u32 reserved1 : 1;
+>> +			u32 reserved2 : 1;
+>>   			u32 shared_gpa_boundary_active : 1;
+>>   			u32 shared_gpa_boundary_bits : 6;
+>> -			u32 reserved2 : 20;
+>> +			u32 reserved3 : 20;
+> Maybe use 'reserved_a1', 'reserved_b1', 'reserved_b2',... to avoid the
+> need to rename in the future when more bits from isolation_config_a get
+> used?
+> 
+
+Good suggestion. will update.
