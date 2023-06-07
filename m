@@ -2,110 +2,86 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D73F2725193
-	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Jun 2023 03:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D729E7251C8
+	for <lists+linux-hyperv@lfdr.de>; Wed,  7 Jun 2023 03:52:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234428AbjFGBgD (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 6 Jun 2023 21:36:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
+        id S240427AbjFGBwB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 6 Jun 2023 21:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240051AbjFGBgB (ORCPT
+        with ESMTP id S240587AbjFGBvr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 6 Jun 2023 21:36:01 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A57AC1984;
-        Tue,  6 Jun 2023 18:36:00 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1159)
-        id 13CD120BE499; Tue,  6 Jun 2023 18:36:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 13CD120BE499
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1686101760;
-        bh=lly0SJj2u+pRh0HVxmkj8xN/oGXK4TlaG54X0J3Z6HE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hcFpLQt8xaweFX7lTiSWlVfwW4Gk5GcMySVi/wWFvQc08LdkvrH8ByBM7jlkGv+Tv
-         IWq2fqPUFKptd7xAZzLYv+qXNjExxzOh+88HTq45aoPmk0a7V1KMBqsGutphjChHop
-         cXricizgrJP7e/eVua6ntgaK2hwemLbjESHTd+/M=
-From:   Nischala Yelchuri <niyelchu@linux.microsoft.com>
-To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tyler Hicks <code@tyhicks.com>, boqun.feng@gmail.com,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Nischala Yelchuri <niyelchu@microsoft.com>,
-        Nischala Yelchuri <niyelchu@linux.microsoft.com>
-Subject: [PATCH] x86/hyperv: Trace hv_set_register()
-Date:   Tue,  6 Jun 2023 18:35:57 -0700
-Message-Id: <1686101757-23985-1-git-send-email-niyelchu@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        Tue, 6 Jun 2023 21:51:47 -0400
+X-Greylist: delayed 382 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 06 Jun 2023 18:49:41 PDT
+Received: from cstnet.cn (smtp80.cstnet.cn [159.226.251.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74B8D30E5
+        for <linux-hyperv@vger.kernel.org>; Tue,  6 Jun 2023 18:49:41 -0700 (PDT)
+Received: from ed3e173716be.home.arpa (unknown [124.16.138.125])
+        by APP-01 (Coremail) with SMTP id qwCowAC3vfGw4H9kCNzJDA--.1644S2;
+        Wed, 07 Jun 2023 09:43:14 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com, nathan@kernel.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH] Drivers: hv: vmbus: Add missing check for dma_set_mask
+Date:   Wed,  7 Jun 2023 09:43:10 +0800
+Message-Id: <20230607014310.19850-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: qwCowAC3vfGw4H9kCNzJDA--.1644S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKr45GFWxWF45Cw13KFy8Krg_yoWDWrXEvr
+        15Z34kWrZYyF4xtwsIkr1UZryI9an8ta9xXrWxt3Z5AF4UZr9IvrsrZr1jyw1q9FWrAF15
+        ZryjyrZ3Cr17GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+        WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6w4l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUChFxUUUUU=
+X-Originating-IP: [124.16.138.125]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add a new trace point trace_hyperv_set_register()
-to capture register address and its value in hv_set_register().
+Add check for dma_set_mask() and return the error if it fails.
 
-Signed-off-by: Nischala Yelchuri <niyelchu@linux.microsoft.com>
+Fixes: 6bf625a4140f ("Drivers: hv: vmbus: Rework use of DMA_BIT_MASK(64)")
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
 ---
- arch/x86/include/asm/trace/hyperv.h | 14 ++++++++++++++
- arch/x86/kernel/cpu/mshyperv.c      |  3 +++
- 2 files changed, 17 insertions(+)
+ drivers/hv/vmbus_drv.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/trace/hyperv.h b/arch/x86/include/asm/trace/hyperv.h
-index a8e5a7a2b..54b2f69f5 100644
---- a/arch/x86/include/asm/trace/hyperv.h
-+++ b/arch/x86/include/asm/trace/hyperv.h
-@@ -86,6 +86,20 @@ TRACE_EVENT(hyperv_send_ipi_one,
- 		      __entry->cpu, __entry->vector)
- 	);
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 1c65a6dfb9fa..68b7be2762ea 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1908,7 +1908,11 @@ int vmbus_device_register(struct hv_device *child_device_obj)
  
-+TRACE_EVENT(hyperv_set_register,
-+	    TP_PROTO(unsigned int reg,
-+		     u64 value),
-+	    TP_ARGS(reg, value),
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int, reg)
-+		    __field(u64, value)
-+		    ),
-+	    TP_fast_assign(__entry->reg = reg;
-+		    __entry->value = value;
-+		    ),
-+	    TP_printk("reg %u value %llu",
-+		    __entry->reg, __entry->value)
-+	);
- #endif /* CONFIG_HYPERV */
+ 	child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
+ 	child_device_obj->device.dma_mask = &child_device_obj->dma_mask;
+-	dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
++	ret = dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
++	if (ret) {
++		put_device(&child_device_obj->device);
++		return ret;
++	}
  
- #undef TRACE_INCLUDE_PATH
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index c7969e806..d4ef63f4e 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -32,6 +32,7 @@
- #include <asm/nmi.h>
- #include <clocksource/hyperv_timer.h>
- #include <asm/numa.h>
-+#include <asm/trace/hyperv.h>
- 
- /* Is Linux running as the root partition? */
- bool hv_root_partition;
-@@ -98,6 +99,8 @@ EXPORT_SYMBOL_GPL(hv_get_register);
- 
- void hv_set_register(unsigned int reg, u64 value)
- {
-+	trace_hyperv_set_register(reg, value);
-+
- 	if (hv_nested)
- 		reg = hv_get_nested_reg(reg);
- 
+ 	/*
+ 	 * Register with the LDM. This will kick off the driver/device
 -- 
 2.25.1
 
