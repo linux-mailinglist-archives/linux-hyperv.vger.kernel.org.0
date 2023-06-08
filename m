@@ -2,129 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E737F72839E
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Jun 2023 17:20:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4DB8728695
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Jun 2023 19:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236449AbjFHPUx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 8 Jun 2023 11:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52034 "EHLO
+        id S232710AbjFHRsB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Jun 2023 13:48:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236957AbjFHPUv (ORCPT
+        with ESMTP id S231722AbjFHRsA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 8 Jun 2023 11:20:51 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021024.outbound.protection.outlook.com [52.101.57.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9802D61;
-        Thu,  8 Jun 2023 08:20:50 -0700 (PDT)
+        Thu, 8 Jun 2023 13:48:00 -0400
+Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020019.outbound.protection.outlook.com [52.101.61.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4504CE2;
+        Thu,  8 Jun 2023 10:47:59 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MdrfM+FmPUebNovZZYWsO+mh/eyhnRwHpSshij6cvN52pvWP0nJrzGXMC8Z1ppRld/2FxomG+kXLeccBTaWKDlXnOm8+AW3gN5yV1UoLK1d1+9gaF7vZkMeJT0rcqdC6BKKpFzS9HX+ieFf0WUfsXgR4z7b7p0GzSO5HPHZWqdnibMZ9hjZgygBu0qagtHCEw39QD5IfdBtUtp509Bbky/72S+aUptdJzX77rhLcBh/bCkDHIpzjuD3Gc750Iyp99I7bsYiOzv0KjLKMWO888SD4hLSXb+IrA6TnEy3nF9NObTcx2nsfr9l1Wft4/Y141rqfnTYGuc/YE6Gviqm1+g==
+ b=naoy/Qk/TXrH5V2/xY8GK6D2O/pXx1q2iqY8B1B12R6ndLB9weN1WX6F0sFGHRnyzij5GETqzmG0aSkfnhoNd65XrMdvYK9xErmr9mWIDVRbjyxT/oEfLtIPvDc9ZMih7v85Ma+AEzPra4tSBcZ5tzBtpglqcbYzQ0YVEAe5+3qV2NLmv6k8BtFZv5W/lgD/geFiFGHXjP0Oj7u0wX9maNWFK2tXWasniJDmZ9jEY/6P2lEVV/bH8KSaW8YQ4T65p4/QS5suTzpUU+7fAV7ungVeXqGGQOs3T5awPZFc44yLYoUagnkYhVHuzkM+tBFMpvMvI3YqQnQaP2F7fDkdnQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=apQakb7opuLnG3Qw16fgxdPqc4zIfJ2eVYT40iuACq8=;
- b=eNK6ma2QzxokZhBbXpAOIBC2ltBM0BRqb6/IArQC3jGP/RUlHNi0g43YJxzDIznUp+o9kcGsGCYlEdiGJwRWhJgNPIJgLRSq6a3ONHtdBrFsYQXPc2OmINtssD+S7mYvLgXWQH12b1YgRf0nkt8BkcC4jadJYHUhMPQPIXJrIQCG6neeRyFrSVArY51Zj0AY+pxvD7qy3cgexacR4XdTXE3stoPxIZHqOdPaMY8xz7+l/imAIiyTR1/IfIwS80zbEL6s1M6xJcAJfJg39hFDVJn4l8qJmwOooHc1ugMucVjvlBKUmync5MaHrhcFomzSqywVoJ94JbFjrIrhfP8DJQ==
+ bh=/5scAxNWFt4g5otw+BxCcoVlu7zi2Ep/yZDbdRiaNrI=;
+ b=aGfLQjyDPMIO3q9phlKVLP8+ekLjF4dV+UUyaqqv5i7oRSC9JStCAW3svX83nuidJXu9+zF8Yu1b7xhKUwOgAQe+nJ0wnvfSqOB/kclXJxY0GTIac+sRt/NUNfNTjjnIwsWuM/Zxv/nfWhgm3kk9RQkcbrgXDLMYR0oCgGVe8rOY0j0uSgm4gqXbVggZ4AeUr1nX263eoyTEe1ecDm8CnyV73+mCiGCDohXIG/KxqhNLZDGopzr8Dh2f9yyvc0AZ7YFjKmOZNxHmgy7wzYa/zGyrokpxUyfIW4PG8HRHwa8nD7ql+xLkdxDs6t+iB9P8haOznP2py7+h39bvEyxWKQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=apQakb7opuLnG3Qw16fgxdPqc4zIfJ2eVYT40iuACq8=;
- b=jiRs4OCpL7ax/OcItUPxzYVhvDIxXR8Obhuz3H2YjAc18XXtl0k083WBlv4eUrva/55PehmZY+7Ay/7xu0X/cYJJN+foyQGWjW83xSu4cx7fVpNTlu1kt1ynCtIH8f7sdSTHKASbNRs4CML37g717ijjsAFY9n4+7E/I0eh9DE0=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DS0PR21MB3949.namprd21.prod.outlook.com (2603:10b6:8:115::11) with
+ bh=/5scAxNWFt4g5otw+BxCcoVlu7zi2Ep/yZDbdRiaNrI=;
+ b=i1pq39GDfgRgSMdx6dPY1Ufi5u76Kztk6b4GGkeYL2Zhe6aM0lotp3rBm4TZWglNqQFoiSkFHXv4uBs6VMfWmojC2HClWkdPJVaemo5IAE8l++sGEQ4Jt/2ygQVELgbk2qg7IqvbYl7Nwj/dVp/LiCm25bLxMwgC9LgCiMjzCNs=
+Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
+ by SJ1PR21MB3456.namprd21.prod.outlook.com (2603:10b6:a03:454::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.14; Thu, 8 Jun
- 2023 15:20:46 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b%3]) with mapi id 15.20.6500.004; Thu, 8 Jun 2023
- 15:20:46 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.12; Thu, 8 Jun
+ 2023 17:47:56 +0000
+Received: from PH7PR21MB3263.namprd21.prod.outlook.com
+ ([fe80::86cc:ee17:391f:9e45]) by PH7PR21MB3263.namprd21.prod.outlook.com
+ ([fe80::86cc:ee17:391f:9e45%4]) with mapi id 15.20.6500.004; Thu, 8 Jun 2023
+ 17:47:56 +0000
+From:   Long Li <longli@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/1] x86/irq: Add hardcoded hypervisor interrupts to
- /proc/stat
-Thread-Topic: [PATCH 1/1] x86/irq: Add hardcoded hypervisor interrupts to
- /proc/stat
-Thread-Index: AQHZStvOKEpex/oSu0efNAklHfBImK8HPJyAgHpmqwA=
-Date:   Thu, 8 Jun 2023 15:20:46 +0000
-Message-ID: <BYAPR21MB1688C273172834D7107F6F22D750A@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1677523568-50263-1-git-send-email-mikelley@microsoft.com>
- <dce372bd-e63c-f24c-5b79-1ef65fd1e59a@intel.com>
-In-Reply-To: <dce372bd-e63c-f24c-5b79-1ef65fd1e59a@intel.com>
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>
+Subject: RE: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Thread-Topic: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Thread-Index: AQHZmIoxGgRZCanZmkK6Z33s8kWpWa9/0eVwgADyswCAAGyLQA==
+Date:   Thu, 8 Jun 2023 17:47:56 +0000
+Message-ID: <PH7PR21MB3263782C842638253C1FDB0CCE50A@PH7PR21MB3263.namprd21.prod.outlook.com>
+References: <20230606151747.1649305-1-weh@microsoft.com>
+ <PH7PR21MB32634CB06AFF8BFFDBC003B3CE53A@PH7PR21MB3263.namprd21.prod.outlook.com>
+ <SI2P153MB0441EC655394CEA3E8E727E7BB50A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <SI2P153MB0441EC655394CEA3E8E727E7BB50A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=82d7c1ce-fb85-4faa-835f-c6363bd6e2b5;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-08T15:18:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6ddf424f-7835-43f4-b969-27a83fd42970;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-07T20:49:00Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DS0PR21MB3949:EE_
-x-ms-office365-filtering-correlation-id: 5f815c0d-6fc1-4611-f77c-08db6833eec6
+x-ms-traffictypediagnostic: PH7PR21MB3263:EE_|SJ1PR21MB3456:EE_
+x-ms-office365-filtering-correlation-id: ed8b3543-c6e9-4795-ba94-08db68487dd1
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: k6R1pG11tObgeNnf1izCSqsSIfiSSFRzpn630tYu0dNpsUXS4YagUjbNmw8zz5okVNvY28+f/6vt7uVrpE4mTA9oDVrsTY2cOCMOtbPgslMf1iRZa1AaKuxyI7Sy6LIrVH+d0lk7HiodXm2CWD4pSdL0IqBn3pypZlmLKTTNScBFcHUDgB9pGjThwLUu/PeI9NZn2vKJYyqSYqf1lq40wbeGcXzvaUkVf4e34aPQCGyQr3zhTOI6NdK1/VSmfKUc4bu+1xv9TGXSNL7pUzX7yvlIxZTyh/5mmrx02czgnHsH+uCJixjOGf1folfxKOkbyHepBEcV9wbBhmllCvvQ+clu+FHE/b37ajOpscvccRyDMKCvXItU0C4nsp/jzAJSg8ljbB32m/nvvrxlhmxSow/nzR3Zc7bM0v74Twjx4KKzb3MLLGv7Yvao4/k235zOgh11jDUmS0LfvfDhjVDMGagIVK4x4vRqAlw6829M+NU+VQTaCm5975Y8ln+9oA6GoFoQS06Zx3V1ostww4ctnHXtL73Zqiuzd/ArZVdcZdpBmC8IyONCS6Z4EWSRVBLBWAzd91QoqQYz/mzI318mfCf+mFc7NH8sStUu9crtch3HSAF+9e+OJrHLSJWY0+SqrjQJRTWpAvalGVBUuB9jZ3nH8lpKfOeH/NMn6VB7DR0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(39860400002)(136003)(366004)(346002)(451199021)(66946007)(66556008)(66446008)(66476007)(64756008)(76116006)(478600001)(54906003)(10290500003)(8676002)(52536014)(8936002)(5660300002)(71200400001)(6916009)(4326008)(316002)(41300700001)(7696005)(38100700002)(82950400001)(82960400001)(122000001)(55016003)(9686003)(53546011)(38070700005)(26005)(186003)(6506007)(8990500004)(86362001)(33656002)(2906002);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: OZwyC8qZdWeHEmFI4cKHNeo5BtS4UZAl+/U3Ks86NE0jUTd/wMBOAaUP2M2G2UaMz8OdsYD2jYjjmd7F8epk9wsHtjeou7rG+GXHORKVE654YJMWxVJrihm2pRpuy8s5BmVlOw1Y10WR7P6lBtsUxjy4FkUUafV8hnwYG03WPnL6Qv3qNC6IhQMXirp4NZFQI0sMb8OtoQQtg1O/HfifRYS1cHkozvl2sO7Z10wsGnLwRY/urS/7qAfHLN0AfJjhBWqTTjgXdw1iknKXPYBH/dVUprlOvLdJqGReAYqo5XU7bq7vJkjWhqLCNtlNg9TkbWipVg9pp4aCr82NGd96t953+jfSRcIOFPLnkvYUTXXOyIFJz33lWRBKWJzjZlsJy+3GDKedMWv1Te6UlCaBe6ZLUR/Nsc9zt1jC+pBTRv4/PHaTjd7uWpfnhnf/9lLkt4CoJ7k0yJuO8yeIFOT4ekV4GF+8dHowziSMGIStJa9M03/pxqULAWJ8v2GVqO6sEbcyLQWo34M8y3EOcebJvyj4CHJgn74ujO3R2MykZ0rbMXBQPkuaicb0CtZUoglQqV2oh9OnKvoV+BARJyA6sWmEwxKxaOzAfja8zsOKSwyXX1aT1KIsLFSCKaNHvgYZGH8JSgt0fmz6UeWYbsgotkKxd3ObB+dJvK3exjwLQp/mbxgZuVTAKNbG0qbPZnSt
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(451199021)(7696005)(316002)(41300700001)(55016003)(8990500004)(86362001)(83380400001)(38070700005)(9686003)(186003)(6506007)(7416002)(26005)(33656002)(2906002)(82950400001)(82960400001)(921005)(122000001)(38100700002)(5660300002)(52536014)(8936002)(8676002)(76116006)(66446008)(66556008)(66476007)(66946007)(64756008)(110136005)(478600001)(10290500003)(66899021)(71200400001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SWRlcWg3V2tKa3NDS25Vd2lYZG1JcG9NK3FyVzBtb3BWOTI3L3NLR1hkSE00?=
- =?utf-8?B?WXhLUmxLWXVaaHBTVmlyYWZrK2JPd2toTFFHcUJHMzgyblFQWEJBSUlVSWtU?=
- =?utf-8?B?QWRTQnZ1ckxoOUFWSGVwSWJISzA2dHU0VmNFcmZiblNUU2NUUUFKZTBkSTZG?=
- =?utf-8?B?VmNzY0F3S1ViOVhTQVNsUFYvdnpiSk9OcUppUnpXUzA3S09ubEVRakJhanNL?=
- =?utf-8?B?ZWtSZVg4Rk9rMHprcEc4YUxtQlhkUi9xT3V2ZzM0YVpmbzdkdDFha3RLYmlK?=
- =?utf-8?B?MjJJWFZhKytoOExKcE1odjZpSVF4aTBYYUlUZXB3NkRUNmdDRy9BWU1tSHY0?=
- =?utf-8?B?YmZicHBCWFJqb2FvaE1ucDAvWC9Ld2hYVjdUa3pnckRtT0FBUXU5NGdkRnNJ?=
- =?utf-8?B?ZmwzcUNTMzFocHI3L3N4cVYyVW1EMklLaEpVbWEyTThkb2FRUDJBWERRbGx0?=
- =?utf-8?B?RzBKMkhpU0ZmRzlBMFVLdVJ0YUtMZ3NBa3VxRi9DL2FzVitaMWE2SThCVzFC?=
- =?utf-8?B?cGFHckdaUW1yRUc4QXl3UTBLUVBvQ1BxVlp1NUhnenh6Znl0eW1idklXUTBv?=
- =?utf-8?B?Y1FOeWRQRktCMitxZ01iTWlvZW84a3NYS3dqTk9jNTN0TWFiSjB0VTdKUnE4?=
- =?utf-8?B?d3RRZS82VWdlQ2c4K011RG5WZ29IWjh5ZXMwNGt2ektkaFhjM3VmbUpqYkVS?=
- =?utf-8?B?Q1FYK2tCU3BENnkwQ3lEQUFTU28zemY0T09iekdnMWVtdVhvT2lnU3FnNGY3?=
- =?utf-8?B?TXV5VnEva1NOYXZ4Vk9aQ0ZoUzFYMFpsZTREd2hQbnozcis1bEY1dXdRQ3Fu?=
- =?utf-8?B?M0pFenhCT1VHVlFvdnlYRGRvTFVVeGF6cFVjeFEzbEJBeWdXajA5TmRLQUdr?=
- =?utf-8?B?aHFpUWxVTFBhWFRsOWtvSVZVSEtQUlBBZGxaeHJyQjM0UGszUTBBZis0RFFz?=
- =?utf-8?B?QU9uM2F6WUVLbjlzNzRsdmJDVnJzQUkyRVpnVWNsWmNmbW9sd0JwYkVleGd6?=
- =?utf-8?B?VjVLQ3MwY3VRTG41blFoYm13MkwvYlRMbVdGNnZ1THREOGNwaXk4SnRtcUda?=
- =?utf-8?B?bDUvSjF6WjBzVDM0YTY2SzVpbU1LUDNRclFBNFgydnZkRHhXNFIwSkdZMHdj?=
- =?utf-8?B?WkxYa0lmbWNwd2I1S2F4ZTZJdjNQRGhpeURqSDgvNEozK2JtcWJYd3U2dVdB?=
- =?utf-8?B?YWtEcWVmNHc0MWhlQkl2WkQrb0IrN2hrUENjS2ZjcFJkTnd4VUtmeTdYY3li?=
- =?utf-8?B?WVIwUlVBM1VBMTMrajE2LzhNbnkrOEZkU0JwZG00NFlpclkvUzh5bnU2cFpv?=
- =?utf-8?B?ZzhzZ2lWYkpLbVBvL0NhYnRJNE1CeTB4T0pTRmozekoxWU8ydDROcXgzeWp4?=
- =?utf-8?B?ekRIb1hRbW5qQkNQTEMzNHpSUjVqRVdzRWpERGxaeW56cU1hT3VzekFQKzhD?=
- =?utf-8?B?ZzNPdUFlTEEybGZldThUQ2FlT3l4bW0wOHRNSFJSVE9sNmMwUmV5ZmRJSW9z?=
- =?utf-8?B?MEJVVXUzNncxS1Nwd21QU1BoOHJKb0Vwb3k5amFkTmd4d1dGMEo0QUMwN3Zv?=
- =?utf-8?B?UkRTYjhiMEsyc1psbCtPblJmODhnOTJWQzhEbjd0Y3BCS1ljN29sWTRDamVE?=
- =?utf-8?B?UVVoTUhkbVFLYWR6WHJ0N3RpMTU0K29ONFcyMzI0d2FLY1pjSDF1TDkvSThB?=
- =?utf-8?B?dUp3bGptQU16ZGxBUmRweGdSejNUSG9qdU9xOHVVYStseUVYMWlmV1VSQnp3?=
- =?utf-8?B?MklEV1pORkpiVWltVWxTNWIzL0d2NFNvVldWR01VR0dGc1RtOWEwTFdDWGJR?=
- =?utf-8?B?MGpmZlBvZGtQNi9GT05ubXhDM1Z1UHNTTXcvdlM3TFlsdEVkY0JGVDJ5OG9m?=
- =?utf-8?B?TWVEOHo4bGJLNkRyQ2RnL0NxNGl1dmlVZS9VbU1wZ21JLzZuc3JzR3B0N1BG?=
- =?utf-8?B?dlFDWjEwRFB3QUZscTJmZE9GZkF4UW9aempvcGRxZVVJMXUzNlAxbEZqM0R3?=
- =?utf-8?B?cHc4Q3dxemdHa3kvNEZ4RUN5TVN2SzVEcWd1U0Yyc1FOSnd6UUlKWGZSdHd1?=
- =?utf-8?B?NGk5cVIyNTlwVytFTDZ0Z2JHMlpQdml4bERWZTFFS2xNajRvUGhsaE5nNjZC?=
- =?utf-8?B?Y3pySFRQbDhra0dhNDIyQWdlUXNmT0ZRMkJucjhzaGx0TXJsV3gyd3JjYmV3?=
- =?utf-8?B?aGc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?qMlG62AR7MvrPM6oOd8iNrYh51ZicDCxOipzLdq9EQRj1J2Unm+TSoV6hmK/?=
+ =?us-ascii?Q?o3mtITWOuM9LDLfew1CrrcYXDKh/+xXDUSDWFMX4UiKoWciIZ4f+uv2sbUkA?=
+ =?us-ascii?Q?/cHrk9/UipTPL1ieZowNtrDW0CrghkZUSSYZYSM4zOkNc/CKSSG8OX+tazwL?=
+ =?us-ascii?Q?IfXK4hvL1CXwK7mm3dmv0Sl38Ibb2kE3/Cdb7uQ+qukrYWrclwnkBSDcQDHG?=
+ =?us-ascii?Q?5r50iDcSnYPntNmQSyUPhWm7wU/Pj//j94sMnUxOruPZGOOcc71CtHa03INp?=
+ =?us-ascii?Q?8NLgY6VsuzFAWDCghYxSjybC0XjJpz2UYjuVLGniZzVaPCkDifI2QFgWBWhH?=
+ =?us-ascii?Q?+ZKWmGsz6MMiYK7+L+9jhFUVRdUpmV987xEQwX6D6dUmqr3n+EQWtwdk1rBu?=
+ =?us-ascii?Q?F+om248yWHVIL3B8h4ZyFG2hy3y8cH1Q8n+61YaG93XlrTtM1id9pYRZXA91?=
+ =?us-ascii?Q?1XZLU9NF8dwAKOs7nxVaP1aV0nmpnBxlY86nODJkaLAlE/RuWvJXuBWE9dHY?=
+ =?us-ascii?Q?JyD0wMGrEoZ43ooafPcJmmjLo+WIF8s+DOpj54EqncdyYVcnLLcGl/oQ/JAn?=
+ =?us-ascii?Q?2UI6GKSRnU0Wqqk2gAp6syW0Y39LsfP/PIkq1pAFcT8wYGCDG9UkHfsgySME?=
+ =?us-ascii?Q?XoJYrCIdWNMGNMVcsHQQk6LQslqXgjuf/a6LynCKoDdddsb0jH8yO7JBBnld?=
+ =?us-ascii?Q?ZfUZGH61ITFLqSlWqwF4fKyMpkc9si2TlyRFJKMjXc/uDHRhZx2o03F/0kyW?=
+ =?us-ascii?Q?bbCu8IOvH0YFWpbiaRQzXI9ix0OyoanRb/bh/SqJ6esC18RDFSdxleU1hTOU?=
+ =?us-ascii?Q?3eLQ7pfC4rNaMi5tYSUeBO5e9SHtwOyQEjyM19l/y2CiqfD+0+SI1f5SyKcc?=
+ =?us-ascii?Q?nuoFQg5zUZREsRzLIVVbeaKtRc0J7ut09sJklqCvYxcGiQgpGGCOZlIJJDj4?=
+ =?us-ascii?Q?SDU/TorDlgllfi+tJv6Z8y99lX2A2ZopJn2+F6U1cvLATav1ubWqAfsnwK63?=
+ =?us-ascii?Q?y3WecfyWhAGv3mj1db2CthsiJrYDeI3iaZX2Af8s4/b2ZASEmAm99UxGKFUJ?=
+ =?us-ascii?Q?oISmcONJILoyg+4GQqsWx2pNiuJvdkSaLuOun/CIhTDPnxUNPiQuYWfeA2Kl?=
+ =?us-ascii?Q?/tojPGxEZkdgFCv0c9AAnNkJ74UCDRK8lb3PjAFxsCHg0oJHUV8LSzIydMeG?=
+ =?us-ascii?Q?2oMiV/BLIcWU3KOQBruailw0kikIOqd2qxaBLnfxkLjA8051QVrdv2zEsqOF?=
+ =?us-ascii?Q?pNSquN8+rLJ0yQlp2o1tGFjnDHDvTlhgXVZdX+AZX0n3MK9UUxopK7B7TjhJ?=
+ =?us-ascii?Q?D6UlHxLmXQy+pvgLHVxSyX9oBohR21iwnbxKFHUm1DAVtdRxdqbCDE/JFtSA?=
+ =?us-ascii?Q?LXwz3MURibJcXWqh4QaPPg30poulUkDClkUGOQHrQsiADJoCMb9vJMHMCiko?=
+ =?us-ascii?Q?xkVaqGbhM40AUA1DdlPQgBIu8LKGxCNVwz3J/zKzeQzPrEOkz7zFt4vng4om?=
+ =?us-ascii?Q?hBIQP1yb6ABcLsX5yOR33R033bzNtABAIhZmsho8MUZVArLRN2cUHzu/40jY?=
+ =?us-ascii?Q?hOTNo/OSgEW7TNMh84VOdzc8IuIXIq6VgL7Mrl+m?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f815c0d-6fc1-4611-f77c-08db6833eec6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2023 15:20:46.1487
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed8b3543-c6e9-4795-ba94-08db68487dd1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2023 17:47:56.0273
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2lMxs2BpiC0lsIodvI7W8iSQZx4mDCPZ3IOIBxpardWpa8gm2pUCXK0BNRGZlTP83xlGKZTpOkT9tjJH4esMK9jaesYnTAzWQxdMtFUhZhc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR21MB3949
+X-MS-Exchange-CrossTenant-userprincipalname: VzQYf19ImwqhhPxymRj/ZhUMQ7n7c8q+b5VhfzgHY7t0IQKcLucPHcMv7QIIxyIOFnTmZcA5mPRd9jcRaK67tw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR21MB3456
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -135,26 +135,169 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-RnJvbTogRGF2ZSBIYW5zZW4gPGRhdmUuaGFuc2VuQGludGVsLmNvbT4gU2VudDogV2VkbmVzZGF5
-LCBNYXJjaCAyMiwgMjAyMyAxMTowNyBBTQ0KPiANCj4gT24gMi8yNy8yMyAxMDo0NiwgTWljaGFl
-bCBLZWxsZXkgd3JvdGU6DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9pcnEuYyBi
-L2FyY2gveDg2L2tlcm5lbC9pcnEuYw0KPiA+IGluZGV4IDc2NmZmZTMuLjlmNjY4ZDIgMTAwNjQ0
-DQo+ID4gLS0tIGEvYXJjaC94ODYva2VybmVsL2lycS5jDQo+ID4gKysrIGIvYXJjaC94ODYva2Vy
-bmVsL2lycS5jDQo+ID4gQEAgLTIxMSw2ICsyMTEsMTMgQEAgdTY0IGFyY2hfaXJxX3N0YXRfY3B1
-KHVuc2lnbmVkIGludCBjcHUpDQo+ID4gICNpZmRlZiBDT05GSUdfWDg2X01DRV9USFJFU0hPTEQN
-Cj4gPiAgCXN1bSArPSBpcnFfc3RhdHMoY3B1KS0+aXJxX3RocmVzaG9sZF9jb3VudDsNCj4gPiAg
-I2VuZGlmDQo+ID4gKyNpZmRlZiBDT05GSUdfWDg2X0hWX0NBTExCQUNLX1ZFQ1RPUg0KPiA+ICsJ
-c3VtICs9IGlycV9zdGF0cyhjcHUpLT5pcnFfaHZfY2FsbGJhY2tfY291bnQ7DQo+ID4gKyNlbmRp
-Zg0KPiA+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfSFlQRVJWKQ0KPiA+ICsJc3VtICs9IGlycV9z
-dGF0cyhjcHUpLT5pcnFfaHZfcmVlbmxpZ2h0ZW5tZW50X2NvdW50Ow0KPiA+ICsJc3VtICs9IGly
-cV9zdGF0cyhjcHUpLT5oeXBlcnZfc3RpbWVyMF9jb3VudDsNCj4gPiArI2VuZGlmDQo+ID4gICNp
-ZmRlZiBDT05GSUdfWDg2X01DRQ0KPiA+ICAJc3VtICs9IHBlcl9jcHUobWNlX2V4Y2VwdGlvbl9j
-b3VudCwgY3B1KTsNCj4gPiAgCXN1bSArPSBwZXJfY3B1KG1jZV9wb2xsX2NvdW50LCBjcHUpOw0K
-PiANCj4gVGhpcyBzZWVtcyBmaW5lLCBlc3BlY2lhbGx5IHNpbmNlIGFyY2hfc2hvd19pbnRlcnJ1
-cHRzKCkgaGFzIHRoZW0uICBCdXQsDQo+IHdoYXQncyB3aXRoIHRoZSAiI2lmIElTX0VOQUJMRUQi
-IHZlcnN1cyB0aGUgcGxhaW4gI2lmZGVmPyAgSXMgdGhlcmUgc29tZQ0KPiBkaWZmZXJlbmNlIEkn
-bSBtaXNzaW5nPyAgV2h5IG5vdCBqdXN0IGJlIGNvbnNpc3RlbnQgd2l0aCB0aGUgb3RoZXIgY29k
-ZQ0KPiBhbmQgdXNlIGEgcGxhaW4gI2lmZGVmIGZvciBib3RoPw0KDQpEYXZlIC0tDQoNCldpdGgg
-U2VhbidzIGV4cGxhbmF0aW9uIGZvciAjaWYgSVNfRU5BQkxFRCwgYXJlIHlvdSBPSyB3aXRoIGdp
-dmluZyB0aGlzDQphbiBBQ0sgYXMgYW4geDg2IG1haW50YWluZXI/ICAgVGhpcyBwYXRjaCBoYXMg
-YmVlbiBoYW5naW5nIGFyb3VuZCBmb3IgYQ0Kd2hpbGUgbm93IC4uLg0KDQpNaWNoYWVsDQo=
+> Subject: RE: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to
+> mana ib driver.
+>=20
+>=20
+>=20
+> > -----Original Message-----
+> > Subject: RE: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to
+> > mana ib driver.
+> >
+> > > Subject: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to
+> > > mana ib driver.
+> > >
+> > > Add EQ interrupt support for mana ib driver. Allocate EQs per
+> > > ucontext to receive interrupt. Attach EQ when CQ is created. Call CQ
+> > > interrupt handler when completion interrupt happens. EQs are
+> > > destroyed when
+> > ucontext is deallocated.
+> > >
+> > > The change calls some public APIs in mana ethernet driver to
+> > > allocate EQs and other resources. Ehe EQ process routine is also
+> > > shared by mana ethernet and mana ib drivers.
+> > >
+> > > Co-developed-by: Ajay Sharma <sharmaajay@microsoft.com>
+> > > Signed-off-by: Ajay Sharma <sharmaajay@microsoft.com>
+> > > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > > ---
+> > >
+> > > v2: Use ibdev_dbg to print error messages and return -ENOMEN
+> > >     when kzalloc fails.
+> > >
+> > >  drivers/infiniband/hw/mana/cq.c               |  32 ++++-
+> > >  drivers/infiniband/hw/mana/main.c             |  87 ++++++++++++
+> > >  drivers/infiniband/hw/mana/mana_ib.h          |   4 +
+> > >  drivers/infiniband/hw/mana/qp.c               |  90 +++++++++++-
+> > >  .../net/ethernet/microsoft/mana/gdma_main.c   | 131 ++++++++++------=
+-
+> -
+> > >  drivers/net/ethernet/microsoft/mana/mana_en.c |   1 +
+> > >  include/net/mana/gdma.h                       |   9 +-
+> > >  7 files changed, 290 insertions(+), 64 deletions(-)
+> > >
+> > > diff --git a/drivers/infiniband/hw/mana/cq.c
+> > > b/drivers/infiniband/hw/mana/cq.c index d141cab8a1e6..3cd680e0e753
+> > > 100644
+> > > --- a/drivers/infiniband/hw/mana/cq.c
+> > > +++ b/drivers/infiniband/hw/mana/cq.c
+> > > @@ -12,13 +12,20 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const
+> > > struct ib_cq_init_attr *attr,
+> > >  	struct ib_device *ibdev =3D ibcq->device;
+> > >  	struct mana_ib_create_cq ucmd =3D {};
+> > >  	struct mana_ib_dev *mdev;
+> > > +	struct gdma_context *gc;
+> > > +	struct gdma_dev *gd;
+> > >  	int err;
+> > >
+> > >  	mdev =3D container_of(ibdev, struct mana_ib_dev, ib_dev);
+> > > +	gd =3D mdev->gdma_dev;
+> > > +	gc =3D gd->gdma_context;
+> > >
+> > >  	if (udata->inlen < sizeof(ucmd))
+> > >  		return -EINVAL;
+> > >
+> > > +	cq->comp_vector =3D attr->comp_vector > gc->max_num_queues ?
+> > > +				0 : attr->comp_vector;
+> > > +
+> > >  	err =3D ib_copy_from_udata(&ucmd, udata, min(sizeof(ucmd), udata-
+> > > >inlen));
+> > >  	if (err) {
+> > >  		ibdev_dbg(ibdev,
+> > > @@ -69,11 +76,32 @@ int mana_ib_destroy_cq(struct ib_cq *ibcq,
+> > > struct ib_udata *udata)
+> > >  	struct mana_ib_cq *cq =3D container_of(ibcq, struct mana_ib_cq, ibc=
+q);
+> > >  	struct ib_device *ibdev =3D ibcq->device;
+> > >  	struct mana_ib_dev *mdev;
+> > > +	struct gdma_context *gc;
+> > > +	struct gdma_dev *gd;
+> > > +
+> > >
+> > >  	mdev =3D container_of(ibdev, struct mana_ib_dev, ib_dev);
+> > > +	gd =3D mdev->gdma_dev;
+> > > +	gc =3D gd->gdma_context;
+> > >
+> > > -	mana_ib_gd_destroy_dma_region(mdev, cq->gdma_region);
+> > > -	ib_umem_release(cq->umem);
+> > > +
+> > > +
+> > > +	if (atomic_read(&ibcq->usecnt) =3D=3D 0) {
+> > > +		mana_ib_gd_destroy_dma_region(mdev, cq->gdma_region);
+> >
+> > Need to check if this function fails. The following code will call
+> > kfree(gc-
+> > >cq_table[cq->id]), it's possible that IRQ is happening at the same
+> > >time if CQ
+> > is not destroyed.
+> >
+>=20
+> Sure. Will update.
+>=20
+> > > +		ibdev_dbg(ibdev, "freeing gdma cq %p\n", gc->cq_table[cq-
+> > >id]);
+> > > +		kfree(gc->cq_table[cq->id]);
+> > > +		gc->cq_table[cq->id] =3D NULL;
+> > > +		ib_umem_release(cq->umem);
+> > > +	}
+> > >
+> > >  	return 0;
+> > >  }
+> > > +
+> > > +void mana_ib_cq_handler(void *ctx, struct gdma_queue *gdma_cq) {
+> > > +	struct mana_ib_cq *cq =3D ctx;
+> > > +	struct ib_device *ibdev =3D cq->ibcq.device;
+> > > +
+> > > +	ibdev_dbg(ibdev, "Enter %s %d\n", __func__, __LINE__);
+> >
+> > This debug message seems overkill?
+> >
+> > > +	cq->ibcq.comp_handler(&cq->ibcq, cq->ibcq.cq_context); }
+> > > diff --git a/drivers/infiniband/hw/mana/main.c
+> > > b/drivers/infiniband/hw/mana/main.c
+> > > index 7be4c3adb4e2..e4efbcaed10e 100644
+> > > --- a/drivers/infiniband/hw/mana/main.c
+> > > +++ b/drivers/infiniband/hw/mana/main.c
+> > > @@ -143,6 +143,81 @@ int mana_ib_dealloc_pd(struct ib_pd *ibpd,
+> > > struct ib_udata *udata)
+> > >  	return err;
+> > >  }
+> > >
+> > > +static void mana_ib_destroy_eq(struct mana_ib_ucontext *ucontext,
+> > > +			       struct mana_ib_dev *mdev) {
+> > > +	struct gdma_context *gc =3D mdev->gdma_dev->gdma_context;
+> > > +	struct ib_device *ibdev =3D ucontext->ibucontext.device;
+> > > +	struct gdma_queue *eq;
+> > > +	int i;
+> > > +
+> > > +	if (!ucontext->eqs)
+> > > +		return;
+> > > +
+> > > +	for (i =3D 0; i < gc->max_num_queues; i++) {
+> > > +		eq =3D ucontext->eqs[i].eq;
+> > > +		if (!eq)
+> > > +			continue;
+> > > +
+> > > +		mana_gd_destroy_queue(gc, eq);
+> > > +	}
+> > > +
+> > > +	kfree(ucontext->eqs);
+> > > +	ucontext->eqs =3D NULL;
+> > > +
+> > > +	ibdev_dbg(ibdev, "destroyed eq's count %d\n", gc-
+> > >max_num_queues); }
+> >
+> > Will gc->max_num_queues change after destroying a EQ?
+> >
+>=20
+> I think it will not change. Also the compiler might optimize the code to =
+just
+> read the value once and store it in a register.
+>=20
+> Thanks,
+> Wei
+
+This message is confusing. How about changing it to " destroyed eq. Maximum=
+ count %d", or just remove the count as it's not informational.
+
+Long
