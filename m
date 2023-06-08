@@ -2,162 +2,172 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF91372835F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Jun 2023 17:15:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C556728368
+	for <lists+linux-hyperv@lfdr.de>; Thu,  8 Jun 2023 17:16:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234497AbjFHPPo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 8 Jun 2023 11:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
+        id S236824AbjFHPQB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 8 Jun 2023 11:16:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbjFHPPn (ORCPT
+        with ESMTP id S236748AbjFHPQA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 8 Jun 2023 11:15:43 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F662D65;
-        Thu,  8 Jun 2023 08:15:42 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-653fcd58880so504979b3a.0;
-        Thu, 08 Jun 2023 08:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686237341; x=1688829341;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=55lU3irJzSJsczewYDUgMmkeCe1yQwAopk76mACRoR8=;
-        b=bSovjVo5+79ACX4vm6JKqNPLYD4eh3+dh5dMYGQV+oC8Bpqk1J4Y9TM7YsRau2OLk8
-         YuHmAxY6xVmI4FZvpwFVSlMokszfSXsExm9JggO3lHIQbcb7i3LqsoK0YJ+zN1CKMwzz
-         Oc6J4WV4lX67xNuRNSOX62JOGQ7yjmFMq+nLq9sX/4H3qes1PYjN1ouH4l+g3RckprVY
-         NEsWlS0huBmstEvgHDhVp+8YcyYQqnN3gT6yQirbRAeRaX/DKIvLqsKFt5oiXJ2TKHtf
-         0hf43xR5VxUx+Cx5BnC17lc/JyKBWMuDov4/4SzeqE0xT+Yq4VcQck/hE3EvpVC9rC8k
-         yBxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686237341; x=1688829341;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=55lU3irJzSJsczewYDUgMmkeCe1yQwAopk76mACRoR8=;
-        b=hbL/IL8tbYzZ0sPxeBkLQQFJCTi2DtjfIP9mE+OQstBddlpLveHxQ7V8tttrInAsW4
-         /KJx0EJSAutPLgAUgIccrq3BTh99YHBbbq1oJ52WfYEJ/vGU9eOyffM4wew8mokMBQDB
-         MbEycWBBSFXJMeMg0EoWT8ejEXqS8wdBh0jk9NNAF1NRjYg7ZfeVbbgA4NziWHz5b+RC
-         tf2nBYQUIT48UZUl7j+Xks9nw1DXAm6ME2ta9bZdlqBIY4C2ZSIZRJXowQzgUVyQOB2s
-         +dvwcgh0TuqUcmNfPz/lGR3HQ6mnvqMsCkpQzIKoJt2CkSXNXA2geQXDfoTgCsFmd6Ei
-         tNKw==
-X-Gm-Message-State: AC+VfDwc0/psRp3Cv/yvgolNV684GZHPq3Ws3xMVHC3W8qmGG2KYLSXT
-        zuT07dNSh04kX7cQ0I8L/j/GILoefRTruw==
-X-Google-Smtp-Source: ACHHUZ42h/CI+r2MG29MXq+ydxY3pg+noX5hvO26RUOoZxcPPTVrrTYRI/PXAtIB3z3/6eLFy951Ug==
-X-Received: by 2002:a05:6a00:24cc:b0:64c:c453:244f with SMTP id d12-20020a056a0024cc00b0064cc453244fmr7200998pfv.15.1686237341053;
-        Thu, 08 Jun 2023 08:15:41 -0700 (PDT)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
-        by smtp.gmail.com with ESMTPSA id u1-20020aa78481000000b0064fd8b3dd10sm1230826pfn.109.2023.06.08.08.15.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jun 2023 08:15:40 -0700 (PDT)
-Message-ID: <8b93aa93-903f-3a69-77f9-0c6b694d826b@gmail.com>
-Date:   Thu, 8 Jun 2023 23:15:25 +0800
+        Thu, 8 Jun 2023 11:16:00 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021015.outbound.protection.outlook.com [52.101.57.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4722D76;
+        Thu,  8 Jun 2023 08:15:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G/ZW6LSCseU3Tyn0paWll4IpyGrS9hm2/O7wM4Ectk0l1aZ+Fd6OcmCVPqmvUU5/f3AlNUccNQcax9PTF2MrZ7/jCD9jBf8892Ou8EGmGULLYujBF4CLPOyCnUHWUC6aV+NIBm2vGH2RnpZCejBUhJTbZz2KwwShVQdwt5/EjmIJRoCSzSHPQPvsbNdBSw1huS1+RGmiY90+775r+upfXFKoZJzLjMAlC/AkI3yzcb3BEkETMPXpDmJEb2Typxn6lh/E8TAHWHp5l6THCwRMh7tQktaZ5GVdKlnkGK7+Z32c7Kf5/pR0jmagX7Fx9ehgPi0a9nTc/Tsu/tmieH7AEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JF9SSrvtfeHKnCOI//p14wuZLYN1kYmgiK/Jbw+VJbo=;
+ b=Z5E9LoM4/xn7Id2ZBye9rLGwuwQkQEXcyorAUVibHOBqX3xJmQj0aNTWMHEwGYgaEftepKY4oEAHb07X0LBWbxC+PJu902Nl9xKzkAKDn8sebpAQSPmGUq1Ovl0edurovP6YQ36T24EXZb9aIj+WjZW+FEvOlyhGVWLAFdlAtzv2SaGF2Blfvt4xZ/GJApEqqyDaIMm4HthaINet6iF5AkW5Mx1+sDZPpNb06E3E8Fe7xp077aiQh2ZK1cQG46AoeGSi1YwqsFKMTbS+2nWp5o/NGzSwAiZaJWgi8PQqBGCXfKLB47Vhw6aL2su863Dxitc4yM1Ae+T7UZP2KsXu1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JF9SSrvtfeHKnCOI//p14wuZLYN1kYmgiK/Jbw+VJbo=;
+ b=QC683X/5OWygLUfQaX1C7P9IcRRu9PBSHCjlTPDj1LJPDMS15oX2RNf/DJOR3BWSNLspsfM8+qDc6M+RDT/YZ0LZkDBUbvwnO8bZniLNn4594MmiWLtH27hOxsWJezD//U+K+ZeFbQS0Joo7C85caBYQ9Bcvfj8Ns1Iwp02mDC0=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by MW4PR21MB1955.namprd21.prod.outlook.com (2603:10b6:303:71::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.14; Thu, 8 Jun
+ 2023 15:15:53 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::7d5d:3139:cf68:64b]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::7d5d:3139:cf68:64b%3]) with mapi id 15.20.6500.004; Thu, 8 Jun 2023
+ 15:15:53 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "nathan@kernel.org" <nathan@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] Drivers: hv: vmbus: Add missing check for dma_set_mask
+Thread-Topic: [PATCH] Drivers: hv: vmbus: Add missing check for dma_set_mask
+Thread-Index: AQHZmOF2t5CS72Yo7EWOWPcfmSwiDa+BA2Sw
+Date:   Thu, 8 Jun 2023 15:15:53 +0000
+Message-ID: <BYAPR21MB1688B317E2ECB18E709502D8D750A@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20230607014310.19850-1-jiasheng@iscas.ac.cn>
+In-Reply-To: <20230607014310.19850-1-jiasheng@iscas.ac.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9bb7716d-127f-4c28-a6d7-daec35f35311;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-08T15:04:52Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|MW4PR21MB1955:EE_
+x-ms-office365-filtering-correlation-id: ace38b94-2bc2-4586-3517-08db6833401a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9GSVtFk5Ze7FYDjfmUc5RtPJnvtRvEspqbJJtvOjrIWrYDJ2hv+oLOEPsCJ0/7p9jmNrHgl6k5h0BLfg0b2C5gW3/YdvJxGAnLMhDFjVk3DHz4K89aOv4OCWCwseTPZpzMGyM853z3vqvI92bK46QruLK8b5MBdtC+g4keqsdtTw0mf1xlBPPeEck+vEKkrwYunNg7kCilMpJYYomm7D1AIQIU9Zzuc5KFZBFUZZdyswB44fs3BJWkI27ZzopO7eqotEWxmq8T26mSIbzCLckXJ61Kj2hWunwNAfFvpLkmqJ+2X/T7hwD35QTUO990uM4SAz45SXPdCGsp8ghXMF7SYJr0EYqFxSGRkKv3uUvEIG6dHEe/+2HBeR/vxb89c54qFJkq5XzdWOx2zf0VZX/Xu8jqUtYhTyKeSn/dkNd1FBy8nNPe1nxD6YphFtjI2WdhFCSPvN/P4FecyCkHTg7DxFt7UFjVkgcQrcHJkK2st9cBaH8ROH6cCl08ScA07JXzLuWkrragpZYj1bqjiKMk7GJfIyvdXELsbC0vQZTLGMpwoY5HnPybUMAwpdFrOUc9rYOQTYuCIwx9HZV7LWTmMrFgo6jvL2aTDenRACHBToi+9PRjhfYSPeZnyMgInMrtnyTTnpgKXhpg92Vm2u7OPtXdyWZj/e3DiffsYDi2c=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(376002)(346002)(366004)(136003)(451199021)(8990500004)(38070700005)(2906002)(86362001)(33656002)(5660300002)(52536014)(55016003)(71200400001)(7696005)(83380400001)(186003)(9686003)(6506007)(26005)(122000001)(82950400001)(82960400001)(478600001)(110136005)(54906003)(76116006)(66946007)(66556008)(66446008)(64756008)(316002)(66476007)(4326008)(38100700002)(41300700001)(10290500003)(8936002)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?tvc0l5zus1r0Y3cY9wbaJL2O78m3MoO1hfMHmvtnuZD06pKy3A7jiHNXYndN?=
+ =?us-ascii?Q?nLjBT+hjme5BUhTvrJVjhHmLzEjxt6Z+AepArBncwizpoJavfaqM+rHPX2ot?=
+ =?us-ascii?Q?zKwq9hFKy+AwYICWtr+t0BND264SZ5YNLVuROVTWUZMEElYFvY7tJ3mH8Z6y?=
+ =?us-ascii?Q?kHq3GNskQvwpT0NLF06nrL2Rtd3j9jRdRP0hsGn/ww4UbpEzl+dZuiZASaXx?=
+ =?us-ascii?Q?ndidZUuBMv6d2ql0pTwndqOySTB6INxtfk7Ae+CvX6DzVodsNBiSXSXj1CL7?=
+ =?us-ascii?Q?sIGLef1dskXS1d7RsiKYibQUqqVxulFM2PHYnFDkIXbvP6Lgwjt3rr88C0ev?=
+ =?us-ascii?Q?Yp41hiHyOhjm2rWn2TWqohjF4n4m4twqzw8R4cTWaUt/VbFU/dG8CbNZSirA?=
+ =?us-ascii?Q?HyzA6QWvzMVatAgKMhzoe7qq8ElBBiNokCYS2W8VpRTs8lKMrAtfP32tbpFe?=
+ =?us-ascii?Q?93Mnz6ZZt3DSkUCRTo4a1za+T3cfbGZlIHgTFZLAKDpKMQzt8ADJNZNMS9Oe?=
+ =?us-ascii?Q?FSVWARbEB+sXo8SvqGbmHcZm1rMNsv+uM3kXiROdlRuAs7i1pwTqGPBA/BMm?=
+ =?us-ascii?Q?ayFOBeQ+HCq2aH4Y4g0pO9QXV2bi8E7yRkD91tpbqYdRihiA+y0efmpbSe2T?=
+ =?us-ascii?Q?kS/a9KvzOsmAZW0fq4Z7X3fYZ+pG61xczaxdkZvgOnX3MTaQpc2UfJ6XbHMF?=
+ =?us-ascii?Q?AZVntzLIQF5GRhiw6iBk5gtTicq+bMqHt4ZGdFNA5KoFhxBWhMqAzx0U/u/Y?=
+ =?us-ascii?Q?l99nv7uhwfd+jEE79G9XKVBA9zYmYzPCSp0kqqluloQ+Bknfvj0ex3RueN8S?=
+ =?us-ascii?Q?oCgP8jzvp41tyI1rY0UPRWMlpG6KI4uNMZiHa3WZlXIQrHCe1iFqpY+yJUwL?=
+ =?us-ascii?Q?LoDPFArhMZcTwZzPUYqJah54AX3+G4AIoGtZmx8LRVesAoS8A69t/iyqm8LQ?=
+ =?us-ascii?Q?AkSMsWDUSa9wAiQgWXNUDAU6F1sQOo75PKwMhTsSvUn723dHwAu1l6HP7WMf?=
+ =?us-ascii?Q?yfcR8XVov1V/ZLLk+VqL/+eCEULtICcs1fIhIiDAVr30ifpAND2aJ352FMsM?=
+ =?us-ascii?Q?/jghlcN5cIUgJ+h0C5oM1fjg5UuHKmOF0AJiAe6mNLo7sHmzFHuCj3XdO7nE?=
+ =?us-ascii?Q?Ctsxi8mNn/b8d/13jsjAZpQjijj3nw45ZC5MHejIyCakvkEs5EB4pgUvjjqO?=
+ =?us-ascii?Q?yvFRMXZM1rk2M5Qg23K5k3dmXdu1qphPTZJwJ4KaLJBkrKWivqlLW1dmNqJB?=
+ =?us-ascii?Q?UhWVATeuM9Q1r+Pq+Rtxcum9FwywJ+qiXqgEKq4aFiQ3+iOv6GbzLYXe7xqU?=
+ =?us-ascii?Q?Gg9Q4EdQPPSGSMnFzwBejSufUFVoNYw5WKwhIvye+r3QPheMMyyu7KuJObWO?=
+ =?us-ascii?Q?ofQ91thFKLeBAOEult5rVaaC+XW7lV3Fd0RAY236cPYbGhhbEZwEsWmcZO4q?=
+ =?us-ascii?Q?Qt+mYGBrJk6T2DBGTgappkshDpRRJlhUNSYQS9OgvMXY+/7Flb/uqh6+Pn3J?=
+ =?us-ascii?Q?wlOo5R/NBEla/LrZ/M5+4J3uRyMCzkmmTqRFE+vdxyryau7Vjpyy913EVCjx?=
+ =?us-ascii?Q?SZKWviI1SjuHJEMolryWm2KvOLE6nJbHmO2cjtvPB6fhi4lqZia1S87Fwgt0?=
+ =?us-ascii?Q?SQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [EXTERNAL] Re: [PATCH 5/9] x86/hyperv: Use vmmcall to implement
- Hyper-V hypercall in sev-snp enlightened guest
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com, Tianyu Lan <tiala@microsoft.com>,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkuznets@redhat.com
-References: <20230601151624.1757616-1-ltykernel@gmail.com>
- <20230601151624.1757616-6-ltykernel@gmail.com>
- <20230608132127.GK998233@hirez.programming.kicks-ass.net>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <20230608132127.GK998233@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ace38b94-2bc2-4586-3517-08db6833401a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2023 15:15:53.0983
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: diYyU5Xo0+jJ0+o9TjbWn3JRnrkelUqhwRPAwLVvQ1CBsuVlxDHuxxsa4WmNaywQ5OV8aRRfi1peegZsisJqYtYbMFsczZqjka8T//DYwPM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1955
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 6/8/2023 9:21 PM, Peter Zijlstra wrote:
-> On Thu, Jun 01, 2023 at 11:16:18AM -0400, Tianyu Lan wrote:
->> From: Tianyu Lan <tiala@microsoft.com>
->>
->> In sev-snp enlightened guest, Hyper-V hypercall needs
->> to use vmmcall to trigger vmexit and notify hypervisor
->> to handle hypercall request.
->>
->> There is no x86 SEV SNP feature flag support so far and
->> hardware provides MSR_AMD64_SEV register to check SEV-SNP
->> capability with MSR_AMD64_SEV_ENABLED bit. ALTERNATIVE can't
->> work without SEV-SNP x86 feature flag. May add later when
->> the associated flag is introduced.
->>
->> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
->> ---
->>   arch/x86/include/asm/mshyperv.h | 44 ++++++++++++++++++++++++---------
->>   1 file changed, 33 insertions(+), 11 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
->> index 31c476f4e656..d859d7c5f5e8 100644
->> --- a/arch/x86/include/asm/mshyperv.h
->> +++ b/arch/x86/include/asm/mshyperv.h
->> @@ -61,16 +61,25 @@ static inline u64 hv_do_hypercall(u64 control, void *input, void *output)
->>   	u64 hv_status;
->>   
->>   #ifdef CONFIG_X86_64
->> -	if (!hv_hypercall_pg)
->> -		return U64_MAX;
->> +	if (hv_isolation_type_en_snp()) {
->> +		__asm__ __volatile__("mov %4, %%r8\n"
->> +				     "vmmcall"
->> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
->> +				       "+c" (control), "+d" (input_address)
->> +				     :  "r" (output_address)
->> +				     : "cc", "memory", "r8", "r9", "r10", "r11");
->> +	} else {
->> +		if (!hv_hypercall_pg)
->> +			return U64_MAX;
->>   
->> -	__asm__ __volatile__("mov %4, %%r8\n"
->> -			     CALL_NOSPEC
->> -			     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
->> -			       "+c" (control), "+d" (input_address)
->> -			     :  "r" (output_address),
->> -				THUNK_TARGET(hv_hypercall_pg)
->> -			     : "cc", "memory", "r8", "r9", "r10", "r11");
->> +		__asm__ __volatile__("mov %4, %%r8\n"
->> +				     CALL_NOSPEC
->> +				     : "=a" (hv_status), ASM_CALL_CONSTRAINT,
->> +				       "+c" (control), "+d" (input_address)
->> +				     :  "r" (output_address),
->> +					THUNK_TARGET(hv_hypercall_pg)
->> +				     : "cc", "memory", "r8", "r9", "r10", "r11");
->> +	}
->>   #else
-> 
-> Remains unanswered:
-> 
-> https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.kernel.org%2Fr%2F20230516102912.GG2587705%2540hirez.programming.kicks-ass.net&data=05%7C01%7CTianyu.Lan%40microsoft.com%7C60a576eb67634ffa27b108db68234d5a%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C638218273105649705%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=MFj67DON0K%2BUoUJbeaIA5oVTxyrzO3fb5DbxYgDWwX0%3D&reserved=0
-> 
-> Would this not generate better code with an alternative?
+From: Jiasheng Jiang <jiasheng@iscas.ac.cn> Sent: Tuesday, June 6, 2023 6:4=
+3 PM
+>=20
+> Add check for dma_set_mask() and return the error if it fails.
+>=20
+> Fixes: 6bf625a4140f ("Drivers: hv: vmbus: Rework use of DMA_BIT_MASK(64)"=
+)
+> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+> ---
+>  drivers/hv/vmbus_drv.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 1c65a6dfb9fa..68b7be2762ea 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1908,7 +1908,11 @@ int vmbus_device_register(struct hv_device
+> *child_device_obj)
+>=20
+>  	child_device_obj->device.dma_parms =3D &child_device_obj->dma_parms;
+>  	child_device_obj->device.dma_mask =3D &child_device_obj->dma_mask;
+> -	dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
+> +	ret =3D dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
+> +	if (ret) {
+> +		put_device(&child_device_obj->device);
 
+I don't think the put_device() call is correct here.  The underlying kobj i=
+n
+child_device_obj->device is not initialized until device_register() calls
+device_initialize().  It's after device_initialize() is called that put_dev=
+ice()
+must be used.
 
-Hi Peter:
-	Thanks to review. I put the explaination in the change log.
+That said, I don't see that the memory for the child_device_obj gets
+freed if we just do "return ret", though maybe I'm missing it.  And there's
+the matter of the memory allocated by dev_set_name().   Getting this
+error path fully correct may be rather awkward. :-(
 
-"There is no x86 SEV SNP feature(X86_FEATURE_SEV_SNP) flag
-support so far and hardware provides MSR_AMD64_SEV register
-to check SEV-SNP capability with MSR_AMD64_SEV_ENABLED bit
-ALTERNATIVE can't work without SEV-SNP x86 feature flag."
-There is no cpuid leaf bit to check AMD SEV-SNP feature.
+Michael
 
-After some Hyper-V doesn't provides SEV and SEV-ES guest before and so
-may reuse X86_FEATURE_SEV and X86_FEATURE_SEV_ES flag as alternative
-feature check for Hyper-V SEV-SNP guest. Will refresh patch.
-
-
+> +		return ret;
+> +	}
+>=20
+>  	/*
+>  	 * Register with the LDM. This will kick off the driver/device
+> --
+> 2.25.1
 
