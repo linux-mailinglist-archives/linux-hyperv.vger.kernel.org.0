@@ -2,317 +2,151 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 597CF72A376
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 21:54:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F3B272A4CC
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 22:39:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230470AbjFITyM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jun 2023 15:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50862 "EHLO
+        id S230477AbjFIUj3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jun 2023 16:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231675AbjFITyG (ORCPT
+        with ESMTP id S230047AbjFIUj2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jun 2023 15:54:06 -0400
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCB83AA6;
-        Fri,  9 Jun 2023 12:54:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1686340441; x=1717876441;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=L8AJYXTOF2/4YdwafM0nj79mMZyRJRuD9KvtxPd4yGw=;
-  b=SUpga5AjHAN33rob5sz5oxL1kzlXXwAbCdPde+OiGaPKqNcyEP/AfxTl
-   B/pqp3qj/wLvtTPmGsBTJwZ9MYA8y3CfRV4JUVobmVpyhtVIS2c14xote
-   LBYDrxrCNeSQgf14jaA15fjhAxEufeqwGWYOY0GyxBzsqBGJg9dIwmbth
-   g=;
-X-IronPort-AV: E=Sophos;i="6.00,230,1681171200"; 
-   d="scan'208";a="654069006"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 19:53:55 +0000
-Received: from EX19MTAUWB002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com (Postfix) with ESMTPS id DDAD740DDB;
-        Fri,  9 Jun 2023 19:53:53 +0000 (UTC)
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 9 Jun 2023 19:53:52 +0000
-Received: from 88665a182662.ant.amazon.com (10.106.101.20) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 9 Jun 2023 19:53:47 +0000
-From:   Kuniyuki Iwashima <kuniyu@amazon.com>
-To:     <haiyangz@microsoft.com>
-CC:     <ncardwell@google.com>, <atenart@kernel.org>,
-        <bagasdotme@gmail.com>, <corbet@lwn.net>, <davem@davemloft.net>,
-        <dsahern@kernel.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <kuniyu@amazon.com>, <kys@microsoft.com>,
-        <linux-doc@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <liushixin2@huawei.com>,
-        <maheshb@google.com>, <netdev@vger.kernel.org>, <olaf@aepfle.de>,
-        <pabeni@redhat.com>, <simon.horman@corigine.com>,
-        <soheil@google.com>, <stephen@networkplumber.org>,
-        <tim.gardner@canonical.com>, <vkuznets@redhat.com>,
-        <weiwan@google.com>, <ycheng@google.com>, <ykaliuta@redhat.com>
-Subject: Re: [PATCH net-next] tcp: Make pingpong threshold tunable
-Date:   Fri, 9 Jun 2023 12:53:38 -0700
-Message-ID: <20230609195338.27299-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <CADVnQykbSQTrNtpFm8YVgGY929mmzY2zSQ2-KxGmNthYyR9GLg@mail.gmail.com>
-References: <CADVnQykbSQTrNtpFm8YVgGY929mmzY2zSQ2-KxGmNthYyR9GLg@mail.gmail.com>
+        Fri, 9 Jun 2023 16:39:28 -0400
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020026.outbound.protection.outlook.com [52.101.56.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 364052D7C;
+        Fri,  9 Jun 2023 13:39:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NAs20PerSiuKH/XLdXSJa3GUPV9dP0zO6OPbrLbcR2zDV1RX4JbAkogCeIQpPKy5l8PhbzexhCzl5Z0VieRxPVANW+Ezn8iYADiGkEagDJARSs1eI4CAjhsAOQB9qMPFbigG/EV7vgPNplKuJFsw1d20WeFnGF6PHXPJuEcYBv91znJqRS1H5MapsC5twd1+NC7w8LLj1+F7IoytS5rEWl4OqNmPdgNru521DYh2/OXRsASrWg22IfzrNLnM+UXNf/f/vqSAuvujSC0XMeDV8fe+cMTwvvJpbu8+J848Upjt4Ov8n2W2px160aE2+fKptg5P+Eolp1JMsG5+CdDwrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7jPMz2tVI/FMbDhYJZsqHAhq/VD4UANM+LOK/VxDiFc=;
+ b=lC2KWW6D49lpwHsoYwVQA2IG2vst+jpkm8L9VIryT766VYoQpfM7+xaiTWVDu4d9+6pc8/btWVD/1oLuCqQyE62BQyXWjeJ9asixjsPiCjDF1TanpMOOTsLiCd45ndvQxyQQzr5IT/aRzLIjdp1TEAJyhC4SC6hEHET0DMlabou278GptLXZleatoCBnlgxUjPSDrtal04bFGu6ho7uA/KDpAM90GnJxKTrZ/0iNctctUpZi0KlMsZn0Dbz/Kg52pVjCC5QUvNlEb3mly/DEg3KzrWyVkKcxJZvo6OiNWPzESqOVolTJ9nD0UeoXE7SfygEJCrkp0H6EGOb1UuFT2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7jPMz2tVI/FMbDhYJZsqHAhq/VD4UANM+LOK/VxDiFc=;
+ b=cfo5DGY7QFk9MKqi6+7t0PjcFw5h7E9Fv3itqYXLX3aet7w+5IuHHjFIXKjWRmTaK3QOkOlx0prT7Sl2UBq7O4Fgbqxj1NLbcdgSnl8x66bEs4oWJUYzMsX4mOquoAMCpn4wBl+Lk15NmxmWbmJ//w4I6E9wAozPZWFgxdM1pAc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by MN0PR21MB3703.namprd21.prod.outlook.com (2603:10b6:208:3d2::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.12; Fri, 9 Jun
+ 2023 20:39:24 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::b7e9:4da1:3c23:35f]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::b7e9:4da1:3c23:35f%5]) with mapi id 15.20.6500.016; Fri, 9 Jun 2023
+ 20:39:24 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     kys@microsoft.com, martin.petersen@oracle.com,
+        longli@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        jejb@linux.ibm.com, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH 1/1] scsi: storvsc: Always set no_report_opcodes
+Date:   Fri,  9 Jun 2023 13:38:21 -0700
+Message-Id: <1686343101-18930-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0148.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::33) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.106.101.20]
-X-ClientProxiedBy: EX19D032UWB003.ant.amazon.com (10.13.139.165) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|MN0PR21MB3703:EE_
+X-MS-Office365-Filtering-Correlation-Id: f205c07f-0083-446a-63e5-08db69299c7e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1MDPSV2CBGX9HRpEsDMd6P/r6xej0G4FtFirGXtAqPOg1PvNzR0fi8cixze+gJqhhYfT04AB94jhbfq7fAbzuFmzHOBigAIQsM6vGvJX9rz6A1w6f1dF2MfXrYlnJCP0BzX6YfPiG+U0FKe4+XW7WeqsC7lbJZ1HBQl+dkFRr5kexJfFBvETNfJrVubHzt3w1r0qBE9rWolcvJDsbYmHosJhk5404YzTAWRY0P/w0NIvbeueT+myUPYB90RsTeEDHw911hzh620QvywTmR7k3lUzufPkpevfKTlVjogbUwUjR0FmDwgKGQ62ce4YqP58oKpRcJ06ylHrmfZw0K+v/JMLv40tVPtu9eI0/CYvwVjGhT0A0dphJWqhEdSaGJOyOSNtMwdMXHWRWd1nqJo8Jzpey9w4Ga6ZTW6wytEMRjQbbvxU38vqpQ7BwtzfODwZ7I9yV64BI3mcFJbfcvPFjjrnc5h7rowN6QyASciQFF6hH8VnCmifsX2A3rWlIaOsa9UvTaC99xaoGanCA6KgSEXr/RbDN3IpIMJCnynB/Rj0h22CRN/rDIAA+gLqqPq0okLEv8YKx/HHDprmjNrOC59J52H2p6ed/8DtfPoc8gfgQyp8tvddEdYTGLK9Pwv1nPSfpdyPVdqy/q1cEGl1hTOHNPQ2e2HiuWiN6e53J8A=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(396003)(366004)(346002)(136003)(451199021)(10290500003)(66946007)(316002)(66556008)(107886003)(66476007)(478600001)(4326008)(36756003)(86362001)(83380400001)(6506007)(26005)(6512007)(186003)(8676002)(8936002)(2906002)(5660300002)(41300700001)(6666004)(52116002)(6486002)(82950400001)(82960400001)(2616005)(38100700002)(38350700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ADB8vGoJPDrZkTql1eSFuTegPPwMZnK+CS0A19qs2+hk73poBDNgfrMyZJjz?=
+ =?us-ascii?Q?iVg1wbLf7zzIto+AU22Opb5EbFJwk2HmVZI2CfG3ac2x1UuS3f3baU1EZv/+?=
+ =?us-ascii?Q?1Eq9RGZAXZwCqaU05lzjc03rGX9NW4oxtR5bruYObVy77VGDXy4qgPtOhHmG?=
+ =?us-ascii?Q?LIiwWepRnhYeAsS/xbEVcFv/ZK/UtKOcbr0Slalw8NZkf1nGKpGY/dPKGn8p?=
+ =?us-ascii?Q?MaGvd+ZsmCkge9buZztDN4v4dnaephGrEpcwsFgPZMkyC70punpFFL9eclKC?=
+ =?us-ascii?Q?sX0S6WJoXCf4Yu8MGDaUux/pM/mRRa2S7PTku2R1i+SFAH2O//vWlfHq2cwR?=
+ =?us-ascii?Q?jpEboIhv+6x1fvMepdkrBYbeDsHeOGPB0NGoObZfM0FSxiomPkB6eeaB76T8?=
+ =?us-ascii?Q?ionOg8oQHDsxk2bDIU4xF5crzLf9pN1PqV3Z5rMnPY9IczFANK/EyxCfXj9i?=
+ =?us-ascii?Q?j9DhnwrokUGIEPjNpfWZ+EZWL+0iGPWTBzUXmzUpUtRo1xP8XHfjmnyutGl2?=
+ =?us-ascii?Q?IXdnXjAgKySEkjnhCMKShvr/+3q55/THk2lbZOXizijqp2h6kNPWPL3c4J9O?=
+ =?us-ascii?Q?5TK3EVOLquuYsHxzfxh8YoMfDQMaRQadqIHQTRALEWMKn5XKosZ7YkHRBZ4p?=
+ =?us-ascii?Q?FbwDhCrwh/QZabx4TIdzKYxsbt3nUwrNT8QKjhpZe9CJT63DuKmbnRRLKh2D?=
+ =?us-ascii?Q?hYkMHGdtxLRL6mmCeH1wI5GiQ8hcydWqkMRStAhYIYgwUXxsxG4Gf86Tt4d+?=
+ =?us-ascii?Q?k3i8wnAbI6PcIOYGF5Ye2ldIzKg/VQtuByLxwzp7c0fMlWGtetzUngXlPXoq?=
+ =?us-ascii?Q?vs/K/TLCPoJI90GY6gfFNQjUj50VDRr9+JURJrHZwyrrxeJAyEEWY9r54ncq?=
+ =?us-ascii?Q?mDgjCmPSmRWfQ9ydR6f55J4H7xRJ87Uj3Dz/Qv5zhHUU2diyZ2cq332/TRi7?=
+ =?us-ascii?Q?ZGRkwwWrBBbyxsPuFvWqzo56T/eZzmuZkFTBs3+Vb8Wka260xXwvOVEunk2I?=
+ =?us-ascii?Q?S8G5Fjwhzg35w9+DNG75PFTcPiFJgDDr23G0G7zZzpKpj6qcJkIOMWy5aLDV?=
+ =?us-ascii?Q?wSVzG/OFUgd0g9yYludBTWgnr61e7eSRUdyh2SNvtB7u0KnbeWvHT4fO9zA7?=
+ =?us-ascii?Q?E8MoTOTIXsaPPDZOJiAYvxsMl1in1LyI00gSNvm6VJfs0GZZuVu4exeLk2Hr?=
+ =?us-ascii?Q?svtCGVSsXVIpWzHkCIm9yFEwd49gvq87xiAaRTqPJmdwVSI+2EofOvPJ0b3i?=
+ =?us-ascii?Q?NxhJ8ggHn8uJLwEuOghi0/VnYrt2Kpyn+80fWzRexsXLwqTGIiyabTj3uJUR?=
+ =?us-ascii?Q?JPc70yqld6OnNjmPhK4vyyn+qX7IUY7KIc+L49Zp4Lsr7uifA02wAIYYINpR?=
+ =?us-ascii?Q?KqXcCc64uicqcgpi9OY5uL5+lvLtMR+33O1mI+pkS5rmomeuQehQ9b91zM1h?=
+ =?us-ascii?Q?5ZXGMy0hcDpzEpKPMkEiTlkTrR7YLt76ddg8MAPQIt9YdZfY1eGN3fOwzHnS?=
+ =?us-ascii?Q?uCJgL9huqyuB/ZOigUv8MqJDNsBxrd2uTkcEWBNDENxdCwzJD60NF7pRsVNZ?=
+ =?us-ascii?Q?hfv7yd7LaHWUnslyUtXeNeu5beWmQwCJhcgfXej6?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f205c07f-0083-446a-63e5-08db69299c7e
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2023 20:39:24.4302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FAHWKXNT2cLY3EdfhLmckjjONHic6XmiLMZTmwhqTMfWOqKumfRBQaU5yxgHb7EdP0a2SmPVRMfw5rZjrpdTKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3703
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Neal Cardwell <ncardwell@google.com>
-Date: Fri, 9 Jun 2023 15:16:00 -0400
-> On Fri, Jun 9, 2023 at 12:26 PM Haiyang Zhang <haiyangz@microsoft.com> wrote:
-> 
-> Regarding the patch title:
-> > [PATCH net-next] tcp: Make pingpong threshold tunable
-> 
-> There are many ways to make something tunable these days, including
-> BPF, setsockopt(), and sysctl. :-) This patch only uses sysctl. Please
-> consider a more clear/specific title, like:
-> 
->    [PATCH net-next] tcp: set pingpong threshold via sysctl
-> 
-> > TCP pingpong threshold is 1 by default. But some applications, like SQL DB
-> > may prefer a higher pingpong threshold to activate delayed acks in quick
-> > ack mode for better performance.
-> >
-> > The pingpong threshold and related code were changed to 3 in the year
-> > 2019, and reverted to 1 in the year 2022.
-> 
-> Please include the specific commit, like:
-> 
-> The pingpong threshold and related code were changed to 3 in the year
->  2019 in:
->    commit 4a41f453bedf ("tcp: change pingpong threshold to 3")
-> and reverted to 1 in the year 2022 in:
->   commit 4d8f24eeedc5 ("Revert "tcp: change pingpong threshold to 3"")
-> 
-> Then please make sure to use scripts/checkpatch.pl on your resulting
-> patch to check the formatting of the commit references, among other
-> things.
-> 
-> > There is no single value that
-> > fits all applications.
-> >
-> > Add net.core.tcp_pingpong_thresh sysctl tunable,
-> 
-> For consistency, TCP sysctls should be in net.ipv4 rather than
-> net.core. Yes, that is awkward, given IPv6 support. But consistency is
-> very important here. :-)
-> 
-> > so it can be tuned for
-> > optimal performance based on the application needs.
-> >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  Documentation/admin-guide/sysctl/net.rst |  8 ++++++++
-> >  include/net/inet_connection_sock.h       | 14 +++++++++++---
-> >  net/core/sysctl_net_core.c               |  9 +++++++++
-> >  net/ipv4/tcp.c                           |  2 ++
-> >  net/ipv4/tcp_output.c                    | 17 +++++++++++++++--
-> >  5 files changed, 45 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/admin-guide/sysctl/net.rst b/Documentation/admin-guide/sysctl/net.rst
-> > index 4877563241f3..16f54be9461f 100644
-> > --- a/Documentation/admin-guide/sysctl/net.rst
-> > +++ b/Documentation/admin-guide/sysctl/net.rst
-> > @@ -413,6 +413,14 @@ historical importance.
-> >
-> >  Default: 0
-> >
-> > +tcp_pingpong_thresh
-> > +-------------------
-> > +
-> > +TCP pingpong threshold is 1 by default, but some application may need a higher
-> > +threshold for optimal performance.
-> > +
-> > +Default: 1, min: 1, max: 3
-> 
-> If we want to make this tunable, it seems sad to make the max 3. I'd
-> suggest making the max 255, since we have 8 bits of space anyway in
-> the inet_csk(sk)->icsk_ack.pingpong field.
-> 
-> > +
-> >  2. /proc/sys/net/unix - Parameters for Unix domain sockets
-> >  ----------------------------------------------------------
-> >
-> > diff --git a/include/net/inet_connection_sock.h b/include/net/inet_connection_sock.h
-> > index c2b15f7e5516..e84e33ddae49 100644
-> > --- a/include/net/inet_connection_sock.h
-> > +++ b/include/net/inet_connection_sock.h
-> > @@ -324,11 +324,11 @@ void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
-> >
-> >  struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
-> >
-> > -#define TCP_PINGPONG_THRESH    1
-> > +extern int tcp_pingpong_thresh;
-> 
-> To match most TCP sysctls, this should be per-namespace, rather than global.
+Hyper-V synthetic SCSI devices do not support the MAINTENANCE_IN SCSI
+command, so scsi_report_opcode() always fails, resulting in messages
+like this:
 
-Also, please change int to u8.
+hv_storvsc <guid>: tag#205 cmd 0xa3 status: scsi 0x2 srb 0x86 hv 0xc0000001
 
+The recently added support for command duration limits calls
+scsi_report_opcode() four times as each device comes online, which
+significantly increases the number of messages logged in a system with
+many disks.
 
-> 
-> Please follow a recent example by Eric, perhaps:
->  65466904b015f6eeb9225b51aeb29b01a1d4b59c
->   tcp: adjust TSO packet sizes based on min_rtt
-> 
-> 
-> >
-> >  static inline void inet_csk_enter_pingpong_mode(struct sock *sk)
-> >  {
-> > -       inet_csk(sk)->icsk_ack.pingpong = TCP_PINGPONG_THRESH;
-> > +       inet_csk(sk)->icsk_ack.pingpong = tcp_pingpong_thresh;
-> >  }
-> 
->   inet_csk(sk)->icsk_ack.pingpong =  sock_net(sk)->sysctl_tcp_pingpong_thresh;
+Fix the problem by always marking Hyper-V synthetic SCSI devices as
+not supporting scsi_report_opcode(). With this setting, the
+MAINTENANCE_IN SCSI command is not issued and no messages are logged.
 
-Let's use READ_ONCE(sock_net(sk)->sysctl_tcp_pingpong_thresh).
-Same for other sysctl reads.
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+---
+ drivers/scsi/storvsc_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index e6bc622..659196a 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1567,6 +1567,8 @@ static int storvsc_device_configure(struct scsi_device *sdevice)
+ {
+ 	blk_queue_rq_timeout(sdevice->request_queue, (storvsc_timeout * HZ));
+ 
++	/* storvsc devices don't support MAINTENANCE_IN SCSI cmd */
++	sdevice->no_report_opcodes = 1;
+ 	sdevice->no_write_same = 1;
+ 
+ 	/*
+-- 
+1.8.3.1
 
-> 
-> >  static inline void inet_csk_exit_pingpong_mode(struct sock *sk)
-> > @@ -338,7 +338,15 @@ static inline void inet_csk_exit_pingpong_mode(struct sock *sk)
-> >
-> >  static inline bool inet_csk_in_pingpong_mode(struct sock *sk)
-> >  {
-> > -       return inet_csk(sk)->icsk_ack.pingpong >= TCP_PINGPONG_THRESH;
-> > +       return inet_csk(sk)->icsk_ack.pingpong >= tcp_pingpong_thresh;
-> > +}
-> 
-> Again, sock_net(sk)->sysctl_tcp_pingpong_thresh rather than tcp_pingpong_thresh.
-> 
-> > +static inline void inet_csk_inc_pingpong_cnt(struct sock *sk)
-> > +{
-> > +       struct inet_connection_sock *icsk = inet_csk(sk);
-> > +
-> > +       if (icsk->icsk_ack.pingpong < U8_MAX)
-> > +               icsk->icsk_ack.pingpong++;
-> >  }
-> >
-> >  static inline bool inet_csk_has_ulp(struct sock *sk)
-> > diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-> > index 782273bb93c2..b5253567f2bd 100644
-> > --- a/net/core/sysctl_net_core.c
-> > +++ b/net/core/sysctl_net_core.c
-> > @@ -653,6 +653,15 @@ static struct ctl_table net_core_table[] = {
-> 
-> Again, in net.ipv4, not net.core.
-> 
-> >                 .proc_handler   = proc_dointvec_minmax,
-> >                 .extra1         = SYSCTL_ZERO,
-> >         },
-> > +       {
-> > +               .procname       = "tcp_pingpong_thresh",
-> > +               .data           = &tcp_pingpong_thresh,
-> > +               .maxlen         = sizeof(int),
-> > +               .mode           = 0644,
-> > +               .proc_handler   = proc_dointvec_minmax,
-> > +               .extra1         = SYSCTL_ONE,
-> > +               .extra2         = SYSCTL_THREE,
-> 
-> Please make the max U8_MAX to allow more flexibility (since we have 8
-> bits of space anyway in the inet_csk(sk)->icsk_ack.pingpong field).
-
-Please use proc_dou8vec_minmax(), then you can drop .extra2.
-
-		.maxlen		= sizeof(u8),
-		.mode		= 0644,
-		.proc_handler	= proc_dou8vec_minmax,
-		.extra1         = SYSCTL_ONE,
-
-Thanks,
-Kuniyuki
-
-> 
-> > +       },
-> >         { }
-> >  };
-> >
-> > diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> > index 53b7751b68e1..dcd143193d41 100644
-> > --- a/net/ipv4/tcp.c
-> > +++ b/net/ipv4/tcp.c
-> > @@ -308,6 +308,8 @@ EXPORT_SYMBOL(tcp_have_smc);
-> >  struct percpu_counter tcp_sockets_allocated ____cacheline_aligned_in_smp;
-> >  EXPORT_SYMBOL(tcp_sockets_allocated);
-> >
-> > +int tcp_pingpong_thresh __read_mostly = 1;
-> > +
-> 
-> Again, per-network-namespace. You will need to initialize the
-> per-netns value in tcp_sk_init(). Again, see Eric's
-> 65466904b015f6eeb9225b51aeb29b01a1d4b59c commit for an example.
-> 
-> >   * TCP splice context
-> >   */
-> > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> > index cfe128b81a01..576d21621778 100644
-> > --- a/net/ipv4/tcp_output.c
-> > +++ b/net/ipv4/tcp_output.c
-> > @@ -167,12 +167,25 @@ static void tcp_event_data_sent(struct tcp_sock *tp,
-> >         if (tcp_packets_in_flight(tp) == 0)
-> >                 tcp_ca_event(sk, CA_EVENT_TX_START);
-> >
-> > +       /* If tcp_pingpong_thresh > 1, and
-> > +        * this is the first data packet sent in response to the
-> > +        * previous received data,
-> > +        * and it is a reply for ato after last received packet,
-> > +        * increase pingpong count.
-> > +        */
-> > +       if (tcp_pingpong_thresh > 1 &&
-> > +           before(tp->lsndtime, icsk->icsk_ack.lrcvtime) &&
-> > +           (u32)(now - icsk->icsk_ack.lrcvtime) < icsk->icsk_ack.ato)
-> > +               inet_csk_inc_pingpong_cnt(sk);
-> > +
-> 
-> Introducing this new code re-introduces a bug fixed in 4d8f24eeedc5.
-> As that commit description noted:
-> 
->     This to-be-reverted commit was meant to apply a stricter rule for the
->     stack to enter pingpong mode. However, the condition used to check for
->     interactive session "before(tp->lsndtime, icsk->icsk_ack.lrcvtime)" is
->     jiffy based and might be too coarse, which delays the stack entering
->     pingpong mode.
->     We revert this patch so that we no longer use the above condition to
->     determine interactive session,
-> 
-> >         tp->lsndtime = now;
-> >
-> > -       /* If it is a reply for ato after last received
-> > +       /* If tcp_pingpong_thresh == 1, and
-> 
-> Please remove the "If tcp_pingpong_thresh == 1, and" part, since this
-> is the correct code path no matter the value of the threshold.
-> 
-> > +        * it is a reply for ato after last received
-> >          * packet, enter pingpong mode.
-> >          */
-> > -       if ((u32)(now - icsk->icsk_ack.lrcvtime) < icsk->icsk_ack.ato)
-> > +       if (tcp_pingpong_thresh == 1 &&
-> 
-> Please remove the "if (tcp_pingpong_thresh == 1 &&" part, since this
-> is the correct code path no matter the value of the threshold.
-> 
-> > +           (u32)(now - icsk->icsk_ack.lrcvtime) < icsk->icsk_ack.ato)
-> >                 inet_csk_enter_pingpong_mode(sk);
-> 
-> Please make this call inet_csk_inc_pingpong_cnt(), since this is the
-> correct code path no matter the value of the threshold.
