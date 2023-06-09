@@ -2,113 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F2F729A4F
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 14:48:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B597729F0E
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 17:48:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237763AbjFIMr5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jun 2023 08:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51322 "EHLO
+        id S232118AbjFIPsU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jun 2023 11:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240650AbjFIMrc (ORCPT
+        with ESMTP id S241884AbjFIPsT (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jun 2023 08:47:32 -0400
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020018.outbound.protection.outlook.com [52.101.61.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9022136;
-        Fri,  9 Jun 2023 05:47:31 -0700 (PDT)
+        Fri, 9 Jun 2023 11:48:19 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021024.outbound.protection.outlook.com [52.101.57.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7844358C;
+        Fri,  9 Jun 2023 08:48:14 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KARYcr+kxKs9b18YepAhMJnpqOxunRj24pJUXq8iGXDFSzrscV7swD1lDkn/sWsER9YGKDHgnT3V+efgEYVig7NMOBQW5PfWzVATZGpbk7eF3U4Jab0CBGddW/17+N0TKc31dQRD9UPQKorX6wehgTikt9kGczqtGZ8hWaQ07G9f5Ifihg9PnWLmwig8Z8qR2ianwtsyVTrJZjrXZ5WH55aQW0Mi8BqJufYR5iNfxlOgSA+nfS+uNek/uwKkagMjfiHeGk4yTPIMM4Magt2Aecymlobly6CQLTQMLG+tgOYxOO9kJ8cvjL8QrnR3b+7FYcAIwkmY9wHcRkVYOufcwg==
+ b=ZBSodRiLwRGWdsBsVRe+sd2gCcVVyAy7vJFaA86PMIK2ZA8Rok01ARukhiI0V8D3+KGUKu3aiQaW6M58Sz4BJodKlu+8JfBOgH6uKWQWepxrRSi2kNtxqWLabJP+yW4KJL9M6l38qOF0oXkyCrRPe8xvNL6VbrWh2ZDV9vZ+dh9rrZmhadjnx8U1Dz+qQS+VXOunZ56b/ugJeaCJOZ1veEigjbtCWMy00TO6oujUzusSCg+qxiuepJyH4pGhlCE8PdoFJZ8gEZQWwulUz5/TOZmtCO4ludo3w8XSSS3WcLvtAbCbHRYkkhK6BxvvxlKPQCIQxuHLExuWFUQLykZI+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q65oAac/4CkSujD77p+jm27aO2fBUlyIW/TMumQxvO4=;
- b=lxiKdBgmeFIWXpT3FY9GpFrO3jyaozinO/1NSB/OVK5IGQ7ZmEoRzU9iaC/n7pqPXGvQ87LiMhxIAQCAk3TK6yrKLEdmpt2MW/zjVp8U6e1oYaGlnFrQjbLcSii9NK74qZ/fejmlCEU3MPyyNgOKkQ6Vl3RN9Uy8ppG8tJoq1Fq9ISD8BSwI0v6Slz3b3KOBxaUYHR3kUHNrQ4r75FZujAHQG1mbfAr3SAsuh92gK8u8Mewfu6M4F0ekjUa0/WGrvXBxJVf93UuSU5QwXaJTlPna1J19WdNte8BhZx613JTWdgTSpj4BmGERPaFZ7h7+oRcF/RnKxYzMQmwxQavo9g==
+ bh=vBEiMFHE7Fvlt+D+RdQX4mNFM3RdWHk515ySSjrqpkY=;
+ b=Db9zvBg6e8JClDLu4YCtvpUfH69O2vOjycecPIxSvpxuvJULZfpy19nZnX/FMco4yaqJEDhqFv8hngA1ulWxTMJ2PJ2kkYBQWei03O5JOg2vSfE4S8Y/Is/eLph3HsvL0ZL/jio3c1qEIyr9rWT9MiiqETlzie5HsKP7/2O0zXDXzoE3rUX2kljH7yMAHCv7FZnxFQl8igkWZpuPJxz889GpK5m5i5tBLZ8WiF3OQ5xrHs6v+brvDxow34nUgpiEyXXY4EMpCUZaZX3uLXSUXpI4rMYJHajC73TybVrzWFppx8zg6QGdNF9GcLBoGpUb+hxhsXKhG54tSXAWKpEMIA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q65oAac/4CkSujD77p+jm27aO2fBUlyIW/TMumQxvO4=;
- b=YoFiJ2Oqzg03amzIrXTuGEFxLTOJ3KUpbhc/6vjVgwsvrr9U0twhNq1rvn2ezGiP22nbBdzFB+gepDP4XW7rdPH+M7rj57qz52nYNqTNF+cjc8GZx7Dt2zRSpPAUagEIEcBsxvql2Du3HGbdpmxzBnyoSqdUAhhSByewp8ohSCc=
+ bh=vBEiMFHE7Fvlt+D+RdQX4mNFM3RdWHk515ySSjrqpkY=;
+ b=SZCHYRxS4akAM1QWeJahMk58r72lR3baTODDOpxsGqYT8LLNRB8kXYmOX3aRmQZWvBUv7IEqYKGU5sh5dqCym7saC7L4DDo42lL2ToP4nYnTvgB0NJl/MjgGirPzFkBY1SGd0xiJEAm77ufWvxbcB629qXCOk0GsVRamBJiW9+0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
- by DM4PR21MB3056.namprd21.prod.outlook.com (2603:10b6:8:5c::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6500.6; Fri, 9 Jun 2023 12:47:28 +0000
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::4eff:a209:efda:81d4]) by BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::4eff:a209:efda:81d4%6]) with mapi id 15.20.6500.016; Fri, 9 Jun 2023
- 12:47:27 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, decui@microsoft.com, kys@microsoft.com,
-        paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-        davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-        longli@microsoft.com, ssengar@linux.microsoft.com,
-        linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-        john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-        sharmaajay@microsoft.com, hawk@kernel.org, tglx@linutronix.de,
-        shradhagupta@linux.microsoft.com, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next,V2] net: mana: Add support for vlan tagging
-Date:   Fri,  9 Jun 2023 05:47:17 -0700
-Message-Id: <1686314837-14042-1-git-send-email-haiyangz@microsoft.com>
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by MN0PR21MB3559.namprd21.prod.outlook.com (2603:10b6:208:3d0::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.2; Fri, 9 Jun
+ 2023 15:48:11 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::b7e9:4da1:3c23:35f]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::b7e9:4da1:3c23:35f%5]) with mapi id 15.20.6500.016; Fri, 9 Jun 2023
+ 15:48:11 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH 1/1] clocksource: hyper-v: Rework clocksource and sched clock setup
+Date:   Fri,  9 Jun 2023 08:47:01 -0700
+Message-Id: <1686325621-16382-1-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 Content-Type: text/plain
-X-ClientProxiedBy: MW4PR04CA0086.namprd04.prod.outlook.com
- (2603:10b6:303:6b::31) To BY5PR21MB1443.namprd21.prod.outlook.com
- (2603:10b6:a03:21f::18)
+X-ClientProxiedBy: MW4PR03CA0280.namprd03.prod.outlook.com
+ (2603:10b6:303:b5::15) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|DM4PR21MB3056:EE_
-X-MS-Office365-Filtering-Correlation-Id: 94488e2b-4259-4a12-7994-08db68e7ada3
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|MN0PR21MB3559:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47497ca7-97e7-414e-a4c6-08db6900ed5b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CePopvVD3k4GKOKb9mDzCJ5nbEzGGc6Q6bDIyS1CTH7CZ0ZRFbRO0TvwmOVcAFKL06bprqGUThv4QG8h8CnHln6/lFr8rt+YUk/neu2ltge0B0nYHPKT37hH4ar2D63hGLwUMGTw2br1rrW1eJflujwWRBMoLcdV0jxzwu77c+qHETUypDN+Vap6Em+RVQZkj/v2Y7tJPgI4DI4lzebs6H3zOg5aU0j7wewhN8I5QnaN1kTbwTXPi3Z/HxbI/8TrsXtgsr81vutqyMeZrIidleJYbJDgGlMmNxNwVmNNfPGC9+0t7P7poYntAhwqPAKE+TvNquUIucWe0jyI9/n2yAKrCqiDrX9bIZlzXC6T7TOZYoX2BNRekkymkYhlmN0696QjSDmoGZDFRF1rFJSAk1/q3MGwVnTrpM0fDzR/WCj1IyUDMjEK6TqYx74yigspw4VWylJr6cVAIghWy+Pg472EO4UuY0tBfFa+uzVhXWX818/XzpA+LKy+kd0uU2VFpSrp+OwZkVajRZh20cPdr/zPM2geOXhGkvW65sEcFEkNsQlV4OSyq/H58etqrHwnp9zgtARoq6d3UG6HadUiF/YGEJQHBCpTD33xZNRMqdpir1nGjVYOpRs6JXAbpN/PoElq+NbQPqzGX1pDetfckAcDYM9bjCsXzornKs5S8F4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(396003)(39860400002)(366004)(346002)(451199021)(66946007)(36756003)(7416002)(5660300002)(2906002)(6666004)(7846003)(6486002)(186003)(6512007)(83380400001)(52116002)(26005)(6506007)(82950400001)(478600001)(38350700002)(82960400001)(10290500003)(41300700001)(316002)(66556008)(2616005)(38100700002)(66476007)(4326008)(8936002)(8676002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: ri/2k3YJ7NG7OzbYvlXD0h9kcm5gMNKf4iNED5Jk81EEqzHRMzYyxzwO5/97NoKhy0bGrlkv8HpoJ5tZkUoSuOGsZjv1H7U6BWF14cxIa83CqU9OSNTHD/KjBXcnTpuLhgrkWEC9wawzaJPOTpgZEybpNdpUh8WZycB74UP6U4M5YIhP8C5mAn+7rJnOVQXVbJ3t7uNJdUKRnuUQhefvVJmHf9snYxqJdvvHt9pDNk/1noD3SQa4+RXW7XxRN+W756mfr5BXWKGGCLOVxNZFIdVg7M760tS2jpDv+ZOTJLjT4BPpjmI/mgaf0OgseoLfiyVzZnyhi6kn+lBtOWYND6YI1Pp4uEJ971DF4tZardt8EiPVrBGhXkMRdz+X71YY4xn6JPgobmEWlv9TiZHRhzzR7gjJVZc+Vpu1ZXTfZ+feQMPl/39a0VxX/IK0ecfLUob+aHZNF4PXmecHOUWXcbyvGFug9Ay0j4TtL9Na31YDZx6xWY6rq9gubkAa5Lp3u+RMyqg0gxwWXO8YbuDLvFywVFrhxisAmi+HjoDbAbeyvK3p/xRKVKUlGBGV+1FHjjTN6WM8pV+93wl25oSEdPaJulxcwjOpzIRB+lWJ6//iSdGkW4gSSu6Bz/UaosbWeOeprT0V7BKle4nLnK3aZRLRuj8kc50zeDXWlF2ZE0g=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(451199021)(2906002)(52116002)(10290500003)(6486002)(478600001)(6666004)(86362001)(36756003)(6512007)(6506007)(26005)(107886003)(82960400001)(38350700002)(82950400001)(186003)(38100700002)(5660300002)(66476007)(66556008)(316002)(2616005)(66946007)(8936002)(8676002)(83380400001)(4326008)(66899021)(41300700001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5+2gyRh2pA5hCg8ywYCUn9d7a21UEDTTz32wRkugP9Dw61Bv7yPijmdRZKMd?=
- =?us-ascii?Q?M6gAMLdHHvj5AUNfnPqx73Sp1+zlaMApqlA9RBXJr5oOtps/SSmCNYsAeEPd?=
- =?us-ascii?Q?iy7w6XXwBZX4am6sddB2OB/ubUSQBGG4TWZsIMOeXF13PsdQ6jAAy7QNbC9c?=
- =?us-ascii?Q?fYqREOJUD0bRfCM4Ju+bIsryE9HC2oy+y4ixyPBd1iI8cbcWolakyGhtVLq5?=
- =?us-ascii?Q?Y55tSZM/Wh27xI+dDPUBfRDTNQnyyqh+TDJzk5oVsyw7rnHx3AgIatHI3Jxb?=
- =?us-ascii?Q?tQbvY6B+YLDjNJzr5jOWpxdfQcngZBLkbovdlG8mjh5nuP4JrN6lZHXLkFxO?=
- =?us-ascii?Q?P6O7mAHcazqV6f67KG92Wp/d9oWPNB4oeRV2EQeUouJPlxm2ikKGhbzXZmbf?=
- =?us-ascii?Q?+LBWqDUeAtSxlOCczC/Ih6YIXtM50C8pkClXa+0xZaS6IdTa80pTnDR3PSIG?=
- =?us-ascii?Q?GpFz6RG8MqnEY+CFYUWzshdZBIrrUo5qFkdpGTJ/ZrNAcRuwphDj219DUMzb?=
- =?us-ascii?Q?pttm/QDy/AqpeSFeCpskPwCNwrKEARBp2yxjrwcRW1fT4bFICUW/H+5fO65J?=
- =?us-ascii?Q?zrpOZRikrVQXLi1wdmO/IysOSMDLTChPBpIXtX9Uw/NGBSWdyWILDx6u2jZW?=
- =?us-ascii?Q?xtbMsUz7gqirV91vzlrQ69RNK5pSLcjngpnoNwczReu6/zlYk3werL7rOFtP?=
- =?us-ascii?Q?LH6GmJH6Vfs64jrQr/2ZpgO9wfLM0MqunFb0GujQ1GN+3gwxtU3UyrvO/7zW?=
- =?us-ascii?Q?GtLbMM36Wc+ZrhmzLchipXrCNpUUZdC3w02ZoC00kHaf7v2kbzoXJFHvTnKV?=
- =?us-ascii?Q?nJF1r9bsfqyrJT0kFcENYT2zP+XqrJzDuGDBaaEzeXnIlPD2E2Uy1tGdgYrN?=
- =?us-ascii?Q?/EgkrJnhiuF5bD+Jh9RspLvYWyR1vpIED+0CN88yDJftpgmSXojOzvvHieFV?=
- =?us-ascii?Q?tWFaZgYVeOMxjWfN1fe/nZPzGahk9QY+mIv0N74NCDr5P+NpwVyLIZNA9rKj?=
- =?us-ascii?Q?f1Y9/jM52RS26cMaa7q3gayMK37AAICvMxvJ36bOGJYG3jUhDevAG0VxoYWg?=
- =?us-ascii?Q?lwtY/HMW0g1t+A8FdQu4j0PSrT2ZqF6lQnD7Lx+RmC9qGwASNK0eAgZXVa4Z?=
- =?us-ascii?Q?rSVeaA/C9B/wiUvGJnet1wJ72C/YYrdTOGNLHiJDXhK8PyN6P7XnRJ74ux7v?=
- =?us-ascii?Q?oyiI6z/Ji+GtqTBFxoqkReCRgRzqrXREpGSxm4/DI+gAWtOilSKmh0ZefFGt?=
- =?us-ascii?Q?w1k45DJtNkPNR8eJu3iRPs18xfgX5yVXIv2mU9FY3cHPArGmO524FkbxZ05C?=
- =?us-ascii?Q?wK8lrkkOAx6CGt4APGz3OlxPusPSwb22evOKYV7yv11nQS4uEd18ADHMq/HV?=
- =?us-ascii?Q?dI/K46+z3uQxA3YZgTE8loCice1LkZtRDBdl9cyXH94/E8WNbfaBLUgll4Mt?=
- =?us-ascii?Q?ZMl013aGtl9ZyEVAYL/oWphvmyMq6itFlGuh5zXL53NAbmF8UPobsxUQecWa?=
- =?us-ascii?Q?siZlMTwahnV/T+FMvJM45XS2dyZN2JlIuudVhMs2CHIWpkS39OzCBXUguVhR?=
- =?us-ascii?Q?D6NbiDzfkpZfaWdyxQ6ZFHW+lHFtn4MLXIPzynUL?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OB//da6h1y4II5utzVdCkX3SseCMMkyEUrc88P7uGKjoxOpPiR+5QbGek8WH?=
+ =?us-ascii?Q?RlY7obOviNzXxCixBTygDepcsw+wBzIV1hIeOzhdbs6eVJsN4slO0UdCS2Wv?=
+ =?us-ascii?Q?vLL91uDZFybZOAIHLHBtQRaGGyqP0DF9uCRG4IGV0cw/sBMo/RCYtEJ4XCst?=
+ =?us-ascii?Q?LETQcB9soGgL2/WoWhp7LNCWHUb41naZ6APdTySau2RMXF13lj0Vw58oSHaT?=
+ =?us-ascii?Q?a2W7/r7G9+o0VCUWlZ0UMEagpufdE/jdA3jdyTcBI0+/CHYbMtNyXl7VSse1?=
+ =?us-ascii?Q?FARTaqECqWaaq8aLC7+sZVs/cYZOhr6fixMrudmkki9lqS8VFv1qpipLpLLF?=
+ =?us-ascii?Q?+6J9iMfgbXpFK5l2m+RlmJ90rKRe7EsqxVAbTre3p/1JOlyFYmrnzvRgLaX5?=
+ =?us-ascii?Q?PiOCJURFWamx47BM7FMhqX+axVmBhxfRFT5IBFIGLr44HKRQ6m7frnmN5cTr?=
+ =?us-ascii?Q?bttSSMjenZweMRLZ3zXrKKo/wywMj/zJ32Q23UKBG7BrxDT3L7EioMGWb0qn?=
+ =?us-ascii?Q?xC8SdxAS9CsAtreNSjnmdCFcsohAVRI3cbKN7kB/Mq3ZcteaKYk1PrtBAFqs?=
+ =?us-ascii?Q?HYXe2zckxit7A3kIyknD7NP2muDZ3iFoaxU4J6wjncDNK5Z/k37k8mc/vfBh?=
+ =?us-ascii?Q?Sf3CTgyxHP72wgL+BLkNDD5Np59878mt87gh463woaqN5Cz2D2JcfiI8vhNM?=
+ =?us-ascii?Q?DNjOkrD63FUSeTdSvM6vFHC6Rwq5lGY//HIWowBT1bmt58NDdJfsAMNxVxql?=
+ =?us-ascii?Q?QpnSUEXDcLknrGuuAbp+bJF9fM0wDzBPm8UlimthLg1/bX04kNMG+BpRcGzE?=
+ =?us-ascii?Q?AV9OyIxjJWH2MiTVgGivFeBcW6oXlCyjSoEreqijnej4jVL6VGde3kOQksX5?=
+ =?us-ascii?Q?ccq68jsMU8x1qPMjGbWtKOAyI3kJ+AjLhhDr1Zc0CAYhTzWiN3hy2ZpXiTPd?=
+ =?us-ascii?Q?N+WeSEdZRk8YlNbZbe3Kl2YchQf2qhhWcLdSjW1VUPQOpc5VEobaAeOb8BXL?=
+ =?us-ascii?Q?3FcTY260MIFqk3CrueHHDG2C5vYANbZ3ATLKIrSn0u/QgxnuJ/dhGIvfAnc2?=
+ =?us-ascii?Q?lYSSg8rLUcH/W4g1Gs3IoVBePAUMaCzMHcuomcnvIf9EMpHUFS7FRmxT25CY?=
+ =?us-ascii?Q?islHxVhNPzuUBl7abGay07PDLpdSWnVtM2r8D80MJgiY6iCwnQDUaqPd66O6?=
+ =?us-ascii?Q?p/jL96pmrHzUNiMcdw3DDuNO39f917KNTa58oZ1Ibz9OdXopZcEGZnpmYU2R?=
+ =?us-ascii?Q?w0L+7tdzonu4J7RJED72hFpOr+rNHFjcW7RJ5paCOouvj+H6ZDrguosVIj9Z?=
+ =?us-ascii?Q?gtB/983VN6PH+fjgJ1j/37MqHsGmqo6oc5d/OaiCfNMTdV7KMoPH/NWQxmVv?=
+ =?us-ascii?Q?Y+JgFKXGm3A7RFPjT2CJmD7us9SsmZwSGdkMpXvKcPcufZqNkbf6fbUkww3u?=
+ =?us-ascii?Q?VP5N5CW1R7opYmBKttPfdHcwbGTnBkHb5NAVa3ivJpDahQKZGBH0Xz+wp/Yp?=
+ =?us-ascii?Q?qVqng0GuMcQyiSjdLDy4RsVk5yR9Bt687aOQHfNRF2JJLbA8UkC56eRDgYeV?=
+ =?us-ascii?Q?tnx4m3w2mFkS+zfFruGJdWi7IgEXpfcMQ4baaCpJ?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94488e2b-4259-4a12-7994-08db68e7ada3
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47497ca7-97e7-414e-a4c6-08db6900ed5b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2023 12:47:26.7101
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2023 15:48:10.7361
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: U5Ion2XW9DPzD4nJCtDZ8DNK3yYXbx/BW1DYRV/hKyywG8WAZRAvy6Xt5zJ1oFEr4Oa/iVHuuZF+mNEqFa8ZRA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3056
+X-MS-Exchange-CrossTenant-UserPrincipalName: JLnrwNl0MW6cIg7yX/plk9yX9/NLX1PkSML5Qvajg99Y6QhH3Q+bQOjFnVIVKMMVWqms9OjDp2l4sfv3SXZx5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR21MB3559
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -119,67 +113,135 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-To support vlan, use MANA_LONG_PKT_FMT if vlan tag is present in TX
-skb. Then extract the vlan tag from the skb struct, and save it to
-tx_oob for the NIC to transmit. For vlan tags on the payload, they
-are accepted by the NIC too.
+Current code assigns either the Hyper-V TSC page or MSR-based ref counter
+as the sched clock. This may be sub-optimal in two cases. First, if there
+is hardware support to ensure consistent TSC frequency across live
+migrations and Hyper-V is using that support, the raw TSC is a faster
+source of time than the Hyper-V TSC page.  Second, the MSR-based ref
+counter is relatively slow because reads require a trap to the hypervisor.
+As such, it should never be used as the sched clock. The native sched
+clock based on the raw TSC or jiffies is much better.
 
-For RX, extract the vlan tag from CQE and put it into skb.
+Rework the sched clock setup so it is set to the TSC page only if
+Hyper-V indicates that the TSC may have inconsistent frequency across
+live migrations. Also, remove the code that sets the sched clock to
+the MSR-based ref counter. In the cases where it is not set, the sched
+clock will then be the native sched clock.
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+As part of the rework, always enable both the TSC page clocksource and
+the MSR-based ref counter clocksource. Set the ratings so the TSC page
+clocksource is preferred. While the MSR-based ref counter clocksource
+is unlikely to ever be the default, having it available for manual
+selection is convenient for development purposes.
+
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 ---
-V2:
-Removed the code that extracts inband tag, because our NIC accepts
-inband tags too.
+ drivers/clocksource/hyperv_timer.c | 54 ++++++++++++++++----------------------
+ 1 file changed, 23 insertions(+), 31 deletions(-)
 
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index d907727c7b7a..cd4d5ceb9f2d 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -179,6 +179,14 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		pkg.tx_oob.s_oob.short_vp_offset = txq->vp_offset;
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index d851970..e56307a 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -485,15 +485,9 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+ 	return read_hv_clock_msr();
+ }
+ 
+-static u64 noinstr read_hv_sched_clock_msr(void)
+-{
+-	return (read_hv_clock_msr() - hv_sched_clock_offset) *
+-		(NSEC_PER_SEC / HV_CLOCK_HZ);
+-}
+-
+ static struct clocksource hyperv_cs_msr = {
+ 	.name	= "hyperv_clocksource_msr",
+-	.rating	= 500,
++	.rating	= 495,
+ 	.read	= read_hv_clock_msr_cs,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+@@ -523,7 +517,7 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock)
+ static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
+ #endif /* CONFIG_GENERIC_SCHED_CLOCK */
+ 
+-static bool __init hv_init_tsc_clocksource(void)
++static void __init hv_init_tsc_clocksource(void)
+ {
+ 	union hv_reference_tsc_msr tsc_msr;
+ 
+@@ -534,17 +528,14 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	 * Hyper-V Reference TSC rating, causing the generic TSC to be used.
+ 	 * TSC_INVARIANT is not offered on ARM64, so the Hyper-V Reference
+ 	 * TSC will be preferred over the virtualized ARM64 arch counter.
+-	 * While the Hyper-V MSR clocksource won't be used since the
+-	 * Reference TSC clocksource is present, change its rating as
+-	 * well for consistency.
+ 	 */
+ 	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
+ 		hyperv_cs_tsc.rating = 250;
+-		hyperv_cs_msr.rating = 250;
++		hyperv_cs_msr.rating = 245;
  	}
  
-+	if (skb_vlan_tag_present(skb)) {
-+		pkt_fmt = MANA_LONG_PKT_FMT;
-+		pkg.tx_oob.l_oob.inject_vlan_pri_tag = 1;
-+		pkg.tx_oob.l_oob.pcp = skb_vlan_tag_get_prio(skb);
-+		pkg.tx_oob.l_oob.dei = skb_vlan_tag_get_cfi(skb);
-+		pkg.tx_oob.l_oob.vlan_id = skb_vlan_tag_get_id(skb);
+ 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+-		return false;
++		return;
+ 
+ 	hv_read_reference_counter = read_hv_clock_tsc;
+ 
+@@ -575,33 +566,34 @@ static bool __init hv_init_tsc_clocksource(void)
+ 
+ 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+ 
+-	hv_sched_clock_offset = hv_read_reference_counter();
+-	hv_setup_sched_clock(read_hv_sched_clock_tsc);
+-
+-	return true;
++	/*
++	 * If TSC is invariant, then let it stay as the sched clock since it
++	 * will be faster than reading the TSC page. But if not invariant, use
++	 * the TSC page so that live migrations across hosts with different
++	 * frequencies is handled correctly.
++	 */
++	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT)) {
++		hv_sched_clock_offset = hv_read_reference_counter();
++		hv_setup_sched_clock(read_hv_sched_clock_tsc);
 +	}
-+
- 	pkg.tx_oob.s_oob.pkt_fmt = pkt_fmt;
+ }
  
- 	if (pkt_fmt == MANA_SHORT_PKT_FMT) {
-@@ -1457,6 +1465,12 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
- 			skb_set_hash(skb, hash_value, PKT_HASH_TYPE_L3);
- 	}
+ void __init hv_init_clocksource(void)
+ {
+ 	/*
+-	 * Try to set up the TSC page clocksource. If it succeeds, we're
+-	 * done. Otherwise, set up the MSR clocksource.  At least one of
+-	 * these will always be available except on very old versions of
+-	 * Hyper-V on x86.  In that case we won't have a Hyper-V
++	 * Try to set up the TSC page clocksource, then the MSR clocksource.
++	 * At least one of these will always be available except on very old
++	 * versions of Hyper-V on x86.  In that case we won't have a Hyper-V
+ 	 * clocksource, but Linux will still run with a clocksource based
+ 	 * on the emulated PIT or LAPIC timer.
++	 *
++	 * Never use the MSR clocksource as sched clock.  It's too slow.
++	 * Better to use the native sched clock as the fallback.
+ 	 */
+-	if (hv_init_tsc_clocksource())
+-		return;
+-
+-	if (!(ms_hyperv.features & HV_MSR_TIME_REF_COUNT_AVAILABLE))
+-		return;
+-
+-	hv_read_reference_counter = read_hv_clock_msr;
+-	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
++	hv_init_tsc_clocksource();
  
-+	if (cqe->rx_vlantag_present) {
-+		u16 vlan_tci = cqe->rx_vlan_id;
-+
-+		__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vlan_tci);
-+	}
-+
- 	u64_stats_update_begin(&rx_stats->syncp);
- 	rx_stats->packets++;
- 	rx_stats->bytes += pkt_len;
-@@ -2451,8 +2465,9 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
- 	ndev->hw_features |= NETIF_F_RXCSUM;
- 	ndev->hw_features |= NETIF_F_TSO | NETIF_F_TSO6;
- 	ndev->hw_features |= NETIF_F_RXHASH;
--	ndev->features = ndev->hw_features;
--	ndev->vlan_features = 0;
-+	ndev->features = ndev->hw_features | NETIF_F_HW_VLAN_CTAG_TX |
-+			 NETIF_F_HW_VLAN_CTAG_RX;
-+	ndev->vlan_features = ndev->features;
- 	ndev->xdp_features = NETDEV_XDP_ACT_BASIC | NETDEV_XDP_ACT_REDIRECT |
- 			     NETDEV_XDP_ACT_NDO_XMIT;
+-	hv_sched_clock_offset = hv_read_reference_counter();
+-	hv_setup_sched_clock(read_hv_sched_clock_msr);
++	if (ms_hyperv.features & HV_MSR_TIME_REF_COUNT_AVAILABLE)
++		clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
+ }
  
+ void __init hv_remap_tsc_clocksource(void)
 -- 
-2.25.1
+1.8.3.1
 
