@@ -2,109 +2,90 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FFF7729642
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 12:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A480729736
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 12:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240508AbjFIKGr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jun 2023 06:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
+        id S240295AbjFIKnL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jun 2023 06:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230363AbjFIKF6 (ORCPT
+        with ESMTP id S240288AbjFIKmR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jun 2023 06:05:58 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 848E565A1;
-        Fri,  9 Jun 2023 02:56:45 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1112)
-        id 2EE7820C1473; Fri,  9 Jun 2023 02:56:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2EE7820C1473
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1686304605;
-        bh=QCAfbAdMJ4hq/jLexUoenZqABGBc2UI5B4FxLEQLDhc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c71GVxoshBaJT+JmmEXKMETgHlQqie6/1B1zvQm1lko5kFta+orf/3fDmIvVdEoV7
-         0M/tCdICZ0MBaVddlp0ZN1wghI0x9kVsZHKQS/BiF0aP9wDd5qeNtY0fb0oDl+HE1d
-         dqckaHpOM92p4CC+HFBrVBYiIzZ+U72VdNtl2IzY=
-Date:   Fri, 9 Jun 2023 02:56:45 -0700
-From:   Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Tianyu Lan <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>
-Subject: Re: [PATCH 7/9] x86/hyperv: Initialize cpu and memory for SEV-SNP
- enlightened guest
-Message-ID: <20230609095645.GA21469@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20230601151624.1757616-1-ltykernel@gmail.com>
- <20230601151624.1757616-8-ltykernel@gmail.com>
- <BYAPR21MB1688B4F74FF7B670267D32FAD750A@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Fri, 9 Jun 2023 06:42:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CAA2134;
+        Fri,  9 Jun 2023 03:40:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CD2A8656BC;
+        Fri,  9 Jun 2023 10:40:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E90DC4339C;
+        Fri,  9 Jun 2023 10:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686307221;
+        bh=HqRF6r8J75am0/TGz1JIrl9KjnRcfUrduSSaH/UbhKk=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=ioKa0004fqkfvxKyNFMCujzB8yWuxMq3APBai4E4xy9Le/wO9/LY/YoDVpUrYSLia
+         6uyfnzwqFFaopo/Hu1EKLwxbTEJdUqhZOPnoVwodzSepslh0IokHl3C8YjGx2ZAICM
+         6XESD3HNp1dKS+rN2RuVWdRRgRFmR3z/PgPsVouhMpOWhhwFzvU+HDc/kdogCYoKDp
+         QEspCMDcpi4MuuBHleAedA0VVjO3m0K1iUBsQis1gMcldlBoqMx89oBoM2u4k3ynOl
+         sgl13hwaiJn7SPHJ/DZhphk5MQJNE4O8LVeXw24ALLiVRvc1KbOoJTiIcf524bvrXq
+         jnZOCijYP8Dtg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 016E2C43157;
+        Fri,  9 Jun 2023 10:40:21 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1688B4F74FF7B670267D32FAD750A@BYAPR21MB1688.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 3/3] tools: ynl: Remove duplicated include in
+ devlink-user.c
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <168630722099.15877.14513212480913480643.git-patchwork-notify@kernel.org>
+Date:   Fri, 09 Jun 2023 10:40:20 +0000
+References: <20230609085249.131071-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20230609085249.131071-1-yang.lee@linux.alibaba.com>
+To:     Yang Li <yang.lee@linux.alibaba.com>
+Cc:     simon.horman@corigine.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, abaci@linux.alibaba.com
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 01:51:35PM +0000, Michael Kelley (LINUX) wrote:
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Thursday, June 1, 2023 8:16 AM
-> > 
-> > Hyper-V enlightened guest doesn't have boot loader support.
-> > Boot Linux kernel directly from hypervisor with data(kernel
-> 
-> Add a space between "data" and "(kernel"
-> 
-> > image, initrd and parameter page) and memory for boot up that
-> > is initialized via AMD SEV PSP proctol LAUNCH_UPDATE_DATA
-> 
-> s/proctol/protocol/
-> 
-> > (Please refernce https://www.amd.com/system/files/TechDocs/55766_SEV-KM_API_Specification.pdf 1.3.1 Launch).
-> 
-> s/refernce/reference/
-> 
-> And the link above didn't work for me -- the "55766_SEV-KM_API_Specification.pdf"
-> part was separated from the rest of the URL, though it's possible the mangling
-> was done by Microsoft's email system.  Please double check that the URL is
-> correctly formatted with no spurious spaces.
-> 
-> Even better, maybe write this as:
-> 
-> Please reference Section 1.3.1 "Launch" of [1].
-> 
-> Then put the full link as [1] at the bottom of the commit message.
-> 
+Hello:
 
-Tianyu: that document is SEV specific, and does not have the parts that SEV-SNP
-uses. For SNP this is the firmware ABI:
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-https://www.amd.com/system/files/TechDocs/56860.pdf
+On Fri,  9 Jun 2023 16:52:47 +0800 you wrote:
+> ./tools/net/ynl/generated/devlink-user.c: stdlib.h is included more than once.
+> 
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=5464
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+> ---
+>  tools/net/ynl/generated/devlink-user.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-and the API I think you mean is SNP_LAUNCH_UPDATE.
+Here is the summary with links:
+  - [net-next,3/3] tools: ynl: Remove duplicated include in devlink-user.c
+    (no matching commit)
+  - [net-next,2/3] tools: ynl: Remove duplicated include in handshake-user.c
+    https://git.kernel.org/netdev/net-next/c/e7c5433c5aaa
+  - [net-next,1/3] net: hv_netvsc: Remove duplicated include in rndis_filter.c
+    (no matching commit)
 
-It would also help to mention that the data at EN_SEV_SNP_PROCESSOR_INFO_ADDR
-is loaded as PAGE_TYPE_UNMEASURED.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Thanks,
-Jeremi
+
