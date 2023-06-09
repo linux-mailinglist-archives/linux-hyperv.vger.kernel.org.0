@@ -2,69 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D1067293E5
-	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 10:55:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FFF7729642
+	for <lists+linux-hyperv@lfdr.de>; Fri,  9 Jun 2023 12:06:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239245AbjFIIxa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 9 Jun 2023 04:53:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53442 "EHLO
+        id S240508AbjFIKGr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 9 Jun 2023 06:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241087AbjFIIxK (ORCPT
+        with ESMTP id S230363AbjFIKF6 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 9 Jun 2023 04:53:10 -0400
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F07F5;
-        Fri,  9 Jun 2023 01:52:59 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VkhW8Rn_1686300774;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0VkhW8Rn_1686300774)
-          by smtp.aliyun-inc.com;
-          Fri, 09 Jun 2023 16:52:55 +0800
-From:   Yang Li <yang.lee@linux.alibaba.com>
-To:     simon.horman@corigine.com
-Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, netdev@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yang Li <yang.lee@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH net-next 1/3] net: hv_netvsc: Remove duplicated include in rndis_filter.c
-Date:   Fri,  9 Jun 2023 16:52:49 +0800
-Message-Id: <20230609085249.131071-3-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
-In-Reply-To: <20230609085249.131071-1-yang.lee@linux.alibaba.com>
-References: <20230609085249.131071-1-yang.lee@linux.alibaba.com>
+        Fri, 9 Jun 2023 06:05:58 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 848E565A1;
+        Fri,  9 Jun 2023 02:56:45 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1112)
+        id 2EE7820C1473; Fri,  9 Jun 2023 02:56:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2EE7820C1473
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1686304605;
+        bh=QCAfbAdMJ4hq/jLexUoenZqABGBc2UI5B4FxLEQLDhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c71GVxoshBaJT+JmmEXKMETgHlQqie6/1B1zvQm1lko5kFta+orf/3fDmIvVdEoV7
+         0M/tCdICZ0MBaVddlp0ZN1wghI0x9kVsZHKQS/BiF0aP9wDd5qeNtY0fb0oDl+HE1d
+         dqckaHpOM92p4CC+HFBrVBYiIzZ+U72VdNtl2IzY=
+Date:   Fri, 9 Jun 2023 02:56:45 -0700
+From:   Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Tianyu Lan <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>
+Subject: Re: [PATCH 7/9] x86/hyperv: Initialize cpu and memory for SEV-SNP
+ enlightened guest
+Message-ID: <20230609095645.GA21469@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20230601151624.1757616-1-ltykernel@gmail.com>
+ <20230601151624.1757616-8-ltykernel@gmail.com>
+ <BYAPR21MB1688B4F74FF7B670267D32FAD750A@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB1688B4F74FF7B670267D32FAD750A@BYAPR21MB1688.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-./drivers/net/hyperv/rndis_filter.c: linux/slab.h is included more than once.
+On Thu, Jun 08, 2023 at 01:51:35PM +0000, Michael Kelley (LINUX) wrote:
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Thursday, June 1, 2023 8:16 AM
+> > 
+> > Hyper-V enlightened guest doesn't have boot loader support.
+> > Boot Linux kernel directly from hypervisor with data(kernel
+> 
+> Add a space between "data" and "(kernel"
+> 
+> > image, initrd and parameter page) and memory for boot up that
+> > is initialized via AMD SEV PSP proctol LAUNCH_UPDATE_DATA
+> 
+> s/proctol/protocol/
+> 
+> > (Please refernce https://www.amd.com/system/files/TechDocs/55766_SEV-KM_API_Specification.pdf 1.3.1 Launch).
+> 
+> s/refernce/reference/
+> 
+> And the link above didn't work for me -- the "55766_SEV-KM_API_Specification.pdf"
+> part was separated from the rest of the URL, though it's possible the mangling
+> was done by Microsoft's email system.  Please double check that the URL is
+> correctly formatted with no spurious spaces.
+> 
+> Even better, maybe write this as:
+> 
+> Please reference Section 1.3.1 "Launch" of [1].
+> 
+> Then put the full link as [1] at the bottom of the commit message.
+> 
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=5462
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
----
- drivers/net/hyperv/rndis_filter.c | 1 -
- 1 file changed, 1 deletion(-)
+Tianyu: that document is SEV specific, and does not have the parts that SEV-SNP
+uses. For SNP this is the firmware ABI:
 
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index af95947a87c5..ecc2128ca9b7 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -21,7 +21,6 @@
- #include <linux/rtnetlink.h>
- #include <linux/ucs2_string.h>
- #include <linux/string.h>
--#include <linux/slab.h>
- 
- #include "hyperv_net.h"
- #include "netvsc_trace.h"
--- 
-2.20.1.7.g153144c
+https://www.amd.com/system/files/TechDocs/56860.pdf
 
+and the API I think you mean is SNP_LAUNCH_UPDATE.
+
+It would also help to mention that the data at EN_SEV_SNP_PROCESSOR_INFO_ADDR
+is loaded as PAGE_TYPE_UNMEASURED.
+
+Thanks,
+Jeremi
