@@ -2,46 +2,46 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2BD772CC49
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jun 2023 19:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81CA372CC52
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jun 2023 19:22:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232666AbjFLRV3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Jun 2023 13:21:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33398 "EHLO
+        id S235632AbjFLRW3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Jun 2023 13:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232963AbjFLRV2 (ORCPT
+        with ESMTP id S234342AbjFLRW2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Jun 2023 13:21:28 -0400
+        Mon, 12 Jun 2023 13:22:28 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2587DB;
-        Mon, 12 Jun 2023 10:21:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B055E188;
+        Mon, 12 Jun 2023 10:22:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D3DC612EA;
-        Mon, 12 Jun 2023 17:21:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC14CC433EF;
-        Mon, 12 Jun 2023 17:21:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 30E4462C02;
+        Mon, 12 Jun 2023 17:22:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D275BC433D2;
+        Mon, 12 Jun 2023 17:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686590485;
-        bh=gAuJ9KU5RmFURvI3QbJHtsovxcdj1K6oUU0iGJV69mM=;
+        s=k20201202; t=1686590543;
+        bh=vlOR8zUqa0xWW55aQjxka+rjurEYPK49ewDDW1z+1z4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=c8gKP6QI5EfugRQgVTVDhMd0Rmp342XYgNVNZyqas7fICrM7G6nRrWc/lIFK9WcKZ
-         /xNkwtTyXt01CCLhTIxX8PzH9fZF1rqCjmW/2Lp/ZknUeE7agOK4gcyqffLevOkZI5
-         bDeXumksNF1xaHJbscoCbzvHLGjWvIkNAacC4Ospg1UwYX28O0dMwIigFG4Q2knUtu
-         mNN7wagragjKgu3r1P/GS/s6+G4gDOygw8T6qrwKTKOrUTzGaawBRI58nL7kGc/AdD
-         lNVbsgBhQCsofTCaa/YdT6xy+GaJc9i+b0j9dD9HhU16kRymrqggaOR6+GvrxNOavN
-         WTF0M/kG7b0pA==
-Date:   Mon, 12 Jun 2023 10:21:24 -0700
+        b=AOWot06QUq5Or4bsqOqp8NpKFm67pisZsU/VnFLKpp3Bn8wEUPXECFNrhDLCqjnOP
+         w8j0RUzoLOKxb7TZEU8FSfRwTYmKMMuM3ebGHdNcCUiDnZNhzMLlFBJ6Qu/3r/6g4G
+         JIJ+dXFWiOKF1z/fQpS4tPP2aTy8Wvo14t1KfSXMgWbd5bdkTVg9ahh043CGMmJ0So
+         6A5u1SClwBjn8fBrofwA2Hh4TB1ilYxErKBtwsEfqz6lnlIPAp6fUdq+oxC7bdrn0V
+         NgZoqQogEMjf3Bc+PplGuovqo21f6WmfqzI5CqeJyCpwoND2XbVXtam3FYbZ7gTKnY
+         EyKwW9YvKwizA==
+Date:   Mon, 12 Jun 2023 10:22:21 -0700
 From:   Jakub Kicinski <kuba@kernel.org>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Wei Hu <weh@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
         Long Li <longli@microsoft.com>,
         Ajay Sharma <sharmaajay@microsoft.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         "wei.liu@kernel.org" <wei.liu@kernel.org>,
         Dexuan Cui <decui@microsoft.com>,
@@ -53,11 +53,12 @@ Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>
 Subject: Re: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana
  ib driver.
-Message-ID: <20230612102124.6d7c31e1@kernel.org>
-In-Reply-To: <SI2P153MB0441DAC4E756A1991A03520FBB54A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
+Message-ID: <20230612102221.2ca726fd@kernel.org>
+In-Reply-To: <20230612061349.GM12152@unreal>
 References: <20230606151747.1649305-1-weh@microsoft.com>
         <20230607213903.470f71ae@kernel.org>
         <SI2P153MB0441DAC4E756A1991A03520FBB54A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
+        <20230612061349.GM12152@unreal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -71,28 +72,13 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, 12 Jun 2023 04:44:44 +0000 Wei Hu wrote:
-> If the patch also needs to go through the NETDEV branch, does it mean two subsystems will pull its own part? A few follow-up questions about generating a PR, since I have never done such before.
+On Mon, 12 Jun 2023 09:13:49 +0300 Leon Romanovsky wrote:
+> > Thanks for you comment. I am  new to the process. I have a few
+> > questions regarding to this and hope you can help. First of all,
+> > the patch is mostly for IB. Is it possible for the patch to just go
+> > through the RDMA branch, since most of the changes are in RDMA?   
 > 
-> 1. Which repo should I clone and create the branch from?
+> Yes, it can, we (RDMA) will handle it.
 
-The main tree of Linus Torvalds. Check which tags are present in both
-netdev and rdma trees and use the newest common tag between the trees
-as a base.
-
-> 2. From the example you provided, I see these people has their own branches on kernel.org, for example something like:
-> git://git.kernel.org/pub/scm/linux/kernel/git/saeed/linux.git tags/mlx5-updates-2023-06-06. 
-> I am not Linux maintainer. I just have repo on Github. How do I
-> create or fork on kernel.org? Do I need an account to do so? Or I can
-> use my own repo on Github?
-
-GitHub is fine.
-
-> 3.  How to create PR in this case? Should I follow this link:
-> https://docs.kernel.org/maintainer/pull-requests.html?
-
-Sort of. But still post the patches, so you'd want to use these
-commands somewhere along the way:
-
-git format-patch [...] -o $path --cover-letter
-git request-pull [...] >> $path/0000-cover-letter.patch
+Probably, although it's better to teach them some process sooner
+rather than later?
