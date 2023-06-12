@@ -2,209 +2,150 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DED172BE79
-	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jun 2023 12:13:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0357072C8E0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jun 2023 16:45:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232183AbjFLKNY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 12 Jun 2023 06:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
+        id S232809AbjFLOpE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Jun 2023 10:45:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbjFLKNM (ORCPT
+        with ESMTP id S230449AbjFLOol (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 12 Jun 2023 06:13:12 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2123.outbound.protection.outlook.com [40.107.101.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406505BB0;
-        Mon, 12 Jun 2023 02:53:14 -0700 (PDT)
+        Mon, 12 Jun 2023 10:44:41 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2071d.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::71d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB2493;
+        Mon, 12 Jun 2023 07:44:40 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HMl2qdVTW0qPZSFnSr92hDZrWkWuo/sEWoRIvIiVM63vYPGCOYS1/73Jxm5B6h/dYH6znxiO3uhvpw1cMl8YZCXX0LyGES3o3IVD1dVcGtnDZFD9M6dKtQ3MULFwMek6mNdYaCqkF/OGf+zoQJ/4NTVhErJXg6gCN//7E8O8DI8ITcsuieuZ7DQ5CvdR3+s/KbkJU/g8rgGKcStzhQBnDI2S/O4J79II8JH7yttqIB6Bcg8pa2I4b2xfayHetjuzD1vk2VtIkkPNoUWpz0IrXSR+8MaCSd04B7AfqWtF56JNvKywy2XXWebLGKujhU5wOU5BuDmZQGsezu3Ybwedxg==
+ b=OfvrtfvdgD85rqbmbuqlAYMRefXs1odV/GCRhYeZYhMpqPGHGVwR7zm34SfYxWsvBIufObqVs2kIijLVo2nS8SUnLB5GmavOiYXgjal1oNKvQ7IPepqkjRD59B608RvxQ1ZC69Z321F87EUBwCfT15mQKZF5HUMeekb+1CjY2tVXXmleOWZgU2bkbWJfULycYVlI25xOtnY9RlUW4iuSYy7fBulwxzYVBIU6lSi4oYLvO6lfbXUYCnTj+o9QlgYJp5ueXX3eVTL5gFC0mNl9659u4QCjDlLO/B+iol4jNVgXHiQQEQ0ze9QPEh0vJRSf9RdOFKg0JwrfsmCSkZ0FBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AzSrWYlTV3dEjy/jsSI1XSdPbRAILZRO/NQ6OIJbAOM=;
- b=ncJkFMZ9k1Z/Cgz7ax+9mgl47QQM8DdKoaCgZkJmhNH6dwvNG+PzTmnsRF7C/dCAqg85gJ9UJJ4bwMcSirdA0hioCBIm1F02pl9ZfJZr8+GZGM7Kq6vrEayiKtQ+otIEz4dFIHuyem5PLG5YRsGuj9e5mhiQSusqNw89WGAZjr7OzBeFKPXVSADq4F11coyRQU7U7YcAHyeFJ/QRxlDoKl9CpmGsmzbNJDrRLoYbfwTwx8sbT/6Esgv1jdDHDL+osLW1c4oxubJ7kdLGTXzO0SYP9YOktfw5uwVfxCMoJBsOxyfwixoQlNWq2d8yO7GwGibvB49VCvKLkzr8WPIwMg==
+ bh=z+3lUFWKopzi1eL14CGUb1EQdG4zbouTP+jHyGexqsc=;
+ b=LHIkq1J3eUJfBGwCrajznLBIFMHnD62CLehgUBo9touI2TuxqSoEwJ4cWcdDV6UP28+JHWfZghXBK+cKmZPXwJR/oI5SotX2TEwPw3PelWuINoBdXMmOH25HsuaRTx9BXUqYZtRwjD9M3OoQDqlOC8sszIlzONSIRA5SfKcHX741F/SzuvWLtbsoMevgN+uPJYoJvEBBF5fvijqlQIEAaXeSRhyonosu501Ns+yKebpOam6TFk0TJOdHdYFA61USKMLVFyx0OA8pX7cxjEppRZWVQ7Z7ibFhDZVp4N/giNs4wwokzCj2GAmh8fkUsg3S2nw3zAUZHXO3UEvsmgGjSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
- dkim=pass header.d=corigine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AzSrWYlTV3dEjy/jsSI1XSdPbRAILZRO/NQ6OIJbAOM=;
- b=Gi7bhptYqzow5puOWyu88UYIZf6jUPlaAjAJm6/TsG/gvwheTR3pQM07dS/NqShAp+Rdz+Bb8miqtkH6+qIyggL5/UMjbtoNXmD/2HYyMU1BCLEE4giTcOVXDbfHlN1dKQhdazlj1Z1iCjlsz9pxe85fRcFUpM9mEl+nSyyawJM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=corigine.com;
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
- by CH2PR13MB3717.namprd13.prod.outlook.com (2603:10b6:610:9d::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.29; Mon, 12 Jun
- 2023 09:53:10 +0000
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb8f:e482:76e0:fe6e]) by PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb8f:e482:76e0:fe6e%4]) with mapi id 15.20.6477.028; Mon, 12 Jun 2023
- 09:53:09 +0000
-Date:   Mon, 12 Jun 2023 11:53:00 +0200
-From:   Simon Horman <simon.horman@corigine.com>
-To:     Bobby Eshleman <bobby.eshleman@bytedance.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+ bh=z+3lUFWKopzi1eL14CGUb1EQdG4zbouTP+jHyGexqsc=;
+ b=Jt1I8qgAGVFcontxA4gUiDVlTzMvzVFZdPlG805A8DkllE9wfQw8kI2HjuExV2QQjmK0iqsnMM6BhlkCsP139/QQB0/onXP8Ny+iQqaSMiciRSE5X/Q1hpX+YtZN9za/XSVHOTiCtv2rZc6VORMOkybcqYcEjX2ZbmGOoWdczxE=
+Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM (2603:1096:4:fc::7) by
+ SEZP153MB0789.APCP153.PROD.OUTLOOK.COM (2603:1096:101:a4::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6521.0; Mon, 12 Jun 2023 14:44:33 +0000
+Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+ ([fe80::7d79:7433:e57b:55b5]) by SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+ ([fe80::7d79:7433:e57b:55b5%4]) with mapi id 15.20.6521.002; Mon, 12 Jun 2023
+ 14:44:33 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Long Li <longli@microsoft.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Krasnov Arseniy <oxffffaa@gmail.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v4 7/8] vsock: Add lockless sendmsg() support
-Message-ID: <ZIbq/CeWowEq+nvg@corigine.com>
-References: <20230413-b4-vsock-dgram-v4-0-0cebbb2ae899@bytedance.com>
- <20230413-b4-vsock-dgram-v4-7-0cebbb2ae899@bytedance.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230413-b4-vsock-dgram-v4-7-0cebbb2ae899@bytedance.com>
-X-ClientProxiedBy: AM0PR04CA0054.eurprd04.prod.outlook.com
- (2603:10a6:208:1::31) To PH0PR13MB4842.namprd13.prod.outlook.com
- (2603:10b6:510:78::6)
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>
+Subject: RE: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Thread-Topic: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Thread-Index: AQHZmIoyK0/pJvWPX0+gdBo6594smK+F8UuAgAFVmQA=
+Date:   Mon, 12 Jun 2023 14:44:32 +0000
+Message-ID: <SI2P153MB04417877A20ADE1B1AEE1DABBB54A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
+References: <20230606151747.1649305-1-weh@microsoft.com>
+ <20230611181857.GK12152@unreal>
+In-Reply-To: <20230611181857.GK12152@unreal>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5b880b88-b598-4ea6-8161-006080eb9296;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-12T14:41:34Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SI2P153MB0441:EE_|SEZP153MB0789:EE_
+x-ms-office365-filtering-correlation-id: f759156b-e1f1-41b8-ebe2-08db6b5388ec
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6ZGJVWGGQL0RkQ/bhw80Z6t9XDZbBb0/vFW7MOiNipZFjEEwBa8SWbdNGogmq9yHU662+U8V1XhXvufpyfInQehOs/brhmkMy3N+APu7IgAieU7eVZqVt0zPyV1H8GD94L/QxaQ+FIt12I/R0C1dN7ziP5cRh6zplZm6fm9svJ32yrbLIXjgp7xyzT0UZWPE86X5E/SUs1rbSJjH2uyRZlaRKSQuimr54W+mgZdOaTUZhZQOmDeJTYqis8OAglqA85/0rBFhLUs/sgDWrRM0k64R9bL5OroILm9a8pFbwslOVELcVssOx+mKGbXKbh8vWawvYfipWSgTCq1K56hyfgeA2BCQEDl5fD2R4n/pQEop3Xte7fTWKGtkAC2NIC81lHvivyLnVrrwPbk859VYuUAFrkB4QJVSBCU18killq1Bq6hQE3tEW2TQn8e4ikJQGgPIIdbC61RFCAcW/7QoQSWidHTuN/GSd4G8x3eN+coI/p6FvBdB7ILWPTtJR40r2n8qvtB/9iXR61cKNFUGxYAU9gaoTTMG9rCVjz+fmc4IK4Qb47/OPLe+3J0QwucyUucaHuRSxZh+ruFAfb3uBbYjuAd9X3JIwsZi3iOfWSyAiYxMYJYhS7EDWTywNgwZgWhjGJzbGulZAayIxDT6XUeC6uCKEmUs9FBDlEm+llg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2P153MB0441.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(451199021)(10290500003)(41300700001)(316002)(7696005)(5660300002)(52536014)(4326008)(66446008)(66476007)(66556008)(64756008)(76116006)(66946007)(71200400001)(6916009)(478600001)(54906003)(8936002)(8676002)(7416002)(38070700005)(86362001)(107886003)(9686003)(186003)(38100700002)(6506007)(26005)(33656002)(82950400001)(82960400001)(122000001)(8990500004)(2906002)(4744005)(83380400001)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1AtSPlLvrC4fst75FvZ+7jBvR1vDzbSobTmA+9fVnhEaikJB4MK+62PN8x2D?=
+ =?us-ascii?Q?/aTjj6Ff4Gl60r28ntGJnL48LSjGFDpMeSu1u03MwAPpEw7sZdrd/DdkswE1?=
+ =?us-ascii?Q?wH1+pi7djTAIUm+sHh0IvmiTnQ3T/Nh3GxS0YcJNHHNG0A4t8HBhE6vYqyEA?=
+ =?us-ascii?Q?wycqPjWoA4lZoZ4/OvbT8ZJwqtOK+v96q1MSOECFx4HOELLe+igThVn3Xsne?=
+ =?us-ascii?Q?lCiPJMtYL9j9BwTUvYcHR1BmP70EXUU2bVG1MnTst0Ujjq0o8ll7eDM+MFSf?=
+ =?us-ascii?Q?/CQHD4VhqZ3iEu00gLjG8dUnDtH8WGhVWUuov9EMgwF1bIYba1T6MDTa7+Ov?=
+ =?us-ascii?Q?g34LFaTPNfTxIGS7LOTeVeO1j81cWMXSgGfmXrGDN8QbpTogu1sbdeX50apX?=
+ =?us-ascii?Q?HFNBvvK4ITP4wQgr4DOypRkATzpXdZOguuaYkUsSaNWd8uMlYXTyjSmDTs47?=
+ =?us-ascii?Q?f9q/l+FGWgNYlh5nqU6RQJnUZ1ewO4ot2v8i02/i7K1iowRPu3YdAfR9C255?=
+ =?us-ascii?Q?m5vYGWENJxyWwIX9zS8J07YU9HZDJFM1Sf6Bm8PR13YRCzvYCyHmClZ2jVEn?=
+ =?us-ascii?Q?Ra3hzGfDhio28YL/L9uuArRGetDA03X4iJk2I4HygSs4ENyVFcXpo8XgscQI?=
+ =?us-ascii?Q?DRZUtFPYcQnWIose/Z5nqKamkeu56RAvD5gU/NaZr2y3Pmyp53lxFKbEFTRQ?=
+ =?us-ascii?Q?XX84iHfN7iI+eM0vP83Oli3VoYO3/gYqRfAEyelrorCGSkSVZgE6RzLFR8LV?=
+ =?us-ascii?Q?XGnmU4+0QS4zc8X1nYPyjMwBWV/a5d6fSS7vc2sUucJPoMwDoxg3Ln4HG9B9?=
+ =?us-ascii?Q?Gzz+guE6yHbCeqDwp5rsG4Ue5NwwpkTEY/2JxVGO4Ga2vcYPi7KK/DMKM2XM?=
+ =?us-ascii?Q?alwlpVY/pRLhLTYZ/UvuB7Yk1CYbMrho6lJCefjuGifIXcvQFPhfW/EvMibO?=
+ =?us-ascii?Q?MmvNCFnR31Hh4x1ZpSNnmugD9TOXSbplos85wn+HeXGHHWsW2r9GMMSvc9zl?=
+ =?us-ascii?Q?0nEDf7ByPFWVDKU8g+svgkJXg4V791dMqTBTxG/jQjaNAV1QJoIbuDEXvCKi?=
+ =?us-ascii?Q?CBDeDgZTFVOkX78l0ea45nsVct6g3sSpQjMIwLjst7yzk6q8NUEkDvvL7tgc?=
+ =?us-ascii?Q?xQBV5XsdGAf/9xEvcvKWL5J5FST1TvUGZdxIPI+1wXMYEB/2u2OKHG7INLwl?=
+ =?us-ascii?Q?ehTwcjmnVwcD1AFGx88gQbkwU6ohcI8cJpO2i5+oGdG6YpvWk84Nphw1QumV?=
+ =?us-ascii?Q?ZPhVrk2OhhAZwRmuAy5MxARJ7+iur5vMmHkLhpmFWBIHETxN/kI3HlHeadKT?=
+ =?us-ascii?Q?4pBYJ0rWYUlnK0w/05JhnXd70n/jgS1pt50aXiZuhAIrSXAHwq/16+pGQBKN?=
+ =?us-ascii?Q?RDSnPAK73wtkw6CvgjEvTRF+nM+zKAUb/4oNXzVP1jZhC5XG928j2WS++/5C?=
+ =?us-ascii?Q?YCAcDZbbX90FCkvDgMha6QaBxekjSdc5TqLhv6Ch/U99yH3eV2fCs/XPYNSe?=
+ =?us-ascii?Q?IPUEJ+5I0T8U9xudVOQQ7YvMgYMcJBucAeRg5KQmjPg7rWCFYFRqqIvIC08O?=
+ =?us-ascii?Q?TmeT27PYgdpHG9r5CrE=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|CH2PR13MB3717:EE_
-X-MS-Office365-Filtering-Correlation-Id: 782a562c-4550-48c5-c915-08db6b2ad44b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: frGqxNmZW+J6BegJdT2APZdNJM6bsEY2GjDUZex6LdHEZbmTpQIDH8TkR6ZVefjEM/DSQgfatIR9XuFu2fqOSrSx7r/wWpJv0QuImAo+ElneTN1twy8bwFZrx6dFBh1yiTjTyZsmim383CyEqRy5+XwIdXtueF8LUrTj06a9pyWkAugMXqHFD3SxC0KyHbWFYbDaFQjh5h0DGVU4IRtqL87KzRUMluEGuMdK94Phoxk72S7nkcyODWB7Jhm8NmfyafatVX3j1RiqVqr3VFgsf4irPjraDAZuvxSdfYlbVyfmUU7wdaRTlK6GUURD9ix0gc0DN9CSybkSjFFyxycx0bHZ5WgkL0YJ1P2UwgoDEAoUcMHMsDRR0ShpgmbcJFhPv5Wn4wwaS9S/dTGDLSJOOZWCKencc0tCDFIDoa5nhYMiNDMxDOHGzzvNJFTwkATVlYNRIUpfMvEVnhMqid+RZCgGFmOjp+OBVk6PbXwrmv5oMN1kP6pvZvdOxH2D1RuwSPvaht7GzUtZHkLUlmMT6cDXyzNRCzHQj4ZiX7NT/6Kzi+HAjkXZtOSM9rfkB9hiX/IBaKQTjYqIyQOxDbqOeCV5qj/zCl51JKu/3Iad0GQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(39830400003)(346002)(396003)(136003)(451199021)(2616005)(83380400001)(38100700002)(86362001)(36756003)(478600001)(54906003)(44832011)(4326008)(6486002)(6666004)(8936002)(8676002)(2906002)(5660300002)(7416002)(66556008)(66946007)(66476007)(6916009)(41300700001)(316002)(186003)(6506007)(6512007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xvv6W6+sc8D8w/zddHVCBve+ti0k6uxzOP4gKGC+AlzklUa2u1Mi2r50l980?=
- =?us-ascii?Q?7T2c4OPmwFEALS5o0Ia52Chs3ky5GafByULONv16HDRlFltPAKXdaXzck4lV?=
- =?us-ascii?Q?lV6kCNBFpwDhAz0kpilKwVHaPOdYjsKP/+UxW2+daZYsoxme30WEJF6RGhEx?=
- =?us-ascii?Q?MogrPwwSF32TM7GAR4zDsA/et89I7pILkXWqpq1XbSD4MBk/OLWpDCcuLU6r?=
- =?us-ascii?Q?i9Zgj1qFdnAXc4uM4NO7J5SUGw3ivGnmuGT0WPIMdk+zbtl8Xr3YyYjmHNYR?=
- =?us-ascii?Q?s6+SrsZLYDQY2GKOn/rBmYTMvOedR1CRDuG3UbYDrJChzZgr4XnPz4MNgjA6?=
- =?us-ascii?Q?Ug3J7vRdA9Rdbuzj2l/wGpuYxpR7suM0QU+A95JAJ1F2i1S10qdS1cfHP9os?=
- =?us-ascii?Q?xwAN/1tCKfGlr1QJQ881iPDnhCU8SjfSPsnx0SwX4iAfuaA3aMqOmOi27m1M?=
- =?us-ascii?Q?UNTd8t2RaCZeG4NktfNYjE1Npuht3izd08/q3DyPYXoWLuU2lt7QB0VnrjCF?=
- =?us-ascii?Q?pfqBIbCbefblo4g9w1jLnBjBYo5czjDwzs+UenkaZ2VnqDRFHd18qfQERgrX?=
- =?us-ascii?Q?LwfgK/N4AJNUAWDF4ROP7UFmiIKyIqyz8Y+KalJWHImaQr4swpF8JoRX6olT?=
- =?us-ascii?Q?Qw697Ld0bETK9ZjQ50wO1R2mfz4tG4bW2vlYIQ6z0ix8n0k2HXl5qZoEMVP+?=
- =?us-ascii?Q?6wbEukuJ0L1cMaBQGGQgvs0NAatqoOwl1lH1Gxll5xw+VTm6Kxz/64RPF76U?=
- =?us-ascii?Q?hRxSlc5zOwWlqYU22tGg43vDQxJBdekg8SgSeHTmDv6KipyfK7DlDUg6bbvG?=
- =?us-ascii?Q?y+EmbipBMxCTV0+MRiGa+NswdLuIn9BujJYzVL17SFGj8ArTHOS5YFm1LIjd?=
- =?us-ascii?Q?gI+6v58KGRu8RGMn+J7v/V1j/1km1/pxaBmoEge70qxAuFzyXy1UFGAImk1P?=
- =?us-ascii?Q?Qh4r8vP35TLX7A16XT2/+q+hDKrS/D26CjXqzABU4Ps7N+c41Dk2r3WGgo7k?=
- =?us-ascii?Q?rixXfRep5v3iPFaO8/NsAm+W/eQIeYEvaU3MXYfrvyTl9xMez9lcsfkQXmS/?=
- =?us-ascii?Q?4AZNmde/4wuIrW1boeJ/pN/Z69niLw6kISbeVjhrt/kD3nBKb3i7mH64LowC?=
- =?us-ascii?Q?Lp/UBnS8QN8wZMQ7HtcNJyTi4GdVVxmzh/KBozJVRv8XyBjoudliHmjGeF3R?=
- =?us-ascii?Q?TX7M7sywV5oedRspHdFVq44AhIHjMt4iqVTvKwXd3cQfIUB+5meAnei1/NRB?=
- =?us-ascii?Q?XrrLbSlXhX3paMpTCPaWskGC2Q5YroTJrDMOiuEO9lMCgvoR9Be1J1DmPpWC?=
- =?us-ascii?Q?0DZWzthMq+sCmxsWKFJzK2LcyIW63B6YW0B2bZjxCIuKcz8KDTZx6Ni5tSB2?=
- =?us-ascii?Q?fgXsiJRihIYe5SnQm+UfFYHT6GCXEYLBN/c8b2a3qHi5BsLLyDjqdnNVV90t?=
- =?us-ascii?Q?Kyt08wB+vwmAbIBMN02yRIRW597kMtME2PP5WtMCEiXJ8zZmA+r+GaCPyl+k?=
- =?us-ascii?Q?otT0YwzeJ63Qp4cVNvQH2pAFx8sR835HGzn/7Xvs7kCbN0/QnFaUC8cY3Zf2?=
- =?us-ascii?Q?vlSPNrPQUWQp+hLqxsdg7uHEHNyfxbFFtBGWXijanrNYD88V1p7qfksydpaU?=
- =?us-ascii?Q?3r4eIL7LpSMPDDLX7CvM4vLuMRN3oomV0wlidifWQl7NU971k6csY9fa6Vgi?=
- =?us-ascii?Q?ND5RJg=3D=3D?=
-X-OriginatorOrg: corigine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 782a562c-4550-48c5-c915-08db6b2ad44b
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2023 09:53:09.8595
+X-MS-Exchange-CrossTenant-AuthSource: SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: f759156b-e1f1-41b8-ebe2-08db6b5388ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2023 14:44:32.6257
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0F7eC0zaMxHxGzqGfiSPyrAyAlPc+XVpufa+OwXFWNbiGNkf2cM/EMiI5nWyBRGzpu+A1kTaZOX1aEBCNDc00YJv274JNNKyDpL0tgxiuVc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3717
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S695oSh5HqIb0b4bktkHQByPE9Imp/mUt/MHEgUTAhel+D9Y06w/r4K/wOinGf34T0dClokE5pGeUqNFEQVkeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZP153MB0789
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Jun 10, 2023 at 12:58:34AM +0000, Bobby Eshleman wrote:
-> Because the dgram sendmsg() path for AF_VSOCK acquires the socket lock
-> it does not scale when many senders share a socket.
-> 
-> Prior to this patch the socket lock is used to protect both reads and
-> writes to the local_addr, remote_addr, transport, and buffer size
-> variables of a vsock socket. What follows are the new protection schemes
-> for these fields that ensure a race-free and usually lock-free
-> multi-sender sendmsg() path for vsock dgrams.
-> 
-> - local_addr
-> local_addr changes as a result of binding a socket. The write path
-> for local_addr is bind() and various vsock_auto_bind() call sites.
-> After a socket has been bound via vsock_auto_bind() or bind(), subsequent
-> calls to bind()/vsock_auto_bind() do not write to local_addr again. bind()
-> rejects the user request and vsock_auto_bind() early exits.
-> Therefore, the local addr can not change while a parallel thread is
-> in sendmsg() and lock-free reads of local addr in sendmsg() are safe.
-> Change: only acquire lock for auto-binding as-needed in sendmsg().
-> 
-> - buffer size variables
-> Not used by dgram, so they do not need protection. No change.
-> 
-> - remote_addr and transport
-> Because a remote_addr update may result in a changed transport, but we
-> would like to be able to read these two fields lock-free but coherently
-> in the vsock send path, this patch packages these two fields into a new
-> struct vsock_remote_info that is referenced by an RCU-protected pointer.
-> 
-> Writes are synchronized as usual by the socket lock. Reads only take
-> place in RCU read-side critical sections. When remote_addr or transport
-> is updated, a new remote info is allocated. Old readers still see the
-> old coherent remote_addr/transport pair, and new readers will refer to
-> the new coherent. The coherency between remote_addr and transport
-> previously provided by the socket lock alone is now also preserved by
-> RCU, except with the highly-scalable lock-free read-side.
-> 
-> Helpers are introduced for accessing and updating the new pointer.
-> 
-> The new structure is contains an rcu_head so that kfree_rcu() can be
-> used. This removes the need of writers to use synchronize_rcu() after
-> freeing old structures which is simply more efficient and reduces code
-> churn where remote_addr/transport are already being updated inside RCU
-> read-side sections.
-> 
-> Only virtio has been tested, but updates were necessary to the VMCI and
-> hyperv code. Unfortunately the author does not have access to
-> VMCI/hyperv systems so those changes are untested.
-> 
-> Perf Tests (results from patch v2)
-> vCPUS: 16
-> Threads: 16
-> Payload: 4KB
-> Test Runs: 5
-> Type: SOCK_DGRAM
-> 
-> Before: 245.2 MB/s
-> After: 509.2 MB/s (+107%)
-> 
-> Notably, on the same test system, vsock dgram even outperforms
-> multi-threaded UDP over virtio-net with vhost and MQ support enabled.
-> 
-> Throughput metrics for single-threaded SOCK_DGRAM and
-> single/multi-threaded SOCK_STREAM showed no statistically signficant
+> -----Original Message-----
+> From: Leon Romanovsky <leon@kernel.org>
+> Sent: Monday, June 12, 2023 2:19 AM
+>=20
+> > +
+> > +void mana_ib_cq_handler(void *ctx, struct gdma_queue *gdma_cq) {
+> > +	struct mana_ib_cq *cq =3D ctx;
+> > +	struct ib_device *ibdev =3D cq->ibcq.device;
+> > +
+> > +	ibdev_dbg(ibdev, "Enter %s %d\n", __func__, __LINE__);
+>=20
+> This patch has two many debug prints, most if not all should go.
+>=20
+Thanks. I will remove the debug prints in the normal path.=20
 
-Hi Bobby,
-
-a minor nit from checkpatch --codespell: signficant -> significant
-
-> throughput changes (lowest p-value reaching 0.27), with the range of the
-> mean difference ranging between -5% to +1%.
-> 
-> Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
-
-...
+Wei
