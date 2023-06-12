@@ -2,835 +2,206 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A855572B40A
-	for <lists+linux-hyperv@lfdr.de>; Sun, 11 Jun 2023 22:55:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65E3772B6BF
+	for <lists+linux-hyperv@lfdr.de>; Mon, 12 Jun 2023 06:48:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232456AbjFKUzZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 11 Jun 2023 16:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53572 "EHLO
+        id S234377AbjFLEqN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 12 Jun 2023 00:46:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229936AbjFKUzR (ORCPT
+        with ESMTP id S235574AbjFLEpY (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 11 Jun 2023 16:55:17 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B68E51;
-        Sun, 11 Jun 2023 13:55:02 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4f122ff663eso4136750e87.2;
-        Sun, 11 Jun 2023 13:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686516900; x=1689108900;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u//teaprYjmQN5bT3dcEJ9ffSoWPAthk7C7NuLjRaeY=;
-        b=fPDYrcWhvs49ZjWJjTVJsPEmVXpn5jrUKLb9OCLu4d2/8fwzvC1f6jbHpHaSgGcXB3
-         kNkiV3KP0W06QN0NsGGIED4LPq7iKMW/DB8LhmlrUwDpvKNN/MygUvm8wU5vNKEXe9SV
-         dEUTsTyV5oI6Bl1mM5kpm8O5GKCHcLSwvrPETURH5lA+J8LnYS813k4aNm/q/cyp7L2z
-         0sRjVN9aJxOEhx36dO+EntBTJ6R+ObkE+IwTJbLc9wmzCxEloP+bvIi1SiEWcGeujmgk
-         lfo7731Uwepp/rh2gOJLXjucQnn052ikgjZ2i+lrzmuXItl7NjLN2VEoERtEfzsMHT3E
-         D7OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686516900; x=1689108900;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u//teaprYjmQN5bT3dcEJ9ffSoWPAthk7C7NuLjRaeY=;
-        b=HOOgrApfq1/tsEvMuun7QT1lPFrlkMk/lZYcj1enIyowYZ0UKVg6N+QhXepdqW/iUC
-         kZiKduw/RjEDIAK34zKVjJkNWKDaDqC+hJ4azZr641aqMIT0VXsDNe1ZBCr23uww5Q2u
-         0sUV3NoWJDc3dLdx0N61Pxug3Qn1zrMk2Nfw1n0/A3EeuT+5crMl5QwYrDwLfwY8t/Kn
-         aM0O4pZN5eswQ+OmETMGcIbcfhJCTWBoSCiDtFP4S+K+C4mE1jUeVX7eDh8gaQG3r6ms
-         SlLvzLIO6KC4vv1n3WzCxoGAc8AF3vPDMObK8NK3b9Juy1fV+mRQ3uRkWe0vHAfkuv22
-         dfSg==
-X-Gm-Message-State: AC+VfDxEzE6broYi/u9B0kpYtrK/7Flz5rS984F5nkMTGV0YK0XB1NpN
-        W6PWIWEPo0SvHfuV+IX9/fw=
-X-Google-Smtp-Source: ACHHUZ4c4SurfYLz4CNr8Rk/Jxeq6Wna6EdiJuGlDn18ThBGDgzX4hOLqVKpNJtO/5N6rx40ApE28A==
-X-Received: by 2002:a19:6d1c:0:b0:4f3:82a8:dcfc with SMTP id i28-20020a196d1c000000b004f382a8dcfcmr2732688lfc.55.1686516900080;
-        Sun, 11 Jun 2023 13:55:00 -0700 (PDT)
-Received: from ?IPV6:2a00:1e88:c487:9300:dcc4:573f:aaf5:21af? ([2a00:1e88:c487:9300:dcc4:573f:aaf5:21af])
-        by smtp.gmail.com with ESMTPSA id z7-20020a19f707000000b004f508e8a9acsm1242872lfe.301.2023.06.11.13.54.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 11 Jun 2023 13:54:59 -0700 (PDT)
-Message-ID: <484c7b6f-5ce5-ce43-2dfd-0ae3063f1e47@gmail.com>
-Date:   Sun, 11 Jun 2023 23:54:57 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH RFC net-next v4 8/8] tests: add vsock dgram tests
-Content-Language: en-US
-To:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mon, 12 Jun 2023 00:45:24 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2098.outbound.protection.outlook.com [40.107.117.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33E1171F;
+        Sun, 11 Jun 2023 21:44:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ao1zz4RP1rkuzIiMvzC/Dfl7eEm5hCNZrZnDtqZihYXsNn5tSj8ihv74O8gn3W5LSlHd9imXpSQVaNfLDedg8sk6V6ilA87lQwgeGDhWcJjHQ6Qrf2H38LE682Gf3RP2gV6DAN81m5Jgt/7xJDb9+pX0VO04WUg8+ffKgtNLmWB123jPE/pXpoyTRkxhhjr5RwU2P3ln84l5oHItYSYKN4g9kRj6GRDbOhVvjOILAfX1uyTEzDaFxAuWCl8tvzp1ciP4qFpuMxwHO6HkHWhTB9tyarPwDgojVFKwNkv7Uzzzh0LJmuAVUKXXb5zE0e0CegoWGO3/4Jylwf5Lv148FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YHjwTgLFcNJj0wyrZHVMKfHWyCiJPiJ2euEEU90+NB0=;
+ b=IJMnexhSeZ/BneZKW0mfny+0ibb2QWYQQ5+ZBw8jb8HeuF5ekloDyw5q1Jc+B1NvA94OzOAW6vwaVUF1r80hIS+gJ3+a0TrkHn5GXoOIpu1T9hI8Xo6++wMLcmru+aMCHABm4rCmojXc7o+mBZnXin7WS7XCRfYlGqhvmiT9pw+7hYKpMlbM8sMWnPLCQxl0xmyqFHhzo+Wml1gPSs920LJgePvR2jJogLxASmjLKor+hIzOHKjY5/QCE7FuECj5/E4hfaiT/XXssTcvnsmkHpucaQrdDVUzDg/3jC4F3DgxH4MycknU3k0Zno9gAA/F9c7MtjNCpSiEwYCbBvHa1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YHjwTgLFcNJj0wyrZHVMKfHWyCiJPiJ2euEEU90+NB0=;
+ b=fFbBQo2NcYGzrcUKLwDb0kPYYQ1WzZqZ8AHxSRLM04qCo8O6LvNsPBLZRffBXfdlUPWlOABXKNrl9vAuzXJtdIe0lp1ALR09js/Oq2Y0liQ1WvXMaSPwFKiLJ0LHJjJRqSZVCZqRi0Q3lN6vRWEDRBQKuxdQaE043cGLMHG2z6c=
+Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM (2603:1096:4:fc::7) by
+ TYZP153MB0628.APCP153.PROD.OUTLOOK.COM (2603:1096:400:25e::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6521.3; Mon, 12 Jun 2023 04:44:44 +0000
+Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+ ([fe80::7d79:7433:e57b:55b5]) by SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+ ([fe80::7d79:7433:e57b:55b5%4]) with mapi id 15.20.6521.002; Mon, 12 Jun 2023
+ 04:44:44 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        Long Li <longli@microsoft.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "leon@kernel.org" <leon@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        Simon Horman <simon.horman@corigine.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        bpf@vger.kernel.org, Jiang Wang <jiang.wang@bytedance.com>
-References: <20230413-b4-vsock-dgram-v4-0-0cebbb2ae899@bytedance.com>
- <20230413-b4-vsock-dgram-v4-8-0cebbb2ae899@bytedance.com>
-From:   Arseniy Krasnov <oxffffaa@gmail.com>
-In-Reply-To: <20230413-b4-vsock-dgram-v4-8-0cebbb2ae899@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
-        HK_RANDOM_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>
+Subject: RE: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Thread-Topic: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Thread-Index: AQHZmIoyK0/pJvWPX0+gdBo6594smK+AVTiAgAZKrxA=
+Date:   Mon, 12 Jun 2023 04:44:44 +0000
+Message-ID: <SI2P153MB0441DAC4E756A1991A03520FBB54A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
+References: <20230606151747.1649305-1-weh@microsoft.com>
+ <20230607213903.470f71ae@kernel.org>
+In-Reply-To: <20230607213903.470f71ae@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=286edcf7-c4c8-4100-bc0e-54eb0eca02c6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-12T04:43:54Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SI2P153MB0441:EE_|TYZP153MB0628:EE_
+x-ms-office365-filtering-correlation-id: ad805535-b1ef-4aa9-f41e-08db6affbe21
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hmZWzL7I0dTSui7wNVmU2pf8DeDGfP+R/x2FTk0Z7tCeQ0GmvlopBle41y8AuC0r+tRMvKfe/4dGlU7jPVlFipCu8+t5mPNVfU556yiXs0vs/wownV1ltM9FQulm+BGhcKwNnvIP2okpKH5VfdFAHIob5pLEyUUY7zQFfJrgw3W/CFjJEU/eG5Bcg2tkMUVa0dU+XP9xnLd+lXMMUhMfC+r8thmTieJ2RsCY9WcFGfmtFJvRyxSeSULH3ehFBddp8TYPyAvGKk61RH5uw0BQLs8szPw55O6fekMRXYc0bQHDyNMDwVLShEEcUum3AwUD/dcvwjRim0Na2rIFVztSTwvqKWY4s+1K7TwM9rYa7A53gfpWEAdk+g956PSsq+tI5qsf7lAM6360Upi+jioVRIe469wGnVEtyeDUcxf32O5+cvS+LqEn8ibYdy6dy8COW2yfzCABDwHg7v6lSJd1QoDnynztinaGtp8fAKvG9HNCm8xVaS9CmpXcE/QBHbiyRN5ac/TIdEe25CObklFYRY+yVxL0pTMCTL6zrJ3Xd70sS7HFPo8CGBlYUJ7gj9iI6LPzlITRSweO+qewvvQ1Terr6prIAwdT2vAZlqxUOD7+3bk8Idhm+rRfqQ8mgyjU65Uc4iSKkbf1mCcDH0klPQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2P153MB0441.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(396003)(346002)(376002)(366004)(451199021)(966005)(7696005)(316002)(41300700001)(83380400001)(86362001)(8990500004)(38070700005)(9686003)(6506007)(53546011)(186003)(26005)(107886003)(7416002)(2906002)(33656002)(122000001)(82950400001)(82960400001)(38100700002)(55016003)(52536014)(5660300002)(8936002)(8676002)(10290500003)(66946007)(66446008)(64756008)(66476007)(66556008)(54906003)(76116006)(4326008)(478600001)(71200400001)(6916009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HMxftERMGmJnb8/eTZ2/2CwfcHp8hs+tfpTT/TlBYvhBTMxZBgaAOpCdiuFZ?=
+ =?us-ascii?Q?7ozqFyX33sXekSx33JL96g6jaRNgpPe7ghA+KojP936rhzaZD5DdApsjquUN?=
+ =?us-ascii?Q?NibwA1VjwQJPWMXietk3P0MQvtVjFvtzSAf+QQyO8Yzo6z3EVOnpJI6pU53v?=
+ =?us-ascii?Q?YlAi98hQZMRcER0XG8CquHZ2uHpYpIcG2sSBkZ+FJ6YbTQMTotxhJJxXvET2?=
+ =?us-ascii?Q?/wO8Qt2pX20vSVY8JVUCoMxGkqdTjGEQFNfGAYdgWaX7kbo/J+g7wnMX5j9G?=
+ =?us-ascii?Q?E8WObYnratrS/bd4g2HmmkKbD/T6DkmN2w8qOKWk7HJyNdLY7i5tPSi+RjGe?=
+ =?us-ascii?Q?hIY6DSLJitfcqeTGuCRvBBvbiBYEnewOngbXHaY3v9aR0A0MF9Crm8H8Ha2w?=
+ =?us-ascii?Q?mAZ78hr7n3d9VgdCxu3dEZKf/3EWoV+Ugg9JHbAiFR+1lEMTVikmS8lLGa8v?=
+ =?us-ascii?Q?nRpnuNGmHY0xxAEWLFzbUkP46Uy106rqgFXeUuZ5gBqcyez3LvjWZVGS3JRc?=
+ =?us-ascii?Q?sFqo/qExcffsmcGzwHoFM/hEPlrsEWuE12t55mu2Lpp2HrqCrDXqmae7P72Y?=
+ =?us-ascii?Q?g0bsfwtREHvAPXquIbKOLeVg+kr5teEz6Stb6AQk4xw5eE5Wl/avxknFqIjK?=
+ =?us-ascii?Q?Dr3bA0f5766iaLTEhA/7EJ1wPcC2UvAiT06LUpP8Y96IGURBxxRxsAS8TRch?=
+ =?us-ascii?Q?ln15PMuRBsygJetIKV215dg3MOq4MZrzDNa5VinYT9lzv44eLawKFz+aHnDB?=
+ =?us-ascii?Q?DqzV41fy6sk52JB6vISzvSMjz41YL+smJGLmdKO0ZQ+U+3aqwAn8RzajFENN?=
+ =?us-ascii?Q?VqoirlQuuRPxMp01ReZTvWNmcoi6EngQGFY3uhwrnLz8+2LjxAvZ6yE8CJx2?=
+ =?us-ascii?Q?ser5ZK7/OrBDmdRHaLd3+UbBmLjPne5N5id6c665G/g8V6ACLEh6NhM3Icr0?=
+ =?us-ascii?Q?QS4RXB7oWjGOWL7eSzdj0TqDuaTWiMOdDDQUZ+9NjWANZu+owhbGDtwvAbDs?=
+ =?us-ascii?Q?p+w3Of2sEds9doSKFfBxXS1l+ScjurQ5WtbnDfBTMI0DZho3kHJrE6srj8Wj?=
+ =?us-ascii?Q?IwEh2ba1GnpXMtmbdNILZgQwNb4jzk3Zs8mZ28OcP63QLmfkLMLTCX9QJ8RG?=
+ =?us-ascii?Q?lrSafm6dzUIpCPw5iGG0cXs0GXNnbcti1sfEeyiuGhePKJdMCUC5BZPOGjFq?=
+ =?us-ascii?Q?asqvmctenZODz3Nzm1z1WTKcEHv7nz74vAo1PNRIDjOTgm63ghMKmFceXYcj?=
+ =?us-ascii?Q?wHxkbQG/bIPp/38X63HMf4n6y2pHd8dOfXNREEQb6nj5Y0omr9HlXTpbU1PP?=
+ =?us-ascii?Q?FEUtlqEFuefV4Evr/IuilaM70xqC4Frh+uamZ/sIQHgK2NsqEtlI7gE5dKq6?=
+ =?us-ascii?Q?ng/I786/Bss90ydlaztZ7aNwU9wyPZ6jUnW7uTMdAG/VwEwI0urgK96/2ju6?=
+ =?us-ascii?Q?pWIzBqWvgYDLcNgA/W30eNEsXkAQoMUVA9U+YOprHxuLeh0xgKd3qjFPpvyj?=
+ =?us-ascii?Q?zQTApyM+BiJ1gA/oPq6nzAx9lZ9Qs/jvhHe7ocqrg1+/XRfEzFsUl4y292H+?=
+ =?us-ascii?Q?nIg9epbrRbhCZkyQgpg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad805535-b1ef-4aa9-f41e-08db6affbe21
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2023 04:44:44.1905
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VmTsVxCoKPlN4QnIFTBSPuGC8W7dyMtHac7luPB13kGFEXb4tfDH+SSY3m46mI1dJY2df+EtgC4GkO8ybcAhgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZP153MB0628
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hello Bobby!
+Hi Jakub,
 
-Sorry, may be I become a little bit annoying:), but I tried to run vsock_test with
-this v4 version, and again get the same crash:
+> -----Original Message-----
+> From: Jakub Kicinski <kuba@kernel.org>
+> Sent: Thursday, June 8, 2023 12:39 PM
+> To: Wei Hu <weh@microsoft.com>
+> Cc: netdev@vger.kernel.org; linux-hyperv@vger.kernel.org; linux-
+> rdma@vger.kernel.org; Long Li <longli@microsoft.com>; Ajay Sharma
+> <sharmaajay@microsoft.com>; jgg@ziepe.ca; leon@kernel.org; KY
+> Srinivasan <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
+> wei.liu@kernel.org; Dexuan Cui <decui@microsoft.com>;
+> davem@davemloft.net; edumazet@google.com; pabeni@redhat.com;
+> vkuznets@redhat.com; ssengar@linux.microsoft.com;
+> shradhagupta@linux.microsoft.com
+> Subject: Re: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to
+> mana ib driver.
+>=20
+> On Tue,  6 Jun 2023 15:17:47 +0000 Wei Hu wrote:
+> >  drivers/infiniband/hw/mana/cq.c               |  32 ++++-
+> >  drivers/infiniband/hw/mana/main.c             |  87 ++++++++++++
+> >  drivers/infiniband/hw/mana/mana_ib.h          |   4 +
+> >  drivers/infiniband/hw/mana/qp.c               |  90 +++++++++++-
+> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 131 ++++++++++--------
+> >  drivers/net/ethernet/microsoft/mana/mana_en.c |   1 +
+> >  include/net/mana/gdma.h                       |   9 +-
+>=20
+> IB and netdev are different subsystem, can you put it on a branch and sen=
+d a
+> PR as the cover letter so that both subsystems can pull?
+>=20
+> Examples:
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.
+> kernel.org%2Fall%2F20230607210410.88209-1-
+> saeed%40kernel.org%2F&data=3D05%7C01%7Cweh%40microsoft.com%7Cb672
+> 4a9f672f47d433ef08db67da4ada%7C72f988bf86f141af91ab2d7cd011db47%7C
+> 1%7C0%7C638217959538674174%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiM
+> C4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000
+> %7C%7C%7C&sdata=3DamO0W8QsR2I5INNNzCNOKEjrsYbzuZ92KXhNdfwSCHA
+> %3D&reserved=3D0
+> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.
+> kernel.org%2Fall%2F20230602171302.745492-1-
+> anthony.l.nguyen%40intel.com%2F&data=3D05%7C01%7Cweh%40microsoft.co
+> m%7Cb6724a9f672f47d433ef08db67da4ada%7C72f988bf86f141af91ab2d7cd0
+> 11db47%7C1%7C0%7C638217959538674174%7CUnknown%7CTWFpbGZsb3d8
+> eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
+> D%7C3000%7C%7C%7C&sdata=3DA%2BjjtSx%2FvY2T%2BNIEPGuftk%2BCr%2Fv
+> Yt2Xc1q8B6h2tb6g%3D&reserved=3D0
 
-# cat client.sh 
-./vsock_test  --mode=client --control-host=192.168.1.1 --control-port=12345 --peer-cid=2
-# ./client.sh 
-Control socket connected to 192.168.1.1:12345.
-0 - SOCK_STREAM connection reset...[   20.065237] BUG: kernel NULL pointer dereference, addre0
-[   20.065895] #PF: supervisor read access in kernel mode
-[   20.065895] #PF: error_code(0x0000) - not-present page
-[   20.065895] PGD 0 P4D 0 
-[   20.065895] Oops: 0000 [#1] PREEMPT SMP PTI
-[   20.065895] CPU: 0 PID: 111 Comm: vsock_test Not tainted 6.4.0-rc3-gefcccba07069 #385
-[   20.065895] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd44
-[   20.065895] RIP: 0010:static_key_count+0x0/0x20
-[   20.065895] Code: 04 4c 8b 46 08 49 29 c0 4c 01 c8 4c 89 47 08 89 0e 89 56 04 48 89 46 08 f
-[   20.065895] RSP: 0018:ffffbbb000223dc0 EFLAGS: 00010202
-[   20.065895] RAX: ffffffff85709880 RBX: ffffffffc0079140 RCX: 0000000000000000
-[   20.065895] RDX: ffff9f73c2175700 RSI: 0000000000000000 RDI: 0000000000000000
-[   20.065895] RBP: ffff9f73c2385900 R08: ffffbbb000223d30 R09: ffff9f73ff896000
-[   20.065895] R10: 0000000000001000 R11: 0000000000000000 R12: ffffbbb000223e80
-[   20.065895] R13: 0000000000000000 R14: 0000000000000002 R15: ffff9f73c1cfaa80
-[   20.065895] FS:  00007f1ad82f55c0(0000) GS:ffff9f73fe400000(0000) knlGS:0000000000000000
-[   20.065895] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   20.065895] CR2: 0000000000000000 CR3: 000000003f954000 CR4: 00000000000006f0
-[   20.065895] Call Trace:
-[   20.065895]  <TASK>
-[   20.065895]  once_deferred+0xd/0x30
-[   20.065895]  vsock_assign_transport+0x9a/0x1b0 [vsock]
-[   20.065895]  vsock_connect+0xb4/0x3a0 [vsock]
-[   20.065895]  ? var_wake_function+0x60/0x60
-[   20.065895]  __sys_connect+0x9e/0xd0
-[   20.065895]  ? _raw_spin_unlock_irq+0xe/0x30
-[   20.065895]  ? do_setitimer+0x128/0x1f0
-[   20.065895]  ? alarm_setitimer+0x4c/0x90
-[   20.065895]  ? fpregs_assert_state_consistent+0x1d/0x50
-[   20.065895]  ? exit_to_user_mode_prepare+0x36/0x130
-[   20.065895]  __x64_sys_connect+0x11/0x20
-[   20.065895]  do_syscall_64+0x3b/0xc0
-[   20.065895]  entry_SYSCALL_64_after_hwframe+0x4b/0xb5
-[   20.065895] RIP: 0033:0x7f1ad822dd13
-[   20.065895] Code: 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 64 8
-[   20.065895] RSP: 002b:00007ffc513e3c98 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-[   20.065895] RAX: ffffffffffffffda RBX: 000055aed298e020 RCX: 00007f1ad822dd13
-[   20.065895] RDX: 0000000000000010 RSI: 00007ffc513e3cb0 RDI: 0000000000000004
-[   20.065895] RBP: 0000000000000004 R08: 000055aed32b2018 R09: 0000000000000000
-[   20.065895] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-[   20.065895] R13: 000055aed298acb1 R14: 00007ffc513e3cb0 R15: 00007ffc513e3d40
-[   20.065895]  </TASK>
-[   20.065895] Modules linked in: vsock_loopback vhost_vsock vmw_vsock_virtio_transport vmw_vb
-[   20.065895] CR2: 0000000000000000
-[   20.154060] ---[ end trace 0000000000000000 ]---
-[   20.155519] RIP: 0010:static_key_count+0x0/0x20
-[   20.156932] Code: 04 4c 8b 46 08 49 29 c0 4c 01 c8 4c 89 47 08 89 0e 89 56 04 48 89 46 08 f
-[   20.161367] RSP: 0018:ffffbbb000223dc0 EFLAGS: 00010202
-[   20.162613] RAX: ffffffff85709880 RBX: ffffffffc0079140 RCX: 0000000000000000
-[   20.164262] RDX: ffff9f73c2175700 RSI: 0000000000000000 RDI: 0000000000000000
-[   20.165934] RBP: ffff9f73c2385900 R08: ffffbbb000223d30 R09: ffff9f73ff896000
-[   20.167684] R10: 0000000000001000 R11: 0000000000000000 R12: ffffbbb000223e80
-[   20.169427] R13: 0000000000000000 R14: 0000000000000002 R15: ffff9f73c1cfaa80
-[   20.171109] FS:  00007f1ad82f55c0(0000) GS:ffff9f73fe400000(0000) knlGS:0000000000000000
-[   20.173000] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   20.174381] CR2: 0000000000000000 CR3: 000000003f954000 CR4: 00000000000006f0
+Thanks for you comment. I am  new to the process. I have a few questions re=
+garding to this and hope you can help. First of all, the patch is mostly fo=
+r IB. Is it possible for the patch to just go through the RDMA branch, sinc=
+e most of the changes are in RDMA?=20
 
-So, what HEAD do You use? May be You have some specific config (I use x86-64 defconfig + vsock/vhost
-related things) ?
+If the patch also needs to go through the NETDEV branch, does it mean two s=
+ubsystems will pull its own part? A few follow-up questions about generatin=
+g a PR, since I have never done such before.
 
-Thanks, Arseniy
+1. Which repo should I clone and create the branch from?
 
+2. From the example you provided, I see these people has their own branches=
+ on kernel.org, for example something like:
+git://git.kernel.org/pub/scm/linux/kernel/git/saeed/linux.git tags/mlx5-upd=
+ates-2023-06-06.=20
+I am not Linux maintainer. I just have repo on Github. How do I create or f=
+ork on kernel.org? Do I need an account to do so? Or I can use my own repo =
+on Github?
 
-On 10.06.2023 03:58, Bobby Eshleman wrote:
-> From: Jiang Wang <jiang.wang@bytedance.com>
-> 
-> This patch adds tests for vsock datagram.
-> 
-> Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
-> Signed-off-by: Jiang Wang <jiang.wang@bytedance.com>
-> ---
->  tools/testing/vsock/util.c       | 141 ++++++++++++-
->  tools/testing/vsock/util.h       |   6 +
->  tools/testing/vsock/vsock_test.c | 432 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 578 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-> index 01b636d3039a..811e70d7cf1e 100644
-> --- a/tools/testing/vsock/util.c
-> +++ b/tools/testing/vsock/util.c
-> @@ -99,7 +99,8 @@ static int vsock_connect(unsigned int cid, unsigned int port, int type)
->  	int ret;
->  	int fd;
->  
-> -	control_expectln("LISTENING");
-> +	if (type != SOCK_DGRAM)
-> +		control_expectln("LISTENING");
->  
->  	fd = socket(AF_VSOCK, type, 0);
->  
-> @@ -130,6 +131,11 @@ int vsock_seqpacket_connect(unsigned int cid, unsigned int port)
->  	return vsock_connect(cid, port, SOCK_SEQPACKET);
->  }
->  
-> +int vsock_dgram_connect(unsigned int cid, unsigned int port)
-> +{
-> +	return vsock_connect(cid, port, SOCK_DGRAM);
-> +}
-> +
->  /* Listen on <cid, port> and return the first incoming connection.  The remote
->   * address is stored to clientaddrp.  clientaddrp may be NULL.
->   */
-> @@ -211,6 +217,34 @@ int vsock_seqpacket_accept(unsigned int cid, unsigned int port,
->  	return vsock_accept(cid, port, clientaddrp, SOCK_SEQPACKET);
->  }
->  
-> +int vsock_dgram_bind(unsigned int cid, unsigned int port)
-> +{
-> +	union {
-> +		struct sockaddr sa;
-> +		struct sockaddr_vm svm;
-> +	} addr = {
-> +		.svm = {
-> +			.svm_family = AF_VSOCK,
-> +			.svm_port = port,
-> +			.svm_cid = cid,
-> +		},
-> +	};
-> +	int fd;
-> +
-> +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-> +	if (fd < 0) {
-> +		perror("socket");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
-> +		perror("bind");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	return fd;
-> +}
-> +
->  /* Transmit one byte and check the return value.
->   *
->   * expected_ret:
-> @@ -260,6 +294,57 @@ void send_byte(int fd, int expected_ret, int flags)
->  	}
->  }
->  
-> +/* Transmit one byte and check the return value.
-> + *
-> + * expected_ret:
-> + *  <0 Negative errno (for testing errors)
-> + *   0 End-of-file
-> + *   1 Success
-> + */
-> +void sendto_byte(int fd, const struct sockaddr *dest_addr, int len, int expected_ret,
-> +		 int flags)
-> +{
-> +	const uint8_t byte = 'A';
-> +	ssize_t nwritten;
-> +
-> +	timeout_begin(TIMEOUT);
-> +	do {
-> +		nwritten = sendto(fd, &byte, sizeof(byte), flags, dest_addr,
-> +				  len);
-> +		timeout_check("write");
-> +	} while (nwritten < 0 && errno == EINTR);
-> +	timeout_end();
-> +
-> +	if (expected_ret < 0) {
-> +		if (nwritten != -1) {
-> +			fprintf(stderr, "bogus sendto(2) return value %zd\n",
-> +				nwritten);
-> +			exit(EXIT_FAILURE);
-> +		}
-> +		if (errno != -expected_ret) {
-> +			perror("write");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +		return;
-> +	}
-> +
-> +	if (nwritten < 0) {
-> +		perror("write");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +	if (nwritten == 0) {
-> +		if (expected_ret == 0)
-> +			return;
-> +
-> +		fprintf(stderr, "unexpected EOF while sending byte\n");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +	if (nwritten != sizeof(byte)) {
-> +		fprintf(stderr, "bogus sendto(2) return value %zd\n", nwritten);
-> +		exit(EXIT_FAILURE);
-> +	}
-> +}
-> +
->  /* Receive one byte and check the return value.
->   *
->   * expected_ret:
-> @@ -313,6 +398,60 @@ void recv_byte(int fd, int expected_ret, int flags)
->  	}
->  }
->  
-> +/* Receive one byte and check the return value.
-> + *
-> + * expected_ret:
-> + *  <0 Negative errno (for testing errors)
-> + *   0 End-of-file
-> + *   1 Success
-> + */
-> +void recvfrom_byte(int fd, struct sockaddr *src_addr, socklen_t *addrlen,
-> +		   int expected_ret, int flags)
-> +{
-> +	uint8_t byte;
-> +	ssize_t nread;
-> +
-> +	timeout_begin(TIMEOUT);
-> +	do {
-> +		nread = recvfrom(fd, &byte, sizeof(byte), flags, src_addr, addrlen);
-> +		timeout_check("read");
-> +	} while (nread < 0 && errno == EINTR);
-> +	timeout_end();
-> +
-> +	if (expected_ret < 0) {
-> +		if (nread != -1) {
-> +			fprintf(stderr, "bogus recvfrom(2) return value %zd\n",
-> +				nread);
-> +			exit(EXIT_FAILURE);
-> +		}
-> +		if (errno != -expected_ret) {
-> +			perror("read");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +		return;
-> +	}
-> +
-> +	if (nread < 0) {
-> +		perror("read");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +	if (nread == 0) {
-> +		if (expected_ret == 0)
-> +			return;
-> +
-> +		fprintf(stderr, "unexpected EOF while receiving byte\n");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +	if (nread != sizeof(byte)) {
-> +		fprintf(stderr, "bogus recvfrom(2) return value %zd\n", nread);
-> +		exit(EXIT_FAILURE);
-> +	}
-> +	if (byte != 'A') {
-> +		fprintf(stderr, "unexpected byte read %c\n", byte);
-> +		exit(EXIT_FAILURE);
-> +	}
-> +}
-> +
->  /* Run test cases.  The program terminates if a failure occurs. */
->  void run_tests(const struct test_case *test_cases,
->  	       const struct test_opts *opts)
-> diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
-> index fb99208a95ea..a69e128d120c 100644
-> --- a/tools/testing/vsock/util.h
-> +++ b/tools/testing/vsock/util.h
-> @@ -37,13 +37,19 @@ void init_signals(void);
->  unsigned int parse_cid(const char *str);
->  int vsock_stream_connect(unsigned int cid, unsigned int port);
->  int vsock_seqpacket_connect(unsigned int cid, unsigned int port);
-> +int vsock_dgram_connect(unsigned int cid, unsigned int port);
->  int vsock_stream_accept(unsigned int cid, unsigned int port,
->  			struct sockaddr_vm *clientaddrp);
->  int vsock_seqpacket_accept(unsigned int cid, unsigned int port,
->  			   struct sockaddr_vm *clientaddrp);
-> +int vsock_dgram_bind(unsigned int cid, unsigned int port);
->  void vsock_wait_remote_close(int fd);
->  void send_byte(int fd, int expected_ret, int flags);
-> +void sendto_byte(int fd, const struct sockaddr *dest_addr, int len, int expected_ret,
-> +		 int flags);
->  void recv_byte(int fd, int expected_ret, int flags);
-> +void recvfrom_byte(int fd, struct sockaddr *src_addr, socklen_t *addrlen,
-> +		   int expected_ret, int flags);
->  void run_tests(const struct test_case *test_cases,
->  	       const struct test_opts *opts);
->  void list_tests(const struct test_case *test_cases);
-> diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-> index ac1bd3ac1533..ded82d39ee5d 100644
-> --- a/tools/testing/vsock/vsock_test.c
-> +++ b/tools/testing/vsock/vsock_test.c
-> @@ -1053,6 +1053,413 @@ static void test_stream_virtio_skb_merge_server(const struct test_opts *opts)
->  	close(fd);
->  }
->  
-> +static void test_dgram_sendto_client(const struct test_opts *opts)
-> +{
-> +	union {
-> +		struct sockaddr sa;
-> +		struct sockaddr_vm svm;
-> +	} addr = {
-> +		.svm = {
-> +			.svm_family = AF_VSOCK,
-> +			.svm_port = 1234,
-> +			.svm_cid = opts->peer_cid,
-> +		},
-> +	};
-> +	int fd;
-> +
-> +	/* Wait for the server to be ready */
-> +	control_expectln("BIND");
-> +
-> +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-> +	if (fd < 0) {
-> +		perror("socket");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	sendto_byte(fd, &addr.sa, sizeof(addr.svm), 1, 0);
-> +
-> +	/* Notify the server that the client has finished */
-> +	control_writeln("DONE");
-> +
-> +	close(fd);
-> +}
-> +
-> +static void test_dgram_sendto_server(const struct test_opts *opts)
-> +{
-> +	union {
-> +		struct sockaddr sa;
-> +		struct sockaddr_vm svm;
-> +	} addr = {
-> +		.svm = {
-> +			.svm_family = AF_VSOCK,
-> +			.svm_port = 1234,
-> +			.svm_cid = VMADDR_CID_ANY,
-> +		},
-> +	};
-> +	int len = sizeof(addr.sa);
-> +	int fd;
-> +
-> +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-> +	if (fd < 0) {
-> +		perror("socket");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
-> +		perror("bind");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	/* Notify the client that the server is ready */
-> +	control_writeln("BIND");
-> +
-> +	recvfrom_byte(fd, &addr.sa, &len, 1, 0);
-> +
-> +	/* Wait for the client to finish */
-> +	control_expectln("DONE");
-> +
-> +	close(fd);
-> +}
-> +
-> +static void test_dgram_connect_client(const struct test_opts *opts)
-> +{
-> +	union {
-> +		struct sockaddr sa;
-> +		struct sockaddr_vm svm;
-> +	} addr = {
-> +		.svm = {
-> +			.svm_family = AF_VSOCK,
-> +			.svm_port = 1234,
-> +			.svm_cid = opts->peer_cid,
-> +		},
-> +	};
-> +	int ret;
-> +	int fd;
-> +
-> +	/* Wait for the server to be ready */
-> +	control_expectln("BIND");
-> +
-> +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-> +	if (fd < 0) {
-> +		perror("bind");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	ret = connect(fd, &addr.sa, sizeof(addr.svm));
-> +	if (ret < 0) {
-> +		perror("connect");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	send_byte(fd, 1, 0);
-> +
-> +	/* Notify the server that the client has finished */
-> +	control_writeln("DONE");
-> +
-> +	close(fd);
-> +}
-> +
-> +static void test_dgram_connect_server(const struct test_opts *opts)
-> +{
-> +	test_dgram_sendto_server(opts);
-> +}
-> +
-> +static void test_dgram_multiconn_sendto_client(const struct test_opts *opts)
-> +{
-> +	union {
-> +		struct sockaddr sa;
-> +		struct sockaddr_vm svm;
-> +	} addr = {
-> +		.svm = {
-> +			.svm_family = AF_VSOCK,
-> +			.svm_port = 1234,
-> +			.svm_cid = opts->peer_cid,
-> +		},
-> +	};
-> +	int fds[MULTICONN_NFDS];
-> +	int i;
-> +
-> +	/* Wait for the server to be ready */
-> +	control_expectln("BIND");
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++) {
-> +		fds[i] = socket(AF_VSOCK, SOCK_DGRAM, 0);
-> +		if (fds[i] < 0) {
-> +			perror("socket");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++)
-> +		sendto_byte(fds[i], &addr.sa, sizeof(addr.svm), 1, 0);
-> +
-> +	/* Notify the server that the client has finished */
-> +	control_writeln("DONE");
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++)
-> +		close(fds[i]);
-> +}
-> +
-> +static void test_dgram_multiconn_sendto_server(const struct test_opts *opts)
-> +{
-> +	union {
-> +		struct sockaddr sa;
-> +		struct sockaddr_vm svm;
-> +	} addr = {
-> +		.svm = {
-> +			.svm_family = AF_VSOCK,
-> +			.svm_port = 1234,
-> +			.svm_cid = VMADDR_CID_ANY,
-> +		},
-> +	};
-> +	int len = sizeof(addr.sa);
-> +	int fd;
-> +	int i;
-> +
-> +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-> +	if (fd < 0) {
-> +		perror("socket");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
-> +		perror("bind");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	/* Notify the client that the server is ready */
-> +	control_writeln("BIND");
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++)
-> +		recvfrom_byte(fd, &addr.sa, &len, 1, 0);
-> +
-> +	/* Wait for the client to finish */
-> +	control_expectln("DONE");
-> +
-> +	close(fd);
-> +}
-> +
-> +static void test_dgram_multiconn_send_client(const struct test_opts *opts)
-> +{
-> +	int fds[MULTICONN_NFDS];
-> +	int i;
-> +
-> +	/* Wait for the server to be ready */
-> +	control_expectln("BIND");
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++) {
-> +		fds[i] = vsock_dgram_connect(opts->peer_cid, 1234);
-> +		if (fds[i] < 0) {
-> +			perror("socket");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++)
-> +		send_byte(fds[i], 1, 0);
-> +
-> +	/* Notify the server that the client has finished */
-> +	control_writeln("DONE");
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++)
-> +		close(fds[i]);
-> +}
-> +
-> +static void test_dgram_multiconn_send_server(const struct test_opts *opts)
-> +{
-> +	union {
-> +		struct sockaddr sa;
-> +		struct sockaddr_vm svm;
-> +	} addr = {
-> +		.svm = {
-> +			.svm_family = AF_VSOCK,
-> +			.svm_port = 1234,
-> +			.svm_cid = VMADDR_CID_ANY,
-> +		},
-> +	};
-> +	int fd;
-> +	int i;
-> +
-> +	fd = socket(AF_VSOCK, SOCK_DGRAM, 0);
-> +	if (fd < 0) {
-> +		perror("socket");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	if (bind(fd, &addr.sa, sizeof(addr.svm)) < 0) {
-> +		perror("bind");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	/* Notify the client that the server is ready */
-> +	control_writeln("BIND");
-> +
-> +	for (i = 0; i < MULTICONN_NFDS; i++)
-> +		recv_byte(fd, 1, 0);
-> +
-> +	/* Wait for the client to finish */
-> +	control_expectln("DONE");
-> +
-> +	close(fd);
-> +}
-> +
-> +static void test_dgram_msg_bounds_client(const struct test_opts *opts)
-> +{
-> +	unsigned long recv_buf_size;
-> +	int page_size;
-> +	int msg_cnt;
-> +	int fd;
-> +
-> +	fd = vsock_dgram_connect(opts->peer_cid, 1234);
-> +	if (fd < 0) {
-> +		perror("connect");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	/* Let the server know the client is ready */
-> +	control_writeln("CLNTREADY");
-> +
-> +	msg_cnt = control_readulong();
-> +	recv_buf_size = control_readulong();
-> +
-> +	/* Wait, until receiver sets buffer size. */
-> +	control_expectln("SRVREADY");
-> +
-> +	page_size = getpagesize();
-> +
-> +	for (int i = 0; i < msg_cnt; i++) {
-> +		unsigned long curr_hash;
-> +		ssize_t send_size;
-> +		size_t buf_size;
-> +		void *buf;
-> +
-> +		/* Use "small" buffers and "big" buffers. */
-> +		if (i & 1)
-> +			buf_size = page_size +
-> +					(rand() % (MAX_MSG_SIZE - page_size));
-> +		else
-> +			buf_size = 1 + (rand() % page_size);
-> +
-> +		buf_size = min(buf_size, recv_buf_size);
-> +
-> +		buf = malloc(buf_size);
-> +
-> +		if (!buf) {
-> +			perror("malloc");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +
-> +		memset(buf, rand() & 0xff, buf_size);
-> +		/* Set at least one MSG_EOR + some random. */
-> +
-> +		send_size = send(fd, buf, buf_size, 0);
-> +
-> +		if (send_size < 0) {
-> +			perror("send");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +
-> +		if (send_size != buf_size) {
-> +			fprintf(stderr, "Invalid send size\n");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +
-> +		/* In theory the implementation isn't required to transmit
-> +		 * these packets in order, so we use this SYNC control message
-> +		 * so that server and client coordinate sending and receiving
-> +		 * one packet at a time. The client sends a packet and waits
-> +		 * until it has been received before sending another.
-> +		 */
-> +		control_writeln("PKTSENT");
-> +		control_expectln("PKTRECV");
-> +
-> +		/* Send the server a hash of the packet */
-> +		curr_hash = hash_djb2(buf, buf_size);
-> +		control_writeulong(curr_hash);
-> +		free(buf);
-> +	}
-> +
-> +	control_writeln("SENDDONE");
-> +	close(fd);
-> +}
-> +
-> +static void test_dgram_msg_bounds_server(const struct test_opts *opts)
-> +{
-> +	const unsigned long msg_cnt = 16;
-> +	unsigned long sock_buf_size;
-> +	struct msghdr msg = {0};
-> +	struct iovec iov = {0};
-> +	char buf[MAX_MSG_SIZE];
-> +	socklen_t len;
-> +	int fd;
-> +	int i;
-> +
-> +	fd = vsock_dgram_bind(VMADDR_CID_ANY, 1234);
-> +
-> +	if (fd < 0) {
-> +		perror("bind");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	/* Set receive buffer to maximum */
-> +	sock_buf_size = -1;
-> +	if (setsockopt(fd, SOL_SOCKET, SO_RCVBUF,
-> +		       &sock_buf_size, sizeof(sock_buf_size))) {
-> +		perror("setsockopt(SO_RECVBUF)");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	/* Retrieve the receive buffer size */
-> +	len = sizeof(sock_buf_size);
-> +	if (getsockopt(fd, SOL_SOCKET, SO_RCVBUF,
-> +		       &sock_buf_size, &len)) {
-> +		perror("getsockopt(SO_RECVBUF)");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	/* Client ready to receive parameters */
-> +	control_expectln("CLNTREADY");
-> +
-> +	control_writeulong(msg_cnt);
-> +	control_writeulong(sock_buf_size);
-> +
-> +	/* Ready to receive data. */
-> +	control_writeln("SRVREADY");
-> +
-> +	iov.iov_base = buf;
-> +	iov.iov_len = sizeof(buf);
-> +	msg.msg_iov = &iov;
-> +	msg.msg_iovlen = 1;
-> +
-> +	for (i = 0; i < msg_cnt; i++) {
-> +		unsigned long remote_hash;
-> +		unsigned long curr_hash;
-> +		ssize_t recv_size;
-> +
-> +		control_expectln("PKTSENT");
-> +		recv_size = recvmsg(fd, &msg, 0);
-> +		control_writeln("PKTRECV");
-> +
-> +		if (!recv_size)
-> +			break;
-> +
-> +		if (recv_size < 0) {
-> +			perror("recvmsg");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +
-> +		curr_hash = hash_djb2(msg.msg_iov[0].iov_base, recv_size);
-> +		remote_hash = control_readulong();
-> +
-> +		if (curr_hash != remote_hash) {
-> +			fprintf(stderr, "Message bounds broken\n");
-> +			exit(EXIT_FAILURE);
-> +		}
-> +	}
-> +
-> +	close(fd);
-> +}
-> +
->  static struct test_case test_cases[] = {
->  	{
->  		.name = "SOCK_STREAM connection reset",
-> @@ -1128,6 +1535,31 @@ static struct test_case test_cases[] = {
->  		.run_client = test_stream_virtio_skb_merge_client,
->  		.run_server = test_stream_virtio_skb_merge_server,
->  	},
-> +	{
-> +		.name = "SOCK_DGRAM client sendto",
-> +		.run_client = test_dgram_sendto_client,
-> +		.run_server = test_dgram_sendto_server,
-> +	},
-> +	{
-> +		.name = "SOCK_DGRAM client connect",
-> +		.run_client = test_dgram_connect_client,
-> +		.run_server = test_dgram_connect_server,
-> +	},
-> +	{
-> +		.name = "SOCK_DGRAM multiple connections using sendto",
-> +		.run_client = test_dgram_multiconn_sendto_client,
-> +		.run_server = test_dgram_multiconn_sendto_server,
-> +	},
-> +	{
-> +		.name = "SOCK_DGRAM multiple connections using send",
-> +		.run_client = test_dgram_multiconn_send_client,
-> +		.run_server = test_dgram_multiconn_send_server,
-> +	},
-> +	{
-> +		.name = "SOCK_DGRAM msg bounds",
-> +		.run_client = test_dgram_msg_bounds_client,
-> +		.run_server = test_dgram_msg_bounds_server,
-> +	},
->  	{},
->  };
->  
-> 
+3.  How to create PR in this case? Should I follow this link: https://docs.=
+kernel.org/maintainer/pull-requests.html?
+
+Thanks,
+Wei
