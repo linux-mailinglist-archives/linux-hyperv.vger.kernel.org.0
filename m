@@ -2,97 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E4F772DADA
-	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jun 2023 09:29:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 719AA72E9F1
+	for <lists+linux-hyperv@lfdr.de>; Tue, 13 Jun 2023 19:35:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234756AbjFMH3q (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 13 Jun 2023 03:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60566 "EHLO
+        id S239251AbjFMRda (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 13 Jun 2023 13:33:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237927AbjFMH3o (ORCPT
+        with ESMTP id S239494AbjFMRdO (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 13 Jun 2023 03:29:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2650C1720;
-        Tue, 13 Jun 2023 00:29:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 987806320A;
-        Tue, 13 Jun 2023 07:29:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 484D2C433EF;
-        Tue, 13 Jun 2023 07:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686641381;
-        bh=4Qor2Eois7iv4mh8rLWFv20BV5k0vOezfA8NaE+NqFE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H/AK2ja6byrwjff8XYyniafFUOEmCjUEVE7ee/T4u2O3VxX22dFyA3bDrN4BTwq9B
-         IMtbawLIcf856Kp72hD++WR8JhTe7SFap7iNZ03PKqMvsWurAAb9HS71RYYuSLsVFe
-         ST73X/9GD1M+1LHOr7Y4oIDQIutD+Tk5tlOvL8/bZ4j36DB68/makp2wfN2i4onoXj
-         dKI4lWtAY3pHSfv+Z6XyRJJwjJubWQ8/AEHeOtX3gZjFJJYTCdcRiAKd9UMWFVa4oU
-         oqcxcsIjfSEw90LO7ij5Ib6bLT6w7KMRUUtNkVE92lgJZDAgCun6eNku79FltQiRU3
-         lYMGv+UlDgnZQ==
-Date:   Tue, 13 Jun 2023 10:29:36 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Wei Hu <weh@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Long Li <longli@microsoft.com>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>
-Subject: Re: [PATCH v2 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
- driver.
-Message-ID: <20230613072936.GV12152@unreal>
-References: <20230606151747.1649305-1-weh@microsoft.com>
- <20230607213903.470f71ae@kernel.org>
- <SI2P153MB0441DAC4E756A1991A03520FBB54A@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
- <20230612061349.GM12152@unreal>
- <20230612102221.2ca726fd@kernel.org>
+        Tue, 13 Jun 2023 13:33:14 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17051BFD;
+        Tue, 13 Jun 2023 10:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686677589; x=1718213589;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=kaaQfVZjsi6nPisz9n/bF0zoS0o4mv4awPemaC1m2E0=;
+  b=MuATKvqiQtQoZmZf9Y7WLfLFLYrl98KQ2rxe+13Q9EfGDXXw2p0VIf7A
+   5Vb6p+d6HnxUObFK59twU0r2JvlZO094UW7ck08X1iys3V1L335iUN+ZZ
+   PlXw7SJAH3AbomCaUWHQrs+MqTcgiwCR/Na8TxS7FZeJhYZtXy8qFBqRD
+   DG+ZM+0hXVjL0AYdIphTMptRtTzWGhyOkc0EK1Bqqd4Z8CYK90K2ai+JW
+   miJBlW7Mz9jFC+GXC4Tkj64R2SQiWZ0tyjgObNhq0JerGgC122yn1FzbT
+   Auuz1oqqeIt8IWSMhYiOgKjYg5Dc5BegKkVNpjkLKttQBy2J86iGNMhGS
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="358405660"
+X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
+   d="scan'208";a="358405660"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 10:33:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="776917221"
+X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
+   d="scan'208";a="776917221"
+Received: from clin147-mobl.amr.corp.intel.com (HELO [10.212.134.227]) ([10.212.134.227])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 10:33:08 -0700
+Message-ID: <23749756-022a-5574-af4d-a4a03d9542e1@intel.com>
+Date:   Tue, 13 Jun 2023 10:33:07 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230612102221.2ca726fd@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2] x86/hyperv: add noop functions to x86_init mpparse
+ functions
+Content-Language: en-US
+To:     Saurabh Sengar <ssengar@linux.microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        mikelley@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, hpa@zytor.com
+References: <1686640391-13001-1-git-send-email-ssengar@linux.microsoft.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <1686640391-13001-1-git-send-email-ssengar@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 10:22:21AM -0700, Jakub Kicinski wrote:
-> On Mon, 12 Jun 2023 09:13:49 +0300 Leon Romanovsky wrote:
-> > > Thanks for you comment. I am  new to the process. I have a few
-> > > questions regarding to this and hope you can help. First of all,
-> > > the patch is mostly for IB. Is it possible for the patch to just go
-> > > through the RDMA branch, since most of the changes are in RDMA?   
-> > 
-> > Yes, it can, we (RDMA) will handle it.
-> 
-> Probably, although it's better to teach them some process sooner
-> rather than later?
+On 6/13/23 00:13, Saurabh Sengar wrote:
+> In certain configurations, VTL0 and VTL2 can share the same VM
+> partition and hence share the same memory address space. In such
+> systems VTL2 has visibility of all of the VTL0 memory space.
 
-Like Jason wrote above, shared branch is valuable once the submitter has
-enough volume to justify. In previous cycles, when we needed it, I simply
-created shared branch [1] for them.
+FWIW, this is pretty much gibberish to me.  The way I suggest avoiding
+producing gibberish is avoiding acronyms:
 
-Even we (Nvidia), who has enough patch volume, sometimes prefer to
-delay submission to next cycle and don't bother ourselves with shared
-branch.
+	Hyper-V can run VMs at different privilege "levels".  Sometimes,
+	it chooses to run two different VMs at different levels but
+	they share some of their address space.  This <insert reason
+	that someone might want to do this>.
 
-[1] https://lore.kernel.org/all/Y2v2CGEWC70g+Ot+@unreal/
+That's not gibberish.
 
-Thanks
+> When CONFIG_X86_MPPARSE is enabled for VTL2, the kernel performs
+> a scan of low memory to search for MP tables. However, in systems
+> where VTL0 controls the low memory and may contain valid tables
+> specific to VTL0, this scanning process can lead to confusion
+> within the VTL2 kernel.
+
+What is the end-user-visible effect of this "confusion"?  A crash?  A
+warning?  An error message?  What is the impact on end users?
+
+This information will help the maintainers decide how to disposition
+your patch.  Should we send it upstream immediately because it's
+impacting millions of users?  Or can we do it in a bit more leisurely
+fashion because nobody cares?
+
+> In !ACPI system, there is no way to disable CONFIG_X86_MPPARSE
+> hence add the noop function instead.
+
+This makes zero sense to me.
+
+Like I told you before, we don't compile things out just because they
+don't work on one weirdo system.  If we did that, we'd have a billion
+incompatible x86 kernel images that can't boot across systems.
+
+
