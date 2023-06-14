@@ -2,117 +2,412 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B290730740
-	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jun 2023 20:16:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62E93730734
+	for <lists+linux-hyperv@lfdr.de>; Wed, 14 Jun 2023 20:15:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240899AbjFNSQo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 14 Jun 2023 14:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47360 "EHLO
+        id S241026AbjFNSPp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 14 Jun 2023 14:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243174AbjFNSPV (ORCPT
+        with ESMTP id S243179AbjFNSPV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
         Wed, 14 Jun 2023 14:15:21 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1A47426BF;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1F3C22700;
         Wed, 14 Jun 2023 11:15:17 -0700 (PDT)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8A6B720FE871;
+        by linux.microsoft.com (Postfix) with ESMTPSA id A314E20FEA4C;
         Wed, 14 Jun 2023 11:15:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8A6B720FE871
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A314E20FEA4C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1686766516;
-        bh=P4/LsegbU0ZnJYipJHaEnVLb8YhEnuCaEclVr3qm9DQ=;
-        h=From:To:Subject:Date:From;
-        b=gIAqO0DeiZnxdnWILAk4/Jz2l/XGtReoT+t6sQG+NaKAPjqZbzCuLaB9G8tRv5GuL
-         wCNv8Azx8pvcCBGpKpYO7lTtJLOP/j4vsftKUMLwIbfTF1k4JbSjVD2TafiWY1TI/v
-         eEzGKZFSZKRiesM7wCGLCZ+kQ0zpEvkq/vIa8czA=
+        bh=ZR2EsnjP22csIYjdGghsF6b4o1WpJemLTpX53XhmhKI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=MvsBj1cxLlY6Du9mATEtzjgAa4itNMlA2JGzPzKR9s/RAoHBz4URDZMSVlP6T/M84
+         2DPnDkyPOYvqWdluW+UUeYIRkMS94MjSFhldj9Ld7GVrGSm8Lfd5KJ7GZlyNg8Q/iF
+         JrEBYMMvi1wC9dBYGA1T6Y3Gne/oJAVVX0retUSI=
 From:   Saurabh Sengar <ssengar@linux.microsoft.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
         decui@microsoft.com, mikelley@microsoft.com,
         gregkh@linuxfoundation.org, corbet@lwn.net,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-doc@vger.kernel.org
-Subject: [PATCH v2 0/5] UIO driver for low speed Hyper-V devices
-Date:   Wed, 14 Jun 2023 11:15:07 -0700
-Message-Id: <1686766512-2589-1-git-send-email-ssengar@linux.microsoft.com>
+Subject: [PATCH v2 1/5] uio: Add hv_vmbus_client driver
+Date:   Wed, 14 Jun 2023 11:15:08 -0700
+Message-Id: <1686766512-2589-2-git-send-email-ssengar@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1686766512-2589-1-git-send-email-ssengar@linux.microsoft.com>
+References: <1686766512-2589-1-git-send-email-ssengar@linux.microsoft.com>
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hyper-V is adding some low speed "specialty" synthetic devices.
-This patch series propose the solution to support these devices.
-Instead of writing new kernel-level VMBus drivers for all of
-these devices, we propose a solution wherein these devices are
-made accessible to user space through a dedicated UIO-based
-hv_vmbus_client driver, allowing for efficient device handling
-via user space drivers. This solution aims to optimize the
-development process by eliminating the need to create
-individual kernel-level VMBus drivers for each device and
-provide flexibility to user space applications to control the
-ring buffer independently.
+Generic VMBus driver that can be dynamically bound, to any simple
+low speed Hyper-V VMBus device. This driver supports single
+channel and uses hypercall instead of monitor bits to interrupt
+host, which is suitable for low speed devices. Additionally, the
+driver also provide the flexibility of custom ring buffer sizes and
+avoid memory allocation for gpadl to offer memory optimization.
 
-Since all these new synthetic devices are low speed devices,
-they don't support monitor bits and we must use vmbus_setevent()
-to enable interrupts from the host. The new uio driver supports
-all these requirements effectively. Additionally, this new driver
-also provide the support for having smaller/cutom ringbuffer
-size.
-
-Furthermore, this patch series includes a revision of the fcopy
-application to leverage the new interface seamlessly along with
-removal of old driver and application. However, please note that
-the development of other similar drivers is still a work in
-progress, and will be shared as they become available.
-
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
 [V2]
-1. Update driver info in Documentation/driver-api/uio-howto.rst
-2. Update ring_size sysfs info in Documentation/ABI/stable/sysfs-bus-vmbus
-3. Remove DRIVER_VERSION
-4. Remove refcnt
-5. scnprintf -> sysfs_emit
-6. sysfs_create_file -> ATTRIBUTE_GROUPS + ".driver.groups";
-7. sysfs_create_bin_file -> device_create_bin_file
-8. dev_notice -> dev_err
-9. Removed invalid free of devm_ allocated data
-10. Updated application with simpler sysfs path
-
-
-Saurabh Sengar (5):
-  uio: Add hv_vmbus_client driver
-  tools: hv: Add vmbus_bufring
-  tools: hv: Add new fcopy application based on uio driver
-  tools: hv: Remove hv_fcopy_daemon
-  Drivers: hv: Remove fcopy driver
+- Update driver info in Documentation/driver-api/uio-howto.rst
+- Update ring_size sysfs info in Documentation/ABI/stable/sysfs-bus-vmbus
+- Remove DRIVER_VERSION
+- Remove refcnt
+- scnprintf -> sysfs_emit
+- sysfs_create_file -> ATTRIBUTE_GROUPS + ".driver.groups";
+- sysfs_create_bin_file -> device_create_bin_file
+- dev_notice -> dev_err
+- remove MODULE_VERSION
 
  Documentation/ABI/stable/sysfs-bus-vmbus |   7 +
- Documentation/driver-api/uio-howto.rst   |  46 +++
- drivers/hv/Makefile                      |   2 +-
- drivers/hv/hv_fcopy.c                    | 427 --------------------
- drivers/hv/hv_util.c                     |  12 -
- drivers/uio/Kconfig                      |  12 +
+ Documentation/driver-api/uio-howto.rst   |  46 +++++
+ drivers/uio/Kconfig                      |  12 ++
  drivers/uio/Makefile                     |   1 +
- drivers/uio/uio_hv_vmbus_client.c        | 217 ++++++++++
- tools/hv/Build                           |   3 +-
- tools/hv/Makefile                        |  10 +-
- tools/hv/hv_fcopy_daemon.c               | 266 ------------
- tools/hv/hv_fcopy_uio_daemon.c           | 489 +++++++++++++++++++++++
- tools/hv/vmbus_bufring.c                 | 322 +++++++++++++++
- tools/hv/vmbus_bufring.h                 | 158 ++++++++
- 14 files changed, 1260 insertions(+), 712 deletions(-)
- delete mode 100644 drivers/hv/hv_fcopy.c
+ drivers/uio/uio_hv_vmbus_client.c        | 217 +++++++++++++++++++++++
+ 5 files changed, 283 insertions(+)
  create mode 100644 drivers/uio/uio_hv_vmbus_client.c
- delete mode 100644 tools/hv/hv_fcopy_daemon.c
- create mode 100644 tools/hv/hv_fcopy_uio_daemon.c
- create mode 100644 tools/hv/vmbus_bufring.c
- create mode 100644 tools/hv/vmbus_bufring.h
 
+diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus b/Documentation/ABI/stable/sysfs-bus-vmbus
+index 3066feae1d8d..5d075fbd150b 100644
+--- a/Documentation/ABI/stable/sysfs-bus-vmbus
++++ b/Documentation/ABI/stable/sysfs-bus-vmbus
+@@ -153,6 +153,13 @@ Contact:	Stephen Hemminger <sthemmin@microsoft.com>
+ Description:	Binary file created by uio_hv_generic for ring buffer
+ Users:		Userspace drivers
+ 
++What:		/sys/bus/vmbus/devices/<UUID>/ring_size
++Date:		June. 2023
++KernelVersion:	6.4
++Contact:	Saurabh Sengar <ssengar@microsoft.com>
++Description:	File created by uio_hv_vmbus_client for setting device ring buffer size
++Users:		Userspace drivers
++
+ What:           /sys/bus/vmbus/devices/<UUID>/channels/<N>/intr_in_full
+ Date:           February 2019
+ KernelVersion:  5.0
+diff --git a/Documentation/driver-api/uio-howto.rst b/Documentation/driver-api/uio-howto.rst
+index 907ffa3b38f5..33b67f876b96 100644
+--- a/Documentation/driver-api/uio-howto.rst
++++ b/Documentation/driver-api/uio-howto.rst
+@@ -722,6 +722,52 @@ For example::
+ 
+ 	/sys/bus/vmbus/devices/3811fe4d-0fa0-4b62-981a-74fc1084c757/channels/21/ring
+ 
++Generic Hyper-V driver for low speed devices
++============================================
++
++The generic driver is a kernel module named uio_hv_vmbus_client. It
++supports slow devices on the Hyper-V VMBus similar to uio_hv_generic
++for faster devices. This driver also gives flexibility of customized
++ring buffer sizes.
++
++Making the driver recognize the device
++--------------------------------------
++
++Since the driver does not declare any device GUID's, it will not get
++loaded automatically and will not automatically bind to any devices, you
++must load it and allocate id to the driver yourself. For example, to use
++the fcopy device class GUID::
++
++        DEV_UUID=eb765408-105f-49b6-b4aa-c123b64d17d4
++        driverctl -b vmbus set-override $DEV_UUID uio_hv_vmbus_client
++
++You can verify that the device has been bound to the driver by looking
++for it in sysfs, for example like the following::
++
++        ls -l /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/driver
++
++Which if successful should print::
++
++      .../eb765408-105f-49b6-b4aa-c123b64d17d4/driver -> ../../../bus/vmbus/drivers/uio_hv_vmbus_client
++
++Things to know about uio_hv_vmbus_client
++----------------------------------------
++
++The uio_hv_vmbus_client driver facilitates the mapping of the Hyper-V device
++ring buffer to userspace and offers an interface to manage it.
++
++The userspace API for mapping and performing read/write operations on the device
++ring buffer is implemented in tools/hv/vmbus_bufring.c. Userspace applications
++can utilize this file as a library to build their logic on top of it.
++
++Additionally, the uio_hv_vmbus_client driver offers a sysfs entry called
++"ring_size" that allows users to adjust the size of the device ring buffer
++before opening it.
++
++For example::
++
++        /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/ring_size
++
+ Further information
+ ===================
+ 
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 2e16c5338e5b..dcc727e6fd3f 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -166,6 +166,18 @@ config UIO_HV_GENERIC
+ 
+ 	  If you compile this as a module, it will be called uio_hv_generic.
+ 
++config UIO_HV_SLOW_DEVICES
++	tristate "Generic driver for low speed VMBus devices"
++	depends on HYPERV
++	help
++	  Generic driver that you can bind, dynamically, to any simple
++	  Hyper-V VMBus device with single channel and these devices
++	  uses hypercall instead of monitor bits to interrupt host. This
++	  driver also provide the flexibility of custom ring buffer sizes.
++	  It is useful for slower VMbus devices.
++
++	  If you compile this as a module, it will be called uio_hv_vmbus_client.
++
+ config UIO_DFL
+ 	tristate "Generic driver for DFL (Device Feature List) bus"
+ 	depends on FPGA_DFL
+diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
+index f2f416a14228..44be0f96da34 100644
+--- a/drivers/uio/Makefile
++++ b/drivers/uio/Makefile
+@@ -11,4 +11,5 @@ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
+ obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
+ obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
+ obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
++obj-$(CONFIG_UIO_HV_SLOW_DEVICES)	+= uio_hv_vmbus_client.o
+ obj-$(CONFIG_UIO_DFL)	+= uio_dfl.o
+diff --git a/drivers/uio/uio_hv_vmbus_client.c b/drivers/uio/uio_hv_vmbus_client.c
+new file mode 100644
+index 000000000000..92fa54271971
+--- /dev/null
++++ b/drivers/uio/uio_hv_vmbus_client.c
+@@ -0,0 +1,217 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * uio_hv_vmbus_client - UIO driver for low speed VMBus devices
++ *
++ * Copyright (c) 2023, Microsoft Corporation.
++ *
++ * Authors:
++ *   Saurabh Sengar <ssengar@microsoft.com>
++ *
++ * Since the driver does not declare any device ids, you must allocate
++ * id and bind the device to the driver yourself.  For example:
++ * driverctl -b vmbus set-override <dev uuid> uio_hv_vmbus_client
++ */
++
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/uio_driver.h>
++#include <linux/hyperv.h>
++
++#define DRIVER_AUTHOR	"Saurabh Sengar <ssengar@microsoft.com>"
++#define DRIVER_DESC	"Generic UIO driver for low speed VMBus devices"
++
++#define DEFAULT_HV_RING_SIZE	VMBUS_RING_SIZE(3 * HV_HYP_PAGE_SIZE)
++static int ring_size = DEFAULT_HV_RING_SIZE;
++
++struct uio_hv_vmbus_dev {
++	struct uio_info info;
++	struct hv_device *device;
++};
++
++/* Sysfs API to allow mmap of the ring buffers */
++static int uio_hv_vmbus_mmap(struct file *filp, struct kobject *kobj,
++			     struct bin_attribute *attr, struct vm_area_struct *vma)
++{
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct hv_device *hv_dev = container_of(dev, struct hv_device, device);
++	struct vmbus_channel *channel = hv_dev->channel;
++	void *ring_buffer = page_address(channel->ringbuffer_page);
++
++	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
++			       channel->ringbuffer_pagecount << PAGE_SHIFT);
++}
++
++static const struct bin_attribute ring_buffer_bin_attr = {
++	.attr = {
++		.name = "ringbuffer",
++		.mode = 0600,
++	},
++	.mmap = uio_hv_vmbus_mmap,
++};
++
++/*
++ * This is the irqcontrol callback to be registered to uio_info.
++ * It can be used to disable/enable interrupt from user space processes.
++ *
++ * @param info
++ *  pointer to uio_info.
++ * @param irq_state
++ *  state value. 1 to enable interrupt, 0 to disable interrupt.
++ */
++static int uio_hv_vmbus_irqcontrol(struct uio_info *info, s32 irq_state)
++{
++	struct uio_hv_vmbus_dev *pdata = info->priv;
++	struct hv_device *hv_dev = pdata->device;
++
++	/* Issue a full memory barrier before triggering the notification */
++	virt_mb();
++
++	vmbus_setevent(hv_dev->channel);
++	return 0;
++}
++
++/*
++ * Callback from vmbus_event when something is in inbound ring.
++ */
++static void uio_hv_vmbus_channel_cb(void *context)
++{
++	struct uio_hv_vmbus_dev *pdata = context;
++
++	/* Issue a full memory barrier before sending the event to userspace */
++	virt_mb();
++
++	uio_event_notify(&pdata->info);
++}
++
++static int uio_hv_vmbus_open(struct uio_info *info, struct inode *inode)
++{
++	struct uio_hv_vmbus_dev *pdata = container_of(info, struct uio_hv_vmbus_dev, info);
++	struct hv_device *hv_dev = pdata->device;
++	struct vmbus_channel *channel = hv_dev->channel;
++	int ret;
++
++	ret = vmbus_open(channel, ring_size, ring_size, NULL, 0,
++			 uio_hv_vmbus_channel_cb, pdata);
++	if (ret) {
++		dev_err(&hv_dev->device, "error %d when opening the channel\n", ret);
++		return ret;
++	}
++	channel->inbound.ring_buffer->interrupt_mask = 0;
++	set_channel_read_mode(channel, HV_CALL_ISR);
++
++	ret = device_create_bin_file(&hv_dev->device, &ring_buffer_bin_attr);
++	if (ret)
++		dev_err(&hv_dev->device, "sysfs create ring bin file failed; %d\n", ret);
++
++	return ret;
++}
++
++/* VMbus primary channel is closed on last close */
++static int uio_hv_vmbus_release(struct uio_info *info, struct inode *inode)
++{
++	struct uio_hv_vmbus_dev *pdata = container_of(info, struct uio_hv_vmbus_dev, info);
++	struct hv_device *hv_dev = pdata->device;
++	struct vmbus_channel *channel = hv_dev->channel;
++
++	device_remove_bin_file(&hv_dev->device, &ring_buffer_bin_attr);
++	vmbus_close(channel);
++
++	return 0;
++}
++
++static ssize_t ring_size_show(struct device *dev, struct device_attribute *attr,
++			      char *buf)
++{
++	return sysfs_emit(buf, "%d\n", ring_size);
++}
++
++static ssize_t ring_size_store(struct device *dev, struct device_attribute *attr,
++			       const char *buf, size_t count)
++{
++	unsigned int val;
++
++	if (kstrtouint(buf, 0, &val) < 0)
++		return -EINVAL;
++
++	if (val < HV_HYP_PAGE_SIZE)
++		return -EINVAL;
++
++	ring_size = val;
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(ring_size);
++
++static struct attribute *uio_hv_vmbus_client_attrs[] = {
++	&dev_attr_ring_size.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(uio_hv_vmbus_client);
++
++static int uio_hv_vmbus_probe(struct hv_device *dev, const struct hv_vmbus_device_id *dev_id)
++{
++	struct uio_hv_vmbus_dev *pdata;
++	int ret;
++	char *name = NULL;
++
++	pdata = devm_kzalloc(&dev->device, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
++
++	name = kasprintf(GFP_KERNEL, "%pUl", &dev->dev_instance);
++
++	/* Fill general uio info */
++	pdata->info.name = name; /* /sys/class/uio/uioX/name */
++	pdata->info.version = "1";
++	pdata->info.irqcontrol = uio_hv_vmbus_irqcontrol;
++	pdata->info.open = uio_hv_vmbus_open;
++	pdata->info.release = uio_hv_vmbus_release;
++	pdata->info.irq = UIO_IRQ_CUSTOM;
++	pdata->info.priv = pdata;
++	pdata->device = dev;
++
++	ret = uio_register_device(&dev->device, &pdata->info);
++	if (ret) {
++		dev_err(&dev->device, "uio_hv_vmbus register failed\n");
++		return ret;
++	}
++
++	hv_set_drvdata(dev, pdata);
++
++	return 0;
++}
++
++static void uio_hv_vmbus_remove(struct hv_device *dev)
++{
++	struct uio_hv_vmbus_dev *pdata = hv_get_drvdata(dev);
++
++	if (pdata)
++		uio_unregister_device(&pdata->info);
++}
++
++static struct hv_driver uio_hv_vmbus_drv = {
++	.driver.dev_groups = uio_hv_vmbus_client_groups,
++	.name = "uio_hv_vmbus_client",
++	.id_table = NULL, /* only dynamic id's */
++	.probe = uio_hv_vmbus_probe,
++	.remove = uio_hv_vmbus_remove,
++};
++
++static int __init uio_hv_vmbus_init(void)
++{
++	return vmbus_driver_register(&uio_hv_vmbus_drv);
++}
++
++static void __exit uio_hv_vmbus_exit(void)
++{
++	vmbus_driver_unregister(&uio_hv_vmbus_drv);
++}
++
++module_init(uio_hv_vmbus_init);
++module_exit(uio_hv_vmbus_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR(DRIVER_AUTHOR);
++MODULE_DESCRIPTION(DRIVER_DESC);
 -- 
 2.34.1
 
