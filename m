@@ -2,238 +2,109 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EAB673387E
-	for <lists+linux-hyperv@lfdr.de>; Fri, 16 Jun 2023 20:55:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A22C7344B7
+	for <lists+linux-hyperv@lfdr.de>; Sun, 18 Jun 2023 05:06:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345513AbjFPSyu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 16 Jun 2023 14:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34996 "EHLO
+        id S229445AbjFRDGQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 17 Jun 2023 23:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345067AbjFPSyl (ORCPT
+        with ESMTP id S229379AbjFRDGP (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 16 Jun 2023 14:54:41 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021021.outbound.protection.outlook.com [52.101.57.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1149C3C01;
-        Fri, 16 Jun 2023 11:54:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jxGDuAhvdM1YV3OOCZwge7+cLuFPKhSXX2IVvQ2Q45ZuX7CmNYgbtTtywgtDddG9lifeaBRH+6cy82KrTKg9d1zT+G4eCY5vSf/8nx3MhTozSS5t9eenES/dLYTmPXAp131yR+OrDgD/Zb10CgcR3LypUI4+HgrkmjLP80z7t5JTwO3vnwcSxAZJJPJDRbHdZklbRQW8WBAYpZf163iAWmOP9QMKzv6T+PE0lNXZFPOfPPRYhmhA4siebRnQHMbk3MU+1Sqk8CtTnP44qlyTpMSXp26btlUlEgxcvH+Nl+nPxydVVX2luTaMMWgPtITRK/n2PrwLhZuwI+6kxroD6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WYlls6laxxWim1T/6gHEid/WWrkZmkvMjANp0eVWpQA=;
- b=OEJqNk24xkUwFk9kLkuaA+or+YsvEQHRJUoTRa3I6/UgA/YGFy7uCzxNf81VQGhepJl+9EsPvrriDiJnec5yFonue1xln3DL6QANXkv94hsRMYziGglnv23Kn1xdacXLu19DwLzirzq5v9GcnM3hkNfTFUTIW0ZxCZc4I16uqYs9MUPvWryL7wchc+OvcjcCB8Gb6ShLChUMj2j6aKkKY9kSzRywLR9a853DhgVN/NotXjo++Dl8uOyDlv5ppgJLLxdmrMPRo1bqcYNhoWiA0soho1Q7zTiBqtCBrSZHDE0IINvZIau1G/zhuZphFemuI3JnPxsXWlf7R/kfmNc3hA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WYlls6laxxWim1T/6gHEid/WWrkZmkvMjANp0eVWpQA=;
- b=WVrm/J6uJdp1ONZjZCgsseEms1jjbo7De5G93J5njnhk53B6ZdRa7zF2pC6g0knNiTqWr10/3L+q5k7Ua3kiW5E0QnUtEESS31yEsYV99edYhZrdVPefmSYMKWAlIVzsuqViC3h5ibNVhDuSq0PrczfZGkvoiqvcuAmIQ64jHoY=
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
- by BY5PR21MB1410.namprd21.prod.outlook.com (2603:10b6:a03:232::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.11; Fri, 16 Jun
- 2023 18:54:33 +0000
-Received: from PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::eee5:34cd:7c3b:9374]) by PH7PR21MB3263.namprd21.prod.outlook.com
- ([fe80::eee5:34cd:7c3b:9374%4]) with mapi id 15.20.6521.009; Fri, 16 Jun 2023
- 18:54:33 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        Shachar Raindel <shacharr@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] net: mana: Batch ringing RX queue doorbell on receiving
- packets
-Thread-Topic: [PATCH] net: mana: Batch ringing RX queue doorbell on receiving
- packets
-Thread-Index: AQHZn+EJXTKD1broDkaYLVl7X2Pogq+NpSyAgAAiyDA=
-Date:   Fri, 16 Jun 2023 18:54:33 +0000
-Message-ID: <PH7PR21MB3263C8E5FC38C20767865717CE58A@PH7PR21MB3263.namprd21.prod.outlook.com>
-References: <1686871671-31110-1-git-send-email-longli@linuxonhyperv.com>
- <PH7PR21MB3116FB2C7E12556B0007C9BFCA58A@PH7PR21MB3116.namprd21.prod.outlook.com>
-In-Reply-To: <PH7PR21MB3116FB2C7E12556B0007C9BFCA58A@PH7PR21MB3116.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3303894-c75d-406b-aad1-a94f96e78183;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-16T16:47:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3263:EE_|BY5PR21MB1410:EE_
-x-ms-office365-filtering-correlation-id: 3981ea71-9239-482c-b876-08db6e9b1fa4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xmls1en0WHyDZ/aYtbEWj9EzETsPhmLkXTcsI5GUhVz5a4o7a5KHxhxJ9NJ2um6/OZxALsZrmUb7deViCcPaxgqP+5u49LJZ61/HLUFTRYdCF/Xu20dbyVbeREwZbV/2kOItTzpLGHVa0KwTGGZApSZB4Vnbj9ROc02h/10bjsXmAk+W9ah1T8LlRlpvY3IqI5xxSjGTsNDl3ujGGmKHJ7IRJgVI3RAx//1ERKqxsCn5ecgBdrYBDac4z4Z3VclSrVl2YSymhgXt3LRy6GmC2EA5EnhGAvQY+4p75tKBN8Ah9IAJnU16nUnJYJC9Pws4mdmX23IhCAotEk3hoyabdbug9q/4bv+TlkmnV1SY5mCThfjGAVQ5uqu1T/Q+OoGvfYr7mRHfbCjDSuC40SVbq089qupw+IvN3tTXMDTnCTnDeglk8OW5RRtZBJ+DjBoiIVlqB84UmtPH/qVTBE6D+VwpoiYWoivmZeA4NB3xyqtQ9nFgqATa6XC69ewQ4Gyhpa+zFapkS2QyWwh+36EA035xadWAdCD705UKIF8ZJE2MB8jP7ScoJ3MdjtCkD1m5Pz8A8JD94Dc4DAbpg9XgBwj6pwtGaT75BGCS6lqZ234sZ3AM//y5a7Qpqh7yyXZZSMsoujBlu2eTxQUCGpkGcnDXCWe2uDtDPOQo+0hRnA9PjhHqjYPRRJnVSsx+zlvY
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(451199021)(7416002)(52536014)(5660300002)(8990500004)(55016003)(71200400001)(54906003)(2906002)(41300700001)(8676002)(8936002)(316002)(4326008)(66446008)(66556008)(66946007)(76116006)(66476007)(64756008)(33656002)(10290500003)(478600001)(110136005)(7696005)(9686003)(38100700002)(53546011)(86362001)(186003)(921005)(122000001)(82960400001)(82950400001)(6506007)(38070700005)(83380400001)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?vmtFf4LH1IEbYVAEwCJ1gCl1e/gx7fZ95qqCSNNNUb3NlBDxig53lP04f2dd?=
- =?us-ascii?Q?Yzq2Cy/5aExnb+zrISN0ATiD3bfFVcXB3c0BU3ZQV6K/xMJ87m2rQDwd8Tlw?=
- =?us-ascii?Q?mPG3VwrbGIAtFjXdAexjf+2rJsC1R4bScFgyexW8+KPOPrOo84qnLZHNPhMY?=
- =?us-ascii?Q?YKdh/Yklts2dYD1ETSlEliE3hZQPHENlkuo7Y5NhejuijWQNEQfnsF6Cr8H7?=
- =?us-ascii?Q?HaJTQ42ndLXoBQPnhIPqydInsCis11DYDI5gRhuABVKoCWX9nvowou6yknOB?=
- =?us-ascii?Q?YKlJX02Bdfs4se3IEG4UTwAV7eCFd1ZSTPddQzOBpVBECbMO7+8JwCVOyHy8?=
- =?us-ascii?Q?pd3YIhYfAKZ9jinCm5BnshFJSygABnhV/K5OPMD0DYV35F9UXmMv+f0nmpIW?=
- =?us-ascii?Q?dhtksJ+7eaT0fqB6yR4xvIzTXv1CguQpV4Oy86hwBHSP044UX0g3xKQ91NZv?=
- =?us-ascii?Q?Mr/E/Lq/gP9J6apzUlKza0k7YaswIqiMc/eZm5CxubmdX47dssxFVDZEJx50?=
- =?us-ascii?Q?s4c4baTbgNZDJXpAohXtLWhcWu8Bu2+05adDs/fCHamwZtyyZNkCW6MszwgG?=
- =?us-ascii?Q?wZQ7OWtVkDRz6X+ensWuR5qM/BxU2FOKhd/JrfsyeJr7NRBBBVl0Cp1Q7UUA?=
- =?us-ascii?Q?Rcx8ZdKOWXUGBTi6LsPWeigCh10FhHLadwHGuO4ehERw4RA0mVVh5PnQ3pGx?=
- =?us-ascii?Q?hK95jsLi1JE/bXIMFNaX7KDIkqXvOEKUhrMYam2v92Lw/Enfa3fITgo3lM/L?=
- =?us-ascii?Q?GQCSULCF501kDlkF8mI0hV2Oc4mmWkRU1AqnImNt3YLTIk9pq6drfg/tzuNd?=
- =?us-ascii?Q?JKQf5ZVe4ohcvM64RRp/eq9h37J0+G/CcSpTgt97Lio6UVuDX40dFNa17pVs?=
- =?us-ascii?Q?ZgmAvyxAUrU2V0FqkJ1C/ThGo5gkBobcT/27zUmeBc4hyKcHdFQArvJ2RxaK?=
- =?us-ascii?Q?Hb+8s3pvArSE/mPG3yUVdYLCrcwOQukGw8A8VeUAaX/0KhfxxLDdpJrmmcht?=
- =?us-ascii?Q?TvbvHTD/UVMI0ducLe7MdBpex5iIPWeRLembq4zJ5Db2FddjUkkWMkSUL8Jm?=
- =?us-ascii?Q?8KFRqVK0uF3qlKxM3CEbR1RYhCfZeHnLLFmoOaMYzYE5qvSLfb8y6adJ4DHD?=
- =?us-ascii?Q?s2ZUd91VsAaAzxi3CKqrUw7SIrLZve3QAietcT2olm+2w7mpdop00Z8nrGmB?=
- =?us-ascii?Q?/QhE5hIZY0RTegyvwtnxHL73l0fp7JlEkVgSv6/7bAoHvBSOr1uTmdU3G3PT?=
- =?us-ascii?Q?tn6KXa+s1j35ThBfme6gXL19nVAhKsg+htaTXW243G8ZeezWqTlr4BJ5QEK2?=
- =?us-ascii?Q?9qbs7Zw1K3XWT3/qgDr3TV3nCCbxSH2yhHbqOD22JNVOx0eVeiexqZZhA5d4?=
- =?us-ascii?Q?x89dZlhUGslmvCOEOWO/5ZL1IXGzf908M3G8hc8Kx68yBboQGN5POPIyXl2e?=
- =?us-ascii?Q?653hJWTNcqMbFjX4gTP6VcPZXWOJZdu7tPtzBine7nntZc4gvo9VG2OEAIGN?=
- =?us-ascii?Q?cCad5uqLhKh51byNEKMCOdLLheATteNdzzeZm/NV5SdOicsdxVVfboCmaezm?=
- =?us-ascii?Q?pYp9SeErMDTtPKpvlXG9doB2eqMnL6SB+XLI5kfp?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 17 Jun 2023 23:06:15 -0400
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02616E4D;
+        Sat, 17 Jun 2023 20:06:14 -0700 (PDT)
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-666e6541c98so1664830b3a.2;
+        Sat, 17 Jun 2023 20:06:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687057573; x=1689649573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TKr/7fFsDyuqeMVJXBiEJIZ7rSj0By3FJTWDssD98XA=;
+        b=lKstEJr0z+1iKP4xpUz8l7TJLScBf6OQ5cAk96VrCQSW2xrP/Wl/nmFMHfwxU1gXz8
+         VRlgx6CELNkQCSowXdKTi/PW+FB4YpmsmINrf0ePSNjqX8rnZ1vG2IdZzVTrc6rT3YZr
+         r3nVq8CwLRfk9eWBPJJrIhoE/UAXxnUPe08nQreVdfavjkWZMIDlN4osA125ECXeEJR4
+         oP/p435fCt6By/KA7ZMnGVYESTFOd1zrqhPtHSreDFLqOdHU9f3EiPXIMWASmmO78o3o
+         BpxxiRR12yn95prcEwlMyZnDn7YKOkUS0JF31+HozWbsUH7Y6cZJvxQZeQDfe31Nxeyq
+         ikAA==
+X-Gm-Message-State: AC+VfDzYuQLFHoCYGGyTksjsQjCwsERpTdjHMZQ1gaBmrx+S6jQga0Al
+        i0U+6VLAWmanjxaLIsqami8=
+X-Google-Smtp-Source: ACHHUZ74QrQ86X1lYZ850oqc82Io3H167wR3MfIR6qT0HuQK7NUlA3TCEIzguXToHF7OYlQIYKqjDg==
+X-Received: by 2002:a05:6a00:14d2:b0:64f:6c01:d580 with SMTP id w18-20020a056a0014d200b0064f6c01d580mr9104380pfu.14.1687057573305;
+        Sat, 17 Jun 2023 20:06:13 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id k16-20020aa792d0000000b00665a76a8cfasm9539488pfa.194.2023.06.17.20.06.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Jun 2023 20:06:12 -0700 (PDT)
+Date:   Sun, 18 Jun 2023 03:06:11 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     bhelgaas@google.com, davem@davemloft.net, edumazet@google.com,
+        haiyangz@microsoft.com, jakeo@microsoft.com, kuba@kernel.org,
+        kw@linux.com, kys@microsoft.com, leon@kernel.org,
+        linux-pci@vger.kernel.org, lpieralisi@kernel.org,
+        mikelley@microsoft.com, pabeni@redhat.com, robh@kernel.org,
+        saeedm@nvidia.com, wei.liu@kernel.org, longli@microsoft.com,
+        boqun.feng@gmail.com, ssengar@microsoft.com, helgaas@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        josete@microsoft.com, simon.horman@corigine.com
+Subject: Re: [PATCH v4 0/5] pci-hyperv: Fix race condition bugs for fast
+ device hotplug
+Message-ID: <ZI50o1XBQbRL5Hlk@liuwe-devbox-debian-v2>
+References: <20230615044451.5580-1-decui@microsoft.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3981ea71-9239-482c-b876-08db6e9b1fa4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2023 18:54:33.2314
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0Ywym2nUktyrcTYNM7hVSpYBhf9WupU4F2wy8qc804p4wkj8klCmNukGcPOTnfRtjeXzWVdBziiR24H86g4sBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1410
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230615044451.5580-1-decui@microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
+On Wed, Jun 14, 2023 at 09:44:46PM -0700, Dexuan Cui wrote:
+> Before the guest finishes probing a device, the host may be already starting
+> to remove the device. Currently there are multiple race condition bugs in the
+> pci-hyperv driver, which can cause the guest to panic.  The patchset fixes
+> the crashes.
+> 
+> The patchset also does some cleanup work: patch 3 removes the useless
+> hv_pcichild_state, and patch 4 reverts an old patch which is not really
+> useful (without patch 4, it would be hard to make patch 5 clean).
+> 
+> Patch 6 in v3 is dropped for now since it's a feature rather than a fix.
+> Patch 6 will be split into two patches as suggested by Lorenzo and will be
+> posted after the 5 patches are accepted first.
+> 
+> The v4 addressed Lorenzo's comments and added Lorenzo' Acks to patch
+> 1, 3 and 5.
+> 
+> The v4 is based on v6.4-rc6, and can apply cleanly to the Hyper-V tree's
+> hyperv-fixes branch.
+> 
+> The patchset is also availsble in my github branch:
+> https://github.com/dcui/tdx/commits/decui/vpci/v6.4-rc6-vpci-v4
+> 
+> FYI, v3 can be found here:
+> https://lwn.net/ml/linux-kernel/20230420024037.5921-1-decui@microsoft.com/
+> 
+> Please review. Thanks!
+> 
+> 
+> Dexuan Cui (5):
+>   PCI: hv: Fix a race condition bug in hv_pci_query_relations()
+>   PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
+>   PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
+>   Revert "PCI: hv: Fix a timing issue which causes kdump to fail
+>     occasionally"
+>   PCI: hv: Add a per-bus mutex state_lock
 
-I'm sending v2 to address some corner cases discovered during tests.
-
-Thanks,
-Long
-
-> -----Original Message-----
-> From: Haiyang Zhang <haiyangz@microsoft.com>
-> Sent: Friday, June 16, 2023 9:49 AM
-> To: longli@linuxonhyperv.com; KY Srinivasan <kys@microsoft.com>; Wei Liu
-> <wei.liu@kernel.org>; Dexuan Cui <decui@microsoft.com>; David S. Miller
-> <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub
-> Kicinski <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Leon
-> Romanovsky <leon@kernel.org>; Shradha Gupta
-> <shradhagupta@linux.microsoft.com>; Ajay Sharma
-> <sharmaajay@microsoft.com>; Shachar Raindel <shacharr@microsoft.com>;
-> Stephen Hemminger <stephen@networkplumber.org>; linux-
-> hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Cc: linux-rdma@vger.kernel.org; Long Li <longli@microsoft.com>;
-> stable@vger.kernel.org
-> Subject: RE: [PATCH] net: mana: Batch ringing RX queue doorbell on receiv=
-ing
-> packets
->=20
->=20
->=20
-> > -----Original Message-----
-> > From: longli@linuxonhyperv.com <longli@linuxonhyperv.com>
-> > Sent: Thursday, June 15, 2023 7:28 PM
-> > To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
-> > <decui@microsoft.com>; David S. Miller <davem@davemloft.net>; Eric
-> > Dumazet <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>;
-> Paolo
-> > Abeni <pabeni@redhat.com>; Leon Romanovsky <leon@kernel.org>;
-> Shradha
-> > Gupta <shradhagupta@linux.microsoft.com>; Ajay Sharma
-> > <sharmaajay@microsoft.com>; Shachar Raindel <shacharr@microsoft.com>;
-> > Stephen Hemminger <stephen@networkplumber.org>; linux-
-> > hyperv@vger.kernel.org; netdev@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Cc: linux-rdma@vger.kernel.org; Long Li <longli@microsoft.com>;
-> > stable@vger.kernel.org
-> > Subject: [PATCH] net: mana: Batch ringing RX queue doorbell on
-> > receiving packets
-> >
-> > From: Long Li <longli@microsoft.com>
-> >
-> > It's inefficient to ring the doorbell page every time a WQE is posted
-> > to the received queue.
-> >
-> > Move the code for ringing doorbell page to where after we have posted
-> > all WQEs to the receive queue during a callback from napi_poll().
-> >
-> > Tests showed no regression in network latency benchmarks.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure
-> > Network Adapter (MANA)")
-> > Signed-off-by: Long Li <longli@microsoft.com>
-> > ---
-> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > index cd4d5ceb9f2d..ef1f0ce8e44d 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > @@ -1383,8 +1383,8 @@ static void mana_post_pkt_rxq(struct mana_rxq
-> > *rxq)
-> >
-> >  	recv_buf_oob =3D &rxq->rx_oobs[curr_index];
-> >
-> > -	err =3D mana_gd_post_and_ring(rxq->gdma_rq, &recv_buf_oob-
-> > >wqe_req,
-> > -				    &recv_buf_oob->wqe_inf);
-> > +	err =3D mana_gd_post_work_request(rxq->gdma_rq, &recv_buf_oob-
-> > >wqe_req,
-> > +					&recv_buf_oob->wqe_inf);
-> >  	if (WARN_ON_ONCE(err))
-> >  		return;
-> >
-> > @@ -1654,6 +1654,12 @@ static void mana_poll_rx_cq(struct mana_cq
-> *cq)
-> >  		mana_process_rx_cqe(rxq, cq, &comp[i]);
-> >  	}
-> >
-> > +	if (comp_read) {
-> > +		struct gdma_context *gc =3D rxq->gdma_rq->gdma_dev-
-> > >gdma_context;
-> > +
-> > +		mana_gd_wq_ring_doorbell(gc, rxq->gdma_rq);
-> > +	}
-> > +
->=20
-> Thank you!
->=20
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-
+Applied to hyperv-fixes. Thanks.
