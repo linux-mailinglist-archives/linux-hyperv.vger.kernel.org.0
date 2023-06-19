@@ -2,122 +2,107 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53440735D21
-	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jun 2023 19:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9129F735DAB
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jun 2023 21:03:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbjFSRl2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Jun 2023 13:41:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
+        id S229519AbjFSTDM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Jun 2023 15:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjFSRl1 (ORCPT
+        with ESMTP id S229513AbjFSTDL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Jun 2023 13:41:27 -0400
-Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020024.outbound.protection.outlook.com [52.101.56.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62070E0;
-        Mon, 19 Jun 2023 10:41:25 -0700 (PDT)
+        Mon, 19 Jun 2023 15:03:11 -0400
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020021.outbound.protection.outlook.com [52.101.56.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388D99C;
+        Mon, 19 Jun 2023 12:03:10 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RQXaqLwVO81OcT1E4Y+jzqujqBfxQQ7sK7uc9yYwzm3ze57C0B9UuENX4ZHUWnFbJbA92j+C4Z7qWOuMtfW/pVury3m54CUkkJcIThreAPVBHzcaugO/PUnYBsgu1H44YoJ9cnKcbzlMwemXSjasCqphBkrQEeWH549UvJmbBHs90nU9LsAQ05eREZoUY4V9OsodDp9VqXJVZndLt0LJ0t/JhVV9FK/vOBmpwDbd0FUZOwxti09/CfK8AKFcKOhTQ5pvvru0fcy7B8CWdHKPBDybzuEPXD3QFPEtb8NfMovOHXisuVAahrkkHoifDkygqpEe7s0Ed5XNhkQs1mZIug==
+ b=hwmtcLy9p3RK3Zl8ElJ5iXlLDF4Lyarruk4MEQBeaLT2QWH5Nkdu2On2QhwEbEHxG+pB6jT8YH92rE0Gc9mmLoGGX/mIPlzAnHaGIYptEO1LlHHU0itL72V2DDa1P9/Rcfa0MMAtQCkiYBYHatZotaXVq/64e+i5Crdxdva2fJbTc8U7bRTti5+uB/7XcvviSnMPZM1PvHHp0H2H3ApuIN2eQb7PjY3Bx/Jf2FhKAh9wUW0jikncDqT3DSrkettrJDPcminYf/OV+dpMnjSjtNmTq2BAxKGQc/U67zXAR6kXpWckJjC0IXLPmMk6b+tPkvvooQufwQ9sRqnHdgqA6Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SKgNK+XyPhNtnI0XAKINLSXON4dyFQhDlXCo90KgeTU=;
- b=iDIGgQeoyN7XSlfbW2Z1JBWQgc5YZi9lG1gPhy0xpX7x1y2L6U4DnTy/UikSO3jpRLlqzuyeDpN7zvbrxGUVM/UCTwUSJtAXANgfn+xkIIeSPTxVorUYioUDtziwPXxD1ROOdtR74X/AwU/kB0jjSupNCgkLtd0MngiXeRv4mCrClp3zLXpuS7VMP5IlZewT1V7+vxDbd4eKAdwwlyqLcUgP3A97ur2kvrc0qDyeXhPwaB8aPtOHT8xhkHelV9VGHdZtCWVe7xO9oI/KJ958y+S3i2+o5JxSaxxvYZmATqopszHgAVLQJxtGUbvJ9spQYcxlQN3xcuzeAAQ221khaQ==
+ bh=Xmreg1Ep5alRt66IHWQ2B1ILJyQeOlSh2yOxxflPmkQ=;
+ b=kV7pkEJpnMi/RM33/Y57QX0n7vjGjOJjshHmdsgUSoWDgBiUh4AfVTQY9+pQ4Wcb6bQPbe94vnLw6Efb04GGrmVo8ELLAdiIvBxzipimsIjv71NOvr8rXg32NKoKRgmbXQ9r/9yUgMC+3TuDnrUiFqHYIsAumIhb7GK1KHnFU2BQR9gnsGg3iHXv88h6BBvWvZUXpCGZGDapq2PSeElg6bcX+GISztYUU3V22JSFFK2XIWdNyPZ+EQWQFG8wO1OhdTVygDOdpKZUEMnOZUZrxdL4VD8p1NTx7J6deBmQAiDOIyyE8OivYYxg/5bkEs7FK7v45cb6NWdQhiMa/9bPlw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SKgNK+XyPhNtnI0XAKINLSXON4dyFQhDlXCo90KgeTU=;
- b=geo8GV2omeuZg9p5O3KOqMJBFCDr+38uCS43/YwYhM9UZ+zMLSwJ6vQNoocelFa+AhZpz8XZbUxicDI/wS2NU/eBuS81nYkaq/U+rmp54JX/DTKh7aF5XQVxQycS+vWshw13JNiqFW2teKCidXiXo9xMJiT1eGaIdyQMcUME49c=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by CO1PR21MB1315.namprd21.prod.outlook.com (2603:10b6:303:152::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.5; Mon, 19 Jun
- 2023 17:41:20 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b%3]) with mapi id 15.20.6544.002; Mon, 19 Jun 2023
- 17:41:20 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [PATCH 1/1] clocksource: hyper-v: Rework clocksource and sched
- clock setup
-Thread-Topic: [PATCH 1/1] clocksource: hyper-v: Rework clocksource and sched
- clock setup
-Thread-Index: AQHZmunMRY0uWgs/g0+c1NT6w1jjM6+SXPaAgAAFcRCAAAZKAIAACuQA
-Date:   Mon, 19 Jun 2023 17:41:20 +0000
-Message-ID: <BYAPR21MB168877B777F93FB6A2453B7DD75FA@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1686325621-16382-1-git-send-email-mikelley@microsoft.com>
- <fdc643c4-6298-d337-1d8d-3f28f6c1acfc@linaro.org>
- <BYAPR21MB1688E1163BB36DF03CC8E00BD75FA@BYAPR21MB1688.namprd21.prod.outlook.com>
- <07c5efe5-4eb0-121f-7b50-8f3fba68beab@linaro.org>
-In-Reply-To: <07c5efe5-4eb0-121f-7b50-8f3fba68beab@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d34586cd-8829-43de-855b-774e18b889c0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-19T17:37:23Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
+ bh=Xmreg1Ep5alRt66IHWQ2B1ILJyQeOlSh2yOxxflPmkQ=;
+ b=dzDRQOWn7MgoNLRuwkqMFWmIuYHewA29+TafG0BA5T7Vy/HPyHK6enbDIDGL33LAO1ry4IOnjMlsRbieYykf46g/6AesYHR4APOfa0YB29p9vcTLKQ1l460cfCn99LU6FY3SslmHftWmZxOvVMmt4N6Tol/MphfBDyyIgn+3WqA=
+Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|CO1PR21MB1315:EE_
-x-ms-office365-filtering-correlation-id: 0b73e992-0d10-4f54-6cf6-08db70ec6462
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OcblweH2uXAhOQkEktnUQ8G8/+730gOlLkjQq9xWdZClTOPHWrWt7CXhqjcPZMvQTA8imqBrRP8QEH2tQFS/psWZMqLnmuu6V1bAnaNJFXjaXPjGIbP7IJ5t+iAORr+s9c0wuqDTvO736GJ8w/tIPmZwJ8xiPDeAqg5a2W7hbxBLTPw1p54OydaDClOjqxMldKLXILrG03xRWCnF6ZgJGfLsoDO+LmcqCCItZHix36vRfHFlkQPDca4VirP/fqkUHt1/f2Kmu7uA1EDl1SGYOMktzxXehKa73tBIFNGbz+zQ59XFb1ONNyWNRnaZvy38s/EO4lnRds/GHZ1kMhs682TTyBzG/b+Ws5+Gm877BeCkO05KVOy6SuunUpyHBRYnUFr3Ndc41rE5dXe+o+LkY3R5/Ykzz2s8pquaFmqvkE1WuOzgay5vp08R4IFzuAIai5NKSOYxNcwGQHuie0U2p1oHV5yNzHEjzNxPfUYQmmQR4bFb0gKb+f7wh8iRAUcT7XTRfQ54F9Ea4KjwpkGBa2rY6cI6eHTNElZfcL9EhEYVIRebyekDjL0RyHzWTP59TEarQxPfOIMa40SpKv/VSabqZAmjFjzH3mCyb41Tr3VE21M8/YR2l/rXMx/zuqrbLw9z6I6wYriMQVM0JyKuDYnkFu6mUt/xctnGTH/CYWVCFnoKYm1RBM71/VoMnrwO
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(396003)(39860400002)(366004)(376002)(451199021)(52536014)(122000001)(82960400001)(82950400001)(83380400001)(38100700002)(33656002)(86362001)(38070700005)(41300700001)(8936002)(8676002)(5660300002)(66446008)(64756008)(66556008)(66476007)(66946007)(316002)(6506007)(53546011)(9686003)(26005)(966005)(55016003)(186003)(76116006)(478600001)(7696005)(110136005)(71200400001)(10290500003)(2906002)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?V97kKTqaNV0uc7a1BHzdwFZR2SEFLkFu9/JpeSRHUAcgWDEdyB9K7Vi7WJ3h?=
- =?us-ascii?Q?XMZEvajjhcXI6+FV5wN2kyVg35Unm3fn3KR0v9JENyNetmnqd4quM+TD/qpq?=
- =?us-ascii?Q?uc4DPbX0OHd6P3rP9eXtsDWX+JaWrlQ0vMY06XQdDJscV8ot1i078R30fo7F?=
- =?us-ascii?Q?sFjhz1E5EdiPRZJ66Aoo+t4e/HpiMWs+lO7xEh5RzZju3grMqNG4yUMAi4Mx?=
- =?us-ascii?Q?yFCKjZYHoFmAuVzrKa+tlcQjb7yOXki+7tSWqISEwTH638Wqh0f8z/fQnrDH?=
- =?us-ascii?Q?cM06ZY+26pdqGb8056s53TADHIWwLmfKTFCyIAinejZejIp+yIXqg6ETyoE7?=
- =?us-ascii?Q?wzxEjBQE0+VzWr6IVsEPlx+/1uyZya8Nlo5s0I8/twvTK9phK0cDWTnPcg87?=
- =?us-ascii?Q?NzAnxQiumNKtW0/x4FUtd8JQ4Kv2Y0RQrqyW2Wm0xtGpjy5UP6zapR0LdF9k?=
- =?us-ascii?Q?DRaixgi35bQXFvoVJJ6kL1YqsvMp8kBTW38rULeyr6MGE4aqSHqhzmkSoEXe?=
- =?us-ascii?Q?OhKU+z8yV5JERuHL6yYDWWWCM/l+bRuIeLpS0RfmBtHajaQ5GLozdHErP0Vh?=
- =?us-ascii?Q?UVuxruJFM3CJwowNgNfQpcG2b7Js6w8KZD018GRReblWIt9sPKlRAae+F7AO?=
- =?us-ascii?Q?9LGHuG6HLfTUqUv0ZtxYnexCcywpfPzzv8pjXfjrZMtDGRKl4DSXd6wpKan1?=
- =?us-ascii?Q?qfIiA2SBRzUWcQfs5d7uudvXIyxMQifX3B9/Blwe0R5bDSRBokMOT3yO0LIf?=
- =?us-ascii?Q?GpvL098r/RBW7XfwDMOM6D5UMUntCN2waZ4zdndYoZR8RNowAD8QWqQxQwWU?=
- =?us-ascii?Q?p4dTA3VTnwLAvmI4v2LPK0JQCpw2okvLTFnCyt08YYaCk4+m+vYyS0LnP0zU?=
- =?us-ascii?Q?BHBbKWYeGtBJ30tY+eiN9fDHGf6effjkf5XfvHMRcd8fx4sKSdQsJtQDWyn9?=
- =?us-ascii?Q?HwqWX6cFJGO0HEwOOkgleWqi6Plxbviz/tkbobci+sSaG+GyFCO3elWqDOqG?=
- =?us-ascii?Q?KVMzHulKIIuCj3xlHMjpIdOMXRmqtlZNszGSOSZhx+vJIH8CljNWxYBcA7rI?=
- =?us-ascii?Q?tSv0lc/awyRDnC4oVzpsHz1ztbJEoB10G7pPNfgWFooJqvDKdocMKK8aaMwm?=
- =?us-ascii?Q?iYB5Ep6PImeO3We7k8w3WlBr+gAJeUHEZfcNN6hCQNTC5hai4U5oiBtXFk9s?=
- =?us-ascii?Q?cG3tOwPRIpctzeFUjE+ZywBzAVeLOIhWLOec+tDJjZoLyGzcRA0LjB4UiU9Q?=
- =?us-ascii?Q?0AJ1Ag6160/pqfw4GTqOE41OxKjPxG09z7D4E3dtO4yNNgajpBMKqfNAQv2J?=
- =?us-ascii?Q?LEMLHEvZNzlKlkTwnl8XHr/PFYd40LBPL5miqtrMDRcFJGJ2iqK+SK4jIhCC?=
- =?us-ascii?Q?duFBW0PCKKVzIfDJBChCcN/82zkcq0srCOYyDijDzRWuM852molWw1/m2TH6?=
- =?us-ascii?Q?La99mq3qJI3fhRkVKHTm3O+saArB8li8cJ9uoPib9i6CAgkMkPob5LvdpsvQ?=
- =?us-ascii?Q?UaSENDSUZLdoFzjxhw4x9IVZ/qdIO+nbQaop22HHhOnlBiyRcaI5TluTvLfo?=
- =?us-ascii?Q?YDaPHz7ZmYDhkZbWIg0iwYrp+OeG59hhGbc3QG/Sdj6cg1Y0z9aM4LCGnkhw?=
- =?us-ascii?Q?Xg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
+ by PH0PR21MB1861.namprd21.prod.outlook.com (2603:10b6:510:17::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.19; Mon, 19 Jun
+ 2023 19:03:06 +0000
+Received: from DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::5faf:ae1c:ae43:68f5]) by DM6PR21MB1370.namprd21.prod.outlook.com
+ ([fe80::5faf:ae1c:ae43:68f5%6]) with mapi id 15.20.6544.002; Mon, 19 Jun 2023
+ 19:03:06 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Cc:     mikelley@microsoft.com
+Subject: [PATCH v2 1/1] clocksource: hyper-v: Rework clocksource and sched clock setup
+Date:   Mon, 19 Jun 2023 12:02:40 -0700
+Message-Id: <1687201360-16003-1-git-send-email-mikelley@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0122.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::7) To DM6PR21MB1370.namprd21.prod.outlook.com
+ (2603:10b6:5:16b::28)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|PH0PR21MB1861:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f0d77c5-6744-43c6-bc20-08db70f7d06b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PZ9Lp+JwzMakEGrBpvry1GukJWJoIV+vroOia5Depwu5H/FeSzJfgyS08XZcwf5ZnC4/j3f3HXmzj5HeXt24YJvBls/Fpqle/hfHjanmxFiO+l2djo2pmCXDiqIW8iz04TsFKyz+byzDG7Vwp2j9pDSJ8GYr36GXFgsxw9S17W00C5mHgLpelYTIc8+YPDuyofb2P52H4sSXQ6zuMW60aixJTxUeMQXl10TCo3fYeJMACIhiSqDZ2gty3bH5JicEDcwl5q259N5Ma+eOROPjc649SqEEySR86GvWKxyQBAniKxCC2S/uoT2vVKSZBWIhXWoInGlIeffDJWKwa91pcVUPT69ECWyBKYdE2dMue/qJgJs/Lj/OvOmyKCyHS3Z8i2P7P36+Orl1mRJLp0JtWYaDdj2L23Lp0kdbxCVf7UL/ecilqsH04FB6L43UIq8GTlwsAgQ4iSw4jmi+DsBq4lkPDGZLTXYA+u/laDraFGFwMbLBE7uirrRkNwnsuHGedJ9bqHoZVN5lGa0fL+nIdtAM6Agy+y/nTImsvN8oGd8eqJpVq5KqmBI44eQxJgJ4961PgmhjqZSGSBkogvi73/CyMwifAozgby0vC9j6vWyGveIGkAI1drMIs7GahQRLWrxI+7US5nPrrte2DKejAGK9Lma38rcbud/buZXwIvA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(451199021)(38350700002)(82960400001)(38100700002)(82950400001)(86362001)(36756003)(6666004)(52116002)(6486002)(10290500003)(186003)(107886003)(6512007)(6506007)(8676002)(26005)(8936002)(5660300002)(478600001)(2906002)(41300700001)(66476007)(66556008)(66946007)(316002)(4326008)(66899021)(2616005)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qHbpvNbeWffImz6FQSP0JcaFYSJDh4SNPE9Km7xTZCjl9RzweefroNHLdSqi?=
+ =?us-ascii?Q?PyNdvXY9rwd1iXiPoc8AfC97aegEZcC4uxtT904opZFWBcK8eKwSLzkMj0Sd?=
+ =?us-ascii?Q?APWe80CHZY1xKvAfbfy6igQw0n8YULrDAkVms5lNwsznKA9csbO53fOqEyX9?=
+ =?us-ascii?Q?yQSmWi6ocTn8mTii1JhUmHq1KrWXfCGfNNXwddldSqyxxaxGhDPfvlYqNcm5?=
+ =?us-ascii?Q?JGeP8oWPRQERzELzZhlI+XM9kX2pJMnFPQjcyt+VLWsDgk9z1ft6f5tqjwhF?=
+ =?us-ascii?Q?bk0gnQHBWZhP+FSJLCD1AhkOc3dtlDe0/DTdpTo4sH4XCYTLwz4k6391FIMW?=
+ =?us-ascii?Q?LHxACO11lKxijWyYHIKw9o8FfcP3RyuTdFuJjwq4ym8Fhm06lJqYXeZeayrC?=
+ =?us-ascii?Q?FUiVZRCwluyNujXZevk528DcILmjoXmynRmGQwl/EhnynUcuoUC0jwnnxRTO?=
+ =?us-ascii?Q?/0nB6WoVVnZI+fcxIRrdkdWRgCg3CJlo4NzgC97dwtixLQuS34DjsKAGOYSt?=
+ =?us-ascii?Q?yB8syZaLS50c6D17osSOEvRXIlUuRHHSDkI0hAJ89SCJDHQs3iQ+Q1eLNIWU?=
+ =?us-ascii?Q?LGtpvLHVS8HDuUEw96NRweZKpRj2fD7wHgB6+fNL+E+nPkoiEM2h5ywxS296?=
+ =?us-ascii?Q?g8abbJIASwttJnpunVAz1q7Ez+ofOdgX7FmQFfj5k/1de4FjPZJpRwWEafll?=
+ =?us-ascii?Q?zf3mSauufhb9pmkCZs+v6rNfNWEwlnDs15GHNzkBtHWJ0blllmht3blLrtyM?=
+ =?us-ascii?Q?lUx3YBi4gdBHfAR3IMZPgU+GRyezsXJTkFTcnaGIUtekfUXDG6ewa3yFmHC8?=
+ =?us-ascii?Q?egBmrDTJH+iXLJDKkGxEY3p/PLKzLV99tqGX7ysDtCUHM2LMmgtk8FC26umZ?=
+ =?us-ascii?Q?G9xCtRzqra23nyCFO6ztEadtjND9Qcp656f5q9BvS3owRYvXfPEI1hRCdn25?=
+ =?us-ascii?Q?RfKKvlNt1yjIaqL2WHUIdH7dB6h+DBMuFgSXWDf5JstpnHOKdTYuxllMH8In?=
+ =?us-ascii?Q?vYSPRwsJKH+UupprQsgJm2cOWSDfd5JcKrj2kMyz09jgTBvoTwop822QyrHy?=
+ =?us-ascii?Q?u3Do4fMhOKp7E8caDyki0n8qt2Gk1Oa+mM88iP72RFBX8r+1dRZSGnBdp7eL?=
+ =?us-ascii?Q?bAs9Up+ZXOoZsLRij+CrKsZyepN9tb6a61sVKToO5WxErTFU3KrtBpE+VcWx?=
+ =?us-ascii?Q?MuJ1LCtCY+Lg7A4wj88K5BLPOY1jdcm8a+mZaec/3Xd32Y+pfsGpZZwIBCBl?=
+ =?us-ascii?Q?hm48XverIH9x2HlOH+jUxlWfN2muKfjKiRy+ZfDE9h86YHQWYI4oguctOpbv?=
+ =?us-ascii?Q?/NfKUj45DFUA5JJCWNccCog+xe+jV+SgZBXwQu8vxyYuDQhIKD3o4KHPVRwp?=
+ =?us-ascii?Q?3Kkxr6xVF7tupWAdMc9oDNUagDP3cGwlC5I9KRNWkknYAlQQwNcM/kV8u7KS?=
+ =?us-ascii?Q?W8CIs4i4DtK+z91oivx8SmWpQ7UNcD+wf79/+6TPWzma3WF8OTUaZ5xFNYOs?=
+ =?us-ascii?Q?iNxboOYO4inJNHUZ/D4VUpHJ80t56o41hXLRmYAT0NflOXniYZiK4CDagz9c?=
+ =?us-ascii?Q?O2BpDVM7FYk60hGYdSzI6cfZ/6h3g7A94E3VemZD?=
 X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f0d77c5-6744-43c6-bc20-08db70f7d06b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b73e992-0d10-4f54-6cf6-08db70ec6462
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2023 17:41:20.1627
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2023 19:03:06.0375
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LLJDjaG+EOVZqT9xOKOZJBZbIQwI+5q5pMd4jo9EWBRHmD9I5AaPUYU0QTDFkWGJuUs3amYE0PeIBv+LNO9+3jzXKZRyRAWV2e9bBeoAelk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR21MB1315
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1OW67x0rLs8PEDkM48/ZlP/CzjwhlflsJ2XMOS+L6F5RC++mOJbYvOr+l75rNrix05baW2ic1OL3WtM23cHsMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB1861
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -128,67 +113,140 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Daniel Lezcano <daniel.lezcano@linaro.org> Sent: Monday, June 19, 202=
-3 9:58 AM
->=20
-> On 19/06/2023 18:44, Michael Kelley (LINUX) wrote:
-> > From: Daniel Lezcano <daniel.lezcano@linaro.org> Sent: Monday, June 19,=
- 2023 9:16 AM
-> >>
-> >> On 09/06/2023 17:47, Michael Kelley wrote:
-> >>> Current code assigns either the Hyper-V TSC page or MSR-based ref cou=
-nter
-> >>> as the sched clock. This may be sub-optimal in two cases. First, if t=
-here
-> >>> is hardware support to ensure consistent TSC frequency across live
-> >>> migrations and Hyper-V is using that support, the raw TSC is a faster
-> >>> source of time than the Hyper-V TSC page.  Second, the MSR-based ref
-> >>> counter is relatively slow because reads require a trap to the hyperv=
-isor.
-> >>> As such, it should never be used as the sched clock. The native sched
-> >>> clock based on the raw TSC or jiffies is much better.
-> >>>
-> >>> Rework the sched clock setup so it is set to the TSC page only if
-> >>> Hyper-V indicates that the TSC may have inconsistent frequency across
-> >>> live migrations. Also, remove the code that sets the sched clock to
-> >>> the MSR-based ref counter. In the cases where it is not set, the sche=
-d
-> >>> clock will then be the native sched clock.
-> >>>
-> >>> As part of the rework, always enable both the TSC page clocksource an=
-d
-> >>> the MSR-based ref counter clocksource. Set the ratings so the TSC pag=
-e
-> >>> clocksource is preferred. While the MSR-based ref counter clocksource
-> >>> is unlikely to ever be the default, having it available for manual
-> >>> selection is convenient for development purposes.
-> >>>
-> >>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> >>
-> >> The patch does not apply, does it depend on another patch?
-> >
-> > It should apply to linux-next.  It depends on two previous patches from
-> > Peter Zijlstra in the sched/core branch of tip.  See:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=
-=3Dsched/core&id=3D9397fa2ea3e7634f61da1ab76b9eb88ba04dfdfc
-> >
-> > and
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=
-=3Dsched/core&id=3De39acc37db34f6688e2c16e958fb1d662c422c81
->
-> Yeah, but the branch is tip/timers/core
->=20
-> Could you respin against it ?
->=20
+Current code assigns either the Hyper-V TSC page or MSR-based ref counter
+as the sched clock. This may be sub-optimal in two cases. First, if there
+is hardware support to ensure consistent TSC frequency across live
+migrations and Hyper-V is using that support, the raw TSC is a faster
+source of time than the Hyper-V TSC page.  Second, the MSR-based ref
+counter is relatively slow because reads require a trap to the hypervisor.
+As such, it should never be used as the sched clock. The native sched
+clock based on the raw TSC or jiffies is much better.
 
-Ah, OK.  Just to confirm, you are saying that this patch would go through t=
-he
-tip/timers/core branch, which does *not* have Peter's patches.  Resolving t=
-he
-merge conflict will be done within the tip branches.
+Rework the sched clock setup so it is set to the TSC page only if
+Hyper-V indicates that the TSC may have inconsistent frequency across
+live migrations. Also, remove the code that sets the sched clock to
+the MSR-based ref counter. In the cases where it is not set, the sched
+clock will then be the native sched clock.
 
-Yes, I'll respin for tip/timers/core.
+As part of the rework, always enable both the TSC page clocksource and
+the MSR-based ref counter clocksource. Set the ratings so the TSC page
+clocksource is preferred. While the MSR-based ref counter clocksource
+is unlikely to ever be the default, having it available for manual
+selection is convenient for development purposes.
 
-Michael
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
+---
+
+Changes in v2:
+* Rebased to tip/timers/core branch [Daniel Lezcano]
+
+ drivers/clocksource/hyperv_timer.c | 54 ++++++++++++++++----------------------
+ 1 file changed, 23 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index bcd9042..9fc008c 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -475,15 +475,9 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+ 	return read_hv_clock_msr();
+ }
+ 
+-static u64 notrace read_hv_sched_clock_msr(void)
+-{
+-	return (read_hv_clock_msr() - hv_sched_clock_offset) *
+-		(NSEC_PER_SEC / HV_CLOCK_HZ);
+-}
+-
+ static struct clocksource hyperv_cs_msr = {
+ 	.name	= "hyperv_clocksource_msr",
+-	.rating	= 500,
++	.rating	= 495,
+ 	.read	= read_hv_clock_msr_cs,
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+@@ -513,7 +507,7 @@ static __always_inline void hv_setup_sched_clock(void *sched_clock)
+ static __always_inline void hv_setup_sched_clock(void *sched_clock) {}
+ #endif /* CONFIG_GENERIC_SCHED_CLOCK */
+ 
+-static bool __init hv_init_tsc_clocksource(void)
++static void __init hv_init_tsc_clocksource(void)
+ {
+ 	union hv_reference_tsc_msr tsc_msr;
+ 
+@@ -524,17 +518,14 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	 * Hyper-V Reference TSC rating, causing the generic TSC to be used.
+ 	 * TSC_INVARIANT is not offered on ARM64, so the Hyper-V Reference
+ 	 * TSC will be preferred over the virtualized ARM64 arch counter.
+-	 * While the Hyper-V MSR clocksource won't be used since the
+-	 * Reference TSC clocksource is present, change its rating as
+-	 * well for consistency.
+ 	 */
+ 	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
+ 		hyperv_cs_tsc.rating = 250;
+-		hyperv_cs_msr.rating = 250;
++		hyperv_cs_msr.rating = 245;
+ 	}
+ 
+ 	if (!(ms_hyperv.features & HV_MSR_REFERENCE_TSC_AVAILABLE))
+-		return false;
++		return;
+ 
+ 	hv_read_reference_counter = read_hv_clock_tsc;
+ 
+@@ -565,33 +556,34 @@ static bool __init hv_init_tsc_clocksource(void)
+ 
+ 	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+ 
+-	hv_sched_clock_offset = hv_read_reference_counter();
+-	hv_setup_sched_clock(read_hv_sched_clock_tsc);
+-
+-	return true;
++	/*
++	 * If TSC is invariant, then let it stay as the sched clock since it
++	 * will be faster than reading the TSC page. But if not invariant, use
++	 * the TSC page so that live migrations across hosts with different
++	 * frequencies is handled correctly.
++	 */
++	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT)) {
++		hv_sched_clock_offset = hv_read_reference_counter();
++		hv_setup_sched_clock(read_hv_sched_clock_tsc);
++	}
+ }
+ 
+ void __init hv_init_clocksource(void)
+ {
+ 	/*
+-	 * Try to set up the TSC page clocksource. If it succeeds, we're
+-	 * done. Otherwise, set up the MSR clocksource.  At least one of
+-	 * these will always be available except on very old versions of
+-	 * Hyper-V on x86.  In that case we won't have a Hyper-V
++	 * Try to set up the TSC page clocksource, then the MSR clocksource.
++	 * At least one of these will always be available except on very old
++	 * versions of Hyper-V on x86.  In that case we won't have a Hyper-V
+ 	 * clocksource, but Linux will still run with a clocksource based
+ 	 * on the emulated PIT or LAPIC timer.
++	 *
++	 * Never use the MSR clocksource as sched clock.  It's too slow.
++	 * Better to use the native sched clock as the fallback.
+ 	 */
+-	if (hv_init_tsc_clocksource())
+-		return;
+-
+-	if (!(ms_hyperv.features & HV_MSR_TIME_REF_COUNT_AVAILABLE))
+-		return;
+-
+-	hv_read_reference_counter = read_hv_clock_msr;
+-	clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
++	hv_init_tsc_clocksource();
+ 
+-	hv_sched_clock_offset = hv_read_reference_counter();
+-	hv_setup_sched_clock(read_hv_sched_clock_msr);
++	if (ms_hyperv.features & HV_MSR_TIME_REF_COUNT_AVAILABLE)
++		clocksource_register_hz(&hyperv_cs_msr, NSEC_PER_SEC/100);
+ }
+ 
+ void __init hv_remap_tsc_clocksource(void)
+-- 
+1.8.3.1
+
