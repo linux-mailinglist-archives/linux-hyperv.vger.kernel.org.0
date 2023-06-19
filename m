@@ -2,115 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34AE4736039
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jun 2023 01:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10C67736013
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jun 2023 01:19:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229814AbjFSXnw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 19 Jun 2023 19:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50686 "EHLO
+        id S229571AbjFSXTh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Jun 2023 19:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbjFSXnj (ORCPT
+        with ESMTP id S229448AbjFSXTg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 19 Jun 2023 19:43:39 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0E01A4;
-        Mon, 19 Jun 2023 16:43:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687218219; x=1718754219;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=93F5iXdL1aFe8xiqIFZhy89J/IUrk/GxSpjv1QQ9jI0=;
-  b=DTkuV9hSKSVd+wYCSoMEpj6y+gTl+n2bl6SwRvDqN5XgyPeGK7u/dQpV
-   QN2epjFjSSvSrTEb2cR/+RqUo1yZ2BLJlgMgk36irYSRAs6ylEe23Ynie
-   dcijUwfU4tf2hpsRLjOWJ7ltkif/7JSXxnG7Bf9eZOVnY0aAJ4M/PrCqf
-   WbvuEon0uFWeQGzlDh92te5hYgloYHpmBrF+mpcQA4Fnma3Xw7RDPW0II
-   //XRmKtnVxTo26it36Gh5C0V3yy9xmxapiVlNJKPiSrZwgA//3fwG7FvG
-   NmmmOFNmDrGqzBg7m7DipOPV6KWhzpkL4Zt2MLrO80UyGn6a97W3SY2Aj
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="340071499"
-X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
-   d="scan'208";a="340071499"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 16:43:38 -0700
-X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="747789703"
-X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
-   d="scan'208";a="747789703"
-Received: from unknown (HELO fred..) ([172.25.112.68])
-  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2023 16:43:36 -0700
-From:   Xin Li <xin3.li@intel.com>
-To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, x86@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
-        mike.travis@hpe.com, dimitri.sivanich@hpe.com,
-        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
-        joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
-        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
-        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
-Subject: [PATCH 3/3] tools: Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools
-Date:   Mon, 19 Jun 2023 16:16:11 -0700
-Message-Id: <20230619231611.2230-4-xin3.li@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230619231611.2230-1-xin3.li@intel.com>
-References: <20230619231611.2230-1-xin3.li@intel.com>
+        Mon, 19 Jun 2023 19:19:36 -0400
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA68F9;
+        Mon, 19 Jun 2023 16:19:35 -0700 (PDT)
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-54f73f09765so1818255a12.1;
+        Mon, 19 Jun 2023 16:19:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687216774; x=1689808774;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tm8k626C7qGMC9sSzDj2ShaNEjkau+rD80jKlJLNIXU=;
+        b=NSBwLeE6MPpEmyYs/Wt+d/TwJtkBNOiZoGAp/+8ED/cgn/rCKzqtYDUuOuKPN3N9iQ
+         +oZG3Cewwb5nf+wQFh8/+HTHMekO635Oy0qrJcwucA5oLqFhWN16lbYPMCksTooltlXA
+         pUpr/UE6tL73UBhsO9IKMunQcjRDR3faEOJaaIDZ1qfnRvSLY9xD5OE3Izp9oX4rlpIO
+         HXJUJdtv3PaP4u1e4bchC7LkfML6cws937ij3cyqQQp3pdk/8P3w2mJKIQgoePyxS4Fd
+         i6/gySXnjevLv25+dUDDTLln+nZgDtrqUh3TGUf/DuXV7/JypJuZe0aO5RIGKCvX7f5Y
+         hhUg==
+X-Gm-Message-State: AC+VfDxIRtTq3SSto6tiEX8Br3tsegKZzCGyYtEpuHWzR3hYyqZsvfsB
+        b/TBHD9uBxRFVfpO6di2gRE=
+X-Google-Smtp-Source: ACHHUZ4g0kIAdH9egh+GmR2cwqNKvb0CxisOi4lkBa/DzqpEYgj4TFalHr26WMBiJsN99XMwoXKjLw==
+X-Received: by 2002:a05:6a20:158d:b0:10d:951f:58ba with SMTP id h13-20020a056a20158d00b0010d951f58bamr8241163pzj.52.1687216774430;
+        Mon, 19 Jun 2023 16:19:34 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id w15-20020a170902e88f00b001b53d3d911dsm327950plg.69.2023.06.19.16.19.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jun 2023 16:19:33 -0700 (PDT)
+Date:   Mon, 19 Jun 2023 23:19:32 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+        Linux Kernel List <linux-kernel@vger.kernel.org>,
+        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [GIT PULL] Hyper-V fixes for 6.4-rc8
+Message-ID: <ZJDihKX5BT38Rkab@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools.
+Hi Linus,
 
-Signed-off-by: Xin Li <xin3.li@intel.com>
----
- tools/arch/x86/include/asm/irq_vectors.h               | 7 -------
- tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh | 2 +-
- 2 files changed, 1 insertion(+), 8 deletions(-)
+The following changes since commit ac9a78681b921877518763ba0e89202254349d1b:
 
-diff --git a/tools/arch/x86/include/asm/irq_vectors.h b/tools/arch/x86/include/asm/irq_vectors.h
-index 43dcb9284208..3a19904c2db6 100644
---- a/tools/arch/x86/include/asm/irq_vectors.h
-+++ b/tools/arch/x86/include/asm/irq_vectors.h
-@@ -35,13 +35,6 @@
-  */
- #define FIRST_EXTERNAL_VECTOR		0x20
- 
--/*
-- * Reserve the lowest usable vector (and hence lowest priority)  0x20 for
-- * triggering cleanup after irq migration. 0x21-0x2f will still be used
-- * for device interrupts.
-- */
--#define IRQ_MOVE_CLEANUP_VECTOR		FIRST_EXTERNAL_VECTOR
--
- #define IA32_SYSCALL_VECTOR		0x80
- 
- /*
-diff --git a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-index eed9ce0fcbe6..87dc68c7de0c 100755
---- a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-+++ b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-@@ -12,7 +12,7 @@ x86_irq_vectors=${arch_x86_header_dir}/irq_vectors.h
- 
- # FIRST_EXTERNAL_VECTOR is not that useful, find what is its number
- # and then replace whatever is using it and that is useful, which at
--# the time of writing of this script was: IRQ_MOVE_CLEANUP_VECTOR.
-+# the time of writing of this script was: 0x20.
- 
- first_external_regex='^#define[[:space:]]+FIRST_EXTERNAL_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
- first_external_vector=$(grep -E ${first_external_regex} ${x86_irq_vectors} | sed -r "s/${first_external_regex}/\1/g")
--- 
-2.34.1
+  Linux 6.4-rc1 (2023-05-07 13:34:35 -0700)
 
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20230619
+
+for you to fetch changes up to 067d6ec7ed5b49380688e06c1e5f883a71bef4fe:
+
+  PCI: hv: Add a per-bus mutex state_lock (2023-06-18 03:05:40 +0000)
+
+----------------------------------------------------------------
+hyperv-fixes for 6.4-rc8
+  - Fix races in Hyper-V PCI controller (Dexuan Cui)
+  - Fix handling of hyperv_pcpu_input_arg (Michael Kelley)
+  - Fix vmbus_wait_for_unload to scan present CPUs (Michael Kelley)
+  - Call hv_synic_free in the failure path of hv_synic_alloc (Dexuan
+    Cui)
+  - Add noop for real mode handlers for virtual trust level code
+    (Saurabh Sengar)
+----------------------------------------------------------------
+Dexuan Cui (6):
+      Drivers: hv: vmbus: Call hv_synic_free() if hv_synic_alloc() fails
+      PCI: hv: Fix a race condition bug in hv_pci_query_relations()
+      PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
+      PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
+      Revert "PCI: hv: Fix a timing issue which causes kdump to fail occasionally"
+      PCI: hv: Add a per-bus mutex state_lock
+
+Michael Kelley (3):
+      Drivers: hv: vmbus: Fix vmbus_wait_for_unload() to scan present CPUs
+      x86/hyperv: Fix hyperv_pcpu_input_arg handling when CPUs go online/offline
+      arm64/hyperv: Use CPUHP_AP_HYPERV_ONLINE state to fix CPU online sequencing
+
+Saurabh Sengar (1):
+      x86/hyperv/vtl: Add noop for realmode pointers
+
+ arch/arm64/hyperv/mshyperv.c        |   2 +-
+ arch/x86/hyperv/hv_init.c           |   2 +-
+ arch/x86/hyperv/hv_vtl.c            |   2 +
+ drivers/hv/channel_mgmt.c           |  18 ++++-
+ drivers/hv/hv_common.c              |  48 ++++++-------
+ drivers/hv/vmbus_drv.c              |   5 +-
+ drivers/pci/controller/pci-hyperv.c | 139 +++++++++++++++++++++---------------
+ include/linux/cpuhotplug.h          |   1 +
+ 8 files changed, 129 insertions(+), 88 deletions(-)
