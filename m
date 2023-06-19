@@ -2,67 +2,94 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A22C7344B7
-	for <lists+linux-hyperv@lfdr.de>; Sun, 18 Jun 2023 05:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BA8A7358E4
+	for <lists+linux-hyperv@lfdr.de>; Mon, 19 Jun 2023 15:47:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229445AbjFRDGQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 17 Jun 2023 23:06:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35482 "EHLO
+        id S232053AbjFSNrX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 19 Jun 2023 09:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjFRDGP (ORCPT
+        with ESMTP id S231338AbjFSNrW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 17 Jun 2023 23:06:15 -0400
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02616E4D;
-        Sat, 17 Jun 2023 20:06:14 -0700 (PDT)
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-666e6541c98so1664830b3a.2;
-        Sat, 17 Jun 2023 20:06:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687057573; x=1689649573;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TKr/7fFsDyuqeMVJXBiEJIZ7rSj0By3FJTWDssD98XA=;
-        b=lKstEJr0z+1iKP4xpUz8l7TJLScBf6OQ5cAk96VrCQSW2xrP/Wl/nmFMHfwxU1gXz8
-         VRlgx6CELNkQCSowXdKTi/PW+FB4YpmsmINrf0ePSNjqX8rnZ1vG2IdZzVTrc6rT3YZr
-         r3nVq8CwLRfk9eWBPJJrIhoE/UAXxnUPe08nQreVdfavjkWZMIDlN4osA125ECXeEJR4
-         oP/p435fCt6By/KA7ZMnGVYESTFOd1zrqhPtHSreDFLqOdHU9f3EiPXIMWASmmO78o3o
-         BpxxiRR12yn95prcEwlMyZnDn7YKOkUS0JF31+HozWbsUH7Y6cZJvxQZeQDfe31Nxeyq
-         ikAA==
-X-Gm-Message-State: AC+VfDzYuQLFHoCYGGyTksjsQjCwsERpTdjHMZQ1gaBmrx+S6jQga0Al
-        i0U+6VLAWmanjxaLIsqami8=
-X-Google-Smtp-Source: ACHHUZ74QrQ86X1lYZ850oqc82Io3H167wR3MfIR6qT0HuQK7NUlA3TCEIzguXToHF7OYlQIYKqjDg==
-X-Received: by 2002:a05:6a00:14d2:b0:64f:6c01:d580 with SMTP id w18-20020a056a0014d200b0064f6c01d580mr9104380pfu.14.1687057573305;
-        Sat, 17 Jun 2023 20:06:13 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id k16-20020aa792d0000000b00665a76a8cfasm9539488pfa.194.2023.06.17.20.06.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Jun 2023 20:06:12 -0700 (PDT)
-Date:   Sun, 18 Jun 2023 03:06:11 +0000
-From:   Wei Liu <wei.liu@kernel.org>
+        Mon, 19 Jun 2023 09:47:22 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0257BD;
+        Mon, 19 Jun 2023 06:47:20 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id A73EC3200915;
+        Mon, 19 Jun 2023 09:47:15 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 19 Jun 2023 09:47:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+         h=cc:cc:content-type:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1687182434; x=
+        1687268834; bh=E2eLG5b+IZsgxO3zQfTIrYDsY9Sg2au6WKKO1Lx6xeE=; b=g
+        pvfrGJ21CPVG9sS/TvMo/DrLLarXRNl4FhZ2jTK2h5yob6n9WXu04KOeZdYvRr4E
+        PEYAlzix1SVOE5LnI+wv3D7m9jtajNuoHX7StOChJTRCLFetDQEykHXrk2unmyl8
+        bI8x5OmsN+/xhsEfJozTKPFSbJQ/x7u33byFvExbBXoAu8Qt4STloybxWvGaAE+m
+        Vs3tsVvL0alcP6Izg2sKpWIemsIMe8DYbsgOrwl6rLjkqV0AflftPwqKzrDELi0a
+        KgAJSUuGcDAMik8JG4GbGcfDnYfGTbsT/i2HwQ/sorwnlO8Ra/vz5/m9SYVy9Eoo
+        sbLG6TFQosbETbGhpnIkQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1687182434; x=1687268834; bh=E2eLG5b+IZsgx
+        O3zQfTIrYDsY9Sg2au6WKKO1Lx6xeE=; b=FFwmbQlNyFWm05W13BYqeeyk3ol3d
+        KIeyOC7+jobtsZOECBtxI62dfA43znc1jgvGAqCHwyuhIxL01tmW8FjiE8B1SI16
+        OPs9CcW+uuQ/dypadOWhMYR/90RL/aqlZ6wODcJvhqNFnITmJJ7XwtpwsyU4CvwN
+        K5QwLPdQjuOWA+mXVhSkVJo4mHTovOfR7CGk96HgE6eDbRN0X1qk3Pkrq/VF8pQT
+        OJONbIyoehesaPICAEGHC0j5Bg/EaHCBrng/bIdRECtW2efZ2xyFbibREtSRNlMi
+        1n+xMZrfPg7PtRMh8DZyo/ws7qTvnFb2LhkK8jUnSA/z/M7ouop+YWovw==
+X-ME-Sender: <xms:YVyQZIdFVfU1ifvBkJF2yJGLMDIMojtLCXxL7zRjxuD-urh9jF5QmA>
+    <xme:YVyQZKMAMIS9qMpc6cnYBE7GKJTlf5sP21vOIAsIsEzdKzPY7HojG_a5P8WxqL8fH
+    XYMeT7MAc8HcCxq1Dw>
+X-ME-Received: <xmr:YVyQZJgPp1Du-Jnn90ND94ouhLggLnmT4TV0Wik4xoVAaeKeC_MBm8QhSqCfzG4maz-IPQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeefvddgieejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
+    ihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlsehshhhuthgvmhhovhdrnh
+    grmhgvqeenucggtffrrghtthgvrhhnpeffhfekfedtjedthefhleetgeethfevtdehhfev
+    ffdvteelveekledvtddtgefggfenucffohhmrghinheplhifnhdrnhgvthdpkhgvrhhnvg
+    hlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvg
+X-ME-Proxy: <xmx:YVyQZN-fJ-SpoTbwk3U5tlvp6WhoQMRGzC4xwqxkCjupfx17nkd3UQ>
+    <xmx:YVyQZEswWb7IJ8kU4KOYUN45jvcLHedSfbxDI9fZUnVohqPiVV7lSA>
+    <xmx:YVyQZEGOZz0i1NX2N7Uvi0pVj0OZ0Khpmqel--lzRQnGUBP7I5SLsA>
+    <xmx:YlyQZIfvOtfIuVxPltAevzrvlA_8Acb4Sa-7St6cijg_lyUmBplFBg>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 19 Jun 2023 09:47:12 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+        id 9BBE810DD6D; Mon, 19 Jun 2023 16:47:09 +0300 (+03)
+Date:   Mon, 19 Jun 2023 16:47:09 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 To:     Dexuan Cui <decui@microsoft.com>
-Cc:     bhelgaas@google.com, davem@davemloft.net, edumazet@google.com,
-        haiyangz@microsoft.com, jakeo@microsoft.com, kuba@kernel.org,
-        kw@linux.com, kys@microsoft.com, leon@kernel.org,
-        linux-pci@vger.kernel.org, lpieralisi@kernel.org,
-        mikelley@microsoft.com, pabeni@redhat.com, robh@kernel.org,
-        saeedm@nvidia.com, wei.liu@kernel.org, longli@microsoft.com,
-        boqun.feng@gmail.com, ssengar@microsoft.com, helgaas@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        josete@microsoft.com, simon.horman@corigine.com
-Subject: Re: [PATCH v4 0/5] pci-hyperv: Fix race condition bugs for fast
- device hotplug
-Message-ID: <ZI50o1XBQbRL5Hlk@liuwe-devbox-debian-v2>
-References: <20230615044451.5580-1-decui@microsoft.com>
+Cc:     ak@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+        brijesh.singh@amd.com, dan.j.williams@intel.com,
+        dave.hansen@intel.com, dave.hansen@linux.intel.com,
+        haiyangz@microsoft.com, hpa@zytor.com, jane.chu@oracle.com,
+        kirill.shutemov@linux.intel.com, kys@microsoft.com,
+        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        rostedt@goodmis.org, sathyanarayanan.kuppuswamy@linux.intel.com,
+        seanjc@google.com, tglx@linutronix.de, tony.luck@intel.com,
+        wei.liu@kernel.org, x86@kernel.org, mikelley@microsoft.com,
+        linux-kernel@vger.kernel.org, Tianyu.Lan@microsoft.com,
+        rick.p.edgecombe@intel.com
+Subject: Re: [PATCH v7 0/2] Support TDX guests on Hyper-V (the x86/tdx part)
+Message-ID: <20230619134709.6c4sgargh67xwc5g@box.shutemov.name>
+References: <20230616044701.15888-1-decui@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230615044451.5580-1-decui@microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+In-Reply-To: <20230616044701.15888-1-decui@microsoft.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,41 +97,30 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 09:44:46PM -0700, Dexuan Cui wrote:
-> Before the guest finishes probing a device, the host may be already starting
-> to remove the device. Currently there are multiple race condition bugs in the
-> pci-hyperv driver, which can cause the guest to panic.  The patchset fixes
-> the crashes.
+On Thu, Jun 15, 2023 at 09:46:59PM -0700, Dexuan Cui wrote:
+> The two patches (which are based on the latest x86/tdx branch in the tip
+> tree) are the x86/tdx part of the v6 patchset:
+> https://lwn.net/ml/linux-kernel/20230504225351.10765-1-decui@microsoft.com/
 > 
-> The patchset also does some cleanup work: patch 3 removes the useless
-> hv_pcichild_state, and patch 4 reverts an old patch which is not really
-> useful (without patch 4, it would be hard to make patch 5 clean).
+> The other patches of the v6 patchset needs more changes in preparation for
+> the upcoming paravisor support, so let me post the x86/tdx part first.
 > 
-> Patch 6 in v3 is dropped for now since it's a feature rather than a fix.
-> Patch 6 will be split into two patches as suggested by Lorenzo and will be
-> posted after the 5 patches are accepted first.
+> This v7 patchset addressed Dave's comments on patch 1:
+> see https://lwn.net/ml/linux-kernel/SA1PR21MB1335736123C2BCBBFD7460C3BF46A@SA1PR21MB1335.namprd21.prod.outlook.com/
 > 
-> The v4 addressed Lorenzo's comments and added Lorenzo' Acks to patch
-> 1, 3 and 5.
+> Patch 2 is just a repost. There was a race between set_memory_encrypted()
+> and load_unaligned_zeropad(), which has been fixed by the 3 patches of
+> Kirill in the x86/tdx branch of the tip tree:
+>   3f6819dd192e ("x86/mm: Allow guest.enc_status_change_prepare() to fail")
+>   195edce08b63 ("x86/tdx: Fix race between set_memory_encrypted() and load_unaligned_zeropad()")
+>   94142c9d1bdf ("x86/mm: Fix enc_status_change_finish_noop()")
+>   (see https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/tdx)
 > 
-> The v4 is based on v6.4-rc6, and can apply cleanly to the Hyper-V tree's
-> hyperv-fixes branch.
-> 
-> The patchset is also availsble in my github branch:
-> https://github.com/dcui/tdx/commits/decui/vpci/v6.4-rc6-vpci-v4
-> 
-> FYI, v3 can be found here:
-> https://lwn.net/ml/linux-kernel/20230420024037.5921-1-decui@microsoft.com/
-> 
-> Please review. Thanks!
-> 
-> 
-> Dexuan Cui (5):
->   PCI: hv: Fix a race condition bug in hv_pci_query_relations()
->   PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic
->   PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev
->   Revert "PCI: hv: Fix a timing issue which causes kdump to fail
->     occasionally"
->   PCI: hv: Add a per-bus mutex state_lock
+> If you want to view the patchset on github, it is here:
+> https://github.com/dcui/tdx/commits/decui/upstream-tip/x86/tdx/v7
 
-Applied to hyperv-fixes. Thanks.
+JFYI, it won't apply to tip/master. Unaccepted memory changed the code you
+patching.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
