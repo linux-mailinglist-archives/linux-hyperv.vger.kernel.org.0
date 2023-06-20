@@ -2,42 +2,42 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54F6E736318
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jun 2023 07:19:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54ED073631F
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jun 2023 07:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230360AbjFTFTZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Jun 2023 01:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
+        id S230244AbjFTFZO (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Jun 2023 01:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229830AbjFTFTX (ORCPT
+        with ESMTP id S229830AbjFTFZM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Jun 2023 01:19:23 -0400
-Received: from HK2P15301CU002.outbound.protection.outlook.com (mail-eastasiaazon11020017.outbound.protection.outlook.com [52.101.128.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90411A8;
-        Mon, 19 Jun 2023 22:19:20 -0700 (PDT)
+        Tue, 20 Jun 2023 01:25:12 -0400
+Received: from HK2P15301CU002.outbound.protection.outlook.com (mail-eastasiaazon11020015.outbound.protection.outlook.com [52.101.128.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5A51AC;
+        Mon, 19 Jun 2023 22:25:10 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E3VbwAMeMwKyoxshTm8ORAgWCklL2EJekheIyj5FsSuVAvlbTRgPi2qUDC2lyoMML231tRv8lX20s2Us+qcP6oqbBi76Q19cnU2WWG3xfSHrm7VI329H3gI42o6jo8liAMO3fFQLuYtyBhTTgCFep14er01DRmBOBWWb5UWXqFgdCSHLA8bmbHxRHPrjhFMxomo6YMevHtSny+W42+QHS0hNuKjhlhiUhC+wP0tEs5c9qFIm+uZxwiCYbGh5pGZTazWR9IPcy7CMIsk0be5x4ZjdqmKVmw/JfEInY0jVRAUocsSlQUonWpYTb5+um29gEE8HnjTUeTWbyl1A8RTiHQ==
+ b=EyfvhQKeP2US4+vvrHcDFwQrf7BpE1tXwXKe2cpt1qcXouqsQRFCi4Jtyp7DiPs+Enk/EzVi/UdJLGi9RizCWDpiCxsDzeONvQun6waMWf5nG8fAuFLUvyv8lTmlT+rtPB20K4B2mU9pNgLw5vbbGtgENX+AgfimKMu1ZTCmyMhm5lJe25xsPMZpsJnRp9JhskGIysC19N2kvnfKSsWVVKgsa/UsVkymYsSyExMoDFvttqUfFGUBqlTuxI3ETw4rho8Ek68PtPjJ4u6zmdycqA7xAtfQB3WLunRFKWiKY1vCpMQpDXXP/OFlIskFJ1XJpPekCFHxvJZVCRzLnecJZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SXOKJAdJjIv28XgoQkhdoCB2FayfH2T7O5Ubmk1q8ew=;
- b=KnP1jtp5mC4CE4owCrp0556rvMnf9Elm//xvqPHx/VLeM47HkfKrtkX+51MMyDOhUPEStjd2ORmrZzY6+zBBoWCoLOAFLaJ/ecsn1pIW6ht/uih1+sIa0SaFM8gDWF3tVp5as6DWHQ/qFE1pyvSByEGP1t7LDT/iNuJg2YHQmp1ynRr0S8Jmbi1EyD20ochxdrPMm+nbgzsDVIjK7q410xZJHZ5WIGWBP7meTB7Bp6X5SYXn4J4zUkrCR+I9sgaqYhnD2LxOEhs0n5vtXlUNPG1peT48xVedBSvgHa8OaH3KRjx/1oT8mQjty2rl4wM287lZA+ZnPyU9ACyjPBq0Sg==
+ bh=Gd5XojvryCOi3uii9G2kq6ZStAUPvChiQtMTYLTM+pY=;
+ b=UIRWVP4Vtj/bSgUwMR1gKTIF90k/3sVNEjU59F4pzwVccb3dxl/fxPOWMgtEjlsmP0ZnwnMOoAWGYgptj9/5VyRw57cgSE9Athxz6jTK5Chtm19n3cHuFejsRholmLn6WYmBoSp+SmZxAqb3k5kDf5Zsl3lHdkB/AjwTa/Obeitn2H+HVyVy5Oq/nYfc3BvNZfQoZGq+RuX+gWsG5AaXmJWU9II4ypVhCqBCl8cFN+kQqigm6df83r6cxslJlguSJkOj2wrYaVymuvZHdi4At8T3iwB9R0BFccRFWb43PJyuC2ueK9uY1bwaF39Hg/tECBuHvGDZx54UDk+hVov2ng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SXOKJAdJjIv28XgoQkhdoCB2FayfH2T7O5Ubmk1q8ew=;
- b=MucwqzRnPUKQ3/qaF88CMsLGtnZBt8Cu7eWqgEpuUQb3MEszOqZujjSp4qabiGgP1v5HPw1jCp+SkHQLoQ8YuNDs7+fdpg1dVw+OGUfbh90Rs/V6griAcwDLLC2sPrfvk9DaWylJNPbmqShl6jDKcBFRF/w3orB6Dnp/L8cKvT8=
+ bh=Gd5XojvryCOi3uii9G2kq6ZStAUPvChiQtMTYLTM+pY=;
+ b=UaXSkx/lbi5/nG/ZZ2z/vrxX72UaF3i//ZrK6YwLkNvb6tnnA3P3AX/Nvork7VuZMqrnzNi245CWCs81Xo0L68EvffVV/CKMfP8XnbpAuYto7lUrt0ppRCkZG5RjXBXYsQgcRfRzB7uf99jsqxAwJcstHVv/JhRKlDTcyPSX8WA=
 Received: from PUZP153MB0749.APCP153.PROD.OUTLOOK.COM (2603:1096:301:e6::8) by
- TYZP153MB0740.APCP153.PROD.OUTLOOK.COM (2603:1096:400:258::7) with Microsoft
+ PSAP153MB0408.APCP153.PROD.OUTLOOK.COM (2603:1096:301:29::14) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6521.16; Tue, 20 Jun 2023 05:19:15 +0000
+ 15.20.6521.13; Tue, 20 Jun 2023 05:25:06 +0000
 Received: from PUZP153MB0749.APCP153.PROD.OUTLOOK.COM
  ([fe80::1cc2:aa38:1d02:9a11]) by PUZP153MB0749.APCP153.PROD.OUTLOOK.COM
  ([fe80::1cc2:aa38:1d02:9a11%2]) with mapi id 15.20.6521.013; Tue, 20 Jun 2023
- 05:19:15 +0000
+ 05:25:06 +0000
 From:   Saurabh Singh Sengar <ssengar@microsoft.com>
 To:     Greg KH <gregkh@linuxfoundation.org>,
         Saurabh Sengar <ssengar@linux.microsoft.com>
@@ -50,77 +50,76 @@ CC:     KY Srinivasan <kys@microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH v2 1/5] uio: Add hv_vmbus_client driver
-Thread-Topic: [EXTERNAL] Re: [PATCH v2 1/5] uio: Add hv_vmbus_client driver
-Thread-Index: AQHZnwURGv1AAiMyG0eDJttQESSN76+TLQsg
-Date:   Tue, 20 Jun 2023 05:19:14 +0000
-Message-ID: <PUZP153MB07490FDBBB8CC3099CFF126BBE5CA@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+Subject: RE: [EXTERNAL] Re: [PATCH v2 2/5] tools: hv: Add vmbus_bufring
+Thread-Topic: [EXTERNAL] Re: [PATCH v2 2/5] tools: hv: Add vmbus_bufring
+Thread-Index: AQHZnwV0dJHFjLU8M0ikMK1jJEcj8a+TL3RA
+Date:   Tue, 20 Jun 2023 05:25:06 +0000
+Message-ID: <PUZP153MB07492FF43240CFD055CF268ABE5CA@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
 References: <1686766512-2589-1-git-send-email-ssengar@linux.microsoft.com>
- <1686766512-2589-2-git-send-email-ssengar@linux.microsoft.com>
- <2023061419-probe-velocity-b276@gregkh>
-In-Reply-To: <2023061419-probe-velocity-b276@gregkh>
+ <1686766512-2589-3-git-send-email-ssengar@linux.microsoft.com>
+ <2023061430-facedown-getting-d9f7@gregkh>
+In-Reply-To: <2023061430-facedown-getting-d9f7@gregkh>
 Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=92d7d703-fc27-4d25-bee2-869046fa4b77;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-20T05:10:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d40da97b-fc4a-45c3-99c8-e2bfdfb7879c;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-20T05:19:12Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PUZP153MB0749:EE_|TYZP153MB0740:EE_
-x-ms-office365-filtering-correlation-id: 449cb811-7ff3-480d-2b0b-08db714de3b7
+x-ms-traffictypediagnostic: PUZP153MB0749:EE_|PSAP153MB0408:EE_
+x-ms-office365-filtering-correlation-id: 780875d2-d70a-43e6-22c4-08db714eb511
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9QqhKUFp4yZdbQnL6jqz2MXX4YRkNe8uSvrkHOtipS6yDYOPBGurTxfumrLOnwgGHxzm5c7K1ap3HFPiZDYT6zcRUyTryE5atEhfb//yhPFo7P8nKqwfLp1qX2+a7yQ+vXBO7D1YFNb2e+ZfAV5H9hbKLXso/PTKwCvDOyFPMuEtg2qJVzM9KKbO6PJjWUDa/rREqlD1xyyYOwvy7t25DMbsyzFYZrsNd6SmCZlIMftRQyPj7dSKncsfjGN2nYcPvwW83Bgse6WQYNtZ9Eoa1cS82yB0K+hzG3azX/5ckCIhbrPlPf53s8tUiGJuQaLkwmwKmZFrTcNnXf53A5YaFZcmhBvEnL3wioCFbqO1ZAs0XhAzURHpdBjwtIWZxoVUF1+Mc7r3IjCwErc7cxBxcHRRG29r/h1ZFzvIz+mlZOdbFkKGT1wT1kgIVEZ26cK2ByceFuHmcUZG/ul6WVIpUOYfvTENb1V6wiepg5p38IG/fNuGjJxNiwe4Z4UPCtWc05RZbmZMUWRt62cJ7kj3wjnqdkYUIL+QzQBNGbNP+49vLrIHlXWH9lWp6j/YZl/7D9JXsYmpFFDKYZ8wYBcclswlZJ5rQkhZLpFfm9kpbz9jcvDSy9X4SZ3Deo2X/lw5weR/XZu9oM3Y2wTGdebDaQvsaW1jIv36av3fcoxMFT0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZP153MB0749.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(346002)(136003)(39860400002)(396003)(451199021)(122000001)(55016003)(8990500004)(82960400001)(82950400001)(478600001)(33656002)(71200400001)(7696005)(53546011)(9686003)(6506007)(10290500003)(86362001)(110136005)(54906003)(186003)(38070700005)(83380400001)(8676002)(41300700001)(8936002)(316002)(52536014)(38100700002)(5660300002)(4326008)(76116006)(2906002)(66946007)(66476007)(64756008)(66446008)(66556008);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: 4o+mOvWFdwWAu25tPxqnipa3+kmpaqjFsxQBEgfd8jdLg8Pq0rGfq154X4WBkW7qEZnlim1PBkvqzGfBk8ib52VVy/3XxU8Kubuom6YN1isRXc9xND60FCkuJdWydzgn/vPMQb2KRN9gw8zFpdYNmKjB8Yp/GyxWvjHO/OslxXuOJNexxORdA86EWXRTVUeMt+eyWnL/zB0muicOTuVwigh8J1x10Rt74QEMgucCkiUrM7PjW+ShruzQ/uY/tMAz2j15b8XTuqPLv/FkI2F3HQddD/NK76hqs0EY7jX0hhqZqc8VxYGA5JJRTGdlE9XMh23EbCAcPedsYDgHZXRnCazQTVn99nQngmlu8C2Xbxn7DaOLaCKPHTZ+WgHOz5qIt3DkZqfKoMlnmKbIEacnNITqtwoYCj1Jw/02GBAKiaR+QTk0mgX+H237BJQttVnnoAR1Q65xkORTyFqSWJGLhGYL2HOdmizYSZPKNZmwCJ0cd9WrfwMS+F8DI3xTxImd56o3Yy0X3/DAp4abv+LXJU2MKi66HWGs1wte5CWZSOhRbcWt89wMjGc6Q/xRg82+4F7d26tpiT9f3zIxL5AiENmtCU6ijIRWqqmZ8LuxUoyGpIQX65nH1F2IszFfF8jYcQ/6eH1fGW9v990Tj0yYRBNVH/lebsn4Z1sn0EPfNOw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZP153MB0749.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(136003)(346002)(396003)(39860400002)(451199021)(53546011)(6506007)(9686003)(186003)(10290500003)(478600001)(7696005)(966005)(55016003)(71200400001)(2906002)(66446008)(316002)(38070700005)(41300700001)(86362001)(5660300002)(8936002)(8676002)(52536014)(82960400001)(82950400001)(122000001)(83380400001)(38100700002)(54906003)(110136005)(66476007)(64756008)(66556008)(76116006)(4326008)(8990500004)(66946007)(33656002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UN8ti5300nP5cxBb5+kPcCFd3kdJWfz9HMl5cI4Vjfr6eBuxVgNGw3rojWQc?=
- =?us-ascii?Q?TeiS8FYQxLMBbdfajnmvHn8rOHcP7tvpS8sfnMZacuyh18DkDAEPKOsZkUky?=
- =?us-ascii?Q?mtYXsxpnTEORCM6D4dffmTjNDBc9j7zZGindE6npnUTcfv7Bod301b/IXL6N?=
- =?us-ascii?Q?KJHou8HYxMnzEnntg2Mo5n00EjBgIE2B0/F+/MQMRml/5eNoA2yXn4yICBJe?=
- =?us-ascii?Q?w306RMvLSFQ5UsX6hOOIIpHeBRtCx4OqBm0YyQkXptsAO/1hhgzLRyozFAn3?=
- =?us-ascii?Q?Uf7IBtFDX2VLg303+WRjnBWXUro/PhBEMEiqeoINHIebzCs8zO+wH7PJERtw?=
- =?us-ascii?Q?fd2O+6j8w4TeQJCJRBV99Hi58YNZF+880X7UE3YSqaqAo8KONOVJ5ON2iC9I?=
- =?us-ascii?Q?3Q2Vq1Ba/o+6jMNYTJriqQCfjHl5SmeZQzgSR9jx/Cc8XniiOA4KP5gNVwOm?=
- =?us-ascii?Q?QQQI/EuZL7gG6Zwi3dY8PFvTUg7AMGbH4Lk5cygHVlxRx36eFEcYqgfa7CZr?=
- =?us-ascii?Q?ITRCzeNPx+9OWtoGLyTZtmWRPtKluBo/g6jk4vmMo+5LkUqNMlpxI/r6abV6?=
- =?us-ascii?Q?+2XqKXnvFiU+xCOR1c2sBBrI7XKJuD9X3m9Ghb6/WXqQ3yDg6y7IpObDwQG5?=
- =?us-ascii?Q?ehFI0vWoWgIlQQNxR1niAfuHf14/kXti8wfgqBNiOX3jROC0N0aboqfKSnV4?=
- =?us-ascii?Q?ZiUBmCk4+REd1lvmyOJALDOgr9X3+z1ukfEnhnBt72av3z7akukKhEgqtO0V?=
- =?us-ascii?Q?PHuha05IT8RW6z2WfXph+tt0ZyZj9jcQvQtL/aBT+KF/1UUwo0uKjnKHCrck?=
- =?us-ascii?Q?pHH2FLak2RIhDC0mgLdxhHIi/e+Ge7uHaQGqR58iGGe9rmJBYfHcAsYAdsPU?=
- =?us-ascii?Q?h6WNiHkxcO99iM480LKNAQySpLYhUV9M3b6mVGwHbhPy/7Lg2k3EqO9dQ891?=
- =?us-ascii?Q?6AMLhyglp5PotUYpkn6F20jvv2TRQP6YSerbJB2q3GMC4oTfqZzR8qyuXOIM?=
- =?us-ascii?Q?VkrkoHInOD7AsTAEhuuJAIM703Ph3kMPvoESL2x0nMvuvXAf9aAMqTCXvB2b?=
- =?us-ascii?Q?WtKe+1tIL5qP94YbE0taMI3SC2aglkEtjTV8ONcJ6d47hDtXWQKaIoaKQqkm?=
- =?us-ascii?Q?iM0eV37kL7DneDvzI3gVuA1Ybivw3z+GpTdBL69L/jWjUkf4QJ7v22g9hH0e?=
- =?us-ascii?Q?xmwPm2oU1Hu2+4/NCN9dFfzrUMchD5dsKU16aVEtJSHTRO/+K+340F7mESQl?=
- =?us-ascii?Q?m/teerN0o793ELcYTT2yTpJkEArVIVgwd82xJuJxZJJ1D/fHj9Osrpi+wocq?=
- =?us-ascii?Q?eLhhzALFw8w5JCtg0MHQPlP8HGCgRW0dOU3qCelbivMuR5HMLCz7qivUufpb?=
- =?us-ascii?Q?/xTlYpdBcWEM6CYIz4lqTiDoaXRE6K9XSFTucTteATnLdSy7nOv20PHfjvA/?=
- =?us-ascii?Q?B2z8Rzlq1fxT4/4ndCjSe1plaEFdOtjRv5SQ8cZmcc+lZhUzT9XH2+ixhfty?=
- =?us-ascii?Q?Rmtua+Qvl9ZsikFNUq/l9E5czlm207RzsbvbZHqKbeAS9wXTw0SWp9MKI6fU?=
- =?us-ascii?Q?HSFDyu3P+I+HphAY2tHgrWPktbFzOwhmqOwcDV3X?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Wv873DE/5tJ2dvESpb5JyAE/sVYMnDhoDLr02UhSeShmBFe6Wz9yBtyj0saw?=
+ =?us-ascii?Q?d6zw7Pj3Hpj1fmvR14NxY9DBlHpLherz79siJDvfqJa2mBJ/Kx99XyAIKauE?=
+ =?us-ascii?Q?ywdxqw3hhk4uyIUoN/QEnD8Gz/ECAEth7hXZ4A9cKDc1Je7Bfa23VQbuo1yV?=
+ =?us-ascii?Q?/4na+vrh+jXHjyWlIZEth7kfKhGbAdKgXYc5fDyTmpybSkW79QbGfbOC3Zuz?=
+ =?us-ascii?Q?SpxlmIPqikuQPLq0QC7jBHhgIdvTopQVLuna/PQgxRGQkeGcH0qMXbotX3/l?=
+ =?us-ascii?Q?0M7xDsyoxVYt+tkHk5oxgY18vW/r+7/lSGOgFxM9Lkz14TBcf/NusX9SXozu?=
+ =?us-ascii?Q?Ei3rbSxpGj7tgLhwJssOGBUQQUyDAiRXlYcxobgTol160VkUUYa/iwBAt2bX?=
+ =?us-ascii?Q?+csaDVTMMGPpkdzFj+VGkvO1pqZz/6XkiES9vMYhXdupgEJwSE3hsAl3fDDm?=
+ =?us-ascii?Q?7Vmcz5EMyW517Z3q29eh/zkfi0dWSXsFp2FYJNjXnT+OoZMjz6SgLDaIs4nd?=
+ =?us-ascii?Q?XF28LnO/3P50ycPf/GU/ggIeZQddhO/X8/mavNgou2F22silrkVcL9OMlNos?=
+ =?us-ascii?Q?JNIWAFkrpK4wjqmjvbTlaaVsQwsYeHO3MrXXKfBG/kw8b8xMUlscV5LXuUtf?=
+ =?us-ascii?Q?zLMI0mQqTBDrpshSzmgqcpckQHa7r1yn7n7hMpNAm5OJAgOjjt5/FTCep7xg?=
+ =?us-ascii?Q?A5NLwO2hjd7S5zxFY9enV87RvZT/J4S5FZxjrcdAnd+E/09ZZ3q29BF+sQJ7?=
+ =?us-ascii?Q?rBcVkdDerFhBTT4aW770lNGnZD1gl1Uq5WJw0AN1/WmP5/XytfTPq8Tw8YGA?=
+ =?us-ascii?Q?eDkriot5Wb28ut965W+AFEt1YIjm4SdiV8TRslkV0sXLTaUym4mRA8wKiPOh?=
+ =?us-ascii?Q?JtVmW6KpNHBXni2MnXBScukKq+vra4Oki6c8auerlEespUlZqxlPu1DcSxxc?=
+ =?us-ascii?Q?hbfDyA5SoOiKnKUtUlqA3GwtiyCztJBB9iP+lz4gmWOaixNVqebMrC4G3XKZ?=
+ =?us-ascii?Q?RdVQIxaaCuRXLxz5xXnM0zdCgif4TtW+H/0akP9DTw3zQ4NE2UGe3hKOGvMv?=
+ =?us-ascii?Q?dslLvz3GHDVV3XopnvzWT+dXe9ScfcjUYaDdRsR5lvAkk6L5ESR3RXmN7ORR?=
+ =?us-ascii?Q?i8m7YzMeznL0hBrW22sYLqczL7R2iiEbeWLFASF+UmfNxMw7IqCRMakkaVv6?=
+ =?us-ascii?Q?TBFVmIJ7bcFDgTd78CS9lHVyn9Zk/9aarbPKImRvRoAc4rkVBemXMokqIwZt?=
+ =?us-ascii?Q?2v+grzxvjU7WFBl6yfPSWd1YA9IJJquMRXHKd+bN1hbT38IZpyCQcQW1+fEd?=
+ =?us-ascii?Q?sWQZajbQ7eHxbxr6A/QkiFeSNzBQl+cAwc/NYDg+fE3HwbmAlgC23j8YWnI8?=
+ =?us-ascii?Q?9qHzZOPlCjIV0Ghls/8G1qZ9U9ACkZhW3WimONYjWNhEBJJlZz9cC2oTmRyh?=
+ =?us-ascii?Q?POaCdXoKf5SUSndJzLp9HLgYSwXZyanbBhjvG6DsxWHvbqs9/Ol2NCSjhGZB?=
+ =?us-ascii?Q?bLYagVO0IGY+mqqHGtTYP+4Tm705WgLnHArHMf/0Du/G6KzCApjb3/Zg5CKP?=
+ =?us-ascii?Q?XEMXupTq4AEhVUq9WM8Oq1Rt7sjbrVxdmmJCPZNN?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PUZP153MB0749.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 449cb811-7ff3-480d-2b0b-08db714de3b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2023 05:19:14.9654
+X-MS-Exchange-CrossTenant-Network-Message-Id: 780875d2-d70a-43e6-22c4-08db714eb511
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2023 05:25:06.1826
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8ixqWF64S2h8atIqss45XaZ+uQNAoqIoUTZ0uIso59RlV/zcE7cUZ01fd9+dDR6rgSkyUP/U8Ub6C1gU5LZOJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZP153MB0740
+X-MS-Exchange-CrossTenant-userprincipalname: /DTPm1ntGc6GlsXksfDz0in7d3cP/PMmmtPe1/tXTU4fiwLkw9OSPV6Ui8+eEMbGyYk2p3o3Kf9miScNFr+c2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAP153MB0408
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -131,7 +130,7 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 > -----Original Message-----
 > From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Thursday, June 15, 2023 2:43 AM
+> Sent: Thursday, June 15, 2023 2:46 AM
 > To: Saurabh Sengar <ssengar@linux.microsoft.com>
 > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
 > <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
@@ -139,336 +138,121 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 > corbet@lwn.net; linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.or=
 g;
 > linux-doc@vger.kernel.org
-> Subject: [EXTERNAL] Re: [PATCH v2 1/5] uio: Add hv_vmbus_client driver
+> Subject: [EXTERNAL] Re: [PATCH v2 2/5] tools: hv: Add vmbus_bufring
 >=20
-> On Wed, Jun 14, 2023 at 11:15:08AM -0700, Saurabh Sengar wrote:
-> > --- a/Documentation/ABI/stable/sysfs-bus-vmbus
-> > +++ b/Documentation/ABI/stable/sysfs-bus-vmbus
-> > @@ -153,6 +153,13 @@ Contact:	Stephen Hemminger
-> <sthemmin@microsoft.com>
-> >  Description:	Binary file created by uio_hv_generic for ring buffer
-> >  Users:		Userspace drivers
+> On Wed, Jun 14, 2023 at 11:15:09AM -0700, Saurabh Sengar wrote:
+> > Common userspace interface for read/write from VMBus ringbuffer.
+> > This implementation is open for use by any userspace driver or
+> > application seeking direct control over VMBus ring buffers.
+> > A significant  part of this code is borrowed from DPDK.
+>=20
+> "  "?
+>=20
+> Anyway, this does not explain what this is at all.
+
+I can elaborate more in next version.
+
+>=20
+> And if you "borrowed" it from DPDK, that feels odd, are you sure you are
+> allowed to do so?
+
+I will confirm this internally before sending next version.
+
+>=20
+> > Link:
+> > https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit=
+h
 > >
-> > +What:		/sys/bus/vmbus/devices/<UUID>/ring_size
-> > +Date:		June. 2023
->=20
-> No need for the "."
-
-OK
-
->=20
-> > +KernelVersion:	6.4
->=20
-> 6.4 will be released without this, sorry.
-
-Ok will change it to 6.5.
-
->=20
-> > +Contact:	Saurabh Sengar <ssengar@microsoft.com>
-> > +Description:	File created by uio_hv_vmbus_client for setting device ri=
-ng
-> buffer size
-> > +Users:		Userspace drivers
-> > +
-> >  What:           /sys/bus/vmbus/devices/<UUID>/channels/<N>/intr_in_ful=
-l
-> >  Date:           February 2019
-> >  KernelVersion:  5.0
-> > diff --git a/Documentation/driver-api/uio-howto.rst
-> > b/Documentation/driver-api/uio-howto.rst
-> > index 907ffa3b38f5..33b67f876b96 100644
-> > --- a/Documentation/driver-api/uio-howto.rst
-> > +++ b/Documentation/driver-api/uio-howto.rst
-> > @@ -722,6 +722,52 @@ For example::
+> ub.com%2FDPDK%2Fdpdk%2F&data=3D05%7C01%7Cssengar%40microsoft.com
+> %7C79975
 > >
+> a82b7b44c67b0b508db6d1c9301%7C72f988bf86f141af91ab2d7cd011db47%7
+> C1%7C0
 > >
-> > /sys/bus/vmbus/devices/3811fe4d-0fa0-4b62-981a-
-> 74fc1084c757/channels/2
-> > 1/ring
+> %7C638223741757437265%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj
+> AwMDAiLCJQ
 > >
-> > +Generic Hyper-V driver for low speed devices
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +The generic driver is a kernel module named uio_hv_vmbus_client. It
-> > +supports slow devices on the Hyper-V VMBus similar to uio_hv_generic
-> > +for faster devices. This driver also gives flexibility of customized
-> > +ring buffer sizes.
-> > +
-> > +Making the driver recognize the device
-> > +--------------------------------------
-> > +
-> > +Since the driver does not declare any device GUID's, it will not get
-> > +loaded automatically and will not automatically bind to any devices,
-> > +you must load it and allocate id to the driver yourself. For example,
-> > +to use the fcopy device class GUID::
-> > +
-> > +        DEV_UUID=3Deb765408-105f-49b6-b4aa-c123b64d17d4
-> > +        driverctl -b vmbus set-override $DEV_UUID uio_hv_vmbus_client
+> IjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata
+> =3D100fd
+> > FVed6C5lBrikWqkWwFpfH33LHF0H8fuRb0myL0%3D&reserved=3D0
 >=20
-> Why are you adding a dependancy on a 300 line bash script that is not use=
-d
-> by most distros?
->=20
-> Why not just show the "real" commands that you can use here that don't
-> require an external tool not controlled by the kernel at all.
+> Not what a Link: tag is for, sorry.
 
-Ok will mention the regular  "echo" commands as you suggested.
+Will fix, thanks for pointing this.
 
 >=20
+> >
+> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> > [V2]
+> > - simpler sysfs path, less parsing
+> >
+> >  tools/hv/vmbus_bufring.c | 322
+> > +++++++++++++++++++++++++++++++++++++++
+> >  tools/hv/vmbus_bufring.h | 158 +++++++++++++++++++
+> >  2 files changed, 480 insertions(+)
+> >  create mode 100644 tools/hv/vmbus_bufring.c  create mode 100644
+> > tools/hv/vmbus_bufring.h
+>=20
+> You add new files to the tools directory, yet say nothing about how to us=
+e
+> them or even how to build them.
+>=20
+> Why is there a .h file for a single .c file?  That seems pointless, right=
+?
+
+This is a header file so that any userspace application can add it. This fi=
+le
+Is used by fcopy application in [PATCH v2 3/5] of this patch series.
+If this is confusing, shall I merge 2/5 and 3/5 ? I thought better to keep =
+the
+common library code as separate patch. Please let me know your opinion.
+
+>=20
+> > diff --git a/tools/hv/vmbus_bufring.c b/tools/hv/vmbus_bufring.c new
+> > file mode 100644 index 000000000000..d44a06d45b03
 > > --- /dev/null
-> > +++ b/drivers/uio/uio_hv_vmbus_client.c
-> > @@ -0,0 +1,217 @@
-> > +// SPDX-License-Identifier: GPL-2.0
+> > +++ b/tools/hv/vmbus_bufring.c
+> > @@ -0,0 +1,322 @@
+> > +// SPDX-License-Identifier: BSD-3-Clause
 > > +/*
-> > + * uio_hv_vmbus_client - UIO driver for low speed VMBus devices
-> > + *
-> > + * Copyright (c) 2023, Microsoft Corporation.
-> > + *
-> > + * Authors:
-> > + *   Saurabh Sengar <ssengar@microsoft.com>
-> > + *
-> > + * Since the driver does not declare any device ids, you must
-> > +allocate
-> > + * id and bind the device to the driver yourself.  For example:
-> > + * driverctl -b vmbus set-override <dev uuid> uio_hv_vmbus_client
+> > + * Copyright (c) 2009-2012,2016,2023 Microsoft Corp.
+> > + * Copyright (c) 2012 NetApp Inc.
+> > + * Copyright (c) 2012 Citrix Inc.
+> > + * All rights reserved.
 >=20
-> Again, no need to discuss driverctl.
+> No copyright for the work you did?
 
-Noted.
+I have added 2023 Microsoft Corp. Please let me know if I need to add
+anything more.
 
 >=20
 > > + */
 > > +
-> > +#include <linux/device.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/uio_driver.h>
-> > +#include <linux/hyperv.h>
+> > +#include <errno.h>
+> > +#include <fcntl.h>
+> > +#include <emmintrin.h>
+> > +#include <linux/limits.h>
+> > +#include <stdbool.h>
+> > +#include <stdint.h>
+> > +#include <stdio.h>
+> > +#include <string.h>
+> > +#include <sys/mman.h>
+> > +#include <sys/uio.h>
+> > +#include <unistd.h>
+> > +#include "vmbus_bufring.h"
 > > +
-> > +#define DRIVER_AUTHOR	"Saurabh Sengar <ssengar@microsoft.com>"
-> > +#define DRIVER_DESC	"Generic UIO driver for low speed VMBus
-> devices"
+> > +#define	rte_compiler_barrier()	({ asm volatile ("" : : : "memory"); })
+> > +
+> > +#define	rte_smp_rwmb()		({ asm volatile ("" : : :
+> "memory"); })
 >=20
-> You only use these defines in one place, so why not just spell them out t=
-here,
-> no need for 2 extra lines, right?
+> These aren't in any common header file already?
 
-Sure, will fix
-
->=20
-> > +
-> > +#define DEFAULT_HV_RING_SIZE	VMBUS_RING_SIZE(3 *
-> HV_HYP_PAGE_SIZE)
-> > +static int ring_size =3D DEFAULT_HV_RING_SIZE;
->=20
-> You only use that #define in one place, why have it at all?
-
-Ok, will fix
-
->=20
-> And you are defining a "global" variable that can be modified by an indiv=
-idual
-> sysfs file for ANY device bound to this driver, messing with the other de=
-vice's
-> ring buffer size, right?  This needs to be per-device, or explain in huge=
- detail
-> here why not.
-
-The global variable is expected to be set by userspace per device before op=
-ening, the
-particular uio device. For a particular Hyper-v device this value be same, =
-and once
-device is open the ring buffer is allocated and there won't be any impact a=
-fterwards
-changing it. I can elaborate more of this in sysfs documentation.
-
->=20
-> > +
-> > +struct uio_hv_vmbus_dev {
-> > +	struct uio_info info;
-> > +	struct hv_device *device;
-> > +};
-> > +
-> > +/* Sysfs API to allow mmap of the ring buffers */ static int
-> > +uio_hv_vmbus_mmap(struct file *filp, struct kobject *kobj,
-> > +			     struct bin_attribute *attr, struct vm_area_struct
-> *vma) {
-> > +	struct device *dev =3D container_of(kobj, struct device, kobj);
-> > +	struct hv_device *hv_dev =3D container_of(dev, struct hv_device,
-> device);
-> > +	struct vmbus_channel *channel =3D hv_dev->channel;
-> > +	void *ring_buffer =3D page_address(channel->ringbuffer_page);
-> > +
-> > +	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
-> > +			       channel->ringbuffer_pagecount << PAGE_SHIFT); }
-> > +
-> > +static const struct bin_attribute ring_buffer_bin_attr =3D {
-> > +	.attr =3D {
-> > +		.name =3D "ringbuffer",
-> > +		.mode =3D 0600,
-> > +	},
-> > +	.mmap =3D uio_hv_vmbus_mmap,
-> > +};
-> > +
-> > +/*
-> > + * This is the irqcontrol callback to be registered to uio_info.
-> > + * It can be used to disable/enable interrupt from user space processe=
+I see every userspace application is maintaining their separate copy of thi=
 s.
-> > + *
-> > + * @param info
-> > + *  pointer to uio_info.
-> > + * @param irq_state
-> > + *  state value. 1 to enable interrupt, 0 to disable interrupt.
-> > + */
-> > +static int uio_hv_vmbus_irqcontrol(struct uio_info *info, s32
-> > +irq_state) {
-> > +	struct uio_hv_vmbus_dev *pdata =3D info->priv;
-> > +	struct hv_device *hv_dev =3D pdata->device;
-> > +
-> > +	/* Issue a full memory barrier before triggering the notification */
-> > +	virt_mb();
-> > +
-> > +	vmbus_setevent(hv_dev->channel);
-> > +	return 0;
-> > +}
-> > +
-> > +/*
-> > + * Callback from vmbus_event when something is in inbound ring.
-> > + */
-> > +static void uio_hv_vmbus_channel_cb(void *context) {
-> > +	struct uio_hv_vmbus_dev *pdata =3D context;
-> > +
-> > +	/* Issue a full memory barrier before sending the event to userspace
-> */
-> > +	virt_mb();
-> > +
-> > +	uio_event_notify(&pdata->info);
-> > +}
-> > +
-> > +static int uio_hv_vmbus_open(struct uio_info *info, struct inode
-> > +*inode) {
-> > +	struct uio_hv_vmbus_dev *pdata =3D container_of(info, struct
-> uio_hv_vmbus_dev, info);
-> > +	struct hv_device *hv_dev =3D pdata->device;
-> > +	struct vmbus_channel *channel =3D hv_dev->channel;
-> > +	int ret;
-> > +
-> > +	ret =3D vmbus_open(channel, ring_size, ring_size, NULL, 0,
-> > +			 uio_hv_vmbus_channel_cb, pdata);
-> > +	if (ret) {
-> > +		dev_err(&hv_dev->device, "error %d when opening the
-> channel\n", ret);
-> > +		return ret;
-> > +	}
-> > +	channel->inbound.ring_buffer->interrupt_mask =3D 0;
-> > +	set_channel_read_mode(channel, HV_CALL_ISR);
-> > +
-> > +	ret =3D device_create_bin_file(&hv_dev->device,
-> &ring_buffer_bin_attr);
-> > +	if (ret)
-> > +		dev_err(&hv_dev->device, "sysfs create ring bin file failed;
-> %d\n",
-> > +ret);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/* VMbus primary channel is closed on last close */ static int
-> > +uio_hv_vmbus_release(struct uio_info *info, struct inode *inode) {
-> > +	struct uio_hv_vmbus_dev *pdata =3D container_of(info, struct
-> uio_hv_vmbus_dev, info);
-> > +	struct hv_device *hv_dev =3D pdata->device;
-> > +	struct vmbus_channel *channel =3D hv_dev->channel;
-> > +
-> > +	device_remove_bin_file(&hv_dev->device, &ring_buffer_bin_attr);
-> > +	vmbus_close(channel);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static ssize_t ring_size_show(struct device *dev, struct device_attrib=
-ute
-> *attr,
-> > +			      char *buf)
-> > +{
-> > +	return sysfs_emit(buf, "%d\n", ring_size); }
-> > +
-> > +static ssize_t ring_size_store(struct device *dev, struct device_attri=
-bute
-> *attr,
-> > +			       const char *buf, size_t count) {
-> > +	unsigned int val;
-> > +
-> > +	if (kstrtouint(buf, 0, &val) < 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (val < HV_HYP_PAGE_SIZE)
-> > +		return -EINVAL;
-> > +
-> > +	ring_size =3D val;
-> > +
-> > +	return count;
-> > +}
-> > +
-> > +static DEVICE_ATTR_RW(ring_size);
-> > +
-> > +static struct attribute *uio_hv_vmbus_client_attrs[] =3D {
-> > +	&dev_attr_ring_size.attr,
-> > +	NULL,
-> > +};
-> > +ATTRIBUTE_GROUPS(uio_hv_vmbus_client);
-> > +
-> > +static int uio_hv_vmbus_probe(struct hv_device *dev, const struct
-> > +hv_vmbus_device_id *dev_id) {
-> > +	struct uio_hv_vmbus_dev *pdata;
-> > +	int ret;
-> > +	char *name =3D NULL;
-> > +
-> > +	pdata =3D devm_kzalloc(&dev->device, sizeof(*pdata), GFP_KERNEL);
-> > +	if (!pdata)
-> > +		return -ENOMEM;
-> > +
-> > +	name =3D kasprintf(GFP_KERNEL, "%pUl", &dev->dev_instance);
-> > +
-> > +	/* Fill general uio info */
-> > +	pdata->info.name =3D name; /* /sys/class/uio/uioX/name */
-> > +	pdata->info.version =3D "1";
-> > +	pdata->info.irqcontrol =3D uio_hv_vmbus_irqcontrol;
-> > +	pdata->info.open =3D uio_hv_vmbus_open;
-> > +	pdata->info.release =3D uio_hv_vmbus_release;
-> > +	pdata->info.irq =3D UIO_IRQ_CUSTOM;
-> > +	pdata->info.priv =3D pdata;
-> > +	pdata->device =3D dev;
-> > +
-> > +	ret =3D uio_register_device(&dev->device, &pdata->info);
-> > +	if (ret) {
-> > +		dev_err(&dev->device, "uio_hv_vmbus register failed\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	hv_set_drvdata(dev, pdata);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void uio_hv_vmbus_remove(struct hv_device *dev) {
-> > +	struct uio_hv_vmbus_dev *pdata =3D hv_get_drvdata(dev);
-> > +
-> > +	if (pdata)
-> > +		uio_unregister_device(&pdata->info);
-> > +}
-> > +
-> > +static struct hv_driver uio_hv_vmbus_drv =3D {
-> > +	.driver.dev_groups =3D uio_hv_vmbus_client_groups,
-> > +	.name =3D "uio_hv_vmbus_client",
-> > +	.id_table =3D NULL, /* only dynamic id's */
->=20
-> No need to set this if it's NULL.
+Although I can remove this duplicate define and can use only one of these.
 
-Ok.
-
-Thanks for your review.
 - Saurabh
 
 >=20
