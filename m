@@ -2,191 +2,225 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39FC173745C
-	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jun 2023 20:34:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28B52737478
+	for <lists+linux-hyperv@lfdr.de>; Tue, 20 Jun 2023 20:40:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjFTSem (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 20 Jun 2023 14:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33288 "EHLO
+        id S230063AbjFTSko (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 20 Jun 2023 14:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbjFTSel (ORCPT
+        with ESMTP id S229931AbjFTSkm (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 20 Jun 2023 14:34:41 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66D410C2;
-        Tue, 20 Jun 2023 11:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687286079; x=1718822079;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7wOYvg1PU199MGs3s9q0fJPuRo9zPR+Rxyq5xsvig9s=;
-  b=fNfm000NvG30KuV79I1/O/qHl7r8GxEZ5uVLVzl4dyiwLeJuqphaj5jt
-   E2RVHj2Gt8WfS9XiSbpOxSJU2gQoNHAw6y4rwwQTV/1i5D3MOJ+UoycuP
-   flJisCPgeOsREcG2fYcXszrq4dsS6vUiI7tzx0371FSSlXsRgA/Jjl+PI
-   oq3s7chx32cO5bXFAC1EfjfMaML7aeFmqKniuvQwZwEq7+ECewTJBvSS5
-   xFSuyIwc3L0O1PF77tSdlXb9cbgmUXGW5SM0lmQxO8A0mwp630nqXIe5E
-   pm0E+3YOgPRU9J1AJ9YGupUmTRmWTY+towwa2So5xZr+QgmCD+XgvSf7c
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="340291597"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="340291597"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 11:34:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="960883657"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="960883657"
-Received: from oyloh-mobl.amr.corp.intel.com (HELO [10.209.25.231]) ([10.209.25.231])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 11:34:18 -0700
-Message-ID: <d20baf1e-a736-667f-2082-0c0539013f2b@linux.intel.com>
-Date:   Tue, 20 Jun 2023 11:34:17 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH v8 2/2] x86/tdx: Support vmalloc() for
- tdx_enc_status_changed()
-Content-Language: en-US
-To:     Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, brijesh.singh@amd.com,
-        dan.j.williams@intel.com, dave.hansen@intel.com,
-        dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
-        jane.chu@oracle.com, kirill.shutemov@linux.intel.com,
-        kys@microsoft.com, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, rostedt@goodmis.org, seanjc@google.com,
-        tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
-        x86@kernel.org, mikelley@microsoft.com
-Cc:     linux-kernel@vger.kernel.org, Tianyu.Lan@microsoft.com,
-        rick.p.edgecombe@intel.com
-References: <20230620154830.25442-1-decui@microsoft.com>
- <20230620154830.25442-3-decui@microsoft.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230620154830.25442-3-decui@microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        Tue, 20 Jun 2023 14:40:42 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2C8C0DC;
+        Tue, 20 Jun 2023 11:40:41 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1159)
+        id 9BD3921C1E6D; Tue, 20 Jun 2023 11:40:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9BD3921C1E6D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1687286438;
+        bh=iCzyGwffGnwO8ZEB3IZCpwiNa8XaOywtNyIWOP4HGgo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sZD3vJiKM8LNDshcV5jtR/6F13HysN7P8u+JXev5GrKpOVQE1epnmacbMBCuVFa7X
+         wY4rNjW8qpm//ADz0G7EH1Sr6gIQvx8xEZxjLfjkDq3INdIPdKQj85KttcYQHLk0mn
+         uCwR/wDHA9ekB1MilHbPCT/PyCtI7ILjIFh3Q19s=
+From:   Nischala Yelchuri <niyelchu@linux.microsoft.com>
+To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     mikelley@microsoft.com, "K. Y. Srinivasan"@linux.microsoft.com,
+        kys@microsoft.com, Haiyang@linux.microsoft.com,
+        Zhang@linux.microsoft.com, haiyangz@microsoft.com,
+        Wei@linux.microsoft.com, Liu@linux.microsoft.com,
+        wei.liu@kernel.org, Dexuan@linux.microsoft.com,
+        Cui@linux.microsoft.com, decui@microsoft.com,
+        Thomas@linux.microsoft.com, Gleixner@linux.microsoft.com,
+        tglx@linutronix.de, Ingo@linux.microsoft.com,
+        Molnar@linux.microsoft.com, mingo@redhat.com,
+        Borislav@linux.microsoft.com, Petkov@linux.microsoft.com,
+        bp@alien8.de, Dave@linux.microsoft.com, Hansen@linux.microsoft.com,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        "H. Peter Anvin"@linux.microsoft.com, hpa@zytor.com,
+        Tyler@linux.microsoft.com, Hicks@linux.microsoft.com,
+        code@tyhicks.com, niyelchu@microsoft.com
+Subject: [PATCH] x86/hyperv: Improve code for referencing hyperv_pcpu_input_arg
+Date:   Tue, 20 Jun 2023 11:40:38 -0700
+Message-Id: <1687286438-9421-1-git-send-email-niyelchu@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi,
+Several places in code for Hyper-V reference the
+per-CPU variable hyperv_pcpu_input_arg. Older code uses a multi-line
+sequence to reference the variable, and usually includes a cast.
+Newer code does a much simpler direct assignment. The latter is
+preferable as the complexity of the older code is unnecessary.
 
-On 6/20/23 8:48 AM, Dexuan Cui wrote:
-> When a TDX guest runs on Hyper-V, the hv_netvsc driver's netvsc_init_buf()
-> allocates buffers using vzalloc(), and needs to share the buffers with the
-> host OS by calling set_memory_decrypted(), which is not working for
-> vmalloc() yet. Add the support by handling the pages one by one.
-> 
-> Co-developed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
+Update older code to use the simpler direct assignment.
 
-Looks good to me.
+Signed-off-by: Nischala Yelchuri <niyelchu@linux.microsoft.com>
+---
+ arch/x86/hyperv/hv_apic.c |  4 +---
+ arch/x86/hyperv/ivm.c     |  7 +++----
+ arch/x86/hyperv/mmu.c     | 12 ++----------
+ arch/x86/hyperv/nested.c  | 11 ++---------
+ drivers/hv/hv_balloon.c   |  2 +-
+ 5 files changed, 9 insertions(+), 27 deletions(-)
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  arch/x86/coco/tdx/tdx.c | 35 +++++++++++++++++++++++++++++------
->  1 file changed, 29 insertions(+), 6 deletions(-)
-> 
-> Changes in v2:
->   Changed tdx_enc_status_changed() in place.
-> 
-> Changes in v3:
->   No change since v2.
-> 
-> Changes in v4:
->   Added Kirill's Co-developed-by since Kirill helped to improve the
->     code by adding tdx_enc_status_changed_phys().
-> 
->   Thanks Kirill for the clarification on load_unaligned_zeropad()!
-> 
-> Changes in v5:
->   Added Kirill's Signed-off-by.
->   Added Michael's Reviewed-by.
-> 
-> Changes in v6: None.
-> 
-> Changes in v7: None.
->   Note: there was a race between set_memory_encrypted() and
->   load_unaligned_zeropad(), which has been fixed by the 3 patches of
->   Kirill in the x86/tdx branch of the tip tree.
-> 
-> Changes in v8:
->   Rebased to tip.git's master branch.
-> 
-> diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-> index 0c198ab73aa7..a313d5ab42f1 100644
-> --- a/arch/x86/coco/tdx/tdx.c
-> +++ b/arch/x86/coco/tdx/tdx.c
-> @@ -8,6 +8,7 @@
->  #include <linux/export.h>
->  #include <linux/io.h>
-> +#include <linux/mm.h>
->  #include <asm/coco.h>
->  #include <asm/tdx.h>
->  #include <asm/vmx.h>
->  #include <asm/insn.h>
-> @@ -752,6 +753,19 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
->  	return false;
->  }
->  
-> +static bool tdx_enc_status_changed_phys(phys_addr_t start, phys_addr_t end,
-> +					bool enc)
-> +{
-> +	if (!tdx_map_gpa(start, end, enc))
-> +		return false;
-> +
-> +	/* shared->private conversion requires memory to be accepted before use */
-> +	if (enc)
-> +		return tdx_accept_memory(start, end);
-> +
-> +	return true;
-> +}
-> +
->  /*
->   * Inform the VMM of the guest's intent for this physical page: shared with
->   * the VMM or private to the guest.  The VMM is expected to change its mapping
-> @@ -759,15 +773,24 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
->   */
->  static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
->  {
-> -	phys_addr_t start = __pa(vaddr);
-> -	phys_addr_t end   = __pa(vaddr + numpages * PAGE_SIZE);
-> +	unsigned long start = vaddr;
-> +	unsigned long end = start + numpages * PAGE_SIZE;
->  
-> -	if (!tdx_map_gpa(start, end, enc))
-> +	if (offset_in_page(start) != 0)
->  		return false;
->  
-> -	/* shared->private conversion requires memory to be accepted before use */
-> -	if (enc)
-> -		return tdx_accept_memory(start, end);
-> +	if (!is_vmalloc_addr((void *)start))
-> +		return tdx_enc_status_changed_phys(__pa(start), __pa(end), enc);
-> +
-> +	while (start < end) {
-> +		phys_addr_t start_pa = slow_virt_to_phys((void *)start);
-> +		phys_addr_t end_pa = start_pa + PAGE_SIZE;
-> +
-> +		if (!tdx_enc_status_changed_phys(start_pa, end_pa, enc))
-> +			return false;
-> +
-> +		start += PAGE_SIZE;
-> +	}
->  
->  	return true;
->  }
-
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index 1fbda2f94..b21335e6a 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -107,7 +107,6 @@ static bool cpu_is_self(int cpu)
+ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
+ 		bool exclude_self)
+ {
+-	struct hv_send_ipi_ex **arg;
+ 	struct hv_send_ipi_ex *ipi_arg;
+ 	unsigned long flags;
+ 	int nr_bank = 0;
+@@ -117,9 +116,8 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
+ 		return false;
+ 
+ 	local_irq_save(flags);
+-	arg = (struct hv_send_ipi_ex **)this_cpu_ptr(hyperv_pcpu_input_arg);
++	ipi_arg = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 
+-	ipi_arg = *arg;
+ 	if (unlikely(!ipi_arg))
+ 		goto ipi_mask_ex_done;
+ 
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 14f46ad2c..28be6df88 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -247,7 +247,7 @@ EXPORT_SYMBOL_GPL(hv_ghcb_msr_read);
+ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+ 			   enum hv_mem_host_visibility visibility)
+ {
+-	struct hv_gpa_range_for_visibility **input_pcpu, *input;
++	struct hv_gpa_range_for_visibility *input;
+ 	u16 pages_processed;
+ 	u64 hv_status;
+ 	unsigned long flags;
+@@ -263,9 +263,8 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+ 	}
+ 
+ 	local_irq_save(flags);
+-	input_pcpu = (struct hv_gpa_range_for_visibility **)
+-			this_cpu_ptr(hyperv_pcpu_input_arg);
+-	input = *input_pcpu;
++	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
++
+ 	if (unlikely(!input)) {
+ 		local_irq_restore(flags);
+ 		return -EINVAL;
+diff --git a/arch/x86/hyperv/mmu.c b/arch/x86/hyperv/mmu.c
+index 8460bd35e..1cc113200 100644
+--- a/arch/x86/hyperv/mmu.c
++++ b/arch/x86/hyperv/mmu.c
+@@ -61,7 +61,6 @@ static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
+ 				   const struct flush_tlb_info *info)
+ {
+ 	int cpu, vcpu, gva_n, max_gvas;
+-	struct hv_tlb_flush **flush_pcpu;
+ 	struct hv_tlb_flush *flush;
+ 	u64 status;
+ 	unsigned long flags;
+@@ -74,10 +73,7 @@ static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
+ 
+ 	local_irq_save(flags);
+ 
+-	flush_pcpu = (struct hv_tlb_flush **)
+-		     this_cpu_ptr(hyperv_pcpu_input_arg);
+-
+-	flush = *flush_pcpu;
++	flush = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 
+ 	if (unlikely(!flush)) {
+ 		local_irq_restore(flags);
+@@ -178,17 +174,13 @@ static u64 hyperv_flush_tlb_others_ex(const struct cpumask *cpus,
+ 				      const struct flush_tlb_info *info)
+ {
+ 	int nr_bank = 0, max_gvas, gva_n;
+-	struct hv_tlb_flush_ex **flush_pcpu;
+ 	struct hv_tlb_flush_ex *flush;
+ 	u64 status;
+ 
+ 	if (!(ms_hyperv.hints & HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED))
+ 		return HV_STATUS_INVALID_PARAMETER;
+ 
+-	flush_pcpu = (struct hv_tlb_flush_ex **)
+-		     this_cpu_ptr(hyperv_pcpu_input_arg);
+-
+-	flush = *flush_pcpu;
++	flush = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 
+ 	if (info->mm) {
+ 		/*
+diff --git a/arch/x86/hyperv/nested.c b/arch/x86/hyperv/nested.c
+index 5d70968c8..9dc259fa3 100644
+--- a/arch/x86/hyperv/nested.c
++++ b/arch/x86/hyperv/nested.c
+@@ -19,7 +19,6 @@
+ 
+ int hyperv_flush_guest_mapping(u64 as)
+ {
+-	struct hv_guest_mapping_flush **flush_pcpu;
+ 	struct hv_guest_mapping_flush *flush;
+ 	u64 status;
+ 	unsigned long flags;
+@@ -30,10 +29,7 @@ int hyperv_flush_guest_mapping(u64 as)
+ 
+ 	local_irq_save(flags);
+ 
+-	flush_pcpu = (struct hv_guest_mapping_flush **)
+-		this_cpu_ptr(hyperv_pcpu_input_arg);
+-
+-	flush = *flush_pcpu;
++	flush = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 
+ 	if (unlikely(!flush)) {
+ 		local_irq_restore(flags);
+@@ -90,7 +86,6 @@ EXPORT_SYMBOL_GPL(hyperv_fill_flush_guest_mapping_list);
+ int hyperv_flush_guest_mapping_range(u64 as,
+ 		hyperv_fill_flush_list_func fill_flush_list_func, void *data)
+ {
+-	struct hv_guest_mapping_flush_list **flush_pcpu;
+ 	struct hv_guest_mapping_flush_list *flush;
+ 	u64 status;
+ 	unsigned long flags;
+@@ -102,10 +97,8 @@ int hyperv_flush_guest_mapping_range(u64 as,
+ 
+ 	local_irq_save(flags);
+ 
+-	flush_pcpu = (struct hv_guest_mapping_flush_list **)
+-		this_cpu_ptr(hyperv_pcpu_input_arg);
++	flush = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 
+-	flush = *flush_pcpu;
+ 	if (unlikely(!flush)) {
+ 		local_irq_restore(flags);
+ 		goto fault;
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index dffcc894f..0d7a3ba66 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1628,7 +1628,7 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+ 	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+ 	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order));
+ 	local_irq_save(flags);
+-	hint = *(struct hv_memory_hint **)this_cpu_ptr(hyperv_pcpu_input_arg);
++	hint = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 	if (!hint) {
+ 		local_irq_restore(flags);
+ 		return -ENOSPC;
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.25.1
+
