@@ -2,209 +2,290 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3556737FD2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jun 2023 13:09:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B6C738327
+	for <lists+linux-hyperv@lfdr.de>; Wed, 21 Jun 2023 14:13:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231970AbjFUK30 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 21 Jun 2023 06:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45472 "EHLO
+        id S232118AbjFULSH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 21 Jun 2023 07:18:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232117AbjFUK3L (ORCPT
+        with ESMTP id S230076AbjFULSE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 21 Jun 2023 06:29:11 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C471C1737;
-        Wed, 21 Jun 2023 03:29:04 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-        id 266D621C2043; Wed, 21 Jun 2023 03:29:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 266D621C2043
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1687343344;
-        bh=chZwILjB8n5vZjnofE7dyAXFYm12Ys8pfNtbWBPSFg0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VtCZ45Dj+681XgJ/rY2h8s7WG5WqyExIxJhfSehRcNJQ7Ixa/HwkMlDiba1CXkOge
-         82oFWc8yJlqQZcOJ1PfnkUHxRGL5TRGAl/cHeJ0/3B0qg9PikYe0vebEuqqSrqf+wi
-         yGPSkz6mg7CXO0Ma002vvPowWZhbjn4+MVCy7dPw=
-From:   souradeep chakrabarti <schakrabarti@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
-        sharmaajay@microsoft.com, leon@kernel.org, cai.huoqing@linux.dev,
-        ssengar@linux.microsoft.com, vkuznets@redhat.com,
-        tglx@linutronix.de, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-Subject: [PATCH] net: mana: Fix MANA VF unload when host is unresponsive
-Date:   Wed, 21 Jun 2023 03:29:01 -0700
-Message-Id: <1687343341-10898-1-git-send-email-schakrabarti@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        Wed, 21 Jun 2023 07:18:04 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B7C184;
+        Wed, 21 Jun 2023 04:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687346282; x=1718882282;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=bNOOeYVCQ7poh+/POpUoy8h5Fc7oKKTV5NlBm31y8T8=;
+  b=UwWPAw+/N37hMw7X+nGZKpKlbKMwdZwvU+RQSpoKtcCgHwAHlhG1R0Bz
+   mdQuYCMMNAaFMEkH7GrE4t3WUk2LY/5Pcnf2XGALDNK9RwMDVImCbKHMg
+   qoOzDu8Gcpxdq/rZVd9n7TljpxDRVX4QNw/YfVDT6F30txm34vFMxXfrb
+   KOm3AeOH23cSslUWfXulopUv1Ymrabi373RGtL5NwNXUaKveRfwRjWum2
+   5UHnjpMjtR78BKPbQg5XHQQBYzvRvOHoG3xnfMxW2NmjyCJbH96j0tEg6
+   nOjpaqQe/fp4wEK6ZzsCO4YL+JCONvGwpYn8qdpKeL2Pwdr9aQXiY+jDK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="339758007"
+X-IronPort-AV: E=Sophos;i="6.00,260,1681196400"; 
+   d="scan'208";a="339758007"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 04:17:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="664623042"
+X-IronPort-AV: E=Sophos;i="6.00,260,1681196400"; 
+   d="scan'208";a="664623042"
+Received: from unknown (HELO localhost) ([10.237.66.162])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 04:16:58 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Joel Granados <j.granados@samsung.com>, mcgrof@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russ Weight <russell.h.weight@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>, Corey Minyard <minyard@acm.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Song Liu <song@kernel.org>, Robin Holt <robinmholt@gmail.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        David Ahern <dsahern@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Doug Gilbert <dgilbert@interlog.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        David Howells <dhowells@redhat.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, Jan Kara <jack@suse.cz>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        John Stultz <jstultz@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Joerg Reuter <jreuter@yaina.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Mat Martineau <martineau@kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        Remi Denis-Courmont <courmisch@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Wenjia Zhang <wenjia@linux.ibm.com>,
+        Jan Karcher <jaka@linux.ibm.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>
+Cc:     Joel Granados <j.granados@samsung.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Matthew Bobrowski <repnop@google.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-raid@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        linux-cachefs@redhat.com, codalist@coda.cs.cmu.edu,
+        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@oss.oracle.com,
+        fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+        bpf@vger.kernel.org, kexec@lists.infradead.org,
+        linux-trace-kernel@vger.kernel.org, linux-hams@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, dccp@vger.kernel.org,
+        linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
+        lvs-devel@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-afs@lists.infradead.org, linux-sctp@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        keyrings@vger.kernel.org
+Subject: Re: [PATCH 09/11] sysctl: Remove the end element in sysctl table
+ arrays
+In-Reply-To: <20230621094817.433842-1-j.granados@samsung.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20230621091000.424843-1-j.granados@samsung.com>
+ <CGME20230621094824eucas1p2b6adfbd3f15ff3665674917f419b25d3@eucas1p2.samsung.com>
+ <20230621094817.433842-1-j.granados@samsung.com>
+Date:   Wed, 21 Jun 2023 14:16:55 +0300
+Message-ID: <87o7l92hg8.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+On Wed, 21 Jun 2023, Joel Granados <j.granados@samsung.com> wrote:
+> Remove the empty end element from all the arrays that are passed to the
+> register sysctl calls. In some files this means reducing the explicit
+> array size by one. Also make sure that we are using the size in
+> ctl_table_header instead of evaluating the .procname element.
 
-This patch addresses  the VF unload issue, where mana_dealloc_queues()
-gets stuck in infinite while loop, because of host unresponsiveness.
-It adds a timeout in the while loop, to fix it.
+Where's the harm in removing the end elements driver by driver? This is
+an unwieldy patch to handle.
 
-Also this patch adds a new attribute in mana_context, which gets set when
-mana_hwc_send_request() hits a timeout because of host unresponsiveness.
-This flag then helps to avoid the timeouts in successive calls.
+> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+> index f43950219ffc..e4d7372afb10 100644
+> --- a/drivers/gpu/drm/i915/i915_perf.c
+> +++ b/drivers/gpu/drm/i915/i915_perf.c
+> @@ -4884,24 +4884,23 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+>  
+>  static struct ctl_table oa_table[] = {
+>  	{
+> -	 .procname = "perf_stream_paranoid",
+> -	 .data = &i915_perf_stream_paranoid,
+> -	 .maxlen = sizeof(i915_perf_stream_paranoid),
+> -	 .mode = 0644,
+> -	 .proc_handler = proc_dointvec_minmax,
+> -	 .extra1 = SYSCTL_ZERO,
+> -	 .extra2 = SYSCTL_ONE,
+> -	 },
+> +		.procname = "perf_stream_paranoid",
+> +		.data = &i915_perf_stream_paranoid,
+> +		.maxlen = sizeof(i915_perf_stream_paranoid),
+> +		.mode = 0644,
+> +		.proc_handler = proc_dointvec_minmax,
+> +		.extra1 = SYSCTL_ZERO,
+> +		.extra2 = SYSCTL_ONE,
+> +	},
+>  	{
+> -	 .procname = "oa_max_sample_rate",
+> -	 .data = &i915_oa_max_sample_rate,
+> -	 .maxlen = sizeof(i915_oa_max_sample_rate),
+> -	 .mode = 0644,
+> -	 .proc_handler = proc_dointvec_minmax,
+> -	 .extra1 = SYSCTL_ZERO,
+> -	 .extra2 = &oa_sample_rate_hard_limit,
+> -	 },
+> -	{}
+> +		.procname = "oa_max_sample_rate",
+> +		.data = &i915_oa_max_sample_rate,
+> +		.maxlen = sizeof(i915_oa_max_sample_rate),
+> +		.mode = 0644,
+> +		.proc_handler = proc_dointvec_minmax,
+> +		.extra1 = SYSCTL_ZERO,
+> +		.extra2 = &oa_sample_rate_hard_limit,
+> +	}
+>  };
 
-Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
----
- .../net/ethernet/microsoft/mana/gdma_main.c   |  4 +++-
- .../net/ethernet/microsoft/mana/hw_channel.c  | 12 ++++++++++-
- drivers/net/ethernet/microsoft/mana/mana_en.c | 21 +++++++++++++++++--
- include/net/mana/mana.h                       |  2 ++
- 4 files changed, 35 insertions(+), 4 deletions(-)
+The existing indentation is off, but fixing it doesn't really belong in
+this patch.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 8f3f78b68592..5cc43ae78334 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -946,10 +946,12 @@ int mana_gd_deregister_device(struct gdma_dev *gd)
- 	struct gdma_context *gc = gd->gdma_context;
- 	struct gdma_general_resp resp = {};
- 	struct gdma_general_req req = {};
-+	struct mana_context *ac;
- 	int err;
- 
- 	if (gd->pdid == INVALID_PDID)
- 		return -EINVAL;
-+	ac = (struct mana_context *)gd->driver_data;
- 
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_DEREGISTER_DEVICE, sizeof(req),
- 			     sizeof(resp));
-@@ -957,7 +959,7 @@ int mana_gd_deregister_device(struct gdma_dev *gd)
- 	req.hdr.dev_id = gd->dev_id;
- 
- 	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
--	if (err || resp.hdr.status) {
-+	if ((err || resp.hdr.status) && !ac->vf_unload_timeout) {
- 		dev_err(gc->dev, "Failed to deregister device: %d, 0x%x\n",
- 			err, resp.hdr.status);
- 		if (!err)
-diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-index 9d1507eba5b9..557b890ad0ae 100644
---- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
-+++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
-@@ -1,8 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
- /* Copyright (c) 2021, Microsoft Corporation. */
- 
-+#include "asm-generic/errno.h"
- #include <net/mana/gdma.h>
- #include <net/mana/hw_channel.h>
-+#include <net/mana/mana.h>
- 
- static int mana_hwc_get_msg_index(struct hw_channel_context *hwc, u16 *msg_id)
- {
-@@ -786,12 +788,19 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
- 	struct hwc_wq *txq = hwc->txq;
- 	struct gdma_req_hdr *req_msg;
- 	struct hwc_caller_ctx *ctx;
-+	struct mana_context *ac;
- 	u32 dest_vrcq = 0;
- 	u32 dest_vrq = 0;
- 	u16 msg_id;
- 	int err;
- 
- 	mana_hwc_get_msg_index(hwc, &msg_id);
-+	ac = (struct mana_context *)hwc->gdma_dev->driver_data;
-+	if (ac->vf_unload_timeout) {
-+		dev_err(hwc->dev, "HWC: vport is already unloaded.\n");
-+		err = -ETIMEDOUT;
-+		goto out;
-+	}
- 
- 	tx_wr = &txq->msg_buf->reqs[msg_id];
- 
-@@ -825,9 +834,10 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
- 		goto out;
- 	}
- 
--	if (!wait_for_completion_timeout(&ctx->comp_event, 30 * HZ)) {
-+	if (!wait_for_completion_timeout(&ctx->comp_event, 5 * HZ)) {
- 		dev_err(hwc->dev, "HWC: Request timed out!\n");
- 		err = -ETIMEDOUT;
-+		ac->vf_unload_timeout = true;
- 		goto out;
- 	}
- 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index d907727c7b7a..24f5508d2979 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2330,7 +2330,10 @@ static int mana_dealloc_queues(struct net_device *ndev)
- 	struct mana_port_context *apc = netdev_priv(ndev);
- 	struct gdma_dev *gd = apc->ac->gdma_dev;
- 	struct mana_txq *txq;
-+	struct sk_buff *skb;
-+	struct mana_cq *cq;
- 	int i, err;
-+	unsigned long timeout;
- 
- 	if (apc->port_is_up)
- 		return -EINVAL;
-@@ -2348,13 +2351,26 @@ static int mana_dealloc_queues(struct net_device *ndev)
- 	 *
- 	 * Drain all the in-flight TX packets
- 	 */
-+
-+	timeout = jiffies + 120 * HZ;
- 	for (i = 0; i < apc->num_queues; i++) {
- 		txq = &apc->tx_qp[i].txq;
--
--		while (atomic_read(&txq->pending_sends) > 0)
-+		while (atomic_read(&txq->pending_sends) > 0 &&
-+		       time_before(jiffies, timeout)) {
- 			usleep_range(1000, 2000);
-+		}
- 	}
- 
-+	for (i = 0; i < apc->num_queues; i++) {
-+		txq = &apc->tx_qp[i].txq;
-+		cq = &apc->tx_qp[i].tx_cq;
-+		while (atomic_read(&txq->pending_sends)) {
-+			skb = skb_dequeue(&txq->pending_skbs);
-+			mana_unmap_skb(skb, apc);
-+			napi_consume_skb(skb, cq->budget);
-+			atomic_sub(1, &txq->pending_sends);
-+		}
-+	}
- 	/* We're 100% sure the queues can no longer be woken up, because
- 	 * we're sure now mana_poll_tx_cq() can't be running.
- 	 */
-@@ -2605,6 +2621,7 @@ int mana_probe(struct gdma_dev *gd, bool resuming)
- 		}
- 	}
- 
-+	ac->vf_unload_timeout = false;
- 	err = add_adev(gd);
- out:
- 	if (err)
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 9eef19972845..34f5d8e06ede 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -361,6 +361,8 @@ struct mana_context {
- 	struct mana_eq *eqs;
- 
- 	struct net_device *ports[MAX_PORTS_IN_MANA_DEV];
-+
-+	bool vf_unload_timeout;
- };
- 
- struct mana_port_context {
+BR,
+Jani.
+
+
 -- 
-2.34.1
-
+Jani Nikula, Intel Open Source Graphics Center
