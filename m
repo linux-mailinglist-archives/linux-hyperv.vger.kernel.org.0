@@ -2,180 +2,161 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 425E973A637
-	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Jun 2023 18:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A862F73A791
+	for <lists+linux-hyperv@lfdr.de>; Thu, 22 Jun 2023 19:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231239AbjFVQie (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 22 Jun 2023 12:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
+        id S230044AbjFVRqW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 22 Jun 2023 13:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231245AbjFVQiY (ORCPT
+        with ESMTP id S229585AbjFVRqV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 22 Jun 2023 12:38:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 034AE1BDF
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Jun 2023 09:37:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687451866;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9JewwlfUhZBK+i/3ORJq58l+o9JnC1L/BGtep803e2U=;
-        b=GInVMjLeh7nUD14dOTloEoQBIUeBPudI3oh9xSRuqCuOnFVsc+C+cplD8DS5VInyfYK24C
-        9Ha5BjH9oofwXKvu33WBAHYiJlYL5PkDgBxO7y0H4a8a6fFXJC1ShoZVm7wQYT88ue3HsG
-        CALb0HlgxbNPMfiI3uwovOOiGglOk/Y=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-323-M6z-gDZ8NVet5eJQQAeAqQ-1; Thu, 22 Jun 2023 12:37:43 -0400
-X-MC-Unique: M6z-gDZ8NVet5eJQQAeAqQ-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-95847b4b4e7so544484666b.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 22 Jun 2023 09:37:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687451844; x=1690043844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9JewwlfUhZBK+i/3ORJq58l+o9JnC1L/BGtep803e2U=;
-        b=DJmD/HLlEticegAvthDBR3tcj7coxiAcbE33WJc2IRz2XuYDbuctSol7WTMwphu0h6
-         YnkpGcI5VIhMoMYpz+gZ6Pvmq30POFM9f/iUY4tR+nA+EevmXNhVtGCZYI1VdKMAc2ns
-         h7j91O3yMnJIstX227NZ/Ei8MAcIE9jZ2/e0LiHPaOu7SKLCCuLPDBeKsB7l/hoOp2cj
-         eOjoZVBjuLDY1GRenAPLfP7xaqwTCR0H+Ocpuf1GvXRnagVoYMcWDYPZPcc0PIZjqnJv
-         Lrqe0N58I348LCcqQVEGoaXf+Y5HUduXdIB8I3qGJYFvnLwGrUJXQ+wSvQSR0pcPYTuh
-         1+lg==
-X-Gm-Message-State: AC+VfDyHStxL3KepEeDJWJrRtzaprqhN+Aj8QmLy25hcbBQXx7euiaRO
-        hfs/vJSu9LuVBLHL4lCddJ3xWvZYNNP19MIYftCpWChTOzTmmps+hHKHqoO1kjfoPiNqlIV3xNH
-        DjOVlWHgP7ZrtLrcWfXH4bC/r
-X-Received: by 2002:a17:906:1d05:b0:98d:3b40:eecf with SMTP id n5-20020a1709061d0500b0098d3b40eecfmr1372791ejh.4.1687451844712;
-        Thu, 22 Jun 2023 09:37:24 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6WBDrRLIvqjb1enN3k1BFXMWSMSHxFtm3j7J6yA27lcpfSf8BJASjPHEgLDkecnWxmEIbgwA==
-X-Received: by 2002:a17:906:1d05:b0:98d:3b40:eecf with SMTP id n5-20020a1709061d0500b0098d3b40eecfmr1372763ejh.4.1687451844433;
-        Thu, 22 Jun 2023 09:37:24 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-160.retail.telecomitalia.it. [87.11.6.160])
-        by smtp.gmail.com with ESMTPSA id e22-20020a1709067e1600b0096f675ce45csm4808601ejr.182.2023.06.22.09.37.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 09:37:23 -0700 (PDT)
-Date:   Thu, 22 Jun 2023 18:37:21 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Bobby Eshleman <bobby.eshleman@bytedance.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Thu, 22 Jun 2023 13:46:21 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2103.outbound.protection.outlook.com [40.107.117.103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D0B1BD6;
+        Thu, 22 Jun 2023 10:46:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=StRgRHkMriPAXA0NNm5vIDjRIqDR03xo5853GFGkXOmKUkf2M7U2v37eoyC0bn1jz6F1h8cflKy3+VaKb6OjseISYqWhCFgbqk6S7B65/8iacEHY3p1HRS35Ccltc27MpiT4HM95kKpd1CA0pIh2FQcGudqv+rUNdBNnXWebFwv/Y5hfamS51loIwozQoBoZazf8PzojgNk5xVuupzsQ/KNxU4k/cWL9yBkxNuQi1RbGUEHYa1clF+EyUPgGKSO6+CYrZCCiOhmjmegkLMlQOE/R3i/ecyZug53a73htzjIYfIjz3zhK+Zp3SejYCSUoSSQds2lWP6VZ4tYUDw1maA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qqvo/GVH8vdic1vy93Ge4SPbSYXgtcuyM9HL2/P1yGE=;
+ b=AuKPB9gv8YkDH2wQQoRFzO9KpaJCWJ7MU4Ji0ERvrGZhIg5yssHLAz01pCZ9FHLffm3c/aoxe42aI1VzduVpMUDY3zjouqUVpXaEPBvg7Jcnc7BqLj2xxapUCUBimSTqyDvoUhr0sKiKe4PLB14QM56JK62GRtrnHQxOAqPN3IO0NpfYGou/nUIF8Jk85anZ309wy/0xlyn8eHHFrj+wWs+0yadfjtK8QS79mzh9dhoA5DKV10SGXYEWsm2wCm/eySB2go8vbozUOkMHyS1654YOl7G1C5SHMYLT/9bkId1wUs3VjWZ2bwMGbHFUcz5mNerqOvA4Uys53AJv06jXcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qqvo/GVH8vdic1vy93Ge4SPbSYXgtcuyM9HL2/P1yGE=;
+ b=AV5oPQMDR30qI2h3yofHGJA/c//vMEazrumB8KuYjMaMkYwj5zCD0VPtQw35v9fNZtTXFY5z+96oxbAG2Fuq3ZhtRx6YONIJ1SuRjAjya93F9UjGL+bdnTH31lHMBBZfr2pY+Fk873Uv1s1NKL2t1TarcKBxt5g2VyycvX6oaI0=
+Received: from SEZP153MB0742.APCP153.PROD.OUTLOOK.COM (2603:1096:101:94::13)
+ by KL1P15301MB0418.APCP153.PROD.OUTLOOK.COM (2603:1096:820:26::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.9; Thu, 22 Jun
+ 2023 17:46:15 +0000
+Received: from SEZP153MB0742.APCP153.PROD.OUTLOOK.COM
+ ([fe80::6260:f346:f62c:1eec]) by SEZP153MB0742.APCP153.PROD.OUTLOOK.COM
+ ([fe80::6260:f346:f62c:1eec%7]) with mapi id 15.20.6544.008; Thu, 22 Jun 2023
+ 17:46:15 +0000
+From:   Saurabh Singh Sengar <ssengar@microsoft.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Saurabh Sengar <ssengar@linux.microsoft.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Simon Horman <simon.horman@corigine.com>,
-        Krasnov Arseniy <oxffffaa@gmail.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH RFC net-next v4 7/8] vsock: Add lockless sendmsg() support
-Message-ID: <6aif4uoucg6fhqwg2fmx76jkt6542dt7cqsxrtnebpboihfjeb@akpxj3yd2xle>
-References: <20230413-b4-vsock-dgram-v4-0-0cebbb2ae899@bytedance.com>
- <20230413-b4-vsock-dgram-v4-7-0cebbb2ae899@bytedance.com>
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH v2 2/5] tools: hv: Add vmbus_bufring
+Thread-Topic: [EXTERNAL] Re: [PATCH v2 2/5] tools: hv: Add vmbus_bufring
+Thread-Index: AQHZnwV0dJHFjLU8M0ikMK1jJEcj8a+XJFQA
+Date:   Thu, 22 Jun 2023 17:46:14 +0000
+Message-ID: <SEZP153MB074232C9FA0289579BFDDC2FBE22A@SEZP153MB0742.APCP153.PROD.OUTLOOK.COM>
+References: <1686766512-2589-1-git-send-email-ssengar@linux.microsoft.com>
+ <1686766512-2589-3-git-send-email-ssengar@linux.microsoft.com>
+ <2023061430-facedown-getting-d9f7@gregkh>
+In-Reply-To: <2023061430-facedown-getting-d9f7@gregkh>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bf8782aa-bcba-4efc-823b-91cab283ce22;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-22T17:44:25Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEZP153MB0742:EE_|KL1P15301MB0418:EE_
+x-ms-office365-filtering-correlation-id: c1a08cd4-90ca-4073-1339-08db7348935e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3edBpO7Evw6V5A/qB2sHZBa99lNbaARv1So0yrxknR2AoO43KiNtBDt0YGQeZidGHAfML78CYj5XhaB3EOHBxqOeIyM8gHY77Dipck0UeXDuaXJaBEXeiLKmj3TqvYvvqKQnwItJX5CyhCLSxVZnZ+1nB1mSoHWT/gK0S9c28oG2c+2WxTFeMrr6LxYE11XgB+3nJkzwyADorssipIL6ts0oX0yONryy2u+RyElWD3pNYbPHpMbaJrueXo3d+EMQdmbTCh9W6CNiZPy1SipmwAGkeDSj9EpbtHDaq8imF8OjqFwTbhi+XE4uNN8UDcxHkSloDG1Qz2hEMcYUU0wE25oN3If0wiFEKinDIlzhXSaHmojRZUbxTUD7FxtLEHkqpzum1vBDFUQ0C4vmiME6MZcgIztVfy/fHJoMNBBeeFW9G4nVBL9CpN3RqwAiHbgyW0f77ipOMa18ZFfrdmz9BurgkOHGgoK6dpacWbYnaVRleEvwVXpN9/f4IfGmqcMlwBARHHt3aYhYGJSw7sxoVERvBhWy1Avm9uuq7e2Dk4FZ4vdMFgQG1iFLtqkxarvK9A/sKNzUabE8O2Vnj4RRe56pcpZAZIxSN54fFpCHDBpCv1fG/Nx+D2qQxuHq02a/ruxpGHZjHUFWYvrb1DHz2NYZb0/sL+NOXFGO7I+iY9c=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZP153MB0742.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(376002)(346002)(366004)(39860400002)(451199021)(4326008)(2906002)(478600001)(10290500003)(38070700005)(54906003)(8990500004)(110136005)(86362001)(7696005)(316002)(82960400001)(122000001)(71200400001)(82950400001)(41300700001)(76116006)(38100700002)(33656002)(83380400001)(66946007)(55016003)(66556008)(66476007)(66446008)(64756008)(8676002)(8936002)(6506007)(186003)(52536014)(5660300002)(9686003)(53546011);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?rIht7kP04WrfPk/4cQ9gd4GuDCknnsbWyIX8ImRerWRUOP9LKLrxeb76l/1z?=
+ =?us-ascii?Q?Ax2ejLAVO+Es/86mTigc2n9M50+PcXdCr2Dy8mY9tQ8RWtJ4sPP++383St4d?=
+ =?us-ascii?Q?4j/Bc/Oigru9CrTcHOphAtDQQpZxZbCygkg4TGBwACGMcd+APHIh2vUpBWZ8?=
+ =?us-ascii?Q?ANomfPZqCClCj7ZK5yZh1NcydUNZ5MLOgNfrMu6Sj2rvHYC3y3l02O0yjU0I?=
+ =?us-ascii?Q?ld+2wVE39VUKJTKGVGicKxwSGJXCKCgmjohTCof3Ili/l6jDhmNn4oRX+N2Z?=
+ =?us-ascii?Q?DNrL2nECFq+6yfA9IifdICZ30XYVICxl6X9bF82OCuRQ5pPaA7r0JhzBgtpH?=
+ =?us-ascii?Q?46AjkogRZCDk+nrYYfh61t3R89dSCuKvE8UqcZconRtCduLrON2ai2i0MDcV?=
+ =?us-ascii?Q?EqRbVx+GeayDdkgxE8jMdWSNrKwlmqHSVaafWZ6znTrfPGKsTiFhdUNWdKg1?=
+ =?us-ascii?Q?pUefRPIFhioMp/YtJ8hkZJ3zA0NiSBHiBHx0O+znXETtXk27wwAAb/7TXPhb?=
+ =?us-ascii?Q?TWuXDs8fGvXqtK7UNvjWNGXW/R2WSQLxFWxNAlfyURG3mnpNMRtVcvBitUHy?=
+ =?us-ascii?Q?bwUfdBSFteFvfMMHs3ayixMcl8K/wFGIkJ8K2+1mS/iVvfmJUMFk08InuQPu?=
+ =?us-ascii?Q?AD1seUHjTnRBXtyB2VbTJivVJ1dqQdMKhkk7E+O3iKKQSBlf8TMFibRnkUd+?=
+ =?us-ascii?Q?tEju9B1aTqJ01VkSpxaok8ecJrG0ItUQ2FvediAnTi2KI1HhmdMA7s2LOwoq?=
+ =?us-ascii?Q?uMpe9IjzKPmUlQvYu+iYnw/fUKAM7J6tderD6W/r58QQz7ER7432+8YrA0u9?=
+ =?us-ascii?Q?zT6eGDwqzOnxLcLOTd84hdhexsEOPThDcpJiZGywI6m/AkRlO6S7Q+r4Xett?=
+ =?us-ascii?Q?ShbVsA8+ySSQ5vMPJ9L5XHNu3CAOxeAknqPeIyNUiC7nrc3P2sDrfNJuCJMq?=
+ =?us-ascii?Q?bedoLZnQTC0ybksw5cj74etdTfvbqh+214ynf0VDVCUDeh30aaeHsZXY5P+v?=
+ =?us-ascii?Q?mzP5vcEEx6Zc1FP5zA7D6N6XJqQWZA88O58Ty5LU4FoqlhJmqlIywBXmwa8N?=
+ =?us-ascii?Q?kiq16y/ISyiLWatsIayzL5zhX1U2hSpCbzij7wTy/eGBmrIpEu9JkdEapClU?=
+ =?us-ascii?Q?+WhWKM+/wBDoJp01EES90TBQTBoVlDChLT/YIa5dgA/uUVB9Q40LHY9LwWYX?=
+ =?us-ascii?Q?p7UlllgBxr7GqYz6iaezYZvI+c1913Vo99ckxi8SnPvuRPBH+PM3Kw0sYlgC?=
+ =?us-ascii?Q?dfMBM3rfkcLyEiTZdT6HuO5ihSny47iAaKwNVxYz4hipv1pTw0+L4g4dFw2g?=
+ =?us-ascii?Q?iUnn24HD9Qe3EOAcAfdJ23HlX5Owepm3Aqn/Uh4Tm+4oDwZvCWPTaX0dM+53?=
+ =?us-ascii?Q?PsDgqh+MM+aIbPE1Rg4uTj8qD/VyBIQ6wG106mDbKq29fgviF9BOqkkB+WI3?=
+ =?us-ascii?Q?WqUbuARLe1ortT44zSUtlAOB/NaktQq8byBo02u4PBSFnNV4cwL6kaXeHvW9?=
+ =?us-ascii?Q?vtAHQx1XQOghd5wBjSyB8R/7Rk/e91aOofh0tgmbAnoVAo6v7Mgk5LNZSm+y?=
+ =?us-ascii?Q?blriTfQQvOnIl/GrELFgEufXHn7ldHFtJ6cWXcHE?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230413-b4-vsock-dgram-v4-7-0cebbb2ae899@bytedance.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEZP153MB0742.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1a08cd4-90ca-4073-1339-08db7348935e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jun 2023 17:46:14.9759
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tBHYVl4E1vgtE+vjJhWx65X8VXZz35KNkeRbrv9E5AVPS+RpyyH637yfFdv8GK9qBhrwTOSMI0WbDhPl9mRnjQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1P15301MB0418
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Sat, Jun 10, 2023 at 12:58:34AM +0000, Bobby Eshleman wrote:
->Because the dgram sendmsg() path for AF_VSOCK acquires the socket lock
->it does not scale when many senders share a socket.
->
->Prior to this patch the socket lock is used to protect both reads and
->writes to the local_addr, remote_addr, transport, and buffer size
->variables of a vsock socket. What follows are the new protection schemes
->for these fields that ensure a race-free and usually lock-free
->multi-sender sendmsg() path for vsock dgrams.
->
->- local_addr
->local_addr changes as a result of binding a socket. The write path
->for local_addr is bind() and various vsock_auto_bind() call sites.
->After a socket has been bound via vsock_auto_bind() or bind(), subsequent
->calls to bind()/vsock_auto_bind() do not write to local_addr again. bind()
->rejects the user request and vsock_auto_bind() early exits.
->Therefore, the local addr can not change while a parallel thread is
->in sendmsg() and lock-free reads of local addr in sendmsg() are safe.
->Change: only acquire lock for auto-binding as-needed in sendmsg().
->
->- buffer size variables
->Not used by dgram, so they do not need protection. No change.
->
->- remote_addr and transport
->Because a remote_addr update may result in a changed transport, but we
->would like to be able to read these two fields lock-free but coherently
->in the vsock send path, this patch packages these two fields into a new
->struct vsock_remote_info that is referenced by an RCU-protected pointer.
->
->Writes are synchronized as usual by the socket lock. Reads only take
->place in RCU read-side critical sections. When remote_addr or transport
->is updated, a new remote info is allocated. Old readers still see the
->old coherent remote_addr/transport pair, and new readers will refer to
->the new coherent. The coherency between remote_addr and transport
->previously provided by the socket lock alone is now also preserved by
->RCU, except with the highly-scalable lock-free read-side.
->
->Helpers are introduced for accessing and updating the new pointer.
->
->The new structure is contains an rcu_head so that kfree_rcu() can be
->used. This removes the need of writers to use synchronize_rcu() after
->freeing old structures which is simply more efficient and reduces code
->churn where remote_addr/transport are already being updated inside RCU
->read-side sections.
->
->Only virtio has been tested, but updates were necessary to the VMCI and
->hyperv code. Unfortunately the author does not have access to
->VMCI/hyperv systems so those changes are untested.
 
-@Dexuan, @Vishnu, @Bryan, can you test this?
 
->
->Perf Tests (results from patch v2)
->vCPUS: 16
->Threads: 16
->Payload: 4KB
->Test Runs: 5
->Type: SOCK_DGRAM
->
->Before: 245.2 MB/s
->After: 509.2 MB/s (+107%)
->
->Notably, on the same test system, vsock dgram even outperforms
->multi-threaded UDP over virtio-net with vhost and MQ support enabled.
->
->Throughput metrics for single-threaded SOCK_DGRAM and
->single/multi-threaded SOCK_STREAM showed no statistically signficant
->throughput changes (lowest p-value reaching 0.27), with the range of the
->mean difference ranging between -5% to +1%.
->
+> -----Original Message-----
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Thursday, June 15, 2023 2:46 AM
+> To: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
+> <decui@microsoft.com>; Michael Kelley (LINUX) <mikelley@microsoft.com>;
+> corbet@lwn.net; linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.or=
+g;
+> linux-doc@vger.kernel.org
+> Subject: [EXTERNAL] Re: [PATCH v2 2/5] tools: hv: Add vmbus_bufring
+>=20
+> On Wed, Jun 14, 2023 at 11:15:09AM -0700, Saurabh Sengar wrote:
+> > Common userspace interface for read/write from VMBus ringbuffer.
+> > This implementation is open for use by any userspace driver or
+> > application seeking direct control over VMBus ring buffers.
+> > A significant  part of this code is borrowed from DPDK.
+>=20
+> "  "?
+>=20
+> Anyway, this does not explain what this is at all.
+>=20
+> And if you "borrowed" it from DPDK, that feels odd, are you sure you are
+> allowed to do so?
 
-Quite nice. Did you see any improvements also on stream/seqpacket
-sockets?
+Yes, we have confirmed this with our legal team, as the previous code is
+covered under an appropriate open-source license, we are fine to reuse it h=
+ere.
 
-However this is a big change, maybe I would move it to another series,
-because it takes time to be reviewed and tested properly.
-
-WDYT?
-
-Thanks,
-Stefano
+- Saurabh
 
