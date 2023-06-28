@@ -2,51 +2,69 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57AB47401C9
-	for <lists+linux-hyperv@lfdr.de>; Tue, 27 Jun 2023 18:58:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC287740F5A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 28 Jun 2023 12:54:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbjF0Q6A (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 27 Jun 2023 12:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
+        id S230443AbjF1Kxn (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 28 Jun 2023 06:53:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbjF0Q57 (ORCPT
+        with ESMTP id S231329AbjF1Kxc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 27 Jun 2023 12:57:59 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E0B210CF;
-        Tue, 27 Jun 2023 09:57:58 -0700 (PDT)
-Received: from [192.168.0.5] (75-172-40-221.tukw.qwest.net [75.172.40.221])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8E0AB20AECAD;
-        Tue, 27 Jun 2023 09:57:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8E0AB20AECAD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1687885077;
-        bh=eol4JTI8wX7UZd7+77Z/kmpFdoWKbnYccggCXyonl54=;
-        h=Date:Subject:To:References:From:In-Reply-To:From;
-        b=Rf/SKH6AuhCao/hUPpDgvhXY9tPNBcqsAfto61A7Hi+M6nAYk7+vuM1eFP42las0C
-         Ur/FuwQCc2K2gL63xVM3q8VVOW3pCtdlIsLh8xcsSBn6Ymwg44L5UPXZofizGQzpEG
-         HzVUI/8RCXiQWIBIkKX8BUxzA7DmRy6ICmThIlpQ=
-Message-ID: <df9d5443-b563-c4c8-1038-6a01c132a132@linux.microsoft.com>
-Date:   Tue, 27 Jun 2023 09:58:05 -0700
+        Wed, 28 Jun 2023 06:53:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4C48F;
+        Wed, 28 Jun 2023 03:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3D0zkVphuK2SF+WTuA1GlLTLg0tSaGa1VzB0TRXOtHM=; b=Eyo0jXC+yZimEt3nWG+saiaJ+z
+        pYrPTC8SzJdJoaw4RJQiFtynXIixHA02Ml1V5fMo6jR0qUUzE2zHOOOWtvTkFTnccHwvF44jT8Ahq
+        6TLP7uuNlK5Gyf0S0c44WMYb2jhM7+fOjFNA9ybG/hJ0bpL8RlkhtnVTLlan+3nFUK/sn69f1uQGJ
+        F2eMVT47vRJ7rmFT8EVlgjqMcu2nF4krrZeGqINsGQDqTvWiR11t5UOe2UjNI7KexcSTlvbDdDihv
+        eytYP/jqcCEnMrSgMf041BbxfP3JZSnA5QEct/8qRisKMlGlpuEppQEbtRdrJu14yCWACHEoDSjQS
+        DSELVNLg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qESnT-003i8K-4X; Wed, 28 Jun 2023 10:53:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 652BB3002C5;
+        Wed, 28 Jun 2023 12:53:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3FB52247FBAAB; Wed, 28 Jun 2023 12:53:14 +0200 (CEST)
+Date:   Wed, 28 Jun 2023 12:53:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, daniel.lezcano@linaro.org,
+        arnd@arndb.de, michael.h.kelley@microsoft.com,
+        Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: Re: [EXTERNAL] Re: [PATCH 5/9] x86/hyperv: Use vmmcall to implement
+ Hyper-V hypercall in sev-snp enlightened guest
+Message-ID: <20230628105314.GB2439977@hirez.programming.kicks-ass.net>
+References: <20230601151624.1757616-1-ltykernel@gmail.com>
+ <20230601151624.1757616-6-ltykernel@gmail.com>
+ <20230608132127.GK998233@hirez.programming.kicks-ass.net>
+ <8b93aa93-903f-3a69-77f9-0c6b694d826b@gmail.com>
+ <d06bb33e-047f-c849-de6a-246bc361c7af@gmail.com>
+ <20230627115002.GW83892@hirez.programming.kicks-ass.net>
+ <20230627120502.GFZJrQbgSgOhj/44pW@fat_crate.local>
+ <20230627133834.GA2412070@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2] Drivers: hv: Change hv_free_hyperv_page() to take void
- * argument
-Content-Language: en-US
-To:     Kameron Carr <kameroncarr@linux.microsoft.com>, arnd@arndb.de,
-        decui@microsoft.com, haiyangz@microsoft.com, kys@microsoft.com,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wei.liu@kernel.org
-References: <1687558189-19734-1-git-send-email-kameroncarr@linux.microsoft.com>
-From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <1687558189-19734-1-git-send-email-kameroncarr@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-19.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230627133834.GA2412070@hirez.programming.kicks-ass.net>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,120 +72,21 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+On Tue, Jun 27, 2023 at 03:38:35PM +0200, Peter Zijlstra wrote:
 
-On 6/23/2023 3:09 PM, Kameron Carr wrote:
-> Currently hv_free_hyperv_page() takes an unsigned long argument, which
-> is inconsistent with the void * return value from the corresponding
-> hv_alloc_hyperv_page() function and variants. This creates unnecessary
-> extra casting.
+> That said; there is a tiny difference between:
 > 
-> Change the hv_free_hyperv_page() argument type to void *.
-> Also remove redundant casts from invocations of
-> hv_alloc_hyperv_page() and variants.
+> ALTERNATIVE_2(oldinst, newinst1, flag1, newinst2, flag2)
 > 
-> Signed-off-by: Kameron Carr <kameroncarr@linux.microsoft.com>
-> ---
-> V1 -> V2: Added Signed-off-by
+> and
 > 
->  drivers/hv/connection.c        | 13 ++++++-------
->  drivers/hv/hv_common.c         | 10 +++++-----
->  include/asm-generic/mshyperv.h |  2 +-
->  3 files changed, 12 insertions(+), 13 deletions(-)
+> ALTERNATIVE(ALTERNATIVE(oldinst, newinst1, flag1),
+> 	    newinst2, flag2)
 > 
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index 5978e9d..ebf15f3 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -209,8 +209,7 @@ int vmbus_connect(void)
->  	 * Setup the vmbus event connection for channel interrupt
->  	 * abstraction stuff
->  	 */
-> -	vmbus_connection.int_page =
-> -	(void *)hv_alloc_hyperv_zeroed_page();
-> +	vmbus_connection.int_page = hv_alloc_hyperv_zeroed_page();
->  	if (vmbus_connection.int_page == NULL) {
->  		ret = -ENOMEM;
->  		goto cleanup;
-> @@ -225,8 +224,8 @@ int vmbus_connect(void)
->  	 * Setup the monitor notification facility. The 1st page for
->  	 * parent->child and the 2nd page for child->parent
->  	 */
-> -	vmbus_connection.monitor_pages[0] = (void *)hv_alloc_hyperv_page();
-> -	vmbus_connection.monitor_pages[1] = (void *)hv_alloc_hyperv_page();
-> +	vmbus_connection.monitor_pages[0] = hv_alloc_hyperv_page();
-> +	vmbus_connection.monitor_pages[1] = hv_alloc_hyperv_page();
->  	if ((vmbus_connection.monitor_pages[0] == NULL) ||
->  	    (vmbus_connection.monitor_pages[1] == NULL)) {
->  		ret = -ENOMEM;
-> @@ -333,15 +332,15 @@ void vmbus_disconnect(void)
->  		destroy_workqueue(vmbus_connection.work_queue);
->  
->  	if (vmbus_connection.int_page) {
-> -		hv_free_hyperv_page((unsigned long)vmbus_connection.int_page);
-> +		hv_free_hyperv_page(vmbus_connection.int_page);
->  		vmbus_connection.int_page = NULL;
->  	}
->  
->  	set_memory_encrypted((unsigned long)vmbus_connection.monitor_pages[0], 1);
->  	set_memory_encrypted((unsigned long)vmbus_connection.monitor_pages[1], 1);
->  
-> -	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[0]);
-> -	hv_free_hyperv_page((unsigned long)vmbus_connection.monitor_pages[1]);
-> +	hv_free_hyperv_page(vmbus_connection.monitor_pages[0]);
-> +	hv_free_hyperv_page(vmbus_connection.monitor_pages[1]);
->  	vmbus_connection.monitor_pages[0] = NULL;
->  	vmbus_connection.monitor_pages[1] = NULL;
->  }
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 542a1d5..6a2258f 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -115,12 +115,12 @@ void *hv_alloc_hyperv_zeroed_page(void)
->  }
->  EXPORT_SYMBOL_GPL(hv_alloc_hyperv_zeroed_page);
->  
-> -void hv_free_hyperv_page(unsigned long addr)
-> +void hv_free_hyperv_page(void *addr)
->  {
->  	if (PAGE_SIZE == HV_HYP_PAGE_SIZE)
-> -		free_page(addr);
-> +		free_page((unsigned long)addr);
->  	else
-> -		kfree((void *)addr);
-> +		kfree(addr);
->  }
->  EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
->  
-> @@ -253,7 +253,7 @@ static void hv_kmsg_dump_unregister(void)
->  	atomic_notifier_chain_unregister(&panic_notifier_list,
->  					 &hyperv_panic_report_block);
->  
-> -	hv_free_hyperv_page((unsigned long)hv_panic_page);
-> +	hv_free_hyperv_page(hv_panic_page);
->  	hv_panic_page = NULL;
->  }
->  
-> @@ -270,7 +270,7 @@ static void hv_kmsg_dump_register(void)
->  	ret = kmsg_dump_register(&hv_kmsg_dumper);
->  	if (ret) {
->  		pr_err("Hyper-V: kmsg dump register error 0x%x\n", ret);
-> -		hv_free_hyperv_page((unsigned long)hv_panic_page);
-> +		hv_free_hyperv_page(hv_panic_page);
->  		hv_panic_page = NULL;
->  	}
->  }
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> index 402a8c1..a8f4b65 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -190,7 +190,7 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
->  
->  void *hv_alloc_hyperv_page(void);
->  void *hv_alloc_hyperv_zeroed_page(void);
-> -void hv_free_hyperv_page(unsigned long addr);
-> +void hv_free_hyperv_page(void *addr);
->  
->  /**
->   * hv_cpu_number_to_vp_number() - Map CPU to VP.
+> and that is alt_instr::instrlen, when the inner alternative is the
+> smaller, then the outer alternative will add additional padding that the
+> inner (obviously) doesn't know about.
 
+New version:
+
+https://lkml.kernel.org/r/20230628104952.GA2439977%40hirez.programming.kicks-ass.net
