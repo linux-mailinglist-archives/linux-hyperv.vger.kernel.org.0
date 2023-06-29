@@ -2,192 +2,227 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AD4F7426AC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jun 2023 14:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38CF47426C7
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jun 2023 14:55:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231835AbjF2Mof (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Jun 2023 08:44:35 -0400
-Received: from mail-mw2nam12on2130.outbound.protection.outlook.com ([40.107.244.130]:35936
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229459AbjF2Moa (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Jun 2023 08:44:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NATJjTTpfMGjjz43bD0THvECk/Vxh7l2uyJqLnhS9hbB98rAeOA1c8KOPgDv+2wJdndz/4DLdLkUFOqJKiSvIz4WDYjoMTLej57g2OcZImAwQ5b14/RrNASuyMax7ZJlxtdcMeOp5PhDPz+PO/JwsqzFhLQ34kNM3Pt+BO4LM0B/Nf/NZUSpd+Z7EgUCu1f/CB2uTM+nhZQIKT/kNzXSilr+OjxmyOt3Hj/vVkbsdvb0pbdZBPWugXGXBgyoIcbu3nrCG0Sk0bPY8ahmFviaL+X98p4C93lnxwL+ZaDe18ln9+2753PfJdz7atul5jUGf9pSGzJpWQTMEVz6rQ2ErA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FEs7AwGhLUOSl8RIs8CssvHYOriexhQj4nEbh3pT2XU=;
- b=k6/k+F+Vy+N4eK6NKuIScLIn/BGxLyMMYa3VNUA3PR+GMclbV4/8qulkHaRlUT+/Izzd8c5vYFgouAemzNniav1Og+kp7sAhvxjfpwG/CWIIsUTlv6WTVvOwNz1J40yo6DO2Ow8LNApZoOY3aTjoBTcnXOZmZyZEC2fSP6cW6nI6fyTVb4Vmm8ETx/L0Gd/LzwvPjur23ar28AZOQXpo0T0N99A6km5R8n1MEADDvgjgMzBD/17+72yiiOdarT0Rbs2G0bJvVrmwYbDfbU71EcCOew3DIRpv9vkiX7VY7G+0PvbS2o1RKqSvIgMaa4AlWM93eG7pTsPwXinDCvIrww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FEs7AwGhLUOSl8RIs8CssvHYOriexhQj4nEbh3pT2XU=;
- b=N9Q3+zwjP9yCwPJqELclhyQWBStbQOjyrSHsyv/tdbFGOM4d04bvOT36DyOP4LWlujTKvEIVoSOA6TbpDTUf0f2F0f+gJNpSGPiM+RVTgA80ef+MljN96rQprngDdL2z7Ez0sTlokGmisUGqXW/uDSUnw0t2IJq5M3YYmbq1i0w=
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com (2603:10b6:510:1d0::10)
- by SJ1PR21MB3723.namprd21.prod.outlook.com (2603:10b6:a03:451::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.4; Thu, 29 Jun
- 2023 12:44:27 +0000
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::848b:6d47:841d:20ff]) by PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::848b:6d47:841d:20ff%4]) with mapi id 15.20.6544.006; Thu, 29 Jun 2023
- 12:44:27 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: RE: [PATCH] hv_netvsc: support a new host capability
- AllowRscDisabledStatus
-Thread-Topic: [PATCH] hv_netvsc: support a new host capability
- AllowRscDisabledStatus
-Thread-Index: AQHZqnBMGWxSndAt1U6NS9TBDf5Ag6+huQmQ
-Date:   Thu, 29 Jun 2023 12:44:26 +0000
-Message-ID: <PH7PR21MB3116F77C196628B6BBADA3C7CA25A@PH7PR21MB3116.namprd21.prod.outlook.com>
-References: <1688032719-22847-1-git-send-email-shradhagupta@linux.microsoft.com>
-In-Reply-To: <1688032719-22847-1-git-send-email-shradhagupta@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=19ad304a-2c5c-4783-9c07-96fc51ad70fa;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-29T12:41:00Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3116:EE_|SJ1PR21MB3723:EE_
-x-ms-office365-filtering-correlation-id: 9644bbd4-c459-41f6-d0fa-08db789e9300
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y6gKWkRiT03sbclehpqU5U8VblRWvbaogP2Tyjr4KlAGadyTmqirWKUgI9lIGgCdf2RZY6kpPIfCmKMsVsgGUzOOo2BdT4aYYfXc+qDa8wzazaHNzOta1aryjnSsL+8Nl+gnXiO/afPANOi6LVaFX1GwfyCXdW5zeATr7bmRvJlj2CBlDisHCtCB0ht4stznqhEk8cxWXTYu/rivOq93CgT3P9hSdJxC5GVhB1LRK/VDvu0WoogChBpFeC3h3gu/T0hU90LmyDV8/hwXhXnVZwgFqF8oOtt+IeTsrow0hBem7Cn7gggXTXEfY9eYPBdHR75CrAxjJIJf5XkXZ4CKRVEiYfbFnZNtvBgk7qIzQGOoyQ0LzUx9r6DrBCHqQ205AtkJBpwNi/2VRYE7KPtNj+/RNwnHrK7X4KG0RqeSERQPOAwyyAwvoALbw6AM9zlyrx2cC2sdjAjyvwLraTRFuaD1U6rHtScPpd66KAOdHoXnviJW+dr7ToQV1PhC/KB3FLrlllVuSrDzGr667czfO40CN/SrY42k9GC5TSMWBu4NLXIuDwiq8gGli6kYdtreHNc1gdIQWgk/F+xQqt7tyGFZ0c1JYxFIC+A5fVLwaHi7FY8zM8mvcNstB8BS2aWtFDgQ1axsMj4NPnKiAvwd/8XziBSPui1HY2Py12g/NyM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3116.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(396003)(346002)(376002)(366004)(451199021)(41300700001)(2906002)(8990500004)(7696005)(186003)(38100700002)(71200400001)(82950400001)(82960400001)(122000001)(83380400001)(6506007)(26005)(9686003)(53546011)(55016003)(110136005)(54906003)(86362001)(10290500003)(478600001)(38070700005)(316002)(76116006)(64756008)(66946007)(4326008)(33656002)(66476007)(66556008)(66446008)(8936002)(8676002)(52536014)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?6Df+fZFN1SVtoZ6ux4vHnxUiM4RKuhgxkgSaw46/7zuMWWR3FQJvNsYPXkbF?=
- =?us-ascii?Q?7MSCgpQsInMeluD+At61OlGeAr/fEx/1Ya/uGu0piHYkeEBgrie6jeuf2Pdn?=
- =?us-ascii?Q?LBuL0wfeFYmhAyzuhzRYo6qAptRE0azN4UwgblppRgAvJKrz3tpshv0tjF+q?=
- =?us-ascii?Q?3GGzrAI2ePC13IgymNJBwZ8rDU6ZccznuOwB6aSN9GEh/6s1hpG11x+UOtFb?=
- =?us-ascii?Q?kZOMcyVLVJWbG/7x9cecZ6lmzSSXVX/lggHy7UsyQk614dK9/vhSKvOQID3Y?=
- =?us-ascii?Q?YFIrCa6eLXKD0vo5U2Esms2y2LVNXqiMO8jNmXtjy1luSeSv238cwvAhdXLe?=
- =?us-ascii?Q?xnZmEznaZj6IYCpO3XCie5OYXjftVsPIGpfgDLe+DdjsVFWUjTgrzo1y3xZI?=
- =?us-ascii?Q?FAz/LHZOVALgg9LTmAsVZ0j8fNFvLuLA0bfzZ6MbM/jJevw2Jh/SGIH9Qw81?=
- =?us-ascii?Q?F0MXqxK6ouNx+45nfVPndfSbliwA7mmg+OwOrIXeYlEACv9o+tADiW46vngr?=
- =?us-ascii?Q?gEkRbMjgIEnwo3vYS1yXLoNr4li1g2X8odhm0Z+TgllSmKwQL7f75vFyU9OY?=
- =?us-ascii?Q?EeqMF26lS05wTrygkwVHjI+06IXEvcgcadCsMqiBpCD4avVG1lgb++RebPzr?=
- =?us-ascii?Q?rGpgDt94w3M0ArcVQOEeSggFiOYCZsZ8ENBDJVdoPJoUisJKyTnMNIC2wf4x?=
- =?us-ascii?Q?goxP1kJa4HpgJPho4JA1Cknm6MONxKmlHiTd+etQYDHJ7Z5zg9Rd8ybO5fg8?=
- =?us-ascii?Q?GYEFX68a38J4k4iFOm4zfWkqegefAtJebD7uJfp4WJ0VfONh2zN4L1ZRqXtR?=
- =?us-ascii?Q?xpGvnX3NHIACh5Rcv8Sq9JNqTGetM76hZ5v0BVEGiIHU3WDzOQOt3iEQmBpf?=
- =?us-ascii?Q?EUEuBwlknfIeLBbsUHltldan4Dh78gm7lCbTkeNLcpZsVkol3j10i+BTMbHm?=
- =?us-ascii?Q?LMkkN0lHZ69vEukPPu/6zTtEDC/KfxOLiNckGF8+zS/iJ4Mw5mqv/LgQnBTh?=
- =?us-ascii?Q?ohN+WpXgPBwzGsRwWDxCTF1SDC4htNZgjFso0O1xhRV3Ctdm6uThkqthYQOq?=
- =?us-ascii?Q?d/kReLwljA+rmDOSyV6OWt2YDojdTiHfZV6my8KAD/4O3TefDZOJL+wmrhwF?=
- =?us-ascii?Q?XntnhlXbq3xI+snA3DHBsHrKyskX+o8Px6ypZ1lXAw7w0ietIjGQo9G/tm08?=
- =?us-ascii?Q?IMfRiYecUqXlb0XoUKHx6PZanKA+FHajwiZyHa0taHq7zb67Y3tUnun9YTGn?=
- =?us-ascii?Q?b70Av3V0BlHx4BqEp5v6k64SUed3QALNzILmtyZ8ET/gT4TbpP/8gTS9M3E5?=
- =?us-ascii?Q?GOH5MXiYSAfYy8XNWPQ4j1sBmOKAaeNovcXYQnyzaxELbEzLmir385u4otLb?=
- =?us-ascii?Q?Ke+cw+ZCX2lNuDn8rolswtAD07RiUaG8xHN6BFtjieUGwrhDTWlOqt4JM2Ew?=
- =?us-ascii?Q?QjKQkx+AyRbG3hBUulAn1A4FtF1scZxUA/bukvztupyFKZRUI8x5bfHqE+Ph?=
- =?us-ascii?Q?g/fNSoSHcHdds3JfwlDOWhbAHjY1DJNMSnrciUAywP67thhwGJ9i+Bky+b/S?=
- =?us-ascii?Q?/hwHEvvFmVWHI6+iwbRWKTOI80CxTTKSnxSzzWeQ?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S231799AbjF2MzR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Jun 2023 08:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229459AbjF2MzQ (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 29 Jun 2023 08:55:16 -0400
+Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB5C2961;
+        Thu, 29 Jun 2023 05:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
+        t=1688043306; bh=qlzO1nAzqPvB+Hzmr0HgbCqGg7RmBSNwRMReUr64bck=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=jUu9zRsEygCOa39ZCgxRiLbKjXTQyAk3/vq1UdG1rNhZGoBj1lnigTzep51CpGxAI
+         Bi14AsqbPSnMerzIsKznCyRo9Sr6o9nEuXrSMeAlj3HQr2VxpcMMRF4Ii1rtyOqAct
+         kG/wvCT5WHvifhVE0+KGx6hx6hBDjd766/gHEM8M=
+Received: from [100.100.34.13] (unknown [220.248.53.61])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id D6696600AE;
+        Thu, 29 Jun 2023 20:55:02 +0800 (CST)
+Message-ID: <6906281a-baa8-a960-e679-69d1e714e713@xen0n.name>
+Date:   Thu, 29 Jun 2023 20:55:02 +0800
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3116.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9644bbd4-c459-41f6-d0fa-08db789e9300
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2023 12:44:26.9168
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MSLKn4ubFRR76etuGd9mf3aKgOjcgB3edHrxZFEWUcYVWc+KHTrSMcTo1i+yGkGk37MLuWk6AQxxAI0jjpC0MQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR21MB3723
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH 06/12] arch: Declare screen_info in <asm/screen_info.h>
+Content-Language: en-US
+To:     Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
+        deller@gmx.de, daniel@ffwll.ch, airlied@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-arch@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@quicinc.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        "Mike Rapoport (IBM)" <rppt@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zi Yan <ziy@nvidia.com>
+References: <20230629121952.10559-1-tzimmermann@suse.de>
+ <20230629121952.10559-7-tzimmermann@suse.de>
+From:   WANG Xuerui <kernel@xen0n.name>
+In-Reply-To: <20230629121952.10559-7-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Sent: Thursday, June 29, 2023 5:59 AM
-> To: linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org
-> Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>; Eric Dumazet
-> <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
-> <pabeni@redhat.com>; KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
-> <decui@microsoft.com>; Long Li <longli@microsoft.com>; Michael Kelley
-> (LINUX) <mikelley@microsoft.com>; David S. Miller <davem@davemloft.net>
-> Subject: [PATCH] hv_netvsc: support a new host capability
-> AllowRscDisabledStatus
->=20
-> A future Azure host update has the potential to change RSC behavior
-> in the VMs. To avoid this invisble change, Vswitch will check the
-> netvsc version of a VM before sending its RSC capabilities, and will
-> always indicate that the host performs RSC if the VM doesn't have an
-> updated netvsc driver regardless of the actual host RSC capabilities.
-> Netvsc now advertises a new capability: AllowRscDisabledStatus
-> The host will check for this capability before sending RSC status,
-> and if a VM does not have this capability it will send RSC enabled
-> status regardless of host RSC settings
->=20
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+On 2023/6/29 19:45, Thomas Zimmermann wrote:
+> The variable screen_info does not exist on all architectures. Declare
+> it in <asm-generic/screen_info.h>. All architectures that do declare it
+> will provide it via <asm/screen_info.h>.
+> 
+> Add the Kconfig token ARCH_HAS_SCREEN_INFO to guard against access on
+> architectures that don't provide screen_info.
+> 
+> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Richard Henderson <richard.henderson@linaro.org>
+> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: Brian Cain <bcain@quicinc.com>
+> Cc: Huacai Chen <chenhuacai@kernel.org>
+> Cc: WANG Xuerui <kernel@xen0n.name>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Dinh Nguyen <dinguyen@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Max Filippov <jcmvbkbc@gmail.com>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Frederic Weisbecker <frederic@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Juerg Haefliger <juerg.haefliger@canonical.com>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+> Cc: Niklas Schnelle <schnelle@linux.ibm.com>
+> Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Zi Yan <ziy@nvidia.com>
 > ---
->  drivers/net/hyperv/hyperv_net.h | 3 +++
->  drivers/net/hyperv/netvsc.c     | 8 ++++++++
->  2 files changed, 11 insertions(+)
->=20
-> diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_=
-net.h
-> index dd5919ec408b..218e0f31dd66 100644
-> --- a/drivers/net/hyperv/hyperv_net.h
-> +++ b/drivers/net/hyperv/hyperv_net.h
-> @@ -572,6 +572,9 @@ struct nvsp_2_vsc_capability {
->  			u64 teaming:1;
->  			u64 vsubnetid:1;
->  			u64 rsc:1;
-> +			u64 timestamp:1;
-> +			u64 reliablecorrelationid:1;
-> +			u64 allowrscdisabledstatus:1;
->  		};
->  	};
->  } __packed;
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index da737d959e81..2eb1e85ba940 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -619,6 +619,14 @@ static int negotiate_nvsp_ver(struct hv_device
-> *device,
->  	init_packet->msg.v2_msg.send_ndis_config.mtu =3D ndev->mtu +
-> ETH_HLEN;
->  	init_packet->msg.v2_msg.send_ndis_config.capability.ieee8021q =3D 1;
->=20
-> +	/* Don't need a version check while setting this bit because if we
-> +	 * have a New VM on an old host, the VM will set the bit but the host
-> +	 * won't check it. If we have an old VM on a new host, the host will
-> +	 * check the bit, see its zero, and it'll know the VM has an
-> +	 * older NetVsc
-> +	 */
-> +	init_packet-
-> >msg.v2_msg.send_ndis_config.capability.allowrscdisabledstatus =3D 1;
+>   arch/Kconfig                      |  6 ++++++
+>   arch/alpha/Kconfig                |  1 +
+>   arch/arm/Kconfig                  |  1 +
+>   arch/arm64/Kconfig                |  1 +
+>   arch/csky/Kconfig                 |  1 +
+>   arch/hexagon/Kconfig              |  1 +
+>   arch/ia64/Kconfig                 |  1 +
+>   arch/loongarch/Kconfig            |  1 +
+>   arch/mips/Kconfig                 |  1 +
+>   arch/nios2/Kconfig                |  1 +
+>   arch/powerpc/Kconfig              |  1 +
+>   arch/riscv/Kconfig                |  1 +
+>   arch/sh/Kconfig                   |  1 +
+>   arch/sparc/Kconfig                |  1 +
+>   arch/x86/Kconfig                  |  1 +
+>   arch/xtensa/Kconfig               |  1 +
+>   drivers/video/Kconfig             |  3 +++
+>   include/asm-generic/Kbuild        |  1 +
+>   include/asm-generic/screen_info.h | 12 ++++++++++++
+>   include/linux/screen_info.h       |  2 +-
+>   20 files changed, 38 insertions(+), 1 deletion(-)
+>   create mode 100644 include/asm-generic/screen_info.h
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 205fd23e0cada..2f58293fd7bcb 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -1466,6 +1466,12 @@ config ARCH_HAS_NONLEAF_PMD_YOUNG
+>   	  address translations. Page table walkers that clear the accessed bit
+>   	  may use this capability to reduce their search space.
+>   
+> +config ARCH_HAS_SCREEN_INFO
+> +	bool
+> +	help
+> +	  Selected by architectures that provide a global instance of
+> +	  screen_info.
+> +
+>   source "kernel/gcov/Kconfig"
+>   
+>   source "scripts/gcc-plugins/Kconfig"
+> [snip]
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index d38b066fc931b..6aab2fb7753da 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -13,6 +13,7 @@ config LOONGARCH
+>   	select ARCH_HAS_FORTIFY_SOURCE
+>   	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+>   	select ARCH_HAS_PTE_SPECIAL
+> +	select ARCH_HAS_SCREEN_INFO
+>   	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+>   	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+>   	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+> [snip]
 
-Have you tested on the new host to verify: Before this patch, the host show=
-s
-RSC status on, and after this patch the host shows it's off?
+Acked-by: WANG Xuerui <git@xen0n.name> # loongarch
 
-Thanks,
-- Haiyang
+Thanks!
+
+-- 
+WANG "xen0n" Xuerui
+
+Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
+
