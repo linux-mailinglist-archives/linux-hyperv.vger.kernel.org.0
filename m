@@ -2,98 +2,105 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A593A742678
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jun 2023 14:31:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FEFA742691
+	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jun 2023 14:36:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbjF2Mbf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Jun 2023 08:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
+        id S231447AbjF2Mg1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Jun 2023 08:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbjF2Mbd (ORCPT
+        with ESMTP id S231496AbjF2MgR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Jun 2023 08:31:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 194BD2680
-        for <linux-hyperv@vger.kernel.org>; Thu, 29 Jun 2023 05:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688041844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lxNJCuGafLKSPeJQnzjiGq0TjYezzEm7bsw6nf+e1Ec=;
-        b=iZobZO2FrTsUgB9U0xDXNe05kHwpioMuHaqeaYnw3iHSR/sJeaAlAmZDPrY0VF/hE04rWC
-        VJfyJaGW8qvL2MK2c/2jcxBAXvuyzJkWhnVo0zBCrEqTFbaP0P9DQxiEP3RERAwAG7ubM2
-        IntVFms7WxDXNGQN3VULjHPHwR0wNqA=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-645-XQj4My-rNRujf5FhvIi-5w-1; Thu, 29 Jun 2023 08:30:41 -0400
-X-MC-Unique: XQj4My-rNRujf5FhvIi-5w-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-30793c16c78so922855f8f.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 29 Jun 2023 05:30:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688041840; x=1690633840;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxNJCuGafLKSPeJQnzjiGq0TjYezzEm7bsw6nf+e1Ec=;
-        b=jdbnkB0I/atyd7uQoZqny0KVsbDp0Z03tcvNdzJDmYgJ3rQaAIPjEdjMKLP8RBHqXy
-         yx28X/Z8rmJfwhjrT9MZB+E0x16PtzvnQPwk2lEX2ZGbpcm5wkGU/LTj8HjXjFyjYG5l
-         xzS5xjoWDJS8u/KtnX+5pdsnj7vf7KgjKpbEclbkfyrX2EfMXbcf7UjwV5pXWFGs2rN1
-         5XvWqixbfPZRg8KG92qYwAl7rQGY2Dn4vqR6iRhXhbtoygiHJumLurk+fS2Z50xO4IfW
-         Xpr6XmfNxz/e+dHX2v8EyszidKAMejXRKwE30OoEhc2SxSZOU2AcYpGJwLKEGxAIY1yv
-         sewg==
-X-Gm-Message-State: AC+VfDygIGvFc/sLHQmO0DmIvvdk/fxAD8vz34ZY20eh3ZEgNodCpKQl
-        oKbrPAKv7j+YSpAOwng0p2wcCKl66fvhkg8v+xaG9Zb7g9lmaXHc9Piq8pmEvaYdmkZaRxtgLF5
-        IgiQDqqrv5itPc1HS9iwPinkr
-X-Received: by 2002:adf:ed8c:0:b0:313:e922:3941 with SMTP id c12-20020adfed8c000000b00313e9223941mr17813866wro.46.1688041840052;
-        Thu, 29 Jun 2023 05:30:40 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6kHN46tOVkCu1gvmqDPPPR5I5tNgGXFZ/EvKTkOoxsRLh+54YIckn5gW3VqlVkVhLtJAP1ow==
-X-Received: by 2002:adf:ed8c:0:b0:313:e922:3941 with SMTP id c12-20020adfed8c000000b00313e9223941mr17813849wro.46.1688041839681;
-        Thu, 29 Jun 2023 05:30:39 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-160.retail.telecomitalia.it. [87.11.6.160])
-        by smtp.gmail.com with ESMTPSA id q17-20020a5d6591000000b0030796e103a1sm15964532wru.5.2023.06.29.05.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jun 2023 05:30:38 -0700 (PDT)
-Date:   Thu, 29 Jun 2023 14:30:35 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org,
-        Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Arseniy Krasnov <oxffffaa@gmail.com>,
-        Vishnu Dasa <vdasa@vmware.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC net-next v4 6/8] virtio/vsock: support dgrams
-Message-ID: <yzxr4hdhac33gxpaelovlshdywdci2dqbt7fbellldy3zhc24e@hgrfvycmc7h6>
-References: <20230413-b4-vsock-dgram-v4-0-0cebbb2ae899@bytedance.com>
- <20230413-b4-vsock-dgram-v4-6-0cebbb2ae899@bytedance.com>
- <92b3a6df-ded3-6470-39d1-fe0939441abc@gmail.com>
- <ppx75eomyyb354knfkwbwin3il2ot7hf5cefwrt6ztpcbc3pps@q736cq5v4bdh>
- <ZJUho6NbpCgGatap@bullseye>
- <d53tgo4igvz34pycgs36xikjosrncejlzuvh47bszk55milq52@whcyextsxfka>
- <ZJo5L+IM1P3kFAhe@bullseye>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ZJo5L+IM1P3kFAhe@bullseye>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        Thu, 29 Jun 2023 08:36:17 -0400
+Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB9F6297B;
+        Thu, 29 Jun 2023 05:36:15 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailnew.west.internal (Postfix) with ESMTP id 3C0B92B00163;
+        Thu, 29 Jun 2023 08:36:08 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 29 Jun 2023 08:36:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1688042167; x=1688049367; bh=bT
+        G+9AqapEnTzTdZN+3/z4mAZ7LW415XlukWbIMXEK4=; b=jVer3ZsYEpv4oKp9MB
+        szsrrrdYGu7rGZrQTOVLMkGALoFHHLvc/oUUpXJBoXJgdCfT0l7aA0yKhATrYNXB
+        aEGN9jvcC01pqiHdFsqq0bkFFSz9UIn0wpYtG5wYSyHBgIUb0q0WF10Dn3D0ys+Q
+        XdVTz1xDdvBF5BWZT8QJkN/TJUgNTFQEn9uRiImRIIIxVlZAUYgfDYxAZN24C9If
+        0fvLO/7Vh+JJJx9ib3bnVyk06XlQdUmqqoWItzk2IhpGynOSTiS1PFOrwsJCeCaJ
+        8UiDOATEhC65kKFJEjC7rOkzppp5TX9XQuMvRoXskdiug/iaC/tnwPy1ygPdzaL6
+        IoZw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1688042167; x=1688049367; bh=bTG+9AqapEnTz
+        TdZN+3/z4mAZ7LW415XlukWbIMXEK4=; b=CccPJWvx1a+Oz1MM5Taiu9fsGftW9
+        hmgBcLqXYChcnfp2nv6RWUg7M5kQcytbmDfhV1AVipcw49+CmNKous2ER6JLcGud
+        qLKDK3EFXotIhbICdzx3r91mhkebGgUqVWBxeOtOqIwIjt2VLx2+7M0e0ZNBw8IY
+        QYBew9HSxFvupkHfoU1p8ZntBi5WUvQWBmTXQhafzKFZRTGtPdZIsRBX2guG6EvC
+        jm91VDAmWV04RD50eKeuNQ1gIbDXgSNCl/ADV15oAHykwZ0L0pLZZYK3u1cr3+Rr
+        x7zXD2MAiXbufbU1CsLjDKzyEFWnoX4+00s21o08yDXbrmZmwqDH+dXBg==
+X-ME-Sender: <xms:tnqdZAyITayvFU5PbWEsgwbjYWgt1_bFD3KxUqWmvV0MpPRpzRhMYw>
+    <xme:tnqdZETRQyAQkFjh37a8uYBhXLeGI9R7f1m3td7LD-JziB80SvWJeQz0ASta2bqx9
+    LtzynNQufcPspiPv5Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtdeggdehhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:t3qdZCWK84TlQOUoGax5_YXtDLllqy8UMuSas5speVwKDdAYHHtFmg>
+    <xmx:t3qdZOh7zh5gc4FrE0MBs27VLcYOiuEURtr1UYpC_ojWWV1ts5U5xw>
+    <xmx:t3qdZCD2YEfxCMDoMp6Bks-zFbCY2rQklJKHTChqpgGWw39PgvnhXA>
+    <xmx:t3qdZKjiEc4oaeDQe8Jc0rTS3lifMyHCY8K24zrYhOb09JLKNV8fH1kx3iQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id D6555B60086; Thu, 29 Jun 2023 08:36:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+Mime-Version: 1.0
+Message-Id: <80e3a583-805e-4e8f-a67b-ebe2e4b9a7e5@app.fastmail.com>
+In-Reply-To: <20230629121952.10559-8-tzimmermann@suse.de>
+References: <20230629121952.10559-1-tzimmermann@suse.de>
+ <20230629121952.10559-8-tzimmermann@suse.de>
+Date:   Thu, 29 Jun 2023 14:35:46 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Thomas Zimmermann" <tzimmermann@suse.de>,
+        "Helge Deller" <deller@gmx.de>, "Daniel Vetter" <daniel@ffwll.ch>,
+        "Dave Airlie" <airlied@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
+        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Frederic Weisbecker" <frederic@kernel.org>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        "Ard Biesheuvel" <ardb@kernel.org>,
+        "Sami Tolvanen" <samitolvanen@google.com>,
+        "Juerg Haefliger" <juerg.haefliger@canonical.com>
+Subject: Re: [PATCH 07/12] arch/x86: Declare edid_info in <asm/screen_info.h>
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -101,87 +108,18 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 01:19:43AM +0000, Bobby Eshleman wrote:
->On Mon, Jun 26, 2023 at 05:03:15PM +0200, Stefano Garzarella wrote:
->> On Fri, Jun 23, 2023 at 04:37:55AM +0000, Bobby Eshleman wrote:
->> > On Thu, Jun 22, 2023 at 06:09:12PM +0200, Stefano Garzarella wrote:
->> > > On Sun, Jun 11, 2023 at 11:49:02PM +0300, Arseniy Krasnov wrote:
->> > > > Hello Bobby!
->> > > >
->> > > > On 10.06.2023 03:58, Bobby Eshleman wrote:
->> > > > > This commit adds support for datagrams over virtio/vsock.
->> > > > >
->> > > > > Message boundaries are preserved on a per-skb and per-vq entry basis.
->> > > >
->> > > > I'm a little bit confused about the following case: let vhost sends 4097 bytes
->> > > > datagram to the guest. Guest uses 4096 RX buffers in it's virtio queue, each
->> > > > buffer has attached empty skb to it. Vhost places first 4096 bytes to the first
->> > > > buffer of guests RX queue, and 1 last byte to the second buffer. Now IIUC guest
->> > > > has two skb in it rx queue, and user in guest wants to read data - does it read
->> > > > 4097 bytes, while guest has two skb - 4096 bytes and 1 bytes? In seqpacket there is
->> > > > special marker in header which shows where message ends, and how it works here?
->> > >
->> > > I think the main difference is that DGRAM is not connection-oriented, so
->> > > we don't have a stream and we can't split the packet into 2 (maybe we
->> > > could, but we have no guarantee that the second one for example will be
->> > > not discarded because there is no space).
->> > >
->> > > So I think it is acceptable as a restriction to keep it simple.
->> > >
->> > > My only doubt is, should we make the RX buffer size configurable,
->> > > instead of always using 4k?
->> > >
->> > I think that is a really good idea. What mechanism do you imagine?
->>
->> Some parameter in sysfs?
->>
+On Thu, Jun 29, 2023, at 13:45, Thomas Zimmermann wrote:
+> The global variable edid_info contains the firmware's EDID information
+> as an extension to the regular screen_info on x86. Therefore move it to
+> <asm/screen_info.h>.
 >
->I comment more on this below.
->
->> >
->> > For sendmsg() with buflen > VQ_BUF_SIZE, I think I'd like -ENOBUFS
->>
->> For the guest it should be easy since it allocates the buffers, but for
->> the host?
->>
->> Maybe we should add a field in the configuration space that reports some
->> sort of MTU.
->>
->> Something in addition to what Laura had proposed here:
->> https://markmail.org/message/ymhz7wllutdxji3e
->>
->
->That sounds good to me.
->
->IIUC vhost exposes the limit via the configuration space, and the guest
->can configure the RX buffer size up to that limit via sysfs?
->
->> > returned even though it is uncharacteristic of Linux sockets.
->> > Alternatively, silently dropping is okay... but seems needlessly
->> > unhelpful.
->>
->> UDP takes advantage of IP fragmentation, right?
->> But what happens if a fragment is lost?
->>
->> We should try to behave in a similar way.
->>
->
->AFAICT in UDP the sending socket will see EHOSTUNREACH on its error
->queue and the packet will be dropped.
->
->For more details:
->- the IP defragmenter will emit an ICMP_TIME_EXCEEDED from ip_expire()
->  if the fragment queue is not completed within time.
->- Upon seeing ICMP_TIME_EXCEEDED, the sending stack will then add
->  EHOSTUNREACH to the socket's error queue, as seen in __udp4_lib_err().
->
->Given some updated man pages I think enqueuing EHOSTUNREACH is okay for
->vsock too. This also reserves ENOBUFS/ENOMEM only for shortage on local
->buffers / mem.
->
->What do you think?
+> Add the Kconfig token ARCH_HAS_EDID_INFO to guard against access on
+> architectures that don't provide edid_info. Select it on x86.
 
-Yep, makes sense to me!
+I'm not sure we need another symbol in addition to
+CONFIG_FIRMWARE_EDID. Since all the code behind that
+existing symbol is also x86 specific, would it be enough
+to just add either 'depends on X86' or 'depends on X86 ||
+COMPILE_TEST' there?
 
-Stefano
-
+      Arnd
