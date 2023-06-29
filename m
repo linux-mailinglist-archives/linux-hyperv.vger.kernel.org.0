@@ -2,95 +2,63 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78D94742CCC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 29 Jun 2023 21:03:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D261743024
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jun 2023 00:09:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232987AbjF2TBo (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Jun 2023 15:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232770AbjF2TBQ (ORCPT
+        id S229632AbjF2WJx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Jun 2023 18:09:53 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:41646 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232170AbjF2WJp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Jun 2023 15:01:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A86572D78;
-        Thu, 29 Jun 2023 12:01:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 490E461614;
-        Thu, 29 Jun 2023 19:01:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 499C7C433CD;
-        Thu, 29 Jun 2023 19:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688065273;
-        bh=BfBq32+wUjq/ixVzTsMobWC5JLbxN7vWJFEZGGw/1hk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXAZOBI6j8LtrWrl1R9HBGJXsx7y+7w09f2umB4vTFUHiAtuEd95tWMLAmIMq14Uc
-         q4AzvUJ8fz+DT9wQipeNbxcrVuB3r5Tisy7XPxCJj44FqEoVGKn2uOoSEwySVk/Byp
-         bGpeE9y5CbfkLM3oksJRJW9Th4pXVjp7u2P+XTsUmRmjvd1FQrklnpSKnXznVRE/8W
-         AcQOoUjtyT1PU9yOmFddDI3dN61BWbKHIc3xAMCvJwONdbcLhmB5UxATrh/SEt7zM/
-         tKU1WcAtnUdrSexeeo8CBe46jze9Thx3jnfByd0KxMOFjoBNjF2k4WC3jML00BtO4Y
-         jMZbV+t2O7Cmg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
-        haiyangz@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.3 07/17] arm64/hyperv: Use CPUHP_AP_HYPERV_ONLINE state to fix CPU online sequencing
-Date:   Thu, 29 Jun 2023 15:00:36 -0400
-Message-Id: <20230629190049.907558-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230629190049.907558-1-sashal@kernel.org>
-References: <20230629190049.907558-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.3.9
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+        Thu, 29 Jun 2023 18:09:45 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id F17ED2083969; Thu, 29 Jun 2023 15:09:44 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F17ED2083969
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1688076584;
+        bh=bRJBnZIyqX5lWmieXAT5ZWBktdQw7iN0MiN86gS1bd0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qy2y55CfMDoH/brlN1bIt1o/wgwyjDECNCRlOQ6OL2ndQITH/NHG9QbFQxQ6FZfVy
+         aDJIc+NoW/q2XUyTS3V/f+FFsDAc9lpZDmEDtcrTWPnEIsgSACCXAnv731fZzdy7nj
+         wTIZWIM9XuPM5a1Yb2gNi1V2G4sZ1olDysSTUyr8=
+From:   longli@linuxonhyperv.com
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        Shachar Raindel <shacharr@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-rdma@vger.kernel.org, Long Li <longli@microsoft.com>
+Subject: [PATCH net v4 0/2] net: mana: Fix doorbell access for receive queues
+Date:   Thu, 29 Jun 2023 15:09:29 -0700
+Message-Id: <1688076571-24938-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Long Li <longli@microsoft.com>
 
-[ Upstream commit 52ae076c3a9b366b6fa9f7c7e67aed8b28716ed9 ]
+This patchset fixes the issues discovered during 200G physical link
+tests. It fixes doorbell usage and WQE format for receive queues.
 
-State CPUHP_AP_HYPERV_ONLINE has been introduced to correctly sequence the
-initialization of hyperv_pcpu_input_arg. Use this new state for Hyper-V
-initialization so that hyperv_pcpu_input_arg is allocated early enough.
+Long Li (2):
+  net: mana: Batch ringing RX queue doorbell on receiving packets
+  net: mana: Use the correct WQE count for ringing RQ doorbell
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Link: https://lore.kernel.org/r/1684862062-51576-2-git-send-email-mikelley@microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/hyperv/mshyperv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/microsoft/mana/gdma_main.c |  5 ++++-
+ drivers/net/ethernet/microsoft/mana/mana_en.c   | 10 ++++++++--
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index a406454578f07..f1b8a04ee9f26 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -67,7 +67,7 @@ static int __init hyperv_init(void)
- 	if (ret)
- 		return ret;
- 
--	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "arm64/hyperv_init:online",
-+	ret = cpuhp_setup_state(CPUHP_AP_HYPERV_ONLINE, "arm64/hyperv_init:online",
- 				hv_common_cpu_init, hv_common_cpu_die);
- 	if (ret < 0) {
- 		hv_common_free();
 -- 
-2.39.2
+2.34.1
 
