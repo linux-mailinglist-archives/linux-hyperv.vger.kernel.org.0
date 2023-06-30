@@ -2,138 +2,135 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 574F0743052
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jun 2023 00:19:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 568A5743314
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jun 2023 05:21:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbjF2WTB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 29 Jun 2023 18:19:01 -0400
-Received: from mail-dm6nam12on2093.outbound.protection.outlook.com ([40.107.243.93]:54400
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229742AbjF2WTA (ORCPT <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 29 Jun 2023 18:19:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M4t8W6RxZaXMigf7Yymv3hitPccwmuov+U5MzK6e75Morc6ZC/m8K8psqp0HB+YCX6llD5V86O6mAVREPyS9tubDVx19fDdrrrP899l0UbOjO7vg0V/rizWo1Mp+pjQBlmhkMv3DJ5el4XjsEO0MFDqeL3bpCYqjmZu8tCsrh2t+ul590SILq7J5fL21TLTjRf8Ke/dO+vY1gqBadfof4MiKNkK80c3wOD9e82bUvfwh8hCtajNcp0RF24b6edB7GDmYKnlN3VpwY6t0kUwwpnz0NzHvtc56iDySUOcz9dkcLLWL6vroGBXjDRN1T6zgN0rcLJOQTnrZ6aaLkGizWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E7b5eK+1FlT8N4cDtSMAcch85nDINSCqGoTTYvnUGVo=;
- b=dJaklesJY3tJ3dhS6vrii2K7DlJBRZZlBVeAYHzY0ugep0KFqdvHCopvvjnAngNpE+YGUFo/+NvPOD45jLg5updSQgoiyMBsCJIGcXvxBH9Sk4zZVGorh5biCk6VccRLZsdf4p4lzNGp9u5EJPxuG8JnfHWQisOeBitnKDcp8MOlMuPTpV2yorlUsBWPHG0JLKP+Wxz6IcUsXHW2vIpDMUxxu2wN+oU5tWxwLlrJAlJZf1a6Z+BimKUQO7UsO34QbZUmhboz/DGU0QsRgZ1Gqr+c8MbjKYlbmZHKUk/NZkIprE55+OkpS905/3CtchBY8NY8JHV59xNfHTjQr7vWUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E7b5eK+1FlT8N4cDtSMAcch85nDINSCqGoTTYvnUGVo=;
- b=F7QbCVFOgyXv4KqyUW8Y5y9rRoKj4mx5GFVNZOFTfKcz7+7ai5YRHsnGx6e2ckDtgaAQHjEY0qlf7eqmijUgSCkjCMMWhjDTpRhFmfI37tNjp4zieDiIGMHsIBMt2LNEAgO657CbXUjmKJfgHEuBIya9Sx0QijYft+DzqZQ2DVg=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by IA1PR21MB3472.namprd21.prod.outlook.com (2603:10b6:208:3e3::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.4; Thu, 29 Jun
- 2023 22:18:56 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::7d5d:3139:cf68:64b%3]) with mapi id 15.20.6565.005; Thu, 29 Jun 2023
- 22:18:56 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC:     Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH AUTOSEL 6.3 07/17] arm64/hyperv: Use
- CPUHP_AP_HYPERV_ONLINE state to fix CPU online sequencing
-Thread-Topic: [PATCH AUTOSEL 6.3 07/17] arm64/hyperv: Use
- CPUHP_AP_HYPERV_ONLINE state to fix CPU online sequencing
-Thread-Index: AQHZqrwVgYW4CVLgJEC2yQxsCXSETK+iWaqQ
-Date:   Thu, 29 Jun 2023 22:18:56 +0000
-Message-ID: <BYAPR21MB16886629B821C5D846125004D725A@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20230629190049.907558-1-sashal@kernel.org>
- <20230629190049.907558-7-sashal@kernel.org>
-In-Reply-To: <20230629190049.907558-7-sashal@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d7c21818-d6b3-4a59-9aa3-04c16dc7696b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-29T22:18:01Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|IA1PR21MB3472:EE_
-x-ms-office365-filtering-correlation-id: 8df8411f-50fc-4ff7-8a15-08db78eed47d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: w9sGlOtE0YN+42BC2YuBphICJWjNc2cM/OJOcOk5RaB3OorCoZZVok18JOxqoDzoUWzxdUmJff+8rYR9KzCm0egwzMD2GLm6dl0o7HIXQS45ft0bfCBEhwXIrLc0U/Pbc77XjYYk7oOJo1p0Iba6tbkmxK4TgwF7sdPUiSQdI1s74pc5Vw45+RmJdLR5EEJL0kxdxcbmGLgmUvE5kysPlJlu8AC9xnO+QE5lqSk3vNYYBbvpQHKzySAInFMMhynRkaE25UAOh9o0DHUCw+1QqW0IywCO38+7JhXfOfVogn/+Xk52nkRNLqnYsRtFBp0kVwBz3YKkyYnRM6n0pBFVGTj93BAv3yXhnNXprvHaBDlVhC4eZSRzOoNcX5z8fAB2TRSKPU0TyEzkfSN2UwlklJ7lsG9K7r3nFoCohvUtA6yCoeqE5mCI5KzDbZdh/62AhZlB2D+EjyJyS416ycS9AnvkOjHN7ugz0mPuJlIJlucY/7IKCFn5CoIt7OgfHbcL7e+piWH6JQ8vzHRurahOgK/lrBHh2M+97S/SBYUtHz9PuL1TqTWvkJmq1jvdJI8jSbaSAElAPFp68Y+inOSufvRbu2ax9iz8m3i+GAKRl2cf7zJqY4yphkaYYuevug5ZZSsIHpHzdmbKETbi0NDKrOkwAkCCylw46zWYwyIuKqU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(39860400002)(376002)(136003)(396003)(346002)(451199021)(9686003)(186003)(26005)(6506007)(41300700001)(7696005)(83380400001)(478600001)(10290500003)(110136005)(82960400001)(82950400001)(54906003)(71200400001)(122000001)(38100700002)(64756008)(66556008)(55016003)(66476007)(66446008)(76116006)(66946007)(4326008)(316002)(5660300002)(52536014)(86362001)(33656002)(4744005)(38070700005)(2906002)(8676002)(8936002)(8990500004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?eT/sx2DqS3dEaPCUunfupkwq7for0s6ILx5f7P4+obdbB2eTMJfE4EvrjqHU?=
- =?us-ascii?Q?ErfhCIslGLt+1IxpSbRJTFq7gbCblHz/ZmRKxlFh9LrN7Bv8synJ/pOo1KNX?=
- =?us-ascii?Q?hfmr6C77UyLPr/OBchdjLFcs5tkXl40+ToGTlyv6xv66gMKLuxzG2KB0/0Fu?=
- =?us-ascii?Q?/dRU0COP6ei2azjOBKt99/AjihzHTTo/xEc5CyV4wjq9PegiALxMfJ0rfTPH?=
- =?us-ascii?Q?1/aQiVyzadGebXsQ3BdX5nRr5WpNHPVAjvGxiloAIVExudmGzHacqI40ldiV?=
- =?us-ascii?Q?+ZqgHH8lQGajNvYALoo1sTe7rd0MnBjDQs/9o9Dx44M9MZkEZdTD+DVOfnNX?=
- =?us-ascii?Q?LxxhoTOrbdcRncx99TEwA+aHKQt6KYF7gYqHiuPi06HpbnVLeR1ESqYovRnH?=
- =?us-ascii?Q?VEkzykayzhJzfZtGF2O2gs84aA414ATIDuqA9KLam5DCqj4UQprP2V1vcsb4?=
- =?us-ascii?Q?X0YIqBS8U+g2NXCUkqPic/RkJ4Ntk+4OeguvRrLurS351mr12+iJBBf+eAlF?=
- =?us-ascii?Q?JVLIDNdqNP9iiFBzdXeUHffc3wpt3szTzthmyfHXYuTZ9kscTFBdBcjG4zW3?=
- =?us-ascii?Q?8tL/H7/UsYgS9zvOPNGNOCu5TqODYfpERXykQ67Dheg63kyrkZlAGvAVfkPf?=
- =?us-ascii?Q?QjkjOcFJ4BAmWcrMjdY8KFzi4PMHrktAeIm7N1ll8ZtYr3IHYeT+RZbD6/QL?=
- =?us-ascii?Q?auI2cwlkX1mJ/C36X63E99dA7Ni0uoYut3FZN0hGu2Nze4cgE/scACKQO+re?=
- =?us-ascii?Q?az8MjlKWqjFJiq3aVmJVT/0xsEyMvvDOzsVDbRDLVn6kR3wJm6bhCvqa5/5q?=
- =?us-ascii?Q?MuR8uMj71M8/2tG0IU6Q0Mw7MkiCQpHoeluhYm1oi9uRrEVuOgJ2ICym22zD?=
- =?us-ascii?Q?/Fx6LcsvSCwqKcHeukpYOsRmETkGkqpmYI71rL2weDGxteWcR39HtdPHxDq8?=
- =?us-ascii?Q?FtltkSzhfv4bcU6Q5E/lyoR1OKQ5PoOKyiG9JlCYZSMvXErMpDjLxF/ngTPd?=
- =?us-ascii?Q?bZm9sBKsPwDL8jmY4mHzcuQp6Ie4RcFK5DAwJy97iha7/KOK5LRrrbWg3mAu?=
- =?us-ascii?Q?vzdXy7VOwPyTmF6F/sqmEPNjlCuCKsgFEzMHw8y2TDqcS/aNMA8BTCMGTQhk?=
- =?us-ascii?Q?aA8cnL9QT6LGJjTjw7FHrkUuTjATmXndXE6Hm3WwERpVmnfI08t7ckWd16Jo?=
- =?us-ascii?Q?QbbretA7HnQ6rt7vw4FrNo/dI6L9YNm3bGbS25TlRRsGw3GWJxCpfJcmuWg2?=
- =?us-ascii?Q?gou4Jtx/MmHPM4k4ASnkk8J2vRxek7I1fB407eSC9N4g7knQiNlksPDWycDq?=
- =?us-ascii?Q?BIkxM+gNbBf6Zj6sPq1P2PkZNDfM53GVwYOHGJmBuG19wLO5YN/h7sw/2DBI?=
- =?us-ascii?Q?vRasdEFsdfBtEY1Tt17Qk9a6ASB4HCOdax5uki7lFotrANo5KG+QnR3+tybB?=
- =?us-ascii?Q?8fxj6ZZniTRc/eGVhY4K68S5YnMSH9G+POnBBXGl3j4Ng7oBKBww3O0URDnQ?=
- =?us-ascii?Q?zeoIveNen+3EDZD3lSMZSqO43ghE80R+PpBhCO83hkgDZAcapWCOYY7HTkEW?=
- =?us-ascii?Q?GIiO4C5MvbQukdYO9y5z5fmfxJLb5/ouaB0QbYc3+u70iUVdyANgzqm11mY0?=
- =?us-ascii?Q?ug=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S230036AbjF3DUz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 29 Jun 2023 23:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230141AbjF3DUU (ORCPT
+        <rfc822;linux-hyperv@vger.kernel.org>);
+        Thu, 29 Jun 2023 23:20:20 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D81A235BD;
+        Thu, 29 Jun 2023 20:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688095215; x=1719631215;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CleN5csZxWjHwwb4MOnNoiZ8h4BJOgyw+uua6zQ7x1U=;
+  b=dmb9jSCGAhVd+Z6Ofg2gyEHPv+o+iNRBvAA7PwMBDckklm/UKBczl9Gd
+   1129se0+DxmPHzeavViix8pf5zXzCy5l77R2ZxZ4nMfQZX6RZdKO8+wia
+   mzyukiEbM7hVyQt08ufBFA9xcfMq9k605PZXB/vmENgQTAgJHMR4Y89BT
+   EbAJoOVlglb2C32dOZ36NnQa/fZ/IWwu9SpH4fSEN4OK8FKjrtCQgxZaA
+   yQme1vOZro/56GZ4VUyEp2zgeHbufDskctSBen8VaJGqWjOg4KPzSNhbw
+   awqTPR5VhPNGiEf5dXKbMDKAElsm7rRKQ+EqEjJ5e/SsorFJbCwAizf1P
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="393027491"
+X-IronPort-AV: E=Sophos;i="6.01,169,1684825200"; 
+   d="scan'208";a="393027491"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2023 20:20:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="1048058620"
+X-IronPort-AV: E=Sophos;i="6.01,169,1684825200"; 
+   d="scan'208";a="1048058620"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Jun 2023 20:20:10 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qF4g5-000Ee1-1N;
+        Fri, 30 Jun 2023 03:20:09 +0000
+Date:   Fri, 30 Jun 2023 11:19:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Wei Hu <weh@microsoft.com>, netdev@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+        longli@microsoft.com, sharmaajay@microsoft.com, jgg@ziepe.ca,
+        leon@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        vkuznets@redhat.com, ssengar@linux.microsoft.com,
+        shradhagupta@linux.microsoft.com
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v3 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
+ driver.
+Message-ID: <202306301145.qNZGZ0MP-lkp@intel.com>
+References: <20230615111412.1687573-1-weh@microsoft.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8df8411f-50fc-4ff7-8a15-08db78eed47d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2023 22:18:56.5392
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q25LxnvwRrB1fMPgTbuSLVW+vAEmRIrDwQCLL0+ZO7MQQZW5ats1s3wFsYsAMVjtZ44DIUHnzqUULxfS7iPZA1z1hsteYgnn6QebRQBArV4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3472
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230615111412.1687573-1-weh@microsoft.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Sasha Levin <sashal@kernel.org> Sent: Thursday, June 29, 2023 12:01 P=
-M
->=20
-> From: Michael Kelley <mikelley@microsoft.com>
->=20
-> [ Upstream commit 52ae076c3a9b366b6fa9f7c7e67aed8b28716ed9 ]
->=20
-> State CPUHP_AP_HYPERV_ONLINE has been introduced to correctly sequence th=
-e
-> initialization of hyperv_pcpu_input_arg. Use this new state for Hyper-V
-> initialization so that hyperv_pcpu_input_arg is allocated early enough.
->=20
+Hi Wei,
 
-State CPUHP_AP_HYPERV_ONLINE was introduced in 6.4.  There's no need
-to backport this patch to stable releases.
+kernel test robot noticed the following build warnings:
 
-Michael
+[auto build test WARNING on linus/master]
+[also build test WARNING on horms-ipvs/master v6.4 next-20230629]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wei-Hu/RDMA-mana_ib-Add-EQ-interrupt-support-to-mana-ib-driver/20230615-191709
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230615111412.1687573-1-weh%40microsoft.com
+patch subject: [PATCH v3 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib driver.
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230630/202306301145.qNZGZ0MP-lkp@intel.com/config)
+compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+reproduce: (https://download.01.org/0day-ci/archive/20230630/202306301145.qNZGZ0MP-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306301145.qNZGZ0MP-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/infiniband/hw/mana/main.c:150:20: warning: unused variable 'ibdev' [-Wunused-variable]
+           struct ib_device *ibdev = ucontext->ibucontext.device;
+                             ^
+   1 warning generated.
+
+
+vim +/ibdev +150 drivers/infiniband/hw/mana/main.c
+
+   145	
+   146	static void mana_ib_destroy_eq(struct mana_ib_ucontext *ucontext,
+   147				       struct mana_ib_dev *mdev)
+   148	{
+   149		struct gdma_context *gc = mdev->gdma_dev->gdma_context;
+ > 150		struct ib_device *ibdev = ucontext->ibucontext.device;
+   151		struct gdma_queue *eq;
+   152		int i;
+   153	
+   154		if (!ucontext->eqs)
+   155			return;
+   156	
+   157		for (i = 0; i < gc->max_num_queues; i++) {
+   158			eq = ucontext->eqs[i].eq;
+   159			if (!eq)
+   160				continue;
+   161	
+   162			mana_gd_destroy_queue(gc, eq);
+   163		}
+   164	
+   165		kfree(ucontext->eqs);
+   166		ucontext->eqs = NULL;
+   167	}
+   168	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
