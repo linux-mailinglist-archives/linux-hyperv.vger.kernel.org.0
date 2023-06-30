@@ -2,94 +2,111 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62ED97439BC
-	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jun 2023 12:41:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B58B743B8F
+	for <lists+linux-hyperv@lfdr.de>; Fri, 30 Jun 2023 14:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232429AbjF3KlP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 30 Jun 2023 06:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35854 "EHLO
+        id S233129AbjF3MHI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 30 Jun 2023 08:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231361AbjF3Kky (ORCPT
+        with ESMTP id S232981AbjF3MG0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 30 Jun 2023 06:40:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FDD4691
-        for <linux-hyperv@vger.kernel.org>; Fri, 30 Jun 2023 03:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688121425;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mSmMChIzFsnctBY/ntNdQM0sRE6MR8Uu4qXuBm6oUrY=;
-        b=JnMlmMVKS4zCLulyXJVbyCYj6CPvxAAU+eZZcTlSkQqN6QhtJnMDdqNL7t610BVCMO6RKV
-        V+tN2R2Fy3lnI4p7zeXrAcVMoxWKAWVQAUESsk/npHuKRwkxqyWVtR1bHbuSJ6kKBSj6BX
-        NEuiwcf4Wbb0hFCFJONtBHRAdtEXNrY=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-191-CzBVf0NiO9CMh8oaZs0zsg-1; Fri, 30 Jun 2023 06:37:04 -0400
-X-MC-Unique: CzBVf0NiO9CMh8oaZs0zsg-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4009ad15222so3937421cf.1
-        for <linux-hyperv@vger.kernel.org>; Fri, 30 Jun 2023 03:37:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688121423; x=1690713423;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mSmMChIzFsnctBY/ntNdQM0sRE6MR8Uu4qXuBm6oUrY=;
-        b=ePdmB9pjyks7hRF4vX2lM7VNk9YpxVhD31jN03GzzDIvwK18sHZSoAD6eBnCw4MhZ0
-         EqCig7oVVFNtFufqcFZxRYgb35aL+cp8uqPcggtGw27BDVHiSFm7DtFWMbJ/jscLJXgO
-         rlsnrK0fWy3pRBvm7E4+fUd/X+UZ1codE3OCasFISUYy6JPKG4ELwjFsDIM75sMgpG8H
-         mZ1ah9DTspEP98tAUrb2sbK6cQlB4dVd3+YIUAAXIDlGQIpZki9PxvgTEWAH3hn4fGQY
-         YiJEMfxrSaQchZcb1Vt7+fxZeKc3aQNI7WOvMom0WtQ4IYrrohq6611GOEKIlLmCdc10
-         gmqg==
-X-Gm-Message-State: AC+VfDwemiDxd/DIgjzD31kX3nZTwx0iaLXGugYmDSVxRdd8qfsiz6T5
-        NlYegQZXYQVuggIq4N6KK52+Qpi0z9HDIIVfNlc44AI45N99iDwa8KBdI6PWw43FJfXGY7XymKo
-        gSZWwQ85CvIu7+Mm18rISIc4I
-X-Received: by 2002:a05:622a:1819:b0:400:a9a4:8517 with SMTP id t25-20020a05622a181900b00400a9a48517mr2536791qtc.4.1688121423742;
-        Fri, 30 Jun 2023 03:37:03 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7dr4NVZJGnbWpLNO5IGOyHWOg9Nxt/DgSxcc/RdlVezoQPlU7ziI3vkR1ZVcAPcj0V3cyAZg==
-X-Received: by 2002:a05:622a:1819:b0:400:a9a4:8517 with SMTP id t25-20020a05622a181900b00400a9a48517mr2536779qtc.4.1688121423483;
-        Fri, 30 Jun 2023 03:37:03 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-247-156.dyn.eolo.it. [146.241.247.156])
-        by smtp.gmail.com with ESMTPSA id cc23-20020a05622a411700b003f7fd3ce69fsm5015184qtb.59.2023.06.30.03.37.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 03:37:03 -0700 (PDT)
-Message-ID: <e5c3e5e5033290c2228bbad0307334a964eb065e.camel@redhat.com>
-Subject: Re: [Patch v3] net: mana: Batch ringing RX queue doorbell on
- receiving packets
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Long Li <longli@microsoft.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Fri, 30 Jun 2023 12:36:58 +0200
-In-Reply-To: <PH7PR21MB3263B266E381BA15DCE45820CE25A@PH7PR21MB3263.namprd21.prod.outlook.com>
-References: <1687823827-15850-1-git-send-email-longli@linuxonhyperv.com>
-         <36c95dd6babb2202f70594d5dde13493af62dcad.camel@redhat.com>
-         <PH7PR21MB3263B266E381BA15DCE45820CE25A@PH7PR21MB3263.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
-MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        Fri, 30 Jun 2023 08:06:26 -0400
+X-Greylist: delayed 725 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 30 Jun 2023 05:05:52 PDT
+Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A41449E;
+        Fri, 30 Jun 2023 05:05:51 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C8F845842A1;
+        Fri, 30 Jun 2023 07:53:45 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Fri, 30 Jun 2023 07:53:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1688126025; x=1688133225; bh=ya
+        Hy0NgB4QI7znLtjDpufXmMXzZcSHw23m7h8BkLYBc=; b=10KOp+CzUmojO7ZSQ7
+        q9c3tAJBmOd76hg6sonOk40OjKAR6/QOPiz7XUomr8IP6aN19s7N9Q20gnTBA8OU
+        H+ET1KWhVc0oqozGAYUdc7B70SAPMdGIyEmEipUjQs98dHfF9mAUgsaeXHru8OlA
+        Z6b+3BUsGbAouqrpsuvP8THkbsAzAbWArrjQjssrDfLJHYAxMJ1nD0US1BwUxLpH
+        Khsbp9i0wfMK4NjF83UPBZQU2Xe9X8o6q5JmvVGPeBGgXYJSti5i4d4Vr++XzGjN
+        1deBUgFU/w8tfA/bjpGKl2V8A3IgBHPWHWftg2j80IDtUUtjFI/5ldbjH9jVYmeY
+        G2pw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1688126025; x=1688133225; bh=yaHy0NgB4QI7z
+        nLtjDpufXmMXzZcSHw23m7h8BkLYBc=; b=VLzmPefoROKUnYgyH59xLO28GGD4n
+        I4lte/pn3WzX95H4eQRtTSBAb90fH5FqIscW92NizI9x3K9rvYkB4k9q6ajV1EbD
+        VxE8AOWeA5gd3Truhe/A9kaDx6LrP7Tl4Y9XFamiioeruNo4WJqflkjaHJ0nsHcv
+        J2r4IJGTVqOt1B1dMbybj/sbd/LzIbl5CzvfvEtuw8uPdvo7PAFEKVHhv2+1X9Xd
+        qEBjQf6xoQoJmFw77YwpNSZG5Kn1KzEpYegVmCRAHDr3owvr/EeqaPrEmVGD6Gmw
+        mfm5v+sxS/9Ml4UMUnNpdnRbqLCJ6zjTnHpvZojc13GhJnUu+kDlq3vDg==
+X-ME-Sender: <xms:SMKeZCxMqe5zxyzHHEyo_jowh1NvQkg3HAWm1oxMk5pEwCXuDt8nPQ>
+    <xme:SMKeZOQSC2GjFmKEVBEJ34bdcsM63u6r5Bbn1HzIVxPff5ENjvEYekcilieyCztL0
+    OOiy6d_8S9V2AG4VWM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrtdeigdeggecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
+    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
+    hnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:SMKeZEU7QF7lH3eivuj7P9AQVrp-KepGLUxX15AeZTjz07bNrMm_5Q>
+    <xmx:SMKeZIimGJWbUJHe4AXjoJoG2-DRyW8QkepPJWqWF6Y-rgF7svHorw>
+    <xmx:SMKeZEDcwFLycbP_cRSrtSET1YHYJvelMIMgwIjYVgEhFWn2ec6cwQ>
+    <xmx:ScKeZMj8q19ja7k4QwyGQviRl-VaDcpKWJEn2nnWWhOtIymUXjLwrw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 94900B60093; Fri, 30 Jun 2023 07:53:44 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
+Mime-Version: 1.0
+Message-Id: <dd5aa01e-afad-48d2-bf4c-4a58b74f1644@app.fastmail.com>
+In-Reply-To: <ef7b3899-7d18-8018-47fa-aac0efaa61f4@suse.de>
+References: <20230629121952.10559-1-tzimmermann@suse.de>
+ <20230629121952.10559-8-tzimmermann@suse.de>
+ <80e3a583-805e-4e8f-a67b-ebe2e4b9a7e5@app.fastmail.com>
+ <d3de124c-6aa8-e930-e238-7bd6dd7929a6@suse.de>
+ <0dbbdfc4-0e91-4be4-9ca0-d8ba6f18453d@app.fastmail.com>
+ <ef7b3899-7d18-8018-47fa-aac0efaa61f4@suse.de>
+Date:   Fri, 30 Jun 2023 13:53:24 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Thomas Zimmermann" <tzimmermann@suse.de>,
+        "Helge Deller" <deller@gmx.de>, "Daniel Vetter" <daniel@ffwll.ch>,
+        "Dave Airlie" <airlied@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
+        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Frederic Weisbecker" <frederic@kernel.org>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        "Ard Biesheuvel" <ardb@kernel.org>,
+        "Sami Tolvanen" <samitolvanen@google.com>,
+        "Juerg Haefliger" <juerg.haefliger@canonical.com>
+Subject: Re: [PATCH 07/12] arch/x86: Declare edid_info in <asm/screen_info.h>
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -97,58 +114,79 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, 2023-06-29 at 18:18 +0000, Long Li wrote:
-> > Subject: Re: [Patch v3] net: mana: Batch ringing RX queue doorbell
-> > on receiving
-> > packets
-> >=20
-> > On Mon, 2023-06-26 at 16:57 -0700, longli@linuxonhyperv.com wrote:
-> > > From: Long Li <longli@microsoft.com>
-> > >=20
-> > > It's inefficient to ring the doorbell page every time a WQE is
-> > > posted
-> > > to the received queue. Excessive MMIO writes result in CPU
-> > > spending
-> > > more time waiting on LOCK instructions (atomic operations),
-> > > resulting
-> > > in poor scaling performance.
-> > >=20
-> > > Move the code for ringing doorbell page to where after we have
-> > > posted
-> > > all WQEs to the receive queue during a callback from napi_poll().
-> > >=20
-> > > With this change, tests showed an improvement from 120G/s to
-> > > 160G/s on
-> > > a 200G physical link, with 16 or 32 hardware queues.
-> > >=20
-> > > Tests showed no regression in network latency benchmarks on
-> > > single
-> > > connection.
-> > >=20
-> > > While we are making changes in this code path, change the code
-> > > for
-> > > ringing doorbell to set the WQE_COUNT to 0 for Receive Queue. The
-> > > hardware specification specifies that it should set to 0.
-> > > Although
-> > > currently the hardware doesn't enforce the check, in the future
-> > > releases it may do.
-> > >=20
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure
-> > > Network Adapter (MANA)")
-> >=20
-> > Uhmmm... this looks like a performance improvement to me, more
-> > suitable for
-> > the net-next tree ?!? (Note that net-next is closed now).
->=20
-> This issue is a blocker for usage on 200G physical link. I think it
-> can be categorized as a fix.
+On Fri, Jun 30, 2023, at 09:46, Thomas Zimmermann wrote:
+> Am 29.06.23 um 15:21 schrieb Arnd Bergmann:
+>> On Thu, Jun 29, 2023, at 15:01, Thomas Zimmermann wrote:
+>>> Am 29.06.23 um 14:35 schrieb Arnd Bergmann:
+>>>> On Thu, Jun 29, 2023, at 13:45, Thomas Zimmermann wrote:
+>
+>>>
+>>> FIRMWARE_EDID is a user-selectable feature, while ARCH_HAS_EDID_INFO
+>>> announces an architecture feature. They do different things.
+>> 
+>> I still have trouble seeing the difference.
+>
+> The idea here is that ARCH_HAS_ signals the architecture's support for 
+> the feature.  Drivers set 'depends on' in their Kconfig.
+>
+> Another Kconfig token, VIDEO_SCREEN_INFO or FIRMWARE_EDID, would then 
+> actually enable the feature.  Drivers select VIDEO_SCREEN_INFO or 
+> FIRMWARE_EDID and the architectures contains code like
 
-Let me ask the question the other way around: is there any specific
-reason to have this fix into 6.5 and all the way back to 5.13?
-Especially the latest bit (CC-ing stable) looks at least debatable.
+Fair enough. In that case, I guess FIRMWARE_EDID will just depend on
+ARCH_HAS_EDID_INFO, or possibly "depends on FIRMWARE_EDID || EFI"
+after it starts calling into an EFI specific function, right?
 
-Thanks,
+> #ifdef VIDEO_SCREEN_INFO
+> struct screen_info screen_info = {
+> 	/* set values here */
+> }
+> #endif
+>
+> This allows us to disable code that requires screen_info/edid_info, but 
+> also disable screen_info/edid_info unless such code has been enabled in 
+> the kernel config.
+>
+> Some architectures currently mimic this by guarding screen_info with 
+> ifdef CONFIG_VT or similar. I'd like to make this more flexible. The 
+> cost of a few more internal Kconfig tokens seems negligible.
 
-Paolo
+I definitely get it for the screen_info, which needs the complexity.
+For ARCHARCH_HAS_EDID_INFO I would hope that it's never selected by
+anything other than x86, so I would still go with just a dependency
+on x86 for simplicity, but I don't mind having the extra symbol if that
+keeps it more consistent with how the screen_info is handled.
 
+>> I suppose you could use FIRMWARE_EDID on EFI or OF systems without
+>> the need for a global edid_info structure, but that would not
+>> share any code with the current fb_firmware_edid() function.
+>
+> The current code is build on top of screen_info and edid_info. I'd 
+> preferably not replace that, if possible.
+
+One way I could imagine this looking in the end would be
+something like
+
+struct screen_info *fb_screen_info(struct device *dev)
+{
+      struct screen_info *si = NULL;
+
+      if (IS_ENABLED(CONFIG_EFI))
+            si = efi_get_screen_info(dev);
+
+      if (IS_ENABLED(CONFIG_ARCH_HAS_SCREEN_INFO) && !si)
+            si = screen_info;
+
+      return si;
+}
+
+corresponding to fb_firmware_edid(). With this, any driver
+that wants to access screen_info would call this function
+instead of using the global pointer, plus either NULL pointer
+check or a CONFIG_ARCH_HAS_SCREEN_INFO dependency.
+
+This way we could completely eliminate the global screen_info
+on arm64, riscv, and loongarch but still use the efi and
+hyperv framebuffer/drm drivers.
+
+    Arnd
