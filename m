@@ -2,118 +2,118 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 191F774854E
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jul 2023 15:45:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 899387485A0
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jul 2023 16:02:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231213AbjGENpY (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jul 2023 09:45:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49622 "EHLO
+        id S232126AbjGEOCx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jul 2023 10:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbjGENpW (ORCPT
+        with ESMTP id S231865AbjGEOCv (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jul 2023 09:45:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D667319AF
-        for <linux-hyperv@vger.kernel.org>; Wed,  5 Jul 2023 06:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688564659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=T+o2RTG0Hb65gnco//4sOAJzUPOXWOr/LTu5B+NLPrw=;
-        b=d5J+DoqWckaRpbZQsVgF6QpfsM9si5lYjHctRoNLFT5xwvo4NVepIwnPGi/0kZZBorMAM9
-        JaOW1fRkdgUd04r0ZLm0lADPvaciEPYSG7wM60xt6h2tEGZJWXHbIPpd8onDsUX3JfvWT3
-        vIm3qyAO3WdStLhiYsSlAvYGDnA5Gj0=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-568-kQBTNDd4MzS0QHoQv4QKAg-1; Wed, 05 Jul 2023 09:44:17 -0400
-X-MC-Unique: kQBTNDd4MzS0QHoQv4QKAg-1
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-560c7abdbdcso5173450eaf.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Jul 2023 06:44:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688564657; x=1691156657;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T+o2RTG0Hb65gnco//4sOAJzUPOXWOr/LTu5B+NLPrw=;
-        b=CM4LOi1HGJO0b59+MdjZhlwUr1J8RxIW5DcUYkpWhbmOqehEOzueHVHVbFyJj16+bY
-         FS5lugAoGI3joPDZ7GtB5ahe6I+XQGv3VMSuYszpEHTmMIzlvJcOd1+OTVWEGAt75DB8
-         bU/8oRkEZWD2wXOLZPAykkWhmh/1BQ4p+y4EOGbmdvwoT7N70XOVX00hC2zwVQS9addU
-         hIkmwtRNQyNFPgrcXNvi/7XVWmivLZSYzM6PwKqMuhdbjZ3h/fJ6V7bBE38UUV5M7O9a
-         tCeYWMrX8xo6plofVc6LMImz6ifg4Rm6l74zRivqnuCqFDOmvqWnrLMVjE0YUENJ73a9
-         fwtQ==
-X-Gm-Message-State: ABy/qLYGSYlpB6MK5nZdCmFOMVLWmK6rwZPnPhwexDG45SYY7f9DsYv9
-        hVHc63Z4hgfNK130IZ1/Ff3IJUuvyyO2CdE+w+BcnpgqcEPHj6aUPPiyUmsI3tRsypKk3m8fiWT
-        Psbfvmrso8WtnZCxnf4+gpCvC
-X-Received: by 2002:a05:6358:ce2f:b0:135:24ed:5108 with SMTP id gt47-20020a056358ce2f00b0013524ed5108mr3704007rwb.10.1688564656767;
-        Wed, 05 Jul 2023 06:44:16 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlFGE0zZqSbKFgTrY3B/H+Rx4zZXdmwzYAHOS/f6BcW3q/kf/NXLDYjZFmgseUK8rdA7x+IOmA==
-X-Received: by 2002:a05:6358:ce2f:b0:135:24ed:5108 with SMTP id gt47-20020a056358ce2f00b0013524ed5108mr3703995rwb.10.1688564656468;
-        Wed, 05 Jul 2023 06:44:16 -0700 (PDT)
-Received: from localhost.localdomain ([115.96.119.220])
-        by smtp.googlemail.com with ESMTPSA id v29-20020a63481d000000b00553d27ab0e0sm17550034pga.69.2023.07.05.06.44.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 06:44:15 -0700 (PDT)
-From:   Ani Sinha <anisinha@redhat.com>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Wed, 5 Jul 2023 10:02:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB6211B;
+        Wed,  5 Jul 2023 07:02:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AC71A61568;
+        Wed,  5 Jul 2023 14:02:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4E5C433C7;
+        Wed,  5 Jul 2023 14:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688565769;
+        bh=8Pv519rVX2nyzfcP+WWJAfxHrjLTPQrVejjsds7b0e8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bTRx9QYeOOUu652xyFmZdnhpFBlT1LXlf0Ecjj9AqPmaZ+k4P5cbVpk6enhALEj+4
+         a++Be9rRcL1yiFdllRaQpJkGq+/dACPEV0zCo8uGcqIMkwlkcT4Ast+4B3zEqtA1my
+         1yBNwB/rHhuV7+nPSGNDHyjhl1Y31bpbXvZr1mlYn5elxSVYB5RM2nn4wn9qN5bmxL
+         FhXk8K0TM+LeSS3LrDieZiEoszeAJyznP28Jfz7n7JlnTk3REgjOePQES9Lrc3TQHq
+         SlhmZXawVNCyXfrzkOfyjPxviE83s/157jrxJcl8wZPOP79iNgmJs7hVoxKps5UvLW
+         XTlf78IsOIZ2w==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-Cc:     Ani Sinha <anisinha@redhat.com>, linux-hyperv@vger.kernel.org,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dawei Li <set_pte_at@outlook.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        linux-hyperv@vger.kernel.org, linux-input@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] vmbus_testing: fix wrong python syntax for integer value comparison
-Date:   Wed,  5 Jul 2023 19:14:07 +0530
-Message-Id: <20230705134408.6302-1-anisinha@redhat.com>
-X-Mailer: git-send-email 2.39.1
+Subject: [PATCH] HID: hyperv: avoid struct memcpy overrun warning
+Date:   Wed,  5 Jul 2023 16:02:24 +0200
+Message-Id: <20230705140242.844167-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-It is incorrect in python to compare integer values using the "is" keyword.
-The "is" keyword in python is used to compare references to two objects,
-not their values. Newer version of python3 (version 3.8) throws a warning
-when such incorrect comparison is made. For value comparison, "==" should
-be used.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Fix this in the code and suppress the following warning:
+A previous patch addressed the fortified memcpy warning for most
+builds, but I still see this one with gcc-9:
 
-/usr/sbin/vmbus_testing:167: SyntaxWarning: "is" with a literal. Did you mean "=="?
+In file included from include/linux/string.h:254,
+                 from drivers/hid/hid-hyperv.c:8:
+In function 'fortify_memcpy_chk',
+    inlined from 'mousevsc_on_receive' at drivers/hid/hid-hyperv.c:272:3:
+include/linux/fortify-string.h:583:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+  583 |    __write_overflow_field(p_size_field, size);
+      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Signed-off-by: Ani Sinha <anisinha@redhat.com>
+My guess is that the WARN_ON() itself is what confuses gcc, so it no
+longer sees that there is a correct range check. Rework the code in a
+way that helps readability and avoids the warning.
+
+Fixes: 542f25a944715 ("HID: hyperv: Replace one-element array with flexible-array member")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- tools/hv/vmbus_testing | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-hyperv.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/tools/hv/vmbus_testing b/tools/hv/vmbus_testing
-index e7212903dd1d..4467979d8f69 100755
---- a/tools/hv/vmbus_testing
-+++ b/tools/hv/vmbus_testing
-@@ -164,7 +164,7 @@ def recursive_file_lookup(path, file_map):
- def get_all_devices_test_status(file_map):
+diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+index 49d4a26895e76..f33485d83d24f 100644
+--- a/drivers/hid/hid-hyperv.c
++++ b/drivers/hid/hid-hyperv.c
+@@ -258,19 +258,17 @@ static void mousevsc_on_receive(struct hv_device *device,
  
-         for device in file_map:
--                if (get_test_state(locate_state(device, file_map)) is 1):
-+                if (get_test_state(locate_state(device, file_map)) == 1):
-                         print("Testing = ON for: {}"
-                               .format(device.split("/")[5]))
-                 else:
-@@ -203,7 +203,7 @@ def write_test_files(path, value):
- def set_test_state(state_path, state_value, quiet):
+ 	switch (hid_msg_hdr->type) {
+ 	case SYNTH_HID_PROTOCOL_RESPONSE:
++		len = struct_size(pipe_msg, data, pipe_msg->size);
++
+ 		/*
+ 		 * While it will be impossible for us to protect against
+ 		 * malicious/buggy hypervisor/host, add a check here to
+ 		 * ensure we don't corrupt memory.
+ 		 */
+-		if (struct_size(pipe_msg, data, pipe_msg->size)
+-			> sizeof(struct mousevsc_prt_msg)) {
+-			WARN_ON(1);
++		if (WARN_ON(len > sizeof(struct mousevsc_prt_msg)))
+ 			break;
+-		}
  
-         write_test_files(state_path, state_value)
--        if (get_test_state(state_path) is 1):
-+        if (get_test_state(state_path) == 1):
-                 if (not quiet):
-                         print("Testing = ON for device: {}"
-                               .format(state_path.split("/")[5]))
+-		memcpy(&input_dev->protocol_resp, pipe_msg,
+-				struct_size(pipe_msg, data, pipe_msg->size));
++		memcpy(&input_dev->protocol_resp, pipe_msg, len);
+ 		complete(&input_dev->wait_event);
+ 		break;
+ 
 -- 
-2.39.1
+2.39.2
 
