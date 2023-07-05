@@ -2,142 +2,131 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE27747EE8
-	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jul 2023 10:03:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B802747F2B
+	for <lists+linux-hyperv@lfdr.de>; Wed,  5 Jul 2023 10:16:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231638AbjGEID2 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 5 Jul 2023 04:03:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35628 "EHLO
+        id S232453AbjGEIQT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 5 Jul 2023 04:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231992AbjGEID1 (ORCPT
+        with ESMTP id S232446AbjGEIQS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 5 Jul 2023 04:03:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8311989
-        for <linux-hyperv@vger.kernel.org>; Wed,  5 Jul 2023 01:02:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688544151;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XDgcQtPSCk85F9YjOuVpAuyCl327gSG/7+9nyPHiobU=;
-        b=HVNH53ZDOszA2ZQz3FXyXsIdeqgezqU0uNVYe9yOyAHL6wluM2dvAM16LhKgyJWDFGOQmn
-        tb2JRp6RWWHzNzPXI9PkC+ELtVg840KchYLERyVasoxVVEy+OMxCArJ6ecJOa0Aa21JF+6
-        cOz8UIM1odQz1gioutujRaqMF28O6Tc=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-se9O0876P_-NgCYvYNU6UQ-1; Wed, 05 Jul 2023 04:02:30 -0400
-X-MC-Unique: se9O0876P_-NgCYvYNU6UQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-3fbe356b8deso7664795e9.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 05 Jul 2023 01:02:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688544149; x=1691136149;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XDgcQtPSCk85F9YjOuVpAuyCl327gSG/7+9nyPHiobU=;
-        b=Ub2Ca0Xfj5Q39vzKGgERTEbkuI8xGn4SycQ0UMghLXIt4w9+RtVgOgRUQmRxa52axs
-         hRu8DvN5ajnWjIte5hYARrRHkLpx55//usheMhd3E0nf/qtnLb3nh7WHpSS8BwheQnVj
-         TFHXeIr+Ur+p3r3TJkBWETyuiCBZgiDyM7r5GqN2v0omDzlfuSBzbVeNSTy3lOfqyyPt
-         W/YcSDhTz5pcQsiHauZgpI2ZpgZrCOMyMnHFTOVDgoyN73yqGrklEYXwtAk431SkUz5r
-         GJyBX8t8uq1ju4L7NHQSx1TISJ0ac4CmuY5a7O0JO405YH1wuuZhUJeVN1xt9zCiWy4Y
-         4xyA==
-X-Gm-Message-State: AC+VfDzilEo1ZCLiCtHo1/Se8VZ0OANW1aikhy0Cjd3HJ+9qRu+owYWr
-        KydeivUL8NXbrn1GuVr3fItn4mJFEPBSbVVEWn3b44Fp9KkBOOBjIBIH8Q/PAvoEoSDJj2/B3H2
-        fMRZ90jLTabRav2e0rDUmeN1q
-X-Received: by 2002:a05:600c:b54:b0:3f5:ffe3:46a7 with SMTP id k20-20020a05600c0b5400b003f5ffe346a7mr12254766wmr.9.1688544149339;
-        Wed, 05 Jul 2023 01:02:29 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4vylDlXvfuU9EWjWb12pZMcRCpkOIK+1WjIMZRSIYzVmT0WCKJ1Gd1jMG8KQnYrrWHnxleng==
-X-Received: by 2002:a05:600c:b54:b0:3f5:ffe3:46a7 with SMTP id k20-20020a05600c0b5400b003f5ffe346a7mr12254706wmr.9.1688544148234;
-        Wed, 05 Jul 2023 01:02:28 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id x8-20020a5d4908000000b0031432c2fb95sm8956824wrq.88.2023.07.05.01.02.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 01:02:27 -0700 (PDT)
-From:   Javier Martinez Canillas <javierm@redhat.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
-        deller@gmx.de, daniel@ffwll.ch, airlied@gmail.com
-Cc:     linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mips@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-csky@vger.kernel.org, Antonino Daplas <adaplas@gmail.com>,
-        Maik Broemme <mbroemme@libmpq.org>, loongarch@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 10/12] fbdev/core: Use fb_is_primary_device() in
- fb_firmware_edid()
-In-Reply-To: <20230629121952.10559-11-tzimmermann@suse.de>
-References: <20230629121952.10559-1-tzimmermann@suse.de>
- <20230629121952.10559-11-tzimmermann@suse.de>
-Date:   Wed, 05 Jul 2023 10:02:27 +0200
-Message-ID: <878rbuss4s.fsf@minerva.mail-host-address-is-not-set>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Wed, 5 Jul 2023 04:16:18 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3598E1709;
+        Wed,  5 Jul 2023 01:16:17 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+        id 6B27B20A1043; Wed,  5 Jul 2023 01:16:16 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6B27B20A1043
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1688544976;
+        bh=WbiYtCCkfhxy2EY5js2nXgs66lTqxblIFI1ejNxQRPc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=scSfyhRTze3AHlBP9Vv0lBFdiZGT/u683sHmKUvnmvqpfkrSOrAsuFbTLSAJ90qyC
+         BHwcyQavvZSqPT1fSBsXFR5DgKoz1arui0ECqrj69rN9LH7jGEZ3Ot/vuxdenE/3C1
+         AhjBq2JrCi/duD+KPEATi5hKhnZ1UNpnkb/f0Kx8=
+From:   Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
+        sharmaajay@microsoft.com, leon@kernel.org, cai.huoqing@linux.dev,
+        ssengar@linux.microsoft.com, vkuznets@redhat.com,
+        tglx@linutronix.de, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     stable@vger.kernel.org, schakrabarti@microsoft.com,
+        Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Subject: [PATCH V5 net] net: mana: Fix MANA VF unload when hardware is unresponsive
+Date:   Wed,  5 Jul 2023 01:16:13 -0700
+Message-Id: <1688544973-2507-1-git-send-email-schakrabarti@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
+When unloading the MANA driver, mana_dealloc_queues() waits for the MANA
+hardware to complete any inflight packets and set the pending send count
+to zero. But if the hardware has failed, mana_dealloc_queues()
+could wait forever.
 
-> Detect the primary VGA device with fb_is_primary_device() in the
-> implementation of fb_firmware_edid(). Remove the existing code.
->
+Fix this by adding a timeout to the wait. Set the timeout to 120 seconds,
+which is a somewhat arbitrary value that is more than long enough for
+functional hardware to complete any sends.
 
-An explanation about why this is possible would be useful here.
+Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+---
+V4 -> V5:
+* Added fixes tag
+* Changed the usleep_range from static to incremental value.
+* Initialized timeout in the begining.
+---
+Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 30 ++++++++++++++++---
+ 1 file changed, 26 insertions(+), 4 deletions(-)
 
-> Adapt the function to receive an instance of struct fb_info and
-> update all callers.
->
-
-[...]
-
-> -const unsigned char *fb_firmware_edid(struct device *device)
-> +const unsigned char *fb_firmware_edid(struct fb_info *info)
->  {
-> -	struct pci_dev *dev = NULL;
-> -	struct resource *res = NULL;
->  	unsigned char *edid = NULL;
->  
-> -	if (device)
-> -		dev = to_pci_dev(device);
-> -
-> -	if (dev)
-> -		res = &dev->resource[PCI_ROM_RESOURCE];
-> -
-> -	if (res && res->flags & IORESOURCE_ROM_SHADOW)
-
-This open codes what used to be the fb_is_primary_device() logic before
-commit 5ca1479cd35d ("fbdev: Simplify fb_is_primary_device for x86").
-But now after that commit there is functional change since the ROM
-shadowing check would be dropped.
-
-I believe that's OK and Sima explains in their commit message that
-vga_default_device() should be enough and the check is redundant.
-
-Still, I think that this change should be documented in your commit
-message. 
-
-With that change,
-
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index a499e460594b..56b7074db1a2 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2345,9 +2345,13 @@ int mana_attach(struct net_device *ndev)
+ static int mana_dealloc_queues(struct net_device *ndev)
+ {
+ 	struct mana_port_context *apc = netdev_priv(ndev);
++	unsigned long timeout = jiffies + 120 * HZ;
+ 	struct gdma_dev *gd = apc->ac->gdma_dev;
+ 	struct mana_txq *txq;
++	struct sk_buff *skb;
++	struct mana_cq *cq;
+ 	int i, err;
++	u32 tsleep;
+ 
+ 	if (apc->port_is_up)
+ 		return -EINVAL;
+@@ -2363,15 +2367,33 @@ static int mana_dealloc_queues(struct net_device *ndev)
+ 	 * to false, but it doesn't matter since mana_start_xmit() drops any
+ 	 * new packets due to apc->port_is_up being false.
+ 	 *
+-	 * Drain all the in-flight TX packets
++	 * Drain all the in-flight TX packets.
++	 * A timeout of 120 seconds for all the queues is used.
++	 * This will break the while loop when h/w is not responding.
++	 * This value of 120 has been decided here considering max
++	 * number of queues.
+ 	 */
++
+ 	for (i = 0; i < apc->num_queues; i++) {
+ 		txq = &apc->tx_qp[i].txq;
+-
+-		while (atomic_read(&txq->pending_sends) > 0)
+-			usleep_range(1000, 2000);
++		tsleep = 1000;
++		while (atomic_read(&txq->pending_sends) > 0 &&
++		       time_before(jiffies, timeout)) {
++			usleep_range(tsleep, tsleep << 1);
++			tsleep <<= 1;
++		}
+ 	}
+ 
++	for (i = 0; i < apc->num_queues; i++) {
++		txq = &apc->tx_qp[i].txq;
++		cq = &apc->tx_qp[i].tx_cq;
++		while (atomic_read(&txq->pending_sends)) {
++			skb = skb_dequeue(&txq->pending_skbs);
++			mana_unmap_skb(skb, apc);
++			dev_consume_skb_any(skb);
++			atomic_sub(1, &txq->pending_sends);
++		}
++	}
+ 	/* We're 100% sure the queues can no longer be woken up, because
+ 	 * we're sure now mana_poll_tx_cq() can't be running.
+ 	 */
 -- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+2.34.1
 
