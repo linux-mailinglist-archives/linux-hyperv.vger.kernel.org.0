@@ -2,81 +2,72 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05137749756
-	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jul 2023 10:19:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A18E97498E9
+	for <lists+linux-hyperv@lfdr.de>; Thu,  6 Jul 2023 12:02:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232144AbjGFITv (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 6 Jul 2023 04:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43154 "EHLO
+        id S230087AbjGFKCp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 6 Jul 2023 06:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231773AbjGFITs (ORCPT
+        with ESMTP id S231773AbjGFKCg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 6 Jul 2023 04:19:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04AB19B7
-        for <linux-hyperv@vger.kernel.org>; Thu,  6 Jul 2023 01:19:01 -0700 (PDT)
+        Thu, 6 Jul 2023 06:02:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5D4E3
+        for <linux-hyperv@vger.kernel.org>; Thu,  6 Jul 2023 03:01:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688631541;
+        s=mimecast20190719; t=1688637711;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lx+lBJ29CFsk81sGY8QIW/lXN8O5LUUJoAktsDtK8dk=;
-        b=AdtHj49xyhjdVnPT5qVMWEo1VxzJ/ioaPxBJBZiIuuMKPrdb0f0kSqA2GBZPdFfBHoXY5M
-        QigwsqVLas+tnk/56sXt5+reR8L/CAgTB59LKuXkyX27CDA/8N3apvwVRdO9p6GeZjK3m2
-        Pqkuy+OSW/y80IA6/YBGLvET2Xt2jN8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=PFB/bHaV+5S4HNAEYX/AEdRm3PBRbuuOs/N7fpLg5iE=;
+        b=hKw1k4X7OtdOsb8IlPWp/krUxNJCPDcMl2THTnD/JQDIDIqEe4jSI/J7Yz18cmLYiPKypi
+        EDb7CnWlLlPCgDjAAtJ5IMW1e6q3sKSGMMt8J+WE4t0IN2A4Y3XQ98j3zEsUCezK0tN6Kr
+        G01gBm5htE8Ppf44EOCIk38faQUsR30=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-325-00_z0t3gOnWtBdvyu6FnYQ-1; Thu, 06 Jul 2023 04:18:59 -0400
-X-MC-Unique: 00_z0t3gOnWtBdvyu6FnYQ-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-765ad67e690so11744285a.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 06 Jul 2023 01:18:59 -0700 (PDT)
+ us-mta-264-RFNwxjPEMZKRo_n6yZOXug-1; Thu, 06 Jul 2023 06:01:50 -0400
+X-MC-Unique: RFNwxjPEMZKRo_n6yZOXug-1
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-5704995f964so6055167b3.2
+        for <linux-hyperv@vger.kernel.org>; Thu, 06 Jul 2023 03:01:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688631539; x=1691223539;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lx+lBJ29CFsk81sGY8QIW/lXN8O5LUUJoAktsDtK8dk=;
-        b=ZlmToOBo2ws5ZLO524GhLtMJnxjswFtqNW9jZY3eMEuyanvx1zssre/pLbsvgy+Nm9
-         ug19oOVMz1rdWi6pW+OIu9lQSQiUZZRtCHpc4gSaLpTzp71ElElM75hD3YUp1Pb+XNFF
-         u+yFdf8RtSSx4FIz0drzjd62XdbgS3VwNWqv8qmW5aqFqFOEpwXrkxG2yzFA3Bz1Pqut
-         h8rtOF84Gmv1ROhfde4m64JiSF2LvAcMYDsQLXyo3niQWAVlBycqzNfDosN6jkTOb6OJ
-         4QBINVv7oTcv+MwuQVPvfWUFeNqV9VQ4Hyx9VSNA3FDtBpFuRIkgi3nIlkE/cu+a/IcR
-         FGgg==
-X-Gm-Message-State: ABy/qLbM56HxTaiO1ho8aZM283DlHeroP4eDI2425J/ZxKRHmVDuiZOv
-        Er5foDaBcYQE2AK4PUPFS2FTapnwesPMvt+xPqqjt/3aBvHD4YFRoknPEe1O6LQBB7cpJbMfNVe
-        LRGFzKcmg/c2JtUpFg660zbTH
-X-Received: by 2002:a05:6214:411c:b0:62b:5410:322d with SMTP id kc28-20020a056214411c00b0062b5410322dmr1222405qvb.6.1688631539315;
-        Thu, 06 Jul 2023 01:18:59 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHlIzKkGbc7Mhe75o6I7OvXujWZEcDlXrKdSN6nbMjmBM78UrxpGipZsStzvrEN62Vz4TceNw==
-X-Received: by 2002:a05:6214:411c:b0:62b:5410:322d with SMTP id kc28-20020a056214411c00b0062b5410322dmr1222386qvb.6.1688631538999;
-        Thu, 06 Jul 2023 01:18:58 -0700 (PDT)
-Received: from gerbillo.redhat.com (host-95-248-55-118.retail.telecomitalia.it. [95.248.55.118])
-        by smtp.gmail.com with ESMTPSA id e4-20020a0caa44000000b006300e92ea02sm591634qvb.121.2023.07.06.01.18.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jul 2023 01:18:58 -0700 (PDT)
-Message-ID: <062d9a4a0ec07e0c498fb7c6b8aab9d27177b21a.camel@redhat.com>
-Subject: Re: [PATCH V5 net] net: mana: Fix MANA VF unload when hardware is
- unresponsive
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, longli@microsoft.com, sharmaajay@microsoft.com,
-        leon@kernel.org, cai.huoqing@linux.dev,
-        ssengar@linux.microsoft.com, vkuznets@redhat.com,
-        tglx@linutronix.de, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     stable@vger.kernel.org, schakrabarti@microsoft.com
-Date:   Thu, 06 Jul 2023 10:18:51 +0200
-In-Reply-To: <1688544973-2507-1-git-send-email-schakrabarti@linux.microsoft.com>
-References: <1688544973-2507-1-git-send-email-schakrabarti@linux.microsoft.com>
+        d=1e100.net; s=20221208; t=1688637709; x=1691229709;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PFB/bHaV+5S4HNAEYX/AEdRm3PBRbuuOs/N7fpLg5iE=;
+        b=I1+WCx5scWnn943pRirA6kkee8y3HPQDxEPnD6BLamS1oRKzoIm+VTuRSwoScS+iVP
+         quEu23jynNoQGPpWg75kbhawsG3u0saHdn9T1FDagK0G9CWN+qUsL3a8vut8XcbFejIa
+         0NciHirfmhCsT8Ij1ys03VbnIJ1QL/V0fW5ZyNu83k33bIkA6dYlzY7VxpbgYpd3mTRA
+         SwzopxV2v6b/1IX7m4aFNl7P0oLmzC3yGQLoKwCott+Os+IE8rkUPGUwmwnVmqhLyqxI
+         OwM1ZC8mRXhFM9/qkQvgGWMcalWvYwU32boHbYMs3tBHIfkvI2sn79YwDWVOxz7iJ/MF
+         e8MQ==
+X-Gm-Message-State: ABy/qLY8UQ2bqlPTN8v8Zge1D5WWJSPLpJxXzdQxLNStixP8LHCBE3BH
+        NwOgIlbdhD9jaxQhIrgacl2pDeVU0pQprtr4FD4MEO5wUEKMlb6i/NIU/34kc65m/LGT8a6lxro
+        DAOWRrg+Y/zZOJ9yfipMXRbLj19Ls81C0PGfugrC5
+X-Received: by 2002:a81:8384:0:b0:56d:c97:39f4 with SMTP id t126-20020a818384000000b0056d0c9739f4mr1424688ywf.8.1688637709731;
+        Thu, 06 Jul 2023 03:01:49 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHnS8DTGuBigSC1cOUEhrHGP3AjZEn+XIDZR976mIx9TGjJA3wYtGsoU6qHdLxp+gcwyMWCUHKwipRzaY/ylEo=
+X-Received: by 2002:a81:8384:0:b0:56d:c97:39f4 with SMTP id
+ t126-20020a818384000000b0056d0c9739f4mr1424668ywf.8.1688637709450; Thu, 06
+ Jul 2023 03:01:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230704234532.532c8ee7.gary@garyguo.net>
+In-Reply-To: <20230704234532.532c8ee7.gary@garyguo.net>
+From:   Stefano Garzarella <sgarzare@redhat.com>
+Date:   Thu, 6 Jul 2023 12:01:38 +0200
+Message-ID: <CAGxU2F4_br6e3hEELXP_wpQSZTs5FYhQ-iahiZKzMMRYWpFXdA@mail.gmail.com>
+Subject: Re: Hyper-V vsock streams do not fill the supplied buffer in full
+To:     Gary Guo <gary@garyguo.net>, Dexuan Cui <decui@microsoft.com>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
-MIME-Version: 1.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -87,89 +78,59 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, 2023-07-05 at 01:16 -0700, Souradeep Chakrabarti wrote:
-> When unloading the MANA driver, mana_dealloc_queues() waits for the MANA
-> hardware to complete any inflight packets and set the pending send count
-> to zero. But if the hardware has failed, mana_dealloc_queues()
-> could wait forever.
->=20
-> Fix this by adding a timeout to the wait. Set the timeout to 120 seconds,
-> which is a somewhat arbitrary value that is more than long enough for
-> functional hardware to complete any sends.
->=20
-> Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network=
- Adapter (MANA)")
-> ---
-> V4 -> V5:
-> * Added fixes tag
-> * Changed the usleep_range from static to incremental value.
-> * Initialized timeout in the begining.
-> ---
-> Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Hi Gary,
 
-the changelog should come after the SoB tag, and there should be no '--
-- ' separator before the SoB.
+On Wed, Jul 5, 2023 at 12:45=E2=80=AFAM Gary Guo <gary@garyguo.net> wrote:
+>
+> When a vsock stream is called with recvmsg with a buffer, it only fills
+> the buffer with data from the first single VM packet. Even if there are
+> more VM packets at the time and the buffer is still not completely
+> filled, it will just leave the buffer partially filled.
+>
+> This causes some issues when in WSLD which uses the vsock in
+> non-blocking mode and uses epoll.
+>
+> For stream-oriented sockets, the epoll man page [1] says that
+>
+> > For stream-oriented files (e.g., pipe, FIFO, stream socket),
+> > the condition that the read/write I/O space is exhausted can
+> > also be detected by checking the amount of data read from /
+> > written to the target file descriptor.  For example, if you
+> > call read(2) by asking to read a certain amount of data and
+> > read(2) returns a lower number of bytes, you can be sure of
+> > having exhausted the read I/O space for the file descriptor.
+>
+> This has been used as an optimisation in the wild for reducing number
+> of syscalls required for stream sockets (by asserting that the socket
+> will not have to polled to EAGAIN in edge-trigger mode, if the buffer
+> given to recvmsg is not filled completely). An example is Tokio, which
+> starting in v1.21.0 [2].
+>
+> When this optimisation combines with the behaviour of Hyper-V vsock, it
+> causes issue in this scenario:
+> * the VM host send data to the guest, and it's splitted into multiple
+>   VM packets
+> * sk_data_ready is called and epoll returns, notifying the userspace
+>   that the socket is ready
+> * userspace call recvmsg with a buffer, and it's partially filled
+> * userspace assumes that the stream socket is depleted, and if new data
+>   arrives epoll will notify it again.
+> * kernel always considers the socket to be ready, and since it's in
+>   edge-trigger mode, the epoll instance will never be notified again.
+>
+> This different realisation of the readiness causes the userspace to
+> block forever.
 
-Please double-check your patch with the checkpatch script before the
-next submission, it should catch trivial issues as the above one.
+Thanks for the detailed description of the problem.
 
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 30 ++++++++++++++++---
->  1 file changed, 26 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/=
-ethernet/microsoft/mana/mana_en.c
-> index a499e460594b..56b7074db1a2 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -2345,9 +2345,13 @@ int mana_attach(struct net_device *ndev)
->  static int mana_dealloc_queues(struct net_device *ndev)
->  {
->  	struct mana_port_context *apc =3D netdev_priv(ndev);
-> +	unsigned long timeout =3D jiffies + 120 * HZ;
->  	struct gdma_dev *gd =3D apc->ac->gdma_dev;
->  	struct mana_txq *txq;
-> +	struct sk_buff *skb;
-> +	struct mana_cq *cq;
->  	int i, err;
-> +	u32 tsleep;
-> =20
->  	if (apc->port_is_up)
->  		return -EINVAL;
-> @@ -2363,15 +2367,33 @@ static int mana_dealloc_queues(struct net_device =
-*ndev)
->  	 * to false, but it doesn't matter since mana_start_xmit() drops any
->  	 * new packets due to apc->port_is_up being false.
->  	 *
-> -	 * Drain all the in-flight TX packets
-> +	 * Drain all the in-flight TX packets.
-> +	 * A timeout of 120 seconds for all the queues is used.
-> +	 * This will break the while loop when h/w is not responding.
-> +	 * This value of 120 has been decided here considering max
-> +	 * number of queues.
->  	 */
-> +
->  	for (i =3D 0; i < apc->num_queues; i++) {
->  		txq =3D &apc->tx_qp[i].txq;
-> -
-> -		while (atomic_read(&txq->pending_sends) > 0)
-> -			usleep_range(1000, 2000);
-> +		tsleep =3D 1000;
-> +		while (atomic_read(&txq->pending_sends) > 0 &&
-> +		       time_before(jiffies, timeout)) {
-> +			usleep_range(tsleep, tsleep << 1);
-> +			tsleep <<=3D 1;
-> +		}
->  	}
-> =20
-> +	for (i =3D 0; i < apc->num_queues; i++) {
-> +		txq =3D &apc->tx_qp[i].txq;
-> +		cq =3D &apc->tx_qp[i].tx_cq;
+I think we should fix the hvs_stream_dequeue() in
+net/vmw_vsock/hyperv_transport.c.
+We can do something similar to what we do in
+virtio_transport_stream_do_dequeue() in
+net/vmw_vsock/virtio_transport_common.c
 
-The above variable is unused, and causes a build warning. Please remove
-the assignment and the variable declaration.
+@Dexuan WDYT?
 
 Thanks,
-
-Paolo
+Stefano
 
