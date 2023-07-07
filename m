@@ -2,34 +2,34 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43BDA74AF0E
-	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jul 2023 12:51:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BDF674AF12
+	for <lists+linux-hyperv@lfdr.de>; Fri,  7 Jul 2023 12:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbjGGKv5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 7 Jul 2023 06:51:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51616 "EHLO
+        id S232543AbjGGKwC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 7 Jul 2023 06:52:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232799AbjGGKvr (ORCPT
+        with ESMTP id S232900AbjGGKvt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 7 Jul 2023 06:51:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC341FEE;
-        Fri,  7 Jul 2023 03:51:31 -0700 (PDT)
+        Fri, 7 Jul 2023 06:51:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40EE92114;
+        Fri,  7 Jul 2023 03:51:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 39E9A618F4;
-        Fri,  7 Jul 2023 10:51:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABADC433C8;
-        Fri,  7 Jul 2023 10:51:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CA1A8616E2;
+        Fri,  7 Jul 2023 10:51:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BE0C433C7;
+        Fri,  7 Jul 2023 10:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1688727090;
+        s=korg; t=1688727107;
         bh=dMjQvPWxzVC76cHGIJsn2XnTQOoQzkZMZV+Gp6SjNoc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DzXWq+TsLd9+UoSFGQPsmq3hgM4LcY9udSFATS9UWuXZiFNJWyB3yGhLH7RM4CS3l
-         9KnIQzdut1CSiROHnyHybMwykGtwNtpvZxhABiQgFqpj9OjaVHaGo2rnD77OuC49hV
-         1TRpdcEC8jDYEl6uSbrXQ3usPjzg2JnOKsHPoT34=
+        b=sJFPhtdyKU1Pv9meWkgz+GxiE3dvLlcPVaWOk3l6v6zsvCro5YoFy0HKBQ3XH/rOh
+         pV3qhrLRfJivF21FL2R058gRLFnLm27oWyYbtdsarzoIVXXQ21T4v/bXXBB69rxVqY
+         NYYVD57ow8ftnjQCIA5vrdOfUdF2hZdA1Xv4NW0w=
 Date:   Fri, 7 Jul 2023 11:16:07 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
@@ -49,10 +49,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <1688723128-14878-1-git-send-email-schakrabarti@linux.microsoft.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
