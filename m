@@ -2,41 +2,76 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C31750DB8
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jul 2023 18:13:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56F287510D3
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jul 2023 21:00:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231309AbjGLQNN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Jul 2023 12:13:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47490 "EHLO
+        id S230108AbjGLTAd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Jul 2023 15:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233538AbjGLQNG (ORCPT
+        with ESMTP id S229446AbjGLTAc (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Jul 2023 12:13:06 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740FB1FE1
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 09:12:45 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qJcQH-0000ws-J6; Wed, 12 Jul 2023 18:10:37 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qJcQ7-00DvHU-NY; Wed, 12 Jul 2023 18:10:27 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qJcQ6-004LMY-OR; Wed, 12 Jul 2023 18:10:26 +0200
-Date:   Wed, 12 Jul 2023 18:10:25 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        Wed, 12 Jul 2023 15:00:32 -0400
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D28EA
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 12:00:27 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-7835ae70e46so251354339f.3
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 12:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1689188426; x=1691780426;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rTThceHWQZD4Ac2XfATsHd8gywiOPtbGgdMtmxYrl6g=;
+        b=Gk1ElV6FWuyCjz4OM+tZP9ox71mTshMdFokbxgmhOjky0jYb4U8Lmj70aXdZt/jaMB
+         gW801CTEqkOHuPJL1DFkVYmqPSv3TZtMOs+GEDTRA0UfoG0VQaHtCcLijnuvur9K0VMc
+         P4ZMS9CDTDyWmf6SrYwH+jh14ogYv+6e81SN0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689188426; x=1691780426;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rTThceHWQZD4Ac2XfATsHd8gywiOPtbGgdMtmxYrl6g=;
+        b=TOKYPEVUtrxAajRmEu9tPjbqM+FArkWmgEOqXkYAzUdMGFvmSuOzePBVJ8jgc7CS0c
+         IAt1nDfajAptPwXT9eSzvqVZ4V1xKRIR61sokHtu7IjRlD6LFoZ+gUIsK0IwcXvii4Vk
+         4J/fc9FFd2kmTqvCxNm4XGqVbAuyHxtvo5Dwxd1JJc80Z5cVISJJMoIERPoIi6imMOe/
+         kGuZdPjh7y3ZMDK+MJR1pX0k1IYlcUzQRem4gHs7BoqB0gMLPslq+/OaSjUs+UC6dhf4
+         iOi1RPtDzEJweffcri+hfUdpw/W6XD+Nv6qfuLKFIKtqdnwECZ7IwZIrArJngctV2YhP
+         NSpQ==
+X-Gm-Message-State: ABy/qLbzeDeVvUEYRmjiwBfZmlFMbbFpS+NeSl/P/D4okHEEnqCIgBM4
+        992w4h1+pjNRtUDTl1EUBcxzHJ8a7izCzYBeGLxbFg==
+X-Google-Smtp-Source: APBJJlG8Hj+HeYphAFVXavpZAoniaVHO/LPDLsLKxDojeecAdox5v0UoLfSngWXrFQd5G2ycJRsOww==
+X-Received: by 2002:a6b:fe16:0:b0:785:fbe8:1da0 with SMTP id x22-20020a6bfe16000000b00785fbe81da0mr18365457ioh.15.1689188426544;
+        Wed, 12 Jul 2023 12:00:26 -0700 (PDT)
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
+        by smtp.gmail.com with ESMTPSA id k24-20020a02ccd8000000b0042b46224650sm1356914jaq.91.2023.07.12.12.00.26
+        for <linux-hyperv@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jul 2023 12:00:26 -0700 (PDT)
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-345f3e28082so27957045ab.1
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 12:00:26 -0700 (PDT)
+X-Received: by 2002:a25:50c9:0:b0:c6d:e3e3:5592 with SMTP id
+ e192-20020a2550c9000000b00c6de3e35592mr13511834ybb.54.1689186698646; Wed, 12
+ Jul 2023 11:31:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230712094702.1770121-1-u.kleine-koenig@pengutronix.de> <87fs5tgpvv.fsf@intel.com>
+In-Reply-To: <87fs5tgpvv.fsf@intel.com>
+From:   Sean Paul <seanpaul@chromium.org>
+Date:   Wed, 12 Jul 2023 14:31:02 -0400
+X-Gmail-Original-Message-ID: <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
+Message-ID: <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH RFC v1 00/52] drm/crtc: Rename struct
+ drm_crtc::dev to drm_dev
 To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
         Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
         "Pan, Xinhui" <Xinhui.Pan@amd.com>,
         Harry Wentland <harry.wentland@amd.com>,
         Leo Li <sunpeng.li@amd.com>,
@@ -46,16 +81,17 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Guchun Chen <guchun.chen@amd.com>,
         Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
         Evan Quan <evan.quan@amd.com>, Likun Gao <Likun.Gao@amd.com>,
-        Marek =?utf-8?B?T2zFocOhaw==?= <marek.olsak@amd.com>,
+        =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>,
         David Francis <David.Francis@amd.com>,
         Hawking Zhang <Hawking.Zhang@amd.com>,
-        Lang Yu <Lang.Yu@amd.com>, Philip Yang <Philip.Yang@amd.com>,
+        Graham Sider <Graham.Sider@amd.com>, Lang Yu <Lang.Yu@amd.com>,
+        Philip Yang <Philip.Yang@amd.com>,
         Yifan Zhang <yifan1.zhang@amd.com>,
         Tim Huang <Tim.Huang@amd.com>, Zack Rusin <zackr@vmware.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        Sam Ravnborg <sam@ravnborg.org>, xurui <xurui@kylinos.cn>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?utf-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>,
-        =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+        =?UTF-8?B?TWHDrXJhIENhbmFs?= <mairacanal@riseup.net>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
         Qingqing Zhuo <qingqing.zhuo@amd.com>,
         Aurabindo Pillai <aurabindo.pillai@amd.com>,
         Hersen Wu <hersenxs.wu@amd.com>,
@@ -70,7 +106,7 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Mario Limonciello <mario.limonciello@amd.com>,
         Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
         Roman Li <roman.li@amd.com>,
-        =?utf-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= 
+        =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= 
         <samsagax@gmail.com>, Dave Airlie <airlied@redhat.com>,
         Russell King <linux@armlinux.org.uk>,
         Liviu Dudau <liviu.dudau@arm.com>,
@@ -86,7 +122,7 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Stefan Agner <stefan@agner.ch>,
         Alison Wang <alison.wang@nxp.com>,
         Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
         Xinliang Liu <xinliang.liu@linaro.org>,
         Tian Tao <tiantao6@hisilicon.com>,
         Danilo Krummrich <dakr@redhat.com>,
@@ -94,7 +130,7 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
         Lucas De Marchi <lucas.demarchi@intel.com>,
         Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
         Andrzej Hajda <andrzej.hajda@intel.com>,
@@ -106,16 +142,16 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
         Kai Vehmanen <kai.vehmanen@linux.intel.com>,
         Vinod Govindapillai <vinod.govindapillai@intel.com>,
-        =?utf-8?Q?=C5=81ukasz?= Bartosik <lb@semihalf.com>,
+        =?UTF-8?Q?=C5=81ukasz_Bartosik?= <lb@semihalf.com>,
         Anusha Srivatsa <anusha.srivatsa@intel.com>,
         Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
         Uma Shankar <uma.shankar@intel.com>,
         Imre Deak <imre.deak@intel.com>,
         Mitul Golani <mitulkumar.ajitkumar.golani@intel.com>,
         Swati Sharma <swati2.sharma@intel.com>,
-        Jouni =?utf-8?B?SMO2Z2FuZGVy?= <jouni.hogander@intel.com>,
+        =?UTF-8?Q?Jouni_H=C3=B6gander?= <jouni.hogander@intel.com>,
         Mika Kahola <mika.kahola@intel.com>,
-        =?utf-8?B?Sm9zw6k=?= Roberto de Souza <jose.souza@intel.com>,
+        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
         Arun R Murthy <arun.r.murthy@intel.com>,
         Gustavo Sousa <gustavo.sousa@intel.com>,
         Khaled Almahallawy <khaled.almahallawy@intel.com>,
@@ -129,14 +165,17 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Vandita Kulkarni <vandita.kulkarni@intel.com>,
         Suraj Kandpal <suraj.kandpal@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
         Drew Davenport <ddavenport@chromium.org>,
         Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Philipp Zabel <p.zabel@pengutronix.de>,
+        Marian Cichy <m.cichy@pengutronix.de>,
         Dan Carpenter <error27@gmail.com>,
         Paul Cercueil <paul@crapouillou.net>,
         Anitha Chrisanthus <anitha.chrisanthus@intel.com>,
+        Edmund Dea <edmund.j.dea@intel.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Chun-Kuang Hu <chunkuang.hu@kernel.org>,
@@ -162,7 +201,7 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
         Orson Zhai <orsonzhai@gmail.com>,
         Baolin Wang <baolin.wang@linux.alibaba.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
@@ -218,40 +257,23 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         John Stultz <jstultz@google.com>,
         freedreno@lists.freedesktop.org,
         Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH RFC v1 00/52] drm/crtc: Rename struct drm_crtc::dev to
- drm_dev
-Message-ID: <20230712161025.22op3gtzgujrhytb@pengutronix.de>
-References: <20230712094702.1770121-1-u.kleine-koenig@pengutronix.de>
- <87fs5tgpvv.fsf@intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fzugsjz5u2erhwcr"
-Content-Disposition: inline
-In-Reply-To: <87fs5tgpvv.fsf@intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hyperv@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
---fzugsjz5u2erhwcr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Jani,
-
-On Wed, Jul 12, 2023 at 05:34:28PM +0300, Jani Nikula wrote:
-> On Wed, 12 Jul 2023, Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> =
-wrote:
+On Wed, Jul 12, 2023 at 10:52=E2=80=AFAM Jani Nikula <jani.nikula@intel.com=
+> wrote:
+>
+> On Wed, 12 Jul 2023, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.d=
+e> wrote:
 > > Hello,
 > >
 > > while I debugged an issue in the imx-lcdc driver I was constantly
@@ -291,53 +313,26 @@ iq -c | sort -n
 > > it's not only me and others like the result of this effort it should be
 > > followed up by adapting the other structs and the individual usages in
 > > the different drivers.
->=20
+>
 > I think this is an unnecessary change. In drm, a dev is usually a drm
-> device, i.e. struct drm_device *.
+> device, i.e. struct drm_device *. As shown by the numbers above.
+>
 
-Well, unless it's not. Prominently there is
+I'd really prefer this patch (series or single) is not accepted. This
+will cause problems for everyone cherry-picking patches to a
+downstream kernel (LTS or distro tree). I usually wouldn't expect
+sympathy here, but the questionable benefit does not outweigh the cost
+IM[biased]O.
 
-	struct drm_device {
-		...
-		struct device *dev;
-		...
-	};
-
-which yields quite a few code locations using dev->dev which is
-IMHO unnecessary irritating:
-
-	$ git grep '\<dev->dev' v6.5-rc1 drivers/gpu/drm | wc -l
-	1633
-
-Also the functions that deal with both a struct device and a struct
-drm_device often use "dev" for the struct device and then "ddev" for
-the drm_device (see for example amdgpu_device_get_pcie_replay_count()).
+Sean
 
 > If folks insist on following through with this anyway, I'm firmly in the
 > camp the name should be "drm" and nothing else.
-
-Up to now positive feedback is in the majority.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---fzugsjz5u2erhwcr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSu0HEACgkQj4D7WH0S
-/k4tEAgAjSlm+m9acQMJLbHVbIAaWzq11GFCJMY9/BGZLpqO6K6E9a01pfO8fCgN
-isja7eDWpKflOXKYWqhmcSssK1xwJLNSKt8+htEafh6mxWV5HU0jyoWvSxTnQ1gL
-nWDFOPr3pLhv1CGL5/k0t1+hd+ECL1khVbWpQFdBDTjwwqD6TfY0iTXxGaZuGxa8
-lJUBRc+bVymGD1u+8ox4REDSHSpNH5sz5k4aGUyv1NQmIFYZJL/BkV8FDSJ5ch4S
-9zSAf5yMI9E3lXBKmepbTTTUk3sobZSO4cb1acQreVw0dx3kVtIw3yq1clLJcajd
-E9HRqReDdg8q7s08KuyJFhsdIlCQLQ==
-=sqnn
------END PGP SIGNATURE-----
-
---fzugsjz5u2erhwcr--
+>
+>
+> BR,
+> Jani.
+>
+>
+> --
+> Jani Nikula, Intel Open Source Graphics Center
