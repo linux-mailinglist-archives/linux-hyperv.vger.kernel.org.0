@@ -2,76 +2,55 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56F287510D3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jul 2023 21:00:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79BDC75111A
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jul 2023 21:24:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230108AbjGLTAd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Jul 2023 15:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
+        id S232512AbjGLTYF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Jul 2023 15:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjGLTAc (ORCPT
+        with ESMTP id S229775AbjGLTYD (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Jul 2023 15:00:32 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D28EA
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 12:00:27 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-7835ae70e46so251354339f.3
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 12:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689188426; x=1691780426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rTThceHWQZD4Ac2XfATsHd8gywiOPtbGgdMtmxYrl6g=;
-        b=Gk1ElV6FWuyCjz4OM+tZP9ox71mTshMdFokbxgmhOjky0jYb4U8Lmj70aXdZt/jaMB
-         gW801CTEqkOHuPJL1DFkVYmqPSv3TZtMOs+GEDTRA0UfoG0VQaHtCcLijnuvur9K0VMc
-         P4ZMS9CDTDyWmf6SrYwH+jh14ogYv+6e81SN0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689188426; x=1691780426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rTThceHWQZD4Ac2XfATsHd8gywiOPtbGgdMtmxYrl6g=;
-        b=TOKYPEVUtrxAajRmEu9tPjbqM+FArkWmgEOqXkYAzUdMGFvmSuOzePBVJ8jgc7CS0c
-         IAt1nDfajAptPwXT9eSzvqVZ4V1xKRIR61sokHtu7IjRlD6LFoZ+gUIsK0IwcXvii4Vk
-         4J/fc9FFd2kmTqvCxNm4XGqVbAuyHxtvo5Dwxd1JJc80Z5cVISJJMoIERPoIi6imMOe/
-         kGuZdPjh7y3ZMDK+MJR1pX0k1IYlcUzQRem4gHs7BoqB0gMLPslq+/OaSjUs+UC6dhf4
-         iOi1RPtDzEJweffcri+hfUdpw/W6XD+Nv6qfuLKFIKtqdnwECZ7IwZIrArJngctV2YhP
-         NSpQ==
-X-Gm-Message-State: ABy/qLbzeDeVvUEYRmjiwBfZmlFMbbFpS+NeSl/P/D4okHEEnqCIgBM4
-        992w4h1+pjNRtUDTl1EUBcxzHJ8a7izCzYBeGLxbFg==
-X-Google-Smtp-Source: APBJJlG8Hj+HeYphAFVXavpZAoniaVHO/LPDLsLKxDojeecAdox5v0UoLfSngWXrFQd5G2ycJRsOww==
-X-Received: by 2002:a6b:fe16:0:b0:785:fbe8:1da0 with SMTP id x22-20020a6bfe16000000b00785fbe81da0mr18365457ioh.15.1689188426544;
-        Wed, 12 Jul 2023 12:00:26 -0700 (PDT)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id k24-20020a02ccd8000000b0042b46224650sm1356914jaq.91.2023.07.12.12.00.26
-        for <linux-hyperv@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 12:00:26 -0700 (PDT)
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-345f3e28082so27957045ab.1
-        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 12:00:26 -0700 (PDT)
-X-Received: by 2002:a25:50c9:0:b0:c6d:e3e3:5592 with SMTP id
- e192-20020a2550c9000000b00c6de3e35592mr13511834ybb.54.1689186698646; Wed, 12
- Jul 2023 11:31:38 -0700 (PDT)
+        Wed, 12 Jul 2023 15:24:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B7681FC2;
+        Wed, 12 Jul 2023 12:24:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A0D2618F9;
+        Wed, 12 Jul 2023 19:24:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E67C433C7;
+        Wed, 12 Jul 2023 19:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689189841;
+        bh=Tfejh8EXB17kdCnKChHCKsENFyCAyHmgokGK8jgx0S4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ntLZbbIa8ui4VLewT/ZWNtkWgRs7MbRiBOhFPmK6XwjRbTD/3kPBu1aqhFZ0rkrTw
+         NoTZi0Izio/rxjoLWBubaj+3vL5lvYukHPTwqzZkAMQJcVh8+LeSyVQRiF6uaWPcM/
+         zuqSfu4Q9tdtMALob+iDjB+wXeO+wx4IclmprAMk1ovBvhz2Kb6mUBbsrON4ASXRiy
+         LcrKecm8vPG1UI+nVF2Hnnsm4BKqA7ElLyIZzw3R6g6ih439+oVUcyzCdQwNklbbMO
+         NQNR0TgJUV9FeYvO7UXNbntxcy7XKI2L5F9S7YJV8onDbx66b25wYy9gLnXBEh/586
+         QVl33fuhfdZNQ==
+Message-ID: <2eeb1271-731a-1a70-4c83-449567452f8f@kernel.org>
+Date:   Wed, 12 Jul 2023 21:22:44 +0200
 MIME-Version: 1.0
-References: <20230712094702.1770121-1-u.kleine-koenig@pengutronix.de> <87fs5tgpvv.fsf@intel.com>
-In-Reply-To: <87fs5tgpvv.fsf@intel.com>
-From:   Sean Paul <seanpaul@chromium.org>
-Date:   Wed, 12 Jul 2023 14:31:02 -0400
-X-Gmail-Original-Message-ID: <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
-Message-ID: <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
 Subject: Re: [Freedreno] [PATCH RFC v1 00/52] drm/crtc: Rename struct
  drm_crtc::dev to drm_dev
-To:     Jani Nikula <jani.nikula@intel.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+Content-Language: en-US
+To:     Sean Paul <seanpaul@chromium.org>,
+        Jani Nikula <jani.nikula@intel.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
         Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
         "Pan, Xinhui" <Xinhui.Pan@amd.com>,
         Harry Wentland <harry.wentland@amd.com>,
         Leo Li <sunpeng.li@amd.com>,
@@ -90,8 +69,8 @@ Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?=
         Tim Huang <Tim.Huang@amd.com>, Zack Rusin <zackr@vmware.com>,
         Sam Ravnborg <sam@ravnborg.org>, xurui <xurui@kylinos.cn>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?B?TWHDrXJhIENhbmFs?= <mairacanal@riseup.net>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+        =?UTF-8?Q?Ma=c3=adra_Canal?= <mairacanal@riseup.net>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
         Qingqing Zhuo <qingqing.zhuo@amd.com>,
         Aurabindo Pillai <aurabindo.pillai@amd.com>,
         Hersen Wu <hersenxs.wu@amd.com>,
@@ -106,7 +85,7 @@ Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?=
         Mario Limonciello <mario.limonciello@amd.com>,
         Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
         Roman Li <roman.li@amd.com>,
-        =?UTF-8?Q?Joaqu=C3=ADn_Ignacio_Aramend=C3=ADa?= 
+        =?UTF-8?Q?Joaqu=c3=adn_Ignacio_Aramend=c3=ada?= 
         <samsagax@gmail.com>, Dave Airlie <airlied@redhat.com>,
         Russell King <linux@armlinux.org.uk>,
         Liviu Dudau <liviu.dudau@arm.com>,
@@ -118,11 +97,10 @@ Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?=
         Inki Dae <inki.dae@samsung.com>,
         Seung-Woo Kim <sw0312.kim@samsung.com>,
         Kyungmin Park <kyungmin.park@samsung.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Stefan Agner <stefan@agner.ch>,
         Alison Wang <alison.wang@nxp.com>,
         Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
         Xinliang Liu <xinliang.liu@linaro.org>,
         Tian Tao <tiantao6@hisilicon.com>,
         Danilo Krummrich <dakr@redhat.com>,
@@ -142,16 +120,16 @@ Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?=
         Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
         Kai Vehmanen <kai.vehmanen@linux.intel.com>,
         Vinod Govindapillai <vinod.govindapillai@intel.com>,
-        =?UTF-8?Q?=C5=81ukasz_Bartosik?= <lb@semihalf.com>,
+        =?UTF-8?Q?=c5=81ukasz_Bartosik?= <lb@semihalf.com>,
         Anusha Srivatsa <anusha.srivatsa@intel.com>,
         Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
         Uma Shankar <uma.shankar@intel.com>,
         Imre Deak <imre.deak@intel.com>,
         Mitul Golani <mitulkumar.ajitkumar.golani@intel.com>,
         Swati Sharma <swati2.sharma@intel.com>,
-        =?UTF-8?Q?Jouni_H=C3=B6gander?= <jouni.hogander@intel.com>,
+        =?UTF-8?Q?Jouni_H=c3=b6gander?= <jouni.hogander@intel.com>,
         Mika Kahola <mika.kahola@intel.com>,
-        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+        =?UTF-8?Q?Jos=c3=a9_Roberto_de_Souza?= <jose.souza@intel.com>,
         Arun R Murthy <arun.r.murthy@intel.com>,
         Gustavo Sousa <gustavo.sousa@intel.com>,
         Khaled Almahallawy <khaled.almahallawy@intel.com>,
@@ -201,7 +179,7 @@ Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?=
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
         Orson Zhai <orsonzhai@gmail.com>,
         Baolin Wang <baolin.wang@linux.alibaba.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
@@ -257,82 +235,48 @@ Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?=
         John Stultz <jstultz@google.com>,
         freedreno@lists.freedesktop.org,
         Lucas Stach <l.stach@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230712094702.1770121-1-u.kleine-koenig@pengutronix.de>
+ <87fs5tgpvv.fsf@intel.com>
+ <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 10:52=E2=80=AFAM Jani Nikula <jani.nikula@intel.com=
-> wrote:
->
-> On Wed, 12 Jul 2023, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.d=
-e> wrote:
-> > Hello,
-> >
-> > while I debugged an issue in the imx-lcdc driver I was constantly
-> > irritated about struct drm_device pointer variables being named "dev"
-> > because with that name I usually expect a struct device pointer.
-> >
-> > I think there is a big benefit when these are all renamed to "drm_dev".
-> > I have no strong preference here though, so "drmdev" or "drm" are fine
-> > for me, too. Let the bikesheding begin!
-> >
-> > Some statistics:
-> >
-> > $ git grep -ohE 'struct drm_device *\* *[^ (),;]*' v6.5-rc1 | sort | un=
-iq -c | sort -n
-> >       1 struct drm_device *adev_to_drm
-> >       1 struct drm_device *drm_
-> >       1 struct drm_device          *drm_dev
-> >       1 struct drm_device        *drm_dev
-> >       1 struct drm_device *pdev
-> >       1 struct drm_device *rdev
-> >       1 struct drm_device *vdev
-> >       2 struct drm_device *dcss_drv_dev_to_drm
-> >       2 struct drm_device **ddev
-> >       2 struct drm_device *drm_dev_alloc
-> >       2 struct drm_device *mock
-> >       2 struct drm_device *p_ddev
-> >       5 struct drm_device *device
-> >       9 struct drm_device * dev
-> >      25 struct drm_device *d
-> >      95 struct drm_device *
-> >     216 struct drm_device *ddev
-> >     234 struct drm_device *drm_dev
-> >     611 struct drm_device *drm
-> >    4190 struct drm_device *dev
-> >
-> > This series starts with renaming struct drm_crtc::dev to drm_dev. If
-> > it's not only me and others like the result of this effort it should be
-> > followed up by adapting the other structs and the individual usages in
-> > the different drivers.
->
-> I think this is an unnecessary change. In drm, a dev is usually a drm
-> device, i.e. struct drm_device *. As shown by the numbers above.
->
+On 12/07/2023 20:31, Sean Paul wrote:
+>>>     216 struct drm_device *ddev
+>>>     234 struct drm_device *drm_dev
+>>>     611 struct drm_device *drm
+>>>    4190 struct drm_device *dev
+>>>
+>>> This series starts with renaming struct drm_crtc::dev to drm_dev. If
+>>> it's not only me and others like the result of this effort it should be
+>>> followed up by adapting the other structs and the individual usages in
+>>> the different drivers.
+>>
+>> I think this is an unnecessary change. In drm, a dev is usually a drm
+>> device, i.e. struct drm_device *. As shown by the numbers above.
+>>
+> 
+> I'd really prefer this patch (series or single) is not accepted. This
+> will cause problems for everyone cherry-picking patches to a
+> downstream kernel (LTS or distro tree). I usually wouldn't expect
+> sympathy here, but the questionable benefit does not outweigh the cost
+> IM[biased]O.
 
-I'd really prefer this patch (series or single) is not accepted. This
-will cause problems for everyone cherry-picking patches to a
-downstream kernel (LTS or distro tree). I usually wouldn't expect
-sympathy here, but the questionable benefit does not outweigh the cost
-IM[biased]O.
+You know, every code cleanup and style adjustment is interfering with
+backporting. The only argument for a fast-pacing kernel should be
+whether the developers of this code find it more readable with such cleanup.
 
-Sean
+Best regards,
+Krzysztof
 
-> If folks insist on following through with this anyway, I'm firmly in the
-> camp the name should be "drm" and nothing else.
->
->
-> BR,
-> Jani.
->
->
-> --
-> Jani Nikula, Intel Open Source Graphics Center
