@@ -2,181 +2,144 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5099274FF96
-	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jul 2023 08:44:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00FB774FFD7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 12 Jul 2023 09:03:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbjGLGov (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 12 Jul 2023 02:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40990 "EHLO
+        id S230344AbjGLHDm (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 12 Jul 2023 03:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbjGLGov (ORCPT
+        with ESMTP id S230229AbjGLHDl (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 12 Jul 2023 02:44:51 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D210910F7;
-        Tue, 11 Jul 2023 23:44:42 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 542932257C;
-        Wed, 12 Jul 2023 06:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1689144281; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Wed, 12 Jul 2023 03:03:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658C8B1
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 00:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689145374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=E3XnKIdyYzs9WzUUslFZfdtKZkW2mVfTAiy9Yfh4sv0=;
-        b=um9f/BNFht0hF6qfEMiGec1WN+rwJTel0EZVGynCUBznu+naWlk/+sSsvExpMvKu2fA+TF
-        e3cpze2sA7owkkecnk/V4YXnfwmlAxT6rqW7FxRf0F/0Af4v/KMvZvHVolenSGFhfbKMvY
-        d9RMt5QDxIw1HFGAPOtocjcVjh8L3q8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1689144281;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E3XnKIdyYzs9WzUUslFZfdtKZkW2mVfTAiy9Yfh4sv0=;
-        b=QWOqGp5bh9cit+mxGXUzK2PdJyS+BJcR1fc5EKRw6uHa2kCnZ1oPtAWdiEqMdfRABSdVXt
-        4TPwQ84Doc2bduBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EDE32133DD;
-        Wed, 12 Jul 2023 06:44:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id we7SONhLrmRTEgAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Wed, 12 Jul 2023 06:44:40 +0000
-Message-ID: <b8d28b32-62ff-93fd-ad24-990f82efa38a@suse.de>
-Date:   Wed, 12 Jul 2023 08:44:40 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 00/17] fbdev: Remove FBINFO_DEFAULT and
- FBINFO_FLAG_DEFAULT flags
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, linux-sh@vger.kernel.org, deller@gmx.de,
-        linux-staging@lists.linux.dev, javierm@redhat.com,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-nvidia@lists.surfsouth.com,
-        linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-geode@lists.infradead.org, linux-media@vger.kernel.org
-References: <20230710130113.14563-1-tzimmermann@suse.de>
- <20230710171903.GA14712@ravnborg.org>
- <ab92f8d9-36ab-06bc-b85b-d52b7a1bfe9a@suse.de>
- <20230711144744.GA117276@ravnborg.org>
-Content-Language: en-US
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <20230711144744.GA117276@ravnborg.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------K7I6QDTtJR3cKkqc48HZx2aU"
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        bh=Wufi9rv0SDzDYEN3qmZtEV5G7f/6JaOzjp0WTDKMnGU=;
+        b=dYGf7wYG2lGVIIquXWfoAcfdKadqulXk3XVN8J8uCQDya8ulQDkU4KiEDpYr2gSZlyewAj
+        x+uU28xJj3pqKm5eKba2BLpbSgKg2Gd7+3owjRCsNR3nCVo2cJR5KfXPXlLWz3aDyWoa2/
+        6bs/+MZSpNZ55XfB4nntwMrUN2ZukvI=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-158-tpxVkAkbM_u3UC6HJERKsA-1; Wed, 12 Jul 2023 03:02:53 -0400
+X-MC-Unique: tpxVkAkbM_u3UC6HJERKsA-1
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1b895fa8929so70329685ad.0
+        for <linux-hyperv@vger.kernel.org>; Wed, 12 Jul 2023 00:02:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689145372; x=1691737372;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wufi9rv0SDzDYEN3qmZtEV5G7f/6JaOzjp0WTDKMnGU=;
+        b=cG184ARD1yGhG7jEMHdYTiiUxtI37/1PrtWF1vQ0c/beieOs/wuk5skR4zeu3FH89P
+         gmmMPriNCboTdW3DgVWbAyfgpGN74KXsaXxYOqQz4m2FDFWJjPzWzSf9TYTx9W151bwe
+         xEpR423GEHHTOTmWo55VYl6M6D8Ia2uU90/Ad0LeJdsEL095TkU9dbI21XbYTKAXW8LB
+         AKr1LutNLpQQ7GNdpNb9LP7ERlzqPiD4EC5si3LZkfcfPBX8ufeYQSVVk2l9Dir6J2lA
+         CixOKgnEqwLlCNq+ffy6mTiHBP/PM88//lOcUwfRm4FHL4Hu9N4/gpmulINzzM5MMqVV
+         rhKQ==
+X-Gm-Message-State: ABy/qLZeplkX3ybp59s3AwCCfQzvKiMEkZpztwVAmKICGFUMZJKikuOZ
+        JakFYW5/VVtXOra+neTAgAiCrI+Tg2tTO0qezAVlvNDGby2hcHg0kDm5MxVdhdgQ33sDiLp/Q7D
+        Em06Wi84J8bkPU287om+jC2CvJNEYbWNj
+X-Received: by 2002:a17:902:f68c:b0:1b8:c1f:fcfc with SMTP id l12-20020a170902f68c00b001b80c1ffcfcmr15621555plg.11.1689145371884;
+        Wed, 12 Jul 2023 00:02:51 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHb0dBFUiexF5mmKYCB06wLwX90g+ILyNJsPf1yZNNVkvuX1bBpUE1JjXI0J1CJtA5DWyyAeA==
+X-Received: by 2002:a17:902:f68c:b0:1b8:c1f:fcfc with SMTP id l12-20020a170902f68c00b001b80c1ffcfcmr15621546plg.11.1689145371595;
+        Wed, 12 Jul 2023 00:02:51 -0700 (PDT)
+Received: from smtpclient.apple ([115.96.113.77])
+        by smtp.gmail.com with ESMTPSA id d5-20020a170903230500b001b672af624esm3143511plh.164.2023.07.12.00.02.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 12 Jul 2023 00:02:50 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.3\))
+Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Add support for keyfile config based
+ connection profile in NM
+From:   Ani Sinha <anisinha@redhat.com>
+In-Reply-To: <20230523053627.GA10913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Date:   Wed, 12 Jul 2023 12:32:43 +0530
+Cc:     Wei Liu <wei.liu@kernel.org>, Olaf Hering <olaf@aepfle.de>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <53E9AC1D-C907-4B55-97F2-FC10DCD4D470@redhat.com>
+References: <1683265875-3706-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20230508095340.2ca1630f.olaf@aepfle.de>
+ <ZFknuu+f74e1zHZe@liuwe-devbox-debian-v2>
+ <20230508191246.2fcd6eb5.olaf@aepfle.de>
+ <ZFkuY4dmwiPsUJ3+@liuwe-devbox-debian-v2>
+ <20230523053627.GA10913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+To:     Shradha Gupta <shradhagupta@linux.microsoft.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.3)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------K7I6QDTtJR3cKkqc48HZx2aU
-Content-Type: multipart/mixed; boundary="------------O4sBmtVossZBjDercKZUVHqN";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, linux-sh@vger.kernel.org, deller@gmx.de,
- linux-staging@lists.linux.dev, javierm@redhat.com,
- amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
- linux-input@vger.kernel.org, linux-nvidia@lists.surfsouth.com,
- linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-geode@lists.infradead.org, linux-media@vger.kernel.org
-Message-ID: <b8d28b32-62ff-93fd-ad24-990f82efa38a@suse.de>
-Subject: Re: [PATCH 00/17] fbdev: Remove FBINFO_DEFAULT and
- FBINFO_FLAG_DEFAULT flags
-References: <20230710130113.14563-1-tzimmermann@suse.de>
- <20230710171903.GA14712@ravnborg.org>
- <ab92f8d9-36ab-06bc-b85b-d52b7a1bfe9a@suse.de>
- <20230711144744.GA117276@ravnborg.org>
-In-Reply-To: <20230711144744.GA117276@ravnborg.org>
 
---------------O4sBmtVossZBjDercKZUVHqN
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-DQoNCkFtIDExLjA3LjIzIHVtIDE2OjQ3IHNjaHJpZWIgU2FtIFJhdm5ib3JnOg0KPiBIaSBU
-aG9tYXMsDQo+IA0KPiBPbiBUdWUsIEp1bCAxMSwgMjAyMyBhdCAwODoyNDo0MEFNICswMjAw
-LCBUaG9tYXMgWmltbWVybWFubiB3cm90ZToNCj4+IEhpIFNhbQ0KPj4NCj4+IEFtIDEwLjA3
-LjIzIHVtIDE5OjE5IHNjaHJpZWIgU2FtIFJhdm5ib3JnOg0KPj4+IEhpIFRob21hcywNCj4+
-Pg0KPj4+IE9uIE1vbiwgSnVsIDEwLCAyMDIzIGF0IDAyOjUwOjA0UE0gKzAyMDAsIFRob21h
-cyBaaW1tZXJtYW5uIHdyb3RlOg0KPj4+PiBSZW1vdmUgdGhlIHVudXNlZCBmbGFncyBGQklO
-Rk9fREVGQVVMVCBhbmQgRkJJTkZPX0ZMQUdfREVGQVVMVCBmcm9tDQo+Pj4+IGZiZGV2IGFu
-ZCBkcml2ZXJzLCBhcyBicmllZmx5IGRpc2N1c3NlZCBhdCBbMV0uIEJvdGggZmxhZ3Mgd2Vy
-ZSBtYXliZQ0KPj4+PiB1c2VmdWwgd2hlbiBmYmRldiBoYWQgc3BlY2lhbCBoYW5kbGluZyBm
-b3IgZHJpdmVyIG1vZHVsZXMuIFdpdGgNCj4+Pj4gY29tbWl0IDM3NmIzZmY1NGM5YSAoImZi
-ZGV2OiBOdWtlIEZCSU5GT19NT0RVTEUiKSwgdGhleSBhcmUgYm90aCAwDQo+Pj4+IGFuZCBo
-YXZlIG5vIGZ1cnRoZXIgZWZmZWN0Lg0KPj4+Pg0KPj4+PiBQYXRjaGVzIDEgdG8gNyByZW1v
-dmUgRkJJTkZPX0RFRkFVTFQgZnJvbSBkcml2ZXJzLiBQYXRjaGVzIDIgdG8gNQ0KPj4+PiBz
-cGxpdCB0aGlzIGJ5IHRoZSB3YXkgdGhlIGZiX2luZm8gc3RydWN0IGlzIGJlaW5nIGFsbG9j
-YXRlZC4gQWxsIGZsYWdzDQo+Pj4+IGFyZSBjbGVhcmVkIHRvIHplcm8gZHVyaW5nIHRoZSBh
-bGxvY2F0aW9uLg0KPj4+Pg0KPj4+PiBQYXRjaGVzIDggdG8gMTYgZG8gdGhlIHNhbWUgZm9y
-IEZCSU5GT19GTEFHX0RFRkFVTFQuIFBhdGNoIDggZml4ZXMNCj4+Pj4gYW4gYWN0dWFsIGJ1
-ZyBpbiBob3cgYXJjaC9zaCB1c2VzIHRoZSB0b2tuZSBmb3Igc3RydWN0IGZiX3ZpZGVvbW9k
-ZSwNCj4+Pj4gd2hpY2ggaXMgdW5yZWxhdGVkLg0KPj4+Pg0KPj4+PiBQYXRjaCAxNyByZW1v
-dmVzIGJvdGggZmxhZyBjb25zdGFudHMgZnJvbSA8bGludXgvZmIuaD4NCj4+Pg0KPj4+IFdl
-IGhhdmUgYSBmZXcgbW9yZSBmbGFncyB0aGF0IGFyZSB1bnVzZWQgLSBzaG91bGQgdGhleSBi
-ZSBudWtlZCB0b28/DQo+Pj4gRkJJTkZPX0hXQUNDRUxfRklMTFJFQ1QNCj4+PiBGQklORk9f
-SFdBQ0NFTF9ST1RBVEUNCj4+PiBGQklORk9fSFdBQ0NFTF9YUEFODQo+Pg0KPj4gSXQgc2Vl
-bXMgdGhvc2UgYXJlIHRoZXJlIGZvciBjb21wbGV0ZW5lc3MuIE5vdGhpbmcgc2V0cyBfUk9U
-QVRFLCB0aGUgb3RoZXJzDQo+PiBhcmUgc2ltcGx5IG5ldmVyIGNoZWNrZWQuIEFjY29yZGlu
-ZyB0byB0aGUgY29tbWVudHMsIHNvbWUgYXJlIHJlcXVpcmVkLCBzb21lDQo+PiBhcmUgb3B0
-aW9uYWwuIEkgZG9uJ3Qga25vdyB3aGF0IHRoYXQgbWVhbnMuDQo+Pg0KPj4gSUlSQyB0aGVy
-ZSB3ZXJlIGNvbXBsYWlucyBhYm91dCBwZXJmb3JtYW5jZSB3aGVuIERhbmllbCB0cmllZCB0
-byByZW1vdmUNCj4+IGZiY29uIGFjY2VsZXJhdGlvbiwgc28gbm90IGFsbCBfSFdBQ0NFTF8g
-ZmxhZ3MgYXJlIHVubmVlZGVkLg0KPj4NCj4+IExlYXZpbmcgdGhlbSBpbiBmb3IgcmVmZXJl
-bmNlL2NvbXBsZXRlbmVzcyBtaWdodCBiZSBhbiBvcHRpb247IG9yIG5vdC4gSQ0KPj4gaGF2
-ZSBubyBzdHJvbmcgZmVlbGluZ3MgYWJvdXQgdGhvc2UgZmxhZ3MuDQo+Pg0KPj4+DQo+Pj4g
-VW51c2VkIGFzIGluIG5vIHJlZmVyZW5jZXMgZnJvbSBmYmRldi9jb3JlLyoNCj4+Pg0KPj4+
-IEkgd291bGQgcmF0aGVyIHNlZSBvbmUgc2VyaWVzIG51a2UgYWxsIHVudXNlZCBGQklORk8g
-ZmxhZ3MgaW4gb25lIGdvLg0KPj4+IEFzc3VtaW5nIG15IHF1aWNrIGdyZXAgYXJlIHJpZ2h0
-IGFuZCB0aGUgYWJvdmUgY2FuIGJlIGRyb3BwZWQuDQo+Pg0KPj4gSSB3b3VsZCBub3Qgd2Fu
-dCB0byBleHRlbmQgdGhpcyBzZXJpZXMuIEknbSByZW1vdmluZyBfREVGQVVMVCBhcyBpdCdz
-DQo+PiBhYnNvbHV0ZWx5IHBvaW50bGVzcyBhbmQgY29uZnVzaW5nLg0KPiANCj4gT0ssIG1h
-a2VzIHNlbnNlIGFuZCB0aGFua3MgZm9yIHRoZSBleHBsYW5hdGlvbi4NCj4gDQo+IFRoZSBz
-ZXJpZXMgaXM6DQo+IEFja2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+
-DQoNClRoYW5rcyBhIGxvdC4NCg0KPiANCg0KLS0gDQpUaG9tYXMgWmltbWVybWFubg0KR3Jh
-cGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFu
-eSBHbWJIDQpGcmFua2Vuc3RyYXNzZSAxNDYsIDkwNDYxIE51ZXJuYmVyZywgR2VybWFueQ0K
-R0Y6IEl2byBUb3RldiwgQW5kcmV3IE15ZXJzLCBBbmRyZXcgTWNEb25hbGQsIEJvdWRpZW4g
-TW9lcm1hbg0KSFJCIDM2ODA5IChBRyBOdWVybmJlcmcpDQo=
+> On 23-May-2023, at 11:06 AM, Shradha Gupta =
+<shradhagupta@linux.microsoft.com> wrote:
+>=20
+> On Mon, May 08, 2023 at 05:16:19PM +0000, Wei Liu wrote:
+>> On Mon, May 08, 2023 at 07:12:46PM +0200, Olaf Hering wrote:
+>>> Mon, 8 May 2023 16:47:54 +0000 Wei Liu <wei.liu@kernel.org>:
+>>>=20
+>>>> Olaf, is this a reviewed-by from you? :-)
+>>>=20
+>>> Sorry, I did not review the new functionality, just tried to make =
+sure there will be no regression for existing consumers.
+>>=20
+>> Okay, this is fine, too. Thank you for looking into this.
+>>=20
+>>=20
+>>>=20
+>>> Olaf
+>>=20
+>=20
+> Gentle reminder.
+>=20
 
---------------O4sBmtVossZBjDercKZUVHqN--
+I have a comment about the following change:
 
---------------K7I6QDTtJR3cKkqc48HZx2aU
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
++		error =3D fprintf(nmfile, "\n[ipv4]\n");
++		if (error < 0)
++			goto setval_error;
++
++		if (new_val->dhcp_enabled) {
++			error =3D kvp_write_file(nmfile, "method", "", =
+"auto");
++			if (error < 0)
++				goto setval_error;
++		} else {
++			error =3D kvp_write_file(nmfile, "method", "", =
+"manual");
++			if (error < 0)
++				goto setval_error;
++		}
 
------BEGIN PGP SIGNATURE-----
+I think the method equally would apply for ipv6 as it applies for ipv4.=20=
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmSuS9gFAwAAAAAACgkQlh/E3EQov+Bh
-IQ//T0PiPxd+GFmqKROILrPIawDb/I+fuq60CvxBHVfPPlvkdxBPBDUE4WuUFhGYCE/oZ6jRlZJX
-YKYHYEJ5vEcWCNRR8mfGpNGLyDbuJY9mqzUHWHqhbhHvrEPV2V7WnCjp7UrnMUvqnvnwDDifBkgA
-YXI94XN/fqrNmjRzAFvQitvZb1pz3pGlsldbPi/3va2wdNY2h4xtmY4WRd0I/wgVN5YfNjYGeEGb
-GQT466I6XnDIzQurY+q0dxDn3Ab3NQQZAr704nfyTZrFfOAJcIz89vrWU29+Qcr/yjEtFtdNamic
-WIEJ3DWexIdWBplaQDqxUySBlzU3c3pLLaFwE0SyVPwaUcI5qOpfhMeWgwEwZb1W6+Or4ehLxoIY
-muVgE8o2WeQSRihUXz0b/nAclqW/WDHaVhpjURRzviYnD+urODodyuQn0dt36yxciVfsmifL6PCe
-Y6X+ADFjH7mB4JZw4zJIl6XSOEGkMXRwkvU0WOXdNcsg8xYuZ8y2OI+ybBeWuLMyJcPQMlqRzbI8
-FZ0vgeM3VyTooQheJDh3psIr6oGhJabMlXIVsjocTCvbf9KjSQHwhF9qRcp30sh5PjRGBH4WRtua
-KmtCjiBbCfjcF8l9I4RiBoehwlJ4rIqyDx8KvMljftLG7YkgfWCariHTeYa7wA2l91erXQEi5RZc
-GMo=
-=HzCA
------END PGP SIGNATURE-----
+We can use =
+https://www.golinuxcloud.com/nmcli-command-examples-cheatsheet-centos-rhel=
+/#18_Disable_IPv6_Address_for_ethernet_connection_IPV6INIT as a =
+reference.=20
+So setting the method should be common to both ipv4 and ipv6.
 
---------------K7I6QDTtJR3cKkqc48HZx2aU--
