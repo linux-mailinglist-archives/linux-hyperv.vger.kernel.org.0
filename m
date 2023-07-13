@@ -2,309 +2,518 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E5DF752573
-	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jul 2023 16:48:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B50D752632
+	for <lists+linux-hyperv@lfdr.de>; Thu, 13 Jul 2023 17:09:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231644AbjGMOsx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 13 Jul 2023 10:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54416 "EHLO
+        id S232816AbjGMPJM (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 13 Jul 2023 11:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231617AbjGMOsv (ORCPT
+        with ESMTP id S232883AbjGMPJL (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 13 Jul 2023 10:48:51 -0400
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021018.outbound.protection.outlook.com [52.101.62.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C206C2707;
-        Thu, 13 Jul 2023 07:48:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F9/ugR/AU3bX0PJ2z+vSPKDsd1pIvKnXsPbXz2slRp83LdrkKhKvQpoJmXz/6dXtyYJq/pxSLazc1zBPJtrdcoPGsuqKtNx/0zFd/cHBJc5R55GVfPgIg5xZUukqPoOIgy8MuWEiAjX/9xKtlEiVDwIidzc3ol5U/W4EVuXBkgBO71k9SV+ZqSUVUAq0IbML6zqxcOu8LPXXYWO7880ehtSztncUuHmjtxDLNK85blFAzx4n89elnqp+Yq41DvU9uYrgkt3L11iTA/yQ/2Pp2uUYPRHS1QiNl90rXw3PK9U1TIk4mcNsMg3tQ2r/iMka1gP6jLSc9dXllSU87pw7Aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SzkOrI9emLI3vBoFC3fba8bWg9WN6lL7vpvADbhV2O4=;
- b=gjhDkP6vkjQG4c4AOFhXXWx2Cc2srAt3PfRpfrlFnVgk78pWQOIdmp9mvKLyhidAQ/82Am4kXuPDfFdaTUT/+n4zRVifcNzUYAYpnUo//kIRQiKoOFbWQmc4hCJ7fIaWxXSYEs7K1kBPnaBgmeyiXBuGL/rt90ikn48pB4ujXklzFSAdzhtyUPtS6kW1KyJA9xGAMDxgvX6YHD80p+zSs13PfgHYrX4LFuBrhfrigA+e9zEBgsf4wJaVlQforIUAk5FOkmT5mvubpY3yX/Nm4+hx7ozbVg/M+L1WHF7qP6C2RD6KTBxmQebaLNLMb3FmzX78wzUCW99KVwTyCryhhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SzkOrI9emLI3vBoFC3fba8bWg9WN6lL7vpvADbhV2O4=;
- b=AJ8HYIjJPEZkQf4b6CLfEMY3WTeangd6Z9tGiRPzFsimWmq8p+Oh5o65Qv2R84g991X/WPPp7ofbU5yVx0rNpqCglOWOBdNnFcpK8cSyznHaMbp9H9jOWums2NTsWtkLZ6ERD+y93Qk+Zdn6VgiELNA0aUrbK6jIj8V2GeXglgk=
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
- by DM6PR21MB1531.namprd21.prod.outlook.com (2603:10b6:5:25f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.12; Thu, 13 Jul
- 2023 14:48:46 +0000
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::e42f:9692:e651:6707]) by BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::e42f:9692:e651:6707%4]) with mapi id 15.20.6609.007; Thu, 13 Jul 2023
- 14:48:46 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: mana: Add page pool for RX buffers
-Thread-Topic: [PATCH net-next] net: mana: Add page pool for RX buffers
-Thread-Index: Adm1mSA+i88N/DCwBUak7+uxb6tVIw==
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-Date:   Thu, 13 Jul 2023 14:48:45 +0000
-Message-ID: <1689259687-5231-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MW4PR03CA0049.namprd03.prod.outlook.com
- (2603:10b6:303:8e::24) To BY5PR21MB1443.namprd21.prod.outlook.com
- (2603:10b6:a03:21f::18)
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-exchange-messagesentrepresentingtype: 2
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY5PR21MB1443:EE_|DM6PR21MB1531:EE_
-x-ms-office365-filtering-correlation-id: fd5e86bf-46d8-46f5-85b9-08db83b042b8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U3WXDiWp5f+bHmc9sshQnJ/o2IS2Sz4LBx888SBan5gzOM6Xgv32TVUgyXdzOueeo41MUh/bqmhLEuKF6f5u+c94JMl4+C53mVvaO5Ff2vwLaiYIMe2y5c5OZP5Q5ZQIJ+wMUSwEYN/i7xc+kIXApU5RQQxR20p5G5XIoOusfRKhZppbcjm01ufBrweM44vtFmOgxMX5Eq8gjmgzrf4EWlPF7UHmJ6AxpLo0aMGPD4WBz1WzKG1R33vK8v1b5KEDLGSSNRtmRjvS/6xh+WiiMqE1YoiOVuS5ILJfey5VY6X6VTowg4CMMvl0tX4vNrz2nhTnJwY3f8YvRxtPcXBrWx2bO4WI7SwOUb2cYjEX6Z/LAK/PzFnEtuHV5fkVbLUMGgPhDuFY8BZad1+lNHuXgnjTZPqIGLbNd72bgin3bylSBNN9J0d6QNo5NlocqDOcz2VbVVmMMNr0gXZNV7OuqsfdEBPWK7t360NicfLAscKXp+WRXNhNYw/7dnBMvoFRmkwUtf/7XFfVKkdg490ATKpAijfiYIW2/vWBgu+3/p7U9wcibPo/JLNbm4lAuhHXPkpWhCWEakug20W9sZ29W0DO66RG4k8BBH8EJSABipBKPBYtDXA87nudRKD82eSx31ABxUpn+CLArbHEiWkt8K3nN3/C1l9ZyrRhysDIXN0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(376002)(39860400002)(136003)(366004)(451199021)(2616005)(6512007)(26005)(186003)(6506007)(7416002)(5660300002)(8936002)(41300700001)(8676002)(4326008)(110136005)(38350700002)(38100700002)(122000001)(54906003)(82960400001)(82950400001)(66946007)(316002)(66446008)(64756008)(66556008)(66476007)(7846003)(83380400001)(71200400001)(2906002)(52116002)(10290500003)(478600001)(6486002)(36756003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?hBP2tuiv5Ma+Amxa68K8EJDJ6WWGK3uq61XI6ThtF3+L+LL0NeGtX+aRlT?=
- =?iso-8859-1?Q?GBjecMuTB2NupRBBiJYxBMIc0WHOX1GNBa2tdXyGIoaaKngJpbXBy/l3Qc?=
- =?iso-8859-1?Q?5tt5Q2mHJ0Q8e7TT1LGiqgFAS2UAGIbFhrEP+3uIz22EXOO4vBQysc+L92?=
- =?iso-8859-1?Q?7OicpaOGcnAmieSt0XQATFupY/5tggBEVVIvFz+seXofXf5WJJT4g9X+31?=
- =?iso-8859-1?Q?WEwRxCBOyy5c3Hey5kX6qY7olXtVu9GgltLePYf6iYbwz28GaCV3xmYRmY?=
- =?iso-8859-1?Q?k3aZKEdbdPImH2NU3ix9ZNaDKXQiw8gD8hgj2LTmWDaxT+y/NJ1AfHMpAd?=
- =?iso-8859-1?Q?vOhASbQRjKUNq8/OCoW3fszD0iPnrTDtd7roNK1eZaI4IrZufpi+VfIUuq?=
- =?iso-8859-1?Q?U/72sylVCpMs8kxiKRr8Gjwr0b+pF+5bPa91hI4xKzUrISgu78jNmKUqqf?=
- =?iso-8859-1?Q?o46JVBFxt1svuJUFNu3YPOxCue+YAMol4HVvCHsD7TLXfhMa2O95wmx6hd?=
- =?iso-8859-1?Q?WAtV3BX20Sa8nja3IGRafYViA44TToP5oZ0WL1Dd3H9fgnxqFebswO3hnh?=
- =?iso-8859-1?Q?hsm0f3lCXUDJ7IrswBb4aQW4Y2AelGf13u/zIXRTC2455iBL7ruXIoXhbv?=
- =?iso-8859-1?Q?PmpjkoNnYpuwj5MR8bMQSCz+nXSwMeo6lV0BbCWnansIyjUPkqNybQQ4Fa?=
- =?iso-8859-1?Q?PFVcLseG//0vA+rY8JKm1VUl/aL5tmzgo9Y1xH2i/JsRlh+w/BvF/wNsVQ?=
- =?iso-8859-1?Q?36je6F60hiVQ5opHyusJn+ieqVeX1Hqry9hzFosDH1uSCDlOgcO0qyn2kJ?=
- =?iso-8859-1?Q?08Uooc01Xmt5gauG4nDrYiM8g6+SEBmGXAvZUzpiUi2ZwJ83rjysMLY/tD?=
- =?iso-8859-1?Q?BmNKHxpqFznGXVnV6wQBA+lc3nX4tzdR3Yzs8HX0G3t+zKRemhtJdP5ITi?=
- =?iso-8859-1?Q?EQSjMKAK4z7jVN9HGsBze7MPOGcYbr/v22wBnBVgxrNF5oj767OfgDWNaB?=
- =?iso-8859-1?Q?CsKc9MbZAFgmtFDWYhVWJwurAdt1LvOEN8imE0xHgGrlfQ9xeqFm0ayiBB?=
- =?iso-8859-1?Q?tp8QElg5154NSDX9eBOLA2TeVychPqYo4RVu8RDW8GuUJLWQ2XothIGzYe?=
- =?iso-8859-1?Q?AH3fS5fpbIfwMSNsPQAOFS9pwjjIhMHVMn5klDX2qhNTiRXvgHI1Kk84Lm?=
- =?iso-8859-1?Q?+eZIaU+nVIUEySmkzK+N/Oi9YjPLpEL4eCAdM2hHIxtF964oIiE4OgMKVY?=
- =?iso-8859-1?Q?gHsMaPUCcNq5rEFmiJX43ZbFNFuPBI/Aq64jHADwGkvUWMTbLrM69oxF6e?=
- =?iso-8859-1?Q?AimOJxa9R6ZRdeLPKc+Ey64DcpbER1gpMMxQCDbzVGSDTp04Dn+GSUSZjN?=
- =?iso-8859-1?Q?C2+gd7edQAs4izr0Ca1a+SnNyjqDYmIbcP6c1oM3YVgSBAev5L2cUs+40t?=
- =?iso-8859-1?Q?e3KMSx/Z7papeoP3dFFpd2/qfKlK9oqbE4mrVKjp1u3twTO6R89bUvag9Q?=
- =?iso-8859-1?Q?7FUI30QTPhbQJ+cnYiRroCgsM7hgkHWHZpZsWwgPSxjz4xHRlkxRj78kdI?=
- =?iso-8859-1?Q?QcPsmyeWx6+HtgwFn+9Mm0CLNniAINL7xMNlNuOISTvZs2i9yoDDDllRLQ?=
- =?iso-8859-1?Q?XNDCZ7uhSiMhSc7n4cgwd5CSS+OWVxe8V9?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jul 2023 11:09:11 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BC5134;
+        Thu, 13 Jul 2023 08:09:09 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7C6A52215A;
+        Thu, 13 Jul 2023 15:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1689260947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MS6Q/88TMXWzZPXfu/PTu2qDJkEKMqR1diKbb8wT1eU=;
+        b=cEBc0UcNtLsv9/np6kbLs/An3rRHlzzg4WKB1vazu2CrpKaBj2wmoM6mOu0B48lqik2WZU
+        s0jUIKNWNSsjxwILxBM98lddtS+cUFtia+65jXw7n0fBK7Q5iNfwmfJLNnBLiP47Upwn23
+        PHKmf1yem40W1KFSIQvAVq4ArQzWMuk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1689260947;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MS6Q/88TMXWzZPXfu/PTu2qDJkEKMqR1diKbb8wT1eU=;
+        b=Vl/f6Y8CEHJhBZGlsg6hVEEwlwTtg+HhIYHsDOu10IZWCZUdlBGSixnruIlV04LbwCBXFV
+        h0UKbVbUcp8wDlBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D4808133D6;
+        Thu, 13 Jul 2023 15:09:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 08LHMo8TsGTCBQAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Thu, 13 Jul 2023 15:09:03 +0000
+Message-ID: <78be52b8-5ffb-601a-84b2-ead2894973a6@suse.de>
+Date:   Thu, 13 Jul 2023 17:09:02 +0200
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd5e86bf-46d8-46f5-85b9-08db83b042b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jul 2023 14:48:45.9912
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 90C9vvElG38vr3i8rxg/wqgUm2JBwd+UacRP/Xt4sewLMt+TyQv93Nta2BKsFuzklwLX3UfJhNSSXPExbzybNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1531
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [Freedreno] [PATCH RFC v1 00/52] drm/crtc: Rename struct
+ drm_crtc::dev to drm_dev
+Content-Language: en-US
+To:     Sean Paul <seanpaul@chromium.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Jani Nikula <jani.nikula@intel.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+        Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
+        dri-devel@lists.freedesktop.org,
+        Vandita Kulkarni <vandita.kulkarni@intel.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Anitha Chrisanthus <anitha.chrisanthus@intel.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Arun R Murthy <arun.r.murthy@intel.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Liu Shixin <liushixin2@huawei.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        Wenjing Liu <wenjing.liu@amd.com>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+        Danilo Krummrich <dakr@redhat.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        spice-devel@lists.freedesktop.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        linux-sunxi@lists.linux.dev, Stylon Wang <stylon.wang@amd.com>,
+        Tim Huang <Tim.Huang@amd.com>,
+        Suraj Kandpal <suraj.kandpal@intel.com>,
+        =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
+        Andi Shyti <andi.shyti@linux.intel.com>,
+        Yifan Zhang <yifan1.zhang@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        =?UTF-8?Q?=c5=81ukasz_Bartosik?= <lb@semihalf.com>,
+        Radhakrishna Sripada <radhakrishna.sripada@intel.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        kernel@pengutronix.de, Alex Deucher <alexander.deucher@amd.com>,
+        freedreno@lists.freedesktop.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Zack Rusin <zackr@vmware.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-aspeed@lists.ozlabs.org, nouveau@lists.freedesktop.org,
+        Mitul Golani <mitulkumar.ajitkumar.golani@intel.com>,
+        =?UTF-8?Q?Jos=c3=a9_Roberto_de_Souza?= <jose.souza@intel.com>,
+        virtualization@lists.linux-foundation.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Yongqin Liu <yongqin.liu@linaro.org>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Fei Yang <fei.yang@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        David Lechner <david@lechnology.com>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+        David Francis <David.Francis@amd.com>,
+        Aaron Liu <aaron.liu@amd.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        Vinod Polimera <quic_vpolimer@quicinc.com>,
+        linux-rockchip@lists.infradead.org,
+        Fangzhi Zuo <jerry.zuo@amd.com>,
+        Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        VMware Graphics Reviewers 
+        <linux-graphics-maintainer@vmware.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        =?UTF-8?Q?Jouni_H=c3=b6gander?= <jouni.hogander@intel.com>,
+        Dave Airlie <airlied@redhat.com>, linux-mips@vger.kernel.org,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-arm-msm@vger.kernel.org,
+        Animesh Manna <animesh.manna@intel.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Maxime Ripard <mripard@kernel.org>,
+        Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-amlogic@lists.infradead.org, Evan Quan <evan.quan@amd.com>,
+        Michal Simek <michal.simek@amd.com>,
+        linux-arm-kernel@lists.infradead.org, Sean Paul <sean@poorly.run>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Qingqing Zhuo <qingqing.zhuo@amd.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Swati Sharma <swati2.sharma@intel.com>,
+        John Stultz <jstultz@google.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Anusha Srivatsa <anusha.srivatsa@intel.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        linux-hyperv@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Melissa Wen <melissa.srw@gmail.com>,
+        =?UTF-8?Q?Ma=c3=adra_Canal?= <mairacanal@riseup.net>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Likun Gao <Likun.Gao@amd.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Deepak Rawat <drawat.floss@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Joel Stanley <joel@jms.id.au>,
+        Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Alan Liu <haoping.liu@amd.com>,
+        Philip Yang <Philip.Yang@amd.com>,
+        Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org,
+        Alison Wang <alison.wang@nxp.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Gustavo Sousa <gustavo.sousa@intel.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Tomi Valkeinen <tomba@kernel.org>,
+        Deepak R Varma <drv@mailo.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Chia-I Wu <olvaffe@gmail.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Tian Tao <tiantao6@hisilicon.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Khaled Almahallawy <khaled.almahallawy@intel.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Emma Anholt <emma@anholt.net>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Imre Deak <imre.deak@intel.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Roman Li <roman.li@amd.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Clark <robdclark@gmail.com>,
+        Hamza Mahfooz <hamza.mahfooz@amd.com>,
+        David Airlie <airlied@gmail.com>, Marek Vasut <marex@denx.de>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        xen-devel@lists.xenproject.org, Guchun Chen <guchun.chen@amd.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Mika Kahola <mika.kahola@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
+        Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+        Vinod Govindapillai <vinod.govindapillai@intel.com>,
+        linux-tegra@vger.kernel.org,
+        =?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <marek.olsak@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?Q?Joaqu=c3=adn_Ignacio_Aramend=c3=ada?= 
+        <samsagax@gmail.com>, Melissa Wen <mwen@igalia.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-mediatek@lists.infradead.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Tadokoro <davidbtadokoro@usp.br>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        amd-gfx@lists.freedesktop.org, Jyri Sarha <jyri.sarha@iki.fi>,
+        Yannick Fertre <yannick.fertre@foss.st.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Philippe Cornu <philippe.cornu@foss.st.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Wayne Lin <Wayne.Lin@amd.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Nirmoy Das <nirmoy.das@intel.com>, Lang Yu <Lang.Yu@amd.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+References: <20230712094702.1770121-1-u.kleine-koenig@pengutronix.de>
+ <87fs5tgpvv.fsf@intel.com>
+ <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
+ <20230713130337.fd2l67r23g2irifx@pengutronix.de>
+ <CAOw6vbKtjyUm+OqO7LSV1hDOMQATwkEWP4GzBbbXib0i5EviUQ@mail.gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <CAOw6vbKtjyUm+OqO7LSV1hDOMQATwkEWP4GzBbbXib0i5EviUQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------UZzIExM15Kv5h8d3TfG92PJg"
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add page pool for RX buffers for faster buffer cycle and reduce CPU
-usage.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------UZzIExM15Kv5h8d3TfG92PJg
+Content-Type: multipart/mixed; boundary="------------MlAYonS9DhZc9LUjMUrylqL8";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Sean Paul <seanpaul@chromium.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Jani Nikula <jani.nikula@intel.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?=
+ <heiko@sntech.de>, Geert Uytterhoeven <geert+renesas@glider.be>,
+ Xinliang Liu <xinliang.liu@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
+ dri-devel@lists.freedesktop.org,
+ Vandita Kulkarni <vandita.kulkarni@intel.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Anitha Chrisanthus <anitha.chrisanthus@intel.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Arun R Murthy <arun.r.murthy@intel.com>, Jerome Brunet
+ <jbrunet@baylibre.com>, Liu Shixin <liushixin2@huawei.com>,
+ linux-samsung-soc@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+ Matt Roper <matthew.d.roper@intel.com>, Wenjing Liu <wenjing.liu@amd.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
+ Danilo Krummrich <dakr@redhat.com>, NXP Linux Team <linux-imx@nxp.com>,
+ spice-devel@lists.freedesktop.org,
+ Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+ linux-sunxi@lists.linux.dev, Stylon Wang <stylon.wang@amd.com>,
+ Tim Huang <Tim.Huang@amd.com>, Suraj Kandpal <suraj.kandpal@intel.com>,
+ =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@igalia.com>,
+ Andi Shyti <andi.shyti@linux.intel.com>, Yifan Zhang <yifan1.zhang@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Lucas De Marchi <lucas.demarchi@intel.com>, Inki Dae <inki.dae@samsung.com>,
+ Hersen Wu <hersenxs.wu@amd.com>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>,
+ Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+ =?UTF-8?Q?=c5=81ukasz_Bartosik?= <lb@semihalf.com>,
+ Radhakrishna Sripada <radhakrishna.sripada@intel.com>,
+ Andrew Jeffery <andrew@aj.id.au>, Seung-Woo Kim <sw0312.kim@samsung.com>,
+ =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, kernel@pengutronix.de,
+ Alex Deucher <alexander.deucher@amd.com>, freedreno@lists.freedesktop.org,
+ Claudiu Beznea <claudiu.beznea@microchip.com>, Zack Rusin
+ <zackr@vmware.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-aspeed@lists.ozlabs.org, nouveau@lists.freedesktop.org,
+ Mitul Golani <mitulkumar.ajitkumar.golani@intel.com>,
+ =?UTF-8?Q?Jos=c3=a9_Roberto_de_Souza?= <jose.souza@intel.com>,
+ virtualization@lists.linux-foundation.org,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Yongqin Liu <yongqin.liu@linaro.org>,
+ Mario Limonciello <mario.limonciello@amd.com>, Fei Yang
+ <fei.yang@intel.com>, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>, David Lechner <david@lechnology.com>,
+ Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+ "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+ David Francis <David.Francis@amd.com>, Aaron Liu <aaron.liu@amd.com>,
+ Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+ Vinod Polimera <quic_vpolimer@quicinc.com>,
+ linux-rockchip@lists.infradead.org, Fangzhi Zuo <jerry.zuo@amd.com>,
+ Aurabindo Pillai <aurabindo.pillai@amd.com>,
+ VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+ Ben Skeggs <bskeggs@redhat.com>, =?UTF-8?Q?Jouni_H=c3=b6gander?=
+ <jouni.hogander@intel.com>, Dave Airlie <airlied@redhat.com>,
+ linux-mips@vger.kernel.org, Gurchetan Singh <gurchetansingh@chromium.org>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-arm-msm@vger.kernel.org, Animesh Manna <animesh.manna@intel.com>,
+ linux-renesas-soc@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+ Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-amlogic@lists.infradead.org,
+ Evan Quan <evan.quan@amd.com>, Michal Simek <michal.simek@amd.com>,
+ linux-arm-kernel@lists.infradead.org, Sean Paul <sean@poorly.run>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Boris Brezillon <bbrezillon@kernel.org>, Chunyan Zhang
+ <zhang.lyra@gmail.com>, Qingqing Zhuo <qingqing.zhuo@amd.com>,
+ Sandy Huang <hjc@rock-chips.com>, Swati Sharma <swati2.sharma@intel.com>,
+ John Stultz <jstultz@google.com>,
+ Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Drew Davenport <ddavenport@chromium.org>, Kevin Hilman
+ <khilman@baylibre.com>, Hawking Zhang <Hawking.Zhang@amd.com>,
+ Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Anusha Srivatsa <anusha.srivatsa@intel.com>,
+ Dan Carpenter <error27@gmail.com>, Karol Herbst <kherbst@redhat.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ linux-hyperv@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+ Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=c3=adra_Canal?=
+ <mairacanal@riseup.net>, Luca Coelho <luciano.coelho@intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Likun Gao <Likun.Gao@amd.com>,
+ Sam Ravnborg <sam@ravnborg.org>, Alain Volmat <alain.volmat@foss.st.com>,
+ Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Deepak Rawat <drawat.floss@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+ Joel Stanley <joel@jms.id.au>, Ankit Nautiyal <ankit.k.nautiyal@intel.com>,
+ Harry Wentland <harry.wentland@amd.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Alan Liu <haoping.liu@amd.com>,
+ Philip Yang <Philip.Yang@amd.com>, Lyude Paul <lyude@redhat.com>,
+ intel-gfx@lists.freedesktop.org, Alison Wang <alison.wang@nxp.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Gustavo Sousa <gustavo.sousa@intel.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+ Tomi Valkeinen <tomba@kernel.org>, Deepak R Varma <drv@mailo.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Chia-I Wu <olvaffe@gmail.com>, Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+ Tian Tao <tiantao6@hisilicon.com>, Shawn Guo <shawnguo@kernel.org>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ Khaled Almahallawy <khaled.almahallawy@intel.com>,
+ linux-stm32@st-md-mailman.stormreply.com, Emma Anholt <emma@anholt.net>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, Imre Deak <imre.deak@intel.com>,
+ Liviu Dudau <liviu.dudau@arm.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Roman Li
+ <roman.li@amd.com>, Paul Cercueil <paul@crapouillou.net>,
+ Rob Clark <robdclark@gmail.com>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
+ David Airlie <airlied@gmail.com>, Marek Vasut <marex@denx.de>,
+ Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+ xen-devel@lists.xenproject.org, Guchun Chen <guchun.chen@amd.com>,
+ Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Russell King <linux@armlinux.org.uk>, Uma Shankar <uma.shankar@intel.com>,
+ Mika Kahola <mika.kahola@intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Jiasheng Jiang <jiasheng@iscas.ac.cn>,
+ Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+ Vinod Govindapillai <vinod.govindapillai@intel.com>,
+ linux-tegra@vger.kernel.org, =?UTF-8?B?TWFyZWsgT2zFocOhaw==?=
+ <marek.olsak@amd.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,
+ =?UTF-8?Q?Joaqu=c3=adn_Ignacio_Aramend=c3=ada?= <samsagax@gmail.com>,
+ Melissa Wen <mwen@igalia.com>, Hans de Goede <hdegoede@redhat.com>,
+ linux-mediatek@lists.infradead.org, Fabio Estevam <festevam@gmail.com>,
+ Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ David Tadokoro <davidbtadokoro@usp.br>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Orson Zhai <orsonzhai@gmail.com>, amd-gfx@lists.freedesktop.org,
+ Jyri Sarha <jyri.sarha@iki.fi>, Yannick Fertre <yannick.fertre@foss.st.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Philippe Cornu <philippe.cornu@foss.st.com>, Daniel Vetter
+ <daniel@ffwll.ch>, Wayne Lin <Wayne.Lin@amd.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Nirmoy Das <nirmoy.das@intel.com>, Lang Yu <Lang.Yu@amd.com>,
+ Lucas Stach <l.stach@pengutronix.de>
+Message-ID: <78be52b8-5ffb-601a-84b2-ead2894973a6@suse.de>
+Subject: Re: [Freedreno] [PATCH RFC v1 00/52] drm/crtc: Rename struct
+ drm_crtc::dev to drm_dev
+References: <20230712094702.1770121-1-u.kleine-koenig@pengutronix.de>
+ <87fs5tgpvv.fsf@intel.com>
+ <CAOw6vbLO_UaXDbTCtAQJgthXOUMPqEV+c2MQhP-1DuK44OhGxw@mail.gmail.com>
+ <20230713130337.fd2l67r23g2irifx@pengutronix.de>
+ <CAOw6vbKtjyUm+OqO7LSV1hDOMQATwkEWP4GzBbbXib0i5EviUQ@mail.gmail.com>
+In-Reply-To: <CAOw6vbKtjyUm+OqO7LSV1hDOMQATwkEWP4GzBbbXib0i5EviUQ@mail.gmail.com>
 
-Get an extra ref count of a page after allocation, so after upper
-layers put the page, it's still referenced by the pool. We can reuse
-it as RX buffer without alloc a new page.
+--------------MlAYonS9DhZc9LUjMUrylqL8
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 73 ++++++++++++++++++-
- include/net/mana/mana.h                       |  5 ++
- 2 files changed, 77 insertions(+), 1 deletion(-)
+SGkNCg0KQW0gMTMuMDcuMjMgdW0gMTY6NDEgc2NocmllYiBTZWFuIFBhdWw6DQo+IE9uIFRo
+dSwgSnVsIDEzLCAyMDIzIGF0IDk6MDTigK9BTSBVd2UgS2xlaW5lLUvDtm5pZw0KPiA8dS5r
+bGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlPiB3cm90ZToNCj4+DQo+PiBoZWxsbyBTZWFu
+LA0KPj4NCj4+IE9uIFdlZCwgSnVsIDEyLCAyMDIzIGF0IDAyOjMxOjAyUE0gLTA0MDAsIFNl
+YW4gUGF1bCB3cm90ZToNCj4+PiBJJ2QgcmVhbGx5IHByZWZlciB0aGlzIHBhdGNoIChzZXJp
+ZXMgb3Igc2luZ2xlKSBpcyBub3QgYWNjZXB0ZWQuIFRoaXMNCj4+PiB3aWxsIGNhdXNlIHBy
+b2JsZW1zIGZvciBldmVyeW9uZSBjaGVycnktcGlja2luZyBwYXRjaGVzIHRvIGENCj4+PiBk
+b3duc3RyZWFtIGtlcm5lbCAoTFRTIG9yIGRpc3RybyB0cmVlKS4gSSB1c3VhbGx5IHdvdWxk
+bid0IGV4cGVjdA0KPj4+IHN5bXBhdGh5IGhlcmUsIGJ1dCB0aGUgcXVlc3Rpb25hYmxlIGJl
+bmVmaXQgZG9lcyBub3Qgb3V0d2VpZ2ggdGhlIGNvc3QNCj4+PiBJTVtiaWFzZWRdTy4NCj4+
+DQo+PiBJIGFncmVlIHRoYXQgZm9yIGJhY2twb3J0cyB0aGlzIGlzbid0IHNvIG5pY2UuIEhv
+d2V2ZXIgd2l0aCB0aGUgc3BsaXQNCj4+IGFwcHJvYWNoICh0aGF0IHdhcyBhcmd1bWVudGVk
+IGFnYWluc3QgaGVyZSkgaXQncyBub3Qgc29vIGJhZC4gUGF0Y2ggIzENCj4+IChhbmQgc2lt
+aWxhciBjaGFuZ2VzIGZvciB0aGUgb3RoZXIgYWZmZWN0ZWQgc3RydWN0dXJlcykgY291bGQg
+YmUNCj4+IHRyaXZpYWxseSBiYWNrcG9ydGVkIGFuZCB3aXRoIHRoYXQgaXQgZG9lc24ndCBt
+YXR0ZXIgaWYgeW91IHdyaXRlIGRldiBvcg0KPj4gZHJtIChvciB3aGF0ZXZlciBuYW1lIGlz
+IGNob3NlbiBpbiB0aGUgZW5kKTsgYm90aCB3b3JrIGluIHRoZSBzYW1lIHdheS4NCj4gDQo+
+IFBhdGNoICMxIGF2b2lkcyB0aGUgbmVlZCB0byBiYWNrcG9ydCB0aGUgZW50aXJlIHNldCwg
+aG93ZXZlciBldmVyeQ0KPiBjaGFuZ2Ugb2NjdXJpbmcgYWZ0ZXIgdGhlIHJlbmFtZSBwYXRj
+aGVzIHdpbGwgY2F1c2UgY29uZmxpY3RzIG9uDQo+IGZ1dHVyZSBjaGVycnktcGlja3MuIERv
+d25zdHJlYW0ga2VybmVscyB3aWxsIGhhdmUgdG8gYmFja3BvcnQgdGhlDQo+IHdob2xlIHNl
+dC4gQmFja3BvcnRpbmcgdGhlIGVudGlyZSBzZXQgd2lsbCBjcmVhdGUgYW4gZXBvY2ggaW4N
+Cj4gZG93bnN0cmVhbSBrZXJuZWxzIHdoZXJlIGNoZXJyeS1waWNraW5nIHBhdGNoZXMgcHJl
+Y2VkaW5nIHRoaXMgc2V0DQo+IHdpbGwgbmVlZCB0byB1bmRlcmdvIGNvbmZsaWN0IHJlc29s
+dXRpb24gYXMgd2VsbC4gQXMgbWVudGlvbmVkIGluIG15DQo+IHByZXZpb3VzIGVtYWlsLCBJ
+IGRvbid0IGV4cGVjdCBzeW1wYXRoeSBoZXJlLCBpdCdzIHBhcnQgb2YgbWFpbnRhaW5pbmcN
+Cj4gYSBkb3duc3RyZWFtIGtlcm5lbCwgYnV0IHRoZXJlIGlzIGEgcmVhbCBjb3N0IHRvIGtl
+cm5lbCBjb25zdW1lcnMuDQo+IA0KPj4NCj4+IEJ1dCBldmVuIHdpdGggdGhlIG9uZS1wYXRj
+aC1wZXItcmVuYW1lIGFwcHJvYWNoIEknZCBjb25zaWRlciB0aGUNCj4+IHJlbmFtaW5nIGEg
+bmV0IHdpbiwgYmVjYXVzZSBlYXNlIG9mIHVuZGVyc3RhbmRpbmcgY29kZSBoYXMgYSBiaWcg
+dmFsdWUuDQo+PiBJdCdzIHZhbHVlIGlzIG5vdCBzbyBlYXN5IG1lYXN1cmFibGUgYXMgImNv
+bmZsaWN0cyB3aGVuIGJhY2twb3J0aW5nIiwNCj4+IGJ1dCBpdCBhbHNvIG1hdHRlcnMgaW4g
+c2F5IHR3byB5ZWFycyBmcm9tIG5vdywgd2hpbGUgYmFja3BvcnRpbmcNCj4+IHNob3VsZG4n
+dCBiZSBhbiBpc3N1ZSB0aGVuIGFueSBtb3JlLg0KPiANCj4gWW91J3ZlIHJpZ2h0bHkgaWRl
+bnRpZmllZCB0aGUgY29uamVjdHVyZSBpbiB5b3VyIHN0YXRlbWVudC4gSSd2ZSBiZWVuDQo+
+IG9uIGJvdGggc2lkZXMgb2YgdGhlIGFyZ3VtZW50LCBoYXZpbmcgd3JpdHRlbi9tYWludGFp
+bmVkIGRybSBjb2RlDQo+IHVwc3RyZWFtIGFuZCBjaGVycnktcGlja2VkIGNoYW5nZXMgdG8g
+YSBkb3duc3RyZWFtIGtlcm5lbC4gUGVyaGFwcw0KPiBpdCdzIGJlY2F1c2UgZHJtJ3MgZGVm
+aW5pdGlvbiBvZiBkZXYgaXMgaW5ncmFpbmVkIGluIG15IG11c2NsZSBtZW1vcnksDQo+IG9y
+IG1heWJlIGl0J3MgYmVjYXVzZSBJIGRvbid0IGRvIGEgbG90IG9mIHVwc3RyZWFtIGRldmVs
+b3BtZW50IHRoZXNlDQo+IGRheXMsIGJ1dCBJIGp1c3QgaGF2ZSBhIGhhcmQgdGltZSBzZWVp
+bmcgdGhlIGJlbmVmaXQgaGVyZS4NCg0KSSBjYW4gb25seSBzZWNvbmQgd2hhdCBTZWFuIHdy
+aXRlcy4gSSd2ZSBkb25lIHF1aXRlIGEgYml0IG9mIGJhY2twb3J0aW5nIA0Kb2YgRFJNIGNv
+ZGUuIEl0J3MgaGFyZCBhbHJlYWR5LiBBbmQgdGhpcyBraW5kIG9mIGNoYW5nZSBpcyBnb2lu
+ZyB0byB0byANCmFmZmVjdCBhbG1vc3QgZXZlcnkgYmFja3BvcnRlZCBEUk0gcGF0Y2ggaW4g
+dGhlIGNvbWluZyB5ZWFycy4gTm90IGp1c3QgDQpmb3IgZGlzdHJpYnV0aW9uIGtlcm5lbHMs
+IGJ1dCBhbHNvIGZvciB1cHN0cmVhbSdzIHN0YWJsZSBzZXJpZXMuIEl0J3MgDQpyZWFsbHkg
+b25seSBwb3NzaWJsZSB0byBkbyB0aGlzIGNoYW5nZSBvdmVyIG1hbnkgcmVsZWFzZXMgd2hp
+bGUga2VlcGluZyANCmNvbXBhdGlibGUgd2l0aCB0aGUgb2xkIG5hbWUuIFNvIHRoZSBtb3Jl
+IEkgdGhpbmsgYWJvdXQgaXQsIHRoZSBsZXNzIEkgDQpsaWtlIHRoaXMgY2hhbmdlLg0KDQpC
+ZXN0IHJlZ2FyZHMNClRob21hcw0KDQo+IA0KPiBJIGFwcHJlY2lhdGUgeW91ciBlbmdhZ2Vt
+ZW50IG9uIHRoZSB0b3BpYywgdGhhbmsgeW91IQ0KPiANCj4gU2Vhbg0KPiANCj4+DQo+PiBU
+aGFua3MgZm9yIHlvdXIgaW5wdXQsIGJlc3QgcmVnYXJkcw0KPj4gVXdlDQo+Pg0KPj4gLS0N
+Cj4+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAgICAgICAgICAgICAgICB8IFV3ZSBL
+bGVpbmUtS8O2bmlnICAgICAgICAgICAgfA0KPj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlv
+bnMgICAgICAgICAgICAgICAgIHwgaHR0cHM6Ly93d3cucGVuZ3V0cm9uaXguZGUvIHwNCg0K
+LS0gDQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VT
+RSBTb2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpGcmFua2Vuc3RyYXNzZSAxNDYs
+IDkwNDYxIE51ZXJuYmVyZywgR2VybWFueQ0KR0Y6IEl2byBUb3RldiwgQW5kcmV3IE15ZXJz
+LCBBbmRyZXcgTWNEb25hbGQsIEJvdWRpZW4gTW9lcm1hbg0KSFJCIDM2ODA5IChBRyBOdWVy
+bmJlcmcpDQo=
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/et=
-hernet/microsoft/mana/mana_en.c
-index a499e460594b..6444a8e47852 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -1507,6 +1507,34 @@ static void mana_rx_skb(void *buf_va, struct mana_rx=
-comp_oob *cqe,
- 	return;
- }
-=20
-+static struct page *mana_get_page_from_pool(struct mana_rxq *rxq)
-+{
-+	struct page *page;
-+	int i;
-+
-+	i =3D rxq->pl_last + 1;
-+	if (i >=3D MANA_POOL_SIZE)
-+		i =3D 0;
-+
-+	rxq->pl_last =3D i;
-+
-+	page =3D rxq->pool[i];
-+	if (page_ref_count(page) =3D=3D 1) {
-+		get_page(page);
-+		return page;
-+	}
-+
-+	page =3D dev_alloc_page();
-+	if (page) {
-+		put_page(rxq->pool[i]);
-+
-+		get_page(page);
-+		rxq->pool[i] =3D page;
-+	}
-+
-+	return page;
-+}
-+
- static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
- 			     dma_addr_t *da, bool is_napi)
- {
-@@ -1533,7 +1561,7 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, st=
-ruct device *dev,
- 			return NULL;
- 		}
- 	} else {
--		page =3D dev_alloc_page();
-+		page =3D mana_get_page_from_pool(rxq);
- 		if (!page)
- 			return NULL;
-=20
-@@ -1873,6 +1901,21 @@ static int mana_create_txq(struct mana_port_context =
-*apc,
- 	return err;
- }
-=20
-+static void mana_release_rxq_pool(struct mana_rxq *rxq)
-+{
-+	struct page *page;
-+	int i;
-+
-+	for (i =3D 0; i < MANA_POOL_SIZE; i++) {
-+		page =3D rxq->pool[i];
-+
-+		if (page)
-+			put_page(page);
-+
-+		rxq->pool[i] =3D NULL;
-+	}
-+}
-+
- static void mana_destroy_rxq(struct mana_port_context *apc,
- 			     struct mana_rxq *rxq, bool validate_state)
-=20
-@@ -1917,6 +1960,8 @@ static void mana_destroy_rxq(struct mana_port_context=
- *apc,
- 		rx_oob->buf_va =3D NULL;
- 	}
-=20
-+	mana_release_rxq_pool(rxq);
-+
- 	if (rxq->gdma_rq)
- 		mana_gd_destroy_queue(gc, rxq->gdma_rq);
-=20
-@@ -2008,6 +2053,27 @@ static int mana_push_wqe(struct mana_rxq *rxq)
- 	return 0;
- }
-=20
-+static int mana_alloc_rxq_pool(struct mana_rxq *rxq)
-+{
-+	struct page *page;
-+	int i;
-+
-+	for (i =3D 0; i < MANA_POOL_SIZE; i++) {
-+		page =3D dev_alloc_page();
-+		if (!page)
-+			goto err;
-+
-+		rxq->pool[i] =3D page;
-+	}
-+
-+	return 0;
-+
-+err:
-+	mana_release_rxq_pool(rxq);
-+
-+	return -ENOMEM;
-+}
-+
- static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
- 					u32 rxq_idx, struct mana_eq *eq,
- 					struct net_device *ndev)
-@@ -2029,6 +2095,11 @@ static struct mana_rxq *mana_create_rxq(struct mana_=
-port_context *apc,
- 	if (!rxq)
- 		return NULL;
-=20
-+	if (mana_alloc_rxq_pool(rxq)) {
-+		kfree(rxq);
-+		return NULL;
-+	}
-+
- 	rxq->ndev =3D ndev;
- 	rxq->num_rx_buf =3D RX_BUFFERS_PER_QUEUE;
- 	rxq->rxq_idx =3D rxq_idx;
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 024ad8ddb27e..8f1f09f9e4ab 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -297,6 +297,8 @@ struct mana_recv_buf_oob {
-=20
- #define MANA_XDP_MTU_MAX (PAGE_SIZE - MANA_RXBUF_PAD - XDP_PACKET_HEADROOM=
-)
-=20
-+#define MANA_POOL_SIZE (RX_BUFFERS_PER_QUEUE * 2)
-+
- struct mana_rxq {
- 	struct gdma_queue *gdma_rq;
- 	/* Cache the gdma receive queue id */
-@@ -330,6 +332,9 @@ struct mana_rxq {
- 	bool xdp_flush;
- 	int xdp_rc; /* XDP redirect return code */
-=20
-+	struct page *pool[MANA_POOL_SIZE];
-+	int pl_last;
-+
- 	/* MUST BE THE LAST MEMBER:
- 	 * Each receive buffer has an associated mana_recv_buf_oob.
- 	 */
---=20
-2.25.1
+--------------MlAYonS9DhZc9LUjMUrylqL8--
 
+--------------UZzIExM15Kv5h8d3TfG92PJg
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmSwE44FAwAAAAAACgkQlh/E3EQov+CI
+yQ//aZHYhcxB037tgGfzs4wCdHrFdvhb5Mqh5H9F2uMCAuLkMCZZ6zMzqlDeOTNynCNJ8xBXx/tY
+Z9jdNWdNGgTZE4GyX63pd3sAgBDtmj62p2x5eeBhve2bM01a7BvueZoqQ7bKedRwl7xyVPZYM11a
+zBT+/iz7U+E/+N5J66ZaUOVWiIW1CAo+Z+zxewzXD+pjA/earmoHjIu+01QUsUyUQ9OX9cQpJOPv
+/J0bNuItNGvILSLV7rR70FF55hJ/DbyvlCgOmrbhFRsVX4uuuuCAW3gAoTu/UFq+ZWhUDV0Td3Bg
+jb/adYZH7VmxHTv6LOheoWTgj3K8qjK+fgbTIZy/Llzenh1R+b8cf5hbIMirI2i1BdNLqiRZggWK
+cuEA8icsjxmmXDpLK1+bRk5L5Jh0oKmI3AJztXIFAQIC/KiC4S2a2onb7toJyFvoeEzbIdpR5xXw
+a7NhaDkGwksRiHgQv1BMO4GIZtkzMqxja6qqac1CQxnU3nyBH3rBjSiT36K7+uyMQkw/11rNweNU
+Bp/pM3ZcHIUoyP6oJTuIYWZm7drTbfstCMjAuQGT+EY1V/vHJifdtruW29QM9DsXPz09pkFR0REk
+f/Xbx4gNiXjL6H17xkRd1v/NJ/NTJXoxF1Oc9H46yvUMX4Vj8klQKGqEcnUzYWmAQB8VdfHTff1e
+ztc=
+=359C
+-----END PGP SIGNATURE-----
+
+--------------UZzIExM15Kv5h8d3TfG92PJg--
