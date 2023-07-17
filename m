@@ -2,129 +2,139 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA967550E0
-	for <lists+linux-hyperv@lfdr.de>; Sun, 16 Jul 2023 21:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57496755D3C
+	for <lists+linux-hyperv@lfdr.de>; Mon, 17 Jul 2023 09:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjGPTNX (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 16 Jul 2023 15:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
+        id S230499AbjGQHoc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 17 Jul 2023 03:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjGPTNW (ORCPT
+        with ESMTP id S230264AbjGQHoV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 16 Jul 2023 15:13:22 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04hn2203.outbound.protection.outlook.com [52.100.163.203])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D26EE4B;
-        Sun, 16 Jul 2023 12:13:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AeHDYQtHXsAUZZK3RwxGCmUCo0gU9BXWH3CM3YDOWHYyQVpY/iVBc5Mwzl4E50CVDNzuNZpGO6Pm6ZhO9qIWLma73JIUMPvwlLmLqzri5CLYoS2261MmoKFZ9RARqEsbMePJZszZS2NNxJGEMROOVnzVtaRRQoNn/RAfFQH5h5vnTn7f1sRXSuAqD0To4gxphUztc4pQiXqf04gyFyoyIWwOoXmQuzTdxlsYJ6s2BDXH0+gQo3rcY/9E7R76pgqucVckhrnvOKzfBt4gosMTA0GZ9QZFduP5jj2Kiz3lPiYjWWYCDkkC+66AWgKT5CY/c4xCsZQxdu7Yh7C5nDsCrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p/PeuBOnf5dYVxGl3ciVpz37qiwzVVT3w8y5MbyXetw=;
- b=gG8NXnq4buzgAI/iMTOB4dVa8xI5ZIo5Ea2LwID7qlWrmnv5J4+ZxdNx7eJmfGYSwgaGr5fx013WK1K1UhqJFAxdEeCBY+C5YQC3ogSGrnlozIpolAFNq34Hx0WjrfsUYfbZQAL89DzKe83qnH07DRvnMhalBDzl5A2XWZgmFL1SClbXXRKC49m2H7x11PyYYHK99JxJFFU3D2dVw1Py3nCG6x52V7xsTDdW9hNEBd3/6o6K0tg6I8DBk0DKwWG2Anh43sbPHjuKq8DS5H2sgku1J/uQchWWZ+P7tN9Et6sFEX509emPG+sW51nZv0eUbU3bqAl5GSxMTK0cNQhdUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 201.217.50.26) smtp.rcpttodomain=tmd.ac smtp.mailfrom=ips.gov.py;
- dmarc=bestguesspass action=none header.from=ips.gov.py; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ipspy.onmicrosoft.com;
- s=selector2-ipspy-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p/PeuBOnf5dYVxGl3ciVpz37qiwzVVT3w8y5MbyXetw=;
- b=1IvSiFUjqwR1B2+js2XOmQMR6Dv9Wg7W95Vppaqbwx6iH8CykOtLo6N8HF/IyEAIMiQVu6CAXCe4//cNsr1X3sEYy8D2yqKzq1gPPzC88hs6CEwEdOk7RE/zxBiBbIZQb4PPgV7JW8XZLH86b1ug0Vn5AupZ74DyFoXwREzlByk=
-Received: from DS7PR03CA0357.namprd03.prod.outlook.com (2603:10b6:8:55::10) by
- CPWP152MB5370.LAMP152.PROD.OUTLOOK.COM (2603:10d6:103:175::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6588.31; Sun, 16 Jul 2023 19:13:12 +0000
-Received: from DM6NAM10FT085.eop-nam10.prod.protection.outlook.com
- (2603:10b6:8:55:cafe::12) by DS7PR03CA0357.outlook.office365.com
- (2603:10b6:8:55::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.32 via Frontend
- Transport; Sun, 16 Jul 2023 19:13:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 201.217.50.26)
- smtp.mailfrom=ips.gov.py; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=ips.gov.py;
-Received-SPF: Pass (protection.outlook.com: domain of ips.gov.py designates
- 201.217.50.26 as permitted sender) receiver=protection.outlook.com;
- client-ip=201.217.50.26; helo=mail.ips.gov.py; pr=C
-Received: from mail.ips.gov.py (201.217.50.26) by
- DM6NAM10FT085.mail.protection.outlook.com (10.13.152.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.6588.13 via Frontend Transport; Sun, 16 Jul 2023 19:13:10 +0000
-Received: from vs-w12-exch-02.ips.intranet.local (10.20.11.162) by
- vs-w12-exch-02.ips.intranet.local (10.20.11.162) with Microsoft SMTP Server
- (TLS) id 15.0.1497.42; Sun, 16 Jul 2023 15:12:32 -0400
-Received: from vs-w12-exch-02.ips.intranet.local ([fe80::4132:32db:6b34:3eb2])
- by vs-w12-exch-02.ips.intranet.local ([fe80::4132:32db:6b34:3eb2%14]) with
- mapi id 15.00.1497.042; Sun, 16 Jul 2023 15:12:32 -0400
-From:   Silvana Lorena Verza Petters <slverza@ips.gov.py>
-To:     "t@hotmail.com" <t@hotmail.com>
-Subject: !!!!!@
-Thread-Topic: !!!!!@
-Thread-Index: AQHZuBl4AIiFm/4VuU6e3DMORFm9fA==
-Date:   Sun, 16 Jul 2023 19:12:32 +0000
-Message-ID: <f546819ef1fa4c1f83fc50ff25a13bfb@vs-w12-exch-02.ips.intranet.local>
-Accept-Language: es-PY, en-US
-Content-Language: es-PY
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [154.6.13.18]
-Content-Type: text/plain; charset="iso-8859-1"
+        Mon, 17 Jul 2023 03:44:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF15E64
+        for <linux-hyperv@vger.kernel.org>; Mon, 17 Jul 2023 00:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689579813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PQVhAdPhMy3kA8WlEpRTBlp68XeaAscXbJ2l6phyeAs=;
+        b=YnHJz94asRnKzleAtSYb53P6F3YFMzxWXU9lwwtm5K0HteAURcxtUDEpKh2m6bW0FWy58b
+        EN8lqv9ni+1e490RvnPssZwAmAj77pjITHf+R1Rn6z8wDMZSiL/oeoCJ+RqOznzUk8TSIN
+        2GkHEVEbnw5NzB+Q5fXKyow2sVK7DDU=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-283-ZgtzqEEeN7qMmgJUfHeOVQ-1; Mon, 17 Jul 2023 03:43:31 -0400
+X-MC-Unique: ZgtzqEEeN7qMmgJUfHeOVQ-1
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-56687ec60d4so5555938eaf.0
+        for <linux-hyperv@vger.kernel.org>; Mon, 17 Jul 2023 00:43:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689579810; x=1692171810;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PQVhAdPhMy3kA8WlEpRTBlp68XeaAscXbJ2l6phyeAs=;
+        b=DYCT08esNG2Yk1xKCIrUYWT3hjyMeTfz2tYYzXuKE5MuAphwbadokxCSru2kWmq3+U
+         SGxr1D0Oz9wsSVRrGzaTw2KM9ZgPRZzor4Ch4GgjjXANXuks89vA5IFmTTlBPtq5ICxA
+         mwxOe10909ZSUInqrtQPNx/hiJ24nC6ygqf/wzHfpgeYNDbnOBXQ2uphIXeTyhLh0SM1
+         tmd9/47UQF4UoeNdIIBKMLZZorKgqbCGQPUDHFgA8BjCorxujCe0G50spALiA0i5lb/J
+         czX7s8xZQnIXraClz1tM2SzHCJ58BqC2kRZ4AW5OlEk6h0XBu0dnU+ZWy4yfi8ioO1xS
+         Q7TA==
+X-Gm-Message-State: ABy/qLbWc/l6o1TQNtPHRUvLYCO0KqzD1b8kv2BHykalqhN3B7S7jg6v
+        ZhaUnoGwpQhbfpSGWPVbLF9hIsmeSpwpbQsaBczHMpmb24d+j0hOwLW5zYrMfmGxxJsuBZH9yaa
+        4AQZ61Wuo00bURASpKIrI9C5T5NB9W+y/
+X-Received: by 2002:a05:6358:90f:b0:134:c37f:4b63 with SMTP id r15-20020a056358090f00b00134c37f4b63mr10463398rwi.2.1689579810585;
+        Mon, 17 Jul 2023 00:43:30 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFK36ibipM0G2rzToLTfIecoh81m8Px1hLNcEbl1T9WmTowhFWmHY6w0sOGmKuUZwVeblBkeQ==
+X-Received: by 2002:a05:6358:90f:b0:134:c37f:4b63 with SMTP id r15-20020a056358090f00b00134c37f4b63mr10463390rwi.2.1689579810286;
+        Mon, 17 Jul 2023 00:43:30 -0700 (PDT)
+Received: from smtpclient.apple ([203.212.242.27])
+        by smtp.gmail.com with ESMTPSA id t2-20020a17090a950200b00263f33eef41sm4377184pjo.37.2023.07.17.00.43.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jul 2023 00:43:29 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.3\))
+Subject: Re: [PATCH] vmbus_testing: fix wrong python syntax for integer value
+ comparison
+From:   Ani Sinha <anisinha@redhat.com>
+In-Reply-To: <20230705134408.6302-1-anisinha@redhat.com>
+Date:   Mon, 17 Jul 2023 13:13:25 +0530
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM10FT085:EE_|CPWP152MB5370:EE_
-X-MS-Office365-Filtering-Correlation-Id: e778bd06-bc32-4106-693e-08db8630b232
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?8jrHifhpWaE8rBoDCMO1/NIaYvGzwJxEObASfspd2CAOr8iL3Eev8NaQU+?=
- =?iso-8859-1?Q?ZbZlbZkRbjRYkfAcMAgGaX3BMwzNWIzdoVM+33S/bX1HjeaulWxjZp3sbB?=
- =?iso-8859-1?Q?PJDWfAlII60tpYSsv6235qd4wBOiwdfbaWsfXDWZncw7VfXHdnRrb5e1yE?=
- =?iso-8859-1?Q?fVb9WhNSLecYflx1H+Iydp18E362KpOHaolZ9Pd2Ptau7gFi7Ys+AXGlmX?=
- =?iso-8859-1?Q?Wht5Xwmnw4jvl3P980KIHBsiNy21CcDIG2x59oSD+kesV9qGbbgugky85K?=
- =?iso-8859-1?Q?dq4mYT0ENYd5T5isPts3a7S6cffCMjCO7Gz8bHUnRPHJwsDZIxjhA5MMmN?=
- =?iso-8859-1?Q?jtI/4p7FWv+2x3znRL067hJDVHMAdsiYO4DQ8s29pT+JjR6Kn9KKYHD62z?=
- =?iso-8859-1?Q?DzeexrkxmeILs17ovJ3Rkb6QdrwMVXNeljo8Uk5z9JX1dpoJvzPe7DgUos?=
- =?iso-8859-1?Q?INOvheX/1wMTN5+FWT3ZZvcZXTWEenr1t9Lma42IB4CR6QJFb5k4fZG4BQ?=
- =?iso-8859-1?Q?i26QdmIySZRlfRHuTm7CwS9tZxymMsJpVpRrsx+WQzh5bpyvBXn5pTeCWK?=
- =?iso-8859-1?Q?ocu29GE+7VwsPyEIivC5BJ1ZHKdq5tWBHSWLFLPFaL7I+9Rq3F4zVNr6EW?=
- =?iso-8859-1?Q?POFpMN8GAkpDmNWdbFVWRY1nYpT4RrtKAOITHEmcVsFP29/mn/EW/3HNK+?=
- =?iso-8859-1?Q?QYvwtDh5YmrvMjBIOKvVcio70/1BbBqcOeWIWjycAC/QaJ+iP/K3NHVmgE?=
- =?iso-8859-1?Q?bStCTgRDjyajQ9ws8nAcQ5SkW6sYvHMvdcGSRp7htyeDUQ5X2VctIoh3P7?=
- =?iso-8859-1?Q?zyCJktxY3Tq8GQF6lrvZpX+XZCVNN3ZWObRL50G9RBERF15ko5UXKI4WeP?=
- =?iso-8859-1?Q?UBBmoptWv9Sk4wEwq8n7JWDz2ApvuAtN1wlDs/dbXIht4EobXLOV+p2/ON?=
- =?iso-8859-1?Q?R7eoAoHxKl7MqXzm0jfZAq+75rGZm+/W3/BNOtYIIk2AbMwPlacLBu3iJi?=
- =?iso-8859-1?Q?60SDoqxPLd9mSWTOSxRVvEjU9Ww+hwp/uX0dAaNb94231hV7FmRCvw3v9h?=
- =?iso-8859-1?Q?OLeuPtzhtake9pnFKdWpptEM0SSXhdW4BGJO1GUEEVeWmLn3dkYHLEJIm4?=
- =?iso-8859-1?Q?FNUlD226TXCANevqvIVB0pIHl1zkF4ysnCfssa/pMEyYS9zl+b4ZAbYDDn?=
- =?iso-8859-1?Q?+D81lgC2bilWPQ9zgQVACUb/0wKIUfHlMl8=3D?=
-X-Forefront-Antispam-Report: CIP:201.217.50.26;CTRY:PY;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:mail.ips.gov.py;PTR:mail.ips.gov.py;CAT:OSPM;SFS:(13230028)(396003)(376002)(346002)(39860400002)(136003)(451199021)(82310400008)(36840700001)(40480700001)(55016003)(9686003)(567454004)(108616005)(7696005)(24736004)(70586007)(70206006)(478600001)(82740400003)(356005)(7596003)(83380400001)(336012)(186003)(32650700002)(26005)(36860700001)(86362001)(558084003)(6862004)(2906002)(5660300002)(8676002)(8936002)(7416002)(7406005)(7366002)(7336002)(41300700001)(316002)(16050700002);DIR:OUT;SFP:1501;
-X-OriginatorOrg: ips.gov.py
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2023 19:13:10.3789
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e778bd06-bc32-4106-693e-08db8630b232
-X-MS-Exchange-CrossTenant-Id: 601d630b-0433-4b64-9f43-f0b9b1dcab7f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=601d630b-0433-4b64-9f43-f0b9b1dcab7f;Ip=[201.217.50.26];Helo=[mail.ips.gov.py]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM10FT085.eop-nam10.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CPWP152MB5370
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Message-Id: <761F02E9-7A80-486B-8CB4-B5E067D7F587@redhat.com>
+References: <20230705134408.6302-1-anisinha@redhat.com>
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.3)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-=0A=
-=0A=
-I have an urgent communication with you Contact me privately.=0A=
-=0A=
-E-mail: rccrc00@gmail.com=0A=
-=0A=
-for details.=0A=
+
+
+> On 05-Jul-2023, at 7:14 PM, Ani Sinha <anisinha@redhat.com> wrote:
+>=20
+> It is incorrect in python to compare integer values using the "is" =
+keyword.
+> The "is" keyword in python is used to compare references to two =
+objects,
+> not their values. Newer version of python3 (version 3.8) throws a =
+warning
+> when such incorrect comparison is made. For value comparison, "=3D=3D" =
+should
+> be used.
+>=20
+> Fix this in the code and suppress the following warning:
+>=20
+> /usr/sbin/vmbus_testing:167: SyntaxWarning: "is" with a literal. Did =
+you mean "=3D=3D"?
+
+Ping =E2=80=A6
+
+>=20
+> Signed-off-by: Ani Sinha <anisinha@redhat.com>
+> ---
+> tools/hv/vmbus_testing | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/tools/hv/vmbus_testing b/tools/hv/vmbus_testing
+> index e7212903dd1d..4467979d8f69 100755
+> --- a/tools/hv/vmbus_testing
+> +++ b/tools/hv/vmbus_testing
+> @@ -164,7 +164,7 @@ def recursive_file_lookup(path, file_map):
+> def get_all_devices_test_status(file_map):
+>=20
+>         for device in file_map:
+> -                if (get_test_state(locate_state(device, file_map)) is =
+1):
+> +                if (get_test_state(locate_state(device, file_map)) =3D=3D=
+ 1):
+>                         print("Testing =3D ON for: {}"
+>                               .format(device.split("/")[5]))
+>                 else:
+> @@ -203,7 +203,7 @@ def write_test_files(path, value):
+> def set_test_state(state_path, state_value, quiet):
+>=20
+>         write_test_files(state_path, state_value)
+> -        if (get_test_state(state_path) is 1):
+> +        if (get_test_state(state_path) =3D=3D 1):
+>                 if (not quiet):
+>                         print("Testing =3D ON for device: {}"
+>                               .format(state_path.split("/")[5]))
+> --=20
+> 2.39.1
+>=20
+
