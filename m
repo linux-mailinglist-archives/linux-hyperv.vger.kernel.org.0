@@ -2,213 +2,271 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9637175800B
-	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Jul 2023 16:48:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20A94758404
+	for <lists+linux-hyperv@lfdr.de>; Tue, 18 Jul 2023 20:01:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231501AbjGROsU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 18 Jul 2023 10:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34472 "EHLO
+        id S231998AbjGRSBC (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 18 Jul 2023 14:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231461AbjGROsS (ORCPT
+        with ESMTP id S232169AbjGRSBA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 18 Jul 2023 10:48:18 -0400
-Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5049EE;
-        Tue, 18 Jul 2023 07:48:16 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 783FD5801B9;
-        Tue, 18 Jul 2023 10:48:13 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Tue, 18 Jul 2023 10:48:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1689691693; x=1689698893; bh=4E
-        XBgwGIlgKcIRz7fYYqQngyR1yPZq+r239tLLqrHVk=; b=U+PxApC1c0376TqZuP
-        isAD22T8M4zJIjSrvXmVpbp6KhpIotLqk2flmz7s+T06sAtwetZtqAN35oBQM18V
-        E9Vd5EknfrCd55/sR9Rg3J+FxpX5GsKEjtQU9AFnUtjkxe7oqBoVQzTNoDP5u5X5
-        rSry6e0s/Ht0NKUlu8EZd+aki7CeM1QL9lQ7BuAYb8NIf+q6wneEjcqyAdNAOSKe
-        3Q3/Rw4DAondMIM4X45wkoQvE0WYFJubJX2ViPetJGUOtAKwJQY/rNiVnrqi130S
-        /Ys2lD9M1NM+lK1VylAriUlkcLzpU6TE/xpWVIXsuJ6Oq43IcCjQXdSEh9Y0zSSg
-        cz2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1689691693; x=1689698893; bh=4EXBgwGIlgKcI
-        Rz7fYYqQngyR1yPZq+r239tLLqrHVk=; b=vt/n/+reICKpoGKCCTL+PKs8fBesX
-        bRB0MIXNSbw788baiVok0Iks/FSNTx3qLITMrTkCAbIvshkyyo9MJWsyNbKKs3Uy
-        qud4qHjnngBLw0+PwQ07Re6o3QKgK/+v3dwIvNqhul//0hUKKRr6nGmkpdaLExui
-        66AQ4sIEYM6WU7ha+ddVGz5eyqyj5wcVeESPo62AwB8GCUXJgKYBPh4Ltx3Lxhzq
-        EWTdVTjHxSm6vhtcdlSDxi5e9dMQ0fVJoXkaYJu6CJwtLBsbItpUb+zW9oKkFbMO
-        wy0AtBUz7Iqop6y2Wl8lzx4kAiNFUPuXWdo9jc9jUT8tXU0cWmw6lNQQw==
-X-ME-Sender: <xms:LKa2ZL9VJEOBxw8oEliC4PNJ4jT_CVSWCm_f5JE7K0Tw5PBqWCeIWw>
-    <xme:LKa2ZHs4jDEworQ0UeTqj33pEpAv3TWtuinGhkkOiumIW6T5P6F5-QDM6L3vP0zGS
-    TuGhzKBjkxCybTvb-8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrgeeggdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
-    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:LKa2ZJDmNsYvmYWf3JnzcWBbZoO5jKTiyTtqE4alr31NKvJCBTj5aw>
-    <xmx:LKa2ZHf3KGqesnyHhNEumxnmoezUKbmQR2ScJuBN6eMpWSftCWddxg>
-    <xmx:LKa2ZAMMvpHsg5Hc9S56BEMspz1ujpTc1dNFZ8wWYcJ3ItQpHjWkmw>
-    <xmx:Laa2ZGuPGNZd1VeqvnHuAjKMw2FYyCL90xx6fqP8Sbak_y136dhR7Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 4A372B60086; Tue, 18 Jul 2023 10:48:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-531-gfdfa13a06d-fm-20230703.001-gfdfa13a0
-Mime-Version: 1.0
-Message-Id: <0beb03f8-ba55-439f-8aa5-6da0e85c11d9@app.fastmail.com>
-In-Reply-To: <150c0fa2-bff2-0644-d6e5-c4dab7f79048@suse.de>
-References: <20230629121952.10559-1-tzimmermann@suse.de>
- <20230629121952.10559-8-tzimmermann@suse.de>
- <80e3a583-805e-4e8f-a67b-ebe2e4b9a7e5@app.fastmail.com>
- <d3de124c-6aa8-e930-e238-7bd6dd7929a6@suse.de>
- <0dbbdfc4-0e91-4be4-9ca0-d8ba6f18453d@app.fastmail.com>
- <ef7b3899-7d18-8018-47fa-aac0efaa61f4@suse.de>
- <dd5aa01e-afad-48d2-bf4c-4a58b74f1644@app.fastmail.com>
- <150c0fa2-bff2-0644-d6e5-c4dab7f79048@suse.de>
-Date:   Tue, 18 Jul 2023 16:47:41 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Thomas Zimmermann" <tzimmermann@suse.de>,
-        "Helge Deller" <deller@gmx.de>, "Daniel Vetter" <daniel@ffwll.ch>,
-        "Dave Airlie" <airlied@gmail.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mips@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        sparclinux@vger.kernel.org, linux-riscv@lists.infradead.org,
-        "Ard Biesheuvel" <ardb@kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-hexagon@vger.kernel.org, linux-staging@lists.linux.dev,
-        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "Sami Tolvanen" <samitolvanen@google.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Frederic Weisbecker" <frederic@kernel.org>,
-        "Nicholas Piggin" <npiggin@gmail.com>,
-        "Borislav Petkov" <bp@alien8.de>, loongarch@lists.linux.dev,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Juerg Haefliger" <juerg.haefliger@canonical.com>,
-        linux-alpha@vger.kernel.org,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 07/12] arch/x86: Declare edid_info in <asm/screen_info.h>
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        Tue, 18 Jul 2023 14:01:00 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 04A581722;
+        Tue, 18 Jul 2023 11:00:55 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+        id 5902621C4506; Tue, 18 Jul 2023 11:00:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5902621C4506
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1689703254;
+        bh=2EtqkbDML7oSfMbtE2vBfMQ9qbiYn/gMi6DTcnH66S0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UU0wJTw3xTZzKiLiCButWWRHugpqky6Kf/2OKf1FlXlFsud8OWv5zLQQiQQQJswGD
+         fs2+v7peejuwH9kzecdyv1hfXFVUtf5S4qco0xdVL5Ls3sQYqDZG1xlqNBjC6cb6ZQ
+         JUvd1TBxur75PEUPwXmqZwI20w6rENkp9rCNqwUI=
+From:   Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
+        sharmaajay@microsoft.com, leon@kernel.org, cai.huoqing@linux.dev,
+        ssengar@linux.microsoft.com, vkuznets@redhat.com,
+        tglx@linutronix.de, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     schakrabarti@microsoft.com,
+        Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Subject: [PATCH V4 net-next] net: mana: Configure hwc timeout from hardware
+Date:   Tue, 18 Jul 2023 11:00:32 -0700
+Message-Id: <1689703232-24858-1-git-send-email-schakrabarti@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Jul 5, 2023, at 10:18, Thomas Zimmermann wrote:
-> Am 30.06.23 um 13:53 schrieb Arnd Bergmann:
->> On Fri, Jun 30, 2023, at 09:46, Thomas Zimmermann wrote:
->>> Am 29.06.23 um 15:21 schrieb Arnd Bergmann:
->> 
->> I definitely get it for the screen_info, which needs the complexity.
->> For ARCHARCH_HAS_EDID_INFO I would hope that it's never selected by
->> anything other than x86, so I would still go with just a dependency
->> on x86 for simplicity, but I don't mind having the extra symbol if that
->> keeps it more consistent with how the screen_info is handled.
->
-> Well, I'd like to add edid_info to platforms with EFI. What would be 
-> arm/arm64 and loongarch, I guess. See below for the future plans.
+At present hwc timeout value is a fixed value. This patch sets the hwc
+timeout from the hardware. It now uses a new hardware capability
+GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG to query and set the value
+in hwc_timeout.
 
-To be clear: I don't mind using a 'struct edid_info' being passed
-around between subsystems, that is clearly an improvement over
-'struct screen_info'. It's the global variable that seems like
-an artifact of linux-2.4 days, and I think we can do better than that.
+Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+---
+V3 -> V4:
+* Changing branch to net-next.
+* Changed the commit message to 75 chars per line.
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 30 ++++++++++++++++++-
+ .../net/ethernet/microsoft/mana/hw_channel.c  | 25 +++++++++++++++-
+ include/net/mana/gdma.h                       | 20 ++++++++++++-
+ include/net/mana/hw_channel.h                 |  5 ++++
+ 4 files changed, 77 insertions(+), 3 deletions(-)
 
->>>> I suppose you could use FIRMWARE_EDID on EFI or OF systems without
->>>> the need for a global edid_info structure, but that would not
->>>> share any code with the current fb_firmware_edid() function.
->>>
->>> The current code is build on top of screen_info and edid_info. I'd
->>> preferably not replace that, if possible.
->> 
->> One way I could imagine this looking in the end would be
->> something like
->> 
->> struct screen_info *fb_screen_info(struct device *dev)
->> {
->>        struct screen_info *si = NULL;
->> 
->>        if (IS_ENABLED(CONFIG_EFI))
->>              si = efi_get_screen_info(dev);
->> 
->>        if (IS_ENABLED(CONFIG_ARCH_HAS_SCREEN_INFO) && !si)
->>              si = screen_info;
->> 
->>        return si;
->> }
->> 
->> corresponding to fb_firmware_edid(). With this, any driver
->> that wants to access screen_info would call this function
->> instead of using the global pointer, plus either NULL pointer
->> check or a CONFIG_ARCH_HAS_SCREEN_INFO dependency.
->> 
->> This way we could completely eliminate the global screen_info
->> on arm64, riscv, and loongarch but still use the efi and
->> hyperv framebuffer/drm drivers.
->
-> If possible, I'd like to remove global screen_info and edid_info 
-> entirely from fbdev and the various consoles.
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 8f3f78b68592..4537a70e30d4 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -106,6 +106,25 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
++static int mana_gd_query_hwc_timeout(struct pci_dev *pdev, u32 *timeout_val)
++{
++	struct gdma_context *gc = pci_get_drvdata(pdev);
++	struct gdma_query_hwc_timeout_resp resp = {};
++	struct gdma_query_hwc_timeout_req req = {};
++	int err;
++
++	mana_gd_init_req_hdr(&req.hdr, GDMA_QUERY_HWC_TIMEOUT,
++			     sizeof(req), sizeof(resp));
++	req.timeout_ms = *timeout_val;
++	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
++	if (err || resp.hdr.status)
++		return err ? err : -EPROTO;
++
++	*timeout_val = resp.timeout_ms;
++
++	return 0;
++}
++
+ static int mana_gd_detect_devices(struct pci_dev *pdev)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+@@ -879,8 +898,11 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 	struct gdma_verify_ver_resp resp = {};
+ 	struct gdma_verify_ver_req req = {};
++	struct hw_channel_context *hwc;
+ 	int err;
+ 
++	hwc = gc->hwc.driver_data;
++
+ 	mana_gd_init_req_hdr(&req.hdr, GDMA_VERIFY_VF_DRIVER_VERSION,
+ 			     sizeof(req), sizeof(resp));
+ 
+@@ -907,7 +929,13 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
+ 			err, resp.hdr.status);
+ 		return err ? err : -EPROTO;
+ 	}
+-
++	if (resp.pf_cap_flags1 & GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG) {
++		err = mana_gd_query_hwc_timeout(pdev, &hwc->hwc_timeout);
++		if (err) {
++			dev_err(gc->dev, "Failed to set the hwc timeout %d\n", err);
++			return err;
++		}
++	}
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 2bd1d74021f7..db433501e5e6 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -174,7 +174,25 @@ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+ 		complete(&hwc->hwc_init_eqe_comp);
+ 		break;
+ 
++	case GDMA_EQE_HWC_SOC_RECONFIG_DATA:
++		type_data.as_uint32 = event->details[0];
++		type = type_data.type;
++		val = type_data.value;
++
++		switch (type) {
++		case HWC_DATA_CFG_HWC_TIMEOUT:
++			hwc->hwc_timeout = val;
++			break;
++
++		default:
++			dev_warn(hwc->dev, "Received unknown reconfig type %u\n", type);
++			break;
++		}
++
++		break;
++
+ 	default:
++		dev_warn(hwc->dev, "Received unknown gdma event %u\n", event->type);
+ 		/* Ignore unknown events, which should never happen. */
+ 		break;
+ 	}
+@@ -704,6 +722,7 @@ int mana_hwc_create_channel(struct gdma_context *gc)
+ 	gd->pdid = INVALID_PDID;
+ 	gd->doorbell = INVALID_DOORBELL;
+ 
++	hwc->hwc_timeout = HW_CHANNEL_WAIT_RESOURCE_TIMEOUT_MS;
+ 	/* mana_hwc_init_queues() only creates the required data structures,
+ 	 * and doesn't touch the HWC device.
+ 	 */
+@@ -770,6 +789,8 @@ void mana_hwc_destroy_channel(struct gdma_context *gc)
+ 	hwc->gdma_dev->doorbell = INVALID_DOORBELL;
+ 	hwc->gdma_dev->pdid = INVALID_PDID;
+ 
++	hwc->hwc_timeout = 0;
++
+ 	kfree(hwc);
+ 	gc->hwc.driver_data = NULL;
+ 	gc->hwc.gdma_context = NULL;
+@@ -818,6 +839,7 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
+ 		dest_vrq = hwc->pf_dest_vrq_id;
+ 		dest_vrcq = hwc->pf_dest_vrcq_id;
+ 	}
++	dev_err(hwc->dev, "HWC: timeout %u ms\n", hwc->hwc_timeout);
+ 
+ 	err = mana_hwc_post_tx_wqe(txq, tx_wr, dest_vrq, dest_vrcq, false);
+ 	if (err) {
+@@ -825,7 +847,8 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
+ 		goto out;
+ 	}
+ 
+-	if (!wait_for_completion_timeout(&ctx->comp_event, 30 * HZ)) {
++	if (!wait_for_completion_timeout(&ctx->comp_event,
++					 (hwc->hwc_timeout / 1000) * HZ)) {
+ 		dev_err(hwc->dev, "HWC: Request timed out!\n");
+ 		err = -ETIMEDOUT;
+ 		goto out;
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 96c120160f15..88b6ef7ce1a6 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -33,6 +33,7 @@ enum gdma_request_type {
+ 	GDMA_DESTROY_PD			= 30,
+ 	GDMA_CREATE_MR			= 31,
+ 	GDMA_DESTROY_MR			= 32,
++	GDMA_QUERY_HWC_TIMEOUT		= 84, /* 0x54 */
+ };
+ 
+ #define GDMA_RESOURCE_DOORBELL_PAGE	27
+@@ -57,6 +58,8 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
++	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
++	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+ };
+ 
+ enum {
+@@ -531,10 +534,12 @@ enum {
+  * so the driver is able to reliably support features like busy_poll.
+  */
+ #define GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX BIT(2)
++#define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
+ 
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+-	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX)
++	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
++	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+@@ -664,6 +669,19 @@ struct gdma_disable_queue_req {
+ 	u32 alloc_res_id_on_creation;
+ }; /* HW DATA */
+ 
++/* GDMA_QUERY_HWC_TIMEOUT */
++struct gdma_query_hwc_timeout_req {
++	struct gdma_req_hdr hdr;
++	u32 timeout_ms;
++	u32 reserved;
++};
++
++struct gdma_query_hwc_timeout_resp {
++	struct gdma_resp_hdr hdr;
++	u32 timeout_ms;
++	u32 reserved;
++};
++
+ enum atb_page_size {
+ 	ATB_PAGE_SIZE_4K,
+ 	ATB_PAGE_SIZE_8K,
+diff --git a/include/net/mana/hw_channel.h b/include/net/mana/hw_channel.h
+index 6a757a6e2732..3d3b5c881bc1 100644
+--- a/include/net/mana/hw_channel.h
++++ b/include/net/mana/hw_channel.h
+@@ -23,6 +23,10 @@
+ #define HWC_INIT_DATA_PF_DEST_RQ_ID	10
+ #define HWC_INIT_DATA_PF_DEST_CQ_ID	11
+ 
++#define HWC_DATA_CFG_HWC_TIMEOUT 1
++
++#define HW_CHANNEL_WAIT_RESOURCE_TIMEOUT_MS 30000
++
+ /* Structures labeled with "HW DATA" are exchanged with the hardware. All of
+  * them are naturally aligned and hence don't need __packed.
+  */
+@@ -182,6 +186,7 @@ struct hw_channel_context {
+ 
+ 	u32 pf_dest_vrq_id;
+ 	u32 pf_dest_vrcq_id;
++	u32 hwc_timeout;
+ 
+ 	struct hwc_caller_ctx *caller_ctx;
+ };
+-- 
+2.34.1
 
-ok
-
-> We currently use screen_info to set up the generic framebuffer device in 
-> drivers/firmware/sysfb.c. I'd like to use edid_info here as well, so 
-> that the generic graphics drivers can get EDID information.
->
-> For the few fbdev drivers and consoles that require the global 
-> screen_info/edid_info, I'd rather provide lookup functions in sysfb 
-> (e.g., sysfb_get_screen_info(), sysfb_get_edid_info()). The global 
-> screen_info/edid_info state would then become an internal artifact of 
-> the sysfb code.
->
-> Hopefully that explains some of the decisions made in this patchset.
-
-I spent some more time looking at the screen_info side, after my
-first set of patches to refine the #ifdefs, and I think we don't
-even need to make screen_info available to non-x86 drivers at all:
-
-- All the vgacon users except for x86 can just register a static
-  screen_info (or simplified into a simpler structure) with the
-  driver itself. This even includes ia64, which does not support
-  EFI framebuffers.
-
-- The VESA, vga16, SIS, Intel and HyperV framebuffer drivers only
-  need access to screen_info on x86. HyperV is the only driver that
-  can currently access the data from EFI firmware on arm64, but
-  that is only used for 'gen 1' guests, which I'm pretty sure
-  only exist on x86.
-
-- All the other references to screen_info are specific to EFI
-  firmware, so we can move the global definition from arm,
-  arm64, loongarch, riscv and ia64 into the EFI firmware
-  code itself. It is still accessed by efifb and efi-earlycon
-  at this point.
-
-I have uploaded version 2 of my series to
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=screen-info-v2
-and will send it out after I get the green light from build
-bots. 
-
-       Arnd
