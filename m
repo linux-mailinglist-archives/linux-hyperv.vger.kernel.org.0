@@ -2,157 +2,406 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B27275D18B
-	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Jul 2023 20:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C135675D2F4
+	for <lists+linux-hyperv@lfdr.de>; Fri, 21 Jul 2023 21:05:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231150AbjGUSuE (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 21 Jul 2023 14:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44416 "EHLO
+        id S231655AbjGUTFg (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 21 Jul 2023 15:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbjGUSuD (ORCPT
+        with ESMTP id S231667AbjGUTFf (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 21 Jul 2023 14:50:03 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3035530DB;
-        Fri, 21 Jul 2023 11:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dRVad3AdlNBuQFcE3VkpuVa4kjKo5sqvv2omBkEJAhk=; b=RICVyA8m/ElTSsoZyZAcWPzqpg
-        NltaEFXLBwX3vHwLI8klmtRcEBIV3YKouDLDORAqNIIca4Jyb7P7ZytuVs60AnkRxThqqNXX3aMrS
-        T71Jkwq5a4R3HNeABMHrJpHykLhSKEb/BA4ARSsvSppepe++3Bxo8eSKqMxPwFwKGpQlCCWTtYFF5
-        viu65DcntLnT/dEbnzS6xpQccS2ndNSkPwMXNg4RSvo0YvShFkHqt1JsKXgDn0utjMIr5tUSBy5ts
-        OtU6jkC+cU94Ype7/Ju+8qEf67NRDJGjpQHtCZGY2ikiKJvWqbca01VreLYPpygwpGNlkFA95B8HD
-        j4GodREg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qMvCD-001N7w-8w; Fri, 21 Jul 2023 18:49:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 47790300095;
-        Fri, 21 Jul 2023 20:49:44 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 27EBD3157E621; Fri, 21 Jul 2023 20:49:44 +0200 (CEST)
-Date:   Fri, 21 Jul 2023 20:49:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/1] x86/hyperv: Disable IBT when hypercall page lacks
- ENDBR instruction
-Message-ID: <20230721184944.GP4253@hirez.programming.kicks-ass.net>
-References: <1689885237-32662-1-git-send-email-mikelley@microsoft.com>
- <20230720211553.GA3615208@hirez.programming.kicks-ass.net>
- <SN6PR2101MB16933FAC4E09E15D824EB2FDD73FA@SN6PR2101MB1693.namprd21.prod.outlook.com>
- <20230721075848.GA3630545@hirez.programming.kicks-ass.net>
- <BYAPR21MB168878CCD076762A1EA58635D73FA@BYAPR21MB1688.namprd21.prod.outlook.com>
+        Fri, 21 Jul 2023 15:05:35 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021018.outbound.protection.outlook.com [52.101.57.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD84F30D6;
+        Fri, 21 Jul 2023 12:05:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=djiNATnMOshYIhIVRgnJRenk4a5tB4WTNmSR+BXT/TqsdomZLr5DDcRfVG0qsDvPFxykjDHWIu14rkbOFxPc/NvcYI8JG0l7WhRq9aU+ZJvh7jU5FIo/nJEKLmTjkED1cGE5OhsAU+qiOyf64cgamSSyUiKB3alqiB8Di2T7cWuyo83m+JoLA6BWBzaIYv4aL2GeCoD5cqEhUgFZ8BvWJDHhdwh6W8RrVBJNUxQIlWMDvLV9oL0eJ6gIg2jcteWKO0Gppb7EBtj9NigV7mh43fzWmWqZDHHeDu3PzBLSFYrRFXx6xRnAyo3FDUQ8bu3ko9+APvjY+xYpHs+4ViIVKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=E3g9920JQfVxZeuukjp/9kc93iacgdEZVcwDLp6s+50=;
+ b=DxcmznZggrROcFFg9nbw5d4nF+bWzTnq9MWpF9BlqzdXDX9CXMMfaFK1GvV1tmD29HlYi5Lk2jUiw398zhrQyxXeFvNHgibZRlqh3sgValld+eUeYQ661BI7kzTdUoCo1LhkNiaCZ3QaBxB0zkibn6RavHHg0C9nmKnUIuRN1IW2vavz3sihkQT8Aa3XWk2aklrU6NDIStm8fo5g8gVyWJg+ywVt/KLSFekIDJDsT3FCfiHy/1FhcxMo9zRq4ouHeh/6EyCc5KVgDKt8FroMCSxdLH8DsUQf6lB+/jSfSckHkgOLZ22GRCwp3vn4M8JC6YaZ3L16bjHO73gvKolVtA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E3g9920JQfVxZeuukjp/9kc93iacgdEZVcwDLp6s+50=;
+ b=N/bp3jEbJGJLJ5nwYkleWMh9GxcISRt7mYT4xZ1fkmKIjaKljKVPV6y7LJ8iVBQXpULL2dzKGJPLKPiloGng1koabXdm4veAcIqx7jK8+nlW2tghuBqTAyYGZGY6dAeKMlZZRNT3hHhHzWmJoZ6j1iPzenQYosyaQtyu+2tOe2I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
+ by MWH0PF2418FBE1E.namprd21.prod.outlook.com (2603:10b6:30f:fff1:0:3:0:a)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.3; Fri, 21 Jul
+ 2023 19:05:30 +0000
+Received: from BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::9461:c35c:25c5:85cc]) by BY5PR21MB1443.namprd21.prod.outlook.com
+ ([fe80::9461:c35c:25c5:85cc%3]) with mapi id 15.20.6631.014; Fri, 21 Jul 2023
+ 19:05:30 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
+Cc:     haiyangz@microsoft.com, decui@microsoft.com, kys@microsoft.com,
+        paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+        davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+        longli@microsoft.com, ssengar@linux.microsoft.com,
+        linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+        john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+        sharmaajay@microsoft.com, hawk@kernel.org, tglx@linutronix.de,
+        shradhagupta@linux.microsoft.com, linux-kernel@vger.kernel.org
+Subject: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
+Date:   Fri, 21 Jul 2023 12:05:21 -0700
+Message-Id: <1689966321-17337-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR04CA0097.namprd04.prod.outlook.com
+ (2603:10b6:303:83::12) To BY5PR21MB1443.namprd21.prod.outlook.com
+ (2603:10b6:a03:21f::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB168878CCD076762A1EA58635D73FA@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|MWH0PF2418FBE1E:EE_
+X-MS-Office365-Filtering-Correlation-Id: b912c938-06a8-47c8-9048-08db8a1d733e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QxsWxSHKNjT16p6UIKsGg9YwxNMuiROJG5p3XHtT2IuxUNZumL0lNRux1CM9AF12a6k9H+DVF3S9A+BPGHNbmEpdN9YTpRflOsYcIIFddyD7m/PWmNwqA0kc+LXE6z+2xeEjJtk2mUMuvj4CX/lIu4fPpnbf6HqC23eLP/ix7i6JXxQkbLIrcoaHp/l2MHBOyJtJEWIWojQEy2lN3VsqwzaShxpPiDm7jL3UphitTBlMTDbqhspYPwBoSnmw+1tZNvBv4C/OsDCU1Bpj+aeYkeDm+gNte1DVBiYNkCOIGUefz7B9gmQ39v+w40D+Z7AqkfO/89kTMS6MU3p0hMnWHlxPCgBooDMm54QPPdMJycy/EXHbBJXg2fs46u22F9MVbt0Hr/zSAhoGFHeB4UBEzzttXQ1zyxbH4O2PNFxs4uVvt7g/dunekbFVUeHj9p3aE+3/gEFyocY5Q+AZo35oL+HoKI68GY5UYHOGOaDS1snLyYe9uNpXvLc9VaRCGMQsMom+jjRy8cLrg/wR6tcJbTgwmD+/pkvt/VKeh1mjePmc88Hm23iX9Me2pxjH2RDH5y57PzIHFmIO40K8B2UH51o/3LOXL44ycnAhrTAC8kXoJMd5WH6EWCVGw4XeUWZpXaAjkLzzMTMuPPlMWxCiI6c/f7rbgUeTXoJOv1rC/b4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(366004)(136003)(376002)(39860400002)(396003)(451199021)(7846003)(6666004)(52116002)(5660300002)(6486002)(186003)(26005)(66556008)(6512007)(66946007)(66476007)(6506007)(4326008)(7416002)(316002)(41300700001)(8936002)(10290500003)(82960400001)(38100700002)(38350700002)(8676002)(82950400001)(2616005)(36756003)(2906002)(478600001)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pMdnHLaWIEdgL7ZanpV7ZWZueOIkBOv8uwLgbfn+fBj0jHUnC3ZKwyImq3Wo?=
+ =?us-ascii?Q?fZFagBCEix96CFV3Sl8lY6zRpmBTawQQCPXoz8Oe9cc9X+mQKLKJp35DqACe?=
+ =?us-ascii?Q?0OotXNr7o4Okii9CE16FxFxKcNSg59SKAGB+ZD1UksQWHi94JgX5GyzA+NHU?=
+ =?us-ascii?Q?D1Z8hE7/cfq/W4ff6TT/ju9E9knOwwHRXzsuT4fc6Y0tMapya8UAvGfiw222?=
+ =?us-ascii?Q?u/a6wuDo+ywfvLR1EzS5g0wsrIGBBt+bTTjXRa/bq9Bt3BDaDGu3IySuJ+zx?=
+ =?us-ascii?Q?eDmDh+I5bqUYvBaUIxCfwceNcZlpjF4SpniLse3/a63MyJvV52i8ffyWumP6?=
+ =?us-ascii?Q?Ji5uTYZLWou1aQBEMcgxx19Tz7CxMYxzk2S4wI1ABP79h362WXi+ivC7WO6f?=
+ =?us-ascii?Q?HOp2ZlE9PDjLKziJ7oChPRlJmjWLpoddKI8wly8hfU0EWW62hoju1aFoHKVc?=
+ =?us-ascii?Q?sjoeNSBGztSuRHwOWrVHJJBmJ/voFGu8mBIuvGJOho49gYziXD3lLdutdLwA?=
+ =?us-ascii?Q?pRKMG5RgA+5NgDvcTdUReWPbQTrdlpfcATx+rAojESsj+Df9C3LDJEQmoqXv?=
+ =?us-ascii?Q?Ex7GSogwtag18Rqm6bqpfBREp2pmsF7VrxWyw9uwf/lb4v4xOvx7p1rGnJQG?=
+ =?us-ascii?Q?gTdL65NxlnG0JTRVqWU70LWDzZtOLhEEaKCO+NcQwzQlvyjigdlbqkhdIvAf?=
+ =?us-ascii?Q?umXXcZnIknIex+61Gh+B+YPa7CVn0RwxldcvCgBVxZFpEpLwO4jp76x9Rvbq?=
+ =?us-ascii?Q?n+zLj8Qk0VYwbshdbteDYyEmxjLtF6J6VriEJXn5redk7B0tbGuU6l4QFoWO?=
+ =?us-ascii?Q?fpa/2ebbBNvQIhSFpDZccd/ckTG67DeVp2i01n1bKzYYNSvXwev9i45CYXyy?=
+ =?us-ascii?Q?EjNFLkV0N1MMfI/1B4q/Pqn9A+HFG/o+ShKUN8hIRbW1YRbvHjc8mlyLXLB8?=
+ =?us-ascii?Q?+P/OgTaJ2VaOp8zVJid9x+MwEocxf5i7JXCAqzTfU0rQOvdlZvS2ggH/py5+?=
+ =?us-ascii?Q?geMkNJKYhAbpPyWCkk+O4zZUQ0Y0f93TFG2RdqHbcwJiRkJbcsS1IdNJ2PLp?=
+ =?us-ascii?Q?tuSpP/WM6ZUjk9R8rk7gE5SQmbhYGrygHHljiBnceOBwX3gSVZkrN+gQiGWL?=
+ =?us-ascii?Q?7JVPXWtmo/OCYcO8ftz59LpG14fQX4KkaOtO2I5WTm5twgUgqZhtRvhLlVjm?=
+ =?us-ascii?Q?KNimgkwg/34ZRQBTD0IkVfHhPMuQ56D056uhXbtK+yRsVYVFbSkrf7+GTRIp?=
+ =?us-ascii?Q?cW/ujRglIjeuqXFhrtCUC0oXRKwgChOaTsw91nWmo0R2EEQ31XqEKu2awIjv?=
+ =?us-ascii?Q?W6XsbUFYZRfauGUemhnQbJa38NjQiRsM5TWDbDsktrpNq0xpgMJ37K1pOHIh?=
+ =?us-ascii?Q?qwOz6uGhRHz0DOQrHFvXb/IjA1SfiOqetDx94y6eW8KksHBMgenAOuRYYf5X?=
+ =?us-ascii?Q?h3FgCSOVoTuHDU/KHlFcQ1yUNyiFqzXq28MyDl7CMK6N5vPYWeSZAOrCEchR?=
+ =?us-ascii?Q?GvLAoiYfZg9zrpr0mUDDSHTIGGHO3jbFYXvcbez7h94HLFlcCddcgmzULiZk?=
+ =?us-ascii?Q?91Vtzumy8NVDZWvalkKvx4dAFoInaVeNY45Bz7x+?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b912c938-06a8-47c8-9048-08db8a1d733e
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2023 19:05:30.0013
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9HhcBx7jM87wDy4wuqE34bS4nIwdpbk3aRYcuFhJMJ2Jh5V006oEgcxug2r15tyoc3sWrItaOl8qlJRhjU/b7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWH0PF2418FBE1E
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 02:00:35PM +0000, Michael Kelley (LINUX) wrote:
+Add page pool for RX buffers for faster buffer cycle and reduce CPU
+usage.
 
-> > Well, we have a lot of infrastructure for this already. Specifically
-> > this is very like the paravirt patching.
-> > 
-> > Also, direct calls are both faster and have less speculation issues, so
-> > it might still be worth looking at.
-> > 
-> > The way to do something like this would be:
-> > 
-> > 
-> > 	asm volatile ("   ANNOTATE_RETPOLINE_SAFE	\n\t"
-> > 		      "1: call *hv_hypercall_page	\n\t"
-> > 		      ".pushsection .hv_call_sites	\n\t"
-> > 		      ".long 1b - .			\n\t"
-> > 		      ".popsection			\n\t");
-> > 
-> > 
-> > And then (see alternative.c for many other examples):
-> > 
-> > 
-> > patch_hypercalls()
-> > {
-> > 	s32 *s;
-> > 
-> > 	for (s = __hv_call_sites_begin; s < __hv_call_sites_end; s++) {
-> > 		void *addr = (void *)s + *s;
-> > 		struct insn insn;
-> > 
-> > 		ret = insn_decode_kernel(&insn, addr);
-> > 		if (WARN_ON_ONCE(ret < 0))
-> > 			continue;
-> > 
-> > 		/*
-> > 		 * indirect call: ff 15 disp32
-> > 		 * direct call:   2e e8 disp32
-> > 		 */
-> > 		if (insn.length == 6 &&
-> > 		    insn.opcode.bytes[0] == 0xFF &&
-> > 		    X86_MODRM_REG(insn.modrm.bytes[0]) == 2) {
-> > 
-> > 			/* verify it was calling hy_hypercall_page */
-> > 			if (WARN_ON_ONCE(addr + 6 + insn.displacement.value != &hv_hypercall_page))
-> > 				continue;
-> > 
-> > 			/*
-> > 			 * write a CS padded direct call -- assumes the
-> > 			 * hypercall page is in the 2G immediate range
-> > 			 * of the kernel text
-> 
-> Probably not true -- the hypercall page has a vmalloc address.
+The standard page pool API is used.
 
-See module_alloc(), that uses vmalloc but constrains the address to stay
-within the 2G immediate address limit.
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+---
+V3:
+Update xdp mem model, pool param, alloc as suggested by Jakub Kicinski
+V2:
+Use the standard page pool API as suggested by Jesper Dangaard Brouer
 
-> > 			 */
-> > 			addr[0] = 0x2e; /* CS prefix */
-> > 			addr[1] = CALL_INSN_OPCODE;
-> > 			(s32 *)&Addr[2] = *hv_hypercall_page - (addr + 6);
-			*(s32 *)...
-> > 		}
-> > 	}
-> > }
-> > 
-> > 
-> > See, easy :-)
-> 
-> OK, worth looking into.  This is a corner of the Linux kernel code that
-> I've never looked at before.  I appreciate the pointers.
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 91 +++++++++++++++----
+ include/net/mana/mana.h                       |  3 +
+ 2 files changed, 78 insertions(+), 16 deletions(-)
 
-No problem, I've been doing too much of this the past few years :-)
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index a499e460594b..4307f25f8c7a 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1414,8 +1414,8 @@ static struct sk_buff *mana_build_skb(struct mana_rxq *rxq, void *buf_va,
+ 	return skb;
+ }
+ 
+-static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
+-			struct mana_rxq *rxq)
++static void mana_rx_skb(void *buf_va, bool from_pool,
++			struct mana_rxcomp_oob *cqe, struct mana_rxq *rxq)
+ {
+ 	struct mana_stats_rx *rx_stats = &rxq->stats;
+ 	struct net_device *ndev = rxq->ndev;
+@@ -1448,6 +1448,9 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
+ 	if (!skb)
+ 		goto drop;
+ 
++	if (from_pool)
++		skb_mark_for_recycle(skb);
++
+ 	skb->dev = napi->dev;
+ 
+ 	skb->protocol = eth_type_trans(skb, ndev);
+@@ -1498,9 +1501,14 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
+ 	u64_stats_update_end(&rx_stats->syncp);
+ 
+ drop:
+-	WARN_ON_ONCE(rxq->xdp_save_va);
+-	/* Save for reuse */
+-	rxq->xdp_save_va = buf_va;
++	if (from_pool) {
++		page_pool_recycle_direct(rxq->page_pool,
++					 virt_to_head_page(buf_va));
++	} else {
++		WARN_ON_ONCE(rxq->xdp_save_va);
++		/* Save for reuse */
++		rxq->xdp_save_va = buf_va;
++	}
+ 
+ 	++ndev->stats.rx_dropped;
+ 
+@@ -1508,11 +1516,13 @@ static void mana_rx_skb(void *buf_va, struct mana_rxcomp_oob *cqe,
+ }
+ 
+ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+-			     dma_addr_t *da, bool is_napi)
++			     dma_addr_t *da, bool *from_pool, bool is_napi)
+ {
+ 	struct page *page;
+ 	void *va;
+ 
++	*from_pool = false;
++
+ 	/* Reuse XDP dropped page if available */
+ 	if (rxq->xdp_save_va) {
+ 		va = rxq->xdp_save_va;
+@@ -1533,17 +1543,22 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+ 			return NULL;
+ 		}
+ 	} else {
+-		page = dev_alloc_page();
++		page = page_pool_dev_alloc_pages(rxq->page_pool);
+ 		if (!page)
+ 			return NULL;
+ 
++		*from_pool = true;
+ 		va = page_to_virt(page);
+ 	}
+ 
+ 	*da = dma_map_single(dev, va + rxq->headroom, rxq->datasize,
+ 			     DMA_FROM_DEVICE);
+ 	if (dma_mapping_error(dev, *da)) {
+-		put_page(virt_to_head_page(va));
++		if (*from_pool)
++			page_pool_put_full_page(rxq->page_pool, page, is_napi);
++		else
++			put_page(virt_to_head_page(va));
++
+ 		return NULL;
+ 	}
+ 
+@@ -1552,21 +1567,25 @@ static void *mana_get_rxfrag(struct mana_rxq *rxq, struct device *dev,
+ 
+ /* Allocate frag for rx buffer, and save the old buf */
+ static void mana_refill_rx_oob(struct device *dev, struct mana_rxq *rxq,
+-			       struct mana_recv_buf_oob *rxoob, void **old_buf)
++			       struct mana_recv_buf_oob *rxoob, void **old_buf,
++			       bool *old_fp)
+ {
++	bool from_pool;
+ 	dma_addr_t da;
+ 	void *va;
+ 
+-	va = mana_get_rxfrag(rxq, dev, &da, true);
++	va = mana_get_rxfrag(rxq, dev, &da, &from_pool, true);
+ 	if (!va)
+ 		return;
+ 
+ 	dma_unmap_single(dev, rxoob->sgl[0].address, rxq->datasize,
+ 			 DMA_FROM_DEVICE);
+ 	*old_buf = rxoob->buf_va;
++	*old_fp = rxoob->from_pool;
+ 
+ 	rxoob->buf_va = va;
+ 	rxoob->sgl[0].address = da;
++	rxoob->from_pool = from_pool;
+ }
+ 
+ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+@@ -1580,6 +1599,7 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	struct device *dev = gc->dev;
+ 	void *old_buf = NULL;
+ 	u32 curr, pktlen;
++	bool old_fp;
+ 
+ 	apc = netdev_priv(ndev);
+ 
+@@ -1622,12 +1642,12 @@ static void mana_process_rx_cqe(struct mana_rxq *rxq, struct mana_cq *cq,
+ 	rxbuf_oob = &rxq->rx_oobs[curr];
+ 	WARN_ON_ONCE(rxbuf_oob->wqe_inf.wqe_size_in_bu != 1);
+ 
+-	mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf);
++	mana_refill_rx_oob(dev, rxq, rxbuf_oob, &old_buf, &old_fp);
+ 
+ 	/* Unsuccessful refill will have old_buf == NULL.
+ 	 * In this case, mana_rx_skb() will drop the packet.
+ 	 */
+-	mana_rx_skb(old_buf, oob, rxq);
++	mana_rx_skb(old_buf, old_fp, oob, rxq);
+ 
+ drop:
+ 	mana_move_wq_tail(rxq->gdma_rq, rxbuf_oob->wqe_inf.wqe_size_in_bu);
+@@ -1659,6 +1679,8 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+ 
+ 	if (rxq->xdp_flush)
+ 		xdp_do_flush();
++
++	page_pool_nid_changed(rxq->page_pool, numa_mem_id());
+ }
+ 
+ static int mana_cq_handler(void *context, struct gdma_queue *gdma_queue)
+@@ -1881,6 +1903,7 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
+ 	struct mana_recv_buf_oob *rx_oob;
+ 	struct device *dev = gc->dev;
+ 	struct napi_struct *napi;
++	struct page *page;
+ 	int i;
+ 
+ 	if (!rxq)
+@@ -1913,10 +1936,18 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
+ 		dma_unmap_single(dev, rx_oob->sgl[0].address,
+ 				 rx_oob->sgl[0].size, DMA_FROM_DEVICE);
+ 
+-		put_page(virt_to_head_page(rx_oob->buf_va));
++		page = virt_to_head_page(rx_oob->buf_va);
++
++		if (rx_oob->from_pool)
++			page_pool_put_full_page(rxq->page_pool, page, false);
++		else
++			put_page(page);
++
+ 		rx_oob->buf_va = NULL;
+ 	}
+ 
++	page_pool_destroy(rxq->page_pool);
++
+ 	if (rxq->gdma_rq)
+ 		mana_gd_destroy_queue(gc, rxq->gdma_rq);
+ 
+@@ -1927,18 +1958,20 @@ static int mana_fill_rx_oob(struct mana_recv_buf_oob *rx_oob, u32 mem_key,
+ 			    struct mana_rxq *rxq, struct device *dev)
+ {
+ 	struct mana_port_context *mpc = netdev_priv(rxq->ndev);
++	bool from_pool = false;
+ 	dma_addr_t da;
+ 	void *va;
+ 
+ 	if (mpc->rxbufs_pre)
+ 		va = mana_get_rxbuf_pre(rxq, &da);
+ 	else
+-		va = mana_get_rxfrag(rxq, dev, &da, false);
++		va = mana_get_rxfrag(rxq, dev, &da, &from_pool, false);
+ 
+ 	if (!va)
+ 		return -ENOMEM;
+ 
+ 	rx_oob->buf_va = va;
++	rx_oob->from_pool = from_pool;
+ 
+ 	rx_oob->sgl[0].address = da;
+ 	rx_oob->sgl[0].size = rxq->datasize;
+@@ -2008,6 +2041,25 @@ static int mana_push_wqe(struct mana_rxq *rxq)
+ 	return 0;
+ }
+ 
++static int mana_create_page_pool(struct mana_rxq *rxq)
++{
++	struct page_pool_params pprm = {};
++	int ret;
++
++	pprm.pool_size = RX_BUFFERS_PER_QUEUE;
++	pprm.napi = &rxq->rx_cq.napi;
++
++	rxq->page_pool = page_pool_create(&pprm);
++
++	if (IS_ERR(rxq->page_pool)) {
++		ret = PTR_ERR(rxq->page_pool);
++		rxq->page_pool = NULL;
++		return ret;
++	}
++
++	return 0;
++}
++
+ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 					u32 rxq_idx, struct mana_eq *eq,
+ 					struct net_device *ndev)
+@@ -2037,6 +2089,13 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 	mana_get_rxbuf_cfg(ndev->mtu, &rxq->datasize, &rxq->alloc_size,
+ 			   &rxq->headroom);
+ 
++	/* Create page pool for RX queue */
++	err = mana_create_page_pool(rxq);
++	if (err) {
++		netdev_err(ndev, "Create page pool err:%d\n", err);
++		goto out;
++	}
++
+ 	err = mana_alloc_rx_wqe(apc, rxq, &rq_size, &cq_size);
+ 	if (err)
+ 		goto out;
+@@ -2108,8 +2167,8 @@ static struct mana_rxq *mana_create_rxq(struct mana_port_context *apc,
+ 
+ 	WARN_ON(xdp_rxq_info_reg(&rxq->xdp_rxq, ndev, rxq_idx,
+ 				 cq->napi.napi_id));
+-	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq,
+-					   MEM_TYPE_PAGE_SHARED, NULL));
++	WARN_ON(xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq, MEM_TYPE_PAGE_POOL,
++					   rxq->page_pool));
+ 
+ 	napi_enable(&cq->napi);
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 024ad8ddb27e..b12859511839 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -280,6 +280,7 @@ struct mana_recv_buf_oob {
+ 	struct gdma_wqe_request wqe_req;
+ 
+ 	void *buf_va;
++	bool from_pool; /* allocated from a page pool */
+ 
+ 	/* SGL of the buffer going to be sent has part of the work request. */
+ 	u32 num_sge;
+@@ -330,6 +331,8 @@ struct mana_rxq {
+ 	bool xdp_flush;
+ 	int xdp_rc; /* XDP redirect return code */
+ 
++	struct page_pool *page_pool;
++
+ 	/* MUST BE THE LAST MEMBER:
+ 	 * Each receive buffer has an associated mana_recv_buf_oob.
+ 	 */
+-- 
+2.25.1
 
-> Hypercall sites also exist in loadable modules, so would need to hook
-> into module_finalize() as well.  Processing a new section type looks
-> straightforward.
-
-Yep,
-
-> But altogether, this feels like more change than should go as a bug
-> fix to be backported to stable kernels.  It's something to look at for a
-> future kernel release.
-
-Agreed!
