@@ -2,182 +2,214 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD39075D9DB
-	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Jul 2023 06:53:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69C5675DAFB
+	for <lists+linux-hyperv@lfdr.de>; Sat, 22 Jul 2023 10:16:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231360AbjGVExc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sat, 22 Jul 2023 00:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49954 "EHLO
+        id S229598AbjGVIQN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 22 Jul 2023 04:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231362AbjGVExR (ORCPT
+        with ESMTP id S229456AbjGVIQM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sat, 22 Jul 2023 00:53:17 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021014.outbound.protection.outlook.com [52.101.57.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CE94681;
-        Fri, 21 Jul 2023 21:52:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xo9lthHa9LaSHq5rLKL35h3do0qZGg7wM7CRSWLrfht42KIizNnic7/MWPbznwwnHDzBwNgDvSR06pqxRRxAL/GRmDbZKaDpODGCVEkhX1Ch5jPw32SWqYMlIr36huqcxyYE63A4hB/6KuaaeHr7pIbDxWLl7qLkwdbNIQ5M1HoaT1duYVlR1QorRjjV/AtNGj4261skkn2DCRxV1ivCz9xUXU6SoPuK/n2PjUj9j7WTpe6LVeqw7+xoxf5gWLc7jpkeRYlFP8uQ//efjg4LxtnyfOr58GSHq126LCiwDjrb1u7wnWQwnqch21g8SkWcfknws0cFPXtLKhpYNnAA7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tCKTySSFMZnk9HDozdvtLUHwrBvy/tfwM/1wBsXPV74=;
- b=BdCEfRQHqjgQ5oQh19Z3IljfsC5TZpeD5betzWYNk2rEl0Rz5Y23C4ci8MD7BbvNxFEo86RjYRMSoNf2+/LLpJ+fd1ZjqQS2SKrJx7WLR8D3SpJB+oomWby7Pl9tI919xbE7dU3CbCZpPU/uYvLh1TK9GTNnQZstOkhVuvgLUrnQt51lpoA5n+W3/2ik9drKgAw8HLiHBo/gwf3sccfPt3qI1pvQNtHRDoAgjFfc4LKH85DtZDf3J2JK9Glv6ACHG/xGAl2pdrdPho1/F7teLjKHc4DQcpNAkXPZCG+vxr7RzIUW8Xs6PTb1IMQ261eyO+QlTuK1ptgWaocOM10nSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tCKTySSFMZnk9HDozdvtLUHwrBvy/tfwM/1wBsXPV74=;
- b=ZrWaum5iebJM7tUm6Ue2wtZmT4s7Rm2VScuykOHozn6IuCMVOkwO+6IK09LIurFmBVZAihtMh2BFnZu1LxqvhuPHX5DD8EB9oey62PKsGRLdHPYwwvwrGNva8+1ABOkZB3Yr5S1DnNqN+OFxTAGQXagdpndXe6UTcH4+BlbD9iA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
- by DM4PR21MB3416.namprd21.prod.outlook.com (2603:10b6:8:b3::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6631.16; Sat, 22 Jul 2023 04:51:41 +0000
-Received: from DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::58ed:9fb:47a9:13df]) by DM6PR21MB1370.namprd21.prod.outlook.com
- ([fe80::58ed:9fb:47a9:13df%7]) with mapi id 15.20.6631.014; Sat, 22 Jul 2023
- 04:51:40 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        peterz@infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Cc:     mikelley@microsoft.com, stable@vger.kernel.org
-Subject: [PATCH v2 1/1] x86/hyperv: Disable IBT when hypercall page lacks ENDBR instruction
-Date:   Fri, 21 Jul 2023 21:51:16 -0700
-Message-Id: <1690001476-98594-1-git-send-email-mikelley@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR04CA0265.namprd04.prod.outlook.com
- (2603:10b6:303:88::30) To DM6PR21MB1370.namprd21.prod.outlook.com
- (2603:10b6:5:16b::28)
+        Sat, 22 Jul 2023 04:16:12 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D812D58;
+        Sat, 22 Jul 2023 01:16:10 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4fbc0314a7bso4145828e87.2;
+        Sat, 22 Jul 2023 01:16:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690013769; x=1690618569;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TzDFSq9ToW2a8ApBbamX9DH0vv1xgjFWtYbk7I9a3zo=;
+        b=iLHQMkzn513/CX45oKtJQROkuU6hKVIZtEYUjvD8YJbi8M6JmgtmRhQr8qCCfW6sdV
+         fFnJktywfx3lh713VRE/fpTLUGqhM7eTtC4QGaI16YgOTN1N1RTwTfgVP8hfSsogJ4Nh
+         Gq5zI3yjt4KPOpZPg4HVs9+68A9F1c3ow4aYnJy4wxziSVrWyulj/l1Fulkx4BOi3SuC
+         h7jIKRY5ZXAm/vee7nES09uZfZXSOuWR6CM0mm8qUF8fDTKFYxuiIt1hdwjN2Ts2u3wX
+         pF/YDQRQsnvC/hus4QYTvt3uKjLEN801mEl09d9/j82Uc2pBNbhVPFZpqdbQO1RCnAS+
+         HfTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690013769; x=1690618569;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TzDFSq9ToW2a8ApBbamX9DH0vv1xgjFWtYbk7I9a3zo=;
+        b=afzJg4c+UW48CY1ExkWpybNKiZsTkBDgFu09tmZQ0N9kILrpvnt1VvTa59ub5B/Eqc
+         qnf73oYyb2FM2x+V4gUSw3Ex3+s37jb32XkgrSzvTyNCH2A5Afu8pjBtFaJ7weO3LGV3
+         pLPIQVwlxUKxvvv8T5+6Q/RKInRI1dYv+jnyn7pFj6/IN7ZgLgJhFt8vLWM39+qF9Zxv
+         4Tv8Rj0FxuFAEtrPlsrD2ZiZQ7i4IASMUkMtoUNISeRPFMqoANcHqorzKsuxeUAkN9DE
+         TthzCw7W5hvaY2mWnJEQmjCQkpHHkNNA92Q7DNYyOaNUR1PpAHXipzWCPrtnKnrR57dj
+         S/8Q==
+X-Gm-Message-State: ABy/qLaF0YC2gAXV6yCeeWV2OzVG6Pt7YMbYEmdPLj1R9v3qGhTjWxcH
+        ZWNE5mLD1OtDBw7M0YUZqdA=
+X-Google-Smtp-Source: APBJJlF4G37yXBGyU+5UfZllj5K9yoI0tYISBTZQihm07jz0DksXS19CbW3keLZz1+QQUk60QkISJg==
+X-Received: by 2002:ac2:4dbb:0:b0:4fb:772a:af12 with SMTP id h27-20020ac24dbb000000b004fb772aaf12mr2254319lfe.21.1690013768483;
+        Sat, 22 Jul 2023 01:16:08 -0700 (PDT)
+Received: from ?IPV6:2a00:1e88:c228:ec00:1b41:4959:c1a0:b9eb? ([2a00:1e88:c228:ec00:1b41:4959:c1a0:b9eb])
+        by smtp.gmail.com with ESMTPSA id er14-20020a05651248ce00b004fdb27909cesm1097750lfb.5.2023.07.22.01.16.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Jul 2023 01:16:08 -0700 (PDT)
+Message-ID: <051e4091-556c-4592-4a72-4dacf0015da8@gmail.com>
+Date:   Sat, 22 Jul 2023 11:16:05 +0300
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|DM4PR21MB3416:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5070e73b-f46a-4c03-b1e1-08db8a6f568b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xhZ3FXgE0lEaw3msm4DhqcnUBA/mq67iQfxSqEpcoZGf9+CvOZtU4f1YxvajiSNg/EUVL9CGPOBIfJQTpglJxXsxiAJ4xEerI4ZHbN4DS52w4pl612T9VR/ycXpYD+bkcwuDwhXyHB6QBxbPgAcomz03Q5I+zXzC+wEIQe0BtSXRemrN+M8acxR7raCGuq1GggRnSk9+zbHw+gQEhSTwGZJa6lwesy/A0lA/B7g+Nt7dWS+P4qPBBVbrlUjOMzwtnynRT8Q5oaZJRZo5yBvrn8nqjQmE7ulTV64QVQ82+oDIXm/nq80DBSKvmSB/XKzJnFfF5JtFw18emc6KEaBstVPqQQJxNGsfW+VIiu/tcg/SokMw5OMEsGgsSao3+SF1rW3/i9CN76cKEuNEiPwcD7iF9kSArQHJIapPEHD8sD5yZHN7F9d94VI92T35uVC3xI1Yl8qYagUjdPdtnSxaOngOmjvFSJ6ujBxlBNjIKTpRz0DyML+s/1IRvbVMHtoOysVY2mlNasN7P9yX/t+6k47FCNKaZiHZEXBuPG1T03BJe0habm4A/01Mkq6X5SngroXWywl7YIz2iwqX8axQskmQEAiivL/gD9FGEQpMyzV+aHX4EWiJ4kyoPpGjrEhiqirc6aoYOYLUVS4sROS/p8h/0+jetxGEjKDL3mJSjW2Tv0zEV2S7p/rjps8ozcWo
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(396003)(366004)(136003)(376002)(451199021)(66556008)(66946007)(4326008)(66476007)(7416002)(5660300002)(41300700001)(2906002)(316002)(6486002)(52116002)(2616005)(6506007)(8676002)(8936002)(186003)(26005)(82950400001)(82960400001)(38100700002)(38350700002)(921005)(86362001)(6512007)(10290500003)(478600001)(6666004)(36756003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CbZWIdROjWxoC94r86d+Gic2yPAS0W3VE0jaHSm8fkfq9pp5gHeLeqGqg/Ad?=
- =?us-ascii?Q?hz5l7rxFPXGPfCb0igKn5xvQlxcLbLOYssx9LrpfVd4qPcONVbf573lX6tZX?=
- =?us-ascii?Q?peOAfX6QLCWQs4R7ktrCRJH/9glPWhPrUEVNn7HNBr/sbpe2An5yrgEFZPpa?=
- =?us-ascii?Q?q5MeXm5tTHMfc1ZPphOYzZzxtkTpkKu+CEax/Tj4/l1bcY2BhdQyVkIZknv9?=
- =?us-ascii?Q?JI7mxuOuuHBoBKFYM3f7kcp+Rp8dxIZEhAgTKEfp5JojfXBMkMiFTURH5CvS?=
- =?us-ascii?Q?pTKMUvn0fsFGm2T/WCXKOAxmOQEOxlP57+yMY0+pHn8bVkUawWYSl+yqeeTo?=
- =?us-ascii?Q?Xx0GDHgWIfUz8hHuC0LjhwSeAHxE9N8pRX7l/vJpHG/AEyRQlNEcrR+MRQ+J?=
- =?us-ascii?Q?jPYPZ7kBYN0wVWI+TakiRvZwnj0BUdD5pwPqBfO5hVnmzJtQUr/p5qGfnCXY?=
- =?us-ascii?Q?EnimBmzBTNuWZKhHEePyqibpaTMt5j8HioU4PF1rbNWZL9ubNpaBeBW8wOd8?=
- =?us-ascii?Q?K91b031FpqKRFsWauXYSZlKJXEbNoOu8tMTx90tXXYG0AkGkeY9cSpGmlA4/?=
- =?us-ascii?Q?U70A8mDNxyiNMkCG1uTKyqBzdMeOGrgh/1CtKGYZxLIiAG38XH8G6UQk4q7s?=
- =?us-ascii?Q?7udu+dJCVrRYgefV8pGejXzG58dhA7XvfsQrxrg8Z5W1+yEd71i5WkdVEaoS?=
- =?us-ascii?Q?KUT5IzwJoWUaXQuwGkFWx38VjYceWryAQFNBHD2bzMee/1HJ2Y07TU/Y32Ti?=
- =?us-ascii?Q?JjKyjxg3pbs2pQq8MzU7jR79dJvjsYk4T9Rid1ZSUzkW3hCiF5aN+GbIB96S?=
- =?us-ascii?Q?3wSSU6ERRWlwHW7l20WKD/wwl0+BSgbkzzFTTnEslZEev85w0OGLZnUAGPLx?=
- =?us-ascii?Q?KgSZQZOdkEetAB8BmpiK4mOHZolqGNGUgjFYIw6Ps60YoEKV5VJk7DJSW8Fd?=
- =?us-ascii?Q?hkxpAHaZOQ5MxT5e+Cr2tuGqGDgF6vYfzVrHdF/h+rNMu+vT3L+8omML9YAp?=
- =?us-ascii?Q?AmLQzTiqNYa88WZxD1/mLQN2247CJHJaPfUy8xam27EzmLC85de8OcEdFlK7?=
- =?us-ascii?Q?/d095QyFD8KQRPzaYoOOHPunLTTamY2SW2XkgOGKWeiw98wYjKJKEshSLA69?=
- =?us-ascii?Q?Dwg49/aChK/g/LC+2gNvGGghqk+v9BD4UYZWVvWsuuhSo+kbYhRRE6H/bRcX?=
- =?us-ascii?Q?/Dx27VQgQMIFkx+ZOjthrRdg9E7VVVpNQNHBvYBZ2ouYIPEWv7Mg8U0xt61w?=
- =?us-ascii?Q?VuQGO7F2SLl6YNtod5ZLHIHqpMsJ3Ad8ZjS35GEIt3LaSf3Ugp8ho+GmoOjV?=
- =?us-ascii?Q?lsq61S7HEV2lYc7D/gPAyOU4xAAXNpEoPIO21lQcLjia8jrw9EgRJOha2pyS?=
- =?us-ascii?Q?J9xJ4voi2/NZx9kmL0pDg+Cj8BiDXuBQ3JtdimAYbScFudTsjZHjTwCmxMsR?=
- =?us-ascii?Q?uUTTwkJXMIQnGvluYYEvJurOtLFCnpYuvSJUi9e5ChsJKK8d38g3cGBwj/FB?=
- =?us-ascii?Q?ztSGdwqRpbe8gRbqDkkV+0b1t+IRq/rbjQt7XmZdZO0IhqWmZmYDmEU2kAOV?=
- =?us-ascii?Q?mSRyDjAZLpmzckayTE+QvVGnf70W8e4YyeV9rhN8?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5070e73b-f46a-4c03-b1e1-08db8a6f568b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2023 04:51:40.1926
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QGQ8Loj0foU59Ol2ERTxvhNjuha/NJuV6nClBtx9tWcgDjDh5YC2ykt+2JNoDaAqS1OVls88aXe9beY/n7PxkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3416
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH RFC net-next v5 07/14] virtio/vsock: add common datagram
+ send path
+Content-Language: en-US
+To:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>
+Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
+        Simon Horman <simon.horman@corigine.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20230413-b4-vsock-dgram-v5-0-581bd37fdb26@bytedance.com>
+ <20230413-b4-vsock-dgram-v5-7-581bd37fdb26@bytedance.com>
+From:   Arseniy Krasnov <oxffffaa@gmail.com>
+In-Reply-To: <20230413-b4-vsock-dgram-v5-7-581bd37fdb26@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On hardware that supports Indirect Branch Tracking (IBT), Hyper-V VMs
-with ConfigVersion 9.3 or later support IBT in the guest. However,
-current versions of Hyper-V have a bug in that there's not an ENDBR64
-instruction at the beginning of the hypercall page. Since hypercalls are
-made with an indirect call to the hypercall page, all hypercall attempts
-fail with an exception and Linux panics.
 
-A Hyper-V fix is in progress to add ENDBR64. But guard against the Linux
-panic by clearing X86_FEATURE_IBT if the hypercall page doesn't start
-with ENDBR. The VM will boot and run without IBT.
 
-If future Linux 32-bit kernels were to support IBT, additional hypercall
-page hackery would be needed to make IBT work for such kernels in a
-Hyper-V VM.
+On 19.07.2023 03:50, Bobby Eshleman wrote:
+> This commit implements the common function
+> virtio_transport_dgram_enqueue for enqueueing datagrams. It does not add
+> usage in either vhost or virtio yet.
+> 
+> Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> ---
+>  net/vmw_vsock/virtio_transport_common.c | 76 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index ffcbdd77feaa..3bfaff758433 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -819,7 +819,81 @@ virtio_transport_dgram_enqueue(struct vsock_sock *vsk,
+>  			       struct msghdr *msg,
+>  			       size_t dgram_len)
+>  {
+> -	return -EOPNOTSUPP;
+> +	/* Here we are only using the info struct to retain style uniformity
+> +	 * and to ease future refactoring and merging.
+> +	 */
+> +	struct virtio_vsock_pkt_info info_stack = {
+> +		.op = VIRTIO_VSOCK_OP_RW,
+> +		.msg = msg,
+> +		.vsk = vsk,
+> +		.type = VIRTIO_VSOCK_TYPE_DGRAM,
+> +	};
+> +	const struct virtio_transport *t_ops;
+> +	struct virtio_vsock_pkt_info *info;
+> +	struct sock *sk = sk_vsock(vsk);
+> +	struct virtio_vsock_hdr *hdr;
+> +	u32 src_cid, src_port;
+> +	struct sk_buff *skb;
+> +	void *payload;
+> +	int noblock;
+> +	int err;
+> +
+> +	info = &info_stack;
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
----
+I think 'info' assignment could be moved below, to the place where it is used
+first time.
 
-Changes in v2:
-* Use pr_warn() instead of pr_info() [Peter Zijlstra]
+> +
+> +	if (dgram_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
+> +		return -EMSGSIZE;
+> +
+> +	t_ops = virtio_transport_get_ops(vsk);
+> +	if (unlikely(!t_ops))
+> +		return -EFAULT;
+> +
+> +	/* Unlike some of our other sending functions, this function is not
+> +	 * intended for use without a msghdr.
+> +	 */
+> +	if (WARN_ONCE(!msg, "vsock dgram bug: no msghdr found for dgram enqueue\n"))
+> +		return -EFAULT;
 
- arch/x86/hyperv/hv_init.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Sorry, but is that possible? I thought 'msg' is always provided by general socket layer (e.g. before
+af_vsock.c code) and can't be NULL for DGRAM. Please correct me if i'm wrong.
 
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 6c04b52..5cbee24 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -14,6 +14,7 @@
- #include <asm/apic.h>
- #include <asm/desc.h>
- #include <asm/sev.h>
-+#include <asm/ibt.h>
- #include <asm/hypervisor.h>
- #include <asm/hyperv-tlfs.h>
- #include <asm/mshyperv.h>
-@@ -472,6 +473,26 @@ void __init hyperv_init(void)
- 	}
- 
- 	/*
-+	 * Some versions of Hyper-V that provide IBT in guest VMs have a bug
-+	 * in that there's no ENDBR64 instruction at the entry to the
-+	 * hypercall page. Because hypercalls are invoked via an indirect call
-+	 * to the hypercall page, all hypercall attempts fail when IBT is
-+	 * enabled, and Linux panics. For such buggy versions, disable IBT.
-+	 *
-+	 * Fixed versions of Hyper-V always provide ENDBR64 on the hypercall
-+	 * page, so if future Linux kernel versions enable IBT for 32-bit
-+	 * builds, additional hypercall page hackery will be required here
-+	 * to provide an ENDBR32.
-+	 */
-+#ifdef CONFIG_X86_KERNEL_IBT
-+	if (cpu_feature_enabled(X86_FEATURE_IBT) &&
-+	    *(u32 *)hv_hypercall_pg != gen_endbr()) {
-+		setup_clear_cpu_cap(X86_FEATURE_IBT);
-+		pr_warn("Hyper-V: Disabling IBT because of Hyper-V bug\n");
-+	}
-+#endif
-+
-+	/*
- 	 * hyperv_init() is called before LAPIC is initialized: see
- 	 * apic_intr_mode_init() -> x86_platform.apic_post_init() and
- 	 * apic_bsp_setup() -> setup_local_APIC(). The direct-mode STIMER
--- 
-1.8.3.1
+Also I see, that in af_vsock.c , 'vsock_dgram_sendmsg()' dereferences 'msg' for checking MSG_OOB without any
+checks (before calling transport callback - this function in case of virtio). So I think if we want to keep
+this type of check - such check must be placed in af_vsock.c or somewhere before first dereference of this pointer.
 
+> +
+> +	noblock = msg->msg_flags & MSG_DONTWAIT;
+> +
+> +	/* Use sock_alloc_send_skb to throttle by sk_sndbuf. This helps avoid
+> +	 * triggering the OOM.
+> +	 */
+> +	skb = sock_alloc_send_skb(sk, dgram_len + VIRTIO_VSOCK_SKB_HEADROOM,
+> +				  noblock, &err);
+> +	if (!skb)
+> +		return err;
+> +
+> +	skb_reserve(skb, VIRTIO_VSOCK_SKB_HEADROOM);
+> +
+> +	src_cid = t_ops->transport.get_local_cid();
+> +	src_port = vsk->local_addr.svm_port;
+> +
+> +	hdr = virtio_vsock_hdr(skb);
+> +	hdr->type	= cpu_to_le16(info->type);
+> +	hdr->op		= cpu_to_le16(info->op);
+> +	hdr->src_cid	= cpu_to_le64(src_cid);
+> +	hdr->dst_cid	= cpu_to_le64(remote_addr->svm_cid);
+> +	hdr->src_port	= cpu_to_le32(src_port);
+> +	hdr->dst_port	= cpu_to_le32(remote_addr->svm_port);
+> +	hdr->flags	= cpu_to_le32(info->flags);
+> +	hdr->len	= cpu_to_le32(dgram_len);
+> +
+> +	skb_set_owner_w(skb, sk);
+> +
+> +	payload = skb_put(skb, dgram_len);
+> +	err = memcpy_from_msg(payload, msg, dgram_len);
+> +	if (err)
+> +		return err;
+
+Do we need free allocated skb here ?
+
+> +
+> +	trace_virtio_transport_alloc_pkt(src_cid, src_port,
+> +					 remote_addr->svm_cid,
+> +					 remote_addr->svm_port,
+> +					 dgram_len,
+> +					 info->type,
+> +					 info->op,
+> +					 0);
+> +
+> +	return t_ops->send_pkt(skb);
+>  }
+>  EXPORT_SYMBOL_GPL(virtio_transport_dgram_enqueue);
+>  
+> 
+
+Thanks, Arseniy
