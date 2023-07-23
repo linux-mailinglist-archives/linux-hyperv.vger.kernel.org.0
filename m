@@ -2,85 +2,117 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D6D75E5B3
-	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Jul 2023 01:08:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF4C075E5B6
+	for <lists+linux-hyperv@lfdr.de>; Mon, 24 Jul 2023 01:16:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjGWXIK (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Sun, 23 Jul 2023 19:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
+        id S229835AbjGWXQA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sun, 23 Jul 2023 19:16:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjGWXIJ (ORCPT
+        with ESMTP id S229577AbjGWXQA (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Sun, 23 Jul 2023 19:08:09 -0400
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4092BA6;
-        Sun, 23 Jul 2023 16:08:09 -0700 (PDT)
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1bba54f7eefso1655025ad.1;
-        Sun, 23 Jul 2023 16:08:09 -0700 (PDT)
+        Sun, 23 Jul 2023 19:16:00 -0400
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D7CE4B;
+        Sun, 23 Jul 2023 16:15:58 -0700 (PDT)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1b852785a65so24375125ad.0;
+        Sun, 23 Jul 2023 16:15:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690153688; x=1690758488;
+        d=1e100.net; s=20221208; t=1690154158; x=1690758958;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ejk+IkfG5HIe+hQjbA5510kpJD8rhXbCRXUBxtMfbVI=;
-        b=hRq6HwXB+GfLKQkkMMU7dPscLDa0JJW9+hKahdl7vetT9797uZFdsdobsNDf24yXUV
-         kZt/6+JwzV+iNV65CRAb6tIolayUrsheaj6GBZkn8I89SikhAAi2WdfKBF1S2LvZwbnp
-         4ZTWCLT3LLkEme4zGyMzJx09sfxGrophkCESZt4oiZMRHjH8j+fuIQjjfaR5G6h9tdgs
-         VVwkv+oiKHgYH00rbIva+WFeY5C7qUKx3FAiO7lr7jBhhl1Asdh9hQMQXGA1VjuKgpQp
-         ne35oED5QNLmxX9qnw0SwtAjbUM1e5y0yMx38OxFTu1zWuDvBQY2MXzSdTPTaP20BdVD
-         uWmQ==
-X-Gm-Message-State: ABy/qLay9kUz7jG7UYcHO8wVx4ztm7e2S32teyf+O/PK8H/EW589u82e
-        eZzCQkkQ9N+4FmYVYAsoDXw=
-X-Google-Smtp-Source: APBJJlFr8ysZfwUQa77PynVAKsPnJE7xdexUyBkakvwffPNWKm2eJFRhP2YEapD59k+0m/Atbuc5yw==
-X-Received: by 2002:a17:902:ecc9:b0:1b8:8702:1e7c with SMTP id a9-20020a170902ecc900b001b887021e7cmr13048563plh.33.1690153688428;
-        Sun, 23 Jul 2023 16:08:08 -0700 (PDT)
+        bh=wNkYcJGF2U6ccOrqy8oHiZSNN81wGQ9+4DqeH0IB8jA=;
+        b=BZhuJE0lnL1pByH4ROqSIem97zPo4NB+uEkyaQLBv2gMYen7R4bHPGRH4PEYNkGT4+
+         7iMfybc5AZD/WC553OK/BwwYKvL5Hp740yTy7IdkzkfFUuMnz50EK3W5qEnMlf4CUmL3
+         1aue47uEvFHFyExmU6rXasEAwv2zOe8ByYK2YfV1EcYzGu0jh+HMdZ6mgL4GtvYYorWk
+         e4q3V3r02vCnw4ZuqLTVpKrt3KUpJij3kAWsf++MGUmkbwgYTXNWGpRLwqRR40dE0Opn
+         DM3ifGed+pEW+r9mnBkk9YzZJn2DdFjHmM4/ypn27dupf+XlpyaZiUJ9d/kS4o3O290I
+         ndhg==
+X-Gm-Message-State: ABy/qLaHgctcsJaAHviD9s0xZenlPvoZ1N/zTsD77U5eT5IFsanMqEF/
+        2h94TlDNI+M+91LRobbBU1Y=
+X-Google-Smtp-Source: APBJJlGly9bOV9iyKhNmRbGB0QmVJDspu/SEDpuWGk5dIsUDdACb9Q4GSR0sZ4DPUQ9kLhBMJ7aPKA==
+X-Received: by 2002:a17:902:ea0a:b0:1b0:3d03:4179 with SMTP id s10-20020a170902ea0a00b001b03d034179mr10518228plg.6.1690154157985;
+        Sun, 23 Jul 2023 16:15:57 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d24-20020a170902b71800b001b9cea4e8a2sm7355186pls.293.2023.07.23.16.08.07
+        by smtp.gmail.com with ESMTPSA id d17-20020a170902ced100b001b80d399730sm7392329plg.242.2023.07.23.16.15.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Jul 2023 16:08:07 -0700 (PDT)
-Date:   Sun, 23 Jul 2023 23:08:06 +0000
+        Sun, 23 Jul 2023 16:15:57 -0700 (PDT)
+Date:   Sun, 23 Jul 2023 23:15:55 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        peterz@infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] x86/hyperv: Disable IBT when hypercall page lacks
- ENDBR instruction
-Message-ID: <ZL2y1oaObNrnMHE8@liuwe-devbox-debian-v2>
-References: <1690001476-98594-1-git-send-email-mikelley@microsoft.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "huzhi001@208suo.com" <huzhi001@208suo.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] clocksource: Fix warnings in mshyperv.h
+Message-ID: <ZL20q7yVHqX0F8K8@liuwe-devbox-debian-v2>
+References: <tencent_7A4BAF2CDEE6AC56AB5ABBCE9CA1C2FE5205@qq.com>
+ <f5f5e7f2627ea55d81bc2d39420c40e8@208suo.com>
+ <BYAPR21MB16885FB2E77FC9ADB1C8B48DD736A@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1690001476-98594-1-git-send-email-mikelley@microsoft.com>
+In-Reply-To: <BYAPR21MB16885FB2E77FC9ADB1C8B48DD736A@BYAPR21MB1688.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 09:51:16PM -0700, Michael Kelley wrote:
-> On hardware that supports Indirect Branch Tracking (IBT), Hyper-V VMs
-> with ConfigVersion 9.3 or later support IBT in the guest. However,
-> current versions of Hyper-V have a bug in that there's not an ENDBR64
-> instruction at the beginning of the hypercall page. Since hypercalls are
-> made with an indirect call to the hypercall page, all hypercall attempts
-> fail with an exception and Linux panics.
+On Wed, Jul 12, 2023 at 09:06:30PM +0000, Michael Kelley (LINUX) wrote:
+> From: huzhi001@208suo.com <huzhi001@208suo.com> Sent: Wednesday, July 12, 2023 4:23 AM
+> > 
+> > The following checkpatch warnings are removed:
+> > WARNING: Use #include <linux/io.h> instead of <asm/io.h>
 > 
-> A Hyper-V fix is in progress to add ENDBR64. But guard against the Linux
-> panic by clearing X86_FEATURE_IBT if the hypercall page doesn't start
-> with ENDBR. The VM will boot and run without IBT.
+> The "Subject:" of the patch should probably start with "x86/hyperv",
+> not "clocksource".  Usually I look back at the commit history of a
+> particular file and try to be consistent with the Subject: prefix that
+> has been used in the past.  "x86/hyperv" is typical for this
+> include file.
 > 
-> If future Linux 32-bit kernels were to support IBT, additional hypercall
-> page hackery would be needed to make IBT work for such kernels in a
-> Hyper-V VM.
+> Other than that,
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+
+There is only one warning fixed.
+
+I changed the subject line and commit message.
 
 Applied to hyperv-fixes. Thanks.
+
+> > 
+> > Signed-off-by: ZhiHu <huzhi001@208suo.com>
+> > ---
+> >   arch/x86/include/asm/mshyperv.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/mshyperv.h
+> > b/arch/x86/include/asm/mshyperv.h
+> > index 88d9ef98e087..fa83d88e4c99 100644
+> > --- a/arch/x86/include/asm/mshyperv.h
+> > +++ b/arch/x86/include/asm/mshyperv.h
+> > @@ -5,7 +5,7 @@
+> >   #include <linux/types.h>
+> >   #include <linux/nmi.h>
+> >   #include <linux/msi.h>
+> > -#include <asm/io.h>
+> > +#include <linux/io.h>
+> >   #include <asm/hyperv-tlfs.h>
+> >   #include <asm/nospec-branch.h>
+> >   #include <asm/paravirt.h>
