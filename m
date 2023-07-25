@@ -2,68 +2,49 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8007620DD
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jul 2023 20:02:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 002077621F3
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jul 2023 21:02:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232641AbjGYSCL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Jul 2023 14:02:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
+        id S230425AbjGYTCT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 25 Jul 2023 15:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232601AbjGYSB7 (ORCPT
+        with ESMTP id S230128AbjGYTCS (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Jul 2023 14:01:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A9A10F7
-        for <linux-hyperv@vger.kernel.org>; Tue, 25 Jul 2023 11:01:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690308071;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xBbADqs+v1wKci/ZBXowdEAl6AvZzPcdCEegqxDdVtQ=;
-        b=X9Yc7Kdy0dLazHuWhObM0oucrtNBDvqrBOXlSx/xkF5lAISB3j2wWmhwV+F4Z8wkEoykAm
-        JjFQEnqWjLrxNCA/x8LpXgwl8w8DAvqZ7X1p3yQMDR+TobeShvNe6PqC7IJUpg6YBbRpXt
-        0ifJ3dghuvudxBN562KvjuzM3az5tDo=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-645-uFs-7afNMau_FjdqTAbFQg-1; Tue, 25 Jul 2023 14:01:10 -0400
-X-MC-Unique: uFs-7afNMau_FjdqTAbFQg-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-51bee352ffcso4423491a12.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 25 Jul 2023 11:01:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690308065; x=1690912865;
-        h=content-transfer-encoding:in-reply-to:references:to
-         :content-language:subject:cc:user-agent:mime-version:date:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xBbADqs+v1wKci/ZBXowdEAl6AvZzPcdCEegqxDdVtQ=;
-        b=UTyiOSzByDTubQrjDFV/JHw8syj6YhTtJx3UTkE2nMcKnl+/VcfUZk+fgQ7dtWcotN
-         S6HCN0tXAnQZT9kfmmrVHx8Bx4Wcx9lvB9KkmD9ZlTNprM1bjNu0Rs4VsaPuIaDW6b6A
-         xmySx9BjspI7HDC7P6TxjPXl6zilNlQnKuDkda5aVvV/jyfYqvdA5BXZAykyzL2/Rdbm
-         011oKWXoMTQK8FWLGTNDD4wA0fUItsyDzKrzN4RFl2LG/RDUikhER7qZmXyvbUtB0WtM
-         cTjv5FRCtxoarply+zYRVQIfKe4AN8AZeful27oek0tpiHFlgUxMP1la7v1/ojjoaWTR
-         y6JQ==
-X-Gm-Message-State: ABy/qLYJuoH7Z+6pm7q3OMysuiynVmn1Ix1NUmtwsMYvtSPctPSSVtCM
-        /MOiMR/hGcInF2pvYeEGUy2TKDEguxbPQp7mkULuXYGUz2OcGlSDpC3ZOGgWvYi4A2cG9p4JrKR
-        tvtEFQe8KvOyfMKqIrr/TYGNk
-X-Received: by 2002:aa7:c6da:0:b0:522:2aee:a2c9 with SMTP id b26-20020aa7c6da000000b005222aeea2c9mr6710250eds.5.1690308065634;
-        Tue, 25 Jul 2023 11:01:05 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHizmB181reThRO6/ASk1i7c69OaRWpmGynXIDW5VJ7Fjh9jnBGY5twnl6WJ5sBLy4NT1Nk6w==
-X-Received: by 2002:aa7:c6da:0:b0:522:2aee:a2c9 with SMTP id b26-20020aa7c6da000000b005222aeea2c9mr6710228eds.5.1690308065265;
-        Tue, 25 Jul 2023 11:01:05 -0700 (PDT)
-Received: from [192.168.42.222] (194-45-78-10.static.kviknet.net. [194.45.78.10])
-        by smtp.gmail.com with ESMTPSA id l25-20020aa7c3d9000000b0051873c201a0sm7798293edr.26.2023.07.25.11.01.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jul 2023 11:01:04 -0700 (PDT)
-From:   Jesper Dangaard Brouer <jbrouer@redhat.com>
-X-Google-Original-From: Jesper Dangaard Brouer <brouer@redhat.com>
-Message-ID: <729b360c-4d79-1025-f5be-384b17f132d3@redhat.com>
-Date:   Tue, 25 Jul 2023 20:01:03 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Cc:     brouer@redhat.com, Dexuan Cui <decui@microsoft.com>,
+        Tue, 25 Jul 2023 15:02:18 -0400
+Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021026.outbound.protection.outlook.com [52.101.62.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C366D121;
+        Tue, 25 Jul 2023 12:02:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VPWnA40nqfwSCIBf3EpHAVAxs4CcFIUT4/sS3MOgJkUDf9GIVX5vphY8W1ayA9D5P7WRHs91qM+3nMJ+qdVH5Ql5G8OEfn6nGTdwraQeUIpxhdMf/9nxGGxevGo+ke+IRoy0WL0Rkr0HaarcL1Kz/kjBgAAqib+/P3CjAPnj48mim5g1Pq+pOQXDl6VXRPkR9IuiuSHkfinRBgSGBPusZWQ3JGjnfwLMa8mcr8xv3CCpcupbhScU9oJn8HRGZvV2RiGv66GWQo+WhZ+RrxzVJL97BYCjVkwIDoKav1jGyNBTe8Vx1MzH99AbmLOqE3T4rU3QcFmjq+nJ0ZwkIqxetA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sftyt76KOmFZPcSMea8jiZ88u+09UDBK2DkDz9iF6x4=;
+ b=dVqR8qIOGgovdz8DwXkzRVhzNv2PHF7L133U/vd0fSADiAZIp9nEahkD5/f0rpIN60BmBz20OQHmbv2U95jLriUH6ygNLhYUKb6M9B0zxPLf9x5aUJBs6UVkFIwn996PHOF7e1jNn4fmcJbl1EeWdw+xR4elX6J2JN3Ry9jLZ1coqkuFN4r5N1NzCVU+fmeyO2gUuTC48QISPoEUwVa9oRLdB5mh08OB3lfjV1eN5higP6uH9e9eRj3NPzz2dPnSaw3F1jyr+CENXeik/sB2A3dYfBvsE8tTHiqBgGlKYglTQvCXUJ2Biym4x8PqrlXVIZsddJHNSc4l4zsIwvzMzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sftyt76KOmFZPcSMea8jiZ88u+09UDBK2DkDz9iF6x4=;
+ b=iDJJIIuMD7vgAC8wQVWwc+w9DzCg683djDIR9dowB7TO+IQSxNeU72V1xrB8q3lojz4lev7BUBoH+vxCHMfn5Xjz2fSFIFUZUh004SkaJ7ZeLLueo6YRTT06b010dxGCzctc8xy6dunrIuAVwJeOyBygiaEICUIED6bglcYBo3k=
+Received: from PH7PR21MB3116.namprd21.prod.outlook.com (2603:10b6:510:1d0::10)
+ by SJ0PR21MB2072.namprd21.prod.outlook.com (2603:10b6:a03:397::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.4; Tue, 25 Jul
+ 2023 19:02:10 +0000
+Received: from PH7PR21MB3116.namprd21.prod.outlook.com
+ ([fe80::d2:cad1:318e:224b]) by PH7PR21MB3116.namprd21.prod.outlook.com
+ ([fe80::d2:cad1:318e:224b%7]) with mapi id 15.20.6652.002; Tue, 25 Jul 2023
+ 19:02:10 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Jesper Dangaard Brouer <jbrouer@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "brouer@redhat.com" <brouer@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Paul Rosswurm <paulros@microsoft.com>,
         "olaf@aepfle.de" <olaf@aepfle.de>,
@@ -87,143 +68,127 @@ Cc:     brouer@redhat.com, Dexuan Cui <decui@microsoft.com>,
         "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: Re: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
-Content-Language: en-US
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Jesper Dangaard Brouer <jbrouer@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
+Thread-Topic: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
+Thread-Index: AQHZvAZSl8pOb40fXE2pDlV9gZuDN6/IzCkAgABE5NCAADEEcIABidWAgAANWGA=
+Date:   Tue, 25 Jul 2023 19:02:10 +0000
+Message-ID: <PH7PR21MB3116F5612AA8303512EEBA4CCA03A@PH7PR21MB3116.namprd21.prod.outlook.com>
 References: <1689966321-17337-1-git-send-email-haiyangz@microsoft.com>
  <1af55bbb-7aff-e575-8dc1-8ba64b924580@redhat.com>
  <PH7PR21MB3116F8A97F3626AB04915B96CA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
  <PH7PR21MB311675E57B81B49577ADE98FCA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
-In-Reply-To: <PH7PR21MB311675E57B81B49577ADE98FCA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <729b360c-4d79-1025-f5be-384b17f132d3@redhat.com>
+In-Reply-To: <729b360c-4d79-1025-f5be-384b17f132d3@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=60666082-2b7c-425c-aa9e-f9d880f18a60;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-07-25T18:48:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR21MB3116:EE_|SJ0PR21MB2072:EE_
+x-ms-office365-filtering-correlation-id: bdd4ce79-0d46-4e3c-4c44-08db8d41a648
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tnr2e71rw9y+LKwDORVZVTWdpig3R2o3BrUdXePNurngvucccGkjXBs3BuysT2xxkFAeU++uSx08br58ct41u9Q12j4+dJPGeGQL1izkoH9JpcoIFP4WDCp0Tl457NKLrUxC83OTNUrMovQ0aS4Xrw4QoAzFY/aw4k28ZpKU3qEKIl+iwN1hgaixm3rokulJfeCebsDAHYkz7MgbU7JRuTrUsNU4U2if3QoOOBNAoBGDqXFSSOUDnS0VGIHab5o+qg6Jd98l6SZ6TRbbznTHWZt8pyZT0zrmiwvdsjrC7kxu5h4qoHBTnVpJ90C65OJqasdYef/H1Mf1ILVI/2qo/g9UIjcF28heavlSjHF1GOfb1OJ2WxwAGU6qbWaSe9pf/ZoE61XB5pg2gAr55PL/VFnE+9WcBzzhR7jK9DmfPIreLPI3rVrsqwC/mSD6zjeNSOVLmMooF7Ppq8k+xTGqYrC5blfPPI9oq6C+wvtSNVXkyGqZh1KMYcD/MDfP6UgUlWvJHPtkgzphXtVu9J//zbo+p30CWEuLfEXRN6JpvQg8TtiDJE0+7kurOTOs7OQu1MQsnzZ72LdGRzzVq7hdhCHrd7rVIQcwrcIFedl6eeizGFSsnpkX5+nz8O8Q2Rnwt8yPxDzM8gUhXOyd18BhZUCC+PS6Hl3QS/qq21QIZ20=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3116.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(451199021)(38070700005)(83380400001)(82950400001)(38100700002)(122000001)(82960400001)(9686003)(2906002)(33656002)(186003)(6506007)(26005)(8990500004)(86362001)(52536014)(478600001)(5660300002)(10290500003)(55016003)(71200400001)(7416002)(7696005)(41300700001)(110136005)(4326008)(64756008)(66556008)(66476007)(54906003)(8936002)(66446008)(316002)(76116006)(66946007)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZEdjOWhSWEVjS0FMNnhva0VBaEU5ZHd6TnVyTzY0SVdxa1RFay9OREI5aXNt?=
+ =?utf-8?B?K0NUdUdUQWtsTVl1WWlOYW92WlRyeHI3UWNaVWtON0YxcWNUWFJiWDlDaXk2?=
+ =?utf-8?B?YndQRHRLVHJwKzBDc0ZFalc1MTFrZ2NXS1U5akd6ZmpZOTUxSWljMnBXNWhS?=
+ =?utf-8?B?bkRYajNIcXRITVJLVGRUaWtFOFFSQ3dSRHVOemxPUmZORGdVb2xGRFQrSU14?=
+ =?utf-8?B?RVhEeitNWFpXSEFodEh2d1YrT05mRWFaVHV1SzFkY3NZTWlrUWZyall2SWJO?=
+ =?utf-8?B?RjRPeUcveEpmWnJYZW9GN3B0ZHhBSjhMQVZNVGxmNUZMdkNwMFdiSEdZanhV?=
+ =?utf-8?B?RnE1QlRNamIyeldOdldheDF3N2RjTHI5RDduOXFGNGZKNDY2ekxTNnZ4NU1R?=
+ =?utf-8?B?cThUWldFcms2a250WU01SGt6WEFOTHV1aFN0ZGR0dkZodytzOEE4ZjFWdXFz?=
+ =?utf-8?B?VFJFNTVGMmFTTUFPcmoySENmOWFjd1VmWWI0S2VXWms4SjlWY1NHaHM3cnBv?=
+ =?utf-8?B?Y1VEUldIREhiM2thZzVLQTR5Z25UK09MRnZXUWQra0F5dWd6Mnl3ZVJxZ2Nr?=
+ =?utf-8?B?MS94RVZjNXRFdkk2UWVPMlA2RHEybW8yTHZ0T2s1bEthMldnM1R4anNWR0I4?=
+ =?utf-8?B?VStXVGhpT0RnVzY0THBSTCtCRXhFZGwzK3l6YUcxeDFxdHlOa0hrMHAyRERr?=
+ =?utf-8?B?SHNjSVdHM1o3dnMwbXh0NUk0eDd6ZGgzQmlzeUZlNDRVZTQ5dS9IYkRDZE5V?=
+ =?utf-8?B?TjFwYkhObGtYVUtsaThiNHREKzZVcTlhcGdIdTZIRmg4UjdNakdqY09UaHpZ?=
+ =?utf-8?B?bTZ0cHFqek5kSFF3T0FDOHBGTlRyRjZ0Y0ZVbmRJMzduSy9Vdjg3bWp5dWNr?=
+ =?utf-8?B?WFBuVE1IZmdzSHpWRGp3c1B1KzdQSUNtVGtXa3IvcXk0ZUVEWlViNk9SWlRR?=
+ =?utf-8?B?TDFiUWtlK1gvQkRUcGMzODAydWdqYkVnR1dnZ3ZxamhjdDJNc3UvbERBcjFM?=
+ =?utf-8?B?UTduUFU4OTBRd3lCcWRlSktqTk8vUGY1R2ZHUGF6U2xjQll2SWptb0VlTUVV?=
+ =?utf-8?B?alRGT2x1V3VueU9VV2pPUHF5UE9Qc0I3cFBLV2RSaUM5NTZCdlN5b0hSWHJk?=
+ =?utf-8?B?YndYVHBkN2RLMXlkRDdtQjVFdUJXZ1pDc3pnQWVrQm5GSW04YStJRFJUMXMv?=
+ =?utf-8?B?aFFqOXNVc2RPQlB6K2FVbEMxZktaS0YweFZMZktFcUJLdGFMN3RYd1Juek83?=
+ =?utf-8?B?cHBoSTl5QzRZYmhXa2lKQzJMRXlQZW9uWnBnZGpadjZEbGl0UkRZZ2ViNnl6?=
+ =?utf-8?B?NHNBdGpDbFJOcjZuR29LbVVMRVlqYWVGM0RQbDlWWjNTcWJpbXFQMm01dDhO?=
+ =?utf-8?B?ZjRYcEVZbjVrSlJQaFkzbVF3WDF0ZlRsdkNpUjlIazB2M2h2MDRldTI4ZzRE?=
+ =?utf-8?B?bkFXcExuZlQ1Z0ZvL3dER01Oa29LQXNTVlcxRGp5MjcxeXhKVzBYb1RTWUJH?=
+ =?utf-8?B?dWF2dFhuVDlxRE9qVThCK2k3SWlQOElUckdsWGIyRXEwZ2RFNUFmK1dGTXho?=
+ =?utf-8?B?WWRGQnowZzNZWXphUEN4VlphbVBzWGUyOHRVamlrRzk1QjVVZW1FVHlQZkFh?=
+ =?utf-8?B?YXpiN3pyY2VJa29pMmlYeGFvczZxZ0xtdVpuMXZrNDJrNkh6Zmk4Qnd5MHJW?=
+ =?utf-8?B?SjNhcERUMVlwMlVhMUtvQVZGaEhrd1J1eDY5aXZVeDV5V1VPTzRHN1ZkY216?=
+ =?utf-8?B?b05YbU1lZ2dTUFFjL0RyR3hNNEs4aUNyVXhRc0FLT2RqblNvd3dIbmpxTlVD?=
+ =?utf-8?B?ZXFaeDgwb3phT3cyQzVWQXczdDUxbVFCWDdzVUVPUjJ3VU1lWXRIZDhGMjd1?=
+ =?utf-8?B?YWFjZm5EdmlndFFZR05Zanh4dU90bXlybDhHYWRrR0t6TTc1UXcyZkFVQ0lx?=
+ =?utf-8?B?SUNGNU1CNWhmK2tPZjNBT0owNWZOQXp3TExYdEJjbGN1cVl4Nm1jVlpOTGNB?=
+ =?utf-8?B?Q2FuQ0xYVU9qZ1ZOVE1jUDgycGc1c1dRV1Urc1JjbndCUWZuWmhVc1VNbk9t?=
+ =?utf-8?B?SzVlTUZqMWpJUkhqYzI3UkFOdmxjNHFNTVUxZytYY1J1SmZ4SlhVSmFvbW1Z?=
+ =?utf-8?Q?H4Hp/0dqXq9sRxn0JTwDqjnXb?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3116.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdd4ce79-0d46-4e3c-4c44-08db8d41a648
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2023 19:02:10.4963
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PgtB1DF3j6rGIVm4byXNjHBPZh5/YKotF6A4tF7KKL8OMl2erXvPKhZoKYd+5BHFZfxrHfc5HyJlkoJuHifejQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB2072
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-
-
-On 24/07/2023 20.35, Haiyang Zhang wrote:
-> 
-[...]
->>> On 21/07/2023 21.05, Haiyang Zhang wrote:
->>>> Add page pool for RX buffers for faster buffer cycle and reduce CPU
->>>> usage.
->>>>
->>>> The standard page pool API is used.
->>>>
->>>> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
->>>> ---
->>>> V3:
->>>> Update xdp mem model, pool param, alloc as suggested by Jakub Kicinski
->>>> V2:
->>>> Use the standard page pool API as suggested by Jesper Dangaard Brouer
->>>>
->>>> ---
->>>>    drivers/net/ethernet/microsoft/mana/mana_en.c | 91 +++++++++++++++--
->> --
->>>>    include/net/mana/mana.h                       |  3 +
->>>>    2 files changed, 78 insertions(+), 16 deletions(-)
->>>>
->>>> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
->>> b/drivers/net/ethernet/microsoft/mana/mana_en.c
->>>> index a499e460594b..4307f25f8c7a 100644
->>>> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
->>>> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
->>> [...]
->>>> @@ -1659,6 +1679,8 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
->>>>
->>>>    	if (rxq->xdp_flush)
->>>>    		xdp_do_flush();
->>>> +
->>>> +	page_pool_nid_changed(rxq->page_pool, numa_mem_id());
->>>
->>> I don't think this page_pool_nid_changed() called is needed, if you do
->>> as I suggest below (nid = NUMA_NO_NODE).
->>>
->>>
->>>>    }
->>>>
->>>>    static int mana_cq_handler(void *context, struct gdma_queue
->>> *gdma_queue)
->>> [...]
->>>
->>>> @@ -2008,6 +2041,25 @@ static int mana_push_wqe(struct mana_rxq
->> *rxq)
->>>>    	return 0;
->>>>    }
->>>>
->>>> +static int mana_create_page_pool(struct mana_rxq *rxq)
->>>> +{
->>>> +	struct page_pool_params pprm = {};
->>>
->>> You are implicitly assigning NUMA node id zero.
->>>
->>>> +	int ret;
->>>> +
->>>> +	pprm.pool_size = RX_BUFFERS_PER_QUEUE;
->>>> +	pprm.napi = &rxq->rx_cq.napi;
->>>
->>> You likely want to assign pprm.nid to NUMA_NO_NODE
->>>
->>>    pprm.nid = NUMA_NO_NODE;
->>>
->>> For most drivers it is recommended to assign ``NUMA_NO_NODE`` (value -1)
->>> as the NUMA ID to ``pp_params.nid``. When ``CONFIG_NUMA`` is enabled
->>> this setting will automatically select the (preferred) NUMA node (via
->>> ``numa_mem_id()``) based on where NAPI RX-processing is currently
->>> running. The effect is that page_pool will only use recycled memory when
->>> NUMA node match running CPU. This assumes CPU refilling driver RX-ring
->>> will also run RX-NAPI.
->>>
->>> If a driver want more control over the NUMA node memory selection,
->>> drivers can assign (``pp_params.nid``) something else than
->>> `NUMA_NO_NODE`` and runtime adjust via function
->>> ``page_pool_nid_changed()``.
->>
->> Our driver is using NUMA 0 by default, so I implicitly assign NUMA node id
->> to zero during pool init.
->>
->> And, if the IRQ/CPU affinity is changed, the page_pool_nid_changed()
->> will update the nid for the pool. Does this sound good?
->>
-> 
-> Also, since our driver is getting the default node from here:
-> 	gc->numa_node = dev_to_node(&pdev->dev);
-> I will update this patch to set the default node as above, instead of implicitly
-> assigning it to 0.
-> 
-
-In that case, I agree that it make sense to use dev_to_node(&pdev->dev), 
-like:
-	pprm.nid = dev_to_node(&pdev->dev);
-
-Driver must have a reason for assigning gc->numa_node for this hardware,
-which is okay. That is why page_pool API allows driver to control this.
-
-But then I don't think you should call page_pool_nid_changed() like
-
-	page_pool_nid_changed(rxq->page_pool, numa_mem_id());
-
-Because then you will (at first packet processing event) revert the
-dev_to_node() setting to use numa_mem_id() of processing/running CPU.
-(In effect this will be the same as setting NUMA_NO_NODE).
-
-I know, mlx5 do call page_pool_nid_changed(), but they showed benchmark
-numbers that this was preferred action, even-when sysadm had
-"misconfigured" the default smp_affinity RX-processing to happen on a
-remote NUMA node.  AFAIK mlx5 keeps the descriptor rings on the
-originally configured NUMA node that corresponds to the NIC PCIe slot.
-
---Jesper
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSmVzcGVyIERhbmdhYXJk
+IEJyb3VlciA8amJyb3VlckByZWRoYXQuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBKdWx5IDI1LCAy
+MDIzIDI6MDEgUE0NCj4gPj4NCj4gPj4gT3VyIGRyaXZlciBpcyB1c2luZyBOVU1BIDAgYnkgZGVm
+YXVsdCwgc28gSSBpbXBsaWNpdGx5IGFzc2lnbiBOVU1BIG5vZGUgaWQNCj4gPj4gdG8gemVybyBk
+dXJpbmcgcG9vbCBpbml0Lg0KPiA+Pg0KPiA+PiBBbmQsIGlmIHRoZSBJUlEvQ1BVIGFmZmluaXR5
+IGlzIGNoYW5nZWQsIHRoZSBwYWdlX3Bvb2xfbmlkX2NoYW5nZWQoKQ0KPiA+PiB3aWxsIHVwZGF0
+ZSB0aGUgbmlkIGZvciB0aGUgcG9vbC4gRG9lcyB0aGlzIHNvdW5kIGdvb2Q/DQo+ID4+DQo+ID4N
+Cj4gPiBBbHNvLCBzaW5jZSBvdXIgZHJpdmVyIGlzIGdldHRpbmcgdGhlIGRlZmF1bHQgbm9kZSBm
+cm9tIGhlcmU6DQo+ID4gCWdjLT5udW1hX25vZGUgPSBkZXZfdG9fbm9kZSgmcGRldi0+ZGV2KTsN
+Cj4gPiBJIHdpbGwgdXBkYXRlIHRoaXMgcGF0Y2ggdG8gc2V0IHRoZSBkZWZhdWx0IG5vZGUgYXMg
+YWJvdmUsIGluc3RlYWQgb2YgaW1wbGljaXRseQ0KPiA+IGFzc2lnbmluZyBpdCB0byAwLg0KPiA+
+DQo+IA0KPiBJbiB0aGF0IGNhc2UsIEkgYWdyZWUgdGhhdCBpdCBtYWtlIHNlbnNlIHRvIHVzZSBk
+ZXZfdG9fbm9kZSgmcGRldi0+ZGV2KSwNCj4gbGlrZToNCj4gCXBwcm0ubmlkID0gZGV2X3RvX25v
+ZGUoJnBkZXYtPmRldik7DQo+IA0KPiBEcml2ZXIgbXVzdCBoYXZlIGEgcmVhc29uIGZvciBhc3Np
+Z25pbmcgZ2MtPm51bWFfbm9kZSBmb3IgdGhpcyBoYXJkd2FyZSwNCj4gd2hpY2ggaXMgb2theS4g
+VGhhdCBpcyB3aHkgcGFnZV9wb29sIEFQSSBhbGxvd3MgZHJpdmVyIHRvIGNvbnRyb2wgdGhpcy4N
+Cj4gDQo+IEJ1dCB0aGVuIEkgZG9uJ3QgdGhpbmsgeW91IHNob3VsZCBjYWxsIHBhZ2VfcG9vbF9u
+aWRfY2hhbmdlZCgpIGxpa2UNCj4gDQo+IAlwYWdlX3Bvb2xfbmlkX2NoYW5nZWQocnhxLT5wYWdl
+X3Bvb2wsIG51bWFfbWVtX2lkKCkpOw0KPiANCj4gQmVjYXVzZSB0aGVuIHlvdSB3aWxsIChhdCBm
+aXJzdCBwYWNrZXQgcHJvY2Vzc2luZyBldmVudCkgcmV2ZXJ0IHRoZQ0KPiBkZXZfdG9fbm9kZSgp
+IHNldHRpbmcgdG8gdXNlIG51bWFfbWVtX2lkKCkgb2YgcHJvY2Vzc2luZy9ydW5uaW5nIENQVS4N
+Cj4gKEluIGVmZmVjdCB0aGlzIHdpbGwgYmUgdGhlIHNhbWUgYXMgc2V0dGluZyBOVU1BX05PX05P
+REUpLg0KPiANCj4gSSBrbm93LCBtbHg1IGRvIGNhbGwgcGFnZV9wb29sX25pZF9jaGFuZ2VkKCks
+IGJ1dCB0aGV5IHNob3dlZCBiZW5jaG1hcmsNCj4gbnVtYmVycyB0aGF0IHRoaXMgd2FzIHByZWZl
+cnJlZCBhY3Rpb24sIGV2ZW4td2hlbiBzeXNhZG0gaGFkDQo+ICJtaXNjb25maWd1cmVkIiB0aGUg
+ZGVmYXVsdCBzbXBfYWZmaW5pdHkgUlgtcHJvY2Vzc2luZyB0byBoYXBwZW4gb24gYQ0KPiByZW1v
+dGUgTlVNQSBub2RlLiAgQUZBSUsgbWx4NSBrZWVwcyB0aGUgZGVzY3JpcHRvciByaW5ncyBvbiB0
+aGUNCj4gb3JpZ2luYWxseSBjb25maWd1cmVkIE5VTUEgbm9kZSB0aGF0IGNvcnJlc3BvbmRzIHRv
+IHRoZSBOSUMgUENJZSBzbG90Lg0KDQpJbiBtYW5hX2dkX3NldHVwX2lycXMoKSwgd2Ugc2V0IHRo
+ZSBkZWZhdWx0IElSUS9DUFUgYWZmaW5pdHkgdG8gZ2MtPm51bWFfbm9kZSANCnRvbywgc28gaXQg
+d29uJ3QgcmV2ZXJ0IHRoZSBuaWQgaW5pdGlhbCBzZXR0aW5nLiANCg0KQ3VycmVudGx5LCB0aGUg
+QXp1cmUgaHlwZXJ2aXNvciBhbHdheXMgaW5kaWNhdGVzIG51bWEgMCBhcyBkZWZhdWx0LiAoSW4g
+DQp0aGUgZnV0dXJlLCBpdCB3aWxsIHN0YXJ0IHRvIHByb3ZpZGUgdGhlIGFjY3VyYXRlIGRlZmF1
+bHQgZGV2IG5vZGUuKSBXaGVuIGEgDQp1c2VyIG1hbnVhbGx5IGNoYW5nZXMgdGhlIElSUS9DUFUg
+YWZmaW5pdHkgZm9yIHBlcmYgdHVuaW5nLCB3ZSB3YW50IHRvIA0KYWxsb3cgcGFnZV9wb29sX25p
+ZF9jaGFuZ2VkKCkgdG8gdXBkYXRlIHRoZSBwb29sLiBJcyB0aGlzIE9LPw0KDQpUaGFua3MsDQot
+IEhhaXlhbmcNCg0K
