@@ -2,83 +2,108 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28D10761D41
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jul 2023 17:23:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D8007620DD
+	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jul 2023 20:02:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbjGYPX1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Jul 2023 11:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47958 "EHLO
+        id S232641AbjGYSCL (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 25 Jul 2023 14:02:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232782AbjGYPXY (ORCPT
+        with ESMTP id S232601AbjGYSB7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Jul 2023 11:23:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2888018D
-        for <linux-hyperv@vger.kernel.org>; Tue, 25 Jul 2023 08:22:48 -0700 (PDT)
+        Tue, 25 Jul 2023 14:01:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A9A10F7
+        for <linux-hyperv@vger.kernel.org>; Tue, 25 Jul 2023 11:01:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690298567;
+        s=mimecast20190719; t=1690308071;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=e9mBhDoGQ3JObgjS7OW/V+V7P8XjDmhT8kheexTlPRE=;
-        b=hCUuE5viiCxU2FGQxIlayPn9WrfOYDhJoclmd/+lOKhz+51R9OD0obzKVIj/Tq+JwH7EqW
-        QdD/tmITmop4KsfUnQLrq4ujB8K9PHJdF0lIBVFV6wiE004qE3bd5K2MdIiAwXRpWLCcON
-        Hh13YRbNxNM3CzQvO3JOFUVgQcq4NAk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=xBbADqs+v1wKci/ZBXowdEAl6AvZzPcdCEegqxDdVtQ=;
+        b=X9Yc7Kdy0dLazHuWhObM0oucrtNBDvqrBOXlSx/xkF5lAISB3j2wWmhwV+F4Z8wkEoykAm
+        JjFQEnqWjLrxNCA/x8LpXgwl8w8DAvqZ7X1p3yQMDR+TobeShvNe6PqC7IJUpg6YBbRpXt
+        0ifJ3dghuvudxBN562KvjuzM3az5tDo=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-210-aFcD6GkuNvOV_NVDTaDjnw-1; Tue, 25 Jul 2023 11:22:45 -0400
-X-MC-Unique: aFcD6GkuNvOV_NVDTaDjnw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3fbffd088a9so34489435e9.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 25 Jul 2023 08:22:45 -0700 (PDT)
+ us-mta-645-uFs-7afNMau_FjdqTAbFQg-1; Tue, 25 Jul 2023 14:01:10 -0400
+X-MC-Unique: uFs-7afNMau_FjdqTAbFQg-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-51bee352ffcso4423491a12.1
+        for <linux-hyperv@vger.kernel.org>; Tue, 25 Jul 2023 11:01:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690298564; x=1690903364;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+        d=1e100.net; s=20221208; t=1690308065; x=1690912865;
+        h=content-transfer-encoding:in-reply-to:references:to
+         :content-language:subject:cc:user-agent:mime-version:date:message-id
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e9mBhDoGQ3JObgjS7OW/V+V7P8XjDmhT8kheexTlPRE=;
-        b=CifPqCNaCkFHLVjoDFu7FMSirivvofFj3gvuzK29WvFyvPrLCRtuaii9jODYX1rKN0
-         lHTtcuNNr7gL3/9uJd16+t7yY5JgQClIdRqvgqCrNypqjDI/QzAF7uWkU2IcAMRZjHT/
-         RAVmvW0NvFfIBbu9dWzqywuhXBzfwJIB/NQ8rJpQT2Wd9VFvqiWqqhL+5UcA2P72zIEC
-         qIvPvroUXiSNxKbAVw56t56A3AYm0E2X1CdYp/uiugfJqoxYKjVLEvpwUfpJgJQBfdvC
-         opqXCMyd+HF1jGpPImCx8IBhoKQQVERU/dGAQyn8NRryoEBhRR5RzYe/hPsU3Gc8xDBa
-         QvRA==
-X-Gm-Message-State: ABy/qLYp3X3rWnVh25MOS+E+w4PvMrNBKZYFYWiV2VwRDkfxqVP27hAY
-        OV4fveXeN0zih3b6yIJYVS5cNWXCthelgTsgO3Z8uBG8a13PhSxtv6J4s/uWXm1dpZq+0/LYcxP
-        DJ6FoETaj6cAEhmcyuALpkotI
-X-Received: by 2002:a05:600c:2106:b0:3f9:ba2:5d19 with SMTP id u6-20020a05600c210600b003f90ba25d19mr9572188wml.33.1690298564445;
-        Tue, 25 Jul 2023 08:22:44 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlE5krxv/KWhPryzhnakx2wQxMZ6yI0hRhzu2uZF4bzXXhPeA+DNxkXZTfxfSPbdPPWW6Kq3XQ==
-X-Received: by 2002:a05:600c:2106:b0:3f9:ba2:5d19 with SMTP id u6-20020a05600c210600b003f90ba25d19mr9572148wml.33.1690298564043;
-        Tue, 25 Jul 2023 08:22:44 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id d11-20020a1c730b000000b003fc00892c13sm13278785wmb.35.2023.07.25.08.22.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 08:22:43 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, arnd@arndb.de,
-        kirill.shutemov@linux.intel.com, rppt@kernel.org, nikunj@amd.com,
-        thomas.lendacky@amd.com, liam.merwick@oracle.com,
-        alexandr.lobakin@intel.com, michael.roth@amd.com,
-        tiala@microsoft.com, pasha.tatashin@soleen.com,
-        peterz@infradead.org, jpoimboe@kernel.org,
-        michael.h.kelley@microsoft.com
-Subject: Re: [PATCH] x86/hyperv: Rename hv_isolation_type_snp/en_snp() to
- isol_type_snp_paravisor/enlightened()
-In-Reply-To: <20230725150825.283891-1-ltykernel@gmail.com>
-References: <20230725150825.283891-1-ltykernel@gmail.com>
-Date:   Tue, 25 Jul 2023 17:22:41 +0200
-Message-ID: <871qgwow1q.fsf@redhat.com>
+        bh=xBbADqs+v1wKci/ZBXowdEAl6AvZzPcdCEegqxDdVtQ=;
+        b=UTyiOSzByDTubQrjDFV/JHw8syj6YhTtJx3UTkE2nMcKnl+/VcfUZk+fgQ7dtWcotN
+         S6HCN0tXAnQZT9kfmmrVHx8Bx4Wcx9lvB9KkmD9ZlTNprM1bjNu0Rs4VsaPuIaDW6b6A
+         xmySx9BjspI7HDC7P6TxjPXl6zilNlQnKuDkda5aVvV/jyfYqvdA5BXZAykyzL2/Rdbm
+         011oKWXoMTQK8FWLGTNDD4wA0fUItsyDzKrzN4RFl2LG/RDUikhER7qZmXyvbUtB0WtM
+         cTjv5FRCtxoarply+zYRVQIfKe4AN8AZeful27oek0tpiHFlgUxMP1la7v1/ojjoaWTR
+         y6JQ==
+X-Gm-Message-State: ABy/qLYJuoH7Z+6pm7q3OMysuiynVmn1Ix1NUmtwsMYvtSPctPSSVtCM
+        /MOiMR/hGcInF2pvYeEGUy2TKDEguxbPQp7mkULuXYGUz2OcGlSDpC3ZOGgWvYi4A2cG9p4JrKR
+        tvtEFQe8KvOyfMKqIrr/TYGNk
+X-Received: by 2002:aa7:c6da:0:b0:522:2aee:a2c9 with SMTP id b26-20020aa7c6da000000b005222aeea2c9mr6710250eds.5.1690308065634;
+        Tue, 25 Jul 2023 11:01:05 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHizmB181reThRO6/ASk1i7c69OaRWpmGynXIDW5VJ7Fjh9jnBGY5twnl6WJ5sBLy4NT1Nk6w==
+X-Received: by 2002:aa7:c6da:0:b0:522:2aee:a2c9 with SMTP id b26-20020aa7c6da000000b005222aeea2c9mr6710228eds.5.1690308065265;
+        Tue, 25 Jul 2023 11:01:05 -0700 (PDT)
+Received: from [192.168.42.222] (194-45-78-10.static.kviknet.net. [194.45.78.10])
+        by smtp.gmail.com with ESMTPSA id l25-20020aa7c3d9000000b0051873c201a0sm7798293edr.26.2023.07.25.11.01.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jul 2023 11:01:04 -0700 (PDT)
+From:   Jesper Dangaard Brouer <jbrouer@redhat.com>
+X-Google-Original-From: Jesper Dangaard Brouer <brouer@redhat.com>
+Message-ID: <729b360c-4d79-1025-f5be-384b17f132d3@redhat.com>
+Date:   Tue, 25 Jul 2023 20:01:03 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Cc:     brouer@redhat.com, Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Paul Rosswurm <paulros@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Subject: Re: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
+Content-Language: en-US
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Jesper Dangaard Brouer <jbrouer@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <1689966321-17337-1-git-send-email-haiyangz@microsoft.com>
+ <1af55bbb-7aff-e575-8dc1-8ba64b924580@redhat.com>
+ <PH7PR21MB3116F8A97F3626AB04915B96CA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
+ <PH7PR21MB311675E57B81B49577ADE98FCA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
+In-Reply-To: <PH7PR21MB311675E57B81B49577ADE98FCA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,349 +111,119 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Tianyu Lan <ltykernel@gmail.com> writes:
-
-> From: Tianyu Lan <tiala@microsoft.com>
->
-> Rename hv_isolation_type_snp and hv_isolation_type_en_snp()
-> to make them much intuitiver.
->
-> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
-
-Thanks for the patch! A few comments below ...
-
-> ---
-> This patch is based on the patchset "x86/hyperv: Add AMD sev-snp
-> enlightened guest support on hyperv" https://lore.kernel.org/lkml/
-> 20230718032304.136888-3-ltykernel@gmail.com/T/.
->
->  arch/x86/hyperv/hv_init.c       |  6 +++---
->  arch/x86/hyperv/ivm.c           | 17 +++++++++--------
->  arch/x86/include/asm/mshyperv.h |  8 ++++----
->  arch/x86/kernel/cpu/mshyperv.c  | 12 ++++++------
->  drivers/hv/connection.c         |  2 +-
->  drivers/hv/hv.c                 | 16 ++++++++--------
->  drivers/hv/hv_common.c          | 10 +++++-----
->  include/asm-generic/mshyperv.h  |  4 ++--
->  8 files changed, 38 insertions(+), 37 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index b004370d3b01..49054dc30604 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -52,7 +52,7 @@ static int hyperv_init_ghcb(void)
->  	void *ghcb_va;
->  	void **ghcb_base;
->  
-> -	if (!hv_isolation_type_snp())
-> +	if (!isol_type_snp_paravisor())
->  		return 0;
->  
->  	if (!hv_ghcb_pg)
-> @@ -116,7 +116,7 @@ static int hv_cpu_init(unsigned int cpu)
->  			 * is blocked to run in Confidential VM. So only decrypt assist
->  			 * page in non-root partition here.
->  			 */
-> -			if (*hvp && hv_isolation_type_en_snp()) {
-> +			if (*hvp && isol_type_snp_enlightened()) {
->  				WARN_ON_ONCE(set_memory_decrypted((unsigned long)(*hvp), 1));
->  				memset(*hvp, 0, PAGE_SIZE);
->  			}
-> @@ -453,7 +453,7 @@ void __init hyperv_init(void)
->  		goto common_free;
->  	}
->  
-> -	if (hv_isolation_type_snp()) {
-> +	if (isol_type_snp_paravisor()) {
->  		/* Negotiate GHCB Version. */
->  		if (!hv_ghcb_negotiate_protocol())
->  			hv_ghcb_terminate(SEV_TERM_SET_GEN,
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> index 2eda4e69849d..2911c2525ed5 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -591,24 +591,25 @@ bool hv_is_isolation_supported(void)
->  	return hv_get_isolation_type() != HV_ISOLATION_TYPE_NONE;
->  }
->  
-> -DEFINE_STATIC_KEY_FALSE(isolation_type_snp);
-> +DEFINE_STATIC_KEY_FALSE(isol_type_snp_paravisor_flag);
->  
->  /*
-> - * hv_isolation_type_snp - Check system runs in the AMD SEV-SNP based
-> + * isol_type_snp_paravisor - Check system runs in the AMD SEV-SNP based
->   * isolation VM.
->   */
-> -bool hv_isolation_type_snp(void)
-> +bool isol_type_snp_paravisor(void)
 
 
-I think that it would be better to keep 'hv_' prefix here for two reasons: 
-...
+On 24/07/2023 20.35, Haiyang Zhang wrote:
+> 
+[...]
+>>> On 21/07/2023 21.05, Haiyang Zhang wrote:
+>>>> Add page pool for RX buffers for faster buffer cycle and reduce CPU
+>>>> usage.
+>>>>
+>>>> The standard page pool API is used.
+>>>>
+>>>> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+>>>> ---
+>>>> V3:
+>>>> Update xdp mem model, pool param, alloc as suggested by Jakub Kicinski
+>>>> V2:
+>>>> Use the standard page pool API as suggested by Jesper Dangaard Brouer
+>>>>
+>>>> ---
+>>>>    drivers/net/ethernet/microsoft/mana/mana_en.c | 91 +++++++++++++++--
+>> --
+>>>>    include/net/mana/mana.h                       |  3 +
+>>>>    2 files changed, 78 insertions(+), 16 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>> b/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>>> index a499e460594b..4307f25f8c7a 100644
+>>>> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>>> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+>>> [...]
+>>>> @@ -1659,6 +1679,8 @@ static void mana_poll_rx_cq(struct mana_cq *cq)
+>>>>
+>>>>    	if (rxq->xdp_flush)
+>>>>    		xdp_do_flush();
+>>>> +
+>>>> +	page_pool_nid_changed(rxq->page_pool, numa_mem_id());
+>>>
+>>> I don't think this page_pool_nid_changed() called is needed, if you do
+>>> as I suggest below (nid = NUMA_NO_NODE).
+>>>
+>>>
+>>>>    }
+>>>>
+>>>>    static int mana_cq_handler(void *context, struct gdma_queue
+>>> *gdma_queue)
+>>> [...]
+>>>
+>>>> @@ -2008,6 +2041,25 @@ static int mana_push_wqe(struct mana_rxq
+>> *rxq)
+>>>>    	return 0;
+>>>>    }
+>>>>
+>>>> +static int mana_create_page_pool(struct mana_rxq *rxq)
+>>>> +{
+>>>> +	struct page_pool_params pprm = {};
+>>>
+>>> You are implicitly assigning NUMA node id zero.
+>>>
+>>>> +	int ret;
+>>>> +
+>>>> +	pprm.pool_size = RX_BUFFERS_PER_QUEUE;
+>>>> +	pprm.napi = &rxq->rx_cq.napi;
+>>>
+>>> You likely want to assign pprm.nid to NUMA_NO_NODE
+>>>
+>>>    pprm.nid = NUMA_NO_NODE;
+>>>
+>>> For most drivers it is recommended to assign ``NUMA_NO_NODE`` (value -1)
+>>> as the NUMA ID to ``pp_params.nid``. When ``CONFIG_NUMA`` is enabled
+>>> this setting will automatically select the (preferred) NUMA node (via
+>>> ``numa_mem_id()``) based on where NAPI RX-processing is currently
+>>> running. The effect is that page_pool will only use recycled memory when
+>>> NUMA node match running CPU. This assumes CPU refilling driver RX-ring
+>>> will also run RX-NAPI.
+>>>
+>>> If a driver want more control over the NUMA node memory selection,
+>>> drivers can assign (``pp_params.nid``) something else than
+>>> `NUMA_NO_NODE`` and runtime adjust via function
+>>> ``page_pool_nid_changed()``.
+>>
+>> Our driver is using NUMA 0 by default, so I implicitly assign NUMA node id
+>> to zero during pool init.
+>>
+>> And, if the IRQ/CPU affinity is changed, the page_pool_nid_changed()
+>> will update the nid for the pool. Does this sound good?
+>>
+> 
+> Also, since our driver is getting the default node from here:
+> 	gc->numa_node = dev_to_node(&pdev->dev);
+> I will update this patch to set the default node as above, instead of implicitly
+> assigning it to 0.
+> 
 
->  {
-> -	return static_branch_unlikely(&isolation_type_snp);
-> +	return static_branch_unlikely(&isol_type_snp_paravisor_flag);
-...
-First reason is that it would be possible to drop '_flag' suffix here.
-...
+In that case, I agree that it make sense to use dev_to_node(&pdev->dev), 
+like:
+	pprm.nid = dev_to_node(&pdev->dev);
 
->  }
->  
-> -DEFINE_STATIC_KEY_FALSE(isolation_type_en_snp);
-> +DEFINE_STATIC_KEY_FALSE(isol_type_snp_enlightened_flag);
-> +
->  /*
-> - * hv_isolation_type_en_snp - Check system runs in the AMD SEV-SNP based
-> + * isol_type_snp_enlightened - Check system runs in the AMD SEV-SNP based
->   * isolation enlightened VM.
->   */
-> -bool hv_isolation_type_en_snp(void)
-> +bool isol_type_snp_enlightened(void)
->  {
-> -	return static_branch_unlikely(&isolation_type_en_snp);
-> +	return static_branch_unlikely(&isol_type_snp_enlightened_flag);
->  }
->  
-> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-> index c5a3c29fad01..51eb239d71dd 100644
-> --- a/arch/x86/include/asm/mshyperv.h
-> +++ b/arch/x86/include/asm/mshyperv.h
-> @@ -25,8 +25,8 @@
->  
->  union hv_ghcb;
->  
-> -DECLARE_STATIC_KEY_FALSE(isolation_type_snp);
-> -DECLARE_STATIC_KEY_FALSE(isolation_type_en_snp);
-> +DECLARE_STATIC_KEY_FALSE(isol_type_snp_paravisor_flag);
-> +DECLARE_STATIC_KEY_FALSE(isol_type_snp_enlightened_flag);
->  
->  typedef int (*hyperv_fill_flush_list_func)(
->  		struct hv_guest_mapping_flush_list *flush,
-> @@ -46,7 +46,7 @@ extern void *hv_hypercall_pg;
->  
->  extern u64 hv_current_partition_id;
->  
-> -extern bool hv_isolation_type_en_snp(void);
-> +extern bool isol_type_snp_enlightened(void);
->  
->  extern union hv_ghcb * __percpu *hv_ghcb_pg;
->  
-> @@ -268,7 +268,7 @@ static inline void hv_sev_init_mem_and_cpu(void) {}
->  static int hv_snp_boot_ap(int cpu, unsigned long start_ip) {}
->  #endif
->  
-> -extern bool hv_isolation_type_snp(void);
-> +extern bool isol_type_snp_paravisor(void);
->  
->  static inline bool hv_is_synic_reg(unsigned int reg)
->  {
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index 6ff0b60d30f9..d9dcee48099c 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -66,7 +66,7 @@ u64 hv_get_non_nested_register(unsigned int reg)
->  {
->  	u64 value;
->  
-> -	if (hv_is_synic_reg(reg) && hv_isolation_type_snp())
-> +	if (hv_is_synic_reg(reg) && isol_type_snp_paravisor())
->  		hv_ghcb_msr_read(reg, &value);
->  	else
->  		rdmsrl(reg, value);
-> @@ -76,7 +76,7 @@ EXPORT_SYMBOL_GPL(hv_get_non_nested_register);
->  
->  void hv_set_non_nested_register(unsigned int reg, u64 value)
->  {
-> -	if (hv_is_synic_reg(reg) && hv_isolation_type_snp()) {
-> +	if (hv_is_synic_reg(reg) && isol_type_snp_paravisor()) {
->  		hv_ghcb_msr_write(reg, value);
->  
->  		/* Write proxy bit via wrmsl instruction */
-> @@ -300,7 +300,7 @@ static void __init hv_smp_prepare_cpus(unsigned int max_cpus)
->  	 *  Override wakeup_secondary_cpu_64 callback for SEV-SNP
->  	 *  enlightened guest.
->  	 */
-> -	if (hv_isolation_type_en_snp())
-> +	if (isol_type_snp_enlightened())
->  		apic->wakeup_secondary_cpu_64 = hv_snp_boot_ap;
->  
->  	if (!hv_root_partition)
-> @@ -421,9 +421,9 @@ static void __init ms_hyperv_init_platform(void)
->  
->  
->  		if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
-> -			static_branch_enable(&isolation_type_en_snp);
-> +			static_branch_enable(&isol_type_snp_enlightened_flag);
->  		} else if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
-> -			static_branch_enable(&isolation_type_snp);
-> +			static_branch_enable(&isol_type_snp_paravisor_flag);
->  		}
->  	}
->  
-> @@ -545,7 +545,7 @@ static void __init ms_hyperv_init_platform(void)
->  	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
->  		mark_tsc_unstable("running on Hyper-V");
->  
-> -	if (hv_isolation_type_en_snp())
-> +	if (isol_type_snp_enlightened())
->  		hv_sev_init_mem_and_cpu();
->  
->  	hardlockup_detector_disable();
-> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-> index 02b54f85dc60..8659d18a55fe 100644
-> --- a/drivers/hv/connection.c
-> +++ b/drivers/hv/connection.c
-> @@ -484,7 +484,7 @@ void vmbus_set_event(struct vmbus_channel *channel)
->  
->  	++channel->sig_events;
->  
-> -	if (hv_isolation_type_snp())
-> +	if (isol_type_snp_paravisor())
->  		hv_ghcb_hypercall(HVCALL_SIGNAL_EVENT, &channel->sig_event,
->  				NULL, sizeof(channel->sig_event));
->  	else
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index ec6e35a0d9bf..7651d79205da 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -64,7 +64,7 @@ int hv_post_message(union hv_connection_id connection_id,
->  	aligned_msg->payload_size = payload_size;
->  	memcpy((void *)aligned_msg->payload, payload, payload_size);
->  
-> -	if (hv_isolation_type_snp())
-> +	if (isol_type_snp_paravisor())
->  		status = hv_ghcb_hypercall(HVCALL_POST_MESSAGE,
->  				(void *)aligned_msg, NULL,
->  				sizeof(*aligned_msg));
-> @@ -109,7 +109,7 @@ int hv_synic_alloc(void)
->  		 * Synic message and event pages are allocated by paravisor.
->  		 * Skip these pages allocation here.
->  		 */
-> -		if (!hv_isolation_type_snp() && !hv_root_partition) {
-> +		if (!isol_type_snp_paravisor() && !hv_root_partition) {
->  			hv_cpu->synic_message_page =
->  				(void *)get_zeroed_page(GFP_ATOMIC);
->  			if (hv_cpu->synic_message_page == NULL) {
-> @@ -125,7 +125,7 @@ int hv_synic_alloc(void)
->  			}
->  		}
->  
-> -		if (hv_isolation_type_en_snp()) {
-> +		if (isol_type_snp_enlightened()) {
->  			ret = set_memory_decrypted((unsigned long)
->  				hv_cpu->synic_message_page, 1);
->  			if (ret) {
-> @@ -174,7 +174,7 @@ void hv_synic_free(void)
->  			= per_cpu_ptr(hv_context.cpu_context, cpu);
->  
->  		/* It's better to leak the page if the encryption fails. */
-> -		if (hv_isolation_type_en_snp()) {
-> +		if (isol_type_snp_enlightened()) {
->  			if (hv_cpu->synic_message_page) {
->  				ret = set_memory_encrypted((unsigned long)
->  					hv_cpu->synic_message_page, 1);
-> @@ -221,7 +221,7 @@ void hv_synic_enable_regs(unsigned int cpu)
->  	simp.as_uint64 = hv_get_register(HV_REGISTER_SIMP);
->  	simp.simp_enabled = 1;
->  
-> -	if (hv_isolation_type_snp() || hv_root_partition) {
-> +	if (isol_type_snp_paravisor() || hv_root_partition) {
->  		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
->  		u64 base = (simp.base_simp_gpa << HV_HYP_PAGE_SHIFT) &
->  				~ms_hyperv.shared_gpa_boundary;
-> @@ -240,7 +240,7 @@ void hv_synic_enable_regs(unsigned int cpu)
->  	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
->  	siefp.siefp_enabled = 1;
->  
-> -	if (hv_isolation_type_snp() || hv_root_partition) {
-> +	if (isol_type_snp_paravisor() || hv_root_partition) {
->  		/* Mask out vTOM bit. ioremap_cache() maps decrypted */
->  		u64 base = (siefp.base_siefp_gpa << HV_HYP_PAGE_SHIFT) &
->  				~ms_hyperv.shared_gpa_boundary;
-> @@ -323,7 +323,7 @@ void hv_synic_disable_regs(unsigned int cpu)
->  	 * addresses.
->  	 */
->  	simp.simp_enabled = 0;
-> -	if (hv_isolation_type_snp() || hv_root_partition) {
-> +	if (isol_type_snp_paravisor() || hv_root_partition) {
->  		iounmap(hv_cpu->synic_message_page);
->  		hv_cpu->synic_message_page = NULL;
->  	} else {
-> @@ -335,7 +335,7 @@ void hv_synic_disable_regs(unsigned int cpu)
->  	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
->  	siefp.siefp_enabled = 0;
->  
-> -	if (hv_isolation_type_snp() || hv_root_partition) {
-> +	if (isol_type_snp_paravisor() || hv_root_partition) {
->  		iounmap(hv_cpu->synic_event_page);
->  		hv_cpu->synic_event_page = NULL;
->  	} else {
-> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-> index 2d43ba2bc925..527e91409ef7 100644
-> --- a/drivers/hv/hv_common.c
-> +++ b/drivers/hv/hv_common.c
-> @@ -381,7 +381,7 @@ int hv_common_cpu_init(unsigned int cpu)
->  			*outputarg = (char *)(*inputarg) + HV_HYP_PAGE_SIZE;
->  		}
->  
-> -		if (hv_isolation_type_en_snp()) {
-> +		if (isol_type_snp_enlightened()) {
->  			ret = set_memory_decrypted((unsigned long)*inputarg, pgcount);
->  			if (ret) {
->  				kfree(*inputarg);
-> @@ -509,17 +509,17 @@ bool __weak hv_is_isolation_supported(void)
->  }
->  EXPORT_SYMBOL_GPL(hv_is_isolation_supported);
->  
-> -bool __weak hv_isolation_type_snp(void)
-> +bool __weak isol_type_snp_paravisor(void)
->  {
->  	return false;
->  }
-> -EXPORT_SYMBOL_GPL(hv_isolation_type_snp);
-> +EXPORT_SYMBOL_GPL(isol_type_snp_paravisor);
->  
-> -bool __weak hv_isolation_type_en_snp(void)
-> +bool __weak isol_type_snp_enlightened(void)
->  {
->  	return false;
->  }
-> -EXPORT_SYMBOL_GPL(hv_isolation_type_en_snp);
-> +EXPORT_SYMBOL_GPL(isol_type_snp_enlightened);
->  
->  void __weak hv_setup_vmbus_handler(void (*handler)(void))
->  {
-> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-> index f73a044ecaa7..d60a9306c0cc 100644
-> --- a/include/asm-generic/mshyperv.h
-> +++ b/include/asm-generic/mshyperv.h
-> @@ -64,7 +64,7 @@ extern void * __percpu *hyperv_pcpu_output_arg;
->  
->  extern u64 hv_do_hypercall(u64 control, void *inputaddr, void *outputaddr);
->  extern u64 hv_do_fast_hypercall8(u16 control, u64 input8);
-> -extern bool hv_isolation_type_snp(void);
-> +extern bool isol_type_snp_paravisor(void);
->  
->  /* Helper functions that provide a consistent pattern for checking Hyper-V hypercall status. */
->  static inline int hv_result(u64 status)
-> @@ -279,7 +279,7 @@ bool hv_is_hyperv_initialized(void);
->  bool hv_is_hibernation_supported(void);
->  enum hv_isolation_type hv_get_isolation_type(void);
->  bool hv_is_isolation_supported(void);
-> -bool hv_isolation_type_snp(void);
-> +bool isol_type_snp_paravisor(void);
->  u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size);
->  void hyperv_cleanup(void);
->  bool hv_query_ext_cap(u64 cap_query);
+Driver must have a reason for assigning gc->numa_node for this hardware,
+which is okay. That is why page_pool API allows driver to control this.
 
-...
+But then I don't think you should call page_pool_nid_changed() like
 
-Second reason is that 'isol_type_snp_paravisor'/'isol_type_snp_enlightened'
-are exported and present in headers, it is unclear that these are
-Hyper-V related.
+	page_pool_nid_changed(rxq->page_pool, numa_mem_id());
 
--- 
-Vitaly
+Because then you will (at first packet processing event) revert the
+dev_to_node() setting to use numa_mem_id() of processing/running CPU.
+(In effect this will be the same as setting NUMA_NO_NODE).
+
+I know, mlx5 do call page_pool_nid_changed(), but they showed benchmark
+numbers that this was preferred action, even-when sysadm had
+"misconfigured" the default smp_affinity RX-processing to happen on a
+remote NUMA node.  AFAIK mlx5 keeps the descriptor rings on the
+originally configured NUMA node that corresponds to the NIC PCIe slot.
+
+--Jesper
 
