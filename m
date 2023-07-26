@@ -2,181 +2,231 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A2B2763BA2
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jul 2023 17:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 829AD763D3E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jul 2023 19:08:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234964AbjGZPvs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Jul 2023 11:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
+        id S231857AbjGZRIN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Jul 2023 13:08:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234997AbjGZPvl (ORCPT
+        with ESMTP id S230109AbjGZRIM (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Jul 2023 11:51:41 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021020.outbound.protection.outlook.com [52.101.57.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71E52738;
-        Wed, 26 Jul 2023 08:51:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dSfbmjz91fjid65wdq6MCab49N2VkteNQ5yR/XLZBixu/SBwR+AmkLOLTchi+IHp5Ii9IaUlswX01hWi4cYfEwFJXP//M6axCGfjzRXBa9D62Y0ORoQfV8Lja/KZZ9FZghJ3NRwl13CyjFhRUeqmmVBAkE1EMe4bLwUEmrdiPY6028SofFWommL9rqHNkjbSkbTsVu3S1zgIIRJEiy8GBOdi4LGdvINk/DIK9Yjll10SATeB3k6im13bWjhjBbf7VB3KX9+ooLB4M/wDG7Gwmyo1I/TsrJbp8uqpsx3ew7qqgwKt4c34AL75kQRSZzyeYA0XLFTMZpyUy8JQ1dGc+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7LrhnSaQDG9XB05b+Jv6Q3P5ig58JYg/dd2N40gM0Q0=;
- b=Is+XNVyB1lBHFo6lXKWzClsrYrgYYk0/d5DYsEQ9yCQcYNBN065On1p1cXKpI2z3ltmE2uNYwIPYtTD2lB34kd28DashUJPVvwTcqRlzgA9vULffkO/Te1Aij5c/d8KY53quGi36xRcd3hqDLFDHqYv3uJJd9tORlAP9ejbPwdBtFRz3PcaW3c9eHHO6QBD3taTJu0mEvNBTBtN+HMd6lGjfdp+QyGhV3JhVGa6OxyO/KXpRt9jujg5bu23GCR6x+N4Q5R0UfFDkRpQl37UIpdJDDLLz7i98adUWFhDxqohPF31oqiQ8mrxom9NM88x6gV9HVgUfaAK2YIE3hXxBfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7LrhnSaQDG9XB05b+Jv6Q3P5ig58JYg/dd2N40gM0Q0=;
- b=TdcO6Y0dFyJ9Mnv1kyfIbGI/aXkj5J5S02oCkdG+ErCKCbCfGTYMwEYmXun4NA6Bd5u38I+MUJPV9Uz+IrS1PmbGZQH1cu76uMRgPeireAlc7xQcr5evHuD7bZ3BA4+gBovpRvFMHY9zRlhk8ncMXc3i1AhqJSiCNT85OVqSmXg=
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com (2603:10b6:510:1d0::10)
- by BL0PR2101MB1346.namprd21.prod.outlook.com (2603:10b6:208:92::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.3; Wed, 26 Jul
- 2023 15:51:32 +0000
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::d2:cad1:318e:224b]) by PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::d2:cad1:318e:224b%7]) with mapi id 15.20.6652.002; Wed, 26 Jul 2023
- 15:51:32 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jesper Dangaard Brouer <jbrouer@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "brouer@redhat.com" <brouer@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: RE: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
-Thread-Topic: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
-Thread-Index: AQHZvAZSl8pOb40fXE2pDlV9gZuDN6/IzCkAgABE5NCAADEEcIABidWAgAANWGCAAPQoAIAAavKQ
-Date:   Wed, 26 Jul 2023 15:51:32 +0000
-Message-ID: <PH7PR21MB3116C4C749C4E915CADEE273CA00A@PH7PR21MB3116.namprd21.prod.outlook.com>
-References: <1689966321-17337-1-git-send-email-haiyangz@microsoft.com>
- <1af55bbb-7aff-e575-8dc1-8ba64b924580@redhat.com>
- <PH7PR21MB3116F8A97F3626AB04915B96CA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
- <PH7PR21MB311675E57B81B49577ADE98FCA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
- <729b360c-4d79-1025-f5be-384b17f132d3@redhat.com>
- <PH7PR21MB3116F5612AA8303512EEBA4CCA03A@PH7PR21MB3116.namprd21.prod.outlook.com>
- <6396223c-6008-0e1b-e6ed-79c04c87a5e0@redhat.com>
-In-Reply-To: <6396223c-6008-0e1b-e6ed-79c04c87a5e0@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=779a0386-fc46-47d6-8bab-1fba97ac898a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-07-26T15:45:26Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3116:EE_|BL0PR2101MB1346:EE_
-x-ms-office365-filtering-correlation-id: c3f956af-1f82-41fa-8136-08db8df02f2e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8HPRak+jDLiKgYyhvH9a8C5bYbB1XHX+lv/iLZXhZjUEFr4KmbPrbjNhzdixrQKSS7y45fK4wVBGNm3A31VEsZaf+x09X3bvrgoxkNDaPWVFlMmkCAt5KUTI4So/u2t3QMKYLz+ZsQ+xr+mus88RwLt16lyzlLSAQocCzDDhU/NXViG8PuBFsv3vhybADjPSdDkq+SkxG5TiKb106HHly78pHkXz0yzLi4yzRjwyL7rG8YZgFZxr2Q3Oz/ksUf6ZYdDlaRieRWFr8eMMxu2W/twqeD+GKcb+SADGaVLH3AoKn/H5q6AUIVg0amKhMHGWA9FrPlmPp2RPkalHX5jluIQuo2+TWRSfkzI4/h2D+80v/O7kWxXb4tDD9MEt95tL10rddlUgMITAhQg4+VAuTUrQRBL4M0yu8Yciq0XWdj/bDKmoa/x3MtauedbohAWX546VjcJwp4xepDja0gRDLZMu2xsFbBIRZHzR2SsHPfk0M7v8mH88/ua+KFOjc40Epd3E/pkJRxuETrfGLaNpJfXuev70EO3MnCPNqd/5LO1rEbnV7OlncVGZSptVi1XR97ZPzavFgiJbmg+VaaQ4xTdq3sXzpFjxn46sECD+UploawSvuQtddLbkwfRMP1lsMfouLpN47KVmwDhfGTMJ/zZ1yYRsOaIukb+N4hwci+Q=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3116.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(396003)(346002)(376002)(366004)(451199021)(55016003)(110136005)(122000001)(38100700002)(9686003)(54906003)(7696005)(66946007)(71200400001)(478600001)(82960400001)(52536014)(66556008)(41300700001)(10290500003)(82950400001)(5660300002)(316002)(66476007)(8676002)(4326008)(76116006)(8936002)(64756008)(66446008)(83380400001)(186003)(26005)(6506007)(86362001)(8990500004)(33656002)(38070700005)(2906002)(7416002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MzJlWHRLKzl5SDhmbml1anBxck5XYXpQM2xGZ25KWHZpOUt3TFI1bmMvTGVG?=
- =?utf-8?B?bTVuWGFzeWI4SXJ0aVBvSHVxV3ZSUFJaUTZURUFTUFh0L0lSMGN0YTJIWUJ5?=
- =?utf-8?B?U2o2YnR4aklKVk5FMHVRamNRZDFMbnE0TUFnN0k5V29tUksrUGVONlZNQjc0?=
- =?utf-8?B?Zll5YUJwZEdWeGRKbTEwSVM0ZEdvYys2V00yUTZDZUdTWDZUYktITmtyekgz?=
- =?utf-8?B?QWJtRmQ0MU5oNUZFZTVZa2FEZGJmRTNTTnBZRVRGTEw5TUxaZkRKZlFPNFhD?=
- =?utf-8?B?KzZ3RWJjako4SkN2WnhUSTQwZFoyaUxseGE5bWxVcDRCMVdxVzV2N203d1Vo?=
- =?utf-8?B?ejhtb0E4amQ5TmZ1eVBINmFtdWF4QTg3Y01tOTh2T0RhYnQySnNoMS82U0VU?=
- =?utf-8?B?cGpkaHdOK3lnR25lSlFxYmFQTUwwSkl3bGRzNGF2SjhYanZDTER5QjFVRTlQ?=
- =?utf-8?B?SGNFakJpemhzODJ2STJrWlV1SS9tWUtmRHFHMFdaTE5kUlZWZjByWWx6Wjdm?=
- =?utf-8?B?QTcvMnE5VmlJOVhLNkhhd0dnQkZtcUtlN0Eya3dMcnAySU1lVzJueVdwVVE2?=
- =?utf-8?B?cjlkZjd2RmhxWWtTVEtxd2N0TzJsTklOVVBhN3B6OXZ3OHFWRm8zT2E3THp0?=
- =?utf-8?B?WXFSMHZ6WmR0Uy9laHZicUQzMEwzak9zOGcwbWcvYlRFQTM4L1pSa01uemlK?=
- =?utf-8?B?R3lONlRaRG8wMlNzMDhueXpKN2ZwSlo2TXg0Rm1CUTIyWUZtblFjRkZoU3Zk?=
- =?utf-8?B?dms1UTRscjdkNFIzbjVOaEJ3QVJCODFjYnN2TTV6Q2ljOVN2aHFwbnpjTmRW?=
- =?utf-8?B?c09NTFZ5dVpVTmhEcFFqMmRZTW4ySHIweDJvUGluS1N2MkF1WkVEeGJMam5N?=
- =?utf-8?B?WENVMXpheHhrMTA0UksveUg3eVhzVXFkeEU2OGx0TW1QSmoxRDk5QzdSNnFz?=
- =?utf-8?B?MTlGOUprRHlFZjNNVThtMEUzS1YzOHMyWmI5VWw1RzZONWtTeFVrOVNpWHN4?=
- =?utf-8?B?SDRKVFFodnJrWUs1VWw4Zm8yU0s0YW16bC95SDdNRjRXa2w3MklWTFY5RTVk?=
- =?utf-8?B?Qlh0N0FjMHU2cHZLNFlnL3lEMjY5MUZpV29DVDVoYmlMdW5oY3poelB6NzlT?=
- =?utf-8?B?VkFtc3dSdGxOVUo4T2FaWkNlNmlBRDVaR0tOaEdaa0Q3MWR6a0xpdVNtUTl2?=
- =?utf-8?B?QitCSDU5aGlzUlpXTUNaaDNsTFpsanphbGZhVXk1dDNDRHJoOTV2WS9weDJo?=
- =?utf-8?B?TWpjRUIxbmdzb0FVQUZOVG5jM0FIcnRraWpuVnB6VWVlazNHR2d3YUszdC9K?=
- =?utf-8?B?WUpKUy9UQVJQNTNJSDNLd1Q5aXhDb3dRTmFBMlRwY2lwM3ZMbVFQcW9VQlZ5?=
- =?utf-8?B?L3had3czdnlIKys2NVRmQlJKbFZ5L1ZRTmJXdVNIMXdrVTBnRkdReUREQmZr?=
- =?utf-8?B?L1htN3pGbHFSSGQyS1NVTEdKTjhidWlPMXMrVVBYd3FNUitaSWpjRWtIdmx3?=
- =?utf-8?B?US9jT2U2akczbGdqWHhoa0Zybm1XWUxwcFlUMGNYUU8vMDlHNWI5b0xLaE1S?=
- =?utf-8?B?RTRsdFJzUGczVFRXWFZKUkRRbEJMakxibzJOTWJpakNrREM0NlFVZ0plTlFu?=
- =?utf-8?B?MWNJSFhOeDkvNXAxaW9GRHZJSnhZdWgwL1VrazhFZkNHa1ltL1hIZnpUNm14?=
- =?utf-8?B?eldmUi9XK1ZIRGF1c3RYalVnckZsZjB1azRKVlF6Um90VWZidFEremxJNG0x?=
- =?utf-8?B?ak50ZnF5SmIreHlEL09oSkVFQndyV0VQNEdIcUVtRW5DdWZzeGFPOXZ0RVJt?=
- =?utf-8?B?b0lLM25vUFlLQnpEQkJZbGxsc0pyUy9YRjFxZ0lqdCtiMThpU0xxVnEwaytS?=
- =?utf-8?B?ajlQUW9NVm83THBKQXozaVdPU25XU3lBZ25zZnZRMWFQTVFVWUxKU3BnTkwr?=
- =?utf-8?B?RFFkZkUzZEVFdy9UUm5UNy90ejhybWR1OGVzbkFZbFExMDR3aHFjZkVUR3JN?=
- =?utf-8?B?Ly8vZ1Zpelp4cW1SZGQwSFZGMktFbEEyL3RoRTJIWlREMDJSdGQxOXVJQ0po?=
- =?utf-8?B?bVU5elZENjlJWkphbkFEQ2MvdWZQcnY2Wk04YmNPcldUbml4dDRQeTB6Y2RZ?=
- =?utf-8?Q?HsS5X0qkQOg1TaQClgRpqHssC?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 26 Jul 2023 13:08:12 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C479B;
+        Wed, 26 Jul 2023 10:08:10 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-686efb9ee3cso34628b3a.3;
+        Wed, 26 Jul 2023 10:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690391290; x=1690996090;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jyXhagd27xsfagA4mpBvlczZOCwL70cnZ1O+Bi2yCeM=;
+        b=WiRpf8xXnnPC2cDTySvVbHxkgThqpZ0c6oaaRYfTClFXawhCqp+jOW55lULpKEqU8M
+         LO2CWdxcXYpZjZSoAaKs1dPRwlsf1EsGR6j710vfmVhImIBT7opyYJmwXzvYLD2FXwTM
+         +dBEmqmarjHESBn3nXrpsFRKFOZvlAYnbsh5PrCC/4E1TQMTX2L37yhBsMmGPa5fSqf2
+         7M5lKKi8ANw/XpxFBsFXmr98MzXGSL72Af98+FFSXEek7e1CulNPIycG8n3+lWVDCaJC
+         AORitu/f+aJuVUu3bRMeQCg5RIAwvGrauvxQAsn2W9lieKqA/D9XqARHu1H/qaxRCIRX
+         9v0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690391290; x=1690996090;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jyXhagd27xsfagA4mpBvlczZOCwL70cnZ1O+Bi2yCeM=;
+        b=aQP4LPcwMvugw4MMBBMt9vLQ0tMaUoCXipOSpKXi4pQ93YJZSScDieat00f0OLzF1s
+         nPC4j0qM4RuQWBTqGx55tC4H/5owBLj9nj8cMqkIQqjuniEk3kfUGun5tRSBXTmB75m2
+         QZ4mdjfkJKRHEEvZJjqB+jIT15V62vwABp8tOSQsh5Jmg98AWIrhqMmaZ4vcMi3SGcsT
+         rIpGOBox8dzxlDZFMmspIxAq/M+U8pU/yA+7YgMHRgS0+/MQcB5arSzERu6lOBYiB8Ll
+         oQTz6JmeEPMmjNA77sw2BeApbl68WpiXh1fT71cy2SsOPEexIx3Q+hPvBZ68omGDlQSG
+         TIPg==
+X-Gm-Message-State: ABy/qLZScavji0eS3BA+Bc/H7v87fWGr1GW29Y8GcvwICDi86eQ/+p7j
+        wbCQE+Fiao06cHpO/iVbdALOLktOkGtU/TBN
+X-Google-Smtp-Source: APBJJlHoUxrL7Gb3vH3wGr3Zh4JL6JMMrXCYEcjaAvIOxbH/nVhdWi3v0nrKCkDeyj1henERh81tDA==
+X-Received: by 2002:aa7:88c6:0:b0:682:a6c5:6f28 with SMTP id k6-20020aa788c6000000b00682a6c56f28mr3411995pff.32.1690391290004;
+        Wed, 26 Jul 2023 10:08:10 -0700 (PDT)
+Received: from localhost (c-73-190-126-111.hsd1.wa.comcast.net. [73.190.126.111])
+        by smtp.gmail.com with ESMTPSA id x17-20020aa793b1000000b0064f51ee5b90sm12014pff.62.2023.07.26.10.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 10:08:09 -0700 (PDT)
+Date:   Wed, 26 Jul 2023 17:08:08 +0000
+From:   Bobby Eshleman <bobbyeshleman@gmail.com>
+To:     Arseniy Krasnov <oxffffaa@gmail.com>
+Cc:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Simon Horman <simon.horman@corigine.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH RFC net-next v5 07/14] virtio/vsock: add common datagram
+ send path
+Message-ID: <ZMFS+MlAPTso6wjQ@bullseye>
+References: <20230413-b4-vsock-dgram-v5-0-581bd37fdb26@bytedance.com>
+ <20230413-b4-vsock-dgram-v5-7-581bd37fdb26@bytedance.com>
+ <051e4091-556c-4592-4a72-4dacf0015da8@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3116.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3f956af-1f82-41fa-8136-08db8df02f2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2023 15:51:32.6169
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +VaQReD+QLV2uw/6IhFtdkZD1w88JcIH3ZsZyCCZwyIx5Cbta1rAi+WnKCHdCMdAu4a9Vqz6LqF2R1nz7Dr6Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1346
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <051e4091-556c-4592-4a72-4dacf0015da8@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSmVzcGVyIERhbmdhYXJk
-IEJyb3VlciA8amJyb3VlckByZWRoYXQuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIEp1bHkgMjYs
-IDIwMjMgNToyMyBBTQ0KPiA+DQo+ID4gSW4gbWFuYV9nZF9zZXR1cF9pcnFzKCksIHdlIHNldCB0
-aGUgZGVmYXVsdCBJUlEvQ1BVIGFmZmluaXR5IHRvIGdjLQ0KPiA+bnVtYV9ub2RlDQo+ID4gdG9v
-LCBzbyBpdCB3b24ndCByZXZlcnQgdGhlIG5pZCBpbml0aWFsIHNldHRpbmcuDQo+ID4NCj4gPiBD
-dXJyZW50bHksIHRoZSBBenVyZSBoeXBlcnZpc29yIGFsd2F5cyBpbmRpY2F0ZXMgbnVtYSAwIGFz
-IGRlZmF1bHQuIChJbg0KPiA+IHRoZSBmdXR1cmUsIGl0IHdpbGwgc3RhcnQgdG8gcHJvdmlkZSB0
-aGUgYWNjdXJhdGUgZGVmYXVsdCBkZXYgbm9kZS4pIFdoZW4gYQ0KPiA+IHVzZXIgbWFudWFsbHkg
-Y2hhbmdlcyB0aGUgSVJRL0NQVSBhZmZpbml0eSBmb3IgcGVyZiB0dW5pbmcsIHdlIHdhbnQgdG8N
-Cj4gPiBhbGxvdyBwYWdlX3Bvb2xfbmlkX2NoYW5nZWQoKSB0byB1cGRhdGUgdGhlIHBvb2wuIElz
-IHRoaXMgT0s/DQo+ID4NCj4gDQo+IElmIEkgd2VyZSB5b3UsIEkgd291bGQgd2FpdCB3aXRoIHRo
-ZSBwYWdlX3Bvb2xfbmlkX2NoYW5nZWQoKQ0KPiAib3B0aW1pemF0aW9uIiBhbmQgZG8gYSBiZW5j
-aG1hcmsgbWFyayB0byBzZWUgaWYgdGhpcyBhY3R1YWxseSBoYXZlIGENCj4gYmVuZWZpdC4gIChZ
-b3UgY2FuIGRvIHRoaXMgaW4gYW5vdGhlciBwYXRjaCkuICAoSW4gYSBBenVyZSBoeXBlcnZpc29y
-DQo+IGVudmlyb25tZW50IGlzIG1pZ2h0IG5vdCBiZSB0aGUgcmlnaHQgY2hvaWNlKS4NCk9rLCBJ
-IHdpbGwgc3VibWl0IGEgcGF0Y2ggd2l0aG91dCB0aGUgcGFnZV9wb29sX25pZF9jaGFuZ2VkKCkg
-b3B0aW1pemF0aW9uIA0KZm9yIG5vdywgYW5kIHdpbGwgZG8gbW9yZSB0ZXN0aW5nIG9uIHRoaXMu
-DQoNCj4gVGhpcyByZW1pbmRzIG1lLCBkbyB5b3UgaGF2ZSBhbnkgYmVuY2htYXJrIGRhdGEgb24g
-dGhlIGltcHJvdmVtZW50IHRoaXMNCj4gcGF0Y2ggKHVzaW5nIHBhZ2VfcG9vbCkgZ2F2ZT8NCldp
-dGggaXBlcmYgYW5kIDEyOCB0aHJlYWRzIHRlc3QsIHRoaXMgcGF0Y2ggaW1wcm92ZWQgdGhlIHRo
-cm91Z2hwdXQgYnkgMTItMTUlLCANCmFuZCBkZWNyZWFzZWQgdGhlIElSUSBhc3NvY2lhdGVkIENQ
-VSdzIHVzYWdlIGZyb20gOTktMTAwJSB0byAxMC01MCUuDQoNClRoYW5rcywNCi0gSGFpeWFuZw0K
-DQo=
+On Sat, Jul 22, 2023 at 11:16:05AM +0300, Arseniy Krasnov wrote:
+> 
+> 
+> On 19.07.2023 03:50, Bobby Eshleman wrote:
+> > This commit implements the common function
+> > virtio_transport_dgram_enqueue for enqueueing datagrams. It does not add
+> > usage in either vhost or virtio yet.
+> > 
+> > Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> > ---
+> >  net/vmw_vsock/virtio_transport_common.c | 76 ++++++++++++++++++++++++++++++++-
+> >  1 file changed, 75 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index ffcbdd77feaa..3bfaff758433 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -819,7 +819,81 @@ virtio_transport_dgram_enqueue(struct vsock_sock *vsk,
+> >  			       struct msghdr *msg,
+> >  			       size_t dgram_len)
+> >  {
+> > -	return -EOPNOTSUPP;
+> > +	/* Here we are only using the info struct to retain style uniformity
+> > +	 * and to ease future refactoring and merging.
+> > +	 */
+> > +	struct virtio_vsock_pkt_info info_stack = {
+> > +		.op = VIRTIO_VSOCK_OP_RW,
+> > +		.msg = msg,
+> > +		.vsk = vsk,
+> > +		.type = VIRTIO_VSOCK_TYPE_DGRAM,
+> > +	};
+> > +	const struct virtio_transport *t_ops;
+> > +	struct virtio_vsock_pkt_info *info;
+> > +	struct sock *sk = sk_vsock(vsk);
+> > +	struct virtio_vsock_hdr *hdr;
+> > +	u32 src_cid, src_port;
+> > +	struct sk_buff *skb;
+> > +	void *payload;
+> > +	int noblock;
+> > +	int err;
+> > +
+> > +	info = &info_stack;
+> 
+> I think 'info' assignment could be moved below, to the place where it is used
+> first time.
+> 
+> > +
+> > +	if (dgram_len > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
+> > +		return -EMSGSIZE;
+> > +
+> > +	t_ops = virtio_transport_get_ops(vsk);
+> > +	if (unlikely(!t_ops))
+> > +		return -EFAULT;
+> > +
+> > +	/* Unlike some of our other sending functions, this function is not
+> > +	 * intended for use without a msghdr.
+> > +	 */
+> > +	if (WARN_ONCE(!msg, "vsock dgram bug: no msghdr found for dgram enqueue\n"))
+> > +		return -EFAULT;
+> 
+> Sorry, but is that possible? I thought 'msg' is always provided by general socket layer (e.g. before
+> af_vsock.c code) and can't be NULL for DGRAM. Please correct me if i'm wrong.
+> 
+> Also I see, that in af_vsock.c , 'vsock_dgram_sendmsg()' dereferences 'msg' for checking MSG_OOB without any
+> checks (before calling transport callback - this function in case of virtio). So I think if we want to keep
+> this type of check - such check must be placed in af_vsock.c or somewhere before first dereference of this pointer.
+> 
+
+There is some talk about dgram sockets adding additional messages types
+in the future that help with congestion control. Those messages won't
+come from the socket layer, so msghdr will be null. Since there is no
+other function for sending datagrams, it seemed likely that this
+function would be reworked for that purpose. I felt that adding this
+check was a direct way to make it explicit that this function is
+currently designed only for the socket-layer caller.
+
+Perhaps a comment would suffice?
+
+> > +
+> > +	noblock = msg->msg_flags & MSG_DONTWAIT;
+> > +
+> > +	/* Use sock_alloc_send_skb to throttle by sk_sndbuf. This helps avoid
+> > +	 * triggering the OOM.
+> > +	 */
+> > +	skb = sock_alloc_send_skb(sk, dgram_len + VIRTIO_VSOCK_SKB_HEADROOM,
+> > +				  noblock, &err);
+> > +	if (!skb)
+> > +		return err;
+> > +
+> > +	skb_reserve(skb, VIRTIO_VSOCK_SKB_HEADROOM);
+> > +
+> > +	src_cid = t_ops->transport.get_local_cid();
+> > +	src_port = vsk->local_addr.svm_port;
+> > +
+> > +	hdr = virtio_vsock_hdr(skb);
+> > +	hdr->type	= cpu_to_le16(info->type);
+> > +	hdr->op		= cpu_to_le16(info->op);
+> > +	hdr->src_cid	= cpu_to_le64(src_cid);
+> > +	hdr->dst_cid	= cpu_to_le64(remote_addr->svm_cid);
+> > +	hdr->src_port	= cpu_to_le32(src_port);
+> > +	hdr->dst_port	= cpu_to_le32(remote_addr->svm_port);
+> > +	hdr->flags	= cpu_to_le32(info->flags);
+> > +	hdr->len	= cpu_to_le32(dgram_len);
+> > +
+> > +	skb_set_owner_w(skb, sk);
+> > +
+> > +	payload = skb_put(skb, dgram_len);
+> > +	err = memcpy_from_msg(payload, msg, dgram_len);
+> > +	if (err)
+> > +		return err;
+> 
+> Do we need free allocated skb here ?
+> 
+
+Yep, thanks.
+
+> > +
+> > +	trace_virtio_transport_alloc_pkt(src_cid, src_port,
+> > +					 remote_addr->svm_cid,
+> > +					 remote_addr->svm_port,
+> > +					 dgram_len,
+> > +					 info->type,
+> > +					 info->op,
+> > +					 0);
+> > +
+> > +	return t_ops->send_pkt(skb);
+> >  }
+> >  EXPORT_SYMBOL_GPL(virtio_transport_dgram_enqueue);
+> >  
+> > 
+> 
+> Thanks, Arseniy
+
+Thanks for the review!
+
+Best,
+Bobby
