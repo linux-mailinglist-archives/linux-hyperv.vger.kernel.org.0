@@ -2,193 +2,307 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 002077621F3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 25 Jul 2023 21:02:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 519FA7627B6
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jul 2023 02:23:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230425AbjGYTCT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Jul 2023 15:02:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52296 "EHLO
+        id S229459AbjGZAXp (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 25 Jul 2023 20:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230128AbjGYTCS (ORCPT
+        with ESMTP id S231236AbjGZAXp (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Jul 2023 15:02:18 -0400
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021026.outbound.protection.outlook.com [52.101.62.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C366D121;
-        Tue, 25 Jul 2023 12:02:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VPWnA40nqfwSCIBf3EpHAVAxs4CcFIUT4/sS3MOgJkUDf9GIVX5vphY8W1ayA9D5P7WRHs91qM+3nMJ+qdVH5Ql5G8OEfn6nGTdwraQeUIpxhdMf/9nxGGxevGo+ke+IRoy0WL0Rkr0HaarcL1Kz/kjBgAAqib+/P3CjAPnj48mim5g1Pq+pOQXDl6VXRPkR9IuiuSHkfinRBgSGBPusZWQ3JGjnfwLMa8mcr8xv3CCpcupbhScU9oJn8HRGZvV2RiGv66GWQo+WhZ+RrxzVJL97BYCjVkwIDoKav1jGyNBTe8Vx1MzH99AbmLOqE3T4rU3QcFmjq+nJ0ZwkIqxetA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sftyt76KOmFZPcSMea8jiZ88u+09UDBK2DkDz9iF6x4=;
- b=dVqR8qIOGgovdz8DwXkzRVhzNv2PHF7L133U/vd0fSADiAZIp9nEahkD5/f0rpIN60BmBz20OQHmbv2U95jLriUH6ygNLhYUKb6M9B0zxPLf9x5aUJBs6UVkFIwn996PHOF7e1jNn4fmcJbl1EeWdw+xR4elX6J2JN3Ry9jLZ1coqkuFN4r5N1NzCVU+fmeyO2gUuTC48QISPoEUwVa9oRLdB5mh08OB3lfjV1eN5higP6uH9e9eRj3NPzz2dPnSaw3F1jyr+CENXeik/sB2A3dYfBvsE8tTHiqBgGlKYglTQvCXUJ2Biym4x8PqrlXVIZsddJHNSc4l4zsIwvzMzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sftyt76KOmFZPcSMea8jiZ88u+09UDBK2DkDz9iF6x4=;
- b=iDJJIIuMD7vgAC8wQVWwc+w9DzCg683djDIR9dowB7TO+IQSxNeU72V1xrB8q3lojz4lev7BUBoH+vxCHMfn5Xjz2fSFIFUZUh004SkaJ7ZeLLueo6YRTT06b010dxGCzctc8xy6dunrIuAVwJeOyBygiaEICUIED6bglcYBo3k=
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com (2603:10b6:510:1d0::10)
- by SJ0PR21MB2072.namprd21.prod.outlook.com (2603:10b6:a03:397::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.4; Tue, 25 Jul
- 2023 19:02:10 +0000
-Received: from PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::d2:cad1:318e:224b]) by PH7PR21MB3116.namprd21.prod.outlook.com
- ([fe80::d2:cad1:318e:224b%7]) with mapi id 15.20.6652.002; Tue, 25 Jul 2023
- 19:02:10 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jesper Dangaard Brouer <jbrouer@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "brouer@redhat.com" <brouer@redhat.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Paul Rosswurm <paulros@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Subject: RE: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
-Thread-Topic: [PATCH V3,net-next] net: mana: Add page pool for RX buffers
-Thread-Index: AQHZvAZSl8pOb40fXE2pDlV9gZuDN6/IzCkAgABE5NCAADEEcIABidWAgAANWGA=
-Date:   Tue, 25 Jul 2023 19:02:10 +0000
-Message-ID: <PH7PR21MB3116F5612AA8303512EEBA4CCA03A@PH7PR21MB3116.namprd21.prod.outlook.com>
-References: <1689966321-17337-1-git-send-email-haiyangz@microsoft.com>
- <1af55bbb-7aff-e575-8dc1-8ba64b924580@redhat.com>
- <PH7PR21MB3116F8A97F3626AB04915B96CA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
- <PH7PR21MB311675E57B81B49577ADE98FCA02A@PH7PR21MB3116.namprd21.prod.outlook.com>
- <729b360c-4d79-1025-f5be-384b17f132d3@redhat.com>
-In-Reply-To: <729b360c-4d79-1025-f5be-384b17f132d3@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=60666082-2b7c-425c-aa9e-f9d880f18a60;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-07-25T18:48:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR21MB3116:EE_|SJ0PR21MB2072:EE_
-x-ms-office365-filtering-correlation-id: bdd4ce79-0d46-4e3c-4c44-08db8d41a648
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tnr2e71rw9y+LKwDORVZVTWdpig3R2o3BrUdXePNurngvucccGkjXBs3BuysT2xxkFAeU++uSx08br58ct41u9Q12j4+dJPGeGQL1izkoH9JpcoIFP4WDCp0Tl457NKLrUxC83OTNUrMovQ0aS4Xrw4QoAzFY/aw4k28ZpKU3qEKIl+iwN1hgaixm3rokulJfeCebsDAHYkz7MgbU7JRuTrUsNU4U2if3QoOOBNAoBGDqXFSSOUDnS0VGIHab5o+qg6Jd98l6SZ6TRbbznTHWZt8pyZT0zrmiwvdsjrC7kxu5h4qoHBTnVpJ90C65OJqasdYef/H1Mf1ILVI/2qo/g9UIjcF28heavlSjHF1GOfb1OJ2WxwAGU6qbWaSe9pf/ZoE61XB5pg2gAr55PL/VFnE+9WcBzzhR7jK9DmfPIreLPI3rVrsqwC/mSD6zjeNSOVLmMooF7Ppq8k+xTGqYrC5blfPPI9oq6C+wvtSNVXkyGqZh1KMYcD/MDfP6UgUlWvJHPtkgzphXtVu9J//zbo+p30CWEuLfEXRN6JpvQg8TtiDJE0+7kurOTOs7OQu1MQsnzZ72LdGRzzVq7hdhCHrd7rVIQcwrcIFedl6eeizGFSsnpkX5+nz8O8Q2Rnwt8yPxDzM8gUhXOyd18BhZUCC+PS6Hl3QS/qq21QIZ20=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3116.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(451199021)(38070700005)(83380400001)(82950400001)(38100700002)(122000001)(82960400001)(9686003)(2906002)(33656002)(186003)(6506007)(26005)(8990500004)(86362001)(52536014)(478600001)(5660300002)(10290500003)(55016003)(71200400001)(7416002)(7696005)(41300700001)(110136005)(4326008)(64756008)(66556008)(66476007)(54906003)(8936002)(66446008)(316002)(76116006)(66946007)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZEdjOWhSWEVjS0FMNnhva0VBaEU5ZHd6TnVyTzY0SVdxa1RFay9OREI5aXNt?=
- =?utf-8?B?K0NUdUdUQWtsTVl1WWlOYW92WlRyeHI3UWNaVWtON0YxcWNUWFJiWDlDaXk2?=
- =?utf-8?B?YndQRHRLVHJwKzBDc0ZFalc1MTFrZ2NXS1U5akd6ZmpZOTUxSWljMnBXNWhS?=
- =?utf-8?B?bkRYajNIcXRITVJLVGRUaWtFOFFSQ3dSRHVOemxPUmZORGdVb2xGRFQrSU14?=
- =?utf-8?B?RVhEeitNWFpXSEFodEh2d1YrT05mRWFaVHV1SzFkY3NZTWlrUWZyall2SWJO?=
- =?utf-8?B?RjRPeUcveEpmWnJYZW9GN3B0ZHhBSjhMQVZNVGxmNUZMdkNwMFdiSEdZanhV?=
- =?utf-8?B?RnE1QlRNamIyeldOdldheDF3N2RjTHI5RDduOXFGNGZKNDY2ekxTNnZ4NU1R?=
- =?utf-8?B?cThUWldFcms2a250WU01SGt6WEFOTHV1aFN0ZGR0dkZodytzOEE4ZjFWdXFz?=
- =?utf-8?B?VFJFNTVGMmFTTUFPcmoySENmOWFjd1VmWWI0S2VXWms4SjlWY1NHaHM3cnBv?=
- =?utf-8?B?Y1VEUldIREhiM2thZzVLQTR5Z25UK09MRnZXUWQra0F5dWd6Mnl3ZVJxZ2Nr?=
- =?utf-8?B?MS94RVZjNXRFdkk2UWVPMlA2RHEybW8yTHZ0T2s1bEthMldnM1R4anNWR0I4?=
- =?utf-8?B?VStXVGhpT0RnVzY0THBSTCtCRXhFZGwzK3l6YUcxeDFxdHlOa0hrMHAyRERr?=
- =?utf-8?B?SHNjSVdHM1o3dnMwbXh0NUk0eDd6ZGgzQmlzeUZlNDRVZTQ5dS9IYkRDZE5V?=
- =?utf-8?B?TjFwYkhObGtYVUtsaThiNHREKzZVcTlhcGdIdTZIRmg4UjdNakdqY09UaHpZ?=
- =?utf-8?B?bTZ0cHFqek5kSFF3T0FDOHBGTlRyRjZ0Y0ZVbmRJMzduSy9Vdjg3bWp5dWNr?=
- =?utf-8?B?WFBuVE1IZmdzSHpWRGp3c1B1KzdQSUNtVGtXa3IvcXk0ZUVEWlViNk9SWlRR?=
- =?utf-8?B?TDFiUWtlK1gvQkRUcGMzODAydWdqYkVnR1dnZ3ZxamhjdDJNc3UvbERBcjFM?=
- =?utf-8?B?UTduUFU4OTBRd3lCcWRlSktqTk8vUGY1R2ZHUGF6U2xjQll2SWptb0VlTUVV?=
- =?utf-8?B?alRGT2x1V3VueU9VV2pPUHF5UE9Qc0I3cFBLV2RSaUM5NTZCdlN5b0hSWHJk?=
- =?utf-8?B?YndYVHBkN2RLMXlkRDdtQjVFdUJXZ1pDc3pnQWVrQm5GSW04YStJRFJUMXMv?=
- =?utf-8?B?aFFqOXNVc2RPQlB6K2FVbEMxZktaS0YweFZMZktFcUJLdGFMN3RYd1Juek83?=
- =?utf-8?B?cHBoSTl5QzRZYmhXa2lKQzJMRXlQZW9uWnBnZGpadjZEbGl0UkRZZ2ViNnl6?=
- =?utf-8?B?NHNBdGpDbFJOcjZuR29LbVVMRVlqYWVGM0RQbDlWWjNTcWJpbXFQMm01dDhO?=
- =?utf-8?B?ZjRYcEVZbjVrSlJQaFkzbVF3WDF0ZlRsdkNpUjlIazB2M2h2MDRldTI4ZzRE?=
- =?utf-8?B?bkFXcExuZlQ1Z0ZvL3dER01Oa29LQXNTVlcxRGp5MjcxeXhKVzBYb1RTWUJH?=
- =?utf-8?B?dWF2dFhuVDlxRE9qVThCK2k3SWlQOElUckdsWGIyRXEwZ2RFNUFmK1dGTXho?=
- =?utf-8?B?WWRGQnowZzNZWXphUEN4VlphbVBzWGUyOHRVamlrRzk1QjVVZW1FVHlQZkFh?=
- =?utf-8?B?YXpiN3pyY2VJa29pMmlYeGFvczZxZ0xtdVpuMXZrNDJrNkh6Zmk4Qnd5MHJW?=
- =?utf-8?B?SjNhcERUMVlwMlVhMUtvQVZGaEhrd1J1eDY5aXZVeDV5V1VPTzRHN1ZkY216?=
- =?utf-8?B?b05YbU1lZ2dTUFFjL0RyR3hNNEs4aUNyVXhRc0FLT2RqblNvd3dIbmpxTlVD?=
- =?utf-8?B?ZXFaeDgwb3phT3cyQzVWQXczdDUxbVFCWDdzVUVPUjJ3VU1lWXRIZDhGMjd1?=
- =?utf-8?B?YWFjZm5EdmlndFFZR05Zanh4dU90bXlybDhHYWRrR0t6TTc1UXcyZkFVQ0lx?=
- =?utf-8?B?SUNGNU1CNWhmK2tPZjNBT0owNWZOQXp3TExYdEJjbGN1cVl4Nm1jVlpOTGNB?=
- =?utf-8?B?Q2FuQ0xYVU9qZ1ZOVE1jUDgycGc1c1dRV1Urc1JjbndCUWZuWmhVc1VNbk9t?=
- =?utf-8?B?SzVlTUZqMWpJUkhqYzI3UkFOdmxjNHFNTVUxZytYY1J1SmZ4SlhVSmFvbW1Z?=
- =?utf-8?Q?H4Hp/0dqXq9sRxn0JTwDqjnXb?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 25 Jul 2023 20:23:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BBC41A8;
+        Tue, 25 Jul 2023 17:23:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B9E0F61935;
+        Wed, 26 Jul 2023 00:23:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 138F5C433C7;
+        Wed, 26 Jul 2023 00:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690331023;
+        bh=n8uJXeLuOskMOSTFvxFIlIysin1FQNq5sN6Yig5KJJM=;
+        h=From:Date:Subject:To:Cc:Reply-To:From;
+        b=jV627cONptCuFZwZrq5vMcQjX1OSp8wmOlqA2sDDdyenGHxdLfdwB2aMp9XDV/aop
+         d0Wrw0e6HefzRPJ3ilyrJ0FUdTb8HoBgFxiVCrYpo/2Aoai9p8pBKsJykRLeUDF5zc
+         fEuCFpOBelgd15IZPGAF6m0UlebRcIM6/PWiBHmIPaGVB4grhhaieDtfxsVJjwzlZD
+         r8xHatJFgEov/rQBko1xbzzMgJ2KxXDb2LHioK3YbIk7xe4wVVVJIp37nRl/fiy+B/
+         OAHG4bRuQqrUChFU9ZnkDvO5GZ8NAEEkDCKKkSthM9bI54qIOCN8G7vbFnlB5dZo4B
+         pCHf7GCE4YXEQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.lore.kernel.org (Postfix) with ESMTP id F3EF8EB64DD;
+        Wed, 26 Jul 2023 00:23:42 +0000 (UTC)
+From:   Mitchell Levy via B4 Relay 
+        <devnull+levymitchell0.gmail.com@kernel.org>
+Date:   Wed, 26 Jul 2023 00:23:31 +0000
+Subject: [PATCH] hv_balloon: Update the balloon driver to use the SBRM API
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3116.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdd4ce79-0d46-4e3c-4c44-08db8d41a648
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2023 19:02:10.4963
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PgtB1DF3j6rGIVm4byXNjHBPZh5/YKotF6A4tF7KKL8OMl2erXvPKhZoKYd+5BHFZfxrHfc5HyJlkoJuHifejQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB2072
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230726-master-v1-1-b2ce6a4538db@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAIJnwGQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDcyNT3dzE4pLUIt2kpOQUSyMDU3NTiyQloOKCotS0zAqwQdGxtbUAcXR
+ m81gAAAA=
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelly@microsoft.com, peterz@infradead.org,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "Mitchell Levy (Microsoft)" <levymitchell0@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1690331022; l=7710;
+ i=levymitchell0@gmail.com; s=20230725; h=from:subject:message-id;
+ bh=84uGYvJcj5OV/bgfkKqlgiyUtrhDwWgEQj+Xrg0YrbI=;
+ b=BD5lgOcxZEQ142ZfkGpO3DuyzHnugCgXqED3QlEpvQ8EGyB3Hb629rgO6ebbbP9C8XgIh4FC3
+ uam7fNanBfgDV6LNQ6LINu2kpzcBU7M1DU1TzddZ3XXjORIkxVGdVRs
+X-Developer-Key: i=levymitchell0@gmail.com; a=ed25519;
+ pk=o3BLKQtTK7QMnUiW3/7p5JcITesvc3qL/w+Tz19oYeE=
+X-Endpoint-Received: by B4 Relay for levymitchell0@gmail.com/20230725 with auth_id=69
+X-Original-From: Mitchell Levy <levymitchell0@gmail.com>
+Reply-To: <levymitchell0@gmail.com>
+X-Spam-Status: No, score=0.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSmVzcGVyIERhbmdhYXJk
-IEJyb3VlciA8amJyb3VlckByZWRoYXQuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBKdWx5IDI1LCAy
-MDIzIDI6MDEgUE0NCj4gPj4NCj4gPj4gT3VyIGRyaXZlciBpcyB1c2luZyBOVU1BIDAgYnkgZGVm
-YXVsdCwgc28gSSBpbXBsaWNpdGx5IGFzc2lnbiBOVU1BIG5vZGUgaWQNCj4gPj4gdG8gemVybyBk
-dXJpbmcgcG9vbCBpbml0Lg0KPiA+Pg0KPiA+PiBBbmQsIGlmIHRoZSBJUlEvQ1BVIGFmZmluaXR5
-IGlzIGNoYW5nZWQsIHRoZSBwYWdlX3Bvb2xfbmlkX2NoYW5nZWQoKQ0KPiA+PiB3aWxsIHVwZGF0
-ZSB0aGUgbmlkIGZvciB0aGUgcG9vbC4gRG9lcyB0aGlzIHNvdW5kIGdvb2Q/DQo+ID4+DQo+ID4N
-Cj4gPiBBbHNvLCBzaW5jZSBvdXIgZHJpdmVyIGlzIGdldHRpbmcgdGhlIGRlZmF1bHQgbm9kZSBm
-cm9tIGhlcmU6DQo+ID4gCWdjLT5udW1hX25vZGUgPSBkZXZfdG9fbm9kZSgmcGRldi0+ZGV2KTsN
-Cj4gPiBJIHdpbGwgdXBkYXRlIHRoaXMgcGF0Y2ggdG8gc2V0IHRoZSBkZWZhdWx0IG5vZGUgYXMg
-YWJvdmUsIGluc3RlYWQgb2YgaW1wbGljaXRseQ0KPiA+IGFzc2lnbmluZyBpdCB0byAwLg0KPiA+
-DQo+IA0KPiBJbiB0aGF0IGNhc2UsIEkgYWdyZWUgdGhhdCBpdCBtYWtlIHNlbnNlIHRvIHVzZSBk
-ZXZfdG9fbm9kZSgmcGRldi0+ZGV2KSwNCj4gbGlrZToNCj4gCXBwcm0ubmlkID0gZGV2X3RvX25v
-ZGUoJnBkZXYtPmRldik7DQo+IA0KPiBEcml2ZXIgbXVzdCBoYXZlIGEgcmVhc29uIGZvciBhc3Np
-Z25pbmcgZ2MtPm51bWFfbm9kZSBmb3IgdGhpcyBoYXJkd2FyZSwNCj4gd2hpY2ggaXMgb2theS4g
-VGhhdCBpcyB3aHkgcGFnZV9wb29sIEFQSSBhbGxvd3MgZHJpdmVyIHRvIGNvbnRyb2wgdGhpcy4N
-Cj4gDQo+IEJ1dCB0aGVuIEkgZG9uJ3QgdGhpbmsgeW91IHNob3VsZCBjYWxsIHBhZ2VfcG9vbF9u
-aWRfY2hhbmdlZCgpIGxpa2UNCj4gDQo+IAlwYWdlX3Bvb2xfbmlkX2NoYW5nZWQocnhxLT5wYWdl
-X3Bvb2wsIG51bWFfbWVtX2lkKCkpOw0KPiANCj4gQmVjYXVzZSB0aGVuIHlvdSB3aWxsIChhdCBm
-aXJzdCBwYWNrZXQgcHJvY2Vzc2luZyBldmVudCkgcmV2ZXJ0IHRoZQ0KPiBkZXZfdG9fbm9kZSgp
-IHNldHRpbmcgdG8gdXNlIG51bWFfbWVtX2lkKCkgb2YgcHJvY2Vzc2luZy9ydW5uaW5nIENQVS4N
-Cj4gKEluIGVmZmVjdCB0aGlzIHdpbGwgYmUgdGhlIHNhbWUgYXMgc2V0dGluZyBOVU1BX05PX05P
-REUpLg0KPiANCj4gSSBrbm93LCBtbHg1IGRvIGNhbGwgcGFnZV9wb29sX25pZF9jaGFuZ2VkKCks
-IGJ1dCB0aGV5IHNob3dlZCBiZW5jaG1hcmsNCj4gbnVtYmVycyB0aGF0IHRoaXMgd2FzIHByZWZl
-cnJlZCBhY3Rpb24sIGV2ZW4td2hlbiBzeXNhZG0gaGFkDQo+ICJtaXNjb25maWd1cmVkIiB0aGUg
-ZGVmYXVsdCBzbXBfYWZmaW5pdHkgUlgtcHJvY2Vzc2luZyB0byBoYXBwZW4gb24gYQ0KPiByZW1v
-dGUgTlVNQSBub2RlLiAgQUZBSUsgbWx4NSBrZWVwcyB0aGUgZGVzY3JpcHRvciByaW5ncyBvbiB0
-aGUNCj4gb3JpZ2luYWxseSBjb25maWd1cmVkIE5VTUEgbm9kZSB0aGF0IGNvcnJlc3BvbmRzIHRv
-IHRoZSBOSUMgUENJZSBzbG90Lg0KDQpJbiBtYW5hX2dkX3NldHVwX2lycXMoKSwgd2Ugc2V0IHRo
-ZSBkZWZhdWx0IElSUS9DUFUgYWZmaW5pdHkgdG8gZ2MtPm51bWFfbm9kZSANCnRvbywgc28gaXQg
-d29uJ3QgcmV2ZXJ0IHRoZSBuaWQgaW5pdGlhbCBzZXR0aW5nLiANCg0KQ3VycmVudGx5LCB0aGUg
-QXp1cmUgaHlwZXJ2aXNvciBhbHdheXMgaW5kaWNhdGVzIG51bWEgMCBhcyBkZWZhdWx0LiAoSW4g
-DQp0aGUgZnV0dXJlLCBpdCB3aWxsIHN0YXJ0IHRvIHByb3ZpZGUgdGhlIGFjY3VyYXRlIGRlZmF1
-bHQgZGV2IG5vZGUuKSBXaGVuIGEgDQp1c2VyIG1hbnVhbGx5IGNoYW5nZXMgdGhlIElSUS9DUFUg
-YWZmaW5pdHkgZm9yIHBlcmYgdHVuaW5nLCB3ZSB3YW50IHRvIA0KYWxsb3cgcGFnZV9wb29sX25p
-ZF9jaGFuZ2VkKCkgdG8gdXBkYXRlIHRoZSBwb29sLiBJcyB0aGlzIE9LPw0KDQpUaGFua3MsDQot
-IEhhaXlhbmcNCg0K
+From: Mitchell Levy <levymitchell0@gmail.com>
+
+
+
+---
+This patch is intended as a proof-of-concept for the new SBRM
+machinery[1]. For some brief background, the idea behind SBRM is using
+the __cleanup__ attribute to automatically unlock locks (or otherwise
+release resources) when they go out of scope, similar to C++ style RAII.
+This promises some benefits such as making code simpler (particularly
+where you have lots of goto fail; type constructs) as well as reducing
+the surface area for certain kinds of bugs.
+
+The changes in this patch should not result in any difference in how the
+code actually runs (i.e., it's purely an exercise in this new syntax
+sugar). In one instance SBRM was not appropriate, so I left that part
+alone, but all other locking/unlocking is handled automatically in this
+patch.
+
+Link: https://lore.kernel.org/all/20230626125726.GU4253@hirez.programming.kicks-ass.net/ [1]
+
+Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: "Mitchell Levy (Microsoft)" <levymitchell0@gmail.com>
+---
+ drivers/hv/hv_balloon.c | 82 +++++++++++++++++++++++--------------------------
+ 1 file changed, 38 insertions(+), 44 deletions(-)
+
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index dffcc894f117..2812601e84da 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -8,6 +8,7 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/cleanup.h>
+ #include <linux/kernel.h>
+ #include <linux/jiffies.h>
+ #include <linux/mman.h>
+@@ -646,7 +647,7 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ 			      void *v)
+ {
+ 	struct memory_notify *mem = (struct memory_notify *)v;
+-	unsigned long flags, pfn_count;
++	unsigned long pfn_count;
+ 
+ 	switch (val) {
+ 	case MEM_ONLINE:
+@@ -655,21 +656,22 @@ static int hv_memory_notifier(struct notifier_block *nb, unsigned long val,
+ 		break;
+ 
+ 	case MEM_OFFLINE:
+-		spin_lock_irqsave(&dm_device.ha_lock, flags);
+-		pfn_count = hv_page_offline_check(mem->start_pfn,
+-						  mem->nr_pages);
+-		if (pfn_count <= dm_device.num_pages_onlined) {
+-			dm_device.num_pages_onlined -= pfn_count;
+-		} else {
+-			/*
+-			 * We're offlining more pages than we managed to online.
+-			 * This is unexpected. In any case don't let
+-			 * num_pages_onlined wrap around zero.
+-			 */
+-			WARN_ON_ONCE(1);
+-			dm_device.num_pages_onlined = 0;
++		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
++			pfn_count = hv_page_offline_check(mem->start_pfn,
++							  mem->nr_pages);
++			if (pfn_count <= dm_device.num_pages_onlined) {
++				dm_device.num_pages_onlined -= pfn_count;
++			} else {
++				/*
++				 * We're offlining more pages than we
++				 * managed to online. This is
++				 * unexpected. In any case don't let
++				 * num_pages_onlined wrap around zero.
++				 */
++				WARN_ON_ONCE(1);
++				dm_device.num_pages_onlined = 0;
++			}
+ 		}
+-		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+ 		break;
+ 	case MEM_GOING_ONLINE:
+ 	case MEM_GOING_OFFLINE:
+@@ -721,24 +723,23 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 	unsigned long start_pfn;
+ 	unsigned long processed_pfn;
+ 	unsigned long total_pfn = pfn_count;
+-	unsigned long flags;
+ 
+ 	for (i = 0; i < (size/HA_CHUNK); i++) {
+ 		start_pfn = start + (i * HA_CHUNK);
+ 
+-		spin_lock_irqsave(&dm_device.ha_lock, flags);
+-		has->ha_end_pfn +=  HA_CHUNK;
++		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
++			has->ha_end_pfn +=  HA_CHUNK;
+ 
+-		if (total_pfn > HA_CHUNK) {
+-			processed_pfn = HA_CHUNK;
+-			total_pfn -= HA_CHUNK;
+-		} else {
+-			processed_pfn = total_pfn;
+-			total_pfn = 0;
+-		}
++			if (total_pfn > HA_CHUNK) {
++				processed_pfn = HA_CHUNK;
++				total_pfn -= HA_CHUNK;
++			} else {
++				processed_pfn = total_pfn;
++				total_pfn = 0;
++			}
+ 
+-		has->covered_end_pfn +=  processed_pfn;
+-		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++			has->covered_end_pfn +=  processed_pfn;
++		}
+ 
+ 		reinit_completion(&dm_device.ol_waitevent);
+ 
+@@ -758,10 +759,10 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ 				 */
+ 				do_hot_add = false;
+ 			}
+-			spin_lock_irqsave(&dm_device.ha_lock, flags);
+-			has->ha_end_pfn -= HA_CHUNK;
+-			has->covered_end_pfn -=  processed_pfn;
+-			spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++			scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
++				has->ha_end_pfn -= HA_CHUNK;
++				has->covered_end_pfn -=  processed_pfn;
++			}
+ 			break;
+ 		}
+ 
+@@ -781,10 +782,9 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
+ static void hv_online_page(struct page *pg, unsigned int order)
+ {
+ 	struct hv_hotadd_state *has;
+-	unsigned long flags;
+ 	unsigned long pfn = page_to_pfn(pg);
+ 
+-	spin_lock_irqsave(&dm_device.ha_lock, flags);
++	guard(spinlock_irqsave)(&dm_device.ha_lock);
+ 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+ 		/* The page belongs to a different HAS. */
+ 		if ((pfn < has->start_pfn) ||
+@@ -794,7 +794,6 @@ static void hv_online_page(struct page *pg, unsigned int order)
+ 		hv_bring_pgs_online(has, pfn, 1UL << order);
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+ }
+ 
+ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+@@ -803,9 +802,8 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ 	struct hv_hotadd_gap *gap;
+ 	unsigned long residual, new_inc;
+ 	int ret = 0;
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&dm_device.ha_lock, flags);
++	guard(spinlock_irqsave)(&dm_device.ha_lock);
+ 	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+ 		/*
+ 		 * If the pfn range we are dealing with is not in the current
+@@ -852,7 +850,6 @@ static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+ 		ret = 1;
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+ 
+ 	return ret;
+ }
+@@ -947,7 +944,6 @@ static unsigned long process_hot_add(unsigned long pg_start,
+ {
+ 	struct hv_hotadd_state *ha_region = NULL;
+ 	int covered;
+-	unsigned long flags;
+ 
+ 	if (pfn_cnt == 0)
+ 		return 0;
+@@ -979,9 +975,9 @@ static unsigned long process_hot_add(unsigned long pg_start,
+ 		ha_region->covered_end_pfn = pg_start;
+ 		ha_region->end_pfn = rg_start + rg_size;
+ 
+-		spin_lock_irqsave(&dm_device.ha_lock, flags);
+-		list_add_tail(&ha_region->list, &dm_device.ha_region_list);
+-		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
++		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
++			list_add_tail(&ha_region->list, &dm_device.ha_region_list);
++		}
+ 	}
+ 
+ do_pg_range:
+@@ -2047,7 +2043,6 @@ static void balloon_remove(struct hv_device *dev)
+ 	struct hv_dynmem_device *dm = hv_get_drvdata(dev);
+ 	struct hv_hotadd_state *has, *tmp;
+ 	struct hv_hotadd_gap *gap, *tmp_gap;
+-	unsigned long flags;
+ 
+ 	if (dm->num_pages_ballooned != 0)
+ 		pr_warn("Ballooned pages: %d\n", dm->num_pages_ballooned);
+@@ -2073,7 +2068,7 @@ static void balloon_remove(struct hv_device *dev)
+ #endif
+ 	}
+ 
+-	spin_lock_irqsave(&dm_device.ha_lock, flags);
++	guard(spinlock_irqsave)(&dm_device.ha_lock);
+ 	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
+ 		list_for_each_entry_safe(gap, tmp_gap, &has->gap_list, list) {
+ 			list_del(&gap->list);
+@@ -2082,7 +2077,6 @@ static void balloon_remove(struct hv_device *dev)
+ 		list_del(&has->list);
+ 		kfree(has);
+ 	}
+-	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+ }
+ 
+ static int balloon_suspend(struct hv_device *hv_dev)
+
+---
+base-commit: 3f01e9fed8454dcd89727016c3e5b2fbb8f8e50c
+change-id: 20230725-master-bbcd9205758b
+
+Best regards,
+-- 
+Mitchell Levy <levymitchell0@gmail.com>
+
