@@ -2,29 +2,29 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EDB6764036
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jul 2023 22:08:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7431576403C
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jul 2023 22:08:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231215AbjGZUIb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 26 Jul 2023 16:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47912 "EHLO
+        id S231675AbjGZUIf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Jul 2023 16:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbjGZUIa (ORCPT
+        with ESMTP id S231245AbjGZUIb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 26 Jul 2023 16:08:30 -0400
+        Wed, 26 Jul 2023 16:08:31 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 541E22701;
-        Wed, 26 Jul 2023 13:08:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 071512703;
+        Wed, 26 Jul 2023 13:08:29 -0700 (PDT)
 Received: by linux.microsoft.com (Postfix, from userid 1174)
-        id E62872383128; Wed, 26 Jul 2023 13:08:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E62872383128
+        id 967042383123; Wed, 26 Jul 2023 13:08:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 967042383123
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1690402107;
-        bh=MjaPqUlSsdoag8NJcUndVT0bduMzGdYog8nj30+Fq/o=;
+        s=default; t=1690402108;
+        bh=PwwJfLB03F8EZKJX5ZJOsl+GO9Urq8QBa84Mq4fm+wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XY4Y/3BsqLegS5SFqWIcmRmfbyvVYAzoDfgw23dWoyKz8QWDrR00U9clVQlb3Qqcp
-         gH7vbcX9XvvK53inVYusdYF2gdzWnAyRp1rbUJ+TodnJAsfPg1hNf65wWaIUpPFzgu
-         Zos8PBRah4V5y4gHW1GyPMqJ9krA7ZI/ikJQWiVQ=
+        b=d3Jge8vtq8EzaAKIg0DuSLbI3owLetSnSH5IucptQq7H0x9mUCML5b9mXYw0zHHo3
+         cEopp4LMPrQUqplJ195lEKFh0Woku/MJ8HNZ6Ih/uEyN/hiBZ0RpXDxnFuZ1wfdga2
+         IVUDOmeyd2SFnXQ3WzVV+Kef5EMHsZgnuHDsE97o=
 From:   sharmaajay@linuxonhyperv.com
 To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
         Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
@@ -35,9 +35,9 @@ To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
 Cc:     linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Ajay Sharma <sharmaajay@microsoft.com>
-Subject: [Patch v3 2/4] RDMA/mana_ib : Register Mana IB  device with Management SW
-Date:   Wed, 26 Jul 2023 13:08:22 -0700
-Message-Id: <1690402104-29518-3-git-send-email-sharmaajay@linuxonhyperv.com>
+Subject: [Patch v3 3/4] RDMA/mana_ib : Create adapter and Add error eq
+Date:   Wed, 26 Jul 2023 13:08:23 -0700
+Message-Id: <1690402104-29518-4-git-send-email-sharmaajay@linuxonhyperv.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1690402104-29518-1-git-send-email-sharmaajay@linuxonhyperv.com>
 References: <1690402104-29518-1-git-send-email-sharmaajay@linuxonhyperv.com>
@@ -54,452 +54,571 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 From: Ajay Sharma <sharmaajay@microsoft.com>
 
-Each of the MANA infiniband devices must be registered
-with the management software to request services/resources.
-Register the Mana IB device with Management
-which would later help get an adapter handle.
+Create adapter object as nice container for VF resources.
+Add error eq needed for adapter creation and later used
+for notification from Management SW. The management
+software uses this channel to send messages or error
+notifications back to the Client.
 
 Signed-off-by: Ajay Sharma <sharmaajay@microsoft.com>
 ---
- drivers/infiniband/hw/mana/device.c           | 20 +++++--
- drivers/infiniband/hw/mana/main.c             | 58 ++++++-------------
- drivers/infiniband/hw/mana/mana_ib.h          |  1 +
- drivers/infiniband/hw/mana/mr.c               | 17 ++----
- drivers/infiniband/hw/mana/qp.c               | 10 ++--
- .../net/ethernet/microsoft/mana/gdma_main.c   |  5 ++
- include/net/mana/gdma.h                       |  3 +
- 7 files changed, 55 insertions(+), 59 deletions(-)
+ drivers/infiniband/hw/mana/device.c           |  22 ++-
+ drivers/infiniband/hw/mana/main.c             |  95 ++++++++++++
+ drivers/infiniband/hw/mana/mana_ib.h          |  33 ++++
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 146 ++++++++++--------
+ drivers/net/ethernet/microsoft/mana/mana_en.c |   3 +
+ include/net/mana/gdma.h                       |  13 +-
+ 6 files changed, 242 insertions(+), 70 deletions(-)
 
 diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 083f27246ba8..ea4c8c8fc10d 100644
+index ea4c8c8fc10d..4077e440657a 100644
 --- a/drivers/infiniband/hw/mana/device.c
 +++ b/drivers/infiniband/hw/mana/device.c
-@@ -78,22 +78,34 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	mib_dev->ib_dev.num_comp_vectors = 1;
- 	mib_dev->ib_dev.dev.parent = mdev->gdma_context->dev;
+@@ -68,7 +68,7 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ 	ibdev_dbg(&mib_dev->ib_dev, "mdev=%p id=%d num_ports=%d\n", mdev,
+ 		  mdev->dev_id.as_uint32, mib_dev->ib_dev.phys_port_cnt);
  
--	ret = ib_register_device(&mib_dev->ib_dev, "mana_%d",
--				 mdev->gdma_context->dev);
-+	ret = mana_gd_register_device(&mib_dev->gc->mana_ib);
- 	if (ret) {
--		ib_dealloc_device(&mib_dev->ib_dev);
--		return ret;
-+		ibdev_err(&mib_dev->ib_dev, "Failed to register device, ret %d",
-+			  ret);
-+		goto free_ib_device;
+-	mib_dev->gdma_dev = mdev;
++	mib_dev->gc = mdev->gdma_context;
+ 	mib_dev->ib_dev.node_type = RDMA_NODE_IB_CA;
+ 
+ 	/*
+@@ -85,15 +85,31 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ 		goto free_ib_device;
  	}
  
-+	ret = ib_register_device(&mib_dev->ib_dev, "mana_%d",
-+				 mdev->gdma_context->dev);
-+	if (ret)
++	ret = mana_ib_create_error_eq(mib_dev);
++	if (ret) {
++		ibdev_err(&mib_dev->ib_dev, "Failed to allocate err eq");
 +		goto deregister_device;
++	}
 +
++	ret = mana_ib_create_adapter(mib_dev);
++	if (ret) {
++		ibdev_err(&mib_dev->ib_dev, "Failed to create adapter");
++		goto free_error_eq;
++	}
++
+ 	ret = ib_register_device(&mib_dev->ib_dev, "mana_%d",
+ 				 mdev->gdma_context->dev);
+ 	if (ret)
+-		goto deregister_device;
++		goto destroy_adapter;
+ 
  	dev_set_drvdata(&adev->dev, mib_dev);
  
  	return 0;
-+
-+deregister_device:
-+	mana_gd_deregister_device(&mib_dev->gc->mana_ib);
-+free_ib_device:
-+	ib_dealloc_device(&mib_dev->ib_dev);
-+	return ret;
- }
  
- static void mana_ib_remove(struct auxiliary_device *adev)
++destroy_adapter:
++	mana_ib_destroy_adapter(mib_dev);
++free_error_eq:
++	mana_gd_destroy_queue(mib_dev->gc, mib_dev->fatal_err_eq);
+ deregister_device:
+ 	mana_gd_deregister_device(&mib_dev->gc->mana_ib);
+ free_ib_device:
+@@ -105,6 +121,8 @@ static void mana_ib_remove(struct auxiliary_device *adev)
  {
  	struct mana_ib_dev *mib_dev = dev_get_drvdata(&adev->dev);
  
-+	mana_gd_deregister_device(&mib_dev->gc->mana_ib);
++	mana_gd_destroy_queue(mib_dev->gc, mib_dev->fatal_err_eq);
++	mana_ib_destroy_adapter(mib_dev);
+ 	mana_gd_deregister_device(&mib_dev->gc->mana_ib);
  	ib_unregister_device(&mib_dev->ib_dev);
  	ib_dealloc_device(&mib_dev->ib_dev);
- }
 diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 189e774cdab6..2c4e3c496644 100644
+index 2c4e3c496644..1b1a8670d0fa 100644
 --- a/drivers/infiniband/hw/mana/main.c
 +++ b/drivers/infiniband/hw/mana/main.c
-@@ -8,7 +8,7 @@
- void mana_ib_uncfg_vport(struct mana_ib_dev *mib_dev, struct mana_ib_pd *pd,
- 			 u32 port)
+@@ -504,3 +504,98 @@ int mana_ib_query_gid(struct ib_device *ibdev, u32 port, int index,
+ void mana_ib_disassociate_ucontext(struct ib_ucontext *ibcontext)
  {
--	struct gdma_dev *gd = mib_dev->gdma_dev;
-+	struct gdma_dev *gd = &mib_dev->gc->mana;
- 	struct mana_port_context *mpc;
- 	struct net_device *ndev;
- 	struct mana_context *mc;
-@@ -32,7 +32,7 @@ int mana_ib_cfg_vport(struct mana_ib_dev *mib_dev, u32 port,
- 		      struct mana_ib_pd *pd,
- 		      u32 doorbell_id)
- {
--	struct gdma_dev *mdev = mib_dev->gdma_dev;
-+	struct gdma_dev *mdev = &mib_dev->gc->mana;
- 	struct mana_port_context *mpc;
- 	struct mana_context *mc;
- 	struct net_device *ndev;
-@@ -81,17 +81,16 @@ int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
- 	struct gdma_create_pd_req req = {};
- 	enum gdma_pd_flags flags = 0;
- 	struct mana_ib_dev *mib_dev;
--	struct gdma_dev *mdev;
+ }
 +
- 	int err;
- 
- 	mib_dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	mdev = mib_dev->gdma_dev;
- 
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_PD, sizeof(req),
- 			     sizeof(resp));
- 
- 	req.flags = flags;
--	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
-+	err = mana_gd_send_request(mib_dev->gc, sizeof(req), &req,
- 				   sizeof(resp), &resp);
- 
- 	if (err || resp.hdr.status) {
-@@ -121,17 +120,15 @@ int mana_ib_dealloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
- 	struct gdma_destory_pd_resp resp = {};
- 	struct gdma_destroy_pd_req req = {};
- 	struct mana_ib_dev *mib_dev;
--	struct gdma_dev *mdev;
- 	int err;
- 
- 	mib_dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	mdev = mib_dev->gdma_dev;
- 
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_PD, sizeof(req),
- 			     sizeof(resp));
- 
- 	req.pd_handle = pd->pd_handle;
--	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
-+	err = mana_gd_send_request(mib_dev->gc, sizeof(req), &req,
- 				   sizeof(resp), &resp);
- 
- 	if (err || resp.hdr.status) {
-@@ -207,17 +204,13 @@ int mana_ib_alloc_ucontext(struct ib_ucontext *ibcontext,
- 		container_of(ibcontext, struct mana_ib_ucontext, ibucontext);
- 	struct ib_device *ibdev = ibcontext->device;
- 	struct mana_ib_dev *mib_dev;
--	struct gdma_context *gc;
--	struct gdma_dev *dev;
- 	int doorbell_page;
- 	int ret;
- 
- 	mib_dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	dev = mib_dev->gdma_dev;
--	gc = dev->gdma_context;
- 
- 	/* Allocate a doorbell page index */
--	ret = mana_gd_allocate_doorbell_page(gc, &doorbell_page);
-+	ret = mana_gd_allocate_doorbell_page(mib_dev->gc, &doorbell_page);
- 	if (ret) {
- 		ibdev_dbg(ibdev, "Failed to allocate doorbell page %d\n", ret);
- 		return ret;
-@@ -236,20 +229,17 @@ void mana_ib_dealloc_ucontext(struct ib_ucontext *ibcontext)
- 		container_of(ibcontext, struct mana_ib_ucontext, ibucontext);
- 	struct ib_device *ibdev = ibcontext->device;
- 	struct mana_ib_dev *mib_dev;
--	struct gdma_context *gc;
- 	int ret;
- 
- 	mib_dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mib_dev->gdma_dev->gdma_context;
- 
--	ret = mana_gd_destroy_doorbell_page(gc, mana_ucontext->doorbell);
-+	ret = mana_gd_destroy_doorbell_page(mib_dev->gc, mana_ucontext->doorbell);
- 	if (ret)
- 		ibdev_dbg(ibdev, "Failed to destroy doorbell page %d\n", ret);
- }
- 
- static int
- mana_ib_gd_first_dma_region(struct mana_ib_dev *mib_dev,
--			    struct gdma_context *gc,
- 			    struct gdma_create_dma_region_req *create_req,
- 			    size_t num_pages, mana_handle_t *gdma_region,
- 			    u32 expected_status)
-@@ -262,7 +252,7 @@ mana_ib_gd_first_dma_region(struct mana_ib_dev *mib_dev,
- 		struct_size(create_req, page_addr_list, num_pages);
- 	create_req->page_addr_list_len = num_pages;
- 
--	err = mana_gd_send_request(gc, create_req_msg_size, create_req,
-+	err = mana_gd_send_request(mib_dev->gc, create_req_msg_size, create_req,
- 				   sizeof(create_resp), &create_resp);
- 	if (err || create_resp.hdr.status != expected_status) {
- 		ibdev_dbg(&mib_dev->ib_dev,
-@@ -282,7 +272,7 @@ mana_ib_gd_first_dma_region(struct mana_ib_dev *mib_dev,
- }
- 
- static int
--mana_ib_gd_add_dma_region(struct mana_ib_dev *mib_dev, struct gdma_context *gc,
-+mana_ib_gd_add_dma_region(struct mana_ib_dev *mib_dev,
- 			  struct gdma_dma_region_add_pages_req *add_req,
- 			  unsigned int num_pages, u32 expected_status)
- {
-@@ -295,7 +285,7 @@ mana_ib_gd_add_dma_region(struct mana_ib_dev *mib_dev, struct gdma_context *gc,
- 			     add_req_msg_size, sizeof(add_resp));
- 	add_req->page_addr_list_len = num_pages;
- 
--	err = mana_gd_send_request(gc, add_req_msg_size, add_req,
-+	err = mana_gd_send_request(mib_dev->gc, add_req_msg_size, add_req,
- 				   sizeof(add_resp), &add_resp);
- 	if (err || add_resp.hdr.status != expected_status) {
- 		ibdev_dbg(&mib_dev->ib_dev,
-@@ -323,18 +313,14 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,
- 	struct ib_block_iter biter;
- 	size_t max_pgs_add_cmd = 0;
- 	size_t max_pgs_create_cmd;
--	struct gdma_context *gc;
- 	size_t num_pages_total;
--	struct gdma_dev *mdev;
- 	unsigned long page_sz;
- 	unsigned int tail = 0;
- 	u64 *page_addr_list;
- 	void *request_buf;
- 	int err;
- 
--	mdev = mib_dev->gdma_dev;
--	gc = mdev->gdma_context;
--	hwc = gc->hwc.driver_data;
-+	hwc = mib_dev->gc->hwc.driver_data;
- 
- 	/* Hardware requires dma region to align to chosen page size */
- 	page_sz = ib_umem_find_best_pgsz(umem, PAGE_SZ_BM, 0);
-@@ -388,7 +374,7 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,
- 
- 		if (!num_pages_processed) {
- 			/* First create message */
--			err = mana_ib_gd_first_dma_region(mib_dev, gc, create_req,
-+			err = mana_ib_gd_first_dma_region(mib_dev, create_req,
- 							  tail, gdma_region,
- 							  expected_status);
- 			if (err)
-@@ -403,7 +389,7 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,
- 			page_addr_list = add_req->page_addr_list;
- 		} else {
- 			/* Subsequent create messages */
--			err = mana_ib_gd_add_dma_region(mib_dev, gc, add_req, tail,
-+			err = mana_ib_gd_add_dma_region(mib_dev, add_req, tail,
- 							expected_status);
- 			if (err)
- 				break;
-@@ -429,13 +415,9 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,
- 
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *mib_dev, u64 gdma_region)
- {
--	struct gdma_dev *mdev = mib_dev->gdma_dev;
--	struct gdma_context *gc;
--
--	gc = mdev->gdma_context;
- 	ibdev_dbg(&mib_dev->ib_dev, "destroy dma region 0x%llx\n", gdma_region);
- 
--	return mana_gd_destroy_dma_region(gc, gdma_region);
-+	return mana_gd_destroy_dma_region(mib_dev->gc, gdma_region);
- }
- 
- int mana_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vma)
-@@ -444,13 +426,11 @@ int mana_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vma)
- 		container_of(ibcontext, struct mana_ib_ucontext, ibucontext);
- 	struct ib_device *ibdev = ibcontext->device;
- 	struct mana_ib_dev *mib_dev;
--	struct gdma_context *gc;
- 	phys_addr_t pfn;
- 	pgprot_t prot;
- 	int ret;
- 
- 	mib_dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mib_dev->gdma_dev->gdma_context;
- 
- 	if (vma->vm_pgoff != 0) {
- 		ibdev_dbg(ibdev, "Unexpected vm_pgoff %lu\n", vma->vm_pgoff);
-@@ -458,18 +438,18 @@ int mana_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vma)
- 	}
- 
- 	/* Map to the page indexed by ucontext->doorbell */
--	pfn = (gc->phys_db_page_base +
--	       gc->db_page_size * mana_ucontext->doorbell) >>
-+	pfn = (mib_dev->gc->phys_db_page_base +
-+	       mib_dev->gc->db_page_size * mana_ucontext->doorbell) >>
- 	      PAGE_SHIFT;
- 	prot = pgprot_writecombine(vma->vm_page_prot);
- 
--	ret = rdma_user_mmap_io(ibcontext, vma, pfn, gc->db_page_size, prot,
--				NULL);
-+	ret = rdma_user_mmap_io(ibcontext, vma, pfn, mib_dev->gc->db_page_size,
-+				prot, NULL);
- 	if (ret)
- 		ibdev_dbg(ibdev, "can't rdma_user_mmap_io ret %d\n", ret);
- 	else
- 		ibdev_dbg(ibdev, "mapped I/O pfn 0x%llx page_size %u, ret %d\n",
--			  pfn, gc->db_page_size, ret);
-+			  pfn, mib_dev->gc->db_page_size, ret);
- 
- 	return ret;
- }
++int mana_ib_destroy_adapter(struct mana_ib_dev *mib_dev)
++{
++	struct mana_ib_destroy_adapter_resp resp = {};
++	struct mana_ib_destroy_adapter_req req = {};
++	struct gdma_context *gc;
++	int err;
++
++	gc = mib_dev->gc;
++
++	mana_gd_init_req_hdr(&req.hdr, MANA_IB_DESTROY_ADAPTER, sizeof(req),
++			     sizeof(resp));
++	req.adapter = mib_dev->adapter_handle;
++	req.hdr.dev_id = gc->mana_ib.dev_id;
++
++	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
++
++	if (err) {
++		ibdev_err(&mib_dev->ib_dev, "Failed to destroy adapter err %d", err);
++		return err;
++	}
++
++	return 0;
++}
++
++int mana_ib_create_adapter(struct mana_ib_dev *mib_dev)
++{
++	struct mana_ib_create_adapter_resp resp = {};
++	struct mana_ib_create_adapter_req req = {};
++	struct gdma_context *gc;
++	int err;
++
++	gc = mib_dev->gc;
++
++	mana_gd_init_req_hdr(&req.hdr, MANA_IB_CREATE_ADAPTER, sizeof(req),
++			     sizeof(resp));
++	req.notify_eq_id = mib_dev->fatal_err_eq->id;
++	req.hdr.dev_id = gc->mana_ib.dev_id;
++
++	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
++
++	if (err) {
++		ibdev_err(&mib_dev->ib_dev, "Failed to create adapter err %d",
++			  err);
++		return err;
++	}
++
++	mib_dev->adapter_handle = resp.adapter;
++
++	return 0;
++}
++
++static void mana_ib_soc_event_handler(void *ctx, struct gdma_queue *queue,
++				      struct gdma_event *event)
++{
++	struct mana_ib_dev *mib_dev = (struct mana_ib_dev *)ctx;
++
++	switch (event->type) {
++	case GDMA_EQE_SOC_EVENT_NOTIFICATION:
++		ibdev_info(&mib_dev->ib_dev, "Received SOC Notification");
++		break;
++	case GDMA_EQE_SOC_EVENT_TEST:
++		ibdev_info(&mib_dev->ib_dev, "Received SoC Test");
++		break;
++	default:
++		ibdev_dbg(&mib_dev->ib_dev, "Received unsolicited evt %d",
++			  event->type);
++	}
++}
++
++int mana_ib_create_error_eq(struct mana_ib_dev *mib_dev)
++{
++	struct gdma_queue_spec spec = {};
++	int err;
++
++	spec.type = GDMA_EQ;
++	spec.monitor_avl_buf = false;
++	spec.queue_size = EQ_SIZE;
++	spec.eq.callback = mana_ib_soc_event_handler;
++	spec.eq.context = mib_dev;
++	spec.eq.log2_throttle_limit = LOG2_EQ_THROTTLE;
++	spec.eq.msix_allocated = true;
++	spec.eq.msix_index = 0;
++	spec.doorbell = mib_dev->gc->mana_ib.doorbell;
++	spec.pdid = mib_dev->gc->mana_ib.pdid;
++
++	err = mana_gd_create_mana_eq(&mib_dev->gc->mana_ib, &spec,
++				     &mib_dev->fatal_err_eq);
++	if (err)
++		return err;
++
++	mib_dev->fatal_err_eq->eq.disable_needed = true;
++
++	return 0;
++}
 diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index ee4efd0af278..3a2ba6b96f15 100644
+index 3a2ba6b96f15..8a652bccd978 100644
 --- a/drivers/infiniband/hw/mana/mana_ib.h
 +++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -30,6 +30,7 @@
- struct mana_ib_dev {
+@@ -31,6 +31,8 @@ struct mana_ib_dev {
  	struct ib_device ib_dev;
  	struct gdma_dev *gdma_dev;
-+	struct gdma_context *gc;
+ 	struct gdma_context *gc;
++	struct gdma_queue *fatal_err_eq;
++	mana_handle_t adapter_handle;
  };
  
  struct mana_ib_wq {
-diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana/mr.c
-index f6a53906204d..3106d1bce837 100644
---- a/drivers/infiniband/hw/mana/mr.c
-+++ b/drivers/infiniband/hw/mana/mr.c
-@@ -29,13 +29,10 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev *mib_dev,
- 				struct mana_ib_mr *mr,
- 				struct gdma_create_mr_params *mr_params)
- {
--	struct gdma_dev *mdev = mib_dev->gdma_dev;
- 	struct gdma_create_mr_response resp = {};
- 	struct gdma_create_mr_request req = {};
--	struct gdma_context *gc;
- 	int err;
+@@ -93,6 +95,31 @@ struct mana_ib_rwq_ind_table {
+ 	struct ib_rwq_ind_table ib_ind_table;
+ };
  
--	gc = mdev->gdma_context;
++enum mana_ib_command_code {
++	MANA_IB_CREATE_ADAPTER  = 0x30002,
++	MANA_IB_DESTROY_ADAPTER = 0x30003,
++};
++
++struct mana_ib_create_adapter_req {
++	struct gdma_req_hdr hdr;
++	u32 notify_eq_id;
++	u32 reserved;
++}; /*HW Data */
++
++struct mana_ib_create_adapter_resp {
++	struct gdma_resp_hdr hdr;
++	mana_handle_t adapter;
++}; /* HW Data */
++
++struct mana_ib_destroy_adapter_req {
++	struct gdma_req_hdr hdr;
++	mana_handle_t adapter;
++}; /*HW Data */
++
++struct mana_ib_destroy_adapter_resp {
++	struct gdma_resp_hdr hdr;
++}; /* HW Data */
++
+ int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,
+ 				 struct ib_umem *umem,
+ 				 mana_handle_t *gdma_region);
+@@ -161,4 +188,10 @@ int mana_ib_query_gid(struct ib_device *ibdev, u32 port, int index,
  
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_MR, sizeof(req),
- 			     sizeof(resp));
-@@ -56,7 +53,8 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev *mib_dev,
- 		return -EINVAL;
- 	}
+ void mana_ib_disassociate_ucontext(struct ib_ucontext *ibcontext);
  
--	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
-+	err = mana_gd_send_request(mib_dev->gc, sizeof(req), &req,
-+				   sizeof(resp), &resp);
- 
- 	if (err || resp.hdr.status) {
- 		ibdev_dbg(&mib_dev->ib_dev, "Failed to create mr %d, %u", err,
-@@ -77,22 +75,19 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev *mib_dev,
- static int mana_ib_gd_destroy_mr(struct mana_ib_dev *mib_dev, u64 mr_handle)
- {
- 	struct gdma_destroy_mr_response resp = {};
--	struct gdma_dev *mdev = mib_dev->gdma_dev;
- 	struct gdma_destroy_mr_request req = {};
--	struct gdma_context *gc;
- 	int err;
- 
--	gc = mdev->gdma_context;
--
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_MR, sizeof(req),
- 			     sizeof(resp));
- 
- 	req.mr_handle = mr_handle;
- 
--	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
-+	err = mana_gd_send_request(mib_dev->gc, sizeof(req), &req,
-+				   sizeof(resp), &resp);
- 	if (err || resp.hdr.status) {
--		dev_err(gc->dev, "Failed to destroy MR: %d, 0x%x\n", err,
--			resp.hdr.status);
-+		dev_err(mib_dev->gc->dev, "Failed to destroy MR: %d, 0x%x\n",
-+			err, resp.hdr.status);
- 		if (!err)
- 			err = -EPROTO;
- 		return err;
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index 2e3a57123ed7..874cfd794825 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -21,7 +21,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *mib_dev,
- 	u32 req_buf_size;
- 	int i, err;
- 
--	mdev = mib_dev->gdma_dev;
-+	mdev = &mib_dev->gc->mana;
- 	gc = mdev->gdma_context;
- 
- 	req_buf_size =
-@@ -102,7 +102,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 	struct ib_rwq_ind_table *ind_tbl = attr->rwq_ind_tbl;
- 	struct mana_ib_create_qp_rss_resp resp = {};
- 	struct mana_ib_create_qp_rss ucmd = {};
--	struct gdma_dev *gd = mib_dev->gdma_dev;
-+	struct gdma_dev *gd = &mib_dev->gc->mana;
- 	mana_handle_t *mana_ind_table;
- 	struct mana_port_context *mpc;
- 	struct mana_context *mc;
-@@ -267,7 +267,7 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 		rdma_udata_to_drv_context(udata, struct mana_ib_ucontext,
- 					  ibucontext);
- 	struct mana_ib_create_qp_resp resp = {};
--	struct gdma_dev *gd = mib_dev->gdma_dev;
-+	struct gdma_dev *gd = &mib_dev->gc->mana;
- 	struct mana_ib_create_qp ucmd = {};
- 	struct mana_obj_spec wq_spec = {};
- 	struct mana_obj_spec cq_spec = {};
-@@ -437,7 +437,7 @@ static int mana_ib_destroy_qp_rss(struct mana_ib_qp *qp,
- {
- 	struct mana_ib_dev *mib_dev =
- 		container_of(qp->ibqp.device, struct mana_ib_dev, ib_dev);
--	struct gdma_dev *gd = mib_dev->gdma_dev;
-+	struct gdma_dev *gd = &mib_dev->gc->mana;
- 	struct mana_port_context *mpc;
- 	struct mana_context *mc;
- 	struct net_device *ndev;
-@@ -464,7 +464,7 @@ static int mana_ib_destroy_qp_raw(struct mana_ib_qp *qp, struct ib_udata *udata)
- {
- 	struct mana_ib_dev *mib_dev =
- 		container_of(qp->ibqp.device, struct mana_ib_dev, ib_dev);
--	struct gdma_dev *gd = mib_dev->gdma_dev;
-+	struct gdma_dev *gd = &mib_dev->gc->mana;
- 	struct ib_pd *ibpd = qp->ibqp.pd;
- 	struct mana_port_context *mpc;
- 	struct mana_context *mc;
++int mana_ib_create_error_eq(struct mana_ib_dev *mib_dev);
++
++int mana_ib_create_adapter(struct mana_ib_dev *mib_dev);
++
++int mana_ib_destroy_adapter(struct mana_ib_dev *mib_dev);
++
+ #endif
 diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 8f3f78b68592..9fa7a2d6c2b2 100644
+index 9fa7a2d6c2b2..55e194c9d84e 100644
 --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -139,6 +139,9 @@ static int mana_gd_detect_devices(struct pci_dev *pdev)
- 		if (dev_type == GDMA_DEVICE_MANA) {
- 			gc->mana.gdma_context = gc;
- 			gc->mana.dev_id = dev;
-+		} else if (dev_type == GDMA_DEVICE_MANA_IB) {
-+			gc->mana_ib.dev_id = dev;
-+			gc->mana_ib.gdma_context = gc;
+@@ -185,7 +185,8 @@ void mana_gd_free_memory(struct gdma_mem_info *gmi)
+ }
+ 
+ static int mana_gd_create_hw_eq(struct gdma_context *gc,
+-				struct gdma_queue *queue)
++				struct gdma_queue *queue,
++				u32 doorbell, u32 pdid)
+ {
+ 	struct gdma_create_queue_resp resp = {};
+ 	struct gdma_create_queue_req req = {};
+@@ -199,8 +200,8 @@ static int mana_gd_create_hw_eq(struct gdma_context *gc,
+ 
+ 	req.hdr.dev_id = queue->gdma_dev->dev_id;
+ 	req.type = queue->type;
+-	req.pdid = queue->gdma_dev->pdid;
+-	req.doolbell_id = queue->gdma_dev->doorbell;
++	req.pdid = pdid;
++	req.doolbell_id = doorbell;
+ 	req.gdma_region = queue->mem_info.dma_region_handle;
+ 	req.queue_size = queue->queue_size;
+ 	req.log2_throttle_limit = queue->eq.log2_throttle_limit;
+@@ -371,53 +372,51 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 	}
+ }
+ 
+-static void mana_gd_process_eq_events(void *arg)
++static void mana_gd_process_eq_events(struct list_head *eq_list)
+ {
+ 	u32 owner_bits, new_bits, old_bits;
+ 	union gdma_eqe_info eqe_info;
+ 	struct gdma_eqe *eq_eqe_ptr;
+-	struct gdma_queue *eq = arg;
++	struct gdma_queue *eq;
+ 	struct gdma_context *gc;
+ 	struct gdma_eqe *eqe;
+ 	u32 head, num_eqe;
+ 	int i;
+ 
+-	gc = eq->gdma_dev->gdma_context;
+-
+-	num_eqe = eq->queue_size / GDMA_EQE_SIZE;
+-	eq_eqe_ptr = eq->queue_mem_ptr;
+-
+-	/* Process up to 5 EQEs at a time, and update the HW head. */
+-	for (i = 0; i < 5; i++) {
+-		eqe = &eq_eqe_ptr[eq->head % num_eqe];
+-		eqe_info.as_uint32 = eqe->eqe_info;
+-		owner_bits = eqe_info.owner_bits;
+-
+-		old_bits = (eq->head / num_eqe - 1) & GDMA_EQE_OWNER_MASK;
+-		/* No more entries */
+-		if (owner_bits == old_bits)
+-			break;
+-
+-		new_bits = (eq->head / num_eqe) & GDMA_EQE_OWNER_MASK;
+-		if (owner_bits != new_bits) {
+-			dev_err(gc->dev, "EQ %d: overflow detected\n", eq->id);
+-			break;
++	list_for_each_entry_rcu(eq, eq_list, entry) {
++		gc = eq->gdma_dev->gdma_context;
++
++		num_eqe = eq->queue_size / GDMA_EQE_SIZE;
++		eq_eqe_ptr = eq->queue_mem_ptr;
++		/* Process up to 5 EQEs at a time, and update the HW head. */
++		for (i = 0; i < 5; i++) {
++			eqe = &eq_eqe_ptr[eq->head % num_eqe];
++			eqe_info.as_uint32 = eqe->eqe_info;
++			owner_bits = eqe_info.owner_bits;
++
++			old_bits = (eq->head / num_eqe - 1) & GDMA_EQE_OWNER_MASK;
++			/* No more entries */
++			if (owner_bits == old_bits)
++				break;
++
++			new_bits = (eq->head / num_eqe) & GDMA_EQE_OWNER_MASK;
++			if (owner_bits != new_bits) {
++				dev_err(gc->dev, "EQ %d: overflow detected\n",
++					eq->id);
++				break;
++			}
++			/* Per GDMA spec, rmb is necessary after checking owner_bits, before
++			 * reading eqe.
++			 */
++			rmb();
++			mana_gd_process_eqe(eq);
++			eq->head++;
  		}
+ 
+-		/* Per GDMA spec, rmb is necessary after checking owner_bits, before
+-		 * reading eqe.
+-		 */
+-		rmb();
+-
+-		mana_gd_process_eqe(eq);
+-
+-		eq->head++;
++		head = eq->head % (num_eqe << GDMA_EQE_OWNER_BITS);
++		mana_gd_ring_doorbell(gc, eq->gdma_dev->doorbell, eq->type,
++				      eq->id, head, SET_ARM_BIT);
+ 	}
+-
+-	head = eq->head % (num_eqe << GDMA_EQE_OWNER_BITS);
+-
+-	mana_gd_ring_doorbell(gc, eq->gdma_dev->doorbell, eq->type, eq->id,
+-			      head, SET_ARM_BIT);
+ }
+ 
+ static int mana_gd_register_irq(struct gdma_queue *queue,
+@@ -435,44 +434,47 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
+ 	gc = gd->gdma_context;
+ 	r = &gc->msix_resource;
+ 	dev = gc->dev;
++	msi_index = spec->eq.msix_index;
+ 
+ 	spin_lock_irqsave(&r->lock, flags);
+ 
+-	msi_index = find_first_zero_bit(r->map, r->size);
+-	if (msi_index >= r->size || msi_index >= gc->num_msix_usable) {
+-		err = -ENOSPC;
+-	} else {
+-		bitmap_set(r->map, msi_index, 1);
+-		queue->eq.msix_index = msi_index;
+-	}
+-
+-	spin_unlock_irqrestore(&r->lock, flags);
++	if (!spec->eq.msix_allocated) {
++		msi_index = find_first_zero_bit(r->map, r->size);
+ 
+-	if (err) {
+-		dev_err(dev, "Register IRQ err:%d, msi:%u rsize:%u, nMSI:%u",
+-			err, msi_index, r->size, gc->num_msix_usable);
++		if (msi_index >= r->size ||
++		    msi_index >= gc->num_msix_usable)
++			err = -ENOSPC;
++		else
++			bitmap_set(r->map, msi_index, 1);
+ 
+-		return err;
++		if (err) {
++			dev_err(dev, "Register IRQ err:%d, msi:%u rsize:%u, nMSI:%u",
++				err, msi_index, r->size, gc->num_msix_usable);
++				goto out;
++		}
  	}
  
-@@ -940,6 +943,7 @@ int mana_gd_register_device(struct gdma_dev *gd)
++	queue->eq.msix_index = msi_index;
+ 	gic = &gc->irq_contexts[msi_index];
  
- 	return 0;
+-	WARN_ON(gic->handler || gic->arg);
+-
+-	gic->arg = queue;
++	list_add_rcu(&queue->entry, &gic->eq_list);
+ 
+ 	gic->handler = mana_gd_process_eq_events;
+ 
+-	return 0;
++out:
++	spin_unlock_irqrestore(&r->lock, flags);
++	return err;
  }
-+EXPORT_SYMBOL(mana_gd_register_device);
  
- int mana_gd_deregister_device(struct gdma_dev *gd)
+-static void mana_gd_deregiser_irq(struct gdma_queue *queue)
++static void mana_gd_deregister_irq(struct gdma_queue *queue)
  {
-@@ -970,6 +974,7 @@ int mana_gd_deregister_device(struct gdma_dev *gd)
+ 	struct gdma_dev *gd = queue->gdma_dev;
+ 	struct gdma_irq_context *gic;
+ 	struct gdma_context *gc;
+ 	struct gdma_resource *r;
+ 	unsigned int msix_index;
++	struct list_head *p, *n;
++	struct gdma_queue *eq;
+ 	unsigned long flags;
  
+ 	gc = gd->gdma_context;
+@@ -483,14 +485,23 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
+ 	if (WARN_ON(msix_index >= gc->num_msix_usable))
+ 		return;
+ 
++	spin_lock_irqsave(&r->lock, flags);
++
+ 	gic = &gc->irq_contexts[msix_index];
+-	gic->handler = NULL;
+-	gic->arg = NULL;
++	list_for_each_safe(p, n, &gic->eq_list) {
++		eq = list_entry(p, struct gdma_queue, entry);
++		if (queue == eq) {
++			list_del(&eq->entry);
++			break;
++		}
++	}
+ 
+-	spin_lock_irqsave(&r->lock, flags);
+-	bitmap_clear(r->map, msix_index, 1);
+-	spin_unlock_irqrestore(&r->lock, flags);
++	if (list_empty(&gic->eq_list)) {
++		gic->handler = NULL;
++		bitmap_clear(r->map, msix_index, 1);
++	}
+ 
++	spin_unlock_irqrestore(&r->lock, flags);
+ 	queue->eq.msix_index = INVALID_PCI_MSIX_INDEX;
+ }
+ 
+@@ -553,7 +564,7 @@ static void mana_gd_destroy_eq(struct gdma_context *gc, bool flush_evenets,
+ 			dev_warn(gc->dev, "Failed to flush EQ: %d\n", err);
+ 	}
+ 
+-	mana_gd_deregiser_irq(queue);
++	mana_gd_deregister_irq(queue);
+ 
+ 	if (queue->eq.disable_needed)
+ 		mana_gd_disable_queue(queue);
+@@ -568,7 +579,7 @@ static int mana_gd_create_eq(struct gdma_dev *gd,
+ 	u32 log2_num_entries;
+ 	int err;
+ 
+-	queue->eq.msix_index = INVALID_PCI_MSIX_INDEX;
++	queue->eq.msix_index = spec->eq.msix_index;
+ 
+ 	log2_num_entries = ilog2(queue->queue_size / GDMA_EQE_SIZE);
+ 
+@@ -590,7 +601,8 @@ static int mana_gd_create_eq(struct gdma_dev *gd,
+ 	queue->eq.log2_throttle_limit = spec->eq.log2_throttle_limit ?: 1;
+ 
+ 	if (create_hwq) {
+-		err = mana_gd_create_hw_eq(gc, queue);
++		err = mana_gd_create_hw_eq(gc, queue,
++					   spec->doorbell, spec->pdid);
+ 		if (err)
+ 			goto out;
+ 
+@@ -800,6 +812,7 @@ int mana_gd_create_mana_eq(struct gdma_dev *gd,
+ 	kfree(queue);
  	return err;
  }
-+EXPORT_SYMBOL(mana_gd_deregister_device);
++EXPORT_SYMBOL(mana_gd_create_mana_eq);
  
- u32 mana_gd_wq_avail_space(struct gdma_queue *wq)
+ int mana_gd_create_mana_wq_cq(struct gdma_dev *gd,
+ 			      const struct gdma_queue_spec *spec,
+@@ -876,6 +889,7 @@ void mana_gd_destroy_queue(struct gdma_context *gc, struct gdma_queue *queue)
+ 	mana_gd_free_memory(gmi);
+ 	kfree(queue);
+ }
++EXPORT_SYMBOL(mana_gd_destroy_queue);
+ 
+ int mana_gd_verify_vf_version(struct pci_dev *pdev)
  {
+@@ -1193,7 +1207,7 @@ static irqreturn_t mana_gd_intr(int irq, void *arg)
+ 	struct gdma_irq_context *gic = arg;
+ 
+ 	if (gic->handler)
+-		gic->handler(gic->arg);
++		gic->handler(&gic->eq_list);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -1246,7 +1260,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 	for (i = 0; i < nvec; i++) {
+ 		gic = &gc->irq_contexts[i];
+ 		gic->handler = NULL;
+-		gic->arg = NULL;
++		INIT_LIST_HEAD(&gic->eq_list);
+ 
+ 		if (!i)
+ 			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_hwc@pci:%s",
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index a499e460594b..d2ba7de8b512 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -1167,6 +1167,9 @@ static int mana_create_eq(struct mana_context *ac)
+ 	spec.eq.callback = NULL;
+ 	spec.eq.context = ac->eqs;
+ 	spec.eq.log2_throttle_limit = LOG2_EQ_THROTTLE;
++	spec.eq.msix_allocated = false;
++	spec.doorbell = gd->doorbell;
++	spec.pdid = gd->pdid;
+ 
+ 	for (i = 0; i < gc->max_num_queues; i++) {
+ 		err = mana_gd_create_mana_eq(gd, &spec, &ac->eqs[i].eq);
 diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 96c120160f15..e2b212dd722b 100644
+index e2b212dd722b..aee8e8fa1ea6 100644
 --- a/include/net/mana/gdma.h
 +++ b/include/net/mana/gdma.h
-@@ -63,6 +63,7 @@ enum {
- 	GDMA_DEVICE_NONE	= 0,
- 	GDMA_DEVICE_HWC		= 1,
- 	GDMA_DEVICE_MANA	= 2,
-+	GDMA_DEVICE_MANA_IB	= 3,
+@@ -57,6 +57,10 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
++
++	/* IB NiC  Events start at 176*/
++	GDMA_EQE_SOC_EVENT_NOTIFICATION = 176,
++	GDMA_EQE_SOC_EVENT_TEST,
  };
  
- struct gdma_resource {
-@@ -384,6 +385,8 @@ struct gdma_context {
+ enum {
+@@ -291,6 +295,7 @@ struct gdma_queue {
  
- 	/* Azure network adapter */
- 	struct gdma_dev		mana;
-+	/* rdma device */
-+	struct gdma_dev		mana_ib;
+ 	u32 head;
+ 	u32 tail;
++	struct list_head entry;
+ 
+ 	/* Extra fields specific to EQ/CQ. */
+ 	union {
+@@ -318,6 +323,8 @@ struct gdma_queue_spec {
+ 	enum gdma_queue_type type;
+ 	bool monitor_avl_buf;
+ 	unsigned int queue_size;
++	u32 doorbell;
++	u32 pdid;
+ 
+ 	/* Extra fields specific to EQ/CQ. */
+ 	union {
+@@ -326,6 +333,8 @@ struct gdma_queue_spec {
+ 			void *context;
+ 
+ 			unsigned long log2_throttle_limit;
++			bool msix_allocated;
++			unsigned int msix_index;
+ 		} eq;
+ 
+ 		struct {
+@@ -341,8 +350,8 @@ struct gdma_queue_spec {
+ #define MANA_IRQ_NAME_SZ 32
+ 
+ struct gdma_irq_context {
+-	void (*handler)(void *arg);
+-	void *arg;
++	void (*handler)(struct list_head *arg);
++	struct list_head eq_list;
+ 	char name[MANA_IRQ_NAME_SZ];
  };
  
- #define MAX_NUM_GDMA_DEVICES	4
 -- 
 2.25.1
 
