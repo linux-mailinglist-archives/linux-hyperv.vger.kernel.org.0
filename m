@@ -2,244 +2,274 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A25C76299A
-	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jul 2023 05:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F9BB762A4E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 26 Jul 2023 06:28:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbjGZD5d (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 25 Jul 2023 23:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52406 "EHLO
+        id S232003AbjGZE2R (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 26 Jul 2023 00:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231330AbjGZD5O (ORCPT
+        with ESMTP id S232065AbjGZE1x (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 25 Jul 2023 23:57:14 -0400
+        Wed, 26 Jul 2023 00:27:53 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 345A326A8;
-        Tue, 25 Jul 2023 20:57:10 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1174)
-        id C24AC2380B22; Tue, 25 Jul 2023 20:57:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C24AC2380B22
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1690343829;
-        bh=cn29Y0IhWYYGeE2rse2hah4n3/yrSw8p/EmKJrmtne4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9fJLuJRRqHlrXnpClK7m7nbWtxQn8wG9JhxPD1ZCfHxRQd0PtW0mannW6frSRskJ
-         2q8asxySL+vauAaJEhZHGrNS68M0wSDovA2WDG1TfbThMiP5vmIXSCE2/jAqBj64N5
-         tCNyvb+7f8Wj6NlP/zTz8uzEktFsVaRR1S7ogeQM=
-From:   sharmaajay@linuxonhyperv.com
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     linux-rdma@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ajay Sharma <sharmaajay@microsoft.com>
-Subject: [Patch v2 5/5] RDMA/mana_ib : Query adapter capabilities
-Date:   Tue, 25 Jul 2023 20:57:00 -0700
-Message-Id: <1690343820-20188-6-git-send-email-sharmaajay@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1690343820-20188-1-git-send-email-sharmaajay@linuxonhyperv.com>
-References: <1690343820-20188-1-git-send-email-sharmaajay@linuxonhyperv.com>
-X-Spam-Status: No, score=-9.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
-        version=3.4.6
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A22082D48;
+        Tue, 25 Jul 2023 21:26:52 -0700 (PDT)
+Received: from [10.171.20.65] (unknown [167.220.238.65])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 828E22380B17;
+        Tue, 25 Jul 2023 21:26:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 828E22380B17
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1690345612;
+        bh=eSSFE37BQmdV3L+lRN6zp4WJzj2Rij++NeZzBS9Ss18=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=NUbkG6N/qUDaTVwL9jnj7ui1eZdAUrlBVfgO9lR4L4yeg6xMsLL+Mke/nHxZAIWwe
+         LMTsUWfsjCwmyBGhvkOh85DG1KQECCboYHoQTuMQwEop/imCW01vVXFQzfGk/gDLcp
+         7xCt93YJAuZOfKXJpuXDmP3NGKu/RPKcC0moGjPg=
+Message-ID: <4d0715a5-70a8-9667-ccf0-de9bc933bb04@linux.microsoft.com>
+Date:   Wed, 26 Jul 2023 09:56:45 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 7/9] x86/hyperv: Initialize cpu and memory for SEV-SNP
+ enlightened guest
+Content-Language: en-US
+To:     Tianyu Lan <ltykernel@gmail.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        daniel.lezcano@linaro.org, arnd@arndb.de,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, Michael Kelley <mikelley@microsoft.com>
+References: <20230718032304.136888-1-ltykernel@gmail.com>
+ <20230718032304.136888-8-ltykernel@gmail.com>
+From:   Jinank Jain <jinankjain@linux.microsoft.com>
+In-Reply-To: <20230718032304.136888-8-ltykernel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Ajay Sharma <sharmaajay@microsoft.com>
+Hi Tianyu,
 
-Query the adapter capabilities to expose to
-other clients and VF.
+On 7/18/2023 8:53 AM, Tianyu Lan wrote:
+> From: Tianyu Lan <tiala@microsoft.com>
+>
+> Hyper-V enlightened guest doesn't have boot loader support.
+> Boot Linux kernel directly from hypervisor with data (kernel
+> image, initrd and parameter page) and memory for boot up that
+> is initialized via AMD SEV PSP protocol (Please reference
+> Section 4.5 Launching a Guest of [1]).
+>
+> Kernel needs to read processor and memory info from EN_SEV_
+> SNP_PROCESSOR/MEM_INFO_ADDR address which are populated by
+> Hyper-V. The data is prepared by hypervisor via SNP_
+> LAUNCH_UPDATE with page type SNP_PAGE_TYPE_UNMEASURED and
+> Initialize smp cpu related ops, validate system memory and
+> add them into e820 table.
+>
+> [1]: https://www.amd.com/system/files/TechDocs/56860.pdf
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Tianyu Lan <tiala@microsoft.com>
+> ---
+> Change since v2:
+> 	* Update change log.
+> ---
+>   arch/x86/hyperv/ivm.c           | 93 +++++++++++++++++++++++++++++++++
+>   arch/x86/include/asm/mshyperv.h | 17 ++++++
+>   arch/x86/kernel/cpu/mshyperv.c  |  3 ++
+>   3 files changed, 113 insertions(+)
+>
+> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+> index b2b5cb19fac9..ede47c8264e0 100644
+> --- a/arch/x86/hyperv/ivm.c
+> +++ b/arch/x86/hyperv/ivm.c
+> @@ -18,6 +18,11 @@
+>   #include <asm/mshyperv.h>
+>   #include <asm/hypervisor.h>
+>   #include <asm/mtrr.h>
+> +#include <asm/coco.h>
+> +#include <asm/io_apic.h>
+> +#include <asm/sev.h>
+> +#include <asm/realmode.h>
+> +#include <asm/e820/api.h>
+>   
+>   #ifdef CONFIG_AMD_MEM_ENCRYPT
+>   
+> @@ -58,6 +63,8 @@ union hv_ghcb {
+>   
+>   static u16 hv_ghcb_version __ro_after_init;
+>   
+> +static u32 processor_count;
+> +
+>   u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size)
+>   {
+>   	union hv_ghcb *hv_ghcb;
+> @@ -357,6 +364,92 @@ static bool hv_is_private_mmio(u64 addr)
+>   	return false;
+>   }
+>   
+> +static __init void hv_snp_get_smp_config(unsigned int early)
+> +{
+> +	/*
+> +	 * The "early" parameter can be true only if old-style AMD
+> +	 * Opteron NUMA detection is enabled, which should never be
+> +	 * the case for an SEV-SNP guest.  See CONFIG_AMD_NUMA.
+> +	 * For safety, just do nothing if "early" is true.
+> +	 */
+> +	if (early)
+> +		return;
+> +
+> +	/*
+> +	 * There is no firmware and ACPI MADT table support in
+> +	 * in the Hyper-V SEV-SNP enlightened guest. Set smp
+> +	 * related config variable here.
+> +	 */
+> +	while (num_processors < processor_count) {
+> +		early_per_cpu(x86_cpu_to_apicid, num_processors) = num_processors;
+> +		early_per_cpu(x86_bios_cpu_apicid, num_processors) = num_processors;
+> +		physid_set(num_processors, phys_cpu_present_map);
+> +		set_cpu_possible(num_processors, true);
+> +		set_cpu_present(num_processors, true);
+> +		num_processors++;
+> +	}
+> +}
+> +
+> +__init void hv_sev_init_mem_and_cpu(void)
+> +{
+> +	struct memory_map_entry *entry;
+> +	struct e820_entry *e820_entry;
+> +	u64 e820_end;
+> +	u64 ram_end;
+> +	u64 page;
+> +
+> +	/*
+> +	 * Hyper-V enlightened snp guest boots kernel
+> +	 * directly without bootloader. So roms, bios
+> +	 * regions and reserve resources are not available.
+> +	 * Set these callback to NULL.
+> +	 */
+> +	x86_platform.legacy.rtc			= 0;
+> +	x86_platform.legacy.reserve_bios_regions = 0;
+> +	x86_platform.set_wallclock		= set_rtc_noop;
+> +	x86_platform.get_wallclock		= get_rtc_noop;
+> +	x86_init.resources.probe_roms		= x86_init_noop;
+> +	x86_init.resources.reserve_resources	= x86_init_noop;
+> +	x86_init.mpparse.find_smp_config	= x86_init_noop;
+> +	x86_init.mpparse.get_smp_config		= hv_snp_get_smp_config;
+> +
+> +	/*
+> +	 * Hyper-V SEV-SNP enlightened guest doesn't support ioapic
+> +	 * and legacy APIC page read/write. Switch to hv apic here.
+> +	 */
+> +	disable_ioapic_support();
 
-Signed-off-by: Ajay Sharma <sharmaajay@microsoft.com>
----
- drivers/infiniband/hw/mana/device.c  |  4 +++
- drivers/infiniband/hw/mana/main.c    | 43 ++++++++++++++++++----
- drivers/infiniband/hw/mana/mana_ib.h | 53 +++++++++++++++++++++++++++-
- 3 files changed, 92 insertions(+), 8 deletions(-)
+Where are we switching hv_apic? May I am missing something here?
 
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 4077e440657a..e15da43c73a0 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -97,6 +97,10 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 		goto free_error_eq;
- 	}
- 
-+	ret = mana_ib_query_adapter_caps(mib_dev);
-+	if (ret)
-+		ibdev_dbg(&mib_dev->ib_dev, "Failed to get caps, use defaults");
-+
- 	ret = ib_register_device(&mib_dev->ib_dev, "mana_%d",
- 				 mdev->gdma_context->dev);
- 	if (ret)
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index aab1cc096824..d6cfda1d079f 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -469,21 +469,26 @@ int mana_ib_get_port_immutable(struct ib_device *ibdev, u32 port_num,
- int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_attr *props,
- 			 struct ib_udata *uhw)
- {
-+	struct mana_ib_dev *mib_dev = container_of(ibdev,
-+			struct mana_ib_dev, ib_dev);
-+
- 	props->max_qp = MANA_MAX_NUM_QUEUES;
- 	props->max_qp_wr = MAX_SEND_BUFFERS_PER_QUEUE;
--
--	/*
--	 * max_cqe could be potentially much bigger.
--	 * As this version of driver only support RAW QP, set it to the same
--	 * value as max_qp_wr
--	 */
- 	props->max_cqe = MAX_SEND_BUFFERS_PER_QUEUE;
--
- 	props->max_mr_size = MANA_IB_MAX_MR_SIZE;
- 	props->max_mr = MANA_IB_MAX_MR;
- 	props->max_send_sge = MAX_TX_WQE_SGL_ENTRIES;
- 	props->max_recv_sge = MAX_RX_WQE_SGL_ENTRIES;
- 
-+	if (mib_dev->adapter_handle) {
-+		props->max_qp = mib_dev->adapter_caps.max_qp_count;
-+		props->max_qp_wr = mib_dev->adapter_caps.max_requester_sq_size;
-+		props->max_cqe = mib_dev->adapter_caps.max_requester_sq_size;
-+		props->max_mr = mib_dev->adapter_caps.max_mr_count;
-+		props->max_send_sge = mib_dev->adapter_caps.max_send_wqe_size;
-+		props->max_recv_sge = mib_dev->adapter_caps.max_recv_wqe_size;
-+	}
-+
- 	return 0;
- }
- 
-@@ -598,3 +603,27 @@ int mana_ib_create_error_eq(struct mana_ib_dev *mib_dev)
- 
- 	return 0;
- }
-+
-+int mana_ib_query_adapter_caps(struct mana_ib_dev *mib_dev)
-+{
-+	struct mana_ib_query_adapter_caps_resp resp = {};
-+	struct mana_ib_query_adapter_caps_req req = {};
-+	int err;
-+
-+	mana_gd_init_req_hdr(&req.hdr, MANA_IB_GET_ADAPTER_CAP, sizeof(req),
-+			     sizeof(resp));
-+	req.hdr.resp.msg_version = MANA_IB__GET_ADAPTER_CAP_RESPONSE_V3;
-+	req.hdr.dev_id = mib_dev->gc->mana_ib.dev_id;
-+
-+	err = mana_gd_send_request(mib_dev->gc, sizeof(req), &req,
-+				   sizeof(resp), &resp);
-+
-+	if (err) {
-+		ibdev_err(&mib_dev->ib_dev, "Failed to query adapter caps err %d", err);
-+		return err;
-+	}
-+
-+	memcpy(&mib_dev->adapter_caps, &resp.max_sq_id,
-+			sizeof(mib_dev->adapter_caps));
-+	return 0;
-+}
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 8a652bccd978..1044358230d3 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -20,19 +20,41 @@
- 
- /* MANA doesn't have any limit for MR size */
- #define MANA_IB_MAX_MR_SIZE	U64_MAX
--
-+#define MANA_IB__GET_ADAPTER_CAP_RESPONSE_V3 3
- /*
-  * The hardware limit of number of MRs is greater than maximum number of MRs
-  * that can possibly represent in 24 bits
-  */
- #define MANA_IB_MAX_MR		0xFFFFFFu
- 
-+struct mana_ib_adapter_caps {
-+	u32 max_sq_id;
-+	u32 max_rq_id;
-+	u32 max_cq_id;
-+	u32 max_qp_count;
-+	u32 max_cq_count;
-+	u32 max_mr_count;
-+	u32 max_pd_count;
-+	u32 max_inbound_read_limit;
-+	u32 max_outbound_read_limit;
-+	u32 mw_count;
-+	u32 max_srq_count;
-+	u32 max_requester_sq_size;
-+	u32 max_responder_sq_size;
-+	u32 max_requester_rq_size;
-+	u32 max_responder_rq_size;
-+	u32 max_send_wqe_size;
-+	u32 max_recv_wqe_size;
-+	u32 max_inline_data_size;
-+};
-+
- struct mana_ib_dev {
- 	struct ib_device ib_dev;
- 	struct gdma_dev *gdma_dev;
- 	struct gdma_context *gc;
- 	struct gdma_queue *fatal_err_eq;
- 	mana_handle_t adapter_handle;
-+	struct mana_ib_adapter_caps adapter_caps;
- };
- 
- struct mana_ib_wq {
-@@ -96,6 +118,7 @@ struct mana_ib_rwq_ind_table {
- };
- 
- enum mana_ib_command_code {
-+	MANA_IB_GET_ADAPTER_CAP = 0x30001,
- 	MANA_IB_CREATE_ADAPTER  = 0x30002,
- 	MANA_IB_DESTROY_ADAPTER = 0x30003,
- };
-@@ -120,6 +143,32 @@ struct mana_ib_destroy_adapter_resp {
- 	struct gdma_resp_hdr hdr;
- }; /* HW Data */
- 
-+struct mana_ib_query_adapter_caps_req {
-+	struct gdma_req_hdr hdr;
-+}; /*HW Data */
-+
-+struct mana_ib_query_adapter_caps_resp {
-+	struct gdma_resp_hdr hdr;
-+	u32 max_sq_id;
-+	u32 max_rq_id;
-+	u32 max_cq_id;
-+	u32 max_qp_count;
-+	u32 max_cq_count;
-+	u32 max_mr_count;
-+	u32 max_pd_count;
-+	u32 max_inbound_read_limit;
-+	u32 max_outbound_read_limit;
-+	u32 mw_count;
-+	u32 max_srq_count;
-+	u32 max_requester_sq_size;
-+	u32 max_responder_sq_size;
-+	u32 max_requester_rq_size;
-+	u32 max_responder_rq_size;
-+	u32 max_send_wqe_size;
-+	u32 max_recv_wqe_size;
-+	u32 max_inline_data_size;
-+}; /* HW Data */
-+
- int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,
- 				 struct ib_umem *umem,
- 				 mana_handle_t *gdma_region);
-@@ -194,4 +243,6 @@ int mana_ib_create_adapter(struct mana_ib_dev *mib_dev);
- 
- int mana_ib_destroy_adapter(struct mana_ib_dev *mib_dev);
- 
-+int mana_ib_query_adapter_caps(struct mana_ib_dev *mib_dev);
-+
- #endif
--- 
-2.25.1
+Also in my experiments I have seen that if we don't enable I/O Apic 
+legacy serial console does not seem to work for SEV-SNP guests.
+
+> +
+> +	/* Get processor and mem info. */
+> +	processor_count = *(u32 *)__va(EN_SEV_SNP_PROCESSOR_INFO_ADDR);
+> +	entry = (struct memory_map_entry *)__va(EN_SEV_SNP_MEM_INFO_ADDR);
+> +
+> +	/*
+> +	 * There is no bootloader/EFI firmware in the SEV SNP guest.
+> +	 * E820 table in the memory just describes memory for kernel,
+> +	 * ACPI table, cmdline, boot params and ramdisk. The dynamic
+> +	 * data(e.g, vcpu number and the rest memory layout) needs to
+> +	 * be read from EN_SEV_SNP_PROCESSOR_INFO_ADDR.
+> +	 */
+> +	for (; entry->numpages != 0; entry++) {
+> +		e820_entry = &e820_table->entries[
+> +				e820_table->nr_entries - 1];
+> +		e820_end = e820_entry->addr + e820_entry->size;
+> +		ram_end = (entry->starting_gpn +
+> +			   entry->numpages) * PAGE_SIZE;
+> +
+> +		if (e820_end < entry->starting_gpn * PAGE_SIZE)
+> +			e820_end = entry->starting_gpn * PAGE_SIZE;
+> +
+> +		if (e820_end < ram_end) {
+> +			pr_info("Hyper-V: add e820 entry [mem %#018Lx-%#018Lx]\n", e820_end, ram_end - 1);
+> +			e820__range_add(e820_end, ram_end - e820_end,
+> +					E820_TYPE_RAM);
+> +			for (page = e820_end; page < ram_end; page += PAGE_SIZE)
+> +				pvalidate((unsigned long)__va(page), RMP_PG_SIZE_4K, true);
+> +		}
+> +	}
+> +}
+> +
+>   void __init hv_vtom_init(void)
+>   {
+>   	/*
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 025eda129d99..e57df590846a 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -50,6 +50,21 @@ extern bool hv_isolation_type_en_snp(void);
+>   
+>   extern union hv_ghcb * __percpu *hv_ghcb_pg;
+>   
+> +/*
+> + * Hyper-V puts processor and memory layout info
+> + * to this address in SEV-SNP enlightened guest.
+> + */
+> +#define EN_SEV_SNP_PROCESSOR_INFO_ADDR  0x802000
+> +#define EN_SEV_SNP_MEM_INFO_ADDR	0x802018
+> +
+> +struct memory_map_entry {
+> +	u64 starting_gpn;
+> +	u64 numpages;
+> +	u16 type;
+> +	u16 flags;
+> +	u32 reserved;
+> +};
+> +
+>   int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
+>   int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
+>   int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
+> @@ -234,12 +249,14 @@ void hv_ghcb_msr_read(u64 msr, u64 *value);
+>   bool hv_ghcb_negotiate_protocol(void);
+>   void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
+>   void hv_vtom_init(void);
+> +void hv_sev_init_mem_and_cpu(void);
+>   #else
+>   static inline void hv_ghcb_msr_write(u64 msr, u64 value) {}
+>   static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
+>   static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
+>   static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
+>   static inline void hv_vtom_init(void) {}
+> +static inline void hv_sev_init_mem_and_cpu(void) {}
+>   #endif
+>   
+>   extern bool hv_isolation_type_snp(void);
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index 5398fb2f4d39..d3bb921ee7fe 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -529,6 +529,9 @@ static void __init ms_hyperv_init_platform(void)
+>   	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
+>   		mark_tsc_unstable("running on Hyper-V");
+>   
+> +	if (hv_isolation_type_en_snp())
+> +		hv_sev_init_mem_and_cpu();
+> +
+>   	hardlockup_detector_disable();
+>   }
+>   
+
+Regards,
+
+Jinank
 
