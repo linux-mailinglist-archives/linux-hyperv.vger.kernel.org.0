@@ -2,61 +2,61 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6317A766AF2
-	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Jul 2023 12:46:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35813766F55
+	for <lists+linux-hyperv@lfdr.de>; Fri, 28 Jul 2023 16:22:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234928AbjG1KqJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 28 Jul 2023 06:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43140 "EHLO
+        id S235717AbjG1OWc (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 28 Jul 2023 10:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233660AbjG1KqI (ORCPT
+        with ESMTP id S235602AbjG1OWb (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 28 Jul 2023 06:46:08 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C438A0;
-        Fri, 28 Jul 2023 03:46:05 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bbc2e1c6b2so12920665ad.3;
-        Fri, 28 Jul 2023 03:46:05 -0700 (PDT)
+        Fri, 28 Jul 2023 10:22:31 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C784422B;
+        Fri, 28 Jul 2023 07:22:08 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-56401f1da3dso1030262a12.0;
+        Fri, 28 Jul 2023 07:22:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690541164; x=1691145964;
+        d=gmail.com; s=20221208; t=1690554128; x=1691158928;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nPaup7cUyVRbpTRQswB0viHDK7comrm26phPHKmAKzI=;
-        b=Fi3Jsfr/+uQ1WuimMMOFiC7VTQSiKAH57Dy7rLtpa0KUxXB02PiP3TRa/+iWga7uC7
-         bcmhfoHiBbFwaFRZ3zvdzZOrEuZJ2qXGFCwSoi3R1I6KXiO4GGGnhd8ZfqsN+5BJk8dP
-         AaFNZPhtufvUsPvUhXzRCTAb4IhFXEvGkz2OF8n0/qXHG78bOxcuMCLWJJ0qhER0vmjV
-         8rf8NfnTxEGftz/fRKlVPl5Qoeaiz4NQ3wcSPJdJ0FaT0nLapQ/W2mFmFJdA/I/9z0VG
-         hSt7iz4Xavn97uvO3BPAQI9WQlpeuRFmoBOyubybOSgl6+flPRJzCnxYMSs3lmJ9RgEH
-         75ag==
+        bh=yaHDfRPeOYEFoHO/IUNE0JLDV+4mnu7twVsVbad4hws=;
+        b=TCkoVpnoq7rWVgCt4u3ufL0iy8Y5iTREf6qhy36uqb4y2aJAyZXxCXigZh/xyysfpX
+         /3kqX8pP1ws104T9gEKexu+X0pg9Hxl7t0JP4HK4caRtY2h8o2TeCevpLQ3ruCQVF21n
+         Qr+stlczafmHz67i9bz5hWVkdDqxuczyZc/aj6yJQG2pNtGo1u6wr0m2mQkt+DOos1+s
+         5RFf+ScKzX3qIzano3KtS7q/43p68BLv3aDdYUp9Id6EvYTlVJk+oHmWZqA7vDxGf+gY
+         A1Hme/hP2kWPxbhOh8wWk2sxp59nEwzwiHK7dliE9CX2qTk3rj1SNQVnhsUJF7nKKM4s
+         XQ4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690541164; x=1691145964;
+        d=1e100.net; s=20221208; t=1690554128; x=1691158928;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=nPaup7cUyVRbpTRQswB0viHDK7comrm26phPHKmAKzI=;
-        b=VOCu494FfuRUFkcY4Uowd4FKeJh0mu7aezp4ZFGOQcHq6WWBgg418fNY5fSKL+ciXp
-         lRxzgR6IGhcnrBvtnnvDMMgGRiEpQ0zY1vrwSIpTz0Eet5HFdjMhzlER4yVQWcQEXxS9
-         Nsz7H1AExDwM2QuBpt/YAY5k20MQsVb9mW9p+63A4deWJ76eCvZvgA1o03/cdCyqMBuQ
-         wtiejSWutK1w2tV0JyUB0LGleEUJTy8xsCiRsYmSgq6T6sZgYRSpXdWxr+5qGroQ4ZSu
-         6ThUlI+CgVpHzgvpCFO9oef6CxBjC/5ajYY7XHQQfkUvGEUx4bexLQiPJ/YtR6rq1ssu
-         +FSg==
-X-Gm-Message-State: ABy/qLZTVVx7JRCmXyHtImT/whHBYNgiWHc8lHlaySCSni9ukom2szth
-        s4TyyUUiC3DlgFMELmq5iwo=
-X-Google-Smtp-Source: APBJJlEp8OfeRIGgcYdWOg4/SHQSfmeHRo51elGMyHJ+bImcPqLh3vBKYSv3JjL5KaKxE+IKnV3zUw==
-X-Received: by 2002:a17:902:f547:b0:1b8:b827:aa8e with SMTP id h7-20020a170902f54700b001b8b827aa8emr1026011plf.11.1690541164368;
-        Fri, 28 Jul 2023 03:46:04 -0700 (PDT)
+        bh=yaHDfRPeOYEFoHO/IUNE0JLDV+4mnu7twVsVbad4hws=;
+        b=CMOLMhxsyp5ISccbDi6rM3c2Unw7X2D0ZgsY0zxR9kpp06PIHPdvxebWc0IqrGYTx6
+         0Nu+ukvaTvEeytUZJQHiZivycnVfRxbN12yIhlOZ8DgBBCPv55egM2C7WIKvu0l2fOoa
+         sLNFBC69Lyo6u19xN3YrEJe4EP/GZIENr6qfqKYY6y3HyjcfOCTOJ9Fie5bMsLyEZbr1
+         jU2Sax2H3y9UC/aFLDFe6JnlpOf5frI30SvrR5IZGpb2uJ4VTeajvzBqIL46YbWfbPVV
+         /VpEi61uyEXO1mKRXhPsW02ckUCs5Rf86Gm7QTKmxOlY7DJ5InDL03VWg3JFKXpIu/en
+         j/3Q==
+X-Gm-Message-State: ABy/qLZ1Szpw7rpjkKUmit0r8hZCP/MhfWCNYCB0pZhsaJf40pZAlm2O
+        q5Bwh2L7eAAE+5JM6ZQUBqQ=
+X-Google-Smtp-Source: APBJJlF89ELEa4ed3usCbf4UmNMKfQ5ivHg7Rz8sOUofytiRiDTG5MwXDPheALvyHG5drlWsb7u9qA==
+X-Received: by 2002:a17:90a:c205:b0:263:f776:8ba3 with SMTP id e5-20020a17090ac20500b00263f7768ba3mr1655996pjt.9.1690554127611;
+        Fri, 28 Jul 2023 07:22:07 -0700 (PDT)
 Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
-        by smtp.gmail.com with ESMTPSA id ix17-20020a170902f81100b001b3d0aff88fsm3285386plb.109.2023.07.28.03.45.56
+        by smtp.gmail.com with ESMTPSA id ev16-20020a17090aead000b002684b837d88sm2690605pjb.14.2023.07.28.07.22.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Jul 2023 03:46:02 -0700 (PDT)
-Message-ID: <36b73cf6-4594-c9b2-2896-cd0dd49f8974@gmail.com>
-Date:   Fri, 28 Jul 2023 18:45:54 +0800
+        Fri, 28 Jul 2023 07:22:07 -0700 (PDT)
+Message-ID: <29fa53c5-7374-0b64-d135-54c968498685@gmail.com>
+Date:   Fri, 28 Jul 2023 22:21:59 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.1
-Subject: Re: [PATCH V3 5/9] x86/hyperv: Use vmmcall to implement Hyper-V
- hypercall in sev-snp enlightened guest
+Subject: Re: [PATCH V2] x86/hyperv: Rename hv_isolation_type_snp/en_snp() to
+ isol_type_snp_paravisor/enlightened()
 To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
@@ -67,20 +67,16 @@ To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
         "bp@alien8.de" <bp@alien8.de>,
         "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
         "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
         "arnd@arndb.de" <arnd@arndb.de>
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "vkuznets@redhat.com" <vkuznets@redhat.com>
-References: <20230718032304.136888-1-ltykernel@gmail.com>
- <20230718032304.136888-6-ltykernel@gmail.com>
- <BYAPR21MB16882FAEDEFAED59208ED9E0D700A@BYAPR21MB1688.namprd21.prod.outlook.com>
- <89c9f27c-f539-ef75-dc67-bdb0a8480c4b@gmail.com>
- <BYAPR21MB16880B1657BA4C907D002730D700A@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20230726124900.300258-1-ltykernel@gmail.com>
+ <BYAPR21MB168896AAD24E773B92DD2B10D706A@BYAPR21MB1688.namprd21.prod.outlook.com>
 From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <BYAPR21MB16880B1657BA4C907D002730D700A@BYAPR21MB1688.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB168896AAD24E773B92DD2B10D706A@BYAPR21MB1688.namprd21.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -93,24 +89,23 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 7/26/2023 10:29 PM, Michael Kelley (LINUX) wrote:
->> Hi Michael:
->> 	Thanks for your review. The patch mentioned by Boris has not been
->> merged and so still use X86_FEATURE_SEV_ES here. We may replace the
->> feature flag with X86_FEATURE_SEV_SNP after it's upstreamed.
+On 7/28/2023 10:53 AM, Michael Kelley (LINUX) wrote:
+>> @@ -268,7 +268,7 @@ static inline void hv_sev_init_mem_and_cpu(void) {}
+>>   static int hv_snp_boot_ap(int cpu, unsigned long start_ip) {}
+>>   #endif
 >>
-> Just so I'm clear, is it true that in an SEV-SNP VM, the CPUID flags for
-> SEV-ES*and*  SEV-SNP are set?  That would seem to be necessary for
-> your approach to work.
-
-Yes, SEV and SEV-ES flags are set in the SEV-SNP guest and they are 
-necessary.
-
+>> -extern bool hv_isolation_type_snp(void);
+>> +extern bool hv_isol_type_snp_paravisor(void);
+> This declaration of hv_isolation_type_snp() also occurs twice
+> in include/asm-generic/mshyperv.h.  I think this one can be
+> dropped entirely rather than renamed since
+> include/asm-generic/mshyperv.h is #include'd at the bottom of
+> this file, and there is no user in between.
 > 
-> I wonder if it would be better to take the patch from Brijesh Singh
-> that adds X86_FEATURE_SEV_SNP and add it to your patch set (with
-> Brijesh's agreement, of course).  That patch is small and straightforward.
->
+> hv_isolation_type_snp() is used in several architecture
+> independent source code files, so having it declared in
+> include/asm-generic/mshyperv.h makes sense rather than
+> being in an architecture-specific version of mshyperv.h.
+> 
 
-I will sync with Brijesh. Thanks for suggestion.
-
+Agree. Will update in the next version.
