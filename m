@@ -2,37 +2,37 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6BD276A341
-	for <lists+linux-hyperv@lfdr.de>; Mon, 31 Jul 2023 23:47:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2C7E76A3F2
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Aug 2023 00:11:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231466AbjGaVrq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 Jul 2023 17:47:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57064 "EHLO
+        id S231803AbjGaWLx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 31 Jul 2023 18:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjGaVrp (ORCPT
+        with ESMTP id S231804AbjGaWLs (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 Jul 2023 17:47:45 -0400
+        Mon, 31 Jul 2023 18:11:48 -0400
 Received: from mail.zytor.com (unknown [IPv6:2607:7c80:54:3::138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C174114;
-        Mon, 31 Jul 2023 14:47:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0580B1981;
+        Mon, 31 Jul 2023 15:11:41 -0700 (PDT)
 Received: from [192.168.105.249] ([75.104.94.137])
         (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 36VLiSLD3093143
+        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 36VM7txf3103048
         (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 31 Jul 2023 14:44:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 36VLiSLD3093143
+        Mon, 31 Jul 2023 15:08:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 36VM7txf3103048
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2023071101; t=1690839952;
-        bh=Hg2XSL3316ANoXYXjd63x+cCNIVtiqBW14cv6sKLqfM=;
+        s=2023071101; t=1690841375;
+        bh=X+M4w9IgqyGhFftvL0ts+Txt2pH1wocbrviAaT7WSp0=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=OJyzPW65vrM8sDH6eNGy+5kWbcB7PMYBpzWhQpIWkaAZClwYLyiR8q3r0h24DHa+i
-         plc1tYwGV1X0jnVZoHyMcH21g4d3T5nrZNciwkD9pXyPp9eyd7deKj5//687qepUUN
-         GajcQAPfiwt5T7KF3w3EDPjhuU+UOb+SXF0Ey3xPLdCdh2vlXfVnIDfD1LR2iQn1Q3
-         +p5bLyY/BkC4u9rExXSQvakREpl4pn+K6rV/GzfnNnDvo8xR1x7/0XAWYi0JZGxsUi
-         6sYcbHmh6hzcml78uw2uhAQKsHCzb+/6sFfciH7vXjmIcsvNRtd0H0JUkcPZnEheRh
-         J+lI/W952JXBg==
-Message-ID: <4ccbf0e9-716d-dfe0-537c-210e5455418c@zytor.com>
-Date:   Mon, 31 Jul 2023 14:44:20 -0700
+        b=XFcw8mHtRsl4TcZ5Z+9TuwZ7pfjvdNqSpwDLDpFsAfd/pRi+FbwrTEcqslERWxffC
+         cgFKch7rqXk7xeaKLgEYkT1cKGAy6lNFxl6xQJ0fbNDJ7sv9zpYGWXBRa8N2lEo5DR
+         G/GCfDVd/qzoFF9SUxuA7hRU/ROGNY4q6TBtRqRfJXYuVJskDXCrkKAQal43XsJ7PX
+         PlycbEss3tGY6NKNX7yE7ihX3QPEQjBg9VfjApas+qZFkVyB7AoO2WWrlZ+j8SXiEq
+         CQq7y33RknpAiyzIOPtVrS0p+SqzFZP4pjxOjHk1xtmUQ70RjsXjOD9F2NjeIVYHD8
+         KsFoANCn7EDLw==
+Message-ID: <da169e64-9dad-18a8-611b-57ff74006285@zytor.com>
+Date:   Mon, 31 Jul 2023 15:07:47 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
@@ -121,37 +121,100 @@ List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
 On 7/30/23 23:41, Xin Li wrote:
-> +
-> +static DEFINE_FRED_HANDLER(fred_sw_interrupt_user)
+> +static DEFINE_FRED_HANDLER(fred_other_default)
 > +{
-> +	/*
-> +	 * In compat mode INT $0x80 (32bit system call) is
-> +	 * performance-critical. Handle it first.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_IA32_EMULATION) &&
-> +	    likely(regs->vector == IA32_SYSCALL_VECTOR)) {
-> +		regs->orig_ax = regs->ax;
-> +		regs->ax = -ENOSYS;
-> +		return do_int80_syscall_32(regs);
-> +	}
-
-We can presumably drop the early out here as well...
-
-> +
-> +	/*
-> +	 * Some software exceptions can also be triggered as
-> +	 * int instructions, for historical reasons.
-> +	 */
-> +	switch (regs->vector) {
-> +	case X86_TRAP_BP:
-> +	case X86_TRAP_OF:
-> +		fred_emulate_trap(regs);
-> +		break;
-> +	default:
-> +		regs->vector = X86_TRAP_GP;
-> +		fred_emulate_fault(regs);
-> +		break;
-> +	}
+> +	regs->vector = X86_TRAP_UD;
+> +	fred_emulate_fault(regs);
 > +}
 > +
+> +static DEFINE_FRED_HANDLER(fred_syscall)
+> +{
+> +	regs->orig_ax = regs->ax;
+> +	regs->ax = -ENOSYS;
+> +	do_syscall_64(regs, regs->orig_ax);
+> +}
+> +
+> +#if IS_ENABLED(CONFIG_IA32_EMULATION)
+> +/*
+> + * Emulate SYSENTER if applicable. This is not the preferred system
+> + * call in 32-bit mode under FRED, rather int $0x80 is preferred and
+> + * exported in the vdso.
+> + */
+> +static DEFINE_FRED_HANDLER(fred_sysenter)
+> +{
+> +	regs->orig_ax = regs->ax;
+> +	regs->ax = -ENOSYS;
+> +	do_fast_syscall_32(regs);
+> +}
+> +#else
+> +#define fred_sysenter fred_other_default
+> +#endif
+> +
+> +static DEFINE_FRED_HANDLER(fred_other)
+> +{
+> +	static const fred_handler user_other_handlers[FRED_NUM_OTHER_VECTORS] =
+> +	{
+> +		/*
+> +		 * Vector 0 of the other event type is not used
+> +		 * per FRED spec 5.0.
+> +		 */
+> +		[0]		= fred_other_default,
+> +		[FRED_SYSCALL]	= fred_syscall,
+> +		[FRED_SYSENTER]	= fred_sysenter
+> +	};
+> +
+> +	user_other_handlers[regs->vector](regs);
+> +}
 
+OK, this is wrong.
+
+Dispatching like fred_syscall() is only valid for syscall64, which means 
+you have to check regs->l is set in addition to the correct regs->vector 
+to determine validity.
+
+Similarly, sysenter is only valid if regs->l is clear.
+
+The best way is probably to drop the dispatch table here and just do an 
+if ... else if ... else statement; gcc is smart enough that it will 
+combine the vector test and the L bit test into a single mask and 
+compare. This also allows stubs to be inlined.
+
+However, emulating #UD on events other than wrong mode of SYSCALL and 
+SYSENTER may be a bad idea. It would probably be better to invoke 
+fred_bad_event() in that case.
+
+Something like this:
+
++static DEFINE_FRED_HANDLER(fred_other_default)
++{
++	regs->vector = X86_TRAP_UD;
++	fred_emulate_fault(regs);
++}
+
+1) rename this to fred_emulate_ud (since that is what it actually does.)
+
+... then ...
+
+	/* The compiler can fold these into a single test */
+
+	if (likely(regs->vector == FRED_SYSCALL && regs->l)) {
+		fred_syscall64(regs);
+	} else if (likely(regs->vector == FRED_SYSENTER && !regs->l)) {
+		fred_sysenter32(regs);
+	} else if (regs->vector == FRED_SYSCALL ||
+		   regs->vector == FRED_SYSENTER) {
+		/* Invalid SYSCALL or SYSENTER instruction */
+		fred_emulate_ud(regs);
+	} else {
+		/* Unknown event */
+		fred_bad_event(regs);
+	}
+
+... or the SYSCALL64 and SYSENTER32 can be inlined with the appropriate 
+comment (gcc will do so regardless.)
+
+	-hpa
+
+
+
+	-hpa
