@@ -2,50 +2,66 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2C7E76A3F2
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Aug 2023 00:11:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 253FF76A42D
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Aug 2023 00:29:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231803AbjGaWLx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 31 Jul 2023 18:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
+        id S231800AbjGaW3M (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 31 Jul 2023 18:29:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231804AbjGaWLs (ORCPT
+        with ESMTP id S230526AbjGaW3I (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 31 Jul 2023 18:11:48 -0400
-Received: from mail.zytor.com (unknown [IPv6:2607:7c80:54:3::138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0580B1981;
-        Mon, 31 Jul 2023 15:11:41 -0700 (PDT)
-Received: from [192.168.105.249] ([75.104.94.137])
-        (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 36VM7txf3103048
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 31 Jul 2023 15:08:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 36VM7txf3103048
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2023071101; t=1690841375;
-        bh=X+M4w9IgqyGhFftvL0ts+Txt2pH1wocbrviAaT7WSp0=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=XFcw8mHtRsl4TcZ5Z+9TuwZ7pfjvdNqSpwDLDpFsAfd/pRi+FbwrTEcqslERWxffC
-         cgFKch7rqXk7xeaKLgEYkT1cKGAy6lNFxl6xQJ0fbNDJ7sv9zpYGWXBRa8N2lEo5DR
-         G/GCfDVd/qzoFF9SUxuA7hRU/ROGNY4q6TBtRqRfJXYuVJskDXCrkKAQal43XsJ7PX
-         PlycbEss3tGY6NKNX7yE7ihX3QPEQjBg9VfjApas+qZFkVyB7AoO2WWrlZ+j8SXiEq
-         CQq7y33RknpAiyzIOPtVrS0p+SqzFZP4pjxOjHk1xtmUQ70RjsXjOD9F2NjeIVYHD8
-         KsFoANCn7EDLw==
-Message-ID: <da169e64-9dad-18a8-611b-57ff74006285@zytor.com>
-Date:   Mon, 31 Jul 2023 15:07:47 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v9 29/36] x86/fred: FRED entry/exit and dispatch code
-Content-Language: en-US
-To:     Xin Li <xin3.li@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Mon, 31 Jul 2023 18:29:08 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3908173E
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Jul 2023 15:29:06 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-585fb08172bso31623417b3.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 31 Jul 2023 15:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690842546; x=1691447346;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Q8GvYD+4dtlsTwSTiHUPQzTJlHbTbzrpGF3h1vVBww=;
+        b=wjwMM2KWT8HU0SHDHdNRxn0t00ajJ3rnXd0KHF3IvjHCM9C9HEucQqbNqO3DdnlESa
+         nz4NidPHfLZdlM97AQO2l5R9cvi5qOsP8Ijvq8FdyQ975MNIp/vKfJQp4Fn/KRaq6Jwk
+         4kloVUH4EDmpWV0M/Jbjnxx6ZpxxBUBTWBZfCkK7wrUfN/3hE3YtfIlsy05XGvIcQMBR
+         YwOaTVtyj5jc9ti6xzcRvjvMofBrcZ2GDu27qgywzvVHzJ4o32YZtNXzHqvcANqA6/YW
+         sTLo8o8faSsSn6oqDWZE2/b1jMu9Jj3r8qqQ2mBwBCqkSpgBEgjiP8UrfNG7IjOkrlZB
+         RMgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690842546; x=1691447346;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Q8GvYD+4dtlsTwSTiHUPQzTJlHbTbzrpGF3h1vVBww=;
+        b=dFYn89qTO3FK0E+rvFKyTh2N/Ap9CXWv+67+sqY7YHHDdzwQX6NblG998ZrvO3ceKe
+         MDQ3dl2jo3Py6edAJFfD/hNQs4my/BpH08tO6KnmOTJOPnDnrqKSjsLBp0mNU/NPYEIO
+         XfWpMyCR3Z54BAWJt3BMmzIgcP0iTH9OZbvcgdnqWDP/nJ8iOklrQ1sU8SQL5G4Nlsrx
+         PirUYkj5yaksnfjCn64NJeLO/azLfWVQOboUXaR3KR2PichU4nK/r5zqE563xTQr3peK
+         L42wTAp9BBH4Iwg2BanGXVNr3qpPqHD65PrRBEysrpq+H4Y7P+MGZKGRY2l4VitecO2B
+         X8cA==
+X-Gm-Message-State: ABy/qLa53pZmEz3rSm+pqw9MP4xap9wsuyL4xya3CkwXJrkD0wWpoeDf
+        5QiFsv4kxb4WTzG49EL8rh8mVJb/a6w=
+X-Google-Smtp-Source: APBJJlGgIomNHDqU6KhEMJb1Ck8ilBU2ctVZYZehyK88j/kbenJFHvBGJ75gfwK64a/yrr50dO0Jiu4+k6c=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:b109:0:b0:56d:502:9eb0 with SMTP id
+ p9-20020a81b109000000b0056d05029eb0mr90305ywh.6.1690842545957; Mon, 31 Jul
+ 2023 15:29:05 -0700 (PDT)
+Date:   Mon, 31 Jul 2023 15:29:04 -0700
+In-Reply-To: <20230731063317.3720-1-xin3.li@intel.com>
+Mime-Version: 1.0
+References: <20230731063317.3720-1-xin3.li@intel.com>
+Message-ID: <ZMg1sD7IamB0INVs@google.com>
+Subject: Re: [PATCH v9 00/36] x86: enable FRED for x86-64
+From:   Sean Christopherson <seanjc@google.com>
+To:     Xin Li <xin3.li@intel.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Jonathan Corbet <corbet@lwn.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
         Andy Lutomirski <luto@kernel.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Tony Luck <tony.luck@intel.com>,
@@ -55,7 +71,6 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Juergen Gross <jgross@suse.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
@@ -67,7 +82,7 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Steven Rostedt <rostedt@goodmis.org>,
         Kim Phillips <kim.phillips@amd.com>,
         Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        "Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
         Sebastian Reichel <sebastian.reichel@collabora.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Suren Baghdasaryan <surenb@google.com>,
@@ -105,116 +120,31 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Yantengsi <siyanteng@loongson.cn>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
         Sathvika Vasireddy <sv@linux.ibm.com>
-References: <20230731064119.3870-1-xin3.li@intel.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <20230731064119.3870-1-xin3.li@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 7/30/23 23:41, Xin Li wrote:
-> +static DEFINE_FRED_HANDLER(fred_other_default)
-> +{
-> +	regs->vector = X86_TRAP_UD;
-> +	fred_emulate_fault(regs);
-> +}
-> +
-> +static DEFINE_FRED_HANDLER(fred_syscall)
-> +{
-> +	regs->orig_ax = regs->ax;
-> +	regs->ax = -ENOSYS;
-> +	do_syscall_64(regs, regs->orig_ax);
-> +}
-> +
-> +#if IS_ENABLED(CONFIG_IA32_EMULATION)
-> +/*
-> + * Emulate SYSENTER if applicable. This is not the preferred system
-> + * call in 32-bit mode under FRED, rather int $0x80 is preferred and
-> + * exported in the vdso.
-> + */
-> +static DEFINE_FRED_HANDLER(fred_sysenter)
-> +{
-> +	regs->orig_ax = regs->ax;
-> +	regs->ax = -ENOSYS;
-> +	do_fast_syscall_32(regs);
-> +}
-> +#else
-> +#define fred_sysenter fred_other_default
-> +#endif
-> +
-> +static DEFINE_FRED_HANDLER(fred_other)
-> +{
-> +	static const fred_handler user_other_handlers[FRED_NUM_OTHER_VECTORS] =
-> +	{
-> +		/*
-> +		 * Vector 0 of the other event type is not used
-> +		 * per FRED spec 5.0.
-> +		 */
-> +		[0]		= fred_other_default,
-> +		[FRED_SYSCALL]	= fred_syscall,
-> +		[FRED_SYSENTER]	= fred_sysenter
-> +	};
-> +
-> +	user_other_handlers[regs->vector](regs);
-> +}
+On Sun, Jul 30, 2023, Xin Li wrote:
+> This patch set enables the Intel flexible return and event delivery
+> (FRED) architecture for x86-64.
 
-OK, this is wrong.
+...
 
-Dispatching like fred_syscall() is only valid for syscall64, which means 
-you have to check regs->l is set in addition to the correct regs->vector 
-to determine validity.
+> -- 
+> 2.34.1
 
-Similarly, sysenter is only valid if regs->l is clear.
+What is this based on?	FYI, you're using a version of git that will (mostly)
+automatically generate the based, e.g. I do 
 
-The best way is probably to drop the dispatch table here and just do an 
-if ... else if ... else statement; gcc is smart enough that it will 
-combine the vector test and the L bit test into a single mask and 
-compare. This also allows stubs to be inlined.
+  git format-patch --base=HEAD~$nr ...
 
-However, emulating #UD on events other than wrong mode of SYSCALL and 
-SYSENTER may be a bad idea. It would probably be better to invoke 
-fred_bad_event() in that case.
-
-Something like this:
-
-+static DEFINE_FRED_HANDLER(fred_other_default)
-+{
-+	regs->vector = X86_TRAP_UD;
-+	fred_emulate_fault(regs);
-+}
-
-1) rename this to fred_emulate_ud (since that is what it actually does.)
-
-... then ...
-
-	/* The compiler can fold these into a single test */
-
-	if (likely(regs->vector == FRED_SYSCALL && regs->l)) {
-		fred_syscall64(regs);
-	} else if (likely(regs->vector == FRED_SYSENTER && !regs->l)) {
-		fred_sysenter32(regs);
-	} else if (regs->vector == FRED_SYSCALL ||
-		   regs->vector == FRED_SYSENTER) {
-		/* Invalid SYSCALL or SYSENTER instruction */
-		fred_emulate_ud(regs);
-	} else {
-		/* Unknown event */
-		fred_bad_event(regs);
-	}
-
-... or the SYSCALL64 and SYSENTER32 can be inlined with the appropriate 
-comment (gcc will do so regardless.)
-
-	-hpa
-
-
-
-	-hpa
+in my scripts, where $nr is the number of patches I am sending.  My specific
+approaches requires HEAD-$nr to be a publicly visible object/commit, but that
+should be the case the vast majority of the time anyways.
