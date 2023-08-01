@@ -2,247 +2,652 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EEF776C077
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 00:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90DEA76C0BD
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 01:19:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230141AbjHAWfU (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Aug 2023 18:35:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47028 "EHLO
+        id S230246AbjHAXTJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Aug 2023 19:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbjHAWfS (ORCPT
+        with ESMTP id S230145AbjHAXTH (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Aug 2023 18:35:18 -0400
-Received: from esa2.hc3370-68.iphmx.com (esa2.hc3370-68.iphmx.com [216.71.145.153])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E551BE3;
-        Tue,  1 Aug 2023 15:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1690929317;
-  h=message-id:date:from:subject:to:cc:references:
+        Tue, 1 Aug 2023 19:19:07 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F309219B6;
+        Tue,  1 Aug 2023 16:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690931946; x=1722467946;
+  h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=NqzRNG8bI4/kBb+OMrG6n/fgnVRw0P5LyiLmWT5fJ/s=;
-  b=Xe932+hFegLYFHuT2jDOCfTtoCKUACCAd/w0MttYoYqRXtmobfamxMDN
-   1yaHWRzqrKqYnzkslRJJtTd7LSxCdtNcP0gDEKh1eqaXtz2bhVL5fu6UH
-   vOFD5t11MUai7rmW5GhXp0osWV7YNYm0wxOG6pEXOe4crimzoLCEn/Fnc
-   Q=;
-X-IronPort-RemoteIP: 104.47.51.46
-X-IronPort-MID: 118053144
-X-IronPort-Reputation: None
-X-IronPort-Listener: OutboundMail
-X-IronPort-SenderGroup: RELAY_O365
-X-IronPort-MailFlowPolicy: $RELAYED
-IronPort-Data: A9a23:CrCaUqNZeZ+eJrbvrR2EkMFynXyQoLVcMsEvi/4bfWQNrUoi0DEBz
- 2oZCGmGPviIazSmeYtyO4znp0lSv8fSzdVqGwto+SlhQUwRpJueD7x1DKtS0wC6dZSfER09v
- 63yTvGacajYm1eF/k/F3oDJ9CU6jufQAOKnUoYoAwgpLSd8UiAtlBl/rOAwh49skLCRDhiE/
- Nj/uKUzAnf8s9JPGjxSs/vrRC9H5qyo42tI5gVmP5ingXeF/5UrJMNHTU2OByOQrrl8RoaSW
- +vFxbelyWLVlz9F5gSNy+uTnuUiG9Y+DCDW4pZkc/HKbitq/0Te5p0TJvsEAXq7vh3S9zxHJ
- HehgrTrIeshFvWkdO3wyHC0GQkmVUFN0OevzXRSLaV/ZqAJGpfh66wGMa04AWEX0st6P0di1
- 8IhEh4uMkiMrsC93rDgeMA506zPLOGzVG8ekldJ6GmDSNwAGNXESaiM4sJE1jAtgMwIBezZe
- 8cSdTtoalLHfgFLPVAUTpk5mY9EhFGmK2Ee9A3T+PNxvza7IA9ZidABNPL8fNCQSNoTtUGfv
- m/cpEzyAw0ANczZwj2Amp6prraWzXumA9tOSNVU8NY1p0KW4lIyOSQyagGYmfbgqkjvANNQf
- hl8Fi0G6PJaGFaQZsXyWw2QpH+CowIGXNxRA6s25WmlzqvS/hbcBnkcQyRfQMIpudVwRjEw0
- FKN2dTzClRHqqCOUjSU8LuZtyi1PwAVNWJEbigBJSMJ4tzivJsyyAnOUN9lEaW1pt3tFHf7x
- DXihC0/hLhVkdQCyaSg1VDfjnSnoZ2hZhUp6xvaGH2s7gdRZJaoIYev7DDz7/laK52CZkKcp
- 3VCkM+bhMgUBIDLlDGERuolFbSlof2CNVX0g1JiG4co7TmF4GO4cMZb5zQWDENoNNsUPD/2Z
- UjVkR1e6YUVP3awa6JzJYWrBKwCyanmCMTNTPfZZdkLf4M3cgKblAlqZEiNzyX2m1Mtub8wN
- I3dcsu2C3seT6N9w1KeQu4Hzb4tgDgz2W7JXp395xO92LGaaTieTrJtGFmHa+0iqriBqR/J2
- 9xFMMKGwBJaFub5Z0H//Y8YLhYJIH49CJzng8ZNceePKQ1jXmomDpf5w74jcaRhnqJIhqHJ9
- HT7UUhdoHL2n3/OLy2Oa3Z+ePXuW4pyqTQwOilEFUqo3H0qesCr4aETfpA0bJEu8eAlxvlxJ
- 9EVK5uoAflVTDnDvTMHYvHVqI1kaQTuhg+UOSehSCYwcoQmRAHT/NLgOAz1+0EmFieruNEsi
- 7ym2BnSTZcKS0JlFsm+QPeuzF61uXUMsOdzVFHPOd5dZAPn940CAzD2lOE+J80XARHCwCaKk
- giRHBEUrPXMpIlz98PG7YiLtYqmEOtWGktcAnnV6quwOSDG/22lh4haX461kSv1UWr1/OCoY
- 7xTxvSkavkfxg4W7cx7Dqphyr846533vbhGww94HXLNKVO2FrdnJXrA1s5K3kFQ+oJkVcKNc
- hrn0rFn1X+hYasJzHZ5yNIZU9m+
-IronPort-HdrOrdr: A9a23:Kb02FKtJqrADtuplpc9ulfub7skDeNV00zEX/kB9WHVpm62j+/
- xG+c5x6faaslkssR0b9+xoWpPhfZqsz/9ICOAqVN/JMTUO01HYT72Kg7GSpgHIKmnT8fNcyL
- clU4UWMqyVMbGit7eZ3DWF
-X-Talos-CUID: 9a23:AYh6zm1lYPMiy9OmNxLMdrxfN80bVFH/8k7qDWzkUWlAaraLSwSi0fYx
-X-Talos-MUID: 9a23:OONluAvnolCGKmV+Vc2n2xZ9MeNWwpWXLH9Xsq0J4umCZHdxNGLI
-X-IronPort-AV: E=Sophos;i="6.01,248,1684814400"; 
-   d="scan'208";a="118053144"
-Received: from mail-bn1nam02lp2046.outbound.protection.outlook.com (HELO NAM02-BN1-obe.outbound.protection.outlook.com) ([104.47.51.46])
-  by ob1.hc3370-68.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 01 Aug 2023 18:35:14 -0400
+  bh=Bj5w8ug5nXkPeA631Z/FPHszoX+SVqqkPZbhd/00H+M=;
+  b=gkkUj0mYHi03IR2EMaCScNPuN7k5mb05cI0lio702ZD1H21wyxjjQkC9
+   YfriAyt3HVnksxVx0y66MgTz+BRO57YBQDst3SIrMZ0aqtuW/6/CS0WWy
+   NIJWojNPnV73v4f8XEEXxFuQFI+yPFdS/j9NSjzu/URc4mv3uJxPQtLBv
+   iEp91PH1AOU3asyxuGOQDYiREjOrkzTUAOvu8U/rHyqEB45qpB7b+DGqA
+   JTvCHzS8BSzk8Z+Ev6fAyG81cY5y7i6LVGwM3AR1625gomHsXZL6raUik
+   7o+GK62F/ryA5yTpcN/aUX5ASd13VGvN3UhwalyGwh3c9Gn6low8WjiZY
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="372164214"
+X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
+   d="scan'208";a="372164214"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 16:19:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="975463188"
+X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
+   d="scan'208";a="975463188"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga006.fm.intel.com with ESMTP; 01 Aug 2023 16:19:03 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 1 Aug 2023 16:19:02 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 1 Aug 2023 16:19:02 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Tue, 1 Aug 2023 16:19:02 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Tue, 1 Aug 2023 16:19:01 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lUaHuJG5J/22sEHvsXH9tcZaRMNYe4gKfFCpzcEgt8qee2AovpQTOFOp8R+rrgAjOnqUbMfbWv/U4A1ijBWGIVpWoisEXK8XS3eDLXJN85r1WVZimI9Vwi1g3FQzQvqI+qGbIbDbGSTYrM0KJaVafjsWGLjpXfkTObBR2Fv4hfkfzB3QcOaiMtjmya4opqT5xzcAeMPKGhJ7kLnQeqHKyDq256cbFan8YCEFbAeJ9mERniJM+EH5OOX4yZloV6An37RgIY1d5qFmQF7lwmc6+d97JLXdY1JCcVcs2cHk7+uUpqQqYbw2+MbEncaKwJUgjosgDe3WYCRQuymddLUCCA==
+ b=H6OnvTlFB0Z4Az04FF2JP/OQPJXQARjUEk6tuZWuEzxwzNx1am73RzC4tRurLIPmOE0nAN5+MNDPh/hNYLcuBW+dampqcxvRaf4i+1vrmAdrZ6I4JSGdc0gYtOkKVVnAAsNrsAigNHYN+FECMc3qOuwOXTHFoRIkqspvkvpJ/aiLrD7ra5AfUR6YEyl+G1UQBKJWgLMQ1ifjQAttI4FinsaIYCHwzYcqMLuEiNQald+8WlgpqZEkKctJFJOOUxEPTLnjDaKu0KgItzPXmF6IbLYHelpeBt4Hy0ZkmfyYDeDW+SX+SWh9QxoB5k0pV2/lnoBI2ht/ekn3lBawsPTZOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MiYEYoytPD1M9SQHmaAJNFPgzUrmsNGjShgMwWmjyDE=;
- b=gKXKCaJWjHh3m8x3iqBVmio52guZqFq58X5rltovYZfTomA/8LAtfuNg48XCiMOo/EnKh6UgbuX002RvgKELXmXQ8N3wkvTJtkohsT2DCEljWkL7GZb8NgcjG5RvDb3Ctmr52apSt/f+VZrH9q0xcwfpRdy/PEC+d+wqI8jDAc7XjZYn+gu4LiFI3pxlU8x3L0m3bKoELJ9k/TXjYCvUBPb3GvduOOye1yo7I1dgrik1+BI0XYzS2b35oMk75oB9KR9hLZT2XDH7PtWrHqYmEz00Xgf/ovKQkL692drqgR21zwwlaEO5eFz8f2Uj6HQhIVy0uq5x7rxvesPK/F9reA==
+ bh=S8XlHjVcyfKORPqwqUUtCNjTJnsqwsptu6fUDZ6EwMc=;
+ b=h8Gx5TfTzNt1IIu4IBBZ1PsLgHJHdv5h06581B9Ptv37El2/n5d1c69T36NonHbCHd9u4utT71NF44OeLZtZakNvFOEM6OV1ro5AVqgH+sMnyZx3qtg/kxo1JhNIh6y3Leo+VF9RrQmwWDWteX1SYYyPNQrcvDCp00TCmWIUT2Dvd/dIKZqBbeePbgrGUFnt76ex1m+9GlCjwqTwCPcYXt6XtsgwActzeORHTm+wfJ8W3zwtJpYW/FnbUAcE2qT+RVzOORGY7fEdg/t6gugHbk/XN7HRodpZRICYsxa9DOH+Wjs+5S8w6SgUmym4iNGtQOn1pbowpYFRPGss64oqrQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
- dkim=pass header.d=citrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MiYEYoytPD1M9SQHmaAJNFPgzUrmsNGjShgMwWmjyDE=;
- b=h35XZ/libgheuyvNuuhVIHqHpOF0N5bsKoZ7WYODhEBcWwkIC5qFX0BAcExTyp2R3xYIgka2dTkuv8rFcrtD/rc62AKb78cmPiMNDZ/sEJd8eTwgvoyUsMaYCj36xsJ5tYXZk/E1T8ZQ+k3S8wifl4crp7+21g9TVIb+FnHVQyI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=citrix.com;
-Received: from BYAPR03MB3623.namprd03.prod.outlook.com (2603:10b6:a02:aa::12)
- by BN8PR03MB4916.namprd03.prod.outlook.com (2603:10b6:408:7a::18) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
+ by BN9PR11MB5531.namprd11.prod.outlook.com (2603:10b6:408:104::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.45; Tue, 1 Aug
- 2023 22:35:10 +0000
-Received: from BYAPR03MB3623.namprd03.prod.outlook.com
- ([fe80::9410:217b:251f:2a98]) by BYAPR03MB3623.namprd03.prod.outlook.com
- ([fe80::9410:217b:251f:2a98%4]) with mapi id 15.20.6631.043; Tue, 1 Aug 2023
- 22:35:10 +0000
-Message-ID: <fb5cb37f-550e-1627-ff5e-bfd2e5696a26@citrix.com>
-Date:   Tue, 1 Aug 2023 23:35:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [patch v2 21/38] x86/cpu: Provide cpu_init/parse_topology()
-Content-Language: en-GB
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+ 2023 23:18:58 +0000
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::50e4:2cb8:4529:af04]) by SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::50e4:2cb8:4529:af04%7]) with mapi id 15.20.6631.043; Tue, 1 Aug 2023
+ 23:18:58 +0000
+From:   "Li, Xin3" <xin3.li@intel.com>
+To:     "Christopherson,, Sean" <seanjc@google.com>
+CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         "x86@kernel.org" <x86@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Huang Rui <ray.huang@amd.com>, Juergen Gross <jgross@suse.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-hyperv@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20230728105650.565799744@linutronix.de>
- <20230728120930.839913695@linutronix.de>
- <BYAPR21MB16889FD224344B1B28BE22A1D705A@BYAPR21MB1688.namprd21.prod.outlook.com>
- <871qgop8dc.ffs@tglx>
- <20230731132714.GH29590@hirez.programming.kicks-ass.net>
- <87sf94nlaq.ffs@tglx>
- <BYAPR21MB16885EA9B2A7F382D2F9C5A2D705A@BYAPR21MB1688.namprd21.prod.outlook.com>
- <87fs53n6xd.ffs@tglx>
- <BYAPR21MB1688CE738E6DB857031B829DD705A@BYAPR21MB1688.namprd21.prod.outlook.com>
- <873513n31m.ffs@tglx> <87r0omjt8c.ffs@tglx>
-In-Reply-To: <87r0omjt8c.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0226.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a6::15) To BYAPR03MB3623.namprd03.prod.outlook.com
- (2603:10b6:a02:aa::12)
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Lutomirski, Andy" <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "Cui, Dexuan" <decui@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Wanpeng Li" <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Gross, Jurgen" <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Babu Moger <babu.moger@amd.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Chatre, Reinette" <reinette.chatre@intel.com>,
+        "Daniel Sneddon" <daniel.sneddon@linux.intel.com>,
+        Breno Leitao <leitao@debian.org>,
+        Nikunj A Dadhania <nikunj@amd.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        "Sami Tolvanen" <samitolvanen@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Masahiro Yamada" <masahiroy@kernel.org>,
+        Ze Gao <zegao2021@gmail.com>, "Li, Fei1" <fei1.li@intel.com>,
+        Conghui <conghui.chen@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "Jiapeng Chong" <jiapeng.chong@linux.alibaba.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Ostrovsky, Boris" <boris.ostrovsky@oracle.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Yantengsi <siyanteng@loongson.cn>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Sathvika Vasireddy <sv@linux.ibm.com>
+Subject: RE: [PATCH RESEND v9 33/36] KVM: VMX: Add VMX_DO_FRED_EVENT_IRQOFF
+ for IRQ/NMI handling
+Thread-Topic: [PATCH RESEND v9 33/36] KVM: VMX: Add VMX_DO_FRED_EVENT_IRQOFF
+ for IRQ/NMI handling
+Thread-Index: AQHZxFc6Fm9A65hsiUKYksIzWWSQ5K/VzGiAgABBoTA=
+Date:   Tue, 1 Aug 2023 23:18:58 +0000
+Message-ID: <SA1PR11MB673440DE4294DDE87D93AE54A80AA@SA1PR11MB6734.namprd11.prod.outlook.com>
+References: <20230801083553.8468-1-xin3.li@intel.com>
+ <20230801083553.8468-7-xin3.li@intel.com> <ZMlWe5TgS6HM98Mg@google.com>
+In-Reply-To: <ZMlWe5TgS6HM98Mg@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|BN9PR11MB5531:EE_
+x-ms-office365-filtering-correlation-id: dcaf6d6e-4187-4417-1291-08db92e5aef5
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r+cxM3pPta8sYitUgROn2PDucNcvUltiyujBLIB2Z3wc/WA1AbpGfiDgnG9ZYXNPCazHzJRSrD7yg9SlHm0RpgIU92mD//G2FOnZbMXYqkS9rAXw8oGg29t03wb9+L8oj34ta6j/zwjU159ZxdM4/KUGyubBdtUbQwPvR2Fcu82GfE6XgEgEcZPoFpG18sWnfD8mwsKSZ/IPzxtmQULTfv0bfMlSUrigqSh/dityjnqxcvC1NlobvtkVFxDX/EtrPJDHDBI33wmCK4NWV/Jfm/PXW6Ojbs3wqBWGKVYnB+mg2ReWtV0Rr7HmOhZ9r0V6/M9Deske9dBdlz/eYLTWAckiJLc6RNaaxIKUrcQc+l8ZHNcuu8pibRB2E/uGeoBe8Z+HejgkJfxE18Xyz1P1r7PwUEPz554vq8wLD/3HflT+OF4VkbiEeEpEadkuRjFktwPyolvk7fmbSq24tNm0qQV+6NuJMDzha/lLGYG6v+KZcAyUfOHWDLWQBrbhrBKYbB+vdNv8paD2fKP2UkojnMLGw5Gfri8nYlkqhwOlRfQgqWfdPfxcVDNZEYmL1Bci+KJ3nYJ/TQkJrRWXZ4ZmOUiM+pw1wFV/3ZLR/xfij2Y=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(376002)(346002)(396003)(136003)(451199021)(55016003)(186003)(9686003)(316002)(86362001)(478600001)(122000001)(54906003)(38100700002)(76116006)(71200400001)(66946007)(66556008)(66476007)(66446008)(33656002)(64756008)(7696005)(4326008)(6916009)(82960400001)(6506007)(41300700001)(26005)(52536014)(8676002)(5660300002)(8936002)(30864003)(2906002)(38070700005)(7416002)(7406005)(7366002)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?a/2pvAgarmi6UxxjEwF9/15YLf2D0Eyn4fdBB8TeZPD1X1viRO//B83LSg+W?=
+ =?us-ascii?Q?Kb1IdO9MiI6onQllU79snUl5ERrgGYi0IcI196Hl3kip2suAMqWODPMTM2LP?=
+ =?us-ascii?Q?eNrdGtYbxu7IVB71bzz8NR4HhEADC8Iz/0UpQWzmDOg5jYVpP9bheXJFvSu0?=
+ =?us-ascii?Q?Pe8yWpoq72YuJCN1vn/WZbfmimwy1GnFcNimvVFQmWCVn5sW06QeSYH2BUNQ?=
+ =?us-ascii?Q?rWMxGTwHW6TUTD3cJ9N7wIjTotFv7mx6lzbIbfmNaa5Kq8vPbBJbrFC2pkz6?=
+ =?us-ascii?Q?o0XywMr2OPye+wB1KthXoxT9FlPr5knw9mevANI78AgCQqBTo/HdQwxLsa9q?=
+ =?us-ascii?Q?mh4OmuzyKkQYl1rW2Y/Qj606hKl8yXua+muHOsNGOGoQkzKXsUh4wBdP3IVp?=
+ =?us-ascii?Q?9w2RARPvzINL29PxfzwHggsig+iwYOv/hQbxbUE0EOnbLeR34bSucGOl50L1?=
+ =?us-ascii?Q?RzjSNl1Mmj872iKuR7IdZKVnx3P125fcFI6Wms7Fwrf7xUstqDQeZJ/831Qg?=
+ =?us-ascii?Q?AHrT5Hhoea963KRxmwvc+xTs7h3jDDmwy6cuoEAPzbCze2I/jD1J0JdE00nh?=
+ =?us-ascii?Q?8JUkhP1iq2/nkMAv5HP3WBMstojrhSwGAHUmAyVTe9ejwgGWOogZN7/1oKHq?=
+ =?us-ascii?Q?gXWYUgLlg1D3JQv8ytHKjTWuXcYkFH9UcUusaGJ6xYpoqhQVfhtyRM5UtaBo?=
+ =?us-ascii?Q?E+CLgpxhhHMPkFaYhCub2XqviDWFDoFIUOif5Mp/6mwhYGvozE1/88Kug/f6?=
+ =?us-ascii?Q?i8Ip+TfcXnB8OyuoNL/tfdZ7auSwDB9TUvdaQJmjIKxnVPkVu/X75wezWphi?=
+ =?us-ascii?Q?YwcyUPwBXPXXiGWXCJfkYBSCGXjDFs7sNpdm8eOoBNeZcRgMQ+kBDC0CHw3M?=
+ =?us-ascii?Q?0giAooLfQrIrOvOMgmG8n/rsthYIg+qCw3n8hsjNr3FtZBMLZLh4+JhIjF2o?=
+ =?us-ascii?Q?M9b9a+CPz4Fx+VNCkhsSXlnECKrQ2Mx0IYM7PjgyM/WufkvWwbRagO4F8Bcs?=
+ =?us-ascii?Q?88T8Rui1/HKgQq2tkgICF13dQehrvtfhw857nucMvWVWxu4il690S0aoVUdu?=
+ =?us-ascii?Q?J6L9aje42joksBmHiVoAdRjr8TNotpKWCu+0R33wHKEQhEPuCldsiNkr5mnD?=
+ =?us-ascii?Q?gNoxHrhUA19rkcAf+3NcKQkhRqVlDjWjPBPMHFOQ/9IC1MuGWmxe3VwrKM5+?=
+ =?us-ascii?Q?6NLq3/MvzcwkJg7MeruyNC7FSHYrnJRJjtTfyFzBV68ahPqny6nmjHhaXXQg?=
+ =?us-ascii?Q?mS7kWPhezOmDMXB4j/afudj8xvnEBFaRJg38Clj6x+lohzd9A75OGSQj/wnO?=
+ =?us-ascii?Q?0IZVVPSPZCpZF0GRQ2QBUOzS3WFZ/CUcZ1URSH6YA+mhFG7xeXctwtMps1FE?=
+ =?us-ascii?Q?QC6Fj1+UhReDZAV4AQUd8m+vvsKtPa2Z+vkSow4Wd0rZmLQBBXGRJHvtAnqm?=
+ =?us-ascii?Q?csHgiAtZu+rrRMLsJ62P/DbeDtSc2BkZ8sxdMrOc0sMfRikfW50dzH/O/tdl?=
+ =?us-ascii?Q?Ep2bVYks3d+ffPtxBwQm3xVJ2lalH6UQdOZuQW0i1dbQum+zAwaiL3YtjpSq?=
+ =?us-ascii?Q?ybJJ8ADOJcos5uSX+uE=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3623:EE_|BN8PR03MB4916:EE_
-X-MS-Office365-Filtering-Correlation-Id: f14ea66b-8cbb-46e3-950e-08db92df9019
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4xw4O1tz/ejz8dktygw/GI1FhSsnKM8f0Uk7Rseu4mcPpgf7fvRbU2pydzj71CT3anK5eZDkHPyEmJ0l6ZCCQ5t72foqEKOlmyy/Dmd25A7HYtF2kPbDLIOvJZm95rst1DXEqCy0PM0DyWNxrbUIypiOc2BvOlxD0A+NZElACIhT0NqD6BCqhBOMa1lxP9yZGNt2UgFe/XYoCfAB9ona//neQmsNjrByTbZfCfoiSDd1bcZAeQKGJLKNwlz7r8ef8RgL+XSNwElzcHVYs7bHyrJgp8EUIQ2O7R5lzDL7wwEEjeotaLAPvKC9pLO16OxtH+qhuLrnz0LqLVpEE7sU4HaTVxtxPayNNW5RJfT4uomQF98LMKxew7P92jNw+EwXpDm+WspoJFa38pbZ2zI69JIeklM9n3nfRAhgBPCnUdrZvLfzeM6YR+lUlED7ESsEvGrxk0qpHWyM40QtELpNWikw3cfOIBUi3iqo2+iBri6WSROxogw+ddOu9xFrGCsG1JYx9xFm0Fh+e8xpsPXbPWyTUCDe3FR139J8rqlrTK5/CYXHCBCgO+Jn32AZUIDNl5jofBheHyr1OYU2WalxcyMj/9d7w0S2zFc+bRnbwZNQIZy1bPli0l8VrbrzWOzmyFm9QnzmR0x6HHCVA4ypvg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3623.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(346002)(136003)(396003)(39860400002)(451199021)(66946007)(2906002)(4326008)(66556008)(66476007)(6486002)(6666004)(86362001)(31696002)(6512007)(83380400001)(478600001)(36756003)(186003)(82960400001)(26005)(6506007)(38100700002)(2616005)(53546011)(110136005)(54906003)(316002)(41300700001)(4744005)(8936002)(8676002)(31686004)(5660300002)(7416002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UHFOZHdLamdhKzJNQllpTTRsbUxZNUJnVzByam5leVkvOVpCZ2FRVFEvZTN5?=
- =?utf-8?B?T1Rsd0J1OTNvVFJrckNyYVExU0ZhR2l0SGNmWndJWUxoVTVyMXY4MW5JNm93?=
- =?utf-8?B?MVl3S0FkK1pZOERmWUNDdzBLRFFzc1VlbGRKS2lENHBoZStBZC9VbG1KVHgw?=
- =?utf-8?B?SjF3MnJuc0tUcTJORksvU0pCK2FHZUFTUEFSRUJ3ZHVJWmpDclJHdXNJaHRP?=
- =?utf-8?B?aHh5S1NTNzhzTzJveVo1emIzSFZYUVNTdGVmOW45dE5NN2pxdTRiUTk4dEVN?=
- =?utf-8?B?SG5jQlNrV2h6eW4xQWpYSDR2SDFIMExLWG84YnQvTkdiMXo1QXltYmJiTThL?=
- =?utf-8?B?TUdhTWtKbnJRdlZvaE1aVjdRcFFsTWY3OWpCNUpZajh0Sm9WREhJSlF2Wkh2?=
- =?utf-8?B?WnQ3WkRvdGQyZzIwa2hGZDBUcEgvb3k5WE10Y0hkLzF3OTBRVTVEZDlWQldz?=
- =?utf-8?B?QzB5WTkzM1NzcjFoNzJvTU8rV3lDckNaazJobnUvbEFrblBiR0tydFFqSmN5?=
- =?utf-8?B?dGlaQ2hibW9QOHpSK1U2RVNRNk5CN0lkRVdKeExkaTBYRGhGYW5oVTFzZDFx?=
- =?utf-8?B?N1JhaUhrL1dDZWZ0eEhob0YzMTJsRHA3N05HSnVMNkpWQUcwVUoyUjNyRHUx?=
- =?utf-8?B?NkNhOEZYOHFzYWNuN0cxSUoyemJ1aDExbU5YTFlNLzFjeENlUThDVXdLQkhr?=
- =?utf-8?B?OGlkWGJuWFZmajdmdkhRN2tPSVZHNTZlYlI3VmhWTnE4YmZoT0F1Uk9CWG13?=
- =?utf-8?B?dlo3T3FYOGNMZ25WV2hsNTZqYVpDM3BlemdHbkxLa1ZkVVFOR3FoS3N2YStn?=
- =?utf-8?B?cjNTWWM0WUx3L0lJOUNoMzJzUGNHbWJHd3NWOW5BYStpT0ZkWXlyQkVnQkRy?=
- =?utf-8?B?SjlFaG5OSmMrbUNTSlN1Y2ZBc1BKbUUrdytpa3dDSzdlNkU1OGhlZjdjRWN4?=
- =?utf-8?B?WUQxR3FlWHBweEdsRy9IT1RyNnFwcEJxZ1JmaVFBRzRGREZzR0c1dnlENmhI?=
- =?utf-8?B?aFBwS29IS2Nqc2NjR2IydklFODRTSWI0R0hvSzFOMmZXcS9JVVpQQ3BxbW52?=
- =?utf-8?B?N2themdSVTFsTGt3MXMzMWJSVng5YTNWd1BxOHpwZVBia2RNSUdPOTloRm1j?=
- =?utf-8?B?Y25lT1lML2xLUGtTNERTVll5S2MxemlEblYyTEYzNHhuYW5BeVY1M1NTV1BU?=
- =?utf-8?B?M05KVk45ZEhObk1FZUIwSnFseXI2N1lPYUwvelpSTndMcXFwZUR4dGQxd1c3?=
- =?utf-8?B?ekdkanlrejdPa3l3azdQNzJvNGVha1NZL2FoZVhUSXZybkNESzhNM2RNTTBM?=
- =?utf-8?B?bTB4Yk54Q3JxZjR4RjgyeEwwSXI3dVZJbUdIbFZJaVo4aFg3blVzZTRlbHBO?=
- =?utf-8?B?bW43am1ISnFMbWJVQnQwakk1cFlkbGNQQlVYd3Z0Qjd2V2ZlWHVhNHl0ZXg4?=
- =?utf-8?B?QzV1bUJWdmNlcU85NDBDK3RodHNObDhobGlqcGZ2amRuZWgvSzN6ZllyL0JE?=
- =?utf-8?B?QTRqTVlPMnBZdEZ3aXpubDRrY1MxWEZZZWNheWZ3ZVVuQ25vZ0RhWFlCKzQ4?=
- =?utf-8?B?VUhUbHQ4eTF1K1VXcVhwY3RUVDdZZlhwb1hoZVpRMnVWTHZvQTkweU1RUmI3?=
- =?utf-8?B?VkZHMEdUKzBBZmRwMVFqTXdhWG53bjVaOTE4ZWJ6S2x4a0pCNnVwMFA2M01H?=
- =?utf-8?B?YVVpN245NXQ4Z2Q0NzBGZFNtNmZTSGM5QTJKcHVWOUMyb0RZRVVrQUFoRVR0?=
- =?utf-8?B?dis5Q3huNC9SdXp2VjFtZDBqSHpEZG9qS3hxbU1YcW5pcm9GT2RnUncxdnlZ?=
- =?utf-8?B?WkNOODNmaU4vRnZxWnFwM2ZuMzBnc1pySTVYREVuaEI5NWJVYTRCY2plekFU?=
- =?utf-8?B?Z2VWODlrREw0MGIwMEZ0bTkyTEpsSUJIank2NjJWejFsS3pGanlxZW5jZlpO?=
- =?utf-8?B?Z2p2MS9yVHlaQjVIYmVYa1JvZmlzTW1WMmt0NllZcUdUcW1yZWtDaUs3UmV6?=
- =?utf-8?B?djRoV3lGSWoxa3EvZ1JiS2pRbnZlMkxPVGRVT1gvdUpqcTVkNzZRVHlWTi9V?=
- =?utf-8?B?MEhGZGRld3BHTGtlUEN2b3pncVA1eDZqbXE4YXYzMUl6L2hod3BqYXBPOHlQ?=
- =?utf-8?B?TFJEMk9YUU44NFdITkc4ZkkzWGQ0bk9jcGhPMFVITTA5Q09zK1QzdlY5Vm5H?=
- =?utf-8?B?Mnc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?byttQmtUUmtIalREVkxYR0lVQVhsV0owMVdaNDBZNXdNaTFFRmVlWC9JOS9G?=
- =?utf-8?B?aGhPQmN3NmZRbXNQMTNtTWk4NnR6b2xQQmxSWGxRd1N5azh1ZUM5SGZHS2U2?=
- =?utf-8?B?VW9kd1FHd2N6MlBpK0JDeHR0dC9hbUJuTWhEb3I0b0dRemJneERTZ0NzZHhP?=
- =?utf-8?B?SVAvbklZa1FmTFNxcHFjYmEyTk1BNFRndnNubTZmd1RvbUFaTEkwbUF5NU95?=
- =?utf-8?B?N3lVK1FMaWViaENXOG5KQVNXTnMrV0JURllNUVhKeEN5d2FNOEcxZG1qcmcw?=
- =?utf-8?B?V2F3SExlNWJ2dXljZUdTdHhqSDJtS1U3YVlQb0ZTZmJiaUp2SDVOZGU0amhM?=
- =?utf-8?B?VGRYQW8zUElzeklNaEVDei9XeEEyMktWbG9wTVdhakJWN0Q5OTZWSHRHUlVj?=
- =?utf-8?B?Q0d1SHhUSytDOEw3bXZPSm9QQmFINkRuVXdrc29vdUpTK0I3QjliWWJWSTJl?=
- =?utf-8?B?VW5SbXNBeU84ZklDUVJYLzhjOVgrdFE5RXptMDV4SDZ5dDJiNW55M1J4em1F?=
- =?utf-8?B?T09aQkM1c0RNV0QyTEZYSWx6U0pjNW9jNkRCQVh1R2pkNVdNVzltV1JwN1NY?=
- =?utf-8?B?cHE5WnF1am1LOXkyS3NKeUlHTzdJMG1OMGdFTk8xR3Zac0VMOFdRSURNYjF6?=
- =?utf-8?B?cmpiVjhZZk41WnhEZzZNOEhITllSanE0dEVlNjRxVjZNeTRDRE5rK3Z5VWVV?=
- =?utf-8?B?L0J0Z0pqRmJnQjRPNlgxOE5GSHBHb241V2VEL2YzL2h0SE12QTVCOWI2Q21p?=
- =?utf-8?B?MmNXc3Mrc082aE4wdWp0cElwUjE2K0FmRExFNWRhZjU5cUpUMXRpMk9UZ2pJ?=
- =?utf-8?B?dTZzVndoZ3U2dnB3VW9NNDVYRzBiNWQrazE5bytOY29YR0dDK3dQbFlURVdm?=
- =?utf-8?B?dkJtTE4zSlJVQ09rN3g2M3NUN3AzTkVtNTBhcE9obHpnZElpMXFYZmY4akZR?=
- =?utf-8?B?dHBCK2l1M2puSVdVS2lYUHkxWFhQUDdHR0hibksreHk0U0FKbEpRME5ybU15?=
- =?utf-8?B?aStWaVI4cXBzVFFBN2lBK2RpNDFjRFcxeC8zQ1FDMloxMGkvSnZMN1p3M25m?=
- =?utf-8?B?UDQzOEZNOGQ3Z0hHOWRTMXFwN0xUZysxTjkzU1liUUo3MG4xdFBXS1IzOWFL?=
- =?utf-8?B?MmhqeEJUNEd5NDc2MmhzZDVRTEQ0KzhQVDNpTU9aaEZkTlB1M1p0RnVXVHJx?=
- =?utf-8?B?WkdDSVNTeW9objRzSnRvVStBS2p2c2Uwc0FxcFZDSWg1VFZGanNGTjE2Zjd0?=
- =?utf-8?B?U3d3c1FYc3QvZjNEanRyRGVmc3hyODNVVTNSYWRLcGxPL1ViS1lLM1VWdHdu?=
- =?utf-8?B?WGFYdjdwUGxzQ0wwT1VmY2xjdUMwVnZpVzVJU2tabVoyUUJsSXJoZXJ5TExW?=
- =?utf-8?B?WEJxRThBdWpLSVpjMm5PY1c3blRHVTZEZVFybWEzU0djaHp0emVXV1Z0a00v?=
- =?utf-8?B?Ymk4U3N5YW1WNGVqYzZqWEdVdzA3d3hKNUxjWnM1Ky9GV1BBMHFJUktYT2M2?=
- =?utf-8?B?KzZzUVhkOUpXL1o0RjVMeE5sMFpoRjVLeUp3eGhkYkhXSFhKS3F4T2ZxNTV5?=
- =?utf-8?B?YVlaUTdYNFNFZ2ljd0RGZFFwZ2JhcEx2TEl2U3dRV2R1RjkvU1lFajZMOHNa?=
- =?utf-8?B?Q1IrV09aWExoYlEyNGpzZUl2c1hhYUQ2eGxNM2Nza3ZTOXVueWZCYTRoamIz?=
- =?utf-8?Q?d+JX6nlSMlUIEz7+K+cD?=
-X-OriginatorOrg: citrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f14ea66b-8cbb-46e3-950e-08db92df9019
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3623.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2023 22:35:09.9076
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dcaf6d6e-4187-4417-1291-08db92e5aef5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Aug 2023 23:18:58.3382
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Rj5ZDso3s/vtt+ki9d41422d44h+rneviJ2FAUIp0PF+yc4pJZmATQTjPctZDBqw8aK4smggygpEkP3cg4JrUIYA+CC+9WOM//MhdQ7BWd0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4916
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zLD37UF9Af+/IutB05oxvOXT646Uz9bT1I+muC63nEsLa2MpWAeg8hpAy4QXyWL2PwYzM6wcEojbDrn0Es+yLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5531
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 01/08/2023 11:25 pm, Thomas Gleixner wrote:
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -1688,7 +1688,7 @@ static void validate_apic_and_package_id
->  
->  	apicid = apic->cpu_present_to_apicid(cpu);
->  
-> -	if (apicid != c->topo.apicid) {
-> +	if (WARN_ON_ONCE(apicid != c->topo.apicid)) {
->  		pr_err(FW_BUG "CPU%u: APIC id mismatch. Firmware: %x APIC: %x\n",
 
-While you're fixing this, care to remove the chaotic-evil path of mixing
-%u and %x with no 0x prefix?
+> > +#include "../../entry/calling.h"
+>=20
+> Rather than do the low level PUSH_REGS and POP_REGS, I vote to have core =
+code
+> expose a FRED-specific wrapper for invoking external_interrupt().  More b=
+elow.
 
-~Andrew
+Nice idea!
+
+> > +	/*
+> > +	 * A FRED stack frame has extra 16 bytes of information pushed at the
+> > +	 * regular stack top compared to an IDT stack frame.
+>=20
+> There is pretty much no chance that anyone remembers the layout of an IDT=
+ stack
+> frame off the top of their head.  I.e. saying "FRED has 16 bytes more" is=
+n't all
+> that useful.  It also fails to capture the fact that FRED stuff a hell of=
+ a lot
+> more information in those "common" 48 bytes.
+>=20
+> It'll be hard/impossible to capture all of the overload info in a comment=
+, but
+> showing the actual layout of the frame would be super helpful, e.g. somet=
+hing
+> like
+> this
+>=20
+> 	/*
+> 	 * FRED stack frames are always 64 bytes:
+> 	 *
+> 	 * ------------------------------
+> 	 * | Bytes  | Usage             |
+> 	 * -----------------------------|
+> 	 * | 63:56  | Reserved          |
+> 	 * | 55:48  | Event Data        |
+>          * | 47:40  | SS + Event Info   |
+>          * | 39:32  | RSP               |
+> 	 * | 31:24  | RFLAGS            |
+>          * | 23:16  | CS + Aux Info     |
+>          * |  15:8  | RIP               |
+>          * |   7:0  | Error Code        |
+>          * ------------------------------
+> 	 */
+> 	 *
+> 	 * Use LEA to get the return RIP and push it, then push an error code.
+> 	 * Note, only NMI handling does an ERETS to the target!  IRQ handling
+> 	 * doesn't need to unmask NMIs and so simply uses CALL+RET, i.e. the
+> 	 * RIP pushed here is only truly consumed for NMIs!
+
+I take these as ASM code does need more love, i.e., nice comments :/
+
+Otherwise only more confusion.
+
+=20
+>=20
+> Jumping way back to providing a wrapper for FRED, if we do that, then the=
+re's no
+> need to include calling.h, and the weird wrinkle about the ERET target ki=
+nda goes
+> away too.  E.g. provide this in arch/x86/entry/entry_64_fred.S
+>=20
+> 	.section .text, "ax"
+>=20
+> /* Note, this is instrumentation safe, and returns via RET, not ERETS! */
+> #if IS_ENABLED(CONFIG_KVM_INTEL)
+> SYM_CODE_START(fred_irq_entry_from_kvm)
+> 	FRED_ENTER
+> 	call external_interrupt
+> 	FRED_EXIT
+> 	RET
+> SYM_CODE_END(fred_irq_entry_from_kvm)
+> EXPORT_SYMBOL_GPL(fred_irq_entry_from_kvm);
+> #endif
+>=20
+> and then the KVM side for this particular chunk is more simply:
+>=20
+> 	lea 1f(%rip), %rax
+> 	push %rax
+> 	push $0		/* FRED error code, 0 for NMI and external
+> interrupts */
+>=20
+> 	\branch_insn \branch_target
+> 1:
+> 	VMX_DO_EVENT_FRAME_END
+> 	RET
+>=20
+>=20
+> Alternatively, the whole thing could be shoved into
+> arch/x86/entry/entry_64_fred.S,
+> but at a glance I don't think that would be a net positive due to the nee=
+d to
+> handle
+> IRQs vs. NMIs.
+>=20
+> > +	\branch_insn \branch_target
+> > +
+> > +	.if \nmi =3D=3D 0
+> > +	POP_REGS
+> > +	.endif
+> > +
+> > +1:
+> > +	/*
+> > +	 * "Restore" RSP from RBP, even though IRET has already unwound RSP t=
+o
+>=20
+> As mentioned above, this is incorrect on two fronts.
+>=20
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 0ecf4be2c6af..4e90c69a92bf 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -6890,6 +6890,14 @@ static void vmx_apicv_post_state_restore(struct
+> kvm_vcpu *vcpu)
+> >  	memset(vmx->pi_desc.pir, 0, sizeof(vmx->pi_desc.pir));
+> >  }
+> >
+> > +#ifdef CONFIG_X86_FRED
+> > +void vmx_do_fred_interrupt_irqoff(unsigned int vector);
+> > +void vmx_do_fred_nmi_irqoff(unsigned int vector);
+> > +#else
+> > +#define vmx_do_fred_interrupt_irqoff(x) BUG()
+> > +#define vmx_do_fred_nmi_irqoff(x) BUG()
+> > +#endif
+>=20
+> My slight preference is to open code the BUG() as a ud2 in assembly, pure=
+ly to
+> avoid more #ifdefs.
+>=20
+> > +
+> >  void vmx_do_interrupt_irqoff(unsigned long entry);
+> >  void vmx_do_nmi_irqoff(void);
+> >
+> > @@ -6932,14 +6940,16 @@ static void handle_external_interrupt_irqoff(st=
+ruct
+> kvm_vcpu *vcpu)
+> >  {
+> >  	u32 intr_info =3D vmx_get_intr_info(vcpu);
+> >  	unsigned int vector =3D intr_info & INTR_INFO_VECTOR_MASK;
+> > -	gate_desc *desc =3D (gate_desc *)host_idt_base + vector;
+> >
+> >  	if (KVM_BUG(!is_external_intr(intr_info), vcpu->kvm,
+> >  	    "unexpected VM-Exit interrupt info: 0x%x", intr_info))
+> >  		return;
+> >
+> >  	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+> > -	vmx_do_interrupt_irqoff(gate_offset(desc));
+> > +	if (cpu_feature_enabled(X86_FEATURE_FRED))
+> > +		vmx_do_fred_interrupt_irqoff(vector);	/* Event type is 0 */
+>=20
+> I strongly prefer to use code to document what's going on.  E.g. the tail=
+ comment
+> just left me wondering, what event type is 0?  Whereas this makes it quit=
+e clear
+> that KVM is signaling a hardware interrupt.  The fact that it's a nop as =
+far as
+> code generation goes is irrelevant.
+>=20
+> 	vmx_do_fred_interrupt_irqoff((EVENT_TYPE_HWINT << 16) | vector);
+
+Better readability.
+
+>=20
+> > +	else
+> > +		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base
+> + vector));
+> >  	kvm_after_interrupt(vcpu);
+> >
+> >  	vcpu->arch.at_instruction_boundary =3D true;
+>=20
+> Here's a diff for (hopefully) everything I've suggested above.
+
+Thanks a lot!  I will test it and update the patch in this mail thread.
+
+>=20
+> ---
+>  arch/x86/entry/entry_64_fred.S | 17 ++++++-
+>  arch/x86/kernel/traps.c        |  5 --
+>  arch/x86/kvm/vmx/vmenter.S     | 84 +++++++++++++++-------------------
+>  arch/x86/kvm/vmx/vmx.c         |  7 +--
+>  4 files changed, 55 insertions(+), 58 deletions(-)
+>=20
+> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fre=
+d.S
+> index 12063267d2ac..a973c0bd29f6 100644
+> --- a/arch/x86/entry/entry_64_fred.S
+> +++ b/arch/x86/entry/entry_64_fred.S
+> @@ -10,7 +10,6 @@
+>  #include "calling.h"
+>=20
+>  	.code64
+> -	.section ".noinstr.text", "ax"
+>=20
+>  .macro FRED_ENTER
+>  	UNWIND_HINT_END_OF_STACK
+> @@ -24,6 +23,22 @@
+>  	POP_REGS
+>  .endm
+>=20
+> +	.section .text, "ax"
+> +
+> +/* Note, this is instrumentation safe, and returns via RET, not ERETS! *=
+/
+> +#if IS_ENABLED(CONFIG_KVM_INTEL)
+> +SYM_CODE_START(fred_irq_entry_from_kvm)
+> +	FRED_ENTER
+> +	call external_interrupt
+> +	FRED_EXIT
+> +	RET
+> +SYM_CODE_END(fred_irq_entry_from_kvm)
+> +EXPORT_SYMBOL_GPL(fred_irq_entry_from_kvm);
+> +#endif
+> +
+> +	.section ".noinstr.text", "ax"
+> +
+> +
+>  /*
+>   * The new RIP value that FRED event delivery establishes is
+>   * IA32_FRED_CONFIG & ~FFFH for events that occur in ring 3.
+> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> index 21eeba7b188f..cbcb83c71dab 100644
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -1566,11 +1566,6 @@ int external_interrupt(struct pt_regs *regs)
+>  	return 0;
+>  }
+>=20
+> -#if IS_ENABLED(CONFIG_KVM_INTEL)
+> -/* For KVM VMX to handle IRQs in IRQ induced VM exits. */
+> -EXPORT_SYMBOL_GPL(external_interrupt);
+> -#endif
+> -
+>  #endif /* CONFIG_X86_64 */
+>=20
+>  void __init trap_init(void)
+> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+> index 79a4c91d9434..e25df565c3f8 100644
+> --- a/arch/x86/kvm/vmx/vmenter.S
+> +++ b/arch/x86/kvm/vmx/vmenter.S
+> @@ -9,7 +9,6 @@
+>  #include <asm/segment.h>
+>  #include "kvm-asm-offsets.h"
+>  #include "run_flags.h"
+> -#include "../../entry/calling.h"
+>=20
+>  #define WORD_SIZE (BITS_PER_LONG / 8)
+>=20
+> @@ -33,15 +32,31 @@
+>  #define VCPU_R15	__VCPU_REGS_R15 * WORD_SIZE
+>  #endif
+>=20
+> +.macro VMX_DO_EVENT_FRAME_BEGIN
+> +	/*
+> +	 * Unconditionally create a stack frame, getting the correct RSP on the
+> +	 * stack (for x86-64) would take two instructions anyways, and RBP can
+> +	 * be used to restore RSP to make objtool happy (see below).
+> +	 */
+> +	push %_ASM_BP
+> +	mov %_ASM_SP, %_ASM_BP
+> +.endm
+> +
+> +.macro VMX_DO_EVENT_FRAME_END
+> +	/*
+> +	 * "Restore" RSP from RBP, even though {E,I}RET has already unwound RSP
+> +	 * to the correct value *in most cases*.  KVM's IRQ handling with FRED
+> +	 * doesn't do ERETS, and objtool doesn't know the callee will IRET/ERET
+> +	 * and, without the explicit restore, thinks the stack is getting wallo=
+ped.
+> +	 * Using an unwind hint is problematic due to x86-64's dynamic alignmen=
+t.
+> +	 */
+> +	mov %_ASM_BP, %_ASM_SP
+> +	pop %_ASM_BP
+> +.endm
+> +
+>  #ifdef CONFIG_X86_FRED
+>  .macro VMX_DO_FRED_EVENT_IRQOFF branch_insn branch_target nmi=3D0
+> -	/*
+> -	 * Unconditionally create a stack frame, getting the correct RSP on the
+> -	 * stack (for x86-64) would take two instructions anyways, and RBP can
+> -	 * be used to restore RSP to make objtool happy (see below).
+> -	 */
+> -	push %_ASM_BP
+> -	mov %_ASM_SP, %_ASM_BP
+> +	VMX_DO_EVENT_FRAME_BEGIN
+>=20
+>  	/*
+>  	 * Don't check the FRED stack level, the call stack leading to this
+> @@ -78,43 +93,23 @@
+>  	 * push an error code before invoking the IRQ/NMI handler.
+>  	 *
+>  	 * Use LEA to get the return RIP and push it, then push an error code.
+> +	 * Note, only NMI handling does an ERETS to the target!  IRQ handling
+> +	 * doesn't need to unmask NMIs and so simply uses CALL+RET, i.e. the
+> +	 * RIP pushed here is only truly consumed for NMIs!
+>  	 */
+>  	lea 1f(%rip), %rax
+>  	push %rax
+>  	push $0		/* FRED error code, 0 for NMI and external
+> interrupts */
+>=20
+> -	.if \nmi =3D=3D 0
+> -	PUSH_REGS
+> -	mov %rsp, %rdi
+> -	.endif
+> -
+>  	\branch_insn \branch_target
+> -
+> -	.if \nmi =3D=3D 0
+> -	POP_REGS
+> -	.endif
+> -
+>  1:
+> -	/*
+> -	 * "Restore" RSP from RBP, even though IRET has already unwound RSP to
+> -	 * the correct value.  objtool doesn't know the callee will IRET and,
+> -	 * without the explicit restore, thinks the stack is getting walloped.
+> -	 * Using an unwind hint is problematic due to x86-64's dynamic alignmen=
+t.
+> -	 */
+> -	mov %_ASM_BP, %_ASM_SP
+> -	pop %_ASM_BP
+> +	VMX_DO_EVENT_FRAME_END
+>  	RET
+>  .endm
+>  #endif
+>=20
+>  .macro VMX_DO_EVENT_IRQOFF call_insn call_target
+> -	/*
+> -	 * Unconditionally create a stack frame, getting the correct RSP on the
+> -	 * stack (for x86-64) would take two instructions anyways, and RBP can
+> -	 * be used to restore RSP to make objtool happy (see below).
+> -	 */
+> -	push %_ASM_BP
+> -	mov %_ASM_SP, %_ASM_BP
+> +	VMX_DO_EVENT_FRAME_BEGIN
+>=20
+>  #ifdef CONFIG_X86_64
+>  	/*
+> @@ -129,14 +124,7 @@
+>  	push $__KERNEL_CS
+>  	\call_insn \call_target
+>=20
+> -	/*
+> -	 * "Restore" RSP from RBP, even though IRET has already unwound RSP to
+> -	 * the correct value.  objtool doesn't know the callee will IRET and,
+> -	 * without the explicit restore, thinks the stack is getting walloped.
+> -	 * Using an unwind hint is problematic due to x86-64's dynamic alignmen=
+t.
+> -	 */
+> -	mov %_ASM_BP, %_ASM_SP
+> -	pop %_ASM_BP
+> +	VMX_DO_EVENT_FRAME_END
+>  	RET
+>  .endm
+>=20
+> @@ -375,11 +363,13 @@ SYM_INNER_LABEL_ALIGN(vmx_vmexit,
+> SYM_L_GLOBAL)
+>=20
+>  SYM_FUNC_END(__vmx_vcpu_run)
+>=20
+> -#ifdef CONFIG_X86_FRED
+>  SYM_FUNC_START(vmx_do_fred_nmi_irqoff)
+> +#ifdef CONFIG_X86_FRED
+>  	VMX_DO_FRED_EVENT_IRQOFF jmp fred_entrypoint_kernel nmi=3D1
+> +#else
+> +	ud2
+> +#endif
+>  SYM_FUNC_END(vmx_do_fred_nmi_irqoff)
+> -#endif
+>=20
+>  SYM_FUNC_START(vmx_do_nmi_irqoff)
+>  	VMX_DO_EVENT_IRQOFF call asm_exc_nmi_kvm_vmx
+> @@ -438,11 +428,13 @@ SYM_FUNC_END(vmread_error_trampoline)
+>  #endif
+>=20
+>  .section .text, "ax"
+> -#ifdef CONFIG_X86_FRED
+>  SYM_FUNC_START(vmx_do_fred_interrupt_irqoff)
+> -	VMX_DO_FRED_EVENT_IRQOFF call external_interrupt
+> +#ifdef CONFIG_X86_FRED
+> +	VMX_DO_FRED_EVENT_IRQOFF call fred_irq_entry_from_kvm
+> +#else
+> +	ud2
+> +#endif
+>  SYM_FUNC_END(vmx_do_fred_interrupt_irqoff)
+> -#endif
+>=20
+>  SYM_FUNC_START(vmx_do_interrupt_irqoff)
+>  	VMX_DO_EVENT_IRQOFF CALL_NOSPEC _ASM_ARG1
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bf757f5071e4..cb4675dd87df 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6919,13 +6919,8 @@ static void vmx_apicv_post_state_restore(struct
+> kvm_vcpu *vcpu)
+>  	memset(vmx->pi_desc.pir, 0, sizeof(vmx->pi_desc.pir));
+>  }
+>=20
+> -#ifdef CONFIG_X86_FRED
+>  void vmx_do_fred_interrupt_irqoff(unsigned int vector);
+>  void vmx_do_fred_nmi_irqoff(unsigned int vector);
+> -#else
+> -#define vmx_do_fred_interrupt_irqoff(x) BUG()
+> -#define vmx_do_fred_nmi_irqoff(x) BUG()
+> -#endif
+>=20
+>  void vmx_do_interrupt_irqoff(unsigned long entry);
+>  void vmx_do_nmi_irqoff(void);
+> @@ -6976,7 +6971,7 @@ static void handle_external_interrupt_irqoff(struct
+> kvm_vcpu *vcpu)
+>=20
+>  	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+>  	if (cpu_feature_enabled(X86_FEATURE_FRED))
+> -		vmx_do_fred_interrupt_irqoff(vector);	/* Event type is 0 */
+> +		vmx_do_fred_interrupt_irqoff((EVENT_TYPE_HWINT << 16) |
+> vector);
+>  	else
+>  		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base
+> + vector));
+>  	kvm_after_interrupt(vcpu);
+>=20
+> base-commit: 8961078ffe509a97ec7803b17912e57c47b93fa2
+> --
+
