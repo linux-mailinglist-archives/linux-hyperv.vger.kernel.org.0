@@ -2,48 +2,47 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D08D876AC85
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Aug 2023 11:09:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1893976B275
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Aug 2023 13:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231567AbjHAJJW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Aug 2023 05:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37636 "EHLO
+        id S234258AbjHALAP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Aug 2023 07:00:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232256AbjHAJId (ORCPT
+        with ESMTP id S234266AbjHAK7w (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Aug 2023 05:08:33 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43FAB5259;
-        Tue,  1 Aug 2023 02:06:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690880782; x=1722416782;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gEY4ZGGaaQpe3vscglEO/Z/ZNgQa2ejE/Ek77q9vAj0=;
-  b=f9cIxaseGt3BtPp3qF6j32WuRpx4CAG+Ewm57HSvt0RNCgveOsQs/Krf
-   5xeTlh0C+DFHyDodO6Up2kde9vgqcQcr2pTvlb5VMeGJyS7Cdz1n42LTq
-   rLM+WSnl4mUdx9QGwNU2Y/ywXKA0Jz/hjOMklbiJ1xBsK2Unmq4oOtk6m
-   1UFCYH19PVibkVVfNAbx5BNaJUeNvlgvclXhWMSI6sJv+PKl+ehEbyN7Z
-   kYHXqQAFNzAKgHxUtY/RgXm5jCPt+TQ8mWzKaqo3zphh5f8OxTSfejLxj
-   qVUTLmAiT2BsiWLL//rxPllx97yG1PYfm4YsOWCufQUtXVbHO7jzkOLgc
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="366713785"
-X-IronPort-AV: E=Sophos;i="6.01,246,1684825200"; 
-   d="scan'208";a="366713785"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 02:04:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="722420775"
-X-IronPort-AV: E=Sophos;i="6.01,246,1684825200"; 
-   d="scan'208";a="722420775"
-Received: from unknown (HELO fred..) ([172.25.112.68])
-  by orsmga007.jf.intel.com with ESMTP; 01 Aug 2023 02:04:42 -0700
-From:   Xin Li <xin3.li@intel.com>
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tue, 1 Aug 2023 06:59:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EED41212A;
+        Tue,  1 Aug 2023 03:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YE2qKJj0nGqnS749mvZ5YUYTvinBv+jyNwtgFmZ3+Q8=; b=B4FnZuoFBN+F7R8DhAptG4cq8z
+        pPAaq6jCEOFFR82ZVOVboWY8+HWwV3rlE2vVb4LcpJDDaCI4WVTuxm8u6FVkIebNJt/3gcIQm6EhL
+        uXQ9+1AOGEwGNY69X2a3xZYhi/Agcfkhl1LN/EwnbZXdP/CmzjrmglNYVirBrsSPtCbRQsVzvlhp5
+        SDHPPm61BKP47UPCPAMttegoehcM9Ft77iB3YVbCYJpLGtKta4ZnlPIAqWwoHHV5XeZ7nOyk/P+mp
+        XoyolXg40nLd0D8FykoUZP4HDTHUG8dWEBpVmrSeli8/hyAPgtOsPcp1Ip1gsGBrgvP3hSx85WCwW
+        0Lt8kRjw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qQmzW-008Bn5-MT; Tue, 01 Aug 2023 10:52:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 35E773002D3;
+        Tue,  1 Aug 2023 12:52:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D59162119E820; Tue,  1 Aug 2023 12:52:36 +0200 (CEST)
+Date:   Tue, 1 Aug 2023 12:52:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Xin Li <xin3.li@intel.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Jonathan Corbet <corbet@lwn.net>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
@@ -58,7 +57,6 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Wanpeng Li <wanpengli@tencent.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
         Juergen Gross <jgross@suse.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
         Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
@@ -68,9 +66,8 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Randy Dunlap <rdunlap@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Kim Phillips <kim.phillips@amd.com>,
-        Xin Li <xin3.li@intel.com>,
         Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        "Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
         Sebastian Reichel <sebastian.reichel@collabora.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
         Suren Baghdasaryan <surenb@google.com>,
@@ -107,83 +104,40 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Yantengsi <siyanteng@loongson.cn>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
         Sathvika Vasireddy <sv@linux.ibm.com>
-Subject: [PATCH RESEND v9 36/36] x86/fred: Disable FRED by default in its early stage
-Date:   Tue,  1 Aug 2023 01:35:53 -0700
-Message-Id: <20230801083553.8468-10-xin3.li@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230801083553.8468-1-xin3.li@intel.com>
-References: <20230801083553.8468-1-xin3.li@intel.com>
+Subject: Re: [PATCH RESEND v9 00/36] x86: enable FRED for x86-64
+Message-ID: <20230801105236.GB79828@hirez.programming.kicks-ass.net>
+References: <20230801083318.8363-1-xin3.li@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230801083318.8363-1-xin3.li@intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Disable FRED by default in its early stage.
+On Tue, Aug 01, 2023 at 01:32:42AM -0700, Xin Li wrote:
+> Resend because the mail system failed to deliver some messages yesterday.
 
-To enable FRED, a new kernel command line option "fred" needs to be added.
+Well, you need to figure out how to send patches, because both yesterday
+and today are screwy.
 
-Tested-by: Shan Kang <shan.kang@intel.com>
-Signed-off-by: Xin Li <xin3.li@intel.com>
----
+The one from yesterday came in 6 thread groups: 0-25, 26, 27, 28, 29, 30-36,
+while the one from today comes in 2 thread groups: 0-26, 27-36. Which I
+suppose one can count as an improvement :/
 
-Changes since v7:
-* Add a log message when FRED is enabled.
----
- Documentation/admin-guide/kernel-parameters.txt | 4 ++++
- arch/x86/kernel/cpu/common.c                    | 3 +++
- arch/x86/kernel/fred.c                          | 3 +++
- 3 files changed, 10 insertions(+)
+Seriously, it should not be hard to send 36 patches in a single thread.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a1457995fd41..cb12decfcdc0 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1513,6 +1513,10 @@
- 			Warning: use of this parameter will taint the kernel
- 			and may cause unknown problems.
- 
-+	fred
-+			Forcefully enable flexible return and event delivery,
-+			which is otherwise disabled by default.
-+
- 	ftrace=[tracer]
- 			[FTRACE] will set and start the specified tracer
- 			as early as possible in order to facilitate early
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index b34a8a138755..38cf4f64a56e 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1451,6 +1451,9 @@ static void __init cpu_parse_early_param(void)
- 	char *argptr = arg, *opt;
- 	int arglen, taint = 0;
- 
-+	if (!cmdline_find_option_bool(boot_command_line, "fred"))
-+		setup_clear_cpu_cap(X86_FEATURE_FRED);
-+
- #ifdef CONFIG_X86_32
- 	if (cmdline_find_option_bool(boot_command_line, "no387"))
- #ifdef CONFIG_MATH_EMULATION
-diff --git a/arch/x86/kernel/fred.c b/arch/x86/kernel/fred.c
-index 7fdf79c964a8..a4a726ea9fc2 100644
---- a/arch/x86/kernel/fred.c
-+++ b/arch/x86/kernel/fred.c
-@@ -8,6 +8,9 @@
- 
- void cpu_init_fred_exceptions(void)
- {
-+	/* When FRED is enabled by default, this log message may not needed */
-+	pr_info("Initialize FRED on CPU%d\n", smp_processor_id());
-+
- 	wrmsrl(MSR_IA32_FRED_CONFIG,
- 	       /* Reserve for CALL emulation */
- 	       FRED_CONFIG_REDZONE |
--- 
-2.34.1
+I see you're trying to send through the regular corporate email
+trainwreck; do you have a linux.intel.com account? Or really anything
+else besides intel.com? You can try sending the series to yourself to
+see if it arrives correctly as a whole before sending it out to the list
+again.
 
+I also believe there is a kernel.org service for sending patch series,
+but i'm not sure I remember the details.
