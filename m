@@ -2,293 +2,358 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAABB76A856
-	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Aug 2023 07:31:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C722A76ABA8
+	for <lists+linux-hyperv@lfdr.de>; Tue,  1 Aug 2023 11:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbjHAFbb (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Aug 2023 01:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46462 "EHLO
+        id S230474AbjHAJCV (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Aug 2023 05:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbjHAFba (ORCPT
+        with ESMTP id S232227AbjHAJCC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Aug 2023 01:31:30 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3114B2D61;
-        Mon, 31 Jul 2023 22:31:03 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-686f94328a4so3078278b3a.0;
-        Mon, 31 Jul 2023 22:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690867842; x=1691472642;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nqWAF22RstBS1tGS4yV0AwAq4FB3FJTFpBhfM6sE4dE=;
-        b=SGjp1jBd6U+xAiBQVxPDidkD6EbzHrvMBp2VhYLTxu3exqJAEKzqU/Tb780Wrq3Ry0
-         tdsGApUrGOqtMVTRHB4iGcjRj9MhvwUCFdkSctlg+wPHlqNO3HyvYh8EULZLPz0+AjOt
-         xuYd0hMjkBILUV/DyHtrMwF0MYBo8tVAW8QFnbadZ63iXugnDEG0dM7VPb6LCj+ceNLE
-         vJR3ODRNJliIw11rbC0Y5ZUcjqLPjEz4UBP7BWQztCtxqNXbTPnvbmMirvy3CroTYp9t
-         mRC3PklfkjRBwt8yTzCiEg0hqtjJoBT6FojMhA4ihMjaNM4CDjeO6LR0EgDVr+8pLFTi
-         NSVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690867842; x=1691472642;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nqWAF22RstBS1tGS4yV0AwAq4FB3FJTFpBhfM6sE4dE=;
-        b=G5x6J2J41NZtfy7N4ddf+l9V6BMsXXXb+BDP6m6nESP7sVG16lQk096d2gymz16VzK
-         /8OQmpY3QYlt2cF91ZHT2UHS3dwp8M49B4CxGdJ7M7u6CaPBrlQ8TpkD2lG9S7CKh1v7
-         +St/Jz18I92NF4Spi0qHBt672QbQoFknchttZHhWfpcm4RIjfywzHNP0TepAPrrOUX3D
-         fwxjwfgwU7nc/G5JKKMRf02A+bdzCB1oJMiED93iSycu9lDGYWbwCkvz0weolsfP9fob
-         /1kqUZwwP5DdQJRACK6W2R+4P5KQOX7JwImgT+Jh23SFNZ5UvhT41Xq1l52NFottCp89
-         HLbA==
-X-Gm-Message-State: ABy/qLb+LdPybXcPxnyO/9XZJbOW4w35T1RHa50CyYxXw96/nVGFanp/
-        bzdh7qzlQCPkOXCvaEqloYc=
-X-Google-Smtp-Source: APBJJlFievjHlQxWtYiAHh/QmASEiUYMImGOwyD0Iz4AYv5+vCanWbm/6XgiBdhS0kXxv1fpeukrKw==
-X-Received: by 2002:a05:6a00:16c8:b0:666:eaaf:a2af with SMTP id l8-20020a056a0016c800b00666eaafa2afmr13691945pfc.14.1690867841668;
-        Mon, 31 Jul 2023 22:30:41 -0700 (PDT)
-Received: from localhost (c-67-166-91-86.hsd1.wa.comcast.net. [67.166.91.86])
-        by smtp.gmail.com with ESMTPSA id ey14-20020a056a0038ce00b00686bdff1d6fsm8225653pfb.77.2023.07.31.22.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 22:30:41 -0700 (PDT)
-Date:   Tue, 1 Aug 2023 05:30:40 +0000
-From:   Bobby Eshleman <bobbyeshleman@gmail.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
-        linux-hyperv@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        virtualization@lists.linux-foundation.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Tue, 1 Aug 2023 05:02:02 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89238173A;
+        Tue,  1 Aug 2023 02:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690880514; x=1722416514;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VNTVJuExdWzMgMIJDnYnYchd3KTTE96ZhRNNSfTQvuI=;
+  b=Y5g5BMG2urrfx2UdjI6zPWzQrWvk1yj5Wrmsy2KPt3swW/g2XUQl7rUu
+   nHd+tIbOde4Y/WIWE7wIXB7GBnqMq8qZRuzW3y12ceEIaai9xcHMKyClA
+   8YbSjWREaqGvl+DTcyza19725/y68VoHX0ey72abqC9kmnaKiZ3J/3fLf
+   Ve5bBctS55HGPszRiDLq76kc6sYEnVWVX4MAQUMcCe3ae+Nf4dut7tvja
+   lx5TxRusx7XAq/DbrZTfI1YJ+QPJWi4nlkXGrqOfjWqC6AXQZhLehcKek
+   X60a3RoYE6k9AgkXROmBNTML2t+mBGMqHvFd6BuzM9vvI4OT+gBuO1MeW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="433082047"
+X-IronPort-AV: E=Sophos;i="6.01,246,1684825200"; 
+   d="scan'208";a="433082047"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 02:01:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10788"; a="975216940"
+X-IronPort-AV: E=Sophos;i="6.01,246,1684825200"; 
+   d="scan'208";a="975216940"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by fmsmga006.fm.intel.com with ESMTP; 01 Aug 2023 02:01:50 -0700
+From:   Xin Li <xin3.li@intel.com>
+To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        Krasnov Arseniy <oxffffaa@gmail.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Jiang Wang <jiang.wang@bytedance.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH RFC net-next v5 00/14] virtio/vsock: support datagrams
-Message-ID: <ZMiYgDjm0IxXglP/@bullseye>
-References: <20230413-b4-vsock-dgram-v5-0-581bd37fdb26@bytedance.com>
- <20230727035004-mutt-send-email-mst@kernel.org>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Xin Li <xin3.li@intel.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        "Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Babu Moger <babu.moger@amd.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+        Breno Leitao <leitao@debian.org>,
+        Nikunj A Dadhania <nikunj@amd.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Ze Gao <zegao2021@gmail.com>, Fei Li <fei1.li@intel.com>,
+        Conghui <conghui.chen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Jane Malalane <jane.malalane@citrix.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Yantengsi <siyanteng@loongson.cn>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Sathvika Vasireddy <sv@linux.ibm.com>
+Subject: [PATCH RESEND v9 00/36] x86: enable FRED for x86-64
+Date:   Tue,  1 Aug 2023 01:32:42 -0700
+Message-Id: <20230801083318.8363-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230727035004-mutt-send-email-mst@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jul 27, 2023 at 03:51:42AM -0400, Michael S. Tsirkin wrote:
-> On Wed, Jul 19, 2023 at 12:50:04AM +0000, Bobby Eshleman wrote:
-> > Hey all!
-> > 
-> > This series introduces support for datagrams to virtio/vsock.
-> > 
-> > It is a spin-off (and smaller version) of this series from the summer:
-> >   https://lore.kernel.org/all/cover.1660362668.git.bobby.eshleman@bytedance.com/
-> > 
-> > Please note that this is an RFC and should not be merged until
-> > associated changes are made to the virtio specification, which will
-> > follow after discussion from this series.
-> > 
-> > Another aside, the v4 of the series has only been mildly tested with a
-> > run of tools/testing/vsock/vsock_test. Some code likely needs cleaning
-> > up, but I'm hoping to get some of the design choices agreed upon before
-> > spending too much time making it pretty.
-> > 
-> > This series first supports datagrams in a basic form for virtio, and
-> > then optimizes the sendpath for all datagram transports.
-> > 
-> > The result is a very fast datagram communication protocol that
-> > outperforms even UDP on multi-queue virtio-net w/ vhost on a variety
-> > of multi-threaded workload samples.
-> > 
-> > For those that are curious, some summary data comparing UDP and VSOCK
-> > DGRAM (N=5):
-> > 
-> > 	vCPUS: 16
-> > 	virtio-net queues: 16
-> > 	payload size: 4KB
-> > 	Setup: bare metal + vm (non-nested)
-> > 
-> > 	UDP: 287.59 MB/s
-> > 	VSOCK DGRAM: 509.2 MB/s
-> > 
-> > Some notes about the implementation...
-> > 
-> > This datagram implementation forces datagrams to self-throttle according
-> > to the threshold set by sk_sndbuf. It behaves similar to the credits
-> > used by streams in its effect on throughput and memory consumption, but
-> > it is not influenced by the receiving socket as credits are.
-> > 
-> > The device drops packets silently.
-> > 
-> > As discussed previously, this series introduces datagrams and defers
-> > fairness to future work. See discussion in v2 for more context around
-> > datagrams, fairness, and this implementation.
-> 
-> it's a big thread - can't you summarize here?
-> 
+Resend because the mail system failed to deliver some messages yesterday.
 
-Sure, no problem. I'll add that in the next rev. For the sake of readers
-here, the fairness of vsock streams and vsock datagrams per this
-implementation was experimentally demonstrated to be nearly equal.
+This patch set enables the Intel flexible return and event delivery
+(FRED) architecture for x86-64.
 
-Fairness was measured as a percentage reduction of throughput on an
-active and concurrent stream flow. The socket type under test (datagram
-or stream) was overprovisioned into a large pool of sockets and were
-exercised to maximum sending throughput. Each socket was given a unique
-port and single-threaded sender to avoid any scalability differences
-between datagrams and streams. Meanwhile, the throughput of a single,
-lone stream socket was measured before and throughout the lifetime the
-pool of sockets, to detect fairness as an amount of reduced throughput.
-It was demonstrated that there was no real difference in this fairness
-characteristic of datagrams and streams for vsock. In fact, datagrams
-faired better (that is, datagrams were nicer to streams than streams
-were to other streams), although the effect was not statistically
-significant. From the design perspective, the queuing policy is always
-FIFO regardless of socket type. Credits, despite being a perfect
-mechanism for synchronizing send and receive buffer sizes, have no
-effect on queuing fairness either.
+The FRED architecture defines simple new transitions that change
+privilege level (ring transitions). The FRED architecture was
+designed with the following goals:
 
-> 
-> > Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
-> 
-> 
-> could you give a bit more motivation? which applications do
-> you have in mind? for example, on localhost loopback datagrams
-> are actually reliable and a bunch of apps came to depend
-> on that even if they shouldn't.
-> 
-> 
+1) Improve overall performance and response time by replacing event
+   delivery through the interrupt descriptor table (IDT event
+   delivery) and event return by the IRET instruction with lower
+   latency transitions.
 
-Our use case is sending various metrics from VMs to the host.
-Ultimately, we just like the performance numbers we get from this
-datagram implementation compared to what we get from UDP.
+2) Improve software robustness by ensuring that event delivery
+   establishes the full supervisor context and that event return
+   establishes the full user context.
 
-Currently the system is:
-  producers <-> UDS <-> guest proxy <-> UDP <-> host <-> UDS <-> consumers
-  ^-------- guest ----------------^ ^------------ host ------------------^
+The new transitions defined by the FRED architecture are FRED event
+delivery and, for returning from events, two FRED return instructions.
+FRED event delivery can effect a transition from ring 3 to ring 0, but
+it is used also to deliver events incident to ring 0. One FRED
+instruction (ERETU) effects a return from ring 0 to ring 3, while the
+other (ERETS) returns while remaining in ring 0. Collectively, FRED
+event delivery and the FRED return instructions are FRED transitions.
 
-And the numbers look really promising when using vsock dgram:
-  producers <-> UDS <-> guest proxy <-> VSOCK dgram <-> host <-> UDS <-> consumers
-  ^-------- guest ----------------^ ^------------ host ---------------------------^
+Search for the latest FRED spec in most search engines with this search pattern:
 
-The numbers also look really promising when using sockmap in lieu of the
-proxies.
+  site:intel.com FRED (flexible return and event delivery) specification
 
-Best,
-Bobby
+As of now there is no publicly avaiable CPU supporting FRED, thus the Intel
+Simics® Simulator is used as software development and testing vehicles. And
+it can be downloaded from:
+  https://www.intel.com/content/www/us/en/developer/articles/tool/simics-simulator.html
 
-> 
-> > ---
-> > Changes in v5:
-> > - teach vhost to drop dgram when a datagram exceeds the receive buffer
-> >   - now uses MSG_ERRQUEUE and depends on Arseniy's zerocopy patch:
-> > 	"vsock: read from socket's error queue"
-> > - replace multiple ->dgram_* callbacks with single ->dgram_addr_init()
-> >   callback
-> > - refactor virtio dgram skb allocator to reduce conflicts w/ zerocopy series
-> > - add _fallback/_FALLBACK suffix to dgram transport variables/macros
-> > - add WARN_ONCE() for table_size / VSOCK_HASH issue
-> > - add static to vsock_find_bound_socket_common
-> > - dedupe code in vsock_dgram_sendmsg() using module_got var
-> > - drop concurrent sendmsg() for dgram and defer to future series
-> > - Add more tests
-> >   - test EHOSTUNREACH in errqueue
-> >   - test stream + dgram address collision
-> > - improve clarity of dgram msg bounds test code
-> > - Link to v4: https://lore.kernel.org/r/20230413-b4-vsock-dgram-v4-0-0cebbb2ae899@bytedance.com
-> > 
-> > Changes in v4:
-> > - style changes
-> >   - vsock: use sk_vsock(vsk) in vsock_dgram_recvmsg instead of
-> >     &sk->vsk
-> >   - vsock: fix xmas tree declaration
-> >   - vsock: fix spacing issues
-> >   - virtio/vsock: virtio_transport_recv_dgram returns void because err
-> >     unused
-> > - sparse analysis warnings/errors
-> >   - virtio/vsock: fix unitialized skerr on destroy
-> >   - virtio/vsock: fix uninitialized err var on goto out
-> >   - vsock: fix declarations that need static
-> >   - vsock: fix __rcu annotation order
-> > - bugs
-> >   - vsock: fix null ptr in remote_info code
-> >   - vsock/dgram: make transport_dgram a fallback instead of first
-> >     priority
-> >   - vsock: remove redundant rcu read lock acquire in getname()
-> > - tests
-> >   - add more tests (message bounds and more)
-> >   - add vsock_dgram_bind() helper
-> >   - add vsock_dgram_connect() helper
-> > 
-> > Changes in v3:
-> > - Support multi-transport dgram, changing logic in connect/bind
-> >   to support VMCI case
-> > - Support per-pkt transport lookup for sendto() case
-> > - Fix dgram_allow() implementation
-> > - Fix dgram feature bit number (now it is 3)
-> > - Fix binding so dgram and connectible (cid,port) spaces are
-> >   non-overlapping
-> > - RCU protect transport ptr so connect() calls never leave
-> >   a lockless read of the transport and remote_addr are always
-> >   in sync
-> > - Link to v2: https://lore.kernel.org/r/20230413-b4-vsock-dgram-v2-0-079cc7cee62e@bytedance.com
-> > 
-> > ---
-> > Bobby Eshleman (13):
-> >       af_vsock: generalize vsock_dgram_recvmsg() to all transports
-> >       af_vsock: refactor transport lookup code
-> >       af_vsock: support multi-transport datagrams
-> >       af_vsock: generalize bind table functions
-> >       af_vsock: use a separate dgram bind table
-> >       virtio/vsock: add VIRTIO_VSOCK_TYPE_DGRAM
-> >       virtio/vsock: add common datagram send path
-> >       af_vsock: add vsock_find_bound_dgram_socket()
-> >       virtio/vsock: add common datagram recv path
-> >       virtio/vsock: add VIRTIO_VSOCK_F_DGRAM feature bit
-> >       vhost/vsock: implement datagram support
-> >       vsock/loopback: implement datagram support
-> >       virtio/vsock: implement datagram support
-> > 
-> > Jiang Wang (1):
-> >       test/vsock: add vsock dgram tests
-> > 
-> >  drivers/vhost/vsock.c                   |  64 ++-
-> >  include/linux/virtio_vsock.h            |  10 +-
-> >  include/net/af_vsock.h                  |  14 +-
-> >  include/uapi/linux/virtio_vsock.h       |   2 +
-> >  net/vmw_vsock/af_vsock.c                | 281 ++++++++++---
-> >  net/vmw_vsock/hyperv_transport.c        |  13 -
-> >  net/vmw_vsock/virtio_transport.c        |  26 +-
-> >  net/vmw_vsock/virtio_transport_common.c | 190 +++++++--
-> >  net/vmw_vsock/vmci_transport.c          |  60 +--
-> >  net/vmw_vsock/vsock_loopback.c          |  10 +-
-> >  tools/testing/vsock/util.c              | 141 ++++++-
-> >  tools/testing/vsock/util.h              |   6 +
-> >  tools/testing/vsock/vsock_test.c        | 680 ++++++++++++++++++++++++++++++++
-> >  13 files changed, 1320 insertions(+), 177 deletions(-)
-> > ---
-> > base-commit: 37cadc266ebdc7e3531111c2b3304fa01b2131e8
-> > change-id: 20230413-b4-vsock-dgram-3b6eba6a64e5
-> > 
-> > Best regards,
-> > -- 
-> > Bobby Eshleman <bobby.eshleman@bytedance.com>
-> 
-> _______________________________________________
-> Virtualization mailing list
-> Virtualization@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/virtualization
+To enable FRED, the Simics package 8112 QSP-CPU needs to be installed with CPU
+model configured as:
+	$cpu_comp_class = "x86-experimental-fred"
+
+
+Changes since v8:
+* Move the FRED initialization patch after all required changes are in
+  place (Thomas Gleixner).
+* Don't do syscall early out in fred_entry_from_user() before there are
+  proper performance numbers and justifications (Thomas Gleixner).
+* Add the control exception handler to the FRED exception handler table
+  (Thomas Gleixner).
+* Introduce a macro sysvec_install() to derive the asm handler name from
+  a C handler, which simplifies the code and avoids an ugly typecast
+  (Thomas Gleixner).
+* Remove junk code that assumes no local APIC on x86_64 (Thomas Gleixner).
+* Put IDTENTRY changes in a separate patch (Thomas Gleixner).
+* Use high-order 48 bits above the lowest 16 bit SS only when FRED is
+  enabled (Thomas Gleixner).
+* Explain why writing directly to the IA32_KERNEL_GS_BASE MSR is
+  doing the right thing (Thomas Gleixner).
+* Reword some patch descriptions (Thomas Gleixner).
+* Add a new macro VMX_DO_FRED_EVENT_IRQOFF for FRED instead of
+  refactoring VMX_DO_EVENT_IRQOFF (Sean Christopherson).
+* Do NOT use a trampoline, just LEA+PUSH the return RIP, PUSH the error
+  code, and jump to the FRED kernel entry point for NMI or call
+  external_interrupt() for IRQs (Sean Christopherson).
+* Call external_interrupt() only when FRED is enabled, and convert the
+  non-FRED handling to external_interrupt() after FRED lands (Sean
+  Christopherson).
+* Use __packed instead of __attribute__((__packed__)) (Borislav Petkov).
+* Put all comments above the members, like the rest of the file does
+  (Borislav Petkov).
+* Reflect the FRED spec 5.0 change that ERETS and ERETU add 8 to %rsp
+  before popping the return context from the stack.
+* Reflect stack frame definition changes from FRED spec 3.0 to 5.0.
+* Add ENDBR to the FRED_ENTER asm macro after kernel IBT is added to
+  FRED base line in FRED spec 5.0.
+* Add a document which briefly introduces FRED features.
+* Remove 2 patches, "allow FRED systems to use interrupt vectors
+  0x10-0x1f" and "allow dynamic stack frame size", from this patch set,
+  as they are "optimizations" only.
+* Send 2 patches, "header file for event types" and "do not modify the
+  DPL bits for a null selector", as pre-FRED patches.
+
+Changes since v7:
+* Always call external_interrupt() for VMX IRQ handling on x86_64, thus avoid
+  re-entering the noinstr code.
+* Create a FRED stack frame when FRED is compiled-in but not enabled, which
+  uses some extra stack space but simplifies the code.
+* Add a log message when FRED is enabled.
+
+Changes since v6:
+* Add a comment to explain why it is safe to write to a previous FRED stack
+  frame. (Lai Jiangshan).
+* Export fred_entrypoint_kernel(), required when kvm-intel built as a module.
+* Reserve a REDZONE for CALL emulation and Align RSP to a 64-byte boundary
+  before pushing a new FRED stack frame.
+* Replace pt_regs csx flags prefix FRED_CSL_ with FRED_CSX_.
+
+Changes since v5:
+* Initialize system_interrupt_handlers with dispatch_table_spurious_interrupt()
+  instead of NULL to get rid of a branch (Peter Zijlstra).
+* Disallow #DB inside #MCE for robustness sake (Peter Zijlstra).
+* Add a comment for FRED stack level settings (Lai Jiangshan).
+* Move the NMI bit from an invalid stack frame, which caused ERETU to fault,
+  to the fault handler's stack frame, thus to unblock NMI ASAP if NMI is blocked
+  (Lai Jiangshan).
+* Refactor VMX_DO_EVENT_IRQOFF to handle IRQ/NMI in IRQ/NMI induced VM exits
+  when FRED is enabled (Sean Christopherson).
+
+Changes since v4:
+* Do NOT use the term "injection", which in the KVM context means to
+  reinject an event into the guest (Sean Christopherson).
+* Add the explanation of why to execute "int $2" to invoke the NMI handler
+  in NMI caused VM exits (Sean Christopherson).
+* Use cs/ss instead of csx/ssx when initializing the pt_regs structure
+  for calling external_interrupt(), otherwise it breaks i386 build.
+
+Changes since v3:
+* Call external_interrupt() to handle IRQ in IRQ caused VM exits.
+* Execute "int $2" to handle NMI in NMI caused VM exits.
+* Rename csl/ssl of the pt_regs structure to csx/ssx (x for extended)
+  (Andrew Cooper).
+
+Changes since v2:
+* Improve comments for changes in arch/x86/include/asm/idtentry.h.
+
+Changes since v1:
+* call irqentry_nmi_{enter,exit}() in both IDT and FRED debug fault kernel
+  handler (Peter Zijlstra).
+* Initialize a FRED exception handler to fred_bad_event() instead of NULL
+  if no FRED handler defined for an exception vector (Peter Zijlstra).
+* Push calling irqentry_{enter,exit}() and instrumentation_{begin,end}()
+  down into individual FRED exception handlers, instead of in the dispatch
+  framework (Peter Zijlstra).
+
+H. Peter Anvin (Intel) (22):
+  x86/fred: Add Kconfig option for FRED (CONFIG_X86_FRED)
+  x86/fred: Disable FRED support if CONFIG_X86_FRED is disabled
+  x86/cpufeatures: Add the cpu feature bit for FRED
+  x86/opcode: Add ERETU, ERETS instructions to x86-opcode-map
+  x86/objtool: Teach objtool about ERETU and ERETS
+  x86/cpu: Add X86_CR4_FRED macro
+  x86/cpu: Add MSR numbers for FRED configuration
+  x86/fred: Make unions for the cs and ss fields in struct pt_regs
+  x86/fred: Add a new header file for FRED definitions
+  x86/fred: Reserve space for the FRED stack frame
+  x86/fred: Update MSR_IA32_FRED_RSP0 during task switch
+  x86/fred: Let ret_from_fork_asm() jmp to fred_exit_user when FRED is
+    enabled
+  x86/fred: Disallow the swapgs instruction when FRED is enabled
+  x86/fred: No ESPFIX needed when FRED is enabled
+  x86/fred: Allow single-step trap and NMI when starting a new task
+  x86/fred: Add a page fault entry stub for FRED
+  x86/fred: Add a debug fault entry stub for FRED
+  x86/fred: Add a NMI entry stub for FRED
+  x86/traps: Add a system interrupt handler table for system interrupt
+    dispatch
+  x86/traps: Add external_interrupt() to dispatch external interrupts
+  x86/fred: FRED entry/exit and dispatch code
+  x86/fred: FRED initialization code
+
+Xin Li (14):
+  Documentation/x86/64: Add documentation for FRED
+  x86/fred: Define a common function type fred_handler
+  x86/fred: Add a machine check entry stub for FRED
+  x86/fred: Add a double fault entry stub for FRED
+  x86/entry: Remove idtentry_sysvec from entry_{32,64}.S
+  x86/idtentry: Incorporate definitions/declarations of the FRED
+    external interrupt handler type
+  x86/traps: Add sysvec_install() to install a system interrupt handler
+  x86/idtentry: Incorporate declaration/definition of the FRED exception
+    handler type
+  x86/fred: Fixup fault on ERETU by jumping to fred_entrypoint_user
+  x86/traps: Export external_interrupt() for handling IRQ in IRQ induced
+    VM exits
+  x86/fred: Export fred_entrypoint_kernel() for handling NMI in NMI
+    induced VM exits
+  KVM: VMX: Add VMX_DO_FRED_EVENT_IRQOFF for IRQ/NMI handling
+  x86/syscall: Split IDT syscall setup code into idt_syscall_init()
+  x86/fred: Disable FRED by default in its early stage
+
+ .../admin-guide/kernel-parameters.txt         |   4 +
+ Documentation/arch/x86/x86_64/fred.rst        | 102 ++++++++
+ Documentation/arch/x86/x86_64/index.rst       |   1 +
+ arch/x86/Kconfig                              |   9 +
+ arch/x86/entry/Makefile                       |   5 +-
+ arch/x86/entry/entry_32.S                     |   4 -
+ arch/x86/entry/entry_64.S                     |  14 +-
+ arch/x86/entry/entry_64_fred.S                |  58 +++++
+ arch/x86/entry/entry_fred.c                   | 220 ++++++++++++++++++
+ arch/x86/entry/vsyscall/vsyscall_64.c         |   2 +-
+ arch/x86/include/asm/asm-prototypes.h         |   1 +
+ arch/x86/include/asm/cpufeatures.h            |   1 +
+ arch/x86/include/asm/disabled-features.h      |   8 +-
+ arch/x86/include/asm/extable_fixup_types.h    |   4 +-
+ arch/x86/include/asm/fred.h                   | 157 +++++++++++++
+ arch/x86/include/asm/idtentry.h               | 115 ++++++++-
+ arch/x86/include/asm/msr-index.h              |  13 +-
+ arch/x86/include/asm/ptrace.h                 |  57 ++++-
+ arch/x86/include/asm/switch_to.h              |  11 +-
+ arch/x86/include/asm/thread_info.h            |  12 +-
+ arch/x86/include/asm/traps.h                  |  23 ++
+ arch/x86/include/uapi/asm/processor-flags.h   |   2 +
+ arch/x86/kernel/Makefile                      |   1 +
+ arch/x86/kernel/cpu/acrn.c                    |   5 +-
+ arch/x86/kernel/cpu/common.c                  |  47 +++-
+ arch/x86/kernel/cpu/mce/core.c                |  15 ++
+ arch/x86/kernel/cpu/mshyperv.c                |  16 +-
+ arch/x86/kernel/espfix_64.c                   |   8 +
+ arch/x86/kernel/fred.c                        |  67 ++++++
+ arch/x86/kernel/irqinit.c                     |   7 +-
+ arch/x86/kernel/kvm.c                         |   2 +-
+ arch/x86/kernel/nmi.c                         |  19 ++
+ arch/x86/kernel/process_64.c                  |  31 ++-
+ arch/x86/kernel/traps.c                       | 153 ++++++++++--
+ arch/x86/kvm/vmx/vmenter.S                    |  88 +++++++
+ arch/x86/kvm/vmx/vmx.c                        |  19 +-
+ arch/x86/lib/x86-opcode-map.txt               |   2 +-
+ arch/x86/mm/extable.c                         |  79 +++++++
+ arch/x86/mm/fault.c                           |  18 +-
+ drivers/xen/events/events_base.c              |   3 +-
+ tools/arch/x86/include/asm/cpufeatures.h      |   1 +
+ .../arch/x86/include/asm/disabled-features.h  |   8 +-
+ tools/arch/x86/include/asm/msr-index.h        |  13 +-
+ tools/arch/x86/lib/x86-opcode-map.txt         |   2 +-
+ tools/objtool/arch/x86/decode.c               |  19 +-
+ 45 files changed, 1348 insertions(+), 98 deletions(-)
+ create mode 100644 Documentation/arch/x86/x86_64/fred.rst
+ create mode 100644 arch/x86/entry/entry_64_fred.S
+ create mode 100644 arch/x86/entry/entry_fred.c
+ create mode 100644 arch/x86/include/asm/fred.h
+ create mode 100644 arch/x86/kernel/fred.c
+
+-- 
+2.34.1
+
