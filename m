@@ -2,51 +2,31 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B21D76C784
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 09:53:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82FF076CB75
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 13:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233751AbjHBHxy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 03:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
+        id S232050AbjHBLHr (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 07:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229639AbjHBHxW (ORCPT
+        with ESMTP id S230057AbjHBLHq (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 03:53:22 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E3E49FF;
-        Wed,  2 Aug 2023 00:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690962684; x=1722498684;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OjVi6oAFwGDJrW+uaOJzko/OOgjU1MnWnooOVf6WufE=;
-  b=Vy4hUO57geKPUeJKmFRuSE6y2SfMqIUZMMg//IKj7saO/SHKThDbJc0F
-   RrH+Gpq79z0P1+kTkX8lH+sORE+kzAKDZKDiqhPeHwnPRgs3szZH5TT6W
-   NdmixoLCzhDbDC5szrp1oA6z6QkgZLoQt/qnVreYsg6UzIEVBfUjBYtRS
-   FWkRHqsOzY0l2tIfO4+zO802/Gyy6nXWymmvSmAspKUjZ2prrF7JO3HL8
-   jBEuPRqCfkoqr5gnwPopNf2KqaGP9zP5FUNTfbAFGOpOr9a6c+kp1cVFG
-   ybtfP7T0l4znRYP2kEhNdwu5zM/EzLBjY2gLRO9lZzCsCLYqmM4J3+5F5
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="369506963"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="369506963"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 00:51:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="819099480"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="819099480"
-Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Aug 2023 00:51:19 -0700
-Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qR6da-00010l-1x;
-        Wed, 02 Aug 2023 07:51:18 +0000
-Date:   Wed, 2 Aug 2023 15:50:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        Wed, 2 Aug 2023 07:07:46 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0220A123;
+        Wed,  2 Aug 2023 04:07:45 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+        id C83E8238C421; Wed,  2 Aug 2023 04:07:43 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C83E8238C421
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1690974463;
+        bh=ScNxCmRJAOBz8Wvq7+5zN9Yyd2Q/fLFs3kdGC6qTeBQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IeHUZSfi7i7X8zhEiANUmT/3D1TYKi6tsDdvR/vZa50b/JzCp6Sh6u7f4TquTikmA
+         urSK9wVw2c0pWniak4U1btsGyGE7jsu1sm8gIZXYkwWJ/Jsj2NLdzz1fNKDEqlL3H9
+         ZyEsZjV/3TYhodLRzg7OE6Y8toSG1q1bY4vLK80Q=
+From:   Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
         decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
         kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
         sharmaajay@microsoft.com, leon@kernel.org, cai.huoqing@linux.dev,
@@ -54,131 +34,230 @@ To:     Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
         tglx@linutronix.de, linux-hyperv@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, schakrabarti@microsoft.com,
-        Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH V7 net] net: mana: Fix MANA VF unload when hardware is
-Message-ID: <202308021532.8iYkExDh-lkp@intel.com>
-References: <1690892953-25201-1-git-send-email-schakrabarti@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1690892953-25201-1-git-send-email-schakrabarti@linux.microsoft.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Cc:     schakrabarti@microsoft.com,
+        Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+Subject: [PATCH V6 net-next] net: mana: Configure hwc timeout from hardware
+Date:   Wed,  2 Aug 2023 04:07:40 -0700
+Message-Id: <1690974460-15660-1-git-send-email-schakrabarti@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Hi Souradeep,
+At present hwc timeout value is a fixed value. This patch sets the hwc
+timeout from the hardware. It now uses a new hardware capability
+GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG to query and set the value
+in hwc_timeout.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+---
+V5 -> V6:
+* used msecs_to_jiffies() in wait_for_completion_timeout.
+---
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 30 ++++++++++++++++++-
+ .../net/ethernet/microsoft/mana/hw_channel.c  | 24 ++++++++++++++-
+ include/net/mana/gdma.h                       | 20 ++++++++++++-
+ include/net/mana/hw_channel.h                 |  5 ++++
+ 4 files changed, 76 insertions(+), 3 deletions(-)
 
-[auto build test WARNING on net/main]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Souradeep-Chakrabarti/net-mana-Fix-MANA-VF-unload-when-hardware-is/20230801-203141
-base:   net/main
-patch link:    https://lore.kernel.org/r/1690892953-25201-1-git-send-email-schakrabarti%40linux.microsoft.com
-patch subject: [PATCH V7 net] net: mana: Fix MANA VF unload when hardware is
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230802/202308021532.8iYkExDh-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230802/202308021532.8iYkExDh-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308021532.8iYkExDh-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/microsoft/mana/mana_en.c: In function 'mana_dealloc_queues':
->> drivers/net/ethernet/microsoft/mana/mana_en.c:2398:24: warning: suggest parentheses around assignment used as truth value [-Wparentheses]
-    2398 |                 while (skb = skb_dequeue(&txq->pending_skbs)) {
-         |                        ^~~
-
-
-vim +2398 drivers/net/ethernet/microsoft/mana/mana_en.c
-
-  2345	
-  2346	static int mana_dealloc_queues(struct net_device *ndev)
-  2347	{
-  2348		struct mana_port_context *apc = netdev_priv(ndev);
-  2349		unsigned long timeout = jiffies + 120 * HZ;
-  2350		struct gdma_dev *gd = apc->ac->gdma_dev;
-  2351		struct mana_txq *txq;
-  2352		struct sk_buff *skb;
-  2353		int i, err;
-  2354		u32 tsleep;
-  2355	
-  2356		if (apc->port_is_up)
-  2357			return -EINVAL;
-  2358	
-  2359		mana_chn_setxdp(apc, NULL);
-  2360	
-  2361		if (gd->gdma_context->is_pf)
-  2362			mana_pf_deregister_filter(apc);
-  2363	
-  2364		/* No packet can be transmitted now since apc->port_is_up is false.
-  2365		 * There is still a tiny chance that mana_poll_tx_cq() can re-enable
-  2366		 * a txq because it may not timely see apc->port_is_up being cleared
-  2367		 * to false, but it doesn't matter since mana_start_xmit() drops any
-  2368		 * new packets due to apc->port_is_up being false.
-  2369		 *
-  2370		 * Drain all the in-flight TX packets.
-  2371		 * A timeout of 120 seconds for all the queues is used.
-  2372		 * This will break the while loop when h/w is not responding.
-  2373		 * This value of 120 has been decided here considering max
-  2374		 * number of queues.
-  2375		 */
-  2376	
-  2377		for (i = 0; i < apc->num_queues; i++) {
-  2378			txq = &apc->tx_qp[i].txq;
-  2379			tsleep = 1000;
-  2380			while (atomic_read(&txq->pending_sends) > 0 &&
-  2381			       time_before(jiffies, timeout)) {
-  2382				usleep_range(tsleep, tsleep + 1000);
-  2383				tsleep <<= 1;
-  2384			}
-  2385			if (atomic_read(&txq->pending_sends)) {
-  2386				err = pcie_flr(to_pci_dev(gd->gdma_context->dev));
-  2387				if (err) {
-  2388					netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
-  2389						   err, atomic_read(&txq->pending_sends),
-  2390						   txq->gdma_txq_id);
-  2391				}
-  2392				break;
-  2393			}
-  2394		}
-  2395	
-  2396		for (i = 0; i < apc->num_queues; i++) {
-  2397			txq = &apc->tx_qp[i].txq;
-> 2398			while (skb = skb_dequeue(&txq->pending_skbs)) {
-  2399				mana_unmap_skb(skb, apc);
-  2400				dev_consume_skb_any(skb);
-  2401			}
-  2402			atomic_set(&txq->pending_sends, 0);
-  2403		}
-  2404		/* We're 100% sure the queues can no longer be woken up, because
-  2405		 * we're sure now mana_poll_tx_cq() can't be running.
-  2406		 */
-  2407	
-  2408		apc->rss_state = TRI_STATE_FALSE;
-  2409		err = mana_config_rss(apc, TRI_STATE_FALSE, false, false);
-  2410		if (err) {
-  2411			netdev_err(ndev, "Failed to disable vPort: %d\n", err);
-  2412			return err;
-  2413		}
-  2414	
-  2415		mana_destroy_vport(apc);
-  2416	
-  2417		return 0;
-  2418	}
-  2419	
-
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index 8f3f78b68592..2e17ee3acfda 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -106,6 +106,25 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
++static int mana_gd_query_hwc_timeout(struct pci_dev *pdev, u32 *timeout_val)
++{
++	struct gdma_context *gc = pci_get_drvdata(pdev);
++	struct gdma_query_hwc_timeout_resp resp = {};
++	struct gdma_query_hwc_timeout_req req = {};
++	int err;
++
++	mana_gd_init_req_hdr(&req.hdr, GDMA_QUERY_HWC_TIMEOUT,
++			     sizeof(req), sizeof(resp));
++	req.timeout_ms = *timeout_val;
++	err = mana_gd_send_request(gc, sizeof(req), &req, sizeof(resp), &resp);
++	if (err || resp.hdr.status)
++		return err ? err : -EPROTO;
++
++	*timeout_val = resp.timeout_ms;
++
++	return 0;
++}
++
+ static int mana_gd_detect_devices(struct pci_dev *pdev)
+ {
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+@@ -879,8 +898,10 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
+ 	struct gdma_context *gc = pci_get_drvdata(pdev);
+ 	struct gdma_verify_ver_resp resp = {};
+ 	struct gdma_verify_ver_req req = {};
++	struct hw_channel_context *hwc;
+ 	int err;
+ 
++	hwc = gc->hwc.driver_data;
+ 	mana_gd_init_req_hdr(&req.hdr, GDMA_VERIFY_VF_DRIVER_VERSION,
+ 			     sizeof(req), sizeof(resp));
+ 
+@@ -907,7 +928,14 @@ int mana_gd_verify_vf_version(struct pci_dev *pdev)
+ 			err, resp.hdr.status);
+ 		return err ? err : -EPROTO;
+ 	}
+-
++	if (resp.pf_cap_flags1 & GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG) {
++		err = mana_gd_query_hwc_timeout(pdev, &hwc->hwc_timeout);
++		if (err) {
++			dev_err(gc->dev, "Failed to set the hwc timeout %d\n", err);
++			return err;
++		}
++		dev_dbg(gc->dev, "set the hwc timeout to %u\n", hwc->hwc_timeout);
++	}
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/ethernet/microsoft/mana/hw_channel.c b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+index 2bd1d74021f7..9d1cd3bfcf66 100644
+--- a/drivers/net/ethernet/microsoft/mana/hw_channel.c
++++ b/drivers/net/ethernet/microsoft/mana/hw_channel.c
+@@ -174,7 +174,25 @@ static void mana_hwc_init_event_handler(void *ctx, struct gdma_queue *q_self,
+ 		complete(&hwc->hwc_init_eqe_comp);
+ 		break;
+ 
++	case GDMA_EQE_HWC_SOC_RECONFIG_DATA:
++		type_data.as_uint32 = event->details[0];
++		type = type_data.type;
++		val = type_data.value;
++
++		switch (type) {
++		case HWC_DATA_CFG_HWC_TIMEOUT:
++			hwc->hwc_timeout = val;
++			break;
++
++		default:
++			dev_warn(hwc->dev, "Received unknown reconfig type %u\n", type);
++			break;
++		}
++
++		break;
++
+ 	default:
++		dev_warn(hwc->dev, "Received unknown gdma event %u\n", event->type);
+ 		/* Ignore unknown events, which should never happen. */
+ 		break;
+ 	}
+@@ -696,6 +714,7 @@ int mana_hwc_create_channel(struct gdma_context *gc)
+ 	gd->driver_data = hwc;
+ 	hwc->gdma_dev = gd;
+ 	hwc->dev = gc->dev;
++	hwc->hwc_timeout = HW_CHANNEL_WAIT_RESOURCE_TIMEOUT_MS;
+ 
+ 	/* HWC's instance number is always 0. */
+ 	gd->dev_id.as_uint32 = 0;
+@@ -770,6 +789,8 @@ void mana_hwc_destroy_channel(struct gdma_context *gc)
+ 	hwc->gdma_dev->doorbell = INVALID_DOORBELL;
+ 	hwc->gdma_dev->pdid = INVALID_PDID;
+ 
++	hwc->hwc_timeout = 0;
++
+ 	kfree(hwc);
+ 	gc->hwc.driver_data = NULL;
+ 	gc->hwc.gdma_context = NULL;
+@@ -825,7 +846,8 @@ int mana_hwc_send_request(struct hw_channel_context *hwc, u32 req_len,
+ 		goto out;
+ 	}
+ 
+-	if (!wait_for_completion_timeout(&ctx->comp_event, 30 * HZ)) {
++	if (!wait_for_completion_timeout(&ctx->comp_event,
++					 (msecs_to_jiffies(hwc->hwc_timeout) * HZ))) {
+ 		dev_err(hwc->dev, "HWC: Request timed out!\n");
+ 		err = -ETIMEDOUT;
+ 		goto out;
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 96c120160f15..88b6ef7ce1a6 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -33,6 +33,7 @@ enum gdma_request_type {
+ 	GDMA_DESTROY_PD			= 30,
+ 	GDMA_CREATE_MR			= 31,
+ 	GDMA_DESTROY_MR			= 32,
++	GDMA_QUERY_HWC_TIMEOUT		= 84, /* 0x54 */
+ };
+ 
+ #define GDMA_RESOURCE_DOORBELL_PAGE	27
+@@ -57,6 +58,8 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
+ 	GDMA_EQE_HWC_INIT_DATA		= 130,
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
++	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
++	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
+ };
+ 
+ enum {
+@@ -531,10 +534,12 @@ enum {
+  * so the driver is able to reliably support features like busy_poll.
+  */
+ #define GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX BIT(2)
++#define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
+ 
+ #define GDMA_DRV_CAP_FLAGS1 \
+ 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
+-	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX)
++	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
++	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG)
+ 
+ #define GDMA_DRV_CAP_FLAGS2 0
+ 
+@@ -664,6 +669,19 @@ struct gdma_disable_queue_req {
+ 	u32 alloc_res_id_on_creation;
+ }; /* HW DATA */
+ 
++/* GDMA_QUERY_HWC_TIMEOUT */
++struct gdma_query_hwc_timeout_req {
++	struct gdma_req_hdr hdr;
++	u32 timeout_ms;
++	u32 reserved;
++};
++
++struct gdma_query_hwc_timeout_resp {
++	struct gdma_resp_hdr hdr;
++	u32 timeout_ms;
++	u32 reserved;
++};
++
+ enum atb_page_size {
+ 	ATB_PAGE_SIZE_4K,
+ 	ATB_PAGE_SIZE_8K,
+diff --git a/include/net/mana/hw_channel.h b/include/net/mana/hw_channel.h
+index 6a757a6e2732..3d3b5c881bc1 100644
+--- a/include/net/mana/hw_channel.h
++++ b/include/net/mana/hw_channel.h
+@@ -23,6 +23,10 @@
+ #define HWC_INIT_DATA_PF_DEST_RQ_ID	10
+ #define HWC_INIT_DATA_PF_DEST_CQ_ID	11
+ 
++#define HWC_DATA_CFG_HWC_TIMEOUT 1
++
++#define HW_CHANNEL_WAIT_RESOURCE_TIMEOUT_MS 30000
++
+ /* Structures labeled with "HW DATA" are exchanged with the hardware. All of
+  * them are naturally aligned and hence don't need __packed.
+  */
+@@ -182,6 +186,7 @@ struct hw_channel_context {
+ 
+ 	u32 pf_dest_vrq_id;
+ 	u32 pf_dest_vrcq_id;
++	u32 hwc_timeout;
+ 
+ 	struct hwc_caller_ctx *caller_ctx;
+ };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
