@@ -2,234 +2,384 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09C8D76D4E5
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 19:15:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98B7B76D5FA
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 19:48:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbjHBRPT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 13:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
+        id S231894AbjHBRs4 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 13:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230372AbjHBRPR (ORCPT
+        with ESMTP id S234021AbjHBRsX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 13:15:17 -0400
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021016.outbound.protection.outlook.com [52.101.62.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8493581;
-        Wed,  2 Aug 2023 10:14:46 -0700 (PDT)
+        Wed, 2 Aug 2023 13:48:23 -0400
+Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020015.outbound.protection.outlook.com [52.101.61.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A7730DB;
+        Wed,  2 Aug 2023 10:48:04 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MUmxV9BXYCEYDkdAr6SHMZ4II0dNf3ieQH5jJEfWU/Yo+i1j2BM+jcwxAS6LCtl5nwYOjvI/T15AXNp4D7hXiUQrFmafP43Nz6x2BedrCzDYHVn4W4Ak5Wbc8rSXaGcjt/lO12NWAFSTtm0KripQVN99oXepoxjNadaQJ1at8CEqzaWAvXhLVKO+m3evxiO7yLIHWvu1FhkodSZLqV2l0KUfx89mNZ89Hsqxp4Qhfmy6l98i8VP1HNdMKjhegxfxDxNF6PivxMD5srZ0sinrSqxHyLY+qgCl3xgiw7IZVSfcu4ZtSEOhueJoaJBRB9p7AzGn9PTMBqBlfKJ8feQJ8w==
+ b=dAwk0UeH87QBrsAacK6RFvYAwlnvWyk8MBQfqPJZW78BVA7FxOpLSJgvBXdpu0cFI2DKaOoHvtJeTnwDXGIWluD6lbrABJ6jo1AfL2crvAQXEvPwm341hO6YY6/WXJiWhEunfCld8dzSSlF8jsoDxbARnIaCCDeByS0Al20CoVQ7mHmmHMV+qvfUZ5VEAdaY2Iyy81uLW4O1plnMQOlCxRdi88mEqNip4sifOd5CH03+5PMYWPLU9TNuwD5yS7vSME97aa0b18wCHz0tqjfFp+KGXGUQu4HjkwvO13DhaxIP6DYiiWXWoyVleZvx1dQ5CJtmW8EuDA7CtKlQ/YADig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YnKvyJ18gz16wnYGJ8j7zI1nVCDVm6zDfWA7kj8CBD0=;
- b=mZ38O4ZsvZIMP/CL7y65vwXZODi14l1zLwNaoGaa93vIGq3zw8Anbg8hVZvlV1xhh5Wixpf/wyrm8pKixlK2zEAOA9HPBp9jUdoyNYnnIG3hjvhoeAHrItEe5ZEGlS9QPtgrApbs72KFdcY1uETFPytW5N6getzaGfwq4EPANIDR0gVodGeS173oad5sTeqzyfEdj0FBZSPqOPJnlVZ6+RN31YSh8BTmcNSCYng6BaTkAPk9vOyGOHGf4dEkR2+d3U4BbERZCZRbywUS5HYMmNKxSrsl/KmXvJImPeGr5BHh/jC1vrLvP3UUlEUXRg4iHxYBGuYzk26EeKbcpb6S3w==
+ bh=yREP1gm3Q+Y4vso1mlc90UnO5BBHwbfTIMM0R/TuDiM=;
+ b=L70TzTnNkzkwV68mw2/NNueMNT+4wcN+iORBNvzu0yWMo65iwL6eUjelSiEev/PkFCNItBgm0806IQ42IDDOVB6KA46R5wHne07j8Z8uCYPs8O7Ndw9Vm/iLwbbbCn/wv0B0/A7qE678D4llUwygzaCht1QZiuBxbblF7rf2vgIOJWKnE4VqKtNx39Er1vB7u+wTWfhqX/Iyns1ytsxon/0/rO5/vDqccBLISlLSGAcicY67TRG9oh9GaavUslEP8G5p2LtrDmr56Xzl1dtz40+bEQ4Gme/ED+jYz83ozg21/7BOfs0rZchhg8+bH3L3pqCsgWWkwrNInIN6aX9erg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YnKvyJ18gz16wnYGJ8j7zI1nVCDVm6zDfWA7kj8CBD0=;
- b=F9XZ2bPxTFfpzx0b7X0hiNucr/xZRSKEJ9c6aiWRIXkXFPG/1ogg0tC79oT2CXvtBzShBdLhwkDq7IAKcFIjWA44YySunE/MtHOD44avv5shDXWCQ2QyBD2YDQCWsv2Z1L8VsvHWL3uaFcPLtmDAbxZz8nl3szpceZBDLufCkcQ=
+ bh=yREP1gm3Q+Y4vso1mlc90UnO5BBHwbfTIMM0R/TuDiM=;
+ b=KyWAq3/mW/UQm34TLi1K+pJnRYnyTsR16MeVJHAnVcmsD/RB74TkrdkmIMRtueJmMDsu8ghFTukN1ukNIl4J9ODbgVLcFNa21FbdGdE1sWceaoQsejEWDcPXLGsnkC1eUM3i/7uGxwdOlbd27OTkGU+gQTzk9HrD0Y4+0/tEzN8=
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by BL1PR21MB3209.namprd21.prod.outlook.com (2603:10b6:208:396::12) with
+ by PH7PR21MB3946.namprd21.prod.outlook.com (2603:10b6:510:24a::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.8; Wed, 2 Aug
- 2023 17:14:43 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.6; Wed, 2 Aug
+ 2023 17:47:55 +0000
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::b588:458f:b0dd:8b9f]) by BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::b588:458f:b0dd:8b9f%3]) with mapi id 15.20.6652.004; Wed, 2 Aug 2023
- 17:14:43 +0000
+ 17:47:55 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Sonia Sharma <sosha@linux.microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Sonia Sharma <Sonia.Sharma@microsoft.com>,
+To:     "levymitchell0@gmail.com" <levymitchell0@gmail.com>,
         KY Srinivasan <kys@microsoft.com>,
         Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>
-Subject: RE: [PATCH] hv_netvsc: fix netvsc_send_completion to avoid multiple
- message length checks
-Thread-Topic: [PATCH] hv_netvsc: fix netvsc_send_completion to avoid multiple
- message length checks
-Thread-Index: AQHZxQVQdXJzjtZSzk6I2z3MndS5yK/XPhqw
-Date:   Wed, 2 Aug 2023 17:14:43 +0000
-Message-ID: <BYAPR21MB168878FE729DB8E57CABBB69D70BA@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1690955450-5994-1-git-send-email-sosha@linux.microsoft.com>
-In-Reply-To: <1690955450-5994-1-git-send-email-sosha@linux.microsoft.com>
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mikelly@microsoft.com" <mikelly@microsoft.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: RE: [PATCH] hv_balloon: Update the balloon driver to use the SBRM API
+Thread-Topic: [PATCH] hv_balloon: Update the balloon driver to use the SBRM
+ API
+Thread-Index: AQHZv1d0yHRwyuNfyUabzxLfRPMEe6/XS4YA
+Date:   Wed, 2 Aug 2023 17:47:55 +0000
+Message-ID: <BYAPR21MB16889DB462CEA394895BEBDBD70BA@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <20230726-master-v1-1-b2ce6a4538db@gmail.com>
+In-Reply-To: <20230726-master-v1-1-b2ce6a4538db@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=96cc346b-c973-4882-86ac-acfdcb222869;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-08-02T17:09:18Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8558535d-1fed-4ed1-b3db-0f9829f2e5fb;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-08-02T17:16:41Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|BL1PR21MB3209:EE_
-x-ms-office365-filtering-correlation-id: 8acbbe37-9d3f-459f-38d2-08db937bf69e
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|PH7PR21MB3946:EE_
+x-ms-office365-filtering-correlation-id: a8fa2baa-76ee-42aa-ec7d-08db93809a21
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zj7TXXZVsbSpjwQGiqN6/F2pDWz/+RPgfnEuLQfUoLKb5U7uQ+k4JgNVFsODfGKjwT6T9UKryuq8NLsKwHmruvJQ1GC3u4p1uku/ce5QkAdqCqtmhBSWbC81QfZZonnQNj+DHRBSgP7nWi0sMTmiPo9bJIGUNr5UndPYj8eHrDBwmoqKwmRnPA3yYiKxX43IX7PdaxKFfHMJTUfbx8jjkAP7oqsW4OzK2IZvw0Hg2iQN0UiaLTf3GWDSHMrmN9qU7Z5b0mMTGzHztwF8PWIfCjpyeGtededLhEq/bzBkm4VZIX5KMEs7j1K9TxAbHK9rn0B/A5MOdRIFHNbvT5NgMJH9xhuHVKP+VG6n/htbDXKWKctUHFmFh4zzt7ZMBtlEtPOzFGfLyTlQqgEVYmMLbsYhCaFCh2LXaU7nw3aATpZiUFryfJeXmm2zKFsn42vrWGQGq5tV8aO9EYlcMH4jfh128CBE3GFb97YRevFq4QF0OVsQYl0dZrhYol64b72W6rZlqaVxrSH3zNr+ee9L6W6LrjUdktj+siQ2pW47u146rIbt4aVeDmwh8EM6qyN9P2LOzf26ugFoqw4GYGnWNQd0qTM3BkB5Xf/v5HSWFsPG/TtLJFoXIU9QeT6uIbx9mMZSXFs3dubBUjonfryMEMzXr5944BjjciBAxKPC+bY=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(376002)(136003)(346002)(366004)(451199021)(33656002)(10290500003)(8990500004)(110136005)(9686003)(2906002)(38070700005)(478600001)(7696005)(83380400001)(54906003)(82960400001)(86362001)(82950400001)(122000001)(71200400001)(76116006)(52536014)(786003)(316002)(4326008)(64756008)(66556008)(66946007)(66446008)(66476007)(8936002)(8676002)(186003)(38100700002)(26005)(55016003)(5660300002)(41300700001)(6506007);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: IUqZ2ypM3dU0dsW1KuPz94Ep5St5aSJ77o/HqQtir3KDfiCkMPOC2p40oG0kHdRV3Q8Qtm0nj31KsBtnZzq5JZ9N3Q+P+isRyqwTKHnPut74E0IriIxACt9mo63gGnH6RE/F8DxEklZvbkMGEe5bkozVBJOZB0kjjsL7XgwRNFVQ/Mse+YE5ynWb/iFjsdQiKeM0eJ02Y1w20js08lULpM/0gvpBFhTs+Qtwq9yHf/3D6Sxr8PbOwbzzntsaA6tIgyfnvnn2IvSwd1Rvlr9xB4H3bxQCqwGZB5FrK4yxnCOavrH5pcNTrFnPGgiPkognBUs96ES3GLrgC1tRzd1PdHr08/zaKoWaLnJiW852UeDGkWT9LnxzrCGWZq3swR/ToE9NrTSom9PpYdxvvoNvB/g8jORnaZcE1iB10UNw+rx1IfmOyRuNKLpSQPnUanvnCrW/2g2Jv9fMmj4r+DdQLlqTCqSjqCJfbbRa8jDJQvclcD6NViE4wMmI4ZpynmkcPsZsMX0lxMWvGmHxXKuc1qo4j84iTLnARplFPOLcFzGEDFtI2FbZpoHmktCM3Umzt8WV0iOon30FFTAkN/+OEdUrjqZGK7odcpBQhGV11f5suANlAskuH1J4K1vpn+xpZdsUPhomg2GPJF7T2Jzq+Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(346002)(39860400002)(376002)(366004)(451199021)(15650500001)(2906002)(66899021)(8990500004)(83380400001)(55016003)(71200400001)(38070700005)(66476007)(76116006)(64756008)(66446008)(66556008)(66946007)(786003)(6636002)(110136005)(54906003)(9686003)(86362001)(33656002)(316002)(10290500003)(4326008)(7696005)(122000001)(478600001)(8676002)(8936002)(966005)(52536014)(5660300002)(38100700002)(41300700001)(82960400001)(82950400001)(6506007)(186003)(26005);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/Rwo5v/M8Q51YF89jmftbU8dLOwcVuih2FxQh8PrmS6LrrqFoXzQ3NXZrOvm?=
- =?us-ascii?Q?xnFz/2rLuqdUYB4Z8OZrjqa1SxiR+Nx+bfuRynFTQHRU2cbX1ZKYjCDohVKr?=
- =?us-ascii?Q?s6vgm/QmdaiF+7RCNmVO/IzCxeRwyKw136E06TN86YslsGhBb/V59aFhzYuQ?=
- =?us-ascii?Q?c2TsgEv5R/imeL+ZD2A9/56YMVA6LOe/1GqYlqlQqj7ZxW33l0Z1L8JoRtDN?=
- =?us-ascii?Q?iqk7JLltYSPyxrbntgFTRTNukAWo8596FVrB9mzATl/O3j/aa9sunQ8731zw?=
- =?us-ascii?Q?MLHkOeNxiQGwF+ox8+T+BpRZFpx6ALsHgwOoeEX6n0R0grb5N7BAU/OVLcln?=
- =?us-ascii?Q?YtnhxpNdrRw05xwcJX2F+IZ/Qdw3L0RKTLA6Q05Kk6CKQHF6tuNK8TpR6RAN?=
- =?us-ascii?Q?2xG6CnJkO9cpr1d9OCHCt1+RSiPSYqvowGGxPBVI0xDNWy4IAx2InDTRDiu3?=
- =?us-ascii?Q?3JQZaYtiSWJWkddKY/1xF5KL2diZ7Ovkqelfdq29Aj+7o9DRVa6ugbOSK4O2?=
- =?us-ascii?Q?Gg3ygLuB+fIR7BTgSzrow1beEdlyUEcSe3mSTQ6Eb1EkCOclwk/ZM8c6Y2GX?=
- =?us-ascii?Q?8nREnVL38T+cvwf+tO+MoGxmugCoUmjnysY5GLhZA5G7oGT2brtsOLExVP8i?=
- =?us-ascii?Q?RV/IyLb5Cm+uq/GoZ6xVzMOw95m5Je4/i8IjiAl0ZD02L7ohhn6zvhg+2W4d?=
- =?us-ascii?Q?dycQ2glXVYm3gB4Jlzxkj7ADK3P9KU0K7Oe3SN1o0gdanjEfACpTU+utifSU?=
- =?us-ascii?Q?BBLMD37Hk4VgmyK3qY5CDAqI1k8cy4S3R3cmnQnOqewXqYQpp0IXwXV0G7n7?=
- =?us-ascii?Q?pND4wY8MbwLbGLToEsHyxnkUdVETRzdQ5DpOCCKrcH17ZkWhIw7QMoPfYn1r?=
- =?us-ascii?Q?i5czDDJNBOcY3X9AJzOmwyy3l4s+goeVhR8FYmqQSeGaXRuwuoYiqWsw9ZHs?=
- =?us-ascii?Q?Fjp9u7UiZ0Q4veQljgkYqTHKiz4M0sNCg0LsiPCY8kWHJIGeuRVSIxBKdwfL?=
- =?us-ascii?Q?RiE4pMcTDjTrcgqmXlNxmDfU1jK/6q0eJ2coIQv9BDAFi9oK3KCojFeAPQY3?=
- =?us-ascii?Q?xuuHDzYLVLbSXQUO16QeTB3hEFzG4uGaF/U0290d2H41sFHHaLfs1XVd/FEQ?=
- =?us-ascii?Q?28sg7NgqclbTAu4cQv2kJUu0mSAh+if3HvNG8BPhXCe5cbiBg4rxH4LBcGO2?=
- =?us-ascii?Q?zgO3KzCj/b9uOjbMPl2uKuHUqBPUJfaZJwJxPTgx3hU3mMlsn9sOYlGpnWAP?=
- =?us-ascii?Q?+Dw78m1nce2hw/LUQlEYSddWO7Q1iF/3uMwBNcIwNTui5xGcl3Yn7eB/bsRZ?=
- =?us-ascii?Q?jYMidGaPeK1WKShILWGb/iyi61wAuBSmbHXXxvh7D5hJaeinA+KvQCKRoH9K?=
- =?us-ascii?Q?0lByM8fbiE+shvPCR50ed88TW0Y0e7sg2k95UalpjXPhqvqPpqpvWoVGBqmu?=
- =?us-ascii?Q?QB5ONJHJc/ia+omoMOet13HNLD1piDop8Zv0659y25sy2ve3AC2S8IUZpTjy?=
- =?us-ascii?Q?jMOjB19MEHgiBtaYaUJYZ3Fbk5CksPuFqn6LcO0Vb5ZOLBPsWwUmRbtrozGf?=
- =?us-ascii?Q?MYFC/5FpgasRaTZkR1d9iDJps77nE0mqiVn6WyYq/z5cXKl9XfUnS65LcGgO?=
- =?us-ascii?Q?Hw=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Pt61rbIq90FMbQ9V4qYWeDDZoMV/HTj3lJOG4kTYZIxsaB9+I9m/ztb3pNLM?=
+ =?us-ascii?Q?D7ISm9m28MKAxSqgISa10xJXclSQbn4hh1KV+WZHKT7Px5Ec3Vs5/p0cKrdC?=
+ =?us-ascii?Q?T6mmeAQzmsDuRMBq93xiUs96rE67euT4WVUhhM8xJwa2ewV20PGTR2SlrrAv?=
+ =?us-ascii?Q?FFULPxCNll91PFe3Towkxxh22TlaHKARTyW1ayBonz2H+p+3IF91yEaBa7j0?=
+ =?us-ascii?Q?BxWR22TGFNo0tRVQuZxfmuiUkDNpAQ9+JbSopqybHoJG4LepCHbq05Q8mikM?=
+ =?us-ascii?Q?JrU3Gode0PL6ILT3UTGrVTaj6zHUNseLnl17RP8Eojgvha8GWpb9vGjd+YoH?=
+ =?us-ascii?Q?oh3mYMrmjZtF1x4xdW7T5a3oOvPQXOh1r7+sZs2p6aopiSX8WkK4bOTbkX03?=
+ =?us-ascii?Q?qHgvWzhcV6ef35UZL7TEVrHRZR6sMcpHEGMbAavSSfixEElWHDpqMvR/Fj1Q?=
+ =?us-ascii?Q?6QkFZoNjKrw7OCdIRQ7UKJdrteT7TR6U5nG6Oj4QcZmeQgAWNjPXppfhvUUv?=
+ =?us-ascii?Q?Gw12+j3IYyABSkO/1ceykFDRBVFPI+ewncJE6AoQoMXRMFYXlR4PDDbJIebF?=
+ =?us-ascii?Q?4pxErxxnIKMB1zO2s03T9DvqzLoHzrJdcgrZE7eJ0AJPcYGA86iihimR+V/M?=
+ =?us-ascii?Q?MegTqvrBl13K2f3K931NF9qIgWY/1Uf7FAfJ1qTYmo2V8xDGy7lsQKer1jpk?=
+ =?us-ascii?Q?C23vUPh6+MJfbFdF5ZdDeWQkGbHUklDUHRypm0SuuPqVBREM1VPswoW3O/Q9?=
+ =?us-ascii?Q?FDJuE75HZQjdxRwbyHyyQ5ntIwwAYyGtKpHNwKStQmLlFu9qnPQvdS2mubV/?=
+ =?us-ascii?Q?8MTJNxPsow2Sf+w3IgIdpkefYGqjHTcJnQNm8+Oe68kEG9p6qRmRMF1xeb1m?=
+ =?us-ascii?Q?e7r88ypF6IwlxIeT8eCygblBCyUM7YNyk9Bqq5Q2ec+oblHuunOHSQJWnD/L?=
+ =?us-ascii?Q?tjAXaiKyipaBDPQsGVcMWq0fihEpNeLccNvz4i+wLcieHoO3hRWuXuq6K/gH?=
+ =?us-ascii?Q?1PuGnQwvlcoC7oepIIWLV8an+5g9DbEDvLmGmq0agGki0To0cVxCN16DIwd6?=
+ =?us-ascii?Q?Gt6Jbqiaof2x/Tr3xnVu8ygjjtmQYTG9MuyqpdK3U1YQOCRWELt6kuHovqbU?=
+ =?us-ascii?Q?dsguJcomDoKVnzxU+NHdvGcxdVdO/bxk06lXXuxefVpfYH8tBo0SQB4ZKoMc?=
+ =?us-ascii?Q?2jGHh0/NCptpXtnINZuw0qgpR8trBq5kqOEjAnSQ4gxCT9OQnSJIjVlGTfL5?=
+ =?us-ascii?Q?bluitPA7924ytrwecrxfTYse1ornzBLofFt/HX9AHZpiMrlFQFk5cVAiGx8S?=
+ =?us-ascii?Q?Or/fEHTXI2bnacf4kj6P+lg7szSzUzPsZRU9KvH2OUMk1a9cdZj/9k+87kR6?=
+ =?us-ascii?Q?xLiDUg/YGLUHsKo9dtJxx/Bw5EhJfG8XycjUJavWfJv+cBhSZM1+IfHLtINn?=
+ =?us-ascii?Q?2amnBFTQvZ5Kdmr3caxfbbCQv5lAjyJ+zquEm3QQG8qnl1M0KraDscCG4RjE?=
+ =?us-ascii?Q?zeV0JWbO62gr9WAbzuNe+ZcokFrslbufHDdu/zjkUiNeYq9dU0rVaQZRa/ee?=
+ =?us-ascii?Q?EALO4Ve1ZpOk6VX3YIkrUZnmhjCN8TFapCDoCmgpFcuifb4W9edHo5BIbkgk?=
+ =?us-ascii?Q?fg=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8acbbe37-9d3f-459f-38d2-08db937bf69e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2023 17:14:43.0495
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8fa2baa-76ee-42aa-ec7d-08db93809a21
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2023 17:47:55.4017
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mybnfMIgQcD54Z/fRYoGnqp46NMuUhzHqC0sW4RcH+P0Bz6sZxTqxMLS24e8wlmBvaNH1POVffDraqSf6xv02DOwilpRDGWx8bMQvb9CWcI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3209
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-userprincipalname: fpNJfrJ6zpxQE0gPQx0wvLD+wOcM+Bh/nAwI/Kcx58WncC+A2Zpl4LYmaNAXGn/NTrV63kZdgQyhAj/sr/AzNohK3X0G0i1hKjM0/WpQzFI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3946
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Sonia Sharma <sosha@linux.microsoft.com> Sent: Tuesday, August 1, 202=
-3 10:51 PM
+From: Mitchell Levy via B4 Relay <devnull+levymitchell0.gmail.com@kernel.or=
+g> Sent: Tuesday, July 25, 2023 5:24 PM
+>
+> This patch is intended as a proof-of-concept for the new SBRM
+> machinery[1]. For some brief background, the idea behind SBRM is using
+> the __cleanup__ attribute to automatically unlock locks (or otherwise
+> release resources) when they go out of scope, similar to C++ style RAII.
+> This promises some benefits such as making code simpler (particularly
+> where you have lots of goto fail; type constructs) as well as reducing
+> the surface area for certain kinds of bugs.
 >=20
-
-The Subject line for networking patches should be tagged
-with "net" for fixes to the release that's currently in progress,
-or "net-next" for the next release.  Bug fixes like this one can
-be "net".   Look through the mailing list archives for examples.
-
-> switch statement in netvsc_send_completion() is incorrectly validating
-
-s/switch/The switch/
-
-> the length of incoming network packets by falling through next case.
-
-s/through next case/through to the next case/
-
-> Avoid the fallthrough, instead break after a case match and then process
-
-s/fallthrough, instead/fallthrough.  Instead,/
-
-> the complete() call.
+> The changes in this patch should not result in any difference in how the
+> code actually runs (i.e., it's purely an exercise in this new syntax
+> sugar). In one instance SBRM was not appropriate, so I left that part
+> alone, but all other locking/unlocking is handled automatically in this
+> patch.
 >=20
-> Signed-off-by: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+> Link: https://lore.kernel.org/all/20230626125726.GU4253@hirez.programming=
+.kicks-ass.net/ [1]
+
+I haven't previously seen the "[1]" footnote-style identifier used with the
+Link: tag.  Usually the "[1]" goes at the beginning of the line with the
+additional information, but that conflicts with the Link: tag.  Maybe I'm
+wrong, but you might either omit the footnote-style identifier, or the Link=
+:
+tag, instead of trying to use them together.
+
+Separately, have you built a kernel for ARM64 with these changes in
+place?  The Hyper-V balloon driver is used on both x86 and ARM64
+architectures.  There's nothing obviously architecture specific here,
+but given that SBRM is new, it might be wise to verify that all is good
+when building and running on ARM64.
+
+>=20
+> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: "Mitchell Levy (Microsoft)" <levymitchell0@gmail.com>
 > ---
->  drivers/net/hyperv/netvsc.c | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
+>  drivers/hv/hv_balloon.c | 82 +++++++++++++++++++++++--------------------=
+------
+>  1 file changed, 38 insertions(+), 44 deletions(-)
 >=20
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index 82e9796c8f5e..347688dd2eb9 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -851,7 +851,7 @@ static void netvsc_send_completion(struct net_device =
-*ndev,
->  				   msglen);
->  			return;
->  		}
-> -		fallthrough;
-> +		break;
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index dffcc894f117..2812601e84da 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -8,6 +8,7 @@
 >=20
->  	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
->  		if (msglen < sizeof(struct nvsp_message_header) +
-> @@ -860,7 +860,7 @@ static void netvsc_send_completion(struct net_device =
-*ndev,
->  				   msglen);
->  			return;
->  		}
-> -		fallthrough;
-> +		break;
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 >=20
->  	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
->  		if (msglen < sizeof(struct nvsp_message_header) +
-> @@ -869,7 +869,7 @@ static void netvsc_send_completion(struct net_device =
-*ndev,
->  				   msglen);
->  			return;
->  		}
-> -		fallthrough;
-> +		break;
+> +#include <linux/cleanup.h>
+>  #include <linux/kernel.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/mman.h>
+> @@ -646,7 +647,7 @@ static int hv_memory_notifier(struct notifier_block *=
+nb, unsigned long val,
+>  			      void *v)
+>  {
+>  	struct memory_notify *mem =3D (struct memory_notify *)v;
+> -	unsigned long flags, pfn_count;
+> +	unsigned long pfn_count;
 >=20
->  	case NVSP_MSG5_TYPE_SUBCHANNEL:
->  		if (msglen < sizeof(struct nvsp_message_header) +
-> @@ -878,10 +878,6 @@ static void netvsc_send_completion(struct net_device=
- *ndev,
->  				   msglen);
->  			return;
->  		}
-> -		/* Copy the response back */
-> -		memcpy(&net_device->channel_init_pkt, nvsp_packet,
-> -		       sizeof(struct nvsp_message));
-> -		complete(&net_device->channel_init_wait);
+>  	switch (val) {
+>  	case MEM_ONLINE:
+> @@ -655,21 +656,22 @@ static int hv_memory_notifier(struct notifier_block=
+ *nb, unsigned long val,
 >  		break;
 >=20
->  	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
-> @@ -904,13 +900,18 @@ static void netvsc_send_completion(struct net_devic=
-e *ndev,
+>  	case MEM_OFFLINE:
+> -		spin_lock_irqsave(&dm_device.ha_lock, flags);
+> -		pfn_count =3D hv_page_offline_check(mem->start_pfn,
+> -						  mem->nr_pages);
+> -		if (pfn_count <=3D dm_device.num_pages_onlined) {
+> -			dm_device.num_pages_onlined -=3D pfn_count;
+> -		} else {
+> -			/*
+> -			 * We're offlining more pages than we managed to online.
+> -			 * This is unexpected. In any case don't let
+> -			 * num_pages_onlined wrap around zero.
+> -			 */
+> -			WARN_ON_ONCE(1);
+> -			dm_device.num_pages_onlined =3D 0;
+> +		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+> +			pfn_count =3D hv_page_offline_check(mem->start_pfn,
+> +							  mem->nr_pages);
+> +			if (pfn_count <=3D dm_device.num_pages_onlined) {
+> +				dm_device.num_pages_onlined -=3D pfn_count;
+> +			} else {
+> +				/*
+> +				 * We're offlining more pages than we
+> +				 * managed to online. This is
+> +				 * unexpected. In any case don't let
+> +				 * num_pages_onlined wrap around zero.
+> +				 */
+> +				WARN_ON_ONCE(1);
+> +				dm_device.num_pages_onlined =3D 0;
+> +			}
+>  		}
+> -		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+>  		break;
+>  	case MEM_GOING_ONLINE:
+>  	case MEM_GOING_OFFLINE:
+> @@ -721,24 +723,23 @@ static void hv_mem_hot_add(unsigned long start, uns=
+igned long size,
+>  	unsigned long start_pfn;
+>  	unsigned long processed_pfn;
+>  	unsigned long total_pfn =3D pfn_count;
+> -	unsigned long flags;
 >=20
->  		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
->  					desc, budget);
-> -		break;
-> +		return;
+>  	for (i =3D 0; i < (size/HA_CHUNK); i++) {
+>  		start_pfn =3D start + (i * HA_CHUNK);
 >=20
->  	default:
->  		netdev_err(ndev,
->  			   "Unknown send completion type %d received!!\n",
->  			   nvsp_packet->hdr.msg_type);
-
-Need to add a "return" statement here so that the error case doesn't
-try to do the memcpy() and complete().
-
+> -		spin_lock_irqsave(&dm_device.ha_lock, flags);
+> -		has->ha_end_pfn +=3D  HA_CHUNK;
+> +		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+> +			has->ha_end_pfn +=3D  HA_CHUNK;
+>=20
+> -		if (total_pfn > HA_CHUNK) {
+> -			processed_pfn =3D HA_CHUNK;
+> -			total_pfn -=3D HA_CHUNK;
+> -		} else {
+> -			processed_pfn =3D total_pfn;
+> -			total_pfn =3D 0;
+> -		}
+> +			if (total_pfn > HA_CHUNK) {
+> +				processed_pfn =3D HA_CHUNK;
+> +				total_pfn -=3D HA_CHUNK;
+> +			} else {
+> +				processed_pfn =3D total_pfn;
+> +				total_pfn =3D 0;
+> +			}
+>=20
+> -		has->covered_end_pfn +=3D  processed_pfn;
+> -		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+> +			has->covered_end_pfn +=3D  processed_pfn;
+> +		}
+>=20
+>  		reinit_completion(&dm_device.ol_waitevent);
+>=20
+> @@ -758,10 +759,10 @@ static void hv_mem_hot_add(unsigned long start, uns=
+igned long size,
+>  				 */
+>  				do_hot_add =3D false;
+>  			}
+> -			spin_lock_irqsave(&dm_device.ha_lock, flags);
+> -			has->ha_end_pfn -=3D HA_CHUNK;
+> -			has->covered_end_pfn -=3D  processed_pfn;
+> -			spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+> +			scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+> +				has->ha_end_pfn -=3D HA_CHUNK;
+> +				has->covered_end_pfn -=3D  processed_pfn;
+> +			}
+>  			break;
+>  		}
+>=20
+> @@ -781,10 +782,9 @@ static void hv_mem_hot_add(unsigned long start, unsi=
+gned long size,
+>  static void hv_online_page(struct page *pg, unsigned int order)
+>  {
+>  	struct hv_hotadd_state *has;
+> -	unsigned long flags;
+>  	unsigned long pfn =3D page_to_pfn(pg);
+>=20
+> -	spin_lock_irqsave(&dm_device.ha_lock, flags);
+> +	guard(spinlock_irqsave)(&dm_device.ha_lock);
+>  	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+>  		/* The page belongs to a different HAS. */
+>  		if ((pfn < has->start_pfn) ||
+> @@ -794,7 +794,6 @@ static void hv_online_page(struct page *pg, unsigned =
+int order)
+>  		hv_bring_pgs_online(has, pfn, 1UL << order);
+>  		break;
 >  	}
-> +
-> +	/* Copy the response back */
-> +	memcpy(&net_device->channel_init_pkt, nvsp_packet,
-> +			sizeof(struct nvsp_message));
-> +	complete(&net_device->channel_init_wait);
+> -	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
 >  }
 >=20
->  static u32 netvsc_get_next_send_section(struct netvsc_device *net_device=
-)
+>  static int pfn_covered(unsigned long start_pfn, unsigned long pfn_cnt)
+> @@ -803,9 +802,8 @@ static int pfn_covered(unsigned long start_pfn, unsig=
+ned long pfn_cnt)
+>  	struct hv_hotadd_gap *gap;
+>  	unsigned long residual, new_inc;
+>  	int ret =3D 0;
+> -	unsigned long flags;
+>=20
+> -	spin_lock_irqsave(&dm_device.ha_lock, flags);
+> +	guard(spinlock_irqsave)(&dm_device.ha_lock);
+>  	list_for_each_entry(has, &dm_device.ha_region_list, list) {
+>  		/*
+>  		 * If the pfn range we are dealing with is not in the current
+> @@ -852,7 +850,6 @@ static int pfn_covered(unsigned long start_pfn, unsig=
+ned long pfn_cnt)
+>  		ret =3D 1;
+>  		break;
+>  	}
+> -	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+>=20
+>  	return ret;
+>  }
+> @@ -947,7 +944,6 @@ static unsigned long process_hot_add(unsigned long pg=
+_start,
+>  {
+>  	struct hv_hotadd_state *ha_region =3D NULL;
+>  	int covered;
+> -	unsigned long flags;
+>=20
+>  	if (pfn_cnt =3D=3D 0)
+>  		return 0;
+> @@ -979,9 +975,9 @@ static unsigned long process_hot_add(unsigned long pg=
+_start,
+>  		ha_region->covered_end_pfn =3D pg_start;
+>  		ha_region->end_pfn =3D rg_start + rg_size;
+>=20
+> -		spin_lock_irqsave(&dm_device.ha_lock, flags);
+> -		list_add_tail(&ha_region->list, &dm_device.ha_region_list);
+> -		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+> +		scoped_guard(spinlock_irqsave, &dm_device.ha_lock) {
+> +			list_add_tail(&ha_region->list, &dm_device.ha_region_list);
+> +		}
+>  	}
+>=20
+>  do_pg_range:
+> @@ -2047,7 +2043,6 @@ static void balloon_remove(struct hv_device *dev)
+>  	struct hv_dynmem_device *dm =3D hv_get_drvdata(dev);
+>  	struct hv_hotadd_state *has, *tmp;
+>  	struct hv_hotadd_gap *gap, *tmp_gap;
+> -	unsigned long flags;
+>=20
+>  	if (dm->num_pages_ballooned !=3D 0)
+>  		pr_warn("Ballooned pages: %d\n", dm->num_pages_ballooned);
+> @@ -2073,7 +2068,7 @@ static void balloon_remove(struct hv_device *dev)
+>  #endif
+>  	}
+>=20
+> -	spin_lock_irqsave(&dm_device.ha_lock, flags);
+> +	guard(spinlock_irqsave)(&dm_device.ha_lock);
+>  	list_for_each_entry_safe(has, tmp, &dm->ha_region_list, list) {
+>  		list_for_each_entry_safe(gap, tmp_gap, &has->gap_list, list) {
+>  			list_del(&gap->list);
+> @@ -2082,7 +2077,6 @@ static void balloon_remove(struct hv_device *dev)
+>  		list_del(&has->list);
+>  		kfree(has);
+>  	}
+> -	spin_unlock_irqrestore(&dm_device.ha_lock, flags);
+>  }
+>=20
+>  static int balloon_suspend(struct hv_device *hv_dev)
+>=20
+> ---
+> base-commit: 3f01e9fed8454dcd89727016c3e5b2fbb8f8e50c
+> change-id: 20230725-master-bbcd9205758b
+>=20
+> Best regards,
 > --
-> 2.25.1
+> Mitchell Levy <levymitchell0@gmail.com>
 
+These lines at the end of the patch look spurious.  But Boqun has
+already commented on that.
+
+Michael
