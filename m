@@ -2,43 +2,43 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8067576D9E9
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 23:47:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 398F276D9E5
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 23:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233822AbjHBVrI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 17:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44360 "EHLO
+        id S233836AbjHBVqh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 17:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230269AbjHBVqm (ORCPT
+        with ESMTP id S233376AbjHBVqR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 17:46:42 -0400
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020023.outbound.protection.outlook.com [52.101.61.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C95B22D62;
-        Wed,  2 Aug 2023 14:46:06 -0700 (PDT)
+        Wed, 2 Aug 2023 17:46:17 -0400
+Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021020.outbound.protection.outlook.com [52.101.62.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A194268F;
+        Wed,  2 Aug 2023 14:45:46 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KZX1WovSfrjVPqq/8hYN8rQVWBsfVc34CYuecT01aKgOntUd2ihSr1zWQrkZbOXJnMi2Wn1j3hiTSIDYKFCpvdI1mnrdJDxabi/Y8egEif4sOnOB1LpJRV7YMoOb97YN+GmJnIvE4LaE8s1xMVvf2rWX5ubSidUvQGIb3OrzreEzFHWkk3VhGLPpWDSzFNVPveEun1KVoJz82cgl2+bZO/UbWPKx3ZwGsWY3qcpF0QJhJ63bu66dGOLKBVNqada3CkzFXoF0ToFLsuWj8au6GbpxYylU6X+U/TiDHFg0WRRiYrnyYNIkBHx9P1mkXV8ZKgDUtOGL4XYLW8wVT0Fhng==
+ b=R8ejla2c3rkrWzXwgxxBXyBJ13lMF9+vaGPtzYIScv32NoQBMetnKSPzYdqatAbhHJYEoIWnBxo7Gxi69tpq2JLu7kdo9mtmklhNBLwYC6U3hmAHLzLt612bnLeGX9XopDtDDa4lZXcoetYwZswKclN+KVGSDN/FOqIVvSYalRaVAMyjVFtG4hjTy968GL9PNoY0zW9Le83rS9kqWhpzIyyApcKUEtQM3LiwmCHzQrlGWF7KJu1SnSngRQwIN0H3AChGTUCxI/yidBsdo91CxD9xtcFktwZXahLRMq6Z3XsAGamY77FHXZqRNLZYZIwCOuo+geZ8yHcMuOdAMqcRQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yP9T6/Q5VMI4CQiUTg5oiGY+ZCUNCU9234K/zLZUrcA=;
- b=dssZKx40ILxKywCZFU8kLmJ7PsnD2m2CLAVURcaWTBzaoEShMYy415+QChk/wskQzo1/Pwf4I7KcKnMtVZm6S8aTGATfr/YpVviJ2ppwoMzcJnAunNpbOkczSOqKsCWh7wI0+ltEH4+CAhdSVfzuTpFJRk2LXFxp8Bi3JrXdBmEHBZcg2MntxkN0yeqCBTJy7ev9U8og83eRZhMLBJZGSLmgH3zobvfqdDe0mRqd5ft2L3Fx7z+0sm8n8IGvbOzUl9h/pkNiU+xCwJ00xapMgUTIUtEHTzuwFyeEnAtKaUUvjfga/H4LhtKgvqT+ZF17ad7VAJZCAjxmBBIdq+Mcxg==
+ bh=C3rbyQYVHXjMPGd2tE1ngXRqeB0W85HoMEX+yF21Y/E=;
+ b=Q8pwdqZ1kUvrPm5X1u3cdkVaxNWn1BnZxoBoTEREfZLmkbb6464EQp7DYt28GpB+Pz4hLg/fP4tK+D9veBGYHAKXtft//3BSDvP5DksQo+HxivJcrv2ikcpgPzX1Ael7iSQEZXxKZ97pP5/XsvXlSO/DI6i11ozhfxI1NfBX//rluGD2SYVk6W+G/WhzEa74Xn3rf2cM+J0i+B9wxCpmrAndw3oVAGFc4wo6q5wvSkIYvWxFqzYZHMJknISmQnhpaa0IVy+aNehrgL1qWg7axa30U8tPcYNxR6fHuf+VQWS/8gf9/EV2jkRYW/POoKDwdpsL6QQGDZOlPYpMuXDCow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yP9T6/Q5VMI4CQiUTg5oiGY+ZCUNCU9234K/zLZUrcA=;
- b=LOeCSA9ZLY+SOHqZy09BQRiy3QMXSf0S3QJxiYHGCLsNvR5x64YizDFdydSPAwdRSeGsm0j/X7bPSXo5m/aURbiQXAIDBQh15Aj3BX+JSsN6jT20b46AK8cIVOlYtIsDwaPpFbHcqTD510OKUvhFi1gmCBpwFAWelyp/BYFFPB0=
+ bh=C3rbyQYVHXjMPGd2tE1ngXRqeB0W85HoMEX+yF21Y/E=;
+ b=PaXYEuAPXL4wVEDWc0loJmiVekseGfnGYCdn3mcnekR+IZOmRu5zmW4VO08cWTp1GBZcV2En2iSLSC3jL4DoEaPiq8nlzpFNTc2AYCTsv4Z5ZWz7NCIVCp9CuKtQpiBZCZEafL69QooILxFy0E5riBpBL2Y30wz6bHCE+pqdDEE=
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by MN2PR21MB1536.namprd21.prod.outlook.com (2603:10b6:208:204::15) with
+ by SA3PR21MB3866.namprd21.prod.outlook.com (2603:10b6:806:2fb::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.8; Wed, 2 Aug
- 2023 21:43:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.5; Wed, 2 Aug
+ 2023 21:45:16 +0000
 Received: from BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::b588:458f:b0dd:8b9f]) by BYAPR21MB1688.namprd21.prod.outlook.com
  ([fe80::b588:458f:b0dd:8b9f%3]) with mapi id 15.20.6652.004; Wed, 2 Aug 2023
- 21:43:54 +0000
+ 21:45:16 +0000
 From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 To:     Saurabh Sengar <ssengar@linux.microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
@@ -50,76 +50,78 @@ To:     Saurabh Sengar <ssengar@linux.microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: RE: [PATCH v3 2/3] tools: hv: Add vmbus_bufring
-Thread-Topic: [PATCH v3 2/3] tools: hv: Add vmbus_bufring
-Thread-Index: AQHZtj2TTqsrFtVeJEmFoKyGZAXica/XnY+w
-Date:   Wed, 2 Aug 2023 21:43:54 +0000
-Message-ID: <BYAPR21MB1688F11EF5924D8D69F97203D70BA@BYAPR21MB1688.namprd21.prod.outlook.com>
+Subject: RE: [PATCH v3 3/3] tools: hv: Add new fcopy application based on uio
+ driver
+Thread-Topic: [PATCH v3 3/3] tools: hv: Add new fcopy application based on uio
+ driver
+Thread-Index: AQHZtj2UkBd0/zRLlEWpc4uymEEQD6/XpHpg
+Date:   Wed, 2 Aug 2023 21:45:16 +0000
+Message-ID: <BYAPR21MB16884ABB3DAD7B8213EF5D6DD70BA@BYAPR21MB1688.namprd21.prod.outlook.com>
 References: <1689330346-5374-1-git-send-email-ssengar@linux.microsoft.com>
- <1689330346-5374-3-git-send-email-ssengar@linux.microsoft.com>
-In-Reply-To: <1689330346-5374-3-git-send-email-ssengar@linux.microsoft.com>
+ <1689330346-5374-4-git-send-email-ssengar@linux.microsoft.com>
+In-Reply-To: <1689330346-5374-4-git-send-email-ssengar@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2aa72647-c4ef-4bbc-b80d-0558ac66f7d4;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-08-02T21:05:09Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7a2f2bef-00c7-44e0-9159-1e8fedfdb809;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-08-02T21:29:55Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|MN2PR21MB1536:EE_
-x-ms-office365-filtering-correlation-id: a16d1617-5533-4aab-f7b7-08db93a1918c
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|SA3PR21MB3866:EE_
+x-ms-office365-filtering-correlation-id: c91d1455-6f0c-46cc-121a-08db93a1c284
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EbDXACKKyVI+aaoGsW0//DRJid9eey0xuORqY610fB0/O4swourSbxeNeL+mo4A97zj29AINPIgEB7lbLUo4/NJji2imAoOU0aNDxaaxH3uINaVOY+CX+85WBX+CYcWYmreBAmE5xvMj9h6lrG/bK9uFlWlADxfX9HHXpA6f1sDJJLpHmmjITo28Nduz8rizWBtAYBpq7E/yTPbH30c0R4ueP7NOKmTDCIIw/mOKrcbLfvMK7z0Q1NwYJdRLFBjMhW/W/Gre3BrY6e+9z5LrbJBbGlG0cT6gFDTOpS/jijTSNHR7wlQQn1w719GM5OVfG9SVTxML/It7UwwPvgWMT+j0noTLXwa5gA/5ma6NqSqYyAiEc/PUhcZuCj2wC8lYy+iHlaFZDMPhqRxhfwviTWlgwL3alm6bjviVYsizADmb+E+gpbLWmorlJ26ffLzXSToVPVeJXiFxu6+s4xgRt6C7j5OvrB10WbHS+dYoM8PEdAKZqZEDLVUtJeZ6qVoTBVFny6rv8AgrXYQTE22KiNd4MJ6xadShNS3UvTFbKhBix7V8+K5r9wgJ464RbFA3mW1mpqX23H7LTk4tZ8IAfz2XPzzqblLCZ8ppqbBd3J2PW61KiPwxGFRP8B7f54knjuxU5ibTbHCFhmYkpb1MMJWxVtHFkMNTfI8P0mJD3JgqeD8PPSziQ+Y87qHf0HXA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(346002)(39860400002)(396003)(376002)(366004)(451199021)(33656002)(10290500003)(8990500004)(110136005)(9686003)(921005)(2906002)(966005)(38070700005)(478600001)(7696005)(83380400001)(30864003)(82960400001)(86362001)(122000001)(82950400001)(71200400001)(76116006)(52536014)(786003)(316002)(64756008)(66556008)(66946007)(66446008)(66476007)(8936002)(8676002)(186003)(38100700002)(26005)(55016003)(5660300002)(41300700001)(6506007)(21314003);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: OlEoBHGAl5P6/nKZSZbLYB7NhZzrC5KEX2ohIjb9StObOtG0YzsJp8uDew3k4JjehnGYFO+2e7/0GSFlsHmKGtyTmzkNMpA+6v1Bt4rQbpchov3nSVffQO36Efv7vEkVsyxZaHWIMHairwwCHk80rKSiXxwuqtYqBs21xW0zuDezqmFHfPKC0cJj2dNdA5puwZlzYoj7kCEPhwkxom06ZWZs1pqWUIKvCt+w5LwXXPb7olYKhxWfwLzEHZPXzbPVqhBIZEk/Mgu93P7zUPBvZwkHbhMU7jYEA4brQiYgvT6J5zEza6Qqi61JnQMGhqnScC/pQ6i5j3oOSFErOfdhwAp6AuuxSlbxUhxpyo17UwPexsn5oz3dx0FTQXLr3JVP/PL21S5mZVSth1Z2Tg3w4k4k8eUKM+YkvoIlUszoRZfJjgI63dTTgwv/pXHPwzyQQBC+byNr0H4BmCVt/0VWkZkqB+Szz5CtQfMGt+VS+PyPXiUWYTfRWRKN0q84BcA3aeUJn6UB7UJiHs/k4l56fN5IqaZvW2xmFfRyy9WX6xy3GggJOXQay/jNHycXIo93KPnVLlTAjfBQRN6kcEsc6WVwGTQSj0jhfQMXdkmw/6HQbEa/bspNxPZBdhsTmWqNiWqhlQK2UvpxUhELfCxy4Yu9OtF2JCKuABn9sHi9UqA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(366004)(136003)(39860400002)(396003)(376002)(451199021)(8936002)(6506007)(10290500003)(82950400001)(82960400001)(186003)(9686003)(110136005)(966005)(7696005)(26005)(122000001)(71200400001)(921005)(478600001)(66556008)(64756008)(66476007)(83380400001)(76116006)(66446008)(38100700002)(66946007)(52536014)(30864003)(8676002)(2906002)(38070700005)(41300700001)(786003)(316002)(55016003)(8990500004)(86362001)(5660300002)(33656002)(559001)(579004);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Ha5xrmES6W5CKSDAB7/LjxUC7qArzaHQ988wjtru4glGI9bPTrcsZG+CBnne?=
- =?us-ascii?Q?Qx4xBNjnngyTDhaZLVKFiqmfS0VeaYDOD9/mn3bc5W6w+wh5OrIsMGZhTArK?=
- =?us-ascii?Q?oqi26og5XCrOl4JXMli/oSsvpz8itM/TJmunzynGOixnMihpXmyOmmYpPYKy?=
- =?us-ascii?Q?e5a4lYprzc1PfOeOH4njPGp8w+OVipKHYjt09VQEaPZcgosdBWvsZmswcXGg?=
- =?us-ascii?Q?DmCh4AoVpd/7Y1hnQKxPOSlGhme2M7NYfGxm/llcFy9J7F41dJ/86KBvkxYh?=
- =?us-ascii?Q?b6m7j6iwNEIDWgr65CgyGtOr/v9P7tv9JNHoB6+f6m+N/YXJeaCcVMJ6gfFC?=
- =?us-ascii?Q?gTYiCc3hQbw7FG/iRJOQVPDUx80xYo0aEWqOKO89Zh/czkcNIlIx1UkpGxXB?=
- =?us-ascii?Q?ouVkWP/m6TACh2uV8k2iDWGXfMyUFYvk1BD00LYoN6kk23mzR6emEsn0YgkH?=
- =?us-ascii?Q?SR5YAekJBtxkv19WtX4TuTUIxTDvlmr1DG1nxSKCwf+njq6iuiXJ6vnac9RW?=
- =?us-ascii?Q?ryccOtMN1TcrGsYnNCXTnZmw+zCtkLQ47o9m9DRwlhkA/BmXu5eI9amiuuZY?=
- =?us-ascii?Q?S0za4ur7GMF25chp19cNvXPXBs1xAo87ZhLIznLq69eaTq4A8rAzr/j3U3ae?=
- =?us-ascii?Q?LrNyBtKYX6nE3xdV40kw6GkxBrKbCIeRYAGkWnnr2WF+gMGDzSNGP3IU0nFw?=
- =?us-ascii?Q?9iUDveQdMaVktzPl4ZmIjBBMEh8A0PI24QaoSRz4ZxzjbdPxwlCKg71vfYgh?=
- =?us-ascii?Q?4X2ZDL8SGe5tBb2Z+Q81X7xwwosHXU8ubpzROLv4VuIYld6h8QmV9/H9UvHR?=
- =?us-ascii?Q?wh8hCTNFYerHHInJSODfoZjQ5bvrfoVnoN05f6D3IIHU7RpyMzFajRF+jMvj?=
- =?us-ascii?Q?b/FAFuY+pzWCV3SMxpb+QODTNyTEno7rMqBVD4uh4O7D1rf2vz2TGYa/Cvil?=
- =?us-ascii?Q?iXM1Yus6g3TXoYiHYIH4ROwitKIYVqcLWd5wNI1eD8VeZMtdwzMZF30t4yRL?=
- =?us-ascii?Q?Bnc/G3sP3SWRgBPIVw8uP8gv9vsvgBUVjPClLVafuJayrfrYvm/FosUIf3T7?=
- =?us-ascii?Q?p30JfaSGYILyAXtjFBjLQN+E0rE6ZyU1D0DTVKTah2JTDpweRovPFOXpiFGS?=
- =?us-ascii?Q?2hCVEaduyFB4YPISaaef4QA4MkZaEBtNYnLjlXEqaxg1bVFJUPzx9yOCFTjv?=
- =?us-ascii?Q?6xU/N8/O0fKOg07zfgr6IFPy78Hbj4vouzsMLyrO9t+E/L2ugp9FhXNkHrB8?=
- =?us-ascii?Q?mTvrxLO0G6L1ms+dIW9ZH9u67Ey5paXtpLcDBMhS1Q0N1CBXYsMbo5pkMBL4?=
- =?us-ascii?Q?4htyGOC3UKEqfLtEJmdxJ3AZ0QsWif1e90dwdWiR0XEIRsYsch1RdTwz9Ubf?=
- =?us-ascii?Q?PM7do7JiMcmFSfaUY9QNT0utHHGr6pBkIuwChZu/grkK514+4n1zIJWld/k1?=
- =?us-ascii?Q?BbaW3fuEx7mowLTqjwxzWIcu7u3Np9BBf3eqbHzGKOrhiim073zQpqtyV/SP?=
- =?us-ascii?Q?4GkIHpRz0xvMRYpb1psDSkvsSLQU1wWnvCf32AjnJ0Ri/K69PByPokY2Ndjk?=
- =?us-ascii?Q?rL7+wTFomWqWYgYJzxzvDYT96ylhZOAgnxtqnEu8PZEqAmax9Xoa1jsbu1Fc?=
- =?us-ascii?Q?ng=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?OZSHDuxn/jsfYDzmbz56g6G0gAbHRYBM16M6W7KQlz9ZJ2H63sA71TW39aKb?=
+ =?us-ascii?Q?M1AmjDkeO0fslWtOKgWRL40tjPf3yVhuv1J3xbnYLaOT5NyyfzdwWvtDDr2x?=
+ =?us-ascii?Q?EneOo+jPtX7b3n68El22ijQ/Wg629Sc+3gI38FhZcJHmFKCHZ6COIJ01Yqzm?=
+ =?us-ascii?Q?AVt4CnnnavAESDkrZqWPR6qk1zFthixpal0ejaNsjnwU3u34B4bm0CQAtr28?=
+ =?us-ascii?Q?cOW45DLkNRJ5ah336Y8NHYiRocRPzuiyR1BDZADKegufOWjcRtUQnN1/8tGp?=
+ =?us-ascii?Q?EJNaAwtEcF8JZv5vR81oWTOAXF2odNPpiMmKarZ25CzVfGWx+ZPeF4gHvNNb?=
+ =?us-ascii?Q?tJbqRQgR7cLBUJJKsreH3pzIkDOGfElsDf7E5E5OQsTHQuG+9GE8y6sWNOPe?=
+ =?us-ascii?Q?Uxpc/zEPpFassPWOHVZKlI0BXEd5ltRJvijZkF18A6zaxOHaxwLRW2t/7dWs?=
+ =?us-ascii?Q?OsnJgp9/AY7FloCqlmL7roq4zEZXDYdIV4bWN2KsShqY4AovSvDfMDK/iOqI?=
+ =?us-ascii?Q?rZWzbTmTx5DKUDjWyc/enTg+jrnvzVMU8ZBV7vtzyfkRwm4cGX377OZjVt57?=
+ =?us-ascii?Q?+kplvbIARa2Mt7tLK3VwDH7IUJFqLAcvVbS7kHUBXFqElxZrKj4WKElSQeZ1?=
+ =?us-ascii?Q?EcpQOjqufp6dGgUKJyBHdeb3zVfXJLykKDBtC7ZuZcSvTcKrTzw/4psqH4QX?=
+ =?us-ascii?Q?ibV/KN0JXQCYQeWaaA4J6TYHdljAT4ywqGgp8YZN+1/lAhziC7eBj+DJUu/N?=
+ =?us-ascii?Q?OtbJ5JrtSrV1sRdIyZPKk7CRjjTY5iPcJvLCP+VAE1FNibkP9IDIlIaVQ0An?=
+ =?us-ascii?Q?RAMizMxQTyelbZpHa7Ek7u1IWF0QdF4WICuVctV5xkcwZn7vdCSFLt16tVsp?=
+ =?us-ascii?Q?DqEVIk+zLxwN/WhY6NxMF6XKKmE+Wlczw+OM/0nsMnKfhIgsTHseANqIG4uD?=
+ =?us-ascii?Q?Rvg6SnXbz8LpY6aVTUear9tVtXQLE4z3RTYHs3TQJLXe0U1nsXTMG+JJHJxD?=
+ =?us-ascii?Q?9ADTZxc+MnNdQmxhKur7YaAFx/WpUnUVr4u6tl/a2UZPV5hkTF5c5hSJTy71?=
+ =?us-ascii?Q?9DO9n1waPJbV3nT0B0LIF52p/hpGWSuMLjieTN97ORBd8Hc9JT/0SaeGdJJJ?=
+ =?us-ascii?Q?piPS0MCKAHso6WLpwleXXfXaUS7QjjN31NvxWKPy1kGkjgQa057KnCfTRB9z?=
+ =?us-ascii?Q?ot4aa62pUcfWFiR80xyyYsA4zu0Zp5l5Xpxy6N1A4s5fh+dO2BFq8qqBhXum?=
+ =?us-ascii?Q?3dx+/1Q9YpB484Iwncaargt23KzwmCRxktz5uEaEwcRteHF1F0d2wHvGAA2T?=
+ =?us-ascii?Q?wqgXc7O6i/CKLAx4dZkufNYDaRMk0p4ECa8vfPj1NnbiXqwZ/u8BKCSCjNaP?=
+ =?us-ascii?Q?AR/STMg72rojJbfsSMdWiSjQM+J4MZ63Cw8rLcvXn2WcreEeUajnLTe1no+b?=
+ =?us-ascii?Q?zxZn/X0NgFpN43/au8AvhLKKgPrA2kV880wAkWLVnATd/WXBD5DjAvuLJvb6?=
+ =?us-ascii?Q?ysnaxqNog6CVNxdn3JfIifxN8MPWoCaXVt/ntjWBx8tY/sCtQdx3WVd6R4J0?=
+ =?us-ascii?Q?85ufPpugue9/EyvTeA90Upd0XlGm19kUewBgbkL3cJaBD3JwQbv4/qek1ffu?=
+ =?us-ascii?Q?vA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a16d1617-5533-4aab-f7b7-08db93a1918c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2023 21:43:54.3982
+X-MS-Exchange-CrossTenant-Network-Message-Id: c91d1455-6f0c-46cc-121a-08db93a1c284
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2023 21:45:16.5272
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: P92LIT4N4cIjth8FmHyadfr5JbkbUDarN5ocwk+hleFgOIV/Hz66RB8+j8J3GuqD98RicUptyNDjxwLQgKLO3wZupqrIFXjrcuynfGnf3pI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1536
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-userprincipalname: qqH6enVJbKWHi+cqihjt6OFgLiUMpgE7vY7V3ar39Q0fwvSWsDjC5X3uT7dPcbKPW++rxQDBxdZajFvgVyU84zgS8gVJYWvEtcqnDuBJgMs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB3866
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -129,579 +131,709 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 From: Saurabh Sengar <ssengar@linux.microsoft.com> Sent: Friday, July 14, 2=
 023 3:26 AM
 >=20
-> Provide a userspace interface for userspace drivers or applications to
-> read/write a VMBus ringbuffer. A significant part of this code is
-> borrowed from DPDK[1]. Current library is supported exclusively for
-> the x86 architecture.
+> Implement the file copy service for Linux guests on Hyper-V. This
+> permits the host to copy a file (over VMBus) into the guest. This
+> facility is part of "guest integration services" supported on the
+> Hyper-V platform.
 >=20
-> To build this library:
-> make -C tools/hv libvmbus_bufring.a
+> Here is a link that provides additional details on this functionality:
 >=20
-> Applications using this library can include the vmbus_bufring.h header
-> file and libvmbus_bufring.a statically.
+> https://learn.microsoft.com/en-us/powershell/module/hyper-v/copy-vmfile?v=
+iew=3Dwindowsserver2022-ps
 >=20
-> [1] https://github.com/DPDK/dpdk/
+> This new fcopy application uses uio_hv_vmbus_client driver which
+> makes the earlier hv_util based driver and application obsolete.
 >=20
-> Signed-off-by: Mary Hardy <maryhardy@microsoft.com>
 > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 > ---
 > [V3]
-> - Made ring buffer data offset depend on page size
-> - remove rte_smp_rwmb macro and reused rte_compiler_barrier instead
-> - Added legal counsel sign-off
-> - Removed "Link:" tag
-> - Improve commit messages
-> - new library compilation dependent on x86
-> - simplify mmap
+> - Improve cover letter and commit messages
+> - Improve debug prints
+> - Instead of hardcoded instance id, query from class id sysfs
+> - Set the ring_size value from application
+> - Update the application to mmap /dev/uio instead of sysfs
+> - new application compilation dependent on x86
 >=20
 > [V2]
-> - simpler sysfs path, less parsing
+> - simpler sysfs path
 >=20
->  tools/hv/Build           |   1 +
->  tools/hv/Makefile        |  13 +-
->  tools/hv/vmbus_bufring.c | 297 +++++++++++++++++++++++++++++++++++++++
->  tools/hv/vmbus_bufring.h | 154 ++++++++++++++++++++
->  4 files changed, 464 insertions(+), 1 deletion(-)
->  create mode 100644 tools/hv/vmbus_bufring.c
->  create mode 100644 tools/hv/vmbus_bufring.h
+>  tools/hv/Build                 |   1 +
+>  tools/hv/Makefile              |  10 +-
+>  tools/hv/hv_fcopy_uio_daemon.c | 578 +++++++++++++++++++++++++++++++++
+>  3 files changed, 588 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/hv/hv_fcopy_uio_daemon.c
 >=20
 > diff --git a/tools/hv/Build b/tools/hv/Build
-> index 6cf51fa4b306..2a667d3d94cb 100644
+> index 2a667d3d94cb..efcbb74a0d23 100644
 > --- a/tools/hv/Build
 > +++ b/tools/hv/Build
-> @@ -1,3 +1,4 @@
->  hv_kvp_daemon-y +=3D hv_kvp_daemon.o
+> @@ -2,3 +2,4 @@ hv_kvp_daemon-y +=3D hv_kvp_daemon.o
 >  hv_vss_daemon-y +=3D hv_vss_daemon.o
 >  hv_fcopy_daemon-y +=3D hv_fcopy_daemon.o
-> +vmbus_bufring-y +=3D vmbus_bufring.o
+>  vmbus_bufring-y +=3D vmbus_bufring.o
+> +hv_fcopy_uio_daemon-y +=3D hv_fcopy_uio_daemon.o
 > diff --git a/tools/hv/Makefile b/tools/hv/Makefile
-> index fe770e679ae8..33cf488fd20f 100644
+> index 33cf488fd20f..678c6c450a53 100644
 > --- a/tools/hv/Makefile
 > +++ b/tools/hv/Makefile
-> @@ -11,14 +11,19 @@ srctree :=3D $(patsubst %/,%,$(dir $(CURDIR)))
->  srctree :=3D $(patsubst %/,%,$(dir $(srctree)))
->  endif
+> @@ -21,8 +21,10 @@ override CFLAGS +=3D -O2 -Wall -g -D_GNU_SOURCE -
+> I$(OUTPUT)include
 >=20
-> +include $(srctree)/tools/scripts/Makefile.arch
-> +
->  # Do not use make's built-in rules
->  # (this improves performance and avoids hard-to-debug behaviour);
->  MAKEFLAGS +=3D -r
->=20
->  override CFLAGS +=3D -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
->=20
-> +ifeq ($(SRCARCH),x86)
-> +ALL_LIBS :=3D libvmbus_bufring.a
-> +endif
+>  ifeq ($(SRCARCH),x86)
+>  ALL_LIBS :=3D libvmbus_bufring.a
+> -endif
+> +ALL_TARGETS :=3D hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
+> hv_fcopy_uio_daemon
+> +else
 >  ALL_TARGETS :=3D hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
-> -ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
-> +ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS)) $(patsubst
+> +endif
+>  ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS)) $(patsubst
 > %,$(OUTPUT)%,$(ALL_LIBS))
 >=20
 >  ALL_SCRIPTS :=3D hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.=
 sh
+> @@ -56,6 +58,12 @@ $(HV_FCOPY_DAEMON_IN): FORCE
+>  $(OUTPUT)hv_fcopy_daemon: $(HV_FCOPY_DAEMON_IN)
+>  	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
 >=20
-> @@ -27,6 +32,12 @@ all: $(ALL_PROGRAMS)
->  export srctree OUTPUT CC LD CFLAGS
->  include $(srctree)/tools/build/Makefile.include
->=20
-> +HV_VMBUS_BUFRING_IN :=3D $(OUTPUT)vmbus_bufring.o
-> +$(HV_VMBUS_BUFRING_IN): FORCE
-> +	$(Q)$(MAKE) $(build)=3Dvmbus_bufring
-> +$(OUTPUT)libvmbus_bufring.a : vmbus_bufring.o
-> +	$(AR) rcs $@ $^
+> +HV_FCOPY_UIO_DAEMON_IN :=3D $(OUTPUT)hv_fcopy_uio_daemon-in.o
+> +$(HV_FCOPY_UIO_DAEMON_IN): FORCE
+> +	$(Q)$(MAKE) $(build)=3Dhv_fcopy_uio_daemon
+> +$(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
+> libvmbus_bufring.a
+> +	$(QUIET_LINK)$(CC) -lm $< -L. -lvmbus_bufring -o $@
 > +
->  HV_KVP_DAEMON_IN :=3D $(OUTPUT)hv_kvp_daemon-in.o
->  $(HV_KVP_DAEMON_IN): FORCE
->  	$(Q)$(MAKE) $(build)=3Dhv_kvp_daemon
-> diff --git a/tools/hv/vmbus_bufring.c b/tools/hv/vmbus_bufring.c
+>  clean:
+>  	rm -f $(ALL_PROGRAMS)
+>  	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
+> diff --git a/tools/hv/hv_fcopy_uio_daemon.c b/tools/hv/hv_fcopy_uio_daemo=
+n.c
 > new file mode 100644
-> index 000000000000..fb1f0489c625
+> index 000000000000..e8618a30dc7e
 > --- /dev/null
-> +++ b/tools/hv/vmbus_bufring.c
-> @@ -0,0 +1,297 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
+> +++ b/tools/hv/hv_fcopy_uio_daemon.c
+> @@ -0,0 +1,578 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * Copyright (c) 2009-2012,2016,2023 Microsoft Corp.
-> + * Copyright (c) 2012 NetApp Inc.
-> + * Copyright (c) 2012 Citrix Inc.
-> + * All rights reserved.
+> + * An implementation of host to guest copy functionality for Linux.
+> + *
+> + * Copyright (C) 2023, Microsoft, Inc.
+> + *
+> + * Author : K. Y. Srinivasan <kys@microsoft.com>
+> + * Author : Saurabh Sengar <ssengar@microsoft.com>
+> + *
 > + */
 > +
+> +#include <dirent.h>
 > +#include <errno.h>
-> +#include <emmintrin.h>
+> +#include <fcntl.h>
+> +#include <getopt.h>
+> +#include <locale.h>
+> +#include <stdbool.h>
+> +#include <stddef.h>
+> +#include <stdint.h>
 > +#include <stdio.h>
+> +#include <stdlib.h>
 > +#include <string.h>
+> +#include <syslog.h>
 > +#include <unistd.h>
-> +#include <sys/uio.h>
+> +#include <sys/mman.h>
+> +#include <sys/stat.h>
+> +#include <linux/hyperv.h>
 > +#include "vmbus_bufring.h"
 > +
-> +#define	rte_compiler_barrier()	({ asm volatile ("" : : : "memory"); })
-> +#define RINGDATA_START_OFFSET	(getpagesize())
-> +#define VMBUS_RQST_ERROR	0xFFFFFFFFFFFFFFFF
-> +#define ALIGN(val, align)	((typeof(val))((val) & (~((typeof(val))((align=
-) - 1)))))
+> +#define ICMSGTYPE_NEGOTIATE	0
+> +#define ICMSGTYPE_FCOPY		7
 > +
-> +/* Increase bufring index by inc with wraparound */
-> +static inline uint32_t vmbus_br_idxinc(uint32_t idx, uint32_t inc, uint3=
-2_t sz)
+> +#define WIN8_SRV_MAJOR		1
+> +#define WIN8_SRV_MINOR		1
+> +#define WIN8_SRV_VERSION	(WIN8_SRV_MAJOR << 16 | WIN8_SRV_MINOR)
+> +
+> +#define MAX_PATH_LEN		300
+> +#define MAX_LINE_LEN		40
+> +#define DEVICES_SYSFS		"/sys/bus/vmbus/devices"
+> +#define FCOPY_CLASS_ID		"34d14be3-dee4-41c8-9ae7-6b174977c192"
+> +
+> +#define FCOPY_VER_COUNT		1
+> +static const int fcopy_versions[] =3D {
+> +	WIN8_SRV_VERSION
+> +};
+> +
+> +#define FW_VER_COUNT		1
+> +static const int fw_versions[] =3D {
+> +	UTIL_FW_VERSION
+> +};
+> +
+> +#define HV_RING_SIZE		(4 * 4096)
+> +
+> +unsigned char desc[HV_RING_SIZE];
+> +
+> +static int target_fd;
+> +static char target_fname[PATH_MAX];
+> +static unsigned long long filesize;
+> +
+> +static int hv_fcopy_create_file(char *file_name, char *path_name, __u32 =
+flags)
 > +{
-> +	idx +=3D inc;
-> +	if (idx >=3D sz)
-> +		idx -=3D sz;
+> +	int error =3D HV_E_FAIL;
+> +	char *q, *p;
 > +
-> +	return idx;
-> +}
+> +	filesize =3D 0;
+> +	p =3D (char *)path_name;
+> +	snprintf(target_fname, sizeof(target_fname), "%s/%s",
+> +		 (char *)path_name, (char *)file_name);
 > +
-> +void vmbus_br_setup(struct vmbus_br *br, void *buf, unsigned int blen)
-> +{
-> +	br->vbr =3D buf;
-> +	br->windex =3D br->vbr->windex;
-> +	br->dsize =3D blen - RINGDATA_START_OFFSET;
-> +}
-> +
-> +static inline __always_inline void
-> +rte_smp_mb(void)
-> +{
-> +	asm volatile("lock addl $0, -128(%%rsp); " ::: "memory");
-> +}
-> +
-> +static inline int
-> +rte_atomic32_cmpset(volatile uint32_t *dst, uint32_t exp, uint32_t src)
-> +{
-> +	uint8_t res;
-> +
-> +	asm volatile("lock ; "
-> +		     "cmpxchgl %[src], %[dst];"
-> +		     "sete %[res];"
-> +		     : [res] "=3Da" (res),     /* output */
-> +		     [dst] "=3Dm" (*dst)
-> +		     : [src] "r" (src),      /* input */
-> +		     "a" (exp),
-> +		     "m" (*dst)
-> +		     : "memory");            /* no-clobber list */
-> +	return res;
-> +}
-> +
-> +static inline uint32_t
-> +vmbus_txbr_copyto(const struct vmbus_br *tbr, uint32_t windex,
-> +		  const void *src0, uint32_t cplen)
-> +{
-> +	uint8_t *br_data =3D (uint8_t *)tbr->vbr + RINGDATA_START_OFFSET;
-> +	uint32_t br_dsize =3D tbr->dsize;
-> +	const uint8_t *src =3D src0;
-> +
-> +	if (cplen > br_dsize - windex) {
-> +		uint32_t fraglen =3D br_dsize - windex;
-> +
-> +		/* Wrap-around detected */
-> +		memcpy(br_data + windex, src, fraglen);
-> +		memcpy(br_data, src + fraglen, cplen - fraglen);
-> +	} else {
-> +		memcpy(br_data + windex, src, cplen);
+> +	/*
+> +	 * Check to see if the path is already in place; if not,
+> +	 * create if required.
+> +	 */
+> +	while ((q =3D strchr(p, '/')) !=3D NULL) {
+> +		if (q =3D=3D p) {
+> +			p++;
+> +			continue;
+> +		}
+> +		*q =3D '\0';
+> +		if (access(path_name, F_OK)) {
+> +			if (flags & CREATE_PATH) {
+> +				if (mkdir(path_name, 0755)) {
+> +					syslog(LOG_ERR, "Failed to create %s",
+> +					       path_name);
+> +					goto done;
+> +				}
+> +			} else {
+> +				syslog(LOG_ERR, "Invalid path: %s", path_name);
+> +				goto done;
+> +			}
+> +		}
+> +		p =3D q + 1;
+> +		*q =3D '/';
 > +	}
 > +
-> +	return vmbus_br_idxinc(windex, cplen, br_dsize);
-> +}
+> +	if (!access(target_fname, F_OK)) {
+> +		syslog(LOG_INFO, "File: %s exists", target_fname);
+> +		if (!(flags & OVER_WRITE)) {
+> +			error =3D HV_ERROR_ALREADY_EXISTS;
+> +			goto done;
+> +		}
+> +	}
 > +
-> +/*
-> + * Write scattered channel packet to TX bufring.
-> + *
-> + * The offset of this channel packet is written as a 64bits value
-> + * immediately after this channel packet.
-> + *
-> + * The write goes through three stages:
-> + *  1. Reserve space in ring buffer for the new data.
-> + *     Writer atomically moves priv_write_index.
-> + *  2. Copy the new data into the ring.
-> + *  3. Update the tail of the ring (visible to host) that indicates
-> + *     next read location. Writer updates write_index
-> + */
-> +static int
-> +vmbus_txbr_write(struct vmbus_br *tbr, const struct iovec iov[], int iov=
-len,
-> +		 bool *need_sig)
-> +{
-> +	struct vmbus_bufring *vbr =3D tbr->vbr;
-> +	uint32_t ring_size =3D tbr->dsize;
-> +	uint32_t old_windex, next_windex, windex, total;
-> +	uint64_t save_windex;
-> +	int i;
+> +	target_fd =3D open(target_fname,
+> +			 O_RDWR | O_CREAT | O_TRUNC | O_CLOEXEC, 0744);
+> +	if (target_fd =3D=3D -1) {
+> +		syslog(LOG_INFO, "Open Failed: %s", strerror(errno));
+> +		goto done;
+> +	}
 > +
-> +	total =3D 0;
-> +	for (i =3D 0; i < iovlen; i++)
-> +		total +=3D iov[i].iov_len;
-> +	total +=3D sizeof(save_windex);
-> +
-> +	/* Reserve space in ring */
-> +	do {
-> +		uint32_t avail;
-> +
-> +		/* Get current free location */
-> +		old_windex =3D tbr->windex;
-> +
-> +		/* Prevent compiler reordering this with calculation */
-> +		rte_compiler_barrier();
-> +
-> +		avail =3D vmbus_br_availwrite(tbr, old_windex);
-> +
-> +		/* If not enough space in ring, then tell caller. */
-> +		if (avail <=3D total)
-> +			return -EAGAIN;
-> +
-> +		next_windex =3D vmbus_br_idxinc(old_windex, total, ring_size);
-> +
-> +		/* Atomic update of next write_index for other threads */
-> +	} while (!rte_atomic32_cmpset(&tbr->windex, old_windex, next_windex));
-> +
-> +	/* Space from old..new is now reserved */
-> +	windex =3D old_windex;
-> +	for (i =3D 0; i < iovlen; i++)
-> +		windex =3D vmbus_txbr_copyto(tbr, windex, iov[i].iov_base, iov[i].iov_=
-len);
-> +
-> +	/* Set the offset of the current channel packet. */
-> +	save_windex =3D ((uint64_t)old_windex) << 32;
-> +	windex =3D vmbus_txbr_copyto(tbr, windex, &save_windex,
-> +				   sizeof(save_windex));
-> +
-> +	/* The region reserved should match region used */
-> +	if (windex !=3D next_windex)
-> +		return -EINVAL;
-> +
-> +	/* Ensure that data is available before updating host index */
-> +	rte_compiler_barrier();
-> +
-> +	/* Checkin for our reservation. wait for our turn to update host */
-> +	while (!rte_atomic32_cmpset(&vbr->windex, old_windex, next_windex))
-> +		_mm_pause();
-> +
-> +	return 0;
-> +}
-> +
-> +int rte_vmbus_chan_send(struct vmbus_br *txbr, uint16_t type, void *data=
-,
-> +			uint32_t dlen, uint32_t flags)
-> +{
-> +	struct vmbus_chanpkt pkt;
-> +	unsigned int pktlen, pad_pktlen;
-> +	const uint32_t hlen =3D sizeof(pkt);
-> +	bool send_evt =3D false;
-> +	uint64_t pad =3D 0;
-> +	struct iovec iov[3];
-> +	int error;
-> +
-> +	pktlen =3D hlen + dlen;
-> +	pad_pktlen =3D ALIGN(pktlen, sizeof(uint64_t));
-
-This ALIGN function rounds down.  So pad_pktlen could be
-less than pktlen.
-
-> +
-> +	pkt.hdr.type =3D type;
-> +	pkt.hdr.flags =3D flags;
-> +	pkt.hdr.hlen =3D hlen >> VMBUS_CHANPKT_SIZE_SHIFT;
-> +	pkt.hdr.tlen =3D pad_pktlen >> VMBUS_CHANPKT_SIZE_SHIFT;
-> +	pkt.hdr.xactid =3D VMBUS_RQST_ERROR; /* doesn't support multiple reques=
-ts at same time */
-> +
-> +	iov[0].iov_base =3D &pkt;
-> +	iov[0].iov_len =3D hlen;
-> +	iov[1].iov_base =3D data;
-> +	iov[1].iov_len =3D dlen;
-> +	iov[2].iov_base =3D &pad;
-> +	iov[2].iov_len =3D pad_pktlen - pktlen;
-
-Given the way your ALIGN function works, the above could
-produce a negative value for iov[2].iov_len.  Then bad things
-will happen. :-(
-
-> +
-> +	error =3D vmbus_txbr_write(txbr, iov, 3, &send_evt);
-> +
+> +	error =3D 0;
+> +done:
+> +	if (error)
+> +		target_fname[0] =3D '\0';
 > +	return error;
 > +}
 > +
-> +static inline uint32_t
-> +vmbus_rxbr_copyfrom(const struct vmbus_br *rbr, uint32_t rindex,
-> +		    void *dst0, size_t cplen)
+> +static int hv_copy_data(struct hv_do_fcopy *cpmsg)
 > +{
-> +	const uint8_t *br_data =3D (uint8_t *)rbr->vbr + RINGDATA_START_OFFSET;
-> +	uint32_t br_dsize =3D rbr->dsize;
-> +	uint8_t *dst =3D dst0;
+> +	ssize_t bytes_written;
+> +	int ret =3D 0;
 > +
-> +	if (cplen > br_dsize - rindex) {
-> +		uint32_t fraglen =3D br_dsize - rindex;
+> +	bytes_written =3D pwrite(target_fd, cpmsg->data, cpmsg->size,
+> +			       cpmsg->offset);
 > +
-> +		/* Wrap-around detected. */
-> +		memcpy(dst, br_data + rindex, fraglen);
-> +		memcpy(dst + fraglen, br_data, cplen - fraglen);
-> +	} else {
-> +		memcpy(dst, br_data + rindex, cplen);
+> +	filesize +=3D cpmsg->size;
+> +	if (bytes_written !=3D cpmsg->size) {
+> +		switch (errno) {
+> +		case ENOSPC:
+> +			ret =3D HV_ERROR_DISK_FULL;
+> +			break;
+> +		default:
+> +			ret =3D HV_E_FAIL;
+> +			break;
+> +		}
+> +		syslog(LOG_ERR, "pwrite failed to write %llu bytes: %ld (%s)",
+> +		       filesize, (long)bytes_written, strerror(errno));
 > +	}
 > +
-> +	return vmbus_br_idxinc(rindex, cplen, br_dsize);
-> +}
-> +
-> +/* Copy data from receive ring but don't change index */
-> +static int
-> +vmbus_rxbr_peek(const struct vmbus_br *rbr, void *data, size_t dlen)
-> +{
-> +	uint32_t avail;
-> +
-> +	/*
-> +	 * The requested data and the 64bits channel packet
-> +	 * offset should be there at least.
-> +	 */
-> +	avail =3D vmbus_br_availread(rbr);
-> +	if (avail < dlen + sizeof(uint64_t))
-> +		return -EAGAIN;
-> +
-> +	vmbus_rxbr_copyfrom(rbr, rbr->vbr->rindex, data, dlen);
-> +	return 0;
+> +	return ret;
 > +}
 > +
 > +/*
-> + * Copy data from receive ring and change index
-> + * NOTE:
-> + * We assume (dlen + skip) =3D=3D sizeof(channel packet).
-> + */
-> +static int
-> +vmbus_rxbr_read(struct vmbus_br *rbr, void *data, size_t dlen, size_t sk=
-ip)
-> +{
-> +	struct vmbus_bufring *vbr =3D rbr->vbr;
-> +	uint32_t br_dsize =3D rbr->dsize;
-> +	uint32_t rindex;
-> +
-> +	if (vmbus_br_availread(rbr) < dlen + skip + sizeof(uint64_t))
-> +		return -EAGAIN;
-> +
-> +	/* Record where host was when we started read (for debug) */
-> +	rbr->windex =3D rbr->vbr->windex;
-> +
-> +	/*
-> +	 * Copy channel packet from RX bufring.
-> +	 */
-> +	rindex =3D vmbus_br_idxinc(rbr->vbr->rindex, skip, br_dsize);
-> +	rindex =3D vmbus_rxbr_copyfrom(rbr, rindex, data, dlen);
-> +
-> +	/*
-> +	 * Discard this channel packet's 64bits offset, which is useless to us.
-> +	 */
-> +	rindex =3D vmbus_br_idxinc(rindex, sizeof(uint64_t), br_dsize);
-> +
-> +	/* Update the read index _after_ the channel packet is fetched.	 */
-> +	rte_compiler_barrier();
-> +
-> +	vbr->rindex =3D rindex;
-> +
-> +	return 0;
-> +}
-> +
-> +int rte_vmbus_chan_recv_raw(struct vmbus_br *rxbr,
-> +			    void *data, uint32_t *len)
-> +{
-> +	struct vmbus_chanpkt_hdr pkt;
-> +	uint32_t dlen, bufferlen =3D *len;
-> +	int error;
-> +
-> +	error =3D vmbus_rxbr_peek(rxbr, &pkt, sizeof(pkt));
-> +	if (error)
-> +		return error;
-> +
-> +	if (unlikely(pkt.hlen < VMBUS_CHANPKT_HLEN_MIN))
-> +		/* XXX this channel is dead actually. */
-> +		return -EIO;
-> +
-> +	if (unlikely(pkt.hlen > pkt.tlen))
-> +		return -EIO;
-> +
-> +	/* Length are in quad words */
-> +	dlen =3D pkt.tlen << VMBUS_CHANPKT_SIZE_SHIFT;
-> +	*len =3D dlen;
-> +
-> +	/* If caller buffer is not large enough */
-> +	if (unlikely(dlen > bufferlen))
-> +		return -ENOBUFS;
-> +
-> +	/* Read data and skip packet header */
-> +	error =3D vmbus_rxbr_read(rxbr, data, dlen, 0);
-> +	if (error)
-> +		return error;
-> +
-> +	/* Return the number of bytes read */
-> +	return dlen + sizeof(uint64_t);
-> +}
-> diff --git a/tools/hv/vmbus_bufring.h b/tools/hv/vmbus_bufring.h
-> new file mode 100644
-> index 000000000000..45ecc48e517f
-> --- /dev/null
-> +++ b/tools/hv/vmbus_bufring.h
-> @@ -0,0 +1,154 @@
-> +/* SPDX-License-Identifier: BSD-3-Clause */
-> +
-> +#ifndef _VMBUS_BUF_H_
-> +#define _VMBUS_BUF_H_
-> +
-> +#include <stdbool.h>
-> +#include <stdint.h>
-> +
-> +#define __packed   __attribute__((__packed__))
-> +#define unlikely(x)	__builtin_expect(!!(x), 0)
-> +
-> +#define ICMSGHDRFLAG_TRANSACTION	1
-> +#define ICMSGHDRFLAG_REQUEST		2
-> +#define ICMSGHDRFLAG_RESPONSE		4
-> +
-> +#define IC_VERSION_NEGOTIATION_MAX_VER_COUNT 100
-> +#define ICMSG_HDR (sizeof(struct vmbuspipe_hdr) + sizeof(struct icmsg_hd=
-r))
-> +#define ICMSG_NEGOTIATE_PKT_SIZE(icframe_vercnt, icmsg_vercnt) \
-> +	(ICMSG_HDR + sizeof(struct icmsg_negotiate) + \
-> +	 (((icframe_vercnt) + (icmsg_vercnt)) * sizeof(struct ic_version)))
-> +
-> +/*
-> + * Channel packets
-> + */
-> +
-> +/* Channel packet flags */
-> +#define VMBUS_CHANPKT_TYPE_INBAND	0x0006
-> +#define VMBUS_CHANPKT_TYPE_RXBUF	0x0007
-> +#define VMBUS_CHANPKT_TYPE_GPA		0x0009
-> +#define VMBUS_CHANPKT_TYPE_COMP		0x000b
-> +
-> +#define VMBUS_CHANPKT_FLAG_NONE		0
-> +#define VMBUS_CHANPKT_FLAG_RC		0x0001  /* report completion */
-> +
-> +#define VMBUS_CHANPKT_SIZE_SHIFT	3
-> +#define VMBUS_CHANPKT_SIZE_ALIGN	BIT(VMBUS_CHANPKT_SIZE_SHIFT)
-> +#define VMBUS_CHANPKT_HLEN_MIN		\
-> +	(sizeof(struct vmbus_chanpkt_hdr) >> VMBUS_CHANPKT_SIZE_SHIFT)
-> +
-> +/*
-> + * Buffer ring
-> + */
-> +struct vmbus_bufring {
-> +	volatile uint32_t windex;
-> +	volatile uint32_t rindex;
-> +
-> +	/*
-> +	 * Interrupt mask {0,1}
-> +	 *
-> +	 * For TX bufring, host set this to 1, when it is processing
-> +	 * the TX bufring, so that we can safely skip the TX event
-> +	 * notification to host.
-> +	 *
-> +	 * For RX bufring, once this is set to 1 by us, host will not
-> +	 * further dispatch interrupts to us, even if there are data
-> +	 * pending on the RX bufring.  This effectively disables the
-> +	 * interrupt of the channel to which this RX bufring is attached.
-> +	 */
-> +	volatile uint32_t imask;
-> +
-> +	/*
-> +	 * Win8 uses some of the reserved bits to implement
-> +	 * interrupt driven flow management. On the send side
-> +	 * we can request that the receiver interrupt the sender
-> +	 * when the ring transitions from being full to being able
-> +	 * to handle a message of size "pending_send_sz".
-> +	 *
-> +	 * Add necessary state for this enhancement.
-> +	 */
-> +	volatile uint32_t pending_send;
-> +	uint32_t reserved1[12];
-> +
-> +	union {
-> +		struct {
-> +			uint32_t feat_pending_send_sz:1;
-> +		};
-> +		uint32_t value;
-> +	} feature_bits;
-> +
-> +	/*
-> +	 * Ring data starts here + RingDataStartOffset
-
-This mention of RingDataStartOffset looks stale.  I could
-not find it defined anywhere.
-
-> +	 * !!! DO NOT place any fields below this !!!
-> +	 */
-> +	uint8_t data[];
-> +} __packed;
-> +
-> +struct vmbus_br {
-> +	struct vmbus_bufring *vbr;
-> +	uint32_t	dsize;
-> +	uint32_t	windex; /* next available location */
-> +};
-> +
-> +struct vmbus_chanpkt_hdr {
-> +	uint16_t	type;	/* VMBUS_CHANPKT_TYPE_ */
-> +	uint16_t	hlen;	/* header len, in 8 bytes */
-> +	uint16_t	tlen;	/* total len, in 8 bytes */
-> +	uint16_t	flags;	/* VMBUS_CHANPKT_FLAG_ */
-> +	uint64_t	xactid;
-> +} __packed;
-> +
-> +struct vmbus_chanpkt {
-> +	struct vmbus_chanpkt_hdr hdr;
-> +} __packed;
-> +
-> +struct vmbuspipe_hdr {
-> +	unsigned int flags;
-> +	unsigned int msgsize;
-> +} __packed;
-> +
-> +struct ic_version {
-> +	unsigned short major;
-> +	unsigned short minor;
-> +} __packed;
-> +
-> +struct icmsg_negotiate {
-> +	unsigned short icframe_vercnt;
-> +	unsigned short icmsg_vercnt;
-> +	unsigned int reserved;
-> +	struct ic_version icversion_data[]; /* any size array */
-> +} __packed;
-> +
-> +struct icmsg_hdr {
-> +	struct ic_version icverframe;
-> +	unsigned short icmsgtype;
-> +	struct ic_version icvermsg;
-> +	unsigned short icmsgsize;
-> +	unsigned int status;
-> +	unsigned char ictransaction_id;
-> +	unsigned char icflags;
-> +	unsigned char reserved[2];
-> +} __packed;
-> +
-> +int rte_vmbus_chan_recv_raw(struct vmbus_br *rxbr, void *data, uint32_t =
-*len);
-> +int rte_vmbus_chan_send(struct vmbus_br *txbr, uint16_t type, void *data=
+> + * Reset target_fname to "" in the two below functions for hibernation: =
+if
+> + * the fcopy operation is aborted by hibernation, the daemon should remo=
+ve the
+> + * partially-copied file; to achieve this, the hv_utils driver always fa=
+kes a
+> + * CANCEL_FCOPY message upon suspend, and later when the VM resumes back=
 ,
-> +			uint32_t dlen, uint32_t flags);
-> +void vmbus_br_setup(struct vmbus_br *br, void *buf, unsigned int blen);
-> +
-> +/* Amount of space available for write */
-> +static inline uint32_t vmbus_br_availwrite(const struct vmbus_br *br, ui=
-nt32_t
-> windex)
+> + * the daemon calls hv_copy_cancel() to remove the file; if a file is co=
+pied
+> + * successfully before suspend, hv_copy_finished() must reset target_fna=
+me to
+> + * avoid that the file can be incorrectly removed upon resume, since the=
+ faked
+> + * CANCEL_FCOPY message is spurious in this case.
+> + */
+> +static int hv_copy_finished(void)
 > +{
-> +	uint32_t rindex =3D br->vbr->rindex;
-> +
-> +	if (windex >=3D rindex)
-> +		return br->dsize - (windex - rindex);
-> +	else
-> +		return rindex - windex;
+> +	close(target_fd);
+> +	target_fname[0] =3D '\0';
+> +	return 0;
 > +}
 > +
-> +static inline uint32_t vmbus_br_availread(const struct vmbus_br *br)
+> +static void print_usage(char *argv[])
 > +{
-> +	return br->dsize - vmbus_br_availwrite(br, br->vbr->windex);
+> +	fprintf(stderr, "Usage: %s [options]\n"
+> +		"Options are:\n"
+> +		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
+> +		"  -h, --help             print this help\n", argv[0]);
 > +}
 > +
-> +#endif	/* !_VMBUS_BUF_H_ */
+> +static bool vmbus_prep_negotiate_resp(struct icmsg_hdr *icmsghdrp, unsig=
+ned char *buf,
+> +				      unsigned int buflen, const int *fw_version, int fw_vercnt,
+> +				const int *srv_version, int srv_vercnt,
+> +				int *nego_fw_version, int *nego_srv_version)
+> +{
+> +	int icframe_major, icframe_minor;
+> +	int icmsg_major, icmsg_minor;
+> +	int fw_major, fw_minor;
+> +	int srv_major, srv_minor;
+> +	int i, j;
+> +	bool found_match =3D false;
+> +	struct icmsg_negotiate *negop;
+> +
+> +	/* Check that there's enough space for icframe_vercnt, icmsg_vercnt */
+> +	if (buflen < ICMSG_HDR + offsetof(struct icmsg_negotiate, reserved)) {
+> +		syslog(LOG_ERR, "Invalid icmsg negotiate");
+> +		return false;
+> +	}
+> +
+> +	icmsghdrp->icmsgsize =3D 0x10;
+> +	negop =3D (struct icmsg_negotiate *)&buf[ICMSG_HDR];
+> +
+> +	icframe_major =3D negop->icframe_vercnt;
+> +	icframe_minor =3D 0;
+> +
+> +	icmsg_major =3D negop->icmsg_vercnt;
+> +	icmsg_minor =3D 0;
+> +
+> +	/* Validate negop packet */
+> +	if (icframe_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
+> +	    icmsg_major > IC_VERSION_NEGOTIATION_MAX_VER_COUNT ||
+> +	    ICMSG_NEGOTIATE_PKT_SIZE(icframe_major, icmsg_major) > buflen) {
+> +		syslog(LOG_ERR, "Invalid icmsg negotiate - icframe_major: %u, icmsg_ma=
+jor: %u\n",
+> +		       icframe_major, icmsg_major);
+> +		goto fw_error;
+> +	}
+> +
+> +	/*
+> +	 * Select the framework version number we will
+> +	 * support.
+> +	 */
+> +
+> +	for (i =3D 0; i < fw_vercnt; i++) {
+> +		fw_major =3D (fw_version[i] >> 16);
+> +		fw_minor =3D (fw_version[i] & 0xFFFF);
+> +
+> +		for (j =3D 0; j < negop->icframe_vercnt; j++) {
+> +			if (negop->icversion_data[j].major =3D=3D fw_major &&
+> +			    negop->icversion_data[j].minor =3D=3D fw_minor) {
+> +				icframe_major =3D negop->icversion_data[j].major;
+> +				icframe_minor =3D negop->icversion_data[j].minor;
+> +				found_match =3D true;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (found_match)
+> +			break;
+> +	}
+> +
+> +	if (!found_match)
+> +		goto fw_error;
+> +
+> +	found_match =3D false;
+> +
+> +	for (i =3D 0; i < srv_vercnt; i++) {
+> +		srv_major =3D (srv_version[i] >> 16);
+> +		srv_minor =3D (srv_version[i] & 0xFFFF);
+> +
+> +		for (j =3D negop->icframe_vercnt;
+> +			(j < negop->icframe_vercnt + negop->icmsg_vercnt);
+> +			j++) {
+> +			if (negop->icversion_data[j].major =3D=3D srv_major &&
+> +			    negop->icversion_data[j].minor =3D=3D srv_minor) {
+> +				icmsg_major =3D negop->icversion_data[j].major;
+> +				icmsg_minor =3D negop->icversion_data[j].minor;
+> +				found_match =3D true;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (found_match)
+> +			break;
+> +	}
+> +
+> +	/*
+> +	 * Respond with the framework and service
+> +	 * version numbers we can support.
+> +	 */
+> +fw_error:
+> +	if (!found_match) {
+> +		negop->icframe_vercnt =3D 0;
+> +		negop->icmsg_vercnt =3D 0;
+> +	} else {
+> +		negop->icframe_vercnt =3D 1;
+> +		negop->icmsg_vercnt =3D 1;
+> +	}
+> +
+> +	if (nego_fw_version)
+> +		*nego_fw_version =3D (icframe_major << 16) | icframe_minor;
+> +
+> +	if (nego_srv_version)
+> +		*nego_srv_version =3D (icmsg_major << 16) | icmsg_minor;
+> +
+> +	negop->icversion_data[0].major =3D icframe_major;
+> +	negop->icversion_data[0].minor =3D icframe_minor;
+> +	negop->icversion_data[1].major =3D icmsg_major;
+> +	negop->icversion_data[1].minor =3D icmsg_minor;
+> +
+> +	return found_match;
+> +}
+> +
+> +static void wcstoutf8(char *dest, const __u16 *src, size_t dest_size)
+> +{
+> +	size_t len =3D 0;
+> +
+> +	while (len < dest_size) {
+> +		if (src[len] < 0x80)
+> +			dest[len++] =3D (char)(*src++);
+> +		else
+> +			dest[len++] =3D 'X';
+> +	}
+> +
+> +	dest[len] =3D '\0';
+> +}
+> +
+> +static int hv_fcopy_start(struct hv_start_fcopy *smsg_in)
+> +{
+> +	setlocale(LC_ALL, "en_US.utf8");
+> +	size_t file_size, path_size;
+> +	char *file_name, *path_name;
+> +	char *in_file_name =3D (char *)smsg_in->file_name;
+> +	char *in_path_name =3D (char *)smsg_in->path_name;
+> +
+> +	file_size =3D wcstombs(NULL, (const wchar_t *restrict)in_file_name, 0) =
++ 1;
+> +	path_size =3D wcstombs(NULL, (const wchar_t *restrict)in_path_name, 0) =
++ 1;
+> +
+> +	file_name =3D (char *)malloc(file_size * sizeof(char));
+> +	path_name =3D (char *)malloc(path_size * sizeof(char));
+> +
+> +	wcstoutf8(file_name, (__u16 *)in_file_name, file_size);
+> +	wcstoutf8(path_name, (__u16 *)in_path_name, path_size);
+> +
+> +	return hv_fcopy_create_file(file_name, path_name, smsg_in->copy_flags);
+> +}
+> +
+> +static int hv_fcopy_send_data(struct hv_fcopy_hdr *fcopy_msg, int recvle=
+n)
+> +{
+> +	int operation =3D fcopy_msg->operation;
+> +
+> +	/*
+> +	 * The  strings sent from the host are encoded in
+> +	 * utf16; convert it to utf8 strings.
+> +	 * The host assures us that the utf16 strings will not exceed
+> +	 * the max lengths specified. We will however, reserve room
+> +	 * for the string terminating character - in the utf16s_utf8s()
+> +	 * function we limit the size of the buffer where the converted
+> +	 * string is placed to W_MAX_PATH -1 to guarantee
+> +	 * that the strings can be properly terminated!
+> +	 */
+> +
+> +	switch (operation) {
+> +	case START_FILE_COPY:
+> +		return hv_fcopy_start((struct hv_start_fcopy *)fcopy_msg);
+> +	case WRITE_TO_FILE:
+> +		return hv_copy_data((struct hv_do_fcopy *)fcopy_msg);
+> +	case COMPLETE_FCOPY:
+> +		return hv_copy_finished();
+> +	}
+> +
+> +	return HV_E_FAIL;
+> +}
+> +
+> +/* process the packet recv from host */
+> +static int fcopy_pkt_process(struct vmbus_br *txbr)
+> +{
+> +	int ret, offset, pktlen;
+> +	int fcopy_srv_version;
+> +	const struct vmbus_chanpkt_hdr *pkt;
+> +	struct hv_fcopy_hdr *fcopy_msg;
+> +	struct icmsg_hdr *icmsghdr;
+> +
+> +	pkt =3D (const struct vmbus_chanpkt_hdr *)desc;
+> +	offset =3D pkt->hlen << 3;
+> +	pktlen =3D (pkt->tlen << 3) - offset;
+> +	icmsghdr =3D (struct icmsg_hdr *)&desc[offset + sizeof(struct vmbuspipe=
+_hdr)];
+> +	icmsghdr->status =3D HV_E_FAIL;
+> +
+> +	if (icmsghdr->icmsgtype =3D=3D ICMSGTYPE_NEGOTIATE) {
+> +		if (vmbus_prep_negotiate_resp(icmsghdr, desc + offset, pktlen, fw_vers=
+ions,
+> +					      FW_VER_COUNT, fcopy_versions, FCOPY_VER_COUNT,
+> +					      NULL, &fcopy_srv_version)) {
+> +			syslog(LOG_INFO, "FCopy IC version %d.%d",
+> +			       fcopy_srv_version >> 16, fcopy_srv_version & 0xFFFF);
+> +			icmsghdr->status =3D 0;
+> +		}
+> +	} else if (icmsghdr->icmsgtype =3D=3D ICMSGTYPE_FCOPY) {
+> +		/* Ensure recvlen is big enough to contain hv_fcopy_hdr */
+> +		if (pktlen < ICMSG_HDR + sizeof(struct hv_fcopy_hdr)) {
+> +			syslog(LOG_ERR, "Invalid Fcopy hdr. Packet length too small: %u",
+> +			       pktlen);
+> +			return -ENOBUFS;
+> +		}
+> +
+> +		fcopy_msg =3D (struct hv_fcopy_hdr *)&desc[offset + ICMSG_HDR];
+> +		icmsghdr->status =3D hv_fcopy_send_data(fcopy_msg, pktlen);
+> +	}
+> +
+> +	icmsghdr->icflags =3D ICMSGHDRFLAG_TRANSACTION | ICMSGHDRFLAG_RESPONSE;
+> +	ret =3D rte_vmbus_chan_send(txbr, 0x6, desc + offset, pktlen, 0);
+> +	if (ret) {
+> +		syslog(LOG_ERR, "Write to ringbuffer failed err: %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void fcopy_get_first_folder(char *path, char *chan_no)
+> +{
+> +	DIR *dir =3D opendir(path);
+> +	struct dirent *entry;
+> +
+> +	if (!dir) {
+> +		syslog(LOG_ERR, "Failed to open directory (errno=3D%s).\n", strerror(e=
+rrno));
+> +		return;
+> +	}
+> +
+> +	while ((entry =3D readdir(dir)) !=3D NULL) {
+> +		if (entry->d_type =3D=3D DT_DIR && strcmp(entry->d_name, ".") !=3D 0 &=
+&
+> +		    strcmp(entry->d_name, "..") !=3D 0) {
+> +			strcpy(chan_no, entry->d_name);
+> +			break;
+> +		}
+> +	}
+> +
+> +	closedir(dir);
+> +}
+> +
+> +static void fcopy_set_ring_size(char *path, char *inst, int size)
+> +{
+> +	char ring_size_path[MAX_PATH_LEN] =3D {0};
+> +	FILE *fd;
+> +
+> +	snprintf(ring_size_path, sizeof(ring_size_path), "%s/%s/%s", path, inst=
+, "ring_size");
+> +	fd =3D fopen(ring_size_path, "w");
+> +	if (!fd) {
+> +		syslog(LOG_WARNING, "Failed to open ring_size file (errno=3D%s).\n", s=
+trerror(errno));
+> +		return;
+> +	}
+> +	fprintf(fd, "%d", size);
+
+Check for and log an error if the new value isn't accepted by the kernel dr=
+iver?
+The code is using a ring size value that should be accepted by the kernel d=
+river,
+but weird stuff happens and it's probably better to know about it.
+
+> +	fclose(fd);
+> +}
+> +
+> +static char *fcopy_read_sysfs(char *path, char *buf, int len)
+> +{
+> +	FILE *fd;
+> +	char *ret;
+> +
+> +	fd =3D fopen(path, "r");
+> +	if (!fd)
+> +		return NULL;
+> +
+> +	ret =3D fgets(buf, len, fd);
+> +	fclose(fd);
+> +
+> +	return ret;
+> +}
+> +
+> +static int fcopy_get_instance_id(char *path, char *class_id, char *inst)
+> +{
+> +	DIR *dir =3D opendir(path);
+> +	struct dirent *entry;
+> +	char tmp_path[MAX_PATH_LEN] =3D {0};
+> +	char line[MAX_LINE_LEN];
+> +
+> +	if (!dir) {
+> +		syslog(LOG_ERR, "Failed to open directory (errno=3D%s).\n", strerror(e=
+rrno));
+> +		return -EINVAL;
+> +	}
+> +
+> +	while ((entry =3D readdir(dir)) !=3D NULL) {
+> +		if (entry->d_type =3D=3D DT_LNK && strcmp(entry->d_name, ".") !=3D 0 &=
+&
+> +		    strcmp(entry->d_name, "..") !=3D 0) {
+> +			/* search for the sysfs path with matching class_id */
+> +			snprintf(tmp_path, sizeof(tmp_path), "%s/%s/%s",
+> +				 path, entry->d_name, "class_id");
+> +			if (!fcopy_read_sysfs(tmp_path, line, MAX_LINE_LEN))
+> +				continue;
+> +
+> +			/* class id matches, now fetch the instance id from device_id */
+> +			if (strstr(line, class_id)) {
+> +				snprintf(tmp_path, sizeof(tmp_path), "%s/%s/%s",
+> +					 path, entry->d_name, "device_id");
+> +				if (!fcopy_read_sysfs(tmp_path, line, MAX_LINE_LEN))
+> +					continue;
+> +				/* remove braces */
+> +				strncpy(inst, line + 1, strlen(line) - 3);
+> +				break;
+> +			}
+> +		}
+> +	}
+> +
+> +	closedir(dir);
+> +	return 0;
+
+If this function doesn't find a matching class_id, it appears that it
+returns 0, but with the "inst" parameter unset.  The caller will then
+proceed as if "inst" was set when it is actually an uninitialized stack
+variable.  Probably need some better error detection and handling.
+
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	int fcopy_fd =3D -1, tmp =3D 1;
+> +	int daemonize =3D 1, long_index =3D 0, opt, ret =3D -EINVAL;
+> +	struct vmbus_br txbr, rxbr;
+> +	void *ring;
+> +	uint32_t len =3D HV_RING_SIZE;
+> +	char uio_name[10] =3D {0};
+> +	char uio_dev_path[15] =3D {0};
+> +	char uio_path[MAX_PATH_LEN] =3D {0};
+> +	char inst[MAX_LINE_LEN] =3D {0};
+> +
+> +	static struct option long_options[] =3D {
+> +		{"help",	no_argument,	   0,  'h' },
+> +		{"no-daemon",	no_argument,	   0,  'n' },
+> +		{0,		0,		   0,  0   }
+> +	};
+> +
+> +	while ((opt =3D getopt_long(argc, argv, "hn", long_options,
+> +				  &long_index)) !=3D -1) {
+> +		switch (opt) {
+> +		case 'n':
+> +			daemonize =3D 0;
+> +			break;
+> +		case 'h':
+> +		default:
+> +			print_usage(argv);
+> +			exit(EXIT_FAILURE);
+> +		}
+> +	}
+> +
+> +	if (daemonize && daemon(1, 0)) {
+> +		syslog(LOG_ERR, "daemon() failed; error: %s", strerror(errno));
+> +		exit(EXIT_FAILURE);
+> +	}
+> +
+> +	openlog("HV_UIO_FCOPY", 0, LOG_USER);
+> +	syslog(LOG_INFO, "starting; pid is:%d", getpid());
+> +
+> +	/* get instance id */
+> +	if (fcopy_get_instance_id(DEVICES_SYSFS, FCOPY_CLASS_ID, inst))
+> +		exit(EXIT_FAILURE);
+
+Per above, need better error handling.  And since the syslog is now open,
+any errors should be logged rather than having the process just
+mysteriously exit.
+
+> +
+> +	/* set ring_size value */
+> +	fcopy_set_ring_size(DEVICES_SYSFS, inst, HV_RING_SIZE);
+> +
+> +	/* get /dev/uioX dev path and open it */
+> +	snprintf(uio_path, sizeof(uio_path), "%s/%s/%s", DEVICES_SYSFS, inst, "=
+uio");
+> +	fcopy_get_first_folder(uio_path, uio_name);
+> +	snprintf(uio_dev_path, sizeof(uio_dev_path), "/dev/%s", uio_name);
+> +	fcopy_fd =3D open(uio_dev_path, O_RDWR);
+> +
+> +	if (fcopy_fd < 0) {
+> +		syslog(LOG_ERR, "open %s failed; error: %d %s",
+> +		       uio_dev_path, errno, strerror(errno));
+> +		syslog(LOG_ERR, "Please make sure module uio_hv_vmbus_client is loaded=
+ and" \
+> +		       " device is not used by any other application\n");
+> +		ret =3D fcopy_fd;
+> +		exit(EXIT_FAILURE);
+> +	}
+> +
+> +	ring =3D mmap(NULL, 2 * HV_RING_SIZE, PROT_READ | PROT_WRITE, MAP_SHARE=
+D, fcopy_fd, 0);
+> +	if (ring =3D=3D MAP_FAILED) {
+> +		ret =3D errno;
+> +		syslog(LOG_ERR, "mmap ringbuffer failed; error: %d %s", ret, strerror(=
+ret));
+> +		goto close;
+> +	}
+> +	vmbus_br_setup(&txbr, ring, HV_RING_SIZE);
+> +	vmbus_br_setup(&rxbr, (char *)ring + HV_RING_SIZE, HV_RING_SIZE);
+> +
+> +	while (1) {
+> +		/*
+> +		 * In this loop we process fcopy messages after the
+> +		 * handshake is complete.
+> +		 */
+> +		ret =3D pread(fcopy_fd, &tmp, sizeof(int), 0);
+> +		if (ret < 0) {
+> +			syslog(LOG_ERR, "pread failed: %s", strerror(errno));
+> +			continue;
+> +		}
+> +
+> +		len =3D HV_RING_SIZE;
+> +		ret =3D rte_vmbus_chan_recv_raw(&rxbr, desc, &len);
+> +		if (unlikely(ret <=3D 0)) {
+> +			/* This indicates a failure to communicate (or worse) */
+> +			syslog(LOG_ERR, "VMBus channel recv error: %d", ret);
+> +		} else {
+> +			ret =3D fcopy_pkt_process(&txbr);
+> +			if (ret < 0)
+> +				goto close;
+> +
+> +			/* Signal host */
+> +			tmp =3D 1;
+> +			if ((write(fcopy_fd, &tmp, sizeof(int))) !=3D sizeof(int)) {
+> +				ret =3D errno;
+> +				syslog(LOG_ERR, "Registration failed: %s\n", strerror(ret));
+> +				goto close;
+> +			}
+> +		}
+> +	}
+> +close:
+> +	close(fcopy_fd);
+> +	return ret;
+> +}
 > --
 > 2.34.1
 
