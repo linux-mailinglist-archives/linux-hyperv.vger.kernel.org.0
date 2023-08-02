@@ -2,67 +2,41 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BDE576C4F0
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 07:37:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09BBF76C504
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 07:50:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231869AbjHBFhH (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 01:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48682 "EHLO
+        id S231974AbjHBFu5 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 01:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230425AbjHBFhG (ORCPT
+        with ESMTP id S231933AbjHBFu5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 01:37:06 -0400
+        Wed, 2 Aug 2023 01:50:57 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7FCAFE4;
-        Tue,  1 Aug 2023 22:37:05 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1099)
-        id E6B10238AF65; Tue,  1 Aug 2023 22:37:04 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6B10238AF65
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 605EF10EA;
+        Tue,  1 Aug 2023 22:50:56 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id DB1D0238AF68;
+        Tue,  1 Aug 2023 22:50:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DB1D0238AF68
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1690954624;
-        bh=llvx4mdfvSj5J9l9m59JQT19sx7YAHn2YDSG1Mqh4zg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XXeucYayypWB4Kio0+xxOSHEZRvpMym5mJtcgLvrT2yZlil5eZM/tWaHJtEkIUWiP
-         FF8Vo+uFbn0zN1C/cQslGXIeVX0ojBDCdxMUZstsuVdhBv0IvOOX96FOhvqpxx51wT
-         0XNmljKGS06jFaD5DcQ/XkZQ6NFNWwgR/P0q/eio=
-Date:   Tue, 1 Aug 2023 22:37:04 -0700
-From:   Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-To:     Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
-Cc:     Souradeep Chakrabarti <schakrabarti@microsoft.com>,
-        Simon Horman <horms@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        Long Li <longli@microsoft.com>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "cai.huoqing@linux.dev" <cai.huoqing@linux.dev>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH V7 net] net: mana: Fix MANA VF unload when
- hardware is
-Message-ID: <20230802053704.GA3488@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1690892953-25201-1-git-send-email-schakrabarti@linux.microsoft.com>
- <ZMklUch+vfZBqfAr@kernel.org>
- <PUZP153MB0788A2C4FC7A76D2CDD021BCCC0AA@PUZP153MB0788.APCP153.PROD.OUTLOOK.COM>
- <CAH-L+nPsuoJfCQcJnpMWk5DPGev8f+YWi0K4V+fU=5-bxP5GVw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH-L+nPsuoJfCQcJnpMWk5DPGev8f+YWi0K4V+fU=5-bxP5GVw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        s=default; t=1690955455;
+        bh=o47Z7FL0EGxS3sVmC/j/HBMYaOZNkpQdTsm/vyp5wl4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iYphvqsD9S7j9YmWuFtcsNLo5T1gH3Ycq8824t/mHMaHdmQxLHCbZpVFiplfKLJUh
+         shXSniCj9LPlN1q9pXFDcWHkic/TVkN+/XRGWPg9xjPmc5/QlKkzB9i4Ds2MVTOUrT
+         ONxNgROrBy3woN47CcfeUO16Wbz866VgW+js1hp4=
+From:   Sonia Sharma <sosha@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-hyperv@vger.kernel.org, sosha@microsoft.com,
+        kys@microsoft.com, mikelley@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com
+Subject: [PATCH] hv_netvsc: fix netvsc_send_completion to avoid multiple message length checks
+Date:   Tue,  1 Aug 2023 22:50:50 -0700
+Message-Id: <1690955450-5994-1-git-send-email-sosha@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
@@ -73,72 +47,80 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 10:57:52AM +0530, Kalesh Anakkur Purayil wrote:
-> Hi Souradeep,
-> 
-> It looks like the subject line is not complete. I could see "net: mana: Fix
-> MANA VF unload when hardware is".
-> 
-> Is that correct?
-> 
-> Regards,
-> Kalesh
->
-Yes, it got truncated. Will fix it in next version. 
-> On Wed, Aug 2, 2023 at 12:29 AM Souradeep Chakrabarti <
-> schakrabarti@microsoft.com> wrote:
-> 
-> >
-> >
-> > >-----Original Message-----
-> > >From: Simon Horman <horms@kernel.org>
-> > >Sent: Tuesday, August 1, 2023 9:01 PM
-> > >To: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
-> > >Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > ><haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
-> > ><decui@microsoft.com>; davem@davemloft.net; edumazet@google.com;
-> > >kuba@kernel.org; pabeni@redhat.com; Long Li <longli@microsoft.com>; Ajay
-> > >Sharma <sharmaajay@microsoft.com>; leon@kernel.org;
-> > >cai.huoqing@linux.dev; ssengar@linux.microsoft.com; vkuznets
-> > ><vkuznets@redhat.com>; tglx@linutronix.de; linux-hyperv@vger.kernel.org;
-> > >netdev@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > >rdma@vger.kernel.org; Souradeep Chakrabarti
-> > ><schakrabarti@microsoft.com>; stable@vger.kernel.org
-> > >Subject: [EXTERNAL] Re: [PATCH V7 net] net: mana: Fix MANA VF unload when
-> > >hardware is
-> > >
-> > >On Tue, Aug 01, 2023 at 05:29:13AM -0700, Souradeep Chakrabarti wrote:
-> > >
-> > >...
-> > >
-> > >Hi Souradeep,
-> > >
-> > >
-> > >> +    for (i = 0; i < apc->num_queues; i++) {
-> > >> +            txq = &apc->tx_qp[i].txq;
-> > >> +            while (skb = skb_dequeue(&txq->pending_skbs)) {
-> > >
-> > >W=1 builds with both clang-16 and gcc-12 complain that they would like an
-> > >extra set of parentheses around an assignment used as a truth value.
-> > Thanks for letting me know. I will fix it in next version.
-> > >
-> > >> +                    mana_unmap_skb(skb, apc);
-> > >> +                    dev_consume_skb_any(skb);
-> > >> +            }
-> > >> +            atomic_set(&txq->pending_sends, 0);
-> > >> +    }
-> > >>      /* We're 100% sure the queues can no longer be woken up, because
-> > >>       * we're sure now mana_poll_tx_cq() can't be running.
-> > >>       */
-> > >> --
-> > >> 2.34.1
-> > >>
-> > >>
-> >
-> >
-> 
-> -- 
-> Regards,
-> Kalesh A P
+From: Sonia Sharma <sonia.sharma@linux.microsoft.com>
 
+switch statement in netvsc_send_completion() is incorrectly validating
+the length of incoming network packets by falling through next case.
+Avoid the fallthrough, instead break after a case match and then process
+the complete() call.
+
+Signed-off-by: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+---
+ drivers/net/hyperv/netvsc.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 82e9796c8f5e..347688dd2eb9 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -851,7 +851,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		fallthrough;
++		break;
+ 
+ 	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
+ 		if (msglen < sizeof(struct nvsp_message_header) +
+@@ -860,7 +860,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		fallthrough;
++		break;
+ 
+ 	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
+ 		if (msglen < sizeof(struct nvsp_message_header) +
+@@ -869,7 +869,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		fallthrough;
++		break;
+ 
+ 	case NVSP_MSG5_TYPE_SUBCHANNEL:
+ 		if (msglen < sizeof(struct nvsp_message_header) +
+@@ -878,10 +878,6 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		/* Copy the response back */
+-		memcpy(&net_device->channel_init_pkt, nvsp_packet,
+-		       sizeof(struct nvsp_message));
+-		complete(&net_device->channel_init_wait);
+ 		break;
+ 
+ 	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
+@@ -904,13 +900,18 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 
+ 		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
+ 					desc, budget);
+-		break;
++		return;
+ 
+ 	default:
+ 		netdev_err(ndev,
+ 			   "Unknown send completion type %d received!!\n",
+ 			   nvsp_packet->hdr.msg_type);
+ 	}
++
++	/* Copy the response back */
++	memcpy(&net_device->channel_init_pkt, nvsp_packet,
++			sizeof(struct nvsp_message));
++	complete(&net_device->channel_init_wait);
+ }
+ 
+ static u32 netvsc_get_next_send_section(struct netvsc_device *net_device)
+-- 
+2.25.1
 
