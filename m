@@ -2,339 +2,329 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6FE776DA0B
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 23:58:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4007F76DAB2
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 00:22:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232048AbjHBV6K (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 17:58:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51614 "EHLO
+        id S234033AbjHBWWZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 18:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231656AbjHBV6I (ORCPT
+        with ESMTP id S232763AbjHBWWG (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 17:58:08 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C7726AF;
-        Wed,  2 Aug 2023 14:58:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MIOpl7SG0pgWrvDO808mHhV4XL9diduY/u7M/1HtGMLrCGuKSkm8UMYZB974I7xeDq7yfzn+Pt8noFYohj07VTjLaGlZ0RX0r3mp/R9Pupk0UxoPnuwuglXGENNlGnB83fFe7gr+w9hFwznAxQSODm0G0jx8RRI7owy1MWMUWxn3WzuieOYP1RpI4NhU2zIv7n2Bd88+LPU9xXf3Hf0iO2DDX2fK/OALF8eD04vZN5KotAY3BIn3zJvQOgOzXH3NcVchehidwtcfKxJCzX7yEJwIQ6EfuzsSXUynKuVGoNi/GYH+ZBz7Pu2PiGV9h+mvgedx4AcLLWpWWy+4dvtGMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HymMt0C9LMD5aNI/MJb2LdzV+Zqy+ImZZ1OdulC8Hik=;
- b=VC7fjE8O9ofmLXFoSrxCd2NhpLPU/jyoBbSg2uhsEd1hvyh1d/0EdkER3eg5prY9HRXFkJY18E3vmJwQlw1RIWX1lYFzCMHCsBtjmraM6g1vX9KP8L2suRyNfbiGUd1Bb6mmKJpCpz75cC3CBeyRwKFnaGmW4jEzy32O2fbloG0LVn9niqCRfwpJLatNYOWR/vP7oZPPSP/0WJ+A/tnwdDv4QOaQH4ipJ5VeQdwfRp0gHV5Y8ePXVzOeg22CMEZ2oySJAXMkyvKbdYPe/bdg0w6b+dA7kSvL/XY68ZrV5n9Dkw62z72fIilwjJ+N14D05DCty5se6d/t2vc6Mgl+SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HymMt0C9LMD5aNI/MJb2LdzV+Zqy+ImZZ1OdulC8Hik=;
- b=aPLa1pLVnm1sxgqd07cYEPjQVMIKpbS4vMBEaNDvuGk8VyGByOBJcT8pfGQXQs41+w93JS5jeNg17hlWKC6gU+vecNK28Ofs5bj8f21uDOJOIasSfUGY/ODxz9opuXP0BUhzeYS1Z4/WV9hzkvSPOQUHAzUEejOtQbNZflmvtHM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
- by CYYPR12MB8923.namprd12.prod.outlook.com (2603:10b6:930:bc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.47; Wed, 2 Aug
- 2023 21:58:02 +0000
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::d267:7b8b:844f:8bcd]) by DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::d267:7b8b:844f:8bcd%7]) with mapi id 15.20.6631.046; Wed, 2 Aug 2023
- 21:58:02 +0000
-Message-ID: <08bf0835-a4fa-38b5-4cbb-b2058a6a2da0@amd.com>
-Date:   Wed, 2 Aug 2023 16:57:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFC PATCH 1/1] x86/mm: Mark CoCo VM pages invalid while moving
- between private and shared
-Content-Language: en-US
-To:     Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
-        peterz@infradead.org, sathyanarayanan.kuppuswamy@linux.intel.com,
-        kirill.shutemov@linux.intel.com, seanjc@google.com,
-        rick.p.edgecombe@intel.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, x86@kernel.org
-References: <1688661719-60329-1-git-send-email-mikelley@microsoft.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <1688661719-60329-1-git-send-email-mikelley@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0017.namprd05.prod.outlook.com
- (2603:10b6:803:40::30) To DM4PR12MB5229.namprd12.prod.outlook.com
- (2603:10b6:5:398::12)
+        Wed, 2 Aug 2023 18:22:06 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DADF46B7;
+        Wed,  2 Aug 2023 15:20:30 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bb119be881so3287645ad.3;
+        Wed, 02 Aug 2023 15:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691014814; x=1691619614;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fsO18jbro23/540UiL63McF01EyAUYZvzhuNfCuznL4=;
+        b=WZXqrWQ8f0yIm2LQBBhvr3Fa4+eH+Qt3mWIjtAM+wP4e988G9Dh0kG1Yv7OtIuKwsF
+         5MgSi+QjNJQXv0+uFK/KwhIANABiEMebGq2NAEwKxuiAk8TlnfsLOt+sLWJBwfj8UGVm
+         fnD9jhi+qGL3tTYJ/ctWPw0HooKTZLNcaNelgD/uw2K1rTXsw6MI1YKMlPnuGdSmf40w
+         yYMHaHGF78r7iCGQlOo/cgX1Hx46JhbiiDJip9xt+7If03OQe6hvt1kk2iU2d1xNIzPn
+         1Y9qtd9HJm0x/C2lxQhAu4Jc2REzMWDUure3Yeef5b81cAm//KCzIbN1V3tFG6qQJzH7
+         i2fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691014814; x=1691619614;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fsO18jbro23/540UiL63McF01EyAUYZvzhuNfCuznL4=;
+        b=SMrlq7vpc7/uZH805Ek5DQ3yt1TJ+LKAVmdgOESu51p4ggmmS5YNEBgJn+X6kYLrgN
+         Ol3y+vnOMhN6uzsNdsr6wYNjiuqKyxN9wk4GkE7xWuWFs7eOib29BcMOGlttnaIqSRIF
+         eFgHqRtlW/8Zey3+0XAfHNAxEak/8dId9PWltdkppv9IiwD3/8AdAGHKgqptEctMJagJ
+         hZF7N3QUG+6k5k0P16cmANP2726Rcm5O/rCDSYNG3sizACBr9xitEXApmz4xoruk3X6Y
+         6ppk8MU16+Vo6DNZOlTiaFmSJH4t6U7SZLRh6TPLwpC7w7G0mkA3S+kszSVSjVfBz9pP
+         tuGA==
+X-Gm-Message-State: ABy/qLaM2W7HYvMjHZUH8vTb2e5s4vVRxLW/5LTd5XV60HKdtcH1xE10
+        cRRJdaIyxPwIUbA/ho/NAoM=
+X-Google-Smtp-Source: APBJJlGru4c6zFfgUeuBFSmQHEAVj9BnJRBBzAjnkXgiijxG1Thgs2LpEKcuV62N5/b70m9SiRkCpg==
+X-Received: by 2002:a17:902:e746:b0:1ab:11c8:777a with SMTP id p6-20020a170902e74600b001ab11c8777amr20667592plf.13.1691014814102;
+        Wed, 02 Aug 2023 15:20:14 -0700 (PDT)
+Received: from localhost (ec2-52-8-182-0.us-west-1.compute.amazonaws.com. [52.8.182.0])
+        by smtp.gmail.com with ESMTPSA id e12-20020a170902ed8c00b001b9cea4e8a2sm12884062plj.293.2023.08.02.15.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Aug 2023 15:20:13 -0700 (PDT)
+Date:   Wed, 2 Aug 2023 21:23:43 +0000
+From:   Bobby Eshleman <bobbyeshleman@gmail.com>
+To:     Arseniy Krasnov <oxffffaa@gmail.com>
+Cc:     Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Simon Horman <simon.horman@corigine.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH RFC net-next v5 11/14] vhost/vsock: implement datagram
+ support
+Message-ID: <ZMrJX/mBF1HbbOkO@bullseye>
+References: <20230413-b4-vsock-dgram-v5-0-581bd37fdb26@bytedance.com>
+ <20230413-b4-vsock-dgram-v5-11-581bd37fdb26@bytedance.com>
+ <b15d237e-31b5-40ae-83fc-e71649febd2b@gmail.com>
+ <ZMFd+Jd/LrfpJsVA@bullseye>
+ <acd54194-d397-e721-28e4-73a69257a2a9@gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|CYYPR12MB8923:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45559adc-863e-423a-f414-08db93a38b02
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Q7mWz3N8Us9g0C531sexqKb2XyrfgdIvIF76nUIXOPz3Qu5dgQRecuEXxyGU0lGHpzobDxQAJQ+16FgnWONuXbg+tx7ChIQG0O8P1h9m7biHyGNVh3Glu6d/loxAg8YMRYHCM5e/+WtaCLVtMpx/jph1ya5Qph0rsfKYDqvf2BAaxHTi1uD0POVkW6Qn9Se4yAYorgbbeQzmwdfeb/PMxVOqE7C9a/qJS6pKZMJxWtx8F/YFQp907t25fqJB34GNyKsankHXfyRMvH7NgEp7jksAP52Ch45yLMLG4bLx/4RuOuTRa7Ps0FFlsoli7HFIa6DkbsXX9cHWb6BPN+X05O1sjVkLUaKV+kPZMQSjJZ6me1l7WP+Nk1EL1fOv2g7NI/yGGhCiIpqOXNuvc652TA+rsnwT+OcrAjcon+tRWKwNp+yZqm2TgMQbcZ1tffKxJ4VuRfrfjGEiknQQ31hNFrdGy34ITGV+byz5dHnWcsvo6YZkXA0FIQiT8yOjD1AJ3AmowsZJ8Uh+HgVLjNj9AZAM/BfEbBT6xtvmZrwFx2DXmg/Wu1YRkXTS2Bf2dBpgZYfc/CtcsQx6lMFvtvWxmIdwVI1HiHHd9A0hFc6yrQEd93PYxQ3keFKDEzFFFuQ/rkrLCT2R3lr6g8IW4zQfRiia13TvSLp1D7QKu0N6/SY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(6029001)(4636009)(376002)(366004)(136003)(39860400002)(346002)(396003)(451199021)(36756003)(31696002)(86362001)(31686004)(45080400002)(478600001)(38100700002)(921005)(2616005)(186003)(26005)(83380400001)(6506007)(53546011)(41300700001)(8676002)(8936002)(7416002)(6512007)(6666004)(6486002)(316002)(66476007)(66556008)(5660300002)(66946007)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TmVtdXByOHdGaGJ3aFlkTitVNGhrdEUraWpJdVlJQUJvR00rMEhHN3ZodmVl?=
- =?utf-8?B?Z2hhdFFBdXpESlhhSllSbGN1MVdrWEJaVC8xM3Rzd1RldXFxaGhMR3E4UlMx?=
- =?utf-8?B?WndCeWVxVG1sRjIrZWVxdTdOdi9idFM4aUNCM04xSUxQYTkyQllpTlNSbzJU?=
- =?utf-8?B?Rk5CcGxESjRhd3VKRUJReUpGQ1BaSkIvZERtMEwwUHh5SHVzTUZqcUtDVmhM?=
- =?utf-8?B?TURERHBEMTNUMjEyMFg2emNza21ldFMyc2g2cHZLRzR2c0NOSFZlYXNWSkZI?=
- =?utf-8?B?cFZNRFpxMFlyMk1RcWR0L1FHa1FkMFVmN0wreFMwd0ZVSGs0K0tZRlRvVW1p?=
- =?utf-8?B?M0djdlhpYmZEMTY4RWhWYURxc1JBekdHbkYxZDV2bktZbGtQQjdDNUY3RlRm?=
- =?utf-8?B?eTJPWE5abU9GV1l5RVpmejlvMkluVDhpb3YvNnpjdjRwbFBoK1gxd3BjVmFZ?=
- =?utf-8?B?K1JWZjBmaTFScFhNVFZwNHh1NC9KUTVTdjk5bVNtcVFzcHNIS1pYRFJ3eTNU?=
- =?utf-8?B?UUt3bjI5bTUrV3pNYWNqMkV2L3ZiQzA0bHl6TG9Sd0xlUU9MS205VytVZnFj?=
- =?utf-8?B?emNXQVpoYkZFbUx3VllzcHpLa29VOWhDd0FETVliUlhmeGpTQkdjc3FnZjd3?=
- =?utf-8?B?WUk4bTRjNStxU2M2K3o1Q1lpcFlpU0hwcFZHelN2QnlOdjhpZTVpSVNvRm9h?=
- =?utf-8?B?Vm5aOHlpSWU0L1E4Mkd6akRwR2JZSzFCcDZ1RWtUaHJOVEtpUTR0K2FWVEYr?=
- =?utf-8?B?a0s4QzkrMHNXZ1BmcE53VjhkZlA1NVY3cGEzelR5c1pRNWZ6V2poMy96Nmsv?=
- =?utf-8?B?ZVJqTlVHQ0QzaVloRXptVTRlZG9taWN0WTVqdDNGUmhPS1lBaXZqZEdmMEov?=
- =?utf-8?B?ZUJnbUFnTXd5OWF1MVpORUhzcEErVHFCWnVRTURLdENmUk9nTXBUcXR5Vk14?=
- =?utf-8?B?NGcyK2UzWlZIaTMvRjdOeFVBeTRoRDNTdWRoV3ZvTjh0V3JoSzB3SHEvOWpE?=
- =?utf-8?B?V0NQTVhnSjljc2JUSVNXR25lcUpRMThkL1FIMFAyVTU3UEh0R0p0UEltV2x5?=
- =?utf-8?B?MmRUUW1LNHNVcmJJWmprNVlVV3JGMTFYY0wvd0RVdUxhRmZjWDlZSzQ5dk83?=
- =?utf-8?B?Q0w2YWNnd0t4cEpDOHljaEdUUDI4M2pJVGlNWUFJSU9vdlcySlRNWEJybUtx?=
- =?utf-8?B?WU9WdEhpN2QvaHJtMXF3Sm9EVkloc2lQVys4QThiYXhLdjRmMUd1MFRBSVNC?=
- =?utf-8?B?TnBNQS91d3Y1eGsvM1JZZGRyUnpKWDFiSForZDd4STFjcE1rZ0NjY0p6K2hW?=
- =?utf-8?B?V2l1UFJDbEpibmNObC8xZE42U0VXMkFxYU1sQ1RMTG96QlZVcXpkZ0VlTWIw?=
- =?utf-8?B?YnowQUYvS3JBT01mMnFJVy9Ic0RCRFFTZENaYVNuMTZaeXp4R2VJOGRyM1dy?=
- =?utf-8?B?Q2pLZGhkcW9hN0FYWlp5SHl1UmlDOC80Q2NnSW9Na3N5SEdwN0NtOWh5UXpv?=
- =?utf-8?B?RGtVR2dPTkkralFSdkNocTZMVkZGSnBUKzZjUWFLYlJwSWdUM3Y2N1gxYjZ5?=
- =?utf-8?B?eCs4TXhadFVwc2JkK0Foc1lLTld6T3RZb1NMc0x1V3AwNk5kSjVFM2ErMW5v?=
- =?utf-8?B?NjMwYUhVVEpSUE1qWlMrUGJEcTdVaEJ1cTMyK1NCZ2k0SVpXNU5hMXNSL1h4?=
- =?utf-8?B?cjN0NEFDWnhiYUs3Ym5Camd3WGg1UHp1UE5kRjNZTXg1NldySTRCaWQ4R2J3?=
- =?utf-8?B?R3MvU2sxVW5YcGFWSW5tQjhYaTN2TS9xY0I3Y21RY1hRVDhDbzF1R25MeUJk?=
- =?utf-8?B?d29pTGRndXQ1Y3I5N3ovaVBBK1BOaFgrcFhSN2g3bXp0ak9wakNLMFBPTGFX?=
- =?utf-8?B?OU5hWUMrSTBoRGtZTDBVdDVjd3dMVWlvdnF0Qy9LcVdPMGk4Nmg3eEErNXpW?=
- =?utf-8?B?K3NGek5QOUVua0dvbnNPY3BHeU5YcytuOVYya21tY2xITUZiVWc1UzNnMTds?=
- =?utf-8?B?ai9DWGRyTzc0a0lwSkJmSkxsNDU2T3RFWElubS9WeXBYQ2E2NTJPWE5mNW5W?=
- =?utf-8?B?L3JSYjVZZElzSjZKU3BlUmpaVHFIdks5SjZ4LzBHdXY4dG00ZW1BOHlzSDFJ?=
- =?utf-8?Q?ozH8YxmhpswLTjgMo0GKoaPh2?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45559adc-863e-423a-f414-08db93a38b02
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2023 21:58:02.5888
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f2BrQ0csK2i3T2nbgvKaEWbSfY7oA3y4d9or8dzCBik/qfaO50ZiQdER2v0/jaXmdLkAxH4Yn+4502Wruci5Mg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8923
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acd54194-d397-e721-28e4-73a69257a2a9@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 7/6/23 11:41, Michael Kelley wrote:
-> In a CoCo VM when a page transitions from private to shared, or vice
-> versa, attributes in the PTE must be updated *and* the hypervisor must
-> be notified of the change. Because there are two separate steps, there's
-> a window where the settings are inconsistent.  Normally the code that
-> initiates the transition (via set_memory_decrypted() or
-> set_memory_encrypted()) ensures that the memory is not being accessed
-> during a transition, so the window of inconsistency is not a problem.
-> However, the load_unaligned_zeropad() function can read arbitrary memory
-> pages at arbitrary times, which could access a transitioning page during
-> the window.  In such a case, CoCo VM specific exceptions are taken
-> (depending on the CoCo architecture in use).  Current code in those
-> exception handlers recovers and does "fixup" on the result returned by
-> load_unaligned_zeropad().  Unfortunately, this exception handling and
-> fixup code is tricky and somewhat fragile.  At the moment, it is
-> broken for both TDX and SEV-SNP.
+On Thu, Jul 27, 2023 at 11:00:55AM +0300, Arseniy Krasnov wrote:
 > 
-> There's also a problem with the current code in paravisor scenarios:
-> TDX Partitioning and SEV-SNP in vTOM mode. The exceptions need
-> to be forwarded from the paravisor to the Linux guest, but there
-> are no architectural specs for how to do that.
 > 
-> To avoid these complexities of the CoCo exception handlers, change
-> the core transition code in __set_memory_enc_pgtable() to do the
-> following:
+> On 26.07.2023 20:55, Bobby Eshleman wrote:
+> > On Sat, Jul 22, 2023 at 11:42:38AM +0300, Arseniy Krasnov wrote:
+> >>
+> >>
+> >> On 19.07.2023 03:50, Bobby Eshleman wrote:
+> >>> This commit implements datagram support for vhost/vsock by teaching
+> >>> vhost to use the common virtio transport datagram functions.
+> >>>
+> >>> If the virtio RX buffer is too small, then the transmission is
+> >>> abandoned, the packet dropped, and EHOSTUNREACH is added to the socket's
+> >>> error queue.
+> >>>
+> >>> Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> >>> ---
+> >>>  drivers/vhost/vsock.c    | 62 +++++++++++++++++++++++++++++++++++++++++++++---
+> >>>  net/vmw_vsock/af_vsock.c |  5 +++-
+> >>>  2 files changed, 63 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> >>> index d5d6a3c3f273..da14260c6654 100644
+> >>> --- a/drivers/vhost/vsock.c
+> >>> +++ b/drivers/vhost/vsock.c
+> >>> @@ -8,6 +8,7 @@
+> >>>   */
+> >>>  #include <linux/miscdevice.h>
+> >>>  #include <linux/atomic.h>
+> >>> +#include <linux/errqueue.h>
+> >>>  #include <linux/module.h>
+> >>>  #include <linux/mutex.h>
+> >>>  #include <linux/vmalloc.h>
+> >>> @@ -32,7 +33,8 @@
+> >>>  enum {
+> >>>  	VHOST_VSOCK_FEATURES = VHOST_FEATURES |
+> >>>  			       (1ULL << VIRTIO_F_ACCESS_PLATFORM) |
+> >>> -			       (1ULL << VIRTIO_VSOCK_F_SEQPACKET)
+> >>> +			       (1ULL << VIRTIO_VSOCK_F_SEQPACKET) |
+> >>> +			       (1ULL << VIRTIO_VSOCK_F_DGRAM)
+> >>>  };
+> >>>  
+> >>>  enum {
+> >>> @@ -56,6 +58,7 @@ struct vhost_vsock {
+> >>>  	atomic_t queued_replies;
+> >>>  
+> >>>  	u32 guest_cid;
+> >>> +	bool dgram_allow;
+> >>>  	bool seqpacket_allow;
+> >>>  };
+> >>>  
+> >>> @@ -86,6 +89,32 @@ static struct vhost_vsock *vhost_vsock_get(u32 guest_cid)
+> >>>  	return NULL;
+> >>>  }
+> >>>  
+> >>> +/* Claims ownership of the skb, do not free the skb after calling! */
+> >>> +static void
+> >>> +vhost_transport_error(struct sk_buff *skb, int err)
+> >>> +{
+> >>> +	struct sock_exterr_skb *serr;
+> >>> +	struct sock *sk = skb->sk;
+> >>> +	struct sk_buff *clone;
+> >>> +
+> >>> +	serr = SKB_EXT_ERR(skb);
+> >>> +	memset(serr, 0, sizeof(*serr));
+> >>> +	serr->ee.ee_errno = err;
+> >>> +	serr->ee.ee_origin = SO_EE_ORIGIN_NONE;
+> >>> +
+> >>> +	clone = skb_clone(skb, GFP_KERNEL);
+> >>
+> >> May for skb which is error carrier we can use 'sock_omalloc()', not 'skb_clone()' ? TCP uses skb
+> >> allocated by this function as carriers of error structure. I guess 'skb_clone()' also clones data of origin,
+> >> but i think that there is no need in data as we insert it to error queue of the socket.
+> >>
+> >> What do You think?
+> > 
+> > IIUC skb_clone() is often used in this scenario so that the user can
+> > retrieve the error-causing packet from the error queue.  Is there some
+> > reason we shouldn't do this?
+> > 
+> > I'm seeing that the serr bits need to occur on the clone here, not the
+> > original. I didn't realize the SKB_EXT_ERR() is a skb->cb cast. I'm not
+> > actually sure how this passes the test case since ->cb isn't cloned.
 > 
-> 1.  Remove aliasing mappings
-> 2.  Remove the PRESENT bit from the PTEs of all transitioning pages
-> 3.  Flush the TLB globally
-> 4.  Flush the data cache if needed
-> 5.  Set/clear the encryption attribute as appropriate
-> 6.  Notify the hypervisor of the page status change
-> 7.  Add back the PRESENT bit
+> Ah yes, sorry, You are right, I just confused this case with zerocopy completion
+> handling - there we allocate "empty" skb which carries completion metadata in its
+> 'cb' field.
 > 
-> With this approach, load_unaligned_zeropad() just takes its normal
-> page-fault-based fixup path if it touches a page that is transitioning.
-> As a result, load_unaligned_zeropad() and CoCo VM page transitioning
-> are completely decoupled.  CoCo VM page transitions can proceed
-> without needing to handle architecture-specific exceptions and fix
-> things up. This decoupling reduces the complexity due to separate
-> TDX and SEV-SNP fixup paths, and gives more freedom to revise and
-> introduce new capabilities in future versions of the TDX and SEV-SNP
-> architectures. Paravisor scenarios work properly without needing
-> to forward exceptions.
+> Hm, but can't we just reinsert current skb (update it's 'cb' as 'sock_exterr_skb')
+> to error queue of the socket without cloning it ?
 > 
-> This approach may make __set_memory_enc_pgtable() slightly slower
-> because of touching the PTEs three times instead of just once. But
-> the run time of this function is already dominated by the hypercall
-> and the need to flush the TLB at least once and maybe twice. In any
-> case, this function is only used for CoCo VM page transitions, and
-> is already unsuitable for hot paths.
+> Thanks, Arseniy
 > 
-> The architecture specific callback function for notifying the
-> hypervisor typically must translate guest kernel virtual addresses
-> into guest physical addresses to pass to the hypervisor.  Because
-> the PTEs are invalid at the time of callback, the code for doing the
-> translation needs updating.  virt_to_phys() or equivalent continues
-> to work for direct map addresses.  But vmalloc addresses cannot use
-> vmalloc_to_page() because that function requires the leaf PTE to be
-> valid. Instead, slow_virt_to_phys() must be used. Both functions
-> manually walk the page table hierarchy, so performance is the same.
 
-This all seems reasonable if it allows the paravisor approach to run 
-without issues.
+I just assumed other socket types used skb_clone() for some reason
+unknown to me and I didn't want to deviate.
 
-> 
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> ---
-> 
-> I'm assuming the TDX handling of the data cache flushing is the
-> same with this new approach, and that it doesn't need to be paired
-> with a TLB flush as in the current code.  If that's not a correct
-> assumption, let me know.
-> 
-> I've left the two hypervisor callbacks, before and after Step 5
-> above. If the PTEs are invalid, it seems like the order of Step 5
-> and Step 6 shouldn't matter, so perhaps one of the callback could
-> be dropped.  Let me know if there are reasons to do otherwise.
-> 
-> It may well be possible to optimize the new implementation of
-> __set_memory_enc_pgtable(). The existing set_memory_np() and
-> set_memory_p() functions do all the right things in a very clear
-> fashion, but perhaps not as optimally as having all three PTE
-> manipulations directly in the same function. It doesn't appear
-> that optimizing the performance really matters here, but I'm open
-> to suggestions.
-> 
-> I've tested this on TDX VMs and SEV-SNP + vTOM VMs.  I can also
-> test on SEV-SNP VMs without vTOM. But I'll probably need help
-> covering SEV and SEV-ES VMs.
+If it is fine to just use the skb directly, then I am happy to make that
+change.
 
-I wouldn't think that SEV and SEV-ES VMs would have any issues. However, 
-these types of VMs don't make hypercalls at the moment, but I don't know 
-that any slow downs would be noticed.
+Best,
+Bobby
 
-> 
-> This RFC patch does *not* remove code that would no longer be
-> needed. If there's agreement to take this new approach, I'll
-> add patches to remove the unneeded code.
-> 
-> This patch is built against linux-next20230704.
-
-
-> 
->   arch/x86/hyperv/ivm.c        |  3 ++-
->   arch/x86/kernel/sev.c        |  2 +-
->   arch/x86/mm/pat/set_memory.c | 32 ++++++++++++--------------------
->   3 files changed, 15 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-> index 28be6df..2859ec3 100644
-> --- a/arch/x86/hyperv/ivm.c
-> +++ b/arch/x86/hyperv/ivm.c
-> @@ -308,7 +308,8 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
->   		return false;
->   
->   	for (i = 0, pfn = 0; i < pagecount; i++) {
-> -		pfn_array[pfn] = virt_to_hvpfn((void *)kbuffer + i * HV_HYP_PAGE_SIZE);
-> +		pfn_array[pfn] = slow_virt_to_phys((void *)kbuffer +
-> +					i * HV_HYP_PAGE_SIZE) >> HV_HYP_PAGE_SHIFT;
-
-Definitely needs a comment here (and below) that slow_virt_to_phys() is 
-being used because of making the page not present.
-
->   		pfn++;
->   
->   		if (pfn == HV_MAX_MODIFY_GPA_REP_COUNT || i == pagecount - 1) {
-> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-> index 1ee7bed..59db55e 100644
-> --- a/arch/x86/kernel/sev.c
-> +++ b/arch/x86/kernel/sev.c
-> @@ -784,7 +784,7 @@ static unsigned long __set_pages_state(struct snp_psc_desc *data, unsigned long
->   		hdr->end_entry = i;
->   
->   		if (is_vmalloc_addr((void *)vaddr)) {
-> -			pfn = vmalloc_to_pfn((void *)vaddr);
-> +			pfn = slow_virt_to_phys((void *)vaddr) >> PAGE_SHIFT;
->   			use_large_entry = false;
->   		} else {
->   			pfn = __pa(vaddr) >> PAGE_SHIFT;
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index bda9f12..8a194c7 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -2136,6 +2136,11 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
->   	if (WARN_ONCE(addr & ~PAGE_MASK, "misaligned address: %#lx\n", addr))
->   		addr &= PAGE_MASK;
->   
-> +	/* set_memory_np() removes aliasing mappings and flushes the TLB */
-
-Is there any case where the TLB wouldn't be flushed when it should? Since, 
-for SEV at least, the TLB flush being removed below was always performed.
-
-Thanks,
-Tom
-
-> +	ret = set_memory_np(addr, numpages);
-> +	if (ret)
-> +		return ret;
-> +
->   	memset(&cpa, 0, sizeof(cpa));
->   	cpa.vaddr = &addr;
->   	cpa.numpages = numpages;
-> @@ -2143,36 +2148,23 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
->   	cpa.mask_clr = enc ? pgprot_decrypted(empty) : pgprot_encrypted(empty);
->   	cpa.pgd = init_mm.pgd;
->   
-> -	/* Must avoid aliasing mappings in the highmem code */
-> -	kmap_flush_unused();
-> -	vm_unmap_aliases();
-> -
->   	/* Flush the caches as needed before changing the encryption attribute. */
-> -	if (x86_platform.guest.enc_tlb_flush_required(enc))
-> -		cpa_flush(&cpa, x86_platform.guest.enc_cache_flush_required());
-> +	if (x86_platform.guest.enc_cache_flush_required())
-> +		cpa_flush(&cpa, 1);
->   
->   	/* Notify hypervisor that we are about to set/clr encryption attribute. */
->   	if (!x86_platform.guest.enc_status_change_prepare(addr, numpages, enc))
->   		return -EIO;
->   
->   	ret = __change_page_attr_set_clr(&cpa, 1);
-> -
-> -	/*
-> -	 * After changing the encryption attribute, we need to flush TLBs again
-> -	 * in case any speculative TLB caching occurred (but no need to flush
-> -	 * caches again).  We could just use cpa_flush_all(), but in case TLB
-> -	 * flushing gets optimized in the cpa_flush() path use the same logic
-> -	 * as above.
-> -	 */
-> -	cpa_flush(&cpa, 0);
-> +	if (ret)
-> +		return ret;
->   
->   	/* Notify hypervisor that we have successfully set/clr encryption attribute. */
-> -	if (!ret) {
-> -		if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
-> -			ret = -EIO;
-> -	}
-> +	if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
-> +		return -EIO;
->   
-> -	return ret;
-> +	return set_memory_p(&addr, numpages);
->   }
->   
->   static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
+> > 
+> >>
+> >>> +	if (!clone)
+> >>> +		return;
+> >>
+> >> What will happen here 'if (!clone)' ? skb will leak as it was removed from queue?
+> >>
+> > 
+> > Ah yes, true.
+> > 
+> >>> +
+> >>> +	if (sock_queue_err_skb(sk, clone))
+> >>> +		kfree_skb(clone);
+> >>> +
+> >>> +	sk->sk_err = err;
+> >>> +	sk_error_report(sk);
+> >>> +
+> >>> +	kfree_skb(skb);
+> >>> +}
+> >>> +
+> >>>  static void
+> >>>  vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+> >>>  			    struct vhost_virtqueue *vq)
+> >>> @@ -160,9 +189,15 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+> >>>  		hdr = virtio_vsock_hdr(skb);
+> >>>  
+> >>>  		/* If the packet is greater than the space available in the
+> >>> -		 * buffer, we split it using multiple buffers.
+> >>> +		 * buffer, we split it using multiple buffers for connectible
+> >>> +		 * sockets and drop the packet for datagram sockets.
+> >>>  		 */
+> >>>  		if (payload_len > iov_len - sizeof(*hdr)) {
+> >>> +			if (le16_to_cpu(hdr->type) == VIRTIO_VSOCK_TYPE_DGRAM) {
+> >>> +				vhost_transport_error(skb, EHOSTUNREACH);
+> >>> +				continue;
+> >>> +			}
+> >>> +
+> >>>  			payload_len = iov_len - sizeof(*hdr);
+> >>>  
+> >>>  			/* As we are copying pieces of large packet's buffer to
+> >>> @@ -394,6 +429,7 @@ static bool vhost_vsock_more_replies(struct vhost_vsock *vsock)
+> >>>  	return val < vq->num;
+> >>>  }
+> >>>  
+> >>> +static bool vhost_transport_dgram_allow(u32 cid, u32 port);
+> >>>  static bool vhost_transport_seqpacket_allow(u32 remote_cid);
+> >>>  
+> >>>  static struct virtio_transport vhost_transport = {
+> >>> @@ -410,7 +446,8 @@ static struct virtio_transport vhost_transport = {
+> >>>  		.cancel_pkt               = vhost_transport_cancel_pkt,
+> >>>  
+> >>>  		.dgram_enqueue            = virtio_transport_dgram_enqueue,
+> >>> -		.dgram_allow              = virtio_transport_dgram_allow,
+> >>> +		.dgram_allow              = vhost_transport_dgram_allow,
+> >>> +		.dgram_addr_init          = virtio_transport_dgram_addr_init,
+> >>>  
+> >>>  		.stream_enqueue           = virtio_transport_stream_enqueue,
+> >>>  		.stream_dequeue           = virtio_transport_stream_dequeue,
+> >>> @@ -443,6 +480,22 @@ static struct virtio_transport vhost_transport = {
+> >>>  	.send_pkt = vhost_transport_send_pkt,
+> >>>  };
+> >>>  
+> >>> +static bool vhost_transport_dgram_allow(u32 cid, u32 port)
+> >>> +{
+> >>> +	struct vhost_vsock *vsock;
+> >>> +	bool dgram_allow = false;
+> >>> +
+> >>> +	rcu_read_lock();
+> >>> +	vsock = vhost_vsock_get(cid);
+> >>> +
+> >>> +	if (vsock)
+> >>> +		dgram_allow = vsock->dgram_allow;
+> >>> +
+> >>> +	rcu_read_unlock();
+> >>> +
+> >>> +	return dgram_allow;
+> >>> +}
+> >>> +
+> >>>  static bool vhost_transport_seqpacket_allow(u32 remote_cid)
+> >>>  {
+> >>>  	struct vhost_vsock *vsock;
+> >>> @@ -799,6 +852,9 @@ static int vhost_vsock_set_features(struct vhost_vsock *vsock, u64 features)
+> >>>  	if (features & (1ULL << VIRTIO_VSOCK_F_SEQPACKET))
+> >>>  		vsock->seqpacket_allow = true;
+> >>>  
+> >>> +	if (features & (1ULL << VIRTIO_VSOCK_F_DGRAM))
+> >>> +		vsock->dgram_allow = true;
+> >>> +
+> >>>  	for (i = 0; i < ARRAY_SIZE(vsock->vqs); i++) {
+> >>>  		vq = &vsock->vqs[i];
+> >>>  		mutex_lock(&vq->mutex);
+> >>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> >>> index e73f3b2c52f1..449ed63ac2b0 100644
+> >>> --- a/net/vmw_vsock/af_vsock.c
+> >>> +++ b/net/vmw_vsock/af_vsock.c
+> >>> @@ -1427,9 +1427,12 @@ int vsock_dgram_recvmsg(struct socket *sock, struct msghdr *msg,
+> >>>  		return prot->recvmsg(sk, msg, len, flags, NULL);
+> >>>  #endif
+> >>>  
+> >>> -	if (flags & MSG_OOB || flags & MSG_ERRQUEUE)
+> >>> +	if (unlikely(flags & MSG_OOB))
+> >>>  		return -EOPNOTSUPP;
+> >>>  
+> >>> +	if (unlikely(flags & MSG_ERRQUEUE))
+> >>> +		return sock_recv_errqueue(sk, msg, len, SOL_VSOCK, 0);
+> >>> +
+> >>
+> >> Sorry, but I get build error here, because SOL_VSOCK in undefined. I think it should be added to
+> >> include/linux/socket.h and to uapi files also for future use in userspace.
+> >>
+> > 
+> > Strange, I built each patch individually without issue. My base is
+> > netdev/main with your SOL_VSOCK patch applied. I will look today and see
+> > if I'm missing something.
+> > 
+> >> Also Stefano Garzarella <sgarzare@redhat.com> suggested to add define something like VSOCK_RECVERR,
+> >> in the same way as IP_RECVERR, and use it as last parameter of 'sock_recv_errqueue()'.
+> >>
+> > 
+> > Got it, thanks.
+> > 
+> >>>  	transport = vsk->transport;
+> >>>  
+> >>>  	/* Retrieve the head sk_buff from the socket's receive queue. */
+> >>>
+> >>
+> >> Thanks, Arseniy
+> > 
+> > Thanks,
+> > Bobby
