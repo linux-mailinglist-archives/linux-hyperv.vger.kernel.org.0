@@ -2,115 +2,331 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E168376C134
-	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 01:46:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A15C076C182
+	for <lists+linux-hyperv@lfdr.de>; Wed,  2 Aug 2023 02:33:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjHAXqI (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 1 Aug 2023 19:46:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
+        id S229628AbjHBAdF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 1 Aug 2023 20:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229657AbjHAXqH (ORCPT
+        with ESMTP id S229492AbjHBAdF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 1 Aug 2023 19:46:07 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3F0E57
-        for <linux-hyperv@vger.kernel.org>; Tue,  1 Aug 2023 16:46:05 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id af79cd13be357-7654e1d83e8so443793285a.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 01 Aug 2023 16:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1690933565; x=1691538365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KBKGP+rOQrE0yI33WFL70QQXfWqUPCJII6/ruXV7a18=;
-        b=SWXVXrgm7uYZHZpxzUnYKGRlHWgX0IK0Rnlpt7cDr5IAkGjYP2UkjUfjYQGOZNR6qJ
-         LJgCwO55lyoYtyX6E3Q4s40xhlJi1dKPH0AZpIy8isp0s8rC0ju8u3sjUbibjy6jNmr+
-         mcJOcMWuV5sswR+4lXv+R2JNNPJMLL1UAxV+nc9eXFABT8+j+4Fr4O92HGXMdw8ZW/cO
-         tYSdLgE9sYsL2LpWr9Lpjtw96tubbaY6Lk9BRgEa7XCIyKeCZkvIgI1OH2+pWauTOwMU
-         tjTG/lngwIPwA8M8k3ptItHteXjaC4SjLv7Eqa1WLuIH7QiFLFw+WP+vp7HZAj1aZd8b
-         Tmdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690933565; x=1691538365;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KBKGP+rOQrE0yI33WFL70QQXfWqUPCJII6/ruXV7a18=;
-        b=FJ37OO+UPoN3nij+KHQl3Hbzy3l5Vnse0yk3ltm+83w8kJ/mp5JMtmMasJvAE5m2JH
-         IOoIHxbbW2lDBgdbrc2YZjwDSlU3YNhq7lEA4ScD3jIZNDL9fqsC3qNpQmeJ9XNKZlI2
-         fgOuv//WoZHvPrcMDeuh4/Bgj4TYOOfG6AVkiRmrWtFDuYfgs5R2TO0e+4KA/ZTjinvv
-         xxb1Q+vMxS7cYJhtjtbfCEkxjNNvNS+oY64nyekPuxvpusWKnWXbbw8/8A/90ibRYP5j
-         am0w0gnZOY5k4eV/s215BGvIXiZyMp/lvynNd0/Hs6fg/jCO94Zv9r0YlD66B7ybEreu
-         vYRw==
-X-Gm-Message-State: ABy/qLZu+aP+fOzITjB3zsjEey+6JYjYQw2e7fhXJk+ZioLsK2XRSn0L
-        yJ4In3weRTtbYPtQO87vaezoBQ==
-X-Google-Smtp-Source: APBJJlGxnpoNiNKnO6qXw0UeYYlZ6fEaFr61aQgxxSleH8rfkxM6Fg0dXraa5FyNSubaYwh/wMlyfw==
-X-Received: by 2002:a05:620a:4010:b0:76c:bf54:70ab with SMTP id h16-20020a05620a401000b0076cbf5470abmr5499429qko.12.1690933564773;
-        Tue, 01 Aug 2023 16:46:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-25-194.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.25.194])
-        by smtp.gmail.com with ESMTPSA id q10-20020ae9e40a000000b007676f3859fasm4543814qkc.30.2023.08.01.16.46.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 16:46:04 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1qQz3z-002y3w-GJ;
-        Tue, 01 Aug 2023 20:46:03 -0300
-Date:   Tue, 1 Aug 2023 20:46:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Long Li <longli@microsoft.com>
-Cc:     Wei Hu <weh@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Ajay Sharma <sharmaajay@microsoft.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-        "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>
-Subject: Re: [PATCH v4 1/1] RDMA/mana_ib: Add EQ interrupt support to mana ib
- driver.
-Message-ID: <ZMmZO9IPmXNEB49t@ziepe.ca>
-References: <20230728170749.1888588-1-weh@microsoft.com>
- <ZMP+MH7f/Vk9/J0b@ziepe.ca>
- <PH7PR21MB3263C134979B17F1C53D3E8DCE06A@PH7PR21MB3263.namprd21.prod.outlook.com>
- <ZMQCuQU+b/Ai9HcU@ziepe.ca>
- <PH7PR21MB326396D1782613FE406F616ACE06A@PH7PR21MB3263.namprd21.prod.outlook.com>
- <ZMQLW4elDj0vV1ld@ziepe.ca>
- <PH7PR21MB326367A455B78A1F230C5C34CE0AA@PH7PR21MB3263.namprd21.prod.outlook.com>
+        Tue, 1 Aug 2023 20:33:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91ABDE
+        for <linux-hyperv@vger.kernel.org>; Tue,  1 Aug 2023 17:33:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 420596164B
+        for <linux-hyperv@vger.kernel.org>; Wed,  2 Aug 2023 00:33:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43811C433C9;
+        Wed,  2 Aug 2023 00:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690936382;
+        bh=A3BXXpE0ZGUshoZprV1BnkEKcp6ww7lalvidLo2qbSs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S4uBXlRlNFxPWQIM2eX9KwDX0ToY8JUnt3C62TcUW/kHHFaN4B7uDdaZ7uL4D4cFg
+         Hw7/zEglOX4c9axzBXqYgBeis2+mUbdYiZgnvDl4Oto6ov579fuAbyKcuhx+3p+Wa9
+         jaVWeql1S5DiwwqIhnkMCM19gM1isCONXRvSp77IweH39eCzSwTL1HWqeBx/G054g9
+         6tpuCAfCLBS07IgdvbY35cYLI9MssvIAyo6MCVHX90+lDbOSb5YqUcqXt/YXtW82XK
+         SAQ9Jww38AuUT8aPK8G5ayZpkxTSDS3gCdZPDnMcr00ZxuCMOoBbdaP1mS0vOB8bqw
+         NtdfBjE/c6ZBg==
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     ast@kernel.org
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org, hawk@kernel.org,
+        amritha.nambiar@intel.com, aleksander.lobakin@intel.com,
+        Jakub Kicinski <kuba@kernel.org>, j.vosburgh@gmail.com,
+        andy@greyhouse.net, shayagr@amazon.com, akiyano@amazon.com,
+        ioana.ciornei@nxp.com, claudiu.manoil@nxp.com,
+        vladimir.oltean@nxp.com, wei.fang@nxp.com, shenwei.wang@nxp.com,
+        xiaoning.wang@nxp.com, linux-imx@nxp.com, dmichail@fungible.com,
+        jeroendb@google.com, pkaligineedi@google.com, shailend@google.com,
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        horatiu.vultur@microchip.com, UNGLinuxDriver@microchip.com,
+        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, peppe.cavallaro@st.com,
+        alexandre.torgue@foss.st.com, joabreu@synopsys.com,
+        mcoquelin.stm32@gmail.com, grygorii.strashko@ti.com,
+        longli@microsoft.com, sharmaajay@microsoft.com,
+        daniel@iogearbox.net, john.fastabend@gmail.com,
+        gerhard@engleder-embedded.com, simon.horman@corigine.com,
+        leon@kernel.org, linux-hyperv@vger.kernel.org
+Subject: [PATCH bpf-next 1/3] eth: add missing xdp.h includes in drivers
+Date:   Tue,  1 Aug 2023 17:32:44 -0700
+Message-ID: <20230802003246.2153774-2-kuba@kernel.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230802003246.2153774-1-kuba@kernel.org>
+References: <20230802003246.2153774-1-kuba@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR21MB326367A455B78A1F230C5C34CE0AA@PH7PR21MB3263.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 07:06:57PM +0000, Long Li wrote:
+Handful of drivers currently expect to get xdp.h by virtue
+of including netdevice.h. This will soon no longer be the case
+so add explicit includes.
 
-> The driver interrupt code limits the CPU processing time of each EQ
-> by reading a small batch of EQEs in this interrupt. It guarantees
-> all the EQs are checked on this CPU, and limits the interrupt
-> processing time for any given EQ. In this way, a bad EQ (which is
-> stormed by a bad user doing unreasonable re-arming on the CQ) can't
-> storm other EQs on this CPU.
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+---
+CC: j.vosburgh@gmail.com
+CC: andy@greyhouse.net
+CC: shayagr@amazon.com
+CC: akiyano@amazon.com
+CC: ioana.ciornei@nxp.com
+CC: claudiu.manoil@nxp.com
+CC: vladimir.oltean@nxp.com
+CC: wei.fang@nxp.com
+CC: shenwei.wang@nxp.com
+CC: xiaoning.wang@nxp.com
+CC: linux-imx@nxp.com
+CC: dmichail@fungible.com
+CC: jeroendb@google.com
+CC: pkaligineedi@google.com
+CC: shailend@google.com
+CC: jesse.brandeburg@intel.com
+CC: anthony.l.nguyen@intel.com
+CC: horatiu.vultur@microchip.com
+CC: UNGLinuxDriver@microchip.com
+CC: kys@microsoft.com
+CC: haiyangz@microsoft.com
+CC: wei.liu@kernel.org
+CC: decui@microsoft.com
+CC: peppe.cavallaro@st.com
+CC: alexandre.torgue@foss.st.com
+CC: joabreu@synopsys.com
+CC: mcoquelin.stm32@gmail.com
+CC: grygorii.strashko@ti.com
+CC: longli@microsoft.com
+CC: sharmaajay@microsoft.com
+CC: daniel@iogearbox.net
+CC: hawk@kernel.org
+CC: john.fastabend@gmail.com
+CC: gerhard@engleder-embedded.com
+CC: simon.horman@corigine.com
+CC: leon@kernel.org
+CC: linux-hyperv@vger.kernel.org
+CC: bpf@vger.kernel.org
+---
+ drivers/net/bonding/bond_main.c                       | 1 +
+ drivers/net/ethernet/amazon/ena/ena_netdev.h          | 1 +
+ drivers/net/ethernet/engleder/tsnep.h                 | 1 +
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h      | 1 +
+ drivers/net/ethernet/freescale/enetc/enetc.h          | 1 +
+ drivers/net/ethernet/freescale/fec.h                  | 1 +
+ drivers/net/ethernet/fungible/funeth/funeth_txrx.h    | 1 +
+ drivers/net/ethernet/google/gve/gve.h                 | 1 +
+ drivers/net/ethernet/intel/igc/igc.h                  | 1 +
+ drivers/net/ethernet/microchip/lan966x/lan966x_main.h | 1 +
+ drivers/net/ethernet/microsoft/mana/mana_en.c         | 1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h          | 1 +
+ drivers/net/ethernet/ti/cpsw_priv.h                   | 1 +
+ drivers/net/hyperv/hyperv_net.h                       | 1 +
+ drivers/net/tap.c                                     | 1 +
+ include/net/mana/mana.h                               | 2 ++
+ 16 files changed, 17 insertions(+)
 
-Of course it can, the bad use just creates a million EQs and pushes a
-bit of work through them constantly. How is that really any different
-from pushing more EQEs into a single EQ?
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 7a0f25301f7e..2f21cca4fdaf 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -90,6 +90,7 @@
+ #include <net/tls.h>
+ #endif
+ #include <net/ip6_route.h>
++#include <net/xdp.h>
+ 
+ #include "bonding_priv.h"
+ 
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+index 248b715b4d68..a1134152ecce 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+@@ -15,6 +15,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/skbuff.h>
+ #include <uapi/linux/bpf.h>
++#include <net/xdp.h>
+ 
+ #include "ena_com.h"
+ #include "ena_eth_com.h"
+diff --git a/drivers/net/ethernet/engleder/tsnep.h b/drivers/net/ethernet/engleder/tsnep.h
+index 11b29f56aaf9..6e14c918e3fb 100644
+--- a/drivers/net/ethernet/engleder/tsnep.h
++++ b/drivers/net/ethernet/engleder/tsnep.h
+@@ -14,6 +14,7 @@
+ #include <linux/net_tstamp.h>
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/miscdevice.h>
++#include <net/xdp.h>
+ 
+ #define TSNEP "tsnep"
+ 
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
+index d56d7a13262e..bfb6c96c3b2f 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
+@@ -12,6 +12,7 @@
+ #include <linux/fsl/mc.h>
+ #include <linux/net_tstamp.h>
+ #include <net/devlink.h>
++#include <net/xdp.h>
+ 
+ #include <soc/fsl/dpaa2-io.h>
+ #include <soc/fsl/dpaa2-fd.h>
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc.h b/drivers/net/ethernet/freescale/enetc/enetc.h
+index 8577cf7699a0..7439739cd81a 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc.h
++++ b/drivers/net/ethernet/freescale/enetc/enetc.h
+@@ -11,6 +11,7 @@
+ #include <linux/if_vlan.h>
+ #include <linux/phylink.h>
+ #include <linux/dim.h>
++#include <net/xdp.h>
+ 
+ #include "enetc_hw.h"
+ 
+diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
+index 8f1edcca96c4..5a0974e62f99 100644
+--- a/drivers/net/ethernet/freescale/fec.h
++++ b/drivers/net/ethernet/freescale/fec.h
+@@ -22,6 +22,7 @@
+ #include <linux/timecounter.h>
+ #include <dt-bindings/firmware/imx/rsrc.h>
+ #include <linux/firmware/imx/sci.h>
++#include <net/xdp.h>
+ 
+ #if defined(CONFIG_M523x) || defined(CONFIG_M527x) || defined(CONFIG_M528x) || \
+     defined(CONFIG_M520x) || defined(CONFIG_M532x) || defined(CONFIG_ARM) || \
+diff --git a/drivers/net/ethernet/fungible/funeth/funeth_txrx.h b/drivers/net/ethernet/fungible/funeth/funeth_txrx.h
+index 53b7e95213a8..5eec552a1f24 100644
+--- a/drivers/net/ethernet/fungible/funeth/funeth_txrx.h
++++ b/drivers/net/ethernet/fungible/funeth/funeth_txrx.h
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/netdevice.h>
+ #include <linux/u64_stats_sync.h>
++#include <net/xdp.h>
+ 
+ /* Tx descriptor size */
+ #define FUNETH_SQE_SIZE 64U
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 4b425bf71ede..a31256f70348 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -11,6 +11,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/pci.h>
+ #include <linux/u64_stats_sync.h>
++#include <net/xdp.h>
+ 
+ #include "gve_desc.h"
+ #include "gve_desc_dqo.h"
+diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
+index 9db384f66a8e..4bffc3cb502f 100644
+--- a/drivers/net/ethernet/intel/igc/igc.h
++++ b/drivers/net/ethernet/intel/igc/igc.h
+@@ -15,6 +15,7 @@
+ #include <linux/net_tstamp.h>
+ #include <linux/bitfield.h>
+ #include <linux/hrtimer.h>
++#include <net/xdp.h>
+ 
+ #include "igc_hw.h"
+ 
+diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+index 27f272831ea5..eb7d81b5e9f8 100644
+--- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
++++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+@@ -14,6 +14,7 @@
+ #include <net/pkt_cls.h>
+ #include <net/pkt_sched.h>
+ #include <net/switchdev.h>
++#include <net/xdp.h>
+ 
+ #include <vcap_api.h>
+ #include <vcap_api_client.h>
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index ac2acc9aca9d..21665f114fe9 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -11,6 +11,7 @@
+ 
+ #include <net/checksum.h>
+ #include <net/ip6_checksum.h>
++#include <net/xdp.h>
+ 
+ #include <net/mana/mana.h>
+ #include <net/mana/mana_auxiliary.h>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index 4ce5eaaae513..f838a13b9447 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -23,6 +23,7 @@
+ #include <linux/reset.h>
+ #include <net/page_pool.h>
+ #include <uapi/linux/bpf.h>
++#include <net/xdp.h>
+ 
+ struct stmmac_resources {
+ 	void __iomem *addr;
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
+index 34230145ca0b..67ca005fd990 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.h
++++ b/drivers/net/ethernet/ti/cpsw_priv.h
+@@ -7,6 +7,7 @@
+ #define DRIVERS_NET_ETHERNET_TI_CPSW_PRIV_H_
+ 
+ #include <uapi/linux/bpf.h>
++#include <net/xdp.h>
+ 
+ #include "davinci_cpdma.h"
+ 
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index c9dd69dbe1b8..810977952f95 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -16,6 +16,7 @@
+ #include <linux/hyperv.h>
+ #include <linux/rndis.h>
+ #include <linux/jhash.h>
++#include <net/xdp.h>
+ 
+ /* RSS related */
+ #define OID_GEN_RECEIVE_SCALE_CAPABILITIES 0x00010203  /* query only */
+diff --git a/drivers/net/tap.c b/drivers/net/tap.c
+index 9137fb8c1c42..b196a2a54355 100644
+--- a/drivers/net/tap.c
++++ b/drivers/net/tap.c
+@@ -22,6 +22,7 @@
+ #include <net/net_namespace.h>
+ #include <net/rtnetlink.h>
+ #include <net/sock.h>
++#include <net/xdp.h>
+ #include <linux/virtio_net.h>
+ #include <linux/skb_array.h>
+ 
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 024ad8ddb27e..1ccdca03e166 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -4,6 +4,8 @@
+ #ifndef _MANA_H
+ #define _MANA_H
+ 
++#include <net/xdp.h>
++
+ #include "gdma.h"
+ #include "hw_channel.h"
+ 
+-- 
+2.41.0
 
-And how does your EQ multiplexing work anyhow? Do you poll every EQ on
-every interrupt? That itself is a DOS vector.
-
-Jason
