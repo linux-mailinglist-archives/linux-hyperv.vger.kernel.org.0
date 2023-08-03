@@ -2,88 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39B4A76DCA3
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 02:27:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F8B76DCD9
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 02:45:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229882AbjHCA1Z (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 20:27:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35538 "EHLO
+        id S229882AbjHCAph (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 20:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbjHCA1Z (ORCPT
+        with ESMTP id S229527AbjHCApg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 20:27:25 -0400
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641502D43;
-        Wed,  2 Aug 2023 17:27:24 -0700 (PDT)
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-686be3cbea0so1049778b3a.0;
-        Wed, 02 Aug 2023 17:27:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691022444; x=1691627244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Lskf6Kmvdo5rNLLWiPUjd2IE5xw/oTMaLuczEbQhS8=;
-        b=PVLlTXrHj2j7G6Oaem5puBWo4sa3zsCsc6ONebulUh1FCWbj+Wih8JoD1s/TQGOTc3
-         66xh0gYPpJi8xEdt2q2v6Wd5rxD8RW8z0IZz1PwV5gzPYwtuIqKxocFePZrjvr42iNd/
-         O99nV7bHkrpXCKnNKZxf62WcYdfLupAGYJz6M9UyjkgMw7FCqHDHeLIaoLS+7Qpgg9s0
-         MPKqlIVjwIkuaONb/JUMu0063jMzyF1U4fVPr5EiCOBzB9DywOlNm8GCIXNvr3fb/mwc
-         +hZOIQNGaKaxM6Os+SIQgT+Gxar/owa9N4gLOVRLsmCRZ+KE2/IUYKnywlz7TSVD6lVU
-         EN4g==
-X-Gm-Message-State: ABy/qLb4A6wRMlhraBMgu0dtgzOAf6DyGgh8pJCwfHAIphUe4nKDWgyS
-        b8hUO0tNlk6y1tmaAaYw0/Q=
-X-Google-Smtp-Source: APBJJlEGgf2GNwyqWjoX3d9ZyhSdZlkOI2Cv/gkvnCTjPjVifQkmQBFdGpu93sHaitQVjHkSw6jT+w==
-X-Received: by 2002:a05:6a20:7f94:b0:13a:3bd6:2530 with SMTP id d20-20020a056a207f9400b0013a3bd62530mr22654337pzj.1.1691022443866;
-        Wed, 02 Aug 2023 17:27:23 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id 35-20020a630b23000000b00551df489590sm11855251pgl.12.2023.08.02.17.27.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 17:27:23 -0700 (PDT)
-Date:   Thu, 3 Aug 2023 00:27:17 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arch@vger.kernel.org, mikelley@microsoft.com,
-        kys@microsoft.com, wei.liu@kernel.org, haiyangz@microsoft.com,
-        decui@microsoft.com, ssengar@linux.microsoft.com,
-        mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
-        jinankjain@linux.microsoft.com, apais@linux.microsoft.com,
-        Tianyu.Lan@microsoft.com, vkuznets@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, will@kernel.org, catalin.marinas@arm.com
-Subject: Re: [PATCH 13/15] uapi: hyperv: Add mshv driver headers hvhdk.h,
- hvhdk_mini.h, hvgdk.h, hvgdk_mini.h
-Message-ID: <ZMr0ZVG/YfSywSA0@liuwe-devbox-debian-v2>
-References: <1690487690-2428-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1690487690-2428-14-git-send-email-nunodasneves@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1690487690-2428-14-git-send-email-nunodasneves@linux.microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        Wed, 2 Aug 2023 20:45:36 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BF0EC19BE;
+        Wed,  2 Aug 2023 17:45:33 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3054A238C442;
+        Wed,  2 Aug 2023 17:45:33 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3054A238C442
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1691023533;
+        bh=wQ8f18Ed6SFDdEuacgxnss4bY0Gf8A4bX6O+cn6sJRs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VOCrdY7VN3RyFBgbRsKssN0Ar900Hi7x7mwR62MUmmr0DIeCyQFSYPVGTEgAftZvy
+         LmiLMUTyAx+rC3mpXwNrqWuLMSnQEHYsS7P/Wu0kx/g4rUf9y1+aqCT/5fCiF7KC9r
+         n7mDk8XFVaJjnmmTumcuCMuvsBrOQk9tzKKpyHUg=
+From:   Sonia Sharma <sosha@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        sosha@microsoft.com, kys@microsoft.com, mikelley@microsoft.com,
+        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        longli@microsoft.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com
+Subject: [PATCH v3 net] net: hv_netvsc: fix netvsc_send_completion to avoid multiple message length checks
+Date:   Wed,  2 Aug 2023 17:45:28 -0700
+Message-Id: <1691023528-5270-1-git-send-email-sosha@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Jul 27, 2023 at 12:54:48PM -0700, Nuno Das Neves wrote:
-> Containing hypervisor ABI definitions to use in mshv driver.
-> 
-> Version numbers for each file:
-> hvhdk.h		25212
-> hvhdk_mini.h	25294
-> hvgdk.h		25125
-> hvgdk_mini.h	25294
-> 
-> These are unstable interfaces and as such must be compiled independently
-> from published interfaces found in hyperv-tlfs.h.
-> 
-> These are in uapi because they will be used in the mshv ioctl API.
-> 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+From: Sonia Sharma <sonia.sharma@linux.microsoft.com>
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+The switch statement in netvsc_send_completion() is incorrectly validating
+the length of incoming network packets by falling through to the next case.
+Avoid the fallthrough. Instead break after a case match and then process
+the complete() call.
+
+Signed-off-by: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+---
+Changes in v3:
+* added return statement in default case as pointed by Michael Kelley..
+---
+ drivers/net/hyperv/netvsc.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 82e9796c8f5e..0f7e4d377776 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -851,7 +851,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		fallthrough;
++		break;
+ 
+ 	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
+ 		if (msglen < sizeof(struct nvsp_message_header) +
+@@ -860,7 +860,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		fallthrough;
++		break;
+ 
+ 	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
+ 		if (msglen < sizeof(struct nvsp_message_header) +
+@@ -869,7 +869,7 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		fallthrough;
++		break;
+ 
+ 	case NVSP_MSG5_TYPE_SUBCHANNEL:
+ 		if (msglen < sizeof(struct nvsp_message_header) +
+@@ -878,10 +878,6 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 				   msglen);
+ 			return;
+ 		}
+-		/* Copy the response back */
+-		memcpy(&net_device->channel_init_pkt, nvsp_packet,
+-		       sizeof(struct nvsp_message));
+-		complete(&net_device->channel_init_wait);
+ 		break;
+ 
+ 	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
+@@ -904,13 +900,19 @@ static void netvsc_send_completion(struct net_device *ndev,
+ 
+ 		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
+ 					desc, budget);
+-		break;
++		return;
+ 
+ 	default:
+ 		netdev_err(ndev,
+ 			   "Unknown send completion type %d received!!\n",
+ 			   nvsp_packet->hdr.msg_type);
++		return;
+ 	}
++
++	/* Copy the response back */
++	memcpy(&net_device->channel_init_pkt, nvsp_packet,
++			sizeof(struct nvsp_message));
++	complete(&net_device->channel_init_wait);
+ }
+ 
+ static u32 netvsc_get_next_send_section(struct netvsc_device *net_device)
+-- 
+2.25.1
+
