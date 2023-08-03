@@ -2,129 +2,164 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F8B76DCD9
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 02:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8817D76DCE0
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 02:49:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229882AbjHCAph (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 20:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
+        id S232446AbjHCAtG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 20:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjHCApg (ORCPT
+        with ESMTP id S229527AbjHCAtF (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 20:45:36 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BF0EC19BE;
-        Wed,  2 Aug 2023 17:45:33 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3054A238C442;
-        Wed,  2 Aug 2023 17:45:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3054A238C442
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1691023533;
-        bh=wQ8f18Ed6SFDdEuacgxnss4bY0Gf8A4bX6O+cn6sJRs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VOCrdY7VN3RyFBgbRsKssN0Ar900Hi7x7mwR62MUmmr0DIeCyQFSYPVGTEgAftZvy
-         LmiLMUTyAx+rC3mpXwNrqWuLMSnQEHYsS7P/Wu0kx/g4rUf9y1+aqCT/5fCiF7KC9r
-         n7mDk8XFVaJjnmmTumcuCMuvsBrOQk9tzKKpyHUg=
-From:   Sonia Sharma <sosha@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        sosha@microsoft.com, kys@microsoft.com, mikelley@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        longli@microsoft.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com
-Subject: [PATCH v3 net] net: hv_netvsc: fix netvsc_send_completion to avoid multiple message length checks
-Date:   Wed,  2 Aug 2023 17:45:28 -0700
-Message-Id: <1691023528-5270-1-git-send-email-sosha@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        Wed, 2 Aug 2023 20:49:05 -0400
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56DA269E;
+        Wed,  2 Aug 2023 17:49:04 -0700 (PDT)
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-26837895fc8so210663a91.0;
+        Wed, 02 Aug 2023 17:49:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691023744; x=1691628544;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oTv5W4Q6yS6G6v7qn6WVl32Gcj1wC0XOowAiH8q+7B8=;
+        b=CFVIYiBwZr5MZErTBrWEGvzVYBlF5Qyx5ZQsIGqbRoc2tetc0YCNYOLu1bUu+HXV7j
+         sugxe5qEul+NpTXf+b8aYuc+okVd+ety3Gvl2hMq69oRivfeu8CfXqNXAdJWiQ285Sd0
+         z5PTj91jTi6/LVBkybuGqcuZOlLMPnoOpWgNikpuPQ1igtIrUgwnY8Xmeh17tbXGwJpf
+         x6z6N1+s0aSWZIMJkOgxI7ftkNGt3v/u96uyLClDrjEaqSP2OSJmd7Lm7ntQrA8BCiWd
+         rVmgPf1sZPQ+NMYxMcY12hOjK/12ek9czeoSDVA+WuvVFnZuREZmX/bLBAf4jEl2Ops0
+         0jFQ==
+X-Gm-Message-State: ABy/qLbAQjtQfhM/dtTGIHLNblQ5tLeJniZXmfmZbGAy5NPNAbor0a2n
+        ttmSvQznUzHuLXI56LVeKR0=
+X-Google-Smtp-Source: APBJJlGlrF2BoFgwZfEV6V2b6NStOmhRISsvraxtM7VPK80JgV3vkWcJ9YhwIsY3KRqEi5lAF4jmQg==
+X-Received: by 2002:a17:90a:6fa6:b0:262:e6c6:c2ec with SMTP id e35-20020a17090a6fa600b00262e6c6c2ecmr15085133pjk.33.1691023744201;
+        Wed, 02 Aug 2023 17:49:04 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id l4-20020a17090ad10400b00263f33eef41sm1595084pju.37.2023.08.02.17.49.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Aug 2023 17:49:03 -0700 (PDT)
+Date:   Thu, 3 Aug 2023 00:48:57 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arch@vger.kernel.org, mikelley@microsoft.com,
+        kys@microsoft.com, wei.liu@kernel.org, haiyangz@microsoft.com,
+        decui@microsoft.com, ssengar@linux.microsoft.com,
+        mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+        jinankjain@linux.microsoft.com, apais@linux.microsoft.com,
+        Tianyu.Lan@microsoft.com, vkuznets@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, will@kernel.org, catalin.marinas@arm.com
+Subject: Re: [PATCH 14/15] asm-generic: hyperv: Use mshv headers
+ conditionally. Add asm-generic/hyperv-defs.h
+Message-ID: <ZMr5ebxAqfjHPkVb@liuwe-devbox-debian-v2>
+References: <1690487690-2428-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1690487690-2428-15-git-send-email-nunodasneves@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1690487690-2428-15-git-send-email-nunodasneves@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+On Thu, Jul 27, 2023 at 12:54:49PM -0700, Nuno Das Neves wrote:
+> In order to keep unstable hyper-v interfaces independent of
+> hyperv-tlfs.h, hvhdk.h must replace hyperv-tlfs.h eveywhere it will be
+> used in the mshv driver.
 
-The switch statement in netvsc_send_completion() is incorrectly validating
-the length of incoming network packets by falling through to the next case.
-Avoid the fallthrough. Instead break after a case match and then process
-the complete() call.
+Please properly capitalize "Hyper-V" when it is used as a term.
 
-Signed-off-by: Sonia Sharma <sonia.sharma@linux.microsoft.com>
----
-Changes in v3:
-* added return statement in default case as pointed by Michael Kelley..
----
- drivers/net/hyperv/netvsc.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+> Add hyperv-defs.h to replace some inclusions of hyperv-tlfs.h.
+> It includes hyperv-tlfs.h or hvhdk.h depending on a compile-time constant
+> HV_HYPERV_DEFS which will be defined in the mshv driver.
+> 
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  arch/arm64/include/asm/mshyperv.h |  2 +-
+>  arch/x86/include/asm/mshyperv.h   |  3 +--
+>  drivers/hv/hyperv_vmbus.h         |  1 -
+>  include/asm-generic/hyperv-defs.h | 26 ++++++++++++++++++++++++++
+>  include/asm-generic/mshyperv.h    |  2 +-
+>  include/linux/hyperv.h            |  2 +-
+>  6 files changed, 30 insertions(+), 6 deletions(-)
+>  create mode 100644 include/asm-generic/hyperv-defs.h
+> 
+[...]
+> diff --git a/include/asm-generic/hyperv-defs.h b/include/asm-generic/hyperv-defs.h
+> new file mode 100644
+> index 000000000000..ac6fcba35c8c
+> --- /dev/null
+> +++ b/include/asm-generic/hyperv-defs.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_GENERIC_HYPERV_DEFS_H
+> +#define _ASM_GENERIC_HYPERV_DEFS_H
+> +
+> +/*
+> + * There are cases where Microsoft Hypervisor ABIs are needed which may not be
+> + * stable or present in the Hyper-V TLFS document. E.g. the mshv_root driver.
+> + *
+> + * As these interfaces are unstable and may differ from hyperv-tlfs.h, they
+> + * must be kept separate and independent.
+> + *
+> + * However, code from files that depend on hyperv-tlfs.h (such as mshyperv.h)
+> + * is still needed, so work around the issue by conditionally including the
+> + * correct definitions.
+> + *
+> + * Note: Since they are independent of each other, there are many definitions
+> + * duplicated in both hyperv-tlfs.h and uapi/hyperv/hv*.h files.
+> + */
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 82e9796c8f5e..0f7e4d377776 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -851,7 +851,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -860,7 +860,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -869,7 +869,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG5_TYPE_SUBCHANNEL:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -878,10 +878,6 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		/* Copy the response back */
--		memcpy(&net_device->channel_init_pkt, nvsp_packet,
--		       sizeof(struct nvsp_message));
--		complete(&net_device->channel_init_wait);
- 		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
-@@ -904,13 +900,19 @@ static void netvsc_send_completion(struct net_device *ndev,
- 
- 		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
- 					desc, budget);
--		break;
-+		return;
- 
- 	default:
- 		netdev_err(ndev,
- 			   "Unknown send completion type %d received!!\n",
- 			   nvsp_packet->hdr.msg_type);
-+		return;
- 	}
-+
-+	/* Copy the response back */
-+	memcpy(&net_device->channel_init_pkt, nvsp_packet,
-+			sizeof(struct nvsp_message));
-+	complete(&net_device->channel_init_wait);
- }
- 
- static u32 netvsc_get_next_send_section(struct netvsc_device *net_device)
--- 
-2.25.1
+Is this because we accidentally introduced some host only, unstable
+interfaces to hyperv-tlfs.h? Is the long term plan to drop those from
+hyperv-tlfs.h and further separate the helper functions?
 
+Thanks,
+Wei.
+
+> +#ifdef HV_HYPERV_DEFS
+> +#include <uapi/hyperv/hvhdk.h>
+> +#else
+> +#include <asm/hyperv-tlfs.h>
+> +#endif
+> +
+> +#endif /* _ASM_GENERIC_HYPERV_DEFS_H */
+> +
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 2b20994d809e..e86b6f51fb64 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -25,7 +25,7 @@
+>  #include <linux/cpumask.h>
+>  #include <linux/nmi.h>
+>  #include <asm/ptrace.h>
+> -#include <asm/hyperv-tlfs.h>
+> +#include <asm-generic/hyperv-defs.h>
+>  
+>  #define VTPM_BASE_ADDRESS 0xfed40000
+>  
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index f90de5abcd50..66ed8b3e5d89 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -24,7 +24,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/reciprocal_div.h>
+> -#include <asm/hyperv-tlfs.h>
+> +#include <asm-generic/hyperv-defs.h>
+>  
+>  #define MAX_PAGE_BUFFER_COUNT				32
+>  #define MAX_MULTIPAGE_BUFFER_COUNT			32 /* 128K */
+> -- 
+> 2.25.1
+> 
