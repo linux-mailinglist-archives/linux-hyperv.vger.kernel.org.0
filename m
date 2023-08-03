@@ -2,334 +2,234 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6762476DCFA
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 03:02:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 938E476DD13
+	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 03:23:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231383AbjHCBCj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 2 Aug 2023 21:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46990 "EHLO
+        id S229840AbjHCBXe (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 2 Aug 2023 21:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbjHCBCi (ORCPT
+        with ESMTP id S229597AbjHCBXd (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 2 Aug 2023 21:02:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEFD6CC
-        for <linux-hyperv@vger.kernel.org>; Wed,  2 Aug 2023 18:02:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3175F61B6F
-        for <linux-hyperv@vger.kernel.org>; Thu,  3 Aug 2023 01:02:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4098C433CC;
-        Thu,  3 Aug 2023 01:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691024555;
-        bh=DLi2tUxHPJpseF/qjnWRfCQLDlEWD3I3xLZ3o1zBKqE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s8b1RdyelQgMI+wtUbIVZcM3w4rqvqkMaNG2J9Hplz8FPWHioSwmyUK9EZjUH6rG5
-         +ykMzPSIQQbiZEHxHzkdSTQMFDnlfbrhj+HBXVZnwrhFpGvl0d+bd5aQr1po5hflRV
-         1mo5g0lJh1BfajFQSXp8mMNPaSGnHSSB7EL8zi6iWC0ssrrNhdOgEO790kvvUv12He
-         bDn+cM5TrA7wmu9OSUHdkKq3jaHp51yxIXpHf0bzBAGuzb2LHGtt1fm6cYZlU1tXv+
-         20xDQFmxSwEJ5ZtS9X5YaWkNLfPgBozMSQjWV02oKcLcoTjcwkWqmlJUv9k2zormTG
-         IXFxySgF4UDwg==
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     ast@kernel.org
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org, hawk@kernel.org,
-        amritha.nambiar@intel.com, aleksander.lobakin@intel.com,
-        Jakub Kicinski <kuba@kernel.org>, Wei Fang <wei.fang@nxp.com>,
-        Gerhard Engleder <gerhard@engleder-embedded.com>,
-        j.vosburgh@gmail.com, andy@greyhouse.net, shayagr@amazon.com,
-        akiyano@amazon.com, ioana.ciornei@nxp.com, claudiu.manoil@nxp.com,
-        vladimir.oltean@nxp.com, shenwei.wang@nxp.com,
-        xiaoning.wang@nxp.com, linux-imx@nxp.com, dmichail@fungible.com,
-        jeroendb@google.com, pkaligineedi@google.com, shailend@google.com,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        horatiu.vultur@microchip.com, UNGLinuxDriver@microchip.com,
-        kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, peppe.cavallaro@st.com,
-        alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-        mcoquelin.stm32@gmail.com, grygorii.strashko@ti.com,
-        longli@microsoft.com, sharmaajay@microsoft.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com,
-        simon.horman@corigine.com, leon@kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH bpf-next v2 1/3] eth: add missing xdp.h includes in drivers
-Date:   Wed,  2 Aug 2023 18:02:28 -0700
-Message-ID: <20230803010230.1755386-2-kuba@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230803010230.1755386-1-kuba@kernel.org>
-References: <20230803010230.1755386-1-kuba@kernel.org>
+        Wed, 2 Aug 2023 21:23:33 -0400
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4842D5F;
+        Wed,  2 Aug 2023 18:23:32 -0700 (PDT)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bba48b0bd2so3355965ad.3;
+        Wed, 02 Aug 2023 18:23:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691025811; x=1691630611;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L99r2ZTEs0s1xRLWCPq6Icmbu/mSWzl3/Bl+vsItAA4=;
+        b=ZVHfQc2D526hzJHalVaik4FRs4jvcozIoipwX7NFYqiSeJQ5DLwXHlGD3x0TkVW6c1
+         yeiss/jxKLgF75qwPsoOQhIwZ1rXhHQbQYB8skmwteYFX5/wMbxaeBgevWpYvOkBwQds
+         +IpCArg/9LMEwt3N9AHGsXQvPWPoPfsSrOu2LeJvb+prGTyuCxMlO7gfrRhD2xIC4ZeJ
+         0mObfGGb/yN+oTaPHP93U9eHy0/se+xped7ezQGW63PbFqltUpB7/ozpV7sDLtcxPugQ
+         9Ps+69xZaFeuNcWQ6QispUXskwxyYN32NMCSNJNW25/OHFdMF3KNUDgcgLZolHpimaqU
+         UI1A==
+X-Gm-Message-State: ABy/qLbvdOinbgX6BObP/6ThKC9qmgIAohbqxQnIrZ2GyRZPTVSeBBot
+        bAaAT9m86+2fsEwTjufcw0Q=
+X-Google-Smtp-Source: APBJJlFyzZ0APpf2dycVzuSAvEuollZAIArFhKmP7z/2OuO+QhL68E2G6sLjZLtbq2SX86vDmTVLeg==
+X-Received: by 2002:a17:902:bb8d:b0:1b8:b436:c006 with SMTP id m13-20020a170902bb8d00b001b8b436c006mr15268682pls.12.1691025811335;
+        Wed, 02 Aug 2023 18:23:31 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id 12-20020a170902c24c00b001b9c5e0393csm13073219plg.225.2023.08.02.18.23.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Aug 2023 18:23:30 -0700 (PDT)
+Date:   Thu, 3 Aug 2023 01:23:24 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arch@vger.kernel.org, mikelley@microsoft.com,
+        kys@microsoft.com, wei.liu@kernel.org, haiyangz@microsoft.com,
+        decui@microsoft.com, ssengar@linux.microsoft.com,
+        mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+        jinankjain@linux.microsoft.com, apais@linux.microsoft.com,
+        Tianyu.Lan@microsoft.com, vkuznets@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, will@kernel.org, catalin.marinas@arm.com
+Subject: Re: [PATCH 15/15] Drivers: hv: Add modules to expose /dev/mshv to
+ VMMs running on Hyper-V
+Message-ID: <ZMsBjAmPdqZdNPEF@liuwe-devbox-debian-v2>
+References: <1690487690-2428-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1690487690-2428-16-git-send-email-nunodasneves@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1690487690-2428-16-git-send-email-nunodasneves@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Handful of drivers currently expect to get xdp.h by virtue
-of including netdevice.h. This will soon no longer be the case
-so add explicit includes.
+On Thu, Jul 27, 2023 at 12:54:50PM -0700, Nuno Das Neves wrote:
+> Add mshv, mshv_root, and mshv_vtl modules.
+> - mshv provides /dev/mshv and common code, and is the parent module
+> - mshv_root provides APIs for creating and managing child partitions
+> - mshv_vtl provides VTL (Virtual Trust Level) support for VMMs
 
-Reviewed-by: Wei Fang <wei.fang@nxp.com>
-Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
----
-v2: try a little harder with the alphabetic order of includes
+Please provide a slightly more detailed description of what these
+modules do. This is huge patch after all. People doing code archaeology
+will appreciate a better commit message.
 
-CC: j.vosburgh@gmail.com
-CC: andy@greyhouse.net
-CC: shayagr@amazon.com
-CC: akiyano@amazon.com
-CC: ioana.ciornei@nxp.com
-CC: claudiu.manoil@nxp.com
-CC: vladimir.oltean@nxp.com
-CC: shenwei.wang@nxp.com
-CC: xiaoning.wang@nxp.com
-CC: linux-imx@nxp.com
-CC: dmichail@fungible.com
-CC: jeroendb@google.com
-CC: pkaligineedi@google.com
-CC: shailend@google.com
-CC: jesse.brandeburg@intel.com
-CC: anthony.l.nguyen@intel.com
-CC: horatiu.vultur@microchip.com
-CC: UNGLinuxDriver@microchip.com
-CC: kys@microsoft.com
-CC: haiyangz@microsoft.com
-CC: wei.liu@kernel.org
-CC: decui@microsoft.com
-CC: peppe.cavallaro@st.com
-CC: alexandre.torgue@foss.st.com
-CC: joabreu@synopsys.com
-CC: mcoquelin.stm32@gmail.com
-CC: grygorii.strashko@ti.com
-CC: longli@microsoft.com
-CC: sharmaajay@microsoft.com
-CC: daniel@iogearbox.net
-CC: hawk@kernel.org
-CC: john.fastabend@gmail.com
-CC: simon.horman@corigine.com
-CC: leon@kernel.org
-CC: linux-hyperv@vger.kernel.org
-CC: bpf@vger.kernel.org
----
- drivers/net/bonding/bond_main.c                       | 1 +
- drivers/net/ethernet/amazon/ena/ena_netdev.h          | 1 +
- drivers/net/ethernet/engleder/tsnep.h                 | 1 +
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h      | 1 +
- drivers/net/ethernet/freescale/enetc/enetc.h          | 1 +
- drivers/net/ethernet/freescale/fec.h                  | 1 +
- drivers/net/ethernet/fungible/funeth/funeth_txrx.h    | 1 +
- drivers/net/ethernet/google/gve/gve.h                 | 1 +
- drivers/net/ethernet/intel/igc/igc.h                  | 1 +
- drivers/net/ethernet/microchip/lan966x/lan966x_main.h | 1 +
- drivers/net/ethernet/microsoft/mana/mana_en.c         | 1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac.h          | 1 +
- drivers/net/ethernet/ti/cpsw_priv.h                   | 1 +
- drivers/net/hyperv/hyperv_net.h                       | 1 +
- drivers/net/tap.c                                     | 1 +
- include/net/mana/mana.h                               | 2 ++
- 16 files changed, 17 insertions(+)
+For example (please correct if I'm wrong):
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 7a0f25301f7e..2f21cca4fdaf 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -90,6 +90,7 @@
- #include <net/tls.h>
- #endif
- #include <net/ip6_route.h>
-+#include <net/xdp.h>
- 
- #include "bonding_priv.h"
- 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-index 248b715b4d68..33c923e1261a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-@@ -14,6 +14,7 @@
- #include <linux/interrupt.h>
- #include <linux/netdevice.h>
- #include <linux/skbuff.h>
-+#include <net/xdp.h>
- #include <uapi/linux/bpf.h>
- 
- #include "ena_com.h"
-diff --git a/drivers/net/ethernet/engleder/tsnep.h b/drivers/net/ethernet/engleder/tsnep.h
-index 11b29f56aaf9..6e14c918e3fb 100644
---- a/drivers/net/ethernet/engleder/tsnep.h
-+++ b/drivers/net/ethernet/engleder/tsnep.h
-@@ -14,6 +14,7 @@
- #include <linux/net_tstamp.h>
- #include <linux/ptp_clock_kernel.h>
- #include <linux/miscdevice.h>
-+#include <net/xdp.h>
- 
- #define TSNEP "tsnep"
- 
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
-index d56d7a13262e..bfb6c96c3b2f 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.h
-@@ -12,6 +12,7 @@
- #include <linux/fsl/mc.h>
- #include <linux/net_tstamp.h>
- #include <net/devlink.h>
-+#include <net/xdp.h>
- 
- #include <soc/fsl/dpaa2-io.h>
- #include <soc/fsl/dpaa2-fd.h>
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.h b/drivers/net/ethernet/freescale/enetc/enetc.h
-index 8577cf7699a0..7439739cd81a 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.h
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.h
-@@ -11,6 +11,7 @@
- #include <linux/if_vlan.h>
- #include <linux/phylink.h>
- #include <linux/dim.h>
-+#include <net/xdp.h>
- 
- #include "enetc_hw.h"
- 
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-index 8f1edcca96c4..5a0974e62f99 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -22,6 +22,7 @@
- #include <linux/timecounter.h>
- #include <dt-bindings/firmware/imx/rsrc.h>
- #include <linux/firmware/imx/sci.h>
-+#include <net/xdp.h>
- 
- #if defined(CONFIG_M523x) || defined(CONFIG_M527x) || defined(CONFIG_M528x) || \
-     defined(CONFIG_M520x) || defined(CONFIG_M532x) || defined(CONFIG_ARM) || \
-diff --git a/drivers/net/ethernet/fungible/funeth/funeth_txrx.h b/drivers/net/ethernet/fungible/funeth/funeth_txrx.h
-index 53b7e95213a8..5eec552a1f24 100644
---- a/drivers/net/ethernet/fungible/funeth/funeth_txrx.h
-+++ b/drivers/net/ethernet/fungible/funeth/funeth_txrx.h
-@@ -5,6 +5,7 @@
- 
- #include <linux/netdevice.h>
- #include <linux/u64_stats_sync.h>
-+#include <net/xdp.h>
- 
- /* Tx descriptor size */
- #define FUNETH_SQE_SIZE 64U
-diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
-index 4b425bf71ede..a31256f70348 100644
---- a/drivers/net/ethernet/google/gve/gve.h
-+++ b/drivers/net/ethernet/google/gve/gve.h
-@@ -11,6 +11,7 @@
- #include <linux/netdevice.h>
- #include <linux/pci.h>
- #include <linux/u64_stats_sync.h>
-+#include <net/xdp.h>
- 
- #include "gve_desc.h"
- #include "gve_desc_dqo.h"
-diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
-index 9db384f66a8e..4bffc3cb502f 100644
---- a/drivers/net/ethernet/intel/igc/igc.h
-+++ b/drivers/net/ethernet/intel/igc/igc.h
-@@ -15,6 +15,7 @@
- #include <linux/net_tstamp.h>
- #include <linux/bitfield.h>
- #include <linux/hrtimer.h>
-+#include <net/xdp.h>
- 
- #include "igc_hw.h"
- 
-diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-index 27f272831ea5..eb7d81b5e9f8 100644
---- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-+++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-@@ -14,6 +14,7 @@
- #include <net/pkt_cls.h>
- #include <net/pkt_sched.h>
- #include <net/switchdev.h>
-+#include <net/xdp.h>
- 
- #include <vcap_api.h>
- #include <vcap_api_client.h>
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index ac2acc9aca9d..21665f114fe9 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -11,6 +11,7 @@
- 
- #include <net/checksum.h>
- #include <net/ip6_checksum.h>
-+#include <net/xdp.h>
- 
- #include <net/mana/mana.h>
- #include <net/mana/mana_auxiliary.h>
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index 4ce5eaaae513..a6d034968654 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -22,6 +22,7 @@
- #include <linux/net_tstamp.h>
- #include <linux/reset.h>
- #include <net/page_pool.h>
-+#include <net/xdp.h>
- #include <uapi/linux/bpf.h>
- 
- struct stmmac_resources {
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
-index 34230145ca0b..0e27c433098d 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.h
-+++ b/drivers/net/ethernet/ti/cpsw_priv.h
-@@ -6,6 +6,7 @@
- #ifndef DRIVERS_NET_ETHERNET_TI_CPSW_PRIV_H_
- #define DRIVERS_NET_ETHERNET_TI_CPSW_PRIV_H_
- 
-+#include <net/xdp.h>
- #include <uapi/linux/bpf.h>
- 
- #include "davinci_cpdma.h"
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index c9dd69dbe1b8..810977952f95 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -16,6 +16,7 @@
- #include <linux/hyperv.h>
- #include <linux/rndis.h>
- #include <linux/jhash.h>
-+#include <net/xdp.h>
- 
- /* RSS related */
- #define OID_GEN_RECEIVE_SCALE_CAPABILITIES 0x00010203  /* query only */
-diff --git a/drivers/net/tap.c b/drivers/net/tap.c
-index 9137fb8c1c42..b196a2a54355 100644
---- a/drivers/net/tap.c
-+++ b/drivers/net/tap.c
-@@ -22,6 +22,7 @@
- #include <net/net_namespace.h>
- #include <net/rtnetlink.h>
- #include <net/sock.h>
-+#include <net/xdp.h>
- #include <linux/virtio_net.h>
- #include <linux/skb_array.h>
- 
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 024ad8ddb27e..1ccdca03e166 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -4,6 +4,8 @@
- #ifndef _MANA_H
- #define _MANA_H
- 
-+#include <net/xdp.h>
-+
- #include "gdma.h"
- #include "hw_channel.h"
- 
--- 
-2.41.0
+Module mshv provides /dev/mshv and common code, and is the parent module
+to the other two modules. At its core, it implements an eventfd frame
+work, and defines some helper functions for the other modules.
 
+Module mshv_root provides APIs for creating and managing child
+partitions. It defines abstractions for vcpus, partitions and other
+things related to running a guest inside the kernel. It also exposes
+user space interfaces for the VMMs.
+
+Module mshv_vtl provides VTL (Virtual Trust Level) support for VMMs. It
+allows the VMM to run in a higher trust level than the guest but still
+within the same context as the guest. This is a useful feature for in
+guest emulation for better isolation and performance.
+
+> 
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> ---
+>  drivers/hv/Kconfig             |   54 +
+>  drivers/hv/Makefile            |   21 +
+>  drivers/hv/hv_call.c           |  119 ++
+>  drivers/hv/mshv.h              |  156 +++
+>  drivers/hv/mshv_eventfd.c      |  758 ++++++++++++
+>  drivers/hv/mshv_eventfd.h      |   80 ++
+>  drivers/hv/mshv_main.c         |  208 ++++
+>  drivers/hv/mshv_msi.c          |  129 +++
+>  drivers/hv/mshv_portid_table.c |   84 ++
+>  drivers/hv/mshv_root.h         |  194 ++++
+>  drivers/hv/mshv_root_hv_call.c | 1064 +++++++++++++++++
+>  drivers/hv/mshv_root_main.c    | 1964 ++++++++++++++++++++++++++++++++
+>  drivers/hv/mshv_synic.c        |  689 +++++++++++
+>  drivers/hv/mshv_vtl.h          |   52 +
+>  drivers/hv/mshv_vtl_main.c     | 1541 +++++++++++++++++++++++++
+>  drivers/hv/xfer_to_guest.c     |   28 +
+>  include/uapi/linux/mshv.h      |  298 +++++
+>  17 files changed, 7439 insertions(+)
+>  create mode 100644 drivers/hv/hv_call.c
+>  create mode 100644 drivers/hv/mshv.h
+>  create mode 100644 drivers/hv/mshv_eventfd.c
+>  create mode 100644 drivers/hv/mshv_eventfd.h
+>  create mode 100644 drivers/hv/mshv_main.c
+>  create mode 100644 drivers/hv/mshv_msi.c
+>  create mode 100644 drivers/hv/mshv_portid_table.c
+>  create mode 100644 drivers/hv/mshv_root.h
+>  create mode 100644 drivers/hv/mshv_root_hv_call.c
+>  create mode 100644 drivers/hv/mshv_root_main.c
+>  create mode 100644 drivers/hv/mshv_synic.c
+>  create mode 100644 drivers/hv/mshv_vtl.h
+>  create mode 100644 drivers/hv/mshv_vtl_main.c
+>  create mode 100644 drivers/hv/xfer_to_guest.c
+>  create mode 100644 include/uapi/linux/mshv.h
+> 
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 00242107d62e..b150d686e902 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -54,4 +54,58 @@ config HYPERV_BALLOON
+>  	help
+>  	  Select this option to enable Hyper-V Balloon driver.
+>  
+> +config MSHV
+> +	tristate "Microsoft Hypervisor root partition interfaces: /dev/mshv"
+> +	depends on X86_64 && HYPERV
+> +	select EVENTFD
+> +	select MSHV_VFIO
+
+This is not needed yet, right? I think this is just dead code right now.
+
+It can be introduced when we start upstreaming the VFIO bits.
+
+> +	select MSHV_XFER_TO_GUEST_WORK
+> +	help
+> +	  Select this option to enable core functionality for managing guest
+> +	  virtual machines running under the Microsoft Hypervisor.
+> +
+> +	  The interfaces are provided via a device named /dev/mshv.
+> +
+> +	  To compile this as a module, choose M here.
+> +
+> +	  If unsure, say N.
+> +
+> +config MSHV_ROOT
+> +	tristate "Microsoft Hyper-V root partition APIs driver"
+> +	depends on MSHV
+> +	help
+> +	  Select this option to provide /dev/mshv interfaces specific to
+> +	  running as the root partition on Microsoft Hypervisor.
+> +
+> +	  To compile this as a module, choose M here.
+> +
+> +	  If unsure, say N.
+> +
+> +config MSHV_VTL
+> +	tristate "Microsoft Hyper-V VTL driver"
+> +	depends on MSHV
+> +	select HYPERV_VTL_MODE
+> +	select TRANSPARENT_HUGEPAGE
+> +	help
+> +	  Select this option to enable Hyper-V VTL driver.
+> +	  Virtual Secure Mode (VSM) is a set of hypervisor capabilities and
+> +	  enlightenments offered to host and guest partitions which enables
+> +	  the creation and management of new security boundaries within
+> +	  operating system software.
+> +
+> +	  VSM achieves and maintains isolation through Virtual Trust Levels
+> +	  (VTLs). Virtual Trust Levels are hierarchical, with higher levels
+> +	  being more privileged than lower levels. VTL0 is the least privileged
+> +	  level, and currently only other level supported is VTL2.
+> +
+> +	  To compile this as a module, choose M here.
+> +
+> +	  If unsure, say N.
+
+The changes to the function which indicates if output pages are needed
+should be in this patch.
+
+> +
+> +config MSHV_VFIO
+> +	bool
+> +
+> +config MSHV_XFER_TO_GUEST_WORK
+> +	bool
+> +
+>  endmenu
+> diff --git a/drivers/hv/Makefile b/drivers/hv/Makefile
+> index d76df5c8c2a9..113c79cfadb9 100644
+> --- a/drivers/hv/Makefile
+> +++ b/drivers/hv/Makefile
+> @@ -2,10 +2,31 @@
+>  obj-$(CONFIG_HYPERV)		+= hv_vmbus.o
+>  obj-$(CONFIG_HYPERV_UTILS)	+= hv_utils.o
+>  obj-$(CONFIG_HYPERV_BALLOON)	+= hv_balloon.o
+> +obj-$(CONFIG_DXGKRNL)		+= dxgkrnl/
+
+This is not yet upstreamed. It shouldn't be here. Does this not break
+the build for you?
+
+The rest is basically a copy of what was posted many moons before plus
+some VTL stuff, and new code for the root scheduler and async hypercall
+support. I've probably gone through some versions of this code already,
+so I only skim the code.
+
+Since this is a Microsoft only driver, I don't expect to get much review
+from the community -- the last few rounds were quiet. I will however let
+this patch series float for a while before taking any further actions
+just in case.
+
+If people are interested in specific bits of the code in the driver,
+please let Nuno and I know.
+
+Thanks,
+Wei.
