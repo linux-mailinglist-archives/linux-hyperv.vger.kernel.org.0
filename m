@@ -2,67 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE9DB76F46A
-	for <lists+linux-hyperv@lfdr.de>; Thu,  3 Aug 2023 23:05:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C671476F573
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Aug 2023 00:07:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbjHCVFj (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 3 Aug 2023 17:05:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33274 "EHLO
+        id S229626AbjHCWHh (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 3 Aug 2023 18:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229799AbjHCVFi (ORCPT
+        with ESMTP id S229542AbjHCWHg (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 3 Aug 2023 17:05:38 -0400
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB6BD2D42;
-        Thu,  3 Aug 2023 14:05:37 -0700 (PDT)
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-686be28e1a8so1023238b3a.0;
-        Thu, 03 Aug 2023 14:05:37 -0700 (PDT)
+        Thu, 3 Aug 2023 18:07:36 -0400
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6904E110;
+        Thu,  3 Aug 2023 15:07:34 -0700 (PDT)
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-268b3ddc894so824435a91.1;
+        Thu, 03 Aug 2023 15:07:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691096737; x=1691701537;
+        d=1e100.net; s=20221208; t=1691100454; x=1691705254;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mxzSFjfvH9nf9VFKvjEOffow7qbCJzDE9eBHaKMndwA=;
-        b=Mc+nFpedC0XNZj1F7QNVx4BVicDYJKJLdaVb7uIDwJxg8g6mkOilnZb1KjOLiSYahC
-         2M4ZzexFIt0IawxIOwBhq97K+bEp8wpi1LLdmTP0eDwMDWh7ZM8txptG5wnYduu9wM69
-         dA1IZMD9sUpH2qxGdugJ7NLUHdztBx+dF+UmETFeJ340ulmObYvM/f9Hft2BlJq0tOQp
-         W81xGojHOnxfr5dJnwcEqkmAwuHm7oAVRLPrPwjVcZjRE6+FxY4cFtXdInu+ABb9y5iy
-         R7CHyqX8uXgvCEQ60w56TPNaj0OI6P1eXPF8GsI+9ZmKWx6weGid3i43r/wjAvflFDpP
-         apgg==
-X-Gm-Message-State: ABy/qLZOjj/fsY/NooYSqCmzalWAZ2HqOx/OaqSBWm94H+i8ikvRYIDF
-        CyjSwbT3YuFPoWDSclSKj90=
-X-Google-Smtp-Source: APBJJlGu2lOhqqVnRMmnRl3Qe5W4oVpe+V4SQ0lBNbq9foy8XkQHe6fWAD/dppuFdvz7sCyDqTvNFg==
-X-Received: by 2002:a05:6a21:3d87:b0:131:b3fa:eaaa with SMTP id bj7-20020a056a213d8700b00131b3faeaaamr18213182pzc.61.1691096737256;
-        Thu, 03 Aug 2023 14:05:37 -0700 (PDT)
+        bh=GorMN/ZwPfrkzaNazep8IyRB8qxYOzRyNpyV+jJtZgI=;
+        b=YKA1ouyfHln/vuyfiZNzVmaNd5J32AtsCq90P0nIm02hBF/RzASKE4S0zH97uGcVO8
+         xaB2jHO7Mwc/hgbrwXVbsNtxURCNu5UssJHvMHWg5LiaOxss6o0mfbKED1JhWMsAsXjh
+         yBQfQrCvXmbyUBRR1WsIwOZF2m8/Qo57s2EnOiu6T8L6/RLDYovMMPzZBIEH2rDVhCxO
+         Op7nz/jkgfNFhQDprFPf8YnLgW+MXHfq9iXBeIODDrbust/tl8AUq0PCurouaF4JbLnV
+         dYHyahYKzWVAdY5eMPZVgolduXqjPAw52MRiSn9o9oas2pgOEuF20SALdr1HgGFbpOm0
+         Kbrg==
+X-Gm-Message-State: AOJu0Ywbp1uqzsyvsKz3dOQrfu1tUyC7dFrGHstiHdY9utBjPZMl/5q7
+        bf3aMVrXm2wDZFYu5b8tN44=
+X-Google-Smtp-Source: AGHT+IEvCJKTcf4lBGho+GNe2a/F6WWi73Fhu0wdZA+VyrPmPQ+QFwXngeDaA5ObS4vWxb5p1drEBQ==
+X-Received: by 2002:a17:90a:6305:b0:268:2d92:55d3 with SMTP id e5-20020a17090a630500b002682d9255d3mr20725pjj.39.1691100453820;
+        Thu, 03 Aug 2023 15:07:33 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id j14-20020a633c0e000000b00563826c66eesm247153pga.61.2023.08.03.14.05.36
+        by smtp.gmail.com with ESMTPSA id 100-20020a17090a09ed00b002609cadc56esm364503pjo.11.2023.08.03.15.07.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Aug 2023 14:05:36 -0700 (PDT)
-Date:   Thu, 3 Aug 2023 21:05:29 +0000
+        Thu, 03 Aug 2023 15:07:32 -0700 (PDT)
+Date:   Thu, 3 Aug 2023 22:07:25 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     levymitchell0@gmail.com, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arch@vger.kernel.org, mikelley@microsoft.com,
-        kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-        ssengar@linux.microsoft.com, mukeshrathor@microsoft.com,
-        stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com,
-        apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
-        vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        will@kernel.org, catalin.marinas@arm.com
-Subject: Re: [PATCH 12/15] Documentation: Reserve ioctl number for mshv driver
-Message-ID: <ZMwWmZThinOGSP+s@liuwe-devbox-debian-v2>
-References: <1690487690-2428-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1690487690-2428-13-git-send-email-nunodasneves@linux.microsoft.com>
- <ZMrzgeETgsn1iTfe@liuwe-devbox-debian-v2>
- <878ras8dkc.fsf@meer.lwn.net>
+        mikelly@microsoft.com, peterz@infradead.org
+Subject: Re: [PATCH] hv_balloon: Update the balloon driver to use the SBRM API
+Message-ID: <ZMwlHdGiXM3fv6f3@liuwe-devbox-debian-v2>
+References: <20230726-master-v1-1-b2ce6a4538db@gmail.com>
+ <ZMgmuWmJu9Ppqm2t@boqun-archlinux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <878ras8dkc.fsf@meer.lwn.net>
+In-Reply-To: <ZMgmuWmJu9Ppqm2t@boqun-archlinux>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
@@ -74,52 +65,52 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 07:23:31AM -0600, Jonathan Corbet wrote:
-> Wei Liu <wei.liu@kernel.org> writes:
+On Mon, Jul 31, 2023 at 02:25:13PM -0700, Boqun Feng wrote:
+> Hi Mitchell,
 > 
-> > This needs an ack from Jonathan.
+> On Wed, Jul 26, 2023 at 12:23:31AM +0000, Mitchell Levy via B4 Relay wrote:
+> > From: Mitchell Levy <levymitchell0@gmail.com>
+> > 
+> > 
+> > 
+> > ---
 > 
-> From me?  If every docs change needed an ack from me we'd be in rather
-> worse shape than we are now.  You can certainly have one:
+> I don't know whether it's a tool issue or something else, but all words
+> after the "---" line in the email will be discarded from a commit log.
+> You can try to apply this patch yourself and see the result:
 > 
-> Acked-by: Jonathan Corbet <corbet@lwn.net>
+> 	b4 shazam 20230726-master-v1-1-b2ce6a4538db@gmail.com 
 > 
-> ...but I don't control ioctl() numbers and don't need to gate-keep a
-> change like this.
+> > This patch is intended as a proof-of-concept for the new SBRM
+> > machinery[1]. For some brief background, the idea behind SBRM is using
+> > the __cleanup__ attribute to automatically unlock locks (or otherwise
+> > release resources) when they go out of scope, similar to C++ style RAII.
+> > This promises some benefits such as making code simpler (particularly
+> > where you have lots of goto fail; type constructs) as well as reducing
+> > the surface area for certain kinds of bugs.
+> > 
+> > The changes in this patch should not result in any difference in how the
+> > code actually runs (i.e., it's purely an exercise in this new syntax
+> > sugar). In one instance SBRM was not appropriate, so I left that part
+> > alone, but all other locking/unlocking is handled automatically in this
+> > patch.
+> > 
+> > Link: https://lore.kernel.org/all/20230626125726.GU4253@hirez.programming.kicks-ass.net/ [1]
+> > 
+> > Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+> > Signed-off-by: "Mitchell Levy (Microsoft)" <levymitchell0@gmail.com>
+> 
+> Beside the above format issue, the code looks good to me, nice job!
+> 
+> Feel free to add:
+> 
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> 
 
-Thanks Jonathan.
-
-MAINTAINERS says you're the maintainer for Documentation, and I couldn't
-find who owns userspace-api or who controls the allocation of ioctl
-numbers.
+FAOD I'm expecting a v2 of this patch.
 
 Thanks,
 Wei.
 
-> 
-> Thanks,
-> 
-> jon
-> 
-> > On Thu, Jul 27, 2023 at 12:54:47PM -0700, Nuno Das Neves wrote:
-> >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> >> ---
-> >>  Documentation/userspace-api/ioctl/ioctl-number.rst | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >> 
-> >> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> >> index 0a1882e296ae..ca6b82419118 100644
-> >> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> >> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> >> @@ -355,6 +355,8 @@ Code  Seq#    Include File                                           Comments
-> >>  0xB6  all    linux/fpga-dfl.h
-> >>  0xB7  all    uapi/linux/remoteproc_cdev.h                            <mailto:linux-remoteproc@vger.kernel.org>
-> >>  0xB7  all    uapi/linux/nsfs.h                                       <mailto:Andrei Vagin <avagin@openvz.org>>
-> >> +0xB8  all    uapi/linux/mshv.h                                       Microsoft Hypervisor VM management APIs
-> >> +                                                                     <mailto:linux-hyperv@vger.kernel.org>
-> >>  0xC0  00-0F  linux/usb/iowarrior.h
-> >>  0xCA  00-0F  uapi/misc/cxl.h
-> >>  0xCA  10-2F  uapi/misc/ocxl.h
-> >> -- 
-> >> 2.25.1
-> >> 
+> Regards,
+> Boqun
