@@ -2,443 +2,602 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6743076FAC7
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Aug 2023 09:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABCF276FAC8
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Aug 2023 09:10:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234086AbjHDHKG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Aug 2023 03:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55692 "EHLO
+        id S234065AbjHDHKJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Aug 2023 03:10:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234066AbjHDHKE (ORCPT
+        with ESMTP id S234064AbjHDHKG (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Aug 2023 03:10:04 -0400
+        Fri, 4 Aug 2023 03:10:06 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C04230E1;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C15030E2;
         Fri,  4 Aug 2023 00:10:00 -0700 (PDT)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id EB8DD207F5BC;
-        Fri,  4 Aug 2023 00:09:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EB8DD207F5BC
+        by linux.microsoft.com (Postfix) with ESMTPSA id 10448207F5BD;
+        Fri,  4 Aug 2023 00:10:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 10448207F5BD
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1691133000;
-        bh=tK3oD7odpa1w807rL/Yujw4yRVLIILGtNOd6SFw2Qyw=;
+        bh=PsT/PJNCVNatmEaspRFKPQJm8lT11iMc7zxGAUOy8tk=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Gl9saf4Jcc1BAVdSPN5Z1rQ5GFyPvnLlbwHHJYlbJFFSj9aMjgeOn9BLoXoFdq9zR
-         3f++lEdc5veyqqqfh2IzxxtIhf7rtnTSGpjSHwPEbaU/YYlQZGZmvPwVSZdB11aXXA
-         sL4Gdp5iTqab8v+1/eAqxq9nesF95WiigW7Ermpg=
+        b=kEyng/7+LP6IiNPobb6bU0jptDS38cOBjShKBd8LpcYG+Yk05GWIfBNWEFUM2f6nO
+         8njt60TuTnUDh8vnU/f2G99B8opMqLHSfXcg5c1dXlDSBxnQOX08JDKH8pe/F0UAT3
+         Zg6z4zg+N13/sIs361l9vKZqNjnOmZp8kqXpRR7s=
 From:   Saurabh Sengar <ssengar@linux.microsoft.com>
 To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
         decui@microsoft.com, mikelley@microsoft.com,
         gregkh@linuxfoundation.org, corbet@lwn.net,
         linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-doc@vger.kernel.org
-Subject: [PATCH v4 1/3] uio: Add hv_vmbus_client driver
-Date:   Fri,  4 Aug 2023 00:09:54 -0700
-Message-Id: <1691132996-11706-2-git-send-email-ssengar@linux.microsoft.com>
+Subject: [PATCH v4 2/3] tools: hv: Add vmbus_bufring
+Date:   Fri,  4 Aug 2023 00:09:55 -0700
+Message-Id: <1691132996-11706-3-git-send-email-ssengar@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1691132996-11706-1-git-send-email-ssengar@linux.microsoft.com>
 References: <1691132996-11706-1-git-send-email-ssengar@linux.microsoft.com>
 X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Add a new UIO-based driver that generically supports low speed Hyper-V
-VMBus devices. This driver can be bound to VMBus devices by user space
-drivers that provide device-specific management.
+Provide a userspace interface for userspace drivers or applications to
+read/write a VMBus ringbuffer. A significant part of this code is
+borrowed from DPDK[1]. Current library is supported exclusively for
+the x86 architecture.
 
-The new driver provides the following core functionality, which is
-suitable for low speed devices:
-* A single VMBus channel for each device
-* Ability to specify the VMBus channel ring buffer size for each device
-* Host notification via a hypercall instead of monitor bits
+To build this library:
+make -C tools/hv libvmbus_bufring.a
 
+Applications using this library can include the vmbus_bufring.h header
+file and libvmbus_bufring.a statically.
+
+[1] https://github.com/DPDK/dpdk/
+
+Signed-off-by: Mary Hardy <maryhardy@microsoft.com>
 Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 ---
 [V4]
-- Added Reviewed-by
+- Modify comment to remove RingDataStartOffset mention
+- Change downward ALIGN macro to upward ALIGN
 
 [V3]
-- Removed ringbuffer sysfs entry and used uio framework for mmap
-- Remove ".id_table = NULL"
-- kasprintf -> devm_kasprintf
-- Change global variable ring_size to per device
-- More checks on value which can be set for ring_size
-- Remove driverctl, and used echo command instead for driver documentation
-- Remove unnecessary one time use macros
-- Change kernel version and date for sysfs documentation
-- Update documentation
-- Better commit message
+- Made ring buffer data offset depend on page size
+- remove rte_smp_rwmb macro and reused rte_compiler_barrier instead
+- Added legal counsel sign-off
+- Removed "Link:" tag 
+- Improve commit messages
+- new library compilation dependent on x86
+- simplify mmap
 
 [V2]
-- Update driver info in Documentation/driver-api/uio-howto.rst
-- Update ring_size sysfs info in Documentation/ABI/stable/sysfs-bus-vmbus
-- Remove DRIVER_VERSION
-- Remove refcnt
-- scnprintf -> sysfs_emit
-- sysfs_create_file -> ATTRIBUTE_GROUPS + ".driver.groups";
-- sysfs_create_bin_file -> device_create_bin_file
-- dev_notice -> dev_err
-- remove MODULE_VERSION
+- simpler sysfs path, less parsing
 
- Documentation/ABI/stable/sysfs-bus-vmbus |  10 ++
- Documentation/driver-api/uio-howto.rst   |  54 ++++++
- drivers/uio/Kconfig                      |  12 ++
- drivers/uio/Makefile                     |   1 +
- drivers/uio/uio_hv_vmbus_client.c        | 218 +++++++++++++++++++++++
- 5 files changed, 295 insertions(+)
- create mode 100644 drivers/uio/uio_hv_vmbus_client.c
+ tools/hv/Build           |   1 +
+ tools/hv/Makefile        |  13 +-
+ tools/hv/vmbus_bufring.c | 297 +++++++++++++++++++++++++++++++++++++++
+ tools/hv/vmbus_bufring.h | 154 ++++++++++++++++++++
+ 4 files changed, 464 insertions(+), 1 deletion(-)
+ create mode 100644 tools/hv/vmbus_bufring.c
+ create mode 100644 tools/hv/vmbus_bufring.h
 
-diff --git a/Documentation/ABI/stable/sysfs-bus-vmbus b/Documentation/ABI/stable/sysfs-bus-vmbus
-index 3066feae1d8d..7e77eda77be3 100644
---- a/Documentation/ABI/stable/sysfs-bus-vmbus
-+++ b/Documentation/ABI/stable/sysfs-bus-vmbus
-@@ -153,6 +153,16 @@ Contact:	Stephen Hemminger <sthemmin@microsoft.com>
- Description:	Binary file created by uio_hv_generic for ring buffer
- Users:		Userspace drivers
+diff --git a/tools/hv/Build b/tools/hv/Build
+index 6cf51fa4b306..2a667d3d94cb 100644
+--- a/tools/hv/Build
++++ b/tools/hv/Build
+@@ -1,3 +1,4 @@
+ hv_kvp_daemon-y += hv_kvp_daemon.o
+ hv_vss_daemon-y += hv_vss_daemon.o
+ hv_fcopy_daemon-y += hv_fcopy_daemon.o
++vmbus_bufring-y += vmbus_bufring.o
+diff --git a/tools/hv/Makefile b/tools/hv/Makefile
+index fe770e679ae8..33cf488fd20f 100644
+--- a/tools/hv/Makefile
++++ b/tools/hv/Makefile
+@@ -11,14 +11,19 @@ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ endif
  
-+What:		/sys/bus/vmbus/devices/<UUID>/ring_size
-+Date:		September 2023
-+KernelVersion:	6.6
-+Contact:	Saurabh Sengar <ssengar@microsoft.com>
-+Description:	File created by uio_hv_vmbus_client for setting device ring
-+		buffer size. The value specified within the file denotes the
-+		total memory allocation for the one complete ring buffer, which
-+		includes the ring buffer header, of size PAGE_SIZE.
-+Users:		Userspace drivers
++include $(srctree)/tools/scripts/Makefile.arch
 +
- What:           /sys/bus/vmbus/devices/<UUID>/channels/<N>/intr_in_full
- Date:           February 2019
- KernelVersion:  5.0
-diff --git a/Documentation/driver-api/uio-howto.rst b/Documentation/driver-api/uio-howto.rst
-index 907ffa3b38f5..625c2bda369f 100644
---- a/Documentation/driver-api/uio-howto.rst
-+++ b/Documentation/driver-api/uio-howto.rst
-@@ -722,6 +722,60 @@ For example::
+ # Do not use make's built-in rules
+ # (this improves performance and avoids hard-to-debug behaviour);
+ MAKEFLAGS += -r
  
- 	/sys/bus/vmbus/devices/3811fe4d-0fa0-4b62-981a-74fc1084c757/channels/21/ring
+ override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
  
-+Generic Hyper-V driver for low speed devices
-+============================================
-+
-+The generic driver is a kernel module named uio_hv_vmbus_client. It
-+supports slow devices on the Hyper-V VMBus similar to uio_hv_generic
-+for faster devices. This driver also gives flexibility of customized
-+ring buffer sizes.
-+
-+Making the driver recognize the device
-+--------------------------------------
-+
-+Since the driver does not declare any device GUID's, it will not get
-+loaded automatically and will not automatically bind to any devices. You
-+must load it and allocate id to the driver yourself. For example, to use
-+the fcopy device class GUID::
-+
-+        modprobe uio_hv_vmbus_client
-+        echo "34d14be3-dee4-41c8-9ae7-6b174977c192" > /sys/bus/vmbus/drivers/uio_hv_vmbus_client/new_id
-+
-+If there already is a hardware specific kernel driver for the device,
-+the generic driver still won't bind to it. In this case if you want to
-+use the generic driver for a userspace library you'll have to manually unbind
-+the hardware specific driver and bind the generic driver, using the device
-+instance GUID like this::
-+
-+          echo "eb765408-105f-49b6-b4aa-c123b64d17d4" > /sys/bus/vmbus/drivers/uio_hv_vmbus_client/unbind
-+          echo "eb765408-105f-49b6-b4aa-c123b64d17d4" > /sys/bus/vmbus/drivers/uio_hv_vmbus_client/bind
-+
-+You can verify that the device has been bound to the driver by looking
-+for it in sysfs, for example like the following::
-+
-+        ls -l /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/driver
-+
-+Which if successful should print::
-+
-+      .../eb765408-105f-49b6-b4aa-c123b64d17d4/driver -> ../../../bus/vmbus/drivers/uio_hv_vmbus_client
-+
-+Things to know about uio_hv_vmbus_client
-+----------------------------------------
-+
-+The uio_hv_vmbus_client driver maps the Hyper-V device ring buffer to userspace
-+and offers an interface to manage it.
-+
-+The userspace API for mapping and performing read/write operations on the device
-+ring buffer is implemented in tools/hv/vmbus_bufring.c. Userspace applications
-+should use this file as a library and build their logic on top of it.
-+
-+Additionally, the uio_hv_vmbus_client driver offers the "ring_size" sysfs entry
-+for setting the device ring buffer size before opening the device.
-+
-+For example::
-+
-+        /sys/bus/vmbus/devices/eb765408-105f-49b6-b4aa-c123b64d17d4/ring_size
-+
- Further information
- ===================
++ifeq ($(SRCARCH),x86)
++ALL_LIBS := libvmbus_bufring.a
++endif
+ ALL_TARGETS := hv_kvp_daemon hv_vss_daemon hv_fcopy_daemon
+-ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
++ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS)) $(patsubst %,$(OUTPUT)%,$(ALL_LIBS))
  
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 2e16c5338e5b..bd4d27ecfc9a 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -166,6 +166,18 @@ config UIO_HV_GENERIC
+ ALL_SCRIPTS := hv_get_dhcp_info.sh hv_get_dns_info.sh hv_set_ifconfig.sh
  
- 	  If you compile this as a module, it will be called uio_hv_generic.
+@@ -27,6 +32,12 @@ all: $(ALL_PROGRAMS)
+ export srctree OUTPUT CC LD CFLAGS
+ include $(srctree)/tools/build/Makefile.include
  
-+config UIO_HV_SLOW_DEVICES
-+	tristate "Generic driver for low speed VMBus devices"
-+	depends on HYPERV
-+	help
-+	  Generic driver that you can dynamically bind to low speed Hyper-V
-+	  VMBus devices to allow a user space driver to manage the device.
-+	  The driver provides a single VMBus channel and uses a hypercall
-+	  instead of monitor bits to interrupt the host. The driver provides
-+	  a configurable per-device ring buffer size.
++HV_VMBUS_BUFRING_IN := $(OUTPUT)vmbus_bufring.o
++$(HV_VMBUS_BUFRING_IN): FORCE
++	$(Q)$(MAKE) $(build)=vmbus_bufring
++$(OUTPUT)libvmbus_bufring.a : vmbus_bufring.o
++	$(AR) rcs $@ $^
 +
-+	  If you compile this as a module, it will be called uio_hv_vmbus_client.
-+
- config UIO_DFL
- 	tristate "Generic driver for DFL (Device Feature List) bus"
- 	depends on FPGA_DFL
-diff --git a/drivers/uio/Makefile b/drivers/uio/Makefile
-index f2f416a14228..44be0f96da34 100644
---- a/drivers/uio/Makefile
-+++ b/drivers/uio/Makefile
-@@ -11,4 +11,5 @@ obj-$(CONFIG_UIO_PRUSS)         += uio_pruss.o
- obj-$(CONFIG_UIO_MF624)         += uio_mf624.o
- obj-$(CONFIG_UIO_FSL_ELBC_GPCM)	+= uio_fsl_elbc_gpcm.o
- obj-$(CONFIG_UIO_HV_GENERIC)	+= uio_hv_generic.o
-+obj-$(CONFIG_UIO_HV_SLOW_DEVICES)	+= uio_hv_vmbus_client.o
- obj-$(CONFIG_UIO_DFL)	+= uio_dfl.o
-diff --git a/drivers/uio/uio_hv_vmbus_client.c b/drivers/uio/uio_hv_vmbus_client.c
+ HV_KVP_DAEMON_IN := $(OUTPUT)hv_kvp_daemon-in.o
+ $(HV_KVP_DAEMON_IN): FORCE
+ 	$(Q)$(MAKE) $(build)=hv_kvp_daemon
+diff --git a/tools/hv/vmbus_bufring.c b/tools/hv/vmbus_bufring.c
 new file mode 100644
-index 000000000000..68e5aec92a13
+index 000000000000..0a0686751b79
 --- /dev/null
-+++ b/drivers/uio/uio_hv_vmbus_client.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/tools/hv/vmbus_bufring.c
+@@ -0,0 +1,297 @@
++// SPDX-License-Identifier: BSD-3-Clause
 +/*
-+ * uio_hv_vmbus_client - UIO driver for low speed VMBus devices
-+ *
-+ * Copyright (c) 2023, Microsoft Corporation.
-+ *
-+ * Authors:
-+ *   Saurabh Sengar <ssengar@microsoft.com>
-+ *
-+ * Since the driver does not declare any device ids, userspace code must
-+ * allocate an id and bind the device to the driver.
-+ *
-+ * For example, to associate the fcopy service with this driver:
-+ * # echo "34d14be3-dee4-41c8-9ae7-6b174977c192" > /sys/bus/vmbus/drivers/uio_hv_vmbus_client/new_id
-+ *
-+ * If there already is a hardware specific kernel driver for the device,
-+ * the generic driver still won't bind to it. In this case if you want to
-+ * use the generic driver for a userspace library you'll have to manually unbind
-+ * the hardware specific driver and bind the generic driver, using the device
-+ * instance GUID like this:
-+ * # echo "eb765408-105f-49b6-b4aa-c123b64d17d4" > /sys/bus/vmbus/drivers/uio_hv_vmbus_client/unbind
-+ * # echo "eb765408-105f-49b6-b4aa-c123b64d17d4" > /sys/bus/vmbus/drivers/uio_hv_vmbus_client/bind
++ * Copyright (c) 2009-2012,2016,2023 Microsoft Corp.
++ * Copyright (c) 2012 NetApp Inc.
++ * Copyright (c) 2012 Citrix Inc.
++ * All rights reserved.
 + */
 +
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/uio_driver.h>
-+#include <linux/hyperv.h>
++#include <errno.h>
++#include <emmintrin.h>
++#include <stdio.h>
++#include <string.h>
++#include <unistd.h>
++#include <sys/uio.h>
++#include "vmbus_bufring.h"
 +
-+struct uio_hv_vmbus_dev {
-+	struct uio_info info;
-+	struct hv_device *device;
-+	int ring_size;
-+};
++#define	rte_compiler_barrier()	({ asm volatile ("" : : : "memory"); })
++#define RINGDATA_START_OFFSET	(getpagesize())
++#define VMBUS_RQST_ERROR	0xFFFFFFFFFFFFFFFF
++#define ALIGN(val, align)	(((val) + ((align) - 1)) & ~((align) - 1))
 +
-+/*
-+ * This is the irqcontrol callback to be registered to uio_info.
-+ * It can be used to disable/enable interrupt from user space processes.
-+ *
-+ * @param info
-+ *  pointer to uio_info.
-+ * @param irq_state
-+ *  state value. 1 to enable interrupt.
-+ */
-+static int uio_hv_vmbus_irqcontrol(struct uio_info *info, s32 irq_state)
++/* Increase bufring index by inc with wraparound */
++static inline uint32_t vmbus_br_idxinc(uint32_t idx, uint32_t inc, uint32_t sz)
 +{
-+	struct uio_hv_vmbus_dev *pdata = info->priv;
-+	struct hv_device *hv_dev = pdata->device;
++	idx += inc;
++	if (idx >= sz)
++		idx -= sz;
 +
-+	/* Issue a full memory barrier before triggering the notification */
-+	virt_mb();
-+
-+	if (irq_state == 1)
-+		vmbus_setevent(hv_dev->channel);
-+
-+	return 0;
++	return idx;
 +}
 +
-+/*
-+ * Callback from vmbus_event when something is in inbound ring.
-+ */
-+static void uio_hv_vmbus_channel_cb(void *context)
++void vmbus_br_setup(struct vmbus_br *br, void *buf, unsigned int blen)
 +{
-+	struct uio_hv_vmbus_dev *pdata = context;
-+
-+	/* Issue a full memory barrier before sending the event to userspace */
-+	virt_mb();
-+
-+	uio_event_notify(&pdata->info);
++	br->vbr = buf;
++	br->windex = br->vbr->windex;
++	br->dsize = blen - RINGDATA_START_OFFSET;
 +}
 +
-+static int uio_hv_vmbus_open(struct uio_info *info, struct inode *inode)
++static inline __always_inline void
++rte_smp_mb(void)
 +{
-+	struct uio_hv_vmbus_dev *pdata = container_of(info, struct uio_hv_vmbus_dev, info);
-+	struct hv_device *hv_dev = pdata->device;
-+	struct vmbus_channel *channel = hv_dev->channel;
-+	void *ring_buffer;
-+	int ret;
-+
-+	ret = vmbus_open(channel, pdata->ring_size, pdata->ring_size, NULL, 0,
-+			 uio_hv_vmbus_channel_cb, pdata);
-+	if (ret) {
-+		dev_err(&hv_dev->device, "error %d when opening the channel\n", ret);
-+		return ret;
-+	}
-+	channel->inbound.ring_buffer->interrupt_mask = 0;
-+	set_channel_read_mode(channel, HV_CALL_ISR);
-+
-+	/* set the mem pointer */
-+	info->mem[0].name = "txrx_rings";
-+	ring_buffer = page_address(channel->ringbuffer_page);
-+	info->mem[0].addr = (uintptr_t)virt_to_phys(ring_buffer);
-+	info->mem[0].size = channel->ringbuffer_pagecount << PAGE_SHIFT;
-+	info->mem[0].memtype = UIO_MEM_IOVA;
-+
-+	return ret;
++	asm volatile("lock addl $0, -128(%%rsp); " ::: "memory");
 +}
 +
-+static int uio_hv_vmbus_release(struct uio_info *info, struct inode *inode)
++static inline int
++rte_atomic32_cmpset(volatile uint32_t *dst, uint32_t exp, uint32_t src)
 +{
-+	struct uio_hv_vmbus_dev *pdata = container_of(info, struct uio_hv_vmbus_dev, info);
-+	struct hv_device *hv_dev = pdata->device;
++	uint8_t res;
 +
-+	vmbus_close(hv_dev->channel);
-+
-+	/* restore the mem pointer to its original state */
-+	info->mem[0].name = NULL;
-+	info->mem[0].addr = 0;
-+	info->mem[0].size = 1;
-+	info->mem[0].memtype = UIO_MEM_NONE;
-+
-+	return 0;
++	asm volatile("lock ; "
++		     "cmpxchgl %[src], %[dst];"
++		     "sete %[res];"
++		     : [res] "=a" (res),     /* output */
++		     [dst] "=m" (*dst)
++		     : [src] "r" (src),      /* input */
++		     "a" (exp),
++		     "m" (*dst)
++		     : "memory");            /* no-clobber list */
++	return res;
 +}
 +
-+static ssize_t ring_size_show(struct device *dev, struct device_attribute *attr,
-+			      char *buf)
++static inline uint32_t
++vmbus_txbr_copyto(const struct vmbus_br *tbr, uint32_t windex,
++		  const void *src0, uint32_t cplen)
 +{
-+	struct uio_info *info = dev_get_drvdata(dev);
-+	struct uio_hv_vmbus_dev *pdata = container_of(info, struct uio_hv_vmbus_dev, info);
++	uint8_t *br_data = (uint8_t *)tbr->vbr + RINGDATA_START_OFFSET;
++	uint32_t br_dsize = tbr->dsize;
++	const uint8_t *src = src0;
 +
-+	return sysfs_emit(buf, "%d\n", pdata->ring_size);
-+}
++	if (cplen > br_dsize - windex) {
++		uint32_t fraglen = br_dsize - windex;
 +
-+static ssize_t ring_size_store(struct device *dev, struct device_attribute *attr,
-+			       const char *buf, size_t count)
-+{
-+	unsigned int val;
-+	struct uio_info *info = dev_get_drvdata(dev);
-+	struct uio_hv_vmbus_dev *pdata = container_of(info, struct uio_hv_vmbus_dev, info);
-+
-+	if (kstrtouint(buf, 0, &val) < 0)
-+		return -EINVAL;
-+
-+	if (val < 2 * PAGE_SIZE || val % PAGE_SIZE)
-+		return -EINVAL;
-+
-+	pdata->ring_size = val;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(ring_size);
-+
-+static struct attribute *uio_hv_vmbus_client_attrs[] = {
-+	&dev_attr_ring_size.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(uio_hv_vmbus_client);
-+
-+static int uio_hv_vmbus_probe(struct hv_device *dev, const struct hv_vmbus_device_id *dev_id)
-+{
-+	struct uio_hv_vmbus_dev *pdata;
-+	int ret;
-+	char *name = NULL;
-+
-+	pdata = devm_kzalloc(&dev->device, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	name = devm_kasprintf(&dev->device, GFP_KERNEL, "%pUl", &dev->dev_instance);
-+
-+	/* Fill general uio info */
-+	pdata->info.name = name; /* /sys/class/uio/uioX/name */
-+	pdata->info.version = "1";
-+	pdata->info.irqcontrol = uio_hv_vmbus_irqcontrol;
-+	pdata->info.open = uio_hv_vmbus_open;
-+	pdata->info.release = uio_hv_vmbus_release;
-+	pdata->info.irq = UIO_IRQ_CUSTOM;
-+	pdata->info.priv = pdata;
-+	pdata->ring_size = VMBUS_RING_SIZE(3 * HV_HYP_PAGE_SIZE); /* Default ringbuffer size */
-+	pdata->device = dev;
-+
-+	/* dummy value to register the mem pointers which will be updated by open */
-+	pdata->info.mem[0].size = 1;
-+
-+	ret = uio_register_device(&dev->device, &pdata->info);
-+	if (ret) {
-+		dev_err(&dev->device, "uio_hv_vmbus register failed\n");
-+		return ret;
++		/* Wrap-around detected */
++		memcpy(br_data + windex, src, fraglen);
++		memcpy(br_data, src + fraglen, cplen - fraglen);
++	} else {
++		memcpy(br_data + windex, src, cplen);
 +	}
 +
-+	hv_set_drvdata(dev, pdata);
++	return vmbus_br_idxinc(windex, cplen, br_dsize);
++}
++
++/*
++ * Write scattered channel packet to TX bufring.
++ *
++ * The offset of this channel packet is written as a 64bits value
++ * immediately after this channel packet.
++ *
++ * The write goes through three stages:
++ *  1. Reserve space in ring buffer for the new data.
++ *     Writer atomically moves priv_write_index.
++ *  2. Copy the new data into the ring.
++ *  3. Update the tail of the ring (visible to host) that indicates
++ *     next read location. Writer updates write_index
++ */
++static int
++vmbus_txbr_write(struct vmbus_br *tbr, const struct iovec iov[], int iovlen,
++		 bool *need_sig)
++{
++	struct vmbus_bufring *vbr = tbr->vbr;
++	uint32_t ring_size = tbr->dsize;
++	uint32_t old_windex, next_windex, windex, total;
++	uint64_t save_windex;
++	int i;
++
++	total = 0;
++	for (i = 0; i < iovlen; i++)
++		total += iov[i].iov_len;
++	total += sizeof(save_windex);
++
++	/* Reserve space in ring */
++	do {
++		uint32_t avail;
++
++		/* Get current free location */
++		old_windex = tbr->windex;
++
++		/* Prevent compiler reordering this with calculation */
++		rte_compiler_barrier();
++
++		avail = vmbus_br_availwrite(tbr, old_windex);
++
++		/* If not enough space in ring, then tell caller. */
++		if (avail <= total)
++			return -EAGAIN;
++
++		next_windex = vmbus_br_idxinc(old_windex, total, ring_size);
++
++		/* Atomic update of next write_index for other threads */
++	} while (!rte_atomic32_cmpset(&tbr->windex, old_windex, next_windex));
++
++	/* Space from old..new is now reserved */
++	windex = old_windex;
++	for (i = 0; i < iovlen; i++)
++		windex = vmbus_txbr_copyto(tbr, windex, iov[i].iov_base, iov[i].iov_len);
++
++	/* Set the offset of the current channel packet. */
++	save_windex = ((uint64_t)old_windex) << 32;
++	windex = vmbus_txbr_copyto(tbr, windex, &save_windex,
++				   sizeof(save_windex));
++
++	/* The region reserved should match region used */
++	if (windex != next_windex)
++		return -EINVAL;
++
++	/* Ensure that data is available before updating host index */
++	rte_compiler_barrier();
++
++	/* Checkin for our reservation. wait for our turn to update host */
++	while (!rte_atomic32_cmpset(&vbr->windex, old_windex, next_windex))
++		_mm_pause();
 +
 +	return 0;
 +}
 +
-+static void uio_hv_vmbus_remove(struct hv_device *dev)
++int rte_vmbus_chan_send(struct vmbus_br *txbr, uint16_t type, void *data,
++			uint32_t dlen, uint32_t flags)
 +{
-+	struct uio_hv_vmbus_dev *pdata = hv_get_drvdata(dev);
++	struct vmbus_chanpkt pkt;
++	unsigned int pktlen, pad_pktlen;
++	const uint32_t hlen = sizeof(pkt);
++	bool send_evt = false;
++	uint64_t pad = 0;
++	struct iovec iov[3];
++	int error;
 +
-+	if (pdata)
-+		uio_unregister_device(&pdata->info);
++	pktlen = hlen + dlen;
++	pad_pktlen = ALIGN(pktlen, sizeof(uint64_t));
++
++	pkt.hdr.type = type;
++	pkt.hdr.flags = flags;
++	pkt.hdr.hlen = hlen >> VMBUS_CHANPKT_SIZE_SHIFT;
++	pkt.hdr.tlen = pad_pktlen >> VMBUS_CHANPKT_SIZE_SHIFT;
++	pkt.hdr.xactid = VMBUS_RQST_ERROR; /* doesn't support multiple requests at same time */
++
++	iov[0].iov_base = &pkt;
++	iov[0].iov_len = hlen;
++	iov[1].iov_base = data;
++	iov[1].iov_len = dlen;
++	iov[2].iov_base = &pad;
++	iov[2].iov_len = pad_pktlen - pktlen;
++
++	error = vmbus_txbr_write(txbr, iov, 3, &send_evt);
++
++	return error;
 +}
 +
-+static struct hv_driver uio_hv_vmbus_drv = {
-+	.driver.dev_groups = uio_hv_vmbus_client_groups,
-+	.name = "uio_hv_vmbus_client",
-+	.probe = uio_hv_vmbus_probe,
-+	.remove = uio_hv_vmbus_remove,
++static inline uint32_t
++vmbus_rxbr_copyfrom(const struct vmbus_br *rbr, uint32_t rindex,
++		    void *dst0, size_t cplen)
++{
++	const uint8_t *br_data = (uint8_t *)rbr->vbr + RINGDATA_START_OFFSET;
++	uint32_t br_dsize = rbr->dsize;
++	uint8_t *dst = dst0;
++
++	if (cplen > br_dsize - rindex) {
++		uint32_t fraglen = br_dsize - rindex;
++
++		/* Wrap-around detected. */
++		memcpy(dst, br_data + rindex, fraglen);
++		memcpy(dst + fraglen, br_data, cplen - fraglen);
++	} else {
++		memcpy(dst, br_data + rindex, cplen);
++	}
++
++	return vmbus_br_idxinc(rindex, cplen, br_dsize);
++}
++
++/* Copy data from receive ring but don't change index */
++static int
++vmbus_rxbr_peek(const struct vmbus_br *rbr, void *data, size_t dlen)
++{
++	uint32_t avail;
++
++	/*
++	 * The requested data and the 64bits channel packet
++	 * offset should be there at least.
++	 */
++	avail = vmbus_br_availread(rbr);
++	if (avail < dlen + sizeof(uint64_t))
++		return -EAGAIN;
++
++	vmbus_rxbr_copyfrom(rbr, rbr->vbr->rindex, data, dlen);
++	return 0;
++}
++
++/*
++ * Copy data from receive ring and change index
++ * NOTE:
++ * We assume (dlen + skip) == sizeof(channel packet).
++ */
++static int
++vmbus_rxbr_read(struct vmbus_br *rbr, void *data, size_t dlen, size_t skip)
++{
++	struct vmbus_bufring *vbr = rbr->vbr;
++	uint32_t br_dsize = rbr->dsize;
++	uint32_t rindex;
++
++	if (vmbus_br_availread(rbr) < dlen + skip + sizeof(uint64_t))
++		return -EAGAIN;
++
++	/* Record where host was when we started read (for debug) */
++	rbr->windex = rbr->vbr->windex;
++
++	/*
++	 * Copy channel packet from RX bufring.
++	 */
++	rindex = vmbus_br_idxinc(rbr->vbr->rindex, skip, br_dsize);
++	rindex = vmbus_rxbr_copyfrom(rbr, rindex, data, dlen);
++
++	/*
++	 * Discard this channel packet's 64bits offset, which is useless to us.
++	 */
++	rindex = vmbus_br_idxinc(rindex, sizeof(uint64_t), br_dsize);
++
++	/* Update the read index _after_ the channel packet is fetched.	 */
++	rte_compiler_barrier();
++
++	vbr->rindex = rindex;
++
++	return 0;
++}
++
++int rte_vmbus_chan_recv_raw(struct vmbus_br *rxbr,
++			    void *data, uint32_t *len)
++{
++	struct vmbus_chanpkt_hdr pkt;
++	uint32_t dlen, bufferlen = *len;
++	int error;
++
++	error = vmbus_rxbr_peek(rxbr, &pkt, sizeof(pkt));
++	if (error)
++		return error;
++
++	if (unlikely(pkt.hlen < VMBUS_CHANPKT_HLEN_MIN))
++		/* XXX this channel is dead actually. */
++		return -EIO;
++
++	if (unlikely(pkt.hlen > pkt.tlen))
++		return -EIO;
++
++	/* Length are in quad words */
++	dlen = pkt.tlen << VMBUS_CHANPKT_SIZE_SHIFT;
++	*len = dlen;
++
++	/* If caller buffer is not large enough */
++	if (unlikely(dlen > bufferlen))
++		return -ENOBUFS;
++
++	/* Read data and skip packet header */
++	error = vmbus_rxbr_read(rxbr, data, dlen, 0);
++	if (error)
++		return error;
++
++	/* Return the number of bytes read */
++	return dlen + sizeof(uint64_t);
++}
+diff --git a/tools/hv/vmbus_bufring.h b/tools/hv/vmbus_bufring.h
+new file mode 100644
+index 000000000000..5590df90e971
+--- /dev/null
++++ b/tools/hv/vmbus_bufring.h
+@@ -0,0 +1,154 @@
++/* SPDX-License-Identifier: BSD-3-Clause */
++
++#ifndef _VMBUS_BUF_H_
++#define _VMBUS_BUF_H_
++
++#include <stdbool.h>
++#include <stdint.h>
++
++#define __packed   __attribute__((__packed__))
++#define unlikely(x)	__builtin_expect(!!(x), 0)
++
++#define ICMSGHDRFLAG_TRANSACTION	1
++#define ICMSGHDRFLAG_REQUEST		2
++#define ICMSGHDRFLAG_RESPONSE		4
++
++#define IC_VERSION_NEGOTIATION_MAX_VER_COUNT 100
++#define ICMSG_HDR (sizeof(struct vmbuspipe_hdr) + sizeof(struct icmsg_hdr))
++#define ICMSG_NEGOTIATE_PKT_SIZE(icframe_vercnt, icmsg_vercnt) \
++	(ICMSG_HDR + sizeof(struct icmsg_negotiate) + \
++	 (((icframe_vercnt) + (icmsg_vercnt)) * sizeof(struct ic_version)))
++
++/*
++ * Channel packets
++ */
++
++/* Channel packet flags */
++#define VMBUS_CHANPKT_TYPE_INBAND	0x0006
++#define VMBUS_CHANPKT_TYPE_RXBUF	0x0007
++#define VMBUS_CHANPKT_TYPE_GPA		0x0009
++#define VMBUS_CHANPKT_TYPE_COMP		0x000b
++
++#define VMBUS_CHANPKT_FLAG_NONE		0
++#define VMBUS_CHANPKT_FLAG_RC		0x0001  /* report completion */
++
++#define VMBUS_CHANPKT_SIZE_SHIFT	3
++#define VMBUS_CHANPKT_SIZE_ALIGN	BIT(VMBUS_CHANPKT_SIZE_SHIFT)
++#define VMBUS_CHANPKT_HLEN_MIN		\
++	(sizeof(struct vmbus_chanpkt_hdr) >> VMBUS_CHANPKT_SIZE_SHIFT)
++
++/*
++ * Buffer ring
++ */
++struct vmbus_bufring {
++	volatile uint32_t windex;
++	volatile uint32_t rindex;
++
++	/*
++	 * Interrupt mask {0,1}
++	 *
++	 * For TX bufring, host set this to 1, when it is processing
++	 * the TX bufring, so that we can safely skip the TX event
++	 * notification to host.
++	 *
++	 * For RX bufring, once this is set to 1 by us, host will not
++	 * further dispatch interrupts to us, even if there are data
++	 * pending on the RX bufring.  This effectively disables the
++	 * interrupt of the channel to which this RX bufring is attached.
++	 */
++	volatile uint32_t imask;
++
++	/*
++	 * Win8 uses some of the reserved bits to implement
++	 * interrupt driven flow management. On the send side
++	 * we can request that the receiver interrupt the sender
++	 * when the ring transitions from being full to being able
++	 * to handle a message of size "pending_send_sz".
++	 *
++	 * Add necessary state for this enhancement.
++	 */
++	volatile uint32_t pending_send;
++	uint32_t reserved1[12];
++
++	union {
++		struct {
++			uint32_t feat_pending_send_sz:1;
++		};
++		uint32_t value;
++	} feature_bits;
++
++	/*
++	 * Ring data starts after PAGE_SIZE offset (RINGDATA_START_OFFSET).
++	 * !!! DO NOT place any fields below this !!!
++	 */
++	uint8_t data[];
++} __packed;
++
++struct vmbus_br {
++	struct vmbus_bufring *vbr;
++	uint32_t	dsize;
++	uint32_t	windex; /* next available location */
 +};
 +
-+static int __init uio_hv_vmbus_init(void)
++struct vmbus_chanpkt_hdr {
++	uint16_t	type;	/* VMBUS_CHANPKT_TYPE_ */
++	uint16_t	hlen;	/* header len, in 8 bytes */
++	uint16_t	tlen;	/* total len, in 8 bytes */
++	uint16_t	flags;	/* VMBUS_CHANPKT_FLAG_ */
++	uint64_t	xactid;
++} __packed;
++
++struct vmbus_chanpkt {
++	struct vmbus_chanpkt_hdr hdr;
++} __packed;
++
++struct vmbuspipe_hdr {
++	unsigned int flags;
++	unsigned int msgsize;
++} __packed;
++
++struct ic_version {
++	unsigned short major;
++	unsigned short minor;
++} __packed;
++
++struct icmsg_negotiate {
++	unsigned short icframe_vercnt;
++	unsigned short icmsg_vercnt;
++	unsigned int reserved;
++	struct ic_version icversion_data[]; /* any size array */
++} __packed;
++
++struct icmsg_hdr {
++	struct ic_version icverframe;
++	unsigned short icmsgtype;
++	struct ic_version icvermsg;
++	unsigned short icmsgsize;
++	unsigned int status;
++	unsigned char ictransaction_id;
++	unsigned char icflags;
++	unsigned char reserved[2];
++} __packed;
++
++int rte_vmbus_chan_recv_raw(struct vmbus_br *rxbr, void *data, uint32_t *len);
++int rte_vmbus_chan_send(struct vmbus_br *txbr, uint16_t type, void *data,
++			uint32_t dlen, uint32_t flags);
++void vmbus_br_setup(struct vmbus_br *br, void *buf, unsigned int blen);
++
++/* Amount of space available for write */
++static inline uint32_t vmbus_br_availwrite(const struct vmbus_br *br, uint32_t windex)
 +{
-+	return vmbus_driver_register(&uio_hv_vmbus_drv);
++	uint32_t rindex = br->vbr->rindex;
++
++	if (windex >= rindex)
++		return br->dsize - (windex - rindex);
++	else
++		return rindex - windex;
 +}
 +
-+static void __exit uio_hv_vmbus_exit(void)
++static inline uint32_t vmbus_br_availread(const struct vmbus_br *br)
 +{
-+	vmbus_driver_unregister(&uio_hv_vmbus_drv);
++	return br->dsize - vmbus_br_availwrite(br, br->vbr->windex);
 +}
 +
-+module_init(uio_hv_vmbus_init);
-+module_exit(uio_hv_vmbus_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Saurabh Sengar <ssengar@microsoft.com>");
-+MODULE_DESCRIPTION("Generic UIO driver for low speed VMBus devices");
++#endif	/* !_VMBUS_BUF_H_ */
 -- 
 2.34.1
 
