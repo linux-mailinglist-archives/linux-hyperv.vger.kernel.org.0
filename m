@@ -2,270 +2,333 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85D1077046E
-	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Aug 2023 17:24:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29207770690
+	for <lists+linux-hyperv@lfdr.de>; Fri,  4 Aug 2023 19:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232102AbjHDPYB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 4 Aug 2023 11:24:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56994 "EHLO
+        id S231617AbjHDRCG (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 4 Aug 2023 13:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232103AbjHDPXk (ORCPT
+        with ESMTP id S231558AbjHDRCC (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 4 Aug 2023 11:23:40 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01BE4ECA;
-        Fri,  4 Aug 2023 08:23:13 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-2680182bc21so1211168a91.2;
-        Fri, 04 Aug 2023 08:23:13 -0700 (PDT)
+        Fri, 4 Aug 2023 13:02:02 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8202C4EF5;
+        Fri,  4 Aug 2023 10:01:28 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-686ba29ccb1so1591172b3a.1;
+        Fri, 04 Aug 2023 10:01:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691162592; x=1691767392;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ilQ+OtySQykbmOy9rH55sJLBXlE4zan0gUeshOZx4U=;
-        b=fjCSmhXXXjiFcUCVjV/wXBFi1uQXwKZumQQzsVZLfFZ5hVvj2DEFEaHPouVLB5TE9p
-         rjU1+xwjW1BaVAtcVf6n2MmZtA70isRiUMcv8/ZCR0hlMOjRwFWdWBwMY6+pRlh7eTJx
-         UX0NoZwwvk2hlYqb1Ij5ucQCRAB7V+EVx2NyV6kdTUkuUG4afPMUIyKB6ksJwl8rrSkD
-         MlnW1GNIuRYNolc7BcFepHzT3cAdSeD5MCj962U5i1JlD1psD5lz152QI79B37PHqhE/
-         jgDncRzvN1wYES9D3jaL44gBXhVqiUx/5U55PtFJ1/66Op+M+Do8PuLHHo0I6yvt33hL
-         3FHw==
+        d=gmail.com; s=20221208; t=1691168469; x=1691773269;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WObaqnDQ/iXAupXbpWzMz3+E6agqjJItVYYS0SbAZSA=;
+        b=iRs4ksNwFgwbj3c0nlc4svBrz5scKr7mI7z1JHX4KFpOISLor5h98uVuMBASmcPJVq
+         sIzPprFfD+ZLV2VXTPL2qXSb/mEgj1RSoPoE4zFzocxpV26uwDb7mEvJTfzhfPudemay
+         g89IeZtTiYGKa7P+QrYYfR+/0VQ9FgraKhR/dUjiOeJqTQEXT1Ifzd/n3QcgNhgEs2vY
+         n2tJWWRlMb5+YoHQzOLxXxqFDz2k+rJv5Uk+tc9i+KKvagpfqWTPYxBdmyi5UVtyOpU+
+         qGZg0T2MNXzeKXPiU7GWn87dikHrnOKyU23j/4MtGCmGdNrvaBZsuvXozPza65obV5w8
+         +2Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691162592; x=1691767392;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8ilQ+OtySQykbmOy9rH55sJLBXlE4zan0gUeshOZx4U=;
-        b=VtbNSlEA3lQ5/lFzaWtcCIso74gQW3PNSzFHy1GphLhflTcyWiyeiC5zbY3ylyepEp
-         DBpGn+Eng5Rrwz7quyDT2XvhMJeCrMNwfiyn+Law8byUAkkJvIlk5pSMfHA56gpysSnj
-         lwxfUJeMuciikozzncPyYwnZzToQHWTCsd0ptnjoub4hqLPnTTvBsRrbjoxgHZ3LaIcT
-         0fG7PxNpZL5Vmd3RB+okUsYUxXUkKZhkwLqdEy+BgdGL/ZgiM0/HVPJ3tTDbt0OBireQ
-         Oh92VAGMo3cT5028TU0EH6D//EooqbtHkijh/vsrYW08NFHv3ZI8g59vKPUKru5j5yOF
-         riXQ==
-X-Gm-Message-State: AOJu0Ywn+NvI54ZlMIF+a4XzZbSSFqs+P+zhEp5sBBIBk6d8DfD0PVxB
-        VbIoQY1hQCZ2rPj4nuIj6Zw=
-X-Google-Smtp-Source: AGHT+IHw7eZU8kcuuXguiRFJGnk67UxM9091Iw/TOxbnqpvK854OpxpwRnFvB/u+JoEIxLh4dHzwXA==
-X-Received: by 2002:a17:90b:4c51:b0:25e:d727:6fb4 with SMTP id np17-20020a17090b4c5100b0025ed7276fb4mr1710426pjb.2.1691162592540;
-        Fri, 04 Aug 2023 08:23:12 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:f:a0bf:7946:90be:721b])
-        by smtp.gmail.com with ESMTPSA id s21-20020a170902989500b001aaf2e8b1eesm1891325plp.248.2023.08.04.08.23.11
+        d=1e100.net; s=20221208; t=1691168469; x=1691773269;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WObaqnDQ/iXAupXbpWzMz3+E6agqjJItVYYS0SbAZSA=;
+        b=CrToal+FKOPEI1vgsRwvLZU9HxYDfuaw8an0oanm3Y267yZ2kWoH88nKn3CBAgQz78
+         IBxweMv3MGPuybK7we1efKuNbe60RmG9VoADbOE+unnfbyCRkKqIeIhnQZsMdfMTyt5O
+         kOr8S0RpklYUu9Zygeuf3WF8w54Md8xWso4Orq9hHjBJZwDXrQJHlAdc9MFH2eZ07Nn7
+         kWBMii7Rp5b41Yt8+sVJRYz6EMrLp+9s0hUrK2WV/yQOesaCSgIIxwi4DTCQgs4gwZ2n
+         st9kFl+FQAwDjH5wSJ8stzZiHQtUUy/q4IcbiCLZW4RFfGhDlGQjgDY856QuEoG4WAp6
+         6fyA==
+X-Gm-Message-State: AOJu0YxFvU0kKFxrrjDYDW2ZDuygaXhWhQck5JasTlQDPwI8mxjkK3ts
+        yAVhy31Vmb6AL0LZfBOIJe9BBp8ZmQRg1A==
+X-Google-Smtp-Source: AGHT+IEHdOdLV+Oe6y7VXJ6WaskyzbO3Q0qmCYP7899op0jz543xvDB4PePsxr6360ukI+3yW31y/Q==
+X-Received: by 2002:a05:6a20:7283:b0:13e:c03a:7c5d with SMTP id o3-20020a056a20728300b0013ec03a7c5dmr421030pzk.8.1691168468915;
+        Fri, 04 Aug 2023 10:01:08 -0700 (PDT)
+Received: from localhost (ec2-52-8-182-0.us-west-1.compute.amazonaws.com. [52.8.182.0])
+        by smtp.gmail.com with ESMTPSA id v7-20020a632f07000000b005579f12a238sm1393114pgv.86.2023.08.04.10.01.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Aug 2023 08:23:12 -0700 (PDT)
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH V4 9/9] x86/hyperv: Initialize cpu and memory for SEV-SNP enlightened guest
-Date:   Fri,  4 Aug 2023 11:22:53 -0400
-Message-Id: <20230804152254.686317-10-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230804152254.686317-1-ltykernel@gmail.com>
-References: <20230804152254.686317-1-ltykernel@gmail.com>
+        Fri, 04 Aug 2023 10:01:08 -0700 (PDT)
+Date:   Fri, 4 Aug 2023 17:01:07 +0000
+From:   Bobby Eshleman <bobbyeshleman@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     linux-hyperv@vger.kernel.org,
+        Bobby Eshleman <bobby.eshleman@bytedance.com>,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bryan Tan <bryantan@vmware.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Arseniy Krasnov <oxffffaa@gmail.com>,
+        Vishnu Dasa <vdasa@vmware.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH RFC net-next v5 03/14] af_vsock: support multi-transport
+ datagrams
+Message-ID: <ZM0u09yiCDA6Bbmy@bullseye>
+References: <20230413-b4-vsock-dgram-v5-0-581bd37fdb26@bytedance.com>
+ <20230413-b4-vsock-dgram-v5-3-581bd37fdb26@bytedance.com>
+ <43fad7ab-2ca9-608e-566f-80e607d2d6b8@gmail.com>
+ <ZMrXrBHuaEcpxGwA@bullseye>
+ <ZMr6giur//A1hrND@bullseye>
+ <7ioiy325g6bkplp6sqk676sk62wlsxaqy6luwjnnztxsgd3srt@5nh73ct53kr3>
+ <ZMv40KJo/9Pd2Lik@bullseye>
+ <tqynchyi6ceb3d7lbd4cwt6f6hu6ma3nq6dkqfknnmwstgx62w@z2dp5ybgmx4s>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tqynchyi6ceb3d7lbd4cwt6f6hu6ma3nq6dkqfknnmwstgx62w@z2dp5ybgmx4s>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <tiala@microsoft.com>
+On Fri, Aug 04, 2023 at 04:11:58PM +0200, Stefano Garzarella wrote:
+> On Thu, Aug 03, 2023 at 06:58:24PM +0000, Bobby Eshleman wrote:
+> > On Thu, Aug 03, 2023 at 02:42:26PM +0200, Stefano Garzarella wrote:
+> > > On Thu, Aug 03, 2023 at 12:53:22AM +0000, Bobby Eshleman wrote:
+> > > > On Wed, Aug 02, 2023 at 10:24:44PM +0000, Bobby Eshleman wrote:
+> > > > > On Sun, Jul 23, 2023 at 12:53:15AM +0300, Arseniy Krasnov wrote:
+> > > > > >
+> > > > > >
+> > > > > > On 19.07.2023 03:50, Bobby Eshleman wrote:
+> > > > > > > This patch adds support for multi-transport datagrams.
+> > > > > > >
+> > > > > > > This includes:
+> > > > > > > - Per-packet lookup of transports when using sendto(sockaddr_vm)
+> > > > > > > - Selecting H2G or G2H transport using VMADDR_FLAG_TO_HOST and CID in
+> > > > > > >   sockaddr_vm
+> > > > > > > - rename VSOCK_TRANSPORT_F_DGRAM to VSOCK_TRANSPORT_F_DGRAM_FALLBACK
+> > > > > > > - connect() now assigns the transport for (similar to connectible
+> > > > > > >   sockets)
+> > > > > > >
+> > > > > > > To preserve backwards compatibility with VMCI, some important changes
+> > > > > > > are made. The "transport_dgram" / VSOCK_TRANSPORT_F_DGRAM is changed to
+> > > > > > > be used for dgrams only if there is not yet a g2h or h2g transport that
+> > > > > > > has been registered that can transmit the packet. If there is a g2h/h2g
+> > > > > > > transport for that remote address, then that transport will be used and
+> > > > > > > not "transport_dgram". This essentially makes "transport_dgram" a
+> > > > > > > fallback transport for when h2g/g2h has not yet gone online, and so it
+> > > > > > > is renamed "transport_dgram_fallback". VMCI implements this transport.
+> > > > > > >
+> > > > > > > The logic around "transport_dgram" needs to be retained to prevent
+> > > > > > > breaking VMCI:
+> > > > > > >
+> > > > > > > 1) VMCI datagrams existed prior to h2g/g2h and so operate under a
+> > > > > > >    different paradigm. When the vmci transport comes online, it registers
+> > > > > > >    itself with the DGRAM feature, but not H2G/G2H. Only later when the
+> > > > > > >    transport has more information about its environment does it register
+> > > > > > >    H2G or G2H.  In the case that a datagram socket is created after
+> > > > > > >    VSOCK_TRANSPORT_F_DGRAM registration but before G2H/H2G registration,
+> > > > > > >    the "transport_dgram" transport is the only registered transport and so
+> > > > > > >    needs to be used.
+> > > > > > >
+> > > > > > > 2) VMCI seems to require a special message be sent by the transport when a
+> > > > > > >    datagram socket calls bind(). Under the h2g/g2h model, the transport
+> > > > > > >    is selected using the remote_addr which is set by connect(). At
+> > > > > > >    bind time there is no remote_addr because often no connect() has been
+> > > > > > >    called yet: the transport is null. Therefore, with a null transport
+> > > > > > >    there doesn't seem to be any good way for a datagram socket to tell the
+> > > > > > >    VMCI transport that it has just had bind() called upon it.
+> > > > > > >
+> > > > > > > With the new fallback logic, after H2G/G2H comes online the socket layer
+> > > > > > > will access the VMCI transport via transport_{h2g,g2h}. Prior to H2G/G2H
+> > > > > > > coming online, the socket layer will access the VMCI transport via
+> > > > > > > "transport_dgram_fallback".
+> > > > > > >
+> > > > > > > Only transports with a special datagram fallback use-case such as VMCI
+> > > > > > > need to register VSOCK_TRANSPORT_F_DGRAM_FALLBACK.
+> > > > > > >
+> > > > > > > Signed-off-by: Bobby Eshleman <bobby.eshleman@bytedance.com>
+> > > > > > > ---
+> > > > > > >  drivers/vhost/vsock.c                   |  1 -
+> > > > > > >  include/linux/virtio_vsock.h            |  2 --
+> > > > > > >  include/net/af_vsock.h                  | 10 +++---
+> > > > > > >  net/vmw_vsock/af_vsock.c                | 64 ++++++++++++++++++++++++++-------
+> > > > > > >  net/vmw_vsock/hyperv_transport.c        |  6 ----
+> > > > > > >  net/vmw_vsock/virtio_transport.c        |  1 -
+> > > > > > >  net/vmw_vsock/virtio_transport_common.c |  7 ----
+> > > > > > >  net/vmw_vsock/vmci_transport.c          |  2 +-
+> > > > > > >  net/vmw_vsock/vsock_loopback.c          |  1 -
+> > > > > > >  9 files changed, 58 insertions(+), 36 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> > > > > > > index ae8891598a48..d5d6a3c3f273 100644
+> > > > > > > --- a/drivers/vhost/vsock.c
+> > > > > > > +++ b/drivers/vhost/vsock.c
+> > > > > > > @@ -410,7 +410,6 @@ static struct virtio_transport vhost_transport = {
+> > > > > > >  		.cancel_pkt               = vhost_transport_cancel_pkt,
+> > > > > > >
+> > > > > > >  		.dgram_enqueue            = virtio_transport_dgram_enqueue,
+> > > > > > > -		.dgram_bind               = virtio_transport_dgram_bind,
+> > > > > > >  		.dgram_allow              = virtio_transport_dgram_allow,
+> > > > > > >
+> > > > > > >  		.stream_enqueue           = virtio_transport_stream_enqueue,
+> > > > > > > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> > > > > > > index 18cbe8d37fca..7632552bee58 100644
+> > > > > > > --- a/include/linux/virtio_vsock.h
+> > > > > > > +++ b/include/linux/virtio_vsock.h
+> > > > > > > @@ -211,8 +211,6 @@ void virtio_transport_notify_buffer_size(struct vsock_sock *vsk, u64 *val);
+> > > > > > >  u64 virtio_transport_stream_rcvhiwat(struct vsock_sock *vsk);
+> > > > > > >  bool virtio_transport_stream_is_active(struct vsock_sock *vsk);
+> > > > > > >  bool virtio_transport_stream_allow(u32 cid, u32 port);
+> > > > > > > -int virtio_transport_dgram_bind(struct vsock_sock *vsk,
+> > > > > > > -				struct sockaddr_vm *addr);
+> > > > > > >  bool virtio_transport_dgram_allow(u32 cid, u32 port);
+> > > > > > >
+> > > > > > >  int virtio_transport_connect(struct vsock_sock *vsk);
+> > > > > > > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> > > > > > > index 305d57502e89..f6a0ca9d7c3e 100644
+> > > > > > > --- a/include/net/af_vsock.h
+> > > > > > > +++ b/include/net/af_vsock.h
+> > > > > > > @@ -96,13 +96,13 @@ struct vsock_transport_send_notify_data {
+> > > > > > >
+> > > > > > >  /* Transport features flags */
+> > > > > > >  /* Transport provides host->guest communication */
+> > > > > > > -#define VSOCK_TRANSPORT_F_H2G		0x00000001
+> > > > > > > +#define VSOCK_TRANSPORT_F_H2G			0x00000001
+> > > > > > >  /* Transport provides guest->host communication */
+> > > > > > > -#define VSOCK_TRANSPORT_F_G2H		0x00000002
+> > > > > > > -/* Transport provides DGRAM communication */
+> > > > > > > -#define VSOCK_TRANSPORT_F_DGRAM		0x00000004
+> > > > > > > +#define VSOCK_TRANSPORT_F_G2H			0x00000002
+> > > > > > > +/* Transport provides fallback for DGRAM communication */
+> > > > > > > +#define VSOCK_TRANSPORT_F_DGRAM_FALLBACK	0x00000004
+> > > > > > >  /* Transport provides local (loopback) communication */
+> > > > > > > -#define VSOCK_TRANSPORT_F_LOCAL		0x00000008
+> > > > > > > +#define VSOCK_TRANSPORT_F_LOCAL			0x00000008
+> > > > > > >
+> > > > > > >  struct vsock_transport {
+> > > > > > >  	struct module *module;
+> > > > > > > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> > > > > > > index ae5ac5531d96..26c97b33d55a 100644
+> > > > > > > --- a/net/vmw_vsock/af_vsock.c
+> > > > > > > +++ b/net/vmw_vsock/af_vsock.c
+> > > > > > > @@ -139,8 +139,8 @@ struct proto vsock_proto = {
+> > > > > > >  static const struct vsock_transport *transport_h2g;
+> > > > > > >  /* Transport used for guest->host communication */
+> > > > > > >  static const struct vsock_transport *transport_g2h;
+> > > > > > > -/* Transport used for DGRAM communication */
+> > > > > > > -static const struct vsock_transport *transport_dgram;
+> > > > > > > +/* Transport used as a fallback for DGRAM communication */
+> > > > > > > +static const struct vsock_transport *transport_dgram_fallback;
+> > > > > > >  /* Transport used for local communication */
+> > > > > > >  static const struct vsock_transport *transport_local;
+> > > > > > >  static DEFINE_MUTEX(vsock_register_mutex);
+> > > > > > > @@ -439,6 +439,18 @@ vsock_connectible_lookup_transport(unsigned int cid, __u8 flags)
+> > > > > > >  	return transport;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static const struct vsock_transport *
+> > > > > > > +vsock_dgram_lookup_transport(unsigned int cid, __u8 flags)
+> > > > > > > +{
+> > > > > > > +	const struct vsock_transport *transport;
+> > > > > > > +
+> > > > > > > +	transport = vsock_connectible_lookup_transport(cid, flags);
+> > > > > > > +	if (transport)
+> > > > > > > +		return transport;
+> > > > > > > +
+> > > > > > > +	return transport_dgram_fallback;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  /* Assign a transport to a socket and call the .init transport callback.
+> > > > > > >   *
+> > > > > > >   * Note: for connection oriented socket this must be called when vsk->remote_addr
+> > > > > > > @@ -475,7 +487,8 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+> > > > > > >
+> > > > > > >  	switch (sk->sk_type) {
+> > > > > > >  	case SOCK_DGRAM:
+> > > > > > > -		new_transport = transport_dgram;
+> > > > > > > +		new_transport = vsock_dgram_lookup_transport(remote_cid,
+> > > > > > > +							     remote_flags);
+> > > > > >
+> > > > > > I'm a little bit confused about this:
+> > > > > > 1) Let's create SOCK_DGRAM socket using vsock_create()
+> > > > > > 2) for SOCK_DGRAM it calls 'vsock_assign_transport()' and we go here, remote_cid == -1
+> > > > > > 3) I guess 'vsock_dgram_lookup_transport()' calls logic from 0002 and returns h2g for such remote cid, which is not
+> > > > > >    correct I think...
+> > > > > >
+> > > > > > Please correct me if i'm wrong
+> > > > > >
+> > > > > > Thanks, Arseniy
+> > > > > >
+> > > > >
+> > > > > As I understand, for the VMCI case, if transport_h2g != NULL, then
+> > > > > transport_h2g == transport_dgram_fallback. In either case,
+> > > > > vsk->transport == transport_dgram_fallback.
+> > > > >
+> > > > > For the virtio/vhost case, temporarily vsk->transport == transport_h2g,
+> > > > > but it is unused because vsk->transport->dgram_bind == NULL.
+> > > > >
+> > > > > Until SS_CONNECTED is set by connect() and vsk->transport is set
+> > > > > correctly, the send path is barred from using the bad transport.
+> > > > >
+> > > > > I guess the recvmsg() path is a little more sketchy, and probably only
+> > > > > works in my test cases because h2g/g2h in the vhost/virtio case have
+> > > > > identical dgram_addr_init() implementations.
+> > > > >
+> > > > > I think a cleaner solution is maybe checking in vsock_create() if
+> > > > > dgram_bind is implemented. If it is not, then vsk->transport should be
+> > > > > reset to NULL and a comment added explaining why VMCI requires this.
+> > > > >
+> > > > > Then the other calls can begin explicitly checking for vsk->transport ==
+> > > > > NULL.
+> > > >
+> > > > Actually, on further reflection here, in order for the vsk->transport to
+> > > > be called in time for ->dgram_addr_init(), it is going to be necessary
+> > > > to call vsock_assign_transport() in vsock_dgram_bind() anyway.
+> > > >
+> > > > I think this means that the vsock_assign_transport() call can be removed
+> > > > from vsock_create() call entirely, and yet VMCI can still dispatch
+> > > > messages upon bind() calls as needed.
+> > > >
+> > > > This would then simplify the whole arrangement, if there aren't other
+> > > > unseen issues.
+> > > 
+> > > This sounds like a good approach.
+> > > 
+> > > My only question is whether vsock_dgram_bind() is always called for each
+> > > dgram socket.
+> > > 
+> > 
+> > No, not yet.
+> > 
+> > Currently, receivers may use vsock_dgram_recvmsg() prior to any bind,
+> > but this should probably change.
+> > 
+> > For UDP, if we initialize a socket and call recvmsg() with no prior
+> > bind, then the socket will be auto-bound to 0.0.0.0. I guess vsock
+> > should probably also auto-bind in this case.
+> 
+> I see.
+> 
+> > 
+> > For other cases, bind may not be called prior to calls to vsock_poll() /
+> > vsock_getname() (even if it doesn't make sense to do so), but I think it
+> > is okay as long as vsk->transport is not used.
+> 
+> Makes sense.
+> 
+> > 
+> > vsock_dgram_sendmsg() always auto-binds if needed.
+> 
+> Okay, but the transport for sending messages, doesn't depend on the
+> local address, right?
 
-Hyper-V enlightened guest doesn't have boot loader support.
-Boot Linux kernel directly from hypervisor with data (kernel
-image, initrd and parameter page) and memory for boot up that
-is initialized via AMD SEV PSP protocol (Please reference
-Section 4.5 Launching a Guest of [1]).
+That is correct.
 
-Kernel needs to read processor and memory info from EN_SEV_
-SNP_PROCESSOR/MEM_INFO_ADDR address which are populated by
-Hyper-V. The data is prepared by hypervisor via SNP_
-LAUNCH_UPDATE with page type SNP_PAGE_TYPE_UNMEASURED and
-Initialize smp cpu related ops, validate system memory and
-add them into e820 table.
-
-[1]: https://www.amd.com/system/files/TechDocs/56860.pdf
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <tiala@microsoft.com>
----
-Change since v2:
-	* Update change log.
----
- arch/x86/hyperv/ivm.c           | 88 +++++++++++++++++++++++++++++++++
- arch/x86/include/asm/mshyperv.h | 17 +++++++
- arch/x86/kernel/cpu/mshyperv.c  |  3 ++
- 3 files changed, 108 insertions(+)
-
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index ee08a0cd6da3..e86b2a54cdfd 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -67,6 +67,8 @@ union hv_ghcb {
- 
- static u16 hv_ghcb_version __ro_after_init;
- 
-+static u32 processor_count;
-+
- u64 hv_ghcb_hypercall(u64 control, void *input, void *output, u32 input_size)
- {
- 	union hv_ghcb *hv_ghcb;
-@@ -457,6 +459,92 @@ int hv_snp_boot_ap(int cpu, unsigned long start_ip)
- 	return ret;
- }
- 
-+static __init void hv_snp_get_smp_config(unsigned int early)
-+{
-+	/*
-+	 * The "early" parameter can be true only if old-style AMD
-+	 * Opteron NUMA detection is enabled, which should never be
-+	 * the case for an SEV-SNP guest.  See CONFIG_AMD_NUMA.
-+	 * For safety, just do nothing if "early" is true.
-+	 */
-+	if (early)
-+		return;
-+
-+	/*
-+	 * There is no firmware and ACPI MADT table support in
-+	 * in the Hyper-V SEV-SNP enlightened guest. Set smp
-+	 * related config variable here.
-+	 */
-+	while (num_processors < processor_count) {
-+		early_per_cpu(x86_cpu_to_apicid, num_processors) = num_processors;
-+		early_per_cpu(x86_bios_cpu_apicid, num_processors) = num_processors;
-+		physid_set(num_processors, phys_cpu_present_map);
-+		set_cpu_possible(num_processors, true);
-+		set_cpu_present(num_processors, true);
-+		num_processors++;
-+	}
-+}
-+
-+__init void hv_sev_init_mem_and_cpu(void)
-+{
-+	struct memory_map_entry *entry;
-+	struct e820_entry *e820_entry;
-+	u64 e820_end;
-+	u64 ram_end;
-+	u64 page;
-+
-+	/*
-+	 * Hyper-V enlightened snp guest boots kernel
-+	 * directly without bootloader. So roms, bios
-+	 * regions and reserve resources are not available.
-+	 * Set these callback to NULL.
-+	 */
-+	x86_platform.legacy.rtc			= 0;
-+	x86_platform.legacy.reserve_bios_regions = 0;
-+	x86_platform.set_wallclock		= set_rtc_noop;
-+	x86_platform.get_wallclock		= get_rtc_noop;
-+	x86_init.resources.probe_roms		= x86_init_noop;
-+	x86_init.resources.reserve_resources	= x86_init_noop;
-+	x86_init.mpparse.find_smp_config	= x86_init_noop;
-+	x86_init.mpparse.get_smp_config		= hv_snp_get_smp_config;
-+
-+	/*
-+	 * Hyper-V SEV-SNP enlightened guest doesn't support ioapic
-+	 * and legacy APIC page read/write.
-+	 */
-+	disable_ioapic_support();
-+
-+	/* Get processor and mem info. */
-+	processor_count = *(u32 *)__va(EN_SEV_SNP_PROCESSOR_INFO_ADDR);
-+	entry = (struct memory_map_entry *)__va(EN_SEV_SNP_MEM_INFO_ADDR);
-+
-+	/*
-+	 * There is no bootloader/EFI firmware in the SEV SNP guest.
-+	 * E820 table in the memory just describes memory for kernel,
-+	 * ACPI table, cmdline, boot params and ramdisk. The dynamic
-+	 * data(e.g, vcpu number and the rest memory layout) needs to
-+	 * be read from EN_SEV_SNP_PROCESSOR_INFO_ADDR.
-+	 */
-+	for (; entry->numpages != 0; entry++) {
-+		e820_entry = &e820_table->entries[
-+				e820_table->nr_entries - 1];
-+		e820_end = e820_entry->addr + e820_entry->size;
-+		ram_end = (entry->starting_gpn +
-+			   entry->numpages) * PAGE_SIZE;
-+
-+		if (e820_end < entry->starting_gpn * PAGE_SIZE)
-+			e820_end = entry->starting_gpn * PAGE_SIZE;
-+
-+		if (e820_end < ram_end) {
-+			pr_info("Hyper-V: add e820 entry [mem %#018Lx-%#018Lx]\n", e820_end, ram_end - 1);
-+			e820__range_add(e820_end, ram_end - e820_end,
-+					E820_TYPE_RAM);
-+			for (page = e820_end; page < ram_end; page += PAGE_SIZE)
-+				pvalidate((unsigned long)__va(page), RMP_PG_SIZE_4K, true);
-+		}
-+	}
-+}
-+
- void __init hv_vtom_init(void)
- {
- 	/*
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 5173c3524873..c8f33a7af90e 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -57,6 +57,21 @@ extern union hv_ghcb * __percpu *hv_ghcb_pg;
- #define HV_AP_INIT_GPAT_DEFAULT		0x0007040600070406ULL
- #define HV_AP_SEGMENT_LIMIT		0xffffffff
- 
-+/*
-+ * Hyper-V puts processor and memory layout info
-+ * to this address in SEV-SNP enlightened guest.
-+ */
-+#define EN_SEV_SNP_PROCESSOR_INFO_ADDR  0x802000
-+#define EN_SEV_SNP_MEM_INFO_ADDR	0x802018
-+
-+struct memory_map_entry {
-+	u64 starting_gpn;
-+	u64 numpages;
-+	u16 type;
-+	u16 flags;
-+	u32 reserved;
-+};
-+
- int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages);
- int hv_call_add_logical_proc(int node, u32 lp_index, u32 acpi_id);
- int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags);
-@@ -242,6 +257,7 @@ bool hv_ghcb_negotiate_protocol(void);
- void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
- void hv_vtom_init(void);
- int hv_snp_boot_ap(int cpu, unsigned long start_ip);
-+void hv_sev_init_mem_and_cpu(void);
- #else
- static inline void hv_ghcb_msr_write(u64 msr, u64 value) {}
- static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
-@@ -249,6 +265,7 @@ static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
- static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
- static inline void hv_vtom_init(void) {}
- static int hv_snp_boot_ap(int cpu, unsigned long start_ip) {}
-+static inline void hv_sev_init_mem_and_cpu(void) {}
- #endif
- 
- extern bool hv_isolation_type_snp(void);
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 29e836b950e1..ba9a3a65f664 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -539,6 +539,9 @@ static void __init ms_hyperv_init_platform(void)
- 	if (!(ms_hyperv.features & HV_ACCESS_TSC_INVARIANT))
- 		mark_tsc_unstable("running on Hyper-V");
- 
-+	if (hv_isolation_type_en_snp())
-+		hv_sev_init_mem_and_cpu();
-+
- 	hardlockup_detector_disable();
- }
- 
--- 
-2.25.1
-
+Best,
+Bobby
