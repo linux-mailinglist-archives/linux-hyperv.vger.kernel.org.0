@@ -2,38 +2,48 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FBB4771D88
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Aug 2023 11:52:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03919771EC4
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Aug 2023 12:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjHGJwF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Aug 2023 05:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
+        id S229934AbjHGKuN (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Aug 2023 06:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbjHGJwE (ORCPT
+        with ESMTP id S229587AbjHGKuN (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Aug 2023 05:52:04 -0400
+        Mon, 7 Aug 2023 06:50:13 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C316D1BCD;
-        Mon,  7 Aug 2023 02:51:44 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4C043208694F;
-        Mon,  7 Aug 2023 02:51:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4C043208694F
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8DE4F97;
+        Mon,  7 Aug 2023 03:50:11 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id 0934220861E6; Mon,  7 Aug 2023 03:50:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0934220861E6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1691401862;
-        bh=I8JPvW2x4wvhQ88X64Egmr5ves+Y3CqToeE6x4H3cos=;
+        s=default; t=1691405411;
+        bh=wlQbnMoNYTIUFTlnlboiUtcBjn9Zi3YpgrgIpoIIo50=;
         h=From:To:Cc:Subject:Date:From;
-        b=l+M2Sgvx6w0bgLv9XXrQoQ/gVH46rV69/VdKwlhKbdqKgMZ2A5+EXQ9B7lutxuq76
-         U9QQGAGv0/Mops1yLwpjZ2Pc4I69vqAwCV80g2KHbLkBh5ZLTCz0mx2WBAa/ONFa5D
-         LYFVdF5MNiL8PMglP0jIoH2zNyyQIxz/KJ4WOIW0=
-From:   Saurabh Sengar <ssengar@linux.microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ssengar@microsoft.com
-Subject: [PATCH] hv: hyperv.h: Replace one-element array with flexible-array member
-Date:   Mon,  7 Aug 2023 02:50:53 -0700
-Message-Id: <1691401853-26974-1-git-send-email-ssengar@linux.microsoft.com>
+        b=dlOGbRyrSv17W9cUwr1k3usY+YYbMg3mPLJE1zT5RD0L/qSPnOjkkdorJGTjmpFUE
+         oDxf7XE724F1YLxTAtXKtdo790ZfsNo0BZGJVgmPRkR19ukoBa10UADPyXEgVJpJvx
+         bRZ3KFICIGTynxws/Kb8wbqVAuEY7SfGkwKLC2dY=
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Ajay Sharma <sharmaajay@microsoft.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH net-next] net: mana: Add gdma stats to ethtool output for mana
+Date:   Mon,  7 Aug 2023 03:50:02 -0700
+Message-Id: <1691405402-2641-1-git-send-email-shradhagupta@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
@@ -45,83 +55,227 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-One-element and zero-length arrays are deprecated. Replace one-element
-array in struct vmtransfer_page_packet_header with flexible-array
-member. This change fixes below warning:
+Extended performance counter stats in 'ethtool -S <interface>'
+for MANA VF to include GDMA tx LSO packets and bytes count.
 
-[    2.593788] ================================================================================
-[    2.593908] UBSAN: array-index-out-of-bounds in drivers/net/hyperv/netvsc.c:1445:41
-[    2.593989] index 1 is out of range for type 'vmtransfer_page_range [1]'
-[    2.594049] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.5.0-rc4-next-20230803+ #1
-[    2.594114] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 04/20/2023
-[    2.594121] Call Trace:
-[    2.594126]  <IRQ>
-[    2.594133]  dump_stack_lvl+0x4c/0x70
-[    2.594154]  dump_stack+0x14/0x20
-[    2.594162]  __ubsan_handle_out_of_bounds+0xa6/0xf0
-[    2.594224]  netvsc_poll+0xc01/0xc90 [hv_netvsc]
-[    2.594258]  __napi_poll+0x30/0x1e0
-[    2.594320]  net_rx_action+0x194/0x2f0
-[    2.594333]  __do_softirq+0xde/0x31e
-[    2.594345]  __irq_exit_rcu+0x6b/0x90
-[    2.594357]  irq_exit_rcu+0x12/0x20
-[    2.594366]  sysvec_hyperv_callback+0x84/0x90
-[    2.594376]  </IRQ>
-[    2.594379]  <TASK>
-[    2.594383]  asm_sysvec_hyperv_callback+0x1f/0x30
-[    2.594394] RIP: 0010:pv_native_safe_halt+0xf/0x20
-[    2.594452] Code: 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 05 35 3f 00 fb f4 <c3> cc cc cc cc 66 2e 0f 1f 84 00 00 00 00 00 66 90 90 90 90 90 90
-[    2.594459] RSP: 0018:ffffb841c00d3e88 EFLAGS: 00000256
-[    2.594469] RAX: ffff9d18c326f4a0 RBX: ffff9d18c031df40 RCX: 4000000000000000
-[    2.594475] RDX: 0000000000000001 RSI: 0000000000000082 RDI: 00000000000268dc
-[    2.594481] RBP: ffffb841c00d3e90 R08: 00000066a171109b R09: 00000000d33d2600
-[    2.594486] R10: 000000009a41bf00 R11: 0000000000000000 R12: 0000000000000001
-[    2.594491] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    2.594501]  ? ct_kernel_exit.constprop.0+0x7d/0x90
-[    2.594513]  ? default_idle+0xd/0x20
-[    2.594523]  arch_cpu_idle+0xd/0x20
-[    2.594532]  default_idle_call+0x30/0xe0
-[    2.594542]  do_idle+0x200/0x240
-[    2.594553]  ? complete+0x71/0x80
-[    2.594613]  cpu_startup_entry+0x24/0x30
-[    2.594624]  start_secondary+0x12d/0x160
-[    2.594634]  secondary_startup_64_no_verify+0x17e/0x18b
-[    2.594649]  </TASK>
-[    2.594656] ================================================================================
-
-With this change the structure size is reduced by 8 bytes, below is the
-pahole output.
-
-struct vmtransfer_page_packet_header {
-	struct vmpacket_descriptor d;                    /*     0    16 */
-	u16                        xfer_pageset_id;      /*    16     2 */
-	u8                         sender_owns_set;      /*    18     1 */
-	u8                         reserved;             /*    19     1 */
-	u32                        range_cnt;            /*    20     4 */
-	struct vmtransfer_page_range ranges[];           /*    24     0 */
-
-	/* size: 24, cachelines: 1, members: 6 */
-	/* last cacheline: 24 bytes */
-};
-
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Tested-on: Ubuntu22
+Testcases:
+1. LISA testcase:
+PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
+2. LISA testcase:
+PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
+3. Validated the GDMA stat packets and byte counters
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- include/linux/hyperv.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 40 +++++++++
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 15 ++++
+ include/net/mana/mana.h                       | 88 +++++++++++++++++++
+ 3 files changed, 143 insertions(+)
 
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index bfbc37ce223b..c529f407bfb8 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -348,7 +348,7 @@ struct vmtransfer_page_packet_header {
- 	u8  sender_owns_set;
- 	u8 reserved;
- 	u32 range_cnt;
--	struct vmtransfer_page_range ranges[1];
-+	struct vmtransfer_page_range ranges[];
- } __packed;
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index ac2acc9aca9d..eb5e4164b9bf 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -2234,6 +2234,46 @@ int mana_config_rss(struct mana_port_context *apc, enum TRI_STATE rx,
+ 	return 0;
+ }
  
- struct vmgpadl_packet_header {
++void mana_query_gf_stats(struct mana_port_context *apc)
++{
++	struct mana_query_gf_stat_req	req = {};
++	struct mana_query_gf_stat_resp resp = {};
++	struct net_device *ndev = apc->ndev;
++	int err;
++
++	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_GF_STAT,
++			     sizeof(req), sizeof(resp));
++	req.req_stats = STATISTICS_FLAGS_HC_TX_BYTES |
++			STATISTICS_FLAGS_HC_TX_UCAST_PACKETS |
++			STATISTICS_FLAGS_HC_TX_UCAST_BYTES |
++			STATISTICS_FLAGS_HC_TX_MCAST_PACKETS |
++			STATISTICS_FLAGS_HC_TX_MCAST_BYTES |
++			STATISTICS_FLAGS_HC_TX_BCAST_PACKETS |
++			STATISTICS_FLAGS_HC_TX_BCAST_BYTES;
++
++	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
++				sizeof(resp));
++	if (err) {
++		netdev_err(ndev, "Failed to query GF stats: %d\n", err);
++		return;
++	}
++	err = mana_verify_resp_hdr(&resp.hdr, MANA_QUERY_GF_STAT,
++				   sizeof(resp));
++	if (err || resp.hdr.status) {
++		netdev_err(ndev, "Failed to query GF stats: %d, 0x%x\n", err,
++			   resp.hdr.status);
++		return;
++	}
++
++	apc->eth_stats.hc_tx_bytes = resp.hc_tx_bytes;
++	apc->eth_stats.hc_tx_ucast_pkts = resp.hc_tx_ucast_pkts;
++	apc->eth_stats.hc_tx_ucast_bytes = resp.hc_tx_ucast_bytes;
++	apc->eth_stats.hc_tx_bcast_pkts = resp.hc_tx_bcast_pkts;
++	apc->eth_stats.hc_tx_bcast_bytes = resp.hc_tx_bcast_bytes;
++	apc->eth_stats.hc_tx_mcast_pkts = resp.hc_tx_mcast_pkts;
++	apc->eth_stats.hc_tx_mcast_bytes = resp.hc_tx_mcast_bytes;
++}
++
+ static int mana_init_port(struct net_device *ndev)
+ {
+ 	struct mana_port_context *apc = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+index 0dc78679f620..607150165ab4 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
+@@ -13,6 +13,19 @@ static const struct {
+ } mana_eth_stats[] = {
+ 	{"stop_queue", offsetof(struct mana_ethtool_stats, stop_queue)},
+ 	{"wake_queue", offsetof(struct mana_ethtool_stats, wake_queue)},
++	{"hc_tx_bytes", offsetof(struct mana_ethtool_stats, hc_tx_bytes)},
++	{"hc_tx_ucast_pkts", offsetof(struct mana_ethtool_stats,
++					hc_tx_ucast_pkts)},
++	{"hc_tx_ucast_bytes", offsetof(struct mana_ethtool_stats,
++					hc_tx_ucast_bytes)},
++	{"hc_tx_bcast_pkts", offsetof(struct mana_ethtool_stats,
++					hc_tx_bcast_pkts)},
++	{"hc_tx_bcast_bytes", offsetof(struct mana_ethtool_stats,
++					hc_tx_bcast_bytes)},
++	{"hc_tx_mcast_pkts", offsetof(struct mana_ethtool_stats,
++					hc_tx_mcast_pkts)},
++	{"hc_tx_mcast_bytes", offsetof(struct mana_ethtool_stats,
++					hc_tx_mcast_bytes)},
+ 	{"tx_cq_err", offsetof(struct mana_ethtool_stats, tx_cqe_err)},
+ 	{"tx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
+ 					tx_cqe_unknown_type)},
+@@ -114,6 +127,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
+ 
+ 	if (!apc->port_is_up)
+ 		return;
++	/* we call mana function to update stats from GDMA */
++	mana_query_gf_stats(apc);
+ 
+ 	for (q = 0; q < ARRAY_SIZE(mana_eth_stats); q++)
+ 		data[i++] = *(u64 *)(eth_stats + mana_eth_stats[q].offset);
+diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
+index 024ad8ddb27e..1a751c73e69a 100644
+--- a/include/net/mana/mana.h
++++ b/include/net/mana/mana.h
+@@ -347,6 +347,13 @@ struct mana_tx_qp {
+ struct mana_ethtool_stats {
+ 	u64 stop_queue;
+ 	u64 wake_queue;
++	u64 hc_tx_bytes;
++	u64 hc_tx_ucast_pkts;
++	u64 hc_tx_ucast_bytes;
++	u64 hc_tx_bcast_pkts;
++	u64 hc_tx_bcast_bytes;
++	u64 hc_tx_mcast_pkts;
++	u64 hc_tx_mcast_bytes;
+ 	u64 tx_cqe_err;
+ 	u64 tx_cqe_unknown_type;
+ 	u64 rx_coalesced_err;
+@@ -437,6 +444,7 @@ u32 mana_run_xdp(struct net_device *ndev, struct mana_rxq *rxq,
+ struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
+ void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
+ int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
++void mana_query_gf_stats(struct mana_port_context *apc);
+ 
+ extern const struct ethtool_ops mana_ethtool_ops;
+ 
+@@ -578,6 +586,49 @@ struct mana_fence_rq_resp {
+ 	struct gdma_resp_hdr hdr;
+ }; /* HW DATA */
+ 
++/* Query stats RQ */
++struct mana_query_gf_stat_req {
++	struct gdma_req_hdr hdr;
++	u64 req_stats;
++}; /* HW DATA */
++
++struct mana_query_gf_stat_resp {
++	struct gdma_resp_hdr hdr;
++	u64 reported_stats;
++	/* rx errors/discards */
++	u64 discard_rx_nowqe;
++	u64 err_rx_vport_disabled;
++	/* rx bytes/packets */
++	u64 hc_rx_bytes;
++	u64 hc_rx_ucast_pkts;
++	u64 hc_rx_ucast_bytes;
++	u64 hc_rx_bcast_pkts;
++	u64 hc_rx_bcast_bytes;
++	u64 hc_rx_mcast_pkts;
++	u64 hc_rx_mcast_bytes;
++	/* tx errors */
++	u64 err_tx_gf_disabled;
++	u64 err_tx_vport_disabled;
++	u64 err_tx_inval_vport_offset_pkt;
++	u64 err_tx_vlan_enforcement;
++	u64 err_tx_ethtype_enforcement;
++	u64 err_tx_SA_enforecement;
++	u64 err_tx_SQPDID_enforcement;
++	u64 err_tx_CQPDID_enforcement;
++	u64 err_tx_mtu_violation;
++	u64 err_tx_inval_oob;
++	/* tx bytes/packets */
++	u64 hc_tx_bytes;
++	u64 hc_tx_ucast_pkts;
++	u64 hc_tx_ucast_bytes;
++	u64 hc_tx_bcast_pkts;
++	u64 hc_tx_bcast_bytes;
++	u64 hc_tx_mcast_pkts;
++	u64 hc_tx_mcast_bytes;
++	/* tx error */
++	u64 err_tx_gdma;
++}; /* HW DATA */
++
+ /* Configure vPort Rx Steering */
+ struct mana_cfg_rx_steer_req_v2 {
+ 	struct gdma_req_hdr hdr;
+@@ -657,6 +708,43 @@ struct mana_deregister_filter_resp {
+ 	struct gdma_resp_hdr hdr;
+ }; /* HW DATA */
+ 
++/* Requested GF stats Flags */
++/* Rx discards/Errors */
++#define STATISTICS_FLAGS_RX_DISCARDS_NO_WQE		0x0000000000000001
++#define STATISTICS_FLAGS_RX_ERRORS_VPORT_DISABLED	0x0000000000000002
++/* Rx bytes/pkts */
++#define STATISTICS_FLAGS_HC_RX_BYTES			0x0000000000000004
++#define STATISTICS_FLAGS_HC_RX_UCAST_PACKETS		0x0000000000000008
++#define STATISTICS_FLAGS_HC_RX_UCAST_BYTES		0x0000000000000010
++#define STATISTICS_FLAGS_HC_RX_MCAST_PACKETS		0x0000000000000020
++#define STATISTICS_FLAGS_HC_RX_MCAST_BYTES		0x0000000000000040
++#define STATISTICS_FLAGS_HC_RX_BCAST_PACKETS		0x0000000000000080
++#define STATISTICS_FLAGS_HC_RX_BCAST_BYTES		0x0000000000000100
++/* Tx errors */
++#define STATISTICS_FLAGS_TX_ERRORS_GF_DISABLED		0x0000000000000200
++#define STATISTICS_FLAGS_TX_ERRORS_VPORT_DISABLED	0x0000000000000400
++#define STATISTICS_FLAGS_TX_ERRORS_INVAL_VPORT_OFFSET_PACKETS		\
++							0x0000000000000800
++#define STATISTICS_FLAGS_TX_ERRORS_VLAN_ENFORCEMENT	0x0000000000001000
++#define STATISTICS_FLAGS_TX_ERRORS_ETH_TYPE_ENFORCEMENT			\
++							0x0000000000002000
++#define STATISTICS_FLAGS_TX_ERRORS_SA_ENFORCEMENT	0x0000000000004000
++#define STATISTICS_FLAGS_TX_ERRORS_SQPDID_ENFORCEMENT	0x0000000000008000
++#define STATISTICS_FLAGS_TX_ERRORS_CQPDID_ENFORCEMENT	0x0000000000010000
++#define STATISTICS_FLAGS_TX_ERRORS_MTU_VIOLATION	0x0000000000020000
++#define STATISTICS_FLAGS_TX_ERRORS_INVALID_OOB		0x0000000000040000
++/* Tx bytes/pkts */
++#define STATISTICS_FLAGS_HC_TX_BYTES			0x0000000000080000
++#define STATISTICS_FLAGS_HC_TX_UCAST_PACKETS		0x0000000000100000
++#define STATISTICS_FLAGS_HC_TX_UCAST_BYTES		0x0000000000200000
++#define STATISTICS_FLAGS_HC_TX_MCAST_PACKETS		0x0000000000400000
++#define STATISTICS_FLAGS_HC_TX_MCAST_BYTES		0x0000000000800000
++#define STATISTICS_FLAGS_HC_TX_BCAST_PACKETS		0x0000000001000000
++#define STATISTICS_FLAGS_HC_TX_BCAST_BYTES		0x0000000002000000
++/* Tx error */
++#define STATISTICS_FLAGS_TX_ERRORS_GDMA_ERROR		0x0000000004000000
++
++
+ #define MANA_MAX_NUM_QUEUES 64
+ 
+ #define MANA_SHORT_VPORT_OFFSET_MAX ((1U << 8) - 1)
 -- 
 2.34.1
 
