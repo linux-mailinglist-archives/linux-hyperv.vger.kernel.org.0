@@ -2,90 +2,126 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED418771C58
-	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Aug 2023 10:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FBB4771D88
+	for <lists+linux-hyperv@lfdr.de>; Mon,  7 Aug 2023 11:52:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjHGIfP (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 7 Aug 2023 04:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60328 "EHLO
+        id S229658AbjHGJwF (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 7 Aug 2023 05:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjHGIfO (ORCPT
+        with ESMTP id S229998AbjHGJwE (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 7 Aug 2023 04:35:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3688A10EF;
-        Mon,  7 Aug 2023 01:35:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BEF8861666;
-        Mon,  7 Aug 2023 08:35:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E921C433CC;
-        Mon,  7 Aug 2023 08:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691397312;
-        bh=dQQYVCV202V1fkp+H9UYGcqK9NudKTkhkMb/AaQNtto=;
-        h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-        b=AHBpwm2yXk/zDdi/IuT5WptLqTuta3FroC6SuurxaOy3UnmeMYJzT2/FD+N7S1K99
-         VhT+tOE4K5IzfA7Fc+lS6dkK72uTWhw9BtgS+9LVnJRUeUxGgPNTMpySIt0JLqlEkV
-         CdHA10dcbgLn97pcYK+cxXKYzI2Ymw5wpMempKkf5GT8ZwG7JJ1iZDVlsBHVt011k1
-         Gy6JhhtpXZkdXr6F+4I6nCoRusAMES8rB2YZYQp3nVyWmkEoEDitjcx+MASrmXOVgu
-         g5mtLIEZOKj9z38imh4oKyzKDQdX+O5vjGrnlWeDICBFLN2uxAMHMj17h9WWWIHlJn
-         q//0thIlNzCyA==
-Message-ID: <6f69bd92-a063-1934-2bd8-42a5950254a7@kernel.org>
-Date:   Mon, 7 Aug 2023 10:35:05 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Cc:     decui@microsoft.com, kys@microsoft.com, paulros@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        wei.liu@kernel.org, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, leon@kernel.org, longli@microsoft.com,
-        ssengar@linux.microsoft.com, linux-rdma@vger.kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com,
-        bpf@vger.kernel.org, ast@kernel.org, sharmaajay@microsoft.com,
-        hawk@kernel.org, tglx@linutronix.de,
-        shradhagupta@linux.microsoft.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V6,net-next] net: mana: Add page pool for RX buffers
-Content-Language: en-US
-To:     Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-References: <1691181233-25286-1-git-send-email-haiyangz@microsoft.com>
-From:   Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <1691181233-25286-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Mon, 7 Aug 2023 05:52:04 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C316D1BCD;
+        Mon,  7 Aug 2023 02:51:44 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4C043208694F;
+        Mon,  7 Aug 2023 02:51:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4C043208694F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1691401862;
+        bh=I8JPvW2x4wvhQ88X64Egmr5ves+Y3CqToeE6x4H3cos=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l+M2Sgvx6w0bgLv9XXrQoQ/gVH46rV69/VdKwlhKbdqKgMZ2A5+EXQ9B7lutxuq76
+         U9QQGAGv0/Mops1yLwpjZ2Pc4I69vqAwCV80g2KHbLkBh5ZLTCz0mx2WBAa/ONFa5D
+         LYFVdF5MNiL8PMglP0jIoH2zNyyQIxz/KJ4WOIW0=
+From:   Saurabh Sengar <ssengar@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ssengar@microsoft.com
+Subject: [PATCH] hv: hyperv.h: Replace one-element array with flexible-array member
+Date:   Mon,  7 Aug 2023 02:50:53 -0700
+Message-Id: <1691401853-26974-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+One-element and zero-length arrays are deprecated. Replace one-element
+array in struct vmtransfer_page_packet_header with flexible-array
+member. This change fixes below warning:
 
+[    2.593788] ================================================================================
+[    2.593908] UBSAN: array-index-out-of-bounds in drivers/net/hyperv/netvsc.c:1445:41
+[    2.593989] index 1 is out of range for type 'vmtransfer_page_range [1]'
+[    2.594049] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.5.0-rc4-next-20230803+ #1
+[    2.594114] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 04/20/2023
+[    2.594121] Call Trace:
+[    2.594126]  <IRQ>
+[    2.594133]  dump_stack_lvl+0x4c/0x70
+[    2.594154]  dump_stack+0x14/0x20
+[    2.594162]  __ubsan_handle_out_of_bounds+0xa6/0xf0
+[    2.594224]  netvsc_poll+0xc01/0xc90 [hv_netvsc]
+[    2.594258]  __napi_poll+0x30/0x1e0
+[    2.594320]  net_rx_action+0x194/0x2f0
+[    2.594333]  __do_softirq+0xde/0x31e
+[    2.594345]  __irq_exit_rcu+0x6b/0x90
+[    2.594357]  irq_exit_rcu+0x12/0x20
+[    2.594366]  sysvec_hyperv_callback+0x84/0x90
+[    2.594376]  </IRQ>
+[    2.594379]  <TASK>
+[    2.594383]  asm_sysvec_hyperv_callback+0x1f/0x30
+[    2.594394] RIP: 0010:pv_native_safe_halt+0xf/0x20
+[    2.594452] Code: 0b 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 05 35 3f 00 fb f4 <c3> cc cc cc cc 66 2e 0f 1f 84 00 00 00 00 00 66 90 90 90 90 90 90
+[    2.594459] RSP: 0018:ffffb841c00d3e88 EFLAGS: 00000256
+[    2.594469] RAX: ffff9d18c326f4a0 RBX: ffff9d18c031df40 RCX: 4000000000000000
+[    2.594475] RDX: 0000000000000001 RSI: 0000000000000082 RDI: 00000000000268dc
+[    2.594481] RBP: ffffb841c00d3e90 R08: 00000066a171109b R09: 00000000d33d2600
+[    2.594486] R10: 000000009a41bf00 R11: 0000000000000000 R12: 0000000000000001
+[    2.594491] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+[    2.594501]  ? ct_kernel_exit.constprop.0+0x7d/0x90
+[    2.594513]  ? default_idle+0xd/0x20
+[    2.594523]  arch_cpu_idle+0xd/0x20
+[    2.594532]  default_idle_call+0x30/0xe0
+[    2.594542]  do_idle+0x200/0x240
+[    2.594553]  ? complete+0x71/0x80
+[    2.594613]  cpu_startup_entry+0x24/0x30
+[    2.594624]  start_secondary+0x12d/0x160
+[    2.594634]  secondary_startup_64_no_verify+0x17e/0x18b
+[    2.594649]  </TASK>
+[    2.594656] ================================================================================
 
-On 04/08/2023 22.33, Haiyang Zhang wrote:
-> Add page pool for RX buffers for faster buffer cycle and reduce CPU
-> usage.
-> 
-> The standard page pool API is used.
-> 
-> With iperf and 128 threads test, this patch improved the throughput
-> by 12-15%, and decreased the IRQ associated CPU's usage from 99-100% to
-> 10-50%.
-> 
-> Signed-off-by: Haiyang Zhang<haiyangz@microsoft.com>
-> Reviewed-by: Jesse Brandeburg<jesse.brandeburg@intel.com>
+With this change the structure size is reduced by 8 bytes, below is the
+pahole output.
 
-For the record I want to provide my ACK as page_pool maintainer:
+struct vmtransfer_page_packet_header {
+	struct vmpacket_descriptor d;                    /*     0    16 */
+	u16                        xfer_pageset_id;      /*    16     2 */
+	u8                         sender_owns_set;      /*    18     1 */
+	u8                         reserved;             /*    19     1 */
+	u32                        range_cnt;            /*    20     4 */
+	struct vmtransfer_page_range ranges[];           /*    24     0 */
 
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+	/* size: 24, cachelines: 1, members: 6 */
+	/* last cacheline: 24 bytes */
+};
 
-As patch was applied Sunday, my ACK will not reach the git tree
-  https://git.kernel.org/netdev/net-next/c/b1d13f7a3b53
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+ include/linux/hyperv.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---Jesper
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index bfbc37ce223b..c529f407bfb8 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -348,7 +348,7 @@ struct vmtransfer_page_packet_header {
+ 	u8  sender_owns_set;
+ 	u8 reserved;
+ 	u32 range_cnt;
+-	struct vmtransfer_page_range ranges[1];
++	struct vmtransfer_page_range ranges[];
+ } __packed;
+ 
+ struct vmgpadl_packet_header {
+-- 
+2.34.1
+
