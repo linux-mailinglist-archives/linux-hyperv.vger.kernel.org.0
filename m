@@ -2,68 +2,60 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9BF5773C3E
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Aug 2023 18:02:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00EBA7742A7
+	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Aug 2023 19:47:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231425AbjHHQCq (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Aug 2023 12:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35860 "EHLO
+        id S234805AbjHHRqy (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Tue, 8 Aug 2023 13:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbjHHQBA (ORCPT
+        with ESMTP id S232997AbjHHRpr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Aug 2023 12:01:00 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3D73A80
-        for <linux-hyperv@vger.kernel.org>; Tue,  8 Aug 2023 08:40:33 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4fe27849e6aso9444763e87.1
-        for <linux-hyperv@vger.kernel.org>; Tue, 08 Aug 2023 08:40:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691509214; x=1692114014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d4dnD0+K+dm5daW3WB08MbZFAi/HCGlO7XvEtgJV7ak=;
-        b=KyfwSH+VKDAG3BMj6tq3pn2XdASxvwtswVxQebxj2NG3jztY2osuemFtCPhC/7YOAh
-         2CPB+EHQfWttbL2v0sPk5LzX+Yvga7MVu3NmIxHEJiSKbRjiIWyQp6SPBxVfRmkhfT3i
-         nAYUeSkSWz+HP0UoFgynr3tJV0zy/ZaPDSqgUj8m/vMBqD7pHyvGXSYkLxgvQtZ/UFUU
-         4x6kFKd9e4y42hJB2gJHeqFHQLL93IVemXUKAzKB1sr5hUKIrNE0NZt5zx0Wtp2k131e
-         6IuN6O+DIjFMO6VBoLRnA83KxznhBnq9OHvz+l6yUgtf0q4U+Hr/9GAyiALnrk33gcSv
-         Aqtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691509214; x=1692114014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d4dnD0+K+dm5daW3WB08MbZFAi/HCGlO7XvEtgJV7ak=;
-        b=i8iG5Mfn9tDJXkfZ8ix1gCseqE5Kr7eXZRHMneCR6U0SLuk1/2YPVFY7OsKfEKJ+qA
-         8cv7ZMq5Ob2wjk+f19Uao/q91hbjjRBUPQ5l4F67vU91q5Pm4g+SyQx6Vxvp4XH/k+xI
-         uBQ4c+AcE5veusjDdp0IUo2SHEFs4N9HUbpAgDPgVB4mi5ULYtyRKgSdnMrzfFdOkxwx
-         rlK0XiJ33Yr4GKDarKUXvpr67aBUlchLEJ1asGhwfqFsU9cRb2KtfpSyQyAZjekIFihl
-         a3f+xJKe8vMSVNSwNcjzETubMm+9EFCH4qxJTzPTSs3Py2OGxj/Yci9viaat92ulBKLg
-         /t/g==
-X-Gm-Message-State: AOJu0YwpV7uOMNSNuwFEgqbL4FsgJxyYG0fSBPAbTAXh0Rzwlxkz1Mv8
-        UHC6b84H2hG591U7wmb2w+nl/bXsI4SsJs9wWRM=
-X-Google-Smtp-Source: AGHT+IFbsOyyzxbYaBvG1QmkrxxSBHNWlGts8aZAcOYBA1mSGd9SM+bUxD72/iUt8zqziutWdovXJQ==
-X-Received: by 2002:a2e:9793:0:b0:2b9:453f:a383 with SMTP id y19-20020a2e9793000000b002b9453fa383mr8829643lji.53.1691508827814;
-        Tue, 08 Aug 2023 08:33:47 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id v13-20020a1cf70d000000b003fe17901fcdsm18548603wmh.32.2023.08.08.08.33.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 08:33:47 -0700 (PDT)
-Date:   Tue, 8 Aug 2023 18:33:44 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [bug report] net: mana: Add page pool for RX buffers
-Message-ID: <7659902d-2419-4d7e-8038-6737267c1e16@kadam.mountain>
-References: <72639c0d-9cf5-468e-ad6a-e36c25d63b02@moroto.mountain>
- <PH7PR21MB3116FB9E14746215B1C9D4D4CA0DA@PH7PR21MB3116.namprd21.prod.outlook.com>
+        Tue, 8 Aug 2023 13:45:47 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E49A25EFA;
+        Tue,  8 Aug 2023 09:20:48 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+        id A117320FB9E4; Mon,  7 Aug 2023 22:42:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A117320FB9E4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1691473368;
+        bh=u7vyLoI2Ij9zImGiOWxL0n/ADk3SW2qhJQI2ztc7DS4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gr01MMOSovMipZPAPtHRELfCDaC30YM6q5FWVrn6O6eUgqdYkEYxqD7cBHUkD5zn4
+         Bx981B23mN1yn1gvDzgCiESGquRT9Enc0MOq4TkILM4WxkpZ0Oe0+qXxuUx24Swg0W
+         rgrOB9FEGY8+dtJnUqNxRK4s/DBAUKnp+BMDcKxk=
+Date:   Mon, 7 Aug 2023 22:42:48 -0700
+From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
+To:     Ani Sinha <anisinha@redhat.com>
+Cc:     Wei Liu <wei.liu@kernel.org>, Olaf Hering <olaf@aepfle.de>,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Add support for keyfile config
+ based connection profile in NM
+Message-ID: <20230808054248.GA12620@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1683265875-3706-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20230508095340.2ca1630f.olaf@aepfle.de>
+ <ZFknuu+f74e1zHZe@liuwe-devbox-debian-v2>
+ <20230508191246.2fcd6eb5.olaf@aepfle.de>
+ <ZFkuY4dmwiPsUJ3+@liuwe-devbox-debian-v2>
+ <20230523053627.GA10913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <53E9AC1D-C907-4B55-97F2-FC10DCD4D470@redhat.com>
+ <4142F3A4-8AB4-4DE2-8D03-D3A8F8776BF9@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH7PR21MB3116FB9E14746215B1C9D4D4CA0DA@PH7PR21MB3116.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+In-Reply-To: <4142F3A4-8AB4-4DE2-8D03-D3A8F8776BF9@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-16.0 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,24 +63,53 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 03:12:07PM +0000, Haiyang Zhang wrote:
+On Tue, Aug 08, 2023 at 10:41:21AM +0530, Ani Sinha wrote:
 > 
-> Do I have to initialize it, or just add a code comment explaining like above?
 > 
-
-It depends on if mana_rx_skb() is going to be inlined or not.  This is
-both from a theoretical and pratical perspective.
-
-Theoretical:  Passing uninitialized memory is undefined in C and it's a
-bug, but if the function is inline then it's not really "passing" is it?
-
-Pratical:  If it's not inlined then KMemsan will likely warn about it at
-runtime but if it is inlined then.
-
-The other thing to consider is that these days the compiler is going to
-automatically initialize it to zero anyway, so manually setting it to
-zero will not affect runtime.
-
-regards,
-dan carpenter
-
+> > On 12-Jul-2023, at 12:32 PM, Ani Sinha <anisinha@redhat.com> wrote:
+> > 
+> > 
+> > 
+> >> On 23-May-2023, at 11:06 AM, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
+> >> 
+> >> On Mon, May 08, 2023 at 05:16:19PM +0000, Wei Liu wrote:
+> >>> On Mon, May 08, 2023 at 07:12:46PM +0200, Olaf Hering wrote:
+> >>>> Mon, 8 May 2023 16:47:54 +0000 Wei Liu <wei.liu@kernel.org>:
+> >>>> 
+> >>>>> Olaf, is this a reviewed-by from you? :-)
+> >>>> 
+> >>>> Sorry, I did not review the new functionality, just tried to make sure there will be no regression for existing consumers.
+> >>> 
+> >>> Okay, this is fine, too. Thank you for looking into this.
+> >>> 
+> >>> 
+> >>>> 
+> >>>> Olaf
+> >>> 
+> >> 
+> >> Gentle reminder.
+> >> 
+> > 
+> > I have a comment about the following change:
+> > 
+> > +		error = fprintf(nmfile, "\n[ipv4]\n");
+> > +		if (error < 0)
+> > +			goto setval_error;
+> > +
+> > +		if (new_val->dhcp_enabled) {
+> > +			error = kvp_write_file(nmfile, "method", "", "auto");
+> > +			if (error < 0)
+> > +				goto setval_error;
+> > +		} else {
+> > +			error = kvp_write_file(nmfile, "method", "", "manual");
+> > +			if (error < 0)
+> > +				goto setval_error;
+> > +		}
+> > 
+> > I think the method equally would apply for ipv6 as it applies for ipv4. 
+> > We can use https://www.golinuxcloud.com/nmcli-command-examples-cheatsheet-centos-rhel/#18_Disable_IPv6_Address_for_ethernet_connection_IPV6INIT as a reference. 
+> > So setting the method should be common to both ipv4 and ipv6.
+> 
+> Ping once more ???
+> Can anyone comment on the avove and/or review the patchset?
+That's correct Ani, this needs to be enabled for ipv6 as well, will send out another version. Thanks for catching this.
