@@ -2,152 +2,171 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C177743F4
-	for <lists+linux-hyperv@lfdr.de>; Tue,  8 Aug 2023 20:14:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85AE47756FF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  9 Aug 2023 12:22:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235369AbjHHSOQ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 8 Aug 2023 14:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44792 "EHLO
+        id S231785AbjHIKW1 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 9 Aug 2023 06:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235372AbjHHSNn (ORCPT
+        with ESMTP id S230146AbjHIKW0 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 8 Aug 2023 14:13:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725E41DF2F
-        for <linux-hyperv@vger.kernel.org>; Tue,  8 Aug 2023 10:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691515072;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8Z37MNTsz5IjK+Ues18YoNQH3NZHekHYWw9QPHdtWSg=;
-        b=eGhROQQpNDgQNuxZ5AZnTHd1Z/CJgNI9U/N85nPhaEs7280Fqe7vUPEwrZrn9rTEklEvYL
-        n+cjQz6+ADR2GOwrTpNoPF4xZM/UE4c/jGWshHv2lUilwZios5aW/caqiamyHyfB/N+OWy
-        ynsUbFd4Wjy6Nvc2NQ2myJWjrFrhzPE=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-502-szceJNxzOaiA_COh1EN3Ug-1; Tue, 08 Aug 2023 01:11:29 -0400
-X-MC-Unique: szceJNxzOaiA_COh1EN3Ug-1
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1bc49d0cb4aso29320045ad.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 07 Aug 2023 22:11:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691471488; x=1692076288;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Z37MNTsz5IjK+Ues18YoNQH3NZHekHYWw9QPHdtWSg=;
-        b=czsncRhYJxk3jQ7LEVpR1TRc1Bfs8w7ntMFKE8imaI+qlFLAOD0q4+vgAUNN5FcVxC
-         fLbt72oEQMIwmN38GvO1DtgM1098h4xql4V2trpFJ4eyo5T7+S9D3qJBdw3kR7ElX0xX
-         KXue916zI0ovOs0IKaIAqUH0EBzJM6QyVkvKWDNyk5Rhitfd61TzkCI0cAXyWb2+Ts6L
-         XxKa69vwP69crHDhPVNHnCr/AI+ujVqVj2b+9+utEQ4Gtehp+53eb+Kj1uS6hK/SIfFq
-         YLssQV5+c+1sEPN/pZ0YPurPxjaoEeIQD5t8RvqUiOYkaT/CgwdOkdadcB5noOeTX4sx
-         e8BQ==
-X-Gm-Message-State: AOJu0YzgsfkSNUqEMFEpTBwNHUwLOdNSHmspfbbFKr4yImn9Xx41g7iQ
-        KPOOMxALB8iljNfjZlLlSMlEURypIZSN4p+xDvTCIJkMG8ywcXmy7GHQLVp83QB8fB97I/5LKwR
-        WKFMNV6UEwk5L8/Nzek8qNNcS
-X-Received: by 2002:a17:902:6909:b0:1b8:9002:c9ee with SMTP id j9-20020a170902690900b001b89002c9eemr7750390plk.1.1691471488318;
-        Mon, 07 Aug 2023 22:11:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJ4mG8T42Oe8e4gGSTRDKxIeHrCvX8GrAvrWD26t+TaJGCnz1ILtcBVualyF31Wh+2WzFmOw==
-X-Received: by 2002:a17:902:6909:b0:1b8:9002:c9ee with SMTP id j9-20020a170902690900b001b89002c9eemr7750382plk.1.1691471487992;
-        Mon, 07 Aug 2023 22:11:27 -0700 (PDT)
-Received: from smtpclient.apple ([115.96.156.158])
-        by smtp.gmail.com with ESMTPSA id i11-20020a170902eb4b00b001b9cea4e8a2sm7834747pli.293.2023.08.07.22.11.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Aug 2023 22:11:27 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.3\))
-Subject: Re: [PATCH v3] hv/hv_kvp_daemon: Add support for keyfile config based
- connection profile in NM
-From:   Ani Sinha <anisinha@redhat.com>
-In-Reply-To: <53E9AC1D-C907-4B55-97F2-FC10DCD4D470@redhat.com>
-Date:   Tue, 8 Aug 2023 10:41:21 +0530
-Cc:     Wei Liu <wei.liu@kernel.org>, Olaf Hering <olaf@aepfle.de>,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Long Li <longli@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4142F3A4-8AB4-4DE2-8D03-D3A8F8776BF9@redhat.com>
-References: <1683265875-3706-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20230508095340.2ca1630f.olaf@aepfle.de>
- <ZFknuu+f74e1zHZe@liuwe-devbox-debian-v2>
- <20230508191246.2fcd6eb5.olaf@aepfle.de>
- <ZFkuY4dmwiPsUJ3+@liuwe-devbox-debian-v2>
- <20230523053627.GA10913@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <53E9AC1D-C907-4B55-97F2-FC10DCD4D470@redhat.com>
-To:     Shradha Gupta <shradhagupta@linux.microsoft.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.3)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        Wed, 9 Aug 2023 06:22:26 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E1DC698;
+        Wed,  9 Aug 2023 03:22:25 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1099)
+        id 68B4B20FC3E4; Wed,  9 Aug 2023 03:22:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 68B4B20FC3E4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1691576545;
+        bh=s/Hd32b4XFC5qXe0hMfXzG8vSHV2xgLG+0kVH3hmJUk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kyOStzjyWsOPbM5+GPS6YfLyRyueAoJDuK/3FnslrQcYWOMx67IxnAqm9InYveCN0
+         N31+cX0/E8BFYKY20z9QN+dSOWKPYAmjZVsw0D3NXp9IQYlgDaHQQ7o2DDboLeAm++
+         reoj2X8SQKDn/sS5U0H0nmPTzAXXG+J+A7/S6GSI=
+From:   Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, longli@microsoft.com,
+        sharmaajay@microsoft.com, leon@kernel.org, cai.huoqing@linux.dev,
+        ssengar@linux.microsoft.com, vkuznets@redhat.com,
+        tglx@linutronix.de, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     schakrabarti@microsoft.com,
+        Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+        stable@vger.kernel.org
+Subject: [PATCH V8 net] net: mana: Fix MANA VF unload when hardware is unresponsive
+Date:   Wed,  9 Aug 2023 03:22:05 -0700
+Message-Id: <1691576525-24271-1-git-send-email-schakrabarti@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+When unloading the MANA driver, mana_dealloc_queues() waits for the MANA
+hardware to complete any inflight packets and set the pending send count
+to zero. But if the hardware has failed, mana_dealloc_queues()
+could wait forever.
 
+Fix this by adding a timeout to the wait. Set the timeout to 120 seconds,
+which is a somewhat arbitrary value that is more than long enough for
+functional hardware to complete any sends.
 
-> On 12-Jul-2023, at 12:32 PM, Ani Sinha <anisinha@redhat.com> wrote:
->=20
->=20
->=20
->> On 23-May-2023, at 11:06 AM, Shradha Gupta =
-<shradhagupta@linux.microsoft.com> wrote:
->>=20
->> On Mon, May 08, 2023 at 05:16:19PM +0000, Wei Liu wrote:
->>> On Mon, May 08, 2023 at 07:12:46PM +0200, Olaf Hering wrote:
->>>> Mon, 8 May 2023 16:47:54 +0000 Wei Liu <wei.liu@kernel.org>:
->>>>=20
->>>>> Olaf, is this a reviewed-by from you? :-)
->>>>=20
->>>> Sorry, I did not review the new functionality, just tried to make =
-sure there will be no regression for existing consumers.
->>>=20
->>> Okay, this is fine, too. Thank you for looking into this.
->>>=20
->>>=20
->>>>=20
->>>> Olaf
->>>=20
->>=20
->> Gentle reminder.
->>=20
->=20
-> I have a comment about the following change:
->=20
-> +		error =3D fprintf(nmfile, "\n[ipv4]\n");
-> +		if (error < 0)
-> +			goto setval_error;
-> +
-> +		if (new_val->dhcp_enabled) {
-> +			error =3D kvp_write_file(nmfile, "method", "", =
-"auto");
-> +			if (error < 0)
-> +				goto setval_error;
-> +		} else {
-> +			error =3D kvp_write_file(nmfile, "method", "", =
-"manual");
-> +			if (error < 0)
-> +				goto setval_error;
-> +		}
->=20
-> I think the method equally would apply for ipv6 as it applies for =
-ipv4.=20
-> We can use =
-https://www.golinuxcloud.com/nmcli-command-examples-cheatsheet-centos-rhel=
-/#18_Disable_IPv6_Address_for_ethernet_connection_IPV6INIT as a =
-reference.=20
-> So setting the method should be common to both ipv4 and ipv6.
+Cc: stable@vger.kernel.org
+Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
+Signed-off-by: Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>
+---
+V7 -> V8:
+* Replaced dev_consume_skb_any with dev_kfree_skb_any.
+* Added extra braces to use assignment as truth value.
 
-Ping once more =E2=80=A6
-Can anyone comment on the avove and/or review the patchset?
+V6 -> V7:
+* Optimized the while loop for freeing skb.
+
+V5 -> V6:
+* Added pcie_flr to reset the pci after timeout.
+* Fixed the position of changelog.
+* Removed unused variable like cq.
+
+V4 -> V5:
+* Added fixes tag
+* Changed the usleep_range from static to incremental value.
+* Initialized timeout in the begining.
+
+V3 -> V4:
+* Removed the unnecessary braces from mana_dealloc_queues().
+
+V2 -> V3:
+* Removed the unnecessary braces from mana_dealloc_queues().
+
+V1 -> V2:
+* Added net branch
+* Removed the typecasting to (struct mana_context*) of void pointer
+* Repositioned timeout variable in mana_dealloc_queues()
+* Repositioned vf_unload_timeout in mana_context struct, to utilise the
+ 6 bytes hole
+---
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 37 +++++++++++++++++--
+ 1 file changed, 33 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+index a499e460594b..c2ad0921e893 100644
+--- a/drivers/net/ethernet/microsoft/mana/mana_en.c
++++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+@@ -8,6 +8,7 @@
+ #include <linux/ethtool.h>
+ #include <linux/filter.h>
+ #include <linux/mm.h>
++#include <linux/pci.h>
+ 
+ #include <net/checksum.h>
+ #include <net/ip6_checksum.h>
+@@ -2345,9 +2346,12 @@ int mana_attach(struct net_device *ndev)
+ static int mana_dealloc_queues(struct net_device *ndev)
+ {
+ 	struct mana_port_context *apc = netdev_priv(ndev);
++	unsigned long timeout = jiffies + 120 * HZ;
+ 	struct gdma_dev *gd = apc->ac->gdma_dev;
+ 	struct mana_txq *txq;
++	struct sk_buff *skb;
+ 	int i, err;
++	u32 tsleep;
+ 
+ 	if (apc->port_is_up)
+ 		return -EINVAL;
+@@ -2363,15 +2367,40 @@ static int mana_dealloc_queues(struct net_device *ndev)
+ 	 * to false, but it doesn't matter since mana_start_xmit() drops any
+ 	 * new packets due to apc->port_is_up being false.
+ 	 *
+-	 * Drain all the in-flight TX packets
++	 * Drain all the in-flight TX packets.
++	 * A timeout of 120 seconds for all the queues is used.
++	 * This will break the while loop when h/w is not responding.
++	 * This value of 120 has been decided here considering max
++	 * number of queues.
+ 	 */
++
+ 	for (i = 0; i < apc->num_queues; i++) {
+ 		txq = &apc->tx_qp[i].txq;
+-
+-		while (atomic_read(&txq->pending_sends) > 0)
+-			usleep_range(1000, 2000);
++		tsleep = 1000;
++		while (atomic_read(&txq->pending_sends) > 0 &&
++		       time_before(jiffies, timeout)) {
++			usleep_range(tsleep, tsleep + 1000);
++			tsleep <<= 1;
++		}
++		if (atomic_read(&txq->pending_sends)) {
++			err = pcie_flr(to_pci_dev(gd->gdma_context->dev));
++			if (err) {
++				netdev_err(ndev, "flr failed %d with %d pkts pending in txq %u\n",
++					   err, atomic_read(&txq->pending_sends),
++					   txq->gdma_txq_id);
++			}
++			break;
++		}
+ 	}
+ 
++	for (i = 0; i < apc->num_queues; i++) {
++		txq = &apc->tx_qp[i].txq;
++		while ((skb = skb_dequeue(&txq->pending_skbs))) {
++			mana_unmap_skb(skb, apc);
++			dev_kfree_skb_any(skb);
++		}
++		atomic_set(&txq->pending_sends, 0);
++	}
+ 	/* We're 100% sure the queues can no longer be woken up, because
+ 	 * we're sure now mana_poll_tx_cq() can't be running.
+ 	 */
+-- 
+2.34.1
 
