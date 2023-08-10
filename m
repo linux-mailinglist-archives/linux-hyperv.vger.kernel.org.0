@@ -2,74 +2,90 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2561777DD2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Aug 2023 18:13:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64696777E17
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Aug 2023 18:22:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236734AbjHJQNJ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Aug 2023 12:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45274 "EHLO
+        id S231991AbjHJQWs (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Aug 2023 12:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236556AbjHJQNE (ORCPT
+        with ESMTP id S229871AbjHJQWr (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Aug 2023 12:13:04 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7352703;
-        Thu, 10 Aug 2023 09:04:45 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1bbf8cb694aso9441665ad.3;
-        Thu, 10 Aug 2023 09:04:45 -0700 (PDT)
+        Thu, 10 Aug 2023 12:22:47 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6F9A8;
+        Thu, 10 Aug 2023 09:22:47 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bdaeb0f29aso2876975ad.2;
+        Thu, 10 Aug 2023 09:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691683478; x=1692288278;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1691684566; x=1692289366;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Oyq9KI3NurUC1G8S0DuY90VVqt2QiudPjei5bx+xe8I=;
-        b=OzwLYJDBajWtJkd2M3jwwzEWK28bhXxlwnwqBRIBLdtT4DVYXxRwl66np/1CXRDtM7
-         XOfC3IbH+t/NJNTBRfJMgMbo2FFxptaC717HHYel7YjhvxnB39xBE9K/aQoNdA2GmACM
-         J5w7LFnEqVGJJJSqhEycc1sXyUFFps8+zGNZUMmqhO8Wi7wMB8E1kUUuhysD0RO79gFj
-         vf8ah+BiwsCOcW28UWj5IQJM4iNWymQfqBOmZDtmKSeqs0ANsGfJsF5fpWpxkQ+Efboq
-         gKULvGBR+8q4QDtX7cUVQuHNJRFof9C7TdWxyrO7cbKIXrH/jBKiLrcGq/YIXXcOx2ga
-         Kw9A==
+        bh=LBxuuRBGx37tQ5XIQd6hBtuu9RLCe7TcvWshiqvJ6Ig=;
+        b=hgQ8PWMkP2K0rSExr6a+qhX3F0ukmJLk0DfQrMX1iZo+xMyjKV9CoZegiNwm+EcG+r
+         zJbcpKajI7y/wOrYxn+4CTSYBa+rUKUg6kHN8bfWMB1iblfeFHeDKSsshGJhRKLAkElF
+         ejsC3aZtMvpojv5MhEsuJfIp4KENrn5ODkvDR+l/5ANrP2Cky6o9GIohuhthkV6umPf7
+         32dAvU0TjigyGZ+tWhm8zVhyJsdVXVEzndpZTF97gZ1uGQuLkBzLQbshAg/oTAz58itK
+         M4gc0zvUwbNGRbczqVL42RQtQ9U6fuS6EFUsGw6XUAsbxeJ5PhMD479ITmKOn1RFKMiv
+         j4Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691683478; x=1692288278;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oyq9KI3NurUC1G8S0DuY90VVqt2QiudPjei5bx+xe8I=;
-        b=UpLCvtMJx7ZIAZAGvDfp0SkgwGGdPFfkum3WRKc8fKsWIPeZAq5yGKj/mccp1Iy+Q5
-         Uiy7WQ5L2ZiIsKzGzYiRKDDzqmmyGzUhcIaH28ZnNd68LZOEEUfiCSdlJnSJGNMm2EHI
-         rsq9LmXRlyNCvt+6cfsoNEzA9DFAcTdwi/E8WPP1oSfw7WK+Ql6S41ic5awz+J2biASo
-         E5yjbsMq2nEH5LGafiQPsICB22qiLjAhUqvfJYEnSE7NO7zfzOdQYTdzbZ7PNl305jC4
-         QJEscB37pkUoAqsAGy680QcM2PHdUW5TVUX/Q2HZNldGRVYfQ5oWzV3AbI5uXsL6JIXx
-         lQdQ==
-X-Gm-Message-State: AOJu0YyqhCdE43bXdbYxqhtRwKd7kqwrXaFpLaMMv3E6+DOIJsZ1yKkG
-        vpMQ8nKoVyjoaNiezTpNA2w=
-X-Google-Smtp-Source: AGHT+IE4Xa4wOT0nieJaoHtOa/yBw1xJy7SkPhn6cJeu8e/icU8oDEov1HRquIfSibkVFGy5WzCGYg==
-X-Received: by 2002:a17:902:8688:b0:1b9:c205:a876 with SMTP id g8-20020a170902868800b001b9c205a876mr2395865plo.29.1691683478550;
-        Thu, 10 Aug 2023 09:04:38 -0700 (PDT)
-Received: from ubuntu-Virtual-Machine.corp.microsoft.com ([2001:4898:80e8:0:c620:2003:6c97:8057])
-        by smtp.gmail.com with ESMTPSA id r4-20020a1709028bc400b001b895a17429sm1948821plo.280.2023.08.10.09.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 09:04:35 -0700 (PDT)
-From:   Tianyu Lan <ltykernel@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <tiala@microsoft.com>, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com, Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH V5 8/8] x86/hyperv: Add hyperv-specific handling for VMMCALL under SEV-ES
-Date:   Thu, 10 Aug 2023 12:04:11 -0400
-Message-Id: <20230810160412.820246-9-ltykernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230810160412.820246-1-ltykernel@gmail.com>
-References: <20230810160412.820246-1-ltykernel@gmail.com>
+        d=1e100.net; s=20221208; t=1691684566; x=1692289366;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LBxuuRBGx37tQ5XIQd6hBtuu9RLCe7TcvWshiqvJ6Ig=;
+        b=iOcWVnjqO6k4bmTI6zPV8z9guLXTFkPwLdAam5CnLJdsUP7TErL3GinLpybHortwGG
+         Y3lr7AxKV1o4iOKlO1EuagFly5HFr2wST5xzwmiCLF0qqAAgOHFTeqj/RBsdXBvNzGiZ
+         y/brzYYGHsoce5KxDGdLYx58iG5QPadfQUbfF54lOdCzms2Jr9Z0lmH9lPCdTjyVlZnn
+         KWh7dbDqGEJh8IhDekhjaU0nOOzebqG2lkxM+p9m0IdOlWPM1j+6FCI57luzt1voKV5A
+         Me6XFGh/rgSkA30PpKMtXnd0YY5EHwJ3Lx+6y2ibx7bCxX09wXNnzyAzc6ykYAfZYkk+
+         QLOQ==
+X-Gm-Message-State: AOJu0Yzb0ZPrqkL8zVAPQUh0qqtAX0cHFvsIK3dHxcYPE6PV43fBnpmq
+        BdaV5ZHjtyIoJgl18gpASko=
+X-Google-Smtp-Source: AGHT+IGz0JmplIzBvF6jsyASn31jPQ/ydbP+pgRBs/DbtZZx8p0q2kZlCd/dGEz0nBARuWJVoVjFAg==
+X-Received: by 2002:a17:902:bd4c:b0:1b1:99c9:8ce1 with SMTP id b12-20020a170902bd4c00b001b199c98ce1mr2330144plx.51.1691684566496;
+        Thu, 10 Aug 2023 09:22:46 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:18:efec::75b])
+        by smtp.gmail.com with ESMTPSA id y6-20020a17090322c600b001b9c960ffeasm1981122plg.47.2023.08.10.09.22.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Aug 2023 09:22:46 -0700 (PDT)
+Message-ID: <da667608-a8aa-f5b8-1621-de29b3f19272@gmail.com>
+Date:   Fri, 11 Aug 2023 00:22:36 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [EXTERNAL] [PATCH V2 2/9] x86/hyperv: Set Virtual Trust Level in
+ VMBus init message
+To:     Wei Liu <wei.liu@kernel.org>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>
+References: <20230627032248.2170007-1-ltykernel@gmail.com>
+ <20230627032248.2170007-3-ltykernel@gmail.com>
+ <PUZP153MB0749BAAA8E288D76938704A5BE2DA@PUZP153MB0749.APCP153.PROD.OUTLOOK.COM>
+ <ZNB3m6Qiml7JDTQ7@liuwe-devbox-debian-v2>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <ZNB3m6Qiml7JDTQ7@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,61 +93,30 @@ Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-From: Tianyu Lan <tiala@microsoft.com>
+On 8/7/2023 12:48 PM, Wei Liu wrote:
+> On Fri, Jul 07, 2023 at 09:07:54AM +0000, Saurabh Singh Sengar wrote:
+>>
+>>
+>>> +
+>>> +	ret = hv_do_hypercall(control, input, output);
+>>> +	if (hv_result_success(ret))
+>>> +		vtl = output->as64.low & HV_X64_VTL_MASK;
+>>> +	else
+>>> +		pr_err("Hyper-V: failed to get VTL! %lld", ret);
+>>
+>> In case of error this function will return vtl=0, which can be the valid value of vtl.
+>> I suggest we initialize vtl with -1 so and then check for its return.
+>>
+>> This could be a good utility function which can be used for any Hyper-V VTL system, so think
+>> of making it global ?
+>>
+> 
+> Tianyu -- your thought on this?
 
-Add Hyperv-specific handling for faults caused by VMMCALL
-instructions.
+In current user cases, the guest only runs in VTL0 and Hyper-V may
+return VTL error in some cases but kernel still may run with 0 as VTL.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <tiala@microsoft.com>
----
- arch/x86/kernel/cpu/mshyperv.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index c2ccb49b49c2..b7d73f3107c6 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -32,6 +32,7 @@
- #include <asm/nmi.h>
- #include <clocksource/hyperv_timer.h>
- #include <asm/numa.h>
-+#include <asm/svm.h>
- 
- /* Is Linux running as the root partition? */
- bool hv_root_partition;
-@@ -574,6 +575,22 @@ static bool __init ms_hyperv_msi_ext_dest_id(void)
- 	return eax & HYPERV_VS_PROPERTIES_EAX_EXTENDED_IOAPIC_RTE;
- }
- 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+static void hv_sev_es_hcall_prepare(struct ghcb *ghcb, struct pt_regs *regs)
-+{
-+	/* RAX and CPL are already in the GHCB */
-+	ghcb_set_rcx(ghcb, regs->cx);
-+	ghcb_set_rdx(ghcb, regs->dx);
-+	ghcb_set_r8(ghcb, regs->r8);
-+}
-+
-+static bool hv_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
-+{
-+	/* No checking of the return state needed */
-+	return true;
-+}
-+#endif
-+
- const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
- 	.name			= "Microsoft Hyper-V",
- 	.detect			= ms_hyperv_platform,
-@@ -581,4 +598,8 @@ const __initconst struct hypervisor_x86 x86_hyper_ms_hyperv = {
- 	.init.x2apic_available	= ms_hyperv_x2apic_available,
- 	.init.msi_ext_dest_id	= ms_hyperv_msi_ext_dest_id,
- 	.init.init_platform	= ms_hyperv_init_platform,
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	.runtime.sev_es_hcall_prepare = hv_sev_es_hcall_prepare,
-+	.runtime.sev_es_hcall_finish = hv_sev_es_hcall_finish,
-+#endif
- };
--- 
-2.25.1
-
+I just sent out v5 and set VTL to 0 by default if fail to get VTL from
+Hyper-V and give out a warning log. The get_vtl() is only called on 
+enlightened SEV-SNP guest. If there is new case that needs handle the 
+error from Hyper-V when call VTL hvcall, we may add the logic later.
