@@ -2,33 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 515F7776EF9
-	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Aug 2023 06:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96DB9777221
+	for <lists+linux-hyperv@lfdr.de>; Thu, 10 Aug 2023 10:08:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229540AbjHJEPx (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 10 Aug 2023 00:15:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
+        id S231787AbjHJIIu (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 10 Aug 2023 04:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjHJEPw (ORCPT
+        with ESMTP id S231546AbjHJIIt (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 10 Aug 2023 00:15:52 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0143FE7E;
-        Wed,  9 Aug 2023 21:15:47 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-        id 8340720FC4FB; Wed,  9 Aug 2023 21:15:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8340720FC4FB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1691640947;
-        bh=DXvMqOnkkhHKHXgoZBLN5joc2fsqISplwLvDOIYfDD0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tGOQHq4hRFW46z3lfdLs2nJaJPyx7SQ+l95zcf4y/txG/Vlg90BOrNarzl1+5SP2u
-         3ZD8ABe92X1v14nlI1+OR6kCmBejq6V3+T2N8T/FGWf08Bj+fuVTwnaMMozQZhVo9p
-         ZVJUQh/Q4FEX6f4uX27QjHdjf89VZ3bmTapUMb5g=
-From:   Shradha Gupta <shradhagupta@linux.microsoft.com>
-To:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
+        Thu, 10 Aug 2023 04:08:49 -0400
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4DC10F5
+        for <linux-hyperv@vger.kernel.org>; Thu, 10 Aug 2023 01:08:49 -0700 (PDT)
+Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3a3fbfb616dso465287b6e.3
+        for <linux-hyperv@vger.kernel.org>; Thu, 10 Aug 2023 01:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1691654928; x=1692259728;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BIemsNk2bwMlhF3JhMB6/xoaFfESQL5nw+2gvsxfino=;
+        b=NjIsfTHwVazoeXolTuGW9+DOwHzyOfdknu5SLWuOo/LO852FXZ1PA6Lyb3rE3zO1zb
+         d1ZwaW0h6b3LhaJZMosfjL7ykKz9g0LASsobzc85phsr5pz65oB8Jnzs9brNw9n+/TU3
+         PAjgqZgfqKdYekQtPqJ/VkIfh9e+lc1u4KlQ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691654928; x=1692259728;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BIemsNk2bwMlhF3JhMB6/xoaFfESQL5nw+2gvsxfino=;
+        b=H+Fa3Usj+21F9Xh9lDdFNYFasNPMbTI6G7agzoqcs680Fn7no4rZGAkXhNtRP6gjU2
+         nEWYbfFV1MtTgpTvY3PzzWFUvVtz0oPDa7/UZl8ZPYeYcE9/hdA8aUr1VWtbiOx3ZlhH
+         ZAsWPnfg3buruOCTIlqGepKAiZZSyHeytbEvykwHFbF2l1Aeza1iaVqxoM9Ik5hfyyo+
+         xgnA1cAMWCzFtdvfMXipaGHHpArH+sNypB4waWMJVn8bXl7V8j3xN2sPilbPXj0x65qA
+         BPrOFUuPf5a0SwVCCOroB9yRR1znUXdMRrx13v4NcA+3EzpxdvQxeTdJsHGY1MMFOQjm
+         qAoA==
+X-Gm-Message-State: AOJu0Yz7U4ZTMHgvGDOsVkuCv9Aw3xOEp7Vqhczy5zYkLmqBmR9IMLrg
+        oPwN6bKRrjPUILgvScI/n8ax3o4UuuSTAbVSH4Ddmg==
+X-Google-Smtp-Source: AGHT+IHzyoZB0BBt4TQ0CSGeKpiyA8L+7XvoSRTOmz/bUb2RS4VyQZF7I4FgsStuFEbFgIf83XN+dreOGziCRWuf4RU=
+X-Received: by 2002:a54:410f:0:b0:3a7:2a94:73f6 with SMTP id
+ l15-20020a54410f000000b003a72a9473f6mr1712474oic.49.1691654928490; Thu, 10
+ Aug 2023 01:08:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <1691640922-11362-1-git-send-email-shradhagupta@linux.microsoft.com>
+In-Reply-To: <1691640922-11362-1-git-send-email-shradhagupta@linux.microsoft.com>
+From:   Pavan Chebbi <pavan.chebbi@broadcom.com>
+Date:   Thu, 10 Aug 2023 13:38:36 +0530
+Message-ID: <CALs4sv1CEWni_oHwFAhUn4bMgU7in7jrh1DKH0vd8tKwpts8Ew@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] net: mana: Add gdma stats to ethtool output
+ for mana
+To:     Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
@@ -42,244 +67,127 @@ Cc:     Shradha Gupta <shradhagupta@linux.microsoft.com>,
         Long Li <longli@microsoft.com>,
         Michael Kelley <mikelley@microsoft.com>,
         Shradha Gupta <shradhagupta@microsoft.com>
-Subject: [PATCH net-next v2] net: mana: Add gdma stats to ethtool output for mana
-Date:   Wed,  9 Aug 2023 21:15:22 -0700
-Message-Id: <1691640922-11362-1-git-send-email-shradhagupta@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000001c2a2206028d1bd8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-Extended performance counter stats in 'ethtool -S <interface>'
-for MANA VF to include GDMA tx LSO packets and bytes count.
+--0000000000001c2a2206028d1bd8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tested-on: Ubuntu22
-Testcases:
-1. LISA testcase:
-PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
-2. LISA testcase:
-PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
-3. Validated the GDMA stat packets and byte counters
-Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
----
-Changelog v1->v2
- * removed extra line
- * fixed variable declaration indentation
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 40 +++++++++
- .../ethernet/microsoft/mana/mana_ethtool.c    | 15 ++++
- include/net/mana/mana.h                       | 87 +++++++++++++++++++
- 3 files changed, 142 insertions(+)
+On Thu, Aug 10, 2023 at 9:45=E2=80=AFAM Shradha Gupta
+<shradhagupta@linux.microsoft.com> wrote:
+>
+> Extended performance counter stats in 'ethtool -S <interface>'
+> for MANA VF to include GDMA tx LSO packets and bytes count.
+>
+> Tested-on: Ubuntu22
+> Testcases:
+> 1. LISA testcase:
+> PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-Synthetic
+> 2. LISA testcase:
+> PERF-NETWORK-TCP-THROUGHPUT-MULTICONNECTION-NTTTCP-SRIOV
+> 3. Validated the GDMA stat packets and byte counters
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> ---
+> Changelog v1->v2
+>  * removed extra line
+>  * fixed variable declaration indentation
+> ---
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index ac2acc9aca9d..adeeeac4b4b4 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -2234,6 +2234,46 @@ int mana_config_rss(struct mana_port_context *apc, enum TRI_STATE rx,
- 	return 0;
- }
- 
-+void mana_query_gf_stats(struct mana_port_context *apc)
-+{
-+	struct mana_query_gf_stat_resp resp = {};
-+	struct mana_query_gf_stat_req req = {};
-+	struct net_device *ndev = apc->ndev;
-+	int err;
-+
-+	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_GF_STAT,
-+			     sizeof(req), sizeof(resp));
-+	req.req_stats = STATISTICS_FLAGS_HC_TX_BYTES |
-+			STATISTICS_FLAGS_HC_TX_UCAST_PACKETS |
-+			STATISTICS_FLAGS_HC_TX_UCAST_BYTES |
-+			STATISTICS_FLAGS_HC_TX_MCAST_PACKETS |
-+			STATISTICS_FLAGS_HC_TX_MCAST_BYTES |
-+			STATISTICS_FLAGS_HC_TX_BCAST_PACKETS |
-+			STATISTICS_FLAGS_HC_TX_BCAST_BYTES;
-+
-+	err = mana_send_request(apc->ac, &req, sizeof(req), &resp,
-+				sizeof(resp));
-+	if (err) {
-+		netdev_err(ndev, "Failed to query GF stats: %d\n", err);
-+		return;
-+	}
-+	err = mana_verify_resp_hdr(&resp.hdr, MANA_QUERY_GF_STAT,
-+				   sizeof(resp));
-+	if (err || resp.hdr.status) {
-+		netdev_err(ndev, "Failed to query GF stats: %d, 0x%x\n", err,
-+			   resp.hdr.status);
-+		return;
-+	}
-+
-+	apc->eth_stats.hc_tx_bytes = resp.hc_tx_bytes;
-+	apc->eth_stats.hc_tx_ucast_pkts = resp.hc_tx_ucast_pkts;
-+	apc->eth_stats.hc_tx_ucast_bytes = resp.hc_tx_ucast_bytes;
-+	apc->eth_stats.hc_tx_bcast_pkts = resp.hc_tx_bcast_pkts;
-+	apc->eth_stats.hc_tx_bcast_bytes = resp.hc_tx_bcast_bytes;
-+	apc->eth_stats.hc_tx_mcast_pkts = resp.hc_tx_mcast_pkts;
-+	apc->eth_stats.hc_tx_mcast_bytes = resp.hc_tx_mcast_bytes;
-+}
-+
- static int mana_init_port(struct net_device *ndev)
- {
- 	struct mana_port_context *apc = netdev_priv(ndev);
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-index 0dc78679f620..607150165ab4 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_ethtool.c
-@@ -13,6 +13,19 @@ static const struct {
- } mana_eth_stats[] = {
- 	{"stop_queue", offsetof(struct mana_ethtool_stats, stop_queue)},
- 	{"wake_queue", offsetof(struct mana_ethtool_stats, wake_queue)},
-+	{"hc_tx_bytes", offsetof(struct mana_ethtool_stats, hc_tx_bytes)},
-+	{"hc_tx_ucast_pkts", offsetof(struct mana_ethtool_stats,
-+					hc_tx_ucast_pkts)},
-+	{"hc_tx_ucast_bytes", offsetof(struct mana_ethtool_stats,
-+					hc_tx_ucast_bytes)},
-+	{"hc_tx_bcast_pkts", offsetof(struct mana_ethtool_stats,
-+					hc_tx_bcast_pkts)},
-+	{"hc_tx_bcast_bytes", offsetof(struct mana_ethtool_stats,
-+					hc_tx_bcast_bytes)},
-+	{"hc_tx_mcast_pkts", offsetof(struct mana_ethtool_stats,
-+					hc_tx_mcast_pkts)},
-+	{"hc_tx_mcast_bytes", offsetof(struct mana_ethtool_stats,
-+					hc_tx_mcast_bytes)},
- 	{"tx_cq_err", offsetof(struct mana_ethtool_stats, tx_cqe_err)},
- 	{"tx_cqe_unknown_type", offsetof(struct mana_ethtool_stats,
- 					tx_cqe_unknown_type)},
-@@ -114,6 +127,8 @@ static void mana_get_ethtool_stats(struct net_device *ndev,
- 
- 	if (!apc->port_is_up)
- 		return;
-+	/* we call mana function to update stats from GDMA */
-+	mana_query_gf_stats(apc);
- 
- 	for (q = 0; q < ARRAY_SIZE(mana_eth_stats); q++)
- 		data[i++] = *(u64 *)(eth_stats + mana_eth_stats[q].offset);
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 024ad8ddb27e..81fb5487ab59 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -347,6 +347,13 @@ struct mana_tx_qp {
- struct mana_ethtool_stats {
- 	u64 stop_queue;
- 	u64 wake_queue;
-+	u64 hc_tx_bytes;
-+	u64 hc_tx_ucast_pkts;
-+	u64 hc_tx_ucast_bytes;
-+	u64 hc_tx_bcast_pkts;
-+	u64 hc_tx_bcast_bytes;
-+	u64 hc_tx_mcast_pkts;
-+	u64 hc_tx_mcast_bytes;
- 	u64 tx_cqe_err;
- 	u64 tx_cqe_unknown_type;
- 	u64 rx_coalesced_err;
-@@ -437,6 +444,7 @@ u32 mana_run_xdp(struct net_device *ndev, struct mana_rxq *rxq,
- struct bpf_prog *mana_xdp_get(struct mana_port_context *apc);
- void mana_chn_setxdp(struct mana_port_context *apc, struct bpf_prog *prog);
- int mana_bpf(struct net_device *ndev, struct netdev_bpf *bpf);
-+void mana_query_gf_stats(struct mana_port_context *apc);
- 
- extern const struct ethtool_ops mana_ethtool_ops;
- 
-@@ -578,6 +586,49 @@ struct mana_fence_rq_resp {
- 	struct gdma_resp_hdr hdr;
- }; /* HW DATA */
- 
-+/* Query stats RQ */
-+struct mana_query_gf_stat_req {
-+	struct gdma_req_hdr hdr;
-+	u64 req_stats;
-+}; /* HW DATA */
-+
-+struct mana_query_gf_stat_resp {
-+	struct gdma_resp_hdr hdr;
-+	u64 reported_stats;
-+	/* rx errors/discards */
-+	u64 discard_rx_nowqe;
-+	u64 err_rx_vport_disabled;
-+	/* rx bytes/packets */
-+	u64 hc_rx_bytes;
-+	u64 hc_rx_ucast_pkts;
-+	u64 hc_rx_ucast_bytes;
-+	u64 hc_rx_bcast_pkts;
-+	u64 hc_rx_bcast_bytes;
-+	u64 hc_rx_mcast_pkts;
-+	u64 hc_rx_mcast_bytes;
-+	/* tx errors */
-+	u64 err_tx_gf_disabled;
-+	u64 err_tx_vport_disabled;
-+	u64 err_tx_inval_vport_offset_pkt;
-+	u64 err_tx_vlan_enforcement;
-+	u64 err_tx_ethtype_enforcement;
-+	u64 err_tx_SA_enforecement;
-+	u64 err_tx_SQPDID_enforcement;
-+	u64 err_tx_CQPDID_enforcement;
-+	u64 err_tx_mtu_violation;
-+	u64 err_tx_inval_oob;
-+	/* tx bytes/packets */
-+	u64 hc_tx_bytes;
-+	u64 hc_tx_ucast_pkts;
-+	u64 hc_tx_ucast_bytes;
-+	u64 hc_tx_bcast_pkts;
-+	u64 hc_tx_bcast_bytes;
-+	u64 hc_tx_mcast_pkts;
-+	u64 hc_tx_mcast_bytes;
-+	/* tx error */
-+	u64 err_tx_gdma;
-+}; /* HW DATA */
-+
- /* Configure vPort Rx Steering */
- struct mana_cfg_rx_steer_req_v2 {
- 	struct gdma_req_hdr hdr;
-@@ -657,6 +708,42 @@ struct mana_deregister_filter_resp {
- 	struct gdma_resp_hdr hdr;
- }; /* HW DATA */
- 
-+/* Requested GF stats Flags */
-+/* Rx discards/Errors */
-+#define STATISTICS_FLAGS_RX_DISCARDS_NO_WQE		0x0000000000000001
-+#define STATISTICS_FLAGS_RX_ERRORS_VPORT_DISABLED	0x0000000000000002
-+/* Rx bytes/pkts */
-+#define STATISTICS_FLAGS_HC_RX_BYTES			0x0000000000000004
-+#define STATISTICS_FLAGS_HC_RX_UCAST_PACKETS		0x0000000000000008
-+#define STATISTICS_FLAGS_HC_RX_UCAST_BYTES		0x0000000000000010
-+#define STATISTICS_FLAGS_HC_RX_MCAST_PACKETS		0x0000000000000020
-+#define STATISTICS_FLAGS_HC_RX_MCAST_BYTES		0x0000000000000040
-+#define STATISTICS_FLAGS_HC_RX_BCAST_PACKETS		0x0000000000000080
-+#define STATISTICS_FLAGS_HC_RX_BCAST_BYTES		0x0000000000000100
-+/* Tx errors */
-+#define STATISTICS_FLAGS_TX_ERRORS_GF_DISABLED		0x0000000000000200
-+#define STATISTICS_FLAGS_TX_ERRORS_VPORT_DISABLED	0x0000000000000400
-+#define STATISTICS_FLAGS_TX_ERRORS_INVAL_VPORT_OFFSET_PACKETS		\
-+							0x0000000000000800
-+#define STATISTICS_FLAGS_TX_ERRORS_VLAN_ENFORCEMENT	0x0000000000001000
-+#define STATISTICS_FLAGS_TX_ERRORS_ETH_TYPE_ENFORCEMENT			\
-+							0x0000000000002000
-+#define STATISTICS_FLAGS_TX_ERRORS_SA_ENFORCEMENT	0x0000000000004000
-+#define STATISTICS_FLAGS_TX_ERRORS_SQPDID_ENFORCEMENT	0x0000000000008000
-+#define STATISTICS_FLAGS_TX_ERRORS_CQPDID_ENFORCEMENT	0x0000000000010000
-+#define STATISTICS_FLAGS_TX_ERRORS_MTU_VIOLATION	0x0000000000020000
-+#define STATISTICS_FLAGS_TX_ERRORS_INVALID_OOB		0x0000000000040000
-+/* Tx bytes/pkts */
-+#define STATISTICS_FLAGS_HC_TX_BYTES			0x0000000000080000
-+#define STATISTICS_FLAGS_HC_TX_UCAST_PACKETS		0x0000000000100000
-+#define STATISTICS_FLAGS_HC_TX_UCAST_BYTES		0x0000000000200000
-+#define STATISTICS_FLAGS_HC_TX_MCAST_PACKETS		0x0000000000400000
-+#define STATISTICS_FLAGS_HC_TX_MCAST_BYTES		0x0000000000800000
-+#define STATISTICS_FLAGS_HC_TX_BCAST_PACKETS		0x0000000001000000
-+#define STATISTICS_FLAGS_HC_TX_BCAST_BYTES		0x0000000002000000
-+/* Tx error */
-+#define STATISTICS_FLAGS_TX_ERRORS_GDMA_ERROR		0x0000000004000000
-+
- #define MANA_MAX_NUM_QUEUES 64
- 
- #define MANA_SHORT_VPORT_OFFSET_MAX ((1U << 8) - 1)
--- 
-2.34.1
+Thanks.
+Reviewed-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
 
+> --
+> 2.34.1
+>
+>
+
+--0000000000001c2a2206028d1bd8
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+OltyqaGBuzv+bJTUL+bmV7E4QBLIqGt4jVr1R9hJdH6KxXwJdyfHZ9C6qXmoe2NQhiFUyBOJ0wgk
+dB9Z1IU7nCwvNKYg2JMoJs93tIgbhPJg/D7pqW8gabkCAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
+BB0wG4EZcGF2YW4uY2hlYmJpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
+HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUEV6y/89alKPoFbKUaJXsvWu5
+fdowDQYJKoZIhvcNAQELBQADggEBAEHSIB6g652wVb+r2YCmfHW47Jo+5TuCBD99Hla8PYhaWGkd
+9HIyD3NPhb6Vb6vtMWJW4MFGQF42xYRrAS4LZj072DuMotr79rI09pbOiWg0FlRRFt6R9vgUgebu
+pWSH7kmwVXcPtY94XSMMak4b7RSKig2mKbHDpD4bC7eGlwl5RxzYkgrHtMNRmHmQor5Nvqe52cFJ
+25Azqtwvjt5nbrEd81iBmboNTEnLaKuxbbCtLaMEP8xKeDjAKnNOqHUMps0AsQT8c0EGq39YHpjp
+Wn1l67VU0rMShbEFsiUf9WYgE677oinpdm0t2mdCjxr35tryxptoTZXKHDxr/Yy6l6ExggJtMIIC
+aQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
+EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwV/XkICjVscn4SNZMw
+DQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIG4iAdsXs4VgvGmqvd56GtSym5VizvSF
+zCN9yCgdI1WXMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDgx
+MDA4MDg0OFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQC
+ATANBgkqhkiG9w0BAQEFAASCAQA2C9WEAp3BmP8DrbxHKHRExXJIFU23GHlPvEqKtKOK7/4i45Qi
+DsBk8KBld9KQ9/RO+2K5C8QyTcz+gKZP+Ue3nx91+j+mkxFiuY9IB6muCOJAAPmkPzMFC5RPGud6
+mlOFJiIZMxUdxXh9OtpS0eEFoQbdxYHiahuUQBlLRGFlD/OI753QDWEq2UPxbY2snoJ3ZwrA7GMf
+KiysMViwI33BYeR3VIO4IPDfZkydDIYySZkSlF9H+QpHFjtkQPatDrL5tuIhUoMiXhE23wn/nVw2
+fwALQlK/FwNyq1ziMrrxzZdL/w6eJ0HWyCW5t2PVm6keFETVhFje7vly3JyBstCl
+--0000000000001c2a2206028d1bd8--
