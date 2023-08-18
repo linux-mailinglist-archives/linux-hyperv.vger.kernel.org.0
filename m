@@ -2,487 +2,659 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E308780DED
-	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Aug 2023 16:21:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7962781305
+	for <lists+linux-hyperv@lfdr.de>; Fri, 18 Aug 2023 20:46:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377745AbjHROUf (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 18 Aug 2023 10:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48926 "EHLO
+        id S1379479AbjHRSpw (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Fri, 18 Aug 2023 14:45:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377715AbjHROUO (ORCPT
+        with ESMTP id S1379478AbjHRSpn (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 18 Aug 2023 10:20:14 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D35093AA4;
-        Fri, 18 Aug 2023 07:20:07 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8Dx_+sPft9kSOQZAA--.52188S3;
-        Fri, 18 Aug 2023 22:19:59 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxfSPPfd9k0KpdAA--.50667S3;
-        Fri, 18 Aug 2023 22:18:56 +0800 (CST)
-Message-ID: <1af49baf-05e8-8cc8-c5b7-766db5a4acad@loongson.cn>
-Date:   Fri, 18 Aug 2023 22:18:55 +0800
+        Fri, 18 Aug 2023 14:45:43 -0400
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0269C3A98;
+        Fri, 18 Aug 2023 11:45:40 -0700 (PDT)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1bf11b1c7d0so14708605ad.0;
+        Fri, 18 Aug 2023 11:45:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692384339; x=1692989139;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sw5VmCfPfcFOzoMi20CDCMhCj52pZOKxET3l81JlpUI=;
+        b=Xq29xJbSMpaKbvzLu3qKvsS2PbWZd6gItrZ0Ii2nkV7kVzbYzwRNDJGTFPCAmfS9Bm
+         QqDWoukBwCvfgQ5tsRS8vCd4dKZ20cRRNmkFKeDMpjncqY17ZtsQeg/QV4td65y+hds2
+         ckaop9yPmzhCntw+iUEaok+NNe7F9mvv+BYeJ3hKogavXw9/3D9u8yKCfOR4BtMqDTL9
+         jr6fO4E87f1UfeacYTk7AMYDA7vDtzPEGJiul1+gCoBwbuzjWTbLEnhTN9VPHaAz9KGh
+         LNtjjYISc75azvpO5Row2zeEbHwIq/GHHxYtEGRmf9pI48kfPYGSWNA+6DAOTXbnqoaF
+         8LZw==
+X-Gm-Message-State: AOJu0YzBjWaiot5KJxlda8ncQ7VqaFfWikIu6mMwJncYSutkuiNCZZcD
+        GuIAv1yPMr3W0goqnaAaQvw=
+X-Google-Smtp-Source: AGHT+IGErfHAU7eEfgZEOMRVr9hQOi5rbkruKA92clGvV4SnNPph02knWQA422yGfquL/9ma8Glmfg==
+X-Received: by 2002:a17:903:41d0:b0:1bb:fcb9:f85 with SMTP id u16-20020a17090341d000b001bbfcb90f85mr11821ple.32.1692384339024;
+        Fri, 18 Aug 2023 11:45:39 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id d12-20020a170902cecc00b001b7f40a8959sm2093117plg.76.2023.08.18.11.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Aug 2023 11:45:38 -0700 (PDT)
+Date:   Fri, 18 Aug 2023 18:45:20 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arch@vger.kernel.org, patches@lists.linux.dev,
+        mikelley@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
+        ssengar@linux.microsoft.com, mukeshrathor@microsoft.com,
+        stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com,
+        vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        will@kernel.org, catalin.marinas@arm.com
+Subject: Re: [PATCH v2 01/15] hyperv-tlfs: Change shared HV_REGISTER_*
+ defines to HV_MSR_*
+Message-ID: <ZN+8QBX65wlYiPyI@liuwe-devbox-debian-v2>
+References: <1692309711-5573-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1692309711-5573-2-git-send-email-nunodasneves@linux.microsoft.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [06/12] arch: Declare screen_info in <asm/screen_info.h>
-Content-Language: en-US
-From:   suijingfeng <suijingfeng@loongson.cn>
-To:     Thomas Zimmermann <tzimmermann@suse.de>, arnd@arndb.de,
-        deller@gmx.de, daniel@ffwll.ch, airlied@gmail.com
-Cc:     linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-ia64@vger.kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Rich Felker <dalias@libc.org>, Guo Ren <guoren@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>, linux-arch@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-hexagon@vger.kernel.org, linux-staging@lists.linux.dev,
-        Russell King <linux@armlinux.org.uk>,
-        linux-csky@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Chris Zankel <chris@zankel.net>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        loongarch@lists.linux.dev,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Zi Yan <ziy@nvidia.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Brian Cain <bcain@quicinc.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Mike Rapoport (IBM)" <rppt@kernel.org>,
-        linux-alpha@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>, x86@kernel.org
-References: <20230629121952.10559-7-tzimmermann@suse.de>
- <924934b8-d2ca-c1ea-b357-202c2f995adc@loongson.cn>
-In-Reply-To: <924934b8-d2ca-c1ea-b357-202c2f995adc@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8DxfSPPfd9k0KpdAA--.50667S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfJr4Uur48Ar1kZr4DZF4xuFX_yoW8WFyfAo
-        W7K3WUZF45Xr42gr4xGwn8GFZxJr1Ykrs3JrW8GrnxJF15tF45J348tryjyay5Jry8Kr1U
-        Gr45WrZxAa4UAr1rl-sFpf9Il3svdjkaLaAFLSUrUUUUvb8apTn2vfkv8UJUUUU8wcxFpf
-        9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-        UjIYCTnIWjp_UUUOv7kC6x804xWl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI
-        8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-        Y2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-        v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-        67AKxVW8Jr0_Cr1UM2kKe7AKxVWrXVW3AwAS0I0E0xvYzxvE52x082IY62kv0487Mc804V
-        CY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AK
-        xVW3AVW8Xw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y4
-        8IcVAKI48JM4IIrI8v6xkF7I0E4cxCY480cwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0E
-        n4kS14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbc
-        kI1I0E14v26Fy26r43JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IY
-        s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AKxV
-        W8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07bjZ2-UUUUU=
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1692309711-5573-2-git-send-email-nunodasneves@linux.microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+Hi Michael, Long and Haiyang
 
-On 2023/8/18 22:04, suijingfeng wrote:
-> Hi,
->
->
-> Why this patch get dropped in the end?
->
-> Since the global screen_info is an arch-specific thing,
-> Whenever an arch-neutral module or subsystem references the global 
-> screen_info,
-> There are some complaints from either compile testing robot.
+On Thu, Aug 17, 2023 at 03:01:37PM -0700, Nuno Das Neves wrote:
+> In x86 hyperv-tlfs, HV_REGISTER_ prefix is used to indicate MSRs
+> accessed via rdmsrl/wrmsrl. But in ARM64, HV_REGISTER_ instead indicates
+> VP registers accessed via get/set vp registers hypercall.
+> 
+> This is due to HV_REGISTER_* names being used by hv_set/get_register,
+> with the arch-specific version delegating to the appropriate mechanism.
+> 
+> The problem is, using prefix HV_REGISTER_ for MSRs will conflict with
+> VP registers when they are introduced for x86 in future.
+> 
+> This patch solves the issue by:
+> 
+> 1. Defining all the x86 MSRs with a consistent prefix: HV_X64_MSR_.
+>    This is so HV_REGISTER_ can be reserved for VP registers.
+> 
+> 2. Change the non-arch-specific alias used by hv_set/get_register to
+>    HV_MSR_. This is also happens to be the same name HyperV uses for this
+>    purpose.
+> 
+> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
+I think this patch contains mostly mechanical changes, so I'm hoping
+it's not too controversial.
 
-There are some complaints from either compile testing robot or domain 
-specific reviewers who doubt why you select the CONFIG_SYSFB not 
-CONFIG_VT or CONFIG_EFI.
+Can you give an ack or nack on this patch?
 
+Thanks,
+Wei.
 
-> Well, a programmer may handle it by using the CONFIG_SYSFB guard,
-> but it is not as precise as what this patch provided.
->
-> Personally, I think this patch is still valuable.
-> I suggest either forcing all other architectures to export screen_info,
-> like the X86 and IA64 arch does, after all the screen_info is a good 
-> thing.
-> or provide the fine-control version like this patch does.
->
-
-Because all of the three tokens(CONFIG_SYSFB not CONFIG_VT or CONFIG_EFI.)
-
-have no direct relationship with the global screen_info if an arch is 
-not mentioned first.
-
-
-
-> On 2023/6/29 19:45, Thomas Zimmermann wrote:
->> The variable screen_info does not exist on all architectures. Declare
->> it in <asm-generic/screen_info.h>. All architectures that do declare it
->> will provide it via <asm/screen_info.h>.
->>
->> Add the Kconfig token ARCH_HAS_SCREEN_INFO to guard against access on
->> architectures that don't provide screen_info.
->>
->> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Cc: Richard Henderson <richard.henderson@linaro.org>
->> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
->> Cc: Matt Turner <mattst88@gmail.com>
->> Cc: Russell King <linux@armlinux.org.uk>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Guo Ren <guoren@kernel.org>
->> Cc: Brian Cain <bcain@quicinc.com>
->> Cc: Huacai Chen <chenhuacai@kernel.org>
->> Cc: WANG Xuerui <kernel@xen0n.name>
->> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->> Cc: Dinh Nguyen <dinguyen@kernel.org>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
->> Cc: Paul Walmsley <paul.walmsley@sifive.com>
->> Cc: Palmer Dabbelt <palmer@dabbelt.com>
->> Cc: Albert Ou <aou@eecs.berkeley.edu>
->> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->> Cc: Rich Felker <dalias@libc.org>
->> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: x86@kernel.org
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Chris Zankel <chris@zankel.net>
->> Cc: Max Filippov <jcmvbkbc@gmail.com>
->> Cc: Helge Deller <deller@gmx.de>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: "Paul E. McKenney" <paulmck@kernel.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Frederic Weisbecker <frederic@kernel.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: Sami Tolvanen <samitolvanen@google.com>
->> Cc: Juerg Haefliger <juerg.haefliger@canonical.com>
->> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Cc: Niklas Schnelle <schnelle@linux.ibm.com>
->> Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
->> Cc: "Mike Rapoport (IBM)" <rppt@kernel.org>
->> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
->> Cc: Zi Yan <ziy@nvidia.com>
->> Acked-by: WANG Xuerui <git@xen0n.name> # loongarch
->> ---
->>   arch/Kconfig                      |  6 ++++++
->>   arch/alpha/Kconfig                |  1 +
->>   arch/arm/Kconfig                  |  1 +
->>   arch/arm64/Kconfig                |  1 +
->>   arch/csky/Kconfig                 |  1 +
->>   arch/hexagon/Kconfig              |  1 +
->>   arch/ia64/Kconfig                 |  1 +
->>   arch/loongarch/Kconfig            |  1 +
->>   arch/mips/Kconfig                 |  1 +
->>   arch/nios2/Kconfig                |  1 +
->>   arch/powerpc/Kconfig              |  1 +
->>   arch/riscv/Kconfig                |  1 +
->>   arch/sh/Kconfig                   |  1 +
->>   arch/sparc/Kconfig                |  1 +
->>   arch/x86/Kconfig                  |  1 +
->>   arch/xtensa/Kconfig               |  1 +
->>   drivers/video/Kconfig             |  3 +++
->>   include/asm-generic/Kbuild        |  1 +
->>   include/asm-generic/screen_info.h | 12 ++++++++++++
->>   include/linux/screen_info.h       |  2 +-
->>   20 files changed, 38 insertions(+), 1 deletion(-)
->>   create mode 100644 include/asm-generic/screen_info.h
->>
->> diff --git a/arch/Kconfig b/arch/Kconfig
->> index 205fd23e0cada..2f58293fd7bcb 100644
->> --- a/arch/Kconfig
->> +++ b/arch/Kconfig
->> @@ -1466,6 +1466,12 @@ config ARCH_HAS_NONLEAF_PMD_YOUNG
->>         address translations. Page table walkers that clear the 
->> accessed bit
->>         may use this capability to reduce their search space.
->>   +config ARCH_HAS_SCREEN_INFO
->> +    bool
->> +    help
->> +      Selected by architectures that provide a global instance of
->> +      screen_info.
->> +
->>   source "kernel/gcov/Kconfig"
->>     source "scripts/gcc-plugins/Kconfig"
->> diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
->> index a5c2b1aa46b02..d749011d88b14 100644
->> --- a/arch/alpha/Kconfig
->> +++ b/arch/alpha/Kconfig
->> @@ -4,6 +4,7 @@ config ALPHA
->>       default y
->>       select ARCH_32BIT_USTAT_F_TINODE
->>       select ARCH_HAS_CURRENT_STACK_POINTER
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_MIGHT_HAVE_PC_PARPORT
->>       select ARCH_MIGHT_HAVE_PC_SERIO
->>       select ARCH_NO_PREEMPT
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 0fb4b218f6658..a9d01ee67a90e 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -15,6 +15,7 @@ config ARM
->>       select ARCH_HAS_MEMBARRIER_SYNC_CORE
->>       select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->>       select ARCH_HAS_PTE_SPECIAL if ARM_LPAE
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SETUP_DMA_OPS
->>       select ARCH_HAS_SET_MEMORY
->>       select ARCH_STACKWALK
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 343e1e1cae10a..21addc4715bb3 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -36,6 +36,7 @@ config ARM64
->>       select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->>       select ARCH_HAS_PTE_DEVMAP
->>       select ARCH_HAS_PTE_SPECIAL
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SETUP_DMA_OPS
->>       select ARCH_HAS_SET_DIRECT_MAP
->>       select ARCH_HAS_SET_MEMORY
->> diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
->> index 4df1f8c9d170b..28444e581fc1f 100644
->> --- a/arch/csky/Kconfig
->> +++ b/arch/csky/Kconfig
->> @@ -10,6 +10,7 @@ config CSKY
->>       select ARCH_USE_QUEUED_RWLOCKS
->>       select ARCH_USE_QUEUED_SPINLOCKS
->>       select ARCH_HAS_CURRENT_STACK_POINTER
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_INLINE_READ_LOCK if !PREEMPTION
->>       select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
->>       select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPTION
->> diff --git a/arch/hexagon/Kconfig b/arch/hexagon/Kconfig
->> index 54eadf2651786..cc683c0a43d34 100644
->> --- a/arch/hexagon/Kconfig
->> +++ b/arch/hexagon/Kconfig
->> @@ -5,6 +5,7 @@ comment "Linux Kernel Configuration for Hexagon"
->>   config HEXAGON
->>       def_bool y
->>       select ARCH_32BIT_OFF_T
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->>       select ARCH_NO_PREEMPT
->>       select DMA_GLOBAL_POOL
->> diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
->> index e79f15e32a451..8b1e785e6d53d 100644
->> --- a/arch/ia64/Kconfig
->> +++ b/arch/ia64/Kconfig
->> @@ -10,6 +10,7 @@ config IA64
->>       bool
->>       select ARCH_BINFMT_ELF_EXTRA_PHDRS
->>       select ARCH_HAS_DMA_MARK_CLEAN
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_STRNCPY_FROM_USER
->>       select ARCH_HAS_STRNLEN_USER
->>       select ARCH_MIGHT_HAVE_PC_PARPORT
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index d38b066fc931b..6aab2fb7753da 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -13,6 +13,7 @@ config LOONGARCH
->>       select ARCH_HAS_FORTIFY_SOURCE
->>       select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
->>       select ARCH_HAS_PTE_SPECIAL
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->>       select ARCH_INLINE_READ_LOCK if !PREEMPTION
->>       select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
->> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->> index 675a8660cb85a..c0ae09789cb6d 100644
->> --- a/arch/mips/Kconfig
->> +++ b/arch/mips/Kconfig
->> @@ -10,6 +10,7 @@ config MIPS
->>       select ARCH_HAS_KCOV
->>       select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE if !EVA
->>       select ARCH_HAS_PTE_SPECIAL if !(32BIT && CPU_HAS_RIXI)
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_STRNCPY_FROM_USER
->>       select ARCH_HAS_STRNLEN_USER
->>       select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->> diff --git a/arch/nios2/Kconfig b/arch/nios2/Kconfig
->> index e5936417d3cd3..7183eea282212 100644
->> --- a/arch/nios2/Kconfig
->> +++ b/arch/nios2/Kconfig
->> @@ -3,6 +3,7 @@ config NIOS2
->>       def_bool y
->>       select ARCH_32BIT_OFF_T
->>       select ARCH_HAS_DMA_PREP_COHERENT
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SYNC_DMA_FOR_CPU
->>       select ARCH_HAS_SYNC_DMA_FOR_DEVICE
->>       select ARCH_HAS_DMA_SET_UNCACHED
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index bff5820b7cda1..b1acad3076180 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -148,6 +148,7 @@ config PPC
->>       select ARCH_HAS_PTE_DEVMAP        if PPC_BOOK3S_64
->>       select ARCH_HAS_PTE_SPECIAL
->>       select ARCH_HAS_SCALED_CPUTIME        if 
->> VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SET_MEMORY
->>       select ARCH_HAS_STRICT_KERNEL_RWX    if (PPC_BOOK3S || PPC_8xx 
->> || 40x) && !HIBERNATION
->>       select ARCH_HAS_STRICT_KERNEL_RWX    if PPC_85xx && 
->> !HIBERNATION && !RANDOMIZE_BASE
->> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> index 5966ad97c30c3..b5a48f8424af9 100644
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@ -29,6 +29,7 @@ config RISCV
->>       select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->>       select ARCH_HAS_PMEM_API
->>       select ARCH_HAS_PTE_SPECIAL
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SET_DIRECT_MAP if MMU
->>       select ARCH_HAS_SET_MEMORY if MMU
->>       select ARCH_HAS_STRICT_KERNEL_RWX if MMU && !XIP_KERNEL
->> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
->> index 04b9550cf0070..001f5149952b4 100644
->> --- a/arch/sh/Kconfig
->> +++ b/arch/sh/Kconfig
->> @@ -10,6 +10,7 @@ config SUPERH
->>       select ARCH_HAS_GIGANTIC_PAGE
->>       select ARCH_HAS_GCOV_PROFILE_ALL
->>       select ARCH_HAS_PTE_SPECIAL
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->>       select ARCH_HIBERNATION_POSSIBLE if MMU
->>       select ARCH_MIGHT_HAVE_PC_PARPORT
->> diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
->> index 8535e19062f65..e4bfb80b48cfe 100644
->> --- a/arch/sparc/Kconfig
->> +++ b/arch/sparc/Kconfig
->> @@ -13,6 +13,7 @@ config 64BIT
->>   config SPARC
->>       bool
->>       default y
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_MIGHT_HAVE_PC_PARPORT if SPARC64 && PCI
->>       select ARCH_MIGHT_HAVE_PC_SERIO
->>       select DMA_OPS
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index 53bab123a8ee4..d7c2bf4ee403d 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -91,6 +91,7 @@ config X86
->>       select ARCH_HAS_NONLEAF_PMD_YOUNG    if PGTABLE_LEVELS > 2
->>       select ARCH_HAS_UACCESS_FLUSHCACHE    if X86_64
->>       select ARCH_HAS_COPY_MC            if X86_64
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SET_MEMORY
->>       select ARCH_HAS_SET_DIRECT_MAP
->>       select ARCH_HAS_STRICT_KERNEL_RWX
->> diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
->> index 3c6e5471f025b..c6cbd7459939c 100644
->> --- a/arch/xtensa/Kconfig
->> +++ b/arch/xtensa/Kconfig
->> @@ -8,6 +8,7 @@ config XTENSA
->>       select ARCH_HAS_DMA_PREP_COHERENT if MMU
->>       select ARCH_HAS_GCOV_PROFILE_ALL
->>       select ARCH_HAS_KCOV
->> +    select ARCH_HAS_SCREEN_INFO
->>       select ARCH_HAS_SYNC_DMA_FOR_CPU if MMU
->>       select ARCH_HAS_SYNC_DMA_FOR_DEVICE if MMU
->>       select ARCH_HAS_DMA_SET_UNCACHED if MMU
->> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
->> index 8b2b9ac37c3df..d4a72bea56be0 100644
->> --- a/drivers/video/Kconfig
->> +++ b/drivers/video/Kconfig
->> @@ -21,6 +21,9 @@ config STI_CORE
->>   config VIDEO_CMDLINE
->>       bool
->>   +config ARCH_HAS_SCREEN_INFO
->> +    bool
->> +
->>   config VIDEO_NOMODESET
->>       bool
->>       default n
->> diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
->> index 941be574bbe00..5e5d4158a4b4b 100644
->> --- a/include/asm-generic/Kbuild
->> +++ b/include/asm-generic/Kbuild
->> @@ -47,6 +47,7 @@ mandatory-y += percpu.h
->>   mandatory-y += pgalloc.h
->>   mandatory-y += preempt.h
->>   mandatory-y += rwonce.h
->> +mandatory-y += screen_info.h
->>   mandatory-y += sections.h
->>   mandatory-y += serial.h
->>   mandatory-y += shmparam.h
->> diff --git a/include/asm-generic/screen_info.h 
->> b/include/asm-generic/screen_info.h
->> new file mode 100644
->> index 0000000000000..6fd0e50fabfcd
->> --- /dev/null
->> +++ b/include/asm-generic/screen_info.h
->> @@ -0,0 +1,12 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +#ifndef _ASM_GENERIC_SCREEN_INFO_H
->> +#define _ASM_GENERIC_SCREEN_INFO_H
->> +
->> +#include <uapi/linux/screen_info.h>
->> +
->> +#if defined(CONFIG_ARCH_HAS_SCREEN_INFO)
->> +extern struct screen_info screen_info;
->> +#endif
->> +
->> +#endif /* _ASM_GENERIC_SCREEN_INFO_H */
->> diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
->> index eab7081392d50..c764b9a51c24b 100644
->> --- a/include/linux/screen_info.h
->> +++ b/include/linux/screen_info.h
->> @@ -4,6 +4,6 @@
->>     #include <uapi/linux/screen_info.h>
->>   -extern struct screen_info screen_info;
->> +#include <asm/screen_info.h>
->>     #endif /* _SCREEN_INFO_H */
-
+> ---
+>  arch/arm64/include/asm/hyperv-tlfs.h |  25 +++++
+>  arch/x86/include/asm/hyperv-tlfs.h   | 137 +++++++++++++--------------
+>  arch/x86/include/asm/mshyperv.h      |   8 +-
+>  arch/x86/kernel/cpu/mshyperv.c       |  22 ++---
+>  drivers/clocksource/hyperv_timer.c   |  24 ++---
+>  drivers/hv/hv.c                      |  32 +++----
+>  drivers/hv/hv_common.c               |  18 ++--
+>  include/asm-generic/mshyperv.h       |   2 +-
+>  8 files changed, 146 insertions(+), 122 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/asm/hyperv-tlfs.h
+> index bc6c7ac934a1..a6e852c2fc3a 100644
+> --- a/arch/arm64/include/asm/hyperv-tlfs.h
+> +++ b/arch/arm64/include/asm/hyperv-tlfs.h
+> @@ -64,6 +64,31 @@
+>  #define HV_REGISTER_STIMER0_CONFIG	0x000B0000
+>  #define HV_REGISTER_STIMER0_COUNT	0x000B0001
+>  
+> +/*
+> + * To support non-arch-specific code calling hv_set/get_register:
+> + * - On x86, HV_MSR_ indicates an MSR accessed via rdmsrl/wrmsrl
+> + * - On ARM, HV_MSR_ indicates a VP register accessed via hypercall
+> + */
+> +#define HV_MSR_VP_INDEX		(HV_REGISTER_VP_INDEX)
+> +#define HV_MSR_TIME_REF_COUNT	(HV_REGISTER_TIME_REF_COUNT)
+> +#define HV_MSR_REFERENCE_TS	(HV_REGISTER_REFERENCE_TSC)
+> +
+> +#define HV_MSR_STIMER0_CONFIG	(HV_REGISTER_STIMER0_CONFIG)
+> +#define HV_MSR_STIMER0_COUNT	(HV_REGISTER_STIMER0_COUNT)
+> +
+> +#define HV_MSR_SCONTROL		(HV_REGISTER_SCONTROL)
+> +#define HV_MSR_SIEFP		(HV_REGISTER_SIEFP)
+> +#define HV_MSR_SIMP		(HV_REGISTER_SIMP)
+> +#define HV_MSR_EOM		(HV_REGISTER_EOM)
+> +#define HV_MSR_SINT0		(HV_REGISTER_SINT0)
+> +
+> +#define HV_MSR_CRASH_P0		(HV_REGISTER_CRASH_P0)
+> +#define HV_MSR_CRASH_P1		(HV_REGISTER_CRASH_P1)
+> +#define HV_MSR_CRASH_P2		(HV_REGISTER_CRASH_P2)
+> +#define HV_MSR_CRASH_P3		(HV_REGISTER_CRASH_P3)
+> +#define HV_MSR_CRASH_P4		(HV_REGISTER_CRASH_P4)
+> +#define HV_MSR_CRASH_CTL	(HV_REGISTER_CRASH_CTL)
+> +
+>  union hv_msi_entry {
+>  	u64 as_uint64[2];
+>  	struct {
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index cea95dcd27c2..40902a767733 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -181,7 +181,7 @@ enum hv_isolation_type {
+>  #define HV_X64_MSR_HYPERCALL			0x40000001
+>  
+>  /* MSR used to provide vcpu index */
+> -#define HV_REGISTER_VP_INDEX			0x40000002
+> +#define HV_X64_MSR_VP_INDEX			0x40000002
+>  
+>  /* MSR used to reset the guest OS. */
+>  #define HV_X64_MSR_RESET			0x40000003
+> @@ -190,10 +190,10 @@ enum hv_isolation_type {
+>  #define HV_X64_MSR_VP_RUNTIME			0x40000010
+>  
+>  /* MSR used to read the per-partition time reference counter */
+> -#define HV_REGISTER_TIME_REF_COUNT		0x40000020
+> +#define HV_X64_MSR_TIME_REF_COUNT		0x40000020
+>  
+>  /* A partition's reference time stamp counter (TSC) page */
+> -#define HV_REGISTER_REFERENCE_TSC		0x40000021
+> +#define HV_X64_MSR_REFERENCE_TSC		0x40000021
+>  
+>  /* MSR used to retrieve the TSC frequency */
+>  #define HV_X64_MSR_TSC_FREQUENCY		0x40000022
+> @@ -208,61 +208,61 @@ enum hv_isolation_type {
+>  #define HV_X64_MSR_VP_ASSIST_PAGE		0x40000073
+>  
+>  /* Define synthetic interrupt controller model specific registers. */
+> -#define HV_REGISTER_SCONTROL			0x40000080
+> -#define HV_REGISTER_SVERSION			0x40000081
+> -#define HV_REGISTER_SIEFP			0x40000082
+> -#define HV_REGISTER_SIMP			0x40000083
+> -#define HV_REGISTER_EOM				0x40000084
+> -#define HV_REGISTER_SINT0			0x40000090
+> -#define HV_REGISTER_SINT1			0x40000091
+> -#define HV_REGISTER_SINT2			0x40000092
+> -#define HV_REGISTER_SINT3			0x40000093
+> -#define HV_REGISTER_SINT4			0x40000094
+> -#define HV_REGISTER_SINT5			0x40000095
+> -#define HV_REGISTER_SINT6			0x40000096
+> -#define HV_REGISTER_SINT7			0x40000097
+> -#define HV_REGISTER_SINT8			0x40000098
+> -#define HV_REGISTER_SINT9			0x40000099
+> -#define HV_REGISTER_SINT10			0x4000009A
+> -#define HV_REGISTER_SINT11			0x4000009B
+> -#define HV_REGISTER_SINT12			0x4000009C
+> -#define HV_REGISTER_SINT13			0x4000009D
+> -#define HV_REGISTER_SINT14			0x4000009E
+> -#define HV_REGISTER_SINT15			0x4000009F
+> +#define HV_X64_MSR_SCONTROL			0x40000080
+> +#define HV_X64_MSR_SVERSION			0x40000081
+> +#define HV_X64_MSR_SIEFP			0x40000082
+> +#define HV_X64_MSR_SIMP				0x40000083
+> +#define HV_X64_MSR_EOM				0x40000084
+> +#define HV_X64_MSR_SINT0			0x40000090
+> +#define HV_X64_MSR_SINT1			0x40000091
+> +#define HV_X64_MSR_SINT2			0x40000092
+> +#define HV_X64_MSR_SINT3			0x40000093
+> +#define HV_X64_MSR_SINT4			0x40000094
+> +#define HV_X64_MSR_SINT5			0x40000095
+> +#define HV_X64_MSR_SINT6			0x40000096
+> +#define HV_X64_MSR_SINT7			0x40000097
+> +#define HV_X64_MSR_SINT8			0x40000098
+> +#define HV_X64_MSR_SINT9			0x40000099
+> +#define HV_X64_MSR_SINT10			0x4000009A
+> +#define HV_X64_MSR_SINT11			0x4000009B
+> +#define HV_X64_MSR_SINT12			0x4000009C
+> +#define HV_X64_MSR_SINT13			0x4000009D
+> +#define HV_X64_MSR_SINT14			0x4000009E
+> +#define HV_X64_MSR_SINT15			0x4000009F
+>  
+>  /*
+>   * Define synthetic interrupt controller model specific registers for
+>   * nested hypervisor.
+>   */
+> -#define HV_REGISTER_NESTED_SCONTROL            0x40001080
+> -#define HV_REGISTER_NESTED_SVERSION            0x40001081
+> -#define HV_REGISTER_NESTED_SIEFP               0x40001082
+> -#define HV_REGISTER_NESTED_SIMP                0x40001083
+> -#define HV_REGISTER_NESTED_EOM                 0x40001084
+> -#define HV_REGISTER_NESTED_SINT0               0x40001090
+> +#define HV_X64_MSR_NESTED_SCONTROL		0x40001080
+> +#define HV_X64_MSR_NESTED_SVERSION		0x40001081
+> +#define HV_X64_MSR_NESTED_SIEFP			0x40001082
+> +#define HV_X64_MSR_NESTED_SIMP			0x40001083
+> +#define HV_X64_MSR_NESTED_EOM			0x40001084
+> +#define HV_X64_MSR_NESTED_SINT0			0x40001090
+>  
+>  /*
+>   * Synthetic Timer MSRs. Four timers per vcpu.
+>   */
+> -#define HV_REGISTER_STIMER0_CONFIG		0x400000B0
+> -#define HV_REGISTER_STIMER0_COUNT		0x400000B1
+> -#define HV_REGISTER_STIMER1_CONFIG		0x400000B2
+> -#define HV_REGISTER_STIMER1_COUNT		0x400000B3
+> -#define HV_REGISTER_STIMER2_CONFIG		0x400000B4
+> -#define HV_REGISTER_STIMER2_COUNT		0x400000B5
+> -#define HV_REGISTER_STIMER3_CONFIG		0x400000B6
+> -#define HV_REGISTER_STIMER3_COUNT		0x400000B7
+> +#define HV_X64_MSR_STIMER0_CONFIG		0x400000B0
+> +#define HV_X64_MSR_STIMER0_COUNT		0x400000B1
+> +#define HV_X64_MSR_STIMER1_CONFIG		0x400000B2
+> +#define HV_X64_MSR_STIMER1_COUNT		0x400000B3
+> +#define HV_X64_MSR_STIMER2_CONFIG		0x400000B4
+> +#define HV_X64_MSR_STIMER2_COUNT		0x400000B5
+> +#define HV_X64_MSR_STIMER3_CONFIG		0x400000B6
+> +#define HV_X64_MSR_STIMER3_COUNT		0x400000B7
+>  
+>  /* Hyper-V guest idle MSR */
+>  #define HV_X64_MSR_GUEST_IDLE			0x400000F0
+>  
+>  /* Hyper-V guest crash notification MSR's */
+> -#define HV_REGISTER_CRASH_P0			0x40000100
+> -#define HV_REGISTER_CRASH_P1			0x40000101
+> -#define HV_REGISTER_CRASH_P2			0x40000102
+> -#define HV_REGISTER_CRASH_P3			0x40000103
+> -#define HV_REGISTER_CRASH_P4			0x40000104
+> -#define HV_REGISTER_CRASH_CTL			0x40000105
+> +#define HV_X64_MSR_CRASH_P0			0x40000100
+> +#define HV_X64_MSR_CRASH_P1			0x40000101
+> +#define HV_X64_MSR_CRASH_P2			0x40000102
+> +#define HV_X64_MSR_CRASH_P3			0x40000103
+> +#define HV_X64_MSR_CRASH_P4			0x40000104
+> +#define HV_X64_MSR_CRASH_CTL			0x40000105
+>  
+>  /* TSC emulation after migration */
+>  #define HV_X64_MSR_REENLIGHTENMENT_CONTROL	0x40000106
+> @@ -275,31 +275,30 @@ enum hv_isolation_type {
+>  /* HV_X64_MSR_TSC_INVARIANT_CONTROL bits */
+>  #define HV_EXPOSE_INVARIANT_TSC		BIT_ULL(0)
+>  
+> -/* Register name aliases for temporary compatibility */
+> -#define HV_X64_MSR_STIMER0_COUNT	HV_REGISTER_STIMER0_COUNT
+> -#define HV_X64_MSR_STIMER0_CONFIG	HV_REGISTER_STIMER0_CONFIG
+> -#define HV_X64_MSR_STIMER1_COUNT	HV_REGISTER_STIMER1_COUNT
+> -#define HV_X64_MSR_STIMER1_CONFIG	HV_REGISTER_STIMER1_CONFIG
+> -#define HV_X64_MSR_STIMER2_COUNT	HV_REGISTER_STIMER2_COUNT
+> -#define HV_X64_MSR_STIMER2_CONFIG	HV_REGISTER_STIMER2_CONFIG
+> -#define HV_X64_MSR_STIMER3_COUNT	HV_REGISTER_STIMER3_COUNT
+> -#define HV_X64_MSR_STIMER3_CONFIG	HV_REGISTER_STIMER3_CONFIG
+> -#define HV_X64_MSR_SCONTROL		HV_REGISTER_SCONTROL
+> -#define HV_X64_MSR_SVERSION		HV_REGISTER_SVERSION
+> -#define HV_X64_MSR_SIMP			HV_REGISTER_SIMP
+> -#define HV_X64_MSR_SIEFP		HV_REGISTER_SIEFP
+> -#define HV_X64_MSR_VP_INDEX		HV_REGISTER_VP_INDEX
+> -#define HV_X64_MSR_EOM			HV_REGISTER_EOM
+> -#define HV_X64_MSR_SINT0		HV_REGISTER_SINT0
+> -#define HV_X64_MSR_SINT15		HV_REGISTER_SINT15
+> -#define HV_X64_MSR_CRASH_P0		HV_REGISTER_CRASH_P0
+> -#define HV_X64_MSR_CRASH_P1		HV_REGISTER_CRASH_P1
+> -#define HV_X64_MSR_CRASH_P2		HV_REGISTER_CRASH_P2
+> -#define HV_X64_MSR_CRASH_P3		HV_REGISTER_CRASH_P3
+> -#define HV_X64_MSR_CRASH_P4		HV_REGISTER_CRASH_P4
+> -#define HV_X64_MSR_CRASH_CTL		HV_REGISTER_CRASH_CTL
+> -#define HV_X64_MSR_TIME_REF_COUNT	HV_REGISTER_TIME_REF_COUNT
+> -#define HV_X64_MSR_REFERENCE_TSC	HV_REGISTER_REFERENCE_TSC
+> +/*
+> + * To support non-arch-specific code calling hv_set/get_register:
+> + * - On x86, HV_MSR_ indicates an MSR accessed via rdmsrl/wrmsrl
+> + * - On ARM, HV_MSR_ indicates a VP register accessed via hypercall
+> + */
+> +#define HV_MSR_VP_INDEX		(HV_X64_MSR_VP_INDEX)
+> +#define HV_MSR_TIME_REF_COUNT	(HV_X64_MSR_TIME_REF_COUNT)
+> +#define HV_MSR_REFERENCE_TSC	(HV_X64_MSR_REFERENCE_TSC)
+> +
+> +#define HV_MSR_STIMER0_CONFIG	(HV_X64_MSR_STIMER0_CONFIG)
+> +#define HV_MSR_STIMER0_COUNT	(HV_X64_MSR_STIMER0_COUNT)
+> +
+> +#define HV_MSR_SCONTROL		(HV_X64_MSR_SCONTROL)
+> +#define HV_MSR_SIEFP		(HV_X64_MSR_SIEFP)
+> +#define HV_MSR_SIMP		(HV_X64_MSR_SIMP)
+> +#define HV_MSR_EOM		(HV_X64_MSR_EOM)
+> +#define HV_MSR_SINT0		(HV_X64_MSR_SINT0)
+> +
+> +#define HV_MSR_CRASH_P0		(HV_X64_MSR_CRASH_P0)
+> +#define HV_MSR_CRASH_P1		(HV_X64_MSR_CRASH_P1)
+> +#define HV_MSR_CRASH_P2		(HV_X64_MSR_CRASH_P2)
+> +#define HV_MSR_CRASH_P3		(HV_X64_MSR_CRASH_P3)
+> +#define HV_MSR_CRASH_P4		(HV_X64_MSR_CRASH_P4)
+> +#define HV_MSR_CRASH_CTL	(HV_X64_MSR_CRASH_CTL)
+>  
+>  /* Hyper-V memory host visibility */
+>  enum hv_mem_host_visibility {
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index 88d9ef98e087..daaac502d411 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -242,14 +242,14 @@ extern bool hv_isolation_type_snp(void);
+>  
+>  static inline bool hv_is_synic_reg(unsigned int reg)
+>  {
+> -	return (reg >= HV_REGISTER_SCONTROL) &&
+> -	       (reg <= HV_REGISTER_SINT15);
+> +	return (reg >= HV_X64_MSR_SCONTROL) &&
+> +	       (reg <= HV_X64_MSR_SINT15);
+>  }
+>  
+>  static inline bool hv_is_sint_reg(unsigned int reg)
+>  {
+> -	return (reg >= HV_REGISTER_SINT0) &&
+> -	       (reg <= HV_REGISTER_SINT15);
+> +	return (reg >= HV_X64_MSR_SINT0) &&
+> +	       (reg <= HV_X64_MSR_SINT15);
+>  }
+>  
+>  u64 hv_get_register(unsigned int reg);
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+> index c7969e806c64..4d38cafe6f2c 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -43,19 +43,19 @@ struct ms_hyperv_info ms_hyperv;
+>  static inline unsigned int hv_get_nested_reg(unsigned int reg)
+>  {
+>  	if (hv_is_sint_reg(reg))
+> -		return reg - HV_REGISTER_SINT0 + HV_REGISTER_NESTED_SINT0;
+> +		return reg - HV_X64_MSR_SINT0 + HV_X64_MSR_NESTED_SINT0;
+>  
+>  	switch (reg) {
+> -	case HV_REGISTER_SIMP:
+> -		return HV_REGISTER_NESTED_SIMP;
+> -	case HV_REGISTER_SIEFP:
+> -		return HV_REGISTER_NESTED_SIEFP;
+> -	case HV_REGISTER_SVERSION:
+> -		return HV_REGISTER_NESTED_SVERSION;
+> -	case HV_REGISTER_SCONTROL:
+> -		return HV_REGISTER_NESTED_SCONTROL;
+> -	case HV_REGISTER_EOM:
+> -		return HV_REGISTER_NESTED_EOM;
+> +	case HV_X64_MSR_SIMP:
+> +		return HV_X64_MSR_NESTED_SIMP;
+> +	case HV_X64_MSR_SIEFP:
+> +		return HV_X64_MSR_NESTED_SIEFP;
+> +	case HV_X64_MSR_SVERSION:
+> +		return HV_X64_MSR_NESTED_SVERSION;
+> +	case HV_X64_MSR_SCONTROL:
+> +		return HV_X64_MSR_NESTED_SCONTROL;
+> +	case HV_X64_MSR_EOM:
+> +		return HV_X64_MSR_NESTED_EOM;
+>  	default:
+>  		return reg;
+>  	}
+> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> index e56307a81f4d..2e9fa88f25fe 100644
+> --- a/drivers/clocksource/hyperv_timer.c
+> +++ b/drivers/clocksource/hyperv_timer.c
+> @@ -81,14 +81,14 @@ static int hv_ce_set_next_event(unsigned long delta,
+>  
+>  	current_tick = hv_read_reference_counter();
+>  	current_tick += delta;
+> -	hv_set_register(HV_REGISTER_STIMER0_COUNT, current_tick);
+> +	hv_set_register(HV_MSR_STIMER0_COUNT, current_tick);
+>  	return 0;
+>  }
+>  
+>  static int hv_ce_shutdown(struct clock_event_device *evt)
+>  {
+> -	hv_set_register(HV_REGISTER_STIMER0_COUNT, 0);
+> -	hv_set_register(HV_REGISTER_STIMER0_CONFIG, 0);
+> +	hv_set_register(HV_MSR_STIMER0_COUNT, 0);
+> +	hv_set_register(HV_MSR_STIMER0_CONFIG, 0);
+>  	if (direct_mode_enabled && stimer0_irq >= 0)
+>  		disable_percpu_irq(stimer0_irq);
+>  
+> @@ -119,7 +119,7 @@ static int hv_ce_set_oneshot(struct clock_event_device *evt)
+>  		timer_cfg.direct_mode = 0;
+>  		timer_cfg.sintx = stimer0_message_sint;
+>  	}
+> -	hv_set_register(HV_REGISTER_STIMER0_CONFIG, timer_cfg.as_uint64);
+> +	hv_set_register(HV_MSR_STIMER0_CONFIG, timer_cfg.as_uint64);
+>  	return 0;
+>  }
+>  
+> @@ -373,10 +373,10 @@ static __always_inline u64 read_hv_clock_msr(void)
+>  	 * nanosecond units.
+>  	 *
+>  	 * Use hv_raw_get_register() because this function is used from
+> -	 * noinstr. Notable; while HV_REGISTER_TIME_REF_COUNT is a synthetic
+> +	 * noinstr. Notable; while HV_MSR_TIME_REF_COUNT is a synthetic
+>  	 * register it doesn't need the GHCB path.
+>  	 */
+> -	return hv_raw_get_register(HV_REGISTER_TIME_REF_COUNT);
+> +	return hv_raw_get_register(HV_MSR_TIME_REF_COUNT);
+>  }
+>  
+>  /*
+> @@ -439,9 +439,9 @@ static void suspend_hv_clock_tsc(struct clocksource *arg)
+>  	union hv_reference_tsc_msr tsc_msr;
+>  
+>  	/* Disable the TSC page */
+> -	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> +	tsc_msr.as_uint64 = hv_get_register(HV_MSR_REFERENCE_TSC);
+>  	tsc_msr.enable = 0;
+> -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+> +	hv_set_register(HV_MSR_REFERENCE_TSC, tsc_msr.as_uint64);
+>  }
+>  
+>  
+> @@ -450,10 +450,10 @@ static void resume_hv_clock_tsc(struct clocksource *arg)
+>  	union hv_reference_tsc_msr tsc_msr;
+>  
+>  	/* Re-enable the TSC page */
+> -	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> +	tsc_msr.as_uint64 = hv_get_register(HV_MSR_REFERENCE_TSC);
+>  	tsc_msr.enable = 1;
+>  	tsc_msr.pfn = tsc_pfn;
+> -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+> +	hv_set_register(HV_MSR_REFERENCE_TSC, tsc_msr.as_uint64);
+>  }
+>  
+>  #ifdef HAVE_VDSO_CLOCKMODE_HVCLOCK
+> @@ -555,14 +555,14 @@ static void __init hv_init_tsc_clocksource(void)
+>  	 * thus TSC clocksource will work even without the real TSC page
+>  	 * mapped.
+>  	 */
+> -	tsc_msr.as_uint64 = hv_get_register(HV_REGISTER_REFERENCE_TSC);
+> +	tsc_msr.as_uint64 = hv_get_register(HV_MSR_REFERENCE_TSC);
+>  	if (hv_root_partition)
+>  		tsc_pfn = tsc_msr.pfn;
+>  	else
+>  		tsc_pfn = HVPFN_DOWN(virt_to_phys(tsc_page));
+>  	tsc_msr.enable = 1;
+>  	tsc_msr.pfn = tsc_pfn;
+> -	hv_set_register(HV_REGISTER_REFERENCE_TSC, tsc_msr.as_uint64);
+> +	hv_set_register(HV_MSR_REFERENCE_TSC, tsc_msr.as_uint64);
+>  
+>  	clocksource_register_hz(&hyperv_cs_tsc, NSEC_PER_SEC/100);
+>  
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index de6708dbe0df..3ddacdebe886 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -167,7 +167,7 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  	union hv_synic_scontrol sctrl;
+>  
+>  	/* Setup the Synic's message page */
+> -	simp.as_uint64 = hv_get_register(HV_REGISTER_SIMP);
+> +	simp.as_uint64 = hv_get_register(HV_MSR_SIMP);
+>  	simp.simp_enabled = 1;
+>  
+>  	if (hv_isolation_type_snp() || hv_root_partition) {
+> @@ -183,10 +183,10 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  			>> HV_HYP_PAGE_SHIFT;
+>  	}
+>  
+> -	hv_set_register(HV_REGISTER_SIMP, simp.as_uint64);
+> +	hv_set_register(HV_MSR_SIMP, simp.as_uint64);
+>  
+>  	/* Setup the Synic's event page */
+> -	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
+> +	siefp.as_uint64 = hv_get_register(HV_MSR_SIEFP);
+>  	siefp.siefp_enabled = 1;
+>  
+>  	if (hv_isolation_type_snp() || hv_root_partition) {
+> @@ -202,12 +202,12 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  			>> HV_HYP_PAGE_SHIFT;
+>  	}
+>  
+> -	hv_set_register(HV_REGISTER_SIEFP, siefp.as_uint64);
+> +	hv_set_register(HV_MSR_SIEFP, siefp.as_uint64);
+>  
+>  	/* Setup the shared SINT. */
+>  	if (vmbus_irq != -1)
+>  		enable_percpu_irq(vmbus_irq, 0);
+> -	shared_sint.as_uint64 = hv_get_register(HV_REGISTER_SINT0 +
+> +	shared_sint.as_uint64 = hv_get_register(HV_MSR_SINT0 +
+>  					VMBUS_MESSAGE_SINT);
+>  
+>  	shared_sint.vector = vmbus_interrupt;
+> @@ -223,14 +223,14 @@ void hv_synic_enable_regs(unsigned int cpu)
+>  #else
+>  	shared_sint.auto_eoi = 0;
+>  #endif
+> -	hv_set_register(HV_REGISTER_SINT0 + VMBUS_MESSAGE_SINT,
+> +	hv_set_register(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT,
+>  				shared_sint.as_uint64);
+>  
+>  	/* Enable the global synic bit */
+> -	sctrl.as_uint64 = hv_get_register(HV_REGISTER_SCONTROL);
+> +	sctrl.as_uint64 = hv_get_register(HV_MSR_SCONTROL);
+>  	sctrl.enable = 1;
+>  
+> -	hv_set_register(HV_REGISTER_SCONTROL, sctrl.as_uint64);
+> +	hv_set_register(HV_MSR_SCONTROL, sctrl.as_uint64);
+>  }
+>  
+>  int hv_synic_init(unsigned int cpu)
+> @@ -254,17 +254,17 @@ void hv_synic_disable_regs(unsigned int cpu)
+>  	union hv_synic_siefp siefp;
+>  	union hv_synic_scontrol sctrl;
+>  
+> -	shared_sint.as_uint64 = hv_get_register(HV_REGISTER_SINT0 +
+> +	shared_sint.as_uint64 = hv_get_register(HV_MSR_SINT0 +
+>  					VMBUS_MESSAGE_SINT);
+>  
+>  	shared_sint.masked = 1;
+>  
+>  	/* Need to correctly cleanup in the case of SMP!!! */
+>  	/* Disable the interrupt */
+> -	hv_set_register(HV_REGISTER_SINT0 + VMBUS_MESSAGE_SINT,
+> +	hv_set_register(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT,
+>  				shared_sint.as_uint64);
+>  
+> -	simp.as_uint64 = hv_get_register(HV_REGISTER_SIMP);
+> +	simp.as_uint64 = hv_get_register(HV_MSR_SIMP);
+>  	/*
+>  	 * In Isolation VM, sim and sief pages are allocated by
+>  	 * paravisor. These pages also will be used by kdump
+> @@ -279,9 +279,9 @@ void hv_synic_disable_regs(unsigned int cpu)
+>  		simp.base_simp_gpa = 0;
+>  	}
+>  
+> -	hv_set_register(HV_REGISTER_SIMP, simp.as_uint64);
+> +	hv_set_register(HV_MSR_SIMP, simp.as_uint64);
+>  
+> -	siefp.as_uint64 = hv_get_register(HV_REGISTER_SIEFP);
+> +	siefp.as_uint64 = hv_get_register(HV_MSR_SIEFP);
+>  	siefp.siefp_enabled = 0;
+>  
+>  	if (hv_isolation_type_snp() || hv_root_partition) {
+> @@ -291,12 +291,12 @@ void hv_synic_disable_regs(unsigned int cpu)
+>  		siefp.base_siefp_gpa = 0;
+>  	}
+>  
+> -	hv_set_register(HV_REGISTER_SIEFP, siefp.as_uint64);
+> +	hv_set_register(HV_MSR_SIEFP, siefp.as_uint64);
+>  
+>  	/* Disable the global synic bit */
+> -	sctrl.as_uint64 = hv_get_register(HV_REGISTER_SCONTROL);
+> +	sctrl.as_uint64 = hv_get_register(HV_MSR_SCONTROL);
+>  	sctrl.enable = 0;
+> -	hv_set_register(HV_REGISTER_SCONTROL, sctrl.as_uint64);
+> +	hv_set_register(HV_MSR_SCONTROL, sctrl.as_uint64);
+>  
+>  	if (vmbus_irq != -1)
+>  		disable_percpu_irq(vmbus_irq);
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 542a1d53b303..790b96290360 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -227,17 +227,17 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+>  	 * contain the size of the panic data in that page. Rest of the
+>  	 * registers are no-op when the NOTIFY_MSG flag is set.
+>  	 */
+> -	hv_set_register(HV_REGISTER_CRASH_P0, 0);
+> -	hv_set_register(HV_REGISTER_CRASH_P1, 0);
+> -	hv_set_register(HV_REGISTER_CRASH_P2, 0);
+> -	hv_set_register(HV_REGISTER_CRASH_P3, virt_to_phys(hv_panic_page));
+> -	hv_set_register(HV_REGISTER_CRASH_P4, bytes_written);
+> +	hv_set_register(HV_MSR_CRASH_P0, 0);
+> +	hv_set_register(HV_MSR_CRASH_P1, 0);
+> +	hv_set_register(HV_MSR_CRASH_P2, 0);
+> +	hv_set_register(HV_MSR_CRASH_P3, virt_to_phys(hv_panic_page));
+> +	hv_set_register(HV_MSR_CRASH_P4, bytes_written);
+>  
+>  	/*
+>  	 * Let Hyper-V know there is crash data available along with
+>  	 * the panic message.
+>  	 */
+> -	hv_set_register(HV_REGISTER_CRASH_CTL,
+> +	hv_set_register(HV_MSR_CRASH_CTL,
+>  			(HV_CRASH_CTL_CRASH_NOTIFY |
+>  			 HV_CRASH_CTL_CRASH_NOTIFY_MSG));
+>  }
+> @@ -310,7 +310,7 @@ int __init hv_common_init(void)
+>  		 * Register for panic kmsg callback only if the right
+>  		 * capability is supported by the hypervisor.
+>  		 */
+> -		hyperv_crash_ctl = hv_get_register(HV_REGISTER_CRASH_CTL);
+> +		hyperv_crash_ctl = hv_get_register(HV_MSR_CRASH_CTL);
+>  		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG)
+>  			hv_kmsg_dump_register();
+>  
+> @@ -380,7 +380,7 @@ int hv_common_cpu_init(unsigned int cpu)
+>  		}
+>  	}
+>  
+> -	msr_vp_index = hv_get_register(HV_REGISTER_VP_INDEX);
+> +	msr_vp_index = hv_get_register(HV_MSR_VP_INDEX);
+>  
+>  	hv_vp_index[cpu] = msr_vp_index;
+>  
+> @@ -477,7 +477,7 @@ EXPORT_SYMBOL_GPL(hv_is_hibernation_supported);
+>   */
+>  static u64 __hv_read_ref_counter(void)
+>  {
+> -	return hv_get_register(HV_REGISTER_TIME_REF_COUNT);
+> +	return hv_get_register(HV_MSR_TIME_REF_COUNT);
+>  }
+>  
+>  u64 (*hv_read_reference_counter)(void) = __hv_read_ref_counter;
+> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+> index 402a8c1c202d..094c57320ed1 100644
+> --- a/include/asm-generic/mshyperv.h
+> +++ b/include/asm-generic/mshyperv.h
+> @@ -149,7 +149,7 @@ static inline void vmbus_signal_eom(struct hv_message *msg, u32 old_msg_type)
+>  		 * possibly deliver another msg from the
+>  		 * hypervisor
+>  		 */
+> -		hv_set_register(HV_REGISTER_EOM, 0);
+> +		hv_set_register(HV_MSR_EOM, 0);
+>  	}
+>  }
+>  
+> -- 
+> 2.25.1
+> 
