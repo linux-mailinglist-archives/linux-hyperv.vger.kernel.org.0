@@ -2,85 +2,129 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBB157815D5
-	for <lists+linux-hyperv@lfdr.de>; Sat, 19 Aug 2023 01:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07722781908
+	for <lists+linux-hyperv@lfdr.de>; Sat, 19 Aug 2023 12:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241881AbjHRXbR (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 18 Aug 2023 19:31:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33366 "EHLO
+        id S231694AbjHSKnl (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Sat, 19 Aug 2023 06:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242456AbjHRXbL (ORCPT
+        with ESMTP id S231665AbjHSKnX (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 18 Aug 2023 19:31:11 -0400
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4E6E4C;
-        Fri, 18 Aug 2023 16:31:10 -0700 (PDT)
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1bc0d39b52cso11320905ad.2;
-        Fri, 18 Aug 2023 16:31:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692401470; x=1693006270;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X0VrumJjXJtBH0MCiqRAB25wxy5fETy8C315CEQSkOI=;
-        b=O1uk9GNOIpHfJ4FywIHwXawtEMTIhGkv66O2F+O19NiDM8Ai9qq/Iy/wvlKpLNSX6e
-         WAt0yvNTDngqfvQkUf8M+HZjWCdvXLEZsN5IonLj1LYkoxwi1knEcHSvHAbRkVpemGCx
-         MWG5CZpJFsHLa6vQW4bd0h4RZnC9QH73CbZ3Le4cQ8rR6AQ0v7crc5CDTlqO5cfZGqQk
-         Fw/cnEj4XDmm7K3zS59vZE6z39Hph/lA8YLsYF5SvJ+DZ5S+jODkaZQhbsOvJkgQ+Kei
-         xheLgXVOcBu8mxhGVxsSn1Piuw/S5TKycSb7c9am/Oa85P5JPWyofRbnN44wzr1I3BqX
-         b1Ww==
-X-Gm-Message-State: AOJu0YxyideC79Hx/LAFGz9N3rT3zLfJvOr0V0+PKqo9SI5YHtA+dPju
-        I2lmHHwCLxvjHPEVtbWVScA=
-X-Google-Smtp-Source: AGHT+IHTQ4leX3gaB2UBapnVqB5I/AgZBLaIfW34OqI1+sD+yGPUlnFWei0O+z0QrwTB+gAkYxdWRw==
-X-Received: by 2002:a17:903:11c6:b0:1bb:98a0:b78a with SMTP id q6-20020a17090311c600b001bb98a0b78amr830369plh.18.1692401470267;
-        Fri, 18 Aug 2023 16:31:10 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id c11-20020a170902724b00b001bb515e6b39sm2273755pll.306.2023.08.18.16.31.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 16:31:09 -0700 (PDT)
-Date:   Fri, 18 Aug 2023 23:30:52 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sat, 19 Aug 2023 06:43:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD8649303;
+        Sat, 19 Aug 2023 03:26:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A56FA602E2;
+        Sat, 19 Aug 2023 10:26:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92CE6C433C7;
+        Sat, 19 Aug 2023 10:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1692440776;
+        bh=Kriub9SChhgOzXQ4vf2OlbcqHqfEVe40noLKWwwtcBA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LEmSj0343j7QKyGwCVSxsldxuh+LkW/wbX2vCSO5fekicWYIMzSHo1yCEbCq0aA7b
+         kVW/a8H2jF7iu13U2gjKm4PcObyEcTjO5+WDRwXI2nHmKjgBnslKQibFDFCo3nN+q6
+         5oQCaXeEseuYfR/IbmwnlWeRzNiKRYV/SEZ3+uiY=
+Date:   Sat, 19 Aug 2023 12:26:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         x86@kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-arch@vger.kernel.org, patches@lists.linux.dev,
-        mikelley@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
-        ssengar@linux.microsoft.com, mukeshrathor@microsoft.com,
-        stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com,
-        vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        will@kernel.org, catalin.marinas@arm.com
-Subject: Re: [PATCH v2 14/15] asm-generic: hyperv: Use mshv headers
- conditionally. Add asm-generic/hyperv-defs.h
-Message-ID: <ZN//LCO3mVzC4gv9@liuwe-devbox-debian-v2>
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        decui@microsoft.com, apais@linux.microsoft.com,
+        Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
+        mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+        jinankjain@linux.microsoft.com, vkuznets@redhat.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
+        catalin.marinas@arm.com
+Subject: Re: [PATCH v2 13/15] uapi: hyperv: Add mshv driver headers hvhdk.h,
+ hvhdk_mini.h, hvgdk.h, hvgdk_mini.h
+Message-ID: <2023081923-crown-cake-79f7@gregkh>
 References: <1692309711-5573-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1692309711-5573-15-git-send-email-nunodasneves@linux.microsoft.com>
+ <1692309711-5573-14-git-send-email-nunodasneves@linux.microsoft.com>
+ <ZN6m2gVmtVStuEfA@liuwe-devbox-debian-v2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1692309711-5573-15-git-send-email-nunodasneves@linux.microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <ZN6m2gVmtVStuEfA@liuwe-devbox-debian-v2>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 03:01:50PM -0700, Nuno Das Neves wrote:
-> Add hyperv-defs.h to replace some inclusions of hyperv-tlfs.h.
+On Thu, Aug 17, 2023 at 11:01:46PM +0000, Wei Liu wrote:
+> On Thu, Aug 17, 2023 at 03:01:49PM -0700, Nuno Das Neves wrote:
+> > Containing hypervisor ABI definitions to use in mshv driver.
+> > 
+> > Version numbers for each file:
+> > hvhdk.h		25212
+> > hvhdk_mini.h	25294
+> > hvgdk.h		25125
+> > hvgdk_mini.h	25294
+> > 
+> > These are unstable interfaces and as such must be compiled independently
+> > from published interfaces found in hyperv-tlfs.h.
+> > 
+> > These are in uapi because they will be used in the mshv ioctl API.
+> > 
+> > Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> > Acked-by: Wei Liu <wei.liu@kernel.org>
 > 
-> It includes hyperv-tlfs.h or hvhdk.h depending on a compile-time constant
-> HV_HYPERV_DEFS which will be defined in the mshv driver.
+> There were some concerns raised internally about the stability of the
+> APIs when they are put into UAPI.
 > 
-> This is needed to keep unstable Hyper-V interfaces independent of
-> hyperv-tlfs.h. This ensures hvhdk.h replaces hyperv-tlfs.h in the mshv driver,
-> even via indirect includes.
+> I think this is still okay, for a few reasons:
 > 
-> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>   1. When KVM was first introduced into the kernel tree, it was
+>      experimental. It was only made stable after some time.
+>   2. There are other experimental or unstable APIs in UAPI. They
+>      are clearly marked so.
+>   3. The coda file system, which has been in tree since 2008, has a
+>      header file in UAPI which clearly marks as experimental.
+> 
+> All in all introducing a set of unstable / experimental APIs under UAPI
+> is not unheard of. Rules could've changed now, but I don't find any
+> document under Documentation/.
+> 
+> I think it will be valuable to have this driver in tree sooner rather
+> than later, so that it can evolve with Linux kernel, and we can in turn
+> go back to the hypervisor side to gradually stabilize the APIs.
+> 
+> Greg, I'm told that you may have a strong opinion in this area. Please
+> let me know what you think about this.
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+My "strong" opinion is the one kernel development rule that we have,
+"you can not break userspace".  So, if you change these
+values/structures/whatever in the future, and userspace tools break,
+that's not ok and the changes have to be reverted.
+
+If you can control both sides of the API here (with open tools that you
+can guarantee everyone will always update to), then yes, you can change
+the api in the future.
+
+It's really really hard to make a stable api the first time around, but
+we have "tricks" for how to do it well, and ensure that you can slowly
+change it over time (proper use of flags and zero-checked padding), but
+almost always the simplest way is to just add new apis and keep
+supporting the old ones by internally calling the new functions instead.
+
+So, what do you think will change here in the future and why can't you
+say "this is stable" now?  You have working userspace code for this api,
+right?  What is left to be developed for it?
+
+thanks,
+
+greg k-h
