@@ -2,85 +2,74 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F9A783746
-	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Aug 2023 03:17:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE48778374A
+	for <lists+linux-hyperv@lfdr.de>; Tue, 22 Aug 2023 03:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231958AbjHVBRT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 21 Aug 2023 21:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33146 "EHLO
+        id S229891AbjHVBTi (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 21 Aug 2023 21:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbjHVBRS (ORCPT
+        with ESMTP id S231996AbjHVBTV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 21 Aug 2023 21:17:18 -0400
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1802184;
-        Mon, 21 Aug 2023 18:17:16 -0700 (PDT)
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-68a4025b5e8so1350379b3a.3;
-        Mon, 21 Aug 2023 18:17:16 -0700 (PDT)
+        Mon, 21 Aug 2023 21:19:21 -0400
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1275D187;
+        Mon, 21 Aug 2023 18:19:20 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1bdf4752c3cso21893675ad.2;
+        Mon, 21 Aug 2023 18:19:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692667036; x=1693271836;
+        d=1e100.net; s=20221208; t=1692667159; x=1693271959;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vvCdHBtjSnuFrbABVz90pmxppJPtgweSzJ+1K52oA8A=;
-        b=j2Q7m9U7y9yiSOo1nBNYQc+vdbfKlu0KrZaTbV2cnPcsZk+O1v4ULZVirqtxG61Deu
-         TN81mwJVnwGGcQ4fAmzSGgjMd4X9BkZphcqdb6/KETay7qq4PTT+YqZ3JU6DGYG6YBzx
-         oYtrGkqItk0S298vt1eobaKlxhIbCLJ4J9BbcHluyFVN1Dz6bqYRic4jtLChhhxqvQic
-         ZwTBEUbHuCOzNVN1xrPldvGJePV9EroYAXv/U7P6yQ+fl3l1L2gynjZgOKTb5VZu9YaS
-         tr00BrmQjrNHuEGoMT4yy+ZZEF5zalPvSvqcjpDBALufs4T7fHoC44f18nT28KcO/ae5
-         lM0A==
-X-Gm-Message-State: AOJu0Yw2acWZqjGx8fBoMgUaJyfowu68ZpuCjGPqKqFYSq8axoKg4mC4
-        N8ol23n9fzpgvxrXeU+nYr8=
-X-Google-Smtp-Source: AGHT+IHMQh5HegE43CVlVbwBVI6hDP7ObjofAdRLJ03kKsEvoAIsU8gW2VhfpbtlaAbbRO20SNbPSw==
-X-Received: by 2002:a05:6a20:a115:b0:13f:b028:789c with SMTP id q21-20020a056a20a11500b0013fb028789cmr7206284pzk.5.1692667036329;
-        Mon, 21 Aug 2023 18:17:16 -0700 (PDT)
+        bh=QapfFLaCt/wNGVFmPCUAbuh5qqv4rUy+Qh/cSOJE2Ek=;
+        b=G69xHzQ69Xwr90IDuf2iTd3hj/q/lEMy/5FlJJx/5XWgFbxPlwQIrfoPhdNhkpGF18
+         tslfoKTMxaNw3V1n5Kaid7SE13tNvvSGOCWIUru4C0Y4n/1kkLj6Lb1tsxlfQtf87as4
+         ZwNN59MlsHzz6HNen/HHJVs+3+++pPxtIYX/oobeWMTuHOrfB7AL/99SiXBWTukW/2o2
+         dvx0wk6mpuS92IN8uLe9qjOF52GOGFbz8VrrSR+QQ+M4TGIycNUZEmQNCahInvw3pegI
+         KsPC1MayhoktZUtItgPkf30E8FleAz4A4F6Yn2jlgaKRobik6HoB95u/UOxEk0Vo+nlx
+         jkCQ==
+X-Gm-Message-State: AOJu0YxUCXKsgZoYedusUZsbB7YQKl1F3+PAFcsEuWYEZix0+8LlOL6g
+        geMTq1iZSCP3tP67GdhIyFW5BiTnxEU=
+X-Google-Smtp-Source: AGHT+IFkUFX3NUesGhiDiU53uRVdTgU54omInH5uKyANTQZXU0ReUEbyMc5aclILMzHOMbnxbR9Wew==
+X-Received: by 2002:a17:903:25d4:b0:1bb:94ed:20a with SMTP id jc20-20020a17090325d400b001bb94ed020amr5563403plb.24.1692667159409;
+        Mon, 21 Aug 2023 18:19:19 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id x21-20020a170902ea9500b001bc39aa63ebsm7647738plb.121.2023.08.21.18.17.15
+        by smtp.gmail.com with ESMTPSA id i1-20020a17090332c100b001bf2dcfe352sm7633594plr.234.2023.08.21.18.19.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 18:17:15 -0700 (PDT)
-Date:   Tue, 22 Aug 2023 01:16:56 +0000
+        Mon, 21 Aug 2023 18:19:18 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 01:18:59 +0000
 From:   Wei Liu <wei.liu@kernel.org>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, daniel.lezcano@linaro.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com, Tianyu Lan <tiala@microsoft.com>,
-        linux-arch@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkuznets@redhat.com
-Subject: Re: [PATCH v7 0/8] x86/hyperv: Add AMD sev-snp enlightened guest
- support on hyperv
-Message-ID: <ZOQMiLEdPsD+pF8q@liuwe-devbox-debian-v2>
-References: <20230818102919.1318039-1-ltykernel@gmail.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Drivers: hv: vmbus: Don't dereference ACPI root object
+ handle
+Message-ID: <ZOQNA7IYbxzFMBhI@liuwe-devbox-debian-v2>
+References: <fd8e64ceeecfd1d95ff49021080cf699e88dbbde.1691606267.git.maciej.szmigiero@oracle.com>
+ <BYAPR21MB1688ACCF36131027A665EB06D717A@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230818102919.1318039-1-ltykernel@gmail.com>
+In-Reply-To: <BYAPR21MB1688ACCF36131027A665EB06D717A@BYAPR21MB1688.namprd21.prod.outlook.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 06:29:10AM -0400, Tianyu Lan wrote:
-> From: Tianyu Lan <tiala@microsoft.com>
+On Mon, Aug 14, 2023 at 08:26:28PM +0000, Michael Kelley (LINUX) wrote:
+> From: Maciej S. Szmigiero <mail@maciej.szmigiero.name> Sent: Wednesday, August 9, 2023 11:40 AM
 > 
-> Tianyu Lan (8):
->   x86/hyperv: Add sev-snp enlightened guest static key
->   x86/hyperv: Set Virtual Trust Level in VMBus init message
->   x86/hyperv: Mark Hyper-V vp assist page unencrypted in SEV-SNP
->     enlightened guest
->   drivers: hv: Mark percpu hvcall input arg page unencrypted in SEV-SNP
->     enlightened guest
->   x86/hyperv: Use vmmcall to implement Hyper-V hypercall in sev-snp
->     enlightened guest
->   clocksource: hyper-v: Mark hyperv tsc page unencrypted in sev-snp
->     enlightened guest
->   x86/hyperv: Add smp support for SEV-SNP guest
->   x86/hyperv: Add hyperv-specific handling for VMMCALL under SEV-ES
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-Applied to hyperv-next. Thanks.
+Applied to hyperv-next, thanks!
