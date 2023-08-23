@@ -2,114 +2,189 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FDFC78547D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Aug 2023 11:46:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1B7785ECE
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Aug 2023 19:40:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231461AbjHWJq3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 23 Aug 2023 05:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47772 "EHLO
+        id S237871AbjHWRkW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Aug 2023 13:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236128AbjHWJnB (ORCPT
+        with ESMTP id S236627AbjHWRkV (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 23 Aug 2023 05:43:01 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69290E5F;
-        Wed, 23 Aug 2023 02:13:31 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68a1af910e0so2717091b3a.2;
-        Wed, 23 Aug 2023 02:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692782011; x=1693386811;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lOms2f4/L91imgkkuFrGq9Z9J53A0PDpV5lJYbBBlWc=;
-        b=Ud8nSYAy78ovklEn6i4is9lKdU1r1EmdnbAuRRy+PcZ6iRnAMpCzhvvzjeUOyZZnf+
-         cueS1TxXZ3Lu4i2QS+VizxbGFHZCEhndx7WHnCZvSTQ69rzKvuCZIuzbvNNHC8VXAuO6
-         9OVCUO8xCOHFXPmlCDe8yNwJm3+Vg4n4beieSJqzCnCeIjFOPdpafyvFxAU9rHYgr/8u
-         ENWETQVezZV2Exr8gm3GO06Pc2huU2R1ue2aRq/Cd5DZDMNSBrihOZxOz5kAvNg68K7l
-         xR3t+Tr6ZGU816b8W4BLADhBKHd1eGLOAQ3nf9AkjM1hvBrf1MLjRhyO/GnPi+lzN8UZ
-         UBew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692782011; x=1693386811;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lOms2f4/L91imgkkuFrGq9Z9J53A0PDpV5lJYbBBlWc=;
-        b=e4HhcXGkxeFZt6osNDdsQLMerWWurZIMlRSclQIpXlYYZuaVP2odMgoEtg1LpCmr6k
-         6/P3Ubt2sY5rcf4MqS/2jhLtrH2dMYINbTZpnFkg9pHcMwgTdv/ikx7kpgaz/FimXkw1
-         jtux8qdfcobbY0Ot9PUMpAp1Bu1+ATrtZy/Y1Vf+C4wAl95MwokbwEsW0LBjCH7f61Xz
-         kjYQwHcdy8bKwwzROP4wiGiyXr4iGvCzjlPGJpHFFnrcGPzrOLpKpqq4wImOPziYnBNA
-         jV7SwKZZcxaHwEPvgHLTUP4+vPgiu5KmTLay0PKVpwsQEVxkFlLofrDQxCxs4MD4X2vz
-         UbVA==
-X-Gm-Message-State: AOJu0YyzByZ7TiryTFojfWGkiVb/s2WkDzCmC91NVeX6tB2u+Q8djJP7
-        ngbBsFrVf+8m/tLtfTY5G5Y=
-X-Google-Smtp-Source: AGHT+IGr1srhgonkVCsAJggt0XMtR/IpUTB/MF4nTQAoSUEtIY2WKQ+tvCqg2u3ftQew5hUPbSSTqA==
-X-Received: by 2002:a05:6a00:c89:b0:682:4801:93d3 with SMTP id a9-20020a056a000c8900b00682480193d3mr10166805pfv.31.1692782011164;
-        Wed, 23 Aug 2023 02:13:31 -0700 (PDT)
-Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
-        by smtp.gmail.com with ESMTPSA id a19-20020a62e213000000b0068844ee18dfsm567954pfi.83.2023.08.23.02.13.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Aug 2023 02:13:30 -0700 (PDT)
-Message-ID: <064c4135-2d03-a34b-dcfd-f2203bac2464@gmail.com>
-Date:   Wed, 23 Aug 2023 17:13:17 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH 5/9] Drivers: hv: vmbus: Support >64 VPs for a fully
- enlightened TDX/SNP VM
-To:     Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com,
-        arnd@arndb.de, bp@alien8.de, brijesh.singh@amd.com,
-        dan.j.williams@intel.com, dave.hansen@intel.com,
-        dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
-        jane.chu@oracle.com, kirill.shutemov@linux.intel.com,
-        kys@microsoft.com, linux-hyperv@vger.kernel.org, luto@kernel.org,
-        mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
-        sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-        tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
-        Jason@zx2c4.com, nik.borisov@suse.com, mikelley@microsoft.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Tianyu.Lan@microsoft.com,
-        rick.p.edgecombe@intel.com, andavis@redhat.com, mheslin@redhat.com,
-        vkuznets@redhat.com, xiaoyao.li@intel.com
+        Wed, 23 Aug 2023 13:40:21 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2122.outbound.protection.outlook.com [40.107.96.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2793BE5A;
+        Wed, 23 Aug 2023 10:40:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gB1hrVZjwhJJMcBIqlgJmTmolvM8+v5GNPW12EhO+uXWbb9jHhDcB+zYwbsWRTTpEmt/xUbnDpg153vjV8k5hE1D1C9IsmKPB9GOLw0TE6dYT5UqU90cwzwFs9PDC5KVyZn3vQZuOoPsLkcJiiB8KCeFRUMXwylrvrLTSGOOMayWCxxXDzrBT+bMxdd/aY90ASpL3/gOe1YFctzu/391/uGoqTDh/6OuRy4czmNXg8JxNb+HXQUSkdXQDJoa/3+64pSqeaBLhcjXhOfN3MUfLKHYNJmQwsLQDXiGMrBAAdwTjPNmlq5F4V2q6+bWIS5vHg0KwLughZEDWSQKx3rzFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=91BPTtMxEg4FVb6B4ph7rmcckph/0g/G/Jw7SOSua0k=;
+ b=Fwt8iQ3+UoGncuHIhWv+T2izwRs0SLvsYmNm1U1JxBaAZcXxwJ8BoKggbaxSXO0wYFvsr5gcHf2Wp1UOOXmO2vIligIgRsuBXAmjVr5NzhL5OSGD6sovbzdAxUp+ABk7+F57GzZCCPmnZSchNZ+dfqXP4YBah4TV7KNvoHe+86b8V/1TVP7oAuvdxPrxwagLxTI5oU3GsLCXEPplVhfoMv04qV5SrdFXXgTHX3GUKBjdpRCimYC6BL8OklHOSfs6F8oRgIgrzC/VYdtdrDCC8mUm17K4KK1UO0yNFfFLvFdu9xtVrVr13Q/e+ywBSmMt3Lo88MGPnrHyrPoIMSRW+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=91BPTtMxEg4FVb6B4ph7rmcckph/0g/G/Jw7SOSua0k=;
+ b=Kn+BxKzzblZ6PRJLKDc3Vpfsjy1tM6TQtObZhBv/Jba1amCPz68dub6m7mSx7FpME5CIOXqwR49YZYhoQkjE+Gsg2aR2sDh3AoJPhOskIZAq4/u6vdw5FpKpY2MjqUlVtoXWMKDldcG5MiJoxk+RcDJ3liEnLwTN7FtnjSTS9Z0=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by MW4PR21MB3823.namprd21.prod.outlook.com (2603:10b6:303:223::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.5; Wed, 23 Aug
+ 2023 17:40:15 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::b05:d4ac:60ff:3b3f]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::b05:d4ac:60ff:3b3f%5]) with mapi id 15.20.6745.005; Wed, 23 Aug 2023
+ 17:40:15 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Tianyu Lan <ltykernel@gmail.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>, jason <jason@zx2c4.com>,
+        "nik.borisov@suse.com" <nik.borisov@suse.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
+        Anthony Davis <andavis@redhat.com>,
+        Mark Heslin <mheslin@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>
+Subject: RE: [PATCH 2/9] x86/hyperv: Support hypercalls for fully enlightened
+ TDX guests
+Thread-Topic: [PATCH 2/9] x86/hyperv: Support hypercalls for fully enlightened
+ TDX guests
+Thread-Index: AQHZ1ZBV0WzhzxgTlUOjIYIaUsLzFa/4JQxg
+Date:   Wed, 23 Aug 2023 17:40:15 +0000
+Message-ID: <SA1PR21MB1335A994B0EAD226CF2D15FEBF1CA@SA1PR21MB1335.namprd21.prod.outlook.com>
 References: <20230811221851.10244-1-decui@microsoft.com>
- <20230811221851.10244-6-decui@microsoft.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-In-Reply-To: <20230811221851.10244-6-decui@microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+ <20230811221851.10244-3-decui@microsoft.com>
+ <6ba2366a-5a7a-839c-6b7a-3500a43c3d93@gmail.com>
+In-Reply-To: <6ba2366a-5a7a-839c-6b7a-3500a43c3d93@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=79b55e83-6ce1-43fa-880e-f12ea38f419b;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-08-23T17:34:37Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|MW4PR21MB3823:EE_
+x-ms-office365-filtering-correlation-id: dc497ab4-885d-49d7-5483-08dba40002b3
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: t+dQsmwHAjJbEiISKDtDBT24mpdSr4ZMdyWWwB8JdDk0LUQ+oZUGmZ+4HHPIk8gy7HXNzyouCnp979f8Plzxsg5tpLi2KWCB+4btsJo1weidadP2S8eWJBqE0QOgy1sM+uVxwFWXqxa26E19dB8eL7+6gHbQ+7+RNrd1N6Z1AWbkx+95hlb4aTFtCB+MusbDkVB9tMWump3ryYCQzuY4Kr3OUrnl7bih+8xzn2790doR2i8HNCrY5jZGAkdIVj9NZowJzpMjNg5/+m/71LBrS9yTsrQgCXWo302Ac1ti+SVy+oxPjFe43AQHamd/NkztnnFiN59elxfltQh5dwUQzK5qAhsijTZfGK1es5zz5eevwfafd1IGMvHxr73KDlrIgQGwHlcyfGoRh2eqftP4JdvlcRGo5bQkeLRi6fCVLGuTO+EHf9urKuOCPO24YTIbrrF1Nf8zE5Z7r8IKcYFSrxWWcz1klLz3WPj8xdzsQzylg68i+dO+2RcsgMEaoZTYMAUNoQUt9ZnJYpwrj/pjjLAjULZHzq9feO2/px7b+RaCXIJOAoeGdiRstV+54zlgVEmL0Urjug2IQ3bqfuIUKZMg4WLLhiVm1h3zOMta+bU7gfVrZZN7gMJ/AFCE8A0H5tR4LL4qIEVrt4bOXtrWMfXXhgCKg96BSbjUyfWWPT/MKIS1DSmEeOZAkgXQxXJiDeZAaWNA8IlGVMj8lsB54g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(366004)(346002)(376002)(136003)(1800799009)(186009)(451199024)(71200400001)(55016003)(8676002)(8936002)(4326008)(110136005)(66476007)(66946007)(66446008)(66556008)(54906003)(64756008)(316002)(6636002)(10290500003)(478600001)(12101799020)(76116006)(53546011)(41300700001)(6506007)(7696005)(9686003)(38100700002)(82950400001)(921005)(122000001)(38070700005)(8990500004)(82960400001)(33656002)(7406005)(2906002)(7416002)(86362001)(5660300002)(52536014);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bE9VTlRucVlWenVnTTBLT0Fhb2hnU2JqZGcveUg1UHdsT2pxMmtvdmpUWXNq?=
+ =?utf-8?B?eWgzakZiaVd5bk9EckF6Rld2RXlDRkdkdDlKdUxyVnRXeHdjZVZnYVlkbUdM?=
+ =?utf-8?B?YVA0MDFlVjFiZUF6ZHV4SnRHTG4yNS9rRnFwYXhkYXEyTEVwSUgrbzh5ZG94?=
+ =?utf-8?B?cFdnS09nbHhncjMzd050TVhYUENRUWJPdlEzZEFJanhOYTFSM2ExVGJKOHlU?=
+ =?utf-8?B?bGZKcUxDVlROVXpjamtFUGh4a1ZvTlgyUTBiRm8wSkhwNDNwa1JOUTlKSU9z?=
+ =?utf-8?B?a2pDNjN5UDRzRnJMcG9pWkxwL3BmNW9INlFkaXVOcVlkTkVIdnNCU0lHTm5J?=
+ =?utf-8?B?bitPbHlQUWlOc3M2QUNlL3c5WUtYWlZ2WHF2eWh0WDk4ZWJmK2JaT1Z3M0dE?=
+ =?utf-8?B?S0t4a0tReFA2OFhyTlVxbkZzZjhXVW1mUHB3eXJYZkpKY0UwZVREVXZhRTZh?=
+ =?utf-8?B?K0RUc1hCTG10WW45L21FNlZuQng0MWpqZ2UyWkFFQ1pBaUw3ZVlOT2QxNlVR?=
+ =?utf-8?B?K2svaXVXWXk0OHp3dGYxL2Rnb3JFL0lKSWVhcHlWaGtLRTVlbm43NUJGeG84?=
+ =?utf-8?B?VHk5amhuV2duV09tSFJheTZCVGlxdFNJMWpRZDRkZkZ0dlJoNGMxb0M5cmFv?=
+ =?utf-8?B?U2pqbFR2cHNidDZ4bDRqOVNVb1RWRzdTeGY2THdwSWYvUnZMUmkwMVBZVEVY?=
+ =?utf-8?B?ODRKV056ZEx0YzU0NjhuQ2JsWmw1U1ZVeGZuSnROYUpKcGgycDc0VDdrbGRz?=
+ =?utf-8?B?Y1NDRjVxbWpxN2lkc0Myd2NoODloTHF4cGVaZWlwVVJCblFiUXFHajIzcHVx?=
+ =?utf-8?B?bFlqemZVY05FNHpPRjlZNUhMSEMvOHNwdSs4TitTRE10amRTN2MxSm5lVk1T?=
+ =?utf-8?B?VG1pUXMvSjFTQk9yWCtRWkdCMXFtV1l5WkdLeEdZQnRVOXdYYU92THVYRWJ4?=
+ =?utf-8?B?YWEyTlJGL1BiTjNKOVV3ZURLUHBjNGJubVlpRC9vbUxoMXUzOVFqcXZaWmFR?=
+ =?utf-8?B?TzdEUWQzT3FlTW9TczRjeFJCc25QeHQyY2taYy9TQys0YWZsM3JxbzluNXlP?=
+ =?utf-8?B?WHV1ZnVNT01rdW5QZHpnOEhZOE1OSmtDVDM1L1dscFBqVFBoUDlvYXJucHll?=
+ =?utf-8?B?Zk5veUQvTnJ5NWdCSk5UMWUxS3FsVEdaL3VXRkNGbmdpS0dpY3R5WUdUbFk5?=
+ =?utf-8?B?RmMrdmhjTE5oeE41cjh6WFNtc3pOZ2RmQkNTSmtmNVA0eTBSN1R5NUdhUmxU?=
+ =?utf-8?B?Um13RlAwNkVkVXVTTkJpRmhJUlFoejJiZmRLUGZzQ0ZaQWhHdnZyRGFqQzJ0?=
+ =?utf-8?B?MFlySW9QNnRoYkVkLzBhMWZkckVxUWZRT0J4ZklwZnRJc3pjV1ZneUNCYk0v?=
+ =?utf-8?B?QjBnSFhUOW5qOGU2QndKeDV3Q3VSaWJWVlZ4NVRpKzVheVdvWU9WNXNRbGZu?=
+ =?utf-8?B?WEdwamVtU1BaMldzTHNYeFVhMndsRmtabzRpcXRvTXNXQlFydnVPbXBIWHpj?=
+ =?utf-8?B?bGVheVZ5VU9INm92L21qRSttM0RaenlYcFlxcUE3aVlmUTB5b00zcnkrU3ht?=
+ =?utf-8?B?bWhGTkpCeUVPMHVWYVErT3BXUjdHdHBsa3IxcWdZOUZKcEtYUURpQTg3NHpO?=
+ =?utf-8?B?dmZMa3VQVyttbXNaS08rL0hCMk1yMGhyTC9STXpQbXg4emZKUW5NaURGQ1dS?=
+ =?utf-8?B?czBZZTVHa2hmTlR1TFlybXBKSHhxdWNCVDZaKzVodGtyUEZvNzRFbi81VXcr?=
+ =?utf-8?B?QlRkOVpJektkRFUxL1dlY01JSzBsTnVOTXFxNDM2WEJpbmN3WC9uZGJxWnF6?=
+ =?utf-8?B?QzZlNzZPL01Jd0V4cytBQUZ3ZFJ3RFYvVjQwZXdLbWZhWDhtNXRxRnRFcWlE?=
+ =?utf-8?B?eXJpaTY4enk2MlVwaHVqWG9CZUYxeVVyTXgzYjZpUkhEN0xmK05EUXV3L1ZO?=
+ =?utf-8?B?S0J5NXpoOWVlNllKSjQ3c2FUc0w1UDhrM0JVdmJVM21PUm1VZDhMOWNxNkQw?=
+ =?utf-8?B?MU00ZmlIaU9iMnliL1VoYjlsVGUzc2h1RjY5by9zeEE0Rjk2TjFENjJxT3Zi?=
+ =?utf-8?B?QXA3ejNUNUNCS2l6TlN4dVlxZnR6S09seUw1U3JRVWdIVSt0ZjlTbFlTV3RV?=
+ =?utf-8?B?emNLOEF6d2ZXaDJZVWFBZWY4a24yd2pzRUw5dTNlWWFla1RqN2htcFh5TWg2?=
+ =?utf-8?Q?vMEnmT3ffN3On7Mq4AucEc6ibb2yQ7F4IrzAiPnzhYq+?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc497ab4-885d-49d7-5483-08dba40002b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2023 17:40:15.5093
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kTR3fcs0BcxvudUFh4MGBxTRHME+kUzq8ldphv7asvVIaqpjxt4TpOevkgSOGkqQbfY5rtItGtBTkxFOr/+S9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB3823
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On 8/12/2023 6:18 AM, Dexuan Cui wrote:
-> Don't set *this_cpu_ptr(hyperv_pcpu_input_arg) before the function
-> set_memory_decrypted() returns, otherwise we run into this ticky issue:
-> 
-> For a fully enlightened TDX/SNP VM, in hv_common_cpu_init(),
-> *this_cpu_ptr(hyperv_pcpu_input_arg) is an encrypted page before
-> the set_memory_decrypted() returns.
-> 
-> When such a VM has more than 64 VPs, if the hyperv_pcpu_input_arg is not
-> NULL, hv_common_cpu_init() -> set_memory_decrypted() -> ... ->
-> cpa_flush() -> on_each_cpu() -> ... -> hv_send_ipi_mask() -> ... ->
-> __send_ipi_mask_ex() tries to call hv_do_fast_hypercall16() with the
-> hyperv_pcpu_input_arg as the hypercall input page, which must be a
-> decrypted page in such a VM, but the page is still encrypted at this
-> point, and a fatal fault is triggered.
-> 
-> Fix the issue by setting *this_cpu_ptr(hyperv_pcpu_input_arg) after
-> set_memory_decrypted(): if the hyperv_pcpu_input_arg is NULL,
-> __send_ipi_mask_ex() returns HV_STATUS_INVALID_PARAMETER immediately,
-> and hv_send_ipi_mask() falls back to orig_apic.send_IPI_mask(),
-> which can use x2apic_send_IPI_all(), which may be slightly slower than
-> the hypercall but still works correctly in such a VM.
->
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-
-Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+PiBGcm9tOiBUaWFueXUgTGFuIDxsdHlrZXJuZWxAZ21haWwuY29tPg0KPiBTZW50OiBXZWRuZXNk
+YXksIEF1Z3VzdCAyMywgMjAyMyAxMjowNiBBTQ0KPiBUbzogRGV4dWFuIEN1aSA8ZGVjdWlAbWlj
+cm9zb2Z0LmNvbT47IGFrQGxpbnV4LmludGVsLmNvbTsNCj4gWy4uLl0NCj4gT24gOC8xMi8yMDIz
+IDY6MTggQU0sIERleHVhbiBDdWkgd3JvdGU6DQo+ID4gQSBmdWxseSBlbmxpZ2h0ZW5lZCBURFgg
+Z3Vlc3Qgb24gSHlwZXItViAoaS5lLiB3aXRob3V0IHRoZSBwYXJhdmlzb3IpIG9ubHkNCj4gPiB1
+c2VzIHRoZSBHSENJIGNhbGwgcmF0aGVyIHRoYW4gaHZfaHlwZXJjYWxsX3BnLg0KPiA+DQo+ID4g
+SW4gaHZfZG9faHlwZXJjYWxsKCksIEh5cGVyLVYgcmVxdWlyZXMgdGhhdCB0aGUgaW5wdXQvb3V0
+cHV0IGFkZHJlc3Nlcw0KPiA+IG11c3QgaGF2ZSB0aGUgY2NfbWFzay4NCkknbGwgcmVtb3ZlIHRo
+ZSBhYm92ZSBzZW50ZW5jZSwgc2luY2UgdGhpcyBpcyBubyBsb25nZXIgdHJ1ZSBvbg0KZ2VuZXJh
+bGx5IGF2YWlsYWJsZSBIeXBlci1WOiBjY19tYXNrIHN0aWxsIHdvcmtzLCBidXQgaXQncyBub3Qg
+cmVxdWlyZWQuDQoNCj4gPiBbLi4uXQ0KPiBSZXZpZXdlZC1ieTogVGlhbnl1IExhbiA8dGlhbGFA
+bWljcm9zb2Z0LmNvbT4NClRoYW5rcyENCg0KPiA+IC0tLSBhL2FyY2gveDg2L2h5cGVydi9odl9p
+bml0LmMNCj4gPiArKysgYi9hcmNoL3g4Ni9oeXBlcnYvaHZfaW5pdC5jDQo+ID4gQEAgLTQ4MSw2
+ICs0ODEsMTAgQEAgdm9pZCBfX2luaXQgaHlwZXJ2X2luaXQodm9pZCkNCj4gPiAgIAkvKiBIeXBl
+ci1WIHJlcXVpcmVzIHRvIHdyaXRlIGd1ZXN0IG9zIGlkIHZpYSBnaGNiIGluIFNOUCBJVk0uICov
+DQo+ID4gICAJaHZfZ2hjYl9tc3Jfd3JpdGUoSFZfWDY0X01TUl9HVUVTVF9PU19JRCwgZ3Vlc3Rf
+aWQpOw0KPiA+DQo+ID4gKwkvKiBBIFREWCBndWVzdCB1c2VzIHRoZSBHSENJIGNhbGwgcmF0aGVy
+IHRoYW4gaHZfaHlwZXJjYWxsX3BnLiAqLw0KPiA+ICsJaWYgKGh2X2lzb2xhdGlvbl90eXBlX3Rk
+eCgpKQ0KPiA+ICsJCWdvdG8gc2tpcF9oeXBlcmNhbGxfcGdfaW5pdDsNCj4gPiArDQo+IA0KPiBO
+aXRwaWNrOg0KPiAJUHV0IGh5cGVyY2FsIHBhZ2UgaW5pdGlhbGl6YXRpb24gY29kZSBpbnRvIGEg
+c2VwZWFyYXRlIGZ1bmN0aW9uIGFuZA0KPiBza2lwIHRoZSBmdW5jdGlvbiBpbiB0aGUgdGR4IGd1
+ZXN0IGluc3RlYWQgb2YgYWRkaW5nIHRoZSBsYWJlbC4NClRoaXMgaXMgZG9hYmxlLiBUaGUgaW50
+ZW50aW9uIGhlcmUgaXMgdG8gbWluaW1pemUgdGhlIGNoYW5nZXMuDQpJbiB0aGUgZnV0dXJlLCB3
+ZSdsbCBpbnRyb2R1Y2UgYSBoeXBlcmNhbGwgZnVuY3Rpb24gc3RydWN0dXJlLiBXZSBjYW4NCmRv
+IGNvZGUgcmVmYWN0b3JpbmcgYXQgdGhhdCB0aW1lLg0K
