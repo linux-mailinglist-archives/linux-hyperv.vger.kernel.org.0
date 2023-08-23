@@ -2,162 +2,314 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28458784F36
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Aug 2023 05:21:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E40784F93
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Aug 2023 06:23:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231509AbjHWDVa (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Tue, 22 Aug 2023 23:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60382 "EHLO
+        id S232531AbjHWEX6 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Aug 2023 00:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229952AbjHWDV3 (ORCPT
+        with ESMTP id S231447AbjHWEX5 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Tue, 22 Aug 2023 23:21:29 -0400
-Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021027.outbound.protection.outlook.com [52.101.62.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8AF4CDA;
-        Tue, 22 Aug 2023 20:21:26 -0700 (PDT)
+        Wed, 23 Aug 2023 00:23:57 -0400
+Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020019.outbound.protection.outlook.com [52.101.61.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2AEE56;
+        Tue, 22 Aug 2023 21:23:55 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FPAEUofFiRpGxan4j3EFpivbTC1tPhJqubmB7V9QryLm99myOK9tCs7kAjfUxx04IQ3pMxEQ3RycTXPItzW/qEnVA+RC04wpg/rC4lRLKHPgRJKrDHTBPBKijhhFp+IRhXnV/UWzLQ6sNYmRVdlFxJWw0v7oXm/j6NIKSeiRWpZPSU3Wcjo9aYSncc9nQ/mheDe9LeGgfAUbL9unJJWcE6gebynuxRfR1SJ2hFpgPCo8lp3dVo/d47GBLMm8CWK9vyF4IsZAfQfKpaQVkMIY4V3bb0rp1XgG3Ji/Z2i0YIgK2DO5q0q9dN2oV9D+lBCPR5H0YAqxP+gUZzzQS8UtRg==
+ b=Afcq/oHkkM7Kar+gap5QqHmYCrzGTYMzPw7o7E+bGeeUaaOIc+A03Nkg0gcoNIXpxPeFGYe+F0GGzNvNy+IZjt4S0wrGadjjeMSpoRLUMoU7IBSU6lQPjbKY0+SDte0GsYrh77IF2ftfmy3QF1heYR93jv2q2huFPUci0qXGc/aEfJSe+5y2+IDcKjowyOGVj03+85Mk4SQgPgdQltQnBeGzPFlQqOsWJspPXy6uj6cKRW3CiT3fBnOW0tUZD6/yjrcGba27LOv+5qicWU1jsc4APLUm+LlA85N+TOubnsNS/ST7yRRfgwrwgUpCq/cXr7SCH60rKyExhL+QNZixVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i4MU/idsLDY5yWI/3BgHoxdQiGd04oS/zEIrFpGe87o=;
- b=PetEhPPVkS+0TX/5b8Zm0YQ6yGBgg/LpWpKnoUGyx9KcfKAm65AyhN0zvV8wahcEuMFPBtSSdMtdhowM9DCILoXeWjfDfpm5thP6OshkbhGsyivDAlS2RmOmm0rmyjLOhWoE7fcME8UkebV2r7mpqcanGeQrjngdQoqET+tW5Rpa2CUJAh9fPjxIBHdvopBg9Ac4wcw9t9hhQlkLGpwW2ZjshtBnO1zikjkgOH/pHKwdOolsdxrU9ExLrenULpQJCMj8K4VblQC/vGGquOoTeEQ4t1GhPACg06cgaJWya5IIf2PBx502YNYvOukEe1c8P6a/sUjFoiFSbj+UUJKyZA==
+ bh=F+HPXthsnDX/qhgwM0E+vocgwUbp/TXT6V9N9JNZ0qo=;
+ b=Ca3C96ZZLOIKtTyeFah8WpQAzzsQ2QkiG49kGaL9AvwWDJlpsZ24/w8S2DRCUto0RLl9834gHIqBRmpNqEF+BSj1q5TOzM+CkY8HLpVQWfmsJQu+DP9mTZ/CKvD/C6XzsHHoqYrLi/6vlxbWbMkhoT2b7o24AgjgGfM/UQsr2HKPzfjbsbylJrLSrWOYRuw/lHjdUDXHQ2QAFRcOpvrLZH+QkqxCrCqYXvlhxSM8Jp5CL4RaFvVkng9Ai2l1Y9md3CjVupPIxT5F98q36ToohjO57GLnNlzjfqGWCSwAtGh2B9swKaBcpvl/EurGc5UiRfxXDKeAtxOya7oxZ8RVhw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i4MU/idsLDY5yWI/3BgHoxdQiGd04oS/zEIrFpGe87o=;
- b=HeC7x/1ZnfOHeJawW2merlZP1VofwU/yssZVv/dDpQ8zX9CPA0CVWOoEm1rU2nefulDrLi3GwBqQFDS5kcHRZnL4y6MPJnIX279lzkrvmzfSdkUXQKGpxE77VJlrv+jIiGRxFyWwD7/zaeXaETJec2aVyMVBIp/XRnie6KXHxxI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:30::23) by SA1PR21MB2018.namprd21.prod.outlook.com
- (2603:10b6:806:1b5::10) with Microsoft SMTP Server (version=TLS1_2,
+ bh=F+HPXthsnDX/qhgwM0E+vocgwUbp/TXT6V9N9JNZ0qo=;
+ b=hvtdevlGMwv1unN38jxS0CCn63DOh1/WjETMgUR2+aMPL4YYdeXD6OWiFRRFI53/b5cUMm4xGqefUVt5KiFDW6yWDAgt0TPE1aTzhSKnb/JBAg0hBLYGOqmJiiZWosVaK/ChF/N83VNw+GD8HuWoHnAKghR5fxJb+QQu0BQ65GM=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by IA1PR21MB3736.namprd21.prod.outlook.com (2603:10b6:208:3e3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.4; Wed, 23 Aug
- 2023 03:21:24 +0000
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::b3df:a8e9:52dd:dfad]) by BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::b3df:a8e9:52dd:dfad%5]) with mapi id 15.20.6745.005; Wed, 23 Aug 2023
- 03:21:24 +0000
+ 2023 04:23:51 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::b05:d4ac:60ff:3b3f]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::b05:d4ac:60ff:3b3f%5]) with mapi id 15.20.6745.001; Wed, 23 Aug 2023
+ 04:23:50 +0000
 From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, linux-hyperv@vger.kernel.org,
-        mikelley@microsoft.com, tiala@microsoft.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, thomas.lendacky@amd.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [PATCH] x86/hyperv: Fix undefined reference to isolation_type_en_snp without CONFIG_HYPERV
-Date:   Tue, 22 Aug 2023 20:20:08 -0700
-Message-Id: <20230823032008.18186-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0357.namprd03.prod.outlook.com
- (2603:10b6:303:dc::32) To BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:30::23)
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>, jason <jason@zx2c4.com>,
+        "nik.borisov@suse.com" <nik.borisov@suse.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
+        Anthony Davis <andavis@redhat.com>,
+        Mark Heslin <mheslin@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>
+Subject: RE: [PATCH v2 6/9] x86/hyperv: Introduce a global variable
+ hyperv_paravisor_present
+Thread-Topic: [PATCH v2 6/9] x86/hyperv: Introduce a global variable
+ hyperv_paravisor_present
+Thread-Index: AQHZ06TVJoWZTp5HxU++UB0kj/HGQ6/01qqQgAHUHnA=
+Date:   Wed, 23 Aug 2023 04:23:50 +0000
+Message-ID: <SA1PR21MB1335945301F8E8FBC2CA15B5BF1CA@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20230820202715.29006-1-decui@microsoft.com>
+ <20230820202715.29006-7-decui@microsoft.com>
+ <BYAPR21MB1688ED81A8A54A25A7A10C44D71EA@BYAPR21MB1688.namprd21.prod.outlook.com>
+In-Reply-To: <BYAPR21MB1688ED81A8A54A25A7A10C44D71EA@BYAPR21MB1688.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cfb085e1-2e77-4201-87c1-f2506136f544;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-08-21T14:51:33Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|IA1PR21MB3736:EE_
+x-ms-office365-filtering-correlation-id: ac7284d6-3589-4879-8f06-08dba390c07a
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: e+mw1reEFW70zQ2u1ZWgF2Yp9mjuphP9vAFxDE9CieHr3o+8l6k44Q54SI6Q5TexYc+PUuDrOZG7gV3KLyOfgMShg+Yyu0SvG+mkRkmx0thNndXCk6qTsjqyBykN7j8b/zENlu42ttMtx1qae+mFsl13w2X5R6FCSv9CFHWYBJsfA5YMvU1hthyQLe8gmtFXlj/iIC0nJ0vq7UKTqOnzGAzDG9SXTGAx3T/Da1zDIPMj73zBRTR5J7gQ9gBEJyb0k21s2gQWxxUekrUp5pB2NZ/oSjMNrmE6hnxrgyzWn/NixAnugk1ftwkyEOMueRRffZ+3JDPcUHTTBvFPz1ZZ4cM4zNKLrNzWsxlMUzampMc8lScreZaqAjdkZhHlrJlQlq9UuPIc67w1L1gC66zSVC+Pgjd0QAfmY/l9vwa+2Srj98kXm3RWX8aJDOM7zad1TypaidcfzGcSh+5k/OFZtzF3C3+pdzMpXTzoOvTOc5j2l6tGieuDGJv63dyeE3VDAuMNpW48cR8zLdgf3TPbVWCx6mP0v1exn9Z+NsPcJGD9hD+GYsyCA1EWva/eRzn3ywPKw0a+wgicxVdkE5s5ABajZI9XOMGTvSk3f08JuDhp2wn5CFQHMGqXCvqaCtcSXbRPdGqruKXfpUGI7XSjaqmvtr9JFbzDVPWaLZcLpGJtSUzs82OT7dNQxBJzqo8yGuXaAQ1IDv2q5+1Af17h+Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(376002)(366004)(39860400002)(346002)(186009)(1800799009)(451199024)(12101799020)(71200400001)(7696005)(4326008)(6506007)(33656002)(82950400001)(55016003)(86362001)(38100700002)(82960400001)(38070700005)(9686003)(122000001)(921005)(83380400001)(2906002)(26005)(10290500003)(478600001)(76116006)(5660300002)(66946007)(66446008)(52536014)(8676002)(66476007)(66556008)(41300700001)(8936002)(7416002)(7406005)(64756008)(110136005)(316002)(54906003)(8990500004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?R5+e7SupFUnzZyfiwfKl1M3MNvJpeUu9Do7IPqLLrt0pv29aEg/j4iNepKLi?=
+ =?us-ascii?Q?MrpTdagWvtCZ85Dl8itOCk+kFTKInx4itYoIwdKx6IY2ds5uiKECwDkHRawk?=
+ =?us-ascii?Q?0jKHaSYp+RwYujF1npfFlsPgw5leC7RIOyIUGhh7i+uEdcXpk+4TsoFM+tFf?=
+ =?us-ascii?Q?yFWpgyBjE1/jKY9Ts6H2MqfyeV5/V490CLoM+QeQoXS0w6G36R8Vutx486yQ?=
+ =?us-ascii?Q?JqIdpWX4B4CWr3Nw3BSmtJfIdRFfjbh3JPNmUsWHAMJok5lWidc8uNhQqe6H?=
+ =?us-ascii?Q?l3RkcHU/H2UDPWRu+YyYGhfmfRI0wNZNFbm8gfV6CQW8+0FXlTguReXZjTVF?=
+ =?us-ascii?Q?2XJxXYyIO6SypI/f+g+/y3GGb7IwspRPAivCDYlKKh4eT8SBm9TGMXFRMRJC?=
+ =?us-ascii?Q?cHUjCoSBJbSNE6++PVovIzQvRSOOkM//TJyG3pA7vOoj78HMBM8gjYloDwPd?=
+ =?us-ascii?Q?wELfskLsTRCDK+qEcIijD+RfxQqZqblbRvFXUQNR7mBBbzxaHcVAy028vscq?=
+ =?us-ascii?Q?rcWqHEVj38cFZETVx5u70acWNHH6Wty0tedNvgQ4l7EXhLw3y5ZxKkTXVRum?=
+ =?us-ascii?Q?O3Ipov3xKu9MmcDcZWQKDSixvWjmbim6XEq/tEII1DotcTMvA9Ps+fiKkWH0?=
+ =?us-ascii?Q?989GhpCm+GVPYj9Vy1DTDR9mJvH4IQNTkB7CXCscXPIhEumxCchCTmMpY3qm?=
+ =?us-ascii?Q?WG6DaeFCc7KCHWvQMXrx7im4m9gwOlZKqXodsBzHp49FOjODygCjPDdURiL4?=
+ =?us-ascii?Q?nVhg3BVLVpy6SlxtNY1ZcajlOosXHrzF+Mnh3TrIdvkkXUDtoyY5dVSzIysq?=
+ =?us-ascii?Q?3gF31hYIEjT7d1l3R3F2I8Z/ZHgqXBJBvKpxa08XyxzEj9roefdFDAvJM+6p?=
+ =?us-ascii?Q?t4NiqCwhSAnAJrwAhEabM/2vdFPDcl7xnMfrskowIpHPLT0LgWAKhQxthUSv?=
+ =?us-ascii?Q?74OgxMeE3m3KO5kaq+UZh8+BOqxvYoZPu0wzai5Sq9jSVoQkfngKwRimZUF9?=
+ =?us-ascii?Q?JWuvOia90Gs63GIvVX3oQdZ7Mpr7wpLHxo+iuqsn9V3aEucKsnUU1Q+eFOrA?=
+ =?us-ascii?Q?Hb0lZ6KUsNFmFUIesPIJBbBEPk6V7cVyTqulJGGHy8kFuE/wAF05oCoUNgVL?=
+ =?us-ascii?Q?vOfhed+/OaAKs7luUrhaoUjDv0/op7RZgVUkhE4kNR6xI5i4IpXBSrHNXUaz?=
+ =?us-ascii?Q?QMqPCESNTR4mkfFUKjS8ljj6PW94NM/gfyudU6EsEgKinkCIb0PPvAdS/uVD?=
+ =?us-ascii?Q?cZ5GBMWhth4zPDe1eS3Qd1Za2mn1WEN/eXN0SJQgUZ13aoO7HjcujieJWZN1?=
+ =?us-ascii?Q?j63YKvwLyb4ILyxX92PfKDI72aV9rfB+p0EDzjYU6N0ZciGmbdnC7fzwIv0b?=
+ =?us-ascii?Q?xehqstb7QKHXhbgWpoHUvOm/fRbDjbo8NHOiwNRSo4R3wpTWIhAC0oEZCxyX?=
+ =?us-ascii?Q?wADWHWmvSiUfwiTv2I/DmiQKbvNM0cKtOLv/mxXaAQM79Sye1woOsHnPQAuH?=
+ =?us-ascii?Q?JSGHuIuE1bE8zSo4bk5L/F+sMoM9D17Kv+bW6UTRv7v4rAnAjp97wAlq5tZo?=
+ =?us-ascii?Q?ob1+EBSa6nFX2UU8jSXdgY7U6/DqU6757jU103d6?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR2101MB1092:EE_|SA1PR21MB2018:EE_
-X-MS-Office365-Filtering-Correlation-Id: bc2dc644-7fc3-4533-4f18-08dba3880688
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nBopzEUwAjvhgVcDj42+t1Hz9aooUWVg2xu91meqrqrycx6PtKR7Jbi6dcCvPd05Tc3s4sasqNVqYnUqDUW+iHfowdBj/G1z16pFTax53U3ZzuaZeAGWpZJZMioi2REyw12doKMAMjTVJwSCJp7MdcNOuKwZLF1a1l0mKaXddqrUrvl4SFE2i4nBGjL6ma2p6iNcTPhLnKwN64NDyJ6hc64LkstD1YHhyEvfjBclFkB3X+8IFHSesoBtp6mfdw/cLv4015uRPNsrQhrRtm4M56XTbqTuSJjBMLDXPo6dFH67ilmD+9sPpZYuV1hiSaPgtBxA7v2BkjKqsPvgRg1r2ph2cWikRguZGqhYICZ6HoG3FoznhXKCc+P1pJyDYCtplYEdaN2VNxAW/XEekG6E/PiyiXAbICPp4IFWDX8zfAnRqUklfDxw4fGl/TZgkxpszhxdxGrscEYhuKCNMD+POlBT7dK5sJj6D6c6JD8aQnGmhcL8P3bphjtu9MlfML03Q0HW+Y60UfFjBUORRPol55CFvQA1Q4m/0aAGulVT/oVfRTCBaSIzGeN0IEHCjLuLc4fdw0LvPOGxnuhqbfLsYJKcxgR6d9egJSoMNWPSu4gKKvcRHb5GTTnvb7YkZoqVg6mmi2Ijg6BATKQlzShNSy6gfprI2hqDxnEvqczAQBE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(346002)(366004)(376002)(39860400002)(451199024)(186009)(1800799009)(5660300002)(12101799020)(921005)(6512007)(6486002)(6666004)(6506007)(52116002)(36756003)(86362001)(82950400001)(82960400001)(38100700002)(7416002)(1076003)(2616005)(2906002)(83380400001)(966005)(478600001)(8936002)(8676002)(10290500003)(41300700001)(4326008)(66476007)(66556008)(66946007)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Rj6Dx5FsM5Hxan7CKsviTfqOCZ31AtsZf7nPvMk0bTAmOOeemA0aWCZUfbvL?=
- =?us-ascii?Q?fQipD9JxXfSu8lDa8tM9akeChUrQ1yHSwKqowV81ym9q9NjknCz96QnZQtjG?=
- =?us-ascii?Q?LxKCdLpzQJTcYD+QW9nwjqdfJzF7EUQT/aZugRWngju/Uyp1g8ie3pvZI6KK?=
- =?us-ascii?Q?T81JOEcA9NyKcsa9hIQxsc7YVXG+d5nZiScynr3mRVEi/MvG/EW8g8+NYtlc?=
- =?us-ascii?Q?doUp6AKS3xNkUTHUk2qIU2T+Zv7ZzCfrfZ1crk6e1MIkQeG7ct5nJk7ptOXA?=
- =?us-ascii?Q?bcRBrCBBI3dPGkRY02QJKonwDAjLlumLO06Zdv8D5ZxJqWoy4EsLSH9gUtSv?=
- =?us-ascii?Q?sth4hbo+dM7MnlUb0frA2GfdNXeFmX8/Crbp2X6VsgKx0V8NGppK31GMDSUH?=
- =?us-ascii?Q?xS4Wmtj+FsdJZeOSfhBMGqHAnhAGoKvDfvz/8RkC9vcc3qDDGkRsM6XjqvhR?=
- =?us-ascii?Q?QsWXBHOx9RgR6NE2rHttiOKgpiOrJAFw/Hezz8KoetUGmRKJw747i1R+CDZ6?=
- =?us-ascii?Q?dzuwx0vOy0uc9JrdIIJkm9BczHLu6dD/1sQOAhqtUlHLmeaXMpq4ArH2Sgq+?=
- =?us-ascii?Q?dMgaMPjn6CYx812ubnV/F4YIZ23kxcqtulod7vFlF3IcskVDJydYqQYF7z2T?=
- =?us-ascii?Q?GykX2yGLb3Q22ltS3rZYGwWZOJUyJGwvPSveyutNDsaiYsH1miREY2iipwo6?=
- =?us-ascii?Q?5PlrKhVkbeIzMSzzuXrcdwy0Cbeg3KOo3HUt6d7wwODzbUmutopAmdgzNDpt?=
- =?us-ascii?Q?f7gY1Uqrko58gt7eZPe2ojRAtjKAKReSvXIBG+k9JfRxJl+8rfmZBcHFT1Ld?=
- =?us-ascii?Q?ZJLUvf6vcpyJdED6aLMRtSFoAr+9PFYbSK4fSMUtqJQymlqpNUDUYUWnk2EU?=
- =?us-ascii?Q?RIA64fo/dOtlvBMX05xQAKUMGy2qb2AeEZXeHn/2AfkL6gtw4+4HrqbcT/+q?=
- =?us-ascii?Q?59+YO6w1b0KrbkOj69FFc16Elf6CuVJeduuV8BA4021UjRpLZ2CKvfhb8NiC?=
- =?us-ascii?Q?mO919RpXpvxhszPPPheLVxDzosSAastskDtNQwiry9S/LcSpsus2sKSEoROB?=
- =?us-ascii?Q?Se1ZWjtK5ycBfO+FZobLyeWeLCxLmr4DMPO1kY7ZWWSIUOTQhDBw7dI87bD6?=
- =?us-ascii?Q?DRleaA1bKpNSg+BlnO/IIdpDRKDu116LsHp3Yy8VffJ64X9bbVBli4unJMXq?=
- =?us-ascii?Q?/AZ5H397GF6J5uEdXG8ztKnXJYty/F962z1WrpfurM5WKuvXD28sttWG869K?=
- =?us-ascii?Q?shMV5EKMjHoMZei+FF6q1p3BiNhdYYEhSP6oRQp7yTz3oBy+4/PHZeGFEqXE?=
- =?us-ascii?Q?WCzdS1DcgytwxXC/Ov4ddFeoyp49TmWN30uHvi9URB053Ta2zo0zUC1DdoQp?=
- =?us-ascii?Q?URW4Mn1y4GraMmsSA3pnMfLBNIvhPRNAflxwV93dqNNShF6x9ZMhCgcttCAR?=
- =?us-ascii?Q?VJiem3GG0OT6mRUNJXTD8jPgmDLO1gL77n2yN0tW/EKLzXnMPiV+3aHcDvNk?=
- =?us-ascii?Q?nhU1hYrTF2PsHxDaQE57lt6/l6ibqnWXnUq9pokrS0CFjw2iAMFapM75grvQ?=
- =?us-ascii?Q?V7ZYbV6cF9/5gW8L19s+S8gByf9dGmBUhiFWXAdx6NvLK3SKnqJJdM5mdjV9?=
- =?us-ascii?Q?OamdckLr7BGCXsZ+LHcKfCLAdHOwTTMIiPmLw12GNJzw?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc2dc644-7fc3-4533-4f18-08dba3880688
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2023 03:21:23.8022
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac7284d6-3589-4879-8f06-08dba390c07a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Aug 2023 04:23:50.2600
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ORaDcYif+HAxxgeZZWOKehmY4DKnjMxphLYg1UAy1UZmwTdbmH0EOMGss2jLdnBc6EfVrKeNZP1rQP4v0EAuzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB2018
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nC9dx5OfHpnZmmPOCG3Pf8v4e1YSL57xpusZOmrxru4wUM2Yo8T6630xYnkxMgtGf3Os3a+h1dcjqwAdfltHAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR21MB3736
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-When CONFIG_HYPERV is not set, arch/x86/hyperv/ivm.c is not built (see
-arch/x86/Kbuild), so 'isolation_type_en_snp' in the ivm.c is not defined,
-and this failure happens:
+> From: Michael Kelley (LINUX) <mikelley@microsoft.com>
+> Sent: Monday, August 21, 2023 12:33 PM
+>  [...]
+> From: Dexuan Cui <decui@microsoft.com> Sent: Sunday, August 20, 2023
+> >
+> > The new variable hyperv_paravisor_present is set only when the VM
+> > is a SNP/TDX with the paravisor running: see ms_hyperv_init_platform().
+> >
+> > In many places, hyperv_paravisor_present can replace
+>=20
+> You said "In many places".  Are there places where it can't replace
+> ms_hyperv.paravisor_present?  It looks like all the uses are gone
+> after this patch.
 
-ld: arch/x86/kernel/cpu/mshyperv.o: in function `ms_hyperv_init_platform':
-arch/x86/kernel/cpu/mshyperv.c:417: undefined reference to `isolation_type_en_snp'
+Sorry for the inaccuracy. I meant to say "everywhere" rather than
+"In many places".  I think hyperv_paravisor_present and
+ms_hyperv.paravisor_present can be used interchangeably except that
+I need to use hyperv_paravisor_present in arch/x86/include/asm/mshyperv.h
+to avoid the header file dependency issue.
 
-Fix the failure by testing hv_get_isolation_type() and
-ms_hyperv.paravisor_present for a fully enlightened SNP VM: when
-CONFIG_HYPERV is not set, hv_get_isolation_type() is defined as a
-static inline function that always returns HV_ISOLATION_TYPE_NONE
-(see include/asm-generic/mshyperv.h), so the compiler won't generate any
-code for the ms_hyperv.paravisor_present and static_branch_enable().
+As we discussed offline, we'll add some hypercall function structure in fut=
+ure
+for different VM types, and then hyperv_paravisor_present and
+ms_hyperv.paravisor_present would go away when we make hypercalls.
 
-Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-Closes: https://lore.kernel.org/lkml/b4979997-23b9-0c43-574e-e4a3506500ff@amd.com/
-Fixes: d6e2d6524437 ("x86/hyperv: Add sev-snp enlightened guest static key")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- arch/x86/kernel/cpu/mshyperv.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+So let me use hyperv_paravisor_present only in
+arch/x86/include/asm/mshyperv.h to make the patch smaller.
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 26b9fcabd7d95..c8d3ca2b0e0ee 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -413,10 +413,11 @@ static void __init ms_hyperv_init_platform(void)
- 			ms_hyperv.isolation_config_a, ms_hyperv.isolation_config_b);
- 
- 
--		if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
--			static_branch_enable(&isolation_type_en_snp);
--		} else if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
--			static_branch_enable(&isolation_type_snp);
-+		if (hv_get_isolation_type() == HV_ISOLATION_TYPE_SNP) {
-+			if (ms_hyperv.paravisor_present)
-+				static_branch_enable(&isolation_type_snp);
-+			else
-+				static_branch_enable(&isolation_type_en_snp);
- 		}
- 	}
- 
--- 
-2.25.1
+> > ms_hyperv.paravisor_present, and it's also used to replace
+> > hv_isolation_type_snp() in drivers/hv/hv.c.
+> >
+> > Call hv_vtom_init() when it's a VBS VM or when hyperv_paravisor_present
+> > is true (i.e. the VM is a SNP/TDX VM with the paravisor).
+> >
+> > Enhance hv_vtom_init() for a TDX VM with the paravisor.
+> >
+> > The biggest motive to introduce hyperv_paravisor_present is that we
+> > can not use ms_hyperv.paravisor_present in
+> arch/x86/include/asm/mshyperv.h:
+> > that would introduce a complicated header file dependency issue.
+>=20
+> The discussion in this commit messages about hyperv_paravisor_present
+> is a bit scattered and confusing.  I think you are introducing the global
+> variable
+> to solve the header file dependency issue.  Otherwise, the ms_hyperv fiel=
+d
+> would be equivalent.  Then you are using hyperv_paravisor_present for
+> several purposes, including to decide whether to call hv_vtom_init() and
+> to simplify the logic in drivers/hv/hv.c.  Maybe you could reorganize
+> the commit message a bit to be more direct regarding the purpose.
+
+The new changelog will be:
+
+    x86/hyperv: Introduce a global variable hyperv_paravisor_present
+
+    The new variable hyperv_paravisor_present is set only when the VM
+    is a SNP/TDX VM with the paravisor running: see ms_hyperv_init_platform=
+().
+
+    We introduce hyperv_paravisor_present because we can not use
+    ms_hyperv.paravisor_present in arch/x86/include/asm/mshyperv.h:
+
+    struct ms_hyperv_info is defined in include/asm-generic/mshyperv.h, whi=
+ch
+    is included at the end of arch/x86/include/asm/mshyperv.h, but at the
+    beginning of arch/x86/include/asm/mshyperv.h, we would already need to =
+use
+    struct ms_hyperv_info in hv_do_hypercall().
+
+    We use hyperv_paravisor_present only in include/asm-generic/mshyperv.h,
+    and use ms_hyperv.paravisor_present elsewhere. In the future, we'll
+    introduce a hypercall function structure for different VM types, and
+    at boot time, the right function pointers would be written into the
+    structure so that runtime testing of TDX vs. SNP vs. normal will be
+    avoided and hyperv_paravisor_present will no longer be needed.
+
+    Call hv_vtom_init() when it's a VBS VM or when ms_hyperv.paravisor_pres=
+ent
+    is true, i.e. the VM is a SNP VM or TDX VM with the paravisor.
+
+    Enhance hv_vtom_init() for a TDX VM with the paravisor.
+
+    In hv_common_cpu_init(), don't decrypt the hyperv_pcpu_input_arg
+    for a TDX VM with the paravisor, just like we don't decrypt the page
+    for a SNP VM with the paravisor.
+
+BTW, please refer to the link for the v3 version of this patch (WIP):
+
+> > In arch/x86/include/asm/mshyperv.h, _hv_do_fast_hypercall8()
+> > is changed to specially handle HVCALL_SIGNAL_EVENT for a TDX VM with
+> the
+> > paravisor, because such a VM must use TDX GHCI (see hv_tdx_hypercall())
+> > for this hypercall. See vmbus_set_event() -> hv_do_fast_hypercall8() ->
+> > _hv_do_fast_hypercall8() -> hv_tdx_hypercall().
+>=20
+> Embedding the special case for HVCALL_SIGNAL_EVENT within
+> hv_do_fast_hypercall8() is not consistent with how this special case
+> is handled for SNP.  For SNP, the special case is coded directly into
+> vmbus_set_event().  Any reason not to do the same for TDX + paravisor?
+
+Ok, will handle it directly in vmbus_set_event().
+
+> > @@ -497,13 +497,29 @@ int hv_snp_boot_ap(int cpu, unsigned long
+> start_ip)
+> >
+> >  void __init hv_vtom_init(void)
+> >  {
+> > +	enum hv_isolation_type type =3D hv_get_isolation_type();
+> >  	/*
+> >  	 * By design, a VM using vTOM doesn't see the SEV setting,
+> >  	 * so SEV initialization is bypassed and sev_status isn't set.
+> >  	 * Set it here to indicate a vTOM VM.
+> >  	 */
+>=20
+> The above comment applies just to the case HV_ISOLATION_TYPE_SNP,
+> not to the entire switch statement, so it should be moved under the
+> case.
+
+Will fix.
+
+> > [...]
+> > --- a/arch/x86/include/asm/mshyperv.h
+> > +++ b/arch/x86/include/asm/mshyperv.h
+[...]
+> > @@ -134,7 +135,9 @@ static inline u64 _hv_do_fast_hypercall8(u64
+> control, u64 input1)
+> >  	u64 hv_status;
+> >
+> >  #ifdef CONFIG_X86_64
+> > -	if (hv_isolation_type_tdx())
+> > +	if (hv_isolation_type_tdx() &&
+> > +		(!hyperv_paravisor_present ||
+> > +		 control =3D=3D (HVCALL_SIGNAL_EVENT |
+> HV_HYPERCALL_FAST_BIT)))
+>=20
+> See comment above.  This would be more consistent with SNP if it were
+> handled directly in vmbus_set_event().
+
+Will fix.
+
+> > --- a/drivers/hv/connection.c
+> > +++ b/drivers/hv/connection.c
+> > @@ -484,7 +484,7 @@ void vmbus_set_event(struct vmbus_channel
+> *channel)
+> >
+> >  	++channel->sig_events;
+> >
+> > -	if (hv_isolation_type_snp())
+> > +	if (hv_isolation_type_snp() && hyperv_paravisor_present)
+>=20
+> This code change seems to be more properly part of Patch 9 in the
+> series when hv_isolation_type_en_snp() goes away.
+
+The change here is part of the efforts to correctly support hypercalls for
+a TDX VM with the paravisor. Patch 9 is just a clean-up patch, which is
+not really required for a TDX VM (with or with the paravisor) to run on
+Hyper-V, so IMO it's better to keep the change here in this patch.
+
+BTW, please refer to the link for the v3 version of this patch (WIP):
+
 
