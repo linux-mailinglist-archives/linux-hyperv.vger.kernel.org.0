@@ -2,87 +2,125 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB14D785003
-	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Aug 2023 07:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11CDF785118
+	for <lists+linux-hyperv@lfdr.de>; Wed, 23 Aug 2023 09:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232695AbjHWFmz (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Wed, 23 Aug 2023 01:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58780 "EHLO
+        id S232905AbjHWHGW (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Wed, 23 Aug 2023 03:06:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjHWFmz (ORCPT
+        with ESMTP id S229581AbjHWHGW (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Wed, 23 Aug 2023 01:42:55 -0400
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A5D10B;
-        Tue, 22 Aug 2023 22:42:53 -0700 (PDT)
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1bf0b24d925so34362485ad.3;
-        Tue, 22 Aug 2023 22:42:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692769373; x=1693374173;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        Wed, 23 Aug 2023 03:06:22 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9AA185;
+        Wed, 23 Aug 2023 00:06:20 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-26f7f71b9a7so1612340a91.0;
+        Wed, 23 Aug 2023 00:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692774379; x=1693379179;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B7SuHeADhiwKqTmvuzAw3dFizq+0uKLvXLc6/Gr+tX4=;
-        b=NdhmuQgXNpHBll0NW0kyJ4/UKl5jw6jedfnIbLRry44aw3Ik2MgEeZQLUCWaE/8GQO
-         1JgNJ6b31f9AXbcqFDNlfT0e9GbydonJrfWWB1Fvwc84Nn7wnvQ2aFfXTD6JAIEf/88m
-         /m6WPoIhtPDiQJcizyJATHQW2N1Ju9J+dUhOfKnHmvmKX9KEmHBbJAabwGJlwvt0M4uL
-         uiw04mFOIkrw+wllDFmkv6bq3bihk43Nh+w2GNfsCz9aVOdnL8n5R5M02g3D7sPmZPsf
-         KdCQmBX7v3xwVq3GfsiV4tmxxUeTPO81Pt+J1PDtdzoz5WxDi+BRo16Vp+Ev+9sUHOOd
-         WRmg==
-X-Gm-Message-State: AOJu0Yz93yB2yIAZBTFxtrCtsrgn1ZffseYcuy4aygWbke+WD4KpW/tn
-        ZgOa6POh64IxNaGLtxdyL4Q=
-X-Google-Smtp-Source: AGHT+IHpBx9WJt0TP4xuv2JVlMBs97PJAKc9tws5wtGb13UtWB6SrdPNMYd/nSa0a1zrIqV6sF7E6g==
-X-Received: by 2002:a17:903:32d2:b0:1bf:1181:a614 with SMTP id i18-20020a17090332d200b001bf1181a614mr10763436plr.26.1692769373273;
-        Tue, 22 Aug 2023 22:42:53 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id e9-20020a170902b78900b001b5656b0bf9sm9921263pls.286.2023.08.22.22.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Aug 2023 22:42:52 -0700 (PDT)
-Date:   Wed, 23 Aug 2023 05:42:32 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
-        tiala@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        thomas.lendacky@amd.com, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH] x86/hyperv: Fix undefined reference to
- isolation_type_en_snp without CONFIG_HYPERV
-Message-ID: <ZOWcSKlonRpbNloN@liuwe-devbox-debian-v2>
-References: <20230823032008.18186-1-decui@microsoft.com>
+        bh=7HurChyAGdIeZIEmXo40ae/GPpY2M43AtWuOafUdiH0=;
+        b=O/s997Q5PN56nEC2lwTbxkTiTnffL6a1EipTrBhTFMFFHRCVz/uMUW90Q1KeXO8dlN
+         NUQzLdNIakvBzbpCLFODGV+4MvJb/al7khbs5iIXQuu/EeAUfnFiIeiNnW8tfiR4w7+c
+         9REFASousRsf+/O7nhnqxiKzL9hw/nyo7iykm+AeJvBz9UvQvzTJpHDZE5/ydHjLjrcy
+         bGUTmZU0eprG9RFDDvP6d2+TKVZViYEVkRpi+aEj33zYSSycg+qIsmt4mjV1p0hg0Ey5
+         2G/VXpzsT4JOraLYI/E2RjpumFsWmJ1ToPAlK0f0+4f/PJQMsII27ggu0jVUJ6HIKAS/
+         u1QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692774379; x=1693379179;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7HurChyAGdIeZIEmXo40ae/GPpY2M43AtWuOafUdiH0=;
+        b=McCElIgDiKPgO/rQh1Fa6pfPAOmTJPobEh/XWx/ref4FyujufEJs5rqxG3gVHIjZn3
+         wVAI1LhJtagSeFZVwwKW9aG/fwCyFw7ZgKdKHHbYtPwoBisGvX2/mcJnOz+lRTbAwckv
+         As3SbEQjpLODxTTz2IgakpdCWPgpTi+ePDA1OzlsS7RYUNb7/p+/T/jW9ncZmHBOtEwa
+         lWisKWSnlzM7l7W61alLoS6ogiUmguDoQIBlGWEgQQBOZf+VFMzY1+X5PcapKfx/ZJrl
+         GO6jwLTSmFTzp7bcYy9t0Xx/ndXWZg0Q2NudOEzzJzp7eg2ta5IzcJ6Q1Uo+keuQzp/4
+         g7ZQ==
+X-Gm-Message-State: AOJu0YwNprlQblXjOSuPn4mRAaQb0uZuW8ONPuRQlq0fN2OAtQJQo1a8
+        qGEX6OrqH+NU9HbBea+vKuY=
+X-Google-Smtp-Source: AGHT+IEkoSYhjYhg28YfiIvQ6zxsm4pAFS3yRUCZgdMe9EYSmy8xC4XrwV9EpnILl5RHuwvgMB+J1g==
+X-Received: by 2002:a17:90a:db15:b0:263:2335:594e with SMTP id g21-20020a17090adb1500b002632335594emr10965283pjv.38.1692774379461;
+        Wed, 23 Aug 2023 00:06:19 -0700 (PDT)
+Received: from ?IPV6:2404:f801:0:5:8000::75b? ([2404:f801:9000:1a:efea::75b])
+        by smtp.gmail.com with ESMTPSA id a3-20020a17090a740300b0026b3a86b0d5sm8883044pjg.33.2023.08.23.00.06.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Aug 2023 00:06:17 -0700 (PDT)
+Message-ID: <6ba2366a-5a7a-839c-6b7a-3500a43c3d93@gmail.com>
+Date:   Wed, 23 Aug 2023 15:05:59 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230823032008.18186-1-decui@microsoft.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH 2/9] x86/hyperv: Support hypercalls for fully enlightened
+ TDX guests
+To:     Dexuan Cui <decui@microsoft.com>, ak@linux.intel.com,
+        arnd@arndb.de, bp@alien8.de, brijesh.singh@amd.com,
+        dan.j.williams@intel.com, dave.hansen@intel.com,
+        dave.hansen@linux.intel.com, haiyangz@microsoft.com, hpa@zytor.com,
+        jane.chu@oracle.com, kirill.shutemov@linux.intel.com,
+        kys@microsoft.com, linux-hyperv@vger.kernel.org, luto@kernel.org,
+        mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+        sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
+        tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
+        Jason@zx2c4.com, nik.borisov@suse.com, mikelley@microsoft.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Tianyu.Lan@microsoft.com,
+        rick.p.edgecombe@intel.com, andavis@redhat.com, mheslin@redhat.com,
+        vkuznets@redhat.com, xiaoyao.li@intel.com
+References: <20230811221851.10244-1-decui@microsoft.com>
+ <20230811221851.10244-3-decui@microsoft.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+In-Reply-To: <20230811221851.10244-3-decui@microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 08:20:08PM -0700, Dexuan Cui wrote:
-> When CONFIG_HYPERV is not set, arch/x86/hyperv/ivm.c is not built (see
-> arch/x86/Kbuild), so 'isolation_type_en_snp' in the ivm.c is not defined,
-> and this failure happens:
+On 8/12/2023 6:18 AM, Dexuan Cui wrote:
+> A fully enlightened TDX guest on Hyper-V (i.e. without the paravisor) only
+> uses the GHCI call rather than hv_hypercall_pg.
 > 
-> ld: arch/x86/kernel/cpu/mshyperv.o: in function `ms_hyperv_init_platform':
-> arch/x86/kernel/cpu/mshyperv.c:417: undefined reference to `isolation_type_en_snp'
+> In hv_do_hypercall(), Hyper-V requires that the input/output addresses
+> must have the cc_mask.
 > 
-> Fix the failure by testing hv_get_isolation_type() and
-> ms_hyperv.paravisor_present for a fully enlightened SNP VM: when
-> CONFIG_HYPERV is not set, hv_get_isolation_type() is defined as a
-> static inline function that always returns HV_ISOLATION_TYPE_NONE
-> (see include/asm-generic/mshyperv.h), so the compiler won't generate any
-> code for the ms_hyperv.paravisor_present and static_branch_enable().
-> 
-> Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Closes: https://lore.kernel.org/lkml/b4979997-23b9-0c43-574e-e4a3506500ff@amd.com/
-> Fixes: d6e2d6524437 ("x86/hyperv: Add sev-snp enlightened guest static key")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Michael Kelley<mikelley@microsoft.com>
+> Signed-off-by: Dexuan Cui<decui@microsoft.com>
+> ---
 
-Applied. Thanks.
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
+
+>   arch/x86/hyperv/hv_init.c       |  8 ++++++++
+>   arch/x86/hyperv/ivm.c           | 17 +++++++++++++++++
+>   arch/x86/include/asm/mshyperv.h | 15 +++++++++++++++
+>   drivers/hv/hv_common.c          | 10 ++++++++--
+>   include/asm-generic/mshyperv.h  |  1 +
+>   5 files changed, 49 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 547ebf6a03bc9..d8ea54663113c 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -481,6 +481,10 @@ void __init hyperv_init(void)
+>   	/* Hyper-V requires to write guest os id via ghcb in SNP IVM. */
+>   	hv_ghcb_msr_write(HV_X64_MSR_GUEST_OS_ID, guest_id);
+>   
+> +	/* A TDX guest uses the GHCI call rather than hv_hypercall_pg. */
+> +	if (hv_isolation_type_tdx())
+> +		goto skip_hypercall_pg_init;
+> +
+
+Nitpick:
+	Put hypercal page initialization code into a sepearate function and 
+skip the function in the tdx guest instead of adding the label.
