@@ -2,91 +2,71 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E4A17866C4
-	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Aug 2023 06:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4C19786975
+	for <lists+linux-hyperv@lfdr.de>; Thu, 24 Aug 2023 10:06:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238674AbjHXEeB (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Thu, 24 Aug 2023 00:34:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54014 "EHLO
+        id S234803AbjHXIFd (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Thu, 24 Aug 2023 04:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239511AbjHXEdx (ORCPT
+        with ESMTP id S240512AbjHXIF2 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Thu, 24 Aug 2023 00:33:53 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C4D10F0;
-        Wed, 23 Aug 2023 21:33:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=LSXnJD44VIR9JsXcB9/2yi/FqjF9d8bRSrOH7J7jbr4=; b=AgzR/Knk2DJX3oW1rvjsKVixln
-        66mgxRxSjB0xJTr8b/eHdpZl6tM3v8q3cy7mr3BQ/1O+aGYq1Feg2Ziw3rzItAtzqiy0+sdNp6iTX
-        YVVnUKwZJgcRxys2B3yNwIclfDmGC+dqvbs/rawcMVBxREAyw2zrXTrV0i+/p75fhi4vPbGoANMXD
-        odCtywue7Z0LD3H4reArHI8Mo8pLgrP61QmUVQeCml8qJvjHDtwG1lUueL09y5IrGjaMOVXob2vF+
-        KaL3hdX2RF/bvAYdC/i8CvuxuUkgq2o9HYuIaBDbjXkSbnfOJ2kCP2WVIOZt6oB6eGOGu8Eh8vPVm
-        +bzEAO1Q==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qZ22O-0029JV-0g;
-        Thu, 24 Aug 2023 04:33:40 +0000
-Message-ID: <f6f098c1-74de-be02-5882-bf07cc41d6d5@infradead.org>
-Date:   Wed, 23 Aug 2023 21:33:39 -0700
+        Thu, 24 Aug 2023 04:05:28 -0400
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 692881729;
+        Thu, 24 Aug 2023 01:04:55 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0VqT5ls6_1692864233;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VqT5ls6_1692864233)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Aug 2023 16:04:02 +0800
+From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To:     kys@microsoft.com
+Cc:     haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] x86/hyperv: Remove duplicate include
+Date:   Thu, 24 Aug 2023 16:03:52 +0800
+Message-Id: <20230824080352.98945-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: linux-next: Tree for Aug 23 (hyperv)
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <20230823161428.3af51dee@canb.auug.org.au>
- <449fdf75-6d5c-46c3-2a1e-23c55a73b62e@infradead.org>
- <ZObLMtemsJap3UX+@liuwe-devbox-debian-v2>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <ZObLMtemsJap3UX+@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+./arch/x86/hyperv/ivm.c: asm/sev.h is included more than once.
+./arch/x86/hyperv/ivm.c: asm/coco.h is included more than once.
 
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=6212
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ arch/x86/hyperv/ivm.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-On 8/23/23 20:14, Wei Liu wrote:
-> On Wed, Aug 23, 2023 at 06:45:07PM -0700, Randy Dunlap wrote:
->>
->>
->> On 8/22/23 23:14, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20230822:
->>>
->>
->> on x86_64:
->>
->> In file included from ../arch/x86/hyperv/hv_init.c:20:
->> ../arch/x86/include/asm/mshyperv.h:272:12: warning: 'hv_snp_boot_ap' defined but not used [-Wunused-function]
->>   272 | static int hv_snp_boot_ap(int cpu, unsigned long start_ip) { return 0; }
->>       |            ^~~~~~~~~~~~~~
-> [...]
->>
->> Full randconfig file is attached.
-> 
-> Thanks for the email.
-> 
-> I think this is already fixed in hyperv-next. In the latest code,
-> hv_snp_boot_ap in has `inline` attribute.
-> 
-
-Sounds good. Thanks.
-
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 1448c6338971..55d43415a2fd 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -18,9 +18,7 @@
+ #include <asm/mshyperv.h>
+ #include <asm/hypervisor.h>
+ #include <asm/mtrr.h>
+-#include <asm/coco.h>
+ #include <asm/io_apic.h>
+-#include <asm/sev.h>
+ #include <asm/realmode.h>
+ #include <asm/e820/api.h>
+ #include <asm/desc.h>
 -- 
-~Randy
+2.20.1.7.g153144c
+
