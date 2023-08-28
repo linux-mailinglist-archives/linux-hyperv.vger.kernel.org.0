@@ -2,170 +2,367 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FBD97890CE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 25 Aug 2023 23:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20C7D78AB6A
+	for <lists+linux-hyperv@lfdr.de>; Mon, 28 Aug 2023 12:31:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbjHYVyZ (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Fri, 25 Aug 2023 17:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
+        id S231393AbjH1Kar (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 28 Aug 2023 06:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjHYVxv (ORCPT
+        with ESMTP id S231372AbjH1KaR (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Fri, 25 Aug 2023 17:53:51 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EA426AF;
-        Fri, 25 Aug 2023 14:53:48 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37PIEJG8011032;
-        Fri, 25 Aug 2023 21:53:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2023-03-30;
- bh=Nwek5df8OG5D5Iliip4VWRlyomrKCFEqYQkXldVmbHI=;
- b=Mpp2wYe5+AUm9HQYqde0DUSsGTZcZ86Thg1frWhQbK3iFkrMgRVrd/guD2HThtD1SW/A
- OmqQyfbYOdEfkSNnMGdyV7vM5QYseZvSQm54FuDODC8GGyvYxcDKgakYI2OaVaUCqJRk
- vKHiH5/myl62CeDgH6s/zPDIEBGiSkzNwA6TWz8LcBMx9wxOEAINZ2z1+CShiRs2PSWD
- 21ncY9gISuPMB2HLyIt5wN3p9PaF2ypifW9Okaabnj8u/WOhhtVvmtKfaLatpsLvG5rv
- rnAPViaOtHSfG3KmyFJaGkimGdSMGlVZ5B/giweQP8MzFWX0Pd3sdifIB+k9X5Bsc7Xa KQ== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sn1yv7ckj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 21:53:41 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37PJoHje036185;
-        Fri, 25 Aug 2023 21:53:40 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2047.outbound.protection.outlook.com [104.47.66.47])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3sn1yxvwkh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 21:53:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Beh4c3iZIrSCz+q5IlaICJ76BKvo1Agiaq7Y7GeP9rVlzi/lNoikODIFFVneckSl5AqQVD5eN8AvmZeiFlGVJiVrMZvqLUa/0n1fuv/3G7RL8u2pbqYt9eZESS1s0uPIn2VDbGYP3J8Mj/M3yksXxNSuDVv3bq6stmJx48rvMFZi7dHslccyOIniUuXkp6VA6ijNldxFBLXgoudGjC7W5MJmXQsA3Y0g+UVqPKlKvXKPrKj9zKu8sfB2c+SiQgd56+wwCKOXdK6ZKbVlN3tyTnCp1DH3LDz6BH7tSUUbQ0KU/bmamwEwVCzpCtkfnU2GfQcvvbF06TpRf+3Kd449Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nwek5df8OG5D5Iliip4VWRlyomrKCFEqYQkXldVmbHI=;
- b=IxOPzr9CrM8ALOOiI/8YKvz/uM0XAEK8VtdZkanCZ2jwO12saTdIF//3ESGTM7v/nPPfaTFc0yOWXoNLVm02GF/BT7uSIYuVNM3BqaYbI0lSplfFeGBL8gackKwQpmuF1MzUA5GAvnwAFh5xNcpE33eLh3mSCab4XLdTaj2AdUZR3aiwcSWD32ghU3oia2WpJ5xkGpCSxd2prrlOWfDx7xU/CgdsDQZyOJTClB6wm1pK3iA2F3lBQfBOGnceOjFZUJSVxf9pwXDupdaK6nQxCeSn7A+ZcSGM5987gsvBr/IPE5caqv7Ifs3swglV9Ad8znmvY7hX8aLMa+102yYveg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nwek5df8OG5D5Iliip4VWRlyomrKCFEqYQkXldVmbHI=;
- b=P4Yye7Th9lhyaxQ29Ux4wWgRRojDpZfdkugSTSS6g+rOxH4s5smnU376m3GqPyUdJoj4rl6q1vNtMBwbPQfyFSaNiEgRQmrQCFfKmtkavwxyp4CfLsw1002W1DgIqNYXOavXxj3XgjPzH9uRWuGg4Fn6jFORyI7DIg6D7ZArujI=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by PH0PR10MB4518.namprd10.prod.outlook.com (2603:10b6:510:38::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27; Fri, 25 Aug
- 2023 21:53:29 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::59f3:b30d:a592:36be]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::59f3:b30d:a592:36be%7]) with mapi id 15.20.6699.034; Fri, 25 Aug 2023
- 21:53:29 +0000
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     kys@microsoft.com, martin.petersen@oracle.com,
-        longli@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        jejb@linux.ibm.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Subject: Re: [PATCH 1/1] scsi: storvsc: Handle additional SRB status values
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1bkeuzt6l.fsf@ca-mkp.ca.oracle.com>
-References: <1692984084-95105-1-git-send-email-mikelley@microsoft.com>
-Date:   Fri, 25 Aug 2023 17:53:26 -0400
-In-Reply-To: <1692984084-95105-1-git-send-email-mikelley@microsoft.com>
-        (Michael Kelley's message of "Fri, 25 Aug 2023 10:21:24 -0700")
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR03CA0020.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::30) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        Mon, 28 Aug 2023 06:30:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE2E6A7;
+        Mon, 28 Aug 2023 03:30:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 49CC563C13;
+        Mon, 28 Aug 2023 10:30:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A0FC433C9;
+        Mon, 28 Aug 2023 10:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1693218612;
+        bh=mtWcpg4pPAjZMs1U3EqtlsEKvHdweVPU8plNwlTqWWc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xviubvNfN4haFhNIF13ZY0TCFfK/W2sl/QUnVm+m3bW/JJKF8dg4hm8gqvQllkx9X
+         aUlkICu2DUCIi4wsomidiKSPp76IlPe/Hfs8FgaDFmo7dobHtoxwf8ElUSWTH7CKU2
+         XwJ7WRO2YLN13OH41lYT9PkAWhzjhYaI5207FRXI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Deepak Rawat <drawat.floss@gmail.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Emma Anholt <emma@anholt.net>, Helge Deller <deller@gmx.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-hyperv@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 007/122] drm/aperture: Remove primary argument
+Date:   Mon, 28 Aug 2023 12:12:02 +0200
+Message-ID: <20230828101156.720830036@linuxfoundation.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230828101156.480754469@linuxfoundation.org>
+References: <20230828101156.480754469@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|PH0PR10MB4518:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0f9dc032-9774-495c-3ee8-08dba5b5b78f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DdnLQupkOVY+CPQyQQu5PM85YE5Y7iYjEsasw+SPnCuxgsRXMYoU1GbDB8nol81Bwl2CSVNrIR8ZGo7ml7F+zZ8EEfAJUBIBMbgBm8m8XsaAMnX/jaNBubAjQrFiryM7BFX2C1tfe+lfnU3PoiEr6bxVS70yjuPTO6M7whX4wa8wudOmmn+o6/QLWf19VpB0BXiICpEE5HFPJsqva8sCqCyyQAHY8lppK/1h0TsD4gwtOx/6c84Eh9r9+IGDBpgYvImCZeLK7/JJ7dAwxYJQzgF+jSFXl9H/8h691FokSCuKjToO4mNLqHLpeHU2Ga4GdDwzjGjOuDLV7tLVlBlZ2r9gUSRMRC6WRagiqQQpGdTbaISRpWzJts2m+PXOtoFMgnS8U76qPqyW0jT74SOKxoZWNMK960kXdYvevZi1R4+jwV5Rbx0PrQrodyT5F7S2jJxg4ezP7hiz2mZe4qrqc0Qr/t6sffzGzxgD/P4LtMDYKvpp5JIc6c7CR+gzObG4D/FGQJmNJdM52GvLIM7iaJqlMcxY2OPmZo62mgoFK1M=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(39860400002)(346002)(136003)(366004)(1800799009)(186009)(451199024)(8936002)(8676002)(83380400001)(5660300002)(4744005)(4326008)(26005)(6666004)(38100700002)(6916009)(66556008)(66946007)(66476007)(316002)(478600001)(966005)(41300700001)(2906002)(36916002)(6506007)(86362001)(6486002)(6512007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mAarsCBDXnNb3qzDvY5tT/ahPwIRHaI6ytIVSWudjz1YtQdvQ2Q7zLJFHSDw?=
- =?us-ascii?Q?H9cfdoec7yhD29CyysJBC4YR+hO4Cuw2V7Z0G+XunK8Qdq+5C7vi9J1+ywRU?=
- =?us-ascii?Q?UVGeGyCNGHtbePcLnfNgOP9Jbk6itdOZS2/ozCqOTqA3NhFBd3sA88QV0IOi?=
- =?us-ascii?Q?GenHgyVlOTGc9gEnAm7kgbvEca5dzuHtQ1Qnex46RzYu6J0PthtNutlQnMR2?=
- =?us-ascii?Q?ChPx3PrfOeIPeSd+EwNEFqcFB63P/B/0TlQo51f3PmzcWOu7MbFscSEGK/YW?=
- =?us-ascii?Q?o4qFWyYniTM5j5l5gTaWAoyyyF04DJctg8lo1GpenjQsSwtiAHh/2b9WwdYd?=
- =?us-ascii?Q?FA++a3Ix0nF0lQGoezWF/r0O1H4GgT94lbkeu8fubOf1WmX444LeDqUYXDqo?=
- =?us-ascii?Q?2MSCDb8Id5i/4MzCAyCvTfoaF583HuHDTLOERzHRNJvOl70ZpFlWx0V7ZmMH?=
- =?us-ascii?Q?BZGkpriwwghneyuszde/jEii0KnxGS0Nw7zQfrrqMmEzHHkvjGX6RleiwrLu?=
- =?us-ascii?Q?AT8RAh2uv0A8xUb41NzVy8F2TkK23YkAJg6nEDMtkKO0WYkxSf3Gkhhhh53P?=
- =?us-ascii?Q?Jygb7WqERibai7DokARGpybbfY4r4bBgRFEKz8AM7ZTOWm/Z8wgO3dLtJ/Er?=
- =?us-ascii?Q?BXZgw/OIOJn3ovfHfWA10mGjeFOs3SHuZAZXbAThYh+XJSL1qs0AuJpeOvBS?=
- =?us-ascii?Q?hBTntuK1npjBDBj6iBEeVmoY8P3X8YscPTNFj0gHs2NuAw++2tTFxayta9Bj?=
- =?us-ascii?Q?W6LSQxQzxgVc6OvwCrDoYuiPZ11f5vtMoDzZZFCJyS57EQNJmLDyXOjYrUd+?=
- =?us-ascii?Q?BpSRzX3Hs2inXL++1i4cC4ZYRqW+3l3Jwki+D7B/Q1QsWW5V2v3fI32vx6mI?=
- =?us-ascii?Q?CoyQc0HhT14SsAOW2dKPa0eTibl/vimiy3RUuF4sWL050PYoirWCMh9ZHOeN?=
- =?us-ascii?Q?z4TjzXsOOvAG1BXEQlxceTtGqCMua1SWL5+2quUzRb8Q2ZpoJq+ricI/YVgF?=
- =?us-ascii?Q?bIp2LgJzpahBuoFyZd36EJwESnu/5uQyGVigDG5bqdM2e4vR22j+uCF8VGdW?=
- =?us-ascii?Q?le3uZmwG5U6TTSRteJwruxt62Nuasp5HNsg3HMN7dztGbzcXkq9dlK2kDMb3?=
- =?us-ascii?Q?Pmqy9AIOpClaI5m7/f06zkOxff2RZK3Ru2VAd4+D7Bx1ouN60jA7Dnr+jnG7?=
- =?us-ascii?Q?1WmYrmKBimwifZg0czX0R/Nk4WCjNneAXibBInCyBfqemYBjKjMqSbqGhsrN?=
- =?us-ascii?Q?V0f2PjRaGO2P0FhIZQEw8+a5W5Nr8cTx7GKFI/Gls2F78nV0DNJdG6IVsqZy?=
- =?us-ascii?Q?/rIF7JhwELLgrpuVd0AiWNeurGv6YV6VydKdwp6zv+dS58U9QuNTOxBDSqx+?=
- =?us-ascii?Q?pwHq1rsP2W8kc1Hwp7G9+nSYRnmaVnErnPgBUoSJtykez97GFcx0n3sZgJfC?=
- =?us-ascii?Q?Z2pj4YdlM9a3Jy7HMiD/xhvDV0f41B7sFeme7r9RWcTzwtFa7Xqmm3QIa+Co?=
- =?us-ascii?Q?kN2TqOj22vjr1f++eRWP6LqHREXruBCK5lVsnEG5pBOSqEInEL23UB/XubFI?=
- =?us-ascii?Q?OK73dJKaAo96NW+dAdOBE62qjaxIa6L/TPAdN1TYrapdv1YxOejyehHLjUzO?=
- =?us-ascii?Q?3w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: fugGbENQKYQmTfMC3gLOWpT5j3r3DE29HhjMrW+cIEuVzOwLiFdWb2n08vLAVoVGdPTJ0U2RJszClTJ46VNMPajwgSbH0GruaElaoYziPVL6MQ+ABKOqBmDMOgS7q+rw0UV6GnSmJ66mp2POOHgzgwVputYMdTxZx8HEBY5VfUX5/vn57vV/o9gvu1vNiEwwToG7NCBi1aIguS2pPjNWTzzzCI+O2lyCvYiDc2SZw5O9AH2KwvT5WYngyovslDuEESCPkd7lRI2t32Nzjp/X6JIbnGippj8JiKoSGVhUm4LYTeL60s9vack4INmeTQTbnRCJYbe/gQ3JFAlcgKuXKKdA2ehtxBhZeiJ9GGg6PNLcrJQoeAHwTMHuOtp392C9Edx6N0yFZQ7fDdpcRmnFhvDo88ovWiVkyAFQjGbjBTGOzNNex0BbR6WfML0rLvCcwttUBrNmAA3C1faIrfKdUJEJrRzmYvi/uzwAGsa6rDXGE3vBeOPsFqyTGeAmQpnrQYIziw9Pq5qyzPFLPweRkqCe8Ido4qdF5MYCKVUtV0Rz8q2P3v88dgaO/yo5F5GCs40Al5SVnmgf/RyxFVG6BhDNJL5zYfdD2XcYUokE/R0sBatXLbZOgI+B8vfyOoyLCYIHt86DAZ6SBu0a3X9C3oJ7Urb9ZtBkE1hSzFAmZ4kiamtege0lGW0whBE19991yluHPpePQZTGYSRBgMLVRn7B9eSSy8lrTfsj6Zs8OaeQO89SUbbjWqW3AnsLqAVN9U8bU4c7BjQp3jgmcGl4sVX7coDPLYVQ5EOmA0UT14m2mYc07WEoORezqcqZ9i0YdfIehsdQdJeG5iiVEOayG9XtcPg+IXLerhtppdsNbKY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f9dc032-9774-495c-3ee8-08dba5b5b78f
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2023 21:53:29.1827
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DJzzEIeY0jeImZG8I0sObZBdvcED25LRdSLL4oXRxAQZoE7lYzwmjIZvl346+f8VrdtrLpKQKajoxoM7xOcVZmL/RXIGbeQLSSUo+kZzykA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4518
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-25_19,2023-08-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=737 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308250196
-X-Proofpoint-GUID: pAkxmGUcjDQFSmxQle1lPN0ra1GP4T87
-X-Proofpoint-ORIG-GUID: pAkxmGUcjDQFSmxQle1lPN0ra1GP4T87
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
+6.1-stable review patch.  If anyone has any objections, please let me know.
 
-Michael,
+------------------
 
-> Testing of virtual fibre channel devices under Hyper-V has shown
-> additional SRB status values being returned for various error cases.
-> Because these SRB status values are not recognized by storvsc, the I/O
-> operations are not flagged as an error. Request are treated as if they
-> completed normally but with zero data transferred, which can cause a
-> flood of retries.
->
-> Add definitions for these SRB status values and handle them like other
-> error statuses from the Hyper-V host.
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Applied to 6.5/scsi-fixes, thanks!
+[ Upstream commit 62aeaeaa1b267c5149abee6b45967a5df3feed58 ]
 
-[1/1] scsi: storvsc: Handle additional SRB status values
-      https://git.kernel.org/mkp/scsi/c/812fe6420a6e
+Only really pci devices have a business setting this - it's for
+figuring out whether the legacy vga stuff should be nuked too. And
+with the preceding two patches those are all using the pci version of
+this.
 
+Which means for all other callers primary == false and we can remove
+it now.
+
+v2:
+- Reorder to avoid compile fail (Thomas)
+- Include gma500, which retained it's called to the non-pci version.
+
+v4:
+- fix Daniel's S-o-b address
+
+v5:
+- add back an S-o-b tag with Daniel's Intel address
+
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Deepak Rawat <drawat.floss@gmail.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Emma Anholt <emma@anholt.net>
+Cc: Helge Deller <deller@gmx.de>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-hyperv@vger.kernel.org
+Cc: linux-amlogic@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-tegra@vger.kernel.org
+Cc: linux-fbdev@vger.kernel.org
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20230406132109.32050-4-tzimmermann@suse.de
+Stable-dep-of: 5ae3716cfdcd ("video/aperture: Only remove sysfb on the default vga pci device")
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/arm/hdlcd_drv.c             |  2 +-
+ drivers/gpu/drm/armada/armada_drv.c         |  2 +-
+ drivers/gpu/drm/drm_aperture.c              | 11 +++--------
+ drivers/gpu/drm/gma500/psb_drv.c            |  2 +-
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c     |  1 -
+ drivers/gpu/drm/meson/meson_drv.c           |  2 +-
+ drivers/gpu/drm/msm/msm_fbdev.c             |  2 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c |  2 +-
+ drivers/gpu/drm/stm/drv.c                   |  2 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c           |  2 +-
+ drivers/gpu/drm/tegra/drm.c                 |  2 +-
+ drivers/gpu/drm/vc4/vc4_drv.c               |  2 +-
+ include/drm/drm_aperture.h                  |  7 +++----
+ 13 files changed, 16 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
+index a032003c340cc..d6ea47873627f 100644
+--- a/drivers/gpu/drm/arm/hdlcd_drv.c
++++ b/drivers/gpu/drm/arm/hdlcd_drv.c
+@@ -290,7 +290,7 @@ static int hdlcd_drm_bind(struct device *dev)
+ 	 */
+ 	if (hdlcd_read(hdlcd, HDLCD_REG_COMMAND)) {
+ 		hdlcd_write(hdlcd, HDLCD_REG_COMMAND, 0);
+-		drm_aperture_remove_framebuffers(false, &hdlcd_driver);
++		drm_aperture_remove_framebuffers(&hdlcd_driver);
+ 	}
+ 
+ 	drm_mode_config_reset(drm);
+diff --git a/drivers/gpu/drm/armada/armada_drv.c b/drivers/gpu/drm/armada/armada_drv.c
+index 142668cd6d7cd..688ba358f5319 100644
+--- a/drivers/gpu/drm/armada/armada_drv.c
++++ b/drivers/gpu/drm/armada/armada_drv.c
+@@ -95,7 +95,7 @@ static int armada_drm_bind(struct device *dev)
+ 	}
+ 
+ 	/* Remove early framebuffers */
+-	ret = drm_aperture_remove_framebuffers(false, &armada_drm_driver);
++	ret = drm_aperture_remove_framebuffers(&armada_drm_driver);
+ 	if (ret) {
+ 		dev_err(dev, "[" DRM_NAME ":%s] can't kick out simple-fb: %d\n",
+ 			__func__, ret);
+diff --git a/drivers/gpu/drm/drm_aperture.c b/drivers/gpu/drm/drm_aperture.c
+index 3b8fdeeafd53a..697cffbfd6037 100644
+--- a/drivers/gpu/drm/drm_aperture.c
++++ b/drivers/gpu/drm/drm_aperture.c
+@@ -32,17 +32,13 @@
+  *
+  *	static int remove_conflicting_framebuffers(struct pci_dev *pdev)
+  *	{
+- *		bool primary = false;
+  *		resource_size_t base, size;
+  *		int ret;
+  *
+  *		base = pci_resource_start(pdev, 0);
+  *		size = pci_resource_len(pdev, 0);
+- *	#ifdef CONFIG_X86
+- *		primary = pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
+- *	#endif
+  *
+- *		return drm_aperture_remove_conflicting_framebuffers(base, size, primary,
++ *		return drm_aperture_remove_conflicting_framebuffers(base, size,
+  *		                                                    &example_driver);
+  *	}
+  *
+@@ -161,7 +157,6 @@ EXPORT_SYMBOL(devm_aperture_acquire_from_firmware);
+  * drm_aperture_remove_conflicting_framebuffers - remove existing framebuffers in the given range
+  * @base: the aperture's base address in physical memory
+  * @size: aperture size in bytes
+- * @primary: also kick vga16fb if present
+  * @req_driver: requesting DRM driver
+  *
+  * This function removes graphics device drivers which use the memory range described by
+@@ -171,9 +166,9 @@ EXPORT_SYMBOL(devm_aperture_acquire_from_firmware);
+  * 0 on success, or a negative errno code otherwise
+  */
+ int drm_aperture_remove_conflicting_framebuffers(resource_size_t base, resource_size_t size,
+-						 bool primary, const struct drm_driver *req_driver)
++						 const struct drm_driver *req_driver)
+ {
+-	return aperture_remove_conflicting_devices(base, size, primary, req_driver->name);
++	return aperture_remove_conflicting_devices(base, size, false, req_driver->name);
+ }
+ EXPORT_SYMBOL(drm_aperture_remove_conflicting_framebuffers);
+ 
+diff --git a/drivers/gpu/drm/gma500/psb_drv.c b/drivers/gpu/drm/gma500/psb_drv.c
+index 000e6704e3c75..738eb558a97e9 100644
+--- a/drivers/gpu/drm/gma500/psb_drv.c
++++ b/drivers/gpu/drm/gma500/psb_drv.c
+@@ -430,7 +430,7 @@ static int psb_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	 * TODO: Refactor psb_driver_load() to map vdc_reg earlier. Then we
+ 	 *       might be able to read the framebuffer range from the device.
+ 	 */
+-	ret = drm_aperture_remove_framebuffers(false, &driver);
++	ret = drm_aperture_remove_framebuffers(&driver);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+index ca127ff797f75..29ee0814bccc8 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_drv.c
+@@ -74,7 +74,6 @@ static int hyperv_setup_vram(struct hyperv_drm_device *hv,
+ 
+ 	drm_aperture_remove_conflicting_framebuffers(screen_info.lfb_base,
+ 						     screen_info.lfb_size,
+-						     false,
+ 						     &hyperv_driver);
+ 
+ 	hv->fb_size = (unsigned long)hv->mmio_megabytes * 1024 * 1024;
+diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+index eea433ade79d0..119544d88b586 100644
+--- a/drivers/gpu/drm/meson/meson_drv.c
++++ b/drivers/gpu/drm/meson/meson_drv.c
+@@ -285,7 +285,7 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+ 	 * Remove early framebuffers (ie. simplefb). The framebuffer can be
+ 	 * located anywhere in RAM
+ 	 */
+-	ret = drm_aperture_remove_framebuffers(false, &meson_driver);
++	ret = drm_aperture_remove_framebuffers(&meson_driver);
+ 	if (ret)
+ 		goto free_drm;
+ 
+diff --git a/drivers/gpu/drm/msm/msm_fbdev.c b/drivers/gpu/drm/msm/msm_fbdev.c
+index 46168eccfac4a..d4a9b501e1bcc 100644
+--- a/drivers/gpu/drm/msm/msm_fbdev.c
++++ b/drivers/gpu/drm/msm/msm_fbdev.c
+@@ -157,7 +157,7 @@ struct drm_fb_helper *msm_fbdev_init(struct drm_device *dev)
+ 	}
+ 
+ 	/* the fw fb could be anywhere in memory */
+-	ret = drm_aperture_remove_framebuffers(false, dev->driver);
++	ret = drm_aperture_remove_framebuffers(dev->driver);
+ 	if (ret)
+ 		goto fini;
+ 
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+index 813f9f8c86982..8e12053a220b0 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+@@ -140,7 +140,7 @@ static int rockchip_drm_bind(struct device *dev)
+ 	int ret;
+ 
+ 	/* Remove existing drivers that may own the framebuffer memory. */
+-	ret = drm_aperture_remove_framebuffers(false, &rockchip_drm_driver);
++	ret = drm_aperture_remove_framebuffers(&rockchip_drm_driver);
+ 	if (ret) {
+ 		DRM_DEV_ERROR(dev,
+ 			      "Failed to remove existing framebuffers - %d.\n",
+diff --git a/drivers/gpu/drm/stm/drv.c b/drivers/gpu/drm/stm/drv.c
+index d7914f5122dff..0a09a85ac9d69 100644
+--- a/drivers/gpu/drm/stm/drv.c
++++ b/drivers/gpu/drm/stm/drv.c
+@@ -185,7 +185,7 @@ static int stm_drm_platform_probe(struct platform_device *pdev)
+ 
+ 	DRM_DEBUG("%s\n", __func__);
+ 
+-	ret = drm_aperture_remove_framebuffers(false, &drv_driver);
++	ret = drm_aperture_remove_framebuffers(&drv_driver);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 7910c5853f0a8..5c483bbccbbbc 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -98,7 +98,7 @@ static int sun4i_drv_bind(struct device *dev)
+ 		goto unbind_all;
+ 
+ 	/* Remove early framebuffers (ie. simplefb) */
+-	ret = drm_aperture_remove_framebuffers(false, &sun4i_drv_driver);
++	ret = drm_aperture_remove_framebuffers(&sun4i_drv_driver);
+ 	if (ret)
+ 		goto unbind_all;
+ 
+diff --git a/drivers/gpu/drm/tegra/drm.c b/drivers/gpu/drm/tegra/drm.c
+index a1f909dac89a7..5fc55b9777cbf 100644
+--- a/drivers/gpu/drm/tegra/drm.c
++++ b/drivers/gpu/drm/tegra/drm.c
+@@ -1252,7 +1252,7 @@ static int host1x_drm_probe(struct host1x_device *dev)
+ 
+ 	drm_mode_config_reset(drm);
+ 
+-	err = drm_aperture_remove_framebuffers(false, &tegra_drm_driver);
++	err = drm_aperture_remove_framebuffers(&tegra_drm_driver);
+ 	if (err < 0)
+ 		goto hub;
+ 
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+index 8c329c071c62d..b6384a5dfdbc1 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.c
++++ b/drivers/gpu/drm/vc4/vc4_drv.c
+@@ -351,7 +351,7 @@ static int vc4_drm_bind(struct device *dev)
+ 			return -EPROBE_DEFER;
+ 	}
+ 
+-	ret = drm_aperture_remove_framebuffers(false, driver);
++	ret = drm_aperture_remove_framebuffers(driver);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/include/drm/drm_aperture.h b/include/drm/drm_aperture.h
+index 7096703c39493..cbe33b49fd5dc 100644
+--- a/include/drm/drm_aperture.h
++++ b/include/drm/drm_aperture.h
+@@ -13,14 +13,13 @@ int devm_aperture_acquire_from_firmware(struct drm_device *dev, resource_size_t
+ 					resource_size_t size);
+ 
+ int drm_aperture_remove_conflicting_framebuffers(resource_size_t base, resource_size_t size,
+-						 bool primary, const struct drm_driver *req_driver);
++						 const struct drm_driver *req_driver);
+ 
+ int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev,
+ 						     const struct drm_driver *req_driver);
+ 
+ /**
+  * drm_aperture_remove_framebuffers - remove all existing framebuffers
+- * @primary: also kick vga16fb if present
+  * @req_driver: requesting DRM driver
+  *
+  * This function removes all graphics device drivers. Use this function on systems
+@@ -30,9 +29,9 @@ int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev,
+  * 0 on success, or a negative errno code otherwise
+  */
+ static inline int
+-drm_aperture_remove_framebuffers(bool primary, const struct drm_driver *req_driver)
++drm_aperture_remove_framebuffers(const struct drm_driver *req_driver)
+ {
+-	return drm_aperture_remove_conflicting_framebuffers(0, (resource_size_t)-1, primary,
++	return drm_aperture_remove_conflicting_framebuffers(0, (resource_size_t)-1,
+ 							    req_driver);
+ }
+ 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.40.1
+
+
+
