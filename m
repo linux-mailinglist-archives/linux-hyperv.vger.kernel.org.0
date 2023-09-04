@@ -2,58 +2,58 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B20847917AF
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Sep 2023 15:00:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92F4C7917C2
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Sep 2023 15:05:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243884AbjIDNAT (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 4 Sep 2023 09:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56762 "EHLO
+        id S235096AbjIDNGA (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 4 Sep 2023 09:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjIDNAS (ORCPT
+        with ESMTP id S232426AbjIDNF7 (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 4 Sep 2023 09:00:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8BE1AD
-        for <linux-hyperv@vger.kernel.org>; Mon,  4 Sep 2023 05:59:31 -0700 (PDT)
+        Mon, 4 Sep 2023 09:05:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E493CC7
+        for <linux-hyperv@vger.kernel.org>; Mon,  4 Sep 2023 06:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693832371;
+        s=mimecast20190719; t=1693832712;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=zEV+8LVB0e1YVGA/3PaV1RliEe0ZafqnElnGxMEFxlo=;
-        b=b/HcOHUiuBZ360BjvQHAipIXEXnGA6iC8iAvD0JPLjQm+GUekg/RNL0xFks7ZfPewMVidt
-        u3mhRBHduL63RY3LmejvoK99/9CzIi9Odkwa2G13wC5o+a673revVvtMkQvllBVknNFntD
-        Sm7/LTx15KzUvLdi5g2LytNOXlTOONk=
+        bh=JGDuo0fidzIyb7lQTlkFMMjSr0JbZNOTrueOM/c6sEY=;
+        b=T5zWLRHrBVs1USqX/tvB5tN2WMDSXsH1eXhwvC8fsQ+zR+BLJAY+ZK+8eQX7saTwKWQtjA
+        4LM34LkAfFrcqjbiVQVcW8ckeNShrt27IxgXRAwe5mjqnMOdl1HwmMOcNcWf86wHbxP+xC
+        eyEtsPaVLx0lEyVLKbzyky9KEXT88W0=
 Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
  [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-327-ygCIIvkkON2U5g5lGBqmOg-1; Mon, 04 Sep 2023 08:59:30 -0400
-X-MC-Unique: ygCIIvkkON2U5g5lGBqmOg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-30932d15a30so805324f8f.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 04 Sep 2023 05:59:29 -0700 (PDT)
+ us-mta-400-UtOp-xZiN-eLUwh_XWaEEA-1; Mon, 04 Sep 2023 09:05:11 -0400
+X-MC-Unique: UtOp-xZiN-eLUwh_XWaEEA-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-31aef4011cfso809141f8f.2
+        for <linux-hyperv@vger.kernel.org>; Mon, 04 Sep 2023 06:05:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693832368; x=1694437168;
+        d=1e100.net; s=20221208; t=1693832710; x=1694437510;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zEV+8LVB0e1YVGA/3PaV1RliEe0ZafqnElnGxMEFxlo=;
-        b=RmexR9oZ+Ufvy45AIQ5PulJ7wSf8OiWqTqeXAPExawLV4DZZdelzH+aeoDCIfBpmn6
-         +fsM0DQcmYw+XTg7nQx3ySe+Q3zuZaj5rM/HustmF+/zggaSUorJ/LNDWmNMFKTtKZ08
-         g3nrsu4hkDnjuJHJkMcXxY/sfRN3Era73qSUQ+TuQdhCcI/zB5AYuhFPgjTg7uu0TmwZ
-         1UWS7sSKUJplWshrkXT6mhhn/IcJF/VuMAwWetlXAfYl6sEgSK8r034r9f+YyUQJl2rK
-         xv/87Tw9wgkfiONqSsQKYIafa/HOwgBoTTQLJhts1tPik492kXSPhlosZLXahjnBu8d+
-         Crog==
-X-Gm-Message-State: AOJu0YyFOAy7qmfG4lVDXD76pwSLz2CZvlLazuwtHTJiY7Ftvzr70QqW
-        m0Q0uvLxuFgi8cASd+2ndEwo8wTvdHieboRmOgHU/Glt1uGGEilhn86JVcQzwnpt9GYAkOXjFUx
-        6NM610UhM9o+YlQ0FdzIcPjVC
-X-Received: by 2002:a5d:4591:0:b0:31d:d977:4e3d with SMTP id p17-20020a5d4591000000b0031dd9774e3dmr7801075wrq.19.1693832368176;
-        Mon, 04 Sep 2023 05:59:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHKikRn5bbMbcnbDDAwQ42B3JKHCa5zsGawpabxpCAhlcfEHQ3tfQsF2MOZFWXS2OqG+gZYTw==
-X-Received: by 2002:a5d:4591:0:b0:31d:d977:4e3d with SMTP id p17-20020a5d4591000000b0031dd9774e3dmr7801053wrq.19.1693832367823;
-        Mon, 04 Sep 2023 05:59:27 -0700 (PDT)
+        bh=JGDuo0fidzIyb7lQTlkFMMjSr0JbZNOTrueOM/c6sEY=;
+        b=DzRrPxlzfdTYlHiF40QaPCtIhWNDkgpkHol21tZiUK2POXnICK4Yalm5cctYY486Yh
+         iRRSFxE3lejv1iDjkfiLCaruQxa14B0NuY8cVowcLwrZXyNOtFkl5YlpS1SF5lPGIkNs
+         lAPszimyj1j8I0HRk9U78W4sPdxiJWf2KoGgBZ5JQtW7HDEKdSOek2/m91IxNxqq4VGy
+         eIFcAE7m3dThsnuVHuUwV+ugFIDUojCTmp1zADWZe6G51QYT3Pu7x+mpuPmUqYRPQTER
+         AZ/1fHf6TNFfhFZUC5IY+tOExMzDS7mSgb8RFIQDMVX9KpccIbkk5oA1gnj96F4dliPM
+         VQpg==
+X-Gm-Message-State: AOJu0YwB476dvM/GsqKJ18r8e4SuWNU+4P79GMRJIf49b3zc3CgrY/Ut
+        /E+ZlRQtYg0r9EzwhAhz/nBEDVSfuA2XkTFliVXv/dPzbqPD03ZwteEXzVsL+tNuIENj0hYXzCr
+        yph/5odBKPjE++Q4V4D1wrcMS
+X-Received: by 2002:a05:6000:1cd:b0:317:5de3:86fb with SMTP id t13-20020a05600001cd00b003175de386fbmr7162731wrx.10.1693832709956;
+        Mon, 04 Sep 2023 06:05:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXjVWzCt7e02jUxRGN8dZzdROG6Y6I7k2Dqt3rSE/+w+cQmE9Wq23/UuCwnni8eIyMrEIxCA==
+X-Received: by 2002:a05:6000:1cd:b0:317:5de3:86fb with SMTP id t13-20020a05600001cd00b003175de386fbmr7162714wrx.10.1693832709657;
+        Mon, 04 Sep 2023 06:05:09 -0700 (PDT)
 Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id c7-20020a5d4147000000b0031de43fe9bfsm14636476wrq.0.2023.09.04.05.59.27
+        by smtp.gmail.com with ESMTPSA id f7-20020adffcc7000000b0031c7682607asm14485436wrs.111.2023.09.04.06.05.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Sep 2023 05:59:27 -0700 (PDT)
+        Mon, 04 Sep 2023 06:05:09 -0700 (PDT)
 From:   Javier Martinez Canillas <javierm@redhat.com>
 To:     Thomas Zimmermann <tzimmermann@suse.de>, deller@gmx.de,
         daniel@ffwll.ch, sam@ravnborg.org
@@ -61,13 +61,13 @@ Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-staging@lists.linux.dev, linux-hyperv@vger.kernel.org,
         linux-input@vger.kernel.org,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        Steve Glendinning <steve.glendinning@shawell.net>
-Subject: Re: [PATCH 1/8] fbdev/smscufx: Use fb_ops helpers for deferred I/O
-In-Reply-To: <20230828132131.29295-2-tzimmermann@suse.de>
+        Bernie Thompson <bernie@plugable.com>
+Subject: Re: [PATCH 2/8] fbdev/udlfb: Use fb_ops helpers for deferred I/O
+In-Reply-To: <20230828132131.29295-3-tzimmermann@suse.de>
 References: <20230828132131.29295-1-tzimmermann@suse.de>
- <20230828132131.29295-2-tzimmermann@suse.de>
-Date:   Mon, 04 Sep 2023 14:59:26 +0200
-Message-ID: <877cp66qmp.fsf@minerva.mail-host-address-is-not-set>
+ <20230828132131.29295-3-tzimmermann@suse.de>
+Date:   Mon, 04 Sep 2023 15:05:08 +0200
+Message-ID: <874jka6qd7.fsf@minerva.mail-host-address-is-not-set>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -83,46 +83,37 @@ X-Mailing-List: linux-hyperv@vger.kernel.org
 
 Thomas Zimmermann <tzimmermann@suse.de> writes:
 
-Hello Thomas,
-
 > Generate callback functions for struct fb_ops with the fbdev macro
 > FB_GEN_DEFAULT_DEFERRED_SYSMEM_OPS(). Initialize struct fb_ops to
 > the generated functions with fbdev initializer macros.
 >
 > Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Steve Glendinning <steve.glendinning@shawell.net>
+> Cc: Bernie Thompson <bernie@plugable.com>
 > ---
-
-The patch looks good to me, but I've a question below.
 
 Acked-by: Javier Martinez Canillas <javierm@redhat.com>
 
->  drivers/video/fbdev/smscufx.c | 85 +++++++++--------------------------
->  1 file changed, 22 insertions(+), 63 deletions(-)
->
-> diff --git a/drivers/video/fbdev/smscufx.c b/drivers/video/fbdev/smscufx.c
-
 [...]
 
->  static const struct fb_ops ufx_ops = {
->  	.owner = THIS_MODULE,
-> -	.fb_read = fb_sys_read,
-> -	.fb_write = ufx_ops_write,
-> +	__FB_DEFAULT_DEFERRED_OPS_RDWR(ufx_ops),
->  	.fb_setcolreg = ufx_ops_setcolreg,
-> -	.fb_fillrect = ufx_ops_fillrect,
-> -	.fb_copyarea = ufx_ops_copyarea,
-> -	.fb_imageblit = ufx_ops_imageblit,
-> +	__FB_DEFAULT_DEFERRED_OPS_DRAW(ufx_ops),
->  	.fb_mmap = ufx_ops_mmap,
+> +static void dlfb_ops_damage_range(struct fb_info *info, off_t off, size_t len)
+> +{
+> +	struct dlfb_data *dlfb = info->par;
+> +	int start = max((int)(off / info->fix.line_length), 0);
+> +	int lines = min((u32)((len / info->fix.line_length) + 1), (u32)info->var.yres);
+> +
+> +	dlfb_handle_damage(dlfb, 0, start, info->var.xres, lines);
+> +}
+> +
+> +static void dlfb_ops_damage_area(struct fb_info *info, u32 x, u32 y, u32 width, u32 height)
+> +{
+> +	struct dlfb_data *dlfb = info->par;
+> +
+> +	dlfb_offload_damage(dlfb, x, y, width, height);
+> +}
+> +
 
-There are no generated functions for .fb_mmap, I wonder what's the value
-of __FB_DEFAULT_DEFERRED_OPS_MMAP() ? Maybe just removing that macro and
-setting .fb_mmap = fb_deferred_io_mmap instead if there's no custom mmap
-handler would be easier to read ?
-
-Alternatively, __FB_DEFAULT_DEFERRED_OPS_MMAP() could still be left but
-not taking a __prefix argument since that is not used anyways ?
+These two are very similar to the helpers you added for the smscufx driver
+in patch #1. I guess there's room for further consolidation as follow-up ?
 
 -- 
 Best regards,
