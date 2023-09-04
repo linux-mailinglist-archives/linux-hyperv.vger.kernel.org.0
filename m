@@ -2,151 +2,156 @@ Return-Path: <linux-hyperv-owner@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31C957919F4
-	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Sep 2023 16:45:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1074791A9C
+	for <lists+linux-hyperv@lfdr.de>; Mon,  4 Sep 2023 17:27:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352094AbjIDOp3 (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
-        Mon, 4 Sep 2023 10:45:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48534 "EHLO
+        id S244844AbjIDP1X (ORCPT <rfc822;lists+linux-hyperv@lfdr.de>);
+        Mon, 4 Sep 2023 11:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345104AbjIDOp2 (ORCPT
+        with ESMTP id S236286AbjIDP1U (ORCPT
         <rfc822;linux-hyperv@vger.kernel.org>);
-        Mon, 4 Sep 2023 10:45:28 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3F8CFD;
-        Mon,  4 Sep 2023 07:45:25 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 557B221847;
-        Mon,  4 Sep 2023 14:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1693838724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Mon, 4 Sep 2023 11:27:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA491CC4
+        for <linux-hyperv@vger.kernel.org>; Mon,  4 Sep 2023 08:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693841191;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=zwOfbAWdwcxiVEZLogxCvwETbAleNSV4ENBibaw75QE=;
-        b=2WCs7309i+x/BqUyDQuQAroHGHyJvPJGW5nh7hDDnsYcacC/+DEOxazTb/8S3XJpyVToc1
-        oxYCSk1LqEsg5aZtCrxHlbw8QrkASQQDz+9dvRbgxvZeptmtmRdZHubvx2cC8sQfjb5ghO
-        WmTqAn+SwPRhEA4ssqK8mYS4mx9UeEk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1693838724;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zwOfbAWdwcxiVEZLogxCvwETbAleNSV4ENBibaw75QE=;
-        b=Coek/URptDUKM6d5L5sOSMh1YeT+Br1iQjDDCxQC5XP1dISO7+0jN8FkNTdD/+nSVNxjoG
-        mly3oqzZQ7KHyvDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2436C13425;
-        Mon,  4 Sep 2023 14:45:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 6Wz5B4Tt9WSeNwAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Mon, 04 Sep 2023 14:45:24 +0000
-Message-ID: <9ff7e92a-539e-42fd-031b-d3a256021529@suse.de>
-Date:   Mon, 4 Sep 2023 16:45:23 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH 1/8] fbdev/smscufx: Use fb_ops helpers for deferred I/O
-Content-Language: en-US
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     Javier Martinez Canillas <javierm@redhat.com>, deller@gmx.de,
+        bh=3w9m5Kyek9McC6DIqWL/AU9aeKuaClRRwuI23BVEZVQ=;
+        b=Xa8FHV6bm0p1zaUL9qk1FEHxbPPpBViCfftbLqkgTiyON9g3C1UobNHZj1rJgIXOEKf2rO
+        qEsqSWUfzlkVc7MCBBajc92yiZfQLl51zNbYpA/Zx8wtntRAdbgBvMmhxwBlBlrY4oq11q
+        8/K28Hb/eDlGTwmz+EnEATCfUlLPETA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-679-yqFUuA8lOeecaB-f1-sonQ-1; Mon, 04 Sep 2023 11:26:28 -0400
+X-MC-Unique: yqFUuA8lOeecaB-f1-sonQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-3f5df65fa35so10158195e9.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 04 Sep 2023 08:26:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693841187; x=1694445987;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3w9m5Kyek9McC6DIqWL/AU9aeKuaClRRwuI23BVEZVQ=;
+        b=NRRSCgvuCNM8/axaJUqD8dRfyonOOxSHfclThSAiNZWK5Lp6UE588WmWl3nbMRkUHt
+         D8XPaDlBJSf+EJYpZtgpMyq7S0/79cBEF5bNg5eoyC9OS/m8spiOGL0jSp5s5YWSrXZC
+         gnGy0p4QWRHfk/joppCx+1NPCo4+J8NkC3XHwI7RWEeTeev+Emy2oQ2GrsvyVOZBJm63
+         M7/YG6C3mrixCEOrn/vMSFtwu1e6Ajvuk/D5tFAGyXrAsmSgdXe6sIjJmBomi/rq3Qnb
+         U2KRqzxwUDTDBzTQb1+TbZlvJE4MsW3SH4jl2g1F2+xouBa+S0NRMxPm0mjp0vZLmyS6
+         JQZQ==
+X-Gm-Message-State: AOJu0Ywal1pLTyl6WJ6wUnjMSm6RAZkq91hWtEl6z6LFX7oyZH+658SN
+        7wBBbzq/uYLIpWWr6/3OkFftFoD73t98efLFJXMuNvf1I9WW6yKL6HkGiZUB7LlJwBQ49ncxRUP
+        Spuogv6k3FFwdEGn08SaCGDb3RJk+g/Bt
+X-Received: by 2002:a05:600c:230a:b0:401:aa8f:7566 with SMTP id 10-20020a05600c230a00b00401aa8f7566mr7184366wmo.26.1693841187211;
+        Mon, 04 Sep 2023 08:26:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/QgrG9ZZeCMMajoiNwd74ytk48aIpSmfM9Lf3C5BkHGpRWOhGbvtZxEvbd/m0qpvgeZC8gA==
+X-Received: by 2002:a05:600c:230a:b0:401:aa8f:7566 with SMTP id 10-20020a05600c230a00b00401aa8f7566mr7184357wmo.26.1693841186846;
+        Mon, 04 Sep 2023 08:26:26 -0700 (PDT)
+Received: from localhost (156.pool92-189-221.dynamic.orange.es. [92.189.221.156])
+        by smtp.gmail.com with ESMTPSA id p15-20020a5d68cf000000b0031416362e23sm14937968wrw.3.2023.09.04.08.26.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Sep 2023 08:26:26 -0700 (PDT)
+From:   Javier Martinez Canillas <javierm@redhat.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>, deller@gmx.de,
         daniel@ffwll.ch, sam@ravnborg.org
 Cc:     Steve Glendinning <steve.glendinning@shawell.net>,
         linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
         linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-input@vger.kernel.org
+Subject: Re: [PATCH 1/8] fbdev/smscufx: Use fb_ops helpers for deferred I/O
+In-Reply-To: <b9b985e7-4f60-7c59-3121-b26b07b13b03@suse.de>
 References: <20230828132131.29295-1-tzimmermann@suse.de>
  <20230828132131.29295-2-tzimmermann@suse.de>
  <877cp66qmp.fsf@minerva.mail-host-address-is-not-set>
  <b9b985e7-4f60-7c59-3121-b26b07b13b03@suse.de>
-In-Reply-To: <b9b985e7-4f60-7c59-3121-b26b07b13b03@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------PRkXFkMYvCBn8xIvrEX4jg8i"
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Date:   Mon, 04 Sep 2023 17:26:25 +0200
+Message-ID: <871qfe6jtq.fsf@minerva.mail-host-address-is-not-set>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-hyperv.vger.kernel.org>
 X-Mailing-List: linux-hyperv@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------PRkXFkMYvCBn8xIvrEX4jg8i
-Content-Type: multipart/mixed; boundary="------------nbhjRC7dfWIrkQvkawxwnpwG";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Javier Martinez Canillas <javierm@redhat.com>, deller@gmx.de,
- daniel@ffwll.ch, sam@ravnborg.org
-Cc: Steve Glendinning <steve.glendinning@shawell.net>,
- linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-input@vger.kernel.org
-Message-ID: <9ff7e92a-539e-42fd-031b-d3a256021529@suse.de>
-Subject: Re: [PATCH 1/8] fbdev/smscufx: Use fb_ops helpers for deferred I/O
-References: <20230828132131.29295-1-tzimmermann@suse.de>
- <20230828132131.29295-2-tzimmermann@suse.de>
- <877cp66qmp.fsf@minerva.mail-host-address-is-not-set>
- <b9b985e7-4f60-7c59-3121-b26b07b13b03@suse.de>
-In-Reply-To: <b9b985e7-4f60-7c59-3121-b26b07b13b03@suse.de>
+Thomas Zimmermann <tzimmermann@suse.de> writes:
 
---------------nbhjRC7dfWIrkQvkawxwnpwG
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> Hi Javier
+>
+> Am 04.09.23 um 14:59 schrieb Javier Martinez Canillas:
+>> Thomas Zimmermann <tzimmermann@suse.de> writes:
+>> 
+>> Hello Thomas,
+>> 
+>>> Generate callback functions for struct fb_ops with the fbdev macro
+>>> FB_GEN_DEFAULT_DEFERRED_SYSMEM_OPS(). Initialize struct fb_ops to
+>>> the generated functions with fbdev initializer macros.
+>>>
+>>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>> Cc: Steve Glendinning <steve.glendinning@shawell.net>
+>>> ---
+>> 
+>> The patch looks good to me, but I've a question below.
+>> 
+>> Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+>> 
+>>>   drivers/video/fbdev/smscufx.c | 85 +++++++++--------------------------
+>>>   1 file changed, 22 insertions(+), 63 deletions(-)
+>>>
+>>> diff --git a/drivers/video/fbdev/smscufx.c b/drivers/video/fbdev/smscufx.c
+>> 
+>> [...]
+>> 
+>>>   static const struct fb_ops ufx_ops = {
+>>>   	.owner = THIS_MODULE,
+>>> -	.fb_read = fb_sys_read,
+>>> -	.fb_write = ufx_ops_write,
+>>> +	__FB_DEFAULT_DEFERRED_OPS_RDWR(ufx_ops),
+>>>   	.fb_setcolreg = ufx_ops_setcolreg,
+>>> -	.fb_fillrect = ufx_ops_fillrect,
+>>> -	.fb_copyarea = ufx_ops_copyarea,
+>>> -	.fb_imageblit = ufx_ops_imageblit,
+>>> +	__FB_DEFAULT_DEFERRED_OPS_DRAW(ufx_ops),
+>>>   	.fb_mmap = ufx_ops_mmap,
+>> 
+>> There are no generated functions for .fb_mmap, I wonder what's the value
+>> of __FB_DEFAULT_DEFERRED_OPS_MMAP() ? Maybe just removing that macro and
+>> setting .fb_mmap = fb_deferred_io_mmap instead if there's no custom mmap
+>> handler would be easier to read ?
+>
+> At least two drivers could use __FB_DEFAULT_DEFERRED_OPS_MMAP: 
+> picolcd-fb and hyperv_fb. At some point, we might want to set/clear 
+> fb_mmap depending on some Kconfig value. Having 
+> __FB_DEFAULT_DEFERRED_OPS_MMAP might be helpful then.
+>
 
-DQoNCkFtIDA0LjA5LjIzIHVtIDE2OjM5IHNjaHJpZWIgVGhvbWFzIFppbW1lcm1hbm46DQpb
-Li4uXQ0KPiBBdCBsZWFzdCB0d28gZHJpdmVycyBjb3VsZCB1c2UgX19GQl9ERUZBVUxUX0RF
-RkVSUkVEX09QU19NTUFQOiANCj4gcGljb2xjZC1mYiBhbmQgaHlwZXJ2X2ZiLiBBdCBzb21l
-IHBvaW50LCB3ZSBtaWdodCB3YW50IHRvIHNldC9jbGVhciANCg0KQm90aCBkcml2ZXJzIGFy
-ZSBhbHJlYWR5IGluIHRoaXMgcGF0Y2hzZXQuDQoNCj4gZmJfbW1hcCBkZXBlbmRpbmcgb24g
-c29tZSBLY29uZmlnIHZhbHVlLiBIYXZpbmcgDQo+IF9fRkJfREVGQVVMVF9ERUZFUlJFRF9P
-UFNfTU1BUCBtaWdodCBiZSBoZWxwZnVsIHRoZW4uDQo+IA0KPj4NCj4+IEFsdGVybmF0aXZl
-bHksIF9fRkJfREVGQVVMVF9ERUZFUlJFRF9PUFNfTU1BUCgpIGNvdWxkIHN0aWxsIGJlIGxl
-ZnQgYnV0DQo+PiBub3QgdGFraW5nIGEgX19wcmVmaXggYXJndW1lbnQgc2luY2UgdGhhdCBp
-cyBub3QgdXNlZCBhbnl3YXlzID8NCj4gDQo+IFRoZSBkcml2ZXIgb3B0aW9uYWxseSBwcm92
-aWRlcyBtbWFwIHdpdGhvdXQgZGVmZXJyZWQgSS9PLCBoZW5jZSB0aGUgbW1hcCANCj4gZnVu
-Y3Rpb24uIFRoYXQgbWFrZXMgbm8gc2Vuc2UsIGFzIHRoZXNlIHdyaXRlcyB0byB0aGUgYnVm
-ZmVyIHdvdWxkIG5ldmVyIA0KPiBtYWtlIGl0IHRvIHRoZSBkZXZpY2UgbWVtb3J5LiBCdXQg
-SSBkaWRuJ3Qgd2FudCB0byByZW1vdmUgdGhlIGNvZGUgDQo+IGVpdGhlci4gU28gSSBqdXN0
-IGxlZnQgdGhlIGV4aXN0aW5nIGZ1bmN0aW9uIGFzLWlzLiBVc3VhbGx5LCB0aGUgDQo+IGRl
-ZmVycmVkLUkvTyBtbWFwIGlzIGNhbGxlZCBpbW1lZGlhdGVseS4gWzFdDQo+IA0KPiBCZXN0
-IHJlZ2FyZHMNCj4gVGhvbWFzDQo+IA0KPiBbMV0gDQo+IGh0dHBzOi8vZWxpeGlyLmJvb3Rs
-aW4uY29tL2xpbnV4L3Y2LjUuMS9zb3VyY2UvZHJpdmVycy92aWRlby9mYmRldi9zbXNjdWZ4
-LmMjTDc4NA0KPiANCj4+DQo+IA0KDQotLSANClRob21hcyBaaW1tZXJtYW5uDQpHcmFwaGlj
-cyBEcml2ZXIgRGV2ZWxvcGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdt
-YkgNCkZyYW5rZW5zdHJhc3NlIDE0NiwgOTA0NjEgTnVlcm5iZXJnLCBHZXJtYW55DQpHRjog
-SXZvIFRvdGV2LCBBbmRyZXcgTXllcnMsIEFuZHJldyBNY0RvbmFsZCwgQm91ZGllbiBNb2Vy
-bWFuDQpIUkIgMzY4MDkgKEFHIE51ZXJuYmVyZykNCg==
+Got it, thanks for the explanation.
 
---------------nbhjRC7dfWIrkQvkawxwnpwG--
+>> 
+>> Alternatively, __FB_DEFAULT_DEFERRED_OPS_MMAP() could still be left but
+>> not taking a __prefix argument since that is not used anyways ?
+>
+> The driver optionally provides mmap without deferred I/O, hence the mmap 
+> function. That makes no sense, as these writes to the buffer would never 
+> make it to the device memory. But I didn't want to remove the code 
+> either. So I just left the existing function as-is. Usually, the 
+> deferred-I/O mmap is called immediately. [1]
+>
 
---------------PRkXFkMYvCBn8xIvrEX4jg8i
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+Makes sense.
 
------BEGIN PGP SIGNATURE-----
+-- 
+Best regards,
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmT17YMFAwAAAAAACgkQlh/E3EQov+Bl
-7g/+IkeJ8BEF+Ndcx15ceam9wUKFmxrZZxzU3LVoh0UKmoqA/1bZ7nZz9X3gO2D1mOe/iyUxqP+1
-jKOe7Cc2BG3mz2GekbDQJa4XPIlsJ5Ox/lHMSsQrVe48luAYSqpX9LGzox429Kl2REQM5dPs6/wz
-D2c9sfHYFJ6orzHl18rtb+LK0U7pBxirS0sKLcE2Hpt0Z7k2JN6bPJ+cVEkFPa+KA2Ydea2SLfeU
-a4lWvRG/F+YvIoN4EA8e7Lo6z8w1aBn6dfqhxyLwORLUvles4UD3Ok6WrCKoUa27Ub4Ui2HSIx2E
-UPD7/3QASWkPTh87sJw5u25oe+R0IFxhYaxhC9OoABhjbfZJVz88TSoKMV5s7gjhjWxfEhAH3hhf
-cBHtLzkhShL0hst4yFv5kgnDZmlUeIhtEy3aGdK0mrCKVRgLTOJUr9X3ID9aiA+eJoBnDz8UVv4E
-PzmHX01HEszSf/8IxP2qkZXlSlHD53mFenzZQ/Xo+OaEZ1ccgeRzpWbQEPs0+Bc7peUZ/CzUGc0C
-m84wwZ+bTa3KJN7vNOnTvu8YinMBnu9nlkQXSrv652p1N8hQ3jhrX3J+xPJiA7e0bHrsVy1eWihe
-ezMlOHNqpnkNXm3wooPhDXkFzpBV5rnFjrupLgMk8BeeMIiH/ohPHh7r698qLnvyQmuiyn0QbW9M
-Eeo=
-=uykn
------END PGP SIGNATURE-----
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
---------------PRkXFkMYvCBn8xIvrEX4jg8i--
