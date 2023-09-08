@@ -1,100 +1,135 @@
-Return-Path: <linux-hyperv+bounces-18-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-19-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF36A797DD0
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Sep 2023 23:14:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 863767985D4
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Sep 2023 12:27:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA94F1C20B08
-	for <lists+linux-hyperv@lfdr.de>; Thu,  7 Sep 2023 21:14:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 131962819B2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  8 Sep 2023 10:27:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F4E41427F;
-	Thu,  7 Sep 2023 21:14:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3F3C442C;
+	Fri,  8 Sep 2023 10:27:34 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6362C13AEA
-	for <linux-hyperv@vger.kernel.org>; Thu,  7 Sep 2023 21:14:17 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4F61BCB;
-	Thu,  7 Sep 2023 14:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694121256; x=1725657256;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=K/4R11GA5GpsQdIJCNNlgg03vTNiPvCQPb3usbgQwyc=;
-  b=FXQokRyV7m0AJU86COaUcAxZuruas3K+OOXs/HRxPmnNnhuDjy1KEelV
-   XUtVD8Jy8lzUxzSaAe2Kmt845mE6scv63g+IVG6YeVtywBDkZKSn2nNvV
-   Y8kAHrHuUoPD7I8ZIUsKXP8zaBl3cVJ6fhIt9pO4UuwpxzGOUNGw5sv5O
-   +w3E+R1vaz7jHvpCRVtP6yjCrDpsajo7UonfavKtP46zUxK5yKZNTuzWf
-   A+GSRJgckRT74Ow1GZIvfZ4IkCrS9G2Lkd2Cw2z2wcAIKPO9l5o3p7XoN
-   lXE8MjSMri1cUovIyAQ526BCNPbZAKZNxmGK+28GIkFOK0IPLQ7bCAdr0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="367741043"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="367741043"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 14:14:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="807692439"
-X-IronPort-AV: E=Sophos;i="6.02,236,1688454000"; 
-   d="scan'208";a="807692439"
-Received: from ningle-mobl2.amr.corp.intel.com (HELO [10.209.13.77]) ([10.209.13.77])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 14:14:14 -0700
-Message-ID: <4732ef96-9a47-3513-4494-48e4684d65cd@intel.com>
-Date: Thu, 7 Sep 2023 14:14:13 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2842210F
+	for <linux-hyperv@vger.kernel.org>; Fri,  8 Sep 2023 10:27:34 +0000 (UTC)
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 517B31BFF
+	for <linux-hyperv@vger.kernel.org>; Fri,  8 Sep 2023 03:27:04 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2bf6b37859eso7152511fa.0
+        for <linux-hyperv@vger.kernel.org>; Fri, 08 Sep 2023 03:27:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=grsecurity.net; s=grsec; t=1694168774; x=1694773574; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GzirF41rnUqKpCrHpf0iIc8MJPJsNa+V/TRO9JKyJ8w=;
+        b=jvjXqpM7+1aqsRGtMdThWHuTMTyU3BLTxLVASo6Z0ZyDIqzWpamao4ee65bRkngrNH
+         iN+8PT2m0btikOqsGnE9/iwLrEPxfwcc/WNuS4ScJJWlMPXSl5EA3y+ef+jMo7PuIKnr
+         Q4slLWWztE1dLODASduVuC81Yosigh0rzeVQYFjRjG2rckuNwmKU8v+UuzutlAPIZNrD
+         90cIEnWLEwIC9wK0DFW/ldGdJ8t67W83ZvbKywNeAAAJvrLnaEJmb2kZp7dGxxL0nveZ
+         egV46pKq1Vshf9DC4+U7h9iNOP1SDkpsuwJa2GbgCRG+/+SAhE4gzcGMwmYdlzcGMrJ6
+         TkXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694168774; x=1694773574;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GzirF41rnUqKpCrHpf0iIc8MJPJsNa+V/TRO9JKyJ8w=;
+        b=ey5KoROi9JiStuX1bdyiuvhALpEiFU+I/JmIkeakvTe8s+TdoFUuek+uTJ9uL/wNhN
+         Ez0yceIWBAs0848X6pgEZu8XVBcD4C+iFvtq1opd2QkMLdr45WWkQEw8oFp9/uRONoLK
+         kUlhjveL8LBMfuzHnnTAhxgo4M4H77MEJMe2kIg/bBbNM/BUC8Ou43gxF0oMYRDPRPWu
+         3zOdTQ27Cdwm3VEZEX/DqYZJSzDF1QkO+1EXVxHtj+wPpqaYnpJtr63zHB9owvjZ9D7d
+         sZ5n3Ny+ZV+aUsuIUBD+Q5xFdes4mABYE+W5S8xD1R0wACbYPYDh6R+4xDqOlVdOYvXh
+         PGPw==
+X-Gm-Message-State: AOJu0Yz2kZEiYmWMTA3cqn1Cy+Q22XTjRy7I7qwV5vFT+gKNn1B+Cg+n
+	3kElsNAT+eInduuX5rhSQ9JMxND8SZ3zys3Q/PI=
+X-Google-Smtp-Source: AGHT+IEcb6V0yih75oVWWeDE9YCVheVESKk0yVeRdT2afa8x9RlbRO0O7uqXrN4UesergTgOWUMvRw==
+X-Received: by 2002:a2e:9ace:0:b0:2bd:ddf:8aa6 with SMTP id p14-20020a2e9ace000000b002bd0ddf8aa6mr1383716ljj.23.1694168773889;
+        Fri, 08 Sep 2023 03:26:13 -0700 (PDT)
+Received: from bell.fritz.box (p200300f6af456100ee66353b07eac200.dip0.t-ipconnect.de. [2003:f6:af45:6100:ee66:353b:7ea:c200])
+        by smtp.gmail.com with ESMTPSA id q8-20020a1709064c8800b0098963eb0c3dsm844056eju.26.2023.09.08.03.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Sep 2023 03:26:13 -0700 (PDT)
+From: Mathias Krause <minipli@grsecurity.net>
+To: linux-hyperv@vger.kernel.org
+Cc: Mathias Krause <minipli@grsecurity.net>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-kernel@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	stable@kernel.org
+Subject: [PATCH] x86/hyperv/vtl: Replace real_mode_header only under Hyper-V
+Date: Fri,  8 Sep 2023 12:26:10 +0200
+Message-Id: <20230908102610.1039767-1-minipli@grsecurity.net>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v10 2/2] x86/tdx: Support vmalloc() for
- tdx_enc_status_changed()
-Content-Language: en-US
-To: Dexuan Cui <decui@microsoft.com>, x86@kernel.org, ak@linux.intel.com,
- arnd@arndb.de, bp@alien8.de, brijesh.singh@amd.com,
- dan.j.williams@intel.com, dave.hansen@linux.intel.com,
- haiyangz@microsoft.com, hpa@zytor.com, jane.chu@oracle.com,
- kirill.shutemov@linux.intel.com, kys@microsoft.com, luto@kernel.org,
- mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
- sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
- tglx@linutronix.de, tony.luck@intel.com, wei.liu@kernel.org,
- Jason@zx2c4.com, nik.borisov@suse.com, mikelley@microsoft.com
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- Tianyu.Lan@microsoft.com, rick.p.edgecombe@intel.com, andavis@redhat.com,
- mheslin@redhat.com, vkuznets@redhat.com, xiaoyao.li@intel.com
-References: <20230811214826.9609-1-decui@microsoft.com>
- <20230811214826.9609-3-decui@microsoft.com>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230811214826.9609-3-decui@microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 8/11/23 14:48, Dexuan Cui wrote:
-> When a TDX guest runs on Hyper-V, the hv_netvsc driver's netvsc_init_buf()
-> allocates buffers using vzalloc(), and needs to share the buffers with the
-> host OS by calling set_memory_decrypted(), which is not working for
-> vmalloc() yet. Add the support by handling the pages one by one.
-> 
-> Co-developed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Booting a CONFIG_HYPERV_VTL_MODE=y enabled kernel on bare metal or a
+non-Hyper-V hypervisor leads to serve memory corruption as
+hv_vtl_early_init() will run even though hv_vtl_init_platform() did not.
+This skips no-oping the 'realmode_reserve' and 'realmode_init' platform
+hooks, making init_real_mode() -> setup_real_mode() try to copy
+'real_mode_blob' over 'real_mode_header' which we set to the stub
+'hv_vtl_real_mode_header'. However, as 'real_mode_blob' isn't just a
+'struct real_mode_header' -- it's the complete code! -- copying it over
+'hv_vtl_real_mode_header' will corrupt quite some memory following it.
 
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+The real cause for this erroneous behaviour is that hv_vtl_early_init()
+blindly assumes the kernel is running on Hyper-V, which it may not.
+
+Fix this by making sure the code only replaces the real mode header with
+the stub one iff the kernel is running under Hyper-V.
+
+Fixes: 3be1bc2fe9d2 ("x86/hyperv: VTL support for Hyper-V")
+Cc: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: stable@kernel.org
+Signed-off-by: Mathias Krause <minipli@grsecurity.net>
+---
+ arch/x86/hyperv/hv_vtl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 57df7821d66c..54c06f4b8b4c 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -12,6 +12,7 @@
+ #include <asm/desc.h>
+ #include <asm/i8259.h>
+ #include <asm/mshyperv.h>
++#include <asm/hypervisor.h>
+ #include <asm/realmode.h>
+ 
+ extern struct boot_params boot_params;
+@@ -214,6 +215,9 @@ static int hv_vtl_wakeup_secondary_cpu(int apicid, unsigned long start_eip)
+ 
+ static int __init hv_vtl_early_init(void)
+ {
++	if (!hypervisor_is_type(X86_HYPER_MS_HYPERV))
++		return 0;
++
+ 	/*
+ 	 * `boot_cpu_has` returns the runtime feature support,
+ 	 * and here is the earliest it can be used.
+-- 
+2.30.2
 
 
