@@ -1,152 +1,154 @@
-Return-Path: <linux-hyperv+bounces-75-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-76-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05E317A0731
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 16:22:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A845A7A0871
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 17:04:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CE6C1F210A2
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 14:22:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 621DA281E3E
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 15:04:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5ECE22EF0;
-	Thu, 14 Sep 2023 14:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEE951CFB0;
+	Thu, 14 Sep 2023 14:49:14 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA527241E7
-	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 14:22:30 +0000 (UTC)
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB26DF
-	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 07:22:29 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40434d284f7so8185875e9.3
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 07:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1694701348; x=1695306148; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ff9Ehpvke6LtFPxvHhzarjEmuj2e3YwgZf0e14rNLIQ=;
-        b=oFoJvRewtC6A80eeRdd+puYIumNM+E1bfXQYd3VmpzcXsIEabMXBB+vrO2KmBnsoWs
-         ppRNLJDdee40avDVqtKO4TsqeW/qOcSMLUjEGOPNCjhdrIVQqi+tozip8YfdZXL/Zu2y
-         2I8l2NE2J4QwrfM3W39ZSacGyERMECQsB8iqA=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FB628E11
+	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 14:49:14 +0000 (UTC)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C436B1FC9
+	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 07:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1694702952;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JJNWd5PCe2BYCxEP8rDUQkK/YgAeIPdVdWnp3Lyzy3o=;
+	b=K1oM7fY99l9Xx2kzfLM6hcnwPk8R6pnqZmQvd4E18GQduyznP+ejlmPqAwGhGOjVFWDMZI
+	A6/yHGmzp2I8SxHxyXHni5kn79U0hviwrHvEnlk2do00vWk677XVPEJn6BbZztFMAmoBZS
+	s5u1yyXdDCzw3VNrN1iwsiT/2W+bQTw=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-639-UkuMCJbMPleDbopM7PpfUg-1; Thu, 14 Sep 2023 10:49:11 -0400
+X-MC-Unique: UkuMCJbMPleDbopM7PpfUg-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-50daa85e940so729055a12.0
+        for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 07:49:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694701348; x=1695306148;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ff9Ehpvke6LtFPxvHhzarjEmuj2e3YwgZf0e14rNLIQ=;
-        b=YWtVGJbjeSGeBBuG5QtSr+i2G67GMIZ1Xz84MQfOJm0SLDTnTIDjDUiL7l5Phrelmc
-         /iYfaM570tg+XYbxgJ8MI9mgniL6Y/icDV1rLODeskpncveMpde4aB+0wS+Xl4SymzYd
-         zdh5FIaYiwzQAaNbs1JXjBKMvEmKtolBxcnEU5oLTiOlIXvNSUKQ/JDIwmuOq6QbyAeN
-         D4XOE92N0iyuXomyc1KFYotOW2232vQMqMmZeISYD1fp+jJzEidMwxA7Nx9cpZfI4bRR
-         gL4uhLw6DxX0KeijKOsnN5I5+/ZMGkXpgsFrF14VRoFpbXoTDFe+/jJ26cL7/H1wyCkp
-         PVMQ==
-X-Gm-Message-State: AOJu0YwvPnumoJVG4hBX0lOVDgterutHXBXZAjLDgnBEZvGvP5Yzj1Th
-	VvS4bI2utI03/pUiBGF+TbyNsg==
-X-Google-Smtp-Source: AGHT+IFve9l57veSgCPqyrpryNeRPxRNyvtIANtQFRamRYlphhlxA6Tmolp/NSw7/qlFLxzi7VWxww==
-X-Received: by 2002:a7b:c414:0:b0:402:fe6d:6296 with SMTP id k20-20020a7bc414000000b00402fe6d6296mr4934579wmi.9.1694701348349;
-        Thu, 14 Sep 2023 07:22:28 -0700 (PDT)
-Received: from [10.80.67.28] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
-        by smtp.gmail.com with ESMTPSA id v26-20020a1cf71a000000b003fe1630a8f0sm5015544wmh.24.2023.09.14.07.22.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Sep 2023 07:22:28 -0700 (PDT)
-Message-ID: <cd4979cf-bcf4-75b4-a18b-c61a9b2e0ffb@citrix.com>
-Date: Thu, 14 Sep 2023 15:22:27 +0100
+        d=1e100.net; s=20230601; t=1694702950; x=1695307750;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JJNWd5PCe2BYCxEP8rDUQkK/YgAeIPdVdWnp3Lyzy3o=;
+        b=sd9rVCX6+0KhMQM0KL74kzTQ0Mrb3B2Odbqq7CYyIRAsREVsBYO3TxX2GdwC2T5nxc
+         kZFlwZ4ZUAo4XzCAp0RP4DRuP+9Bd2olXei3BVyzKwZP3OHSx8yuTEwKf0Wwwn8VjdiR
+         pJusG88rblz3dvGn3E2/Sb49byQ02o5zvKLcLWOx1xETe19xAnkRczSR7kSVP2/k5qV6
+         rq4PffuVajVaRQLFfYokskcUZYSeB5Eh4u8sJS/iQj8ZNASPWFo6mcuvk33S6SxTSUgS
+         ZBv1kRMfmbC8JUSOZ+4wVwHowdsDc31iJl96xN2u2kIzn43MlKM4l3N4hRBPiikFQujS
+         7O8A==
+X-Gm-Message-State: AOJu0Yx/ZVWsPBoppwXfuGqm2Q00vY9jvQMI9U5ZGukMHQv8yWPYz5vP
+	Glzkki/ojgCWBjzdfkm65ygJRF1fz1nnL2ivdZ4tm2kMsyhBTKssA7+8/7ffDbTD8+RIBo7+4JX
+	+2p8r0sZ0XPzKgQlgXOKPQsCK
+X-Received: by 2002:a17:906:55:b0:9a1:fbfb:4d11 with SMTP id 21-20020a170906005500b009a1fbfb4d11mr5271988ejg.73.1694702950363;
+        Thu, 14 Sep 2023 07:49:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFuUh+o4qBa2QpPTqZcV/CAgpJXUP4q4YCRFbbhogb7vavGnViV5ntjLQB4fVRFpDMI4D+1TQ==
+X-Received: by 2002:a17:906:55:b0:9a1:fbfb:4d11 with SMTP id 21-20020a170906005500b009a1fbfb4d11mr5271965ejg.73.1694702950001;
+        Thu, 14 Sep 2023 07:49:10 -0700 (PDT)
+Received: from fedora (g2.ign.cz. [91.219.240.8])
+        by smtp.gmail.com with ESMTPSA id rn5-20020a170906d92500b009a1e0349c4csm1119680ejb.23.2023.09.14.07.49.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Sep 2023 07:49:09 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mikelley@microsoft.com
+Subject: Re: [PATCH] x86/hyperv: Restrict get_vtl to only VTL platforms
+In-Reply-To: <1694604531-17128-1-git-send-email-ssengar@linux.microsoft.com>
+References: <1694604531-17128-1-git-send-email-ssengar@linux.microsoft.com>
+Date: Thu, 14 Sep 2023 16:49:08 +0200
+Message-ID: <874jjwq07v.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-From: andrew.cooper3@citrix.com
-Subject: Re: [PATCH v10 05/38] x86/trapnr: Add event type macros to
- <asm/trapnr.h>
-Content-Language: en-GB
-To: Xin Li <xin3.li@intel.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
- xen-devel@lists.xenproject.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, luto@kernel.org,
- pbonzini@redhat.com, seanjc@google.com, peterz@infradead.org,
- jgross@suse.com, ravi.v.shankar@intel.com, mhiramat@kernel.org,
- jiangshanlai@gmail.com
-References: <20230914044805.301390-1-xin3.li@intel.com>
- <20230914044805.301390-6-xin3.li@intel.com>
-In-Reply-To: <20230914044805.301390-6-xin3.li@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 14/09/2023 5:47 am, Xin Li wrote:
-> Intel VT-x classifies events into eight different types, which is
-> inherited by FRED for event identification. As such, event type
-> becomes a common x86 concept, and should be defined in a common x86
-> header.
+Saurabh Sengar <ssengar@linux.microsoft.com> writes:
+
+> For non VTL platforms vtl is always 0, and there is no need of
+> get_vtl function. For VTL platforms get_vtl should always succeed
+> and should return the correct VTL.
 >
-> Add event type macros to <asm/trapnr.h>, and use it in <asm/vmx.h>.
->
-> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> Tested-by: Shan Kang <shan.kang@intel.com>
-> Signed-off-by: Xin Li <xin3.li@intel.com>
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 > ---
->  arch/x86/include/asm/trapnr.h | 12 ++++++++++++
->  arch/x86/include/asm/vmx.h    | 17 +++++++++--------
->  2 files changed, 21 insertions(+), 8 deletions(-)
+>  arch/x86/hyperv/hv_init.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 >
-> diff --git a/arch/x86/include/asm/trapnr.h b/arch/x86/include/asm/trapnr.h
-> index f5d2325aa0b7..ab7e4c9d666f 100644
-> --- a/arch/x86/include/asm/trapnr.h
-> +++ b/arch/x86/include/asm/trapnr.h
-> @@ -2,6 +2,18 @@
->  #ifndef _ASM_X86_TRAPNR_H
->  #define _ASM_X86_TRAPNR_H
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 783ed339f341..e589c240565a 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -416,8 +416,8 @@ static u8 __init get_vtl(void)
+>  	if (hv_result_success(ret)) {
+>  		ret = output->as64.low & HV_X64_VTL_MASK;
+>  	} else {
+> -		pr_err("Failed to get VTL(%lld) and set VTL to zero by default.\n", ret);
+> -		ret = 0;
+> +		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
+
+Nitpick: arch/x86/hyperv/hv_init.c lacks pr_fmt so the message won't get
+prefixed with "Hyper-V". I'm not sure 'VTL' abbreviation has the only,
+Hyper-V specific meaning. I'd suggest we add 
+
+#define pr_fmt(fmt)  "Hyper-V: " fmt
+
+to the beginning of the file.
+
+> +		BUG();
+>  	}
 >  
-> +/*
-> + * Event type codes used by both FRED and Intel VT-x
-
-And AMD SVM.  This enumeration has never been unique to just VT-x.
-
-> + */
-> +#define EVENT_TYPE_EXTINT	0	// External interrupt
-> +#define EVENT_TYPE_RESERVED	1
-> +#define EVENT_TYPE_NMI		2	// NMI
-> +#define EVENT_TYPE_HWEXC	3	// Hardware originated traps, exceptions
-> +#define EVENT_TYPE_SWINT	4	// INT n
-> +#define EVENT_TYPE_PRIV_SWEXC	5	// INT1
-> +#define EVENT_TYPE_SWEXC	6	// INT0, INT3
-
-Typo.  into, not int0  (the difference shows up more clearly in lower case.)
-
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index 0e73616b82f3..c84acfefcd31 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -374,14 +375,14 @@ enum vmcs_field {
->  #define VECTORING_INFO_DELIVER_CODE_MASK    	INTR_INFO_DELIVER_CODE_MASK
->  #define VECTORING_INFO_VALID_MASK       	INTR_INFO_VALID_MASK
+>  	local_irq_restore(flags);
+> @@ -604,8 +604,10 @@ void __init hyperv_init(void)
+>  	hv_query_ext_cap(0);
 >  
-> -#define INTR_TYPE_EXT_INTR              (0 << 8) /* external interrupt */
-> -#define INTR_TYPE_RESERVED              (1 << 8) /* reserved */
-> -#define INTR_TYPE_NMI_INTR		(2 << 8) /* NMI */
-> -#define INTR_TYPE_HARD_EXCEPTION	(3 << 8) /* processor exception */
-> -#define INTR_TYPE_SOFT_INTR             (4 << 8) /* software interrupt */
-> -#define INTR_TYPE_PRIV_SW_EXCEPTION	(5 << 8) /* ICE breakpoint - undocumented */
-> -#define INTR_TYPE_SOFT_EXCEPTION	(6 << 8) /* software exception */
-> -#define INTR_TYPE_OTHER_EVENT           (7 << 8) /* other event */
-> +#define INTR_TYPE_EXT_INTR		(EVENT_TYPE_EXTINT << 8)	/* external interrupt */
-> +#define INTR_TYPE_RESERVED		(EVENT_TYPE_RESERVED << 8)	/* reserved */
-> +#define INTR_TYPE_NMI_INTR		(EVENT_TYPE_NMI << 8)		/* NMI */
-> +#define INTR_TYPE_HARD_EXCEPTION	(EVENT_TYPE_HWEXC << 8)		/* processor exception */
-> +#define INTR_TYPE_SOFT_INTR		(EVENT_TYPE_SWINT << 8)		/* software interrupt */
-> +#define INTR_TYPE_PRIV_SW_EXCEPTION	(EVENT_TYPE_PRIV_SWEXC << 8)	/* ICE breakpoint - undocumented */
+>  	/* Find the VTL */
+> -	if (!ms_hyperv.paravisor_present && hv_isolation_type_snp())
+> +	if (IS_ENABLED(CONFIG_HYPERV_VTL_MODE))
+>  		ms_hyperv.vtl = get_vtl();
+> +	else
+> +		ms_hyperv.vtl = 0;
 
-ICEBP/INT1 is no longer undocumented.
+Is 'else' branch really needed? 'ms_hyperv' seems to be a statically
+allocated global. But instead of doing this, what about putting the
+whole get_vtl() funtion under '#if (IS_ENABLED(CONFIG_HYPERV_VTL_MODE))', i.e.:
 
-~Andrew
+#if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
+static u8 __init get_vtl(void)
+{
+        u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
+...
+}
+#else
+static inline get_vtl(void) { return 0; }
+#endif
+
+and then we can always do
+
+      ms_hyperv.vtl = get_vtl();
+
+unconditionally?
+
+>  
+>  	return;
+
+-- 
+Vitaly
+
 
