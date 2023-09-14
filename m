@@ -1,244 +1,349 @@
-Return-Path: <linux-hyperv+bounces-28-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-29-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DD0D79F144
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Sep 2023 20:40:36 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B50C079FA00
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 07:19:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 75CCA2818DD
-	for <lists+linux-hyperv@lfdr.de>; Wed, 13 Sep 2023 18:40:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19E55B20527
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 05:19:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C305391;
-	Wed, 13 Sep 2023 18:40:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5647E17C3;
+	Thu, 14 Sep 2023 05:19:12 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EB437F
-	for <linux-hyperv@vger.kernel.org>; Wed, 13 Sep 2023 18:40:33 +0000 (UTC)
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63925A3
-	for <linux-hyperv@vger.kernel.org>; Wed, 13 Sep 2023 11:40:32 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-5008d16cc36so148218e87.2
-        for <linux-hyperv@vger.kernel.org>; Wed, 13 Sep 2023 11:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694630430; x=1695235230; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z+kAAaz8DPw8hDMu58WJTq8XnZOBUPzC1oE9LVRkCzk=;
-        b=jh964z9Prx3opJGDPIXXV+Af8EZ/su98pBUU1mjM2+RHRBo3gaId/ptUKec6r3VTfF
-         YIj3g71MCezTDuIgfsLnoG8JGWWf8zIzerz6oPZX+3Z2EZvGmIgD7KukjpEMovYRaAGv
-         WEGCW4QNBxE942cVg50NA8z16Tf1khM+vQ1N8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694630430; x=1695235230;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z+kAAaz8DPw8hDMu58WJTq8XnZOBUPzC1oE9LVRkCzk=;
-        b=tpN8TPlnBKMZOHclAJc9j2IlUkNyElBPmsyMvcr4NlntrAYYEJW+XFBJwq83lKBB2y
-         1xNDqJdz7IYcWWP4jMzACmXCgU8XDdgsTSLVNHKNHRCbFchEgwSWmEJeccSHr3xnwnng
-         HT2sS+FI83bQZY+p3yC2UA6N5EREQ9h6U5EQeEf3l/EryiLuZNxD3YjPer/XKiJx8NiW
-         uB9q/RXmlxw1b2J6p9y60wmUYiBfWpZ2F5Nbfc3iMCnSE8CmDYhnKTPNENZnhEYEgJTk
-         R88g+79c/5JBoesBpTN8M4N9wJE0gMUu6M/OIXrzgJvlXUbZmjuWYoUo/UZdh/4FW/zp
-         MucA==
-X-Gm-Message-State: AOJu0YyijXwK23UKeN41Nh8oKR/vwJkfZEW8JtNoFiqw9LfFS5Q88Wzz
-	zuRdrO8SzVTjCAOH5Fy8Ig7v7Xr2ppcUUJBBTwUui7Uy
-X-Google-Smtp-Source: AGHT+IETT6X5IgbsgZcpdtoYFs73V71UIq9hTqDXM5czKzUmre9jtY/SSargEKsyl92cqFE8loY/ew==
-X-Received: by 2002:a05:6512:3a91:b0:500:9796:fb6 with SMTP id q17-20020a0565123a9100b0050097960fb6mr3424123lfu.40.1694630429805;
-        Wed, 13 Sep 2023 11:40:29 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id m5-20020a056402050500b0052568bf9411sm7580479edv.68.2023.09.13.11.40.29
-        for <linux-hyperv@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Sep 2023 11:40:29 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-51e24210395so2551a12.0
-        for <linux-hyperv@vger.kernel.org>; Wed, 13 Sep 2023 11:40:29 -0700 (PDT)
-X-Received: by 2002:a05:600c:1c24:b0:401:a494:2bbb with SMTP id
- j36-20020a05600c1c2400b00401a4942bbbmr161937wms.5.1694629925852; Wed, 13 Sep
- 2023 11:32:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459A262C
+	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 05:19:12 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890711BCF;
+	Wed, 13 Sep 2023 22:19:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694668751; x=1726204751;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Ut3SQsni6+YOQ98PuGqQ9Bg1pmgPTft5nlrIOiIGVkM=;
+  b=e7OkMANML6xlnpazokXtlQqIUB3BI5jl97gLKWKvbi8Nm7j0Nas5bhR6
+   u/BMRopjyULKIQUUptoCt4tXkTQr2D5ImNyYYMtQnIbqW23tS1ayva9af
+   NVoqAsxPpwMh/JPsG7kf8jmX2ZVRrxEooLfbfmWBDXsx3Os8Kk1M33php
+   CcKRhS5LAzlYxVgqEm8NuxHj+SdsGqvnoNec1fHEXMJMLc5YeLVWr6MZY
+   Gdix6FebJILqyVdAcXufnnDI99ctAcPWb4qk33ZNI26D6Ddcy7GsXpAev
+   AC3JKruf1pNQZ+COGOjcfAdhUqHWi90KhdCjYnz01wfE7nAZKzrkJixjz
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="382661063"
+X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
+   d="scan'208";a="382661063"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 22:17:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="779488733"
+X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
+   d="scan'208";a="779488733"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by orsmga001.jf.intel.com with ESMTP; 13 Sep 2023 22:17:28 -0700
+From: Xin Li <xin3.li@intel.com>
+To: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org,
+	xen-devel@lists.xenproject.org
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	luto@kernel.org,
+	pbonzini@redhat.com,
+	seanjc@google.com,
+	peterz@infradead.org,
+	jgross@suse.com,
+	ravi.v.shankar@intel.com,
+	mhiramat@kernel.org,
+	andrew.cooper3@citrix.com,
+	jiangshanlai@gmail.com
+Subject: [PATCH v10 00/38] x86: enable FRED for x86-64
+Date: Wed, 13 Sep 2023 21:47:27 -0700
+Message-Id: <20230914044805.301390-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230901234015.566018-1-dianders@chromium.org>
-In-Reply-To: <20230901234015.566018-1-dianders@chromium.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 13 Sep 2023 11:31:53 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=US2G_s8_UtaRMBDLgOJqJzDzxMpg0C0wJ3TabUsuZsGg@mail.gmail.com>
-Message-ID: <CAD=FV=US2G_s8_UtaRMBDLgOJqJzDzxMpg0C0wJ3TabUsuZsGg@mail.gmail.com>
-Subject: Re: [RFT PATCH 0/6] drm: drm-misc drivers call drm_atomic_helper_shutdown()
- at the right times
-To: dri-devel@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>
-Cc: airlied@gmail.com, airlied@redhat.com, alain.volmat@foss.st.com, 
-	alexander.deucher@amd.com, alexandre.belloni@bootlin.com, 
-	alexandre.torgue@foss.st.com, alison.wang@nxp.com, andrew@aj.id.au, 
-	bbrezillon@kernel.org, christian.koenig@amd.com, claudiu.beznea@microchip.com, 
-	daniel@ffwll.ch, drawat.floss@gmail.com, emma@anholt.net, hdegoede@redhat.com, 
-	javierm@redhat.com, jernej.skrabec@gmail.com, jfalempe@redhat.com, 
-	joel@jms.id.au, jstultz@google.com, jyri.sarha@iki.fi, 
-	kong.kongxinwei@hisilicon.com, kraxel@redhat.com, linus.walleij@linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, 
-	liviu.dudau@arm.com, maarten.lankhorst@linux.intel.com, 
-	mcoquelin.stm32@gmail.com, nicolas.ferre@microchip.com, 
-	paul.kocialkowski@bootlin.com, philippe.cornu@foss.st.com, 
-	raphael.gallais-pou@foss.st.com, robh@kernel.org, sam@ravnborg.org, 
-	samuel@sholland.org, spice-devel@lists.freedesktop.org, stefan@agner.ch, 
-	steven.price@arm.com, suijingfeng@loongson.cn, sumit.semwal@linaro.org, 
-	tiantao6@hisilicon.com, tomi.valkeinen@ideasonboard.com, tzimmermann@suse.de, 
-	u.kleine-koenig@pengutronix.de, virtualization@lists.linux-foundation.org, 
-	wens@csie.org, xinliang.liu@linaro.org, yannick.fertre@foss.st.com, 
-	yongqin.liu@linaro.org, zackr@vmware.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This patch set enables the Intel flexible return and event delivery
+(FRED) architecture for x86-64.
 
-On Fri, Sep 1, 2023 at 4:40=E2=80=AFPM Douglas Anderson <dianders@chromium.=
-org> wrote:
->
->
-> NOTE: in order to avoid email sending limits on the cover letter, I've
-> split this patch series in two. Patches that target drm-misc and ones
-> that don't. The cover letter of the two is identical other than this note=
-.
->
-> This patch series came about after a _long_ discussion between me and
-> Maxime Ripard in response to a different patch I sent out [1]. As part
-> of that discussion, we realized that it would be good if DRM drivers
-> consistently called drm_atomic_helper_shutdown() properly at shutdown
-> and driver remove time as it's documented that they should do. The
-> eventual goal of this would be to enable removing some hacky code from
-> panel drivers where they had to hook into shutdown themselves because
-> the DRM driver wasn't calling them.
->
-> It turns out that quite a lot of drivers seemed to be missing
-> drm_atomic_helper_shutdown() in one or both places that it was
-> supposed to be. This patch series attempts to fix all the drivers that
-> I was able to identify.
->
-> NOTE: fixing this wasn't exactly cookie cutter. Each driver has its
-> own unique way of setting itself up and tearing itself down. Some
-> drivers also use the component model, which adds extra fun. I've made
-> my best guess at solving this and I've run a bunch of compile tests
-> (specifically, allmodconfig for amd64, arm64, and powerpc). That being
-> said, these code changes are not totally trivial and I've done zero
-> real testing on them. Making these patches was also a little mind
-> numbing and I'm certain my eyes glazed over at several points when
-> writing them. What I'm trying to say is to please double-check that I
-> didn't do anything too silly, like cast your driver's drvdata to the
-> wrong type. Even better, test these patches!
->
-> I've organized this series like this:
-> 1. One patch for all simple cases of just needing a call at shutdown
->    time for drivers that go through drm-misc.
-> 2. A separate patch for "drm/vc4", even though it goes through
->    drm-misc, since I wanted to leave an extra note for that one.
-> 3. Patches for drivers that just needed a call at shutdown time for
->    drivers that _don't_ go through drm-misc.
-> 4. Patches for the few drivers that had the call at shutdown time but
->    lacked it at remove time.
-> 5. One patch for all simple cases of needing a call at shutdown and
->    remove (or unbind) time for drivers that go through drm-misc.
-> 6. A separate patch for "drm/hisilicon/kirin", even though it goes
->    through drm-misc, since I wanted to leave an extra note for that
->    one.
-> 7. Patches for drivers that needed a call at shutdown and remove (or
->    unbind) time for drivers that _don't_ go through drm-misc.
->
-> I've labeled this patch series as RFT (request for testing) to help
-> call attention to the fact that I didn't personally test any of these
-> patches.
->
-> If you're a maintainer of one of these drivers and you think that the
-> patch for your driver looks fabulous, you've tested it, and you'd like
-> to land it right away then please do. For non-drm-misc drivers there
-> are no dependencies here. Some of the drm-misc drivers depend on the
-> first patch, AKA ("drm/atomic-helper: drm_atomic_helper_shutdown(NULL)
-> should be a noop"). I've tried to call this out but it also should be
-> obvious once you know to look for it.
->
-> I'd like to call out a few drivers that I _didn't_ fix in this series
-> and why. If any of these drivers should be fixed then please yell.
-> - DRM driers backed by usb_driver (like gud, gm12u320, udl): I didn't
-> add the call to drm_atomic_helper_shutdown() at shutdown time
-> because there's no ".shutdown" callback for them USB drivers. Given
-> that USB is hotpluggable, I'm assuming that they are robust against
-> this and the special shutdown callback isn't needed.
-> - ofdrm and simpledrm: These didn't have drm_atomic_helper_shutdown()
-> in either shutdown or remove, but I didn't add it. I think that's OK
-> since they're sorta special and not really directly controlling
-> hardware power sequencing.
-> - virtio, vkms, vmwgfx, xen: I believe these are all virtual (thus
-> they wouldn't directly drive a panel) and adding the shutdown
-> didn't look straightforward, so I skipped them.
->
-> I've let each patch in the series get CCed straight from
-> get_maintainer. That means not everyone will have received every patch
-> but everyone should be on the cover letter. I know some people dislike
-> this but when touching this many drivers there's not much
-> choice. dri-devel and lkml have been CCed and lore/lei exist, so
-> hopefully that's enough for folks. I'm happy to add people to the
-> whole series for future posts.
->
-> [1] https://lore.kernel.org/lkml/20230804140605.RFC.4.I930069a32baab6faf4=
-6d6b234f89613b5cec0f14@changeid
->
->
-> Douglas Anderson (6):
->   drm/atomic-helper: drm_atomic_helper_shutdown(NULL) should be a noop
->   drm: Call drm_atomic_helper_shutdown() at shutdown time for misc
->     drivers
->   drm/vc4: Call drm_atomic_helper_shutdown() at shutdown time
->   drm/ssd130x: Call drm_atomic_helper_shutdown() at remove time
->   drm: Call drm_atomic_helper_shutdown() at shutdown/remove time for
->     misc drivers
->   drm/hisilicon/kirin: Call drm_atomic_helper_shutdown() at
->     shutdown/unbind time
->
->  .../gpu/drm/arm/display/komeda/komeda_drv.c   |  9 +++++
->  .../gpu/drm/arm/display/komeda/komeda_kms.c   |  7 ++++
->  .../gpu/drm/arm/display/komeda/komeda_kms.h   |  1 +
->  drivers/gpu/drm/arm/hdlcd_drv.c               |  6 ++++
->  drivers/gpu/drm/arm/malidp_drv.c              |  6 ++++
->  drivers/gpu/drm/aspeed/aspeed_gfx_drv.c       |  7 ++++
->  drivers/gpu/drm/ast/ast_drv.c                 |  6 ++++
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.c  |  6 ++++
->  drivers/gpu/drm/drm_atomic_helper.c           |  3 ++
->  drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c     |  8 +++++
->  .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  6 ++++
->  .../gpu/drm/hisilicon/kirin/kirin_drm_drv.c   |  9 +++++
->  drivers/gpu/drm/hyperv/hyperv_drm_drv.c       |  6 ++++
->  drivers/gpu/drm/logicvc/logicvc_drm.c         |  9 +++++
->  drivers/gpu/drm/loongson/lsdc_drv.c           |  6 ++++
->  drivers/gpu/drm/mcde/mcde_drv.c               |  9 +++++
->  drivers/gpu/drm/mgag200/mgag200_drv.c         |  8 +++++
->  drivers/gpu/drm/omapdrm/omap_drv.c            |  8 +++++
->  drivers/gpu/drm/pl111/pl111_drv.c             |  7 ++++
->  drivers/gpu/drm/qxl/qxl_drv.c                 |  7 ++++
->  drivers/gpu/drm/solomon/ssd130x.c             |  1 +
->  drivers/gpu/drm/sti/sti_drv.c                 |  7 ++++
->  drivers/gpu/drm/stm/drv.c                     |  7 ++++
->  drivers/gpu/drm/sun4i/sun4i_drv.c             |  6 ++++
->  drivers/gpu/drm/tilcdc/tilcdc_drv.c           | 11 +++++-
->  drivers/gpu/drm/tiny/bochs.c                  |  6 ++++
->  drivers/gpu/drm/tiny/cirrus.c                 |  6 ++++
->  drivers/gpu/drm/tve200/tve200_drv.c           |  7 ++++
->  drivers/gpu/drm/vboxvideo/vbox_drv.c          | 10 ++++++
->  drivers/gpu/drm/vc4/vc4_drv.c                 | 36 ++++++++++++-------
->  30 files changed, 217 insertions(+), 14 deletions(-)
+The FRED architecture defines simple new transitions that change
+privilege level (ring transitions). The FRED architecture was
+designed with the following goals:
 
-Just a heads up to keep folks in the loop: I've landed the first patch
-in the drm-misc series, AKA ("drm/atomic-helper:
-drm_atomic_helper_shutdown(NULL) should be a noop"), but I haven't
-landed any of the others yet. I'm going to give them another ~week
-just to be sure there are no objections.
+1) Improve overall performance and response time by replacing event
+   delivery through the interrupt descriptor table (IDT event
+   delivery) and event return by the IRET instruction with lower
+   latency transitions.
 
--Doug
+2) Improve software robustness by ensuring that event delivery
+   establishes the full supervisor context and that event return
+   establishes the full user context.
+
+The new transitions defined by the FRED architecture are FRED event
+delivery and, for returning from events, two FRED return instructions.
+FRED event delivery can effect a transition from ring 3 to ring 0, but
+it is used also to deliver events incident to ring 0. One FRED
+instruction (ERETU) effects a return from ring 0 to ring 3, while the
+other (ERETS) returns while remaining in ring 0. Collectively, FRED
+event delivery and the FRED return instructions are FRED transitions.
+
+Search for the latest FRED spec in most search engines with this search pattern:
+
+  site:intel.com FRED (flexible return and event delivery) specification
+
+As of now there is no publicly avaiable CPU supporting FRED, thus the Intel
+Simics® Simulator is used as software development and testing vehicles. And
+it can be downloaded from:
+  https://www.intel.com/content/www/us/en/developer/articles/tool/simics-simulator.html
+
+To enable FRED, the Simics package 8112 QSP-CPU needs to be installed with CPU
+model configured as:
+	$cpu_comp_class = "x86-experimental-fred"
+
+
+Changes since v9:
+* Set unused sysvec table entries to fred_handle_spurious_interrupt()
+  in fred_complete_exception_setup() (Thomas Gleixner).
+* Shove the whole thing into arch/x86/entry/entry_64_fred.S for invoking
+  external_interrupt() and fred_exc_nmi() (Sean Christopherson).
+* Correct and improve a few comments (Sean Christopherson).
+* Merge the two IRQ/NMI asm entries into one as it's fine to invoke
+  noinstr code from regular code (Thomas Gleixner).
+* Setup the long mode and NMI flags in the augmented SS field of FRED
+  stack frame in C instead of asm (Thomas Gleixner).
+* Don't use jump tables, indirect jumps are expensive (Thomas Gleixner).
+* Except #NMI/#DB/#MCE, FRED really can share the exception handlers
+  with IDT (Thomas Gleixner).
+* Avoid the sysvec_* idt_entry muck, do it at a central place, reuse code
+  instead of blindly copying it, which breaks the performance optimized
+  sysvec entries like reschedule_ipi (Thomas Gleixner).
+* Add asm_ prefix to FRED asm entry points (Thomas Gleixner).
+* Disable #DB to avoid endless recursion and stack overflow when a
+  watchpoint/breakpoint is set in the code path which is executed by
+  #DB handler (Thomas Gleixner).
+* Introduce a new structure fred_ss to denote the FRED flags above SS
+  selector, which avoids FRED_SSX_ macros and makes the code simpler
+  and easier to read (Thomas Gleixner).
+* Use type u64 to define FRED bit fields instead of type unsigned int
+  (Thomas Gleixner).
+* Avoid a type cast by defining X86_CR4_FRED as 0 on 32-bit (Thomas
+  Gleixner).
+* Add the WRMSRNS instruction support (Thomas Gleixner).
+
+Changes since v8:
+* Move the FRED initialization patch after all required changes are in
+  place (Thomas Gleixner).
+* Don't do syscall early out in fred_entry_from_user() before there are
+  proper performance numbers and justifications (Thomas Gleixner).
+* Add the control exception handler to the FRED exception handler table
+  (Thomas Gleixner).
+* Introduce a macro sysvec_install() to derive the asm handler name from
+  a C handler, which simplifies the code and avoids an ugly typecast
+  (Thomas Gleixner).
+* Remove junk code that assumes no local APIC on x86_64 (Thomas Gleixner).
+* Put IDTENTRY changes in a separate patch (Thomas Gleixner).
+* Use high-order 48 bits above the lowest 16 bit SS only when FRED is
+  enabled (Thomas Gleixner).
+* Explain why writing directly to the IA32_KERNEL_GS_BASE MSR is
+  doing the right thing (Thomas Gleixner).
+* Reword some patch descriptions (Thomas Gleixner).
+* Add a new macro VMX_DO_FRED_EVENT_IRQOFF for FRED instead of
+  refactoring VMX_DO_EVENT_IRQOFF (Sean Christopherson).
+* Do NOT use a trampoline, just LEA+PUSH the return RIP, PUSH the error
+  code, and jump to the FRED kernel entry point for NMI or call
+  external_interrupt() for IRQs (Sean Christopherson).
+* Call external_interrupt() only when FRED is enabled, and convert the
+  non-FRED handling to external_interrupt() after FRED lands (Sean
+  Christopherson).
+* Use __packed instead of __attribute__((__packed__)) (Borislav Petkov).
+* Put all comments above the members, like the rest of the file does
+  (Borislav Petkov).
+* Reflect the FRED spec 5.0 change that ERETS and ERETU add 8 to %rsp
+  before popping the return context from the stack.
+* Reflect stack frame definition changes from FRED spec 3.0 to 5.0.
+* Add ENDBR to the FRED_ENTER asm macro after kernel IBT is added to
+  FRED base line in FRED spec 5.0.
+* Add a document which briefly introduces FRED features.
+* Remove 2 patches, "allow FRED systems to use interrupt vectors
+  0x10-0x1f" and "allow dynamic stack frame size", from this patch set,
+  as they are "optimizations" only.
+* Send 2 patches, "header file for event types" and "do not modify the
+  DPL bits for a null selector", as pre-FRED patches.
+
+Changes since v7:
+* Always call external_interrupt() for VMX IRQ handling on x86_64, thus avoid
+  re-entering the noinstr code.
+* Create a FRED stack frame when FRED is compiled-in but not enabled, which
+  uses some extra stack space but simplifies the code.
+* Add a log message when FRED is enabled.
+
+Changes since v6:
+* Add a comment to explain why it is safe to write to a previous FRED stack
+  frame. (Lai Jiangshan).
+* Export fred_entrypoint_kernel(), required when kvm-intel built as a module.
+* Reserve a REDZONE for CALL emulation and Align RSP to a 64-byte boundary
+  before pushing a new FRED stack frame.
+* Replace pt_regs csx flags prefix FRED_CSL_ with FRED_CSX_.
+
+Changes since v5:
+* Initialize system_interrupt_handlers with dispatch_table_spurious_interrupt()
+  instead of NULL to get rid of a branch (Peter Zijlstra).
+* Disallow #DB inside #MCE for robustness sake (Peter Zijlstra).
+* Add a comment for FRED stack level settings (Lai Jiangshan).
+* Move the NMI bit from an invalid stack frame, which caused ERETU to fault,
+  to the fault handler's stack frame, thus to unblock NMI ASAP if NMI is blocked
+  (Lai Jiangshan).
+* Refactor VMX_DO_EVENT_IRQOFF to handle IRQ/NMI in IRQ/NMI induced VM exits
+  when FRED is enabled (Sean Christopherson).
+
+Changes since v4:
+* Do NOT use the term "injection", which in the KVM context means to
+  reinject an event into the guest (Sean Christopherson).
+* Add the explanation of why to execute "int $2" to invoke the NMI handler
+  in NMI caused VM exits (Sean Christopherson).
+* Use cs/ss instead of csx/ssx when initializing the pt_regs structure
+  for calling external_interrupt(), otherwise it breaks i386 build.
+
+Changes since v3:
+* Call external_interrupt() to handle IRQ in IRQ caused VM exits.
+* Execute "int $2" to handle NMI in NMI caused VM exits.
+* Rename csl/ssl of the pt_regs structure to csx/ssx (x for extended)
+  (Andrew Cooper).
+
+Changes since v2:
+* Improve comments for changes in arch/x86/include/asm/idtentry.h.
+
+Changes since v1:
+* call irqentry_nmi_{enter,exit}() in both IDT and FRED debug fault kernel
+  handler (Peter Zijlstra).
+* Initialize a FRED exception handler to fred_bad_event() instead of NULL
+  if no FRED handler defined for an exception vector (Peter Zijlstra).
+* Push calling irqentry_{enter,exit}() and instrumentation_{begin,end}()
+  down into individual FRED exception handlers, instead of in the dispatch
+  framework (Peter Zijlstra).
+
+
+H. Peter Anvin (Intel) (22):
+  x86/fred: Add Kconfig option for FRED (CONFIG_X86_FRED)
+  x86/cpufeatures: Add the cpu feature bit for FRED
+  x86/fred: Disable FRED support if CONFIG_X86_FRED is disabled
+  x86/opcode: Add ERET[US] instructions to the x86 opcode map
+  x86/objtool: Teach objtool about ERET[US]
+  x86/cpu: Add X86_CR4_FRED macro
+  x86/cpu: Add MSR numbers for FRED configuration
+  x86/fred: Add a new header file for FRED definitions
+  x86/fred: Reserve space for the FRED stack frame
+  x86/fred: Update MSR_IA32_FRED_RSP0 during task switch
+  x86/fred: Disallow the swapgs instruction when FRED is enabled
+  x86/fred: No ESPFIX needed when FRED is enabled
+  x86/fred: Allow single-step trap and NMI when starting a new task
+  x86/fred: Make exc_page_fault() work for FRED
+  x86/fred: Add a debug fault entry stub for FRED
+  x86/fred: Add a NMI entry stub for FRED
+  x86/fred: FRED entry/exit and dispatch code
+  x86/traps: Add sysvec_install() to install a system interrupt handler
+  x86/fred: Let ret_from_fork_asm() jmp to asm_fred_exit_user when FRED
+    is enabled
+  x86/fred: Add fred_syscall_init()
+  x86/fred: Add FRED initialization functions
+  x86/fred: Invoke FRED initialization code to enable FRED
+
+Peter Zijlstra (Intel) (1):
+  x86/entry/calling: Allow PUSH_AND_CLEAR_REGS being used beyond actual
+    entry code
+
+Xin Li (15):
+  x86/cpufeatures: Add the cpu feature bit for WRMSRNS
+  x86/opcode: Add the WRMSRNS instruction to the x86 opcode map
+  x86/msr: Add the WRMSRNS instruction support
+  x86/entry: Remove idtentry_sysvec from entry_{32,64}.S
+  x86/trapnr: Add event type macros to <asm/trapnr.h>
+  Documentation/x86/64: Add a documentation for FRED
+  x86/fred: Disable FRED by default in its early stage
+  x86/ptrace: Cleanup the definition of the pt_regs structure
+  x86/ptrace: Add FRED additional information to the pt_regs structure
+  x86/idtentry: Incorporate definitions/declarations of the FRED entries
+  x86/fred: Add a machine check entry stub for FRED
+  x86/fred: Fixup fault on ERETU by jumping to fred_entrypoint_user
+  x86/entry: Add fred_entry_from_kvm() for VMX to handle IRQ/NMI
+  KVM: VMX: Call fred_entry_from_kvm() for IRQ/NMI handling
+  x86/syscall: Split IDT syscall setup code into idt_syscall_init()
+
+ .../admin-guide/kernel-parameters.txt         |   3 +
+ Documentation/arch/x86/x86_64/fred.rst        |  98 ++++++
+ Documentation/arch/x86/x86_64/index.rst       |   1 +
+ arch/x86/Kconfig                              |   9 +
+ arch/x86/entry/Makefile                       |   5 +-
+ arch/x86/entry/calling.h                      |  15 +-
+ arch/x86/entry/entry_32.S                     |   4 -
+ arch/x86/entry/entry_64.S                     |  14 +-
+ arch/x86/entry/entry_64_fred.S                | 129 ++++++++
+ arch/x86/entry/entry_fred.c                   | 279 ++++++++++++++++++
+ arch/x86/entry/vsyscall/vsyscall_64.c         |   2 +-
+ arch/x86/include/asm/asm-prototypes.h         |   1 +
+ arch/x86/include/asm/cpufeatures.h            |   2 +
+ arch/x86/include/asm/desc.h                   |   2 -
+ arch/x86/include/asm/disabled-features.h      |   8 +-
+ arch/x86/include/asm/extable_fixup_types.h    |   4 +-
+ arch/x86/include/asm/fred.h                   |  97 ++++++
+ arch/x86/include/asm/idtentry.h               |  88 +++++-
+ arch/x86/include/asm/msr-index.h              |  13 +-
+ arch/x86/include/asm/msr.h                    |  18 ++
+ arch/x86/include/asm/ptrace.h                 |  85 +++++-
+ arch/x86/include/asm/switch_to.h              |   8 +-
+ arch/x86/include/asm/thread_info.h            |  12 +-
+ arch/x86/include/asm/trapnr.h                 |  12 +
+ arch/x86/include/asm/vmx.h                    |  17 +-
+ arch/x86/include/uapi/asm/processor-flags.h   |   7 +
+ arch/x86/kernel/Makefile                      |   1 +
+ arch/x86/kernel/cpu/acrn.c                    |   4 +-
+ arch/x86/kernel/cpu/common.c                  |  53 +++-
+ arch/x86/kernel/cpu/cpuid-deps.c              |   2 +
+ arch/x86/kernel/cpu/mce/core.c                |  26 ++
+ arch/x86/kernel/cpu/mshyperv.c                |  15 +-
+ arch/x86/kernel/espfix_64.c                   |   8 +
+ arch/x86/kernel/fred.c                        |  59 ++++
+ arch/x86/kernel/idt.c                         |   4 +-
+ arch/x86/kernel/irqinit.c                     |   7 +-
+ arch/x86/kernel/kvm.c                         |   2 +-
+ arch/x86/kernel/nmi.c                         |  28 ++
+ arch/x86/kernel/process_64.c                  |  67 ++++-
+ arch/x86/kernel/traps.c                       |  48 ++-
+ arch/x86/kvm/vmx/vmx.c                        |  12 +-
+ arch/x86/lib/x86-opcode-map.txt               |   4 +-
+ arch/x86/mm/extable.c                         |  79 +++++
+ arch/x86/mm/fault.c                           |   5 +-
+ drivers/xen/events/events_base.c              |   2 +-
+ tools/arch/x86/include/asm/cpufeatures.h      |   2 +
+ .../arch/x86/include/asm/disabled-features.h  |   8 +-
+ tools/arch/x86/include/asm/msr-index.h        |  13 +-
+ tools/arch/x86/lib/x86-opcode-map.txt         |   4 +-
+ tools/objtool/arch/x86/decode.c               |  19 +-
+ 50 files changed, 1291 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/arch/x86/x86_64/fred.rst
+ create mode 100644 arch/x86/entry/entry_64_fred.S
+ create mode 100644 arch/x86/entry/entry_fred.c
+ create mode 100644 arch/x86/include/asm/fred.h
+ create mode 100644 arch/x86/kernel/fred.c
+
+-- 
+2.34.1
+
 
