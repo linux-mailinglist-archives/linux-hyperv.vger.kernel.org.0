@@ -1,77 +1,200 @@
-Return-Path: <linux-hyperv+bounces-77-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-78-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 712A07A0AFC
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 18:45:48 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CE027A115A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 01:00:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19B441C20869
-	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 16:45:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E62DD281DE1
+	for <lists+linux-hyperv@lfdr.de>; Thu, 14 Sep 2023 23:00:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC4081CFB8;
-	Thu, 14 Sep 2023 16:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEFACD2F7;
+	Thu, 14 Sep 2023 23:00:45 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F68C8F3
-	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 16:45:25 +0000 (UTC)
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38CC01FDC
-	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 09:45:25 -0700 (PDT)
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-54290603887so888261a12.1
-        for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 09:45:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694709924; x=1695314724;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sd+i/dsqDqXlUNMV2SCPLk9f0K5zcCjoQJ50UAQIR2U=;
-        b=sny7UqWOJyrjRvl3ALQ5zctv0sjnHzzb+4/3FSv2GetKWOa7y8LXm2B8So34kewNtL
-         CjDprRSxQG0AWIhaEL28jzK0pwZUXYjRHWKKlD++qWFs4l0kPDy+UUOrERzBzqRlpXQF
-         tGeUFww0LR4tL/TCg4r9nbAHG9qCK1sOSR5N1hI3bOV/z6GYQEySSeUgwRYMaG043Zsp
-         NW9Ed2pJp4pqX5dCoXBT+NiGqlxL693ieS2rAuz9eKvX5X5FCuG9sCfh3OXrt+XaqHYE
-         Nlj5vH1EnjAL5Ads2SzPXGp+3E+xBN3GcSgdc7dIByfyY2DCV3xNhn/i0KCQ4IB3hDoL
-         BNAg==
-X-Gm-Message-State: AOJu0Yw5j0iiweTxPN32UWfVm8xzNIXDqpkpCJjR1NePnUnKit1pNFPi
-	Hr4d09q/pKbtiFrogCQwQVY=
-X-Google-Smtp-Source: AGHT+IFT+alj8/51ItNOg5APyupqqJulO7t8Ge08UX0PlY64a6Mt67aOlFn8zNlfdO3poCWGtmGf2A==
-X-Received: by 2002:a17:90b:4b48:b0:274:3d7d:e793 with SMTP id mi8-20020a17090b4b4800b002743d7de793mr5911042pjb.47.1694709924494;
-        Thu, 14 Sep 2023 09:45:24 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id np10-20020a17090b4c4a00b0026b6b17ca5dsm1557247pjb.54.2023.09.14.09.45.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 09:45:23 -0700 (PDT)
-Date: Thu, 14 Sep 2023 16:44:47 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>
-Subject: Re: This list has been migrated to the new infrastructure
-Message-ID: <ZQM4f/i9vu5z22Iz@liuwe-devbox-debian-v2>
-References: <20230905-mortally-gap-190ba0@meerkat>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272653C05
+	for <linux-hyperv@vger.kernel.org>; Thu, 14 Sep 2023 23:00:43 +0000 (UTC)
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA63E6A;
+	Thu, 14 Sep 2023 16:00:43 -0700 (PDT)
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1694732439;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y9UPmbkXZRNuioCyvMTxakQr1LFj1kbpXONIFu2xSbU=;
+	b=lg2xYIiFHmDQ94KTGhglBSA6Z0t67NpbKHOIiF7u/MK/QNmaP++hoHuiLV+K+pCpRbvrny
+	3/iljaw4BlgVWi/Axp6VS4fmMqKGyXg21eMc5ZV4tP/U4RlYANeOwmzU8va1MEOljqy3TT
+	btUeGlhB3sh0EMaUYvltsYDxwKSXnXEylIIdoo/fFFa9bHszzToBmfF7mWfvAeUCCTtYF7
+	dLVR6DZAro2zzE9j6g8fxSwh1UCUDJaHZwjyB+5Hh3UOpHfdYzQSP58MDIwDkxgh0AroPW
+	ApRPA6r3z/oN2U1ADa5bw8cimXbGYP6+gkTTb8YmUICXl2qp0JQtDGwblbFK+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1694732439;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y9UPmbkXZRNuioCyvMTxakQr1LFj1kbpXONIFu2xSbU=;
+	b=48C9u5FtSr/8YhitFLfTJzZIuTnlSrzcd0C4TaCewwtRO7Oehv/gGi/6/V2pnG6aVMDDrx
+	+xZpy5dDgM7R8iDQ==
+To: andrew.cooper3@citrix.com, Xin Li <xin3.li@intel.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ kvm@vger.kernel.org, xen-devel@lists.xenproject.org
+Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, luto@kernel.org, pbonzini@redhat.com,
+ seanjc@google.com, peterz@infradead.org, jgross@suse.com,
+ ravi.v.shankar@intel.com, mhiramat@kernel.org, jiangshanlai@gmail.com
+Subject: Re: [PATCH v10 03/38] x86/msr: Add the WRMSRNS instruction support
+In-Reply-To: <6f5678ff-f8b1-9ada-c8c7-f32cfb77263a@citrix.com>
+References: <20230914044805.301390-1-xin3.li@intel.com>
+ <20230914044805.301390-4-xin3.li@intel.com>
+ <6f5678ff-f8b1-9ada-c8c7-f32cfb77263a@citrix.com>
+Date: Fri, 15 Sep 2023 01:00:39 +0200
+Message-ID: <87y1h81ht4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230905-mortally-gap-190ba0@meerkat>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 05, 2023 at 11:58:43AM -0400, Konstantin Ryabitsev wrote:
-> Hello:
-> 
-> The linux-hyperv list has been migrated to the new vger infrastructure. This
-> should be a fully transparent process and you don't need to change anything
-> about how you participate with the list or how you receive mail.
-> 
-> This message acts as a final test to make sure that the list archives are
-> properly updating.
+Andrew!
 
-Thank you very much!
+On Thu, Sep 14 2023 at 15:05, andrew wrote:
+> On 14/09/2023 5:47 am, Xin Li wrote:
+>> +static __always_inline void wrmsrns(u32 msr, u64 val)
+>> +{
+>> +	__wrmsrns(msr, val, val >> 32);
+>> +}
+>
+> This API works in terms of this series where every WRMSRNS is hidden
+> behind a FRED check, but it's an awkward interface to use anywhere else
+> in the kernel.
 
-Wei.
+Agreed.
+
+> I fully understand that you expect all FRED capable systems to have
+> WRMSRNS, but it is not a hard requirement and you will end up with
+> simpler (and therefore better) logic by deleting the dependency.
+
+According to the CPU folks FRED systems are guaranteed to have WRMSRNS -
+I asked for that :). It's just not yet documented.
+
+But that I aside, I agree that we should opt for the safe side with a
+fallback like the one you have in XEN even for the places which are
+strictly FRED dependent.
+
+> As a "normal" user of the WRMSR APIs, the programmer only cares about:
+>
+> 1) wrmsr() -> needs to be serialising
+> 2) wrmsr_ns() -> safe to be non-serialising
+
+Correct.
+
+> In Xen, I added something of the form:
+>
+> /* Non-serialising WRMSR, when available.=C2=A0 Falls back to a serialisi=
+ng
+> WRMSR. */
+> static inline void wrmsr_ns(uint32_t msr, uint32_t lo, uint32_t hi)
+> {
+> =C2=A0=C2=A0=C2=A0 /*
+> =C2=A0=C2=A0=C2=A0=C2=A0 * WRMSR is 2 bytes.=C2=A0 WRMSRNS is 3 bytes.=C2=
+=A0 Pad WRMSR with a redundant CS
+> =C2=A0=C2=A0=C2=A0=C2=A0 * prefix to avoid a trailing NOP.
+> =C2=A0=C2=A0=C2=A0=C2=A0 */
+> =C2=A0=C2=A0=C2=A0 alternative_input(".byte 0x2e; wrmsr",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ".byte 0x0f,0x01,0xc=
+6", X86_FEATURE_WRMSRNS,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "c" (msr), "a" (lo),=
+ "d" (hi));
+> }
+>
+> and despite what Juergen said, I'm going to recommend that you do wire
+> this through the paravirt infrastructure, for the benefit of regular
+> users having a nice API, not because XenPV is expecting to do something
+> wildly different here.
+
+I fundamentaly hate adding this to the PV infrastructure. We don't want
+more PV ops, quite the contrary.
+
+For the initial use case at hand, there is an explicit FRED dependency
+and the code in question really wants to use WRMSRNS directly and not
+through a PV function call.
+
+I agree with your reasoning for the more generic use case where we can
+gain performance independent of FRED by using WRMSRNS for cases where
+the write has no serialization requirements.
+
+But this made me look into PV ops some more. For actual performance
+relevant code the current PV ops mechanics are a horrorshow when the op
+defaults to the native instruction.
+
+Let's look at wrmsrl():
+
+wrmsrl(msr, val
+ wrmsr(msr, (u32)val, (u32)val >> 32))
+  paravirt_write_msr(msr, low, high)
+    PVOP_VCALL3(cpu.write_msr, msr, low, high)
+
+Which results in
+
+	mov	$msr, %edi
+	mov	$val, %rdx
+	mov	%edx, %esi
+	shr	$0x20, %rdx
+	call	native_write_msr
+
+and native_write_msr() does at minimum:
+
+	mov    %edi,%ecx
+	mov    %esi,%eax
+	wrmsr
+        ret
+
+In the worst case 'ret' is going through the return thunk. Not to talk
+about function prologues and whatever.
+
+This becomes even more silly for trivial instructions like STI/CLI or in
+the worst case paravirt_nop().
+
+The call makes only sense, when the native default is an actual
+function, but for the trivial cases it's a blatant engineering
+trainwreck.
+
+I wouldn't care at all if CONFIG_PARAVIRT_XXL would be the esoteric use
+case, but AFAICT it's default enabled on all major distros.
+
+So no. I'm fundamentally disagreeing with your recommendation. The way
+forward is:
+
+  1) Provide the native variant for wrmsrns(), i.e. rename the proposed
+     wrmsrns() to native_wrmsr_ns() and have the X86_FEATURE_WRMSRNS
+     safety net as you pointed out.
+
+     That function can be used in code which is guaranteed to be not
+     affected by the PV_XXL madness.
+
+  2) Come up with a sensible solution for the PV_XXL horrorshow
+
+  3) Implement a sane general variant of wrmsr_ns() which handles
+     both X86_FEATURE_WRMSRNS and X86_MISFEATURE_PV_XXL
+
+  4) Convert other code which benefits from the non-serializing variant
+     to wrmsr_ns()
+
+Thanks,
+
+        tglx
 
