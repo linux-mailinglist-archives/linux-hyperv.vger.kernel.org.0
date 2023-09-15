@@ -1,233 +1,113 @@
-Return-Path: <linux-hyperv+bounces-91-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-92-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B64E7A1579
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 07:32:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F70B7A15A9
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 07:47:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 003FB2825A7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 05:32:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 998511C2121B
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 05:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0633081C;
-	Fri, 15 Sep 2023 05:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8FDA3FDF;
+	Fri, 15 Sep 2023 05:47:18 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112D2809
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 Sep 2023 05:32:21 +0000 (UTC)
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62BB62711;
-	Thu, 14 Sep 2023 22:32:05 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7416B1F38C;
-	Fri, 15 Sep 2023 05:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1694755923; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JHk09nPjxFZrJgb8m7unTMF/azz4TxdRPAGo/tOeBHk=;
-	b=RdcOfw73eNUBMj5nBCcvzq91XSANz6JckowZgDJVrroVdxIYUkUoyr353mcuRRIfxjCc16
-	nLDy1Iy4gedYedRcWEn1Hl7i9RzsuGkF5Yb+xYTRKe/89zEvBuHegMziQjQLf6T5u5hRl+
-	fhdUPLuCZRgshltifM6T7TQtfALszJE=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D489513479;
-	Fri, 15 Sep 2023 05:32:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id AzSFMlLsA2WNZQAAMHmgww
-	(envelope-from <jgross@suse.com>); Fri, 15 Sep 2023 05:32:02 +0000
-Message-ID: <59a556d0-b962-4b63-9127-ba799db3b0ed@suse.com>
-Date: Fri, 15 Sep 2023 07:32:02 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F7D3C05
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 Sep 2023 05:47:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE0BC433B7;
+	Fri, 15 Sep 2023 05:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694756837;
+	bh=RyPR2NkOFcffhMr5xddvC27sEYDMrJaqGqZTUScQkPA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PcvjwDYx9G5f5Q1qxmIfIx5D0ne1wz4esF+c5nMP3hE41d6nNonhJxXX4/PUPMnzt
+	 6IFVF+L5cUwGSpdXGC9UnPrlhotCcgfse/rpTnTcuP+ptih8GLpBYauZqloFgw4mKm
+	 1BJ4h9wpYsZDVo/JkDqFS86S8QepQGmMcduIrPgKI9p+ayQKVK5++KZEbJZg+++hRi
+	 APvnDLOLgHFa9QzULX+SIhe2v+5k6OYtaDDMPz3MGCP43ZqWapGyedZSR/31ZKtcxY
+	 zc2AZBJQYwAAfcCSy28d4Vinr1VmiJGRwpjQCASK4NeItrige3SaZGkefwxAZMm0JB
+	 fOjUjO2NE9U5Q==
+Date: Fri, 15 Sep 2023 14:47:10 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Xin Li <xin3.li@intel.com>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ kvm@vger.kernel.org, xen-devel@lists.xenproject.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, luto@kernel.org, pbonzini@redhat.com,
+ seanjc@google.com, peterz@infradead.org, jgross@suse.com,
+ ravi.v.shankar@intel.com, mhiramat@kernel.org, andrew.cooper3@citrix.com,
+ jiangshanlai@gmail.com
+Subject: Re: [PATCH v10 02/38] x86/opcode: Add the WRMSRNS instruction to
+ the x86 opcode map
+Message-Id: <20230915144710.7c2b94e93db16fd217acaf9f@kernel.org>
+In-Reply-To: <20230914044805.301390-3-xin3.li@intel.com>
+References: <20230914044805.301390-1-xin3.li@intel.com>
+	<20230914044805.301390-3-xin3.li@intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 03/38] x86/msr: Add the WRMSRNS instruction support
-Content-Language: en-US
-To: andrew.cooper3@citrix.com, "H. Peter Anvin" <hpa@zytor.com>,
- Thomas Gleixner <tglx@linutronix.de>, Xin Li <xin3.li@intel.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, luto@kernel.org, pbonzini@redhat.com, seanjc@google.com,
- peterz@infradead.org, ravi.v.shankar@intel.com, mhiramat@kernel.org,
- jiangshanlai@gmail.com
-References: <20230914044805.301390-1-xin3.li@intel.com>
- <20230914044805.301390-4-xin3.li@intel.com>
- <6f5678ff-f8b1-9ada-c8c7-f32cfb77263a@citrix.com> <87y1h81ht4.ffs@tglx>
- <7ba4ae3e-f75d-66a8-7669-b6eb17c1aa1c@citrix.com>
- <0e7d37db-e1af-ac40-6eca-5565d1bebcde@zytor.com>
- <6575702e-fea5-61b2-dd61-7b556a8603e8@citrix.com>
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <6575702e-fea5-61b2-dd61-7b556a8603e8@citrix.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------hZDkENmzAqDrTPHAvl4iVr8s"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------hZDkENmzAqDrTPHAvl4iVr8s
-Content-Type: multipart/mixed; boundary="------------G5kOFu6QJX70g00rNoeOWpMy";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: andrew.cooper3@citrix.com, "H. Peter Anvin" <hpa@zytor.com>,
- Thomas Gleixner <tglx@linutronix.de>, Xin Li <xin3.li@intel.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, luto@kernel.org, pbonzini@redhat.com, seanjc@google.com,
- peterz@infradead.org, ravi.v.shankar@intel.com, mhiramat@kernel.org,
- jiangshanlai@gmail.com
-Message-ID: <59a556d0-b962-4b63-9127-ba799db3b0ed@suse.com>
-Subject: Re: [PATCH v10 03/38] x86/msr: Add the WRMSRNS instruction support
-References: <20230914044805.301390-1-xin3.li@intel.com>
- <20230914044805.301390-4-xin3.li@intel.com>
- <6f5678ff-f8b1-9ada-c8c7-f32cfb77263a@citrix.com> <87y1h81ht4.ffs@tglx>
- <7ba4ae3e-f75d-66a8-7669-b6eb17c1aa1c@citrix.com>
- <0e7d37db-e1af-ac40-6eca-5565d1bebcde@zytor.com>
- <6575702e-fea5-61b2-dd61-7b556a8603e8@citrix.com>
-In-Reply-To: <6575702e-fea5-61b2-dd61-7b556a8603e8@citrix.com>
+On Wed, 13 Sep 2023 21:47:29 -0700
+Xin Li <xin3.li@intel.com> wrote:
 
---------------G5kOFu6QJX70g00rNoeOWpMy
-Content-Type: multipart/mixed; boundary="------------uZgzuBBDELwhBg4RgPtVNbpB"
+> Add the opcode used by WRMSRNS, which is the non-serializing version of
+> WRMSR and may replace it to improve performance, to the x86 opcode map.
+> 
+> Tested-by: Shan Kang <shan.kang@intel.com>
+> Signed-off-by: Xin Li <xin3.li@intel.com>
 
---------------uZgzuBBDELwhBg4RgPtVNbpB
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+This looks good to me.
 
-T24gMTUuMDkuMjMgMDM6MTYsIGFuZHJldy5jb29wZXIzQGNpdHJpeC5jb20gd3JvdGU6DQo+
-IE9uIDE1LzA5LzIwMjMgMjowMSBhbSwgSC4gUGV0ZXIgQW52aW4gd3JvdGU6DQo+PiBUaGUg
-d2hvbGUgYml0IHdpdGggYWx0ZXJuYXRpdmVzIGFuZCBwdm9wcyBiZWluZyBzZXBhcmF0ZSBp
-cyBhIG1ham9yDQo+PiBtYWludGFpbmFiaWxpdHkgcHJvYmxlbSwgYW5kIGhvbmVzdGx5IGl0
-IG5ldmVyIG1hZGUgYW55IHNlbnNlIGluIHRoZQ0KPj4gZmlyc3QgcGxhY2UuIE5ldmVyIGhh
-dmUgdHdvIG1lY2hhbmlzbXMgdG8gZG8gb25lIGpvYjsgaXQgbWFrZXMgaXQNCj4+IGhhcmRl
-ciB0byBncm9rIHRoZWlyIGludGVyYWN0aW9ucy4NCj4gDQo+IFRoaXMgYml0IGlzIGVhc3ku
-DQo+IA0KPiBKdWVyZ2VuIGhhcyBhbHJlYWR5IGRvbmUgdGhlIHdvcmsgdG8gZGVsZXRlIG9u
-ZSBvZiB0aGVzZSB0d28gcGF0Y2hpbmcNCj4gbWVjaGFuaXNtcyBhbmQgcmVwbGFjZSBpdCB3
-aXRoIHRoZSBvdGhlci4NCj4gDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvYTMy
-ZTIxMWYtNGFkZC00ZmIyLTllNWEtNDgwYWU5YjliYmYyQHN1c2UuY29tLw0KPiANCj4gVW5m
-b3J0dW5hdGVseSwgaXQncyBvbmx5IGNvbGxlY3RpbmcgcGluZ3MgYW5kIHR1bWJsZXdlZWRz
-Lg0KDQpJbmRlZWQuDQoNClVuZm9ydHVuYXRlbHkgdGhlcmUgaXMgcHJvYmFibHkgc29tZSBv
-Ymp0b29sIHN1cHBvcnQgbmVlZGVkIGZvciB0aGF0LCB3aGljaCBJJ20NCm5vdCBzdXJlIGhv
-dyB0byBpbXBsZW1lbnQuDQoNCg0KSnVlcmdlbg0K
---------------uZgzuBBDELwhBg4RgPtVNbpB
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Thanks,
 
-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
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
+> ---
+>  arch/x86/lib/x86-opcode-map.txt       | 2 +-
+>  tools/arch/x86/lib/x86-opcode-map.txt | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+> index 5168ee0360b2..1efe1d9bf5ce 100644
+> --- a/arch/x86/lib/x86-opcode-map.txt
+> +++ b/arch/x86/lib/x86-opcode-map.txt
+> @@ -1051,7 +1051,7 @@ GrpTable: Grp6
+>  EndTable
+>  
+>  GrpTable: Grp7
+> -0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B)
+> +0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B) | WRMSRNS (110),(11B)
+>  1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B) | ENCLS (111),(11B)
+>  2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
+>  3: LIDT Ms
+> diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+> index 5168ee0360b2..1efe1d9bf5ce 100644
+> --- a/tools/arch/x86/lib/x86-opcode-map.txt
+> +++ b/tools/arch/x86/lib/x86-opcode-map.txt
+> @@ -1051,7 +1051,7 @@ GrpTable: Grp6
+>  EndTable
+>  
+>  GrpTable: Grp7
+> -0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B)
+> +0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B) | WRMSRNS (110),(11B)
+>  1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B) | ENCLS (111),(11B)
+>  2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
+>  3: LIDT Ms
+> -- 
+> 2.34.1
+> 
 
---------------uZgzuBBDELwhBg4RgPtVNbpB--
 
---------------G5kOFu6QJX70g00rNoeOWpMy--
-
---------------hZDkENmzAqDrTPHAvl4iVr8s
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmUD7FIFAwAAAAAACgkQsN6d1ii/Ey+M
-9Af9HJCpFeU8EHkw53/InfDtLEXQPqGNDIYig8DyWwhnNdhICFI88NOIVSjLS9SyjJPGwf0LlHk6
-IKiP/qXdFyhv6iqTp1tlkIylssrvcYsugH3zLG8k4osgsLoxtjh06Yuh0XIIuLiNtNUihmBWxTHU
-608bvQO34to6Pi+dcsJ2B8R9Mgpuk4+9fPFTKjf4T4qziA+8OJWVIt/hwPDpxygf9nU8eseyQtQK
-7s3ODrbpUx5pKDc33RPhAHYunKbX97HmiX6DnVTHUZIcGjinZi+7ht2hqSFUjLOf7BlUA9HLVJA0
-dry2jvk6MkfXh5Aw2Q3LFC8p4DNlQZpKtD5ODHsr6A==
-=PDSQ
------END PGP SIGNATURE-----
-
---------------hZDkENmzAqDrTPHAvl4iVr8s--
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
