@@ -1,144 +1,125 @@
-Return-Path: <linux-hyperv+bounces-93-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-94-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 223697A16A7
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 08:57:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 841FF7A16DE
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 09:06:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0B01282619
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 06:57:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A22B01C211BF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 07:06:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10B5A6AB1;
-	Fri, 15 Sep 2023 06:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA6C96FAF;
+	Fri, 15 Sep 2023 07:06:20 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65171379
-	for <linux-hyperv@vger.kernel.org>; Fri, 15 Sep 2023 06:57:52 +0000 (UTC)
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9E1662711;
-	Thu, 14 Sep 2023 23:57:21 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 0AF25212BE69; Thu, 14 Sep 2023 23:57:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0AF25212BE69
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1694761041;
-	bh=e+0ylquv9A5KtyzvdTC9+dYY+hP2ulWv/8F37NNvEiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UUTaIbYZydJCT4m0Ye8+WYheZ9GTeQP4lfeB+kgwXCIpMlZ1vVtpau0Q3SCfIVumq
-	 O1TMIQxgvNtn71c/c/oWa9A8hy9VFFqW/B/MLvhWdvjP6T7myCFyBI0kpHcxr6gr14
-	 Jf21fq740XtGrzMvVzSACRyjLvltZYijznB74fM4=
-Date: Thu, 14 Sep 2023 23:57:21 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: ssengar@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mikelley@microsoft.com
-Subject: Re: [PATCH] x86/hyperv: Restrict get_vtl to only VTL platforms
-Message-ID: <20230915065720.GA19997@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1694604531-17128-1-git-send-email-ssengar@linux.microsoft.com>
- <874jjwq07v.fsf@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C8C3201
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 Sep 2023 07:06:19 +0000 (UTC)
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1425F3
+	for <linux-hyperv@vger.kernel.org>; Fri, 15 Sep 2023 00:06:17 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-529fb2c6583so2201887a12.1
+        for <linux-hyperv@vger.kernel.org>; Fri, 15 Sep 2023 00:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=grsecurity.net; s=grsec; t=1694761576; x=1695366376; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CZe/76vQ5HQXY75ssS2Oaysyi0zH2iJKZW/pjIi7njM=;
+        b=K1RIicayhVLoN8PllzdgRDznmRNW4eju+ulyebdlDWDPGQdNOvnKvxEP+i6Ao+5cKA
+         DRuCmurY9wbasbYtTZKgdB/gnc03HJIms0htI0HKr3kLqIWwUM6PdDsT3qtZwL3uVH3h
+         H7oQC7VCiFZJwlEdaQk65+dQUNHQ5gapJpH1kX8abSl/0FRMhQYWsRP4pIGGbRS8S632
+         zlwlHvEckDNh8qobRAnAPl3CTXv6qlcU/icfncaX8pbR8N/EgReYhzSLBkJ36Q3LQ7ff
+         PkXZRg56HlmQOzyfGmlaKWXYYxCuzBvHGeLTQWkTpSDy585hC3V0fSmfnaqRHXZAXTrJ
+         qMNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694761576; x=1695366376;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CZe/76vQ5HQXY75ssS2Oaysyi0zH2iJKZW/pjIi7njM=;
+        b=MryEc/EjcJ3UWYDVN6bq07ISORblvJRjQUkT1OAkK6WPEvatCPMWMRPNc9jvXRHs1V
+         q+knxsvREvdvtuVHyfHM/c73Dez6SBEZGoXbVrFJmmj4kInS0YglgY+0mlEJGV5fQfem
+         bsLhbnpzMcjML1pAWoZ2U9TZcCa80IVQRkiTSnETLVLgIaTjs8A8JuTLS/xUx6oXAIxC
+         QtnGJw/+ks0sou1QjKFteK21sV76vDYXwDgCRfXbJGu9ZTNx7tKPA9aAaha+fF200qhg
+         k4YuDBmslJpQHx8q3KHX9+MIG7pKabXj4Yn7h2VE0xm6+7fvDGjgvbh2vnvR+Nb4OGww
+         1XtQ==
+X-Gm-Message-State: AOJu0YzDAzwZTUdruO5pO09HUeYQTRwFIm23XvURM6Q4v5e70Z7mhx+R
+	EtIdCpIApRTXOvmsaE64vvmJrg==
+X-Google-Smtp-Source: AGHT+IFjTdhbbRBWkinRu9hafMJAySVNAho/ZxW0RAdT/t/nmM256x/l1JolKpXpxLMQPLQ6qb7EDA==
+X-Received: by 2002:a17:906:20cb:b0:9ad:7f13:954d with SMTP id c11-20020a17090620cb00b009ad7f13954dmr550736ejc.31.1694761576254;
+        Fri, 15 Sep 2023 00:06:16 -0700 (PDT)
+Received: from ?IPV6:2003:f6:af2c:1500:c7bb:d28e:613f:8cb7? (p200300f6af2c1500c7bbd28e613f8cb7.dip0.t-ipconnect.de. [2003:f6:af2c:1500:c7bb:d28e:613f:8cb7])
+        by smtp.gmail.com with ESMTPSA id p25-20020a1709060e9900b00992b50fbbe9sm2001336ejf.90.2023.09.15.00.06.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Sep 2023 00:06:15 -0700 (PDT)
+Message-ID: <92c52af3-085e-8467-88bf-da4fbc56eeaa@grsecurity.net>
+Date: Fri, 15 Sep 2023 09:06:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874jjwq07v.fsf@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] x86/hyperv/vtl: Replace real_mode_header only under
+ Hyper-V
+Content-Language: en-US, de-DE
+To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, linux-kernel@vger.kernel.org,
+ stable@kernel.org
+References: <20230908102610.1039767-1-minipli@grsecurity.net>
+ <20230908150224.GA3196@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <ca1a5950-9092-6caf-471c-ebda623173e5@grsecurity.net>
+ <20230913052714.GA29112@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+From: Mathias Krause <minipli@grsecurity.net>
+In-Reply-To: <20230913052714.GA29112@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 14, 2023 at 04:49:08PM +0200, Vitaly Kuznetsov wrote:
-> Saurabh Sengar <ssengar@linux.microsoft.com> writes:
+On 13.09.23 07:27, Saurabh Singh Sengar wrote:
+> On Mon, Sep 11, 2023 at 10:00:59AM +0200, Mathias Krause wrote:
+>> On 08.09.23 17:02, Saurabh Singh Sengar wrote:
+>>> On Fri, Sep 08, 2023 at 12:26:10PM +0200, Mathias Krause wrote:
+>>>> Booting a CONFIG_HYPERV_VTL_MODE=y enabled kernel on bare metal or a
+>>>> non-Hyper-V hypervisor leads to serve memory corruption as
+>>>
+>>> FWIW, CONFIG_HYPERV_VTL_MODE is not expected to be enabled for non VTL
+>>> platforms.
+>>
+>> Fair enough, but there's really no excuse to randomly crashing the
+>> kernel if one forgot to RTFM like I did. The code should (and easily
+>> can) handle such situations, especially if it's just a matter of a two
+>> line change.
 > 
-> > For non VTL platforms vtl is always 0, and there is no need of
-> > get_vtl function. For VTL platforms get_vtl should always succeed
-> > and should return the correct VTL.
-> >
-> > Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > ---
-> >  arch/x86/hyperv/hv_init.c | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index 783ed339f341..e589c240565a 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -416,8 +416,8 @@ static u8 __init get_vtl(void)
-> >  	if (hv_result_success(ret)) {
-> >  		ret = output->as64.low & HV_X64_VTL_MASK;
-> >  	} else {
-> > -		pr_err("Failed to get VTL(%lld) and set VTL to zero by default.\n", ret);
-> > -		ret = 0;
-> > +		pr_err("Failed to get VTL(error: %lld) exiting...\n", ret);
-> 
-> Nitpick: arch/x86/hyperv/hv_init.c lacks pr_fmt so the message won't get
-> prefixed with "Hyper-V". I'm not sure 'VTL' abbreviation has the only,
-> Hyper-V specific meaning. I'd suggest we add 
-> 
-> #define pr_fmt(fmt)  "Hyper-V: " fmt
-> 
-> to the beginning of the file.
+> Thanks, I understand your concern. We don't want people to enable this
+> flag by mistake and see unexpected behaviours.
 
-Good suggestion, I can do this as a separate patch.
+Unexpected behaviour like randomly crashing the kernel? ;)
 
-> 
-> > +		BUG();
-> >  	}
-> >  
-> >  	local_irq_restore(flags);
-> > @@ -604,8 +604,10 @@ void __init hyperv_init(void)
-> >  	hv_query_ext_cap(0);
-> >  
-> >  	/* Find the VTL */
-> > -	if (!ms_hyperv.paravisor_present && hv_isolation_type_snp())
-> > +	if (IS_ENABLED(CONFIG_HYPERV_VTL_MODE))
-> >  		ms_hyperv.vtl = get_vtl();
-> > +	else
-> > +		ms_hyperv.vtl = 0;
-> 
-> Is 'else' branch really needed? 'ms_hyperv' seems to be a statically
-> allocated global. But instead of doing this, what about putting the
-> whole get_vtl() funtion under '#if (IS_ENABLED(CONFIG_HYPERV_VTL_MODE))', i.e.:
-> 
-> #if IS_ENABLED(CONFIG_HYPERV_VTL_MODE)
-> static u8 __init get_vtl(void)
-> {
->         u64 control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_REGISTERS;
-> ...
-> }
-> #else
-> static inline get_vtl(void) { return 0; }
-> #endif
-> 
-> and then we can always do
-> 
->       ms_hyperv.vtl = get_vtl();
-> 
-> unconditionally?
+> To add extra safety for this flag, we can make this flag dependent on
+> EXPERT config.
 
+Well, if you want to prevent people from using it, make it depend on
+BROKEN, because that's what it is. All the other hypervisor support in
+the kernel (Xen, VMware, KVM, ACRN, Jailhouse, even plain Hyper-V) can
+perfectly cope with getting booted on a different hypervisor or bare
+metal. Why is Hyper-V's VTL mode such a special snow flake that it has
+to cause random memory corruption and, in turn, crash the kernel with
+spectacular (and undebugable) fireworks if it's not booted under Hyper-V?
 
-Fine with me, can update in v2.
-
-- Saurabh
-
-> 
-> >  
-> >  	return;
-> 
-> -- 
-> Vitaly
-> 
+Thanks,
+Mathias
 
