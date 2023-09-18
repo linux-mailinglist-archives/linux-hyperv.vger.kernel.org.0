@@ -1,187 +1,137 @@
-Return-Path: <linux-hyperv+bounces-104-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-106-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A9F17A25A8
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 20:26:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D3547A44AA
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Sep 2023 10:29:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40F091C20A78
-	for <lists+linux-hyperv@lfdr.de>; Fri, 15 Sep 2023 18:26:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0973C1C20A8D
+	for <lists+linux-hyperv@lfdr.de>; Mon, 18 Sep 2023 08:29:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0DA19BD7;
-	Fri, 15 Sep 2023 18:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9269914AA3;
+	Mon, 18 Sep 2023 08:29:08 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E38E18E1F;
-	Fri, 15 Sep 2023 18:24:42 +0000 (UTC)
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id C11151FD7;
-	Fri, 15 Sep 2023 11:24:39 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1174)
-	id 60255212BE7C; Fri, 15 Sep 2023 11:24:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 60255212BE7C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1694802279;
-	bh=TGsvvgWpwhxqiST3JXUN8KZ0za3/WKQ/h15qpNdLHjA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mUYOEGki4l0DI/ZaWsQJSQfr+HuJwxaixKsemOd0tT3KrY5Z52yLZbtxyrZshZQoZ
-	 pHCa6MCfbTbSJYuvCeKekobB8o0/RWBr72YuZI29G+yXYuLWOmL5eC+qkLzLWIhkek
-	 4y/A2+SzHT8MgFApfAjMYGjym1aA4xiMFcqHacDM=
-From: sharmaajay@linuxonhyperv.com
-To: Long Li <longli@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C4F23B9;
+	Mon, 18 Sep 2023 08:29:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EB4C433C8;
+	Mon, 18 Sep 2023 08:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695025748;
+	bh=I4MBU/4uH3DIkiejuLa8YlBMQjERBUrRdAlU1AeqGEk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E/BdUyywT4oXbhnP4Pt69tq8iGu+MHVIfEB2TfBw8MoKJ9w5m/z+GFZQ4LtD+Y1/p
+	 xElf+AccnC111qLUNjBssJzsqyhNBIZ3JClvyeN42N66G06S2HJgtSrm5u4wUIN8/Y
+	 RYx4Ru/cLPWTf+LgDVaOv2ynqVQqerjzsQ0NApGqDlFVp6hCsZQLxfhH5XidaIMC1r
+	 ZKYKo96v4NhKVEPEdMAtdhOUyDuJUAEzEQs9JDZnT47wU1XuaLHR9UwMCYwKsmY+6j
+	 cybXr0eSYf9/iXbDo0M1YdZVoS8Gd/K7oRy/PTL4WiEhErglJuDvm1HPKrDw5m1yUB
+	 98GiQ3BmWU3qg==
+Date: Mon, 18 Sep 2023 11:29:03 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Ajay Sharma <sharmaajay@microsoft.com>
+Cc: "sharmaajay@linuxonhyperv.com" <sharmaajay@linuxonhyperv.com>,
+	Long Li <longli@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-rdma@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ajay Sharma <sharmaajay@microsoft.com>
-Subject: [Patch v6 5/5] RDMA/mana_ib : Send event to qp
-Date: Fri, 15 Sep 2023 11:24:30 -0700
-Message-Id: <1694802270-17452-6-git-send-email-sharmaajay@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1694802270-17452-1-git-send-email-sharmaajay@linuxonhyperv.com>
-References: <1694802270-17452-1-git-send-email-sharmaajay@linuxonhyperv.com>
-X-Spam-Status: No, score=-9.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_SPF_WL
-	autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [Patch v5 0/5] RDMA/mana_ib
+Message-ID: <20230918082903.GC13757@unreal>
+References: <1694105559-9465-1-git-send-email-sharmaajay@linuxonhyperv.com>
+ <20230911123231.GB19469@unreal>
+ <BY5PR21MB1394F62601FEFE734181FFF7D6F2A@BY5PR21MB1394.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BY5PR21MB1394F62601FEFE734181FFF7D6F2A@BY5PR21MB1394.namprd21.prod.outlook.com>
 
-From: Ajay Sharma <sharmaajay@microsoft.com>
+On Mon, Sep 11, 2023 at 06:57:21PM +0000, Ajay Sharma wrote:
+> I have updated the last patch to use xarray, will post the update patch. We currently use aux bus for ib device. Gd_register_device is firmware specific. All the patches use RDMA/mana_ib format which is aligned with drivers/infiniband/hw/mana/ .
 
-Send the QP fatal error event to only the
-context that created the qp.
+➜  kernel git:(wip/leon-for-rc) git l --no-merges drivers/infiniband/hw/mana/
+2145328515c8 RDMA/mana_ib: Use v2 version of cfg_rx_steer_req to enable RX coalescing
+89d42b8c85b4 RDMA/mana_ib: Fix a bug when the PF indicates more entries for registering memory on first packet
+563ca0e9eab8 RDMA/mana_ib: Prevent array underflow in mana_ib_create_qp_raw()
+3574cfdca285 RDMA/mana: Remove redefinition of basic u64 type
+0266a177631d RDMA/mana_ib: Add a driver for Microsoft Azure Network Adapter
 
-Signed-off-by: Ajay Sharma <sharmaajay@microsoft.com>
----
- drivers/infiniband/hw/mana/device.c  |  4 ++++
- drivers/infiniband/hw/mana/main.c    | 11 ++++++++---
- drivers/infiniband/hw/mana/mana_ib.h | 18 +++++++++---------
- drivers/infiniband/hw/mana/qp.c      |  2 ++
- 4 files changed, 23 insertions(+), 12 deletions(-)
+It is different format from presented here. You added extra space before ":"
+and there is double space in one of the titles.
 
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index e15da43c73a0..fcc8083e2783 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -101,6 +101,8 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	if (ret)
- 		ibdev_dbg(&mib_dev->ib_dev, "Failed to get caps, use defaults");
- 
-+	xa_init(&mib_dev->rq_to_qp_lookup_table);
-+
- 	ret = ib_register_device(&mib_dev->ib_dev, "mana_%d",
- 				 mdev->gdma_context->dev);
- 	if (ret)
-@@ -112,6 +114,7 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 
- destroy_adapter:
- 	mana_ib_destroy_adapter(mib_dev);
-+	xa_destroy(&mib_dev->rq_to_qp_lookup_table);
- free_error_eq:
- 	mana_gd_destroy_queue(mib_dev->gc, mib_dev->fatal_err_eq);
- deregister_device:
-@@ -129,6 +132,7 @@ static void mana_ib_remove(struct auxiliary_device *adev)
- 	mana_ib_destroy_adapter(mib_dev);
- 	mana_gd_deregister_device(&mib_dev->gc->mana_ib);
- 	ib_unregister_device(&mib_dev->ib_dev);
-+	xa_destroy(&mib_dev->rq_to_qp_lookup_table);
- 	ib_dealloc_device(&mib_dev->ib_dev);
- }
- 
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 82923475267d..29be8fd1ec7f 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -556,13 +556,18 @@ static void mana_ib_critical_event_handler(void *ctx, struct gdma_queue *queue,
- {
- 	struct mana_ib_dev *mib_dev = (struct mana_ib_dev *)ctx;
- 	struct ib_event mib_event;
-+	struct mana_ib_qp *qp;
-+	u64 rq_id;
- 	switch (event->type) {
- 	case GDMA_EQE_SOC_EVENT_NOTIFICATION:
-+		rq_id = event->details[0] & 0xFFFFFF;
-+		qp = xa_load(&mib_dev->rq_to_qp_lookup_table, rq_id);
- 		mib_event.event = IB_EVENT_QP_FATAL;
- 		mib_event.device = &mib_dev->ib_dev;
--		mib_event.element.qp =
--				(struct ib_qp*)(event->details[0] & 0xFFFFFF);
--		ib_dispatch_event(&mib_event);
-+		if (qp && qp->ibqp.event_handler)
-+			qp->ibqp.event_handler(&mib_event, qp->ibqp.qp_context);
-+		else
-+			ibdev_dbg(&mib_dev->ib_dev, "found no qp or event handler");
- 		ibdev_dbg(&mib_dev->ib_dev, "Received critical notification");
- 		break;
- 	default:
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 6b9406738cb2..243572b52336 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -48,15 +48,6 @@ struct mana_ib_adapter_caps {
- 	u32 max_inline_data_size;
- };
- 
--struct mana_ib_dev {
--	struct ib_device ib_dev;
--	struct gdma_dev *gdma_dev;
--	struct gdma_context *gc;
--	struct gdma_queue *fatal_err_eq;
--	mana_handle_t adapter_handle;
--	struct mana_ib_adapter_caps adapter_caps;
--};
--
- struct mana_ib_wq {
- 	struct ib_wq ibwq;
- 	struct ib_umem *umem;
-@@ -113,6 +104,15 @@ struct mana_ib_ucontext {
- 	u32 doorbell;
- };
- 
-+struct mana_ib_dev {
-+	struct ib_device ib_dev;
-+	struct gdma_dev *gdma_dev;
-+	struct gdma_context *gc;
-+	struct gdma_queue *fatal_err_eq;
-+	mana_handle_t adapter_handle;
-+	struct mana_ib_adapter_caps adapter_caps;
-+	struct xarray rq_to_qp_lookup_table;
-+};
- struct mana_ib_rwq_ind_table {
- 	struct ib_rwq_ind_table ib_ind_table;
- };
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index ef3275ac92a0..19fae28985c3 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -210,6 +210,8 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 		wq->id = wq_spec.queue_index;
- 		cq->id = cq_spec.queue_index;
- 
-+		xa_store(&mib_dev->rq_to_qp_lookup_table, wq->id, qp, GFP_KERNEL);
-+
- 		ibdev_dbg(&mib_dev->ib_dev,
- 			  "ret %d rx_object 0x%llx wq id %llu cq id %llu\n",
- 			  ret, wq->rx_object, wq->id, cq->id);
--- 
-2.25.1
+Regarding aux, I see it, but what confuses me is proliferation of terms
+and various calls: device, client, adapter. My expectation is to see
+more uniform methodology where IB is represented as device.
 
+Thanks
+
+> 
+> Thanks
+> 
+> > -----Original Message-----
+> > From: Leon Romanovsky <leon@kernel.org>
+> > Sent: Monday, September 11, 2023 7:33 AM
+> > To: sharmaajay@linuxonhyperv.com
+> > Cc: Long Li <longli@microsoft.com>; Jason Gunthorpe <jgg@ziepe.ca>; Dexuan
+> > Cui <decui@microsoft.com>; Wei Liu <wei.liu@kernel.org>; David S. Miller
+> > <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub
+> > Kicinski <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; linux-
+> > rdma@vger.kernel.org; linux-hyperv@vger.kernel.org; netdev@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; Ajay Sharma <sharmaajay@microsoft.com>
+> > Subject: [EXTERNAL] Re: [Patch v5 0/5] RDMA/mana_ib
+> > 
+> > On Thu, Sep 07, 2023 at 09:52:34AM -0700, sharmaajay@linuxonhyperv.com
+> > wrote:
+> > > From: Ajay Sharma <sharmaajay@microsoft.com>
+> > >
+> > > Change from v4:
+> > > Send qp fatal error event to the context that created the qp. Add
+> > > lookup table for qp.
+> > >
+> > > Ajay Sharma (5):
+> > >   RDMA/mana_ib : Rename all mana_ib_dev type variables to mib_dev
+> > >   RDMA/mana_ib : Register Mana IB  device with Management SW
+> > >   RDMA/mana_ib : Create adapter and Add error eq
+> > >   RDMA/mana_ib : Query adapter capabilities
+> > >   RDMA/mana_ib : Send event to qp
+> > 
+> > I didn't look very deep into the series and has three very initial comments.
+> > 1. Please do git log drivers/infiniband/hw/mana/ and use same format for
+> > commit messages.
+> > 2. Don't invent your own index-to-qp query mechanism in last patch and use
+> > xarray.
+> > 3. Once you decided to export mana_gd_register_device, it hinted me that it is
+> > time to move to auxbus infrastructure.
+> > 
+> > Thanks
+> > 
+> > >
+> > >  drivers/infiniband/hw/mana/cq.c               |  12 +-
+> > >  drivers/infiniband/hw/mana/device.c           |  81 +++--
+> > >  drivers/infiniband/hw/mana/main.c             | 288 +++++++++++++-----
+> > >  drivers/infiniband/hw/mana/mana_ib.h          | 102 ++++++-
+> > >  drivers/infiniband/hw/mana/mr.c               |  42 ++-
+> > >  drivers/infiniband/hw/mana/qp.c               |  86 +++---
+> > >  drivers/infiniband/hw/mana/wq.c               |  21 +-
+> > >  .../net/ethernet/microsoft/mana/gdma_main.c   | 152 +++++----
+> > >  drivers/net/ethernet/microsoft/mana/mana_en.c |   3 +
+> > >  include/net/mana/gdma.h                       |  16 +-
+> > >  10 files changed, 545 insertions(+), 258 deletions(-)
+> > >
+> > > --
+> > > 2.25.1
+> > >
 
