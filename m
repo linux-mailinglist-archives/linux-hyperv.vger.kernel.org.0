@@ -1,57 +1,57 @@
-Return-Path: <linux-hyperv+bounces-126-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-127-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 417887A77D7
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 11:44:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EFE77A7907
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 12:20:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 385781C20C90
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 09:44:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7901281592
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 10:20:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78EDA156C8;
-	Wed, 20 Sep 2023 09:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FD5615ADE;
+	Wed, 20 Sep 2023 10:20:09 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C015B156C1
-	for <linux-hyperv@vger.kernel.org>; Wed, 20 Sep 2023 09:44:45 +0000 (UTC)
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2088.outbound.protection.outlook.com [40.107.6.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211BECE;
-	Wed, 20 Sep 2023 02:44:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC6115AD8
+	for <linux-hyperv@vger.kernel.org>; Wed, 20 Sep 2023 10:20:06 +0000 (UTC)
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2048.outbound.protection.outlook.com [40.107.247.48])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871C5AC;
+	Wed, 20 Sep 2023 03:20:03 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bVvKZIsC0e3cKTuIVD1pCshC/K6pE82ujA8i/GBe28wm1DKRqrXi7kJfpMZ1PjTI2/mCUno1E/vz+bO4k/5j9iSECCU4zKZo+jj4p5xHTARSX+yKqEvxItfQjbX66A9CYgCzlCHcMP95EoTP5J4waE8o64Z8B+YSOIHIA4oJJvaj5X5GRyrTAAaw6N+AGnwX4SthZZ2G7MB1xSA+RKYd+5at3OpEj9hxpAIMfPoXUW/kB66bGUOpfKewRHdDuCS6JKxeVtXbL4rWFaVB9eZ7Vata6gb+bJUm4gXvS82rnlpPDR7Oa9eorGuHHydyLRriYmDbnFryeUrx20N6wu/l7A==
+ b=O5HQwT670UVX8mnI0ax+FZj9EsuY4esnkzbGJCLSr3sgHEbv+A0PtTLSObG5YKXPWqmENTjruN0bIPsmLSaZ7Xdgi4lD2Y0EvL7wf1ZFGOHk958e2ZNomWAC0aTkT3fwjCEJpB92qw3diCmSzea+Si8AwyhXJ3LFbgg9CAATA6UrImQajy33h/WZYLst+Z/K+58SNHKO4NdvvGvygugCOSF4ZSjd4bmMcsgJeVq8YSqHer8Q27SYBuYaLZihmlX9lzB8payeJ2SpJYwBGcYoyQJLRrjkc3arM3eksbvAYB8+G30T/7N+Lr39dwxTOBHdH6YkGJRk0hhPtvU5v2mdPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5UtxivITkJkOtaPuJj7c32JRnWGOu72fRn859bMMgK8=;
- b=noMzkIeB77uM0h9ZYPMDXxRoTqbk+lxO4xDeJuzVVVO/G0mE93sR+eGki1VoxLcZFMT17FUYr6CS7yESPofRO/cspJuBKr7C+Fo20+rTsJ2tJm64fS9mgGcDUPW05UlOPgV7m7biLDdQuyvhxzH/yOpvDr0QGGKOlgwwci2BGOKjGO4ln4SLJGTYRHjG8Tbj9hHHA5yM8WoQzNQ59w5GRx3BGRwMI20v8ZNVW9jJt+ar0Qh9NKHjxbYRyK/YglquYUUzL1fv9QqJ27mn66+Ev2W9lUpHXjt0NmZJfik2blwOXPx7kcZbS+281/IPpTEdgFm3Ytsf3fuerx9qTli6gw==
+ bh=YAINhEdYTcENyXk8OY5ai9zN5pJCicyvFXeYrjOYSPk=;
+ b=Tk055o/G+0dcH5nVVPu9VlH1hxH7IhX5z7RJXT5M0BCw21Lw9/E3Hi41eI6rEfUGOZGGybO9QWdVrY0HKfa2us17bC4/kndQh24Xv6G/AZ2QdnUv4P7F5ijRCr6NSbc7xVcchYjzS3+Pi52ePlvQw5il0i7xBmDoNO9KQd63Hl3f5JwN+18eCHkGvV7OWbrHMRsuzO5RPVnTfx6dmdqVGeW8CVboANe2qZP7tGhl3U3ofPMZDNInd7q+OWy17yYMlSwrCoSSMerTK4LmrU3YLX+3pucK1sonCwvPp3qne8ycMKWXWDCGWW2GpJxlxoaMDZwEy/WsU/f8ErwbVkT6qw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
  dkim=pass header.d=suse.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5UtxivITkJkOtaPuJj7c32JRnWGOu72fRn859bMMgK8=;
- b=OEc6dkzJUEFYROlXBQI2n9DW+N+xZmMREPNfVS2hBlHdmz5WWBRM+r2uMGGpvD2thyXhUkkVIXhZxg0P5IqM8GJpEY0wCEZ/2G+bKQEa9v39SnruAITJNz6uS+GTK/GG6MOrpsNayhylG4Cmz9djBumdj1SzozYQyh/gTKpKaKWAFf9c/9NCAhctbjSIuzd6vxLoVu++uciLvpdSZg4i8BhMmOVOGVKne5c90wHwOnLDCFYhMjPV3a1iaZ9Xlq/8tVGKiA/X30d0NozoufV2Kj0jtpmZRzABL5ET0On1HwAeX9d2mknu+KTxfdHG1hFr35LoNt/LspIMdS8EqBRDXA==
+ bh=YAINhEdYTcENyXk8OY5ai9zN5pJCicyvFXeYrjOYSPk=;
+ b=4dMO9RPLB8esifBXGX+b69aSKwYBMKuuu9SbliM2w+93wU3sv8Wh0ypn6QH1p5e2pLrGGsGlX5zBguqFOfjixxMG6DNB/LhVhz9ujtqLtoow8uZliP2SgPIs9SUAImRtiHdt7K82+QRBgNyEBhSQHbl2H18jtGyoffTOd49SNCHhFmIqnv51HMK4cpDXI0B9+zhDzbcsfZRYLPTq6Q5t+o5vKOsEZVOWieQtE7F9ovHr+BAEd2L2dO92Lb+6M3vdXY7OswSe9uFRZ2ER4YhpDzXBz91uKTRKFkmdaQV+MvypNYOVKX087sx6eZ6L7BRHgwbPnUpYBXMkFhQktqlnNA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=suse.com;
 Received: from DBBPR04MB7788.eurprd04.prod.outlook.com (2603:10a6:10:1e4::15)
- by AM9PR04MB8132.eurprd04.prod.outlook.com (2603:10a6:20b:3eb::12) with
+ by DB9PR04MB9703.eurprd04.prod.outlook.com (2603:10a6:10:302::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Wed, 20 Sep
- 2023 09:44:38 +0000
+ 2023 10:20:00 +0000
 Received: from DBBPR04MB7788.eurprd04.prod.outlook.com
  ([fe80::5b25:12c8:9f51:9b31]) by DBBPR04MB7788.eurprd04.prod.outlook.com
  ([fe80::5b25:12c8:9f51:9b31%4]) with mapi id 15.20.6792.026; Wed, 20 Sep 2023
- 09:44:38 +0000
-Message-ID: <b28b68ec-b86d-6641-e303-41747b9b5c10@suse.com>
-Date: Wed, 20 Sep 2023 12:44:33 +0300
+ 10:20:00 +0000
+Message-ID: <aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com>
+Date: Wed, 20 Sep 2023 13:19:56 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH v10 06/38] Documentation/x86/64: Add a documentation for
- FRED
+Subject: Re: [PATCH v10 09/38] x86/fred: Disable FRED support if
+ CONFIG_X86_FRED is disabled
 Content-Language: en-US
 To: Xin Li <xin3.li@intel.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
@@ -63,13 +63,13 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
  jgross@suse.com, ravi.v.shankar@intel.com, mhiramat@kernel.org,
  andrew.cooper3@citrix.com, jiangshanlai@gmail.com
 References: <20230914044805.301390-1-xin3.li@intel.com>
- <20230914044805.301390-7-xin3.li@intel.com>
+ <20230914044805.301390-10-xin3.li@intel.com>
 From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <20230914044805.301390-7-xin3.li@intel.com>
+In-Reply-To: <20230914044805.301390-10-xin3.li@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: VE1PR03CA0032.eurprd03.prod.outlook.com
- (2603:10a6:803:118::21) To DBBPR04MB7788.eurprd04.prod.outlook.com
+X-ClientProxiedBy: FR4P281CA0098.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:cb::15) To DBBPR04MB7788.eurprd04.prod.outlook.com
  (2603:10a6:10:1e4::15)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
@@ -78,179 +78,142 @@ List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR04MB7788:EE_|AM9PR04MB8132:EE_
-X-MS-Office365-Filtering-Correlation-Id: 007d6d41-c1c3-459f-c13f-08dbb9be3484
+X-MS-TrafficTypeDiagnostic: DBBPR04MB7788:EE_|DB9PR04MB9703:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e38e81a-8c4e-4991-7042-08dbb9c32549
 X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	/820x9R7hkhc/SawfUZtrBxb7wgHZN0RAYHKWqZZpr3GDoEmZ+WpPPtv531UHqsK2eTX/AP2eiV3xBJbSbtj56cQgX74KxWZKUkJVIaW+4AeF+3JIR8pSdaEh+w9aS+wiAOsrdqwdUaSunkL89OYjt4orPFiVWbikQ9X7NP8oA3GO1H0w26RVjLI63d8fbgRVeghV1fiODxi161Wu8ErXgmhNDrn2BO5GbnYMzixtgzgUZ/9xCE08BI5Cdp0lbaUtoNz7YjLGX/0oceeFHNsW8pAVBCOmZWL4UlslB9mUW2qHKW7x7uylnwo08uyba+WsrjpZP5MqXeutioW3QWJuEO73gS3A+aN4CdMaQ+Ej7JNt3eHqmsBeVQYHkpR3e0eZx/O9ZtMdwpBYBMOOSQs4ijUOa8H3k44soZy3K1B0vLfJfmU/9mmPw2Th3lx0IDTNpGXilcr91VG9IVvOYbsrUzl+o/xTZ6i5a5nfKt5NimS+BZfuV/ckV8HWKGNtC1OLKgSvyfR/YS2ZBSlKEEs9aD6pHN8Cnn+wxBp1EpgHhhmGK2hNZp8u7+lOfleaM0zWH6pPnNBClUhbMTt6q8Q9TpmeyCqLYH5YfJfKc1YuQq6OrCieTmnwuusHLCJXhpIzIhqA1NQLDtea1luj6Rk0Q==
+	ZbyrK9C+nN2sIcAa9U8A4mG00Z/bAaHO+AuovHU6defTCjOQsINvYY6lphvwL0TupGeSiieGz/Jg3WyX2rp8veexmyXx4Tz8KgWFzTm0rYAbgWmwivrGvLMgn0jPuYS7q5IklfIhkYrUYtUleH8ejqAZNpj2k0gtYK7pmuP3Ds+3277tuBgv6anaALRNczHIlJU6kJY0NTVzCPxyGetMn5mMFIBoZIOTaFsGR8UySX7rg1LjpHw0zOa3YXs6MriIb/8fltt5zHFk97Xdz+eoVwlq7BkTMCDp+5LWWRRl70HmwyYqy/+9t5f3u8yQHN/uP17w2SLDjAooROBR8SwrdOtiOQV5HIVQyIRxW/zucBlLwAt9dhWIKRsmvT4Cq2E8AHusYguWNs6el1oMkHBRntcxelM0k1fnffndSLb2Aif1XQFTESChf3rGxkqPewgS3uA0I4ogsns/n3nkaoIlp9Uy5VQKwLidtK3538JzuupBYfFw3hvmJRd3ihWuAKRiOGMS8tylKQnUJAuwrQ1W9FWAeIdTwca7ouCh/r0q3Gi7WeFxxuIokus/XoikFSUpaxLk7/aJYPDv0CNfZonsPkqEZ+65qSM3KPaB97V2Xvzs1a9jv6pmMzE/vByQ9Ndh0KrqQhM/q1wG/56fXMTipg==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB7788.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(396003)(366004)(136003)(346002)(186009)(1800799009)(451199024)(8676002)(6486002)(83380400001)(6512007)(26005)(7416002)(316002)(41300700001)(2616005)(66556008)(66476007)(8936002)(5660300002)(66946007)(4326008)(6666004)(6506007)(2906002)(478600001)(31696002)(86362001)(38100700002)(36756003)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB7788.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(396003)(376002)(39860400002)(136003)(1800799009)(186009)(451199024)(26005)(2616005)(8676002)(8936002)(4326008)(7416002)(83380400001)(2906002)(31696002)(36756003)(86362001)(6506007)(6486002)(31686004)(5660300002)(6666004)(316002)(6512007)(478600001)(66946007)(66556008)(41300700001)(38100700002)(66476007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Qm9nSldNZzNqcVdJcWd1YURUcThiNXdxb0MwaFZ3a1FqUXgxOVV4OTdvUEtX?=
- =?utf-8?B?S0ZxcW9TMEpTMlk1Tk04SlExT2Rqbm1pOWR3YUNabDVwRXJFWmhTUzlTNVF5?=
- =?utf-8?B?Sm9kNUtWb2ZZMU9QanFHRk5WT1gxbzBKRTh0S3dMdkV6amNodmZ6OWR0cnJR?=
- =?utf-8?B?WDFzMFZ0dEhwV1RTdzlqOUdwc1hsZUNQcU15a0RTL2dqbWE0S0VkV2NZT005?=
- =?utf-8?B?QnpSZW83S2ZaTWdtUWc0MmNOWDJjeGJ1UWhFdktkYzZoMWFacTVyWlk3cEtu?=
- =?utf-8?B?cUxQeUhkcjd0bURSVWgzMkMvaGZwL0FaQzFQdnY1cTd3ZHBkaW1Pd00wS3Vq?=
- =?utf-8?B?ZkpQMlZ5VlIxYVVReWlad3padjQzOWFIbE03aVJRa042T3pxVmtWNzQ3WThI?=
- =?utf-8?B?VjFHTHBmV0h3aGQ3dzJPZEN0ZWpkZ2pCaW9kRUVKZm92RHduUHY5NFRmMXFR?=
- =?utf-8?B?aFhRZ1h1MmV3UXJZU0VPcEUvYVZvZWFSaEJFRGxXbzcwMkQrcVNXYUdsWHAz?=
- =?utf-8?B?YnBqSXprazB6YnYvL3FIRXI0RnUyVUJoS2x0NXR5ZkcwU3Vud1VjRXlMaUly?=
- =?utf-8?B?YTFleUZkdnhOQjJCTTAwMW1sS0tQWFNjdFV6clA1ZGxrM3REV1FwVE1xd1Jj?=
- =?utf-8?B?VVBQRkNNWTloRmFyZFBCYmxhbUJkd2RZZ2xBSTlQSWpoL29CNHZxQUFFTU44?=
- =?utf-8?B?OXNWeStmL0I4Ui9ZaStNbzQxTkVsMHB6YWVJeERQMHJOSkplam50UW5VN1BW?=
- =?utf-8?B?WlZhTkVxcGZNYzRLY2tORURKYkdyZFJJbDdHTEtTaldSazRRcTdWcUZNRkEv?=
- =?utf-8?B?TE9ucHlzTy9ma2dDVjEvRUNoam1VTnRqTDZ3ZnE0NTkrVGlCeDVXZHFYWVd6?=
- =?utf-8?B?aXF6WTBOQ3huYzdKeng1MEZ5ZFF0azZ5VkxEdis4TTZxREVROFBSK3Q1R3k0?=
- =?utf-8?B?L2RYOUlDTXVsTmNmOTU2TVZaUXpKNlhzd2NpU0dTMzZPZEEzN0RmL1RjcFVB?=
- =?utf-8?B?OVVBK0xGRVpuMEJSVHVoNjNNbEZTTlN2TmFIcEczZ2QwZWYrcUpmN3pEZEhK?=
- =?utf-8?B?SDNZcjFJSGZ4VGptSmhjM3ZsSDhsamw0L1B4bXJBS0RvYytqd2xuL3BkK1RJ?=
- =?utf-8?B?ZE5kRDBvaFdoanhKeStnckhVVmdlekxxSmI3bm5KUk40Z3ZrRHdQTWtlYmpK?=
- =?utf-8?B?MjhnYTUvNXVScXdSV0pxWm9NeWVuSVJCSEZLRGQwNUZ3UlJBb0tPaFVIbGxN?=
- =?utf-8?B?aERMK0JHMkk2RHd5WUhtSU1NT24vbTM2aTBNcUcwRDBzd1NVMXJQR1hRSGI4?=
- =?utf-8?B?VEVibkRMZzI0SjAxOVpCWXdlV0Y1VHlnUW9uKzJHQTA3SWJhcS9TdDRhS3FW?=
- =?utf-8?B?c1lZSFZaVDRRU2lYajBHOFRWS3ppUGUrbklyU0MzbWpjQ0NiM2tEOHVkVnpu?=
- =?utf-8?B?NVJOVmlyT0RINk1LTzFWUXB4ZE14MmNIQmEyL0JlRjJCVWZvMjRwUzVDZnNT?=
- =?utf-8?B?NG4rYWtCSHpENy9mYXdqTVVLaVpGZklMaWhodzlQdlIrSVlJTllQZVlsbjlk?=
- =?utf-8?B?QllLc3Z5SlVvRldpc3UyRlpjV0FIbU8xZm9mRnUzMUg3SjdHalhpYlZzVGJy?=
- =?utf-8?B?Z0Uya0NZSnp1TVBMWkQrOUxFRDJIL01hVlBhWlB0d05DamdBWFJLb3Nsdm5I?=
- =?utf-8?B?ZnB1VU5UUTFEb3h6bmdwSTJtSHhZdFVkMmpLU3RjVEVFQytma3A2V25DWTNl?=
- =?utf-8?B?Rmp0ZDBnMzVCS1NmeEF0RVE4QS9jR0hoVWdPRXJ5T0N4VC9nRlp5L1B4VWVM?=
- =?utf-8?B?OGwyalBTOVNCemxVOWpCS3h2QlNPOFFpZ3FvWXQzbnN0TDF4U3J0U2xraTli?=
- =?utf-8?B?VE9ObFhJc3BPcTZFdGtFNnlqOHhFZXQ2OTc3Nm1WWGoxTnVzWDV6c2dtcDhZ?=
- =?utf-8?B?a3NSd0xxTFEwTzg4K1dVWklJZ1pCR2Y1dlplbEFreDZEbzJpYXJiQ1RCWFVX?=
- =?utf-8?B?VGNHZU1nUGJQUVhkcFZkaWVxWEdnT2dPK3NSOUYvaTByOUdTeENsV3BzdnJq?=
- =?utf-8?B?MVA2UEhnTndVQ1dkY0NuNklGeG96d3k3QW8rL1JkbzBaT2dmVDFPSXM1ZThQ?=
- =?utf-8?Q?9bQg/GoKF8dfNw8GdV5kbP/Sm?=
+	=?utf-8?B?dGUzUzVlT09tVWt4cTltMXQ3cEZnME5OUmJqUFJnUXgzRlBBa3dGbmdMVDVV?=
+ =?utf-8?B?ZFZhZWhLdU9ZWFlKQ2FiUFVnNXZhN2QyK2I3clBxN2dsWDV2clZ3aWRsKzEr?=
+ =?utf-8?B?dzd6WUhlSC9ick1uSG9teFR2eGVwb0cxK1lNVTRVY1pTaDNQdzRjaDh4NkJl?=
+ =?utf-8?B?VDF5d3BHank3dnFKUGtCQmgzVk5uTmhJR01MMHVDZ3pjNm9QczZqQU9TeHJn?=
+ =?utf-8?B?K1owVitaaVU3bUNuYWwvdGlhZDFxell4UEtHVmtvejgyV3VTYlhUSk9kRkht?=
+ =?utf-8?B?ejl1Q1FrYlVPeFlubTBDTFhzMHhqNi9EVjJVOWRNNnMwdzVIR0hFbU8vSExm?=
+ =?utf-8?B?dWZ5U2V3WWhDRy9wZVU3Sk13T25XSTdjWVh1V3dZeThsbE5TRTJ3WFArUXdR?=
+ =?utf-8?B?QVNXRlFFb3R3TDg0Z1ZXUlU4ZUgvU1QyQmdJS05BTEhlL1BPeUtEQWU5WDFP?=
+ =?utf-8?B?QmVzb3VKSTJLcVlSSnVpWDNIZjBEZ0I5eVVGOHVPUjZXSGRseWo3TXhDMDN4?=
+ =?utf-8?B?MElteE9mTFhoNkdrZmJSM3FVcm9pTzBnelFNaHhEbVF2cVFRZW5KK1pqQith?=
+ =?utf-8?B?QU1wZ0dqdW9CQ2o3ZExaOGQzbGE2RHFpRFVRd21JOGhYTHBOTzRSd0QvYkZJ?=
+ =?utf-8?B?MkZ0dEdpYmswd3BDSFc4ZVZ1bnE0SS9QanZZbTVORm9sSVVSQkE5empUdHpz?=
+ =?utf-8?B?dlFVa0pyTlY1WUZZb01JblRoSDRhU09nMjZQUXNMZ3diK1NiRFovK2FKenhC?=
+ =?utf-8?B?V2lyeklWUGUxampJdXNvZTFxRXBGVExJOEpRV3NQZWhseHZNZ0ZyTkMzNE5C?=
+ =?utf-8?B?cVFRcXlSTGlPcitERWRENmF0bDY1WUZPeVFqQ3YxclVzZGVMUjVReTFiMThO?=
+ =?utf-8?B?bGdqenJNZXNIV05RSC9IaWwrY01jVHpFTmp0bDJuYUl2NG1CakRUWVI1OEtX?=
+ =?utf-8?B?T3N2UFFXY2lDUFU4NVNWODJVOEdlYUxOUDdRcXcra2lKd3IyTnVuUTRRRWIv?=
+ =?utf-8?B?cTRvUjRoOHVMdkpPUkZzUGlDK2p1MlhDRFMwbldoaTAraE0zQklIcWhlQmp1?=
+ =?utf-8?B?OWZjdUx6M0d0NmtDQmhhVlVjNUxmakcxbnl5UzBJUmJmM0tKVXZ4cGQ4bUQv?=
+ =?utf-8?B?clJwZ0U0Z1dqN24vbFFLY2orZDFpMEtncENMdkMrdDZxa0lXYzc0Q1dzUkp0?=
+ =?utf-8?B?STlCdlIwVUVUTG50TWU2UUJhRllVTENPWlQzNi8vVnNYTWNQeWdveHB6blpl?=
+ =?utf-8?B?OUNWemkxbnpHd05JK3dnNUttSVJzazNGNUtjWjh2VGJWa2RjVENpV2xYTmFT?=
+ =?utf-8?B?SU9FV3J5QlNGMDF6UnVWUTlyU2J1bkpRcWVLbFNVYzRhWXJsbmRpZGRpd2s0?=
+ =?utf-8?B?U0Z2NExTSWFIclNoZzBtL1dud3dxQ2RGOTZ3NE8rc0Z6UGR1YmVrRjMyRHFT?=
+ =?utf-8?B?Q29JNk5CdjR4K2kyUUZGZEt1eHJ3QTBDTXJzQ0FSSVArT0hLR24zYkg1cVR4?=
+ =?utf-8?B?M3B5VWVJUmJCT2FCbVBEbWxXWk1pNUl6ZXY5blowYkg2ekpscVNIaFcrQkts?=
+ =?utf-8?B?N1RYcXJ3T2dEZ0ZLYnhHN2FZODI0V05idjdvL1NxTFZPN1RoQnhPSDJidy94?=
+ =?utf-8?B?ZTdwYnVEajIwd0dFRzdjNjZMYUNBbzRhSnJNU1BCNmVZZjdkc3ZFanZnMUZU?=
+ =?utf-8?B?RmoxOWtIYks5anJVdlRQQkh1N0kxTnRUTk9Vd0IxTkJXaTk4MGVuM2xuQ3NB?=
+ =?utf-8?B?T1hLcm9oMnNQWlN6RVlYQ3lUNnFqQVlreVVzNGlrNVJ2TzhFd2k2cEYvVlJQ?=
+ =?utf-8?B?QXg2d2REWGRjcUpRMzNDc3RVUVMvNExPbHBpTXA1SHRsbnByZW02ajQ5azNG?=
+ =?utf-8?B?TUNTaC80L3E3cjZQUW10dlI2Ni9pbDNyUmJYZVhmYzdsNmlsSkN0em5rV1BS?=
+ =?utf-8?B?Q2xPTDdGQ1pPZXdpNmhkb3lwTUdDTWtwVDhIT1BUSXV4Yjh3L3FmWXBlUXpU?=
+ =?utf-8?B?YWJIMDdVM2ZKbFlab3YwUzZWU3Q2VXlEa3FiMlNNN1FFeTgwNVlpM3I3Tmw5?=
+ =?utf-8?B?Zit2VWhlTWU5MWlHRkdRRjIybHNJY2p4NUFNM3JuU3hZeVFaRnpWZVJ6aTRL?=
+ =?utf-8?Q?gkjQgbXLoUdX8YFCFNLsh28bJ?=
 X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 007d6d41-c1c3-459f-c13f-08dbb9be3484
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e38e81a-8c4e-4991-7042-08dbb9c32549
 X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB7788.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2023 09:44:38.2383
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2023 10:20:00.0455
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2XMekrE4+SoCTkFVNs/qagiRU44pYDYVD0SoV2WR4VN+qkAjWlrAIfM73A6wOPqieUCnZEX4x8Y7lY6xQbbLQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8132
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gw/P3fDnlhKg24u3Qd13vdZu029a/Zv4oqik/MLVWTKMPaHSo3OcXBRu7GKof8FbiJ6sBXov8DVqEYMP+/5FNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9703
 X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
 
 On 14.09.23 г. 7:47 ч., Xin Li wrote:
-> Briefly introduce FRED, and its advantages compared to IDT.
+> From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
 > 
+> Add CONFIG_X86_FRED to <asm/disabled-features.h> to make
+> cpu_feature_enabled() work correctly with FRED.
+> 
+> Originally-by: Megha Dey <megha.dey@intel.com>
+> Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Tested-by: Shan Kang <shan.kang@intel.com>
 > Signed-off-by: Xin Li <xin3.li@intel.com>
 > ---
->   Documentation/arch/x86/x86_64/fred.rst  | 98 +++++++++++++++++++++++++
->   Documentation/arch/x86/x86_64/index.rst |  1 +
->   2 files changed, 99 insertions(+)
->   create mode 100644 Documentation/arch/x86/x86_64/fred.rst
+>   arch/x86/include/asm/disabled-features.h       | 8 +++++++-
+>   tools/arch/x86/include/asm/disabled-features.h | 8 +++++++-
+>   2 files changed, 14 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/arch/x86/x86_64/fred.rst b/Documentation/arch/x86/x86_64/fred.rst
-> new file mode 100644
-> index 000000000000..a4ebb95f92c8
-> --- /dev/null
-> +++ b/Documentation/arch/x86/x86_64/fred.rst
-> @@ -0,0 +1,98 @@
-> +.. SPDX-License-Identifier: GPL-2.0
+> diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+> index 702d93fdd10e..3cde57cb5093 100644
+> --- a/arch/x86/include/asm/disabled-features.h
+> +++ b/arch/x86/include/asm/disabled-features.h
+> @@ -117,6 +117,12 @@
+>   #define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
+>   #endif
+>   
+> +#ifdef CONFIG_X86_FRED
+> +# define DISABLE_FRED	0
+> +#else
+> +# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
+> +#endif
 > +
-> +=========================================
-> +Flexible Return and Event Delivery (FRED)
-> +=========================================
+>   /*
+>    * Make sure to add features to the correct mask
+>    */
+> @@ -134,7 +140,7 @@
+>   #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+>   			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
+>   #define DISABLED_MASK12	(DISABLE_LAM)
+> -#define DISABLED_MASK13	0
+> +#define DISABLED_MASK13	(DISABLE_FRED)
+>   #define DISABLED_MASK14	0
+>   #define DISABLED_MASK15	0
+>   #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
+> diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
+> index fafe9be7a6f4..d540ecdd8812 100644
+> --- a/tools/arch/x86/include/asm/disabled-features.h
+> +++ b/tools/arch/x86/include/asm/disabled-features.h
+> @@ -105,6 +105,12 @@
+>   # define DISABLE_TDX_GUEST	(1 << (X86_FEATURE_TDX_GUEST & 31))
+>   #endif
+>   
+> +#ifdef CONFIG_X86_FRED
+> +# define DISABLE_FRED	0
+> +#else
+> +# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
+> +#endif
 > +
-> +Overview
-> +========
-> +
-> +The FRED architecture defines simple new transitions that change
-> +privilege level (ring transitions). The FRED architecture was
-> +designed with the following goals:
-> +
-> +1) Improve overall performance and response time by replacing event
-> +   delivery through the interrupt descriptor table (IDT event
-> +   delivery) and event return by the IRET instruction with lower
-> +   latency transitions.
-> +
-> +2) Improve software robustness by ensuring that event delivery
-> +   establishes the full supervisor context and that event return
-> +   establishes the full user context.
-> +
-> +The new transitions defined by the FRED architecture are FRED event
-> +delivery and, for returning from events, two FRED return instructions.
-> +FRED event delivery can effect a transition from ring 3 to ring 0, but
-> +it is used also to deliver events incident to ring 0. One FRED
-> +instruction (ERETU) effects a return from ring 0 to ring 3, while the
-> +other (ERETS) returns while remaining in ring 0. Collectively, FRED
-> +event delivery and the FRED return instructions are FRED transitions.
-> +
-> +In addition to these transitions, the FRED architecture defines a new
-> +instruction (LKGS) for managing the state of the GS segment register.
-> +The LKGS instruction can be used by 64-bit operating systems that do
-> +not use the new FRED transitions.
-> +
-> +Furthermore, the FRED architecture is easy to extend for future CPU
-> +architectures.
-> +
-> +Software based event dispatching
-> +================================
-> +
-> +FRED operates differently from IDT in terms of event handling. Instead
-> +of directly dispatching an event to its handler based on the event
-> +vector, FRED requires the software to dispatch an event to its handler
-> +based on both the event's type and vector. Therefore, an event dispatch
-> +framework must be implemented to facilitate the event-to-handler
-> +dispatch process. The FRED event dispatch framework takes control
-> +once an event is delivered, and employs a two-level dispatch.
-> +
-> +The first level dispatching is event type based, and the second level
-> +dispatching is event vector based.
-> +
-> +Full supervisor/user context
-> +============================
-> +
-> +FRED event delivery atomically save and restore full supervisor/user
-> +context upon event delivery and return. Thus it avoids the problem of
-> +transient states due to %cr2 and/or %dr6, and it is no longer needed
-> +to handle all the ugly corner cases caused by half baked entry states.
-> +
-> +FRED allows explicit unblock of NMI with new event return instructions
-> +ERETS/ERETU, avoiding the mess caused by IRET which unconditionally
-> +unblocks NMI, e.g., when an exception happens during NMI handling.
-> +
-> +FRED always restores the full value of %rsp, thus ESPFIX is no longer
-> +needed when FRED is enabled.
-> +
-> +LKGS
-> +====
-> +
-> +LKGS behaves like the MOV to GS instruction except that it loads the
-> +base address into the IA32_KERNEL_GS_BASE MSR instead of the GS
-> +segment’s descriptor cache. With LKGS, it ends up with avoiding
-> +mucking with kernel GS, i.e., an operating system can always operate
-> +with its own GS base address.
-> +
-> +Because FRED event delivery from ring 3 swaps the value of the GS base
-> +address and that of the IA32_KERNEL_GS_BASE MSR, and ERETU swaps the
-> +value of the GS base address and that of the IA32_KERNEL_GS_BASE MSR,
-> +plus the introduction of LKGS instruction, the SWAPGS instruction is
-> +no longer needed when FRED is enabled, thus is disallowed (#UD).
+>   /*
+>    * Make sure to add features to the correct mask
+>    */
+> @@ -122,7 +128,7 @@
+>   #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+>   			 DISABLE_CALL_DEPTH_TRACKING)
+>   #define DISABLED_MASK12	(DISABLE_LAM)
+> -#define DISABLED_MASK13	0
+> +#define DISABLED_MASK13	(DISABLE_FRED)
 
-nit: This will be more clear if rewritten: "Because FRED event delivery 
-from ring 3 and ERETU both swap the value of the GS base, plus the..." .
+FRED feature is defined in cpuid word 12, not 13
 
-The idea is to remove the duplicate statement that IA32_KERNEL_GS_BASE 
-and the GS registers are swapped as it makes the sentence somewhat hard 
-to read.
-
-
-<snip>
+>   #define DISABLED_MASK14	0
+>   #define DISABLED_MASK15	0
+>   #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
 
