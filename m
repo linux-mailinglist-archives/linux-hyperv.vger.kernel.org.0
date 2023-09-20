@@ -1,194 +1,256 @@
-Return-Path: <linux-hyperv+bounces-125-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-126-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E48B57A75A6
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 10:19:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 417887A77D7
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 11:44:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A06D828184D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 08:19:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 385781C20C90
+	for <lists+linux-hyperv@lfdr.de>; Wed, 20 Sep 2023 09:44:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F272F9F6;
-	Wed, 20 Sep 2023 08:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78EDA156C8;
+	Wed, 20 Sep 2023 09:44:47 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FBCC8E0
-	for <linux-hyperv@vger.kernel.org>; Wed, 20 Sep 2023 08:19:06 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58620E6;
-	Wed, 20 Sep 2023 01:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695197941; x=1726733941;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ZhWMOChsCZxUb6si/Tzng9Pk/ALO9A+UEzdgmdBxZi8=;
-  b=ZGxxypDpKFj9HtoGXCRucd8ZuNZuy/YxCfM9YJUtsXefWu+MH+/xE7qU
-   NSvJKU3pdx2U1GShXFjyTVbKoqJVMf0tjQ2i6oEWLUx194cJe/eDddS/X
-   eUR8ZUXCmJjAhENR8d2MVdkoHZLYo74fReeZUQVfjKQwOti9dcYsFgKaI
-   JhpJmQMqR9Ecsxr5tqcl7OUm3t0hWDRkvFj3Y9NfziR9KAXTL7UV9/Naj
-   egFJlcQbp0e871wI79nK8FlDMl/xdtDXkZtYxt9tYA0vYmyn7C5jc+ArK
-   h8CtbRk0RVBlqmwVmUFjPhORMjVNAlYKhe9OtWc2IyNe8ZwGMA6pWmP5n
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="380064541"
-X-IronPort-AV: E=Sophos;i="6.02,161,1688454000"; 
-   d="scan'208";a="380064541"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 01:18:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="749800944"
-X-IronPort-AV: E=Sophos;i="6.02,161,1688454000"; 
-   d="scan'208";a="749800944"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Sep 2023 01:18:47 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Wed, 20 Sep 2023 01:18:46 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Wed, 20 Sep 2023 01:18:46 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Wed, 20 Sep 2023 01:18:46 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Wed, 20 Sep 2023 01:18:46 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C015B156C1
+	for <linux-hyperv@vger.kernel.org>; Wed, 20 Sep 2023 09:44:45 +0000 (UTC)
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2088.outbound.protection.outlook.com [40.107.6.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211BECE;
+	Wed, 20 Sep 2023 02:44:43 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BnoQFKx4vtu/hDKNKuqIXj2lhzX0H6QDCe+LV422t4w43U1Fe7rbTGv0Jy9JA8ZlxQEqCeEcSgPGLWOrdToG0p24BlwfRpwqtoWs88gF3EiJLn91xJJnfjkDMoEflDblyP2tHky+s/H21Wqokg1gychx+tZbYvSyFJ7zxYEsPrGv7SxbdfpxSWYaj9qJCA0l6uMoKJK4je94HXYkMR8NMAeqkk22whsLSd/6NUhzeb0ybvJuDGJ42z7PVpwlXo6CHgK/lsKKOIeU1lzAiFUnZvOxmW3ehQsEG3w5hkuTGl8LSj9q+arsAze3QCQq3MdMO95Xa2ZN+93Ph922EKy+iQ==
+ b=bVvKZIsC0e3cKTuIVD1pCshC/K6pE82ujA8i/GBe28wm1DKRqrXi7kJfpMZ1PjTI2/mCUno1E/vz+bO4k/5j9iSECCU4zKZo+jj4p5xHTARSX+yKqEvxItfQjbX66A9CYgCzlCHcMP95EoTP5J4waE8o64Z8B+YSOIHIA4oJJvaj5X5GRyrTAAaw6N+AGnwX4SthZZ2G7MB1xSA+RKYd+5at3OpEj9hxpAIMfPoXUW/kB66bGUOpfKewRHdDuCS6JKxeVtXbL4rWFaVB9eZ7Vata6gb+bJUm4gXvS82rnlpPDR7Oa9eorGuHHydyLRriYmDbnFryeUrx20N6wu/l7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZhWMOChsCZxUb6si/Tzng9Pk/ALO9A+UEzdgmdBxZi8=;
- b=aR5lCQSDh5KQ6H3L5+wnl478BdMM/Rlkdi8qlTMTlyh/OCeZgEKw6nDQxitaIlYxfxXNmATCg6GHvFROzl4IGWwUpfVzxae9YkGNtCnHrRIlmHsj3ZNvRw7q6nw2S4Fy+oKmB0U0AHuW+hhCJL2XqgHhm0FsyxPV3V/aXS8l5RGoFeQFrPxSodxvNjClKlvwUG7wZxfuxsDHfYPOFtMIQu8KOdEVnXeuKPL870cgm2HJtXzLMt7wj0zJgSikMBddXKUj2+YfO5i2xvIh+vxAsIUwVCgj9CPCc9W1EUhHJ8H/+EXC4rmVK/QJ9jAfLVzshK2kjVuuZf227P1QR9xVjQ==
+ bh=5UtxivITkJkOtaPuJj7c32JRnWGOu72fRn859bMMgK8=;
+ b=noMzkIeB77uM0h9ZYPMDXxRoTqbk+lxO4xDeJuzVVVO/G0mE93sR+eGki1VoxLcZFMT17FUYr6CS7yESPofRO/cspJuBKr7C+Fo20+rTsJ2tJm64fS9mgGcDUPW05UlOPgV7m7biLDdQuyvhxzH/yOpvDr0QGGKOlgwwci2BGOKjGO4ln4SLJGTYRHjG8Tbj9hHHA5yM8WoQzNQ59w5GRx3BGRwMI20v8ZNVW9jJt+ar0Qh9NKHjxbYRyK/YglquYUUzL1fv9QqJ27mn66+Ev2W9lUpHXjt0NmZJfik2blwOXPx7kcZbS+281/IPpTEdgFm3Ytsf3fuerx9qTli6gw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
- by PH0PR11MB5659.namprd11.prod.outlook.com (2603:10b6:510:ea::6) with
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5UtxivITkJkOtaPuJj7c32JRnWGOu72fRn859bMMgK8=;
+ b=OEc6dkzJUEFYROlXBQI2n9DW+N+xZmMREPNfVS2hBlHdmz5WWBRM+r2uMGGpvD2thyXhUkkVIXhZxg0P5IqM8GJpEY0wCEZ/2G+bKQEa9v39SnruAITJNz6uS+GTK/GG6MOrpsNayhylG4Cmz9djBumdj1SzozYQyh/gTKpKaKWAFf9c/9NCAhctbjSIuzd6vxLoVu++uciLvpdSZg4i8BhMmOVOGVKne5c90wHwOnLDCFYhMjPV3a1iaZ9Xlq/8tVGKiA/X30d0NozoufV2Kj0jtpmZRzABL5ET0On1HwAeX9d2mknu+KTxfdHG1hFr35LoNt/LspIMdS8EqBRDXA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from DBBPR04MB7788.eurprd04.prod.outlook.com (2603:10a6:10:1e4::15)
+ by AM9PR04MB8132.eurprd04.prod.outlook.com (2603:10a6:20b:3eb::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.28; Wed, 20 Sep
- 2023 08:18:44 +0000
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::922f:ec7c:601b:7f61]) by SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::922f:ec7c:601b:7f61%5]) with mapi id 15.20.6792.026; Wed, 20 Sep 2023
- 08:18:44 +0000
-From: "Li, Xin3" <xin3.li@intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-CC: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "Lutomirski, Andy"
-	<luto@kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"Christopherson,, Sean" <seanjc@google.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Gross, Jurgen" <jgross@suse.com>, "Shankar, Ravi V"
-	<ravi.v.shankar@intel.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"jiangshanlai@gmail.com" <jiangshanlai@gmail.com>
-Subject: RE: [PATCH v10 03/38] x86/msr: Add the WRMSRNS instruction support
-Thread-Topic: [PATCH v10 03/38] x86/msr: Add the WRMSRNS instruction support
-Thread-Index: AQHZ5ssSXb894LHEBkqZUWtDh9samLAjYtKAgAADDuA=
-Date: Wed, 20 Sep 2023 08:18:44 +0000
-Message-ID: <SA1PR11MB6734F205C2171425415E4F00A8F9A@SA1PR11MB6734.namprd11.prod.outlook.com>
-References: <20230914044805.301390-1-xin3.li@intel.com>
- <20230914044805.301390-4-xin3.li@intel.com>
- <dda01248-f456-d8d7-5021-ef6b2e7ade2c@suse.com>
-In-Reply-To: <dda01248-f456-d8d7-5021-ef6b2e7ade2c@suse.com>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Wed, 20 Sep
+ 2023 09:44:38 +0000
+Received: from DBBPR04MB7788.eurprd04.prod.outlook.com
+ ([fe80::5b25:12c8:9f51:9b31]) by DBBPR04MB7788.eurprd04.prod.outlook.com
+ ([fe80::5b25:12c8:9f51:9b31%4]) with mapi id 15.20.6792.026; Wed, 20 Sep 2023
+ 09:44:38 +0000
+Message-ID: <b28b68ec-b86d-6641-e303-41747b9b5c10@suse.com>
+Date: Wed, 20 Sep 2023 12:44:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v10 06/38] Documentation/x86/64: Add a documentation for
+ FRED
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|PH0PR11MB5659:EE_
-x-ms-office365-filtering-correlation-id: c5cfb639-8560-47d4-801b-08dbb9b23499
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Kj++hWDUjB1kERo6XUk7wmzS/0+HA2vnsL9f0LradaEmCvTZkosNoNTBm55tU1kxGglrFClquIRjFCD185l6yBZc1cbhz6MCiHRMzTTH5iYNsk4NcvYlrkQOxbne8Q7lpopPc9yDroTCdV3pqO54ABa6MP6DCwEU7S467fGNdaPoTq6/Um9vVy4CXwvayVEtt/eS2i9v/YF7KljEYvfYWWEcqpqW0WtejZhk5nrMeu++rHyUCFWLytnMNJfGi/mbMe/FDe/CSGAKveUrO7t0MPqTbZwI4VoP1Hr7sk4j5b/0mP+ef/RbWh1B/i2DAF72PWrIMmM7xL8z42Nt2Q9UUPcmctZ+m3bN/XXA2UXDPpnt+gSbfF036m1RE8Wmy1sUKgH/AM19cANDg4yEwxxsEO3qDFFwDvAUrNRzkL11JZfQZe23yx52OvAAIVjGfDZYp0crD2gWKWi51iL2IbCMIzN6CeIiKUjQfpyzZqNKALnWIi/X/tQnNGHV1qH0IdO8Qs5xyKbFj1YD8ObZ1y5XmdLMHPEd2TDgJQnyuBXE8eINDugjMrO+Ga/p7dpIzO4a7kNhfZTbZatXPr8211+0cuK20LS501JHU5siobdAWAjhKvHDkf2M1lw6j0h5gfIu4oaE/TJbTK/5YJ+zDgU9mw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(39860400002)(136003)(376002)(451199024)(1800799009)(186009)(316002)(4326008)(5660300002)(6506007)(9686003)(7696005)(41300700001)(110136005)(2906002)(64756008)(8676002)(8936002)(54906003)(66446008)(66556008)(66476007)(66946007)(76116006)(4744005)(52536014)(7416002)(478600001)(33656002)(55016003)(86362001)(122000001)(71200400001)(26005)(38100700002)(38070700005)(82960400001)(133343001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NjhVVHB3aUpiU0huVk1oMXJwWll3dHFvenRDYmZqWW5waEpGeG5CUC94WGNF?=
- =?utf-8?B?aWdhOU8vUldrRzJibW0vZk9TWXVrNjkwZnVmbU50ZFVyQmNjbEZaWDVDMnlw?=
- =?utf-8?B?cktDeEIxaUcvVWVxZ3RWWjBBWGNLN05lSWhuOFJzaytYallrSDlDQWRaY1Zq?=
- =?utf-8?B?TjB1bHlQRXQ0VlpBcW9iVjloMzZna09RVmdWSUNQRnF1aXllWUlZMkk5SHlq?=
- =?utf-8?B?dHdHa0tTL1lhSCt5V0xmUENNb2xEbmMvUS9QU08yZTl1YUR2MTdHWGN0cllZ?=
- =?utf-8?B?YVdnUElmTVJSMmhBVHZncGU4T0hwSFo5ajlsT2tVU01ORExGaEdsYzdlNkh4?=
- =?utf-8?B?UUNleFRMQ1RSYkVndnhxa0lRK1FTU0s2Y1puMGw0bmFxdU8wZEQrY1dtSnBK?=
- =?utf-8?B?Y2dZU2Rhd1pNM25aSVBQUFlmSFBla0dqN2tYSlgvazlmN0dicHhYb0lhOTF5?=
- =?utf-8?B?VGorUjNjZldVY0M5aGJYYlpDVnRQKzBFQkcrN05nelhYd29JeFRQNng3NkMx?=
- =?utf-8?B?ckxIUjNORFNCZ1IvRDRoSzltcXhPL0hwaUg5T1Qvd0ZxNFdDbExyZGRybkVu?=
- =?utf-8?B?dnhFWGNrTnZXNzB5UnN2bDNnY05zeENBZFlvNHplcEdnUDlUZTFrckRBWlRh?=
- =?utf-8?B?Q2dhWG4xbFNwNGFGMWk1WENIV1RRWGJmNzBzYU5nVmpXWEFOaHNSMVROMXZn?=
- =?utf-8?B?a05DMGY5UkVTakxQNGxQdjcwaHVFYWprK3lmTHNtUHY0VHN4VUs1cnhIMW81?=
- =?utf-8?B?VnJpNDU1b3EwOWozK2tzMW9YLzMxT0s4V3JCMWN5OGxNTldIT3oyLzFxcERo?=
- =?utf-8?B?YjNPckpBZlFSb3hBL0hEM3dNSUNkSWRPN1ZkVEV5QTZJRHl0UnMrZGJqSTdj?=
- =?utf-8?B?NTRBRlgxbHpFNE4wdkJuUUt5dzBQNmk1MlFwL3o3QVBJUVhRcXFOZHB5ZnBx?=
- =?utf-8?B?MzZFNXBZbFN1M2NRZXl6ZWk1RHEzaXg5TGlKbnFiVHZJMzFXSk9uSlhDUkdS?=
- =?utf-8?B?ZEwvdHI5dEVYc2dNUG04bm1ubWh4dWZTRzBzSHVUNUFGaFFIMGhJWGsvQ3JN?=
- =?utf-8?B?NW8rNERsM01zOTJKdk1SdHB1U1Vka0pVTXZrTG1YQWVXTm9CK1dyQXRQQ2NC?=
- =?utf-8?B?NmhycUVxZTdQZXhjK0gxRVF2MTBZV0Q5K3EvUG1ISkxXWkZmSG5XZVV1amFE?=
- =?utf-8?B?NSt3UzNmdnhYbUZ3eVZmU3VSTnNmVVFVNlFoSHd2UHJaMGM4c000ZHUvWU1v?=
- =?utf-8?B?MkdkdTJQVHZIQzloaWNXbm9Dc1hOcXV6bGFmVVVUNjdqWEZsOWI4ajlSTWV3?=
- =?utf-8?B?aFpERkFKc3hvcEFqSWtuSTJkUmFibkpXK2tYSmdzWjVGYWdMTnZoZGU3YzNp?=
- =?utf-8?B?SDgxR3lMTzd5TGlzOVFmOFV6WVZSUFJUMHdZcm1rS0NaU3ZuSUh4SnJkQWc0?=
- =?utf-8?B?ZGtFdC9mRHJ6SzFtUWtoL2dNN3pETW5BbnhIUW5rMWozSGlTUVMyR0I0VHFQ?=
- =?utf-8?B?VUc4cE1zbWNld3ZhVFRZWGRyVWJPVVlpVXdoeXpIUmwvb2hGOWkySmtGZTJX?=
- =?utf-8?B?Z01GZ1BrOCtXZ2t2NWYyTDNaNGtxOTFrcVJxM0VyNCtKQU5OeWZ1T3RRRVdq?=
- =?utf-8?B?ZG1vb2d4ODlFd2NRcmtObDVQaWdTM1hXUU5EZVI3TUZCWVd1d3Y0bDUvcE1a?=
- =?utf-8?B?MHRkL1Y5YzI3aUZ2RUdmaThOdjNCUy9udWw4c0RBVUhMZWFvRGFNaEZybms2?=
- =?utf-8?B?R2ExQmgvMmo4Q3JMNENFNDdIZlNoeitBdFViUERuVHVmakZBQjJOQ1FHL3hu?=
- =?utf-8?B?a0xkaG0weVp3cms2Ulc1dzlrRlk4ZHNCVG9KZVJodlpheDIra1Rxa09ZY01z?=
- =?utf-8?B?enBrcHZpYm1aL2xjeEw4VVpmak9aTTkrZ1RrNk0rWjB0cG9SbGs3TnJROEo1?=
- =?utf-8?B?SkI1Q1RPUmJVcFl6T3prbGc0WXUyODNhMXBaVnBpeFgyVXVSaGxteTdxVGhw?=
- =?utf-8?B?VVVrWkxCOFl6ejVqRnY4U282RG04Z0Q0Y1VyT0o5ZlRQeWhBYWJLNDNqTVA4?=
- =?utf-8?B?NmFlakNLTU51Y1RzRjdicWVxRHN0WWxrTzBlWlU3d0RnRk5SK0ZCOVR6L3FS?=
- =?utf-8?Q?UWubnnhQrK7EkXs4bODhpyjbF?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+To: Xin Li <xin3.li@intel.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+ xen-devel@lists.xenproject.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, luto@kernel.org,
+ pbonzini@redhat.com, seanjc@google.com, peterz@infradead.org,
+ jgross@suse.com, ravi.v.shankar@intel.com, mhiramat@kernel.org,
+ andrew.cooper3@citrix.com, jiangshanlai@gmail.com
+References: <20230914044805.301390-1-xin3.li@intel.com>
+ <20230914044805.301390-7-xin3.li@intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+In-Reply-To: <20230914044805.301390-7-xin3.li@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: VE1PR03CA0032.eurprd03.prod.outlook.com
+ (2603:10a6:803:118::21) To DBBPR04MB7788.eurprd04.prod.outlook.com
+ (2603:10a6:10:1e4::15)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR04MB7788:EE_|AM9PR04MB8132:EE_
+X-MS-Office365-Filtering-Correlation-Id: 007d6d41-c1c3-459f-c13f-08dbb9be3484
+X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/820x9R7hkhc/SawfUZtrBxb7wgHZN0RAYHKWqZZpr3GDoEmZ+WpPPtv531UHqsK2eTX/AP2eiV3xBJbSbtj56cQgX74KxWZKUkJVIaW+4AeF+3JIR8pSdaEh+w9aS+wiAOsrdqwdUaSunkL89OYjt4orPFiVWbikQ9X7NP8oA3GO1H0w26RVjLI63d8fbgRVeghV1fiODxi161Wu8ErXgmhNDrn2BO5GbnYMzixtgzgUZ/9xCE08BI5Cdp0lbaUtoNz7YjLGX/0oceeFHNsW8pAVBCOmZWL4UlslB9mUW2qHKW7x7uylnwo08uyba+WsrjpZP5MqXeutioW3QWJuEO73gS3A+aN4CdMaQ+Ej7JNt3eHqmsBeVQYHkpR3e0eZx/O9ZtMdwpBYBMOOSQs4ijUOa8H3k44soZy3K1B0vLfJfmU/9mmPw2Th3lx0IDTNpGXilcr91VG9IVvOYbsrUzl+o/xTZ6i5a5nfKt5NimS+BZfuV/ckV8HWKGNtC1OLKgSvyfR/YS2ZBSlKEEs9aD6pHN8Cnn+wxBp1EpgHhhmGK2hNZp8u7+lOfleaM0zWH6pPnNBClUhbMTt6q8Q9TpmeyCqLYH5YfJfKc1YuQq6OrCieTmnwuusHLCJXhpIzIhqA1NQLDtea1luj6Rk0Q==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB7788.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(396003)(366004)(136003)(346002)(186009)(1800799009)(451199024)(8676002)(6486002)(83380400001)(6512007)(26005)(7416002)(316002)(41300700001)(2616005)(66556008)(66476007)(8936002)(5660300002)(66946007)(4326008)(6666004)(6506007)(2906002)(478600001)(31696002)(86362001)(38100700002)(36756003)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Qm9nSldNZzNqcVdJcWd1YURUcThiNXdxb0MwaFZ3a1FqUXgxOVV4OTdvUEtX?=
+ =?utf-8?B?S0ZxcW9TMEpTMlk1Tk04SlExT2Rqbm1pOWR3YUNabDVwRXJFWmhTUzlTNVF5?=
+ =?utf-8?B?Sm9kNUtWb2ZZMU9QanFHRk5WT1gxbzBKRTh0S3dMdkV6amNodmZ6OWR0cnJR?=
+ =?utf-8?B?WDFzMFZ0dEhwV1RTdzlqOUdwc1hsZUNQcU15a0RTL2dqbWE0S0VkV2NZT005?=
+ =?utf-8?B?QnpSZW83S2ZaTWdtUWc0MmNOWDJjeGJ1UWhFdktkYzZoMWFacTVyWlk3cEtu?=
+ =?utf-8?B?cUxQeUhkcjd0bURSVWgzMkMvaGZwL0FaQzFQdnY1cTd3ZHBkaW1Pd00wS3Vq?=
+ =?utf-8?B?ZkpQMlZ5VlIxYVVReWlad3padjQzOWFIbE03aVJRa042T3pxVmtWNzQ3WThI?=
+ =?utf-8?B?VjFHTHBmV0h3aGQ3dzJPZEN0ZWpkZ2pCaW9kRUVKZm92RHduUHY5NFRmMXFR?=
+ =?utf-8?B?aFhRZ1h1MmV3UXJZU0VPcEUvYVZvZWFSaEJFRGxXbzcwMkQrcVNXYUdsWHAz?=
+ =?utf-8?B?YnBqSXprazB6YnYvL3FIRXI0RnUyVUJoS2x0NXR5ZkcwU3Vud1VjRXlMaUly?=
+ =?utf-8?B?YTFleUZkdnhOQjJCTTAwMW1sS0tQWFNjdFV6clA1ZGxrM3REV1FwVE1xd1Jj?=
+ =?utf-8?B?VVBQRkNNWTloRmFyZFBCYmxhbUJkd2RZZ2xBSTlQSWpoL29CNHZxQUFFTU44?=
+ =?utf-8?B?OXNWeStmL0I4Ui9ZaStNbzQxTkVsMHB6YWVJeERQMHJOSkplam50UW5VN1BW?=
+ =?utf-8?B?WlZhTkVxcGZNYzRLY2tORURKYkdyZFJJbDdHTEtTaldSazRRcTdWcUZNRkEv?=
+ =?utf-8?B?TE9ucHlzTy9ma2dDVjEvRUNoam1VTnRqTDZ3ZnE0NTkrVGlCeDVXZHFYWVd6?=
+ =?utf-8?B?aXF6WTBOQ3huYzdKeng1MEZ5ZFF0azZ5VkxEdis4TTZxREVROFBSK3Q1R3k0?=
+ =?utf-8?B?L2RYOUlDTXVsTmNmOTU2TVZaUXpKNlhzd2NpU0dTMzZPZEEzN0RmL1RjcFVB?=
+ =?utf-8?B?OVVBK0xGRVpuMEJSVHVoNjNNbEZTTlN2TmFIcEczZ2QwZWYrcUpmN3pEZEhK?=
+ =?utf-8?B?SDNZcjFJSGZ4VGptSmhjM3ZsSDhsamw0L1B4bXJBS0RvYytqd2xuL3BkK1RJ?=
+ =?utf-8?B?ZE5kRDBvaFdoanhKeStnckhVVmdlekxxSmI3bm5KUk40Z3ZrRHdQTWtlYmpK?=
+ =?utf-8?B?MjhnYTUvNXVScXdSV0pxWm9NeWVuSVJCSEZLRGQwNUZ3UlJBb0tPaFVIbGxN?=
+ =?utf-8?B?aERMK0JHMkk2RHd5WUhtSU1NT24vbTM2aTBNcUcwRDBzd1NVMXJQR1hRSGI4?=
+ =?utf-8?B?VEVibkRMZzI0SjAxOVpCWXdlV0Y1VHlnUW9uKzJHQTA3SWJhcS9TdDRhS3FW?=
+ =?utf-8?B?c1lZSFZaVDRRU2lYajBHOFRWS3ppUGUrbklyU0MzbWpjQ0NiM2tEOHVkVnpu?=
+ =?utf-8?B?NVJOVmlyT0RINk1LTzFWUXB4ZE14MmNIQmEyL0JlRjJCVWZvMjRwUzVDZnNT?=
+ =?utf-8?B?NG4rYWtCSHpENy9mYXdqTVVLaVpGZklMaWhodzlQdlIrSVlJTllQZVlsbjlk?=
+ =?utf-8?B?QllLc3Z5SlVvRldpc3UyRlpjV0FIbU8xZm9mRnUzMUg3SjdHalhpYlZzVGJy?=
+ =?utf-8?B?Z0Uya0NZSnp1TVBMWkQrOUxFRDJIL01hVlBhWlB0d05DamdBWFJLb3Nsdm5I?=
+ =?utf-8?B?ZnB1VU5UUTFEb3h6bmdwSTJtSHhZdFVkMmpLU3RjVEVFQytma3A2V25DWTNl?=
+ =?utf-8?B?Rmp0ZDBnMzVCS1NmeEF0RVE4QS9jR0hoVWdPRXJ5T0N4VC9nRlp5L1B4VWVM?=
+ =?utf-8?B?OGwyalBTOVNCemxVOWpCS3h2QlNPOFFpZ3FvWXQzbnN0TDF4U3J0U2xraTli?=
+ =?utf-8?B?VE9ObFhJc3BPcTZFdGtFNnlqOHhFZXQ2OTc3Nm1WWGoxTnVzWDV6c2dtcDhZ?=
+ =?utf-8?B?a3NSd0xxTFEwTzg4K1dVWklJZ1pCR2Y1dlplbEFreDZEbzJpYXJiQ1RCWFVX?=
+ =?utf-8?B?VGNHZU1nUGJQUVhkcFZkaWVxWEdnT2dPK3NSOUYvaTByOUdTeENsV3BzdnJq?=
+ =?utf-8?B?MVA2UEhnTndVQ1dkY0NuNklGeG96d3k3QW8rL1JkbzBaT2dmVDFPSXM1ZThQ?=
+ =?utf-8?Q?9bQg/GoKF8dfNw8GdV5kbP/Sm?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 007d6d41-c1c3-459f-c13f-08dbb9be3484
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB7788.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5cfb639-8560-47d4-801b-08dbb9b23499
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2023 08:18:44.0368
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2023 09:44:38.2383
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wWT6le60h0yJoVf/hI2kPwb+KN8e3Tczz+1WKb9BSIm/CXNBdBXjgCcrsV+R9F4aI+QS0GNR5pdDw7HTmC/vyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5659
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2XMekrE4+SoCTkFVNs/qagiRU44pYDYVD0SoV2WR4VN+qkAjWlrAIfM73A6wOPqieUCnZEX4x8Y7lY6xQbbLQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8132
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-PiA+ICtzdGF0aWMgX19hbHdheXNfaW5saW5lIHZvaWQgX193cm1zcm5zKHUzMiBtc3IsIHUzMiBs
-b3csIHUzMiBoaWdoKQ0KPiANCj4gU2hvdWxkbid0IHRoaXMgYmUgbmFtZWQgd3Jtc3Juc19zYWZl
-IHNpbmNlIGl0IGhhcyBleGNlcHRpb24gaGFuZGxpbmcsIHNpbWlsYXIgdG8NCj4gdGhlIGN1cnJl
-bnQgd3Jtc3JsX3NhZmUuDQo+IA0KDQpCb3RoIHNhZmUgYW5kIHVuc2FmZSB2ZXJzaW9ucyBoYXZl
-IGV4Y2VwdGlvbiBoYW5kbGluZywgd2hpbGUgdGhlIHNhZmUNCnZlcnNpb24gcmV0dXJucyBhbiBp
-bnRlZ2VyIHRvIGl0cyBjYWxsZXIgdG8gaW5kaWNhdGUgYW4gZXhjZXB0aW9uIGRpZA0KaGFwcGVu
-IG9yIG5vdC4NCg0KRXhjZXB0aW9uIGhhbmRsaW5nIGlzIGEgbXVzdCBmb3IgV1JNU1IvUkRNU1Ig
-YW5kIHJlbGF0ZWQgaW5zdHJ1Y3Rpb25zLg0KDQpUaGFua3MhDQogICAgWGluDQo=
+
+
+On 14.09.23 г. 7:47 ч., Xin Li wrote:
+> Briefly introduce FRED, and its advantages compared to IDT.
+> 
+> Signed-off-by: Xin Li <xin3.li@intel.com>
+> ---
+>   Documentation/arch/x86/x86_64/fred.rst  | 98 +++++++++++++++++++++++++
+>   Documentation/arch/x86/x86_64/index.rst |  1 +
+>   2 files changed, 99 insertions(+)
+>   create mode 100644 Documentation/arch/x86/x86_64/fred.rst
+> 
+> diff --git a/Documentation/arch/x86/x86_64/fred.rst b/Documentation/arch/x86/x86_64/fred.rst
+> new file mode 100644
+> index 000000000000..a4ebb95f92c8
+> --- /dev/null
+> +++ b/Documentation/arch/x86/x86_64/fred.rst
+> @@ -0,0 +1,98 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=========================================
+> +Flexible Return and Event Delivery (FRED)
+> +=========================================
+> +
+> +Overview
+> +========
+> +
+> +The FRED architecture defines simple new transitions that change
+> +privilege level (ring transitions). The FRED architecture was
+> +designed with the following goals:
+> +
+> +1) Improve overall performance and response time by replacing event
+> +   delivery through the interrupt descriptor table (IDT event
+> +   delivery) and event return by the IRET instruction with lower
+> +   latency transitions.
+> +
+> +2) Improve software robustness by ensuring that event delivery
+> +   establishes the full supervisor context and that event return
+> +   establishes the full user context.
+> +
+> +The new transitions defined by the FRED architecture are FRED event
+> +delivery and, for returning from events, two FRED return instructions.
+> +FRED event delivery can effect a transition from ring 3 to ring 0, but
+> +it is used also to deliver events incident to ring 0. One FRED
+> +instruction (ERETU) effects a return from ring 0 to ring 3, while the
+> +other (ERETS) returns while remaining in ring 0. Collectively, FRED
+> +event delivery and the FRED return instructions are FRED transitions.
+> +
+> +In addition to these transitions, the FRED architecture defines a new
+> +instruction (LKGS) for managing the state of the GS segment register.
+> +The LKGS instruction can be used by 64-bit operating systems that do
+> +not use the new FRED transitions.
+> +
+> +Furthermore, the FRED architecture is easy to extend for future CPU
+> +architectures.
+> +
+> +Software based event dispatching
+> +================================
+> +
+> +FRED operates differently from IDT in terms of event handling. Instead
+> +of directly dispatching an event to its handler based on the event
+> +vector, FRED requires the software to dispatch an event to its handler
+> +based on both the event's type and vector. Therefore, an event dispatch
+> +framework must be implemented to facilitate the event-to-handler
+> +dispatch process. The FRED event dispatch framework takes control
+> +once an event is delivered, and employs a two-level dispatch.
+> +
+> +The first level dispatching is event type based, and the second level
+> +dispatching is event vector based.
+> +
+> +Full supervisor/user context
+> +============================
+> +
+> +FRED event delivery atomically save and restore full supervisor/user
+> +context upon event delivery and return. Thus it avoids the problem of
+> +transient states due to %cr2 and/or %dr6, and it is no longer needed
+> +to handle all the ugly corner cases caused by half baked entry states.
+> +
+> +FRED allows explicit unblock of NMI with new event return instructions
+> +ERETS/ERETU, avoiding the mess caused by IRET which unconditionally
+> +unblocks NMI, e.g., when an exception happens during NMI handling.
+> +
+> +FRED always restores the full value of %rsp, thus ESPFIX is no longer
+> +needed when FRED is enabled.
+> +
+> +LKGS
+> +====
+> +
+> +LKGS behaves like the MOV to GS instruction except that it loads the
+> +base address into the IA32_KERNEL_GS_BASE MSR instead of the GS
+> +segment’s descriptor cache. With LKGS, it ends up with avoiding
+> +mucking with kernel GS, i.e., an operating system can always operate
+> +with its own GS base address.
+> +
+> +Because FRED event delivery from ring 3 swaps the value of the GS base
+> +address and that of the IA32_KERNEL_GS_BASE MSR, and ERETU swaps the
+> +value of the GS base address and that of the IA32_KERNEL_GS_BASE MSR,
+> +plus the introduction of LKGS instruction, the SWAPGS instruction is
+> +no longer needed when FRED is enabled, thus is disallowed (#UD).
+
+nit: This will be more clear if rewritten: "Because FRED event delivery 
+from ring 3 and ERETU both swap the value of the GS base, plus the..." .
+
+The idea is to remove the duplicate statement that IA32_KERNEL_GS_BASE 
+and the GS registers are swapped as it makes the sentence somewhat hard 
+to read.
+
+
+<snip>
 
