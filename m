@@ -1,502 +1,141 @@
-Return-Path: <linux-hyperv+bounces-151-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-152-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B9327AA77A
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 06:03:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40E547AA80A
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 06:58:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id E310A2818D3
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 04:03:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id 28AEC1C2091D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 04:58:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DEA6EDC;
-	Fri, 22 Sep 2023 04:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22A1E659;
+	Fri, 22 Sep 2023 04:58:48 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFA6EB8
-	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 04:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8E6639
+	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 04:58:46 +0000 (UTC)
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id B9946100;
-	Thu, 21 Sep 2023 21:03:07 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 48D9A212C5B7; Thu, 21 Sep 2023 21:03:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 48D9A212C5B7
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6629B192;
+	Thu, 21 Sep 2023 21:58:45 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A1BED212C5B7;
+	Thu, 21 Sep 2023 21:58:44 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A1BED212C5B7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1695355387;
-	bh=meiW4RiCklaZ8RL+hZk5/S3ItX0+YFzFKci2nKSC9yI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iPTrQTP7xx8TKjqwFnwDkAeiPI7iOOH72nDTH/GTu9YoSGdxGfU1FFsscaHS6OGSM
-	 KBao9GFBpnZc06GlW0rKbkofBQ7OVTQpDE6v2djDRvSXij6NB7fPS48glsHVhKf6NS
-	 g2MuK7hrA7yPUCoOYblIfOKAc8AHRvDWuv6wBm7k=
-Date: Thu, 21 Sep 2023 21:03:07 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Stephen Hemminger <sthemmin@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	Olaf Hering <olaf@aepfle.de>, Ani Sinha <anisinha@redhat.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v6] hv/hv_kvp_daemon:Support for keyfile based connection
- profile
-Message-ID: <20230922040307.GA19208@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1695274074-28028-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=default; t=1695358724;
+	bh=+yXMZYNsMsvn2jwwDbQl1ZwR5DmyfHWdhUieAsjjntE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZV8FpA5rQIGeeqhPqT4DBWcgP+m3qnVc4ZFfXauyHrMtr98EOzQ1wYPpgAl/NxFTM
+	 cM2GWtz3RpyVULVnoqz0MAQ0g/yv/US4sVIPpE0Zc4+te1K+nhtiCi+dzHqQt/xz8d
+	 +QyjT7tMhmkicZfXAlaVkFiDXVJBwFShF4dWdjOM=
+From: Saurabh Sengar <ssengar@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mikelley@microsoft.com
+Cc: minipli@grsecurity.net,
+	ssengar@microsoft.com
+Subject: [PATCH v2] x86/hyperv: Remove hv_vtl_early_init initcall
+Date: Thu, 21 Sep 2023 21:58:40 -0700
+Message-Id: <1695358720-27681-1-git-send-email-ssengar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+	autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1695274074-28028-1-git-send-email-shradhagupta@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Wed, Sep 20, 2023 at 10:27:54PM -0700, Shradha Gupta wrote:
-> Ifcfg config file support in NetworkManger is deprecated. This patch
-> provides support for the new keyfile config format for connection
-> profiles in NetworkManager. The patch modifies the hv_kvp_daemon code
-> to generate the new network configuration in keyfile
-> format(.ini-style format) along with a ifcfg format configuration.
-> The ifcfg format configuration is also retained to support easy
-> backward compatibility for distro vendors. These configurations are
-> stored in temp files which are further translated using the
-> hv_set_ifconfig.sh script. This script is implemented by individual
-> distros based on the network management commands supported.
-> For example, RHEL's implementation could be found here:
-> https://gitlab.com/redhat/centos-stream/src/hyperv-daemons/-/blob/c9s/hv_set_ifconfig.sh
-> Debian's implementation could be found here:
-> https://github.com/endlessm/linux/blob/master/debian/cloud-tools/hv_set_ifconfig
-> 
-> The next part of this support is to let the Distro vendors consume
-> these modified implementations to the new configuration format.
-> 
-> Tested-on: Rhel9(Hyper-V, Azure)(nm and ifcfg files verified)
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
->  Changes v5->v6
->  * corrected unnecessary varibale initialization
->  * corrected missing free and fopen in error scenarios
->  * fixed reference to incorrect file name
-> ---
->  tools/hv/hv_kvp_daemon.c    | 219 +++++++++++++++++++++++++++++++-----
->  tools/hv/hv_set_ifconfig.sh |  39 ++++++-
->  2 files changed, 226 insertions(+), 32 deletions(-)
-> 
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 27f5e7dfc2f7..665d1695c7bf 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -1171,13 +1171,80 @@ static int process_ip_string(FILE *f, char *ip_string, int type)
->  	return 0;
->  }
->  
-> +/*
-> + * Only IPv4 subnet strings needs to be converted to plen
-> + * For IPv6 the subnet is already privided in plen format
-> + */
-> +static int kvp_subnet_to_plen(char *subnet_addr_str)
-> +{
-> +	int plen = 0;
-> +	struct in_addr subnet_addr4;
-> +
-> +	/*
-> +	 * Convert subnet address to binary representation
-> +	 */
-> +	if (inet_pton(AF_INET, subnet_addr_str, &subnet_addr4) == 1) {
-> +		uint32_t subnet_mask = ntohl(subnet_addr4.s_addr);
-> +
-> +		while (subnet_mask & 0x80000000) {
-> +			plen++;
-> +			subnet_mask <<= 1;
-> +		}
-> +	} else {
-> +		return -1;
-> +	}
-> +
-> +	return plen;
-> +}
-> +
-> +static int process_ip_string_nm(FILE *f, char *ip_string, char *subnet,
-> +				int is_ipv6)
-> +{
-> +	char addr[INET6_ADDRSTRLEN];
-> +	char subnet_addr[INET6_ADDRSTRLEN];
-> +	int error, i = 0;
-> +	int ip_offset = 0, subnet_offset = 0;
-> +	int plen;
-> +
-> +	memset(addr, 0, sizeof(addr));
-> +	memset(subnet_addr, 0, sizeof(subnet_addr));
-> +
-> +	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> +				   (MAX_IP_ADDR_SIZE * 2)) &&
-> +				   parse_ip_val_buffer(subnet,
-> +						       &subnet_offset,
-> +						       subnet_addr,
-> +						       (MAX_IP_ADDR_SIZE *
-> +							2))) {
-> +		if (!is_ipv6)
-> +			plen = kvp_subnet_to_plen((char *)subnet_addr);
-> +		else
-> +			plen = atoi(subnet_addr);
-> +
-> +		if (plen < 0)
-> +			return plen;
-> +
-> +		error = fprintf(f, "address%d=%s/%d\n", ++i, (char *)addr,
-> +				plen);
-> +		if (error < 0)
-> +			return error;
-> +
-> +		memset(addr, 0, sizeof(addr));
-> +		memset(subnet_addr, 0, sizeof(subnet_addr));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  {
->  	int error = 0;
->  	char if_file[PATH_MAX];
-> -	FILE *file;
-> +	char nm_file[PATH_MAX];
-> +	FILE *ifcfg_file, *nmfile;
->  	char cmd[PATH_MAX];
->  	char *mac_addr;
-> +	int is_ipv6;
->  	int str_len;
->  
->  	/*
-> @@ -1197,7 +1264,7 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  	 * in a given distro to configure the interface and so are free
->  	 * ignore information that may not be relevant.
->  	 *
-> -	 * Here is the format of the ip configuration file:
-> +	 * Here is the ifcfg format of the ip configuration file:
->  	 *
->  	 * HWADDR=macaddr
->  	 * DEVICE=interface name
-> @@ -1220,6 +1287,32 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  	 * tagged as IPV6_DEFAULTGW and IPV6 NETMASK will be tagged as
->  	 * IPV6NETMASK.
->  	 *
-> +	 * Here is the keyfile format of the ip configuration file:
-> +	 *
-> +	 * [ethernet]
-> +	 * mac-address=macaddr
-> +	 * [connection]
-> +	 * interface-name=interface name
-> +	 *
-> +	 * [ipv4]
-> +	 * method=<protocol> (where <protocol> is "auto" if DHCP is configured
-> +	 *                       or "manual" if no boot-time protocol should be used)
-> +	 *
-> +	 * address1=ipaddr1/plen
-> +	 * address2=ipaddr2/plen
-> +	 *
-> +	 * gateway=gateway1;gateway2
-> +	 *
-> +	 * dns=dns1;dns2
-> +	 *
-> +	 * [ipv6]
-> +	 * address1=ipaddr1/plen
-> +	 * address2=ipaddr2/plen
-> +	 *
-> +	 * gateway=gateway1;gateway2
-> +	 *
-> +	 * dns=dns1;dns2
-> +	 *
->  	 * The host can specify multiple ipv4 and ipv6 addresses to be
->  	 * configured for the interface. Furthermore, the configuration
->  	 * needs to be persistent. A subsequent GET call on the interface
-> @@ -1227,14 +1320,29 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  	 * call.
->  	 */
->  
-> +	/*
-> +	 * We are populating both ifcfg and nmconnection files
-> +	 */
->  	snprintf(if_file, sizeof(if_file), "%s%s%s", KVP_CONFIG_LOC,
-> -		"/ifcfg-", if_name);
-> +		 "/ifcfg-", if_name);
->  
-> -	file = fopen(if_file, "w");
-> +	ifcfg_file = fopen(if_file, "w");
->  
-> -	if (file == NULL) {
-> +	if (!ifcfg_file) {
->  		syslog(LOG_ERR, "Failed to open config file; error: %d %s",
-> -				errno, strerror(errno));
-> +		       errno, strerror(errno));
-> +		return HV_E_FAIL;
-> +	}
-> +
-> +	snprintf(nm_file, sizeof(nm_file), "%s%s%s%s", KVP_CONFIG_LOC,
-> +		 "/", if_name, ".nmconnection");
-> +
-> +	nmfile = fopen(nm_file, "w");
-> +
-> +	if (!nmfile) {
-> +		syslog(LOG_ERR, "Failed to open config file; error: %d %s",
-> +		       errno, strerror(errno));
-> +		fclose(ifcfg_file);
->  		return HV_E_FAIL;
->  	}
->  
-> @@ -1248,12 +1356,30 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  		goto setval_error;
->  	}
->  
-> -	error = kvp_write_file(file, "HWADDR", "", mac_addr);
-> -	free(mac_addr);
-> +	error = kvp_write_file(ifcfg_file, "HWADDR", "", mac_addr);
-> +	if (error < 0) {
-> +		free(mac_addr);
+There has been cases reported where HYPERV_VTL_MODE is enabled by mistake,
+on a non Hyper-V platforms. This causes the hv_vtl_early_init function to
+be called in an non Hyper-V/VTL platforms which results the memory
+corruption.
 
-There are multiple error cases down from this point, which needs to free
-mac_addr as well. I suggest to move free(mac_addr) under setval_error
-label to address all. This will also mean to move the other "free(mac_addr)"
-further down to avoid getting called twice.
+Remove the early_initcall for hv_vtl_early_init and call it at the end of
+hyperv_init to make sure it is never called in a non Hyper-V platform by
+mistake.
 
-We can also create a new label for it if you prefer.
+Reported-by: Mathias Krause <minipli@grsecurity.net>
+Closes: https://lore.kernel.org/lkml/40467722-f4ab-19a5-4989-308225b1f9f0@grsecurity.net/
+Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+Acked-by: Mathias Krause <minipli@grsecurity.net>
+---
+This patch is dependent on :
+https://lore.kernel.org/lkml/1695182675-13405-1-git-send-email-ssengar@linux.microsoft.com/
+[V2]
+- Fix HYPERV_VTL_MODE=n compilation flow
+- Updated commit s/vhv_vtl_early_init/hv_vtl_early_init
 
-- Saurabh
 
-> +		goto setval_error;
-> +	}
-> +
-> +	error = kvp_write_file(ifcfg_file, "DEVICE", "", if_name);
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	error = fprintf(nmfile, "\n[connection]\n");
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	error = kvp_write_file(nmfile, "interface-name", "", if_name);
->  	if (error)
->  		goto setval_error;
->  
-> -	error = kvp_write_file(file, "DEVICE", "", if_name);
-> +	error = fprintf(nmfile, "\n[ethernet]\n");
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	error = kvp_write_file(nmfile, "mac-address", "", mac_addr);
-> +	free(mac_addr);
->  	if (error)
->  		goto setval_error;
->  
-> @@ -1263,47 +1389,87 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  	 * proceed to parse and pass the IPv6 information to the
->  	 * disto-specific script hv_set_ifconfig.
->  	 */
-> +
-> +	/*
-> +	 * First populate the ifcfg file format
-> +	 */
->  	if (new_val->dhcp_enabled) {
-> -		error = kvp_write_file(file, "BOOTPROTO", "", "dhcp");
-> +		error = kvp_write_file(ifcfg_file, "BOOTPROTO", "", "dhcp");
->  		if (error)
->  			goto setval_error;
-> -
->  	} else {
-> -		error = kvp_write_file(file, "BOOTPROTO", "", "none");
-> +		error = kvp_write_file(ifcfg_file, "BOOTPROTO", "", "none");
->  		if (error)
->  			goto setval_error;
->  	}
->  
-> -	/*
-> -	 * Write the configuration for ipaddress, netmask, gateway and
-> -	 * name servers.
-> -	 */
-> -
-> -	error = process_ip_string(file, (char *)new_val->ip_addr, IPADDR);
-> +	error = process_ip_string(ifcfg_file, (char *)new_val->ip_addr,
-> +				  IPADDR);
->  	if (error)
->  		goto setval_error;
->  
-> -	error = process_ip_string(file, (char *)new_val->sub_net, NETMASK);
-> +	error = process_ip_string(ifcfg_file, (char *)new_val->sub_net,
-> +				  NETMASK);
->  	if (error)
->  		goto setval_error;
->  
-> -	error = process_ip_string(file, (char *)new_val->gate_way, GATEWAY);
-> +	error = process_ip_string(ifcfg_file, (char *)new_val->gate_way,
-> +				  GATEWAY);
->  	if (error)
->  		goto setval_error;
->  
-> -	error = process_ip_string(file, (char *)new_val->dns_addr, DNS);
-> +	error = process_ip_string(ifcfg_file, (char *)new_val->dns_addr, DNS);
->  	if (error)
->  		goto setval_error;
->  
-> -	fclose(file);
-> +	if (new_val->addr_family == ADDR_FAMILY_IPV6) {
-> +		error = fprintf(nmfile, "\n[ipv6]\n");
-> +		is_ipv6 = 1;
-> +		if (error < 0)
-> +			goto setval_error;
-> +	} else {
-> +		error = fprintf(nmfile, "\n[ipv4]\n");
-> +		if (error < 0)
-> +			goto setval_error;
-> +	}
-> +
-> +	if (new_val->dhcp_enabled) {
-> +		error = kvp_write_file(nmfile, "method", "", "auto");
-> +		if (error < 0)
-> +			goto setval_error;
-> +	} else {
-> +		error = kvp_write_file(nmfile, "method", "", "manual");
-> +		if (error < 0)
-> +			goto setval_error;
-> +	}
-> +
-> +	/*
-> +	 * Write the configuration for ipaddress, netmask, gateway and
-> +	 * name services
-> +	 */
-> +	error = process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> +				     (char *)new_val->sub_net, is_ipv6);
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	error = fprintf(nmfile, "gateway=%s\n", (char *)new_val->gate_way);
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	error = fprintf(nmfile, "dns=%s\n", (char *)new_val->dns_addr);
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	fclose(nmfile);
-> +	fclose(ifcfg_file);
->  
->  	/*
->  	 * Now that we have populated the configuration file,
->  	 * invoke the external script to do its magic.
->  	 */
->  
-> -	str_len = snprintf(cmd, sizeof(cmd), KVP_SCRIPTS_PATH "%s %s",
-> -			   "hv_set_ifconfig", if_file);
-> +	str_len = snprintf(cmd, sizeof(cmd), KVP_SCRIPTS_PATH "%s %s %s",
-> +			   "hv_set_ifconfig", if_file, nm_file);
->  	/*
->  	 * This is a little overcautious, but it's necessary to suppress some
->  	 * false warnings from gcc 8.0.1.
-> @@ -1316,14 +1482,15 @@ static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value *new_val)
->  
->  	if (system(cmd)) {
->  		syslog(LOG_ERR, "Failed to execute cmd '%s'; error: %d %s",
-> -				cmd, errno, strerror(errno));
-> +		       cmd, errno, strerror(errno));
->  		return HV_E_FAIL;
->  	}
->  	return 0;
->  
->  setval_error:
->  	syslog(LOG_ERR, "Failed to write config file");
-> -	fclose(file);
-> +	fclose(ifcfg_file);
-> +	fclose(nmfile);
->  	return error;
->  }
->  
-> diff --git a/tools/hv/hv_set_ifconfig.sh b/tools/hv/hv_set_ifconfig.sh
-> index d10fe35b7f25..ae5a7a8249a2 100755
-> --- a/tools/hv/hv_set_ifconfig.sh
-> +++ b/tools/hv/hv_set_ifconfig.sh
-> @@ -18,12 +18,12 @@
->  #
->  # This example script is based on a RHEL environment.
->  #
-> -# Here is the format of the ip configuration file:
-> +# Here is the ifcfg format of the ip configuration file:
->  #
->  # HWADDR=macaddr
->  # DEVICE=interface name
->  # BOOTPROTO=<protocol> (where <protocol> is "dhcp" if DHCP is configured
-> -#                       or "none" if no boot-time protocol should be used)
-> +# 			or "none" if no boot-time protocol should be used)
->  #
->  # IPADDR0=ipaddr1
->  # IPADDR1=ipaddr2
-> @@ -41,6 +41,32 @@
->  # tagged as IPV6_DEFAULTGW and IPV6 NETMASK will be tagged as
->  # IPV6NETMASK.
->  #
-> +# Here is the keyfile format of the ip configuration file:
-> +#
-> +# [ethernet]
-> +# mac-address=macaddr
-> +# [connection]
-> +# interface-name=interface name
-> +#
-> +# [ipv4]
-> +# method=<protocol> (where <protocol> is "auto" if DHCP is configured
-> +#                       or "manual" if no boot-time protocol should be used)
-> +#
-> +# address1=ipaddr1/plen
-> +# address=ipaddr2/plen
-> +#
-> +# gateway=gateway1;gateway2
-> +#
-> +# dns=dns1;
-> +#
-> +# [ipv6]
-> +# address1=ipaddr1/plen
-> +# address2=ipaddr1/plen
-> +#
-> +# gateway=gateway1;gateway2
-> +#
-> +# dns=dns1;dns2
-> +#
->  # The host can specify multiple ipv4 and ipv6 addresses to be
->  # configured for the interface. Furthermore, the configuration
->  # needs to be persistent. A subsequent GET call on the interface
-> @@ -48,18 +74,19 @@
->  # call.
->  #
->  
-> -
-> -
->  echo "IPV6INIT=yes" >> $1
->  echo "NM_CONTROLLED=no" >> $1
->  echo "PEERDNS=yes" >> $1
->  echo "ONBOOT=yes" >> $1
->  
-> -
->  cp $1 /etc/sysconfig/network-scripts/
->  
-> +chmod 600 $2
-> +interface=$(echo $2 | awk -F - '{ print $2 }')
-> +filename="${2##*/}"
-> +
-> +sed '/\[connection\]/a autoconnect=true' $2 > /etc/NetworkManager/system-connections/${filename}
->  
-> -interface=$(echo $1 | awk -F - '{ print $2 }')
->  
->  /sbin/ifdown $interface 2>/dev/null
->  /sbin/ifup $interface 2>/dev/null
-> -- 
-> 2.34.1
-> 
+ arch/x86/hyperv/hv_init.c       | 3 +++
+ arch/x86/hyperv/hv_vtl.c        | 3 +--
+ arch/x86/include/asm/mshyperv.h | 2 ++
+ 3 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index f0128fd4031d..608f4fe41fb7 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -610,6 +610,9 @@ void __init hyperv_init(void)
+ 	/* Find the VTL */
+ 	ms_hyperv.vtl = get_vtl();
+ 
++	if (ms_hyperv.vtl > 0) /* non default VTL */
++		hv_vtl_early_init();
++
+ 	return;
+ 
+ clean_guest_os_id:
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 36a562218010..999f5ac82fe9 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -215,7 +215,7 @@ static int hv_vtl_wakeup_secondary_cpu(int apicid, unsigned long start_eip)
+ 	return hv_vtl_bringup_vcpu(vp_id, start_eip);
+ }
+ 
+-static int __init hv_vtl_early_init(void)
++int __init hv_vtl_early_init(void)
+ {
+ 	/*
+ 	 * `boot_cpu_has` returns the runtime feature support,
+@@ -230,4 +230,3 @@ static int __init hv_vtl_early_init(void)
+ 
+ 	return 0;
+ }
+-early_initcall(hv_vtl_early_init);
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 033b53f993c6..896445edc6a8 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -340,8 +340,10 @@ static inline u64 hv_get_non_nested_register(unsigned int reg) { return 0; }
+ 
+ #ifdef CONFIG_HYPERV_VTL_MODE
+ void __init hv_vtl_init_platform(void);
++int __init hv_vtl_early_init(void);
+ #else
+ static inline void __init hv_vtl_init_platform(void) {}
++static inline int __init hv_vtl_early_init(void) { return 0; }
+ #endif
+ 
+ #include <asm-generic/mshyperv.h>
+-- 
+2.34.1
+
 
