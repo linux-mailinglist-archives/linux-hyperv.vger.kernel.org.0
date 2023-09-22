@@ -1,35 +1,35 @@
-Return-Path: <linux-hyperv+bounces-188-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-182-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FF8A7AB95C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 20:38:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 394877AB953
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 20:38:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by ny.mirrors.kernel.org (Postfix) with ESMTP id 65A8F1C208FB
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 18:38:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id D9AF028201D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 18:38:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C74FD45F6D;
-	Fri, 22 Sep 2023 18:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0783B45F68;
+	Fri, 22 Sep 2023 18:38:50 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A812441E23
-	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 18:38:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB9C436AD
+	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 18:38:46 +0000 (UTC)
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 139EBF7;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 14739FB;
 	Fri, 22 Sep 2023 11:38:44 -0700 (PDT)
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1416A212C7E1;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3002F212C7E3;
 	Fri, 22 Sep 2023 11:38:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1416A212C7E1
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3002F212C7E3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1695407922;
-	bh=HF/7TB3ETksYEB9KlMb0r3JzZFCijaEXdQeCMYRt1dI=;
+	bh=aL5El9c71MWrlr8MRz/X5/nVNwfU9u77bS051hju8/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G2w4L7Fnu1V9IWTR7zNpQuV5su75IStJ9JdTiCtM9OAdjaVz9FY8cIhX2DrcU9e+D
-	 Ao7dl2mV8OWOIuT7nqDDJ2AuwTM21VG5gRNoPhYp6Bm4RNn2wMkFLsc2obtnr8cnoB
-	 azGbCzcJznPnJSGooZlCT1zpcu2IpLH7r5H4/10Q=
+	b=lypAwHUSsfVsrLBQpkf3+tXoLg0OhMUfB07GSBYFpngHJ2dlfelrHFZLtdvqcPcfw
+	 gb2jGkWx7jj7j+KFok33DCkuHAGLGwcP0MZF1UkZ+GwDk1YNhPBq92jBizu2BHWhMX
+	 Q545R3c7wv5EA4M6D7VsqCjQtmPbT5E1s31Ycv6g=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -57,9 +57,9 @@ Cc: patches@lists.linux.dev,
 	hpa@zytor.com,
 	will@kernel.org,
 	catalin.marinas@arm.com
-Subject: [PATCH v3 11/15] Drivers: hv: export vmbus_isr, hv_context and hv_post_message
-Date: Fri, 22 Sep 2023 11:38:31 -0700
-Message-Id: <1695407915-12216-12-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v3 12/15] Documentation: Reserve ioctl number for mshv driver
+Date: Fri, 22 Sep 2023 11:38:32 -0700
+Message-Id: <1695407915-12216-13-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1695407915-12216-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1695407915-12216-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -75,69 +75,25 @@ List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 
-These will be used by the mshv_vtl driver.
-
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Acked-by: Jonathan Corbet <corbet@lwn.net>
 ---
- drivers/hv/hv.c           | 2 ++
- drivers/hv/hyperv_vmbus.h | 1 +
- drivers/hv/vmbus_drv.c    | 3 ++-
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ Documentation/userspace-api/ioctl/ioctl-number.rst | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index d7869205dcbe..c60a4fb55f3c 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -25,6 +25,7 @@
- 
- /* The one and only */
- struct hv_context hv_context;
-+EXPORT_SYMBOL_GPL(hv_context);
- 
- /*
-  * hv_init - Main initialization routine.
-@@ -93,6 +94,7 @@ int hv_post_message(union hv_connection_id connection_id,
- 
- 	return hv_result(status);
- }
-+EXPORT_SYMBOL_GPL(hv_post_message);
- 
- int hv_synic_alloc(void)
- {
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index f6b1e710f805..09792eb4ffed 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -32,6 +32,7 @@
-  */
- #define HV_UTIL_NEGO_TIMEOUT 55
- 
-+void vmbus_isr(void);
- 
- /* Definitions for the monitored notification facility */
- union hv_monitor_trigger_group {
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index edbb38f6956b..6d27597af8bf 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1286,7 +1286,7 @@ static void vmbus_chan_sched(struct hv_per_cpu_context *hv_cpu)
- 	}
- }
- 
--static void vmbus_isr(void)
-+void vmbus_isr(void)
- {
- 	struct hv_per_cpu_context *hv_cpu
- 		= this_cpu_ptr(hv_context.cpu_context);
-@@ -1309,6 +1309,7 @@ static void vmbus_isr(void)
- 
- 	add_interrupt_randomness(vmbus_interrupt);
- }
-+EXPORT_SYMBOL_GPL(vmbus_isr);
- 
- static irqreturn_t vmbus_percpu_isr(int irq, void *dev_id)
- {
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 4ea5b837399a..71e6d23070ca 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -355,6 +355,8 @@ Code  Seq#    Include File                                           Comments
+ 0xB6  all    linux/fpga-dfl.h
+ 0xB7  all    uapi/linux/remoteproc_cdev.h                            <mailto:linux-remoteproc@vger.kernel.org>
+ 0xB7  all    uapi/linux/nsfs.h                                       <mailto:Andrei Vagin <avagin@openvz.org>>
++0xB8  all    uapi/linux/mshv.h                                       Microsoft Hypervisor VM management APIs
++                                                                     <mailto:linux-hyperv@vger.kernel.org>
+ 0xC0  00-0F  linux/usb/iowarrior.h
+ 0xCA  00-0F  uapi/misc/cxl.h
+ 0xCA  10-2F  uapi/misc/ocxl.h
 -- 
 2.25.1
 
