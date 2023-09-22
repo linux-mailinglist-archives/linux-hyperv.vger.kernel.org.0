@@ -1,165 +1,259 @@
-Return-Path: <linux-hyperv+bounces-174-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-175-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE53F7AB91C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 20:23:39 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 232C27AB944
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 20:38:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by am.mirrors.kernel.org (Postfix) with ESMTP id 5B9D71F2352C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 18:23:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id 255CC1C2091D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 18:38:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B36E42C11;
-	Fri, 22 Sep 2023 18:23:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CB2743693;
+	Fri, 22 Sep 2023 18:38:45 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314E645F55
-	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 18:23:33 +0000 (UTC)
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630C1FB
-	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 11:23:31 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c572c9c852so21745165ad.2
-        for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 11:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695407011; x=1696011811; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yr61q+Y7qYRmoBTJuHgU+TYxnPKaIi9OdQT3qJe9OKQ=;
-        b=iCmOCMPCCL9WxWQPipTKjiZkcJbnyvLx9UAPFJ3jfhYVo/UdCh0+xaVLO4N9WYho8k
-         kwoYiIC6rCezw41K9BZ5BxuzU58U2S9lh0QTPIiFfbUnsxxQWWZ7K35huxRzNJ/XR+1R
-         tR5rhVSDtJqtpZRXG+d9pwjq4V4cuAJtk6ZWk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695407011; x=1696011811;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yr61q+Y7qYRmoBTJuHgU+TYxnPKaIi9OdQT3qJe9OKQ=;
-        b=UofZoc7wvhqJ/GVFHFxjmS+MlDhvh7vXq917zTwQ92i20igitKbeY8MNbHF78rBz8v
-         53o1SUVo62U3Mq1B+AKSU8OiWClCpuMtAhPRwxsP+XagSEQ4eX03593K/3sSD7Jg63HY
-         aaolX07gShfCPXfvI69Q+DvuLcXN+XN36wqPBVrT687vvGUYvIHkp7ocsYdx+EnrVAJS
-         yvF1ViwxZJWdil5xueZltuOvBO/XegysbwMsAgxrwkXLGq9tEvvk1eLcohtbxIkQ8RZB
-         leQ1w40zVvMO0IyY3Epiv/ENkxpr4eaeQvtshfu+2/FY+K5eYKlvfQgZvBMX54xjIZ6f
-         rakw==
-X-Gm-Message-State: AOJu0YxDccb3izxBj7RUnQADw1lJEjZpeORoV30fnwqCyqYE0Zdc+jrJ
-	F4fz5i+nvRzMf/cYWqVnsqmlPg==
-X-Google-Smtp-Source: AGHT+IEPfMe5MVG2BsIHv/EtqHgJb805J/3mFScd6v8b4SEGGTa1wBOOaNI8zST/3Yhw8KfpVcqPdA==
-X-Received: by 2002:a17:902:b7c9:b0:1c5:cbfb:c16f with SMTP id v9-20020a170902b7c900b001c5cbfbc16fmr265044plz.25.1695407010837;
-        Fri, 22 Sep 2023 11:23:30 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f8-20020a17090274c800b001bdc9daadc9sm3775058plt.89.2023.09.22.11.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 11:23:30 -0700 (PDT)
-Date: Fri, 22 Sep 2023 11:23:29 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, David Ahern <dsahern@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Alex Elder <elder@kernel.org>, Pravin B Shelar <pshelar@ovn.org>,
-	Shaokun Zhang <zhangshaokun@hisilicon.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, dev@openvswitch.org,
-	linux-parisc@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 14/14] net: sched: Annotate struct tc_pedit with
- __counted_by
-Message-ID: <202309221122.74FA902A@keescook>
-References: <20230922172449.work.906-kees@kernel.org>
- <20230922172858.3822653-14-keescook@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07A841776
+	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 18:38:43 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 85BF9AB;
+	Fri, 22 Sep 2023 11:38:41 -0700 (PDT)
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C95A3212C5CD;
+	Fri, 22 Sep 2023 11:38:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C95A3212C5CD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1695407920;
+	bh=RjSwxBRyWpJEBY1wCo9rYn7tpDxkXA16qcqUnB6DS6U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Rem98psiD47ctTHRdEliz2PAHvhy2Xq7qqCkWEAskTT3DoQh58gKEAmVWn8NsDW8a
+	 TR+3qw41aBo0Px150sF8BtWvvJpOHUtr/H1FBfSJxOPYxNNtTvWe2tmt411TJ9TUFH
+	 0hdTV8HFmc4hevu5bvGCbhDVyWs9Q5Nqutup4h9I=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org
+Cc: patches@lists.linux.dev,
+	mikelley@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	gregkh@linuxfoundation.org,
+	haiyangz@microsoft.com,
+	decui@microsoft.com,
+	apais@linux.microsoft.com,
+	Tianyu.Lan@microsoft.com,
+	ssengar@linux.microsoft.com,
+	mukeshrathor@microsoft.com,
+	stanislav.kinsburskiy@gmail.com,
+	jinankjain@linux.microsoft.com,
+	vkuznets@redhat.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	will@kernel.org,
+	catalin.marinas@arm.com
+Subject: [PATCH v3 00/15] Introduce /dev/mshv drivers
+Date: Fri, 22 Sep 2023 11:38:20 -0700
+Message-Id: <1695407915-12216-1-git-send-email-nunodasneves@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-15.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED,URI_TRY_3LD,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922172858.3822653-14-keescook@chromium.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Fri, Sep 22, 2023 at 10:28:56AM -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct tc_pedit.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-> Cc: Cong Wang <xiyou.wangcong@gmail.com>
-> Cc: Jiri Pirko <jiri@resnulli.us>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  net/sched/act_pedit.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/sched/act_pedit.c b/net/sched/act_pedit.c
-> index 1ef8fcfa9997..77c407eff3b0 100644
-> --- a/net/sched/act_pedit.c
-> +++ b/net/sched/act_pedit.c
-> @@ -515,11 +515,11 @@ static int tcf_pedit_dump(struct sk_buff *skb, struct tc_action *a,
->  		spin_unlock_bh(&p->tcf_lock);
->  		return -ENOBUFS;
->  	}
-> +	opt->nkeys = parms->tcfp_nkeys;
->  
->  	memcpy(opt->keys, parms->tcfp_keys,
->  	       flex_array_size(opt, keys, parms->tcfp_nkeys));
->  	opt->index = p->tcf_index;
-> -	opt->nkeys = parms->tcfp_nkeys;
->  	opt->flags = parms->tcfp_flags;
->  	opt->action = p->tcf_action;
->  	opt->refcnt = refcount_read(&p->tcf_refcnt) - ref;
-> -- 
-> 2.34.1
-> 
+This series introduces support for creating and running guest machines
+while running on the Microsoft Hypervisor. [0]
+This is done via an IOCTL interface accessed through /dev/mshv, similar to
+/dev/kvm. Another series introducing this support was previously posted.
+[1]
 
-Coccinelle was not happy about the #define ...
+These interfaces support VMMs running in:
+1. The root patition - provided in the mshv_root module, and
+2. VTL 2 - provided in the mshv_vtl module [2]
 
-struct tc_pedit_sel {
-	tc_gen;
-	unsigned char           nkeys;
-	unsigned char           flags;
-	struct tc_pedit_key     keys[0];
-};
+Patches breakdown
+-----------------
+The first 7 patches are refactoring and adding some helper functions.
+They provide some benefit on their own and could be applied independently
+as cleanup patches.
 
-#define tc_pedit tc_pedit_sel
+Patches 8-12 just set things up for the driver code to come. These are very
+small. They come first so that the remaining patches are more self-contained.
 
-Also, it's not been converted to a proper flexible array...
+The final 3 patches are the meat of the series:
+- Patch 13 contains new header files used by the driver.
+  These are designed to mirror the ABI headers exported by Hyper-V. This is
+  done to avoid polluting hyperv-tlfs.h and help track changes to the ABIs
+  that are still unstable. (See FAQ below).
+- Patch 14 conditionally includes these new header files into mshyperv.h
+  and linux/hyperv.h, in order to be able to use these files in the new
+  drivers while remaining independent from hyperv-tlfs.h.
+- Patch 15 contains the new driver code located in drivers/hv. This is a
+  large amount of code and new files, but it is mostly self-contained and
+  all within drivers/hv - apart from the IOCTL interface itself in uapi.
+
+Patch 15 is rather big and has bounced back from some mailing lists. If you
+did not get a copy in your inbox, you can view it here instead:
+https://github.com/NunoDasNeves/linux/commit/2ae1cabd82257cb303296ab6af707d1bac867e42
+
+FAQ on include/uapi/hyperv/*.h
+------------------------------
+Q:
+Why not just add these definitions to hyperv-tlfs.h?
+A:
+The intention of hyperv-tlfs.h is to contain stable definitions documented
+in the public TLFS document. These new definitions don't fit that criteria,
+so they should be separate.
+
+Q:
+The new headers redefine many things that are already in hyperv-tlfs.h - why?
+A:
+Some definitions are extended compared to what is documented in the TLFS.
+In order to avoid adding undocumented or unstable definitions to hyperv-tlfs.h,
+the new headers must compile independently.
+Therefore, the new headers must redefine many things in hyperv-tlfs.h in order
+to compile.
+
+Q:
+Why are these files named hvgdk.h, hvgdk_mini.h, hvhdk.h and hvhdk_mini.h?
+A:
+The precise meaning of the names reflects conventions used internally at
+Microsoft.
+Naming them this way makes it easy to find where particular Hyper-V
+definitions come from, and check their correctness.
+It also facilitates the future work of automatically generating these files.
+
+Q:
+Why are they in uapi?
+A:
+In short, to keep things simple. There are many definitions needed in both
+the kernel and the VMM in userspace. Separating them doesn't serve much
+purpose, and makes it more laborious to import definitions from Hyper-V
+code.
+
+--------------------------
+[0] "Hyper-V" is more well-known, but it really refers to the whole stack
+    including the hypervisor and other components that run in Windows
+    kernel and userspace.
+[1] Previous /dev/mshv patch series and discussion:
+    https://lore.kernel.org/linux-hyperv/1632853875-20261-1-git-send-email-nunodasneves@linux.microsoft.com/
+[2] Virtual Secure Mode (VSM) and Virtual Trust Levels (VTL):
+    https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm
+--------------------------
+
+Changes since v2:
+    * Fix some commit message wrapping
+    * Fix many checkpatch.pl --strict style issues
+    * Replace uapi ints with __s32
+    * Replace uapi enums with __u32
+    * Replace uapi pointers with __u64
+    * Add explicit padding to uapi structures
+    * Initialize status in get/set registers hypercall helpers
+    * Add missing return on error in get_vp_signaled_count
+    * Remove select TRANSPARENT_HUGEPAGES for mshv_vtl
+    * Use __func__ prefix consistently in printks
+    * Use single generic cpuid() to get all 4 registers instead of 4 calls
+    * Change hv_proximity_domain_info from union to struct for clarity
+Changes since v1:
+    * Clean up formatting, capitalization in commit messages
+    * Add detail to commit message for patch 15
+    * Remove errant lines in Makefile and Kconfig in patch 15
+    * Move a reference to CONFIG_MSHV_VTL from patch 9 to 15
+
+Nuno Das Neves (15):
+  hyperv-tlfs: Change shared HV_REGISTER_* defines to HV_MSR_*
+  mshyperv: Introduce hv_get_hypervisor_version function
+  mshyperv: Introduce numa_node_to_proximity_domain_info
+  asm-generic/mshyperv: Introduce hv_recommend_using_aeoi()
+  hyperv: Move hv_connection_id to hyperv-tlfs
+  hyperv-tlfs: Introduce hv_status_to_string and hv_status_to_errno
+  Drivers: hv: Move hv_call_deposit_pages and hv_call_create_vp to
+    common code
+  Drivers: hv: Introduce per-cpu event ring tail
+  Drivers: hv: Introduce hv_output_arg_exists in hv_common.c
+  x86: hyperv: Add mshv_handler irq handler and setup function
+  Drivers: hv: export vmbus_isr, hv_context and hv_post_message
+  Documentation: Reserve ioctl number for mshv driver
+  uapi: hyperv: Add mshv driver headers defining hypervisor ABIs
+  asm-generic: hyperv: Use new Hyper-V headers conditionally.
+  Drivers: hv: Add modules to expose /dev/mshv to VMMs running on
+    Hyper-V
+
+ .../userspace-api/ioctl/ioctl-number.rst      |    2 +
+ arch/arm64/hyperv/mshyperv.c                  |   23 +-
+ arch/arm64/include/asm/hyperv-tlfs.h          |   25 +
+ arch/arm64/include/asm/mshyperv.h             |    2 +-
+ arch/x86/hyperv/hv_init.c                     |    2 +-
+ arch/x86/hyperv/hv_proc.c                     |  166 +-
+ arch/x86/include/asm/hyperv-tlfs.h            |  137 +-
+ arch/x86/include/asm/mshyperv.h               |   12 +-
+ arch/x86/kernel/cpu/mshyperv.c                |   67 +-
+ drivers/acpi/numa/srat.c                      |    1 +
+ drivers/clocksource/hyperv_timer.c            |   24 +-
+ drivers/hv/Kconfig                            |   49 +
+ drivers/hv/Makefile                           |   20 +
+ drivers/hv/hv.c                               |   50 +-
+ drivers/hv/hv_call.c                          |  113 +
+ drivers/hv/hv_common.c                        |  223 +-
+ drivers/hv/hyperv_vmbus.h                     |    2 +-
+ drivers/hv/mshv.h                             |  123 ++
+ drivers/hv/mshv_eventfd.c                     |  761 +++++++
+ drivers/hv/mshv_eventfd.h                     |   80 +
+ drivers/hv/mshv_main.c                        |  208 ++
+ drivers/hv/mshv_msi.c                         |  129 ++
+ drivers/hv/mshv_portid_table.c                |   84 +
+ drivers/hv/mshv_root.h                        |  193 ++
+ drivers/hv/mshv_root_hv_call.c                | 1015 +++++++++
+ drivers/hv/mshv_root_main.c                   | 1920 +++++++++++++++++
+ drivers/hv/mshv_synic.c                       |  688 ++++++
+ drivers/hv/mshv_vtl.h                         |   52 +
+ drivers/hv/mshv_vtl_main.c                    | 1517 +++++++++++++
+ drivers/hv/vmbus_drv.c                        |    3 +-
+ drivers/hv/xfer_to_guest.c                    |   28 +
+ include/asm-generic/hyperv-defs.h             |   26 +
+ include/asm-generic/hyperv-tlfs.h             |   93 +-
+ include/asm-generic/mshyperv.h                |   73 +-
+ include/linux/hyperv.h                        |   11 +-
+ include/uapi/hyperv/hvgdk.h                   |   41 +
+ include/uapi/hyperv/hvgdk_mini.h              | 1076 +++++++++
+ include/uapi/hyperv/hvhdk.h                   | 1342 ++++++++++++
+ include/uapi/hyperv/hvhdk_mini.h              |  160 ++
+ include/uapi/linux/mshv.h                     |  306 +++
+ 40 files changed, 10483 insertions(+), 364 deletions(-)
+ create mode 100644 drivers/hv/hv_call.c
+ create mode 100644 drivers/hv/mshv.h
+ create mode 100644 drivers/hv/mshv_eventfd.c
+ create mode 100644 drivers/hv/mshv_eventfd.h
+ create mode 100644 drivers/hv/mshv_main.c
+ create mode 100644 drivers/hv/mshv_msi.c
+ create mode 100644 drivers/hv/mshv_portid_table.c
+ create mode 100644 drivers/hv/mshv_root.h
+ create mode 100644 drivers/hv/mshv_root_hv_call.c
+ create mode 100644 drivers/hv/mshv_root_main.c
+ create mode 100644 drivers/hv/mshv_synic.c
+ create mode 100644 drivers/hv/mshv_vtl.h
+ create mode 100644 drivers/hv/mshv_vtl_main.c
+ create mode 100644 drivers/hv/xfer_to_guest.c
+ create mode 100644 include/asm-generic/hyperv-defs.h
+ create mode 100644 include/uapi/hyperv/hvgdk.h
+ create mode 100644 include/uapi/hyperv/hvgdk_mini.h
+ create mode 100644 include/uapi/hyperv/hvhdk.h
+ create mode 100644 include/uapi/hyperv/hvhdk_mini.h
+ create mode 100644 include/uapi/linux/mshv.h
 
 -- 
-Kees Cook
+2.25.1
+
 
