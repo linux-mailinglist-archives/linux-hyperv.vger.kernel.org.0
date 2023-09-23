@@ -1,46 +1,46 @@
-Return-Path: <linux-hyperv+bounces-245-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-244-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4C797ABFD7
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AE8C7ABFD6
 	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Sep 2023 12:12:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id 65BF3281057
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Sep 2023 10:12:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id D0B4A2810FF
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Sep 2023 10:12:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0972110A08;
-	Sat, 23 Sep 2023 10:12:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9908A10A14;
+	Sat, 23 Sep 2023 10:12:07 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4712710A13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470F410A08
 	for <linux-hyperv@vger.kernel.org>; Sat, 23 Sep 2023 10:12:06 +0000 (UTC)
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE05E5C;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE194E5D;
 	Sat, 23 Sep 2023 03:11:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1695463917; x=1726999917;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=I/WDYuAd3nxCrdi9nQ03uROwALnkbrNhAERS8D1SLLE=;
-  b=Tx3TkyCCjCVXjf0rj3Nz5YDTdSS+WvV9vLsawe+1ZSMGtqvqmb8jCFjZ
-   Fa87W//jst/MhetknBuAWx7Q3GcCWek+PU1hXzpKU6UouWUr6uDDqYLTC
-   oZeASKT7ieA/xBgriDLLVm4GeFL9oNFlXOAMmfMmLgWI8uYcbNsMRc7le
-   RCyVyFt+nCwuLN0G1Rz4D0FKPReKfNS/DeOV3DYM9j3+Dug2GVgGHV6DN
-   O68TiXGlvq1bvT6H6E0KxRT+xe6YX/yC2dEaM6aN4oASflIW9Ju1YTukK
-   HhWNmia4XMfG7R/aU1ahyf+I80fGHkFlOwlk5QZhkDyOIJ6sMPEfSOIvJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="447492448"
+  bh=/UldAmuJEnsflYS2+cyLAQ4E+J1yAKX8pToUnF0eneI=;
+  b=cSgCws86QNPsjOO5vVLxydRsfm5uymPrqcLO/cLPHAOLmoAx1dwP2l9Y
+   cRK1fqM3UKAxPhRwY7EfH7LC858sWA7bfExQRUyDK/OCDFeWZcg0j/G5F
+   zDjspyIy0nyBnLjn+l2xynn+FEFmrxiCE+GutdSnUObZ4686/pgJB7Tei
+   5+vw520MNuKuDRykFe3HZVb6+pVNwTXJ3czCMn5TOhj+nh/Bog6zrzwja
+   YUhhLJOaiSljHU1N9iaS1atRAa0itFA6yfKCeu4PNCLPqwtSuyuOVMp4h
+   lvZLaTdnpI9a0Ua5QXlrqcyocZTfygd+0rFtpiygg1jgkcviRh1dRXcr7
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="447492461"
 X-IronPort-AV: E=Sophos;i="6.03,171,1694761200"; 
-   d="scan'208";a="447492448"
+   d="scan'208";a="447492461"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2023 03:11:51 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2023 03:11:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="813388209"
+X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="813388214"
 X-IronPort-AV: E=Sophos;i="6.03,171,1694761200"; 
-   d="scan'208";a="813388209"
+   d="scan'208";a="813388214"
 Received: from unknown (HELO fred..) ([172.25.112.68])
   by fmsmga008.fm.intel.com with ESMTP; 23 Sep 2023 03:11:51 -0700
 From: Xin Li <xin3.li@intel.com>
@@ -66,9 +66,9 @@ Cc: tglx@linutronix.de,
 	andrew.cooper3@citrix.com,
 	jiangshanlai@gmail.com,
 	nik.borisov@suse.com
-Subject: [PATCH v11 31/37] x86/fred: Fixup fault on ERETU by jumping to fred_entrypoint_user
-Date: Sat, 23 Sep 2023 02:42:06 -0700
-Message-Id: <20230923094212.26520-32-xin3.li@intel.com>
+Subject: [PATCH v11 32/37] x86/entry/calling: Allow PUSH_AND_CLEAR_REGS being used beyond actual entry code
+Date: Sat, 23 Sep 2023 02:42:07 -0700
+Message-Id: <20230923094212.26520-33-xin3.li@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230923094212.26520-1-xin3.li@intel.com>
 References: <20230923094212.26520-1-xin3.li@intel.com>
@@ -85,179 +85,74 @@ X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-If the stack frame contains an invalid user context (e.g. due to invalid SS,
-a non-canonical RIP, etc.) the ERETU instruction will trap (#SS or #GP).
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-From a Linux point of view, this really should be considered a user space
-failure, so use the standard fault fixup mechanism to intercept the fault,
-fix up the exception frame, and redirect execution to fred_entrypoint_user.
-The end result is that it appears just as if the hardware had taken the
-exception immediately after completing the transition to user space.
+PUSH_AND_CLEAR_REGS could be used besides actual entry code; in that case
+%rbp shouldn't be cleared (otherwise the frame pointer is destroyed) and
+UNWIND_HINT shouldn't be added.
 
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Tested-by: Shan Kang <shan.kang@intel.com>
 Signed-off-by: Xin Li <xin3.li@intel.com>
 ---
+ arch/x86/entry/calling.h | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-Changes since v8:
-* Reflect the FRED spec 5.0 change that ERETS and ERETU add 8 to %rsp
-  before popping the return context from the stack.
-
-Changes since v6:
-* Add a comment to explain why it is safe to write to the previous FRED stack
-  frame. (Lai Jiangshan).
-
-Changes since v5:
-* Move the NMI bit from an invalid stack frame, which caused ERETU to fault,
-  to the fault handler's stack frame, thus to unblock NMI ASAP if NMI is blocked
-  (Lai Jiangshan).
----
- arch/x86/entry/entry_64_fred.S             |  5 +-
- arch/x86/include/asm/extable_fixup_types.h |  4 +-
- arch/x86/mm/extable.c                      | 79 ++++++++++++++++++++++
- 3 files changed, 86 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-index 5781c3411b44..d1c2fc4af8ae 100644
---- a/arch/x86/entry/entry_64_fred.S
-+++ b/arch/x86/entry/entry_64_fred.S
-@@ -3,6 +3,7 @@
-  * The actual FRED entry points.
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index f6907627172b..eb57c023d5df 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -65,7 +65,7 @@ For 32-bit we have the following conventions - kernel is built with
+  * for assembly code:
   */
  
-+#include <asm/asm.h>
- #include <asm/fred.h>
- 
- #include "calling.h"
-@@ -34,7 +35,9 @@ SYM_CODE_START_NOALIGN(asm_fred_entrypoint_user)
- 	call	fred_entry_from_user
- SYM_INNER_LABEL(asm_fred_exit_user, SYM_L_GLOBAL)
- 	FRED_EXIT
--	ERETU
-+1:	ERETU
+-.macro PUSH_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0
++.macro PUSH_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 unwind_hint=1
+ 	.if \save_ret
+ 	pushq	%rsi		/* pt_regs->si */
+ 	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
+@@ -87,14 +87,17 @@ For 32-bit we have the following conventions - kernel is built with
+ 	pushq	%r13		/* pt_regs->r13 */
+ 	pushq	%r14		/* pt_regs->r14 */
+ 	pushq	%r15		/* pt_regs->r15 */
 +
-+	_ASM_EXTABLE_TYPE(1b, asm_fred_entrypoint_user, EX_TYPE_ERETU)
- SYM_CODE_END(asm_fred_entrypoint_user)
++	.if \unwind_hint
+ 	UNWIND_HINT_REGS
++	.endif
  
- .fill asm_fred_entrypoint_kernel - ., 1, 0xcc
-diff --git a/arch/x86/include/asm/extable_fixup_types.h b/arch/x86/include/asm/extable_fixup_types.h
-index 991e31cfde94..1585c798a02f 100644
---- a/arch/x86/include/asm/extable_fixup_types.h
-+++ b/arch/x86/include/asm/extable_fixup_types.h
-@@ -64,6 +64,8 @@
- #define	EX_TYPE_UCOPY_LEN4		(EX_TYPE_UCOPY_LEN | EX_DATA_IMM(4))
- #define	EX_TYPE_UCOPY_LEN8		(EX_TYPE_UCOPY_LEN | EX_DATA_IMM(8))
+ 	.if \save_ret
+ 	pushq	%rsi		/* return address on top of stack */
+ 	.endif
+ .endm
  
--#define EX_TYPE_ZEROPAD			20 /* longword load with zeropad on fault */
-+#define	EX_TYPE_ZEROPAD			20 /* longword load with zeropad on fault */
-+
-+#define	EX_TYPE_ERETU			21
+-.macro CLEAR_REGS
++.macro CLEAR_REGS clear_bp=1
+ 	/*
+ 	 * Sanitize registers of values that a speculation attack might
+ 	 * otherwise want to exploit. The lower registers are likely clobbered
+@@ -109,7 +112,9 @@ For 32-bit we have the following conventions - kernel is built with
+ 	xorl	%r10d, %r10d	/* nospec r10 */
+ 	xorl	%r11d, %r11d	/* nospec r11 */
+ 	xorl	%ebx,  %ebx	/* nospec rbx */
++	.if \clear_bp
+ 	xorl	%ebp,  %ebp	/* nospec rbp */
++	.endif
+ 	xorl	%r12d, %r12d	/* nospec r12 */
+ 	xorl	%r13d, %r13d	/* nospec r13 */
+ 	xorl	%r14d, %r14d	/* nospec r14 */
+@@ -117,9 +122,9 @@ For 32-bit we have the following conventions - kernel is built with
  
- #endif
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index 271dcb2deabc..bc7af7e8587b 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -6,6 +6,7 @@
- #include <xen/xen.h>
+ .endm
  
- #include <asm/fpu/api.h>
-+#include <asm/fred.h>
- #include <asm/sev.h>
- #include <asm/traps.h>
- #include <asm/kdebug.h>
-@@ -223,6 +224,80 @@ static bool ex_handler_ucopy_len(const struct exception_table_entry *fixup,
- 	return ex_handler_uaccess(fixup, regs, trapnr, fault_address);
- }
+-.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0
+-	PUSH_REGS rdx=\rdx, rcx=\rcx, rax=\rax, save_ret=\save_ret
+-	CLEAR_REGS
++.macro PUSH_AND_CLEAR_REGS rdx=%rdx rcx=%rcx rax=%rax save_ret=0 clear_bp=1 unwind_hint=1
++	PUSH_REGS rdx=\rdx, rcx=\rcx, rax=\rax, save_ret=\save_ret unwind_hint=\unwind_hint
++	CLEAR_REGS clear_bp=\clear_bp
+ .endm
  
-+#ifdef CONFIG_X86_FRED
-+static bool ex_handler_eretu(const struct exception_table_entry *fixup,
-+			     struct pt_regs *regs, unsigned long error_code)
-+{
-+	struct pt_regs *uregs = (struct pt_regs *)
-+		(regs->sp - offsetof(struct pt_regs, orig_ax));
-+	unsigned short ss = uregs->ss;
-+	unsigned short cs = uregs->cs;
-+
-+	/*
-+	 * Move the NMI bit from the invalid stack frame, which caused ERETU
-+	 * to fault, to the fault handler's stack frame, thus to unblock NMI
-+	 * with the fault handler's ERETS instruction ASAP if NMI is blocked.
-+	 */
-+	regs->fred_ss.nmi = uregs->fred_ss.nmi;
-+
-+	/*
-+	 * Sync event information to uregs, i.e., the ERETU return frame, but
-+	 * is it safe to write to the ERETU return frame which is just above
-+	 * current event stack frame?
-+	 *
-+	 * The RSP used by FRED to push a stack frame is not the value in %rsp,
-+	 * it is calculated from %rsp with the following 2 steps:
-+	 * 1) RSP = %rsp - (IA32_FRED_CONFIG & 0x1c0)	// Reserve N*64 bytes
-+	 * 2) RSP = RSP & ~0x3f		// Align to a 64-byte cache line
-+	 * when an event delivery doesn't trigger a stack level change.
-+	 *
-+	 * Here is an example with N*64 (N=1) bytes reserved:
-+	 *
-+	 *  64-byte cache line ==>  ______________
-+	 *                         |___Reserved___|
-+	 *                         |__Event_data__|
-+	 *                         |_____SS_______|
-+	 *                         |_____RSP______|
-+	 *                         |_____FLAGS____|
-+	 *                         |_____CS_______|
-+	 *                         |_____IP_______|
-+	 *  64-byte cache line ==> |__Error_code__| <== ERETU return frame
-+	 *                         |______________|
-+	 *                         |______________|
-+	 *                         |______________|
-+	 *                         |______________|
-+	 *                         |______________|
-+	 *                         |______________|
-+	 *                         |______________|
-+	 *  64-byte cache line ==> |______________| <== RSP after step 1) and 2)
-+	 *                         |___Reserved___|
-+	 *                         |__Event_data__|
-+	 *                         |_____SS_______|
-+	 *                         |_____RSP______|
-+	 *                         |_____FLAGS____|
-+	 *                         |_____CS_______|
-+	 *                         |_____IP_______|
-+	 *  64-byte cache line ==> |__Error_code__| <== ERETS return frame
-+	 *
-+	 * Thus a new FRED stack frame will always be pushed below a previous
-+	 * FRED stack frame ((N*64) bytes may be reserved between), and it is
-+	 * safe to write to a previous FRED stack frame as they never overlap.
-+	 */
-+	fred_info(uregs)->edata = fred_event_data(regs);
-+	uregs->ssx = regs->ssx;
-+	uregs->fred_ss.ss = ss;
-+	/* The NMI bit was moved away above */
-+	uregs->fred_ss.nmi = 0;
-+	uregs->csx = regs->csx;
-+	uregs->sl = 0;
-+	uregs->wfe = 0;
-+	uregs->cs = cs;
-+	uregs->orig_ax = error_code;
-+
-+	return ex_handler_default(fixup, regs);
-+}
-+#endif
-+
- int ex_get_fixup_type(unsigned long ip)
- {
- 	const struct exception_table_entry *e = search_exception_tables(ip);
-@@ -300,6 +375,10 @@ int fixup_exception(struct pt_regs *regs, int trapnr, unsigned long error_code,
- 		return ex_handler_ucopy_len(e, regs, trapnr, fault_addr, reg, imm);
- 	case EX_TYPE_ZEROPAD:
- 		return ex_handler_zeropad(e, regs, fault_addr);
-+#ifdef CONFIG_X86_FRED
-+	case EX_TYPE_ERETU:
-+		return ex_handler_eretu(e, regs, error_code);
-+#endif
- 	}
- 	BUG();
- }
+ .macro POP_REGS pop_rdi=1
 -- 
 2.34.1
 
