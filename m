@@ -1,192 +1,168 @@
-Return-Path: <linux-hyperv+bounces-203-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-202-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6C5F7ABC3F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Sep 2023 01:22:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AB2F7ABC1F
+	for <lists+linux-hyperv@lfdr.de>; Sat, 23 Sep 2023 01:01:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id 996AE2822BE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 23:22:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id E2F842823B8
+	for <lists+linux-hyperv@lfdr.de>; Fri, 22 Sep 2023 23:01:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 805004885F;
-	Fri, 22 Sep 2023 23:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6EC48859;
+	Fri, 22 Sep 2023 23:01:47 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB31C171D2
-	for <linux-hyperv@vger.kernel.org>; Fri, 22 Sep 2023 23:21:58 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0EE619E;
-	Fri, 22 Sep 2023 16:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695424915; x=1726960915;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=eRSQiAA0/fY80IdmbnDj6mU63HiekFWFjAJs7jeFOsA=;
-  b=hPYnciC2Zl04lfwZnyVfsPn0ZN+QIuR3h/ooCinOE48vzygkxB8RSGzq
-   38n8OJs7Y1EmfPrdvUJXMAdL+RVTUVAeJ6scurKDwJEKC2QphOHUcuLWh
-   grVbJsw/33mnvlrg8YecodooWwvs0T5eIiFgJgsuTudfgNUkFLwsX4MES
-   jiDY5LFHCLpp1ZLK4YVyhC5izDJlVZ7Mu1kBMkcPZNxIZ0EORcc2M4sFR
-   tXLuuiS/yRXrdKeVyiavEjCDo/TJbGrI88UX0hG1Z0pcZ+dNyLbjGDtgO
-   lEtvxMjMDEzj8e3jbcCS8Riwz4tswSlyE2h44zaToXUnyzXMP6jwuD0KM
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="360348322"
-X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="360348322"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2023 16:21:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10841"; a="777013684"
-X-IronPort-AV: E=Sophos;i="6.03,169,1694761200"; 
-   d="scan'208";a="777013684"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Sep 2023 16:21:53 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 22 Sep 2023 16:21:54 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 22 Sep 2023 16:21:54 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Fri, 22 Sep 2023 16:21:54 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.173)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Fri, 22 Sep 2023 16:21:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fs0YHcxp47VQTDDTIjZ4i8Yo/or0uwWhmcDCw2NZMRZspO3iIXm2s/tGV6I4ZALiUUc0NRb63VISovDGrWFtyF3X5kUTqUpvEwgnC6wDYQL9gLYfcLyqOMQos1YhYqnloa2/J8JiQc8So1HewPwkNZ/TJBu0merxqYW7kYVy8wDj32AeHk0bklqtWVV5Y0xgwNuLBtOTIjtDAa7jgsLLPYX6PHWGAOZ3BTX/gsycSLc7ToiJaUCJf6en+heNKuinD6Wt7PZfwm4+aKxlSMNp68HmRbmG3yVBUjeaTbAANCVFhxqbCr1wZmOXZuFOqoRr6zUoLh7QmFnyHMp+Y/2Jhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fu86OMXWhzKasKRPAoR0Ot28UCYqUIKz3W7U7EBwKrk=;
- b=bOp7kJ+6Xi0mnWyjoT9ytxVrNGza342hNHoMt3SDBrRWqoduBAMB3dHOpp/XXHPLzniUpldNFjjDCHawElV0BrR7FVnvVBk1rFCIua00tgfIeuZzg8WouKr284+ahLkSk+28Kvjfqa3UCDLEeiDLw36MuJWZGkrDbR6IZzK0liuHEZqUYWdb/EQlcN60baRKpPvXB0nl9rBiZ+mc23ueWSOzpM+nKkM2KWoqwDoHWEvpVf1mcSF+EN1+zBsmLZtt/brxtF0Zk0y5hSDGXh52yOAJWZWKVszJd7P37cN1gYlfVNVEzbTKh4VdpqylLrON8I/rRl0XRCWbXK59M5/99A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
- by PH0PR11MB5061.namprd11.prod.outlook.com (2603:10b6:510:3c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.23; Fri, 22 Sep
- 2023 23:21:51 +0000
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::922f:ec7c:601b:7f61]) by SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::922f:ec7c:601b:7f61%6]) with mapi id 15.20.6813.017; Fri, 22 Sep 2023
- 23:21:51 +0000
-From: "Li, Xin3" <xin3.li@intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Nikolay Borisov
-	<nik.borisov@suse.com>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-CC: "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "Lutomirski, Andy"
-	<luto@kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"Christopherson,, Sean" <seanjc@google.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Gross, Jurgen" <jgross@suse.com>, "Shankar, Ravi V"
-	<ravi.v.shankar@intel.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"jiangshanlai@gmail.com" <jiangshanlai@gmail.com>
-Subject: RE: [PATCH v10 03/38] x86/msr: Add the WRMSRNS instruction support
-Thread-Topic: [PATCH v10 03/38] x86/msr: Add the WRMSRNS instruction support
-Thread-Index: AQHZ5ssSXb894LHEBkqZUWtDh9samLAjYtKAgAADDuCAAyUhEIAAclUAgACIVkA=
-Date: Fri, 22 Sep 2023 23:21:50 +0000
-Message-ID: <SA1PR11MB6734FA69601B69FBC92361D8A8FFA@SA1PR11MB6734.namprd11.prod.outlook.com>
-References: <20230914044805.301390-1-xin3.li@intel.com>
- <20230914044805.301390-4-xin3.li@intel.com>
- <dda01248-f456-d8d7-5021-ef6b2e7ade2c@suse.com>
- <SA1PR11MB6734F205C2171425415E4F00A8F9A@SA1PR11MB6734.namprd11.prod.outlook.com>
- <SA1PR11MB6734445986E951E686172419A8FFA@SA1PR11MB6734.namprd11.prod.outlook.com>
- <87o7hugsnh.ffs@tglx>
-In-Reply-To: <87o7hugsnh.ffs@tglx>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|PH0PR11MB5061:EE_
-x-ms-office365-filtering-correlation-id: 50fdce97-b9f2-432b-5ece-08dbbbc2b362
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WMfVeQb7hnt9WXGXYpg+0b6XYqDKaFsaWNQVRzwiWUJHT8BRsLSZvlBrP1cYdUDY54503PQ0wF87DSu3ukvLekiuuR0/VRE/S5r0iRhV4mOg1x52upoD2Uq0Zlb/4NdOA/vjefcUSkF5e3sKj2XOV6t2v3pQMYCfJEoQQz+p3Z+anzY3UR1tp+vyhSfePapqIJbNl9Jr6ynUWcjsnKZmGXdKGc4P+0NyAUedx2mWhYuGAqPLOvnTadgKhV66EQU/oinJig6wibYqbz8/qymsV0kG4+zRD49Ny5uQzNHaECKWISq578hsdZjxikDGajFRNx67Aw9hn+X7C9zlJCIDeFe3VCSbeoA+2nwSXAvSNEVe5uAzXAZ/BV0Q8r624NNaKCTiEVYZ2Tg1CAS2WW7AXDNOkz0Nxa8ziCZBfmtHHUh4yLQZkqcTQ2TJgds1PWw7eDUZSH+JTV0jE9mHDP32G+g6QYClvULgw36eNDnrqIRTVS3/UYsAxV1aPRJysSUYweQ3DWN4ujRqbUPWunc1+1zywTg98TjxT/xvoppUAdMGMywzZ0eYxqWpmKwRs3tr/8ePEZw4Xdk3VBAEycixQAK+T8/GnsMcLNNhoZz8U6YbXVaRGpGXybNJlQscLsgsUk/aIT9dH92F1H2gByjOyQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(39860400002)(366004)(346002)(376002)(451199024)(1800799009)(186009)(7416002)(4744005)(478600001)(66476007)(66446008)(83380400001)(66556008)(55016003)(54906003)(64756008)(5660300002)(52536014)(316002)(41300700001)(8936002)(8676002)(2906002)(4326008)(66946007)(110136005)(33656002)(76116006)(86362001)(9686003)(7696005)(6506007)(71200400001)(82960400001)(26005)(122000001)(38070700005)(38100700002)(133343001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?OwYLATXwLUsdGqTk5CXv2uEArtiJxY9ytp85Qw4KM6CqtMcLAMYyd02Un+ok?=
- =?us-ascii?Q?FzgHLym8H0/zbF+HMYTUYYZqLfk1HXIspT7bQug0SuG106CaWehEhwJQNLL8?=
- =?us-ascii?Q?eepdex+LZzlVfQfDgcgCpeEhEcb3OMsd5n4SEtH40QV3IMcliEC0Ug6kUOjr?=
- =?us-ascii?Q?ebB0bsxcIN8/f5jgzsYv/PG8QYWLn2xnHfiJkZyvFwfe5P0kDNguxU1MNwAy?=
- =?us-ascii?Q?dvrjCHpv1BoqJdqu7VDMUuu6yoEV3yiFXfwOrM1nJV1ORO57Jl74bfjoKdGK?=
- =?us-ascii?Q?epQCL84F/HF6ONxSiXhkCoWQU9QRT0dPX02uyMbl5UC5W5XL11sv6oHe6Wd6?=
- =?us-ascii?Q?yYALeXQPh8mVSSa2wBSHUl2FlTnfCNIpM3X6x5GOHr+XRgKgE6EPbBEK1vGA?=
- =?us-ascii?Q?zrwGoxKmzWffcXn2zJODBz7wGcclT9xmlg/lIgSBeSeM/JgRFhR9ZzLa8r0n?=
- =?us-ascii?Q?ElVOLnCUVoCMOWUss+0QsikJ1wBsZ59TWGTwcVQ46m1an7VSiPIuMKqlLhZj?=
- =?us-ascii?Q?9og98AkD/Qn+0/W62esy0Q6+IjCBqk27pcDMeShZhGMTLXl0QhgNV61X+MGq?=
- =?us-ascii?Q?ofvNUEgZEA0N10aSxzSOYg5WsM5O4j1eSnGefzkMCXzRrGa440Y2GEEZBsL8?=
- =?us-ascii?Q?EyhV1/vNyE8r+1XYdG87Lfi3HqfP99qFmFUZWEndRgWZBSlcwYODsGbgl4Ja?=
- =?us-ascii?Q?sVmXnHAhygbPPHlaYmVZyLbiAHdD0fwf2EdaR5kI49d3yTz/HwRCw3E3AgSu?=
- =?us-ascii?Q?I2AZEzhnr4fn+3f3vS1IDfeQfsOvjGN1z4PTB6iwQlxUwuWh+MIt/1Y4hOMt?=
- =?us-ascii?Q?9a7C7yD359JqCZ2hBqpW96Sy0jxflrSybrJAloBah3nTHg+X10WWaaKNRqpZ?=
- =?us-ascii?Q?aUbjNYop7fpLiX7E2ODBAMNngvocmsoXNtpepyInp3KtCTjh2S/0rcKbdAO/?=
- =?us-ascii?Q?cMYF0TRqEjJzgHCcRaWgKdHOrIGeRbjIlxMHR9+RdVEWNdDFfMaiIw8Lu7VM?=
- =?us-ascii?Q?B922lSBrJL1WI19YzsGMsDLBJDYyyRCPnzw2ut5irp6hAqDaSPNHMx9cb8gm?=
- =?us-ascii?Q?YNw+5lucUe1YFYLs9XvyZ5LicsukDUWO/9fJmNEo7U4eSTmzscWHJeZBJhGN?=
- =?us-ascii?Q?9E5ebbhrXg7bzD9wyih1Erpnrpq1mzwg1+92u5SYlKOvrzLB8Ps/0aZ0IdL1?=
- =?us-ascii?Q?CbimL65ST+dw3M5jpMCYDAoD5MergPLDUa+vWb9q0Xpkg0w3QtZIj5jp+vca?=
- =?us-ascii?Q?RmwSONEEtbvsFYdFGsZmyeNYJWLVeDw76oDgzjVDIJa/Bj50map8rcFsFpTw?=
- =?us-ascii?Q?in4tqKfSKF7h2DaEKTlmogK7q8H3JqhCP+q58iCtbQI+p0xTq72EADd9iCbj?=
- =?us-ascii?Q?o2HHH0bnYyh8sp8Nz9KmJvmq9RHGmy2JhMrLly5GOMz4g0uY4mrco9Hopioh?=
- =?us-ascii?Q?bos4CsNweoRwp1PRCyoF6WIyxW9mLOj+1gotHY0SiWDOI4P4gGkJZifsCRhz?=
- =?us-ascii?Q?4TnBbC9r0SUaA1tguBqsxWXSroQtk7y/eslMrG7CV9dE113t6BHWbiza5k4k?=
- =?us-ascii?Q?jtMtP9PWCGMOA0E0GL0=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B012F48854;
+	Fri, 22 Sep 2023 23:01:45 +0000 (UTC)
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A98AF;
+	Fri, 22 Sep 2023 16:01:43 -0700 (PDT)
+Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
+	by cmsmtp with ESMTP
+	id jjHCqDsdyez0Cjp9Dq8wGM; Fri, 22 Sep 2023 23:01:19 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id jp9aqUSxwjI4jjp9aqtYmu; Fri, 22 Sep 2023 23:01:43 +0000
+X-Authority-Analysis: v=2.4 cv=Uoxwis8B c=1 sm=1 tr=0 ts=650e1cd7
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=i0EeH86SAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=VwQbUJbxAAAA:8
+ a=20KFwNOVAAAA:8 a=cm27Pg_UAAAA:8 a=YSKGN3ub9cUXa_79IdMA:9 a=QEXdDO2ut3YA:10
+ a=y1Q9-5lHfBjTkpIzbSAN:22 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DBDGjSTctz03T3kxqYSvA7eXNQPoYq5wl9a6ycqf3dE=; b=rrlfox9rEpjoN0z0e6OcGu6l3z
+	z45KfH2Ubc2bt/MsuiE8FU1H7AlwXb2f157S4keahk67tqZS3qa1f26ffZ8ybjjXKrCaURX9dS4x7
+	YoxoheMj0rQJrdBXap8rTF3OZUWJv/P+G1qvqIuddqH4Q8bivOAoQ0d4dIvuN7odfkSWn9us2cEB7
+	ELoJwvhGeEwxUWQh+3LlN8+Sg3gSuzmA4B5ss+sWIZ8j3M/15IPv1fgGyc/y4c389vM/CH3710OFZ
+	GqBZd5fQzOCeLMSt2qujFy03jFQ9vsYFBRiyq/JdNSOF/Znuw4BfAIPN/v5i5/GyikiGrd8Yc6pCL
+	ClLpWPug==;
+Received: from [94.239.20.48] (port=51456 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qjkJt-0001Kq-2J;
+	Fri, 22 Sep 2023 12:52:02 -0500
+Message-ID: <aad8eaeb-2d60-adaa-ee84-7f8b1e7c217c@embeddedor.com>
+Date: Fri, 22 Sep 2023 19:52:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50fdce97-b9f2-432b-5ece-08dbbbc2b362
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Sep 2023 23:21:51.0298
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ad1q9hX2zy5dXs8bhVWM0+WYziBPZ8kgPgQJ8Pq3eIqJTsE4+uDbgSPNV5A4WTf7QaFkOiAVSqjUQQiHzWacFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5061
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 06/14] net: hisilicon: Annotate struct rcb_common_cb with
+ __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
+ Salil Mehta <salil.mehta@huawei.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ Jamal Hadi Salim <jhs@mojatatu.com>, David Ahern <dsahern@kernel.org>,
+ Martin KaFai Lau <martin.lau@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Claudiu Manoil
+ <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Ajay Sharma <sharmaajay@microsoft.com>, Alex Elder <elder@kernel.org>,
+ Pravin B Shelar <pshelar@ovn.org>, Shaokun Zhang
+ <zhangshaokun@hisilicon.com>, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+ dev@openvswitch.org, linux-parisc@vger.kernel.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org
+References: <20230922172449.work.906-kees@kernel.org>
+ <20230922172858.3822653-6-keescook@chromium.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230922172858.3822653-6-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.239.20.48
+X-Source-L: No
+X-Exim-ID: 1qjkJt-0001Kq-2J
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:51456
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKexkz8Jfpu3MlXBpAYmOs70tcVTcPzT4z1Qvmz8Rv4p9VyRm+EFiODf1grqzcSx4WK5ju7qmWbmXdlOuuSMG8pffTi8pmWLx99hiNptpC3hTtZgOcr5
+ pvfiEdLjsAkU6xwXiK0S5g0nLd96Cb8tHuYQCixHJWx+Ns4O3VWRaxR3eKrAb02PKgMdvUj9aAsFgoL021r97/q3Cug7XgkwKCHS8Qqj8Z0elcwb6i8Iv3Yg
+ W6HRC0QEMy4n2DJfhKD4MWU0BA7Lxyz6zykk++5LzPtYX6feaLZmAnvSqBY0FQ78tvOoHKoM42eET6Nlm1pn2CwrPusfwP1qMLwE2ZclTJdOUpkVp18FMm/9
+ yaVyuT+y7+VJgkD9yW0orOEXcYECgssUZufmckjwG5rJ6m+YiORn6x9QLZ4h1epmy0E/MMo8
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-> > I notice there are several call sites using the safe version w/o
-> > checking the return value, should the unsafe version be a better
-> > choice in such cases?
->=20
-> Depends. The safe version does not emit a warning on fail. So if the
-> callsite truly does not care about the error it's fine.
 
-Right. So the _safe suffix also means to suppress a warning that the
-caller doesn't care.
 
-Thanks!
-    Xin
+On 9/22/23 11:28, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct rcb_common_cb.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
+> Cc: Salil Mehta <salil.mehta@huawei.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+-- 
+Gustavo
+
+> ---
+>   drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h
+> index a9f805925699..c1e9b6997853 100644
+> --- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h
+> +++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h
+> @@ -108,7 +108,7 @@ struct rcb_common_cb {
+>   	u32 ring_num;
+>   	u32 desc_num; /*  desc num per queue*/
+>   
+> -	struct ring_pair_cb ring_pair_cb[];
+> +	struct ring_pair_cb ring_pair_cb[] __counted_by(ring_num);
+>   };
+>   
+>   int hns_rcb_buf_size2type(u32 buf_size);
 
