@@ -1,168 +1,164 @@
-Return-Path: <linux-hyperv+bounces-260-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-256-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 176C37AC636
-	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Sep 2023 03:41:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B5FD7AC61B
+	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Sep 2023 03:33:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by am.mirrors.kernel.org (Postfix) with ESMTP id 794A11F23B95
-	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Sep 2023 01:41:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id 2A8371C2083D
+	for <lists+linux-hyperv@lfdr.de>; Sun, 24 Sep 2023 01:32:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8488F62D;
-	Sun, 24 Sep 2023 01:41:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A5B262D;
+	Sun, 24 Sep 2023 01:32:56 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2D362F;
-	Sun, 24 Sep 2023 01:41:51 +0000 (UTC)
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA292180;
-	Sat, 23 Sep 2023 18:41:49 -0700 (PDT)
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTP
-	id k7Q2qwjv9EoVskE84qKPpz; Sun, 24 Sep 2023 01:41:49 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id kE83qrrpTPNASkE83qgI1T; Sun, 24 Sep 2023 01:41:48 +0000
-X-Authority-Analysis: v=2.4 cv=X8FBlUfe c=1 sm=1 tr=0 ts=650f93dc
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=i0EeH86SAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=VwQbUJbxAAAA:8
- a=20KFwNOVAAAA:8 a=cm27Pg_UAAAA:8 a=YSKGN3ub9cUXa_79IdMA:9 a=QEXdDO2ut3YA:10
- a=y1Q9-5lHfBjTkpIzbSAN:22 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=QlO38JItyn9oJ4bwMUFFP3FqsNzwUMOqMup3Pv/RlbM=; b=Gkx26kuo9o/AJL/iYhzFoN09LU
-	WMsmG9IcUJxXG+VvqHMCURZfGBb+vkFjRPVV0Pwn7QDXGghrOgZo79R3x/hScOMDhaGal8jrU2DD4
-	sCxs/0oGyUdDvFfx7KlDZcXymiMW539jiVOum6/5rFS3mbqjhwQUbM6MAVyuatF34tgKAdEovYTVz
-	rTytP47tAxm3PfG/B0A+ZheMpSXUu+CRwsPjV7baGkJ7mJKZm8zzVNHpBv5pjlrHsLXpn2OFAtH38
-	Bxq/ldFDJSheMZPRsy6HvD2R8uLLn2tobWxoCyXerJiQIVeLDzmE7iAMTTS3LFH5m3IFAN3tg8ysK
-	F6suFvzw==;
-Received: from [94.239.20.48] (port=55626 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjkIo-000075-35;
-	Fri, 22 Sep 2023 12:50:55 -0500
-Message-ID: <dd13a477-96b5-4348-eeeb-14f21319ed39@embeddedor.com>
-Date: Fri, 22 Sep 2023 19:51:50 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF4436D;
+	Sun, 24 Sep 2023 01:32:54 +0000 (UTC)
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020027.outbound.protection.outlook.com [52.101.56.27])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90FE113;
+	Sat, 23 Sep 2023 18:32:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g17hGKn3iC3cdPvs4gCvPBYOOpRfvTuqM5lVWQe3SZeargqgc+rX8sjZpGVe4CRfLPY1xGK4SDjIwCZIhj/wmqx6QOSnh8ztQrzGxLWB2dCh3Njzm7r4uZj35NcIg7HK1WxGGzP1A1h4ObLUe5t0Q9Wi/Teo3N9fC/Qq1kDfh8iWy6bw5XiCbDTHaC5rrMGET/vWjRRnI36UckcGP4Bti0c3R2YxYxVMeqJle2qH/BSXpB3Itzp7u6FujKdjMEKxwP30ishEw4olRFUtfc9plvVWztvMMAV8MPlPV1LQ/RyV15qvNYD7/JPWGOfG4GJvHxEyAxBWaV9ar6gs/NkbzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tPuywyRqq8oz7RGlLDuebbtMZwM9CbilH7xM4WFGc+E=;
+ b=hrdgIuyhPosvzztl6HCy6Y5i9eKZPZDpuzoGJL8sTpDDQYqF5P5BSNGUl7J6WRWLm+hxy2cp2+Y43RifwUIkMTUN5wDkGVpN3BPunjv/VyfBAgU/X1ysoegduCfBpgvNTCTK5pLWz5XlQgTjyv1yDAQQGaNOG9HKpO7sbg6jWCFkdSMJUs5FxeS57vs5gCZQGbrK79evbmmrEADzFYbAZVC9Y03oh0WclhKATILGLfdoOOHQVnIgEh4MG1v9GHItSZXvu3nfoQklpzdAvStkHnw6bCjpw39/aiT0bswIlCYEIucm/8SK8N4FCiMp+GGSiyRzdDA2gHyCdk5yVnWqQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tPuywyRqq8oz7RGlLDuebbtMZwM9CbilH7xM4WFGc+E=;
+ b=IbQfLqJgOLqe1L9ZSWPz1EqUGUzYEgOSQeYgWd+fEwa196xQ7UfK+7MTHQbxn5rjSSRkq6sWLIG0sojAFm/hYoHKo9jrOX/pkDWFCIGrEBPzZ1dlrCY7Rl39HDr2gfy9YKQADi6+HnZMmHEZhQ6ngx4JB32m/xcfE+OJ44rG5jo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+Received: from DM6PR21MB1451.namprd21.prod.outlook.com (2603:10b6:5:25c::16)
+ by SJ0PR21MB1323.namprd21.prod.outlook.com (2603:10b6:a03:3e7::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.14; Sun, 24 Sep
+ 2023 01:32:49 +0000
+Received: from DM6PR21MB1451.namprd21.prod.outlook.com
+ ([fe80::827:4af:136a:236e]) by DM6PR21MB1451.namprd21.prod.outlook.com
+ ([fe80::827:4af:136a:236e%3]) with mapi id 15.20.6838.010; Sun, 24 Sep 2023
+ 01:32:48 +0000
+From: Haiyang Zhang <haiyangz@microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: haiyangz@microsoft.com,
+	decui@microsoft.com,
+	kys@microsoft.com,
+	paulros@microsoft.com,
+	olaf@aepfle.de,
+	vkuznets@redhat.com,
+	davem@davemloft.net,
+	wei.liu@kernel.org,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	leon@kernel.org,
+	longli@microsoft.com,
+	ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	bpf@vger.kernel.org,
+	ast@kernel.org,
+	sharmaajay@microsoft.com,
+	hawk@kernel.org,
+	tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net, 0/3] net: mana: Fix some TX processing bugs
+Date: Sat, 23 Sep 2023 18:31:44 -0700
+Message-Id: <1695519107-24139-1-git-send-email-haiyangz@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0043.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::18) To DM6PR21MB1451.namprd21.prod.outlook.com
+ (2603:10b6:5:25c::16)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 04/14] net: hns: Annotate struct ppe_common_cb with
- __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>,
- Salil Mehta <salil.mehta@huawei.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- Jamal Hadi Salim <jhs@mojatatu.com>, David Ahern <dsahern@kernel.org>,
- Martin KaFai Lau <martin.lau@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Claudiu Manoil
- <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Ajay Sharma <sharmaajay@microsoft.com>, Alex Elder <elder@kernel.org>,
- Pravin B Shelar <pshelar@ovn.org>, Shaokun Zhang
- <zhangshaokun@hisilicon.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
- dev@openvswitch.org, linux-parisc@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20230922172449.work.906-kees@kernel.org>
- <20230922172858.3822653-4-keescook@chromium.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922172858.3822653-4-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qjkIo-000075-35
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:55626
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNJpHygesTnC9s4/oKhsiSlt39atOTOWtv0wJ1wVifhALYIJgEbY4fx/e1uMwTYJ3/8CRN5d3KuTZbbtkim+x5p+/obVSjygLkB93NEpyPKF1THf9WIC
- FCMpFVXXS5HFy1i09t6eTnCSsdXJcltIMiF/7oEdZagp/qFb/RmYoP7hW609X2twlv+xv1qjaaP7zPTJ5Bq+zZ+dTZQKwZBOkHnJQjQ6YDFcie3GoIDxPV9K
- xBBc0wDxcVz04PQXWuiJImSLZCoZTD1O7NkZGRKYWKrSQ1vqBwaO0casmMyjDhykoiJnYGI4OQofBH3kycEiZtXPpMZoNqPgmHpxclNpHeqPvOidWW3koSfT
- roA3/Ne0t4hupZ8ACDMliQXE3dsBHni6H09yww2yse6efyr751H/f9vfHTJ7RKUYinqy1wbD
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+Sender: LKML haiyangz <lkmlhyz@microsoft.com>
+X-MS-Exchange-MessageSentRepresentingType: 2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR21MB1451:EE_|SJ0PR21MB1323:EE_
+X-MS-Office365-Filtering-Correlation-Id: f057f27f-bc2b-4725-04c7-08dbbc9e28a0
+X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+ RBjN/G4UW3VojPkQfxrfIYzde4JNSIHc0OyFWaobwmAs20+bNfBjwCh8FBRbDZr1Mm47AtQh4f9ihg2lhc7JKt5JOzvdtvPelWG23IfWXaShyfi0EWoHaCiGxjVjCPeC0W0L6+6lSGrzRmbNXQ69nKffn0Bq4Pw8RjaGZNsGFB/QJWEPA3e05lXz812cGDBCdL+q07pZzEB9aF1jY599iHGokE9opRmaNuA7VRIJBC80+pXuVGOtnHCSEn+8s6SP/ny2XTfPwJ90LLWon6+BiFOC3ZiWyfVplc8EjDZKU35Hk3Z9QD3Ksrxl8L/EK7YFL4DrxfPob3di+m/Ow5Dq58g+l5GVc7JM5Xs3yaqfeT4rBhBGGfaqQGmhP0w8ol0nEtFAwAQ357xexcsFo7vnnhQtkGTSgIrjmecQHaM5MUunBBM8Le3i47ZerZFYxql/Ksa5z/9k/P4h06Zj1Icl2O6vK7WTymjpFa9bWpuF5SQPpZjbk0vpuvxrMwgKuUDUMQIdnTldTpfap0TvVBhwjuc3U2+bRpog4oDRJzTgmm89KoRZ7No0oqaLlmycZKGAR03yWDDD5ianG1yFGWT3ozQpuvrptCrxtBc9TE8hPzmId+GMlkHeT5LspjFPBxXX15MQaBdIY71xbL1BTDBTlV8orWEen79UefI9HuhKstY=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1451.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(39860400002)(376002)(346002)(136003)(230922051799003)(1800799009)(186009)(451199024)(52116002)(10290500003)(6506007)(6486002)(6666004)(478600001)(83380400001)(6512007)(26005)(2616005)(7416002)(4744005)(2906002)(41300700001)(66476007)(8936002)(8676002)(66556008)(66946007)(316002)(4326008)(5660300002)(36756003)(7846003)(82950400001)(82960400001)(38350700002)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?uFIsjew/Ob9eeu3k+zbooSk7R5WNvH6g9OHD+P8qE+W5PY9+PQcAcnXJPZ4v?=
+ =?us-ascii?Q?FfqPYI1j1zdq2LcrL8XYWhyoBVcKlWS1VJj/F3B5CHr2Oqk88aGllLJ1CxVP?=
+ =?us-ascii?Q?ZKqeE1x6ELiyUjbb/CX5GBcq3FId1eOEuw1VhCFxL06K4tUBhq0v1WTvkRtr?=
+ =?us-ascii?Q?vd3/m1DPyzMvHYn87yFEiwqpuUFWxpM86b61gy+qvXRlZ7X7bYjMmbEahRtg?=
+ =?us-ascii?Q?DinyD6KcjMZj3AOlivDYU8NaF44cQEQ/RcGAvy304bUpAktZYmtQ0j5PTq+g?=
+ =?us-ascii?Q?TWsOOqsimTxm+2peFWyMNblz+shSAe4MwdKLz/Q0dGIYRRvbmGEiGWVMX/RR?=
+ =?us-ascii?Q?JwsjT4A9msbAlqM4xGeOKqECXBGG3lvD0ndLHBIDqbjecG3W6U14xhjiJWj4?=
+ =?us-ascii?Q?HdxrjE2DfDmyylYXRNIgy1/NGR9H329nzI2Gbd//2mwSZ2V4YRO42N3CGeqs?=
+ =?us-ascii?Q?NUwth8gUMmQTdsFDs36oWhknGYLSPGu5MnKSJJjdDSWWIhgf3CXNJ26vJcuK?=
+ =?us-ascii?Q?gd2KHOVsGv7QOjMLC08QdN/vWvq1qncJv06gG5JfG4yRMw+91VJBMFgouue0?=
+ =?us-ascii?Q?BR7Qh2UhJrspnHnNy/HgX6XVrd1uSa0EFpB1nU2kU/8A9d57rKZPCIJVLSuc?=
+ =?us-ascii?Q?lm58K9Huj6lm0dYYWLsIspdFB8Sg3ttFjAHemhBUEdQdJsmlDZ34x+Y/yMw/?=
+ =?us-ascii?Q?5Z7I/P6VKwr3n9/dPPMEfgqtW8mkowCORewtwZQNLSuZXhDT8Sbr3d3QOQCs?=
+ =?us-ascii?Q?eIg6PS7H5+kLDU4by4Wh6fIOVB91GbbYKsGjcCBzOzN2PmCb6axYtemOsRMt?=
+ =?us-ascii?Q?t3mwaG+QNe/+cKAmikoROieX8Df4qOjunFfqNs3l+EF6nutlTHPAl2GRHG34?=
+ =?us-ascii?Q?v/xeeEUna2UPpdPTU4fOO1eTELV4U2xOVs5TCEuF4n252xYZ7322mSZFUn4l?=
+ =?us-ascii?Q?fems/milK3l+gTev+ZO+x4HW+AL25ea0yZ+nIzt1ihTmCX5jL7K6BZsp5cjf?=
+ =?us-ascii?Q?JY+++sfRz6QNmlTv/SY+NvahDYHRdCW2rLAwM8sTkLxOKMPJFHF6DZeO8lMR?=
+ =?us-ascii?Q?jSDrKzFBebhKEVqV9hbykmGpFFxRV/LaRb0AnKIhRjT2aQbVtGVFAAIjGkZG?=
+ =?us-ascii?Q?EFxYTn9/Gjftc2pGrrSeDDdkI4U2dythalev6ephFjv3YbHnWO5eZW7/yFQ8?=
+ =?us-ascii?Q?rS6Wi4W33bBazN1hJmvn6+P99fF4PfiAp0e7Lun7wzxNClYYAsTbK7tToCjl?=
+ =?us-ascii?Q?+sn+LXz0JeNS6YiK15wpwCJDdJTXWSZyzW7bV2fw3vOSRiERIzIJKz14zFHk?=
+ =?us-ascii?Q?/DE08KAiuaeq5I7Ycm4C6Uh/m1f+48YPu1qp0X7JB07D2dSKwiOPl+WqHamo?=
+ =?us-ascii?Q?lEM0V4vYayRrIA3HPeZwFlzETZbuwVtC78X4dSfSjmHg1EN7I+jQ1Np335yC?=
+ =?us-ascii?Q?LFvnkhAEg56SrCBs5lNfw3ZwEDG0zqmNgdyy194Zy+UVwPeGgbBCzQgth3Uo?=
+ =?us-ascii?Q?Hl2eRi8QxTcCuyR4NNMDP4aNujLcGuUqSWBRXF9H764mudXXlldEu0Yow4mB?=
+ =?us-ascii?Q?hhAp4OZZHsK/lfjRcTHB0x8nx+3eU94fDPRNBFrn?=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f057f27f-bc2b-4725-04c7-08dbbc9e28a0
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1451.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2023 01:32:47.8674
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qXV0D9mFu8eQAQWfCEuMsgVn7KpF5TRXl/KpcPwQGaz5ZPfiXdXf8oaHkVO6S0cvWTkfSPkxQHIheB1igunN6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1323
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Fix TX processing bugs on error handling, tso_bytes calculation,
+and sge0 size.
 
+Haiyang Zhang (3):
+  net: mana: Fix TX CQE error handling
+  net: mana: Fix the tso_bytes calculation
+  net: mana: Fix oversized sge0 for GSO packets
 
-On 9/22/23 11:28, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ppe_common_cb.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
-> Cc: Salil Mehta <salil.mehta@huawei.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 206 ++++++++++++------
+ include/net/mana/mana.h                       |   5 +-
+ 2 files changed, 145 insertions(+), 66 deletions(-)
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
 -- 
-Gustavo
+2.25.1
 
-> ---
->   drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
-> index 0f0e16f9afc0..7e00231c1acf 100644
-> --- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
-> +++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
-> @@ -92,7 +92,7 @@ struct ppe_common_cb {
->   	u8 comm_index;   /*ppe_common index*/
->   
->   	u32 ppe_num;
-> -	struct hns_ppe_cb ppe_cb[];
-> +	struct hns_ppe_cb ppe_cb[] __counted_by(ppe_num);
->   
->   };
->   
 
