@@ -1,127 +1,178 @@
-Return-Path: <linux-hyperv+bounces-281-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-282-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFD7C7AE904
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Sep 2023 11:26:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9012F7AECEE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Sep 2023 14:33:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sy.mirrors.kernel.org (Postfix) with ESMTP id 0C130B20849
-	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Sep 2023 09:26:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id 35477281857
+	for <lists+linux-hyperv@lfdr.de>; Tue, 26 Sep 2023 12:33:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44BB212B77;
-	Tue, 26 Sep 2023 09:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB89D28DAE;
+	Tue, 26 Sep 2023 12:33:39 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B6F1849
-	for <linux-hyperv@vger.kernel.org>; Tue, 26 Sep 2023 09:26:35 +0000 (UTC)
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EB9FB
-	for <linux-hyperv@vger.kernel.org>; Tue, 26 Sep 2023 02:26:34 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-405361bba99so79337855e9.2
-        for <linux-hyperv@vger.kernel.org>; Tue, 26 Sep 2023 02:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1695720392; x=1696325192; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=kmbdPGVs/W/K0GplugB5QvWG9QUiEtGu9P+FlblHW9s=;
-        b=omASNCkvQh8ogDycK6NS67DjKJ9uzDzUSm5qj2PQ42ShbFSp0GjTT1kFT9G8h/y/NP
-         CmD6FuqIQ10+Z9raam3r4/NqUsq7eXuiu9uvf3msORuxNCoxvZ96rhuaJz3VgwGB4Vth
-         vUHV0Rs+bmjfVjEuTYRdZ6Py8lkOBcJCj+6iQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695720392; x=1696325192;
-        h=content-transfer-encoding:in-reply-to:references:cc:to
-         :content-language:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kmbdPGVs/W/K0GplugB5QvWG9QUiEtGu9P+FlblHW9s=;
-        b=IRH5P8xF4ityN0pw813ofMXNy0/L8SoMnq9VJJqNZVL2K79W6QejCTtxtUesoovey6
-         cm3vN/OzpwReXfTdxfLLLWB4HhCrG9RbbJtYwTy/d39R27mxDHCQKAfBN7Loj3RSkyBN
-         9AmWOtlUvbH2cloBVD8AFwliyaIjI/LVGBEECKmUtvHb5PuAyM3pxtBI/7d2vnip3H3L
-         bqp3SvFzSpdRALYqxM3k4IuUknqQ8MwFgobYDLr9tzwobfNYpO5QlNXPPulsIeuSspRE
-         UfR3ZfqhOZtp+ap2tYyVqXwi/5qoq/GRpuzcrtTXVv/Mv5ryx3RAZshRuqj3dosfdyTV
-         83iQ==
-X-Gm-Message-State: AOJu0Yx/agK5ean8QQHYaHqPN5tUGhR/kWBw5l0ZSPry5WZwIqhDMXsO
-	QtaQ2hZYpP5eVR/LxiPEx8MD2Q==
-X-Google-Smtp-Source: AGHT+IGgfHuuM6+TDVmgDCR6/9jB/xVFtYMos7qI/oRqScsqgBiOvBrkuPDQ8QUbO3jvp1Bf0T5msA==
-X-Received: by 2002:a5d:44ca:0:b0:31f:fdd8:7d56 with SMTP id z10-20020a5d44ca000000b0031ffdd87d56mr8037098wrr.12.1695720392647;
-        Tue, 26 Sep 2023 02:26:32 -0700 (PDT)
-Received: from [10.80.67.28] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
-        by smtp.gmail.com with ESMTPSA id o5-20020adfeac5000000b0031984b370f2sm14100219wrn.47.2023.09.26.02.26.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Sep 2023 02:26:32 -0700 (PDT)
-Message-ID: <6e0064bc-65c1-24f5-c29d-c1d1c027e2d3@citrix.com>
-Date: Tue, 26 Sep 2023 10:26:31 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C20B2869D
+	for <linux-hyperv@vger.kernel.org>; Tue, 26 Sep 2023 12:33:38 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA27711D;
+	Tue, 26 Sep 2023 05:33:36 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 1318520B74C0; Tue, 26 Sep 2023 05:33:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1318520B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1695731616;
+	bh=eorYgxmtB2WEDhSzSXglOLVbIYf2lmcE5SfGSmPo5ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lBKDsWur+Azdt3wFsEq+NVIYYXomnLJSmI+9ykR00PihrafadUM1BDJrS6LBkr0IB
+	 VrduIN2jMFUPr2Q1R5ZNzFivvc+C7lQqYcg1bW/tfADL0tL51W+FJIdA8NSRFi1//e
+	 FNVzOhYT/BUX7jKP2bGXB+cMXVgf/Kzrs9L8ZrpI=
+Date: Tue, 26 Sep 2023 05:33:36 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	patches@lists.linux.dev, mikelley@microsoft.com, kys@microsoft.com,
+	wei.liu@kernel.org, haiyangz@microsoft.com, decui@microsoft.com,
+	apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
+	mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+	jinankjain@linux.microsoft.com, vkuznets@redhat.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
+	catalin.marinas@arm.com
+Subject: Re: [PATCH v3 15/15] Drivers: hv: Add modules to expose /dev/mshv to
+ VMMs running on Hyper-V
+Message-ID: <20230926123336.GA9863@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1695407915-12216-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1695407915-12216-16-git-send-email-nunodasneves@linux.microsoft.com>
+ <2023092342-staunch-chafe-1598@gregkh>
+ <e235025e-abfa-4b31-8b83-416ec8ec4f72@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-From: andrew.cooper3@citrix.com
-Subject: Re: [PATCH v11 05/37] x86/trapnr: Add event type macros to
- <asm/trapnr.h>
-Content-Language: en-GB
-To: Nikolay Borisov <nik.borisov@suse.com>, Xin Li <xin3.li@intel.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
- kvm@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, luto@kernel.org,
- pbonzini@redhat.com, seanjc@google.com, peterz@infradead.org,
- jgross@suse.com, ravi.v.shankar@intel.com, mhiramat@kernel.org,
- jiangshanlai@gmail.com
-References: <20230923094212.26520-1-xin3.li@intel.com>
- <20230923094212.26520-6-xin3.li@intel.com>
- <7acd7bb3-0406-4fd9-8396-835bfd951d87@suse.com>
-In-Reply-To: <7acd7bb3-0406-4fd9-8396-835bfd951d87@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e235025e-abfa-4b31-8b83-416ec8ec4f72@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 26/09/2023 9:10 am, Nikolay Borisov wrote:
-> On 23.09.23 г. 12:41 ч., Xin Li wrote:
->> diff --git a/arch/x86/include/asm/trapnr.h
->> b/arch/x86/include/asm/trapnr.h
->> index f5d2325aa0b7..8d1154cdf787 100644
->> --- a/arch/x86/include/asm/trapnr.h
->> +++ b/arch/x86/include/asm/trapnr.h
->> @@ -2,6 +2,18 @@
->>   #ifndef _ASM_X86_TRAPNR_H
->>   #define _ASM_X86_TRAPNR_H
->>   +/*
->> + * Event type codes used by FRED, Intel VT-x and AMD SVM
->> + */
->> +#define EVENT_TYPE_EXTINT    0    // External interrupt
->> +#define EVENT_TYPE_RESERVED    1
->> +#define EVENT_TYPE_NMI        2    // NMI
->> +#define EVENT_TYPE_HWEXC    3    // Hardware originated traps,
->> exceptions
->> +#define EVENT_TYPE_SWINT    4    // INT n
->> +#define EVENT_TYPE_PRIV_SWEXC    5    // INT1
->> +#define EVENT_TYPE_SWEXC    6    // INTO, INT3
->
-> nit: This turned into INTO (Oh) rather than INT0( zero) in v11
+On Mon, Sep 25, 2023 at 05:07:24PM -0700, Nuno Das Neves wrote:
+> Resend in plain text instead of HTML - oops!
+> 
+> On 9/23/2023 12:58 AM, Greg KH wrote:
+> >On Fri, Sep 22, 2023 at 11:38:35AM -0700, Nuno Das Neves wrote:
+> >>+static int mshv_vtl_get_vsm_regs(void)
+> >>+{
+> >>+	struct hv_register_assoc registers[2];
+> >>+	union hv_input_vtl input_vtl;
+> >>+	int ret, count = 2;
+> >>+
+> >>+	input_vtl.as_uint8 = 0;
+> >>+	registers[0].name = HV_REGISTER_VSM_CODE_PAGE_OFFSETS;
+> >>+	registers[1].name = HV_REGISTER_VSM_CAPABILITIES;
+> >>+
+> >>+	ret = hv_call_get_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
+> >>+				       count, input_vtl, registers);
+> >>+	if (ret)
+> >>+		return ret;
+> >>+
+> >>+	mshv_vsm_page_offsets.as_uint64 = registers[0].value.reg64;
+> >>+	mshv_vsm_capabilities.as_uint64 = registers[1].value.reg64;
+> >>+
+> >>+	pr_debug("%s: VSM code page offsets: %#016llx\n", __func__,
+> >>+		 mshv_vsm_page_offsets.as_uint64);
+> >>+	pr_info("%s: VSM capabilities: %#016llx\n", __func__,
+> >>+		mshv_vsm_capabilities.as_uint64);
+> >
+> >When drivers are working properly, they are quiet.  This is very noisy
+> >and probably is leaking memory addresses to userspace?
+> >
+> 
+> I will remove these, thanks.
+> 
+> >Also, there is NEVER a need for __func__ in a pr_debug() line, it has
+> >that for you automatically.
+> >
+> 
+> Thank you, I didn't know this.
+> 
+> >Also, drivers should never call pr_*() calls, always use the proper
+> >dev_*() calls instead.
+> >
+> 
+> We only use struct device in one place in this driver, I think that
+> is the only place it makes sense to use dev_*() over pr_*() calls.
+> >
+> >
+> >>+
+> >>+	return ret;
+> >>+}
+> >>+
+> >>+static int mshv_vtl_configure_vsm_partition(void)
+> >>+{
+> >>+	union hv_register_vsm_partition_config config;
+> >>+	struct hv_register_assoc reg_assoc;
+> >>+	union hv_input_vtl input_vtl;
+> >>+
+> >>+	config.as_u64 = 0;
+> >>+	config.default_vtl_protection_mask = HV_MAP_GPA_PERMISSIONS_MASK;
+> >>+	config.enable_vtl_protection = 1;
+> >>+	config.zero_memory_on_reset = 1;
+> >>+	config.intercept_vp_startup = 1;
+> >>+	config.intercept_cpuid_unimplemented = 1;
+> >>+
+> >>+	if (mshv_vsm_capabilities.intercept_page_available) {
+> >>+		pr_debug("%s: using intercept page", __func__);
+> >
+> >Again, __func__ is not needed, you are providing it twice here for no
+> >real reason except to waste storage space :)
+> >
+> 
+> Thanks, I will review all the uses of pr_debug().
+> 
+> >>+		config.intercept_page = 1;
+> >>+	}
+> >>+
+> >>+	reg_assoc.name = HV_REGISTER_VSM_PARTITION_CONFIG;
+> >>+	reg_assoc.value.reg64 = config.as_u64;
+> >>+	input_vtl.as_uint8 = 0;
+> >>+
+> >>+	return hv_call_set_vp_registers(HV_VP_INDEX_SELF, HV_PARTITION_ID_SELF,
+> >>+				       1, input_vtl, &reg_assoc);
+> >
+> >
+> >None of this needs to be unwound if initialization fails later on?
+> >
+> 
+> I think unwinding this is not needed, not 100% sure.
+> Saurabh, can you comment?
 
-Yes, v11 corrected a bug in v10.
+Yes unwinding is not useful here, as these are synthetic register
+and there is no other use case of VSM supporting platforms other
+than VSM configuration.
 
-The INTO instruction is "INT on Overflow".  No zero involved.
+In a non VSM supported platform hv_call_set_vp_registers itself will
+fail for HV_REGISTER_VSM_PARTITION_CONFIG.
 
-INT3 is thusly named because it generates vector 3.  Similarly for INT1
-although it had the unofficial name ICEBP long before INT1 got documented.
+- Saurabh
 
-If INTO were to have a number, it would need to be 4, but it's behaviour
-is conditional on the overflow flag, unlike INT3/1 which are
-unconditional exceptions.
-
-~Andrew
+> 
+> Thanks,
+> Nuno
+> 
+> >thanks,
+> >
+> >greg k-h
+> 
 
