@@ -1,155 +1,137 @@
-Return-Path: <linux-hyperv+bounces-286-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-287-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A20957AFA51
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Sep 2023 07:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C85A7AFA8E
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Sep 2023 08:01:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by ny.mirrors.kernel.org (Postfix) with ESMTP id 715351C20442
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Sep 2023 05:49:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id 788F51C20429
+	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Sep 2023 06:01:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCD4E14A94;
-	Wed, 27 Sep 2023 05:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A36031549F;
+	Wed, 27 Sep 2023 06:01:04 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C15E13FF1;
-	Wed, 27 Sep 2023 05:49:55 +0000 (UTC)
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 63645170E;
-	Tue, 26 Sep 2023 22:49:53 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AE48620B74C0;
-	Tue, 26 Sep 2023 22:49:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AE48620B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1695793792;
-	bh=zYLgfwVrqDBS5frwkU8WzeM8Y0joHuphXzHL6ORt8IQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Pp/754cU2V+m654v727QrXirT71pL8pHi7Htgxvk49n2VPSfi6SwI3wBlvLBbpSCN
-	 3ZZB1cSIoEW/kYqMfBTKoZKuQxBYc0jh6YwEuTmwktm9ATqCp5kw0OBa9pDTlNgGmq
-	 zcU46rYDR40PJ5T4AHo3KS2YJKRi6g2rRNqEndTs=
-From: Sonia Sharma <sosha@linux.microsoft.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	sosha@microsoft.com,
-	kys@microsoft.com,
-	mikelley@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Subject: [PATCH v5 net-next] net: hv_netvsc: fix netvsc_send_completion to avoid multiple message length checks
-Date: Tue, 26 Sep 2023 22:49:47 -0700
-Message-Id: <1695793787-21107-1-git-send-email-sosha@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-	autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825DD15493;
+	Wed, 27 Sep 2023 06:01:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD420C433C7;
+	Wed, 27 Sep 2023 06:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1695794464;
+	bh=5bU3gzx6D/KCU0/C5mz2JXiNA41aaEP8U6oXybPm8gI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j2LRf4pJ6rPQn6ySzyf20SC7ew+5hiHg0ZgTGztrtSHsf+ONc0fSbPWBjlR9BQEcF
+	 T9u0I6IHdfCXvEtS+qRFuUJFBEdCb9gUa1iDa3NEL90zruzcMkXboJd04FQft3n+wA
+	 JDYbRNptapF/6wySxZlqHvmS2oV11NdlYt4NoVdQ=
+Date: Wed, 27 Sep 2023 08:01:01 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+	patches@lists.linux.dev, mikelley@microsoft.com, kys@microsoft.com,
+	haiyangz@microsoft.com, decui@microsoft.com,
+	apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
+	ssengar@linux.microsoft.com, mukeshrathor@microsoft.com,
+	stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com,
+	vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	will@kernel.org, catalin.marinas@arm.com
+Subject: Re: [PATCH v3 15/15] Drivers: hv: Add modules to expose /dev/mshv to
+ VMMs running on Hyper-V
+Message-ID: <2023092737-daily-humility-f01c@gregkh>
+References: <1695407915-12216-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1695407915-12216-16-git-send-email-nunodasneves@linux.microsoft.com>
+ <2023092342-staunch-chafe-1598@gregkh>
+ <e235025e-abfa-4b31-8b83-416ec8ec4f72@linux.microsoft.com>
+ <2023092630-masculine-clinic-19b6@gregkh>
+ <ZRJyGrm4ufNZvN04@liuwe-devbox-debian-v2>
+ <2023092614-tummy-dwelling-7063@gregkh>
+ <ZRKBo5Nbw+exPkAj@liuwe-devbox-debian-v2>
+ <2023092646-version-series-a7b5@gregkh>
+ <05119cbc-155d-47c5-ab21-e6a08eba5dc4@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <05119cbc-155d-47c5-ab21-e6a08eba5dc4@linux.microsoft.com>
 
-From: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+On Tue, Sep 26, 2023 at 02:52:36PM -0700, Nuno Das Neves wrote:
+> On 9/26/2023 1:03 AM, Greg KH wrote:
+> > On Tue, Sep 26, 2023 at 07:00:51AM +0000, Wei Liu wrote:
+> > > On Tue, Sep 26, 2023 at 08:31:03AM +0200, Greg KH wrote:
+> > > > On Tue, Sep 26, 2023 at 05:54:34AM +0000, Wei Liu wrote:
+> > > > > On Tue, Sep 26, 2023 at 06:52:46AM +0200, Greg KH wrote:
+> > > > > > On Mon, Sep 25, 2023 at 05:07:24PM -0700, Nuno Das Neves wrote:
+> > > > > > > On 9/23/2023 12:58 AM, Greg KH wrote:
+> > > > > > > > Also, drivers should never call pr_*() calls, always use the proper
+> > > > > > > > dev_*() calls instead.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > We only use struct device in one place in this driver, I think that is the
+> > > > > > > only place it makes sense to use dev_*() over pr_*() calls.
+> > > > > > 
+> > > > > > Then the driver needs to be fixed to use struct device properly so that
+> > > > > > you do have access to it when you want to print messages.  That's a
+> > > > > > valid reason to pass around your device structure when needed.
+> > > > > 
+> 
+> What is the tangible benefit of using dev_*() over pr_*()?
 
-The switch statement in netvsc_send_completion() is incorrectly validating
-the length of incoming network packets by falling through to the next case.
-Avoid the fallthrough. Instead break after a case match and then process
-the complete() call.
-The current code has not caused any known failures. But nonetheless, the
-code should be corrected as a different ordering of the switch cases might
-cause a length check to fail when it should not.
+Unified reporting and handling of userspace of kernel log messages so
+they can be classified properly as well as dealing correctly with the
+dynamic debugging kernel infrastructure.
 
-Signed-off-by: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+Why wouldn't you want to use it?
 
----
-Changes in v3:
-* added return statement in default case as pointed by Michael Kelley.
-Changes in v4:
-* added fixes tag
-* modified commit message to explain the issue fixed by patch.
-Changes in v5:
-* Dropped fixes tag as suggested by Simon Horman.
-* fixed indentation
----
- drivers/net/hyperv/netvsc.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+> As I said,
+> our use of struct device is very limited compared to all the places we
+> may need to log errors.
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 82e9796c8f5e..0f7e4d377776 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -851,7 +851,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -860,7 +860,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -869,7 +869,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG5_TYPE_SUBCHANNEL:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -878,10 +878,6 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		/* Copy the response back */
--		memcpy(&net_device->channel_init_pkt, nvsp_packet,
--		       sizeof(struct nvsp_message));
--		complete(&net_device->channel_init_wait);
- 		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
-@@ -904,13 +900,19 @@ static void netvsc_send_completion(struct net_device *ndev,
- 
- 		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
- 					desc, budget);
--		break;
-+		return;
- 
- 	default:
- 		netdev_err(ndev,
- 			   "Unknown send completion type %d received!!\n",
- 			   nvsp_packet->hdr.msg_type);
-+		return;
- 	}
-+
-+	/* Copy the response back */
-+	memcpy(&net_device->channel_init_pkt, nvsp_packet,
-+	   sizeof(struct nvsp_message));
-+	complete(&net_device->channel_init_wait);
- }
- 
- static u32 netvsc_get_next_send_section(struct netvsc_device *net_device)
--- 
-2.25.1
+Then please fix that.
 
+> pr_*() is used by many, many drivers; it seems to be the norm.
+
+Not at all, it is not.
+
+> We can certainly add a pr_fmt to improve the logging.
+
+Please do it correctly so you don't have to go and add support for it
+later when your tools people ask you why they can't properly parse your
+driver's kernel log messages.
+
+> > > If we're working with real devices like network cards or graphics cards
+> > > I would agree -- it is easy to imagine that we have several cards of the
+> > > same model in the system -- but in real world there won't be two
+> > > hypervisor instances running on the same hardware.
+> > > 
+> > > We can stash the struct device inside some private data fields, but that
+> > > doesn't change the fact that we're still having one instance of the
+> > > structure. Is this what you want? Or do you have something else in mind?
+> > 
+> > You have a real device, it's how userspace interacts with your
+> > subsystem.  Please use that, it is dynamically created and handled and
+> > is the correct representation here.
+> > 
+> 
+> Are you referring to the struct device we get from calling
+> misc_register?
+
+Yes.
+
+> How would you suggest we get a reference to that device via e.g. open()
+> or ioctl() without keeping a global reference to it?
+
+You explicitly have it in your open() and ioctl() call, you never need a
+global reference for it the kernel gives it to you!
+
+thanks,
+
+greg k-h
 
