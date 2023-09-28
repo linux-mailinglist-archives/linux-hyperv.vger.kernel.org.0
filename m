@@ -1,155 +1,102 @@
-Return-Path: <linux-hyperv+bounces-293-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-294-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1F567B0DFA
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Sep 2023 23:19:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1BD97B0FD3
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Sep 2023 02:18:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id 00E3728231D
-	for <lists+linux-hyperv@lfdr.de>; Wed, 27 Sep 2023 21:19:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id 06B92281B5C
+	for <lists+linux-hyperv@lfdr.de>; Thu, 28 Sep 2023 00:18:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40F824C865;
-	Wed, 27 Sep 2023 21:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40C54399;
+	Thu, 28 Sep 2023 00:18:00 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECC315ACD;
-	Wed, 27 Sep 2023 21:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1855370
+	for <linux-hyperv@vger.kernel.org>; Thu, 28 Sep 2023 00:17:58 +0000 (UTC)
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D119012A;
-	Wed, 27 Sep 2023 14:19:20 -0700 (PDT)
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 53CE120B74C0;
-	Wed, 27 Sep 2023 14:19:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 53CE120B74C0
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id D4C41114;
+	Wed, 27 Sep 2023 17:17:56 -0700 (PDT)
+Received: from [10.0.0.178] (c-76-135-56-23.hsd1.wa.comcast.net [76.135.56.23])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C798520B74C0;
+	Wed, 27 Sep 2023 17:17:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C798520B74C0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1695849560;
-	bh=zYLgfwVrqDBS5frwkU8WzeM8Y0joHuphXzHL6ORt8IQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=r9RGtuVkjU1msQKVhEeBLsmKxlWXSVP2EZq8TN2Sb7w0wdbOpbquGZzhVyne/SZTw
-	 w7mzMl985oAl20ftM4fLyW7g6uoUSPCToBkWmmSMXLIhkfhdn6Z0lVh+lscZ13UhhW
-	 zZJtOhcjGS4yfEOlvSx+ZDI66y+PX1Tc/CP5eSD8=
-From: Sonia Sharma <sosha@linux.microsoft.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	sosha@microsoft.com,
-	kys@microsoft.com,
-	mikelley@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	longli@microsoft.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Subject: [PATCH net-next v6] net: hv_netvsc: fix netvsc_send_completion to avoid multiple message length checks
-Date: Wed, 27 Sep 2023 14:19:16 -0700
-Message-Id: <1695849556-20746-1-git-send-email-sosha@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-	autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+	s=default; t=1695860276;
+	bh=apiqyVomDl3eH58Vs8mK0hqcp1k7lISOy2zAU3jCyNU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=V8yNq7vak/Kr3K00IoP6fpQzGDvLsvy4Ezk9uAHfe4/mS3eMbtM8AOjTFUAcUd+m8
+	 Uy7bPwEC59miyqW9bO1K2C0BHSiD0UJAdT4igjnaL80svRDmpqu5ZuDj+DfThLWX/d
+	 EzQskjEpeqCkesXIudWToBYAWfoOBMOwhSz/l9+M=
+Message-ID: <fda2a3dd-b325-4780-bd02-d1fedcaec260@linux.microsoft.com>
+Date: Wed, 27 Sep 2023 17:17:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 15/15] Drivers: hv: Add modules to expose /dev/mshv to
+ VMMs running on Hyper-V
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>, Wei Liu <wei.liu@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-arch@vger.kernel.org, patches@lists.linux.dev, mikelley@microsoft.com,
+ kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+ apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
+ ssengar@linux.microsoft.com, mukeshrathor@microsoft.com,
+ stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com,
+ vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
+ catalin.marinas@arm.com
+References: <2023092342-staunch-chafe-1598@gregkh>
+ <e235025e-abfa-4b31-8b83-416ec8ec4f72@linux.microsoft.com>
+ <2023092630-masculine-clinic-19b6@gregkh>
+ <ZRJyGrm4ufNZvN04@liuwe-devbox-debian-v2>
+ <2023092614-tummy-dwelling-7063@gregkh>
+ <ZRKBo5Nbw+exPkAj@liuwe-devbox-debian-v2>
+ <2023092646-version-series-a7b5@gregkh>
+ <05119cbc-155d-47c5-ab21-e6a08eba5dc4@linux.microsoft.com>
+ <2023092737-daily-humility-f01c@gregkh>
+ <ZRPiGk9M3aQr99Y5@liuwe-devbox-debian-v2>
+ <2023092757-cupbearer-cancel-b314@gregkh>
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <2023092757-cupbearer-cancel-b314@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,SPF_HELO_PASS,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-From: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+On 9/27/2023 1:33 AM, Greg KH wrote:
+> On Wed, Sep 27, 2023 at 08:04:42AM +0000, Wei Liu wrote:
+>> So, the driver is supposed to stash a pointer to struct device in
+>> private_data. That's what I alluded to in my previous reply. The core
+>> driver framework or the VFS doesn't give us a reference to struct
+>> device. We have to do it ourselves.
+> 
+> Please read Linux Device Drivers, 3rd edition, chapter 3, for how to do
+> this properly.  The book is free online.
+> 
 
-The switch statement in netvsc_send_completion() is incorrectly validating
-the length of incoming network packets by falling through to the next case.
-Avoid the fallthrough. Instead break after a case match and then process
-the complete() call.
-The current code has not caused any known failures. But nonetheless, the
-code should be corrected as a different ordering of the switch cases might
-cause a length check to fail when it should not.
+Thanks, the issue that confused us was how to get the miscdevice.
+I eventually found the answer in the misc_register() documentation:
 
-Signed-off-by: Sonia Sharma <sonia.sharma@linux.microsoft.com>
+"By default, an open() syscall to the device sets file->private_data to
+point to the structure."
 
----
-Changes in v3:
-* added return statement in default case as pointed by Michael Kelley.
-Changes in v4:
-* added fixes tag
-* modified commit message to explain the issue fixed by patch.
-Changes in v5:
-* Dropped fixes tag as suggested by Simon Horman.
-* fixed indentation
----
- drivers/net/hyperv/netvsc.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+That's good - when we create a guest, we will have the miscdevice
+in private_data already. Then we can just put it in our per-guest data
+structure. That will let us retrieve the device in the other ioctls so 
+we can call dev_*().
 
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 82e9796c8f5e..0f7e4d377776 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -851,7 +851,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_RECV_BUF_COMPLETE:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -860,7 +860,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_SEND_BUF_COMPLETE:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -869,7 +869,7 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		fallthrough;
-+		break;
- 
- 	case NVSP_MSG5_TYPE_SUBCHANNEL:
- 		if (msglen < sizeof(struct nvsp_message_header) +
-@@ -878,10 +878,6 @@ static void netvsc_send_completion(struct net_device *ndev,
- 				   msglen);
- 			return;
- 		}
--		/* Copy the response back */
--		memcpy(&net_device->channel_init_pkt, nvsp_packet,
--		       sizeof(struct nvsp_message));
--		complete(&net_device->channel_init_wait);
- 		break;
- 
- 	case NVSP_MSG1_TYPE_SEND_RNDIS_PKT_COMPLETE:
-@@ -904,13 +900,19 @@ static void netvsc_send_completion(struct net_device *ndev,
- 
- 		netvsc_send_tx_complete(ndev, net_device, incoming_channel,
- 					desc, budget);
--		break;
-+		return;
- 
- 	default:
- 		netdev_err(ndev,
- 			   "Unknown send completion type %d received!!\n",
- 			   nvsp_packet->hdr.msg_type);
-+		return;
- 	}
-+
-+	/* Copy the response back */
-+	memcpy(&net_device->channel_init_pkt, nvsp_packet,
-+	       sizeof(struct nvsp_message));
-+	complete(&net_device->channel_init_wait);
- }
- 
- static u32 netvsc_get_next_send_section(struct netvsc_device *net_device)
--- 
-2.25.1
-
+Thanks,
+Nuno
 
