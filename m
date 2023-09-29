@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-348-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-349-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ACA57B39F0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 20:20:39 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA4DF7B39F1
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 20:20:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sy.mirrors.kernel.org (Postfix) with ESMTP id C8905B209B6
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 18:20:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id 56490281242
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 18:20:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F5466693;
-	Fri, 29 Sep 2023 18:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E545F66693;
+	Fri, 29 Sep 2023 18:20:37 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C826666A
-	for <linux-hyperv@vger.kernel.org>; Fri, 29 Sep 2023 18:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0294E6666A
+	for <linux-hyperv@vger.kernel.org>; Fri, 29 Sep 2023 18:20:36 +0000 (UTC)
 Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020024.outbound.protection.outlook.com [52.101.61.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED5C199;
-	Fri, 29 Sep 2023 11:20:31 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852561B6;
+	Fri, 29 Sep 2023 11:20:33 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hCWVqFO9jReYAMvA2CeP7x4dsq3gwOvrkTgFRYmwS+zzhcxJARNa9dYXKdbrsoVgkCm375cafyZfGxD8ecxtH6TebulY46SdOT/xUV4ifBtu5mSWurGu0zhgTYOtgMBOFmb5becmFRRHjjCtIy7l9Lsm3Y2Y+teAdShoP2yjwUL5eqA0j5hTrACYA+ge7izQvJWmpg5ew/TN2FRExfm2vRQo0m69/gt6Bi/ydlcLqcvvmEQVyUZxh57U6C5ZPm/nK/USsl8kUoQijqeTpDxp6DympEo7v/vidKLS07IXw2W3s15CMvYU7m7qN/LH9m9B4HFga62Y2XYNjTA4VK2Q6A==
+ b=d+68mP4K5AlfZAcx4OLfdGPfBJhD4vqYR7BcGGptnuk2gTKIxHMF41Xol72Z59yHGfXaZbfa+einXd7Qe5BsVP/NvExgJWu9tmqzUISPuOUGbsrwNvFQk9anPXJoPpxKA+0y6WDlPoT33GRvyFyRTu1k2QAFFgbrQD27Htd1TZJEe3TP9c95j/qMlT/UHUtPbKLQsc9KglGaa36O2wFmut6NX1ikmfLyuEvg3Hbqicw+3dYAsa4XPXdY1SzuPh/8x44gbr7xIjl60G9o2dvDFTyj4Crzs3HLvNB4hQHyIUqfEY3QI+mB1jGOa2BKGIwjmnwSVJ/yoEjPg6XFnYL18A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2Rjf3q/TwNEaI/C1ZPj7OLMe/dHReo1HA7m/Y30XYgE=;
- b=Q9bPhxTRqeTOCU/POO2tCj7Oq80HCwDU388vNvmAwPXqsviCvOE9Bh3yysKbWnaFlfikxw+KceGLPblGlYFmGx60Dn4olSBrw51XgHdLfXL9SrCBaUzVEJik1p/I3InTrg8MacpOoJdkl08HlOYHSH8Pmn3vcX1ndKhTyWWXTCDsC5Xg7FCjHjVdgAbXdZsetvRTk6LtnJ6XEdAvNdQqHGODuvELohNmWgLXYB0JPyuiBGMVOmlEcvoKTNJMCQEL2dtc40GlKjpnN+tWiDlvzH37MMtcpLy5B090lrP43OndZkAnWz3UMx8um3jN08sz55qthBZbyBgo2yjE/bz8+w==
+ bh=xVtMPBDElysEOjbegf4nL2dYZfzxFly9Up4BTuDtAyo=;
+ b=FG/pIe+y/a3BbzyJ60nuI/fYGVnB/ccrFGTg3n519bLDDxQg+CQxmGrY3kJ75jQLblB5gM0B4d88qUS1SyM3PKdE92PNE9kRZkg5IVdT9kfUysUJWeOcOIOzwUFfy9hWbt6BgfSrJx2qTpjmw0L7L9xfLGbWLz/bPg1uKQxwfGHseUIhwbSI+/W/IyWCCea1GKUGHVk/CtLD5MN6R/GMC2HuCLNq4Pwf1wsgySwHdKlKUBd9eBWrtObrWtwo80a/7tpKYwzH/WSt0V6X/5NLT8b532EPEY4Njae5NuQvORSHPoJy67wD78ZxTmQA6UydO3Y29Nz/mUUHiX+UQ6YOnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Rjf3q/TwNEaI/C1ZPj7OLMe/dHReo1HA7m/Y30XYgE=;
- b=PjA6oR0DZsp1EB4eT6wT2Ui7u1erumzl5ZEpNnb5YQiufYczBPIi+khAMMZ9PihMONA0Fz95sYyJTHoboOqDIVI5KXSFvtDHouVVNMvUw2C//SfJpBnF7Kxv9NOaHuav/TMQMfCr22OLGzUwC0N3yEK/h6gu/5nIKT/rX9utrvw=
+ bh=xVtMPBDElysEOjbegf4nL2dYZfzxFly9Up4BTuDtAyo=;
+ b=d9MRSlPQHcSMP72CycbFZecKCHZCiiO21mozluRZPm17Pd5acDTFGmRr8RnNUCAifEBVZuX3vBFVSBFauqqKdi6sdN+9Tqv+Ih59zXmlf93He/Y5F2UGCE17Hv5M/hY40H13rAZs5bPcyIIkHP2bhcfLC5qQwtmRFAb2R7Nbd7M=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
  by BL1PR21MB3377.namprd21.prod.outlook.com (2603:10b6:208:39d::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.14; Fri, 29 Sep
- 2023 18:20:25 +0000
+ 2023 18:20:26 +0000
 Received: from DM6PR21MB1370.namprd21.prod.outlook.com
  ([fe80::eff:aea7:be24:8e44]) by DM6PR21MB1370.namprd21.prod.outlook.com
  ([fe80::eff:aea7:be24:8e44%4]) with mapi id 15.20.6863.013; Fri, 29 Sep 2023
- 18:20:25 +0000
+ 18:20:26 +0000
 From: Michael Kelley <mikelley@microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -66,9 +66,9 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	x86@kernel.org
 Cc: mikelley@microsoft.com
-Subject: [PATCH 2/5] x86/mm: Don't do a TLB flush if changing a PTE that isn't marked present
-Date: Fri, 29 Sep 2023 11:19:06 -0700
-Message-Id: <1696011549-28036-3-git-send-email-mikelley@microsoft.com>
+Subject: [PATCH 3/5] x86/mm: Mark CoCo VM pages not present while changing encrypted state
+Date: Fri, 29 Sep 2023 11:19:07 -0700
+Message-Id: <1696011549-28036-4-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1696011549-28036-1-git-send-email-mikelley@microsoft.com>
 References: <1696011549-28036-1-git-send-email-mikelley@microsoft.com>
@@ -85,54 +85,54 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|BL1PR21MB3377:EE_
-X-MS-Office365-Filtering-Correlation-Id: 876bc7ea-dd06-43cc-f419-08dbc118c020
+X-MS-Office365-Filtering-Correlation-Id: 3a16ca76-b309-46be-6291-08dbc118c0d1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	drKoxyNdfNHGgC2dAgfKk4mGYSq5cFVuJNnNMIDX207u2WoRdzsI7vITLfmdZTnBTkhZnUrrY7pmAFk4SzmhMafuWwPPTHOu5OzdhhDKTmjZ96BDP21re9J01cXxnjp1tE926ixm48OOf+LClSqUuJR36FzVqZu+CKPtAgM0mgKIMeI+F8M0Bkhw2h+qWdljNsBb/CRzCZDl6l8MoRaHMjWCx4+3xmL4gr/rqNXLSSYEC8u2popVg/C3sk+90BarA5AONI/xnwkBc7Fl8uGMnth8BuYOo000Qj7tx+UlQb3tDiEHQk05gfoa3fLUIckFQE2sfMo5cBS1jniwr3LvCtqoXeSpzi3HwjxEXWzcVr8itWKB6s/nEG04VkiZsVcSKVlVFtk/a6xcleuciScMQ/R90nJChc83Mmwk3AGXvEeRrjUX4wG57cZ0n6zAwviA9g25MYUZWLBLvVis23EW5uZiGNPhHYweWnLZGqgysCVkkzfAOQ+feLNolaLUpYnCq8yln3u/Ims4ZmF1Jtj2nCxT9n1jR7ffVz8XI1f4yT7UpB+ce15YpgzUoGF883K8U1wvgCVTm9F73vLrDWp9222IeJ5qkesTAtYSufT3UKB8mba/XwiUNBdMd72hhtqYaBWaZCri8HICtjrPEVJTCncZ9dtzgPj3gWoACcSpTAC544HTALBSiSDi0eoD3p7E
+	QfCyQXzBLif9q3mrD4aro364Ker/qXf/g/+GzRbSpZbigwIzBiBxaexYQk985Fe0FRluu/598+zCs1GDR41CCnNGvwKrOwiwZfVngIKH7xvzmEbMzhhqcY6Gva5qwGnkNhi1Z9mSJFGTwuR5kuBQoY9TRkIwp0eCj4tyQ6Uu0QNAhrFjKafLXbtnO43uAIDZ6VmZAGdoxF4fBjsOjFPcCT6UjZWP/iDfi+Am0Qv564gsvTmBm3G4Y30PwonjoU/+5kM+FNwHkwdWOxuEqIKLNo+ojXXdOsZTynwaW++GGEJJECTez5XZrIXGoqerCLNnXEdJy9/Z4qRG5UGSMIk6nWDoYLnUYw7wnaWVc1duUOgJmy7KSvqIHb8L4qVwF0SKfl0ubqb18RBe0rmKS2wY1HiCJiB/NiU8O65wT9gG7sulVuCvhwSBKUIr6r2xxGknPBlWVCPH0nJmfcff7tYGiwYQHPNKDm/FN+n4RR6u66uDH6jgDAnSjdwNoiZ9v9nYFHpWdJhalv2Bo3vBcvJrY342ixK4JATWynTYctsvca3K047Q7PVt/nyZoTwZIUC87d0G73753vR8zjLJBnil+9ODXm9lhlmSuV7vyjWGqHw1J3Hzp16s7uRpZDLutNHhM4dBoWy+3VxQxKI7iShCDVG28UvZkVk6HDg6dfXIvl8xwz+MeSAb6WeMlf8bSqe2
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(136003)(346002)(376002)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799009)(41300700001)(6506007)(6512007)(6486002)(52116002)(478600001)(6666004)(2616005)(2906002)(316002)(66946007)(66556008)(66476007)(5660300002)(107886003)(10290500003)(8676002)(8936002)(4326008)(26005)(7416002)(921005)(82950400001)(82960400001)(36756003)(86362001)(83380400001)(38100700002)(38350700002);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(6029001)(396003)(39860400002)(136003)(346002)(376002)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799009)(41300700001)(6506007)(6512007)(6486002)(52116002)(478600001)(6666004)(2616005)(2906002)(316002)(66946007)(66556008)(66476007)(5660300002)(107886003)(10290500003)(8676002)(8936002)(4326008)(26005)(30864003)(7416002)(921005)(82950400001)(82960400001)(36756003)(86362001)(83380400001)(38100700002)(38350700002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RpoZgqrfEqTuymHl33dS+zp9mv/oxMaZ+DN6gGuh0ZwgRcWJGPmvj+4bpVT+?=
- =?us-ascii?Q?96dKh8bCZc2IMV4jBhYoBR3zO0uGTyKhmYFG33/E7QR7z1FXcVZKUtjIP7kl?=
- =?us-ascii?Q?0wo9xM1Q3eaHq8Pv93Ep2nZrFshl+ninCYOxj9bUjaWP7wOpdI0aWICNS5zC?=
- =?us-ascii?Q?6+ntSGP9irc+kIVOi+ShDxxAUKFBQJItK3ESo1l+FD/8kxkwJR6cfdcMumdf?=
- =?us-ascii?Q?QOAXdvO4ipkLLjJkZF6K9FsQTtSLtQbvCHNetx4K0HjCUG3pTdN71m1DcgpY?=
- =?us-ascii?Q?DNpLCowD7sN9mgeDLF9jn3ZJKxQLyCsLScbYFBAblibdC1ng9MrqKrextZBA?=
- =?us-ascii?Q?S8NxGXBOjpVAxPFpd/0/8XFZZqdyx3R17rcJF6pwCcdWrUzrQzuHhOw1OpjH?=
- =?us-ascii?Q?12xRHSNLbPgP8J/mYW4HFRdCFgBwcWaBONvT83vBIeSpN/J5xgIONIFhwPVe?=
- =?us-ascii?Q?cZX+HNoWSdur4DTSwtzf5w+3JFFJ9BWduHBHPsVBIHSLX/7fAZQwgKb8mq+6?=
- =?us-ascii?Q?FM6+PgQyWDDvUryNoCZ/KIU+IuYzSGn95FcyLtELmAhivw6/PFSyu7FUe45e?=
- =?us-ascii?Q?fDwNkMZ5H1mTy662IHiAoqUHLKs2fs3MNj3SsW4IzSzwngpC4AwxeNJLVIfC?=
- =?us-ascii?Q?fR0LIFlUGr2iB0IdfgdTZiWtkMsB9aTDpf7KOD36+RT901wAKeZ40PpUphx6?=
- =?us-ascii?Q?m1xTqt0H6tflPGrmCMZN8Z4Pjf07WolTB4IwZgnKzcEsqZJQHVB8q1ABms+0?=
- =?us-ascii?Q?ac0o4cu67W7jlN2XWfavlEWvqxcTipxF7DbsE+UXk851fPo2AF/qWkQl5795?=
- =?us-ascii?Q?yg53c863yubZmNyQrxmRoN3f3MLOiR2fXWrYO5I8htk+4MQwiV5IvDzczwO7?=
- =?us-ascii?Q?H9d5AvbH20Fkf9ROq21ENh51V1Fwh03tJfSnZoKm062UmQ0nNNf8NiNUwED0?=
- =?us-ascii?Q?QI3+i7LMduiLbjW2Z8qfvRzzpkK0M4WfgDXZshk3Xezj5w9cGbe1wPGkRSNH?=
- =?us-ascii?Q?9rOyQORQ3q2cjrIOHvNwUr/I19I/rpSwxkdQF2OY7fHbmQlddX6Q05uSOQEM?=
- =?us-ascii?Q?8Ry2mMLz3y2uZXS9AEjtkmPtyReT3jwpsDDj8k+uIBQpSzbXvLFSmg05KNTr?=
- =?us-ascii?Q?ho0k8ph4M780zgXp087JckdGP7qMNtj59SB6FvDHLAMIbrXKpRaumpYolck6?=
- =?us-ascii?Q?PsSVK9dxrXsZxQhWJGa9LyLgyZxBeaifrEMDNignJvyCRBxls53k8njOZGFw?=
- =?us-ascii?Q?0IX+xN5F9n2/1epPb+P0/J8BCctv49VwPv2FdcHmNvwtilqwuT+mUFPGtOrx?=
- =?us-ascii?Q?6yCp7Z7JaFEY1Xhr7NgQGqZCUX34+vFyoEwp1dqoRw/PIggD2W75+8yTRK9S?=
- =?us-ascii?Q?ntxHNZ351zT6VU9upMhdMUU8EKpIj7L/d0PY1yOjki3Mifhbtz6cYjFrhKKv?=
- =?us-ascii?Q?/HhR7SM1dBQV0PEx1tk8+INHsczjn3RlRqZETa8Qr7m6CJk4UoHIenWMj9G8?=
- =?us-ascii?Q?nfx+yp0GWfPxAyPMU39kcDpSstbZD9X5SXb4BJHo/LTMsGJKUdMU77yqAMi+?=
- =?us-ascii?Q?xrxt0N8Ihr7rMKGfdigMCIuqspMI9uOKOw13nbeF0Mt1ZX7CmVG93Vjh2LWG?=
- =?us-ascii?Q?cw=3D=3D?=
+	=?us-ascii?Q?nEkBE0ET302MVTzYfRMOgyEaKMh7dwjgaL5k5iVUnUnPSARCcJyM4rce5Sj+?=
+ =?us-ascii?Q?HWtY2fJU+Fqb9ZpE+eu2RxmmyLHRiPSM0bdZ0vUU7EtnA0GOrwmGvYCFyhYM?=
+ =?us-ascii?Q?UiFqaSxlczcUJrUCm+TqBOhYIkUIHn5tsr/HV8s5gNQS7hbS4xgxdyL6vZ1y?=
+ =?us-ascii?Q?55cov4yp0hYvMkfMh9X12/lafa4QQccPmQhSw6HbMWD+ORxTGG5QHp/73G+k?=
+ =?us-ascii?Q?zgEnbHvoGN1wugQHj1q7GZjlBfu/IwQbhNxqmnrCp497Nn6Q5u1Nf0+0xb9R?=
+ =?us-ascii?Q?NkQEH0biBRWikO6G44WuY5s+DEXnYoyHll3pDSkyp83SYNzhEeLM8RXbdLQJ?=
+ =?us-ascii?Q?hsDn5VHP9G2hoycQxh/Ktym7zXY8q6FdNtxAlHSm9/mQfRl3CZhywSnZ/FVC?=
+ =?us-ascii?Q?9NL5jkEuQuTH9LrLVXMAZuX3h9Tl1d0MSNdHV+/MdZsemVjD04PiuPkZpkGU?=
+ =?us-ascii?Q?v1lYuK3nOehdtp+pf3bUVF+7rHbR4g49mVV0gj19LSfJsbQn9VSxIUZQQ1yP?=
+ =?us-ascii?Q?5Ji/68mhDHgcuNVHy2fRdyTLsyArXEGb7+AcjV3fzeJHz0rblrMaRBh462R4?=
+ =?us-ascii?Q?uiPMGnkCuLlpNXXczD9WVlt4JRXPccNwaw+o2tRHEsnvtHVrAR71258vKhBv?=
+ =?us-ascii?Q?l2LNpuVryR4fZ9onf4V0iVh7eZ88fBDkLHvfKAIeY+IQMRAaVppq4ZW29Bee?=
+ =?us-ascii?Q?/FYoMYz/cBbZIJlgH4tqXVMp/YQxzyr2sPEegOMi3wHkTZvVAjtLj8Weg6/N?=
+ =?us-ascii?Q?I90S1Xnl+CMYcFJ2m0h8bjUvpfWNolXlOPMOqVE+7uJ7zI8M1Aup0ZXBGkxH?=
+ =?us-ascii?Q?nHTz1o+8p5gfFzFx+4yYlMNz2TCTyrHc3OKp1rj7MC8y74UokFKR7X5ioRQl?=
+ =?us-ascii?Q?j979fg9noEoBQpDccpGmEOty9MMT2BIGD7a7Da195G5PMmtT5sFUSU3Ed3/8?=
+ =?us-ascii?Q?E2xvEMAKPfN7nvIzmlUPhknG7joycyqtSA8kiACIuvvZklhbWxUgfT/ugjx6?=
+ =?us-ascii?Q?+5PwXw5Kl968hv5wd93rUiDEE/7dRws7OVB8H7YZkR4yffsgi2oNCs+rV16c?=
+ =?us-ascii?Q?FOCB6cTesVWRAWsizWWN6psU2NGJxd+5GQA4qwj+dPpGYDKuPwvrPuMhowOq?=
+ =?us-ascii?Q?3cJVRM40kJTT+8b05weDsNnCYl8poMLrm2tISim16Fh91czJpi5LDAYsODXY?=
+ =?us-ascii?Q?iMsgHyaOVqoLjLOavvzjMBMNv9KOBkNH/HsiZpKMQuyp/S0285A6tkvf+dc8?=
+ =?us-ascii?Q?UaSkRcaOgkyAxGVGqovtthSw7W9b2nNCVk3bA2aLVVYCTHok5PjJMxCbj+Vg?=
+ =?us-ascii?Q?meR7JzCLT0L52ihVk4yOueMcWbV67KsWgShRp4wRlxWDTFG0rFBz/6h94P8J?=
+ =?us-ascii?Q?ffFwpT8ruVypgtFJ5a/q1dgB2aH1mKfSu1idJCKK2El54bS1I/N8FeeUgbnm?=
+ =?us-ascii?Q?SLOLyQ+5JObTIQBNmPHOKw+40Z4vo6mAc/4feagbmLRbgmTiV3rwPvcF1OgB?=
+ =?us-ascii?Q?XNfk+fBLpcPU95NeUfLWbsJpbwGnjEwwPjuD88qWpy0UWv69igMpYTaeN/Ft?=
+ =?us-ascii?Q?n15X5ZYw/sRzJV3gQN5MA+EPewY6UkRRnUC8CJE0qaSHSAwGaHUZQe5U0REC?=
+ =?us-ascii?Q?ag=3D=3D?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 876bc7ea-dd06-43cc-f419-08dbc118c020
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a16ca76-b309-46be-6291-08dbc118c0d1
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2023 18:20:25.1192
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2023 18:20:26.2619
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 03L3zsEtkDnp8U5ikYVePuc/qNx63RA5q6dnkItn5IfTL++430f/Z/SGDXNl3qkK3LAwq0dkLzuWvGn3RvLYkw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: iJuXp4PzvWMsL1PlchP/ZWqkxFIvDVHtT8GeLLjtsDXFQMRSi/d1kvT0yFg8XBme0xstNlDYXiagjQHXtJTVEg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3377
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -141,36 +141,344 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The core function __change_page_attr() currently sets up a TLB flush if
-a PTE is changed. But if the old value of the PTE doesn't include the
-PRESENT flag, the PTE won't be in the TLB, so a flush isn't needed.
+In a CoCo VM when a page transitions from encrypted to decrypted, or vice
+versa, attributes in the PTE must be updated *and* the hypervisor must
+be notified of the change. Because there are two separate steps, there's
+a window where the settings are inconsistent.  Normally the code that
+initiates the transition (via set_memory_decrypted() or
+set_memory_encrypted()) ensures that the memory is not being accessed
+during a transition, so the window of inconsistency is not a problem.
+However, the load_unaligned_zeropad() function can read arbitrary memory
+pages at arbitrary times, which could access a transitioning page during
+the window.  In such a case, CoCo VM specific exceptions are taken
+(depending on the CoCo architecture in use).  Current code in those
+exception handlers recovers and does "fixup" on the result returned by
+load_unaligned_zeropad().  Unfortunately, this exception handling can't
+work in paravisor scenarios (TDX Paritioning and SEV-SNP in vTOM mode).
+The exceptions need to be forwarded from the paravisor to the Linux
+guest, but there are no architectural specs for how to do that.
 
-Avoid an unnecessary TLB flush by conditioning the flush on the old
-PTE value including PRESENT.  This change improves the performance of
-functions like set_memory_p() by avoiding the flush if the memory range
-was previously all not present.
+Fortunately, there's a simpler way to solve the problem by changing
+the core transition code in __set_memory_enc_pgtable() to do the
+following:
+
+1.  Remove aliasing mappings
+2.  Flush the data cache if needed
+3.  Remove the PRESENT bit from the PTEs of all transitioning pages
+4.  Set/clear the encryption attribute as appropriate
+5.  Flush the TLB so the changed encryption attribute isn't visible
+6.  Notify the hypervisor of the encryption status change
+7.  Add back the PRESENT bit, making the changed attribute visible
+
+With this approach, load_unaligned_zeropad() just takes its normal
+page-fault-based fixup path if it touches a page that is transitioning.
+As a result, load_unaligned_zeropad() and CoCo VM page transitioning
+are completely decoupled.  CoCo VM page transitions can proceed
+without needing to handle architecture-specific exceptions and fix
+things up. This decoupling reduces the complexity due to separate
+TDX and SEV-SNP fixup paths, and gives more freedom to revise and
+introduce new capabilities in future versions of the TDX and SEV-SNP
+architectures. Paravisor scenarios work properly without needing
+to forward exceptions.
+
+With this approach, the order of updating the guest PTEs and
+notifying the hypervisor doesn't matter. As such, only a single
+hypervisor callback is needed, rather one before and one after
+the PTE update. Simplify the code by eliminating the extra
+hypervisor callback along with the TDX and SEV-SNP code that
+handles the before and after cases. The TLB flush callback is
+also no longer required and is removed.
 
 Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 ---
- arch/x86/mm/pat/set_memory.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/coco/tdx/tdx.c       | 66 +------------------------------------------
+ arch/x86/hyperv/ivm.c         |  6 ----
+ arch/x86/kernel/x86_init.c    |  4 ---
+ arch/x86/mm/mem_encrypt_amd.c | 27 ++++--------------
+ arch/x86/mm/pat/set_memory.c  | 55 +++++++++++++++++++++++-------------
+ 5 files changed, 43 insertions(+), 115 deletions(-)
 
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 3e6dbd2..1bb2fff 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -676,24 +676,6 @@ bool tdx_handle_virt_exception(struct pt_regs *regs, struct ve_info *ve)
+ 	return true;
+ }
+ 
+-static bool tdx_tlb_flush_required(bool private)
+-{
+-	/*
+-	 * TDX guest is responsible for flushing TLB on private->shared
+-	 * transition. VMM is responsible for flushing on shared->private.
+-	 *
+-	 * The VMM _can't_ flush private addresses as it can't generate PAs
+-	 * with the guest's HKID.  Shared memory isn't subject to integrity
+-	 * checking, i.e. the VMM doesn't need to flush for its own protection.
+-	 *
+-	 * There's no need to flush when converting from shared to private,
+-	 * as flushing is the VMM's responsibility in this case, e.g. it must
+-	 * flush to avoid integrity failures in the face of a buggy or
+-	 * malicious guest.
+-	 */
+-	return !private;
+-}
+-
+ static bool tdx_cache_flush_required(void)
+ {
+ 	/*
+@@ -776,30 +758,6 @@ static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
+ 	return true;
+ }
+ 
+-static bool tdx_enc_status_change_prepare(unsigned long vaddr, int numpages,
+-					  bool enc)
+-{
+-	/*
+-	 * Only handle shared->private conversion here.
+-	 * See the comment in tdx_early_init().
+-	 */
+-	if (enc)
+-		return tdx_enc_status_changed(vaddr, numpages, enc);
+-	return true;
+-}
+-
+-static bool tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
+-					 bool enc)
+-{
+-	/*
+-	 * Only handle private->shared conversion here.
+-	 * See the comment in tdx_early_init().
+-	 */
+-	if (!enc)
+-		return tdx_enc_status_changed(vaddr, numpages, enc);
+-	return true;
+-}
+-
+ void __init tdx_early_init(void)
+ {
+ 	struct tdx_module_args args = {
+@@ -831,30 +789,8 @@ void __init tdx_early_init(void)
+ 	 */
+ 	physical_mask &= cc_mask - 1;
+ 
+-	/*
+-	 * The kernel mapping should match the TDX metadata for the page.
+-	 * load_unaligned_zeropad() can touch memory *adjacent* to that which is
+-	 * owned by the caller and can catch even _momentary_ mismatches.  Bad
+-	 * things happen on mismatch:
+-	 *
+-	 *   - Private mapping => Shared Page  == Guest shutdown
+-         *   - Shared mapping  => Private Page == Recoverable #VE
+-	 *
+-	 * guest.enc_status_change_prepare() converts the page from
+-	 * shared=>private before the mapping becomes private.
+-	 *
+-	 * guest.enc_status_change_finish() converts the page from
+-	 * private=>shared after the mapping becomes private.
+-	 *
+-	 * In both cases there is a temporary shared mapping to a private page,
+-	 * which can result in a #VE.  But, there is never a private mapping to
+-	 * a shared page.
+-	 */
+-	x86_platform.guest.enc_status_change_prepare = tdx_enc_status_change_prepare;
+-	x86_platform.guest.enc_status_change_finish  = tdx_enc_status_change_finish;
+-
++	x86_platform.guest.enc_status_change_finish  = tdx_enc_status_changed;
+ 	x86_platform.guest.enc_cache_flush_required  = tdx_cache_flush_required;
+-	x86_platform.guest.enc_tlb_flush_required    = tdx_tlb_flush_required;
+ 
+ 	/*
+ 	 * TDX intercepts the RDMSR to read the X2APIC ID in the parallel
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 084fab6..fbe2585 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -550,11 +550,6 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
+ 	return result;
+ }
+ 
+-static bool hv_vtom_tlb_flush_required(bool private)
+-{
+-	return true;
+-}
+-
+ static bool hv_vtom_cache_flush_required(void)
+ {
+ 	return false;
+@@ -614,7 +609,6 @@ void __init hv_vtom_init(void)
+ 
+ 	x86_platform.hyper.is_private_mmio = hv_is_private_mmio;
+ 	x86_platform.guest.enc_cache_flush_required = hv_vtom_cache_flush_required;
+-	x86_platform.guest.enc_tlb_flush_required = hv_vtom_tlb_flush_required;
+ 	x86_platform.guest.enc_status_change_finish = hv_vtom_set_host_visibility;
+ 
+ 	/* Set WB as the default cache mode. */
+diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
+index a37ebd3..cf5179b 100644
+--- a/arch/x86/kernel/x86_init.c
++++ b/arch/x86/kernel/x86_init.c
+@@ -131,9 +131,7 @@ struct x86_cpuinit_ops x86_cpuinit = {
+ 
+ static void default_nmi_init(void) { };
+ 
+-static bool enc_status_change_prepare_noop(unsigned long vaddr, int npages, bool enc) { return true; }
+ static bool enc_status_change_finish_noop(unsigned long vaddr, int npages, bool enc) { return true; }
+-static bool enc_tlb_flush_required_noop(bool enc) { return false; }
+ static bool enc_cache_flush_required_noop(void) { return false; }
+ static bool is_private_mmio_noop(u64 addr) {return false; }
+ 
+@@ -154,9 +152,7 @@ struct x86_platform_ops x86_platform __ro_after_init = {
+ 	.hyper.is_private_mmio		= is_private_mmio_noop,
+ 
+ 	.guest = {
+-		.enc_status_change_prepare = enc_status_change_prepare_noop,
+ 		.enc_status_change_finish  = enc_status_change_finish_noop,
+-		.enc_tlb_flush_required	   = enc_tlb_flush_required_noop,
+ 		.enc_cache_flush_required  = enc_cache_flush_required_noop,
+ 	},
+ };
+diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
+index 6faea41..06960ba 100644
+--- a/arch/x86/mm/mem_encrypt_amd.c
++++ b/arch/x86/mm/mem_encrypt_amd.c
+@@ -278,11 +278,6 @@ static unsigned long pg_level_to_pfn(int level, pte_t *kpte, pgprot_t *ret_prot)
+ 	return pfn;
+ }
+ 
+-static bool amd_enc_tlb_flush_required(bool enc)
+-{
+-	return true;
+-}
+-
+ static bool amd_enc_cache_flush_required(void)
+ {
+ 	return !cpu_feature_enabled(X86_FEATURE_SME_COHERENT);
+@@ -318,18 +313,6 @@ static void enc_dec_hypercall(unsigned long vaddr, unsigned long size, bool enc)
+ #endif
+ }
+ 
+-static bool amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
+-{
+-	/*
+-	 * To maintain the security guarantees of SEV-SNP guests, make sure
+-	 * to invalidate the memory before encryption attribute is cleared.
+-	 */
+-	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && !enc)
+-		snp_set_memory_shared(vaddr, npages);
+-
+-	return true;
+-}
+-
+ /* Return true unconditionally: return value doesn't matter for the SEV side */
+ static bool amd_enc_status_change_finish(unsigned long vaddr, int npages, bool enc)
+ {
+@@ -337,8 +320,12 @@ static bool amd_enc_status_change_finish(unsigned long vaddr, int npages, bool e
+ 	 * After memory is mapped encrypted in the page table, validate it
+ 	 * so that it is consistent with the page table updates.
+ 	 */
+-	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && enc)
+-		snp_set_memory_private(vaddr, npages);
++	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
++		if (enc)
++			snp_set_memory_private(vaddr, npages);
++		else
++			snp_set_memory_shared(vaddr, npages);
++	}
+ 
+ 	if (!cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT))
+ 		enc_dec_hypercall(vaddr, npages << PAGE_SHIFT, enc);
+@@ -498,9 +485,7 @@ void __init sme_early_init(void)
+ 	/* Update the protection map with memory encryption mask */
+ 	add_encrypt_protection_map();
+ 
+-	x86_platform.guest.enc_status_change_prepare = amd_enc_status_change_prepare;
+ 	x86_platform.guest.enc_status_change_finish  = amd_enc_status_change_finish;
+-	x86_platform.guest.enc_tlb_flush_required    = amd_enc_tlb_flush_required;
+ 	x86_platform.guest.enc_cache_flush_required  = amd_enc_cache_flush_required;
+ 
+ 	/*
 diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 8e19796..d7ef8d3 100644
+index d7ef8d3..d062e01 100644
 --- a/arch/x86/mm/pat/set_memory.c
 +++ b/arch/x86/mm/pat/set_memory.c
-@@ -1636,7 +1636,10 @@ static int __change_page_attr(struct cpa_data *cpa, int primary)
- 		 */
- 		if (pte_val(old_pte) != pte_val(new_pte)) {
- 			set_pte_atomic(kpte, new_pte);
--			cpa->flags |= CPA_FLUSHTLB;
+@@ -2147,40 +2147,57 @@ static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
+ 	memset(&cpa, 0, sizeof(cpa));
+ 	cpa.vaddr = &addr;
+ 	cpa.numpages = numpages;
 +
-+			/* If old_pte isn't present, it's not in the TLB */
-+			if (pte_present(old_pte))
-+				cpa->flags |= CPA_FLUSHTLB;
- 		}
- 		cpa->numpages = 1;
- 		return 0;
++	/*
++	 * The caller must ensure that the memory being transitioned between
++	 * encrypted and decrypted is not being accessed.  But if
++	 * load_unaligned_zeropad() touches the "next" page, it may generate a
++	 * read access the caller has no control over. To ensure such accesses
++	 * cause a normal page fault for the load_unaligned_zeropad() handler,
++	 * mark the pages not present until the transition is complete.  We
++	 * don't want a #VE or #VC fault due to a mismatch in the memory
++	 * encryption status, since paravisor configurations can't cleanly do
++	 * the load_unaligned_zeropad() handling in the paravisor.
++	 *
++	 * There's no requirement to do so, but for efficiency we can clear
++	 * _PAGE_PRESENT and set/clr encryption attr as a single operation.
++	 */
+ 	cpa.mask_set = enc ? pgprot_encrypted(empty) : pgprot_decrypted(empty);
+-	cpa.mask_clr = enc ? pgprot_decrypted(empty) : pgprot_encrypted(empty);
++	cpa.mask_clr = enc ? pgprot_decrypted(__pgprot(_PAGE_PRESENT)) :
++				pgprot_encrypted(__pgprot(_PAGE_PRESENT));
+ 	cpa.pgd = init_mm.pgd;
+ 
+ 	/* Must avoid aliasing mappings in the highmem code */
+ 	kmap_flush_unused();
+ 	vm_unmap_aliases();
+ 
+-	/* Flush the caches as needed before changing the encryption attribute. */
+-	if (x86_platform.guest.enc_tlb_flush_required(enc))
+-		cpa_flush(&cpa, x86_platform.guest.enc_cache_flush_required());
+-
+-	/* Notify hypervisor that we are about to set/clr encryption attribute. */
+-	if (!x86_platform.guest.enc_status_change_prepare(addr, numpages, enc))
+-		return -EIO;
++	/* Flush the caches as needed before changing the encryption attr. */
++	if (x86_platform.guest.enc_cache_flush_required())
++		cpa_flush(&cpa, 1);
+ 
+ 	ret = __change_page_attr_set_clr(&cpa, 1);
++	if (ret)
++		return ret;
+ 
+ 	/*
+-	 * After changing the encryption attribute, we need to flush TLBs again
+-	 * in case any speculative TLB caching occurred (but no need to flush
+-	 * caches again).  We could just use cpa_flush_all(), but in case TLB
+-	 * flushing gets optimized in the cpa_flush() path use the same logic
+-	 * as above.
++	 * After clearing _PAGE_PRESENT and changing the encryption attribute,
++	 * we need to flush TLBs to ensure no further accesses to the memory can
++	 * be made with the old encryption attribute (but no need to flush caches
++	 * again).  We could just use cpa_flush_all(), but in case TLB flushing
++	 * gets optimized in the cpa_flush() path use the same logic as above.
+ 	 */
+ 	cpa_flush(&cpa, 0);
+ 
+-	/* Notify hypervisor that we have successfully set/clr encryption attribute. */
+-	if (!ret) {
+-		if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
+-			ret = -EIO;
+-	}
++	/* Notify hypervisor that we have successfully set/clr encryption attr. */
++	if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
++		return -EIO;
+ 
+-	return ret;
++	/*
++	 * Now that the hypervisor is sync'ed with the page table changes
++	 * made here, add back _PAGE_PRESENT. set_memory_p() does not flush
++	 * the TLB.
++	 */
++	return set_memory_p(&addr, numpages);
+ }
+ 
+ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
 -- 
 1.8.3.1
 
