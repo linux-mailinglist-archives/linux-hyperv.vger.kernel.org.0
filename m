@@ -1,478 +1,192 @@
-Return-Path: <linux-hyperv+bounces-355-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-356-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FCBC7B3B6C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 22:43:53 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C0B87B3CEA
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 01:14:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id EEA2C28298C
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 20:43:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTP id 40DA0B2099D
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 23:14:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B7F542BF5;
-	Fri, 29 Sep 2023 20:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8F8347369;
+	Fri, 29 Sep 2023 23:14:16 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61815849C;
-	Fri, 29 Sep 2023 20:43:49 +0000 (UTC)
-Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020018.outbound.protection.outlook.com [52.101.56.18])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351B2CC0;
-	Fri, 29 Sep 2023 13:43:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kn4TiHs7YvVL16wgSl+KCZJHgeon2wHpGX32skHRj4kfW5bCH7xionfc6ETiS3L6+AUTKnU6iKr+mwVIQCw4Wfmiys347UuwhdC+8uZxQ4SZ9ZkRsIirhbwcyYfCsrvCKD0pdkZ/uYA2kq4nFy4D1bOBSBjfXdDHl+d4ZBN9tPGpYbe02ayoBSA/1fZ7jKqkDcZyqYC+LKO4cOTgMrYU0IOdqKHak/JtqT66Q2hE9Wdi0AUe3PnDAkXPSPQ+b6NA+CcD6FdYp/cThLLUGbiihtSQR7O0jAd4DKGsNj57uZjmpLvqNVxCwIlCTcSyHuambQlExE9DqN3s2f1NPARIXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UqC7/sBy3Pmx8EznfoNj77qtEBuneii4Fl9wNU4LjF4=;
- b=IIV1YT6qZZAOILFffEtWmHhQ9FwShWy+aguUrKIK91J8+2ueR2RgkgH2Lj5A1ZimMI3XQf1yOvkCJLFkNG1GUQy6K8p2pUkGArtTG6vRsXAjpeJ4+sTTi17liW2sw5elI+jaeFX7fcsazmTfYU5TCSlyqUGVC1T5KKbVbiDTm3Ut8p6j18huHK2odE1Kx4xlrmbQPWUsMuxabLBYYQl77ce99qBfKF31xezWVPmnAMqku2miJpLxNUrIrnJxIsFhqsZ7Z1WwtBeeXydxlLbspFbrWuZJ8R7puaj1miULS3SXkWDSaAEuh3DcsaKNsoljPkYmet8I5VhSIs31TMDQmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UqC7/sBy3Pmx8EznfoNj77qtEBuneii4Fl9wNU4LjF4=;
- b=iFaMMkkqTxMG3m0i4x/+f2YvC8dQE4IT/i0oEpxNRfCXgrNXQKVjDa0rRcbPH3bU/F7Vpyk8Ti0TOlmstWDQEUGrOEtu3NLur4M2FlZZtwJU33jMlnm+mSgcNdGTtUsrIWI9KyQ8wH2d9gBahpMIXrElUN5qi6wCpXxR303njf4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com (2603:10b6:a03:21f::18)
- by DM4PR21MB3178.namprd21.prod.outlook.com (2603:10b6:8:66::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6863.9; Fri, 29 Sep 2023 20:43:41 +0000
-Received: from BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::1d4f:5006:aed7:78aa]) by BY5PR21MB1443.namprd21.prod.outlook.com
- ([fe80::1d4f:5006:aed7:78aa%6]) with mapi id 15.20.6863.016; Fri, 29 Sep 2023
- 20:43:41 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	decui@microsoft.com,
-	stephen@networkplumber.org,
-	kys@microsoft.com,
-	paulros@microsoft.com,
-	olaf@aepfle.de,
-	vkuznets@redhat.com,
-	davem@davemloft.net,
-	wei.liu@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	bpf@vger.kernel.org,
-	ast@kernel.org,
-	sharmaajay@microsoft.com,
-	hawk@kernel.org,
-	tglx@linutronix.de,
-	shradhagupta@linux.microsoft.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net,v2, 3/3] net: mana: Fix oversized sge0 for GSO packets
-Date: Fri, 29 Sep 2023 13:42:27 -0700
-Message-Id: <1696020147-14989-4-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1696020147-14989-1-git-send-email-haiyangz@microsoft.com>
-References: <1696020147-14989-1-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0209.namprd03.prod.outlook.com
- (2603:10b6:303:b8::34) To BY5PR21MB1443.namprd21.prod.outlook.com
- (2603:10b6:a03:21f::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50EE65885
+	for <linux-hyperv@vger.kernel.org>; Fri, 29 Sep 2023 23:14:14 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8ADE6;
+	Fri, 29 Sep 2023 16:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696029253; x=1727565253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GuguJlpMuR4ytblE3REIb1sY7chzBowLTZJy4y360dY=;
+  b=AGn2HpF7q/xgtWeA3WV5GR9NL5DU/og6tXJBCMTRcMChmbEptCzvp9ZA
+   PEDgXaRykAjK72Iiov6+MVHmOhTwFutL9C1N+shzZTGiTsPrSvDVIrYYe
+   Q3olDUGQ3+vh17gfdn2wCmrjSQBh0ug7ttjKGOc3Cl2XAGw5eL4wgQ1+i
+   Hj/O9AvWAbG+yzKNlnQXAPH6M0leeubc6QV9amdt1JK/4fxfLpwa3fb6v
+   ngT1QLW97SkqWwfRuyQOuKSonDtHYkSnUhB0D04v4nUTvMOVafQ8xNUWf
+   fTolUofxWJpeUho27REgTtddkA+D4crUCaEEjqlpn8BWaNEI+A62GZDIw
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="379682270"
+X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
+   d="scan'208";a="379682270"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2023 16:14:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="785232918"
+X-IronPort-AV: E=Sophos;i="6.03,188,1694761200"; 
+   d="scan'208";a="785232918"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 29 Sep 2023 16:14:06 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qmMgO-0003P5-0S;
+	Fri, 29 Sep 2023 23:14:04 +0000
+Date: Sat, 30 Sep 2023 07:13:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Michael Kelley <mikelley@microsoft.com>, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
+	peterz@infradead.org, thomas.lendacky@amd.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com,
+	kirill.shutemov@linux.intel.com, seanjc@google.com,
+	rick.p.edgecombe@intel.com, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, x86@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, mikelley@microsoft.com
+Subject: Re: [PATCH 3/5] x86/mm: Mark CoCo VM pages not present while
+ changing encrypted state
+Message-ID: <202309300620.S7uwOfcg-lkp@intel.com>
+References: <1696011549-28036-4-git-send-email-mikelley@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR21MB1443:EE_|DM4PR21MB3178:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5fc082cd-13f9-4088-9f86-08dbc12cc40d
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
- sWcQ6kgEC3IRe2ClVHhWuhx6EbC/qDfHSjueXqXjk7+fJBJ1o7OzuUaiVpuCtCyUZJhNrAPtEuA76ETOWGchhBKcROAljrcqEZ1eTzmWi3kNiMaLHizbce7+vKBp6cnCGbYtfD86Xp25vPFHDrnJVSEouRQwDIZze6Fk+ZPWdnaPoafUif7bwfGD/aWzV4NP9Gsn4XPQs6DvA0/CGXkfYWdEyxaoQnvL61ItmwWS3ipzLNb4ePdApFm198GZHe7Hs5LYCcHIncdXRiYW9r9dfnDrUpjUojCylBjjyhdgT3/pt5tEih+FAxxGsPPr+cNpqtH3zPTG4uoN3Z5zLPT+tn/TGaMr8ImVqZg/3Jcq2I7fbOl3T1aheiQhdnXC1e6iaWlN5sr8tCrZh7AQ5V8Rrh+gcqvwcfq8OBGnoSFjJVKj+W2n34v5cOJjXSiSaPzyqf2GLiqONympbBvJxId5zQASUqn3A0DjRDZYZKK5bg94Bn76vHSdLENgq6nabDw40flwTKwy9phqX3jFq2XFSj1aP/Cy8gLLNJ9AZY9NphW45MsvTPAnLNwSBpsbT4CPxfeh90CcciNZJMVeISIu88CWZZ2fWxcMnbPUigJFaFiwQbOJLRwglzg1qZkdqLfkaGECGbvYvW2k8lR+skxffrhcKxRmPPubr+/Rh0Vvma8=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR21MB1443.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(39860400002)(366004)(396003)(136003)(230922051799003)(64100799003)(186009)(451199024)(1800799009)(7416002)(2906002)(6486002)(10290500003)(41300700001)(8676002)(66556008)(66946007)(8936002)(5660300002)(4326008)(66476007)(6666004)(478600001)(6512007)(7846003)(6506007)(52116002)(26005)(2616005)(316002)(83380400001)(38100700002)(36756003)(82960400001)(82950400001)(38350700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?dEmOkRGezta3ICeZGoXZXw4A/4zVLXeECbSThETgHKMvSYtwdCusu4+a4JsM?=
- =?us-ascii?Q?lQOxVsblRIJFlUrir1vIphOKF4UJyr4y2Q0n3dpdXBIUWpUYzMgiS/NY6s2J?=
- =?us-ascii?Q?uqn+fy6L3JZNPV29o4iz8sQiNt9xGPHTr2NrBds1RRMOD7GIiCvNlq/L7VKD?=
- =?us-ascii?Q?Ujt3v8Yp/DtSkB3qzhz3vKAWgkCmoSD65v+7BH9fQ0G9G3IhhKBwBWh2Ilqu?=
- =?us-ascii?Q?GNeI0kKrKCang/9ufBm0/c1N7w3zLofn5StUs9KwgqDe0ZWoTzgZTj7Ck2//?=
- =?us-ascii?Q?d+K2xDS/AX3h7YwP7nMwLPv+LFcti9ICeBi1f1ZONs/aUPsknkUF4lpt8rUm?=
- =?us-ascii?Q?MT3KtgeuCgSEKpOZlprKZFuMB7rhigeYQAe9Z134a+alyTLKScOSLQ2ak1C8?=
- =?us-ascii?Q?Y9BkofLP5eVpFM0Dv/jSbRU5jiDlkCxYdxQugjpppLrpgwLQl3yPNERbH9iF?=
- =?us-ascii?Q?lngb4sdXUJBQg+d8hH36LuZVvMjonuqqL54pOE9ApnBOQQ9REfq0F97CGeY8?=
- =?us-ascii?Q?lDpzAaIltZ/yAKlbduHKb4ABc+VpMfz+DNU0OHQxtVpUgzyjSCQZwenkTP55?=
- =?us-ascii?Q?89lzGv+eiP8bdDMpthwjdLV34gz/RSgxWIPmr6Il9rlQVhTxTcGO5elCioAF?=
- =?us-ascii?Q?6NgcrhD2+65aJrN/24E3H8mRvgcSqvuJxMPTl+8FBN7qveR4t9u7o7VjGJXH?=
- =?us-ascii?Q?PN1aFEN6Ya+KqN/3EdjbfU3FeeRR0BnaV1ZHW4LPbpzRpCRJdH/nphnA9os8?=
- =?us-ascii?Q?havdHnfrjyH2gPbs3XfTh2ZKxwV8tDqkaAWcSTe4jPb7769fRvzW//ETHmL/?=
- =?us-ascii?Q?HsVCGvq2xysyoeViBMLkUJzquYinU+DH9ZKMa5+9AipZx9gjDq7bdyOeIJ9N?=
- =?us-ascii?Q?fF/ow8xrHLgsm2xl1e2eSnyIQgFRAsuKFP4ZUNGQcV9iaxNAkPyceqKRXT/X?=
- =?us-ascii?Q?7tPYiQvKS+RYNr4kycnSzqj3U7fIiYHJy8wmlda8/kcLaSM0oZBbYK4qeWVD?=
- =?us-ascii?Q?940zpUKoZav7hoGS4z4CMcKHlXXXKrSXzdAnQINV+XpP9SGts9RcA28Nzjq+?=
- =?us-ascii?Q?CWlu7qykAKgLddde7H+f1HesHtVuoitVGA4Q2ILdlYHjPjhnmhkaZEnekawd?=
- =?us-ascii?Q?/tMvZa4NOAvPxRR66gJF+HLBb8UR5SG0PFzBbvHo01CviaNSxnfc+PWPo5gq?=
- =?us-ascii?Q?XpEb5EjObJd9jOgo8et6G5tJo+GdC78VHZpdMMHHKRDgCBTPwBLgufCYyaP1?=
- =?us-ascii?Q?wh6l9vlB4kJhrW9J6J5e/HvA95B1bxvYI87BkXWGhFvC5turWuFWL1vucS+8?=
- =?us-ascii?Q?QmQxzYmNUOdD2ByrUH1myi6mPAy5azCxWJ0nlfdOsrFM4nneQmclKSvM774c?=
- =?us-ascii?Q?pNXt9M08TJR0AmqA0IktGuCBLCtvTbphBt9S8zHmSRdqoL8Rd2MnBAjl+3HV?=
- =?us-ascii?Q?vN0bPOGvGjHoWl+hXe+ulJ0RHdJb7SNEmkBXvHxWDtnGsFJpkZQt1COPVTM9?=
- =?us-ascii?Q?1kVBxIjNuXngCa3mjtcbrF5fmQV35/Za5oF38F2GDNmzYb+b6IwuhBVfsggf?=
- =?us-ascii?Q?DtRUNlgdv2Y8qnaECNSKKKcQKTQt4hcaTptQ0rL6?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fc082cd-13f9-4088-9f86-08dbc12cc40d
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR21MB1443.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2023 20:43:41.6102
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IOhvLssdInitd9lE6gUZGUTROdJi0qAf1Bn4ranWzLs9QR3p+mr4ypLe8aGu3yTuTPS0pHLBL7TAhkTzq/ExzA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR21MB3178
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1696011549-28036-4-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Handle the case when GSO SKB linear length is too large.
+Hi Michael,
 
-MANA NIC requires GSO packets to put only the header part to SGE0,
-otherwise the TX queue may stop at the HW level.
+kernel test robot noticed the following build errors:
 
-So, use 2 SGEs for the skb linear part which contains more than the
-packet header.
+[auto build test ERROR on tip/master]
+[also build test ERROR on tip/auto-latest linus/master v6.6-rc3 next-20230929]
+[cannot apply to tip/x86/mm tip/x86/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
-v2: coding style updates suggested by Simon Horman
+url:    https://github.com/intel-lab-lkp/linux/commits/Michael-Kelley/x86-coco-Use-slow_virt_to_phys-in-page-transition-hypervisor-callbacks/20230930-041800
+base:   tip/master
+patch link:    https://lore.kernel.org/r/1696011549-28036-4-git-send-email-mikelley%40microsoft.com
+patch subject: [PATCH 3/5] x86/mm: Mark CoCo VM pages not present while changing encrypted state
+config: i386-tinyconfig (https://download.01.org/0day-ci/archive/20230930/202309300620.S7uwOfcg-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230930/202309300620.S7uwOfcg-lkp@intel.com/reproduce)
 
----
- drivers/net/ethernet/microsoft/mana/mana_en.c | 191 +++++++++++++-----
- include/net/mana/mana.h                       |   5 +-
- 2 files changed, 138 insertions(+), 58 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309300620.S7uwOfcg-lkp@intel.com/
 
-diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-index 86e724c3eb89..48ea4aeeea5d 100644
---- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-+++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-@@ -91,63 +91,137 @@ static unsigned int mana_checksum_info(struct sk_buff *skb)
- 	return 0;
- }
- 
-+static void mana_add_sge(struct mana_tx_package *tp, struct mana_skb_head *ash,
-+			 int sg_i, dma_addr_t da, int sge_len, u32 gpa_mkey)
-+{
-+	ash->dma_handle[sg_i] = da;
-+	ash->size[sg_i] = sge_len;
-+
-+	tp->wqe_req.sgl[sg_i].address = da;
-+	tp->wqe_req.sgl[sg_i].mem_key = gpa_mkey;
-+	tp->wqe_req.sgl[sg_i].size = sge_len;
-+}
-+
- static int mana_map_skb(struct sk_buff *skb, struct mana_port_context *apc,
--			struct mana_tx_package *tp)
-+			struct mana_tx_package *tp, int gso_hs)
- {
- 	struct mana_skb_head *ash = (struct mana_skb_head *)skb->head;
-+	int hsg = 1; /* num of SGEs of linear part */
- 	struct gdma_dev *gd = apc->ac->gdma_dev;
-+	int skb_hlen = skb_headlen(skb);
-+	int sge0_len, sge1_len = 0;
- 	struct gdma_context *gc;
- 	struct device *dev;
- 	skb_frag_t *frag;
- 	dma_addr_t da;
-+	int sg_i;
- 	int i;
- 
- 	gc = gd->gdma_context;
- 	dev = gc->dev;
--	da = dma_map_single(dev, skb->data, skb_headlen(skb), DMA_TO_DEVICE);
- 
-+	if (gso_hs && gso_hs < skb_hlen) {
-+		sge0_len = gso_hs;
-+		sge1_len = skb_hlen - gso_hs;
-+	} else {
-+		sge0_len = skb_hlen;
-+	}
-+
-+	da = dma_map_single(dev, skb->data, sge0_len, DMA_TO_DEVICE);
- 	if (dma_mapping_error(dev, da))
- 		return -ENOMEM;
- 
--	ash->dma_handle[0] = da;
--	ash->size[0] = skb_headlen(skb);
-+	mana_add_sge(tp, ash, 0, da, sge0_len, gd->gpa_mkey);
- 
--	tp->wqe_req.sgl[0].address = ash->dma_handle[0];
--	tp->wqe_req.sgl[0].mem_key = gd->gpa_mkey;
--	tp->wqe_req.sgl[0].size = ash->size[0];
-+	if (sge1_len) {
-+		sg_i = 1;
-+		da = dma_map_single(dev, skb->data + sge0_len, sge1_len,
-+				    DMA_TO_DEVICE);
-+		if (dma_mapping_error(dev, da))
-+			goto frag_err;
-+
-+		mana_add_sge(tp, ash, sg_i, da, sge1_len, gd->gpa_mkey);
-+		hsg = 2;
-+	}
- 
- 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
-+		sg_i = hsg + i;
-+
- 		frag = &skb_shinfo(skb)->frags[i];
- 		da = skb_frag_dma_map(dev, frag, 0, skb_frag_size(frag),
- 				      DMA_TO_DEVICE);
--
- 		if (dma_mapping_error(dev, da))
- 			goto frag_err;
- 
--		ash->dma_handle[i + 1] = da;
--		ash->size[i + 1] = skb_frag_size(frag);
--
--		tp->wqe_req.sgl[i + 1].address = ash->dma_handle[i + 1];
--		tp->wqe_req.sgl[i + 1].mem_key = gd->gpa_mkey;
--		tp->wqe_req.sgl[i + 1].size = ash->size[i + 1];
-+		mana_add_sge(tp, ash, sg_i, da, skb_frag_size(frag),
-+			     gd->gpa_mkey);
- 	}
- 
- 	return 0;
- 
- frag_err:
--	for (i = i - 1; i >= 0; i--)
--		dma_unmap_page(dev, ash->dma_handle[i + 1], ash->size[i + 1],
-+	for (i = sg_i - 1; i >= hsg; i--)
-+		dma_unmap_page(dev, ash->dma_handle[i], ash->size[i],
- 			       DMA_TO_DEVICE);
- 
--	dma_unmap_single(dev, ash->dma_handle[0], ash->size[0], DMA_TO_DEVICE);
-+	for (i = hsg - 1; i >= 0; i--)
-+		dma_unmap_single(dev, ash->dma_handle[i], ash->size[i],
-+				 DMA_TO_DEVICE);
- 
- 	return -ENOMEM;
- }
- 
-+/* Handle the case when GSO SKB linear length is too large.
-+ * MANA NIC requires GSO packets to put only the packet header to SGE0.
-+ * So, we need 2 SGEs for the skb linear part which contains more than the
-+ * header.
-+ * Return a positive value for the number of SGEs, or a negative value
-+ * for an error.
-+ */
-+static int mana_fix_skb_head(struct net_device *ndev, struct sk_buff *skb,
-+			     int gso_hs)
-+{
-+	int num_sge = 1 + skb_shinfo(skb)->nr_frags;
-+	int skb_hlen = skb_headlen(skb);
-+
-+	if (gso_hs < skb_hlen) {
-+		num_sge++;
-+	} else if (gso_hs > skb_hlen) {
-+		if (net_ratelimit())
-+			netdev_err(ndev,
-+				   "TX nonlinear head: hs:%d, skb_hlen:%d\n",
-+				   gso_hs, skb_hlen);
-+
-+		return -EINVAL;
-+	}
-+
-+	return num_sge;
-+}
-+
-+/* Get the GSO packet's header size */
-+static int mana_get_gso_hs(struct sk_buff *skb)
-+{
-+	int gso_hs;
-+
-+	if (skb->encapsulation) {
-+		gso_hs = skb_inner_tcp_all_headers(skb);
-+	} else {
-+		if (skb_shinfo(skb)->gso_type & SKB_GSO_UDP_L4) {
-+			gso_hs = skb_transport_offset(skb) +
-+				 sizeof(struct udphdr);
-+		} else {
-+			gso_hs = skb_tcp_all_headers(skb);
-+		}
-+	}
-+
-+	return gso_hs;
-+}
-+
- netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
- 	enum mana_tx_pkt_format pkt_fmt = MANA_SHORT_PKT_FMT;
- 	struct mana_port_context *apc = netdev_priv(ndev);
-+	int gso_hs = 0; /* zero for non-GSO pkts */
- 	u16 txq_idx = skb_get_queue_mapping(skb);
- 	struct gdma_dev *gd = apc->ac->gdma_dev;
- 	bool ipv4 = false, ipv6 = false;
-@@ -159,7 +233,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	struct mana_txq *txq;
- 	struct mana_cq *cq;
- 	int err, len;
--	u16 ihs;
- 
- 	if (unlikely(!apc->port_is_up))
- 		goto tx_drop;
-@@ -209,19 +282,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	pkg.wqe_req.client_data_unit = 0;
- 
- 	pkg.wqe_req.num_sge = 1 + skb_shinfo(skb)->nr_frags;
--	WARN_ON_ONCE(pkg.wqe_req.num_sge > MAX_TX_WQE_SGL_ENTRIES);
--
--	if (pkg.wqe_req.num_sge <= ARRAY_SIZE(pkg.sgl_array)) {
--		pkg.wqe_req.sgl = pkg.sgl_array;
--	} else {
--		pkg.sgl_ptr = kmalloc_array(pkg.wqe_req.num_sge,
--					    sizeof(struct gdma_sge),
--					    GFP_ATOMIC);
--		if (!pkg.sgl_ptr)
--			goto tx_drop_count;
--
--		pkg.wqe_req.sgl = pkg.sgl_ptr;
--	}
- 
- 	if (skb->protocol == htons(ETH_P_IP))
- 		ipv4 = true;
-@@ -229,6 +289,26 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		ipv6 = true;
- 
- 	if (skb_is_gso(skb)) {
-+		int num_sge;
-+
-+		gso_hs = mana_get_gso_hs(skb);
-+
-+		num_sge = mana_fix_skb_head(ndev, skb, gso_hs);
-+		if (num_sge > 0)
-+			pkg.wqe_req.num_sge = num_sge;
-+		else
-+			goto tx_drop_count;
-+
-+		u64_stats_update_begin(&tx_stats->syncp);
-+		if (skb->encapsulation) {
-+			tx_stats->tso_inner_packets++;
-+			tx_stats->tso_inner_bytes += skb->len - gso_hs;
-+		} else {
-+			tx_stats->tso_packets++;
-+			tx_stats->tso_bytes += skb->len - gso_hs;
-+		}
-+		u64_stats_update_end(&tx_stats->syncp);
-+
- 		pkg.tx_oob.s_oob.is_outer_ipv4 = ipv4;
- 		pkg.tx_oob.s_oob.is_outer_ipv6 = ipv6;
- 
-@@ -252,26 +332,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 						 &ipv6_hdr(skb)->daddr, 0,
- 						 IPPROTO_TCP, 0);
- 		}
--
--		if (skb->encapsulation) {
--			ihs = skb_inner_tcp_all_headers(skb);
--			u64_stats_update_begin(&tx_stats->syncp);
--			tx_stats->tso_inner_packets++;
--			tx_stats->tso_inner_bytes += skb->len - ihs;
--			u64_stats_update_end(&tx_stats->syncp);
--		} else {
--			if (skb_shinfo(skb)->gso_type & SKB_GSO_UDP_L4) {
--				ihs = skb_transport_offset(skb) + sizeof(struct udphdr);
--			} else {
--				ihs = skb_tcp_all_headers(skb);
--			}
--
--			u64_stats_update_begin(&tx_stats->syncp);
--			tx_stats->tso_packets++;
--			tx_stats->tso_bytes += skb->len - ihs;
--			u64_stats_update_end(&tx_stats->syncp);
--		}
--
- 	} else if (skb->ip_summed == CHECKSUM_PARTIAL) {
- 		csum_type = mana_checksum_info(skb);
- 
-@@ -294,11 +354,25 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		} else {
- 			/* Can't do offload of this type of checksum */
- 			if (skb_checksum_help(skb))
--				goto free_sgl_ptr;
-+				goto tx_drop_count;
- 		}
- 	}
- 
--	if (mana_map_skb(skb, apc, &pkg)) {
-+	WARN_ON_ONCE(pkg.wqe_req.num_sge > MAX_TX_WQE_SGL_ENTRIES);
-+
-+	if (pkg.wqe_req.num_sge <= ARRAY_SIZE(pkg.sgl_array)) {
-+		pkg.wqe_req.sgl = pkg.sgl_array;
-+	} else {
-+		pkg.sgl_ptr = kmalloc_array(pkg.wqe_req.num_sge,
-+					    sizeof(struct gdma_sge),
-+					    GFP_ATOMIC);
-+		if (!pkg.sgl_ptr)
-+			goto tx_drop_count;
-+
-+		pkg.wqe_req.sgl = pkg.sgl_ptr;
-+	}
-+
-+	if (mana_map_skb(skb, apc, &pkg, gso_hs)) {
- 		u64_stats_update_begin(&tx_stats->syncp);
- 		tx_stats->mana_map_err++;
- 		u64_stats_update_end(&tx_stats->syncp);
-@@ -1256,11 +1330,16 @@ static void mana_unmap_skb(struct sk_buff *skb, struct mana_port_context *apc)
- 	struct mana_skb_head *ash = (struct mana_skb_head *)skb->head;
- 	struct gdma_context *gc = apc->ac->gdma_dev->gdma_context;
- 	struct device *dev = gc->dev;
--	int i;
-+	int hsg, i;
-+
-+	/* Number of SGEs of linear part */
-+	hsg = (skb_is_gso(skb) && skb_headlen(skb) > ash->size[0]) ? 2 : 1;
- 
--	dma_unmap_single(dev, ash->dma_handle[0], ash->size[0], DMA_TO_DEVICE);
-+	for (i = 0; i < hsg; i++)
-+		dma_unmap_single(dev, ash->dma_handle[i], ash->size[i],
-+				 DMA_TO_DEVICE);
- 
--	for (i = 1; i < skb_shinfo(skb)->nr_frags + 1; i++)
-+	for (i = hsg; i < skb_shinfo(skb)->nr_frags + hsg; i++)
- 		dma_unmap_page(dev, ash->dma_handle[i], ash->size[i],
- 			       DMA_TO_DEVICE);
- }
-diff --git a/include/net/mana/mana.h b/include/net/mana/mana.h
-index 9f70b4332238..4d43adf18606 100644
---- a/include/net/mana/mana.h
-+++ b/include/net/mana/mana.h
-@@ -103,9 +103,10 @@ struct mana_txq {
- 
- /* skb data and frags dma mappings */
- struct mana_skb_head {
--	dma_addr_t dma_handle[MAX_SKB_FRAGS + 1];
-+	/* GSO pkts may have 2 SGEs for the linear part*/
-+	dma_addr_t dma_handle[MAX_SKB_FRAGS + 2];
- 
--	u32 size[MAX_SKB_FRAGS + 1];
-+	u32 size[MAX_SKB_FRAGS + 2];
- };
- 
- #define MANA_HEADROOM sizeof(struct mana_skb_head)
+All errors (new ones prefixed by >>):
+
+   arch/x86/mm/pat/set_memory.c: In function '__set_memory_enc_pgtable':
+>> arch/x86/mm/pat/set_memory.c:2200:16: error: implicit declaration of function 'set_memory_p'; did you mean 'set_memory_np'? [-Werror=implicit-function-declaration]
+    2200 |         return set_memory_p(&addr, numpages);
+         |                ^~~~~~~~~~~~
+         |                set_memory_np
+   cc1: some warnings being treated as errors
+
+
+vim +2200 arch/x86/mm/pat/set_memory.c
+
+  2132	
+  2133	/*
+  2134	 * __set_memory_enc_pgtable() is used for the hypervisors that get
+  2135	 * informed about "encryption" status via page tables.
+  2136	 */
+  2137	static int __set_memory_enc_pgtable(unsigned long addr, int numpages, bool enc)
+  2138	{
+  2139		pgprot_t empty = __pgprot(0);
+  2140		struct cpa_data cpa;
+  2141		int ret;
+  2142	
+  2143		/* Should not be working on unaligned addresses */
+  2144		if (WARN_ONCE(addr & ~PAGE_MASK, "misaligned address: %#lx\n", addr))
+  2145			addr &= PAGE_MASK;
+  2146	
+  2147		memset(&cpa, 0, sizeof(cpa));
+  2148		cpa.vaddr = &addr;
+  2149		cpa.numpages = numpages;
+  2150	
+  2151		/*
+  2152		 * The caller must ensure that the memory being transitioned between
+  2153		 * encrypted and decrypted is not being accessed.  But if
+  2154		 * load_unaligned_zeropad() touches the "next" page, it may generate a
+  2155		 * read access the caller has no control over. To ensure such accesses
+  2156		 * cause a normal page fault for the load_unaligned_zeropad() handler,
+  2157		 * mark the pages not present until the transition is complete.  We
+  2158		 * don't want a #VE or #VC fault due to a mismatch in the memory
+  2159		 * encryption status, since paravisor configurations can't cleanly do
+  2160		 * the load_unaligned_zeropad() handling in the paravisor.
+  2161		 *
+  2162		 * There's no requirement to do so, but for efficiency we can clear
+  2163		 * _PAGE_PRESENT and set/clr encryption attr as a single operation.
+  2164		 */
+  2165		cpa.mask_set = enc ? pgprot_encrypted(empty) : pgprot_decrypted(empty);
+  2166		cpa.mask_clr = enc ? pgprot_decrypted(__pgprot(_PAGE_PRESENT)) :
+  2167					pgprot_encrypted(__pgprot(_PAGE_PRESENT));
+  2168		cpa.pgd = init_mm.pgd;
+  2169	
+  2170		/* Must avoid aliasing mappings in the highmem code */
+  2171		kmap_flush_unused();
+  2172		vm_unmap_aliases();
+  2173	
+  2174		/* Flush the caches as needed before changing the encryption attr. */
+  2175		if (x86_platform.guest.enc_cache_flush_required())
+  2176			cpa_flush(&cpa, 1);
+  2177	
+  2178		ret = __change_page_attr_set_clr(&cpa, 1);
+  2179		if (ret)
+  2180			return ret;
+  2181	
+  2182		/*
+  2183		 * After clearing _PAGE_PRESENT and changing the encryption attribute,
+  2184		 * we need to flush TLBs to ensure no further accesses to the memory can
+  2185		 * be made with the old encryption attribute (but no need to flush caches
+  2186		 * again).  We could just use cpa_flush_all(), but in case TLB flushing
+  2187		 * gets optimized in the cpa_flush() path use the same logic as above.
+  2188		 */
+  2189		cpa_flush(&cpa, 0);
+  2190	
+  2191		/* Notify hypervisor that we have successfully set/clr encryption attr. */
+  2192		if (!x86_platform.guest.enc_status_change_finish(addr, numpages, enc))
+  2193			return -EIO;
+  2194	
+  2195		/*
+  2196		 * Now that the hypervisor is sync'ed with the page table changes
+  2197		 * made here, add back _PAGE_PRESENT. set_memory_p() does not flush
+  2198		 * the TLB.
+  2199		 */
+> 2200		return set_memory_p(&addr, numpages);
+  2201	}
+  2202	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
