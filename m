@@ -1,50 +1,50 @@
-Return-Path: <linux-hyperv+bounces-346-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-347-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 086B97B39EE
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 20:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D94897B39EF
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 20:20:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id 9EA82282CA0
-	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 18:20:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id 9A1FF283179
+	for <lists+linux-hyperv@lfdr.de>; Fri, 29 Sep 2023 18:20:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0034A66696;
-	Fri, 29 Sep 2023 18:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660C866693;
+	Fri, 29 Sep 2023 18:20:33 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D9E6666A
-	for <linux-hyperv@vger.kernel.org>; Fri, 29 Sep 2023 18:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC136666A
+	for <linux-hyperv@vger.kernel.org>; Fri, 29 Sep 2023 18:20:31 +0000 (UTC)
 Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020024.outbound.protection.outlook.com [52.101.61.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD30136;
-	Fri, 29 Sep 2023 11:20:25 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1999C1A5;
+	Fri, 29 Sep 2023 11:20:30 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F+YNJ5lHNU4qjF6nZhzAEHhIAlODolFGFf0gtVCcDagOxXPHWF5E35kYCZxS39In6/dWXmpG3NPUtqTJ/Y2NZAh27pwALhysvcQoFQ/jOPHTvt0m8WdRxvBB/a2Ia6IMGOjhUlFHNeHr/RZnhRwCjQJEb6VBRAHqx7SkQgtQT1guw+MmUZmeGcBfTUMr+0aJbhLj+teG34OJuL775fUUWQ6BV4jdu0O+ksZSCP5rRVS7/WGDfNMRNrBwylFebzk+CXFd0Ro4vloKFVj0rgsaWwSepX9PLlfBW4TZiXrexCRDreECcLL1PeF/OUgQpGtkN8RUYBplUA7VBjdrjftUWQ==
+ b=QC7yPmH/JrFcy7YcWD7eUI/UWr30yvQYnmAyhMdjxQs1MarcFCgv1b+XXB1kFSwpNIMJZ/I52Z4rkwwaDP/kex+M1AjECa5j+52k32MenCjYWIKhO8eJZlLoQywYdoKHKoT6HL0EOym/u1aETB3GKTJwRAlFugMq5WMSe1cztmXUtgZ1/+Mlz6tas9nobUB6OZxotqA5/iJb3GETZ/mE+tSUKmdTGSI++Ry1GM5JdES4p1EpN5BEQ1ZjO2GcT1WH/2hYOreTBzGurV7/f6hzoa41IVIh0z7GwMT5OHFSEv4Hhaiy1MBlLqVaNitkhW/SytoHyn3NwMj9khdOgXuZuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xycPPMLoAFblCRg2Tr3wiRC8N0eGwJc9DrrmmZP3F/8=;
- b=ZotuWgZRKcJLXBA6+fVUgSgp77y3SxTRrbadIctIONb/BJp+zqtUVm6iY4BkRfnMAQSVljZQFwLS6ui5ig7gweCvUcmMQMlNvgLWmk3toGnexNQT0u/CyAXI+hDIuAppK8rOFbmmptkcADeXGxOdj6xCCX1DhWWfvn2kpcP/lHti7rQmUxhn+WwC56jBN1kD2w9vR6zMoqcXsoqSt5qKm5Q+gembdkDZvFRQPUYFPcP6Y0PvS9lwxeKIuMNjopXsJmbsig9DMe6Ua84ev35lJaDIXz0uEMMS+SOPU/m0fT8IzIle73JZOhpoiyfLuaM+JCrJ7agdRo8J9pBhidRwlw==
+ bh=PSOLdTfIZ4+T830+nJ7RRdvPJg2csnPAprl1jzEEDuY=;
+ b=evCDBtRbZsS8cHxLzM9hACL0gQUfAbd+QrsRtMm38RxRH3DMaOG00FZ3w926ZBFQzwRywoh+gLmNugM05jZOw6bH+3jWolFFwxsz5kQbkcT3PnRQ+q8yaO6yzx+PQwQkYK/kHT0h4gxHdUJJScetuXmWb4PbZcYE/jcCF8XrJ7+fz/V1S3OnhsvbqkV01sHf21oZNKjoo3SbmkqbHMSIPmoobsBrCw1tXZlG32W6kWwpPXaXjxDxgRQQ7u+LlNZNU/EdzVgX5OCrR/v6foyexkRo8FR14RIZ2RBiOky6WnqTaAtOzvvof/+Ws+x9OIT38IOrSgx81xD3S2InJJEYUQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xycPPMLoAFblCRg2Tr3wiRC8N0eGwJc9DrrmmZP3F/8=;
- b=PM7pSkxrwVtGXYHJMyFPCywhZq/Q9pxLAzMlzgcO+N4IBY+AR4k2eODNKLjDfAxQX79UU5+IncnbSMOvvvuqRNrU6xjN49DlwbUqpZHnDRQfP4D48iXsQlZFQ2mrkJxIHTr8fgIrY+cv5OrHqGH+o+wmHBSiEHDfI5JTtk/xTjk=
+ bh=PSOLdTfIZ4+T830+nJ7RRdvPJg2csnPAprl1jzEEDuY=;
+ b=CPp9yv1CruSIsC4twRpUAS+reuxxfHbHQeUTGF7SOjVDQexmcRCu6twmLxQ2I5dc5T+lrgRsgYImGqtjmJajaKVb900Z4/YaSwGbfnrbSi0dhcqh+4YI5+TywnNjE0USHGDnkmcentiGKMxiuF617+c/5hsjAZjSkLECk1PDr3o=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 Received: from DM6PR21MB1370.namprd21.prod.outlook.com (2603:10b6:5:16b::28)
  by BL1PR21MB3377.namprd21.prod.outlook.com (2603:10b6:208:39d::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.14; Fri, 29 Sep
- 2023 18:20:22 +0000
+ 2023 18:20:24 +0000
 Received: from DM6PR21MB1370.namprd21.prod.outlook.com
  ([fe80::eff:aea7:be24:8e44]) by DM6PR21MB1370.namprd21.prod.outlook.com
  ([fe80::eff:aea7:be24:8e44%4]) with mapi id 15.20.6863.013; Fri, 29 Sep 2023
- 18:20:22 +0000
+ 18:20:24 +0000
 From: Michael Kelley <mikelley@microsoft.com>
 To: kys@microsoft.com,
 	haiyangz@microsoft.com,
@@ -66,10 +66,12 @@ To: kys@microsoft.com,
 	linux-hyperv@vger.kernel.org,
 	x86@kernel.org
 Cc: mikelley@microsoft.com
-Subject: [PATCH 0/5] x86/coco: Mark CoCo VM pages not present when changing encrypted state
-Date: Fri, 29 Sep 2023 11:19:04 -0700
-Message-Id: <1696011549-28036-1-git-send-email-mikelley@microsoft.com>
+Subject: [PATCH 1/5] x86/coco: Use slow_virt_to_phys() in page transition hypervisor callbacks
+Date: Fri, 29 Sep 2023 11:19:05 -0700
+Message-Id: <1696011549-28036-2-git-send-email-mikelley@microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1696011549-28036-1-git-send-email-mikelley@microsoft.com>
+References: <1696011549-28036-1-git-send-email-mikelley@microsoft.com>
 Content-Type: text/plain
 X-ClientProxiedBy: CY5PR22CA0048.namprd22.prod.outlook.com
  (2603:10b6:930:1d::29) To DM6PR21MB1370.namprd21.prod.outlook.com
@@ -83,54 +85,54 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM6PR21MB1370:EE_|BL1PR21MB3377:EE_
-X-MS-Office365-Filtering-Correlation-Id: e2fcccab-5bd0-42fe-a4f5-08dbc118be6c
+X-MS-Office365-Filtering-Correlation-Id: fb218858-7da1-4d54-234e-08dbc118bf6e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	+JalQnvniGwB6ca9vZ07tMsJZYBBUgYaBeIPOX/azta8SBgQP9ejZ9wCNaYg6YAwyk1LN1W7vlNdLPLClz2fBMYGvdyLgv808VTdIPDTNDFLoqEyCmjhG2vaPIA8zmi/mrTsarPZFNriVr/NkkFtfeNN94grRJ/Kq3uVMluFL3i6flvcfu4Hw/Sw+x0VBIEC8gwfGdESK4EAtTfNkX8vi0bnVU7owlftcBysPv9VlxW4xiXGY3S9nehO36jrofGM8dbdoeOZ+xe74PcrvpDs/d0bW8sGIIglP2veQLOOX1QWOjz3ipcWSB9hWqcVTl/6LfbA+/dBF6834gfwM2x4uc0PxHKIHKCbIJNUcbyE3NteDqYc439+RxIRFfz4OOKwP3G2mylb3D6GRybJCmuC0KeeZlAZs9SCI/eikopm+llmjS1lPVSzcTzwUxjT0Xm2N7ZbPnaasRoa3S/OpZHjVEzyWQe6RAuaYNPATFDphjTZFVeuKm5sWlKmYmq4mb3BNrgaQHFgBWibPc+Wl7Lvi4FAgomj2qLLsNc/ZsSp8hxi9ywbhEEAbQsm6Y07HwNAdpVqBCHhtofttl3aFT67YHyR1/IRyIZZ35wonWsGfKDZdbO67n4tz9XYwAPYde24HqX4lnqsAzeFhJIPYArzlBykc/yWSMwws64x/g9OOUM=
+	mUPHgUoH83MYBMMK8yvbfGOxIuuTET1OnWf1aZ1Of89d1oiR4Cmn468l2LRh3ABqS2JIrvwvzeTz8pElA6pd+AJ27531aA/6wqO6/7AqeN+Amy9Ewig1YB6ZmR9XWmjftofSwwEirEkxFWfm6fWgmrJIdhKUzz6JzC7Yd6HBzebHEKSqi7LZVZ66CF7LkTXTbY9Ms+9UwNb69YC4zksq5AjHwn4YjhLEqDOMroHAMkIC8//Mq6HXYC7z7OYH5njwklkB/DRokbyFzLN2tgbuj9OLckpeRgo35RCH56ZCnYGjwdws2jJ07Lb68zxvRnyYZ8YtVDHGqJZHdHoIZXJ8OBg/49Dyxcgww5+G8lVh0WpFiW02E+HjiSSJYtYwKOfCFqy0jw8QVLCl84TMjKorc5zRGDtXyUL+vX2LlljuV6e5AMRYEUXMga6m5xiEPpBSFEQTvR0F7VNG82yr7TN914rGBfgQl4fxqjVQDQi1WJz68qmMAuS5Tq3duFt0UYk2/kPVwEkSk9xSYBsxHhKyFq3SKF9fLOP+r/vRXqp2OV4qWoej0CUiLFgpic1Ocmosq5sXKBurI6jF6hu1wvN93bN8P5g+d47pKEkJUWhCZmDsk10RX0OFxPppAPZMdCJOMCyd6/HXgYFVBYwxsYYlhVO7I0p9nL8a0ogaxK/dm+20BbW3QOpUZ8QN83ns5IBt
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(6029001)(396003)(39860400002)(136003)(346002)(376002)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799009)(41300700001)(6506007)(6512007)(6486002)(52116002)(478600001)(6666004)(966005)(2616005)(2906002)(316002)(66946007)(66556008)(66476007)(5660300002)(107886003)(10290500003)(8676002)(8936002)(4326008)(26005)(7416002)(921005)(82950400001)(82960400001)(36756003)(86362001)(83380400001)(38100700002)(38350700002);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR21MB1370.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(136003)(346002)(376002)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799009)(41300700001)(6506007)(6512007)(6486002)(52116002)(478600001)(6666004)(2616005)(2906002)(316002)(66946007)(66556008)(66476007)(5660300002)(107886003)(10290500003)(8676002)(8936002)(4326008)(26005)(7416002)(921005)(82950400001)(82960400001)(36756003)(86362001)(83380400001)(38100700002)(38350700002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GdTNNh+yCp1z1bzUOsYqWsPz8MwMUAMZ5K1TaSHNuwEbiuVh22s1d750PXUx?=
- =?us-ascii?Q?iro+fdd5nZLCCR1EbR9aicm1e2kCeXfLZGHT0+DQrlup4x4CNgRIuDYfit4m?=
- =?us-ascii?Q?jhRwqJjSZTNmSeDEZ+xpsOdKyLop0L5Fml8E1Ba+8WQfMOeBnQBPjVVdvaBZ?=
- =?us-ascii?Q?w34NPdz0KfWQ8wTxuDXzR4vXIalgqY8O4Y8ruuVzQ7vK146s/4ntn9CKq908?=
- =?us-ascii?Q?aMf984oOV/M4dURAJa0b7NnTgU7V0wRtIhbzCRlXVPdfxQqJ0hbwOnausMUx?=
- =?us-ascii?Q?HdwErXOJCuSwAAyvUXsuMlU3dFdZhmCeLCLnQBJ5LEQUETwDaFPAq7LabiDJ?=
- =?us-ascii?Q?Ky8UKPKE/rPG18Cg7M7/aF9nwMgkp7Eq3YaxQ+ennIhELb6CBz/gz4pdimm1?=
- =?us-ascii?Q?fLindki6NkURpuf3kAdCnvaLOvOu2PoEAu8fW+KSy29PGvtCBsDn8RNnzV0r?=
- =?us-ascii?Q?Hj8nuSQzV3im+pWMzNGtWc755oDM7/8Yj+rdlwDKPhEN1gwf81qOAKnoUK0+?=
- =?us-ascii?Q?iEpUI5EoFYggiSFgFtfu6Qv5KZu83xlqESySoefnL0Fczaw5nc2TUKFL+0Bx?=
- =?us-ascii?Q?CGrTDwgfdGA6+E71RV1kKoWYzqvoZZwgZctXFhLmPvRRhCR++bV8z2OH2jP8?=
- =?us-ascii?Q?GjqX9SGIGRni9HRkKGQ7OHeaSFxOD7uqLzU6qbFbrTrL/UZYOckwi+8zbRM0?=
- =?us-ascii?Q?ppM/teckbkNAU+diPQKV+58jNd801/vYQQoSUtSs/aJuuuYm/9QMeV976Iir?=
- =?us-ascii?Q?WeD2ArADwXYekhwvxhgPEGB4GWLLX7/vpY8UvuvT+c4AlG2WRy9q08leIg5o?=
- =?us-ascii?Q?EGWQxRRfW46Z0RIAACPVI4y2B74RCXiJQAzW0uJ8s58r5fJmLBrQhT9teMp2?=
- =?us-ascii?Q?dzVQ1WymLs1ORaSFO10KrXYXTQC+JbOage0JOJUOBexNoiqaXj6pTZgYMeez?=
- =?us-ascii?Q?yiJj+nWRqCE8JfplqMFzRozfbSbm3LAY858LaTYHPEKliWnkPYlpobnplHen?=
- =?us-ascii?Q?8f0xRDQx0MwyqjX6cyltJb0TIWAatZMY/v67WaCyjPytpdFOPZXxewIFMcUI?=
- =?us-ascii?Q?lOBce8+4sggeUaVMt5I7IsXhEko1kaIXPZsSe1kVr7Vlg87CMch5IW339u67?=
- =?us-ascii?Q?z0IakRRfDnLecYbkdYDgrJeIsrxMQdn61L57IoW6cyDD1mqYu2f34JhSgJuF?=
- =?us-ascii?Q?ZwrfemJKbJY9L46PmcrRY0Bi9klLWrOq2kFHVjI8qJ1pyWdB/v8tT2+Yn1LD?=
- =?us-ascii?Q?AYKW6BTsTEHkCdyY9psFUn7K0xPnr6xWtI8fSfVg2hgMcgyhE1H9EiC7o5Em?=
- =?us-ascii?Q?mlxznONIINJr4hPFMTUJi5fmEUXpHQy1WnMk4iQ5SbA1qy8GOg8QtuNN0OYq?=
- =?us-ascii?Q?fQDMtGwo7MnB5aKn3MZ6pKzJHtWGe9shqM5+WvJPOypvGE6Ug/jZOag4UH6x?=
- =?us-ascii?Q?4lIArZGtTtgYKa5dh/msJMTOZ4XlzvpZpZEFz3FEW50e3r8mSP9Xk/LtjbNB?=
- =?us-ascii?Q?vmJX1bmmvRMHxg8E/3YPtj32qOdpW+AVtk4KQ8eqBU/ST6r4zzGc/VsXAkeF?=
- =?us-ascii?Q?OINB94jVm05nn4Fs25QBDtfoL6GbcMVSeKrC/EPndki9zzrJI868WSxtNAG9?=
- =?us-ascii?Q?LA=3D=3D?=
+	=?us-ascii?Q?JgbRmJ8EAInjrnLV8/uwCDX97hmH7czFClEH3Z0rvZ4siS3I7S24wn5HrRYB?=
+ =?us-ascii?Q?9/hIUxFUoLE52RdvIOuIGsFWRR9HsFy31ks5zMBVbFHc5vtziH2WqCoBXVoB?=
+ =?us-ascii?Q?zmviF5wz2clvVRfJHjPiVLcEKtPH21uci8wnvTy8eDSHljEHtNdfH87OUdWD?=
+ =?us-ascii?Q?ApmtoCid6IJFa7jmbNCqjfWfpqRDn+5/xYebUxwr4Mdk1PiKR9UnsQDVErLe?=
+ =?us-ascii?Q?6zg80V/jTn4A+CcvsE6bjor/hw4ZGgnlCYiaagAodzBFkNhoOqG7KfL7Fe6Z?=
+ =?us-ascii?Q?b6xA9yzec5208Tc6eaeZ3g100F2l08I3k1OfYhkANQnt0DybMEETIajzw8U5?=
+ =?us-ascii?Q?9CfE5l2K9J/6BtaeUYatHf8kNRSSRvV7/KX4uavMACdkZUF4Gm8kuLNtU/vG?=
+ =?us-ascii?Q?v2WkUtCUQRLddEjl2ZIFNyAU/mpCx2fvAK0e+zJbJEUfAhmQZn5Cw+Vhp/Mi?=
+ =?us-ascii?Q?MqMrlGTaJ+12OdaR3CQK9k2+A7BFxp4mgX/SAlgdifLTG8WwtwCNBCMoRuIO?=
+ =?us-ascii?Q?KeD04bNYXWcLcp+9J76gCzlhp58EGfj/UvIl1V3wMJ6Afufly+lwT/WHSZpc?=
+ =?us-ascii?Q?3jCyTNSMjX1Zx4aRKENzC+ckubJefSKj0IEYAW4QiLq64LzkPQ3my8rp1IRg?=
+ =?us-ascii?Q?PQ5JpALGaqVDUqaz7hSlvk3UsnnhV/lLF6DU81Ir/8oAwt2enqNrdUfBsVEn?=
+ =?us-ascii?Q?InnqIkj8T9Rqamhx37V8fZUdB6IqVlTxAqikuUheoys86Gfw4t1Y4CQEpJCt?=
+ =?us-ascii?Q?9vtRNobxBwC2Le1wHIvG8XL4eWdpARhyzbn7QjKEFL00k8d4llNtke0NFqjc?=
+ =?us-ascii?Q?TYIIr/lSJXccFO7ayKtch8GQ6TSWcKqZxFtOYLkyCODg1tUsqje6pGrFK7qZ?=
+ =?us-ascii?Q?tnJ8FJuENUbo2FMQnNZX/qULDVrBTNxQAFx/it0bu94M5O3mU3Ws8DZWhMyN?=
+ =?us-ascii?Q?9qy+IlVoayyjMFjYIKgHj3QRk/Wdd/AORvSRgn1QFFGOqRHIkNQh4JQ82unk?=
+ =?us-ascii?Q?tRWH2+7V7jWbW0whVA7el36Fgtl8DYfiDr+KsgXWuJ4UwNoFawpFo6q7L337?=
+ =?us-ascii?Q?Ebl0KjFQJMpfAzJzFiMuLqlYVcR5lhJMqYEpMQ2uxTCy4iozKFFOUv3cxFPL?=
+ =?us-ascii?Q?uYYpCbq9OCKacaTFXMbtrXD4YA51bksNSytAYCHr/cBp1i7WqJdtxDbJMuA3?=
+ =?us-ascii?Q?F/tg5f1xZNi+Y+hCVevw91HlVj0Y3H5b73AjYKBh8yKXj0JvkjXgWbhiZnkm?=
+ =?us-ascii?Q?A7NgHRgll01cx2sbb5aZdVIDQBLTP4hBdE2WC3Ueot/Yl3E4DoD7jvoYk9x7?=
+ =?us-ascii?Q?mUSe5JSepfX3UJgK58ZdKIdsFYYSyZQE4GS+bIBBnU923MT+2cj/TN87Agvb?=
+ =?us-ascii?Q?QEp6rYfh2jwQMx89HZHvrZz8w6hcn+nvK3Si0jSEuTDn2Md0y9JPdb+bQt5Q?=
+ =?us-ascii?Q?VWvjOCYM8G/S5o3mZsxIusluzPOXCY4kBQWnB1MqE/RPOm2mKkOtG2v+I+1n?=
+ =?us-ascii?Q?l8VddH8r//ggUQ3kbsyzVuUCiIwmCVJvhCfm7UHg9dgcecYjszAJGLJYLTK7?=
+ =?us-ascii?Q?lrsyi9eTjT/1IEativARqdwG99IOoZl2Wh3wSsB7qwdAY1xNLSrXnJqp3PO5?=
+ =?us-ascii?Q?pw=3D=3D?=
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2fcccab-5bd0-42fe-a4f5-08dbc118be6c
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb218858-7da1-4d54-234e-08dbc118bf6e
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR21MB1370.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2023 18:20:22.2946
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2023 18:20:23.9537
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 14K4EZThbEAlwuhOk5IjJJ1gT1DJLNwVAnPUjYejWc4bYxSmyd/1mXBLmNPqdke8R4fKD3eX93fqpu/4RkDCag==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9HkN7j8Cfuex2mmxod46j1H/sjSzSY7izgmBv4voykqZoAzRC5UwUGOIjdJf8PoilC4FcatAMAYDDcx3uHD7Gw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3377
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -139,96 +141,86 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-In a CoCo VM when a page transitions from encrypted to decrypted, or vice
-versa, attributes in the PTE must be updated *and* the hypervisor must
-be notified of the change. Because there are two separate steps, there's
-a window where the settings are inconsistent.  Normally the code that
-initiates the transition (via set_memory_decrypted() or
-set_memory_encrypted()) ensures that the memory is not being accessed
-during a transition, so the window of inconsistency is not a problem.
-However, load_unaligned_zeropad() can read arbitrary memory pages at
-arbitrary times, which could read a transitioning page during the
-window.  In such a case, CoCo VM specific exceptions are taken
-(depending on the CoCo architecture in use).  Current code in those
-exception handlers recovers and does "fixup" on the result returned by
-load_unaligned_zeropad().  Unfortunately, this exception handling can't
-work in paravisor scenarios (TDX Paritioning and SEV-SNP in vTOM mode).
-The exceptions would need to be forwarded from the paravisor to the
-Linux guest, but there's no architectural spec for how to do that.
+In preparation for temporarily marking pages not present during a
+transition between encrypted and decrypted, use slow_virt_to_phys()
+in the hypervisor callbacks. As long as the PFN is correct,
+slow_virt_to_phys() works even if the leaf PTE is not present.
+The existing functions that depends on vmalloc_to_page() all
+require that the leaf PTE be marked present, so they don't work.
 
-Fortunately, there's a simpler way to solve the problem by changing
-the core transition code in __set_memory_enc_pgtable() to do the
-following:
+Update the comments for slow_virt_to_phys() to note this broader usage
+and the requirement to work even if the PTE is not marked present.
 
-1.  Remove aliasing mappings
-2.  Flush the data cache if needed
-3.  Remove the PRESENT bit from the PTEs of all transitioning pages
-4.  Set/clear the encryption attribute as appropriate
-5.  Flush the TLB so the changed encryption attribute isn't visible
-6.  Notify the hypervisor of the encryption status change
-7.  Add back the PRESENT bit, making the changed attribute visible
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+---
+ arch/x86/hyperv/ivm.c        |  9 ++++++++-
+ arch/x86/kernel/sev.c        |  8 +++++++-
+ arch/x86/mm/pat/set_memory.c | 13 +++++++++----
+ 3 files changed, 24 insertions(+), 6 deletions(-)
 
-With this approach, load_unaligned_zeropad() just takes its normal
-page-fault-based fixup path if it touches a page that is transitioning.
-As a result, load_unaligned_zeropad() and CoCo VM page transitioning
-are completely decoupled.  CoCo VM page transitions can proceed
-without needing to handle architecture-specific exceptions and fix
-things up. This decoupling reduces the complexity due to separate
-TDX and SEV-SNP fixup paths, and gives more freedom to revise and
-introduce new capabilities in future versions of the TDX and SEV-SNP
-architectures. Paravisor scenarios work properly without needing
-to forward exceptions.
-
-This patch set is follow-up to an RFC patch and discussion.[1]
-Compared with the RFC patch, the steps listed above are optimized for
-better performance and particularly for fewer TLB flushes.
-
-Patch 1 handles implications of the hypervisor callbacks in Step 6
-needing to do virt-to-phys translations on pages that are temporarily
-marked not present.
-
-Patch 2 is a performance optimization so that Step 7 doesn't generate
-a TLB flush.
-
-Patch 3 is the core change that implements Steps 1 thru 7. It also
-simplifies the associated TDX, SEV-SNP, and Hyper-V vTOM callbacks.
-
-Patch 4 is a somewhat tangential cleanup that removes an unnecessary
-wrapper function in the path for doing a transition.
-
-Patch 5 adds comments describing the implications of errors when
-doing a transition.  These implications are discussed in the email
-thread for the RFC patch.
-
-With this change, the #VE and #VC exception handlers should no longer
-be triggered for load_unaligned_zeropad() accesses, and the existing
-code in those handlers to do the "fixup" shouldn't be needed. But I
-have not removed that code in this patch set. Kirill Shutemov wants
-to keep the code for TDX #VE, so the code for #VC on the the SEV-SNP
-side has also been kept.
-
-This patch set is based on the linux-next20230921 code tree.
-
-[1] https://lore.kernel.org/lkml/1688661719-60329-1-git-send-email-mikelley@microsoft.com/
-
-Michael Kelley (5):
-  x86/coco: Use slow_virt_to_phys() in page transition hypervisor
-    callbacks
-  x86/mm: Don't do a TLB flush if changing a PTE that isn't marked
-    present
-  x86/mm: Mark CoCo VM pages not present while changing encrypted state
-  x86/mm: Remove unnecessary call layer for __set_memory_enc_pgtable()
-  x86/mm: Add comments about errors in
-    set_memory_decrypted()/encrypted()
-
- arch/x86/coco/tdx/tdx.c       |  66 +-----------------------
- arch/x86/hyperv/ivm.c         |  15 +++---
- arch/x86/kernel/sev.c         |   8 ++-
- arch/x86/kernel/x86_init.c    |   4 --
- arch/x86/mm/mem_encrypt_amd.c |  27 +++-------
- arch/x86/mm/pat/set_memory.c  | 114 +++++++++++++++++++++++++++++-------------
- 6 files changed, 102 insertions(+), 132 deletions(-)
-
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index c1088d3..084fab6 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -524,7 +524,14 @@ static bool hv_vtom_set_host_visibility(unsigned long kbuffer, int pagecount, bo
+ 		return false;
+ 
+ 	for (i = 0, pfn = 0; i < pagecount; i++) {
+-		pfn_array[pfn] = virt_to_hvpfn((void *)kbuffer + i * HV_HYP_PAGE_SIZE);
++		/*
++		 * Use slow_virt_to_phys() because the PRESENT bit has been
++		 * temporarily cleared in the PTEs.  slow_virt_to_phys() works
++		 * without the PRESENT bit while virt_to_hvpfn() or similar
++		 * does not.
++		 */
++		pfn_array[pfn] = slow_virt_to_phys((void *)kbuffer +
++					i * HV_HYP_PAGE_SIZE) >> HV_HYP_PAGE_SHIFT;
+ 		pfn++;
+ 
+ 		if (pfn == HV_MAX_MODIFY_GPA_REP_COUNT || i == pagecount - 1) {
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 2787826..f5d6cec 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -784,7 +784,13 @@ static unsigned long __set_pages_state(struct snp_psc_desc *data, unsigned long
+ 		hdr->end_entry = i;
+ 
+ 		if (is_vmalloc_addr((void *)vaddr)) {
+-			pfn = vmalloc_to_pfn((void *)vaddr);
++			/*
++			 * Use slow_virt_to_phys() because the PRESENT bit has been
++			 * temporarily cleared in the PTEs.  slow_virt_to_phys() works
++			 * without the PRESENT bit while vmalloc_to_pfn() or similar
++			 * does not.
++			 */
++			pfn = slow_virt_to_phys((void *)vaddr) >> PAGE_SHIFT;
+ 			use_large_entry = false;
+ 		} else {
+ 			pfn = __pa(vaddr) >> PAGE_SHIFT;
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index bda9f12..8e19796 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -755,10 +755,15 @@ pmd_t *lookup_pmd_address(unsigned long address)
+  * areas on 32-bit NUMA systems.  The percpu areas can
+  * end up in this kind of memory, for instance.
+  *
+- * This could be optimized, but it is only intended to be
+- * used at initialization time, and keeping it
+- * unoptimized should increase the testing coverage for
+- * the more obscure platforms.
++ * It is also used in callbacks for CoCo VM page transitions between private
++ * and shared because it works when the PRESENT bit is not set in the leaf
++ * PTE. In such cases, the state of the PTEs, including the PFN, is otherwise
++ * known to be valid, so the returned physical address is correct. The similar
++ * function vmalloc_to_pfn() can't be used because it requires the PRESENT bit.
++ *
++ * This could be optimized, but it is only used in paths that are not perf
++ * sensitive, and keeping it unoptimized should increase the testing coverage
++ * for the more obscure platforms.
+  */
+ phys_addr_t slow_virt_to_phys(void *__virt_addr)
+ {
 -- 
 1.8.3.1
 
