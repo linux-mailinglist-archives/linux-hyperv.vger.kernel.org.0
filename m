@@ -1,34 +1,52 @@
-Return-Path: <linux-hyperv+bounces-367-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-368-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66F2D7B4306
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 20:31:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 808357B43DF
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 23:13:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by ny.mirrors.kernel.org (Postfix) with ESMTP id 718341C20821
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 18:31:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id 9C4FF1C20821
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 21:13:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C0F8C0B;
-	Sat, 30 Sep 2023 18:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27F17B661;
+	Sat, 30 Sep 2023 21:13:13 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3D138E;
-	Sat, 30 Sep 2023 18:31:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2140C433C8;
-	Sat, 30 Sep 2023 18:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1696098676;
-	bh=gPSt2DVfnZHEWNHwWx6rdcYJzFL/8huE+2zVEzu3HzI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eCxGV53/kBfbr1GUpC5e/i9KXl5o7XVW0tcnTT1KwiBw4mRDy6sqeUIiaKpWMyMmh
-	 71dbmjeyf2gRyNh1E+xT2rH6H1genxj9yX4EL+SNAWKzMe3IDdMDxLVi+gjIMu5HIc
-	 Yy8X3iOpXOGLMRlr495lhglerpgD+4y/rq5Sq5Jo=
-Date: Sat, 30 Sep 2023 20:31:13 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7A6646
+	for <linux-hyperv@vger.kernel.org>; Sat, 30 Sep 2023 21:13:11 +0000 (UTC)
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7FF2DD;
+	Sat, 30 Sep 2023 14:13:09 -0700 (PDT)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1c5cd27b1acso137792005ad.2;
+        Sat, 30 Sep 2023 14:13:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696108389; x=1696713189;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w4/9Jh9erOblVD03PMD3I+nDmotORbmI0YDClcDj3hs=;
+        b=YtgAbWKWDATEueTyrHWbAU6CPv7y8wC1a3T5bm4zzkLXsGZULlKSz/cxfjgaDV+HaF
+         aBap8G5b5BjjrAbCgCNjeDtyebZQCJLjwI/Ary42TV0RYfPK20yXkR3gxrPc9L2L5IBN
+         /q1muAWwQstvI96NwMjsB9JKP6J1sCGacofvL4/jXxmpI8SJX4+1P7iDMt9+jnHm6A8t
+         aTaNfxnSNWsUmKwbs2Y6sGFO4RcQGWKhddLUMg/OdWgQ2adr3+4off1jkgtumO7RhzBH
+         P96Mv1LY592CLZTB5Qx7CulH2SK1zAw1Nux/OrPcu2ujcnCzTzTIQjm+VWzlv4ePJMKb
+         WjxA==
+X-Gm-Message-State: AOJu0YwOMSH1qQXuixlhToFbFpBnGcYNRBzclt+2MgVfXjfuI0Ahng6Z
+	X+jLX6+mzSquFvpXOSBOhqtApUr6tTY=
+X-Google-Smtp-Source: AGHT+IE7H7jSQLljAYdqE3TR+wtXf6R1QTE+Vlo6MOV6oJH9kKG3SYX9PRUPpjfsLTKd+YWkUayYhw==
+X-Received: by 2002:a17:903:120e:b0:1bc:7001:6e5e with SMTP id l14-20020a170903120e00b001bc70016e5emr8963254plh.32.1696108389106;
+        Sat, 30 Sep 2023 14:13:09 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id iy19-20020a170903131300b001c627413e87sm11023591plb.290.2023.09.30.14.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Sep 2023 14:13:08 -0700 (PDT)
+Date: Sat, 30 Sep 2023 21:13:07 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
 	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-arch@vger.kernel.org, patches@lists.linux.dev,
@@ -42,11 +60,12 @@ Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
 	catalin.marinas@arm.com
 Subject: Re: [PATCH v4 15/15] Drivers: hv: Add modules to expose /dev/mshv to
  VMMs running on Hyper-V
-Message-ID: <2023093002-bonfire-petty-c3ca@gregkh>
+Message-ID: <ZRiPY5GzrGvlnPmY@liuwe-devbox-debian-v2>
 References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
  <1696010501-24584-16-git-send-email-nunodasneves@linux.microsoft.com>
  <2023093004-evoke-snowbird-363b@gregkh>
  <ZRhkxxBbxkeM4whg@liuwe-devbox-debian-v2>
+ <2023093002-bonfire-petty-c3ca@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -55,34 +74,52 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZRhkxxBbxkeM4whg@liuwe-devbox-debian-v2>
+In-Reply-To: <2023093002-bonfire-petty-c3ca@gregkh>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Sat, Sep 30, 2023 at 06:11:19PM +0000, Wei Liu wrote:
-> On Sat, Sep 30, 2023 at 08:11:37AM +0200, Greg KH wrote:
-> > On Fri, Sep 29, 2023 at 11:01:41AM -0700, Nuno Das Neves wrote:
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/mshv.h
-> > > @@ -0,0 +1,306 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+On Sat, Sep 30, 2023 at 08:31:13PM +0200, Greg KH wrote:
+> On Sat, Sep 30, 2023 at 06:11:19PM +0000, Wei Liu wrote:
+> > On Sat, Sep 30, 2023 at 08:11:37AM +0200, Greg KH wrote:
+> > > On Fri, Sep 29, 2023 at 11:01:41AM -0700, Nuno Das Neves wrote:
+> > > > --- /dev/null
+> > > > +++ b/include/uapi/linux/mshv.h
+> > > > @@ -0,0 +1,306 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > > 
+> > > Much better.
+> > > 
+> > > > +#ifndef _UAPI_LINUX_MSHV_H
+> > > > +#define _UAPI_LINUX_MSHV_H
+> > > > +
+> > > > +/*
+> > > > + * Userspace interface for /dev/mshv
+> > > > + * Microsoft Hypervisor root partition APIs
+> > > > + * NOTE: This API is not yet stable!
+> > > 
+> > > Sorry, that will not work for obvious reasons.
 > > 
-> > Much better.
-> > 
-> > > +#ifndef _UAPI_LINUX_MSHV_H
-> > > +#define _UAPI_LINUX_MSHV_H
-> > > +
-> > > +/*
-> > > + * Userspace interface for /dev/mshv
-> > > + * Microsoft Hypervisor root partition APIs
-> > > + * NOTE: This API is not yet stable!
-> > 
-> > Sorry, that will not work for obvious reasons.
+> > This can be removed. For practical purposes, the API has been stable for
+> > the past three years.
 > 
-> This can be removed. For practical purposes, the API has been stable for
-> the past three years.
+> Then who wrote this text?
 
-Then who wrote this text?
+I don't think this matter, does it? This patch series had been rewritten
+so many times internally to conform to upstream standard it is very
+difficult to track down who wrote this and when.
 
-confused,
+If you have concrete concerns about removing the text, please let me
+know.
 
-greg k-h
+Thanks,
+Wei.
+
+> 
+> confused,
+> 
+> greg k-h
 
