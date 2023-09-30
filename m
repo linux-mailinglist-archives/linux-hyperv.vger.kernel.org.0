@@ -1,64 +1,52 @@
-Return-Path: <linux-hyperv+bounces-366-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-367-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28E707B42F4
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 20:19:57 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66F2D7B4306
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 20:31:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id B2EBF282ED4
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 18:19:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id 718341C20821
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 18:31:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F3AB18B1E;
-	Sat, 30 Sep 2023 18:19:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5C0F8C0B;
+	Sat, 30 Sep 2023 18:31:16 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F57818B11;
-	Sat, 30 Sep 2023 18:19:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97A7C433C7;
-	Sat, 30 Sep 2023 18:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696097993;
-	bh=VkV7TjXZJnym2EdSAsMapvwnoXQMIzv/8uo4dDQrWTg=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3D138E;
+	Sat, 30 Sep 2023 18:31:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2140C433C8;
+	Sat, 30 Sep 2023 18:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696098676;
+	bh=gPSt2DVfnZHEWNHwWx6rdcYJzFL/8huE+2zVEzu3HzI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vBOmrl8788GbnxHeP93j29wo1oJzATYxI9FNfCZ+5dQrB5Zfl32IFQxHVQs5Mezw4
-	 qg4RET03lYP+nNNp3ZdBfn1/I+8fe6faywJo5j1LwYGiD25oZBdcYV96BAuVW4pESV
-	 GDtUHZblaXnXYqGPF0Pslim6HYcSh6fffRQ68Pu7xz6OVXQyZBGoUcSu2nuRiaZzGc
-	 7Uca+FJvj0NT2Wsy+d5XaonAEHbaAVVuahl6HFm6KNFjvbcR0u4DoemNLVz5GL9tN6
-	 zaEfh4YeXokL6XoDUQxIW3dFzXWGDnJhyFZ2ljWi8VeWvXW0ApGHMrjgx2mhFcrFzz
-	 TsWCHsXKX6Q4A==
-Date: Sat, 30 Sep 2023 20:19:46 +0200
-From: Simon Horman <horms@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-	Paul Rosswurm <paulros@microsoft.com>,
-	"olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"leon@kernel.org" <leon@kernel.org>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"ast@kernel.org" <ast@kernel.org>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	"hawk@kernel.org" <hawk@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net, 3/3] net: mana: Fix oversized sge0 for GSO packets
-Message-ID: <20230930181946.GG92317@kernel.org>
-References: <1695519107-24139-1-git-send-email-haiyangz@microsoft.com>
- <1695519107-24139-4-git-send-email-haiyangz@microsoft.com>
- <ZRaRSKQDyfkhxYmY@kernel.org>
- <PH7PR21MB311698B8C2107E66890F6C7ECAC0A@PH7PR21MB3116.namprd21.prod.outlook.com>
+	b=eCxGV53/kBfbr1GUpC5e/i9KXl5o7XVW0tcnTT1KwiBw4mRDy6sqeUIiaKpWMyMmh
+	 71dbmjeyf2gRyNh1E+xT2rH6H1genxj9yX4EL+SNAWKzMe3IDdMDxLVi+gjIMu5HIc
+	 Yy8X3iOpXOGLMRlr495lhglerpgD+4y/rq5Sq5Jo=
+Date: Sat, 30 Sep 2023 20:31:13 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org, patches@lists.linux.dev,
+	mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+	decui@microsoft.com, apais@linux.microsoft.com,
+	Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
+	mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+	jinankjain@linux.microsoft.com, vkuznets@redhat.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
+	catalin.marinas@arm.com
+Subject: Re: [PATCH v4 15/15] Drivers: hv: Add modules to expose /dev/mshv to
+ VMMs running on Hyper-V
+Message-ID: <2023093002-bonfire-petty-c3ca@gregkh>
+References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1696010501-24584-16-git-send-email-nunodasneves@linux.microsoft.com>
+ <2023093004-evoke-snowbird-363b@gregkh>
+ <ZRhkxxBbxkeM4whg@liuwe-devbox-debian-v2>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -67,97 +55,34 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PH7PR21MB311698B8C2107E66890F6C7ECAC0A@PH7PR21MB3116.namprd21.prod.outlook.com>
+In-Reply-To: <ZRhkxxBbxkeM4whg@liuwe-devbox-debian-v2>
 
-On Fri, Sep 29, 2023 at 04:11:15PM +0000, Haiyang Zhang wrote:
-
-...
-
-> > > @@ -209,19 +281,6 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb,
-> > struct net_device *ndev)
-> > >  	pkg.wqe_req.client_data_unit = 0;
-> > >
-> > >  	pkg.wqe_req.num_sge = 1 + skb_shinfo(skb)->nr_frags;
-> > > -	WARN_ON_ONCE(pkg.wqe_req.num_sge >
-> > MAX_TX_WQE_SGL_ENTRIES);
-> > > -
-> > > -	if (pkg.wqe_req.num_sge <= ARRAY_SIZE(pkg.sgl_array)) {
-> > > -		pkg.wqe_req.sgl = pkg.sgl_array;
-> > > -	} else {
-> > > -		pkg.sgl_ptr = kmalloc_array(pkg.wqe_req.num_sge,
-> > > -					    sizeof(struct gdma_sge),
-> > > -					    GFP_ATOMIC);
-> > > -		if (!pkg.sgl_ptr)
-> > > -			goto tx_drop_count;
-> > > -
-> > > -		pkg.wqe_req.sgl = pkg.sgl_ptr;
-> > > -	}
+On Sat, Sep 30, 2023 at 06:11:19PM +0000, Wei Liu wrote:
+> On Sat, Sep 30, 2023 at 08:11:37AM +0200, Greg KH wrote:
+> > On Fri, Sep 29, 2023 at 11:01:41AM -0700, Nuno Das Neves wrote:
+> > > --- /dev/null
+> > > +++ b/include/uapi/linux/mshv.h
+> > > @@ -0,0 +1,306 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 > > 
-> > It is unclear to me why this logic has moved from here to further
-> > down in this function. Is it to avoid some cases where
-> > alloation has to be unwond on error (when mana_fix_skb_head() fails) ?
-> > If so, this feels more like an optimisation than a fix.
-> mana_fix_skb_head() may add one more sge (success case) so the sgl 
-> allocation should be done later. Otherwise, we need to free / re-allocate 
-> the array later.
-
-Understood, thanks for the clarification.
-
-> > >  	if (skb->protocol == htons(ETH_P_IP))
-> > >  		ipv4 = true;
-> > > @@ -229,6 +288,23 @@ netdev_tx_t mana_start_xmit(struct sk_buff *skb,
-> > struct net_device *ndev)
-> > >  		ipv6 = true;
-> > >
-> > >  	if (skb_is_gso(skb)) {
-> > > +		gso_hs = mana_get_gso_hs(skb);
+> > Much better.
+> > 
+> > > +#ifndef _UAPI_LINUX_MSHV_H
+> > > +#define _UAPI_LINUX_MSHV_H
 > > > +
-> > > +		if (mana_fix_skb_head(ndev, skb, gso_hs,
-> > &pkg.wqe_req.num_sge))
-> > > +			goto tx_drop_count;
-> > > +
-> > > +		if (skb->encapsulation) {
-> > > +			u64_stats_update_begin(&tx_stats->syncp);
-> > > +			tx_stats->tso_inner_packets++;
-> > > +			tx_stats->tso_inner_bytes += skb->len - gso_hs;
-> > > +			u64_stats_update_end(&tx_stats->syncp);
-> > > +		} else {
-> > > +			u64_stats_update_begin(&tx_stats->syncp);
-> > > +			tx_stats->tso_packets++;
-> > > +			tx_stats->tso_bytes += skb->len - gso_hs;
-> > > +			u64_stats_update_end(&tx_stats->syncp);
-> > > +		}
+> > > +/*
+> > > + * Userspace interface for /dev/mshv
+> > > + * Microsoft Hypervisor root partition APIs
+> > > + * NOTE: This API is not yet stable!
 > > 
-> > nit: I wonder if this could be slightly more succinctly written as:
-> > 
-> > 		u64_stats_update_begin(&tx_stats->syncp);
-> > 		if (skb->encapsulation) {
-> > 			tx_stats->tso_inner_packets++;
-> > 			tx_stats->tso_inner_bytes += skb->len - gso_hs;
-> > 		} else {
-> > 			tx_stats->tso_packets++;
-> > 			tx_stats->tso_bytes += skb->len - gso_hs;
-> > 		}
-> > 		u64_stats_update_end(&tx_stats->syncp);
-> > 
-> Yes it can be written this way:)
+> > Sorry, that will not work for obvious reasons.
 > 
-> > Also, it is unclear to me why the stats logic is moved here from
-> > futher down in the same block. It feels more like a clean-up than a fix
-> > (as, btw, is my suggestion immediately above).
-> Since we need to calculate the gso_hs and fix head earlier than the stats and 
-> some other work, I move it immediately after skb_is_gso(skb).
-> The gso_hs calculation was part of the tx_stats block, so the tx_stats is moved 
-> together to remain close to the gso_hs calculation to keep readability.
+> This can be removed. For practical purposes, the API has been stable for
+> the past three years.
 
-I agree it is nice the way you have it.
-I was mainly thinking that the diffstat could be made smaller,
-which might be beneficial to a fix. But I have no strong feelings on that.
+Then who wrote this text?
 
-> > > +
-> > >  		pkg.tx_oob.s_oob.is_outer_ipv4 = ipv4;
-> > >  		pkg.tx_oob.s_oob.is_outer_ipv6 = ipv6;
-> > >
+confused,
 
-...
+greg k-h
 
