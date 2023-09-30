@@ -1,49 +1,71 @@
-Return-Path: <linux-hyperv+bounces-360-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-361-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3CA57B3E98
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 08:11:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A5577B401E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 13:27:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by ny.mirrors.kernel.org (Postfix) with ESMTP id A61981C2084F
-	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 06:11:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id 961AC281A1E
+	for <lists+linux-hyperv@lfdr.de>; Sat, 30 Sep 2023 11:27:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C6493FE3;
-	Sat, 30 Sep 2023 06:11:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87553A5E;
+	Sat, 30 Sep 2023 11:27:55 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E161FA8;
-	Sat, 30 Sep 2023 06:11:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A82AC433C8;
-	Sat, 30 Sep 2023 06:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1696054300;
-	bh=1EphpFWnU/6lrIe7UpyGV+C1tQHUDqUUsCrgVBuTw64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uFY4WqNIJlRXHSIHR2qN9YOceoWUE6d5MUL+EisewvqwdxsY/k1Iw+mejf80UAw3a
-	 n1xbJv3Iv+bJwy/Dzm1zQ9kaLqL6FMpZCIzIXGUz1OWbknde3uin6PCyzprs1IQqc0
-	 8vpCglLu9qFkcWgnyjkrR6+VLfVZieLjc1zMxQ6k=
-Date: Sat, 30 Sep 2023 08:11:37 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67641AD2A
+	for <linux-hyperv@vger.kernel.org>; Sat, 30 Sep 2023 11:27:53 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BAECA;
+	Sat, 30 Sep 2023 04:27:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696073271; x=1727609271;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uL+N1pJNzEJQPyW2JWtFPyNjmNId4HAagDTl+PkZMhc=;
+  b=CMNMgx/+cLVhyvQUtg1tFhTgiVCG0fZKzv4amCTzbub0j+gf8jqArud1
+   klDnHTyVw+AX2fqNVG2sS8Wsp5WBQrkrpzSPyCLCHaZeItKk8fDWzSd6Z
+   ZkfMppEaLHtAFAtPso1TCL0Kx2LJWca8eTOTX3vwxmxtAd+4j73HQTXLB
+   Cg2sp0zqSc+M5gdndiPJqV+hOZQyJPDq3jFfwcElB6MOFKsnge44tC4Ky
+   XM4q4Mj0CQwTILq/n74wf5AyG4XhIJgu796pMQbM8TEJAesPbYO/rouG4
+   ULo0gijfZLrY5EVaMFHeOjSG0vJT6n9W92U+UEZSiRHALyrhZ8L4BLONF
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="379722978"
+X-IronPort-AV: E=Sophos;i="6.03,190,1694761200"; 
+   d="scan'208";a="379722978"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2023 04:27:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10848"; a="873926489"
+X-IronPort-AV: E=Sophos;i="6.03,190,1694761200"; 
+   d="scan'208";a="873926489"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by orsmga004.jf.intel.com with ESMTP; 30 Sep 2023 04:27:43 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qmY8L-00045R-03;
+	Sat, 30 Sep 2023 11:27:41 +0000
+Date: Sat, 30 Sep 2023 19:26:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
 	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-arch@vger.kernel.org, patches@lists.linux.dev,
+	linux-arch@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, patches@lists.linux.dev,
 	mikelley@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
-	haiyangz@microsoft.com, decui@microsoft.com,
-	apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
-	ssengar@linux.microsoft.com, mukeshrathor@microsoft.com,
-	stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com,
-	vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	will@kernel.org, catalin.marinas@arm.com
-Subject: Re: [PATCH v4 15/15] Drivers: hv: Add modules to expose /dev/mshv to
- VMMs running on Hyper-V
-Message-ID: <2023093004-evoke-snowbird-363b@gregkh>
-References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1696010501-24584-16-git-send-email-nunodasneves@linux.microsoft.com>
+	gregkh@linuxfoundation.org, haiyangz@microsoft.com,
+	decui@microsoft.com, apais@linux.microsoft.com,
+	Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
+	mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+	jinankjain@linux.microsoft.com, vkuznets@redhat.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
+	catalin.marinas@arm.com
+Subject: Re: [PATCH v4 08/15] Drivers: hv: Introduce per-cpu event ring tail
+Message-ID: <202309301948.CyCE3Y0P-lkp@intel.com>
+References: <1696010501-24584-9-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -52,25 +74,81 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1696010501-24584-16-git-send-email-nunodasneves@linux.microsoft.com>
+In-Reply-To: <1696010501-24584-9-git-send-email-nunodasneves@linux.microsoft.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Fri, Sep 29, 2023 at 11:01:41AM -0700, Nuno Das Neves wrote:
-> --- /dev/null
-> +++ b/include/uapi/linux/mshv.h
-> @@ -0,0 +1,306 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+Hi Nuno,
 
-Much better.
+kernel test robot noticed the following build warnings:
 
-> +#ifndef _UAPI_LINUX_MSHV_H
-> +#define _UAPI_LINUX_MSHV_H
-> +
-> +/*
-> + * Userspace interface for /dev/mshv
-> + * Microsoft Hypervisor root partition APIs
-> + * NOTE: This API is not yet stable!
+[auto build test WARNING on arnd-asm-generic/master]
+[also build test WARNING on arm64/for-next/core linus/master v6.6-rc3 next-20230929]
+[cannot apply to tip/x86/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Sorry, that will not work for obvious reasons.
+url:    https://github.com/intel-lab-lkp/linux/commits/Nuno-Das-Neves/hyperv-tlfs-Change-shared-HV_REGISTER_-defines-to-HV_MSR_/20230930-041305
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git master
+patch link:    https://lore.kernel.org/r/1696010501-24584-9-git-send-email-nunodasneves%40linux.microsoft.com
+patch subject: [PATCH v4 08/15] Drivers: hv: Introduce per-cpu event ring tail
+config: x86_64-randconfig-123-20230930 (https://download.01.org/0day-ci/archive/20230930/202309301948.CyCE3Y0P-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230930/202309301948.CyCE3Y0P-lkp@intel.com/reproduce)
 
-greg k-h
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309301948.CyCE3Y0P-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/hv/hv_common.c:98:21: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void [noderef] __percpu *__pdata @@     got unsigned char [noderef] [usertype] __percpu **extern [addressable] [toplevel] hv_synic_eventring_tail @@
+   drivers/hv/hv_common.c:98:21: sparse:     expected void [noderef] __percpu *__pdata
+   drivers/hv/hv_common.c:98:21: sparse:     got unsigned char [noderef] [usertype] __percpu **extern [addressable] [toplevel] hv_synic_eventring_tail
+>> drivers/hv/hv_common.c:349:41: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected unsigned char [noderef] [usertype] __percpu **extern [addressable] [assigned] [toplevel] hv_synic_eventring_tail @@     got unsigned char [usertype] *[noderef] __percpu * @@
+   drivers/hv/hv_common.c:349:41: sparse:     expected unsigned char [noderef] [usertype] __percpu **extern [addressable] [assigned] [toplevel] hv_synic_eventring_tail
+   drivers/hv/hv_common.c:349:41: sparse:     got unsigned char [usertype] *[noderef] __percpu *
+>> drivers/hv/hv_common.c:399:55: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got unsigned char [noderef] [usertype] __percpu ** @@
+   drivers/hv/hv_common.c:399:55: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   drivers/hv/hv_common.c:399:55: sparse:     got unsigned char [noderef] [usertype] __percpu **
+
+vim +98 drivers/hv/hv_common.c
+
+    74	
+    75	/*
+    76	 * Hyper-V specific initialization and shutdown code that is
+    77	 * common across all architectures.  Called from architecture
+    78	 * specific initialization functions.
+    79	 */
+    80	
+    81	void __init hv_common_free(void)
+    82	{
+    83		unregister_sysctl_table(hv_ctl_table_hdr);
+    84		hv_ctl_table_hdr = NULL;
+    85	
+    86		if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
+    87			hv_kmsg_dump_unregister();
+    88	
+    89		kfree(hv_vp_index);
+    90		hv_vp_index = NULL;
+    91	
+    92		free_percpu(hyperv_pcpu_output_arg);
+    93		hyperv_pcpu_output_arg = NULL;
+    94	
+    95		free_percpu(hyperv_pcpu_input_arg);
+    96		hyperv_pcpu_input_arg = NULL;
+    97	
+  > 98		free_percpu(hv_synic_eventring_tail);
+    99		hv_synic_eventring_tail = NULL;
+   100	}
+   101	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
