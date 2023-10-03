@@ -1,172 +1,267 @@
-Return-Path: <linux-hyperv+bounces-409-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-410-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 153F37B5CA0
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Oct 2023 23:45:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D6B77B5E50
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Oct 2023 02:41:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by ny.mirrors.kernel.org (Postfix) with ESMTP id 210BD1C20863
-	for <lists+linux-hyperv@lfdr.de>; Mon,  2 Oct 2023 21:45:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id F144B281423
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Oct 2023 00:41:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEC9C1F934;
-	Mon,  2 Oct 2023 21:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEA58632;
+	Tue,  3 Oct 2023 00:41:12 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D7E208A0
-	for <linux-hyperv@vger.kernel.org>; Mon,  2 Oct 2023 21:45:36 +0000 (UTC)
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D79AB
-	for <linux-hyperv@vger.kernel.org>; Mon,  2 Oct 2023 14:45:31 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-406609df1a6so2486055e9.3
-        for <linux-hyperv@vger.kernel.org>; Mon, 02 Oct 2023 14:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=philpotter-co-uk.20230601.gappssmtp.com; s=20230601; t=1696283130; x=1696887930; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3dA79LkNYU7asBXwt/uQxW8bheOGwedQNE5Z+nFIVT0=;
-        b=jC4WA2n5N6fh0h+8A80v34J674kTNb/dkqkkQ4wr6AQU33VVyNhBrLJ5fIDHvQkiRC
-         YGLtDdF8yOE+UQ1F9TDhWiCE0v6E1PqR6ceCh6wN4S6/wW6QSdK3FhOoyU/zI1HpFs0O
-         +F8KfczwTGXQlzUVF4ka2LhahMo5RG2sNqhG8NaTCIin4KK5EYb9i1itvP4TT4QtItrG
-         6l81HyN+/AWlJTwrcZBsVzzV6zShJd0lbmT0bslRid9k+F5TLRs7b1Nah9+yNFpY15j8
-         CilWH5jhV7Apb9r2YfgO6KBYqg0XMY4yHLusxDU82pYXfBi6WeD9aJ2bVZr42E3kPHhV
-         fbbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696283130; x=1696887930;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3dA79LkNYU7asBXwt/uQxW8bheOGwedQNE5Z+nFIVT0=;
-        b=QaMEAVVR8uyioJDI7U49uJEbFNrGPF6KFUmU28j+5wrryCB8LrNs+yEMABVFR4UEnh
-         sXwP2E0bXvnLdcoUa/W7ecz9XYtMtpIRxP4zyXtg07Pn5IA0h1NkxrPTX3xX1EK6oqUZ
-         UPEFoTKnp3HxDuzz+9RigiCxeXqv6KH8T5y8zy9r+QJsW+gwh8UAK153EfCULyHKV/Mx
-         tZmaWgTFB49GQ/HTmIbdRzPLVGIr7J8tYW2NkIybbJdpHvaD0XLVW1x0iymle5m3sYka
-         pYcmA/10chsIkB+uYlAt6eU/5j/pqaMNfgoQUzliBvMM7i77rZucNMqrgsWOSOo3VFY9
-         D5oQ==
-X-Gm-Message-State: AOJu0YxD+tAFe70mCev7g4gOZhmqh/ofQfk3Ryl6cNl0y+6epX6SulVc
-	gWCk/Aw2bQiuwInegYSRCrBfzA==
-X-Google-Smtp-Source: AGHT+IFQqDHrxS5nLVVcz3uYz3zBoh8PRAUblObfkXMiu+127hGE3d4cKV4jcsCeAwYclm/ssvuz7g==
-X-Received: by 2002:a1c:6a05:0:b0:404:757e:c5ba with SMTP id f5-20020a1c6a05000000b00404757ec5bamr10282866wmc.26.1696283130281;
-        Mon, 02 Oct 2023 14:45:30 -0700 (PDT)
-Received: from localhost.localdomain (3.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.6.1.f.d.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:df16::3])
-        by smtp.gmail.com with ESMTPSA id a11-20020a05600c2d4b00b004065daba6casm7974630wmg.46.2023.10.02.14.45.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Oct 2023 14:45:29 -0700 (PDT)
-From: Phillip Potter <phil@philpotter.co.uk>
-To: devnull+j.granados.samsung.com@kernel.org
-Cc: Jason@zx2c4.com,
-	airlied@gmail.com,
-	arnd@arndb.de,
-	clemens@ladisch.de,
-	daniel@ffwll.ch,
-	davem@davemloft.net,
-	decui@microsoft.com,
-	dgilbert@interlog.com,
-	dri-devel@lists.freedesktop.org,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	gregkh@linuxfoundation.org,
-	haiyangz@microsoft.com,
-	intel-gfx@lists.freedesktop.org,
-	j.granados@samsung.com,
-	jani.nikula@linux.intel.com,
-	jejb@linux.ibm.com,
-	jgg@ziepe.ca,
-	jgross@suse.com,
-	jirislaby@kernel.org,
-	joonas.lahtinen@linux.intel.com,
-	josh@joshtriplett.org,
-	keescook@chromium.org,
-	kuba@kernel.org,
-	kys@microsoft.com,
-	leon@kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	martin.petersen@oracle.com,
-	mcgrof@kernel.org,
-	minyard@acm.org,
-	netdev@vger.kernel.org,
-	oleksandr_tyshchenko@epam.com,
-	openipmi-developer@lists.sourceforge.net,
-	pabeni@redhat.com,
-	phil@philpotter.co.uk,
-	rafael@kernel.org,
-	robinmholt@gmail.com,
-	rodrigo.vivi@intel.com,
-	russell.h.weight@intel.com,
-	song@kernel.org,
-	sstabellini@kernel.org,
-	steve.wahl@hpe.com,
-	sudipm.mukherjee@gmail.com,
-	tvrtko.ursulin@linux.intel.com,
-	tytso@mit.edu,
-	wei.liu@kernel.org,
-	willy@infradead.org,
-	xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v2 01/15] cdrom: Remove now superfluous sentinel element from ctl_table array
-Date: Mon,  2 Oct 2023 22:45:28 +0100
-Message-ID: <20231002214528.15529-1-phil@philpotter.co.uk>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231002-jag-sysctl_remove_empty_elem_drivers-v2-1-02dd0d46f71e@samsung.com>
-References: <20231002-jag-sysctl_remove_empty_elem_drivers-v2-1-02dd0d46f71e@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469AF365
+	for <linux-hyperv@vger.kernel.org>; Tue,  3 Oct 2023 00:41:10 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id E7EA1A9;
+	Mon,  2 Oct 2023 17:41:07 -0700 (PDT)
+Received: from [10.0.0.178] (c-76-135-56-23.hsd1.wa.comcast.net [76.135.56.23])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D572220B74C0;
+	Mon,  2 Oct 2023 17:41:04 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D572220B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1696293665;
+	bh=q1lXOIgpOpeoyI8MnD95ZJF7BeW1/5fq2wtlMaBBZP4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iSVcFH40SA0y+q78CHE8RtSw6g6tF1YQ+fTI4d8PyWo5iquAj++CYCmSXlqX8gwpC
+	 Mv+s1kid6MYugDmetwjd6KOD7xT/lIy64sb9vzqVMUghSgKZQWJ/uKlWtZ63gsJyFN
+	 obbMw4JYEsHjZKluEpBRoU04sukOWjGwWltG6gEw=
+Message-ID: <749f477a-1e7a-495e-bea1-e3abe8da7fb9@linux.microsoft.com>
+Date: Mon, 2 Oct 2023 17:41:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 14/15] asm-generic: hyperv: Use new Hyper-V headers
+ conditionally.
+To: Alex Ionescu <aionescu@gmail.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-arch@vger.kernel.org, patches@lists.linux.dev, mikelley@microsoft.com,
+ kys@microsoft.com, wei.liu@kernel.org, gregkh@linuxfoundation.org,
+ haiyangz@microsoft.com, decui@microsoft.com, apais@linux.microsoft.com,
+ Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
+ mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+ jinankjain@linux.microsoft.com, vkuznets@redhat.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ will@kernel.org, catalin.marinas@arm.com
+References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1696010501-24584-15-git-send-email-nunodasneves@linux.microsoft.com>
+ <CAJ-90NKJ=FViuuy2MyA-8S1j9Lsia8bR-ytZuAr=pOPuAiO0VQ@mail.gmail.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <CAJ-90NKJ=FViuuy2MyA-8S1j9Lsia8bR-ytZuAr=pOPuAiO0VQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-> From: Joel Granados <j.granados@samsung.com>
->
-> This commit comes at the tail end of a greater effort to remove the
-> empty elements at the end of the ctl_table arrays (sentinels) which
-> will reduce the overall build time size of the kernel and run time
-> memory bloat by ~64 bytes per sentinel (further information Link :
-> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
->
-> Remove sentinel element from cdrom_table
->
-> Signed-off-by: Joel Granados <j.granados@samsung.com>
-> ---
->  drivers/cdrom/cdrom.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-> index cc2839805983..a5e07270e0d4 100644
-> --- a/drivers/cdrom/cdrom.c
-> +++ b/drivers/cdrom/cdrom.c
-> @@ -3655,7 +3655,6 @@ static struct ctl_table cdrom_table[] = {
->  		.mode		= 0644,
->  		.proc_handler	= cdrom_sysctl_handler
->  	},
-> -	{ }
->  };
->  static struct ctl_table_header *cdrom_sysctl_header;
->
->
-> -- 
-> 2.30.2
+Hi Alex,
 
+On 10/2/2023 12:35 PM, Alex Ionescu wrote:
+> Hi Nuno,
+> 
+> I understand the requirement to have
+> undocumented/non-standard/non-TLFS-published information in the HDK
+> headers, however, the current state of this patch is that for any
+> other code that's not in the kernel today, or in this upcoming driver,
+> the hyperv-tlfs definitions are incomplete, because some *documented*
+> TLFS fields are only in HDK headers. Similarly, it is also impossible
 
-Hi Joel,
+If I understand correctly, you are saying there are documented
+definitions (in the TLFS document), which are NOT in hyperv-tlfs.h, but
+ARE in these new HDK headers, correct?
 
-Looks good to me, many thanks. I'll send on for inclusion.
+If these are needed elsewhere in the kernel, they can just be added to
+hyperv-tlfs.h.
 
-Reviewed-by: Phillip Potter <phil@philpotter.co.uk>
+> to only use the HDK headers for other use cases, because some basic
+> documented, standard defines only exist in hyperv-tlfs. So there is no
+> "logical" relationship between the two -- HDK headers are not _just_
+> undocumented information, but also documented information, but also
+> not complete documented information.
 
-Regards,
-Phil
+That is correct - they are meant to be independently compileable.
+The new HDK headers only serve as a replacement *in our driver* when we
+need some definitions like do_hypercall() etc in mshyperv.h.
+
+> 
+> Would you consider:
+> 
+> 1) Updating hyperv-tlfs with all newly documented TLFS fields that are
+> in the HDK headers?
+
+I think this can be done on an as-needed basis, as I outlined above.
+
+> OR
+> 2) Updating the new HDK headers you're adding here to also include
+> previously-documented information from hyperv-tlfs? This way, someone
+> can include the HDK headers and get everything they need
+
+The new HDK headers are only intended for the new mshv driver.
+
+> OR
+> 3) Truly making hypertv-tlfs the "documented" header, and then > removing any duplication from HDK so that it remains the
+> "undocumented" header file. In this manner, one would include
+> hyperv-tlfs to use the stable ABI, and they would include HDK (which
+> would include hyperv-tlfs) to use the unstable+stable ABI.
+
+hyperv-tlfs.h is remaining the "documented" header.
+
+But, we can't make the HDK header depend on hyperv-tlfs.h, for 2 primary
+reasons:
+1. We need to put the new HDK headers in uapi so that we can use them in 
+our IOCTL interface. As a result, we can't include hyperv-tlfs.h (unless 
+we put it in uapi as well).
+2. The HDK headers not only duplicate, but also MODIFY some structures 
+in hyperv-tlfs.h. e.g., The struct is in hyperv-tlfs.h, but a particular
+field or bitfield is not.
+
+Thanks,
+Nuno
+
+> 
+> Thank you for your consideration.
+> 
+> Best regards,
+> Alex Ionescu
+> 
+> On Fri, Sep 29, 2023 at 2:02 PM Nuno Das Neves
+> <nunodasneves@linux.microsoft.com> wrote:
+>>
+>> Add asm-generic/hyperv-defs.h. It includes hyperv-tlfs.h or hvhdk.h
+>> depending on compile-time constant HV_HYPERV_DEFS which will be defined in
+>> the mshv driver.
+>>
+>> This is needed to keep unstable Hyper-V interfaces independent of
+>> hyperv-tlfs.h. This ensures hvhdk.h replaces hyperv-tlfs.h in the mshv
+>> driver, even via indirect includes.
+>>
+>> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+>> Acked-by: Wei Liu <wei.liu@kernel.org>
+>> ---
+>>   arch/arm64/include/asm/mshyperv.h |  2 +-
+>>   arch/x86/include/asm/mshyperv.h   |  3 +--
+>>   drivers/hv/hyperv_vmbus.h         |  1 -
+>>   include/asm-generic/hyperv-defs.h | 26 ++++++++++++++++++++++++++
+>>   include/asm-generic/mshyperv.h    |  2 +-
+>>   include/linux/hyperv.h            |  2 +-
+>>   6 files changed, 30 insertions(+), 6 deletions(-)
+>>   create mode 100644 include/asm-generic/hyperv-defs.h
+>>
+>> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
+>> index 20070a847304..8ec14caf3d4f 100644
+>> --- a/arch/arm64/include/asm/mshyperv.h
+>> +++ b/arch/arm64/include/asm/mshyperv.h
+>> @@ -20,7 +20,7 @@
+>>
+>>   #include <linux/types.h>
+>>   #include <linux/arm-smccc.h>
+>> -#include <asm/hyperv-tlfs.h>
+>> +#include <asm-generic/hyperv-defs.h>
+>>
+>>   /*
+>>    * Declare calls to get and set Hyper-V VP register values on ARM64, which
+>> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+>> index e3768d787065..bb1b97106cd3 100644
+>> --- a/arch/x86/include/asm/mshyperv.h
+>> +++ b/arch/x86/include/asm/mshyperv.h
+>> @@ -6,10 +6,9 @@
+>>   #include <linux/nmi.h>
+>>   #include <linux/msi.h>
+>>   #include <linux/io.h>
+>> -#include <asm/hyperv-tlfs.h>
+>>   #include <asm/nospec-branch.h>
+>>   #include <asm/paravirt.h>
+>> -#include <asm/mshyperv.h>
+>> +#include <asm-generic/hyperv-defs.h>
+>>
+>>   /*
+>>    * Hyper-V always provides a single IO-APIC at this MMIO address.
+>> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+>> index 09792eb4ffed..0e4bc18a13fa 100644
+>> --- a/drivers/hv/hyperv_vmbus.h
+>> +++ b/drivers/hv/hyperv_vmbus.h
+>> @@ -15,7 +15,6 @@
+>>   #include <linux/list.h>
+>>   #include <linux/bitops.h>
+>>   #include <asm/sync_bitops.h>
+>> -#include <asm/hyperv-tlfs.h>
+>>   #include <linux/atomic.h>
+>>   #include <linux/hyperv.h>
+>>   #include <linux/interrupt.h>
+>> diff --git a/include/asm-generic/hyperv-defs.h b/include/asm-generic/hyperv-defs.h
+>> new file mode 100644
+>> index 000000000000..ac6fcba35c8c
+>> --- /dev/null
+>> +++ b/include/asm-generic/hyperv-defs.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef _ASM_GENERIC_HYPERV_DEFS_H
+>> +#define _ASM_GENERIC_HYPERV_DEFS_H
+>> +
+>> +/*
+>> + * There are cases where Microsoft Hypervisor ABIs are needed which may not be
+>> + * stable or present in the Hyper-V TLFS document. E.g. the mshv_root driver.
+>> + *
+>> + * As these interfaces are unstable and may differ from hyperv-tlfs.h, they
+>> + * must be kept separate and independent.
+>> + *
+>> + * However, code from files that depend on hyperv-tlfs.h (such as mshyperv.h)
+>> + * is still needed, so work around the issue by conditionally including the
+>> + * correct definitions.
+>> + *
+>> + * Note: Since they are independent of each other, there are many definitions
+>> + * duplicated in both hyperv-tlfs.h and uapi/hyperv/hv*.h files.
+>> + */
+>> +#ifdef HV_HYPERV_DEFS
+>> +#include <uapi/hyperv/hvhdk.h>
+>> +#else
+>> +#include <asm/hyperv-tlfs.h>
+>> +#endif
+>> +
+>> +#endif /* _ASM_GENERIC_HYPERV_DEFS_H */
+>> +
+>> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+>> index d832852d0ee7..6bef0d59d1b7 100644
+>> --- a/include/asm-generic/mshyperv.h
+>> +++ b/include/asm-generic/mshyperv.h
+>> @@ -25,7 +25,7 @@
+>>   #include <linux/cpumask.h>
+>>   #include <linux/nmi.h>
+>>   #include <asm/ptrace.h>
+>> -#include <asm/hyperv-tlfs.h>
+>> +#include <asm-generic/hyperv-defs.h>
+>>
+>>   #define VTPM_BASE_ADDRESS 0xfed40000
+>>
+>> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+>> index 4d5a5e39d76c..722a8cf23d87 100644
+>> --- a/include/linux/hyperv.h
+>> +++ b/include/linux/hyperv.h
+>> @@ -24,7 +24,7 @@
+>>   #include <linux/mod_devicetable.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/reciprocal_div.h>
+>> -#include <asm/hyperv-tlfs.h>
+>> +#include <asm-generic/hyperv-defs.h>
+>>
+>>   #define MAX_PAGE_BUFFER_COUNT                          32
+>>   #define MAX_MULTIPAGE_BUFFER_COUNT                     32 /* 128K */
+>> --
+>> 2.25.1
+>>
+>>
+
 
