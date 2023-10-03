@@ -1,51 +1,47 @@
-Return-Path: <linux-hyperv+bounces-454-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-455-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0FFC7B665D
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Oct 2023 12:27:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2D967B6667
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Oct 2023 12:29:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id 7314E28160F
-	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Oct 2023 10:27:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id E36B41C2032E
+	for <lists+linux-hyperv@lfdr.de>; Tue,  3 Oct 2023 10:29:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58CA1F933;
-	Tue,  3 Oct 2023 10:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F4520317;
+	Tue,  3 Oct 2023 10:29:28 +0000 (UTC)
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCFDD302;
-	Tue,  3 Oct 2023 10:27:35 +0000 (UTC)
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7D1F393;
-	Tue,  3 Oct 2023 03:27:33 -0700 (PDT)
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id F2B5520B74C0; Tue,  3 Oct 2023 03:27:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F2B5520B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1696328853;
-	bh=aysThpHQGFMTeVdI+Rawde/DGhWbjbxle/zDNrgG3rw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22312D302;
+	Tue,  3 Oct 2023 10:29:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E11BC433C8;
+	Tue,  3 Oct 2023 10:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696328967;
+	bh=jXuGOUwI1yvSy2BEPDdzmf9cHXPyEcMQXrsWAPM3Lpw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QADkRjb0rLbTndCt5MDIufWKkV369E7NKRTSnPiPxX2Lc++TFqUBWabK/acTYpO4n
-	 Yz0xHi26ZXEeKlDcZd8NT7BskvSOp63eJInSkE4uMkFKejWDh5R/CmGmN8MrkLOiHz
-	 Mn8Usutan361mbSUx6mbRrRMNBj7Zr3l9c25e5Bs=
-Date: Tue, 3 Oct 2023 03:27:32 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
-	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-	sharmaajay@microsoft.com, hawk@kernel.org, tglx@linutronix.de,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net,v2, 1/3] net: mana: Fix TX CQE error handling
-Message-ID: <20231003102732.GB32191@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1696020147-14989-1-git-send-email-haiyangz@microsoft.com>
- <1696020147-14989-2-git-send-email-haiyangz@microsoft.com>
+	b=kqcITCWlLywDa065bvePch/EM+Fhc9kRn1Pf1zpPvsI7zEZCyqPb/tzWRbuJF52/S
+	 GpnKjE+wRVeGLEE3+29+yE10Hp0MGoCH3PQjW+l4ZWJUJyxeKHCzfitf4LXHOLRkVb
+	 GAmvZunFsFc/Z6UoAyJJOiyKX7DfZOk2/q1k5bzhXUPw3j2l4WHusRyEH1VgM9lRXp
+	 zvDdzD1Cy+4UBtGbrNvXC8SupHfACPgAOlhjljMEnQXHWTCVLVmHc0E7y304VTCgMl
+	 leZc6zYGsJhmVUJUErh5QAziKVNzws+LryHGeTbuSoaUNhocFYW9X2vGZbfah6Fsqs
+	 YZRRngcUmIkTQ==
+Date: Tue, 3 Oct 2023 12:29:22 +0200
+From: Simon Horman <horms@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+	"K . Y . Srinivasan" <kys@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH] hyperv: rndis_filter needs to select NLS
+Message-ID: <ZRvtAq7Vxb2G89J+@kernel.org>
+References: <20230930023234.1903-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -54,67 +50,18 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1696020147-14989-2-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-	autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <20230930023234.1903-1-rdunlap@infradead.org>
 
-On Fri, Sep 29, 2023 at 01:42:25PM -0700, Haiyang Zhang wrote:
-> For an unknown TX CQE error type (probably from a newer hardware),
-> still free the SKB, update the queue tail, etc., otherwise the
-> accounting will be wrong.
+On Fri, Sep 29, 2023 at 07:32:34PM -0700, Randy Dunlap wrote:
+> rndis_filter uses utf8s_to_utf16s() which is provided by setting
+> NLS, so select NLS to fix the build error:
 > 
-> Also, TX errors can be triggered by injecting corrupted packets, so
-> replace the WARN_ONCE to ratelimited error logging.
+> ERROR: modpost: "utf8s_to_utf16s" [drivers/net/hyperv/hv_netvsc.ko] undefined!
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: ca9c54d2d6a5 ("net: mana: Add a driver for Microsoft Azure Network Adapter (MANA)")
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 4a16ebff3d1d..5cdcf7561b38 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -1317,19 +1317,23 @@ static void mana_poll_tx_cq(struct mana_cq *cq)
->  		case CQE_TX_VPORT_IDX_OUT_OF_RANGE:
->  		case CQE_TX_VPORT_DISABLED:
->  		case CQE_TX_VLAN_TAGGING_VIOLATION:
-> -			WARN_ONCE(1, "TX: CQE error %d: ignored.\n",
-> -				  cqe_oob->cqe_hdr.cqe_type);
-> +			if (net_ratelimit())
-> +				netdev_err(ndev, "TX: CQE error %d\n",
-> +					   cqe_oob->cqe_hdr.cqe_type);
-> +
->  			apc->eth_stats.tx_cqe_err++;
->  			break;
->  
->  		default:
-> -			/* If the CQE type is unexpected, log an error, assert,
-> -			 * and go through the error path.
-> +			/* If the CQE type is unknown, log an error,
-> +			 * and still free the SKB, update tail, etc.
->  			 */
-> -			WARN_ONCE(1, "TX: Unexpected CQE type %d: HW BUG?\n",
-> -				  cqe_oob->cqe_hdr.cqe_type);
-> +			if (net_ratelimit())
-> +				netdev_err(ndev, "TX: unknown CQE type %d\n",
-> +					   cqe_oob->cqe_hdr.cqe_type);
-> +
->  			apc->eth_stats.tx_cqe_unknown_type++;
-> -			return;
-> +			break;
->  		}
->  
->  		if (WARN_ON_ONCE(txq->gdma_txq_id != completions[i].wq_num))
-> -- 
-> 2.25.1
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Fixes: 1ce09e899d28 ("hyperv: Add support for setting MAC from within guests")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+Tested-by: Simon Horman <horms@kernel.org> # build-tested
+
 
