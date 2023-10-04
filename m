@@ -1,145 +1,172 @@
-Return-Path: <linux-hyperv+bounces-467-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-468-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F05757B884C
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Oct 2023 20:14:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A4B87B8875
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Oct 2023 20:16:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by ny.mirrors.kernel.org (Postfix) with ESMTP id 208981C20442
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Oct 2023 18:14:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTP id 8F6DE1C203BF
+	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Oct 2023 18:16:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1EA31D68D;
-	Wed,  4 Oct 2023 18:14:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27581D68D;
+	Wed,  4 Oct 2023 18:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hQ5yb0Z3"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAC71D6A1
-	for <linux-hyperv@vger.kernel.org>; Wed,  4 Oct 2023 18:14:45 +0000 (UTC)
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70FE6AD;
-	Wed,  4 Oct 2023 11:14:43 -0700 (PDT)
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-57ba2cd3507so48374eaf.2;
-        Wed, 04 Oct 2023 11:14:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696443282; x=1697048082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6nCGy29qXBi+ptXe1DWiTKziKMJYl0S7yqrhbrtMgRk=;
-        b=Yg4jfZB1D6M+H8/YJER0nPtdjX+UDnUHAmgqeIG4xHbo8XhudT/PB4ZzXBSnJ+4V2N
-         hBepuB6cVH07ehtsJ/+dVkaIuG19wqlw2vKY8F3LzyA0RvvAojxDOUVuDfuVbftIHgI1
-         j5acvbqZuzUm6l1e8DVxzMqvrPLllwCvRZDM4vtHLAgjbEsH3Y2QJ3tQnvS4FMCGrWbl
-         JGeqcq4+qZR/8KeI+vDd/zm9mpDsGc+ebxwuuvW//oXq5XBhC2nbvWvk4l7tvds812X+
-         3Asptx8pW7RbbxOcCnpzOJUjXKgjbwwYQAbmMdSqQFwtjXrYIboZfXrYmT+/gVWDkY47
-         TXPQ==
-X-Gm-Message-State: AOJu0YxLhTAoveFyYSijaSUb7saTLirl2owgHE3oYhhT+8AzBazI04wU
-	dopDWaxWvwr4TcgNFe4WFxU=
-X-Google-Smtp-Source: AGHT+IG7EHbaeeYSQWuYVxJewBVTKh+hSRaSfAIMnjP6jTwYH5NMi2y1YeijxB0WtRbsPtXrqTnwuw==
-X-Received: by 2002:a05:6358:5e12:b0:139:d5b9:87d3 with SMTP id q18-20020a0563585e1200b00139d5b987d3mr2311233rwn.5.1696443282278;
-        Wed, 04 Oct 2023 11:14:42 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id v7-20020a170902b7c700b001c627413e87sm4013296plz.290.2023.10.04.11.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 11:14:41 -0700 (PDT)
-Date: Wed, 4 Oct 2023 18:14:40 +0000
-From: Wei Liu <wei.liu@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Wei Liu <wei.liu@kernel.org>,
-	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-arch@vger.kernel.org, patches@lists.linux.dev,
-	mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-	decui@microsoft.com, apais@linux.microsoft.com,
-	Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
-	mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
-	jinankjain@linux.microsoft.com, vkuznets@redhat.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
-	catalin.marinas@arm.com
-Subject: Re: [PATCH v4 13/15] uapi: hyperv: Add mshv driver headers defining
- hypervisor ABIs
-Message-ID: <ZR2rkNYnQds1MGZ0@liuwe-devbox-debian-v2>
-References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1696010501-24584-14-git-send-email-nunodasneves@linux.microsoft.com>
- <2023093057-eggplant-reshoot-8513@gregkh>
- <ZRia1uyFfEkSqmXw@liuwe-devbox-debian-v2>
- <2023100154-ferret-rift-acef@gregkh>
- <ZRyj5kJJYaBu22O3@liuwe-devbox-debian-v2>
- <2023100458-confusing-carton-3302@gregkh>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF7C1D6A2
+	for <linux-hyperv@vger.kernel.org>; Wed,  4 Oct 2023 18:16:49 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E076A7;
+	Wed,  4 Oct 2023 11:16:48 -0700 (PDT)
+Received: from [10.0.0.178] (c-76-135-56-23.hsd1.wa.comcast.net [76.135.56.23])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D440620B74C2;
+	Wed,  4 Oct 2023 11:16:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D440620B74C2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1696443407;
+	bh=cb3Cn5uFmmhvezEjsgPr/7TAsXnOt8mw0WVyDVVkoNA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hQ5yb0Z3u+VTo0KbZX//PdVbLhCSFC3mhN67YsPEJy0IakC7G13dj12ECZ/+iFXKL
+	 5RmIamHk1JCosfQJxlUOL/PeHl/M+f68XzUQyqtoNaGuXMdH370qibhMf07jSTguq9
+	 WauZnyAwIRzLwbbRJO2zePDtjT9w415VjegYCqqo=
+Message-ID: <e960ffec-f367-4180-b857-4aceedb7cd89@linux.microsoft.com>
+Date: Wed, 4 Oct 2023 11:16:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2023100458-confusing-carton-3302@gregkh>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/15] uapi: hyperv: Add mshv driver headers defining
+ hypervisor ABIs
+Content-Language: en-US
+To: Greg KH <gregkh@linuxfoundation.org>, Dexuan Cui <decui@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "patches@lists.linux.dev" <patches@lists.linux.dev>,
+ "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+ KY Srinivasan <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
+ Tianyu Lan <Tianyu.Lan@microsoft.com>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ MUKESH RATHOR <mukeshrathor@microsoft.com>,
+ "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
+ "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
+ vkuznets <vkuznets@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "will@kernel.org" <will@kernel.org>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1696010501-24584-14-git-send-email-nunodasneves@linux.microsoft.com>
+ <2023093057-eggplant-reshoot-8513@gregkh>
+ <ZRia1uyFfEkSqmXw@liuwe-devbox-debian-v2>
+ <2023100154-ferret-rift-acef@gregkh>
+ <dd5159fe-5337-44ed-bf1b-58220221b597@linux.microsoft.com>
+ <2023100443-wrinkly-romp-79d9@gregkh>
+ <SA1PR21MB1335F5145ACB0ED4F378105ABFCBA@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <2023100415-diving-clapper-a2a7@gregkh>
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <2023100415-diving-clapper-a2a7@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Greg
+On 10/4/2023 10:50 AM, Greg KH wrote:
+> On Wed, Oct 04, 2023 at 05:36:32PM +0000, Dexuan Cui wrote:
+>>> From: Greg KH <gregkh@linuxfoundation.org>
+>>> Sent: Tuesday, October 3, 2023 11:10 PM
+>>> [...]
+>>> On Tue, Oct 03, 2023 at 04:37:01PM -0700, Nuno Das Neves wrote:
+>>>> On 9/30/2023 11:19 PM, Greg KH wrote:
+>>>>> On Sat, Sep 30, 2023 at 10:01:58PM +0000, Wei Liu wrote:
+>>>>>> On Sat, Sep 30, 2023 at 08:09:19AM +0200, Greg KH wrote:
+>>>>>>> On Fri, Sep 29, 2023 at 11:01:39AM -0700, Nuno Das Neves wrote:
+>>>>>>>> +/* Define connection identifier type. */
+>>>>>>>> +union hv_connection_id {
+>>>>>>>> +   __u32 asu32;
+>>>>>>>> +   struct {
+>>>>>>>> +           __u32 id:24;
+>>>>>>>> +           __u32 reserved:8;
+>>>>>>>> +   } __packed u;
+>>
+>> IMO the "__packed" is unnecessary.
+>>
+>>>>>>> bitfields will not work properly in uapi .h files, please never do that.
+>>>>>>
+>>>>>> Can you clarify a bit more why it wouldn't work? Endianess? Alignment?
+>>>>>
+>>>>> Yes to both.
+>>>>>
+>>>>> Did you all read the documentation for how to write a kernel api?  If
+>>>>> not, please do so.  I think it mentions bitfields, but it not, it really
+>>>>> should as of course, this will not work properly with different endian
+>>>>> systems or many compilers.
+>>>>
+>>>> Yes, in
+>>> https://docs.k/
+>>> ernel.org%2Fdriver-
+>>> api%2Fioctl.html&data=05%7C01%7Cdecui%40microsoft.com%7Ce404769e0f
+>>> 85493f0aa108dbc4a08a27%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C
+>>> 0%7C638319966071263290%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj
+>>> AwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%
+>>> 7C%7C&sdata=RiLNA5DRviWBQK6XXhxC4m77raSDBb%2F0BB6BDpFPUJY%3D
+>>> &reserved=0 it says that it is
+>>>> "better to avoid" bitfields.
+>>>>
+>>>> Unfortunately bitfields are used in the definition of the hypervisor
+>>>> ABI. We import these definitions directly from the hypervisor code.
+>>>
+>>> So why do you feel you have to use this specific format for your
+>>> user/kernel api?  That is not what is going to the hypervisor.
+>>
+These *are* going to the hypervisor - we use these same definitions in
+our driver for the kernel/hypervisor API. This is so we don't have to
+maintain two separate definitions for user/kernel and kernel/hypervisor
+APIs.
 
-On Wed, Oct 04, 2023 at 08:11:13AM +0200, Greg KH wrote:
-> On Tue, Oct 03, 2023 at 11:29:42PM +0000, Wei Liu wrote:
-> > > > > > diff --git a/include/uapi/hyperv/hvgdk.h b/include/uapi/hyperv/hvgdk.h
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..9bcbb7d902b2
-> > > > > > --- /dev/null
-> > > > > > +++ b/include/uapi/hyperv/hvgdk.h
-> > > > > > @@ -0,0 +1,41 @@
-> > > > > > +/* SPDX-License-Identifier: MIT */
-> > > > > 
-> > > > > That's usually not a good license for a new uapi .h file, why did you
-> > > > > choose this one?
-> > > > > 
-> > > > 
-> > > > This is chosen so that other Microsoft developers who don't normally
-> > > > work on Linux can review this code.
-> > > 
-> > > Sorry, but that's not how kernel development is done.  Please fix your
-> > > internal review processes and use the correct uapi header file license.
-> > > 
-> > > If your lawyers insist on this license, that's fine, but please have
-> > > them provide a signed-off-by on the patch that adds it and have it
-> > > documented why it is this license in the changelog AND in a comment in
-> > > the file so we can understand what is going on with it.
-> > > 
-> > 
-> > We went through an internal review with our legal counsel regarding the
-> > MIT license. We have an approval from them.
-> > 
-> > Let me ask if using something like "GPL-2.0 WITH Linux-syscall-note OR
-> > MIT" is possible.
+>> If it's hard to avoid bitfield here, maybe we can refer to the definition of
+>> struct iphdr in include/uapi/linux/ip.h
 > 
-> That marking makes no sense from a legal point of view, please work with
-> your lawyers as it seems they do not understand license descriptions
-> very well :(
+> It is not hard to avoid using bitfields, just use the proper definitions
+> to make this portable for all compilers.  And ick, ip.h is not a good
+> thing to follow :)
 > 
+Greg, there is nothing making us use bitfields. It just makes the work
+of porting the hypervisor definitions to Linux easier - aided by the
+fact that in practice, all the compilers in our stack produce the same
+code for these.
 
-Do you mean "GPL-2.0 WITH Linux-syscall-note OR MIT" doesn't make sense?
+If that stops being true, or we need to support some other scenario,
+then I can see the value in changing it. Right now it just feels like
+pointless work.
 
-Why is that? I see that in various UAPI headers.
+Just a reminder - we are the only consumers of this code right now; no
+one else can meaningfully use this interface yet.
 
-include/uapi/drm/lima_drm.h:1:/* SPDX-License-Identifier: (GPL-2.0 WITH Linux-syscall-note) OR MIT */
-include/uapi/linux/io_uring.h:1:/* SPDX-License-Identifier: (GPL-2.0 WITH Linux-syscall-note) OR MIT */
-include/uapi/linux/kfd_sysfs.h:1:/* SPDX-License-Identifier: (GPL-2.0 WITH Linux-syscall-note) OR MIT */
-include/uapi/linux/rkisp1-config.h:1:/* SPDX-License-Identifier: ((GPL-2.0+ WITH Linux-syscall-note) OR MIT) */
-include/uapi/linux/wireguard.h:1:/* SPDX-License-Identifier: (GPL-2.0 WITH Linux-syscall-note) OR MIT */
-include/uapi/xen/evtchn.h:1:/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR MIT) */
-include/uapi/xen/gntdev.h:1:/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR MIT) */
-include/uapi/xen/privcmd.h:1:/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR MIT) */
+That all said, if you really insist on changing it, then please say so.
+And please point to an example of how it should be done so there is no
+confusion on the best path forward.
 
 Thanks,
-Wei.
+Nuno
 
 > thanks,
 > 
 > greg k-h
+
 
