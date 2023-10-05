@@ -1,169 +1,134 @@
-Return-Path: <linux-hyperv+bounces-469-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-470-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 533047B89AB
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Oct 2023 20:28:03 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CC607B9A8B
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 05:59:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by ny.mirrors.kernel.org (Postfix) with ESMTP id 6852A1C20429
-	for <lists+linux-hyperv@lfdr.de>; Wed,  4 Oct 2023 18:28:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id A30FB281689
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 03:59:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 209C11DA24;
-	Wed,  4 Oct 2023 18:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="E2F9qALp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F1F9186B;
+	Thu,  5 Oct 2023 03:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88741D6BA
-	for <linux-hyperv@vger.kernel.org>; Wed,  4 Oct 2023 18:27:59 +0000 (UTC)
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0055198;
-	Wed,  4 Oct 2023 11:27:57 -0700 (PDT)
-Received: from [10.0.0.178] (c-76-135-56-23.hsd1.wa.comcast.net [76.135.56.23])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CA79020B74C0;
-	Wed,  4 Oct 2023 11:27:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA79020B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1696444077;
-	bh=H3hpMWGvjGtlXIXotdjlxYcAB+MUrjLHbNTb9FjcgmM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E2F9qALpVjKLHPt1qgbv6o+F2urPzDJk9C0SK7tHGJgziy2Xd+HvQ7t2Fz4EUlsOI
-	 /I01+rs+iUyXP9YNe6t2U0mQTx3zz0+vNEaFzjubblqGCdCOOn3JmzAiqzHzoLEcrX
-	 Ha+iNvKWADExxT2I7VlTuwbBJkw9wzTIoNOJUw2E=
-Message-ID: <c79ee00f-253d-40d5-9ed6-0f156dc4ebb1@linux.microsoft.com>
-Date: Wed, 4 Oct 2023 11:27:56 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224851863
+	for <linux-hyperv@vger.kernel.org>; Thu,  5 Oct 2023 03:59:11 +0000 (UTC)
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 820A61FDF;
+	Wed,  4 Oct 2023 20:59:09 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c5db4925f9so4649585ad.1;
+        Wed, 04 Oct 2023 20:59:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696478348; x=1697083148;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e+Jkb9so4Sx/SuJj60Fyzc1sAp0BI3gQYpSvgDry1RU=;
+        b=uV9OeEnvCIsjCh7gtOscvYY4I3quzgdpthYLmr75YtiVM/HboaWhAd7CXn48il05iK
+         QE8cx9gGowbYKaV1g7wzGWPczQSrkb7EL7oSdqhYtzfkfyzPYr0bLT3QuNZ7qFfAJa36
+         l+z8oLn9WQX9MrHxF5j7rKRYqrORF3K9MQblbMB9keve19hezIoJY8rMMmaqHF7yUDbF
+         ttJV2jHX0/DnWyEa98qfjVYyfADc1zB3KRX2RWAWifxU5cftDDaKONDTiX5FCBp9xiiB
+         mDARnla87ZHW1rnlLDKYvGcN9A7+r0N4BHwQszOOCq2y6iu7UCX1+4eSxE41m7OqJzwL
+         enoQ==
+X-Gm-Message-State: AOJu0Yw6VTtPgmxL4yN0SoFYe3irDkR5zYdPHNxF4MYcBA6JEpd2vcXr
+	is96ZjBn+chDUWcfnG18nB0=
+X-Google-Smtp-Source: AGHT+IHAxgh1RuIcuUvDcXDLUh/lmF/YHHBUPm/7q98TdAA0PrzTlYpYEdCFxJzdIf9FrJHWVapM5g==
+X-Received: by 2002:a17:902:db10:b0:1bc:edd:e891 with SMTP id m16-20020a170902db1000b001bc0edde891mr398542plx.1.1696478348342;
+        Wed, 04 Oct 2023 20:59:08 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id c16-20020a170903235000b001c724732058sm392807plh.235.2023.10.04.20.59.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Oct 2023 20:59:07 -0700 (PDT)
+Date: Thu, 5 Oct 2023 03:59:05 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org, patches@lists.linux.dev,
+	mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+	decui@microsoft.com, apais@linux.microsoft.com,
+	Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
+	mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
+	jinankjain@linux.microsoft.com, vkuznets@redhat.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org,
+	catalin.marinas@arm.com
+Subject: Re: [PATCH v4 13/15] uapi: hyperv: Add mshv driver headers defining
+ hypervisor ABIs
+Message-ID: <ZR40iZDLy43WzEy3@liuwe-devbox-debian-v2>
+References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1696010501-24584-14-git-send-email-nunodasneves@linux.microsoft.com>
+ <2023093057-eggplant-reshoot-8513@gregkh>
+ <ZRia1uyFfEkSqmXw@liuwe-devbox-debian-v2>
+ <2023100154-ferret-rift-acef@gregkh>
+ <ZRyj5kJJYaBu22O3@liuwe-devbox-debian-v2>
+ <2023100458-confusing-carton-3302@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/15] Drivers: hv: Introduce hv_output_arg_exists in
- hv_common.c
-Content-Language: en-US
-To: Alex Ionescu <aionescu@gmail.com>, Dexuan Cui <decui@microsoft.com>,
- longli@microsoft.com, "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-arch@vger.kernel.org, patches@lists.linux.dev, mikelley@microsoft.com,
- kys@microsoft.com, wei.liu@kernel.org, gregkh@linuxfoundation.org,
- haiyangz@microsoft.com, decui@microsoft.com, apais@linux.microsoft.com,
- Tianyu.Lan@microsoft.com, ssengar@linux.microsoft.com,
- mukeshrathor@microsoft.com, stanislav.kinsburskiy@gmail.com,
- jinankjain@linux.microsoft.com, vkuznets@redhat.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- will@kernel.org, catalin.marinas@arm.com
-References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1696010501-24584-10-git-send-email-nunodasneves@linux.microsoft.com>
- <CAJ-90N+A-wS-Uwrs_2WVL86Uo3qzQ1czxm-u9vDj3UuOwjhLdQ@mail.gmail.com>
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <CAJ-90N+A-wS-Uwrs_2WVL86Uo3qzQ1czxm-u9vDj3UuOwjhLdQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023100458-confusing-carton-3302@gregkh>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 10/2/2023 12:29 PM, Alex Ionescu wrote:
-> Hi Nuno,
+On Wed, Oct 04, 2023 at 08:11:13AM +0200, Greg KH wrote:
+> On Tue, Oct 03, 2023 at 11:29:42PM +0000, Wei Liu wrote:
+> > > > > > diff --git a/include/uapi/hyperv/hvgdk.h b/include/uapi/hyperv/hvgdk.h
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..9bcbb7d902b2
+> > > > > > --- /dev/null
+> > > > > > +++ b/include/uapi/hyperv/hvgdk.h
+> > > > > > @@ -0,0 +1,41 @@
+> > > > > > +/* SPDX-License-Identifier: MIT */
+> > > > > 
+> > > > > That's usually not a good license for a new uapi .h file, why did you
+> > > > > choose this one?
+> > > > > 
+> > > > 
+> > > > This is chosen so that other Microsoft developers who don't normally
+> > > > work on Linux can review this code.
+> > > 
+> > > Sorry, but that's not how kernel development is done.  Please fix your
+> > > internal review processes and use the correct uapi header file license.
+> > > 
+> > > If your lawyers insist on this license, that's fine, but please have
+> > > them provide a signed-off-by on the patch that adds it and have it
+> > > documented why it is this license in the changelog AND in a comment in
+> > > the file so we can understand what is going on with it.
+> > > 
+> > 
+> > We went through an internal review with our legal counsel regarding the
+> > MIT license. We have an approval from them.
+> > 
+> > Let me ask if using something like "GPL-2.0 WITH Linux-syscall-note OR
+> > MIT" is possible.
 > 
-> Is it possible to simply change to always allocating the output page?
-> For example, the output page could be needed in scenarios where Linux
-> is not running as the root partition, since certain hypercalls that a
-> guest can make will still require one (I realize that's not the case
-> _today_, but I don't believe this optimization buys much).
+> That marking makes no sense from a legal point of view, please work with
+> your lawyers as it seems they do not understand license descriptions
+> very well :(
 
-I agree - it would indeed simplify the code, and guests will probably
-make use of it sooner or later.
-
-Happy to make that change if Hyper-V guest maintainers agree.
-Long, Dexuan, Michael, what do you think?
+I've got the clearance to use "GPL-2.0 WITH Linux-syscall-note". We can
+close on this issue. Thank you for the review.
 
 Thanks,
-Nuno
+Wei.
 
-> Best regards,
-> Alex Ionescu
 > 
+> thanks,
 > 
-> On Fri, Sep 29, 2023 at 2:02 PM Nuno Das Neves
-> <nunodasneves@linux.microsoft.com> wrote:
->>
->> This is a more flexible approach for determining whether to allocate the
->> output page.
->>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> Acked-by: Wei Liu <wei.liu@kernel.org>
->> ---
->>   drivers/hv/hv_common.c | 21 +++++++++++++++++----
->>   1 file changed, 17 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
->> index 39077841d518..3f6f23e4c579 100644
->> --- a/drivers/hv/hv_common.c
->> +++ b/drivers/hv/hv_common.c
->> @@ -58,6 +58,14 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
->>   void * __percpu *hyperv_pcpu_output_arg;
->>   EXPORT_SYMBOL_GPL(hyperv_pcpu_output_arg);
->>
->> +/*
->> + * Determine whether output arg is needed
->> + */
->> +static inline bool hv_output_arg_exists(void)
->> +{
->> +       return hv_root_partition ? true : false;
->> +}
->> +
->>   static void hv_kmsg_dump_unregister(void);
->>
->>   static struct ctl_table_header *hv_ctl_table_hdr;
->> @@ -342,10 +350,12 @@ int __init hv_common_init(void)
->>          hyperv_pcpu_input_arg = alloc_percpu(void  *);
->>          BUG_ON(!hyperv_pcpu_input_arg);
->>
->> -       /* Allocate the per-CPU state for output arg for root */
->> -       if (hv_root_partition) {
->> +       if (hv_output_arg_exists()) {
->>                  hyperv_pcpu_output_arg = alloc_percpu(void *);
->>                  BUG_ON(!hyperv_pcpu_output_arg);
->> +       }
->> +
->> +       if (hv_root_partition) {
->>                  hv_synic_eventring_tail = alloc_percpu(u8 *);
->>                  BUG_ON(hv_synic_eventring_tail == NULL);
->>          }
->> @@ -375,7 +385,7 @@ int hv_common_cpu_init(unsigned int cpu)
->>          u8 **synic_eventring_tail;
->>          u64 msr_vp_index;
->>          gfp_t flags;
->> -       int pgcount = hv_root_partition ? 2 : 1;
->> +       int pgcount = hv_output_arg_exists() ? 2 : 1;
->>          void *mem;
->>          int ret;
->>
->> @@ -393,9 +403,12 @@ int hv_common_cpu_init(unsigned int cpu)
->>                  if (!mem)
->>                          return -ENOMEM;
->>
->> -               if (hv_root_partition) {
->> +               if (hv_output_arg_exists()) {
->>                          outputarg = (void **)this_cpu_ptr(hyperv_pcpu_output_arg);
->>                          *outputarg = (char *)mem + HV_HYP_PAGE_SIZE;
->> +               }
->> +
->> +               if (hv_root_partition) {
->>                          synic_eventring_tail = (u8 **)this_cpu_ptr(hv_synic_eventring_tail);
->>                          *synic_eventring_tail = kcalloc(HV_SYNIC_SINT_COUNT, sizeof(u8),
->>                                                          flags);
->> --
->> 2.25.1
->>
->>
-
+> greg k-h
 
