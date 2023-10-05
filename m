@@ -1,92 +1,76 @@
-Return-Path: <linux-hyperv+bounces-473-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-474-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B15BF7B9C61
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 12:00:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EC5FD7B9C7F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 12:27:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id 4ACF5281CBA
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 10:00:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTP id A3069281317
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 10:27:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C2D511CB1;
-	Thu,  5 Oct 2023 10:00:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C20125B6;
+	Thu,  5 Oct 2023 10:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wh24q808"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HHqX91Ju"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B21920E3;
-	Thu,  5 Oct 2023 10:00:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 950B1C116D3;
-	Thu,  5 Oct 2023 10:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696500025;
-	bh=EEdWp/Ry3IlTSHH5W4iQK0g3V2xPwp6PsEmr0L7SbPA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Wh24q8085oThfBu4okUkjzAOz2rCv38txL0DojMdjiSx3+4w9BDu3PuKT+AOVHJDR
-	 LPagfyMwuaX/L50KJTR5EJ5gzB/f66qPC6qUQO3DjuWgWOiJbmWPq6rjUQoI6WXW/R
-	 LsU85lT1mcB6H9OMj3P3oXO8LMl31elssfFP0uD6yIdlZiGvbvcXtGxkX8swnukc1v
-	 2EG17HvqBq/biFVKnotqLBHAJdKhVJ0aCdo4LDuMAno7nWgxRB8ol7s+j3M992rrhQ
-	 ncD2XclK7nSeMhSW91rIQoCEs/0RX9t+rxzE/cbFwJ28sjOC3Y8cA5cWp1l9V6ka1i
-	 X+1mB7AYYfHvQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 778F6E632D8;
-	Thu,  5 Oct 2023 10:00:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B88B6FDF;
+	Thu,  5 Oct 2023 10:27:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFFCC2BCFE;
+	Thu,  5 Oct 2023 10:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696501633;
+	bh=4fxCXTLyJSEnYgLs6b+JCuhTnShTf/CIKp0OZexQrj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HHqX91JuhSpBSMK2o5ESJ0CBb18LLzCffYRKge9Capj2sJtPUdKCWOaxUiEofWFwy
+	 YXYbGFcxtC72+SdtbwVaoy04zAaGLRi5fcM2EwOsKJDm8EESrPXXCLBrKNo9yC3Sf6
+	 J/H2XeTyxw7J+SIcHLdbKmLBsKxTOxNeiNxlLrWI=
+Date: Thu, 5 Oct 2023 12:27:10 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org, patches@lists.linux.dev,
+	mikelley@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+	haiyangz@microsoft.com, decui@microsoft.com,
+	apais@linux.microsoft.com, Tianyu.Lan@microsoft.com,
+	ssengar@linux.microsoft.com, mukeshrathor@microsoft.com,
+	stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com,
+	vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	will@kernel.org, catalin.marinas@arm.com
+Subject: Re: [PATCH v4 13/15] uapi: hyperv: Add mshv driver headers defining
+ hypervisor ABIs
+Message-ID: <2023100517-rogue-gopher-e70f@gregkh>
+References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1696010501-24584-14-git-send-email-nunodasneves@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net,v2, 0/3] net: mana: Fix some TX processing bugs
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169650002548.27211.13692825610419255584.git-patchwork-notify@kernel.org>
-Date: Thu, 05 Oct 2023 10:00:25 +0000
-References: <1696020147-14989-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1696020147-14989-1-git-send-email-haiyangz@microsoft.com>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, decui@microsoft.com,
- stephen@networkplumber.org, kys@microsoft.com, paulros@microsoft.com,
- olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
- longli@microsoft.com, ssengar@linux.microsoft.com,
- linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- bpf@vger.kernel.org, ast@kernel.org, sharmaajay@microsoft.com,
- hawk@kernel.org, tglx@linutronix.de, shradhagupta@linux.microsoft.com,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1696010501-24584-14-git-send-email-nunodasneves@linux.microsoft.com>
 
-Hello:
+On Fri, Sep 29, 2023 at 11:01:39AM -0700, Nuno Das Neves wrote:
+> +/* Define connection identifier type. */
+> +union hv_connection_id {
+> +	__u32 asu32;
+> +	struct {
+> +		__u32 id:24;
+> +		__u32 reserved:8;
 
-This series was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Meta-commment, I don't see anywhere you are properly checking that all
+of the "reserved" areas of these structures are actually set to 0 when
+they are sent to you.  If you don't do that, then they are not really
+reserved at all and can never be used in the future, so properly check
+them please.
 
-On Fri, 29 Sep 2023 13:42:24 -0700 you wrote:
-> Fix TX processing bugs on error handling, tso_bytes calculation,
-> and sge0 size.
-> 
-> Haiyang Zhang (3):
->   net: mana: Fix TX CQE error handling
->   net: mana: Fix the tso_bytes calculation
->   net: mana: Fix oversized sge0 for GSO packets
-> 
-> [...]
+thanks,
 
-Here is the summary with links:
-  - [net,v2,1/3] net: mana: Fix TX CQE error handling
-    https://git.kernel.org/netdev/net/c/b2b000069a4c
-  - [net,v2,2/3] net: mana: Fix the tso_bytes calculation
-    https://git.kernel.org/netdev/net/c/7a54de926574
-  - [net,v2,3/3] net: mana: Fix oversized sge0 for GSO packets
-    https://git.kernel.org/netdev/net/c/a43e8e9ffa0d
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+greg k-h
 
