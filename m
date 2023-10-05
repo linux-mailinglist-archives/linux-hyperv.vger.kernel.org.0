@@ -1,196 +1,334 @@
-Return-Path: <linux-hyperv+bounces-476-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-477-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC5407B9E4D
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 16:04:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 426547BAAB8
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 21:52:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sv.mirrors.kernel.org (Postfix) with ESMTP id 68F16282121
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 14:04:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTP id 712401F22A3F
+	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 19:52:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE0327738;
-	Thu,  5 Oct 2023 14:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 419F238F83;
+	Thu,  5 Oct 2023 19:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jdjGDiUa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATi9jXWw"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC7B125C6
-	for <linux-hyperv@vger.kernel.org>; Thu,  5 Oct 2023 14:04:25 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E600547851;
-	Thu,  5 Oct 2023 07:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696514576; x=1728050576;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=l+KUCngkyx4Xn47J8ZIAf9ufOUPZQFuBvCf7z3BgsUw=;
-  b=jdjGDiUavp+nNZWRqsE4/B19B7E94kiwgiPIVd7y9Lbn8zV4GHVKFtUr
-   7UnoReSNVlPDxBboGfglHFeTf+y1uyH7MWP74HzFWtkNNl5O3TpohlbW0
-   XA7qkLajCNKHRskltZxOzKt3aIsDgjrqeYZgftZORp3vs1qAq0rNFOHWB
-   V+AyczKWDGg9DjoVZLF+OQAgC6PUGqI0E6cykzIe/cOW6n+TvcoM3JR7a
-   ZPVeKAm63SxivuFYl0wBxOsVHXZsQqKbE0EO/A7shhP/I+m9yZdFffHYb
-   b3Jhikkt47kFoLlHtr80DIQov4/q7GzsntzgMPFB9nyXEAhAfnyY9ToD9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="4989434"
-X-IronPort-AV: E=Sophos;i="6.03,202,1694761200"; 
-   d="scan'208";a="4989434"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 00:21:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="701541751"
-X-IronPort-AV: E=Sophos;i="6.03,202,1694761200"; 
-   d="scan'208";a="701541751"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Oct 2023 00:21:38 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Thu, 5 Oct 2023 00:21:38 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Thu, 5 Oct 2023 00:21:38 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Thu, 5 Oct 2023 00:21:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CEr2COyaTpLFS/pIFmGFo1/e2oIIkIcV+3xSAIEz0KD9DmRz93cbY0tsy/kNzBex5BX/fepvw5T4va3w64Pio1S62XWbRMeJTTqtIhIJHCTEBIWv8faSGPBLuRjiQYn7zQAj5RfnWTWZ9aLD37xIv6B56hCHHkcTNXOurhCGCIVW7HaMbCGZLIf/8PUhbaQ0pqPZ4MxKdLRI8zocHlzvDt+nfHsByeoQJ2w7MfrCbUDzH33LgW4lETop3u5wDOdUKrXhJJsXASHeUEdclFyg3XNENV3pSkbkkgccQwXXJxIKXCQKVipANt8ztLPLvS6vriy9HQUcs+SgzKHx8Psg9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l+KUCngkyx4Xn47J8ZIAf9ufOUPZQFuBvCf7z3BgsUw=;
- b=FmU6hv9P/mrGhhcOkKgPAcmL5uCm7qqC7ZN5Hjz5Pt57GVyW7lTeBJDIyRxOCDG1W7wJUENxh+mB8vkleCugppfdnx0psXg0/oRy/hAnRpFY8RPEHU7iH2sMR/SEAce/mCT8hbEkxgj/7LY3DLpY9Cl84N2qnyhXj102LUNGPjMK99vEzsqE8B8MK8FF0RJxEG/tV1/9m30Tn9rjRqwLtNo3Xjy8Ib0FwfTHATA5QqBMqLeRGEwIU/bFzOwYLPq3qQ0blNs2mR1UDLEDeCODrcB5F22H5zW3rRO+WMa/ONEdUWWq5Kpw5SJkdo7ry/fbpfnDBy4o4ZGN3XOc+Un2YA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
- by DS7PR11MB6151.namprd11.prod.outlook.com (2603:10b6:8:9c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.29; Thu, 5 Oct
- 2023 07:21:29 +0000
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::922f:ec7c:601b:7f61]) by SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::922f:ec7c:601b:7f61%6]) with mapi id 15.20.6813.017; Thu, 5 Oct 2023
- 07:21:29 +0000
-From: "Li, Xin3" <xin3.li@intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-CC: "tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "Lutomirski, Andy"
-	<luto@kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"Christopherson,, Sean" <seanjc@google.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Gross, Jurgen" <jgross@suse.com>, "Shankar, Ravi V"
-	<ravi.v.shankar@intel.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"jiangshanlai@gmail.com" <jiangshanlai@gmail.com>
-Subject: RE: [PATCH v12 00/37] x86: enable FRED for x86-64
-Thread-Topic: [PATCH v12 00/37] x86: enable FRED for x86-64
-Thread-Index: AQHZ9caENagGnRugfUWOoRzs4wEdL7A6vBYAgAAMCNA=
-Date: Thu, 5 Oct 2023 07:21:29 +0000
-Message-ID: <SA1PR11MB67345B6C16EEA16FEED714D2A8CAA@SA1PR11MB6734.namprd11.prod.outlook.com>
-References: <20231003062458.23552-1-xin3.li@intel.com>
- <9b5ddb4e-12f1-4058-bcce-119d6ac4817c@suse.com>
-In-Reply-To: <9b5ddb4e-12f1-4058-bcce-119d6ac4817c@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|DS7PR11MB6151:EE_
-x-ms-office365-filtering-correlation-id: a8cfe870-ff54-42a5-c796-08dbc573b18e
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wnAjEeoibdnhFB0qD2X2MCZl8OJKdkKnXQTF+7evRGFnlf5gNiWssSRPy/hUg4gt6pt16EhETDBIkjuGqCq+b4a+1SO9Qtn5hbh2dMRvtmf+vFRUBJA4M2NRKCOTqsMnq7Ko1jpCdKLVwTzAUtPy3UN3H4iwnJvWK25v+Guei4W4s9cLoZTKHhsinIBg2+Du/SyEj7nbqxG3EApsQV3BH49tOd6VOu8XVXQnvFD2bWs+l+BanFDWrMoJs61ip+c63+ty1P2HK5OWEzAvlzCd7n7DrTSI/moNNdfzyn+lq8Pm9Pgq7Zt8SLUwKKu0VNgS1Za5EIqc5XjCx/yRAg1X0YCrRJSh7jsIPXNB2yj9lzojASC5l52rI9ImXvjVufyo/tBAFxLq8ph4S6brJbVSA9b/eYQIv1u3CAr31QZZ2nTceEtsKICIRfrxWjYcfn4mZoaH9PQ7+E/pPb7g3UYenFhkmTG2Ubq1uAxpaN9KWCuN0osQc2od26+72ZA9LrFOMpUHkcsiOm1l3g75UYpttTr0/ypromhRIHYnbopFsnE8FxRGcBJFOQD6yi5e47wF5G5dUAuLTHjbWbNCjDbeKSEK3RkbmESGlnjtkZof4lt3Vgo+ndTK5JlnTxoTMgXH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(346002)(39860400002)(366004)(376002)(230922051799003)(64100799003)(1800799009)(451199024)(186009)(38100700002)(55016003)(26005)(82960400001)(38070700005)(122000001)(33656002)(86362001)(83380400001)(8936002)(316002)(4326008)(64756008)(54906003)(8676002)(66446008)(5660300002)(41300700001)(66476007)(66556008)(52536014)(110136005)(4744005)(66946007)(2906002)(76116006)(7416002)(478600001)(71200400001)(9686003)(6506007)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YnlSRVpWbFlEUDY2aWNaUnlvUWxZMEpCb2F4MXg5aHAyYzJLQkRtYmpYZTUx?=
- =?utf-8?B?dWhFOFE3MndrS2RnNG1BVDcyNGcvbU5XRG9YWWVGeUthYjFLaWFwdHlyenFE?=
- =?utf-8?B?aE81RmpqNTN3NzY0cEwrM04xR3RLelVDZjc3OFdZTS96dENwQjBuaFhzZ1JH?=
- =?utf-8?B?RFlKN1VqNFNid0lOQU9KRlRVVDRNc3dzZmdBTGdXcjUybFE3cG1NRHZJZENt?=
- =?utf-8?B?YVlvQmxabnlIdkhCeXFqWVllY0lURmovQ3Z2ODF3RVI4ckF1c20vZFMrQXZZ?=
- =?utf-8?B?cE1vb2lYbEgyOU5EenRWZUtJSFdUTEpvNlB1MitiMVRxVU03VFFoU2tCRmtm?=
- =?utf-8?B?T25hTkZQNXU5TDFaRUJaRFNnczF1amFOYURZNmVsUmJTTlFsWG9Gdk4rMlBR?=
- =?utf-8?B?SG9DZExGWkpQcWRiOUtGdE9NM0RtanhPTExuczNEYjRqOFlhUlhYSGpVdjg0?=
- =?utf-8?B?TnRnYjE0bnpPM3Avb1dpVWFYekJCbDBkMkVOQm93R29WR0F5SFVSVzl4UUpi?=
- =?utf-8?B?blpRWUdPbW53anBJcTc3cUE4RlNCZkEzeUJoZ2FXMkdETEFnYWhpQ2RDR0xy?=
- =?utf-8?B?ZFVvenozZ0dFbnBGd3RCZk8xdVQwTXpJWmt2bnBDelhpVWVhVmNlWGJkUkl6?=
- =?utf-8?B?WkMzV3V5UlJVemFGREVIaWwvZmJ6R3lBeUdmRXExeDR3OTJjVlF0b3JvVnF2?=
- =?utf-8?B?bUtieVdDUWN2WDNZSEZ1d0l5VjJLRlVtRWRZN2ExbmpxUE5LaUJxV29nZTF1?=
- =?utf-8?B?T2V0TThqeXBXL1ZLd3FxMmV4Z1lkL3Y0Y0NPdjBwdjhGTThHYzZYRFhnSys1?=
- =?utf-8?B?VkJJaC9IOEQ1cENHb2NwbVFhQlQwTDdlZjdLVXorWlpSWnlCYk1qLytpNE9k?=
- =?utf-8?B?QVdZUkExOXNjbWh2V1ZhVkdWQUt2TVhqaE1xaElYeUkyWVRkNHkvcU9JOW0z?=
- =?utf-8?B?SmFGTEFaRlRVK2JyZmtXRFB1M2VkVVJrWnNEZjltbTVodWIxUnFZZ01NVHNq?=
- =?utf-8?B?VVJtTU14K2kxSVFFZzgvY05rZjBVcUpSbDdxamQ1VEYrQkJTT1Rtekw1YVpB?=
- =?utf-8?B?ejNUcGNUQ2lvaFdVbTVoTHZLL3FWY3o1cEFPUkpycTI1WFQrOGJSQWR0bXhr?=
- =?utf-8?B?Yld3NGFpUUczM1c3SDRXWWdTVXovOFIyZ1ZvcTk1S0VEMUg5b3RGb2RCcTZs?=
- =?utf-8?B?VStsS0xBem5DQ2JMUXBrN0lBNFRKdEVlTnJkaUJFRDJ1VDFZVHVrbitYVnFJ?=
- =?utf-8?B?cUFkVVNlQk1xQ0xyUG05TkliSjUyUFozQmNmMHliWmh4dWxrOXZ6TXRMbk1X?=
- =?utf-8?B?TlZJZXRDTHR3aEY5eVJIaEVxRGNROWNkdW1hcUVMMGxGWDdwT1pVZlFhYjJS?=
- =?utf-8?B?Y2J3cExKK0tFUzJjNU9pTEVkZlMzTE5iTmRzdG1QU0ZZdUkxMEZYaFQ3c1d3?=
- =?utf-8?B?cG1KMTVOUkZpenNNQks5Njg4dzllaWhheWJ0cUZQWS8xbTQxSHFxTXhQS0RS?=
- =?utf-8?B?VWpvblhyV0VROGRyVGxvRG91dWpyeWZGbzN1bWdDR1hxV0N3dW40emVJaytL?=
- =?utf-8?B?Ty9idVViVUVxbTBZRXdzcllYZ3Q2WWhUd3c4V0VkdE54Z3ZQcDhXQVZRNmtv?=
- =?utf-8?B?cm1pOGxpbGZycFJmdWlBTHpXOHlPdHVxVWdkS3V5MUh3MzlOWlprZjFmQVEy?=
- =?utf-8?B?enJ1V3AvaW4wbUUzWWNDU2QwaTIwdlo0SnpkclE0bDZSOVBTbXM5TlpUcmJF?=
- =?utf-8?B?b05BTldva0k2YnVuclhHYklhaTlHQ1BIdXBGNnVUYmlDa0cwUjk0OHN2YmdF?=
- =?utf-8?B?aGNnK3Btb0xtTlJ4V3BHeGUrQXNqRW9DSW1FTzhhZTJPeXEzNHcxcFJ5dzFs?=
- =?utf-8?B?VDZ4ZzV0OUcyVVA4REV2d3JiMTRmNGduRWo0dHJQUnBjZGpKeHVzN0hVMnlv?=
- =?utf-8?B?dXdnb3dlWXhSNkFGWDZOM3plbG0vV1JDTnNsN0FiK0JXT2NCRndpMHBmZC9U?=
- =?utf-8?B?YURJN0srK2hvK0ZKVnBGcmVqcUNYWWV4LzgrNkZnTDc5cEkrcE9sRGgzYTZq?=
- =?utf-8?B?Z3c1bFUyVlR1MElDNzRWallKbWxoTEZZR3NHWlZIMWJSU256ODNrSHZzQ00y?=
- =?utf-8?Q?RsJE=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834924122E
+	for <linux-hyperv@vger.kernel.org>; Thu,  5 Oct 2023 19:52:19 +0000 (UTC)
+Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB33DB;
+	Thu,  5 Oct 2023 12:52:17 -0700 (PDT)
+Received: by mail-vk1-xa2b.google.com with SMTP id 71dfb90a1353d-49059c3e32aso206331e0c.0;
+        Thu, 05 Oct 2023 12:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696535536; x=1697140336; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yFv1W8J14AD3Ise4CiUdt+LAXc2O9NgBdpnS7CF0MOw=;
+        b=ATi9jXWw4xMpA9KLclMZTnzSXJsAT5LBJ1AqsWdfvjA/Z4S7uzuhmdr6wkjVXBfdLF
+         6Gq8dQCiM4h89mzpYjLAuq+/ro0/njtwgWj4oN4AGSi7igzQ/QX1Hm2NCqmg87K91ml+
+         cgJJXmAMZ4gsbeVX5DWqYc4pOJ2wbNlvaBdi2WICbEWcosho2fN8Dg+8kLTPWz6HnS7u
+         zA3iFJKEqjB0sB3F+PgfPVk6hRDzG+x6hjb7hSaUMHntKOLKssiXyL5Tleqp/dvrje4M
+         rNpV1vHl+Or7g1ti+sjZmgpfVY0pJAjI5FJlc1K369MWGuCOe+R9EtXeQxpsfCmtikSV
+         F0nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696535536; x=1697140336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yFv1W8J14AD3Ise4CiUdt+LAXc2O9NgBdpnS7CF0MOw=;
+        b=oz72OTcPtyJD0j1Kuqe5uM89G5xpjycfYBZc5FuBg0IYjHSZTDrwt41ikUwKLY2HRC
+         WJBlALrsjd0b3Umk590O+vBKk4wRMWQ1hVFAORvbogkxJGmdPks5oEccJa1xO9kpi6ex
+         wqrBMyiazXnApa0EJMMYIoBEcetqsfIFaqXZYx1rbrDrnV6m+0Bi+a8x3oW5+tqQ4hpD
+         sCeUDfB4KfT0sHmwoGVXVSRKLtvCiTZdmSRjKkujM/JBDkOTMYTf1fOvfpfzeJpaGBzT
+         hTxdyMi1qcJNFCZdCthAe01cKMkJlvPxmGxp7T9Ads2Aq2pO4E2bkoZBTpPkFM5brA7L
+         98wg==
+X-Gm-Message-State: AOJu0Ywy6irDCc6W0zitdcQrdNmtzI5Bhdf+5NQ2fbbakqu9oZa9vX1G
+	iScgNaQt7zir4LUr+4CI1g9pHG615PxuyLFqfUg=
+X-Google-Smtp-Source: AGHT+IGuTEUd8dTcZeTkWYWW1mW8fz4C0ldWo8Lj3yVO2SdMwh2H3DKmTh7Vq/QEWb3sKS/10VY7YdkhsNuEyc3Q0n4=
+X-Received: by 2002:a1f:6e85:0:b0:49b:9510:1f94 with SMTP id
+ j127-20020a1f6e85000000b0049b95101f94mr4097701vkc.1.1696535536308; Thu, 05
+ Oct 2023 12:52:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8cfe870-ff54-42a5-c796-08dbc573b18e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Oct 2023 07:21:29.3301
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y4yGboRDoJVw6HShIVcUIcawr+dMFUTXIsQsaxkZHnLIKZG+zkhFcXrwn4ABkUVLTS8xYyC58qBUJSDRze9mmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6151
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.6
+References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1696010501-24584-15-git-send-email-nunodasneves@linux.microsoft.com>
+ <CAJ-90NKJ=FViuuy2MyA-8S1j9Lsia8bR-ytZuAr=pOPuAiO0VQ@mail.gmail.com> <749f477a-1e7a-495e-bea1-e3abe8da7fb9@linux.microsoft.com>
+In-Reply-To: <749f477a-1e7a-495e-bea1-e3abe8da7fb9@linux.microsoft.com>
+From: Alex Ionescu <aionescu@gmail.com>
+Date: Thu, 5 Oct 2023 15:52:04 -0400
+Message-ID: <CAJ-90NL8S5xnJbiwCHAGs4QeiJ3DHUL0Obi1snqsTDJEpQRnsg@mail.gmail.com>
+Subject: Re: [PATCH v4 14/15] asm-generic: hyperv: Use new Hyper-V headers conditionally.
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, 
+	patches@lists.linux.dev, mikelley@microsoft.com, kys@microsoft.com, 
+	wei.liu@kernel.org, gregkh@linuxfoundation.org, haiyangz@microsoft.com, 
+	decui@microsoft.com, apais@linux.microsoft.com, Tianyu.Lan@microsoft.com, 
+	ssengar@linux.microsoft.com, mukeshrathor@microsoft.com, 
+	stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com, 
+	vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org, 
+	catalin.marinas@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-PiA+IFRoaXMgcGF0Y2ggc2V0IGVuYWJsZXMgdGhlIEludGVsIGZsZXhpYmxlIHJldHVybiBhbmQg
-ZXZlbnQgZGVsaXZlcnkNCj4gPiAoRlJFRCkgYXJjaGl0ZWN0dXJlIGZvciB4ODYtNjQuDQo+ID4N
-Cj4gDQo+IA0KPiBXaGljaCB0cmVlIGlzIHRoaXMgYmFzZWQgb24gbm93Pw0KPg0KDQpJdCB3YXMg
-YmFzZWQgb24gdGhlIHRpcCBtYXN0ZXIgb24gdGhlIGRheSBJIHNlbnQgdGhlIHYxMiBwYXRjaCBz
-ZXQsIGkuZS4sDQpNb25kYXkgbmlnaHQgaW4gdGhlIFVTIHdlc3QgY29hc3QuDQoNCj4gSSB0cmll
-ZCBydW5uaW5nICdiNCBkaWZmJyBidXQgaXQgY29tcGxhaW5zIGl0IGNhbid0DQo+IGZpbmQgc29t
-ZSBjb250ZXh0IGFyb3VuZCBhcmNoL3g4Ni9rZXJuZWwvY3B1L2NvbW1vbi5jIC4NCj4NCg0KV2hh
-dCBkb2VzIGl0IGNvbXBsYWluPw0KDQo+IEkgaGF2ZSB0aGUgdGlwIHRyZWUgdXBkYXRlZC4NCg0K
-SSBqdXN0IGRpZCBhIHJlYmFzZSBvbiB0aGUgbGF0ZXN0IHRpcCBtYXN0ZXIsIGFuZCBkaWQgZmlu
-ZCBhIGJ1aWxkIGJ1Zw0KY2F1c2VkIGJ5Og0KDQpbUEFUQ0ggdjEyIDMzLzM3XSB4ODYvZW50cnk6
-IEFkZCBmcmVkX2VudHJ5X2Zyb21fa3ZtKCkgZm9yIFZNWCB0byBoYW5kbGUgSVJRL05NSQ0KDQph
-cyA8YXNtL2V4cG9ydC5oPiBpcyBkZXByZWNhdGVkIGJ5IDxsaW51eC9leHBvcnQuaD4geWVzdGVy
-ZGF5Lg0KDQpBZnRlciBJIHJlcGxhY2VkIGl0LCBpdCBjb21waWxlcyBhbmQgYm9vdHMuICBXaGF0
-IHNob3VsZCBJIGRvIG5vdz8NCg0KVGhhbmtzIQ0KICAgIFhpbg0K
+Hi Nuno,
+
+Best regards,
+Alex Ionescu
+
+On Mon, Oct 2, 2023 at 8:41=E2=80=AFPM Nuno Das Neves
+<nunodasneves@linux.microsoft.com> wrote:
+>
+> Hi Alex,
+>
+> On 10/2/2023 12:35 PM, Alex Ionescu wrote:
+> > Hi Nuno,
+> >
+> > I understand the requirement to have
+> > undocumented/non-standard/non-TLFS-published information in the HDK
+> > headers, however, the current state of this patch is that for any
+> > other code that's not in the kernel today, or in this upcoming driver,
+> > the hyperv-tlfs definitions are incomplete, because some *documented*
+> > TLFS fields are only in HDK headers. Similarly, it is also impossible
+>
+> If I understand correctly, you are saying there are documented
+> definitions (in the TLFS document), which are NOT in hyperv-tlfs.h, but
+> ARE in these new HDK headers, correct?
+
+Correct.
+
+>
+> If these are needed elsewhere in the kernel, they can just be added to
+> hyperv-tlfs.h.
+
+OK, great, As the need arises I will submit patches here to do so (and
+source the TLFS page/paragraph as needed to help provide they're in
+there). Thank you!
+
+>
+> > to only use the HDK headers for other use cases, because some basic
+> > documented, standard defines only exist in hyperv-tlfs. So there is no
+> > "logical" relationship between the two -- HDK headers are not _just_
+> > undocumented information, but also documented information, but also
+> > not complete documented information.
+>
+> That is correct - they are meant to be independently compileable.
+> The new HDK headers only serve as a replacement *in our driver* when we
+> need some definitions like do_hypercall() etc in mshyperv.h.
+
+Understood.
+
+>
+> >
+> > Would you consider:
+> >
+> > 1) Updating hyperv-tlfs with all newly documented TLFS fields that are
+> > in the HDK headers?
+>
+> I think this can be done on an as-needed basis, as I outlined above.
+
+Sounds good.
+
+>
+> > OR
+> > 2) Updating the new HDK headers you're adding here to also include
+> > previously-documented information from hyperv-tlfs? This way, someone
+> > can include the HDK headers and get everything they need
+>
+> The new HDK headers are only intended for the new mshv driver.
+>
+> > OR
+> > 3) Truly making hypertv-tlfs the "documented" header, and then > removi=
+ng any duplication from HDK so that it remains the
+> > "undocumented" header file. In this manner, one would include
+> > hyperv-tlfs to use the stable ABI, and they would include HDK (which
+> > would include hyperv-tlfs) to use the unstable+stable ABI.
+>
+> hyperv-tlfs.h is remaining the "documented" header.
+>
+> But, we can't make the HDK header depend on hyperv-tlfs.h, for 2 primary
+> reasons:
+> 1. We need to put the new HDK headers in uapi so that we can use them in
+> our IOCTL interface. As a result, we can't include hyperv-tlfs.h (unless
+> we put it in uapi as well).
+> 2. The HDK headers not only duplicate, but also MODIFY some structures
+> in hyperv-tlfs.h. e.g., The struct is in hyperv-tlfs.h, but a particular
+> field or bitfield is not.
+
+#2 was something I was worried about. Do you know if the
+standards/docs team is planning on updating the TLFS at some point
+with updates on their end? At which point I'd assume you'd be OK with
+patches to add them to hyperv-tlfs.h
+
+Thanks a lot!
+
+--
+Best regards,
+Alex Ionescu
+
+>
+> Thanks,
+> Nuno
+>
+> >
+> > Thank you for your consideration.
+> >
+> > Best regards,
+> > Alex Ionescu
+> >
+> > On Fri, Sep 29, 2023 at 2:02=E2=80=AFPM Nuno Das Neves
+> > <nunodasneves@linux.microsoft.com> wrote:
+> >>
+> >> Add asm-generic/hyperv-defs.h. It includes hyperv-tlfs.h or hvhdk.h
+> >> depending on compile-time constant HV_HYPERV_DEFS which will be define=
+d in
+> >> the mshv driver.
+> >>
+> >> This is needed to keep unstable Hyper-V interfaces independent of
+> >> hyperv-tlfs.h. This ensures hvhdk.h replaces hyperv-tlfs.h in the mshv
+> >> driver, even via indirect includes.
+> >>
+> >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> >> Acked-by: Wei Liu <wei.liu@kernel.org>
+> >> ---
+> >>   arch/arm64/include/asm/mshyperv.h |  2 +-
+> >>   arch/x86/include/asm/mshyperv.h   |  3 +--
+> >>   drivers/hv/hyperv_vmbus.h         |  1 -
+> >>   include/asm-generic/hyperv-defs.h | 26 ++++++++++++++++++++++++++
+> >>   include/asm-generic/mshyperv.h    |  2 +-
+> >>   include/linux/hyperv.h            |  2 +-
+> >>   6 files changed, 30 insertions(+), 6 deletions(-)
+> >>   create mode 100644 include/asm-generic/hyperv-defs.h
+> >>
+> >> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/as=
+m/mshyperv.h
+> >> index 20070a847304..8ec14caf3d4f 100644
+> >> --- a/arch/arm64/include/asm/mshyperv.h
+> >> +++ b/arch/arm64/include/asm/mshyperv.h
+> >> @@ -20,7 +20,7 @@
+> >>
+> >>   #include <linux/types.h>
+> >>   #include <linux/arm-smccc.h>
+> >> -#include <asm/hyperv-tlfs.h>
+> >> +#include <asm-generic/hyperv-defs.h>
+> >>
+> >>   /*
+> >>    * Declare calls to get and set Hyper-V VP register values on ARM64,=
+ which
+> >> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/ms=
+hyperv.h
+> >> index e3768d787065..bb1b97106cd3 100644
+> >> --- a/arch/x86/include/asm/mshyperv.h
+> >> +++ b/arch/x86/include/asm/mshyperv.h
+> >> @@ -6,10 +6,9 @@
+> >>   #include <linux/nmi.h>
+> >>   #include <linux/msi.h>
+> >>   #include <linux/io.h>
+> >> -#include <asm/hyperv-tlfs.h>
+> >>   #include <asm/nospec-branch.h>
+> >>   #include <asm/paravirt.h>
+> >> -#include <asm/mshyperv.h>
+> >> +#include <asm-generic/hyperv-defs.h>
+> >>
+> >>   /*
+> >>    * Hyper-V always provides a single IO-APIC at this MMIO address.
+> >> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> >> index 09792eb4ffed..0e4bc18a13fa 100644
+> >> --- a/drivers/hv/hyperv_vmbus.h
+> >> +++ b/drivers/hv/hyperv_vmbus.h
+> >> @@ -15,7 +15,6 @@
+> >>   #include <linux/list.h>
+> >>   #include <linux/bitops.h>
+> >>   #include <asm/sync_bitops.h>
+> >> -#include <asm/hyperv-tlfs.h>
+> >>   #include <linux/atomic.h>
+> >>   #include <linux/hyperv.h>
+> >>   #include <linux/interrupt.h>
+> >> diff --git a/include/asm-generic/hyperv-defs.h b/include/asm-generic/h=
+yperv-defs.h
+> >> new file mode 100644
+> >> index 000000000000..ac6fcba35c8c
+> >> --- /dev/null
+> >> +++ b/include/asm-generic/hyperv-defs.h
+> >> @@ -0,0 +1,26 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +#ifndef _ASM_GENERIC_HYPERV_DEFS_H
+> >> +#define _ASM_GENERIC_HYPERV_DEFS_H
+> >> +
+> >> +/*
+> >> + * There are cases where Microsoft Hypervisor ABIs are needed which m=
+ay not be
+> >> + * stable or present in the Hyper-V TLFS document. E.g. the mshv_root=
+ driver.
+> >> + *
+> >> + * As these interfaces are unstable and may differ from hyperv-tlfs.h=
+, they
+> >> + * must be kept separate and independent.
+> >> + *
+> >> + * However, code from files that depend on hyperv-tlfs.h (such as msh=
+yperv.h)
+> >> + * is still needed, so work around the issue by conditionally includi=
+ng the
+> >> + * correct definitions.
+> >> + *
+> >> + * Note: Since they are independent of each other, there are many def=
+initions
+> >> + * duplicated in both hyperv-tlfs.h and uapi/hyperv/hv*.h files.
+> >> + */
+> >> +#ifdef HV_HYPERV_DEFS
+> >> +#include <uapi/hyperv/hvhdk.h>
+> >> +#else
+> >> +#include <asm/hyperv-tlfs.h>
+> >> +#endif
+> >> +
+> >> +#endif /* _ASM_GENERIC_HYPERV_DEFS_H */
+> >> +
+> >> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshy=
+perv.h
+> >> index d832852d0ee7..6bef0d59d1b7 100644
+> >> --- a/include/asm-generic/mshyperv.h
+> >> +++ b/include/asm-generic/mshyperv.h
+> >> @@ -25,7 +25,7 @@
+> >>   #include <linux/cpumask.h>
+> >>   #include <linux/nmi.h>
+> >>   #include <asm/ptrace.h>
+> >> -#include <asm/hyperv-tlfs.h>
+> >> +#include <asm-generic/hyperv-defs.h>
+> >>
+> >>   #define VTPM_BASE_ADDRESS 0xfed40000
+> >>
+> >> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> >> index 4d5a5e39d76c..722a8cf23d87 100644
+> >> --- a/include/linux/hyperv.h
+> >> +++ b/include/linux/hyperv.h
+> >> @@ -24,7 +24,7 @@
+> >>   #include <linux/mod_devicetable.h>
+> >>   #include <linux/interrupt.h>
+> >>   #include <linux/reciprocal_div.h>
+> >> -#include <asm/hyperv-tlfs.h>
+> >> +#include <asm-generic/hyperv-defs.h>
+> >>
+> >>   #define MAX_PAGE_BUFFER_COUNT                          32
+> >>   #define MAX_MULTIPAGE_BUFFER_COUNT                     32 /* 128K */
+> >> --
+> >> 2.25.1
+> >>
+> >>
+>
 
