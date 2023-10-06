@@ -1,334 +1,214 @@
-Return-Path: <linux-hyperv+bounces-477-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-478-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 426547BAAB8
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 21:52:23 +0200 (CEST)
-Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by am.mirrors.kernel.org (Postfix) with ESMTP id 712401F22A3F
-	for <lists+linux-hyperv@lfdr.de>; Thu,  5 Oct 2023 19:52:22 +0000 (UTC)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4EBC7BB0D2
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Oct 2023 06:28:13 +0200 (CEST)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F8E21C20847
+	for <lists+linux-hyperv@lfdr.de>; Fri,  6 Oct 2023 04:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 419F238F83;
-	Thu,  5 Oct 2023 19:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BB041C39;
+	Fri,  6 Oct 2023 04:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATi9jXWw"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iBmOLzLe"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834924122E
-	for <linux-hyperv@vger.kernel.org>; Thu,  5 Oct 2023 19:52:19 +0000 (UTC)
-Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB33DB;
-	Thu,  5 Oct 2023 12:52:17 -0700 (PDT)
-Received: by mail-vk1-xa2b.google.com with SMTP id 71dfb90a1353d-49059c3e32aso206331e0c.0;
-        Thu, 05 Oct 2023 12:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696535536; x=1697140336; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yFv1W8J14AD3Ise4CiUdt+LAXc2O9NgBdpnS7CF0MOw=;
-        b=ATi9jXWw4xMpA9KLclMZTnzSXJsAT5LBJ1AqsWdfvjA/Z4S7uzuhmdr6wkjVXBfdLF
-         6Gq8dQCiM4h89mzpYjLAuq+/ro0/njtwgWj4oN4AGSi7igzQ/QX1Hm2NCqmg87K91ml+
-         cgJJXmAMZ4gsbeVX5DWqYc4pOJ2wbNlvaBdi2WICbEWcosho2fN8Dg+8kLTPWz6HnS7u
-         zA3iFJKEqjB0sB3F+PgfPVk6hRDzG+x6hjb7hSaUMHntKOLKssiXyL5Tleqp/dvrje4M
-         rNpV1vHl+Or7g1ti+sjZmgpfVY0pJAjI5FJlc1K369MWGuCOe+R9EtXeQxpsfCmtikSV
-         F0nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696535536; x=1697140336;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yFv1W8J14AD3Ise4CiUdt+LAXc2O9NgBdpnS7CF0MOw=;
-        b=oz72OTcPtyJD0j1Kuqe5uM89G5xpjycfYBZc5FuBg0IYjHSZTDrwt41ikUwKLY2HRC
-         WJBlALrsjd0b3Umk590O+vBKk4wRMWQ1hVFAORvbogkxJGmdPks5oEccJa1xO9kpi6ex
-         wqrBMyiazXnApa0EJMMYIoBEcetqsfIFaqXZYx1rbrDrnV6m+0Bi+a8x3oW5+tqQ4hpD
-         sCeUDfB4KfT0sHmwoGVXVSRKLtvCiTZdmSRjKkujM/JBDkOTMYTf1fOvfpfzeJpaGBzT
-         hTxdyMi1qcJNFCZdCthAe01cKMkJlvPxmGxp7T9Ads2Aq2pO4E2bkoZBTpPkFM5brA7L
-         98wg==
-X-Gm-Message-State: AOJu0Ywy6irDCc6W0zitdcQrdNmtzI5Bhdf+5NQ2fbbakqu9oZa9vX1G
-	iScgNaQt7zir4LUr+4CI1g9pHG615PxuyLFqfUg=
-X-Google-Smtp-Source: AGHT+IGuTEUd8dTcZeTkWYWW1mW8fz4C0ldWo8Lj3yVO2SdMwh2H3DKmTh7Vq/QEWb3sKS/10VY7YdkhsNuEyc3Q0n4=
-X-Received: by 2002:a1f:6e85:0:b0:49b:9510:1f94 with SMTP id
- j127-20020a1f6e85000000b0049b95101f94mr4097701vkc.1.1696535536308; Thu, 05
- Oct 2023 12:52:16 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928B51C20
+	for <linux-hyperv@vger.kernel.org>; Fri,  6 Oct 2023 04:28:09 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id AF053DB;
+	Thu,  5 Oct 2023 21:28:07 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 16F1220B74C0; Thu,  5 Oct 2023 21:28:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 16F1220B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1696566487;
+	bh=VBmYwvXPtMjKxp0JBBoGPP6lwV3PKu/EqwN3kEREnbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iBmOLzLeSVS1UZvXtX6J/+6jaPe9RtlnV/ovwK3HQsua+ZuhN8XUo5YON91oE2J8+
+	 1s2NdXVPGbzVByTuC1Q/rSCWoZRZlhuTH2U3P6c0LlzxdlwwglsZpNl1NwgFczYKBI
+	 /8J+5EkkDNtZ+UhCpqt1aXY2H0gR2QLLfJkD5JiQ=
+Date: Thu, 5 Oct 2023 21:28:07 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v4 0/3] UIO driver for low speed Hyper-V
+ devices
+Message-ID: <20231006042807.GA22906@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1691132996-11706-1-git-send-email-ssengar@linux.microsoft.com>
+ <2023081215-canine-fragile-0a69@gregkh>
+ <PUZP153MB06350DAEA2384B996519E07EBE1EA@PUZP153MB0635.APCP153.PROD.OUTLOOK.COM>
+ <2023082246-lumping-rebate-4142@gregkh>
+ <20230906122307.GA5737@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20230926124126.GA12048@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1696010501-24584-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1696010501-24584-15-git-send-email-nunodasneves@linux.microsoft.com>
- <CAJ-90NKJ=FViuuy2MyA-8S1j9Lsia8bR-ytZuAr=pOPuAiO0VQ@mail.gmail.com> <749f477a-1e7a-495e-bea1-e3abe8da7fb9@linux.microsoft.com>
-In-Reply-To: <749f477a-1e7a-495e-bea1-e3abe8da7fb9@linux.microsoft.com>
-From: Alex Ionescu <aionescu@gmail.com>
-Date: Thu, 5 Oct 2023 15:52:04 -0400
-Message-ID: <CAJ-90NL8S5xnJbiwCHAGs4QeiJ3DHUL0Obi1snqsTDJEpQRnsg@mail.gmail.com>
-Subject: Re: [PATCH v4 14/15] asm-generic: hyperv: Use new Hyper-V headers conditionally.
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, 
-	patches@lists.linux.dev, mikelley@microsoft.com, kys@microsoft.com, 
-	wei.liu@kernel.org, gregkh@linuxfoundation.org, haiyangz@microsoft.com, 
-	decui@microsoft.com, apais@linux.microsoft.com, Tianyu.Lan@microsoft.com, 
-	ssengar@linux.microsoft.com, mukeshrathor@microsoft.com, 
-	stanislav.kinsburskiy@gmail.com, jinankjain@linux.microsoft.com, 
-	vkuznets@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, will@kernel.org, 
-	catalin.marinas@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230926124126.GA12048@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-17.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Nuno,
+On Tue, Sep 26, 2023 at 05:41:26AM -0700, Saurabh Singh Sengar wrote:
+> On Wed, Sep 06, 2023 at 05:23:07AM -0700, Saurabh Singh Sengar wrote:
+> > On Tue, Aug 22, 2023 at 01:48:03PM +0200, Greg KH wrote:
+> > > On Mon, Aug 21, 2023 at 07:36:18AM +0000, Saurabh Singh Sengar wrote:
+> > > > 
+> > > > 
+> > > > > -----Original Message-----
+> > > > > From: Greg KH <gregkh@linuxfoundation.org>
+> > > > > Sent: Saturday, August 12, 2023 4:45 PM
+> > > > > To: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > > > > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > > > > <haiyangz@microsoft.com>; wei.liu@kernel.org; Dexuan Cui
+> > > > > <decui@microsoft.com>; Michael Kelley (LINUX) <mikelley@microsoft.com>;
+> > > > > corbet@lwn.net; linux-kernel@vger.kernel.org; linux-hyperv@vger.kernel.org;
+> > > > > linux-doc@vger.kernel.org
+> > > > > Subject: [EXTERNAL] Re: [PATCH v4 0/3] UIO driver for low speed Hyper-V
+> > > > > devices
+> > > > > 
+> > > > > On Fri, Aug 04, 2023 at 12:09:53AM -0700, Saurabh Sengar wrote:
+> > > > > > Hyper-V is adding multiple low speed "speciality" synthetic devices.
+> > > > > > Instead of writing a new kernel-level VMBus driver for each device,
+> > > > > > make the devices accessible to user space through a UIO-based
+> > > > > > hv_vmbus_client driver. Each device can then be supported by a user
+> > > > > > space driver. This approach optimizes the development process and
+> > > > > > provides flexibility to user space applications to control the key
+> > > > > > interactions with the VMBus ring buffer.
+> > > > > 
+> > > > > Why is it faster to write userspace drivers here?  Where are those new drivers,
+> > > > > and why can't they be proper kernel drivers?  Are all hyper-v drivers going to
+> > > > > move to userspace now?
+> > > > 
+> > > > Hi Greg,
+> > > > 
+> > > > You are correct; it isn't faster. However, the developers working on these userspace
+> > > > drivers can concentrate entirely on the business logic of these devices. The more
+> > > > intricate aspects of the kernel, such as interrupt management and host communication,
+> > > > can be encapsulated within the uio driver.
+> > > 
+> > > Yes, kernel drivers are hard, we all know that.
+> > > 
+> > > But if you do it right, it doesn't have to be, saying "it's too hard for
+> > > our programmers to write good code for our platform" isn't exactly a
+> > > good endorcement of either your programmers, or your platform :)
+> > > 
+> > > > The quantity of Hyper-V devices is substantial, and their numbers are consistently
+> > > > increasing. Presently, all of these drivers are in a development/planning phase and
+> > > > rely significantly on the acceptance of this UIO driver as a prerequisite.
+> > > 
+> > > Don't make my acceptance of something that you haven't submitted before
+> > > a business decision that I need to make, that's disenginous.
+> > > 
+> > > > Not all hyper-v drivers will move to userspace, but many a new slow Hyperv-V
+> > > > devices will use this framework and will avoid introducing a new kernel driver. We
+> > > > will also plan to remove some of the existing drivers like kvp/vss.
+> > > 
+> > > Define "slow" please.
+> > 
+> > In the Hyper-V environment, most devices, with the exception of network and storage,
+> > typically do not require extensive data read/write exchanges with the host. Such
+> > devices are considered to be 'slow' devices.
+> > 
+> > > 
+> > > > > > The new synthetic devices are low speed devices that don't support
+> > > > > > VMBus monitor bits, and so they must use vmbus_setevent() to notify
+> > > > > > the host of ring buffer updates. The new driver provides this
+> > > > > > functionality along with a configurable ring buffer size.
+> > > > > >
+> > > > > > Moreover, this series of patches incorporates an update to the fcopy
+> > > > > > application, enabling it to seamlessly utilize the new interface. The
+> > > > > > older fcopy driver and application will be phased out gradually.
+> > > > > > Development of other similar userspace drivers is still underway.
+> > > > > >
+> > > > > > Moreover, this patch series adds a new implementation of the fcopy
+> > > > > > application that uses the new UIO driver. The older fcopy driver and
+> > > > > > application will be phased out gradually. Development of other similar
+> > > > > > userspace drivers is still underway.
+> > > > > 
+> > > > > You are adding a new user api with the "ring buffer" size api, which is odd for
+> > > > > normal UIO drivers as that's not something that UIO was designed for.
+> > > > > 
+> > > > > Why not just make you own generic type uiofs type kernel api if you really
+> > > > > want to do all of this type of thing in userspace instead of in the kernel?
+> > > > 
+> > > > Could you please elaborate more on this suggestion. I couldn't understand it
+> > > > completely.
+> > > 
+> > > Why is uio the requirement here?  Why not make your own framework to
+> > > write hv drivers in userspace that fits in better with the overall goal?
+> > > Call it "hvfs" or something like that, much like we have usbfs for
+> > > writing usb drivers in userspace.
+> > > 
+> > > Bolting on HV drivers to UIO seems very odd as that is not what this
+> > > framework is supposed to be providing at all.  UIO was to enable "pass
+> > > through" memory-mapped drivers that only wanted an interrupt and access
+> > > to raw memory locations in the hardware.
+> > > 
+> > > Now you are adding ring buffer managment and all other sorts of things
+> > > just for your platform.  So make it a real subsystem tuned exactly for
+> > > what you need and NOT try to force it into the UIO interface (which
+> > > should know nothing about ring buffers...)
+> > 
+> > Thank you for elaborating the details. I will drop the plan to introduce a
+> > new UIO driver for this effort. However, I would like to know your thoughts
+> > on enhancing existing 'uio_hv_generic' driver to achieve the same.  We
+> > already have 'uio_hv_generic' driver in linux kernel, which is used for
+> > developing userspace drivers for 'fast Hyper-V devices'.
+> > 
+> > Since these newly introduced synthetic devices operate at a lower speed,
+> > they do not have the capability to support monitor bits. Instead, we must
+> > utilize the 'vmbus_setevent()' method to enable interrupts from the host.
+> > Earlier we made an attempt to support slow devices by uio_hv_generic :
+> > https://lore.kernel.org/lkml/1665685754-13971-1-git-send-email-ssengar@linux.microsoft.com/.
+> > At that time, the absence of userspace code (fcopy) hindered progress
+> > in this direction.
+> > 
+> > Acknowledging your valid concerns about introducing a new UIO driver for
+> > Hyper-V, I propose exploring the potential to enhance the existing
+> > 'uio_hv_generic' driver to accommodate slower devices effectively. My
+> > commitment to this endeavour includes ensuring the seamless operation of
+> > the existing 'fcopy' functionality with the modified 'uio_hv_generic'
+> > driver. Additionally, I will undertake the task of removing the current
+> > 'fcopy' kernel driver and userspace daemon as part of this effort.
+> > 
+> > Please let me know your thoughts. I look forward to your feedback and
+> > the opportunity to discuss this proposal further. 
+> 
+> Greg,
+> 
+> May I know if enhancing uio_hv_generic.c to support 'slow devices' is
+> an accptable approach ? I'm willing to undertake this task and propose
+> the necessary modifications.
+> 
+> - Saurabh
 
-Best regards,
-Alex Ionescu
+ping
 
-On Mon, Oct 2, 2023 at 8:41=E2=80=AFPM Nuno Das Neves
-<nunodasneves@linux.microsoft.com> wrote:
->
-> Hi Alex,
->
-> On 10/2/2023 12:35 PM, Alex Ionescu wrote:
-> > Hi Nuno,
-> >
-> > I understand the requirement to have
-> > undocumented/non-standard/non-TLFS-published information in the HDK
-> > headers, however, the current state of this patch is that for any
-> > other code that's not in the kernel today, or in this upcoming driver,
-> > the hyperv-tlfs definitions are incomplete, because some *documented*
-> > TLFS fields are only in HDK headers. Similarly, it is also impossible
->
-> If I understand correctly, you are saying there are documented
-> definitions (in the TLFS document), which are NOT in hyperv-tlfs.h, but
-> ARE in these new HDK headers, correct?
-
-Correct.
-
->
-> If these are needed elsewhere in the kernel, they can just be added to
-> hyperv-tlfs.h.
-
-OK, great, As the need arises I will submit patches here to do so (and
-source the TLFS page/paragraph as needed to help provide they're in
-there). Thank you!
-
->
-> > to only use the HDK headers for other use cases, because some basic
-> > documented, standard defines only exist in hyperv-tlfs. So there is no
-> > "logical" relationship between the two -- HDK headers are not _just_
-> > undocumented information, but also documented information, but also
-> > not complete documented information.
->
-> That is correct - they are meant to be independently compileable.
-> The new HDK headers only serve as a replacement *in our driver* when we
-> need some definitions like do_hypercall() etc in mshyperv.h.
-
-Understood.
-
->
-> >
-> > Would you consider:
-> >
-> > 1) Updating hyperv-tlfs with all newly documented TLFS fields that are
-> > in the HDK headers?
->
-> I think this can be done on an as-needed basis, as I outlined above.
-
-Sounds good.
-
->
-> > OR
-> > 2) Updating the new HDK headers you're adding here to also include
-> > previously-documented information from hyperv-tlfs? This way, someone
-> > can include the HDK headers and get everything they need
->
-> The new HDK headers are only intended for the new mshv driver.
->
-> > OR
-> > 3) Truly making hypertv-tlfs the "documented" header, and then > removi=
-ng any duplication from HDK so that it remains the
-> > "undocumented" header file. In this manner, one would include
-> > hyperv-tlfs to use the stable ABI, and they would include HDK (which
-> > would include hyperv-tlfs) to use the unstable+stable ABI.
->
-> hyperv-tlfs.h is remaining the "documented" header.
->
-> But, we can't make the HDK header depend on hyperv-tlfs.h, for 2 primary
-> reasons:
-> 1. We need to put the new HDK headers in uapi so that we can use them in
-> our IOCTL interface. As a result, we can't include hyperv-tlfs.h (unless
-> we put it in uapi as well).
-> 2. The HDK headers not only duplicate, but also MODIFY some structures
-> in hyperv-tlfs.h. e.g., The struct is in hyperv-tlfs.h, but a particular
-> field or bitfield is not.
-
-#2 was something I was worried about. Do you know if the
-standards/docs team is planning on updating the TLFS at some point
-with updates on their end? At which point I'd assume you'd be OK with
-patches to add them to hyperv-tlfs.h
-
-Thanks a lot!
-
---
-Best regards,
-Alex Ionescu
-
->
-> Thanks,
-> Nuno
->
-> >
-> > Thank you for your consideration.
-> >
-> > Best regards,
-> > Alex Ionescu
-> >
-> > On Fri, Sep 29, 2023 at 2:02=E2=80=AFPM Nuno Das Neves
-> > <nunodasneves@linux.microsoft.com> wrote:
-> >>
-> >> Add asm-generic/hyperv-defs.h. It includes hyperv-tlfs.h or hvhdk.h
-> >> depending on compile-time constant HV_HYPERV_DEFS which will be define=
-d in
-> >> the mshv driver.
-> >>
-> >> This is needed to keep unstable Hyper-V interfaces independent of
-> >> hyperv-tlfs.h. This ensures hvhdk.h replaces hyperv-tlfs.h in the mshv
-> >> driver, even via indirect includes.
-> >>
-> >> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-> >> Acked-by: Wei Liu <wei.liu@kernel.org>
-> >> ---
-> >>   arch/arm64/include/asm/mshyperv.h |  2 +-
-> >>   arch/x86/include/asm/mshyperv.h   |  3 +--
-> >>   drivers/hv/hyperv_vmbus.h         |  1 -
-> >>   include/asm-generic/hyperv-defs.h | 26 ++++++++++++++++++++++++++
-> >>   include/asm-generic/mshyperv.h    |  2 +-
-> >>   include/linux/hyperv.h            |  2 +-
-> >>   6 files changed, 30 insertions(+), 6 deletions(-)
-> >>   create mode 100644 include/asm-generic/hyperv-defs.h
-> >>
-> >> diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/as=
-m/mshyperv.h
-> >> index 20070a847304..8ec14caf3d4f 100644
-> >> --- a/arch/arm64/include/asm/mshyperv.h
-> >> +++ b/arch/arm64/include/asm/mshyperv.h
-> >> @@ -20,7 +20,7 @@
-> >>
-> >>   #include <linux/types.h>
-> >>   #include <linux/arm-smccc.h>
-> >> -#include <asm/hyperv-tlfs.h>
-> >> +#include <asm-generic/hyperv-defs.h>
-> >>
-> >>   /*
-> >>    * Declare calls to get and set Hyper-V VP register values on ARM64,=
- which
-> >> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/ms=
-hyperv.h
-> >> index e3768d787065..bb1b97106cd3 100644
-> >> --- a/arch/x86/include/asm/mshyperv.h
-> >> +++ b/arch/x86/include/asm/mshyperv.h
-> >> @@ -6,10 +6,9 @@
-> >>   #include <linux/nmi.h>
-> >>   #include <linux/msi.h>
-> >>   #include <linux/io.h>
-> >> -#include <asm/hyperv-tlfs.h>
-> >>   #include <asm/nospec-branch.h>
-> >>   #include <asm/paravirt.h>
-> >> -#include <asm/mshyperv.h>
-> >> +#include <asm-generic/hyperv-defs.h>
-> >>
-> >>   /*
-> >>    * Hyper-V always provides a single IO-APIC at this MMIO address.
-> >> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> >> index 09792eb4ffed..0e4bc18a13fa 100644
-> >> --- a/drivers/hv/hyperv_vmbus.h
-> >> +++ b/drivers/hv/hyperv_vmbus.h
-> >> @@ -15,7 +15,6 @@
-> >>   #include <linux/list.h>
-> >>   #include <linux/bitops.h>
-> >>   #include <asm/sync_bitops.h>
-> >> -#include <asm/hyperv-tlfs.h>
-> >>   #include <linux/atomic.h>
-> >>   #include <linux/hyperv.h>
-> >>   #include <linux/interrupt.h>
-> >> diff --git a/include/asm-generic/hyperv-defs.h b/include/asm-generic/h=
-yperv-defs.h
-> >> new file mode 100644
-> >> index 000000000000..ac6fcba35c8c
-> >> --- /dev/null
-> >> +++ b/include/asm-generic/hyperv-defs.h
-> >> @@ -0,0 +1,26 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +#ifndef _ASM_GENERIC_HYPERV_DEFS_H
-> >> +#define _ASM_GENERIC_HYPERV_DEFS_H
-> >> +
-> >> +/*
-> >> + * There are cases where Microsoft Hypervisor ABIs are needed which m=
-ay not be
-> >> + * stable or present in the Hyper-V TLFS document. E.g. the mshv_root=
- driver.
-> >> + *
-> >> + * As these interfaces are unstable and may differ from hyperv-tlfs.h=
-, they
-> >> + * must be kept separate and independent.
-> >> + *
-> >> + * However, code from files that depend on hyperv-tlfs.h (such as msh=
-yperv.h)
-> >> + * is still needed, so work around the issue by conditionally includi=
-ng the
-> >> + * correct definitions.
-> >> + *
-> >> + * Note: Since they are independent of each other, there are many def=
-initions
-> >> + * duplicated in both hyperv-tlfs.h and uapi/hyperv/hv*.h files.
-> >> + */
-> >> +#ifdef HV_HYPERV_DEFS
-> >> +#include <uapi/hyperv/hvhdk.h>
-> >> +#else
-> >> +#include <asm/hyperv-tlfs.h>
-> >> +#endif
-> >> +
-> >> +#endif /* _ASM_GENERIC_HYPERV_DEFS_H */
-> >> +
-> >> diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshy=
-perv.h
-> >> index d832852d0ee7..6bef0d59d1b7 100644
-> >> --- a/include/asm-generic/mshyperv.h
-> >> +++ b/include/asm-generic/mshyperv.h
-> >> @@ -25,7 +25,7 @@
-> >>   #include <linux/cpumask.h>
-> >>   #include <linux/nmi.h>
-> >>   #include <asm/ptrace.h>
-> >> -#include <asm/hyperv-tlfs.h>
-> >> +#include <asm-generic/hyperv-defs.h>
-> >>
-> >>   #define VTPM_BASE_ADDRESS 0xfed40000
-> >>
-> >> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> >> index 4d5a5e39d76c..722a8cf23d87 100644
-> >> --- a/include/linux/hyperv.h
-> >> +++ b/include/linux/hyperv.h
-> >> @@ -24,7 +24,7 @@
-> >>   #include <linux/mod_devicetable.h>
-> >>   #include <linux/interrupt.h>
-> >>   #include <linux/reciprocal_div.h>
-> >> -#include <asm/hyperv-tlfs.h>
-> >> +#include <asm-generic/hyperv-defs.h>
-> >>
-> >>   #define MAX_PAGE_BUFFER_COUNT                          32
-> >>   #define MAX_MULTIPAGE_BUFFER_COUNT                     32 /* 128K */
-> >> --
-> >> 2.25.1
-> >>
-> >>
->
+> 
+> > 
+> > - Saurabh
 
