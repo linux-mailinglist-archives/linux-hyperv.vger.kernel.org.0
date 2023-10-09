@@ -1,596 +1,247 @@
-Return-Path: <linux-hyperv+bounces-483-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-484-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23BB37BDA9F
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Oct 2023 14:03:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C7AC7BECB8
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Oct 2023 23:19:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 470251C208C7
-	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Oct 2023 12:03:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1776428161C
+	for <lists+linux-hyperv@lfdr.de>; Mon,  9 Oct 2023 21:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8AE218B1F;
-	Mon,  9 Oct 2023 12:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00BB54123A;
+	Mon,  9 Oct 2023 21:19:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TBQtuFCA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AR02btZ4"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CBD63DF
-	for <linux-hyperv@vger.kernel.org>; Mon,  9 Oct 2023 12:03:54 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF0199
-	for <linux-hyperv@vger.kernel.org>; Mon,  9 Oct 2023 05:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1696853031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vsw6MWQRW+N2YsbH4qu0RKFRaC+YmvclR1WLHRhNETc=;
-	b=TBQtuFCA0m2+N9QvGOFK3Hpygui8Tvubg5zbAPZRgNiT3SP7HQtWgTUYSZg751NeJo1Z8y
-	UYEtfX8KEQUmIsNWCz2vrbnoVhBLTh4xpRDoDk3ow+jokVyUShfCbdF0IXsFNzfWKgHez8
-	KcTYR+KYNBvitDbKQWYH2YwppNjAZFI=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-38-4eb7YT_wN1uy8-MgKwsrVA-1; Mon, 09 Oct 2023 08:02:42 -0400
-X-MC-Unique: 4eb7YT_wN1uy8-MgKwsrVA-1
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1c754ee3ec5so42917365ad.2
-        for <linux-hyperv@vger.kernel.org>; Mon, 09 Oct 2023 05:02:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696852961; x=1697457761;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vsw6MWQRW+N2YsbH4qu0RKFRaC+YmvclR1WLHRhNETc=;
-        b=pLw3gMqPRjF5OxS7Gbjwo1kq2mIoeQT4O7Wbt9tIMSn5RumnSuxnvB5Hy21YDY2hui
-         UrDpPr1JWDB31iu0PhwZCwErbMwVQdaNgO4TUwHzJsy+Lnft/7XO0RW+/R+TDUcqtYlI
-         IboKytAZybv+whFKZm6gu0EGZ5TyjBRCnydB9EEbcVKFfizr4u1sM8S9cdd2E9NhG8tH
-         Yi/QTvZ6k3I9bE46EBXXIrJqH6bJPhIURnsgYJQd+W3mjdcuSvsIzkF8Vf/sYrAP28L6
-         BYm4hqRsDX/0c7os32pNqTgmuiWyWH6e11aZDYfdjEa27JbsKfJ7qVO3Jh8dr7PhkKzG
-         5qOQ==
-X-Gm-Message-State: AOJu0YzezMAbXzDCo4MctOKaT9H7YxCDNEzdcEEdRmK5VRDgfsUKfkUg
-	Al/2RSKiIPAqM1Syi0JjZpJ9gejXvarvmt0rEnegYageJ+Tvl9uUCclhGsh6g/uhilg3h40Ro0h
-	a0twsXJY/wtjeTUqm3myqd0o0
-X-Received: by 2002:a17:902:d2c3:b0:1c4:4efc:90a6 with SMTP id n3-20020a170902d2c300b001c44efc90a6mr20837873plc.38.1696852961311;
-        Mon, 09 Oct 2023 05:02:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHDDSdBFku5EVgEFTYiiw6J5dxw4+WtDstnksVxNrjrfRQvt5cdGw3vhQ3ITSh5+sL6GXkR3w==
-X-Received: by 2002:a17:902:d2c3:b0:1c4:4efc:90a6 with SMTP id n3-20020a170902d2c300b001c44efc90a6mr20837832plc.38.1696852960828;
-        Mon, 09 Oct 2023 05:02:40 -0700 (PDT)
-Received: from smtpclient.apple ([115.96.136.216])
-        by smtp.gmail.com with ESMTPSA id b12-20020a170902d50c00b001b9f032bb3dsm9416020plg.3.2023.10.09.05.02.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 09 Oct 2023 05:02:40 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C3237C8C;
+	Mon,  9 Oct 2023 21:19:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1D85C433C8;
+	Mon,  9 Oct 2023 21:18:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696886348;
+	bh=TSGItzmReuXxWm++8av4ew2EUzZA35IjrSGdiAa7ie8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AR02btZ4mgp9dab3ACYI6igrBGiVFEQdmNWNcxHdD8UJq1EhYHaLIGjb3Cwv4s+g+
+	 mmathlc5Veu0bcn46YVnxKQY9ABGfLimELcNw0klUlNtKHXpOmX5SgqRxTUCkLFS3o
+	 ZS0Ueu7JemOZJOGzANL0FRGqVPg0BpVr9dfyhsQ5nDwbUv63LLomoFEIvX/7i3O4Bj
+	 U55wVSdhQ8c2iMBNqigs0yUvbVUtg7hwnPp/Vnt3CUqJhGNKIVOsAVmLVPmdhMkwyJ
+	 uLzJxnSI5zcAdgJpatcdE4e1r1jp90wyIblBOJG7uZmhXO5MwaO5T8h/WirbhImG9y
+	 IaGxkq1DM1dMw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Deepak Rawat <drawat.floss@gmail.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guo Ren <guoren@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Khalid Aziz <khalid@gonehiking.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Wei Liu <wei.liu@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	x86@kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-efi@vger.kernel.org,
+	linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org,
+	linux-ia64@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH v3 0/9] video: screen_info cleanups
+Date: Mon,  9 Oct 2023 23:18:36 +0200
+Message-Id: <20231009211845.3136536-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.4\))
-Subject: Re: [PATCH v8] hv/hv_kvp_daemon:Support for keyfile based connection
- profile
-From: Ani Sinha <anisinha@redhat.com>
-In-Reply-To: <1696847920-31125-1-git-send-email-shradhagupta@linux.microsoft.com>
-Date: Mon, 9 Oct 2023 17:32:35 +0530
-Cc: linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Long Li <longli@microsoft.com>,
- Michael Kelley <mikelley@microsoft.com>,
- Olaf Hering <olaf@aepfle.de>,
- Shradha Gupta <shradhagupta@microsoft.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DF08C86E-1EFA-4C74-A5E7-190B52698F85@redhat.com>
-References: <1696847920-31125-1-git-send-email-shradhagupta@linux.microsoft.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.4)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-	version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+From: Arnd Bergmann <arnd@arndb.de>
+
+v3 changelog
+
+No real changes, just rebased for context changes, and picked up the Acks.
+
+This now conflicts with the ia64 removal and introduces one new dependency
+on IA64, but that is harmless and trivial to deal with later.
+
+Link: https://lore.kernel.org/lkml/20230719123944.3438363-1-arnd@kernel.org/
+---
+v2 changelog
+
+I refreshed the first four patches that I sent before with very minor
+updates, and then added some more to further disaggregate the use
+of screen_info:
+
+ - I found that powerpc wasn't using vga16fb any more
+
+ - vgacon can be almost entirely separated from the global
+   screen_info, except on x86
+
+ - similarly, the EFI framebuffer initialization can be
+   kept separate, except on x86.
+
+I did extensive build testing on arm/arm64/x86 and the normal built bot
+testing for the other architectures.
+
+Which tree should this get merged through?
+
+Link: https://lore.kernel.org/lkml/20230707095415.1449376-1-arnd@kernel.org/
 
 
+Arnd Bergmann (9):
+  vgacon: rework Kconfig dependencies
+  vgacon: rework screen_info #ifdef checks
+  dummycon: limit Arm console size hack to footbridge
+  vgacon, arch/*: remove unused screen_info definitions
+  vgacon: remove screen_info dependency
+  vgacon: clean up global screen_info instances
+  vga16fb: drop powerpc support
+  hyperv: avoid dependency on screen_info
+  efi: move screen_info into efi init code
 
-> On 09-Oct-2023, at 4:08 PM, Shradha Gupta =
-<shradhagupta@linux.microsoft.com> wrote:
->=20
-> Ifcfg config file support in NetworkManger is deprecated. This patch
-> provides support for the new keyfile config format for connection
-> profiles in NetworkManager. The patch modifies the hv_kvp_daemon code
-> to generate the new network configuration in keyfile
-> format(.ini-style format) along with a ifcfg format configuration.
-> The ifcfg format configuration is also retained to support easy
-> backward compatibility for distro vendors. These configurations are
-> stored in temp files which are further translated using the
-> hv_set_ifconfig.sh script. This script is implemented by individual
-> distros based on the network management commands supported.
-> For example, RHEL's implementation could be found here:
-> =
-https://gitlab.com/redhat/centos-stream/src/hyperv-daemons/-/blob/c9s/hv_s=
-et_ifconfig.sh
-> Debian's implementation could be found here:
-> =
-https://github.com/endlessm/linux/blob/master/debian/cloud-tools/hv_set_if=
-config
->=20
-> The next part of this support is to let the Distro vendors consume
-> these modified implementations to the new configuration format.
->=20
-> Tested-on: Rhel9(Hyper-V, Azure)(nm and ifcfg files verified)
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+ arch/alpha/kernel/proto.h                     |  2 +
+ arch/alpha/kernel/setup.c                     |  8 +--
+ arch/alpha/kernel/sys_sio.c                   |  8 ++-
+ arch/arm/include/asm/setup.h                  |  5 ++
+ arch/arm/kernel/atags_parse.c                 | 20 +++---
+ arch/arm/kernel/efi.c                         |  6 --
+ arch/arm/kernel/setup.c                       | 11 +--
+ arch/arm64/kernel/efi.c                       |  4 --
+ arch/arm64/kernel/image-vars.h                |  2 +
+ arch/csky/kernel/setup.c                      | 12 ----
+ arch/hexagon/kernel/Makefile                  |  2 -
+ arch/hexagon/kernel/screen_info.c             |  3 -
+ arch/ia64/kernel/setup.c                      | 53 ++++++++-------
+ arch/loongarch/kernel/efi.c                   |  3 +-
+ arch/loongarch/kernel/image-vars.h            |  2 +
+ arch/loongarch/kernel/setup.c                 |  3 -
+ arch/mips/jazz/setup.c                        |  9 ---
+ arch/mips/kernel/setup.c                      | 11 ---
+ arch/mips/mti-malta/malta-setup.c             |  4 +-
+ arch/mips/sibyte/swarm/setup.c                | 26 ++++---
+ arch/mips/sni/setup.c                         | 18 ++---
+ arch/nios2/kernel/setup.c                     |  5 --
+ arch/powerpc/kernel/setup-common.c            | 16 -----
+ arch/riscv/kernel/image-vars.h                |  2 +
+ arch/riscv/kernel/setup.c                     | 12 ----
+ arch/sh/kernel/setup.c                        |  5 --
+ arch/sparc/kernel/setup_32.c                  | 13 ----
+ arch/sparc/kernel/setup_64.c                  | 13 ----
+ arch/x86/kernel/setup.c                       |  2 +-
+ arch/xtensa/kernel/setup.c                    | 12 ----
+ drivers/firmware/efi/efi-init.c               | 14 +++-
+ drivers/firmware/efi/libstub/efi-stub-entry.c |  8 ++-
+ drivers/firmware/pcdp.c                       |  1 -
+ drivers/gpu/drm/hyperv/hyperv_drm_drv.c       |  7 +-
+ drivers/hv/vmbus_drv.c                        |  6 +-
+ drivers/video/console/Kconfig                 | 11 +--
+ drivers/video/console/dummycon.c              |  2 +-
+ drivers/video/console/vgacon.c                | 68 +++++++++++--------
+ drivers/video/fbdev/Kconfig                   |  2 +-
+ drivers/video/fbdev/hyperv_fb.c               |  8 +--
+ drivers/video/fbdev/vga16fb.c                 |  9 +--
+ include/linux/console.h                       |  7 ++
+ 42 files changed, 183 insertions(+), 252 deletions(-)
+ delete mode 100644 arch/hexagon/kernel/screen_info.c
 
-Reviewed-by: Ani Sinha <anisinha@redhat.com>
+-- 
+2.39.2
 
-> ---
-> Changes v7->v8
-> * Fix some filename variable names to avoid confusion
-> * Add initialization of is_ipv6 variable
-> * Add a few comments
-> ---
-> tools/hv/hv_kvp_daemon.c    | 233 +++++++++++++++++++++++++++++++-----
-> tools/hv/hv_set_ifconfig.sh |  39 +++++-
-> 2 files changed, 235 insertions(+), 37 deletions(-)
->=20
-> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> index 27f5e7dfc2f7..264eeb9c46a9 100644
-> --- a/tools/hv/hv_kvp_daemon.c
-> +++ b/tools/hv/hv_kvp_daemon.c
-> @@ -1171,12 +1171,79 @@ static int process_ip_string(FILE *f, char =
-*ip_string, int type)
-> 	return 0;
-> }
->=20
-> +/*
-> + * Only IPv4 subnet strings needs to be converted to plen
-> + * For IPv6 the subnet is already privided in plen format
-> + */
-> +static int kvp_subnet_to_plen(char *subnet_addr_str)
-> +{
-> +	int plen =3D 0;
-> +	struct in_addr subnet_addr4;
-> +
-> +	/*
-> +	 * Convert subnet address to binary representation
-> +	 */
-> +	if (inet_pton(AF_INET, subnet_addr_str, &subnet_addr4) =3D=3D 1) =
-{
-> +		uint32_t subnet_mask =3D ntohl(subnet_addr4.s_addr);
-> +
-> +		while (subnet_mask & 0x80000000) {
-> +			plen++;
-> +			subnet_mask <<=3D 1;
-> +		}
-> +	} else {
-> +		return -1;
-> +	}
-> +
-> +	return plen;
-> +}
-> +
-> +static int process_ip_string_nm(FILE *f, char *ip_string, char =
-*subnet,
-> +				int is_ipv6)
-> +{
-> +	char addr[INET6_ADDRSTRLEN];
-> +	char subnet_addr[INET6_ADDRSTRLEN];
-> +	int error, i =3D 0;
-> +	int ip_offset =3D 0, subnet_offset =3D 0;
-> +	int plen;
-> +
-> +	memset(addr, 0, sizeof(addr));
-> +	memset(subnet_addr, 0, sizeof(subnet_addr));
-> +
-> +	while (parse_ip_val_buffer(ip_string, &ip_offset, addr,
-> +				   (MAX_IP_ADDR_SIZE * 2)) &&
-> +				   parse_ip_val_buffer(subnet,
-> +						       &subnet_offset,
-> +						       subnet_addr,
-> +						       (MAX_IP_ADDR_SIZE =
-*
-> +							2))) {
-> +		if (!is_ipv6)
-> +			plen =3D kvp_subnet_to_plen((char =
-*)subnet_addr);
-> +		else
-> +			plen =3D atoi(subnet_addr);
-> +
-> +		if (plen < 0)
-> +			return plen;
-> +
-> +		error =3D fprintf(f, "address%d=3D%s/%d\n", ++i, (char =
-*)addr,
-> +				plen);
-> +		if (error < 0)
-> +			return error;
-> +
-> +		memset(addr, 0, sizeof(addr));
-> +		memset(subnet_addr, 0, sizeof(subnet_addr));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> static int kvp_set_ip_info(char *if_name, struct hv_kvp_ipaddr_value =
-*new_val)
-> {
-> 	int error =3D 0;
-> -	char if_file[PATH_MAX];
-> -	FILE *file;
-> +	char if_filename[PATH_MAX];
-> +	char nm_filename[PATH_MAX];
-> +	FILE *ifcfg_file, *nmfile;
-> 	char cmd[PATH_MAX];
-> +	int is_ipv6 =3D 0;
-> 	char *mac_addr;
-> 	int str_len;
->=20
-> @@ -1197,7 +1264,7 @@ static int kvp_set_ip_info(char *if_name, struct =
-hv_kvp_ipaddr_value *new_val)
-> 	 * in a given distro to configure the interface and so are free
-> 	 * ignore information that may not be relevant.
-> 	 *
-> -	 * Here is the format of the ip configuration file:
-> +	 * Here is the ifcfg format of the ip configuration file:
-> 	 *
-> 	 * HWADDR=3Dmacaddr
-> 	 * DEVICE=3Dinterface name
-> @@ -1220,6 +1287,32 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
-> 	 * tagged as IPV6_DEFAULTGW and IPV6 NETMASK will be tagged as
-> 	 * IPV6NETMASK.
-> 	 *
-> +	 * Here is the keyfile format of the ip configuration file:
-> +	 *
-> +	 * [ethernet]
-> +	 * mac-address=3Dmacaddr
-> +	 * [connection]
-> +	 * interface-name=3Dinterface name
-> +	 *
-> +	 * [ipv4]
-> +	 * method=3D<protocol> (where <protocol> is "auto" if DHCP is =
-configured
-> +	 *                       or "manual" if no boot-time protocol =
-should be used)
-> +	 *
-> +	 * address1=3Dipaddr1/plen
-> +	 * address2=3Dipaddr2/plen
-> +	 *
-> +	 * gateway=3Dgateway1;gateway2
-> +	 *
-> +	 * dns=3Ddns1;dns2
-> +	 *
-> +	 * [ipv6]
-> +	 * address1=3Dipaddr1/plen
-> +	 * address2=3Dipaddr2/plen
-> +	 *
-> +	 * gateway=3Dgateway1;gateway2
-> +	 *
-> +	 * dns=3Ddns1;dns2
-> +	 *
-> 	 * The host can specify multiple ipv4 and ipv6 addresses to be
-> 	 * configured for the interface. Furthermore, the configuration
-> 	 * needs to be persistent. A subsequent GET call on the =
-interface
-> @@ -1227,14 +1320,29 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
-> 	 * call.
-> 	 */
->=20
-> -	snprintf(if_file, sizeof(if_file), "%s%s%s", KVP_CONFIG_LOC,
-> -		"/ifcfg-", if_name);
-> +	/*
-> +	 * We are populating both ifcfg and nmconnection files
-> +	 */
-> +	snprintf(if_filename, sizeof(if_filename), "%s%s%s", =
-KVP_CONFIG_LOC,
-> +		 "/ifcfg-", if_name);
->=20
-> -	file =3D fopen(if_file, "w");
-> +	ifcfg_file =3D fopen(if_filename, "w");
->=20
-> -	if (file =3D=3D NULL) {
-> +	if (!ifcfg_file) {
-> 		syslog(LOG_ERR, "Failed to open config file; error: %d =
-%s",
-> -				errno, strerror(errno));
-> +		       errno, strerror(errno));
-> +		return HV_E_FAIL;
-> +	}
-> +
-> +	snprintf(nm_filename, sizeof(nm_filename), "%s%s%s%s", =
-KVP_CONFIG_LOC,
-> +		 "/", if_name, ".nmconnection");
-> +
-> +	nmfile =3D fopen(nm_filename, "w");
-> +
-> +	if (!nmfile) {
-> +		syslog(LOG_ERR, "Failed to open config file; error: %d =
-%s",
-> +		       errno, strerror(errno));
-> +		fclose(ifcfg_file);
-> 		return HV_E_FAIL;
-> 	}
->=20
-> @@ -1248,14 +1356,31 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
-> 		goto setval_error;
-> 	}
->=20
-> -	error =3D kvp_write_file(file, "HWADDR", "", mac_addr);
-> -	free(mac_addr);
-> +	error =3D kvp_write_file(ifcfg_file, "HWADDR", "", mac_addr);
-> +	if (error < 0)
-> +		goto setmac_error;
-> +
-> +	error =3D kvp_write_file(ifcfg_file, "DEVICE", "", if_name);
-> +	if (error < 0)
-> +		goto setmac_error;
-> +
-> +	error =3D fprintf(nmfile, "\n[connection]\n");
-> +	if (error < 0)
-> +		goto setmac_error;
-> +
-> +	error =3D kvp_write_file(nmfile, "interface-name", "", if_name);
-> 	if (error)
-> -		goto setval_error;
-> +		goto setmac_error;
->=20
-> -	error =3D kvp_write_file(file, "DEVICE", "", if_name);
-> +	error =3D fprintf(nmfile, "\n[ethernet]\n");
-> +	if (error < 0)
-> +		goto setmac_error;
-> +
-> +	error =3D kvp_write_file(nmfile, "mac-address", "", mac_addr);
-> 	if (error)
-> -		goto setval_error;
-> +		goto setmac_error;
-> +
-> +	free(mac_addr);
->=20
-> 	/*
-> 	 * The dhcp_enabled flag is only for IPv4. In the case the host =
-only
-> @@ -1263,47 +1388,91 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
-> 	 * proceed to parse and pass the IPv6 information to the
-> 	 * disto-specific script hv_set_ifconfig.
-> 	 */
-> +
-> +	/*
-> +	 * First populate the ifcfg file format
-> +	 */
-> 	if (new_val->dhcp_enabled) {
-> -		error =3D kvp_write_file(file, "BOOTPROTO", "", "dhcp");
-> +		error =3D kvp_write_file(ifcfg_file, "BOOTPROTO", "", =
-"dhcp");
-> 		if (error)
-> 			goto setval_error;
-> -
-> 	} else {
-> -		error =3D kvp_write_file(file, "BOOTPROTO", "", "none");
-> +		error =3D kvp_write_file(ifcfg_file, "BOOTPROTO", "", =
-"none");
-> 		if (error)
-> 			goto setval_error;
-> 	}
->=20
-> -	/*
-> -	 * Write the configuration for ipaddress, netmask, gateway and
-> -	 * name servers.
-> -	 */
-> -
-> -	error =3D process_ip_string(file, (char *)new_val->ip_addr, =
-IPADDR);
-> +	error =3D process_ip_string(ifcfg_file, (char =
-*)new_val->ip_addr,
-> +				  IPADDR);
-> 	if (error)
-> 		goto setval_error;
->=20
-> -	error =3D process_ip_string(file, (char *)new_val->sub_net, =
-NETMASK);
-> +	error =3D process_ip_string(ifcfg_file, (char =
-*)new_val->sub_net,
-> +				  NETMASK);
-> 	if (error)
-> 		goto setval_error;
->=20
-> -	error =3D process_ip_string(file, (char *)new_val->gate_way, =
-GATEWAY);
-> +	error =3D process_ip_string(ifcfg_file, (char =
-*)new_val->gate_way,
-> +				  GATEWAY);
-> 	if (error)
-> 		goto setval_error;
->=20
-> -	error =3D process_ip_string(file, (char *)new_val->dns_addr, =
-DNS);
-> +	error =3D process_ip_string(ifcfg_file, (char =
-*)new_val->dns_addr, DNS);
-> 	if (error)
-> 		goto setval_error;
->=20
-> -	fclose(file);
-> +	if (new_val->addr_family =3D=3D ADDR_FAMILY_IPV6) {
-> +		error =3D fprintf(nmfile, "\n[ipv6]\n");
-> +		if (error < 0)
-> +			goto setval_error;
-> +		is_ipv6 =3D 1;
-> +	} else {
-> +		error =3D fprintf(nmfile, "\n[ipv4]\n");
-> +		if (error < 0)
-> +			goto setval_error;
-> +	}
-> +
-> +	/*
-> +	 * Now we populate the keyfile format
-> +	 */
-> +
-> +	if (new_val->dhcp_enabled) {
-> +		error =3D kvp_write_file(nmfile, "method", "", "auto");
-> +		if (error < 0)
-> +			goto setval_error;
-> +	} else {
-> +		error =3D kvp_write_file(nmfile, "method", "", =
-"manual");
-> +		if (error < 0)
-> +			goto setval_error;
-> +	}
-> +
-> +	/*
-> +	 * Write the configuration for ipaddress, netmask, gateway and
-> +	 * name services
-> +	 */
-> +	error =3D process_ip_string_nm(nmfile, (char *)new_val->ip_addr,
-> +				     (char *)new_val->sub_net, is_ipv6);
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	error =3D fprintf(nmfile, "gateway=3D%s\n", (char =
-*)new_val->gate_way);
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	error =3D fprintf(nmfile, "dns=3D%s\n", (char =
-*)new_val->dns_addr);
-> +	if (error < 0)
-> +		goto setval_error;
-> +
-> +	fclose(nmfile);
-> +	fclose(ifcfg_file);
->=20
-> 	/*
-> 	 * Now that we have populated the configuration file,
-> 	 * invoke the external script to do its magic.
-> 	 */
->=20
-> -	str_len =3D snprintf(cmd, sizeof(cmd), KVP_SCRIPTS_PATH "%s %s",
-> -			   "hv_set_ifconfig", if_file);
-> +	str_len =3D snprintf(cmd, sizeof(cmd), KVP_SCRIPTS_PATH "%s %s =
-%s",
-> +			   "hv_set_ifconfig", if_filename, nm_filename);
-> 	/*
-> 	 * This is a little overcautious, but it's necessary to suppress =
-some
-> 	 * false warnings from gcc 8.0.1.
-> @@ -1316,14 +1485,16 @@ static int kvp_set_ip_info(char *if_name, =
-struct hv_kvp_ipaddr_value *new_val)
->=20
-> 	if (system(cmd)) {
-> 		syslog(LOG_ERR, "Failed to execute cmd '%s'; error: %d =
-%s",
-> -				cmd, errno, strerror(errno));
-> +		       cmd, errno, strerror(errno));
-> 		return HV_E_FAIL;
-> 	}
-> 	return 0;
-> -
-> +setmac_error:
-> +	free(mac_addr);
-> setval_error:
-> 	syslog(LOG_ERR, "Failed to write config file");
-> -	fclose(file);
-> +	fclose(ifcfg_file);
-> +	fclose(nmfile);
-> 	return error;
-> }
->=20
-> diff --git a/tools/hv/hv_set_ifconfig.sh b/tools/hv/hv_set_ifconfig.sh
-> index d10fe35b7f25..ae5a7a8249a2 100755
-> --- a/tools/hv/hv_set_ifconfig.sh
-> +++ b/tools/hv/hv_set_ifconfig.sh
-> @@ -18,12 +18,12 @@
-> #
-> # This example script is based on a RHEL environment.
-> #
-> -# Here is the format of the ip configuration file:
-> +# Here is the ifcfg format of the ip configuration file:
-> #
-> # HWADDR=3Dmacaddr
-> # DEVICE=3Dinterface name
-> # BOOTPROTO=3D<protocol> (where <protocol> is "dhcp" if DHCP is =
-configured
-> -#                       or "none" if no boot-time protocol should be =
-used)
-> +# 			or "none" if no boot-time protocol should be =
-used)
-> #
-> # IPADDR0=3Dipaddr1
-> # IPADDR1=3Dipaddr2
-> @@ -41,6 +41,32 @@
-> # tagged as IPV6_DEFAULTGW and IPV6 NETMASK will be tagged as
-> # IPV6NETMASK.
-> #
-> +# Here is the keyfile format of the ip configuration file:
-> +#
-> +# [ethernet]
-> +# mac-address=3Dmacaddr
-> +# [connection]
-> +# interface-name=3Dinterface name
-> +#
-> +# [ipv4]
-> +# method=3D<protocol> (where <protocol> is "auto" if DHCP is =
-configured
-> +#                       or "manual" if no boot-time protocol should =
-be used)
-> +#
-> +# address1=3Dipaddr1/plen
-> +# address=3Dipaddr2/plen
-> +#
-> +# gateway=3Dgateway1;gateway2
-> +#
-> +# dns=3Ddns1;
-> +#
-> +# [ipv6]
-> +# address1=3Dipaddr1/plen
-> +# address2=3Dipaddr1/plen
-> +#
-> +# gateway=3Dgateway1;gateway2
-> +#
-> +# dns=3Ddns1;dns2
-> +#
-> # The host can specify multiple ipv4 and ipv6 addresses to be
-> # configured for the interface. Furthermore, the configuration
-> # needs to be persistent. A subsequent GET call on the interface
-> @@ -48,18 +74,19 @@
-> # call.
-> #
->=20
-> -
-> -
-> echo "IPV6INIT=3Dyes" >> $1
-> echo "NM_CONTROLLED=3Dno" >> $1
-> echo "PEERDNS=3Dyes" >> $1
-> echo "ONBOOT=3Dyes" >> $1
->=20
-> -
-> cp $1 /etc/sysconfig/network-scripts/
->=20
-> +chmod 600 $2
-> +interface=3D$(echo $2 | awk -F - '{ print $2 }')
-> +filename=3D"${2##*/}"
-> +
-> +sed '/\[connection\]/a autoconnect=3Dtrue' $2 > =
-/etc/NetworkManager/system-connections/${filename}
->=20
-> -interface=3D$(echo $1 | awk -F - '{ print $2 }')
->=20
-> /sbin/ifdown $interface 2>/dev/null
-> /sbin/ifup $interface 2>/dev/null
-> --=20
-> 2.34.1
->=20
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Cain <bcain@quicinc.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Deepak Rawat <drawat.floss@gmail.com>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Khalid Aziz <khalid@gonehiking.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: x86@kernel.org
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-efi@vger.kernel.org
+Cc: linux-csky@vger.kernel.org
+Cc: linux-hexagon@vger.kernel.org
+Cc: linux-ia64@vger.kernel.org
+Cc: loongarch@lists.linux.dev
+Cc: linux-mips@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-fbdev@vger.kernel.org
 
 
