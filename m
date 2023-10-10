@@ -1,67 +1,58 @@
-Return-Path: <linux-hyperv+bounces-494-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-495-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCFD07BF1A3
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Oct 2023 05:43:17 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E2CD7BF251
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Oct 2023 07:39:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7357A281960
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Oct 2023 03:43:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F3A02818E8
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Oct 2023 05:39:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B72823C1;
-	Tue, 10 Oct 2023 03:43:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0119863A1;
+	Tue, 10 Oct 2023 05:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4D415AE
-	for <linux-hyperv@vger.kernel.org>; Tue, 10 Oct 2023 03:43:12 +0000 (UTC)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C4B92;
-	Mon,  9 Oct 2023 20:43:11 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5a24b03e22eso64084637b3.0;
-        Mon, 09 Oct 2023 20:43:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F12433CF
+	for <linux-hyperv@vger.kernel.org>; Tue, 10 Oct 2023 05:39:40 +0000 (UTC)
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC2592;
+	Mon,  9 Oct 2023 22:39:38 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1c8a1541233so14094005ad.1;
+        Mon, 09 Oct 2023 22:39:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696909391; x=1697514191;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jaC1CNi7JQmmxrWwxbdaMek4eXwXT8OMu+wQdUBVHH8=;
-        b=AlCHB8RLVm/jnH2cdJHHbEWDS5uwiLYvvNGdanxdPiuMKmxQ9TaMTGOE/XBaXOBaN5
-         F/Dpl189PjBIoWmrVDmTTvIF155n1qm9qdAgj+tMMnKoggOzDINj4qLh26Kj3chqJSUI
-         BmLKyYogNlS9q6VMa2jWNdWYtAoKa0UAT806xstpuIxwobxcZD4QxigAlQyOaTkx0jc6
-         6XpvXNpY0ahSC0RpXUxy/JIqn9WhroOWKeqdU+DgpUzMCAaDOzYZIK6BD6fDdr8CreJO
-         jxsKcUfgigZq3h1/5pVHQpy4mZUeaHdPFqnTjoJbIX4JmBuhwvsMjUfLUM2Mv2OHWIsy
-         Uuxg==
-X-Gm-Message-State: AOJu0YyEftlHUqM/nmuW9SiZ9vJiUP1+BUBFiQprFDtZJD9cnfpkjmv/
-	wChCeu3Y5PPTzI+FOwUwveyIpX+UoQw=
-X-Google-Smtp-Source: AGHT+IGkwXsDV84jHLcmj9BirA1TG3zfHkKLT3nhlSDzWQOoTcDELHL36PAkT1Y8XQgJ48Wzzw412A==
-X-Received: by 2002:a81:df04:0:b0:5a1:fb1d:740a with SMTP id c4-20020a81df04000000b005a1fb1d740amr17465761ywn.51.1696909390819;
-        Mon, 09 Oct 2023 20:43:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696916378; x=1697521178;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Au6Nx9TnUJPD8zSiRBmFk2cposcSdk1o0pXT9wfYC5E=;
+        b=hUBiMb0zSGQF75XqBybSe1Bca/uJMF8MBJi7HEYevEYCyFmQjZPAnjMG5Rm0nAq3Vj
+         /Pi+76iWUKgV1R8nKU0J6fSc7ZMhyc1E8bnGs9KoL+hQKe2NxWUYFOdXBzaBPpaaOtC5
+         C+s5k7JRrILU7RgpDWpUl3GloRr8+Dh9WIwGQFBTgkjvUgxZ+BIbfyQO4Gi/U8xexSvM
+         etp6mNZi74gkRGAIfN4+n3AGFlZIlI+YyXwDFTE9RaUJXaekbHxZEzFSw28NvZtQrdiP
+         7cRAE7tzayPk89dnSWsYggXRMV2ANcJDZrqc3U35DMvwTX2/51wk7MyHD0Gj7ohm3o9q
+         Qocw==
+X-Gm-Message-State: AOJu0YzGJMqqb2GvLiiRNOuejAQDgMfESGfW4nKgMc6HtzFm9lfWA9ed
+	YMHYCwfADxrnwayuWL8+f2o=
+X-Google-Smtp-Source: AGHT+IG+iTZxeF8sSqUxSo6CL6v/dyUbR6XlzP422btQibVNaZowGqHy9yXyfZowgqqXf8lgH3L41A==
+X-Received: by 2002:a17:903:246:b0:1c0:b84d:3f73 with SMTP id j6-20020a170903024600b001c0b84d3f73mr16875833plh.53.1696916377478;
+        Mon, 09 Oct 2023 22:39:37 -0700 (PDT)
 Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id d9-20020a639909000000b0059b2316be86sm543016pge.46.2023.10.09.20.43.09
+        by smtp.gmail.com with ESMTPSA id u18-20020a170902e5d200b001c6052152fdsm10599982plf.50.2023.10.09.22.39.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Oct 2023 20:43:10 -0700 (PDT)
-Date: Tue, 10 Oct 2023 03:43:08 +0000
+        Mon, 09 Oct 2023 22:39:37 -0700 (PDT)
+Date: Tue, 10 Oct 2023 05:39:35 +0000
 From: Wei Liu <wei.liu@kernel.org>
-To: Ani Sinha <anisinha@redhat.com>
-Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Michael Kelley <mikelley@microsoft.com>,
-	Olaf Hering <olaf@aepfle.de>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v8] hv/hv_kvp_daemon:Support for keyfile based connection
- profile
-Message-ID: <ZSTITGaGzR8wR1+h@liuwe-devbox-debian-v2>
-References: <1696847920-31125-1-git-send-email-shradhagupta@linux.microsoft.com>
- <DF08C86E-1EFA-4C74-A5E7-190B52698F85@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Wei Liu <wei.liu@kernel.org>,
+	Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>, kys@microsoft.com,
+	haiyangz@microsoft.com, decui@microsoft.com
+Subject: [GIT PULL] Hyper-V fixes for 6.6-rc6
+Message-ID: <ZSTjl1BsWyyh9COJ@liuwe-devbox-debian-v2>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -70,42 +61,49 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DF08C86E-1EFA-4C74-A5E7-190B52698F85@redhat.com>
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 09, 2023 at 05:32:35PM +0530, Ani Sinha wrote:
-> 
-> 
-> > On 09-Oct-2023, at 4:08 PM, Shradha Gupta <shradhagupta@linux.microsoft.com> wrote:
-> > 
-> > Ifcfg config file support in NetworkManger is deprecated. This patch
-> > provides support for the new keyfile config format for connection
-> > profiles in NetworkManager. The patch modifies the hv_kvp_daemon code
-> > to generate the new network configuration in keyfile
-> > format(.ini-style format) along with a ifcfg format configuration.
-> > The ifcfg format configuration is also retained to support easy
-> > backward compatibility for distro vendors. These configurations are
-> > stored in temp files which are further translated using the
-> > hv_set_ifconfig.sh script. This script is implemented by individual
-> > distros based on the network management commands supported.
-> > For example, RHEL's implementation could be found here:
-> > https://gitlab.com/redhat/centos-stream/src/hyperv-daemons/-/blob/c9s/hv_set_ifconfig.sh
-> > Debian's implementation could be found here:
-> > https://github.com/endlessm/linux/blob/master/debian/cloud-tools/hv_set_ifconfig
-> > 
-> > The next part of this support is to let the Distro vendors consume
-> > these modified implementations to the new configuration format.
-> > 
-> > Tested-on: Rhel9(Hyper-V, Azure)(nm and ifcfg files verified)
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> 
-> Reviewed-by: Ani Sinha <anisinha@redhat.com>
+Hi Linus,
 
-Applied to hyperv-fixes. Thanks.
+The following changes since commit ce9ecca0238b140b88f43859b211c9fdfd8e5b70:
+
+  Linux 6.6-rc2 (2023-09-17 14:40:24 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed-20231009
+
+for you to fetch changes up to 42999c90461293233de9bb6e6c7d8a2db7281c1e:
+
+  hv/hv_kvp_daemon:Support for keyfile based connection profile (2023-10-10 03:42:29 +0000)
+
+----------------------------------------------------------------
+hyperv-fixes for v6.6-rc6
+  - A few fixes for Hyper-V VTL code (Saurabh Sengar and Olaf Hering)
+  - A fix for the hv_kvp_daemon to support keyfile based connection
+    profile (Shradha Gupta)
+----------------------------------------------------------------
+Olaf Hering (1):
+      hyperv: reduce size of ms_hyperv_info
+
+Saurabh Sengar (3):
+      x86/hyperv: Restrict get_vtl to only VTL platforms
+      x86/hyperv: Remove hv_vtl_early_init initcall
+      x86/hyperv: Add common print prefix "Hyper-V" in hv_init
+
+Shradha Gupta (1):
+      hv/hv_kvp_daemon:Support for keyfile based connection profile
+
+ arch/x86/hyperv/hv_init.c       |  20 ++--
+ arch/x86/hyperv/hv_vtl.c        |   3 +-
+ arch/x86/include/asm/mshyperv.h |   2 +
+ include/asm-generic/mshyperv.h  |   2 +-
+ tools/hv/hv_kvp_daemon.c        | 233 ++++++++++++++++++++++++++++++++++------
+ tools/hv/hv_set_ifconfig.sh     |  39 +++++--
+ 6 files changed, 253 insertions(+), 46 deletions(-)
 
