@@ -1,107 +1,118 @@
-Return-Path: <linux-hyperv+bounces-508-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-509-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 549397C43E3
-	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Oct 2023 00:26:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 507197C4404
+	for <lists+linux-hyperv@lfdr.de>; Wed, 11 Oct 2023 00:27:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D1AF281B59
-	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Oct 2023 22:26:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09430282157
+	for <lists+linux-hyperv@lfdr.de>; Tue, 10 Oct 2023 22:27:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 035D232C85;
-	Tue, 10 Oct 2023 22:26:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFBFD354E5;
+	Tue, 10 Oct 2023 22:27:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1PL/j3Yl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sOLzgyav"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD45932C64;
-	Tue, 10 Oct 2023 22:26:42 +0000 (UTC)
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8C0195;
-	Tue, 10 Oct 2023 15:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Jt7zMqKrLNJ4K7VS3w7XNGV+SpqUurU0PXBkkxalgKc=; b=1PL/j3Yl0CuSo7Wvorcy1SBbas
-	I+6DqkyUbYtUIZ9pkGSDQa8ByQS3UkqTwbfjdaotfSES7NdqYqgxx29fk4+tzLW3FRROafO4ZtsvZ
-	l+W8U6dorpda5yasc9Kqeau3Zz3sh/qCL49nsyxtkbllVRGWd6OzS9TccFLxGNwC4uVawQz8L4W7d
-	AcCH9bEiJX5jVmwx9rhI9AetmVYQ337XpotHrDcgLYa0oedh5OhdR8LhKPPVwrBxYyGTxqsN2NJUq
-	t3JisqYnKbp3RUciBZn8l5IbE1O6D3K7GhlblXGtYAWbn3INUlqHRA26oYGxooXJSmeyHUHhjfGWo
-	wvcm+phA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqLAv-00EFvQ-2z;
-	Tue, 10 Oct 2023 22:26:01 +0000
-Date: Tue, 10 Oct 2023 15:26:01 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: j.granados@samsung.com
-Cc: willy@infradead.org, josh@joshtriplett.org,
-	Kees Cook <keescook@chromium.org>,
-	Phillip Potter <phil@philpotter.co.uk>,
-	Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Doug Gilbert <dgilbert@interlog.com>,
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Corey Minyard <minyard@acm.org>, Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	David Ahern <dsahern@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Robin Holt <robinmholt@gmail.com>, Steve Wahl <steve.wahl@hpe.com>,
-	Russ Weight <russell.h.weight@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, Song Liu <song@kernel.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-serial@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net, netdev@vger.kernel.org,
-	linux-raid@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v2 00/15] sysctl: Remove sentinel elements from drivers
-Message-ID: <ZSXPeVDv6FfKiTp5@bombadil.infradead.org>
-References: <20231002-jag-sysctl_remove_empty_elem_drivers-v2-0-02dd0d46f71e@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD59354E8
+	for <linux-hyperv@vger.kernel.org>; Tue, 10 Oct 2023 22:27:51 +0000 (UTC)
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E7DC1A6
+	for <linux-hyperv@vger.kernel.org>; Tue, 10 Oct 2023 15:27:42 -0700 (PDT)
+Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-65b0a54d436so34304746d6.3
+        for <linux-hyperv@vger.kernel.org>; Tue, 10 Oct 2023 15:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696976861; x=1697581661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CkLtTpyq6hhRKA1Cd8NmRte6SMNGKfwrDP5J91+SqxM=;
+        b=sOLzgyavxmNPuIxJT66RHVRJKPM4L7Y9mosU4527HC4w8KJRNktEAYHaiOvOQgSk1W
+         WgDXRkFGo2xLRGU3Eek+jCG4D0655oAzIpaEmUvKLlz9gC4+1srsdf640xGp/hMxnMJB
+         VI6e4mzHz8VGpe7Gibg3n7Nox0eAy4azTsx1/hd74JY/Sh2gbeQnrqmWf0Ug4VMud0gp
+         gEZoVEoqLrmoJQLPyNKJcNMdeMj4uAIYxWDoVlT9WrATIxVQb0axKhX8KXqvTlezx/0T
+         CxZSH2FaCGcV1lUwERDBgx6SFAqdgeW6kzeRn+UnLXDocf6UZXePvumzIzchPf/o7XlC
+         de5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696976861; x=1697581661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CkLtTpyq6hhRKA1Cd8NmRte6SMNGKfwrDP5J91+SqxM=;
+        b=dTkwDnFNiRuQLuMW3WV2glcXMSBTQX1sO6do93IvymNumNOsSkBVs7T8Hd2xbTxLhT
+         aobgjgQZpDWHDcm9sUPwTANwyvCuDm4ItBG8MQyaNL6DeUlFGjtoJo/sIGlqJ4OUpxjn
+         OIRZ1xf4D8T5KJ+X7YgDkTo9x3NvQ6iyNq2pGbKdnFaHtJkWqZdPPxiuLtMqI1ufx3N5
+         WDKb09+P4hY+JBt2oJ/lyxOe7/K9Yvd/zgmwiv+6jDeJCJ7QEURgolwj9m5QITuaL67N
+         uwQg/S/S64YFrK0ypznIQqPfdcuYeoWqV9GPNNwR4dMeeYpk/QUvEjNtC3mSvcQMv+Wi
+         gNgA==
+X-Gm-Message-State: AOJu0YxmTenDlf4lPKSPsFMg0UF4QJQ+furftkcanVW1OgERUCR8obyE
+	S5w1el0QEzaox5nlyvEk4LUI5YRFT54Mv+mHdYZaObidRMllBPJGNf4=
+X-Google-Smtp-Source: AGHT+IFxlqxkA6VpJQ6lG3e6PyJG8lq0tpawjVN6OqIO8lL7DWTY3wjUGELV0v4sDHNRAaW6jqwWvjwYUgNF1SZ5uZw=
+X-Received: by 2002:a0c:8cca:0:b0:656:3317:b926 with SMTP id
+ q10-20020a0c8cca000000b006563317b926mr16022671qvb.17.1696976861005; Tue, 10
+ Oct 2023 15:27:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231002-jag-sysctl_remove_empty_elem_drivers-v2-0-02dd0d46f71e@samsung.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.6
+References: <1696965810-8315-1-git-send-email-haiyangz@microsoft.com> <20231010151404.3f7faa87@hermes.local>
+In-Reply-To: <20231010151404.3f7faa87@hermes.local>
+From: Yuchung Cheng <ycheng@google.com>
+Date: Tue, 10 Oct 2023 15:27:05 -0700
+Message-ID: <CAK6E8=c576Gt=G9Wdk0gQi=2EiL_=6g1SA=mJ3HhzPCsLRk9tw@mail.gmail.com>
+Subject: Re: [PATCH net-next,v2] tcp: Set pingpong threshold via sysctl
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>, linux-hyperv@vger.kernel.org, 
+	netdev@vger.kernel.org, kys@microsoft.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net, 
+	dsahern@kernel.org, ncardwell@google.com, kuniyu@amazon.com, 
+	morleyd@google.com, mfreemon@cloudflare.com, mubashirq@google.com, 
+	linux-doc@vger.kernel.org, weiwan@google.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 02, 2023 at 10:55:17AM +0200, Joel Granados via B4 Relay wrote:
-> Changes in v2:
-> - Left the dangling comma in the ctl_table arrays.
-> - Link to v1: https://lore.kernel.org/r/20230928-jag-sysctl_remove_empty_elem_drivers-v1-0-e59120fca9f9@samsung.com
-
-Thanks! Pushed onto sysctl-next for wider testing.
-
-  Luis
+On Tue, Oct 10, 2023 at 3:14=E2=80=AFPM Stephen Hemminger
+<stephen@networkplumber.org> wrote:
+>
+> On Tue, 10 Oct 2023 12:23:30 -0700
+> Haiyang Zhang <haiyangz@microsoft.com> wrote:
+>
+> > TCP pingpong threshold is 1 by default. But some applications, like SQL=
+ DB
+> > may prefer a higher pingpong threshold to activate delayed acks in quic=
+k
+> > ack mode for better performance.
+> >
+> > The pingpong threshold and related code were changed to 3 in the year
+> > 2019 in:
+> >   commit 4a41f453bedf ("tcp: change pingpong threshold to 3")
+> > And reverted to 1 in the year 2022 in:
+> >   commit 4d8f24eeedc5 ("Revert "tcp: change pingpong threshold to 3"")
+> >
+> > There is no single value that fits all applications.
+> > Add net.ipv4.tcp_pingpong_thresh sysctl tunable, so it can be tuned for
+> > optimal performance based on the application needs.
+> >
+> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+>
+> If this an application specific optimization, it should be in a socket op=
+tion
+> rather than system wide via sysctl.
+Initially I had a similar comment but later decided a sysctl could
+still be useful if
+1) the entire host (e.g. virtual machine) is dedicated to that application
+2) that application is difficult to change
 
