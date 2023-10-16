@@ -1,66 +1,50 @@
-Return-Path: <linux-hyperv+bounces-525-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-526-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B19477C963D
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Oct 2023 22:29:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E33857CA3A0
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Oct 2023 11:10:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 22876B20B9B
-	for <lists+linux-hyperv@lfdr.de>; Sat, 14 Oct 2023 20:29:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 213191C208D1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Oct 2023 09:10:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9366A1F5F3;
-	Sat, 14 Oct 2023 20:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66FC41BDCC;
+	Mon, 16 Oct 2023 09:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPYSqrdq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKpgoN/b"
 X-Original-To: linux-hyperv@vger.kernel.org
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9AE21105
-	for <linux-hyperv@vger.kernel.org>; Sat, 14 Oct 2023 20:29:18 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F93BF;
-	Sat, 14 Oct 2023 13:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697315357; x=1728851357;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CwUaiwu/anajycCO/09r6K08x3++4gPe/DXKlXMNQ+4=;
-  b=HPYSqrdqNH9pRYtsq+dgDMgydrfPdNVvYmbpk3rGdednvC0qQDYqZm+L
-   TSYzvZBb1d27hZXNxoZ7KJACzH9yAcDPy2u6s/7tTQJ5Ng/D04sriCQFy
-   HrWjZXil/UmS+damdtj4FXzVPOnoXeuflffHQV7+1P/DxU9ZdqirUTXXV
-   3dDetcPvQCMDjwr43011lljcxkurfkb2/THYZiFhh5Hbh60BXamLTT1XO
-   HwffxqIOhNRJ6TQiz+2O4s1y+TggFY04yjlXKoYLCH9gbLmSSk5KphdQb
-   aXfrUYRXJJEcVMSOZIG9oXa9mOtm9q7k2b8QBWLldvcTUS+/WIu/hRbO1
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="375698737"
-X-IronPort-AV: E=Sophos;i="6.03,224,1694761200"; 
-   d="scan'208";a="375698737"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2023 13:29:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10863"; a="898955883"
-X-IronPort-AV: E=Sophos;i="6.03,224,1694761200"; 
-   d="scan'208";a="898955883"
-Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Oct 2023 13:27:19 -0700
-Received: from kbuild by f64821696465 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qrlG3-0006cV-2a;
-	Sat, 14 Oct 2023 20:29:11 +0000
-Date: Sun, 15 Oct 2023 04:28:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Angelina Vu <angelinavu@linux.microsoft.com>,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com
-Subject: Re: [PATCH] hv_balloon: Add module parameter to configure balloon
- floor value
-Message-ID: <202310150425.g4PXZjIU-lkp@intel.com>
-References: <1696978087-4421-1-git-send-email-angelinavu@linux.microsoft.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C21B15ADD;
+	Mon, 16 Oct 2023 09:10:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F4FC433C7;
+	Mon, 16 Oct 2023 09:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697447453;
+	bh=9Lx78ecl0MZuF5F5PNauQCDBeFdcUns/BLrcQKTwtW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UKpgoN/b8/gx5spIIHKQLj/BYMaITLA0ShZI8w54Z6AZp3+yxr+251NrFO3tI9/HA
+	 dKuuuaYuLdJRYP4053aXJObFgODZ8XabcwBbEU7z1bl3ojOSeSyAr2+h/jSiOtNRvv
+	 x0+44lYRpiiNjJ/Pr/xd80TumRQQ0bWoaXWJE4Wz7a3QKh/SwR7NlIUN8qDhptlsWQ
+	 ItL7ryT709B5NYfrKHbsSdf79BPk+Ioj7jZrYg4C2GOamcEbXeK66myoQtT6o7Rtc4
+	 hV9OmkzeywmN8uujBf5iHby+/H6F6OgKHk62t8aRudGlfHwkRZ4dOOzkpMHKmq3oPU
+	 3kZxk5sEhKImw==
+Date: Mon, 16 Oct 2023 11:10:48 +0200
+From: Simon Horman <horms@kernel.org>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, kys@microsoft.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, corbet@lwn.net, dsahern@kernel.org,
+	ncardwell@google.com, ycheng@google.com, kuniyu@amazon.com,
+	morleyd@google.com, mfreemon@cloudflare.com, mubashirq@google.com,
+	linux-doc@vger.kernel.org, weiwan@google.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next,v3] tcp: Set pingpong threshold via sysctl
+Message-ID: <20231016091048.GG1501712@kernel.org>
+References: <1697056244-21888-1-git-send-email-haiyangz@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
@@ -69,42 +53,36 @@ List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1696978087-4421-1-git-send-email-angelinavu@linux.microsoft.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <1697056244-21888-1-git-send-email-haiyangz@microsoft.com>
 
-Hi Angelina,
+On Wed, Oct 11, 2023 at 01:30:44PM -0700, Haiyang Zhang wrote:
+> TCP pingpong threshold is 1 by default. But some applications, like SQL DB
+> may prefer a higher pingpong threshold to activate delayed acks in quick
+> ack mode for better performance.
+> 
+> The pingpong threshold and related code were changed to 3 in the year
+> 2019 in:
+>   commit 4a41f453bedf ("tcp: change pingpong threshold to 3")
+> And reverted to 1 in the year 2022 in:
+>   commit 4d8f24eeedc5 ("Revert "tcp: change pingpong threshold to 3"")
+> 
+> There is no single value that fits all applications.
+> Add net.ipv4.tcp_pingpong_thresh sysctl tunable, so it can be tuned for
+> optimal performance based on the application needs.
+> 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+> v3: Updated doc as suggested by Neal Cardwell.
+>     Updated variable location in struct netns_ipv4 as suggested by Kuniyuki
+>     Iwashima.
+> 
+> v2: Make it per-namesapce setting, and other updates suggested by Neal Cardwell,
+> and Kuniyuki Iwashima.
 
-kernel test robot noticed the following build warnings:
+Thanks,
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.6-rc5 next-20231013]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+this looks clean to me. It seems to address the review of v2.
+And keeps the knob as syctl as discussed in v2.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Angelina-Vu/hv_balloon-Add-module-parameter-to-configure-balloon-floor-value/20231011-064921
-base:   linus/master
-patch link:    https://lore.kernel.org/r/1696978087-4421-1-git-send-email-angelinavu%40linux.microsoft.com
-patch subject: [PATCH] hv_balloon: Add module parameter to configure balloon floor value
-config: i386-randconfig-061-20231014 (https://download.01.org/0day-ci/archive/20231015/202310150425.g4PXZjIU-lkp@intel.com/config)
-compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231015/202310150425.g4PXZjIU-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310150425.g4PXZjIU-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/hv/hv_balloon.c:1100:15: sparse: sparse: symbol 'balloon_floor' was not declared. Should it be static?
-   drivers/hv/hv_balloon.c:2079:9: sparse: sparse: context imbalance in 'balloon_remove' - wrong count at exit
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Simon Horman <horms@kernel.org>
 
