@@ -1,123 +1,97 @@
-Return-Path: <linux-hyperv+bounces-527-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-528-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F8BD7CA6DC
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Oct 2023 13:41:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EF057CA6F1
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Oct 2023 13:50:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B417328120B
-	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Oct 2023 11:41:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9772F1C208E5
+	for <lists+linux-hyperv@lfdr.de>; Mon, 16 Oct 2023 11:50:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8176250EB;
-	Mon, 16 Oct 2023 11:41:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3B724214;
+	Mon, 16 Oct 2023 11:50:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2Q5uhr7K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQPZvlpB"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9038623778
-	for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 11:41:02 +0000 (UTC)
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FBF2DC
-	for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 04:41:00 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-534694a9f26so11154a12.1
-        for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 04:40:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BFE23740
+	for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 11:50:29 +0000 (UTC)
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D238E
+	for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 04:50:24 -0700 (PDT)
+Received: by mail-ua1-x930.google.com with SMTP id a1e0cc1a2514c-7b5f1a6267bso229166241.1
+        for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 04:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697456458; x=1698061258; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2I6xiVgm8CDmOxobNPXJ5HYpt0gEXNwuNgT27rQ1pK8=;
-        b=2Q5uhr7KZnIOPozm+oy0vHWbp03Q1sFUZSwBPx0LsVQC/w/dnP/c3KuRsVKTGEu7kM
-         AROIj0DxDxL1/YKoSGX7rM5Lq1lTKGlp1lkaJWGbrOjLbVJXxdpyCT1WYWzb3vbWOBgk
-         anltbr9L+X2Hn1JBwCIzkQjRdEjjugweYDFB8mohX2nuHlw0wCfQMUy4FqZzgBkBaHdR
-         8SPVoFEJSGtEulLCD0j5oxaLuLvVE5dUJvuP0kmBS9RuKVQIuAeZGQ6X55Aqyj9Vn3md
-         s2mtdAxgTRbWRYgZ+LzvH0GL2oEeUQ6/l+nyB3P1/YMPXJaPilTrFc8I/841CfVH1Yba
-         CarQ==
+        d=gmail.com; s=20230601; t=1697457023; x=1698061823; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KztZxB+FpIACvXHxkqcjgVyNEnICICN3V4gaPD4c2UQ=;
+        b=RQPZvlpBhGb9OHENzQhoyKTSbIyWsRJC40RMm3h3BlSDZqqte7uVEI+WcgUUj5q6wA
+         /WZd8o5rPCW3YT/pOmXqBfFKGmwDQ0wlW4GyktjsUvlpf8yO21gfWuDusKweiT9+Zy1y
+         mVy4d175MV9zzgFgcQU/qvCL3j/Tqs2NOTSmut4Z4VJDlPl5f1ueM7Wt7OdWpAXtxrAO
+         T33u+Z0SjCUPQJVB7Te00hs7AsPgP/ExDlL5hfNc4nW2GysauqdZvE74zY22+dr/hgn2
+         9ke5nEpOUTkKL4w7/gLK10B6gXbXTHAIr7jkjV/zed0sKrSQTuuWKWlGnRr7cyvls5WH
+         OFJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697456458; x=1698061258;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2I6xiVgm8CDmOxobNPXJ5HYpt0gEXNwuNgT27rQ1pK8=;
-        b=SddMRKvIe02FWXHncWPQAUMA2CYDrK/kto9tbeHxxf2BdMq0PurR2wtrqbO+i4Nku8
-         ve9Fkwbe6ijgQEOckVMRCh7JVK4FiZoCT8JNgLePBxlp0dmILLEobtoaNjwN/WKlK+5Y
-         R3rfIHTVzJsd1aRwpX8FwNuGIPQg1rqLl18hengq7vG8MaE1UwJte1bvHLnMOo7OVsHw
-         l+zYBvX0JcPkX8M72tzbezW7KYsbQmBEQTvpfhyb5uY/JrHeH7vaYtjm1Bb2RR7kISrJ
-         CeqXYdFGDGIW/V0FV21SDhWhy5INiHQ/Kq6tWFt/qaBQBJjbKTiorptRcio0JBYnkNaK
-         vUvw==
-X-Gm-Message-State: AOJu0YyYLlC570ajUnfCLKkS68/+XsB4UvtDbMWLETQVEeabNu34AzSE
-	aDXOHBXim+JrlwQEQDrIcyHvCtT4hDFW6zvvPMFyng==
-X-Google-Smtp-Source: AGHT+IEd7QsZDGvewhvSCOpW/J+FnpZ5jMRtoRoEZoPIfRkDvA7e50KC0N8Z+vcUAqp+1WNdbYbn6DP3CRW+eN2eV5Y=
-X-Received: by 2002:a50:cd16:0:b0:538:1d3a:d704 with SMTP id
- z22-20020a50cd16000000b005381d3ad704mr155111edi.1.1697456458241; Mon, 16 Oct
- 2023 04:40:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697457023; x=1698061823;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KztZxB+FpIACvXHxkqcjgVyNEnICICN3V4gaPD4c2UQ=;
+        b=LasZ8X9I9XPnOIvDbgOQvp/+Fmxqpz2aFEGf+B2UWL2dDaDlMvP1jjL27NGW3+ImWk
+         QEZ2gVGwQ34dP8beFcmlZrJLgef8zRX6x1zS7aaNHvSTXRekJIcpasbvz6I5gq7NHqGx
+         wYwUXAOodNDfW4E7EMDZYZNx+RVBr9DB4WyGFc6XDKgTkJB6MAwXKP68uNwYcYf1AwVs
+         GvpG9pJbY+pO9wT5GJ4/QaaDkRHmm6KedHKRdBRnAm/xHWtE9ZjZjDlgwlM0wnnEPnrX
+         aMmDa4860VizJOVey0WxNOyADLDQt06k/XuuXHjkBbgXML9smcEkxhOF9kpJWAXPxbZ/
+         WgYw==
+X-Gm-Message-State: AOJu0Yxku5yVEbrsYp/1M3j9pa6A0kXCOGSy6RTD7AiSJTSmgSiEi9on
+	aiPv8hiozAM5SaAMt8N7v6/vNzs6R5nECd/aalJw7eWTTnqtHg==
+X-Google-Smtp-Source: AGHT+IHDwU0gpaq8sVKMeSKWQXEeDoNWmf37xL6L1zRCeoVowaNWl9NQnK1+T3Ia6Zh99f6kYbL9uEeLXZeeOeWq4NQ=
+X-Received: by 2002:a1f:6e8c:0:b0:493:69f1:d12d with SMTP id
+ j134-20020a1f6e8c000000b0049369f1d12dmr18083505vkc.1.1697457022545; Mon, 16
+ Oct 2023 04:50:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1697056244-21888-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1697056244-21888-1-git-send-email-haiyangz@microsoft.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 16 Oct 2023 13:40:43 +0200
-Message-ID: <CANn89iLth-thO7=V=b+3dbP=K-m+hbBk75FtM+7cFiUphGXwoA@mail.gmail.com>
-Subject: Re: [PATCH net-next,v3] tcp: Set pingpong threshold via sysctl
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, kys@microsoft.com, 
-	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net, 
-	dsahern@kernel.org, ncardwell@google.com, ycheng@google.com, 
-	kuniyu@amazon.com, morleyd@google.com, mfreemon@cloudflare.com, 
-	mubashirq@google.com, linux-doc@vger.kernel.org, weiwan@google.com, 
-	linux-kernel@vger.kernel.org
+From: Alex Ionescu <aionescu@gmail.com>
+Date: Mon, 16 Oct 2023 07:49:56 -0400
+Message-ID: <CAJ-90N+sS6tuzMtRLOSan7WMZZ2g1H-iFc1F1ne631d2kgoi_g@mail.gmail.com>
+Subject: Incorrect definition of hv_enable_vp_vtl in hyperv-tlfs.h
+To: linux-hyperv@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 11, 2023 at 10:31=E2=80=AFPM Haiyang Zhang <haiyangz@microsoft.=
-com> wrote:
->
-> TCP pingpong threshold is 1 by default. But some applications, like SQL D=
-B
-> may prefer a higher pingpong threshold to activate delayed acks in quick
-> ack mode for better performance.
->
+Hi,
 
-...
+In arch/x86/include/asm/hyperv-tlfs.h, the following definition at
+line 786 (in Linus' tree), I believe to be incorrect.
 
->
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index f207712eece1..7d0fe76d56ef 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -170,10 +170,10 @@ static void tcp_event_data_sent(struct tcp_sock *tp=
-,
->         tp->lsndtime =3D now;
->
->         /* If it is a reply for ato after last received
-> -        * packet, enter pingpong mode.
-> +        * packet, increase pingpong count.
->          */
->         if ((u32)(now - icsk->icsk_ack.lrcvtime) < icsk->icsk_ack.ato)
-> -               inet_csk_enter_pingpong_mode(sk);
-> +               inet_csk_inc_pingpong_cnt(sk);
->  }
->
->  /* Account for an ACK we sent. */
+struct hv_enable_vp_vtl {
+    u64                partition_id;
+    u32                vp_index;
+    union hv_input_vtl        target_vtl; <==== Here
 
-OK, but I do not think we solved the fundamental problem of using
-jiffies for this heuristic,
-especially for HZ=3D100 or HZ=3D250 builds.
+For this hypercall, the TLFS and MSDN documentation states this field
+is HV_VTL (u8) and not HV_INPUT_VTL (the bit-field used for targeting
+hypercalls to specific target VTLs, which is not the case here).
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+I realize this is essentially a no-op in code at the moment, but for
+correctness should be addressed? I'm happy to make a patch, but wanted
+to make sure this isn't a mistake in TLFS/MSDN to begin with
+(although, my copy of GDK headers would corroborate it's indeed HV_VTL
+as well).
+
+Best regards,
+Alex Ionescu
 
