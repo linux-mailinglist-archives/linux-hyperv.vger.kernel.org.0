@@ -1,255 +1,713 @@
-Return-Path: <linux-hyperv+bounces-540-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-541-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 607057CB772
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Oct 2023 02:35:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 225C27CB9BE
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Oct 2023 06:32:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7643B20EE2
-	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Oct 2023 00:35:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70520B20F4C
+	for <lists+linux-hyperv@lfdr.de>; Tue, 17 Oct 2023 04:32:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE1415A3;
-	Tue, 17 Oct 2023 00:35:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6322BE67;
+	Tue, 17 Oct 2023 04:32:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ir7AueCN"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SLtR/3Bh"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DCF15A0
-	for <linux-hyperv@vger.kernel.org>; Tue, 17 Oct 2023 00:35:26 +0000 (UTC)
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020015.outbound.protection.outlook.com [52.101.61.15])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1483DA7;
-	Mon, 16 Oct 2023 17:35:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DUwNT65rdVNNKLkvO9dGVjyOuBhIwG99ri/Oz7fvJ0rMeDoRBFwjWYNE1w3YpVyInhNpagNveunxL9Y6V/aRolLXc/pDb2HJtF2C0ZxS07JyptEZTcp+djz5Gf3pFXIBujbAEBPpASTX/kws8LgO8QDnvcMRgl4brSQ8p2FzDgNfMic0xuvcObfLiKtpkWk66y3mNcxjMkz2wk2m7QCAUQvI6G3RMxfe58NaZ2tseil6iIUhno2bd4+q++OTk/w4FhGdjJTwoyZJ6/EhvP7NBiDz+LhARAvprWcXYMgSS+Pgj1gIm7U1+0dghOV0Fkfcm5DNHGzD7uR/Ie9qzq2Fow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0RgZtQMhRXK3pd5fPBOB5sc+Fnjx6W1zclK5LVaR1WA=;
- b=nTpY7KK18dZ5MoEH0uMS9BMq7Q7Lgi8cCgN9n9aAbSxnn1/AyLQxtq1R5qW0W1ICpWUffm8sgdZaFSNH7Rd987ppCHCej0IBDM0pf/o9XcmtiVzk+pI4Z/XUw5aquZQC/jgaqfm3iGJNShCsxaq66sacW5gWB49zWtp57djdHnObSlM8GL3OzsiyWBFlA7PMcPNNpGpLwB6tyMRoyn6A0r53elO6MrL59j/ecbRX9byMulW27Ngx0u3Ox/iUUWl7oKvQ2eWCJBTOSNI54m0Ko5Tk/lQ9oI/vBgjeuGVb6qfkeA1mcQjA1dcmpw1ljl+IdCpW4QHgkI6M+rMhBVS4bQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0RgZtQMhRXK3pd5fPBOB5sc+Fnjx6W1zclK5LVaR1WA=;
- b=Ir7AueCNHL0a2NErN/RKw+XpUxq/KRGFnvC0lJ9wjcspg0WFzPo1V1+L8bDI6Kn/fNoblK79OCo2hG8frNZwdcR2FX6UkkK0H43QjnWAggRB0+KBQrrrcK+HZi/K7XQZTx8FQWYM3/osaklUhJ7V3uVbGW/kr7+YLY5Z8toz5Hk=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DS7PR21MB3695.namprd21.prod.outlook.com (2603:10b6:8:92::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.3; Tue, 17 Oct
- 2023 00:35:22 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::4592:a0bb:e4ef:3093]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::4592:a0bb:e4ef:3093%5]) with mapi id 15.20.6933.003; Tue, 17 Oct 2023
- 00:35:21 +0000
-From: "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To: "Michael Kelley (LINUX)" <mikelley@microsoft.com>, Tom Lendacky
-	<thomas.lendacky@amd.com>, KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan
- Cui <decui@microsoft.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "luto@kernel.org" <luto@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"seanjc@google.com" <seanjc@google.com>, "rick.p.edgecombe@intel.com"
-	<rick.p.edgecombe@intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Subject: RE: [PATCH 3/5] x86/mm: Mark CoCo VM pages not present while changing
- encrypted state
-Thread-Topic: [PATCH 3/5] x86/mm: Mark CoCo VM pages not present while
- changing encrypted state
-Thread-Index: AQHZ8wGfg5XItVQuiU6MiMRAAvPq57A2ttUAgAAoLICAABfDQIAWPneg
-Date: Tue, 17 Oct 2023 00:35:21 +0000
-Message-ID:
- <BYAPR21MB168854B263AD8985210E4F70D7D6A@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <1696011549-28036-1-git-send-email-mikelley@microsoft.com>
- <1696011549-28036-4-git-send-email-mikelley@microsoft.com>
- <c9a06bd0-09aa-5e4b-e2cb-63ebcc93757e@amd.com>
- <2edc7c71-935e-0185-e547-587170a054ff@amd.com>
- <BYAPR21MB1688DA9620895DD50BEA99D6D7C5A@BYAPR21MB1688.namprd21.prod.outlook.com>
-In-Reply-To:
- <BYAPR21MB1688DA9620895DD50BEA99D6D7C5A@BYAPR21MB1688.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f09b5bea-5e2c-4948-86ff-1c5598793ab8;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-10-02T20:24:05Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DS7PR21MB3695:EE_
-x-ms-office365-filtering-correlation-id: e1ff7da5-f869-4b09-d147-08dbcea8f24b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 1wEPi+iZns9OFc7bgrjFdMAhSdi8AurD2UhMJmJvuZL+rSRdPpXFAklNRMYcHxiIBbt87SHvcXXKnAePm8L1PI8DorRTWfzxDIECs/pBgq17zUtjtFVqIQspZqbJIzX9beAc//Fv3Zj6EpXdEAyLLabes8QH3M/+bwAHaLHul5AjAhOGt/XZUbEvLsdfbTdQoBNNxCgZYWx+cRk+MwxhRZ4PM2nBVwhOcBdPyEBdyPoPGFagMCMPg7OD/OJyAzyBsfD1mMEE0vwH725O/7iiHC2Re02wF97/kRYzKI86buegBSm34b+yb+rHtRPvjVJj/FDa/tismcHo297k8QbrQzxk3U3KOGQe7IQAF0MVsr1BpjSqp3B+KokEvBVa4u5ffCpakoShiQaHgh8c9XIoy0b6A+MO4+2imA+E2MI2h/nOCNEhKyBMrisLoOxYkc1upHiFF+GC0Ck2vweAvHEdsYsd8H6JpbjTb5/aNMfpvalQXQ9MerUT9a56psTQ0OxpWNYFt0AyDZ9bR4F+eE+gjNw0TAsR5zTEfJfJqDE+WZPIAO8IB5P32WNnIhw4FSUBcLdkejC5fCiB1IgGMr8wdKxnaT1a4a3lHvxt2WaYqHr8dS/4DY7ZHS2+GUqNyDJhmEsMOnIVmkaNTDMOi+T3c1A8UWsKcYwEVbm7wxqbsu3mUAxXGDafpIGuf7gtyT/s
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(6029001)(346002)(366004)(136003)(376002)(39860400002)(396003)(230922051799003)(451199024)(64100799003)(1800799009)(186009)(86362001)(33656002)(38100700002)(38070700005)(55016003)(6506007)(7696005)(9686003)(71200400001)(53546011)(8676002)(8936002)(83380400001)(52536014)(5660300002)(2906002)(26005)(7416002)(41300700001)(66946007)(316002)(66446008)(66556008)(66476007)(76116006)(64756008)(110136005)(478600001)(10290500003)(8990500004)(921005)(82950400001)(82960400001)(122000001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?a2ZMRVFQNjE5d3ZZWlFocTREYnNXVUg4Szh3U1RRUlowd1NTZHpya1YzdzBx?=
- =?utf-8?B?WFpJblFHd3hVTEd4dFgwakpmby8wU3VXZy8yWWhwb1FLUDNlaVhnOWV4MG9V?=
- =?utf-8?B?MEpGeHppSEp5Tnp2UWJOQllhWXVVVWpGVUd0Zk9EemZ3bjI0NkhGVk5xNnlF?=
- =?utf-8?B?cFZKWXc2cXRiTTJ3UGN5K0tuNk93UTdvNS9BRzIrV0ZraHBEL2RpMmdPdUVY?=
- =?utf-8?B?ZGU5Vnk3L1dFTXRueHhEWGsyaWVvL1cvdC9qcWlZNmwzcTFKZmpJUXM2UFdJ?=
- =?utf-8?B?c2xWajFjMFdzK0paT1Jud3dtNytudTdvZ0t6b1JtbUpvT1ViVUpBeUlrbVJS?=
- =?utf-8?B?dnFJZ0VNSWRKSHRQQkRGNFVBNjdpdDhZcmtQRjlyUk1xOG5NQ05xbmZvNXFT?=
- =?utf-8?B?Ynd0cUVUa0g1WGVlL3RUMnpnNHF3RSt1TE54aXkva2ZoN1Z0ZUhBWHVTQmds?=
- =?utf-8?B?SVZYZmdHczMyTW11QUltRTZ6L25zQjl6K1I4MzBnWGRpd0ZjUGNJUnhMY1VS?=
- =?utf-8?B?WUhXb2tuNHhRazNPK2NRZDhhNm5JTklIWHNjbnRZL0ZlRVZZN21ScmhUZ3pH?=
- =?utf-8?B?OWc3MWQ0SExnaytQNDQ5Q2FCb0lZY2dIY3VMUkc4V0NIcWpEM1RpMEtYZ2Z1?=
- =?utf-8?B?ZmtoTWRwU3pOcGR2bEM5eTJ3WXNEYit2bU16Ny9JcTBQdUNNc2Z1SkFFQkY1?=
- =?utf-8?B?bFVaSFlwMzJpQ2pEQXRrNnppVGNSMFNnQ0pJdkttcHM1OGNqNVorQndFcGI3?=
- =?utf-8?B?ai85RnRDTHFuVkp0VWwwbFI5Z3pDQnJHdERWcTZzZWx6VXVBT0laT3BWM0di?=
- =?utf-8?B?aFRzdjJyRllLTkRvOEhzN3hzd0xSdGZEZlNvbVp4TE1pYU9WS1pxWitYWFdE?=
- =?utf-8?B?VUE0bUcvZ1JUbUhWU2lvRmo3aGMyMEsrWXR4VHowM0RwM25rSDJaQ1MvZXQv?=
- =?utf-8?B?dzFZVmpRanA5clByd0cxU1JlRTUrbXlZQ0l2cVIxYkNvVVVyUDRHc3VsUjBs?=
- =?utf-8?B?OVJlZmpnSEIwZHJOT1VuYmRBeXAxY01KM0xqK2FtTG1WWGNFM0tqQ3gvWk52?=
- =?utf-8?B?dzM0Zk1wdVJvL0dSb1lVT1ZOVjdpRlQvT2lwdC9VdkNVVzcwK0dZQ211bE03?=
- =?utf-8?B?WWhZUjg3K01qOFpkUXpDdGlkaW1semZBUEVWKzdJUzhUMUkyczhJdVJGU1hH?=
- =?utf-8?B?YmJKSk5kd015dlNjV1puRzhwSDUyOGVGZmc1QlJneGh4dnZ1S0l3YWM5S05q?=
- =?utf-8?B?TjFoVDRsNUdhRWtQR1FocEdQRWFyZmplNWtJekdHRGFFM1lqYmRDUmIwSzY1?=
- =?utf-8?B?b1lRUkVCUTVEWUZTZkhVWlBEYnhQZ24xZXVEV0QvcTNuL0FERVJaWFEyRGsw?=
- =?utf-8?B?aGhTTzhNRVZMN2xZendXakUrbVNEQ2Y5MTBxUS9IUUZicm1pMmJQK0lFYXdO?=
- =?utf-8?B?V09jNVFNc29TMEtUalFJRExzUVVqUndUeUtEcHlEVjFpdUJUc1NFVC9YdWRX?=
- =?utf-8?B?L2JudHdEZityZWtYNlNValZmb055TTNSdEdjZTdmWW1jZWZwN3AzeHBzQm9a?=
- =?utf-8?B?N2J6MkFGYzRnTnJveEoxcnRIR2twQ1MvVnF2TGZ6d2doTXZwTU5SWS9DcDNF?=
- =?utf-8?B?YVVWa05MZFAxQUVmd3JxMFpQMXBjaGZDekpPbXBZeDh4VzRjSnAwTEI2b3hu?=
- =?utf-8?B?WmhEL2tGck5OTk5pVWYxN1RxcVF3c0ZPYVU0bjVhUHJrUDRGb0hlejhmSUtp?=
- =?utf-8?B?MzZ1YU5IbklNSEdzNGIvd3d2dmdRUVk2VDVMZFhqKzljcnZlcWNNZkx3b0VK?=
- =?utf-8?B?VFBMYWNjMFFDNGR3d2IwMXY2YXBuTzlKWFFpeHRaRFJKY1VkbGdPd2VoS2o0?=
- =?utf-8?B?UXgyalFtcTFiRy9hdDQ5eGpjaGVhRFlIWW1LRlNudTNHN3hjeFRLMVhvY2FV?=
- =?utf-8?B?cnlEQkRKbCtvWUJFcGhud09abWFLRkFVajFlSmdxbWpVZ3NQbVRjTm5ZQWpm?=
- =?utf-8?B?d3BhS044MzhJanVlRVdPSmtTZ3h3eHoxM25LVjRoNy9JOGlDZEZZMjJFSHRo?=
- =?utf-8?B?RUFzK01jZStBYnFyUkc1NlZsV1R2Wnd6dE10dzdFbllCcHVhcjE3NmtlWFNL?=
- =?utf-8?B?MU5XdUM4TW1PN2xxeU0xVWJUbW14TmFKWERsSzZWZE1zMFBlNlJ6UmdHQWxo?=
- =?utf-8?B?M3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892DDC122
+	for <linux-hyperv@vger.kernel.org>; Tue, 17 Oct 2023 04:32:08 +0000 (UTC)
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF629F
+	for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 21:32:04 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2c518a1d83fso34564671fa.3
+        for <linux-hyperv@vger.kernel.org>; Mon, 16 Oct 2023 21:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1697517122; x=1698121922; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6Xc6oR6a23SD4JV0rF85aZz1KejrLxXqXEECB4OZTOU=;
+        b=SLtR/3BhA5mZVRJPIwDecU/C4mRfZfiBAVjCIAahfuw3XqSOKc0L+wE5Y1AIn23B0t
+         KNvumYUJOrkPzXjzFzsKVlWn17gnyRtfXSf9S6pvieD6MX8kbyHArxVniy1Ieg7+TlqW
+         t24IZuM32qbrQn0QImAYBb3j83eI9pD9CyQe8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697517122; x=1698121922;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6Xc6oR6a23SD4JV0rF85aZz1KejrLxXqXEECB4OZTOU=;
+        b=rwv2w1TXujcWy4JOF7knTxvuWZjzTFNNwrqD2L9a6d4PB8crkTndTNqaoLKmI0hG00
+         3i6p1S0ELMqToGfNzWBHJ3iEcpq32widf+dvBOAiupNm/vUSBxxOUUPglZED9KgC4yZU
+         CicWGv50y4Pf79MdBH0Zc2rqFCcp9QxM2gL0lVNMMJ3C9tZCFtMuATOBeMBc2Z3WHxnw
+         gUE/ML3lHa/SjwgZeJ44xBI3Qvt2O58Mrc/1bVE3lud5tKpPHFUKi0qKC6t1YFP/KJFW
+         GHIujahJIHZd8WBsB0mOQ2GjxZfPLkJGs1FGW4YarufL9ZlbFRi+EDEOYUGKo1ssF4p1
+         w9Rw==
+X-Gm-Message-State: AOJu0YwrifKJbv+Q173OhuC7DrJfvuXntrjYQhiRb1pDxsKLQKP7uiyx
+	L9Fm4IKTq5HScu+zvcO7Zyk3xUEg9R/2a67PhD9C+w==
+X-Google-Smtp-Source: AGHT+IHTD9qpV7Q93Pj8HpsO2CWv553YHO9I1GEWYCcyjA9LY8U0RWmbMlPMBg+hT3AJjaw11mYVqejNdhI14fgCpNM=
+X-Received: by 2002:ac2:47f2:0:b0:507:a6b2:3996 with SMTP id
+ b18-20020ac247f2000000b00507a6b23996mr712711lfp.56.1697517122203; Mon, 16 Oct
+ 2023 21:32:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hyperv@vger.kernel.org
 List-Id: <linux-hyperv.vger.kernel.org>
 List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1ff7da5-f869-4b09-d147-08dbcea8f24b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Oct 2023 00:35:21.7899
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F1O8bcNBneN5AwmBeD0GAEhbFjCjJmZFae8wty9M6XxxR4edTcS4KGz9RJOg/cQAEbsZRjqlgyyhL7X8mI7MACdPXTP3UPCGDpqfeK/A2Ns=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3695
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-	autolearn=no autolearn_force=no version=3.4.6
+References: <1697494322-26814-1-git-send-email-sharmaajay@linuxonhyperv.com> <1697494322-26814-5-git-send-email-sharmaajay@linuxonhyperv.com>
+In-Reply-To: <1697494322-26814-5-git-send-email-sharmaajay@linuxonhyperv.com>
+From: Kalesh Anakkur Purayil <kalesh-anakkur.purayil@broadcom.com>
+Date: Tue, 17 Oct 2023 10:01:50 +0530
+Message-ID: <CAH-L+nPAxQHCCA6pwwHMxys4GGnvmvYZKKNzd8AvMxy-hO0eSw@mail.gmail.com>
+Subject: Re: [Patch v7 4/5] RDMA/mana_ib: Query adapter capabilities
+To: sharmaajay@linuxonhyperv.com
+Cc: Long Li <longli@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-rdma@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ajay Sharma <sharmaajay@microsoft.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000001afbfe0607e201a9"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HTML_MESSAGE,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-RnJvbTogTWljaGFlbCBLZWxsZXkgKExJTlVYKSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4gU2Vu
-dDogTW9uZGF5LCBPY3RvYmVyIDIsIDIwMjMgMTo0MyBQTQ0KPiANCj4gRnJvbTogVG9tIExlbmRh
-Y2t5IDx0aG9tYXMubGVuZGFja3lAYW1kLmNvbT4gU2VudDogTW9uZGF5LCBPY3RvYmVyIDIsIDIw
-MjMNCj4gMTE6NTkgQU0NCj4gPg0KPiA+IE9uIDEwLzIvMjMgMTE6MzUsIFRvbSBMZW5kYWNreSB3
-cm90ZToNCj4gPiA+IE9uIDkvMjkvMjMgMTM6MTksIE1pY2hhZWwgS2VsbGV5IHdyb3RlOg0KPiA+
-ID4+IEluIGEgQ29DbyBWTSB3aGVuIGEgcGFnZSB0cmFuc2l0aW9ucyBmcm9tIGVuY3J5cHRlZCB0
-byBkZWNyeXB0ZWQsIG9yIHZpY2UNCj4gPiA+PiB2ZXJzYSwgYXR0cmlidXRlcyBpbiB0aGUgUFRF
-IG11c3QgYmUgdXBkYXRlZCAqYW5kKiB0aGUgaHlwZXJ2aXNvciBtdXN0DQo+ID4gPj4gYmUgbm90
-aWZpZWQgb2YgdGhlIGNoYW5nZS4gQmVjYXVzZSB0aGVyZSBhcmUgdHdvIHNlcGFyYXRlIHN0ZXBz
-LCB0aGVyZSdzDQo+ID4gPj4gYSB3aW5kb3cgd2hlcmUgdGhlIHNldHRpbmdzIGFyZSBpbmNvbnNp
-c3RlbnQuwqAgTm9ybWFsbHkgdGhlIGNvZGUgdGhhdA0KPiA+ID4+IGluaXRpYXRlcyB0aGUgdHJh
-bnNpdGlvbiAodmlhIHNldF9tZW1vcnlfZGVjcnlwdGVkKCkgb3INCj4gPiA+PiBzZXRfbWVtb3J5
-X2VuY3J5cHRlZCgpKSBlbnN1cmVzIHRoYXQgdGhlIG1lbW9yeSBpcyBub3QgYmVpbmcgYWNjZXNz
-ZWQNCj4gPiA+PiBkdXJpbmcgYSB0cmFuc2l0aW9uLCBzbyB0aGUgd2luZG93IG9mIGluY29uc2lz
-dGVuY3kgaXMgbm90IGEgcHJvYmxlbS4NCj4gPiA+PiBIb3dldmVyLCB0aGUgbG9hZF91bmFsaWdu
-ZWRfemVyb3BhZCgpIGZ1bmN0aW9uIGNhbiByZWFkIGFyYml0cmFyeSBtZW1vcnkNCj4gPiA+PiBw
-YWdlcyBhdCBhcmJpdHJhcnkgdGltZXMsIHdoaWNoIGNvdWxkIGFjY2VzcyBhIHRyYW5zaXRpb25p
-bmcgcGFnZSBkdXJpbmcNCj4gPiA+PiB0aGUgd2luZG93LsKgIEluIHN1Y2ggYSBjYXNlLCBDb0Nv
-IFZNIHNwZWNpZmljIGV4Y2VwdGlvbnMgYXJlIHRha2VuDQo+ID4gPj4gKGRlcGVuZGluZyBvbiB0
-aGUgQ29DbyBhcmNoaXRlY3R1cmUgaW4gdXNlKS7CoCBDdXJyZW50IGNvZGUgaW4gdGhvc2UNCj4g
-PiA+PiBleGNlcHRpb24gaGFuZGxlcnMgcmVjb3ZlcnMgYW5kIGRvZXMgImZpeHVwIiBvbiB0aGUg
-cmVzdWx0IHJldHVybmVkIGJ5DQo+ID4gPj4gbG9hZF91bmFsaWduZWRfemVyb3BhZCgpLsKgIFVu
-Zm9ydHVuYXRlbHksIHRoaXMgZXhjZXB0aW9uIGhhbmRsaW5nIGNhbid0DQo+ID4gPj4gd29yayBp
-biBwYXJhdmlzb3Igc2NlbmFyaW9zIChURFggUGFyaXRpb25pbmcgYW5kIFNFVi1TTlAgaW4gdlRP
-TSBtb2RlKS4NCj4gPiA+PiBUaGUgZXhjZXB0aW9ucyBuZWVkIHRvIGJlIGZvcndhcmRlZCBmcm9t
-IHRoZSBwYXJhdmlzb3IgdG8gdGhlIExpbnV4DQo+ID4gPj4gZ3Vlc3QsIGJ1dCB0aGVyZSBhcmUg
-bm8gYXJjaGl0ZWN0dXJhbCBzcGVjcyBmb3IgaG93IHRvIGRvIHRoYXQuDQo+ID4gPj4NCj4gPiA+
-PiBGb3J0dW5hdGVseSwgdGhlcmUncyBhIHNpbXBsZXIgd2F5IHRvIHNvbHZlIHRoZSBwcm9ibGVt
-IGJ5IGNoYW5naW5nDQo+ID4gPj4gdGhlIGNvcmUgdHJhbnNpdGlvbiBjb2RlIGluIF9fc2V0X21l
-bW9yeV9lbmNfcGd0YWJsZSgpIHRvIGRvIHRoZQ0KPiA+ID4+IGZvbGxvd2luZzoNCj4gPiA+Pg0K
-PiA+ID4+IDEuwqAgUmVtb3ZlIGFsaWFzaW5nIG1hcHBpbmdzDQo+ID4gPj4gMi7CoCBGbHVzaCB0
-aGUgZGF0YSBjYWNoZSBpZiBuZWVkZWQNCj4gPiA+PiAzLsKgIFJlbW92ZSB0aGUgUFJFU0VOVCBi
-aXQgZnJvbSB0aGUgUFRFcyBvZiBhbGwgdHJhbnNpdGlvbmluZyBwYWdlcw0KPiA+ID4+IDQuwqAg
-U2V0L2NsZWFyIHRoZSBlbmNyeXB0aW9uIGF0dHJpYnV0ZSBhcyBhcHByb3ByaWF0ZQ0KPiA+ID4+
-IDUuwqAgRmx1c2ggdGhlIFRMQiBzbyB0aGUgY2hhbmdlZCBlbmNyeXB0aW9uIGF0dHJpYnV0ZSBp
-c24ndCB2aXNpYmxlDQo+ID4gPj4gNi7CoCBOb3RpZnkgdGhlIGh5cGVydmlzb3Igb2YgdGhlIGVu
-Y3J5cHRpb24gc3RhdHVzIGNoYW5nZQ0KPiA+ID4NCj4gPiA+IE5vdCBzdXJlIHdoeSBJIGRpZG4n
-dCBub3RpY2UgdGhpcyBiZWZvcmUsIGJ1dCBJIHdpbGwgbmVlZCB0byB0ZXN0IHRoaXMgdG8NCj4g
-PiA+IGJlIGNlcnRhaW4uIEFzIHBhcnQgb2YgdGhpcyBub3RpZmljYXRpb24sIHRoZSBTTlAgc3Vw
-cG9ydCB3aWxsIGlzc3VlIGENCj4gPiA+IFBWQUxJREFURSBpbnN0cnVjdGlvbiAodG8gZWl0aGVy
-IHZhbGlkYXRlIG9yIHJlc2NpbmQgdmFsaWRhdGlvbiB0byB0aGUNCj4gPiA+IHBhZ2UpLiBQVkFM
-SURBVEUgdGFrZXMgYSB2aXJ0dWFsIGFkZHJlc3MuIElmIHRoZSBQUkVTRU5UIGJpdCBoYXMgYmVl
-bg0KPiA+ID4gcmVtb3ZlZCwgdGhlIFBWQUxJREFURSBpbnN0cnVjdGlvbiB3aWxsIHRha2UgYSAj
-UEYgKHNlZSBjb21tZW50cyBiZWxvdykuDQo+ID4NCj4gPiBZZXMsIHRoaXMgc2VyaWVzIHJlc3Vs
-dHMgaW4gYSAjUEYgYm9vdGluZyBhbiBTTlAgZ3Vlc3Q6DQo+IA0KPiBCdW1tZXIgOi0oICAgIElu
-dGVyZXN0aW5nbHksIGFuIFNOUCBndWVzdCBvbiBIeXBlci1WIHdpdGggYSBwYXJhdmlzb3INCj4g
-d29ya3MsIHByZXN1bWFibHkgYmVjYXVzZSB0aGUgcGFyYXZpc29yIGlzIGRvaW5nIHRoZSBQVkFM
-SURBVEUgd2l0aA0KPiBhIGRpZmZlcmVudCBndWVzdCB2aXJ0dWFsIGFkZHJlc3MgZm9yIHRoZSBw
-aHlzaWNhbCBwYWdlLiAgVERYIG9wZXJhdGVzDQo+IG9uIHBoeXNpY2FsIGFkZHJlc3NlcywgYW5k
-IEkndmUgdGVzdGVkIHRoYXQgaXQgd29ya3MuDQo+IA0KPiBUaGUgc3BlYyBmb3IgUFZBTElEQVRF
-IHNheXMgaXQgcGVyZm9ybXMgdGhlIHNhbWUgc2VnbWVudGF0aW9uDQo+IGFuZCBwYWdpbmcgY2hl
-Y2tzIGFzIGEgMS1ieXRlIHJlYWQsIHNvIGluZGVlZCwgdGhlICNQRiBpcyBleHBlY3RlZC4NCj4g
-QnV0IGluIHRoZSBzcGVjLCB0aGUgcHNldWRvLWNvZGUgZm9yIFBWQUxJREFURSB1c2VzIHRoZSBH
-VUVTVF9WQQ0KPiBvbmx5IHRvIGRlcml2ZSB0aGUgR1VFU1RfUEEgYW5kIHRoZSBTWVNURU1fUEEu
-IFRoZSBHVUVTVF9WQSBpc24ndA0KPiBvdGhlcndpc2UgcmVsZXZhbnQsIHNvIGFueSBHVUVTVF9W
-QSB0aGF0IHZhbGlkbHkgbWFwcyB0byB0aGUgR1VFU1RfUEENCj4gd291bGQgd29yaywgYXMgbG9u
-ZyBhcyB3ZSBjYW4gYmUgYXNzdXJlZCB0aGF0IGxvYWRfdW5hbGlnbmVkX3plcm9wYWQoKQ0KPiB3
-b24ndCB0b3VjaCB0aGF0IEdVRVNUX1ZBLg0KPiANCj4gTGV0IG1lIHRoaW5rIGFib3V0IGlmIHRo
-ZXJlJ3MgYSBub3QtdG9vLWhhY2t5IHdheSB0byBtYWtlIHRoaXMgd29yaw0KPiB3aXRoIHNvbWUg
-dGVtcG9yYXJ5IEdWQS4NCj4gDQoNCkl0IHNlZW1zIGxpa2UgdGhlcmUgYXJlIHR3byBwb3NzaWJs
-ZSBhcHByb2FjaGVzIHRvIG1ha2UgdGhpcyB3b3JrOg0KDQoxLiAgQ3JlYXRlIGEgdGVtcG9yYXJ5
-IHZpcnR1YWwgbWFwcGluZyBpbiB2bWFsbG9jIHNwYWNlIGFuZCBwYXNzDQp0aGF0IHZpcnR1YWwg
-YWRkcmVzcyB0byBQVkFMSURBVEUuICAoQnV0IG9ubHkgZG8gdGhpcyB3aGVuIFBWQUxJREFURQ0K
-aXMgYmVpbmcgdXNlZCBmb3IgcHJpdmF0ZSA8LT4gc2hhcmVkIHRyYW5zaXRpb25zLCBhbmQgbm90
-IGZvciBtZW1vcnkNCmFjY2VwdGFuY2UuKSAgVGhlIHRlbXBvcmFyeSBtYXBwaW5nIGlzIHVwZGF0
-ZWQgd2l0aCBlYWNoIGludm9jYXRpb24NCm9mIFBWQUxJREFURS4gIFRvIG1ha2UgdGhpcyB3b3Jr
-LCB0aGUgdGVtcCB2aXJ0dWFsIGFkZHIgbXVzdCBiZSBhbGlnbmVkDQpvbiBhIDIgTWVnIGJvdW5k
-YXJ5IGFuZCBtdXN0IGhhdmUgYSBndWFyZCBwYWdlIHByZWNlZGluZyBpdCBzbyB0aGF0DQpsb2Fk
-X3VuYWxpZ25lZF96ZXJvcGFkKCkgY2FuJ3Qgc3R1bWJsZSBpbnRvIHRoZSB0ZW1wb3JhcnkgbWFw
-cGluZy4NCkkndmUgd3Jlc3RsZWQgd2l0aCBhIGZldyBhcHByb2FjaGVzIHRvIGNvZGluZyB0aGlz
-IG92ZXIgdGhlIHBhc3QgdHdvDQp3ZWVrcywgYW5kIGhhdmUgc29tZXRoaW5nIHRoYXQncyBub3Qg
-dG9vIGJhZC4gICBUaGlzIGFwcHJvYWNoDQpjZXJ0YWlubHkgdGFrZXMgc29tZSBhZGRpdGlvbmFs
-IENQVSBjeWNsZXMuICBJJ3ZlIHRlc3RlZCBkb2luZyB0aGUNCnRlbXAgbWFwcGluZyBpbiB0aGUg
-Y29udGV4dCBvZiBhIEh5cGVyLVYgdlRPTSBWTSwgYnV0IGRvbid0IHNlZQ0KYW55IG1lYXN1cmFi
-bGUgaW1wYWN0IG9uIGJvb3QgdGltZSwgZXZlbiB3aGVuIGNvbnZlcnRpbmcgYSAxIEdieXRlDQpz
-d2lvdGxiIHNwYWNlIGZyb20gcHJpdmF0ZSB0byBzaGFyZWQuICBJJ20gc2V0dGluZyB1cCBub3cg
-dG8gdGVzdA0KaW4gYSByZWd1bGFyIFNOUCBWTSB3aGVyZSBzbnBfZW5jX3N0YXR1c19jaGFuZ2Vf
-ZmluaXNoKCkgaXMgdXNlZCwNCnRvIGhhdmUgZW5kLXRvLWVuZCBjb25maXJtYXRpb24gdGhhdCBp
-dCByZWFsbHkgZG9lcyB3b3JrLg0KDQoyLiAgQSBjb21wbGV0ZWx5IGRpZmZlcmVudCBhcHByb2Fj
-aCBpcyBmb3IgX19zZXRfbWVtb3J5X2VuY19wZ3RhYmxlKCkNCnRvIGNsZWFyIGFuZCByZXN0b3Jl
-IHRoZSBQUkVTRU5UIGJpdCBvbmx5IHdoZW4gUkVGTEVDVF9WQyBpcyBzZXQgaW4NCnRoZSBNU1Jf
-QU1ENjRfU0VWLCBhbmQgdGhlIGVxdWl2YWxlbnQgb24gVERYLiAgVGhpcyBpcyB0aGUgY2FzZSB0
-aGF0J3MNCnByb2JsZW1hdGljIGZvciBkb2luZyB0aGUgbG9hZF91bmFsaWduZWRfemVyb3BhZCgp
-IGZpeCB1cCBpbiB0aGUgU05QDQojVkMgb3IgVERYICNWRSBleGNlcHRpb24gaGFuZGxlci4gICBJ
-IHRoaW5rIHlvdSBzYWlkIHNvbWUgYWRkaXRpb25hbCB3b3JrDQp3YXMgbmVlZGVkIGZvciB0aGUg
-Zml4dXAgdG8gYmUgZG9uZSBwcm9wZXJseSBpbiB0aGUgU05QICNWQyBjYXNlLCBzbyB0aGF0DQp3
-b3VsZCBoYXZlIHRvIGJlIGRvbmUuICAgVGhlIGNsZWFyZWQgUFJFU0VOVCBiaXQgaXMgaGFuZGxl
-ZCBieSB0aGUNCnBhcmF2aXNvciBiZWNhdXNlIHRoZSBwYXJhdmlzb3IgYWxyZWFkeSBoYXMgYSB2
-aXJ0dWFsIG1hcHBpbmcgdG8gcGFzcw0KdG8gUFZBTElEQVRFLg0KDQpBbnkgdGhvdWdodHM/ICBJ
-J2xsIHRyeSB0byBnZXQgdGhlIGNvZGUgZm9yICMxIHBvc3RlZCBpbiB0aGUgbmV4dCBmZXcNCmRh
-eXMsIHNvIHlvdSBjYW4ganVkZ2UgdGhlIGxldmVsIG9mIGFkZGl0aW9uYWwgY29tcGxleGl0eSB0
-byBtYW5hZ2UNCnRoZSB0ZW1wIHZpcnR1YWwgbWFwcGluZy4NCg0KTWljaGFlbA0K
+--0000000000001afbfe0607e201a9
+Content-Type: multipart/alternative; boundary="000000000000121fe50607e20180"
+
+--000000000000121fe50607e20180
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Ajay,
+
+One comment in line.
+
+Regards,
+Kalesh
+
+On Tue, Oct 17, 2023 at 3:42=E2=80=AFAM <sharmaajay@linuxonhyperv.com> wrot=
+e:
+
+> From: Ajay Sharma <sharmaajay@microsoft.com>
+>
+> Query the adapter capabilities to expose to
+> other clients and VF. This checks against
+> the user supplied values and protects against
+> overflows.
+>
+> Signed-off-by: Ajay Sharma <sharmaajay@microsoft.com>
+> ---
+>  drivers/infiniband/hw/mana/device.c  |  4 ++
+>  drivers/infiniband/hw/mana/main.c    | 67 ++++++++++++++++++++++------
+>  drivers/infiniband/hw/mana/mana_ib.h | 53 +++++++++++++++++++++-
+>  3 files changed, 110 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/infiniband/hw/mana/device.c
+> b/drivers/infiniband/hw/mana/device.c
+> index 4077e440657a..e15da43c73a0 100644
+> --- a/drivers/infiniband/hw/mana/device.c
+> +++ b/drivers/infiniband/hw/mana/device.c
+> @@ -97,6 +97,10 @@ static int mana_ib_probe(struct auxiliary_device *adev=
+,
+>                 goto free_error_eq;
+>         }
+>
+> +       ret =3D mana_ib_query_adapter_caps(mib_dev);
+> +       if (ret)
+> +               ibdev_dbg(&mib_dev->ib_dev, "Failed to get caps, use
+> defaults");
+>
+[Kalesh]: You are ignoring the failure here and continuing with the IB
+register. When the FW command fails, you won't populate the
+"mib_dev->adapter_caps". Subsequent "mana_ib_query_device" may return stale
+values?
+Is that what you want?
+
+> +
+>         ret =3D ib_register_device(&mib_dev->ib_dev, "mana_%d",
+>                                  mdev->gdma_context->dev);
+>         if (ret)
+> diff --git a/drivers/infiniband/hw/mana/main.c
+> b/drivers/infiniband/hw/mana/main.c
+> index 5b5d7abe79ac..82923475267d 100644
+> --- a/drivers/infiniband/hw/mana/main.c
+> +++ b/drivers/infiniband/hw/mana/main.c
+> @@ -469,20 +469,15 @@ int mana_ib_get_port_immutable(struct ib_device
+> *ibdev, u32 port_num,
+>  int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_attr
+> *props,
+>                          struct ib_udata *uhw)
+>  {
+> -       props->max_qp =3D MANA_MAX_NUM_QUEUES;
+> -       props->max_qp_wr =3D MAX_SEND_BUFFERS_PER_QUEUE;
+> +       struct mana_ib_dev *mib_dev =3D container_of(ibdev,
+> +                       struct mana_ib_dev, ib_dev);
+>
+> -       /*
+> -        * max_cqe could be potentially much bigger.
+> -        * As this version of driver only support RAW QP, set it to the
+> same
+> -        * value as max_qp_wr
+> -        */
+> -       props->max_cqe =3D MAX_SEND_BUFFERS_PER_QUEUE;
+> -
+> -       props->max_mr_size =3D MANA_IB_MAX_MR_SIZE;
+> -       props->max_mr =3D MANA_IB_MAX_MR;
+> -       props->max_send_sge =3D MAX_TX_WQE_SGL_ENTRIES;
+> -       props->max_recv_sge =3D MAX_RX_WQE_SGL_ENTRIES;
+> +       props->max_qp =3D mib_dev->adapter_caps.max_qp_count;
+> +       props->max_qp_wr =3D mib_dev->adapter_caps.max_requester_sq_size;
+> +       props->max_cqe =3D mib_dev->adapter_caps.max_requester_sq_size;
+> +       props->max_mr =3D mib_dev->adapter_caps.max_mr_count;
+> +       props->max_send_sge =3D mib_dev->adapter_caps.max_send_wqe_size;
+> +       props->max_recv_sge =3D mib_dev->adapter_caps.max_recv_wqe_size;
+>
+>         return 0;
+>  }
+> @@ -601,3 +596,49 @@ int mana_ib_create_error_eq(struct mana_ib_dev
+> *mib_dev)
+>
+>         return 0;
+>  }
+> +
+> +static void assign_caps(struct mana_ib_adapter_caps *caps,
+> +                       struct mana_ib_query_adapter_caps_resp *resp)
+> +{
+> +       caps->max_sq_id =3D resp->max_sq_id;
+> +       caps->max_rq_id =3D resp->max_rq_id;
+> +       caps->max_cq_id =3D resp->max_cq_id;
+> +       caps->max_qp_count =3D resp->max_qp_count;
+> +       caps->max_cq_count =3D resp->max_cq_count;
+> +       caps->max_mr_count =3D resp->max_mr_count;
+> +       caps->max_pd_count =3D resp->max_pd_count;
+> +       caps->max_inbound_read_limit =3D resp->max_inbound_read_limit;
+> +       caps->max_outbound_read_limit =3D resp->max_outbound_read_limit;
+> +       caps->mw_count =3D resp->mw_count;
+> +       caps->max_srq_count =3D resp->max_srq_count;
+> +       caps->max_requester_sq_size =3D resp->max_requester_sq_size;
+> +       caps->max_responder_sq_size =3D resp->max_responder_sq_size;
+> +       caps->max_requester_rq_size =3D resp->max_requester_rq_size;
+> +       caps->max_responder_rq_size =3D resp->max_responder_rq_size;
+> +       caps->max_send_wqe_size =3D resp->max_send_wqe_size;
+> +       caps->max_recv_wqe_size =3D resp->max_recv_wqe_size;
+> +       caps->max_inline_data_size =3D resp->max_inline_data_size;
+> +}
+> +
+> +int mana_ib_query_adapter_caps(struct mana_ib_dev *mib_dev)
+> +{
+> +       struct mana_ib_query_adapter_caps_resp resp =3D {};
+> +       struct mana_ib_query_adapter_caps_req req =3D {};
+> +       int err;
+> +
+> +       mana_gd_init_req_hdr(&req.hdr, MANA_IB_GET_ADAPTER_CAP,
+> sizeof(req),
+> +                            sizeof(resp));
+> +       req.hdr.resp.msg_version =3D MANA_IB_GET_ADAPTER_CAP_RESPONSE_V3;
+> +       req.hdr.dev_id =3D mib_dev->gc->mana_ib.dev_id;
+> +
+> +       err =3D mana_gd_send_request(mib_dev->gc, sizeof(req), &req,
+> +                                  sizeof(resp), &resp);
+> +
+> +       if (err) {
+> +               ibdev_err(&mib_dev->ib_dev, "Failed to query adapter caps
+> err %d", err);
+> +               return err;
+> +       }
+> +
+> +       assign_caps(&mib_dev->adapter_caps, &resp);
+> +       return 0;
+> +}
+> diff --git a/drivers/infiniband/hw/mana/mana_ib.h
+> b/drivers/infiniband/hw/mana/mana_ib.h
+> index 8a652bccd978..6b9406738cb2 100644
+> --- a/drivers/infiniband/hw/mana/mana_ib.h
+> +++ b/drivers/infiniband/hw/mana/mana_ib.h
+> @@ -20,19 +20,41 @@
+>
+>  /* MANA doesn't have any limit for MR size */
+>  #define MANA_IB_MAX_MR_SIZE    U64_MAX
+> -
+> +#define MANA_IB_GET_ADAPTER_CAP_RESPONSE_V3 3
+>  /*
+>   * The hardware limit of number of MRs is greater than maximum number of
+> MRs
+>   * that can possibly represent in 24 bits
+>   */
+>  #define MANA_IB_MAX_MR         0xFFFFFFu
+>
+> +struct mana_ib_adapter_caps {
+> +       u32 max_sq_id;
+> +       u32 max_rq_id;
+> +       u32 max_cq_id;
+> +       u32 max_qp_count;
+> +       u32 max_cq_count;
+> +       u32 max_mr_count;
+> +       u32 max_pd_count;
+> +       u32 max_inbound_read_limit;
+> +       u32 max_outbound_read_limit;
+> +       u32 mw_count;
+> +       u32 max_srq_count;
+> +       u32 max_requester_sq_size;
+> +       u32 max_responder_sq_size;
+> +       u32 max_requester_rq_size;
+> +       u32 max_responder_rq_size;
+> +       u32 max_send_wqe_size;
+> +       u32 max_recv_wqe_size;
+> +       u32 max_inline_data_size;
+> +};
+> +
+>  struct mana_ib_dev {
+>         struct ib_device ib_dev;
+>         struct gdma_dev *gdma_dev;
+>         struct gdma_context *gc;
+>         struct gdma_queue *fatal_err_eq;
+>         mana_handle_t adapter_handle;
+> +       struct mana_ib_adapter_caps adapter_caps;
+>  };
+>
+>  struct mana_ib_wq {
+> @@ -96,6 +118,7 @@ struct mana_ib_rwq_ind_table {
+>  };
+>
+>  enum mana_ib_command_code {
+> +       MANA_IB_GET_ADAPTER_CAP =3D 0x30001,
+>         MANA_IB_CREATE_ADAPTER  =3D 0x30002,
+>         MANA_IB_DESTROY_ADAPTER =3D 0x30003,
+>  };
+> @@ -120,6 +143,32 @@ struct mana_ib_destroy_adapter_resp {
+>         struct gdma_resp_hdr hdr;
+>  }; /* HW Data */
+>
+> +struct mana_ib_query_adapter_caps_req {
+> +       struct gdma_req_hdr hdr;
+> +}; /*HW Data */
+> +
+> +struct mana_ib_query_adapter_caps_resp {
+> +       struct gdma_resp_hdr hdr;
+> +       u32 max_sq_id;
+> +       u32 max_rq_id;
+> +       u32 max_cq_id;
+> +       u32 max_qp_count;
+> +       u32 max_cq_count;
+> +       u32 max_mr_count;
+> +       u32 max_pd_count;
+> +       u32 max_inbound_read_limit;
+> +       u32 max_outbound_read_limit;
+> +       u32 mw_count;
+> +       u32 max_srq_count;
+> +       u32 max_requester_sq_size;
+> +       u32 max_responder_sq_size;
+> +       u32 max_requester_rq_size;
+> +       u32 max_responder_rq_size;
+> +       u32 max_send_wqe_size;
+> +       u32 max_recv_wqe_size;
+> +       u32 max_inline_data_size;
+> +}; /* HW Data */
+> +
+>  int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,
+>                                  struct ib_umem *umem,
+>                                  mana_handle_t *gdma_region);
+> @@ -194,4 +243,6 @@ int mana_ib_create_adapter(struct mana_ib_dev
+> *mib_dev);
+>
+>  int mana_ib_destroy_adapter(struct mana_ib_dev *mib_dev);
+>
+> +int mana_ib_query_adapter_caps(struct mana_ib_dev *mib_dev);
+> +
+>  #endif
+> --
+> 2.25.1
+>
+>
+>
+
+--=20
+Regards,
+Kalesh A P
+
+--000000000000121fe50607e20180
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi Ajay,</div><div><br></div><div>One comment=C2=A0in=
+ line.</div><div><br></div><div>Regards,</div><div>Kalesh</div><br><div cla=
+ss=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, Oct 17, 20=
+23 at 3:42=E2=80=AFAM &lt;<a href=3D"mailto:sharmaajay@linuxonhyperv.com">s=
+harmaajay@linuxonhyperv.com</a>&gt; wrote:<br></div><blockquote class=3D"gm=
+ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
+204,204);padding-left:1ex">From: Ajay Sharma &lt;<a href=3D"mailto:sharmaaj=
+ay@microsoft.com" target=3D"_blank">sharmaajay@microsoft.com</a>&gt;<br>
+<br>
+Query the adapter capabilities to expose to<br>
+other clients and VF. This checks against<br>
+the user supplied values and protects against<br>
+overflows.<br>
+<br>
+Signed-off-by: Ajay Sharma &lt;<a href=3D"mailto:sharmaajay@microsoft.com" =
+target=3D"_blank">sharmaajay@microsoft.com</a>&gt;<br>
+---<br>
+=C2=A0drivers/infiniband/hw/mana/device.c=C2=A0 |=C2=A0 4 ++<br>
+=C2=A0drivers/infiniband/hw/mana/main.c=C2=A0 =C2=A0 | 67 +++++++++++++++++=
++++++------<br>
+=C2=A0drivers/infiniband/hw/mana/mana_ib.h | 53 +++++++++++++++++++++-<br>
+=C2=A03 files changed, 110 insertions(+), 14 deletions(-)<br>
+<br>
+diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/ma=
+na/device.c<br>
+index 4077e440657a..e15da43c73a0 100644<br>
+--- a/drivers/infiniband/hw/mana/device.c<br>
++++ b/drivers/infiniband/hw/mana/device.c<br>
+@@ -97,6 +97,10 @@ static int mana_ib_probe(struct auxiliary_device *adev,<=
+br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto free_error_eq;=
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D mana_ib_query_adapter_caps(mib_dev);<br=
+>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ibdev_dbg(&amp;mib_=
+dev-&gt;ib_dev, &quot;Failed to get caps, use defaults&quot;);<br></blockqu=
+ote><div>[Kalesh]: You are ignoring the failure here and continuing with th=
+e IB register. When the FW command fails, you won&#39;t populate the &quot;=
+mib_dev-&gt;adapter_caps&quot;. Subsequent &quot;mana_ib_query_device&quot;=
+ may return stale values?</div><div>Is that what you want?</div><blockquote=
+ class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px so=
+lid rgb(204,204,204);padding-left:1ex">
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D ib_register_device(&amp;mib_dev-&gt;ib_=
+dev, &quot;mana_%d&quot;,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mdev-&gt;gdma_context-&gt;dev)=
+;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (ret)<br>
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana=
+/main.c<br>
+index 5b5d7abe79ac..82923475267d 100644<br>
+--- a/drivers/infiniband/hw/mana/main.c<br>
++++ b/drivers/infiniband/hw/mana/main.c<br>
+@@ -469,20 +469,15 @@ int mana_ib_get_port_immutable(struct ib_device *ibde=
+v, u32 port_num,<br>
+=C2=A0int mana_ib_query_device(struct ib_device *ibdev, struct ib_device_at=
+tr *props,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0struct ib_udata *uhw)<br>
+=C2=A0{<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_qp =3D MANA_MAX_NUM_QUEUES;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_qp_wr =3D MAX_SEND_BUFFERS_PER_QU=
+EUE;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct mana_ib_dev *mib_dev =3D container_of(ib=
+dev,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0struct mana_ib_dev, ib_dev);<br>
+<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0/*<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 * max_cqe could be potentially much bigger.<br=
+>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 * As this version of driver only support RAW Q=
+P, set it to the same<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 * value as max_qp_wr<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 */<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_cqe =3D MAX_SEND_BUFFERS_PER_QUEU=
+E;<br>
+-<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_mr_size =3D MANA_IB_MAX_MR_SIZE;<=
+br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_mr =3D MANA_IB_MAX_MR;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_send_sge =3D MAX_TX_WQE_SGL_ENTRI=
+ES;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_recv_sge =3D MAX_RX_WQE_SGL_ENTRI=
+ES;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_qp =3D mib_dev-&gt;adapter_caps.m=
+ax_qp_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_qp_wr =3D mib_dev-&gt;adapter_cap=
+s.max_requester_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_cqe =3D mib_dev-&gt;adapter_caps.=
+max_requester_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_mr =3D mib_dev-&gt;adapter_caps.m=
+ax_mr_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_send_sge =3D mib_dev-&gt;adapter_=
+caps.max_send_wqe_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0props-&gt;max_recv_sge =3D mib_dev-&gt;adapter_=
+caps.max_recv_wqe_size;<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;<br>
+=C2=A0}<br>
+@@ -601,3 +596,49 @@ int mana_ib_create_error_eq(struct mana_ib_dev *mib_de=
+v)<br>
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;<br>
+=C2=A0}<br>
++<br>
++static void assign_caps(struct mana_ib_adapter_caps *caps,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0struct mana_ib_query_adapter_caps_resp *resp)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_sq_id =3D resp-&gt;max_sq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_rq_id =3D resp-&gt;max_rq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_cq_id =3D resp-&gt;max_cq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_qp_count =3D resp-&gt;max_qp_count=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_cq_count =3D resp-&gt;max_cq_count=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_mr_count =3D resp-&gt;max_mr_count=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_pd_count =3D resp-&gt;max_pd_count=
+;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_inbound_read_limit =3D resp-&gt;ma=
+x_inbound_read_limit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_outbound_read_limit =3D resp-&gt;m=
+ax_outbound_read_limit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;mw_count =3D resp-&gt;mw_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_srq_count =3D resp-&gt;max_srq_cou=
+nt;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_requester_sq_size =3D resp-&gt;max=
+_requester_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_responder_sq_size =3D resp-&gt;max=
+_responder_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_requester_rq_size =3D resp-&gt;max=
+_requester_rq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_responder_rq_size =3D resp-&gt;max=
+_responder_rq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_send_wqe_size =3D resp-&gt;max_sen=
+d_wqe_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_recv_wqe_size =3D resp-&gt;max_rec=
+v_wqe_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0caps-&gt;max_inline_data_size =3D resp-&gt;max_=
+inline_data_size;<br>
++}<br>
++<br>
++int mana_ib_query_adapter_caps(struct mana_ib_dev *mib_dev)<br>
++{<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct mana_ib_query_adapter_caps_resp resp =3D=
+ {};<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct mana_ib_query_adapter_caps_req req =3D {=
+};<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0int err;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0mana_gd_init_req_hdr(&amp;req.hdr, MANA_IB_GET_=
+ADAPTER_CAP, sizeof(req),<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 sizeof(resp));<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0req.hdr.resp.msg_version =3D MANA_IB_GET_ADAPTE=
+R_CAP_RESPONSE_V3;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0req.hdr.dev_id =3D mib_dev-&gt;gc-&gt;mana_ib.d=
+ev_id;<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0err =3D mana_gd_send_request(mib_dev-&gt;gc, si=
+zeof(req), &amp;req,<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 sizeof(resp), &amp;resp);<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (err) {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ibdev_err(&amp;mib_=
+dev-&gt;ib_dev, &quot;Failed to query adapter caps err %d&quot;, err);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return err;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0}<br>
++<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0assign_caps(&amp;mib_dev-&gt;adapter_caps, &amp=
+;resp);<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;<br>
++}<br>
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/m=
+ana/mana_ib.h<br>
+index 8a652bccd978..6b9406738cb2 100644<br>
+--- a/drivers/infiniband/hw/mana/mana_ib.h<br>
++++ b/drivers/infiniband/hw/mana/mana_ib.h<br>
+@@ -20,19 +20,41 @@<br>
+<br>
+=C2=A0/* MANA doesn&#39;t have any limit for MR size */<br>
+=C2=A0#define MANA_IB_MAX_MR_SIZE=C2=A0 =C2=A0 U64_MAX<br>
+-<br>
++#define MANA_IB_GET_ADAPTER_CAP_RESPONSE_V3 3<br>
+=C2=A0/*<br>
+=C2=A0 * The hardware limit of number of MRs is greater than maximum number=
+ of MRs<br>
+=C2=A0 * that can possibly represent in 24 bits<br>
+=C2=A0 */<br>
+=C2=A0#define MANA_IB_MAX_MR=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00xFFFFFFu<br>
+<br>
++struct mana_ib_adapter_caps {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_sq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_rq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_cq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_qp_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_cq_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_mr_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_pd_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_inbound_read_limit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_outbound_read_limit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 mw_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_srq_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_requester_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_responder_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_requester_rq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_responder_rq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_send_wqe_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_recv_wqe_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_inline_data_size;<br>
++};<br>
++<br>
+=C2=A0struct mana_ib_dev {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 struct ib_device ib_dev;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 struct gdma_dev *gdma_dev;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 struct gdma_context *gc;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 struct gdma_queue *fatal_err_eq;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 mana_handle_t adapter_handle;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct mana_ib_adapter_caps adapter_caps;<br>
+=C2=A0};<br>
+<br>
+=C2=A0struct mana_ib_wq {<br>
+@@ -96,6 +118,7 @@ struct mana_ib_rwq_ind_table {<br>
+=C2=A0};<br>
+<br>
+=C2=A0enum mana_ib_command_code {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0MANA_IB_GET_ADAPTER_CAP =3D 0x30001,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 MANA_IB_CREATE_ADAPTER=C2=A0 =3D 0x30002,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 MANA_IB_DESTROY_ADAPTER =3D 0x30003,<br>
+=C2=A0};<br>
+@@ -120,6 +143,32 @@ struct mana_ib_destroy_adapter_resp {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 struct gdma_resp_hdr hdr;<br>
+=C2=A0}; /* HW Data */<br>
+<br>
++struct mana_ib_query_adapter_caps_req {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct gdma_req_hdr hdr;<br>
++}; /*HW Data */<br>
++<br>
++struct mana_ib_query_adapter_caps_resp {<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0struct gdma_resp_hdr hdr;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_sq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_rq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_cq_id;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_qp_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_cq_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_mr_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_pd_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_inbound_read_limit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_outbound_read_limit;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 mw_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_srq_count;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_requester_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_responder_sq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_requester_rq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_responder_rq_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_send_wqe_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_recv_wqe_size;<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 max_inline_data_size;<br>
++}; /* HW Data */<br>
++<br>
+=C2=A0int mana_ib_gd_create_dma_region(struct mana_ib_dev *mib_dev,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0struct ib_umem *umem,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mana_handle_t *gdma_region);<b=
+r>
+@@ -194,4 +243,6 @@ int mana_ib_create_adapter(struct mana_ib_dev *mib_dev)=
+;<br>
+<br>
+=C2=A0int mana_ib_destroy_adapter(struct mana_ib_dev *mib_dev);<br>
+<br>
++int mana_ib_query_adapter_caps(struct mana_ib_dev *mib_dev);<br>
++<br>
+=C2=A0#endif<br>
+-- <br>
+2.25.1<br>
+<br>
+<br>
+</blockquote></div><br clear=3D"all"><div><br></div><span class=3D"gmail_si=
+gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
+iv dir=3D"ltr">Regards,<div>Kalesh A P</div></div></div></div>
+
+--000000000000121fe50607e20180--
+
+--0000000000001afbfe0607e201a9
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBWowggRSoAMCAQICDDfBRQmwNSI92mit0zANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAwODI5NTZaFw0yNTA5MTAwODI5NTZaMIGi
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xHzAdBgNVBAMTFkthbGVzaCBBbmFra3VyIFB1cmF5aWwxMjAw
+BgkqhkiG9w0BCQEWI2thbGVzaC1hbmFra3VyLnB1cmF5aWxAYnJvYWRjb20uY29tMIIBIjANBgkq
+hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnv1Reaeezfr6NEmg3xZlh4cz9m7QCN13+j4z1scrX+b
+JfnV8xITT5yvwdQv3R3p7nzD/t29lTRWK3wjodUd2nImo6vBaH3JbDwleIjIWhDXLNZ4u7WIXYwx
+aQ8lYCdKXRsHXgGPY0+zSx9ddpqHZJlHwcvas3oKnQN9WgzZtsM7A8SJefWkNvkcOtef6bL8Ew+3
+FBfXmtsPL9I2vita8gkYzunj9Nu2IM+MnsP7V/+Coy/yZDtFJHp30hDnYGzuOhJchDF9/eASvE8T
+T1xqJODKM9xn5xXB1qezadfdgUs8k8QAYyP/oVBafF9uqDudL6otcBnziyDBQdFCuAQN7wIDAQAB
+o4IB5DCCAeAwDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZC
+aHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJj
+YTIwMjAuY3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3Iz
+cGVyc29uYWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcC
+ARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNV
+HR8EQjBAMD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNp
+Z24yY2EyMDIwLmNybDAuBgNVHREEJzAlgSNrYWxlc2gtYW5ha2t1ci5wdXJheWlsQGJyb2FkY29t
+LmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGP
+zzAdBgNVHQ4EFgQUI3+tdStI+ABRGSqksMsiCmO9uDAwDQYJKoZIhvcNAQELBQADggEBAGfe1o9b
+4wUud0FMjb/FNdc433meL15npjdYWUeioHdlCGB5UvEaMGu71QysfoDOfUNeyO9YKp0h0fm7clvo
+cBqeWe4CPv9TQbmLEtXKdEpj5kFZBGmav69mGTlu1A9KDQW3y0CDzCPG2Fdm4s73PnkwvemRk9E2
+u9/kcZ8KWVeS+xq+XZ78kGTKQ6Wii3dMK/EHQhnDfidadoN/n+x2ySC8yyDNvy81BocnblQzvbuB
+a30CvRuhokNO6Jzh7ZFtjKVMzYas3oo6HXgA+slRszMu4pc+fRPO41FHjeDM76e6P5OnthhnD+NY
+x6xokUN65DN1bn2MkeNs0nQpizDqd0QxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYD
+VQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25h
+bFNpZ24gMiBDQSAyMDIwAgw3wUUJsDUiPdpordMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcN
+AQkEMSIEIL0hoibo0625Ri9g3SryrUfqoIYbcNloxQZ3Vc07+Rl1MBgGCSqGSIb3DQEJAzELBgkq
+hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTAxNzA0MzIwMlowaQYJKoZIhvcNAQkPMVwwWjAL
+BglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG
+9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAznJSgygKl
+nznQWhKblNiZ1cN27E615F9TIzd/5OrV1ePBKqs3F02ZEZ4uWzWeX6vMtnfE3RvbDPDA8FrhyHet
+og3Z2pqNs4b1KTxnzVKWxg8OXk/4Z4QCUC7tNrkCrtyjEO9BIsSu8qNs0hd+FnGQg3jfYvGlJcLq
+ILR53yboWIlFoUSV58/66XtmBhiVCO/ePejtYhswO9RBGhkUkRPqJ70JAoNy2xG+kmOfdNBMp4FI
+qXPui5vlSlqG4E52QqKBiDdiIGIGo2ftWN3I//1RHzis8P1Cn8BVDFSl3n2fccpS8bjb8k/0dgpM
+4EbgSmIO5TV7Ask3Upk65iDf65zS
+--0000000000001afbfe0607e201a9--
 
