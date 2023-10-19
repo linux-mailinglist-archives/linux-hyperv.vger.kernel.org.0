@@ -1,268 +1,234 @@
-Return-Path: <linux-hyperv+bounces-557-lists+linux-hyperv=lfdr.de@vger.kernel.org>
+Return-Path: <linux-hyperv+bounces-558-lists+linux-hyperv=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-hyperv@lfdr.de
 Delivered-To: lists+linux-hyperv@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A86477CFE2C
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 17:41:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A367CFEA2
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 17:47:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E35C28218F
-	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 15:41:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3DDE281C34
+	for <lists+linux-hyperv@lfdr.de>; Thu, 19 Oct 2023 15:47:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95E0C315A7;
-	Thu, 19 Oct 2023 15:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99564315AC;
+	Thu, 19 Oct 2023 15:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="foQ+LfGo"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Phxi+LeH"
 X-Original-To: linux-hyperv@vger.kernel.org
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0E4315A5
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 15:41:04 +0000 (UTC)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB01C121
-	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 08:41:00 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9ace796374so10237819276.0
-        for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 08:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697730060; x=1698334860; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=adJjdu4zvZG+fV58j+myDpWsiZ+K2SAIeatTq8Py4kU=;
-        b=foQ+LfGo9+WT/avUhTGnzauJXTbM6NwkDppKG6a6BczeQrxlDRXJYrpTq7LFkp1oc3
-         ucia+fPj6pyW/NxlwRhedJ3svJTBZ+/AGrQBkx9TyAsDibGmGE4DsR8sW+8hzsAKznDG
-         frGCjG6YGA0Fq3jeKguwDSyq7nBf2JeH/YuyB9ydwEezF5hZODCsWKKhvyF4bSpOwXnd
-         tdi3jl9W+0rjmsORyEsXec/os1LOym/GmNtunZ0qGVoh8ositeNy0nYTY2lQVN47Hf8H
-         py0Yz8UVi9duYVDFfXWc57DedgXABf59d/dlWDXT4gRddiTnAUc/jIw5gTxOt4Ks45RR
-         So2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697730060; x=1698334860;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=adJjdu4zvZG+fV58j+myDpWsiZ+K2SAIeatTq8Py4kU=;
-        b=TJNtmr4n/qELKo2jiRViPQdZFn8ghjHHtKt8RYWDdlnbBWtjQEekF2VqTdtORVU09K
-         /eTv7adt6QtA3S1YuyMnA5DNmGoJsgkzpaYGdrgR2aduBnm7dZTAuOBqvmZoIk5OSAJH
-         ERQAgt57LQG/SSRZTaWsOB1BRO97bLhN18BfweINmp9XVmuKHnh+BIeQFuLyC71Frtcw
-         KiIqNXOrv0oAcTQXYc6tHowiGaudL7Nity4vDJ++6btDT0Wj/CoIiL/xBhpejSaJn/hC
-         siu8ZGuuayBQ+3sfFJBoEvPsChWhJPVLOu2H8lwHsA7lqF/UbpWAtoFhs86kL7a7KBdL
-         LIZA==
-X-Gm-Message-State: AOJu0Yx4n6b/EsZazvnkaCE0t3i9H5fAeDSb7tUiQ3H3cwIBosPG5GNz
-	hkesqnUPbbGdUCkYLjYegJzMtHwUss0=
-X-Google-Smtp-Source: AGHT+IEdAkwGSI4JXsyGWR6R4FkKE7IdPr0rYajN80sqqfNdMpoFfjfsMAfenGioX8KaYubfndjOkTOpzXY=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a5b:a04:0:b0:d9a:6855:6d31 with SMTP id
- k4-20020a5b0a04000000b00d9a68556d31mr59932ybq.3.1697730059906; Thu, 19 Oct
- 2023 08:40:59 -0700 (PDT)
-Date: Thu, 19 Oct 2023 08:40:58 -0700
-In-Reply-To: <87ttqm6d3f.fsf@redhat.com>
-Precedence: bulk
-X-Mailing-List: linux-hyperv@vger.kernel.org
-List-Id: <linux-hyperv.vger.kernel.org>
-List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231018221123.136403-1-dongli.zhang@oracle.com> <87ttqm6d3f.fsf@redhat.com>
-Message-ID: <ZTFOCqMCuSiH8VEt@google.com>
-Subject: Re: [PATCH RFC 1/1] x86/paravirt: introduce param to disable pv sched_clock
-From: Sean Christopherson <seanjc@google.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206F230FB0
+	for <linux-hyperv@vger.kernel.org>; Thu, 19 Oct 2023 15:47:32 +0000 (UTC)
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC59CF;
+	Thu, 19 Oct 2023 08:47:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aqf9kLJE8v26VP3DSoGgD8J3nAOJFMhCOB4usFhToH8=; b=Phxi+LeHacOZH2hZsKFN0/UiAf
+	8wMSV5pxKmOJSYow1NUD2cCvRaZUBsGX+P4MQsHxibkrYFvAQOGcKkuZvctgNL2c6NzEUoES9kf1r
+	dMe6LEypdCPgbt3zXclfmHou1ch0FVtgmtRhG1jMX0DpZ7xaLmxfCWaa85+7wjrgfgJJocK5O4VFO
+	GDSyQ1q2N/du28si4HttjPqUnhNkli9/OlZRslLzPgM+S50/FQC6zLY89RRFVUedLe0a4YQZsZlkD
+	pompPlX4w5kHSg7UlqkXqZ+A3b042hI5JISXVJp1hXzceFmgg0Qae5mLSxfZrY6zuEJVAwFeOGlXY
+	r9zDNg1g==;
+Received: from [2001:8b0:10b:5:583b:153f:ff9:f813] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qtVEp-007rba-1X; Thu, 19 Oct 2023 15:47:07 +0000
+Message-ID: <2f1459d7c3e3e81cdca931e104c3ade71dfcfee5.camel@infradead.org>
+Subject: Re: [PATCH RFC 1/1] x86/paravirt: introduce param to disable pv
+ sched_clock
+From: David Woodhouse <dwmw2@infradead.org>
+To: Sean Christopherson <seanjc@google.com>, Vitaly Kuznetsov
+	 <vkuznets@redhat.com>
 Cc: Dongli Zhang <dongli.zhang@oracle.com>, x86@kernel.org, 
 	virtualization@lists.linux-foundation.org, kvm@vger.kernel.org, 
 	pv-drivers@vmware.com, xen-devel@lists.xenproject.org, 
 	linux-hyperv@vger.kernel.org, jgross@suse.com, akaher@vmware.com, 
 	amakhalov@vmware.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
 	dave.hansen@linux.intel.com, hpa@zytor.com, pbonzini@redhat.com, 
-	wanpengli@tencent.com, peterz@infradead.org, dwmw2@infradead.org, 
-	joe.jin@oracle.com, boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+	wanpengli@tencent.com, peterz@infradead.org, joe.jin@oracle.com, 
+	boris.ostrovsky@oracle.com, linux-kernel@vger.kernel.org
+Date: Thu, 19 Oct 2023 16:47:05 +0100
+In-Reply-To: <ZTFOCqMCuSiH8VEt@google.com>
+References: <20231018221123.136403-1-dongli.zhang@oracle.com>
+	 <87ttqm6d3f.fsf@redhat.com> <ZTFOCqMCuSiH8VEt@google.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-IOFzLyxqUftWQ1c88CUC"
+User-Agent: Evolution 3.44.4-0ubuntu2 
+Precedence: bulk
+X-Mailing-List: linux-hyperv@vger.kernel.org
+List-Id: <linux-hyperv.vger.kernel.org>
+List-Subscribe: <mailto:linux-hyperv+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-hyperv+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+
+
+--=-IOFzLyxqUftWQ1c88CUC
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 19, 2023, Vitaly Kuznetsov wrote:
-> Dongli Zhang <dongli.zhang@oracle.com> writes:
+On Thu, 2023-10-19 at 08:40 -0700, Sean Christopherson wrote:
 >=20
-> > As mentioned in the linux kernel development document, "sched_clock() i=
-s
-> > used for scheduling and timestamping". While there is a default native
-> > implementation, many paravirtualizations have their own implementations=
-.
-> >
-> > About KVM, it uses kvm_sched_clock_read() and there is no way to only
-> > disable KVM's sched_clock. The "no-kvmclock" may disable all
-> > paravirtualized kvmclock features.
-
-...
-
-> > Please suggest and comment if other options are better:
-> >
-> > 1. Global param (this RFC patch).
-> >
-> > 2. The kvmclock specific param (e.g., "no-vmw-sched-clock" in vmware).
-> >
-> > Indeed I like the 2nd method.
-> >
-> > 3. Enforce native sched_clock only when TSC is invariant (hyper-v metho=
-d).
-> >
-> > 4. Remove and cleanup pv sched_clock, and always use pv_sched_clock() f=
-or
-> > all (suggested by Peter Zijlstra in [3]). Some paravirtualizations may
-> > want to keep the pv sched_clock.
+> > Normally, it should be up to the hypervisor to tell the guest which
+> > clock to use, i.e. if TSC is reliable or not. Let me put my question
+> > this way: if TSC on the particular host is good for everything, why
+> > does the hypervisor advertises 'kvmclock' to its guests?
 >=20
-> Normally, it should be up to the hypervisor to tell the guest which
-> clock to use, i.e. if TSC is reliable or not. Let me put my question
-> this way: if TSC on the particular host is good for everything, why
-> does the hypervisor advertises 'kvmclock' to its guests?
-
-I suspect there are two reasons.
-
-  1. As is likely the case in our fleet, no one revisited the set of advert=
-ised
-     PV features when defining the VM shapes for a new generation of hardwa=
-re, or
-     whoever did the reviews wasn't aware that advertising kvmclock is actu=
-ally
-     suboptimal.  All the PV clock stuff in KVM is quite labyrinthian, so i=
-t's
-     not hard to imagine it getting overlooked.
-
-  2. Legacy VMs.  If VMs have been running with a PV clock for years, forci=
-ng
-     them to switch to a new clocksource is high-risk, low-reward.
-
-> If for some 'historical reasons' we can't revoke features we can always
-> introduce a new PV feature bit saying that TSC is preferred.
+> I suspect there are two reasons.
 >=20
-> 1) Global param doesn't sound like a good idea to me: chances are that
-> people will be setting it on their guest images to workaround problems
-> on one hypervisor (or, rather, on one public cloud which is too lazy to
-> fix their hypervisor) while simultaneously creating problems on another.
+> =C2=A0 1. As is likely the case in our fleet, no one revisited the set of=
+ advertised
+> =C2=A0=C2=A0=C2=A0=C2=A0 PV features when defining the VM shapes for a ne=
+w generation of hardware, or
+> =C2=A0=C2=A0=C2=A0=C2=A0 whoever did the reviews wasn't aware that advert=
+ising kvmclock is actually
+> =C2=A0=C2=A0=C2=A0=C2=A0 suboptimal.=C2=A0 All the PV clock stuff in KVM =
+is quite labyrinthian, so it's
+> =C2=A0=C2=A0=C2=A0=C2=A0 not hard to imagine it getting overlooked.
 >=20
-> 2) KVM specific parameter can work, but as KVM's sched_clock is the same
-> as kvmclock, I'm not convinced it actually makes sense to separate the
-> two. Like if sched_clock is known to be bad but TSC is good, why do we
-> need to use PV clock at all? Having a parameter for debugging purposes
-> may be OK though...
->=20
-> 3) This is Hyper-V specific, you can see that it uses a dedicated PV bit
-> (HV_ACCESS_TSC_INVARIANT) and not the architectural
-> CPUID.80000007H:EDX[8]. I'm not sure we can blindly trust the later on
-> all hypervisors.
->=20
-> 4) Personally, I'm not sure that relying on 'TSC is crap' detection is
-> 100% reliable. I can imagine cases when we can't detect that fact that
-> while synchronized across CPUs and not going backwards, it is, for
-> example, ticking with an unstable frequency and PV sched clock is
-> supposed to give the right correction (all of them are rdtsc() based
-> anyways, aren't they?).
+> =C2=A0 2. Legacy VMs.=C2=A0 If VMs have been running with a PV clock for =
+years, forcing
+> =C2=A0=C2=A0=C2=A0=C2=A0 them to switch to a new clocksource is high-risk=
+, low-reward.
 
-Yeah, practically speaking, the only thing adding a knob to turn off using =
-PV
-clocks for sched_clock will accomplish is creating an even bigger matrix of
-combinations that can cause problems, e.g. where guests end up using kvmclo=
-ck
-timekeeping but not scheduling.
+Doubly true for Xen guests (given that the Xen clocksource is identical
+to the KVM clocksource).
 
-The explanation above and the links below fail to capture _the_ key point:
-Linux-as-a-guest already prioritizes the TSC over paravirt clocks as the cl=
-ocksource
-when the TSC is constant and nonstop (first spliced blob below).
+> > If for some 'historical reasons' we can't revoke features we can always
+> > introduce a new PV feature bit saying that TSC is preferred.
 
-What I suggested is that if the TSC is chosen over a PV clock as the clocks=
-ource,
-then we have the kernel also override the sched_clock selection (second spl=
-iced
-blob below).
+Don't we already have one? It's the PVCLOCK_TSC_STABLE_BIT. Why would a
+guest ever use kvmclock if the PVCLOCK_TSC_STABLE_BIT is set?
 
-That doesn't require the guest admin to opt-in, and doesn't create even mor=
-e
-combinations to support.  It also provides for a smoother transition for wh=
-en
-customers inevitably end up creating VMs on hosts that don't advertise kvmc=
-lock
-(or any PV clock).
+The *point* in the kvmclock is that the hypervisor can mess with the
+epoch/scaling to try to compensate for TSC brokenness as the host
+scales/sleeps/etc.
 
-> > To introduce a param may be easier to backport to old kernel version.
-> >
-> > References:
-> > [1] https://lore.kernel.org/all/20230926230649.67852-1-dongli.zhang@ora=
-cle.com/
-> > [2] https://lore.kernel.org/all/20231018195638.1898375-1-seanjc@google.=
-com/
-> > [3] https://lore.kernel.org/all/20231002211651.GA3774@noisy.programming=
-.kicks-ass.net/
+And the *problem* with the kvmclock is that it does just that, even
+when the host TSC hasn't done anything wrong and the kvmclock shouldn't
+have changed at all.
 
-On Mon, Oct 2, 2023 at 11:18=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
-> > Do we need to update the documentation to always suggest TSC when it is
-> > constant, as I believe many users still prefer pv clock than tsc?
-> >
-> > Thanks to tsc ratio scaling, the live migration will not impact tsc.
-> >
-> > >From the source code, the rating of kvm-clock is still higher than tsc=
-.
-> >
-> > BTW., how about to decrease the rating if guest detects constant tsc?
-> >
-> > 166 struct clocksource kvm_clock =3D {
-> > 167         .name   =3D "kvm-clock",
-> > 168         .read   =3D kvm_clock_get_cycles,
-> > 169         .rating =3D 400,
-> > 170         .mask   =3D CLOCKSOURCE_MASK(64),
-> > 171         .flags  =3D CLOCK_SOURCE_IS_CONTINUOUS,
-> > 172         .enable =3D kvm_cs_enable,
-> > 173 };
-> >
-> > 1196 static struct clocksource clocksource_tsc =3D {
-> > 1197         .name                   =3D "tsc",
-> > 1198         .rating                 =3D 300,
-> > 1199         .read                   =3D read_tsc,
->
-> That's already done in kvmclock_init().
->
->         if (boot_cpu_has(X86_FEATURE_CONSTANT_TSC) &&
->             boot_cpu_has(X86_FEATURE_NONSTOP_TSC) &&
->             !check_tsc_unstable())
->                 kvm_clock.rating =3D 299;
->
-> See also: https://lore.kernel.org/all/ZOjF2DMBgW%2FzVvL3@google.com
->
-> > 2. The sched_clock.
-> >
-> > The scheduling is impacted if there is big drift.
->
-> ...
->
-> > Unfortunately, the "no-kvmclock" kernel parameter disables all pv clock
-> > operations (not only sched_clock), e.g., after line 300.
->
-> ...
->
-> > Should I introduce a new param to disable no-kvm-sched-clock only, or t=
-o
-> > introduce a new param to allow the selection of sched_clock?
->
-> I don't think we want a KVM-specific knob, because every flavor of paravi=
-rt guest
-> would need to do the same thing.  And unless there's a good reason to use=
- a
-> paravirt clock, this really shouldn't be something the guest admin needs =
-to opt
-> into using.
+If the PVCLOCK_TSC_STABLE_BIT is set, a guest should just use the guest
+TSC directly without looking to the kvmclock for adjusting it.
+
+No?
 
 
-On Mon, Oct 2, 2023 at 2:06=E2=80=AFPM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Mon, Oct 02, 2023 at 11:18:50AM -0700, Sean Christopherson wrote:
-> > Assuming the desirable thing to do is to use native_sched_clock() in th=
-is
-> > scenario, do we need a separate rating system, or can we simply tie the
-> > sched clock selection to the clocksource selection, e.g. override the
-> > paravirt stuff if the TSC clock has higher priority and is chosen?
->
-> Yeah, I see no point of another rating system. Just force the thing back
-> to native (or don't set it to that other thing).
+
+--=-IOFzLyxqUftWQ1c88CUC
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMxMDE5MTU0NzA1WjAvBgkqhkiG9w0BCQQxIgQgDr2+2ve7
+EAx4DT6OsKvDPJNpUZWdoAh47bFgeh41prowgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgCwloyMKznX9iK8pOW5B+cEGuvbBrpmuzHc
+ko15b8ifpUpguNOCTpwOnZs1B0RQ/T0ptwcwkWYI038SECiwMD2ezW4Sa7K0vZEcTZk6aaqBcLMD
+JwgTGVexTXM9ALXrZpk3As87ZrWXCKpcC6+RP/0OO2c3LxgztCOzOJRjMB/kKBdkpS6FQt4NE+1a
+hvxV7nN5VKQA+6GTuXyoEofpT5XSdZaPDRWRBRErzW99aZxLYI8L1um6+mUBneIFip6er2S0iw3m
+lqvQ5eftUnjj/3TuC8jlk5SJVTCNb4KmFCz8z26Ck2jYOaoK20TFA9+46lp9eqE6OFzv5i6SsD3y
+lIfhBrzVgyNKZcdbpBCSvWtH2ueJFHv/y5/mvQBl9gytVdkNQUDEEpT1jjZg34Ni6lJA5wxgDvwO
+K7CU0WOA5zLr0iW3rCEzeufiOo8FPFaxcKTrb+E+BIpF9+GWNwUQ42TPFp2/K+kIH5QZjs17g3OU
+KIMei8nVBKBX9nZmFVVjq+FcMJDH3/H2p5b+2j9k+N6jx7nNE59x+usNBKcSBSsaIq55x29o1TVz
+95jz+6g0ZmhkvrLlzfixbeysGNffsSPCZwneV7M/X7J0U6LQfkpcJiYLW/ZVcL3LIvh2JRnuYZMG
+Nf8d1FB9xBqjQOHv5sUMe2v7NOuwO0Co98fULmBt9gAAAAAAAA==
+
+
+--=-IOFzLyxqUftWQ1c88CUC--
 
